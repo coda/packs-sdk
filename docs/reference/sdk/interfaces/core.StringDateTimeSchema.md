@@ -95,4 +95,4 @@ BaseStringSchema.type
 
 #### Defined in
 
-[schema.ts:636](https://github.com/coda/packs-sdk/blob/main/schema.ts#L636)
+[schema.ts:646](https://github.com/coda/packs-sdk/blob/main/schema.ts#L646)

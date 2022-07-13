@@ -569,14 +569,24 @@ export interface StringDateTimeSchema extends BaseStringSchema<ValueHintType.Dat
 }
 
 /**
- * Enabling options that can be used with a {@link ImageSchema}.
+ * State of outline on images that can be used with a {@link ImageSchema}.
  */
- export enum ImageState {
-   /** Image styling is disabled. */
+export enum Outline {
+  /** Image outline is disabled. */
   Disabled = 'disabled',
-  /** Image styling is applied. */
+  /** Image outline is applied. */
   Default = 'default',
- }
+}
+
+/**
+ * State of rounded corners on images that can be used with a {@link ImageSchema}.
+ */
+export enum RoundedCorners {
+  /** Image rounded corners are disabled. */
+  Disabled = 'disabled',
+  /** Image rounded corners are applied. */
+  Default = 'default',
+}
 
 /**
  * A schema representing a return value or object property that is provided as a string,
@@ -586,10 +596,10 @@ export interface StringDateTimeSchema extends BaseStringSchema<ValueHintType.Dat
   ValueHintType.ImageReference | ValueHintType.ImageAttachment> {
   /** Instructs Coda to render this value as an Image. */
   codaType: ValueHintType.ImageReference | ValueHintType.ImageAttachment;
-  /** ImageState type specifying whether or not to add outline to rendered images. Defaults to true. */
-  outline?: ImageState;
-  /** ImageState type specifying whether or not to add rounded corners to rendered images. Defaults to true. */
-  roundedCorners?: ImageState
+  /** Outline type specifying whether or not to add outline to rendered images. Defaults to true. */
+  outline?: Outline;
+  /** roundedCorners type specifying whether or not to add rounded corners to rendered images. Defaults to true. */
+  roundedCorners?: RoundedCorners;
 }
 
 /**

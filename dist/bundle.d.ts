@@ -528,12 +528,21 @@ export interface StringDateTimeSchema extends BaseStringSchema<ValueHintType.Dat
 	timeFormat?: string;
 }
 /**
- * Enabling options that can be used with a {@link ImageSchema}.
+ * State of outline on images that can be used with a {@link ImageSchema}.
  */
-export declare enum ImageState {
-	/** Image styling is disabled. */
+export declare enum Outline {
+	/** Image outline is disabled. */
 	Disabled = "disabled",
-	/** Image styling is applied. */
+	/** Image outline is applied. */
+	Default = "default"
+}
+/**
+ * State of rounded corners on images that can be used with a {@link ImageSchema}.
+ */
+export declare enum RoundedCorners {
+	/** Image rounded corners are disabled. */
+	Disabled = "disabled",
+	/** Image rounded corners are applied. */
 	Default = "default"
 }
 /**
@@ -543,10 +552,10 @@ export declare enum ImageState {
 export interface ImageSchema extends BaseStringSchema<ValueHintType.ImageReference | ValueHintType.ImageAttachment> {
 	/** Instructs Coda to render this value as an Image. */
 	codaType: ValueHintType.ImageReference | ValueHintType.ImageAttachment;
-	/** ImageState type specifying whether or not to add outline to rendered images. Defaults to true. */
-	outline?: ImageState;
-	/** ImageState type specifying whether or not to add rounded corners to rendered images. Defaults to true. */
-	roundedCorners?: ImageState;
+	/** Outline type specifying whether or not to add outline to rendered images. Defaults to true. */
+	outline?: Outline;
+	/** roundedCorners type specifying whether or not to add rounded corners to rendered images. Defaults to true. */
+	roundedCorners?: RoundedCorners;
 }
 /**
  * Enumeration of units supported by duration schemas. See {@link DurationSchema.maxUnit}.
