@@ -19,4 +19,4 @@ definition for that property.
 
 #### Defined in
 
-[schema.ts:732](https://github.com/coda/packs-sdk/blob/main/schema.ts#L732)
+[schema.ts:737](https://github.com/coda/packs-sdk/blob/main/schema.ts#L737)
