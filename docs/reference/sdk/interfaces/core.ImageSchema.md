@@ -1,9 +1,9 @@
 ---
-title: "StringImageSchema"
+title: "ImageSchema"
 ---
-# Interface: StringImageSchema
+# Interface: ImageSchema
 
-[core](../modules/core.md).StringImageSchema
+[core](../modules/core.md).ImageSchema
 
 A schema representing a return value or object property that is provided as a string,
 which Coda should interpret as an image.
@@ -12,7 +12,7 @@ which Coda should interpret as an image.
 
 - `BaseStringSchema`<[`ImageReference`](../enums/core.ValueHintType.md#imagereference) \| [`ImageAttachment`](../enums/core.ValueHintType.md#imageattachment)\>
 
-  ↳ **`StringImageSchema`**
+  ↳ **`ImageSchema`**
 
 ## Properties
 
@@ -20,7 +20,7 @@ which Coda should interpret as an image.
 
 • **codaType**: [`ImageReference`](../enums/core.ValueHintType.md#imagereference) \| [`ImageAttachment`](../enums/core.ValueHintType.md#imageattachment)
 
-Instructs Coda to render this value as a Image with proper beautifulImage properties.
+Instructs Coda to render this value as an Image.
 
 #### Overrides
 
@@ -28,7 +28,7 @@ BaseStringSchema.codaType
 
 #### Defined in
 
-[schema.ts:578](https://github.com/coda/packs-sdk/blob/main/schema.ts#L578)
+[schema.ts:588](https://github.com/coda/packs-sdk/blob/main/schema.ts#L588)
 
 ___
 
@@ -53,25 +53,21 @@ ___
 
 ### outline
 
-• `Optional` **outline**: `boolean`
-
-Boolean specifying whether or not to add outline to rendered images. Defaults to true.
+• `Optional` **outline**: `ImageState`
 
 #### Defined in
 
-[schema.ts:583](https://github.com/coda/packs-sdk/blob/main/schema.ts#L583)
+[schema.ts:591](https://github.com/coda/packs-sdk/blob/main/schema.ts#L591)
 
 ___
 
-### round
+### roundedCorners
 
-• `Optional` **round**: `boolean`
-
-Boolean specifying whether or not to add rounded corners to rendered images. Defaults to true.
+• `Optional` **roundedCorners**: `ImageState`
 
 #### Defined in
 
-[schema.ts:588](https://github.com/coda/packs-sdk/blob/main/schema.ts#L588)
+[schema.ts:593](https://github.com/coda/packs-sdk/blob/main/schema.ts#L593)
 
 ___
 
@@ -87,4 +83,4 @@ BaseStringSchema.type
 
 #### Defined in
 
-[schema.ts:632](https://github.com/coda/packs-sdk/blob/main/schema.ts#L632)
+[schema.ts:637](https://github.com/coda/packs-sdk/blob/main/schema.ts#L637)

@@ -569,23 +569,28 @@ export interface StringDateTimeSchema extends BaseStringSchema<ValueHintType.Dat
 }
 
 /**
+ * Enabling options that can be used with a {@link ImageSchema}.
+ */
+ export enum ImageState {
+  // Image styling is disabled.
+  Disabled = 'disabled',
+  // Image styling is applied.
+  Default = 'default',
+ }
+
+/**
  * A schema representing a return value or object property that is provided as a string,
  * which Coda should interpret as an image.
  */
- export interface StringImageSchema extends BaseStringSchema<
+ export interface ImageSchema extends BaseStringSchema<
   ValueHintType.ImageReference | ValueHintType.ImageAttachment> {
-  /** Instructs Coda to render this value as a Image with proper beautifulImage properties. */
+  /** Instructs Coda to render this value as an Image. */
   codaType: ValueHintType.ImageReference | ValueHintType.ImageAttachment;
-  /**
-   * 
-   * Boolean specifying whether or not to add outline to rendered images. Defaults to true.
-   */
-  outline?: boolean;
-  /**
-   *
-   * Boolean specifying whether or not to add rounded corners to rendered images. Defaults to true.
-   */
-  round?: boolean;
+
+  // Boolean specifying whether or not to add outline to rendered images. Defaults to true.
+  outline?: ImageState;
+  // Boolean specifying whether or not to add rounded corners to rendered images. Defaults to true.
+  roundedCorners?: ImageState
 }
 
 /**
@@ -664,9 +669,9 @@ export type StringSchema =
   | StringDateTimeSchema
   | DurationSchema
   | EmailSchema
+  | ImageSchema
   | LinkSchema
   | StringEmbedSchema
-  | StringImageSchema
   | SimpleStringSchema;
 
 /**
