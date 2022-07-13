@@ -93,7 +93,7 @@ function fixUncopyableTypes(val, pathPrefix, postTransforms, depth = 0) {
     return { val, hasModifications: false };
 }
 function isMarshaledValue(val) {
-    return constants_2.MarshalingInjectedKeys.CodaMarshaler in val;
+    return typeof val === 'object' && constants_2.MarshalingInjectedKeys.CodaMarshaler in val;
 }
 function marshalValue(val) {
     const postTransforms = [];

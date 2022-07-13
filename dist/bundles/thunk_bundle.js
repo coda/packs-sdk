@@ -4939,7 +4939,7 @@ module.exports = (() => {
     return { val, hasModifications: false };
   }
   function isMarshaledValue(val) {
-    return "__coda_marshaler__" /* CodaMarshaler */ in val;
+    return typeof val === "object" && "__coda_marshaler__" /* CodaMarshaler */ in val;
   }
   function marshalValue(val) {
     const postTransforms = [];

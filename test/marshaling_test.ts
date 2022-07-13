@@ -146,4 +146,10 @@ describe('Marshaling', () => {
   it('toJSON override does not apply if not marshaling', () => {
     assert.isString(new Date().toJSON());
   });
+
+  it('returns an error trying to unmarshal something that was never marshaled to begin with', () => {
+    assert.throws(() => unmarshalValue(undefined), 'Not a marshaled value: undefined');
+    assert.throws(() => unmarshalValue(1), 'Not a marshaled value: 1');
+    assert.throws(() => unmarshalValue({foo: 'bar'}), 'Not a marshaled value: {"foo":"bar"}');
+  });
 });

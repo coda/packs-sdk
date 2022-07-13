@@ -109,7 +109,7 @@ function fixUncopyableTypes(
 }
 
 function isMarshaledValue(val: any): boolean {
-  return MarshalingInjectedKeys.CodaMarshaler in val;
+  return typeof val === 'object' && MarshalingInjectedKeys.CodaMarshaler in val;
 }
 
 export function marshalValue(val: any): any {
