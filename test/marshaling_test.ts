@@ -1,5 +1,6 @@
 import {MissingScopesError} from '../api';
 import {StatusCodeError} from '../api';
+import {deepCopy} from '../helpers/object_utils';
 import {inspect} from 'util';
 import ivm from 'isolated-vm';
 import {marshalValue} from '../runtime/common/marshaling';
@@ -119,9 +120,15 @@ describe('Marshaling', () => {
 
     it('works for whitelisted coda errors', () => {
       const error = new StatusCodeError(404, '', {url: 'https://coda.io', method: 'GET'}, {headers: {}, body: ''});
-      const transformedError = transformError(error);
+      const expectedOptions = deepCopy(error.options);
+      const expectedResponse = deepCopy(error.response);
+
+      const transformedError = transformError(error) as StatusCodeError;
       assertErrorsEqual(transformedError, error);
       assert.isTrue(transformedError instanceof StatusCodeError);
+      // Make sure custom fields are there.
+      assert.deepEqual(transformedError.options, expectedOptions);
+      assert.deepEqual(transformedError.response, expectedResponse);
 
       const missingScopesError = new MissingScopesError('custom message');
       const transformedMissingScopesError = transformError(missingScopesError);
