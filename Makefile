@@ -13,7 +13,8 @@ PIPENV := PYTHONPATH=${ROOTDIR} PIPENV_IGNORE_VIRTUALENVS=1 pipenv
 
 DOC_GIT_REVISION ?= main
 
-ifeq "$(GH_TOKEN)" ""
+MKDOCS_INSIDERS_VERSION="8.3.9-insiders-4.20.0"
+ifeq "$(MKDOCS_INSIDERS_TOKEN)" ""
     MKDOCS_CONFIG_FILE:=mkdocs.yml
 else
     MKDOCS_CONFIG_FILE:=mkdocs.insiders.yml
@@ -38,9 +39,9 @@ _bootstrap-node:
 .PHONY: _bootstrap-python
 _bootstrap-python:
 	${PIPENV} sync
-	if [[ -n "${GH_TOKEN}" ]]; then \
+	if [[ -n "${MKDOCS_INSIDERS_TOKEN}" ]]; then \
 		echo "Installing MkDocs Material Insiders edition..."; \
-		pipenv run pip install "git+https://${GH_TOKEN}@github.com/squidfunk/mkdocs-material-insiders.git@8.3.9-insiders-4.20.0"; \
+		pipenv run pip install "git+https://${MKDOCS_INSIDERS_TOKEN}@github.com/squidfunk/mkdocs-material-insiders.git@${MKDOCS_INSIDERS_VERSION}"; \
 	fi
 
 .PHONY: _bootstrap-python-requirements
@@ -177,7 +178,6 @@ view-docs:
 # This step generates all the documentation for the SDK using mkdocs and dumps the contents in /site
 .PHONY: build-mkdocs
 build-mkdocs:
-	echo "${MKDOCS_CONFIG_FILE}"
 	${PIPENV} run mkdocs build --strict --config-file ${MKDOCS_CONFIG_FILE}
 
 # This step uploads the documentation for the current package version.
