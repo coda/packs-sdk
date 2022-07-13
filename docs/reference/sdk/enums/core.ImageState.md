@@ -17,7 +17,7 @@ Image styling is applied.
 
 #### Defined in
 
-[schema.ts:582](https://github.com/coda/packs-sdk/blob/main/schema.ts#L582)
+[schema.ts:578](https://github.com/coda/packs-sdk/blob/main/schema.ts#L578)
 
 ___
 
@@ -29,4 +29,4 @@ Image styling is disabled.
 
 #### Defined in
 
-[schema.ts:578](https://github.com/coda/packs-sdk/blob/main/schema.ts#L578)
+[schema.ts:576](https://github.com/coda/packs-sdk/blob/main/schema.ts#L576)
