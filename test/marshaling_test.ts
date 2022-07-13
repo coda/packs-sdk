@@ -4,6 +4,8 @@ import {inspect} from 'util';
 import ivm from 'isolated-vm';
 import {marshalValue} from '../runtime/common/marshaling';
 import {unmarshalValue} from '../runtime/common/marshaling';
+import {unwrapError} from '../runtime/common/marshaling';
+import {wrapError} from '../runtime/common/marshaling';
 
 describe('Marshaling', () => {
   // The purpose of marshaling is to make sure values get into and out of isolated-vm without
@@ -13,11 +15,18 @@ describe('Marshaling', () => {
     const isolate = new ivm.Isolate({memoryLimit: 12});
     const ivmContext = isolate.createContextSync();
 
-    return ivmContext.evalClosureSync(`return $0`, [val], {arguments: {copy: true}, result: {copy: true}});
+    return ivmContext.evalClosureSync(`return $0`, [val], {
+      arguments: {copy: true},
+      result: {copy: true},
+    });
   }
 
   function transform<T>(val: T): T {
     return unmarshalValue(passThroughIsolatedVm(marshalValue(val)));
+  }
+
+  function transformError(val: Error): Error {
+    return unwrapError(new Error(passThroughIsolatedVm(wrapError(val).message)));
   }
 
   it('works for regular objects', () => {
@@ -74,6 +83,11 @@ describe('Marshaling', () => {
     const transformedError = transform([{error}])[0].error;
     assert.isTrue(transformedError instanceof Error);
     assert.equal(transformedError.message, 'test');
+
+    const typeError = new TypeError('test');
+    const transformedTypeError = transform([{typeError}])[0].typeError;
+    assert.isTrue(transformedTypeError instanceof TypeError);
+    assert.equal(transformedTypeError.message, 'test');
   });
 
   describe('Errors', () => {
@@ -92,21 +106,25 @@ describe('Marshaling', () => {
       assertErrorsEqual(transform(error), error);
     });
 
+    // We test wrapError/unwrapError with "transformError", which has stricter serialization
+    // requirements than the normal marshalValue()/unmarshalValue() functions since it needs
+    // to be encoded as a string (not just a copyable object).
+
     it('works for common system errors', () => {
       const typeError = new TypeError('test');
-      const transformedError = transform(typeError);
+      const transformedError = transformError(typeError);
       assertErrorsEqual(typeError, transformedError);
       assert.isTrue(transformedError instanceof TypeError);
     });
 
     it('works for whitelisted coda errors', () => {
       const error = new StatusCodeError(404, '', {url: 'https://coda.io', method: 'GET'}, {headers: {}, body: ''});
-      const transformedError = transform(error);
+      const transformedError = transformError(error);
       assertErrorsEqual(transformedError, error);
       assert.isTrue(transformedError instanceof StatusCodeError);
 
       const missingScopesError = new MissingScopesError('custom message');
-      const transformedMissingScopesError = transform(missingScopesError);
+      const transformedMissingScopesError = transformError(missingScopesError);
       assertErrorsEqual(transformedMissingScopesError, missingScopesError);
       assert.isTrue(transformedMissingScopesError instanceof MissingScopesError);
     });

@@ -150,12 +150,12 @@ export function wrapError(err: Error): Error {
   //     'to actually fetch from the remote API.';
   // }
 
-  return new Error(marshalValue(err));
+  return new Error(JSON.stringify(marshalValue(err)));
 }
 
 export function unwrapError(err: Error): Error {
   try {
-    const unmarshaledValue = unmarshalValue(err.message);
+    const unmarshaledValue = unmarshalValue(JSON.parse(err.message));
     if (unmarshaledValue instanceof Error) {
       return unmarshaledValue;
     }
