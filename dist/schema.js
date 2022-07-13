@@ -295,13 +295,9 @@ var LinkDisplayType;
  */
 var ImageState;
 (function (ImageState) {
-    /**
-    *  Image styling is disabled.
-    */
+    /** Image styling is disabled. */
     ImageState["Disabled"] = "disabled";
-    /**
-     *  Image styling is applied.
-     */
+    /** Image styling is applied. */
     ImageState["Default"] = "default";
 })(ImageState = exports.ImageState || (exports.ImageState = {}));
 /**

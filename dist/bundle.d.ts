@@ -531,13 +531,9 @@ export interface StringDateTimeSchema extends BaseStringSchema<ValueHintType.Dat
  * Enabling options that can be used with a {@link ImageSchema}.
  */
 export declare enum ImageState {
-	/**
-	*  Image styling is disabled.
-	*/
+	/** Image styling is disabled. */
 	Disabled = "disabled",
-	/**
-	 *  Image styling is applied.
-	 */
+	/** Image styling is applied. */
 	Default = "default"
 }
 /**
@@ -545,17 +541,11 @@ export declare enum ImageState {
  * which Coda should interpret as an image.
  */
 export interface ImageSchema extends BaseStringSchema<ValueHintType.ImageReference | ValueHintType.ImageAttachment> {
-	/**
-	 *  Instructs Coda to render this value as an Image.
-	 */
+	/** Instructs Coda to render this value as an Image. */
 	codaType: ValueHintType.ImageReference | ValueHintType.ImageAttachment;
-	/**
-	 *  Boolean specifying whether or not to add outline to rendered images. Defaults to true.
-	 */
+	/** ImageState type specifying whether or not to add outline to rendered images. Defaults to true. */
 	outline?: ImageState;
-	/**
-	 *  Boolean specifying whether or not to add rounded corners to rendered images. Defaults to true.
-	 */
+	/** ImageState type specifying whether or not to add rounded corners to rendered images. Defaults to true. */
 	roundedCorners?: ImageState;
 }
 /**
