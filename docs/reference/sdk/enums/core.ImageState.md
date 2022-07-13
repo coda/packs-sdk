@@ -13,9 +13,11 @@ Enabling options that can be used with a [ImageSchema](../interfaces/core.ImageS
 
 • **Default** = ``"default"``
 
+Image styling is applied.
+
 #### Defined in
 
-[schema.ts:578](https://github.com/coda/packs-sdk/blob/main/schema.ts#L578)
+[schema.ts:582](https://github.com/coda/packs-sdk/blob/main/schema.ts#L582)
 
 ___
 
@@ -23,6 +25,8 @@ ___
 
 • **Disabled** = ``"disabled"``
 
+Image styling is disabled.
+
 #### Defined in
 
-[schema.ts:576](https://github.com/coda/packs-sdk/blob/main/schema.ts#L576)
+[schema.ts:578](https://github.com/coda/packs-sdk/blob/main/schema.ts#L578)
