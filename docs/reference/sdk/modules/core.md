@@ -24,6 +24,7 @@ import * as coda from "@codahq/packs-sdk";
 - [CurrencyFormat](../enums/core.CurrencyFormat.md)
 - [DurationUnit](../enums/core.DurationUnit.md)
 - [EmailDisplayType](../enums/core.EmailDisplayType.md)
+- [ImageState](../enums/core.ImageState.md)
 - [LinkDisplayType](../enums/core.LinkDisplayType.md)
 - [NetworkConnection](../enums/core.NetworkConnection.md)
 - [ParameterType](../enums/core.ParameterType.md)

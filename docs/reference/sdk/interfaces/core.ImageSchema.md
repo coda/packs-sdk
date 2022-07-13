@@ -53,7 +53,7 @@ ___
 
 ### outline
 
-• `Optional` **outline**: `ImageState`
+• `Optional` **outline**: [`ImageState`](../enums/core.ImageState.md)
 
 #### Defined in
 
@@ -63,7 +63,7 @@ ___
 
 ### roundedCorners
 
-• `Optional` **roundedCorners**: `ImageState`
+• `Optional` **roundedCorners**: [`ImageState`](../enums/core.ImageState.md)
 
 #### Defined in
 
