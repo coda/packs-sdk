@@ -13,6 +13,11 @@ PIPENV := PYTHONPATH=${ROOTDIR} PIPENV_IGNORE_VIRTUALENVS=1 pipenv
 
 DOC_GIT_REVISION ?= main
 
+ifeq "$(GH_TOKEN)" ""
+    MKDOCS_CONFIG_FILE:=mkdocs.yml
+else
+    MKDOCS_CONFIG_FILE:=mkdocs.insiders.yml
+endif
 
 # Aliases
 bs: bootstrap
@@ -33,6 +38,10 @@ _bootstrap-node:
 .PHONY: _bootstrap-python
 _bootstrap-python:
 	${PIPENV} sync
+	if [[ -n "${GH_TOKEN}" ]]; then \
+		echo "Installing MkDocs Material Insiders edition..."; \
+		pipenv run pip install "git+https://${GH_TOKEN}@github.com/squidfunk/mkdocs-material-insiders.git@8.3.9-insiders-4.20.0"; \
+	fi
 
 .PHONY: _bootstrap-python-requirements
 _bootstrap-python-requirements:
@@ -160,7 +169,7 @@ docs: typedoc generated-documentation build-mkdocs
 
 .PHONY: view-docs
 view-docs:
-	PYTHONPATH=${ROOTDIR} PIPENV_IGNORE_VIRTUALENVS=1 MK_DOCS_SITE_URL=http://localhost:8000/packs-sdk expect -c 'set timeout 60; spawn pipenv run mkdocs serve; expect "Serving on"; exec open "http://localhost:8000"; interact'
+	PYTHONPATH=${ROOTDIR} PIPENV_IGNORE_VIRTUALENVS=1 MK_DOCS_SITE_URL=http://localhost:8000/packs-sdk expect -c 'set timeout 60; spawn pipenv run mkdocs serve --config-file "${MKDOCS_CONFIG_FILE}"; expect "Serving on"; exec open "http://localhost:8000"; interact'
 
 ###############################################################################
 ### Deployment of documentation ###
@@ -168,7 +177,8 @@ view-docs:
 # This step generates all the documentation for the SDK using mkdocs and dumps the contents in /site
 .PHONY: build-mkdocs
 build-mkdocs:
-	${PIPENV} run mkdocs build --strict
+	echo "${MKDOCS_CONFIG_FILE}"
+	${PIPENV} run mkdocs build --strict --config-file ${MKDOCS_CONFIG_FILE}
 
 # This step uploads the documentation for the current package version.
 # TODO(spencer): probably need some user handling to make sure there is an update in package.json if the documentation has been updated.
@@ -193,17 +203,6 @@ publish-docs-staging:
 .PHONY: publish-docs-prod
 publish-docs-prod:
 	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/scripts/documentation_publisher.ts push prod ${FLAGS})
-
-.PHONY: publish-docs-gh-pages
-publish-docs-gh-pages:
-	if [ -z ${shell git status -uno | grep "Your branch is up to date with 'origin/main'"} ]; then \
-		echo "The documentation can only be published from main at head."; \
-		exit 1; \
-	fi
-	# Build the docs and push them to the gh-pages branch.
-	# See: https://www.mkdocs.org/user-guide/deploying-your-docs/#github-pages
-	# Including the tag "[ci skip]" in the commit message to prevent CircleCI from building the branch.
-	MK_DOCS_SITE_URL=https://coda.github.io/packs-sdk/ ${PIPENV} run mkdocs gh-deploy --message "Deployed {sha} with MkDocs version: {version} [ci skip]"
 
 ###############################################################################
 

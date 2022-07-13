@@ -1,0 +1,4 @@
+INHERIT: mkdocs.yml
+plugins:
+  # Generates social preview cards.
+  social: {}
