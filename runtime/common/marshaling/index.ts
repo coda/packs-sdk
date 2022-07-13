@@ -1,3 +1,5 @@
+import {CodaMarshalerType} from './constants';
+import {MarshalingInjectedKeys} from './constants';
 import {marshalError} from './marshal_errors';
 import {unmarshalError} from './marshal_errors';
 
@@ -106,12 +108,17 @@ function fixUncopyableTypes(
   return {val, hasModifications: false};
 }
 
+function isMarshaledValue(val: any): boolean {
+  return MarshalingInjectedKeys.CodaMarshaler in val;
+}
+
 export function marshalValue(val: any): any {
   const postTransforms: object[] = [];
   const {val: encodedVal} = fixUncopyableTypes(val, [], postTransforms, 0);
   const result = {
     encoded: encodedVal,
     postTransforms,
+    [MarshalingInjectedKeys.CodaMarshaler]: CodaMarshalerType.Object,
   };
   return result;
 }
@@ -126,6 +133,10 @@ function applyTransform(input: any, path: string[], fn: (encoded: any) => any): 
 }
 
 export function unmarshalValue(marshaledValue: any): any {
+  if (!isMarshaledValue(marshaledValue)) {
+    throw Error(`Not a marshaled value: ${JSON.stringify(marshaledValue)}`);
+  }
+
   let result = marshaledValue.encoded;
   for (const transform of marshaledValue.postTransforms) {
     if (transform.type === 'Buffer') {

@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.unwrapError = exports.wrapError = exports.unmarshalValue = exports.marshalValue = void 0;
+const constants_1 = require("./constants");
+const constants_2 = require("./constants");
 const marshal_errors_1 = require("./marshal_errors");
 const marshal_errors_2 = require("./marshal_errors");
 // We rely on the javascript structuredClone() algorithm to copy arguments and results into
@@ -90,12 +92,16 @@ function fixUncopyableTypes(val, pathPrefix, postTransforms, depth = 0) {
     }
     return { val, hasModifications: false };
 }
+function isMarshaledValue(val) {
+    return constants_2.MarshalingInjectedKeys.CodaMarshaler in val;
+}
 function marshalValue(val) {
     const postTransforms = [];
     const { val: encodedVal } = fixUncopyableTypes(val, [], postTransforms, 0);
     const result = {
         encoded: encodedVal,
         postTransforms,
+        [constants_2.MarshalingInjectedKeys.CodaMarshaler]: constants_1.CodaMarshalerType.Object,
     };
     return result;
 }
@@ -110,6 +116,9 @@ function applyTransform(input, path, fn) {
     }
 }
 function unmarshalValue(marshaledValue) {
+    if (!isMarshaledValue(marshaledValue)) {
+        throw Error(`Not a marshaled value: ${JSON.stringify(marshaledValue)}`);
+    }
     let result = marshaledValue.encoded;
     for (const transform of marshaledValue.postTransforms) {
         if (transform.type === 'Buffer') {

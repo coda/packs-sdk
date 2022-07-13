@@ -4,6 +4,7 @@ import {newMockSyncExecutionContext} from '../testing/mocks';
 import path from 'path';
 import {translateErrorStackFromVM} from '../runtime/common/source_map';
 
+// eslint-disable-next-line ban/ban
 describe('compile', () => {
   it('works with source map', async () => {
     const {bundlePath, bundleSourceMapPath} = await compilePackBundle({
@@ -26,7 +27,7 @@ describe('compile', () => {
       });
 
       /* eslint-disable max-len */
-      // the error stack should be prorerly formatted. for example,
+      // the error stack should be properly formatted. for example,
       //
       // at throwError (/Users/huayang/code/packs-sdk/test/packs/fake.ts:25:9)    at Object.execute (/Users/huayang/code/packs-sdk/test/packs/fake.ts:58:9)
       // at executeFormula (/var/folders/n1/7qfgvcqn04j0py98bvnsnd500000gp/T/coda-packs-2e30dbce-fe91-4700-8ee7-39ef3dfafc46peyD7P/bundle.js:7012:28)

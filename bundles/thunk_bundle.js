@@ -4799,13 +4799,11 @@ module.exports = (() => {
   // runtime/common/marshaling/index.ts
   init_buffer_shim();
 
-  // runtime/common/marshaling/marshal_errors.ts
-  init_buffer_shim();
-
   // runtime/common/marshaling/constants.ts
   init_buffer_shim();
 
   // runtime/common/marshaling/marshal_errors.ts
+  init_buffer_shim();
   var recognizableSystemErrorClasses = [
     Error,
     EvalError,
@@ -4940,12 +4938,16 @@ module.exports = (() => {
     }
     return { val, hasModifications: false };
   }
+  function isMarshaledValue(val) {
+    return "__coda_marshaler__" /* CodaMarshaler */ in val;
+  }
   function marshalValue(val) {
     const postTransforms = [];
     const { val: encodedVal } = fixUncopyableTypes(val, [], postTransforms, 0);
     const result = {
       encoded: encodedVal,
-      postTransforms
+      postTransforms,
+      ["__coda_marshaler__" /* CodaMarshaler */]: "Object" /* Object */
     };
     return result;
   }
@@ -4958,6 +4960,9 @@ module.exports = (() => {
     }
   }
   function unmarshalValue(marshaledValue) {
+    if (!isMarshaledValue(marshaledValue)) {
+      throw Error(`Not a marshaled value: ${JSON.stringify(marshaledValue)}`);
+    }
     let result = marshaledValue.encoded;
     for (const transform of marshaledValue.postTransforms) {
       if (transform.type === "Buffer") {
