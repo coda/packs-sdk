@@ -42,6 +42,14 @@ li.no {
   list-style-type: "❌";
 }
 
+div.yes pre code {
+  background-color: #f1f9f1;
+}
+
+div.no pre code {
+  background-color: #f9f1f1;
+}
+
 /* Add an icon next to external links in the nav. */
 .md-sidebar a[href]:where(
   [href^="https://"],
