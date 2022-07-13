@@ -527,7 +527,10 @@ export interface StringDateTimeSchema extends BaseStringSchema<ValueHintType.Dat
 	 */
 	timeFormat?: string;
 }
-declare enum ImageState {
+/**
+ * Enabling options that can be used with a {@link ImageSchema}.
+ */
+export declare enum ImageState {
 	Disabled = "disabled",
 	Default = "default"
 }
