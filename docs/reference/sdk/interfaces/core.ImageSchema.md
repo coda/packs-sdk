@@ -28,7 +28,7 @@ BaseStringSchema.codaType
 
 #### Defined in
 
-[schema.ts:588](https://github.com/coda/packs-sdk/blob/main/schema.ts#L588)
+[schema.ts:594](https://github.com/coda/packs-sdk/blob/main/schema.ts#L594)
 
 ___
 
@@ -55,9 +55,11 @@ ___
 
 • `Optional` **outline**: [`ImageState`](../enums/core.ImageState.md)
 
+Boolean specifying whether or not to add outline to rendered images. Defaults to true.
+
 #### Defined in
 
-[schema.ts:591](https://github.com/coda/packs-sdk/blob/main/schema.ts#L591)
+[schema.ts:598](https://github.com/coda/packs-sdk/blob/main/schema.ts#L598)
 
 ___
 
@@ -65,9 +67,11 @@ ___
 
 • `Optional` **roundedCorners**: [`ImageState`](../enums/core.ImageState.md)
 
+Boolean specifying whether or not to add rounded corners to rendered images. Defaults to true.
+
 #### Defined in
 
-[schema.ts:593](https://github.com/coda/packs-sdk/blob/main/schema.ts#L593)
+[schema.ts:602](https://github.com/coda/packs-sdk/blob/main/schema.ts#L602)
 
 ___
 
@@ -83,4 +87,4 @@ BaseStringSchema.type
 
 #### Defined in
 
-[schema.ts:637](https://github.com/coda/packs-sdk/blob/main/schema.ts#L637)
+[schema.ts:646](https://github.com/coda/packs-sdk/blob/main/schema.ts#L646)
