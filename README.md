@@ -8,16 +8,6 @@ Coda Packs allow you to extend Coda by building new building blocks that can ope
 
 To learn more, see [our SDK documentation](https://coda.io/packs/build).
 
-## Contribution Guide
+## Contributing
 
-### Updating docs, site, and generated code
-
-Run `make build`
-
-### Publishing Changes Process
-
-Adjustments to the `CHANGELOG.md` file should be marked under `### Unreleased` until a release commit is made that updates `package.json` and `CHANGELOG.md` file with a new, later version, and publishes the new version to NPM using `make release`.
-
-#### CHANGELOG
-
-Our `CHANGELOG.md` follows the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) standards, where there is a “Unreleased” section at the top for any unreleased changes. Upon release, it is named according to a semantic versioning system and dated.
+See our [Contributing guide](CONTRIBUTING.md) for more information on how to contribute to this project.
