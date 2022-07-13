@@ -9,7 +9,7 @@ import type {Formula} from '../api';
 import type {GenericSyncTable} from '../api';
 import type {ObjectSchemaDefinition} from '../schema';
 import type {PackFormulaMetadata} from '../api';
-import type {PackMetadataValidationError} from '../testing/upload_validation';
+import {PackMetadataValidationError} from '../testing/upload_validation';
 import type {PackVersionMetadata} from '../compiled_types';
 import type {ParamDefs} from '../api_types';
 import {ParameterType} from '../api_types';
@@ -45,14 +45,22 @@ import {validateVariousAuthenticationMetadata} from '../testing/upload_validatio
 
 describe('Pack metadata Validation', () => {
   async function validateJson(obj: Record<string, any>, sdkVersion?: string) {
+    try {
+      return await doValidateJson(obj, sdkVersion);
+    } catch (err) {
+      const message = err instanceof PackMetadataValidationError ? JSON.stringify(err.validationErrors) : err;
+      assert.fail(`Expected validation to succeed but failed with error ${message}`);
+    }
+  }
+
+  async function doValidateJson(obj: Record<string, any>, sdkVersion?: string) {
     const packageJson = await import('' + '../package.json');
     const codaPacksSDKVersion = packageJson.version as string;
-
     return validatePackVersionMetadata(obj, sdkVersion === null ? codaPacksSDKVersion : sdkVersion);
   }
 
   async function validateJsonAndAssertFails(obj: Record<string, any>, sdkVersion?: string) {
-    const err = await testHelper.willBeRejectedWith(validateJson(obj, sdkVersion), /Pack metadata failed validation/);
+    const err = await testHelper.willBeRejectedWith(doValidateJson(obj, sdkVersion), /Pack metadata failed validation/);
     return err as PackMetadataValidationError;
   }
 
