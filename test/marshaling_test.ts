@@ -1,12 +1,23 @@
 import {MissingScopesError} from '../api';
 import {StatusCodeError} from '../api';
 import {inspect} from 'util';
+import ivm from 'isolated-vm';
 import {marshalValue} from '../runtime/common/marshaling';
 import {unmarshalValue} from '../runtime/common/marshaling';
 
 describe('Marshaling', () => {
+  // The purpose of marshaling is to make sure values get into and out of isolated-vm without
+  // raising errors or getting garbled, so during the tests we'll actually pass values into
+  // and out of isolated-vm to ensure that works correctly.
+  function passThroughIsolatedVm<T>(val: T): T {
+    const isolate = new ivm.Isolate({memoryLimit: 12});
+    const ivmContext = isolate.createContextSync();
+
+    return ivmContext.evalClosureSync(`return $0`, [val], {arguments: {copy: true}, result: {copy: true}});
+  }
+
   function transform<T>(val: T): T {
-    return unmarshalValue(marshalValue(val));
+    return unmarshalValue(passThroughIsolatedVm(marshalValue(val)));
   }
 
   it('works for regular objects', () => {
@@ -27,12 +38,20 @@ describe('Marshaling', () => {
     assert.deepEqual(transform(NaN), NaN);
     assert.deepEqual(transform(Infinity), Infinity);
     assert.deepEqual(transform(new Date(123)), new Date(123));
+    assert.deepEqual(transform(/123/), /123/);
+    assert.deepEqual(transform(new Set([1, 2])), new Set([1, 2]));
+    assert.deepEqual(transform(new Map([['a', 2]])), new Map([['a', 2]]));
+    assert.deepEqual(transform(Uint8Array.from([1, 2, 3])), Uint8Array.from([1, 2, 3]));
+    assert.deepEqual(transform(new ArrayBuffer(10)), new ArrayBuffer(10));
 
-    // the following doesn't work yet.
-    // assert.deepEqual(transform(/123/), /123/);
-    // assert.deepEqual(transform(Uint8Array.from([1, 2, 3])), Uint8Array.from([1, 2, 3]));
-    // assert.deepEqual(transform(new Set([1, 2])), new Set([1, 2]));
-    // assert.deepEqual(transform(new Map([['a', 2]])), new Map([['a', 2]]));
+    class SomeClass {
+      message: string;
+      constructor(message: string) {
+        this.message = message;
+      }
+    }
+    assert.deepEqual(transform(new (class {})()), {});
+    assert.deepEqual(transform(new SomeClass('hi')), {message: 'hi'});
   });
 
   it('works for a variety of compound objects', () => {
@@ -40,20 +59,19 @@ describe('Marshaling', () => {
       [null, undefined, 0, false, NaN, Infinity, {undefined: 1, null: undefined}],
       {Array: [], Boolean: false, new: {_: null}, function: undefined, NaN: 1},
       [{undefined: [{false: [{true: [{null: 0}]}]}]}],
+      ['foo', {1: Buffer.from('bar')}, [[Buffer.from('baz')]]],
     ];
     testObjects.forEach((x: any) => assert.deepEqual(transform(x), x));
   });
 
   it('does not throw error for unhandled objects', () => {
-    transform(() => {});
-    transform(new (class {})());
-    transform(new ArrayBuffer(10));
-    void transform(new Promise(resolve => resolve(1)));
+    assert.throws(() => transform(() => {}), '() => { } could not be cloned.');
+    assert.throws(() => void transform(new Promise(resolve => resolve(1))), '#<Promise> could not be cloned.');
   });
 
   it('works for nested objects', () => {
     const error = new Error('test');
-    const transformedError = transform({error}).error;
+    const transformedError = transform([{error}])[0].error;
     assert.isTrue(transformedError instanceof Error);
     assert.equal(transformedError.message, 'test');
   });

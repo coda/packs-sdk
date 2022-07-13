@@ -1,89 +1,128 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.unwrapError = exports.wrapError = exports.unmarshalValue = exports.marshalValue = void 0;
-const marshal_buffer_1 = require("./marshal_buffer");
-const marshal_dates_1 = require("./marshal_dates");
 const marshal_errors_1 = require("./marshal_errors");
-const marshal_numbers_1 = require("./marshal_numbers");
-const marshal_buffer_2 = require("./marshal_buffer");
-const marshal_dates_2 = require("./marshal_dates");
 const marshal_errors_2 = require("./marshal_errors");
-const marshal_numbers_2 = require("./marshal_numbers");
-// JSON has no native way to represent `undefined`.
-const HACK_UNDEFINED_JSON_VALUE = '__CODA_UNDEFINED__';
+// We rely on the javascript structuredClone() algorithm to copy arguments and results into
+// and out of isolated-vm method calls. There are a few types we want to support that aren't
+// natively supported by structuredClone();
+// - Simple Error types
+// - Buffer
+//
+// We handle these types by having marshalValue() transform them into a copyable representation,
+// and then the marshaled format looks like this:
+//
+// {
+//   encoded: {'obj': [{'bufferField': <base64-encoded buffer>}], 'errorField': <encoded error>},
+//   postTransforms: [
+//     {type: "Buffer", path: ['obj', '0', 'bufferField']},
+//     {type: "Error", path: ['errorField']}
+//   ]
+// }
+//
+// When we pass these objects into or out of isolated-vm we also need to set "copy: true" to enable
+// the structuredClone() algorithm.
 const MaxTraverseDepth = 100;
-const customMarshalers = [marshal_errors_1.marshalError, marshal_buffer_1.marshalBuffer, marshal_numbers_1.marshalNumber, marshal_dates_1.marshalDate];
-const customUnmarshalers = [marshal_errors_2.unmarshalError, marshal_buffer_2.unmarshalBuffer, marshal_numbers_2.unmarshalNumber, marshal_dates_2.unmarshalDate];
-function serialize(val) {
-    for (const marshaler of customMarshalers) {
-        const result = marshaler(val);
-        if (result !== undefined) {
-            return result;
-        }
-    }
-    return val;
-}
-function deserialize(_, val) {
-    if (val) {
-        for (const unmarshaler of customUnmarshalers) {
-            const result = unmarshaler(val);
-            if (result !== undefined) {
-                return result;
-            }
-        }
-    }
-    return val;
-}
-function processValue(val, depth = 0) {
+// pathPrefix can be temporarily modified, but needs to be restored to its original value
+// before returning.
+//
+// "hasModifications" is to avoid trying to copy objects that don't need to be copied.
+// Only objects containing a buffer or an error should need to be copied.
+function fixUncopyableTypes(val, pathPrefix, postTransforms, depth = 0) {
+    var _a;
     if (depth >= MaxTraverseDepth) {
         // this is either a circular reference or a super nested value that we mostly likely
         // don't care about marshalling.
-        return val;
+        return { val, hasModifications: false };
     }
-    if (val === undefined) {
-        return HACK_UNDEFINED_JSON_VALUE;
+    if (!val) {
+        return { val, hasModifications: false };
     }
-    if (val === null) {
-        return val;
+    const maybeError = (0, marshal_errors_1.marshalError)(val);
+    if (maybeError) {
+        postTransforms.push({
+            type: 'Error',
+            path: [...pathPrefix],
+        });
+        return { val: maybeError, hasModifications: true };
+    }
+    if (val instanceof Buffer || ((_a = global.Buffer) === null || _a === void 0 ? void 0 : _a.isBuffer(val))) {
+        // Theoretically it should be possible to pass an array buffer
+        // through structured copy with some transfer options, but it's
+        // simpler to just encode it as a string.
+        postTransforms.push({
+            type: 'Buffer',
+            path: [...pathPrefix],
+        });
+        return { val: val.toString('base64'), hasModifications: true };
     }
     if (Array.isArray(val)) {
-        return val.map(item => processValue(item, depth + 1));
-    }
-    const serializedValue = serialize(val);
-    if (typeof serializedValue === 'object') {
-        let objectValue = serializedValue;
-        if ('toJSON' in serializedValue && typeof serializedValue.toJSON === 'function') {
-            objectValue = serializedValue.toJSON();
+        const maybeModifiedArray = [];
+        let someItemHadModifications = false;
+        val.forEach((item, index) => {
+            pathPrefix.push(index.toString());
+            const { val: itemVal, hasModifications } = fixUncopyableTypes(item, pathPrefix, postTransforms, depth + 1);
+            if (hasModifications) {
+                someItemHadModifications = true;
+            }
+            maybeModifiedArray.push(itemVal);
+            pathPrefix.pop();
+        });
+        if (someItemHadModifications) {
+            return { val: maybeModifiedArray, hasModifications: true };
         }
-        // if val has a constructor that isn't recognized by customMarshalers, it will be
-        // converted into a plain object.
-        const processedValue = {};
-        for (const key of Object.getOwnPropertyNames(objectValue)) {
-            processedValue[key] = processValue(objectValue[key], depth + 1);
-        }
-        return processedValue;
     }
-    return serializedValue;
+    if (typeof val === 'object') {
+        const maybeModifiedObject = {};
+        let hadModifications = false;
+        for (const key of Object.getOwnPropertyNames(val)) {
+            pathPrefix.push(key);
+            const { val: objVal, hasModifications: subValHasModifications } = fixUncopyableTypes(val[key], pathPrefix, postTransforms, depth + 1);
+            maybeModifiedObject[key] = objVal;
+            pathPrefix.pop();
+            if (subValHasModifications) {
+                hadModifications = true;
+            }
+        }
+        if (hadModifications) {
+            return { val: maybeModifiedObject, hasModifications: true };
+        }
+    }
+    return { val, hasModifications: false };
 }
 function marshalValue(val) {
-    // Instead of passing a replacer to `JSON.stringify`, we chose to preprocess the value before
-    // passing it to `JSON.stringify`. The reason is that `JSON.stringify` may call the object toJSON
-    // method before calling the replacer. In many cases, that means the replacer can't tell if the
-    // input has been processed by toJSON or not. For example, Date.prototype.toJSON simply returns
-    // a date string. The replacer can't identify if the initial value is a Date or a date string.
-    //
-    // processValue is trying to mimic the object processing of JSON but the behavior may not be
-    // identical. It will only serve the purpose of our internal marshaling use case.
-    return JSON.stringify(processValue(val));
+    const postTransforms = [];
+    const { val: encodedVal } = fixUncopyableTypes(val, [], postTransforms, 0);
+    const result = {
+        encoded: encodedVal,
+        postTransforms,
+    };
+    return result;
 }
 exports.marshalValue = marshalValue;
-function unmarshalValue(marshaledValue) {
-    if (marshaledValue === undefined) {
-        return marshaledValue;
+function applyTransform(input, path, fn) {
+    if (path.length === 0) {
+        return fn(input);
     }
-    const parsed = JSON.parse(marshaledValue, deserialize);
-    // JSON parsing can't populate `undefined` in deserialize b/c it's not a valid JSON value, so we make a 2nd pass.
-    return reviveUndefinedValues(parsed);
+    else {
+        input[path[0]] = applyTransform(input[path[0]], path.slice(1), fn);
+        return input;
+    }
+}
+function unmarshalValue(marshaledValue) {
+    let result = marshaledValue.encoded;
+    for (const transform of marshaledValue.postTransforms) {
+        if (transform.type === 'Buffer') {
+            result = applyTransform(result, transform.path, (raw) => Buffer.from(raw, 'base64'));
+        }
+        else if (transform.type === 'Error') {
+            result = applyTransform(result, transform.path, (raw) => (0, marshal_errors_2.unmarshalError)(raw));
+        }
+        else {
+            throw new Error(`Not a valid type to unmarshal: ${transform.type}`);
+        }
+    }
+    return result;
 }
 exports.unmarshalValue = unmarshalValue;
 function wrapError(err) {
@@ -111,22 +150,3 @@ function unwrapError(err) {
     }
 }
 exports.unwrapError = unwrapError;
-// Recursively traverses objects/arrays
-function reviveUndefinedValues(val) {
-    // Check null first b/c typeof null === 'object'
-    if (val === null) {
-        return val;
-    }
-    if (val === HACK_UNDEFINED_JSON_VALUE) {
-        return undefined;
-    }
-    if (Array.isArray(val)) {
-        return val.map(x => reviveUndefinedValues(x));
-    }
-    if (typeof val === 'object') {
-        for (const key of Object.getOwnPropertyNames(val)) {
-            val[key] = reviveUndefinedValues(val[key]);
-        }
-    }
-    return val;
-}

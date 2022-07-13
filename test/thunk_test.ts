@@ -48,9 +48,9 @@ describe('Thunk', () => {
     assert.isTrue(result !== 'Object');
   });
 
-  // TODO(dweitzman): Fix this bug. See o/bug/23967
-  it('marshaling buffers uses too much memory', async () => {
-    const isolate = new ivm.Isolate({memoryLimit: 128});
+  // Regression test for o/bug/23967
+  it('marshaling buffers uses a reasonable amount memory', async () => {
+    const isolate = new ivm.Isolate({memoryLimit: 30});
 
     // context is like a container in ivm concept.
     const ivmContext = await isolate.createContext();
@@ -67,7 +67,7 @@ describe('Thunk', () => {
       thunk.setUpBufferForTest();
 
       // Allocate 4mb buffer
-      const buffer = Buffer.alloc(1024*1024);
+      const buffer = Buffer.alloc(1024*1024*4);
 
       for (let i = 0; i < buffer.length; i++) {
         buffer.writeInt8(i % 8, i);
@@ -83,6 +83,6 @@ describe('Thunk', () => {
     const endingHeapSize = (await isolate.getHeapStatistics()).total_heap_size;
     // It currently takes over 50mb of memory to allocate, marshal, and unmarshal
     // a 1mb Buffer.
-    assert.operator(endingHeapSize - startingHeapSize, '>', 1024 * 1024 * 50);
+    assert.operator(endingHeapSize - startingHeapSize, '<', 1024 * 1024 * 8);
   });
 });
