@@ -7,6 +7,8 @@ import {CurrencyFormat} from '..';
 import {DurationUnit} from '..';
 import type {Formula} from '../api';
 import type {GenericSyncTable} from '../api';
+import {ImageCornerStyle} from '../schema';
+import {ImageOutline} from '../schema';
 import type {ObjectSchemaDefinition} from '../schema';
 import type {PackFormulaMetadata} from '../api';
 import {PackMetadataValidationError} from '../testing/upload_validation';
@@ -1857,6 +1859,41 @@ describe('Pack metadata Validation', () => {
         assert.deepEqual(err.validationErrors, [
           {message: 'Could not find any valid schema for this value.', path: 'formulas[0].schema.properties.Name'},
         ]);
+      });
+
+      it('image attachment, default properties', async () => {
+        const metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          properties: {
+            name: {type: ValueType.String, codaType: ValueHintType.ImageAttachment},
+          },
+        });
+        await validateJson(metadata);
+      });
+
+      it('image reference, default properties', async () => {
+        const metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          properties: {
+            name: {type: ValueType.String, codaType: ValueHintType.ImageReference},
+          },
+        });
+        await validateJson(metadata);
+      });
+
+      it('image attachment, custom properties', async () => {
+        const metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          properties: {
+            name: {
+              type: ValueType.String,
+              codaType: ValueHintType.ImageAttachment,
+              imageOutline: ImageOutline.Solid,
+              imageCornerStyle: ImageCornerStyle.Rounded,
+            },
+          },
+        });
+        await validateJson(metadata);
       });
     });
 
