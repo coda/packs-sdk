@@ -4971,11 +4971,11 @@ module.exports = (() => {
     return result;
   }
   function wrapError(err) {
-    return new Error(marshalValue(err));
+    return new Error(JSON.stringify(marshalValue(err)));
   }
   function unwrapError(err) {
     try {
-      const unmarshaledValue = unmarshalValue(err.message);
+      const unmarshaledValue = unmarshalValue(JSON.parse(err.message));
       if (unmarshaledValue instanceof Error) {
         return unmarshaledValue;
       }

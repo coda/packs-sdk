@@ -134,12 +134,12 @@ function wrapError(err) {
     //     'add the --fetch flag ' +
     //     'to actually fetch from the remote API.';
     // }
-    return new Error(marshalValue(err));
+    return new Error(JSON.stringify(marshalValue(err)));
 }
 exports.wrapError = wrapError;
 function unwrapError(err) {
     try {
-        const unmarshaledValue = unmarshalValue(err.message);
+        const unmarshaledValue = unmarshalValue(JSON.parse(err.message));
         if (unmarshaledValue instanceof Error) {
             return unmarshaledValue;
         }
