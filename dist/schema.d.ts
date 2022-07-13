@@ -501,20 +501,20 @@ export interface StringDateTimeSchema extends BaseStringSchema<ValueHintType.Dat
 /**
  * State of outline on images that can be used with a {@link ImageSchema}.
  */
-export declare enum Outline {
-    /** Image outline is disabled. */
+export declare enum ImageOutline {
+    /** Image is rendered without outline. */
     Disabled = "disabled",
-    /** Image outline is applied. */
-    Default = "default"
+    /** Image is rendered with outline. */
+    Solid = "solid"
 }
 /**
- * State of rounded corners on images that can be used with a {@link ImageSchema}.
+ * State of corners on images that can be used with a {@link ImageSchema}.
  */
-export declare enum RoundedCorners {
-    /** Image rounded corners are disabled. */
-    Disabled = "disabled",
-    /** Image rounded corners are applied. */
-    Default = "default"
+export declare enum ImageCornerStyle {
+    /** Image is rendered with rounded corners. */
+    Rounded = "rounded",
+    /** Image is rendered with square corners. */
+    Square = "square"
 }
 /**
  * A schema representing a return value or object property that is provided as a string,
@@ -523,10 +523,10 @@ export declare enum RoundedCorners {
 export interface ImageSchema extends BaseStringSchema<ValueHintType.ImageReference | ValueHintType.ImageAttachment> {
     /** Instructs Coda to render this value as an Image. */
     codaType: ValueHintType.ImageReference | ValueHintType.ImageAttachment;
-    /** Outline type specifying whether or not to add outline to rendered images. Defaults to true. */
-    outline?: Outline;
-    /** roundedCorners type specifying whether or not to add rounded corners to rendered images. Defaults to true. */
-    roundedCorners?: RoundedCorners;
+    /** ImageOutline type specifying style of outline on images. */
+    imageOutline?: ImageOutline;
+    /** ImageCornerStyle type specifying style of corners on images. */
+    imageCornerStyle?: ImageCornerStyle;
 }
 /**
  * Enumeration of units supported by duration schemas. See {@link DurationSchema.maxUnit}.
@@ -574,7 +574,7 @@ export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> e
 /**
  * The subset of StringHintTypes that don't have specific schema attributes.
  */
-export declare const SimpleStringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Html, ValueHintType.ImageReference, ValueHintType.ImageAttachment, ValueHintType.Markdown, ValueHintType.Url, ValueHintType.Email];
+export declare const SimpleStringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Html, ValueHintType.Markdown, ValueHintType.Url, ValueHintType.Email];
 export declare type SimpleStringHintTypes = typeof SimpleStringHintValueTypes[number];
 /**
  * A schema whose underlying value is a string, along with an optional hint about how Coda

@@ -32,7 +32,7 @@ See [makeAttributionNode](../functions/core.makeAttributionNode.md).
 
 #### Defined in
 
-[schema.ts:861](https://github.com/coda/packs-sdk/blob/main/schema.ts#L861)
+[schema.ts:859](https://github.com/coda/packs-sdk/blob/main/schema.ts#L859)
 
 ___
 
@@ -48,7 +48,7 @@ render such a value as an @-reference to that person, rather than a basic object
 
 #### Defined in
 
-[schema.ts:831](https://github.com/coda/packs-sdk/blob/main/schema.ts#L831)
+[schema.ts:829](https://github.com/coda/packs-sdk/blob/main/schema.ts#L829)
 
 ___
 
@@ -83,7 +83,7 @@ The other properties can be seen when hovering over the chip.
 
 #### Defined in
 
-[schema.ts:823](https://github.com/coda/packs-sdk/blob/main/schema.ts#L823)
+[schema.ts:821](https://github.com/coda/packs-sdk/blob/main/schema.ts#L821)
 
 ___
 
@@ -97,7 +97,7 @@ Use [featuredProperties](core.ObjectSchemaDefinition.md#featuredproperties)
 
 #### Defined in
 
-[schema.ts:833](https://github.com/coda/packs-sdk/blob/main/schema.ts#L833)
+[schema.ts:831](https://github.com/coda/packs-sdk/blob/main/schema.ts#L831)
 
 ___
 
@@ -122,7 +122,7 @@ projections have been created for them.
 
 #### Defined in
 
-[schema.ts:850](https://github.com/coda/packs-sdk/blob/main/schema.ts#L850)
+[schema.ts:848](https://github.com/coda/packs-sdk/blob/main/schema.ts#L848)
 
 ___
 
@@ -136,7 +136,7 @@ Use [idProperty](core.ObjectSchemaDefinition.md#idproperty)
 
 #### Defined in
 
-[schema.ts:808](https://github.com/coda/packs-sdk/blob/main/schema.ts#L808)
+[schema.ts:806](https://github.com/coda/packs-sdk/blob/main/schema.ts#L806)
 
 ___
 
@@ -149,7 +149,7 @@ object. Sync table schemas must specify an id property, which uniquely identify 
 
 #### Defined in
 
-[schema.ts:813](https://github.com/coda/packs-sdk/blob/main/schema.ts#L813)
+[schema.ts:811](https://github.com/coda/packs-sdk/blob/main/schema.ts#L811)
 
 ___
 
@@ -162,7 +162,7 @@ See [IdentityDefinition](core.IdentityDefinition.md).
 
 #### Defined in
 
-[schema.ts:855](https://github.com/coda/packs-sdk/blob/main/schema.ts#L855)
+[schema.ts:853](https://github.com/coda/packs-sdk/blob/main/schema.ts#L853)
 
 ___
 
@@ -180,7 +180,7 @@ scenarios they can be useful.
 
 #### Defined in
 
-[schema.ts:871](https://github.com/coda/packs-sdk/blob/main/schema.ts#L871)
+[schema.ts:869](https://github.com/coda/packs-sdk/blob/main/schema.ts#L869)
 
 ___
 
@@ -194,7 +194,7 @@ Use [displayProperty](core.ObjectSchemaDefinition.md#displayproperty)
 
 #### Defined in
 
-[schema.ts:815](https://github.com/coda/packs-sdk/blob/main/schema.ts#L815)
+[schema.ts:813](https://github.com/coda/packs-sdk/blob/main/schema.ts#L813)
 
 ___
 
@@ -206,7 +206,7 @@ Definintion of the key-value pairs in this object.
 
 #### Defined in
 
-[schema.ts:806](https://github.com/coda/packs-sdk/blob/main/schema.ts#L806)
+[schema.ts:804](https://github.com/coda/packs-sdk/blob/main/schema.ts#L804)
 
 ___
 
@@ -218,4 +218,4 @@ Identifies this schema as an object schema.
 
 #### Defined in
 
-[schema.ts:804](https://github.com/coda/packs-sdk/blob/main/schema.ts#L804)
+[schema.ts:802](https://github.com/coda/packs-sdk/blob/main/schema.ts#L802)

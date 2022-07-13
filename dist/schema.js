@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.RoundedCorners = exports.Outline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_2 = require("./helpers/ensure");
@@ -293,23 +293,23 @@ var LinkDisplayType;
 /**
  * State of outline on images that can be used with a {@link ImageSchema}.
  */
-var Outline;
-(function (Outline) {
-    /** Image outline is disabled. */
-    Outline["Disabled"] = "disabled";
-    /** Image outline is applied. */
-    Outline["Default"] = "default";
-})(Outline = exports.Outline || (exports.Outline = {}));
+var ImageOutline;
+(function (ImageOutline) {
+    /** Image is rendered without outline. */
+    ImageOutline["Disabled"] = "disabled";
+    /** Image is rendered with outline. */
+    ImageOutline["Solid"] = "solid";
+})(ImageOutline = exports.ImageOutline || (exports.ImageOutline = {}));
 /**
- * State of rounded corners on images that can be used with a {@link ImageSchema}.
+ * State of corners on images that can be used with a {@link ImageSchema}.
  */
-var RoundedCorners;
-(function (RoundedCorners) {
-    /** Image rounded corners are disabled. */
-    RoundedCorners["Disabled"] = "disabled";
-    /** Image rounded corners are applied. */
-    RoundedCorners["Default"] = "default";
-})(RoundedCorners = exports.RoundedCorners || (exports.RoundedCorners = {}));
+var ImageCornerStyle;
+(function (ImageCornerStyle) {
+    /** Image is rendered with rounded corners. */
+    ImageCornerStyle["Rounded"] = "rounded";
+    /** Image is rendered with square corners. */
+    ImageCornerStyle["Square"] = "square";
+})(ImageCornerStyle = exports.ImageCornerStyle || (exports.ImageCornerStyle = {}));
 /**
  * Enumeration of units supported by duration schemas. See {@link DurationSchema.maxUnit}.
  */
@@ -338,8 +338,6 @@ var DurationUnit;
 exports.SimpleStringHintValueTypes = [
     ValueHintType.Attachment,
     ValueHintType.Html,
-    ValueHintType.ImageReference,
-    ValueHintType.ImageAttachment,
     ValueHintType.Markdown,
     ValueHintType.Url,
     ValueHintType.Email,

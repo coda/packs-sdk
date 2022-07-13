@@ -51,27 +51,27 @@ BaseStringSchema.description
 
 ___
 
-### outline
+### imageCornerStyle
 
-• `Optional` **outline**: [`Outline`](../enums/core.Outline.md)
+• `Optional` **imageCornerStyle**: [`ImageCornerStyle`](../enums/core.ImageCornerStyle.md)
 
-Outline type specifying whether or not to add outline to rendered images. Defaults to true.
-
-#### Defined in
-
-[schema.ts:600](https://github.com/coda/packs-sdk/blob/main/schema.ts#L600)
-
-___
-
-### roundedCorners
-
-• `Optional` **roundedCorners**: [`RoundedCorners`](../enums/core.RoundedCorners.md)
-
-roundedCorners type specifying whether or not to add rounded corners to rendered images. Defaults to true.
+ImageCornerStyle type specifying style of corners on images.
 
 #### Defined in
 
 [schema.ts:602](https://github.com/coda/packs-sdk/blob/main/schema.ts#L602)
+
+___
+
+### imageOutline
+
+• `Optional` **imageOutline**: [`ImageOutline`](../enums/core.ImageOutline.md)
+
+ImageOutline type specifying style of outline on images.
+
+#### Defined in
+
+[schema.ts:600](https://github.com/coda/packs-sdk/blob/main/schema.ts#L600)
 
 ___
 
