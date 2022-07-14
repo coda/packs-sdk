@@ -1,6 +1,5 @@
 import {MissingScopesError} from '../api';
 import {StatusCodeError} from '../api';
-import {deepCopy} from '../helpers/object_utils';
 import {inspect} from 'util';
 import ivm from 'isolated-vm';
 import {marshalValue} from '../runtime/common/marshaling';
@@ -64,6 +63,24 @@ describe('Marshaling', () => {
     assert.deepEqual(transform(new SomeClass('hi')), {message: 'hi'});
   });
 
+  it('does not modify input objects', () => {
+    // Put buffers within frozen objects and arrays, which should raise an error if transform tries to modify
+    // them.
+    const testObj: any = Object.freeze({
+      str: 'bar',
+      arr: Object.freeze([1, 2, 3, Buffer.from('123')]),
+      nested: Object.freeze({buf: Buffer.from('123')}),
+    });
+    assert.deepEqual(transform(testObj), testObj);
+
+    // Just make sure there's no error about modifying a frozen object.
+    transform(
+      Object.freeze({
+        err: new Error('err'),
+      }),
+    );
+  });
+
   it('works for a variety of compound objects', () => {
     const testObjects: any = [
       [null, undefined, 0, false, NaN, Infinity, {undefined: 1, null: undefined}],
@@ -120,20 +137,37 @@ describe('Marshaling', () => {
 
     it('works for whitelisted coda errors', () => {
       const error = new StatusCodeError(404, '', {url: 'https://coda.io', method: 'GET'}, {headers: {}, body: ''});
-      const expectedOptions = deepCopy(error.options);
-      const expectedResponse = deepCopy(error.response);
 
       const transformedError = transformError(error) as StatusCodeError;
       assertErrorsEqual(transformedError, error);
       assert.isTrue(transformedError instanceof StatusCodeError);
-      // Make sure custom fields are there.
-      assert.deepEqual(transformedError.options, expectedOptions);
-      assert.deepEqual(transformedError.response, expectedResponse);
 
       const missingScopesError = new MissingScopesError('custom message');
       const transformedMissingScopesError = transformError(missingScopesError);
       assertErrorsEqual(transformedMissingScopesError, missingScopesError);
       assert.isTrue(transformedMissingScopesError instanceof MissingScopesError);
+    });
+
+    it('loses some type information on custom errors', () => {
+      class CustomError extends Error {
+        customData: any;
+        constructor(customData: any) {
+          super('custom error');
+          this.customData = customData;
+        }
+      }
+
+      const customError = new CustomError({
+        date: new Date(123),
+        nan: NaN,
+        inf: Infinity,
+        undef: undefined,
+        nulled: null,
+      });
+      const expectedOutput = {date: '1970-01-01T00:00:00.123Z', nan: null, inf: null, nulled: null};
+
+      const transformedError = transformError(customError) as CustomError;
+      assert.deepEqual(transformedError.customData, expectedOutput);
     });
   });
 

@@ -151,6 +151,10 @@ export function unmarshalValue(marshaledValue: any): any {
   return result;
 }
 
+// NOTE(dweitzman): Unlike marshalValue, wrapError() loses the types of things like null vs
+// undefined, whether an object is a Date or a Set, and it can't handle NaN/Infinity. This is
+// because wrapError needs to encode the object as a string which we do using JSON.stringify(),
+// losing some that information in the process.
 export function wrapError(err: Error): Error {
   // TODO(huayang): we do this for the sdk.
   // if (err.name === 'TypeError' && err.message === `Cannot read property 'body' of undefined`) {

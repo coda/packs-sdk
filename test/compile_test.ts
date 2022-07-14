@@ -4,7 +4,6 @@ import {newMockSyncExecutionContext} from '../testing/mocks';
 import path from 'path';
 import {translateErrorStackFromVM} from '../runtime/common/source_map';
 
-// eslint-disable-next-line ban/ban
 describe('compile', () => {
   it('works with source map', async () => {
     const {bundlePath, bundleSourceMapPath} = await compilePackBundle({

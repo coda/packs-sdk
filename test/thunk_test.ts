@@ -82,7 +82,7 @@ describe('Thunk', () => {
 
     const endingHeapSize = (await isolate.getHeapStatistics()).total_heap_size;
     // It should take <8mb of memory to allocate, marshal, and unmarshal
-    // a 4mb Buffer + memory for the thunk code.
+    // a 4mb Buffer. The buffer gets base6-encoded which is a 4/3 increase in size.
     assert.operator(endingHeapSize - startingHeapSize, '<', 1024 * 1024 * 8);
   });
 });
