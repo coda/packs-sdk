@@ -148,26 +148,32 @@ describe('Marshaling', () => {
       assert.isTrue(transformedMissingScopesError instanceof MissingScopesError);
     });
 
-    it('loses some type information on custom errors', () => {
+    it('preserves custom type information on custom errors', () => {
       class CustomError extends Error {
         customData: any;
-        constructor(customData: any) {
-          super('custom error');
+        constructor(message: string, customData: any) {
+          super(message);
           this.customData = customData;
         }
       }
 
-      const customError = new CustomError({
+      const customError = new CustomError('outer error', {
         date: new Date(123),
         nan: NaN,
         inf: Infinity,
         undef: undefined,
         nulled: null,
+        buffer: Buffer.from('abc'),
+        embeddedError: new CustomError('inner error', null),
       });
-      const expectedOutput = {date: '1970-01-01T00:00:00.123Z', nan: null, inf: null, nulled: null};
 
       const transformedError = transformError(customError) as CustomError;
-      assert.deepEqual(transformedError.customData, expectedOutput);
+
+      const {embeddedError: transformedEmbeddedError, ...transformedCustomData} = transformedError.customData;
+      const {embeddedError: origEmbeddedError, ...origCustomData} = customError.customData;
+      assert.deepEqual(transformedCustomData, origCustomData);
+      assert.equal(transformedError.name, customError.name);
+      assertErrorsEqual(transformedEmbeddedError, origEmbeddedError);
     });
   });
 

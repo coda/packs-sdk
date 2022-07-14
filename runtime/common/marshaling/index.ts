@@ -1,6 +1,8 @@
 import {CodaMarshalerType} from './constants';
 import {MarshalingInjectedKeys} from './constants';
+import {deserialize} from 'v8';
 import {marshalError} from './marshal_errors';
+import {serialize} from 'v8';
 import {unmarshalError} from './marshal_errors';
 
 // We rely on the javascript structuredClone() algorithm to copy arguments and results into
@@ -60,7 +62,7 @@ function fixUncopyableTypes(
     return {val, hasModifications: false};
   }
 
-  const maybeError = marshalError(val);
+  const maybeError = marshalError(val, marshalValue);
   if (maybeError) {
     postTransforms.push({
       type: TransformType.Error,
@@ -160,7 +162,7 @@ export function unmarshalValue(marshaledValue: any): any {
     if (transform.type === 'Buffer') {
       result = applyTransform(result, transform.path, (raw: string) => Buffer.from(raw, 'base64'));
     } else if (transform.type === 'Error') {
-      result = applyTransform(result, transform.path, (raw: any) => unmarshalError(raw));
+      result = applyTransform(result, transform.path, (raw: any) => unmarshalError(raw, unmarshalValue));
     } else {
       throw new Error(`Not a valid type to unmarshal: ${transform.type}`);
     }
@@ -183,12 +185,12 @@ export function wrapError(err: Error): Error {
   //     'to actually fetch from the remote API.';
   // }
 
-  return new Error(JSON.stringify(marshalValue(err)));
+  return new Error(serialize(marshalValue(err)).toString('base64'));
 }
 
 export function unwrapError(err: Error): Error {
   try {
-    const unmarshaledValue = unmarshalValue(JSON.parse(err.message));
+    const unmarshaledValue = unmarshalValue(deserialize(Buffer.from(err.message, 'base64')));
     if (unmarshaledValue instanceof Error) {
       return unmarshaledValue;
     }
