@@ -11,6 +11,8 @@ This documentation aims to follow the [Google Developer Documentation Style Guid
 
 To ensure a consistent experience for readers, the following style rules should be followed when writing sample code. Many of these rules are enforced automatically by the linter for samples in the `documentation` directory, but small snippets of code inline in markdown files must be checked manually.
 
+These style rules have been written to optimize the experience for novice developers and those new to JavaScript. The language has many advanced features and alternative syntaxes, but they often sacrifice readability for compactness. The decisions in this style guide will therefore differ from what's traditionally selected by engineering teams.
+
 
 ### Use a single SDK import
 
