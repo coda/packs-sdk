@@ -1,9 +1,8 @@
 import {CodaMarshalerType} from './constants';
 import {MarshalingInjectedKeys} from './constants';
-import {deserialize} from 'v8';
 import {marshalError} from './marshal_errors';
-import {serialize} from 'v8';
 import {unmarshalError} from './marshal_errors';
+import v8 from 'v8';
 
 // We rely on the javascript structuredClone() algorithm to copy arguments and results into
 // and out of isolated-vm method calls. There are a few types we want to support that aren't
@@ -185,12 +184,12 @@ export function wrapError(err: Error): Error {
   //     'to actually fetch from the remote API.';
   // }
 
-  return new Error(serialize(marshalValue(err)).toString('base64'));
+  return new Error(v8.serialize(marshalValue(err)).toString('base64'));
 }
 
 export function unwrapError(err: Error): Error {
   try {
-    const unmarshaledValue = unmarshalValue(deserialize(Buffer.from(err.message, 'base64')));
+    const unmarshaledValue = unmarshalValue(v8.deserialize(Buffer.from(err.message, 'base64')));
     if (unmarshaledValue instanceof Error) {
       return unmarshaledValue;
     }

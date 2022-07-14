@@ -1,12 +1,14 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.unwrapError = exports.wrapError = exports.unmarshalValue = exports.marshalValue = void 0;
 const constants_1 = require("./constants");
 const constants_2 = require("./constants");
-const v8_1 = require("v8");
 const marshal_errors_1 = require("./marshal_errors");
-const v8_2 = require("v8");
 const marshal_errors_2 = require("./marshal_errors");
+const v8_1 = __importDefault(require("v8"));
 // We rely on the javascript structuredClone() algorithm to copy arguments and results into
 // and out of isolated-vm method calls. There are a few types we want to support that aren't
 // natively supported by structuredClone();
@@ -158,12 +160,12 @@ function wrapError(err) {
     //     'add the --fetch flag ' +
     //     'to actually fetch from the remote API.';
     // }
-    return new Error((0, v8_2.serialize)(marshalValue(err)).toString('base64'));
+    return new Error(v8_1.default.serialize(marshalValue(err)).toString('base64'));
 }
 exports.wrapError = wrapError;
 function unwrapError(err) {
     try {
-        const unmarshaledValue = unmarshalValue((0, v8_1.deserialize)(Buffer.from(err.message, 'base64')));
+        const unmarshaledValue = unmarshalValue(v8_1.default.deserialize(Buffer.from(err.message, 'base64')));
         if (unmarshaledValue instanceof Error) {
             return unmarshaledValue;
         }

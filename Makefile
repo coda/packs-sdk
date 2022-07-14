@@ -98,9 +98,9 @@ compile-thunk:
 		--bundle \
 		--outfile=${ROOTDIR}/bundles/thunk_bundle.js \
 		--inject:${ROOTDIR}/testing/injections/buffer_shim.js \
+		--external:v8 \
 		--format=iife \
 		--global-name=module.exports \
-		--platform=node \
 		--target=node14;
 
 .PHONY: compile
