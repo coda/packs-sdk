@@ -21,6 +21,9 @@ import {FeatureSet} from '../types';
 import type {GenericObjectSchema} from '../schema';
 import type {HeaderBearerTokenAuthentication} from '../types';
 import type {Identity} from '../schema';
+import {ImageCornerStyle} from '../schema';
+import {ImageOutline} from '../schema';
+import type {ImageSchema} from '..';
 import {LinkDisplayType} from '../schema';
 import type {LinkSchema} from '../schema';
 import type {MultiQueryParamTokenAuthentication} from '../types';
@@ -712,6 +715,14 @@ const linkPropertySchema = zodCompleteStrictObject<LinkSchema & ObjectSchemaProp
   ...basePropertyValidators,
 });
 
+const imagePropertySchema = zodCompleteStrictObject<ImageSchema & ObjectSchemaProperty>({
+  type: zodDiscriminant(ValueType.String),
+  codaType: z.union([zodDiscriminant(ValueHintType.ImageAttachment), zodDiscriminant(ValueHintType.ImageReference)]),
+  imageOutline: z.nativeEnum(ImageOutline).optional(),
+  imageCornerStyle: z.nativeEnum(ImageCornerStyle).optional(),
+  ...basePropertyValidators,
+});
+
 const stringPropertySchema = z.union([
   simpleStringPropertySchema,
   stringDatePropertySchema,
@@ -721,6 +732,7 @@ const stringPropertySchema = z.union([
   embedPropertySchema,
   emailPropertySchema,
   linkPropertySchema,
+  imagePropertySchema,
 ]);
 
 const stringPackFormulaSchema = zodCompleteObject<Omit<StringPackFormula<any>, 'execute'>>({
