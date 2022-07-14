@@ -100,6 +100,7 @@ compile-thunk:
 		--inject:${ROOTDIR}/testing/injections/buffer_shim.js \
 		--format=iife \
 		--global-name=module.exports \
+		--platform=node \
 		--target=node14;
 
 .PHONY: compile

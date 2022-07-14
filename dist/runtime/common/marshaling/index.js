@@ -3,7 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.unwrapError = exports.wrapError = exports.unmarshalValue = exports.marshalValue = void 0;
 const constants_1 = require("./constants");
 const constants_2 = require("./constants");
+const v8_1 = require("v8");
 const marshal_errors_1 = require("./marshal_errors");
+const v8_2 = require("v8");
 const marshal_errors_2 = require("./marshal_errors");
 // We rely on the javascript structuredClone() algorithm to copy arguments and results into
 // and out of isolated-vm method calls. There are a few types we want to support that aren't
@@ -45,7 +47,7 @@ function fixUncopyableTypes(val, pathPrefix, postTransforms, depth = 0) {
     if (!val) {
         return { val, hasModifications: false };
     }
-    const maybeError = (0, marshal_errors_1.marshalError)(val);
+    const maybeError = (0, marshal_errors_1.marshalError)(val, marshalValue);
     if (maybeError) {
         postTransforms.push({
             type: TransformType.Error,
@@ -134,7 +136,7 @@ function unmarshalValue(marshaledValue) {
             result = applyTransform(result, transform.path, (raw) => Buffer.from(raw, 'base64'));
         }
         else if (transform.type === 'Error') {
-            result = applyTransform(result, transform.path, (raw) => (0, marshal_errors_2.unmarshalError)(raw));
+            result = applyTransform(result, transform.path, (raw) => (0, marshal_errors_2.unmarshalError)(raw, unmarshalValue));
         }
         else {
             throw new Error(`Not a valid type to unmarshal: ${transform.type}`);
@@ -156,12 +158,12 @@ function wrapError(err) {
     //     'add the --fetch flag ' +
     //     'to actually fetch from the remote API.';
     // }
-    return new Error(JSON.stringify(marshalValue(err)));
+    return new Error((0, v8_2.serialize)(marshalValue(err)).toString('base64'));
 }
 exports.wrapError = wrapError;
 function unwrapError(err) {
     try {
-        const unmarshaledValue = unmarshalValue(JSON.parse(err.message));
+        const unmarshaledValue = unmarshalValue((0, v8_1.deserialize)(Buffer.from(err.message, 'base64')));
         if (unmarshaledValue instanceof Error) {
             return unmarshaledValue;
         }

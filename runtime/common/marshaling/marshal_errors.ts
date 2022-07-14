@@ -37,7 +37,7 @@ function getErrorClassType(err: Error): ErrorClassType {
   return ErrorClassType.Other;
 }
 
-export function marshalError(err: any): object | undefined {
+export function marshalError(err: any, marshalFn: (val: any) => any): object | undefined {
   if (!(err instanceof Error)) {
     return;
   }
@@ -49,15 +49,22 @@ export function marshalError(err: any): object | undefined {
    *  - message
    */
   const {name, stack, message, ...args} = err;
-  return {
+
+  const extraArgs: {[key: string]: any} = {...args};
+  for (const [k, v] of Object.entries(extraArgs)) {
+    extraArgs[k] = marshalFn(v);
+  }
+
+  const result = {
     name,
     stack,
     message,
     [MarshalingInjectedKeys.CodaMarshaler]: CodaMarshalerType.Error,
     [MarshalingInjectedKeys.ErrorClassName]: err.constructor.name,
     [MarshalingInjectedKeys.ErrorClassType]: getErrorClassType(err),
-    ...args,
+    extraArgs,
   };
+  return result;
 }
 
 function getErrorClass(errorClassType: ErrorClassType, name: string): ErrorConstructor {
@@ -76,7 +83,10 @@ function getErrorClass(errorClassType: ErrorClassType, name: string): ErrorConst
   return errorClasses.find(cls => cls.name === name) || Error;
 }
 
-export function unmarshalError(val: {[key: string]: any | undefined}): Error | undefined {
+export function unmarshalError(
+  val: {[key: string]: any | undefined},
+  unmarshalFn: (val: any) => any,
+): Error | undefined {
   if (typeof val !== 'object' || val[MarshalingInjectedKeys.CodaMarshaler] !== CodaMarshalerType.Error) {
     return;
   }
@@ -88,7 +98,7 @@ export function unmarshalError(val: {[key: string]: any | undefined}): Error | u
     [MarshalingInjectedKeys.ErrorClassName]: errorClassName,
     [MarshalingInjectedKeys.CodaMarshaler]: _,
     [MarshalingInjectedKeys.ErrorClassType]: errorClassType,
-    ...otherProperties
+    extraArgs,
   } = val;
   const ErrorClass = getErrorClass(errorClassType, errorClassName);
   const error = new ErrorClass();
@@ -99,8 +109,8 @@ export function unmarshalError(val: {[key: string]: any | undefined}): Error | u
   // setting name explicitly makes it a property. Some behavior may change (for example, JSON.stringify).
   error.name = name;
 
-  for (const key of Object.keys(otherProperties)) {
-    (error as any)[key] = otherProperties[key];
+  for (const key of Object.keys(extraArgs)) {
+    (error as any)[key] = unmarshalFn(extraArgs[key]);
   }
 
   return error;

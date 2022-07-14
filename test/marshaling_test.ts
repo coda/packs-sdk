@@ -164,7 +164,7 @@ describe('Marshaling', () => {
         undef: undefined,
         nulled: null,
         buffer: Buffer.from('abc'),
-        embeddedError: new CustomError('inner error', null),
+        embeddedError: new TypeError('inner type error'),
       });
 
       const transformedError = transformError(customError) as CustomError;

@@ -34,7 +34,7 @@ function getErrorClassType(err) {
     }
     return ErrorClassType.Other;
 }
-function marshalError(err) {
+function marshalError(err, marshalFn) {
     if (!(err instanceof Error)) {
         return;
     }
@@ -45,15 +45,20 @@ function marshalError(err) {
      *  - message
      */
     const { name, stack, message, ...args } = err;
-    return {
+    const extraArgs = { ...args };
+    for (const [k, v] of Object.entries(extraArgs)) {
+        extraArgs[k] = marshalFn(v);
+    }
+    const result = {
         name,
         stack,
         message,
         [constants_2.MarshalingInjectedKeys.CodaMarshaler]: constants_1.CodaMarshalerType.Error,
         [constants_2.MarshalingInjectedKeys.ErrorClassName]: err.constructor.name,
         [constants_2.MarshalingInjectedKeys.ErrorClassType]: getErrorClassType(err),
-        ...args,
+        extraArgs,
     };
+    return result;
 }
 exports.marshalError = marshalError;
 function getErrorClass(errorClassType, name) {
@@ -70,11 +75,11 @@ function getErrorClass(errorClassType, name) {
     }
     return errorClasses.find(cls => cls.name === name) || Error;
 }
-function unmarshalError(val) {
+function unmarshalError(val, unmarshalFn) {
     if (typeof val !== 'object' || val[constants_2.MarshalingInjectedKeys.CodaMarshaler] !== constants_1.CodaMarshalerType.Error) {
         return;
     }
-    const { name, stack, message, [constants_2.MarshalingInjectedKeys.ErrorClassName]: errorClassName, [constants_2.MarshalingInjectedKeys.CodaMarshaler]: _, [constants_2.MarshalingInjectedKeys.ErrorClassType]: errorClassType, ...otherProperties } = val;
+    const { name, stack, message, [constants_2.MarshalingInjectedKeys.ErrorClassName]: errorClassName, [constants_2.MarshalingInjectedKeys.CodaMarshaler]: _, [constants_2.MarshalingInjectedKeys.ErrorClassType]: errorClassType, extraArgs, } = val;
     const ErrorClass = getErrorClass(errorClassType, errorClassName);
     const error = new ErrorClass();
     error.message = message;
@@ -82,8 +87,8 @@ function unmarshalError(val) {
     // "name" is a bit tricky because native Error class implements it as a getter but not a property.
     // setting name explicitly makes it a property. Some behavior may change (for example, JSON.stringify).
     error.name = name;
-    for (const key of Object.keys(otherProperties)) {
-        error[key] = otherProperties[key];
+    for (const key of Object.keys(extraArgs)) {
+        error[key] = unmarshalFn(extraArgs[key]);
     }
     return error;
 }
