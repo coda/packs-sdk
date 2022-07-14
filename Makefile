@@ -189,20 +189,29 @@ build-mkdocs:
 # For example, if you wanted to force upload (to skip the existing directory check), you can run
 # make publish-docs-<env> FLAGS=--forceUpload
 .PHONY: publish-docs-adhoc
-publish-docs-adhoc:
+publish-docs-adhoc: validate-mkdocs-insiders
 	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/scripts/documentation_publisher.ts push adhoc ${FLAGS})
 
 .PHONY: publish-docs-head
-publish-docs-head:
+publish-docs-head: validate-mkdocs-insiders
 	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/scripts/documentation_publisher.ts push head ${FLAGS})
 
 .PHONY: publish-docs-staging
-publish-docs-staging:
+publish-docs-staging: validate-mkdocs-insiders
 	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/scripts/documentation_publisher.ts push staging ${FLAGS})
 
 .PHONY: publish-docs-prod
-publish-docs-prod:
+publish-docs-prod: validate-mkdocs-insiders
 	(cd ${ROOTDIR}; ./node_modules/.bin/ts-node documentation/scripts/documentation_publisher.ts push prod ${FLAGS})
+
+# Verify that the MkDocs Material Insiders GitHub token is present in the environment.
+# Used to verify that the published docs are using the desired version of the library.
+.PHONY: validate-mkdocs-insiders
+validate-mkdocs-insiders:
+	if [[ -z "${MKDOCS_INSIDERS_TOKEN}" ]]; then \
+		echo "Not using the MkDocs Material Insiders library."; \
+		exit 1; \
+	fi
 
 ###############################################################################
 
