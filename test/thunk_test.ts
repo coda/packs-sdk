@@ -81,8 +81,8 @@ describe('Thunk', () => {
     assert.equal(result, true);
 
     const endingHeapSize = (await isolate.getHeapStatistics()).total_heap_size;
-    // It currently takes over 50mb of memory to allocate, marshal, and unmarshal
-    // a 1mb Buffer.
+    // It should take <8mb of memory to allocate, marshal, and unmarshal
+    // a 4mb Buffer + memory for the thunk code.
     assert.operator(endingHeapSize - startingHeapSize, '<', 1024 * 1024 * 8);
   });
 });
