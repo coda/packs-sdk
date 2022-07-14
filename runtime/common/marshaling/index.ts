@@ -115,6 +115,10 @@ function fixUncopyableTypes(
         hadModifications = true;
       }
     }
+    // We don't want to accidentally replace something like a Date object with a simple
+    // object, so we only return a copied version if we actually discover a buffer within.
+    // Another option here might be to check against a known list of types which structuredClone()
+    // supports and skip all this copy logic for known-safe types.
     if (hadModifications) {
       return {val: maybeModifiedObject, hasModifications: true};
     }
