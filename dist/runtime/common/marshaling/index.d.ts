@@ -1,4 +1,20 @@
-export declare function marshalValue(val: any): any;
+import { CodaMarshalerType } from './constants';
+import { MarshalingInjectedKeys } from './constants';
+declare enum TransformType {
+    Buffer = "Buffer",
+    Error = "Error"
+}
+interface PostTransform {
+    type: TransformType;
+    path: string[];
+}
+interface MarshaledValue {
+    encoded: any;
+    postTransforms: PostTransform[];
+    [MarshalingInjectedKeys.CodaMarshaler]: CodaMarshalerType.Object;
+}
+export declare function marshalValue(val: any): MarshaledValue;
 export declare function unmarshalValue(marshaledValue: any): any;
 export declare function wrapError(err: Error): Error;
 export declare function unwrapError(err: Error): Error;
+export {};

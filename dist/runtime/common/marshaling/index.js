@@ -25,6 +25,11 @@ const marshal_errors_2 = require("./marshal_errors");
 // When we pass these objects into or out of isolated-vm we also need to set "copy: true" to enable
 // the structuredClone() algorithm.
 const MaxTraverseDepth = 100;
+var TransformType;
+(function (TransformType) {
+    TransformType["Buffer"] = "Buffer";
+    TransformType["Error"] = "Error";
+})(TransformType || (TransformType = {}));
 // pathPrefix can be temporarily modified, but needs to be restored to its original value
 // before returning.
 //
@@ -43,7 +48,7 @@ function fixUncopyableTypes(val, pathPrefix, postTransforms, depth = 0) {
     const maybeError = (0, marshal_errors_1.marshalError)(val);
     if (maybeError) {
         postTransforms.push({
-            type: 'Error',
+            type: TransformType.Error,
             path: [...pathPrefix],
         });
         return { val: maybeError, hasModifications: true };
@@ -53,7 +58,7 @@ function fixUncopyableTypes(val, pathPrefix, postTransforms, depth = 0) {
         // through structured copy with some transfer options, but it's
         // simpler to just encode it as a string.
         postTransforms.push({
-            type: 'Buffer',
+            type: TransformType.Buffer,
             path: [...pathPrefix],
         });
         return { val: val.toString('base64'), hasModifications: true };
@@ -61,15 +66,16 @@ function fixUncopyableTypes(val, pathPrefix, postTransforms, depth = 0) {
     if (Array.isArray(val)) {
         const maybeModifiedArray = [];
         let someItemHadModifications = false;
-        val.forEach((item, index) => {
-            pathPrefix.push(index.toString());
+        for (let i = 0; i < val.length; i++) {
+            const item = val[i];
+            pathPrefix.push(i.toString());
             const { val: itemVal, hasModifications } = fixUncopyableTypes(item, pathPrefix, postTransforms, depth + 1);
             if (hasModifications) {
                 someItemHadModifications = true;
             }
             maybeModifiedArray.push(itemVal);
             pathPrefix.pop();
-        });
+        }
         if (someItemHadModifications) {
             return { val: maybeModifiedArray, hasModifications: true };
         }
@@ -98,12 +104,11 @@ function isMarshaledValue(val) {
 function marshalValue(val) {
     const postTransforms = [];
     const { val: encodedVal } = fixUncopyableTypes(val, [], postTransforms, 0);
-    const result = {
+    return {
         encoded: encodedVal,
         postTransforms,
         [constants_2.MarshalingInjectedKeys.CodaMarshaler]: constants_1.CodaMarshalerType.Object,
     };
-    return result;
 }
 exports.marshalValue = marshalValue;
 function applyTransform(input, path, fn) {

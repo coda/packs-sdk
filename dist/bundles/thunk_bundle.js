@@ -4892,14 +4892,14 @@ module.exports = (() => {
     const maybeError = marshalError(val);
     if (maybeError) {
       postTransforms.push({
-        type: "Error",
+        type: "Error" /* Error */,
         path: [...pathPrefix]
       });
       return { val: maybeError, hasModifications: true };
     }
     if (val instanceof Buffer2 || ((_a = global.Buffer) == null ? void 0 : _a.isBuffer(val))) {
       postTransforms.push({
-        type: "Buffer",
+        type: "Buffer" /* Buffer */,
         path: [...pathPrefix]
       });
       return { val: val.toString("base64"), hasModifications: true };
@@ -4907,15 +4907,16 @@ module.exports = (() => {
     if (Array.isArray(val)) {
       const maybeModifiedArray = [];
       let someItemHadModifications = false;
-      val.forEach((item, index) => {
-        pathPrefix.push(index.toString());
+      for (let i = 0; i < val.length; i++) {
+        const item = val[i];
+        pathPrefix.push(i.toString());
         const { val: itemVal, hasModifications } = fixUncopyableTypes(item, pathPrefix, postTransforms, depth + 1);
         if (hasModifications) {
           someItemHadModifications = true;
         }
         maybeModifiedArray.push(itemVal);
         pathPrefix.pop();
-      });
+      }
       if (someItemHadModifications) {
         return { val: maybeModifiedArray, hasModifications: true };
       }
@@ -4944,12 +4945,11 @@ module.exports = (() => {
   function marshalValue(val) {
     const postTransforms = [];
     const { val: encodedVal } = fixUncopyableTypes(val, [], postTransforms, 0);
-    const result = {
+    return {
       encoded: encodedVal,
       postTransforms,
       ["__coda_marshaler__" /* CodaMarshaler */]: "Object" /* Object */
     };
-    return result;
   }
   function applyTransform(input, path, fn) {
     if (path.length === 0) {
