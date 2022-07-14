@@ -55,7 +55,7 @@ ___
 
 • `Optional` **imageCornerStyle**: [`ImageCornerStyle`](../enums/core.ImageCornerStyle.md)
 
-ImageCornerStyle type specifying style of corners on images.
+ImageCornerStyle type specifying style of corners on images. If unspecified, default is Rounded.
 
 #### Defined in
 
@@ -67,7 +67,7 @@ ___
 
 • `Optional` **imageOutline**: [`ImageOutline`](../enums/core.ImageOutline.md)
 
-ImageOutline type specifying style of outline on images.
+ImageOutline type specifying style of outline on images. If unspecified, default is Solid.
 
 #### Defined in
 

@@ -596,9 +596,9 @@ export enum ImageCornerStyle {
   ValueHintType.ImageReference | ValueHintType.ImageAttachment> {
   /** Instructs Coda to render this value as an Image. */
   codaType: ValueHintType.ImageReference | ValueHintType.ImageAttachment;
-  /** ImageOutline type specifying style of outline on images. */
+  /** ImageOutline type specifying style of outline on images. If unspecified, default is Solid. */
   imageOutline?: ImageOutline;
-  /** ImageCornerStyle type specifying style of corners on images. */
+  /** ImageCornerStyle type specifying style of corners on images. If unspecified, default is Rounded. */
   imageCornerStyle?: ImageCornerStyle;
 }
 
