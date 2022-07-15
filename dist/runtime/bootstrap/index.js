@@ -58,7 +58,7 @@ async function injectAsyncFunction(context, stubName, func) {
          );
          return coda.unmarshalValue(result);
        });
-     };`, [stub], { arguments: { reference: true }, result: { copy: true } });
+     };`, [stub], { arguments: { reference: true } });
 }
 exports.injectAsyncFunction = injectAsyncFunction;
 async function injectVoidFunction(context, stubName, func) {
@@ -69,7 +69,7 @@ async function injectVoidFunction(context, stubName, func) {
         coda.handleError(() => {
           $0.applyIgnored(undefined, args.map(coda.marshalValue), {arguments: {copy: true}});
         });
-     };`, [stub], { arguments: { reference: true }, result: { copy: true } });
+     };`, [stub], { arguments: { reference: true } });
 }
 exports.injectVoidFunction = injectVoidFunction;
 async function injectFetcherFunction(context, stubName, func) {
@@ -91,7 +91,7 @@ async function injectFetcherFunction(context, stubName, func) {
          coda.handleFetcherStatusError(parsedResult, fetchRequest);
          return parsedResult;
        });
-     };`, [stub], { arguments: { reference: true }, result: { copy: true } });
+     };`, [stub], { arguments: { reference: true } });
 }
 exports.injectFetcherFunction = injectFetcherFunction;
 /**

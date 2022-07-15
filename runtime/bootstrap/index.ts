@@ -81,7 +81,7 @@ export async function injectAsyncFunction(
        });
      };`,
     [stub],
-    {arguments: {reference: true}, result: {copy: true}},
+    {arguments: {reference: true}},
   );
 }
 
@@ -101,7 +101,7 @@ export async function injectVoidFunction(
         });
      };`,
     [stub],
-    {arguments: {reference: true}, result: {copy: true}},
+    {arguments: {reference: true}},
   );
 }
 
@@ -132,7 +132,7 @@ export async function injectFetcherFunction(
        });
      };`,
     [stub],
-    {arguments: {reference: true}, result: {copy: true}},
+    {arguments: {reference: true}},
   );
 }
 
