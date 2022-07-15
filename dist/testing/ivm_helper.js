@@ -9,9 +9,10 @@ const bootstrap_1 = require("../runtime/bootstrap");
 const fs_1 = __importDefault(require("fs"));
 const bootstrap_2 = require("../runtime/bootstrap");
 const bootstrap_3 = require("../runtime/bootstrap");
+const bootstrap_4 = require("../runtime/bootstrap");
 const isolated_vm_1 = __importDefault(require("isolated-vm"));
 const path_1 = __importDefault(require("path"));
-const bootstrap_4 = require("../runtime/bootstrap");
+const bootstrap_5 = require("../runtime/bootstrap");
 const IsolateMemoryLimit = 128;
 // execution_helper_bundle.js is built by esbuild (see Makefile)
 // which puts it into the same directory: dist/testing/
@@ -29,11 +30,15 @@ async function setupIvmContext(bundlePath, executionContext) {
     //
     // TODO(huayang): this is not efficient enough and needs optimization if to be used widely in testing.
     if (fs_1.default.existsSync(CompiledHelperBundlePath)) {
-        await (0, bootstrap_4.registerBundles)(isolate, ivmContext, bundleFullPath, CompiledHelperBundlePath, false);
+        await ivmContext.global.set('codaInternal', { serializer: {} }, { copy: true });
+        await (0, bootstrap_4.injectSerializer)(ivmContext, 'codaInternal.serializer');
+        await (0, bootstrap_5.registerBundles)(isolate, ivmContext, bundleFullPath, CompiledHelperBundlePath, false);
     }
     else if (fs_1.default.existsSync(HelperTsSourceFile)) {
+        await ivmContext.global.set('codaInternal', { serializer: {} }, { copy: true });
+        await (0, bootstrap_4.injectSerializer)(ivmContext, 'codaInternal.serializer');
         const bundlePath = await (0, build_1.build)(HelperTsSourceFile);
-        await (0, bootstrap_4.registerBundles)(isolate, ivmContext, bundleFullPath, bundlePath, false);
+        await (0, bootstrap_5.registerBundles)(isolate, ivmContext, bundleFullPath, bundlePath, false);
     }
     else {
         throw new Error('cannot find the execution helper');

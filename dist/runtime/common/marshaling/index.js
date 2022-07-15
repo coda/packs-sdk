@@ -1,14 +1,12 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.unwrapError = exports.wrapError = exports.unmarshalValue = exports.marshalValue = void 0;
+exports.unwrapError = exports.wrapError = exports.unmarshalValue = exports.unmarshalValueFromString = exports.marshalValueToString = exports.marshalValue = void 0;
 const constants_1 = require("./constants");
 const constants_2 = require("./constants");
+const serializer_1 = require("./serializer");
 const marshal_errors_1 = require("./marshal_errors");
+const serializer_2 = require("./serializer");
 const marshal_errors_2 = require("./marshal_errors");
-const v8_1 = __importDefault(require("v8"));
 // We rely on the javascript structuredClone() algorithm to copy arguments and results into
 // and out of isolated-vm method calls. There are a few types we want to support that aren't
 // natively supported by structuredClone();
@@ -119,6 +117,14 @@ function marshalValue(val) {
     };
 }
 exports.marshalValue = marshalValue;
+function marshalValueToString(val) {
+    return (0, serializer_2.serialize)(marshalValue(val));
+}
+exports.marshalValueToString = marshalValueToString;
+function unmarshalValueFromString(marshaledValue) {
+    return unmarshalValue((0, serializer_1.deserialize)(marshaledValue));
+}
+exports.unmarshalValueFromString = unmarshalValueFromString;
 function applyTransform(input, path, fn) {
     if (path.length === 0) {
         return fn(input);
@@ -160,12 +166,12 @@ function wrapError(err) {
     //     'add the --fetch flag ' +
     //     'to actually fetch from the remote API.';
     // }
-    return new Error(v8_1.default.serialize(marshalValue(err)).toString('base64'));
+    return new Error(marshalValueToString(err));
 }
 exports.wrapError = wrapError;
 function unwrapError(err) {
     try {
-        const unmarshaledValue = unmarshalValue(v8_1.default.deserialize(Buffer.from(err.message, 'base64')));
+        const unmarshaledValue = unmarshalValueFromString(err.message);
         if (unmarshaledValue instanceof Error) {
             return unmarshaledValue;
         }

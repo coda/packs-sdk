@@ -26,8 +26,7 @@ import {setEndpointHelper} from '../../helpers/migration';
 import {unwrapError} from '../common/marshaling';
 import {wrapError} from '../common/marshaling';
 
-export {marshalValue} from '../common/marshaling';
-export {unmarshalValue} from '../common/marshaling';
+export {marshalValue, unmarshalValue, marshalValueToString, unmarshalValueFromString} from '../common/marshaling';
 
 /**
  * The thunk entrypoint - the first code that runs inside the v8 isolate once control is passed over.

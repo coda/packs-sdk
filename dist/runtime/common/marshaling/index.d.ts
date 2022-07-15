@@ -14,6 +14,8 @@ interface MarshaledValue {
     [MarshalingInjectedKeys.CodaMarshaler]: CodaMarshalerType.Object;
 }
 export declare function marshalValue(val: any): MarshaledValue;
+export declare function marshalValueToString(val: any): string;
+export declare function unmarshalValueFromString(marshaledValue: string): any;
 export declare function unmarshalValue(marshaledValue: any): any;
 export declare function wrapError(err: Error): Error;
 export declare function unwrapError(err: Error): Error;

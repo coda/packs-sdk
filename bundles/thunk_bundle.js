@@ -7,17 +7,10 @@ module.exports = (() => {
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
-  var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
-    get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
-  }) : x)(function(x) {
-    if (typeof require !== "undefined")
-      return require.apply(this, arguments);
-    throw new Error('Dynamic require of "' + x + '" is not supported');
-  });
   var __esm = (fn, res) => function __init() {
     return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
   };
-  var __commonJS = (cb, mod) => function __require2() {
+  var __commonJS = (cb, mod) => function __require() {
     return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
   };
   var __export = (target, all) => {
@@ -4671,8 +4664,10 @@ module.exports = (() => {
     handleErrorAsync: () => handleErrorAsync,
     handleFetcherStatusError: () => handleFetcherStatusError,
     marshalValue: () => marshalValue,
+    marshalValueToString: () => marshalValueToString,
     setUpBufferForTest: () => setUpBufferForTest,
-    unmarshalValue: () => unmarshalValue
+    unmarshalValue: () => unmarshalValue,
+    unmarshalValueFromString: () => unmarshalValueFromString
   });
   init_buffer_shim();
 
@@ -4809,6 +4804,19 @@ module.exports = (() => {
   // runtime/common/marshaling/constants.ts
   init_buffer_shim();
 
+  // runtime/common/marshaling/serializer.ts
+  init_buffer_shim();
+  var serialize;
+  var deserialize;
+  if (true) {
+    serialize = codaInternal.serializer.serialize;
+    deserialize = codaInternal.serializer.deserialize;
+  } else {
+    const v8 = null;
+    serialize = (value) => v8.serialize(value).toString("base64");
+    deserialize = (value) => v8.deserialize(Buffer2.from(value, "base64"));
+  }
+
   // runtime/common/marshaling/marshal_errors.ts
   init_buffer_shim();
   var recognizableSystemErrorClasses = [
@@ -4892,7 +4900,6 @@ module.exports = (() => {
   }
 
   // runtime/common/marshaling/index.ts
-  var import_v8 = __toESM(__require("v8"));
   var MaxTraverseDepth = 100;
   function fixUncopyableTypes(val, pathPrefix, postTransforms, depth = 0) {
     var _a;
@@ -4964,6 +4971,12 @@ module.exports = (() => {
       ["__coda_marshaler__" /* CodaMarshaler */]: "Object" /* Object */
     };
   }
+  function marshalValueToString(val) {
+    return serialize(marshalValue(val));
+  }
+  function unmarshalValueFromString(marshaledValue) {
+    return unmarshalValue(deserialize(marshaledValue));
+  }
   function applyTransform(input, path, fn) {
     if (path.length === 0) {
       return fn(input);
@@ -4989,11 +5002,11 @@ module.exports = (() => {
     return result;
   }
   function wrapError(err) {
-    return new Error(import_v8.default.serialize(marshalValue(err)).toString("base64"));
+    return new Error(marshalValueToString(err));
   }
   function unwrapError(err) {
     try {
-      const unmarshaledValue = unmarshalValue(import_v8.default.deserialize(Buffer2.from(err.message, "base64")));
+      const unmarshaledValue = unmarshalValueFromString(err.message);
       if (unmarshaledValue instanceof Error) {
         return unmarshaledValue;
       }

@@ -98,8 +98,8 @@ compile-thunk:
 		--bundle \
 		--outfile=${ROOTDIR}/bundles/thunk_bundle.js \
 		--inject:${ROOTDIR}/testing/injections/buffer_shim.js \
-		--external:v8 \
 		--format=iife \
+		--define:process.env.IS_THUNK=true \
 		--global-name=module.exports \
 		--target=node14;
 
