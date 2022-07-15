@@ -569,6 +569,40 @@ export interface StringDateTimeSchema extends BaseStringSchema<ValueHintType.Dat
 }
 
 /**
+ * State of outline on images that can be used with a {@link ImageSchema}.
+ */
+export enum ImageOutline {
+  /** Image is rendered without outline. */
+  Disabled = 'disabled',
+  /** Image is rendered with outline. */
+  Solid = 'solid',
+}
+
+/**
+ * State of corners on images that can be used with a {@link ImageSchema}.
+ */
+export enum ImageCornerStyle {
+  /** Image is rendered with rounded corners. */
+  Rounded = 'rounded',
+  /** Image is rendered with square corners. */
+  Square = 'square',
+}
+
+/**
+ * A schema representing a return value or object property that is provided as a string,
+ * which Coda should interpret as an image.
+ */
+ export interface ImageSchema extends BaseStringSchema<
+  ValueHintType.ImageReference | ValueHintType.ImageAttachment> {
+  /** Instructs Coda to render this value as an Image. */
+  codaType: ValueHintType.ImageReference | ValueHintType.ImageAttachment;
+  /** ImageOutline type specifying style of outline on images. If unspecified, default is Solid. */
+  imageOutline?: ImageOutline;
+  /** ImageCornerStyle type specifying style of corners on images. If unspecified, default is Rounded. */
+  imageCornerStyle?: ImageCornerStyle;
+}
+
+/**
  * Enumeration of units supported by duration schemas. See {@link DurationSchema.maxUnit}.
  */
 export enum DurationUnit {
@@ -620,8 +654,6 @@ export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> e
 export const SimpleStringHintValueTypes = [
   ValueHintType.Attachment,
   ValueHintType.Html,
-  ValueHintType.ImageReference,
-  ValueHintType.ImageAttachment,
   ValueHintType.Markdown,
   ValueHintType.Url,
   ValueHintType.Email,
@@ -644,6 +676,7 @@ export type StringSchema =
   | StringDateTimeSchema
   | DurationSchema
   | EmailSchema
+  | ImageSchema
   | LinkSchema
   | StringEmbedSchema
   | SimpleStringSchema;
