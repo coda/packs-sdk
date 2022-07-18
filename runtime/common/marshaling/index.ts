@@ -24,6 +24,9 @@ import {unmarshalError} from './marshal_errors';
 //
 // When we pass these objects into or out of isolated-vm we also need to set "copy: true" to enable
 // the structuredClone() algorithm.
+//
+// marshalValueToString() and wrapError() use base64-encoded output from v8.serialize() to turn the
+// structuredClone()-compatible object into a string.
 
 const MaxTraverseDepth = 100;
 
@@ -179,10 +182,10 @@ export function unmarshalValue(marshaledValue: any): any {
   return result;
 }
 
-// NOTE(dweitzman): Unlike marshalValue, wrapError() loses the types of things like null vs
-// undefined, whether an object is a Date or a Set, and it can't handle NaN/Infinity. This is
-// because wrapError needs to encode the object as a string which we do using JSON.stringify(),
-// losing some that information in the process.
+// The only way to pass information out of isolated-vm through an uncaught exception is
+// in the "message" field, which must be a string. Because of that, we use marshalValueToString()
+// instead of just putting a structuredClone()-compatible object into a custom field on a custom
+// error type.
 export function wrapError(err: Error): Error {
   // TODO(huayang): we do this for the sdk.
   // if (err.name === 'TypeError' && err.message === `Cannot read property 'body' of undefined`) {
