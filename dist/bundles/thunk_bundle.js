@@ -4817,8 +4817,8 @@ module.exports = (() => {
     deserialize = (value) => v8.deserialize(Buffer2.from(value, "base64"));
   }
 
-  // runtime/common/marshaling/marshal_errors.ts
-  init_buffer_shim();
+  // runtime/common/marshaling/index.ts
+  var MaxTraverseDepth = 100;
   var recognizableSystemErrorClasses = [
     Error,
     EvalError,
@@ -4832,75 +4832,6 @@ module.exports = (() => {
     StatusCodeError,
     MissingScopesError
   ];
-  function getErrorClassType(err) {
-    if (recognizableSystemErrorClasses.some((cls) => cls === err.constructor)) {
-      return "System" /* System */;
-    }
-    if (recognizableCodaErrorClasses.some((cls) => cls === err.constructor)) {
-      return "Coda" /* Coda */;
-    }
-    return "Other" /* Other */;
-  }
-  function marshalError(err, marshalFn) {
-    if (!(err instanceof Error)) {
-      return;
-    }
-    const { name, stack, message, ...args } = err;
-    const extraArgs = { ...args };
-    for (const [k, v] of Object.entries(extraArgs)) {
-      extraArgs[k] = marshalFn(v);
-    }
-    const result = {
-      name,
-      stack,
-      message,
-      ["__coda_marshaler__" /* CodaMarshaler */]: "Error" /* Error */,
-      ["__error_class_name__" /* ErrorClassName */]: err.constructor.name,
-      ["__error_class_type__" /* ErrorClassType */]: getErrorClassType(err),
-      extraArgs
-    };
-    return result;
-  }
-  function getErrorClass(errorClassType, name) {
-    let errorClasses;
-    switch (errorClassType) {
-      case "System" /* System */:
-        errorClasses = recognizableSystemErrorClasses;
-        break;
-      case "Coda" /* Coda */:
-        errorClasses = recognizableCodaErrorClasses;
-        break;
-      default:
-        errorClasses = [];
-    }
-    return errorClasses.find((cls) => cls.name === name) || Error;
-  }
-  function unmarshalError(val, unmarshalFn) {
-    if (typeof val !== "object" || val["__coda_marshaler__" /* CodaMarshaler */] !== "Error" /* Error */) {
-      return;
-    }
-    const {
-      name,
-      stack,
-      message,
-      ["__error_class_name__" /* ErrorClassName */]: errorClassName,
-      ["__coda_marshaler__" /* CodaMarshaler */]: _,
-      ["__error_class_type__" /* ErrorClassType */]: errorClassType,
-      extraArgs
-    } = val;
-    const ErrorClass = getErrorClass(errorClassType, errorClassName);
-    const error = new ErrorClass();
-    error.message = message;
-    error.stack = stack;
-    error.name = name;
-    for (const key of Object.keys(extraArgs)) {
-      error[key] = unmarshalFn(extraArgs[key]);
-    }
-    return error;
-  }
-
-  // runtime/common/marshaling/index.ts
-  var MaxTraverseDepth = 100;
   function fixUncopyableTypes(val, pathPrefix, postTransforms, depth = 0) {
     var _a;
     if (depth >= MaxTraverseDepth) {
@@ -4909,7 +4840,7 @@ module.exports = (() => {
     if (!val) {
       return { val, hasModifications: false };
     }
-    const maybeError = marshalError(val, marshalValue);
+    const maybeError = marshalError(val);
     if (maybeError) {
       postTransforms.push({
         type: "Error" /* Error */,
@@ -4994,7 +4925,7 @@ module.exports = (() => {
       if (transform.type === "Buffer") {
         result = applyTransform(result, transform.path, (raw) => Buffer2.from(raw, "base64"));
       } else if (transform.type === "Error") {
-        result = applyTransform(result, transform.path, (raw) => unmarshalError(raw, unmarshalValue));
+        result = applyTransform(result, transform.path, (raw) => unmarshalError(raw));
       } else {
         throw new Error(`Not a valid type to unmarshal: ${transform.type}`);
       }
@@ -5014,6 +4945,72 @@ module.exports = (() => {
     } catch (_) {
       return err;
     }
+  }
+  function getErrorClassType(err) {
+    if (recognizableSystemErrorClasses.some((cls) => cls === err.constructor)) {
+      return "System" /* System */;
+    }
+    if (recognizableCodaErrorClasses.some((cls) => cls === err.constructor)) {
+      return "Coda" /* Coda */;
+    }
+    return "Other" /* Other */;
+  }
+  function marshalError(err) {
+    if (!(err instanceof Error)) {
+      return;
+    }
+    const { name, stack, message, ...args } = err;
+    const extraArgs = { ...args };
+    for (const [k, v] of Object.entries(extraArgs)) {
+      extraArgs[k] = marshalValue(v);
+    }
+    const result = {
+      name,
+      stack,
+      message,
+      ["__coda_marshaler__" /* CodaMarshaler */]: "Error" /* Error */,
+      ["__error_class_name__" /* ErrorClassName */]: err.constructor.name,
+      ["__error_class_type__" /* ErrorClassType */]: getErrorClassType(err),
+      extraArgs
+    };
+    return result;
+  }
+  function getErrorClass(errorClassType, name) {
+    let errorClasses;
+    switch (errorClassType) {
+      case "System" /* System */:
+        errorClasses = recognizableSystemErrorClasses;
+        break;
+      case "Coda" /* Coda */:
+        errorClasses = recognizableCodaErrorClasses;
+        break;
+      default:
+        errorClasses = [];
+    }
+    return errorClasses.find((cls) => cls.name === name) || Error;
+  }
+  function unmarshalError(val) {
+    if (typeof val !== "object" || val["__coda_marshaler__" /* CodaMarshaler */] !== "Error" /* Error */) {
+      return;
+    }
+    const {
+      name,
+      stack,
+      message,
+      ["__error_class_name__" /* ErrorClassName */]: errorClassName,
+      ["__coda_marshaler__" /* CodaMarshaler */]: _,
+      ["__error_class_type__" /* ErrorClassType */]: errorClassType,
+      extraArgs
+    } = val;
+    const ErrorClass = getErrorClass(errorClassType, errorClassName);
+    const error = new ErrorClass();
+    error.message = message;
+    error.stack = stack;
+    error.name = name;
+    for (const key of Object.keys(extraArgs)) {
+      error[key] = unmarshalValue(extraArgs[key]);
+    }
+    return error;
   }
 
   // runtime/thunk/thunk.ts

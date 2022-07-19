@@ -91,7 +91,7 @@ describe('Marshaling', () => {
     testObjects.forEach((x: any) => assert.deepEqual(transform(x), x));
   });
 
-  it('does not throw error for unhandled objects', () => {
+  it('throws error for unhandled objects', () => {
     assert.throws(() => transform(() => {}), '() => { } could not be cloned.');
     assert.throws(() => void transform(new Promise(resolve => resolve(1))), '#<Promise> could not be cloned.');
   });

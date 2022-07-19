@@ -19,4 +19,8 @@ export declare function unmarshalValueFromString(marshaledValue: string): any;
 export declare function unmarshalValue(marshaledValue: any): any;
 export declare function wrapError(err: Error): Error;
 export declare function unwrapError(err: Error): Error;
+export declare function marshalError(err: any): object | undefined;
+export declare function unmarshalError(val: {
+    [key: string]: any | undefined;
+}): Error | undefined;
 export {};
