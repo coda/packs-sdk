@@ -260,80 +260,9 @@ pack.setUserAuthentication({
     ```
 
 
-### OAuth 2.0
+### Token exchange
 
-[OAuth 2.0][oauth_definition] is a modern, more secure alternative to passing usernames and passwords that has been adopted by many APIs. The details of this protocol can get complicated, but when building a Pack you only need to specify some configuration options and Coda handles the token exchange, storage, refresh, etc.
-
-To configure [`OAuth2`][OAuth] authentication you must specify the authorization URL and the token URL. These URLs are found in the technical documentation of the API you are connecting to, and will be different for each API.
-
-```ts
-pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
-  // These URLs come from the API's developer documentation.
-  authorizationUrl: "https://example.com/authorize",
-  tokenUrl: "https://api.example.com/token",
-});
-```
-
-After adding the code, build a new version of your Pack and then navigate to the **Settings** tab. There you'll see an **Add OAuth Credentials** button you can use to set the Pack's credentials.
-
-<img src="../../../images/auth_oauth.png" srcset="../../../images/auth_oauth_2x.png 2x" class="screenshot" alt="Setting the OAuth client ID and secret">
-
-These credentials identify your application to the provider, and are the same for every user that uses your Pack. You need to obtain these credentials from the API provider, typically by registering your application in the provider's developer console or portal. These values are typically called the client ID and secret, but may in some cases be referred to using terms like "consumer" or "application".
-
-When registering you application in the API provider's console you will be asked to provide a redirect URL. This is where the provider should redirect the user to after they have signed in and approved access. When building a Pack this value should always be set to:
-
-```
-https://coda.io/packsAuth/oauth2
-```
-
-There are many subtle variations to the OAuth2 flow, and Coda can accommodate a variety of them. You can find the additional configuration options in the [`OAuth2Authentication`][OAuth2Authentication] documentation.
-
-However if the API provider deviates too far from the OAuth 2.0 specification it may not be possible to find a configuration that will work. Additionally, Coda currently only supports the [Authorization Code][oauth2_code] grant type, and others like [Client Credentials][oauth2_client] can't be used. If you get stuck please [contact support][support] to explore other options.
-
-[View Sample Code][sample_oauth2]{ .md-button }
-
-??? note "Flexible authentication during token exchange"
-    The OAuth2 specification doesn't require a specific authentication schema your app must use when exchanging tokens. Coda supports the two most popular variants:
-
-    1. Sending the `client_secret` in the JSON body
-    1. Sending an `Authorization: Basic` header using the client ID and secret.
-
-    No configuration is required, Coda will try them both to see what works.
-
-??? warning "OAuth 1.0a not supported"
-    Coda doesn't currently support the older 1.0 or 1.0a versions of the OAuth specification. If you would like to connect to an API that only supports these versions of the standard please [contact support][support] so that we can continue to gauge interest.
-
-
-#### Incremental OAuth
-
-As your pack grows you may find that you need to request more OAuth scopes than you initially did when your existing users connected. Coda allows new scopes to be added to Pack OAuth settings in a non-breaking way: we don't prompt the user to re-authorize until they try to use a Pack feature that fails. Once that happens, we notice that the connection the user was using was created with a stale list of OAuth scopes and we prompt them to re-authenticate it to get your new scopes.
-
-Even when you do know all of the scopes you need, you may not want to request them all at once. An approval screen with a long list of permissions can be intimidating to new users and some my choose to abandon your Pack. In these cases you may want to use incremental authorization, made possible in Packs by the formula field [`extraOAuthScopes`][extraOAuthScopes]. You can use it to specify additional scopes that are needed in order to run a specific formula.
-
-```ts
-pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
-  // ...
-  scopes: ["read"],
-});
-
-// ...
-
-pack.addFormula({
-  name: "UpdateItem",
-  // ...
-  isAction: true,
-  extraOAuthScopes: ["update"],
-  // ...
-});
-```
-
-When the Pack above is installed the user will only be required to grant access to the `read` scope. However, when they try to use the `UpdateItem` action formula and it fails they will then be prompted to grant additional access to the `write` scope. This prompt is displayed as a pop-up dialog at the bottom of the doc:
-
-<img src="../../../images/auth_oauth_incremental.png" srcset="../../../images/auth_oauth_incremental_2x.png 2x" class="screenshot" alt="Prompting the user for additional permissions">
-
-When the user signs in again they will be prompted to approve the additional scopes, after which they will be able to use the formula successfully.
+Some APIs use short-lived tokens which must be obtained through an credential exchange or approval process. The industry-wide standard for this is OAuth 2.0, which is supported in the Pack SDK. You can read more about it in the [OAuth guide][oauth_guide]. Other forms of token exchange are not currently supported.
 
 
 ## Requiring authentication
@@ -398,7 +327,7 @@ pack.setUserAuthentication({
 
 This function is run after the user has entered their credentials, and the credentials are automatically applied to the Fetcher request.
 
-[View Sample Code][sample_oauth2]{ .md-button }
+[View Sample Code][sample_connection_name]{ .md-button }
 
 !!! tip "Use detailed account names"
     If your service allows users to [connect to multiple endpoints](#endpoints), we recommend that you include the endpoint name as well. For example, a pattern like "User Name (Endpoint Name)".
@@ -527,34 +456,29 @@ Typically a Pack can only make HTTP requests to the [network domains][network_do
 There are services however where each account is associated with a distinct domain, instead of a sub-domain of a common root domain. This makes it impossible to declare them ahead of time as network domains. In these cases you can omit network domain declaration from your Pack, which will allow it to make requests to the account's endpoint URL (and only that URL) regardless of domain.
 
 
-[samples]: ../../samples/topic/authentication.md
-[sample_auth_header]: ../../samples/topic/authentication.md#authorization-header
-[sample_custom_header]: ../../samples/topic/authentication.md#custom-header
-[sample_query_param]: ../../samples/topic/authentication.md#query-parameter
-[sample_web_basic]: ../../samples/topic/authentication.md#username-and-password
-[sample_oauth2]: ../../samples/topic/authentication.md#oauth2
-[sample_manual_endpoint]: ../../samples/topic/authentication.md#manual-endpoint
-[sample_automatic_endpoint]: ../../samples/topic/authentication.md#automatic-endpoint
-[sample_selected_endpoint]: ../../samples/topic/authentication.md#selected-endpoint
+[samples]: ../../../samples/topic/authentication.md
+[sample_auth_header]: ../../../samples/topic/authentication.md#authorization-header
+[sample_custom_header]: ../../../samples/topic/authentication.md#custom-header
+[sample_query_param]: ../../../samples/topic/authentication.md#query-parameter
+[sample_web_basic]: ../../../samples/topic/authentication.md#username-and-password
+[sample_manual_endpoint]: ../../../samples/topic/authentication.md#manual-endpoint
+[sample_automatic_endpoint]: ../../../samples/topic/authentication.md#automatic-endpoint
+[sample_selected_endpoint]: ../../../samples/topic/authentication.md#selected-endpoint
+[sample_connection_name]: ../../../samples/topic/authentication.md#oauth2
 
 [hc_account_sharing]: https://help.coda.io/en/articles/4587167-what-can-coda-access-with-packs
 [account_settings]: https://coda.io/account
-[AuthenticationType]: ../../reference/sdk/enums/core.AuthenticationType.md
-[support]: ../../support/index.md
+[AuthenticationType]: ../../../reference/sdk/enums/core.AuthenticationType.md
+[support]: ../../../support/index.md
 [coda_api_auth]: https://coda.io/developers/apis/v1#section/Authentication
-[HeaderBearerToken]: ../../reference/sdk/enums/core.AuthenticationType.md#headerbearertoken
-[CustomHeaderToken]: ../../reference/sdk/enums/core.AuthenticationType.md#customheadertoken
-[QueryParamToken]: ../../reference/sdk/enums/core.AuthenticationType.md#queryparamtoken
-[QueryParamToken]: ../../reference/sdk/enums/core.AuthenticationType.md#custom
+[HeaderBearerToken]: ../../../reference/sdk/enums/core.AuthenticationType.md#headerbearertoken
+[CustomHeaderToken]: ../../../reference/sdk/enums/core.AuthenticationType.md#customheadertoken
+[QueryParamToken]: ../../../reference/sdk/enums/core.AuthenticationType.md#queryparamtoken
+[QueryParamToken]: ../../../reference/sdk/enums/core.AuthenticationType.md#custom
 [wikipedia_basic_auth]: https://en.wikipedia.org/wiki/Basic_access_authentication
-[WebBasic]: ../../reference/sdk/enums/core.AuthenticationType.md#webbasic
-[Custom]: ../../reference/sdk/enums/core.AuthenticationType.md#custom
-[oauth_definition]: https://oauth.net/2/
-[OAuth]: ../../reference/sdk/enums/core.AuthenticationType.md#oauth2
-[OAuth2Authentication]: ../../reference/sdk/interfaces/core.OAuth2Authentication.md
-[oauth2_code]: https://www.oauth.com/oauth2-servers/server-side-apps/authorization-code/
-[oauth2_client]: https://www.oauth.com/oauth2-servers/access-tokens/client-credentials/
-[getConnectionName]: ../../reference/sdk/interfaces/core.BaseAuthentication.md#getconnectionname
-[network_domains]: fetcher.md#network-domains
-[autocomplete_dynamic]: ../basics/parameters/autocomplete.md#dynamic-options
-[extraOAuthScopes]: ../../reference/sdk/interfaces/core.BaseFormulaDef.md#extraoauthscopes
+[WebBasic]: ../../../reference/sdk/enums/core.AuthenticationType.md#webbasic
+[Custom]: ../../../reference/sdk/enums/core.AuthenticationType.md#custom
+[getConnectionName]: ../../../reference/sdk/interfaces/core.BaseAuthentication.md#getconnectionname
+[network_domains]: ../fetcher.md#network-domains
+[autocomplete_dynamic]: ../../basics/parameters/autocomplete.md#dynamic-options
+[oauth_guide]: oauth2.md

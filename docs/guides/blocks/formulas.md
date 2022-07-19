@@ -170,7 +170,7 @@ examples: [
 [cacheTtlSecs]: ../../reference/sdk/interfaces/core.PackFormulaDef.md#cachettlsecs
 [fetcher_cache]: ../advanced/fetcher.md#caching
 [fetcher_rate_limits]: ../advanced/fetcher.md#ratelimits
-[authentication]: ../advanced/authentication.md
+[authentication]: ../advanced/authentication/index.md
 [system_auth]: ../../reference/sdk/classes/core.PackDefinitionBuilder.md#setsystemauthentication
 [user_auth]: ../../reference/sdk/classes/core.PackDefinitionBuilder.md#setuserauthentication
 [connectionRequirement]: ../../reference/sdk/interfaces/core.PackFormulaDef.md#connectionrequirement
