@@ -8,13 +8,13 @@ function marshalNumber(val) {
     if (typeof val === 'number' && (isNaN(val) || val === Infinity)) {
         return {
             data: val.toString(),
-            [constants_2.MarshalingInjectedKeys.CodaMarshaler]: constants_1.CodaMarshalerType.Number,
+            [constants_2.LegacyMarshalingInjectedKeys.CodaMarshaler]: constants_1.LegacyCodaMarshalerType.Number,
         };
     }
 }
 exports.marshalNumber = marshalNumber;
 function unmarshalNumber(val) {
-    if (typeof val !== 'object' || val[constants_2.MarshalingInjectedKeys.CodaMarshaler] !== constants_1.CodaMarshalerType.Number) {
+    if (typeof val !== 'object' || val[constants_2.LegacyMarshalingInjectedKeys.CodaMarshaler] !== constants_1.LegacyCodaMarshalerType.Number) {
         return;
     }
     return Number(val.data);

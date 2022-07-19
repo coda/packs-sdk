@@ -19,6 +19,7 @@ import path from 'path';
 import {translateErrorStackFromVM} from '../common/source_map';
 import {unmarshalValue} from '../common/marshaling';
 import {unwrapError} from '../common/marshaling';
+import v8 from 'v8';
 
 /**
  * Setup an isolate context with sufficient globals needed to execute a pack.
@@ -172,6 +173,29 @@ export async function executeThunk<T extends FormulaSpecification>(
   }
 }
 
+// Lambdas can't import the v8 serialize/deserialize functions which are helpful for safely
+// data into or out of isolated-vm embedded into an error message string, so we explicitly
+// make a serialization function available within the lambda.
+export async function injectSerializer(context: Context, stubName: string) {
+  const serializeFn = (arg: any) => v8.serialize(arg).toString('base64');
+  const deserializeFn = (arg: any) => v8.deserialize(Buffer.from(arg, 'base64'));
+  await context.evalClosure(
+    `${stubName}.serialize = (arg) => $0.applySync(undefined, [arg], {arguments: {copy: true}, result: {copy: true }})`,
+    [serializeFn],
+    {
+      arguments: {reference: true},
+    },
+  );
+
+  await context.evalClosure(
+    `${stubName}.deserialize = (arg) => $0.applySync(undefined, [arg], {arguments: {copy: true}, result: {copy: true }})`,
+    [deserializeFn],
+    {
+      arguments: {reference: true},
+    },
+  );
+}
+
 /**
  * Injects the ExecutionContext object, including stubs for network calls, into the isolate.
  */
@@ -210,6 +234,9 @@ export async function injectExecutionContext({
 
   await context.global.set('executionContext', executionContextPrimitives, {copy: true});
   await context.global.set('console', {}, {copy: true});
+
+  await context.global.set('codaInternal', {serializer: {}}, {copy: true});
+  await injectSerializer(context, 'codaInternal.serializer');
 
   await injectFetcherFunction(context, 'executionContext.fetcher.fetch', fetcher.fetch.bind(fetcher));
 

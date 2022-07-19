@@ -3,13 +3,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getThunkPath = exports.registerBundles = exports.registerBundle = exports.injectExecutionContext = exports.executeThunk = exports.injectFetcherFunction = exports.injectVoidFunction = exports.injectAsyncFunction = exports.createIsolateContext = void 0;
+exports.getThunkPath = exports.registerBundles = exports.registerBundle = exports.injectExecutionContext = exports.injectSerializer = exports.executeThunk = exports.injectFetcherFunction = exports.injectVoidFunction = exports.injectAsyncFunction = exports.createIsolateContext = void 0;
 const fs_1 = __importDefault(require("fs"));
 const marshaling_1 = require("../common/marshaling");
 const path_1 = __importDefault(require("path"));
 const source_map_1 = require("../common/source_map");
 const marshaling_2 = require("../common/marshaling");
 const marshaling_3 = require("../common/marshaling");
+const v8_1 = __importDefault(require("v8"));
 /**
  * Setup an isolate context with sufficient globals needed to execute a pack.
  *
@@ -121,6 +122,20 @@ async function executeThunk(context, { params, formulaSpec }, packBundlePath, pa
     }
 }
 exports.executeThunk = executeThunk;
+// Lambdas can't import the v8 serialize/deserialize functions which are helpful for safely
+// data into or out of isolated-vm embedded into an error message string, so we explicitly
+// make a serialization function available within the lambda.
+async function injectSerializer(context, stubName) {
+    const serializeFn = (arg) => v8_1.default.serialize(arg).toString('base64');
+    const deserializeFn = (arg) => v8_1.default.deserialize(Buffer.from(arg, 'base64'));
+    await context.evalClosure(`${stubName}.serialize = (arg) => $0.applySync(undefined, [arg], {arguments: {copy: true}, result: {copy: true }})`, [serializeFn], {
+        arguments: { reference: true },
+    });
+    await context.evalClosure(`${stubName}.deserialize = (arg) => $0.applySync(undefined, [arg], {arguments: {copy: true}, result: {copy: true }})`, [deserializeFn], {
+        arguments: { reference: true },
+    });
+}
+exports.injectSerializer = injectSerializer;
 /**
  * Injects the ExecutionContext object, including stubs for network calls, into the isolate.
  */
@@ -138,6 +153,8 @@ async function injectExecutionContext({ context, fetcher, temporaryBlobStorage, 
     };
     await context.global.set('executionContext', executionContextPrimitives, { copy: true });
     await context.global.set('console', {}, { copy: true });
+    await context.global.set('codaInternal', { serializer: {} }, { copy: true });
+    await injectSerializer(context, 'codaInternal.serializer');
     await injectFetcherFunction(context, 'executionContext.fetcher.fetch', fetcher.fetch.bind(fetcher));
     await injectVoidFunction(context, 'console.trace', logger.trace.bind(logger));
     await injectVoidFunction(context, 'console.debug', logger.debug.bind(logger));

@@ -7,13 +7,13 @@ function marshalDate(val) {
     if (val instanceof Date) {
         return {
             date: val.toJSON(),
-            [constants_2.MarshalingInjectedKeys.CodaMarshaler]: constants_1.CodaMarshalerType.Date,
+            [constants_2.LegacyMarshalingInjectedKeys.CodaMarshaler]: constants_1.LegacyCodaMarshalerType.Date,
         };
     }
 }
 exports.marshalDate = marshalDate;
 function unmarshalDate(val) {
-    if (typeof val !== 'object' || val[constants_2.MarshalingInjectedKeys.CodaMarshaler] !== constants_1.CodaMarshalerType.Date) {
+    if (typeof val !== 'object' || val[constants_2.LegacyMarshalingInjectedKeys.CodaMarshaler] !== constants_1.LegacyCodaMarshalerType.Date) {
         return;
     }
     return new Date(Date.parse(val.date));

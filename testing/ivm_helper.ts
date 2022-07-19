@@ -5,6 +5,7 @@ import {createIsolateContext} from '../runtime/bootstrap';
 import fs from 'fs';
 import {getThunkPath} from '../runtime/bootstrap';
 import {injectExecutionContext} from '../runtime/bootstrap';
+import {injectSerializer} from '../runtime/bootstrap';
 import ivm from 'isolated-vm';
 import path from 'path';
 import {registerBundles} from '../runtime/bootstrap';
@@ -30,8 +31,14 @@ export async function setupIvmContext(bundlePath: string, executionContext: Exec
   //
   // TODO(huayang): this is not efficient enough and needs optimization if to be used widely in testing.
   if (fs.existsSync(CompiledHelperBundlePath)) {
+    await ivmContext.global.set('codaInternal', {serializer: {}}, {copy: true});
+    await injectSerializer(ivmContext, 'codaInternal.serializer');
+
     await registerBundles(isolate, ivmContext, bundleFullPath, CompiledHelperBundlePath, false);
   } else if (fs.existsSync(HelperTsSourceFile)) {
+    await ivmContext.global.set('codaInternal', {serializer: {}}, {copy: true});
+    await injectSerializer(ivmContext, 'codaInternal.serializer');
+
     const bundlePath = await buildBundle(HelperTsSourceFile);
     await registerBundles(isolate, ivmContext, bundleFullPath, bundlePath, false);
   } else {

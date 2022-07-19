@@ -1,5 +1,5 @@
-import {CodaMarshalerType} from './constants';
-import {MarshalingInjectedKeys} from './constants';
+import {LegacyCodaMarshalerType} from './constants';
+import {LegacyMarshalingInjectedKeys} from './constants';
 
 export function marshalBuffer(val: any): object | undefined {
   // Usually `val instanceof Buffer` would be sufficient (e.g. imported as a regular module) to decide
@@ -9,13 +9,13 @@ export function marshalBuffer(val: any): object | undefined {
   if (val instanceof Buffer || global.Buffer?.isBuffer(val)) {
     return {
       data: [...Uint8Array.from(val)],
-      [MarshalingInjectedKeys.CodaMarshaler]: CodaMarshalerType.Buffer,
+      [LegacyMarshalingInjectedKeys.CodaMarshaler]: LegacyCodaMarshalerType.Buffer,
     };
   }
 }
 
 export function unmarshalBuffer(val: {[key: string]: any}): Buffer | undefined {
-  if (typeof val !== 'object' || val[MarshalingInjectedKeys.CodaMarshaler] !== CodaMarshalerType.Buffer) {
+  if (typeof val !== 'object' || val[LegacyMarshalingInjectedKeys.CodaMarshaler] !== LegacyCodaMarshalerType.Buffer) {
     return;
   }
   return Buffer.from(val.data as Uint8Array);

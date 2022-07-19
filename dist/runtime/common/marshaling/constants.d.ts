@@ -1,8 +1,6 @@
 export declare enum CodaMarshalerType {
     Error = "Error",
-    Buffer = "Buffer",
-    Number = "Number",
-    Date = "Date"
+    Object = "Object"
 }
 export declare enum MarshalingInjectedKeys {
     CodaMarshaler = "__coda_marshaler__",

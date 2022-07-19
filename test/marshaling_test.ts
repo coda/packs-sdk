@@ -1,12 +1,32 @@
 import {MissingScopesError} from '../api';
 import {StatusCodeError} from '../api';
 import {inspect} from 'util';
+import ivm from 'isolated-vm';
 import {marshalValue} from '../runtime/common/marshaling';
 import {unmarshalValue} from '../runtime/common/marshaling';
+import {unwrapError} from '../runtime/common/marshaling';
+import {wrapError} from '../runtime/common/marshaling';
 
 describe('Marshaling', () => {
+  // The purpose of marshaling is to make sure values get into and out of isolated-vm without
+  // raising errors or getting garbled, so during the tests we'll actually pass values into
+  // and out of isolated-vm to ensure that works correctly.
+  function passThroughIsolatedVm<T>(val: T): T {
+    const isolate = new ivm.Isolate({memoryLimit: 12});
+    const ivmContext = isolate.createContextSync();
+
+    return ivmContext.evalClosureSync(`return $0`, [val], {
+      arguments: {copy: true},
+      result: {copy: true},
+    });
+  }
+
   function transform<T>(val: T): T {
-    return unmarshalValue(marshalValue(val));
+    return unmarshalValue(passThroughIsolatedVm(marshalValue(val)));
+  }
+
+  function transformError(val: Error): Error {
+    return unwrapError(new Error(passThroughIsolatedVm(wrapError(val).message)));
   }
 
   it('works for regular objects', () => {
@@ -27,12 +47,38 @@ describe('Marshaling', () => {
     assert.deepEqual(transform(NaN), NaN);
     assert.deepEqual(transform(Infinity), Infinity);
     assert.deepEqual(transform(new Date(123)), new Date(123));
+    assert.deepEqual(transform(/123/), /123/);
+    assert.deepEqual(transform(new Set([1, 2])), new Set([1, 2]));
+    assert.deepEqual(transform(new Map([['a', 2]])), new Map([['a', 2]]));
+    assert.deepEqual(transform(Uint8Array.from([1, 2, 3])), Uint8Array.from([1, 2, 3]));
+    assert.deepEqual(transform(new ArrayBuffer(10)), new ArrayBuffer(10));
 
-    // the following doesn't work yet.
-    // assert.deepEqual(transform(/123/), /123/);
-    // assert.deepEqual(transform(Uint8Array.from([1, 2, 3])), Uint8Array.from([1, 2, 3]));
-    // assert.deepEqual(transform(new Set([1, 2])), new Set([1, 2]));
-    // assert.deepEqual(transform(new Map([['a', 2]])), new Map([['a', 2]]));
+    class SomeClass {
+      message: string;
+      constructor(message: string) {
+        this.message = message;
+      }
+    }
+    assert.deepEqual(transform(new (class {})()), {});
+    assert.deepEqual(transform(new SomeClass('hi')), {message: 'hi'});
+  });
+
+  it('does not modify input objects', () => {
+    // Put buffers within frozen objects and arrays, which should raise an error if transform tries to modify
+    // them.
+    const testObj: any = Object.freeze({
+      str: 'bar',
+      arr: Object.freeze([1, 2, 3, Buffer.from('123')]),
+      nested: Object.freeze({buf: Buffer.from('123')}),
+    });
+    assert.deepEqual(transform(testObj), testObj);
+
+    // Just make sure there's no error about modifying a frozen object.
+    transform(
+      Object.freeze({
+        err: new Error('err'),
+      }),
+    );
   });
 
   it('works for a variety of compound objects', () => {
@@ -40,22 +86,26 @@ describe('Marshaling', () => {
       [null, undefined, 0, false, NaN, Infinity, {undefined: 1, null: undefined}],
       {Array: [], Boolean: false, new: {_: null}, function: undefined, NaN: 1},
       [{undefined: [{false: [{true: [{null: 0}]}]}]}],
+      ['foo', {1: Buffer.from('bar')}, [[Buffer.from('baz')]]],
     ];
     testObjects.forEach((x: any) => assert.deepEqual(transform(x), x));
   });
 
-  it('does not throw error for unhandled objects', () => {
-    transform(() => {});
-    transform(new (class {})());
-    transform(new ArrayBuffer(10));
-    void transform(new Promise(resolve => resolve(1)));
+  it('throws error for unhandled objects', () => {
+    assert.throws(() => transform(() => {}), '() => { } could not be cloned.');
+    assert.throws(() => void transform(new Promise(resolve => resolve(1))), '#<Promise> could not be cloned.');
   });
 
   it('works for nested objects', () => {
     const error = new Error('test');
-    const transformedError = transform({error}).error;
+    const transformedError = transform([{error}])[0].error;
     assert.isTrue(transformedError instanceof Error);
     assert.equal(transformedError.message, 'test');
+
+    const typeError = new TypeError('test');
+    const transformedTypeError = transform([{typeError}])[0].typeError;
+    assert.isTrue(transformedTypeError instanceof TypeError);
+    assert.equal(transformedTypeError.message, 'test');
   });
 
   describe('Errors', () => {
@@ -74,23 +124,56 @@ describe('Marshaling', () => {
       assertErrorsEqual(transform(error), error);
     });
 
+    // We test wrapError/unwrapError with "transformError", which has stricter serialization
+    // requirements than the normal marshalValue()/unmarshalValue() functions since it needs
+    // to be encoded as a string (not just a copyable object).
+
     it('works for common system errors', () => {
       const typeError = new TypeError('test');
-      const transformedError = transform(typeError);
+      const transformedError = transformError(typeError);
       assertErrorsEqual(typeError, transformedError);
       assert.isTrue(transformedError instanceof TypeError);
     });
 
     it('works for whitelisted coda errors', () => {
       const error = new StatusCodeError(404, '', {url: 'https://coda.io', method: 'GET'}, {headers: {}, body: ''});
-      const transformedError = transform(error);
+
+      const transformedError = transformError(error) as StatusCodeError;
       assertErrorsEqual(transformedError, error);
       assert.isTrue(transformedError instanceof StatusCodeError);
 
       const missingScopesError = new MissingScopesError('custom message');
-      const transformedMissingScopesError = transform(missingScopesError);
+      const transformedMissingScopesError = transformError(missingScopesError);
       assertErrorsEqual(transformedMissingScopesError, missingScopesError);
       assert.isTrue(transformedMissingScopesError instanceof MissingScopesError);
+    });
+
+    it('preserves custom type information on custom errors', () => {
+      class CustomError extends Error {
+        customData: any;
+        constructor(message: string, customData: any) {
+          super(message);
+          this.customData = customData;
+        }
+      }
+
+      const customError = new CustomError('outer error', {
+        date: new Date(123),
+        nan: NaN,
+        inf: Infinity,
+        undef: undefined,
+        nulled: null,
+        buffer: Buffer.from('abc'),
+        embeddedError: new TypeError('inner type error'),
+      });
+
+      const transformedError = transformError(customError) as CustomError;
+
+      const {embeddedError: transformedEmbeddedError, ...transformedCustomData} = transformedError.customData;
+      const {embeddedError: origEmbeddedError, ...origCustomData} = customError.customData;
+      assert.deepEqual(transformedCustomData, origCustomData);
+      assert.equal(transformedError.name, customError.name);
+      assertErrorsEqual(transformedEmbeddedError, origEmbeddedError);
     });
   });
 
@@ -102,5 +185,11 @@ describe('Marshaling', () => {
 
   it('toJSON override does not apply if not marshaling', () => {
     assert.isString(new Date().toJSON());
+  });
+
+  it('returns an error trying to unmarshal something that was never marshaled to begin with', () => {
+    assert.throws(() => unmarshalValue(undefined), 'Not a marshaled value: undefined');
+    assert.throws(() => unmarshalValue(1), 'Not a marshaled value: 1');
+    assert.throws(() => unmarshalValue({foo: 'bar'}), 'Not a marshaled value: {"foo":"bar"}');
   });
 });

@@ -4664,8 +4664,10 @@ module.exports = (() => {
     handleErrorAsync: () => handleErrorAsync,
     handleFetcherStatusError: () => handleFetcherStatusError,
     marshalValue: () => marshalValue,
+    marshalValueToString: () => marshalValueToString,
     setUpBufferForTest: () => setUpBufferForTest,
-    unmarshalValue: () => unmarshalValue
+    unmarshalValue: () => unmarshalValue,
+    unmarshalValueFromString: () => unmarshalValueFromString
   });
   init_buffer_shim();
 
@@ -4799,48 +4801,24 @@ module.exports = (() => {
   // runtime/common/marshaling/index.ts
   init_buffer_shim();
 
-  // runtime/common/marshaling/marshal_buffer.ts
-  init_buffer_shim();
-
   // runtime/common/marshaling/constants.ts
   init_buffer_shim();
 
-  // runtime/common/marshaling/marshal_buffer.ts
-  function marshalBuffer(val) {
-    var _a;
-    if (val instanceof Buffer2 || ((_a = global.Buffer) == null ? void 0 : _a.isBuffer(val))) {
-      return {
-        data: [...Uint8Array.from(val)],
-        ["__coda_marshaler__" /* CodaMarshaler */]: "Buffer" /* Buffer */
-      };
-    }
-  }
-  function unmarshalBuffer(val) {
-    if (typeof val !== "object" || val["__coda_marshaler__" /* CodaMarshaler */] !== "Buffer" /* Buffer */) {
-      return;
-    }
-    return Buffer2.from(val.data);
+  // runtime/common/marshaling/serializer.ts
+  init_buffer_shim();
+  var serialize;
+  var deserialize;
+  if (true) {
+    serialize = codaInternal.serializer.serialize;
+    deserialize = codaInternal.serializer.deserialize;
+  } else {
+    const v8 = null;
+    serialize = (value) => v8.serialize(value).toString("base64");
+    deserialize = (value) => v8.deserialize(Buffer2.from(value, "base64"));
   }
 
-  // runtime/common/marshaling/marshal_dates.ts
-  init_buffer_shim();
-  function marshalDate(val) {
-    if (val instanceof Date) {
-      return {
-        date: val.toJSON(),
-        ["__coda_marshaler__" /* CodaMarshaler */]: "Date" /* Date */
-      };
-    }
-  }
-  function unmarshalDate(val) {
-    if (typeof val !== "object" || val["__coda_marshaler__" /* CodaMarshaler */] !== "Date" /* Date */) {
-      return;
-    }
-    return new Date(Date.parse(val.date));
-  }
-
-  // runtime/common/marshaling/marshal_errors.ts
-  init_buffer_shim();
+  // runtime/common/marshaling/index.ts
+  var MaxTraverseDepth = 100;
   var recognizableSystemErrorClasses = [
     Error,
     EvalError,
@@ -4854,6 +4832,120 @@ module.exports = (() => {
     StatusCodeError,
     MissingScopesError
   ];
+  function fixUncopyableTypes(val, pathPrefix, postTransforms, depth = 0) {
+    var _a;
+    if (depth >= MaxTraverseDepth) {
+      return { val, hasModifications: false };
+    }
+    if (!val) {
+      return { val, hasModifications: false };
+    }
+    const maybeError = marshalError(val);
+    if (maybeError) {
+      postTransforms.push({
+        type: "Error" /* Error */,
+        path: [...pathPrefix]
+      });
+      return { val: maybeError, hasModifications: true };
+    }
+    if (val instanceof Buffer2 || ((_a = global.Buffer) == null ? void 0 : _a.isBuffer(val))) {
+      postTransforms.push({
+        type: "Buffer" /* Buffer */,
+        path: [...pathPrefix]
+      });
+      return { val: val.toString("base64"), hasModifications: true };
+    }
+    if (Array.isArray(val)) {
+      const maybeModifiedArray = [];
+      let someItemHadModifications = false;
+      for (let i = 0; i < val.length; i++) {
+        const item = val[i];
+        pathPrefix.push(i.toString());
+        const { val: itemVal, hasModifications } = fixUncopyableTypes(item, pathPrefix, postTransforms, depth + 1);
+        if (hasModifications) {
+          someItemHadModifications = true;
+        }
+        maybeModifiedArray.push(itemVal);
+        pathPrefix.pop();
+      }
+      if (someItemHadModifications) {
+        return { val: maybeModifiedArray, hasModifications: true };
+      }
+    }
+    if (typeof val === "object") {
+      const maybeModifiedObject = {};
+      let hadModifications = false;
+      for (const key of Object.getOwnPropertyNames(val)) {
+        pathPrefix.push(key);
+        const { val: objVal, hasModifications: subValHasModifications } = fixUncopyableTypes(val[key], pathPrefix, postTransforms, depth + 1);
+        maybeModifiedObject[key] = objVal;
+        pathPrefix.pop();
+        if (subValHasModifications) {
+          hadModifications = true;
+        }
+      }
+      if (hadModifications) {
+        return { val: maybeModifiedObject, hasModifications: true };
+      }
+    }
+    return { val, hasModifications: false };
+  }
+  function isMarshaledValue(val) {
+    return typeof val === "object" && "__coda_marshaler__" /* CodaMarshaler */ in val;
+  }
+  function marshalValue(val) {
+    const postTransforms = [];
+    const { val: encodedVal } = fixUncopyableTypes(val, [], postTransforms, 0);
+    return {
+      encoded: encodedVal,
+      postTransforms,
+      ["__coda_marshaler__" /* CodaMarshaler */]: "Object" /* Object */
+    };
+  }
+  function marshalValueToString(val) {
+    return serialize(marshalValue(val));
+  }
+  function unmarshalValueFromString(marshaledValue) {
+    return unmarshalValue(deserialize(marshaledValue));
+  }
+  function applyTransform(input, path, fn) {
+    if (path.length === 0) {
+      return fn(input);
+    } else {
+      input[path[0]] = applyTransform(input[path[0]], path.slice(1), fn);
+      return input;
+    }
+  }
+  function unmarshalValue(marshaledValue) {
+    if (!isMarshaledValue(marshaledValue)) {
+      throw Error(`Not a marshaled value: ${JSON.stringify(marshaledValue)}`);
+    }
+    let result = marshaledValue.encoded;
+    for (const transform of marshaledValue.postTransforms) {
+      if (transform.type === "Buffer") {
+        result = applyTransform(result, transform.path, (raw) => Buffer2.from(raw, "base64"));
+      } else if (transform.type === "Error") {
+        result = applyTransform(result, transform.path, (raw) => unmarshalError(raw));
+      } else {
+        throw new Error(`Not a valid type to unmarshal: ${transform.type}`);
+      }
+    }
+    return result;
+  }
+  function wrapError(err) {
+    return new Error(marshalValueToString(err));
+  }
+  function unwrapError(err) {
+    try {
+      const unmarshaledValue = unmarshalValueFromString(err.message);
+      if (unmarshaledValue instanceof Error) {
+        return unmarshaledValue;
+      }
+      return err;
+    } catch (_) {
+      return err;
+    }
+  }
   function getErrorClassType(err) {
     if (recognizableSystemErrorClasses.some((cls) => cls === err.constructor)) {
       return "System" /* System */;
@@ -4868,15 +4960,20 @@ module.exports = (() => {
       return;
     }
     const { name, stack, message, ...args } = err;
-    return {
+    const extraArgs = { ...args };
+    for (const [k, v] of Object.entries(extraArgs)) {
+      extraArgs[k] = marshalValue(v);
+    }
+    const result = {
       name,
       stack,
       message,
       ["__coda_marshaler__" /* CodaMarshaler */]: "Error" /* Error */,
       ["__error_class_name__" /* ErrorClassName */]: err.constructor.name,
       ["__error_class_type__" /* ErrorClassType */]: getErrorClassType(err),
-      ...args
+      extraArgs
     };
+    return result;
   }
   function getErrorClass(errorClassType, name) {
     let errorClasses;
@@ -4903,128 +5000,17 @@ module.exports = (() => {
       ["__error_class_name__" /* ErrorClassName */]: errorClassName,
       ["__coda_marshaler__" /* CodaMarshaler */]: _,
       ["__error_class_type__" /* ErrorClassType */]: errorClassType,
-      ...otherProperties
+      extraArgs
     } = val;
     const ErrorClass = getErrorClass(errorClassType, errorClassName);
     const error = new ErrorClass();
     error.message = message;
     error.stack = stack;
     error.name = name;
-    for (const key of Object.keys(otherProperties)) {
-      error[key] = otherProperties[key];
+    for (const key of Object.keys(extraArgs)) {
+      error[key] = unmarshalValue(extraArgs[key]);
     }
     return error;
-  }
-
-  // runtime/common/marshaling/marshal_numbers.ts
-  init_buffer_shim();
-  function marshalNumber(val) {
-    if (typeof val === "number" && (isNaN(val) || val === Infinity)) {
-      return {
-        data: val.toString(),
-        ["__coda_marshaler__" /* CodaMarshaler */]: "Number" /* Number */
-      };
-    }
-  }
-  function unmarshalNumber(val) {
-    if (typeof val !== "object" || val["__coda_marshaler__" /* CodaMarshaler */] !== "Number" /* Number */) {
-      return;
-    }
-    return Number(val.data);
-  }
-
-  // runtime/common/marshaling/index.ts
-  var HACK_UNDEFINED_JSON_VALUE = "__CODA_UNDEFINED__";
-  var MaxTraverseDepth = 100;
-  var customMarshalers = [marshalError, marshalBuffer, marshalNumber, marshalDate];
-  var customUnmarshalers = [unmarshalError, unmarshalBuffer, unmarshalNumber, unmarshalDate];
-  function serialize(val) {
-    for (const marshaler of customMarshalers) {
-      const result = marshaler(val);
-      if (result !== void 0) {
-        return result;
-      }
-    }
-    return val;
-  }
-  function deserialize(_, val) {
-    if (val) {
-      for (const unmarshaler of customUnmarshalers) {
-        const result = unmarshaler(val);
-        if (result !== void 0) {
-          return result;
-        }
-      }
-    }
-    return val;
-  }
-  function processValue(val, depth = 0) {
-    if (depth >= MaxTraverseDepth) {
-      return val;
-    }
-    if (val === void 0) {
-      return HACK_UNDEFINED_JSON_VALUE;
-    }
-    if (val === null) {
-      return val;
-    }
-    if (Array.isArray(val)) {
-      return val.map((item) => processValue(item, depth + 1));
-    }
-    const serializedValue = serialize(val);
-    if (typeof serializedValue === "object") {
-      let objectValue = serializedValue;
-      if ("toJSON" in serializedValue && typeof serializedValue.toJSON === "function") {
-        objectValue = serializedValue.toJSON();
-      }
-      const processedValue = {};
-      for (const key of Object.getOwnPropertyNames(objectValue)) {
-        processedValue[key] = processValue(objectValue[key], depth + 1);
-      }
-      return processedValue;
-    }
-    return serializedValue;
-  }
-  function marshalValue(val) {
-    return JSON.stringify(processValue(val));
-  }
-  function unmarshalValue(marshaledValue) {
-    if (marshaledValue === void 0) {
-      return marshaledValue;
-    }
-    const parsed = JSON.parse(marshaledValue, deserialize);
-    return reviveUndefinedValues(parsed);
-  }
-  function wrapError(err) {
-    return new Error(marshalValue(err));
-  }
-  function unwrapError(err) {
-    try {
-      const unmarshaledValue = unmarshalValue(err.message);
-      if (unmarshaledValue instanceof Error) {
-        return unmarshaledValue;
-      }
-      return err;
-    } catch (_) {
-      return err;
-    }
-  }
-  function reviveUndefinedValues(val) {
-    if (val === null) {
-      return val;
-    }
-    if (val === HACK_UNDEFINED_JSON_VALUE) {
-      return void 0;
-    }
-    if (Array.isArray(val)) {
-      return val.map((x) => reviveUndefinedValues(x));
-    }
-    if (typeof val === "object") {
-      for (const key of Object.getOwnPropertyNames(val)) {
-        val[key] = reviveUndefinedValues(val[key]);
-      }
-    }
-    return val;
   }
 
   // runtime/thunk/thunk.ts

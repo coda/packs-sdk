@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setUpBufferForTest = exports.handleFetcherStatusError = exports.handleError = exports.handleErrorAsync = exports.ensureSwitchUnreachable = exports.findAndExecutePackFunction = exports.unmarshalValue = exports.marshalValue = void 0;
+exports.setUpBufferForTest = exports.handleFetcherStatusError = exports.handleError = exports.handleErrorAsync = exports.ensureSwitchUnreachable = exports.findAndExecutePackFunction = exports.unmarshalValueFromString = exports.marshalValueToString = exports.unmarshalValue = exports.marshalValue = void 0;
 const types_1 = require("../../types");
 const buffer_1 = require("buffer");
 const types_2 = require("../types");
@@ -15,8 +15,9 @@ const marshaling_1 = require("../common/marshaling");
 const marshaling_2 = require("../common/marshaling");
 var marshaling_3 = require("../common/marshaling");
 Object.defineProperty(exports, "marshalValue", { enumerable: true, get: function () { return marshaling_3.marshalValue; } });
-var marshaling_4 = require("../common/marshaling");
-Object.defineProperty(exports, "unmarshalValue", { enumerable: true, get: function () { return marshaling_4.unmarshalValue; } });
+Object.defineProperty(exports, "unmarshalValue", { enumerable: true, get: function () { return marshaling_3.unmarshalValue; } });
+Object.defineProperty(exports, "marshalValueToString", { enumerable: true, get: function () { return marshaling_3.marshalValueToString; } });
+Object.defineProperty(exports, "unmarshalValueFromString", { enumerable: true, get: function () { return marshaling_3.unmarshalValueFromString; } });
 /**
  * The thunk entrypoint - the first code that runs inside the v8 isolate once control is passed over.
  */

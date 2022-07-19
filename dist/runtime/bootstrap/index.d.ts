@@ -38,6 +38,7 @@ export declare function executeThunk<T extends FormulaSpecification>(context: Co
     params: ParamValues<ParamDefs>;
     formulaSpec: T;
 }, packBundlePath: string, packBundleSourceMapPath: string): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult>;
+export declare function injectSerializer(context: Context, stubName: string): Promise<void>;
 /**
  * Injects the ExecutionContext object, including stubs for network calls, into the isolate.
  */

@@ -1,7 +1,7 @@
-import {CodaMarshalerType} from './constants';
-import {MarshalingInjectedKeys} from './constants';
-import {MissingScopesError} from '../../../api';
-import {StatusCodeError} from '../../../api';
+import {LegacyCodaMarshalerType} from './constants';
+import {LegacyMarshalingInjectedKeys} from './constants';
+import {MissingScopesError} from '../../api';
+import {StatusCodeError} from '../../api';
 
 enum ErrorClassType {
   System = 'System',
@@ -37,7 +37,7 @@ function getErrorClassType(err: Error): ErrorClassType {
   return ErrorClassType.Other;
 }
 
-export function marshalError(err: any): object | undefined {
+export function legacyMarshalError(err: any): object | undefined {
   if (!(err instanceof Error)) {
     return;
   }
@@ -53,9 +53,9 @@ export function marshalError(err: any): object | undefined {
     name,
     stack,
     message,
-    [MarshalingInjectedKeys.CodaMarshaler]: CodaMarshalerType.Error,
-    [MarshalingInjectedKeys.ErrorClassName]: err.constructor.name,
-    [MarshalingInjectedKeys.ErrorClassType]: getErrorClassType(err),
+    [LegacyMarshalingInjectedKeys.CodaMarshaler]: LegacyCodaMarshalerType.Error,
+    [LegacyMarshalingInjectedKeys.ErrorClassName]: err.constructor.name,
+    [LegacyMarshalingInjectedKeys.ErrorClassType]: getErrorClassType(err),
     ...args,
   };
 }
@@ -76,8 +76,8 @@ function getErrorClass(errorClassType: ErrorClassType, name: string): ErrorConst
   return errorClasses.find(cls => cls.name === name) || Error;
 }
 
-export function unmarshalError(val: {[key: string]: any | undefined}): Error | undefined {
-  if (typeof val !== 'object' || val[MarshalingInjectedKeys.CodaMarshaler] !== CodaMarshalerType.Error) {
+export function legacyUnmarshalError(val: {[key: string]: any | undefined}): Error | undefined {
+  if (typeof val !== 'object' || val[LegacyMarshalingInjectedKeys.CodaMarshaler] !== LegacyCodaMarshalerType.Error) {
     return;
   }
 
@@ -85,9 +85,9 @@ export function unmarshalError(val: {[key: string]: any | undefined}): Error | u
     name,
     stack,
     message,
-    [MarshalingInjectedKeys.ErrorClassName]: errorClassName,
-    [MarshalingInjectedKeys.CodaMarshaler]: _,
-    [MarshalingInjectedKeys.ErrorClassType]: errorClassType,
+    [LegacyMarshalingInjectedKeys.ErrorClassName]: errorClassName,
+    [LegacyMarshalingInjectedKeys.CodaMarshaler]: _,
+    [LegacyMarshalingInjectedKeys.ErrorClassType]: errorClassType,
     ...otherProperties
   } = val;
   const ErrorClass = getErrorClass(errorClassType, errorClassName);

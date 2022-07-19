@@ -4,9 +4,7 @@ exports.MarshalingInjectedKeys = exports.CodaMarshalerType = void 0;
 var CodaMarshalerType;
 (function (CodaMarshalerType) {
     CodaMarshalerType["Error"] = "Error";
-    CodaMarshalerType["Buffer"] = "Buffer";
-    CodaMarshalerType["Number"] = "Number";
-    CodaMarshalerType["Date"] = "Date";
+    CodaMarshalerType["Object"] = "Object";
 })(CodaMarshalerType = exports.CodaMarshalerType || (exports.CodaMarshalerType = {}));
 var MarshalingInjectedKeys;
 (function (MarshalingInjectedKeys) {

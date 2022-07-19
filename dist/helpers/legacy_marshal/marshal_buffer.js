@@ -12,13 +12,13 @@ function marshalBuffer(val) {
     if (val instanceof Buffer || ((_a = global.Buffer) === null || _a === void 0 ? void 0 : _a.isBuffer(val))) {
         return {
             data: [...Uint8Array.from(val)],
-            [constants_2.MarshalingInjectedKeys.CodaMarshaler]: constants_1.CodaMarshalerType.Buffer,
+            [constants_2.LegacyMarshalingInjectedKeys.CodaMarshaler]: constants_1.LegacyCodaMarshalerType.Buffer,
         };
     }
 }
 exports.marshalBuffer = marshalBuffer;
 function unmarshalBuffer(val) {
-    if (typeof val !== 'object' || val[constants_2.MarshalingInjectedKeys.CodaMarshaler] !== constants_1.CodaMarshalerType.Buffer) {
+    if (typeof val !== 'object' || val[constants_2.LegacyMarshalingInjectedKeys.CodaMarshaler] !== constants_1.LegacyCodaMarshalerType.Buffer) {
         return;
     }
     return Buffer.from(val.data);

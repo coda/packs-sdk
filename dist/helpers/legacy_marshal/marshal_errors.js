@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.unmarshalError = exports.marshalError = void 0;
+exports.legacyUnmarshalError = exports.legacyMarshalError = void 0;
 const constants_1 = require("./constants");
 const constants_2 = require("./constants");
-const api_1 = require("../../../api");
-const api_2 = require("../../../api");
+const api_1 = require("../../api");
+const api_2 = require("../../api");
 var ErrorClassType;
 (function (ErrorClassType) {
     ErrorClassType["System"] = "System";
@@ -34,7 +34,7 @@ function getErrorClassType(err) {
     }
     return ErrorClassType.Other;
 }
-function marshalError(err) {
+function legacyMarshalError(err) {
     if (!(err instanceof Error)) {
         return;
     }
@@ -49,13 +49,13 @@ function marshalError(err) {
         name,
         stack,
         message,
-        [constants_2.MarshalingInjectedKeys.CodaMarshaler]: constants_1.CodaMarshalerType.Error,
-        [constants_2.MarshalingInjectedKeys.ErrorClassName]: err.constructor.name,
-        [constants_2.MarshalingInjectedKeys.ErrorClassType]: getErrorClassType(err),
+        [constants_2.LegacyMarshalingInjectedKeys.CodaMarshaler]: constants_1.LegacyCodaMarshalerType.Error,
+        [constants_2.LegacyMarshalingInjectedKeys.ErrorClassName]: err.constructor.name,
+        [constants_2.LegacyMarshalingInjectedKeys.ErrorClassType]: getErrorClassType(err),
         ...args,
     };
 }
-exports.marshalError = marshalError;
+exports.legacyMarshalError = legacyMarshalError;
 function getErrorClass(errorClassType, name) {
     let errorClasses;
     switch (errorClassType) {
@@ -70,11 +70,11 @@ function getErrorClass(errorClassType, name) {
     }
     return errorClasses.find(cls => cls.name === name) || Error;
 }
-function unmarshalError(val) {
-    if (typeof val !== 'object' || val[constants_2.MarshalingInjectedKeys.CodaMarshaler] !== constants_1.CodaMarshalerType.Error) {
+function legacyUnmarshalError(val) {
+    if (typeof val !== 'object' || val[constants_2.LegacyMarshalingInjectedKeys.CodaMarshaler] !== constants_1.LegacyCodaMarshalerType.Error) {
         return;
     }
-    const { name, stack, message, [constants_2.MarshalingInjectedKeys.ErrorClassName]: errorClassName, [constants_2.MarshalingInjectedKeys.CodaMarshaler]: _, [constants_2.MarshalingInjectedKeys.ErrorClassType]: errorClassType, ...otherProperties } = val;
+    const { name, stack, message, [constants_2.LegacyMarshalingInjectedKeys.ErrorClassName]: errorClassName, [constants_2.LegacyMarshalingInjectedKeys.CodaMarshaler]: _, [constants_2.LegacyMarshalingInjectedKeys.ErrorClassType]: errorClassType, ...otherProperties } = val;
     const ErrorClass = getErrorClass(errorClassType, errorClassName);
     const error = new ErrorClass();
     error.message = message;
@@ -87,4 +87,4 @@ function unmarshalError(val) {
     }
     return error;
 }
-exports.unmarshalError = unmarshalError;
+exports.legacyUnmarshalError = legacyUnmarshalError;
