@@ -525,6 +525,13 @@ const numericDateTimePropertySchema = zodCompleteStrictObject({
     timeFormat: z.string().optional(),
     ...basePropertyValidators,
 });
+const numericDurationPropertySchema = zodCompleteStrictObject({
+    type: zodDiscriminant(schema_13.ValueType.Number),
+    codaType: zodDiscriminant(schema_12.ValueHintType.Duration),
+    precision: z.number().optional(),
+    maxUnit: z.nativeEnum(schema_4.DurationUnit).optional(),
+    ...basePropertyValidators,
+});
 const numberPropertySchema = z.union([
     numericPropertySchema,
     scalePropertySchema,
@@ -533,6 +540,7 @@ const numberPropertySchema = z.union([
     numericDatePropertySchema,
     numericTimePropertySchema,
     numericDateTimePropertySchema,
+    numericDurationPropertySchema,
 ]);
 const numericPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,

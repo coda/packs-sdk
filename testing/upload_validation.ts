@@ -32,6 +32,7 @@ import {NetworkConnection} from '../api_types';
 import type {NoAuthentication} from '../types';
 import type {NumericDateSchema} from '../schema';
 import type {NumericDateTimeSchema} from '../schema';
+import type {NumericDurationSchema} from '../schema';
 import type {NumericPackFormula} from '../api';
 import type {NumericSchema} from '../schema';
 import type {NumericTimeSchema} from '../schema';
@@ -640,6 +641,14 @@ const numericDateTimePropertySchema = zodCompleteStrictObject<NumericDateTimeSch
   ...basePropertyValidators,
 });
 
+const numericDurationPropertySchema = zodCompleteStrictObject<NumericDurationSchema & ObjectSchemaProperty>({
+  type: zodDiscriminant(ValueType.Number),
+  codaType: zodDiscriminant(ValueHintType.Duration),
+  precision: z.number().optional(),
+  maxUnit: z.nativeEnum(DurationUnit).optional(),
+  ...basePropertyValidators,
+});
+
 const numberPropertySchema = z.union([
   numericPropertySchema,
   scalePropertySchema,
@@ -648,6 +657,7 @@ const numberPropertySchema = z.union([
   numericDatePropertySchema,
   numericTimePropertySchema,
   numericDateTimePropertySchema,
+  numericDurationPropertySchema,
 ]);
 
 const numericPackFormulaSchema = zodCompleteObject<Omit<NumericPackFormula<any>, 'execute'>>({
