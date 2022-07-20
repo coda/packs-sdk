@@ -83,6 +83,7 @@ import * as coda from "@codahq/packs-sdk";
 - [NoAuthentication](../interfaces/core.NoAuthentication.md)
 - [NumericDateSchema](../interfaces/core.NumericDateSchema.md)
 - [NumericDateTimeSchema](../interfaces/core.NumericDateTimeSchema.md)
+- [NumericDurationSchema](../interfaces/core.NumericDurationSchema.md)
 - [NumericSchema](../interfaces/core.NumericSchema.md)
 - [NumericTimeSchema](../interfaces/core.NumericTimeSchema.md)
 - [OAuth2Authentication](../interfaces/core.OAuth2Authentication.md)

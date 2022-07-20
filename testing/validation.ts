@@ -140,6 +140,7 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
           return scaleErrorMessage ? [scaleErrorMessage] : [];
         case ValueHintType.Date:
         case ValueHintType.DateTime:
+        case ValueHintType.Duration:
         case ValueHintType.Time:
         case ValueHintType.Percent:
         case ValueHintType.Currency:

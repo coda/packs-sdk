@@ -182,6 +182,7 @@ export const NumberHintValueTypes = [
   ValueHintType.Date,
   ValueHintType.Time,
   ValueHintType.DateTime,
+  ValueHintType.Duration,
   ValueHintType.Percent,
   ValueHintType.Currency,
   ValueHintType.Slider,
@@ -229,7 +230,9 @@ export type NumberSchema =
   | NumericSchema
   | NumericDateSchema
   | NumericTimeSchema
-  | NumericDateTimeSchema;
+  | NumericDateTimeSchema
+  | NumericDurationSchema
+;
 
 export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> extends BaseSchema {
   /** Identifies this schema as relating to a number value. */
@@ -304,6 +307,25 @@ export interface NumericDateTimeSchema extends BaseNumberSchema<ValueHintType.Da
    * Only applies when this is used as a sync table property.
    */
   timeFormat?: string;
+}
+
+/**
+ * A schema representing a return value or object property that is provided as a number,
+ * which Coda should interpret as a duration. The given number should be in seconds of the duration.
+ */
+ export interface NumericDurationSchema extends BaseNumberSchema<ValueHintType.Duration> {
+  /** Instructs Coda to render this value as a duration. */
+  codaType: ValueHintType.Duration;
+  /**
+   * A refinement of {@link DurationSchema.maxUnit} to use for rounding the duration when rendering.
+   * Currently only `1` is supported, which is the same as omitting a value.
+   */
+   precision?: number;
+   /**
+    * The unit to use for rounding the duration when rendering. For example, if using `DurationUnit.Days`,
+    * and a value of 273600 is provided (3 days 4 hours) is provided, it will be rendered as "3 days".
+    */
+   maxUnit?: DurationUnit;
 }
 
 /**

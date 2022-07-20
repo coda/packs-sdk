@@ -28,7 +28,7 @@ BaseStringSchema.codaType
 
 #### Defined in
 
-[schema.ts:598](https://github.com/coda/packs-sdk/blob/main/schema.ts#L598)
+[schema.ts:620](https://github.com/coda/packs-sdk/blob/main/schema.ts#L620)
 
 ___
 
@@ -47,7 +47,7 @@ BaseStringSchema.description
 
 #### Defined in
 
-[schema.ts:209](https://github.com/coda/packs-sdk/blob/main/schema.ts#L209)
+[schema.ts:210](https://github.com/coda/packs-sdk/blob/main/schema.ts#L210)
 
 ___
 
@@ -59,7 +59,7 @@ ImageCornerStyle type specifying style of corners on images. If unspecified, def
 
 #### Defined in
 
-[schema.ts:602](https://github.com/coda/packs-sdk/blob/main/schema.ts#L602)
+[schema.ts:624](https://github.com/coda/packs-sdk/blob/main/schema.ts#L624)
 
 ___
 
@@ -71,7 +71,7 @@ ImageOutline type specifying style of outline on images. If unspecified, default
 
 #### Defined in
 
-[schema.ts:600](https://github.com/coda/packs-sdk/blob/main/schema.ts#L600)
+[schema.ts:622](https://github.com/coda/packs-sdk/blob/main/schema.ts#L622)
 
 ___
 
@@ -87,4 +87,4 @@ BaseStringSchema.type
 
 #### Defined in
 
-[schema.ts:646](https://github.com/coda/packs-sdk/blob/main/schema.ts#L646)
+[schema.ts:668](https://github.com/coda/packs-sdk/blob/main/schema.ts#L668)

@@ -136,6 +136,7 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
                     return scaleErrorMessage ? [scaleErrorMessage] : [];
                 case schema_1.ValueHintType.Date:
                 case schema_1.ValueHintType.DateTime:
+                case schema_1.ValueHintType.Duration:
                 case schema_1.ValueHintType.Time:
                 case schema_1.ValueHintType.Percent:
                 case schema_1.ValueHintType.Currency:
