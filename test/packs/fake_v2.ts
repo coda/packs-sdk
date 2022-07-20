@@ -3,6 +3,7 @@ import * as coda from '../..';
 export const pack = coda.newPack();
 
 pack.addNetworkDomain('googleapis.com');
+pack.addNetworkDomain('mirror.co.uk');
 
 pack.setUserAuthentication({
   type: coda.AuthenticationType.OAuth2,
@@ -175,6 +176,22 @@ pack.addFormula({
     const buffer = Buffer.from('Hello World!');
     const url = await context.temporaryBlobStorage.storeBlob(buffer, 'text/plain');
     return url;
+  },
+  cacheTtlSecs: 0,
+});
+
+pack.addFormula({
+  name: 'OverSizedResponse',
+  description: '',
+  parameters: [],
+  resultType: coda.ValueType.String,
+  execute: async ([], context) => {
+    const response = await context.fetcher.fetch({
+      method: 'GET',
+      url: 'https://i2-prod.mirror.co.uk/incoming/article21801317.ece/ALTERNATES/n615/0_MAIN-Eddie-Large.jpg',
+      maxResponseSizeInBytes: 100,
+    });
+    return response ? 'OK' : 'BAD';
   },
   cacheTtlSecs: 0,
 });

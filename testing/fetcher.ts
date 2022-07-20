@@ -8,6 +8,7 @@ import type {Credentials} from './auth_types';
 import type {CustomCredentials} from './auth_types';
 import {DEFAULT_ALLOWED_GET_DOMAINS_REGEXES} from './constants';
 import type {ExecutionContext} from '../api';
+import {FetchError} from 'node-fetch';
 import type {FetchMethodType} from '../api_types';
 import type {FetchRequest} from '../api_types';
 import type {FetchResponse} from '../api_types';
@@ -18,6 +19,7 @@ import {HttpStatusCode} from './constants';
 import type {MultiQueryParamCredentials} from './auth_types';
 import type {OAuth2Credentials} from './auth_types';
 import type {QueryParamCredentials} from './auth_types';
+import {ResponseTooLargeError} from '../api';
 import {STSClient} from '@aws-sdk/client-sts';
 import {Sha256} from '@aws-crypto/sha256-js';
 import {SignatureV4} from '@aws-sdk/signature-v4';
@@ -582,12 +584,19 @@ export class AuthenticatingFetcher implements Fetcher {
 // Namespaced object that can be mocked for testing.
 export const requestHelper = {
   makeRequest: async (request: FetcherOptionsWithFullResponse): Promise<FetcherFullResponse> => {
-    return nodeFetcher({
-      ...request,
-      resolveWithFullResponse: true,
-      timeout: 60000, // msec
-      forever: true, // keep alive connections as long as possible.
-    });
+    try {
+      return await nodeFetcher({
+        ...request,
+        resolveWithFullResponse: true,
+        timeout: 60000, // msec
+        forever: true, // keep alive connections as long as possible.
+      });
+    } catch (err) {
+      if (err instanceof FetchError && err.type === 'max-size') {
+        throw new ResponseTooLargeError(err.message);
+      }
+      throw err;
+    }
   },
 };
 
