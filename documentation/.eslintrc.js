@@ -26,7 +26,8 @@ module.exports = {
         'prefer-arrow-callback': 'off',
         'object-curly-spacing': ['error', 'always'],
         'comma-dangle': ['error', 'always-multiline'],
-        'semi': ['error', 'always',]
+        'semi': ['error', 'always',],
+        'one-var': 'off',
       },
     },
   ],

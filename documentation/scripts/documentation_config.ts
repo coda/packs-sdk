@@ -496,6 +496,12 @@ export const Examples: Example[] = [
           'A formula with a parameter that provides autocomplete for acceptable values, where the options depend on the value of a previous parameter. This sample generates a greeting in either English or Spanish.',
         codeFile: './examples/autocomplete/greeting.ts',
       },
+      {
+        name: 'Autocomplete on vararg key-value pairs',
+        content:
+          'A formula with vararg parameters that represent key-value pairs, which provides autocomplete for available keys and for acceptable values based on the selected key. This sample generates a fictitious ice cream order.',
+        codeFile: './examples/autocomplete/ice_cream.ts',
+      },
     ],
   },
   {
