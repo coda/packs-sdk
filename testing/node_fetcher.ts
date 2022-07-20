@@ -3,6 +3,7 @@ import {Agent as HttpAgent} from 'http';
 import {Agent as HttpsAgent} from 'https';
 import type {RequestInit} from 'node-fetch';
 import type {Response} from 'node-fetch';
+import {ResponseTooLargeError} from '../api';
 import * as nodeFetch from 'node-fetch';
 
 /**
@@ -199,22 +200,29 @@ async function getResultBody(
     forceJsonResponseBody,
   }: {encoding?: null | string; resolveWithRawBody?: boolean; forceJsonResponseBody?: boolean},
 ): Promise<FetcherBodyResponse> {
-  if (resolveWithRawBody) {
-    return response.body;
-  }
-
-  if (encoding === null) {
-    return response.buffer();
-  }
-
-  if (forceJsonResponseBody || response.headers.get('content-type')?.includes('application/json')) {
-    const body = await response.text();
-    try {
-      return JSON.parse(body);
-    } catch (_err) {
-      return body;
+  try {
+    if (resolveWithRawBody) {
+      return response.body;
     }
-  }
 
-  return response.text();
+    if (encoding === null) {
+      return response.buffer();
+    }
+
+    if (forceJsonResponseBody || response.headers.get('content-type')?.includes('application/json')) {
+      const body = await response.text();
+      try {
+        return JSON.parse(body);
+      } catch (_err) {
+        return body;
+      }
+    }
+
+    return response.text();
+  } catch (err) {
+    if (err instanceof nodeFetch.FetchError && err.type === 'max-size') {
+      throw new ResponseTooLargeError(err.message);
+    }
+    throw err;
+  }
 }

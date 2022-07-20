@@ -5,6 +5,7 @@ const constants_1 = require("./constants");
 const constants_2 = require("./constants");
 const api_1 = require("../../../api");
 const api_2 = require("../../../api");
+const api_3 = require("../../../api");
 const serializer_1 = require("./serializer");
 const serializer_2 = require("./serializer");
 // We rely on the javascript structuredClone() algorithm to copy arguments and results into
@@ -52,8 +53,9 @@ const recognizableSystemErrorClasses = [
 ];
 const recognizableCodaErrorClasses = [
     // StatusCodeError doesn't have the new StatusCodeError(message) constructor but it's okay.
-    api_2.StatusCodeError,
+    api_3.StatusCodeError,
     api_1.MissingScopesError,
+    api_2.ResponseTooLargeError,
 ];
 // pathPrefix can be temporarily modified, but needs to be restored to its original value
 // before returning.

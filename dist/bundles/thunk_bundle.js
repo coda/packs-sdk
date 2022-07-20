@@ -4753,6 +4753,12 @@ module.exports = (() => {
       this.response = { ...response, body: responseBody };
     }
   };
+  var ResponseTooLargeError = class extends Error {
+    constructor(message) {
+      super(message);
+      this.name = "ResponseTooLargeError";
+    }
+  };
   var MissingScopesError = class extends Error {
     constructor(message) {
       super(message || "Additional permissions are required");
@@ -4830,7 +4836,8 @@ module.exports = (() => {
   ];
   var recognizableCodaErrorClasses = [
     StatusCodeError,
-    MissingScopesError
+    MissingScopesError,
+    ResponseTooLargeError
   ];
   function fixUncopyableTypes(val, pathPrefix, postTransforms, depth = 0) {
     var _a;

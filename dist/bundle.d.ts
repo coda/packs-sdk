@@ -1473,6 +1473,16 @@ export interface FetchRequest {
 	 * wish to make an unauthenticated supporting request as part of a formula implementation.
 	 */
 	disableAuthentication?: boolean;
+	/**
+	 * By default, any fetch response that more than 4MB will be rejected with
+	 * {@link ResponseTooLargeError}. The `maxResponseSizeInBytes` option overrides the
+	 * size limit. However it only works with smaller value. `maxResponseSizeInBytes`
+	 * values larger than the default size limit will be ignored.
+	 *
+	 * If the Pack indeed to retrieve responses larger than the default size limit, please
+	 * reach out to the Coda support.
+	 */
+	maxResponseSizeInBytes?: number;
 }
 /**
  * The response of a call to {@link Fetcher.fetch}.
@@ -1914,6 +1924,17 @@ export declare class StatusCodeError extends Error {
 	response: StatusCodeErrorResponse;
 	/** @hidden */
 	constructor(statusCode: number, body: any, options: FetchRequest, response: StatusCodeErrorResponse);
+}
+/**
+ * An error that will be thrown by {@link Fetcher.fetch} when the fetcher response size is too large.
+ */
+export declare class ResponseTooLargeError extends Error {
+	/**
+	 * The name of the error, for identiciation purposes.
+	 */
+	name: string;
+	/** @hidden */
+	constructor(message?: string);
 }
 /**
  * Throw this error if the user needs to re-authenticate to gain OAuth scopes that have been added

@@ -416,6 +416,7 @@ describe('Auth', () => {
         uri: 'https://example.com',
         encoding: undefined,
         resolveWithFullResponse: true,
+        maxResponseSizeBytes: undefined,
       });
     });
 
@@ -433,6 +434,7 @@ describe('Auth', () => {
           uri: 'https://example.com',
           encoding: undefined,
           resolveWithFullResponse: true,
+          maxResponseSizeBytes: undefined,
         });
       };
       it('defaultAuthentication', () => execTest(createPackWithDefaultAuth(auth)));
@@ -455,6 +457,7 @@ describe('Auth', () => {
           uri: 'https://example.com',
           encoding: undefined,
           resolveWithFullResponse: true,
+          maxResponseSizeBytes: undefined,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
@@ -481,6 +484,7 @@ describe('Auth', () => {
           uri: 'https://some-endpoint-url.com/foo',
           encoding: undefined,
           resolveWithFullResponse: true,
+          maxResponseSizeBytes: undefined,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth, opts)));
@@ -507,6 +511,7 @@ describe('Auth', () => {
           uri: 'https://some-endpoint-url.com/foo',
           encoding: undefined,
           resolveWithFullResponse: true,
+          maxResponseSizeBytes: undefined,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth, opts)));
@@ -553,6 +558,7 @@ describe('Auth', () => {
           uri: 'https://example.com',
           encoding: undefined,
           resolveWithFullResponse: true,
+          maxResponseSizeBytes: undefined,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
@@ -583,6 +589,7 @@ describe('Auth', () => {
           uri: 'https://example.com',
           encoding: undefined,
           resolveWithFullResponse: true,
+          maxResponseSizeBytes: undefined,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
@@ -609,6 +616,7 @@ describe('Auth', () => {
           uri: 'https://example.com',
           encoding: undefined,
           resolveWithFullResponse: true,
+          maxResponseSizeBytes: undefined,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
@@ -634,6 +642,7 @@ describe('Auth', () => {
           uri: 'https://example.com/foo?myParam=some-param-value&blah=123',
           encoding: undefined,
           resolveWithFullResponse: true,
+          maxResponseSizeBytes: undefined,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
@@ -662,6 +671,7 @@ describe('Auth', () => {
           uri: 'https://example.com/foo?blah=123&param1=param-value-1&param2=param-value-2',
           encoding: undefined,
           resolveWithFullResponse: true,
+          maxResponseSizeBytes: undefined,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
@@ -689,6 +699,7 @@ describe('Auth', () => {
           uri: 'https://example.com',
           encoding: undefined,
           resolveWithFullResponse: true,
+          maxResponseSizeBytes: undefined,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
@@ -811,6 +822,7 @@ describe('Auth', () => {
           uri: 'https://example.com',
           encoding: undefined,
           resolveWithFullResponse: true,
+          maxResponseSizeBytes: undefined,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
@@ -841,6 +853,7 @@ describe('Auth', () => {
           uri: 'https://some-endpoint-url.com/foo?bar=blah',
           encoding: undefined,
           resolveWithFullResponse: true,
+          maxResponseSizeBytes: undefined,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth, opts)));
@@ -1152,6 +1165,7 @@ describe('Auth', () => {
         uri: 'https://example.com',
         encoding: undefined,
         resolveWithFullResponse: true,
+        maxResponseSizeBytes: undefined,
       });
     });
 
@@ -1188,6 +1202,7 @@ describe('Auth', () => {
           uri: 'https://example.com/some-blob.jpg',
           encoding: null,
           resolveWithFullResponse: true,
+          maxResponseSizeBytes: undefined,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth, opts)));
@@ -1245,6 +1260,7 @@ describe('Auth', () => {
           uri: 'https://example.com',
           encoding: undefined,
           resolveWithFullResponse: true,
+          maxResponseSizeBytes: undefined,
         });
 
         sinon.assert.calledOnceWithMatch(fakeLaunchOAuthServerFlow, {
@@ -1287,6 +1303,7 @@ describe('Auth', () => {
           uri: 'https://example.com',
           encoding: undefined,
           resolveWithFullResponse: true,
+          maxResponseSizeBytes: undefined,
         });
 
         sinon.assert.calledOnceWithMatch(fakeLaunchOAuthServerFlow, {

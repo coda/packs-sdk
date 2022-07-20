@@ -34,7 +34,7 @@ to construct URLs to use with the fetcher. Alternatively, you can use relative U
 
 #### Defined in
 
-[api_types.ts:692](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L692)
+[api_types.ts:702](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L702)
 
 ___
 
@@ -73,7 +73,7 @@ This is mostly for Coda internal use and we do not recommend relying on it.
 
 #### Defined in
 
-[api_types.ts:697](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L697)
+[api_types.ts:707](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L707)
 
 ___
 
@@ -92,7 +92,7 @@ replaced by the fetcher in secure way.
 
 #### Defined in
 
-[api_types.ts:708](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L708)
+[api_types.ts:718](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L718)
 
 ___
 
@@ -148,4 +148,4 @@ The timezone of the doc from which this formula was invoked.
 
 #### Defined in
 
-[api_types.ts:701](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L701)
+[api_types.ts:711](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L711)

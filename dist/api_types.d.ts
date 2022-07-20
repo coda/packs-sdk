@@ -408,6 +408,16 @@ export interface FetchRequest {
      * wish to make an unauthenticated supporting request as part of a formula implementation.
      */
     disableAuthentication?: boolean;
+    /**
+     * By default, any fetch response that more than 4MB will be rejected with
+     * {@link ResponseTooLargeError}. The `maxResponseSizeInBytes` option overrides the
+     * size limit. However it only works with smaller value. `maxResponseSizeInBytes`
+     * values larger than the default size limit will be ignored.
+     *
+     * If the Pack indeed to retrieve responses larger than the default size limit, please
+     * reach out to the Coda support.
+     */
+    maxResponseSizeInBytes?: number;
 }
 /**
  * The response of a call to {@link Fetcher.fetch}.

@@ -59,8 +59,9 @@ class AuthenticatingFetcher {
                 body,
                 resolveWithFullResponse: true,
                 form,
-                // Omitting maxResponseSizeBytes since some packs are permitted larger values
-                // in production.
+                // Omitting the default maxResponseSizeBytes since some packs are
+                // permitted larger values in production.
+                maxResponseSizeBytes: request.maxResponseSizeInBytes,
             });
         }
         catch (requestFailure) {
@@ -436,7 +437,9 @@ class AuthenticatingFetcher {
         const parsed = new url_1.URL(url);
         const host = parsed.host.toLowerCase();
         const allowedDomains = this._networkDomains || [];
-        if (!allowedDomains.map(domain => domain.toLowerCase()).some(domain => host === domain || host.endsWith(`.${domain}`)) &&
+        if (!allowedDomains
+            .map(domain => domain.toLowerCase())
+            .some(domain => host === domain || host.endsWith(`.${domain}`)) &&
             !(method === 'GET' ? constants_1.DEFAULT_ALLOWED_GET_DOMAINS_REGEXES : []).some(domain => domain.test(host.toLowerCase()))) {
             throw new Error(`Attempted to connect to undeclared host '${host}'`);
         }

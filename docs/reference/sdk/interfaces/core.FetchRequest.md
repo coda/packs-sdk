@@ -103,6 +103,24 @@ will be a NodeJS Buffer.
 
 ___
 
+### maxResponseSizeInBytes
+
+• `Optional` **maxResponseSizeInBytes**: `number`
+
+By default, any fetch response that more than 4MB will be rejected with
+[ResponseTooLargeError](../classes/core.ResponseTooLargeError.md). The `maxResponseSizeInBytes` option overrides the
+size limit. However it only works with smaller value. `maxResponseSizeInBytes`
+values larger than the default size limit will be ignored.
+
+If the Pack indeed to retrieve responses larger than the default size limit, please
+reach out to the Coda support.
+
+#### Defined in
+
+[api_types.ts:527](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L527)
+
+___
+
 ### method
 
 • **method**: ``"GET"`` \| ``"PATCH"`` \| ``"POST"`` \| ``"PUT"`` \| ``"DELETE"`` \| ``"HEAD"``

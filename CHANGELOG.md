@@ -2,9 +2,10 @@
 
 This changelog keeps track of all changes to the Packs SDK. We follow conventions from [keepachangelog](https://keepachangelog.com/en/1.0.0/).
 
-## Not yet released
+## [1.0.3] - Not yet released
 
 - Added `ImageSchema`, for use with images. Allows packs to set two flags on a formula returning an image: if the image should be rendered with or without an outline, and whether to turn off the rounded corners. If the outline flag `ImageOutline` is not set on a schema, the default is `Solid`, and the image will be rendered with an outline. If the corners flag `ImageCornerStyle` is not set, the default is `Rounded`, and the image will be rendered with rounded corners.
+- Added an optional `maxResponseSizeInBytes` parameter to allow restricting the fetch response size.
 
 ## [1.0.2] - 2022-07-14
 

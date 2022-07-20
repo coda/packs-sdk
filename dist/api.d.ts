@@ -101,6 +101,17 @@ export declare class StatusCodeError extends Error {
     constructor(statusCode: number, body: any, options: FetchRequest, response: StatusCodeErrorResponse);
 }
 /**
+ * An error that will be thrown by {@link Fetcher.fetch} when the fetcher response size is too large.
+ */
+export declare class ResponseTooLargeError extends Error {
+    /**
+     * The name of the error, for identiciation purposes.
+     */
+    name: string;
+    /** @hidden */
+    constructor(message?: string);
+}
+/**
  * Throw this error if the user needs to re-authenticate to gain OAuth scopes that have been added
  * to the pack since their connection was created, or scopes that are specific to a certain formula.
  * This is useful because Coda will always attempt to execute a formula even if a user has not yet
