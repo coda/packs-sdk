@@ -556,7 +556,8 @@ You'll notice that it takes in an account as a parameter, and it should auto-sel
 
 Now that you have an understanding of how to use OAuth2 in Packs, here are some more resources you can explore:
 
-- [Authentication guide][authentication] - More in-depth information about how to setup authentication in a Pack, including OAuth2.
+- [Authentication guide][authentication] - Information about how authentication works in Packs.
+- [OAuth guide][oauth_guide] - More in-depth information about how to setup OAuth authentication.
 - [Sample code][samples_apis] - A collection of sample Packs that use OAuth2 to connect to various popular APIs.
 
 
@@ -571,5 +572,6 @@ Now that you have an understanding of how to use OAuth2 in Packs, here are some 
 [todoist_console]: https://developer.todoist.com/appconsole.html
 [oauth_standard]: https://datatracker.ietf.org/doc/html/rfc6749
 [todoist_tasks]: https://developer.todoist.com/rest/v1/#get-active-tasks
-[authentication]: ../../guides/advanced/authentication.md
+[authentication]: ../../guides/advanced/authentication/index.md
 [samples_apis]: ../../samples/topic/apis.md
+[oauth_guide]: ../../guides/advanced/authentication/oauth2.md

@@ -415,8 +415,8 @@ dig +short egress.coda.io
 [stringify]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
 [cacheTtlSecs]: ../../reference/sdk/interfaces/core.FetchRequest.md#cacheTtlSecs
 [formula_cache]: ../blocks/formulas.md#caching
-[authentication]: ../advanced/authentication.md
+[authentication]: ../advanced/authentication/index.md
 [spec_headers]: https://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
 [baseauthentication_networkdomain]: ../../reference/sdk/interfaces/core.BaseAuthentication.md#networkdomain
-[auth_user]: ../advanced/authentication.md#user
+[auth_user]: ../advanced/authentication/index.md#user
 [temporaryblobstorage]: ../../reference/sdk/interfaces/core.TemporaryBlobStorage.md
