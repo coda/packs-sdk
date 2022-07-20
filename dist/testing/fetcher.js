@@ -7,7 +7,9 @@ exports.newFetcherSyncExecutionContext = exports.newFetcherExecutionContext = ex
 const client_sts_1 = require("@aws-sdk/client-sts");
 const types_1 = require("../types");
 const constants_1 = require("./constants");
+const node_fetch_1 = require("node-fetch");
 const constants_2 = require("./constants");
+const api_1 = require("../api");
 const client_sts_2 = require("@aws-sdk/client-sts");
 const sha256_js_1 = require("@aws-crypto/sha256-js");
 const signature_v4_1 = require("@aws-sdk/signature-v4");
@@ -449,12 +451,20 @@ exports.AuthenticatingFetcher = AuthenticatingFetcher;
 // Namespaced object that can be mocked for testing.
 exports.requestHelper = {
     makeRequest: async (request) => {
-        return (0, node_fetcher_1.nodeFetcher)({
-            ...request,
-            resolveWithFullResponse: true,
-            timeout: 60000,
-            forever: true, // keep alive connections as long as possible.
-        });
+        try {
+            return await (0, node_fetcher_1.nodeFetcher)({
+                ...request,
+                resolveWithFullResponse: true,
+                timeout: 60000,
+                forever: true, // keep alive connections as long as possible.
+            });
+        }
+        catch (err) {
+            if (err instanceof node_fetch_1.FetchError && err.type === 'max-size') {
+                throw new api_1.ResponseTooLargeError(err.message);
+            }
+            throw err;
+        }
     },
 };
 class AuthenticatingBlobStorage {

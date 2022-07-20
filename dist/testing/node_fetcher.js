@@ -26,7 +26,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.nodeFetcher = exports.isStatusCodeError = exports.StatusCodeError = exports.fetch = void 0;
 const http_1 = require("http");
 const https_1 = require("https");
-const api_1 = require("../api");
 const nodeFetch = __importStar(require("node-fetch"));
 /**
  * A wrapper for fetch() that allows us to
@@ -131,28 +130,20 @@ async function nodeFetcher(options) {
 exports.nodeFetcher = nodeFetcher;
 async function getResultBody(response, { encoding, resolveWithRawBody, forceJsonResponseBody, }) {
     var _a;
-    try {
-        if (resolveWithRawBody) {
-            return response.body;
-        }
-        if (encoding === null) {
-            return response.buffer();
-        }
-        if (forceJsonResponseBody || ((_a = response.headers.get('content-type')) === null || _a === void 0 ? void 0 : _a.includes('application/json'))) {
-            const body = await response.text();
-            try {
-                return JSON.parse(body);
-            }
-            catch (_err) {
-                return body;
-            }
-        }
-        return response.text();
+    if (resolveWithRawBody) {
+        return response.body;
     }
-    catch (err) {
-        if (err instanceof nodeFetch.FetchError && err.type === 'max-size') {
-            throw new api_1.ResponseTooLargeError(err.message);
-        }
-        throw err;
+    if (encoding === null) {
+        return response.buffer();
     }
+    if (forceJsonResponseBody || ((_a = response.headers.get('content-type')) === null || _a === void 0 ? void 0 : _a.includes('application/json'))) {
+        const body = await response.text();
+        try {
+            return JSON.parse(body);
+        }
+        catch (_err) {
+            return body;
+        }
+    }
+    return response.text();
 }
