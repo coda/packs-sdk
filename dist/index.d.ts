@@ -141,6 +141,7 @@ export type { NumberSchema } from './schema';
 export type { NumericDateSchema } from './schema';
 export type { NumericDateTimeSchema } from './schema';
 export type { NumericTimeSchema } from './schema';
+export type { NumericDurationSchema } from './schema';
 export type { NumericSchema } from './schema';
 export type { ObjectSchema } from './schema';
 export type { ObjectSchemaDefinition } from './schema';

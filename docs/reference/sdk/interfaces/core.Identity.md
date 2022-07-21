@@ -30,7 +30,7 @@ See [attribution](core.ObjectSchemaDefinition.md#attribution)
 
 #### Defined in
 
-[schema.ts:786](https://github.com/coda/packs-sdk/blob/main/schema.ts#L786)
+[schema.ts:808](https://github.com/coda/packs-sdk/blob/main/schema.ts#L808)
 
 ___
 
@@ -52,7 +52,7 @@ you wish to reference, again to distinguish which table instance you are trying 
 
 #### Defined in
 
-[schema.ts:782](https://github.com/coda/packs-sdk/blob/main/schema.ts#L782)
+[schema.ts:804](https://github.com/coda/packs-sdk/blob/main/schema.ts#L804)
 
 ___
 
@@ -69,7 +69,7 @@ For example, if you are defining a schema that represents a user object, "User" 
 
 #### Defined in
 
-[schema.ts:770](https://github.com/coda/packs-sdk/blob/main/schema.ts#L770)
+[schema.ts:792](https://github.com/coda/packs-sdk/blob/main/schema.ts#L792)
 
 ___
 
@@ -85,4 +85,4 @@ The ID of another pack, if you are trying to reference a value from different pa
 
 #### Defined in
 
-[schema.ts:794](https://github.com/coda/packs-sdk/blob/main/schema.ts#L794)
+[schema.ts:816](https://github.com/coda/packs-sdk/blob/main/schema.ts#L816)

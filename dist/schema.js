@@ -185,6 +185,7 @@ exports.NumberHintValueTypes = [
     ValueHintType.Date,
     ValueHintType.Time,
     ValueHintType.DateTime,
+    ValueHintType.Duration,
     ValueHintType.Percent,
     ValueHintType.Currency,
     ValueHintType.Slider,
