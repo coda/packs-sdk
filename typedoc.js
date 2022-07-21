@@ -19,6 +19,8 @@ module.exports = {
     // Internal intermediate or helper types that we probably don't care to export or document.
     '$Values',
     'AsAuthDef',
+    'AutocompleteParameterTypeMapping',
+    'AutocompleteParameterTypes',
     'BooleanHintValueTypes',
     'GenericObjectSchema',
     'NumberHintValueTypes',
@@ -26,7 +28,7 @@ module.exports = {
     'ObjectSchema',
     'ObjectSchemaDefinitionType',
     'ObjectSchemaType',
-    'ParameterTypeMap',
+    'ParameterTypeMap',    
     'SimpleStringHintTypes',
     'StringHintTypeToSchemaType',
     'StringHintValueTypes',

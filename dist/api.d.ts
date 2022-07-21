@@ -230,10 +230,24 @@ export declare function isUserVisibleError(error: Error): error is UserVisibleEr
 export declare function isDynamicSyncTable(syncTable: SyncTable): syncTable is GenericDynamicSyncTable;
 export declare function wrapMetadataFunction(fnOrFormula: MetadataFormula | MetadataFunction | undefined): MetadataFormula | undefined;
 export declare function wrapGetSchema(getSchema: MetadataFormula | undefined): MetadataFormula | undefined;
+/**
+ * List of ParameterTypes that support autocomplete.
+ */
+export declare type AutocompleteParameterTypes = ParameterType.Number | ParameterType.String | ParameterType.StringArray | ParameterType.SparseStringArray;
+/**
+ * Mapping of autocomplete-enabled ParameterTypes to the underlying Type that should be returned
+ * by the autocomplete parameter.
+ */
+export interface AutocompleteParameterTypeMapping {
+    [ParameterType.Number]: Type.number;
+    [ParameterType.String]: Type.string;
+    [ParameterType.StringArray]: Type.string;
+    [ParameterType.SparseStringArray]: Type.string;
+}
 /** Options you can specify when defining a parameter using {@link makeParameter}. */
 export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[T]>, 'type' | 'autocomplete'> & {
     type: T;
-    autocomplete?: T extends ParameterType.Number | ParameterType.String ? MetadataFormulaDef | Array<TypeMap[ParameterTypeMap[T]] | SimpleAutocompleteOption<T>> : undefined;
+    autocomplete?: T extends AutocompleteParameterTypes ? MetadataFormulaDef | Array<TypeMap[AutocompleteParameterTypeMapping[T]] | SimpleAutocompleteOption<T>> : undefined;
 };
 /**
  * Create a definition for a parameter for a formula or sync.
@@ -655,11 +669,11 @@ export declare function makeMetadataFormula(execute: MetadataFunction, options?:
  * A result from a parameter autocomplete function that pairs a UI display value with
  * the underlying option that will be used in the formula when selected.
  */
-export interface SimpleAutocompleteOption<T extends ParameterType.Number | ParameterType.String> {
+export interface SimpleAutocompleteOption<T extends AutocompleteParameterTypes> {
     /** Text that will be displayed to the user in UI for this option. */
     display: string;
     /** The actual value that will get used in the formula if this option is selected. */
-    value: TypeMap[ParameterTypeMap[T]];
+    value: TypeMap[AutocompleteParameterTypeMapping[T]];
 }
 /**
  * Utility to search over an array of autocomplete results and return only those that
@@ -681,7 +695,7 @@ export interface SimpleAutocompleteOption<T extends ParameterType.Number | Param
  * }
  * ```
  */
-export declare function simpleAutocomplete<T extends ParameterType.Number | ParameterType.String>(search: string | undefined, options: Array<TypeMap[ParameterTypeMap[T]] | SimpleAutocompleteOption<T>>): Promise<MetadataFormulaObjectResultType[]>;
+export declare function simpleAutocomplete<T extends AutocompleteParameterTypes>(search: string | undefined, options: Array<TypeMap[AutocompleteParameterTypeMapping[T]] | SimpleAutocompleteOption<T>>): Promise<MetadataFormulaObjectResultType[]>;
 /**
  * A helper to search over a list of objects representing candidate search results,
  * filtering to only those that match a search string, and converting the matching
@@ -719,7 +733,7 @@ export declare function autocompleteSearchObjects<T>(search: string, objs: T[], 
  * as the value of the `autocomplete` property in your parameter definition. There is no longer
  * any needed to wrap a value with this formula.
  */
-export declare function makeSimpleAutocompleteMetadataFormula<T extends ParameterType.Number | ParameterType.String>(options: Array<TypeMap[ParameterTypeMap[T]] | SimpleAutocompleteOption<T>>): MetadataFormula;
+export declare function makeSimpleAutocompleteMetadataFormula<T extends AutocompleteParameterTypes>(options: Array<TypeMap[AutocompleteParameterTypeMapping[T]] | SimpleAutocompleteOption<T>>): MetadataFormula;
 /** @deprecated */
 export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({ response, ...definition }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT>;
 /**

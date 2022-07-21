@@ -280,12 +280,42 @@ describe('API test', () => {
       });
     });
 
+    it('autocomplete works for array param', () => {
+      makeFormula({
+        resultType: ValueType.String,
+        name: 'Test',
+        description: '',
+        parameters: [makeParameter({
+          type: ParameterType.StringArray, 
+          name: 'myParam', 
+          description: '',
+          autocomplete: ['Foo', 'Bar', 'Baz'],
+        })],
+        execute: ([param]) => param[0],
+      });
+    });
+
     it('sparse array inferred from makeParameter with array param', () => {
       makeFormula({
         resultType: ValueType.String,
         name: 'Test',
         description: '',
         parameters: [makeParameter({type: ParameterType.SparseStringArray, name: 'myParam', description: ''})],
+        execute: ([param]) => param[0] ?? 'undefined',
+      });
+    });
+
+    it('autocomplete works for array param', () => {
+      makeFormula({
+        resultType: ValueType.String,
+        name: 'Test',
+        description: '',
+        parameters: [makeParameter({
+          type: ParameterType.SparseStringArray, 
+          name: 'myParam', 
+          description: '',
+          autocomplete: ['Foo', 'Bar', 'Baz'],
+        })],
         execute: ([param]) => param[0] ?? 'undefined',
       });
     });

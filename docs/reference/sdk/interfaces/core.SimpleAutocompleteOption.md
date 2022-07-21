@@ -12,7 +12,7 @@ the underlying option that will be used in the formula when selected.
 
 | Name | Type |
 | :------ | :------ |
-| `T` | extends [`Number`](../enums/core.ParameterType.md#number) \| [`String`](../enums/core.ParameterType.md#string) |
+| `T` | extends `AutocompleteParameterTypes` |
 
 ## Properties
 
@@ -24,16 +24,16 @@ Text that will be displayed to the user in UI for this option.
 
 #### Defined in
 
-[api.ts:1116](https://github.com/coda/packs-sdk/blob/main/api.ts#L1116)
+[api.ts:1137](https://github.com/coda/packs-sdk/blob/main/api.ts#L1137)
 
 ___
 
 ### value
 
-• **value**: `TypeMap`[`ParameterTypeMap`[`T`]]
+• **value**: `TypeMap`[`AutocompleteParameterTypeMapping`[`T`]]
 
 The actual value that will get used in the formula if this option is selected.
 
 #### Defined in
 
-[api.ts:1118](https://github.com/coda/packs-sdk/blob/main/api.ts#L1118)
+[api.ts:1139](https://github.com/coda/packs-sdk/blob/main/api.ts#L1139)
