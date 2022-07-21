@@ -59,7 +59,7 @@ However if the API provider deviates too far from the OAuth 2.0 specification it
 
 ### Set developer credentials
 
-After you the add the configuration code, build a new version of your Pack and then navigate to the **Settings** tab. There you'll see an **Add OAuth Credentials** button you can use to set the Pack's credentials.
+After you add the configuration code, build a new version of your Pack and then navigate to the **Settings** tab. There you'll see an **Add OAuth Credentials** button you can use to set the Pack's credentials.
 
 <img src="../../../../images/auth_oauth.png" srcset="../../../../images/auth_oauth_2x.png 2x" class="screenshot" alt="Setting the OAuth client ID and secret">
 
