@@ -103,21 +103,25 @@ will be a NodeJS Buffer.
 
 ___
 
-### maxResponseSizeInBytes
+### maxResponseSizeBytes
 
-• `Optional` **maxResponseSizeInBytes**: `number`
+• `Optional` **maxResponseSizeBytes**: `number`
 
 By default, any fetch response that more than 4MB will be rejected with
-[ResponseTooLargeError](../classes/core.ResponseTooLargeError.md). The `maxResponseSizeInBytes` option overrides the
-size limit. However it only works with smaller value. `maxResponseSizeInBytes`
+[ResponseTooLargeError](../classes/core.ResponseTooLargeError.md). The `maxResponseSizeBytes` option overrides the
+size limit. However it only works with smaller value. `maxResponseSizeBytes`
 values larger than the default size limit will be ignored.
+
+This option is useful if your Pack is memory heavy. For example, if the Pack is
+going to manipulating an image (e.g. resizing), it's suggested to ignore images
+larger than 1MB to avoid a potential out-of-memory crash.
 
 If the Pack indeed to retrieve responses larger than the default size limit, please
 reach out to the Coda support.
 
 #### Defined in
 
-[api_types.ts:527](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L527)
+[api_types.ts:531](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L531)
 
 ___
 

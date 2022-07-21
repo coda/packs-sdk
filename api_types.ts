@@ -517,14 +517,18 @@ export interface FetchRequest {
   disableAuthentication?: boolean;
   /**
    * By default, any fetch response that more than 4MB will be rejected with
-   * {@link ResponseTooLargeError}. The `maxResponseSizeInBytes` option overrides the
-   * size limit. However it only works with smaller value. `maxResponseSizeInBytes`
+   * {@link ResponseTooLargeError}. The `maxResponseSizeBytes` option overrides the
+   * size limit. However it only works with smaller value. `maxResponseSizeBytes`
    * values larger than the default size limit will be ignored.
+   *
+   * This option is useful if your Pack is memory heavy. For example, if the Pack is
+   * going to manipulating an image (e.g. resizing), it's suggested to ignore images
+   * larger than 1MB to avoid a potential out-of-memory crash.
    *
    * If the Pack indeed to retrieve responses larger than the default size limit, please
    * reach out to the Coda support.
    */
-  maxResponseSizeInBytes?: number;
+  maxResponseSizeBytes?: number;
 }
 
 /**

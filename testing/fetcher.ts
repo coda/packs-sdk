@@ -104,7 +104,7 @@ export class AuthenticatingFetcher implements Fetcher {
         form,
         // Omitting the default maxResponseSizeBytes since some packs are
         // permitted larger values in production.
-        maxResponseSizeBytes: request.maxResponseSizeInBytes,
+        maxResponseSizeBytes: request.maxResponseSizeBytes,
       });
     } catch (requestFailure: any) {
       // Only attempt 1 retry

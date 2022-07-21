@@ -63,7 +63,7 @@ class AuthenticatingFetcher {
                 form,
                 // Omitting the default maxResponseSizeBytes since some packs are
                 // permitted larger values in production.
-                maxResponseSizeBytes: request.maxResponseSizeInBytes,
+                maxResponseSizeBytes: request.maxResponseSizeBytes,
             });
         }
         catch (requestFailure) {

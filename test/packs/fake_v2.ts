@@ -189,7 +189,7 @@ pack.addFormula({
     const response = await context.fetcher.fetch({
       method: 'GET',
       url: 'https://i2-prod.mirror.co.uk/incoming/article21801317.ece/ALTERNATES/n615/0_MAIN-Eddie-Large.jpg',
-      maxResponseSizeInBytes: 100,
+      maxResponseSizeBytes: 100,
     });
     return response ? 'OK' : 'BAD';
   },
