@@ -31,14 +31,14 @@ autocomplete: async function(context, search) {
 
 | Name | Type |
 | :------ | :------ |
-| `T` | extends [`String`](../enums/core.ParameterType.md#string) \| [`Number`](../enums/core.ParameterType.md#number) |
+| `T` | extends `AutocompleteParameterTypes` |
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `search` | `undefined` \| `string` |
-| `options` | (`TypeMap`[`ParameterTypeMap`[`T`]] \| [`SimpleAutocompleteOption`](../interfaces/core.SimpleAutocompleteOption.md)<`T`\>)[] |
+| `options` | (`TypeMap`[`AutocompleteParameterTypeMapping`[`T`]] \| [`SimpleAutocompleteOption`](../interfaces/core.SimpleAutocompleteOption.md)<`T`\>)[] |
 
 #### Returns
 

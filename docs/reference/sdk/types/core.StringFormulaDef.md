@@ -17,4 +17,4 @@ A definition accepted by [makeFormula](../functions/core.makeFormula.md) for a f
 
 #### Defined in
 
-[api.ts:907](https://github.com/coda/packs-sdk/blob/main/api.ts#L907)
+[api.ts:928](https://github.com/coda/packs-sdk/blob/main/api.ts#L928)

@@ -17,13 +17,13 @@ any needed to wrap a value with this formula.
 
 | Name | Type |
 | :------ | :------ |
-| `T` | extends [`String`](../enums/core.ParameterType.md#string) \| [`Number`](../enums/core.ParameterType.md#number) |
+| `T` | extends `AutocompleteParameterTypes` |
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `options` | (`TypeMap`[`ParameterTypeMap`[`T`]] \| [`SimpleAutocompleteOption`](../interfaces/core.SimpleAutocompleteOption.md)<`T`\>)[] |
+| `options` | (`TypeMap`[`AutocompleteParameterTypeMapping`[`T`]] \| [`SimpleAutocompleteOption`](../interfaces/core.SimpleAutocompleteOption.md)<`T`\>)[] |
 
 #### Returns
 
