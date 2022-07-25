@@ -300,8 +300,8 @@ const defaultAuthenticationValidators = {
     }),
     [types_1.AuthenticationType.OAuth2]: zodCompleteStrictObject({
         type: zodDiscriminant(types_1.AuthenticationType.OAuth2),
-        authorizationUrl: z.string(),
-        tokenUrl: z.string(),
+        authorizationUrl: z.string().url(),
+        tokenUrl: z.string().url(),
         scopes: z.array(z.string()).optional(),
         scopeDelimiter: z.enum([' ', ',', ';']).optional(),
         tokenPrefix: z.string().optional(),

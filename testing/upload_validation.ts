@@ -380,8 +380,8 @@ const defaultAuthenticationValidators: Record<AuthenticationType, z.ZodTypeAny> 
   }),
   [AuthenticationType.OAuth2]: zodCompleteStrictObject<OAuth2Authentication>({
     type: zodDiscriminant(AuthenticationType.OAuth2),
-    authorizationUrl: z.string(),
-    tokenUrl: z.string(),
+    authorizationUrl: z.string().url(),
+    tokenUrl: z.string().url(),
     scopes: z.array(z.string()).optional(),
     scopeDelimiter: z.enum([' ', ',', ';']).optional(),
     tokenPrefix: z.string().optional(),
