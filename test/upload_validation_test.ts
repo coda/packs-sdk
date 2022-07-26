@@ -2309,8 +2309,8 @@ describe('Pack metadata Validation', () => {
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
           type: AuthenticationType.OAuth2,
-          authorizationUrl: 'some-url',
-          tokenUrl: 'some-url',
+          authorizationUrl: 'https://example.com/authUrl',
+          tokenUrl: 'https://example.com/tokenUrl',
           scopes: ['scope 1', 'scope 2'],
           tokenPrefix: 'some-prefix',
           additionalParams: {foo: 'bar'},
@@ -2333,11 +2333,32 @@ describe('Pack metadata Validation', () => {
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
           type: AuthenticationType.OAuth2,
+          authorizationUrl: 'https://example.com/authUrl',
+          tokenUrl: 'https://example.com/tokenUrl',
+        },
+      });
+      await validateJson(metadata);
+    });
+
+    it('OAuth2, errors', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.OAuth2,
           authorizationUrl: 'some-url',
           tokenUrl: 'some-url',
         },
       });
-      await validateJson(metadata);
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: 'Invalid url',
+          path: 'defaultAuthentication.authorizationUrl',
+        },
+        {
+          message: 'Invalid url',
+          path: 'defaultAuthentication.tokenUrl',
+        },
+      ]);
     });
 
     it('WebBasic', async () => {
