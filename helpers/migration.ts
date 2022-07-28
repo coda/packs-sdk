@@ -45,26 +45,6 @@ class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
   get attribution() {
     return this._schema.attribution ?? this._schema.identity?.attribution;
   }
-
-  get imageProperty() {
-    return this._schema.imageProperty;
-  }
-
-  get descriptionProperty() {
-    return this._schema.descriptionProperty;
-  }
-
-  get subtitleProperties() {
-    return this._schema.subtitleProperties;
-  }
-
-  get linkProperty() {
-    return this._schema.linkProperty;
-  }
-
-  get titleProperty() {
-    return this._schema.titleProperty;
-  }
 }
 
 export function paramDefHelper<S extends UnionType, T extends ParamDef<S>>(def: T): ParamDefHelper<S, T> {
