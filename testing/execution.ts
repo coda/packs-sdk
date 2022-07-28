@@ -472,6 +472,6 @@ export function newRealFetcherSyncExecutionContext(
   packDef: BasicPackDefinition,
   manifestPath: string,
 ): SyncExecutionContext {
-  const context = newRealFetcherSyncExecutionContext(packDef, manifestPath);
+  const context = newRealFetcherExecutionContext(packDef, manifestPath);
   return {...context, sync: {}};
 }

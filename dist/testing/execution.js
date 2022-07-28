@@ -298,7 +298,7 @@ function newRealFetcherExecutionContext(packDef, manifestPath) {
 }
 exports.newRealFetcherExecutionContext = newRealFetcherExecutionContext;
 function newRealFetcherSyncExecutionContext(packDef, manifestPath) {
-    const context = newRealFetcherSyncExecutionContext(packDef, manifestPath);
+    const context = newRealFetcherExecutionContext(packDef, manifestPath);
     return { ...context, sync: {} };
 }
 exports.newRealFetcherSyncExecutionContext = newRealFetcherSyncExecutionContext;
