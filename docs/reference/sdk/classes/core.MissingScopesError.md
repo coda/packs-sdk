@@ -36,4 +36,4 @@ Error.name
 
 #### Defined in
 
-[api.ts:165](https://github.com/coda/packs-sdk/blob/main/api.ts#L165)
+[api.ts:166](https://github.com/coda/packs-sdk/blob/main/api.ts#L166)

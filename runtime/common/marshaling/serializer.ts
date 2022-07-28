@@ -20,6 +20,13 @@ let deserialize: (buffer: string) => any;
 if (process.env.IS_THUNK) {
   serialize = codaInternal.serializer.serialize;
   deserialize = codaInternal.serializer.deserialize;
+} else if (process.env.IS_BROWSER) {
+  serialize = (): string => {
+    throw new Error('Not implemented');
+  };
+  deserialize = (): string => {
+    throw new Error('Not implemented');
+  };
 } else {
   const v8 = require('v8');
   serialize = (value: any): string => v8.serialize(value).toString('base64');

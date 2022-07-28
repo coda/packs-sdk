@@ -178,3 +178,30 @@ pack.addFormula({
   },
   cacheTtlSecs: 0,
 });
+
+pack.addFormula({
+  name: 'StatusCode',
+  description: '<Help text for the formula>',
+  parameters: [
+    coda.makeParameter({
+      type: coda.ParameterType.Number,
+      name: 'status',
+      description: '<Help text for the parameter>',
+    }),
+    // Add more parameters here and in the array below.
+  ],
+  resultType: coda.ValueType.String,
+  cacheTtlSecs: 0,
+  async execute([param], context) {
+    try {
+      const response = await context.fetcher.fetch({url: `https://httpbin.org/status/${param}`, method: 'GET'});
+      return `${response.status}`;
+    } catch (err) {
+      if (err instanceof coda.StatusCodeError) {
+        return `Error is StatusCodeError with code ${err.statusCode}`;
+      } else {
+        return `Unrecogonized error ${JSON.stringify(err)}`;
+      }
+    }
+  },
+});

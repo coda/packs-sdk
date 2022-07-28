@@ -116,13 +116,14 @@ compile:
 	# copy buffer.d.ts to be used by monaco browser.
 	cp ${ROOTDIR}/node_modules/buffer/index.d.ts ${ROOTDIR}/dist/buffer.d.ts
 
-	# this bundle is executed by lambda, either cjs or iife format should work.
+	# This bundle is used by the Pack studio to compile the pack bundle in the browser. It eventually runs in IVM.
 	${ROOTDIR}/node_modules/.bin/esbuild ${ROOTDIR}/index.ts \
 		--bundle \
 		--outfile=${ROOTDIR}/dist/bundle.js \
-		--format=cjs \
+		--define:process.env.IS_THUNK=true \
 		--minify \
 		--target=node14;
+
 	# Generate a typescript file for use in /experimental so the web editor
 	# can resolve packs-sdk imports
 	${ROOTDIR}/node_modules/.bin/dts-bundle-generator ${ROOTDIR}/index.ts \

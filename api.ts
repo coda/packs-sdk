@@ -3,6 +3,7 @@ import type {ArrayType} from './api_types';
 import type {BooleanSchema} from './schema';
 import type {CommonPackFormulaDef} from './api_types';
 import {ConnectionRequirement} from './api_types';
+import {ContextStub} from './context_stub';
 import type {ExecutionContext} from './api_types';
 import type {FetchRequest} from './api_types';
 import type {Identity} from './schema';
@@ -337,12 +338,11 @@ export function wrapGetSchema(getSchema: MetadataFormula | undefined): MetadataF
 /**
  * List of ParameterTypes that support autocomplete.
  */
-export type AutocompleteParameterTypes = 
-  | ParameterType.Number 
-  | ParameterType.String 
-  | ParameterType.StringArray 
-  | ParameterType.SparseStringArray
-;
+export type AutocompleteParameterTypes =
+  | ParameterType.Number
+  | ParameterType.String
+  | ParameterType.StringArray
+  | ParameterType.SparseStringArray;
 
 /**
  * Mapping of autocomplete-enabled ParameterTypes to the underlying Type that should be returned
@@ -360,7 +360,7 @@ export type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterT
   type: T;
   autocomplete?: T extends AutocompleteParameterTypes
     ? MetadataFormulaDef | Array<TypeMap[AutocompleteParameterTypeMapping[T]] | SimpleAutocompleteOption<T>>
-    : undefined
+    : undefined;
 };
 
 /**
@@ -900,7 +900,7 @@ export function makeFormula<ParamDefsT extends ParamDefs, ResultT extends ValueT
     };
   }
 
-  return maybeRewriteConnectionForFormula(formula, fullDefinition.connectionRequirement) as Formula<
+  return maybeRewriteConnectionAndStubContextForFormula(formula, fullDefinition.connectionRequirement) as Formula<
     ParamDefsT,
     ResultT,
     SchemaT
@@ -1510,7 +1510,10 @@ export function makeSyncTable<
   dynamicOptions = {},
 }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT> {
   const {getSchema: getSchemaDef, entityName, defaultAddDynamicColumns} = dynamicOptions;
-  const {execute: wrappedExecute, ...definition} = maybeRewriteConnectionForFormula(formula, connectionRequirement);
+  const {execute: wrappedExecute, ...definition} = maybeRewriteConnectionAndStubContextForFormula(
+    formula,
+    connectionRequirement,
+  );
 
   // Since we mutate schemaDef, we need to make a copy so the input schema can be reused across sync tables.
   const schemaDef = deepCopy(inputSchema);
@@ -1570,7 +1573,7 @@ export function makeSyncTable<
       connectionRequirement: definition.connectionRequirement || connectionRequirement,
       resultType: Type.object as any,
     },
-    getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
+    getSchema: maybeRewriteConnectionAndStubContextForFormula(getSchema, connectionRequirement),
     entityName,
     defaultAddDynamicColumns,
   };
@@ -1687,9 +1690,9 @@ export function makeDynamicSyncTable<
   return {
     ...table,
     isDynamic: true,
-    getDisplayUrl: maybeRewriteConnectionForFormula(getDisplayUrl, connectionRequirement),
-    listDynamicUrls: maybeRewriteConnectionForFormula(listDynamicUrls, connectionRequirement),
-    getName: maybeRewriteConnectionForFormula(getName, connectionRequirement),
+    getDisplayUrl: maybeRewriteConnectionAndStubContextForFormula(getDisplayUrl, connectionRequirement),
+    listDynamicUrls: maybeRewriteConnectionAndStubContextForFormula(listDynamicUrls, connectionRequirement),
+    getName: maybeRewriteConnectionAndStubContextForFormula(getName, connectionRequirement),
   } as DynamicSyncTableDef<K, L, ParamDefsT, any>;
 }
 
@@ -1789,9 +1792,13 @@ export function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: Empty
   });
 }
 
-export function maybeRewriteConnectionForFormula<
+export function maybeRewriteConnectionAndStubContextForFormula<
   ParamDefsT extends ParamDefs,
-  T extends CommonPackFormulaDef<ParamDefsT> | undefined,
+  T extends
+    | (CommonPackFormulaDef<ParamDefsT> & {
+        execute(params: ParamValues<any>, context: ExecutionContext | SyncExecutionContext): any;
+      })
+    | undefined,
 >(formula: T, connectionRequirement: ConnectionRequirement | undefined): T {
   if (formula && connectionRequirement) {
     return {
@@ -1800,7 +1807,7 @@ export function maybeRewriteConnectionForFormula<
         return {
           ...param,
           autocomplete: param.autocomplete
-            ? maybeRewriteConnectionForFormula(param.autocomplete, connectionRequirement)
+            ? maybeRewriteConnectionAndStubContextForFormula(param.autocomplete, connectionRequirement)
             : undefined,
         };
       }) as ParamDefsT,
@@ -1808,12 +1815,22 @@ export function maybeRewriteConnectionForFormula<
         return {
           ...param,
           autocomplete: param.autocomplete
-            ? maybeRewriteConnectionForFormula(param.autocomplete, connectionRequirement)
+            ? maybeRewriteConnectionAndStubContextForFormula(param.autocomplete, connectionRequirement)
             : undefined,
         };
       }) as ParamDefsT,
       connectionRequirement,
     };
   }
+
+  if (formula) {
+    const originalExecute = formula.execute;
+    formula.execute = (params: ParamValues<any>, context: ExecutionContext | SyncExecutionContext) => {
+      // this type casting isn't exactly correct. if there's a 3rd execution context type added
+      // (in addition to ExecutionContext and SyncExecutionContext), ContextStub might be missing fields.
+      return originalExecute(params, new ContextStub(context) as typeof context);
+    };
+  }
+
   return formula;
 }

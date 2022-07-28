@@ -4686,117 +4686,8 @@ module.exports = (() => {
   // api_types.ts
   init_buffer_shim();
 
-  // schema.ts
+  // context_stub.ts
   init_buffer_shim();
-
-  // helpers/ensure.ts
-  init_buffer_shim();
-  function ensureExists(value, message) {
-    if (typeof value === "undefined" || value === null) {
-      throw new (getErrorConstructor(message))(message || `Expected value for ${String(value)}`);
-    }
-    return value;
-  }
-  function getErrorConstructor(message) {
-    return message ? UserVisibleError : Error;
-  }
-
-  // helpers/object_utils.ts
-  init_buffer_shim();
-
-  // helpers/migration.ts
-  init_buffer_shim();
-  function setEndpointHelper(step) {
-    return new SetEndpointHelper(step);
-  }
-  var SetEndpointHelper = class {
-    constructor(step) {
-      this._step = step;
-    }
-    get getOptions() {
-      return ensureExists(this._step.getOptions ?? this._step.getOptionsFormula);
-    }
-  };
-
-  // schema.ts
-  var import_pascalcase = __toESM(require_pascalcase());
-
-  // handler_templates.ts
-  init_buffer_shim();
-  var import_clone = __toESM(require_clone());
-
-  // helpers/url.ts
-  init_buffer_shim();
-  var import_qs = __toESM(require_lib());
-  var import_url_parse = __toESM(require_url_parse());
-
-  // api.ts
-  var UserVisibleError = class extends Error {
-    constructor(message, internalError) {
-      super(message);
-      this.isUserVisible = true;
-      this.internalError = internalError;
-    }
-  };
-  var StatusCodeError = class extends Error {
-    constructor(statusCode, body, options, response) {
-      super(`${statusCode} - ${JSON.stringify(body)}`);
-      this.name = "StatusCodeError";
-      this.statusCode = statusCode;
-      this.body = body;
-      this.error = body;
-      this.options = options;
-      let responseBody = response == null ? void 0 : response.body;
-      if (typeof responseBody === "object") {
-        responseBody = JSON.stringify(responseBody);
-      }
-      this.response = { ...response, body: responseBody };
-    }
-  };
-  var MissingScopesError = class extends Error {
-    constructor(message) {
-      super(message || "Additional permissions are required");
-      this.name = "MissingScopesError";
-    }
-  };
-  function isDynamicSyncTable(syncTable) {
-    return "isDynamic" in syncTable;
-  }
-
-  // runtime/common/helpers.ts
-  init_buffer_shim();
-  function findFormula(packDef, formulaNameWithNamespace) {
-    const packFormulas = packDef.formulas;
-    if (!packFormulas) {
-      throw new Error(`Pack definition has no formulas.`);
-    }
-    const [namespace, name] = formulaNameWithNamespace.includes("::") ? formulaNameWithNamespace.split("::") : ["", formulaNameWithNamespace];
-    if (namespace) {
-      console.log(`Warning: formula was invoked with a namespace (${formulaNameWithNamespace}), but namespaces are now deprecated.`);
-    }
-    const formulas = Array.isArray(packFormulas) ? packFormulas : packFormulas[namespace];
-    if (!formulas || !formulas.length) {
-      throw new Error(`Pack definition has no formulas${namespace ?? ` for namespace "${namespace}"`}.`);
-    }
-    for (const formula of formulas) {
-      if (formula.name === name) {
-        return formula;
-      }
-    }
-    throw new Error(`Pack definition has no formula "${name}"${namespace ?? ` in namespace "${namespace}"`}.`);
-  }
-  function findSyncFormula(packDef, syncFormulaName) {
-    if (!packDef.syncTables) {
-      throw new Error(`Pack definition has no sync tables.`);
-    }
-    for (const syncTable of packDef.syncTables) {
-      const syncFormula = syncTable.getter;
-      if (syncTable.name === syncFormulaName) {
-        return syncFormula;
-      }
-    }
-    throw new Error(`Pack definition has no sync formula "${syncFormulaName}" in its sync tables.`);
-  }
 
   // runtime/common/marshaling/index.ts
   init_buffer_shim();
@@ -4811,6 +4702,13 @@ module.exports = (() => {
   if (true) {
     serialize = codaInternal.serializer.serialize;
     deserialize = codaInternal.serializer.deserialize;
+  } else if (process.env.IS_BROWSER) {
+    serialize = () => {
+      throw new Error("Not implemented");
+    };
+    deserialize = () => {
+      throw new Error("Not implemented");
+    };
   } else {
     const v8 = null;
     serialize = (value) => v8.serialize(value).toString("base64");
@@ -5011,6 +4909,118 @@ module.exports = (() => {
       error[key] = unmarshalValue(extraArgs[key]);
     }
     return error;
+  }
+
+  // schema.ts
+  init_buffer_shim();
+
+  // helpers/ensure.ts
+  init_buffer_shim();
+  function ensureExists(value, message) {
+    if (typeof value === "undefined" || value === null) {
+      throw new (getErrorConstructor(message))(message || `Expected value for ${String(value)}`);
+    }
+    return value;
+  }
+  function getErrorConstructor(message) {
+    return message ? UserVisibleError : Error;
+  }
+
+  // helpers/object_utils.ts
+  init_buffer_shim();
+
+  // helpers/migration.ts
+  init_buffer_shim();
+  function setEndpointHelper(step) {
+    return new SetEndpointHelper(step);
+  }
+  var SetEndpointHelper = class {
+    constructor(step) {
+      this._step = step;
+    }
+    get getOptions() {
+      return ensureExists(this._step.getOptions ?? this._step.getOptionsFormula);
+    }
+  };
+
+  // schema.ts
+  var import_pascalcase = __toESM(require_pascalcase());
+
+  // handler_templates.ts
+  init_buffer_shim();
+  var import_clone = __toESM(require_clone());
+
+  // helpers/url.ts
+  init_buffer_shim();
+  var import_qs = __toESM(require_lib());
+  var import_url_parse = __toESM(require_url_parse());
+
+  // api.ts
+  var UserVisibleError = class extends Error {
+    constructor(message, internalError) {
+      super(message);
+      this.isUserVisible = true;
+      this.internalError = internalError;
+    }
+  };
+  var StatusCodeError = class extends Error {
+    constructor(statusCode, body, options, response) {
+      super(`${statusCode} - ${JSON.stringify(body)}`);
+      this.name = "StatusCodeError";
+      this.statusCode = statusCode;
+      this.body = body;
+      this.error = body;
+      this.options = options;
+      let responseBody = response == null ? void 0 : response.body;
+      if (typeof responseBody === "object") {
+        responseBody = JSON.stringify(responseBody);
+      }
+      this.response = { ...response, body: responseBody };
+    }
+  };
+  var MissingScopesError = class extends Error {
+    constructor(message) {
+      super(message || "Additional permissions are required");
+      this.name = "MissingScopesError";
+    }
+  };
+  function isDynamicSyncTable(syncTable) {
+    return "isDynamic" in syncTable;
+  }
+
+  // runtime/common/helpers.ts
+  init_buffer_shim();
+  function findFormula(packDef, formulaNameWithNamespace) {
+    const packFormulas = packDef.formulas;
+    if (!packFormulas) {
+      throw new Error(`Pack definition has no formulas.`);
+    }
+    const [namespace, name] = formulaNameWithNamespace.includes("::") ? formulaNameWithNamespace.split("::") : ["", formulaNameWithNamespace];
+    if (namespace) {
+      console.log(`Warning: formula was invoked with a namespace (${formulaNameWithNamespace}), but namespaces are now deprecated.`);
+    }
+    const formulas = Array.isArray(packFormulas) ? packFormulas : packFormulas[namespace];
+    if (!formulas || !formulas.length) {
+      throw new Error(`Pack definition has no formulas${namespace ?? ` for namespace "${namespace}"`}.`);
+    }
+    for (const formula of formulas) {
+      if (formula.name === name) {
+        return formula;
+      }
+    }
+    throw new Error(`Pack definition has no formula "${name}"${namespace ?? ` in namespace "${namespace}"`}.`);
+  }
+  function findSyncFormula(packDef, syncFormulaName) {
+    if (!packDef.syncTables) {
+      throw new Error(`Pack definition has no sync tables.`);
+    }
+    for (const syncTable of packDef.syncTables) {
+      const syncFormula = syncTable.getter;
+      if (syncTable.name === syncFormulaName) {
+        return syncFormula;
+      }
+    }
+    throw new Error(`Pack definition has no sync formula "${syncFormulaName}" in its sync tables.`);
   }
 
   // runtime/thunk/thunk.ts

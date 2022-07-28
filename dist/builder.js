@@ -270,7 +270,9 @@ class PackDefinitionBuilder {
         // Rewrite any formulas or sync tables that were already defined, in case the maker sets the default
         // after the fact.
         this.formulas = this.formulas.map(formula => {
-            return formula.connectionRequirement ? formula : (0, api_5.maybeRewriteConnectionForFormula)(formula, connectionRequirement);
+            return formula.connectionRequirement
+                ? formula
+                : (0, api_5.maybeRewriteConnectionAndStubContextForFormula)(formula, connectionRequirement);
         });
         this.syncTables = this.syncTables.map(syncTable => {
             if (syncTable.getter.connectionRequirement) {
@@ -279,7 +281,7 @@ class PackDefinitionBuilder {
             else if ((0, api_1.isDynamicSyncTable)(syncTable)) {
                 return {
                     ...syncTable,
-                    getter: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getter, connectionRequirement),
+                    getter: (0, api_5.maybeRewriteConnectionAndStubContextForFormula)(syncTable.getter, connectionRequirement),
                     // These 4 are metadata formulas, so they use ConnectionRequirement.Required
                     // by default if you don't specify a connection requirement (a legacy behavior
                     // that is confusing and perhaps undesirable now that we have better builders).
@@ -291,17 +293,17 @@ class PackDefinitionBuilder {
                     // always work, but it does give rise to confusing behavior that calling
                     // setDefaultConnectionRequirement() can wipe away an explicit connection
                     // requirement override set on one of these 4 metadata formulas.
-                    getName: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getName, connectionRequirement),
-                    getDisplayUrl: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getDisplayUrl, connectionRequirement),
-                    getSchema: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getSchema, connectionRequirement),
-                    listDynamicUrls: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.listDynamicUrls, connectionRequirement),
+                    getName: (0, api_5.maybeRewriteConnectionAndStubContextForFormula)(syncTable.getName, connectionRequirement),
+                    getDisplayUrl: (0, api_5.maybeRewriteConnectionAndStubContextForFormula)(syncTable.getDisplayUrl, connectionRequirement),
+                    getSchema: (0, api_5.maybeRewriteConnectionAndStubContextForFormula)(syncTable.getSchema, connectionRequirement),
+                    listDynamicUrls: (0, api_5.maybeRewriteConnectionAndStubContextForFormula)(syncTable.listDynamicUrls, connectionRequirement),
                 };
             }
             else {
                 return {
                     ...syncTable,
-                    getter: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getter, connectionRequirement),
-                    getSchema: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getSchema, connectionRequirement),
+                    getter: (0, api_5.maybeRewriteConnectionAndStubContextForFormula)(syncTable.getter, connectionRequirement),
+                    getSchema: (0, api_5.maybeRewriteConnectionAndStubContextForFormula)(syncTable.getSchema, connectionRequirement),
                 };
             }
         });

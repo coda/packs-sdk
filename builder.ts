@@ -21,7 +21,7 @@ import {isDynamicSyncTable} from './api';
 import {makeDynamicSyncTable} from './api';
 import {makeFormula} from './api';
 import {makeSyncTable} from './api';
-import {maybeRewriteConnectionForFormula} from './api';
+import {maybeRewriteConnectionAndStubContextForFormula} from './api';
 import {setEndpointDefHelper} from './helpers/migration';
 import {wrapMetadataFunction} from './api';
 
@@ -366,7 +366,9 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     // Rewrite any formulas or sync tables that were already defined, in case the maker sets the default
     // after the fact.
     this.formulas = this.formulas.map(formula => {
-      return formula.connectionRequirement ? formula : maybeRewriteConnectionForFormula(formula, connectionRequirement);
+      return formula.connectionRequirement
+        ? formula
+        : maybeRewriteConnectionAndStubContextForFormula(formula, connectionRequirement);
     });
     this.syncTables = this.syncTables.map(syncTable => {
       if (syncTable.getter.connectionRequirement) {
@@ -374,7 +376,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       } else if (isDynamicSyncTable(syncTable)) {
         return {
           ...syncTable,
-          getter: maybeRewriteConnectionForFormula(syncTable.getter, connectionRequirement),
+          getter: maybeRewriteConnectionAndStubContextForFormula(syncTable.getter, connectionRequirement),
           // These 4 are metadata formulas, so they use ConnectionRequirement.Required
           // by default if you don't specify a connection requirement (a legacy behavior
           // that is confusing and perhaps undesirable now that we have better builders).
@@ -386,16 +388,19 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
           // always work, but it does give rise to confusing behavior that calling
           // setDefaultConnectionRequirement() can wipe away an explicit connection
           // requirement override set on one of these 4 metadata formulas.
-          getName: maybeRewriteConnectionForFormula(syncTable.getName, connectionRequirement),
-          getDisplayUrl: maybeRewriteConnectionForFormula(syncTable.getDisplayUrl, connectionRequirement),
-          getSchema: maybeRewriteConnectionForFormula(syncTable.getSchema, connectionRequirement),
-          listDynamicUrls: maybeRewriteConnectionForFormula(syncTable.listDynamicUrls, connectionRequirement),
+          getName: maybeRewriteConnectionAndStubContextForFormula(syncTable.getName, connectionRequirement),
+          getDisplayUrl: maybeRewriteConnectionAndStubContextForFormula(syncTable.getDisplayUrl, connectionRequirement),
+          getSchema: maybeRewriteConnectionAndStubContextForFormula(syncTable.getSchema, connectionRequirement),
+          listDynamicUrls: maybeRewriteConnectionAndStubContextForFormula(
+            syncTable.listDynamicUrls,
+            connectionRequirement,
+          ),
         };
       } else {
         return {
           ...syncTable,
-          getter: maybeRewriteConnectionForFormula(syncTable.getter, connectionRequirement),
-          getSchema: maybeRewriteConnectionForFormula(syncTable.getSchema, connectionRequirement),
+          getter: maybeRewriteConnectionAndStubContextForFormula(syncTable.getter, connectionRequirement),
+          getSchema: maybeRewriteConnectionAndStubContextForFormula(syncTable.getSchema, connectionRequirement),
         };
       }
     });

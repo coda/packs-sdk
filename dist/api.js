@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.maybeRewriteConnectionForFormula = exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTableLegacy = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makeMetadataFormula = exports.makeFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeFileArrayParameter = exports.makeFileParameter = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeParameter = exports.wrapGetSchema = exports.wrapMetadataFunction = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.MissingScopesError = exports.StatusCodeError = exports.UserVisibleError = void 0;
+exports.maybeRewriteConnectionAndStubContextForFormula = exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTableLegacy = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makeMetadataFormula = exports.makeFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeFileArrayParameter = exports.makeFileParameter = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeParameter = exports.wrapGetSchema = exports.wrapMetadataFunction = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.MissingScopesError = exports.StatusCodeError = exports.UserVisibleError = void 0;
 const api_types_1 = require("./api_types");
+const context_stub_1 = require("./context_stub");
 const api_types_2 = require("./api_types");
 const api_types_3 = require("./api_types");
 const schema_1 = require("./schema");
@@ -434,7 +435,7 @@ function makeFormula(fullDefinition) {
             }
         };
     }
-    return maybeRewriteConnectionForFormula(formula, fullDefinition.connectionRequirement);
+    return maybeRewriteConnectionAndStubContextForFormula(formula, fullDefinition.connectionRequirement);
 }
 exports.makeFormula = makeFormula;
 /**
@@ -640,7 +641,7 @@ exports.makeObjectFormula = makeObjectFormula;
  */
 function makeSyncTable({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions = {}, }) {
     const { getSchema: getSchemaDef, entityName, defaultAddDynamicColumns } = dynamicOptions;
-    const { execute: wrappedExecute, ...definition } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
+    const { execute: wrappedExecute, ...definition } = maybeRewriteConnectionAndStubContextForFormula(formula, connectionRequirement);
     // Since we mutate schemaDef, we need to make a copy so the input schema can be reused across sync tables.
     const schemaDef = (0, object_utils_1.deepCopy)(inputSchema);
     // Hydrate the schema's identity.
@@ -694,7 +695,7 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
             connectionRequirement: definition.connectionRequirement || connectionRequirement,
             resultType: api_types_3.Type.object,
         },
-        getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
+        getSchema: maybeRewriteConnectionAndStubContextForFormula(getSchema, connectionRequirement),
         entityName,
         defaultAddDynamicColumns,
     };
@@ -766,9 +767,9 @@ function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchem
     return {
         ...table,
         isDynamic: true,
-        getDisplayUrl: maybeRewriteConnectionForFormula(getDisplayUrl, connectionRequirement),
-        listDynamicUrls: maybeRewriteConnectionForFormula(listDynamicUrls, connectionRequirement),
-        getName: maybeRewriteConnectionForFormula(getName, connectionRequirement),
+        getDisplayUrl: maybeRewriteConnectionAndStubContextForFormula(getDisplayUrl, connectionRequirement),
+        listDynamicUrls: maybeRewriteConnectionAndStubContextForFormula(listDynamicUrls, connectionRequirement),
+        getName: maybeRewriteConnectionAndStubContextForFormula(getName, connectionRequirement),
     };
 }
 exports.makeDynamicSyncTable = makeDynamicSyncTable;
@@ -861,7 +862,7 @@ function makeEmptyFormula(definition) {
     });
 }
 exports.makeEmptyFormula = makeEmptyFormula;
-function maybeRewriteConnectionForFormula(formula, connectionRequirement) {
+function maybeRewriteConnectionAndStubContextForFormula(formula, connectionRequirement) {
     var _a;
     if (formula && connectionRequirement) {
         return {
@@ -870,7 +871,7 @@ function maybeRewriteConnectionForFormula(formula, connectionRequirement) {
                 return {
                     ...param,
                     autocomplete: param.autocomplete
-                        ? maybeRewriteConnectionForFormula(param.autocomplete, connectionRequirement)
+                        ? maybeRewriteConnectionAndStubContextForFormula(param.autocomplete, connectionRequirement)
                         : undefined,
                 };
             }),
@@ -878,13 +879,21 @@ function maybeRewriteConnectionForFormula(formula, connectionRequirement) {
                 return {
                     ...param,
                     autocomplete: param.autocomplete
-                        ? maybeRewriteConnectionForFormula(param.autocomplete, connectionRequirement)
+                        ? maybeRewriteConnectionAndStubContextForFormula(param.autocomplete, connectionRequirement)
                         : undefined,
                 };
             }),
             connectionRequirement,
         };
     }
+    if (formula) {
+        const originalExecute = formula.execute;
+        formula.execute = (params, context) => {
+            // this type casting isn't exactly correct. if there's a 3rd execution context type added
+            // (in addition to ExecutionContext and SyncExecutionContext), ContextStub might be missing fields.
+            return originalExecute(params, new context_stub_1.ContextStub(context));
+        };
+    }
     return formula;
 }
-exports.maybeRewriteConnectionForFormula = maybeRewriteConnectionForFormula;
+exports.maybeRewriteConnectionAndStubContextForFormula = maybeRewriteConnectionAndStubContextForFormula;
