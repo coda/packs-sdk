@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.zodErrorDetailToValidationError = exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.NETWORK_DOMAIN_CHARACTER_LIMIT = exports.COLUMN_MATCHERS_COUNT_LIMIT = exports.BUILDING_BLOCK_DESCRIPTION_CHARACTER_LIMIT = exports.BUILDING_BLOCK_NAME_CHARACTER_LIMIT = exports.BUILDING_BLOCK_COUNT_LIMIT = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
+exports.zodErrorDetailToValidationError = exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.NETWORK_DOMAIN_CHARACTER_LIMIT = exports.COLUMN_MATCHERS_COUNT_LIMIT = exports.COLUMN_MATCHERS_CHARACTER_LIMIT = exports.BUILDING_BLOCK_DESCRIPTION_CHARACTER_LIMIT = exports.BUILDING_BLOCK_NAME_CHARACTER_LIMIT = exports.BUILDING_BLOCK_COUNT_LIMIT = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
 const schema_1 = require("../schema");
 const types_1 = require("../types");
 const schema_2 = require("../schema");
@@ -67,6 +67,7 @@ exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = /^\/(.*)\/([a-z]+)?$/;
 exports.BUILDING_BLOCK_COUNT_LIMIT = 500;
 exports.BUILDING_BLOCK_NAME_CHARACTER_LIMIT = 50;
 exports.BUILDING_BLOCK_DESCRIPTION_CHARACTER_LIMIT = 500;
+exports.COLUMN_MATCHERS_CHARACTER_LIMIT = 100;
 exports.COLUMN_MATCHERS_COUNT_LIMIT = 10;
 exports.NETWORK_DOMAIN_CHARACTER_LIMIT = 100;
 var CustomErrorCode;
@@ -908,7 +909,7 @@ const formatMetadataSchema = zodCompleteObject({
     hasNoConnection: z.boolean().optional(),
     instructions: z.string().optional(),
     placeholder: z.string().optional(),
-    matchers: z.array(z.string().refine(validateFormatMatcher)).max(exports.COLUMN_MATCHERS_COUNT_LIMIT),
+    matchers: z.array(z.string().max(exports.COLUMN_MATCHERS_CHARACTER_LIMIT).refine(validateFormatMatcher)).max(exports.COLUMN_MATCHERS_COUNT_LIMIT),
 });
 const syncFormulaSchema = zodCompleteObject({
     schema: arrayPropertySchema.optional(),

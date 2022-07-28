@@ -5,6 +5,7 @@ import {AuthenticationType} from '../types';
 import {BUILDING_BLOCK_COUNT_LIMIT} from '../testing/upload_validation';
 import {BUILDING_BLOCK_DESCRIPTION_CHARACTER_LIMIT} from '../testing/upload_validation';
 import {BUILDING_BLOCK_NAME_CHARACTER_LIMIT} from '../testing/upload_validation';
+import {COLUMN_MATCHERS_CHARACTER_LIMIT} from '../testing/upload_validation';
 import {COLUMN_MATCHERS_COUNT_LIMIT} from '../testing/upload_validation';
 import {ConnectionRequirement} from '../api_types';
 import {CurrencyFormat} from '..';
@@ -2343,6 +2344,40 @@ describe('Pack metadata Validation', () => {
           {
             message: `Array must contain at most ${COLUMN_MATCHERS_COUNT_LIMIT} element(s)`,
             path: 'formats[0].matchers',
+          },
+        ]);
+      });
+
+      it('rejects column matcher character lengths that are too long', async () => {
+        const formula = makeStringFormula({
+          name: 'MyFormula',
+          description: 'My description',
+          examples: [],
+          parameters: [makeStringParameter('myParam', 'param description')],
+          execute: () => '',
+        });
+        const metadata = createFakePackVersionMetadata({
+          formulas: [formulaToMetadata(formula)],
+          formulaNamespace: 'MyNamespace',
+          formats: [
+            {
+              name: 'Hi',
+              formulaNamespace: 'MyNamespace',
+              formulaName: 'MyFormula',
+              hasNoConnection: true,
+              instructions: 'some instructions',
+              placeholder: 'some placeholder',
+              matchers: [`/${'a'.repeat(COLUMN_MATCHERS_CHARACTER_LIMIT + 1)}/i`],
+            },
+          ],
+        });
+
+        const err = await validateJsonAndAssertFails(metadata);
+
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: `String must contain at most ${COLUMN_MATCHERS_CHARACTER_LIMIT} character(s)`,
+            path: 'formats[0].matchers[0]',
           },
         ]);
       });

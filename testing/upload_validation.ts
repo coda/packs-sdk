@@ -94,6 +94,7 @@ export const PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = /^\/(.*)\/([a-z]+)?$/;
 export const BUILDING_BLOCK_COUNT_LIMIT = 500;
 export const BUILDING_BLOCK_NAME_CHARACTER_LIMIT = 50;
 export const BUILDING_BLOCK_DESCRIPTION_CHARACTER_LIMIT = 500;
+export const COLUMN_MATCHERS_CHARACTER_LIMIT = 100;
 export const COLUMN_MATCHERS_COUNT_LIMIT = 10;
 export const NETWORK_DOMAIN_CHARACTER_LIMIT = 100;
 
@@ -1087,7 +1088,8 @@ const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
   hasNoConnection: z.boolean().optional(),
   instructions: z.string().optional(),
   placeholder: z.string().optional(),
-  matchers: z.array(z.string().refine(validateFormatMatcher)).max(COLUMN_MATCHERS_COUNT_LIMIT),
+  matchers: z.array(
+    z.string().max(COLUMN_MATCHERS_CHARACTER_LIMIT).refine(validateFormatMatcher)).max(COLUMN_MATCHERS_COUNT_LIMIT),
 });
 
 const syncFormulaSchema = zodCompleteObject<Omit<SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>>, 'execute'>>({
