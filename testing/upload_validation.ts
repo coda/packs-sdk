@@ -91,6 +91,11 @@ import * as z from 'zod';
  * a real RegExp object.
  */
 export const PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = /^\/(.*)\/([a-z]+)?$/;
+export const BUILDING_BLOCK_COUNT_LIMIT = 500;
+export const BUILDING_BLOCK_NAME_CHARACTER_LIMIT = 50;
+export const BUILDING_BLOCK_DESCRIPTION_CHARACTER_LIMIT = 500;
+export const COLUMN_MATCHERS_COUNT_LIMIT = 10;
+export const NETWORK_DOMAIN_CHARACTER_LIMIT = 100;
 
 enum CustomErrorCode {
   NonMatchingDiscriminant = 'nonMatchingDiscriminant',
@@ -495,8 +500,8 @@ const commonPackFormulaSchema = {
   // It would be preferable to use validateFormulaName here, but we have to exempt legacy packs with sync tables
   // whose getter names violate the validator, and those exemptions require the pack id, so this has to be
   // done as a superRefine on the top-level object that also contains the pack id.
-  name: z.string(),
-  description: z.string(),
+  name: z.string().max(BUILDING_BLOCK_NAME_CHARACTER_LIMIT),
+  description: z.string().max(BUILDING_BLOCK_DESCRIPTION_CHARACTER_LIMIT),
   examples: z
     .array(
       z.object({
@@ -1076,13 +1081,13 @@ const formulaMetadataSchema = z
   });
 
 const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
-  name: z.string(),
+  name: z.string().max(BUILDING_BLOCK_NAME_CHARACTER_LIMIT),
   formulaNamespace: z.string().optional(), // Will be removed once we deprecate namespace objects.
   formulaName: z.string(),
   hasNoConnection: z.boolean().optional(),
   instructions: z.string().optional(),
   placeholder: z.string().optional(),
-  matchers: z.array(z.string().refine(validateFormatMatcher)),
+  matchers: z.array(z.string().refine(validateFormatMatcher)).max(COLUMN_MATCHERS_COUNT_LIMIT),
 });
 
 const syncFormulaSchema = zodCompleteObject<Omit<SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>>, 'execute'>>({
@@ -1093,8 +1098,8 @@ const syncFormulaSchema = zodCompleteObject<Omit<SyncFormula<any, any, ParamDefs
 });
 
 const baseSyncTableSchema = {
-  name: z.string().nonempty(),
-  description: z.string().optional(),
+  name: z.string().nonempty().max(BUILDING_BLOCK_NAME_CHARACTER_LIMIT),
+  description: z.string().max(BUILDING_BLOCK_DESCRIPTION_CHARACTER_LIMIT).optional(),
   schema: genericObjectSchema,
   getter: syncFormulaSchema,
   entityName: z.string().optional(),
@@ -1103,6 +1108,7 @@ const baseSyncTableSchema = {
   identityName: z
     .string()
     .min(1)
+    .max(BUILDING_BLOCK_NAME_CHARACTER_LIMIT)
     .optional()
     .refine(
       val => !val || !SystemColumnNames.includes(val),
@@ -1163,6 +1169,7 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject<PackVersionMetadata
     .array(
       z
         .string()
+        .max(NETWORK_DOMAIN_CHARACTER_LIMIT)
         .refine(domain => !(domain.startsWith('http:') || domain.startsWith('https:') || domain.indexOf('/') >= 0), {
           message: 'Invalid network domain. Instead of "https://www.example.com", just specify "example.com".',
         }),
@@ -1269,6 +1276,16 @@ function validateFormulas(schema: z.ZodObject<any>) {
         path: ['defaultAuthentication.networkDomain'],
       },
     )
+    .superRefine((data, context) => {
+      const buildingBlockCount = (data.syncTables?.length as number || 0) + (data.formulas?.length as number ?? 0) +
+        (data.formats?.length as number || 0);
+      if (buildingBlockCount > BUILDING_BLOCK_COUNT_LIMIT) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Cannot have more than ${BUILDING_BLOCK_COUNT_LIMIT} formulas, sync tables, and column formats. Detected ${buildingBlockCount}.`,
+        })
+      }
+    })
     .superRefine((data, context) => {
       if (data.defaultAuthentication && data.defaultAuthentication.type !== AuthenticationType.None) {
         return;

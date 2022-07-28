@@ -11,6 +11,11 @@ import * as z from 'zod';
  * a real RegExp object.
  */
 export declare const PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX: RegExp;
+export declare const BUILDING_BLOCK_COUNT_LIMIT = 500;
+export declare const BUILDING_BLOCK_NAME_CHARACTER_LIMIT = 50;
+export declare const BUILDING_BLOCK_DESCRIPTION_CHARACTER_LIMIT = 500;
+export declare const COLUMN_MATCHERS_COUNT_LIMIT = 10;
+export declare const NETWORK_DOMAIN_CHARACTER_LIMIT = 100;
 export declare class PackMetadataValidationError extends Error {
     readonly originalError: Error | undefined;
     readonly validationErrors: ValidationError[] | undefined;

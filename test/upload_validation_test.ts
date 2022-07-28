@@ -2,6 +2,10 @@ import {testHelper} from './test_helper';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '..';
 import {AuthenticationType} from '../types';
+import {BUILDING_BLOCK_COUNT_LIMIT} from '../testing/upload_validation';
+import {BUILDING_BLOCK_DESCRIPTION_CHARACTER_LIMIT} from '../testing/upload_validation';
+import {BUILDING_BLOCK_NAME_CHARACTER_LIMIT} from '../testing/upload_validation';
+import {COLUMN_MATCHERS_COUNT_LIMIT} from '../testing/upload_validation';
 import {ConnectionRequirement} from '../api_types';
 import {CurrencyFormat} from '..';
 import {DurationUnit} from '..';
@@ -9,6 +13,7 @@ import type {Formula} from '../api';
 import type {GenericSyncTable} from '../api';
 import {ImageCornerStyle} from '../schema';
 import {ImageOutline} from '../schema';
+import {NETWORK_DOMAIN_CHARACTER_LIMIT} from '../testing/upload_validation';
 import type {ObjectSchemaDefinition} from '../schema';
 import type {PackFormulaMetadata} from '../api';
 import {PackMetadataValidationError} from '../testing/upload_validation';
@@ -171,6 +176,77 @@ describe('Pack metadata Validation', () => {
     ]);
   });
 
+  it('rejects if number of building blocks goes over limit', async () => {
+    const formula = makeFormula({
+      resultType: ValueType.Number,
+      name: 'MyFormula',
+      description: 'My description',
+      examples: [],
+      parameters: [makeStringParameter('myParam', 'param description')],
+      execute: () => 1,
+    });
+    const format = {
+      name: 'MyFormat',
+      formulaNamespace: 'MyNamespace',
+      formulaName: 'MyFormula',
+      hasNoConnection: true,
+      instructions: 'some instructions',
+      placeholder: 'some placehoder',
+      matchers: ['/some compiled regex/i'],
+    }
+    const formulas = [];
+    const formats = [];
+    const syncTables = [];
+    for (let i = 0; i < BUILDING_BLOCK_COUNT_LIMIT / 2; i++) {
+      formulas.push({
+        ...formula,
+        name: `Formula${i}`,
+      });
+      formats.push({
+        ...format,
+        name: `Format${i}`,
+        formulaName: `Formula${i}`,
+      })
+      syncTables.push(makeSyncTable({
+        name: `Sync${i}`,
+        identityName: `Sync${i}`,
+        schema: makeObjectSchema({
+          type: ValueType.Object,
+          primary: 'foo',
+          id: 'foo',
+          properties: {
+            Foo: {type: ValueType.String},
+          },
+        }),
+        formula: {
+          name: 'SyncTable',
+          description: 'A simple sync table',
+          async execute([], _context) {
+            return {result: []};
+          },
+          parameters: [],
+          examples: [],
+        },
+      }))
+    }
+    const metadata = createFakePackVersionMetadata(
+      {
+        formulas,
+        formats,
+        syncTables,
+        formulaNamespace: 'MyNamespace'
+      });
+    
+    const err = await validateJsonAndAssertFails(metadata);
+    
+    assert.deepEqual(err.validationErrors, [
+      {
+        message: `Cannot have more than ${BUILDING_BLOCK_COUNT_LIMIT} formulas, sync tables, and column formats. Detected ${formulas.length + formats.length + syncTables.length}.`,
+        path: ''
+      },
+    ]);
+  });
+
   describe('Formulas', () => {
     function formulaToMetadata(formula: Formula): PackFormulaMetadata {
       const {execute, ...rest} = formula;
@@ -327,6 +403,52 @@ describe('Pack metadata Validation', () => {
           },
         ]);
       }
+    });
+
+    it('rejects formula names that are too long', async () => {
+      const formula = makeFormula({
+        resultType: ValueType.String,
+        name: 'A'.repeat(1 + BUILDING_BLOCK_NAME_CHARACTER_LIMIT),
+        description: 'My description',
+        examples: [],
+        parameters: [],
+        execute: () => '',
+      });
+
+      const metadata = createFakePackVersionMetadata({
+        formulas: [formulaToMetadata(formula)],
+        formulaNamespace: 'MyNamespace',
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: `String must contain at most ${BUILDING_BLOCK_NAME_CHARACTER_LIMIT} character(s)`,
+          path: 'formulas[0].name',
+        },
+      ]);
+    });
+
+    it('rejects formula descriptions that are too long', async () => {
+      const formula = makeFormula({
+        resultType: ValueType.String,
+        name: 'Hi',
+        description: 'A'.repeat(1 + BUILDING_BLOCK_DESCRIPTION_CHARACTER_LIMIT),
+        examples: [],
+        parameters: [],
+        execute: () => '',
+      });
+
+      const metadata = createFakePackVersionMetadata({
+        formulas: [formulaToMetadata(formula)],
+        formulaNamespace: 'MyNamespace',
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: `String must contain at most ${BUILDING_BLOCK_DESCRIPTION_CHARACTER_LIMIT} character(s)`,
+          path: 'formulas[0].description',
+        },
+      ]);
     });
 
     it('valid string formula with examples', async () => {
@@ -1257,7 +1379,8 @@ describe('Pack metadata Validation', () => {
           },
         ]);
       });
-    });
+    }
+    );
 
     it('duplicate sync table identity names', async () => {
       const syncTable1 = makeSyncTable({
@@ -1481,6 +1604,118 @@ describe('Pack metadata Validation', () => {
         syncTables: [syncTable],
       });
       await validateJson(metadata);
+    });
+
+    it('rejects sync table names that are too long', async () => {
+      const syncTable = makeSyncTable({
+        name: 'A'.repeat(BUILDING_BLOCK_NAME_CHARACTER_LIMIT + 1),
+        identityName: 'Sync',
+        schema: makeObjectSchema({
+          type: ValueType.Object,
+          primary: 'foo',
+          id: 'foo',
+          properties: {
+            Foo: {type: ValueType.String},
+          },
+        }),
+        formula: {
+          name: 'SyncTable',
+          description: 'A simple sync table',
+          async execute([], _context) {
+            return {result: []};
+          },
+          parameters: [],
+          examples: [],
+        },
+      });
+
+      const metadata = createFakePack({
+        id: 1013,
+        syncTables: [syncTable],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: `String must contain at most ${BUILDING_BLOCK_NAME_CHARACTER_LIMIT} character(s)`,
+          path: 'syncTables[0].name',
+        },
+      ]);
+    });
+
+    it('rejects sync table identity names that are too long', async () => {
+      const syncTable = makeSyncTable({
+        name: 'Hi',
+        identityName: 'A'.repeat(BUILDING_BLOCK_NAME_CHARACTER_LIMIT + 1),
+        schema: makeObjectSchema({
+          type: ValueType.Object,
+          primary: 'foo',
+          id: 'foo',
+          properties: {
+            Foo: {type: ValueType.String},
+          },
+        }),
+        formula: {
+          name: 'SyncTable',
+          description: 'A simple sync table',
+          async execute([], _context) {
+            return {result: []};
+          },
+          parameters: [],
+          examples: [],
+        },
+      });
+
+      const metadata = createFakePack({
+        id: 1013,
+        syncTables: [syncTable],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: `String must contain at most ${BUILDING_BLOCK_NAME_CHARACTER_LIMIT} character(s)`,
+          path: 'syncTables[0].identityName',
+        },
+      ]);
+    });
+
+    it('rejects sync table descriptions that are too long', async () => {
+      const syncTable = makeSyncTable({
+        name: 'Hi',
+        identityName: 'Hi',
+        description: 'A'.repeat(BUILDING_BLOCK_DESCRIPTION_CHARACTER_LIMIT + 1),
+        schema: makeObjectSchema({
+          type: ValueType.Object,
+          primary: 'foo',
+          id: 'foo',
+          properties: {
+            Foo: {type: ValueType.String},
+          },
+        }),
+        formula: {
+          name: 'SyncTable',
+          description: 'A simple sync table',
+          async execute([], _context) {
+            return {result: []};
+          },
+          parameters: [],
+          examples: [],
+        },
+      });
+
+      const metadata = createFakePack({
+        id: 1013,
+        syncTables: [syncTable],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: `String must contain at most ${BUILDING_BLOCK_DESCRIPTION_CHARACTER_LIMIT} character(s)`,
+          path: 'syncTables[0].description',
+        },
+      ]);
     });
 
     describe('object schemas', () => {
@@ -2043,7 +2278,76 @@ describe('Pack metadata Validation', () => {
           },
         ]);
       });
-    });
+
+      it('rejects column format names that are too long', async () => {
+        const formula = makeStringFormula({
+          name: 'MyFormula',
+          description: 'My description',
+          examples: [],
+          parameters: [makeStringParameter('myParam', 'param description')],
+          execute: () => '',
+        });
+        const metadata = createFakePackVersionMetadata({
+          formulas: [formulaToMetadata(formula)],
+          formulaNamespace: 'MyNamespace',
+          formats: [
+            {
+              name: 'A'.repeat(BUILDING_BLOCK_NAME_CHARACTER_LIMIT + 1),
+              formulaNamespace: 'MyNamespace',
+              formulaName: 'MyFormula',
+              hasNoConnection: true,
+              instructions: 'some instructions',
+              placeholder: 'some placeholder',
+              matchers: ['/some compiled regex/i'],
+            },
+          ],
+        });
+
+        const err = await validateJsonAndAssertFails(metadata);
+
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: `String must contain at most ${BUILDING_BLOCK_NAME_CHARACTER_LIMIT} character(s)`,
+            path: 'formats[0].name',
+          },
+        ]);
+      });
+
+      it('rejects column matcher arrays that are too long', async () => {
+        const formula = makeStringFormula({
+          name: 'MyFormula',
+          description: 'My description',
+          examples: [],
+          parameters: [makeStringParameter('myParam', 'param description')],
+          execute: () => '',
+        });
+        const metadata = createFakePackVersionMetadata({
+          formulas: [formulaToMetadata(formula)],
+          formulaNamespace: 'MyNamespace',
+          formats: [
+            {
+              name: 'Hi',
+              formulaNamespace: 'MyNamespace',
+              formulaName: 'MyFormula',
+              hasNoConnection: true,
+              instructions: 'some instructions',
+              placeholder: 'some placeholder',
+              matchers: Array(COLUMN_MATCHERS_COUNT_LIMIT + 1).fill('/some compiled regex/i'),
+            },
+          ],
+        });
+
+        const err = await validateJsonAndAssertFails(metadata);
+
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: `Array must contain at most ${COLUMN_MATCHERS_COUNT_LIMIT} element(s)`,
+            path: 'formats[0].matchers',
+          },
+        ]);
+      });
+    }
+    );
 
     it('scalar parameter examples', async () => {
       const formula = makeFormula({
@@ -2659,6 +2963,23 @@ describe('Pack metadata Validation', () => {
         },
       ]);
     });
+
+    it('rejects when network domain length is greater than character limit', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken
+        },
+        networkDomains: [`${'a'.repeat(NETWORK_DOMAIN_CHARACTER_LIMIT)}.io`],
+      });
+
+      const err = await validateJsonAndAssertFails(metadata, '1.0.0');
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: `String must contain at most ${NETWORK_DOMAIN_CHARACTER_LIMIT} character(s)`,
+          path: 'networkDomains[0]',
+        },
+      ]);
+    });
   });
 
   describe('validateVariousAuthenticationMetadata', () => {
@@ -2810,6 +3131,52 @@ describe('Pack metadata Validation', () => {
       assert.ok(arraySchemaResult);
       const objectSchemaResult = validateSyncTableSchema(itemSchema);
       assert.ok(objectSchemaResult);
+    });
+
+    it('rejects formula names that are too long', async () => {
+      const formula = makeFormula({
+        resultType: ValueType.String,
+        name: 'A'.repeat(1 + BUILDING_BLOCK_NAME_CHARACTER_LIMIT),
+        description: 'My description',
+        examples: [],
+        parameters: [],
+        execute: () => '',
+      });
+
+      const metadata = createFakePackVersionMetadata({
+        formulas: [formula],
+        formulaNamespace: 'MyNamespace',
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: `String must contain at most ${BUILDING_BLOCK_NAME_CHARACTER_LIMIT} character(s)`,
+          path: 'formulas[0].name',
+        },
+      ]);
+    });
+
+    it('rejects formula descriptions that are too long', async () => {
+      const formula = makeFormula({
+        resultType: ValueType.String,
+        name: 'Hi',
+        description: 'A'.repeat(1 + BUILDING_BLOCK_DESCRIPTION_CHARACTER_LIMIT),
+        examples: [],
+        parameters: [],
+        execute: () => '',
+      });
+
+      const metadata = createFakePackVersionMetadata({
+        formulas: [formula],
+        formulaNamespace: 'MyNamespace',
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: `String must contain at most ${BUILDING_BLOCK_DESCRIPTION_CHARACTER_LIMIT} character(s)`,
+          path: 'formulas[0].description',
+        },
+      ]);
     });
   });
 

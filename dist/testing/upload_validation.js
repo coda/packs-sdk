@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.zodErrorDetailToValidationError = exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
+exports.zodErrorDetailToValidationError = exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.NETWORK_DOMAIN_CHARACTER_LIMIT = exports.COLUMN_MATCHERS_COUNT_LIMIT = exports.BUILDING_BLOCK_DESCRIPTION_CHARACTER_LIMIT = exports.BUILDING_BLOCK_NAME_CHARACTER_LIMIT = exports.BUILDING_BLOCK_COUNT_LIMIT = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
 const schema_1 = require("../schema");
 const types_1 = require("../types");
 const schema_2 = require("../schema");
@@ -64,6 +64,11 @@ const z = __importStar(require("zod"));
  * a real RegExp object.
  */
 exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = /^\/(.*)\/([a-z]+)?$/;
+exports.BUILDING_BLOCK_COUNT_LIMIT = 500;
+exports.BUILDING_BLOCK_NAME_CHARACTER_LIMIT = 50;
+exports.BUILDING_BLOCK_DESCRIPTION_CHARACTER_LIMIT = 500;
+exports.COLUMN_MATCHERS_COUNT_LIMIT = 10;
+exports.NETWORK_DOMAIN_CHARACTER_LIMIT = 100;
 var CustomErrorCode;
 (function (CustomErrorCode) {
     CustomErrorCode["NonMatchingDiscriminant"] = "nonMatchingDiscriminant";
@@ -400,8 +405,8 @@ const commonPackFormulaSchema = {
     // It would be preferable to use validateFormulaName here, but we have to exempt legacy packs with sync tables
     // whose getter names violate the validator, and those exemptions require the pack id, so this has to be
     // done as a superRefine on the top-level object that also contains the pack id.
-    name: z.string(),
-    description: z.string(),
+    name: z.string().max(exports.BUILDING_BLOCK_NAME_CHARACTER_LIMIT),
+    description: z.string().max(exports.BUILDING_BLOCK_DESCRIPTION_CHARACTER_LIMIT),
     examples: z
         .array(z.object({
         params: z.array(z.union([
@@ -897,13 +902,13 @@ const formulaMetadataSchema = z
     }
 });
 const formatMetadataSchema = zodCompleteObject({
-    name: z.string(),
+    name: z.string().max(exports.BUILDING_BLOCK_NAME_CHARACTER_LIMIT),
     formulaNamespace: z.string().optional(),
     formulaName: z.string(),
     hasNoConnection: z.boolean().optional(),
     instructions: z.string().optional(),
     placeholder: z.string().optional(),
-    matchers: z.array(z.string().refine(validateFormatMatcher)),
+    matchers: z.array(z.string().refine(validateFormatMatcher)).max(exports.COLUMN_MATCHERS_COUNT_LIMIT),
 });
 const syncFormulaSchema = zodCompleteObject({
     schema: arrayPropertySchema.optional(),
@@ -912,8 +917,8 @@ const syncFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
 });
 const baseSyncTableSchema = {
-    name: z.string().nonempty(),
-    description: z.string().optional(),
+    name: z.string().nonempty().max(exports.BUILDING_BLOCK_NAME_CHARACTER_LIMIT),
+    description: z.string().max(exports.BUILDING_BLOCK_DESCRIPTION_CHARACTER_LIMIT).optional(),
     schema: genericObjectSchema,
     getter: syncFormulaSchema,
     entityName: z.string().optional(),
@@ -922,6 +927,7 @@ const baseSyncTableSchema = {
     identityName: z
         .string()
         .min(1)
+        .max(exports.BUILDING_BLOCK_NAME_CHARACTER_LIMIT)
         .optional()
         .refine(val => !val || !SystemColumnNames.includes(val), `This property name is reserved for internal use by Coda and can't be used as an identityName, sorry!`),
 };
@@ -967,6 +973,7 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject({
     networkDomains: z
         .array(z
         .string()
+        .max(exports.NETWORK_DOMAIN_CHARACTER_LIMIT)
         .refine(domain => !(domain.startsWith('http:') || domain.startsWith('https:') || domain.indexOf('/') >= 0), {
         message: 'Invalid network domain. Instead of "https://www.example.com", just specify "example.com".',
     }))
@@ -1057,6 +1064,17 @@ function validateFormulas(schema) {
     }, {
         message: 'CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict `defaultAuthentication.networkDomain` to coda.io',
         path: ['defaultAuthentication.networkDomain'],
+    })
+        .superRefine((data, context) => {
+        var _a, _b, _c, _d;
+        const buildingBlockCount = (((_a = data.syncTables) === null || _a === void 0 ? void 0 : _a.length) || 0) + ((_c = (_b = data.formulas) === null || _b === void 0 ? void 0 : _b.length) !== null && _c !== void 0 ? _c : 0) +
+            (((_d = data.formats) === null || _d === void 0 ? void 0 : _d.length) || 0);
+        if (buildingBlockCount > exports.BUILDING_BLOCK_COUNT_LIMIT) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `Cannot have more than ${exports.BUILDING_BLOCK_COUNT_LIMIT} formulas, sync tables, and column formats. Detected ${buildingBlockCount}.`,
+            });
+        }
     })
         .superRefine((data, context) => {
         if (data.defaultAuthentication && data.defaultAuthentication.type !== types_1.AuthenticationType.None) {
