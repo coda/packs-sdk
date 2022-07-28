@@ -4746,7 +4746,7 @@ module.exports = (() => {
       this.body = body;
       this.error = body;
       this.options = options;
-      let responseBody = response == null ? void 0 : response.body;
+      let responseBody = response?.body;
       if (typeof responseBody === "object") {
         responseBody = JSON.stringify(responseBody);
       }
@@ -4809,8 +4809,18 @@ module.exports = (() => {
   var serialize;
   var deserialize;
   if (true) {
-    serialize = codaInternal.serializer.serialize;
-    deserialize = codaInternal.serializer.deserialize;
+    serialize = (value) => {
+      if ("codaInternal" in global) {
+        return codaInternal.serializer.serialize(value);
+      }
+      throw new Error("Not implemented");
+    };
+    deserialize = (value) => {
+      if ("codaInternal" in global) {
+        return codaInternal.serializer.deserialize(value);
+      }
+      throw new Error("Not implemented");
+    };
   } else {
     const v8 = null;
     serialize = (value) => v8.serialize(value).toString("base64");
@@ -4833,7 +4843,6 @@ module.exports = (() => {
     MissingScopesError
   ];
   function fixUncopyableTypes(val, pathPrefix, postTransforms, depth = 0) {
-    var _a;
     if (depth >= MaxTraverseDepth) {
       return { val, hasModifications: false };
     }
@@ -4848,7 +4857,7 @@ module.exports = (() => {
       });
       return { val: maybeError, hasModifications: true };
     }
-    if (val instanceof Buffer2 || ((_a = global.Buffer) == null ? void 0 : _a.isBuffer(val))) {
+    if (val instanceof Buffer2 || global.Buffer?.isBuffer(val)) {
       postTransforms.push({
         type: "Buffer" /* Buffer */,
         path: [...pathPrefix]
@@ -5038,12 +5047,12 @@ module.exports = (() => {
       case "Metadata" /* Metadata */: {
         switch (formulaSpec.metadataFormulaType) {
           case "GetConnectionName" /* GetConnectionName */:
-            if ((defaultAuthentication == null ? void 0 : defaultAuthentication.type) !== "None" /* None */ && (defaultAuthentication == null ? void 0 : defaultAuthentication.type) !== "Various" /* Various */ && (defaultAuthentication == null ? void 0 : defaultAuthentication.getConnectionName)) {
+            if (defaultAuthentication?.type !== "None" /* None */ && defaultAuthentication?.type !== "Various" /* Various */ && defaultAuthentication?.getConnectionName) {
               return defaultAuthentication.getConnectionName.execute(params, executionContext);
             }
             break;
           case "GetConnectionUserId" /* GetConnectionUserId */:
-            if ((defaultAuthentication == null ? void 0 : defaultAuthentication.type) !== "None" /* None */ && (defaultAuthentication == null ? void 0 : defaultAuthentication.type) !== "Various" /* Various */ && (defaultAuthentication == null ? void 0 : defaultAuthentication.getConnectionUserId)) {
+            if (defaultAuthentication?.type !== "None" /* None */ && defaultAuthentication?.type !== "Various" /* Various */ && defaultAuthentication?.getConnectionUserId) {
               return defaultAuthentication.getConnectionUserId.execute(params, executionContext);
             }
             break;
@@ -5054,7 +5063,7 @@ module.exports = (() => {
             }
             break;
           case "PostSetupSetEndpoint" /* PostSetupSetEndpoint */:
-            if ((defaultAuthentication == null ? void 0 : defaultAuthentication.type) !== "None" /* None */ && (defaultAuthentication == null ? void 0 : defaultAuthentication.type) !== "Various" /* Various */ && (defaultAuthentication == null ? void 0 : defaultAuthentication.postSetup)) {
+            if (defaultAuthentication?.type !== "None" /* None */ && defaultAuthentication?.type !== "Various" /* Various */ && defaultAuthentication?.postSetup) {
               const setupStep = defaultAuthentication.postSetup.find((step) => step.type === "SetEndPoint" /* SetEndpoint */ && step.name === formulaSpec.stepName);
               if (setupStep) {
                 return setEndpointHelper(setupStep).getOptions.execute(params, executionContext);
@@ -5117,7 +5126,7 @@ module.exports = (() => {
       case "Sync" /* Sync */:
         if (syncTables) {
           const syncTable = syncTables.find((table) => table.getter.name === formulaSpec.parentFormulaName);
-          formula = syncTable == null ? void 0 : syncTable.getter;
+          formula = syncTable?.getter;
         }
         break;
       default:
@@ -5126,7 +5135,7 @@ module.exports = (() => {
     if (formula) {
       const params = formula.parameters.concat(formula.varargParameters || []);
       const paramDef = params.find((param) => param.name === formulaSpec.parameterName);
-      return paramDef == null ? void 0 : paramDef.autocomplete;
+      return paramDef?.autocomplete;
     }
   }
   function ensureSwitchUnreachable(value) {
