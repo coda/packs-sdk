@@ -78,7 +78,7 @@ class StatusCodeError extends Error {
         }
         this.response = { ...response, body: responseBody };
     }
-    /* Returns if the error is an instance of StatusCodeError. Note that instanceof may not work. */
+    /** Returns if the error is an instance of StatusCodeError. Note that instanceof may not work. */
     static isStatusCodeError(err) {
         return 'name' in err && err.name === StatusCodeError.name;
     }
@@ -105,7 +105,7 @@ class MissingScopesError extends Error {
          */
         this.name = 'MissingScopesError';
     }
-    /* Returns if the error is an instance of MissingScopesError. Note that instanceof may not work. */
+    /** Returns if the error is an instance of MissingScopesError. Note that instanceof may not work. */
     static isMissingScopesError(err) {
         return 'name' in err && err.name === MissingScopesError.name;
     }
