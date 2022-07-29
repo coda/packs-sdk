@@ -145,7 +145,7 @@ export class StatusCodeError extends Error {
     this.response = {...response, body: responseBody};
   }
 
-  /* Returns if the error is an instance of StatusCodeError. Note that instanceof may not work. */
+  /** Returns if the error is an instance of StatusCodeError. Note that instanceof may not work. */
   static isStatusCodeError(err: any): err is StatusCodeError {
     return 'name' in err && err.name === StatusCodeError.name;
   }
@@ -174,7 +174,7 @@ export class MissingScopesError extends Error {
     super(message || 'Additional permissions are required');
   }
 
-  /* Returns if the error is an instance of MissingScopesError. Note that instanceof may not work. */
+  /** Returns if the error is an instance of MissingScopesError. Note that instanceof may not work. */
   static isMissingScopesError(err: any): err is MissingScopesError {
     return 'name' in err && err.name === MissingScopesError.name;
   }
