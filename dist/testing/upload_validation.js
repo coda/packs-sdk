@@ -69,7 +69,7 @@ exports.Limits = {
     BuildingBlockName: 50,
     BuildingBlockDescription: 100,
     ColumnMatcherRegex: 100,
-    NumColumnMatchers: 10,
+    NumColumnMatchersPerFormat: 10,
     NetworkDomainUrl: 253,
 };
 var CustomErrorCode;
@@ -911,7 +911,7 @@ const formatMetadataSchema = zodCompleteObject({
     hasNoConnection: z.boolean().optional(),
     instructions: z.string().optional(),
     placeholder: z.string().optional(),
-    matchers: z.array(z.string().max(exports.Limits.ColumnMatcherRegex).refine(validateFormatMatcher)).max(exports.Limits.NumColumnMatchers),
+    matchers: z.array(z.string().max(exports.Limits.ColumnMatcherRegex).refine(validateFormatMatcher)).max(exports.Limits.NumColumnMatchersPerFormat),
 });
 const syncFormulaSchema = zodCompleteObject({
     schema: arrayPropertySchema.optional(),
@@ -985,10 +985,11 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject({
         message: 'Formula namespaces can only contain alphanumeric characters and underscores.',
     }),
     systemConnectionAuthentication: z.union(zodUnionInput(systemAuthenticationValidators)).optional(),
-    formulas: z.array(formulaMetadataSchema).optional().default([]),
-    formats: z.array(formatMetadataSchema).optional().default([]),
+    formulas: z.array(formulaMetadataSchema).max(exports.Limits.BuildingBlockCountPerType).optional().default([]),
+    formats: z.array(formatMetadataSchema).max(exports.Limits.BuildingBlockCountPerType).optional().default([]),
     syncTables: z
         .array(syncTableSchema)
+        .max(exports.Limits.BuildingBlockCountPerType)
         .optional()
         .default([])
         .superRefine((data, context) => {
@@ -1067,26 +1068,6 @@ function validateFormulas(schema) {
     }, {
         message: 'CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict `defaultAuthentication.networkDomain` to coda.io',
         path: ['defaultAuthentication.networkDomain'],
-    })
-        .superRefine((data, context) => {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j;
-        const blockTypesOverLimit = [];
-        if (((_b = (_a = data.formulas) === null || _a === void 0 ? void 0 : _a.length) !== null && _b !== void 0 ? _b : 0) > exports.Limits.BuildingBlockCountPerType) {
-            blockTypesOverLimit.push(`${(_c = data.formulas) === null || _c === void 0 ? void 0 : _c.length} formulas`);
-        }
-        if (((_e = (_d = data.formats) === null || _d === void 0 ? void 0 : _d.length) !== null && _e !== void 0 ? _e : 0) > exports.Limits.BuildingBlockCountPerType) {
-            blockTypesOverLimit.push(`${(_f = data.formats) === null || _f === void 0 ? void 0 : _f.length} formats`);
-        }
-        if (((_h = (_g = data.syncTables) === null || _g === void 0 ? void 0 : _g.length) !== null && _h !== void 0 ? _h : 0) > exports.Limits.BuildingBlockCountPerType) {
-            blockTypesOverLimit.push(`${(_j = data.syncTables) === null || _j === void 0 ? void 0 : _j.length} sync tables`);
-        }
-        if (blockTypesOverLimit.length) {
-            context.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: `Cannot have more than ${exports.Limits.BuildingBlockCountPerType} of each of formulas, sync tables, and column formats. ` +
-                    `Detected ${blockTypesOverLimit.join(', ')}.`,
-            });
-        }
     })
         .superRefine((data, context) => {
         if (data.defaultAuthentication && data.defaultAuthentication.type !== types_1.AuthenticationType.None) {

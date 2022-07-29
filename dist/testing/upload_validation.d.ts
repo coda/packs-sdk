@@ -16,7 +16,7 @@ export declare const Limits: {
     BuildingBlockName: number;
     BuildingBlockDescription: number;
     ColumnMatcherRegex: number;
-    NumColumnMatchers: number;
+    NumColumnMatchersPerFormat: number;
     NetworkDomainUrl: number;
 };
 export declare class PackMetadataValidationError extends Error {

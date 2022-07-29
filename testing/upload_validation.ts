@@ -97,7 +97,7 @@ export const Limits = {
   BuildingBlockName: 50,
   BuildingBlockDescription: 100,
   ColumnMatcherRegex: 100,
-  NumColumnMatchers: 10,
+  NumColumnMatchersPerFormat: 10,
   NetworkDomainUrl: 253,
 }
 
@@ -1092,7 +1092,7 @@ const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
   instructions: z.string().optional(),
   placeholder: z.string().optional(),
   matchers: z.array(
-    z.string().max(Limits.ColumnMatcherRegex).refine(validateFormatMatcher)).max(Limits.NumColumnMatchers),
+    z.string().max(Limits.ColumnMatcherRegex).refine(validateFormatMatcher)).max(Limits.NumColumnMatchersPerFormat),
 });
 
 const syncFormulaSchema = zodCompleteObject<Omit<SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>>, 'execute'>>({
@@ -1184,10 +1184,11 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject<PackVersionMetadata
     message: 'Formula namespaces can only contain alphanumeric characters and underscores.',
   }),
   systemConnectionAuthentication: z.union(zodUnionInput(systemAuthenticationValidators)).optional(),
-  formulas: z.array(formulaMetadataSchema).optional().default([]),
-  formats: z.array(formatMetadataSchema).optional().default([]),
+  formulas: z.array(formulaMetadataSchema).max(Limits.BuildingBlockCountPerType).optional().default([]),
+  formats: z.array(formatMetadataSchema).max(Limits.BuildingBlockCountPerType).optional().default([]),
   syncTables: z
     .array(syncTableSchema)
+    .max(Limits.BuildingBlockCountPerType)
     .optional()
     .default([])
     .superRefine((data, context) => {
@@ -1281,28 +1282,6 @@ function validateFormulas(schema: z.ZodObject<any>) {
         path: ['defaultAuthentication.networkDomain'],
       },
     )
-    .superRefine((data, context) => {
-      const blockTypesOverLimit: string[] = [];
-      if ((data.formulas?.length ?? 0) > Limits.BuildingBlockCountPerType) {
-        blockTypesOverLimit.push(`${data.formulas?.length} formulas`);
-      }
-
-      if ((data.formats?.length ?? 0) > Limits.BuildingBlockCountPerType) {
-        blockTypesOverLimit.push(`${data.formats?.length} formats`);
-      }
-
-      if ((data.syncTables?.length ?? 0) > Limits.BuildingBlockCountPerType) {
-        blockTypesOverLimit.push(`${data.syncTables?.length} sync tables`);
-      }
-
-      if (blockTypesOverLimit.length) {
-        context.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: `Cannot have more than ${Limits.BuildingBlockCountPerType} of each of formulas, sync tables, and column formats. ` +
-          `Detected ${blockTypesOverLimit.join(', ')}.`,
-        })
-      }
-    })
     .superRefine((data, context) => {
       if (data.defaultAuthentication && data.defaultAuthentication.type !== AuthenticationType.None) {
         return;
