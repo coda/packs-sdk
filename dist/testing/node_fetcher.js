@@ -103,16 +103,6 @@ async function nodeFetcher(options) {
         headers: Object.fromEntries(response.headers.entries()),
         body: resultBody,
     };
-    // if (simple) {
-    //   if (!response.ok) {
-    //     throw new StatusCodeError(
-    //       response.status,
-    //       resultBody,
-    //       {...options, url: url.href, method} as any as FetchRequest,
-    //       fullResponse,
-    //     );
-    //   }
-    // }
     if (resolveWithFullResponse) {
         return fullResponse;
     }
