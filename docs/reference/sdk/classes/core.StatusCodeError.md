@@ -92,3 +92,19 @@ The HTTP status code, e.g. `404`.
 #### Defined in
 
 [api.ts:111](https://github.com/coda/packs-sdk/blob/main/api.ts#L111)
+
+## Methods
+
+### isStatusCodeError
+
+▸ `Static` **isStatusCodeError**(`err`): err is StatusCodeError
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `err` | `any` |
+
+#### Returns
+
+err is StatusCodeError

@@ -1933,6 +1933,7 @@ export declare class StatusCodeError extends Error {
 	response: StatusCodeErrorResponse;
 	/** @hidden */
 	constructor(statusCode: number, body: any, options: FetchRequest, response: StatusCodeErrorResponse);
+	static isStatusCodeError(err: any): err is StatusCodeError;
 }
 /**
  * Throw this error if the user needs to re-authenticate to gain OAuth scopes that have been added
@@ -1948,11 +1949,12 @@ export declare class StatusCodeError extends Error {
  */
 export declare class MissingScopesError extends Error {
 	/**
-	 * The name of the error, for identiciation purposes.
+	 * The name of the error, for identification purposes.
 	 */
 	name: string;
 	/** @hidden */
 	constructor(message?: string);
+	static isMissingScopesError(err: any): err is MissingScopesError;
 }
 /**
  * The result of defining a sync table. Should not be necessary to use directly,
