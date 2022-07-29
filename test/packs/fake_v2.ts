@@ -189,7 +189,6 @@ pack.addFormula({
       name: 'status',
       description: '',
     }),
-    // Add more parameters here and in the array below.
   ],
   resultType: coda.ValueType.String,
   cacheTtlSecs: 0,
