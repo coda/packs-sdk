@@ -475,7 +475,7 @@ const variousSupportedAuthenticationValidators = Object.entries(defaultAuthentic
 const primitiveUnion = z.union([z.number(), z.string(), z.boolean(), z.date()]);
 
 const paramDefValidator = zodCompleteObject<ParamDef<any>>({
-  name: z.string(),
+  name: z.string().max(Limits.BuildingBlockName),
   type: z
     .union([
       z.nativeEnum(Type),
@@ -493,7 +493,7 @@ const paramDefValidator = zodCompleteObject<ParamDef<any>>({
         message: 'Object parameters are not currently supported.',
       },
     ),
-  description: z.string(),
+  description: z.string().max(Limits.BuildingBlockDescription),
   optional: z.boolean().optional(),
   autocomplete: z.unknown().optional(),
   defaultValue: z.unknown().optional(),
@@ -1283,15 +1283,15 @@ function validateFormulas(schema: z.ZodObject<any>) {
     )
     .superRefine((data, context) => {
       const blockTypesOverLimit: string[] = [];
-      if (data.formulas?.length ?? 0 > Limits.BuildingBlockCountPerType) {
+      if ((data.formulas?.length ?? 0) > Limits.BuildingBlockCountPerType) {
         blockTypesOverLimit.push(`${data.formulas?.length} formulas`);
       }
 
-      if (data.formats?.length ?? 0 > Limits.BuildingBlockCountPerType) {
+      if ((data.formats?.length ?? 0) > Limits.BuildingBlockCountPerType) {
         blockTypesOverLimit.push(`${data.formats?.length} formats`);
       }
 
-      if (data.syncTables?.length ?? 0 > Limits.BuildingBlockCountPerType) {
+      if ((data.syncTables?.length ?? 0) > Limits.BuildingBlockCountPerType) {
         blockTypesOverLimit.push(`${data.syncTables?.length} sync tables`);
       }
 

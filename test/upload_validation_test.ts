@@ -2,11 +2,6 @@ import {testHelper} from './test_helper';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '..';
 import {AuthenticationType} from '../types';
-import {BUILDING_BLOCK_COUNT_LIMIT} from '../testing/upload_validation';
-import {BUILDING_BLOCK_DESCRIPTION_CHARACTER_LIMIT} from '../testing/upload_validation';
-import {BUILDING_BLOCK_NAME_CHARACTER_LIMIT} from '../testing/upload_validation';
-import {COLUMN_MATCHERS_CHARACTER_LIMIT} from '../testing/upload_validation';
-import {COLUMN_MATCHERS_COUNT_LIMIT} from '../testing/upload_validation';
 import {ConnectionRequirement} from '../api_types';
 import {CurrencyFormat} from '..';
 import {DurationUnit} from '..';
@@ -14,7 +9,7 @@ import type {Formula} from '../api';
 import type {GenericSyncTable} from '../api';
 import {ImageCornerStyle} from '../schema';
 import {ImageOutline} from '../schema';
-import {NETWORK_DOMAIN_CHARACTER_LIMIT} from '../testing/upload_validation';
+import {Limits} from '../testing/upload_validation';
 import type {ObjectSchemaDefinition} from '../schema';
 import type {PackFormulaMetadata} from '../api';
 import {PackMetadataValidationError} from '../testing/upload_validation';
@@ -198,7 +193,7 @@ describe('Pack metadata Validation', () => {
     const formulas = [];
     const formats = [];
     const syncTables = [];
-    for (let i = 0; i < BUILDING_BLOCK_COUNT_LIMIT / 2; i++) {
+    for (let i = 0; i < Limits.BuildingBlockCountPerType + 1; i++) {
       formulas.push({
         ...formula,
         name: `Formula${i}`,
@@ -242,7 +237,8 @@ describe('Pack metadata Validation', () => {
     
     assert.deepEqual(err.validationErrors, [
       {
-        message: `Cannot have more than ${BUILDING_BLOCK_COUNT_LIMIT} formulas, sync tables, and column formats. Detected ${formulas.length + formats.length + syncTables.length}.`,
+        message: `Cannot have more than ${Limits.BuildingBlockCountPerType} of each of formulas, sync tables, and column formats. ` +
+        `Detected ${formulas.length} formulas, ${formats.length} formats, ${syncTables.length} sync tables.`,
         path: ''
       },
     ]);
@@ -409,7 +405,7 @@ describe('Pack metadata Validation', () => {
     it('rejects formula names that are too long', async () => {
       const formula = makeFormula({
         resultType: ValueType.String,
-        name: 'A'.repeat(1 + BUILDING_BLOCK_NAME_CHARACTER_LIMIT),
+        name: 'A'.repeat(1 + Limits.BuildingBlockName),
         description: 'My description',
         examples: [],
         parameters: [],
@@ -423,7 +419,7 @@ describe('Pack metadata Validation', () => {
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          message: `String must contain at most ${BUILDING_BLOCK_NAME_CHARACTER_LIMIT} character(s)`,
+          message: `String must contain at most ${Limits.BuildingBlockName} character(s)`,
           path: 'formulas[0].name',
         },
       ]);
@@ -433,7 +429,7 @@ describe('Pack metadata Validation', () => {
       const formula = makeFormula({
         resultType: ValueType.String,
         name: 'Hi',
-        description: 'A'.repeat(1 + BUILDING_BLOCK_DESCRIPTION_CHARACTER_LIMIT),
+        description: 'A'.repeat(1 + Limits.BuildingBlockDescription),
         examples: [],
         parameters: [],
         execute: () => '',
@@ -446,7 +442,7 @@ describe('Pack metadata Validation', () => {
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          message: `String must contain at most ${BUILDING_BLOCK_DESCRIPTION_CHARACTER_LIMIT} character(s)`,
+          message: `String must contain at most ${Limits.BuildingBlockDescription} character(s)`,
           path: 'formulas[0].description',
         },
       ]);
@@ -721,6 +717,32 @@ describe('Pack metadata Validation', () => {
           {
             message: 'Parameter names must be unique. Found duplicate name "p1".',
             path: 'formulas[0].parameters',
+          },
+        ]);
+      });
+
+      it('rejects parameters with names that are too long', async () => {
+        const metadata = makeMetadataFromParams([
+          makeParameter({type: ParameterType.StringArray, name: 'a'.repeat(Limits.BuildingBlockName + 1), description: 'param description'}),
+        ]);
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: `String must contain at most ${Limits.BuildingBlockName} character(s)`,
+            path: 'formulas[0].parameters[0].name',
+          },
+        ]);
+      });
+
+      it('rejects parameters with descriptions that are too long', async () => {
+        const metadata = makeMetadataFromParams([
+          makeParameter({type: ParameterType.StringArray, name: 'Hi', description: 'a'.repeat(Limits.BuildingBlockDescription + 1)}),
+        ]);
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: `String must contain at most ${Limits.BuildingBlockDescription} character(s)`,
+            path: 'formulas[0].parameters[0].description',
           },
         ]);
       });
@@ -1609,7 +1631,7 @@ describe('Pack metadata Validation', () => {
 
     it('rejects sync table names that are too long', async () => {
       const syncTable = makeSyncTable({
-        name: 'A'.repeat(BUILDING_BLOCK_NAME_CHARACTER_LIMIT + 1),
+        name: 'A'.repeat(Limits.BuildingBlockName + 1),
         identityName: 'Sync',
         schema: makeObjectSchema({
           type: ValueType.Object,
@@ -1638,7 +1660,7 @@ describe('Pack metadata Validation', () => {
 
       assert.deepEqual(err.validationErrors, [
         {
-          message: `String must contain at most ${BUILDING_BLOCK_NAME_CHARACTER_LIMIT} character(s)`,
+          message: `String must contain at most ${Limits.BuildingBlockName} character(s)`,
           path: 'syncTables[0].name',
         },
       ]);
@@ -1647,7 +1669,7 @@ describe('Pack metadata Validation', () => {
     it('rejects sync table identity names that are too long', async () => {
       const syncTable = makeSyncTable({
         name: 'Hi',
-        identityName: 'A'.repeat(BUILDING_BLOCK_NAME_CHARACTER_LIMIT + 1),
+        identityName: 'A'.repeat(Limits.BuildingBlockName + 1),
         schema: makeObjectSchema({
           type: ValueType.Object,
           primary: 'foo',
@@ -1675,7 +1697,7 @@ describe('Pack metadata Validation', () => {
 
       assert.deepEqual(err.validationErrors, [
         {
-          message: `String must contain at most ${BUILDING_BLOCK_NAME_CHARACTER_LIMIT} character(s)`,
+          message: `String must contain at most ${Limits.BuildingBlockName} character(s)`,
           path: 'syncTables[0].identityName',
         },
       ]);
@@ -1685,7 +1707,7 @@ describe('Pack metadata Validation', () => {
       const syncTable = makeSyncTable({
         name: 'Hi',
         identityName: 'Hi',
-        description: 'A'.repeat(BUILDING_BLOCK_DESCRIPTION_CHARACTER_LIMIT + 1),
+        description: 'A'.repeat(Limits.BuildingBlockDescription + 1),
         schema: makeObjectSchema({
           type: ValueType.Object,
           primary: 'foo',
@@ -1713,7 +1735,7 @@ describe('Pack metadata Validation', () => {
 
       assert.deepEqual(err.validationErrors, [
         {
-          message: `String must contain at most ${BUILDING_BLOCK_DESCRIPTION_CHARACTER_LIMIT} character(s)`,
+          message: `String must contain at most ${Limits.BuildingBlockDescription} character(s)`,
           path: 'syncTables[0].description',
         },
       ]);
@@ -2293,7 +2315,7 @@ describe('Pack metadata Validation', () => {
           formulaNamespace: 'MyNamespace',
           formats: [
             {
-              name: 'A'.repeat(BUILDING_BLOCK_NAME_CHARACTER_LIMIT + 1),
+              name: 'A'.repeat(Limits.BuildingBlockName + 1),
               formulaNamespace: 'MyNamespace',
               formulaName: 'MyFormula',
               hasNoConnection: true,
@@ -2308,7 +2330,7 @@ describe('Pack metadata Validation', () => {
 
         assert.deepEqual(err.validationErrors, [
           {
-            message: `String must contain at most ${BUILDING_BLOCK_NAME_CHARACTER_LIMIT} character(s)`,
+            message: `String must contain at most ${Limits.BuildingBlockName} character(s)`,
             path: 'formats[0].name',
           },
         ]);
@@ -2333,7 +2355,7 @@ describe('Pack metadata Validation', () => {
               hasNoConnection: true,
               instructions: 'some instructions',
               placeholder: 'some placeholder',
-              matchers: Array(COLUMN_MATCHERS_COUNT_LIMIT + 1).fill('/some compiled regex/i'),
+              matchers: Array(Limits.NumColumnMatchers + 1).fill('/some compiled regex/i'),
             },
           ],
         });
@@ -2342,7 +2364,7 @@ describe('Pack metadata Validation', () => {
 
         assert.deepEqual(err.validationErrors, [
           {
-            message: `Array must contain at most ${COLUMN_MATCHERS_COUNT_LIMIT} element(s)`,
+            message: `Array must contain at most ${Limits.NumColumnMatchers} element(s)`,
             path: 'formats[0].matchers',
           },
         ]);
@@ -2367,7 +2389,7 @@ describe('Pack metadata Validation', () => {
               hasNoConnection: true,
               instructions: 'some instructions',
               placeholder: 'some placeholder',
-              matchers: [`/${'a'.repeat(COLUMN_MATCHERS_CHARACTER_LIMIT + 1)}/i`],
+              matchers: [`/${'a'.repeat(Limits.ColumnMatcherRegex + 1)}/i`],
             },
           ],
         });
@@ -2376,7 +2398,7 @@ describe('Pack metadata Validation', () => {
 
         assert.deepEqual(err.validationErrors, [
           {
-            message: `String must contain at most ${COLUMN_MATCHERS_CHARACTER_LIMIT} character(s)`,
+            message: `String must contain at most ${Limits.ColumnMatcherRegex} character(s)`,
             path: 'formats[0].matchers[0]',
           },
         ]);
@@ -3004,13 +3026,13 @@ describe('Pack metadata Validation', () => {
         defaultAuthentication: {
           type: AuthenticationType.HeaderBearerToken
         },
-        networkDomains: [`${'a'.repeat(NETWORK_DOMAIN_CHARACTER_LIMIT)}.io`],
+        networkDomains: [`${'a'.repeat(Limits.NetworkDomainUrl)}.io`],
       });
 
       const err = await validateJsonAndAssertFails(metadata, '1.0.0');
       assert.deepEqual(err.validationErrors, [
         {
-          message: `String must contain at most ${NETWORK_DOMAIN_CHARACTER_LIMIT} character(s)`,
+          message: `String must contain at most ${Limits.NetworkDomainUrl} character(s)`,
           path: 'networkDomains[0]',
         },
       ]);
@@ -3171,7 +3193,7 @@ describe('Pack metadata Validation', () => {
     it('rejects formula names that are too long', async () => {
       const formula = makeFormula({
         resultType: ValueType.String,
-        name: 'A'.repeat(1 + BUILDING_BLOCK_NAME_CHARACTER_LIMIT),
+        name: 'A'.repeat(1 + Limits.BuildingBlockName),
         description: 'My description',
         examples: [],
         parameters: [],
@@ -3185,7 +3207,7 @@ describe('Pack metadata Validation', () => {
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          message: `String must contain at most ${BUILDING_BLOCK_NAME_CHARACTER_LIMIT} character(s)`,
+          message: `String must contain at most ${Limits.BuildingBlockName} character(s)`,
           path: 'formulas[0].name',
         },
       ]);
@@ -3195,7 +3217,7 @@ describe('Pack metadata Validation', () => {
       const formula = makeFormula({
         resultType: ValueType.String,
         name: 'Hi',
-        description: 'A'.repeat(1 + BUILDING_BLOCK_DESCRIPTION_CHARACTER_LIMIT),
+        description: 'A'.repeat(1 + Limits.BuildingBlockDescription),
         examples: [],
         parameters: [],
         execute: () => '',
@@ -3208,7 +3230,7 @@ describe('Pack metadata Validation', () => {
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          message: `String must contain at most ${BUILDING_BLOCK_DESCRIPTION_CHARACTER_LIMIT} character(s)`,
+          message: `String must contain at most ${Limits.BuildingBlockDescription} character(s)`,
           path: 'formulas[0].description',
         },
       ]);

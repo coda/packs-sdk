@@ -384,7 +384,7 @@ const variousSupportedAuthenticationValidators = Object.entries(defaultAuthentic
     .map(([_authType, schema]) => schema);
 const primitiveUnion = z.union([z.number(), z.string(), z.boolean(), z.date()]);
 const paramDefValidator = zodCompleteObject({
-    name: z.string(),
+    name: z.string().max(exports.Limits.BuildingBlockName),
     type: z
         .union([
         z.nativeEnum(api_types_3.Type),
@@ -398,7 +398,7 @@ const paramDefValidator = zodCompleteObject({
         !(typeof paramType === 'object' && paramType.type === 'array' && paramType.items === api_types_3.Type.object), {
         message: 'Object parameters are not currently supported.',
     }),
-    description: z.string(),
+    description: z.string().max(exports.Limits.BuildingBlockDescription),
     optional: z.boolean().optional(),
     autocomplete: z.unknown().optional(),
     defaultValue: z.unknown().optional(),
@@ -1071,13 +1071,13 @@ function validateFormulas(schema) {
         .superRefine((data, context) => {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j;
         const blockTypesOverLimit = [];
-        if ((_b = (_a = data.formulas) === null || _a === void 0 ? void 0 : _a.length) !== null && _b !== void 0 ? _b : 0 > exports.Limits.BuildingBlockCountPerType) {
+        if (((_b = (_a = data.formulas) === null || _a === void 0 ? void 0 : _a.length) !== null && _b !== void 0 ? _b : 0) > exports.Limits.BuildingBlockCountPerType) {
             blockTypesOverLimit.push(`${(_c = data.formulas) === null || _c === void 0 ? void 0 : _c.length} formulas`);
         }
-        if ((_e = (_d = data.formats) === null || _d === void 0 ? void 0 : _d.length) !== null && _e !== void 0 ? _e : 0 > exports.Limits.BuildingBlockCountPerType) {
+        if (((_e = (_d = data.formats) === null || _d === void 0 ? void 0 : _d.length) !== null && _e !== void 0 ? _e : 0) > exports.Limits.BuildingBlockCountPerType) {
             blockTypesOverLimit.push(`${(_f = data.formats) === null || _f === void 0 ? void 0 : _f.length} formats`);
         }
-        if ((_h = (_g = data.syncTables) === null || _g === void 0 ? void 0 : _g.length) !== null && _h !== void 0 ? _h : 0 > exports.Limits.BuildingBlockCountPerType) {
+        if (((_h = (_g = data.syncTables) === null || _g === void 0 ? void 0 : _g.length) !== null && _h !== void 0 ? _h : 0) > exports.Limits.BuildingBlockCountPerType) {
             blockTypesOverLimit.push(`${(_j = data.syncTables) === null || _j === void 0 ? void 0 : _j.length} sync tables`);
         }
         if (blockTypesOverLimit.length) {
