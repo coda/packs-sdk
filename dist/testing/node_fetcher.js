@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.nodeFetcher = exports.isStatusCodeError = exports.StatusCodeError = exports.fetch = void 0;
+exports.nodeFetcher = exports.fetch = void 0;
 const http_1 = require("http");
 const https_1 = require("https");
 const nodeFetch = __importStar(require("node-fetch"));
@@ -36,22 +36,8 @@ async function fetch(url, init) {
     return nodeFetch.default(url, init);
 }
 exports.fetch = fetch;
-class StatusCodeError extends Error {
-    constructor(statusCode, body, options, response) {
-        super(`${statusCode} - ${JSON.stringify(body)}`);
-        this.name = 'StatusCodeError';
-        this.statusCode = statusCode;
-        this.options = options;
-        this.response = response;
-    }
-}
-exports.StatusCodeError = StatusCodeError;
-function isStatusCodeError(err) {
-    return typeof err === 'object' && err.name === StatusCodeError.name;
-}
-exports.isStatusCodeError = isStatusCodeError;
 async function nodeFetcher(options) {
-    const { method = 'GET', uri, qs, followRedirect = true, gzip = true, json, headers: rawHeaders = {}, form, body, timeout, forever, resolveWithFullResponse, resolveWithRawBody, simple = true, encoding, ca, maxResponseSizeBytes, legacyBlankAcceptHeader, } = options;
+    const { method = 'GET', uri, qs, followRedirect = true, gzip = true, json, headers: rawHeaders = {}, form, body, timeout, forever, resolveWithFullResponse, resolveWithRawBody, encoding, ca, maxResponseSizeBytes, legacyBlankAcceptHeader, } = options;
     const init = {
         method,
         timeout,
@@ -117,11 +103,6 @@ async function nodeFetcher(options) {
         headers: Object.fromEntries(response.headers.entries()),
         body: resultBody,
     };
-    if (simple) {
-        if (!response.ok) {
-            throw new StatusCodeError(response.status, resultBody, options, fullResponse);
-        }
-    }
     if (resolveWithFullResponse) {
         return fullResponse;
     }

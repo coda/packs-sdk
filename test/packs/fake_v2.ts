@@ -3,6 +3,7 @@ import * as coda from '../..';
 export const pack = coda.newPack();
 
 pack.addNetworkDomain('googleapis.com');
+pack.addNetworkDomain('httpbin.org');
 
 pack.setUserAuthentication({
   type: coda.AuthenticationType.OAuth2,
@@ -177,4 +178,30 @@ pack.addFormula({
     return url;
   },
   cacheTtlSecs: 0,
+});
+
+pack.addFormula({
+  name: 'StatusCode',
+  description: '',
+  parameters: [
+    coda.makeParameter({
+      type: coda.ParameterType.Number,
+      name: 'status',
+      description: '',
+    }),
+  ],
+  resultType: coda.ValueType.String,
+  cacheTtlSecs: 0,
+  async execute([param], context) {
+    try {
+      const response = await context.fetcher.fetch({url: `https://httpbin.org/status/${param}`, method: 'GET'});
+      return `${response.status}`;
+    } catch (err) {
+      if (err instanceof coda.StatusCodeError) {
+        return `Error is StatusCodeError with code ${err.statusCode}`;
+      } else {
+        return `Unrecogonized error ${JSON.stringify(err)}`;
+      }
+    }
+  },
 });
