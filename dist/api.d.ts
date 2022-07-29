@@ -99,6 +99,8 @@ export declare class StatusCodeError extends Error {
     response: StatusCodeErrorResponse;
     /** @hidden */
     constructor(statusCode: number, body: any, options: FetchRequest, response: StatusCodeErrorResponse);
+    /** Returns if the error is an instance of StatusCodeError. Note that instanceof may not work. */
+    static isStatusCodeError(err: any): err is StatusCodeError;
 }
 /**
  * Throw this error if the user needs to re-authenticate to gain OAuth scopes that have been added
@@ -114,11 +116,13 @@ export declare class StatusCodeError extends Error {
  */
 export declare class MissingScopesError extends Error {
     /**
-     * The name of the error, for identiciation purposes.
+     * The name of the error, for identification purposes.
      */
     name: string;
     /** @hidden */
     constructor(message?: string);
+    /** Returns if the error is an instance of MissingScopesError. Note that instanceof may not work. */
+    static isMissingScopesError(err: any): err is MissingScopesError;
 }
 /**
  * The result of defining a sync table. Should not be necessary to use directly,

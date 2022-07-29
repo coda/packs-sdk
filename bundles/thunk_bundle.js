@@ -4752,11 +4752,17 @@ module.exports = (() => {
       }
       this.response = { ...response, body: responseBody };
     }
+    static isStatusCodeError(err) {
+      return "name" in err && err.name === StatusCodeError.name;
+    }
   };
   var MissingScopesError = class extends Error {
     constructor(message) {
       super(message || "Additional permissions are required");
       this.name = "MissingScopesError";
+    }
+    static isMissingScopesError(err) {
+      return "name" in err && err.name === MissingScopesError.name;
     }
   };
   function isDynamicSyncTable(syncTable) {
