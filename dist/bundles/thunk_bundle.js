@@ -4832,7 +4832,7 @@ module.exports = (() => {
     StatusCodeError,
     MissingScopesError
   ];
-  function fixUncopyableTypes(val, pathPrefix, postTransforms, depth = 0) {
+  function fixUncopyableTypes(val, pathPrefix, postTransforms, forLogging, depth) {
     var _a;
     if (depth >= MaxTraverseDepth) {
       return { val, hasModifications: false };
@@ -4861,7 +4861,7 @@ module.exports = (() => {
       for (let i = 0; i < val.length; i++) {
         const item = val[i];
         pathPrefix.push(i.toString());
-        const { val: itemVal, hasModifications } = fixUncopyableTypes(item, pathPrefix, postTransforms, depth + 1);
+        const { val: itemVal, hasModifications } = fixUncopyableTypes(item, pathPrefix, postTransforms, forLogging, depth + 1);
         if (hasModifications) {
           someItemHadModifications = true;
         }
@@ -4877,7 +4877,7 @@ module.exports = (() => {
       let hadModifications = false;
       for (const key of Object.getOwnPropertyNames(val)) {
         pathPrefix.push(key);
-        const { val: objVal, hasModifications: subValHasModifications } = fixUncopyableTypes(val[key], pathPrefix, postTransforms, depth + 1);
+        const { val: objVal, hasModifications: subValHasModifications } = fixUncopyableTypes(val[key], pathPrefix, postTransforms, forLogging, depth + 1);
         maybeModifiedObject[key] = objVal;
         pathPrefix.pop();
         if (subValHasModifications) {
@@ -4893,14 +4893,17 @@ module.exports = (() => {
   function isMarshaledValue(val) {
     return typeof val === "object" && "__coda_marshaler__" /* CodaMarshaler */ in val;
   }
-  function marshalValue(val) {
+  function marshalValueInternal(val, forLogging) {
     const postTransforms = [];
-    const { val: encodedVal } = fixUncopyableTypes(val, [], postTransforms, 0);
+    const { val: encodedVal } = fixUncopyableTypes(val, [], postTransforms, forLogging, 0);
     return {
       encoded: encodedVal,
       postTransforms,
       ["__coda_marshaler__" /* CodaMarshaler */]: "Object" /* Object */
     };
+  }
+  function marshalValue(val) {
+    return marshalValueInternal(val, false);
   }
   function marshalValueToString(val) {
     return serialize(marshalValue(val));

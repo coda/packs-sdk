@@ -3,6 +3,7 @@ import {StatusCodeError} from '../api';
 import {inspect} from 'util';
 import ivm from 'isolated-vm';
 import {marshalValue} from '../runtime/common/marshaling';
+import {marshalValueForLogging} from '../runtime/common/marshaling';
 import {unmarshalValue} from '../runtime/common/marshaling';
 import {unwrapError} from '../runtime/common/marshaling';
 import {wrapError} from '../runtime/common/marshaling';
@@ -23,6 +24,10 @@ describe('Marshaling', () => {
 
   function transform<T>(val: T): T {
     return unmarshalValue(passThroughIsolatedVm(marshalValue(val)));
+  }
+
+  function transformForLogging<T>(val: T): T {
+    return unmarshalValue(passThroughIsolatedVm(marshalValueForLogging(val)));
   }
 
   function transformError(val: Error): Error {
@@ -52,6 +57,12 @@ describe('Marshaling', () => {
     assert.deepEqual(transform(new Map([['a', 2]])), new Map([['a', 2]]));
     assert.deepEqual(transform(Uint8Array.from([1, 2, 3])), Uint8Array.from([1, 2, 3]));
     assert.deepEqual(transform(new ArrayBuffer(10)), new ArrayBuffer(10));
+
+    const recursiveObj = {
+      myself: null as any,
+    };
+    recursiveObj.myself = recursiveObj;
+    assert.deepEqual(transform(recursiveObj), recursiveObj);
 
     class SomeClass {
       message: string;
@@ -94,6 +105,19 @@ describe('Marshaling', () => {
   it('throws error for unhandled objects', () => {
     assert.throws(() => transform(() => {}), '() => { } could not be cloned.');
     assert.throws(() => void transform(new Promise(resolve => resolve(1))), '#<Promise> could not be cloned.');
+  });
+
+  it('does not throw error for functions in logging mode', () => {
+    assert.deepEqual(
+      transformForLogging({
+        someFunc: () => {
+          return 1;
+        },
+        somePromise: Promise.resolve(1),
+        someDate: new Date(123),
+      }),
+      {someFunc: '<function>' as any, somePromise: '<Promise>' as any, someDate: new Date(123)},
+    );
   });
 
   it('works for nested objects', () => {

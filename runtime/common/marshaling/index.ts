@@ -75,7 +75,8 @@ function fixUncopyableTypes(
   val: any,
   pathPrefix: string[],
   postTransforms: PostTransform[],
-  depth: number = 0,
+  forLogging: boolean,
+  depth: number,
 ): {val: any; hasModifications: boolean} {
   if (depth >= MaxTraverseDepth) {
     // this is either a circular reference or a super nested value that we mostly likely
@@ -113,7 +114,13 @@ function fixUncopyableTypes(
     for (let i = 0; i < val.length; i++) {
       const item = val[i];
       pathPrefix.push(i.toString());
-      const {val: itemVal, hasModifications} = fixUncopyableTypes(item, pathPrefix, postTransforms, depth + 1);
+      const {val: itemVal, hasModifications} = fixUncopyableTypes(
+        item,
+        pathPrefix,
+        postTransforms,
+        forLogging,
+        depth + 1,
+      );
       if (hasModifications) {
         someItemHadModifications = true;
       }
@@ -125,15 +132,25 @@ function fixUncopyableTypes(
     }
   }
 
+  if (forLogging) {
+    if (typeof val === 'function') {
+      return {val: '<function>', hasModifications: true};
+    }
+    if (val instanceof Promise) {
+      return {val: '<Promise>', hasModifications: true};
+    }
+  }
+
   if (typeof val === 'object') {
     const maybeModifiedObject: any = {};
     let hadModifications = false;
-    for (const key of Object.getOwnPropertyNames(val)) {
+    for (const key of Object.keys(val)) {
       pathPrefix.push(key);
       const {val: objVal, hasModifications: subValHasModifications} = fixUncopyableTypes(
         val[key],
         pathPrefix,
         postTransforms,
+        forLogging,
         depth + 1,
       );
       maybeModifiedObject[key] = objVal;
@@ -158,14 +175,28 @@ function isMarshaledValue(val: any): boolean {
   return typeof val === 'object' && MarshalingInjectedKeys.CodaMarshaler in val;
 }
 
-export function marshalValue(val: any): MarshaledValue {
+function marshalValueInternal(val: any, forLogging: boolean): MarshaledValue {
   const postTransforms: PostTransform[] = [];
-  const {val: encodedVal} = fixUncopyableTypes(val, [], postTransforms, 0);
+  const {val: encodedVal} = fixUncopyableTypes(val, [], postTransforms, forLogging, 0);
   return {
     encoded: encodedVal,
     postTransforms,
     [MarshalingInjectedKeys.CodaMarshaler]: CodaMarshalerType.Object,
   };
+}
+
+// The marshaling for console.log is willing to be more lossy/forgiving than the marshaling
+// for other functions since you usually want console.log to print _something_ rather than
+// throw an error.
+//
+// Currently only functions and promises are detected and turned into strings. Other unsupported
+// types could still raise an error.
+export function marshalValueForLogging(val: any): MarshaledValue {
+  return marshalValueInternal(val, true);
+}
+
+export function marshalValue(val: any): MarshaledValue {
+  return marshalValueInternal(val, false);
 }
 
 export function marshalValueToString(val: any): string {

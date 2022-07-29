@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.unmarshalError = exports.marshalError = exports.unwrapError = exports.wrapError = exports.unmarshalValue = exports.unmarshalValueFromString = exports.marshalValueToString = exports.marshalValue = void 0;
+exports.unmarshalError = exports.marshalError = exports.unwrapError = exports.wrapError = exports.unmarshalValue = exports.unmarshalValueFromString = exports.marshalValueToString = exports.marshalValue = exports.marshalValueForLogging = void 0;
 const constants_1 = require("./constants");
 const constants_2 = require("./constants");
 const api_1 = require("../../../api");
@@ -60,7 +60,7 @@ const recognizableCodaErrorClasses = [
 //
 // "hasModifications" is to avoid trying to copy objects that don't need to be copied.
 // Only objects containing a buffer or an error should need to be copied.
-function fixUncopyableTypes(val, pathPrefix, postTransforms, depth = 0) {
+function fixUncopyableTypes(val, pathPrefix, postTransforms, forLogging, depth) {
     var _a;
     if (depth >= MaxTraverseDepth) {
         // this is either a circular reference or a super nested value that we mostly likely
@@ -94,7 +94,7 @@ function fixUncopyableTypes(val, pathPrefix, postTransforms, depth = 0) {
         for (let i = 0; i < val.length; i++) {
             const item = val[i];
             pathPrefix.push(i.toString());
-            const { val: itemVal, hasModifications } = fixUncopyableTypes(item, pathPrefix, postTransforms, depth + 1);
+            const { val: itemVal, hasModifications } = fixUncopyableTypes(item, pathPrefix, postTransforms, forLogging, depth + 1);
             if (hasModifications) {
                 someItemHadModifications = true;
             }
@@ -110,7 +110,7 @@ function fixUncopyableTypes(val, pathPrefix, postTransforms, depth = 0) {
         let hadModifications = false;
         for (const key of Object.getOwnPropertyNames(val)) {
             pathPrefix.push(key);
-            const { val: objVal, hasModifications: subValHasModifications } = fixUncopyableTypes(val[key], pathPrefix, postTransforms, depth + 1);
+            const { val: objVal, hasModifications: subValHasModifications } = fixUncopyableTypes(val[key], pathPrefix, postTransforms, forLogging, depth + 1);
             maybeModifiedObject[key] = objVal;
             pathPrefix.pop();
             if (subValHasModifications) {
@@ -130,14 +130,21 @@ function fixUncopyableTypes(val, pathPrefix, postTransforms, depth = 0) {
 function isMarshaledValue(val) {
     return typeof val === 'object' && constants_2.MarshalingInjectedKeys.CodaMarshaler in val;
 }
-function marshalValue(val) {
+function marshalValueInternal(val, forLogging) {
     const postTransforms = [];
-    const { val: encodedVal } = fixUncopyableTypes(val, [], postTransforms, 0);
+    const { val: encodedVal } = fixUncopyableTypes(val, [], postTransforms, forLogging, 0);
     return {
         encoded: encodedVal,
         postTransforms,
         [constants_2.MarshalingInjectedKeys.CodaMarshaler]: constants_1.CodaMarshalerType.Object,
     };
+}
+function marshalValueForLogging(val) {
+    return marshalValueInternal(val, true);
+}
+exports.marshalValueForLogging = marshalValueForLogging;
+function marshalValue(val) {
+    return marshalValueInternal(val, false);
 }
 exports.marshalValue = marshalValue;
 function marshalValueToString(val) {

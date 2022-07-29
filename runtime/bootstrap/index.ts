@@ -85,7 +85,9 @@ export async function injectAsyncFunction(
   );
 }
 
-export async function injectVoidFunction(
+// Log functions have no return value and do a more relaxed version of marshaling that doesn't
+// raise an exception on unsupported types like normal marshaling would.
+export async function injectLogFunction(
   context: Context,
   stubName: string,
   func: (...args: any[]) => void,
@@ -97,7 +99,7 @@ export async function injectVoidFunction(
   await context.evalClosure(
     `${stubName} = function(...args) {
         coda.handleError(() => {
-          $0.applyIgnored(undefined, args.map(coda.marshalValue), {arguments: {copy: true}});
+          $0.applyIgnored(undefined, args.map(coda.marshalValueForLogging), {arguments: {copy: true}});
         });
      };`,
     [stub],
@@ -240,13 +242,13 @@ export async function injectExecutionContext({
 
   await injectFetcherFunction(context, 'executionContext.fetcher.fetch', fetcher.fetch.bind(fetcher));
 
-  await injectVoidFunction(context, 'console.trace', logger.trace.bind(logger));
-  await injectVoidFunction(context, 'console.debug', logger.debug.bind(logger));
-  await injectVoidFunction(context, 'console.info', logger.info.bind(logger));
-  await injectVoidFunction(context, 'console.warn', logger.warn.bind(logger));
-  await injectVoidFunction(context, 'console.error', logger.error.bind(logger));
+  await injectLogFunction(context, 'console.trace', logger.trace.bind(logger));
+  await injectLogFunction(context, 'console.debug', logger.debug.bind(logger));
+  await injectLogFunction(context, 'console.info', logger.info.bind(logger));
+  await injectLogFunction(context, 'console.warn', logger.warn.bind(logger));
+  await injectLogFunction(context, 'console.error', logger.error.bind(logger));
   // console.log is an alias of logger.info
-  await injectVoidFunction(context, 'console.log', logger.info.bind(logger));
+  await injectLogFunction(context, 'console.log', logger.info.bind(logger));
 
   await injectAsyncFunction(
     context,

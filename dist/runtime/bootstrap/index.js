@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getThunkPath = exports.registerBundles = exports.registerBundle = exports.injectExecutionContext = exports.injectSerializer = exports.executeThunk = exports.injectFetcherFunction = exports.injectVoidFunction = exports.injectAsyncFunction = exports.createIsolateContext = void 0;
+exports.getThunkPath = exports.registerBundles = exports.registerBundle = exports.injectExecutionContext = exports.injectSerializer = exports.executeThunk = exports.injectFetcherFunction = exports.injectLogFunction = exports.injectAsyncFunction = exports.createIsolateContext = void 0;
 const fs_1 = __importDefault(require("fs"));
 const marshaling_1 = require("../common/marshaling");
 const path_1 = __importDefault(require("path"));
@@ -61,17 +61,19 @@ async function injectAsyncFunction(context, stubName, func) {
      };`, [stub], { arguments: { reference: true } });
 }
 exports.injectAsyncFunction = injectAsyncFunction;
-async function injectVoidFunction(context, stubName, func) {
+// Log functions have no return value and do a more relaxed version of marshaling that doesn't
+// raise an exception on unsupported types like normal marshaling would.
+async function injectLogFunction(context, stubName, func) {
     const stub = (...args) => {
         func(...args.map(arg => (0, marshaling_2.unmarshalValue)(arg)));
     };
     await context.evalClosure(`${stubName} = function(...args) {
         coda.handleError(() => {
-          $0.applyIgnored(undefined, args.map(coda.marshalValue), {arguments: {copy: true}});
+          $0.applyIgnored(undefined, args.map(coda.marshalValueForLogging), {arguments: {copy: true}});
         });
      };`, [stub], { arguments: { reference: true } });
 }
-exports.injectVoidFunction = injectVoidFunction;
+exports.injectLogFunction = injectLogFunction;
 async function injectFetcherFunction(context, stubName, func) {
     const stub = async (marshaledValue) => {
         const result = await func((0, marshaling_2.unmarshalValue)(marshaledValue));
@@ -156,13 +158,13 @@ async function injectExecutionContext({ context, fetcher, temporaryBlobStorage, 
     await context.global.set('codaInternal', { serializer: {} }, { copy: true });
     await injectSerializer(context, 'codaInternal.serializer');
     await injectFetcherFunction(context, 'executionContext.fetcher.fetch', fetcher.fetch.bind(fetcher));
-    await injectVoidFunction(context, 'console.trace', logger.trace.bind(logger));
-    await injectVoidFunction(context, 'console.debug', logger.debug.bind(logger));
-    await injectVoidFunction(context, 'console.info', logger.info.bind(logger));
-    await injectVoidFunction(context, 'console.warn', logger.warn.bind(logger));
-    await injectVoidFunction(context, 'console.error', logger.error.bind(logger));
+    await injectLogFunction(context, 'console.trace', logger.trace.bind(logger));
+    await injectLogFunction(context, 'console.debug', logger.debug.bind(logger));
+    await injectLogFunction(context, 'console.info', logger.info.bind(logger));
+    await injectLogFunction(context, 'console.warn', logger.warn.bind(logger));
+    await injectLogFunction(context, 'console.error', logger.error.bind(logger));
     // console.log is an alias of logger.info
-    await injectVoidFunction(context, 'console.log', logger.info.bind(logger));
+    await injectLogFunction(context, 'console.log', logger.info.bind(logger));
     await injectAsyncFunction(context, 'executionContext.temporaryBlobStorage.storeBlob', temporaryBlobStorage.storeBlob.bind(temporaryBlobStorage));
     await injectAsyncFunction(context, 'executionContext.temporaryBlobStorage.storeUrl', temporaryBlobStorage.storeUrl.bind(temporaryBlobStorage));
 }

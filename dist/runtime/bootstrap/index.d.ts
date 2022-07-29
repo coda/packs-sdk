@@ -29,7 +29,7 @@ export declare function createIsolateContext(isolate: Isolate): Promise<Context>
  * See https://github.com/laverdet/isolated-vm#examples
  */
 export declare function injectAsyncFunction(context: Context, stubName: string, func: (...args: any[]) => Promise<any>): Promise<void>;
-export declare function injectVoidFunction(context: Context, stubName: string, func: (...args: any[]) => void): Promise<void>;
+export declare function injectLogFunction(context: Context, stubName: string, func: (...args: any[]) => void): Promise<void>;
 export declare function injectFetcherFunction(context: Context, stubName: string, func: (request: FetchRequest) => Promise<FetchResponse>): Promise<void>;
 /**
  * Actually execute the pack function inside the isolate by loading and passing control to the thunk.
