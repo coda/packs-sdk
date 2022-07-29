@@ -1402,8 +1402,7 @@ describe('Pack metadata Validation', () => {
           },
         ]);
       });
-    }
-    );
+    });
 
     it('duplicate sync table identity names', async () => {
       const syncTable1 = makeSyncTable({
