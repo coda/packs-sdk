@@ -9,6 +9,7 @@ import type {Formula} from '../api';
 import type {GenericSyncTable} from '../api';
 import {ImageCornerStyle} from '../schema';
 import {ImageOutline} from '../schema';
+import {Limits} from '../testing/upload_validation';
 import type {ObjectSchemaDefinition} from '../schema';
 import type {PackFormulaMetadata} from '../api';
 import {PackMetadataValidationError} from '../testing/upload_validation';
@@ -329,6 +330,52 @@ describe('Pack metadata Validation', () => {
       }
     });
 
+    it('rejects formula names that are too long', async () => {
+      const formula = makeFormula({
+        resultType: ValueType.String,
+        name: 'A'.repeat(1 + Limits.BuildingBlockName),
+        description: 'My description',
+        examples: [],
+        parameters: [],
+        execute: () => '',
+      });
+
+      const metadata = createFakePackVersionMetadata({
+        formulas: [formulaToMetadata(formula)],
+        formulaNamespace: 'MyNamespace',
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: `String must contain at most ${Limits.BuildingBlockName} character(s)`,
+          path: 'formulas[0].name',
+        },
+      ]);
+    });
+
+    it('rejects formula descriptions that are too long', async () => {
+      const formula = makeFormula({
+        resultType: ValueType.String,
+        name: 'Hi',
+        description: 'A'.repeat(1 + Limits.BuildingBlockDescription),
+        examples: [],
+        parameters: [],
+        execute: () => '',
+      });
+
+      const metadata = createFakePackVersionMetadata({
+        formulas: [formulaToMetadata(formula)],
+        formulaNamespace: 'MyNamespace',
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: `String must contain at most ${Limits.BuildingBlockDescription} character(s)`,
+          path: 'formulas[0].description',
+        },
+      ]);
+    });
+
     it('valid string formula with examples', async () => {
       const formula = makeStringFormula({
         name: 'MyFormula',
@@ -503,6 +550,39 @@ describe('Pack metadata Validation', () => {
       assert.deepEqual(err.validationErrors, [{message: 'Required', path: 'formulas[0].description'}]);
     });
 
+    it('rejects if number of formulas goes over limit', async () => {
+      const formula = makeFormula({
+        resultType: ValueType.Number,
+        name: 'MyFormula',
+        description: 'My description',
+        examples: [],
+        parameters: [makeStringParameter('myParam', 'param description')],
+        execute: () => 1,
+      });
+
+      const formulas = [];
+      for (let i = 0; i < Limits.BuildingBlockCountPerType + 1; i++) {
+        formulas.push({
+          ...formula,
+          name: `Formula${i}`,
+        });
+      }
+      const metadata = createFakePackVersionMetadata(
+        {
+          formulas,
+          formulaNamespace: 'MyNamespace'
+        });
+
+      const err = await validateJsonAndAssertFails(metadata);
+
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: `Array must contain at most ${Limits.BuildingBlockCountPerType} element(s)`,
+          path: 'formulas',
+        },
+      ]);
+    });
+
     describe('parameters', () => {
       function makeMetadataFromParams(params: ParamDefs) {
         const formula = makeNumericFormula({
@@ -598,6 +678,32 @@ describe('Pack metadata Validation', () => {
           {
             message: 'Parameter names must be unique. Found duplicate name "p1".',
             path: 'formulas[0].parameters',
+          },
+        ]);
+      });
+
+      it('rejects parameters with names that are too long', async () => {
+        const metadata = makeMetadataFromParams([
+          makeParameter({type: ParameterType.StringArray, name: 'a'.repeat(Limits.BuildingBlockName + 1), description: 'param description'}),
+        ]);
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: `String must contain at most ${Limits.BuildingBlockName} character(s)`,
+            path: 'formulas[0].parameters[0].name',
+          },
+        ]);
+      });
+
+      it('rejects parameters with descriptions that are too long', async () => {
+        const metadata = makeMetadataFromParams([
+          makeParameter({type: ParameterType.StringArray, name: 'Hi', description: 'a'.repeat(Limits.BuildingBlockDescription + 1)}),
+        ]);
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: `String must contain at most ${Limits.BuildingBlockDescription} character(s)`,
+            path: 'formulas[0].parameters[0].description',
           },
         ]);
       });
@@ -1257,230 +1363,384 @@ describe('Pack metadata Validation', () => {
           },
         ]);
       });
-    });
 
-    it('duplicate sync table identity names', async () => {
-      const syncTable1 = makeSyncTable({
-        name: 'SyncTable1',
-        identityName: 'Identity',
-        schema: makeObjectSchema({
-          type: ValueType.Object,
-          primary: 'foo',
-          id: 'foo',
-          properties: {
-            Foo: {type: ValueType.String},
+      it('duplicate sync table identity names', async () => {
+        const syncTable1 = makeSyncTable({
+          name: 'SyncTable1',
+          identityName: 'Identity',
+          schema: makeObjectSchema({
+            type: ValueType.Object,
+            primary: 'foo',
+            id: 'foo',
+            properties: {
+              Foo: {type: ValueType.String},
+            },
+          }),
+          formula: {
+            name: 'SyncTable',
+            description: 'A simple sync table',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
           },
-        }),
-        formula: {
+        });
+        const syncTable2 = makeSyncTable({
+          name: 'SyncTable2',
+          identityName: 'Identity',
+          schema: makeObjectSchema({
+            type: ValueType.Object,
+            primary: 'foo',
+            id: 'foo',
+            properties: {
+              Foo: {type: ValueType.String},
+            },
+          }),
+          formula: {
+            name: 'SyncTable',
+            description: 'A simple sync table',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+          },
+        });
+
+        const metadata = createFakePack({
+          syncTables: [syncTable1, syncTable2],
+        });
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'Sync table identity names must be unique. Found duplicate name "Identity".',
+            path: 'syncTables',
+          },
+        ]);
+      });
+
+      it('duplicate sync table identity names not triggered for dynamic sync tables', async () => {
+        const syncTable1 = makeDynamicSyncTable({
+          name: 'DynamicSyncTable1',
+          identityName: 'DynamicItem1',
+          getName: makeMetadataFormula(async () => {
+            return '';
+          }),
+          getSchema: makeMetadataFormula(async () => {
+            return '';
+          }),
+          formula: {
+            name: 'SyncTable',
+            description: 'Sync table',
+            examples: [],
+            parameters: [],
+            execute: async () => {
+              return {result: []};
+            },
+          },
+          getDisplayUrl: makeMetadataFormula(async () => {
+            return '';
+          }),
+        });
+        const syncTable2 = makeDynamicSyncTable({
+          name: 'DynamicSyncTable2',
+          identityName: 'DynamicItem2',
+          getName: makeMetadataFormula(async () => {
+            return '';
+          }),
+          getSchema: makeMetadataFormula(async () => {
+            return '';
+          }),
+          formula: {
+            name: 'SyncTable',
+            description: 'Sync table',
+            examples: [],
+            parameters: [],
+            execute: async () => {
+              return {result: []};
+            },
+          },
+          getDisplayUrl: makeMetadataFormula(async () => {
+            return '';
+          }),
+        });
+        const metadata = createFakePack({
+          syncTables: [syncTable1, syncTable2],
+        });
+        await validateJson(metadata);
+      });
+
+      it('duplicate sync table names', async () => {
+        const syncTable1 = makeSyncTable({
           name: 'SyncTable',
-          description: 'A simple sync table',
-          async execute([], _context) {
-            return {result: []};
+          identityName: 'Identity1',
+          schema: makeObjectSchema({
+            type: ValueType.Object,
+            primary: 'foo',
+            id: 'foo',
+            properties: {
+              Foo: {type: ValueType.String},
+            },
+          }),
+          formula: {
+            name: 'SyncTable',
+            description: 'A simple sync table',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
           },
-          parameters: [],
-        },
-      });
-      const syncTable2 = makeSyncTable({
-        name: 'SyncTable2',
-        identityName: 'Identity',
-        schema: makeObjectSchema({
-          type: ValueType.Object,
-          primary: 'foo',
-          id: 'foo',
-          properties: {
-            Foo: {type: ValueType.String},
-          },
-        }),
-        formula: {
+        });
+        const syncTable2 = makeSyncTable({
           name: 'SyncTable',
-          description: 'A simple sync table',
-          async execute([], _context) {
-            return {result: []};
+          identityName: 'Identity2',
+          schema: makeObjectSchema({
+            type: ValueType.Object,
+            primary: 'foo',
+            id: 'foo',
+            properties: {
+              Foo: {type: ValueType.String},
+            },
+          }),
+          formula: {
+            name: 'SyncTable',
+            description: 'A simple sync table',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
           },
-          parameters: [],
-        },
+        });
+
+        const metadata = createFakePack({
+          syncTables: [syncTable1, syncTable2],
+        });
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'Sync table names must be unique. Found duplicate name "SyncTable".',
+            path: 'syncTables',
+          },
+        ]);
       });
 
-      const metadata = createFakePack({
-        syncTables: [syncTable1, syncTable2],
-      });
-      const err = await validateJsonAndAssertFails(metadata);
-      assert.deepEqual(err.validationErrors, [
-        {
-          message: 'Sync table identity names must be unique. Found duplicate name "Identity".',
-          path: 'syncTables',
-        },
-      ]);
-    });
-
-    it('duplicate sync table identity names not triggered for dynamic sync tables', async () => {
-      const syncTable1 = makeDynamicSyncTable({
-        name: 'DynamicSyncTable1',
-        identityName: 'DynamicItem1',
-        getName: makeMetadataFormula(async () => {
-          return '';
-        }),
-        getSchema: makeMetadataFormula(async () => {
-          return '';
-        }),
-        formula: {
+      it('invalid sync table getter name', async () => {
+        const syncTable = makeSyncTable({
           name: 'SyncTable',
-          description: 'Sync table',
-          examples: [],
-          parameters: [],
-          execute: async () => {
-            return {result: []};
+          identityName: 'Sync',
+          schema: makeObjectSchema({
+            type: ValueType.Object,
+            primary: 'foo',
+            id: 'foo',
+            properties: {
+              Foo: {type: ValueType.String},
+            },
+          }),
+          formula: {
+            name: 'Formula with Spaces',
+            description: 'A simple sync table',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            examples: [],
           },
-        },
-        getDisplayUrl: makeMetadataFormula(async () => {
-          return '';
-        }),
+        });
+
+        const metadata = createFakePack({
+          syncTables: [syncTable],
+        });
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'Formula names can only contain alphanumeric characters and underscores.',
+            path: 'syncTables[0].getter.name',
+          },
+        ]);
       });
-      const syncTable2 = makeDynamicSyncTable({
-        name: 'DynamicSyncTable2',
-        identityName: 'DynamicItem2',
-        getName: makeMetadataFormula(async () => {
-          return '';
-        }),
-        getSchema: makeMetadataFormula(async () => {
-          return '';
-        }),
-        formula: {
+
+      it('invalid sync table getter name but in legacy exemption list', async () => {
+        const syncTable = makeSyncTable({
           name: 'SyncTable',
-          description: 'Sync table',
-          examples: [],
-          parameters: [],
-          execute: async () => {
-            return {result: []};
+          identityName: 'Sync',
+          schema: makeObjectSchema({
+            type: ValueType.Object,
+            primary: 'foo',
+            id: 'foo',
+            properties: {
+              Foo: {type: ValueType.String},
+            },
+          }),
+          formula: {
+            name: 'Sync repos',
+            description: 'A simple sync table',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            examples: [],
           },
-        },
-        getDisplayUrl: makeMetadataFormula(async () => {
-          return '';
-        }),
-      });
-      const metadata = createFakePack({
-        syncTables: [syncTable1, syncTable2],
-      });
-      await validateJson(metadata);
-    });
+        });
 
-    it('duplicate sync table names', async () => {
-      const syncTable1 = makeSyncTable({
-        name: 'SyncTable',
-        identityName: 'Identity1',
-        schema: makeObjectSchema({
-          type: ValueType.Object,
-          primary: 'foo',
-          id: 'foo',
-          properties: {
-            Foo: {type: ValueType.String},
-          },
-        }),
-        formula: {
-          name: 'SyncTable',
-          description: 'A simple sync table',
-          async execute([], _context) {
-            return {result: []};
-          },
-          parameters: [],
-        },
-      });
-      const syncTable2 = makeSyncTable({
-        name: 'SyncTable',
-        identityName: 'Identity2',
-        schema: makeObjectSchema({
-          type: ValueType.Object,
-          primary: 'foo',
-          id: 'foo',
-          properties: {
-            Foo: {type: ValueType.String},
-          },
-        }),
-        formula: {
-          name: 'SyncTable',
-          description: 'A simple sync table',
-          async execute([], _context) {
-            return {result: []};
-          },
-          parameters: [],
-        },
+        const metadata = createFakePack({
+          id: 1013,
+          syncTables: [syncTable],
+        });
+        await validateJson(metadata);
       });
 
-      const metadata = createFakePack({
-        syncTables: [syncTable1, syncTable2],
-      });
-      const err = await validateJsonAndAssertFails(metadata);
-      assert.deepEqual(err.validationErrors, [
-        {
-          message: 'Sync table names must be unique. Found duplicate name "SyncTable".',
-          path: 'syncTables',
-        },
-      ]);
-    });
+      it('rejects sync table names that are too long', async () => {
+        const syncTable = makeSyncTable({
+          name: 'A'.repeat(Limits.BuildingBlockName + 1),
+          identityName: 'Sync',
+          schema: makeObjectSchema({
+            type: ValueType.Object,
+            primary: 'foo',
+            id: 'foo',
+            properties: {
+              Foo: {type: ValueType.String},
+            },
+          }),
+          formula: {
+            name: 'SyncTable',
+            description: 'A simple sync table',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            examples: [],
+          },
+        });
 
-    it('invalid sync table getter name', async () => {
-      const syncTable = makeSyncTable({
-        name: 'SyncTable',
-        identityName: 'Sync',
-        schema: makeObjectSchema({
-          type: ValueType.Object,
-          primary: 'foo',
-          id: 'foo',
-          properties: {
-            Foo: {type: ValueType.String},
-          },
-        }),
-        formula: {
-          name: 'Formula with Spaces',
-          description: 'A simple sync table',
-          async execute([], _context) {
-            return {result: []};
-          },
-          parameters: [],
-          examples: [],
-        },
-      });
+        const metadata = createFakePack({
+          id: 1013,
+          syncTables: [syncTable],
+        });
+        const err = await validateJsonAndAssertFails(metadata);
 
-      const metadata = createFakePack({
-        syncTables: [syncTable],
-      });
-      const err = await validateJsonAndAssertFails(metadata);
-      assert.deepEqual(err.validationErrors, [
-        {
-          message: 'Formula names can only contain alphanumeric characters and underscores.',
-          path: 'syncTables[0].getter.name',
-        },
-      ]);
-    });
-
-    it('invalid sync table getter name but in legacy exemption list', async () => {
-      const syncTable = makeSyncTable({
-        name: 'SyncTable',
-        identityName: 'Sync',
-        schema: makeObjectSchema({
-          type: ValueType.Object,
-          primary: 'foo',
-          id: 'foo',
-          properties: {
-            Foo: {type: ValueType.String},
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: `String must contain at most ${Limits.BuildingBlockName} character(s)`,
+            path: 'syncTables[0].name',
           },
-        }),
-        formula: {
-          name: 'Sync repos',
-          description: 'A simple sync table',
-          async execute([], _context) {
-            return {result: []};
-          },
-          parameters: [],
-          examples: [],
-        },
+        ]);
       });
 
-      const metadata = createFakePack({
-        id: 1013,
-        syncTables: [syncTable],
+      it('rejects sync table identity names that are too long', async () => {
+        const syncTable = makeSyncTable({
+          name: 'Hi',
+          identityName: 'A'.repeat(Limits.BuildingBlockName + 1),
+          schema: makeObjectSchema({
+            type: ValueType.Object,
+            primary: 'foo',
+            id: 'foo',
+            properties: {
+              Foo: {type: ValueType.String},
+            },
+          }),
+          formula: {
+            name: 'SyncTable',
+            description: 'A simple sync table',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            examples: [],
+          },
+        });
+
+        const metadata = createFakePack({
+          id: 1013,
+          syncTables: [syncTable],
+        });
+        const err = await validateJsonAndAssertFails(metadata);
+
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: `String must contain at most ${Limits.BuildingBlockName} character(s)`,
+            path: 'syncTables[0].identityName',
+          },
+        ]);
       });
-      await validateJson(metadata);
+
+      it('rejects sync table descriptions that are too long', async () => {
+        const syncTable = makeSyncTable({
+          name: 'Hi',
+          identityName: 'Hi',
+          description: 'A'.repeat(Limits.BuildingBlockDescription + 1),
+          schema: makeObjectSchema({
+            type: ValueType.Object,
+            primary: 'foo',
+            id: 'foo',
+            properties: {
+              Foo: {type: ValueType.String},
+            },
+          }),
+          formula: {
+            name: 'SyncTable',
+            description: 'A simple sync table',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            examples: [],
+          },
+        });
+
+        const metadata = createFakePack({
+          id: 1013,
+          syncTables: [syncTable],
+        });
+        const err = await validateJsonAndAssertFails(metadata);
+
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: `String must contain at most ${Limits.BuildingBlockDescription} character(s)`,
+            path: 'syncTables[0].description',
+          },
+        ]);
+      });
+
+      it('rejects if number of sync tables goes over limit', async () => {
+        const syncTables = [];
+        for (let i = 0; i < Limits.BuildingBlockCountPerType + 1; i++) {
+          syncTables.push(makeSyncTable({
+            name: `Sync${i}`,
+            identityName: `Sync${i}`,
+            schema: makeObjectSchema({
+              type: ValueType.Object,
+              primary: 'foo',
+              id: 'foo',
+              properties: {
+                Foo: {type: ValueType.String},
+              },
+            }),
+            formula: {
+              name: 'SyncTable',
+              description: 'A simple sync table',
+              async execute([], _context) {
+                return {result: []};
+              },
+              parameters: [],
+              examples: [],
+            },
+          }))
+        }
+
+        const metadata = createFakePackVersionMetadata(
+          {
+            syncTables,
+            formulaNamespace: 'MyNamespace'
+          });
+
+        const err = await validateJsonAndAssertFails(metadata);
+
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: `Array must contain at most ${Limits.BuildingBlockCountPerType} element(s)`,
+            path: 'syncTables',
+          },
+        ]);
+      });
     });
 
     describe('object schemas', () => {
@@ -2043,7 +2303,156 @@ describe('Pack metadata Validation', () => {
           },
         ]);
       });
-    });
+
+      it('rejects column format names that are too long', async () => {
+        const formula = makeStringFormula({
+          name: 'MyFormula',
+          description: 'My description',
+          examples: [],
+          parameters: [makeStringParameter('myParam', 'param description')],
+          execute: () => '',
+        });
+        const metadata = createFakePackVersionMetadata({
+          formulas: [formulaToMetadata(formula)],
+          formulaNamespace: 'MyNamespace',
+          formats: [
+            {
+              name: 'A'.repeat(Limits.BuildingBlockName + 1),
+              formulaNamespace: 'MyNamespace',
+              formulaName: 'MyFormula',
+              hasNoConnection: true,
+              instructions: 'some instructions',
+              placeholder: 'some placeholder',
+              matchers: ['/some compiled regex/i'],
+            },
+          ],
+        });
+
+        const err = await validateJsonAndAssertFails(metadata);
+
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: `String must contain at most ${Limits.BuildingBlockName} character(s)`,
+            path: 'formats[0].name',
+          },
+        ]);
+      });
+
+      it('rejects column matcher arrays that are too long', async () => {
+        const formula = makeStringFormula({
+          name: 'MyFormula',
+          description: 'My description',
+          examples: [],
+          parameters: [makeStringParameter('myParam', 'param description')],
+          execute: () => '',
+        });
+        const metadata = createFakePackVersionMetadata({
+          formulas: [formulaToMetadata(formula)],
+          formulaNamespace: 'MyNamespace',
+          formats: [
+            {
+              name: 'Hi',
+              formulaNamespace: 'MyNamespace',
+              formulaName: 'MyFormula',
+              hasNoConnection: true,
+              instructions: 'some instructions',
+              placeholder: 'some placeholder',
+              matchers: Array(Limits.NumColumnMatchersPerFormat + 1).fill('/some compiled regex/i'),
+            },
+          ],
+        });
+
+        const err = await validateJsonAndAssertFails(metadata);
+
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: `Array must contain at most ${Limits.NumColumnMatchersPerFormat} element(s)`,
+            path: 'formats[0].matchers',
+          },
+        ]);
+      });
+
+      it('rejects column matcher character lengths that are too long', async () => {
+        const formula = makeStringFormula({
+          name: 'MyFormula',
+          description: 'My description',
+          examples: [],
+          parameters: [makeStringParameter('myParam', 'param description')],
+          execute: () => '',
+        });
+        const metadata = createFakePackVersionMetadata({
+          formulas: [formulaToMetadata(formula)],
+          formulaNamespace: 'MyNamespace',
+          formats: [
+            {
+              name: 'Hi',
+              formulaNamespace: 'MyNamespace',
+              formulaName: 'MyFormula',
+              hasNoConnection: true,
+              instructions: 'some instructions',
+              placeholder: 'some placeholder',
+              matchers: [`/${'a'.repeat(Limits.ColumnMatcherRegex + 1)}/i`],
+            },
+          ],
+        });
+
+        const err = await validateJsonAndAssertFails(metadata);
+
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: `String must contain at most ${Limits.ColumnMatcherRegex} character(s)`,
+            path: 'formats[0].matchers[0]',
+          },
+        ]);
+      });
+
+      it('rejects if number of column formats goes over limit', async () => {
+        const formula = makeFormula({
+          resultType: ValueType.Number,
+          name: 'MyFormula',
+          description: 'My description',
+          examples: [],
+          parameters: [makeStringParameter('myParam', 'param description')],
+          execute: () => 1,
+        });
+        const format = {
+          name: 'MyFormat',
+          formulaNamespace: 'MyNamespace',
+          formulaName: 'MyFormula',
+          hasNoConnection: true,
+          instructions: 'some instructions',
+          placeholder: 'some placehoder',
+          matchers: ['/some compiled regex/i'],
+        }
+        const formats = [];
+        for (let i = 0; i < Limits.BuildingBlockCountPerType + 1; i++) {
+
+          formats.push({
+            ...format,
+            name: `Format${i}`,
+            formulaName: formula.name,
+          });
+        }
+
+        const metadata = createFakePackVersionMetadata(
+          {
+            formulas: [formula],
+            formats,
+            formulaNamespace: 'MyNamespace'
+          });
+
+        const err = await validateJsonAndAssertFails(metadata);
+
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: `Array must contain at most ${Limits.BuildingBlockCountPerType} element(s)`,
+            path: 'formats',
+          },
+        ]);
+      });
+
+      }
+    );
 
     it('scalar parameter examples', async () => {
       const formula = makeFormula({
@@ -2659,6 +3068,23 @@ describe('Pack metadata Validation', () => {
         },
       ]);
     });
+
+    it('rejects when network domain length is greater than character limit', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken
+        },
+        networkDomains: [`${'a'.repeat(Limits.NetworkDomainUrl)}.io`],
+      });
+
+      const err = await validateJsonAndAssertFails(metadata, '1.0.0');
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: `String must contain at most ${Limits.NetworkDomainUrl} character(s)`,
+          path: 'networkDomains[0]',
+        },
+      ]);
+    });
   });
 
   describe('validateVariousAuthenticationMetadata', () => {
@@ -2810,6 +3236,52 @@ describe('Pack metadata Validation', () => {
       assert.ok(arraySchemaResult);
       const objectSchemaResult = validateSyncTableSchema(itemSchema);
       assert.ok(objectSchemaResult);
+    });
+
+    it('rejects formula names that are too long', async () => {
+      const formula = makeFormula({
+        resultType: ValueType.String,
+        name: 'A'.repeat(1 + Limits.BuildingBlockName),
+        description: 'My description',
+        examples: [],
+        parameters: [],
+        execute: () => '',
+      });
+
+      const metadata = createFakePackVersionMetadata({
+        formulas: [formula],
+        formulaNamespace: 'MyNamespace',
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: `String must contain at most ${Limits.BuildingBlockName} character(s)`,
+          path: 'formulas[0].name',
+        },
+      ]);
+    });
+
+    it('rejects formula descriptions that are too long', async () => {
+      const formula = makeFormula({
+        resultType: ValueType.String,
+        name: 'Hi',
+        description: 'A'.repeat(1 + Limits.BuildingBlockDescription),
+        examples: [],
+        parameters: [],
+        execute: () => '',
+      });
+
+      const metadata = createFakePackVersionMetadata({
+        formulas: [formula],
+        formulaNamespace: 'MyNamespace',
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: `String must contain at most ${Limits.BuildingBlockDescription} character(s)`,
+          path: 'formulas[0].description',
+        },
+      ]);
     });
   });
 
