@@ -95,8 +95,8 @@ export const PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = /^\/(.*)\/([a-z]+)?$/;
 export const Limits = {
   BuildingBlockCountPerType: 100,
   BuildingBlockName: 50,
-  BuildingBlockDescription: 100,
-  ColumnMatcherRegex: 100,
+  BuildingBlockDescription: 250,
+  ColumnMatcherRegex: 300,
   NumColumnMatchersPerFormat: 10,
   NetworkDomainUrl: 253,
 }
