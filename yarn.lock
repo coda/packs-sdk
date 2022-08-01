@@ -1613,10 +1613,10 @@ available-typed-arrays@^1.0.2:
   resolved "https://registry.npmjs.org/available-typed-arrays/-/available-typed-arrays-1.0.4.tgz"
   integrity sha512-SA5mXJWrId1TaQjfxUYghbqQ/hYioKmLJvPJyDuYRtXXenFNMjj4hSSt1Cf1xsuXSXrtxrVC5Ot4eU6cOtBDdA==
 
-aws-sdk@*, aws-sdk@^2.1166.0:
-  version "2.1166.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1166.0.tgz#9bc5ceb3690d2747b941a2e2b8ebacfffb412f41"
-  integrity sha512-9CJQpMtIv2sxvwYTcMCfuCGU8t5qEppnvmo0uFFOm+1Q1uEv5sPg95wQH3Gfj4Mmv4FKWFofgTLksn0u2pDxsw==
+aws-sdk@*, aws-sdk@^2.1186.0:
+  version "2.1186.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1186.0.tgz#f08fc5f1f53defa1fff83177621947dc0ca8d29b"
+  integrity sha512-3yDWwNWgbSH9tRVyan0PlRU938Po9QH+06XHwRNwAa/6bixYl4L48c6YgpfxBpwl0IvcCCTivD7ZqshndwishQ==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -1625,6 +1625,7 @@ aws-sdk@*, aws-sdk@^2.1166.0:
     querystring "0.2.0"
     sax "1.2.1"
     url "0.10.3"
+    util "^0.12.4"
     uuid "8.0.0"
     xml2js "0.4.19"
 
@@ -6895,7 +6896,7 @@ util@0.10.3:
   dependencies:
     inherits "2.0.1"
 
-util@~0.12.0:
+util@^0.12.4, util@~0.12.0:
   version "0.12.4"
   resolved "https://registry.npmjs.org/util/-/util-0.12.4.tgz"
   integrity sha512-bxZ9qtSlGUWSOy9Qa9Xgk11kSslpuZwaxCg4sNIDj6FLucDab2JxnHwyNTCpHMtK1MjoQiWQ6DiUMZYbSrO+Sw==
