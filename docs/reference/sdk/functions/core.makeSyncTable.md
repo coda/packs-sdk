@@ -36,3 +36,7 @@ See [Normalization](/index.html#normalization) for more information about schema
 #### Returns
 
 [`SyncTableDef`](../interfaces/core.SyncTableDef.md)<`K`, `L`, `ParamDefsT`, `SchemaT`\>
+
+#### Defined in
+
+[api.ts:1504](https://github.com/coda/packs-sdk/blob/main/api.ts#L1504)

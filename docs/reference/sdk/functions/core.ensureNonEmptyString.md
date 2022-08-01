@@ -20,3 +20,7 @@ If the value is not a string or is empty, an error will be raised at runtime.
 #### Returns
 
 `string`
+
+#### Defined in
+
+[helpers/ensure.ts:37](https://github.com/coda/packs-sdk/blob/main/helpers/ensure.ts#L37)

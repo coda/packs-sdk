@@ -28,3 +28,7 @@ any needed to wrap a value with this formula.
 #### Returns
 
 [`MetadataFormula`](../types/core.MetadataFormula.md)
+
+#### Defined in
+
+[api.ts:1257](https://github.com/coda/packs-sdk/blob/main/api.ts#L1257)

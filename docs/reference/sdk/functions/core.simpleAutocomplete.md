@@ -43,3 +43,7 @@ autocomplete: async function(context, search) {
 #### Returns
 
 `Promise`<[`MetadataFormulaObjectResultType`](../interfaces/core.MetadataFormulaObjectResultType.md)[]\>
+
+#### Defined in
+
+[api.ts:1171](https://github.com/coda/packs-sdk/blob/main/api.ts#L1171)
