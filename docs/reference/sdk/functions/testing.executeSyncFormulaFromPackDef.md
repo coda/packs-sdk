@@ -38,3 +38,7 @@ For now, use `coda execute --vm` to simulate that level of isolation.
 #### Returns
 
 `Promise`<`T`[]\>
+
+#### Defined in
+
+[testing/execution.ts:344](https://github.com/coda/packs-sdk/blob/main/testing/execution.ts#L344)

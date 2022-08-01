@@ -16,3 +16,7 @@ title: "newMockSyncExecutionContext"
 #### Returns
 
 [`MockSyncExecutionContext`](../interfaces/testing.MockSyncExecutionContext.md)
+
+#### Defined in
+
+[testing/mocks.ts:21](https://github.com/coda/packs-sdk/blob/main/testing/mocks.ts#L21)

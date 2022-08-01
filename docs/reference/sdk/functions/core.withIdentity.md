@@ -21,3 +21,7 @@ You could add the identity directly, but that would make the schema less re-usab
 #### Returns
 
 `GenericObjectSchema`
+
+#### Defined in
+
+[schema.ts:1399](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1399)

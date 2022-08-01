@@ -110,3 +110,7 @@ Returns if the error is an instance of StatusCodeError. Note that instanceof may
 #### Returns
 
 err is StatusCodeError
+
+#### Defined in
+
+[api.ts:149](https://github.com/coda/packs-sdk/blob/main/api.ts#L149)
