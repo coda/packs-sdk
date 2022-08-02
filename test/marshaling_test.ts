@@ -3,7 +3,7 @@ import {StatusCodeError} from '../api';
 import {inspect} from 'util';
 import ivm from 'isolated-vm';
 import {marshalValue} from '../runtime/common/marshaling';
-import {marshalValueForLogging} from '../runtime/common/marshaling';
+import {marshalValuesForLogging} from '../runtime/common/marshaling';
 import {unmarshalValue} from '../runtime/common/marshaling';
 import {unwrapError} from '../runtime/common/marshaling';
 import {wrapError} from '../runtime/common/marshaling';
@@ -26,12 +26,12 @@ describe('Marshaling', () => {
     return unmarshalValue(passThroughIsolatedVm(marshalValue(val)));
   }
 
-  function transformForLogging<T>(val: T): T {
-    return unmarshalValue(passThroughIsolatedVm(marshalValueForLogging(val)));
-  }
-
   function transformError(val: Error): Error {
     return unwrapError(new Error(passThroughIsolatedVm(wrapError(val).message)));
+  }
+
+  function transformForLogging(vals: any[]): any[] {
+    return passThroughIsolatedVm(marshalValuesForLogging(vals)).map(unmarshalValue);
   }
 
   it('works for regular objects', () => {
@@ -57,12 +57,6 @@ describe('Marshaling', () => {
     assert.deepEqual(transform(new Map([['a', 2]])), new Map([['a', 2]]));
     assert.deepEqual(transform(Uint8Array.from([1, 2, 3])), Uint8Array.from([1, 2, 3]));
     assert.deepEqual(transform(new ArrayBuffer(10)), new ArrayBuffer(10));
-
-    const recursiveObj = {
-      myself: null as any,
-    };
-    recursiveObj.myself = recursiveObj;
-    assert.deepEqual(transform(recursiveObj), recursiveObj);
 
     class SomeClass {
       message: string;
@@ -105,25 +99,6 @@ describe('Marshaling', () => {
   it('throws error for unhandled objects', () => {
     assert.throws(() => transform(() => {}), '() => { } could not be cloned.');
     assert.throws(() => void transform(new Promise(resolve => resolve(1))), '#<Promise> could not be cloned.');
-  });
-
-  it('does not throw error for functions in logging mode', () => {
-    assert.deepEqual(
-      transformForLogging({
-        someFunc: () => {
-          return 1;
-        },
-        somePromise: Promise.resolve(1),
-        nestedPendingPromise: Promise.resolve([new Promise(() => undefined)]),
-        someDate: new Date(123),
-      }),
-      {
-        someFunc: '[Function: someFunc]' as any,
-        somePromise: 'Promise { 1 }' as any,
-        nestedPendingPromise: 'Promise { [ Promise { <pending> } ] }' as any,
-        someDate: new Date(123),
-      },
-    );
   });
 
   it('works for nested objects', () => {
@@ -221,5 +196,15 @@ describe('Marshaling', () => {
     assert.throws(() => unmarshalValue(undefined), 'Not a marshaled value: undefined');
     assert.throws(() => unmarshalValue(1), 'Not a marshaled value: 1');
     assert.throws(() => unmarshalValue({foo: 'bar'}), 'Not a marshaled value: {"foo":"bar"}');
+  });
+
+  it('marshals values for logging', () => {
+    assert.deepEqual(transformForLogging(['one string']), ['one string']);
+    assert.deepEqual(transformForLogging(['two', 'strings']), ['two strings']);
+    assert.deepEqual(transformForLogging(['a %s c', 'b']), ['a b c']);
+    assert.deepEqual(transformForLogging(['%o vs %j', {a: 'b'}, {a: 'b'}]), [`{ a: 'b' } vs {"a":"b"}`]);
+    assert.deepEqual(transformForLogging([{someFunc: () => 1, somePromise: Promise.resolve(1)}]), [
+      '{ someFunc: [Function: someFunc], somePromise: Promise { 1 } }',
+    ]);
   });
 });

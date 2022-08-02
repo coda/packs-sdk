@@ -28,10 +28,10 @@ import {wrapError} from '../common/marshaling';
 
 export {
   marshalValue,
-  marshalValueForLogging,
   unmarshalValue,
   marshalValueToString,
   unmarshalValueFromString,
+  marshalValuesForLogging,
 } from '../common/marshaling';
 
 /**

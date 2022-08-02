@@ -674,7 +674,7 @@ module.exports = (() => {
           return true;
         return Buffer4.compare(this, b) === 0;
       };
-      Buffer4.prototype.inspect = function inspect2() {
+      Buffer4.prototype.inspect = function inspect() {
         let str = "";
         const max = exports.INSPECT_MAX_BYTES;
         str = this.toString("hex", 0, max).replace(/(.{2})/g, "$1 ").trim();
@@ -3147,7 +3147,7 @@ module.exports = (() => {
         } else if (indexOf(seen, obj) >= 0) {
           return "[Circular]";
         }
-        function inspect2(value, from, noIndent) {
+        function inspect(value, from, noIndent) {
           if (from) {
             seen = $arrSlice.call(seen);
             seen.push(from);
@@ -3165,7 +3165,7 @@ module.exports = (() => {
         }
         if (typeof obj === "function" && !isRegExp(obj)) {
           var name = nameOf(obj);
-          var keys = arrObjKeys(obj, inspect2);
+          var keys = arrObjKeys(obj, inspect);
           return "[Function" + (name ? ": " + name : " (anonymous)") + "]" + (keys.length > 0 ? " { " + $join.call(keys, ", ") + " }" : "");
         }
         if (isSymbol(obj)) {
@@ -3189,16 +3189,16 @@ module.exports = (() => {
           if (obj.length === 0) {
             return "[]";
           }
-          var xs = arrObjKeys(obj, inspect2);
+          var xs = arrObjKeys(obj, inspect);
           if (indent && !singleLineValues(xs)) {
             return "[" + indentedJoin(xs, indent) + "]";
           }
           return "[ " + $join.call(xs, ", ") + " ]";
         }
         if (isError(obj)) {
-          var parts = arrObjKeys(obj, inspect2);
+          var parts = arrObjKeys(obj, inspect);
           if (!("cause" in Error.prototype) && "cause" in obj && !isEnumerable.call(obj, "cause")) {
-            return "{ [" + String(obj) + "] " + $join.call($concat.call("[cause]: " + inspect2(obj.cause), parts), ", ") + " }";
+            return "{ [" + String(obj) + "] " + $join.call($concat.call("[cause]: " + inspect(obj.cause), parts), ", ") + " }";
           }
           if (parts.length === 0) {
             return "[" + String(obj) + "]";
@@ -3215,14 +3215,14 @@ module.exports = (() => {
         if (isMap(obj)) {
           var mapParts = [];
           mapForEach.call(obj, function(value, key) {
-            mapParts.push(inspect2(key, obj, true) + " => " + inspect2(value, obj));
+            mapParts.push(inspect(key, obj, true) + " => " + inspect(value, obj));
           });
           return collectionOf("Map", mapSize.call(obj), mapParts, indent);
         }
         if (isSet(obj)) {
           var setParts = [];
           setForEach.call(obj, function(value) {
-            setParts.push(inspect2(value, obj));
+            setParts.push(inspect(value, obj));
           });
           return collectionOf("Set", setSize.call(obj), setParts, indent);
         }
@@ -3236,19 +3236,19 @@ module.exports = (() => {
           return weakCollectionOf("WeakRef");
         }
         if (isNumber(obj)) {
-          return markBoxed(inspect2(Number(obj)));
+          return markBoxed(inspect(Number(obj)));
         }
         if (isBigInt(obj)) {
-          return markBoxed(inspect2(bigIntValueOf.call(obj)));
+          return markBoxed(inspect(bigIntValueOf.call(obj)));
         }
         if (isBoolean(obj)) {
           return markBoxed(booleanValueOf.call(obj));
         }
         if (isString(obj)) {
-          return markBoxed(inspect2(String(obj)));
+          return markBoxed(inspect(String(obj)));
         }
         if (!isDate(obj) && !isRegExp(obj)) {
-          var ys = arrObjKeys(obj, inspect2);
+          var ys = arrObjKeys(obj, inspect);
           var isPlainObject = gPO ? gPO(obj) === Object.prototype : obj instanceof Object || obj.constructor === Object;
           var protoTag = obj instanceof Object ? "" : "null prototype";
           var stringTag = !isPlainObject && toStringTag && Object(obj) === obj && toStringTag in obj ? $slice.call(toStr(obj), 8, -1) : protoTag ? "Object" : "";
@@ -3496,13 +3496,13 @@ module.exports = (() => {
         var lineJoiner = "\n" + indent.prev + indent.base;
         return lineJoiner + $join.call(xs, "," + lineJoiner) + "\n" + indent.prev;
       }
-      function arrObjKeys(obj, inspect2) {
+      function arrObjKeys(obj, inspect) {
         var isArr = isArray2(obj);
         var xs = [];
         if (isArr) {
           xs.length = obj.length;
           for (var i = 0; i < obj.length; i++) {
-            xs[i] = has(obj, i) ? inspect2(obj[i], obj) : "";
+            xs[i] = has(obj, i) ? inspect(obj[i], obj) : "";
           }
         }
         var syms = typeof gOPS === "function" ? gOPS(obj) : [];
@@ -3523,15 +3523,15 @@ module.exports = (() => {
           if (hasShammedSymbols && symMap["$" + key] instanceof Symbol) {
             continue;
           } else if ($test.call(/[^\w$]/, key)) {
-            xs.push(inspect2(key, obj) + ": " + inspect2(obj[key], obj));
+            xs.push(inspect(key, obj) + ": " + inspect(obj[key], obj));
           } else {
-            xs.push(key + ": " + inspect2(obj[key], obj));
+            xs.push(key + ": " + inspect(obj[key], obj));
           }
         }
         if (typeof gOPS === "function") {
           for (var j = 0; j < syms.length; j++) {
             if (isEnumerable.call(obj, syms[j])) {
-              xs.push("[" + inspect2(syms[j]) + "]: " + inspect2(obj[syms[j]], obj));
+              xs.push("[" + inspect(syms[j]) + "]: " + inspect(obj[syms[j]], obj));
             }
           }
         }
@@ -3547,7 +3547,7 @@ module.exports = (() => {
       init_buffer_shim();
       var GetIntrinsic = require_get_intrinsic();
       var callBound = require_callBound();
-      var inspect2 = require_object_inspect();
+      var inspect = require_object_inspect();
       var $TypeError = GetIntrinsic("%TypeError%");
       var $WeakMap = GetIntrinsic("%WeakMap%", true);
       var $Map = GetIntrinsic("%Map%", true);
@@ -3593,7 +3593,7 @@ module.exports = (() => {
         var channel = {
           assert: function(key) {
             if (!channel.has(key)) {
-              throw new $TypeError("Side channel does not contain " + inspect2(key));
+              throw new $TypeError("Side channel does not contain " + inspect(key));
             }
           },
           get: function(key) {
@@ -3782,7 +3782,7 @@ module.exports = (() => {
           return strWithoutPlus;
         }
       };
-      var encode = function encode2(str, defaultEncoder, charset, kind, format) {
+      var encode = function encode2(str, defaultEncoder, charset, kind, format2) {
         if (str.length === 0) {
           return str;
         }
@@ -3800,7 +3800,7 @@ module.exports = (() => {
         var out = "";
         for (var i = 0; i < string.length; ++i) {
           var c = string.charCodeAt(i);
-          if (c === 45 || c === 46 || c === 95 || c === 126 || c >= 48 && c <= 57 || c >= 65 && c <= 90 || c >= 97 && c <= 122 || format === formats.RFC1738 && (c === 40 || c === 41)) {
+          if (c === 45 || c === 46 || c === 95 || c === 126 || c >= 48 && c <= 57 || c >= 65 && c <= 90 || c >= 97 && c <= 122 || format2 === formats.RFC1738 && (c === 40 || c === 41)) {
             out += string.charAt(i);
             continue;
           }
@@ -3929,7 +3929,7 @@ module.exports = (() => {
         return typeof v === "string" || typeof v === "number" || typeof v === "boolean" || typeof v === "symbol" || typeof v === "bigint";
       };
       var sentinel = {};
-      var stringify = function stringify2(object, prefix, generateArrayPrefix, commaRoundTrip, strictNullHandling, skipNulls, encoder, filter, sort, allowDots, serializeDate, format, formatter, encodeValuesOnly, charset, sideChannel) {
+      var stringify = function stringify2(object, prefix, generateArrayPrefix, commaRoundTrip, strictNullHandling, skipNulls, encoder, filter, sort, allowDots, serializeDate, format2, formatter, encodeValuesOnly, charset, sideChannel) {
         var obj = object;
         var tmpSc = sideChannel;
         var step = 0;
@@ -3962,22 +3962,22 @@ module.exports = (() => {
         }
         if (obj === null) {
           if (strictNullHandling) {
-            return encoder && !encodeValuesOnly ? encoder(prefix, defaults.encoder, charset, "key", format) : prefix;
+            return encoder && !encodeValuesOnly ? encoder(prefix, defaults.encoder, charset, "key", format2) : prefix;
           }
           obj = "";
         }
         if (isNonNullishPrimitive(obj) || utils.isBuffer(obj)) {
           if (encoder) {
-            var keyValue = encodeValuesOnly ? prefix : encoder(prefix, defaults.encoder, charset, "key", format);
+            var keyValue = encodeValuesOnly ? prefix : encoder(prefix, defaults.encoder, charset, "key", format2);
             if (generateArrayPrefix === "comma" && encodeValuesOnly) {
               var valuesArray = split.call(String(obj), ",");
               var valuesJoined = "";
               for (var i = 0; i < valuesArray.length; ++i) {
-                valuesJoined += (i === 0 ? "" : ",") + formatter(encoder(valuesArray[i], defaults.encoder, charset, "value", format));
+                valuesJoined += (i === 0 ? "" : ",") + formatter(encoder(valuesArray[i], defaults.encoder, charset, "value", format2));
               }
               return [formatter(keyValue) + (commaRoundTrip && isArray2(obj) && valuesArray.length === 1 ? "[]" : "") + "=" + valuesJoined];
             }
-            return [formatter(keyValue) + "=" + formatter(encoder(obj, defaults.encoder, charset, "value", format))];
+            return [formatter(keyValue) + "=" + formatter(encoder(obj, defaults.encoder, charset, "value", format2))];
           }
           return [formatter(prefix) + "=" + formatter(String(obj))];
         }
@@ -4017,7 +4017,7 @@ module.exports = (() => {
             sort,
             allowDots,
             serializeDate,
-            format,
+            format2,
             formatter,
             encodeValuesOnly,
             charset,
@@ -4037,14 +4037,14 @@ module.exports = (() => {
         if (typeof opts.charset !== "undefined" && opts.charset !== "utf-8" && opts.charset !== "iso-8859-1") {
           throw new TypeError("The charset option must be either utf-8, iso-8859-1, or undefined");
         }
-        var format = formats["default"];
+        var format2 = formats["default"];
         if (typeof opts.format !== "undefined") {
           if (!has.call(formats.formatters, opts.format)) {
             throw new TypeError("Unknown format option provided.");
           }
-          format = opts.format;
+          format2 = opts.format;
         }
-        var formatter = formats.formatters[format];
+        var formatter = formats.formatters[format2];
         var filter = defaults.filter;
         if (typeof opts.filter === "function" || isArray2(opts.filter)) {
           filter = opts.filter;
@@ -4059,7 +4059,7 @@ module.exports = (() => {
           encoder: typeof opts.encoder === "function" ? opts.encoder : defaults.encoder,
           encodeValuesOnly: typeof opts.encodeValuesOnly === "boolean" ? opts.encodeValuesOnly : defaults.encodeValuesOnly,
           filter,
-          format,
+          format: format2,
           formatter,
           serializeDate: typeof opts.serializeDate === "function" ? opts.serializeDate : defaults.serializeDate,
           skipNulls: typeof opts.skipNulls === "boolean" ? opts.skipNulls : defaults.skipNulls,
@@ -5699,7 +5699,7 @@ module.exports = (() => {
         if (!isString(f)) {
           var objects = [];
           for (var i = 0; i < arguments.length; i++) {
-            objects.push(inspect2(arguments[i]));
+            objects.push(inspect(arguments[i]));
           }
           return objects.join(" ");
         }
@@ -5730,7 +5730,7 @@ module.exports = (() => {
           if (isNull(x) || !isObject2(x)) {
             str += " " + x;
           } else {
-            str += " " + inspect2(x);
+            str += " " + inspect(x);
           }
         }
         return str;
@@ -5784,7 +5784,7 @@ module.exports = (() => {
         }
         return debugs[set];
       };
-      function inspect2(obj, opts) {
+      function inspect(obj, opts) {
         var ctx = {
           seen: [],
           stylize: stylizeNoColor
@@ -5810,8 +5810,8 @@ module.exports = (() => {
           ctx.stylize = stylizeWithColor;
         return formatValue(ctx, obj, ctx.depth);
       }
-      exports.inspect = inspect2;
-      inspect2.colors = {
+      exports.inspect = inspect;
+      inspect.colors = {
         "bold": [1, 22],
         "italic": [3, 23],
         "underline": [4, 24],
@@ -5826,7 +5826,7 @@ module.exports = (() => {
         "red": [31, 39],
         "yellow": [33, 39]
       };
-      inspect2.styles = {
+      inspect.styles = {
         "special": "cyan",
         "number": "yellow",
         "boolean": "yellow",
@@ -5837,9 +5837,9 @@ module.exports = (() => {
         "regexp": "red"
       };
       function stylizeWithColor(str, styleType) {
-        var style = inspect2.styles[styleType];
+        var style = inspect.styles[styleType];
         if (style) {
-          return "\x1B[" + inspect2.colors[style][0] + "m" + str + "\x1B[" + inspect2.colors[style][1] + "m";
+          return "\x1B[" + inspect.colors[style][0] + "m" + str + "\x1B[" + inspect.colors[style][1] + "m";
         } else {
           return str;
         }
@@ -6259,8 +6259,8 @@ module.exports = (() => {
     handleErrorAsync: () => handleErrorAsync,
     handleFetcherStatusError: () => handleFetcherStatusError,
     marshalValue: () => marshalValue,
-    marshalValueForLogging: () => marshalValueForLogging,
     marshalValueToString: () => marshalValueToString,
+    marshalValuesForLogging: () => marshalValuesForLogging,
     setUpBufferForTest: () => setUpBufferForTest,
     unmarshalValue: () => unmarshalValue,
     unmarshalValueFromString: () => unmarshalValueFromString
@@ -6447,7 +6447,7 @@ module.exports = (() => {
     StatusCodeError,
     MissingScopesError
   ];
-  function fixUncopyableTypes(val, pathPrefix, postTransforms, forLogging, depth) {
+  function fixUncopyableTypes(val, pathPrefix, postTransforms, depth = 0) {
     if (depth >= MaxTraverseDepth) {
       return { val, hasModifications: false };
     }
@@ -6475,13 +6475,7 @@ module.exports = (() => {
       for (let i = 0; i < val.length; i++) {
         const item = val[i];
         pathPrefix.push(i.toString());
-        const { val: itemVal, hasModifications } = fixUncopyableTypes(
-          item,
-          pathPrefix,
-          postTransforms,
-          forLogging,
-          depth + 1
-        );
+        const { val: itemVal, hasModifications } = fixUncopyableTypes(item, pathPrefix, postTransforms, depth + 1);
         if (hasModifications) {
           someItemHadModifications = true;
         }
@@ -6492,21 +6486,15 @@ module.exports = (() => {
         return { val: maybeModifiedArray, hasModifications: true };
       }
     }
-    if (forLogging) {
-      if (typeof val === "function" || val instanceof Promise) {
-        return { val: (0, import_util.inspect)(val), hasModifications: true };
-      }
-    }
     if (typeof val === "object") {
       const maybeModifiedObject = {};
       let hadModifications = false;
-      for (const key of Object.keys(val)) {
+      for (const key of Object.getOwnPropertyNames(val)) {
         pathPrefix.push(key);
         const { val: objVal, hasModifications: subValHasModifications } = fixUncopyableTypes(
           val[key],
           pathPrefix,
           postTransforms,
-          forLogging,
           depth + 1
         );
         maybeModifiedObject[key] = objVal;
@@ -6524,20 +6512,17 @@ module.exports = (() => {
   function isMarshaledValue(val) {
     return typeof val === "object" && "__coda_marshaler__" /* CodaMarshaler */ in val;
   }
-  function marshalValueInternal(val, forLogging) {
+  function marshalValuesForLogging(val) {
+    return [marshalValue((0, import_util.format)(...val))];
+  }
+  function marshalValue(val) {
     const postTransforms = [];
-    const { val: encodedVal } = fixUncopyableTypes(val, [], postTransforms, forLogging, 0);
+    const { val: encodedVal } = fixUncopyableTypes(val, [], postTransforms, 0);
     return {
       encoded: encodedVal,
       postTransforms,
       ["__coda_marshaler__" /* CodaMarshaler */]: "Object" /* Object */
     };
-  }
-  function marshalValueForLogging(val) {
-    return marshalValueInternal(val, true);
-  }
-  function marshalValue(val) {
-    return marshalValueInternal(val, false);
   }
   function marshalValueToString(val) {
     return serialize(marshalValue(val));

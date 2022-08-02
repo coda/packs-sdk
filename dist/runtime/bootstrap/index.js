@@ -64,12 +64,12 @@ exports.injectAsyncFunction = injectAsyncFunction;
 // Log functions have no return value and do a more relaxed version of marshaling that doesn't
 // raise an exception on unsupported types like normal marshaling would.
 async function injectLogFunction(context, stubName, func) {
-    const stub = (...args) => {
-        func(...args.map(arg => (0, marshaling_2.unmarshalValue)(arg)));
+    const stub = (marshaledArgs) => {
+        func(...marshaledArgs.map(marshaling_2.unmarshalValue));
     };
     await context.evalClosure(`${stubName} = function(...args) {
         coda.handleError(() => {
-          $0.applyIgnored(undefined, args.map(coda.marshalValueForLogging), {arguments: {copy: true}});
+          $0.applyIgnored(undefined, [coda.marshalValuesForLogging(args)], {arguments: {copy: true}});
         });
      };`, [stub], { arguments: { reference: true } });
 }

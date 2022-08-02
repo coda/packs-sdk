@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.unmarshalError = exports.marshalError = exports.unwrapError = exports.wrapError = exports.unmarshalValue = exports.unmarshalValueFromString = exports.marshalValueToString = exports.marshalValue = exports.marshalValueForLogging = void 0;
+exports.unmarshalError = exports.marshalError = exports.unwrapError = exports.wrapError = exports.unmarshalValue = exports.unmarshalValueFromString = exports.marshalValueToString = exports.marshalValue = exports.marshalValuesForLogging = void 0;
 const constants_1 = require("./constants");
 const constants_2 = require("./constants");
 const api_1 = require("../../../api");
@@ -61,7 +61,7 @@ const recognizableCodaErrorClasses = [
 //
 // "hasModifications" is to avoid trying to copy objects that don't need to be copied.
 // Only objects containing a buffer or an error should need to be copied.
-function fixUncopyableTypes(val, pathPrefix, postTransforms, forLogging, depth) {
+function fixUncopyableTypes(val, pathPrefix, postTransforms, depth = 0) {
     var _a;
     if (depth >= MaxTraverseDepth) {
         // this is either a circular reference or a super nested value that we mostly likely
@@ -95,7 +95,7 @@ function fixUncopyableTypes(val, pathPrefix, postTransforms, forLogging, depth) 
         for (let i = 0; i < val.length; i++) {
             const item = val[i];
             pathPrefix.push(i.toString());
-            const { val: itemVal, hasModifications } = fixUncopyableTypes(item, pathPrefix, postTransforms, forLogging, depth + 1);
+            const { val: itemVal, hasModifications } = fixUncopyableTypes(item, pathPrefix, postTransforms, depth + 1);
             if (hasModifications) {
                 someItemHadModifications = true;
             }
@@ -106,17 +106,12 @@ function fixUncopyableTypes(val, pathPrefix, postTransforms, forLogging, depth) 
             return { val: maybeModifiedArray, hasModifications: true };
         }
     }
-    if (forLogging) {
-        if (typeof val === 'function' || val instanceof Promise) {
-            return { val: (0, util_1.inspect)(val), hasModifications: true };
-        }
-    }
     if (typeof val === 'object') {
         const maybeModifiedObject = {};
         let hadModifications = false;
-        for (const key of Object.keys(val)) {
+        for (const key of Object.getOwnPropertyNames(val)) {
             pathPrefix.push(key);
-            const { val: objVal, hasModifications: subValHasModifications } = fixUncopyableTypes(val[key], pathPrefix, postTransforms, forLogging, depth + 1);
+            const { val: objVal, hasModifications: subValHasModifications } = fixUncopyableTypes(val[key], pathPrefix, postTransforms, depth + 1);
             maybeModifiedObject[key] = objVal;
             pathPrefix.pop();
             if (subValHasModifications) {
@@ -136,27 +131,18 @@ function fixUncopyableTypes(val, pathPrefix, postTransforms, forLogging, depth) 
 function isMarshaledValue(val) {
     return typeof val === 'object' && constants_2.MarshalingInjectedKeys.CodaMarshaler in val;
 }
-function marshalValueInternal(val, forLogging) {
+function marshalValuesForLogging(val) {
+    return [marshalValue((0, util_1.format)(...val))];
+}
+exports.marshalValuesForLogging = marshalValuesForLogging;
+function marshalValue(val) {
     const postTransforms = [];
-    const { val: encodedVal } = fixUncopyableTypes(val, [], postTransforms, forLogging, 0);
+    const { val: encodedVal } = fixUncopyableTypes(val, [], postTransforms, 0);
     return {
         encoded: encodedVal,
         postTransforms,
         [constants_2.MarshalingInjectedKeys.CodaMarshaler]: constants_1.CodaMarshalerType.Object,
     };
-}
-// The marshaling for console.log is willing to be more lossy/forgiving than the marshaling
-// for other functions since you usually want console.log to print _something_ rather than
-// throw an error.
-//
-// Currently only functions and promises are detected and turned into strings. Other unsupported
-// types could still raise an error.
-function marshalValueForLogging(val) {
-    return marshalValueInternal(val, true);
-}
-exports.marshalValueForLogging = marshalValueForLogging;
-function marshalValue(val) {
-    return marshalValueInternal(val, false);
 }
 exports.marshalValue = marshalValue;
 function marshalValueToString(val) {

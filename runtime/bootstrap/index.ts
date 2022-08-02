@@ -92,14 +92,14 @@ export async function injectLogFunction(
   stubName: string,
   func: (...args: any[]) => void,
 ): Promise<void> {
-  const stub = (...args: string[]) => {
-    func(...args.map(arg => unmarshalValue(arg)));
+  const stub = (marshaledArgs: any) => {
+    func(...marshaledArgs.map(unmarshalValue));
   };
 
   await context.evalClosure(
     `${stubName} = function(...args) {
         coda.handleError(() => {
-          $0.applyIgnored(undefined, args.map(coda.marshalValueForLogging), {arguments: {copy: true}});
+          $0.applyIgnored(undefined, [coda.marshalValuesForLogging(args)], {arguments: {copy: true}});
         });
      };`,
     [stub],
