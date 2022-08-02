@@ -308,6 +308,12 @@ export const Examples: Example[] = [
           'A sync table that presents a list of URLs to select from. This sample shows responses to a Typeform form.',
         codeFile: './examples/dynamic-sync-table/typeform.ts',
       },
+      {
+        name: 'With grouped URL list',
+        content:
+          'A sync table that presents a list of URLs to select from, grouped into folders. This sample shows data from Open Data NY (data.ny.gov), which is powered by Socrata.',
+        codeFile: './examples/dynamic-sync-table/open_data_ny.ts',
+      },
     ],
   },
   {
