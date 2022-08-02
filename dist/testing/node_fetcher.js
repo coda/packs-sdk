@@ -22,11 +22,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.nodeFetcher = exports.fetch = void 0;
 const http_1 = require("http");
 const https_1 = require("https");
 const nodeFetch = __importStar(require("node-fetch"));
+const timeout_signal_1 = __importDefault(require("timeout-signal"));
 /**
  * A wrapper for fetch() that allows us to
  * (1) easily stub this out in tests, and
@@ -40,7 +44,7 @@ async function nodeFetcher(options) {
     const { method = 'GET', uri, qs, followRedirect = true, gzip = true, json, headers: rawHeaders = {}, form, body, timeout, forever, resolveWithFullResponse, resolveWithRawBody, encoding, ca, maxResponseSizeBytes, legacyBlankAcceptHeader, } = options;
     const init = {
         method,
-        timeout,
+        signal: timeout ? (0, timeout_signal_1.default)(timeout) : undefined,
         compress: gzip,
         size: maxResponseSizeBytes || 0,
     };

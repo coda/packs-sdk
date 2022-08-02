@@ -4,6 +4,7 @@ import {Agent as HttpsAgent} from 'https';
 import type {RequestInit} from 'node-fetch';
 import type {Response} from 'node-fetch';
 import * as nodeFetch from 'node-fetch';
+import timeoutSignal from 'timeout-signal';
 
 /**
  * A wrapper for fetch() that allows us to
@@ -86,7 +87,7 @@ export async function nodeFetcher(options: BaseFetcherOptions): Promise<FetcherF
 
   const init: RequestInit = {
     method,
-    timeout,
+    signal: timeout ? timeoutSignal(timeout) : undefined,
     compress: gzip,
     size: maxResponseSizeBytes || 0,
   };
