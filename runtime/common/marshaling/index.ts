@@ -3,6 +3,7 @@ import {MarshalingInjectedKeys} from './constants';
 import {MissingScopesError} from '../../../api';
 import {StatusCodeError} from '../../../api';
 import {deserialize} from './serializer';
+import {inspect} from 'util';
 import {serialize} from './serializer';
 
 // We rely on the javascript structuredClone() algorithm to copy arguments and results into
@@ -133,11 +134,8 @@ function fixUncopyableTypes(
   }
 
   if (forLogging) {
-    if (typeof val === 'function') {
-      return {val: '<function>', hasModifications: true};
-    }
-    if (val instanceof Promise) {
-      return {val: '<Promise>', hasModifications: true};
+    if (typeof val === 'function' || val instanceof Promise) {
+      return {val: inspect(val), hasModifications: true};
     }
   }
 

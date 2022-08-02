@@ -114,9 +114,15 @@ describe('Marshaling', () => {
           return 1;
         },
         somePromise: Promise.resolve(1),
+        nestedPendingPromise: Promise.resolve([new Promise(() => undefined)]),
         someDate: new Date(123),
       }),
-      {someFunc: '<function>' as any, somePromise: '<Promise>' as any, someDate: new Date(123)},
+      {
+        someFunc: '[Function: someFunc]' as any,
+        somePromise: 'Promise { 1 }' as any,
+        nestedPendingPromise: 'Promise { [ Promise { <pending> } ] }' as any,
+        someDate: new Date(123),
+      },
     );
   });
 

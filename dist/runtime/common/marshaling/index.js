@@ -6,6 +6,7 @@ const constants_2 = require("./constants");
 const api_1 = require("../../../api");
 const api_2 = require("../../../api");
 const serializer_1 = require("./serializer");
+const util_1 = require("util");
 const serializer_2 = require("./serializer");
 // We rely on the javascript structuredClone() algorithm to copy arguments and results into
 // and out of isolated-vm method calls. There are a few types we want to support that aren't
@@ -105,10 +106,15 @@ function fixUncopyableTypes(val, pathPrefix, postTransforms, forLogging, depth) 
             return { val: maybeModifiedArray, hasModifications: true };
         }
     }
+    if (forLogging) {
+        if (typeof val === 'function' || val instanceof Promise) {
+            return { val: (0, util_1.inspect)(val), hasModifications: true };
+        }
+    }
     if (typeof val === 'object') {
         const maybeModifiedObject = {};
         let hadModifications = false;
-        for (const key of Object.getOwnPropertyNames(val)) {
+        for (const key of Object.keys(val)) {
             pathPrefix.push(key);
             const { val: objVal, hasModifications: subValHasModifications } = fixUncopyableTypes(val[key], pathPrefix, postTransforms, forLogging, depth + 1);
             maybeModifiedObject[key] = objVal;
@@ -139,6 +145,12 @@ function marshalValueInternal(val, forLogging) {
         [constants_2.MarshalingInjectedKeys.CodaMarshaler]: constants_1.CodaMarshalerType.Object,
     };
 }
+// The marshaling for console.log is willing to be more lossy/forgiving than the marshaling
+// for other functions since you usually want console.log to print _something_ rather than
+// throw an error.
+//
+// Currently only functions and promises are detected and turned into strings. Other unsupported
+// types could still raise an error.
 function marshalValueForLogging(val) {
     return marshalValueInternal(val, true);
 }
