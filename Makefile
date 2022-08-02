@@ -100,6 +100,7 @@ compile-thunk:
 		--inject:${ROOTDIR}/testing/injections/buffer_shim.js \
 		--format=iife \
 		--define:process.env.IN_ISOLATED_VM_OR_BROWSER=true \
+		--define:process.env.NODE_DEBUG=false \
 		--global-name=module.exports \
 		--target=es2020;
 
@@ -126,6 +127,7 @@ compile-ts:
 		--outfile=${ROOTDIR}/dist/bundle.js \
 		--format=cjs \
 		--define:process.env.IN_ISOLATED_VM_OR_BROWSER=true \
+		--define:process.env.NODE_DEBUG=false \
 		--minify \
 		--target=es2020;
 

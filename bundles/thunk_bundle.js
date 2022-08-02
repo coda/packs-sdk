@@ -5762,8 +5762,8 @@ module.exports = (() => {
       };
       var debugs = {};
       var debugEnvRegex = /^$/;
-      if (process.env.NODE_DEBUG) {
-        debugEnv = process.env.NODE_DEBUG;
+      if (false) {
+        debugEnv = false;
         debugEnv = debugEnv.replace(/[|\\{}()[\]^$+?.]/g, "\\$&").replace(/\*/g, ".*").replace(/,/g, "$|^").toUpperCase();
         debugEnvRegex = new RegExp("^" + debugEnv + "$", "i");
       }
