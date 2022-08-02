@@ -28,7 +28,7 @@ them to, after all).
 
 • **name**: `string` = `'MissingScopesError'`
 
-The name of the error, for identiciation purposes.
+The name of the error, for identification purposes.
 
 #### Overrides
 
@@ -36,4 +36,26 @@ Error.name
 
 #### Defined in
 
-[api.ts:165](https://github.com/coda/packs-sdk/blob/main/api.ts#L165)
+[api.ts:170](https://github.com/coda/packs-sdk/blob/main/api.ts#L170)
+
+## Methods
+
+### isMissingScopesError
+
+▸ `Static` **isMissingScopesError**(`err`): err is MissingScopesError
+
+Returns if the error is an instance of MissingScopesError. Note that instanceof may not work.
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `err` | `any` |
+
+#### Returns
+
+err is MissingScopesError
+
+#### Defined in
+
+[api.ts:178](https://github.com/coda/packs-sdk/blob/main/api.ts#L178)

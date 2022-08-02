@@ -8,6 +8,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 - Added `NumericDurationSchema`, which will allow packs to return `ValueType.Number` values that are interpreted in Coda as a duration in seconds.
 - Added autocomplete support for `ParameterType.StringArray` and `ParameterType.SparseStringArray` parameters.
 - Changed OAuth2 validation to check that authorizationUrl and tokenUrl parse as URLs.
+- Limited number of formulas, column formats, and sync tables to 100 each. Added character limits to names and descriptions, and to length of column matchers and network domains.
 
 ## [1.0.2] - 2022-07-14
 

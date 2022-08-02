@@ -243,3 +243,7 @@ The JavaScript function that implements this formula
 #### Returns
 
 `ResultT` \| `Promise`<`ResultT`\>
+
+#### Defined in
+
+[api.ts:551](https://github.com/coda/packs-sdk/blob/main/api.ts#L551)

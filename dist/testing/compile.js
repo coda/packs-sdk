@@ -54,6 +54,7 @@ async function loadIntoVM(bundlePath) {
     const jail = ivmContext.global;
     await jail.set('global', jail.derefInto());
     await jail.set('exports', {}, { copy: true });
+    await jail.set('codaInternal', { serializer: {} }, { copy: true });
     const script = await isolate.compileScript(bundle.toString(), { filename: bundlePath });
     await script.run(ivmContext);
 }
@@ -122,12 +123,15 @@ async function buildWithES({ lastBundleFilename, outputBundleFilename, options: 
         // - cjs bundles are adding exports to global.exports.
         // - if iife bundles add exports to global, require() doesn't work. only module.exports works. idk why.
         globalName: format === 'iife' ? 'module.exports' : undefined,
-        platform: 'node',
-        // Ensure the generated bundle works in Node 14, for compatibility with Lambda.
-        target: 'node14',
+        // isolated-vm environment is approximately es2020. It's known that es2021 will break because of
+        // logical assignment
+        target: 'ES2020',
         inject: getInjections(buildOptions),
         minify: false,
         sourcemap: 'both',
+        // The pack bundle is always targeting the isolated-vm environment.
+        define: { 'process.env.IN_ISOLATED_VM_OR_BROWSER': 'true' },
+        external: ['codaInternal'], // for serializer
     };
     // https://zchee.github.io/golang-wiki/MinimumRequirements/ says macOS High Sierra 10.13 or newer
     // https://en.wikipedia.org/wiki/MacOS says OS X 10.13 corresponds to Darwin kernel version 17

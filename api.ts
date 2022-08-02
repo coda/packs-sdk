@@ -144,6 +144,11 @@ export class StatusCodeError extends Error {
 
     this.response = {...response, body: responseBody};
   }
+
+  /** Returns if the error is an instance of StatusCodeError. Note that instanceof may not work. */
+  static isStatusCodeError(err: any): err is StatusCodeError {
+    return 'name' in err && err.name === StatusCodeError.name;
+  }
 }
 
 /**
@@ -160,13 +165,18 @@ export class StatusCodeError extends Error {
  */
 export class MissingScopesError extends Error {
   /**
-   * The name of the error, for identiciation purposes.
+   * The name of the error, for identification purposes.
    */
   override name: string = 'MissingScopesError';
 
   /** @hidden */
   constructor(message?: string) {
     super(message || 'Additional permissions are required');
+  }
+
+  /** Returns if the error is an instance of MissingScopesError. Note that instanceof may not work. */
+  static isMissingScopesError(err: any): err is MissingScopesError {
+    return 'name' in err && err.name === MissingScopesError.name;
   }
 }
 
@@ -337,12 +347,11 @@ export function wrapGetSchema(getSchema: MetadataFormula | undefined): MetadataF
 /**
  * List of ParameterTypes that support autocomplete.
  */
-export type AutocompleteParameterTypes = 
-  | ParameterType.Number 
-  | ParameterType.String 
-  | ParameterType.StringArray 
-  | ParameterType.SparseStringArray
-;
+export type AutocompleteParameterTypes =
+  | ParameterType.Number
+  | ParameterType.String
+  | ParameterType.StringArray
+  | ParameterType.SparseStringArray;
 
 /**
  * Mapping of autocomplete-enabled ParameterTypes to the underlying Type that should be returned
@@ -360,7 +369,7 @@ export type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterT
   type: T;
   autocomplete?: T extends AutocompleteParameterTypes
     ? MetadataFormulaDef | Array<TypeMap[AutocompleteParameterTypeMapping[T]] | SimpleAutocompleteOption<T>>
-    : undefined
+    : undefined;
 };
 
 /**

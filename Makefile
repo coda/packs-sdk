@@ -99,12 +99,12 @@ compile-thunk:
 		--outfile=${ROOTDIR}/bundles/thunk_bundle.js \
 		--inject:${ROOTDIR}/testing/injections/buffer_shim.js \
 		--format=iife \
-		--define:process.env.IS_THUNK=true \
+		--define:process.env.IN_ISOLATED_VM_OR_BROWSER=true \
 		--global-name=module.exports \
-		--target=node14;
+		--target=es2020;
 
-.PHONY: compile
-compile:
+.PHONY: compile-ts
+compile-ts:	
 	${ROOTDIR}/node_modules/.bin/tsc
 
 	$(MAKE) compile-thunk
@@ -116,13 +116,23 @@ compile:
 	# copy buffer.d.ts to be used by monaco browser.
 	cp ${ROOTDIR}/node_modules/buffer/index.d.ts ${ROOTDIR}/dist/buffer.d.ts
 
-	# this bundle is executed by lambda, either cjs or iife format should work.
+	# This bundle is used by the Pack studio to compile the pack bundle in the browser. It will be loaded in both 
+	# browser and isolated-vm. In the browser, the pack bundle is loaded in an iframe to extract pack metadata.
+	# In lambda, the pack bundle actually runs formulas.
+	#
+	# isolated-vm environment is approximately es2020. It's known that es2021 will break because of Logical assignment
 	${ROOTDIR}/node_modules/.bin/esbuild ${ROOTDIR}/index.ts \
 		--bundle \
 		--outfile=${ROOTDIR}/dist/bundle.js \
 		--format=cjs \
+		--define:process.env.IN_ISOLATED_VM_OR_BROWSER=true \
 		--minify \
-		--target=node14;
+		--target=es2020;
+
+.PHONY: compile
+compile:
+	$(MAKE) compile-ts
+
 	# Generate a typescript file for use in /experimental so the web editor
 	# can resolve packs-sdk imports
 	${ROOTDIR}/node_modules/.bin/dts-bundle-generator ${ROOTDIR}/index.ts \

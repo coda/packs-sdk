@@ -36,3 +36,7 @@ makeParameter({type: ParameterType.StringArray, name: 'myArrayParam', descriptio
 #### Returns
 
 [`ParamDef`](../interfaces/core.ParamDef.md)<`ParameterTypeMap`[`T`]\>
+
+#### Defined in
+
+[api.ts:388](https://github.com/coda/packs-sdk/blob/main/api.ts#L388)

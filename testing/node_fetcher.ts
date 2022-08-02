@@ -61,24 +61,6 @@ export interface FetcherFullResponse {
   body?: FetcherBodyResponse;
 }
 
-export class StatusCodeError extends Error {
-  statusCode: number;
-  options: BaseFetcherOptions;
-  response: FetcherFullResponse;
-
-  constructor(statusCode: number, body: any, options: BaseFetcherOptions, response: FetcherFullResponse) {
-    super(`${statusCode} - ${JSON.stringify(body)}`);
-    this.name = 'StatusCodeError';
-    this.statusCode = statusCode;
-    this.options = options;
-    this.response = response;
-  }
-}
-
-export function isStatusCodeError(err: any): err is StatusCodeError {
-  return typeof err === 'object' && err.name === StatusCodeError.name;
-}
-
 export function nodeFetcher(options: FetcherOptionsWithFullResponse): Promise<FetcherFullResponse>;
 export function nodeFetcher(options: FetcherOptionsWithBodyResponse): Promise<FetcherBodyResponse>;
 export async function nodeFetcher(options: BaseFetcherOptions): Promise<FetcherFullResponse | FetcherBodyResponse> {
@@ -96,7 +78,6 @@ export async function nodeFetcher(options: BaseFetcherOptions): Promise<FetcherF
     forever,
     resolveWithFullResponse,
     resolveWithRawBody,
-    simple = true,
     encoding,
     ca,
     maxResponseSizeBytes,
@@ -177,12 +158,6 @@ export async function nodeFetcher(options: BaseFetcherOptions): Promise<FetcherF
     headers: Object.fromEntries(response.headers.entries()),
     body: resultBody,
   };
-
-  if (simple) {
-    if (!response.ok) {
-      throw new StatusCodeError(response.status, resultBody, options, fullResponse);
-    }
-  }
 
   if (resolveWithFullResponse) {
     return fullResponse;

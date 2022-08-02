@@ -222,7 +222,7 @@ A definition of the request and any parameter transformations to make in order t
 
 #### Defined in
 
-[api.ts:570](https://github.com/coda/packs-sdk/blob/main/api.ts#L570)
+[api.ts:579](https://github.com/coda/packs-sdk/blob/main/api.ts#L579)
 
 ___
 
@@ -234,7 +234,7 @@ A definition of the schema for the object list returned by this function.
 
 #### Defined in
 
-[api.ts:572](https://github.com/coda/packs-sdk/blob/main/api.ts#L572)
+[api.ts:581](https://github.com/coda/packs-sdk/blob/main/api.ts#L581)
 
 ___
 

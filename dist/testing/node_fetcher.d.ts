@@ -53,13 +53,6 @@ export interface FetcherFullResponse {
     };
     body?: FetcherBodyResponse;
 }
-export declare class StatusCodeError extends Error {
-    statusCode: number;
-    options: BaseFetcherOptions;
-    response: FetcherFullResponse;
-    constructor(statusCode: number, body: any, options: BaseFetcherOptions, response: FetcherFullResponse);
-}
-export declare function isStatusCodeError(err: any): err is StatusCodeError;
 export declare function nodeFetcher(options: FetcherOptionsWithFullResponse): Promise<FetcherFullResponse>;
 export declare function nodeFetcher(options: FetcherOptionsWithBodyResponse): Promise<FetcherBodyResponse>;
 export {};
