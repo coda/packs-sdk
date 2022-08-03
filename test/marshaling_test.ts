@@ -202,6 +202,8 @@ describe('Marshaling', () => {
     assert.deepEqual(transformForLogging(['one string']), ['one string']);
     assert.deepEqual(transformForLogging(['two', 'strings']), ['two strings']);
     assert.deepEqual(transformForLogging(['a %s c', 'b']), ['a b c']);
+    // NOTE: The %o here won't actually work inside of thunks because the pure-js
+    // implementation of util.format used with esbuild doesn't support it. See thunk_test.js
     assert.deepEqual(transformForLogging(['%o vs %j', {a: 'b'}, {a: 'b'}]), [`{ a: 'b' } vs {"a":"b"}`]);
     assert.deepEqual(transformForLogging([{someFunc: () => 1, somePromise: Promise.resolve(1)}]), [
       '{ someFunc: [Function: someFunc], somePromise: Promise { 1 } }',

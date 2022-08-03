@@ -150,6 +150,7 @@ describe('Thunk', () => {
         console.log("foo %s baz", "bar");
         console.log({someFunc: () => 1, somePromise: Promise.resolve(1)});
         console.log(new Error("some error"));
+        console.log("%o", {a: "b"});
       `,
       [],
       {},
@@ -161,6 +162,8 @@ describe('Thunk', () => {
       'foo bar baz',
       '{ someFunc: [Function: someFunc], somePromise: {} }',
       '[Error: some error]',
+      // Note the "%o" isn't supported due to limitations of util.format in pure js with esbuild.
+      "%o { a: 'b' }",
     ]);
   });
 });
