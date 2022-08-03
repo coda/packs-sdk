@@ -9,7 +9,7 @@ import type { ParamDefs } from '../../api_types';
 import type { ParamValues } from '../../api_types';
 import type { SyncExecutionContext } from '../../api_types';
 import type { SyncFormulaSpecification } from '../types';
-export { marshalValue, unmarshalValue, marshalValueToString, unmarshalValueFromString } from '../common/marshaling';
+export { marshalValue, unmarshalValue, marshalValueToString, unmarshalValueFromString, marshalValuesForLogging, } from '../common/marshaling';
 /**
  * The thunk entrypoint - the first code that runs inside the v8 isolate once control is passed over.
  */

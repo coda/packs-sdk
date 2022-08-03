@@ -3,6 +3,7 @@ import {MarshalingInjectedKeys} from './constants';
 import {MissingScopesError} from '../../../api';
 import {StatusCodeError} from '../../../api';
 import {deserialize} from './serializer';
+import {format} from 'util';
 import {serialize} from './serializer';
 
 // We rely on the javascript structuredClone() algorithm to copy arguments and results into
@@ -156,6 +157,10 @@ function fixUncopyableTypes(
 
 function isMarshaledValue(val: any): boolean {
   return typeof val === 'object' && MarshalingInjectedKeys.CodaMarshaler in val;
+}
+
+export function marshalValuesForLogging(val: any[]): MarshaledValue[] {
+  return [marshalValue(format(...val))];
 }
 
 export function marshalValue(val: any): MarshaledValue {

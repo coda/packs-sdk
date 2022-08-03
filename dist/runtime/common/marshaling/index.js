@@ -1,11 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.unmarshalError = exports.marshalError = exports.unwrapError = exports.wrapError = exports.unmarshalValue = exports.unmarshalValueFromString = exports.marshalValueToString = exports.marshalValue = void 0;
+exports.unmarshalError = exports.marshalError = exports.unwrapError = exports.wrapError = exports.unmarshalValue = exports.unmarshalValueFromString = exports.marshalValueToString = exports.marshalValue = exports.marshalValuesForLogging = void 0;
 const constants_1 = require("./constants");
 const constants_2 = require("./constants");
 const api_1 = require("../../../api");
 const api_2 = require("../../../api");
 const serializer_1 = require("./serializer");
+const util_1 = require("util");
 const serializer_2 = require("./serializer");
 // We rely on the javascript structuredClone() algorithm to copy arguments and results into
 // and out of isolated-vm method calls. There are a few types we want to support that aren't
@@ -130,6 +131,10 @@ function fixUncopyableTypes(val, pathPrefix, postTransforms, depth = 0) {
 function isMarshaledValue(val) {
     return typeof val === 'object' && constants_2.MarshalingInjectedKeys.CodaMarshaler in val;
 }
+function marshalValuesForLogging(val) {
+    return [marshalValue((0, util_1.format)(...val))];
+}
+exports.marshalValuesForLogging = marshalValuesForLogging;
 function marshalValue(val) {
     const postTransforms = [];
     const { val: encodedVal } = fixUncopyableTypes(val, [], postTransforms, 0);

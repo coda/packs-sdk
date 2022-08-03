@@ -93,13 +93,16 @@ compile-isolated-vm:
 
 .PHONY: compile-thunk
 compile-thunk:
-	# this bundle is loaded into ivm, better to use iife to avoid local symbols leak to global.
+	# This bundle is loaded into ivm, better to use iife to avoid local symbols leak to global.
+	# We need the NODE_DEBUG=false because "util.format" depends on debuglog which depends
+	# on the value of NODE_DEBUG (https://github.com/nodejs/node/blob/6b055f385744d2ca71c19d46a0ec3bcfc51f5cd3/lib/internal/util/debuglog.js#L21)
 	${ROOTDIR}/node_modules/.bin/esbuild ${ROOTDIR}/runtime/thunk/thunk.ts \
 		--bundle \
 		--outfile=${ROOTDIR}/bundles/thunk_bundle.js \
 		--inject:${ROOTDIR}/testing/injections/buffer_shim.js \
 		--format=iife \
 		--define:process.env.IN_ISOLATED_VM_OR_BROWSER=true \
+		--define:process.env.NODE_DEBUG=false \
 		--global-name=module.exports \
 		--target=es2020;
 
@@ -121,11 +124,15 @@ compile-ts:
 	# In lambda, the pack bundle actually runs formulas.
 	#
 	# isolated-vm environment is approximately es2020. It's known that es2021 will break because of Logical assignment
+	#
+	# We need the NODE_DEBUG=false because "util.format" depends on debuglog which depends
+	# on the value of NODE_DEBUG (https://github.com/nodejs/node/blob/6b055f385744d2ca71c19d46a0ec3bcfc51f5cd3/lib/internal/util/debuglog.js#L21)
 	${ROOTDIR}/node_modules/.bin/esbuild ${ROOTDIR}/index.ts \
 		--bundle \
 		--outfile=${ROOTDIR}/dist/bundle.js \
 		--format=cjs \
 		--define:process.env.IN_ISOLATED_VM_OR_BROWSER=true \
+		--define:process.env.NODE_DEBUG=false \
 		--minify \
 		--target=es2020;
 

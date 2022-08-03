@@ -13,6 +13,7 @@ interface MarshaledValue {
     postTransforms: PostTransform[];
     [MarshalingInjectedKeys.CodaMarshaler]: CodaMarshalerType.Object;
 }
+export declare function marshalValuesForLogging(val: any[]): MarshaledValue[];
 export declare function marshalValue(val: any): MarshaledValue;
 export declare function marshalValueToString(val: any): string;
 export declare function unmarshalValueFromString(marshaledValue: string): any;

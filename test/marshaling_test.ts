@@ -3,6 +3,7 @@ import {StatusCodeError} from '../api';
 import {inspect} from 'util';
 import ivm from 'isolated-vm';
 import {marshalValue} from '../runtime/common/marshaling';
+import {marshalValuesForLogging} from '../runtime/common/marshaling';
 import {unmarshalValue} from '../runtime/common/marshaling';
 import {unwrapError} from '../runtime/common/marshaling';
 import {wrapError} from '../runtime/common/marshaling';
@@ -27,6 +28,10 @@ describe('Marshaling', () => {
 
   function transformError(val: Error): Error {
     return unwrapError(new Error(passThroughIsolatedVm(wrapError(val).message)));
+  }
+
+  function transformForLogging(vals: any[]): any[] {
+    return passThroughIsolatedVm(marshalValuesForLogging(vals)).map(unmarshalValue);
   }
 
   it('works for regular objects', () => {
@@ -191,5 +196,17 @@ describe('Marshaling', () => {
     assert.throws(() => unmarshalValue(undefined), 'Not a marshaled value: undefined');
     assert.throws(() => unmarshalValue(1), 'Not a marshaled value: 1');
     assert.throws(() => unmarshalValue({foo: 'bar'}), 'Not a marshaled value: {"foo":"bar"}');
+  });
+
+  it('marshals values for logging', () => {
+    assert.deepEqual(transformForLogging(['one string']), ['one string']);
+    assert.deepEqual(transformForLogging(['two', 'strings']), ['two strings']);
+    assert.deepEqual(transformForLogging(['a %s c', 'b']), ['a b c']);
+    // NOTE: The %o here won't actually work inside of thunks because the pure-js
+    // implementation of util.format used with esbuild doesn't support it. See thunk_test.js
+    assert.deepEqual(transformForLogging(['%o vs %j', {a: 'b'}, {a: 'b'}]), [`{ a: 'b' } vs {"a":"b"}`]);
+    assert.deepEqual(transformForLogging([{someFunc: () => 1, somePromise: Promise.resolve(1)}]), [
+      '{ someFunc: [Function: someFunc], somePromise: Promise { 1 } }',
+    ]);
   });
 });

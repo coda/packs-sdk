@@ -1,5 +1,6 @@
 import {testHelper} from './test_helper';
 import {getThunkPath} from '../runtime/bootstrap';
+import {injectLogFunction} from '../runtime/bootstrap';
 import {injectSerializer} from '../runtime/bootstrap';
 import ivm from 'isolated-vm';
 import {marshalValue} from '../runtime/common/marshaling';
@@ -22,6 +23,7 @@ describe('Thunk', () => {
     // context is like a container in ivm concept.
     const ivmContext = await isolate.createContext();
     const jail = ivmContext.global;
+    await jail.set('global', jail.derefInto());
     await jail.set('test', undefined, {copy: true});
     await jail.set('codaInternal', {serializer: {}}, {copy: true});
     await injectSerializer(ivmContext, 'codaInternal.serializer');
@@ -125,5 +127,43 @@ describe('Thunk', () => {
     `);
 
     assert.equal(result, true);
+  });
+
+  it('log marshaling works', async () => {
+    const isolate = new ivm.Isolate({memoryLimit: 128});
+
+    // context is like a container in ivm concept.
+    const ivmContext = await isolate.createContext();
+    const jail = ivmContext.global;
+    await jail.set('global', jail.derefInto());
+    await jail.set('coda', {}, {copy: true});
+
+    const savedArgs: string[] = [];
+    await injectLogFunction(ivmContext, 'console.log', args => savedArgs.push(args));
+
+    await registerBundle(isolate, ivmContext, getThunkPath(), 'coda');
+
+    await ivmContext.evalClosure(
+      `
+        console.log("%s vs %j", {a: "b"}, {a: "b"});
+        console.log("foo", "bar", {a: "b"});
+        console.log("foo %s baz", "bar");
+        console.log({someFunc: () => 1, somePromise: Promise.resolve(1)});
+        console.log(new Error("some error"));
+        console.log("%o", {a: "b"});
+      `,
+      [],
+      {},
+    );
+
+    assert.deepEqual(savedArgs, [
+      `[object Object] vs {"a":"b"}`,
+      "foo bar { a: 'b' }",
+      'foo bar baz',
+      '{ someFunc: [Function: someFunc], somePromise: {} }',
+      '[Error: some error]',
+      // Note the "%o" isn't supported due to limitations of util.format in pure js with esbuild.
+      "%o { a: 'b' }",
+    ]);
   });
 });
