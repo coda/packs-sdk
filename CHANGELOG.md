@@ -2,7 +2,7 @@
 
 This changelog keeps track of all changes to the Packs SDK. We follow conventions from [keepachangelog](https://keepachangelog.com/en/1.0.0/).
 
-## [Unreleased]
+## [1.0.3] - 2022-08-03
 
 - Added `ImageSchema`, for use with images. Allows packs to set two flags on a formula returning an image: if the image should be rendered with or without an outline, and whether to turn off the rounded corners. If the outline flag `ImageOutline` is not set on a schema, the default is `Solid`, and the image will be rendered with an outline. If the corners flag `ImageCornerStyle` is not set, the default is `Rounded`, and the image will be rendered with rounded corners.
 - Added `NumericDurationSchema`, which will allow packs to return `ValueType.Number` values that are interpreted in Coda as a duration in seconds.
