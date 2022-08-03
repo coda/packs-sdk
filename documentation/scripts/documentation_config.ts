@@ -835,7 +835,7 @@ export const Examples: Example[] = [
       {
         name: 'Facebook (Meta)',
         content: 'The Facebook (Meta) APIs use OAuth2 to authenticate users, prompting them to approve a specific set of scopes.',
-        codeFile: './examples/apis/google.ts',
+        codeFile: './examples/apis/facebook.ts',
       },
       {
         name: 'Giphy',
