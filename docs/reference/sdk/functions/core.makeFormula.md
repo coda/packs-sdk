@@ -82,3 +82,7 @@ makeFormula({
 #### Returns
 
 [`Formula`](../types/core.Formula.md)<`ParamDefsT`, `ResultT`, `SchemaT`\>
+
+#### Defined in
+
+[api.ts:826](https://github.com/coda/packs-sdk/blob/main/api.ts#L826)

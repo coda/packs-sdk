@@ -29,3 +29,7 @@ an object schema, those are left undefined.
 #### Returns
 
 [`Schema`](../types/core.Schema.md)
+
+#### Defined in
+
+[schema.ts:1157](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1157)

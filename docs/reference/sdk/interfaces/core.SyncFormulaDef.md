@@ -247,3 +247,7 @@ as another continuation if there are more result to fetch.
 #### Returns
 
 `Promise`<[`SyncFormulaResult`](core.SyncFormulaResult.md)<`K`, `L`, `SchemaT`\>\>
+
+#### Defined in
+
+[api.ts:720](https://github.com/coda/packs-sdk/blob/main/api.ts#L720)
