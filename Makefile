@@ -111,6 +111,7 @@ compile-thunk:
 		--define:process.env.IN_ISOLATED_VM_OR_BROWSER=true \
 		--define:process.env.NODE_DEBUG=false \
 		--global-name=module.exports \
+		--keep-names \
 		--target=es2020;
 
 .PHONY: compile-ts
@@ -141,7 +142,7 @@ compile-ts:
 		--define:process.env.IN_ISOLATED_VM_OR_BROWSER=true \
 		--define:process.env.NODE_DEBUG=false \
 		--minify \
-		--minify-identifiers=false \
+		--keep-names \
 		--target=es2020;
 
 .PHONY: compile

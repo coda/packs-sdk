@@ -7,6 +7,7 @@ module.exports = (() => {
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
   var __esm = (fn, res) => function __init() {
     return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
   };
@@ -59,15 +60,18 @@ module.exports = (() => {
         var placeHoldersLen = validLen === len2 ? 0 : 4 - validLen % 4;
         return [validLen, placeHoldersLen];
       }
+      __name(getLens, "getLens");
       function byteLength(b64) {
         var lens = getLens(b64);
         var validLen = lens[0];
         var placeHoldersLen = lens[1];
         return (validLen + placeHoldersLen) * 3 / 4 - placeHoldersLen;
       }
+      __name(byteLength, "byteLength");
       function _byteLength(b64, validLen, placeHoldersLen) {
         return (validLen + placeHoldersLen) * 3 / 4 - placeHoldersLen;
       }
+      __name(_byteLength, "_byteLength");
       function toByteArray(b64) {
         var tmp;
         var lens = getLens(b64);
@@ -94,9 +98,11 @@ module.exports = (() => {
         }
         return arr;
       }
+      __name(toByteArray, "toByteArray");
       function tripletToBase64(num) {
         return lookup[num >> 18 & 63] + lookup[num >> 12 & 63] + lookup[num >> 6 & 63] + lookup[num & 63];
       }
+      __name(tripletToBase64, "tripletToBase64");
       function encodeChunk(uint8, start, end) {
         var tmp;
         var output = [];
@@ -106,6 +112,7 @@ module.exports = (() => {
         }
         return output.join("");
       }
+      __name(encodeChunk, "encodeChunk");
       function fromByteArray(uint8) {
         var tmp;
         var len2 = uint8.length;
@@ -124,6 +131,7 @@ module.exports = (() => {
         }
         return parts.join("");
       }
+      __name(fromByteArray, "fromByteArray");
     }
   });
 
@@ -241,6 +249,7 @@ module.exports = (() => {
           return false;
         }
       }
+      __name(typedArraySupport, "typedArraySupport");
       Object.defineProperty(Buffer4.prototype, "parent", {
         enumerable: true,
         get: function() {
@@ -265,6 +274,7 @@ module.exports = (() => {
         Object.setPrototypeOf(buf, Buffer4.prototype);
         return buf;
       }
+      __name(createBuffer, "createBuffer");
       function Buffer4(arg, encodingOrOffset, length) {
         if (typeof arg === "number") {
           if (typeof encodingOrOffset === "string") {
@@ -274,6 +284,7 @@ module.exports = (() => {
         }
         return from(arg, encodingOrOffset, length);
       }
+      __name(Buffer4, "Buffer");
       Buffer4.poolSize = 8192;
       function from(value, encodingOrOffset, length) {
         if (typeof value === "string") {
@@ -306,6 +317,7 @@ module.exports = (() => {
         }
         throw new TypeError("The first argument must be one of type string, Buffer, ArrayBuffer, Array, or Array-like Object. Received type " + typeof value);
       }
+      __name(from, "from");
       Buffer4.from = function(value, encodingOrOffset, length) {
         return from(value, encodingOrOffset, length);
       };
@@ -318,6 +330,7 @@ module.exports = (() => {
           throw new RangeError('The value "' + size + '" is invalid for option "size"');
         }
       }
+      __name(assertSize, "assertSize");
       function alloc(size, fill, encoding) {
         assertSize(size);
         if (size <= 0) {
@@ -328,6 +341,7 @@ module.exports = (() => {
         }
         return createBuffer(size);
       }
+      __name(alloc, "alloc");
       Buffer4.alloc = function(size, fill, encoding) {
         return alloc(size, fill, encoding);
       };
@@ -335,6 +349,7 @@ module.exports = (() => {
         assertSize(size);
         return createBuffer(size < 0 ? 0 : checked(size) | 0);
       }
+      __name(allocUnsafe, "allocUnsafe");
       Buffer4.allocUnsafe = function(size) {
         return allocUnsafe(size);
       };
@@ -356,6 +371,7 @@ module.exports = (() => {
         }
         return buf;
       }
+      __name(fromString, "fromString");
       function fromArrayLike(array) {
         const length = array.length < 0 ? 0 : checked(array.length) | 0;
         const buf = createBuffer(length);
@@ -364,6 +380,7 @@ module.exports = (() => {
         }
         return buf;
       }
+      __name(fromArrayLike, "fromArrayLike");
       function fromArrayView(arrayView) {
         if (isInstance(arrayView, Uint8Array)) {
           const copy = new Uint8Array(arrayView);
@@ -371,6 +388,7 @@ module.exports = (() => {
         }
         return fromArrayLike(arrayView);
       }
+      __name(fromArrayView, "fromArrayView");
       function fromArrayBuffer(array, byteOffset, length) {
         if (byteOffset < 0 || array.byteLength < byteOffset) {
           throw new RangeError('"offset" is outside of buffer bounds');
@@ -389,6 +407,7 @@ module.exports = (() => {
         Object.setPrototypeOf(buf, Buffer4.prototype);
         return buf;
       }
+      __name(fromArrayBuffer, "fromArrayBuffer");
       function fromObject(obj) {
         if (Buffer4.isBuffer(obj)) {
           const len = checked(obj.length) | 0;
@@ -409,22 +428,25 @@ module.exports = (() => {
           return fromArrayLike(obj.data);
         }
       }
+      __name(fromObject, "fromObject");
       function checked(length) {
         if (length >= K_MAX_LENGTH) {
           throw new RangeError("Attempt to allocate Buffer larger than maximum size: 0x" + K_MAX_LENGTH.toString(16) + " bytes");
         }
         return length | 0;
       }
+      __name(checked, "checked");
       function SlowBuffer(length) {
         if (+length != length) {
           length = 0;
         }
         return Buffer4.alloc(+length);
       }
-      Buffer4.isBuffer = function isBuffer(b) {
+      __name(SlowBuffer, "SlowBuffer");
+      Buffer4.isBuffer = /* @__PURE__ */ __name(function isBuffer(b) {
         return b != null && b._isBuffer === true && b !== Buffer4.prototype;
-      };
-      Buffer4.compare = function compare(a, b) {
+      }, "isBuffer");
+      Buffer4.compare = /* @__PURE__ */ __name(function compare(a, b) {
         if (isInstance(a, Uint8Array))
           a = Buffer4.from(a, a.offset, a.byteLength);
         if (isInstance(b, Uint8Array))
@@ -448,8 +470,8 @@ module.exports = (() => {
         if (y < x)
           return 1;
         return 0;
-      };
-      Buffer4.isEncoding = function isEncoding(encoding) {
+      }, "compare");
+      Buffer4.isEncoding = /* @__PURE__ */ __name(function isEncoding(encoding) {
         switch (String(encoding).toLowerCase()) {
           case "hex":
           case "utf8":
@@ -466,8 +488,8 @@ module.exports = (() => {
           default:
             return false;
         }
-      };
-      Buffer4.concat = function concat(list, length) {
+      }, "isEncoding");
+      Buffer4.concat = /* @__PURE__ */ __name(function concat(list, length) {
         if (!Array.isArray(list)) {
           throw new TypeError('"list" argument must be an Array of Buffers');
         }
@@ -501,7 +523,7 @@ module.exports = (() => {
           pos += buf.length;
         }
         return buffer;
-      };
+      }, "concat");
       function byteLength(string, encoding) {
         if (Buffer4.isBuffer(string)) {
           return string.length;
@@ -544,6 +566,7 @@ module.exports = (() => {
           }
         }
       }
+      __name(byteLength, "byteLength");
       Buffer4.byteLength = byteLength;
       function slowToString(encoding, start, end) {
         let loweredCase = false;
@@ -593,13 +616,15 @@ module.exports = (() => {
           }
         }
       }
+      __name(slowToString, "slowToString");
       Buffer4.prototype._isBuffer = true;
       function swap(b, n, m) {
         const i = b[n];
         b[n] = b[m];
         b[m] = i;
       }
-      Buffer4.prototype.swap16 = function swap16() {
+      __name(swap, "swap");
+      Buffer4.prototype.swap16 = /* @__PURE__ */ __name(function swap16() {
         const len = this.length;
         if (len % 2 !== 0) {
           throw new RangeError("Buffer size must be a multiple of 16-bits");
@@ -608,8 +633,8 @@ module.exports = (() => {
           swap(this, i, i + 1);
         }
         return this;
-      };
-      Buffer4.prototype.swap32 = function swap32() {
+      }, "swap16");
+      Buffer4.prototype.swap32 = /* @__PURE__ */ __name(function swap32() {
         const len = this.length;
         if (len % 4 !== 0) {
           throw new RangeError("Buffer size must be a multiple of 32-bits");
@@ -619,8 +644,8 @@ module.exports = (() => {
           swap(this, i + 1, i + 2);
         }
         return this;
-      };
-      Buffer4.prototype.swap64 = function swap64() {
+      }, "swap32");
+      Buffer4.prototype.swap64 = /* @__PURE__ */ __name(function swap64() {
         const len = this.length;
         if (len % 8 !== 0) {
           throw new RangeError("Buffer size must be a multiple of 64-bits");
@@ -632,35 +657,35 @@ module.exports = (() => {
           swap(this, i + 3, i + 4);
         }
         return this;
-      };
-      Buffer4.prototype.toString = function toString() {
+      }, "swap64");
+      Buffer4.prototype.toString = /* @__PURE__ */ __name(function toString() {
         const length = this.length;
         if (length === 0)
           return "";
         if (arguments.length === 0)
           return utf8Slice(this, 0, length);
         return slowToString.apply(this, arguments);
-      };
+      }, "toString");
       Buffer4.prototype.toLocaleString = Buffer4.prototype.toString;
-      Buffer4.prototype.equals = function equals(b) {
+      Buffer4.prototype.equals = /* @__PURE__ */ __name(function equals(b) {
         if (!Buffer4.isBuffer(b))
           throw new TypeError("Argument must be a Buffer");
         if (this === b)
           return true;
         return Buffer4.compare(this, b) === 0;
-      };
-      Buffer4.prototype.inspect = function inspect() {
+      }, "equals");
+      Buffer4.prototype.inspect = /* @__PURE__ */ __name(function inspect() {
         let str = "";
         const max = exports.INSPECT_MAX_BYTES;
         str = this.toString("hex", 0, max).replace(/(.{2})/g, "$1 ").trim();
         if (this.length > max)
           str += " ... ";
         return "<Buffer " + str + ">";
-      };
+      }, "inspect");
       if (customInspectSymbol) {
         Buffer4.prototype[customInspectSymbol] = Buffer4.prototype.inspect;
       }
-      Buffer4.prototype.compare = function compare(target, start, end, thisStart, thisEnd) {
+      Buffer4.prototype.compare = /* @__PURE__ */ __name(function compare(target, start, end, thisStart, thisEnd) {
         if (isInstance(target, Uint8Array)) {
           target = Buffer4.from(target, target.offset, target.byteLength);
         }
@@ -714,7 +739,7 @@ module.exports = (() => {
         if (y < x)
           return 1;
         return 0;
-      };
+      }, "compare");
       function bidirectionalIndexOf(buffer, val, byteOffset, encoding, dir) {
         if (buffer.length === 0)
           return -1;
@@ -764,6 +789,7 @@ module.exports = (() => {
         }
         throw new TypeError("val must be string, number or Buffer");
       }
+      __name(bidirectionalIndexOf, "bidirectionalIndexOf");
       function arrayIndexOf(arr, val, byteOffset, encoding, dir) {
         let indexSize = 1;
         let arrLength = arr.length;
@@ -787,6 +813,7 @@ module.exports = (() => {
             return buf.readUInt16BE(i2 * indexSize);
           }
         }
+        __name(read, "read");
         let i;
         if (dir) {
           let foundIndex = -1;
@@ -819,15 +846,16 @@ module.exports = (() => {
         }
         return -1;
       }
-      Buffer4.prototype.includes = function includes(val, byteOffset, encoding) {
+      __name(arrayIndexOf, "arrayIndexOf");
+      Buffer4.prototype.includes = /* @__PURE__ */ __name(function includes(val, byteOffset, encoding) {
         return this.indexOf(val, byteOffset, encoding) !== -1;
-      };
-      Buffer4.prototype.indexOf = function indexOf(val, byteOffset, encoding) {
+      }, "includes");
+      Buffer4.prototype.indexOf = /* @__PURE__ */ __name(function indexOf(val, byteOffset, encoding) {
         return bidirectionalIndexOf(this, val, byteOffset, encoding, true);
-      };
-      Buffer4.prototype.lastIndexOf = function lastIndexOf(val, byteOffset, encoding) {
+      }, "indexOf");
+      Buffer4.prototype.lastIndexOf = /* @__PURE__ */ __name(function lastIndexOf(val, byteOffset, encoding) {
         return bidirectionalIndexOf(this, val, byteOffset, encoding, false);
-      };
+      }, "lastIndexOf");
       function hexWrite(buf, string, offset, length) {
         offset = Number(offset) || 0;
         const remaining = buf.length - offset;
@@ -852,19 +880,24 @@ module.exports = (() => {
         }
         return i;
       }
+      __name(hexWrite, "hexWrite");
       function utf8Write(buf, string, offset, length) {
         return blitBuffer(utf8ToBytes(string, buf.length - offset), buf, offset, length);
       }
+      __name(utf8Write, "utf8Write");
       function asciiWrite(buf, string, offset, length) {
         return blitBuffer(asciiToBytes(string), buf, offset, length);
       }
+      __name(asciiWrite, "asciiWrite");
       function base64Write(buf, string, offset, length) {
         return blitBuffer(base64ToBytes(string), buf, offset, length);
       }
+      __name(base64Write, "base64Write");
       function ucs2Write(buf, string, offset, length) {
         return blitBuffer(utf16leToBytes(string, buf.length - offset), buf, offset, length);
       }
-      Buffer4.prototype.write = function write(string, offset, length, encoding) {
+      __name(ucs2Write, "ucs2Write");
+      Buffer4.prototype.write = /* @__PURE__ */ __name(function write(string, offset, length, encoding) {
         if (offset === void 0) {
           encoding = "utf8";
           length = this.length;
@@ -920,13 +953,13 @@ module.exports = (() => {
               loweredCase = true;
           }
         }
-      };
-      Buffer4.prototype.toJSON = function toJSON() {
+      }, "write");
+      Buffer4.prototype.toJSON = /* @__PURE__ */ __name(function toJSON() {
         return {
           type: "Buffer",
           data: Array.prototype.slice.call(this._arr || this, 0)
         };
-      };
+      }, "toJSON");
       function base64Slice(buf, start, end) {
         if (start === 0 && end === buf.length) {
           return base64.fromByteArray(buf);
@@ -934,6 +967,7 @@ module.exports = (() => {
           return base64.fromByteArray(buf.slice(start, end));
         }
       }
+      __name(base64Slice, "base64Slice");
       function utf8Slice(buf, start, end) {
         end = Math.min(buf.length, end);
         const res = [];
@@ -994,6 +1028,7 @@ module.exports = (() => {
         }
         return decodeCodePointsArray(res);
       }
+      __name(utf8Slice, "utf8Slice");
       var MAX_ARGUMENTS_LENGTH = 4096;
       function decodeCodePointsArray(codePoints) {
         const len = codePoints.length;
@@ -1007,6 +1042,7 @@ module.exports = (() => {
         }
         return res;
       }
+      __name(decodeCodePointsArray, "decodeCodePointsArray");
       function asciiSlice(buf, start, end) {
         let ret = "";
         end = Math.min(buf.length, end);
@@ -1015,6 +1051,7 @@ module.exports = (() => {
         }
         return ret;
       }
+      __name(asciiSlice, "asciiSlice");
       function latin1Slice(buf, start, end) {
         let ret = "";
         end = Math.min(buf.length, end);
@@ -1023,6 +1060,7 @@ module.exports = (() => {
         }
         return ret;
       }
+      __name(latin1Slice, "latin1Slice");
       function hexSlice(buf, start, end) {
         const len = buf.length;
         if (!start || start < 0)
@@ -1035,6 +1073,7 @@ module.exports = (() => {
         }
         return out;
       }
+      __name(hexSlice, "hexSlice");
       function utf16leSlice(buf, start, end) {
         const bytes = buf.slice(start, end);
         let res = "";
@@ -1043,7 +1082,8 @@ module.exports = (() => {
         }
         return res;
       }
-      Buffer4.prototype.slice = function slice(start, end) {
+      __name(utf16leSlice, "utf16leSlice");
+      Buffer4.prototype.slice = /* @__PURE__ */ __name(function slice(start, end) {
         const len = this.length;
         start = ~~start;
         end = end === void 0 ? len : ~~end;
@@ -1066,14 +1106,15 @@ module.exports = (() => {
         const newBuf = this.subarray(start, end);
         Object.setPrototypeOf(newBuf, Buffer4.prototype);
         return newBuf;
-      };
+      }, "slice");
       function checkOffset(offset, ext, length) {
         if (offset % 1 !== 0 || offset < 0)
           throw new RangeError("offset is not uint");
         if (offset + ext > length)
           throw new RangeError("Trying to access beyond buffer length");
       }
-      Buffer4.prototype.readUintLE = Buffer4.prototype.readUIntLE = function readUIntLE(offset, byteLength2, noAssert) {
+      __name(checkOffset, "checkOffset");
+      Buffer4.prototype.readUintLE = Buffer4.prototype.readUIntLE = /* @__PURE__ */ __name(function readUIntLE(offset, byteLength2, noAssert) {
         offset = offset >>> 0;
         byteLength2 = byteLength2 >>> 0;
         if (!noAssert)
@@ -1085,8 +1126,8 @@ module.exports = (() => {
           val += this[offset + i] * mul;
         }
         return val;
-      };
-      Buffer4.prototype.readUintBE = Buffer4.prototype.readUIntBE = function readUIntBE(offset, byteLength2, noAssert) {
+      }, "readUIntLE");
+      Buffer4.prototype.readUintBE = Buffer4.prototype.readUIntBE = /* @__PURE__ */ __name(function readUIntBE(offset, byteLength2, noAssert) {
         offset = offset >>> 0;
         byteLength2 = byteLength2 >>> 0;
         if (!noAssert) {
@@ -1098,38 +1139,38 @@ module.exports = (() => {
           val += this[offset + --byteLength2] * mul;
         }
         return val;
-      };
-      Buffer4.prototype.readUint8 = Buffer4.prototype.readUInt8 = function readUInt8(offset, noAssert) {
+      }, "readUIntBE");
+      Buffer4.prototype.readUint8 = Buffer4.prototype.readUInt8 = /* @__PURE__ */ __name(function readUInt8(offset, noAssert) {
         offset = offset >>> 0;
         if (!noAssert)
           checkOffset(offset, 1, this.length);
         return this[offset];
-      };
-      Buffer4.prototype.readUint16LE = Buffer4.prototype.readUInt16LE = function readUInt16LE(offset, noAssert) {
+      }, "readUInt8");
+      Buffer4.prototype.readUint16LE = Buffer4.prototype.readUInt16LE = /* @__PURE__ */ __name(function readUInt16LE(offset, noAssert) {
         offset = offset >>> 0;
         if (!noAssert)
           checkOffset(offset, 2, this.length);
         return this[offset] | this[offset + 1] << 8;
-      };
-      Buffer4.prototype.readUint16BE = Buffer4.prototype.readUInt16BE = function readUInt16BE(offset, noAssert) {
+      }, "readUInt16LE");
+      Buffer4.prototype.readUint16BE = Buffer4.prototype.readUInt16BE = /* @__PURE__ */ __name(function readUInt16BE(offset, noAssert) {
         offset = offset >>> 0;
         if (!noAssert)
           checkOffset(offset, 2, this.length);
         return this[offset] << 8 | this[offset + 1];
-      };
-      Buffer4.prototype.readUint32LE = Buffer4.prototype.readUInt32LE = function readUInt32LE(offset, noAssert) {
+      }, "readUInt16BE");
+      Buffer4.prototype.readUint32LE = Buffer4.prototype.readUInt32LE = /* @__PURE__ */ __name(function readUInt32LE(offset, noAssert) {
         offset = offset >>> 0;
         if (!noAssert)
           checkOffset(offset, 4, this.length);
         return (this[offset] | this[offset + 1] << 8 | this[offset + 2] << 16) + this[offset + 3] * 16777216;
-      };
-      Buffer4.prototype.readUint32BE = Buffer4.prototype.readUInt32BE = function readUInt32BE(offset, noAssert) {
+      }, "readUInt32LE");
+      Buffer4.prototype.readUint32BE = Buffer4.prototype.readUInt32BE = /* @__PURE__ */ __name(function readUInt32BE(offset, noAssert) {
         offset = offset >>> 0;
         if (!noAssert)
           checkOffset(offset, 4, this.length);
         return this[offset] * 16777216 + (this[offset + 1] << 16 | this[offset + 2] << 8 | this[offset + 3]);
-      };
-      Buffer4.prototype.readBigUInt64LE = defineBigIntMethod(function readBigUInt64LE(offset) {
+      }, "readUInt32BE");
+      Buffer4.prototype.readBigUInt64LE = defineBigIntMethod(/* @__PURE__ */ __name(function readBigUInt64LE(offset) {
         offset = offset >>> 0;
         validateNumber(offset, "offset");
         const first = this[offset];
@@ -1140,8 +1181,8 @@ module.exports = (() => {
         const lo = first + this[++offset] * 2 ** 8 + this[++offset] * 2 ** 16 + this[++offset] * 2 ** 24;
         const hi = this[++offset] + this[++offset] * 2 ** 8 + this[++offset] * 2 ** 16 + last * 2 ** 24;
         return BigInt(lo) + (BigInt(hi) << BigInt(32));
-      });
-      Buffer4.prototype.readBigUInt64BE = defineBigIntMethod(function readBigUInt64BE(offset) {
+      }, "readBigUInt64LE"));
+      Buffer4.prototype.readBigUInt64BE = defineBigIntMethod(/* @__PURE__ */ __name(function readBigUInt64BE(offset) {
         offset = offset >>> 0;
         validateNumber(offset, "offset");
         const first = this[offset];
@@ -1152,8 +1193,8 @@ module.exports = (() => {
         const hi = first * 2 ** 24 + this[++offset] * 2 ** 16 + this[++offset] * 2 ** 8 + this[++offset];
         const lo = this[++offset] * 2 ** 24 + this[++offset] * 2 ** 16 + this[++offset] * 2 ** 8 + last;
         return (BigInt(hi) << BigInt(32)) + BigInt(lo);
-      });
-      Buffer4.prototype.readIntLE = function readIntLE(offset, byteLength2, noAssert) {
+      }, "readBigUInt64BE"));
+      Buffer4.prototype.readIntLE = /* @__PURE__ */ __name(function readIntLE(offset, byteLength2, noAssert) {
         offset = offset >>> 0;
         byteLength2 = byteLength2 >>> 0;
         if (!noAssert)
@@ -1168,8 +1209,8 @@ module.exports = (() => {
         if (val >= mul)
           val -= Math.pow(2, 8 * byteLength2);
         return val;
-      };
-      Buffer4.prototype.readIntBE = function readIntBE(offset, byteLength2, noAssert) {
+      }, "readIntLE");
+      Buffer4.prototype.readIntBE = /* @__PURE__ */ __name(function readIntBE(offset, byteLength2, noAssert) {
         offset = offset >>> 0;
         byteLength2 = byteLength2 >>> 0;
         if (!noAssert)
@@ -1184,42 +1225,42 @@ module.exports = (() => {
         if (val >= mul)
           val -= Math.pow(2, 8 * byteLength2);
         return val;
-      };
-      Buffer4.prototype.readInt8 = function readInt8(offset, noAssert) {
+      }, "readIntBE");
+      Buffer4.prototype.readInt8 = /* @__PURE__ */ __name(function readInt8(offset, noAssert) {
         offset = offset >>> 0;
         if (!noAssert)
           checkOffset(offset, 1, this.length);
         if (!(this[offset] & 128))
           return this[offset];
         return (255 - this[offset] + 1) * -1;
-      };
-      Buffer4.prototype.readInt16LE = function readInt16LE(offset, noAssert) {
+      }, "readInt8");
+      Buffer4.prototype.readInt16LE = /* @__PURE__ */ __name(function readInt16LE(offset, noAssert) {
         offset = offset >>> 0;
         if (!noAssert)
           checkOffset(offset, 2, this.length);
         const val = this[offset] | this[offset + 1] << 8;
         return val & 32768 ? val | 4294901760 : val;
-      };
-      Buffer4.prototype.readInt16BE = function readInt16BE(offset, noAssert) {
+      }, "readInt16LE");
+      Buffer4.prototype.readInt16BE = /* @__PURE__ */ __name(function readInt16BE(offset, noAssert) {
         offset = offset >>> 0;
         if (!noAssert)
           checkOffset(offset, 2, this.length);
         const val = this[offset + 1] | this[offset] << 8;
         return val & 32768 ? val | 4294901760 : val;
-      };
-      Buffer4.prototype.readInt32LE = function readInt32LE(offset, noAssert) {
+      }, "readInt16BE");
+      Buffer4.prototype.readInt32LE = /* @__PURE__ */ __name(function readInt32LE(offset, noAssert) {
         offset = offset >>> 0;
         if (!noAssert)
           checkOffset(offset, 4, this.length);
         return this[offset] | this[offset + 1] << 8 | this[offset + 2] << 16 | this[offset + 3] << 24;
-      };
-      Buffer4.prototype.readInt32BE = function readInt32BE(offset, noAssert) {
+      }, "readInt32LE");
+      Buffer4.prototype.readInt32BE = /* @__PURE__ */ __name(function readInt32BE(offset, noAssert) {
         offset = offset >>> 0;
         if (!noAssert)
           checkOffset(offset, 4, this.length);
         return this[offset] << 24 | this[offset + 1] << 16 | this[offset + 2] << 8 | this[offset + 3];
-      };
-      Buffer4.prototype.readBigInt64LE = defineBigIntMethod(function readBigInt64LE(offset) {
+      }, "readInt32BE");
+      Buffer4.prototype.readBigInt64LE = defineBigIntMethod(/* @__PURE__ */ __name(function readBigInt64LE(offset) {
         offset = offset >>> 0;
         validateNumber(offset, "offset");
         const first = this[offset];
@@ -1229,8 +1270,8 @@ module.exports = (() => {
         }
         const val = this[offset + 4] + this[offset + 5] * 2 ** 8 + this[offset + 6] * 2 ** 16 + (last << 24);
         return (BigInt(val) << BigInt(32)) + BigInt(first + this[++offset] * 2 ** 8 + this[++offset] * 2 ** 16 + this[++offset] * 2 ** 24);
-      });
-      Buffer4.prototype.readBigInt64BE = defineBigIntMethod(function readBigInt64BE(offset) {
+      }, "readBigInt64LE"));
+      Buffer4.prototype.readBigInt64BE = defineBigIntMethod(/* @__PURE__ */ __name(function readBigInt64BE(offset) {
         offset = offset >>> 0;
         validateNumber(offset, "offset");
         const first = this[offset];
@@ -1240,31 +1281,31 @@ module.exports = (() => {
         }
         const val = (first << 24) + this[++offset] * 2 ** 16 + this[++offset] * 2 ** 8 + this[++offset];
         return (BigInt(val) << BigInt(32)) + BigInt(this[++offset] * 2 ** 24 + this[++offset] * 2 ** 16 + this[++offset] * 2 ** 8 + last);
-      });
-      Buffer4.prototype.readFloatLE = function readFloatLE(offset, noAssert) {
+      }, "readBigInt64BE"));
+      Buffer4.prototype.readFloatLE = /* @__PURE__ */ __name(function readFloatLE(offset, noAssert) {
         offset = offset >>> 0;
         if (!noAssert)
           checkOffset(offset, 4, this.length);
         return ieee754.read(this, offset, true, 23, 4);
-      };
-      Buffer4.prototype.readFloatBE = function readFloatBE(offset, noAssert) {
+      }, "readFloatLE");
+      Buffer4.prototype.readFloatBE = /* @__PURE__ */ __name(function readFloatBE(offset, noAssert) {
         offset = offset >>> 0;
         if (!noAssert)
           checkOffset(offset, 4, this.length);
         return ieee754.read(this, offset, false, 23, 4);
-      };
-      Buffer4.prototype.readDoubleLE = function readDoubleLE(offset, noAssert) {
+      }, "readFloatBE");
+      Buffer4.prototype.readDoubleLE = /* @__PURE__ */ __name(function readDoubleLE(offset, noAssert) {
         offset = offset >>> 0;
         if (!noAssert)
           checkOffset(offset, 8, this.length);
         return ieee754.read(this, offset, true, 52, 8);
-      };
-      Buffer4.prototype.readDoubleBE = function readDoubleBE(offset, noAssert) {
+      }, "readDoubleLE");
+      Buffer4.prototype.readDoubleBE = /* @__PURE__ */ __name(function readDoubleBE(offset, noAssert) {
         offset = offset >>> 0;
         if (!noAssert)
           checkOffset(offset, 8, this.length);
         return ieee754.read(this, offset, false, 52, 8);
-      };
+      }, "readDoubleBE");
       function checkInt(buf, value, offset, ext, max, min) {
         if (!Buffer4.isBuffer(buf))
           throw new TypeError('"buffer" argument must be a Buffer instance');
@@ -1273,7 +1314,8 @@ module.exports = (() => {
         if (offset + ext > buf.length)
           throw new RangeError("Index out of range");
       }
-      Buffer4.prototype.writeUintLE = Buffer4.prototype.writeUIntLE = function writeUIntLE(value, offset, byteLength2, noAssert) {
+      __name(checkInt, "checkInt");
+      Buffer4.prototype.writeUintLE = Buffer4.prototype.writeUIntLE = /* @__PURE__ */ __name(function writeUIntLE(value, offset, byteLength2, noAssert) {
         value = +value;
         offset = offset >>> 0;
         byteLength2 = byteLength2 >>> 0;
@@ -1288,8 +1330,8 @@ module.exports = (() => {
           this[offset + i] = value / mul & 255;
         }
         return offset + byteLength2;
-      };
-      Buffer4.prototype.writeUintBE = Buffer4.prototype.writeUIntBE = function writeUIntBE(value, offset, byteLength2, noAssert) {
+      }, "writeUIntLE");
+      Buffer4.prototype.writeUintBE = Buffer4.prototype.writeUIntBE = /* @__PURE__ */ __name(function writeUIntBE(value, offset, byteLength2, noAssert) {
         value = +value;
         offset = offset >>> 0;
         byteLength2 = byteLength2 >>> 0;
@@ -1304,16 +1346,16 @@ module.exports = (() => {
           this[offset + i] = value / mul & 255;
         }
         return offset + byteLength2;
-      };
-      Buffer4.prototype.writeUint8 = Buffer4.prototype.writeUInt8 = function writeUInt8(value, offset, noAssert) {
+      }, "writeUIntBE");
+      Buffer4.prototype.writeUint8 = Buffer4.prototype.writeUInt8 = /* @__PURE__ */ __name(function writeUInt8(value, offset, noAssert) {
         value = +value;
         offset = offset >>> 0;
         if (!noAssert)
           checkInt(this, value, offset, 1, 255, 0);
         this[offset] = value & 255;
         return offset + 1;
-      };
-      Buffer4.prototype.writeUint16LE = Buffer4.prototype.writeUInt16LE = function writeUInt16LE(value, offset, noAssert) {
+      }, "writeUInt8");
+      Buffer4.prototype.writeUint16LE = Buffer4.prototype.writeUInt16LE = /* @__PURE__ */ __name(function writeUInt16LE(value, offset, noAssert) {
         value = +value;
         offset = offset >>> 0;
         if (!noAssert)
@@ -1321,8 +1363,8 @@ module.exports = (() => {
         this[offset] = value & 255;
         this[offset + 1] = value >>> 8;
         return offset + 2;
-      };
-      Buffer4.prototype.writeUint16BE = Buffer4.prototype.writeUInt16BE = function writeUInt16BE(value, offset, noAssert) {
+      }, "writeUInt16LE");
+      Buffer4.prototype.writeUint16BE = Buffer4.prototype.writeUInt16BE = /* @__PURE__ */ __name(function writeUInt16BE(value, offset, noAssert) {
         value = +value;
         offset = offset >>> 0;
         if (!noAssert)
@@ -1330,8 +1372,8 @@ module.exports = (() => {
         this[offset] = value >>> 8;
         this[offset + 1] = value & 255;
         return offset + 2;
-      };
-      Buffer4.prototype.writeUint32LE = Buffer4.prototype.writeUInt32LE = function writeUInt32LE(value, offset, noAssert) {
+      }, "writeUInt16BE");
+      Buffer4.prototype.writeUint32LE = Buffer4.prototype.writeUInt32LE = /* @__PURE__ */ __name(function writeUInt32LE(value, offset, noAssert) {
         value = +value;
         offset = offset >>> 0;
         if (!noAssert)
@@ -1341,8 +1383,8 @@ module.exports = (() => {
         this[offset + 1] = value >>> 8;
         this[offset] = value & 255;
         return offset + 4;
-      };
-      Buffer4.prototype.writeUint32BE = Buffer4.prototype.writeUInt32BE = function writeUInt32BE(value, offset, noAssert) {
+      }, "writeUInt32LE");
+      Buffer4.prototype.writeUint32BE = Buffer4.prototype.writeUInt32BE = /* @__PURE__ */ __name(function writeUInt32BE(value, offset, noAssert) {
         value = +value;
         offset = offset >>> 0;
         if (!noAssert)
@@ -1352,7 +1394,7 @@ module.exports = (() => {
         this[offset + 2] = value >>> 8;
         this[offset + 3] = value & 255;
         return offset + 4;
-      };
+      }, "writeUInt32BE");
       function wrtBigUInt64LE(buf, value, offset, min, max) {
         checkIntBI(value, min, max, buf, offset, 7);
         let lo = Number(value & BigInt(4294967295));
@@ -1373,6 +1415,7 @@ module.exports = (() => {
         buf[offset++] = hi;
         return offset;
       }
+      __name(wrtBigUInt64LE, "wrtBigUInt64LE");
       function wrtBigUInt64BE(buf, value, offset, min, max) {
         checkIntBI(value, min, max, buf, offset, 7);
         let lo = Number(value & BigInt(4294967295));
@@ -1393,13 +1436,14 @@ module.exports = (() => {
         buf[offset] = hi;
         return offset + 8;
       }
-      Buffer4.prototype.writeBigUInt64LE = defineBigIntMethod(function writeBigUInt64LE(value, offset = 0) {
+      __name(wrtBigUInt64BE, "wrtBigUInt64BE");
+      Buffer4.prototype.writeBigUInt64LE = defineBigIntMethod(/* @__PURE__ */ __name(function writeBigUInt64LE(value, offset = 0) {
         return wrtBigUInt64LE(this, value, offset, BigInt(0), BigInt("0xffffffffffffffff"));
-      });
-      Buffer4.prototype.writeBigUInt64BE = defineBigIntMethod(function writeBigUInt64BE(value, offset = 0) {
+      }, "writeBigUInt64LE"));
+      Buffer4.prototype.writeBigUInt64BE = defineBigIntMethod(/* @__PURE__ */ __name(function writeBigUInt64BE(value, offset = 0) {
         return wrtBigUInt64BE(this, value, offset, BigInt(0), BigInt("0xffffffffffffffff"));
-      });
-      Buffer4.prototype.writeIntLE = function writeIntLE(value, offset, byteLength2, noAssert) {
+      }, "writeBigUInt64BE"));
+      Buffer4.prototype.writeIntLE = /* @__PURE__ */ __name(function writeIntLE(value, offset, byteLength2, noAssert) {
         value = +value;
         offset = offset >>> 0;
         if (!noAssert) {
@@ -1417,8 +1461,8 @@ module.exports = (() => {
           this[offset + i] = (value / mul >> 0) - sub & 255;
         }
         return offset + byteLength2;
-      };
-      Buffer4.prototype.writeIntBE = function writeIntBE(value, offset, byteLength2, noAssert) {
+      }, "writeIntLE");
+      Buffer4.prototype.writeIntBE = /* @__PURE__ */ __name(function writeIntBE(value, offset, byteLength2, noAssert) {
         value = +value;
         offset = offset >>> 0;
         if (!noAssert) {
@@ -1436,8 +1480,8 @@ module.exports = (() => {
           this[offset + i] = (value / mul >> 0) - sub & 255;
         }
         return offset + byteLength2;
-      };
-      Buffer4.prototype.writeInt8 = function writeInt8(value, offset, noAssert) {
+      }, "writeIntBE");
+      Buffer4.prototype.writeInt8 = /* @__PURE__ */ __name(function writeInt8(value, offset, noAssert) {
         value = +value;
         offset = offset >>> 0;
         if (!noAssert)
@@ -1446,8 +1490,8 @@ module.exports = (() => {
           value = 255 + value + 1;
         this[offset] = value & 255;
         return offset + 1;
-      };
-      Buffer4.prototype.writeInt16LE = function writeInt16LE(value, offset, noAssert) {
+      }, "writeInt8");
+      Buffer4.prototype.writeInt16LE = /* @__PURE__ */ __name(function writeInt16LE(value, offset, noAssert) {
         value = +value;
         offset = offset >>> 0;
         if (!noAssert)
@@ -1455,8 +1499,8 @@ module.exports = (() => {
         this[offset] = value & 255;
         this[offset + 1] = value >>> 8;
         return offset + 2;
-      };
-      Buffer4.prototype.writeInt16BE = function writeInt16BE(value, offset, noAssert) {
+      }, "writeInt16LE");
+      Buffer4.prototype.writeInt16BE = /* @__PURE__ */ __name(function writeInt16BE(value, offset, noAssert) {
         value = +value;
         offset = offset >>> 0;
         if (!noAssert)
@@ -1464,8 +1508,8 @@ module.exports = (() => {
         this[offset] = value >>> 8;
         this[offset + 1] = value & 255;
         return offset + 2;
-      };
-      Buffer4.prototype.writeInt32LE = function writeInt32LE(value, offset, noAssert) {
+      }, "writeInt16BE");
+      Buffer4.prototype.writeInt32LE = /* @__PURE__ */ __name(function writeInt32LE(value, offset, noAssert) {
         value = +value;
         offset = offset >>> 0;
         if (!noAssert)
@@ -1475,8 +1519,8 @@ module.exports = (() => {
         this[offset + 2] = value >>> 16;
         this[offset + 3] = value >>> 24;
         return offset + 4;
-      };
-      Buffer4.prototype.writeInt32BE = function writeInt32BE(value, offset, noAssert) {
+      }, "writeInt32LE");
+      Buffer4.prototype.writeInt32BE = /* @__PURE__ */ __name(function writeInt32BE(value, offset, noAssert) {
         value = +value;
         offset = offset >>> 0;
         if (!noAssert)
@@ -1488,19 +1532,20 @@ module.exports = (() => {
         this[offset + 2] = value >>> 8;
         this[offset + 3] = value & 255;
         return offset + 4;
-      };
-      Buffer4.prototype.writeBigInt64LE = defineBigIntMethod(function writeBigInt64LE(value, offset = 0) {
+      }, "writeInt32BE");
+      Buffer4.prototype.writeBigInt64LE = defineBigIntMethod(/* @__PURE__ */ __name(function writeBigInt64LE(value, offset = 0) {
         return wrtBigUInt64LE(this, value, offset, -BigInt("0x8000000000000000"), BigInt("0x7fffffffffffffff"));
-      });
-      Buffer4.prototype.writeBigInt64BE = defineBigIntMethod(function writeBigInt64BE(value, offset = 0) {
+      }, "writeBigInt64LE"));
+      Buffer4.prototype.writeBigInt64BE = defineBigIntMethod(/* @__PURE__ */ __name(function writeBigInt64BE(value, offset = 0) {
         return wrtBigUInt64BE(this, value, offset, -BigInt("0x8000000000000000"), BigInt("0x7fffffffffffffff"));
-      });
+      }, "writeBigInt64BE"));
       function checkIEEE754(buf, value, offset, ext, max, min) {
         if (offset + ext > buf.length)
           throw new RangeError("Index out of range");
         if (offset < 0)
           throw new RangeError("Index out of range");
       }
+      __name(checkIEEE754, "checkIEEE754");
       function writeFloat(buf, value, offset, littleEndian, noAssert) {
         value = +value;
         offset = offset >>> 0;
@@ -1510,12 +1555,13 @@ module.exports = (() => {
         ieee754.write(buf, value, offset, littleEndian, 23, 4);
         return offset + 4;
       }
-      Buffer4.prototype.writeFloatLE = function writeFloatLE(value, offset, noAssert) {
+      __name(writeFloat, "writeFloat");
+      Buffer4.prototype.writeFloatLE = /* @__PURE__ */ __name(function writeFloatLE(value, offset, noAssert) {
         return writeFloat(this, value, offset, true, noAssert);
-      };
-      Buffer4.prototype.writeFloatBE = function writeFloatBE(value, offset, noAssert) {
+      }, "writeFloatLE");
+      Buffer4.prototype.writeFloatBE = /* @__PURE__ */ __name(function writeFloatBE(value, offset, noAssert) {
         return writeFloat(this, value, offset, false, noAssert);
-      };
+      }, "writeFloatBE");
       function writeDouble(buf, value, offset, littleEndian, noAssert) {
         value = +value;
         offset = offset >>> 0;
@@ -1525,13 +1571,14 @@ module.exports = (() => {
         ieee754.write(buf, value, offset, littleEndian, 52, 8);
         return offset + 8;
       }
-      Buffer4.prototype.writeDoubleLE = function writeDoubleLE(value, offset, noAssert) {
+      __name(writeDouble, "writeDouble");
+      Buffer4.prototype.writeDoubleLE = /* @__PURE__ */ __name(function writeDoubleLE(value, offset, noAssert) {
         return writeDouble(this, value, offset, true, noAssert);
-      };
-      Buffer4.prototype.writeDoubleBE = function writeDoubleBE(value, offset, noAssert) {
+      }, "writeDoubleLE");
+      Buffer4.prototype.writeDoubleBE = /* @__PURE__ */ __name(function writeDoubleBE(value, offset, noAssert) {
         return writeDouble(this, value, offset, false, noAssert);
-      };
-      Buffer4.prototype.copy = function copy(target, targetStart, start, end) {
+      }, "writeDoubleBE");
+      Buffer4.prototype.copy = /* @__PURE__ */ __name(function copy(target, targetStart, start, end) {
         if (!Buffer4.isBuffer(target))
           throw new TypeError("argument should be a Buffer");
         if (!start)
@@ -1567,8 +1614,8 @@ module.exports = (() => {
           Uint8Array.prototype.set.call(target, this.subarray(start, end), targetStart);
         }
         return len;
-      };
-      Buffer4.prototype.fill = function fill(val, start, end, encoding) {
+      }, "copy");
+      Buffer4.prototype.fill = /* @__PURE__ */ __name(function fill(val, start, end, encoding) {
         if (typeof val === "string") {
           if (typeof start === "string") {
             encoding = start;
@@ -1621,10 +1668,10 @@ module.exports = (() => {
           }
         }
         return this;
-      };
+      }, "fill");
       var errors = {};
       function E(sym, getMessage, Base) {
-        errors[sym] = class NodeError extends Base {
+        errors[sym] = /* @__PURE__ */ __name(class NodeError extends Base {
           constructor() {
             super();
             Object.defineProperty(this, "message", {
@@ -1650,8 +1697,9 @@ module.exports = (() => {
           toString() {
             return `${this.name} [${sym}]: ${this.message}`;
           }
-        };
+        }, "NodeError");
       }
+      __name(E, "E");
       E("ERR_BUFFER_OUT_OF_BOUNDS", function(name) {
         if (name) {
           return `${name} is outside of buffer bounds`;
@@ -1685,12 +1733,14 @@ module.exports = (() => {
         }
         return `${val.slice(0, i)}${res}`;
       }
+      __name(addNumericalSeparator, "addNumericalSeparator");
       function checkBounds(buf, offset, byteLength2) {
         validateNumber(offset, "offset");
         if (buf[offset] === void 0 || buf[offset + byteLength2] === void 0) {
           boundsError(offset, buf.length - (byteLength2 + 1));
         }
       }
+      __name(checkBounds, "checkBounds");
       function checkIntBI(value, min, max, buf, offset, byteLength2) {
         if (value > max || value < min) {
           const n = typeof min === "bigint" ? "n" : "";
@@ -1708,11 +1758,13 @@ module.exports = (() => {
         }
         checkBounds(buf, offset, byteLength2);
       }
+      __name(checkIntBI, "checkIntBI");
       function validateNumber(value, name) {
         if (typeof value !== "number") {
           throw new errors.ERR_INVALID_ARG_TYPE(name, "number", value);
         }
       }
+      __name(validateNumber, "validateNumber");
       function boundsError(value, length, type) {
         if (Math.floor(value) !== value) {
           validateNumber(value, type);
@@ -1723,6 +1775,7 @@ module.exports = (() => {
         }
         throw new errors.ERR_OUT_OF_RANGE(type || "offset", `>= ${type ? 1 : 0} and <= ${length}`, value);
       }
+      __name(boundsError, "boundsError");
       var INVALID_BASE64_RE = /[^+/0-9A-Za-z-_]/g;
       function base64clean(str) {
         str = str.split("=")[0];
@@ -1734,6 +1787,7 @@ module.exports = (() => {
         }
         return str;
       }
+      __name(base64clean, "base64clean");
       function utf8ToBytes(string, units) {
         units = units || Infinity;
         let codePoint;
@@ -1790,6 +1844,7 @@ module.exports = (() => {
         }
         return bytes;
       }
+      __name(utf8ToBytes, "utf8ToBytes");
       function asciiToBytes(str) {
         const byteArray = [];
         for (let i = 0; i < str.length; ++i) {
@@ -1797,6 +1852,7 @@ module.exports = (() => {
         }
         return byteArray;
       }
+      __name(asciiToBytes, "asciiToBytes");
       function utf16leToBytes(str, units) {
         let c, hi, lo;
         const byteArray = [];
@@ -1811,9 +1867,11 @@ module.exports = (() => {
         }
         return byteArray;
       }
+      __name(utf16leToBytes, "utf16leToBytes");
       function base64ToBytes(str) {
         return base64.toByteArray(base64clean(str));
       }
+      __name(base64ToBytes, "base64ToBytes");
       function blitBuffer(src, dst, offset, length) {
         let i;
         for (i = 0; i < length; ++i) {
@@ -1823,12 +1881,15 @@ module.exports = (() => {
         }
         return i;
       }
+      __name(blitBuffer, "blitBuffer");
       function isInstance(obj, type) {
         return obj instanceof type || obj != null && obj.constructor != null && obj.constructor.name != null && obj.constructor.name === type.name;
       }
+      __name(isInstance, "isInstance");
       function numberIsNaN(obj) {
         return obj !== obj;
       }
+      __name(numberIsNaN, "numberIsNaN");
       var hexSliceLookupTable = function() {
         const alphabet = "0123456789abcdef";
         const table = new Array(256);
@@ -1843,9 +1904,11 @@ module.exports = (() => {
       function defineBigIntMethod(fn) {
         return typeof BigInt === "undefined" ? BufferBigIntNotDefined : fn;
       }
+      __name(defineBigIntMethod, "defineBigIntMethod");
       function BufferBigIntNotDefined() {
         throw new Error("BigInt not supported");
       }
+      __name(BufferBigIntNotDefined, "BufferBigIntNotDefined");
     }
   });
 
@@ -1862,7 +1925,7 @@ module.exports = (() => {
   var require_pascalcase = __commonJS({
     "node_modules/pascalcase/index.js"(exports, module) {
       init_buffer_shim();
-      var titlecase = (input) => input[0].toLocaleUpperCase() + input.slice(1);
+      var titlecase = /* @__PURE__ */ __name((input) => input[0].toLocaleUpperCase() + input.slice(1), "titlecase");
       module.exports = (value) => {
         if (value === null || value === void 0)
           return "";
@@ -1891,26 +1954,27 @@ module.exports = (() => {
         function _instanceof(obj, type) {
           return type != null && obj instanceof type;
         }
+        __name(_instanceof, "_instanceof");
         var nativeMap;
         try {
           nativeMap = Map;
         } catch (_) {
-          nativeMap = function() {
-          };
+          nativeMap = /* @__PURE__ */ __name(function() {
+          }, "nativeMap");
         }
         var nativeSet;
         try {
           nativeSet = Set;
         } catch (_) {
-          nativeSet = function() {
-          };
+          nativeSet = /* @__PURE__ */ __name(function() {
+          }, "nativeSet");
         }
         var nativePromise;
         try {
           nativePromise = Promise;
         } catch (_) {
-          nativePromise = function() {
-          };
+          nativePromise = /* @__PURE__ */ __name(function() {
+          }, "nativePromise");
         }
         function clone3(parent, circular, depth, prototype, includeNonEnumerable) {
           if (typeof circular === "object") {
@@ -2038,31 +2102,37 @@ module.exports = (() => {
             }
             return child;
           }
+          __name(_clone, "_clone");
           return _clone(parent, depth);
         }
-        clone3.clonePrototype = function clonePrototype(parent) {
+        __name(clone3, "clone");
+        clone3.clonePrototype = /* @__PURE__ */ __name(function clonePrototype(parent) {
           if (parent === null)
             return null;
-          var c = function() {
-          };
+          var c = /* @__PURE__ */ __name(function() {
+          }, "c");
           c.prototype = parent;
           return new c();
-        };
+        }, "clonePrototype");
         function __objToStr(o) {
           return Object.prototype.toString.call(o);
         }
+        __name(__objToStr, "__objToStr");
         clone3.__objToStr = __objToStr;
         function __isDate(o) {
           return typeof o === "object" && __objToStr(o) === "[object Date]";
         }
+        __name(__isDate, "__isDate");
         clone3.__isDate = __isDate;
         function __isArray(o) {
           return typeof o === "object" && __objToStr(o) === "[object Array]";
         }
+        __name(__isArray, "__isArray");
         clone3.__isArray = __isArray;
         function __isRegExp(o) {
           return typeof o === "object" && __objToStr(o) === "[object RegExp]";
         }
+        __name(__isRegExp, "__isRegExp");
         clone3.__isRegExp = __isRegExp;
         function __getRegExpFlags(re) {
           var flags = "";
@@ -2074,6 +2144,7 @@ module.exports = (() => {
             flags += "m";
           return flags;
         }
+        __name(__getRegExpFlags, "__getRegExpFlags");
         clone3.__getRegExpFlags = __getRegExpFlags;
         return clone3;
       }();
@@ -2088,7 +2159,7 @@ module.exports = (() => {
     "node_modules/side-channel/node_modules/has-symbols/shams.js"(exports, module) {
       "use strict";
       init_buffer_shim();
-      module.exports = function hasSymbols() {
+      module.exports = /* @__PURE__ */ __name(function hasSymbols() {
         if (typeof Symbol !== "function" || typeof Object.getOwnPropertySymbols !== "function") {
           return false;
         }
@@ -2132,7 +2203,7 @@ module.exports = (() => {
           }
         }
         return true;
-      };
+      }, "hasSymbols");
     }
   });
 
@@ -2143,7 +2214,7 @@ module.exports = (() => {
       init_buffer_shim();
       var origSymbol = typeof Symbol !== "undefined" && Symbol;
       var hasSymbolSham = require_shams();
-      module.exports = function hasNativeSymbols() {
+      module.exports = /* @__PURE__ */ __name(function hasNativeSymbols() {
         if (typeof origSymbol !== "function") {
           return false;
         }
@@ -2157,7 +2228,7 @@ module.exports = (() => {
           return false;
         }
         return hasSymbolSham();
-      };
+      }, "hasNativeSymbols");
     }
   });
 
@@ -2170,14 +2241,14 @@ module.exports = (() => {
       var slice = Array.prototype.slice;
       var toStr = Object.prototype.toString;
       var funcType = "[object Function]";
-      module.exports = function bind(that) {
+      module.exports = /* @__PURE__ */ __name(function bind(that) {
         var target = this;
         if (typeof target !== "function" || toStr.call(target) !== funcType) {
           throw new TypeError(ERROR_MESSAGE + target);
         }
         var args = slice.call(arguments, 1);
         var bound;
-        var binder = function() {
+        var binder = /* @__PURE__ */ __name(function() {
           if (this instanceof bound) {
             var result = target.apply(this, args.concat(slice.call(arguments)));
             if (Object(result) === result) {
@@ -2187,7 +2258,7 @@ module.exports = (() => {
           } else {
             return target.apply(that, args.concat(slice.call(arguments)));
           }
-        };
+        }, "binder");
         var boundLength = Math.max(0, target.length - args.length);
         var boundArgs = [];
         for (var i = 0; i < boundLength; i++) {
@@ -2195,14 +2266,14 @@ module.exports = (() => {
         }
         bound = Function("binder", "return function (" + boundArgs.join(",") + "){ return binder.apply(this,arguments); }")(binder);
         if (target.prototype) {
-          var Empty = function Empty2() {
-          };
+          var Empty = /* @__PURE__ */ __name(function Empty2() {
+          }, "Empty");
           Empty.prototype = target.prototype;
           bound.prototype = new Empty();
           Empty.prototype = null;
         }
         return bound;
-      };
+      }, "bind");
     }
   });
 
@@ -2235,12 +2306,12 @@ module.exports = (() => {
       var $SyntaxError = SyntaxError;
       var $Function = Function;
       var $TypeError = TypeError;
-      var getEvalledConstructor = function(expressionSyntax) {
+      var getEvalledConstructor = /* @__PURE__ */ __name(function(expressionSyntax) {
         try {
           return $Function('"use strict"; return (' + expressionSyntax + ").constructor;")();
         } catch (e) {
         }
-      };
+      }, "getEvalledConstructor");
       var $gOPD = Object.getOwnPropertyDescriptor;
       if ($gOPD) {
         try {
@@ -2249,9 +2320,9 @@ module.exports = (() => {
           $gOPD = null;
         }
       }
-      var throwTypeError = function() {
+      var throwTypeError = /* @__PURE__ */ __name(function() {
         throw new $TypeError();
-      };
+      }, "throwTypeError");
       var ThrowTypeError = $gOPD ? function() {
         try {
           arguments.callee;
@@ -2336,7 +2407,7 @@ module.exports = (() => {
         "%WeakRef%": typeof WeakRef === "undefined" ? undefined2 : WeakRef,
         "%WeakSet%": typeof WeakSet === "undefined" ? undefined2 : WeakSet
       };
-      var doEval = function doEval2(name) {
+      var doEval = /* @__PURE__ */ __name(function doEval2(name) {
         var value;
         if (name === "%AsyncFunction%") {
           value = getEvalledConstructor("async function () {}");
@@ -2357,7 +2428,7 @@ module.exports = (() => {
         }
         INTRINSICS[name] = value;
         return value;
-      };
+      }, "doEval");
       var LEGACY_ALIASES = {
         "%ArrayBufferPrototype%": ["ArrayBuffer", "prototype"],
         "%ArrayPrototype%": ["Array", "prototype"],
@@ -2420,7 +2491,7 @@ module.exports = (() => {
       var $exec = bind.call(Function.call, RegExp.prototype.exec);
       var rePropName = /[^%.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|%$))/g;
       var reEscapeChar = /\\(\\)?/g;
-      var stringToPath = function stringToPath2(string) {
+      var stringToPath = /* @__PURE__ */ __name(function stringToPath2(string) {
         var first = $strSlice(string, 0, 1);
         var last = $strSlice(string, -1);
         if (first === "%" && last !== "%") {
@@ -2433,8 +2504,8 @@ module.exports = (() => {
           result[result.length] = quote ? $replace(subString, reEscapeChar, "$1") : number || match;
         });
         return result;
-      };
-      var getBaseIntrinsic = function getBaseIntrinsic2(name, allowMissing) {
+      }, "stringToPath");
+      var getBaseIntrinsic = /* @__PURE__ */ __name(function getBaseIntrinsic2(name, allowMissing) {
         var intrinsicName = name;
         var alias;
         if (hasOwn(LEGACY_ALIASES, intrinsicName)) {
@@ -2456,8 +2527,8 @@ module.exports = (() => {
           };
         }
         throw new $SyntaxError("intrinsic " + name + " does not exist!");
-      };
-      module.exports = function GetIntrinsic(name, allowMissing) {
+      }, "getBaseIntrinsic");
+      module.exports = /* @__PURE__ */ __name(function GetIntrinsic(name, allowMissing) {
         if (typeof name !== "string" || name.length === 0) {
           throw new $TypeError("intrinsic name must be a non-empty string");
         }
@@ -2517,7 +2588,7 @@ module.exports = (() => {
           }
         }
         return value;
-      };
+      }, "GetIntrinsic");
     }
   });
 
@@ -2526,7 +2597,7 @@ module.exports = (() => {
     "node_modules/call-bind/node_modules/has-symbols/shams.js"(exports, module) {
       "use strict";
       init_buffer_shim();
-      module.exports = function hasSymbols() {
+      module.exports = /* @__PURE__ */ __name(function hasSymbols() {
         if (typeof Symbol !== "function" || typeof Object.getOwnPropertySymbols !== "function") {
           return false;
         }
@@ -2570,7 +2641,7 @@ module.exports = (() => {
           }
         }
         return true;
-      };
+      }, "hasSymbols");
     }
   });
 
@@ -2581,7 +2652,7 @@ module.exports = (() => {
       init_buffer_shim();
       var origSymbol = typeof Symbol !== "undefined" && Symbol;
       var hasSymbolSham = require_shams2();
-      module.exports = function hasNativeSymbols() {
+      module.exports = /* @__PURE__ */ __name(function hasNativeSymbols() {
         if (typeof origSymbol !== "function") {
           return false;
         }
@@ -2595,7 +2666,7 @@ module.exports = (() => {
           return false;
         }
         return hasSymbolSham();
-      };
+      }, "hasNativeSymbols");
     }
   });
 
@@ -2608,12 +2679,12 @@ module.exports = (() => {
       var $SyntaxError = SyntaxError;
       var $Function = Function;
       var $TypeError = TypeError;
-      var getEvalledConstructor = function(expressionSyntax) {
+      var getEvalledConstructor = /* @__PURE__ */ __name(function(expressionSyntax) {
         try {
           return $Function('"use strict"; return (' + expressionSyntax + ").constructor;")();
         } catch (e) {
         }
-      };
+      }, "getEvalledConstructor");
       var $gOPD = Object.getOwnPropertyDescriptor;
       if ($gOPD) {
         try {
@@ -2622,9 +2693,9 @@ module.exports = (() => {
           $gOPD = null;
         }
       }
-      var throwTypeError = function() {
+      var throwTypeError = /* @__PURE__ */ __name(function() {
         throw new $TypeError();
-      };
+      }, "throwTypeError");
       var ThrowTypeError = $gOPD ? function() {
         try {
           arguments.callee;
@@ -2709,7 +2780,7 @@ module.exports = (() => {
         "%WeakRef%": typeof WeakRef === "undefined" ? undefined2 : WeakRef,
         "%WeakSet%": typeof WeakSet === "undefined" ? undefined2 : WeakSet
       };
-      var doEval = function doEval2(name) {
+      var doEval = /* @__PURE__ */ __name(function doEval2(name) {
         var value;
         if (name === "%AsyncFunction%") {
           value = getEvalledConstructor("async function () {}");
@@ -2730,7 +2801,7 @@ module.exports = (() => {
         }
         INTRINSICS[name] = value;
         return value;
-      };
+      }, "doEval");
       var LEGACY_ALIASES = {
         "%ArrayBufferPrototype%": ["ArrayBuffer", "prototype"],
         "%ArrayPrototype%": ["Array", "prototype"],
@@ -2793,7 +2864,7 @@ module.exports = (() => {
       var $exec = bind.call(Function.call, RegExp.prototype.exec);
       var rePropName = /[^%.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|%$))/g;
       var reEscapeChar = /\\(\\)?/g;
-      var stringToPath = function stringToPath2(string) {
+      var stringToPath = /* @__PURE__ */ __name(function stringToPath2(string) {
         var first = $strSlice(string, 0, 1);
         var last = $strSlice(string, -1);
         if (first === "%" && last !== "%") {
@@ -2806,8 +2877,8 @@ module.exports = (() => {
           result[result.length] = quote ? $replace(subString, reEscapeChar, "$1") : number || match;
         });
         return result;
-      };
-      var getBaseIntrinsic = function getBaseIntrinsic2(name, allowMissing) {
+      }, "stringToPath");
+      var getBaseIntrinsic = /* @__PURE__ */ __name(function getBaseIntrinsic2(name, allowMissing) {
         var intrinsicName = name;
         var alias;
         if (hasOwn(LEGACY_ALIASES, intrinsicName)) {
@@ -2829,8 +2900,8 @@ module.exports = (() => {
           };
         }
         throw new $SyntaxError("intrinsic " + name + " does not exist!");
-      };
-      module.exports = function GetIntrinsic(name, allowMissing) {
+      }, "getBaseIntrinsic");
+      module.exports = /* @__PURE__ */ __name(function GetIntrinsic(name, allowMissing) {
         if (typeof name !== "string" || name.length === 0) {
           throw new $TypeError("intrinsic name must be a non-empty string");
         }
@@ -2890,7 +2961,7 @@ module.exports = (() => {
           }
         }
         return value;
-      };
+      }, "GetIntrinsic");
     }
   });
 
@@ -2914,7 +2985,7 @@ module.exports = (() => {
           $defineProperty = null;
         }
       }
-      module.exports = function callBind(originalFunction) {
+      module.exports = /* @__PURE__ */ __name(function callBind(originalFunction) {
         var func = $reflectApply(bind, $call, arguments);
         if ($gOPD && $defineProperty) {
           var desc = $gOPD(func, "length");
@@ -2923,10 +2994,10 @@ module.exports = (() => {
           }
         }
         return func;
-      };
-      var applyBind = function applyBind2() {
+      }, "callBind");
+      var applyBind = /* @__PURE__ */ __name(function applyBind2() {
         return $reflectApply(bind, $apply, arguments);
-      };
+      }, "applyBind");
       if ($defineProperty) {
         $defineProperty(module.exports, "apply", { value: applyBind });
       } else {
@@ -2943,13 +3014,13 @@ module.exports = (() => {
       var GetIntrinsic = require_get_intrinsic2();
       var callBind = require_call_bind();
       var $indexOf = callBind(GetIntrinsic("String.prototype.indexOf"));
-      module.exports = function callBoundIntrinsic(name, allowMissing) {
+      module.exports = /* @__PURE__ */ __name(function callBoundIntrinsic(name, allowMissing) {
         var intrinsic = GetIntrinsic(name, !!allowMissing);
         if (typeof intrinsic === "function" && $indexOf(name, ".prototype.") > -1) {
           return callBind(intrinsic);
         }
         return intrinsic;
-      };
+      }, "callBoundIntrinsic");
     }
   });
 
@@ -3015,10 +3086,11 @@ module.exports = (() => {
         }
         return $replace.call(str, sepRegex, "$&_");
       }
+      __name(addNumericSeparator, "addNumericSeparator");
       var utilInspect = require_util();
       var inspectCustom = utilInspect.custom;
       var inspectSymbol = isSymbol(inspectCustom) ? inspectCustom : null;
-      module.exports = function inspect_(obj, options, depth, seen) {
+      module.exports = /* @__PURE__ */ __name(function inspect_(obj, options, depth, seen) {
         var opts = options || {};
         if (has(opts, "quoteStyle") && (opts.quoteStyle !== "single" && opts.quoteStyle !== "double")) {
           throw new TypeError('option "quoteStyle" must be "single" or "double"');
@@ -3089,6 +3161,7 @@ module.exports = (() => {
           }
           return inspect_(value, opts, depth + 1, seen);
         }
+        __name(inspect, "inspect");
         if (typeof obj === "function" && !isRegExp(obj)) {
           var name = nameOf(obj);
           var keys = arrObjKeys(obj, inspect);
@@ -3189,35 +3262,44 @@ module.exports = (() => {
           return tag + "{ " + $join.call(ys, ", ") + " }";
         }
         return String(obj);
-      };
+      }, "inspect_");
       function wrapQuotes(s, defaultStyle, opts) {
         var quoteChar = (opts.quoteStyle || defaultStyle) === "double" ? '"' : "'";
         return quoteChar + s + quoteChar;
       }
+      __name(wrapQuotes, "wrapQuotes");
       function quote(s) {
         return $replace.call(String(s), /"/g, "&quot;");
       }
+      __name(quote, "quote");
       function isArray2(obj) {
         return toStr(obj) === "[object Array]" && (!toStringTag || !(typeof obj === "object" && toStringTag in obj));
       }
+      __name(isArray2, "isArray");
       function isDate(obj) {
         return toStr(obj) === "[object Date]" && (!toStringTag || !(typeof obj === "object" && toStringTag in obj));
       }
+      __name(isDate, "isDate");
       function isRegExp(obj) {
         return toStr(obj) === "[object RegExp]" && (!toStringTag || !(typeof obj === "object" && toStringTag in obj));
       }
+      __name(isRegExp, "isRegExp");
       function isError(obj) {
         return toStr(obj) === "[object Error]" && (!toStringTag || !(typeof obj === "object" && toStringTag in obj));
       }
+      __name(isError, "isError");
       function isString(obj) {
         return toStr(obj) === "[object String]" && (!toStringTag || !(typeof obj === "object" && toStringTag in obj));
       }
+      __name(isString, "isString");
       function isNumber(obj) {
         return toStr(obj) === "[object Number]" && (!toStringTag || !(typeof obj === "object" && toStringTag in obj));
       }
+      __name(isNumber, "isNumber");
       function isBoolean(obj) {
         return toStr(obj) === "[object Boolean]" && (!toStringTag || !(typeof obj === "object" && toStringTag in obj));
       }
+      __name(isBoolean, "isBoolean");
       function isSymbol(obj) {
         if (hasShammedSymbols) {
           return obj && typeof obj === "object" && obj instanceof Symbol;
@@ -3235,6 +3317,7 @@ module.exports = (() => {
         }
         return false;
       }
+      __name(isSymbol, "isSymbol");
       function isBigInt(obj) {
         if (!obj || typeof obj !== "object" || !bigIntValueOf) {
           return false;
@@ -3246,15 +3329,18 @@ module.exports = (() => {
         }
         return false;
       }
+      __name(isBigInt, "isBigInt");
       var hasOwn = Object.prototype.hasOwnProperty || function(key) {
         return key in this;
       };
       function has(obj, key) {
         return hasOwn.call(obj, key);
       }
+      __name(has, "has");
       function toStr(obj) {
         return objectToString.call(obj);
       }
+      __name(toStr, "toStr");
       function nameOf(f) {
         if (f.name) {
           return f.name;
@@ -3265,6 +3351,7 @@ module.exports = (() => {
         }
         return null;
       }
+      __name(nameOf, "nameOf");
       function indexOf(xs, x) {
         if (xs.indexOf) {
           return xs.indexOf(x);
@@ -3276,6 +3363,7 @@ module.exports = (() => {
         }
         return -1;
       }
+      __name(indexOf, "indexOf");
       function isMap(x) {
         if (!mapSize || !x || typeof x !== "object") {
           return false;
@@ -3292,6 +3380,7 @@ module.exports = (() => {
         }
         return false;
       }
+      __name(isMap, "isMap");
       function isWeakMap(x) {
         if (!weakMapHas || !x || typeof x !== "object") {
           return false;
@@ -3308,6 +3397,7 @@ module.exports = (() => {
         }
         return false;
       }
+      __name(isWeakMap, "isWeakMap");
       function isWeakRef(x) {
         if (!weakRefDeref || !x || typeof x !== "object") {
           return false;
@@ -3319,6 +3409,7 @@ module.exports = (() => {
         }
         return false;
       }
+      __name(isWeakRef, "isWeakRef");
       function isSet(x) {
         if (!setSize || !x || typeof x !== "object") {
           return false;
@@ -3335,6 +3426,7 @@ module.exports = (() => {
         }
         return false;
       }
+      __name(isSet, "isSet");
       function isWeakSet(x) {
         if (!weakSetHas || !x || typeof x !== "object") {
           return false;
@@ -3351,6 +3443,7 @@ module.exports = (() => {
         }
         return false;
       }
+      __name(isWeakSet, "isWeakSet");
       function isElement(x) {
         if (!x || typeof x !== "object") {
           return false;
@@ -3360,6 +3453,7 @@ module.exports = (() => {
         }
         return typeof x.nodeName === "string" && typeof x.getAttribute === "function";
       }
+      __name(isElement, "isElement");
       function inspectString(str, opts) {
         if (str.length > opts.maxStringLength) {
           var remaining = str.length - opts.maxStringLength;
@@ -3369,6 +3463,7 @@ module.exports = (() => {
         var s = $replace.call($replace.call(str, /(['\\])/g, "\\$1"), /[\x00-\x1f]/g, lowbyte);
         return wrapQuotes(s, "single", opts);
       }
+      __name(inspectString, "inspectString");
       function lowbyte(c) {
         var n = c.charCodeAt(0);
         var x = {
@@ -3383,16 +3478,20 @@ module.exports = (() => {
         }
         return "\\x" + (n < 16 ? "0" : "") + $toUpperCase.call(n.toString(16));
       }
+      __name(lowbyte, "lowbyte");
       function markBoxed(str) {
         return "Object(" + str + ")";
       }
+      __name(markBoxed, "markBoxed");
       function weakCollectionOf(type) {
         return type + " { ? }";
       }
+      __name(weakCollectionOf, "weakCollectionOf");
       function collectionOf(type, size, entries, indent) {
         var joinedEntries = indent ? indentedJoin(entries, indent) : $join.call(entries, ", ");
         return type + " (" + size + ") {" + joinedEntries + "}";
       }
+      __name(collectionOf, "collectionOf");
       function singleLineValues(xs) {
         for (var i = 0; i < xs.length; i++) {
           if (indexOf(xs[i], "\n") >= 0) {
@@ -3401,6 +3500,7 @@ module.exports = (() => {
         }
         return true;
       }
+      __name(singleLineValues, "singleLineValues");
       function getIndent(opts, depth) {
         var baseIndent;
         if (opts.indent === "	") {
@@ -3415,6 +3515,7 @@ module.exports = (() => {
           prev: $join.call(Array(depth + 1), baseIndent)
         };
       }
+      __name(getIndent, "getIndent");
       function indentedJoin(xs, indent) {
         if (xs.length === 0) {
           return "";
@@ -3422,6 +3523,7 @@ module.exports = (() => {
         var lineJoiner = "\n" + indent.prev + indent.base;
         return lineJoiner + $join.call(xs, "," + lineJoiner) + "\n" + indent.prev;
       }
+      __name(indentedJoin, "indentedJoin");
       function arrObjKeys(obj, inspect) {
         var isArr = isArray2(obj);
         var xs = [];
@@ -3463,6 +3565,7 @@ module.exports = (() => {
         }
         return xs;
       }
+      __name(arrObjKeys, "arrObjKeys");
     }
   });
 
@@ -3483,7 +3586,7 @@ module.exports = (() => {
       var $mapGet = callBound("Map.prototype.get", true);
       var $mapSet = callBound("Map.prototype.set", true);
       var $mapHas = callBound("Map.prototype.has", true);
-      var listGetNode = function(list, key) {
+      var listGetNode = /* @__PURE__ */ __name(function(list, key) {
         for (var prev = list, curr; (curr = prev.next) !== null; prev = curr) {
           if (curr.key === key) {
             prev.next = curr.next;
@@ -3492,12 +3595,12 @@ module.exports = (() => {
             return curr;
           }
         }
-      };
-      var listGet = function(objects, key) {
+      }, "listGetNode");
+      var listGet = /* @__PURE__ */ __name(function(objects, key) {
         var node = listGetNode(objects, key);
         return node && node.value;
-      };
-      var listSet = function(objects, key, value) {
+      }, "listGet");
+      var listSet = /* @__PURE__ */ __name(function(objects, key, value) {
         var node = listGetNode(objects, key);
         if (node) {
           node.value = value;
@@ -3508,11 +3611,11 @@ module.exports = (() => {
             value
           };
         }
-      };
-      var listHas = function(objects, key) {
+      }, "listSet");
+      var listHas = /* @__PURE__ */ __name(function(objects, key) {
         return !!listGetNode(objects, key);
-      };
-      module.exports = function getSideChannel() {
+      }, "listHas");
+      module.exports = /* @__PURE__ */ __name(function getSideChannel() {
         var $wm;
         var $m;
         var $o;
@@ -3573,7 +3676,7 @@ module.exports = (() => {
           }
         };
         return channel;
-      };
+      }, "getSideChannel");
     }
   });
 
@@ -3619,7 +3722,7 @@ module.exports = (() => {
         }
         return array;
       }();
-      var compactQueue = function compactQueue2(queue) {
+      var compactQueue = /* @__PURE__ */ __name(function compactQueue2(queue) {
         while (queue.length > 1) {
           var item = queue.pop();
           var obj = item.obj[item.prop];
@@ -3633,8 +3736,8 @@ module.exports = (() => {
             item.obj[item.prop] = compacted;
           }
         }
-      };
-      var arrayToObject = function arrayToObject2(source, options) {
+      }, "compactQueue");
+      var arrayToObject = /* @__PURE__ */ __name(function arrayToObject2(source, options) {
         var obj = options && options.plainObjects ? /* @__PURE__ */ Object.create(null) : {};
         for (var i = 0; i < source.length; ++i) {
           if (typeof source[i] !== "undefined") {
@@ -3642,8 +3745,8 @@ module.exports = (() => {
           }
         }
         return obj;
-      };
-      var merge = function merge2(target, source, options) {
+      }, "arrayToObject");
+      var merge = /* @__PURE__ */ __name(function merge2(target, source, options) {
         if (!source) {
           return target;
         }
@@ -3690,14 +3793,14 @@ module.exports = (() => {
           }
           return acc;
         }, mergeTarget);
-      };
-      var assign = function assignSingleSource(target, source) {
+      }, "merge");
+      var assign = /* @__PURE__ */ __name(function assignSingleSource(target, source) {
         return Object.keys(source).reduce(function(acc, key) {
           acc[key] = source[key];
           return acc;
         }, target);
-      };
-      var decode = function(str, decoder, charset) {
+      }, "assignSingleSource");
+      var decode = /* @__PURE__ */ __name(function(str, decoder, charset) {
         var strWithoutPlus = str.replace(/\+/g, " ");
         if (charset === "iso-8859-1") {
           return strWithoutPlus.replace(/%[0-9a-f]{2}/gi, unescape);
@@ -3707,8 +3810,8 @@ module.exports = (() => {
         } catch (e) {
           return strWithoutPlus;
         }
-      };
-      var encode = function encode2(str, defaultEncoder, charset, kind, format2) {
+      }, "decode");
+      var encode = /* @__PURE__ */ __name(function encode2(str, defaultEncoder, charset, kind, format2) {
         if (str.length === 0) {
           return str;
         }
@@ -3747,8 +3850,8 @@ module.exports = (() => {
           out += hexTable[240 | c >> 18] + hexTable[128 | c >> 12 & 63] + hexTable[128 | c >> 6 & 63] + hexTable[128 | c & 63];
         }
         return out;
-      };
-      var compact = function compact2(value) {
+      }, "encode");
+      var compact = /* @__PURE__ */ __name(function compact2(value) {
         var queue = [{ obj: { o: value }, prop: "o" }];
         var refs = [];
         for (var i = 0; i < queue.length; ++i) {
@@ -3766,20 +3869,20 @@ module.exports = (() => {
         }
         compactQueue(queue);
         return value;
-      };
-      var isRegExp = function isRegExp2(obj) {
+      }, "compact");
+      var isRegExp = /* @__PURE__ */ __name(function isRegExp2(obj) {
         return Object.prototype.toString.call(obj) === "[object RegExp]";
-      };
-      var isBuffer = function isBuffer2(obj) {
+      }, "isRegExp");
+      var isBuffer = /* @__PURE__ */ __name(function isBuffer2(obj) {
         if (!obj || typeof obj !== "object") {
           return false;
         }
         return !!(obj.constructor && obj.constructor.isBuffer && obj.constructor.isBuffer(obj));
-      };
-      var combine = function combine2(a, b) {
+      }, "isBuffer");
+      var combine = /* @__PURE__ */ __name(function combine2(a, b) {
         return [].concat(a, b);
-      };
-      var maybeMap = function maybeMap2(val, fn) {
+      }, "combine");
+      var maybeMap = /* @__PURE__ */ __name(function maybeMap2(val, fn) {
         if (isArray2(val)) {
           var mapped = [];
           for (var i = 0; i < val.length; i += 1) {
@@ -3788,7 +3891,7 @@ module.exports = (() => {
           return mapped;
         }
         return fn(val);
-      };
+      }, "maybeMap");
       module.exports = {
         arrayToObject,
         assign,
@@ -3814,23 +3917,23 @@ module.exports = (() => {
       var formats = require_formats();
       var has = Object.prototype.hasOwnProperty;
       var arrayPrefixGenerators = {
-        brackets: function brackets(prefix) {
+        brackets: /* @__PURE__ */ __name(function brackets(prefix) {
           return prefix + "[]";
-        },
+        }, "brackets"),
         comma: "comma",
-        indices: function indices(prefix, key) {
+        indices: /* @__PURE__ */ __name(function indices(prefix, key) {
           return prefix + "[" + key + "]";
-        },
-        repeat: function repeat(prefix) {
+        }, "indices"),
+        repeat: /* @__PURE__ */ __name(function repeat(prefix) {
           return prefix;
-        }
+        }, "repeat")
       };
       var isArray2 = Array.isArray;
       var split = String.prototype.split;
       var push = Array.prototype.push;
-      var pushToArray = function(arr, valueOrArray) {
+      var pushToArray = /* @__PURE__ */ __name(function(arr, valueOrArray) {
         push.apply(arr, isArray2(valueOrArray) ? valueOrArray : [valueOrArray]);
-      };
+      }, "pushToArray");
       var toISO = Date.prototype.toISOString;
       var defaultFormat = formats["default"];
       var defaults = {
@@ -3845,17 +3948,17 @@ module.exports = (() => {
         format: defaultFormat,
         formatter: formats.formatters[defaultFormat],
         indices: false,
-        serializeDate: function serializeDate(date) {
+        serializeDate: /* @__PURE__ */ __name(function serializeDate(date) {
           return toISO.call(date);
-        },
+        }, "serializeDate"),
         skipNulls: false,
         strictNullHandling: false
       };
-      var isNonNullishPrimitive = function isNonNullishPrimitive2(v) {
+      var isNonNullishPrimitive = /* @__PURE__ */ __name(function isNonNullishPrimitive2(v) {
         return typeof v === "string" || typeof v === "number" || typeof v === "boolean" || typeof v === "symbol" || typeof v === "bigint";
-      };
+      }, "isNonNullishPrimitive");
       var sentinel = {};
-      var stringify = function stringify2(object, prefix, generateArrayPrefix, commaRoundTrip, strictNullHandling, skipNulls, encoder, filter, sort, allowDots, serializeDate, format2, formatter, encodeValuesOnly, charset, sideChannel) {
+      var stringify = /* @__PURE__ */ __name(function stringify2(object, prefix, generateArrayPrefix, commaRoundTrip, strictNullHandling, skipNulls, encoder, filter, sort, allowDots, serializeDate, format2, formatter, encodeValuesOnly, charset, sideChannel) {
         var obj = object;
         var tmpSc = sideChannel;
         var step = 0;
@@ -3934,8 +4037,8 @@ module.exports = (() => {
           pushToArray(values, stringify2(value, keyPrefix, generateArrayPrefix, commaRoundTrip, strictNullHandling, skipNulls, encoder, filter, sort, allowDots, serializeDate, format2, formatter, encodeValuesOnly, charset, valueSideChannel));
         }
         return values;
-      };
-      var normalizeStringifyOptions = function normalizeStringifyOptions2(opts) {
+      }, "stringify");
+      var normalizeStringifyOptions = /* @__PURE__ */ __name(function normalizeStringifyOptions2(opts) {
         if (!opts) {
           return defaults;
         }
@@ -3975,7 +4078,7 @@ module.exports = (() => {
           sort: typeof opts.sort === "function" ? opts.sort : null,
           strictNullHandling: typeof opts.strictNullHandling === "boolean" ? opts.strictNullHandling : defaults.strictNullHandling
         };
-      };
+      }, "normalizeStringifyOptions");
       module.exports = function(object, opts) {
         var obj = object;
         var options = normalizeStringifyOptions(opts);
@@ -4059,20 +4162,20 @@ module.exports = (() => {
         plainObjects: false,
         strictNullHandling: false
       };
-      var interpretNumericEntities = function(str) {
+      var interpretNumericEntities = /* @__PURE__ */ __name(function(str) {
         return str.replace(/&#(\d+);/g, function($0, numberStr) {
           return String.fromCharCode(parseInt(numberStr, 10));
         });
-      };
-      var parseArrayValue = function(val, options) {
+      }, "interpretNumericEntities");
+      var parseArrayValue = /* @__PURE__ */ __name(function(val, options) {
         if (val && typeof val === "string" && options.comma && val.indexOf(",") > -1) {
           return val.split(",");
         }
         return val;
-      };
+      }, "parseArrayValue");
       var isoSentinel = "utf8=%26%2310003%3B";
       var charsetSentinel = "utf8=%E2%9C%93";
-      var parseValues = function parseQueryStringValues(str, options) {
+      var parseValues = /* @__PURE__ */ __name(function parseQueryStringValues(str, options) {
         var obj = {};
         var cleanStr = options.ignoreQueryPrefix ? str.replace(/^\?/, "") : str;
         var limit = options.parameterLimit === Infinity ? void 0 : options.parameterLimit;
@@ -4123,8 +4226,8 @@ module.exports = (() => {
           }
         }
         return obj;
-      };
-      var parseObject = function(chain, val, options, valuesParsed) {
+      }, "parseQueryStringValues");
+      var parseObject = /* @__PURE__ */ __name(function(chain, val, options, valuesParsed) {
         var leaf = valuesParsed ? val : parseArrayValue(val, options);
         for (var i = chain.length - 1; i >= 0; --i) {
           var obj;
@@ -4147,8 +4250,8 @@ module.exports = (() => {
           leaf = obj;
         }
         return leaf;
-      };
-      var parseKeys = function parseQueryStringKeys(givenKey, val, options, valuesParsed) {
+      }, "parseObject");
+      var parseKeys = /* @__PURE__ */ __name(function parseQueryStringKeys(givenKey, val, options, valuesParsed) {
         if (!givenKey) {
           return;
         }
@@ -4180,8 +4283,8 @@ module.exports = (() => {
           keys.push("[" + key.slice(segment.index) + "]");
         }
         return parseObject(keys, val, options, valuesParsed);
-      };
-      var normalizeParseOptions = function normalizeParseOptions2(opts) {
+      }, "parseQueryStringKeys");
+      var normalizeParseOptions = /* @__PURE__ */ __name(function normalizeParseOptions2(opts) {
         if (!opts) {
           return defaults;
         }
@@ -4210,7 +4313,7 @@ module.exports = (() => {
           plainObjects: typeof opts.plainObjects === "boolean" ? opts.plainObjects : defaults.plainObjects,
           strictNullHandling: typeof opts.strictNullHandling === "boolean" ? opts.strictNullHandling : defaults.strictNullHandling
         };
-      };
+      }, "normalizeParseOptions");
       module.exports = function(str, opts) {
         var options = normalizeParseOptions(opts);
         if (str === "" || str === null || typeof str === "undefined") {
@@ -4253,7 +4356,7 @@ module.exports = (() => {
     "node_modules/requires-port/index.js"(exports, module) {
       "use strict";
       init_buffer_shim();
-      module.exports = function required(port, protocol) {
+      module.exports = /* @__PURE__ */ __name(function required(port, protocol) {
         protocol = protocol.split(":")[0];
         port = +port;
         if (!port)
@@ -4273,7 +4376,7 @@ module.exports = (() => {
             return false;
         }
         return port !== 0;
-      };
+      }, "required");
     }
   });
 
@@ -4291,6 +4394,7 @@ module.exports = (() => {
           return null;
         }
       }
+      __name(decode, "decode");
       function encode(input) {
         try {
           return encodeURIComponent(input);
@@ -4298,6 +4402,7 @@ module.exports = (() => {
           return null;
         }
       }
+      __name(encode, "encode");
       function querystring(query) {
         var parser = /([^=?#&]+)=?([^&]*)/g, result = {}, part;
         while (part = parser.exec(query)) {
@@ -4308,6 +4413,7 @@ module.exports = (() => {
         }
         return result;
       }
+      __name(querystring, "querystring");
       function querystringify(obj, prefix) {
         prefix = prefix || "";
         var pairs = [], value, key;
@@ -4328,6 +4434,7 @@ module.exports = (() => {
         }
         return pairs.length ? prefix + pairs.join("&") : "";
       }
+      __name(querystringify, "querystringify");
       exports.stringify = querystringify;
       exports.parse = querystring;
     }
@@ -4349,12 +4456,13 @@ module.exports = (() => {
       function trimLeft(str) {
         return (str ? str : "").toString().replace(controlOrWhitespace, "");
       }
+      __name(trimLeft, "trimLeft");
       var rules = [
         ["#", "hash"],
         ["?", "query"],
-        function sanitize(address, url) {
+        /* @__PURE__ */ __name(function sanitize(address, url) {
           return isSpecial(url.protocol) ? address.replace(/\\/g, "/") : address;
-        },
+        }, "sanitize"),
         ["/", "pathname"],
         ["@", "auth", 1],
         [NaN, "host", void 0, 1, 1],
@@ -4393,9 +4501,11 @@ module.exports = (() => {
         }
         return finaldestination;
       }
+      __name(lolcation, "lolcation");
       function isSpecial(scheme) {
         return scheme === "file:" || scheme === "ftp:" || scheme === "http:" || scheme === "https:" || scheme === "ws:" || scheme === "wss:";
       }
+      __name(isSpecial, "isSpecial");
       function extractProtocol(address, location) {
         address = trimLeft(address);
         address = address.replace(CRHTLF, "");
@@ -4442,6 +4552,7 @@ module.exports = (() => {
           rest
         };
       }
+      __name(extractProtocol, "extractProtocol");
       function resolve(relative, base) {
         if (relative === "")
           return base;
@@ -4465,6 +4576,7 @@ module.exports = (() => {
           path.push("");
         return path.join("/");
       }
+      __name(resolve, "resolve");
       function Url(address, location, parser) {
         address = trimLeft(address);
         address = address.replace(CRHTLF, "");
@@ -4544,6 +4656,7 @@ module.exports = (() => {
         url.origin = url.protocol !== "file:" && isSpecial(url.protocol) && url.host ? url.protocol + "//" + url.host : "null";
         url.href = url.toString();
       }
+      __name(Url, "Url");
       function set(part, value, fn) {
         var url = this;
         switch (part) {
@@ -4617,6 +4730,7 @@ module.exports = (() => {
         url.href = url.toString();
         return url;
       }
+      __name(set, "set");
       function toString(stringify) {
         if (!stringify || typeof stringify !== "function")
           stringify = qs2.stringify;
@@ -4646,6 +4760,7 @@ module.exports = (() => {
           result += url.hash;
         return result;
       }
+      __name(toString, "toString");
       Url.prototype = { set, toString };
       Url.extractProtocol = extractProtocol;
       Url.location = lolcation;
@@ -4663,18 +4778,18 @@ module.exports = (() => {
       var hasToStringTag = typeof Symbol === "function" && typeof Symbol.toStringTag === "symbol";
       var callBound = require_callBound();
       var $toString = callBound("Object.prototype.toString");
-      var isStandardArguments = function isArguments(value) {
+      var isStandardArguments = /* @__PURE__ */ __name(function isArguments(value) {
         if (hasToStringTag && value && typeof value === "object" && Symbol.toStringTag in value) {
           return false;
         }
         return $toString(value) === "[object Arguments]";
-      };
-      var isLegacyArguments = function isArguments(value) {
+      }, "isArguments");
+      var isLegacyArguments = /* @__PURE__ */ __name(function isArguments(value) {
         if (isStandardArguments(value)) {
           return true;
         }
         return value !== null && typeof value === "object" && typeof value.length === "number" && value.length >= 0 && $toString(value) !== "[object Array]" && $toString(value.callee) === "[object Function]";
-      };
+      }, "isArguments");
       var supportsStandardArguments = function() {
         return isStandardArguments(arguments);
       }();
@@ -4693,7 +4808,7 @@ module.exports = (() => {
       var isFnRegex = /^\s*(?:function)?\*/;
       var hasToStringTag = typeof Symbol === "function" && typeof Symbol.toStringTag === "symbol";
       var getProto = Object.getPrototypeOf;
-      var getGeneratorFunc = function() {
+      var getGeneratorFunc = /* @__PURE__ */ __name(function() {
         if (!hasToStringTag) {
           return false;
         }
@@ -4701,9 +4816,9 @@ module.exports = (() => {
           return Function("return function*() {}")();
         } catch (e) {
         }
-      };
+      }, "getGeneratorFunc");
       var GeneratorFunction;
-      module.exports = function isGeneratorFunction(fn) {
+      module.exports = /* @__PURE__ */ __name(function isGeneratorFunction(fn) {
         if (typeof fn !== "function") {
           return false;
         }
@@ -4722,7 +4837,7 @@ module.exports = (() => {
           GeneratorFunction = generatorFunc ? getProto(generatorFunc) : false;
         }
         return getProto(fn) === GeneratorFunction;
-      };
+      }, "isGeneratorFunction");
     }
   });
 
@@ -4732,7 +4847,7 @@ module.exports = (() => {
       init_buffer_shim();
       var hasOwn = Object.prototype.hasOwnProperty;
       var toString = Object.prototype.toString;
-      module.exports = function forEach(obj, fn, ctx) {
+      module.exports = /* @__PURE__ */ __name(function forEach(obj, fn, ctx) {
         if (toString.call(fn) !== "[object Function]") {
           throw new TypeError("iterator must be a function");
         }
@@ -4748,7 +4863,7 @@ module.exports = (() => {
             }
           }
         }
-      };
+      }, "forEach");
     }
   });
 
@@ -4770,7 +4885,7 @@ module.exports = (() => {
         "Uint8Array",
         "Uint8ClampedArray"
       ];
-      module.exports = function availableTypedArrays() {
+      module.exports = /* @__PURE__ */ __name(function availableTypedArrays() {
         var out = [];
         for (var i = 0; i < possibleNames.length; i++) {
           if (typeof global[possibleNames[i]] === "function") {
@@ -4778,7 +4893,7 @@ module.exports = (() => {
           }
         }
         return out;
-      };
+      }, "availableTypedArrays");
     }
   });
 
@@ -4787,7 +4902,7 @@ module.exports = (() => {
     "node_modules/has-symbols/shams.js"(exports, module) {
       "use strict";
       init_buffer_shim();
-      module.exports = function hasSymbols() {
+      module.exports = /* @__PURE__ */ __name(function hasSymbols() {
         if (typeof Symbol !== "function" || typeof Object.getOwnPropertySymbols !== "function") {
           return false;
         }
@@ -4831,7 +4946,7 @@ module.exports = (() => {
           }
         }
         return true;
-      };
+      }, "hasSymbols");
     }
   });
 
@@ -4842,7 +4957,7 @@ module.exports = (() => {
       init_buffer_shim();
       var origSymbol = typeof Symbol !== "undefined" && Symbol;
       var hasSymbolSham = require_shams3();
-      module.exports = function hasNativeSymbols() {
+      module.exports = /* @__PURE__ */ __name(function hasNativeSymbols() {
         if (typeof origSymbol !== "function") {
           return false;
         }
@@ -4856,7 +4971,7 @@ module.exports = (() => {
           return false;
         }
         return hasSymbolSham();
-      };
+      }, "hasNativeSymbols");
     }
   });
 
@@ -4869,12 +4984,12 @@ module.exports = (() => {
       var $SyntaxError = SyntaxError;
       var $Function = Function;
       var $TypeError = TypeError;
-      var getEvalledConstructor = function(expressionSyntax) {
+      var getEvalledConstructor = /* @__PURE__ */ __name(function(expressionSyntax) {
         try {
           return $Function('"use strict"; return (' + expressionSyntax + ").constructor;")();
         } catch (e) {
         }
-      };
+      }, "getEvalledConstructor");
       var $gOPD = Object.getOwnPropertyDescriptor;
       if ($gOPD) {
         try {
@@ -4883,9 +4998,9 @@ module.exports = (() => {
           $gOPD = null;
         }
       }
-      var throwTypeError = function() {
+      var throwTypeError = /* @__PURE__ */ __name(function() {
         throw new $TypeError();
-      };
+      }, "throwTypeError");
       var ThrowTypeError = $gOPD ? function() {
         try {
           arguments.callee;
@@ -4970,7 +5085,7 @@ module.exports = (() => {
         "%WeakRef%": typeof WeakRef === "undefined" ? undefined2 : WeakRef,
         "%WeakSet%": typeof WeakSet === "undefined" ? undefined2 : WeakSet
       };
-      var doEval = function doEval2(name) {
+      var doEval = /* @__PURE__ */ __name(function doEval2(name) {
         var value;
         if (name === "%AsyncFunction%") {
           value = getEvalledConstructor("async function () {}");
@@ -4991,7 +5106,7 @@ module.exports = (() => {
         }
         INTRINSICS[name] = value;
         return value;
-      };
+      }, "doEval");
       var LEGACY_ALIASES = {
         "%ArrayBufferPrototype%": ["ArrayBuffer", "prototype"],
         "%ArrayPrototype%": ["Array", "prototype"],
@@ -5053,7 +5168,7 @@ module.exports = (() => {
       var $strSlice = bind.call(Function.call, String.prototype.slice);
       var rePropName = /[^%.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|%$))/g;
       var reEscapeChar = /\\(\\)?/g;
-      var stringToPath = function stringToPath2(string) {
+      var stringToPath = /* @__PURE__ */ __name(function stringToPath2(string) {
         var first = $strSlice(string, 0, 1);
         var last = $strSlice(string, -1);
         if (first === "%" && last !== "%") {
@@ -5066,8 +5181,8 @@ module.exports = (() => {
           result[result.length] = quote ? $replace(subString, reEscapeChar, "$1") : number || match;
         });
         return result;
-      };
-      var getBaseIntrinsic = function getBaseIntrinsic2(name, allowMissing) {
+      }, "stringToPath");
+      var getBaseIntrinsic = /* @__PURE__ */ __name(function getBaseIntrinsic2(name, allowMissing) {
         var intrinsicName = name;
         var alias;
         if (hasOwn(LEGACY_ALIASES, intrinsicName)) {
@@ -5089,8 +5204,8 @@ module.exports = (() => {
           };
         }
         throw new $SyntaxError("intrinsic " + name + " does not exist!");
-      };
-      module.exports = function GetIntrinsic(name, allowMissing) {
+      }, "getBaseIntrinsic");
+      module.exports = /* @__PURE__ */ __name(function GetIntrinsic(name, allowMissing) {
         if (typeof name !== "string" || name.length === 0) {
           throw new $TypeError("intrinsic name must be a non-empty string");
         }
@@ -5147,7 +5262,7 @@ module.exports = (() => {
           }
         }
         return value;
-      };
+      }, "GetIntrinsic");
     }
   });
 
@@ -5181,14 +5296,14 @@ module.exports = (() => {
       var hasSymbols = require_has_symbols3()();
       var hasToStringTag = hasSymbols && typeof Symbol.toStringTag === "symbol";
       var typedArrays = availableTypedArrays();
-      var $indexOf = callBound("Array.prototype.indexOf", true) || function indexOf(array, value) {
+      var $indexOf = callBound("Array.prototype.indexOf", true) || /* @__PURE__ */ __name(function indexOf(array, value) {
         for (var i = 0; i < array.length; i += 1) {
           if (array[i] === value) {
             return i;
           }
         }
         return -1;
-      };
+      }, "indexOf");
       var $slice = callBound("String.prototype.slice");
       var toStrTags = {};
       var gOPD = require_getOwnPropertyDescriptor();
@@ -5208,7 +5323,7 @@ module.exports = (() => {
           toStrTags[typedArray] = descriptor.get;
         });
       }
-      var tryTypedArrays = function tryAllTypedArrays(value) {
+      var tryTypedArrays = /* @__PURE__ */ __name(function tryAllTypedArrays(value) {
         var anyTrue = false;
         forEach(toStrTags, function(getter, typedArray) {
           if (!anyTrue) {
@@ -5219,8 +5334,8 @@ module.exports = (() => {
           }
         });
         return anyTrue;
-      };
-      module.exports = function isTypedArray(value) {
+      }, "tryAllTypedArrays");
+      module.exports = /* @__PURE__ */ __name(function isTypedArray(value) {
         if (!value || typeof value !== "object") {
           return false;
         }
@@ -5232,7 +5347,7 @@ module.exports = (() => {
           return false;
         }
         return tryTypedArrays(value);
-      };
+      }, "isTypedArray");
     }
   });
 
@@ -5269,7 +5384,7 @@ module.exports = (() => {
           }
         });
       }
-      var tryTypedArrays = function tryAllTypedArrays(value) {
+      var tryTypedArrays = /* @__PURE__ */ __name(function tryAllTypedArrays(value) {
         var foundName = false;
         forEach(toStrTags, function(getter, typedArray) {
           if (!foundName) {
@@ -5283,9 +5398,9 @@ module.exports = (() => {
           }
         });
         return foundName;
-      };
+      }, "tryAllTypedArrays");
       var isTypedArray = require_is_typed_array();
-      module.exports = function whichTypedArray(value) {
+      module.exports = /* @__PURE__ */ __name(function whichTypedArray(value) {
         if (!isTypedArray(value)) {
           return false;
         }
@@ -5293,7 +5408,7 @@ module.exports = (() => {
           return $slice($toString(value), 8, -1);
         }
         return tryTypedArrays(value);
-      };
+      }, "whichTypedArray");
     }
   });
 
@@ -5309,6 +5424,7 @@ module.exports = (() => {
       function uncurryThis(f) {
         return f.call.bind(f);
       }
+      __name(uncurryThis, "uncurryThis");
       var BigIntSupported = typeof BigInt !== "undefined";
       var SymbolSupported = typeof Symbol !== "undefined";
       var ObjectToString = uncurryThis(Object.prototype.toString);
@@ -5334,12 +5450,14 @@ module.exports = (() => {
           return false;
         }
       }
+      __name(checkBoxedPrimitive, "checkBoxedPrimitive");
       exports.isArgumentsObject = isArgumentsObject;
       exports.isGeneratorFunction = isGeneratorFunction;
       exports.isTypedArray = isTypedArray;
       function isPromise2(input) {
         return typeof Promise !== "undefined" && input instanceof Promise || input !== null && typeof input === "object" && typeof input.then === "function" && typeof input.catch === "function";
       }
+      __name(isPromise2, "isPromise");
       exports.isPromise = isPromise2;
       function isArrayBufferView(value) {
         if (typeof ArrayBuffer !== "undefined" && ArrayBuffer.isView) {
@@ -5347,54 +5465,67 @@ module.exports = (() => {
         }
         return isTypedArray(value) || isDataView(value);
       }
+      __name(isArrayBufferView, "isArrayBufferView");
       exports.isArrayBufferView = isArrayBufferView;
       function isUint8Array(value) {
         return whichTypedArray(value) === "Uint8Array";
       }
+      __name(isUint8Array, "isUint8Array");
       exports.isUint8Array = isUint8Array;
       function isUint8ClampedArray(value) {
         return whichTypedArray(value) === "Uint8ClampedArray";
       }
+      __name(isUint8ClampedArray, "isUint8ClampedArray");
       exports.isUint8ClampedArray = isUint8ClampedArray;
       function isUint16Array(value) {
         return whichTypedArray(value) === "Uint16Array";
       }
+      __name(isUint16Array, "isUint16Array");
       exports.isUint16Array = isUint16Array;
       function isUint32Array(value) {
         return whichTypedArray(value) === "Uint32Array";
       }
+      __name(isUint32Array, "isUint32Array");
       exports.isUint32Array = isUint32Array;
       function isInt8Array(value) {
         return whichTypedArray(value) === "Int8Array";
       }
+      __name(isInt8Array, "isInt8Array");
       exports.isInt8Array = isInt8Array;
       function isInt16Array(value) {
         return whichTypedArray(value) === "Int16Array";
       }
+      __name(isInt16Array, "isInt16Array");
       exports.isInt16Array = isInt16Array;
       function isInt32Array(value) {
         return whichTypedArray(value) === "Int32Array";
       }
+      __name(isInt32Array, "isInt32Array");
       exports.isInt32Array = isInt32Array;
       function isFloat32Array(value) {
         return whichTypedArray(value) === "Float32Array";
       }
+      __name(isFloat32Array, "isFloat32Array");
       exports.isFloat32Array = isFloat32Array;
       function isFloat64Array(value) {
         return whichTypedArray(value) === "Float64Array";
       }
+      __name(isFloat64Array, "isFloat64Array");
       exports.isFloat64Array = isFloat64Array;
       function isBigInt64Array(value) {
         return whichTypedArray(value) === "BigInt64Array";
       }
+      __name(isBigInt64Array, "isBigInt64Array");
       exports.isBigInt64Array = isBigInt64Array;
       function isBigUint64Array(value) {
         return whichTypedArray(value) === "BigUint64Array";
       }
+      __name(isBigUint64Array, "isBigUint64Array");
       exports.isBigUint64Array = isBigUint64Array;
       function isMapToString(value) {
         return ObjectToString(value) === "[object Map]";
       }
+      __name(isMapToString, "isMapToString");
       isMapToString.working = typeof Map !== "undefined" && isMapToString(/* @__PURE__ */ new Map());
       function isMap(value) {
         if (typeof Map === "undefined") {
@@ -5402,10 +5533,12 @@ module.exports = (() => {
         }
         return isMapToString.working ? isMapToString(value) : value instanceof Map;
       }
+      __name(isMap, "isMap");
       exports.isMap = isMap;
       function isSetToString(value) {
         return ObjectToString(value) === "[object Set]";
       }
+      __name(isSetToString, "isSetToString");
       isSetToString.working = typeof Set !== "undefined" && isSetToString(/* @__PURE__ */ new Set());
       function isSet(value) {
         if (typeof Set === "undefined") {
@@ -5413,10 +5546,12 @@ module.exports = (() => {
         }
         return isSetToString.working ? isSetToString(value) : value instanceof Set;
       }
+      __name(isSet, "isSet");
       exports.isSet = isSet;
       function isWeakMapToString(value) {
         return ObjectToString(value) === "[object WeakMap]";
       }
+      __name(isWeakMapToString, "isWeakMapToString");
       isWeakMapToString.working = typeof WeakMap !== "undefined" && isWeakMapToString(/* @__PURE__ */ new WeakMap());
       function isWeakMap(value) {
         if (typeof WeakMap === "undefined") {
@@ -5424,18 +5559,22 @@ module.exports = (() => {
         }
         return isWeakMapToString.working ? isWeakMapToString(value) : value instanceof WeakMap;
       }
+      __name(isWeakMap, "isWeakMap");
       exports.isWeakMap = isWeakMap;
       function isWeakSetToString(value) {
         return ObjectToString(value) === "[object WeakSet]";
       }
+      __name(isWeakSetToString, "isWeakSetToString");
       isWeakSetToString.working = typeof WeakSet !== "undefined" && isWeakSetToString(/* @__PURE__ */ new WeakSet());
       function isWeakSet(value) {
         return isWeakSetToString(value);
       }
+      __name(isWeakSet, "isWeakSet");
       exports.isWeakSet = isWeakSet;
       function isArrayBufferToString(value) {
         return ObjectToString(value) === "[object ArrayBuffer]";
       }
+      __name(isArrayBufferToString, "isArrayBufferToString");
       isArrayBufferToString.working = typeof ArrayBuffer !== "undefined" && isArrayBufferToString(new ArrayBuffer());
       function isArrayBuffer(value) {
         if (typeof ArrayBuffer === "undefined") {
@@ -5443,10 +5582,12 @@ module.exports = (() => {
         }
         return isArrayBufferToString.working ? isArrayBufferToString(value) : value instanceof ArrayBuffer;
       }
+      __name(isArrayBuffer, "isArrayBuffer");
       exports.isArrayBuffer = isArrayBuffer;
       function isDataViewToString(value) {
         return ObjectToString(value) === "[object DataView]";
       }
+      __name(isDataViewToString, "isDataViewToString");
       isDataViewToString.working = typeof ArrayBuffer !== "undefined" && typeof DataView !== "undefined" && isDataViewToString(new DataView(new ArrayBuffer(1), 0, 1));
       function isDataView(value) {
         if (typeof DataView === "undefined") {
@@ -5454,11 +5595,13 @@ module.exports = (() => {
         }
         return isDataViewToString.working ? isDataViewToString(value) : value instanceof DataView;
       }
+      __name(isDataView, "isDataView");
       exports.isDataView = isDataView;
       var SharedArrayBufferCopy = typeof SharedArrayBuffer !== "undefined" ? SharedArrayBuffer : void 0;
       function isSharedArrayBufferToString(value) {
         return ObjectToString(value) === "[object SharedArrayBuffer]";
       }
+      __name(isSharedArrayBufferToString, "isSharedArrayBufferToString");
       function isSharedArrayBuffer(value) {
         if (typeof SharedArrayBufferCopy === "undefined") {
           return false;
@@ -5468,54 +5611,67 @@ module.exports = (() => {
         }
         return isSharedArrayBufferToString.working ? isSharedArrayBufferToString(value) : value instanceof SharedArrayBufferCopy;
       }
+      __name(isSharedArrayBuffer, "isSharedArrayBuffer");
       exports.isSharedArrayBuffer = isSharedArrayBuffer;
       function isAsyncFunction(value) {
         return ObjectToString(value) === "[object AsyncFunction]";
       }
+      __name(isAsyncFunction, "isAsyncFunction");
       exports.isAsyncFunction = isAsyncFunction;
       function isMapIterator(value) {
         return ObjectToString(value) === "[object Map Iterator]";
       }
+      __name(isMapIterator, "isMapIterator");
       exports.isMapIterator = isMapIterator;
       function isSetIterator(value) {
         return ObjectToString(value) === "[object Set Iterator]";
       }
+      __name(isSetIterator, "isSetIterator");
       exports.isSetIterator = isSetIterator;
       function isGeneratorObject(value) {
         return ObjectToString(value) === "[object Generator]";
       }
+      __name(isGeneratorObject, "isGeneratorObject");
       exports.isGeneratorObject = isGeneratorObject;
       function isWebAssemblyCompiledModule(value) {
         return ObjectToString(value) === "[object WebAssembly.Module]";
       }
+      __name(isWebAssemblyCompiledModule, "isWebAssemblyCompiledModule");
       exports.isWebAssemblyCompiledModule = isWebAssemblyCompiledModule;
       function isNumberObject(value) {
         return checkBoxedPrimitive(value, numberValue);
       }
+      __name(isNumberObject, "isNumberObject");
       exports.isNumberObject = isNumberObject;
       function isStringObject(value) {
         return checkBoxedPrimitive(value, stringValue);
       }
+      __name(isStringObject, "isStringObject");
       exports.isStringObject = isStringObject;
       function isBooleanObject(value) {
         return checkBoxedPrimitive(value, booleanValue);
       }
+      __name(isBooleanObject, "isBooleanObject");
       exports.isBooleanObject = isBooleanObject;
       function isBigIntObject(value) {
         return BigIntSupported && checkBoxedPrimitive(value, bigIntValue);
       }
+      __name(isBigIntObject, "isBigIntObject");
       exports.isBigIntObject = isBigIntObject;
       function isSymbolObject(value) {
         return SymbolSupported && checkBoxedPrimitive(value, symbolValue);
       }
+      __name(isSymbolObject, "isSymbolObject");
       exports.isSymbolObject = isSymbolObject;
       function isBoxedPrimitive(value) {
         return isNumberObject(value) || isStringObject(value) || isBooleanObject(value) || isBigIntObject(value) || isSymbolObject(value);
       }
+      __name(isBoxedPrimitive, "isBoxedPrimitive");
       exports.isBoxedPrimitive = isBoxedPrimitive;
       function isAnyArrayBuffer(value) {
         return typeof Uint8Array !== "undefined" && (isArrayBuffer(value) || isSharedArrayBuffer(value));
       }
+      __name(isAnyArrayBuffer, "isAnyArrayBuffer");
       exports.isAnyArrayBuffer = isAnyArrayBuffer;
       ["isProxy", "isExternal", "isModuleNamespaceObject"].forEach(function(method) {
         Object.defineProperty(exports, method, {
@@ -5532,9 +5688,9 @@ module.exports = (() => {
   var require_isBufferBrowser = __commonJS({
     "node_modules/util/support/isBufferBrowser.js"(exports, module) {
       init_buffer_shim();
-      module.exports = function isBuffer(arg) {
+      module.exports = /* @__PURE__ */ __name(function isBuffer(arg) {
         return arg && typeof arg === "object" && typeof arg.copy === "function" && typeof arg.fill === "function" && typeof arg.readUInt8 === "function";
-      };
+      }, "isBuffer");
     }
   });
 
@@ -5543,7 +5699,7 @@ module.exports = (() => {
     "node_modules/inherits/inherits_browser.js"(exports, module) {
       init_buffer_shim();
       if (typeof Object.create === "function") {
-        module.exports = function inherits(ctor, superCtor) {
+        module.exports = /* @__PURE__ */ __name(function inherits(ctor, superCtor) {
           if (superCtor) {
             ctor.super_ = superCtor;
             ctor.prototype = Object.create(superCtor.prototype, {
@@ -5555,18 +5711,18 @@ module.exports = (() => {
               }
             });
           }
-        };
+        }, "inherits");
       } else {
-        module.exports = function inherits(ctor, superCtor) {
+        module.exports = /* @__PURE__ */ __name(function inherits(ctor, superCtor) {
           if (superCtor) {
             ctor.super_ = superCtor;
-            var TempCtor = function() {
-            };
+            var TempCtor = /* @__PURE__ */ __name(function() {
+            }, "TempCtor");
             TempCtor.prototype = superCtor.prototype;
             ctor.prototype = new TempCtor();
             ctor.prototype.constructor = ctor;
           }
-        };
+        }, "inherits");
       }
     }
   });
@@ -5575,14 +5731,14 @@ module.exports = (() => {
   var require_util2 = __commonJS({
     "node_modules/util/util.js"(exports) {
       init_buffer_shim();
-      var getOwnPropertyDescriptors = Object.getOwnPropertyDescriptors || function getOwnPropertyDescriptors2(obj) {
+      var getOwnPropertyDescriptors = Object.getOwnPropertyDescriptors || /* @__PURE__ */ __name(function getOwnPropertyDescriptors2(obj) {
         var keys = Object.keys(obj);
         var descriptors = {};
         for (var i = 0; i < keys.length; i++) {
           descriptors[keys[i]] = Object.getOwnPropertyDescriptor(obj, keys[i]);
         }
         return descriptors;
-      };
+      }, "getOwnPropertyDescriptors");
       var formatRegExp = /%[sdj%]/g;
       exports.format = function(f) {
         if (!isString(f)) {
@@ -5647,6 +5803,7 @@ module.exports = (() => {
           }
           return fn.apply(this, arguments);
         }
+        __name(deprecated, "deprecated");
         return deprecated;
       };
       var debugs = {};
@@ -5699,6 +5856,7 @@ module.exports = (() => {
           ctx.stylize = stylizeWithColor;
         return formatValue(ctx, obj, ctx.depth);
       }
+      __name(inspect, "inspect");
       exports.inspect = inspect;
       inspect.colors = {
         "bold": [1, 22],
@@ -5733,9 +5891,11 @@ module.exports = (() => {
           return str;
         }
       }
+      __name(stylizeWithColor, "stylizeWithColor");
       function stylizeNoColor(str, styleType) {
         return str;
       }
+      __name(stylizeNoColor, "stylizeNoColor");
       function arrayToHash(array) {
         var hash = {};
         array.forEach(function(val, idx) {
@@ -5743,6 +5903,7 @@ module.exports = (() => {
         });
         return hash;
       }
+      __name(arrayToHash, "arrayToHash");
       function formatValue(ctx, value, recurseTimes) {
         if (ctx.customInspect && value && isFunction(value.inspect) && value.inspect !== exports.inspect && !(value.constructor && value.constructor.prototype === value)) {
           var ret = value.inspect(recurseTimes, ctx);
@@ -5818,6 +5979,7 @@ module.exports = (() => {
         ctx.seen.pop();
         return reduceToSingleString(output, base, braces);
       }
+      __name(formatValue, "formatValue");
       function formatPrimitive(ctx, value) {
         if (isUndefined(value))
           return ctx.stylize("undefined", "undefined");
@@ -5832,9 +5994,11 @@ module.exports = (() => {
         if (isNull(value))
           return ctx.stylize("null", "null");
       }
+      __name(formatPrimitive, "formatPrimitive");
       function formatError(value) {
         return "[" + Error.prototype.toString.call(value) + "]";
       }
+      __name(formatError, "formatError");
       function formatArray(ctx, value, recurseTimes, visibleKeys, keys) {
         var output = [];
         for (var i = 0, l = value.length; i < l; ++i) {
@@ -5851,6 +6015,7 @@ module.exports = (() => {
         });
         return output;
       }
+      __name(formatArray, "formatArray");
       function formatProperty(ctx, value, recurseTimes, visibleKeys, key, array) {
         var name, str, desc;
         desc = Object.getOwnPropertyDescriptor(value, key) || { value: value[key] };
@@ -5905,6 +6070,7 @@ module.exports = (() => {
         }
         return name + ": " + str;
       }
+      __name(formatProperty, "formatProperty");
       function reduceToSingleString(output, base, braces) {
         var numLinesEst = 0;
         var length = output.reduce(function(prev, cur) {
@@ -5918,73 +6084,90 @@ module.exports = (() => {
         }
         return braces[0] + base + " " + output.join(", ") + " " + braces[1];
       }
+      __name(reduceToSingleString, "reduceToSingleString");
       exports.types = require_types();
       function isArray2(ar) {
         return Array.isArray(ar);
       }
+      __name(isArray2, "isArray");
       exports.isArray = isArray2;
       function isBoolean(arg) {
         return typeof arg === "boolean";
       }
+      __name(isBoolean, "isBoolean");
       exports.isBoolean = isBoolean;
       function isNull(arg) {
         return arg === null;
       }
+      __name(isNull, "isNull");
       exports.isNull = isNull;
       function isNullOrUndefined(arg) {
         return arg == null;
       }
+      __name(isNullOrUndefined, "isNullOrUndefined");
       exports.isNullOrUndefined = isNullOrUndefined;
       function isNumber(arg) {
         return typeof arg === "number";
       }
+      __name(isNumber, "isNumber");
       exports.isNumber = isNumber;
       function isString(arg) {
         return typeof arg === "string";
       }
+      __name(isString, "isString");
       exports.isString = isString;
       function isSymbol(arg) {
         return typeof arg === "symbol";
       }
+      __name(isSymbol, "isSymbol");
       exports.isSymbol = isSymbol;
       function isUndefined(arg) {
         return arg === void 0;
       }
+      __name(isUndefined, "isUndefined");
       exports.isUndefined = isUndefined;
       function isRegExp(re) {
         return isObject2(re) && objectToString(re) === "[object RegExp]";
       }
+      __name(isRegExp, "isRegExp");
       exports.isRegExp = isRegExp;
       exports.types.isRegExp = isRegExp;
       function isObject2(arg) {
         return typeof arg === "object" && arg !== null;
       }
+      __name(isObject2, "isObject");
       exports.isObject = isObject2;
       function isDate(d) {
         return isObject2(d) && objectToString(d) === "[object Date]";
       }
+      __name(isDate, "isDate");
       exports.isDate = isDate;
       exports.types.isDate = isDate;
       function isError(e) {
         return isObject2(e) && (objectToString(e) === "[object Error]" || e instanceof Error);
       }
+      __name(isError, "isError");
       exports.isError = isError;
       exports.types.isNativeError = isError;
       function isFunction(arg) {
         return typeof arg === "function";
       }
+      __name(isFunction, "isFunction");
       exports.isFunction = isFunction;
       function isPrimitive(arg) {
         return arg === null || typeof arg === "boolean" || typeof arg === "number" || typeof arg === "string" || typeof arg === "symbol" || typeof arg === "undefined";
       }
+      __name(isPrimitive, "isPrimitive");
       exports.isPrimitive = isPrimitive;
       exports.isBuffer = require_isBufferBrowser();
       function objectToString(o) {
         return Object.prototype.toString.call(o);
       }
+      __name(objectToString, "objectToString");
       function pad(n) {
         return n < 10 ? "0" + n.toString(10) : n.toString(10);
       }
+      __name(pad, "pad");
       var months = [
         "Jan",
         "Feb",
@@ -6008,6 +6191,7 @@ module.exports = (() => {
         ].join(":");
         return [d.getDate(), months[d.getMonth()], time].join(" ");
       }
+      __name(timestamp, "timestamp");
       exports.log = function() {
         console.log("%s - %s", timestamp(), exports.format.apply(exports, arguments));
       };
@@ -6025,8 +6209,9 @@ module.exports = (() => {
       function hasOwnProperty(obj, prop) {
         return Object.prototype.hasOwnProperty.call(obj, prop);
       }
+      __name(hasOwnProperty, "hasOwnProperty");
       var kCustomPromisifiedSymbol = typeof Symbol !== "undefined" ? Symbol("util.promisify.custom") : void 0;
-      exports.promisify = function promisify(original) {
+      exports.promisify = /* @__PURE__ */ __name(function promisify(original) {
         if (typeof original !== "function")
           throw new TypeError('The "original" argument must be of type Function');
         if (kCustomPromisifiedSymbol && original[kCustomPromisifiedSymbol]) {
@@ -6066,6 +6251,7 @@ module.exports = (() => {
           }
           return promise;
         }
+        __name(fn, "fn");
         Object.setPrototypeOf(fn, Object.getPrototypeOf(original));
         if (kCustomPromisifiedSymbol)
           Object.defineProperty(fn, kCustomPromisifiedSymbol, {
@@ -6075,7 +6261,7 @@ module.exports = (() => {
             configurable: true
           });
         return Object.defineProperties(fn, getOwnPropertyDescriptors(original));
-      };
+      }, "promisify");
       exports.promisify.custom = kCustomPromisifiedSymbol;
       function callbackifyOnRejected(reason, cb) {
         if (!reason) {
@@ -6085,6 +6271,7 @@ module.exports = (() => {
         }
         return cb(reason);
       }
+      __name(callbackifyOnRejected, "callbackifyOnRejected");
       function callbackify(original) {
         if (typeof original !== "function") {
           throw new TypeError('The "original" argument must be of type Function');
@@ -6099,19 +6286,21 @@ module.exports = (() => {
             throw new TypeError("The last argument must be of type Function");
           }
           var self2 = this;
-          var cb = function() {
+          var cb = /* @__PURE__ */ __name(function() {
             return maybeCb.apply(self2, arguments);
-          };
+          }, "cb");
           original.apply(this, args).then(function(ret) {
             process.nextTick(cb.bind(null, null, ret));
           }, function(rej) {
             process.nextTick(callbackifyOnRejected.bind(null, rej, cb));
           });
         }
+        __name(callbackified, "callbackified");
         Object.setPrototypeOf(callbackified, Object.getPrototypeOf(original));
         Object.defineProperties(callbackified, getOwnPropertyDescriptors(original));
         return callbackified;
       }
+      __name(callbackify, "callbackify");
       exports.callbackify = callbackify;
     }
   });
@@ -6159,9 +6348,11 @@ module.exports = (() => {
     }
     return value;
   }
+  __name(ensureExists, "ensureExists");
   function getErrorConstructor(message) {
     return message ? UserVisibleError : Error;
   }
+  __name(getErrorConstructor, "getErrorConstructor");
 
   // helpers/object_utils.ts
   init_buffer_shim();
@@ -6171,6 +6362,7 @@ module.exports = (() => {
   function setEndpointHelper(step) {
     return new SetEndpointHelper(step);
   }
+  __name(setEndpointHelper, "setEndpointHelper");
   var SetEndpointHelper = class {
     constructor(step) {
       this._step = step;
@@ -6179,6 +6371,7 @@ module.exports = (() => {
       return ensureExists(this._step.getOptions ?? this._step.getOptionsFormula);
     }
   };
+  __name(SetEndpointHelper, "SetEndpointHelper");
 
   // schema.ts
   var import_pascalcase = __toESM(require_pascalcase());
@@ -6200,6 +6393,7 @@ module.exports = (() => {
       this.internalError = internalError;
     }
   };
+  __name(UserVisibleError, "UserVisibleError");
   var StatusCodeError = class extends Error {
     constructor(statusCode, body, options, response) {
       super(`${statusCode} - ${JSON.stringify(body)}`);
@@ -6218,6 +6412,7 @@ module.exports = (() => {
       return "name" in err && err.name === StatusCodeError.name;
     }
   };
+  __name(StatusCodeError, "StatusCodeError");
   var MissingScopesError = class extends Error {
     constructor(message) {
       super(message || "Additional permissions are required");
@@ -6227,9 +6422,11 @@ module.exports = (() => {
       return "name" in err && err.name === MissingScopesError.name;
     }
   };
+  __name(MissingScopesError, "MissingScopesError");
   function isDynamicSyncTable(syncTable) {
     return "isDynamic" in syncTable;
   }
+  __name(isDynamicSyncTable, "isDynamicSyncTable");
 
   // runtime/common/helpers.ts
   init_buffer_shim();
@@ -6253,6 +6450,7 @@ module.exports = (() => {
     }
     throw new Error(`Pack definition has no formula "${name}"${namespace ?? ` in namespace "${namespace}"`}.`);
   }
+  __name(findFormula, "findFormula");
   function findSyncFormula(packDef, syncFormulaName) {
     if (!packDef.syncTables) {
       throw new Error(`Pack definition has no sync tables.`);
@@ -6265,6 +6463,7 @@ module.exports = (() => {
     }
     throw new Error(`Pack definition has no sync formula "${syncFormulaName}" in its sync tables.`);
   }
+  __name(findSyncFormula, "findSyncFormula");
 
   // runtime/common/marshaling/index.ts
   init_buffer_shim();
@@ -6277,22 +6476,22 @@ module.exports = (() => {
   var serialize;
   var deserialize;
   if (true) {
-    serialize = (value) => {
+    serialize = /* @__PURE__ */ __name((value) => {
       if ("codaInternal" in global) {
         return codaInternal.serializer.serialize(value);
       }
       throw new Error("Not implemented");
-    };
-    deserialize = (value) => {
+    }, "serialize");
+    deserialize = /* @__PURE__ */ __name((value) => {
       if ("codaInternal" in global) {
         return codaInternal.serializer.deserialize(value);
       }
       throw new Error("Not implemented");
-    };
+    }, "deserialize");
   } else {
     const v8 = null;
-    serialize = (value) => v8.serialize(value).toString("base64");
-    deserialize = (value) => v8.deserialize(Buffer2.from(value, "base64"));
+    serialize = /* @__PURE__ */ __name((value) => v8.serialize(value).toString("base64"), "serialize");
+    deserialize = /* @__PURE__ */ __name((value) => v8.deserialize(Buffer2.from(value, "base64")), "deserialize");
   }
 
   // runtime/common/marshaling/index.ts
@@ -6368,12 +6567,15 @@ module.exports = (() => {
     }
     return { val, hasModifications: false };
   }
+  __name(fixUncopyableTypes, "fixUncopyableTypes");
   function isMarshaledValue(val) {
     return typeof val === "object" && "__coda_marshaler__" /* CodaMarshaler */ in val;
   }
+  __name(isMarshaledValue, "isMarshaledValue");
   function marshalValuesForLogging(val) {
     return [marshalValue((0, import_util.format)(...val))];
   }
+  __name(marshalValuesForLogging, "marshalValuesForLogging");
   function marshalValue(val) {
     const postTransforms = [];
     const { val: encodedVal } = fixUncopyableTypes(val, [], postTransforms, 0);
@@ -6383,12 +6585,15 @@ module.exports = (() => {
       ["__coda_marshaler__" /* CodaMarshaler */]: "Object" /* Object */
     };
   }
+  __name(marshalValue, "marshalValue");
   function marshalValueToString(val) {
     return serialize(marshalValue(val));
   }
+  __name(marshalValueToString, "marshalValueToString");
   function unmarshalValueFromString(marshaledValue) {
     return unmarshalValue(deserialize(marshaledValue));
   }
+  __name(unmarshalValueFromString, "unmarshalValueFromString");
   function applyTransform(input, path, fn) {
     if (path.length === 0) {
       return fn(input);
@@ -6397,6 +6602,7 @@ module.exports = (() => {
       return input;
     }
   }
+  __name(applyTransform, "applyTransform");
   function unmarshalValue(marshaledValue) {
     if (!isMarshaledValue(marshaledValue)) {
       throw Error(`Not a marshaled value: ${JSON.stringify(marshaledValue)}`);
@@ -6413,9 +6619,11 @@ module.exports = (() => {
     }
     return result;
   }
+  __name(unmarshalValue, "unmarshalValue");
   function wrapError(err) {
     return new Error(marshalValueToString(err));
   }
+  __name(wrapError, "wrapError");
   function unwrapError(err) {
     try {
       const unmarshaledValue = unmarshalValueFromString(err.message);
@@ -6427,6 +6635,7 @@ module.exports = (() => {
       return err;
     }
   }
+  __name(unwrapError, "unwrapError");
   function getErrorClassType(err) {
     if (recognizableSystemErrorClasses.some((cls) => cls === err.constructor)) {
       return "System" /* System */;
@@ -6436,6 +6645,7 @@ module.exports = (() => {
     }
     return "Other" /* Other */;
   }
+  __name(getErrorClassType, "getErrorClassType");
   function marshalError(err) {
     if (!(err instanceof Error)) {
       return;
@@ -6456,6 +6666,7 @@ module.exports = (() => {
     };
     return result;
   }
+  __name(marshalError, "marshalError");
   function getErrorClass(errorClassType, name) {
     let errorClasses;
     switch (errorClassType) {
@@ -6470,6 +6681,7 @@ module.exports = (() => {
     }
     return errorClasses.find((cls) => cls.name === name) || Error;
   }
+  __name(getErrorClass, "getErrorClass");
   function unmarshalError(val) {
     if (typeof val !== "object" || val["__coda_marshaler__" /* CodaMarshaler */] !== "Error" /* Error */) {
       return;
@@ -6493,6 +6705,7 @@ module.exports = (() => {
     }
     return error;
   }
+  __name(unmarshalError, "unmarshalError");
 
   // runtime/thunk/thunk.ts
   async function findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, shouldWrapError = true) {
@@ -6505,6 +6718,7 @@ module.exports = (() => {
       throw shouldWrapError ? wrapError(err) : err;
     }
   }
+  __name(findAndExecutePackFunction, "findAndExecutePackFunction");
   function doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext) {
     const { syncTables, defaultAuthentication } = manifest;
     switch (formulaSpec.type) {
@@ -6586,6 +6800,7 @@ module.exports = (() => {
     }
     throw new Error(`Could not find a formula matching formula spec ${JSON.stringify(formulaSpec)}`);
   }
+  __name(doFindAndExecutePackFunction, "doFindAndExecutePackFunction");
   function findParentFormula(manifest, formulaSpec) {
     const { formulas, syncTables } = manifest;
     let formula;
@@ -6610,9 +6825,11 @@ module.exports = (() => {
       return paramDef?.autocomplete;
     }
   }
+  __name(findParentFormula, "findParentFormula");
   function ensureSwitchUnreachable(value) {
     throw new Error(`Unreachable code hit with value ${String(value)}`);
   }
+  __name(ensureSwitchUnreachable, "ensureSwitchUnreachable");
   async function handleErrorAsync(func) {
     try {
       return await func();
@@ -6620,6 +6837,7 @@ module.exports = (() => {
       throw unwrapError(err);
     }
   }
+  __name(handleErrorAsync, "handleErrorAsync");
   function handleError(func) {
     try {
       return func();
@@ -6627,6 +6845,7 @@ module.exports = (() => {
       throw unwrapError(err);
     }
   }
+  __name(handleError, "handleError");
   function handleFetcherStatusError(fetchResult, fetchRequest) {
     if (fetchResult.status >= 300) {
       throw new StatusCodeError(fetchResult.status, fetchResult.body, fetchRequest, {
@@ -6635,11 +6854,13 @@ module.exports = (() => {
       });
     }
   }
+  __name(handleFetcherStatusError, "handleFetcherStatusError");
   function setUpBufferForTest() {
     if (!global.Buffer) {
       global.Buffer = import_buffer.Buffer;
     }
   }
+  __name(setUpBufferForTest, "setUpBufferForTest");
   return __toCommonJS(thunk_exports);
 })();
 /*!
