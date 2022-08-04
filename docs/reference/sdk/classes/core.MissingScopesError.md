@@ -55,7 +55,3 @@ Returns if the error is an instance of MissingScopesError. Note that instanceof 
 #### Returns
 
 err is MissingScopesError
-
-#### Defined in
-
-[api.ts:178](https://github.com/coda/packs-sdk/blob/main/api.ts#L178)

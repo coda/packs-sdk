@@ -246,10 +246,6 @@ The JavaScript function that implements this formula
 
 [PackFormulaDef](core.PackFormulaDef.md).[execute](core.PackFormulaDef.md#execute)
 
-#### Defined in
-
-[api.ts:551](https://github.com/coda/packs-sdk/blob/main/api.ts#L551)
-
 ___
 
 ### onError
@@ -271,7 +267,3 @@ that can then be applied to many different formulas in a pack.
 #### Returns
 
 `any`
-
-#### Defined in
-
-[api.ts:931](https://github.com/coda/packs-sdk/blob/main/api.ts#L931)

@@ -28,7 +28,3 @@ let url = withQueryParams("/someApi/someEndpoint", {token: "asdf", limit: 5});
 #### Returns
 
 `string`
-
-#### Defined in
-
-[helpers/url.ts:16](https://github.com/coda/packs-sdk/blob/main/helpers/url.ts#L16)

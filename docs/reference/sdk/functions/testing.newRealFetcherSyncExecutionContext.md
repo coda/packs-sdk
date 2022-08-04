@@ -17,7 +17,3 @@ title: "newRealFetcherSyncExecutionContext"
 #### Returns
 
 [`SyncExecutionContext`](../interfaces/core.SyncExecutionContext.md)
-
-#### Defined in
-
-[testing/execution.ts:471](https://github.com/coda/packs-sdk/blob/main/testing/execution.ts#L471)

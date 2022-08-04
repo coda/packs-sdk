@@ -44,7 +44,3 @@ coda.makeObjectSchema({
 #### Returns
 
 `T` & { `identity?`: [`Identity`](../interfaces/core.Identity.md) ; `type`: [`Object`](../enums/core.ValueType.md#object)  }
-
-#### Defined in
-
-[schema.ts:1233](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1233)

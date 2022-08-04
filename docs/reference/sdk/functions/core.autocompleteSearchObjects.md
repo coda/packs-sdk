@@ -56,7 +56,3 @@ coda.makeParameter({
 #### Returns
 
 `Promise`<[`MetadataFormulaObjectResultType`](../interfaces/core.MetadataFormulaObjectResultType.md)[]\>
-
-#### Defined in
-
-[api.ts:1231](https://github.com/coda/packs-sdk/blob/main/api.ts#L1231)

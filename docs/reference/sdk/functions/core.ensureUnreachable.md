@@ -43,7 +43,3 @@ function handleEnum(value: MyEnum) {
 #### Returns
 
 `never`
-
-#### Defined in
-
-[helpers/ensure.ts:29](https://github.com/coda/packs-sdk/blob/main/helpers/ensure.ts#L29)

@@ -26,10 +26,6 @@ rather than constructing a builder directly.
 | :------ | :------ |
 | `definition?` | `Partial`<[`PackVersionDefinition`](../interfaces/core.PackVersionDefinition.md)\> |
 
-#### Defined in
-
-[builder.ts:86](https://github.com/coda/packs-sdk/blob/main/builder.ts#L86)
-
 ## Properties
 
 ### defaultAuthentication
@@ -183,10 +179,6 @@ pack.addColumnFormat({
 
 [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
 
-#### Defined in
-
-[builder.ts:232](https://github.com/coda/packs-sdk/blob/main/builder.ts#L232)
-
 ___
 
 ### addDynamicSyncTable
@@ -232,10 +224,6 @@ pack.addDynamicSyncTable({
 #### Returns
 
 [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
-
-#### Defined in
-
-[builder.ts:205](https://github.com/coda/packs-sdk/blob/main/builder.ts#L205)
 
 ___
 
@@ -285,10 +273,6 @@ pack.addFormula({
 
 [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
 
-#### Defined in
-
-[builder.ts:131](https://github.com/coda/packs-sdk/blob/main/builder.ts#L131)
-
 ___
 
 ### addNetworkDomain
@@ -321,10 +305,6 @@ pack.addNetworkDomain('example.com');
 #### Returns
 
 [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
-
-#### Defined in
-
-[builder.ts:340](https://github.com/coda/packs-sdk/blob/main/builder.ts#L340)
 
 ___
 
@@ -370,10 +350,6 @@ pack.addSyncTable({
 
 [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
 
-#### Defined in
-
-[builder.ts:161](https://github.com/coda/packs-sdk/blob/main/builder.ts#L161)
-
 ___
 
 ### setSystemAuthentication
@@ -406,10 +382,6 @@ pack.setSystemAuthentication({
 #### Returns
 
 [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
-
-#### Defined in
-
-[builder.ts:301](https://github.com/coda/packs-sdk/blob/main/builder.ts#L301)
 
 ___
 
@@ -448,10 +420,6 @@ pack.setUserAuthentication({
 
 [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
 
-#### Defined in
-
-[builder.ts:258](https://github.com/coda/packs-sdk/blob/main/builder.ts#L258)
-
 ___
 
 ### setVersion
@@ -480,7 +448,3 @@ pack.setVersion('1.2.3');
 #### Returns
 
 [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
-
-#### Defined in
-
-[builder.ts:358](https://github.com/coda/packs-sdk/blob/main/builder.ts#L358)

@@ -23,7 +23,3 @@ schema it provides better code reuse to derive a reference schema instead.
 #### Returns
 
 `GenericObjectSchema`
-
-#### Defined in
-
-[schema.ts:1370](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1370)

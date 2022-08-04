@@ -29,7 +29,3 @@ it is shaped like a Coda formula to be used at runtime.
 #### Returns
 
 [`MetadataFormula`](../types/core.MetadataFormula.md)
-
-#### Defined in
-
-[api.ts:1113](https://github.com/coda/packs-sdk/blob/main/api.ts#L1113)

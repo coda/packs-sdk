@@ -20,7 +20,3 @@ title: "executeMetadataFormula"
 #### Returns
 
 `Promise`<`any`\>
-
-#### Defined in
-
-[testing/execution.ts:435](https://github.com/coda/packs-sdk/blob/main/testing/execution.ts#L435)

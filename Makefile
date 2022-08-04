@@ -141,6 +141,7 @@ compile-ts:
 		--define:process.env.IN_ISOLATED_VM_OR_BROWSER=true \
 		--define:process.env.NODE_DEBUG=false \
 		--minify \
+		--minify-identifiers=false \
 		--target=es2020;
 
 .PHONY: compile

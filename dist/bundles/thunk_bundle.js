@@ -25,10 +25,7 @@ module.exports = (() => {
     }
     return to;
   };
-  var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-    isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-    mod
-  ));
+  var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target, mod));
   var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
   // node_modules/base64-js/index.js
@@ -120,14 +117,10 @@ module.exports = (() => {
         }
         if (extraBytes === 1) {
           tmp = uint8[len2 - 1];
-          parts.push(
-            lookup[tmp >> 2] + lookup[tmp << 4 & 63] + "=="
-          );
+          parts.push(lookup[tmp >> 2] + lookup[tmp << 4 & 63] + "==");
         } else if (extraBytes === 2) {
           tmp = (uint8[len2 - 2] << 8) + uint8[len2 - 1];
-          parts.push(
-            lookup[tmp >> 10] + lookup[tmp >> 4 & 63] + lookup[tmp << 2 & 63] + "="
-          );
+          parts.push(lookup[tmp >> 10] + lookup[tmp >> 4 & 63] + lookup[tmp << 2 & 63] + "=");
         }
         return parts.join("");
       }
@@ -233,9 +226,7 @@ module.exports = (() => {
       exports.kMaxLength = K_MAX_LENGTH;
       Buffer4.TYPED_ARRAY_SUPPORT = typedArraySupport();
       if (!Buffer4.TYPED_ARRAY_SUPPORT && typeof console !== "undefined" && typeof console.error === "function") {
-        console.error(
-          "This browser lacks typed array (Uint8Array) support which is required by `buffer` v5.x. Use `buffer` v4.x if you require old browser support."
-        );
+        console.error("This browser lacks typed array (Uint8Array) support which is required by `buffer` v5.x. Use `buffer` v4.x if you require old browser support.");
       }
       function typedArraySupport() {
         try {
@@ -277,9 +268,7 @@ module.exports = (() => {
       function Buffer4(arg, encodingOrOffset, length) {
         if (typeof arg === "number") {
           if (typeof encodingOrOffset === "string") {
-            throw new TypeError(
-              'The "string" argument must be of type string. Received type number'
-            );
+            throw new TypeError('The "string" argument must be of type string. Received type number');
           }
           return allocUnsafe(arg);
         }
@@ -294,9 +283,7 @@ module.exports = (() => {
           return fromArrayView(value);
         }
         if (value == null) {
-          throw new TypeError(
-            "The first argument must be one of type string, Buffer, ArrayBuffer, Array, or Array-like Object. Received type " + typeof value
-          );
+          throw new TypeError("The first argument must be one of type string, Buffer, ArrayBuffer, Array, or Array-like Object. Received type " + typeof value);
         }
         if (isInstance(value, ArrayBuffer) || value && isInstance(value.buffer, ArrayBuffer)) {
           return fromArrayBuffer(value, encodingOrOffset, length);
@@ -305,9 +292,7 @@ module.exports = (() => {
           return fromArrayBuffer(value, encodingOrOffset, length);
         }
         if (typeof value === "number") {
-          throw new TypeError(
-            'The "value" argument must not be of type number. Received type number'
-          );
+          throw new TypeError('The "value" argument must not be of type number. Received type number');
         }
         const valueOf = value.valueOf && value.valueOf();
         if (valueOf != null && valueOf !== value) {
@@ -319,9 +304,7 @@ module.exports = (() => {
         if (typeof Symbol !== "undefined" && Symbol.toPrimitive != null && typeof value[Symbol.toPrimitive] === "function") {
           return Buffer4.from(value[Symbol.toPrimitive]("string"), encodingOrOffset, length);
         }
-        throw new TypeError(
-          "The first argument must be one of type string, Buffer, ArrayBuffer, Array, or Array-like Object. Received type " + typeof value
-        );
+        throw new TypeError("The first argument must be one of type string, Buffer, ArrayBuffer, Array, or Array-like Object. Received type " + typeof value);
       }
       Buffer4.from = function(value, encodingOrOffset, length) {
         return from(value, encodingOrOffset, length);
@@ -447,9 +430,7 @@ module.exports = (() => {
         if (isInstance(b, Uint8Array))
           b = Buffer4.from(b, b.offset, b.byteLength);
         if (!Buffer4.isBuffer(a) || !Buffer4.isBuffer(b)) {
-          throw new TypeError(
-            'The "buf1", "buf2" arguments must be one of type Buffer or Uint8Array'
-          );
+          throw new TypeError('The "buf1", "buf2" arguments must be one of type Buffer or Uint8Array');
         }
         if (a === b)
           return 0;
@@ -510,11 +491,7 @@ module.exports = (() => {
                 buf = Buffer4.from(buf);
               buf.copy(buffer, pos);
             } else {
-              Uint8Array.prototype.set.call(
-                buffer,
-                buf,
-                pos
-              );
+              Uint8Array.prototype.set.call(buffer, buf, pos);
             }
           } else if (!Buffer4.isBuffer(buf)) {
             throw new TypeError('"list" argument must be an Array of Buffers');
@@ -533,9 +510,7 @@ module.exports = (() => {
           return string.byteLength;
         }
         if (typeof string !== "string") {
-          throw new TypeError(
-            'The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type ' + typeof string
-          );
+          throw new TypeError('The "string" argument must be one of type string, Buffer, or ArrayBuffer. Received type ' + typeof string);
         }
         const len = string.length;
         const mustMatch = arguments.length > 2 && arguments[2] === true;
@@ -690,9 +665,7 @@ module.exports = (() => {
           target = Buffer4.from(target, target.offset, target.byteLength);
         }
         if (!Buffer4.isBuffer(target)) {
-          throw new TypeError(
-            'The "target" argument must be one of type Buffer or Uint8Array. Received type ' + typeof target
-          );
+          throw new TypeError('The "target" argument must be one of type Buffer or Uint8Array. Received type ' + typeof target);
         }
         if (start === void 0) {
           start = 0;
@@ -911,9 +884,7 @@ module.exports = (() => {
             length = void 0;
           }
         } else {
-          throw new Error(
-            "Buffer.write(string, encoding, offset[, length]) is no longer supported"
-          );
+          throw new Error("Buffer.write(string, encoding, offset[, length]) is no longer supported");
         }
         const remaining = this.length - offset;
         if (length === void 0 || length > remaining)
@@ -1032,10 +1003,7 @@ module.exports = (() => {
         let res = "";
         let i = 0;
         while (i < len) {
-          res += String.fromCharCode.apply(
-            String,
-            codePoints.slice(i, i += MAX_ARGUMENTS_LENGTH)
-          );
+          res += String.fromCharCode.apply(String, codePoints.slice(i, i += MAX_ARGUMENTS_LENGTH));
         }
         return res;
       }
@@ -1596,11 +1564,7 @@ module.exports = (() => {
         if (this === target && typeof Uint8Array.prototype.copyWithin === "function") {
           this.copyWithin(targetStart, start, end);
         } else {
-          Uint8Array.prototype.set.call(
-            target,
-            this.subarray(start, end),
-            targetStart
-          );
+          Uint8Array.prototype.set.call(target, this.subarray(start, end), targetStart);
         }
         return len;
       };
@@ -1688,42 +1652,30 @@ module.exports = (() => {
           }
         };
       }
-      E(
-        "ERR_BUFFER_OUT_OF_BOUNDS",
-        function(name) {
-          if (name) {
-            return `${name} is outside of buffer bounds`;
+      E("ERR_BUFFER_OUT_OF_BOUNDS", function(name) {
+        if (name) {
+          return `${name} is outside of buffer bounds`;
+        }
+        return "Attempt to access memory outside buffer bounds";
+      }, RangeError);
+      E("ERR_INVALID_ARG_TYPE", function(name, actual) {
+        return `The "${name}" argument must be of type number. Received type ${typeof actual}`;
+      }, TypeError);
+      E("ERR_OUT_OF_RANGE", function(str, range, input) {
+        let msg = `The value of "${str}" is out of range.`;
+        let received = input;
+        if (Number.isInteger(input) && Math.abs(input) > 2 ** 32) {
+          received = addNumericalSeparator(String(input));
+        } else if (typeof input === "bigint") {
+          received = String(input);
+          if (input > BigInt(2) ** BigInt(32) || input < -(BigInt(2) ** BigInt(32))) {
+            received = addNumericalSeparator(received);
           }
-          return "Attempt to access memory outside buffer bounds";
-        },
-        RangeError
-      );
-      E(
-        "ERR_INVALID_ARG_TYPE",
-        function(name, actual) {
-          return `The "${name}" argument must be of type number. Received type ${typeof actual}`;
-        },
-        TypeError
-      );
-      E(
-        "ERR_OUT_OF_RANGE",
-        function(str, range, input) {
-          let msg = `The value of "${str}" is out of range.`;
-          let received = input;
-          if (Number.isInteger(input) && Math.abs(input) > 2 ** 32) {
-            received = addNumericalSeparator(String(input));
-          } else if (typeof input === "bigint") {
-            received = String(input);
-            if (input > BigInt(2) ** BigInt(32) || input < -(BigInt(2) ** BigInt(32))) {
-              received = addNumericalSeparator(received);
-            }
-            received += "n";
-          }
-          msg += ` It must be ${range}. Received ${received}`;
-          return msg;
-        },
-        RangeError
-      );
+          received += "n";
+        }
+        msg += ` It must be ${range}. Received ${received}`;
+        return msg;
+      }, RangeError);
       function addNumericalSeparator(val) {
         let res = "";
         let i = val.length;
@@ -1769,11 +1721,7 @@ module.exports = (() => {
         if (length < 0) {
           throw new errors.ERR_BUFFER_OUT_OF_BOUNDS();
         }
-        throw new errors.ERR_OUT_OF_RANGE(
-          type || "offset",
-          `>= ${type ? 1 : 0} and <= ${length}`,
-          value
-        );
+        throw new errors.ERR_OUT_OF_RANGE(type || "offset", `>= ${type ? 1 : 0} and <= ${length}`, value);
       }
       var INVALID_BASE64_RE = /[^+/0-9A-Za-z-_]/g;
       function base64clean(str) {
@@ -1827,27 +1775,15 @@ module.exports = (() => {
           } else if (codePoint < 2048) {
             if ((units -= 2) < 0)
               break;
-            bytes.push(
-              codePoint >> 6 | 192,
-              codePoint & 63 | 128
-            );
+            bytes.push(codePoint >> 6 | 192, codePoint & 63 | 128);
           } else if (codePoint < 65536) {
             if ((units -= 3) < 0)
               break;
-            bytes.push(
-              codePoint >> 12 | 224,
-              codePoint >> 6 & 63 | 128,
-              codePoint & 63 | 128
-            );
+            bytes.push(codePoint >> 12 | 224, codePoint >> 6 & 63 | 128, codePoint & 63 | 128);
           } else if (codePoint < 1114112) {
             if ((units -= 4) < 0)
               break;
-            bytes.push(
-              codePoint >> 18 | 240,
-              codePoint >> 12 & 63 | 128,
-              codePoint >> 6 & 63 | 128,
-              codePoint & 63 | 128
-            );
+            bytes.push(codePoint >> 18 | 240, codePoint >> 12 & 63 | 128, codePoint >> 6 & 63 | 128, codePoint & 63 | 128);
           } else {
             throw new Error("Invalid code point");
           }
@@ -2243,19 +2179,13 @@ module.exports = (() => {
         var bound;
         var binder = function() {
           if (this instanceof bound) {
-            var result = target.apply(
-              this,
-              args.concat(slice.call(arguments))
-            );
+            var result = target.apply(this, args.concat(slice.call(arguments)));
             if (Object(result) === result) {
               return result;
             }
             return this;
           } else {
-            return target.apply(
-              that,
-              args.concat(slice.call(arguments))
-            );
+            return target.apply(that, args.concat(slice.call(arguments)));
           }
         };
         var boundLength = Math.max(0, target.length - args.length);
@@ -2989,11 +2919,7 @@ module.exports = (() => {
         if ($gOPD && $defineProperty) {
           var desc = $gOPD(func, "length");
           if (desc.configurable) {
-            $defineProperty(
-              func,
-              "length",
-              { value: 1 + $max(0, originalFunction.length - (arguments.length - 1)) }
-            );
+            $defineProperty(func, "length", { value: 1 + $max(0, originalFunction.length - (arguments.length - 1)) });
           }
         }
         return func;
@@ -4005,24 +3931,7 @@ module.exports = (() => {
           sideChannel.set(object, step);
           var valueSideChannel = getSideChannel();
           valueSideChannel.set(sentinel, sideChannel);
-          pushToArray(values, stringify2(
-            value,
-            keyPrefix,
-            generateArrayPrefix,
-            commaRoundTrip,
-            strictNullHandling,
-            skipNulls,
-            encoder,
-            filter,
-            sort,
-            allowDots,
-            serializeDate,
-            format2,
-            formatter,
-            encodeValuesOnly,
-            charset,
-            valueSideChannel
-          ));
+          pushToArray(values, stringify2(value, keyPrefix, generateArrayPrefix, commaRoundTrip, strictNullHandling, skipNulls, encoder, filter, sort, allowDots, serializeDate, format2, formatter, encodeValuesOnly, charset, valueSideChannel));
         }
         return values;
       };
@@ -4108,24 +4017,7 @@ module.exports = (() => {
           if (options.skipNulls && obj[key] === null) {
             continue;
           }
-          pushToArray(keys, stringify(
-            obj[key],
-            key,
-            generateArrayPrefix,
-            commaRoundTrip,
-            options.strictNullHandling,
-            options.skipNulls,
-            options.encode ? options.encoder : null,
-            options.filter,
-            options.sort,
-            options.allowDots,
-            options.serializeDate,
-            options.format,
-            options.formatter,
-            options.encodeValuesOnly,
-            options.charset,
-            sideChannel
-          ));
+          pushToArray(keys, stringify(obj[key], key, generateArrayPrefix, commaRoundTrip, options.strictNullHandling, options.skipNulls, options.encode ? options.encoder : null, options.filter, options.sort, options.allowDots, options.serializeDate, options.format, options.formatter, options.encodeValuesOnly, options.charset, sideChannel));
         }
         var joined = keys.join(options.delimiter);
         var prefix = options.addQueryPrefix === true ? "?" : "";
@@ -4214,12 +4106,9 @@ module.exports = (() => {
             val = options.strictNullHandling ? null : "";
           } else {
             key = options.decoder(part.slice(0, pos), defaults.decoder, charset, "key");
-            val = utils.maybeMap(
-              parseArrayValue(part.slice(pos + 1), options),
-              function(encodedVal) {
-                return options.decoder(encodedVal, defaults.decoder, charset, "value");
-              }
-            );
+            val = utils.maybeMap(parseArrayValue(part.slice(pos + 1), options), function(encodedVal) {
+              return options.decoder(encodedVal, defaults.decoder, charset, "value");
+            });
           }
           if (val && options.interpretNumericEntities && charset === "iso-8859-1") {
             val = interpretNumericEntities(val);
@@ -4422,7 +4311,7 @@ module.exports = (() => {
       function querystringify(obj, prefix) {
         prefix = prefix || "";
         var pairs = [], value, key;
-        if ("string" !== typeof prefix)
+        if (typeof prefix !== "string")
           prefix = "?";
         for (key in obj) {
           if (has.call(obj, key)) {
@@ -4486,13 +4375,13 @@ module.exports = (() => {
         var location = globalVar.location || {};
         loc = loc || location;
         var finaldestination = {}, type = typeof loc, key;
-        if ("blob:" === loc.protocol) {
+        if (loc.protocol === "blob:") {
           finaldestination = new Url(unescape(loc.pathname), {});
-        } else if ("string" === type) {
+        } else if (type === "string") {
           finaldestination = new Url(loc, {});
           for (key in ignore)
             delete finaldestination[key];
-        } else if ("object" === type) {
+        } else if (type === "object") {
           for (key in loc) {
             if (key in ignore)
               continue;
@@ -4583,11 +4472,11 @@ module.exports = (() => {
           return new Url(address, location, parser);
         }
         var relative, extracted, parse, instruction, index, key, instructions = rules.slice(), type = typeof location, url = this, i = 0;
-        if ("object" !== type && "string" !== type) {
+        if (type !== "object" && type !== "string") {
           parser = location;
           location = null;
         }
-        if (parser && "function" !== typeof parser)
+        if (parser && typeof parser !== "function")
           parser = qs2.parse;
         location = lolcation(location);
         extracted = extractProtocol(address || "", location);
@@ -4608,10 +4497,10 @@ module.exports = (() => {
           key = instruction[1];
           if (parse !== parse) {
             url[key] = address;
-          } else if ("string" === typeof parse) {
+          } else if (typeof parse === "string") {
             index = parse === "@" ? address.lastIndexOf(parse) : address.indexOf(parse);
             if (~index) {
-              if ("number" === typeof instruction[2]) {
+              if (typeof instruction[2] === "number") {
                 url[key] = address.slice(0, index);
                 address = address.slice(index + instruction[2]);
               } else {
@@ -4659,7 +4548,7 @@ module.exports = (() => {
         var url = this;
         switch (part) {
           case "query":
-            if ("string" === typeof value && value.length) {
+            if (typeof value === "string" && value.length) {
               value = (fn || qs2.parse)(value);
             }
             url[part] = value;
@@ -4729,7 +4618,7 @@ module.exports = (() => {
         return url;
       }
       function toString(stringify) {
-        if (!stringify || "function" !== typeof stringify)
+        if (!stringify || typeof stringify !== "function")
           stringify = qs2.stringify;
         var query, url = this, host = url.host, protocol = url.protocol;
         if (protocol && protocol.charAt(protocol.length - 1) !== ":")
@@ -4750,9 +4639,9 @@ module.exports = (() => {
           host += ":";
         }
         result += host + url.pathname;
-        query = "object" === typeof url.query ? stringify(url.query) : url.query;
+        query = typeof url.query === "object" ? stringify(url.query) : url.query;
         if (query)
-          result += "?" !== query.charAt(0) ? "?" + query : query;
+          result += query.charAt(0) !== "?" ? "?" + query : query;
         if (url.hash)
           result += url.hash;
         return result;
@@ -5950,28 +5839,14 @@ module.exports = (() => {
         var output = [];
         for (var i = 0, l = value.length; i < l; ++i) {
           if (hasOwnProperty(value, String(i))) {
-            output.push(formatProperty(
-              ctx,
-              value,
-              recurseTimes,
-              visibleKeys,
-              String(i),
-              true
-            ));
+            output.push(formatProperty(ctx, value, recurseTimes, visibleKeys, String(i), true));
           } else {
             output.push("");
           }
         }
         keys.forEach(function(key) {
           if (!key.match(/^\d+$/)) {
-            output.push(formatProperty(
-              ctx,
-              value,
-              recurseTimes,
-              visibleKeys,
-              key,
-              true
-            ));
+            output.push(formatProperty(ctx, value, recurseTimes, visibleKeys, key, true));
           }
         });
         return output;
@@ -6199,10 +6074,7 @@ module.exports = (() => {
             writable: false,
             configurable: true
           });
-        return Object.defineProperties(
-          fn,
-          getOwnPropertyDescriptors(original)
-        );
+        return Object.defineProperties(fn, getOwnPropertyDescriptors(original));
       };
       exports.promisify.custom = kCustomPromisifiedSymbol;
       function callbackifyOnRejected(reason, cb) {
@@ -6230,20 +6102,14 @@ module.exports = (() => {
           var cb = function() {
             return maybeCb.apply(self2, arguments);
           };
-          original.apply(this, args).then(
-            function(ret) {
-              process.nextTick(cb.bind(null, null, ret));
-            },
-            function(rej) {
-              process.nextTick(callbackifyOnRejected.bind(null, rej, cb));
-            }
-          );
+          original.apply(this, args).then(function(ret) {
+            process.nextTick(cb.bind(null, null, ret));
+          }, function(rej) {
+            process.nextTick(callbackifyOnRejected.bind(null, rej, cb));
+          });
         }
         Object.setPrototypeOf(callbackified, Object.getPrototypeOf(original));
-        Object.defineProperties(
-          callbackified,
-          getOwnPropertyDescriptors(original)
-        );
+        Object.defineProperties(callbackified, getOwnPropertyDescriptors(original));
         return callbackified;
       }
       exports.callbackify = callbackify;
@@ -6374,9 +6240,7 @@ module.exports = (() => {
     }
     const [namespace, name] = formulaNameWithNamespace.includes("::") ? formulaNameWithNamespace.split("::") : ["", formulaNameWithNamespace];
     if (namespace) {
-      console.log(
-        `Warning: formula was invoked with a namespace (${formulaNameWithNamespace}), but namespaces are now deprecated.`
-      );
+      console.log(`Warning: formula was invoked with a namespace (${formulaNameWithNamespace}), but namespaces are now deprecated.`);
     }
     const formulas = Array.isArray(packFormulas) ? packFormulas : packFormulas[namespace];
     if (!formulas || !formulas.length) {
@@ -6491,12 +6355,7 @@ module.exports = (() => {
       let hadModifications = false;
       for (const key of Object.getOwnPropertyNames(val)) {
         pathPrefix.push(key);
-        const { val: objVal, hasModifications: subValHasModifications } = fixUncopyableTypes(
-          val[key],
-          pathPrefix,
-          postTransforms,
-          depth + 1
-        );
+        const { val: objVal, hasModifications: subValHasModifications } = fixUncopyableTypes(val[key], pathPrefix, postTransforms, depth + 1);
         maybeModifiedObject[key] = objVal;
         pathPrefix.pop();
         if (subValHasModifications) {
@@ -6666,10 +6525,7 @@ module.exports = (() => {
             break;
           case "GetConnectionUserId" /* GetConnectionUserId */:
             if (defaultAuthentication?.type !== "None" /* None */ && defaultAuthentication?.type !== "Various" /* Various */ && defaultAuthentication?.getConnectionUserId) {
-              return defaultAuthentication.getConnectionUserId.execute(
-                params,
-                executionContext
-              );
+              return defaultAuthentication.getConnectionUserId.execute(params, executionContext);
             }
             break;
           case "ParameterAutocomplete" /* ParameterAutocomplete */:
@@ -6680,9 +6536,7 @@ module.exports = (() => {
             break;
           case "PostSetupSetEndpoint" /* PostSetupSetEndpoint */:
             if (defaultAuthentication?.type !== "None" /* None */ && defaultAuthentication?.type !== "Various" /* Various */ && defaultAuthentication?.postSetup) {
-              const setupStep = defaultAuthentication.postSetup.find(
-                (step) => step.type === "SetEndPoint" /* SetEndpoint */ && step.name === formulaSpec.stepName
-              );
+              const setupStep = defaultAuthentication.postSetup.find((step) => step.type === "SetEndPoint" /* SetEndpoint */ && step.name === formulaSpec.stepName);
               if (setupStep) {
                 return setEndpointHelper(setupStep).getOptions.execute(params, executionContext);
               }

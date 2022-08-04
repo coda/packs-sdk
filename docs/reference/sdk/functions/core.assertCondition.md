@@ -34,7 +34,3 @@ function foo(value: string | number) {
 #### Returns
 
 asserts condition
-
-#### Defined in
-
-[helpers/ensure.ts:79](https://github.com/coda/packs-sdk/blob/main/helpers/ensure.ts#L79)

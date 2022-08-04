@@ -25,7 +25,3 @@ let params = getQueryParams("/someApi/someEndpoint?token=asdf&limit=5");
 #### Returns
 
 `Object`
-
-#### Defined in
-
-[helpers/url.ts:37](https://github.com/coda/packs-sdk/blob/main/helpers/url.ts#L37)

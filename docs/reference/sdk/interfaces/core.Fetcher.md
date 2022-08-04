@@ -38,7 +38,3 @@ deal with authentication in any way, Coda will handle that entirely on your beha
 #### Returns
 
 `Promise`<[`FetchResponse`](core.FetchResponse.md)<`T`\>\>
-
-#### Defined in
-
-[api_types.ts:561](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L561)
