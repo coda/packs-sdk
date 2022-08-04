@@ -4,7 +4,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
-- Increase building block description limit to 1000.
+- Increased building block description limit to 1000.
+- Fixed class name (e.g. `StatusCodeError.name`) which resolved to random values in the final build.
 
 ## [1.0.3] - 2022-08-03
 
