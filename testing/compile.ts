@@ -164,6 +164,7 @@ async function buildWithES({
     inject: getInjections(buildOptions),
     minify: false, // don't minify here since browserify doesn't minify anyway.
     sourcemap: 'both',
+    keepNames: true, // this is required to interpret code like `StatusCodeError.name`.
 
     // The pack bundle is always targeting the isolated-vm environment.
     define: {'process.env.IN_ISOLATED_VM_OR_BROWSER': 'true'},

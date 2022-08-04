@@ -129,6 +129,7 @@ async function buildWithES({ lastBundleFilename, outputBundleFilename, options: 
         inject: getInjections(buildOptions),
         minify: false,
         sourcemap: 'both',
+        keepNames: true,
         // The pack bundle is always targeting the isolated-vm environment.
         define: { 'process.env.IN_ISOLATED_VM_OR_BROWSER': 'true' },
         external: ['codaInternal'], // for serializer
