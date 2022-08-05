@@ -157,6 +157,10 @@ async function buildWithES({
     // - if iife bundles add exports to global, require() doesn't work. only module.exports works. idk why.
     globalName: format === 'iife' ? 'module.exports' : undefined,
 
+    // Set target to 'node' to allow pack to use node utils. These node utils will however
+    // be later browserified.
+    platform: 'node',
+
     // isolated-vm environment is approximately es2020. It's known that es2021 will break because of
     // logical assignment
     target: 'ES2020',

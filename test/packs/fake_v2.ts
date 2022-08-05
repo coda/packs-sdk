@@ -1,4 +1,5 @@
 import * as coda from '../..';
+import path from 'path';
 
 export const pack = coda.newPack();
 
@@ -204,4 +205,21 @@ pack.addFormula({
       }
     }
   },
+});
+
+pack.addFormula({
+  name: 'NodeUtils',
+  description: '',
+  parameters: [
+    coda.makeParameter({
+      type: coda.ParameterType.String,
+      name: 'name',
+      description: '',
+    }),
+  ],
+  resultType: coda.ValueType.String,
+  execute: async ([name]) => {
+    return path.join('baseDir', name);
+  },
+  cacheTtlSecs: 0,
 });
