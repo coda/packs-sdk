@@ -2,7 +2,7 @@
 
 This changelog keeps track of all changes to the Packs SDK. We follow conventions from [keepachangelog](https://keepachangelog.com/en/1.0.0/).
 
-## [Unreleased]
+## [1.0.5] - 2022-08-05
 
 - Fixed the CLI compiler throwing for using common node modules.
 
