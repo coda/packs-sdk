@@ -2,6 +2,10 @@
 
 This changelog keeps track of all changes to the Packs SDK. We follow conventions from [keepachangelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+- Fixed the CLI compiler throwing for using common node modules.
+
 ## [1.0.4] - 2022-08-04
 
 - Increased building block description limit to 1000.
