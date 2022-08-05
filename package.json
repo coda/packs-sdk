@@ -106,6 +106,7 @@
     "typedoc-plugin-markdown": "^3.13.4"
   },
   "resolutions": {
+    "release-it/node-fetch": "^3.2.10", 
     "ansi-regex": "^5.0.1",
     "got": "^12.1.0",
     "jsprim": "^2.0.2",
