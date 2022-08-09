@@ -1,6 +1,7 @@
 import type {ArgumentsCamelCase} from 'yargs';
 import type {BasicPackDefinition} from '..';
 import type {PackVersionDefinition} from '..';
+import { PublicApiPackSource } from '../helpers/external-api/v1';
 import {build} from './build';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
@@ -76,7 +77,11 @@ export async function handleRelease({
     packVersion = latestPackVersion;
   }
 
-  await handleResponse(codaClient.createPackRelease(packId, {}, {packVersion, releaseNotes: notes}));
+  await handleResponse(codaClient.createPackRelease(packId, {}, {
+    packVersion,
+    releaseNotes: notes,
+    source: PublicApiPackSource.Cli
+  }));
   return printAndExit('Success!', 0);
 }
 

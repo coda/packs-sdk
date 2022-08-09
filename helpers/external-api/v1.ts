@@ -3787,6 +3787,7 @@ export interface PublicApiCreatePackReleaseRequest {
    * Internal field for cross-environment pack import.
    */
   dangerouslyAllowCrossEnvPack?: boolean;
+  source?: PublicApiPackSource;
 }
 
 /**
