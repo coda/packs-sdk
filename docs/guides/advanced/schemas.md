@@ -71,7 +71,7 @@ pack.addFormula({
   // ...
   resultType: coda.ValueType.Array,
   items: coda.makeSchema({
-    type: coda.ValeType.Number,
+    type: coda.ValueType.Number,
   }),
   // ...
 });
