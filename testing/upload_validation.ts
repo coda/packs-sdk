@@ -99,7 +99,7 @@ export const Limits = {
   ColumnMatcherRegex: 300,
   NumColumnMatchersPerFormat: 10,
   NetworkDomainUrl: 253,
-}
+};
 
 enum CustomErrorCode {
   NonMatchingDiscriminant = 'nonMatchingDiscriminant',
@@ -110,7 +110,11 @@ export class PackMetadataValidationError extends Error {
   readonly validationErrors: ValidationError[] | undefined;
 
   constructor(message: string, originalError?: Error, validationErrors?: ValidationError[]) {
-    super(message);
+    super(
+      `${message}${originalError?.message ? ` (from ${originalError?.message})` : ''}: ${JSON.stringify(
+        validationErrors,
+      )}`.slice(0, 4096), // some random limit to make sure this message isn't unnecessarily long
+    );
     this.originalError = originalError;
     this.validationErrors = validationErrors;
   }
@@ -1091,8 +1095,9 @@ const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
   hasNoConnection: z.boolean().optional(),
   instructions: z.string().optional(),
   placeholder: z.string().optional(),
-  matchers: z.array(
-    z.string().max(Limits.ColumnMatcherRegex).refine(validateFormatMatcher)).max(Limits.NumColumnMatchersPerFormat),
+  matchers: z
+    .array(z.string().max(Limits.ColumnMatcherRegex).refine(validateFormatMatcher))
+    .max(Limits.NumColumnMatchersPerFormat),
 });
 
 const syncFormulaSchema = zodCompleteObject<Omit<SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>>, 'execute'>>({
