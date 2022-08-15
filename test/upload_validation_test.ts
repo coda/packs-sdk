@@ -567,11 +567,10 @@ describe('Pack metadata Validation', () => {
           name: `Formula${i}`,
         });
       }
-      const metadata = createFakePackVersionMetadata(
-        {
-          formulas,
-          formulaNamespace: 'MyNamespace'
-        });
+      const metadata = createFakePackVersionMetadata({
+        formulas,
+        formulaNamespace: 'MyNamespace',
+      });
 
       const err = await validateJsonAndAssertFails(metadata);
 
@@ -684,7 +683,11 @@ describe('Pack metadata Validation', () => {
 
       it('rejects parameters with names that are too long', async () => {
         const metadata = makeMetadataFromParams([
-          makeParameter({type: ParameterType.StringArray, name: 'a'.repeat(Limits.BuildingBlockName + 1), description: 'param description'}),
+          makeParameter({
+            type: ParameterType.StringArray,
+            name: 'a'.repeat(Limits.BuildingBlockName + 1),
+            description: 'param description',
+          }),
         ]);
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
@@ -697,7 +700,11 @@ describe('Pack metadata Validation', () => {
 
       it('rejects parameters with descriptions that are too long', async () => {
         const metadata = makeMetadataFromParams([
-          makeParameter({type: ParameterType.StringArray, name: 'Hi', description: 'a'.repeat(Limits.BuildingBlockDescription + 1)}),
+          makeParameter({
+            type: ParameterType.StringArray,
+            name: 'Hi',
+            description: 'a'.repeat(Limits.BuildingBlockDescription + 1),
+          }),
         ]);
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
@@ -1703,34 +1710,35 @@ describe('Pack metadata Validation', () => {
       it('rejects if number of sync tables goes over limit', async () => {
         const syncTables = [];
         for (let i = 0; i < Limits.BuildingBlockCountPerType + 1; i++) {
-          syncTables.push(makeSyncTable({
-            name: `Sync${i}`,
-            identityName: `Sync${i}`,
-            schema: makeObjectSchema({
-              type: ValueType.Object,
-              primary: 'foo',
-              id: 'foo',
-              properties: {
-                Foo: {type: ValueType.String},
+          syncTables.push(
+            makeSyncTable({
+              name: `Sync${i}`,
+              identityName: `Sync${i}`,
+              schema: makeObjectSchema({
+                type: ValueType.Object,
+                primary: 'foo',
+                id: 'foo',
+                properties: {
+                  Foo: {type: ValueType.String},
+                },
+              }),
+              formula: {
+                name: 'SyncTable',
+                description: 'A simple sync table',
+                async execute([], _context) {
+                  return {result: []};
+                },
+                parameters: [],
+                examples: [],
               },
             }),
-            formula: {
-              name: 'SyncTable',
-              description: 'A simple sync table',
-              async execute([], _context) {
-                return {result: []};
-              },
-              parameters: [],
-              examples: [],
-            },
-          }))
+          );
         }
 
-        const metadata = createFakePackVersionMetadata(
-          {
-            syncTables,
-            formulaNamespace: 'MyNamespace'
-          });
+        const metadata = createFakePackVersionMetadata({
+          syncTables,
+          formulaNamespace: 'MyNamespace',
+        });
 
         const err = await validateJsonAndAssertFails(metadata);
 
@@ -2423,10 +2431,9 @@ describe('Pack metadata Validation', () => {
           instructions: 'some instructions',
           placeholder: 'some placehoder',
           matchers: ['/some compiled regex/i'],
-        }
+        };
         const formats = [];
         for (let i = 0; i < Limits.BuildingBlockCountPerType + 1; i++) {
-
           formats.push({
             ...format,
             name: `Format${i}`,
@@ -2434,12 +2441,11 @@ describe('Pack metadata Validation', () => {
           });
         }
 
-        const metadata = createFakePackVersionMetadata(
-          {
-            formulas: [formula],
-            formats,
-            formulaNamespace: 'MyNamespace'
-          });
+        const metadata = createFakePackVersionMetadata({
+          formulas: [formula],
+          formats,
+          formulaNamespace: 'MyNamespace',
+        });
 
         const err = await validateJsonAndAssertFails(metadata);
 
@@ -2450,9 +2456,7 @@ describe('Pack metadata Validation', () => {
           },
         ]);
       });
-
-      }
-    );
+    });
 
     it('scalar parameter examples', async () => {
       const formula = makeFormula({
@@ -3072,7 +3076,7 @@ describe('Pack metadata Validation', () => {
     it('rejects when network domain length is greater than character limit', async () => {
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
-          type: AuthenticationType.HeaderBearerToken
+          type: AuthenticationType.HeaderBearerToken,
         },
         networkDomains: [`${'a'.repeat(Limits.NetworkDomainUrl)}.io`],
       });
@@ -3132,12 +3136,15 @@ describe('Pack metadata Validation', () => {
   });
 
   describe('validateSyncTableSchema', () => {
-    function validateAndAssertFails(schema: any): PackMetadataValidationError {
+    function validateAndAssertFails(schema: any, details?: string): PackMetadataValidationError {
       try {
         validateSyncTableSchema(schema);
         assert.fail('Expected validateSyncTableSchema to fail but it succeeded');
       } catch (err: any) {
-        assert.equal(err.message, 'Schema failed validation');
+        assert.isTrue(err.message.startsWith('Schema failed validation'));
+        if (details) {
+          assert.include(err.message, details);
+        }
         return err as PackMetadataValidationError;
       }
     }
@@ -3203,7 +3210,11 @@ describe('Pack metadata Validation', () => {
         type: ValueType.Array,
         items: itemSchema,
       });
-      const err = validateAndAssertFails(arraySchema);
+      const err = validateAndAssertFails(
+        arraySchema,
+        '[{"path":"items.identity.name","message":"Invalid name. Identity names can only contain ' +
+          'alphanumeric characters, underscores, and dashes, and no spaces."}]',
+      );
       assert.deepEqual(err.validationErrors, [
         {
           path: 'items.identity.name',

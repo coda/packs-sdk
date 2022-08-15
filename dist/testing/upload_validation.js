@@ -78,7 +78,7 @@ var CustomErrorCode;
 })(CustomErrorCode || (CustomErrorCode = {}));
 class PackMetadataValidationError extends Error {
     constructor(message, originalError, validationErrors) {
-        super(`${message}${(originalError === null || originalError === void 0 ? void 0 : originalError.message) ? ` (from ${originalError === null || originalError === void 0 ? void 0 : originalError.message})` : ''}: ${JSON.stringify(validationErrors)}`.slice(0, 4096));
+        super(`${message}: ${JSON.stringify(validationErrors)}`.slice(0, 4096));
         this.originalError = originalError;
         this.validationErrors = validationErrors;
     }

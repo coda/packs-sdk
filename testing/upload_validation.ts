@@ -111,9 +111,7 @@ export class PackMetadataValidationError extends Error {
 
   constructor(message: string, originalError?: Error, validationErrors?: ValidationError[]) {
     super(
-      `${message}${originalError?.message ? ` (from ${originalError?.message})` : ''}: ${JSON.stringify(
-        validationErrors,
-      )}`.slice(0, 4096), // some random limit to make sure this message isn't unnecessarily long
+      `${message}: ${JSON.stringify(validationErrors)}`.slice(0, 4096), // some random limit to make sure this message isn't unnecessarily long
     );
     this.originalError = originalError;
     this.validationErrors = validationErrors;
