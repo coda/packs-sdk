@@ -78,7 +78,7 @@ var CustomErrorCode;
 })(CustomErrorCode || (CustomErrorCode = {}));
 class PackMetadataValidationError extends Error {
     constructor(message, originalError, validationErrors) {
-        super(message);
+        super(`${message}: ${JSON.stringify(validationErrors)}`.slice(0, 4096));
         this.originalError = originalError;
         this.validationErrors = validationErrors;
     }
@@ -911,7 +911,9 @@ const formatMetadataSchema = zodCompleteObject({
     hasNoConnection: z.boolean().optional(),
     instructions: z.string().optional(),
     placeholder: z.string().optional(),
-    matchers: z.array(z.string().max(exports.Limits.ColumnMatcherRegex).refine(validateFormatMatcher)).max(exports.Limits.NumColumnMatchersPerFormat),
+    matchers: z
+        .array(z.string().max(exports.Limits.ColumnMatcherRegex).refine(validateFormatMatcher))
+        .max(exports.Limits.NumColumnMatchersPerFormat),
 });
 const syncFormulaSchema = zodCompleteObject({
     schema: arrayPropertySchema.optional(),
