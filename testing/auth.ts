@@ -106,9 +106,11 @@ class CredentialHandler {
     const existingCredentials = readCredentialsFile(this._manifestDir);
     if (existingCredentials) {
       const input = promptForInput(
-        `Credentials already exist for this Pack, press "y" to overwrite or "n" to cancel: `,
+        `Credentials already exist for this Pack, overwrite? (y/N): `,
+        {yesOrNo: true}
       );
-      if (input.toLocaleLowerCase() !== 'y') {
+      if (input.toLocaleLowerCase() !== 'yes') {
+        throw new Error(`Input: ${input}`);
         return process.exit(1);
       }
       return existingCredentials;

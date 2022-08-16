@@ -34,6 +34,7 @@ const readlineSync = __importStar(require("readline-sync"));
 const source_map_1 = require("../runtime/common/source_map");
 const marshaling_1 = require("../runtime/common/marshaling");
 const marshaling_2 = require("../runtime/common/marshaling");
+const yn_1 = __importDefault(require("yn"));
 function getManifestFromModule(module) {
     if (!module.manifest && !module.pack) {
         printAndExit('Manifest file must export a variable called "manifest" that refers to a PackDefinition.');
@@ -52,10 +53,20 @@ function printAndExit(msg, exitCode = 1) {
     return process.exit(exitCode);
 }
 exports.printAndExit = printAndExit;
-function promptForInput(prompt, { mask, options } = {}) {
+function promptForInput(prompt, { mask, options, yesOrNo } = {}) {
     while (true) {
         const answer = readlineSync.question(prompt, { mask: mask ? '*' : undefined, hideEchoBack: mask });
-        if (!options || options.includes(answer)) {
+        if (yesOrNo) {
+            if (answer === '') {
+                return 'no';
+            }
+            const response = (0, yn_1.default)(answer, { default: null });
+            if (response === null) {
+                continue;
+            }
+            return (0, yn_1.default)(answer) ? 'yes' : 'no';
+        }
+        else if (!options || options.includes(answer)) {
             return answer;
         }
     }

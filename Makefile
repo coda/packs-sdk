@@ -115,7 +115,7 @@ compile-thunk:
 		--target=es2020;
 
 .PHONY: compile-ts
-compile-ts:	
+compile-ts:
 	${ROOTDIR}/node_modules/.bin/tsc
 
 	$(MAKE) compile-thunk
@@ -127,7 +127,7 @@ compile-ts:
 	# copy buffer.d.ts to be used by monaco browser.
 	cp ${ROOTDIR}/node_modules/buffer/index.d.ts ${ROOTDIR}/dist/buffer.d.ts
 
-	# This bundle is used by the Pack studio to compile the pack bundle in the browser. It will be loaded in both 
+	# This bundle is used by the Pack studio to compile the pack bundle in the browser. It will be loaded in both
 	# browser and isolated-vm. In the browser, the pack bundle is loaded in an iframe to extract pack metadata.
 	# In lambda, the pack bundle actually runs formulas.
 	#

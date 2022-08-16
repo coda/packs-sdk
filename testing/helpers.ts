@@ -6,6 +6,7 @@ import * as readlineSync from 'readline-sync';
 import {translateErrorStackFromVM} from '../runtime/common/source_map';
 import {unwrapError} from '../runtime/common/marshaling';
 import {wrapError} from '../runtime/common/marshaling';
+import yn from 'yn';
 
 export function getManifestFromModule(module: any): PackVersionDefinition {
   if (!module.manifest && !module.pack) {
@@ -26,10 +27,20 @@ export function printAndExit(msg: string, exitCode: number = 1): never {
   return process.exit(exitCode);
 }
 
-export function promptForInput(prompt: string, {mask, options}: {mask?: boolean; options?: string[]} = {}): string {
+export function promptForInput(prompt: string, {mask, options, yesOrNo}:
+  {mask?: boolean; options?: string[], yesOrNo?: boolean} = {}): string {
   while (true) {
     const answer = readlineSync.question(prompt, {mask: mask ? '*' : undefined, hideEchoBack: mask});
-    if (!options || options.includes(answer)) {
+    if (yesOrNo) {
+      if (answer === '') {
+        return 'no';
+      }
+      const response = yn(answer, {default: null});
+      if (response === null) {
+        continue;
+      }
+      return yn(answer) ? 'yes' : 'no';
+    } else if (!options || options.includes(answer)) {
       return answer;
     }
   }

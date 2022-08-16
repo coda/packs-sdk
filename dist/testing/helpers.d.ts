@@ -16,9 +16,10 @@ export declare const printError: {
     (message?: any, ...optionalParams: any[]): void;
 };
 export declare function printAndExit(msg: string, exitCode?: number): never;
-export declare function promptForInput(prompt: string, { mask, options }?: {
+export declare function promptForInput(prompt: string, { mask, options, yesOrNo }?: {
     mask?: boolean;
     options?: string[];
+    yesOrNo?: boolean;
 }): string;
 export declare function readFile(fileName: string): Buffer | undefined;
 export declare function readJSONFile(fileName: string): any | undefined;
