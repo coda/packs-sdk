@@ -16,7 +16,7 @@ async function handleRegister({ apiToken, codaApiEndpoint }) {
     const formattedEndpoint = (0, helpers_2.formatEndpoint)(codaApiEndpoint);
     if (!apiToken) {
         // TODO: deal with auto-open on devbox setups
-        const shouldOpenBrowser = (0, helpers_4.promptForInput)('No API token provided. Do you want to visit Coda to create one (yes/no)? ', { options: ['yes', 'no'] });
+        const shouldOpenBrowser = (0, helpers_4.promptForInput)('No API token provided. Do you want to visit Coda to create one (y/N)? ', { yesOrNo: true });
         if (shouldOpenBrowser !== 'yes') {
             return process.exit(1);
         }

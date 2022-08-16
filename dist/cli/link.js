@@ -48,8 +48,8 @@ async function handleLink({ manifestDir, codaApiEndpoint, packIdOrUrl }) {
         if (existingPackId === packId) {
             return (0, helpers_3.printAndExit)(`Already associated with pack ${existingPackId}. No change needed`, 0);
         }
-        const input = (0, helpers_4.promptForInput)(`Overwrite existing deploy to pack https://coda.io/p/${existingPackId} with https://coda.io/p/${packId} instead? Press "y" to overwrite or "n" to cancel: `);
-        if (input.toLocaleLowerCase() !== 'y') {
+        const input = (0, helpers_4.promptForInput)(`Overwrite existing deploy to pack https://coda.io/p/${existingPackId} with https://coda.io/p/${packId} instead? (y/N): `, { yesOrNo: true });
+        if (input.toLocaleLowerCase() !== 'yes') {
             return process.exit(1);
         }
     }

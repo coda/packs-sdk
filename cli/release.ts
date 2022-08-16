@@ -67,10 +67,10 @@ export async function handleRelease({
     const [latestPackVersionData] = versions;
     const {packVersion: latestPackVersion} = latestPackVersionData;
     const shouldReleaseLatestPackVersion = promptForInput(
-      `No version specified in your manifest. Do you want to release the latest version of the Pack (${latestPackVersion})? (y/n)\n`,
-      {options: ['y', 'n']},
+      `No version specified in your manifest. Do you want to release the latest version of the Pack (${latestPackVersion})? (y/N)\n`,
+      {yesOrNo: true},
     );
-    if (shouldReleaseLatestPackVersion !== 'y') {
+    if (shouldReleaseLatestPackVersion !== 'yes') {
       return process.exit(1);
     }
     packVersion = latestPackVersion;

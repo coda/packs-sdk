@@ -1327,7 +1327,7 @@ describe('Auth', () => {
           clientSecret: 'existing-client-secret',
         });
 
-        setupReadline(['y', '', '']);
+        setupReadline(['yes', '', '']);
         doSetupAuth(pack);
 
         assertCredentialsFileExactly({
