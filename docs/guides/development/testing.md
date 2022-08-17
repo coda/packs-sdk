@@ -39,8 +39,11 @@ By default, these utilities will use an execution environment that includes a mo
 Here’s a very simple example test, using Mocha, for a formula that doesn’t make any fetcher requests:
 
 ```ts
-import {executeFormulaFromPackDef} from '@codahq/packs-sdk/dist/development';
-import {pack} from '../pack';
+import {assert} from "chai";
+import {describe} from "mocha";
+import {executeFormulaFromPackDef} from "@codahq/packs-sdk/dist/development";
+import {it} from "mocha";
+import {pack} from "../pack";
 
 describe('Simple Formula', () => {
   it('executes a formula', async () => {
@@ -58,8 +61,11 @@ A more interesting example is for a Pack that does make some kind of HTTP reques
 
 ```ts
 import {MockExecutionContext} from '@codahq/packs-sdk/dist/development';
-import {executeFormulaFromPackDef} from '@codahq/packs-sdk/dist/development';
-import {pack} from '../pack';
+import {assert} from "chai";
+import {describe} from "mocha";
+import {executeFormulaFromPackDef} from "@codahq/packs-sdk/dist/development";
+import {it} from "mocha";
+import {pack} from "../pack";
 import {newJsonFetchResponse} from '@codahq/packs-sdk/dist/development';
 import {newMockExecutionContext} from '@codahq/packs-sdk/dist/development';
 import sinon from 'sinon';
@@ -94,8 +100,11 @@ Testing a sync is very similar to testing a regular formula. However, you want t
 
 ```ts
 import {MockSyncExecutionContext} from '@codahq/packs-sdk/dist/development';
-import {executeSyncFormulaFromPackDef} from '@codahq/packs-sdk/dist/development';
-import {pack} from '../pack';
+import {assert} from "chai";
+import {describe} from "mocha";
+import {executeFormulaFromPackDef} from "@codahq/packs-sdk/dist/development";
+import {it} from "mocha";
+import {pack} from "../pack";
 import {newJsonFetchResponse} from '@codahq/packs-sdk/dist/development';
 import {newMockSyncExecutionContext} from '@codahq/packs-sdk/dist/development';
 import sinon from 'sinon';
@@ -138,8 +147,11 @@ describe('Sync Formula', () => {
 If you wish to write an end-to-end integration test that actually hits the third-party API that you Pack interacts with, you can simply pass `useRealFetcher: true` when using these test utilities. The execution context will include a fetcher that will make real HTTP requests to whatever urls they are given. For example:
 
 ```ts
-import {executeFormulaFromPackDef} from '@codahq/packs-sdk/dist/development';
-import {pack} from '../pack';
+import {assert} from "chai";
+import {describe} from "mocha";
+import {executeFormulaFromPackDef} from "@codahq/packs-sdk/dist/development";
+import {it} from "mocha";
+import {pack} from "../pack";
 
 describe('Formula integration test', () => {
   it('executes the formula', async () => {
