@@ -37,6 +37,8 @@ If you are experiencing a problem with your Pack or have identified a bug you ca
 
 By default all Packs are limited to only a single [network domain][fetcher_network_domains]. To request an exemption, please fill out the form linked below. Ensure you are signed in with the same Coda account you are using to develop the Pack. We'll review your request and respond with a decision within a few business days.
 
+If the Pack uses OAuth2 authentication where its authorization url domain doesn't match its token url domain, please use this form below as well to get help.
+
 [Create request][network_domains_form]{: .md-button .md-button--primary}
 
 
