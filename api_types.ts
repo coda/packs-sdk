@@ -642,6 +642,13 @@ export interface Sync {
    * The dynamic URL is likely necessary for determining which API resources to fetch.
    */
   dynamicUrl?: string;
+  /**
+   * A list of user manually picked original property keys. If the property uses `fromKey`, the
+   * value will be `fromKey`, otherwise it will be the key of the property.
+   *
+   * `selectedOriginalKeys` only includes the top-level picked properties.
+   */
+  selectedOriginalKeys?: string[];
 }
 
 export type LoggerParamType = string | number | boolean | Record<any, any>;
