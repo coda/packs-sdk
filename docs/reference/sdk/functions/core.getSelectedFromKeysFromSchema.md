@@ -23,4 +23,4 @@ include a subset of properties which were manually selected by the Pack user.
 
 #### Defined in
 
-helpers/schema.ts:9
+[helpers/schema.ts:9](https://github.com/coda/packs-sdk/blob/main/helpers/schema.ts#L9)
