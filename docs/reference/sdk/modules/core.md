@@ -184,6 +184,7 @@ import * as coda from "@codahq/packs-sdk";
 - [ensureUnreachable](../functions/core.ensureUnreachable.md)
 - [generateSchema](../functions/core.generateSchema.md)
 - [getQueryParams](../functions/core.getQueryParams.md)
+- [getSelectedFromKeysFromSchema](../functions/core.getSelectedFromKeysFromSchema.md)
 - [joinUrl](../functions/core.joinUrl.md)
 - [makeAttributionNode](../functions/core.makeAttributionNode.md)
 - [makeDynamicSyncTable](../functions/core.makeDynamicSyncTable.md)
