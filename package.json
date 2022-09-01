@@ -74,7 +74,7 @@
     "@types/readline-sync": "1.4.4",
     "@types/request": "^2.48.8",
     "@types/request-promise-native": "^1.0.18",
-    "@types/semver": "^7.3.10",
+    "@types/semver": "^7.3.12",
     "@types/sha.js": "^2.4.0",
     "@types/sinon": "^10.0.13",
     "@types/uglify-js": "^3.16.0",
