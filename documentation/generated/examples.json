@@ -317,7 +317,7 @@
     },
     "exampleFooterLink": "https://coda.io/packs/build/latest/guides/basics/parameters/autocomplete",
     "learnMoreLink": "/guides/basics/parameters/autocomplete",
-    "content": "Autocomplete can be configured for a parameter to provide a defined set of options for the user to select from. You can can pass either a static array or use a function to dynamically generate the options.",
+    "content": "Autocomplete can be configured for a parameter to provide a defined set of options for the user to select from. You can pass either a static array or use a function to dynamically generate the options.",
     "exampleSnippets": [
       {
         "name": "Simple autocomplete",
