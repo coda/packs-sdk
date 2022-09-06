@@ -184,7 +184,7 @@ pack.addFormula({
 
 ### Markdown {. #markdown}
 
-The [`Markdown`][hint_markdown] value hint indicates that Coda should parse the returned string as markdown as render it as rich text. The value can contain [basic markdown syntax][markdown], but extensions used by other applications (like tables, emoji, etc) are not supported.
+The [`Markdown`][hint_markdown] value hint indicates that Coda should parse the returned string as markdown and render it as rich text. The value can contain [basic markdown syntax][markdown], but extensions used by other applications (like tables, emoji, etc) are not supported.
 
 ```ts
 pack.addFormula({
