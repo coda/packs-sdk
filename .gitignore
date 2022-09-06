@@ -11,3 +11,4 @@ site
 .coda-pack.json
 .coda-credentials.json
 .npmrc
+.devcontainer
