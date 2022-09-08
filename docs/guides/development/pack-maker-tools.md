@@ -114,7 +114,7 @@ The Pack maker tools also lets you adjust a few developer-specific settings for 
 :   If you enable this setting and have selected **Latest version** above, whenever you build a new version of your Pack all of the formulas and sync tables in the doc will be automatically refreshed. This only applies to the current session (browser tab), so you'll need to turn it back on if you refresh the page or open the doc again later.
 
 
-## Additional options
+## Additional options {: #options}
 
 A few additional options are available under the three dots menu at the top of the panel. These are mostly quick links that let you jump between the various assets of the Pack, but also includes an option to force a refresh of the Pack's formulas and sync tables in the document.
 
