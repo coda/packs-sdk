@@ -162,7 +162,7 @@ It currently isn't possible to change the `authorizationUrl` and `tokenUrl` dyna
 Additionally, in order to prevent abuse, Coda enforces the `authorizationUrl` and `tokenUrl` configured have the same domain. This is almost always true, but in rare cases an API provider may use a different URL for each. To request an exemption from this restriction fill out the [Network Domains request form][support_network_domains].
 
 !!! info "OAuth domain and network domain"
-    The domain of the OAuth configuation URLs does not need to match the [network domain][fetcher_network_domains] configured for fetcher requests. This is convinient for services where the OAuth provider is a 3rd party (Okta, Auth0, etc).
+    The domain of the OAuth configuration URLs does not need to match the [network domain][fetcher_network_domains] configured for fetcher requests. This is convenient for services where the OAuth provider is a 3rd party (Okta, Auth0, etc).
 
 
 [oauth_definition]: https://oauth.net/2/

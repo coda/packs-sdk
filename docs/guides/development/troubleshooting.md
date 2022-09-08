@@ -35,10 +35,10 @@ When developing using the Pack CLI you can connect a JavaScript debugger to your
 
 By default the `coda execute` command runs your Pack code in a limited JavaScript VM that emulates the Packs runtime. This VM lacks the debugging capability however, so you must run your Pack with the `--vm=false` flag to execute it in Node.js directly.
 
-For example, to use the debugger in VS Code IDE follow these steps:
+For example, to use the debugger in the VS Code IDE follow these steps:
 
 1.  Add a `debugger;` statement to your code where you want to add a breakpoint. Setting a breakpoint in the IDE itself (the red dot in the gutter to the left of the line) works in some environments, but has known issues in others.
-1.  Open a **JavaScript Debug Terminal** (run **Debug: Create JavaScript Debug Terminal** from the command pallete).
+1.  Open a **JavaScript Debug Terminal** (run **Debug: Create JavaScript Debug Terminal** from the command palette).
 1.  Run the `npx coda execute` command passing in the flag `--vm=false`. For example:
 
     ```npx coda execute --vm=false pack.ts Hello "Eric"```
