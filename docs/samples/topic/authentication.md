@@ -11,7 +11,7 @@ Adding authentication to your Pack allows you to pass credentials with your API 
 Coda supports a fixed set of authentication types which cover the most common patterns that APIs use. In addition you can define your own form of custom token authentication to support more complex scenarios. It's not possible to write completely custom authentication code however, as Coda alone has access to the user's credentials.
 
 
-[Learn More](../../../guides/advanced/authentication){ .md-button }
+[Learn More](../../../guides/basics/authentication){ .md-button }
 
 ## Template (Per-user)
 The basic structure of per-user authentication.
