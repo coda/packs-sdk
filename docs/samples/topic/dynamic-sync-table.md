@@ -530,11 +530,12 @@ pack.addDynamicSyncTable({
       }),
     ],
     execute: async function ([search, filter], context) {
-      let datasetUrl = context.sync.dynamicUrl;
+      let dataset = await getDataset(context);
       let offset = context.sync.continuation?.offset as number || 0;
 
       // Fetch the row data.
-      let url = coda.withQueryParams(datasetUrl, {
+      let baseUrl = `https://${Domain}/resource/${dataset.id}.json`;
+      let url = coda.withQueryParams(baseUrl, {
         $select: ":*, *", // Include internal fields, specifically the row ID.
         $q: search,
         $where: filter,
