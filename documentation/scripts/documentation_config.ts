@@ -224,7 +224,7 @@ export const Examples: Example[] = [
     contentFile: './examples/authentication/README.md',
     linkData: {
       type: UrlType.SdkReferencePath,
-      url: '/guides/advanced/authentication',
+      url: '/guides/basics/authentication',
     },
     exampleSnippets: [
       {
@@ -561,7 +561,7 @@ export const Examples: Example[] = [
     contentFile: './examples/fetcher/README.md',
     linkData: {
       type: UrlType.SdkReferencePath,
-      url: '/guides/advanced/fetcher',
+      url: '/guides/basics/fetcher',
     },
     exampleSnippets: [
       {

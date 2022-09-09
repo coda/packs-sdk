@@ -107,7 +107,7 @@ Learn more about this approach in the [two-way sync guide][two_way_sync].
 
 [help_buttons]: https://help.coda.io/en/articles/2033889-overview-of-buttons
 [help_automations]: https://help.coda.io/en/articles/2423860-automations-in-coda
-[fetcher]: ../advanced/fetcher.md
+[fetcher]: ../basics/fetcher.md
 [samples]: ../../samples/topic/action.md
 [formulas]: formulas.md
 [parameters]: ../basics/parameters/index.md

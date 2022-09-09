@@ -122,4 +122,4 @@ A few additional options are available under the three dots menu at the top of t
 
 
 [troubleshooting_logging]: troubleshooting.md#logging
-[fetcher_headers]: ../advanced/fetcher.md#headers
+[fetcher_headers]: ../basics/fetcher.md#headers

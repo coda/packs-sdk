@@ -411,9 +411,9 @@ dig +short egress.coda.io
 [withQueryParams]: ../../reference/sdk/functions/core.withQueryParams.md
 [stringify]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
 [formula_cache]: ../blocks/formulas.md#caching
-[authentication]: ../advanced/authentication/index.md
+[authentication]: ../basics/authentication/index.md
 [spec_headers]: https://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
 [baseauthentication_networkdomain]: ../../reference/sdk/interfaces/core.BaseAuthentication.md#networkdomain
-[auth_user]: ../advanced/authentication/index.md#user
+[auth_user]: ../basics/authentication/index.md#user
 [temporaryblobstorage]: ../../reference/sdk/interfaces/core.TemporaryBlobStorage.md
-[caching]: caching.md
+[caching]: ../advanced/caching.md

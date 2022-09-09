@@ -72,4 +72,4 @@ While it's easy to get started building a Pack, there are lots of options to exp
 [promotion]: https://coda.io/@hector/promotion-best-practices
 [schemas_row_identifier]: advanced/schemas.md#row-identifier
 [schemas_featured_columns]: advanced/schemas.md#featured-columns
-[auth_name]: advanced/authentication/index.md#name
+[auth_name]: basics/authentication/index.md#name

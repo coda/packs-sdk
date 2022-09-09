@@ -58,10 +58,10 @@
     ],
     "linkData": {
       "type": "SdkReferencePath",
-      "url": "/guides/advanced/authentication"
+      "url": "/guides/basics/authentication"
     },
-    "exampleFooterLink": "https://coda.io/packs/build/latest/guides/advanced/authentication",
-    "learnMoreLink": "/guides/advanced/authentication",
+    "exampleFooterLink": "https://coda.io/packs/build/latest/guides/basics/authentication",
+    "learnMoreLink": "/guides/basics/authentication",
     "content": "Adding authentication to your Pack allows you to pass credentials with your API requests. Simply specify the type of authentication to use and Coda will collect the credentials from the user, store them, and apply them to Fetcher requests. Per-user authentication is the most common, where each user connects to their own account, while system-wide authentication is used in cases where the Pack maker's keys are used for all users.\n\nCoda supports a fixed set of authentication types which cover the most common patterns that APIs use. In addition you can define your own form of custom token authentication to support more complex scenarios. It's not possible to write completely custom authentication code however, as Coda alone has access to the user's credentials.",
     "exampleSnippets": [
       {
@@ -394,10 +394,10 @@
     ],
     "linkData": {
       "type": "SdkReferencePath",
-      "url": "/guides/advanced/fetcher"
+      "url": "/guides/basics/fetcher"
     },
-    "exampleFooterLink": "https://coda.io/packs/build/latest/guides/advanced/fetcher",
-    "learnMoreLink": "/guides/advanced/fetcher",
+    "exampleFooterLink": "https://coda.io/packs/build/latest/guides/basics/fetcher",
+    "learnMoreLink": "/guides/basics/fetcher",
     "content": "Communicating with an API or external server is done through the `Fetcher`, a custom interface for making HTTP requests. The fetcher is made available through the `context` object passed in to formulas. The fetcher can only send requests to URLs that have have a domain name that's been registered using `addNetworkDomain`. The fetcher runs asynchronously, and is typically run within an `async` function that will `await` the result.",
     "exampleSnippets": [
       {

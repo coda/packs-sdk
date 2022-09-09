@@ -1,6 +1,5 @@
 nav:
   - pack-maker-tools.md
-  - Sharing & publishing: https://help.coda.io/en/articles/5987280-sharing-and-publishing-a-pack
   - testing.md
   - troubleshooting.md
   - cli.md

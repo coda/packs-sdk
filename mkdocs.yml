@@ -64,6 +64,11 @@ plugins:
           "guides/troubleshooting.md": "guides/development/troubleshooting.md"
           "get-started/cli.md": "tutorials/get-started/cli.md"
           "get-started/web.md": "tutorials/get-started/web.md"
+          # 2022-09-08: Move some guides from advanced to basic.
+          "guides/advanced/authentication/index.md": "guides/basics/authentication/index.md"
+          "guides/advanced/authentication/oauth2.md": "guides/basics/authentication/oauth2.md"
+          "guides/advanced/fetcher.md": "guides/basics/fetcher.md"
+          
 
 extra:
   # Social icons for the footer.
