@@ -572,6 +572,6 @@ Now that you have an understanding of how to use OAuth2 in Packs, here are some 
 [todoist_console]: https://developer.todoist.com/appconsole.html
 [oauth_standard]: https://datatracker.ietf.org/doc/html/rfc6749
 [todoist_tasks]: https://developer.todoist.com/rest/v1/#get-active-tasks
-[authentication]: ../../guides/advanced/authentication/index.md
+[authentication]: ../../guides/basics/authentication/index.md
 [samples_apis]: ../../samples/topic/apis.md
-[oauth_guide]: ../../guides/advanced/authentication/oauth2.md
+[oauth_guide]: ../../guides/basics/authentication/oauth2.md

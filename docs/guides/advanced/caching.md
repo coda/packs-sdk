@@ -83,5 +83,5 @@ How long to set the caching time depends a lot on the specific data and how it's
 [fetcher_cacheTtlSecs]: ../../reference/sdk/interfaces/core.FetchRequest.md#cacheTtlSecs
 [actions]: ../blocks/actions.md
 [sync_formula]: ../blocks/sync-tables/index.md#formula
-[authentication]: authentication/index.md
-[fetcher]: fetcher.md
+[authentication]: ../basics/authentication/index.md
+[fetcher]: ../basics/fetcher.md

@@ -382,7 +382,7 @@ Now that you have an understanding of how to call an external API, here are some
 [quickstart_cli]: ../get-started/cli.md
 [tutorial_formula]: formula.md
 [exchangerate_home]: https://exchangerate.host/
-[fetcher]: ../../guides/advanced/fetcher.md
+[fetcher]: ../../guides/basics/fetcher.md
 [samples_fetcher]: ../../samples/topic/fetcher.md
 [pmt]: ../../guides/development/pack-maker-tools.md
 [autocomplete]: ../../guides/basics/parameters/autocomplete.md

@@ -163,9 +163,9 @@ examples: [
 [parameters]: ../basics/parameters/index.md
 [actions]: actions.md
 [data-types]: ../basics/data-types.md
-[fetcher_cache]: ../advanced/fetcher.md#caching
-[fetcher_rate_limits]: ../advanced/fetcher.md#ratelimits
-[authentication]: ../advanced/authentication/index.md
+[fetcher_cache]: ../basics/fetcher.md#caching
+[fetcher_rate_limits]: ../basics/fetcher.md#ratelimits
+[authentication]: ../basics/authentication/index.md
 [system_auth]: ../../reference/sdk/classes/core.PackDefinitionBuilder.md#setsystemauthentication
 [user_auth]: ../../reference/sdk/classes/core.PackDefinitionBuilder.md#setuserauthentication
 [connectionRequirement]: ../../reference/sdk/interfaces/core.PackFormulaDef.md#connectionrequirement
