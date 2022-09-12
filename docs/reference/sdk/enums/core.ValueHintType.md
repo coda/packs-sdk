@@ -189,6 +189,18 @@ makeObjectSchema({
 
 ___
 
+### ProgressBar
+
+• **ProgressBar** = ``"progressBar"``
+
+Indicates to render a numeric value as a progress bar UI component.
+
+#### Defined in
+
+[schema.ts:164](https://github.com/coda/packs-sdk/blob/main/schema.ts#L164)
+
+___
+
 ### Reference
 
 • **Reference** = ``"reference"``
@@ -268,7 +280,7 @@ Indicates to render a boolean value as a toggle.
 
 #### Defined in
 
-[schema.ts:164](https://github.com/coda/packs-sdk/blob/main/schema.ts#L164)
+[schema.ts:168](https://github.com/coda/packs-sdk/blob/main/schema.ts#L168)
 
 ___
 

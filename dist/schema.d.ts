@@ -147,12 +147,16 @@ export declare enum ValueHintType {
      */
     Scale = "scale",
     /**
+     * Indicates to render a numeric value as a progress bar UI component.
+     */
+    ProgressBar = "progressBar",
+    /**
      * Indicates to render a boolean value as a toggle.
      */
     Toggle = "toggle"
 }
 export declare const StringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Email, ValueHintType.Embed, ValueHintType.Html, ValueHintType.ImageReference, ValueHintType.ImageAttachment, ValueHintType.Markdown, ValueHintType.Url];
-export declare const NumberHintValueTypes: readonly [ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Percent, ValueHintType.Currency, ValueHintType.Slider, ValueHintType.Scale];
+export declare const NumberHintValueTypes: readonly [ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Percent, ValueHintType.Currency, ValueHintType.Slider, ValueHintType.ProgressBar, ValueHintType.Scale];
 export declare const BooleanHintValueTypes: readonly [ValueHintType.Toggle];
 export declare const ObjectHintValueTypes: readonly [ValueHintType.Person, ValueHintType.Reference];
 /** The subset of {@link ValueHintType} that can be used with a string value. */
@@ -184,7 +188,7 @@ export interface BooleanSchema extends BaseSchema {
 /**
  * The union of all schemas that can represent number values.
  */
-export declare type NumberSchema = CurrencySchema | SliderSchema | ScaleSchema | NumericSchema | NumericDateSchema | NumericTimeSchema | NumericDateTimeSchema | NumericDurationSchema;
+export declare type NumberSchema = CurrencySchema | SliderSchema | ProgressBarSchema | ScaleSchema | NumericSchema | NumericDateSchema | NumericTimeSchema | NumericDateTimeSchema | NumericDurationSchema;
 export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> extends BaseSchema {
     /** Identifies this schema as relating to a number value. */
     type: ValueType.Number;
@@ -315,16 +319,6 @@ export interface CurrencySchema extends BaseNumberSchema<ValueHintType.Currency>
     format?: CurrencyFormat;
 }
 /**
- * Display types that can be used with a {@link SliderSchema} to influence the rendering
- * of the value.
- */
-export declare enum SliderDisplayType {
-    /** Render the value as a slider (the default). */
-    Slider = "slider",
-    /** Render the value as a progress bar. */
-    Progress = "progress"
-}
-/**
  * A schema representing a return value or object property that is a number that should
  * be rendered as a slider.
  */
@@ -337,9 +331,23 @@ export interface SliderSchema extends BaseNumberSchema<ValueHintType.Slider> {
     maximum?: number | string;
     /** The minimum amount the slider can be moved when dragged. */
     step?: number | string;
-    /** How to display this slider. If unspecified, defaults to {@link SliderDisplayType.Slider}. */
-    displayType?: SliderDisplayType;
     /** Whether to display the underlying numeric value in addition to the slider. */
+    showValue?: boolean;
+}
+/**
+ * A schema representing a return value or object property that is a number that should
+ * be rendered as a progress bar.
+ */
+export interface ProgressBarSchema extends BaseNumberSchema<ValueHintType.ProgressBar> {
+    /** Instructs Coda to render this value as a progress bar. */
+    codaType: ValueHintType.ProgressBar;
+    /** The minimum value selectable by this progress bar. */
+    minimum?: number | string;
+    /** The maximum value selectable by this progress bar. */
+    maximum?: number | string;
+    /** The minimum amount the progress bar can be moved when dragged. */
+    step?: number | string;
+    /** Whether to display the underlying numeric value in addition to the progress bar. */
     showValue?: boolean;
 }
 /**

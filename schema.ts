@@ -159,6 +159,10 @@ export enum ValueHintType {
    */
   Scale = 'scale',
   /**
+   * Indicates to render a numeric value as a progress bar UI component.
+   */
+  ProgressBar = 'progressBar',
+  /**
    * Indicates to render a boolean value as a toggle.
    */
   Toggle = 'toggle',
@@ -186,6 +190,7 @@ export const NumberHintValueTypes = [
   ValueHintType.Percent,
   ValueHintType.Currency,
   ValueHintType.Slider,
+  ValueHintType.ProgressBar,
   ValueHintType.Scale,
 ] as const;
 export const BooleanHintValueTypes = [ValueHintType.Toggle] as const;
@@ -226,6 +231,7 @@ export interface BooleanSchema extends BaseSchema {
 export type NumberSchema =
   | CurrencySchema
   | SliderSchema
+  | ProgressBarSchema
   | ScaleSchema
   | NumericSchema
   | NumericDateSchema
@@ -371,17 +377,6 @@ export interface CurrencySchema extends BaseNumberSchema<ValueHintType.Currency>
 }
 
 /**
- * Display types that can be used with a {@link SliderSchema} to influence the rendering
- * of the value.
- */
-export enum SliderDisplayType {
-  /** Render the value as a slider (the default). */
-  Slider = 'slider',
-  /** Render the value as a progress bar. */
-  Progress = 'progress',
-}
-
-/**
  * A schema representing a return value or object property that is a number that should
  * be rendered as a slider.
  */
@@ -394,9 +389,24 @@ export interface SliderSchema extends BaseNumberSchema<ValueHintType.Slider> {
   maximum?: number | string;
   /** The minimum amount the slider can be moved when dragged. */
   step?: number | string;
-  /** How to display this slider. If unspecified, defaults to {@link SliderDisplayType.Slider}. */
-  displayType?: SliderDisplayType;
   /** Whether to display the underlying numeric value in addition to the slider. */
+  showValue?: boolean;
+}
+
+/**
+ * A schema representing a return value or object property that is a number that should
+ * be rendered as a progress bar.
+ */
+export interface ProgressBarSchema extends BaseNumberSchema<ValueHintType.ProgressBar> {
+  /** Instructs Coda to render this value as a progress bar. */
+  codaType: ValueHintType.ProgressBar;
+  /** The minimum value selectable by this progress bar. */
+  minimum?: number | string;
+  /** The maximum value selectable by this progress bar. */
+  maximum?: number | string;
+  /** The minimum amount the progress bar can be moved when dragged. */
+  step?: number | string;
+  /** Whether to display the underlying numeric value in addition to the progress bar. */
   showValue?: boolean;
 }
 

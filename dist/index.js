@@ -12,7 +12,7 @@
  * @module core
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ValidFetchMethods = exports.withIdentity = exports.makeSchema = exports.makeReferenceSchemaFromObjectSchema = exports.makeObjectSchema = exports.makeAttributionNode = exports.generateSchema = exports.ValueType = exports.ValueHintType = exports.SliderDisplayType = exports.ScaleIconSet = exports.LinkDisplayType = exports.ImageOutline = exports.ImageCornerStyle = exports.EmailDisplayType = exports.DurationUnit = exports.CurrencyFormat = exports.AttributionNodeType = exports.ensureUnreachable = exports.ensureNonEmptyString = exports.ensureExists = exports.assertCondition = exports.SvgConstants = exports.withQueryParams = exports.joinUrl = exports.getQueryParams = exports.simpleAutocomplete = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.makeParameter = exports.makeTranslateObjectFormula = exports.makeSyncTable = exports.makeFormula = exports.makeEmptyFormula = exports.makeDynamicSyncTable = exports.makeMetadataFormula = exports.UserVisibleError = exports.Type = exports.MissingScopesError = exports.StatusCodeError = exports.PrecannedDateRange = exports.ParameterType = exports.NetworkConnection = exports.ConnectionRequirement = exports.PackDefinitionBuilder = exports.newPack = exports.PostSetupType = exports.AuthenticationType = void 0;
+exports.ValidFetchMethods = exports.withIdentity = exports.makeSchema = exports.makeReferenceSchemaFromObjectSchema = exports.makeObjectSchema = exports.makeAttributionNode = exports.generateSchema = exports.ValueType = exports.ValueHintType = exports.ScaleIconSet = exports.LinkDisplayType = exports.ImageOutline = exports.ImageCornerStyle = exports.EmailDisplayType = exports.DurationUnit = exports.CurrencyFormat = exports.AttributionNodeType = exports.ensureUnreachable = exports.ensureNonEmptyString = exports.ensureExists = exports.assertCondition = exports.SvgConstants = exports.withQueryParams = exports.joinUrl = exports.getQueryParams = exports.simpleAutocomplete = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.makeParameter = exports.makeTranslateObjectFormula = exports.makeSyncTable = exports.makeFormula = exports.makeEmptyFormula = exports.makeDynamicSyncTable = exports.makeMetadataFormula = exports.UserVisibleError = exports.Type = exports.MissingScopesError = exports.StatusCodeError = exports.PrecannedDateRange = exports.ParameterType = exports.NetworkConnection = exports.ConnectionRequirement = exports.PackDefinitionBuilder = exports.newPack = exports.PostSetupType = exports.AuthenticationType = void 0;
 var types_1 = require("./types");
 Object.defineProperty(exports, "AuthenticationType", { enumerable: true, get: function () { return types_1.AuthenticationType; } });
 var types_2 = require("./types");
@@ -94,23 +94,21 @@ Object.defineProperty(exports, "LinkDisplayType", { enumerable: true, get: funct
 var schema_8 = require("./schema");
 Object.defineProperty(exports, "ScaleIconSet", { enumerable: true, get: function () { return schema_8.ScaleIconSet; } });
 var schema_9 = require("./schema");
-Object.defineProperty(exports, "SliderDisplayType", { enumerable: true, get: function () { return schema_9.SliderDisplayType; } });
+Object.defineProperty(exports, "ValueHintType", { enumerable: true, get: function () { return schema_9.ValueHintType; } });
 var schema_10 = require("./schema");
-Object.defineProperty(exports, "ValueHintType", { enumerable: true, get: function () { return schema_10.ValueHintType; } });
+Object.defineProperty(exports, "ValueType", { enumerable: true, get: function () { return schema_10.ValueType; } });
 var schema_11 = require("./schema");
-Object.defineProperty(exports, "ValueType", { enumerable: true, get: function () { return schema_11.ValueType; } });
+Object.defineProperty(exports, "generateSchema", { enumerable: true, get: function () { return schema_11.generateSchema; } });
 var schema_12 = require("./schema");
-Object.defineProperty(exports, "generateSchema", { enumerable: true, get: function () { return schema_12.generateSchema; } });
+Object.defineProperty(exports, "makeAttributionNode", { enumerable: true, get: function () { return schema_12.makeAttributionNode; } });
 var schema_13 = require("./schema");
-Object.defineProperty(exports, "makeAttributionNode", { enumerable: true, get: function () { return schema_13.makeAttributionNode; } });
+Object.defineProperty(exports, "makeObjectSchema", { enumerable: true, get: function () { return schema_13.makeObjectSchema; } });
 var schema_14 = require("./schema");
-Object.defineProperty(exports, "makeObjectSchema", { enumerable: true, get: function () { return schema_14.makeObjectSchema; } });
+Object.defineProperty(exports, "makeReferenceSchemaFromObjectSchema", { enumerable: true, get: function () { return schema_14.makeReferenceSchemaFromObjectSchema; } });
 var schema_15 = require("./schema");
-Object.defineProperty(exports, "makeReferenceSchemaFromObjectSchema", { enumerable: true, get: function () { return schema_15.makeReferenceSchemaFromObjectSchema; } });
+Object.defineProperty(exports, "makeSchema", { enumerable: true, get: function () { return schema_15.makeSchema; } });
 var schema_16 = require("./schema");
-Object.defineProperty(exports, "makeSchema", { enumerable: true, get: function () { return schema_16.makeSchema; } });
-var schema_17 = require("./schema");
-Object.defineProperty(exports, "withIdentity", { enumerable: true, get: function () { return schema_17.withIdentity; } });
+Object.defineProperty(exports, "withIdentity", { enumerable: true, get: function () { return schema_16.withIdentity; } });
 // Exports for intermediate entities we want included in the TypeDoc documentation
 // but otherwise wouldn't care about including as top-level exports of the SDK
 var api_types_6 = require("./api_types");

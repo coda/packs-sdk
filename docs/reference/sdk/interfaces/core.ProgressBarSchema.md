@@ -1,26 +1,26 @@
 ---
-title: "SliderSchema"
+title: "ProgressBarSchema"
 ---
-# Interface: SliderSchema
+# Interface: ProgressBarSchema
 
-[core](../modules/core.md).SliderSchema
+[core](../modules/core.md).ProgressBarSchema
 
 A schema representing a return value or object property that is a number that should
-be rendered as a slider.
+be rendered as a progress bar.
 
 ## Hierarchy
 
-- `BaseNumberSchema`<[`Slider`](../enums/core.ValueHintType.md#slider)\>
+- `BaseNumberSchema`<[`ProgressBar`](../enums/core.ValueHintType.md#progressbar)\>
 
-  ↳ **`SliderSchema`**
+  ↳ **`ProgressBarSchema`**
 
 ## Properties
 
 ### codaType
 
-• **codaType**: [`Slider`](../enums/core.ValueHintType.md#slider)
+• **codaType**: [`ProgressBar`](../enums/core.ValueHintType.md#progressbar)
 
-Instructs Coda to render this value as a slider.
+Instructs Coda to render this value as a progress bar.
 
 #### Overrides
 
@@ -28,7 +28,7 @@ BaseNumberSchema.codaType
 
 #### Defined in
 
-[schema.ts:385](https://github.com/coda/packs-sdk/blob/main/schema.ts#L385)
+[schema.ts:402](https://github.com/coda/packs-sdk/blob/main/schema.ts#L402)
 
 ___
 
@@ -55,11 +55,11 @@ ___
 
 • `Optional` **maximum**: `string` \| `number`
 
-The maximum value selectable by this slider.
+The maximum value selectable by this progress bar.
 
 #### Defined in
 
-[schema.ts:389](https://github.com/coda/packs-sdk/blob/main/schema.ts#L389)
+[schema.ts:406](https://github.com/coda/packs-sdk/blob/main/schema.ts#L406)
 
 ___
 
@@ -67,11 +67,11 @@ ___
 
 • `Optional` **minimum**: `string` \| `number`
 
-The minimum value selectable by this slider.
+The minimum value selectable by this progress bar.
 
 #### Defined in
 
-[schema.ts:387](https://github.com/coda/packs-sdk/blob/main/schema.ts#L387)
+[schema.ts:404](https://github.com/coda/packs-sdk/blob/main/schema.ts#L404)
 
 ___
 
@@ -79,11 +79,11 @@ ___
 
 • `Optional` **showValue**: `boolean`
 
-Whether to display the underlying numeric value in addition to the slider.
+Whether to display the underlying numeric value in addition to the progress bar.
 
 #### Defined in
 
-[schema.ts:393](https://github.com/coda/packs-sdk/blob/main/schema.ts#L393)
+[schema.ts:410](https://github.com/coda/packs-sdk/blob/main/schema.ts#L410)
 
 ___
 
@@ -91,11 +91,11 @@ ___
 
 • `Optional` **step**: `string` \| `number`
 
-The minimum amount the slider can be moved when dragged.
+The minimum amount the progress bar can be moved when dragged.
 
 #### Defined in
 
-[schema.ts:391](https://github.com/coda/packs-sdk/blob/main/schema.ts#L391)
+[schema.ts:408](https://github.com/coda/packs-sdk/blob/main/schema.ts#L408)
 
 ___
 

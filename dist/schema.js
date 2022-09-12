@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.SliderDisplayType = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_2 = require("./helpers/ensure");
@@ -163,6 +163,10 @@ var ValueHintType;
      */
     ValueHintType["Scale"] = "scale";
     /**
+     * Indicates to render a numeric value as a progress bar UI component.
+     */
+    ValueHintType["ProgressBar"] = "progressBar";
+    /**
      * Indicates to render a boolean value as a toggle.
      */
     ValueHintType["Toggle"] = "toggle";
@@ -189,6 +193,7 @@ exports.NumberHintValueTypes = [
     ValueHintType.Percent,
     ValueHintType.Currency,
     ValueHintType.Slider,
+    ValueHintType.ProgressBar,
     ValueHintType.Scale,
 ];
 exports.BooleanHintValueTypes = [ValueHintType.Toggle];
@@ -219,17 +224,6 @@ var CurrencyFormat;
      */
     CurrencyFormat["Financial"] = "financial";
 })(CurrencyFormat = exports.CurrencyFormat || (exports.CurrencyFormat = {}));
-/**
- * Display types that can be used with a {@link SliderSchema} to influence the rendering
- * of the value.
- */
-var SliderDisplayType;
-(function (SliderDisplayType) {
-    /** Render the value as a slider (the default). */
-    SliderDisplayType["Slider"] = "slider";
-    /** Render the value as a progress bar. */
-    SliderDisplayType["Progress"] = "progress";
-})(SliderDisplayType = exports.SliderDisplayType || (exports.SliderDisplayType = {}));
 /**
  * Icons that can be used with a {@link ScaleSchema}.
  *

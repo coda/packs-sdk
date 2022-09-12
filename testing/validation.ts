@@ -7,6 +7,7 @@ import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
 import type {ParameterError} from './types';
 import {ParameterException} from './types';
+import type {ProgressBarSchema} from '../schema';
 import {ResultValidationContext} from './types';
 import {ResultValidationException} from './types';
 import type {ScaleSchema} from '../schema';
@@ -133,6 +134,7 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
       }
       switch (schema.codaType) {
         case ValueHintType.Slider:
+        case ValueHintType.ProgressBar:
           const sliderErrorMessage = tryParseSlider(result, schema);
           return sliderErrorMessage ? [sliderErrorMessage] : [];
         case ValueHintType.Scale:
@@ -239,7 +241,7 @@ function tryParseEmail(result: unknown, schema: BaseStringSchema): ValidationErr
   }
 }
 
-function tryParseSlider(result: unknown, schema: SliderSchema) {
+function tryParseSlider(result: unknown, schema: SliderSchema | ProgressBarSchema) {
   const value = result as number;
   const {minimum, maximum} = schema;
   if (value < (minimum ?? 0)) {

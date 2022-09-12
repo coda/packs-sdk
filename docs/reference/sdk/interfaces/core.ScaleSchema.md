@@ -32,7 +32,7 @@ BaseNumberSchema.codaType
 
 #### Defined in
 
-[schema.ts:441](https://github.com/coda/packs-sdk/blob/main/schema.ts#L441)
+[schema.ts:451](https://github.com/coda/packs-sdk/blob/main/schema.ts#L451)
 
 ___
 
@@ -51,7 +51,7 @@ BaseNumberSchema.description
 
 #### Defined in
 
-[schema.ts:210](https://github.com/coda/packs-sdk/blob/main/schema.ts#L210)
+[schema.ts:215](https://github.com/coda/packs-sdk/blob/main/schema.ts#L215)
 
 ___
 
@@ -63,7 +63,7 @@ The icon to render.
 
 #### Defined in
 
-[schema.ts:445](https://github.com/coda/packs-sdk/blob/main/schema.ts#L445)
+[schema.ts:455](https://github.com/coda/packs-sdk/blob/main/schema.ts#L455)
 
 ___
 
@@ -75,7 +75,7 @@ The number of icons to render.
 
 #### Defined in
 
-[schema.ts:443](https://github.com/coda/packs-sdk/blob/main/schema.ts#L443)
+[schema.ts:453](https://github.com/coda/packs-sdk/blob/main/schema.ts#L453)
 
 ___
 
@@ -91,4 +91,4 @@ BaseNumberSchema.type
 
 #### Defined in
 
-[schema.ts:238](https://github.com/coda/packs-sdk/blob/main/schema.ts#L238)
+[schema.ts:244](https://github.com/coda/packs-sdk/blob/main/schema.ts#L244)

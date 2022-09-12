@@ -17,7 +17,7 @@ Image is rendered without outline.
 
 #### Defined in
 
-[schema.ts:612](https://github.com/coda/packs-sdk/blob/main/schema.ts#L612)
+[schema.ts:622](https://github.com/coda/packs-sdk/blob/main/schema.ts#L622)
 
 ___
 
@@ -29,4 +29,4 @@ Image is rendered with outline.
 
 #### Defined in
 
-[schema.ts:614](https://github.com/coda/packs-sdk/blob/main/schema.ts#L614)
+[schema.ts:624](https://github.com/coda/packs-sdk/blob/main/schema.ts#L624)

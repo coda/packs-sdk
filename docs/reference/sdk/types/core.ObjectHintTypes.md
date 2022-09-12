@@ -11,4 +11,4 @@ The subset of [ValueHintType](../enums/core.ValueHintType.md) that can be used w
 
 #### Defined in
 
-[schema.ts:201](https://github.com/coda/packs-sdk/blob/main/schema.ts#L201)
+[schema.ts:206](https://github.com/coda/packs-sdk/blob/main/schema.ts#L206)

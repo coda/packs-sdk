@@ -48,6 +48,7 @@ import type {PackVersionMetadata} from '../compiled_types';
 import type {ParamDef} from '../api_types';
 import type {ParamDefs} from '../api_types';
 import {PostSetupType} from '../types';
+import type {ProgressBarSchema} from '../schema';
 import type {QueryParamTokenAuthentication} from '../types';
 import {ScaleIconSet} from '../schema';
 import type {ScaleSchema} from '../schema';
@@ -55,7 +56,6 @@ import type {Schema} from '../schema';
 import type {SetEndpoint} from '../types';
 import {SimpleStringHintValueTypes} from '../schema';
 import type {SimpleStringSchema} from '../schema';
-import {SliderDisplayType} from '../schema';
 import type {SliderSchema} from '../schema';
 import type {StringDateSchema} from '../schema';
 import type {StringDateTimeSchema} from '../schema';
@@ -619,7 +619,16 @@ const sliderPropertySchema = zodCompleteStrictObject<SliderSchema & ObjectSchema
   maximum: z.number().optional(),
   minimum: z.number().optional(),
   step: z.number().optional(),
-  displayType: z.nativeEnum(SliderDisplayType).optional(),
+  showValue: z.boolean().optional(),
+  ...basePropertyValidators,
+});
+
+const progressBarPropertySchema = zodCompleteStrictObject<ProgressBarSchema & ObjectSchemaProperty>({
+  type: zodDiscriminant(ValueType.Number),
+  codaType: zodDiscriminant(ValueHintType.ProgressBar),
+  maximum: z.number().optional(),
+  minimum: z.number().optional(),
+  step: z.number().optional(),
   showValue: z.boolean().optional(),
   ...basePropertyValidators,
 });
@@ -667,6 +676,7 @@ const numberPropertySchema = z.union([
   numericPropertySchema,
   scalePropertySchema,
   sliderPropertySchema,
+  progressBarPropertySchema,
   currencyPropertySchema,
   numericDatePropertySchema,
   numericTimePropertySchema,

@@ -30,7 +30,7 @@ BaseStringSchema.codaType
 
 #### Defined in
 
-[schema.ts:536](https://github.com/coda/packs-sdk/blob/main/schema.ts#L536)
+[schema.ts:546](https://github.com/coda/packs-sdk/blob/main/schema.ts#L546)
 
 ___
 
@@ -49,7 +49,7 @@ BaseStringSchema.description
 
 #### Defined in
 
-[schema.ts:210](https://github.com/coda/packs-sdk/blob/main/schema.ts#L210)
+[schema.ts:215](https://github.com/coda/packs-sdk/blob/main/schema.ts#L215)
 
 ___
 
@@ -64,7 +64,7 @@ Only applies when this is used as a sync table property.
 
 #### Defined in
 
-[schema.ts:543](https://github.com/coda/packs-sdk/blob/main/schema.ts#L543)
+[schema.ts:553](https://github.com/coda/packs-sdk/blob/main/schema.ts#L553)
 
 ___
 
@@ -80,4 +80,4 @@ BaseStringSchema.type
 
 #### Defined in
 
-[schema.ts:681](https://github.com/coda/packs-sdk/blob/main/schema.ts#L681)
+[schema.ts:691](https://github.com/coda/packs-sdk/blob/main/schema.ts#L691)
