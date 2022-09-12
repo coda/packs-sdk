@@ -2,6 +2,11 @@
 
 This changelog keeps track of all changes to the Packs SDK. We follow conventions from [keepachangelog](https://keepachangelog.com/en/1.0.0/).
 
+## Unreleased
+
+- Adds support for render hits for progress bars, with the new `displayType` on `SliderSchema`, which can be set to `SliderDisplayType.Progress`.
+- Also adds in the `showValue` field on `SliderSchema` to indicate whether to show the underlying numeric value associated with a slider.
+
 ## [1.0.5] - 2022-08-05
 
 - Fixed the CLI compiler throwing for using common node modules.
