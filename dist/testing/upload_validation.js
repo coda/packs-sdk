@@ -44,16 +44,17 @@ const types_3 = require("../types");
 const types_4 = require("../types");
 const schema_10 = require("../schema");
 const schema_11 = require("../schema");
-const api_types_3 = require("../api_types");
 const schema_12 = require("../schema");
+const api_types_3 = require("../api_types");
 const schema_13 = require("../schema");
+const schema_14 = require("../schema");
 const zod_1 = require("zod");
 const ensure_1 = require("../helpers/ensure");
-const schema_14 = require("../schema");
+const schema_15 = require("../schema");
 const object_utils_1 = require("../helpers/object_utils");
 const object_utils_2 = require("../helpers/object_utils");
-const schema_15 = require("../schema");
 const schema_16 = require("../schema");
+const schema_17 = require("../schema");
 const migration_1 = require("../helpers/migration");
 const semver_1 = __importDefault(require("semver"));
 const z = __importStar(require("zod"));
@@ -122,8 +123,8 @@ function validateSyncTableSchema(schema) {
         return validated.data;
     }
     // In case this was an ObjectSchema (describing a single row), wrap it up as an ArraySchema.
-    const syntheticArraySchema = (0, schema_16.makeSchema)({
-        type: schema_13.ValueType.Array,
+    const syntheticArraySchema = (0, schema_17.makeSchema)({
+        type: schema_14.ValueType.Array,
         items: schema,
     });
     const validatedAsObjectSchema = arrayPropertySchema.safeParse(syntheticArraySchema);
@@ -454,7 +455,7 @@ const booleanPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
     resultType: zodDiscriminant(api_types_3.Type.boolean),
     schema: zodCompleteObject({
-        type: zodDiscriminant(schema_13.ValueType.Boolean),
+        type: zodDiscriminant(schema_14.ValueType.Boolean),
         codaType: z.enum([...schema_2.BooleanHintValueTypes]).optional(),
         description: z.string().optional(),
     }).optional(),
@@ -480,62 +481,64 @@ const basePropertyValidators = {
     required: z.boolean().optional(),
 };
 const booleanPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Boolean),
+    type: zodDiscriminant(schema_14.ValueType.Boolean),
     codaType: z.enum([...schema_2.BooleanHintValueTypes]).optional(),
     ...basePropertyValidators,
 });
 const numericPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Number),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Percent).optional(),
+    type: zodDiscriminant(schema_14.ValueType.Number),
+    codaType: zodDiscriminant(schema_13.ValueHintType.Percent).optional(),
     precision: z.number().optional(),
     useThousandsSeparator: z.boolean().optional(),
     ...basePropertyValidators,
 });
 const scalePropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Number),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Scale),
+    type: zodDiscriminant(schema_14.ValueType.Number),
+    codaType: zodDiscriminant(schema_13.ValueHintType.Scale),
     maximum: z.number().optional(),
     icon: z.nativeEnum(schema_10.ScaleIconSet).optional(),
     ...basePropertyValidators,
 });
 const sliderPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Number),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Slider),
+    type: zodDiscriminant(schema_14.ValueType.Number),
+    codaType: zodDiscriminant(schema_13.ValueHintType.Slider),
     maximum: z.number().optional(),
     minimum: z.number().optional(),
     step: z.number().optional(),
+    displayType: z.nativeEnum(schema_12.SliderDisplayType).optional(),
+    showValue: z.boolean().optional(),
     ...basePropertyValidators,
 });
 const currencyPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Number),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Currency),
+    type: zodDiscriminant(schema_14.ValueType.Number),
+    codaType: zodDiscriminant(schema_13.ValueHintType.Currency),
     precision: z.number().optional(),
     currencyCode: z.string().optional(),
     format: z.nativeEnum(schema_3.CurrencyFormat).optional(),
     ...basePropertyValidators,
 });
 const numericDatePropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Number),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Date),
+    type: zodDiscriminant(schema_14.ValueType.Number),
+    codaType: zodDiscriminant(schema_13.ValueHintType.Date),
     format: z.string().optional(),
     ...basePropertyValidators,
 });
 const numericTimePropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Number),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Time),
+    type: zodDiscriminant(schema_14.ValueType.Number),
+    codaType: zodDiscriminant(schema_13.ValueHintType.Time),
     format: z.string().optional(),
     ...basePropertyValidators,
 });
 const numericDateTimePropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Number),
-    codaType: zodDiscriminant(schema_12.ValueHintType.DateTime),
+    type: zodDiscriminant(schema_14.ValueType.Number),
+    codaType: zodDiscriminant(schema_13.ValueHintType.DateTime),
     dateFormat: z.string().optional(),
     timeFormat: z.string().optional(),
     ...basePropertyValidators,
 });
 const numericDurationPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Number),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Duration),
+    type: zodDiscriminant(schema_14.ValueType.Number),
+    codaType: zodDiscriminant(schema_13.ValueHintType.Duration),
     precision: z.number().optional(),
     maxUnit: z.nativeEnum(schema_4.DurationUnit).optional(),
     ...basePropertyValidators,
@@ -556,59 +559,59 @@ const numericPackFormulaSchema = zodCompleteObject({
     schema: numberPropertySchema.optional(),
 });
 const simpleStringPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.String),
+    type: zodDiscriminant(schema_14.ValueType.String),
     codaType: z.enum([...schema_11.SimpleStringHintValueTypes]).optional(),
     ...basePropertyValidators,
 });
 const stringDatePropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.String),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Date),
+    type: zodDiscriminant(schema_14.ValueType.String),
+    codaType: zodDiscriminant(schema_13.ValueHintType.Date),
     format: z.string().optional(),
     ...basePropertyValidators,
 });
 const stringTimePropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.String),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Time),
+    type: zodDiscriminant(schema_14.ValueType.String),
+    codaType: zodDiscriminant(schema_13.ValueHintType.Time),
     format: z.string().optional(),
     ...basePropertyValidators,
 });
 const stringDateTimePropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.String),
-    codaType: zodDiscriminant(schema_12.ValueHintType.DateTime),
+    type: zodDiscriminant(schema_14.ValueType.String),
+    codaType: zodDiscriminant(schema_13.ValueHintType.DateTime),
     dateFormat: z.string().optional(),
     timeFormat: z.string().optional(),
     ...basePropertyValidators,
 });
 const durationPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.String),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Duration),
+    type: zodDiscriminant(schema_14.ValueType.String),
+    codaType: zodDiscriminant(schema_13.ValueHintType.Duration),
     precision: z.number().optional(),
     maxUnit: z.nativeEnum(schema_4.DurationUnit).optional(),
     ...basePropertyValidators,
 });
 const embedPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.String),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Embed),
+    type: zodDiscriminant(schema_14.ValueType.String),
+    codaType: zodDiscriminant(schema_13.ValueHintType.Embed),
     force: z.boolean().optional(),
     ...basePropertyValidators,
 });
 const emailPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.String),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Email),
+    type: zodDiscriminant(schema_14.ValueType.String),
+    codaType: zodDiscriminant(schema_13.ValueHintType.Email),
     display: z.nativeEnum(schema_5.EmailDisplayType).optional(),
     autocomplete: z.boolean().optional(),
     ...basePropertyValidators,
 });
 const linkPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.String),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Url),
+    type: zodDiscriminant(schema_14.ValueType.String),
+    codaType: zodDiscriminant(schema_13.ValueHintType.Url),
     display: z.nativeEnum(schema_8.LinkDisplayType).optional(),
     force: z.boolean().optional(),
     ...basePropertyValidators,
 });
 const imagePropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.String),
-    codaType: z.union([zodDiscriminant(schema_12.ValueHintType.ImageAttachment), zodDiscriminant(schema_12.ValueHintType.ImageReference)]),
+    type: zodDiscriminant(schema_14.ValueType.String),
+    codaType: z.union([zodDiscriminant(schema_13.ValueHintType.ImageAttachment), zodDiscriminant(schema_13.ValueHintType.ImageReference)]),
     imageOutline: z.nativeEnum(schema_7.ImageOutline).optional(),
     imageCornerStyle: z.nativeEnum(schema_6.ImageCornerStyle).optional(),
     ...basePropertyValidators,
@@ -632,7 +635,7 @@ const stringPackFormulaSchema = zodCompleteObject({
 // TODO(jonathan): Give this a better type than ZodTypeAny after figuring out
 // recursive typing better.
 const arrayPropertySchema = z.lazy(() => zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Array),
+    type: zodDiscriminant(schema_14.ValueType.Array),
     items: objectPropertyUnionSchema,
     ...basePropertyValidators,
 }));
@@ -692,7 +695,7 @@ const attributionSchema = z
     .optional();
 const genericObjectSchema = z.lazy(() => zodCompleteObject({
     ...basePropertyValidators,
-    type: zodDiscriminant(schema_13.ValueType.Object),
+    type: zodDiscriminant(schema_14.ValueType.Object),
     description: z.string().optional(),
     id: z.string().min(1).optional(),
     idProperty: z.string().min(1).optional(),
@@ -764,7 +767,7 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
                 return;
             }
             const titlePropertySchema = schema.properties[schema.titleProperty];
-            if (![schema_13.ValueType.String, schema_13.ValueType.Object].includes(titlePropertySchema.type)) {
+            if (![schema_14.ValueType.String, schema_14.ValueType.Object].includes(titlePropertySchema.type)) {
                 context.addIssue({
                     code: z.ZodIssueCode.custom,
                     path: ['titleProperty'],
@@ -785,8 +788,8 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
                 return;
             }
             const imagePropertySchema = schema.properties[schema.imageProperty];
-            if (imagePropertySchema.type !== schema_13.ValueType.String ||
-                ![schema_12.ValueHintType.ImageAttachment, schema_12.ValueHintType.ImageReference].includes(imagePropertySchema.codaType)) {
+            if (imagePropertySchema.type !== schema_14.ValueType.String ||
+                ![schema_13.ValueHintType.ImageAttachment, schema_13.ValueHintType.ImageReference].includes(imagePropertySchema.codaType)) {
                 context.addIssue({
                     code: z.ZodIssueCode.custom,
                     path: ['imageProperty'],
@@ -807,9 +810,9 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
                 return;
             }
             const descriptionPropertySchema = schema.properties[schema.descriptionProperty];
-            if (descriptionPropertySchema.type !== schema_13.ValueType.String &&
-                (descriptionPropertySchema.type !== schema_13.ValueType.Array ||
-                    descriptionPropertySchema.items.type !== schema_13.ValueType.String)) {
+            if (descriptionPropertySchema.type !== schema_14.ValueType.String &&
+                (descriptionPropertySchema.type !== schema_14.ValueType.Array ||
+                    descriptionPropertySchema.items.type !== schema_14.ValueType.String)) {
                 context.addIssue({
                     code: z.ZodIssueCode.custom,
                     path: ['descriptionProperty'],
@@ -830,7 +833,7 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
                 return;
             }
             const linkPropertySchema = schema.properties[schema.linkProperty];
-            if (linkPropertySchema.type !== schema_13.ValueType.String || linkPropertySchema.codaType !== schema_12.ValueHintType.Url) {
+            if (linkPropertySchema.type !== schema_14.ValueType.String || linkPropertySchema.codaType !== schema_13.ValueHintType.Url) {
                 context.addIssue({
                     code: z.ZodIssueCode.custom,
                     path: ['linkProperty'],
@@ -857,12 +860,12 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
         if ('codaType' in subtitlePropertySchema &&
             subtitlePropertySchema.codaType &&
             [
-                schema_12.ValueHintType.ImageAttachment,
-                schema_12.ValueHintType.Attachment,
-                schema_12.ValueHintType.ImageReference,
-                schema_12.ValueHintType.Embed,
-                schema_12.ValueHintType.Scale,
-                schema_12.ValueHintType.Scale,
+                schema_13.ValueHintType.ImageAttachment,
+                schema_13.ValueHintType.Attachment,
+                schema_13.ValueHintType.ImageReference,
+                schema_13.ValueHintType.Embed,
+                schema_13.ValueHintType.Scale,
+                schema_13.ValueHintType.Scale,
             ].includes(subtitlePropertySchema.codaType)) {
             context.addIssue({
                 code: z.ZodIssueCode.custom,
@@ -1343,10 +1346,10 @@ const packMetadataSchemaBySdkVersion = [
     },
 ];
 function validateSchemaDeprecatedFields(schema, pathPrefix, context) {
-    if ((0, schema_15.isObject)(schema)) {
+    if ((0, schema_16.isObject)(schema)) {
         validateObjectSchemaDeprecatedFields(schema, pathPrefix, context);
     }
-    if ((0, schema_14.isArray)(schema)) {
+    if ((0, schema_15.isArray)(schema)) {
         validateSchemaDeprecatedFields(schema.items, [...pathPrefix, 'items'], context);
     }
 }

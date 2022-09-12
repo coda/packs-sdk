@@ -55,6 +55,7 @@ import type {Schema} from '../schema';
 import type {SetEndpoint} from '../types';
 import {SimpleStringHintValueTypes} from '../schema';
 import type {SimpleStringSchema} from '../schema';
+import {SliderDisplayType} from '../schema';
 import type {SliderSchema} from '../schema';
 import type {StringDateSchema} from '../schema';
 import type {StringDateTimeSchema} from '../schema';
@@ -618,6 +619,8 @@ const sliderPropertySchema = zodCompleteStrictObject<SliderSchema & ObjectSchema
   maximum: z.number().optional(),
   minimum: z.number().optional(),
   step: z.number().optional(),
+  displayType: z.nativeEnum(SliderDisplayType).optional(),
+  showValue: z.boolean().optional(),
   ...basePropertyValidators,
 });
 

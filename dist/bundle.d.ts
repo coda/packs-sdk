@@ -345,6 +345,14 @@ export interface CurrencySchema extends BaseNumberSchema<ValueHintType.Currency>
 	format?: CurrencyFormat;
 }
 /**
+ * Display types that can be used with a {@link SliderSchema} to influence the rendering
+ * of the value.
+ */
+export declare enum SliderDisplayType {
+	Slider = "slider",
+	Progress = "progress"
+}
+/**
  * A schema representing a return value or object property that is a number that should
  * be rendered as a slider.
  */
@@ -357,6 +365,10 @@ export interface SliderSchema extends BaseNumberSchema<ValueHintType.Slider> {
 	maximum?: number | string;
 	/** The minimum amount the slider can be moved when dragged. */
 	step?: number | string;
+	/** How to display this slider. If unspecified, defaults to {@link SliderDisplayType.Slider}. */
+	displayType?: SliderDisplayType;
+	/** Whether to display the underlying numeric value in addition to the slider. */
+	showValue?: boolean;
 }
 /**
  * Icons that can be used with a {@link ScaleSchema}.

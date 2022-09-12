@@ -231,8 +231,7 @@ export type NumberSchema =
   | NumericDateSchema
   | NumericTimeSchema
   | NumericDateTimeSchema
-  | NumericDurationSchema
-;
+  | NumericDurationSchema;
 
 export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> extends BaseSchema {
   /** Identifies this schema as relating to a number value. */
@@ -313,19 +312,19 @@ export interface NumericDateTimeSchema extends BaseNumberSchema<ValueHintType.Da
  * A schema representing a return value or object property that is provided as a number,
  * which Coda should interpret as a duration. The given number should be in seconds of the duration.
  */
- export interface NumericDurationSchema extends BaseNumberSchema<ValueHintType.Duration> {
+export interface NumericDurationSchema extends BaseNumberSchema<ValueHintType.Duration> {
   /** Instructs Coda to render this value as a duration. */
   codaType: ValueHintType.Duration;
   /**
    * A refinement of {@link DurationSchema.maxUnit} to use for rounding the duration when rendering.
    * Currently only `1` is supported, which is the same as omitting a value.
    */
-   precision?: number;
-   /**
-    * The unit to use for rounding the duration when rendering. For example, if using `DurationUnit.Days`,
-    * and a value of 273600 is provided (3 days 4 hours) is provided, it will be rendered as "3 days".
-    */
-   maxUnit?: DurationUnit;
+  precision?: number;
+  /**
+   * The unit to use for rounding the duration when rendering. For example, if using `DurationUnit.Days`,
+   * and a value of 273600 is provided (3 days 4 hours) is provided, it will be rendered as "3 days".
+   */
+  maxUnit?: DurationUnit;
 }
 
 /**
@@ -372,6 +371,15 @@ export interface CurrencySchema extends BaseNumberSchema<ValueHintType.Currency>
 }
 
 /**
+ * Display types that can be used with a {@link SliderSchema} to influence the rendering
+ * of the value.
+ */
+export enum SliderDisplayType {
+  Slider = 'slider',
+  Progress = 'progress',
+}
+
+/**
  * A schema representing a return value or object property that is a number that should
  * be rendered as a slider.
  */
@@ -384,6 +392,10 @@ export interface SliderSchema extends BaseNumberSchema<ValueHintType.Slider> {
   maximum?: number | string;
   /** The minimum amount the slider can be moved when dragged. */
   step?: number | string;
+  /** How to display this slider. If unspecified, defaults to {@link SliderDisplayType.Slider}. */
+  displayType?: SliderDisplayType;
+  /** Whether to display the underlying numeric value in addition to the slider. */
+  showValue?: boolean;
 }
 
 /**
@@ -614,8 +626,7 @@ export enum ImageCornerStyle {
  * A schema representing a return value or object property that is provided as a string,
  * which Coda should interpret as an image.
  */
- export interface ImageSchema extends BaseStringSchema<
-  ValueHintType.ImageReference | ValueHintType.ImageAttachment> {
+export interface ImageSchema extends BaseStringSchema<ValueHintType.ImageReference | ValueHintType.ImageAttachment> {
   /** Instructs Coda to render this value as an Image. */
   codaType: ValueHintType.ImageReference | ValueHintType.ImageAttachment;
   /** ImageOutline type specifying style of outline on images. If unspecified, default is Solid. */
