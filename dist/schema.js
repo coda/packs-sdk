@@ -225,7 +225,9 @@ var CurrencyFormat;
  */
 var SliderDisplayType;
 (function (SliderDisplayType) {
+    /** Render the value as a slider (the default). */
     SliderDisplayType["Slider"] = "slider";
+    /** Render the value as a progress bar. */
     SliderDisplayType["Progress"] = "progress";
 })(SliderDisplayType = exports.SliderDisplayType || (exports.SliderDisplayType = {}));
 /**

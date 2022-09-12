@@ -14,9 +14,11 @@ of the value.
 
 • **Progress** = ``"progress"``
 
+Render the value as a progress bar.
+
 #### Defined in
 
-[schema.ts:379](https://github.com/coda/packs-sdk/blob/main/schema.ts#L379)
+[schema.ts:381](https://github.com/coda/packs-sdk/blob/main/schema.ts#L381)
 
 ___
 
@@ -24,6 +26,8 @@ ___
 
 • **Slider** = ``"slider"``
 
+Render the value as a slider (the default).
+
 #### Defined in
 
-[schema.ts:378](https://github.com/coda/packs-sdk/blob/main/schema.ts#L378)
+[schema.ts:379](https://github.com/coda/packs-sdk/blob/main/schema.ts#L379)

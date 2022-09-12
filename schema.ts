@@ -375,7 +375,9 @@ export interface CurrencySchema extends BaseNumberSchema<ValueHintType.Currency>
  * of the value.
  */
 export enum SliderDisplayType {
+  /** Render the value as a slider (the default). */
   Slider = 'slider',
+  /** Render the value as a progress bar. */
   Progress = 'progress',
 }
 
