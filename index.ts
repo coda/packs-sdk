@@ -173,7 +173,7 @@ export {ScaleIconSet} from './schema';
 export type {ScaleSchema} from './schema';
 export type {Schema} from './schema';
 export type {SchemaType} from './schema';
-export type {SliderDisplayType} from './schema';
+export {SliderDisplayType} from './schema';
 export type {SliderSchema} from './schema';
 export type {StringDateSchema} from './schema';
 export type {StringEmbedSchema} from './schema';
