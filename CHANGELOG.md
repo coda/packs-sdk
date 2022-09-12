@@ -4,7 +4,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## Unreleased
 
-- Adds support for render hits for progress bars, with the new `ValueHintType.PorgressBar`.
+- Adds support for render hits for progress bars, with the new `ValueHintType.ProgressBar`.
 - Also adds in the `showValue` field on `SliderSchema` to indicate whether to show the underlying numeric value associated with a slider.
 
 ## [1.0.5] - 2022-08-05
