@@ -4,6 +4,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## Unreleased
 
+- The `isolated-vm` npm package is no longer a required dependency. It will be installed automatically if your system supports it, otherwise npm will ignore it. When running `coda execute`, if `isolated-vm` is available, your formula will be executed inside of a virtual machine sandbox to better simulate the actual Coda runtime environment for packs. If not available, your formula will still be executed, just not within a sandbox.
 - Adds support for render hits for progress bars, with the new `ValueHintType.ProgressBar`.
 - Also adds in the `showValue` field on `SliderSchema` to indicate whether to show the underlying numeric value associated with a slider.
 

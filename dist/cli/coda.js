@@ -20,6 +20,7 @@ const set_option_1 = require("./set_option");
 const upload_1 = require("./upload");
 const validate_1 = require("./validate");
 const whoami_1 = require("./whoami");
+const ivm_wrapper_1 = require("../testing/ivm_wrapper");
 const yargs_1 = __importDefault(require("yargs"));
 if (require.main === module) {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -38,7 +39,7 @@ if (require.main === module) {
             vm: {
                 boolean: true,
                 desc: 'Execute the requested command in a virtual machine that mimics the environment Coda uses to execute Packs.',
-                default: true,
+                default: Boolean((0, ivm_wrapper_1.tryGetIvm)()),
             },
             dynamicUrl: {
                 string: true,

@@ -1,18 +1,22 @@
 import {MissingScopesError} from '../api';
 import {StatusCodeError} from '../api';
+import {getIvm} from '../testing/ivm_wrapper';
 import {inspect} from 'util';
-import ivm from 'isolated-vm';
 import {marshalValue} from '../runtime/common/marshaling';
 import {marshalValuesForLogging} from '../runtime/common/marshaling';
+import {tryGetIvm} from '../testing/ivm_wrapper';
 import {unmarshalValue} from '../runtime/common/marshaling';
 import {unwrapError} from '../runtime/common/marshaling';
 import {wrapError} from '../runtime/common/marshaling';
 
 describe('Marshaling', () => {
+  const describeVmOnly = tryGetIvm() ? describe : describe.skip;
+
   // The purpose of marshaling is to make sure values get into and out of isolated-vm without
   // raising errors or getting garbled, so during the tests we'll actually pass values into
   // and out of isolated-vm to ensure that works correctly.
   function passThroughIsolatedVm<T>(val: T): T {
+    const ivm = getIvm();
     const isolate = new ivm.Isolate({memoryLimit: 12});
     const ivmContext = isolate.createContextSync();
 
@@ -113,7 +117,7 @@ describe('Marshaling', () => {
     assert.equal(transformedTypeError.message, 'test');
   });
 
-  describe('Errors', () => {
+  describeVmOnly('Errors', () => {
     function assertErrorsEqual(a: Error, b: Error) {
       assert.equal(a.name, b.name);
       assert.equal(a.stack, b.stack);

@@ -33,11 +33,11 @@ const esbuild = __importStar(require("esbuild"));
 const exorcist_1 = __importDefault(require("exorcist"));
 const fs_1 = __importDefault(require("fs"));
 const config_storage_1 = require("../cli/config_storage");
-const isolated_vm_1 = __importDefault(require("isolated-vm"));
 const os_1 = __importDefault(require("os"));
 const path_1 = __importDefault(require("path"));
 const helpers_1 = require("./helpers");
 const semver_1 = __importDefault(require("semver"));
+const ivm_wrapper_1 = require("./ivm_wrapper");
 const uglify_js_1 = __importDefault(require("uglify-js"));
 const uuid_1 = require("uuid");
 var TimerShimStrategy;
@@ -47,8 +47,12 @@ var TimerShimStrategy;
     TimerShimStrategy["Fake"] = "fake";
 })(TimerShimStrategy = exports.TimerShimStrategy || (exports.TimerShimStrategy = {}));
 async function loadIntoVM(bundlePath) {
+    const ivm = (0, ivm_wrapper_1.tryGetIvm)();
+    if (!ivm) {
+        return;
+    }
     const bundle = fs_1.default.readFileSync(bundlePath);
-    const isolate = new isolated_vm_1.default.Isolate({ memoryLimit: 128 });
+    const isolate = new ivm.Isolate({ memoryLimit: 128 });
     const ivmContext = await isolate.createContext();
     // Setup the global object.
     const jail = ivmContext.global;
