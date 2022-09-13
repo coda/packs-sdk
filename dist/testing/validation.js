@@ -129,6 +129,7 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
             }
             switch (schema.codaType) {
                 case schema_1.ValueHintType.Slider:
+                case schema_1.ValueHintType.ProgressBar:
                     const sliderErrorMessage = tryParseSlider(result, schema);
                     return sliderErrorMessage ? [sliderErrorMessage] : [];
                 case schema_1.ValueHintType.Scale:

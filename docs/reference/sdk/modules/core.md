@@ -94,6 +94,7 @@ import * as coda from "@codahq/packs-sdk";
 - [PackFormulaDef](../interfaces/core.PackFormulaDef.md)
 - [PackVersionDefinition](../interfaces/core.PackVersionDefinition.md)
 - [ParamDef](../interfaces/core.ParamDef.md)
+- [ProgressBarSchema](../interfaces/core.ProgressBarSchema.md)
 - [QueryParamTokenAuthentication](../interfaces/core.QueryParamTokenAuthentication.md)
 - [RequestHandlerTemplate](../interfaces/core.RequestHandlerTemplate.md)
 - [ResponseHandlerTemplate](../interfaces/core.ResponseHandlerTemplate.md)

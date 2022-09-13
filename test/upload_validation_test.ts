@@ -1143,6 +1143,14 @@ describe('Pack metadata Validation', () => {
               Foo: {type: ValueType.Number, codaType: ValueHintType.Scale, maximum: 5, icon: ScaleIconSet.Star},
               Bar: {type: ValueType.String, codaType: ValueHintType.Date, format: 'MMM D, YYYY'},
               Slider: {type: ValueType.Number, codaType: ValueHintType.Slider, minimum: 1, maximum: 3, step: 1},
+              Progress: {
+                type: ValueType.Number,
+                codaType: ValueHintType.ProgressBar,
+                minimum: 1,
+                maximum: 3,
+                step: 1,
+                showValue: true,
+              },
               Currency: {
                 type: ValueType.Number,
                 codaType: ValueHintType.Currency,

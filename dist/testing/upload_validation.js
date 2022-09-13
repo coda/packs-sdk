@@ -504,6 +504,16 @@ const sliderPropertySchema = zodCompleteStrictObject({
     maximum: z.number().optional(),
     minimum: z.number().optional(),
     step: z.number().optional(),
+    showValue: z.boolean().optional(),
+    ...basePropertyValidators,
+});
+const progressBarPropertySchema = zodCompleteStrictObject({
+    type: zodDiscriminant(schema_13.ValueType.Number),
+    codaType: zodDiscriminant(schema_12.ValueHintType.ProgressBar),
+    maximum: z.number().optional(),
+    minimum: z.number().optional(),
+    step: z.number().optional(),
+    showValue: z.boolean().optional(),
     ...basePropertyValidators,
 });
 const currencyPropertySchema = zodCompleteStrictObject({
@@ -544,6 +554,7 @@ const numberPropertySchema = z.union([
     numericPropertySchema,
     scalePropertySchema,
     sliderPropertySchema,
+    progressBarPropertySchema,
     currencyPropertySchema,
     numericDatePropertySchema,
     numericTimePropertySchema,
