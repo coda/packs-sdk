@@ -44,7 +44,7 @@ By default this returns the exchange rate for a single Euro, but we can change t
 https://api.exchangerate.host/latest?base=CAD&amount=100
 ```
 
-The URL returns a JSON response, which includes the conversion rate for all of the currencies it supports:
+The endpoint returns a JSON response, which includes the conversion rate for all of the currencies it supports:
 
 ```js
 {
