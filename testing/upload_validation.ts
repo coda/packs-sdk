@@ -613,12 +613,14 @@ const scalePropertySchema = zodCompleteStrictObject<ScaleSchema & ObjectSchemaPr
   ...basePropertyValidators,
 });
 
+const optionalStringOrNumber = z.union([z.number(), z.string()]).optional();
+
 const sliderPropertySchema = zodCompleteStrictObject<SliderSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.Number),
   codaType: zodDiscriminant(ValueHintType.Slider),
-  maximum: z.number().optional(),
-  minimum: z.number().optional(),
-  step: z.number().optional(),
+  maximum: optionalStringOrNumber,
+  minimum: optionalStringOrNumber,
+  step: optionalStringOrNumber,
   showValue: z.boolean().optional(),
   ...basePropertyValidators,
 });
@@ -626,9 +628,9 @@ const sliderPropertySchema = zodCompleteStrictObject<SliderSchema & ObjectSchema
 const progressBarPropertySchema = zodCompleteStrictObject<ProgressBarSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.Number),
   codaType: zodDiscriminant(ValueHintType.ProgressBar),
-  maximum: z.number().optional(),
-  minimum: z.number().optional(),
-  step: z.number().optional(),
+  maximum: optionalStringOrNumber,
+  minimum: optionalStringOrNumber,
+  step: optionalStringOrNumber,
   showValue: z.boolean().optional(),
   ...basePropertyValidators,
 });
