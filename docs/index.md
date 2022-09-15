@@ -7,12 +7,12 @@ hide:
 
 # Build Packs for Coda
 
+A Pack is an extension that adds new powers to your doc. Packs work by supplementing the core building blocks of Coda, so you can customize how your doc looks, works, and integrates.
+
 <section class="landing-row" markdown>
 
 <div class="landing-item" markdown>
 ## :material-toy-brick-outline: Let’s build building blocks together.
-
-A Pack is an extension that adds new powers to your doc. Packs work by supplementing the core building blocks of Coda, so you can customize how your doc looks, works, and integrates.
 
 With a little JavaScript, anyone can create and publish a Pack to the Gallery. All you need to do is write the code and Coda will deploy and host the Pack for you.
 
@@ -93,16 +93,8 @@ Coda makers have been busy building Packs of all types, and many have published 
 
 </section>
 
-<style>
-  /* Hide the title and edit button on this page. */
-  .md-content h1,
-  .md-content a.md-content__button {
-    display: none;
-  }
-</style>
 
-
-[overview]: guides/index.md
+[overview]: guides/overview.md
 [get_started]: tutorials/get-started/web.md
 [cli]: guides/development/cli.md
 [samples]: samples/index.md

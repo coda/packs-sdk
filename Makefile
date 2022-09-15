@@ -199,7 +199,7 @@ view-docs:
 # This step generates all the documentation for the SDK using mkdocs and dumps the contents in /site
 .PHONY: build-mkdocs
 build-mkdocs:
-	${PIPENV} run mkdocs build --strict
+	MKDOCS_CARDS=true ${PIPENV} run mkdocs build --strict
 
 # This step uploads the documentation for the current package version.
 # TODO(spencer): probably need some user handling to make sure there is an update in package.json if the documentation has been updated.

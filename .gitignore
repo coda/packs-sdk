@@ -12,3 +12,4 @@ site
 .coda-credentials.json
 .npmrc
 .devcontainer
+.cache
