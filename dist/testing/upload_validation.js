@@ -504,7 +504,7 @@ const sliderPropertySchema = zodCompleteStrictObject({
     codaType: zodDiscriminant(schema_12.ValueHintType.Slider),
     maximum: optionalStringOrNumber,
     minimum: optionalStringOrNumber,
-    step: z.number().optional(),
+    step: optionalStringOrNumber,
     showValue: z.boolean().optional(),
     ...basePropertyValidators,
 });
@@ -513,7 +513,7 @@ const progressBarPropertySchema = zodCompleteStrictObject({
     codaType: zodDiscriminant(schema_12.ValueHintType.ProgressBar),
     maximum: optionalStringOrNumber,
     minimum: optionalStringOrNumber,
-    step: z.number().optional(),
+    step: optionalStringOrNumber,
     showValue: z.boolean().optional(),
     ...basePropertyValidators,
 });
