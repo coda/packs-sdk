@@ -15,7 +15,7 @@ The majority of the SDK is in the [Core module][module_core], which contains all
 The [Testing module][module_testing] contains utilities that aid in writing unit tests and integration tests for Packs, and are only available when developing locally using the CLI. Learn more about how to utilize these functions in the [Testing guide][testing].
 
 
-[guides]: ../../guides/index.md
+[guides]: ../../guides/overview.md
 [module_core]: modules/core.md
 [module_testing]: modules/testing.md
 [testing]: ../../guides/development/testing.md#local

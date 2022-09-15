@@ -68,7 +68,16 @@ plugins:
           "guides/advanced/authentication/index.md": "guides/basics/authentication/index.md"
           "guides/advanced/authentication/oauth2.md": "guides/basics/authentication/oauth2.md"
           "guides/advanced/fetcher.md": "guides/basics/fetcher.md"
-          
+          # 2022-09-14: Move Overview page.
+          "guides/index.md": "guides/overview.md"
+
+    # Generate card images for social sharing.
+    - social:
+        cards: !ENV [MK_DOCS_GENERATE_CARDS, true]
+        cards_color:
+          fill: "#006838"  # Emerald
+          text: "#FFFFFF"
+
 
 extra:
   # Social icons for the footer.
@@ -98,6 +107,8 @@ theme:
     - navigation.tabs
     - navigation.tabs.sticky
     - navigation.sections
+    - navigation.indexes
+
   palette:
     scheme: coda
   logo: assets/logo.png

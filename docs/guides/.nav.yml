@@ -1,5 +1,5 @@
 nav:
-  - Overview: index.md
+  - overview.md
   - Building blocks: blocks
   - basics
   - advanced
