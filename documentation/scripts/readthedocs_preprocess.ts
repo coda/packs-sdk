@@ -14,7 +14,6 @@ const EnvScalarYamlType = new yaml.Type('!ENV', {
   resolve (data: string) {
     return data !== null;
   },
-
   construct (data: string): string | undefined {
     return process.env[data];
   },
@@ -25,7 +24,6 @@ const EnvSequenceYamlType = new yaml.Type('!ENV', {
   resolve (data: string[]) {
     return data !== null && data.length > 0;
   },
-
   construct (data: string[]): string | number | boolean | undefined {
     let fallback;
     if (data.length > 1) {
@@ -54,8 +52,7 @@ class CustomTag {
 }
 
 const UnknownYamlTypes = [ 'scalar', 'sequence', 'mapping' ].map(kind => {
-
-  // first argument here is a prefix, so this type will handle anything starting with !
+  // Matched any unknown tag.
   return new yaml.Type('tag:', {
     kind: kind as 'scalar' | 'sequence' | 'mapping',
     multi: true,
@@ -81,9 +78,15 @@ const UnknownYamlTypes = [ 'scalar', 'sequence', 'mapping' ].map(kind => {
  * @see {@link https://github.com/readthedocs/readthedocs.org/issues/8260}
  */
 function setSiteUrl() {
-  let siteUrl = `https://${process.env.READTHEDOCS_PROJECT}.readthedocs-hosted.com/${process.env.READTHEDOCS_LANGUAGE}/${process.env.READTHEDOCS_VERSION}/`;
-  if (process.env.READTHEDOCS_VERSION_TYPE === 'external') {
-    siteUrl = `https://${process.env.READTHEDOCS_PROJECT}--${process.env.READTHEDOCS_VERSION}.com.readthedocs.build/en/${process.env.READTHEDOCS_VERSION}/`;
+  const {
+    READTHEDOCS_PROJECT: project,
+    READTHEDOCS_LANGUAGE: lang,
+    READTHEDOCS_VERSION: version,
+    READTHEDOCS_VERSION_TYPE: type,
+  } = process.env;
+  let siteUrl = `https://${project}.readthedocs-hosted.com/${lang}/${version}/`;
+  if (type === 'external') {
+    siteUrl = `https://${project}--${version}.com.readthedocs.build/en/${version}/`;
   }
   process.env.MK_DOCS_SITE_URL = siteUrl;
   print(`Set MK_DOCS_SITE_URL to: ${siteUrl}`);
@@ -103,6 +106,7 @@ function replaceEnvVars() {
   ]);
 
   let content = fs.readFileSync(FilePath, 'utf8');
+  // When the YAML is loaded, the environment variables are substituted in.
   const doc = yaml.load(content, {schema});
   content = yaml.dump(doc, {schema});
   fs.writeFileSync(FilePath, content);
