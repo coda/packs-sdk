@@ -1143,6 +1143,13 @@ describe('Pack metadata Validation', () => {
               Foo: {type: ValueType.Number, codaType: ValueHintType.Scale, maximum: 5, icon: ScaleIconSet.Star},
               Bar: {type: ValueType.String, codaType: ValueHintType.Date, format: 'MMM D, YYYY'},
               Slider: {type: ValueType.Number, codaType: ValueHintType.Slider, minimum: 1, maximum: 3, step: 1},
+              SliderWithFormulas: {
+                type: ValueType.Number,
+                codaType: ValueHintType.Slider,
+                minimum: '[Min]',
+                maximum: '[Max]',
+                step: '[Step]',
+              },
               Progress: {
                 type: ValueType.Number,
                 codaType: ValueHintType.ProgressBar,
@@ -1191,6 +1198,10 @@ describe('Pack metadata Validation', () => {
         assert.equal(schemaProperties.Slider.minimum, 1);
         assert.equal(schemaProperties.Slider.maximum, 3);
         assert.equal(schemaProperties.Slider.step, 1);
+
+        assert.equal(schemaProperties.SliderWithFormulas.minimum, '[Min]');
+        assert.equal(schemaProperties.SliderWithFormulas.maximum, '[Max]');
+        assert.equal(schemaProperties.SliderWithFormulas.step, '[Step]');
 
         assert.equal(schemaProperties.Currency.precision, 2);
         assert.equal(schemaProperties.Currency.currencyCode, 'EUR');
