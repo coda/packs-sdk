@@ -8,19 +8,10 @@ hide:
 
 # Learn to build a sync table
 
-<section class="tutorial-row" markdown>
-<div markdown>
-
-Sync tables are special tables that pull in rows from an external API or data source. In this tutorial you'll learn how to build a sync table, retrieving book information from [Project Gutenberg][gutenberg].
-
-</div>
-<div markdown>
+Sync tables are special tables that pull in rows from an external API or data source. In this tutorial you'll learn how to build a basic sync table, including multiple types of data, filtering, and pagination.
 
 !!! abstract "Goal"
     Build a `Books` sync table that lists the books available in the Project Gutenberg archive.
-
-</div>
-</section>
 
 Before starting this tutorial, make sure you have completed:
 
@@ -98,7 +89,7 @@ The endpoint returns a JSON response which includes some metadata about the quer
 }
 ```
 
-Here yo can see that there are 308 books on the topic of cooking, returned in pages of 32 at a time. The `next` link provides the URL you can use to fetch the next page of results in the set. The `next` link is null when there are no pages left to fetch:
+Here you can see that there are 308 books on the topic of cooking, returned in pages of 32 at a time. The `next` link provides the URL you can use to fetch the next page of results in the set. The `next` link is null when there are no pages left to fetch:
 
 ```
 https://gutendex.com/books/?page=10&topic=Cooking
@@ -168,7 +159,7 @@ Start by scaffolding out the structure of the sync table, coming back to some of
 
     The first key-value pairs to set are the name and description of the sync table, both of which will be visible to users of the Pack. For the name use a plural noun corresponding to what the rows represent, "Books" in this case.
 
-    Next set the field `identityName`. This acts as the unique ID for this sync table, which is used for creating reference between sync tables. It is not visible to the user, but the normal convention is to use the singular version of the sync table name.
+    Next set the field `identityName`. This acts as the unique ID for this sync table, which is used for creating references between sync tables. It is not visible to the user, but the normal convention is to use the singular version of the sync table name.
 
     </div>
     <div markdown>
@@ -221,7 +212,7 @@ Start by scaffolding out the structure of the sync table, coming back to some of
     <section class="tutorial-row" markdown>
     <div markdown>
 
-    A sync table definition contains inside of it a formula definition, known as the sync formula, which does the actual fetching of the data. It's similar to regular formula, but with a few key differences:
+    A sync table definition contains a formula definition, known as the sync formula, which does the actual fetching of the data. It's similar to regular formula, but with a few key differences:
 
     - The name and description are never shown to the user (but are still required).
     - It doesn't declare a `resultType`, since it returns a special type used by sync tables.
@@ -263,7 +254,7 @@ You now have the basic structure of the sync table itself. Your code still won't
 
 ## :material-table-sync: Write the sync formula
 
-With the structure setup, you can now write the code that fetches the rows.
+With the structure set up, you can now write the code that fetches the rows.
 
 === ":material-numeric-1-circle: Define a topic parameter"
 
@@ -308,7 +299,7 @@ With the structure setup, you can now write the code that fetches the rows.
 
     First retrieve the value of the `topic` parameter, if set. Then use it to construct the API URL to fetch.
 
-    Finally, use the fether to make a request to that URL.
+    Finally, use the fetcher to make a request to that URL.
 
     </div>
     <div markdown>
@@ -484,7 +475,7 @@ The schema is essentially a blueprint for each row in the sync table, describing
 
     In addition the properties themselves, the schema contains various settings.
 
-    The `displayProperty` setting is used to specify which of the properties you defined should be shown within the chip in that row. For this schema the `title` property would make a good display value.
+    The `displayProperty` setting is used to specify which of the properties you defined should be used as the display value. It will be shown within the chip in the first column of the row, which by default is also the display column of the table. For this schema the `title` property would make a good display value.
 
     The `idProperty` setting is used to specify which of the properties contains the unique ID for the row. The `bookId` property was created for this purpose.
 
@@ -521,7 +512,7 @@ Build the Pack and install it in a doc. Drag the **Books** table on to the page 
 
 If everything is working correctly you should get a table with 32 books in it. Hovering over the chip in the first column will show the title and ID of the book.
 
-To filter to a spefic topic, open the sync option for the table, click **Add criteria** > **Topic**, enter a topic (like "Cooking") and click **Sync now**.
+To filter to a specific topic, open the sync option for the table, click **Add criteria** > **Topic**, enter a topic (like "Cooking") and click **Sync now**.
 
 </div>
 <div markdown>
@@ -627,7 +618,7 @@ Now that you have the basics working, extend the schema to include the full set 
 
     Just like `BookSchema` must be defined before the sync table where it is used, so must `AuthorSchema` be defined before it is used in `BookSchema`.
 
-    Define the properties for each author to match the data returned in the API, using `fromKey` when you want to expose a diffent name to users.
+    Define the properties for each author to match the data returned in the API, using `fromKey` when you want to expose a different name to users.
 
     The schema needs `displayProperty` set to determine which property to show in the chip, but it doesn't need `idProperty` set since it's not being used as a sync table row (just a sub-object inside of row).
 
@@ -667,7 +658,7 @@ Now that you have the basics working, extend the schema to include the full set 
 
     These fields don't exist in the row data exactly as needed, but you can define "synthetic" properties that you populate manually in the `execute` function (you'll do that in the next step).
 
-    Define a `thumbnail` and `link` property, setting the `codaType` field to instruct Coda to display these as Image URL and Link colunns respectively.
+    Define a `thumbnail` and `link` property, setting the `codaType` field to instruct Coda to display these as Image URL and Link columns respectively.
 
     </div>
     <div markdown>
@@ -690,7 +681,7 @@ Now that you have the basics working, extend the schema to include the full set 
         },
         thumbnail: {
           type: coda.ValueType.String,
-          codaType: coda.ValueHintType.ImageReference,
+          codaType: coda.ValueHintType.ImageAttachment,
         },
         link: {
           type: coda.ValueType.String,
@@ -947,7 +938,7 @@ If everything is working correctly you should have more than 32 rows in your syn
 The Pack maker tools will show multiple executions of the sync formula, with those after the first marked as continuations.
 
 !!! info "Truncated results"
-    Sync tables have a maximum number of rows they can store, which varies depending on what plan you are subscribed to. When your sync hits that limit the sync formula will be terminated, even if you returned another continuation.
+    Sync tables have a maximum number of rows they can store, which varies depending on what Coda plan you are subscribed to. When your sync hits that limit the sync formula will be terminated, even if you returned another continuation.
 
 </div>
 <div markdown>

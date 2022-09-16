@@ -8,21 +8,10 @@ hide:
 
 # Learn to authenticate with an API using OAuth2
 
-<section class="tutorial-row" markdown>
-<div markdown>
-
-Before a Pack can use an API to fetch private data, it must first be given access by the user. The most popular technology for granting that authorization is OAuth2.
-
-In this tutorial you'll create a formula that access a user's tasks in the Todoist application, using their API and OAuth2.
-
-</div>
-<div markdown>
+Before a Pack can use an API to fetch private data, it must first be given access by the user. The most popular technology for granting that authorization is OAuth2. In this tutorial you'll create a formula that access a user's data from an API that implements OAuth2.
 
 !!! abstract "Goal"
-    Build a `Tasks` formula that retrieves the user's open tasks in Todoist, using OAuth2.
-
-</div>
-</section>
+    Build a `Tasks` formula that retrieves the user's open tasks in Todoist.
 
 Before starting this tutorial, make sure you have completed:
 

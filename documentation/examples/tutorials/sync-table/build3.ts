@@ -35,7 +35,7 @@ const BookSchema = coda.makeObjectSchema({
     },
     thumbnail: {
       type: coda.ValueType.String,
-      codaType: coda.ValueHintType.ImageReference,
+      codaType: coda.ValueHintType.ImageAttachment,
     },
     link: {
       type: coda.ValueType.String,
