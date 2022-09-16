@@ -8,19 +8,10 @@ hide:
 
 # Learn to call an API
 
-<section class="tutorial-row" markdown>
-<div markdown>
-
-One of the primary use cases for a Pack is to integrate with an external API, allowing users to bring in data or functionality not native to Coda. In this tutorial you'll create a formula that converts an amount of money in another currency to US dollars.
-
-</div>
-<div markdown>
+One of the primary use cases for a Pack is to integrate with an external API, allowing users to bring in data or functionality not native to Coda. In this tutorial you'll create a formula that makes a request to an API and uses the response to calculate the result.
 
 !!! abstract "Goal"
     Build a `ToUSD` formula that uses an external API to convert currency values to US dollars.
-
-</div>
-</section>
 
 Before starting this tutorial, make sure you have completed:
 
@@ -44,7 +35,7 @@ By default this returns the exchange rate for a single Euro, but we can change t
 https://api.exchangerate.host/latest?base=CAD&amount=100
 ```
 
-The URL returns a JSON response, which includes the conversion rate for all of the currencies it supports:
+The endpoint returns a JSON response, which includes the conversion rate for all of the currencies it supports:
 
 ```js
 {

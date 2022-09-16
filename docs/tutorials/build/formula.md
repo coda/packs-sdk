@@ -8,19 +8,10 @@ hide:
 
 # Learn to build a formula
 
-<section class="tutorial-row" markdown>
-<div markdown>
-
-Formulas are one of the most basic building blocks in Coda; used to calculate values, filter tables, and so much more. In this tutorial you'll learn how to build a basic formula that reverses text.
-
-</div>
-<div markdown>
+Formulas are one of the most basic building blocks in Coda; used to calculate values, filter tables, and so much more. In this tutorial you'll learn how to build a basic formula that takes in parameters and returns a new value.
 
 !!! abstract "Goal"
     Build a `Reverse` formula that reverses a string of text.
-
-</div>
-</section>
 
 Before starting this tutorial, make sure you have completed one of the **Get started** tutorials, either [In your browser][quickstart_web] or [On your local machine][quickstart_cli].
 

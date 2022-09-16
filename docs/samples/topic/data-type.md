@@ -1,7 +1,7 @@
 ---
 title: Data types
 description: Samples that show how to return values of various data types.
-icon: material/format-list-group
+icon: material/order-alphabetical-ascending
 ---
 
 # Data type samples

@@ -1,3 +1,6 @@
 nav:
   - formula.md
+  - fetcher.md
+  - sync-table.md
+  - oauth.md
   - ...
