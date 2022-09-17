@@ -339,7 +339,7 @@ type TypeOfMap<T extends UnionType> = T extends Type
  * the parameter defintion for that formula.
  */
 export type ParamValues<ParamDefsT extends ParamDefs> = {
-  [K in keyof ParamDefsT]: ParamDefsT[K] extends ParamDef<infer T> ? TypeOfMap<T> : never;
+  [K in keyof ParamDefsT]: ParamDefsT[K] extends ParamDef<infer T> ? TypeOfMap<T> | undefined : never;
 } & any[]; // NOTE(oleg): we need this to avoid "must have a '[Symbol.iterator]()' method that returns an iterator."
 
 /**
