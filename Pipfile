@@ -13,6 +13,8 @@ mkdocs-awesome-pages-plugin = "*"
 mkdocs-macros-plugin = "*"
 mkdocs-redirects = "*"
 mkdocs-simple-hooks = "*"
+pillow = "*"
+cairosvg = "*"
 
 [dev-packages]
 
