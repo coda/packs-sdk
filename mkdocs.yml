@@ -70,6 +70,7 @@ plugins:
           "guides/advanced/fetcher.md": "guides/basics/fetcher.md"
           # 2022-09-14: Move Overview page.
           "guides/index.md": "guides/overview.md"
+    # Run Python scripts during the MkDocs generation process.
     - mkdocs-simple-hooks:
         hooks:
           on_page_markdown: "documentation.scripts.mkdocs_hooks:on_page_markdown"
