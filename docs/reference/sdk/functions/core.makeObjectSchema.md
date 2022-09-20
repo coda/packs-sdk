@@ -1,5 +1,5 @@
 ---
-title: "makeObjectSchema"
+nav: "makeObjectSchema"
 ---
 # Function: makeObjectSchema
 

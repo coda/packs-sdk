@@ -1,5 +1,5 @@
 ---
-title: "ScaleSchema"
+nav: "ScaleSchema"
 ---
 # Interface: ScaleSchema
 

@@ -1,5 +1,5 @@
 ---
-title: "TypedPackFormula"
+nav: "TypedPackFormula"
 ---
 # Type alias: TypedPackFormula
 

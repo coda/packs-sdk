@@ -1,3 +1,7 @@
+---
+description: Utilities for Pack makers to helper them build and troubleshoot their Packs.
+---
+
 # Pack maker tools
 
 While the Pack Studio and Pack CLI are used to develop a Pack, the primary way to monitor and interact with a Pack once it is installed in a document is via the Pack maker tools. It is a pane along the bottom of a Coda document that provides information about the Packs installed in the doc that you have edit access to.

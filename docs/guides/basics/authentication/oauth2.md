@@ -1,5 +1,6 @@
 ---
-title: OAuth
+nav: OAuth
+description: Configure authentication for an API that uses OAuth2.
 ---
 
 # Authenticating using OAuth

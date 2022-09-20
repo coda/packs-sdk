@@ -1,5 +1,5 @@
 ---
-title: Parameters
+nav: Parameters
 description: Samples that show how to accept parameters from the user.
 icon: material/format-textbox
 ---

@@ -1,5 +1,5 @@
 ---
-title: "ArrayType"
+nav: "ArrayType"
 ---
 # Interface: ArrayType<T\>
 

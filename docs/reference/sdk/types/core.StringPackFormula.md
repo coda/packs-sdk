@@ -1,5 +1,5 @@
 ---
-title: "StringPackFormula"
+nav: "StringPackFormula"
 ---
 # Type alias: StringPackFormula<ParamDefsT\>
 

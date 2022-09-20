@@ -1,5 +1,5 @@
 ---
-title: "makeSyncTable"
+nav: "makeSyncTable"
 ---
 # Function: makeSyncTable
 

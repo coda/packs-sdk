@@ -1,5 +1,5 @@
 ---
-title: Schemas
+nav: Schemas
 description: Samples that show how to define a schema, to represent rich objects.
 icon: material/format-list-group
 ---

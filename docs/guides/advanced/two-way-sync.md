@@ -1,5 +1,6 @@
 ---
-title: Two-way sync
+nav: Two-way sync
+description: Use actions to update records and reflect those updates in a sync table.
 ---
 
 # Approximating two-way sync

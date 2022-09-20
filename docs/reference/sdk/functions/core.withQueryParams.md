@@ -1,5 +1,5 @@
 ---
-title: "withQueryParams"
+nav: "withQueryParams"
 ---
 # Function: withQueryParams
 

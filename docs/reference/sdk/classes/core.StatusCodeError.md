@@ -1,5 +1,5 @@
 ---
-title: "StatusCodeError"
+nav: "StatusCodeError"
 ---
 # Class: StatusCodeError
 

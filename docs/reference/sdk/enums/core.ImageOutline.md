@@ -1,5 +1,5 @@
 ---
-title: "ImageOutline"
+nav: "ImageOutline"
 ---
 # Enumeration: ImageOutline
 

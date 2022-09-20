@@ -1,5 +1,5 @@
 ---
-title: "CustomHeaderTokenAuthentication"
+nav: "CustomHeaderTokenAuthentication"
 ---
 # Interface: CustomHeaderTokenAuthentication
 

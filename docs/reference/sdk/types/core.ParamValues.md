@@ -1,5 +1,5 @@
 ---
-title: "ParamValues"
+nav: "ParamValues"
 ---
 # Type alias: ParamValues<ParamDefsT\>
 

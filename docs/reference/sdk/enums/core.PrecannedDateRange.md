@@ -1,5 +1,5 @@
 ---
-title: "PrecannedDateRange"
+nav: "PrecannedDateRange"
 ---
 # Enumeration: PrecannedDateRange
 

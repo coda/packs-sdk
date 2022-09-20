@@ -1,5 +1,6 @@
 ---
-title: Support
+nav: Support
+description: The support channels that exist for the Pack SDK.
 ---
 
 # How to get help

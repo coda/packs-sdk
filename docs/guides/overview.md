@@ -1,5 +1,6 @@
 ---
-title: Overview
+nav: Overview
+description: A quick introduction to what Packs are and how they work.
 ---
 
 # What are Packs?

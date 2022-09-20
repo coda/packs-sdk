@@ -1,5 +1,5 @@
 ---
-title: "LinkAttributionNode"
+nav: "LinkAttributionNode"
 ---
 # Interface: LinkAttributionNode
 

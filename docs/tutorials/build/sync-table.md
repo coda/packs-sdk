@@ -1,5 +1,5 @@
 ---
-title: Sync table
+nav: Sync table
 description: Learn how to build a sync table of external data.
 icon: material/table-sync
 hide:

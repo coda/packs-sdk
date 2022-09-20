@@ -1,5 +1,5 @@
 ---
-title: "RequestHandlerTemplate"
+nav: "RequestHandlerTemplate"
 ---
 # Interface: RequestHandlerTemplate
 

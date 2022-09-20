@@ -1,5 +1,5 @@
 ---
-title: "SvgConstants"
+nav: "SvgConstants"
 ---
 # Namespace: SvgConstants
 

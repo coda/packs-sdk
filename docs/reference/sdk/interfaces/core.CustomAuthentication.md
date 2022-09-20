@@ -1,5 +1,5 @@
 ---
-title: "CustomAuthentication"
+nav: "CustomAuthentication"
 ---
 # Interface: CustomAuthentication
 

@@ -1,5 +1,5 @@
 ---
-title: "IdentityDefinition"
+nav: "IdentityDefinition"
 ---
 # Interface: IdentityDefinition
 

@@ -1,5 +1,5 @@
 ---
-title: "Modules"
+nav: "Modules"
 ---
 # Modules
 

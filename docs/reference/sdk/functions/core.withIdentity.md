@@ -1,5 +1,5 @@
 ---
-title: "withIdentity"
+nav: "withIdentity"
 ---
 # Function: withIdentity
 

@@ -1,5 +1,5 @@
 ---
-title: "ObjectSchemaProperties"
+nav: "ObjectSchemaProperties"
 ---
 # Type alias: ObjectSchemaProperties<K\>
 

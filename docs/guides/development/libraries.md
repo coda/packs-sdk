@@ -1,3 +1,7 @@
+---
+description: Add JavaScript libraries from NPM to enhance your Packs.
+---
+
 # Using libraries
 
 JavaScript has a rich and diverse set of libraries available, making it easy to re-use the work of others and more quickly develop an application. You can utilize many of these libraries when building Packs, but there are some important limitations to be aware of.

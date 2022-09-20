@@ -1,5 +1,5 @@
 ---
-title: "EmailSchema"
+nav: "EmailSchema"
 ---
 # Interface: EmailSchema
 

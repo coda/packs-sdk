@@ -1,5 +1,5 @@
 ---
-title: "MetadataFormula"
+nav: "MetadataFormula"
 ---
 # Type alias: MetadataFormula
 

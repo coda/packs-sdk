@@ -1,5 +1,5 @@
 ---
-title: "UserVisibleError"
+nav: "UserVisibleError"
 ---
 # Class: UserVisibleError
 

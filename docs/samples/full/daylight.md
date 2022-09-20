@@ -1,5 +1,5 @@
 ---
-title: Daylight
+nav: Daylight
 description: A Pack that fetches data about the expected hours of daylight at a location.
 icon: fontawesome/regular/sun
 ---

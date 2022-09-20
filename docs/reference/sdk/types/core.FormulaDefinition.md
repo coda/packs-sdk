@@ -1,5 +1,5 @@
 ---
-title: "FormulaDefinition"
+nav: "FormulaDefinition"
 ---
 # Type alias: FormulaDefinition<ParamDefsT, ResultT, SchemaT\>
 

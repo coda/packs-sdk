@@ -1,5 +1,5 @@
 ---
-title: "BaseFormulaDef"
+nav: "BaseFormulaDef"
 ---
 # Interface: BaseFormulaDef<ParamDefsT, ResultT\>
 

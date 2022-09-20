@@ -1,5 +1,6 @@
 ---
-title: Tutorials
+nav: Tutorials
+description: An index of guided lessons to help you learn various aspects of the SDK.
 hide:
 - toc
 ---

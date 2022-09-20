@@ -1,5 +1,5 @@
 ---
-title: "PackId"
+nav: "PackId"
 ---
 # Type alias: PackId
 

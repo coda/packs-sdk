@@ -1,5 +1,5 @@
 ---
-title: Fetcher
+nav: Fetcher
 description: Samples that show how to fetch data from an external source.
 icon: fontawesome/solid/cloud-arrow-down
 ---

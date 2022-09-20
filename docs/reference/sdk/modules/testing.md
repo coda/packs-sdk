@@ -1,5 +1,5 @@
 ---
-title: "testing"
+nav: "testing"
 ---
 # Module: testing
 

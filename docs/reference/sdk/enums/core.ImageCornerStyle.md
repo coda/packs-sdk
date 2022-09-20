@@ -1,5 +1,5 @@
 ---
-title: "ImageCornerStyle"
+nav: "ImageCornerStyle"
 ---
 # Enumeration: ImageCornerStyle
 

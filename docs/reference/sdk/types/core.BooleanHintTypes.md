@@ -1,5 +1,5 @@
 ---
-title: "BooleanHintTypes"
+nav: "BooleanHintTypes"
 ---
 # Type alias: BooleanHintTypes
 

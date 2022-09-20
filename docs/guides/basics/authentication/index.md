@@ -1,5 +1,6 @@
 ---
-title: Authentication
+nav: Authentication
+description: Configure your Pack to request credentials from the user and pass them along with your fetcher requests.
 ---
 
 # Authenticating with other services

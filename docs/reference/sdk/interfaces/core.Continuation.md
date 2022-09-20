@@ -1,5 +1,5 @@
 ---
-title: "Continuation"
+nav: "Continuation"
 ---
 # Interface: Continuation
 

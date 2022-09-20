@@ -1,5 +1,5 @@
 ---
-title: "ArraySchema"
+nav: "ArraySchema"
 ---
 # Interface: ArraySchema<T\>
 

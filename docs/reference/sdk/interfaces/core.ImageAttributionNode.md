@@ -1,5 +1,5 @@
 ---
-title: "ImageAttributionNode"
+nav: "ImageAttributionNode"
 ---
 # Interface: ImageAttributionNode
 

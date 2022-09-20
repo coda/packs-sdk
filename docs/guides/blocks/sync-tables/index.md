@@ -1,5 +1,6 @@
 ---
-title: Sync tables
+nav: Sync tables
+description: Create tables of data that automatically sync in records from an external data source.
 ---
 
 # Add sync tables

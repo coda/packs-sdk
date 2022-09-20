@@ -1,5 +1,5 @@
 ---
-title: Call an API
+nav: Call an API
 description: Learn how to call an external API from within a Pack.
 icon: material/api
 hide:

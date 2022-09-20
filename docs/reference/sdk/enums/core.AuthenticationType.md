@@ -1,5 +1,5 @@
 ---
-title: "AuthenticationType"
+nav: "AuthenticationType"
 ---
 # Enumeration: AuthenticationType
 

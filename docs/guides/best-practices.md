@@ -1,3 +1,7 @@
+---
+description: Tips and checklists on how to create high quality Packs.
+---
+
 # Best practices
 
 While it's easy to get started building a Pack, there are lots of options to explore and decisions to make as you go. This page includes some best practices we've learned through developing our own Packs that we encourage you to consider.

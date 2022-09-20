@@ -1,5 +1,5 @@
 ---
-title: "Fetcher"
+nav: "Fetcher"
 ---
 # Interface: Fetcher
 

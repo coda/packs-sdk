@@ -1,5 +1,5 @@
 ---
-title: "SimpleAutocompleteOption"
+nav: "SimpleAutocompleteOption"
 ---
 # Interface: SimpleAutocompleteOption<T\>
 

@@ -1,5 +1,6 @@
 ---
-title: Home
+nav: Home
+description: A Pack is an extension that adds new powers to your doc. With a little JavaScript, anyone can create and publish a Pack to the Gallery.
 hide:
   - navigation
   - toc

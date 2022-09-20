@@ -1,5 +1,5 @@
 ---
-title: "DataUrlPrefixWithDarkModeSupport"
+nav: "DataUrlPrefixWithDarkModeSupport"
 ---
 # Variable: DataUrlPrefixWithDarkModeSupport
 

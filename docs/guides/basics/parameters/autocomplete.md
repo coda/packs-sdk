@@ -1,5 +1,6 @@
 ---
-title: Autocomplete
+nav: Autocomplete
+description: Simplify entering parameters by providing choices users can select from.
 ---
 
 # Autocomplete parameter options

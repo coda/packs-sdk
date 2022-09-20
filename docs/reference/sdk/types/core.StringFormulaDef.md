@@ -1,5 +1,5 @@
 ---
-title: "StringFormulaDef"
+nav: "StringFormulaDef"
 ---
 # Type alias: StringFormulaDef<ParamDefsT\>
 

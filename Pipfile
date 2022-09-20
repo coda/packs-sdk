@@ -12,6 +12,7 @@ mkdocs-material = "*"
 mkdocs-awesome-pages-plugin = "*"
 mkdocs-macros-plugin = "*"
 mkdocs-redirects = "*"
+mkdocs-simple-hooks = "*"
 
 [dev-packages]
 

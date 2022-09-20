@@ -1,5 +1,5 @@
 ---
-title: "SimpleStringSchema"
+nav: "SimpleStringSchema"
 ---
 # Interface: SimpleStringSchema<T\>
 

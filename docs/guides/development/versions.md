@@ -1,5 +1,6 @@
 ---
-title: Versions & releases
+nav: Versions & releases
+description: Create new builds of your Pack and release them to users.
 ---
 
 # Managing versions and releases

@@ -1,5 +1,6 @@
 ---
-title: Images & files
+nav: Images & files
+description: Use images and files as parameters and return types.
 ---
 
 # Working with images and files

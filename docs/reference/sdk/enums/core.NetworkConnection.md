@@ -1,5 +1,5 @@
 ---
-title: "NetworkConnection"
+nav: "NetworkConnection"
 ---
 # Enumeration: NetworkConnection
 

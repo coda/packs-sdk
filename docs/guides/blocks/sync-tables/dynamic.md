@@ -1,5 +1,6 @@
 ---
-title: Dynamic sync tables
+nav: Dynamic sync tables
+description: Build advanced sync tables that adapt to dynamic data sources.
 ---
 
 # Creating sync tables with dynamic schemas

@@ -1,5 +1,6 @@
 ---
-title: FAQ
+nav: FAQ
+description: Answers to some of the most common questions about building Packs.
 ---
 
 # Frequently asked questions

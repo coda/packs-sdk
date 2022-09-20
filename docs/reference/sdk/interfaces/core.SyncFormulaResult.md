@@ -1,5 +1,5 @@
 ---
-title: "SyncFormulaResult"
+nav: "SyncFormulaResult"
 ---
 # Interface: SyncFormulaResult<K, L, SchemaT\>
 

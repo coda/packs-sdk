@@ -1,5 +1,5 @@
 ---
-title: "simpleAutocomplete"
+nav: "simpleAutocomplete"
 ---
 # Function: simpleAutocomplete
 

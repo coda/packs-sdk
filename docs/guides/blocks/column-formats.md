@@ -1,5 +1,6 @@
 ---
-title: Column Formats
+nav: Column formats
+description: Automatically apply a formula to a user's input to display it in a different format.
 ---
 
 # Add custom column formats

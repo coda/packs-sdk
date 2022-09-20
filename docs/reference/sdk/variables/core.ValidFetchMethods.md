@@ -1,5 +1,5 @@
 ---
-title: "ValidFetchMethods"
+nav: "ValidFetchMethods"
 ---
 # Variable: ValidFetchMethods
 

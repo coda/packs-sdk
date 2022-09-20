@@ -1,5 +1,5 @@
 ---
-title: "AWSAccessKeyAuthentication"
+nav: "AWSAccessKeyAuthentication"
 ---
 # Interface: AWSAccessKeyAuthentication
 

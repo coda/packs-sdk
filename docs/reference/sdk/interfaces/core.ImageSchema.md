@@ -1,5 +1,5 @@
 ---
-title: "ImageSchema"
+nav: "ImageSchema"
 ---
 # Interface: ImageSchema
 

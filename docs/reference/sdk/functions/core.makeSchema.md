@@ -1,5 +1,5 @@
 ---
-title: "makeSchema"
+nav: "makeSchema"
 ---
 # Function: makeSchema
 

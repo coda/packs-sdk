@@ -1,5 +1,6 @@
 ---
-title: Data types
+nav: Data types
+description: Use semantic types to accurately represent data in the document.
 ---
 
 # Return data with meaningful types

@@ -1,5 +1,5 @@
 ---
-title: "ensureNonEmptyString"
+nav: "ensureNonEmptyString"
 ---
 # Function: ensureNonEmptyString
 

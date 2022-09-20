@@ -1,5 +1,5 @@
 ---
-title: "InvocationLocation"
+nav: "InvocationLocation"
 ---
 # Interface: InvocationLocation
 
