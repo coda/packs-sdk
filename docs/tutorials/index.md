@@ -21,7 +21,7 @@ The tutorials below provide step-by-step instructions and sample code to help yo
 {# Read the page's source, but don't output anything. This is required to populate the page title and metadata. #}
 {{ page.read_source(config) or "" }}
 
-### {% if page.meta.icon %}:{{page.meta.icon|replace("/", "-")}}:{% endif %} {{page.title}}
+### {% if page.meta.icon %}:{{page.meta.icon|replace("/", "-")}}:{% endif %} {{ page.meta.get("nav", page.title) }}
 
 {% if page.meta.description %}{{page.meta.description}}{% endif %}
 
