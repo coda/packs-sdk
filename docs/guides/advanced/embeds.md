@@ -65,7 +65,6 @@ Once a user clicks the embed they are prompted to approve embedding the URL:
 !!! info "Embed approval scope"
     This approval is once per-domain, per-user. This means that each user in the document will need to approve the embed in order to see the content, but that approval works across all embeds in that doc or others.
 
-
 Once approved, Coda attempts to load the URL int an `<iframe>` element with [sandboxing applied][mdn_iframe_sandbox]. The URL must be secure (begin with `https://`) and must not prevent iframing (via the [`X-Frame-Options`][mdn_xfo] or [`Content-Security-Policy`][mdn_csp] headers).
 
 
