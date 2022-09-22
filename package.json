@@ -89,7 +89,7 @@
     "@typescript-eslint/eslint-plugin": "5.36.1",
     "@typescript-eslint/experimental-utils": "5.38.0",
     "@typescript-eslint/parser": "5.32.0",
-    "aws-sdk": "^2.1186.0",
+    "aws-sdk": "^2.1221.0",
     "buffer": "^6.0.3",
     "chai": "^4.3.6",
     "dts-bundle-generator": "^6.12.0",
