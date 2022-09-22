@@ -88,7 +88,7 @@
     "@types/yargs": "^17.0.12",
     "@typescript-eslint/eslint-plugin": "5.36.1",
     "@typescript-eslint/experimental-utils": "5.38.0",
-    "@typescript-eslint/parser": "5.32.0",
+    "@typescript-eslint/parser": "5.38.0",
     "aws-sdk": "^2.1221.0",
     "buffer": "^6.0.3",
     "chai": "^4.3.6",
