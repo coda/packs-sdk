@@ -20,7 +20,7 @@
   "dependencies": {
     "@aws-crypto/sha256-js": "^2.0.1",
     "@aws-sdk/client-sts": "^3.162.0",
-    "@aws-sdk/signature-v4": "^3.130.0",
+    "@aws-sdk/signature-v4": "^3.171.0",
     "browserify": "^17.0.0",
     "clone": "^2.1.2",
     "cross-fetch": "^3.1.5",
