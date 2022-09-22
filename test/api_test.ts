@@ -239,6 +239,15 @@ describe('API test', () => {
       const stringType: Type.string = stringParam.type;
       stringType!;
 
+      const optionalStringParam = makeParameter({
+        type: ParameterType.String,
+        name: 'stringScalar',
+        description: '',
+        optional: true,
+      });
+      const optionalStringType: undefined = optionalStringParam.type;
+      optionalStringType!;
+
       const stringArrayParam = makeParameter({type: ParameterType.StringArray, name: 'stringArray', description: ''});
       const stringArrayType: ArrayType<Type.string> = stringArrayParam.type;
       stringArrayType!;
@@ -285,12 +294,14 @@ describe('API test', () => {
         resultType: ValueType.String,
         name: 'Test',
         description: '',
-        parameters: [makeParameter({
-          type: ParameterType.StringArray, 
-          name: 'myParam', 
-          description: '',
-          autocomplete: ['Foo', 'Bar', 'Baz'],
-        })],
+        parameters: [
+          makeParameter({
+            type: ParameterType.StringArray,
+            name: 'myParam',
+            description: '',
+            autocomplete: ['Foo', 'Bar', 'Baz'],
+          }),
+        ],
         execute: ([param]) => param[0],
       });
     });
@@ -310,12 +321,14 @@ describe('API test', () => {
         resultType: ValueType.String,
         name: 'Test',
         description: '',
-        parameters: [makeParameter({
-          type: ParameterType.SparseStringArray, 
-          name: 'myParam', 
-          description: '',
-          autocomplete: ['Foo', 'Bar', 'Baz'],
-        })],
+        parameters: [
+          makeParameter({
+            type: ParameterType.SparseStringArray,
+            name: 'myParam',
+            description: '',
+            autocomplete: ['Foo', 'Bar', 'Baz'],
+          }),
+        ],
         execute: ([param]) => param[0] ?? 'undefined',
       });
     });

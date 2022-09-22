@@ -372,6 +372,11 @@ export type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterT
     : undefined;
 };
 
+type ParamDefFromOptions<T extends ParameterType, O extends ParameterOptions<T>> = Omit<O, 'type' | 'autcomplete'> & {
+  type: ParameterTypeMap[T];
+  autocomplete: MetadataFormula;
+};
+
 /**
  * Create a definition for a parameter for a formula or sync.
  *
@@ -385,9 +390,9 @@ export type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterT
  * makeParameter({type: ParameterType.StringArray, name: 'myArrayParam', description: 'My description'});
  * ```
  */
-export function makeParameter<T extends ParameterType>(
-  paramDefinition: ParameterOptions<T>,
-): ParamDef<ParameterTypeMap[T]> {
+export function makeParameter<T extends ParameterType, O extends ParameterOptions<T>>(
+  paramDefinition: O,
+): ParamDefFromOptions<T, O> {
   const {type, autocomplete: autocompleteDefOrItems, ...rest} = paramDefinition;
   const actualType = ParameterTypeInputMap[type] as ParameterTypeMap[T];
   let autocomplete: MetadataFormula | undefined;
