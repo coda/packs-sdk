@@ -1,5 +1,5 @@
 ---
-title: "SyncTableOptions"
+nav: "SyncTableOptions"
 ---
 # Interface: SyncTableOptions<K, L, ParamDefsT, SchemaT\>
 

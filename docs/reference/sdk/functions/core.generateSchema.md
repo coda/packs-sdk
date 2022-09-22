@@ -1,5 +1,5 @@
 ---
-title: "generateSchema"
+nav: "generateSchema"
 ---
 # Function: generateSchema
 

@@ -1,5 +1,5 @@
 ---
-title: "GenericSyncFormulaResult"
+nav: "GenericSyncFormulaResult"
 ---
 # Type alias: GenericSyncFormulaResult
 

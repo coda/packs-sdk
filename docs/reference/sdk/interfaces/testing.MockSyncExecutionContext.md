@@ -1,5 +1,5 @@
 ---
-title: "MockSyncExecutionContext"
+nav: "MockSyncExecutionContext"
 ---
 # Interface: MockSyncExecutionContext
 

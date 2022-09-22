@@ -1,5 +1,5 @@
 ---
-title: "MetadataFormulaObjectResultType"
+nav: "MetadataFormulaObjectResultType"
 ---
 # Interface: MetadataFormulaObjectResultType
 

@@ -1,5 +1,5 @@
 ---
-title: "assertCondition"
+nav: "assertCondition"
 ---
 # Function: assertCondition
 

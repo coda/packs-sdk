@@ -1,5 +1,5 @@
 ---
-title: "executeSyncFormulaFromPackDef"
+nav: "executeSyncFormulaFromPackDef"
 ---
 # Function: executeSyncFormulaFromPackDef
 

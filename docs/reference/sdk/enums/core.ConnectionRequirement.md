@@ -1,5 +1,5 @@
 ---
-title: "ConnectionRequirement"
+nav: "ConnectionRequirement"
 ---
 # Enumeration: ConnectionRequirement
 

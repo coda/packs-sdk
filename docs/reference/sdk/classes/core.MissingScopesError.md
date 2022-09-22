@@ -1,5 +1,5 @@
 ---
-title: "MissingScopesError"
+nav: "MissingScopesError"
 ---
 # Class: MissingScopesError
 

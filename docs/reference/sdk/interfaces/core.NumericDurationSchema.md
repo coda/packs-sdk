@@ -1,5 +1,5 @@
 ---
-title: "NumericDurationSchema"
+nav: "NumericDurationSchema"
 ---
 # Interface: NumericDurationSchema
 

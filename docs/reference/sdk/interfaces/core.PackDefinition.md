@@ -1,5 +1,5 @@
 ---
-title: "PackDefinition"
+nav: "PackDefinition"
 ---
 # Interface: PackDefinition
 

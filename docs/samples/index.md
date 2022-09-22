@@ -1,5 +1,6 @@
 ---
-title: Samples
+nav: Samples
+description: An index of code examples to browse through.
 hide:
 - toc
 ---

@@ -1,5 +1,6 @@
 ---
-title: Using the CLI
+nav: Using the CLI
+description: The CLI allows for local development, using libraries, and more.
 ---
 
 # Using the command line interface

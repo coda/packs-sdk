@@ -1,5 +1,5 @@
 ---
-title: "StringDateTimeSchema"
+nav: "StringDateTimeSchema"
 ---
 # Interface: StringDateTimeSchema
 

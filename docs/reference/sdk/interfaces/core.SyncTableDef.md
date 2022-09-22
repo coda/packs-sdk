@@ -1,5 +1,5 @@
 ---
-title: "SyncTableDef"
+nav: "SyncTableDef"
 ---
 # Interface: SyncTableDef<K, L, ParamDefsT, SchemaT\>
 

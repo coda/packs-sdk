@@ -1,5 +1,5 @@
 ---
-title: "makeMetadataFormula"
+nav: "makeMetadataFormula"
 ---
 # Function: makeMetadataFormula
 

@@ -1,5 +1,5 @@
 ---
-title: "NumericDateSchema"
+nav: "NumericDateSchema"
 ---
 # Interface: NumericDateSchema
 

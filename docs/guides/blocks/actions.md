@@ -1,5 +1,6 @@
 ---
-title: Actions
+nav: Actions
+description: Use actions to create, update, or delete records in APIs and external data sources.
 ---
 
 # Add custom actions for buttons and automations

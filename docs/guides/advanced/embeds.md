@@ -1,3 +1,7 @@
+---
+description: Embed external content using Packs and optimize your app for embedding.
+---
+
 # Embedding content
 
 Packs typically operate purely on data and actions, leaving the display up to the document. However there are times in which you may want to provide a richer experience, which can be accomplished by embedding a portion of an application directly within the doc.

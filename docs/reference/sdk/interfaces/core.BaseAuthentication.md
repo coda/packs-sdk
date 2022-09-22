@@ -1,5 +1,5 @@
 ---
-title: "BaseAuthentication"
+nav: "BaseAuthentication"
 ---
 # Interface: BaseAuthentication
 

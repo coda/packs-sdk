@@ -1,5 +1,5 @@
 ---
-title: "BooleanSchema"
+nav: "BooleanSchema"
 ---
 # Interface: BooleanSchema
 

@@ -1,5 +1,5 @@
 ---
-title: "StringEmbedSchema"
+nav: "StringEmbedSchema"
 ---
 # Interface: StringEmbedSchema
 

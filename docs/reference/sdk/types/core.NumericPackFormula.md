@@ -1,5 +1,5 @@
 ---
-title: "NumericPackFormula"
+nav: "NumericPackFormula"
 ---
 # Type alias: NumericPackFormula<ParamDefsT\>
 

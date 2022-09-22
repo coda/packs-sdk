@@ -1,5 +1,5 @@
 ---
-title: "makeSimpleAutocompleteMetadataFormula"
+nav: "makeSimpleAutocompleteMetadataFormula"
 ---
 # Function: makeSimpleAutocompleteMetadataFormula
 

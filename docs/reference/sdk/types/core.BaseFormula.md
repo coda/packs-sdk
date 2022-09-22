@@ -1,5 +1,5 @@
 ---
-title: "BaseFormula"
+nav: "BaseFormula"
 ---
 # Type alias: BaseFormula<ParamDefsT, ResultT\>
 

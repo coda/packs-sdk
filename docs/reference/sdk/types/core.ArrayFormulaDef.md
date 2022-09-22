@@ -1,5 +1,5 @@
 ---
-title: "ArrayFormulaDef"
+nav: "ArrayFormulaDef"
 ---
 # Type alias: ArrayFormulaDef<ParamDefsT, SchemaT\>
 

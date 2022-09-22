@@ -1,5 +1,5 @@
 ---
-title: "DurationUnit"
+nav: "DurationUnit"
 ---
 # Enumeration: DurationUnit
 

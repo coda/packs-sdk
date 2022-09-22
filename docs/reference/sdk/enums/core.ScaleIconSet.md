@@ -1,5 +1,5 @@
 ---
-title: "ScaleIconSet"
+nav: "ScaleIconSet"
 ---
 # Enumeration: ScaleIconSet
 

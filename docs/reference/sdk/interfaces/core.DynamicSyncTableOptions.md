@@ -1,5 +1,5 @@
 ---
-title: "DynamicSyncTableOptions"
+nav: "DynamicSyncTableOptions"
 ---
 # Interface: DynamicSyncTableOptions<K, L, ParamDefsT, SchemaT\>
 

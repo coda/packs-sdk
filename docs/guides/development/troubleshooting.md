@@ -1,5 +1,6 @@
 ---
-title: Troubleshooting
+nav: Troubleshooting
+description: Tools and tips for how to find and fix problems in your Pack.
 ---
 
 # How to troubleshoot your code

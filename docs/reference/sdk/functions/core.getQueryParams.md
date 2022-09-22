@@ -1,5 +1,5 @@
 ---
-title: "getQueryParams"
+nav: "getQueryParams"
 ---
 # Function: getQueryParams
 

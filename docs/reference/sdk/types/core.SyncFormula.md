@@ -1,5 +1,5 @@
 ---
-title: "SyncFormula"
+nav: "SyncFormula"
 ---
 # Type alias: SyncFormula<K, L, ParamDefsT, SchemaT\>
 

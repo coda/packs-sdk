@@ -1,5 +1,5 @@
 ---
-title: "MultiQueryParamTokenAuthentication"
+nav: "MultiQueryParamTokenAuthentication"
 ---
 # Interface: MultiQueryParamTokenAuthentication
 

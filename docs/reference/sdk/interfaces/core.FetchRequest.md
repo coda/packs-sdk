@@ -1,5 +1,5 @@
 ---
-title: "FetchRequest"
+nav: "FetchRequest"
 ---
 # Interface: FetchRequest
 

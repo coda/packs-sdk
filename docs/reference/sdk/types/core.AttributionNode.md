@@ -1,5 +1,5 @@
 ---
-title: "AttributionNode"
+nav: "AttributionNode"
 ---
 # Type alias: AttributionNode
 

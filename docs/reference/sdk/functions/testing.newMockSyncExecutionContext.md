@@ -1,5 +1,5 @@
 ---
-title: "newMockSyncExecutionContext"
+nav: "newMockSyncExecutionContext"
 ---
 # Function: newMockSyncExecutionContext
 

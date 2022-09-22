@@ -1,5 +1,5 @@
 ---
-title: "CodaApiBearerTokenAuthentication"
+nav: "CodaApiBearerTokenAuthentication"
 ---
 # Interface: CodaApiBearerTokenAuthentication
 

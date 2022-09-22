@@ -1,5 +1,5 @@
 ---
-title: "makeFormula"
+nav: "makeFormula"
 ---
 # Function: makeFormula
 

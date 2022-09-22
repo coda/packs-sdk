@@ -1,5 +1,5 @@
 ---
-title: "LinkDisplayType"
+nav: "LinkDisplayType"
 ---
 # Enumeration: LinkDisplayType
 

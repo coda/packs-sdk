@@ -1,5 +1,5 @@
 ---
-title: "EmailDisplayType"
+nav: "EmailDisplayType"
 ---
 # Enumeration: EmailDisplayType
 

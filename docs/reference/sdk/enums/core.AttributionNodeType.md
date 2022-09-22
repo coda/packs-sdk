@@ -1,5 +1,5 @@
 ---
-title: "AttributionNodeType"
+nav: "AttributionNodeType"
 ---
 # Enumeration: AttributionNodeType
 

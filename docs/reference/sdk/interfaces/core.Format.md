@@ -1,5 +1,5 @@
 ---
-title: "Format"
+nav: "Format"
 ---
 # Interface: Format
 

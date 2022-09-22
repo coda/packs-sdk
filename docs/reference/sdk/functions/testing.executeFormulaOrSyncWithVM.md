@@ -1,5 +1,5 @@
 ---
-title: "executeFormulaOrSyncWithVM"
+nav: "executeFormulaOrSyncWithVM"
 ---
 # Function: executeFormulaOrSyncWithVM
 

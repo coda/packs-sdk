@@ -1,5 +1,5 @@
 ---
-title: Dynamic sync tables
+nav: Dynamic sync tables
 description: Samples that show how to create a dynamic sync table.
 icon: material/cloud-sync-outline
 ---

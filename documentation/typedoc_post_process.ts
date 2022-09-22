@@ -29,8 +29,8 @@ async function process(file: string) {
 }
 
 /**
- * Adds frontmatter to generated markdown files, setting a simplified title. The
- * frontmatter title is used in the nav.
+ * Adds frontmatter to generated markdown files, setting a simplified title to
+ * use in the navigation. The frontmatter nav title is used in the nav.
  */
 function addFrontmatter(file: string, content: string): string {
   if (content.startsWith('---\n')) {
@@ -43,7 +43,7 @@ function addFrontmatter(file: string, content: string): string {
     return content;
   }
   const title = match![1];
-  const frontmatter = `---\ntitle: "${title}"\n---\n`;
+  const frontmatter = `---\nnav: "${title}"\n---\n`;
   return frontmatter + content;
 }
 

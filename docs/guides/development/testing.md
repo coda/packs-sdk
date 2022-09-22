@@ -1,5 +1,6 @@
 ---
-title: Testing
+nav: Testing
+description: Make sure your Pack is working correctly by testing it in a doc or locally.
 ---
 
 # Testing your code

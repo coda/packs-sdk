@@ -1,5 +1,5 @@
 ---
-title: "DurationSchema"
+nav: "DurationSchema"
 ---
 # Interface: DurationSchema
 

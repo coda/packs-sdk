@@ -1,5 +1,5 @@
 ---
-title: "ProgressBarSchema"
+nav: "ProgressBarSchema"
 ---
 # Interface: ProgressBarSchema
 

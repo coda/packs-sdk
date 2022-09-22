@@ -1,5 +1,5 @@
 ---
-title: "ensureUnreachable"
+nav: "ensureUnreachable"
 ---
 # Function: ensureUnreachable
 

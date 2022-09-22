@@ -1,5 +1,5 @@
 ---
-title: "Schema"
+nav: "Schema"
 ---
 # Type alias: Schema
 

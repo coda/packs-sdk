@@ -1,5 +1,5 @@
 ---
-title: "SliderSchema"
+nav: "SliderSchema"
 ---
 # Interface: SliderSchema
 

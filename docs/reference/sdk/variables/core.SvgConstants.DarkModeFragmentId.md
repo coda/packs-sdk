@@ -1,5 +1,5 @@
 ---
-title: "DarkModeFragmentId"
+nav: "DarkModeFragmentId"
 ---
 # Variable: DarkModeFragmentId
 

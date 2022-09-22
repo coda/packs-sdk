@@ -1,5 +1,5 @@
 ---
-title: Using OAuth2
+nav: Using OAuth2
 description: Learn how to access private data in an API using OAuth2.
 icon: material/shield-key
 hide:

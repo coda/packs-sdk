@@ -1,5 +1,5 @@
 ---
-title: "SuggestedValueType"
+nav: "SuggestedValueType"
 ---
 # Type alias: SuggestedValueType<T\>
 

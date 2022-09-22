@@ -1,5 +1,5 @@
 ---
-title: "core"
+nav: "core"
 ---
 # Module: core
 

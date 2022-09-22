@@ -1,5 +1,5 @@
 ---
-title: "newJsonFetchResponse"
+nav: "newJsonFetchResponse"
 ---
 # Function: newJsonFetchResponse
 

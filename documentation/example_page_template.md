@@ -1,5 +1,5 @@
 ---
-title: {{name}}
+nav: {{name}}
 description: {{description}}
 {{#if icon}}icon: {{icon}}{{/if}}
 ---

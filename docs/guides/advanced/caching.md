@@ -1,5 +1,6 @@
 ---
-title: Caching
+nav: Caching
+description: The various caching layers and how to configure them.
 ---
 
 # Caching formula and fetcher results
@@ -31,7 +32,7 @@ When making an HTTP request with the [fetcher][fetcher], the Packs runtime first
 
 <img src="../../../images/cache_fetcher_logs.png" srcset="../../../images/cache_fetcher_logs_2x.png 2x" class="screenshot" alt="Cached fetcher requests in the logs">
 
-By default the Packs runtime caches the HTTP responses for all `GET` requests, meaning that your code may not always be getting the latest response from the server. You can adjust this behavior by setting the [`cacheTtlSecs`][fetcher_cacheTtlSecs] field in the fetch request, which specifies for how many seconds the response should be cached. To disable caching for a request set that value to zero. 
+By default the Packs runtime caches the HTTP responses for all `GET` requests, meaning that your code may not always be getting the latest response from the server. You can adjust this behavior by setting the [`cacheTtlSecs`][fetcher_cacheTtlSecs] field in the fetch request, which specifies for how many seconds the response should be cached. To disable caching for a request set that value to zero.
 
 The following types of requests are never cached:
 

@@ -1,5 +1,5 @@
 ---
-title: "WebBasicAuthentication"
+nav: "WebBasicAuthentication"
 ---
 # Interface: WebBasicAuthentication
 

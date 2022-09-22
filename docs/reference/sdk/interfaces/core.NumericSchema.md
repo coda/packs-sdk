@@ -1,5 +1,5 @@
 ---
-title: "NumericSchema"
+nav: "NumericSchema"
 ---
 # Interface: NumericSchema
 

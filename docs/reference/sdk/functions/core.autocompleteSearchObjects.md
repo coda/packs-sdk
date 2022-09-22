@@ -1,5 +1,5 @@
 ---
-title: "autocompleteSearchObjects"
+nav: "autocompleteSearchObjects"
 ---
 # Function: autocompleteSearchObjects
 

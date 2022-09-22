@@ -1,5 +1,5 @@
 ---
-title: "SyncExecutionContext"
+nav: "SyncExecutionContext"
 ---
 # Interface: SyncExecutionContext
 

@@ -1,5 +1,5 @@
 ---
-title: "LinkSchema"
+nav: "LinkSchema"
 ---
 # Interface: LinkSchema
 

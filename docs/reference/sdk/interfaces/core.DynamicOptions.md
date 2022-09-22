@@ -1,5 +1,5 @@
 ---
-title: "DynamicOptions"
+nav: "DynamicOptions"
 ---
 # Interface: DynamicOptions
 

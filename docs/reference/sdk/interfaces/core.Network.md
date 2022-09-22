@@ -1,5 +1,5 @@
 ---
-title: "Network"
+nav: "Network"
 ---
 # Interface: Network
 

@@ -1,5 +1,6 @@
 ---
-title: Parameters
+nav: Parameters
+description: Define parameters on formulas and sync tables to accept values from the user.
 ---
 
 # Accept input with parameters

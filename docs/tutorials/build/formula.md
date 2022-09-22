@@ -1,5 +1,5 @@
 ---
-title: Basic formula
+nav: Basic formula
 description: Learn how to build a basic formula from scratch.
 icon: material/function
 hide:

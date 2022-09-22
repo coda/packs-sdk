@@ -1,5 +1,6 @@
 ---
-title: Schemas
+nav: Schemas
+description: Design schemas to represent rich data, for use in formulas and sync tables.
 ---
 
 # Structuring data with schemas
