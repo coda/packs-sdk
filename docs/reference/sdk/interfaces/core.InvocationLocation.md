@@ -19,7 +19,7 @@ This will be removed in a future version of the SDK.
 
 #### Defined in
 
-[api_types.ts:666](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L666)
+[api_types.ts:677](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L677)
 
 ___
 
@@ -31,4 +31,4 @@ The base URL of the Coda environment executing this formula. Only for Coda inter
 
 #### Defined in
 
-[api_types.ts:662](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L662)
+[api_types.ts:673](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L673)

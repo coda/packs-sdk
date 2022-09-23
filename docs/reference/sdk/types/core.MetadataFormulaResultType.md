@@ -11,4 +11,4 @@ The type of values that can be returned from a [MetadataFormula](core.MetadataFo
 
 #### Defined in
 
-[api.ts:1049](https://github.com/coda/packs-sdk/blob/main/api.ts#L1049)
+[api.ts:1061](https://github.com/coda/packs-sdk/blob/main/api.ts#L1061)

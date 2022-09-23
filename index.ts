@@ -228,3 +228,6 @@ export type {StringHintTypes} from './schema';
 
 export type {RequestHandlerTemplate} from './handler_templates';
 export type {ResponseHandlerTemplate} from './handler_templates';
+
+export type {OptionalParamDef} from './api_types';
+export type {ParamDefFromOptionsUnion} from './api';

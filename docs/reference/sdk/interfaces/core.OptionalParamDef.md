@@ -1,11 +1,11 @@
 ---
-nav: "ParamDef"
+title: "OptionalParamDef"
 ---
-# Interface: ParamDef<T\>
+# Interface: OptionalParamDef<T\>
 
-[core](../modules/core.md).ParamDef
+[core](../modules/core.md).OptionalParamDef
 
-The definition of a formula parameter.
+Marker type for an optional [ParamDef](core.ParamDef.md), used internally.
 
 ## Type parameters
 
@@ -15,9 +15,9 @@ The definition of a formula parameter.
 
 ## Hierarchy
 
-- **`ParamDef`**
+- [`ParamDef`](core.ParamDef.md)<`T`\>
 
-  ↳ [`OptionalParamDef`](core.OptionalParamDef.md)
+  ↳ **`OptionalParamDef`**
 
 ## Properties
 
@@ -34,6 +34,10 @@ Typically once you have fetched the list of matching values, you'll use
 If you have a hardcoded list of valid values, you would only need to use
 [makeSimpleAutocompleteMetadataFormula](../functions/core.makeSimpleAutocompleteMetadataFormula.md).
 
+#### Inherited from
+
+[ParamDef](core.ParamDef.md).[autocomplete](core.ParamDef.md#autocomplete)
+
 #### Defined in
 
 [api_types.ts:305](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L305)
@@ -48,6 +52,10 @@ ___
 
 This will be removed in a future version of the SDK. Use [suggestedValue](core.ParamDef.md#suggestedvalue) instead.
 
+#### Inherited from
+
+[ParamDef](core.ParamDef.md).[defaultValue](core.ParamDef.md#defaultvalue)
+
 #### Defined in
 
 [api_types.ts:309](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L309)
@@ -59,6 +67,10 @@ ___
 • **description**: `string`
 
 A brief description of what this parameter is used for, shown to the user when invoking the formula.
+
+#### Inherited from
+
+[ParamDef](core.ParamDef.md).[description](core.ParamDef.md#description)
 
 #### Defined in
 
@@ -72,6 +84,10 @@ ___
 
 The name of the parameter, which will be shown to the user when invoking this formula.
 
+#### Inherited from
+
+[ParamDef](core.ParamDef.md).[name](core.ParamDef.md#name)
+
 #### Defined in
 
 [api_types.ts:279](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L279)
@@ -80,14 +96,18 @@ ___
 
 ### optional
 
-• `Optional` **optional**: `boolean`
+• **optional**: ``true``
 
 Whether this parameter can be omitted when invoking the formula.
 All optional parameters must come after all non-optional parameters.
 
+#### Overrides
+
+[ParamDef](core.ParamDef.md).[optional](core.ParamDef.md#optional)
+
 #### Defined in
 
-[api_types.ts:292](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L292)
+[api_types.ts:320](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L320)
 
 ___
 
@@ -96,6 +116,10 @@ ___
 • `Optional` **suggestedValue**: [`SuggestedValueType`](../types/core.SuggestedValueType.md)<`T`\>
 
 The suggested value to be prepopulated for this parameter if it is not specified by the user.
+
+#### Inherited from
+
+[ParamDef](core.ParamDef.md).[suggestedValue](core.ParamDef.md#suggestedvalue)
 
 #### Defined in
 
@@ -108,6 +132,10 @@ ___
 • **type**: `T`
 
 The data type of this parameter (string, number, etc).
+
+#### Inherited from
+
+[ParamDef](core.ParamDef.md).[type](core.ParamDef.md#type)
 
 #### Defined in
 

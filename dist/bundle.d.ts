@@ -1329,6 +1329,12 @@ export interface ParamDef<T extends UnionType> {
 	suggestedValue?: SuggestedValueType<T>;
 }
 /**
+ * Marker type for an optional {@link ParamDef}, used internally.
+ */
+export interface OptionalParamDef<T extends UnionType> extends ParamDef<T> {
+	optional: true;
+}
+/**
  * The type for the complete set of parameter definitions for a fomrula.
  */
 export declare type ParamDefs = [
@@ -1344,7 +1350,7 @@ export declare type TypeOfMap<T extends UnionType> = T extends Type ? TypeMap[T]
  * the parameter defintion for that formula.
  */
 export declare type ParamValues<ParamDefsT extends ParamDefs> = {
-	[K in keyof ParamDefsT]: ParamDefsT[K] extends ParamDef<infer T> ? TypeOfMap<T> : never;
+	[K in keyof ParamDefsT]: ParamDefsT[K] extends OptionalParamDef<infer S> ? TypeOfMap<S> | undefined : ParamDefsT[K] extends ParamDef<infer T> ? TypeOfMap<T> : never;
 } & any[];
 /**
  * The type of values that are allowable to be used as a {@link ParamDef.suggestedValue} for a parameter.
@@ -2102,6 +2108,14 @@ export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<Pa
 	autocomplete?: T extends AutocompleteParameterTypes ? MetadataFormulaDef | Array<TypeMap[AutocompleteParameterTypeMapping[T]] | SimpleAutocompleteOption<T>> : undefined;
 };
 /**
+ * Equivalent to {@link ParamDef}. A helper type to generate a param def based
+ * on the inputs to {@link makeParameter}.
+ */
+export declare type ParamDefFromOptionsUnion<T extends ParameterType, O extends ParameterOptions<T>> = Omit<O, "type" | "autcomplete"> & {
+	type: O extends ParameterOptions<infer S> ? ParameterTypeMap[S] : never;
+	autocomplete: MetadataFormula;
+};
+/**
  * Create a definition for a parameter for a formula or sync.
  *
  * @example
@@ -2114,7 +2128,7 @@ export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<Pa
  * makeParameter({type: ParameterType.StringArray, name: 'myArrayParam', description: 'My description'});
  * ```
  */
-export declare function makeParameter<T extends ParameterType>(paramDefinition: ParameterOptions<T>): ParamDef<ParameterTypeMap[T]>;
+export declare function makeParameter<T extends ParameterType, O extends ParameterOptions<T>>(paramDefinition: O): ParamDefFromOptionsUnion<T, O>;
 /**
  * Base type for the inputs for creating a pack formula.
  */

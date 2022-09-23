@@ -36,7 +36,7 @@ to construct URLs to use with the fetcher. Alternatively, you can use relative U
 
 #### Defined in
 
-[api_types.ts:692](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L692)
+[api_types.ts:703](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L703)
 
 ___
 
@@ -75,7 +75,7 @@ This is mostly for Coda internal use and we do not recommend relying on it.
 
 #### Defined in
 
-[api_types.ts:697](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L697)
+[api_types.ts:708](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L708)
 
 ___
 
@@ -94,7 +94,7 @@ replaced by the fetcher in secure way.
 
 #### Defined in
 
-[api_types.ts:708](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L708)
+[api_types.ts:719](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L719)
 
 ___
 
@@ -110,7 +110,7 @@ Information about state of the current sync. Only populated if this is a sync ta
 
 #### Defined in
 
-[api_types.ts:712](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L712)
+[api_types.ts:723](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L723)
 
 ___
 
@@ -150,4 +150,4 @@ The timezone of the doc from which this formula was invoked.
 
 #### Defined in
 
-[api_types.ts:701](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L701)
+[api_types.ts:712](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L712)
