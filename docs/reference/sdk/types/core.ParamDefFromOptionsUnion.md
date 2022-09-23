@@ -1,5 +1,5 @@
 ---
-title: "ParamDefFromOptionsUnion"
+nav: "ParamDefFromOptionsUnion"
 ---
 # Type alias: ParamDefFromOptionsUnion<T, O\>
 

@@ -1,5 +1,5 @@
 ---
-title: "OptionalParamDef"
+nav: "OptionalParamDef"
 ---
 # Interface: OptionalParamDef<T\>
 
