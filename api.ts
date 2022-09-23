@@ -378,7 +378,7 @@ export type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterT
  */
 export type ParamDefFromOptionsUnion<T extends ParameterType, O extends ParameterOptions<T>> = Omit<
   O,
-  'type' | 'autcomplete'
+  'type' | 'autocomplete'
 > & {
   type: O extends ParameterOptions<infer S> ? ParameterTypeMap[S] : never;
   autocomplete: MetadataFormula;
