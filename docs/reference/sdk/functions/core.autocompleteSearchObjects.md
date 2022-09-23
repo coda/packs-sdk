@@ -59,4 +59,4 @@ coda.makeParameter({
 
 #### Defined in
 
-[api.ts:1257](https://github.com/coda/packs-sdk/blob/main/api.ts#L1257)
+[api.ts:1239](https://github.com/coda/packs-sdk/blob/main/api.ts#L1239)

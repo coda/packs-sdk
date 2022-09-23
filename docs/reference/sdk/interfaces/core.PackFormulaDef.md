@@ -246,4 +246,4 @@ The JavaScript function that implements this formula
 
 #### Defined in
 
-[api.ts:577](https://github.com/coda/packs-sdk/blob/main/api.ts#L577)
+[api.ts:559](https://github.com/coda/packs-sdk/blob/main/api.ts#L559)

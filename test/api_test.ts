@@ -275,10 +275,14 @@ describe('API test', () => {
         resultType: ValueType.String,
         name: 'Test',
         description: '',
-        parameters: [makeParameter({type: ParameterType.String, name: 'myParam', description: '', optional: true})],
-        execute: ([param]) => {
-          param = undefined;
-          param!;
+        parameters: [
+          makeParameter({type: ParameterType.String, name: 'optionalParam', description: '', optional: true}),
+          makeParameter({type: ParameterType.String, name: 'requiredParam', description: '', optional: false}),
+        ],
+        execute: ([optionalParam, requiredParam]) => {
+          optionalParam = undefined;
+          optionalParam!;
+          void requiredParam.length; // not nullable
           return '';
         },
       });

@@ -5,7 +5,7 @@ title: "makeParameter"
 
 [core](../modules/core.md).makeParameter
 
-▸ **makeParameter**<`T`\>(`paramDefinition`): `ParamDefFromOptionsUnion`<`T`\>
+▸ **makeParameter**<`T`, `O`\>(`paramDefinition`): `ParamDefFromOptionsUnion`<`T`, `O`\>
 
 Create a definition for a parameter for a formula or sync.
 
@@ -25,18 +25,19 @@ makeParameter({type: ParameterType.StringArray, name: 'myArrayParam', descriptio
 
 | Name | Type |
 | :------ | :------ |
-| `T` | extends `UnionParameterOptions` |
+| `T` | extends [`ParameterType`](../enums/core.ParameterType.md) |
+| `O` | extends [`ParameterOptions`](../types/core.ParameterOptions.md)<`T`\> |
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `paramDefinition` | `T` |
+| `paramDefinition` | `O` |
 
 #### Returns
 
-`ParamDefFromOptionsUnion`<`T`\>
+`ParamDefFromOptionsUnion`<`T`, `O`\>
 
 #### Defined in
 
-[api.ts:416](https://github.com/coda/packs-sdk/blob/main/api.ts#L416)
+[api.ts:396](https://github.com/coda/packs-sdk/blob/main/api.ts#L396)

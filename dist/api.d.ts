@@ -253,8 +253,7 @@ export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<Pa
     type: T;
     autocomplete?: T extends AutocompleteParameterTypes ? MetadataFormulaDef | Array<TypeMap[AutocompleteParameterTypeMapping[T]] | SimpleAutocompleteOption<T>> : undefined;
 };
-declare type UnionParameterOptions = ParameterOptions<ParameterType.String> | ParameterOptions<ParameterType.Number> | ParameterOptions<ParameterType.Boolean> | ParameterOptions<ParameterType.Date> | ParameterOptions<ParameterType.Html> | ParameterOptions<ParameterType.Image> | ParameterOptions<ParameterType.File> | ParameterOptions<ParameterType.StringArray> | ParameterOptions<ParameterType.SparseStringArray> | ParameterOptions<ParameterType.NumberArray> | ParameterOptions<ParameterType.SparseNumberArray> | ParameterOptions<ParameterType.BooleanArray> | ParameterOptions<ParameterType.SparseBooleanArray> | ParameterOptions<ParameterType.DateArray> | ParameterOptions<ParameterType.SparseDateArray> | ParameterOptions<ParameterType.HtmlArray> | ParameterOptions<ParameterType.SparseHtmlArray> | ParameterOptions<ParameterType.ImageArray> | ParameterOptions<ParameterType.SparseImageArray> | ParameterOptions<ParameterType.FileArray> | ParameterOptions<ParameterType.SparseFileArray>;
-declare type ParamDefFromOptionsUnion<O extends UnionParameterOptions> = Omit<O, 'type' | 'autcomplete'> & {
+declare type ParamDefFromOptionsUnion<T extends ParameterType, O extends ParameterOptions<T>> = Omit<O, 'type' | 'autcomplete'> & {
     type: O extends ParameterOptions<infer T> ? ParameterTypeMap[T] : never;
     autocomplete: MetadataFormula;
 };
@@ -271,7 +270,7 @@ declare type ParamDefFromOptionsUnion<O extends UnionParameterOptions> = Omit<O,
  * makeParameter({type: ParameterType.StringArray, name: 'myArrayParam', description: 'My description'});
  * ```
  */
-export declare function makeParameter<T extends UnionParameterOptions>(paramDefinition: T): ParamDefFromOptionsUnion<T>;
+export declare function makeParameter<T extends ParameterType, O extends ParameterOptions<T>>(paramDefinition: O): ParamDefFromOptionsUnion<T, O>;
 /** @deprecated */
 export declare function makeStringParameter(name: string, description: string, args?: ParamArgs<Type.string>): ParamDef<Type.string>;
 /** @deprecated */
