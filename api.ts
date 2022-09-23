@@ -372,7 +372,11 @@ export type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterT
     : undefined;
 };
 
-type ParamDefFromOptionsUnion<T extends ParameterType, O extends ParameterOptions<T>> = Omit<
+/**
+ * Equivalent to {@link ParamDef}. A helper type to generate a param def based
+ * on the inputs to {@link makeParameter}.
+ */
+export type ParamDefFromOptionsUnion<T extends ParameterType, O extends ParameterOptions<T>> = Omit<
   O,
   'type' | 'autcomplete'
 > & {

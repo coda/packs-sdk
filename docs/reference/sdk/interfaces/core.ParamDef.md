@@ -13,6 +13,12 @@ The definition of a formula parameter.
 | :------ | :------ |
 | `T` | extends `UnionType` |
 
+## Hierarchy
+
+- **`ParamDef`**
+
+  ↳ [`OptionalParamDef`](core.OptionalParamDef.md)
+
 ## Properties
 
 ### autocomplete

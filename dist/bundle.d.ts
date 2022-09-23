@@ -1328,6 +1328,9 @@ export interface ParamDef<T extends UnionType> {
 	 */
 	suggestedValue?: SuggestedValueType<T>;
 }
+/**
+ * Marker type for an optional {@link ParamDef}, used internally.
+ */
 export interface OptionalParamDef<T extends UnionType> extends ParamDef<T> {
 	optional: true;
 }
@@ -2104,8 +2107,12 @@ export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<Pa
 	type: T;
 	autocomplete?: T extends AutocompleteParameterTypes ? MetadataFormulaDef | Array<TypeMap[AutocompleteParameterTypeMapping[T]] | SimpleAutocompleteOption<T>> : undefined;
 };
+/**
+ * Equivalent to {@link ParamDef}. A helper type to generate a param def based
+ * on the inputs to {@link makeParameter}.
+ */
 export declare type ParamDefFromOptionsUnion<T extends ParameterType, O extends ParameterOptions<T>> = Omit<O, "type" | "autcomplete"> & {
-	type: O extends ParameterOptions<infer T> ? ParameterTypeMap[T] : never;
+	type: O extends ParameterOptions<infer S> ? ParameterTypeMap[S] : never;
 	autocomplete: MetadataFormula;
 };
 /**

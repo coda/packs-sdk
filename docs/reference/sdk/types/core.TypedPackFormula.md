@@ -15,4 +15,4 @@ contents of a pack for for Coda internal use.
 
 #### Defined in
 
-[api.ts:675](https://github.com/coda/packs-sdk/blob/main/api.ts#L675)
+[api.ts:679](https://github.com/coda/packs-sdk/blob/main/api.ts#L679)

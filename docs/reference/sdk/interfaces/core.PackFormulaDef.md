@@ -36,7 +36,7 @@ CommonPackFormulaDef.cacheTtlSecs
 
 #### Defined in
 
-[api_types.ts:406](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L406)
+[api_types.ts:409](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L409)
 
 ___
 
@@ -52,7 +52,7 @@ CommonPackFormulaDef.connectionRequirement
 
 #### Defined in
 
-[api_types.ts:398](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L398)
+[api_types.ts:401](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L401)
 
 ___
 
@@ -68,7 +68,7 @@ CommonPackFormulaDef.description
 
 #### Defined in
 
-[api_types.ts:372](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L372)
+[api_types.ts:375](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L375)
 
 ___
 
@@ -84,7 +84,7 @@ CommonPackFormulaDef.examples
 
 #### Defined in
 
-[api_types.ts:387](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L387)
+[api_types.ts:390](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L390)
 
 ___
 
@@ -105,7 +105,7 @@ CommonPackFormulaDef.extraOAuthScopes
 
 #### Defined in
 
-[api_types.ts:428](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L428)
+[api_types.ts:431](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L431)
 
 ___
 
@@ -122,7 +122,7 @@ CommonPackFormulaDef.isAction
 
 #### Defined in
 
-[api_types.ts:393](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L393)
+[api_types.ts:396](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L396)
 
 ___
 
@@ -139,7 +139,7 @@ CommonPackFormulaDef.isExperimental
 
 #### Defined in
 
-[api_types.ts:412](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L412)
+[api_types.ts:415](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L415)
 
 ___
 
@@ -156,7 +156,7 @@ CommonPackFormulaDef.isSystem
 
 #### Defined in
 
-[api_types.ts:418](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L418)
+[api_types.ts:421](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L421)
 
 ___
 
@@ -172,7 +172,7 @@ CommonPackFormulaDef.name
 
 #### Defined in
 
-[api_types.ts:367](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L367)
+[api_types.ts:370](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L370)
 
 ___
 
@@ -190,7 +190,7 @@ CommonPackFormulaDef.network
 
 #### Defined in
 
-[api_types.ts:401](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L401)
+[api_types.ts:404](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L404)
 
 ___
 
@@ -206,7 +206,7 @@ CommonPackFormulaDef.parameters
 
 #### Defined in
 
-[api_types.ts:377](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L377)
+[api_types.ts:380](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L380)
 
 ___
 
@@ -223,7 +223,7 @@ CommonPackFormulaDef.varargParameters
 
 #### Defined in
 
-[api_types.ts:382](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L382)
+[api_types.ts:385](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L385)
 
 ## Methods
 
@@ -246,4 +246,4 @@ The JavaScript function that implements this formula
 
 #### Defined in
 
-[api.ts:559](https://github.com/coda/packs-sdk/blob/main/api.ts#L559)
+[api.ts:563](https://github.com/coda/packs-sdk/blob/main/api.ts#L563)

@@ -18,4 +18,4 @@ the parameter defintion for that formula.
 
 #### Defined in
 
-[api_types.ts:345](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L345)
+[api_types.ts:348](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L348)

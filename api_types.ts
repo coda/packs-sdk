@@ -313,6 +313,9 @@ export interface ParamDef<T extends UnionType> {
   suggestedValue?: SuggestedValueType<T>;
 }
 
+/**
+ * Marker type for an optional {@link ParamDef}, used internally.
+ */
 export interface OptionalParamDef<T extends UnionType> extends ParamDef<T> {
   optional: true;
 }

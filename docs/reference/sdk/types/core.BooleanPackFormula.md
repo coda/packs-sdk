@@ -17,4 +17,4 @@ A pack formula that returns a boolean.
 
 #### Defined in
 
-[api.ts:619](https://github.com/coda/packs-sdk/blob/main/api.ts#L619)
+[api.ts:623](https://github.com/coda/packs-sdk/blob/main/api.ts#L623)
