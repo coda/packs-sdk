@@ -239,15 +239,6 @@ describe('API test', () => {
       const stringType: Type.string = stringParam.type;
       stringType!;
 
-      const optionalStringParam = makeParameter({
-        type: ParameterType.String,
-        name: 'stringScalar',
-        description: '',
-        optional: true,
-      });
-      const optionalStringType: undefined = optionalStringParam.type;
-      optionalStringType!;
-
       const stringArrayParam = makeParameter({type: ParameterType.StringArray, name: 'stringArray', description: ''});
       const stringArrayType: ArrayType<Type.string> = stringArrayParam.type;
       stringArrayType!;
@@ -276,6 +267,20 @@ describe('API test', () => {
         description: '',
         parameters: [makeParameter({type: ParameterType.String, name: 'myParam', description: ''})],
         execute: ([param]) => param,
+      });
+    });
+
+    it('strong typing inferred from makeParameter with optional scalar param', () => {
+      makeFormula({
+        resultType: ValueType.String,
+        name: 'Test',
+        description: '',
+        parameters: [makeParameter({type: ParameterType.String, name: 'myParam', description: '', optional: true})],
+        execute: ([param]) => {
+          param = undefined;
+          param!;
+          return '';
+        },
       });
     });
 

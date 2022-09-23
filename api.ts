@@ -372,8 +372,31 @@ export type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterT
     : undefined;
 };
 
-type ParamDefFromOptions<T extends ParameterType, O extends ParameterOptions<T>> = Omit<O, 'type' | 'autcomplete'> & {
-  type: ParameterTypeMap[T];
+type UnionParameterOptions =
+  | ParameterOptions<ParameterType.String>
+  | ParameterOptions<ParameterType.Number>
+  | ParameterOptions<ParameterType.Boolean>
+  | ParameterOptions<ParameterType.Date>
+  | ParameterOptions<ParameterType.Html>
+  | ParameterOptions<ParameterType.Image>
+  | ParameterOptions<ParameterType.File>
+  | ParameterOptions<ParameterType.StringArray>
+  | ParameterOptions<ParameterType.SparseStringArray>
+  | ParameterOptions<ParameterType.NumberArray>
+  | ParameterOptions<ParameterType.SparseNumberArray>
+  | ParameterOptions<ParameterType.BooleanArray>
+  | ParameterOptions<ParameterType.SparseBooleanArray>
+  | ParameterOptions<ParameterType.DateArray>
+  | ParameterOptions<ParameterType.SparseDateArray>
+  | ParameterOptions<ParameterType.HtmlArray>
+  | ParameterOptions<ParameterType.SparseHtmlArray>
+  | ParameterOptions<ParameterType.ImageArray>
+  | ParameterOptions<ParameterType.SparseImageArray>
+  | ParameterOptions<ParameterType.FileArray>
+  | ParameterOptions<ParameterType.SparseFileArray>;
+
+type ParamDefFromOptionsUnion<O extends UnionParameterOptions> = Omit<O, 'type' | 'autcomplete'> & {
+  type: O extends ParameterOptions<infer T> ? ParameterTypeMap[T] : never;
   autocomplete: MetadataFormula;
 };
 
@@ -390,11 +413,9 @@ type ParamDefFromOptions<T extends ParameterType, O extends ParameterOptions<T>>
  * makeParameter({type: ParameterType.StringArray, name: 'myArrayParam', description: 'My description'});
  * ```
  */
-export function makeParameter<T extends ParameterType, O extends ParameterOptions<T>>(
-  paramDefinition: O,
-): ParamDefFromOptions<T, O> {
+export function makeParameter<T extends UnionParameterOptions>(paramDefinition: T): ParamDefFromOptionsUnion<T> {
   const {type, autocomplete: autocompleteDefOrItems, ...rest} = paramDefinition;
-  const actualType = ParameterTypeInputMap[type] as ParameterTypeMap[T];
+  const actualType = ParameterTypeInputMap[type];
   let autocomplete: MetadataFormula | undefined;
 
   if (Array.isArray(autocompleteDefOrItems)) {
@@ -404,7 +425,7 @@ export function makeParameter<T extends ParameterType, O extends ParameterOption
     autocomplete = wrapMetadataFunction(autocompleteDefOrItems);
   }
 
-  return Object.freeze({...rest, autocomplete, type: actualType});
+  return Object.freeze({...rest, autocomplete, type: actualType}) as ParamDefFromOptionsUnion<T>;
 }
 
 // Other parameter helpers below here are obsolete given the above generate parameter makers.

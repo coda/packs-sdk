@@ -1328,6 +1328,9 @@ export interface ParamDef<T extends UnionType> {
 	 */
 	suggestedValue?: SuggestedValueType<T>;
 }
+export interface OptionalParamDef<T extends UnionType> extends ParamDef<T> {
+	optional: true;
+}
 /**
  * The type for the complete set of parameter definitions for a fomrula.
  */
@@ -1344,7 +1347,7 @@ export declare type TypeOfMap<T extends UnionType> = T extends Type ? TypeMap[T]
  * the parameter defintion for that formula.
  */
 export declare type ParamValues<ParamDefsT extends ParamDefs> = {
-	[K in keyof ParamDefsT]: ParamDefsT[K] extends ParamDef<infer T> ? TypeOfMap<T> : never;
+	[K in keyof ParamDefsT]: ParamDefsT[K] extends OptionalParamDef<infer S> ? TypeOfMap<S> | undefined : ParamDefsT[K] extends ParamDef<infer T> ? TypeOfMap<T> : never;
 } & any[];
 /**
  * The type of values that are allowable to be used as a {@link ParamDef.suggestedValue} for a parameter.
@@ -2101,6 +2104,11 @@ export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<Pa
 	type: T;
 	autocomplete?: T extends AutocompleteParameterTypes ? MetadataFormulaDef | Array<TypeMap[AutocompleteParameterTypeMapping[T]] | SimpleAutocompleteOption<T>> : undefined;
 };
+export declare type UnionParameterOptions = ParameterOptions<ParameterType.String> | ParameterOptions<ParameterType.Number> | ParameterOptions<ParameterType.Boolean> | ParameterOptions<ParameterType.Date> | ParameterOptions<ParameterType.Html> | ParameterOptions<ParameterType.Image> | ParameterOptions<ParameterType.File> | ParameterOptions<ParameterType.StringArray> | ParameterOptions<ParameterType.SparseStringArray> | ParameterOptions<ParameterType.NumberArray> | ParameterOptions<ParameterType.SparseNumberArray> | ParameterOptions<ParameterType.BooleanArray> | ParameterOptions<ParameterType.SparseBooleanArray> | ParameterOptions<ParameterType.DateArray> | ParameterOptions<ParameterType.SparseDateArray> | ParameterOptions<ParameterType.HtmlArray> | ParameterOptions<ParameterType.SparseHtmlArray> | ParameterOptions<ParameterType.ImageArray> | ParameterOptions<ParameterType.SparseImageArray> | ParameterOptions<ParameterType.FileArray> | ParameterOptions<ParameterType.SparseFileArray>;
+export declare type ParamDefFromOptionsUnion<O extends UnionParameterOptions> = Omit<O, "type" | "autcomplete"> & {
+	type: O extends ParameterOptions<infer T> ? ParameterTypeMap[T] : never;
+	autocomplete: MetadataFormula;
+};
 /**
  * Create a definition for a parameter for a formula or sync.
  *
@@ -2114,7 +2122,7 @@ export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<Pa
  * makeParameter({type: ParameterType.StringArray, name: 'myArrayParam', description: 'My description'});
  * ```
  */
-export declare function makeParameter<T extends ParameterType>(paramDefinition: ParameterOptions<T>): ParamDef<ParameterTypeMap[T]>;
+export declare function makeParameter<T extends UnionParameterOptions>(paramDefinition: T): ParamDefFromOptionsUnion<T>;
 /**
  * Base type for the inputs for creating a pack formula.
  */
