@@ -975,8 +975,8 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
         return validateProperty(
           'imageProperty',
           imagePropertySchema =>
-            imagePropertySchema.type !== ValueType.String ||
-            ![ValueHintType.ImageAttachment, ValueHintType.ImageReference].includes(
+            imagePropertySchema.type === ValueType.String &&
+            [ValueHintType.ImageAttachment, ValueHintType.ImageReference].includes(
               imagePropertySchema.codaType as ValueHintType,
             ),
           `must refer to a "ValueType.String" property with a "ValueHintType.ImageAttachment" or "ValueHintType.ImageReference" "codaType".`,
@@ -986,9 +986,9 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
         return validateProperty(
           'descriptionProperty',
           descriptionPropertySchema =>
-            descriptionPropertySchema.type !== ValueType.String &&
-            (descriptionPropertySchema.type !== ValueType.Array ||
-              descriptionPropertySchema.items.type !== ValueType.String),
+            descriptionPropertySchema.type === ValueType.String ||
+            (descriptionPropertySchema.type === ValueType.Array &&
+              descriptionPropertySchema.items.type === ValueType.String),
           `must refer to a "ValueType.String" property or array of strings.`,
         );
       };
@@ -996,7 +996,7 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
         return validateProperty(
           'linkProperty',
           linkPropertySchema =>
-            linkPropertySchema.type !== ValueType.String || linkPropertySchema.codaType !== ValueHintType.Url,
+            linkPropertySchema.type === ValueType.String && linkPropertySchema.codaType === ValueHintType.Url,
           `must refer to a "ValueType.String" property with a "ValueHintType.Url" "codaType".`,
         );
       };
