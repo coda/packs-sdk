@@ -1,5 +1,5 @@
 # Trigger Circle CI to build PRs that don't come from project editor.
-# Requires an editor to apply the "buildme" label to external PRs.
+# After the "buildme" label is applied to external PRs this job will trigger them in Circle CI.
 
 on:
   pull_request:
