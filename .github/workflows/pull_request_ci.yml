@@ -6,7 +6,7 @@ on:
     types: [ labeled, synchronize ]
 
 jobs:
-  build:
+  trigger:
     # When applying the label originally and for additional commits.
     if: |
       (github.event.action == 'labeled' && github.event.label.name == 'buildme')
@@ -20,7 +20,8 @@ jobs:
           PULL_REQUEST_NUMBER=$(echo "$GITHUB_REF" | cut -d/ -f3) \
           && echo "Triggering pipeline for PR #${PULL_REQUEST_NUMBER}" \
           && curl --request POST \
-                --url https://circleci.com/api/v2/project/github/coda/packs-sdk/pipeline \
-                --header "Circle-Token: ${CIRCLE_TOKEN}" \
-                --header 'Content-Type: application/json' \
-                --data "{\"branch\": \"pull/${PULL_REQUEST_NUMBER}/head\"}"
+                  --url https://circleci.com/api/v2/project/github/coda/packs-sdk/pipeline \
+                  --header "Circle-Token: ${CIRCLE_TOKEN}" \
+                  --header 'Content-Type: application/json' \
+                  --data "{\"branch\": \"pull/${PULL_REQUEST_NUMBER}/head\"}" \
+                  --silent --show-error --fail
