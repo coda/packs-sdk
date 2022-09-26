@@ -933,102 +933,72 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
     .superRefine((data, context) => {
       const schema = data as GenericObjectSchema;
 
-      const validateTitleProperty = () => {
-        if (schema.titleProperty) {
-          if (!(schema.titleProperty in schema.properties)) {
-            context.addIssue({
-              code: z.ZodIssueCode.custom,
-              path: ['titleProperty'],
-              message: `The "titleProperty" field name "${schema.titleProperty}" does not exist in the "properties" object.`,
-            });
-            return;
-          }
+      function validateProperty(
+        propertyKey: keyof typeof schema,
+        isValidSchema: (schema: Schema & ObjectSchemaProperty) => boolean,
+        invalidSchemaMessage: string,
+      ) {
+        if (schema[propertyKey]) {
+          if (typeof schema[propertyKey] === 'string') {
+            const propertyValue = schema[propertyKey] as string;
+            if (!(propertyValue in schema.properties)) {
+              context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: [propertyKey],
+                message: `The "${propertyKey}" field name "${propertyValue}" does not exist in the "properties" object.`,
+              });
+              return;
+            }
 
-          const titlePropertySchema = schema.properties[schema.titleProperty];
-          if (![ValueType.String, ValueType.Object].includes(titlePropertySchema.type)) {
-            context.addIssue({
-              code: z.ZodIssueCode.custom,
-              path: ['titleProperty'],
-              message: `The "titleProperty" field name "${schema.titleProperty}" must refer to a "ValueType.String" or "ValueType.Object" property.`,
-            });
-            return;
+            const titlePropertySchema = schema.properties[propertyValue];
+            if (!isValidSchema(titlePropertySchema)) {
+              context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: [propertyKey],
+                message: `The "${propertyKey}" field name "${propertyValue}" ${invalidSchemaMessage}`,
+              });
+              return;
+            }
           }
+          // TODO(spencer): Validate JSONpath
         }
+      }
+
+      const validateTitleProperty = () => {
+        return validateProperty(
+          'titleProperty',
+          propertySchema => [ValueType.String, ValueType.Object].includes(propertySchema.type),
+          `must refer to a "ValueType.String" or "ValueType.Object" property.`,
+        );
       };
       const validateImageProperty = () => {
-        if (schema.imageProperty) {
-          if (!(schema.imageProperty in schema.properties)) {
-            context.addIssue({
-              code: z.ZodIssueCode.custom,
-              path: ['imageProperty'],
-              message: `The "imageProperty" field name "${schema.imageProperty}" does not exist in the "properties" object.`,
-            });
-            return;
-          }
-
-          const imagePropertySchema = schema.properties[schema.imageProperty];
-          if (
+        return validateProperty(
+          'imageProperty',
+          imagePropertySchema =>
             imagePropertySchema.type !== ValueType.String ||
             ![ValueHintType.ImageAttachment, ValueHintType.ImageReference].includes(
               imagePropertySchema.codaType as ValueHintType,
-            )
-          ) {
-            context.addIssue({
-              code: z.ZodIssueCode.custom,
-              path: ['imageProperty'],
-              message: `The "imageProperty" field name "${schema.imageProperty}" must refer to a "ValueType.String" property with a "ValueHintType.ImageAttachment" or "ValueHintType.ImageReference" "codaType".`,
-            });
-            return;
-          }
-        }
+            ),
+          `must refer to a "ValueType.String" property with a "ValueHintType.ImageAttachment" or "ValueHintType.ImageReference" "codaType".`,
+        );
       };
       const validateDescriptionProperty = () => {
-        if (schema.descriptionProperty) {
-          if (!(schema.descriptionProperty in schema.properties)) {
-            context.addIssue({
-              code: z.ZodIssueCode.custom,
-              path: ['descriptionProperty'],
-              message: `The "descriptionProperty" field name "${schema.descriptionProperty}" does not exist in the "properties" object.`,
-            });
-            return;
-          }
-
-          const descriptionPropertySchema = schema.properties[schema.descriptionProperty];
-          if (
+        return validateProperty(
+          'descriptionProperty',
+          descriptionPropertySchema =>
             descriptionPropertySchema.type !== ValueType.String &&
             (descriptionPropertySchema.type !== ValueType.Array ||
-              descriptionPropertySchema.items.type !== ValueType.String)
-          ) {
-            context.addIssue({
-              code: z.ZodIssueCode.custom,
-              path: ['descriptionProperty'],
-              message: `The "descriptionProperty" field name "${schema.descriptionProperty}" must refer to a "ValueType.String" property or array of strings.`,
-            });
-            return;
-          }
-        }
+              descriptionPropertySchema.items.type !== ValueType.String),
+          `must refer to a "ValueType.String" property or array of strings.`,
+        );
       };
       const validateLinkProperty = () => {
-        if (schema.linkProperty) {
-          if (!(schema.linkProperty in schema.properties)) {
-            context.addIssue({
-              code: z.ZodIssueCode.custom,
-              path: ['linkProperty'],
-              message: `The "linkProperty" field name "${schema.linkProperty}" does not exist in the "properties" object.`,
-            });
-            return;
-          }
-
-          const linkPropertySchema = schema.properties[schema.linkProperty];
-          if (linkPropertySchema.type !== ValueType.String || linkPropertySchema.codaType !== ValueHintType.Url) {
-            context.addIssue({
-              code: z.ZodIssueCode.custom,
-              path: ['linkProperty'],
-              message: `The "linkProperty" field name "${schema.linkProperty}" must refer to a "ValueType.String" property with a "ValueHintType.Url" "codaType".`,
-            });
-            return;
-          }
-        }
+        return validateProperty(
+          'linkProperty',
+          linkPropertySchema =>
+            linkPropertySchema.type !== ValueType.String || linkPropertySchema.codaType !== ValueHintType.Url,
+          `must refer to a "ValueType.String" property with a "ValueHintType.Url" "codaType".`,
+        );
       };
 
       validateTitleProperty();
@@ -1036,35 +1006,38 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
       validateImageProperty();
       validateDescriptionProperty();
       (schema.subtitleProperties || []).forEach((f, i) => {
-        if (!(f in schema.properties)) {
-          context.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ['subtitleProperties', i],
-            message: `The "subtitleProperties" field name "${f}" does not exist in the "properties" object.`,
-          });
-          return;
-        }
+        if (typeof f === 'string') {
+          if (!(f in schema.properties)) {
+            context.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: ['subtitleProperties', i],
+              message: `The "subtitleProperties" field name "${f}" does not exist in the "properties" object.`,
+            });
+            return;
+          }
 
-        const subtitlePropertySchema = schema.properties[f];
-        if (
-          'codaType' in subtitlePropertySchema &&
-          subtitlePropertySchema.codaType &&
-          [
-            ValueHintType.ImageAttachment,
-            ValueHintType.Attachment,
-            ValueHintType.ImageReference,
-            ValueHintType.Embed,
-            ValueHintType.Scale,
-            ValueHintType.Scale,
-          ].includes(subtitlePropertySchema.codaType)
-        ) {
-          context.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ['subtitleProperties', i],
-            message: `The "subtitleProperties" field name "${f}" must refer to a value that does not have a codaType corresponding to one of ImageAttachment, Attachment, ImageReference, Embed, Scale, or Scale.`,
-          });
-          return;
+          const subtitlePropertySchema = schema.properties[f];
+          if (
+            'codaType' in subtitlePropertySchema &&
+            subtitlePropertySchema.codaType &&
+            [
+              ValueHintType.ImageAttachment,
+              ValueHintType.Attachment,
+              ValueHintType.ImageReference,
+              ValueHintType.Embed,
+              ValueHintType.Scale,
+              ValueHintType.Scale,
+            ].includes(subtitlePropertySchema.codaType)
+          ) {
+            context.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: ['subtitleProperties', i],
+              message: `The "subtitleProperties" field name "${f}" must refer to a value that does not have a codaType corresponding to one of ImageAttachment, Attachment, ImageReference, Embed, Scale, or Scale.`,
+            });
+            return;
+          }
         }
+        // TODO(spencer): Validate JSONpath
       });
     }),
 );

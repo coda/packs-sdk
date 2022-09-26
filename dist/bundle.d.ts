@@ -764,6 +764,12 @@ export interface IdentityDefinition {
 export interface Identity extends IdentityDefinition {
 	packId: number;
 }
+export interface ObjectProperty {
+	label: string;
+	path: string;
+	showLabel?: boolean;
+}
+export declare type PropertyType<K extends string = string> = K | ObjectProperty;
 /**
  * A schema definition for an object value (a value with key-value pairs).
  */
@@ -845,7 +851,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 * Must be a {@link ValueType.String} property
 	 */
 	/** @hidden */
-	titleProperty?: L;
+	titleProperty?: PropertyType<K>;
 	/**
 	 * The name of a property within {@link ObjectSchemaDefinition.properties} that will
 	 * navigate users to more details about this object
@@ -854,14 +860,14 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 * {@link ObjectSchemaDefinition.codaType}.
 	 */
 	/** @hidden */
-	linkProperty?: L;
+	linkProperty?: PropertyType<K>;
 	/**
 	 * A list of property names from within {@link ObjectSchemaDefinition.properties} for the properties of the object
 	 * to be shown in the subtitle of a rich card preview for formulas that return this object.
 	 * Defaults to the value of {@link ObjectSchemaDefinition.featuredProperties} if not specified.
 	 */
 	/** @hidden */
-	subtitleProperties?: L[];
+	subtitleProperties?: Array<PropertyType<K>>;
 	/**
 	 * The name of a property within {@link ObjectSchemaDefinition.properties} that be used as a long body description
 	 * of the object.
@@ -869,7 +875,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 * Must be a {@link ValueType.String} property or {@link ValueType.Array} of {@link ValueType.String}s.
 	 */
 	/** @hidden */
-	descriptionProperty?: L;
+	descriptionProperty?: PropertyType<K>;
 	/**
 	 * The name of a property within {@link ObjectSchemaDefinition.properties} that can be used as a rich image preview of
 	 * the object.
@@ -878,7 +884,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 * {@link ValueHintType.ImageAttachment} or {@link ValueHintType.ImageReference} hints
 	 */
 	/** @hidden */
-	imageProperty?: L;
+	imageProperty?: PropertyType<K>;
 }
 export declare type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
 /** @hidden */

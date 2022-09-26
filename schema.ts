@@ -845,7 +845,7 @@ interface ObjectProperty {
   showLabel?: boolean;
 }
 
-export type PropertyType<K extends string> = K | ObjectProperty;
+export type PropertyType<K extends string = string> = K | ObjectProperty;
 
 /**
  * A schema definition for an object value (a value with key-value pairs).
@@ -1338,6 +1338,19 @@ export function normalizeSchemaKey(key: string): string {
   return pascalcase(key).replace(/:/g, '_');
 }
 
+function tryNormalizeSchemaPropertyType(key: PropertyType): PropertyType {
+  // Colons cause problems in our formula handling.
+  if (typeof key === 'string') {
+    return normalizeSchemaKey(key);
+  }
+
+  const {label} = key;
+  if (label) {
+    return {...key, label: normalizeSchemaKey(label)};
+  }
+  return key;
+}
+
 export function normalizeSchema<T extends Schema>(schema: T): T {
   if (isArray(schema)) {
     return {
@@ -1383,11 +1396,11 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
       description: schema.description,
       attribution: schema.attribution,
       includeUnknownProperties: schema.includeUnknownProperties,
-      titleProperty: titleProperty ? normalizeSchemaKey(titleProperty) : undefined,
-      subtitleProperties: subtitleProperties ? subtitleProperties.map(normalizeSchemaKey) : undefined,
-      imageProperty: imageProperty ? normalizeSchemaKey(imageProperty) : undefined,
-      descriptionProperty: descriptionProperty ? normalizeSchemaKey(descriptionProperty) : undefined,
-      linkProperty: linkProperty ? normalizeSchemaKey(linkProperty) : undefined,
+      titleProperty: titleProperty ? tryNormalizeSchemaPropertyType(titleProperty) : undefined,
+      subtitleProperties: subtitleProperties ? subtitleProperties.map(tryNormalizeSchemaPropertyType) : undefined,
+      imageProperty: imageProperty ? tryNormalizeSchemaPropertyType(imageProperty) : undefined,
+      descriptionProperty: descriptionProperty ? tryNormalizeSchemaPropertyType(descriptionProperty) : undefined,
+      linkProperty: linkProperty ? tryNormalizeSchemaPropertyType(linkProperty) : undefined,
     } as T;
 
     return normalizedSchema;

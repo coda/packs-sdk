@@ -535,6 +535,17 @@ function normalizeSchemaKey(key) {
     return (0, pascalcase_1.default)(key).replace(/:/g, '_');
 }
 exports.normalizeSchemaKey = normalizeSchemaKey;
+function tryNormalizeSchemaPropertyType(key) {
+    // Colons cause problems in our formula handling.
+    if (typeof key === 'string') {
+        return normalizeSchemaKey(key);
+    }
+    const { label } = key;
+    if (label) {
+        return { ...key, label: normalizeSchemaKey(label) };
+    }
+    return key;
+}
 function normalizeSchema(schema) {
     if (isArray(schema)) {
         return {
@@ -569,11 +580,11 @@ function normalizeSchema(schema) {
             description: schema.description,
             attribution: schema.attribution,
             includeUnknownProperties: schema.includeUnknownProperties,
-            titleProperty: titleProperty ? normalizeSchemaKey(titleProperty) : undefined,
-            subtitleProperties: subtitleProperties ? subtitleProperties.map(normalizeSchemaKey) : undefined,
-            imageProperty: imageProperty ? normalizeSchemaKey(imageProperty) : undefined,
-            descriptionProperty: descriptionProperty ? normalizeSchemaKey(descriptionProperty) : undefined,
-            linkProperty: linkProperty ? normalizeSchemaKey(linkProperty) : undefined,
+            titleProperty: titleProperty ? tryNormalizeSchemaPropertyType(titleProperty) : undefined,
+            subtitleProperties: subtitleProperties ? subtitleProperties.map(tryNormalizeSchemaPropertyType) : undefined,
+            imageProperty: imageProperty ? tryNormalizeSchemaPropertyType(imageProperty) : undefined,
+            descriptionProperty: descriptionProperty ? tryNormalizeSchemaPropertyType(descriptionProperty) : undefined,
+            linkProperty: linkProperty ? tryNormalizeSchemaPropertyType(linkProperty) : undefined,
         };
         return normalizedSchema;
     }
