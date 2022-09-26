@@ -9,8 +9,8 @@ jobs:
   build:
     # When applying the label originally and for additional commits.
     if: |
-      ${{ (github.event.action == 'labeled' && github.event.label.name == 'buildme')
-      || (github.event.action == 'synchronize' && contains(github.event.pull_request.labels.*.name, 'buildme')) }}
+      (github.event.action == 'labeled' && github.event.label.name == 'buildme')
+      || (github.event.action == 'synchronize' && contains(github.event.pull_request.labels.*.name, 'buildme'))
     runs-on: ubuntu-latest
     steps:
       - name: Trigger pipeline
