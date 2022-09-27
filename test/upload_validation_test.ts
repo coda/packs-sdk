@@ -292,7 +292,7 @@ describe('Pack metadata Validation', () => {
     });
 
     it('valid formula names', async () => {
-      for (const name of ['foo', 'Foo', 'foo_bar', 'Foo123', 'føø']) {
+      for (const name of ['Foo', 'foo_bar', 'Foo123', 'føø']) {
         const formula = makeNumericFormula({
           name,
           description: 'My description',
@@ -325,6 +325,29 @@ describe('Pack metadata Validation', () => {
           {
             message: 'Formula names can only contain alphanumeric characters and underscores.',
             path: 'formulas[0].name',
+          },
+        ]);
+      }
+    });
+
+    it('duplicate formula names', async () => {
+      for (const name of ['foo', 'Foo', 'foo_bar', 'Foo123', 'føø']) {
+        const formula = makeNumericFormula({
+          name,
+          description: 'My description',
+          examples: [],
+          parameters: [],
+          execute: () => 1,
+        });
+        const metadata = createFakePackVersionMetadata({
+          formulas: [formulaToMetadata(formula)],
+          formulaNamespace: 'MyNamespace',
+        });
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'Formula names must be unique. Found duplicate name "foo".',
+            path: 'formulas',
           },
         ]);
       }
@@ -2361,6 +2384,49 @@ describe('Pack metadata Validation', () => {
           {
             message: `String must contain at most ${Limits.BuildingBlockName} character(s)`,
             path: 'formats[0].name',
+          },
+        ]);
+      });
+
+      it('duplicate format names', async () => {
+        const formula = makeStringFormula({
+          name: 'MyFormula',
+          description: 'My description',
+          examples: [],
+          parameters: [makeStringParameter('myParam', 'param description')],
+          execute: () => '',
+        });
+        const metadata = createFakePackVersionMetadata({
+          formulas: [formulaToMetadata(formula)],
+          formulaNamespace: 'MyNamespace',
+          formats: [
+            {
+              name: 'A',
+              formulaNamespace: 'MyNamespace',
+              formulaName: 'MyFormula',
+              hasNoConnection: true,
+              instructions: 'some instructions',
+              placeholder: 'some placeholder',
+              matchers: ['/some compiled regex/i'],
+            },
+            {
+              name: 'A',
+              formulaNamespace: 'MyNamespace',
+              formulaName: 'MyFormula',
+              hasNoConnection: true,
+              instructions: 'some instructions',
+              placeholder: 'some placeholder',
+              matchers: ['/some compiled regex/i'],
+            },
+          ],
+        });
+
+        const err = await validateJsonAndAssertFails(metadata);
+
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'Format names must be unique. Found duplicate name "A".',
+            path: 'formats',
           },
         ]);
       });

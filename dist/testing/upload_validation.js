@@ -137,10 +137,12 @@ function getNonUniqueElements(items) {
     const set = new Set();
     const nonUnique = [];
     for (const item of items) {
-        if (set.has(item)) {
+        // make this case insensitive
+        const normalized = item.toUpperCase();
+        if (set.has(normalized)) {
             nonUnique.push(item);
         }
-        set.add(item);
+        set.add(normalized);
     }
     return nonUnique;
 }

@@ -189,14 +189,16 @@ export function validateSyncTableSchema(schema: any): ArraySchema<ObjectSchema<a
   );
 }
 
-function getNonUniqueElements<T>(items: T[]): T[] {
-  const set = new Set<T>();
+function getNonUniqueElements<T extends string>(items: T[]): T[] {
+  const set = new Set<string>();
   const nonUnique: T[] = [];
   for (const item of items) {
-    if (set.has(item)) {
+    // make this case insensitive
+    const normalized = item.toUpperCase()
+    if (set.has(normalized)) {
       nonUnique.push(item);
     }
-    set.add(item);
+    set.add(normalized);
   }
   return nonUnique;
 }
