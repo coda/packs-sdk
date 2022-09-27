@@ -137,10 +137,12 @@ function getNonUniqueElements(items) {
     const set = new Set();
     const nonUnique = [];
     for (const item of items) {
-        if (set.has(item)) {
+        // make this case insensitive
+        const normalized = item.toUpperCase();
+        if (set.has(normalized)) {
             nonUnique.push(item);
         }
-        set.add(item);
+        set.add(normalized);
     }
     return nonUnique;
 }
@@ -999,8 +1001,34 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject({
         message: 'Formula namespaces can only contain alphanumeric characters and underscores.',
     }),
     systemConnectionAuthentication: z.union(zodUnionInput(systemAuthenticationValidators)).optional(),
-    formulas: z.array(formulaMetadataSchema).max(exports.Limits.BuildingBlockCountPerType).optional().default([]),
-    formats: z.array(formatMetadataSchema).max(exports.Limits.BuildingBlockCountPerType).optional().default([]),
+    formulas: z
+        .array(formulaMetadataSchema)
+        .max(exports.Limits.BuildingBlockCountPerType)
+        .optional()
+        .default([])
+        .superRefine((data, context) => {
+        const formulaNames = data.map(formulaDef => formulaDef.name);
+        for (const dupe of getNonUniqueElements(formulaNames)) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `Formula names must be unique. Found duplicate name "${dupe}".`,
+            });
+        }
+    }),
+    formats: z
+        .array(formatMetadataSchema)
+        .max(exports.Limits.BuildingBlockCountPerType)
+        .optional()
+        .default([])
+        .superRefine((data, context) => {
+        const formatNames = data.map(formatDef => formatDef.name);
+        for (const dupe of getNonUniqueElements(formatNames)) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `Format names must be unique. Found duplicate name "${dupe}".`,
+            });
+        }
+    }),
     syncTables: z
         .array(syncTableSchema)
         .max(exports.Limits.BuildingBlockCountPerType)
@@ -1018,7 +1046,10 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject({
                     });
                 }
             }
-            identityNames.push((_b = tableDef.schema.identity) === null || _b === void 0 ? void 0 : _b.name);
+            // only add identity names that are not undefined to check for dupes
+            if (tableDef.schema.identity) {
+                identityNames.push((_b = tableDef.schema.identity) === null || _b === void 0 ? void 0 : _b.name);
+            }
         }
         for (const dupe of getNonUniqueElements(identityNames)) {
             context.addIssue({

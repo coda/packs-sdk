@@ -8,6 +8,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 - Adds support for render hits for progress bars, with the new `ValueHintType.ProgressBar`.
 - Also adds in the `showValue` field on `SliderSchema` to indicate whether to show the underlying numeric value associated with a slider.
 - Parameters that are declared as `optional: true` will be inferred as possibly `undefined` in the `execute` method of a formula. Previously, if you had declared, say, a string parameter as optional, the automatic type it would receive as an input to the `execute` method would be `string`, which is inaccurate. It will now be typed as `string | undefined`.
+- Added validation that building blocks of the same type do not share a name.
 
 ## [1.0.5] - 2022-08-05
 
