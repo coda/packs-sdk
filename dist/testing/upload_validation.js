@@ -999,8 +999,34 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject({
         message: 'Formula namespaces can only contain alphanumeric characters and underscores.',
     }),
     systemConnectionAuthentication: z.union(zodUnionInput(systemAuthenticationValidators)).optional(),
-    formulas: z.array(formulaMetadataSchema).max(exports.Limits.BuildingBlockCountPerType).optional().default([]),
-    formats: z.array(formatMetadataSchema).max(exports.Limits.BuildingBlockCountPerType).optional().default([]),
+    formulas: z
+        .array(formulaMetadataSchema)
+        .max(exports.Limits.BuildingBlockCountPerType)
+        .optional()
+        .default([])
+        .superRefine((data, context) => {
+        const formulaNames = data.map(formulaDef => formulaDef.name);
+        for (const dupe of getNonUniqueElements(formulaNames)) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `Formula names must be unique. Found duplicate name "${dupe}".`,
+            });
+        }
+    }),
+    formats: z
+        .array(formatMetadataSchema)
+        .max(exports.Limits.BuildingBlockCountPerType)
+        .optional()
+        .default([])
+        .superRefine((data, context) => {
+        const formatNames = data.map(formatDef => formatDef.name);
+        for (const dupe of getNonUniqueElements(formatNames)) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `Format names must be unique. Found duplicate name "${dupe}".`,
+            });
+        }
+    }),
     syncTables: z
         .array(syncTableSchema)
         .max(exports.Limits.BuildingBlockCountPerType)
