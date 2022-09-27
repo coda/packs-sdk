@@ -1,6 +1,6 @@
 import type {AWSAccessKeyAuthentication} from '../types';
 import type {AWSAssumeRoleAuthentication} from '../types';
-import type {ArraySchema} from '../schema';
+import type {ArraySchema, ObjectProperty, PropertyType} from '../schema';
 import {AttributionNodeType} from '../schema';
 import {AuthenticationType} from '../types';
 import {BooleanHintValueTypes} from '../schema';
@@ -939,28 +939,31 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
         invalidSchemaMessage: string,
       ) {
         if (schema[propertyKey]) {
-          if (typeof schema[propertyKey] === 'string') {
-            const propertyValue = schema[propertyKey] as string;
-            if (!(propertyValue in schema.properties)) {
-              context.addIssue({
-                code: z.ZodIssueCode.custom,
-                path: [propertyKey],
-                message: `The "${propertyKey}" field name "${propertyValue}" does not exist in the "properties" object.`,
-              });
-              return;
-            }
+          const propertyValue =
+            typeof schema[propertyKey] !== 'string'
+              ? (schema[propertyKey] as string)
+              : (schema[propertyKey] as ObjectProperty).value;
 
-            const titlePropertySchema = schema.properties[propertyValue];
-            if (!isValidSchema(titlePropertySchema)) {
-              context.addIssue({
-                code: z.ZodIssueCode.custom,
-                path: [propertyKey],
-                message: `The "${propertyKey}" field name "${propertyValue}" ${invalidSchemaMessage}`,
-              });
-              return;
-            }
-          }
           // TODO(spencer): Validate JSONpath
+
+          if (!(propertyValue in schema.properties)) {
+            context.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: [propertyKey],
+              message: `The "${propertyKey}" field name "${propertyValue}" does not exist in the "properties" object.`,
+            });
+            return;
+          }
+
+          const titlePropertySchema = schema.properties[propertyValue];
+          if (!isValidSchema(titlePropertySchema)) {
+            context.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: [propertyKey],
+              message: `The "${propertyKey}" field name "${propertyValue}" ${invalidSchemaMessage}`,
+            });
+            return;
+          }
         }
       }
 

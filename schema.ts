@@ -6,6 +6,7 @@ import {ensureNonEmptyString} from './helpers/ensure';
 import {ensureUnreachable} from './helpers/ensure';
 import {objectSchemaHelper} from './helpers/migration';
 import pascalcase from 'pascalcase';
+import {JSONPath} from 'jsonpath-plus';
 
 // Defines a subset of the JSON Object schema for use in annotating API results.
 // http://json-schema.org/latest/json-schema-core.html#rfc.section.8.2
@@ -839,13 +840,12 @@ export interface Identity extends IdentityDefinition {
   packId: number;
 }
 
-interface ObjectProperty {
+export interface ObjectProperty {
   label: string;
-  path: string;
-  showLabel?: boolean;
+  value: string;
 }
 
-export type PropertyType<K extends string = string> = K | ObjectProperty;
+export type PropertyType<K extends string = string> = K | string | ObjectProperty;
 
 /**
  * A schema definition for an object value (a value with key-value pairs).
@@ -1449,4 +1449,16 @@ export function withIdentity(schema: GenericObjectSchema, identityName: string):
     ...deepCopy(schema),
     identity: {name: ensureNonEmptyString(identityName)},
   });
+}
+
+/**
+ * Attempts to transform a property value (which may be a json-path string or a normal object schema property) into
+ * a valid one
+ *
+ * Returns undefined if it is invalid
+ */
+export function normalizePropertyValue(propertyValue: string) {
+  const values = propertyValue.split(',');
+
+  JSONPath(propertyValue);
 }

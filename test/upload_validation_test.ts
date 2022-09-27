@@ -1966,6 +1966,35 @@ describe('Pack metadata Validation', () => {
         ]);
       });
 
+      it('evaluates JSON path properly', async () => {
+        const metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          properties: {
+            primary: {type: ValueType.Number},
+            nestedObject: {type: ValueType.Object, properties: {name: {type: ValueType.String}}},
+          },
+          titleProperty: 'nestedObject.name',
+        });
+        // await validateJsonAndAssertFails(metadata);
+        // metadata = metadataForFormulaWithObjectSchema({
+        //   type: ValueType.Object,
+        //   properties: {
+        //     primary: {type: ValueType.Number},
+        //   },
+        //   imageProperty: 'primary',
+        // });
+        // await validateJsonAndAssertFails(metadata);
+        // metadata = metadataForFormulaWithObjectSchema({
+        //   type: ValueType.Object,
+        //   properties: {
+        //     primary: {type: ValueType.String},
+        //   },
+        //   imageProperty: 'primary',
+        // });
+        // await validateJsonAndAssertFails(metadata);
+        await validateJson(metadata);
+      });
+
       it('imageProperty is invalid', async () => {
         let metadata = metadataForFormulaWithObjectSchema({
           type: ValueType.Object,
