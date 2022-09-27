@@ -1046,7 +1046,10 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject({
                     });
                 }
             }
-            identityNames.push((_b = tableDef.schema.identity) === null || _b === void 0 ? void 0 : _b.name);
+            // only add identity names that are not undefined to check for dupes
+            if (tableDef.schema.identity) {
+                identityNames.push((_b = tableDef.schema.identity) === null || _b === void 0 ? void 0 : _b.name);
+            }
         }
         for (const dupe of getNonUniqueElements(identityNames)) {
             context.addIssue({

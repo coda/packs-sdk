@@ -331,26 +331,27 @@ describe('Pack metadata Validation', () => {
     });
 
     it('duplicate formula names', async () => {
+      const formulas = []
       for (const name of ['foo', 'Foo', 'foo_bar', 'Foo123', 'føø']) {
-        const formula = makeNumericFormula({
+        formulas.push(formulaToMetadata(makeNumericFormula({
           name,
           description: 'My description',
           examples: [],
           parameters: [],
           execute: () => 1,
-        });
-        const metadata = createFakePackVersionMetadata({
-          formulas: [formulaToMetadata(formula)],
-          formulaNamespace: 'MyNamespace',
-        });
-        const err = await validateJsonAndAssertFails(metadata);
-        assert.deepEqual(err.validationErrors, [
-          {
-            message: 'Formula names must be unique. Found duplicate name "foo".',
-            path: 'formulas',
-          },
-        ]);
+        })));
       }
+      const metadata = createFakePackVersionMetadata({
+        formulas,
+        formulaNamespace: 'MyNamespace',
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: 'Formula names must be unique. Found duplicate name "Foo".',
+          path: 'formulas',
+        },
+      ]);
     });
 
     it('rejects formula names that are too long', async () => {

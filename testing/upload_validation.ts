@@ -1248,7 +1248,10 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject<PackVersionMetadata
             });
           }
         }
-        identityNames.push(tableDef.schema.identity?.name);
+        // only add identity names that are not undefined to check for dupes
+        if (tableDef.schema.identity) {
+          identityNames.push(tableDef.schema.identity?.name);
+        }
       }
       for (const dupe of getNonUniqueElements(identityNames)) {
         context.addIssue({
