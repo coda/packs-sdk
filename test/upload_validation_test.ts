@@ -331,15 +331,19 @@ describe('Pack metadata Validation', () => {
     });
 
     it('duplicate formula names', async () => {
-      const formulas = []
+      const formulas = [];
       for (const name of ['foo', 'Foo', 'foo_bar', 'Foo123', 'føø']) {
-        formulas.push(formulaToMetadata(makeNumericFormula({
-          name,
-          description: 'My description',
-          examples: [],
-          parameters: [],
-          execute: () => 1,
-        })));
+        formulas.push(
+          formulaToMetadata(
+            makeNumericFormula({
+              name,
+              description: 'My description',
+              examples: [],
+              parameters: [],
+              execute: () => 1,
+            }),
+          ),
+        );
       }
       const metadata = createFakePackVersionMetadata({
         formulas,
@@ -1967,32 +1971,61 @@ describe('Pack metadata Validation', () => {
       });
 
       it('evaluates JSON path properly', async () => {
-        const metadata = metadataForFormulaWithObjectSchema({
+        const baseMetadata: ObjectSchemaDefinition<string, string> = {
           type: ValueType.Object,
           properties: {
             primary: {type: ValueType.Number},
-            nestedObject: {type: ValueType.Object, properties: {name: {type: ValueType.String}}},
+            nestedObject: {
+              type: ValueType.Object,
+              properties: {
+                name: {type: ValueType.String},
+                array: {
+                  type: ValueType.Array,
+                  items: {type: ValueType.Object, properties: {name: {type: ValueType.String}}},
+                },
+              },
+            },
+            array: {
+              type: ValueType.Array,
+              items: {type: ValueType.Object, properties: {name: {type: ValueType.String}}},
+            },
           },
           titleProperty: 'nestedObject.name',
-        });
-        // await validateJsonAndAssertFails(metadata);
-        // metadata = metadataForFormulaWithObjectSchema({
-        //   type: ValueType.Object,
-        //   properties: {
-        //     primary: {type: ValueType.Number},
-        //   },
-        //   imageProperty: 'primary',
-        // });
-        // await validateJsonAndAssertFails(metadata);
-        // metadata = metadataForFormulaWithObjectSchema({
-        //   type: ValueType.Object,
-        //   properties: {
-        //     primary: {type: ValueType.String},
-        //   },
-        //   imageProperty: 'primary',
-        // });
-        // await validateJsonAndAssertFails(metadata);
-        await validateJson(metadata);
+          descriptionProperty: 'array[0].name',
+        };
+        await validateJsonAndAssertFails(
+          metadataForFormulaWithObjectSchema({
+            ...baseMetadata,
+            descriptionProperty: 'array[0][0].name',
+          }),
+        );
+        await validateJsonAndAssertFails(
+          metadataForFormulaWithObjectSchema({
+            ...baseMetadata,
+            imageProperty: 'nestedObject.name',
+          }),
+        );
+        await validateJsonAndAssertFails(
+          metadataForFormulaWithObjectSchema({
+            ...baseMetadata,
+            titleProperty: 'nestedObject.nonexistent',
+          }),
+        );
+        await validateJsonAndAssertFails(
+          metadataForFormulaWithObjectSchema({
+            ...baseMetadata,
+            titleProperty: 'badProperty',
+          }),
+        );
+
+        // Valid paths
+        await validateJson(
+          metadataForFormulaWithObjectSchema({
+            ...baseMetadata,
+            titleProperty: 'nestedObject.array[0].name',
+          }),
+        );
+        await validateJson(metadataForFormulaWithObjectSchema(baseMetadata));
       });
 
       it('imageProperty is invalid', async () => {

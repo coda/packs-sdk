@@ -6,7 +6,6 @@ import {ensureNonEmptyString} from './helpers/ensure';
 import {ensureUnreachable} from './helpers/ensure';
 import {objectSchemaHelper} from './helpers/migration';
 import pascalcase from 'pascalcase';
-import {JSONPath} from 'jsonpath-plus';
 
 // Defines a subset of the JSON Object schema for use in annotating API results.
 // http://json-schema.org/latest/json-schema-core.html#rfc.section.8.2
@@ -1334,21 +1333,53 @@ function checkSchemaPropertyIsRequired<K extends string, L extends string, T ext
 }
 
 export function normalizeSchemaKey(key: string): string {
-  // Colons cause problems in our formula handling.
-  return pascalcase(key).replace(/:/g, '_');
+  // Try splitting by . to handle json paths.
+  return (
+    key
+      .split('.')
+      // Colons cause problems in our formula handling.
+      .map(val => {
+        let partToNormalize = val;
+        let partToIgnoreNormalization = '';
+
+        // Handles array pathing.
+        if (val.includes('[')) {
+          partToNormalize = val.substring(0, val.indexOf('['));
+          partToIgnoreNormalization = val.substring(val.indexOf('['));
+        }
+
+        return (pascalcase(partToNormalize) + partToIgnoreNormalization).replace(/:/g, '_');
+      })
+      .join('.')
+  );
 }
 
 function tryNormalizeSchemaPropertyType(key: PropertyType): PropertyType {
-  // Colons cause problems in our formula handling.
   if (typeof key === 'string') {
     return normalizeSchemaKey(key);
   }
 
-  const {label} = key;
-  if (label) {
-    return {...key, label: normalizeSchemaKey(label)};
-  }
-  return key;
+  const {label, value} = key;
+  return {
+    value: normalizeSchemaKey(value),
+    label: normalizeSchemaKey(label),
+  };
+}
+
+/**
+ * Attempts to transform a property value (which may be a json-path string or a normal object schema property) into
+ * a path to access the relevant schema. Specifically this handles the case of array schemas which have an intermediate
+ * `items` object to traverse.
+ */
+export function normalizePropertyValuePathIntoSchemaPath(propertyValue: string) {
+  const normalizedValue = propertyValue
+    .split('.')
+    .map(val => {
+      return val.replace(/\[(.*?)\]/, '.items');
+    })
+    .join('.properties.');
+
+  return normalizedValue;
 }
 
 export function normalizeSchema<T extends Schema>(schema: T): T {
@@ -1449,16 +1480,4 @@ export function withIdentity(schema: GenericObjectSchema, identityName: string):
     ...deepCopy(schema),
     identity: {name: ensureNonEmptyString(identityName)},
   });
-}
-
-/**
- * Attempts to transform a property value (which may be a json-path string or a normal object schema property) into
- * a valid one
- *
- * Returns undefined if it is invalid
- */
-export function normalizePropertyValue(propertyValue: string) {
-  const values = propertyValue.split(',');
-
-  JSONPath(propertyValue);
 }

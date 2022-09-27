@@ -1,6 +1,6 @@
 import type {AWSAccessKeyAuthentication} from '../types';
 import type {AWSAssumeRoleAuthentication} from '../types';
-import type {ArraySchema, ObjectProperty, PropertyType} from '../schema';
+import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '../schema';
 import {AuthenticationType} from '../types';
 import {BooleanHintValueTypes} from '../schema';
@@ -24,6 +24,7 @@ import type {Identity} from '../schema';
 import {ImageCornerStyle} from '../schema';
 import {ImageOutline} from '../schema';
 import type {ImageSchema} from '..';
+import {JSONPath} from 'jsonpath-plus';
 import {LinkDisplayType} from '../schema';
 import type {LinkSchema} from '../schema';
 import type {MultiQueryParamTokenAuthentication} from '../types';
@@ -39,6 +40,7 @@ import type {NumericTimeSchema} from '../schema';
 import type {OAuth2Authentication} from '../types';
 import {ObjectHintValueTypes} from '../schema';
 import type {ObjectPackFormula} from '../api';
+import type {ObjectProperty} from '../schema';
 import type {ObjectSchema} from '../schema';
 import type {ObjectSchemaProperty} from '../schema';
 import {PackCategory} from '../types';
@@ -81,6 +83,7 @@ import {isDefined} from '../helpers/object_utils';
 import {isNil} from '../helpers/object_utils';
 import {isObject} from '../schema';
 import {makeSchema} from '../schema';
+import {normalizePropertyValuePathIntoSchemaPath} from '../schema';
 import {objectSchemaHelper} from '../helpers/migration';
 import semver from 'semver';
 import * as z from 'zod';
@@ -194,7 +197,7 @@ function getNonUniqueElements<T extends string>(items: T[]): T[] {
   const nonUnique: T[] = [];
   for (const item of items) {
     // make this case insensitive
-    const normalized = item.toUpperCase()
+    const normalized = item.toUpperCase();
     if (set.has(normalized)) {
       nonUnique.push(item);
     }
@@ -940,13 +943,17 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
       ) {
         if (schema[propertyKey]) {
           const propertyValue =
-            typeof schema[propertyKey] !== 'string'
+            typeof schema[propertyKey] === 'string'
               ? (schema[propertyKey] as string)
               : (schema[propertyKey] as ObjectProperty).value;
 
-          // TODO(spencer): Validate JSONpath
+          const schemaPropertyPath = normalizePropertyValuePathIntoSchemaPath(propertyValue);
+          const propertySchema = JSONPath({
+            path: schemaPropertyPath,
+            json: schema.properties,
+          })?.[0];
 
-          if (!(propertyValue in schema.properties)) {
+          if (!propertySchema) {
             context.addIssue({
               code: z.ZodIssueCode.custom,
               path: [propertyKey],
@@ -955,8 +962,7 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
             return;
           }
 
-          const titlePropertySchema = schema.properties[propertyValue];
-          if (!isValidSchema(titlePropertySchema)) {
+          if (!isValidSchema(propertySchema)) {
             context.addIssue({
               code: z.ZodIssueCode.custom,
               path: [propertyKey],
