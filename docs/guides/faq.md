@@ -44,5 +44,5 @@ Coda supports both document- and page-level icons, from a library we source from
 [google_verification]: https://support.google.com/cloud/answer/9110914
 [google_verification_exceptions]: https://support.google.com/cloud/answer/9110914#exceptions-ver-reqts&zippy=%2Cexceptions-to-verification-requirements
 [google_verification_line]: https://support.google.com/cloud/answer/9110914?hl=en#zippy=%2Chow-can-i-make-sure-the-verification-process-is-as-streamlined-as-possible
-[oauth_redirect]: ./advanced/authentication/oauth2/#redirect-url
+[oauth_redirect]: basics/authentication/oauth2.md#redirect-url
 [packs_apps_script]: https://coda.io/packs/apps-script-14470
