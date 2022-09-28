@@ -2025,6 +2025,23 @@ describe('Pack metadata Validation', () => {
             titleProperty: 'nestedObject.array[0].name',
           }),
         );
+        // works for initial property with periods
+        await validateJson(
+          metadataForFormulaWithObjectSchema({
+            ...baseMetadata,
+            properties: {
+              ...baseMetadata.properties,
+              'What is your name.?': {type: ValueType.Object, properties: {name: {type: ValueType.String}}},
+            },
+            titleProperty: 'What is your name.?',
+          }),
+        );
+        await validateJson(
+          metadataForFormulaWithObjectSchema({
+            ...baseMetadata,
+            titleProperty: {value: baseMetadata.titleProperty as string, label: 'new label'},
+          }),
+        );
         await validateJson(metadataForFormulaWithObjectSchema(baseMetadata));
       });
 

@@ -51,6 +51,7 @@ import type {ParamDef} from '../api_types';
 import type {ParamDefs} from '../api_types';
 import {PostSetupType} from '../types';
 import type {ProgressBarSchema} from '../schema';
+import type {PropertyType} from '../schema';
 import type {QueryParamTokenAuthentication} from '../types';
 import {ScaleIconSet} from '../schema';
 import type {ScaleSchema} from '../schema';
@@ -865,6 +866,11 @@ const attributionSchema = z
   .array(z.union([textAttributionNodeSchema, linkAttributionNodeSchema, imageAttributionNodeSchema]))
   .optional();
 
+const propertySchema = z.union([
+  z.string().min(1),
+  zodCompleteObject<PropertyType>({value: z.string().min(1), label: z.string().min(1)}),
+]);
+
 const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
   zodCompleteObject<ObjectSchema<any, any>>({
     ...basePropertyValidators,
@@ -887,11 +893,12 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
     properties: z.record(objectPropertyUnionSchema),
     includeUnknownProperties: z.boolean().optional(),
     __packId: z.number().optional(),
-    titleProperty: z.string().min(1).optional(),
-    linkProperty: z.string().min(1).optional(),
-    subtitleProperties: z.array(z.string().min(1)).optional(),
-    descriptionProperty: z.string().min(1).optional(),
-    imageProperty: z.string().min(1).optional(),
+    // TODO(spencer): update all of these to be union types
+    titleProperty: propertySchema.optional(),
+    linkProperty: propertySchema.optional(),
+    subtitleProperties: z.array(propertySchema).optional(),
+    descriptionProperty: propertySchema.optional(),
+    imageProperty: propertySchema.optional(),
   })
     .superRefine((data, context) => {
       if (!isValidIdentityName(data.identity?.packId, data.identity?.name as string)) {
@@ -947,11 +954,17 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
               ? (schema[propertyKey] as string)
               : (schema[propertyKey] as ObjectProperty).value;
 
-          const schemaPropertyPath = normalizePropertyValuePathIntoSchemaPath(propertyValue);
-          const propertySchema = JSONPath({
-            path: schemaPropertyPath,
-            json: schema.properties,
-          })?.[0];
+          let propertySchema =
+            typeof schema[propertyKey] === 'string' && propertyValue in schema.properties
+              ? schema.properties[propertyValue]
+              : undefined;
+          if (!propertySchema) {
+            const schemaPropertyPath = normalizePropertyValuePathIntoSchemaPath(propertyValue);
+            propertySchema = JSONPath({
+              path: schemaPropertyPath,
+              json: schema.properties,
+            })?.[0];
+          }
 
           if (!propertySchema) {
             context.addIssue({

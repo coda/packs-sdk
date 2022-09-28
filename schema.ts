@@ -860,7 +860,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
    * The name of a property within {@link ObjectSchemaDefinition.properties} that represents a unique id for this
    * object. Sync table schemas must specify an id property, which uniquely identify each synced row.
    */
-  idProperty?: K;
+  idProperty?: PropertyType<K>;
   /** @deprecated Use {@link ObjectSchemaDefinition.displayProperty} */
   primary?: K;
   /**
@@ -870,7 +870,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
    * with only the value of the "displayProperty" property used as the chip's display label.
    * The other properties can be seen when hovering over the chip.
    */
-  displayProperty?: K;
+  displayProperty?: PropertyType<K>;
   /**
    * A hint for how Coda should interpret and render this object value.
    *
@@ -897,7 +897,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
    * Non-featured properties can always be referenced in formulas regardless of whether column
    * projections have been created for them.
    */
-  featuredProperties?: L[];
+  featuredProperties?: Array<PropertyType<K>>;
   /**
    * An identity for this schema, if this schema is important enough to be named and referenced.
    * See {@link IdentityDefinition}.
@@ -1418,9 +1418,9 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
       id: id ? normalizeSchemaKey(id) : undefined,
       featured: featured ? featured.map(normalizeSchemaKey) : undefined,
       primary: primary ? normalizeSchemaKey(primary) : undefined,
-      idProperty: idProperty ? normalizeSchemaKey(idProperty) : undefined,
-      featuredProperties: featuredProperties ? featuredProperties.map(normalizeSchemaKey) : undefined,
-      displayProperty: displayProperty ? normalizeSchemaKey(displayProperty) : undefined,
+      idProperty: idProperty ? tryNormalizeSchemaPropertyType(idProperty) : undefined,
+      featuredProperties: featuredProperties ? featuredProperties.map(tryNormalizeSchemaPropertyType) : undefined,
+      displayProperty: displayProperty ? tryNormalizeSchemaPropertyType(displayProperty) : undefined,
       properties: normalized,
       identity: schema.identity,
       codaType: schema.codaType,
