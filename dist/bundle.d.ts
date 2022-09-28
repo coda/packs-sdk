@@ -766,10 +766,9 @@ export interface Identity extends IdentityDefinition {
 }
 export interface ObjectProperty {
 	label: string;
-	path: string;
-	showLabel?: boolean;
+	value: string;
 }
-export declare type PropertyType<K extends string = string> = K | ObjectProperty;
+export declare type PropertyType<K extends string = string> = K | string | ObjectProperty;
 /**
  * A schema definition for an object value (a value with key-value pairs).
  */

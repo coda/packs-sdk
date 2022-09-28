@@ -730,12 +730,11 @@ export interface IdentityDefinition {
 export interface Identity extends IdentityDefinition {
     packId: number;
 }
-interface ObjectProperty {
+export interface ObjectProperty {
     label: string;
-    path: string;
-    showLabel?: boolean;
+    value: string;
 }
-export declare type PropertyType<K extends string = string> = K | ObjectProperty;
+export declare type PropertyType<K extends string = string> = K | string | ObjectProperty;
 /**
  * A schema definition for an object value (a value with key-value pairs).
  */
@@ -1079,6 +1078,12 @@ export declare function makeObjectSchema<K extends string, L extends string, T e
     type: ValueType.Object;
 };
 export declare function normalizeSchemaKey(key: string): string;
+/**
+ * Attempts to transform a property value (which may be a json-path string or a normal object schema property) into
+ * a path to access the relevant schema. Specifically this handles the case of array schemas which have an intermediate
+ * `items` object to traverse.
+ */
+export declare function normalizePropertyValuePathIntoSchemaPath(propertyValue: string): string;
 export declare function normalizeSchema<T extends Schema>(schema: T): T;
 /**
  * Convenience for creating a reference object schema from an existing schema for the

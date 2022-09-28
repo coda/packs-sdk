@@ -5,7 +5,7 @@ nav: "PropertyType"
 
 [core](../modules/core.md).PropertyType
 
-Ƭ **PropertyType**<`K`\>: `K` \| `ObjectProperty`
+Ƭ **PropertyType**<`K`\>: `K` \| `string` \| `ObjectProperty`
 
 #### Type parameters
 
@@ -15,4 +15,4 @@ nav: "PropertyType"
 
 #### Defined in
 
-[schema.ts:848](https://github.com/coda/packs-sdk/blob/main/schema.ts#L848)
+[schema.ts:847](https://github.com/coda/packs-sdk/blob/main/schema.ts#L847)

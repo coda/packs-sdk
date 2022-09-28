@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_2 = require("./helpers/ensure");
@@ -531,21 +531,48 @@ function checkSchemaPropertyIsRequired(field, schema, referencedByPropertyName) 
     (0, ensure_1.assertCondition)(properties[field].required, `Field "${field}" must be marked as required in schema with codaType "${codaType}".`);
 }
 function normalizeSchemaKey(key) {
-    // Colons cause problems in our formula handling.
-    return (0, pascalcase_1.default)(key).replace(/:/g, '_');
+    // Try splitting by . to handle json paths.
+    return (key
+        .split('.')
+        // Colons cause problems in our formula handling.
+        .map(val => {
+        let partToNormalize = val;
+        let partToIgnoreNormalization = '';
+        // Handles array pathing.
+        if (val.includes('[')) {
+            partToNormalize = val.substring(0, val.indexOf('['));
+            partToIgnoreNormalization = val.substring(val.indexOf('['));
+        }
+        return ((0, pascalcase_1.default)(partToNormalize) + partToIgnoreNormalization).replace(/:/g, '_');
+    })
+        .join('.'));
 }
 exports.normalizeSchemaKey = normalizeSchemaKey;
 function tryNormalizeSchemaPropertyType(key) {
-    // Colons cause problems in our formula handling.
     if (typeof key === 'string') {
         return normalizeSchemaKey(key);
     }
-    const { label } = key;
-    if (label) {
-        return { ...key, label: normalizeSchemaKey(label) };
-    }
-    return key;
+    const { label, value } = key;
+    return {
+        value: normalizeSchemaKey(value),
+        label: normalizeSchemaKey(label),
+    };
 }
+/**
+ * Attempts to transform a property value (which may be a json-path string or a normal object schema property) into
+ * a path to access the relevant schema. Specifically this handles the case of array schemas which have an intermediate
+ * `items` object to traverse.
+ */
+function normalizePropertyValuePathIntoSchemaPath(propertyValue) {
+    const normalizedValue = propertyValue
+        .split('.')
+        .map(val => {
+        return val.replace(/\[(.*?)\]/, '.items');
+    })
+        .join('.properties.');
+    return normalizedValue;
+}
+exports.normalizePropertyValuePathIntoSchemaPath = normalizePropertyValuePathIntoSchemaPath;
 function normalizeSchema(schema) {
     if (isArray(schema)) {
         return {

@@ -37,6 +37,7 @@ const schema_5 = require("../schema");
 const types_2 = require("../types");
 const schema_6 = require("../schema");
 const schema_7 = require("../schema");
+const jsonpath_plus_1 = require("jsonpath-plus");
 const schema_8 = require("../schema");
 const api_types_2 = require("../api_types");
 const schema_9 = require("../schema");
@@ -54,6 +55,7 @@ const object_utils_1 = require("../helpers/object_utils");
 const object_utils_2 = require("../helpers/object_utils");
 const schema_15 = require("../schema");
 const schema_16 = require("../schema");
+const schema_17 = require("../schema");
 const migration_1 = require("../helpers/migration");
 const semver_1 = __importDefault(require("semver"));
 const z = __importStar(require("zod"));
@@ -704,6 +706,10 @@ function isValidIdentityName(packId, name) {
 const attributionSchema = z
     .array(z.union([textAttributionNodeSchema, linkAttributionNodeSchema, imageAttributionNodeSchema]))
     .optional();
+const propertySchema = z.union([
+    z.string().min(1),
+    zodCompleteObject({ value: z.string().min(1), label: z.string().min(1) }),
+]);
 const genericObjectSchema = z.lazy(() => zodCompleteObject({
     ...basePropertyValidators,
     type: zodDiscriminant(schema_13.ValueType.Object),
@@ -725,11 +731,12 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
     properties: z.record(objectPropertyUnionSchema),
     includeUnknownProperties: z.boolean().optional(),
     __packId: z.number().optional(),
-    titleProperty: z.string().min(1).optional(),
-    linkProperty: z.string().min(1).optional(),
-    subtitleProperties: z.array(z.string().min(1)).optional(),
-    descriptionProperty: z.string().min(1).optional(),
-    imageProperty: z.string().min(1).optional(),
+    // TODO(spencer): update all of these to be union types
+    titleProperty: propertySchema.optional(),
+    linkProperty: propertySchema.optional(),
+    subtitleProperties: z.array(propertySchema).optional(),
+    descriptionProperty: propertySchema.optional(),
+    imageProperty: propertySchema.optional(),
 })
     .superRefine((data, context) => {
     var _a, _b;
@@ -768,44 +775,53 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
     .superRefine((data, context) => {
     const schema = data;
     function validateProperty(propertyKey, isValidSchema, invalidSchemaMessage) {
+        var _a;
         if (schema[propertyKey]) {
-            if (typeof schema[propertyKey] === 'string') {
-                const propertyValue = schema[propertyKey];
-                if (!(propertyValue in schema.properties)) {
-                    context.addIssue({
-                        code: z.ZodIssueCode.custom,
-                        path: [propertyKey],
-                        message: `The "${propertyKey}" field name "${propertyValue}" does not exist in the "properties" object.`,
-                    });
-                    return;
-                }
-                const titlePropertySchema = schema.properties[propertyValue];
-                if (!isValidSchema(titlePropertySchema)) {
-                    context.addIssue({
-                        code: z.ZodIssueCode.custom,
-                        path: [propertyKey],
-                        message: `The "${propertyKey}" field name "${propertyValue}" ${invalidSchemaMessage}`,
-                    });
-                    return;
-                }
+            const propertyValue = typeof schema[propertyKey] === 'string'
+                ? schema[propertyKey]
+                : schema[propertyKey].value;
+            let propertySchema = typeof schema[propertyKey] === 'string' && propertyValue in schema.properties
+                ? schema.properties[propertyValue]
+                : undefined;
+            if (!propertySchema) {
+                const schemaPropertyPath = (0, schema_17.normalizePropertyValuePathIntoSchemaPath)(propertyValue);
+                propertySchema = (_a = (0, jsonpath_plus_1.JSONPath)({
+                    path: schemaPropertyPath,
+                    json: schema.properties,
+                })) === null || _a === void 0 ? void 0 : _a[0];
             }
-            // TODO(spencer): Validate JSONpath
+            if (!propertySchema) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: [propertyKey],
+                    message: `The "${propertyKey}" field name "${propertyValue}" does not exist in the "properties" object.`,
+                });
+                return;
+            }
+            if (!isValidSchema(propertySchema)) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: [propertyKey],
+                    message: `The "${propertyKey}" field name "${propertyValue}" ${invalidSchemaMessage}`,
+                });
+                return;
+            }
         }
     }
     const validateTitleProperty = () => {
         return validateProperty('titleProperty', propertySchema => [schema_13.ValueType.String, schema_13.ValueType.Object].includes(propertySchema.type), `must refer to a "ValueType.String" or "ValueType.Object" property.`);
     };
     const validateImageProperty = () => {
-        return validateProperty('imageProperty', imagePropertySchema => imagePropertySchema.type !== schema_13.ValueType.String ||
-            ![schema_12.ValueHintType.ImageAttachment, schema_12.ValueHintType.ImageReference].includes(imagePropertySchema.codaType), `must refer to a "ValueType.String" property with a "ValueHintType.ImageAttachment" or "ValueHintType.ImageReference" "codaType".`);
+        return validateProperty('imageProperty', imagePropertySchema => imagePropertySchema.type === schema_13.ValueType.String &&
+            [schema_12.ValueHintType.ImageAttachment, schema_12.ValueHintType.ImageReference].includes(imagePropertySchema.codaType), `must refer to a "ValueType.String" property with a "ValueHintType.ImageAttachment" or "ValueHintType.ImageReference" "codaType".`);
     };
     const validateDescriptionProperty = () => {
-        return validateProperty('descriptionProperty', descriptionPropertySchema => descriptionPropertySchema.type !== schema_13.ValueType.String &&
-            (descriptionPropertySchema.type !== schema_13.ValueType.Array ||
-                descriptionPropertySchema.items.type !== schema_13.ValueType.String), `must refer to a "ValueType.String" property or array of strings.`);
+        return validateProperty('descriptionProperty', descriptionPropertySchema => descriptionPropertySchema.type === schema_13.ValueType.String ||
+            (descriptionPropertySchema.type === schema_13.ValueType.Array &&
+                descriptionPropertySchema.items.type === schema_13.ValueType.String), `must refer to a "ValueType.String" property or array of strings.`);
     };
     const validateLinkProperty = () => {
-        return validateProperty('linkProperty', linkPropertySchema => linkPropertySchema.type !== schema_13.ValueType.String || linkPropertySchema.codaType !== schema_12.ValueHintType.Url, `must refer to a "ValueType.String" property with a "ValueHintType.Url" "codaType".`);
+        return validateProperty('linkProperty', linkPropertySchema => linkPropertySchema.type === schema_13.ValueType.String && linkPropertySchema.codaType === schema_12.ValueHintType.Url, `must refer to a "ValueType.String" property with a "ValueHintType.Url" "codaType".`);
     };
     validateTitleProperty();
     validateLinkProperty();
