@@ -55,6 +55,7 @@ async function downloadImages(imageUrls, context: coda.ExecutionContext):
       method: "GET",
       url: imageUrl,
       isBinaryResponse: true,
+      disableAuthentication: true,
     });
     requests.push(request);
   }
