@@ -893,7 +893,6 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
     properties: z.record(objectPropertyUnionSchema),
     includeUnknownProperties: z.boolean().optional(),
     __packId: z.number().optional(),
-    // TODO(spencer): update all of these to be union types
     titleProperty: propertySchema.optional(),
     linkProperty: propertySchema.optional(),
     subtitleProperties: z.array(propertySchema).optional(),
@@ -1059,7 +1058,6 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
             return;
           }
         }
-        // TODO(spencer): Validate JSONpath
       });
     }),
 );
