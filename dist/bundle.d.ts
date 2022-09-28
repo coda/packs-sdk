@@ -3937,7 +3937,7 @@ declare function join(...tokens: string[]): string;
  * in processing the context.sync.schema in a sync formula, where the schema would only
  * include a subset of properties which were manually selected by the Pack user.
  */
-export declare function getSelectedFromKeysFromSchema(schema: Schema): string[] | undefined;
+export declare function getEffectivePropertyKeysFromSchema(schema: Schema): string[] | undefined;
 /** Constants for working with SVG images. */
 export declare namespace SvgConstants {
 	/** ID of the node in a returned SVG file that is targeted when Dark Mode is enabled in Coda. */

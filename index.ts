@@ -130,7 +130,7 @@ export {join as joinUrl} from './helpers/url';
 export {withQueryParams} from './helpers/url';
 
 // Schema helpers.
-export {getSelectedFromKeysFromSchema} from './helpers/schema';
+export {getEffectivePropertyKeysFromSchema} from './helpers/schema';
 
 // SVG constants.
 export {SvgConstants} from './helpers/svg';

@@ -1,11 +1,11 @@
 ---
-nav: "getSelectedFromKeysFromSchema"
+nav: "getEffectivePropertyKeysFromSchema"
 ---
-# Function: getSelectedFromKeysFromSchema
+# Function: getEffectivePropertyKeysFromSchema
 
-[core](../modules/core.md).getSelectedFromKeysFromSchema
+[core](../modules/core.md).getEffectivePropertyKeysFromSchema
 
-▸ **getSelectedFromKeysFromSchema**(`schema`): `string`[] \| `undefined`
+▸ **getEffectivePropertyKeysFromSchema**(`schema`): `string`[] \| `undefined`
 
 A helper to extract properties fromKeys from a schema object. This is mostly useful
 in processing the context.sync.schema in a sync formula, where the schema would only

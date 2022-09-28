@@ -4,7 +4,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## Unreleased
 
-- Added helper method `getSelectedFromKeysFromSchema`. This method can be used in the sync table formulas to retrieve the user manually selected property keys by `getSelectedFromKeysFromSchema(context.sync.schema)`.
+- Added helper method `getEffectivePropertyKeysFromSchema`. This method can be used in the sync table formulas to retrieve the user manually selected property keys by `getEffectivePropertyKeysFromSchema(context.sync.schema)`.
 
 ## [1.1.0] - 2022-09-27
 

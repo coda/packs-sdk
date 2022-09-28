@@ -4,4 +4,4 @@ import type { Schema } from '../schema';
  * in processing the context.sync.schema in a sync formula, where the schema would only
  * include a subset of properties which were manually selected by the Pack user.
  */
-export declare function getSelectedFromKeysFromSchema(schema: Schema): string[] | undefined;
+export declare function getEffectivePropertyKeysFromSchema(schema: Schema): string[] | undefined;
