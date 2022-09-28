@@ -1,5 +1,5 @@
 ---
-title: "MetadataContext"
+nav: "MetadataContext"
 ---
 # Type alias: MetadataContext
 
@@ -14,4 +14,4 @@ values are provided in this context object.
 
 #### Defined in
 
-[api.ts:1044](https://github.com/coda/packs-sdk/blob/main/api.ts#L1044)
+[api.ts:1056](https://github.com/coda/packs-sdk/blob/main/api.ts#L1056)

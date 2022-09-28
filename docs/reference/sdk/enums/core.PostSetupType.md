@@ -1,5 +1,5 @@
 ---
-title: "PostSetupType"
+nav: "PostSetupType"
 ---
 # Enumeration: PostSetupType
 

@@ -1,5 +1,5 @@
 ---
-title: "MetadataFunction"
+nav: "MetadataFunction"
 ---
 # Type alias: MetadataFunction
 
@@ -27,4 +27,4 @@ A JavaScript function that can implement a [MetadataFormulaDef](core.MetadataFor
 
 #### Defined in
 
-[api.ts:1088](https://github.com/coda/packs-sdk/blob/main/api.ts#L1088)
+[api.ts:1100](https://github.com/coda/packs-sdk/blob/main/api.ts#L1100)

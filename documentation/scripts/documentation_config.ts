@@ -224,7 +224,7 @@ export const Examples: Example[] = [
     contentFile: './examples/authentication/README.md',
     linkData: {
       type: UrlType.SdkReferencePath,
-      url: '/guides/advanced/authentication',
+      url: '/guides/basics/authentication',
     },
     exampleSnippets: [
       {
@@ -561,7 +561,7 @@ export const Examples: Example[] = [
     contentFile: './examples/fetcher/README.md',
     linkData: {
       type: UrlType.SdkReferencePath,
-      url: '/guides/advanced/fetcher',
+      url: '/guides/basics/fetcher',
     },
     exampleSnippets: [
       {
@@ -584,7 +584,7 @@ export const Examples: Example[] = [
   {
     name: 'Data types',
     description: 'Samples that show how to return values of various data types.',
-    icon: 'material/format-list-group',
+    icon: 'material/order-alphabetical-ascending',
     category: ExampleCategory.Topic,
     triggerTokens: ['resultType', 'type'],
     contentFile: './examples/data-type/README.md',
@@ -664,7 +664,7 @@ export const Examples: Example[] = [
   {
     name: 'Schemas',
     description: 'Samples that show how to define a schema, to represent rich objects.',
-    icon: 'material/receipt-outline',
+    icon: 'material/format-list-group',
     category: ExampleCategory.Topic,
     triggerTokens: ['makeSchema', 'makeObjectSchema'],
     contentFile: './examples/schema/README.md',

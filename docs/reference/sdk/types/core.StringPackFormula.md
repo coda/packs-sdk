@@ -1,5 +1,5 @@
 ---
-title: "StringPackFormula"
+nav: "StringPackFormula"
 ---
 # Type alias: StringPackFormula<ParamDefsT\>
 
@@ -17,4 +17,4 @@ A pack formula that returns a string.
 
 #### Defined in
 
-[api.ts:616](https://github.com/coda/packs-sdk/blob/main/api.ts#L616)
+[api.ts:628](https://github.com/coda/packs-sdk/blob/main/api.ts#L628)

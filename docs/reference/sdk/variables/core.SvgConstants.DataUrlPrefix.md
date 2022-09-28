@@ -1,5 +1,5 @@
 ---
-title: "DataUrlPrefix"
+nav: "DataUrlPrefix"
 ---
 # Variable: DataUrlPrefix
 

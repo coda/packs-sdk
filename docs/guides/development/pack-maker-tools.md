@@ -1,3 +1,7 @@
+---
+description: Utilities for Pack makers to helper them build and troubleshoot their Packs.
+---
+
 # Pack maker tools
 
 While the Pack Studio and Pack CLI are used to develop a Pack, the primary way to monitor and interact with a Pack once it is installed in a document is via the Pack maker tools. It is a pane along the bottom of a Coda document that provides information about the Packs installed in the doc that you have edit access to.
@@ -114,7 +118,7 @@ The Pack maker tools also lets you adjust a few developer-specific settings for 
 :   If you enable this setting and have selected **Latest version** above, whenever you build a new version of your Pack all of the formulas and sync tables in the doc will be automatically refreshed. This only applies to the current session (browser tab), so you'll need to turn it back on if you refresh the page or open the doc again later.
 
 
-## Additional options
+## Additional options {: #options}
 
 A few additional options are available under the three dots menu at the top of the panel. These are mostly quick links that let you jump between the various assets of the Pack, but also includes an option to force a refresh of the Pack's formulas and sync tables in the document.
 
@@ -122,4 +126,4 @@ A few additional options are available under the three dots menu at the top of t
 
 
 [troubleshooting_logging]: troubleshooting.md#logging
-[fetcher_headers]: ../advanced/fetcher.md#headers
+[fetcher_headers]: ../basics/fetcher.md#headers

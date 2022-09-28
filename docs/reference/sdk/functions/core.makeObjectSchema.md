@@ -1,5 +1,5 @@
 ---
-title: "makeObjectSchema"
+nav: "makeObjectSchema"
 ---
 # Function: makeObjectSchema
 
@@ -47,4 +47,4 @@ coda.makeObjectSchema({
 
 #### Defined in
 
-[schema.ts:1233](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1233)
+[schema.ts:1256](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1256)

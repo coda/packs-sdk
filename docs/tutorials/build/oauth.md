@@ -1,5 +1,5 @@
 ---
-title: Using OAuth2
+nav: Using OAuth2
 description: Learn how to access private data in an API using OAuth2.
 icon: material/shield-key
 hide:
@@ -8,21 +8,10 @@ hide:
 
 # Learn to authenticate with an API using OAuth2
 
-<section class="tutorial-row" markdown>
-<div markdown>
-
-Before a Pack can use an API to fetch private data, it must first be given access by the user. The most popular technology for granting that authorization is OAuth2.
-
-In this tutorial you'll create a formula that access a user's tasks in the Todoist application, using their API and OAuth2.
-
-</div>
-<div markdown>
+Before a Pack can use an API to fetch private data, it must first be given access by the user. The most popular technology for granting that authorization is OAuth2. In this tutorial you'll create a formula that access a user's data from an API that implements OAuth2.
 
 !!! abstract "Goal"
-    Build a `Tasks` formula that retrieves the user's open tasks in Todoist, using OAuth2.
-
-</div>
-</section>
+    Build a `Tasks` formula that retrieves the user's open tasks in Todoist.
 
 Before starting this tutorial, make sure you have completed:
 
@@ -572,6 +561,6 @@ Now that you have an understanding of how to use OAuth2 in Packs, here are some 
 [todoist_console]: https://developer.todoist.com/appconsole.html
 [oauth_standard]: https://datatracker.ietf.org/doc/html/rfc6749
 [todoist_tasks]: https://developer.todoist.com/rest/v1/#get-active-tasks
-[authentication]: ../../guides/advanced/authentication/index.md
+[authentication]: ../../guides/basics/authentication/index.md
 [samples_apis]: ../../samples/topic/apis.md
-[oauth_guide]: ../../guides/advanced/authentication/oauth2.md
+[oauth_guide]: ../../guides/basics/authentication/oauth2.md

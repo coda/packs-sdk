@@ -254,6 +254,14 @@ export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<Pa
     autocomplete?: T extends AutocompleteParameterTypes ? MetadataFormulaDef | Array<TypeMap[AutocompleteParameterTypeMapping[T]] | SimpleAutocompleteOption<T>> : undefined;
 };
 /**
+ * Equivalent to {@link ParamDef}. A helper type to generate a param def based
+ * on the inputs to {@link makeParameter}.
+ */
+export declare type ParamDefFromOptionsUnion<T extends ParameterType, O extends ParameterOptions<T>> = Omit<O, 'type' | 'autocomplete'> & {
+    type: O extends ParameterOptions<infer S> ? ParameterTypeMap[S] : never;
+    autocomplete: MetadataFormula;
+};
+/**
  * Create a definition for a parameter for a formula or sync.
  *
  * @example
@@ -266,7 +274,7 @@ export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<Pa
  * makeParameter({type: ParameterType.StringArray, name: 'myArrayParam', description: 'My description'});
  * ```
  */
-export declare function makeParameter<T extends ParameterType>(paramDefinition: ParameterOptions<T>): ParamDef<ParameterTypeMap[T]>;
+export declare function makeParameter<T extends ParameterType, O extends ParameterOptions<T>>(paramDefinition: O): ParamDefFromOptionsUnion<T, O>;
 /** @deprecated */
 export declare function makeStringParameter(name: string, description: string, args?: ParamArgs<Type.string>): ParamDef<Type.string>;
 /** @deprecated */

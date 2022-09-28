@@ -1,5 +1,6 @@
 ---
-title: Parameters
+nav: Parameters
+description: Define parameters on formulas and sync tables to accept values from the user.
 ---
 
 # Accept input with parameters
@@ -443,5 +444,5 @@ The table below shows the recommended parameter type to use with various types o
 [timezones]: ../../advanced/timezones.md
 [data_types_objects]: ../../basics/data-types.md#objects
 [samples_todoist]: ../../../samples/full/todoist.md
-[fetcher_binary_response]: ../../advanced/fetcher.md#binary-response
-[network_domains]: ../../advanced/fetcher.md#network-domains
+[fetcher_binary_response]: ../../basics/fetcher.md#binary-response
+[network_domains]: ../../basics/fetcher.md#network-domains

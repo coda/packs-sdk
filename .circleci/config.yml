@@ -10,6 +10,11 @@ orbs:
           - run:
               name: Install basic tools
               command: sudo apt-get update && sudo apt-get install -y pipenv
+          - run:
+              # Image libraries required by the social cards plugin for MkDocs Material.
+              name: Install image libraries
+              command: sudo apt-get install libcairo2-dev libfreetype6-dev libffi-dev libjpeg-dev libpng-dev libz-dev
+
 
 executors:
   default_build_environment:

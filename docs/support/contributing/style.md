@@ -1,5 +1,6 @@
 ---
-title: Style guide
+nav: Style guide
+description: Rules and guidelines to be followed when writing documentation for the SDK.
 ---
 
 # Documentation Style Guide

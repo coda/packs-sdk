@@ -9,4 +9,4 @@ export interface ExecuteArgs {
     dynamicUrl?: string;
     timerStrategy: TimerShimStrategy;
 }
-export declare function handleExecute({ manifestPath, formulaName, params, fetch, vm, dynamicUrl, timerStrategy, }: ArgumentsCamelCase<ExecuteArgs>): Promise<void>;
+export declare function handleExecute({ manifestPath, formulaName, params, fetch, vm, dynamicUrl, timerStrategy, }: ArgumentsCamelCase<ExecuteArgs>): Promise<undefined>;

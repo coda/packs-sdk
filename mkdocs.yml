@@ -64,6 +64,23 @@ plugins:
           "guides/troubleshooting.md": "guides/development/troubleshooting.md"
           "get-started/cli.md": "tutorials/get-started/cli.md"
           "get-started/web.md": "tutorials/get-started/web.md"
+          # 2022-09-08: Move some guides from advanced to basic.
+          "guides/advanced/authentication/index.md": "guides/basics/authentication/index.md"
+          "guides/advanced/authentication/oauth2.md": "guides/basics/authentication/oauth2.md"
+          "guides/advanced/fetcher.md": "guides/basics/fetcher.md"
+          # 2022-09-14: Move Overview page.
+          "guides/index.md": "guides/overview.md"
+    # Run Python scripts during the MkDocs generation process.
+    - mkdocs-simple-hooks:
+        hooks:
+          on_page_markdown: "documentation.scripts.mkdocs_hooks:on_page_markdown"
+    # Generate card images for social sharing.
+    - social:
+        cards: !ENV [MK_DOCS_GENERATE_CARDS, true]
+        cards_color:
+          fill: "#006838"  # Emerald
+          text: "#FFFFFF"
+
 
 extra:
   # Social icons for the footer.
@@ -93,6 +110,8 @@ theme:
     - navigation.tabs
     - navigation.tabs.sticky
     - navigation.sections
+    - navigation.indexes
+
   palette:
     scheme: coda
   logo: assets/logo.png

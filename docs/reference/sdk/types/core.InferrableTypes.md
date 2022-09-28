@@ -1,5 +1,5 @@
 ---
-title: "InferrableTypes"
+nav: "InferrableTypes"
 ---
 # Type alias: InferrableTypes
 
@@ -11,4 +11,4 @@ Primitive types for which [generateSchema](../functions/core.generateSchema.md) 
 
 #### Defined in
 
-[schema.ts:1141](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1141)
+[schema.ts:1164](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1164)

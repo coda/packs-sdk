@@ -270,6 +270,24 @@ describe('API test', () => {
       });
     });
 
+    it('strong typing inferred from makeParameter with optional scalar param', () => {
+      makeFormula({
+        resultType: ValueType.String,
+        name: 'Test',
+        description: '',
+        parameters: [
+          makeParameter({type: ParameterType.String, name: 'optionalParam', description: '', optional: true}),
+          makeParameter({type: ParameterType.String, name: 'requiredParam', description: '', optional: false}),
+        ],
+        execute: ([optionalParam, requiredParam]) => {
+          optionalParam = undefined;
+          optionalParam!;
+          void requiredParam.length; // not nullable
+          return '';
+        },
+      });
+    });
+
     it('strong typing inferred from makeParameter with array param', () => {
       makeFormula({
         resultType: ValueType.String,
@@ -285,12 +303,14 @@ describe('API test', () => {
         resultType: ValueType.String,
         name: 'Test',
         description: '',
-        parameters: [makeParameter({
-          type: ParameterType.StringArray, 
-          name: 'myParam', 
-          description: '',
-          autocomplete: ['Foo', 'Bar', 'Baz'],
-        })],
+        parameters: [
+          makeParameter({
+            type: ParameterType.StringArray,
+            name: 'myParam',
+            description: '',
+            autocomplete: ['Foo', 'Bar', 'Baz'],
+          }),
+        ],
         execute: ([param]) => param[0],
       });
     });
@@ -310,12 +330,14 @@ describe('API test', () => {
         resultType: ValueType.String,
         name: 'Test',
         description: '',
-        parameters: [makeParameter({
-          type: ParameterType.SparseStringArray, 
-          name: 'myParam', 
-          description: '',
-          autocomplete: ['Foo', 'Bar', 'Baz'],
-        })],
+        parameters: [
+          makeParameter({
+            type: ParameterType.SparseStringArray,
+            name: 'myParam',
+            description: '',
+            autocomplete: ['Foo', 'Bar', 'Baz'],
+          }),
+        ],
         execute: ([param]) => param[0] ?? 'undefined',
       });
     });

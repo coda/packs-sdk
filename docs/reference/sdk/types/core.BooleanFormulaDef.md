@@ -1,5 +1,5 @@
 ---
-title: "BooleanFormulaDef"
+nav: "BooleanFormulaDef"
 ---
 # Type alias: BooleanFormulaDef<ParamDefsT\>
 
@@ -17,4 +17,4 @@ A definition accepted by [makeFormula](../functions/core.makeFormula.md) for a f
 
 #### Defined in
 
-[api.ts:953](https://github.com/coda/packs-sdk/blob/main/api.ts#L953)
+[api.ts:965](https://github.com/coda/packs-sdk/blob/main/api.ts#L965)

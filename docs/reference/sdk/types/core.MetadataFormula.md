@@ -1,5 +1,5 @@
 ---
-title: "MetadataFormula"
+nav: "MetadataFormula"
 ---
 # Type alias: MetadataFormula
 
@@ -37,4 +37,4 @@ current value.
 
 #### Defined in
 
-[api.ts:1079](https://github.com/coda/packs-sdk/blob/main/api.ts#L1079)
+[api.ts:1091](https://github.com/coda/packs-sdk/blob/main/api.ts#L1091)

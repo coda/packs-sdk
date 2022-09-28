@@ -1,5 +1,5 @@
 ---
-title: "PackDefinitionBuilder"
+nav: "PackDefinitionBuilder"
 ---
 # Class: PackDefinitionBuilder
 

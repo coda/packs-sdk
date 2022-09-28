@@ -1,5 +1,5 @@
 ---
-title: "autocompleteSearchObjects"
+nav: "autocompleteSearchObjects"
 ---
 # Function: autocompleteSearchObjects
 
@@ -59,4 +59,4 @@ coda.makeParameter({
 
 #### Defined in
 
-[api.ts:1231](https://github.com/coda/packs-sdk/blob/main/api.ts#L1231)
+[api.ts:1243](https://github.com/coda/packs-sdk/blob/main/api.ts#L1243)

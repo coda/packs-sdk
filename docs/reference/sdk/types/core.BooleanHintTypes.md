@@ -1,5 +1,5 @@
 ---
-title: "BooleanHintTypes"
+nav: "BooleanHintTypes"
 ---
 # Type alias: BooleanHintTypes
 
@@ -11,4 +11,4 @@ The subset of [ValueHintType](../enums/core.ValueHintType.md) that can be used w
 
 #### Defined in
 
-[schema.ts:199](https://github.com/coda/packs-sdk/blob/main/schema.ts#L199)
+[schema.ts:204](https://github.com/coda/packs-sdk/blob/main/schema.ts#L204)

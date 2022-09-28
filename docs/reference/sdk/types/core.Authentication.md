@@ -1,5 +1,5 @@
 ---
-title: "Authentication"
+nav: "Authentication"
 ---
 # Type alias: Authentication
 

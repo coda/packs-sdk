@@ -163,6 +163,10 @@ var ValueHintType;
      */
     ValueHintType["Scale"] = "scale";
     /**
+     * Indicates to render a numeric value as a progress bar UI component.
+     */
+    ValueHintType["ProgressBar"] = "progressBar";
+    /**
      * Indicates to render a boolean value as a toggle.
      */
     ValueHintType["Toggle"] = "toggle";
@@ -189,6 +193,7 @@ exports.NumberHintValueTypes = [
     ValueHintType.Percent,
     ValueHintType.Currency,
     ValueHintType.Slider,
+    ValueHintType.ProgressBar,
     ValueHintType.Scale,
 ];
 exports.BooleanHintValueTypes = [ValueHintType.Toggle];

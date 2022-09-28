@@ -1,3 +1,7 @@
+---
+description: Make HTTP requests to external APIs and services using the custom Fetcher interface.
+---
+
 # Fetching remote data
 
 Many Packs use cases require fetching data from an outside source such as an API, which is done using the custom [`Fetcher`][Fetcher] interface. Other methods for making network requests in JavaScript (such as `XMLHttpRequest` or libraries like `axios` or `jQuery`) are not supported.
@@ -373,13 +377,10 @@ let response = await context.fetcher.fetch({
 
 ## Caching
 
-For performance reasons the Packs runtime caches the HTTP responses for `GET` requests, meaning that your code may not always be getting the latest response from the server. You can adjust this behavior by setting the [`cacheTtlSecs`][cacheTtlSecs] field in the fetch request, which specifies for how many seconds the response should be cached. To disable caching for a request set that value to zero.
-
-!!! info
-    In addition to caching fetcher responses, Coda also caches the results of [formula executions][formula_cache]. To get truly fresh results you may need to disable that caching as well.
+For performance reasons responses for HTTP `GET` requests are cached by default. See the [caching guide][caching] for more information.
 
 
-## Rate limits
+## Rate limits {: #rate-limits}
 
 Making a request to an external API can be expensive, either due to quotas, computing resources, or monetary cost. To help prevent your code from making too many expensive API calls you can set up rate limits for your Pack. To configure these, open the Pack editor and click on **Settings** > **Add rate limits**.
 
@@ -413,10 +414,10 @@ dig +short egress.coda.io
 [buffer]: https://nodejs.org/en/knowledge/advanced/buffers/how-to-use-buffers/
 [withQueryParams]: ../../reference/sdk/functions/core.withQueryParams.md
 [stringify]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
-[cacheTtlSecs]: ../../reference/sdk/interfaces/core.FetchRequest.md#cacheTtlSecs
 [formula_cache]: ../blocks/formulas.md#caching
-[authentication]: ../advanced/authentication/index.md
+[authentication]: ../basics/authentication/index.md
 [spec_headers]: https://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
 [baseauthentication_networkdomain]: ../../reference/sdk/interfaces/core.BaseAuthentication.md#networkdomain
-[auth_user]: ../advanced/authentication/index.md#user
+[auth_user]: ../basics/authentication/index.md#user
 [temporaryblobstorage]: ../../reference/sdk/interfaces/core.TemporaryBlobStorage.md
+[caching]: ../advanced/caching.md

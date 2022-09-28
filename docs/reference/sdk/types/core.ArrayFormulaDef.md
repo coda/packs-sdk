@@ -1,5 +1,5 @@
 ---
-title: "ArrayFormulaDef"
+nav: "ArrayFormulaDef"
 ---
 # Type alias: ArrayFormulaDef<ParamDefsT, SchemaT\>
 
@@ -18,4 +18,4 @@ A definition accepted by [makeFormula](../functions/core.makeFormula.md) for a f
 
 #### Defined in
 
-[api.ts:961](https://github.com/coda/packs-sdk/blob/main/api.ts#L961)
+[api.ts:973](https://github.com/coda/packs-sdk/blob/main/api.ts#L973)

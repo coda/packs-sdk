@@ -1,5 +1,5 @@
 ---
-title: "StringTimeSchema"
+nav: "StringTimeSchema"
 ---
 # Interface: StringTimeSchema
 
@@ -28,7 +28,7 @@ BaseStringSchema.codaType
 
 #### Defined in
 
-[schema.ts:558](https://github.com/coda/packs-sdk/blob/main/schema.ts#L558)
+[schema.ts:582](https://github.com/coda/packs-sdk/blob/main/schema.ts#L582)
 
 ___
 
@@ -47,7 +47,7 @@ BaseStringSchema.description
 
 #### Defined in
 
-[schema.ts:210](https://github.com/coda/packs-sdk/blob/main/schema.ts#L210)
+[schema.ts:215](https://github.com/coda/packs-sdk/blob/main/schema.ts#L215)
 
 ___
 
@@ -62,7 +62,7 @@ Only applies when this is used as a sync table property.
 
 #### Defined in
 
-[schema.ts:565](https://github.com/coda/packs-sdk/blob/main/schema.ts#L565)
+[schema.ts:589](https://github.com/coda/packs-sdk/blob/main/schema.ts#L589)
 
 ___
 
@@ -78,4 +78,4 @@ BaseStringSchema.type
 
 #### Defined in
 
-[schema.ts:668](https://github.com/coda/packs-sdk/blob/main/schema.ts#L668)
+[schema.ts:691](https://github.com/coda/packs-sdk/blob/main/schema.ts#L691)

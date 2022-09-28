@@ -1,5 +1,5 @@
 ---
-title: "makeSchema"
+nav: "makeSchema"
 ---
 # Function: makeSchema
 
@@ -47,4 +47,4 @@ coda.makeSchema({
 
 #### Defined in
 
-[schema.ts:1209](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1209)
+[schema.ts:1232](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1232)

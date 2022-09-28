@@ -1,5 +1,5 @@
 ---
-title: "joinUrl"
+nav: "joinUrl"
 ---
 # Function: joinUrl
 

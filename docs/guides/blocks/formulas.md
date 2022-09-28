@@ -1,6 +1,6 @@
 ---
-title: Formulas
-description: "Formulas are one of the most basic building blocks in Coda, and using Packs you can add your own custom ones."
+nav: Formulas
+description: Formulas are one of the most basic building blocks in Coda, and using Packs you can add your own custom ones.
 ---
 
 # Add custom formulas
@@ -92,27 +92,23 @@ While it's possible to use multiple accounts within a document, each instance of
 
 ## Caching
 
-For performance reasons formula results are cached by default. If your formula is called again with the same parameters, Coda will attempt to load the result from the cache instead of re-running your code. Building or releasing a new version of your Pack will invalidate this cache, ensuring you get fresh results using your new code.
-
-You can adjust the caching behavior by setting the [`cacheTtlSecs`][cacheTtlSecs] field on the formula definition, which specifies for how many seconds the result should be cached. To disable caching for a formula set `cacheTtlSecs` to zero.
-
-The following types of formulas are never cached:
-
-- [Action formulas][actions]
-- [Sync formulas][sync_formula]
-- Formulas that result in an error
-
-!!! info
-    In addition to caching formula results, Coda also caches the [fetcher responses][fetcher_cache]. To get truly fresh results you may need to disable that caching as well.
+For performance reasons formula results are cached by default. See the [caching guide][caching] for more information.
 
 
 ## Recalculation
 
-Coda has complex logic that determines when formula results need to be recalculated. Formulas will always recalculate when the parameter values change, but it will also happen periodically for other reasons including routine maintenance. In general you shouldn't make any assumptions about how often your formula will be run. If running your formula is expensive in some way (API cost, etc) make sure to use [caching](#caching) and [rate limits][fetcher_rate_limits] to limit the impact of recalculation.
+After a formula is run its value is stored in the Coda document model. Reloading the document will not cause the formula to be run again. Instead Coda's formula engine monitors for changes to the formula inputs and determines if the result needs to be recalculated.
 
-Building or releasing a new version of your Pack doesn't automatically cause existing formulas to recalculate, so users may still see old results for a while. In the **Settings** tab of the Pack's side panel there is a "Refresh now" button (**⟳**) that allows users to recalculate all formulas using the Pack. Pack makers also have access to the **Auto-refresh when version changes** toggle, which will do this automatically for the current window for each new Pack version.
+Building or releasing a new version of your Pack doesn't automatically cause existing formulas to recalculate, so users may still see old results for a while. In the **Settings** tab of the Pack's side panel there is a "Refresh now" button (**⟳**) that allows users to recalculate all formulas using the Pack, as well as options to cause them to reculate on a regular schedule.
 
 <img src="../../../images/settings_recalc.png" srcset="../../../images/settings_recalc_2x.png 2x" class="screenshot" alt="Recalculation settings in the Pack side panel">
+
+Pack makers also have access to additional options in the Pack Maker Tools:
+
+- In the three dots menu at the top right of the Pack Maker Tools panel, click the option **Refresh Pack formulas and tables**. [Learn more][pmt_options].
+- In the settings of the Pack Maker tools, toggle on the setting **Auto-refresh formulas & tables**. [Learn more][pmt_settings].
+
+Coda has complex logic that determines when formula results need to be recalculated. Formulas will always recalculate when the parameter values change, but it will also happen periodically for other reasons including routine maintenance. In general you shouldn't make any assumptions about how often your formula will be run. If running your formula is expensive in some way (API cost, etc) make sure to use [caching](#caching) and [rate limits][fetcher_rate_limits] to limit the impact of recalculation.
 
 
 ## Examples
@@ -167,11 +163,13 @@ examples: [
 [parameters]: ../basics/parameters/index.md
 [actions]: actions.md
 [data-types]: ../basics/data-types.md
-[cacheTtlSecs]: ../../reference/sdk/interfaces/core.PackFormulaDef.md#cachettlsecs
-[fetcher_cache]: ../advanced/fetcher.md#caching
-[fetcher_rate_limits]: ../advanced/fetcher.md#ratelimits
-[authentication]: ../advanced/authentication/index.md
+[fetcher_cache]: ../basics/fetcher.md#caching
+[fetcher_rate_limits]: ../basics/fetcher.md#ratelimits
+[authentication]: ../basics/authentication/index.md
 [system_auth]: ../../reference/sdk/classes/core.PackDefinitionBuilder.md#setsystemauthentication
 [user_auth]: ../../reference/sdk/classes/core.PackDefinitionBuilder.md#setuserauthentication
 [connectionRequirement]: ../../reference/sdk/interfaces/core.PackFormulaDef.md#connectionrequirement
 [sync_formula]: sync-tables/index.md#formula
+[pmt_settings]: ../development/pack-maker-tools.md#settings
+[pmt_options]: ../development/pack-maker-tools.md#options
+[caching]: ../advanced/caching.md

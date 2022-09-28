@@ -1,5 +1,5 @@
 ---
-title: "StatusCodeErrorResponse"
+nav: "StatusCodeErrorResponse"
 ---
 # Interface: StatusCodeErrorResponse
 

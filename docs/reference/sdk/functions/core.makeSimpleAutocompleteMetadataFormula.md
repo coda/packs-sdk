@@ -1,5 +1,5 @@
 ---
-title: "makeSimpleAutocompleteMetadataFormula"
+nav: "makeSimpleAutocompleteMetadataFormula"
 ---
 # Function: makeSimpleAutocompleteMetadataFormula
 
@@ -31,4 +31,4 @@ any needed to wrap a value with this formula.
 
 #### Defined in
 
-[api.ts:1257](https://github.com/coda/packs-sdk/blob/main/api.ts#L1257)
+[api.ts:1269](https://github.com/coda/packs-sdk/blob/main/api.ts#L1269)

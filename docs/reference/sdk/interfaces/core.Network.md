@@ -1,5 +1,5 @@
 ---
-title: "Network"
+nav: "Network"
 ---
 # Interface: Network
 
@@ -17,7 +17,7 @@ use `isAction` and `connectionRequirement` on the formula definition instead.
 
 #### Defined in
 
-[api_types.ts:459](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L459)
+[api_types.ts:470](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L470)
 
 ___
 
@@ -27,7 +27,7 @@ ___
 
 #### Defined in
 
-[api_types.ts:457](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L457)
+[api_types.ts:468](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L468)
 
 ___
 
@@ -37,4 +37,4 @@ ___
 
 #### Defined in
 
-[api_types.ts:458](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L458)
+[api_types.ts:469](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L469)

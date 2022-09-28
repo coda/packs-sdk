@@ -1,5 +1,5 @@
 ---
-title: "getSelectedFromKeysFromSchema"
+nav: "getSelectedFromKeysFromSchema"
 ---
 # Function: getSelectedFromKeysFromSchema
 

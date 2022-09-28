@@ -1,5 +1,5 @@
 ---
-title: "SystemAuthenticationDef"
+nav: "SystemAuthenticationDef"
 ---
 # Type alias: SystemAuthenticationDef
 

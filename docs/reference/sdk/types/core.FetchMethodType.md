@@ -1,5 +1,5 @@
 ---
-title: "FetchMethodType"
+nav: "FetchMethodType"
 ---
 # Type alias: FetchMethodType
 
@@ -11,4 +11,4 @@ The type of the HTTP methods (verbs) supported by the fetcher.
 
 #### Defined in
 
-[api_types.ts:465](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L465)
+[api_types.ts:476](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L476)

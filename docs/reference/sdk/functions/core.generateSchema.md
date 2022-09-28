@@ -1,5 +1,5 @@
 ---
-title: "generateSchema"
+nav: "generateSchema"
 ---
 # Function: generateSchema
 
@@ -32,4 +32,4 @@ an object schema, those are left undefined.
 
 #### Defined in
 
-[schema.ts:1157](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1157)
+[schema.ts:1180](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1180)

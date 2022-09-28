@@ -48,6 +48,7 @@ import type {PackVersionMetadata} from '../compiled_types';
 import type {ParamDef} from '../api_types';
 import type {ParamDefs} from '../api_types';
 import {PostSetupType} from '../types';
+import type {ProgressBarSchema} from '../schema';
 import type {QueryParamTokenAuthentication} from '../types';
 import {ScaleIconSet} from '../schema';
 import type {ScaleSchema} from '../schema';
@@ -188,14 +189,16 @@ export function validateSyncTableSchema(schema: any): ArraySchema<ObjectSchema<a
   );
 }
 
-function getNonUniqueElements<T>(items: T[]): T[] {
-  const set = new Set<T>();
+function getNonUniqueElements<T extends string>(items: T[]): T[] {
+  const set = new Set<string>();
   const nonUnique: T[] = [];
   for (const item of items) {
-    if (set.has(item)) {
+    // make this case insensitive
+    const normalized = item.toUpperCase()
+    if (set.has(normalized)) {
       nonUnique.push(item);
     }
-    set.add(item);
+    set.add(normalized);
   }
   return nonUnique;
 }
@@ -612,12 +615,25 @@ const scalePropertySchema = zodCompleteStrictObject<ScaleSchema & ObjectSchemaPr
   ...basePropertyValidators,
 });
 
+const optionalStringOrNumber = z.union([z.number(), z.string()]).optional();
+
 const sliderPropertySchema = zodCompleteStrictObject<SliderSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.Number),
   codaType: zodDiscriminant(ValueHintType.Slider),
-  maximum: z.number().optional(),
-  minimum: z.number().optional(),
-  step: z.number().optional(),
+  maximum: optionalStringOrNumber,
+  minimum: optionalStringOrNumber,
+  step: optionalStringOrNumber,
+  showValue: z.boolean().optional(),
+  ...basePropertyValidators,
+});
+
+const progressBarPropertySchema = zodCompleteStrictObject<ProgressBarSchema & ObjectSchemaProperty>({
+  type: zodDiscriminant(ValueType.Number),
+  codaType: zodDiscriminant(ValueHintType.ProgressBar),
+  maximum: optionalStringOrNumber,
+  minimum: optionalStringOrNumber,
+  step: optionalStringOrNumber,
+  showValue: z.boolean().optional(),
   ...basePropertyValidators,
 });
 
@@ -664,6 +680,7 @@ const numberPropertySchema = z.union([
   numericPropertySchema,
   scalePropertySchema,
   sliderPropertySchema,
+  progressBarPropertySchema,
   currencyPropertySchema,
   numericDatePropertySchema,
   numericTimePropertySchema,
@@ -1187,8 +1204,34 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject<PackVersionMetadata
     message: 'Formula namespaces can only contain alphanumeric characters and underscores.',
   }),
   systemConnectionAuthentication: z.union(zodUnionInput(systemAuthenticationValidators)).optional(),
-  formulas: z.array(formulaMetadataSchema).max(Limits.BuildingBlockCountPerType).optional().default([]),
-  formats: z.array(formatMetadataSchema).max(Limits.BuildingBlockCountPerType).optional().default([]),
+  formulas: z
+    .array(formulaMetadataSchema)
+    .max(Limits.BuildingBlockCountPerType)
+    .optional()
+    .default([])
+    .superRefine((data, context) => {
+      const formulaNames = data.map(formulaDef => formulaDef.name);
+      for (const dupe of getNonUniqueElements(formulaNames)) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Formula names must be unique. Found duplicate name "${dupe}".`,
+        });
+      }
+    }),
+  formats: z
+    .array(formatMetadataSchema)
+    .max(Limits.BuildingBlockCountPerType)
+    .optional()
+    .default([])
+    .superRefine((data, context) => {
+      const formatNames = data.map(formatDef => formatDef.name);
+      for (const dupe of getNonUniqueElements(formatNames)) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Format names must be unique. Found duplicate name "${dupe}".`,
+        });
+      }
+    }),
   syncTables: z
     .array(syncTableSchema)
     .max(Limits.BuildingBlockCountPerType)
@@ -1205,7 +1248,10 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject<PackVersionMetadata
             });
           }
         }
-        identityNames.push(tableDef.schema.identity?.name);
+        // only add identity names that are not undefined to check for dupes
+        if (tableDef.schema.identity) {
+          identityNames.push(tableDef.schema.identity?.name);
+        }
       }
       for (const dupe of getNonUniqueElements(identityNames)) {
         context.addIssue({

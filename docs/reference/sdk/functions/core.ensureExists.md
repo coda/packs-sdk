@@ -1,5 +1,5 @@
 ---
-title: "ensureExists"
+nav: "ensureExists"
 ---
 # Function: ensureExists
 

@@ -1,5 +1,5 @@
 ---
-title: "ParamDef"
+nav: "ParamDef"
 ---
 # Interface: ParamDef<T\>
 
@@ -12,6 +12,12 @@ The definition of a formula parameter.
 | Name | Type |
 | :------ | :------ |
 | `T` | extends `UnionType` |
+
+## Hierarchy
+
+- **`ParamDef`**
+
+  ↳ [`OptionalParamDef`](core.OptionalParamDef.md)
 
 ## Properties
 

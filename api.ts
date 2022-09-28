@@ -373,6 +373,18 @@ export type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterT
 };
 
 /**
+ * Equivalent to {@link ParamDef}. A helper type to generate a param def based
+ * on the inputs to {@link makeParameter}.
+ */
+export type ParamDefFromOptionsUnion<T extends ParameterType, O extends ParameterOptions<T>> = Omit<
+  O,
+  'type' | 'autocomplete'
+> & {
+  type: O extends ParameterOptions<infer S> ? ParameterTypeMap[S] : never;
+  autocomplete: MetadataFormula;
+};
+
+/**
  * Create a definition for a parameter for a formula or sync.
  *
  * @example
@@ -385,11 +397,11 @@ export type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterT
  * makeParameter({type: ParameterType.StringArray, name: 'myArrayParam', description: 'My description'});
  * ```
  */
-export function makeParameter<T extends ParameterType>(
-  paramDefinition: ParameterOptions<T>,
-): ParamDef<ParameterTypeMap[T]> {
+export function makeParameter<T extends ParameterType, O extends ParameterOptions<T>>(
+  paramDefinition: O,
+): ParamDefFromOptionsUnion<T, O> {
   const {type, autocomplete: autocompleteDefOrItems, ...rest} = paramDefinition;
-  const actualType = ParameterTypeInputMap[type] as ParameterTypeMap[T];
+  const actualType = ParameterTypeInputMap[type];
   let autocomplete: MetadataFormula | undefined;
 
   if (Array.isArray(autocompleteDefOrItems)) {
@@ -399,7 +411,7 @@ export function makeParameter<T extends ParameterType>(
     autocomplete = wrapMetadataFunction(autocompleteDefOrItems);
   }
 
-  return Object.freeze({...rest, autocomplete, type: actualType});
+  return Object.freeze({...rest, autocomplete, type: actualType}) as ParamDefFromOptionsUnion<T, O>;
 }
 
 // Other parameter helpers below here are obsolete given the above generate parameter makers.

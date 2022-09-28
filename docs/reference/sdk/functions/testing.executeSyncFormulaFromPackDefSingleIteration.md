@@ -1,5 +1,5 @@
 ---
-title: "executeSyncFormulaFromPackDefSingleIteration"
+nav: "executeSyncFormulaFromPackDefSingleIteration"
 ---
 # Function: executeSyncFormulaFromPackDefSingleIteration
 

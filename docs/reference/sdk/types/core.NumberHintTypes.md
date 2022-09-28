@@ -1,5 +1,5 @@
 ---
-title: "NumberHintTypes"
+nav: "NumberHintTypes"
 ---
 # Type alias: NumberHintTypes
 
@@ -11,4 +11,4 @@ The subset of [ValueHintType](../enums/core.ValueHintType.md) that can be used w
 
 #### Defined in
 
-[schema.ts:197](https://github.com/coda/packs-sdk/blob/main/schema.ts#L197)
+[schema.ts:202](https://github.com/coda/packs-sdk/blob/main/schema.ts#L202)

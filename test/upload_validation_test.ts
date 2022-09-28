@@ -292,7 +292,7 @@ describe('Pack metadata Validation', () => {
     });
 
     it('valid formula names', async () => {
-      for (const name of ['foo', 'Foo', 'foo_bar', 'Foo123', 'føø']) {
+      for (const name of ['Foo', 'foo_bar', 'Foo123', 'føø']) {
         const formula = makeNumericFormula({
           name,
           description: 'My description',
@@ -328,6 +328,30 @@ describe('Pack metadata Validation', () => {
           },
         ]);
       }
+    });
+
+    it('duplicate formula names', async () => {
+      const formulas = []
+      for (const name of ['foo', 'Foo', 'foo_bar', 'Foo123', 'føø']) {
+        formulas.push(formulaToMetadata(makeNumericFormula({
+          name,
+          description: 'My description',
+          examples: [],
+          parameters: [],
+          execute: () => 1,
+        })));
+      }
+      const metadata = createFakePackVersionMetadata({
+        formulas,
+        formulaNamespace: 'MyNamespace',
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: 'Formula names must be unique. Found duplicate name "Foo".',
+          path: 'formulas',
+        },
+      ]);
     });
 
     it('rejects formula names that are too long', async () => {
@@ -1143,6 +1167,21 @@ describe('Pack metadata Validation', () => {
               Foo: {type: ValueType.Number, codaType: ValueHintType.Scale, maximum: 5, icon: ScaleIconSet.Star},
               Bar: {type: ValueType.String, codaType: ValueHintType.Date, format: 'MMM D, YYYY'},
               Slider: {type: ValueType.Number, codaType: ValueHintType.Slider, minimum: 1, maximum: 3, step: 1},
+              SliderWithFormulas: {
+                type: ValueType.Number,
+                codaType: ValueHintType.Slider,
+                minimum: '[Min]',
+                maximum: '[Max]',
+                step: '[Step]',
+              },
+              Progress: {
+                type: ValueType.Number,
+                codaType: ValueHintType.ProgressBar,
+                minimum: 1,
+                maximum: 3,
+                step: 1,
+                showValue: true,
+              },
               Currency: {
                 type: ValueType.Number,
                 codaType: ValueHintType.Currency,
@@ -1183,6 +1222,10 @@ describe('Pack metadata Validation', () => {
         assert.equal(schemaProperties.Slider.minimum, 1);
         assert.equal(schemaProperties.Slider.maximum, 3);
         assert.equal(schemaProperties.Slider.step, 1);
+
+        assert.equal(schemaProperties.SliderWithFormulas.minimum, '[Min]');
+        assert.equal(schemaProperties.SliderWithFormulas.maximum, '[Max]');
+        assert.equal(schemaProperties.SliderWithFormulas.step, '[Step]');
 
         assert.equal(schemaProperties.Currency.precision, 2);
         assert.equal(schemaProperties.Currency.currencyCode, 'EUR');
@@ -2342,6 +2385,49 @@ describe('Pack metadata Validation', () => {
           {
             message: `String must contain at most ${Limits.BuildingBlockName} character(s)`,
             path: 'formats[0].name',
+          },
+        ]);
+      });
+
+      it('duplicate format names', async () => {
+        const formula = makeStringFormula({
+          name: 'MyFormula',
+          description: 'My description',
+          examples: [],
+          parameters: [makeStringParameter('myParam', 'param description')],
+          execute: () => '',
+        });
+        const metadata = createFakePackVersionMetadata({
+          formulas: [formulaToMetadata(formula)],
+          formulaNamespace: 'MyNamespace',
+          formats: [
+            {
+              name: 'A',
+              formulaNamespace: 'MyNamespace',
+              formulaName: 'MyFormula',
+              hasNoConnection: true,
+              instructions: 'some instructions',
+              placeholder: 'some placeholder',
+              matchers: ['/some compiled regex/i'],
+            },
+            {
+              name: 'A',
+              formulaNamespace: 'MyNamespace',
+              formulaName: 'MyFormula',
+              hasNoConnection: true,
+              instructions: 'some instructions',
+              placeholder: 'some placeholder',
+              matchers: ['/some compiled regex/i'],
+            },
+          ],
+        });
+
+        const err = await validateJsonAndAssertFails(metadata);
+
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'Format names must be unique. Found duplicate name "A".',
+            path: 'formats',
           },
         ]);
       });

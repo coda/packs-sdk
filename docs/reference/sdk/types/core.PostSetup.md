@@ -1,5 +1,5 @@
 ---
-title: "PostSetup"
+nav: "PostSetup"
 ---
 # Type alias: PostSetup
 

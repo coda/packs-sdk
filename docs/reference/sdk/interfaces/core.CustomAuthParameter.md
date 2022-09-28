@@ -1,5 +1,5 @@
 ---
-title: "CustomAuthParameter"
+nav: "CustomAuthParameter"
 ---
 # Interface: CustomAuthParameter
 

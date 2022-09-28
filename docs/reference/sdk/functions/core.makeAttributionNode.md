@@ -1,5 +1,5 @@
 ---
-title: "makeAttributionNode"
+nav: "makeAttributionNode"
 ---
 # Function: makeAttributionNode
 
@@ -34,4 +34,4 @@ rendered any time a value with that identity is rendered in a doc.
 
 #### Defined in
 
-[schema.ts:1062](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1062)
+[schema.ts:1085](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1085)

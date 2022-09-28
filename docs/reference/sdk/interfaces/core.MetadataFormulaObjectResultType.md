@@ -1,5 +1,5 @@
 ---
-title: "MetadataFormulaObjectResultType"
+nav: "MetadataFormulaObjectResultType"
 ---
 # Interface: MetadataFormulaObjectResultType
 
@@ -18,7 +18,7 @@ The value displayed to the user in the UI.
 
 #### Defined in
 
-[api.ts:1004](https://github.com/coda/packs-sdk/blob/main/api.ts#L1004)
+[api.ts:1016](https://github.com/coda/packs-sdk/blob/main/api.ts#L1016)
 
 ___
 
@@ -55,7 +55,7 @@ as the `value` of the result that was clicked on.
 
 #### Defined in
 
-[api.ts:1035](https://github.com/coda/packs-sdk/blob/main/api.ts#L1035)
+[api.ts:1047](https://github.com/coda/packs-sdk/blob/main/api.ts#L1047)
 
 ___
 
@@ -67,4 +67,4 @@ The value used for the formula argument when the user selects this option.
 
 #### Defined in
 
-[api.ts:1006](https://github.com/coda/packs-sdk/blob/main/api.ts#L1006)
+[api.ts:1018](https://github.com/coda/packs-sdk/blob/main/api.ts#L1018)

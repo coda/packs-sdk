@@ -1,5 +1,5 @@
 ---
-title: "ValidFetchMethods"
+nav: "ValidFetchMethods"
 ---
 # Variable: ValidFetchMethods
 
@@ -11,4 +11,4 @@ The HTTP methods (verbs) supported by the fetcher.
 
 #### Defined in
 
-[api_types.ts:463](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L463)
+[api_types.ts:474](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L474)

@@ -1,5 +1,5 @@
 ---
-title: "TemporaryBlobStorage"
+nav: "TemporaryBlobStorage"
 ---
 # Interface: TemporaryBlobStorage
 
@@ -42,8 +42,8 @@ Returns a URL for the temporary file that you should return in your formula resp
 The URL expires after 15 minutes by default, but you may pass a custom expiry, however
 Coda reserves the right to ignore long expirations.
 
-If the `downloadFilename` parameter is specified, the data will be interpreted as a file (`attachment` content
-disposition) that will be downloaded when accessed as the file name provided.
+If the `downloadFilename` parameter is specified, when opened in the browser the file will
+be downloaded with the file name provided.
 
 #### Parameters
 
@@ -61,7 +61,7 @@ disposition) that will be downloaded when accessed as the file name provided.
 
 #### Defined in
 
-[api_types.ts:617](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L617)
+[api_types.ts:628](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L628)
 
 ___
 
@@ -76,8 +76,8 @@ that you should return in your formula response.
 The URL expires after 15 minutes by default, but you may pass a custom expiry, however
 Coda reserves the right to ignore long expirations.
 
-If the `downloadFilename` parameter is specified, the data will be interpreted as a file (`attachment` content
-disposition) that will be downloaded when accessed as the file name provided.
+If the `downloadFilename` parameter is specified, when opened in the browser the file will
+be downloaded with the file name provided.
 
 #### Parameters
 
@@ -95,4 +95,4 @@ disposition) that will be downloaded when accessed as the file name provided.
 
 #### Defined in
 
-[api_types.ts:602](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L602)
+[api_types.ts:613](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L613)

@@ -1,5 +1,5 @@
 ---
-title: "TypedPackFormula"
+nav: "TypedPackFormula"
 ---
 # Type alias: TypedPackFormula
 
@@ -15,4 +15,4 @@ contents of a pack for for Coda internal use.
 
 #### Defined in
 
-[api.ts:667](https://github.com/coda/packs-sdk/blob/main/api.ts#L667)
+[api.ts:679](https://github.com/coda/packs-sdk/blob/main/api.ts#L679)

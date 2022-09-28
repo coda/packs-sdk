@@ -1,5 +1,5 @@
 ---
-title: "SyncTable"
+nav: "SyncTable"
 ---
 # Type alias: SyncTable
 

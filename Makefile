@@ -187,6 +187,8 @@ docs: typedoc generated-documentation build-mkdocs
 
 .PHONY: view-docs
 view-docs:
+	# By default don't generate social cards when previewing, for performance.
+	MK_DOCS_GENERATE_CARDS=${MK_DOCS_GENERATE_CARDS:-false}
 	if command -v expect &> /dev/null; then \
 		PYTHONPATH=${ROOTDIR} PIPENV_IGNORE_VIRTUALENVS=1 MK_DOCS_SITE_URL=http://localhost:8000/packs-sdk expect -c 'set timeout 60; spawn pipenv run mkdocs serve; expect "Serving on"; exec open "http://localhost:8000"; interact'; \
 	else \

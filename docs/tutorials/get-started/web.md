@@ -1,5 +1,5 @@
 ---
-title: In the browser
+nav: In the browser
 description: Build your first Pack in minutes using the Pack Studio web editor.
 icon: octicons/browser-16
 ---

@@ -1,5 +1,5 @@
 ---
-title: "ResponseHandlerTemplate"
+nav: "ResponseHandlerTemplate"
 ---
 # Interface: ResponseHandlerTemplate<T\>
 

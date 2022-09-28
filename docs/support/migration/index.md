@@ -1,5 +1,6 @@
 ---
-title: Migration
+nav: Migration
+description: How to upgrade to a new SDK version and what to look out for.
 ---
 
 # Migrating between SDK versions

@@ -4,11 +4,11 @@ import * as esbuild from 'esbuild';
 import exorcist from 'exorcist';
 import fs from 'fs';
 import {getPackOptions} from '../cli/config_storage';
-import ivm from 'isolated-vm';
 import os from 'os';
 import path from 'path';
 import {processVmError} from './helpers';
 import semver from 'semver';
+import {tryGetIvm} from './ivm_wrapper';
 import uglify from 'uglify-js';
 import {v4} from 'uuid';
 
@@ -35,6 +35,10 @@ export interface CompilePackBundleResult {
 }
 
 async function loadIntoVM(bundlePath: string) {
+  const ivm = tryGetIvm();
+  if (!ivm) {
+    return;
+  }
   const bundle = fs.readFileSync(bundlePath);
 
   const isolate = new ivm.Isolate({memoryLimit: 128});

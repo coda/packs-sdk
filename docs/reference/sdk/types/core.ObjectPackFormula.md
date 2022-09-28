@@ -1,5 +1,5 @@
 ---
-title: "ObjectPackFormula"
+nav: "ObjectPackFormula"
 ---
 # Type alias: ObjectPackFormula<ParamDefsT, SchemaT\>
 
@@ -18,4 +18,4 @@ A pack formula that returns a JavaScript object.
 
 #### Defined in
 
-[api.ts:621](https://github.com/coda/packs-sdk/blob/main/api.ts#L621)
+[api.ts:633](https://github.com/coda/packs-sdk/blob/main/api.ts#L633)

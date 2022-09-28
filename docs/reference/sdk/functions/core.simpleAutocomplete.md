@@ -1,5 +1,5 @@
 ---
-title: "simpleAutocomplete"
+nav: "simpleAutocomplete"
 ---
 # Function: simpleAutocomplete
 
@@ -46,4 +46,4 @@ autocomplete: async function(context, search) {
 
 #### Defined in
 
-[api.ts:1171](https://github.com/coda/packs-sdk/blob/main/api.ts#L1171)
+[api.ts:1183](https://github.com/coda/packs-sdk/blob/main/api.ts#L1183)

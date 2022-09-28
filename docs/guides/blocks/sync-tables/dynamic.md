@@ -1,5 +1,6 @@
 ---
-title: Dynamic sync tables
+nav: Dynamic sync tables
+description: Build advanced sync tables that adapt to dynamic data sources.
 ---
 
 # Creating sync tables with dynamic schemas
@@ -384,9 +385,10 @@ In some cases it's not feasible to generate a list of all possible datasets the 
 
 When using this approach you should use a user-facing URL as the dynamic URL, as that is what users will have access to. You'll need some way to translate those URLs into something you can use with the API, typically by extracting an ID.
 
-!!! bug
-    The user experience for this flow has some known issues, and at the moment we advise that you avoid using it.
-    <!-- https://golinks.io/bug/19712 -->
+Dynamic sync tables created this way differ from the ones using a list of URLs in a few notable ways:
+
+- The same dynamic URL can be used to create multiple tables.
+- The rows in these tables can't be [referenced][sync_tables_reference] by other sync tables.
 
 
 ## Dynamic schema only {: #schema-only }
@@ -427,3 +429,4 @@ pack.addSyncTable({
 [dynamicUrl]: ../../../reference/sdk/interfaces/core.Sync.md#dynamicurl
 [sync_tables_identity]: index.md#identity
 [autocomplete_parameter]: ../../basics/parameters/autocomplete.md#parameters
+[sync_tables_reference]: index.md#references

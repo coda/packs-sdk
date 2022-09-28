@@ -1,5 +1,6 @@
 ---
-title: Samples
+nav: Samples
+description: An index of code examples to browse through.
 hide:
 - toc
 ---
@@ -20,7 +21,7 @@ No need to start from scratch; we've got dozens of sample Packs for your to brow
 {# Read the page's source, but don't output anything. This is required to populate the page title and metadata. #}
 {{ page.read_source(config) or "" }}
 
-### {% if page.meta.icon %}:{{page.meta.icon|replace("/", "-")}}:{% endif %} {{page.title}}
+### {% if page.meta.icon %}:{{page.meta.icon|replace("/", "-")}}:{% endif %} {{ page.meta.get("nav", page.title) }}
 
 {{page.meta.description}}
 

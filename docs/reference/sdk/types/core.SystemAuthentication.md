@@ -1,5 +1,5 @@
 ---
-title: "SystemAuthentication"
+nav: "SystemAuthentication"
 ---
 # Type alias: SystemAuthentication
 

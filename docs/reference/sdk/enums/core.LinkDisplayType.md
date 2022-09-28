@@ -1,5 +1,5 @@
 ---
-title: "LinkDisplayType"
+nav: "LinkDisplayType"
 ---
 # Enumeration: LinkDisplayType
 
@@ -17,7 +17,7 @@ Display the referenced web page as a card.
 
 #### Defined in
 
-[schema.ts:492](https://github.com/coda/packs-sdk/blob/main/schema.ts#L492)
+[schema.ts:516](https://github.com/coda/packs-sdk/blob/main/schema.ts#L516)
 
 ___
 
@@ -29,7 +29,7 @@ Display the referenced web page as an embed.
 
 #### Defined in
 
-[schema.ts:497](https://github.com/coda/packs-sdk/blob/main/schema.ts#L497)
+[schema.ts:521](https://github.com/coda/packs-sdk/blob/main/schema.ts#L521)
 
 ___
 
@@ -41,7 +41,7 @@ Display icon only.
 
 #### Defined in
 
-[schema.ts:477](https://github.com/coda/packs-sdk/blob/main/schema.ts#L477)
+[schema.ts:501](https://github.com/coda/packs-sdk/blob/main/schema.ts#L501)
 
 ___
 
@@ -53,7 +53,7 @@ Display web page title.
 
 #### Defined in
 
-[schema.ts:487](https://github.com/coda/packs-sdk/blob/main/schema.ts#L487)
+[schema.ts:511](https://github.com/coda/packs-sdk/blob/main/schema.ts#L511)
 
 ___
 
@@ -65,4 +65,4 @@ Display URL.
 
 #### Defined in
 
-[schema.ts:482](https://github.com/coda/packs-sdk/blob/main/schema.ts#L482)
+[schema.ts:506](https://github.com/coda/packs-sdk/blob/main/schema.ts#L506)

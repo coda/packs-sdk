@@ -7,10 +7,10 @@ exports.setupIvmContext = void 0;
 const build_1 = require("../cli/build");
 const bootstrap_1 = require("../runtime/bootstrap");
 const fs_1 = __importDefault(require("fs"));
+const ivm_wrapper_1 = require("./ivm_wrapper");
 const bootstrap_2 = require("../runtime/bootstrap");
 const bootstrap_3 = require("../runtime/bootstrap");
 const bootstrap_4 = require("../runtime/bootstrap");
-const isolated_vm_1 = __importDefault(require("isolated-vm"));
 const path_1 = __importDefault(require("path"));
 const bootstrap_5 = require("../runtime/bootstrap");
 const IsolateMemoryLimit = 128;
@@ -19,8 +19,9 @@ const IsolateMemoryLimit = 128;
 const CompiledHelperBundlePath = (0, bootstrap_2.getThunkPath)();
 const HelperTsSourceFile = `${__dirname}/../runtime/thunk/thunk.ts`;
 async function setupIvmContext(bundlePath, executionContext) {
+    const ivm = (0, ivm_wrapper_1.getIvm)();
     // creating an isolate with 128M memory limit.
-    const isolate = new isolated_vm_1.default.Isolate({ memoryLimit: IsolateMemoryLimit });
+    const isolate = new ivm.Isolate({ memoryLimit: IsolateMemoryLimit });
     const ivmContext = await (0, bootstrap_1.createIsolateContext)(isolate);
     const bundleFullPath = path_1.default.isAbsolute(bundlePath) ? bundlePath : path_1.default.join(process.cwd(), bundlePath);
     // If the ivm helper is running by node, the compiled execution_helper bundle should be ready at the

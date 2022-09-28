@@ -1,5 +1,6 @@
 ---
-title: Column Formats
+nav: Column formats
+description: Automatically apply a formula to a user's input to display it in a different format.
 ---
 
 # Add custom column formats
@@ -112,4 +113,4 @@ When selected, this will wrap the link in a call to the formula that backs the c
 [parameters]: ../basics/parameters/index.md
 [data-types]: ../basics/data-types.md
 [mdn_regex]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
-[fetcher_network_domain]: ../advanced/fetcher.md#network-domains
+[fetcher_network_domain]: ../basics/fetcher.md#network-domains

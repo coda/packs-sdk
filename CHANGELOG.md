@@ -2,6 +2,14 @@
 
 This changelog keeps track of all changes to the Packs SDK. We follow conventions from [keepachangelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.1.0] - 2022-09-27
+
+- The `isolated-vm` npm package is no longer a required dependency. It will be installed automatically if your system supports it, otherwise npm will ignore it. When running `coda execute`, if `isolated-vm` is available, your formula will be executed inside of a virtual machine sandbox to better simulate the actual Coda runtime environment for packs. If not available, your formula will still be executed, just not within a sandbox.
+- Adds support for render hits for progress bars, with the new `ValueHintType.ProgressBar`.
+- Also adds in the `showValue` field on `SliderSchema` to indicate whether to show the underlying numeric value associated with a slider.
+- Parameters that are declared as `optional: true` will be inferred as possibly `undefined` in the `execute` method of a formula. Previously, if you had declared, say, a string parameter as optional, the automatic type it would receive as an input to the `execute` method would be `string`, which is inaccurate. It will now be typed as `string | undefined`.
+- Added validation that building blocks of the same type do not share a name.
+
 ## [1.0.5] - 2022-08-05
 
 - Fixed the CLI compiler throwing for using common node modules.

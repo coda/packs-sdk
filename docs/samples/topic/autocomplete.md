@@ -1,12 +1,12 @@
 ---
-title: Autocomplete
+nav: Autocomplete
 description: Samples that show how to provide autocomplete options for a parameter.
 icon: material/form-dropdown
 ---
 
 # Autocomplete samples
 
-Autocomplete can be configured for a parameter to provide a defined set of options for the user to select from. You can can pass either a static array or use a function to dynamically generate the options.
+Autocomplete can be configured for a parameter to provide a defined set of options for the user to select from. You can pass either a static array or use a function to dynamically generate the options.
 
 
 [Learn More](../../../guides/basics/parameters/autocomplete){ .md-button }

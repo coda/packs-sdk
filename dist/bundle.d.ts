@@ -150,6 +150,10 @@ export declare enum ValueHintType {
 	 */
 	Scale = "scale",
 	/**
+	 * Indicates to render a numeric value as a progress bar UI component.
+	 */
+	ProgressBar = "progressBar",
+	/**
 	 * Indicates to render a boolean value as a toggle.
 	 */
 	Toggle = "toggle"
@@ -176,6 +180,7 @@ declare const NumberHintValueTypes: readonly [
 	ValueHintType.Percent,
 	ValueHintType.Currency,
 	ValueHintType.Slider,
+	ValueHintType.ProgressBar,
 	ValueHintType.Scale
 ];
 declare const BooleanHintValueTypes: readonly [
@@ -214,7 +219,7 @@ export interface BooleanSchema extends BaseSchema {
 /**
  * The union of all schemas that can represent number values.
  */
-export declare type NumberSchema = CurrencySchema | SliderSchema | ScaleSchema | NumericSchema | NumericDateSchema | NumericTimeSchema | NumericDateTimeSchema | NumericDurationSchema;
+export declare type NumberSchema = CurrencySchema | SliderSchema | ProgressBarSchema | ScaleSchema | NumericSchema | NumericDateSchema | NumericTimeSchema | NumericDateTimeSchema | NumericDurationSchema;
 export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> extends BaseSchema {
 	/** Identifies this schema as relating to a number value. */
 	type: ValueType.Number;
@@ -357,6 +362,24 @@ export interface SliderSchema extends BaseNumberSchema<ValueHintType.Slider> {
 	maximum?: number | string;
 	/** The minimum amount the slider can be moved when dragged. */
 	step?: number | string;
+	/** Whether to display the underlying numeric value in addition to the slider. */
+	showValue?: boolean;
+}
+/**
+ * A schema representing a return value or object property that is a number that should
+ * be rendered as a progress bar.
+ */
+export interface ProgressBarSchema extends BaseNumberSchema<ValueHintType.ProgressBar> {
+	/** Instructs Coda to render this value as a progress bar. */
+	codaType: ValueHintType.ProgressBar;
+	/** The minimum value selectable by this progress bar. */
+	minimum?: number | string;
+	/** The maximum value selectable by this progress bar. */
+	maximum?: number | string;
+	/** The minimum amount the progress bar can be moved when dragged. */
+	step?: number | string;
+	/** Whether to display the underlying numeric value in addition to the progress bar. */
+	showValue?: boolean;
 }
 /**
  * Icons that can be used with a {@link ScaleSchema}.
@@ -1306,6 +1329,12 @@ export interface ParamDef<T extends UnionType> {
 	suggestedValue?: SuggestedValueType<T>;
 }
 /**
+ * Marker type for an optional {@link ParamDef}, used internally.
+ */
+export interface OptionalParamDef<T extends UnionType> extends ParamDef<T> {
+	optional: true;
+}
+/**
  * The type for the complete set of parameter definitions for a fomrula.
  */
 export declare type ParamDefs = [
@@ -1321,7 +1350,7 @@ export declare type TypeOfMap<T extends UnionType> = T extends Type ? TypeMap[T]
  * the parameter defintion for that formula.
  */
 export declare type ParamValues<ParamDefsT extends ParamDefs> = {
-	[K in keyof ParamDefsT]: ParamDefsT[K] extends ParamDef<infer T> ? TypeOfMap<T> : never;
+	[K in keyof ParamDefsT]: ParamDefsT[K] extends OptionalParamDef<infer S> ? TypeOfMap<S> | undefined : ParamDefsT[K] extends ParamDef<infer T> ? TypeOfMap<T> : never;
 } & any[];
 /**
  * The type of values that are allowable to be used as a {@link ParamDef.suggestedValue} for a parameter.
@@ -1572,8 +1601,8 @@ export interface TemporaryBlobStorage {
 	 * The URL expires after 15 minutes by default, but you may pass a custom expiry, however
 	 * Coda reserves the right to ignore long expirations.
 	 *
-	 * If the `downloadFilename` parameter is specified, the data will be interpreted as a file (`attachment` content
-	 * disposition) that will be downloaded when accessed as the file name provided.
+	 * If the `downloadFilename` parameter is specified, when opened in the browser the file will
+	 * be downloaded with the file name provided.
 	 */
 	storeUrl(url: string, opts?: {
 		expiryMs?: number;
@@ -1586,8 +1615,8 @@ export interface TemporaryBlobStorage {
 	 * The URL expires after 15 minutes by default, but you may pass a custom expiry, however
 	 * Coda reserves the right to ignore long expirations.
 	 *
-	 * If the `downloadFilename` parameter is specified, the data will be interpreted as a file (`attachment` content
-	 * disposition) that will be downloaded when accessed as the file name provided.
+	 * If the `downloadFilename` parameter is specified, when opened in the browser the file will
+	 * be downloaded with the file name provided.
 	 */
 	storeBlob(blobData: Buffer, contentType: string, opts?: {
 		expiryMs?: number;
@@ -2079,6 +2108,14 @@ export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<Pa
 	autocomplete?: T extends AutocompleteParameterTypes ? MetadataFormulaDef | Array<TypeMap[AutocompleteParameterTypeMapping[T]] | SimpleAutocompleteOption<T>> : undefined;
 };
 /**
+ * Equivalent to {@link ParamDef}. A helper type to generate a param def based
+ * on the inputs to {@link makeParameter}.
+ */
+export declare type ParamDefFromOptionsUnion<T extends ParameterType, O extends ParameterOptions<T>> = Omit<O, "type" | "autocomplete"> & {
+	type: O extends ParameterOptions<infer S> ? ParameterTypeMap[S] : never;
+	autocomplete: MetadataFormula;
+};
+/**
  * Create a definition for a parameter for a formula or sync.
  *
  * @example
@@ -2091,7 +2128,7 @@ export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<Pa
  * makeParameter({type: ParameterType.StringArray, name: 'myArrayParam', description: 'My description'});
  * ```
  */
-export declare function makeParameter<T extends ParameterType>(paramDefinition: ParameterOptions<T>): ParamDef<ParameterTypeMap[T]>;
+export declare function makeParameter<T extends ParameterType, O extends ParameterOptions<T>>(paramDefinition: O): ParamDefFromOptionsUnion<T, O>;
 /**
  * Base type for the inputs for creating a pack formula.
  */

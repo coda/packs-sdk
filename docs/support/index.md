@@ -1,5 +1,6 @@
 ---
-title: Support
+nav: Support
+description: The support channels that exist for the Pack SDK.
 ---
 
 # How to get help
@@ -47,6 +48,6 @@ If the Pack uses OAuth2 authentication where its authorization url domain doesn'
 [community_post]: https://community.coda.io/new-topic?category=making-packs
 [support_email]: mailto:support+packstudio@coda.io
 [hc_share]: https://help.coda.io/en/articles/1137949-sharing-your-doc#h_5061fdf96a
-[fetcher_network_domains]: ../guides/advanced/fetcher.md#network-domains
+[fetcher_network_domains]: ../guides/basics/fetcher.md#network-domains
 [network_domains_form]: https://coda.io/form/Pack-Network-Domains-Request_ddvuAhFq3IZ
 [office_hours]: https://calendly.com/ekoleda/packs-office-hours

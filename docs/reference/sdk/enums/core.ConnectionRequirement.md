@@ -1,5 +1,5 @@
 ---
-title: "ConnectionRequirement"
+nav: "ConnectionRequirement"
 ---
 # Enumeration: ConnectionRequirement
 
@@ -18,7 +18,7 @@ Indicates this building block does not make use of an account.
 
 #### Defined in
 
-[api_types.ts:431](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L431)
+[api_types.ts:442](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L442)
 
 ___
 
@@ -33,7 +33,7 @@ to specify an account to use.
 
 #### Defined in
 
-[api_types.ts:438](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L438)
+[api_types.ts:449](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L449)
 
 ___
 
@@ -48,4 +48,4 @@ to specify an account to use.
 
 #### Defined in
 
-[api_types.ts:445](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L445)
+[api_types.ts:456](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L456)

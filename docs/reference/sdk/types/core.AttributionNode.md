@@ -1,5 +1,5 @@
 ---
-title: "AttributionNode"
+nav: "AttributionNode"
 ---
 # Type alias: AttributionNode
 
@@ -11,4 +11,4 @@ Union of attribution node types for rendering attribution for a pack value. See 
 
 #### Defined in
 
-[schema.ts:1050](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1050)
+[schema.ts:1073](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1073)

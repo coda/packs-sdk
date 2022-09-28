@@ -1,5 +1,5 @@
 ---
-title: "NetworkConnection"
+nav: "NetworkConnection"
 ---
 # Enumeration: NetworkConnection
 
@@ -17,7 +17,7 @@ use `ConnectionRequirement` instead
 
 #### Defined in
 
-[api_types.ts:450](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L450)
+[api_types.ts:461](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L461)
 
 ___
 
@@ -27,7 +27,7 @@ ___
 
 #### Defined in
 
-[api_types.ts:451](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L451)
+[api_types.ts:462](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L462)
 
 ___
 
@@ -37,4 +37,4 @@ ___
 
 #### Defined in
 
-[api_types.ts:452](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L452)
+[api_types.ts:463](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L463)

@@ -1,5 +1,5 @@
 ---
-title: "TextAttributionNode"
+nav: "TextAttributionNode"
 ---
 # Interface: TextAttributionNode
 
@@ -28,7 +28,7 @@ The text to render with the pack value.
 
 #### Defined in
 
-[schema.ts:996](https://github.com/coda/packs-sdk/blob/main/schema.ts#L996)
+[schema.ts:1019](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1019)
 
 ___
 
@@ -40,4 +40,4 @@ Identifies this as a text attribution node.
 
 #### Defined in
 
-[schema.ts:994](https://github.com/coda/packs-sdk/blob/main/schema.ts#L994)
+[schema.ts:1017](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1017)

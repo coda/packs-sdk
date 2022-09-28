@@ -1,7 +1,10 @@
 nav:
-  - Overview: index.md
-  - Building blocks: blocks
+  - overview.md
+  - blocks
   - basics
   - advanced
   - development
+  - Distribution:
+    - Sharing & publishing: https://help.coda.io/en/articles/5987280-sharing-and-publishing-a-pack
+    - Selling packs: https://help.coda.io/en/articles/6381607-selling-packs-on-coda
   - ...

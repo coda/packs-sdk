@@ -1,5 +1,5 @@
 ---
-title: Images
+nav: Images
 description: Samples that show how to work with images.
 icon: material/image
 ---
@@ -202,6 +202,7 @@ async function downloadImages(imageUrls, context: coda.ExecutionContext):
       method: "GET",
       url: imageUrl,
       isBinaryResponse: true,
+      disableAuthentication: true,
     });
     requests.push(request);
   }

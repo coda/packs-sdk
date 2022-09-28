@@ -1,5 +1,5 @@
 ---
-title: "BooleanSchema"
+nav: "BooleanSchema"
 ---
 # Interface: BooleanSchema
 
@@ -23,7 +23,7 @@ Indicates how to render values in a table. If not specified, renders a checkbox.
 
 #### Defined in
 
-[schema.ts:220](https://github.com/coda/packs-sdk/blob/main/schema.ts#L220)
+[schema.ts:225](https://github.com/coda/packs-sdk/blob/main/schema.ts#L225)
 
 ___
 
@@ -42,7 +42,7 @@ BaseSchema.description
 
 #### Defined in
 
-[schema.ts:210](https://github.com/coda/packs-sdk/blob/main/schema.ts#L210)
+[schema.ts:215](https://github.com/coda/packs-sdk/blob/main/schema.ts#L215)
 
 ___
 
@@ -54,4 +54,4 @@ Identifies this schema as relating to a boolean value.
 
 #### Defined in
 
-[schema.ts:218](https://github.com/coda/packs-sdk/blob/main/schema.ts#L218)
+[schema.ts:223](https://github.com/coda/packs-sdk/blob/main/schema.ts#L223)

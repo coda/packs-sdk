@@ -1,5 +1,5 @@
 ---
-title: "core"
+nav: "core"
 ---
 # Module: core
 
@@ -90,10 +90,12 @@ import * as coda from "@codahq/packs-sdk";
 - [ObjectArrayFormulaDef](../interfaces/core.ObjectArrayFormulaDef.md)
 - [ObjectSchemaDefinition](../interfaces/core.ObjectSchemaDefinition.md)
 - [ObjectSchemaProperty](../interfaces/core.ObjectSchemaProperty.md)
+- [OptionalParamDef](../interfaces/core.OptionalParamDef.md)
 - [PackDefinition](../interfaces/core.PackDefinition.md)
 - [PackFormulaDef](../interfaces/core.PackFormulaDef.md)
 - [PackVersionDefinition](../interfaces/core.PackVersionDefinition.md)
 - [ParamDef](../interfaces/core.ParamDef.md)
+- [ProgressBarSchema](../interfaces/core.ProgressBarSchema.md)
 - [QueryParamTokenAuthentication](../interfaces/core.QueryParamTokenAuthentication.md)
 - [RequestHandlerTemplate](../interfaces/core.RequestHandlerTemplate.md)
 - [ResponseHandlerTemplate](../interfaces/core.ResponseHandlerTemplate.md)
@@ -152,6 +154,7 @@ import * as coda from "@codahq/packs-sdk";
 - [PackFormulaResult](../types/core.PackFormulaResult.md)
 - [PackFormulaValue](../types/core.PackFormulaValue.md)
 - [PackId](../types/core.PackId.md)
+- [ParamDefFromOptionsUnion](../types/core.ParamDefFromOptionsUnion.md)
 - [ParamDefs](../types/core.ParamDefs.md)
 - [ParamValues](../types/core.ParamValues.md)
 - [ParameterOptions](../types/core.ParameterOptions.md)

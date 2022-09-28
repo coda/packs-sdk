@@ -1,5 +1,5 @@
 ---
-title: "makeFormula"
+nav: "makeFormula"
 ---
 # Function: makeFormula
 
@@ -85,4 +85,4 @@ makeFormula({
 
 #### Defined in
 
-[api.ts:826](https://github.com/coda/packs-sdk/blob/main/api.ts#L826)
+[api.ts:838](https://github.com/coda/packs-sdk/blob/main/api.ts#L838)

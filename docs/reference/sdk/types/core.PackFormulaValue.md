@@ -1,5 +1,5 @@
 ---
-title: "PackFormulaValue"
+nav: "PackFormulaValue"
 ---
 # Type alias: PackFormulaValue
 

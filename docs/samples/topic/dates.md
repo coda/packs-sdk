@@ -1,5 +1,5 @@
 ---
-title: Dates and times
+nav: Dates and times
 description: Samples that show how to work with dates and times.
 icon: material/calendar-clock
 ---

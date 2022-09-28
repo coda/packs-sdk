@@ -1,3 +1,7 @@
+title: Learn to build
 nav:
   - formula.md
+  - fetcher.md
+  - sync-table.md
+  - oauth.md
   - ...
