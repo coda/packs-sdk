@@ -1,5 +1,6 @@
 import fs from 'fs-extra';
 import path from 'path';
+import {printAndExit} from '../testing/helpers';
 import {spawnProcess} from './helpers';
 
 const PacksExamplesDirectory = 'node_modules/@codahq/packs-examples';
@@ -24,6 +25,10 @@ function addPatches() {
   spawnProcess(`npx patch-package --exclude 'nothing' mold-source-map`);
 }
 
+function isGitAvailable(): boolean {
+  return spawnProcess('git --version').status === 0;
+}
+
 // By no means comprehensive, just an attempt to cover characters that can appear in a package.json declaration.
 function escapeShellCmd(cmd: string): string {
   return cmd.replace('>', '\\>').replace('<', '\\<');
@@ -46,6 +51,12 @@ export async function handleInit() {
   }
 
   if (!isPacksExamplesInstalled) {
+    if (!isGitAvailable()) {
+      return printAndExit(
+        'The coda init command requires git to be installed and available in your path. ' +
+          'See https://git-scm.com/downloads for suggested ways to install.',
+      );
+    }
     const installCommand = `npm install https://github.com/coda/packs-examples.git`;
     spawnProcess(installCommand);
   }

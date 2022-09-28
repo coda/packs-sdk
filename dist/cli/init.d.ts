@@ -1,1 +1,1 @@
-export declare function handleInit(): Promise<void>;
+export declare function handleInit(): Promise<undefined>;
