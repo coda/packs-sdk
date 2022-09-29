@@ -32,4 +32,4 @@ an object schema, those are left undefined.
 
 #### Defined in
 
-[schema.ts:1189](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1189)
+[schema.ts:1207](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1207)

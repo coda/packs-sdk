@@ -41,6 +41,7 @@ import type {OAuth2Authentication} from '../types';
 import {ObjectHintValueTypes} from '../schema';
 import type {ObjectPackFormula} from '../api';
 import type {ObjectSchema} from '../schema';
+import type {ObjectSchemaPathProperties} from '../schema';
 import type {ObjectSchemaProperty} from '../schema';
 import {PackCategory} from '../types';
 import type {PackFormatMetadata} from '../compiled_types';
@@ -51,7 +52,6 @@ import type {ParamDefs} from '../api_types';
 import {PostSetupType} from '../types';
 import type {ProgressBarSchema} from '../schema';
 import type {PropertyIdentifier} from '../schema';
-import type {PropertyIdentifierDetails} from '../schema';
 import type {QueryParamTokenAuthentication} from '../types';
 import {ScaleIconSet} from '../schema';
 import type {ScaleSchema} from '../schema';
@@ -943,16 +943,13 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
       const schema = data as GenericObjectSchema;
 
       function validateProperty(
-        propertyKey: keyof typeof schema,
+        propertyKey: keyof ObjectSchemaPathProperties,
         isValidSchema: (schema: Schema & ObjectSchemaProperty) => boolean,
         invalidSchemaMessage: string,
       ) {
         const propertyValueRaw = schema[propertyKey];
         if (propertyValueRaw) {
-          const propertyValue =
-            typeof propertyValueRaw === 'string'
-              ? propertyValueRaw
-              : (propertyValueRaw as PropertyIdentifierDetails)?.property;
+          const propertyValue = typeof propertyValueRaw === 'string' ? propertyValueRaw : propertyValueRaw?.property;
           let propertyValueIsPath = false;
 
           let propertySchema =

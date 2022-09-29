@@ -839,12 +839,30 @@ export interface Identity extends IdentityDefinition {
   packId: number;
 }
 
+/**
+ * An identifer for a schema property for specifying labels along with the reference to the property.
+ * This is useful for specifying a label for a property reference that uses a json path, where the
+ * label of the underlying property might not be descriptive enough at the top-level object.
+ */
 export interface PropertyIdentifierDetails {
   label: string;
   property: string;
 }
 
+/**
+ * An identifier for an object schema property that comprises of either an exact property match with the top-level
+ * `properties or a json path (https://github.com/json-path/JsonPath) to a nested property.
+ */
 export type PropertyIdentifier<K extends string = string> = K | string | PropertyIdentifierDetails;
+
+/**
+ * The {@link ObjectSchemaDefinition} properties that reference keys in the `properties` object. These should all be
+ * PropertyIdentifier types.
+ */
+export type ObjectSchemaPathProperties = Pick<
+  GenericObjectSchema,
+  'titleProperty' | 'linkProperty' | 'imageProperty' | 'descriptionProperty'
+>;
 
 /**
  * A schema definition for an object value (a value with key-value pairs).
@@ -1334,6 +1352,10 @@ function checkSchemaPropertyIsRequired<K extends string, L extends string, T ext
   );
 }
 
+/**
+ * Normalizes a schema property key into PascalCase. This interprets "."s as accessing object properties
+ * and "[]" as accessing array items.
+ */
 export function normalizeSchemaKey(key: string): string {
   // Try splitting by . to handle json paths.
   return (
@@ -1356,7 +1378,10 @@ export function normalizeSchemaKey(key: string): string {
   );
 }
 
-function tryNormalizeSchemaPropertyType(key: PropertyIdentifier): PropertyIdentifier {
+/**
+ * Normalizes a schema PropertyIdentifier by converting it to PascalCase.
+ */
+function normalizeSchemaPropertyIdentifier(key: PropertyIdentifier): PropertyIdentifier {
   if (typeof key === 'string') {
     return normalizeSchemaKey(key);
   }
@@ -1370,10 +1395,11 @@ function tryNormalizeSchemaPropertyType(key: PropertyIdentifier): PropertyIdenti
 
 /**
  * Attempts to transform a property value (which may be a json-path string or a normal object schema property) into
- * a path to access the relevant schema. Specifically this handles the case of array schemas which have an intermediate
- * `items` object to traverse.
+ * a path to access the relevant schema. Specifically this handles the case of
+ *   1) object schemas which have an intermediate `properties` object and
+ *   2) array schemas which have an intermediate `items` object to traverse.
  */
-export function normalizePropertyValuePathIntoSchemaPath(propertyValue: string) {
+export function normalizePropertyValuePathIntoSchemaPath(propertyValue: string): string {
   const normalizedValue = propertyValue
     .split('.')
     .map(val => {
@@ -1429,11 +1455,11 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
       description: schema.description,
       attribution: schema.attribution,
       includeUnknownProperties: schema.includeUnknownProperties,
-      titleProperty: titleProperty ? tryNormalizeSchemaPropertyType(titleProperty) : undefined,
-      subtitleProperties: subtitleProperties ? subtitleProperties.map(tryNormalizeSchemaPropertyType) : undefined,
-      imageProperty: imageProperty ? tryNormalizeSchemaPropertyType(imageProperty) : undefined,
-      descriptionProperty: descriptionProperty ? tryNormalizeSchemaPropertyType(descriptionProperty) : undefined,
-      linkProperty: linkProperty ? tryNormalizeSchemaPropertyType(linkProperty) : undefined,
+      titleProperty: titleProperty ? normalizeSchemaPropertyIdentifier(titleProperty) : undefined,
+      subtitleProperties: subtitleProperties ? subtitleProperties.map(normalizeSchemaPropertyIdentifier) : undefined,
+      imageProperty: imageProperty ? normalizeSchemaPropertyIdentifier(imageProperty) : undefined,
+      descriptionProperty: descriptionProperty ? normalizeSchemaPropertyIdentifier(descriptionProperty) : undefined,
+      linkProperty: linkProperty ? normalizeSchemaPropertyIdentifier(linkProperty) : undefined,
     } as T;
 
     return normalizedSchema;

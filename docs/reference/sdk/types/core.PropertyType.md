@@ -7,6 +7,9 @@ nav: "PropertyType"
 
 Ƭ **PropertyType**<`K`\>: `K` \| `string` \| `PropertyIdentifierDetails`
 
+An identifier for an object schema property that comprises of either an exact property match with the top-level
+`properties or a json path (https://github.com/json-path/JsonPath) to a nested property.
+
 #### Type parameters
 
 | Name | Type |
@@ -15,4 +18,4 @@ nav: "PropertyType"
 
 #### Defined in
 
-[schema.ts:847](https://github.com/coda/packs-sdk/blob/main/schema.ts#L847)
+[schema.ts:856](https://github.com/coda/packs-sdk/blob/main/schema.ts#L856)

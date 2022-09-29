@@ -730,11 +730,25 @@ export interface IdentityDefinition {
 export interface Identity extends IdentityDefinition {
     packId: number;
 }
+/**
+ * An identifer for a schema property for specifying labels along with the reference to the property.
+ * This is useful for specifying a label for a property reference that uses a json path, where the
+ * label of the underlying property might not be descriptive enough at the top-level object.
+ */
 export interface PropertyIdentifierDetails {
     label: string;
     property: string;
 }
+/**
+ * An identifier for an object schema property that comprises of either an exact property match with the top-level
+ * `properties or a json path (https://github.com/json-path/JsonPath) to a nested property.
+ */
 export declare type PropertyIdentifier<K extends string = string> = K | string | PropertyIdentifierDetails;
+/**
+ * The {@link ObjectSchemaDefinition} properties that reference keys in the `properties` object. These should all be
+ * PropertyIdentifier types.
+ */
+export declare type ObjectSchemaPathProperties = Pick<GenericObjectSchema, 'titleProperty' | 'linkProperty' | 'imageProperty' | 'descriptionProperty'>;
 /**
  * A schema definition for an object value (a value with key-value pairs).
  */
@@ -1077,11 +1091,16 @@ export declare function makeObjectSchema<K extends string, L extends string, T e
     identity?: Identity;
     type: ValueType.Object;
 };
+/**
+ * Normalizes a schema property key into PascalCase. This interprets "."s as accessing object properties
+ * and "[]" as accessing array items.
+ */
 export declare function normalizeSchemaKey(key: string): string;
 /**
  * Attempts to transform a property value (which may be a json-path string or a normal object schema property) into
- * a path to access the relevant schema. Specifically this handles the case of array schemas which have an intermediate
- * `items` object to traverse.
+ * a path to access the relevant schema. Specifically this handles the case of
+ *   1) object schemas which have an intermediate `properties` object and
+ *   2) array schemas which have an intermediate `items` object to traverse.
  */
 export declare function normalizePropertyValuePathIntoSchemaPath(propertyValue: string): string;
 export declare function normalizeSchema<T extends Schema>(schema: T): T;

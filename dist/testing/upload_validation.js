@@ -777,9 +777,7 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
         var _a;
         const propertyValueRaw = schema[propertyKey];
         if (propertyValueRaw) {
-            const propertyValue = typeof propertyValueRaw === 'string'
-                ? propertyValueRaw
-                : propertyValueRaw === null || propertyValueRaw === void 0 ? void 0 : propertyValueRaw.property;
+            const propertyValue = typeof propertyValueRaw === 'string' ? propertyValueRaw : propertyValueRaw === null || propertyValueRaw === void 0 ? void 0 : propertyValueRaw.property;
             let propertyValueIsPath = false;
             let propertySchema = typeof schema[propertyKey] === 'string' && propertyValue in schema.properties
                 ? schema.properties[propertyValue]

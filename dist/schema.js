@@ -530,6 +530,10 @@ function checkSchemaPropertyIsRequired(field, schema, referencedByPropertyName) 
     (0, ensure_1.assertCondition)(properties[field], `${referencedByPropertyName} set to undefined field "${field}"`);
     (0, ensure_1.assertCondition)(properties[field].required, `Field "${field}" must be marked as required in schema with codaType "${codaType}".`);
 }
+/**
+ * Normalizes a schema property key into PascalCase. This interprets "."s as accessing object properties
+ * and "[]" as accessing array items.
+ */
 function normalizeSchemaKey(key) {
     // Try splitting by . to handle json paths.
     return (key
@@ -548,7 +552,10 @@ function normalizeSchemaKey(key) {
         .join('.'));
 }
 exports.normalizeSchemaKey = normalizeSchemaKey;
-function tryNormalizeSchemaPropertyType(key) {
+/**
+ * Normalizes a schema PropertyIdentifier by converting it to PascalCase.
+ */
+function normalizeSchemaPropertyIdentifier(key) {
     if (typeof key === 'string') {
         return normalizeSchemaKey(key);
     }
@@ -560,8 +567,9 @@ function tryNormalizeSchemaPropertyType(key) {
 }
 /**
  * Attempts to transform a property value (which may be a json-path string or a normal object schema property) into
- * a path to access the relevant schema. Specifically this handles the case of array schemas which have an intermediate
- * `items` object to traverse.
+ * a path to access the relevant schema. Specifically this handles the case of
+ *   1) object schemas which have an intermediate `properties` object and
+ *   2) array schemas which have an intermediate `items` object to traverse.
  */
 function normalizePropertyValuePathIntoSchemaPath(propertyValue) {
     const normalizedValue = propertyValue
@@ -607,11 +615,11 @@ function normalizeSchema(schema) {
             description: schema.description,
             attribution: schema.attribution,
             includeUnknownProperties: schema.includeUnknownProperties,
-            titleProperty: titleProperty ? tryNormalizeSchemaPropertyType(titleProperty) : undefined,
-            subtitleProperties: subtitleProperties ? subtitleProperties.map(tryNormalizeSchemaPropertyType) : undefined,
-            imageProperty: imageProperty ? tryNormalizeSchemaPropertyType(imageProperty) : undefined,
-            descriptionProperty: descriptionProperty ? tryNormalizeSchemaPropertyType(descriptionProperty) : undefined,
-            linkProperty: linkProperty ? tryNormalizeSchemaPropertyType(linkProperty) : undefined,
+            titleProperty: titleProperty ? normalizeSchemaPropertyIdentifier(titleProperty) : undefined,
+            subtitleProperties: subtitleProperties ? subtitleProperties.map(normalizeSchemaPropertyIdentifier) : undefined,
+            imageProperty: imageProperty ? normalizeSchemaPropertyIdentifier(imageProperty) : undefined,
+            descriptionProperty: descriptionProperty ? normalizeSchemaPropertyIdentifier(descriptionProperty) : undefined,
+            linkProperty: linkProperty ? normalizeSchemaPropertyIdentifier(linkProperty) : undefined,
         };
         return normalizedSchema;
     }
