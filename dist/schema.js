@@ -552,9 +552,9 @@ function tryNormalizeSchemaPropertyType(key) {
     if (typeof key === 'string') {
         return normalizeSchemaKey(key);
     }
-    const { label, value } = key;
+    const { label, property: value } = key;
     return {
-        value: normalizeSchemaKey(value),
+        property: normalizeSchemaKey(value),
         label: normalizeSchemaKey(label),
     };
 }

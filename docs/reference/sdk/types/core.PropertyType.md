@@ -5,7 +5,7 @@ nav: "PropertyType"
 
 [core](../modules/core.md).PropertyType
 
-Ƭ **PropertyType**<`K`\>: `K` \| `string` \| `ObjectProperty`
+Ƭ **PropertyType**<`K`\>: `K` \| `string` \| `PropertyIdentifierDetails`
 
 #### Type parameters
 

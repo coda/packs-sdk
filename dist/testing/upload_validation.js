@@ -708,7 +708,7 @@ const attributionSchema = z
     .optional();
 const propertySchema = z.union([
     z.string().min(1),
-    zodCompleteObject({ value: z.string().min(1), label: z.string().min(1) }),
+    zodCompleteObject({ property: z.string().min(1), label: z.string().min(1) }),
 ]);
 const genericObjectSchema = z.lazy(() => zodCompleteObject({
     ...basePropertyValidators,
@@ -731,7 +731,6 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
     properties: z.record(objectPropertyUnionSchema),
     includeUnknownProperties: z.boolean().optional(),
     __packId: z.number().optional(),
-    // TODO(spencer): update all of these to be union types
     titleProperty: propertySchema.optional(),
     linkProperty: propertySchema.optional(),
     subtitleProperties: z.array(propertySchema).optional(),
@@ -776,10 +775,12 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
     const schema = data;
     function validateProperty(propertyKey, isValidSchema, invalidSchemaMessage) {
         var _a;
-        if (schema[propertyKey]) {
-            const propertyValue = typeof schema[propertyKey] === 'string'
-                ? schema[propertyKey]
-                : schema[propertyKey].value;
+        const propertyValueRaw = schema[propertyKey];
+        if (propertyValueRaw) {
+            const propertyValue = typeof propertyValueRaw === 'string'
+                ? propertyValueRaw
+                : propertyValueRaw === null || propertyValueRaw === void 0 ? void 0 : propertyValueRaw.property;
+            let propertyValueIsPath = false;
             let propertySchema = typeof schema[propertyKey] === 'string' && propertyValue in schema.properties
                 ? schema.properties[propertyValue]
                 : undefined;
@@ -789,12 +790,16 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
                     path: schemaPropertyPath,
                     json: schema.properties,
                 })) === null || _a === void 0 ? void 0 : _a[0];
+                propertyValueIsPath = true;
             }
+            const propertyIdentiferDisplay = propertyValueIsPath
+                ? `"${propertyKey}" path`
+                : `"${propertyKey}" field name`;
             if (!propertySchema) {
                 context.addIssue({
                     code: z.ZodIssueCode.custom,
                     path: [propertyKey],
-                    message: `The "${propertyKey}" field name "${propertyValue}" does not exist in the "properties" object.`,
+                    message: `The ${propertyIdentiferDisplay} "${propertyValue}" does not exist in the "properties" object.`,
                 });
                 return;
             }
@@ -802,7 +807,7 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
                 context.addIssue({
                     code: z.ZodIssueCode.custom,
                     path: [propertyKey],
-                    message: `The "${propertyKey}" field name "${propertyValue}" ${invalidSchemaMessage}`,
+                    message: `The ${propertyIdentiferDisplay} "${propertyValue}" ${invalidSchemaMessage}`,
                 });
                 return;
             }
@@ -856,7 +861,6 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
                 return;
             }
         }
-        // TODO(spencer): Validate JSONpath
     });
 }));
 const objectPropertyUnionSchema = z.union([

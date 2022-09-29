@@ -764,11 +764,11 @@ export interface IdentityDefinition {
 export interface Identity extends IdentityDefinition {
 	packId: number;
 }
-export interface ObjectProperty {
+export interface PropertyIdentifierDetails {
 	label: string;
-	value: string;
+	property: string;
 }
-export declare type PropertyType<K extends string = string> = K | string | ObjectProperty;
+declare type PropertyIdentifier<K extends string = string> = K | string | PropertyIdentifierDetails;
 /**
  * A schema definition for an object value (a value with key-value pairs).
  */
@@ -850,7 +850,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 * Must be a {@link ValueType.String} property
 	 */
 	/** @hidden */
-	titleProperty?: PropertyType<K>;
+	titleProperty?: PropertyIdentifier<K>;
 	/**
 	 * The name of a property within {@link ObjectSchemaDefinition.properties} that will
 	 * navigate users to more details about this object
@@ -859,14 +859,14 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 * {@link ObjectSchemaDefinition.codaType}.
 	 */
 	/** @hidden */
-	linkProperty?: PropertyType<K>;
+	linkProperty?: PropertyIdentifier<K>;
 	/**
 	 * A list of property names from within {@link ObjectSchemaDefinition.properties} for the properties of the object
 	 * to be shown in the subtitle of a rich card preview for formulas that return this object.
 	 * Defaults to the value of {@link ObjectSchemaDefinition.featuredProperties} if not specified.
 	 */
 	/** @hidden */
-	subtitleProperties?: Array<PropertyType<K>>;
+	subtitleProperties?: Array<PropertyIdentifier<K>>;
 	/**
 	 * The name of a property within {@link ObjectSchemaDefinition.properties} that be used as a long body description
 	 * of the object.
@@ -874,7 +874,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 * Must be a {@link ValueType.String} property or {@link ValueType.Array} of {@link ValueType.String}s.
 	 */
 	/** @hidden */
-	descriptionProperty?: PropertyType<K>;
+	descriptionProperty?: PropertyIdentifier<K>;
 	/**
 	 * The name of a property within {@link ObjectSchemaDefinition.properties} that can be used as a rich image preview of
 	 * the object.
@@ -883,7 +883,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 * {@link ValueHintType.ImageAttachment} or {@link ValueHintType.ImageReference} hints
 	 */
 	/** @hidden */
-	imageProperty?: PropertyType<K>;
+	imageProperty?: PropertyIdentifier<K>;
 }
 export declare type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
 /** @hidden */
@@ -4012,6 +4012,7 @@ export declare function ensureExists<T>(value: T | null | undefined, message?: s
 export declare function assertCondition(condition: any, message?: string): asserts condition;
 
 export {
+	PropertyIdentifier as PropertyType,
 	join as joinUrl,
 };
 

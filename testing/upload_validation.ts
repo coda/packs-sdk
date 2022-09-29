@@ -40,7 +40,6 @@ import type {NumericTimeSchema} from '../schema';
 import type {OAuth2Authentication} from '../types';
 import {ObjectHintValueTypes} from '../schema';
 import type {ObjectPackFormula} from '../api';
-import type {ObjectProperty} from '../schema';
 import type {ObjectSchema} from '../schema';
 import type {ObjectSchemaProperty} from '../schema';
 import {PackCategory} from '../types';
@@ -51,7 +50,8 @@ import type {ParamDef} from '../api_types';
 import type {ParamDefs} from '../api_types';
 import {PostSetupType} from '../types';
 import type {ProgressBarSchema} from '../schema';
-import type {PropertyType} from '../schema';
+import type {PropertyIdentifier} from '../schema';
+import type {PropertyIdentifierDetails} from '../schema';
 import type {QueryParamTokenAuthentication} from '../types';
 import {ScaleIconSet} from '../schema';
 import type {ScaleSchema} from '../schema';
@@ -868,7 +868,7 @@ const attributionSchema = z
 
 const propertySchema = z.union([
   z.string().min(1),
-  zodCompleteObject<PropertyType>({value: z.string().min(1), label: z.string().min(1)}),
+  zodCompleteObject<PropertyIdentifier>({property: z.string().min(1), label: z.string().min(1)}),
 ]);
 
 const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
@@ -947,11 +947,13 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
         isValidSchema: (schema: Schema & ObjectSchemaProperty) => boolean,
         invalidSchemaMessage: string,
       ) {
-        if (schema[propertyKey]) {
+        const propertyValueRaw = schema[propertyKey];
+        if (propertyValueRaw) {
           const propertyValue =
-            typeof schema[propertyKey] === 'string'
-              ? (schema[propertyKey] as string)
-              : (schema[propertyKey] as ObjectProperty).value;
+            typeof propertyValueRaw === 'string'
+              ? propertyValueRaw
+              : (propertyValueRaw as PropertyIdentifierDetails)?.property;
+          let propertyValueIsPath = false;
 
           let propertySchema =
             typeof schema[propertyKey] === 'string' && propertyValue in schema.properties
@@ -963,13 +965,18 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
               path: schemaPropertyPath,
               json: schema.properties,
             })?.[0];
+            propertyValueIsPath = true;
           }
+
+          const propertyIdentiferDisplay = propertyValueIsPath
+            ? `"${propertyKey}" path`
+            : `"${propertyKey}" field name`;
 
           if (!propertySchema) {
             context.addIssue({
               code: z.ZodIssueCode.custom,
               path: [propertyKey],
-              message: `The "${propertyKey}" field name "${propertyValue}" does not exist in the "properties" object.`,
+              message: `The ${propertyIdentiferDisplay} "${propertyValue}" does not exist in the "properties" object.`,
             });
             return;
           }
@@ -978,7 +985,7 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
             context.addIssue({
               code: z.ZodIssueCode.custom,
               path: [propertyKey],
-              message: `The "${propertyKey}" field name "${propertyValue}" ${invalidSchemaMessage}`,
+              message: `The ${propertyIdentiferDisplay} "${propertyValue}" ${invalidSchemaMessage}`,
             });
             return;
           }
