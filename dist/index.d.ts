@@ -112,6 +112,7 @@ export { simpleAutocomplete } from './api';
 export { getQueryParams } from './helpers/url';
 export { join as joinUrl } from './helpers/url';
 export { withQueryParams } from './helpers/url';
+export { getEffectivePropertyKeysFromSchema } from './helpers/schema';
 export { SvgConstants } from './helpers/svg';
 export { assertCondition } from './helpers/ensure';
 export { ensureExists } from './helpers/ensure';
