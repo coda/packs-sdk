@@ -734,7 +734,7 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
     titleProperty: propertySchema.optional(),
     linkProperty: propertySchema.optional(),
     subtitleProperties: z.array(propertySchema).optional(),
-    descriptionProperty: propertySchema.optional(),
+    snippetProperty: propertySchema.optional(),
     imageProperty: propertySchema.optional(),
 })
     .superRefine((data, context) => {
@@ -818,10 +818,9 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
         return validateProperty('imageProperty', imagePropertySchema => imagePropertySchema.type === schema_13.ValueType.String &&
             [schema_12.ValueHintType.ImageAttachment, schema_12.ValueHintType.ImageReference].includes(imagePropertySchema.codaType), `must refer to a "ValueType.String" property with a "ValueHintType.ImageAttachment" or "ValueHintType.ImageReference" "codaType".`);
     };
-    const validateDescriptionProperty = () => {
-        return validateProperty('descriptionProperty', descriptionPropertySchema => descriptionPropertySchema.type === schema_13.ValueType.String ||
-            (descriptionPropertySchema.type === schema_13.ValueType.Array &&
-                descriptionPropertySchema.items.type === schema_13.ValueType.String), `must refer to a "ValueType.String" property or array of strings.`);
+    const validateSnippetProperty = () => {
+        return validateProperty('snippetProperty', snippetPropertySchema => snippetPropertySchema.type === schema_13.ValueType.String ||
+            (snippetPropertySchema.type === schema_13.ValueType.Array && snippetPropertySchema.items.type === schema_13.ValueType.String), `must refer to a "ValueType.String" property or array of strings.`);
     };
     const validateLinkProperty = () => {
         return validateProperty('linkProperty', linkPropertySchema => linkPropertySchema.type === schema_13.ValueType.String && linkPropertySchema.codaType === schema_12.ValueHintType.Url, `must refer to a "ValueType.String" property with a "ValueHintType.Url" "codaType".`);
@@ -829,7 +828,7 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
     validateTitleProperty();
     validateLinkProperty();
     validateImageProperty();
-    validateDescriptionProperty();
+    validateSnippetProperty();
     (schema.subtitleProperties || []).forEach((f, i) => {
         if (typeof f === 'string') {
             if (!(f in schema.properties)) {

@@ -873,13 +873,13 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	/** @hidden */
 	subtitleProperties?: Array<PropertyIdentifier<K>>;
 	/**
-	 * The name of a property within {@link ObjectSchemaDefinition.properties} that be used as a long body description
+	 * The name of a property within {@link ObjectSchemaDefinition.properties} that be used as a textual summary
 	 * of the object.
 	 *
 	 * Must be a {@link ValueType.String} property or {@link ValueType.Array} of {@link ValueType.String}s.
 	 */
 	/** @hidden */
-	descriptionProperty?: PropertyIdentifier<K>;
+	snippetProperty?: PropertyIdentifier<K>;
 	/**
 	 * The name of a property within {@link ObjectSchemaDefinition.properties} that can be used as a rich image preview of
 	 * the object.

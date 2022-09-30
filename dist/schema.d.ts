@@ -748,7 +748,7 @@ export declare type PropertyIdentifier<K extends string = string> = K | string |
  * The {@link ObjectSchemaDefinition} properties that reference keys in the `properties` object. These should all be
  * PropertyIdentifier types.
  */
-export declare type ObjectSchemaPathProperties = Pick<GenericObjectSchema, 'titleProperty' | 'linkProperty' | 'imageProperty' | 'descriptionProperty'>;
+export declare type ObjectSchemaPathProperties = Pick<GenericObjectSchema, 'titleProperty' | 'linkProperty' | 'imageProperty' | 'snippetProperty'>;
 /**
  * A schema definition for an object value (a value with key-value pairs).
  */
@@ -848,13 +848,13 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
     /** @hidden */
     subtitleProperties?: Array<PropertyIdentifier<K>>;
     /**
-     * The name of a property within {@link ObjectSchemaDefinition.properties} that be used as a long body description
+     * The name of a property within {@link ObjectSchemaDefinition.properties} that be used as a textual summary
      * of the object.
      *
      * Must be a {@link ValueType.String} property or {@link ValueType.Array} of {@link ValueType.String}s.
      */
     /** @hidden */
-    descriptionProperty?: PropertyIdentifier<K>;
+    snippetProperty?: PropertyIdentifier<K>;
     /**
      * The name of a property within {@link ObjectSchemaDefinition.properties} that can be used as a rich image preview of
      * the object.

@@ -1991,12 +1991,12 @@ describe('Pack metadata Validation', () => {
             },
           },
           titleProperty: 'nestedObject.name',
-          descriptionProperty: 'array[0].name',
+          snippetProperty: 'array[0].name',
         };
         await validateJsonAndAssertFails(
           metadataForFormulaWithObjectSchema({
             ...baseMetadata,
-            descriptionProperty: 'array[0][0].name',
+            snippetProperty: 'array[0][0].name',
           }),
         );
         await validateJsonAndAssertFails(
@@ -2150,7 +2150,7 @@ describe('Pack metadata Validation', () => {
           properties: {
             primary: {type: ValueType.Number},
           },
-          descriptionProperty: 'garbage',
+          snippetProperty: 'garbage',
         });
         await validateJsonAndAssertFails(metadata);
         metadata = metadataForFormulaWithObjectSchema({
@@ -2158,7 +2158,7 @@ describe('Pack metadata Validation', () => {
           properties: {
             primary: {type: ValueType.Number},
           },
-          descriptionProperty: 'primary',
+          snippetProperty: 'primary',
         });
         await validateJsonAndAssertFails(metadata);
         metadata = metadataForFormulaWithObjectSchema({
@@ -2166,7 +2166,7 @@ describe('Pack metadata Validation', () => {
           properties: {
             primary: {type: ValueType.String},
           },
-          descriptionProperty: 'primary',
+          snippetProperty: 'primary',
         });
         await validateJson(metadata);
       });

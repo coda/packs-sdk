@@ -896,7 +896,7 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
     titleProperty: propertySchema.optional(),
     linkProperty: propertySchema.optional(),
     subtitleProperties: z.array(propertySchema).optional(),
-    descriptionProperty: propertySchema.optional(),
+    snippetProperty: propertySchema.optional(),
     imageProperty: propertySchema.optional(),
   })
     .superRefine((data, context) => {
@@ -1007,13 +1007,12 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
           `must refer to a "ValueType.String" property with a "ValueHintType.ImageAttachment" or "ValueHintType.ImageReference" "codaType".`,
         );
       };
-      const validateDescriptionProperty = () => {
+      const validateSnippetProperty = () => {
         return validateProperty(
-          'descriptionProperty',
-          descriptionPropertySchema =>
-            descriptionPropertySchema.type === ValueType.String ||
-            (descriptionPropertySchema.type === ValueType.Array &&
-              descriptionPropertySchema.items.type === ValueType.String),
+          'snippetProperty',
+          snippetPropertySchema =>
+            snippetPropertySchema.type === ValueType.String ||
+            (snippetPropertySchema.type === ValueType.Array && snippetPropertySchema.items.type === ValueType.String),
           `must refer to a "ValueType.String" property or array of strings.`,
         );
       };
@@ -1029,7 +1028,7 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
       validateTitleProperty();
       validateLinkProperty();
       validateImageProperty();
-      validateDescriptionProperty();
+      validateSnippetProperty();
       (schema.subtitleProperties || []).forEach((f, i) => {
         if (typeof f === 'string') {
           if (!(f in schema.properties)) {
