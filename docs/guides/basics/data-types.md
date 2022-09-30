@@ -261,7 +261,7 @@ When used with a number value, the number should contain the number of seconds s
 
 ### Durations {: #durations}
 
-The [`Duration`][Duration] value hint represents an amount of time, rather than a specific time. It can only be applied to `String` values, and those strings must match one of a few formats:
+The [`Duration`][Duration] value hint represents an amount of time, rather than a specific time. It can be applied to `Number` or `String` values. For numbers, the value represents the number of seconds. For strings, the value must match one of a few formats:
 
 | Example                     | Result              | Notes                           |
 | --------------------------- | ------------------- | ------------------------------- |
@@ -274,7 +274,7 @@ The [`Duration`][Duration] value hint represents an amount of time, rather than 
 | 0.25 days, 1 min, 15 secs   | 6 hrs 1 min 15 secs | Fractional amounts allowed.     |
 | 72000 minutes               | 50 days             | Don't use thousands separators. |
 
-Any duration value your Pack returns will automatically be converted into its most user-friendly form by Coda. For example, `3600 seconds` will be shown to the user as **1 hr**.
+ Any duration value your Pack returns will automatically be converted into its most user-friendly form by Coda. For example, `3600 seconds` will be shown to the user as **1 hr**.
 
 ```ts
 pack.addFormula({
@@ -396,37 +396,41 @@ The [`Reference`][Reference] value hint can be used to reference a row in a sync
     This value hint currently only work correctly within a sync table. When used outside of a sync table it will render as a normal object chip, as if no value hint was applied.
 
 
-## Corresponding column types
+## Corresponding column types {:#column-types}
 
 The columns of a Coda table are strongly typed, and the data types in the Pack SDK roughly correspond to those same types. The table below indicates the value type and value hint that corresponds to a each column type.
 
-| Column type   | Supported | Value type           | Value hint        |
-| ------------- | --------- | -------------------- | ----------------- |
-| Text          | ✅ Yes    | `String`             |                   |
-| Link          | ✅ Yes    | `String`             | `Url`             |
-| Canvas        | ❌ No     |                      |                   |
-| Select list   | ❌ No     |                      |                   |
-| Number        | ✅ Yes    | `Number`             |                   |
-| Percent       | ✅ Yes    | `Number`             | `Percent`         |
-| Currency      | ✅ Yes    | `Number`             | `Currency`        |
-| Slider        | ✅ Yes    | `Number`             | `Slider`          |
-| Scale         | ✅ Yes    | `Number`             | `Scale`           |
-| Date          | ✅ Yes    | `String` or `Number` | `Date`            |
-| Time          | ✅ Yes    | `String` or `Number` | `Time`            |
-| Date and time | ✅ Yes    | `String` or `Number` | `DateTime`        |
-| Duration      | ✅ Yes    | `String`             | `Duration`        |
-| Checkbox      | ✅ Yes    | `Boolean`            |                   |
-| People        | ✅ Yes    | `Object`             | `Person`          |
-| Email         | ❌ No     |                      |                   |
-| Reaction      | ❌ No     |                      |                   |
-| Button        | ❌ No[^1] |                      |                   |
-| Image         | ✅ Yes    | `String`             | `ImageAttachment` |
-| Image URL     | ✅ Yes    | `String`             | `ImageReference`  |
-| File          | ✅ Yes    | `String`             | `Attachment`      |
-| Lookup        | ✅ Yes    | `Object`             | `Reference`       |
+| Column type   | Supported | Value type               | Value hint        | Options                                                                                       |
+| ------------- | --------- | ------------------------ | ----------------- | --------------------------------------------------------------------------------------------- |
+| Text          | ✅ Yes     | `String`                 |                   |                                                                                               |
+| Link          | ✅ Yes     | `String`                 | `Url`             | [`LinkSchema`][LinkSchema]                                                                    |
+| Embed[^1]         | ✅ Yes     | `String`                 | `Embed`           | [`StringEmbedSchema`][StringEmbedSchema]                                                      |
+| Canvas        | ❌ No      |                          |                   |                                                                                               |
+| Select list   | ❌ No      |                          |                   |                                                                                               |
+| Number        | ✅ Yes     | `Number`                 |                   | [`NumericSchema`][NumericSchema]                                                              |
+| Percent       | ✅ Yes     | `Number`                 | `Percent`         | [`NumericSchema`][NumericSchema]                                                              |
+| Currency      | ✅ Yes     | `Number`                 | `Currency`        | [`CurrencySchema`][CurrencySchema]                                                            |
+| Slider        | ✅ Yes[^2]     | `Number`                 | `Slider`          | [`SliderSchema`][SliderSchema]                                                                |
+| Progress      | ✅ Yes[^2]     | `Number`                 | `ProgressBar`     | [`ProgressBarSchema`][ProgressBarSchema]                                                      |
+| Scale         | ✅ Yes[^2]     | `Number`                 | `Scale`           | [`Scalechema`][SliderSchema]                                                                  |
+| Date          | ✅ Yes     | `String` or<br>`Number`  | `Date`            | [`StringDateSchema`][StringDateSchema] or<br>[`NumericDateSchema`][NumericDateSchema]         |
+| Time          | ✅ Yes     | `String` or<br> `Number` | `Time`            | [`StringTimeSchema`][StringDateSchema] or<br>[`NumericTimeSchema`][NumericDateSchema]         |
+| Date and time | ✅ Yes     | `String` or<br> `Number` | `DateTime`        | [`StringDateTimeSchema`][StringDateSchema] or<br>[`NumericDateTimeSchema`][NumericDateSchema] |
+| Duration      | ✅ Yes     | `String` or<br>`Number`  | `Duration`        | [`DurationSchema`][DurationSchema] or<br>[`NumericDurationSchema`][NumericDurationSchema]     |
+| Checkbox      | ✅ Yes[^2]     | `Boolean`                |                   |                                                                                               |
+| Toggle        | ✅ Yes[^2]     | `Boolean`                | `Toggle`          |                                                                                               |
+| People        | ✅ Yes     | `Object`                 | `Person`          |                                                                                               |
+| Email         | ✅ Yes     | `String`                 | `Email`           | [`EmailSchema`][EmailSchema]                                                                  |
+| Reaction      | ❌ No      |                          |                   |                                                                                               |
+| Button        | ❌ No[^3]  |                          |                   |                                                                                               |
+| Image         | ✅ Yes     | `String`                 | `ImageAttachment` | [`ImageSchema`][ImageSchema]                                                                  |
+| Image URL     | ✅ Yes     | `String`                 | `ImageReference`  | [`ImageSchema`][ImageSchema]                                                                  |
+| File          | ✅ Yes     | `String`                 | `Attachment`      |                                                                                               |
+| Lookup        | ✅ Yes     | `Object`                 | `Reference`       |                                                                                               |
 
-
-[^1]: While a Pack can't return a button directly, it can provide [actions][actions] that a user can use to power their buttons.
+[^1]: Embed isn't a column type in Coda, but it can be used in a table or on the canvas to embed content.
+[^2]: Control column types will only render correctly in a sync table, and will not be interactive.
+[^3]: While a Pack can't return a button directly, it can provide [actions][actions] that a user can use to power their buttons.
 
 
 ## Formatting options
@@ -461,24 +465,7 @@ Some value types and hints support additional formatting options. For example, `
     });
     ```
 
-The full set of formatting options for a given value type and hint can be found in the corresponding schema definition.
-
-| Value type | Value hint | Formatting options                               |
-| ---------- | ---------- | ------------------------------------------------ |
-| `Number`   |            | [`NumericSchema`][NumericSchema]                 |
-| `Number`   | `Percent`  | [`NumericSchema`][NumericSchema]                 |
-| `Number`   | `Currency` | [`CurrencySchema`][CurrencySchema]               |
-| `Number`   | `Slider`   | [`SliderSchema`][SliderSchema]                   |
-| `Number`   | `Scale`    | [`ScaleSchema`][ScaleSchema]                     |
-| `Number`   | `Date`     | [`NumericDateSchema`][NumericDateSchema]         |
-| `Number`   | `Time`     | [`NumericTimeSchema`][NumericTimeSchema]         |
-| `Number`   | `DateTime` | [`NumericDateTimeSchema`][NumericDateTimeSchema] |
-| `String`   | `Date`     | [`StringDateSchema`][StringDateSchema]           |
-| `String`   | `Time`     | [`StringTimeSchema`][StringTimeSchema]           |
-| `String`   | `DateTime` | [`StringDateTimeSchema`][StringDateTimeSchema]   |
-| `String`   | `Duration` | [`DurationSchema`][DurationSchema]               |
-| `String`   | `Embed`    | [`StringEmbedSchema`][StringEmbedSchema]         |
-
+The full set of formatting options for a given value type and hint can be found in the **Options** column of the [table above](#column-types).
 
 
 [samples]: ../../samples/topic/data-type.md
@@ -531,6 +518,11 @@ The full set of formatting options for a given value type and hint can be found 
 [StringDateTimeSchema]: ../../reference/sdk/interfaces/core.StringDateTimeSchema.md
 [DurationSchema]: ../../reference/sdk/interfaces/core.DurationSchema.md
 [StringEmbedSchema]: ../../reference/sdk/interfaces/core.StringEmbedSchema.md
+[ImageSchema]: ../../reference/sdk/interfaces/core.ImageSchema.md
+[NumericDurationSchema]: ../../reference/sdk/interfaces/core.NumericDurationSchema.md
+[LinkSchema]: ../../reference/sdk/interfaces/core.LinkSchema.md
+[ProgressBarSchema]: ../../reference/sdk/interfaces/core.ProgressBarSchema.md
+[EmailSchema]: ../../reference/sdk/interfaces/core.EmailSchema.md
 [formula_list]: https://coda.io/formulas#List
 [embeds]: ../advanced/embeds.md
 [timezones]: ../advanced/timezones.md
