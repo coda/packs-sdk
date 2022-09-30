@@ -19,7 +19,7 @@ interface ReleaseArgs {
   manifestFile: string;
   packVersion?: string;
   codaApiEndpoint: string;
-  notes?: string;
+  notes: string;
 }
 
 export async function handleRelease({

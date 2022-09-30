@@ -5,6 +5,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ## Unreleased
 
 - Added helper method `getEffectivePropertyKeysFromSchema`. This method can be used in the sync table formulas to retrieve the user manually selected property keys by `getEffectivePropertyKeysFromSchema(context.sync.schema)`.
+- Now `--notes` is a required option in `coda release` command.
 
 ## [1.1.0] - 2022-09-27
 

@@ -225,6 +225,7 @@ if (require.main === module) {
           string: true,
           alias: 'n',
           describe: 'Notes about the contents of this Pack release',
+          demandOption: 'Please provide release notes, which will be shown to Pack users to understand the release.',
         },
         codaApiEndpoint: {
           string: true,
