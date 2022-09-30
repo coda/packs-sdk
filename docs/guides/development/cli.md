@@ -26,7 +26,7 @@ The easiest way to get started it to follow the tutorial [Get started on your lo
 
 The CLI requires that you have `node` and `npm` installed. We also recommend developing with TypeScript, in which case, make sure that you have TypeScript and `ts-node` installed.
 
-The CLI makes use of the NPM package `isolated-vm` to provide emulation of the Packs execution environment. This package has its [own requirements][isolated_vm_requirements] that you may also need to install.
+The CLI makes use of the NPM package `isolated-vm` to provide emulation of the Packs execution environment. This package has its [own requirements][isolated_vm_requirements] that you may also need to install. If the these requirements aren't met the SDK will still install, but `coda execute` will run Packs directly in Node instead of the emulated runtime.
 
 
 ### Installing {: #install}

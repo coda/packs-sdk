@@ -25,8 +25,6 @@ Make sure you have `node` and `npm` available on your machine. These two tools o
 
 The instructions below assume some familiarity with the terminal / command prompt. If you aren't used to using this interface consult the help material for your operating system.
 
-Lastly, one of the libraries used by the SDK requires that your machine has some additional developer tooling installed. If you have done other software development you may already have them on your machine, but if not please consult their [help documentation][isolated_vm_requirements] for the packages that need to be installed.
-
 
 ## Set up the Pack structure
 
