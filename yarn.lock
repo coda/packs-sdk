@@ -5944,10 +5944,10 @@ remark-cli@^11.0.0:
     remark "^14.0.0"
     unified-args "^10.0.0"
 
-remark-lint-no-undefined-references@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/remark-lint-no-undefined-references/-/remark-lint-no-undefined-references-4.1.1.tgz#66c8049da8a72c5dc758562b85bb3019bd396fc1"
-  integrity sha512-J20rKfTGflLiTI3T5JlLZSmINk6aDGmZi1y70lpU69LDfAyHAKgDK6sSW9XDeFmCPPdm8Ybxe5Gf2a70k+GcVQ==
+remark-lint-no-undefined-references@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/remark-lint-no-undefined-references/-/remark-lint-no-undefined-references-4.2.0.tgz#11a3e579b9107493d7781973dde8517793f52e0c"
+  integrity sha512-EDV9B1ZXMLcKVtMQFvfvtbag4AkLcu8aUNGXoez5GJLcCAQ8Q+sG74yOtIW4xNVlVubEjl0vdkFhaKYLxvn2Sw==
   dependencies:
     "@types/mdast" "^3.0.0"
     micromark-util-normalize-identifier "^1.0.0"
