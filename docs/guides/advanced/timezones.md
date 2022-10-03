@@ -17,7 +17,7 @@ Any date or time values passed into a Pack are shifted from the doc's timezone t
 !!! info
     Timezone shifting of parameters happens even for date-only (ex: `11/12/1955`) and time-only (`10:04 PM`) values. As per the [Parameters guide][parameters_date], these values are passed to Packs as full `Date` objects.
 
-Likewise when returning a date or time value Coda will shift the value back. When the value represents an exact moment in time (either a number of seconds since the epoch or a full date and time string with a timezone identifier) it will be shifted to that equivalent moment in the document's timezone. However, if the Pack returns a string which represents a relative date or time (it's just a date or time, or has to timezone identifier) it will be assumed that it's already in the timezone of the document and won't be shifted.
+Likewise when returning a date or time value Coda will shift the value back. When the value represents an exact moment in time (either a number of seconds since the epoch or a full date and time string with a timezone identifier) it will be shifted to that equivalent moment in the document's timezone. However, if the Pack returns a string which represents a relative date or time (it's just a date or time, or has no timezone identifier) it will be assumed that it's already in the timezone of the document and won't be shifted.
 
 
 ## Working with timezones {: #working}
