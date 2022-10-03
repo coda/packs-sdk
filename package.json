@@ -63,7 +63,7 @@
     "@types/chai": "^4.3.3",
     "@types/clone": "^2.1.1",
     "@types/exorcist": "^2.0.0",
-    "@types/express": "^4.17.13",
+    "@types/express": "^4.17.14",
     "@types/fs-extra": "^9.0.13",
     "@types/glob": "^8.0.0",
     "@types/js-yaml": "^4.0.5",
