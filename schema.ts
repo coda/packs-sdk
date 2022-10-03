@@ -844,7 +844,7 @@ export interface Identity extends IdentityDefinition {
  * This is useful for specifying a label for a property reference that uses a json path, where the
  * label of the underlying property might not be descriptive enough at the top-level object.
  */
-export interface PropertyIdentifierDetails {
+interface PropertyIdentifierDetails {
   label: string;
   property: string;
 }

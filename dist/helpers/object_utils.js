@@ -33,7 +33,7 @@ function deepCopy(obj) {
 }
 exports.deepCopy = deepCopy;
 /**
- * Returns whethere the value is a Promise.
+ * Returns whether the value is a Promise.
  */
 function isPromise(obj) {
     return obj && typeof obj === 'object' && 'then' in obj;

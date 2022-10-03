@@ -2017,6 +2017,17 @@ describe('Pack metadata Validation', () => {
             titleProperty: 'badProperty',
           }),
         );
+        // Pathing does not work for a property with invalid characters.
+        await validateJsonAndAssertFails(
+          metadataForFormulaWithObjectSchema({
+            ...baseMetadata,
+            properties: {
+              ...baseMetadata.properties,
+              'What[] is. your name?': {type: ValueType.Object, properties: {name: {type: ValueType.String}}},
+            },
+            titleProperty: 'What[] is. your name?.name',
+          }),
+        );
 
         // Valid paths
         await validateJson(
@@ -2025,15 +2036,15 @@ describe('Pack metadata Validation', () => {
             titleProperty: 'nestedObject.array[0].name',
           }),
         );
-        // works for initial property with periods
+        // works for initial property with periods / brackets
         await validateJson(
           metadataForFormulaWithObjectSchema({
             ...baseMetadata,
             properties: {
               ...baseMetadata.properties,
-              'What is your name.?': {type: ValueType.Object, properties: {name: {type: ValueType.String}}},
+              'What[] is. your name?': {type: ValueType.Object, properties: {name: {type: ValueType.String}}},
             },
-            titleProperty: 'What is your name.?',
+            titleProperty: 'What[] is. your name?',
           }),
         );
         await validateJson(
