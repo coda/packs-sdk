@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_2 = require("./helpers/ensure");
@@ -531,14 +531,27 @@ function checkSchemaPropertyIsRequired(field, schema, referencedByPropertyName) 
     (0, ensure_1.assertCondition)(properties[field].required, `Field "${field}" must be marked as required in schema with codaType "${codaType}".`);
 }
 /**
- * Normalizes a schema property key into PascalCase. This interprets "."s as accessing object properties
- * and "[]" as accessing array items.
+ * Normalizes a schema key into PascalCase.
  */
 function normalizeSchemaKey(key) {
+    // Colons cause problems in our formula handling.
+    return (0, pascalcase_1.default)(key).replace(/:/g, '_');
+}
+exports.normalizeSchemaKey = normalizeSchemaKey;
+/**
+ * Normalizes a schema property key path. This interprets "."s as accessing object properties
+ * and "[]" as accessing array items. Uses normalizeSchemaKey to normalize each part in-between.
+ *
+ * This is used for object schema properties that support path projection.
+ */
+function normalizeSchemaKeyPath(key, normalizedProperties) {
+    // Try an exact match on the properties first.
+    if (normalizedProperties.hasOwnProperty(normalizeSchemaKey(key))) {
+        return normalizeSchemaKey(key);
+    }
     // Try splitting by . to handle json paths.
-    return (key
+    return key
         .split('.')
-        // Colons cause problems in our formula handling.
         .map(val => {
         let partToNormalize = val;
         let partToIgnoreNormalization = '';
@@ -547,21 +560,21 @@ function normalizeSchemaKey(key) {
             partToNormalize = val.substring(0, val.indexOf('['));
             partToIgnoreNormalization = val.substring(val.indexOf('['));
         }
-        return ((0, pascalcase_1.default)(partToNormalize) + partToIgnoreNormalization).replace(/:/g, '_');
+        return normalizeSchemaKey(partToNormalize) + partToIgnoreNormalization;
     })
-        .join('.'));
+        .join('.');
 }
-exports.normalizeSchemaKey = normalizeSchemaKey;
+exports.normalizeSchemaKeyPath = normalizeSchemaKeyPath;
 /**
  * Normalizes a schema PropertyIdentifier by converting it to PascalCase.
  */
-function normalizeSchemaPropertyIdentifier(key) {
+function normalizeSchemaPropertyIdentifier(key, normalizedProperties) {
     if (typeof key === 'string') {
-        return normalizeSchemaKey(key);
+        return normalizeSchemaKeyPath(key, normalizedProperties);
     }
     const { label, property: value } = key;
     return {
-        property: normalizeSchemaKey(value),
+        property: normalizeSchemaKeyPath(value, normalizedProperties),
         label: normalizeSchemaKey(label),
     };
 }
@@ -615,11 +628,13 @@ function normalizeSchema(schema) {
             description: schema.description,
             attribution: schema.attribution,
             includeUnknownProperties: schema.includeUnknownProperties,
-            titleProperty: titleProperty ? normalizeSchemaPropertyIdentifier(titleProperty) : undefined,
-            subtitleProperties: subtitleProperties ? subtitleProperties.map(normalizeSchemaPropertyIdentifier) : undefined,
-            imageProperty: imageProperty ? normalizeSchemaPropertyIdentifier(imageProperty) : undefined,
-            snippetProperty: snippetProperty ? normalizeSchemaPropertyIdentifier(snippetProperty) : undefined,
-            linkProperty: linkProperty ? normalizeSchemaPropertyIdentifier(linkProperty) : undefined,
+            titleProperty: titleProperty ? normalizeSchemaPropertyIdentifier(titleProperty, normalized) : undefined,
+            subtitleProperties: subtitleProperties
+                ? subtitleProperties.map(subProp => normalizeSchemaPropertyIdentifier(subProp, normalized))
+                : undefined,
+            imageProperty: imageProperty ? normalizeSchemaPropertyIdentifier(imageProperty, normalized) : undefined,
+            snippetProperty: snippetProperty ? normalizeSchemaPropertyIdentifier(snippetProperty, normalized) : undefined,
+            linkProperty: linkProperty ? normalizeSchemaPropertyIdentifier(linkProperty, normalized) : undefined,
         };
         return normalizedSchema;
     }

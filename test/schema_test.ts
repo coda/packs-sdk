@@ -1,5 +1,6 @@
 import {ValueHintType} from '../index';
 import {ValueType} from '../index';
+import {deepCopy} from '../helpers/object_utils';
 import {makeObjectSchema} from '../index';
 import {makeSchema} from '../index';
 import * as schema from '../schema';
@@ -206,6 +207,49 @@ describe('Schema', () => {
       assert.deepEqual((normalized as any).identity, {
         name: 'hello',
       });
+    });
+
+    it('works', () => {
+      const anotherSchema = schema.makeObjectSchema({
+        type: schema.ValueType.Object,
+        primary: 'boo',
+        properties: {
+          boo: {type: schema.ValueType.String},
+        },
+      });
+      const objectSchema = schema.makeObjectSchema({
+        type: schema.ValueType.Object,
+        id: 'name',
+        primary: 'name',
+        properties: {
+          name: {type: schema.ValueType.String},
+          another: anotherSchema,
+          "What's your name?": {type: schema.ValueType.String},
+          'Enter the date in MM.DD.YYYY format': {type: schema.ValueType.String},
+          'fruit [choose multiple]': {type: schema.ValueType.String},
+        },
+        titleProperty: 'Enter the date in MM.DD.YYYY format',
+        snippetProperty: 'another.boo',
+      });
+      const normalized = schema.normalizeSchema(objectSchema);
+      // Deep copy to remove undefined values
+      assert.deepEqual(deepCopy((normalized as schema.GenericObjectSchema).properties), {
+        Name: {type: schema.ValueType.String, fromKey: 'name'},
+        WhatSYourName: {type: schema.ValueType.String, fromKey: "What's your name?"},
+        EnterTheDateInMMDDYYYYFormat: {
+          type: schema.ValueType.String,
+          fromKey: 'Enter the date in MM.DD.YYYY format',
+        },
+        FruitChooseMultiple: {type: schema.ValueType.String, fromKey: 'fruit [choose multiple]'},
+        Another: {
+          primary: 'Boo',
+          type: schema.ValueType.Object,
+          fromKey: 'another',
+          properties: {Boo: {type: schema.ValueType.String, fromKey: 'boo'}},
+        },
+      });
+      assert.deepEqual((normalized as schema.GenericObjectSchema).titleProperty, 'EnterTheDateInMMDDYYYYFormat');
+      assert.deepEqual((normalized as schema.GenericObjectSchema).snippetProperty, 'Another.Boo');
     });
   });
 });

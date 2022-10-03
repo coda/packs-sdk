@@ -1092,10 +1092,16 @@ export declare function makeObjectSchema<K extends string, L extends string, T e
     type: ValueType.Object;
 };
 /**
- * Normalizes a schema property key into PascalCase. This interprets "."s as accessing object properties
- * and "[]" as accessing array items.
+ * Normalizes a schema key into PascalCase.
  */
 export declare function normalizeSchemaKey(key: string): string;
+/**
+ * Normalizes a schema property key path. This interprets "."s as accessing object properties
+ * and "[]" as accessing array items. Uses normalizeSchemaKey to normalize each part in-between.
+ *
+ * This is used for object schema properties that support path projection.
+ */
+export declare function normalizeSchemaKeyPath(key: string, normalizedProperties: ObjectSchemaProperties): string;
 /**
  * Attempts to transform a property value (which may be a json-path string or a normal object schema property) into
  * a path to access the relevant schema. Specifically this handles the case of
