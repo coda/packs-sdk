@@ -431,7 +431,7 @@
   dependencies:
     tslib "^2.3.1"
 
-"@aws-sdk/signature-v4@3.178.0":
+"@aws-sdk/signature-v4@3.178.0", "@aws-sdk/signature-v4@^3.178.0":
   version "3.178.0"
   resolved "https://registry.yarnpkg.com/@aws-sdk/signature-v4/-/signature-v4-3.178.0.tgz#02f874021725c328a7b044cd71af118fba7d6b11"
   integrity sha512-8oOx6o0uOqlCDPM0dszfR1WHqd0E1VuFqez8iNItp0DhmhaCuanEwKYYA6HOkVu/MA6CsG6zDIJaFr5ODU2NvQ==
@@ -443,18 +443,6 @@
     "@aws-sdk/util-uri-escape" "3.170.0"
     tslib "^2.3.1"
 
-"@aws-sdk/signature-v4@^3.171.0":
-  version "3.171.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/signature-v4/-/signature-v4-3.171.0.tgz#ac37c64abd93749e75655f6c832fa9070c7aad08"
-  integrity sha512-tun1PIN/zW2y3h6uYuGhDLaMQmT52KK3KZyq+UM2XLYPz8j7G2TEFyJVn5Wk+QbHirCmOh8dCkaa5yFO6vfEFw==
-  dependencies:
-    "@aws-sdk/is-array-buffer" "3.170.0"
-    "@aws-sdk/types" "3.171.0"
-    "@aws-sdk/util-hex-encoding" "3.170.0"
-    "@aws-sdk/util-middleware" "3.171.0"
-    "@aws-sdk/util-uri-escape" "3.170.0"
-    tslib "^2.3.1"
-
 "@aws-sdk/smithy-client@3.180.0":
   version "3.180.0"
   resolved "https://registry.yarnpkg.com/@aws-sdk/smithy-client/-/smithy-client-3.180.0.tgz#03953e5d4f0dc3607d422021550126f5a32c2423"
@@ -463,11 +451,6 @@
     "@aws-sdk/middleware-stack" "3.178.0"
     "@aws-sdk/types" "3.178.0"
     tslib "^2.3.1"
-
-"@aws-sdk/types@3.171.0":
-  version "3.171.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/types/-/types-3.171.0.tgz#2463d655636cbcf9cf5bb01d02d8217a5975948a"
-  integrity sha512-Yv5Wn/pbjMBST2jPHWPczmVbOLq8yFQVRyy1zGfsg1ETn25nGPvGBwqOkWcuz229KAcdUvFdRV9xaQCN3Lbo+Q==
 
 "@aws-sdk/types@3.178.0", "@aws-sdk/types@^3.1.0", "@aws-sdk/types@^3.110.0":
   version "3.178.0"
@@ -562,13 +545,6 @@
   integrity sha512-NvDCfOhLLVHp27oGUUs8EVirhz91aX5gdxGS7J/sh5PF0cNN8rwaR1vSLR7BxPmJHMO7NH7i9EwiELfLfYcq6g==
   dependencies:
     tslib "^2.3.0"
-
-"@aws-sdk/util-middleware@3.171.0":
-  version "3.171.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/util-middleware/-/util-middleware-3.171.0.tgz#1627cf129c79131b77d17738d970926322ffa8fd"
-  integrity sha512-43aXJ40z7BIkh6usI8qQlQ6JUj16ecmwsRmUi+SJf3+bHPnkENdjpKCx4i15UWii7fr5QJAivZykuvBXl/sicQ==
-  dependencies:
-    tslib "^2.3.1"
 
 "@aws-sdk/util-middleware@3.178.0":
   version "3.178.0"
