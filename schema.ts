@@ -844,7 +844,7 @@ export interface Identity extends IdentityDefinition {
  * This is useful for specifying a label for a property reference that uses a json path, where the
  * label of the underlying property might not be descriptive enough at the top-level object.
  */
-interface PropertyIdentifierDetails {
+export interface PropertyIdentifierDetails {
   label: string;
   property: string;
 }
@@ -857,7 +857,7 @@ export type PropertyIdentifier<K extends string = string> = K | string | Propert
 
 /**
  * The {@link ObjectSchemaDefinition} properties that reference keys in the `properties` object. These should all be
- * PropertyIdentifier types.
+ * {@link PropertyIdentifier} types.
  */
 export type ObjectSchemaPathProperties = Pick<
   GenericObjectSchema,

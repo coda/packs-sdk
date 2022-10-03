@@ -1,11 +1,11 @@
 ---
-nav: "PropertyType"
+nav: "PropertyIdentifier"
 ---
-# Type alias: PropertyType<K\>
+# Type alias: PropertyIdentifier<K\>
 
-[core](../modules/core.md).PropertyType
+[core](../modules/core.md).PropertyIdentifier
 
-Ƭ **PropertyType**<`K`\>: `K` \| `string` \| `PropertyIdentifierDetails`
+Ƭ **PropertyIdentifier**<`K`\>: `K` \| `string` \| `PropertyIdentifierDetails`
 
 An identifier for an object schema property that comprises of either an exact property match with the top-level
 `properties or a json path (https://github.com/json-path/JsonPath) to a nested property.

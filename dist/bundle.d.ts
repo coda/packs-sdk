@@ -773,7 +773,11 @@ export interface PropertyIdentifierDetails {
 	label: string;
 	property: string;
 }
-declare type PropertyIdentifier<K extends string = string> = K | string | PropertyIdentifierDetails;
+/**
+ * An identifier for an object schema property that comprises of either an exact property match with the top-level
+ * `properties or a json path (https://github.com/json-path/JsonPath) to a nested property.
+ */
+export declare type PropertyIdentifier<K extends string = string> = K | string | PropertyIdentifierDetails;
 /**
  * A schema definition for an object value (a value with key-value pairs).
  */
@@ -4017,7 +4021,6 @@ export declare function ensureExists<T>(value: T | null | undefined, message?: s
 export declare function assertCondition(condition: any, message?: string): asserts condition;
 
 export {
-	PropertyIdentifier as PropertyType,
 	join as joinUrl,
 };
 
