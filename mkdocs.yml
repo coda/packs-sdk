@@ -11,6 +11,7 @@ extra_css:
   - assets/custom.css
 
 markdown_extensions:
+  - abbr
   - admonition
   - attr_list
   - def_list
@@ -30,6 +31,8 @@ markdown_extensions:
         - docs
         - .
       check_paths: true
+      auto_append:
+        - _abbreviations.md
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid

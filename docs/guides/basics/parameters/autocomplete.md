@@ -109,7 +109,7 @@ coda.makeParameter({
 }),
 ```
 
-??? "Object destructuring"
+??? info "Object destructuring"
     In the code above we used [object destructuring][destructuring_assignment] to pull values out of the parameters object and assign them to variables. You could alternatively do that within the body of the `autocomplete` function.
 
     ```ts
@@ -119,6 +119,13 @@ coda.makeParameter({
     },
     ```
 
+!!! warning "Manual refresh required for `StringArray` parameters"
+    When using `StringArray` parameters in the structured builders, the autocomplete values are only fetched once when the parameter UI is loaded. The autocomplete options can be manually refreshed by the user with a menu item, but this limitation doesn't make them a great fit for use cases where the options depend on the values of previous parameters. <!-- o/bug/25402 -->
+    
+    <img src="../../../../images/autocomplete_list_refresh.png" srcset="../../../../images/autocomplete_list_refresh_2x.png 2x" class="screenshot" alt="Autocomplete of list parameters requires manual refresh">
+
+!!! bug "Previous vararg values not available"
+    When using [vararg parameters][parameters_vararg] in the structured builders, the autocomplete function will not be able to access the values of previous vararg parameters. This means it isn't possible to build a set of key/value vararg parameters where the possible values depend on the key selected. <!-- o/bug/25373 -->
 
 
 ## Validation
@@ -152,3 +159,4 @@ pack.addFormula({
 [destructuring_assignment]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
 [SimpleAutocompleteOption]: ../../../reference/sdk/interfaces/core.SimpleAutocompleteOption.md
 [autocompleteSearchObjects]: ../../../reference/sdk/functions/core.autocompleteSearchObjects.md
+[parameters_vararg]: index.md#vararg
