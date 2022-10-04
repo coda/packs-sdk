@@ -736,7 +736,13 @@ export interface Identity extends IdentityDefinition {
  * label of the underlying property might not be descriptive enough at the top-level object.
  */
 export interface PropertyIdentifierDetails {
-    label: string;
+    /**
+     * An optional label for the property. This will be used in locations where the label appears with the property.
+     */
+    label?: string;
+    /**
+     * The value of the property to reference. Can be either an exact property name or a json path.
+     */
     property: string;
 }
 /**

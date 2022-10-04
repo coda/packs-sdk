@@ -18,4 +18,4 @@ An identifier for an object schema property that is comprised of either an exact
 
 #### Defined in
 
-[schema.ts:856](https://github.com/coda/packs-sdk/blob/main/schema.ts#L856)
+[schema.ts:862](https://github.com/coda/packs-sdk/blob/main/schema.ts#L862)

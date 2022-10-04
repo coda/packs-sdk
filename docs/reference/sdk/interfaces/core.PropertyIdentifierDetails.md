@@ -13,11 +13,13 @@ label of the underlying property might not be descriptive enough at the top-leve
 
 ### label
 
-• **label**: `string`
+• `Optional` **label**: `string`
+
+An optional label for the property. This will be used in locations where the label appears with the property.
 
 #### Defined in
 
-[schema.ts:848](https://github.com/coda/packs-sdk/blob/main/schema.ts#L848)
+[schema.ts:851](https://github.com/coda/packs-sdk/blob/main/schema.ts#L851)
 
 ___
 
@@ -25,6 +27,8 @@ ___
 
 • **property**: `string`
 
+The value of the property to reference. Can be either an exact property name or a json path.
+
 #### Defined in
 
-[schema.ts:849](https://github.com/coda/packs-sdk/blob/main/schema.ts#L849)
+[schema.ts:855](https://github.com/coda/packs-sdk/blob/main/schema.ts#L855)
