@@ -315,7 +315,7 @@ There are some important differences between vararg parameters and standard para
 
 ??? info "Partially supported in actions builder or sync table settings"
     
-    While vararg parameters always work in the formula editor, they are only partially supported in the structured builder UIs. A single vararg parameter will be shown as if it was a single array parameter, and a pair of vararg parameters will be shown with a nice UI similar to that used by built-in actions. Three or more vararg parameters won’t show up in the structured builders at all, and the user will need to visit the formula editor to set their values. <!-- go/bug/20828 -->
+    While vararg parameters always work in the formula editor, they are only partially supported in the structured builders. A single vararg parameter will be shown as if it was a single array parameter, and a pair of vararg parameters will be shown with a nice UI similar to that used by built-in actions. Three or more vararg parameters won’t show up in the structured builders at all, and the user will need to visit the formula editor to set their values. <!-- go/bug/20828 -->
 
 ??? example "Example: Step diagram formula"
     ```ts
