@@ -42,6 +42,7 @@ import {makeStringParameter} from '../api';
 import {makeSyncTable} from '../api';
 import {makeSyncTableLegacy} from '../api';
 import {numberArray} from '../api_types';
+import {parseDescription} from '../api';
 import {validatePackVersionMetadata} from '../testing/upload_validation';
 import {validateSyncTableSchema} from '../testing/upload_validation';
 import {validateVariousAuthenticationMetadata} from '../testing/upload_validation';
@@ -96,7 +97,7 @@ describe('Pack metadata Validation', () => {
         makeStringFormula({
           extraneous: 'evil long string',
           name: 'formula',
-          description: '',
+          description: 'A',
           execute: () => '',
           parameters: [],
         } as StringFormulaDefLegacy<any>),
@@ -398,7 +399,7 @@ describe('Pack metadata Validation', () => {
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          message: `String must contain at most ${Limits.BuildingBlockDescription} character(s)`,
+          message: `Description must contain at most ${Limits.BuildingBlockDescription} characters`,
           path: 'formulas[0].description',
         },
       ]);
@@ -575,7 +576,10 @@ describe('Pack metadata Validation', () => {
         formulaNamespace: 'MyNamespace',
       });
       const err = await validateJsonAndAssertFails(metadata);
-      assert.deepEqual(err.validationErrors, [{message: 'Required', path: 'formulas[0].description'}]);
+      assert.deepEqual(err.validationErrors, [
+        {message: 'Array must contain at least 1 element(s)', path: 'formulas[0].description'},
+        {message: 'Description must contain at least 1 character.', path: 'formulas[0].description'},
+      ]);
     });
 
     it('rejects if number of formulas goes over limit', async () => {
@@ -610,6 +614,48 @@ describe('Pack metadata Validation', () => {
       ]);
     });
 
+    describe('descriptions', () => {
+      it('fails with string descriptions on newer SDK versions', async () => {
+        const formula = makeFormula({
+          resultType: ValueType.Number,
+          name: 'MyFormula',
+          description: 'My description',
+          examples: [],
+          parameters: [makeStringParameter('myParam', 'param description')],
+          execute: () => 1,
+        });
+        formula.description = 'A description';
+        const metadata = createFakePackVersionMetadata({
+          formulas: [formula],
+          formulaNamespace: 'MyNamespace',
+        });
+        const err = await validateJsonAndAssertFails(metadata, '1.2.0');
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: `Value was not correctly passed as DescriptionToken[]`,
+            path: 'formulas[0].description',
+          },
+        ]);
+      });
+  
+      it('succeeds with string descriptions on older SDK versions', async () => {
+        const formula = makeFormula({
+          resultType: ValueType.Number,
+          name: 'MyFormula',
+          description: 'My description',
+          examples: [],
+          parameters: [makeStringParameter('myParam', 'param description')],
+          execute: () => 1,
+        });
+        formula.description = 'A description';
+        const metadata = createFakePackVersionMetadata({
+          formulas: [formula],
+          formulaNamespace: 'MyNamespace',
+        });
+        await validateJson(metadata, '1.0.0');
+      });  
+    });
+    
     describe('parameters', () => {
       function makeMetadataFromParams(params: ParamDefs) {
         const formula = makeNumericFormula({
@@ -641,7 +687,7 @@ describe('Pack metadata Validation', () => {
 
       it('invalid formula with spaces in parameter name', async () => {
         const metadata = makeMetadataFromParams([
-          makeParameter({type: ParameterType.String, name: 'my param', description: ''}),
+          makeParameter({type: ParameterType.String, name: 'my param', description: 'param description'}),
         ]);
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
@@ -654,7 +700,7 @@ describe('Pack metadata Validation', () => {
 
       it('invalid formula with object parameter', async () => {
         const metadata = makeMetadataFromParams([
-          {type: Type.object, name: 'myParam', description: 'param description'},
+          {type: Type.object, name: 'myParam', description: parseDescription('A')},
         ]);
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
@@ -667,7 +713,7 @@ describe('Pack metadata Validation', () => {
 
       it('invalid formula with object array parameter', async () => {
         const metadata = makeMetadataFromParams([
-          {type: {type: 'array', items: Type.object}, name: 'myParam', description: 'param description'},
+          {type: {type: 'array', items: Type.object}, name: 'myParam', description: parseDescription('A')},
         ]);
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
@@ -680,24 +726,24 @@ describe('Pack metadata Validation', () => {
 
       it('valid formula with only optional param', async () => {
         const metadata = makeMetadataFromParams([
-          makeParameter({type: ParameterType.String, name: 'p', description: '', optional: true}),
+          makeParameter({type: ParameterType.String, name: 'p', description: 'A', optional: true}),
         ]);
         await validateJson(metadata);
       });
 
       it('valid formula with required and optional params', async () => {
         const metadata = makeMetadataFromParams([
-          makeParameter({type: ParameterType.String, name: 'p1', description: ''}),
-          makeParameter({type: ParameterType.String, name: 'p2', description: '', optional: true}),
+          makeParameter({type: ParameterType.String, name: 'p1', description: 'A'}),
+          makeParameter({type: ParameterType.String, name: 'p2', description: 'B', optional: true}),
         ]);
         await validateJson(metadata);
       });
 
       it('invalid formula with required param after optional param', async () => {
         const metadata = makeMetadataFromParams([
-          makeParameter({type: ParameterType.String, name: 'p1', description: ''}),
-          makeParameter({type: ParameterType.String, name: 'p2', description: '', optional: true}),
-          makeParameter({type: ParameterType.String, name: 'p3', description: ''}),
+          makeParameter({type: ParameterType.String, name: 'p1', description: 'A'}),
+          makeParameter({type: ParameterType.String, name: 'p2', description: 'B', optional: true}),
+          makeParameter({type: ParameterType.String, name: 'p3', description: 'C'}),
         ]);
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
@@ -710,8 +756,8 @@ describe('Pack metadata Validation', () => {
 
       it('invalid formula with duplicate params', async () => {
         const metadata = makeMetadataFromParams([
-          makeParameter({type: ParameterType.String, name: 'p1', description: ''}),
-          makeParameter({type: ParameterType.String, name: 'p1', description: ''}),
+          makeParameter({type: ParameterType.String, name: 'p1', description: 'A'}),
+          makeParameter({type: ParameterType.String, name: 'p1', description: 'B'}),
         ]);
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
@@ -750,10 +796,61 @@ describe('Pack metadata Validation', () => {
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
           {
-            message: `String must contain at most ${Limits.BuildingBlockDescription} character(s)`,
+            message: `Description must contain at most ${Limits.BuildingBlockDescription} characters`,
             path: 'formulas[0].parameters[0].description',
           },
         ]);
+      });
+
+      describe('descriptions', () => {
+        it('fails on descriptions with empty link text', async () => {
+          const metadata = makeMetadataFromParams([
+            makeParameter({
+              type: ParameterType.StringArray,
+              name: 'a',
+              description: 'See this link [](https://coda.io)',
+            }),
+          ]);
+          const err = await validateJsonAndAssertFails(metadata, '1.2.0');
+          assert.deepEqual(err.validationErrors, [
+            {
+              message: `Array must contain at least 1 element(s)`,
+              path: 'formulas[0].parameters[0].description[1].content',
+            },
+          ]);
+        });
+        
+        it('fails with string descriptions on newer SDK versions', async () => {
+          let parameter = makeParameter({
+            type: ParameterType.StringArray,
+            name: 'a',
+            description: 'param description',
+          });
+          parameter = {...parameter, description: 'param description'};
+          const metadata = makeMetadataFromParams([
+            parameter,
+          ]);
+          const err = await validateJsonAndAssertFails(metadata, '1.2.0');
+          assert.deepEqual(err.validationErrors, [
+            {
+              message: `Value was not correctly passed as DescriptionToken[]`,
+              path: 'formulas[0].parameters[0].description',
+            },
+          ]);
+        });
+    
+        it('succeeds with string descriptions on older SDK versions', async () => {
+          let parameter = makeParameter({
+            type: ParameterType.StringArray,
+            name: 'a',
+            description: 'param description',
+          });
+          parameter = {...parameter, description: 'param description'};
+          const metadata = makeMetadataFromParams([
+            parameter,
+          ]);
+          await validateJson(metadata, '1.0.0');
+        });  
       });
     });
 
@@ -947,7 +1044,7 @@ describe('Pack metadata Validation', () => {
           }),
           getter: {
             name: 'SyncTable',
-            description: 'A simple sync table',
+            description: parseDescription('A simple sync table'),
             async execute([], _context) {
               return {result: []};
             },
@@ -1146,7 +1243,7 @@ describe('Pack metadata Validation', () => {
           }),
           getter: {
             name: 'SyncTable',
-            description: 'A simple sync table',
+            description: parseDescription('A simple sync table'),
             async execute() {
               return {result: []};
             },
@@ -1205,6 +1302,73 @@ describe('Pack metadata Validation', () => {
             path: 'syncTables[0].schema.properties.Foo',
           },
         ]);
+      });
+
+      describe('descriptions', () => {
+        it('fails with string descriptions on newer SDK versions', async () => {
+          const syncTable = makeSyncTable({
+            name: 'SyncTable',
+            identityName: 'SomeIdentity',
+            schema: makeObjectSchema({
+              type: ValueType.Object,
+              displayProperty: 'foo',
+              idProperty: 'foo',
+              properties: {
+                foo: {type: ValueType.String, required: true},
+              },
+            }),
+            formula: {
+              name: 'SyncTable',
+              description: 'A simple sync table',
+              async execute([], _context) {
+                return {result: []};
+              },
+              parameters: [],
+              examples: [],
+            },
+          });
+          syncTable.description = 'A sync table';
+  
+          const metadata = createFakePack({
+            syncTables: [syncTable],
+          });
+          const err = await validateJsonAndAssertFails(metadata, '1.2.0');
+          assert.deepEqual(err.validationErrors, [
+            {
+              message: `Value was not correctly passed as DescriptionToken[]`,
+              path: 'syncTable[0].description',
+            },
+          ]);
+        });
+    
+        it('succeeds with string descriptions on older SDK versions', async () => {
+          const syncTable = makeSyncTable({
+            name: 'SyncTable',
+            identityName: 'SomeIdentity',
+            schema: makeObjectSchema({
+              type: ValueType.Object,
+              displayProperty: 'foo',
+              idProperty: 'foo',
+              properties: {
+                foo: {type: ValueType.String, required: true},
+              },
+            }),
+            formula: {
+              name: 'SyncTable',
+              description: 'A simple sync table',
+              async execute([], _context) {
+                return {result: []};
+              },
+              parameters: [],
+              examples: [],
+            },
+          });
+          syncTable.description = 'A sync table';
+          const metadata = createFakePack({
+            syncTables: [syncTable],
+          });
+          await validateJson(metadata, '1.0.0');
+        });
       });
 
       it('sync table with various schemas', async () => {
@@ -1342,7 +1506,8 @@ describe('Pack metadata Validation', () => {
         const invalidFormulaErrors = await validateJsonAndAssertFails(metadata2);
         assert.deepEqual(invalidFormulaErrors.validationErrors, [
           {path: 'syncTables[0].getter.name', message: 'Required'},
-          {path: 'syncTables[0].getter.description', message: 'Required'},
+          {path: 'syncTables[0].getter.description', message: 'Array must contain at least 1 element(s)'},
+          {path: 'syncTables[0].getter.description', message: 'Description must contain at least 1 character.'},
           {path: 'syncTables[0].getter.parameters', message: 'Required'},
         ]);
       });
@@ -1796,7 +1961,7 @@ describe('Pack metadata Validation', () => {
 
         assert.deepEqual(err.validationErrors, [
           {
-            message: `String must contain at most ${Limits.BuildingBlockDescription} character(s)`,
+            message: `Description must contain at most ${Limits.BuildingBlockDescription} characters`,
             path: 'syncTables[0].description',
           },
         ]);
@@ -2502,7 +2667,7 @@ describe('Pack metadata Validation', () => {
           name: 'MyFormula',
           description: 'My description',
           examples: [],
-          parameters: [makeStringParameter('p1', ''), makeStringParameter('p2', '')],
+          parameters: [makeStringParameter('p1', 'A'), makeStringParameter('p2', 'B')],
           execute: () => '',
         });
         const metadata = createFakePackVersionMetadata({
@@ -2774,8 +2939,8 @@ describe('Pack metadata Validation', () => {
       const formula = makeFormula({
         resultType: ValueType.String,
         name: 'Test',
-        description: '',
-        parameters: [makeParameter({type: ParameterType.String, name: 'myParam', description: ''})],
+        description: 'A',
+        parameters: [makeParameter({type: ParameterType.String, name: 'myParam', description: 'A'})],
         execute: ([param1]) => param1[0],
         examples: [{params: ['param'], result: 'result'}],
       });
@@ -2790,8 +2955,8 @@ describe('Pack metadata Validation', () => {
       const formula = makeFormula({
         resultType: ValueType.String,
         name: 'Test',
-        description: '',
-        parameters: [makeParameter({type: ParameterType.StringArray, name: 'myParam', description: ''})],
+        description: 'A',
+        parameters: [makeParameter({type: ParameterType.StringArray, name: 'myParam', description: 'A'})],
         execute: ([param1]) => param1[0] ?? '',
         examples: [{params: [['item1']], result: 'item1'}],
       });
@@ -3601,7 +3766,7 @@ describe('Pack metadata Validation', () => {
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          message: `String must contain at most ${Limits.BuildingBlockDescription} character(s)`,
+          message: `Description must contain at most ${Limits.BuildingBlockDescription} characters`,
           path: 'formulas[0].description',
         },
       ]);
@@ -3627,7 +3792,7 @@ describe('Pack metadata Validation', () => {
               },
             }),
             name: 'MyFormula',
-            description: 'Formula description',
+            description: parseDescription('Formula description'),
             parameters: [],
             examples: [],
             resultType: Type.object,
@@ -3723,7 +3888,7 @@ describe('Pack metadata Validation', () => {
               },
             }),
             name: 'MyFormula',
-            description: 'Formula description',
+            description: parseDescription('Formula description'),
             parameters: [],
             examples: [],
             resultType: Type.object,
@@ -3749,9 +3914,9 @@ describe('Pack metadata Validation', () => {
         formulas: [
           {
             name: 'MyFormula',
-            description: 'Formula description',
-            parameters: [{name: 'param', description: '', type: Type.string, defaultValue: 'foo'}],
-            varargParameters: [{name: 'otherParam', description: '', type: Type.string, defaultValue: 'foo'}],
+            description: parseDescription('Formula description'),
+            parameters: [{name: 'param', description: parseDescription('A'), type: Type.string, defaultValue: 'foo'}],
+            varargParameters: [{name: 'otherParam', description: parseDescription('B'), type: Type.string, defaultValue: 'foo'}],
             resultType: Type.string,
           },
         ],
@@ -3784,7 +3949,7 @@ describe('Pack metadata Validation', () => {
         formula: {
           name: 'MyFormula',
           description: 'Formula description',
-          parameters: [{name: 'param', description: '', type: Type.string, defaultValue: 'foo'}],
+          parameters: [makeParameter({name: 'param', description: 'A', type: ParameterType.String, defaultValue: 'foo'})],
           async execute() {
             return {result: []};
           },
@@ -3835,7 +4000,7 @@ describe('Pack metadata Validation', () => {
               },
             }),
             name: 'MyFormula',
-            description: 'Formula description',
+            description: parseDescription('Formula description'),
             parameters: [],
             resultType: Type.object,
           },

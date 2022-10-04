@@ -1,4 +1,5 @@
 import {AuthenticationType} from '../types';
+import { DescriptionTokenType } from '../api_types';
 import {PackCategory} from '../types';
 import type {PackDefinition} from '../types';
 import type {PackFormulaMetadata} from '../api';
@@ -41,7 +42,7 @@ export const FakePackFormulaMetadata: PackFormulaMetadata = deepFreeze({
     type: ValueType.String,
   },
   name: 'MyFormula',
-  description: 'Formula description',
+  description: [{type: DescriptionTokenType.Text, content: 'Formula description'}],
   parameters: [],
   examples: [],
   resultType: Type.string,

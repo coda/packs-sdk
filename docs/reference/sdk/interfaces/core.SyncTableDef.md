@@ -33,19 +33,19 @@ See [defaultAddDynamicColumns](core.DynamicOptions.md#defaultadddynamiccolumns)
 
 #### Defined in
 
-[api.ts:213](https://github.com/coda/packs-sdk/blob/main/api.ts#L213)
+[api.ts:221](https://github.com/coda/packs-sdk/blob/main/api.ts#L221)
 
 ___
 
 ### description
 
-• `Optional` **description**: `string`
+• `Optional` **description**: [`DescriptionTokensOrString`](../types/core.DescriptionTokensOrString.md)
 
 See [description](core.SyncTableOptions.md#description)
 
 #### Defined in
 
-[api.ts:196](https://github.com/coda/packs-sdk/blob/main/api.ts#L196)
+[api.ts:204](https://github.com/coda/packs-sdk/blob/main/api.ts#L204)
 
 ___
 
@@ -57,7 +57,7 @@ See [entityName](core.DynamicOptions.md#entityname)
 
 #### Defined in
 
-[api.ts:211](https://github.com/coda/packs-sdk/blob/main/api.ts#L211)
+[api.ts:219](https://github.com/coda/packs-sdk/blob/main/api.ts#L219)
 
 ___
 
@@ -69,7 +69,7 @@ See [getSchema](core.DynamicOptions.md#getschema)
 
 #### Defined in
 
-[api.ts:209](https://github.com/coda/packs-sdk/blob/main/api.ts#L209)
+[api.ts:217](https://github.com/coda/packs-sdk/blob/main/api.ts#L217)
 
 ___
 
@@ -81,7 +81,7 @@ See [formula](core.SyncTableOptions.md#formula)
 
 #### Defined in
 
-[api.ts:207](https://github.com/coda/packs-sdk/blob/main/api.ts#L207)
+[api.ts:215](https://github.com/coda/packs-sdk/blob/main/api.ts#L215)
 
 ___
 
@@ -96,7 +96,7 @@ See [identityName](core.SyncTableOptions.md#identityname) for more details.
 
 #### Defined in
 
-[api.ts:205](https://github.com/coda/packs-sdk/blob/main/api.ts#L205)
+[api.ts:213](https://github.com/coda/packs-sdk/blob/main/api.ts#L213)
 
 ___
 
@@ -108,7 +108,7 @@ See [name](core.SyncTableOptions.md#name)
 
 #### Defined in
 
-[api.ts:194](https://github.com/coda/packs-sdk/blob/main/api.ts#L194)
+[api.ts:202](https://github.com/coda/packs-sdk/blob/main/api.ts#L202)
 
 ___
 
@@ -120,4 +120,4 @@ See [schema](core.SyncTableOptions.md#schema)
 
 #### Defined in
 
-[api.ts:198](https://github.com/coda/packs-sdk/blob/main/api.ts#L198)
+[api.ts:206](https://github.com/coda/packs-sdk/blob/main/api.ts#L206)

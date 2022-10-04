@@ -5,7 +5,7 @@ nav: "ParameterOptions"
 
 [core](../modules/core.md).ParameterOptions
 
-Ƭ **ParameterOptions**<`T`\>: `Omit`<[`ParamDef`](../interfaces/core.ParamDef.md)<`ParameterTypeMap`[`T`]\>, ``"type"`` \| ``"autocomplete"``\> & { `autocomplete?`: `T` extends `AutocompleteParameterTypes` ? [`MetadataFormulaDef`](core.MetadataFormulaDef.md) \| (`TypeMap`[`AutocompleteParameterTypeMapping`[`T`]] \| [`SimpleAutocompleteOption`](../interfaces/core.SimpleAutocompleteOption.md)<`T`\>)[] : `undefined` ; `type`: `T`  }
+Ƭ **ParameterOptions**<`T`\>: `Omit`<[`ParamDef`](../interfaces/core.ParamDef.md)<`ParameterTypeMap`[`T`]\>, ``"type"`` \| ``"autocomplete"`` \| ``"description"``\> & { `autocomplete?`: `T` extends `AutocompleteParameterTypes` ? [`MetadataFormulaDef`](core.MetadataFormulaDef.md) \| (`TypeMap`[`AutocompleteParameterTypeMapping`[`T`]] \| [`SimpleAutocompleteOption`](../interfaces/core.SimpleAutocompleteOption.md)<`T`\>)[] : `undefined` ; `description`: `string` ; `type`: `T`  }
 
 Options you can specify when defining a parameter using [makeParameter](../functions/core.makeParameter.md).
 
@@ -17,4 +17,4 @@ Options you can specify when defining a parameter using [makeParameter](../funct
 
 #### Defined in
 
-[api.ts:368](https://github.com/coda/packs-sdk/blob/main/api.ts#L368)
+[api.ts:376](https://github.com/coda/packs-sdk/blob/main/api.ts#L376)

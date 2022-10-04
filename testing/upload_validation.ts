@@ -12,6 +12,8 @@ import {CurrencyFormat} from '../schema';
 import type {CurrencySchema} from '../schema';
 import type {CustomAuthentication} from '../types';
 import type {CustomHeaderTokenAuthentication} from '../types';
+import type {DescriptionToken} from '../api_types';
+import {DescriptionTokenType} from '../api_types';
 import type {DurationSchema} from '../schema';
 import {DurationUnit} from '../schema';
 import type {DynamicSyncTableDef} from '../api';
@@ -25,6 +27,7 @@ import {ImageCornerStyle} from '../schema';
 import {ImageOutline} from '../schema';
 import type {ImageSchema} from '..';
 import {JSONPath} from 'jsonpath-plus';
+import type {LinkDescriptionToken} from '../api_types';
 import {LinkDisplayType} from '../schema';
 import type {LinkSchema} from '../schema';
 import type {MultiQueryParamTokenAuthentication} from '../types';
@@ -69,6 +72,7 @@ import type {SyncFormula} from '../api';
 import type {SyncTable} from '../api';
 import type {SyncTableDef} from '../api';
 import type {SystemAuthenticationTypes} from '../types';
+import type {TextDescriptionToken} from '../api_types';
 import {Type} from '../api_types';
 import type {UnionType} from '../api_types';
 import type {ValidationError} from './types';
@@ -494,6 +498,50 @@ const variousSupportedAuthenticationValidators = Object.entries(defaultAuthentic
   .filter(([authType]) => authType in variousSupportedAuthenticationTypes)
   .map(([_authType, schema]) => schema);
 
+const textDescriptionToken = zodCompleteStrictObject<TextDescriptionToken>({
+  type: zodDiscriminant(DescriptionTokenType.Text),
+  content: z.string(),
+  bold: z.boolean().optional(),
+  italics: z.boolean().optional(),
+});
+
+const linkDescriptionToken = zodCompleteStrictObject<LinkDescriptionToken>({
+  type: zodDiscriminant(DescriptionTokenType.Link),
+  link: z.string(),
+  content: textDescriptionToken.array().min(1),
+});
+
+const descriptionTokens = z.array(z.union([textDescriptionToken, linkDescriptionToken])).min(1)
+  .superRefine((data, context) => {
+    function getLength(token: DescriptionToken): number {
+      if (token.type === DescriptionTokenType.Text) {
+        return token.content.length;
+      }
+      return token.content.reduce((prev, curr) => prev + getLength(curr), 0);
+    }
+
+    const length = data.reduce((prev, curr) => prev + getLength(curr as DescriptionToken), 0);
+
+    if (length > Limits.BuildingBlockDescription) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Description must contain at most ${Limits.BuildingBlockDescription} characters`,
+      });
+    }
+
+    if (length <= 0) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Description must contain at least 1 character.`,
+      });
+    }
+  });
+
+const descriptionOrDescriptionTokens = z.union([
+  z.string().max(Limits.BuildingBlockDescription),
+  descriptionTokens,
+]);
+
 const primitiveUnion = z.union([z.number(), z.string(), z.boolean(), z.date()]);
 
 const paramDefValidator = zodCompleteObject<ParamDef<any>>({
@@ -518,7 +566,7 @@ const paramDefValidator = zodCompleteObject<ParamDef<any>>({
         message: 'Object parameters are not currently supported.',
       },
     ),
-  description: z.string().max(Limits.BuildingBlockDescription),
+  description: descriptionOrDescriptionTokens,
   optional: z.boolean().optional(),
   autocomplete: z.unknown().optional(),
   defaultValue: z.unknown().optional(),
@@ -530,7 +578,7 @@ const commonPackFormulaSchema = {
   // whose getter names violate the validator, and those exemptions require the pack id, so this has to be
   // done as a superRefine on the top-level object that also contains the pack id.
   name: z.string().max(Limits.BuildingBlockName),
-  description: z.string().max(Limits.BuildingBlockDescription),
+  description: descriptionOrDescriptionTokens,
   examples: z
     .array(
       z.object({
@@ -1152,10 +1200,11 @@ const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
 });
 
 const syncFormulaSchema = zodCompleteObject<Omit<SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>>, 'execute'>>({
+  ...commonPackFormulaSchema,
   schema: arrayPropertySchema.optional(),
   resultType: z.any(),
   isSyncFormula: z.literal(true),
-  ...commonPackFormulaSchema,
+  description: descriptionOrDescriptionTokens,
 });
 
 const baseSyncTableSchema = {
@@ -1164,7 +1213,7 @@ const baseSyncTableSchema = {
     .nonempty()
     .max(Limits.BuildingBlockName)
     .regex(regexFormulaName, 'Sync Table names can only contain alphanumeric characters and underscores.'),
-  description: z.string().max(Limits.BuildingBlockDescription).optional(),
+  description: descriptionOrDescriptionTokens.optional(),
   schema: genericObjectSchema,
   getter: syncFormulaSchema,
   entityName: z.string().optional(),
@@ -1661,6 +1710,49 @@ const packMetadataSchemaBySdkVersion: SchemaExtension[] = [
       });
     },
   },
+  {
+    // TODO(alexd): Update after SDK version is released.
+    versionRange: '>1.1.0',
+    schemaExtend: schema => {
+      return schema.superRefine((untypedData, context) => {
+        const data = untypedData as PackVersionMetadata;
+        data.formulas.forEach((formula, i) => {
+          validateIsDescriptionTokens(
+            formula.description,
+            ['formulas', i, 'description'],
+            context,
+          );
+          formula.parameters.forEach((param, i) => {
+            validateIsDescriptionTokens(
+              param.description,
+              ['formulas', i, 'parameters', i, 'description'],
+              context,
+            );
+          });
+          if (formula.varargParameters) {
+            formula.varargParameters.forEach((param, i) => {
+              validateIsDescriptionTokens(
+                param.description,
+                ['formulas', i, 'varargParameters', i, 'description'],
+                context,
+              );
+            });
+          }
+        });
+
+        data.syncTables.forEach((syncTable, i) => {
+          if (syncTable.description) {
+            validateIsDescriptionTokens(
+              syncTable.description,
+              ['syncTable', i, 'description'],
+              context,
+            );
+          }
+        });
+
+      });
+    },
+  }
 ];
 
 function validateSchemaDeprecatedFields(
@@ -1756,4 +1848,18 @@ function validateDeprecatedParameterFields<T extends UnionType>(
     pathPrefix,
     context,
   });
+}
+
+function validateIsDescriptionTokens(
+  param: DescriptionToken[] | string,
+  pathPrefix: Array<string | number>,
+  context: z.RefinementCtx,
+) {
+  if (typeof param === 'string') {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: pathPrefix,
+      message: `Value was not correctly passed as DescriptionToken[]`,
+    });
+  }
 }

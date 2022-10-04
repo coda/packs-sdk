@@ -3,6 +3,8 @@ import type { ArrayType } from './api_types';
 import type { BooleanSchema } from './schema';
 import type { CommonPackFormulaDef } from './api_types';
 import { ConnectionRequirement } from './api_types';
+import type { DescriptionToken } from './api_types';
+import type { DescriptionTokensOrString } from './api_types';
 import type { ExecutionContext } from './api_types';
 import type { FetchRequest } from './api_types';
 import type { Identity } from './schema';
@@ -132,7 +134,7 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
     /** See {@link SyncTableOptions.name} */
     name: string;
     /** See {@link SyncTableOptions.description} */
-    description?: string;
+    description?: DescriptionTokensOrString;
     /** See {@link SyncTableOptions.schema} */
     schema: SchemaT;
     /**
@@ -249,17 +251,19 @@ export interface AutocompleteParameterTypeMapping {
     [ParameterType.SparseStringArray]: Type.string;
 }
 /** Options you can specify when defining a parameter using {@link makeParameter}. */
-export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[T]>, 'type' | 'autocomplete'> & {
+export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[T]>, 'type' | 'autocomplete' | 'description'> & {
     type: T;
     autocomplete?: T extends AutocompleteParameterTypes ? MetadataFormulaDef | Array<TypeMap[AutocompleteParameterTypeMapping[T]] | SimpleAutocompleteOption<T>> : undefined;
+    description: string;
 };
 /**
  * Equivalent to {@link ParamDef}. A helper type to generate a param def based
  * on the inputs to {@link makeParameter}.
  */
-export declare type ParamDefFromOptionsUnion<T extends ParameterType, O extends ParameterOptions<T>> = Omit<O, 'type' | 'autocomplete'> & {
+export declare type ParamDefFromOptionsUnion<T extends ParameterType, O extends ParameterOptions<T>> = Omit<O, 'type' | 'autocomplete' | 'description'> & {
     type: O extends ParameterOptions<infer S> ? ParameterTypeMap[S] : never;
     autocomplete: MetadataFormula;
+    description: DescriptionTokensOrString;
 };
 /**
  * Create a definition for a parameter for a formula or sync.
@@ -352,8 +356,9 @@ export interface EmptyFormulaDef<ParamsT extends ParamDefs> extends Omit<PackFor
     request: RequestHandlerTemplate;
 }
 /** The base class for pack formula descriptors. Subclasses vary based on the return type of the formula. */
-export declare type BaseFormula<ParamDefsT extends ParamDefs, ResultT extends PackFormulaResult> = PackFormulaDef<ParamDefsT, ResultT> & {
+export declare type BaseFormula<ParamDefsT extends ParamDefs, ResultT extends PackFormulaResult> = Omit<PackFormulaDef<ParamDefsT, ResultT>, 'description'> & {
     resultType: TypeOf<ResultT>;
+    description: DescriptionTokensOrString;
 };
 /** A pack formula that returns a number. */
 export declare type NumericPackFormula<ParamDefsT extends ParamDefs> = BaseFormula<ParamDefsT, number> & {
@@ -395,7 +400,6 @@ export declare type PackFormulaMetadata = Omit<TypedPackFormula, 'execute'>;
 export declare type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'execute'>;
 export declare function isObjectPackFormula(fn: PackFormulaMetadata): fn is ObjectPackFormulaMetadata;
 export declare function isStringPackFormula(fn: BaseFormula<ParamDefs, any>): fn is StringPackFormula<ParamDefs>;
-export declare function isSyncPackFormula(fn: BaseFormula<ParamDefs, any>): fn is GenericSyncFormula;
 /**
  * The return value from the formula that implements a sync table. Each sync formula invocation
  * returns one reasonable size page of results. The formula may also return a continuation, indicating
@@ -431,7 +435,8 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
  * There is no need to use this type directly. You provid a {@link SyncFormulaDef} as an
  * input to {@link makeSyncTable} which outputs definitions of this type.
  */
-export declare type SyncFormula<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>> = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
+export declare type SyncFormula<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>> = Omit<SyncFormulaDef<K, L, ParamDefsT, SchemaT>, 'description'> & {
+    description: DescriptionTokensOrString;
     resultType: TypeOf<SchemaType<SchemaT>>;
     isSyncFormula: true;
     schema?: ArraySchema;
@@ -992,7 +997,6 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
 export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: ObjectArrayFormulaDef<ParamDefsT, ResultT>): {
     name: string;
     description: string;
-    cacheTtlSecs?: number | undefined;
     parameters: ParamDefsT;
     varargParameters?: ParamDefs | undefined;
     examples?: {
@@ -1002,6 +1006,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
     isAction?: boolean | undefined;
     connectionRequirement?: ConnectionRequirement | undefined;
     network?: import("./api_types").Network | undefined;
+    cacheTtlSecs?: number | undefined;
     isExperimental?: boolean | undefined;
     isSystem?: boolean | undefined;
     extraOAuthScopes?: string[] | undefined;
@@ -1033,7 +1038,6 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
 export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: EmptyFormulaDef<ParamDefsT>): {
     name: string;
     description: string;
-    cacheTtlSecs?: number | undefined;
     parameters: ParamDefsT;
     varargParameters?: ParamDefs | undefined;
     examples?: {
@@ -1043,6 +1047,7 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
     isAction?: boolean | undefined;
     connectionRequirement?: ConnectionRequirement | undefined;
     network?: import("./api_types").Network | undefined;
+    cacheTtlSecs?: number | undefined;
     isExperimental?: boolean | undefined;
     isSystem?: boolean | undefined;
     extraOAuthScopes?: string[] | undefined;
@@ -1050,4 +1055,5 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
     execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<string>;
     resultType: Type.string;
 };
-export declare function maybeRewriteConnectionForFormula<ParamDefsT extends ParamDefs, T extends CommonPackFormulaDef<ParamDefsT> | undefined>(formula: T, connectionRequirement: ConnectionRequirement | undefined): T;
+export declare function maybeRewriteConnectionForFormula<ParamDefsT extends ParamDefs, T extends CommonPackFormulaDef<ParamDefsT> | MetadataFormula | Formula<any, any, any> | undefined>(formula: T, connectionRequirement: ConnectionRequirement | undefined): T;
+export declare function parseDescription(description: string): DescriptionToken[];

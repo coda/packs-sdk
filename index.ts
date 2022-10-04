@@ -109,6 +109,13 @@ export type {TypedPackFormula} from './api';
 export type {Formula} from './api';
 export {UserVisibleError} from './api';
 
+// Token related interfaces.
+export type {DescriptionToken} from './api_types';
+export type {DescriptionTokensOrString} from './api_types';
+export {DescriptionTokenType} from './api_types';
+export {LinkDescriptionToken} from './api_types';
+export {TextDescriptionToken} from './api_types';
+
 // Formula definition helpers
 export {makeMetadataFormula} from './api';
 export {makeDynamicSyncTable} from './api';

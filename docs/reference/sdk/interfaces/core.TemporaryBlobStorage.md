@@ -61,7 +61,7 @@ be downloaded with the file name provided.
 
 #### Defined in
 
-[api_types.ts:628](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L628)
+[api_types.ts:676](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L676)
 
 ___
 
@@ -95,4 +95,4 @@ be downloaded with the file name provided.
 
 #### Defined in
 
-[api_types.ts:613](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L613)
+[api_types.ts:661](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L661)

@@ -12,7 +12,7 @@
  * @module core
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ValidFetchMethods = exports.withIdentity = exports.makeSchema = exports.makeReferenceSchemaFromObjectSchema = exports.makeObjectSchema = exports.makeAttributionNode = exports.generateSchema = exports.ValueType = exports.ValueHintType = exports.ScaleIconSet = exports.LinkDisplayType = exports.ImageOutline = exports.ImageCornerStyle = exports.EmailDisplayType = exports.DurationUnit = exports.CurrencyFormat = exports.AttributionNodeType = exports.ensureUnreachable = exports.ensureNonEmptyString = exports.ensureExists = exports.assertCondition = exports.SvgConstants = exports.getEffectivePropertyKeysFromSchema = exports.withQueryParams = exports.joinUrl = exports.getQueryParams = exports.simpleAutocomplete = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.makeParameter = exports.makeTranslateObjectFormula = exports.makeSyncTable = exports.makeFormula = exports.makeEmptyFormula = exports.makeDynamicSyncTable = exports.makeMetadataFormula = exports.UserVisibleError = exports.Type = exports.MissingScopesError = exports.StatusCodeError = exports.PrecannedDateRange = exports.ParameterType = exports.NetworkConnection = exports.ConnectionRequirement = exports.PackDefinitionBuilder = exports.newPack = exports.PostSetupType = exports.AuthenticationType = void 0;
+exports.ValidFetchMethods = exports.withIdentity = exports.makeSchema = exports.makeReferenceSchemaFromObjectSchema = exports.makeObjectSchema = exports.makeAttributionNode = exports.generateSchema = exports.ValueType = exports.ValueHintType = exports.ScaleIconSet = exports.LinkDisplayType = exports.ImageOutline = exports.ImageCornerStyle = exports.EmailDisplayType = exports.DurationUnit = exports.CurrencyFormat = exports.AttributionNodeType = exports.ensureUnreachable = exports.ensureNonEmptyString = exports.ensureExists = exports.assertCondition = exports.SvgConstants = exports.getEffectivePropertyKeysFromSchema = exports.withQueryParams = exports.joinUrl = exports.getQueryParams = exports.simpleAutocomplete = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.makeParameter = exports.makeTranslateObjectFormula = exports.makeSyncTable = exports.makeFormula = exports.makeEmptyFormula = exports.makeDynamicSyncTable = exports.makeMetadataFormula = exports.DescriptionTokenType = exports.UserVisibleError = exports.Type = exports.MissingScopesError = exports.StatusCodeError = exports.PrecannedDateRange = exports.ParameterType = exports.NetworkConnection = exports.ConnectionRequirement = exports.PackDefinitionBuilder = exports.newPack = exports.PostSetupType = exports.AuthenticationType = void 0;
 var types_1 = require("./types");
 Object.defineProperty(exports, "AuthenticationType", { enumerable: true, get: function () { return types_1.AuthenticationType; } });
 var types_2 = require("./types");
@@ -37,6 +37,8 @@ var api_types_5 = require("./api_types");
 Object.defineProperty(exports, "Type", { enumerable: true, get: function () { return api_types_5.Type; } });
 var api_3 = require("./api");
 Object.defineProperty(exports, "UserVisibleError", { enumerable: true, get: function () { return api_3.UserVisibleError; } });
+var api_types_6 = require("./api_types");
+Object.defineProperty(exports, "DescriptionTokenType", { enumerable: true, get: function () { return api_types_6.DescriptionTokenType; } });
 // Formula definition helpers
 var api_4 = require("./api");
 Object.defineProperty(exports, "makeMetadataFormula", { enumerable: true, get: function () { return api_4.makeMetadataFormula; } });
@@ -114,5 +116,5 @@ var schema_17 = require("./schema");
 Object.defineProperty(exports, "withIdentity", { enumerable: true, get: function () { return schema_17.withIdentity; } });
 // Exports for intermediate entities we want included in the TypeDoc documentation
 // but otherwise wouldn't care about including as top-level exports of the SDK
-var api_types_6 = require("./api_types");
-Object.defineProperty(exports, "ValidFetchMethods", { enumerable: true, get: function () { return api_types_6.ValidFetchMethods; } });
+var api_types_7 = require("./api_types");
+Object.defineProperty(exports, "ValidFetchMethods", { enumerable: true, get: function () { return api_types_7.ValidFetchMethods; } });

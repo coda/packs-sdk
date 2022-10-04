@@ -38,7 +38,7 @@ Omit.cacheTtlSecs
 
 #### Defined in
 
-[api_types.ts:409](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L409)
+[api_types.ts:457](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L457)
 
 ___
 
@@ -54,7 +54,7 @@ Omit.connectionRequirement
 
 #### Defined in
 
-[api_types.ts:401](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L401)
+[api_types.ts:449](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L449)
 
 ___
 
@@ -70,7 +70,7 @@ Omit.description
 
 #### Defined in
 
-[api_types.ts:375](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L375)
+[api_types.ts:423](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L423)
 
 ___
 
@@ -86,7 +86,7 @@ Omit.examples
 
 #### Defined in
 
-[api_types.ts:390](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L390)
+[api_types.ts:438](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L438)
 
 ___
 
@@ -107,7 +107,7 @@ Omit.extraOAuthScopes
 
 #### Defined in
 
-[api_types.ts:431](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L431)
+[api_types.ts:479](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L479)
 
 ___
 
@@ -124,7 +124,7 @@ Omit.isAction
 
 #### Defined in
 
-[api_types.ts:396](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L396)
+[api_types.ts:444](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L444)
 
 ___
 
@@ -141,7 +141,7 @@ Omit.isExperimental
 
 #### Defined in
 
-[api_types.ts:415](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L415)
+[api_types.ts:463](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L463)
 
 ___
 
@@ -158,7 +158,7 @@ Omit.isSystem
 
 #### Defined in
 
-[api_types.ts:421](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L421)
+[api_types.ts:469](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L469)
 
 ___
 
@@ -174,7 +174,7 @@ Omit.name
 
 #### Defined in
 
-[api_types.ts:370](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L370)
+[api_types.ts:418](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L418)
 
 ___
 
@@ -192,7 +192,7 @@ Omit.network
 
 #### Defined in
 
-[api_types.ts:404](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L404)
+[api_types.ts:452](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L452)
 
 ___
 
@@ -208,7 +208,7 @@ Omit.parameters
 
 #### Defined in
 
-[api_types.ts:380](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L380)
+[api_types.ts:428](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L428)
 
 ___
 
@@ -220,7 +220,7 @@ A definition of the request and any parameter transformations to make in order t
 
 #### Defined in
 
-[api.ts:606](https://github.com/coda/packs-sdk/blob/main/api.ts#L606)
+[api.ts:618](https://github.com/coda/packs-sdk/blob/main/api.ts#L618)
 
 ___
 
@@ -237,4 +237,4 @@ Omit.varargParameters
 
 #### Defined in
 
-[api_types.ts:385](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L385)
+[api_types.ts:433](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L433)

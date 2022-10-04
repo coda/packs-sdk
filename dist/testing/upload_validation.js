@@ -32,6 +32,7 @@ const types_1 = require("../types");
 const schema_2 = require("../schema");
 const api_types_1 = require("../api_types");
 const schema_3 = require("../schema");
+const api_types_2 = require("../api_types");
 const schema_4 = require("../schema");
 const schema_5 = require("../schema");
 const types_2 = require("../types");
@@ -39,13 +40,13 @@ const schema_6 = require("../schema");
 const schema_7 = require("../schema");
 const jsonpath_plus_1 = require("jsonpath-plus");
 const schema_8 = require("../schema");
-const api_types_2 = require("../api_types");
+const api_types_3 = require("../api_types");
 const schema_9 = require("../schema");
 const types_3 = require("../types");
 const types_4 = require("../types");
 const schema_10 = require("../schema");
 const schema_11 = require("../schema");
-const api_types_3 = require("../api_types");
+const api_types_4 = require("../api_types");
 const schema_12 = require("../schema");
 const schema_13 = require("../schema");
 const zod_1 = require("zod");
@@ -398,6 +399,43 @@ const variousSupportedAuthenticationTypes = {
 const variousSupportedAuthenticationValidators = Object.entries(defaultAuthenticationValidators)
     .filter(([authType]) => authType in variousSupportedAuthenticationTypes)
     .map(([_authType, schema]) => schema);
+const textDescriptionToken = zodCompleteStrictObject({
+    type: zodDiscriminant(api_types_2.DescriptionTokenType.Text),
+    content: z.string(),
+    bold: z.boolean().optional(),
+    italics: z.boolean().optional(),
+});
+const linkDescriptionToken = zodCompleteStrictObject({
+    type: zodDiscriminant(api_types_2.DescriptionTokenType.Link),
+    link: z.string(),
+    content: textDescriptionToken.array().min(1),
+});
+const descriptionTokens = z.array(z.union([textDescriptionToken, linkDescriptionToken])).min(1)
+    .superRefine((data, context) => {
+    function getLength(token) {
+        if (token.type === api_types_2.DescriptionTokenType.Text) {
+            return token.content.length;
+        }
+        return token.content.reduce((prev, curr) => prev + getLength(curr), 0);
+    }
+    const length = data.reduce((prev, curr) => prev + getLength(curr), 0);
+    if (length > exports.Limits.BuildingBlockDescription) {
+        context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Description must contain at most ${exports.Limits.BuildingBlockDescription} characters`,
+        });
+    }
+    if (length <= 0) {
+        context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Description must contain at least 1 character.`,
+        });
+    }
+});
+const descriptionOrDescriptionTokens = z.union([
+    z.string().max(exports.Limits.BuildingBlockDescription),
+    descriptionTokens,
+]);
 const primitiveUnion = z.union([z.number(), z.string(), z.boolean(), z.date()]);
 const paramDefValidator = zodCompleteObject({
     name: z
@@ -406,18 +444,18 @@ const paramDefValidator = zodCompleteObject({
         .regex(regexParameterName, 'Parameter names can only contain alphanumeric characters and underscores.'),
     type: z
         .union([
-        z.nativeEnum(api_types_3.Type),
+        z.nativeEnum(api_types_4.Type),
         z.object({
             type: zodDiscriminant('array'),
-            items: z.nativeEnum(api_types_3.Type),
+            items: z.nativeEnum(api_types_4.Type),
             allowEmpty: z.boolean().optional(),
         }),
     ])
-        .refine(paramType => paramType !== api_types_3.Type.object &&
-        !(typeof paramType === 'object' && paramType.type === 'array' && paramType.items === api_types_3.Type.object), {
+        .refine(paramType => paramType !== api_types_4.Type.object &&
+        !(typeof paramType === 'object' && paramType.type === 'array' && paramType.items === api_types_4.Type.object), {
         message: 'Object parameters are not currently supported.',
     }),
-    description: z.string().max(exports.Limits.BuildingBlockDescription),
+    description: descriptionOrDescriptionTokens,
     optional: z.boolean().optional(),
     autocomplete: z.unknown().optional(),
     defaultValue: z.unknown().optional(),
@@ -428,7 +466,7 @@ const commonPackFormulaSchema = {
     // whose getter names violate the validator, and those exemptions require the pack id, so this has to be
     // done as a superRefine on the top-level object that also contains the pack id.
     name: z.string().max(exports.Limits.BuildingBlockName),
-    description: z.string().max(exports.Limits.BuildingBlockDescription),
+    description: descriptionOrDescriptionTokens,
     examples: z
         .array(z.object({
         params: z.array(z.union([
@@ -462,7 +500,7 @@ const commonPackFormulaSchema = {
     network: zodCompleteObject({
         hasSideEffect: z.boolean().optional(),
         requiresConnection: z.boolean().optional(),
-        connection: z.nativeEnum(api_types_2.NetworkConnection).optional(),
+        connection: z.nativeEnum(api_types_3.NetworkConnection).optional(),
     }).optional(),
     cacheTtlSecs: z.number().min(0).optional(),
     isExperimental: z.boolean().optional(),
@@ -471,7 +509,7 @@ const commonPackFormulaSchema = {
 };
 const booleanPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
-    resultType: zodDiscriminant(api_types_3.Type.boolean),
+    resultType: zodDiscriminant(api_types_4.Type.boolean),
     schema: zodCompleteObject({
         type: zodDiscriminant(schema_13.ValueType.Boolean),
         codaType: z.enum([...schema_2.BooleanHintValueTypes]).optional(),
@@ -583,7 +621,7 @@ const numberPropertySchema = z.union([
 ]);
 const numericPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
-    resultType: zodDiscriminant(api_types_3.Type.number),
+    resultType: zodDiscriminant(api_types_4.Type.number),
     schema: numberPropertySchema.optional(),
 });
 const simpleStringPropertySchema = zodCompleteStrictObject({
@@ -657,7 +695,7 @@ const stringPropertySchema = z.union([
 ]);
 const stringPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
-    resultType: zodDiscriminant(api_types_3.Type.string),
+    resultType: zodDiscriminant(api_types_4.Type.string),
     schema: stringPropertySchema.optional(),
 });
 // TODO(jonathan): Give this a better type than ZodTypeAny after figuring out
@@ -900,7 +938,7 @@ const objectPropertyUnionSchema = z.union([
 ]);
 const objectPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
-    resultType: zodDiscriminant(api_types_3.Type.object),
+    resultType: zodDiscriminant(api_types_4.Type.object),
     // TODO(jonathan): See if we should really allow this. The SDK right now explicitly tolerates an undefined
     // schema for objects, but that doesn't seem like a use case we actually want to support.
     schema: z.union([genericObjectSchema, arrayPropertySchema]).optional(),
@@ -934,10 +972,11 @@ const formatMetadataSchema = zodCompleteObject({
         .max(exports.Limits.NumColumnMatchersPerFormat),
 });
 const syncFormulaSchema = zodCompleteObject({
+    ...commonPackFormulaSchema,
     schema: arrayPropertySchema.optional(),
     resultType: z.any(),
     isSyncFormula: z.literal(true),
-    ...commonPackFormulaSchema,
+    description: descriptionOrDescriptionTokens,
 });
 const baseSyncTableSchema = {
     name: z
@@ -945,7 +984,7 @@ const baseSyncTableSchema = {
         .nonempty()
         .max(exports.Limits.BuildingBlockName)
         .regex(regexFormulaName, 'Sync Table names can only contain alphanumeric characters and underscores.'),
-    description: z.string().max(exports.Limits.BuildingBlockDescription).optional(),
+    description: descriptionOrDescriptionTokens.optional(),
     schema: genericObjectSchema,
     getter: syncFormulaSchema,
     entityName: z.string().optional(),
@@ -1384,6 +1423,31 @@ const packMetadataSchemaBySdkVersion = [
             });
         },
     },
+    {
+        // TODO(alexd): Update after SDK version is released.
+        versionRange: '>1.1.0',
+        schemaExtend: schema => {
+            return schema.superRefine((untypedData, context) => {
+                const data = untypedData;
+                data.formulas.forEach((formula, i) => {
+                    validateIsDescriptionTokens(formula.description, ['formulas', i, 'description'], context);
+                    formula.parameters.forEach((param, i) => {
+                        validateIsDescriptionTokens(param.description, ['formulas', i, 'parameters', i, 'description'], context);
+                    });
+                    if (formula.varargParameters) {
+                        formula.varargParameters.forEach((param, i) => {
+                            validateIsDescriptionTokens(param.description, ['formulas', i, 'varargParameters', i, 'description'], context);
+                        });
+                    }
+                });
+                data.syncTables.forEach((syncTable, i) => {
+                    if (syncTable.description) {
+                        validateIsDescriptionTokens(syncTable.description, ['syncTable', i, 'description'], context);
+                    }
+                });
+            });
+        },
+    }
 ];
 function validateSchemaDeprecatedFields(schema, pathPrefix, context) {
     if ((0, schema_15.isObject)(schema)) {
@@ -1449,4 +1513,13 @@ function validateDeprecatedParameterFields(param, pathPrefix, context) {
         pathPrefix,
         context,
     });
+}
+function validateIsDescriptionTokens(param, pathPrefix, context) {
+    if (typeof param === 'string') {
+        context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: pathPrefix,
+            message: `Value was not correctly passed as DescriptionToken[]`,
+        });
+    }
 }

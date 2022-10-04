@@ -36,7 +36,7 @@ Error.name
 
 #### Defined in
 
-[api.ts:170](https://github.com/coda/packs-sdk/blob/main/api.ts#L170)
+[api.ts:178](https://github.com/coda/packs-sdk/blob/main/api.ts#L178)
 
 ## Methods
 
@@ -58,4 +58,4 @@ err is MissingScopesError
 
 #### Defined in
 
-[api.ts:178](https://github.com/coda/packs-sdk/blob/main/api.ts#L178)
+[api.ts:186](https://github.com/coda/packs-sdk/blob/main/api.ts#L186)

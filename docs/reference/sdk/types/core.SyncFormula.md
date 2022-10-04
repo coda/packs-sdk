@@ -5,7 +5,7 @@ nav: "SyncFormula"
 
 [core](../modules/core.md).SyncFormula
 
-Ƭ **SyncFormula**<`K`, `L`, `ParamDefsT`, `SchemaT`\>: [`SyncFormulaDef`](../interfaces/core.SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `SchemaT`\> & { `isSyncFormula`: ``true`` ; `resultType`: `TypeOf`<[`SchemaType`](core.SchemaType.md)<`SchemaT`\>\> ; `schema?`: [`ArraySchema`](../interfaces/core.ArraySchema.md)  }
+Ƭ **SyncFormula**<`K`, `L`, `ParamDefsT`, `SchemaT`\>: `Omit`<[`SyncFormulaDef`](../interfaces/core.SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `SchemaT`\>, ``"description"``\> & { `description`: [`DescriptionTokensOrString`](core.DescriptionTokensOrString.md) ; `isSyncFormula`: ``true`` ; `resultType`: `TypeOf`<[`SchemaType`](core.SchemaType.md)<`SchemaT`\>\> ; `schema?`: [`ArraySchema`](../interfaces/core.ArraySchema.md)  }
 
 The result of defining the formula that implements a sync table.
 
@@ -23,4 +23,4 @@ input to [makeSyncTable](../functions/core.makeSyncTable.md) which outputs defin
 
 #### Defined in
 
-[api.ts:741](https://github.com/coda/packs-sdk/blob/main/api.ts#L741)
+[api.ts:750](https://github.com/coda/packs-sdk/blob/main/api.ts#L750)

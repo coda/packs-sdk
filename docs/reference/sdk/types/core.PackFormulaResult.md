@@ -11,4 +11,4 @@ The union of types that can be returned by the `execute` function for a formula.
 
 #### Defined in
 
-[api_types.ts:110](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L110)
+[api_types.ts:158](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L158)

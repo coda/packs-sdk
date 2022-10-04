@@ -3,9 +3,13 @@ import type {ArrayType} from './api_types';
 import type {BooleanSchema} from './schema';
 import type {CommonPackFormulaDef} from './api_types';
 import {ConnectionRequirement} from './api_types';
+import type {DescriptionToken} from './api_types';
+import {DescriptionTokenType} from './api_types';
+import type {DescriptionTokensOrString} from './api_types';
 import type {ExecutionContext} from './api_types';
 import type {FetchRequest} from './api_types';
 import type {Identity} from './schema';
+import Markdown from 'markdown-it';
 import type {NumberHintTypes} from './schema';
 import type {NumberSchema} from './schema';
 import type {ObjectSchema} from './schema';
@@ -26,6 +30,7 @@ import type {SchemaType} from './schema';
 import type {StringHintTypes} from './schema';
 import type {StringSchema} from './schema';
 import type {SyncExecutionContext} from './api_types';
+import type {TextDescriptionToken} from './api_types';
 import {Type} from './api_types';
 import type {TypeMap} from './api_types';
 import type {TypeOf} from './api_types';
@@ -34,6 +39,7 @@ import {ValueType} from './schema';
 import {booleanArray} from './api_types';
 import {dateArray} from './api_types';
 import {deepCopy} from './helpers/object_utils';
+import {ensureExists} from './helpers/ensure';
 import {ensureUnreachable} from './helpers/ensure';
 import {fileArray} from './api_types';
 import {generateObjectResponseHandler} from './handler_templates';
@@ -49,6 +55,8 @@ import {stringArray} from './api_types';
 
 export {ExecutionContext};
 export {FetchRequest} from './api_types';
+
+const markdown = Markdown();
 
 /**
  * An error whose message will be shown to the end user in the UI when it occurs.
@@ -193,7 +201,7 @@ export interface SyncTableDef<
   /** See {@link SyncTableOptions.name} */
   name: string;
   /** See {@link SyncTableOptions.description} */
-  description?: string;
+  description?: DescriptionTokensOrString;
   /** See {@link SyncTableOptions.schema} */
   schema: SchemaT;
   /**
@@ -365,11 +373,12 @@ export interface AutocompleteParameterTypeMapping {
 }
 
 /** Options you can specify when defining a parameter using {@link makeParameter}. */
-export type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[T]>, 'type' | 'autocomplete'> & {
+export type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[T]>, 'type' | 'autocomplete' | 'description'> & {
   type: T;
   autocomplete?: T extends AutocompleteParameterTypes
     ? MetadataFormulaDef | Array<TypeMap[AutocompleteParameterTypeMapping[T]] | SimpleAutocompleteOption<T>>
     : undefined;
+  description: string;
 };
 
 /**
@@ -378,10 +387,11 @@ export type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterT
  */
 export type ParamDefFromOptionsUnion<T extends ParameterType, O extends ParameterOptions<T>> = Omit<
   O,
-  'type' | 'autocomplete'
+  'type' | 'autocomplete' | 'description'
 > & {
   type: O extends ParameterOptions<infer S> ? ParameterTypeMap[S] : never;
   autocomplete: MetadataFormula;
+  description: DescriptionTokensOrString;
 };
 
 /**
@@ -400,7 +410,7 @@ export type ParamDefFromOptionsUnion<T extends ParameterType, O extends Paramete
 export function makeParameter<T extends ParameterType, O extends ParameterOptions<T>>(
   paramDefinition: O,
 ): ParamDefFromOptionsUnion<T, O> {
-  const {type, autocomplete: autocompleteDefOrItems, ...rest} = paramDefinition;
+  const {type, description: descriptionInput, autocomplete: autocompleteDefOrItems, ...rest} = paramDefinition;
   const actualType = ParameterTypeInputMap[type];
   let autocomplete: MetadataFormula | undefined;
 
@@ -411,7 +421,9 @@ export function makeParameter<T extends ParameterType, O extends ParameterOption
     autocomplete = wrapMetadataFunction(autocompleteDefOrItems);
   }
 
-  return Object.freeze({...rest, autocomplete, type: actualType}) as ParamDefFromOptionsUnion<T, O>;
+  const description = parseDescription(descriptionInput)
+
+  return Object.freeze({...rest, description, autocomplete, type: actualType}) as ParamDefFromOptionsUnion<T, O>;
 }
 
 // Other parameter helpers below here are obsolete given the above generate parameter makers.
@@ -422,7 +434,7 @@ export function makeStringParameter(
   description: string,
   args: ParamArgs<Type.string> = {},
 ): ParamDef<Type.string> {
-  return Object.freeze({...args, name, description, type: Type.string as Type.string});
+  return Object.freeze({...args, name, description: parseDescription(description), type: Type.string as Type.string});
 }
 
 /** @deprecated */
@@ -431,7 +443,7 @@ export function makeStringArrayParameter(
   description: string,
   args: ParamArgs<ArrayType<Type.string>> = {},
 ): ParamDef<ArrayType<Type.string>> {
-  return Object.freeze({...args, name, description, type: stringArray});
+  return Object.freeze({...args, name, description: parseDescription(description), type: stringArray});
 }
 
 /** @deprecated */
@@ -440,7 +452,7 @@ export function makeNumericParameter(
   description: string,
   args: ParamArgs<Type.number> = {},
 ): ParamDef<Type.number> {
-  return Object.freeze({...args, name, description, type: Type.number as Type.number});
+  return Object.freeze({...args, name, description: parseDescription(description), type: Type.number as Type.number});
 }
 
 /** @deprecated */
@@ -449,7 +461,7 @@ export function makeNumericArrayParameter(
   description: string,
   args: ParamArgs<ArrayType<Type.number>> = {},
 ): ParamDef<ArrayType<Type.number>> {
-  return Object.freeze({...args, name, description, type: numberArray});
+  return Object.freeze({...args, name, description: parseDescription(description), type: numberArray});
 }
 
 /** @deprecated */
@@ -458,7 +470,7 @@ export function makeBooleanParameter(
   description: string,
   args: ParamArgs<Type.boolean> = {},
 ): ParamDef<Type.boolean> {
-  return Object.freeze({...args, name, description, type: Type.boolean as Type.boolean});
+  return Object.freeze({...args, name, description: parseDescription(description), type: Type.boolean as Type.boolean});
 }
 
 /** @deprecated */
@@ -467,7 +479,7 @@ export function makeBooleanArrayParameter(
   description: string,
   args: ParamArgs<ArrayType<Type.boolean>> = {},
 ): ParamDef<ArrayType<Type.boolean>> {
-  return Object.freeze({...args, name, description, type: booleanArray});
+  return Object.freeze({...args, name, description: parseDescription(description), type: booleanArray});
 }
 
 /** @deprecated */
@@ -476,7 +488,7 @@ export function makeDateParameter(
   description: string,
   args: ParamArgs<Type.date> = {},
 ): ParamDef<Type.date> {
-  return Object.freeze({...args, name, description, type: Type.date as Type.date});
+  return Object.freeze({...args, name, description: parseDescription(description), type: Type.date as Type.date});
 }
 
 /** @deprecated */
@@ -485,7 +497,7 @@ export function makeDateArrayParameter(
   description: string,
   args: ParamArgs<ArrayType<Type.date>> = {},
 ): ParamDef<ArrayType<Type.date>> {
-  return Object.freeze({...args, name, description, type: dateArray});
+  return Object.freeze({...args, name, description: parseDescription(description), type: dateArray});
 }
 
 /** @deprecated */
@@ -494,7 +506,7 @@ export function makeHtmlParameter(
   description: string,
   args: ParamArgs<Type.html> = {},
 ): ParamDef<Type.html> {
-  return Object.freeze({...args, name, description, type: Type.html as Type.html});
+  return Object.freeze({...args, name, description: parseDescription(description), type: Type.html as Type.html});
 }
 
 /** @deprecated */
@@ -503,7 +515,7 @@ export function makeHtmlArrayParameter(
   description: string,
   args: ParamArgs<ArrayType<Type.html>> = {},
 ): ParamDef<ArrayType<Type.html>> {
-  return Object.freeze({...args, name, description, type: htmlArray});
+  return Object.freeze({...args, name, description: parseDescription(description), type: htmlArray});
 }
 
 /** @deprecated */
@@ -512,7 +524,7 @@ export function makeImageParameter(
   description: string,
   args: ParamArgs<Type.image> = {},
 ): ParamDef<Type.image> {
-  return Object.freeze({...args, name, description, type: Type.image as Type.image});
+  return Object.freeze({...args, name, description: parseDescription(description), type: Type.image as Type.image});
 }
 
 /** @deprecated */
@@ -521,7 +533,7 @@ export function makeImageArrayParameter(
   description: string,
   args: ParamArgs<ArrayType<Type.image>> = {},
 ): ParamDef<ArrayType<Type.image>> {
-  return Object.freeze({...args, name, description, type: imageArray});
+  return Object.freeze({...args, name, description: parseDescription(description), type: imageArray});
 }
 
 /** @deprecated */
@@ -530,7 +542,7 @@ export function makeFileParameter(
   description: string,
   args: ParamArgs<Type.file> = {},
 ): ParamDef<Type.file> {
-  return Object.freeze({...args, name, description, type: Type.file as Type.file});
+  return Object.freeze({...args, name, description: parseDescription(description), type: Type.file as Type.file});
 }
 
 /** @deprecated */
@@ -539,7 +551,7 @@ export function makeFileArrayParameter(
   description: string,
   args: ParamArgs<ArrayType<Type.file>> = {},
 ): ParamDef<ArrayType<Type.file>> {
-  return Object.freeze({...args, name, description, type: fileArray});
+  return Object.freeze({...args, name, description: parseDescription(description), type: fileArray});
 }
 
 /** @deprecated */
@@ -607,11 +619,12 @@ export interface EmptyFormulaDef<ParamsT extends ParamDefs> extends Omit<PackFor
 }
 
 /** The base class for pack formula descriptors. Subclasses vary based on the return type of the formula. */
-export type BaseFormula<ParamDefsT extends ParamDefs, ResultT extends PackFormulaResult> = PackFormulaDef<
+export type BaseFormula<ParamDefsT extends ParamDefs, ResultT extends PackFormulaResult> = Omit<PackFormulaDef<
   ParamDefsT,
   ResultT
-> & {
+>, 'description'> & {
   resultType: TypeOf<ResultT>;
+  description: DescriptionTokensOrString;
 };
 
 /** A pack formula that returns a number. */
@@ -692,10 +705,6 @@ export function isStringPackFormula(fn: BaseFormula<ParamDefs, any>): fn is Stri
   return fn.resultType === Type.string;
 }
 
-export function isSyncPackFormula(fn: BaseFormula<ParamDefs, any>): fn is GenericSyncFormula {
-  return Boolean((fn as GenericSyncFormula).isSyncFormula);
-}
-
 /**
  * The return value from the formula that implements a sync table. Each sync formula invocation
  * returns one reasonable size page of results. The formula may also return a continuation, indicating
@@ -743,7 +752,8 @@ export type SyncFormula<
   L extends string,
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>,
-> = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
+> = Omit<SyncFormulaDef<K, L, ParamDefsT, SchemaT>, 'description'> & {
+  description: DescriptionTokensOrString;
   resultType: TypeOf<SchemaType<SchemaT>>;
   isSyncFormula: true;
   schema?: ArraySchema;
@@ -760,7 +770,11 @@ export type SyncFormula<
 export function makeNumericFormula<ParamDefsT extends ParamDefs>(
   definition: PackFormulaDef<ParamDefsT, number>,
 ): NumericPackFormula<ParamDefsT> {
-  return Object.assign({}, definition, {resultType: Type.number as Type.number}) as NumericPackFormula<ParamDefsT>;
+  return {
+    ...definition,
+    resultType: Type.number as Type.number,
+    description: parseDescription(definition.description),
+  } as NumericPackFormula<ParamDefsT>;
 }
 
 /**
@@ -777,6 +791,7 @@ export function makeStringFormula<ParamDefsT extends ParamDefs>(
   const {response} = definition;
   return Object.assign({}, definition, {
     resultType: Type.string as Type.string,
+    description: parseDescription(definition.description),
     ...(response && {schema: response.schema}),
   }) as StringPackFormula<ParamDefsT>;
 }
@@ -839,6 +854,8 @@ export function makeFormula<ParamDefsT extends ParamDefs, ResultT extends ValueT
   fullDefinition: FormulaDefinition<ParamDefsT, ResultT, SchemaT>,
 ): Formula<ParamDefsT, ResultT, SchemaT> {
   let formula: V2PackFormula<ParamDefsT, SchemaT>;
+  const {description: descriptionString} = fullDefinition;
+  const description = parseDescription(descriptionString);
   switch (fullDefinition.resultType) {
     case ValueType.String: {
       // very strange ts knows that fullDefinition.codaType is StringHintTypes but doesn't know if
@@ -851,6 +868,7 @@ export function makeFormula<ParamDefsT extends ParamDefs, ResultT extends ValueT
       const {onError: _, resultType: unused, codaType, formulaSchema, ...rest} = def;
       const stringFormula: StringPackFormula<ParamDefsT> = {
         ...rest,
+        description,
         resultType: Type.string,
         schema: formulaSchema || (codaType ? {type: ValueType.String, codaType} : undefined),
       };
@@ -866,6 +884,7 @@ export function makeFormula<ParamDefsT extends ParamDefs, ResultT extends ValueT
       const {onError: _, resultType: unused, codaType, formulaSchema, ...rest} = def;
       const numericFormula: NumericPackFormula<ParamDefsT> = {
         ...rest,
+        description,
         resultType: Type.number,
         schema: formulaSchema || (codaType ? {type: ValueType.Number, codaType} : undefined),
       };
@@ -876,6 +895,7 @@ export function makeFormula<ParamDefsT extends ParamDefs, ResultT extends ValueT
       const {onError: _, resultType: unused, ...rest} = fullDefinition as BooleanFormulaDef<ParamDefsT>;
       const booleanFormula: BooleanPackFormula<ParamDefsT> = {
         ...rest,
+        description,
         resultType: Type.boolean,
       };
       formula = booleanFormula;
@@ -885,6 +905,7 @@ export function makeFormula<ParamDefsT extends ParamDefs, ResultT extends ValueT
       const {onError: _, resultType: unused, items, ...rest} = fullDefinition as ArrayFormulaDef<ParamDefsT, SchemaT>;
       const arrayFormula: ObjectPackFormula<ParamDefsT, ArraySchema<SchemaT>> = {
         ...rest,
+        description,
         // TypeOf<SchemaType<ArraySchema<SchemaT>>> is always Type.object but TS can't infer this.
         resultType: Type.object as TypeOf<SchemaType<ArraySchema<SchemaT>>>,
         schema: normalizeSchema({type: ValueType.Array, items}),
@@ -898,6 +919,7 @@ export function makeFormula<ParamDefsT extends ParamDefs, ResultT extends ValueT
       // need a force cast since execute has a different return value due to key normalization.
       const objectFormula = {
         ...rest,
+        description,
         resultType: Type.object as TypeOf<SchemaType<SchemaT>>,
         schema: normalizeSchema(schema),
       } as ObjectPackFormula<ParamDefsT, SchemaT>;
@@ -1322,11 +1344,13 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
     };
   }
 
-  return Object.assign({}, definition, {
-    resultType: Type.object,
+  return {
+    ...definition,
+    description: parseDescription(definition.description),
+    resultType: Type.object as TypeOf<SchemaType<SchemaT>>,
     execute,
     schema,
-  }) as ObjectPackFormula<ParamDefsT, SchemaT>;
+  } as ObjectPackFormula<ParamDefsT, SchemaT>;
 }
 
 /**
@@ -1579,11 +1603,12 @@ export function makeSyncTable<
   };
   return {
     name,
-    description,
+    description: description ? parseDescription(description) : undefined,
     schema: normalizeSchema(schema),
     identityName,
     getter: {
       ...definition,
+      description: parseDescription(definition.description),
       cacheTtlSecs: 0,
       execute,
       schema: formulaSchema,
@@ -1812,7 +1837,7 @@ export function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: Empty
 
 export function maybeRewriteConnectionForFormula<
   ParamDefsT extends ParamDefs,
-  T extends CommonPackFormulaDef<ParamDefsT> | undefined,
+  T extends CommonPackFormulaDef<ParamDefsT> | MetadataFormula | Formula<any, any, any> | undefined,
 >(formula: T, connectionRequirement: ConnectionRequirement | undefined): T {
   if (formula && connectionRequirement) {
     return {
@@ -1837,4 +1862,65 @@ export function maybeRewriteConnectionForFormula<
     };
   }
   return formula;
+}
+
+export function parseDescription(description: string): DescriptionToken[] {
+  const [first] = markdown.parseInline(description || '', {});
+  const output: DescriptionToken[] = [];
+
+  const children = ensureExists(
+    first.children, 
+    `Received description ${description} that could not be parsed via Markdown`);
+  
+  let bold = false;
+  let italics = false;
+  let linkAnchor: TextDescriptionToken[] | undefined;
+  let linkHref: string | undefined;
+
+  for (const child of children) {
+    switch (child.type) {
+      case 'strong_open':
+      case 'strong_close': {
+        bold = child.type === 'strong_open';
+        break;
+      }
+      case 'em_open':
+      case 'em_close': {
+        italics = child.type === 'em_open';
+        break;
+      }
+      case 'link_open': {
+        // attrs is an array of length-2 tuples
+        linkHref = child.attrs?.find(tuple => tuple[0] === 'href')?.[1];
+        linkAnchor = [];
+        break;
+      }
+      case 'link_close': {
+        output.push({
+          type: DescriptionTokenType.Link,
+          link: ensureExists(linkHref),
+          content: ensureExists(linkAnchor),
+        });
+        linkHref = undefined;
+        linkAnchor = undefined;
+      }
+      case 'text': {
+        if (child.content) {
+          const token: TextDescriptionToken = {
+            type: DescriptionTokenType.Text,
+            content: child.content,
+            bold,
+            italics,
+          };
+          if (linkAnchor) {
+            linkAnchor.push(token);
+          } else {
+            output.push(token);
+          }
+        }
+      }
+    }
+  }
+
+  return output;
 }

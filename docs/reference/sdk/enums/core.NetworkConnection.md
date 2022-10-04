@@ -17,7 +17,7 @@ use `ConnectionRequirement` instead
 
 #### Defined in
 
-[api_types.ts:461](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L461)
+[api_types.ts:509](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L509)
 
 ___
 
@@ -27,7 +27,7 @@ ___
 
 #### Defined in
 
-[api_types.ts:462](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L462)
+[api_types.ts:510](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L510)
 
 ___
 
@@ -37,4 +37,4 @@ ___
 
 #### Defined in
 
-[api_types.ts:463](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L463)
+[api_types.ts:511](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L511)

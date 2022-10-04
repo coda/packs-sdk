@@ -1,6 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PrecannedDateRange = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
+exports.PrecannedDateRange = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = exports.DescriptionTokenType = void 0;
+/**
+ * Internal enumeration about the type of description token.
+ */
+var DescriptionTokenType;
+(function (DescriptionTokenType) {
+    /** Enum value for Text token */
+    DescriptionTokenType["Text"] = "text";
+    /** Enum value for Link token */
+    DescriptionTokenType["Link"] = "link";
+})(DescriptionTokenType = exports.DescriptionTokenType || (exports.DescriptionTokenType = {}));
 /**
  * Markers used internally to represent data types for parameters and return values.
  * It should not be necessary to ever use these values directly.

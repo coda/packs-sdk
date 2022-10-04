@@ -5,7 +5,7 @@ nav: "ParamDefFromOptionsUnion"
 
 [core](../modules/core.md).ParamDefFromOptionsUnion
 
-Ƭ **ParamDefFromOptionsUnion**<`T`, `O`\>: `Omit`<`O`, ``"type"`` \| ``"autocomplete"``\> & { `autocomplete`: [`MetadataFormula`](core.MetadataFormula.md) ; `type`: `O` extends [`ParameterOptions`](core.ParameterOptions.md)<infer S\> ? `ParameterTypeMap`[`S`] : `never`  }
+Ƭ **ParamDefFromOptionsUnion**<`T`, `O`\>: `Omit`<`O`, ``"type"`` \| ``"autocomplete"`` \| ``"description"``\> & { `autocomplete`: [`MetadataFormula`](core.MetadataFormula.md) ; `description`: [`DescriptionTokensOrString`](core.DescriptionTokensOrString.md) ; `type`: `O` extends [`ParameterOptions`](core.ParameterOptions.md)<infer S\> ? `ParameterTypeMap`[`S`] : `never`  }
 
 Equivalent to [ParamDef](../interfaces/core.ParamDef.md). A helper type to generate a param def based
 on the inputs to [makeParameter](../functions/core.makeParameter.md).
@@ -19,4 +19,4 @@ on the inputs to [makeParameter](../functions/core.makeParameter.md).
 
 #### Defined in
 
-[api.ts:379](https://github.com/coda/packs-sdk/blob/main/api.ts#L379)
+[api.ts:388](https://github.com/coda/packs-sdk/blob/main/api.ts#L388)

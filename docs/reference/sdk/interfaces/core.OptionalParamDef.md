@@ -40,7 +40,7 @@ If you have a hardcoded list of valid values, you would only need to use
 
 #### Defined in
 
-[api_types.ts:305](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L305)
+[api_types.ts:353](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L353)
 
 ___
 
@@ -58,13 +58,13 @@ This will be removed in a future version of the SDK. Use [suggestedValue](core.P
 
 #### Defined in
 
-[api_types.ts:309](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L309)
+[api_types.ts:357](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L357)
 
 ___
 
 ### description
 
-• **description**: `string`
+• **description**: [`DescriptionTokensOrString`](../types/core.DescriptionTokensOrString.md)
 
 A brief description of what this parameter is used for, shown to the user when invoking the formula.
 
@@ -74,7 +74,7 @@ A brief description of what this parameter is used for, shown to the user when i
 
 #### Defined in
 
-[api_types.ts:287](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L287)
+[api_types.ts:335](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L335)
 
 ___
 
@@ -90,7 +90,7 @@ The name of the parameter, which will be shown to the user when invoking this fo
 
 #### Defined in
 
-[api_types.ts:279](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L279)
+[api_types.ts:327](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L327)
 
 ___
 
@@ -107,7 +107,7 @@ All optional parameters must come after all non-optional parameters.
 
 #### Defined in
 
-[api_types.ts:320](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L320)
+[api_types.ts:368](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L368)
 
 ___
 
@@ -123,7 +123,7 @@ The suggested value to be prepopulated for this parameter if it is not specified
 
 #### Defined in
 
-[api_types.ts:313](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L313)
+[api_types.ts:361](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L361)
 
 ___
 
@@ -139,4 +139,4 @@ The data type of this parameter (string, number, etc).
 
 #### Defined in
 
-[api_types.ts:283](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L283)
+[api_types.ts:331](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L331)

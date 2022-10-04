@@ -5,7 +5,7 @@ nav: "BaseFormula"
 
 [core](../modules/core.md).BaseFormula
 
-Ƭ **BaseFormula**<`ParamDefsT`, `ResultT`\>: [`PackFormulaDef`](../interfaces/core.PackFormulaDef.md)<`ParamDefsT`, `ResultT`\> & { `resultType`: `TypeOf`<`ResultT`\>  }
+Ƭ **BaseFormula**<`ParamDefsT`, `ResultT`\>: `Omit`<[`PackFormulaDef`](../interfaces/core.PackFormulaDef.md)<`ParamDefsT`, `ResultT`\>, ``"description"``\> & { `description`: [`DescriptionTokensOrString`](core.DescriptionTokensOrString.md) ; `resultType`: `TypeOf`<`ResultT`\>  }
 
 The base class for pack formula descriptors. Subclasses vary based on the return type of the formula.
 
@@ -18,4 +18,4 @@ The base class for pack formula descriptors. Subclasses vary based on the return
 
 #### Defined in
 
-[api.ts:610](https://github.com/coda/packs-sdk/blob/main/api.ts#L610)
+[api.ts:622](https://github.com/coda/packs-sdk/blob/main/api.ts#L622)

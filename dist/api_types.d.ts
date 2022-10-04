@@ -4,6 +4,45 @@ import type { ArraySchema } from './schema';
 import type { Continuation } from './api';
 import type { MetadataFormula } from './api';
 /**
+ * Internal enumeration about the type of description token.
+ */
+export declare enum DescriptionTokenType {
+    /** Enum value for Text token */
+    Text = "text",
+    /** Enum value for Link token */
+    Link = "link"
+}
+/**
+ * Internal description of a string token.
+ */
+export interface TextDescriptionToken {
+    /** Type discriminator denoting this is text */
+    type: DescriptionTokenType.Text;
+    /** Content of the token */
+    content: string;
+    /** Denotes whether or not the token is bold */
+    bold?: boolean;
+    /** Denotes whether or not the token is italicized */
+    italics?: boolean;
+}
+/**
+ * Internal description of a link token.
+ */
+export interface LinkDescriptionToken {
+    /** Type discriminator denoting this is a link */
+    type: DescriptionTokenType.Link;
+    /** Rich text for the anchor of the link */
+    content: TextDescriptionToken[];
+    /** Link URL */
+    link: string;
+}
+/**
+ * Internal interface describing richly formatted descriptions.
+ */
+export declare type DescriptionToken = TextDescriptionToken | LinkDescriptionToken;
+/** Internal metadata denoting the structure of the description. */
+export declare type DescriptionTokensOrString = DescriptionToken[] | string;
+/**
  * Markers used internally to represent data types for parameters and return values.
  * It should not be necessary to ever use these values directly.
  *
@@ -204,7 +243,7 @@ export interface ParamDef<T extends UnionType> {
     /**
      * A brief description of what this parameter is used for, shown to the user when invoking the formula.
      */
-    description: string;
+    description: DescriptionTokensOrString;
     /**
      * Whether this parameter can be omitted when invoking the formula.
      * All optional parameters must come after all non-optional parameters.

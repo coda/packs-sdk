@@ -1,6 +1,7 @@
 import './test_helper';
 import type {ArrayType} from '../api_types';
 import {ConnectionRequirement} from '../api_types';
+import {DescriptionTokenType} from '../api_types';
 import {ParameterType} from '../api_types';
 import {StatusCodeError} from '../api';
 import type {Type} from '../api_types';
@@ -11,6 +12,7 @@ import {makeMetadataFormula} from '../api';
 import {makeParameter} from '../api';
 import {makeStringParameter} from '../api';
 import {makeSyncTable} from '../api';
+import {parseDescription} from '../api';
 import * as schema from '../schema';
 
 describe('API test', () => {
@@ -405,5 +407,98 @@ describe('API test', () => {
     const body = {};
     const error = new StatusCodeError(400, body, {url: '', method: 'GET'}, {body, headers: {}});
     assert.equal(error.response.body, '{}');
+  });
+
+  describe('parseDescription', () => {
+    it('handles blanks', () => {
+      assert.deepEqual(parseDescription(''), []);
+    });
+
+    it('does not collapse whitespace', () => {
+      assert.deepEqual(
+        parseDescription('   Foo bar     baz    '), 
+        [{type: DescriptionTokenType.Text, content: '   Foo bar     baz    ', bold: false, italics: false}]);
+    });
+
+    it('with other markdown characters', () => {
+      assert.deepEqual(
+        parseDescription(` * One\n * Two`), 
+        [
+          {type: DescriptionTokenType.Text, content: ' * One', bold: false, italics: false},
+          {type: DescriptionTokenType.Text, content: '* Two', bold: false, italics: false},
+        ]);
+    });
+
+    it('with no formatting', () => {
+      assert.deepEqual(
+        parseDescription('Performs some useful function'), 
+        [{type: DescriptionTokenType.Text, content: 'Performs some useful function', bold: false, italics: false}]);
+      assert.deepEqual(
+        parseDescription('Performs some use_ful* function'), 
+        [{type: DescriptionTokenType.Text, content: 'Performs some use_ful* function', bold: false, italics: false}]);        
+    });
+
+    it('with bold / italics', () => {
+      assert.deepEqual(
+        parseDescription('**Performs** some _useful_ function'), 
+        [
+          {type: DescriptionTokenType.Text, content: 'Performs', bold: true, italics: false},
+          {type: DescriptionTokenType.Text, content: ' some ', bold: false, italics: false},
+          {type: DescriptionTokenType.Text, content: 'useful', bold: false, italics: true},
+          {type: DescriptionTokenType.Text, content: ' function', bold: false, italics: false},
+        ],
+      );
+      assert.deepEqual(
+        parseDescription('**_Performs_** some _useful_ function'), 
+        [
+          {type: DescriptionTokenType.Text, content: 'Performs', bold: true, italics: true},
+          {type: DescriptionTokenType.Text, content: ' some ', bold: false, italics: false},
+          {type: DescriptionTokenType.Text, content: 'useful', bold: false, italics: true},
+          {type: DescriptionTokenType.Text, content: ' function', bold: false, italics: false},
+        ],
+      );        
+    });
+
+    it('with links', () => {
+      assert.deepEqual(
+        parseDescription('See [Coda](https://coda.io) for more details'), 
+        [
+          {type: DescriptionTokenType.Text, content: 'See ', bold: false, italics: false},
+          {
+            type: DescriptionTokenType.Link, 
+            link: 'https://coda.io', 
+            content: [{type: DescriptionTokenType.Text, content: 'Coda', bold: false, italics: false}],
+          },
+          {type: DescriptionTokenType.Text, content: ' for more details', bold: false, italics: false},
+        ],
+      );
+      assert.deepEqual(
+        parseDescription('See [**Coda**](https://coda.io) for more details'), 
+        [
+          {type: DescriptionTokenType.Text, content: 'See ', bold: false, italics: false},
+          {
+            type: DescriptionTokenType.Link, 
+            link: 'https://coda.io', 
+            content: [{type: DescriptionTokenType.Text, content: 'Coda', bold: true, italics: false}],
+          },
+          {type: DescriptionTokenType.Text, content: ' for more details', bold: false, italics: false},
+        ],
+      );
+      assert.deepEqual(
+        parseDescription('See [**Coda** site](https://coda.io) for more details'), 
+        [
+          {type: DescriptionTokenType.Text, content: 'See ', bold: false, italics: false},
+          {
+            type: DescriptionTokenType.Link, 
+            link: 'https://coda.io', 
+            content: [
+              {type: DescriptionTokenType.Text, content: 'Coda', bold: true, italics: false},
+              {type: DescriptionTokenType.Text, content: ' site', bold: false, italics: false},
+            ],
+          },
+          {type: DescriptionTokenType.Text, content: ' for more details', bold: false, italics: false},
+        ],
+      ); 
+    });    
   });
 });

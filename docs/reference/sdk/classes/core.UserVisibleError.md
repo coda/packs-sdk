@@ -45,4 +45,4 @@ Error.constructor
 
 #### Defined in
 
-[api.ts:75](https://github.com/coda/packs-sdk/blob/main/api.ts#L75)
+[api.ts:83](https://github.com/coda/packs-sdk/blob/main/api.ts#L83)

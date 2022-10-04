@@ -20,7 +20,7 @@ use [ValueType](core.ValueType.md).
 
 #### Defined in
 
-[api_types.ts:18](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L18)
+[api_types.ts:66](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L66)
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 #### Defined in
 
-[api_types.ts:19](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L19)
+[api_types.ts:67](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L67)
 
 ___
 
@@ -40,7 +40,7 @@ ___
 
 #### Defined in
 
-[api_types.ts:22](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L22)
+[api_types.ts:70](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L70)
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 #### Defined in
 
-[api_types.ts:20](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L20)
+[api_types.ts:68](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L68)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[api_types.ts:21](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L21)
+[api_types.ts:69](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L69)
 
 ___
 
@@ -70,7 +70,7 @@ ___
 
 #### Defined in
 
-[api_types.ts:16](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L16)
+[api_types.ts:64](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L64)
 
 ___
 
@@ -80,7 +80,7 @@ ___
 
 #### Defined in
 
-[api_types.ts:17](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L17)
+[api_types.ts:65](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L65)
 
 ___
 
@@ -90,4 +90,4 @@ ___
 
 #### Defined in
 
-[api_types.ts:15](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L15)
+[api_types.ts:63](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L63)

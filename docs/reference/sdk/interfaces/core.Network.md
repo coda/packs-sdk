@@ -17,7 +17,7 @@ use `isAction` and `connectionRequirement` on the formula definition instead.
 
 #### Defined in
 
-[api_types.ts:470](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L470)
+[api_types.ts:518](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L518)
 
 ___
 
@@ -27,7 +27,7 @@ ___
 
 #### Defined in
 
-[api_types.ts:468](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L468)
+[api_types.ts:516](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L516)
 
 ___
 
@@ -37,4 +37,4 @@ ___
 
 #### Defined in
 
-[api_types.ts:469](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L469)
+[api_types.ts:517](https://github.com/coda/packs-sdk/blob/main/api_types.ts#L517)
