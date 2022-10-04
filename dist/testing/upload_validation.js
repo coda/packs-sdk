@@ -50,6 +50,7 @@ const schema_12 = require("../schema");
 const schema_13 = require("../schema");
 const zod_1 = require("zod");
 const ensure_1 = require("../helpers/ensure");
+const ensure_2 = require("../helpers/ensure");
 const schema_14 = require("../schema");
 const object_utils_1 = require("../helpers/object_utils");
 const object_utils_2 = require("../helpers/object_utils");
@@ -840,22 +841,39 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
                 return;
             }
             const subtitlePropertySchema = schema.properties[f];
-            if ('codaType' in subtitlePropertySchema &&
-                subtitlePropertySchema.codaType &&
-                [
-                    schema_12.ValueHintType.ImageAttachment,
-                    schema_12.ValueHintType.Attachment,
-                    schema_12.ValueHintType.ImageReference,
-                    schema_12.ValueHintType.Embed,
-                    schema_12.ValueHintType.Scale,
-                    schema_12.ValueHintType.Scale,
-                ].includes(subtitlePropertySchema.codaType)) {
-                context.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    path: ['subtitleProperties', i],
-                    message: `The "subtitleProperties" field name "${f}" must refer to a value that does not have a codaType corresponding to one of ImageAttachment, Attachment, ImageReference, Embed, Scale, or Scale.`,
-                });
+            if (!('codaType' in subtitlePropertySchema && subtitlePropertySchema.codaType)) {
                 return;
+            }
+            switch (subtitlePropertySchema.codaType) {
+                case schema_12.ValueHintType.ImageAttachment:
+                case schema_12.ValueHintType.Attachment:
+                case schema_12.ValueHintType.ImageReference:
+                case schema_12.ValueHintType.Embed:
+                case schema_12.ValueHintType.Scale:
+                    context.addIssue({
+                        code: z.ZodIssueCode.custom,
+                        path: ['subtitleProperties', i],
+                        message: `The "subtitleProperties" field name "${f}" must refer to a value that does not have a codaType corresponding to one of ImageAttachment, Attachment, ImageReference, Embed, or Scale.`,
+                    });
+                    return;
+                case schema_12.ValueHintType.Currency:
+                case schema_12.ValueHintType.Date:
+                case schema_12.ValueHintType.DateTime:
+                case schema_12.ValueHintType.Duration:
+                case schema_12.ValueHintType.Email:
+                case schema_12.ValueHintType.Html:
+                case schema_12.ValueHintType.Markdown:
+                case schema_12.ValueHintType.Percent:
+                case schema_12.ValueHintType.Person:
+                case schema_12.ValueHintType.ProgressBar:
+                case schema_12.ValueHintType.Reference:
+                case schema_12.ValueHintType.Slider:
+                case schema_12.ValueHintType.Toggle:
+                case schema_12.ValueHintType.Time:
+                case schema_12.ValueHintType.Url:
+                    return;
+                default:
+                    (0, ensure_2.ensureUnreachable)(subtitlePropertySchema.codaType);
             }
         }
     });

@@ -575,7 +575,7 @@ function normalizeSchemaPropertyIdentifier(key, normalizedProperties) {
     const { label, property: value } = key;
     return {
         property: normalizeSchemaKeyPath(value, normalizedProperties),
-        label: normalizeSchemaKey(label),
+        label,
     };
 }
 /**

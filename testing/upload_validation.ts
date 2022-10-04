@@ -79,6 +79,7 @@ import type {VariousSupportedAuthenticationTypes} from '../types';
 import type {WebBasicAuthentication} from '../types';
 import {ZodParsedType} from 'zod';
 import {assertCondition} from '../helpers/ensure';
+import {ensureUnreachable} from '../helpers/ensure';
 import {isArray} from '../schema';
 import {isDefined} from '../helpers/object_utils';
 import {isNil} from '../helpers/object_utils';
@@ -1041,24 +1042,41 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
           }
 
           const subtitlePropertySchema = schema.properties[f];
-          if (
-            'codaType' in subtitlePropertySchema &&
-            subtitlePropertySchema.codaType &&
-            [
-              ValueHintType.ImageAttachment,
-              ValueHintType.Attachment,
-              ValueHintType.ImageReference,
-              ValueHintType.Embed,
-              ValueHintType.Scale,
-              ValueHintType.Scale,
-            ].includes(subtitlePropertySchema.codaType)
-          ) {
-            context.addIssue({
-              code: z.ZodIssueCode.custom,
-              path: ['subtitleProperties', i],
-              message: `The "subtitleProperties" field name "${f}" must refer to a value that does not have a codaType corresponding to one of ImageAttachment, Attachment, ImageReference, Embed, Scale, or Scale.`,
-            });
+
+          if (!('codaType' in subtitlePropertySchema && subtitlePropertySchema.codaType)) {
             return;
+          }
+
+          switch (subtitlePropertySchema.codaType) {
+            case ValueHintType.ImageAttachment:
+            case ValueHintType.Attachment:
+            case ValueHintType.ImageReference:
+            case ValueHintType.Embed:
+            case ValueHintType.Scale:
+              context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['subtitleProperties', i],
+                message: `The "subtitleProperties" field name "${f}" must refer to a value that does not have a codaType corresponding to one of ImageAttachment, Attachment, ImageReference, Embed, or Scale.`,
+              });
+              return;
+            case ValueHintType.Currency:
+            case ValueHintType.Date:
+            case ValueHintType.DateTime:
+            case ValueHintType.Duration:
+            case ValueHintType.Email:
+            case ValueHintType.Html:
+            case ValueHintType.Markdown:
+            case ValueHintType.Percent:
+            case ValueHintType.Person:
+            case ValueHintType.ProgressBar:
+            case ValueHintType.Reference:
+            case ValueHintType.Slider:
+            case ValueHintType.Toggle:
+            case ValueHintType.Time:
+            case ValueHintType.Url:
+              return;
+            default:
+              ensureUnreachable(subtitlePropertySchema.codaType);
           }
         }
       });

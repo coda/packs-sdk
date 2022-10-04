@@ -774,7 +774,7 @@ export interface PropertyIdentifierDetails {
 	property: string;
 }
 /**
- * An identifier for an object schema property that comprises of either an exact property match with the top-level
+ * An identifier for an object schema property that is comprised of either an exact property match with the top-level
  * `properties or a json path (https://github.com/json-path/JsonPath) to a nested property.
  */
 export declare type PropertyIdentifier<K extends string = string> = K | string | PropertyIdentifierDetails;
