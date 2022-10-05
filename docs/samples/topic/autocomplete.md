@@ -148,7 +148,7 @@ pack.addFormula({
 });
 ```
 ## Autocomplete on vararg key-value pairs
-A formula with vararg parameters that represent key-value pairs, which provides autocomplete for available keys and for acceptable values based on the selected key. This sample generates a fictitious ice cream order.
+A formula with vararg parameters that represent key-value pairs, which provides autocomplete for available keys and for acceptable values based on the selected key. This sample generates a fictitious ice cream order. Note: This technique will not work when using vararg parameters in the builder UIs.
 
 ```ts
 import * as coda from "@codahq/packs-sdk";

@@ -313,8 +313,9 @@ There are some important differences between vararg parameters and standard para
 - You can't provide a default value, since the user must always enter an explicit value.
 - You can have more than one, but if so the user is required to enter complete sets of values. For example, if you have two vararg parameters `a` and `b`, the user can't provide a value for `a` without also providing a value for `b`. These pairs of parameters can then be repeated multiple times: `Foo("a1", "b1", "a2", "b2")`.
 
-??? bug "Not available in actions builder or sync table settings"
-    At the moment, vararg parameters can only be set in the formula editor. In the action dialog users can switch from the default structured builder to the formula editor, but there is no way to set them for sync tables. <!-- go/bug/20828 -->
+??? info "Partially supported in actions builder or sync table settings"
+    
+    While vararg parameters always work in the formula editor, they are only partially supported in the builder UIs. A single vararg parameter will be shown as if it was a single array parameter, and a pair of vararg parameters will be shown with a nice UI similar to that used by built-in actions. Three or more vararg parameters won’t show up in the builder UIs at all, and the user will need to visit the formula editor to set their values. <!-- go/bug/20828 -->
 
 ??? example "Example: Step diagram formula"
     ```ts

@@ -64,7 +64,7 @@ lint:
 	find . -name "*.ts" | grep -v /dist/ | grep -v /node_modules/ | grep -v .d.ts | xargs ${ROOTDIR}/node_modules/.bin/eslint
 
 	# Markdown lint.
-	npx remark docs --quiet --frail --ignore-pattern 'docs/reference/*'
+	npx remark docs --quiet --frail --ignore-pattern 'docs/reference/*' --ignore-pattern 'docs/_*'
 
 	# release-it only understands "Unreleased" as the name of an upcoming release
 	RELEASE_NAME="$(shell egrep -m 1 '^## ' CHANGELOG.md | egrep -v "^## \[")"; \
