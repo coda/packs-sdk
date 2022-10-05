@@ -867,7 +867,7 @@ export type PropertyIdentifier<K extends string = string> = K | string | Propert
  */
 export type ObjectSchemaPathProperties = Pick<
   GenericObjectSchema,
-  'titleProperty' | 'linkProperty' | 'imageProperty' | 'snippetProperty'
+  'titleProperty' | 'linkProperty' | 'imageProperty' | 'snippetProperty' | 'subtitleProperties'
 >;
 
 /**

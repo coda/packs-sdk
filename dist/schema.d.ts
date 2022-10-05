@@ -754,7 +754,7 @@ export declare type PropertyIdentifier<K extends string = string> = K | string |
  * The {@link ObjectSchemaDefinition} properties that reference keys in the `properties` object. These should all be
  * {@link PropertyIdentifier} types.
  */
-export declare type ObjectSchemaPathProperties = Pick<GenericObjectSchema, 'titleProperty' | 'linkProperty' | 'imageProperty' | 'snippetProperty'>;
+export declare type ObjectSchemaPathProperties = Pick<GenericObjectSchema, 'titleProperty' | 'linkProperty' | 'imageProperty' | 'snippetProperty' | 'subtitleProperties'>;
 /**
  * A schema definition for an object value (a value with key-value pairs).
  */

@@ -774,13 +774,15 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
 })
     .superRefine((data, context) => {
     const schema = data;
+    /**
+     * Validates a PropertyIdentifier key in the object schema.
+     */
     function validateProperty(propertyKey, isValidSchema, invalidSchemaMessage) {
-        var _a;
-        const propertyValueRaw = schema[propertyKey];
-        if (propertyValueRaw) {
-            const propertyValue = typeof propertyValueRaw === 'string' ? propertyValueRaw : propertyValueRaw === null || propertyValueRaw === void 0 ? void 0 : propertyValueRaw.property;
+        function validatePropertyIdentifier(value) {
+            var _a;
+            const propertyValue = typeof value === 'string' ? value : value === null || value === void 0 ? void 0 : value.property;
             let propertyValueIsPath = false;
-            let propertySchema = typeof schema[propertyKey] === 'string' && propertyValue in schema.properties
+            let propertySchema = typeof propertyValueRaw === 'string' && propertyValue in schema.properties
                 ? schema.properties[propertyValue]
                 : undefined;
             if (!propertySchema) {
@@ -811,6 +813,16 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
                 return;
             }
         }
+        const propertyValueRaw = schema[propertyKey];
+        if (propertyValueRaw) {
+            if (Array.isArray(propertyValueRaw)) {
+                propertyValueRaw.forEach(propertyIdentifier => {
+                    validatePropertyIdentifier(propertyIdentifier);
+                });
+                return;
+            }
+            validatePropertyIdentifier(propertyValueRaw);
+        }
     }
     const validateTitleProperty = () => {
         return validateProperty('titleProperty', propertySchema => [schema_13.ValueType.String, schema_13.ValueType.Object].includes(propertySchema.type), `must refer to a "ValueType.String" or "ValueType.Object" property.`);
@@ -826,23 +838,10 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
     const validateLinkProperty = () => {
         return validateProperty('linkProperty', linkPropertySchema => linkPropertySchema.type === schema_13.ValueType.String && linkPropertySchema.codaType === schema_12.ValueHintType.Url, `must refer to a "ValueType.String" property with a "ValueHintType.Url" "codaType".`);
     };
-    validateTitleProperty();
-    validateLinkProperty();
-    validateImageProperty();
-    validateSnippetProperty();
-    (schema.subtitleProperties || []).forEach((f, i) => {
-        if (typeof f === 'string') {
-            if (!(f in schema.properties)) {
-                context.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    path: ['subtitleProperties', i],
-                    message: `The "subtitleProperties" field name "${f}" does not exist in the "properties" object.`,
-                });
-                return;
-            }
-            const subtitlePropertySchema = schema.properties[f];
+    const validateSubtitleProperties = () => {
+        return validateProperty('subtitleProperties', subtitlePropertySchema => {
             if (!('codaType' in subtitlePropertySchema && subtitlePropertySchema.codaType)) {
-                return;
+                return true;
             }
             switch (subtitlePropertySchema.codaType) {
                 case schema_12.ValueHintType.ImageAttachment:
@@ -850,12 +849,7 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
                 case schema_12.ValueHintType.ImageReference:
                 case schema_12.ValueHintType.Embed:
                 case schema_12.ValueHintType.Scale:
-                    context.addIssue({
-                        code: z.ZodIssueCode.custom,
-                        path: ['subtitleProperties', i],
-                        message: `The "subtitleProperties" field name "${f}" must refer to a value that does not have a codaType corresponding to one of ImageAttachment, Attachment, ImageReference, Embed, or Scale.`,
-                    });
-                    return;
+                    return false;
                 case schema_12.ValueHintType.Currency:
                 case schema_12.ValueHintType.Date:
                 case schema_12.ValueHintType.DateTime:
@@ -871,12 +865,17 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
                 case schema_12.ValueHintType.Toggle:
                 case schema_12.ValueHintType.Time:
                 case schema_12.ValueHintType.Url:
-                    return;
+                    return true;
                 default:
                     (0, ensure_2.ensureUnreachable)(subtitlePropertySchema.codaType);
             }
-        }
-    });
+        }, `must refer to a value that does not have a codaType corresponding to one of ImageAttachment, Attachment, ImageReference, Embed, or Scale.`);
+    };
+    validateTitleProperty();
+    validateLinkProperty();
+    validateImageProperty();
+    validateSnippetProperty();
+    validateSubtitleProperties();
 }));
 const objectPropertyUnionSchema = z.union([
     booleanPropertySchema,

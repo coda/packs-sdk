@@ -943,18 +943,20 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
     .superRefine((data, context) => {
       const schema = data as GenericObjectSchema;
 
+      /**
+       * Validates a PropertyIdentifier key in the object schema.
+       */
       function validateProperty(
         propertyKey: keyof ObjectSchemaPathProperties,
         isValidSchema: (schema: Schema & ObjectSchemaProperty) => boolean,
         invalidSchemaMessage: string,
       ) {
-        const propertyValueRaw = schema[propertyKey];
-        if (propertyValueRaw) {
-          const propertyValue = typeof propertyValueRaw === 'string' ? propertyValueRaw : propertyValueRaw?.property;
-          let propertyValueIsPath = false;
+        function validatePropertyIdentifier(value: PropertyIdentifier) {
+          const propertyValue = typeof value === 'string' ? value : value?.property;
 
+          let propertyValueIsPath = false;
           let propertySchema =
-            typeof schema[propertyKey] === 'string' && propertyValue in schema.properties
+            typeof propertyValueRaw === 'string' && propertyValue in schema.properties
               ? schema.properties[propertyValue]
               : undefined;
           if (!propertySchema) {
@@ -987,6 +989,18 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
             });
             return;
           }
+        }
+
+        const propertyValueRaw = schema[propertyKey];
+        if (propertyValueRaw) {
+          if (Array.isArray(propertyValueRaw)) {
+            propertyValueRaw.forEach(propertyIdentifier => {
+              validatePropertyIdentifier(propertyIdentifier);
+            });
+            return;
+          }
+
+          validatePropertyIdentifier(propertyValueRaw);
         }
       }
 
@@ -1026,60 +1040,50 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
         );
       };
 
+      const validateSubtitleProperties = () => {
+        return validateProperty(
+          'subtitleProperties',
+          subtitlePropertySchema => {
+            if (!('codaType' in subtitlePropertySchema && subtitlePropertySchema.codaType)) {
+              return true;
+            }
+
+            switch (subtitlePropertySchema.codaType) {
+              case ValueHintType.ImageAttachment:
+              case ValueHintType.Attachment:
+              case ValueHintType.ImageReference:
+              case ValueHintType.Embed:
+              case ValueHintType.Scale:
+                return false;
+              case ValueHintType.Currency:
+              case ValueHintType.Date:
+              case ValueHintType.DateTime:
+              case ValueHintType.Duration:
+              case ValueHintType.Email:
+              case ValueHintType.Html:
+              case ValueHintType.Markdown:
+              case ValueHintType.Percent:
+              case ValueHintType.Person:
+              case ValueHintType.ProgressBar:
+              case ValueHintType.Reference:
+              case ValueHintType.Slider:
+              case ValueHintType.Toggle:
+              case ValueHintType.Time:
+              case ValueHintType.Url:
+                return true;
+              default:
+                ensureUnreachable(subtitlePropertySchema.codaType);
+            }
+          },
+          `must refer to a value that does not have a codaType corresponding to one of ImageAttachment, Attachment, ImageReference, Embed, or Scale.`,
+        );
+      };
+
       validateTitleProperty();
       validateLinkProperty();
       validateImageProperty();
       validateSnippetProperty();
-      (schema.subtitleProperties || []).forEach((f, i) => {
-        if (typeof f === 'string') {
-          if (!(f in schema.properties)) {
-            context.addIssue({
-              code: z.ZodIssueCode.custom,
-              path: ['subtitleProperties', i],
-              message: `The "subtitleProperties" field name "${f}" does not exist in the "properties" object.`,
-            });
-            return;
-          }
-
-          const subtitlePropertySchema = schema.properties[f];
-
-          if (!('codaType' in subtitlePropertySchema && subtitlePropertySchema.codaType)) {
-            return;
-          }
-
-          switch (subtitlePropertySchema.codaType) {
-            case ValueHintType.ImageAttachment:
-            case ValueHintType.Attachment:
-            case ValueHintType.ImageReference:
-            case ValueHintType.Embed:
-            case ValueHintType.Scale:
-              context.addIssue({
-                code: z.ZodIssueCode.custom,
-                path: ['subtitleProperties', i],
-                message: `The "subtitleProperties" field name "${f}" must refer to a value that does not have a codaType corresponding to one of ImageAttachment, Attachment, ImageReference, Embed, or Scale.`,
-              });
-              return;
-            case ValueHintType.Currency:
-            case ValueHintType.Date:
-            case ValueHintType.DateTime:
-            case ValueHintType.Duration:
-            case ValueHintType.Email:
-            case ValueHintType.Html:
-            case ValueHintType.Markdown:
-            case ValueHintType.Percent:
-            case ValueHintType.Person:
-            case ValueHintType.ProgressBar:
-            case ValueHintType.Reference:
-            case ValueHintType.Slider:
-            case ValueHintType.Toggle:
-            case ValueHintType.Time:
-            case ValueHintType.Url:
-              return;
-            default:
-              ensureUnreachable(subtitlePropertySchema.codaType);
-          }
-        }
-      });
+      validateSubtitleProperties();
     }),
 );
 

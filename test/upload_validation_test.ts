@@ -2017,6 +2017,23 @@ describe('Pack metadata Validation', () => {
             titleProperty: 'badProperty',
           }),
         );
+        await validateJsonAndAssertFails(
+          metadataForFormulaWithObjectSchema({
+            ...baseMetadata,
+            subtitleProperties: ['badProperty'],
+          }),
+        );
+        await validateJsonAndAssertFails(
+          metadataForFormulaWithObjectSchema({
+            ...baseMetadata,
+            subtitleProperties: [
+              'primary',
+              {
+                property: 'nestedObject.nonexistent',
+              },
+            ],
+          }),
+        );
         // Pathing does not work for a property with invalid characters.
         await validateJsonAndAssertFails(
           metadataForFormulaWithObjectSchema({
@@ -2051,6 +2068,12 @@ describe('Pack metadata Validation', () => {
           metadataForFormulaWithObjectSchema({
             ...baseMetadata,
             titleProperty: {property: baseMetadata.titleProperty as string, label: 'new label'},
+          }),
+        );
+        await validateJson(
+          metadataForFormulaWithObjectSchema({
+            ...baseMetadata,
+            subtitleProperties: [{property: baseMetadata.titleProperty as string, label: 'new label'}],
           }),
         );
         await validateJson(metadataForFormulaWithObjectSchema(baseMetadata));
