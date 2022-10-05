@@ -1,1 +1,1 @@
-*[structured builders]: The form-based UIs for parameters shown when configuring buttons, automations, or sync tables.
+*[builder UIs]: The form-based UIs for parameters shown when configuring buttons, automations, or sync tables.
