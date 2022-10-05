@@ -951,7 +951,10 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
         isValidSchema: (schema: Schema & ObjectSchemaProperty) => boolean,
         invalidSchemaMessage: string,
       ) {
-        function validatePropertyIdentifier(value: PropertyIdentifier) {
+        function validatePropertyIdentifier(
+          value: PropertyIdentifier,
+          objectPath: Array<string | number> = [propertyKey],
+        ) {
           const propertyValue = typeof value === 'string' ? value : value?.property;
 
           let propertyValueIsPath = false;
@@ -975,7 +978,7 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
           if (!propertySchema) {
             context.addIssue({
               code: z.ZodIssueCode.custom,
-              path: [propertyKey],
+              path: objectPath,
               message: `The ${propertyIdentiferDisplay} "${propertyValue}" does not exist in the "properties" object.`,
             });
             return;
@@ -984,7 +987,7 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
           if (!isValidSchema(propertySchema)) {
             context.addIssue({
               code: z.ZodIssueCode.custom,
-              path: [propertyKey],
+              path: objectPath,
               message: `The ${propertyIdentiferDisplay} "${propertyValue}" ${invalidSchemaMessage}`,
             });
             return;
@@ -994,8 +997,8 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
         const propertyValueRaw = schema[propertyKey];
         if (propertyValueRaw) {
           if (Array.isArray(propertyValueRaw)) {
-            propertyValueRaw.forEach(propertyIdentifier => {
-              validatePropertyIdentifier(propertyIdentifier);
+            propertyValueRaw.forEach((propertyIdentifier, i) => {
+              validatePropertyIdentifier(propertyIdentifier, [propertyKey, i]);
             });
             return;
           }

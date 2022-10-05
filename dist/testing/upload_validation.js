@@ -778,7 +778,7 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
      * Validates a PropertyIdentifier key in the object schema.
      */
     function validateProperty(propertyKey, isValidSchema, invalidSchemaMessage) {
-        function validatePropertyIdentifier(value) {
+        function validatePropertyIdentifier(value, objectPath = [propertyKey]) {
             var _a;
             const propertyValue = typeof value === 'string' ? value : value === null || value === void 0 ? void 0 : value.property;
             let propertyValueIsPath = false;
@@ -799,7 +799,7 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
             if (!propertySchema) {
                 context.addIssue({
                     code: z.ZodIssueCode.custom,
-                    path: [propertyKey],
+                    path: objectPath,
                     message: `The ${propertyIdentiferDisplay} "${propertyValue}" does not exist in the "properties" object.`,
                 });
                 return;
@@ -807,7 +807,7 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
             if (!isValidSchema(propertySchema)) {
                 context.addIssue({
                     code: z.ZodIssueCode.custom,
-                    path: [propertyKey],
+                    path: objectPath,
                     message: `The ${propertyIdentiferDisplay} "${propertyValue}" ${invalidSchemaMessage}`,
                 });
                 return;
@@ -816,8 +816,8 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
         const propertyValueRaw = schema[propertyKey];
         if (propertyValueRaw) {
             if (Array.isArray(propertyValueRaw)) {
-                propertyValueRaw.forEach(propertyIdentifier => {
-                    validatePropertyIdentifier(propertyIdentifier);
+                propertyValueRaw.forEach((propertyIdentifier, i) => {
+                    validatePropertyIdentifier(propertyIdentifier, [propertyKey, i]);
                 });
                 return;
             }
