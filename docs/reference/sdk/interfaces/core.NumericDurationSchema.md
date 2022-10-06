@@ -6,7 +6,7 @@ nav: "NumericDurationSchema"
 [core](../modules/core.md).NumericDurationSchema
 
 A schema representing a return value or object property that is provided as a number,
-which Coda should interpret as a duration. The given number should be in seconds of the duration.
+which Coda should interpret as a duration. The given number should be a number of days.
 
 ## Hierarchy
 
