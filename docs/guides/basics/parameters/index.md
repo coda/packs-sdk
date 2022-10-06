@@ -86,7 +86,7 @@ String parameters are compatible with almost every column type in Coda, as most 
 
 ??? example "Example: Hello world formula"
     ```ts
-    --8<-- "examples/hello_world/minimal.ts"
+    --8<-- "samples/packs/hello_world/minimal.ts"
     ```
 
 
@@ -112,7 +112,7 @@ The number equivalent for some column types may not be obvious. Specifically:
 
 ??? example "Example: Pizza eaten formula"
     ```ts
-    --8<-- "examples/data-type/pizza_eaten.ts"
+    --8<-- "samples/packs/data-type/pizza_eaten.ts"
     ```
 
 
@@ -135,7 +135,7 @@ JavaScript Date objects can only represent a specific moment in time. This means
 
 ??? example "Example: Good New Years Eve glasses formula"
     ```ts
-    --8<-- "examples/dates/nye_glasses.ts"
+    --8<-- "samples/packs/dates/nye_glasses.ts"
     ```
 
 
@@ -149,7 +149,7 @@ If you need access to the binary content of the image or file you'll need to use
 
 ??? example "Example: Image file size formula"
     ```ts
-    --8<-- "examples/image/file_size.ts"
+    --8<-- "samples/packs/image/file_size.ts"
     ```
 
 
@@ -159,7 +159,7 @@ Each of the parameter types described above has an array variant that allows you
 
 ??? example "Example: Longest string formula"
     ```ts
-    --8<-- "examples/parameter/longest.ts"
+    --8<-- "samples/packs/parameter/longest.ts"
     ```
 
 
@@ -169,7 +169,7 @@ Passing a table column into an array parameter can be error prone, because if th
 
 ??? example "Example: Total cost formula"
     ```ts
-    --8<-- "examples/parameter/total_cost.ts"
+    --8<-- "samples/packs/parameter/total_cost.ts"
     ```
 
 
@@ -244,7 +244,7 @@ In this case the `cost` and `taxRate` parameters would be set, but the `quantity
 
 ??? example "Example: Scream text formula"
     ```ts
-    --8<-- "examples/parameter/scream.ts"
+    --8<-- "samples/packs/parameter/scream.ts"
     ```
 
 
@@ -267,7 +267,7 @@ Currently suggested values are only used for required parameters, and setting th
 
 ??? example "Example: Random dice roll action"
     ```ts
-    --8<-- "examples/action/dice.ts"
+    --8<-- "samples/packs/action/dice.ts"
     ```
 
 
@@ -319,7 +319,7 @@ There are some important differences between vararg parameters and standard para
 
 ??? example "Example: Step diagram formula"
     ```ts
-    --8<-- "examples/parameter/steps.ts"
+    --8<-- "samples/packs/parameter/steps.ts"
     ```
 
 
@@ -366,7 +366,7 @@ pack.addFormula({
 
 ??? example "Example: Math formulas"
     ```ts
-    --8<-- "examples/math/math.ts"
+    --8<-- "samples/packs/math/math.ts"
     ```
 
 

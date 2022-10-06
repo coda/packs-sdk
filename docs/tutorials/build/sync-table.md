@@ -524,7 +524,7 @@ To filter to a specific topic, open the sync option for the table, click **Add c
 
 ??? example "View the full code"
     ```ts
-    --8<-- "examples/tutorials/sync-table/build1.ts"
+    --8<-- "samples/packs/tutorials/sync-table/build1.ts"
     ```
 
 
@@ -801,7 +801,7 @@ The author column displays as a chip, since it's a rich object itself, and hover
 
 ??? example "View the full code"
     ```ts
-    --8<-- "examples/tutorials/sync-table/build2.ts"
+    --8<-- "samples/packs/tutorials/sync-table/build2.ts"
     ```
 
 
@@ -950,7 +950,7 @@ The Pack maker tools will show multiple executions of the sync formula, with tho
 
 ??? example "View the full code"
     ```ts
-    --8<-- "examples/tutorials/sync-table/build3.ts"
+    --8<-- "samples/packs/tutorials/sync-table/build3.ts"
     ```
 
 ## :material-fast-forward: Next steps

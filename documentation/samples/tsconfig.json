@@ -1,11 +1,10 @@
 {
-  "extends": "./tsconfig.json",
   "compilerOptions": {
     "noEmit": true,
     "strict": false,
     "noImplicitAny": false,
     "noUnusedLocals": false,
   },
-  "include": ["./documentation/snippets/**/*.ts", "./documentation/examples/**/*.ts"],
+  "include": ["**/*.ts"],
   "exclude": []
 }

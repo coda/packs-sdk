@@ -165,7 +165,7 @@ compile-documentation-scripts:
 
 .PHONY: compile-samples
 compile-samples:
-	${ROOTDIR}/node_modules/.bin/tsc --project tsconfig.samples.json
+	${ROOTDIR}/node_modules/.bin/tsc --project ./documentation/samples/tsconfig.json
 
 .PHONY: generated-documentation
 generated-documentation: compile-samples
