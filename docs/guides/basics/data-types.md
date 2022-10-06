@@ -261,7 +261,7 @@ When used with a number value, the number should contain the number of seconds s
 
 ### Durations {: #durations}
 
-The [`Duration`][Duration] value hint represents an amount of time, rather than a specific time. It can be applied to `Number` or `String` values. For numbers, the value represents the number of days. For strings, the value must match one of a few formats:
+The [`Duration`][Duration] value hint represents an amount of time, rather than a specific time. It can be applied to `Number` or `String` values. For numbers, the value represents the number of days (fractional amounts allowed). For strings, the value must match one of a few formats:
 
 | Example                     | Result              | Notes                           |
 | --------------------------- | ------------------- | ------------------------------- |
