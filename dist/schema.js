@@ -499,17 +499,21 @@ function makeObjectSchema(schemaDef) {
 }
 exports.makeObjectSchema = makeObjectSchema;
 function validateObjectSchema(schema) {
+    // TODO(jonathan): These should all move to upload_validation checks, since these aren't getting
+    // enforced on upload and a hacked CLI could just bypass these.
+    // These aren't particularly important checks, they're more just aids for the maker
+    // so that their reference and people values won't be broken at runtime.
     if (schema.codaType === ValueHintType.Reference) {
         const { id, identity, primary } = (0, migration_1.objectSchemaHelper)(schema);
-        checkRequiredFieldInObjectSchema(id, 'id', schema.codaType);
+        checkRequiredFieldInObjectSchema(id, 'idProperty', schema.codaType);
         checkRequiredFieldInObjectSchema(identity, 'identity', schema.codaType);
-        checkRequiredFieldInObjectSchema(primary, 'primary', schema.codaType);
+        checkRequiredFieldInObjectSchema(primary, 'displayProperty', schema.codaType);
         checkSchemaPropertyIsRequired((0, ensure_2.ensureExists)(id), schema, 'idProperty');
         checkSchemaPropertyIsRequired((0, ensure_2.ensureExists)(primary), schema, 'displayProperty');
     }
     if (schema.codaType === ValueHintType.Person) {
         const { id } = (0, migration_1.objectSchemaHelper)(schema);
-        checkRequiredFieldInObjectSchema(id, 'id', schema.codaType);
+        checkRequiredFieldInObjectSchema(id, 'idProperty', schema.codaType);
         checkSchemaPropertyIsRequired((0, ensure_2.ensureExists)(id), schema, 'idProperty');
     }
     for (const [_propertyKey, propertySchema] of Object.entries(schema.properties)) {
