@@ -173,6 +173,8 @@ export type {ObjectSchemaDefinition} from './schema';
 export type {ObjectSchemaProperties} from './schema';
 export type {ObjectSchemaProperty} from './schema';
 export type {ProgressBarSchema} from './schema';
+export {PropertyIdentifier} from './schema';
+export {PropertyIdentifierDetails} from './schema';
 export {ScaleIconSet} from './schema';
 export type {ScaleSchema} from './schema';
 export type {Schema} from './schema';

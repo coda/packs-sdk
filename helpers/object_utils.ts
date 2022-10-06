@@ -34,7 +34,7 @@ export function deepCopy<T>(obj: T): T {
 }
 
 /**
- * Returns whethere the value is a Promise.
+ * Returns whether the value is a Promise.
  */
 export function isPromise<T>(obj: any): obj is Promise<T> {
   return obj && typeof obj === 'object' && 'then' in obj;

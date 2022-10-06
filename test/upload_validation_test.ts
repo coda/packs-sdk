@@ -331,15 +331,19 @@ describe('Pack metadata Validation', () => {
     });
 
     it('duplicate formula names', async () => {
-      const formulas = []
+      const formulas = [];
       for (const name of ['foo', 'Foo', 'foo_bar', 'Foo123', 'føø']) {
-        formulas.push(formulaToMetadata(makeNumericFormula({
-          name,
-          description: 'My description',
-          examples: [],
-          parameters: [],
-          execute: () => 1,
-        })));
+        formulas.push(
+          formulaToMetadata(
+            makeNumericFormula({
+              name,
+              description: 'My description',
+              examples: [],
+              parameters: [],
+              execute: () => 1,
+            }),
+          ),
+        );
       }
       const metadata = createFakePackVersionMetadata({
         formulas,
@@ -1966,6 +1970,154 @@ describe('Pack metadata Validation', () => {
         ]);
       });
 
+      it('evaluates JSON path properly', async () => {
+        const baseMetadata: ObjectSchemaDefinition<string, string> = {
+          type: ValueType.Object,
+          properties: {
+            primary: {type: ValueType.Number},
+            nestedObject: {
+              type: ValueType.Object,
+              properties: {
+                name: {type: ValueType.String},
+                array: {
+                  type: ValueType.Array,
+                  items: {type: ValueType.Object, properties: {name: {type: ValueType.String}}},
+                },
+              },
+            },
+            array: {
+              type: ValueType.Array,
+              items: {type: ValueType.Object, properties: {name: {type: ValueType.String}}},
+            },
+          },
+          titleProperty: 'nestedObject.name',
+          snippetProperty: 'array[0].name',
+        };
+        let err = await validateJsonAndAssertFails(
+          metadataForFormulaWithObjectSchema({
+            ...baseMetadata,
+            snippetProperty: 'array[0][0].name',
+          }),
+        );
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'The "snippetProperty" path "Array[0][0].Name" does not exist in the "properties" object.',
+            path: 'formulas[0].schema.snippetProperty',
+          },
+        ]);
+        err = await validateJsonAndAssertFails(
+          metadataForFormulaWithObjectSchema({
+            ...baseMetadata,
+            imageProperty: 'nestedObject.name',
+          }),
+        );
+        assert.deepEqual(err.validationErrors, [
+          {
+            message:
+              'The "imageProperty" path "NestedObject.Name" must refer to a "ValueType.String" property with a "ValueHintType.ImageAttachment" or "ValueHintType.ImageReference" "codaType".',
+            path: 'formulas[0].schema.imageProperty',
+          },
+        ]);
+        err = await validateJsonAndAssertFails(
+          metadataForFormulaWithObjectSchema({
+            ...baseMetadata,
+            titleProperty: 'nestedObject.nonexistent',
+          }),
+        );
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'The "titleProperty" path "NestedObject.Nonexistent" does not exist in the "properties" object.',
+            path: 'formulas[0].schema.titleProperty',
+          },
+        ]);
+        err = await validateJsonAndAssertFails(
+          metadataForFormulaWithObjectSchema({
+            ...baseMetadata,
+            titleProperty: 'badProperty',
+          }),
+        );
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'The "titleProperty" path "BadProperty" does not exist in the "properties" object.',
+            path: 'formulas[0].schema.titleProperty',
+          },
+        ]);
+        err = await validateJsonAndAssertFails(
+          metadataForFormulaWithObjectSchema({
+            ...baseMetadata,
+            subtitleProperties: ['badProperty'],
+          }),
+        );
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'The "subtitleProperties" path "BadProperty" does not exist in the "properties" object.',
+            path: 'formulas[0].schema.subtitleProperties[0]',
+          },
+        ]);
+        err = await validateJsonAndAssertFails(
+          metadataForFormulaWithObjectSchema({
+            ...baseMetadata,
+            subtitleProperties: [
+              'primary',
+              {
+                property: 'nestedObject.nonexistent',
+              },
+            ],
+          }),
+        );
+        assert.deepEqual(err.validationErrors, [
+          {
+            message:
+              'The "subtitleProperties" path "NestedObject.Nonexistent" does not exist in the "properties" object.',
+            path: 'formulas[0].schema.subtitleProperties[1]',
+          },
+        ]);
+
+        // Pathing does not work for a property with invalid characters.
+        await validateJsonAndAssertFails(
+          metadataForFormulaWithObjectSchema({
+            ...baseMetadata,
+            properties: {
+              ...baseMetadata.properties,
+              'What[] is. your name?': {type: ValueType.Object, properties: {name: {type: ValueType.String}}},
+            },
+            titleProperty: 'What[] is. your name?.name',
+          }),
+        );
+
+        // Valid paths
+        await validateJson(
+          metadataForFormulaWithObjectSchema({
+            ...baseMetadata,
+            titleProperty: 'nestedObject.array[0].name',
+          }),
+        );
+        // works for initial property with periods / brackets
+        await validateJson(
+          metadataForFormulaWithObjectSchema({
+            ...baseMetadata,
+            properties: {
+              ...baseMetadata.properties,
+              'What[] is. your name?': {type: ValueType.Object, properties: {name: {type: ValueType.String}}},
+            },
+            titleProperty: 'What[] is. your name?',
+          }),
+        );
+        await validateJson(
+          metadataForFormulaWithObjectSchema({
+            ...baseMetadata,
+            titleProperty: {property: baseMetadata.titleProperty as string, label: 'new label'},
+          }),
+        );
+        await validateJson(
+          metadataForFormulaWithObjectSchema({
+            ...baseMetadata,
+            subtitleProperties: [{property: baseMetadata.titleProperty as string, label: 'new label'}],
+          }),
+        );
+        await validateJson(metadataForFormulaWithObjectSchema(baseMetadata));
+      });
+
       it('imageProperty is invalid', async () => {
         let metadata = metadataForFormulaWithObjectSchema({
           type: ValueType.Object,
@@ -2071,7 +2223,7 @@ describe('Pack metadata Validation', () => {
           properties: {
             primary: {type: ValueType.Number},
           },
-          descriptionProperty: 'garbage',
+          snippetProperty: 'garbage',
         });
         await validateJsonAndAssertFails(metadata);
         metadata = metadataForFormulaWithObjectSchema({
@@ -2079,7 +2231,7 @@ describe('Pack metadata Validation', () => {
           properties: {
             primary: {type: ValueType.Number},
           },
-          descriptionProperty: 'primary',
+          snippetProperty: 'primary',
         });
         await validateJsonAndAssertFails(metadata);
         metadata = metadataForFormulaWithObjectSchema({
@@ -2087,7 +2239,7 @@ describe('Pack metadata Validation', () => {
           properties: {
             primary: {type: ValueType.String},
           },
-          descriptionProperty: 'primary',
+          snippetProperty: 'primary',
         });
         await validateJson(metadata);
       });

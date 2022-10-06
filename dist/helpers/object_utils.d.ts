@@ -9,6 +9,6 @@ export declare function isDefined<T>(obj: T | null | undefined): obj is T;
 export declare function isNil<T>(obj: T | null | undefined): obj is null | undefined;
 export declare function deepCopy<T>(obj: T): T;
 /**
- * Returns whethere the value is a Promise.
+ * Returns whether the value is a Promise.
  */
 export declare function isPromise<T>(obj: any): obj is Promise<T>;

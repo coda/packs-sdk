@@ -840,8 +840,41 @@ export interface Identity extends IdentityDefinition {
 }
 
 /**
+ * An identifer for a schema property for specifying labels along with the reference to the property.
+ * This is useful for specifying a label for a property reference that uses a json path, where the
+ * label of the underlying property might not be descriptive enough at the top-level object.
+ */
+export interface PropertyIdentifierDetails {
+  /**
+   * An optional label for the property. This will be used in locations where the label appears with the property.
+   */
+  label?: string;
+  /**
+   * The value of the property to reference. Can be either an exact property name or a json path.
+   */
+  property: string;
+}
+
+/**
+ * An identifier for an object schema property that is comprised of either an exact property match with the top-level
+ * `properties or a json path (https://github.com/json-path/JsonPath) to a nested property.
+ */
+export type PropertyIdentifier<K extends string = string> = K | string | PropertyIdentifierDetails;
+
+/**
+ * The {@link ObjectSchemaDefinition} properties that reference keys in the `properties` object. These should all be
+ * {@link PropertyIdentifier} types.
+ */
+export type ObjectSchemaPathProperties = Pick<
+  GenericObjectSchema,
+  'titleProperty' | 'linkProperty' | 'imageProperty' | 'snippetProperty' | 'subtitleProperties'
+>;
+
+/**
  * A schema definition for an object value (a value with key-value pairs).
  */
+// TODO(spencer): follow-up with converting idProperty and other existing properties to support
+// PropertyIdentifier.
 export interface ObjectSchemaDefinition<K extends string, L extends string> extends BaseSchema {
   /** Identifies this schema as an object schema. */
   type: ValueType.Object;
@@ -920,7 +953,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
    * Must be a {@link ValueType.String} property
    */
   /** @hidden */
-  titleProperty?: L;
+  titleProperty?: PropertyIdentifier<K>;
   /**
    * The name of a property within {@link ObjectSchemaDefinition.properties} that will
    * navigate users to more details about this object
@@ -929,22 +962,22 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
    * {@link ObjectSchemaDefinition.codaType}.
    */
   /** @hidden */
-  linkProperty?: L;
+  linkProperty?: PropertyIdentifier<K>;
   /**
    * A list of property names from within {@link ObjectSchemaDefinition.properties} for the properties of the object
    * to be shown in the subtitle of a rich card preview for formulas that return this object.
    * Defaults to the value of {@link ObjectSchemaDefinition.featuredProperties} if not specified.
    */
   /** @hidden */
-  subtitleProperties?: L[];
+  subtitleProperties?: Array<PropertyIdentifier<K>>;
   /**
-   * The name of a property within {@link ObjectSchemaDefinition.properties} that be used as a long body description
+   * The name of a property within {@link ObjectSchemaDefinition.properties} that be used as a textual summary
    * of the object.
    *
    * Must be a {@link ValueType.String} property or {@link ValueType.Array} of {@link ValueType.String}s.
    */
   /** @hidden */
-  descriptionProperty?: L;
+  snippetProperty?: PropertyIdentifier<K>;
   /**
    * The name of a property within {@link ObjectSchemaDefinition.properties} that can be used as a rich image preview of
    * the object.
@@ -953,7 +986,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
    * {@link ValueHintType.ImageAttachment} or {@link ValueHintType.ImageReference} hints
    */
   /** @hidden */
-  imageProperty?: L;
+  imageProperty?: PropertyIdentifier<K>;
 }
 
 export type ObjectSchemaDefinitionType<
@@ -1325,9 +1358,77 @@ function checkSchemaPropertyIsRequired<K extends string, L extends string, T ext
   );
 }
 
+/**
+ * Normalizes a schema key into PascalCase.
+ */
 export function normalizeSchemaKey(key: string): string {
   // Colons cause problems in our formula handling.
   return pascalcase(key).replace(/:/g, '_');
+}
+
+/**
+ * Normalizes a schema property key path. This interprets "."s as accessing object properties
+ * and "[]" as accessing array items. Uses normalizeSchemaKey to normalize each part in-between.
+ *
+ * This is used for object schema properties that support path projection.
+ */
+export function normalizeSchemaKeyPath(key: string, normalizedProperties: ObjectSchemaProperties): string {
+  // Try an exact match on the properties first.
+  if (normalizedProperties.hasOwnProperty(normalizeSchemaKey(key))) {
+    return normalizeSchemaKey(key);
+  }
+
+  // Try splitting by . to handle json paths.
+  return key
+    .split('.')
+    .map(val => {
+      let partToNormalize = val;
+      let partToIgnoreNormalization = '';
+
+      // Handles array pathing.
+      if (val.includes('[')) {
+        partToNormalize = val.substring(0, val.indexOf('['));
+        partToIgnoreNormalization = val.substring(val.indexOf('['));
+      }
+
+      return normalizeSchemaKey(partToNormalize) + partToIgnoreNormalization;
+    })
+    .join('.');
+}
+
+/**
+ * Normalizes a schema PropertyIdentifier by converting it to PascalCase.
+ */
+function normalizeSchemaPropertyIdentifier(
+  key: PropertyIdentifier,
+  normalizedProperties: ObjectSchemaProperties,
+): PropertyIdentifier {
+  if (typeof key === 'string') {
+    return normalizeSchemaKeyPath(key, normalizedProperties);
+  }
+
+  const {label, property: value} = key;
+  return {
+    property: normalizeSchemaKeyPath(value, normalizedProperties),
+    label,
+  };
+}
+
+/**
+ * Attempts to transform a property value (which may be a json-path string or a normal object schema property) into
+ * a path to access the relevant schema. Specifically this handles the case of
+ *   1) object schemas which have an intermediate `properties` object and
+ *   2) array schemas which have an intermediate `items` object to traverse.
+ */
+export function normalizePropertyValuePathIntoSchemaPath(propertyValue: string): string {
+  const normalizedValue = propertyValue
+    .split('.')
+    .map(val => {
+      return val.replace(/\[(.*?)\]/, '.items');
+    })
+    .join('.properties.');
+
+  return normalizedValue;
 }
 
 export function normalizeSchema<T extends Schema>(schema: T): T {
@@ -1349,7 +1450,7 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
       titleProperty,
       subtitleProperties,
       imageProperty,
-      descriptionProperty,
+      snippetProperty,
       linkProperty,
     } = schema;
     for (const key of Object.keys(schema.properties)) {
@@ -1375,11 +1476,13 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
       description: schema.description,
       attribution: schema.attribution,
       includeUnknownProperties: schema.includeUnknownProperties,
-      titleProperty: titleProperty ? normalizeSchemaKey(titleProperty) : undefined,
-      subtitleProperties: subtitleProperties ? subtitleProperties.map(normalizeSchemaKey) : undefined,
-      imageProperty: imageProperty ? normalizeSchemaKey(imageProperty) : undefined,
-      descriptionProperty: descriptionProperty ? normalizeSchemaKey(descriptionProperty) : undefined,
-      linkProperty: linkProperty ? normalizeSchemaKey(linkProperty) : undefined,
+      titleProperty: titleProperty ? normalizeSchemaPropertyIdentifier(titleProperty, normalized) : undefined,
+      subtitleProperties: subtitleProperties
+        ? subtitleProperties.map(subProp => normalizeSchemaPropertyIdentifier(subProp, normalized))
+        : undefined,
+      imageProperty: imageProperty ? normalizeSchemaPropertyIdentifier(imageProperty, normalized) : undefined,
+      snippetProperty: snippetProperty ? normalizeSchemaPropertyIdentifier(snippetProperty, normalized) : undefined,
+      linkProperty: linkProperty ? normalizeSchemaPropertyIdentifier(linkProperty, normalized) : undefined,
     } as T;
 
     return normalizedSchema;
