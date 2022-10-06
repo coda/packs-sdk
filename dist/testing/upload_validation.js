@@ -709,7 +709,7 @@ const attributionSchema = z
     .optional();
 const propertySchema = z.union([
     z.string().min(1),
-    zodCompleteObject({ property: z.string().min(1), label: z.string().min(1) }),
+    zodCompleteObject({ property: z.string().min(1), label: z.string().optional() }),
 ]);
 const genericObjectSchema = z.lazy(() => zodCompleteObject({
     ...basePropertyValidators,
