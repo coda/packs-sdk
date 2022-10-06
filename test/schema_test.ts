@@ -68,26 +68,26 @@ describe('Schema', () => {
       expect(() => {
         const missingIdSchema: any = {
           ...baseReferenceSchema,
-          primary: 'reference',
+          displayProperty: 'reference',
           identity: {name: 'Test'},
         };
         makeObjectSchema(missingIdSchema);
-      }).to.throw('Objects with codaType "reference" require a "id" property in the schema definition.');
+      }).to.throw('Objects with codaType "reference" require a "idProperty" property in the schema definition.');
 
       expect(() => {
         const missingPrimarySchema: any = {
           ...baseReferenceSchema,
-          id: 'reference',
+          idProperty: 'reference',
           identity: {name: 'Test'},
         };
         makeObjectSchema(missingPrimarySchema);
-      }).to.throw('Objects with codaType "reference" require a "primary" property in the schema definition.');
+      }).to.throw('Objects with codaType "reference" require a "displayProperty" property in the schema definition.');
 
       expect(() => {
         const missingIdentitySchema: any = {
           ...baseReferenceSchema,
-          id: 'reference',
-          primary: 'reference',
+          idProperty: 'reference',
+          displayProperty: 'reference',
         };
         makeObjectSchema(missingIdentitySchema);
       }).to.throw('Objects with codaType "reference" require a "identity" property in the schema definition.');
@@ -95,8 +95,8 @@ describe('Schema', () => {
       expect(() => {
         const referenceNotRequiredSchema: any = {
           ...baseReferenceSchema,
-          id: 'reference',
-          primary: 'reference',
+          idProperty: 'reference',
+          displayProperty: 'reference',
           identity: {name: 'Test'},
           properties: {...baseReferenceSchema.properties, required: false},
         };
@@ -106,8 +106,8 @@ describe('Schema', () => {
       makeObjectSchema({
         type: ValueType.Object,
         codaType: ValueHintType.Reference,
-        id: 'reference',
-        primary: 'reference',
+        idProperty: 'reference',
+        displayProperty: 'reference',
         identity: {name: 'Test'},
         properties: {
           reference: {
@@ -128,20 +128,20 @@ describe('Schema', () => {
         makeObjectSchema({
           type: ValueType.Object,
           codaType: ValueHintType.Person,
-          primary: 'name',
+          displayProperty: 'name',
           properties: {
             email: {type: ValueType.String, required: true},
             name: {type: ValueType.String, required: true},
           },
         });
-      }).to.throw('Objects with codaType "person" require a "id" property in the schema definition.');
+      }).to.throw('Objects with codaType "person" require a "idProperty" property in the schema definition.');
 
       expect(() => {
         makeObjectSchema({
           type: ValueType.Object,
           codaType: ValueHintType.Person,
-          id: 'email',
-          primary: 'name',
+          idProperty: 'email',
+          displayProperty: 'name',
           properties: {
             email: {type: ValueType.String},
             name: {type: ValueType.String, required: true},
@@ -152,8 +152,8 @@ describe('Schema', () => {
       makeObjectSchema({
         type: ValueType.Object,
         codaType: ValueHintType.Person,
-        id: 'email',
-        primary: 'name',
+        idProperty: 'email',
+        displayProperty: 'name',
         properties: {
           email: {type: ValueType.String, required: true},
           name: {type: ValueType.String, required: true},
@@ -178,21 +178,21 @@ describe('Schema', () => {
     it('passes through object identity', () => {
       const anotherSchema = schema.makeObjectSchema({
         type: schema.ValueType.Object,
-        primary: 'boo',
+        displayProperty: 'boo',
         properties: {
           boo: {type: schema.ValueType.String},
         },
       });
       const objectSchema = schema.makeObjectSchema({
         type: schema.ValueType.Object,
-        id: 'name',
-        primary: 'name',
+        idProperty: 'name',
+        displayProperty: 'name',
         properties: {
           name: {type: schema.ValueType.String},
           another: anotherSchema,
           yetAnother: schema.makeObjectSchema({
             type: schema.ValueType.Object,
-            primary: 'boo',
+            displayProperty: 'boo',
             properties: {
               baz: {type: schema.ValueType.String},
             },
