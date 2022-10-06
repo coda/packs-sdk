@@ -17,6 +17,8 @@ A Pack is an extension that adds new powers to your doc. Packs work by supplemen
 
 With a little JavaScript, anyone can create and publish a Pack to the Gallery. All you need to do is write the code and Coda will deploy and host the Pack for you.
 
+Packs can be created for personal use, shared with a team, or published to the world. Everything from simple utilities to rich integrations can be built with Packs.
+
 [Learn more][overview]{ .md-button .md-button--primary }
 </div>
 
@@ -81,6 +83,22 @@ Our passionate community of Pack makers and Coda experts can help answer your qu
 <section class="landing-row" markdown>
 
 <div class="landing-item" markdown>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/OoR1qX9w4Js" title="YouTube video player: Build a Todoist Coda Pack from Scratch" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+
+<div class="landing-item" markdown>
+## :material-youtube: Grab the popcorn.
+
+In this snippet from a recent webinar we demonstrate how to build a Pack from scratch that retrieves your task list from Todoist :simple-todoist:. It was created in under 10 minutes and with less than 30 lines of code in the Pack Studio. 
+
+[Watch webinars][webinars]{ .md-button }
+</div>
+
+</section>
+
+<section class="landing-row" markdown>
+
+<div class="landing-item" markdown>
 ## :fontawesome-regular-lightbulb: Get inspired.
 
 Coda makers have been busy building Packs of all types, and many have published their work to the Gallery. Try installing a few Packs to get a sense for what you could build.
@@ -102,3 +120,4 @@ Coda makers have been busy building Packs of all types, and many have published 
 [changelog]: reference/changes.md
 [community]: https://community.coda.io/c/developers-central/making-packs/15
 [gallery]: https://coda.io/gallery?filter=packs
+[webinars]: tutorials/webinars.md
