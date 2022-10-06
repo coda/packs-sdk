@@ -1993,37 +1993,68 @@ describe('Pack metadata Validation', () => {
           titleProperty: 'nestedObject.name',
           snippetProperty: 'array[0].name',
         };
-        await validateJsonAndAssertFails(
+        let err = await validateJsonAndAssertFails(
           metadataForFormulaWithObjectSchema({
             ...baseMetadata,
             snippetProperty: 'array[0][0].name',
           }),
         );
-        await validateJsonAndAssertFails(
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'The "snippetProperty" path "Array[0][0].Name" does not exist in the "properties" object.',
+            path: 'formulas[0].schema.snippetProperty',
+          },
+        ]);
+        err = await validateJsonAndAssertFails(
           metadataForFormulaWithObjectSchema({
             ...baseMetadata,
             imageProperty: 'nestedObject.name',
           }),
         );
-        await validateJsonAndAssertFails(
+        assert.deepEqual(err.validationErrors, [
+          {
+            message:
+              'The "imageProperty" path "NestedObject.Name" must refer to a "ValueType.String" property with a "ValueHintType.ImageAttachment" or "ValueHintType.ImageReference" "codaType".',
+            path: 'formulas[0].schema.imageProperty',
+          },
+        ]);
+        err = await validateJsonAndAssertFails(
           metadataForFormulaWithObjectSchema({
             ...baseMetadata,
             titleProperty: 'nestedObject.nonexistent',
           }),
         );
-        await validateJsonAndAssertFails(
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'The "titleProperty" path "NestedObject.Nonexistent" does not exist in the "properties" object.',
+            path: 'formulas[0].schema.titleProperty',
+          },
+        ]);
+        err = await validateJsonAndAssertFails(
           metadataForFormulaWithObjectSchema({
             ...baseMetadata,
             titleProperty: 'badProperty',
           }),
         );
-        await validateJsonAndAssertFails(
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'The "titleProperty" path "BadProperty" does not exist in the "properties" object.',
+            path: 'formulas[0].schema.titleProperty',
+          },
+        ]);
+        err = await validateJsonAndAssertFails(
           metadataForFormulaWithObjectSchema({
             ...baseMetadata,
             subtitleProperties: ['badProperty'],
           }),
         );
-        await validateJsonAndAssertFails(
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'The "subtitleProperties" path "BadProperty" does not exist in the "properties" object.',
+            path: 'formulas[0].schema.subtitleProperties[0]',
+          },
+        ]);
+        err = await validateJsonAndAssertFails(
           metadataForFormulaWithObjectSchema({
             ...baseMetadata,
             subtitleProperties: [
@@ -2034,6 +2065,14 @@ describe('Pack metadata Validation', () => {
             ],
           }),
         );
+        assert.deepEqual(err.validationErrors, [
+          {
+            message:
+              'The "subtitleProperties" path "NestedObject.Nonexistent" does not exist in the "properties" object.',
+            path: 'formulas[0].schema.subtitleProperties[1]',
+          },
+        ]);
+
         // Pathing does not work for a property with invalid characters.
         await validateJsonAndAssertFails(
           metadataForFormulaWithObjectSchema({
