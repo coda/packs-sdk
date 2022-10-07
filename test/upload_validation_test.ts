@@ -639,6 +639,19 @@ describe('Pack metadata Validation', () => {
         await validateJson(metadata);
       });
 
+      it('invalid formula with spaces in parameter name', async () => {
+        const metadata = makeMetadataFromParams([
+          makeParameter({type: ParameterType.String, name: 'my param', description: ''}),
+        ]);
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'Parameter names can only contain alphanumeric characters and underscores.',
+            path: 'formulas[0].parameters[0].name',
+          },
+        ]);
+      });
+
       it('invalid formula with object parameter', async () => {
         const metadata = makeMetadataFromParams([
           {type: Type.object, name: 'myParam', description: 'param description'},
@@ -847,6 +860,41 @@ describe('Pack metadata Validation', () => {
         assert.ok(childSchema);
         assert.equal(childSchema.fromKey, 'child');
         assert.isTrue(childSchema.required);
+      });
+
+      it('invalid sync table name', async () => {
+        const syncTable = makeSyncTable({
+          name: 'Sync@Table',
+          identityName: 'Sync',
+          schema: makeObjectSchema({
+            type: ValueType.Object,
+            primary: 'foo',
+            id: 'foo',
+            properties: {
+              Foo: {type: ValueType.String},
+            },
+          }),
+          formula: {
+            name: 'SyncTable',
+            description: 'A simple sync table',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            examples: [],
+          },
+        });
+
+        const metadata = createFakePack({
+          syncTables: [syncTable],
+        });
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'Sync Table names can only contain alphanumeric characters and underscores.',
+            path: 'syncTables[0].name',
+          },
+        ]);
       });
 
       it('identityName propagated to identity field', async () => {
@@ -2505,6 +2553,32 @@ describe('Pack metadata Validation', () => {
             path: 'formats[0]',
           },
         ]);
+      });
+
+      it('column format names are allowed to have funky characters', async () => {
+        const formula = makeStringFormula({
+          name: 'MyFormula',
+          description: 'My description',
+          examples: [],
+          parameters: [makeStringParameter('myParam', 'param description')],
+          execute: () => '',
+        });
+        const metadata = createFakePackVersionMetadata({
+          formulas: [formulaToMetadata(formula)],
+          formulaNamespace: 'MyNamespace',
+          formats: [
+            {
+              name: 'A Format @!#$%^&*()_-|/\\',
+              formulaNamespace: 'MyNamespace',
+              formulaName: 'MyFormula',
+              hasNoConnection: true,
+              instructions: 'some instructions',
+              placeholder: 'some placeholder',
+              matchers: ['/some compiled regex/i'],
+            },
+          ],
+        });
+        await validateJson(metadata);
       });
 
       it('rejects column format names that are too long', async () => {
