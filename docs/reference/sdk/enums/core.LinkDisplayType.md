@@ -17,7 +17,7 @@ Display the referenced web page as a card.
 
 #### Defined in
 
-[schema.ts:516](https://github.com/coda/packs-sdk/blob/main/schema.ts#L516)
+[schema.ts:517](https://github.com/coda/packs-sdk/blob/main/schema.ts#L517)
 
 ___
 
@@ -29,7 +29,7 @@ Display the referenced web page as an embed.
 
 #### Defined in
 
-[schema.ts:521](https://github.com/coda/packs-sdk/blob/main/schema.ts#L521)
+[schema.ts:522](https://github.com/coda/packs-sdk/blob/main/schema.ts#L522)
 
 ___
 
@@ -41,7 +41,7 @@ Display icon only.
 
 #### Defined in
 
-[schema.ts:501](https://github.com/coda/packs-sdk/blob/main/schema.ts#L501)
+[schema.ts:502](https://github.com/coda/packs-sdk/blob/main/schema.ts#L502)
 
 ___
 
@@ -53,7 +53,7 @@ Display web page title.
 
 #### Defined in
 
-[schema.ts:511](https://github.com/coda/packs-sdk/blob/main/schema.ts#L511)
+[schema.ts:512](https://github.com/coda/packs-sdk/blob/main/schema.ts#L512)
 
 ___
 
@@ -65,4 +65,4 @@ Display URL.
 
 #### Defined in
 
-[schema.ts:506](https://github.com/coda/packs-sdk/blob/main/schema.ts#L506)
+[schema.ts:507](https://github.com/coda/packs-sdk/blob/main/schema.ts#L507)

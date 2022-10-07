@@ -261,7 +261,8 @@ export interface NumericDateTimeSchema extends BaseNumberSchema<ValueHintType.Da
 }
 /**
  * A schema representing a return value or object property that is provided as a number,
- * which Coda should interpret as a duration. The given number should be in seconds of the duration.
+ * which Coda should interpret as a duration. The given number should be an amount of days
+ * (fractions allowed).
  */
 export interface NumericDurationSchema extends BaseNumberSchema<ValueHintType.Duration> {
     /** Instructs Coda to render this value as a duration. */

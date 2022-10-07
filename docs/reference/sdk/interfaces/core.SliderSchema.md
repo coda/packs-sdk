@@ -28,7 +28,7 @@ BaseNumberSchema.codaType
 
 #### Defined in
 
-[schema.ts:385](https://github.com/coda/packs-sdk/blob/main/schema.ts#L385)
+[schema.ts:386](https://github.com/coda/packs-sdk/blob/main/schema.ts#L386)
 
 ___
 
@@ -59,7 +59,7 @@ The maximum value selectable by this slider.
 
 #### Defined in
 
-[schema.ts:389](https://github.com/coda/packs-sdk/blob/main/schema.ts#L389)
+[schema.ts:390](https://github.com/coda/packs-sdk/blob/main/schema.ts#L390)
 
 ___
 
@@ -71,7 +71,7 @@ The minimum value selectable by this slider.
 
 #### Defined in
 
-[schema.ts:387](https://github.com/coda/packs-sdk/blob/main/schema.ts#L387)
+[schema.ts:388](https://github.com/coda/packs-sdk/blob/main/schema.ts#L388)
 
 ___
 
@@ -83,7 +83,7 @@ Whether to display the underlying numeric value in addition to the slider.
 
 #### Defined in
 
-[schema.ts:393](https://github.com/coda/packs-sdk/blob/main/schema.ts#L393)
+[schema.ts:394](https://github.com/coda/packs-sdk/blob/main/schema.ts#L394)
 
 ___
 
@@ -95,7 +95,7 @@ The minimum amount the slider can be moved when dragged.
 
 #### Defined in
 
-[schema.ts:391](https://github.com/coda/packs-sdk/blob/main/schema.ts#L391)
+[schema.ts:392](https://github.com/coda/packs-sdk/blob/main/schema.ts#L392)
 
 ___
 

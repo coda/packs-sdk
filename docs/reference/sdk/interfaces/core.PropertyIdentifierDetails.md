@@ -19,7 +19,7 @@ An optional label for the property. This will be used in locations where the lab
 
 #### Defined in
 
-[schema.ts:851](https://github.com/coda/packs-sdk/blob/main/schema.ts#L851)
+[schema.ts:852](https://github.com/coda/packs-sdk/blob/main/schema.ts#L852)
 
 ___
 
@@ -31,4 +31,4 @@ The value of the property to reference. Can be either an exact property name or 
 
 #### Defined in
 
-[schema.ts:855](https://github.com/coda/packs-sdk/blob/main/schema.ts#L855)
+[schema.ts:856](https://github.com/coda/packs-sdk/blob/main/schema.ts#L856)

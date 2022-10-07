@@ -6,7 +6,8 @@ nav: "NumericDurationSchema"
 [core](../modules/core.md).NumericDurationSchema
 
 A schema representing a return value or object property that is provided as a number,
-which Coda should interpret as a duration. The given number should be in seconds of the duration.
+which Coda should interpret as a duration. The given number should be an amount of days
+(fractions allowed).
 
 ## Hierarchy
 
@@ -28,7 +29,7 @@ BaseNumberSchema.codaType
 
 #### Defined in
 
-[schema.ts:323](https://github.com/coda/packs-sdk/blob/main/schema.ts#L323)
+[schema.ts:324](https://github.com/coda/packs-sdk/blob/main/schema.ts#L324)
 
 ___
 
@@ -60,7 +61,7 @@ and a value of 273600 is provided (3 days 4 hours) is provided, it will be rende
 
 #### Defined in
 
-[schema.ts:333](https://github.com/coda/packs-sdk/blob/main/schema.ts#L333)
+[schema.ts:334](https://github.com/coda/packs-sdk/blob/main/schema.ts#L334)
 
 ___
 
@@ -73,7 +74,7 @@ Currently only `1` is supported, which is the same as omitting a value.
 
 #### Defined in
 
-[schema.ts:328](https://github.com/coda/packs-sdk/blob/main/schema.ts#L328)
+[schema.ts:329](https://github.com/coda/packs-sdk/blob/main/schema.ts#L329)
 
 ___
 
