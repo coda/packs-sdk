@@ -1278,7 +1278,7 @@ export function autocompleteSearchObjects<T>(
   valueKey: keyof T,
 ): Promise<MetadataFormulaObjectResultType[]> {
   if (typeof search !== 'string') {
-    throw new TypeError(`Exepcting a string for "search" parameter but received ${search}`);
+    throw new TypeError(`Expecting a string for "search" parameter but received ${search}`);
   }
 
   const normalizedSearch = search.toLowerCase();
