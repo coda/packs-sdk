@@ -106,6 +106,9 @@ const regexLetterChar = String.raw`[${letterChar}]`;
 const regexWordChar = String.raw`[${wordChar}]`;
 const regexFormulaNameStr = String.raw`^${regexLetterChar}(?:${regexWordChar}+)?$`;
 const regexFormulaName = new RegExp(regexFormulaNameStr, 'u');
+// This is currently the same as the tokenizer's restrictions except stricter
+// because we don't allow leading underscores.
+const regexParameterName = regexFormulaName;
 
 export const Limits = {
   BuildingBlockCountPerType: 100,
@@ -497,7 +500,7 @@ const paramDefValidator = zodCompleteObject<ParamDef<any>>({
   name: z
     .string()
     .max(Limits.BuildingBlockName)
-    .regex(regexFormulaName, 'Parameter names can only contain alphanumeric characters and underscores.'),
+    .regex(regexParameterName, 'Parameter names can only contain alphanumeric characters and underscores.'),
   type: z
     .union([
       z.nativeEnum(Type),
