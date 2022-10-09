@@ -98,6 +98,18 @@ import * as z from 'zod';
  */
 export const PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = /^\/(.*)\/([a-z]+)?$/;
 
+// The following largely copied from tokens.ts for parsing formula names.
+const letterChar = String.raw`\p{L}`;
+const numberChar = String.raw`\p{N}`;
+const wordChar = String.raw`${letterChar}${numberChar}_`;
+const regexLetterChar = String.raw`[${letterChar}]`;
+const regexWordChar = String.raw`[${wordChar}]`;
+const regexFormulaNameStr = String.raw`^${regexLetterChar}(?:${regexWordChar}+)?$`;
+const regexFormulaName = new RegExp(regexFormulaNameStr, 'u');
+// This is currently the same as the tokenizer's restrictions except stricter
+// because we don't allow leading underscores.
+const regexParameterName = regexFormulaName;
+
 export const Limits = {
   BuildingBlockCountPerType: 100,
   BuildingBlockName: 50,
@@ -485,7 +497,10 @@ const variousSupportedAuthenticationValidators = Object.entries(defaultAuthentic
 const primitiveUnion = z.union([z.number(), z.string(), z.boolean(), z.date()]);
 
 const paramDefValidator = zodCompleteObject<ParamDef<any>>({
-  name: z.string().max(Limits.BuildingBlockName),
+  name: z
+    .string()
+    .max(Limits.BuildingBlockName)
+    .regex(regexParameterName, 'Parameter names can only contain alphanumeric characters and underscores.'),
   type: z
     .union([
       z.nativeEnum(Type),
@@ -1144,7 +1159,11 @@ const syncFormulaSchema = zodCompleteObject<Omit<SyncFormula<any, any, ParamDefs
 });
 
 const baseSyncTableSchema = {
-  name: z.string().nonempty().max(Limits.BuildingBlockName),
+  name: z
+    .string()
+    .nonempty()
+    .max(Limits.BuildingBlockName)
+    .regex(regexFormulaName, 'Sync Table names can only contain alphanumeric characters and underscores.'),
   description: z.string().max(Limits.BuildingBlockDescription).optional(),
   schema: genericObjectSchema,
   getter: syncFormulaSchema,
@@ -1289,15 +1308,6 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject<PackVersionMetadata
       }
     }),
 });
-
-// The following largely copied from tokens.ts for parsing formula names.
-const letterChar = String.raw`\p{L}`;
-const numberChar = String.raw`\p{N}`;
-const wordChar = String.raw`${letterChar}${numberChar}_`;
-const regexLetterChar = String.raw`[${letterChar}]`;
-const regexWordChar = String.raw`[${wordChar}]`;
-const regexFormulaNameStr = String.raw`^${regexLetterChar}(?:${regexWordChar}+)?$`;
-const regexFormulaName = new RegExp(regexFormulaNameStr, 'u');
 
 function validateNamespace(namespace: string | undefined): boolean {
   if (typeof namespace === 'undefined') {

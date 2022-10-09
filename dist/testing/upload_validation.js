@@ -67,6 +67,17 @@ const z = __importStar(require("zod"));
  * a real RegExp object.
  */
 exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = /^\/(.*)\/([a-z]+)?$/;
+// The following largely copied from tokens.ts for parsing formula names.
+const letterChar = String.raw `\p{L}`;
+const numberChar = String.raw `\p{N}`;
+const wordChar = String.raw `${letterChar}${numberChar}_`;
+const regexLetterChar = String.raw `[${letterChar}]`;
+const regexWordChar = String.raw `[${wordChar}]`;
+const regexFormulaNameStr = String.raw `^${regexLetterChar}(?:${regexWordChar}+)?$`;
+const regexFormulaName = new RegExp(regexFormulaNameStr, 'u');
+// This is currently the same as the tokenizer's restrictions except stricter
+// because we don't allow leading underscores.
+const regexParameterName = regexFormulaName;
 exports.Limits = {
     BuildingBlockCountPerType: 100,
     BuildingBlockName: 50,
@@ -389,7 +400,10 @@ const variousSupportedAuthenticationValidators = Object.entries(defaultAuthentic
     .map(([_authType, schema]) => schema);
 const primitiveUnion = z.union([z.number(), z.string(), z.boolean(), z.date()]);
 const paramDefValidator = zodCompleteObject({
-    name: z.string().max(exports.Limits.BuildingBlockName),
+    name: z
+        .string()
+        .max(exports.Limits.BuildingBlockName)
+        .regex(regexParameterName, 'Parameter names can only contain alphanumeric characters and underscores.'),
     type: z
         .union([
         z.nativeEnum(api_types_3.Type),
@@ -926,7 +940,11 @@ const syncFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
 });
 const baseSyncTableSchema = {
-    name: z.string().nonempty().max(exports.Limits.BuildingBlockName),
+    name: z
+        .string()
+        .nonempty()
+        .max(exports.Limits.BuildingBlockName)
+        .regex(regexFormulaName, 'Sync Table names can only contain alphanumeric characters and underscores.'),
     description: z.string().max(exports.Limits.BuildingBlockDescription).optional(),
     schema: genericObjectSchema,
     getter: syncFormulaSchema,
@@ -1056,14 +1074,6 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject({
         }
     }),
 });
-// The following largely copied from tokens.ts for parsing formula names.
-const letterChar = String.raw `\p{L}`;
-const numberChar = String.raw `\p{N}`;
-const wordChar = String.raw `${letterChar}${numberChar}_`;
-const regexLetterChar = String.raw `[${letterChar}]`;
-const regexWordChar = String.raw `[${wordChar}]`;
-const regexFormulaNameStr = String.raw `^${regexLetterChar}(?:${regexWordChar}+)?$`;
-const regexFormulaName = new RegExp(regexFormulaNameStr, 'u');
 function validateNamespace(namespace) {
     if (typeof namespace === 'undefined') {
         return true;
