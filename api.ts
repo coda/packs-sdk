@@ -211,6 +211,8 @@ export interface SyncTableDef<
   entityName?: string;
   /** See {@link DynamicOptions.defaultAddDynamicColumns} */
   defaultAddDynamicColumns?: boolean;
+  /** See {@link SyncTableOptions.maxUpdateBatchSize} */
+  maxUpdateBatchSize?: number;
 }
 
 /**
@@ -1406,6 +1408,11 @@ export interface SyncTableOptions<
    * sync tables that have a dynamic schema.
    */
   dynamicOptions?: DynamicOptions;
+  /**
+   * If the pack supports object updates, the maximum number of objects that will be sent to the pack
+   * in a single batch. Defaults to 1 if not specified.
+   */
+  maxUpdateBatchSize?: number;
 }
 
 /**
@@ -1500,6 +1507,11 @@ export interface DynamicSyncTableOptions<
    * in placeholderSchema will be rendered by default after the sync.
    */
   placeholderSchema?: SchemaT;
+  /**
+   * If the pack supports object updates, the maximum number of objects that will be sent to the pack
+   * in a single batch. Defaults to 1 if not specified.
+   */
+  maxUpdateBatchSize?: number;
 }
 
 /**
@@ -1529,6 +1541,7 @@ export function makeSyncTable<
   formula,
   connectionRequirement,
   dynamicOptions = {},
+  maxUpdateBatchSize,
 }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT> {
   const {getSchema: getSchemaDef, entityName, defaultAddDynamicColumns} = dynamicOptions;
   const {execute: wrappedExecute, ...definition} = maybeRewriteConnectionForFormula(formula, connectionRequirement);
@@ -1594,6 +1607,7 @@ export function makeSyncTable<
     getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
     entityName,
     defaultAddDynamicColumns,
+    maxUpdateBatchSize,
   };
 }
 
@@ -1679,6 +1693,7 @@ export function makeDynamicSyncTable<
   connectionRequirement?: ConnectionRequirement;
   defaultAddDynamicColumns?: boolean;
   placeholderSchema?: SchemaT;
+  maxUpdateBatchSize?: number;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any> {
   const placeholderSchema: any =
     placeholderSchemaInput ||

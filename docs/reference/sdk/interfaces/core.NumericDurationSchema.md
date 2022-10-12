@@ -29,7 +29,7 @@ BaseNumberSchema.codaType
 
 #### Defined in
 
-[schema.ts:324](https://github.com/coda/packs-sdk/blob/main/schema.ts#L324)
+[schema.ts:329](https://github.com/coda/packs-sdk/blob/main/schema.ts#L329)
 
 ___
 
@@ -61,7 +61,23 @@ and a value of 273600 is provided (3 days 4 hours) is provided, it will be rende
 
 #### Defined in
 
-[schema.ts:334](https://github.com/coda/packs-sdk/blob/main/schema.ts#L334)
+[schema.ts:339](https://github.com/coda/packs-sdk/blob/main/schema.ts#L339)
+
+___
+
+### mutable
+
+• `Optional` **mutable**: `boolean`
+
+Whether this object schema property is editable by the user in the UI.
+
+#### Inherited from
+
+BaseNumberSchema.mutable
+
+#### Defined in
+
+[schema.ts:220](https://github.com/coda/packs-sdk/blob/main/schema.ts#L220)
 
 ___
 
@@ -74,7 +90,7 @@ Currently only `1` is supported, which is the same as omitting a value.
 
 #### Defined in
 
-[schema.ts:329](https://github.com/coda/packs-sdk/blob/main/schema.ts#L329)
+[schema.ts:334](https://github.com/coda/packs-sdk/blob/main/schema.ts#L334)
 
 ___
 
@@ -90,4 +106,4 @@ BaseNumberSchema.type
 
 #### Defined in
 
-[schema.ts:244](https://github.com/coda/packs-sdk/blob/main/schema.ts#L244)
+[schema.ts:249](https://github.com/coda/packs-sdk/blob/main/schema.ts#L249)

@@ -11,4 +11,4 @@ The union of all schemas that can represent number values.
 
 #### Defined in
 
-[schema.ts:231](https://github.com/coda/packs-sdk/blob/main/schema.ts#L231)
+[schema.ts:236](https://github.com/coda/packs-sdk/blob/main/schema.ts#L236)

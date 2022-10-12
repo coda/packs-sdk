@@ -55,6 +55,7 @@ describe('Builder', () => {
       name: 'Foos',
       identityName: 'Foo',
       connectionRequirement,
+      maxUpdateBatchSize: 10,
       schema: makeObjectSchema({
         type: ValueType.Object,
         id: 'foo',

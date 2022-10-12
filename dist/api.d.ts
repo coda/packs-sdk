@@ -150,6 +150,8 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
     entityName?: string;
     /** See {@link DynamicOptions.defaultAddDynamicColumns} */
     defaultAddDynamicColumns?: boolean;
+    /** See {@link SyncTableOptions.maxUpdateBatchSize} */
+    maxUpdateBatchSize?: number;
 }
 /**
  * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
@@ -819,6 +821,11 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
      * sync tables that have a dynamic schema.
      */
     dynamicOptions?: DynamicOptions;
+    /**
+     * If the pack supports object updates, the maximum number of objects that will be sent to the pack
+     * in a single batch. Defaults to 1 if not specified.
+     */
+    maxUpdateBatchSize?: number;
 }
 /**
  * Options provided when defining a dynamic sync table.
@@ -907,6 +914,11 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
      * in placeholderSchema will be rendered by default after the sync.
      */
     placeholderSchema?: SchemaT;
+    /**
+     * If the pack supports object updates, the maximum number of objects that will be sent to the pack
+     * in a single batch. Defaults to 1 if not specified.
+     */
+    maxUpdateBatchSize?: number;
 }
 /**
  * Wrapper to produce a sync table definition. All (non-dynamic) sync tables should be created
@@ -921,7 +933,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
  */
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaDefT extends ObjectSchemaDefinition<K, L>, SchemaT extends SchemaDefT & {
     identity?: Identity;
-}>({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT>;
+}>({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions, maxUpdateBatchSize, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT>;
 /** @deprecated */
 export declare function makeSyncTableLegacy<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT>, connectionRequirement?: ConnectionRequirement, dynamicOptions?: {
     getSchema?: MetadataFormula;
@@ -959,6 +971,7 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
     connectionRequirement?: ConnectionRequirement;
     defaultAddDynamicColumns?: boolean;
     placeholderSchema?: SchemaT;
+    maxUpdateBatchSize?: number;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any>;
 /**
  * Helper to generate a formula that fetches a list of entities from a given URL and returns them.

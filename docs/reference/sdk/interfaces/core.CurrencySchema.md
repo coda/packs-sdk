@@ -27,7 +27,7 @@ BaseNumberSchema.codaType
 
 #### Defined in
 
-[schema.ts:368](https://github.com/coda/packs-sdk/blob/main/schema.ts#L368)
+[schema.ts:373](https://github.com/coda/packs-sdk/blob/main/schema.ts#L373)
 
 ___
 
@@ -40,7 +40,7 @@ If the currency code is not supported by Coda, the value will be rendered using 
 
 #### Defined in
 
-[schema.ts:375](https://github.com/coda/packs-sdk/blob/main/schema.ts#L375)
+[schema.ts:380](https://github.com/coda/packs-sdk/blob/main/schema.ts#L380)
 
 ___
 
@@ -71,7 +71,23 @@ A render format for further refining how the value is rendered.
 
 #### Defined in
 
-[schema.ts:377](https://github.com/coda/packs-sdk/blob/main/schema.ts#L377)
+[schema.ts:382](https://github.com/coda/packs-sdk/blob/main/schema.ts#L382)
+
+___
+
+### mutable
+
+• `Optional` **mutable**: `boolean`
+
+Whether this object schema property is editable by the user in the UI.
+
+#### Inherited from
+
+BaseNumberSchema.mutable
+
+#### Defined in
+
+[schema.ts:220](https://github.com/coda/packs-sdk/blob/main/schema.ts#L220)
 
 ___
 
@@ -83,7 +99,7 @@ The decimal precision. The value is rounded to this precision when rendered.
 
 #### Defined in
 
-[schema.ts:370](https://github.com/coda/packs-sdk/blob/main/schema.ts#L370)
+[schema.ts:375](https://github.com/coda/packs-sdk/blob/main/schema.ts#L375)
 
 ___
 
@@ -99,4 +115,4 @@ BaseNumberSchema.type
 
 #### Defined in
 
-[schema.ts:244](https://github.com/coda/packs-sdk/blob/main/schema.ts#L244)
+[schema.ts:249](https://github.com/coda/packs-sdk/blob/main/schema.ts#L249)

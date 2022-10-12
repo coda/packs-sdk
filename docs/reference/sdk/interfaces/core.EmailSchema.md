@@ -27,7 +27,7 @@ Whether to auto-complete the email domain during user input.
 
 #### Defined in
 
-[schema.ts:492](https://github.com/coda/packs-sdk/blob/main/schema.ts#L492)
+[schema.ts:497](https://github.com/coda/packs-sdk/blob/main/schema.ts#L497)
 
 ___
 
@@ -43,7 +43,7 @@ BaseStringSchema.codaType
 
 #### Defined in
 
-[schema.ts:488](https://github.com/coda/packs-sdk/blob/main/schema.ts#L488)
+[schema.ts:493](https://github.com/coda/packs-sdk/blob/main/schema.ts#L493)
 
 ___
 
@@ -74,7 +74,23 @@ How the email should be displayed in the UI.
 
 #### Defined in
 
-[schema.ts:490](https://github.com/coda/packs-sdk/blob/main/schema.ts#L490)
+[schema.ts:495](https://github.com/coda/packs-sdk/blob/main/schema.ts#L495)
+
+___
+
+### mutable
+
+• `Optional` **mutable**: `boolean`
+
+Whether this object schema property is editable by the user in the UI.
+
+#### Inherited from
+
+BaseStringSchema.mutable
+
+#### Defined in
+
+[schema.ts:220](https://github.com/coda/packs-sdk/blob/main/schema.ts#L220)
 
 ___
 
@@ -90,4 +106,4 @@ BaseStringSchema.type
 
 #### Defined in
 
-[schema.ts:692](https://github.com/coda/packs-sdk/blob/main/schema.ts#L692)
+[schema.ts:697](https://github.com/coda/packs-sdk/blob/main/schema.ts#L697)

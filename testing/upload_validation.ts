@@ -117,6 +117,7 @@ export const Limits = {
   ColumnMatcherRegex: 300,
   NumColumnMatchersPerFormat: 10,
   NetworkDomainUrl: 253,
+  UpdateBatchSize: 1000,
 };
 
 enum CustomErrorCode {
@@ -585,6 +586,7 @@ const booleanPackFormulaSchema = zodCompleteObject<Omit<BooleanPackFormula<any>,
     type: zodDiscriminant(ValueType.Boolean),
     codaType: z.enum([...BooleanHintValueTypes]).optional(),
     description: z.string().optional(),
+    mutable: z.boolean().optional(),
   }).optional(),
 });
 
@@ -609,6 +611,7 @@ const imageAttributionNodeSchema = z.object({
 
 const basePropertyValidators = {
   description: z.string().optional(),
+  mutable: z.boolean().optional(),
   fromKey: z.string().optional(),
   required: z.boolean().optional(),
 };
@@ -1179,6 +1182,7 @@ const baseSyncTableSchema = {
       val => !val || !SystemColumnNames.includes(val),
       `This property name is reserved for internal use by Coda and can't be used as an identityName, sorry!`,
     ),
+  maxUpdateBatchSize: z.number().min(1).max(Limits.UpdateBatchSize).optional(),
 };
 
 type GenericSyncTableDef = SyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>;

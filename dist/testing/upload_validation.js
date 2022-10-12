@@ -85,6 +85,7 @@ exports.Limits = {
     ColumnMatcherRegex: 300,
     NumColumnMatchersPerFormat: 10,
     NetworkDomainUrl: 253,
+    UpdateBatchSize: 1000,
 };
 var CustomErrorCode;
 (function (CustomErrorCode) {
@@ -476,6 +477,7 @@ const booleanPackFormulaSchema = zodCompleteObject({
         type: zodDiscriminant(schema_13.ValueType.Boolean),
         codaType: z.enum([...schema_2.BooleanHintValueTypes]).optional(),
         description: z.string().optional(),
+        mutable: z.boolean().optional(),
     }).optional(),
 });
 // TODO(jonathan): Use zodCompleteObject on these after exporting these types.
@@ -495,6 +497,7 @@ const imageAttributionNodeSchema = z.object({
 });
 const basePropertyValidators = {
     description: z.string().optional(),
+    mutable: z.boolean().optional(),
     fromKey: z.string().optional(),
     required: z.boolean().optional(),
 };
@@ -957,6 +960,7 @@ const baseSyncTableSchema = {
         .max(exports.Limits.BuildingBlockName)
         .optional()
         .refine(val => !val || !SystemColumnNames.includes(val), `This property name is reserved for internal use by Coda and can't be used as an identityName, sorry!`),
+    maxUpdateBatchSize: z.number().min(1).max(exports.Limits.UpdateBatchSize).optional(),
 };
 const genericSyncTableSchema = zodCompleteObject({
     ...baseSyncTableSchema,

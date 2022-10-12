@@ -29,7 +29,7 @@ BaseStringSchema.codaType
 
 #### Defined in
 
-[schema.ts:532](https://github.com/coda/packs-sdk/blob/main/schema.ts#L532)
+[schema.ts:537](https://github.com/coda/packs-sdk/blob/main/schema.ts#L537)
 
 ___
 
@@ -60,7 +60,7 @@ How the URL should be displayed in the UI.
 
 #### Defined in
 
-[schema.ts:534](https://github.com/coda/packs-sdk/blob/main/schema.ts#L534)
+[schema.ts:539](https://github.com/coda/packs-sdk/blob/main/schema.ts#L539)
 
 ___
 
@@ -72,7 +72,23 @@ Whether to force client embedding (only for LinkDisplayType.Embed) - for example
 
 #### Defined in
 
-[schema.ts:536](https://github.com/coda/packs-sdk/blob/main/schema.ts#L536)
+[schema.ts:541](https://github.com/coda/packs-sdk/blob/main/schema.ts#L541)
+
+___
+
+### mutable
+
+• `Optional` **mutable**: `boolean`
+
+Whether this object schema property is editable by the user in the UI.
+
+#### Inherited from
+
+BaseStringSchema.mutable
+
+#### Defined in
+
+[schema.ts:220](https://github.com/coda/packs-sdk/blob/main/schema.ts#L220)
 
 ___
 
@@ -88,4 +104,4 @@ BaseStringSchema.type
 
 #### Defined in
 
-[schema.ts:692](https://github.com/coda/packs-sdk/blob/main/schema.ts#L692)
+[schema.ts:697](https://github.com/coda/packs-sdk/blob/main/schema.ts#L697)

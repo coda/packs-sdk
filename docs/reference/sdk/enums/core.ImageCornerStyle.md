@@ -17,7 +17,7 @@ Image is rendered with rounded corners.
 
 #### Defined in
 
-[schema.ts:633](https://github.com/coda/packs-sdk/blob/main/schema.ts#L633)
+[schema.ts:638](https://github.com/coda/packs-sdk/blob/main/schema.ts#L638)
 
 ___
 
@@ -29,4 +29,4 @@ Image is rendered with square corners.
 
 #### Defined in
 
-[schema.ts:635](https://github.com/coda/packs-sdk/blob/main/schema.ts#L635)
+[schema.ts:640](https://github.com/coda/packs-sdk/blob/main/schema.ts#L640)

@@ -81,7 +81,7 @@ See [getDisplayUrl](core.DynamicSyncTableOptions.md#getdisplayurl)
 
 #### Defined in
 
-[api.ts:233](https://github.com/coda/packs-sdk/blob/main/api.ts#L233)
+[api.ts:235](https://github.com/coda/packs-sdk/blob/main/api.ts#L235)
 
 ___
 
@@ -93,7 +93,7 @@ See [getName](core.DynamicSyncTableOptions.md#getname)
 
 #### Defined in
 
-[api.ts:231](https://github.com/coda/packs-sdk/blob/main/api.ts#L231)
+[api.ts:233](https://github.com/coda/packs-sdk/blob/main/api.ts#L233)
 
 ___
 
@@ -109,7 +109,7 @@ See [getSchema](core.DynamicSyncTableOptions.md#getschema)
 
 #### Defined in
 
-[api.ts:229](https://github.com/coda/packs-sdk/blob/main/api.ts#L229)
+[api.ts:231](https://github.com/coda/packs-sdk/blob/main/api.ts#L231)
 
 ___
 
@@ -156,7 +156,7 @@ Identifies this sync table as dynamic.
 
 #### Defined in
 
-[api.ts:227](https://github.com/coda/packs-sdk/blob/main/api.ts#L227)
+[api.ts:229](https://github.com/coda/packs-sdk/blob/main/api.ts#L229)
 
 ___
 
@@ -168,7 +168,23 @@ See [listDynamicUrls](core.DynamicSyncTableOptions.md#listdynamicurls)
 
 #### Defined in
 
-[api.ts:235](https://github.com/coda/packs-sdk/blob/main/api.ts#L235)
+[api.ts:237](https://github.com/coda/packs-sdk/blob/main/api.ts#L237)
+
+___
+
+### maxUpdateBatchSize
+
+• `Optional` **maxUpdateBatchSize**: `number`
+
+See [maxUpdateBatchSize](core.SyncTableOptions.md#maxupdatebatchsize)
+
+#### Inherited from
+
+[SyncTableDef](core.SyncTableDef.md).[maxUpdateBatchSize](core.SyncTableDef.md#maxupdatebatchsize)
+
+#### Defined in
+
+[api.ts:215](https://github.com/coda/packs-sdk/blob/main/api.ts#L215)
 
 ___
 
