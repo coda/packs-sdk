@@ -30,7 +30,7 @@ BaseStringSchema.codaType
 
 #### Defined in
 
-[schema.ts:552](https://github.com/coda/packs-sdk/blob/main/schema.ts#L552)
+[schema.ts:553](https://github.com/coda/packs-sdk/blob/main/schema.ts#L553)
 
 ___
 
@@ -64,23 +64,7 @@ Only applies when this is used as a sync table property.
 
 #### Defined in
 
-[schema.ts:559](https://github.com/coda/packs-sdk/blob/main/schema.ts#L559)
-
-___
-
-### mutable
-
-• `Optional` **mutable**: `boolean`
-
-Whether this object schema property is editable by the user in the UI.
-
-#### Inherited from
-
-BaseStringSchema.mutable
-
-#### Defined in
-
-[schema.ts:220](https://github.com/coda/packs-sdk/blob/main/schema.ts#L220)
+[schema.ts:560](https://github.com/coda/packs-sdk/blob/main/schema.ts#L560)
 
 ___
 
@@ -96,4 +80,4 @@ BaseStringSchema.type
 
 #### Defined in
 
-[schema.ts:697](https://github.com/coda/packs-sdk/blob/main/schema.ts#L697)
+[schema.ts:698](https://github.com/coda/packs-sdk/blob/main/schema.ts#L698)

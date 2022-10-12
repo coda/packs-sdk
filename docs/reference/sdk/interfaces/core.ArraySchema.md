@@ -49,23 +49,7 @@ A schema for the items of this array.
 
 #### Defined in
 
-[schema.ts:743](https://github.com/coda/packs-sdk/blob/main/schema.ts#L743)
-
-___
-
-### mutable
-
-• `Optional` **mutable**: `boolean`
-
-Whether this object schema property is editable by the user in the UI.
-
-#### Inherited from
-
-BaseSchema.mutable
-
-#### Defined in
-
-[schema.ts:220](https://github.com/coda/packs-sdk/blob/main/schema.ts#L220)
+[schema.ts:744](https://github.com/coda/packs-sdk/blob/main/schema.ts#L744)
 
 ___
 
@@ -77,4 +61,4 @@ Identifies this schema as an array.
 
 #### Defined in
 
-[schema.ts:741](https://github.com/coda/packs-sdk/blob/main/schema.ts#L741)
+[schema.ts:742](https://github.com/coda/packs-sdk/blob/main/schema.ts#L742)

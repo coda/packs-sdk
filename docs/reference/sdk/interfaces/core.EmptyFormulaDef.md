@@ -220,7 +220,7 @@ A definition of the request and any parameter transformations to make in order t
 
 #### Defined in
 
-[api.ts:608](https://github.com/coda/packs-sdk/blob/main/api.ts#L608)
+[api.ts:609](https://github.com/coda/packs-sdk/blob/main/api.ts#L609)
 
 ___
 

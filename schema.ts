@@ -217,6 +217,7 @@ interface BaseSchema {
   /**
    * Whether this object schema property is editable by the user in the UI.
    */
+  /** @hidden */
   mutable?: boolean;
 }
 

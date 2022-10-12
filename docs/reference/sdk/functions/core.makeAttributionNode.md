@@ -34,4 +34,4 @@ rendered any time a value with that identity is rendered in a doc.
 
 #### Defined in
 
-[schema.ts:1124](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1124)
+[schema.ts:1125](https://github.com/coda/packs-sdk/blob/main/schema.ts#L1125)

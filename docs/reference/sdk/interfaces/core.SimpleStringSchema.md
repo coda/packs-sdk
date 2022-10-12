@@ -34,7 +34,7 @@ BaseStringSchema.codaType
 
 #### Defined in
 
-[schema.ts:699](https://github.com/coda/packs-sdk/blob/main/schema.ts#L699)
+[schema.ts:700](https://github.com/coda/packs-sdk/blob/main/schema.ts#L700)
 
 ___
 
@@ -57,22 +57,6 @@ BaseStringSchema.description
 
 ___
 
-### mutable
-
-• `Optional` **mutable**: `boolean`
-
-Whether this object schema property is editable by the user in the UI.
-
-#### Inherited from
-
-BaseStringSchema.mutable
-
-#### Defined in
-
-[schema.ts:220](https://github.com/coda/packs-sdk/blob/main/schema.ts#L220)
-
-___
-
 ### type
 
 • **type**: [`String`](../enums/core.ValueType.md#string)
@@ -85,4 +69,4 @@ BaseStringSchema.type
 
 #### Defined in
 
-[schema.ts:697](https://github.com/coda/packs-sdk/blob/main/schema.ts#L697)
+[schema.ts:698](https://github.com/coda/packs-sdk/blob/main/schema.ts#L698)

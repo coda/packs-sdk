@@ -100,18 +100,6 @@ See [identityName](core.SyncTableOptions.md#identityname) for more details.
 
 ___
 
-### maxUpdateBatchSize
-
-• `Optional` **maxUpdateBatchSize**: `number`
-
-See [maxUpdateBatchSize](core.SyncTableOptions.md#maxupdatebatchsize)
-
-#### Defined in
-
-[api.ts:215](https://github.com/coda/packs-sdk/blob/main/api.ts#L215)
-
-___
-
 ### name
 
 • **name**: `string`

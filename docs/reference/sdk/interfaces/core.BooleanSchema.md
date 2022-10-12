@@ -23,7 +23,7 @@ Indicates how to render values in a table. If not specified, renders a checkbox.
 
 #### Defined in
 
-[schema.ts:230](https://github.com/coda/packs-sdk/blob/main/schema.ts#L230)
+[schema.ts:231](https://github.com/coda/packs-sdk/blob/main/schema.ts#L231)
 
 ___
 
@@ -46,22 +46,6 @@ BaseSchema.description
 
 ___
 
-### mutable
-
-• `Optional` **mutable**: `boolean`
-
-Whether this object schema property is editable by the user in the UI.
-
-#### Inherited from
-
-BaseSchema.mutable
-
-#### Defined in
-
-[schema.ts:220](https://github.com/coda/packs-sdk/blob/main/schema.ts#L220)
-
-___
-
 ### type
 
 • **type**: [`Boolean`](../enums/core.ValueType.md#boolean)
@@ -70,4 +54,4 @@ Identifies this schema as relating to a boolean value.
 
 #### Defined in
 
-[schema.ts:228](https://github.com/coda/packs-sdk/blob/main/schema.ts#L228)
+[schema.ts:229](https://github.com/coda/packs-sdk/blob/main/schema.ts#L229)

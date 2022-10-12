@@ -27,7 +27,7 @@ this sync table (including autocomplete formulas).
 
 #### Defined in
 
-[api.ts:1405](https://github.com/coda/packs-sdk/blob/main/api.ts#L1405)
+[api.ts:1406](https://github.com/coda/packs-sdk/blob/main/api.ts#L1406)
 
 ___
 
@@ -41,7 +41,7 @@ description for a 'Products' sync table could be: 'Returns products from the e-c
 
 #### Defined in
 
-[api.ts:1374](https://github.com/coda/packs-sdk/blob/main/api.ts#L1374)
+[api.ts:1375](https://github.com/coda/packs-sdk/blob/main/api.ts#L1375)
 
 ___
 
@@ -54,7 +54,7 @@ sync tables that have a dynamic schema.
 
 #### Defined in
 
-[api.ts:1410](https://github.com/coda/packs-sdk/blob/main/api.ts#L1410)
+[api.ts:1411](https://github.com/coda/packs-sdk/blob/main/api.ts#L1411)
 
 ___
 
@@ -69,7 +69,7 @@ These will eventually be consolidated.)
 
 #### Defined in
 
-[api.ts:1400](https://github.com/coda/packs-sdk/blob/main/api.ts#L1400)
+[api.ts:1401](https://github.com/coda/packs-sdk/blob/main/api.ts#L1401)
 
 ___
 
@@ -91,20 +91,7 @@ of the object, and the schema is declared as `{identity: {name: 'Products'}}`.
 
 #### Defined in
 
-[api.ts:1388](https://github.com/coda/packs-sdk/blob/main/api.ts#L1388)
-
-___
-
-### maxUpdateBatchSize
-
-• `Optional` **maxUpdateBatchSize**: `number`
-
-If the pack supports object updates, the maximum number of objects that will be sent to the pack
-in a single batch. Defaults to 1 if not specified.
-
-#### Defined in
-
-[api.ts:1415](https://github.com/coda/packs-sdk/blob/main/api.ts#L1415)
+[api.ts:1389](https://github.com/coda/packs-sdk/blob/main/api.ts#L1389)
 
 ___
 
@@ -118,7 +105,7 @@ from an e-commerce platform should be called 'Products'. This name must not cont
 
 #### Defined in
 
-[api.ts:1368](https://github.com/coda/packs-sdk/blob/main/api.ts#L1368)
+[api.ts:1369](https://github.com/coda/packs-sdk/blob/main/api.ts#L1369)
 
 ___
 
@@ -131,4 +118,4 @@ schema for a single product. The sync formula will return an array of objects th
 
 #### Defined in
 
-[api.ts:1393](https://github.com/coda/packs-sdk/blob/main/api.ts#L1393)
+[api.ts:1394](https://github.com/coda/packs-sdk/blob/main/api.ts#L1394)

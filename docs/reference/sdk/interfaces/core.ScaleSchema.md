@@ -32,7 +32,7 @@ BaseNumberSchema.codaType
 
 #### Defined in
 
-[schema.ts:457](https://github.com/coda/packs-sdk/blob/main/schema.ts#L457)
+[schema.ts:458](https://github.com/coda/packs-sdk/blob/main/schema.ts#L458)
 
 ___
 
@@ -63,7 +63,7 @@ The icon to render.
 
 #### Defined in
 
-[schema.ts:461](https://github.com/coda/packs-sdk/blob/main/schema.ts#L461)
+[schema.ts:462](https://github.com/coda/packs-sdk/blob/main/schema.ts#L462)
 
 ___
 
@@ -75,23 +75,7 @@ The number of icons to render.
 
 #### Defined in
 
-[schema.ts:459](https://github.com/coda/packs-sdk/blob/main/schema.ts#L459)
-
-___
-
-### mutable
-
-• `Optional` **mutable**: `boolean`
-
-Whether this object schema property is editable by the user in the UI.
-
-#### Inherited from
-
-BaseNumberSchema.mutable
-
-#### Defined in
-
-[schema.ts:220](https://github.com/coda/packs-sdk/blob/main/schema.ts#L220)
+[schema.ts:460](https://github.com/coda/packs-sdk/blob/main/schema.ts#L460)
 
 ___
 
@@ -107,4 +91,4 @@ BaseNumberSchema.type
 
 #### Defined in
 
-[schema.ts:249](https://github.com/coda/packs-sdk/blob/main/schema.ts#L249)
+[schema.ts:250](https://github.com/coda/packs-sdk/blob/main/schema.ts#L250)

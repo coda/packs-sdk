@@ -28,7 +28,7 @@ BaseNumberSchema.codaType
 
 #### Defined in
 
-[schema.ts:273](https://github.com/coda/packs-sdk/blob/main/schema.ts#L273)
+[schema.ts:274](https://github.com/coda/packs-sdk/blob/main/schema.ts#L274)
 
 ___
 
@@ -62,23 +62,7 @@ Only applies when this is used as a sync table property.
 
 #### Defined in
 
-[schema.ts:280](https://github.com/coda/packs-sdk/blob/main/schema.ts#L280)
-
-___
-
-### mutable
-
-• `Optional` **mutable**: `boolean`
-
-Whether this object schema property is editable by the user in the UI.
-
-#### Inherited from
-
-BaseNumberSchema.mutable
-
-#### Defined in
-
-[schema.ts:220](https://github.com/coda/packs-sdk/blob/main/schema.ts#L220)
+[schema.ts:281](https://github.com/coda/packs-sdk/blob/main/schema.ts#L281)
 
 ___
 
@@ -94,4 +78,4 @@ BaseNumberSchema.type
 
 #### Defined in
 
-[schema.ts:249](https://github.com/coda/packs-sdk/blob/main/schema.ts#L249)
+[schema.ts:250](https://github.com/coda/packs-sdk/blob/main/schema.ts#L250)

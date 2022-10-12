@@ -212,6 +212,7 @@ export interface SyncTableDef<
   /** See {@link DynamicOptions.defaultAddDynamicColumns} */
   defaultAddDynamicColumns?: boolean;
   /** See {@link SyncTableOptions.maxUpdateBatchSize} */
+  /** @hidden */
   maxUpdateBatchSize?: number;
 }
 
@@ -1412,6 +1413,7 @@ export interface SyncTableOptions<
    * If the pack supports object updates, the maximum number of objects that will be sent to the pack
    * in a single batch. Defaults to 1 if not specified.
    */
+  /** @hidden */
   maxUpdateBatchSize?: number;
 }
 
@@ -1511,6 +1513,7 @@ export interface DynamicSyncTableOptions<
    * If the pack supports object updates, the maximum number of objects that will be sent to the pack
    * in a single batch. Defaults to 1 if not specified.
    */
+  /** @hidden */
   maxUpdateBatchSize?: number;
 }
 

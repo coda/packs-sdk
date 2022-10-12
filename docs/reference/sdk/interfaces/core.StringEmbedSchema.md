@@ -30,7 +30,7 @@ BaseStringSchema.codaType
 
 #### Defined in
 
-[schema.ts:570](https://github.com/coda/packs-sdk/blob/main/schema.ts#L570)
+[schema.ts:571](https://github.com/coda/packs-sdk/blob/main/schema.ts#L571)
 
 ___
 
@@ -66,23 +66,7 @@ but requires user consent per-domain to actually display the embed.
 
 #### Defined in
 
-[schema.ts:579](https://github.com/coda/packs-sdk/blob/main/schema.ts#L579)
-
-___
-
-### mutable
-
-• `Optional` **mutable**: `boolean`
-
-Whether this object schema property is editable by the user in the UI.
-
-#### Inherited from
-
-BaseStringSchema.mutable
-
-#### Defined in
-
-[schema.ts:220](https://github.com/coda/packs-sdk/blob/main/schema.ts#L220)
+[schema.ts:580](https://github.com/coda/packs-sdk/blob/main/schema.ts#L580)
 
 ___
 
@@ -98,4 +82,4 @@ BaseStringSchema.type
 
 #### Defined in
 
-[schema.ts:697](https://github.com/coda/packs-sdk/blob/main/schema.ts#L697)
+[schema.ts:698](https://github.com/coda/packs-sdk/blob/main/schema.ts#L698)
