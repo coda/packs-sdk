@@ -5,6 +5,7 @@ import type { SetEndpoint } from '../types';
 import type { SetEndpointDef } from '../types';
 import type { SuggestedValueType } from '../api_types';
 import type { UnionType } from '../api_types';
+/** @hidden */
 export declare function objectSchemaHelper<T extends ObjectSchemaDefinition<string, string>>(schema: T): ObjectSchemaHelper<T>;
 declare class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
     private readonly _schema;
@@ -17,6 +18,7 @@ declare class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string
     get type(): import("../schema").ValueType.Object;
     get attribution(): import("../schema").AttributionNode[] | undefined;
 }
+/** @hidden */
 export declare function paramDefHelper<S extends UnionType, T extends ParamDef<S>>(def: T): ParamDefHelper<S, T>;
 declare class ParamDefHelper<S extends UnionType, T extends ParamDef<S>> {
     private readonly _def;

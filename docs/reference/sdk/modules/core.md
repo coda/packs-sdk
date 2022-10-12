@@ -188,7 +188,6 @@ import * as coda from "@codahq/packs-sdk";
 - [ensureNonEmptyString](../functions/core.ensureNonEmptyString.md)
 - [ensureUnreachable](../functions/core.ensureUnreachable.md)
 - [generateSchema](../functions/core.generateSchema.md)
-- [getEffectivePropertyKeysFromSchema](../functions/core.getEffectivePropertyKeysFromSchema.md)
 - [getQueryParams](../functions/core.getQueryParams.md)
 - [joinUrl](../functions/core.joinUrl.md)
 - [makeAttributionNode](../functions/core.makeAttributionNode.md)

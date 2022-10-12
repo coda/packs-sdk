@@ -5,8 +5,9 @@ import type {SetEndpoint} from '../types';
 import type {SetEndpointDef} from '../types';
 import type {SuggestedValueType} from '../api_types';
 import type {UnionType} from '../api_types';
-import {ensureExists} from '../helpers/ensure';
+import {ensureExists} from './ensure';
 
+/** @hidden */
 export function objectSchemaHelper<T extends ObjectSchemaDefinition<string, string>>(schema: T): ObjectSchemaHelper<T> {
   return new ObjectSchemaHelper(schema);
 }
@@ -47,6 +48,7 @@ class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
   }
 }
 
+/** @hidden */
 export function paramDefHelper<S extends UnionType, T extends ParamDef<S>>(def: T): ParamDefHelper<S, T> {
   return new ParamDefHelper(def);
 }

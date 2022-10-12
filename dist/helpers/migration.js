@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postSetupMetadataHelper = exports.setEndpointDefHelper = exports.setEndpointHelper = exports.paramDefHelper = exports.objectSchemaHelper = void 0;
-const ensure_1 = require("../helpers/ensure");
+const ensure_1 = require("./ensure");
+/** @hidden */
 function objectSchemaHelper(schema) {
     return new ObjectSchemaHelper(schema);
 }
@@ -36,6 +37,7 @@ class ObjectSchemaHelper {
         return (_a = this._schema.attribution) !== null && _a !== void 0 ? _a : (_b = this._schema.identity) === null || _b === void 0 ? void 0 : _b.attribution;
     }
 }
+/** @hidden */
 function paramDefHelper(def) {
     return new ParamDefHelper(def);
 }

@@ -129,9 +129,6 @@ export {getQueryParams} from './helpers/url';
 export {join as joinUrl} from './helpers/url';
 export {withQueryParams} from './helpers/url';
 
-// Schema helpers.
-export {getEffectivePropertyKeysFromSchema} from './helpers/schema';
-
 // SVG constants.
 export {SvgConstants} from './helpers/svg';
 
@@ -236,3 +233,5 @@ export type {ResponseHandlerTemplate} from './handler_templates';
 
 export type {OptionalParamDef} from './api_types';
 export type {ParamDefFromOptionsUnion} from './api';
+
+export * as internal from './internal';

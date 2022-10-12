@@ -3953,12 +3953,6 @@ export declare function getQueryParams(url: string): {
 	[key: string]: any;
 };
 declare function join(...tokens: string[]): string;
-/**
- * A helper to extract properties fromKeys from a schema object. This is mostly useful
- * in processing the context.sync.schema in a sync formula, where the schema would only
- * include a subset of properties which were manually selected by the Pack user.
- */
-export declare function getEffectivePropertyKeysFromSchema(schema: Schema): string[] | undefined;
 /** Constants for working with SVG images. */
 export declare namespace SvgConstants {
 	/** ID of the node in a returned SVG file that is targeted when Dark Mode is enabled in Coda. */

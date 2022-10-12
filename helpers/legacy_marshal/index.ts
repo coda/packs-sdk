@@ -102,7 +102,6 @@ export function legacyMarshalValue(val: any): string | undefined {
   // identical. It will only serve the purpose of our internal marshaling use case.
   return JSON.stringify(processValue(val));
 }
-
 export function legacyUnmarshalValue(marshaledValue: string | undefined): any {
   if (marshaledValue === undefined) {
     return marshaledValue;
