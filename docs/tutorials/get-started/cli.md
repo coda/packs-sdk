@@ -74,7 +74,7 @@ Replace the contents of `pack.ts` with the following code, which adds a "Hello" 
 
 === "pack.ts"
     ```ts
-    --8<-- "examples/hello_world/hello_world.ts"
+    --8<-- "samples/packs/hello_world/hello_world.ts"
     ```
 
 Take a moment to read through the code and comments and get an understanding of how a formula is structured.

@@ -1,4 +1,4 @@
-import * as coda from "../../../../index";
+import * as coda from "@codahq/packs-sdk";
 
 let parameters = [
   // BEGIN

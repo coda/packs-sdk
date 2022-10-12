@@ -5,7 +5,7 @@ module.exports = {
   ],
   overrides: [
     {
-      files: ['examples/**/*.ts', 'snippets/**/*.ts'],
+      files: ['**/*.ts'],
       rules: {
         'object-shorthand': ['error', 'never'],
         '@typescript-eslint/no-unused-vars': [
