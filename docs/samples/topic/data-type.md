@@ -174,12 +174,12 @@ pack.addFormula({
     coda.makeParameter({
       type: coda.ParameterType.Number,
       name: "amount",
-      description: "The amount to convert."
+      description: "The amount to convert.",
     }),
     coda.makeParameter({
       type: coda.ParameterType.String,
       name: "from",
-      description: "The currency to convert from."
+      description: "The currency to convert from.",
     }),
   ],
   resultType: coda.ValueType.Number,
@@ -198,7 +198,7 @@ pack.addFormula({
     });
     let response = await context.fetcher.fetch({
       method: "GET",
-      url: url
+      url: url,
     });
     let rates = response.body.rates;
     return rates.USD;
@@ -289,8 +289,8 @@ pack.addFormula({
   execute: async function ([text], context) {
     let words = text.split(" ");
     for (let i = 0; i < words.length; i++) {
-      if (i % 2 == 0) {
-        words[i] = `<b>${words[i]}</b>`
+      if (i % 2 === 0) {
+        words[i] = `<b>${words[i]}</b>`;
       }
     }
     return words.join(" ");

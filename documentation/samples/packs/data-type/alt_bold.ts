@@ -17,8 +17,8 @@ pack.addFormula({
   execute: async function ([text], context) {
     let words = text.split(" ");
     for (let i = 0; i < words.length; i++) {
-      if (i % 2 == 0) {
-        words[i] = `<b>${words[i]}</b>`
+      if (i % 2 === 0) {
+        words[i] = `<b>${words[i]}</b>`;
       }
     }
     return words.join(" ");
