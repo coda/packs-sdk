@@ -2641,7 +2641,7 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
 	 */
 	dynamicOptions?: DynamicOptions;
 	/**
-	 * If the pack supports object updates, the maximum number of objects that will be sent to the pack
+	 * If the table supports object updates, the maximum number of objects that will be sent to the pack
 	 * in a single batch. Defaults to 1 if not specified.
 	 */
 	/** @hidden */
