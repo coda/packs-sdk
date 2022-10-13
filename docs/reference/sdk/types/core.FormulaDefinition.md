@@ -17,3 +17,10 @@ A formula definition accepted by [makeFormula](../functions/core.makeFormula.md)
 | `ParamDefsT` | extends [`ParamDefs`](core.ParamDefs.md) |
 | `ResultT` | extends [`ValueType`](../enums/core.ValueType.md) |
 | `SchemaT` | extends [`Schema`](core.Schema.md) |
+<<<<<<< HEAD
+=======
+
+#### Defined in
+
+[api.ts:1025](https://github.com/coda/packs-sdk/blob/main/api.ts#L1025)
+>>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)

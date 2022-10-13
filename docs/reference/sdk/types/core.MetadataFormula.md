@@ -35,3 +35,10 @@ that has the values the user has specified for each of the other parameters in t
 (if any), so that the autocomplete options for one parameter can depend on the current
 values of the others. This is dictionary mapping the names of each parameter to its
 current value.
+<<<<<<< HEAD
+=======
+
+#### Defined in
+
+[api.ts:1120](https://github.com/coda/packs-sdk/blob/main/api.ts#L1120)
+>>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)

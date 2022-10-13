@@ -29,3 +29,10 @@ any needed to wrap a value with this formula.
 #### Returns
 
 [`MetadataFormula`](../types/core.MetadataFormula.md)
+<<<<<<< HEAD
+=======
+
+#### Defined in
+
+[api.ts:1298](https://github.com/coda/packs-sdk/blob/main/api.ts#L1298)
+>>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)

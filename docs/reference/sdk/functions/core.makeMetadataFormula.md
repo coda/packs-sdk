@@ -30,3 +30,10 @@ it is shaped like a Coda formula to be used at runtime.
 #### Returns
 
 [`MetadataFormula`](../types/core.MetadataFormula.md)
+<<<<<<< HEAD
+=======
+
+#### Defined in
+
+[api.ts:1154](https://github.com/coda/packs-sdk/blob/main/api.ts#L1154)
+>>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)

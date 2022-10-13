@@ -25,3 +25,10 @@ A JavaScript function that can implement a [MetadataFormulaDef](core.MetadataFor
 ##### Returns
 
 `Promise`<[`MetadataFormulaResultType`](core.MetadataFormulaResultType.md) \| [`MetadataFormulaResultType`](core.MetadataFormulaResultType.md)[] \| [`ArraySchema`](../interfaces/core.ArraySchema.md) \| `ObjectSchema`<`any`, `any`\>\>
+<<<<<<< HEAD
+=======
+
+#### Defined in
+
+[api.ts:1129](https://github.com/coda/packs-sdk/blob/main/api.ts#L1129)
+>>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)

@@ -39,7 +39,7 @@ function compileFormulaMetadata(formula) {
 function compileSyncTable(syncTable) {
     if ((0, api_1.isDynamicSyncTable)(syncTable)) {
         const { getter, getName, getSchema, getDisplayUrl, listDynamicUrls, ...rest } = syncTable;
-        const { execute, ...getterRest } = getter;
+        const { execute, executeUpdate, ...getterRest } = getter;
         return {
             ...rest,
             getName: compileMetadataFormulaMetadata(getName),
@@ -50,7 +50,7 @@ function compileSyncTable(syncTable) {
         };
     }
     const { getter, ...rest } = syncTable;
-    const { execute, ...getterRest } = getter;
+    const { execute, executeUpdate, ...getterRest } = getter;
     return {
         ...rest,
         getter: getterRest,

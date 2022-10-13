@@ -37,3 +37,10 @@ See [Normalization](/index.html#normalization) for more information about schema
 #### Returns
 
 [`SyncTableDef`](../interfaces/core.SyncTableDef.md)<`K`, `L`, `ParamDefsT`, `SchemaT`\>
+<<<<<<< HEAD
+=======
+
+#### Defined in
+
+[api.ts:1545](https://github.com/coda/packs-sdk/blob/main/api.ts#L1545)
+>>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)

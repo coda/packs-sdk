@@ -43,3 +43,10 @@ coda.makeEmptyFormula({
 #### Returns
 
 { `cacheTtlSecs?`: `number` ; `connectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md) ; `description`: `string` ; `examples?`: { `params`: (`undefined` \| [`PackFormulaValue`](../types/core.PackFormulaValue.md))[] ; `result`: [`PackFormulaResult`](../types/core.PackFormulaResult.md)  }[] ; `extraOAuthScopes?`: `string`[] ; `isAction?`: `boolean` ; `isExperimental?`: `boolean` ; `isSystem?`: `boolean` ; `name`: `string` ; `network?`: [`Network`](../interfaces/core.Network.md) ; `parameters`: `ParamDefsT` ; `varargParameters?`: [`ParamDefs`](../types/core.ParamDefs.md)  } & { `execute`: (`params`: [`ParamValues`](../types/core.ParamValues.md)<`ParamDefsT`\>, `context`: [`ExecutionContext`](../interfaces/core.ExecutionContext.md)) => `Promise`<`string`\> ; `resultType`: [`string`](../enums/core.Type.md#string)  }
+<<<<<<< HEAD
+=======
+
+#### Defined in
+
+[api.ts:1844](https://github.com/coda/packs-sdk/blob/main/api.ts#L1844)
+>>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)

@@ -412,6 +412,14 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
      */
     continuation?: Continuation;
 }
+export interface SyncUpdate<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
+    previousValue: ObjectSchemaDefinitionType<K, L, SchemaT>;
+    newValue: ObjectSchemaDefinitionType<K, L, SchemaT>;
+    updatedFields: string[];
+}
+export interface SyncUpdateResult<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
+    result: Array<ObjectSchemaDefinitionType<K, L, SchemaT> | Error>;
+}
 /**
  * Inputs for creating the formula that implements a sync table.
  */
@@ -430,6 +438,15 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
      */
     /** @hidden */
     maxUpdateBatchSize?: number;
+    /**
+     * The JavaScript function that implements this sync update if the table supports updates.
+     *
+     * This function takes in parameters, updated sync table objects, and a sync context,
+     * and is responsible for pushing those updated objects to the external system then returning
+     * the new state of each object.
+     */
+    /** @hidden */
+    executeUpdate?(params: ParamValues<ParamDefsT>, updates: Array<SyncUpdate<K, L, SchemaT>>, context: SyncExecutionContext): Promise<SyncUpdateResult<K, L, SchemaT>>;
 }
 /**
  * The result of defining the formula that implements a sync table.

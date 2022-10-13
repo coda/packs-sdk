@@ -12,3 +12,10 @@ A context object that is provided to a metadata formula at execution time.
 For example, an autocomplete metadata formula for a parameter value may need
 to know the value of parameters that have already been selected. Those parameter
 values are provided in this context object.
+<<<<<<< HEAD
+=======
+
+#### Defined in
+
+[api.ts:1085](https://github.com/coda/packs-sdk/blob/main/api.ts#L1085)
+>>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)

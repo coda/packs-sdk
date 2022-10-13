@@ -44,3 +44,10 @@ autocomplete: async function(context, search) {
 #### Returns
 
 `Promise`<[`MetadataFormulaObjectResultType`](../interfaces/core.MetadataFormulaObjectResultType.md)[]\>
+<<<<<<< HEAD
+=======
+
+#### Defined in
+
+[api.ts:1212](https://github.com/coda/packs-sdk/blob/main/api.ts#L1212)
+>>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)

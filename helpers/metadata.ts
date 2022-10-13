@@ -61,7 +61,7 @@ function compileFormulaMetadata(formula: TypedPackFormula): PackFormulaMetadata 
 function compileSyncTable(syncTable: GenericSyncTable): PackSyncTable {
   if (isDynamicSyncTable(syncTable)) {
     const {getter, getName, getSchema, getDisplayUrl, listDynamicUrls, ...rest} = syncTable;
-    const {execute, ...getterRest} = getter;
+    const {execute, executeUpdate, ...getterRest} = getter;
     return {
       ...rest,
       getName: compileMetadataFormulaMetadata(getName),
@@ -73,7 +73,7 @@ function compileSyncTable(syncTable: GenericSyncTable): PackSyncTable {
   }
 
   const {getter, ...rest} = syncTable;
-  const {execute, ...getterRest} = getter;
+  const {execute, executeUpdate, ...getterRest} = getter;
   return {
     ...rest,
     getter: getterRest,

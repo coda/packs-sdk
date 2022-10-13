@@ -26,6 +26,13 @@ Input options for defining a sync table. See [makeSyncTable](../functions/core.m
 A [ConnectionRequirement](../enums/core.ConnectionRequirement.md) that will be used for all formulas contained within
 this sync table (including autocomplete formulas).
 
+<<<<<<< HEAD
+=======
+#### Defined in
+
+[api.ts:1432](https://github.com/coda/packs-sdk/blob/main/api.ts#L1432)
+
+>>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)
 ___
 
 ### description
@@ -36,6 +43,13 @@ The description of the sync table. This is shown to users in the Coda UI.
 This should describe what the sync table does in more detailed language. For example, the
 description for a 'Products' sync table could be: 'Returns products from the e-commerce platform.'
 
+<<<<<<< HEAD
+=======
+#### Defined in
+
+[api.ts:1401](https://github.com/coda/packs-sdk/blob/main/api.ts#L1401)
+
+>>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)
 ___
 
 ### dynamicOptions
@@ -45,6 +59,13 @@ ___
 A set of options used internally by [makeDynamicSyncTable](../functions/core.makeDynamicSyncTable.md), or for static
 sync tables that have a dynamic schema.
 
+<<<<<<< HEAD
+=======
+#### Defined in
+
+[api.ts:1437](https://github.com/coda/packs-sdk/blob/main/api.ts#L1437)
+
+>>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)
 ___
 
 ### formula
@@ -56,6 +77,13 @@ that returns an array of objects fitting the given schema and optionally a [Cont
 (The [name](core.SyncFormulaDef.md#name) is redundant and should be the same as the `name` parameter here.
 These will eventually be consolidated.)
 
+<<<<<<< HEAD
+=======
+#### Defined in
+
+[api.ts:1427](https://github.com/coda/packs-sdk/blob/main/api.ts#L1427)
+
+>>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)
 ___
 
 ### identityName
@@ -74,6 +102,13 @@ For example, if your identity name was 'Product', another formula or sync could 
 shell objects that reference rows in this table, so long as they contain the id
 of the object, and the schema is declared as `{identity: {name: 'Products'}}`.
 
+<<<<<<< HEAD
+=======
+#### Defined in
+
+[api.ts:1415](https://github.com/coda/packs-sdk/blob/main/api.ts#L1415)
+
+>>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)
 ___
 
 ### name
@@ -84,6 +119,13 @@ The name of the sync table. This is shown to users in the Coda UI.
 This should describe the entities being synced. For example, a sync table that syncs products
 from an e-commerce platform should be called 'Products'. This name must not contain spaces.
 
+<<<<<<< HEAD
+=======
+#### Defined in
+
+[api.ts:1395](https://github.com/coda/packs-sdk/blob/main/api.ts#L1395)
+
+>>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)
 ___
 
 ### schema
@@ -92,3 +134,10 @@ ___
 
 The definition of the schema that describes a single response object. For example, the
 schema for a single product. The sync formula will return an array of objects that fit this schema.
+<<<<<<< HEAD
+=======
+
+#### Defined in
+
+[api.ts:1420](https://github.com/coda/packs-sdk/blob/main/api.ts#L1420)
+>>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)

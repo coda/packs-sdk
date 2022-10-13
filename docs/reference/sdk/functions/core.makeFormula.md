@@ -83,3 +83,10 @@ makeFormula({
 #### Returns
 
 [`Formula`](../types/core.Formula.md)<`ParamDefsT`, `ResultT`, `SchemaT`\>
+<<<<<<< HEAD
+=======
+
+#### Defined in
+
+[api.ts:867](https://github.com/coda/packs-sdk/blob/main/api.ts#L867)
+>>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)
