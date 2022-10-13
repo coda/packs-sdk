@@ -1214,7 +1214,7 @@ export function simpleAutocomplete<T extends AutocompleteParameterTypes>(
  * filtering to only those that match a search string, and converting the matching
  * objects into the format needed for autocomplete results.
  *
- * A case-sensitive search is performed over each object's `displayKey` property.
+ * A case-insensitive search is performed over each object's `displayKey` property.
  *
  * A common pattern for implementing autocomplete for a formula pattern is to
  * make a request to an API endpoint that returns a list of all entities,
