@@ -14,4 +14,4 @@ values are provided in this context object.
 
 #### Defined in
 
-[api.ts:1059](https://github.com/coda/packs-sdk/blob/main/api.ts#L1059)
+[api.ts:1062](https://github.com/coda/packs-sdk/blob/main/api.ts#L1062)

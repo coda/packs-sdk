@@ -940,6 +940,7 @@ const syncFormulaSchema = zodCompleteObject({
     schema: arrayPropertySchema.optional(),
     resultType: z.any(),
     isSyncFormula: z.literal(true),
+    maxUpdateBatchSize: z.number().min(1).max(exports.Limits.UpdateBatchSize).optional(),
     ...commonPackFormulaSchema,
 });
 const baseSyncTableSchema = {
@@ -960,7 +961,6 @@ const baseSyncTableSchema = {
         .max(exports.Limits.BuildingBlockName)
         .optional()
         .refine(val => !val || !SystemColumnNames.includes(val), `This property name is reserved for internal use by Coda and can't be used as an identityName, sorry!`),
-    maxUpdateBatchSize: z.number().min(1).max(exports.Limits.UpdateBatchSize).optional(),
 };
 const genericSyncTableSchema = zodCompleteObject({
     ...baseSyncTableSchema,

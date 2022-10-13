@@ -81,7 +81,7 @@ See [getDisplayUrl](core.DynamicSyncTableOptions.md#getdisplayurl)
 
 #### Defined in
 
-[api.ts:236](https://github.com/coda/packs-sdk/blob/main/api.ts#L236)
+[api.ts:233](https://github.com/coda/packs-sdk/blob/main/api.ts#L233)
 
 ___
 
@@ -93,7 +93,7 @@ See [getName](core.DynamicSyncTableOptions.md#getname)
 
 #### Defined in
 
-[api.ts:234](https://github.com/coda/packs-sdk/blob/main/api.ts#L234)
+[api.ts:231](https://github.com/coda/packs-sdk/blob/main/api.ts#L231)
 
 ___
 
@@ -109,7 +109,7 @@ See [getSchema](core.DynamicSyncTableOptions.md#getschema)
 
 #### Defined in
 
-[api.ts:232](https://github.com/coda/packs-sdk/blob/main/api.ts#L232)
+[api.ts:229](https://github.com/coda/packs-sdk/blob/main/api.ts#L229)
 
 ___
 
@@ -156,7 +156,7 @@ Identifies this sync table as dynamic.
 
 #### Defined in
 
-[api.ts:230](https://github.com/coda/packs-sdk/blob/main/api.ts#L230)
+[api.ts:227](https://github.com/coda/packs-sdk/blob/main/api.ts#L227)
 
 ___
 
@@ -168,7 +168,7 @@ See [listDynamicUrls](core.DynamicSyncTableOptions.md#listdynamicurls)
 
 #### Defined in
 
-[api.ts:238](https://github.com/coda/packs-sdk/blob/main/api.ts#L238)
+[api.ts:235](https://github.com/coda/packs-sdk/blob/main/api.ts#L235)
 
 ___
 

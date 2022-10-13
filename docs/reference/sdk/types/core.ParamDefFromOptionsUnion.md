@@ -19,4 +19,4 @@ on the inputs to [makeParameter](../functions/core.makeParameter.md).
 
 #### Defined in
 
-[api.ts:382](https://github.com/coda/packs-sdk/blob/main/api.ts#L382)
+[api.ts:379](https://github.com/coda/packs-sdk/blob/main/api.ts#L379)

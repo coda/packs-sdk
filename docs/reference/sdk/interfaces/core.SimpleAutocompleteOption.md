@@ -24,7 +24,7 @@ Text that will be displayed to the user in UI for this option.
 
 #### Defined in
 
-[api.ts:1161](https://github.com/coda/packs-sdk/blob/main/api.ts#L1161)
+[api.ts:1164](https://github.com/coda/packs-sdk/blob/main/api.ts#L1164)
 
 ___
 
@@ -36,4 +36,4 @@ The actual value that will get used in the formula if this option is selected.
 
 #### Defined in
 
-[api.ts:1163](https://github.com/coda/packs-sdk/blob/main/api.ts#L1163)
+[api.ts:1166](https://github.com/coda/packs-sdk/blob/main/api.ts#L1166)

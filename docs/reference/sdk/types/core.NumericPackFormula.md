@@ -17,4 +17,4 @@ A pack formula that returns a number.
 
 #### Defined in
 
-[api.ts:621](https://github.com/coda/packs-sdk/blob/main/api.ts#L621)
+[api.ts:618](https://github.com/coda/packs-sdk/blob/main/api.ts#L618)

@@ -50,7 +50,6 @@ coda.makeDynamicSyncTable({
 | `__namedParameters.getSchema` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) |
 | `__namedParameters.identityName` | `string` |
 | `__namedParameters.listDynamicUrls?` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) |
-| `__namedParameters.maxUpdateBatchSize?` | `number` |
 | `__namedParameters.name` | `string` |
 | `__namedParameters.placeholderSchema?` | `SchemaT` |
 
@@ -60,4 +59,4 @@ coda.makeDynamicSyncTable({
 
 #### Defined in
 
-[api.ts:1668](https://github.com/coda/packs-sdk/blob/main/api.ts#L1668)
+[api.ts:1657](https://github.com/coda/packs-sdk/blob/main/api.ts#L1657)
