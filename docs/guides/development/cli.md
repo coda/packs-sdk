@@ -233,20 +233,12 @@ npx coda upload path/to/pack.ts --notes "Added the formula MyNewFormula."
 When you’ve tested a Pack version and want to make that version live for users of your Pack, create a release. The Pack version that you release will become the version that is used by new installations of your Pack, and existing installations will gradually be upgraded to this version.
 
 ```sh
-npx coda release path/to/pack.ts <optional-version>
+npx coda release path/to/pack.ts <optional-version> --notes "<Description of the release>"
 ```
 
-If you don’t pass a version argument, and don't explicitly set a version in your Pack definition, you will be prompted to use the latest version. The version must always be greater than that of any of your previous releases.
+If you don’t pass a version argument, and don't explicitly set a version in your Pack definition, you will be prompted to use the latest version. The version must always be greater than that of any of your previous releases.  Each release must include notes that describe the changes, which are shown the Pack listing page.
 
-Alternatively, you can easily create releases from the Pack Studio.
-
-<!-- TODO: Un-hide this text when notes are displayed somewhere.
-This command accepts an optional flag where you can provide notes about the contents of the release, helping you and users of your Pack understand what changed from release to release.
-
-```sh
-npx coda release path/to/pack.ts --notes "Added the formula MyNewFormula."
-```
--->
+Alternatively, you can create releases from within the Pack Studio.
 
 
 ## Recommended file structure
