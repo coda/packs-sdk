@@ -68,6 +68,7 @@ describe('Builder', () => {
         execute: async () => {
           return {result: []};
         },
+        maxUpdateBatchSize: 10,
       },
     });
   }
