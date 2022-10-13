@@ -11,6 +11,7 @@ ISOLATED_VM_VERSION=$(shell node -p -e $(ISOLATED_VM_VERSION_COMMAND))
 
 PIPENV := PYTHONPATH=${ROOTDIR} PIPENV_IGNORE_VIRTUALENVS=1 pipenv
 
+DOC_DISABLE_SOURCES ?= true
 DOC_GIT_REVISION ?= main
 
 
@@ -184,13 +185,9 @@ generated-documentation: compile-samples
 
 .PHONY: typedoc
 typedoc:
-	if [ -z "${shell git config --get remote.origin.url | grep coda/packs-sdk}" ]; then \
-		echo "Please config your git origin to git@github.com:coda/packs-sdk.git"; \
-		exit 1; \
-	fi
 	# Most options loaded from typedoc.js.
 	# If you changes this, also update the similar command in typedoc_coverage_test.ts.
-	${ROOTDIR}/node_modules/.bin/typedoc index.ts development.ts --options typedoc.js --gitRevision "${DOC_GIT_REVISION}" --out ${ROOTDIR}/docs/reference/sdk
+	${ROOTDIR}/node_modules/.bin/typedoc index.ts development.ts --options typedoc.js --disableSources "${DOC_DISABLE_SOURCES}" --gitRevision "${DOC_GIT_REVISION}" --out ${ROOTDIR}/docs/reference/sdk
 	node -r ts-node/register documentation/typedoc_post_process.ts
 
 .PHONY: docs
