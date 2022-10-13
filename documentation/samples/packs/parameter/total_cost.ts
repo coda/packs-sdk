@@ -25,9 +25,9 @@ pack.addFormula({
   ],
   resultType: coda.ValueType.Number,
   codaType: coda.ValueHintType.Currency,
-  execute: async function ([prices, quantities, taxRates], context) {
-    if (prices.length !== quantities.length ||
-        prices.length !== taxRates.length) {
+  execute: async function ([prices, quantities=[], taxRates=[]], context) {
+    if ((quantities.length > 0 && quantities.length !== prices.length) ||
+        (taxRates.length > 0 && taxRates.length !== prices.length)) {
       throw new coda.UserVisibleError("All lists must be the same length.");
     }
     let result = 0;
