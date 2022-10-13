@@ -1,6 +1,3 @@
----
-nav: "makeEmptyFormula"
----
 # Function: makeEmptyFormula
 
 [core](../modules/core.md).makeEmptyFormula

@@ -1,6 +1,3 @@
----
-nav: "PackDefinitionBuilder"
----
 # Class: PackDefinitionBuilder
 
 [core](../modules/core.md).PackDefinitionBuilder

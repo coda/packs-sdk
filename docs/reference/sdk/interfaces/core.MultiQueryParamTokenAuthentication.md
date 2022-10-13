@@ -1,6 +1,3 @@
----
-nav: "MultiQueryParamTokenAuthentication"
----
 # Interface: MultiQueryParamTokenAuthentication
 
 [core](../modules/core.md).MultiQueryParamTokenAuthentication

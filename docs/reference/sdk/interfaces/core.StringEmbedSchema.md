@@ -1,6 +1,3 @@
----
-nav: "StringEmbedSchema"
----
 # Interface: StringEmbedSchema
 
 [core](../modules/core.md).StringEmbedSchema

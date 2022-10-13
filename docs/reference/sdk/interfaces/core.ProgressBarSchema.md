@@ -1,6 +1,3 @@
----
-nav: "ProgressBarSchema"
----
 # Interface: ProgressBarSchema
 
 [core](../modules/core.md).ProgressBarSchema

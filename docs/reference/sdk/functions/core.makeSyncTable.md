@@ -1,6 +1,3 @@
----
-nav: "makeSyncTable"
----
 # Function: makeSyncTable
 
 [core](../modules/core.md).makeSyncTable

@@ -1,6 +1,3 @@
----
-nav: "FetchMethodType"
----
 # Type alias: FetchMethodType
 
 [core](../modules/core.md).FetchMethodType

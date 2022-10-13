@@ -1,6 +1,3 @@
----
-nav: "OptionalParamDef"
----
 # Interface: OptionalParamDef<T\>
 
 [core](../modules/core.md).OptionalParamDef

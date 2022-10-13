@@ -1,6 +1,3 @@
----
-nav: "executeMetadataFormula"
----
 # Function: executeMetadataFormula
 
 [testing](../modules/testing.md).executeMetadataFormula

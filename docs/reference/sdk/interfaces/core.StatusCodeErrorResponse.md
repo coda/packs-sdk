@@ -1,6 +1,3 @@
----
-nav: "StatusCodeErrorResponse"
----
 # Interface: StatusCodeErrorResponse
 
 [core](../modules/core.md).StatusCodeErrorResponse

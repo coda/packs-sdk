@@ -1,6 +1,3 @@
----
-nav: "ValueType"
----
 # Enumeration: ValueType
 
 [core](../modules/core.md).ValueType

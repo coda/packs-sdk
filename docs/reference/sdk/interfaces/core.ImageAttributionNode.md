@@ -1,6 +1,3 @@
----
-nav: "ImageAttributionNode"
----
 # Interface: ImageAttributionNode
 
 [core](../modules/core.md).ImageAttributionNode

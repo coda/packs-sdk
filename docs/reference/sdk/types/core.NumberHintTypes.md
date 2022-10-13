@@ -1,6 +1,3 @@
----
-nav: "NumberHintTypes"
----
 # Type alias: NumberHintTypes
 
 [core](../modules/core.md).NumberHintTypes

@@ -1,6 +1,3 @@
----
-nav: "NumericSchema"
----
 # Interface: NumericSchema
 
 [core](../modules/core.md).NumericSchema

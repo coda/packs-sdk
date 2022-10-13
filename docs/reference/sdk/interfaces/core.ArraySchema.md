@@ -1,6 +1,3 @@
----
-nav: "ArraySchema"
----
 # Interface: ArraySchema<T\>
 
 [core](../modules/core.md).ArraySchema

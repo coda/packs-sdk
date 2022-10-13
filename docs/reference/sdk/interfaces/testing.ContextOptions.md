@@ -1,6 +1,3 @@
----
-nav: "ContextOptions"
----
 # Interface: ContextOptions
 
 [testing](../modules/testing.md).ContextOptions

@@ -1,6 +1,3 @@
----
-nav: "BooleanFormulaDef"
----
 # Type alias: BooleanFormulaDef<ParamDefsT\>
 
 [core](../modules/core.md).BooleanFormulaDef

@@ -1,6 +1,3 @@
----
-nav: "StringDateSchema"
----
 # Interface: StringDateSchema
 
 [core](../modules/core.md).StringDateSchema

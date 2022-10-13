@@ -1,6 +1,3 @@
----
-nav: "makeDynamicSyncTable"
----
 # Function: makeDynamicSyncTable
 
 [core](../modules/core.md).makeDynamicSyncTable

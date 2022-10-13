@@ -1,6 +1,3 @@
----
-nav: "ParameterType"
----
 # Enumeration: ParameterType
 
 [core](../modules/core.md).ParameterType

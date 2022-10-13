@@ -1,6 +1,3 @@
----
-nav: "makeSchema"
----
 # Function: makeSchema
 
 [core](../modules/core.md).makeSchema

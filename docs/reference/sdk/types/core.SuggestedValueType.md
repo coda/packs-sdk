@@ -1,6 +1,3 @@
----
-nav: "SuggestedValueType"
----
 # Type alias: SuggestedValueType<T\>
 
 [core](../modules/core.md).SuggestedValueType

@@ -1,6 +1,3 @@
----
-nav: "AWSAssumeRoleAuthentication"
----
 # Interface: AWSAssumeRoleAuthentication
 
 [core](../modules/core.md).AWSAssumeRoleAuthentication

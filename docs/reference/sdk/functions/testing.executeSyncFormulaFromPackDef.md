@@ -1,6 +1,3 @@
----
-nav: "executeSyncFormulaFromPackDef"
----
 # Function: executeSyncFormulaFromPackDef
 
 [testing](../modules/testing.md).executeSyncFormulaFromPackDef

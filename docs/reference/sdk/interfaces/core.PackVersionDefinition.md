@@ -1,6 +1,3 @@
----
-nav: "PackVersionDefinition"
----
 # Interface: PackVersionDefinition
 
 [core](../modules/core.md).PackVersionDefinition

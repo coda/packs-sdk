@@ -1,6 +1,3 @@
----
-nav: "makeParameter"
----
 # Function: makeParameter
 
 [core](../modules/core.md).makeParameter

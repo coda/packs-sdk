@@ -1,6 +1,3 @@
----
-nav: "SimpleStringSchema"
----
 # Interface: SimpleStringSchema<T\>
 
 [core](../modules/core.md).SimpleStringSchema

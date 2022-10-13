@@ -1,6 +1,3 @@
----
-nav: "PostSetupDef"
----
 # Type alias: PostSetupDef
 
 [core](../modules/core.md).PostSetupDef

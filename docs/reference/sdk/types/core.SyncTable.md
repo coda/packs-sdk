@@ -1,6 +1,3 @@
----
-nav: "SyncTable"
----
 # Type alias: SyncTable
 
 [core](../modules/core.md).SyncTable

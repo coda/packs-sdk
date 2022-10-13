@@ -1,6 +1,3 @@
----
-nav: "EmailDisplayType"
----
 # Enumeration: EmailDisplayType
 
 [core](../modules/core.md).EmailDisplayType

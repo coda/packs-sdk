@@ -1,6 +1,3 @@
----
-nav: "OAuth2Authentication"
----
 # Interface: OAuth2Authentication
 
 [core](../modules/core.md).OAuth2Authentication

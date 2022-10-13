@@ -1,6 +1,3 @@
----
-nav: "ImageSchema"
----
 # Interface: ImageSchema
 
 [core](../modules/core.md).ImageSchema

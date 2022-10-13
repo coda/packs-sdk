@@ -1,6 +1,3 @@
----
-nav: "CustomAuthentication"
----
 # Interface: CustomAuthentication
 
 [core](../modules/core.md).CustomAuthentication

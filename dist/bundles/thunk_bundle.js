@@ -4066,7 +4066,7 @@ module.exports = (() => {
     unmarshalValueFromString: () => unmarshalValueFromString
   });
   init_buffer_shim();
-  var import_buffer = __toESM(require_buffer());
+  var import_buffer = __toESM(require_buffer(), 1);
 
   // api.ts
   init_buffer_shim();
@@ -4210,7 +4210,7 @@ module.exports = (() => {
   }
 
   // runtime/common/marshaling/index.ts
-  var import_util = __toESM(require_util());
+  var import_util = __toESM(require_util(), 1);
   var MaxTraverseDepth = 100;
   var recognizableSystemErrorClasses = [
     Error,

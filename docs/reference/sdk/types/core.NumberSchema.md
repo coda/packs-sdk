@@ -1,6 +1,3 @@
----
-nav: "NumberSchema"
----
 # Type alias: NumberSchema
 
 [core](../modules/core.md).NumberSchema

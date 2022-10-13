@@ -1,6 +1,3 @@
----
-nav: "ObjectHintTypes"
----
 # Type alias: ObjectHintTypes
 
 [core](../modules/core.md).ObjectHintTypes

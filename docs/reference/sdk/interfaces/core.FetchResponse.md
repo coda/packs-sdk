@@ -1,6 +1,3 @@
----
-nav: "FetchResponse"
----
 # Interface: FetchResponse<T\>
 
 [core](../modules/core.md).FetchResponse

@@ -1,6 +1,3 @@
----
-nav: "DurationSchema"
----
 # Interface: DurationSchema
 
 [core](../modules/core.md).DurationSchema

@@ -1,6 +1,3 @@
----
-nav: "ObjectArrayFormulaDef"
----
 # Interface: ObjectArrayFormulaDef<ParamsT, SchemaT\>
 
 [core](../modules/core.md).ObjectArrayFormulaDef

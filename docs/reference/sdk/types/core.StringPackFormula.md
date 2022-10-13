@@ -1,6 +1,3 @@
----
-nav: "StringPackFormula"
----
 # Type alias: StringPackFormula<ParamDefsT\>
 
 [core](../modules/core.md).StringPackFormula

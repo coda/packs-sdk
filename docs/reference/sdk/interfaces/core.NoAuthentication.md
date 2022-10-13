@@ -1,6 +1,3 @@
----
-nav: "NoAuthentication"
----
 # Interface: NoAuthentication
 
 [core](../modules/core.md).NoAuthentication

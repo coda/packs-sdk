@@ -1,6 +1,3 @@
----
-nav: "StatusCodeError"
----
 # Class: StatusCodeError
 
 [core](../modules/core.md).StatusCodeError

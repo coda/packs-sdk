@@ -1,6 +1,3 @@
----
-nav: "getQueryParams"
----
 # Function: getQueryParams
 
 [core](../modules/core.md).getQueryParams

@@ -1,6 +1,3 @@
----
-nav: "EmailSchema"
----
 # Interface: EmailSchema
 
 [core](../modules/core.md).EmailSchema

@@ -1,6 +1,3 @@
----
-nav: "Authentication"
----
 # Type alias: Authentication
 
 [core](../modules/core.md).Authentication

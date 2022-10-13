@@ -1,6 +1,3 @@
----
-nav: "RequestHandlerTemplate"
----
 # Interface: RequestHandlerTemplate
 
 [core](../modules/core.md).RequestHandlerTemplate

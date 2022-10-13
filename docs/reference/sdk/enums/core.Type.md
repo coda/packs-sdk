@@ -1,6 +1,3 @@
----
-nav: "Type"
----
 # Enumeration: Type
 
 [core](../modules/core.md).Type

@@ -1,6 +1,3 @@
----
-nav: "MissingScopesError"
----
 # Class: MissingScopesError
 
 [core](../modules/core.md).MissingScopesError

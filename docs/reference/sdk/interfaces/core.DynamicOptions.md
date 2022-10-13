@@ -1,6 +1,3 @@
----
-nav: "DynamicOptions"
----
 # Interface: DynamicOptions
 
 [core](../modules/core.md).DynamicOptions

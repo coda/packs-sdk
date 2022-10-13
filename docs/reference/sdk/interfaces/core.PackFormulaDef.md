@@ -1,6 +1,3 @@
----
-nav: "PackFormulaDef"
----
 # Interface: PackFormulaDef<ParamsT, ResultT\>
 
 [core](../modules/core.md).PackFormulaDef

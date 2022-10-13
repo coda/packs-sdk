@@ -1,6 +1,3 @@
----
-nav: "SvgConstants"
----
 # Namespace: SvgConstants
 
 [core](core.md).SvgConstants

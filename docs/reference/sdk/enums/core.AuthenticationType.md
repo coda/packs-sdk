@@ -1,6 +1,3 @@
----
-nav: "AuthenticationType"
----
 # Enumeration: AuthenticationType
 
 [core](../modules/core.md).AuthenticationType

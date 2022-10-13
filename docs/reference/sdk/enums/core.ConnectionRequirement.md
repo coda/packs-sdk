@@ -1,6 +1,3 @@
----
-nav: "ConnectionRequirement"
----
 # Enumeration: ConnectionRequirement
 
 [core](../modules/core.md).ConnectionRequirement

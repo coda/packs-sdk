@@ -1,6 +1,3 @@
----
-nav: "ScaleSchema"
----
 # Interface: ScaleSchema
 
 [core](../modules/core.md).ScaleSchema

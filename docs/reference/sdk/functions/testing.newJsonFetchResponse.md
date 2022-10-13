@@ -1,6 +1,3 @@
----
-nav: "newJsonFetchResponse"
----
 # Function: newJsonFetchResponse
 
 [testing](../modules/testing.md).newJsonFetchResponse

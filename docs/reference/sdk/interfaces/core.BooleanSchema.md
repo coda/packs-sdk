@@ -1,6 +1,3 @@
----
-nav: "BooleanSchema"
----
 # Interface: BooleanSchema
 
 [core](../modules/core.md).BooleanSchema

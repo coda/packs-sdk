@@ -1,6 +1,3 @@
----
-nav: "generateSchema"
----
 # Function: generateSchema
 
 [core](../modules/core.md).generateSchema

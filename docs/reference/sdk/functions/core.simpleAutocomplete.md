@@ -1,6 +1,3 @@
----
-nav: "simpleAutocomplete"
----
 # Function: simpleAutocomplete
 
 [core](../modules/core.md).simpleAutocomplete

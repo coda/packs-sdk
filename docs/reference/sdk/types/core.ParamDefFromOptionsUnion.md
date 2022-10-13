@@ -1,6 +1,3 @@
----
-nav: "ParamDefFromOptionsUnion"
----
 # Type alias: ParamDefFromOptionsUnion<T, O\>
 
 [core](../modules/core.md).ParamDefFromOptionsUnion

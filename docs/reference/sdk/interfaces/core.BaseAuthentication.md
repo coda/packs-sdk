@@ -1,6 +1,3 @@
----
-nav: "BaseAuthentication"
----
 # Interface: BaseAuthentication
 
 [core](../modules/core.md).BaseAuthentication

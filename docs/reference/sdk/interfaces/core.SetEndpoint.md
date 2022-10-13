@@ -1,6 +1,3 @@
----
-nav: "SetEndpoint"
----
 # Interface: SetEndpoint
 
 [core](../modules/core.md).SetEndpoint

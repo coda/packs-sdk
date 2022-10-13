@@ -1,6 +1,3 @@
----
-nav: "MetadataContext"
----
 # Type alias: MetadataContext
 
 [core](../modules/core.md).MetadataContext

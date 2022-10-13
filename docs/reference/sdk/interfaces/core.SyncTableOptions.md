@@ -1,6 +1,3 @@
----
-nav: "SyncTableOptions"
----
 # Interface: SyncTableOptions<K, L, ParamDefsT, SchemaT\>
 
 [core](../modules/core.md).SyncTableOptions

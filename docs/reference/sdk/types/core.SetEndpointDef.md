@@ -1,6 +1,3 @@
----
-nav: "SetEndpointDef"
----
 # Type alias: SetEndpointDef
 
 [core](../modules/core.md).SetEndpointDef

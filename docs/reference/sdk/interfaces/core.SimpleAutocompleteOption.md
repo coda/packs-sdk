@@ -1,6 +1,3 @@
----
-nav: "SimpleAutocompleteOption"
----
 # Interface: SimpleAutocompleteOption<T\>
 
 [core](../modules/core.md).SimpleAutocompleteOption

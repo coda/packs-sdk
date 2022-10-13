@@ -1,6 +1,3 @@
----
-nav: "ExecuteOptions"
----
 # Interface: ExecuteOptions
 
 [testing](../modules/testing.md).ExecuteOptions

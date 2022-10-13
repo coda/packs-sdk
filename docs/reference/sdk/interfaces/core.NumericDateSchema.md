@@ -1,6 +1,3 @@
----
-nav: "NumericDateSchema"
----
 # Interface: NumericDateSchema
 
 [core](../modules/core.md).NumericDateSchema

@@ -1,6 +1,3 @@
----
-nav: "Network"
----
 # Interface: Network
 
 [core](../modules/core.md).Network

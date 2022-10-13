@@ -1,6 +1,3 @@
----
-nav: "withQueryParams"
----
 # Function: withQueryParams
 
 [core](../modules/core.md).withQueryParams

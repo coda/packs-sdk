@@ -1,6 +1,3 @@
----
-nav: "ensureUnreachable"
----
 # Function: ensureUnreachable
 
 [core](../modules/core.md).ensureUnreachable

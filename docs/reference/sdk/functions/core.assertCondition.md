@@ -1,6 +1,3 @@
----
-nav: "assertCondition"
----
 # Function: assertCondition
 
 [core](../modules/core.md).assertCondition

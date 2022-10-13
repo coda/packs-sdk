@@ -1,6 +1,3 @@
----
-nav: "DataUrlPrefixWithDarkModeSupport"
----
 # Variable: DataUrlPrefixWithDarkModeSupport
 
 [core](../modules/core.md).[SvgConstants](../modules/core.SvgConstants.md).DataUrlPrefixWithDarkModeSupport

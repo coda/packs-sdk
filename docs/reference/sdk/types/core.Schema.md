@@ -1,6 +1,3 @@
----
-nav: "Schema"
----
 # Type alias: Schema
 
 [core](../modules/core.md).Schema

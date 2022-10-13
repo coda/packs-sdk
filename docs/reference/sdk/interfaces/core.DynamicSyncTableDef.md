@@ -1,6 +1,3 @@
----
-nav: "DynamicSyncTableDef"
----
 # Interface: DynamicSyncTableDef<K, L, ParamDefsT, SchemaT\>
 
 [core](../modules/core.md).DynamicSyncTableDef

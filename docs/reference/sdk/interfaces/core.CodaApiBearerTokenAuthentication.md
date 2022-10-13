@@ -1,6 +1,3 @@
----
-nav: "CodaApiBearerTokenAuthentication"
----
 # Interface: CodaApiBearerTokenAuthentication
 
 [core](../modules/core.md).CodaApiBearerTokenAuthentication

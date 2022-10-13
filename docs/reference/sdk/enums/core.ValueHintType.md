@@ -1,6 +1,3 @@
----
-nav: "ValueHintType"
----
 # Enumeration: ValueHintType
 
 [core](../modules/core.md).ValueHintType

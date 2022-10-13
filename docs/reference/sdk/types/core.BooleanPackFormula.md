@@ -1,6 +1,3 @@
----
-nav: "BooleanPackFormula"
----
 # Type alias: BooleanPackFormula<ParamDefsT\>
 
 [core](../modules/core.md).BooleanPackFormula

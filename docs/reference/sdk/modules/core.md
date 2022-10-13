@@ -1,6 +1,3 @@
----
-nav: "core"
----
 # Module: core
 
 The core components of the Pack SDK. These functions and types are used to

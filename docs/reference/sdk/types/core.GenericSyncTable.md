@@ -1,6 +1,3 @@
----
-nav: "GenericSyncTable"
----
 # Type alias: GenericSyncTable
 
 [core](../modules/core.md).GenericSyncTable

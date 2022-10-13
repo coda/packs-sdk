@@ -1,6 +1,3 @@
----
-nav: "AWSAccessKeyAuthentication"
----
 # Interface: AWSAccessKeyAuthentication
 
 [core](../modules/core.md).AWSAccessKeyAuthentication

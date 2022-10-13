@@ -1,6 +1,3 @@
----
-nav: "PackFormulaValue"
----
 # Type alias: PackFormulaValue
 
 [core](../modules/core.md).PackFormulaValue

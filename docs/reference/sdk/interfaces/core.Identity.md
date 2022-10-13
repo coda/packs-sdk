@@ -1,6 +1,3 @@
----
-nav: "Identity"
----
 # Interface: Identity
 
 [core](../modules/core.md).Identity

@@ -1,6 +1,3 @@
----
-nav: "SystemAuthentication"
----
 # Type alias: SystemAuthentication
 
 [core](../modules/core.md).SystemAuthentication

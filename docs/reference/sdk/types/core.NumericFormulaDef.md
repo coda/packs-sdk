@@ -1,6 +1,3 @@
----
-nav: "NumericFormulaDef"
----
 # Type alias: NumericFormulaDef<ParamDefsT\>
 
 [core](../modules/core.md).NumericFormulaDef

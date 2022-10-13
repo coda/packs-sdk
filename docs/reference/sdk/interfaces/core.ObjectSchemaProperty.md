@@ -1,6 +1,3 @@
----
-nav: "ObjectSchemaProperty"
----
 # Interface: ObjectSchemaProperty
 
 [core](../modules/core.md).ObjectSchemaProperty

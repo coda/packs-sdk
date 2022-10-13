@@ -1,6 +1,3 @@
----
-nav: "CustomHeaderTokenAuthentication"
----
 # Interface: CustomHeaderTokenAuthentication
 
 [core](../modules/core.md).CustomHeaderTokenAuthentication

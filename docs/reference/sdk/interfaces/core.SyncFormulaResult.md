@@ -1,6 +1,3 @@
----
-nav: "SyncFormulaResult"
----
 # Interface: SyncFormulaResult<K, L, SchemaT\>
 
 [core](../modules/core.md).SyncFormulaResult

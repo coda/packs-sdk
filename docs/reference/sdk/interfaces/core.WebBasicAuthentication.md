@@ -1,6 +1,3 @@
----
-nav: "WebBasicAuthentication"
----
 # Interface: WebBasicAuthentication
 
 [core](../modules/core.md).WebBasicAuthentication

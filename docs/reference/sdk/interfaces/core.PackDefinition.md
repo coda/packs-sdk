@@ -1,6 +1,3 @@
----
-nav: "PackDefinition"
----
 # Interface: PackDefinition
 
 [core](../modules/core.md).PackDefinition

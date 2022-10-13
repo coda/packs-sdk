@@ -1,6 +1,3 @@
----
-nav: "Fetcher"
----
 # Interface: Fetcher
 
 [core](../modules/core.md).Fetcher

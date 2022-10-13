@@ -1,6 +1,3 @@
----
-nav: "newMockExecutionContext"
----
 # Function: newMockExecutionContext
 
 [testing](../modules/testing.md).newMockExecutionContext

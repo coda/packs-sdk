@@ -1,6 +1,3 @@
----
-nav: "LinkSchema"
----
 # Interface: LinkSchema
 
 [core](../modules/core.md).LinkSchema

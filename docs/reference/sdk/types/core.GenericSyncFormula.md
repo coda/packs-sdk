@@ -1,6 +1,3 @@
----
-nav: "GenericSyncFormula"
----
 # Type alias: GenericSyncFormula
 
 [core](../modules/core.md).GenericSyncFormula

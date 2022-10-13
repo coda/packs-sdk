@@ -1,6 +1,3 @@
----
-nav: "withIdentity"
----
 # Function: withIdentity
 
 [core](../modules/core.md).withIdentity

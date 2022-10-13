@@ -1,6 +1,3 @@
----
-nav: "Sync"
----
 # Interface: Sync
 
 [core](../modules/core.md).Sync

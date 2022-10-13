@@ -1,6 +1,3 @@
----
-nav: "EmptyFormulaDef"
----
 # Interface: EmptyFormulaDef<ParamsT\>
 
 [core](../modules/core.md).EmptyFormulaDef

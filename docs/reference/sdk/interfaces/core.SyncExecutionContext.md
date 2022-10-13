@@ -1,6 +1,3 @@
----
-nav: "SyncExecutionContext"
----
 # Interface: SyncExecutionContext
 
 [core](../modules/core.md).SyncExecutionContext

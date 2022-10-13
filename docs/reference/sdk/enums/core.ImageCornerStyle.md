@@ -1,6 +1,3 @@
----
-nav: "ImageCornerStyle"
----
 # Enumeration: ImageCornerStyle
 
 [core](../modules/core.md).ImageCornerStyle

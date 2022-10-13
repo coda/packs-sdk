@@ -1,6 +1,3 @@
----
-nav: "MetadataFormula"
----
 # Type alias: MetadataFormula
 
 [core](../modules/core.md).MetadataFormula

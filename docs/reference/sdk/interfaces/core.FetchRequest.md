@@ -1,6 +1,3 @@
----
-nav: "FetchRequest"
----
 # Interface: FetchRequest
 
 [core](../modules/core.md).FetchRequest

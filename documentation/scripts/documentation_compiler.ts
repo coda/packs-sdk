@@ -12,7 +12,7 @@ import path from 'path';
 
 const CodeBegin = '// BEGIN\n';
 const CodeEnd = '// END\n';
-const BaseDir = path.join(__dirname, '../../');
+const BaseDir = path.join(__dirname, '../../../..');
 const DocumentationRoot = path.join(BaseDir, 'documentation');
 const TypeDocsRoot = path.join(BaseDir, 'docs');
 const EmbeddedSnippetsRoot = path.join(TypeDocsRoot, 'embedded-snippets');

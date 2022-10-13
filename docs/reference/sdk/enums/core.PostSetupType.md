@@ -1,6 +1,3 @@
----
-nav: "PostSetupType"
----
 # Enumeration: PostSetupType
 
 [core](../modules/core.md).PostSetupType

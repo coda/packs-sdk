@@ -1,6 +1,3 @@
----
-nav: "PostSetup"
----
 # Type alias: PostSetup
 
 [core](../modules/core.md).PostSetup

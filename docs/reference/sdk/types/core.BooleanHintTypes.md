@@ -1,6 +1,3 @@
----
-nav: "BooleanHintTypes"
----
 # Type alias: BooleanHintTypes
 
 [core](../modules/core.md).BooleanHintTypes

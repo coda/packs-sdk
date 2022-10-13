@@ -1,6 +1,3 @@
----
-nav: "TemporaryBlobStorage"
----
 # Interface: TemporaryBlobStorage
 
 [core](../modules/core.md).TemporaryBlobStorage

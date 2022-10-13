@@ -1,6 +1,3 @@
----
-nav: "Format"
----
 # Interface: Format
 
 [core](../modules/core.md).Format

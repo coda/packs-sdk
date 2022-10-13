@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  extends: ['./dev/eslint/rules/base_rules.js'],
+  extends: ['./dev/eslint/rules/base_rules.cjs'],
   env: {
     browser: true,
     commonjs: true,

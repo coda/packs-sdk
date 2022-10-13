@@ -1,6 +1,3 @@
----
-nav: "StringHintTypes"
----
 # Type alias: StringHintTypes
 
 [core](../modules/core.md).StringHintTypes

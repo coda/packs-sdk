@@ -1,6 +1,3 @@
----
-nav: "TextAttributionNode"
----
 # Interface: TextAttributionNode
 
 [core](../modules/core.md).TextAttributionNode

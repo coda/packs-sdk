@@ -1,6 +1,3 @@
----
-nav: "SliderSchema"
----
 # Interface: SliderSchema
 
 [core](../modules/core.md).SliderSchema

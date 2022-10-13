@@ -41,7 +41,7 @@ const ModulesKind = 1;
 
 function getReflectionData() {
   const tempfile = path.join(os.tmpdir(), `typedoc.json`);
-  const command = `node_modules/.bin/typedoc index.ts development.ts --options typedoc.js --json ${tempfile} > /dev/null`;
+  const command = `node_modules/.bin/typedoc index.ts development.ts --options typedoc.cjs --json ${tempfile} > /dev/null`;
   const response = spawnSync(command, {
     shell: true,
   });

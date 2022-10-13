@@ -1,6 +1,3 @@
----
-nav: "ResponseHandlerTemplate"
----
 # Interface: ResponseHandlerTemplate<T\>
 
 [core](../modules/core.md).ResponseHandlerTemplate

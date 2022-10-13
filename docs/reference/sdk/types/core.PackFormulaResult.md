@@ -1,6 +1,3 @@
----
-nav: "PackFormulaResult"
----
 # Type alias: PackFormulaResult
 
 [core](../modules/core.md).PackFormulaResult

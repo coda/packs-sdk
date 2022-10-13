@@ -1,6 +1,3 @@
----
-nav: "Formula"
----
 # Type alias: Formula<ParamDefsT, ResultT, SchemaT\>
 
 [core](../modules/core.md).Formula

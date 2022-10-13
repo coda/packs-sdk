@@ -1,6 +1,3 @@
----
-nav: "Continuation"
----
 # Interface: Continuation
 
 [core](../modules/core.md).Continuation

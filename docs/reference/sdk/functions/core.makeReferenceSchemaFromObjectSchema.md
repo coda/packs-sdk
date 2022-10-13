@@ -1,6 +1,3 @@
----
-nav: "makeReferenceSchemaFromObjectSchema"
----
 # Function: makeReferenceSchemaFromObjectSchema
 
 [core](../modules/core.md).makeReferenceSchemaFromObjectSchema

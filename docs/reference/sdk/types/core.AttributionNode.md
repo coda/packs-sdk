@@ -1,6 +1,3 @@
----
-nav: "AttributionNode"
----
 # Type alias: AttributionNode
 
 [core](../modules/core.md).AttributionNode

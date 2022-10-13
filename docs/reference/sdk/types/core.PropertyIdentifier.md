@@ -1,6 +1,3 @@
----
-nav: "PropertyIdentifier"
----
 # Type alias: PropertyIdentifier<K\>
 
 [core](../modules/core.md).PropertyIdentifier

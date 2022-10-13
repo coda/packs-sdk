@@ -1,6 +1,3 @@
----
-nav: "QueryParamTokenAuthentication"
----
 # Interface: QueryParamTokenAuthentication
 
 [core](../modules/core.md).QueryParamTokenAuthentication

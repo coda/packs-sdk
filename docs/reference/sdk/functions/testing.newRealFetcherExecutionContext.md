@@ -1,6 +1,3 @@
----
-nav: "newRealFetcherExecutionContext"
----
 # Function: newRealFetcherExecutionContext
 
 [testing](../modules/testing.md).newRealFetcherExecutionContext

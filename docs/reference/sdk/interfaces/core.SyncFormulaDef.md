@@ -1,6 +1,3 @@
----
-nav: "SyncFormulaDef"
----
 # Interface: SyncFormulaDef<K, L, ParamDefsT, SchemaT\>
 
 [core](../modules/core.md).SyncFormulaDef

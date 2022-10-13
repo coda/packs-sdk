@@ -1,6 +1,3 @@
----
-nav: "MetadataFormulaObjectResultType"
----
 # Interface: MetadataFormulaObjectResultType
 
 [core](../modules/core.md).MetadataFormulaObjectResultType

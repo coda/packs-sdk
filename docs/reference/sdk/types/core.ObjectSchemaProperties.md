@@ -1,6 +1,3 @@
----
-nav: "ObjectSchemaProperties"
----
 # Type alias: ObjectSchemaProperties<K\>
 
 [core](../modules/core.md).ObjectSchemaProperties

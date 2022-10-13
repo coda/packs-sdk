@@ -1,6 +1,3 @@
----
-nav: "ensureExists"
----
 # Function: ensureExists
 
 [core](../modules/core.md).ensureExists

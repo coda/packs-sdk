@@ -1,6 +1,3 @@
----
-nav: "ObjectFormulaDef"
----
 # Type alias: ObjectFormulaDef<ParamDefsT, SchemaT\>
 
 [core](../modules/core.md).ObjectFormulaDef

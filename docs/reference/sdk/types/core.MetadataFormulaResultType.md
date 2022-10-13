@@ -1,6 +1,3 @@
----
-nav: "MetadataFormulaResultType"
----
 # Type alias: MetadataFormulaResultType
 
 [core](../modules/core.md).MetadataFormulaResultType

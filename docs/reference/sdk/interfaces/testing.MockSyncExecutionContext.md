@@ -1,6 +1,3 @@
----
-nav: "MockSyncExecutionContext"
----
 # Interface: MockSyncExecutionContext
 
 [testing](../modules/testing.md).MockSyncExecutionContext

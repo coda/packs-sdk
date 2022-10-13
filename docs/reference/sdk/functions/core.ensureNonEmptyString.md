@@ -1,6 +1,3 @@
----
-nav: "ensureNonEmptyString"
----
 # Function: ensureNonEmptyString
 
 [core](../modules/core.md).ensureNonEmptyString

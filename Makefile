@@ -159,28 +159,28 @@ compile:
 	# copy these esm format js files to dist directly.
 	cp -r ${ROOTDIR}/testing/injections ${ROOTDIR}/dist/testing/
 
-.PHONY: compile-documentation-scripts
-compile-documentation-scripts:
-	${ROOTDIR}/node_modules/.bin/tsc --project tsconfig.scripts.json
-
 .PHONY: compile-samples
 compile-samples:
 	${ROOTDIR}/node_modules/.bin/tsc --project tsconfig.samples.json
 
+.PHONY: compile-documentation-scripts
+compile-documentation-scripts:
+	${ROOTDIR}/node_modules/.bin/tsc --project ./documentation/tsconfig.json
+
 .PHONY: generated-documentation
-generated-documentation: compile-samples
-	ts-node --project ./documentation/tsconfig.json documentation/scripts/documentation_compiler.ts
+generated-documentation: compile-samples compile-documentation-scripts
+	node ./documentation/dist/documentation/scripts/documentation_compiler.js
 
 .PHONY: typedoc
-typedoc:
+typedoc: compile-documentation-scripts
 	if [ -z "${shell git config --get remote.origin.url | grep coda/packs-sdk}" ]; then \
 		echo "Please config your git origin to git@github.com:coda/packs-sdk.git"; \
 		exit 1; \
 	fi
 	# Most options loaded from typedoc.js.
 	# If you changes this, also update the similar command in typedoc_coverage_test.ts.
-	${ROOTDIR}/node_modules/.bin/typedoc index.ts development.ts --options typedoc.js --gitRevision "${DOC_GIT_REVISION}" --out ${ROOTDIR}/docs/reference/sdk
-	ts-node --project ./documentation/tsconfig.json documentation/typedoc_post_process.ts
+	${ROOTDIR}/node_modules/.bin/typedoc index.ts development.ts --options typedoc.cjs --gitRevision "${DOC_GIT_REVISION}" --out ${ROOTDIR}/docs/reference/sdk
+	node ./documentation/dist/documentation/typedoc_post_process.js
 
 .PHONY: docs
 docs: typedoc generated-documentation build-mkdocs

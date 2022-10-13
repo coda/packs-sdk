@@ -1,6 +1,3 @@
----
-nav: "CustomAuthParameter"
----
 # Interface: CustomAuthParameter
 
 [core](../modules/core.md).CustomAuthParameter

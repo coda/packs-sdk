@@ -1,6 +1,3 @@
----
-nav: "DataUrlPrefix"
----
 # Variable: DataUrlPrefix
 
 [core](../modules/core.md).[SvgConstants](../modules/core.SvgConstants.md).DataUrlPrefix

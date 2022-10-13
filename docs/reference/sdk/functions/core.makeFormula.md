@@ -1,6 +1,3 @@
----
-nav: "makeFormula"
----
 # Function: makeFormula
 
 [core](../modules/core.md).makeFormula

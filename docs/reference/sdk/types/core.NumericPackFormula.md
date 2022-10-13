@@ -1,6 +1,3 @@
----
-nav: "NumericPackFormula"
----
 # Type alias: NumericPackFormula<ParamDefsT\>
 
 [core](../modules/core.md).NumericPackFormula

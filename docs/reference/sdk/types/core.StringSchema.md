@@ -1,6 +1,3 @@
----
-nav: "StringSchema"
----
 # Type alias: StringSchema
 
 [core](../modules/core.md).StringSchema

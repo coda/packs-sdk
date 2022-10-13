@@ -1,6 +1,3 @@
----
-nav: "ArrayFormulaDef"
----
 # Type alias: ArrayFormulaDef<ParamDefsT, SchemaT\>
 
 [core](../modules/core.md).ArrayFormulaDef

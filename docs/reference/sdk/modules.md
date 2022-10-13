@@ -1,6 +1,3 @@
----
-nav: "Modules"
----
 # Modules
 
 ## Modules

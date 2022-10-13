@@ -1,6 +1,3 @@
----
-nav: "PropertyIdentifierDetails"
----
 # Interface: PropertyIdentifierDetails
 
 [core](../modules/core.md).PropertyIdentifierDetails

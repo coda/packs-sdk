@@ -1,6 +1,3 @@
----
-nav: "AttributionNodeType"
----
 # Enumeration: AttributionNodeType
 
 [core](../modules/core.md).AttributionNodeType

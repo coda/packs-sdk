@@ -1,6 +1,3 @@
----
-nav: "DarkModeFragmentId"
----
 # Variable: DarkModeFragmentId
 
 [core](../modules/core.md).[SvgConstants](../modules/core.SvgConstants.md).DarkModeFragmentId

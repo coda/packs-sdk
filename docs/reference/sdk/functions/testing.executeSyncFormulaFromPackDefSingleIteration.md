@@ -1,6 +1,3 @@
----
-nav: "executeSyncFormulaFromPackDefSingleIteration"
----
 # Function: executeSyncFormulaFromPackDefSingleIteration
 
 [testing](../modules/testing.md).executeSyncFormulaFromPackDefSingleIteration

@@ -1,6 +1,3 @@
----
-nav: "ExecutionContext"
----
 # Interface: ExecutionContext
 
 [core](../modules/core.md).ExecutionContext

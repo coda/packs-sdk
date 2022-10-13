@@ -1,6 +1,3 @@
----
-nav: "SyncTableDef"
----
 # Interface: SyncTableDef<K, L, ParamDefsT, SchemaT\>
 
 [core](../modules/core.md).SyncTableDef

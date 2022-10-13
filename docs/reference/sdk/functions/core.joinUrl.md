@@ -1,6 +1,3 @@
----
-nav: "joinUrl"
----
 # Function: joinUrl
 
 [core](../modules/core.md).joinUrl

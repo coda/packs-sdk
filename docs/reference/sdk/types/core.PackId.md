@@ -1,6 +1,3 @@
----
-nav: "PackId"
----
 # Type alias: PackId
 
 [core](../modules/core.md).PackId

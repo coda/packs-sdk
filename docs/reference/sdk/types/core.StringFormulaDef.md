@@ -1,6 +1,3 @@
----
-nav: "StringFormulaDef"
----
 # Type alias: StringFormulaDef<ParamDefsT\>
 
 [core](../modules/core.md).StringFormulaDef

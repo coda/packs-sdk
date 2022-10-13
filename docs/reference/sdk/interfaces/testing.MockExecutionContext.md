@@ -1,6 +1,3 @@
----
-nav: "MockExecutionContext"
----
 # Interface: MockExecutionContext
 
 [testing](../modules/testing.md).MockExecutionContext

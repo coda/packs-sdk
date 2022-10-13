@@ -1,6 +1,3 @@
----
-nav: "StringTimeSchema"
----
 # Interface: StringTimeSchema
 
 [core](../modules/core.md).StringTimeSchema

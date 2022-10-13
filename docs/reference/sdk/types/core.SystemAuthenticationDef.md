@@ -1,6 +1,3 @@
----
-nav: "SystemAuthenticationDef"
----
 # Type alias: SystemAuthenticationDef
 
 [core](../modules/core.md).SystemAuthenticationDef

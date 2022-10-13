@@ -1,6 +1,3 @@
----
-nav: "ParamDef"
----
 # Interface: ParamDef<T\>
 
 [core](../modules/core.md).ParamDef

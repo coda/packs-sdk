@@ -1,6 +1,3 @@
----
-nav: "InferrableTypes"
----
 # Type alias: InferrableTypes
 
 [core](../modules/core.md).InferrableTypes

@@ -1,6 +1,3 @@
----
-nav: "newPack"
----
 # Function: newPack
 
 [core](../modules/core.md).newPack

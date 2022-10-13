@@ -1,6 +1,3 @@
----
-nav: "InvocationLocation"
----
 # Interface: InvocationLocation
 
 [core](../modules/core.md).InvocationLocation

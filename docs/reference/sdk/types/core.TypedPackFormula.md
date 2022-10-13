@@ -1,6 +1,3 @@
----
-nav: "TypedPackFormula"
----
 # Type alias: TypedPackFormula
 
 [core](../modules/core.md).TypedPackFormula

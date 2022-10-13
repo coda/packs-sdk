@@ -1,6 +1,3 @@
----
-nav: "LinkDisplayType"
----
 # Enumeration: LinkDisplayType
 
 [core](../modules/core.md).LinkDisplayType

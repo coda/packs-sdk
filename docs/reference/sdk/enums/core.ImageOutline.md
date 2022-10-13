@@ -1,6 +1,3 @@
----
-nav: "ImageOutline"
----
 # Enumeration: ImageOutline
 
 [core](../modules/core.md).ImageOutline

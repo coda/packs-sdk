@@ -1,6 +1,3 @@
----
-nav: "BasicPackDefinition"
----
 # Type alias: BasicPackDefinition
 
 [core](../modules/core.md).BasicPackDefinition

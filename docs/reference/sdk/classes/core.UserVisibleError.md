@@ -1,6 +1,3 @@
----
-nav: "UserVisibleError"
----
 # Class: UserVisibleError
 
 [core](../modules/core.md).UserVisibleError

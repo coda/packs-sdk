@@ -1,6 +1,3 @@
----
-nav: "ScaleIconSet"
----
 # Enumeration: ScaleIconSet
 
 [core](../modules/core.md).ScaleIconSet

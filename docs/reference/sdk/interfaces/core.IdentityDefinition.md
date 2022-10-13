@@ -1,6 +1,3 @@
----
-nav: "IdentityDefinition"
----
 # Interface: IdentityDefinition
 
 [core](../modules/core.md).IdentityDefinition

@@ -1,6 +1,3 @@
----
-nav: "makeSimpleAutocompleteMetadataFormula"
----
 # Function: makeSimpleAutocompleteMetadataFormula
 
 [core](../modules/core.md).makeSimpleAutocompleteMetadataFormula

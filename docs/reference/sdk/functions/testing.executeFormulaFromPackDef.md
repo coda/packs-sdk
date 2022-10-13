@@ -1,6 +1,3 @@
----
-nav: "executeFormulaFromPackDef"
----
 # Function: executeFormulaFromPackDef
 
 [testing](../modules/testing.md).executeFormulaFromPackDef

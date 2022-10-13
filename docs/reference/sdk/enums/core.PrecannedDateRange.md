@@ -1,6 +1,3 @@
----
-nav: "PrecannedDateRange"
----
 # Enumeration: PrecannedDateRange
 
 [core](../modules/core.md).PrecannedDateRange

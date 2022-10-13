@@ -1,6 +1,3 @@
----
-nav: "makeAttributionNode"
----
 # Function: makeAttributionNode
 
 [core](../modules/core.md).makeAttributionNode

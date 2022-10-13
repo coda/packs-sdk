@@ -1,6 +1,3 @@
----
-nav: "makeTranslateObjectFormula"
----
 # Function: makeTranslateObjectFormula
 
 [core](../modules/core.md).makeTranslateObjectFormula

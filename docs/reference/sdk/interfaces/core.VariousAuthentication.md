@@ -1,6 +1,3 @@
----
-nav: "VariousAuthentication"
----
 # Interface: VariousAuthentication
 
 [core](../modules/core.md).VariousAuthentication

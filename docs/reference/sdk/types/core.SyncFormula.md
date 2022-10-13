@@ -1,6 +1,3 @@
----
-nav: "SyncFormula"
----
 # Type alias: SyncFormula<K, L, ParamDefsT, SchemaT\>
 
 [core](../modules/core.md).SyncFormula

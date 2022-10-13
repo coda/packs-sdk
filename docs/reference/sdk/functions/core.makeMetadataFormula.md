@@ -1,6 +1,3 @@
----
-nav: "makeMetadataFormula"
----
 # Function: makeMetadataFormula
 
 [core](../modules/core.md).makeMetadataFormula

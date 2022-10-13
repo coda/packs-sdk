@@ -1,6 +1,3 @@
----
-nav: "SchemaType"
----
 # Type alias: SchemaType<T\>
 
 [core](../modules/core.md).SchemaType

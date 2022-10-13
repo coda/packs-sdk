@@ -1,6 +1,3 @@
----
-nav: "BaseFormula"
----
 # Type alias: BaseFormula<ParamDefsT, ResultT\>
 
 [core](../modules/core.md).BaseFormula

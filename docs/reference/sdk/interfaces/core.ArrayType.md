@@ -1,6 +1,3 @@
----
-nav: "ArrayType"
----
 # Interface: ArrayType<T\>
 
 [core](../modules/core.md).ArrayType

@@ -1,6 +1,3 @@
----
-nav: "BaseFormulaDef"
----
 # Interface: BaseFormulaDef<ParamDefsT, ResultT\>
 
 [core](../modules/core.md).BaseFormulaDef

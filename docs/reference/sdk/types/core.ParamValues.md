@@ -1,6 +1,3 @@
----
-nav: "ParamValues"
----
 # Type alias: ParamValues<ParamDefsT\>
 
 [core](../modules/core.md).ParamValues

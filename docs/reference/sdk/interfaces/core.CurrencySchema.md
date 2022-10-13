@@ -1,6 +1,3 @@
----
-nav: "CurrencySchema"
----
 # Interface: CurrencySchema
 
 [core](../modules/core.md).CurrencySchema

@@ -1,6 +1,3 @@
----
-nav: "NetworkConnection"
----
 # Enumeration: NetworkConnection
 
 [core](../modules/core.md).NetworkConnection

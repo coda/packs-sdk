@@ -1,6 +1,3 @@
----
-nav: "LinkAttributionNode"
----
 # Interface: LinkAttributionNode
 
 [core](../modules/core.md).LinkAttributionNode

@@ -1,6 +1,3 @@
----
-nav: "ValidFetchMethods"
----
 # Variable: ValidFetchMethods
 
 [core](../modules/core.md).ValidFetchMethods

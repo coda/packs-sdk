@@ -1,6 +1,3 @@
----
-nav: "executeFormulaOrSyncWithVM"
----
 # Function: executeFormulaOrSyncWithVM
 
 [testing](../modules/testing.md).executeFormulaOrSyncWithVM

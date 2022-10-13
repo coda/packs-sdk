@@ -1,6 +1,3 @@
----
-nav: "ObjectSchemaDefinition"
----
 # Interface: ObjectSchemaDefinition<K, L\>
 
 [core](../modules/core.md).ObjectSchemaDefinition

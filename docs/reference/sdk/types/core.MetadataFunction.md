@@ -1,6 +1,3 @@
----
-nav: "MetadataFunction"
----
 # Type alias: MetadataFunction
 
 [core](../modules/core.md).MetadataFunction

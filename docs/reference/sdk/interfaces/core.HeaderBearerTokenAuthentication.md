@@ -1,6 +1,3 @@
----
-nav: "HeaderBearerTokenAuthentication"
----
 # Interface: HeaderBearerTokenAuthentication
 
 [core](../modules/core.md).HeaderBearerTokenAuthentication

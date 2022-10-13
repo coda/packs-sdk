@@ -1,6 +1,3 @@
----
-nav: "ParameterOptions"
----
 # Type alias: ParameterOptions<T\>
 
 [core](../modules/core.md).ParameterOptions

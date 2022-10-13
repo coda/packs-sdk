@@ -1,6 +1,3 @@
----
-nav: "ObjectPackFormula"
----
 # Type alias: ObjectPackFormula<ParamDefsT, SchemaT\>
 
 [core](../modules/core.md).ObjectPackFormula

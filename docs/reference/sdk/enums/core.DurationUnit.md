@@ -1,6 +1,3 @@
----
-nav: "DurationUnit"
----
 # Enumeration: DurationUnit
 
 [core](../modules/core.md).DurationUnit

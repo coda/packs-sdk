@@ -1,6 +1,3 @@
----
-nav: "testing"
----
 # Module: testing
 
 Utilities that aid in writing unit tests and integration tests for Packs.

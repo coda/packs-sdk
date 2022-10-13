@@ -1,6 +1,3 @@
----
-nav: "autocompleteSearchObjects"
----
 # Function: autocompleteSearchObjects
 
 [core](../modules/core.md).autocompleteSearchObjects
