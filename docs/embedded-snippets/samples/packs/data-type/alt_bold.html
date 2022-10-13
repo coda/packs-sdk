@@ -16,7 +16,7 @@
 
       require(['vs/editor/editor.main'], function () {
         var editor = monaco.editor.create(document.getElementById('container'), {
-          value: "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Returns HTML with every other word of the input text bolded.\npack.addFormula({\n  name: \"AlternatingBold\",\n  description: \"Bold every other word.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"text\",\n      description: \"The text to bold.\",\n    }),\n  ],\n  resultType: coda.ValueType.String,\n  codaType: coda.ValueHintType.Html,\n  execute: async function ([text], context) {\n    let words = text.split(\" \");\n    for (let i = 0; i < words.length; i++) {\n      if (i % 2 == 0) {\n        words[i] = `<b>${words[i]}</b>`\n      }\n    }\n    return words.join(\" \");\n  },\n});",
+          value: "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Returns HTML with every other word of the input text bolded.\npack.addFormula({\n  name: \"AlternatingBold\",\n  description: \"Bold every other word.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"text\",\n      description: \"The text to bold.\",\n    }),\n  ],\n  resultType: coda.ValueType.String,\n  codaType: coda.ValueHintType.Html,\n  execute: async function ([text], context) {\n    let words = text.split(\" \");\n    for (let i = 0; i < words.length; i++) {\n      if (i % 2 === 0) {\n        words[i] = `<b>${words[i]}</b>`;\n      }\n    }\n    return words.join(\" \");\n  },\n});",
           language: 'javascript',
           minimap: {enabled: false},
           readOnly: true,
