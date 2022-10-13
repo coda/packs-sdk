@@ -18,6 +18,7 @@ export declare const Limits: {
     ColumnMatcherRegex: number;
     NumColumnMatchersPerFormat: number;
     NetworkDomainUrl: number;
+    UpdateBatchSize: number;
 };
 export declare class PackMetadataValidationError extends Error {
     readonly originalError: Error | undefined;

@@ -28,7 +28,7 @@ BaseNumberSchema.codaType
 
 #### Defined in
 
-[schema.ts:403](https://github.com/coda/packs-sdk/blob/main/schema.ts#L403)
+[schema.ts:409](https://github.com/coda/packs-sdk/blob/main/schema.ts#L409)
 
 ___
 
@@ -59,7 +59,7 @@ The maximum value selectable by this progress bar.
 
 #### Defined in
 
-[schema.ts:407](https://github.com/coda/packs-sdk/blob/main/schema.ts#L407)
+[schema.ts:413](https://github.com/coda/packs-sdk/blob/main/schema.ts#L413)
 
 ___
 
@@ -71,7 +71,7 @@ The minimum value selectable by this progress bar.
 
 #### Defined in
 
-[schema.ts:405](https://github.com/coda/packs-sdk/blob/main/schema.ts#L405)
+[schema.ts:411](https://github.com/coda/packs-sdk/blob/main/schema.ts#L411)
 
 ___
 
@@ -83,7 +83,7 @@ Whether to display the underlying numeric value in addition to the progress bar.
 
 #### Defined in
 
-[schema.ts:411](https://github.com/coda/packs-sdk/blob/main/schema.ts#L411)
+[schema.ts:417](https://github.com/coda/packs-sdk/blob/main/schema.ts#L417)
 
 ___
 
@@ -95,7 +95,7 @@ The minimum amount the progress bar can be moved when dragged.
 
 #### Defined in
 
-[schema.ts:409](https://github.com/coda/packs-sdk/blob/main/schema.ts#L409)
+[schema.ts:415](https://github.com/coda/packs-sdk/blob/main/schema.ts#L415)
 
 ___
 
@@ -111,4 +111,4 @@ BaseNumberSchema.type
 
 #### Defined in
 
-[schema.ts:244](https://github.com/coda/packs-sdk/blob/main/schema.ts#L244)
+[schema.ts:250](https://github.com/coda/packs-sdk/blob/main/schema.ts#L250)

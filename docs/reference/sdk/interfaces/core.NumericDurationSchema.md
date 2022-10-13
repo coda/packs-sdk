@@ -29,7 +29,7 @@ BaseNumberSchema.codaType
 
 #### Defined in
 
-[schema.ts:324](https://github.com/coda/packs-sdk/blob/main/schema.ts#L324)
+[schema.ts:330](https://github.com/coda/packs-sdk/blob/main/schema.ts#L330)
 
 ___
 
@@ -61,7 +61,7 @@ and a value of 273600 is provided (3 days 4 hours) is provided, it will be rende
 
 #### Defined in
 
-[schema.ts:334](https://github.com/coda/packs-sdk/blob/main/schema.ts#L334)
+[schema.ts:340](https://github.com/coda/packs-sdk/blob/main/schema.ts#L340)
 
 ___
 
@@ -74,7 +74,7 @@ Currently only `1` is supported, which is the same as omitting a value.
 
 #### Defined in
 
-[schema.ts:329](https://github.com/coda/packs-sdk/blob/main/schema.ts#L329)
+[schema.ts:335](https://github.com/coda/packs-sdk/blob/main/schema.ts#L335)
 
 ___
 
@@ -90,4 +90,4 @@ BaseNumberSchema.type
 
 #### Defined in
 
-[schema.ts:244](https://github.com/coda/packs-sdk/blob/main/schema.ts#L244)
+[schema.ts:250](https://github.com/coda/packs-sdk/blob/main/schema.ts#L250)

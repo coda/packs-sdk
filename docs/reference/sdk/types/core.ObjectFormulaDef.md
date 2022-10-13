@@ -18,4 +18,4 @@ A definition accepted by [makeFormula](../functions/core.makeFormula.md) for a f
 
 #### Defined in
 
-[api.ts:984](https://github.com/coda/packs-sdk/blob/main/api.ts#L984)
+[api.ts:990](https://github.com/coda/packs-sdk/blob/main/api.ts#L990)

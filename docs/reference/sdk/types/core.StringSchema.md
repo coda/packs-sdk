@@ -11,4 +11,4 @@ The union of schema definition types whose underlying value is a string.
 
 #### Defined in
 
-[schema.ts:719](https://github.com/coda/packs-sdk/blob/main/schema.ts#L719)
+[schema.ts:725](https://github.com/coda/packs-sdk/blob/main/schema.ts#L725)

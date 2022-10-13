@@ -730,6 +730,12 @@ export interface SyncFormulaDef<
    * as another continuation if there are more result to fetch.
    */
   execute(params: ParamValues<ParamDefsT>, context: SyncExecutionContext): Promise<SyncFormulaResult<K, L, SchemaT>>;
+  /**
+   * If the table supports object updates, the maximum number of objects that will be sent to the pack
+   * in a single batch. Defaults to 1 if not specified.
+   */
+  /** @hidden */
+  maxUpdateBatchSize?: number;
 }
 
 /**
