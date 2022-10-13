@@ -1,23 +1,17 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
-const ensure_1 = require("./helpers/ensure");
-const object_utils_1 = require("./helpers/object_utils");
-const ensure_2 = require("./helpers/ensure");
-const ensure_3 = require("./helpers/ensure");
-const ensure_4 = require("./helpers/ensure");
-const migration_1 = require("./helpers/migration");
-const pascalcase_1 = __importDefault(require("pascalcase"));
+import { assertCondition } from './helpers/ensure';
+import { deepCopy } from './helpers/object_utils';
+import { ensureExists } from './helpers/ensure';
+import { ensureNonEmptyString } from './helpers/ensure';
+import { ensureUnreachable } from './helpers/ensure';
+import { objectSchemaHelper } from './helpers/migration';
+import pascalcase from 'pascalcase';
 // Defines a subset of the JSON Object schema for use in annotating API results.
 // http://json-schema.org/latest/json-schema-core.html#rfc.section.8.2
 /**
  * The set of primitive value types that can be used as return values for formulas
  * or in object schemas.
  */
-var ValueType;
+export var ValueType;
 (function (ValueType) {
     /**
      * Indicates a JavaScript boolean (true/false) should be returned.
@@ -39,11 +33,11 @@ var ValueType;
      * Indicates a JavaScript object should be returned. The schema of each object property must also be specified.
      */
     ValueType["Object"] = "object";
-})(ValueType = exports.ValueType || (exports.ValueType = {}));
+})(ValueType || (ValueType = {}));
 /**
  * Synthetic types that instruct Coda how to coerce values from primitives at ingestion time.
  */
-var ValueHintType;
+export var ValueHintType;
 (function (ValueHintType) {
     /**
      * Indicates to interpret the value as a date (e.g. March 3, 2021).
@@ -170,8 +164,8 @@ var ValueHintType;
      * Indicates to render a boolean value as a toggle.
      */
     ValueHintType["Toggle"] = "toggle";
-})(ValueHintType = exports.ValueHintType || (exports.ValueHintType = {}));
-exports.StringHintValueTypes = [
+})(ValueHintType || (ValueHintType = {}));
+export const StringHintValueTypes = [
     ValueHintType.Attachment,
     ValueHintType.Date,
     ValueHintType.Time,
@@ -185,7 +179,7 @@ exports.StringHintValueTypes = [
     ValueHintType.Markdown,
     ValueHintType.Url,
 ];
-exports.NumberHintValueTypes = [
+export const NumberHintValueTypes = [
     ValueHintType.Date,
     ValueHintType.Time,
     ValueHintType.DateTime,
@@ -196,14 +190,14 @@ exports.NumberHintValueTypes = [
     ValueHintType.ProgressBar,
     ValueHintType.Scale,
 ];
-exports.BooleanHintValueTypes = [ValueHintType.Toggle];
-exports.ObjectHintValueTypes = [ValueHintType.Person, ValueHintType.Reference];
+export const BooleanHintValueTypes = [ValueHintType.Toggle];
+export const ObjectHintValueTypes = [ValueHintType.Person, ValueHintType.Reference];
 /**
  * Enumeration of formats supported by schemas that use {@link ValueHintType.Currency}.
  *
  * These affect how a numeric value is rendered in docs.
  */
-var CurrencyFormat;
+export var CurrencyFormat;
 (function (CurrencyFormat) {
     /**
      * Indicates the value should be rendered as a number with a currency symbol as a prefix, e.g. `$2.50`.
@@ -223,13 +217,13 @@ var CurrencyFormat;
      * Indicates the value should be rendered as a number without a currency symbol, e.g. `2.50`.
      */
     CurrencyFormat["Financial"] = "financial";
-})(CurrencyFormat = exports.CurrencyFormat || (exports.CurrencyFormat = {}));
+})(CurrencyFormat || (CurrencyFormat = {}));
 /**
  * Icons that can be used with a {@link ScaleSchema}.
  *
  * For example, to render a star rating, use a {@link ScaleSchema} with `icon: coda.ScaleIconSet.Star`.
  */
-var ScaleIconSet;
+export var ScaleIconSet;
 (function (ScaleIconSet) {
     ScaleIconSet["Star"] = "star";
     ScaleIconSet["Circle"] = "circle";
@@ -251,11 +245,11 @@ var ScaleIconSet;
     ScaleIconSet["Sun"] = "sun";
     ScaleIconSet["Checkmark"] = "checkmark";
     ScaleIconSet["LightBulb"] = "lightbulb";
-})(ScaleIconSet = exports.ScaleIconSet || (exports.ScaleIconSet = {}));
+})(ScaleIconSet || (ScaleIconSet = {}));
 /**
  * Display types that can be used with an {@link EmailSchema}.
  */
-var EmailDisplayType;
+export var EmailDisplayType;
 (function (EmailDisplayType) {
     /**
      * Display both icon and email (default).
@@ -269,11 +263,11 @@ var EmailDisplayType;
      * Display email address only.
      */
     EmailDisplayType["EmailOnly"] = "emailOnly";
-})(EmailDisplayType = exports.EmailDisplayType || (exports.EmailDisplayType = {}));
+})(EmailDisplayType || (EmailDisplayType = {}));
 /**
  * Display types that can be used with a {@link LinkSchema}.
  */
-var LinkDisplayType;
+export var LinkDisplayType;
 (function (LinkDisplayType) {
     /**
      * Display icon only.
@@ -295,31 +289,31 @@ var LinkDisplayType;
      * Display the referenced web page as an embed.
      */
     LinkDisplayType["Embed"] = "embed";
-})(LinkDisplayType = exports.LinkDisplayType || (exports.LinkDisplayType = {}));
+})(LinkDisplayType || (LinkDisplayType = {}));
 /**
  * State of outline on images that can be used with a {@link ImageSchema}.
  */
-var ImageOutline;
+export var ImageOutline;
 (function (ImageOutline) {
     /** Image is rendered without outline. */
     ImageOutline["Disabled"] = "disabled";
     /** Image is rendered with outline. */
     ImageOutline["Solid"] = "solid";
-})(ImageOutline = exports.ImageOutline || (exports.ImageOutline = {}));
+})(ImageOutline || (ImageOutline = {}));
 /**
  * State of corners on images that can be used with a {@link ImageSchema}.
  */
-var ImageCornerStyle;
+export var ImageCornerStyle;
 (function (ImageCornerStyle) {
     /** Image is rendered with rounded corners. */
     ImageCornerStyle["Rounded"] = "rounded";
     /** Image is rendered with square corners. */
     ImageCornerStyle["Square"] = "square";
-})(ImageCornerStyle = exports.ImageCornerStyle || (exports.ImageCornerStyle = {}));
+})(ImageCornerStyle || (ImageCornerStyle = {}));
 /**
  * Enumeration of units supported by duration schemas. See {@link DurationSchema.maxUnit}.
  */
-var DurationUnit;
+export var DurationUnit;
 (function (DurationUnit) {
     /**
      * Indications a duration as a number of days.
@@ -337,11 +331,11 @@ var DurationUnit;
      * Indications a duration as a number of seconds.
      */
     DurationUnit["Seconds"] = "seconds";
-})(DurationUnit = exports.DurationUnit || (exports.DurationUnit = {}));
+})(DurationUnit || (DurationUnit = {}));
 /**
  * The subset of StringHintTypes that don't have specific schema attributes.
  */
-exports.SimpleStringHintValueTypes = [
+export const SimpleStringHintValueTypes = [
     ValueHintType.Attachment,
     ValueHintType.Html,
     ValueHintType.Markdown,
@@ -354,7 +348,7 @@ exports.SimpleStringHintValueTypes = [
  * Multiple attribution nodes can be rendered all together, for example to have
  * attribution that contains both text and a logo image.
  */
-var AttributionNodeType;
+export var AttributionNodeType;
 (function (AttributionNodeType) {
     /**
      * Text attribution content.
@@ -368,7 +362,7 @@ var AttributionNodeType;
      * An image, often a logo of the data source.
      */
     AttributionNodeType[AttributionNodeType["Image"] = 3] = "Image";
-})(AttributionNodeType = exports.AttributionNodeType || (exports.AttributionNodeType = {}));
+})(AttributionNodeType || (AttributionNodeType = {}));
 /**
  * A helper for constructing attribution text, links, or images that render along with a Pack value.
  *
@@ -379,18 +373,15 @@ var AttributionNodeType;
  * Any {@link IdentityDefinition} can include one or more attribution nodes that will be
  * rendered any time a value with that identity is rendered in a doc.
  */
-function makeAttributionNode(node) {
+export function makeAttributionNode(node) {
     return node;
 }
-exports.makeAttributionNode = makeAttributionNode;
-function isObject(val) {
+export function isObject(val) {
     return Boolean(val && val.type === ValueType.Object);
 }
-exports.isObject = isObject;
-function isArray(val) {
+export function isArray(val) {
     return Boolean(val && val.type === ValueType.Array);
 }
-exports.isArray = isArray;
 /**
  * Utility that examines a JavaScript value and attempts to infer a schema definition
  * that describes it.
@@ -405,7 +396,7 @@ exports.isArray = isArray;
  * {@link ObjectSchemaDefinition.displayProperty} attributes for
  * an object schema, those are left undefined.
  */
-function generateSchema(obj) {
+export function generateSchema(obj) {
     if (Array.isArray(obj)) {
         if (obj.length === 0) {
             throw new Error('Must have representative value.');
@@ -434,9 +425,8 @@ function generateSchema(obj) {
     else if (typeof obj === 'number') {
         return { type: ValueType.Number };
     }
-    return (0, ensure_4.ensureUnreachable)(obj);
+    return ensureUnreachable(obj);
 }
-exports.generateSchema = generateSchema;
 /**
  * A wrapper for creating any schema definition.
  *
@@ -459,10 +449,9 @@ exports.generateSchema = generateSchema;
  * });
  * ```
  */
-function makeSchema(schema) {
+export function makeSchema(schema) {
     return schema;
 }
-exports.makeSchema = makeSchema;
 /**
  * A wrapper for creating a schema definition for an object value.
  *
@@ -483,7 +472,7 @@ exports.makeSchema = makeSchema;
  * });
  * ```
  */
-function makeObjectSchema(schemaDef) {
+export function makeObjectSchema(schemaDef) {
     const schema = { ...schemaDef, type: ValueType.Object };
     // In case a single schema object was used for multiple properties, make copies for each of them.
     for (const key of Object.keys(schema.properties)) {
@@ -491,30 +480,29 @@ function makeObjectSchema(schemaDef) {
         if (key !== 'type') {
             // Typescript doesn't like the raw schema.properties[key] (on the left only though...)
             const typedKey = key;
-            schema.properties[typedKey] = (0, object_utils_1.deepCopy)(schema.properties[key]);
+            schema.properties[typedKey] = deepCopy(schema.properties[key]);
         }
     }
     validateObjectSchema(schema);
     return schema;
 }
-exports.makeObjectSchema = makeObjectSchema;
 function validateObjectSchema(schema) {
     // TODO(jonathan): These should all move to upload_validation checks, since these aren't getting
     // enforced on upload and a hacked CLI could just bypass these.
     // These aren't particularly important checks, they're more just aids for the maker
     // so that their reference and people values won't be broken at runtime.
     if (schema.codaType === ValueHintType.Reference) {
-        const { id, identity, primary } = (0, migration_1.objectSchemaHelper)(schema);
+        const { id, identity, primary } = objectSchemaHelper(schema);
         checkRequiredFieldInObjectSchema(id, 'idProperty', schema.codaType);
         checkRequiredFieldInObjectSchema(identity, 'identity', schema.codaType);
         checkRequiredFieldInObjectSchema(primary, 'displayProperty', schema.codaType);
-        checkSchemaPropertyIsRequired((0, ensure_2.ensureExists)(id), schema, 'idProperty');
-        checkSchemaPropertyIsRequired((0, ensure_2.ensureExists)(primary), schema, 'displayProperty');
+        checkSchemaPropertyIsRequired(ensureExists(id), schema, 'idProperty');
+        checkSchemaPropertyIsRequired(ensureExists(primary), schema, 'displayProperty');
     }
     if (schema.codaType === ValueHintType.Person) {
-        const { id } = (0, migration_1.objectSchemaHelper)(schema);
+        const { id } = objectSchemaHelper(schema);
         checkRequiredFieldInObjectSchema(id, 'idProperty', schema.codaType);
-        checkSchemaPropertyIsRequired((0, ensure_2.ensureExists)(id), schema, 'idProperty');
+        checkSchemaPropertyIsRequired(ensureExists(id), schema, 'idProperty');
     }
     for (const [_propertyKey, propertySchema] of Object.entries(schema.properties)) {
         if (propertySchema.type === ValueType.Object) {
@@ -523,28 +511,27 @@ function validateObjectSchema(schema) {
     }
 }
 function checkRequiredFieldInObjectSchema(field, fieldName, codaType) {
-    (0, ensure_2.ensureExists)(field, `Objects with codaType "${codaType}" require a "${fieldName}" property in the schema definition.`);
+    ensureExists(field, `Objects with codaType "${codaType}" require a "${fieldName}" property in the schema definition.`);
 }
 function checkSchemaPropertyIsRequired(field, schema, referencedByPropertyName) {
     const { properties, codaType } = schema;
-    (0, ensure_1.assertCondition)(properties[field], `${referencedByPropertyName} set to undefined field "${field}"`);
-    (0, ensure_1.assertCondition)(properties[field].required, `Field "${field}" must be marked as required in schema with codaType "${codaType}".`);
+    assertCondition(properties[field], `${referencedByPropertyName} set to undefined field "${field}"`);
+    assertCondition(properties[field].required, `Field "${field}" must be marked as required in schema with codaType "${codaType}".`);
 }
 /**
  * Normalizes a schema key into PascalCase.
  */
-function normalizeSchemaKey(key) {
+export function normalizeSchemaKey(key) {
     // Colons cause problems in our formula handling.
-    return (0, pascalcase_1.default)(key).replace(/:/g, '_');
+    return pascalcase(key).replace(/:/g, '_');
 }
-exports.normalizeSchemaKey = normalizeSchemaKey;
 /**
  * Normalizes a schema property key path. This interprets "."s as accessing object properties
  * and "[]" as accessing array items. Uses normalizeSchemaKey to normalize each part in-between.
  *
  * This is used for object schema properties that support path projection.
  */
-function normalizeSchemaKeyPath(key, normalizedProperties) {
+export function normalizeSchemaKeyPath(key, normalizedProperties) {
     // Try an exact match on the properties first.
     if (normalizedProperties.hasOwnProperty(normalizeSchemaKey(key))) {
         return normalizeSchemaKey(key);
@@ -564,7 +551,6 @@ function normalizeSchemaKeyPath(key, normalizedProperties) {
     })
         .join('.');
 }
-exports.normalizeSchemaKeyPath = normalizeSchemaKeyPath;
 /**
  * Normalizes a schema PropertyIdentifier by converting it to PascalCase.
  */
@@ -584,7 +570,7 @@ function normalizeSchemaPropertyIdentifier(key, normalizedProperties) {
  *   1) object schemas which have an intermediate `properties` object and
  *   2) array schemas which have an intermediate `items` object to traverse.
  */
-function normalizePropertyValuePathIntoSchemaPath(propertyValue) {
+export function normalizePropertyValuePathIntoSchemaPath(propertyValue) {
     const normalizedValue = propertyValue
         .split('.')
         .map(val => {
@@ -593,8 +579,7 @@ function normalizePropertyValuePathIntoSchemaPath(propertyValue) {
         .join('.properties.');
     return normalizedValue;
 }
-exports.normalizePropertyValuePathIntoSchemaPath = normalizePropertyValuePathIntoSchemaPath;
-function normalizeSchema(schema) {
+export function normalizeSchema(schema) {
     if (isArray(schema)) {
         return {
             ...schema,
@@ -640,7 +625,6 @@ function normalizeSchema(schema) {
     }
     return schema;
 }
-exports.normalizeSchema = normalizeSchema;
 /**
  * Convenience for creating a reference object schema from an existing schema for the
  * object. Copies over the identity, idProperty, and displayProperty from the schema,
@@ -648,10 +632,10 @@ exports.normalizeSchema = normalizeSchema;
  * A reference schema can always be defined directly, but if you already have an object
  * schema it provides better code reuse to derive a reference schema instead.
  */
-function makeReferenceSchemaFromObjectSchema(schema, identityName) {
-    const { type, id, primary, identity, properties } = (0, migration_1.objectSchemaHelper)(schema);
-    (0, ensure_2.ensureExists)(identity || identityName, 'Source schema must have an identity field, or you must provide an identity name for the reference.');
-    const validId = (0, ensure_2.ensureExists)(id);
+export function makeReferenceSchemaFromObjectSchema(schema, identityName) {
+    const { type, id, primary, identity, properties } = objectSchemaHelper(schema);
+    ensureExists(identity || identityName, 'Source schema must have an identity field, or you must provide an identity name for the reference.');
+    const validId = ensureExists(id);
     const referenceProperties = { [validId]: properties[validId] };
     if (primary && primary !== id) {
         referenceProperties[primary] = properties[primary];
@@ -660,21 +644,19 @@ function makeReferenceSchemaFromObjectSchema(schema, identityName) {
         codaType: ValueHintType.Reference,
         type,
         idProperty: id,
-        identity: identity || { name: (0, ensure_2.ensureExists)(identityName) },
+        identity: identity || { name: ensureExists(identityName) },
         displayProperty: primary,
         properties: referenceProperties,
     });
 }
-exports.makeReferenceSchemaFromObjectSchema = makeReferenceSchemaFromObjectSchema;
 /**
  * Convenience for defining the result schema for an action. The identity enables Coda to
  * update the corresponding sync table row, if it exists.
  * You could add the identity directly, but that would make the schema less re-usable.
  */
-function withIdentity(schema, identityName) {
+export function withIdentity(schema, identityName) {
     return makeObjectSchema({
-        ...(0, object_utils_1.deepCopy)(schema),
-        identity: { name: (0, ensure_3.ensureNonEmptyString)(identityName) },
+        ...deepCopy(schema),
+        identity: { name: ensureNonEmptyString(identityName) },
     });
 }
-exports.withIdentity = withIdentity;

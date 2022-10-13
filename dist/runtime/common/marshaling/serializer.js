@@ -1,10 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.deserialize = exports.serialize = void 0;
 let serialize;
-exports.serialize = serialize;
 let deserialize;
-exports.deserialize = deserialize;
 // The sdk code may be running in the following environments:
 // - isolated-vm:
 //   This could either be in testing or in AWS. Either way, v8 helpers were injected to the
@@ -30,7 +25,7 @@ exports.deserialize = deserialize;
 // another way to ensure that esbuild won't complain about undeclared variables or try
 // to include the 'v8' module in the thunk.
 if (process.env.IN_ISOLATED_VM_OR_BROWSER) {
-    exports.serialize = serialize = (value) => {
+    serialize = (value) => {
         if ('codaInternal' in global) {
             // isolated-vm
             return codaInternal.serializer.serialize(value);
@@ -38,7 +33,7 @@ if (process.env.IN_ISOLATED_VM_OR_BROWSER) {
         // browser
         throw new Error('Not implemented');
     };
-    exports.deserialize = deserialize = (value) => {
+    deserialize = (value) => {
         if ('codaInternal' in global) {
             // isolated-vm
             return codaInternal.serializer.deserialize(value);
@@ -50,6 +45,7 @@ if (process.env.IN_ISOLATED_VM_OR_BROWSER) {
 else {
     // IN_NODE
     const v8 = require('v8');
-    exports.serialize = serialize = (value) => v8.serialize(value).toString('base64');
-    exports.deserialize = deserialize = (value) => v8.deserialize(Buffer.from(value, 'base64'));
+    serialize = (value) => v8.serialize(value).toString('base64');
+    deserialize = (value) => v8.deserialize(Buffer.from(value, 'base64'));
 }
+export { serialize, deserialize };

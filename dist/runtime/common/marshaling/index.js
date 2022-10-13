@@ -1,13 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.unmarshalError = exports.marshalError = exports.unwrapError = exports.wrapError = exports.unmarshalValue = exports.unmarshalValueFromString = exports.marshalValueToString = exports.marshalValue = exports.marshalValuesForLogging = void 0;
-const constants_1 = require("./constants");
-const constants_2 = require("./constants");
-const api_1 = require("../../../api");
-const api_2 = require("../../../api");
-const serializer_1 = require("./serializer");
-const util_1 = require("util");
-const serializer_2 = require("./serializer");
+import { CodaMarshalerType } from './constants';
+import { MarshalingInjectedKeys } from './constants';
+import { MissingScopesError } from '../../../api';
+import { StatusCodeError } from '../../../api';
+import { deserialize } from './serializer';
+import { format } from 'util';
+import { serialize } from './serializer';
 // We rely on the javascript structuredClone() algorithm to copy arguments and results into
 // and out of isolated-vm method calls. There are a few types we want to support that aren't
 // natively supported by structuredClone();
@@ -53,8 +50,8 @@ const recognizableSystemErrorClasses = [
 ];
 const recognizableCodaErrorClasses = [
     // StatusCodeError doesn't have the new StatusCodeError(message) constructor but it's okay.
-    api_2.StatusCodeError,
-    api_1.MissingScopesError,
+    StatusCodeError,
+    MissingScopesError,
 ];
 // pathPrefix can be temporarily modified, but needs to be restored to its original value
 // before returning.
@@ -129,30 +126,26 @@ function fixUncopyableTypes(val, pathPrefix, postTransforms, depth = 0) {
     return { val, hasModifications: false };
 }
 function isMarshaledValue(val) {
-    return typeof val === 'object' && constants_2.MarshalingInjectedKeys.CodaMarshaler in val;
+    return typeof val === 'object' && MarshalingInjectedKeys.CodaMarshaler in val;
 }
-function marshalValuesForLogging(val) {
-    return [marshalValue((0, util_1.format)(...val))];
+export function marshalValuesForLogging(val) {
+    return [marshalValue(format(...val))];
 }
-exports.marshalValuesForLogging = marshalValuesForLogging;
-function marshalValue(val) {
+export function marshalValue(val) {
     const postTransforms = [];
     const { val: encodedVal } = fixUncopyableTypes(val, [], postTransforms, 0);
     return {
         encoded: encodedVal,
         postTransforms,
-        [constants_2.MarshalingInjectedKeys.CodaMarshaler]: constants_1.CodaMarshalerType.Object,
+        [MarshalingInjectedKeys.CodaMarshaler]: CodaMarshalerType.Object,
     };
 }
-exports.marshalValue = marshalValue;
-function marshalValueToString(val) {
-    return (0, serializer_2.serialize)(marshalValue(val));
+export function marshalValueToString(val) {
+    return serialize(marshalValue(val));
 }
-exports.marshalValueToString = marshalValueToString;
-function unmarshalValueFromString(marshaledValue) {
-    return unmarshalValue((0, serializer_1.deserialize)(marshaledValue));
+export function unmarshalValueFromString(marshaledValue) {
+    return unmarshalValue(deserialize(marshaledValue));
 }
-exports.unmarshalValueFromString = unmarshalValueFromString;
 function applyTransform(input, path, fn) {
     if (path.length === 0) {
         return fn(input);
@@ -162,7 +155,7 @@ function applyTransform(input, path, fn) {
         return input;
     }
 }
-function unmarshalValue(marshaledValue) {
+export function unmarshalValue(marshaledValue) {
     if (!isMarshaledValue(marshaledValue)) {
         throw Error(`Not a marshaled value: ${JSON.stringify(marshaledValue)}`);
     }
@@ -180,12 +173,11 @@ function unmarshalValue(marshaledValue) {
     }
     return result;
 }
-exports.unmarshalValue = unmarshalValue;
 // The only way to pass information out of isolated-vm through an uncaught exception is
 // in the "message" field, which must be a string. Because of that, we use marshalValueToString()
 // instead of just putting a structuredClone()-compatible object into a custom field on a custom
 // error type.
-function wrapError(err) {
+export function wrapError(err) {
     // TODO(huayang): we do this for the sdk.
     // if (err.name === 'TypeError' && err.message === `Cannot read property 'body' of undefined`) {
     //   err.message +=
@@ -196,8 +188,7 @@ function wrapError(err) {
     // }
     return new Error(marshalValueToString(err));
 }
-exports.wrapError = wrapError;
-function unwrapError(err) {
+export function unwrapError(err) {
     try {
         const unmarshaledValue = unmarshalValueFromString(err.message);
         if (unmarshaledValue instanceof Error) {
@@ -209,7 +200,6 @@ function unwrapError(err) {
         return err;
     }
 }
-exports.unwrapError = unwrapError;
 function getErrorClassType(err) {
     if (recognizableSystemErrorClasses.some(cls => cls === err.constructor)) {
         return ErrorClassType.System;
@@ -219,7 +209,7 @@ function getErrorClassType(err) {
     }
     return ErrorClassType.Other;
 }
-function marshalError(err) {
+export function marshalError(err) {
     if (!(err instanceof Error)) {
         return;
     }
@@ -238,14 +228,13 @@ function marshalError(err) {
         name,
         stack,
         message,
-        [constants_2.MarshalingInjectedKeys.CodaMarshaler]: constants_1.CodaMarshalerType.Error,
-        [constants_2.MarshalingInjectedKeys.ErrorClassName]: err.constructor.name,
-        [constants_2.MarshalingInjectedKeys.ErrorClassType]: getErrorClassType(err),
+        [MarshalingInjectedKeys.CodaMarshaler]: CodaMarshalerType.Error,
+        [MarshalingInjectedKeys.ErrorClassName]: err.constructor.name,
+        [MarshalingInjectedKeys.ErrorClassType]: getErrorClassType(err),
         extraArgs,
     };
     return result;
 }
-exports.marshalError = marshalError;
 function getErrorClass(errorClassType, name) {
     let errorClasses;
     switch (errorClassType) {
@@ -260,11 +249,11 @@ function getErrorClass(errorClassType, name) {
     }
     return errorClasses.find(cls => cls.name === name) || Error;
 }
-function unmarshalError(val) {
-    if (typeof val !== 'object' || val[constants_2.MarshalingInjectedKeys.CodaMarshaler] !== constants_1.CodaMarshalerType.Error) {
+export function unmarshalError(val) {
+    if (typeof val !== 'object' || val[MarshalingInjectedKeys.CodaMarshaler] !== CodaMarshalerType.Error) {
         return;
     }
-    const { name, stack, message, [constants_2.MarshalingInjectedKeys.ErrorClassName]: errorClassName, [constants_2.MarshalingInjectedKeys.CodaMarshaler]: _, [constants_2.MarshalingInjectedKeys.ErrorClassType]: errorClassType, extraArgs, } = val;
+    const { name, stack, message, [MarshalingInjectedKeys.ErrorClassName]: errorClassName, [MarshalingInjectedKeys.CodaMarshaler]: _, [MarshalingInjectedKeys.ErrorClassType]: errorClassType, extraArgs, } = val;
     const ErrorClass = getErrorClass(errorClassType, errorClassName);
     const error = new ErrorClass();
     error.message = message;
@@ -277,4 +266,3 @@ function unmarshalError(val) {
     }
     return error;
 }
-exports.unmarshalError = unmarshalError;

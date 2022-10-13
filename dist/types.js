@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
 /**
  * @deprecated
  */
-var PackCategory;
+export var PackCategory;
 (function (PackCategory) {
     PackCategory["CRM"] = "CRM";
     PackCategory["Calendar"] = "Calendar";
@@ -23,11 +20,11 @@ var PackCategory;
     PackCategory["Sports"] = "Sports";
     PackCategory["Travel"] = "Travel";
     PackCategory["Weather"] = "Weather";
-})(PackCategory = exports.PackCategory || (exports.PackCategory = {}));
+})(PackCategory || (PackCategory = {}));
 /**
  * Authentication types supported by Coda Packs.
  */
-var AuthenticationType;
+export var AuthenticationType;
 (function (AuthenticationType) {
     /**
      * Indicates this pack does not use authentication. You may also omit an authentication declaration entirely.
@@ -103,47 +100,47 @@ var AuthenticationType;
      * Only for use by Coda-authored packs.
      */
     AuthenticationType["Various"] = "Various";
-})(AuthenticationType = exports.AuthenticationType || (exports.AuthenticationType = {}));
+})(AuthenticationType || (AuthenticationType = {}));
 /**
  * Enumeration of post-account-setup step types. See {@link PostSetup}.
  */
-var PostSetupType;
+export var PostSetupType;
 (function (PostSetupType) {
     /**
      * See {@link SetEndpoint}.
      */
     PostSetupType["SetEndpoint"] = "SetEndPoint";
-})(PostSetupType = exports.PostSetupType || (exports.PostSetupType = {}));
+})(PostSetupType || (PostSetupType = {}));
 /**
  * @deprecated
  * @ignore
  */
-var FeatureSet;
+export var FeatureSet;
 (function (FeatureSet) {
     FeatureSet["Basic"] = "Basic";
     FeatureSet["Pro"] = "Pro";
     FeatureSet["Team"] = "Team";
     FeatureSet["Enterprise"] = "Enterprise";
-})(FeatureSet = exports.FeatureSet || (exports.FeatureSet = {}));
+})(FeatureSet || (FeatureSet = {}));
 /**
  * @ignore
  * @deprecated
  */
-var QuotaLimitType;
+export var QuotaLimitType;
 (function (QuotaLimitType) {
     QuotaLimitType["Action"] = "Action";
     QuotaLimitType["Getter"] = "Getter";
     QuotaLimitType["Sync"] = "Sync";
     QuotaLimitType["Metadata"] = "Metadata";
-})(QuotaLimitType = exports.QuotaLimitType || (exports.QuotaLimitType = {}));
+})(QuotaLimitType || (QuotaLimitType = {}));
 /**
  * @ignore
  * @deprecated
  */
-var SyncInterval;
+export var SyncInterval;
 (function (SyncInterval) {
     SyncInterval["Manual"] = "Manual";
     SyncInterval["Daily"] = "Daily";
     SyncInterval["Hourly"] = "Hourly";
     SyncInterval["EveryTenMinutes"] = "EveryTenMinutes";
-})(SyncInterval = exports.SyncInterval || (exports.SyncInterval = {}));
+})(SyncInterval || (SyncInterval = {}));

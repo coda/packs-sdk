@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.assertCondition = exports.ensureExists = exports.ensureNonEmptyString = exports.ensureUnreachable = void 0;
-const api_1 = require("../api");
+import { UserVisibleError } from '../api';
 /**
  * Helper for TypeScript to make sure that handling of code forks is exhaustive,
  * most commonly with a `switch` statement.
@@ -28,21 +25,19 @@ const api_1 = require("../api");
  * }
  * ```
  */
-function ensureUnreachable(value, message) {
+export function ensureUnreachable(value, message) {
     throw new Error(message || `Unreachable code hit with value ${String(value)}`);
 }
-exports.ensureUnreachable = ensureUnreachable;
 /**
  * Helper to check that a given value is a string, and is not the empty string.
  * If the value is not a string or is empty, an error will be raised at runtime.
  */
-function ensureNonEmptyString(value, message) {
+export function ensureNonEmptyString(value, message) {
     if (typeof value !== 'string' || value.length === 0) {
         throw new (getErrorConstructor(message))(message || `Expected non-empty string for ${String(value)}`);
     }
     return value;
 }
-exports.ensureNonEmptyString = ensureNonEmptyString;
 /**
  * Helper to check that a given value is defined, that is, is neither `undefined` nor `null`.
  * If the value is `undefined` or `null`, an error will be raised at runtime.
@@ -50,15 +45,14 @@ exports.ensureNonEmptyString = ensureNonEmptyString;
  * This is typically used to inform TypeScript that you expect a given value to always exist.
  * Calling this function refines a type that can otherwise be null or undefined.
  */
-function ensureExists(value, message) {
+export function ensureExists(value, message) {
     if (typeof value === 'undefined' || value === null) {
         throw new (getErrorConstructor(message))(message || `Expected value for ${String(value)}`);
     }
     return value;
 }
-exports.ensureExists = ensureExists;
 function getErrorConstructor(message) {
-    return message ? api_1.UserVisibleError : Error;
+    return message ? UserVisibleError : Error;
 }
 /**
  * Helper to apply a TypeScript assertion to subsequent code. TypeScript can infer
@@ -77,9 +71,8 @@ function getErrorConstructor(message) {
  * }
  * ```
  */
-function assertCondition(condition, message) {
+export function assertCondition(condition, message) {
     if (!condition) {
         throw new (getErrorConstructor(message))(message || 'Assertion failed');
     }
 }
-exports.assertCondition = assertCondition;

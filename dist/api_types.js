@@ -1,6 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.PrecannedDateRange = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
 /**
  * Markers used internally to represent data types for parameters and return values.
  * It should not be necessary to ever use these values directly.
@@ -9,7 +6,7 @@ exports.PrecannedDateRange = exports.ValidFetchMethods = exports.NetworkConnecti
  * a formula return value, or properties within an object return value,
  * use {@link ValueType}.
  */
-var Type;
+export var Type;
 (function (Type) {
     Type[Type["string"] = 0] = "string";
     Type[Type["number"] = 1] = "number";
@@ -19,50 +16,49 @@ var Type;
     Type[Type["html"] = 5] = "html";
     Type[Type["image"] = 6] = "image";
     Type[Type["file"] = 7] = "file";
-})(Type = exports.Type || (exports.Type = {}));
-function isArrayType(obj) {
+})(Type || (Type = {}));
+export function isArrayType(obj) {
     return obj && obj.type === 'array' && typeof obj.items === 'number';
 }
-exports.isArrayType = isArrayType;
 /** @deprecated */
-exports.stringArray = {
+export const stringArray = {
     type: 'array',
     items: Type.string,
 };
 /** @deprecated */
-exports.numberArray = {
+export const numberArray = {
     type: 'array',
     items: Type.number,
 };
 /** @deprecated */
-exports.booleanArray = {
+export const booleanArray = {
     type: 'array',
     items: Type.boolean,
 };
 /** @deprecated */
-exports.dateArray = {
+export const dateArray = {
     type: 'array',
     items: Type.date,
 };
 /** @deprecated */
-exports.htmlArray = {
+export const htmlArray = {
     type: 'array',
     items: Type.html,
 };
 /** @deprecated */
-exports.imageArray = {
+export const imageArray = {
     type: 'array',
     items: Type.image,
 };
 /** @deprecated */
-exports.fileArray = {
+export const fileArray = {
     type: 'array',
     items: Type.file,
 };
 /**
  * Enumeration of types of formula parameters. These describe Coda value types (as opposed to JavaScript value types).
  */
-var ParameterType;
+export var ParameterType;
 (function (ParameterType) {
     /**
      * Indicates a parameter that is a Coda text value.
@@ -153,8 +149,8 @@ var ParameterType;
      * {@link FileArray} that accepts unparsable values as `undefined`.
      */
     ParameterType["SparseFileArray"] = "sparseFileArray";
-})(ParameterType = exports.ParameterType || (exports.ParameterType = {}));
-exports.ParameterTypeInputMap = {
+})(ParameterType || (ParameterType = {}));
+export const ParameterTypeInputMap = {
     [ParameterType.String]: Type.string,
     [ParameterType.Number]: Type.number,
     [ParameterType.Boolean]: Type.boolean,
@@ -181,7 +177,7 @@ exports.ParameterTypeInputMap = {
  * Enumeration of requirement states for whether a given formula or sync table requires
  * a connection (account) to use.
  */
-var ConnectionRequirement;
+export var ConnectionRequirement;
 (function (ConnectionRequirement) {
     /**
      * Indicates this building block does not make use of an account.
@@ -201,16 +197,16 @@ var ConnectionRequirement;
      * to specify an account to use.
      */
     ConnectionRequirement["Required"] = "required";
-})(ConnectionRequirement = exports.ConnectionRequirement || (exports.ConnectionRequirement = {}));
+})(ConnectionRequirement || (ConnectionRequirement = {}));
 /** @deprecated use `ConnectionRequirement` instead */
-var NetworkConnection;
+export var NetworkConnection;
 (function (NetworkConnection) {
     NetworkConnection["None"] = "none";
     NetworkConnection["Optional"] = "optional";
     NetworkConnection["Required"] = "required";
-})(NetworkConnection = exports.NetworkConnection || (exports.NetworkConnection = {}));
+})(NetworkConnection || (NetworkConnection = {}));
 /** The HTTP methods (verbs) supported by the fetcher. */
-exports.ValidFetchMethods = ['GET', 'PATCH', 'POST', 'PUT', 'DELETE', 'HEAD'];
+export const ValidFetchMethods = ['GET', 'PATCH', 'POST', 'PUT', 'DELETE', 'HEAD'];
 // A mapping exists in coda that allows these to show up in the UI.
 // If adding new values here, add them to that mapping and vice versa.
 /**
@@ -229,7 +225,7 @@ exports.ValidFetchMethods = ['GET', 'PATCH', 'POST', 'PUT', 'DELETE', 'HEAD'];
  * "last 7 days". Defaulting to a hardcoded date range would not be useful
  * and requiring the user to always specify a date range may be inconvenient.
  */
-var PrecannedDateRange;
+export var PrecannedDateRange;
 (function (PrecannedDateRange) {
     // Past
     PrecannedDateRange["Yesterday"] = "yesterday";
@@ -263,4 +259,4 @@ var PrecannedDateRange;
      * and ending in the distant future (e.g. 12/31/3999). Exact dates are subject to change.
      */
     PrecannedDateRange["Everything"] = "everything";
-})(PrecannedDateRange = exports.PrecannedDateRange || (exports.PrecannedDateRange = {}));
+})(PrecannedDateRange || (PrecannedDateRange = {}));

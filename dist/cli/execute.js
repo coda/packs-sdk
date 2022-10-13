@@ -1,25 +1,22 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleExecute = void 0;
-const compile_1 = require("../testing/compile");
-const execution_1 = require("../testing/execution");
-const helpers_1 = require("./helpers");
-const helpers_2 = require("./helpers");
-const helpers_3 = require("../testing/helpers");
-const ivm_wrapper_1 = require("../testing/ivm_wrapper");
-async function handleExecute({ manifestPath, formulaName, params, fetch, vm, dynamicUrl, timerStrategy, }) {
-    if (vm && !(0, ivm_wrapper_1.tryGetIvm)()) {
-        return (0, helpers_3.printAndExit)('The --vm flag was specified, but the isolated-vm package is not installed, likely because this package is not ' +
+import { compilePackBundle } from '../testing/compile';
+import { executeFormulaOrSyncFromCLI } from '../testing/execution';
+import { importManifest } from './helpers';
+import { makeManifestFullPath } from './helpers';
+import { printAndExit } from '../testing/helpers';
+import { tryGetIvm } from '../testing/ivm_wrapper';
+export async function handleExecute({ manifestPath, formulaName, params, fetch, vm, dynamicUrl, timerStrategy, }) {
+    if (vm && !tryGetIvm()) {
+        return printAndExit('The --vm flag was specified, but the isolated-vm package is not installed, likely because this package is not ' +
             'compatible with your platform. Try again but omitting the --vm flag.');
     }
-    const fullManifestPath = (0, helpers_2.makeManifestFullPath)(manifestPath);
-    const { bundlePath, bundleSourceMapPath } = await (0, compile_1.compilePackBundle)({
+    const fullManifestPath = makeManifestFullPath(manifestPath);
+    const { bundlePath, bundleSourceMapPath } = await compilePackBundle({
         manifestPath: fullManifestPath,
         minify: false,
         timerStrategy,
     });
-    const manifest = await (0, helpers_1.importManifest)(bundlePath);
-    await (0, execution_1.executeFormulaOrSyncFromCLI)({
+    const manifest = await importManifest(bundlePath);
+    await executeFormulaOrSyncFromCLI({
         formulaName,
         params,
         manifest,
@@ -31,4 +28,3 @@ async function handleExecute({ manifestPath, formulaName, params, fetch, vm, dyn
         contextOptions: { useRealFetcher: fetch },
     });
 }
-exports.handleExecute = handleExecute;

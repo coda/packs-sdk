@@ -1,16 +1,13 @@
-"use strict";
 /**
  * This file is auto-generated from OpenAPI definitions by `make build-openapi`. Do not edit manually.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.PublicApiPackFormulaType = exports.PublicApiFeaturedDocStatus = exports.PublicApiFeatureSet = exports.PublicApiLogLevel = exports.PublicApiPackLogType = exports.PublicApiPackLogRequestType = exports.PublicApiPackConnectionType = exports.PublicApiPackDiscoverability = exports.PublicApiPackSource = exports.PublicApiPackAssetType = exports.PublicApiPackAccessType = exports.PublicApiPackPrincipalType = exports.PublicApiPackListingsSortBy = exports.PublicApiPacksSortBy = exports.PublicApiAnalyticsScale = exports.PublicApiPackAnalyticsOrderBy = exports.PublicApiWorkspaceUserRole = exports.PublicApiTableType = exports.PublicApiSortBy = exports.PublicApiControlType = exports.PublicApiValueFormat = exports.PublicApiRowsSortBy = exports.PublicApiImageStatus = exports.PublicApiLinkedDataType = exports.PublicApiColumnFormatType = exports.PublicApiIconSet = exports.PublicApiDurationUnit = exports.PublicApiLinkDisplayType = exports.PublicApiEmailDisplayType = exports.PublicApiCurrencyFormatType = exports.PublicApiSortDirection = exports.PublicApiLayout = exports.PublicApiDocPublishMode = exports.PublicApiAccessType = exports.PublicApiPrincipalType = exports.PublicApiType = exports.OpenApiSpecVersion = exports.OpenApiSpecHash = void 0;
 /* eslint-disable */
-exports.OpenApiSpecHash = '3cb65a92b168c432b6eb8cad28cd0cc16911c3536d86f2d256c7ddb6007de8ad';
-exports.OpenApiSpecVersion = '1.2.5';
+export const OpenApiSpecHash = '3cb65a92b168c432b6eb8cad28cd0cc16911c3536d86f2d256c7ddb6007de8ad';
+export const OpenApiSpecVersion = '1.2.5';
 /**
  * A constant identifying the type of the resource.
  */
-var PublicApiType;
+export var PublicApiType;
 (function (PublicApiType) {
     PublicApiType["AclMetadata"] = "aclMetadata";
     PublicApiType["AclPermissions"] = "aclPermissions";
@@ -44,39 +41,39 @@ var PublicApiType;
     PublicApiType["Table"] = "table";
     PublicApiType["User"] = "user";
     PublicApiType["Workspace"] = "workspace";
-})(PublicApiType = exports.PublicApiType || (exports.PublicApiType = {}));
+})(PublicApiType || (PublicApiType = {}));
 /**
  * Type of principal.
  */
-var PublicApiPrincipalType;
+export var PublicApiPrincipalType;
 (function (PublicApiPrincipalType) {
     PublicApiPrincipalType["Email"] = "email";
     PublicApiPrincipalType["Domain"] = "domain";
     PublicApiPrincipalType["Anyone"] = "anyone";
-})(PublicApiPrincipalType = exports.PublicApiPrincipalType || (exports.PublicApiPrincipalType = {}));
+})(PublicApiPrincipalType || (PublicApiPrincipalType = {}));
 /**
  * Type of access.
  */
-var PublicApiAccessType;
+export var PublicApiAccessType;
 (function (PublicApiAccessType) {
     PublicApiAccessType["ReadOnly"] = "readonly";
     PublicApiAccessType["Write"] = "write";
     PublicApiAccessType["Comment"] = "comment";
     PublicApiAccessType["None"] = "none";
-})(PublicApiAccessType = exports.PublicApiAccessType || (exports.PublicApiAccessType = {}));
+})(PublicApiAccessType || (PublicApiAccessType = {}));
 /**
  * A time unit used as part of a duration value.
  */
-var PublicApiDocPublishMode;
+export var PublicApiDocPublishMode;
 (function (PublicApiDocPublishMode) {
     PublicApiDocPublishMode["View"] = "view";
     PublicApiDocPublishMode["Play"] = "play";
     PublicApiDocPublishMode["Edit"] = "edit";
-})(PublicApiDocPublishMode = exports.PublicApiDocPublishMode || (exports.PublicApiDocPublishMode = {}));
+})(PublicApiDocPublishMode || (PublicApiDocPublishMode = {}));
 /**
  * Layout type of the table or view.
  */
-var PublicApiLayout;
+export var PublicApiLayout;
 (function (PublicApiLayout) {
     PublicApiLayout["Default"] = "default";
     PublicApiLayout["AreaChart"] = "areaChart";
@@ -93,58 +90,58 @@ var PublicApiLayout;
     PublicApiLayout["ScatterChart"] = "scatterChart";
     PublicApiLayout["Slide"] = "slide";
     PublicApiLayout["WordCloud"] = "wordCloud";
-})(PublicApiLayout = exports.PublicApiLayout || (exports.PublicApiLayout = {}));
+})(PublicApiLayout || (PublicApiLayout = {}));
 /**
  * Direction of a sort for a table or view.
  */
-var PublicApiSortDirection;
+export var PublicApiSortDirection;
 (function (PublicApiSortDirection) {
     PublicApiSortDirection["Ascending"] = "ascending";
     PublicApiSortDirection["Descending"] = "descending";
-})(PublicApiSortDirection = exports.PublicApiSortDirection || (exports.PublicApiSortDirection = {}));
+})(PublicApiSortDirection || (PublicApiSortDirection = {}));
 /**
  * How the numeric value should be formatted (with or without symbol, negative numbers in parens).
  */
-var PublicApiCurrencyFormatType;
+export var PublicApiCurrencyFormatType;
 (function (PublicApiCurrencyFormatType) {
     PublicApiCurrencyFormatType["Currency"] = "currency";
     PublicApiCurrencyFormatType["Accounting"] = "accounting";
     PublicApiCurrencyFormatType["Financial"] = "financial";
-})(PublicApiCurrencyFormatType = exports.PublicApiCurrencyFormatType || (exports.PublicApiCurrencyFormatType = {}));
+})(PublicApiCurrencyFormatType || (PublicApiCurrencyFormatType = {}));
 /**
  * How an email address should be displayed in the user interface.
  */
-var PublicApiEmailDisplayType;
+export var PublicApiEmailDisplayType;
 (function (PublicApiEmailDisplayType) {
     PublicApiEmailDisplayType["IconAndEmail"] = "iconAndEmail";
     PublicApiEmailDisplayType["IconOnly"] = "iconOnly";
     PublicApiEmailDisplayType["EmailOnly"] = "emailOnly";
-})(PublicApiEmailDisplayType = exports.PublicApiEmailDisplayType || (exports.PublicApiEmailDisplayType = {}));
+})(PublicApiEmailDisplayType || (PublicApiEmailDisplayType = {}));
 /**
  * How a link should be displayed in the user interface.
  */
-var PublicApiLinkDisplayType;
+export var PublicApiLinkDisplayType;
 (function (PublicApiLinkDisplayType) {
     PublicApiLinkDisplayType["IconOnly"] = "iconOnly";
     PublicApiLinkDisplayType["Url"] = "url";
     PublicApiLinkDisplayType["Title"] = "title";
     PublicApiLinkDisplayType["Card"] = "card";
     PublicApiLinkDisplayType["Embed"] = "embed";
-})(PublicApiLinkDisplayType = exports.PublicApiLinkDisplayType || (exports.PublicApiLinkDisplayType = {}));
+})(PublicApiLinkDisplayType || (PublicApiLinkDisplayType = {}));
 /**
  * A time unit used as part of a duration value.
  */
-var PublicApiDurationUnit;
+export var PublicApiDurationUnit;
 (function (PublicApiDurationUnit) {
     PublicApiDurationUnit["Days"] = "days";
     PublicApiDurationUnit["Hours"] = "hours";
     PublicApiDurationUnit["Minutes"] = "minutes";
     PublicApiDurationUnit["Seconds"] = "seconds";
-})(PublicApiDurationUnit = exports.PublicApiDurationUnit || (exports.PublicApiDurationUnit = {}));
+})(PublicApiDurationUnit || (PublicApiDurationUnit = {}));
 /**
  * List of available icon sets.
  */
-var PublicApiIconSet;
+export var PublicApiIconSet;
 (function (PublicApiIconSet) {
     PublicApiIconSet["Star"] = "star";
     PublicApiIconSet["Circle"] = "circle";
@@ -166,11 +163,11 @@ var PublicApiIconSet;
     PublicApiIconSet["Sun"] = "sun";
     PublicApiIconSet["Checkmark"] = "checkmark";
     PublicApiIconSet["LightBulb"] = "lightbulb";
-})(PublicApiIconSet = exports.PublicApiIconSet || (exports.PublicApiIconSet = {}));
+})(PublicApiIconSet || (PublicApiIconSet = {}));
 /**
  * Format type of the column
  */
-var PublicApiColumnFormatType;
+export var PublicApiColumnFormatType;
 (function (PublicApiColumnFormatType) {
     PublicApiColumnFormatType["Text"] = "text";
     PublicApiColumnFormatType["Person"] = "person";
@@ -195,49 +192,49 @@ var PublicApiColumnFormatType;
     PublicApiColumnFormatType["Reaction"] = "reaction";
     PublicApiColumnFormatType["Canvas"] = "canvas";
     PublicApiColumnFormatType["Other"] = "other";
-})(PublicApiColumnFormatType = exports.PublicApiColumnFormatType || (exports.PublicApiColumnFormatType = {}));
+})(PublicApiColumnFormatType || (PublicApiColumnFormatType = {}));
 /**
  * A schema.org identifier for the object.
  */
-var PublicApiLinkedDataType;
+export var PublicApiLinkedDataType;
 (function (PublicApiLinkedDataType) {
     PublicApiLinkedDataType["ImageObject"] = "ImageObject";
     PublicApiLinkedDataType["MonetaryAmount"] = "MonetaryAmount";
     PublicApiLinkedDataType["Person"] = "Person";
     PublicApiLinkedDataType["WebPage"] = "WebPage";
     PublicApiLinkedDataType["StructuredValue"] = "StructuredValue";
-})(PublicApiLinkedDataType = exports.PublicApiLinkedDataType || (exports.PublicApiLinkedDataType = {}));
+})(PublicApiLinkedDataType || (PublicApiLinkedDataType = {}));
 /**
  * The status values that an image object can have.
  */
-var PublicApiImageStatus;
+export var PublicApiImageStatus;
 (function (PublicApiImageStatus) {
     PublicApiImageStatus["Live"] = "live";
     PublicApiImageStatus["Deleted"] = "deleted";
     PublicApiImageStatus["Failed"] = "failed";
-})(PublicApiImageStatus = exports.PublicApiImageStatus || (exports.PublicApiImageStatus = {}));
+})(PublicApiImageStatus || (PublicApiImageStatus = {}));
 /**
  * Determines how the rows returned are sorted
  */
-var PublicApiRowsSortBy;
+export var PublicApiRowsSortBy;
 (function (PublicApiRowsSortBy) {
     PublicApiRowsSortBy["CreatedAt"] = "createdAt";
     PublicApiRowsSortBy["Natural"] = "natural";
     PublicApiRowsSortBy["UpdatedAt"] = "updatedAt";
-})(PublicApiRowsSortBy = exports.PublicApiRowsSortBy || (exports.PublicApiRowsSortBy = {}));
+})(PublicApiRowsSortBy || (PublicApiRowsSortBy = {}));
 /**
  * The format that cell values are returned as.
  */
-var PublicApiValueFormat;
+export var PublicApiValueFormat;
 (function (PublicApiValueFormat) {
     PublicApiValueFormat["Simple"] = "simple";
     PublicApiValueFormat["SimpleWithArrays"] = "simpleWithArrays";
     PublicApiValueFormat["Rich"] = "rich";
-})(PublicApiValueFormat = exports.PublicApiValueFormat || (exports.PublicApiValueFormat = {}));
+})(PublicApiValueFormat || (PublicApiValueFormat = {}));
 /**
  * Type of the control.
  */
-var PublicApiControlType;
+export var PublicApiControlType;
 (function (PublicApiControlType) {
     PublicApiControlType["Button"] = "button";
     PublicApiControlType["Checkbox"] = "checkbox";
@@ -249,29 +246,29 @@ var PublicApiControlType;
     PublicApiControlType["Scale"] = "scale";
     PublicApiControlType["Slider"] = "slider";
     PublicApiControlType["Reaction"] = "reaction";
-})(PublicApiControlType = exports.PublicApiControlType || (exports.PublicApiControlType = {}));
+})(PublicApiControlType || (PublicApiControlType = {}));
 /**
  * Determines how the objects returned are sorted
  */
-var PublicApiSortBy;
+export var PublicApiSortBy;
 (function (PublicApiSortBy) {
     PublicApiSortBy["Name"] = "name";
-})(PublicApiSortBy = exports.PublicApiSortBy || (exports.PublicApiSortBy = {}));
-var PublicApiTableType;
+})(PublicApiSortBy || (PublicApiSortBy = {}));
+export var PublicApiTableType;
 (function (PublicApiTableType) {
     PublicApiTableType["Table"] = "table";
     PublicApiTableType["View"] = "view";
-})(PublicApiTableType = exports.PublicApiTableType || (exports.PublicApiTableType = {}));
-var PublicApiWorkspaceUserRole;
+})(PublicApiTableType || (PublicApiTableType = {}));
+export var PublicApiWorkspaceUserRole;
 (function (PublicApiWorkspaceUserRole) {
     PublicApiWorkspaceUserRole["Admin"] = "Admin";
     PublicApiWorkspaceUserRole["DocMaker"] = "DocMaker";
     PublicApiWorkspaceUserRole["Editor"] = "Editor";
-})(PublicApiWorkspaceUserRole = exports.PublicApiWorkspaceUserRole || (exports.PublicApiWorkspaceUserRole = {}));
+})(PublicApiWorkspaceUserRole || (PublicApiWorkspaceUserRole = {}));
 /**
  * Determines how the Pack analytics returned are sorted.
  */
-var PublicApiPackAnalyticsOrderBy;
+export var PublicApiPackAnalyticsOrderBy;
 (function (PublicApiPackAnalyticsOrderBy) {
     PublicApiPackAnalyticsOrderBy["AnalyticsDate"] = "date";
     PublicApiPackAnalyticsOrderBy["PackId"] = "packId";
@@ -293,83 +290,83 @@ var PublicApiPackAnalyticsOrderBy;
     PublicApiPackAnalyticsOrderBy["WorkspacesActivelyUsing30Day"] = "workspacesActivelyUsing30Day";
     PublicApiPackAnalyticsOrderBy["WorkspacesActivelyUsing90Day"] = "workspacesActivelyUsing90Day";
     PublicApiPackAnalyticsOrderBy["WorkspacesActivelyUsingAllTime"] = "workspacesActivelyUsingAllTime";
-})(PublicApiPackAnalyticsOrderBy = exports.PublicApiPackAnalyticsOrderBy || (exports.PublicApiPackAnalyticsOrderBy = {}));
+})(PublicApiPackAnalyticsOrderBy || (PublicApiPackAnalyticsOrderBy = {}));
 /**
  * Quantization period over which to view analytics.
  */
-var PublicApiAnalyticsScale;
+export var PublicApiAnalyticsScale;
 (function (PublicApiAnalyticsScale) {
     PublicApiAnalyticsScale["Daily"] = "daily";
     PublicApiAnalyticsScale["Cumulative"] = "cumulative";
-})(PublicApiAnalyticsScale = exports.PublicApiAnalyticsScale || (exports.PublicApiAnalyticsScale = {}));
+})(PublicApiAnalyticsScale || (PublicApiAnalyticsScale = {}));
 /**
  * Determines how the Packs returned are sorted.
  */
-var PublicApiPacksSortBy;
+export var PublicApiPacksSortBy;
 (function (PublicApiPacksSortBy) {
     PublicApiPacksSortBy["Title"] = "title";
     PublicApiPacksSortBy["CreatedAt"] = "createdAt";
     PublicApiPacksSortBy["UpdatedAt"] = "updatedAt";
-})(PublicApiPacksSortBy = exports.PublicApiPacksSortBy || (exports.PublicApiPacksSortBy = {}));
+})(PublicApiPacksSortBy || (PublicApiPacksSortBy = {}));
 /**
  * Determines how the Pack listings returned are sorted.
  */
-var PublicApiPackListingsSortBy;
+export var PublicApiPackListingsSortBy;
 (function (PublicApiPackListingsSortBy) {
     PublicApiPackListingsSortBy["PackId"] = "packId";
     PublicApiPackListingsSortBy["Name"] = "name";
     PublicApiPackListingsSortBy["PackVersion"] = "packVersion";
     PublicApiPackListingsSortBy["PackVersionModifiedAt"] = "packVersionModifiedAt";
-})(PublicApiPackListingsSortBy = exports.PublicApiPackListingsSortBy || (exports.PublicApiPackListingsSortBy = {}));
+})(PublicApiPackListingsSortBy || (PublicApiPackListingsSortBy = {}));
 /**
  * Type of Pack permissions.
  */
-var PublicApiPackPrincipalType;
+export var PublicApiPackPrincipalType;
 (function (PublicApiPackPrincipalType) {
     PublicApiPackPrincipalType["User"] = "user";
     PublicApiPackPrincipalType["Workspace"] = "workspace";
     PublicApiPackPrincipalType["Worldwide"] = "worldwide";
-})(PublicApiPackPrincipalType = exports.PublicApiPackPrincipalType || (exports.PublicApiPackPrincipalType = {}));
-var PublicApiPackAccessType;
+})(PublicApiPackPrincipalType || (PublicApiPackPrincipalType = {}));
+export var PublicApiPackAccessType;
 (function (PublicApiPackAccessType) {
     PublicApiPackAccessType["View"] = "view";
     PublicApiPackAccessType["Test"] = "test";
     PublicApiPackAccessType["Edit"] = "edit";
-})(PublicApiPackAccessType = exports.PublicApiPackAccessType || (exports.PublicApiPackAccessType = {}));
-var PublicApiPackAssetType;
+})(PublicApiPackAccessType || (PublicApiPackAccessType = {}));
+export var PublicApiPackAssetType;
 (function (PublicApiPackAssetType) {
     PublicApiPackAssetType["Logo"] = "logo";
     PublicApiPackAssetType["Cover"] = "cover";
     PublicApiPackAssetType["ExampleImage"] = "exampleImage";
-})(PublicApiPackAssetType = exports.PublicApiPackAssetType || (exports.PublicApiPackAssetType = {}));
-var PublicApiPackSource;
+})(PublicApiPackAssetType || (PublicApiPackAssetType = {}));
+export var PublicApiPackSource;
 (function (PublicApiPackSource) {
     PublicApiPackSource["Web"] = "web";
     PublicApiPackSource["Cli"] = "cli";
-})(PublicApiPackSource = exports.PublicApiPackSource || (exports.PublicApiPackSource = {}));
+})(PublicApiPackSource || (PublicApiPackSource = {}));
 /**
  * Widest principal a Pack is available to.
  */
-var PublicApiPackDiscoverability;
+export var PublicApiPackDiscoverability;
 (function (PublicApiPackDiscoverability) {
     PublicApiPackDiscoverability["Public"] = "public";
     PublicApiPackDiscoverability["Workspace"] = "workspace";
     PublicApiPackDiscoverability["Private"] = "private";
-})(PublicApiPackDiscoverability = exports.PublicApiPackDiscoverability || (exports.PublicApiPackDiscoverability = {}));
+})(PublicApiPackDiscoverability || (PublicApiPackDiscoverability = {}));
 /**
  * Type of Pack connections.
  */
-var PublicApiPackConnectionType;
+export var PublicApiPackConnectionType;
 (function (PublicApiPackConnectionType) {
     PublicApiPackConnectionType["Header"] = "header";
     PublicApiPackConnectionType["UrlParam"] = "urlParam";
     PublicApiPackConnectionType["HttpBasic"] = "httpBasic";
     PublicApiPackConnectionType["Custom"] = "custom";
-})(PublicApiPackConnectionType = exports.PublicApiPackConnectionType || (exports.PublicApiPackConnectionType = {}));
+})(PublicApiPackConnectionType || (PublicApiPackConnectionType = {}));
 /**
  * The context request type where a Pack log is generated.
  */
-var PublicApiPackLogRequestType;
+export var PublicApiPackLogRequestType;
 (function (PublicApiPackLogRequestType) {
     PublicApiPackLogRequestType["Unknown"] = "unknown";
     PublicApiPackLogRequestType["ConnectionNameMetadataRequest"] = "connectionNameMetadataRequest";
@@ -384,16 +381,16 @@ var PublicApiPackLogRequestType;
     PublicApiPackLogRequestType["InvokeSyncFormulaRequest"] = "invokeSyncFormulaRequest";
     PublicApiPackLogRequestType["ImpersonateInvokeFormulaRequest"] = "impersonateInvokeFormulaRequest";
     PublicApiPackLogRequestType["ImpersonateInvokeMetadataFormulaRequest"] = "impersonateInvokeMetadataFormulaRequest";
-})(PublicApiPackLogRequestType = exports.PublicApiPackLogRequestType || (exports.PublicApiPackLogRequestType = {}));
-var PublicApiPackLogType;
+})(PublicApiPackLogRequestType || (PublicApiPackLogRequestType = {}));
+export var PublicApiPackLogType;
 (function (PublicApiPackLogType) {
     PublicApiPackLogType["Custom"] = "custom";
     PublicApiPackLogType["Fetcher"] = "fetcher";
     PublicApiPackLogType["Invocation"] = "invocation";
     PublicApiPackLogType["Internal"] = "internal";
     PublicApiPackLogType["Auth"] = "auth";
-})(PublicApiPackLogType = exports.PublicApiPackLogType || (exports.PublicApiPackLogType = {}));
-var PublicApiLogLevel;
+})(PublicApiPackLogType || (PublicApiPackLogType = {}));
+export var PublicApiLogLevel;
 (function (PublicApiLogLevel) {
     PublicApiLogLevel["Error"] = "error";
     PublicApiLogLevel["Warn"] = "warn";
@@ -401,32 +398,32 @@ var PublicApiLogLevel;
     PublicApiLogLevel["Debug"] = "debug";
     PublicApiLogLevel["Trace"] = "trace";
     PublicApiLogLevel["Unknown"] = "unknown";
-})(PublicApiLogLevel = exports.PublicApiLogLevel || (exports.PublicApiLogLevel = {}));
+})(PublicApiLogLevel || (PublicApiLogLevel = {}));
 /**
  * Only relevant for original Coda packs.
  */
-var PublicApiFeatureSet;
+export var PublicApiFeatureSet;
 (function (PublicApiFeatureSet) {
     PublicApiFeatureSet["Basic"] = "Basic";
     PublicApiFeatureSet["Pro"] = "Pro";
     PublicApiFeatureSet["Team"] = "Team";
     PublicApiFeatureSet["Enterprise"] = "Enterprise";
-})(PublicApiFeatureSet = exports.PublicApiFeatureSet || (exports.PublicApiFeatureSet = {}));
+})(PublicApiFeatureSet || (PublicApiFeatureSet = {}));
 /**
  * Status of featured doc in pack listing.
  */
-var PublicApiFeaturedDocStatus;
+export var PublicApiFeaturedDocStatus;
 (function (PublicApiFeaturedDocStatus) {
     PublicApiFeaturedDocStatus["DocInaccessibleOrDoesNotExist"] = "docInaccessibleOrDoesNotExist";
     PublicApiFeaturedDocStatus["InvalidPublishedDocUrl"] = "invalidPublishedDocUrl";
-})(PublicApiFeaturedDocStatus = exports.PublicApiFeaturedDocStatus || (exports.PublicApiFeaturedDocStatus = {}));
+})(PublicApiFeaturedDocStatus || (PublicApiFeaturedDocStatus = {}));
 /**
  * The pack formula type.
  */
-var PublicApiPackFormulaType;
+export var PublicApiPackFormulaType;
 (function (PublicApiPackFormulaType) {
     PublicApiPackFormulaType["Action"] = "action";
     PublicApiPackFormulaType["Formula"] = "formula";
     PublicApiPackFormulaType["Sync"] = "sync";
     PublicApiPackFormulaType["Metadata"] = "metadata";
-})(PublicApiPackFormulaType = exports.PublicApiPackFormulaType || (exports.PublicApiPackFormulaType = {}));
+})(PublicApiPackFormulaType || (PublicApiPackFormulaType = {}));

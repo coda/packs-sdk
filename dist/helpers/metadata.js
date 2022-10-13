@@ -1,9 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.compilePackMetadata = void 0;
-const types_1 = require("../types");
-const api_1 = require("../api");
-function compilePackMetadata(manifest) {
+import { AuthenticationType } from '../types';
+import { isDynamicSyncTable } from '../api';
+export function compilePackMetadata(manifest) {
     const { formats, formulas, formulaNamespace, syncTables, defaultAuthentication, ...definition } = manifest;
     const compiledFormats = compileFormatsMetadata(formats || []);
     const compiledFormulas = (formulas && compileFormulasMetadata(formulas)) || [];
@@ -20,7 +17,6 @@ function compilePackMetadata(manifest) {
     };
     return metadata;
 }
-exports.compilePackMetadata = compilePackMetadata;
 function compileFormatsMetadata(formats) {
     return formats.map(format => {
         return {
@@ -37,7 +33,7 @@ function compileFormulaMetadata(formula) {
     return rest;
 }
 function compileSyncTable(syncTable) {
-    if ((0, api_1.isDynamicSyncTable)(syncTable)) {
+    if (isDynamicSyncTable(syncTable)) {
         const { getter, getName, getSchema, getDisplayUrl, listDynamicUrls, ...rest } = syncTable;
         const { execute, ...getterRest } = getter;
         return {
@@ -60,7 +56,7 @@ function compileDefaultAuthenticationMetadata(authentication) {
     if (!authentication) {
         return;
     }
-    if (authentication.type === types_1.AuthenticationType.None || authentication.type === types_1.AuthenticationType.Various) {
+    if (authentication.type === AuthenticationType.None || authentication.type === AuthenticationType.Various) {
         return authentication;
     }
     const { getConnectionName, getConnectionUserId, postSetup, ...rest } = authentication;

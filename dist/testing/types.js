@@ -1,13 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ResultValidationException = exports.ResultValidationContext = exports.ParameterException = void 0;
-const object_utils_1 = require("../helpers/object_utils");
-class ParameterException extends Error {
+import { deepCopy } from '../helpers/object_utils';
+export class ParameterException extends Error {
 }
-exports.ParameterException = ParameterException;
-class ResultValidationContext {
+export class ResultValidationContext {
     constructor(contexts) {
-        this.fieldContexts = contexts ? (0, object_utils_1.deepCopy)(contexts) : [];
+        this.fieldContexts = contexts ? deepCopy(contexts) : [];
     }
     extendForProperty(propertyKey) {
         const newContext = { propertyKey, arrayIndices: [] };
@@ -28,8 +24,7 @@ class ResultValidationContext {
         return `${propertyKey}${arrayIndices.map(idx => `[${idx}]`)}`;
     }
 }
-exports.ResultValidationContext = ResultValidationContext;
-class ResultValidationException extends Error {
+export class ResultValidationException extends Error {
     constructor(message, errors) {
         super(message);
         this.errors = errors;
@@ -40,4 +35,3 @@ class ResultValidationException extends Error {
         return new ResultValidationException(message, errors);
     }
 }
-exports.ResultValidationException = ResultValidationException;

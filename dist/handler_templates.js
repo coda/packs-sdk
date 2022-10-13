@@ -1,15 +1,9 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateObjectResponseHandler = exports.transformBody = exports.generateRequestHandler = void 0;
-const clone_1 = __importDefault(require("clone"));
-const object_utils_1 = require("./helpers/object_utils");
-const ensure_1 = require("./helpers/ensure");
-const schema_1 = require("./schema");
-const schema_2 = require("./schema");
-const url_1 = require("./helpers/url");
+import clone from 'clone';
+import { deepCopy } from './helpers/object_utils';
+import { ensureExists } from './helpers/ensure';
+import { isArray } from './schema';
+import { isObject } from './schema';
+import { withQueryParams } from './helpers/url';
 function generateParamMap(keys, nameToValueMap, optionalNames) {
     const map = {};
     keys.forEach(key => {
@@ -49,7 +43,7 @@ function formatString(template, params) {
     }
     return result;
 }
-function generateRequestHandler(request, parameters) {
+export function generateRequestHandler(request, parameters) {
     const { url, queryParams, nameMapping: paramNameMapping, bodyTemplate, bodyParams, method, headers, transforms, } = request;
     // Generate a map from index to name that we will use to bind args to the appropriate spots.
     const indexToNameMap = new Map();
@@ -73,7 +67,7 @@ function generateRequestHandler(request, parameters) {
     return function requestHandler(params) {
         const nameMapping = {};
         params.forEach((param, index) => {
-            const paramName = (0, ensure_1.ensureExists)(indexToNameMap.get(index));
+            const paramName = ensureExists(indexToNameMap.get(index));
             const paramTransform = transforms ? transforms[paramName] : undefined;
             if (paramTransform) {
                 const transformResult = paramTransform(param);
@@ -92,14 +86,14 @@ function generateRequestHandler(request, parameters) {
         // We don't know a priori which params are used within the URL, so generate a map for all of them.
         const baseUrl = formatString(url, generateQueryParamMap(Object.keys(nameMapping), nameMapping));
         const fullUrl = hasQueryParams
-            ? (0, url_1.withQueryParams)(baseUrl, generateQueryParamMap((0, ensure_1.ensureExists)(queryParams), nameMapping, optionalNames))
+            ? withQueryParams(baseUrl, generateQueryParamMap(ensureExists(queryParams), nameMapping, optionalNames))
             : baseUrl;
         let body;
         if (bodyTemplate) {
-            body = (0, clone_1.default)(bodyTemplate);
+            body = clone(bodyTemplate);
         }
         if (hasBodyParams) {
-            const currentBodyParams = generateParamMap((0, ensure_1.ensureExists)(bodyParams), nameMapping, optionalNames);
+            const currentBodyParams = generateParamMap(ensureExists(bodyParams), nameMapping, optionalNames);
             // Merge the param if needed.
             body = body ? { ...body, ...currentBodyParams } : currentBodyParams;
         }
@@ -115,9 +109,8 @@ function generateRequestHandler(request, parameters) {
         };
     };
 }
-exports.generateRequestHandler = generateRequestHandler;
 function mapKeys(obj, schema) {
-    if (!(schema && (0, schema_2.isObject)(schema))) {
+    if (!(schema && isObject(schema))) {
         return obj;
     }
     const { properties } = schema;
@@ -125,7 +118,7 @@ function mapKeys(obj, schema) {
     const remappedKeys = new Map();
     for (const key in properties) {
         if (properties.hasOwnProperty(key) && properties[key].fromKey) {
-            const fromKey = (0, ensure_1.ensureExists)(properties[key].fromKey);
+            const fromKey = ensureExists(properties[key].fromKey);
             remappedKeys.set(fromKey, [...(remappedKeys.get(fromKey) || []), key]);
         }
     }
@@ -139,32 +132,31 @@ function mapKeys(obj, schema) {
             if (!schema.properties[newKey] && !schema.includeUnknownProperties) {
                 continue;
             }
-            remappedObject[newKey] = mappedKeys.length > 1 ? (0, object_utils_1.deepCopy)(obj[key]) : obj[key];
+            remappedObject[newKey] = mappedKeys.length > 1 ? deepCopy(obj[key]) : obj[key];
             const keySchema = schema.properties[newKey];
             const currentValue = remappedObject[newKey];
-            if (Array.isArray(currentValue) && (0, schema_1.isArray)(keySchema) && (0, schema_2.isObject)(keySchema.items)) {
+            if (Array.isArray(currentValue) && isArray(keySchema) && isObject(keySchema.items)) {
                 remappedObject[newKey] = currentValue.map(val => mapKeys(val, keySchema.items));
             }
-            else if (typeof currentValue === 'object' && (0, schema_2.isObject)(keySchema)) {
+            else if (typeof currentValue === 'object' && isObject(keySchema)) {
                 remappedObject[newKey] = mapKeys(currentValue, keySchema);
             }
         }
     }
     return remappedObject;
 }
-function transformBody(body, schema) {
-    if ((0, schema_1.isArray)(schema) && (0, schema_2.isObject)(schema.items)) {
+export function transformBody(body, schema) {
+    if (isArray(schema) && isObject(schema.items)) {
         const objects = body;
         const mappedObjs = objects.map(obj => mapKeys(obj, schema.items));
         return mappedObjs;
     }
-    if ((0, schema_2.isObject)(schema)) {
+    if (isObject(schema)) {
         return mapKeys(body, schema);
     }
     return body;
 }
-exports.transformBody = transformBody;
-function generateObjectResponseHandler(response) {
+export function generateObjectResponseHandler(response) {
     const { projectKey } = response;
     return function objectResponseHandler(resp) {
         const { body } = resp;
@@ -176,4 +168,3 @@ function generateObjectResponseHandler(response) {
         return projectedBody;
     };
 }
-exports.generateObjectResponseHandler = generateObjectResponseHandler;

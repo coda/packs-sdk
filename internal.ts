@@ -24,18 +24,18 @@ export type {UnionType} from './api_types';
 export {isArray} from './schema';
 export {isObject} from './schema';
 export {isArrayType} from './api_types';
+export {objectSchemaHelper} from './helpers/migration';
+export {paramDefHelper} from './helpers/migration';
+export {normalizePropertyValuePathIntoSchemaPath} from './schema';
 
 // Schema manipulation / transformation
-export {paramDefHelper} from './helpers/migration';
+
 export {postSetupMetadataHelper} from './helpers/migration';
-export {objectSchemaHelper} from './helpers/migration';
 
 export {normalizeSchema} from './schema';
 export {normalizeSchemaKey} from './schema';
-export {normalizePropertyValuePathIntoSchemaPath} from './schema';
 
 // Fetcher helpers
 export {transformBody} from './handler_templates';
-
 
 export * as legacyImports from './legacy_exports';

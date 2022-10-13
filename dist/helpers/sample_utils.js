@@ -1,11 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.fakeDefinitionToMetadata = exports.fakeDefinitionToDefinition = void 0;
-function fakeDefinitionToDefinition(def) {
+export function fakeDefinitionToDefinition(def) {
     return def;
 }
-exports.fakeDefinitionToDefinition = fakeDefinitionToDefinition;
-function fakeDefinitionToMetadata(def) {
+export function fakeDefinitionToMetadata(def) {
     const { formulas: originalFormulas, defaultAuthentication: originalDefaultAuthentication, formats: originalFormats, syncTables: originalSyncTables, ...packMetadata } = def;
     const formulas = originalFormulas.map(formula => {
         const { execute, ...formulaMetadata } = formula;
@@ -38,4 +34,3 @@ function fakeDefinitionToMetadata(def) {
         ...packMetadata,
     };
 }
-exports.fakeDefinitionToMetadata = fakeDefinitionToMetadata;

@@ -1,72 +1,43 @@
-"use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.zodErrorDetailToValidationError = exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.Limits = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
-const schema_1 = require("../schema");
-const types_1 = require("../types");
-const schema_2 = require("../schema");
-const api_types_1 = require("../api_types");
-const schema_3 = require("../schema");
-const schema_4 = require("../schema");
-const schema_5 = require("../schema");
-const types_2 = require("../types");
-const schema_6 = require("../schema");
-const schema_7 = require("../schema");
-const jsonpath_plus_1 = require("jsonpath-plus");
-const schema_8 = require("../schema");
-const api_types_2 = require("../api_types");
-const schema_9 = require("../schema");
-const types_3 = require("../types");
-const types_4 = require("../types");
-const schema_10 = require("../schema");
-const schema_11 = require("../schema");
-const api_types_3 = require("../api_types");
-const schema_12 = require("../schema");
-const schema_13 = require("../schema");
-const zod_1 = require("zod");
-const ensure_1 = require("../helpers/ensure");
-const ensure_2 = require("../helpers/ensure");
-const schema_14 = require("../schema");
-const object_utils_1 = require("../helpers/object_utils");
-const object_utils_2 = require("../helpers/object_utils");
-const schema_15 = require("../schema");
-const schema_16 = require("../schema");
-const schema_17 = require("../schema");
-const migration_1 = require("../helpers/migration");
-const semver_1 = __importDefault(require("semver"));
-const z = __importStar(require("zod"));
+import { AttributionNodeType } from '../schema';
+import { AuthenticationType } from '../types';
+import { BooleanHintValueTypes } from '../schema';
+import { ConnectionRequirement } from '../api_types';
+import { CurrencyFormat } from '../schema';
+import { DurationUnit } from '../schema';
+import { EmailDisplayType } from '../schema';
+import { FeatureSet } from '../types';
+import { ImageCornerStyle } from '../schema';
+import { ImageOutline } from '../schema';
+import { JSONPath } from 'jsonpath-plus';
+import { LinkDisplayType } from '../schema';
+import { NetworkConnection } from '../api_types';
+import { ObjectHintValueTypes } from '../schema';
+import { PackCategory } from '../types';
+import { PostSetupType } from '../types';
+import { ScaleIconSet } from '../schema';
+import { SimpleStringHintValueTypes } from '../schema';
+import { Type } from '../api_types';
+import { ValueHintType } from '../schema';
+import { ValueType } from '../schema';
+import { ZodParsedType } from 'zod';
+import { assertCondition } from '../helpers/ensure';
+import { ensureUnreachable } from '../helpers/ensure';
+import { isArray } from '../schema';
+import { isDefined } from '../helpers/object_utils';
+import { isNil } from '../helpers/object_utils';
+import { isObject } from '../schema';
+import { makeSchema } from '../schema';
+import { normalizePropertyValuePathIntoSchemaPath } from '../schema';
+import { objectSchemaHelper } from '../helpers/migration';
+import semver from 'semver';
+import * as z from 'zod';
 /**
  * The uncompiled column format matchers will be expected to be actual regex objects,
  * and when we compile the pack / stringify it to json, we will store the .toString()
  * of those regex objects. This regex is used to hydrate the stringified regex back into
  * a real RegExp object.
  */
-exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = /^\/(.*)\/([a-z]+)?$/;
+export const PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = /^\/(.*)\/([a-z]+)?$/;
 // The following largely copied from tokens.ts for parsing formula names.
 const letterChar = String.raw `\p{L}`;
 const numberChar = String.raw `\p{N}`;
@@ -78,7 +49,7 @@ const regexFormulaName = new RegExp(regexFormulaNameStr, 'u');
 // This is currently the same as the tokenizer's restrictions except stricter
 // because we don't allow leading underscores.
 const regexParameterName = regexFormulaName;
-exports.Limits = {
+export const Limits = {
     BuildingBlockCountPerType: 100,
     BuildingBlockName: 50,
     BuildingBlockDescription: 1000,
@@ -90,22 +61,21 @@ var CustomErrorCode;
 (function (CustomErrorCode) {
     CustomErrorCode["NonMatchingDiscriminant"] = "nonMatchingDiscriminant";
 })(CustomErrorCode || (CustomErrorCode = {}));
-class PackMetadataValidationError extends Error {
+export class PackMetadataValidationError extends Error {
     constructor(message, originalError, validationErrors) {
         super(`${message}: ${JSON.stringify(validationErrors)}`.slice(0, 4096));
         this.originalError = originalError;
         this.validationErrors = validationErrors;
     }
 }
-exports.PackMetadataValidationError = PackMetadataValidationError;
-async function validatePackVersionMetadata(metadata, sdkVersion, { warningMode } = {}) {
+export async function validatePackVersionMetadata(metadata, sdkVersion, { warningMode } = {}) {
     let combinedSchema = legacyPackMetadataSchema;
     // Server-side validation may be running a different SDK version than the pack maker
     // is using, so some breaking changes to metadata validation can be set up to only
     // take effect before or after an SDK version bump.
     if (sdkVersion) {
         for (const { versionRange, schemaExtend } of packMetadataSchemaBySdkVersion) {
-            if (warningMode || semver_1.default.satisfies(sdkVersion, versionRange)) {
+            if (warningMode || semver.satisfies(sdkVersion, versionRange)) {
                 combinedSchema = schemaExtend(combinedSchema);
             }
         }
@@ -118,26 +88,24 @@ async function validatePackVersionMetadata(metadata, sdkVersion, { warningMode }
     }
     return validated.data;
 }
-exports.validatePackVersionMetadata = validatePackVersionMetadata;
 // Note: This is called within Coda for validating user-provided authentication metadata
 // as part of Various connections.
-function validateVariousAuthenticationMetadata(auth) {
+export function validateVariousAuthenticationMetadata(auth) {
     const validated = z.union(zodUnionInput(variousSupportedAuthenticationValidators)).safeParse(auth);
     if (validated.success) {
         return auth;
     }
     throw new PackMetadataValidationError('Various authentication failed validation', validated.error, validated.error.errors.flatMap(zodErrorDetailToValidationError));
 }
-exports.validateVariousAuthenticationMetadata = validateVariousAuthenticationMetadata;
 // Note: This is called within Coda for validating the result of getSchema calls for dynamic sync tables.
-function validateSyncTableSchema(schema) {
+export function validateSyncTableSchema(schema) {
     const validated = arrayPropertySchema.safeParse(schema);
     if (validated.success) {
         return validated.data;
     }
     // In case this was an ObjectSchema (describing a single row), wrap it up as an ArraySchema.
-    const syntheticArraySchema = (0, schema_16.makeSchema)({
-        type: schema_13.ValueType.Array,
+    const syntheticArraySchema = makeSchema({
+        type: ValueType.Array,
         items: schema,
     });
     const validatedAsObjectSchema = arrayPropertySchema.safeParse(syntheticArraySchema);
@@ -146,7 +114,6 @@ function validateSyncTableSchema(schema) {
     }
     throw new PackMetadataValidationError('Schema failed validation', validated.error, validated.error.errors.flatMap(zodErrorDetailToValidationError));
 }
-exports.validateSyncTableSchema = validateSyncTableSchema;
 function getNonUniqueElements(items) {
     const set = new Set();
     const nonUnique = [];
@@ -160,7 +127,7 @@ function getNonUniqueElements(items) {
     }
     return nonUnique;
 }
-function zodErrorDetailToValidationError(subError) {
+export function zodErrorDetailToValidationError(subError) {
     var _a;
     // Top-level errors for union types are totally useless, they just say "invalid input",
     // but they do record all of the specific errors when trying each element of the union,
@@ -223,7 +190,6 @@ function zodErrorDetailToValidationError(subError) {
         },
     ];
 }
-exports.zodErrorDetailToValidationError = zodErrorDetailToValidationError;
 function zodPathToPathString(zodPath) {
     const parts = [];
     zodPath.forEach((zodPathPart, i) => {
@@ -255,11 +221,11 @@ function zodDiscriminant(value) {
     });
 }
 function zodUnionInput(schemas) {
-    (0, ensure_1.assertCondition)(schemas.length >= 2, 'A zod union type requires at least 2 options.');
+    assertCondition(schemas.length >= 2, 'A zod union type requires at least 2 options.');
     return schemas;
 }
 const setEndpointPostSetupValidator = zodCompleteObject({
-    type: zodDiscriminant(types_4.PostSetupType.SetEndpoint),
+    type: zodDiscriminant(PostSetupType.SetEndpoint),
     name: z.string(),
     description: z.string(),
     // TODO(jonathan): Remove this from the metadata object, only needs to be present in the full bundle.
@@ -285,32 +251,32 @@ const baseAuthenticationValidators = {
     networkDomain: z.union([singleAuthDomainSchema, z.array(singleAuthDomainSchema).nonempty()]).optional(),
 };
 const defaultAuthenticationValidators = {
-    [types_1.AuthenticationType.None]: zodCompleteStrictObject({
-        type: zodDiscriminant(types_1.AuthenticationType.None),
+    [AuthenticationType.None]: zodCompleteStrictObject({
+        type: zodDiscriminant(AuthenticationType.None),
     }),
-    [types_1.AuthenticationType.HeaderBearerToken]: zodCompleteStrictObject({
-        type: zodDiscriminant(types_1.AuthenticationType.HeaderBearerToken),
+    [AuthenticationType.HeaderBearerToken]: zodCompleteStrictObject({
+        type: zodDiscriminant(AuthenticationType.HeaderBearerToken),
         ...baseAuthenticationValidators,
     }),
-    [types_1.AuthenticationType.CodaApiHeaderBearerToken]: zodCompleteStrictObject({
-        type: zodDiscriminant(types_1.AuthenticationType.CodaApiHeaderBearerToken),
+    [AuthenticationType.CodaApiHeaderBearerToken]: zodCompleteStrictObject({
+        type: zodDiscriminant(AuthenticationType.CodaApiHeaderBearerToken),
         deferConnectionSetup: z.boolean().optional(),
         shouldAutoAuthSetup: z.boolean().optional(),
         ...baseAuthenticationValidators,
     }),
-    [types_1.AuthenticationType.CustomHeaderToken]: zodCompleteStrictObject({
-        type: zodDiscriminant(types_1.AuthenticationType.CustomHeaderToken),
+    [AuthenticationType.CustomHeaderToken]: zodCompleteStrictObject({
+        type: zodDiscriminant(AuthenticationType.CustomHeaderToken),
         headerName: z.string(),
         tokenPrefix: z.string().optional(),
         ...baseAuthenticationValidators,
     }),
-    [types_1.AuthenticationType.QueryParamToken]: zodCompleteStrictObject({
-        type: zodDiscriminant(types_1.AuthenticationType.QueryParamToken),
+    [AuthenticationType.QueryParamToken]: zodCompleteStrictObject({
+        type: zodDiscriminant(AuthenticationType.QueryParamToken),
         paramName: z.string(),
         ...baseAuthenticationValidators,
     }),
-    [types_1.AuthenticationType.MultiQueryParamToken]: zodCompleteStrictObject({
-        type: zodDiscriminant(types_1.AuthenticationType.MultiQueryParamToken),
+    [AuthenticationType.MultiQueryParamToken]: zodCompleteStrictObject({
+        type: zodDiscriminant(AuthenticationType.MultiQueryParamToken),
         params: z
             .array(zodCompleteStrictObject({
             name: z.string(),
@@ -322,8 +288,8 @@ const defaultAuthenticationValidators = {
         }, { message: 'Duplicated parameter names in the mutli-query-token authentication config' }),
         ...baseAuthenticationValidators,
     }),
-    [types_1.AuthenticationType.OAuth2]: zodCompleteStrictObject({
-        type: zodDiscriminant(types_1.AuthenticationType.OAuth2),
+    [AuthenticationType.OAuth2]: zodCompleteStrictObject({
+        type: zodDiscriminant(AuthenticationType.OAuth2),
         authorizationUrl: z.string().url(),
         tokenUrl: z.string().url(),
         scopes: z.array(z.string()).optional(),
@@ -338,8 +304,8 @@ const defaultAuthenticationValidators = {
         nestedResponseKey: z.string().optional(),
         ...baseAuthenticationValidators,
     }),
-    [types_1.AuthenticationType.WebBasic]: zodCompleteStrictObject({
-        type: zodDiscriminant(types_1.AuthenticationType.WebBasic),
+    [AuthenticationType.WebBasic]: zodCompleteStrictObject({
+        type: zodDiscriminant(AuthenticationType.WebBasic),
         uxConfig: zodCompleteStrictObject({
             placeholderUsername: z.string().optional(),
             placeholderPassword: z.string().optional(),
@@ -347,18 +313,18 @@ const defaultAuthenticationValidators = {
         }).optional(),
         ...baseAuthenticationValidators,
     }),
-    [types_1.AuthenticationType.AWSAccessKey]: zodCompleteStrictObject({
-        type: zodDiscriminant(types_1.AuthenticationType.AWSAccessKey),
+    [AuthenticationType.AWSAccessKey]: zodCompleteStrictObject({
+        type: zodDiscriminant(AuthenticationType.AWSAccessKey),
         service: z.string(),
         ...baseAuthenticationValidators,
     }),
-    [types_1.AuthenticationType.AWSAssumeRole]: zodCompleteStrictObject({
-        type: zodDiscriminant(types_1.AuthenticationType.AWSAssumeRole),
+    [AuthenticationType.AWSAssumeRole]: zodCompleteStrictObject({
+        type: zodDiscriminant(AuthenticationType.AWSAssumeRole),
         service: z.string(),
         ...baseAuthenticationValidators,
     }),
-    [types_1.AuthenticationType.Custom]: zodCompleteStrictObject({
-        type: zodDiscriminant(types_1.AuthenticationType.Custom),
+    [AuthenticationType.Custom]: zodCompleteStrictObject({
+        type: zodDiscriminant(AuthenticationType.Custom),
         params: z
             .array(zodCompleteStrictObject({
             name: z.string(),
@@ -370,30 +336,30 @@ const defaultAuthenticationValidators = {
         }, { message: 'Duplicated parameter names in the mutli-query-token authentication config' }),
         ...baseAuthenticationValidators,
     }),
-    [types_1.AuthenticationType.Various]: zodCompleteStrictObject({
-        type: zodDiscriminant(types_1.AuthenticationType.Various),
+    [AuthenticationType.Various]: zodCompleteStrictObject({
+        type: zodDiscriminant(AuthenticationType.Various),
     }),
 };
 const systemAuthenticationTypes = {
-    [types_1.AuthenticationType.HeaderBearerToken]: true,
-    [types_1.AuthenticationType.CustomHeaderToken]: true,
-    [types_1.AuthenticationType.MultiQueryParamToken]: true,
-    [types_1.AuthenticationType.QueryParamToken]: true,
-    [types_1.AuthenticationType.WebBasic]: true,
-    [types_1.AuthenticationType.AWSAccessKey]: true,
-    [types_1.AuthenticationType.AWSAssumeRole]: true,
-    [types_1.AuthenticationType.Custom]: true,
+    [AuthenticationType.HeaderBearerToken]: true,
+    [AuthenticationType.CustomHeaderToken]: true,
+    [AuthenticationType.MultiQueryParamToken]: true,
+    [AuthenticationType.QueryParamToken]: true,
+    [AuthenticationType.WebBasic]: true,
+    [AuthenticationType.AWSAccessKey]: true,
+    [AuthenticationType.AWSAssumeRole]: true,
+    [AuthenticationType.Custom]: true,
 };
 const systemAuthenticationValidators = Object.entries(defaultAuthenticationValidators)
     .filter(([authType]) => authType in systemAuthenticationTypes)
     .map(([_authType, schema]) => schema);
 const variousSupportedAuthenticationTypes = {
-    [types_1.AuthenticationType.HeaderBearerToken]: true,
-    [types_1.AuthenticationType.CustomHeaderToken]: true,
-    [types_1.AuthenticationType.MultiQueryParamToken]: true,
-    [types_1.AuthenticationType.QueryParamToken]: true,
-    [types_1.AuthenticationType.WebBasic]: true,
-    [types_1.AuthenticationType.None]: true,
+    [AuthenticationType.HeaderBearerToken]: true,
+    [AuthenticationType.CustomHeaderToken]: true,
+    [AuthenticationType.MultiQueryParamToken]: true,
+    [AuthenticationType.QueryParamToken]: true,
+    [AuthenticationType.WebBasic]: true,
+    [AuthenticationType.None]: true,
 };
 const variousSupportedAuthenticationValidators = Object.entries(defaultAuthenticationValidators)
     .filter(([authType]) => authType in variousSupportedAuthenticationTypes)
@@ -402,22 +368,22 @@ const primitiveUnion = z.union([z.number(), z.string(), z.boolean(), z.date()]);
 const paramDefValidator = zodCompleteObject({
     name: z
         .string()
-        .max(exports.Limits.BuildingBlockName)
+        .max(Limits.BuildingBlockName)
         .regex(regexParameterName, 'Parameter names can only contain alphanumeric characters and underscores.'),
     type: z
         .union([
-        z.nativeEnum(api_types_3.Type),
+        z.nativeEnum(Type),
         z.object({
             type: zodDiscriminant('array'),
-            items: z.nativeEnum(api_types_3.Type),
+            items: z.nativeEnum(Type),
             allowEmpty: z.boolean().optional(),
         }),
     ])
-        .refine(paramType => paramType !== api_types_3.Type.object &&
-        !(typeof paramType === 'object' && paramType.type === 'array' && paramType.items === api_types_3.Type.object), {
+        .refine(paramType => paramType !== Type.object &&
+        !(typeof paramType === 'object' && paramType.type === 'array' && paramType.items === Type.object), {
         message: 'Object parameters are not currently supported.',
     }),
-    description: z.string().max(exports.Limits.BuildingBlockDescription),
+    description: z.string().max(Limits.BuildingBlockDescription),
     optional: z.boolean().optional(),
     autocomplete: z.unknown().optional(),
     defaultValue: z.unknown().optional(),
@@ -427,8 +393,8 @@ const commonPackFormulaSchema = {
     // It would be preferable to use validateFormulaName here, but we have to exempt legacy packs with sync tables
     // whose getter names violate the validator, and those exemptions require the pack id, so this has to be
     // done as a superRefine on the top-level object that also contains the pack id.
-    name: z.string().max(exports.Limits.BuildingBlockName),
-    description: z.string().max(exports.Limits.BuildingBlockDescription),
+    name: z.string().max(Limits.BuildingBlockName),
+    description: z.string().max(Limits.BuildingBlockDescription),
     examples: z
         .array(z.object({
         params: z.array(z.union([
@@ -457,12 +423,12 @@ const commonPackFormulaSchema = {
     }, { message: 'All optional parameters must be come after all non-optional parameters.' }),
     varargParameters: z.array(paramDefValidator).optional(),
     isAction: z.boolean().optional(),
-    connectionRequirement: z.nativeEnum(api_types_1.ConnectionRequirement).optional(),
+    connectionRequirement: z.nativeEnum(ConnectionRequirement).optional(),
     // TODO(jonathan): Remove after removing `network` from formula def.
     network: zodCompleteObject({
         hasSideEffect: z.boolean().optional(),
         requiresConnection: z.boolean().optional(),
-        connection: z.nativeEnum(api_types_2.NetworkConnection).optional(),
+        connection: z.nativeEnum(NetworkConnection).optional(),
     }).optional(),
     cacheTtlSecs: z.number().min(0).optional(),
     isExperimental: z.boolean().optional(),
@@ -471,25 +437,25 @@ const commonPackFormulaSchema = {
 };
 const booleanPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
-    resultType: zodDiscriminant(api_types_3.Type.boolean),
+    resultType: zodDiscriminant(Type.boolean),
     schema: zodCompleteObject({
-        type: zodDiscriminant(schema_13.ValueType.Boolean),
-        codaType: z.enum([...schema_2.BooleanHintValueTypes]).optional(),
+        type: zodDiscriminant(ValueType.Boolean),
+        codaType: z.enum([...BooleanHintValueTypes]).optional(),
         description: z.string().optional(),
     }).optional(),
 });
 // TODO(jonathan): Use zodCompleteObject on these after exporting these types.
 const textAttributionNodeSchema = z.object({
-    type: zodDiscriminant(schema_1.AttributionNodeType.Text),
+    type: zodDiscriminant(AttributionNodeType.Text),
     text: z.string(),
 });
 const linkAttributionNodeSchema = z.object({
-    type: zodDiscriminant(schema_1.AttributionNodeType.Link),
+    type: zodDiscriminant(AttributionNodeType.Link),
     anchorUrl: z.string(),
     anchorText: z.string(),
 });
 const imageAttributionNodeSchema = z.object({
-    type: zodDiscriminant(schema_1.AttributionNodeType.Image),
+    type: zodDiscriminant(AttributionNodeType.Image),
     anchorUrl: z.string(),
     imageUrl: z.string(),
 });
@@ -499,28 +465,28 @@ const basePropertyValidators = {
     required: z.boolean().optional(),
 };
 const booleanPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Boolean),
-    codaType: z.enum([...schema_2.BooleanHintValueTypes]).optional(),
+    type: zodDiscriminant(ValueType.Boolean),
+    codaType: z.enum([...BooleanHintValueTypes]).optional(),
     ...basePropertyValidators,
 });
 const numericPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Number),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Percent).optional(),
+    type: zodDiscriminant(ValueType.Number),
+    codaType: zodDiscriminant(ValueHintType.Percent).optional(),
     precision: z.number().optional(),
     useThousandsSeparator: z.boolean().optional(),
     ...basePropertyValidators,
 });
 const scalePropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Number),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Scale),
+    type: zodDiscriminant(ValueType.Number),
+    codaType: zodDiscriminant(ValueHintType.Scale),
     maximum: z.number().optional(),
-    icon: z.nativeEnum(schema_10.ScaleIconSet).optional(),
+    icon: z.nativeEnum(ScaleIconSet).optional(),
     ...basePropertyValidators,
 });
 const optionalStringOrNumber = z.union([z.number(), z.string()]).optional();
 const sliderPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Number),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Slider),
+    type: zodDiscriminant(ValueType.Number),
+    codaType: zodDiscriminant(ValueHintType.Slider),
     maximum: optionalStringOrNumber,
     minimum: optionalStringOrNumber,
     step: optionalStringOrNumber,
@@ -528,8 +494,8 @@ const sliderPropertySchema = zodCompleteStrictObject({
     ...basePropertyValidators,
 });
 const progressBarPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Number),
-    codaType: zodDiscriminant(schema_12.ValueHintType.ProgressBar),
+    type: zodDiscriminant(ValueType.Number),
+    codaType: zodDiscriminant(ValueHintType.ProgressBar),
     maximum: optionalStringOrNumber,
     minimum: optionalStringOrNumber,
     step: optionalStringOrNumber,
@@ -537,37 +503,37 @@ const progressBarPropertySchema = zodCompleteStrictObject({
     ...basePropertyValidators,
 });
 const currencyPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Number),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Currency),
+    type: zodDiscriminant(ValueType.Number),
+    codaType: zodDiscriminant(ValueHintType.Currency),
     precision: z.number().optional(),
     currencyCode: z.string().optional(),
-    format: z.nativeEnum(schema_3.CurrencyFormat).optional(),
+    format: z.nativeEnum(CurrencyFormat).optional(),
     ...basePropertyValidators,
 });
 const numericDatePropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Number),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Date),
+    type: zodDiscriminant(ValueType.Number),
+    codaType: zodDiscriminant(ValueHintType.Date),
     format: z.string().optional(),
     ...basePropertyValidators,
 });
 const numericTimePropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Number),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Time),
+    type: zodDiscriminant(ValueType.Number),
+    codaType: zodDiscriminant(ValueHintType.Time),
     format: z.string().optional(),
     ...basePropertyValidators,
 });
 const numericDateTimePropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Number),
-    codaType: zodDiscriminant(schema_12.ValueHintType.DateTime),
+    type: zodDiscriminant(ValueType.Number),
+    codaType: zodDiscriminant(ValueHintType.DateTime),
     dateFormat: z.string().optional(),
     timeFormat: z.string().optional(),
     ...basePropertyValidators,
 });
 const numericDurationPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Number),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Duration),
+    type: zodDiscriminant(ValueType.Number),
+    codaType: zodDiscriminant(ValueHintType.Duration),
     precision: z.number().optional(),
-    maxUnit: z.nativeEnum(schema_4.DurationUnit).optional(),
+    maxUnit: z.nativeEnum(DurationUnit).optional(),
     ...basePropertyValidators,
 });
 const numberPropertySchema = z.union([
@@ -583,65 +549,65 @@ const numberPropertySchema = z.union([
 ]);
 const numericPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
-    resultType: zodDiscriminant(api_types_3.Type.number),
+    resultType: zodDiscriminant(Type.number),
     schema: numberPropertySchema.optional(),
 });
 const simpleStringPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.String),
-    codaType: z.enum([...schema_11.SimpleStringHintValueTypes]).optional(),
+    type: zodDiscriminant(ValueType.String),
+    codaType: z.enum([...SimpleStringHintValueTypes]).optional(),
     ...basePropertyValidators,
 });
 const stringDatePropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.String),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Date),
+    type: zodDiscriminant(ValueType.String),
+    codaType: zodDiscriminant(ValueHintType.Date),
     format: z.string().optional(),
     ...basePropertyValidators,
 });
 const stringTimePropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.String),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Time),
+    type: zodDiscriminant(ValueType.String),
+    codaType: zodDiscriminant(ValueHintType.Time),
     format: z.string().optional(),
     ...basePropertyValidators,
 });
 const stringDateTimePropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.String),
-    codaType: zodDiscriminant(schema_12.ValueHintType.DateTime),
+    type: zodDiscriminant(ValueType.String),
+    codaType: zodDiscriminant(ValueHintType.DateTime),
     dateFormat: z.string().optional(),
     timeFormat: z.string().optional(),
     ...basePropertyValidators,
 });
 const durationPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.String),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Duration),
+    type: zodDiscriminant(ValueType.String),
+    codaType: zodDiscriminant(ValueHintType.Duration),
     precision: z.number().optional(),
-    maxUnit: z.nativeEnum(schema_4.DurationUnit).optional(),
+    maxUnit: z.nativeEnum(DurationUnit).optional(),
     ...basePropertyValidators,
 });
 const embedPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.String),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Embed),
+    type: zodDiscriminant(ValueType.String),
+    codaType: zodDiscriminant(ValueHintType.Embed),
     force: z.boolean().optional(),
     ...basePropertyValidators,
 });
 const emailPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.String),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Email),
-    display: z.nativeEnum(schema_5.EmailDisplayType).optional(),
+    type: zodDiscriminant(ValueType.String),
+    codaType: zodDiscriminant(ValueHintType.Email),
+    display: z.nativeEnum(EmailDisplayType).optional(),
     autocomplete: z.boolean().optional(),
     ...basePropertyValidators,
 });
 const linkPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.String),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Url),
-    display: z.nativeEnum(schema_8.LinkDisplayType).optional(),
+    type: zodDiscriminant(ValueType.String),
+    codaType: zodDiscriminant(ValueHintType.Url),
+    display: z.nativeEnum(LinkDisplayType).optional(),
     force: z.boolean().optional(),
     ...basePropertyValidators,
 });
 const imagePropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.String),
-    codaType: z.union([zodDiscriminant(schema_12.ValueHintType.ImageAttachment), zodDiscriminant(schema_12.ValueHintType.ImageReference)]),
-    imageOutline: z.nativeEnum(schema_7.ImageOutline).optional(),
-    imageCornerStyle: z.nativeEnum(schema_6.ImageCornerStyle).optional(),
+    type: zodDiscriminant(ValueType.String),
+    codaType: z.union([zodDiscriminant(ValueHintType.ImageAttachment), zodDiscriminant(ValueHintType.ImageReference)]),
+    imageOutline: z.nativeEnum(ImageOutline).optional(),
+    imageCornerStyle: z.nativeEnum(ImageCornerStyle).optional(),
     ...basePropertyValidators,
 });
 const stringPropertySchema = z.union([
@@ -657,13 +623,13 @@ const stringPropertySchema = z.union([
 ]);
 const stringPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
-    resultType: zodDiscriminant(api_types_3.Type.string),
+    resultType: zodDiscriminant(Type.string),
     schema: stringPropertySchema.optional(),
 });
 // TODO(jonathan): Give this a better type than ZodTypeAny after figuring out
 // recursive typing better.
 const arrayPropertySchema = z.lazy(() => zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Array),
+    type: zodDiscriminant(ValueType.Array),
     items: objectPropertyUnionSchema,
     ...basePropertyValidators,
 }));
@@ -727,13 +693,13 @@ const propertySchema = z.union([
 ]);
 const genericObjectSchema = z.lazy(() => zodCompleteObject({
     ...basePropertyValidators,
-    type: zodDiscriminant(schema_13.ValueType.Object),
+    type: zodDiscriminant(ValueType.Object),
     description: z.string().optional(),
     id: z.string().min(1).optional(),
     idProperty: z.string().min(1).optional(),
     primary: z.string().min(1).optional(),
     displayProperty: z.string().min(1).optional(),
-    codaType: z.enum([...schema_9.ObjectHintValueTypes]).optional(),
+    codaType: z.enum([...ObjectHintValueTypes]).optional(),
     featured: z.array(z.string()).optional(),
     featuredProperties: z.array(z.string()).optional(),
     identity: zodCompleteObject({
@@ -763,19 +729,19 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
     }
 })
     .refine(data => {
-    const schemaHelper = (0, migration_1.objectSchemaHelper)(data);
-    return (0, object_utils_2.isNil)(schemaHelper.id) || schemaHelper.id in schemaHelper.properties;
+    const schemaHelper = objectSchemaHelper(data);
+    return isNil(schemaHelper.id) || schemaHelper.id in schemaHelper.properties;
 }, {
     message: 'The "idProperty" property must appear as a key in the "properties" object.',
 })
     .refine(data => {
-    const schemaHelper = (0, migration_1.objectSchemaHelper)(data);
-    return (0, object_utils_2.isNil)(schemaHelper.primary) || schemaHelper.primary in schemaHelper.properties;
+    const schemaHelper = objectSchemaHelper(data);
+    return isNil(schemaHelper.primary) || schemaHelper.primary in schemaHelper.properties;
 }, {
     message: 'The "displayProperty" property must appear as a key in the "properties" object.',
 })
     .superRefine((data, context) => {
-    const schemaHelper = (0, migration_1.objectSchemaHelper)(data);
+    const schemaHelper = objectSchemaHelper(data);
     (schemaHelper.featured || []).forEach((f, i) => {
         if (!(f in schemaHelper.properties)) {
             context.addIssue({
@@ -800,8 +766,8 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
                 ? schema.properties[propertyValue]
                 : undefined;
             if (!propertySchema) {
-                const schemaPropertyPath = (0, schema_17.normalizePropertyValuePathIntoSchemaPath)(propertyValue);
-                propertySchema = (_a = (0, jsonpath_plus_1.JSONPath)({
+                const schemaPropertyPath = normalizePropertyValuePathIntoSchemaPath(propertyValue);
+                propertySchema = (_a = JSONPath({
                     path: schemaPropertyPath,
                     json: schema.properties,
                 })) === null || _a === void 0 ? void 0 : _a[0];
@@ -839,18 +805,18 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
         }
     }
     const validateTitleProperty = () => {
-        return validateProperty('titleProperty', propertySchema => [schema_13.ValueType.String, schema_13.ValueType.Object].includes(propertySchema.type), `must refer to a "ValueType.String" or "ValueType.Object" property.`);
+        return validateProperty('titleProperty', propertySchema => [ValueType.String, ValueType.Object].includes(propertySchema.type), `must refer to a "ValueType.String" or "ValueType.Object" property.`);
     };
     const validateImageProperty = () => {
-        return validateProperty('imageProperty', imagePropertySchema => imagePropertySchema.type === schema_13.ValueType.String &&
-            [schema_12.ValueHintType.ImageAttachment, schema_12.ValueHintType.ImageReference].includes(imagePropertySchema.codaType), `must refer to a "ValueType.String" property with a "ValueHintType.ImageAttachment" or "ValueHintType.ImageReference" "codaType".`);
+        return validateProperty('imageProperty', imagePropertySchema => imagePropertySchema.type === ValueType.String &&
+            [ValueHintType.ImageAttachment, ValueHintType.ImageReference].includes(imagePropertySchema.codaType), `must refer to a "ValueType.String" property with a "ValueHintType.ImageAttachment" or "ValueHintType.ImageReference" "codaType".`);
     };
     const validateSnippetProperty = () => {
-        return validateProperty('snippetProperty', snippetPropertySchema => snippetPropertySchema.type === schema_13.ValueType.String ||
-            (snippetPropertySchema.type === schema_13.ValueType.Array && snippetPropertySchema.items.type === schema_13.ValueType.String), `must refer to a "ValueType.String" property or array of strings.`);
+        return validateProperty('snippetProperty', snippetPropertySchema => snippetPropertySchema.type === ValueType.String ||
+            (snippetPropertySchema.type === ValueType.Array && snippetPropertySchema.items.type === ValueType.String), `must refer to a "ValueType.String" property or array of strings.`);
     };
     const validateLinkProperty = () => {
-        return validateProperty('linkProperty', linkPropertySchema => linkPropertySchema.type === schema_13.ValueType.String && linkPropertySchema.codaType === schema_12.ValueHintType.Url, `must refer to a "ValueType.String" property with a "ValueHintType.Url" "codaType".`);
+        return validateProperty('linkProperty', linkPropertySchema => linkPropertySchema.type === ValueType.String && linkPropertySchema.codaType === ValueHintType.Url, `must refer to a "ValueType.String" property with a "ValueHintType.Url" "codaType".`);
     };
     const validateSubtitleProperties = () => {
         return validateProperty('subtitleProperties', subtitlePropertySchema => {
@@ -858,30 +824,30 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
                 return true;
             }
             switch (subtitlePropertySchema.codaType) {
-                case schema_12.ValueHintType.ImageAttachment:
-                case schema_12.ValueHintType.Attachment:
-                case schema_12.ValueHintType.ImageReference:
-                case schema_12.ValueHintType.Embed:
-                case schema_12.ValueHintType.Scale:
+                case ValueHintType.ImageAttachment:
+                case ValueHintType.Attachment:
+                case ValueHintType.ImageReference:
+                case ValueHintType.Embed:
+                case ValueHintType.Scale:
                     return false;
-                case schema_12.ValueHintType.Currency:
-                case schema_12.ValueHintType.Date:
-                case schema_12.ValueHintType.DateTime:
-                case schema_12.ValueHintType.Duration:
-                case schema_12.ValueHintType.Email:
-                case schema_12.ValueHintType.Html:
-                case schema_12.ValueHintType.Markdown:
-                case schema_12.ValueHintType.Percent:
-                case schema_12.ValueHintType.Person:
-                case schema_12.ValueHintType.ProgressBar:
-                case schema_12.ValueHintType.Reference:
-                case schema_12.ValueHintType.Slider:
-                case schema_12.ValueHintType.Toggle:
-                case schema_12.ValueHintType.Time:
-                case schema_12.ValueHintType.Url:
+                case ValueHintType.Currency:
+                case ValueHintType.Date:
+                case ValueHintType.DateTime:
+                case ValueHintType.Duration:
+                case ValueHintType.Email:
+                case ValueHintType.Html:
+                case ValueHintType.Markdown:
+                case ValueHintType.Percent:
+                case ValueHintType.Person:
+                case ValueHintType.ProgressBar:
+                case ValueHintType.Reference:
+                case ValueHintType.Slider:
+                case ValueHintType.Toggle:
+                case ValueHintType.Time:
+                case ValueHintType.Url:
                     return true;
                 default:
-                    (0, ensure_2.ensureUnreachable)(subtitlePropertySchema.codaType);
+                    ensureUnreachable(subtitlePropertySchema.codaType);
             }
         }, `must refer to a value that does not have a codaType corresponding to one of ImageAttachment, Attachment, ImageReference, Embed, or Scale.`);
     };
@@ -900,7 +866,7 @@ const objectPropertyUnionSchema = z.union([
 ]);
 const objectPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
-    resultType: zodDiscriminant(api_types_3.Type.object),
+    resultType: zodDiscriminant(Type.object),
     // TODO(jonathan): See if we should really allow this. The SDK right now explicitly tolerates an undefined
     // schema for objects, but that doesn't seem like a use case we actually want to support.
     schema: z.union([genericObjectSchema, arrayPropertySchema]).optional(),
@@ -923,15 +889,15 @@ const formulaMetadataSchema = z
     }
 });
 const formatMetadataSchema = zodCompleteObject({
-    name: z.string().max(exports.Limits.BuildingBlockName),
+    name: z.string().max(Limits.BuildingBlockName),
     formulaNamespace: z.string().optional(),
     formulaName: z.string(),
     hasNoConnection: z.boolean().optional(),
     instructions: z.string().optional(),
     placeholder: z.string().optional(),
     matchers: z
-        .array(z.string().max(exports.Limits.ColumnMatcherRegex).refine(validateFormatMatcher))
-        .max(exports.Limits.NumColumnMatchersPerFormat),
+        .array(z.string().max(Limits.ColumnMatcherRegex).refine(validateFormatMatcher))
+        .max(Limits.NumColumnMatchersPerFormat),
 });
 const syncFormulaSchema = zodCompleteObject({
     schema: arrayPropertySchema.optional(),
@@ -943,9 +909,9 @@ const baseSyncTableSchema = {
     name: z
         .string()
         .nonempty()
-        .max(exports.Limits.BuildingBlockName)
+        .max(Limits.BuildingBlockName)
         .regex(regexFormulaName, 'Sync Table names can only contain alphanumeric characters and underscores.'),
-    description: z.string().max(exports.Limits.BuildingBlockDescription).optional(),
+    description: z.string().max(Limits.BuildingBlockDescription).optional(),
     schema: genericObjectSchema,
     getter: syncFormulaSchema,
     entityName: z.string().optional(),
@@ -954,7 +920,7 @@ const baseSyncTableSchema = {
     identityName: z
         .string()
         .min(1)
-        .max(exports.Limits.BuildingBlockName)
+        .max(Limits.BuildingBlockName)
         .optional()
         .refine(val => !val || !SystemColumnNames.includes(val), `This property name is reserved for internal use by Coda and can't be used as an identityName, sorry!`),
 };
@@ -1000,7 +966,7 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject({
     networkDomains: z
         .array(z
         .string()
-        .max(exports.Limits.NetworkDomainUrl)
+        .max(Limits.NetworkDomainUrl)
         .refine(domain => !(domain.startsWith('http:') || domain.startsWith('https:') || domain.indexOf('/') >= 0), {
         message: 'Invalid network domain. Instead of "https://www.example.com", just specify "example.com".',
     }))
@@ -1011,7 +977,7 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject({
     systemConnectionAuthentication: z.union(zodUnionInput(systemAuthenticationValidators)).optional(),
     formulas: z
         .array(formulaMetadataSchema)
-        .max(exports.Limits.BuildingBlockCountPerType)
+        .max(Limits.BuildingBlockCountPerType)
         .optional()
         .default([])
         .superRefine((data, context) => {
@@ -1025,7 +991,7 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject({
     }),
     formats: z
         .array(formatMetadataSchema)
-        .max(exports.Limits.BuildingBlockCountPerType)
+        .max(Limits.BuildingBlockCountPerType)
         .optional()
         .default([])
         .superRefine((data, context) => {
@@ -1039,7 +1005,7 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject({
     }),
     syncTables: z
         .array(syncTableSchema)
-        .max(exports.Limits.BuildingBlockCountPerType)
+        .max(Limits.BuildingBlockCountPerType)
         .optional()
         .default([])
         .superRefine((data, context) => {
@@ -1094,7 +1060,7 @@ function validateFormulas(schema) {
         .refine(untypedMetadata => {
         var _a, _b;
         const metadata = untypedMetadata;
-        if (((_a = metadata.defaultAuthentication) === null || _a === void 0 ? void 0 : _a.type) !== types_1.AuthenticationType.CodaApiHeaderBearerToken) {
+        if (((_a = metadata.defaultAuthentication) === null || _a === void 0 ? void 0 : _a.type) !== AuthenticationType.CodaApiHeaderBearerToken) {
             return true;
         }
         const codaDomains = ['coda.io', 'localhost'];
@@ -1115,12 +1081,12 @@ function validateFormulas(schema) {
         path: ['defaultAuthentication.networkDomain'],
     })
         .superRefine((data, context) => {
-        if (data.defaultAuthentication && data.defaultAuthentication.type !== types_1.AuthenticationType.None) {
+        if (data.defaultAuthentication && data.defaultAuthentication.type !== AuthenticationType.None) {
             return;
         }
         // if the pack has no default authentication, make sure all formulas don't set connection requirements.
         (data.formulas || []).forEach((formula, i) => {
-            if (formula.connectionRequirement && formula.connectionRequirement !== api_types_1.ConnectionRequirement.None) {
+            if (formula.connectionRequirement && formula.connectionRequirement !== ConnectionRequirement.None) {
                 context.addIssue({
                     code: z.ZodIssueCode.custom,
                     path: ['formulas', i],
@@ -1130,7 +1096,7 @@ function validateFormulas(schema) {
         });
         (data.syncTables || []).forEach((syncTable, i) => {
             const connectionRequirement = syncTable.getter.connectionRequirement;
-            if (connectionRequirement && connectionRequirement !== api_types_1.ConnectionRequirement.None) {
+            if (connectionRequirement && connectionRequirement !== ConnectionRequirement.None) {
                 context.addIssue({
                     code: z.ZodIssueCode.custom,
                     path: ['syncTables', i, 'getter', 'connectionRequirement'],
@@ -1172,7 +1138,7 @@ function validateFormulas(schema) {
 }
 function validateFormatMatcher(value) {
     try {
-        const parsed = value.match(exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX);
+        const parsed = value.match(PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX);
         if (!parsed) {
             return false;
         }
@@ -1193,11 +1159,11 @@ const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSc
     shortDescription: z.string().nonempty().optional(),
     description: z.string().nonempty().optional(),
     permissionsDescription: z.string().optional(),
-    category: z.nativeEnum(types_3.PackCategory).optional(),
+    category: z.nativeEnum(PackCategory).optional(),
     logoPath: z.string().optional(),
     exampleImages: z.array(z.string()).optional(),
     exampleVideoIds: z.array(z.string()).optional(),
-    minimumFeatureSet: z.nativeEnum(types_2.FeatureSet).optional(),
+    minimumFeatureSet: z.nativeEnum(FeatureSet).optional(),
     quotas: z.any().optional(),
     rateLimits: z.any().optional(),
     isSystem: z.boolean().optional(),
@@ -1250,14 +1216,14 @@ const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSc
 })
     .refine(data => {
     var _a, _b, _c;
-    const usesAuthentication = (data.defaultAuthentication && data.defaultAuthentication.type !== types_1.AuthenticationType.None) ||
+    const usesAuthentication = (data.defaultAuthentication && data.defaultAuthentication.type !== AuthenticationType.None) ||
         data.systemConnectionAuthentication;
     if (!usesAuthentication || ((_a = data.networkDomains) === null || _a === void 0 ? void 0 : _a.length) || ((_b = data.defaultAuthentication) === null || _b === void 0 ? void 0 : _b.requiresEndpointUrl)) {
         return true;
     }
     // Various is an internal authentication type that's only applicable to whitelisted Pack Ids.
     // Skipping validation here to let it exempt from network domains.
-    if (((_c = data.defaultAuthentication) === null || _c === void 0 ? void 0 : _c.type) === types_1.AuthenticationType.Various) {
+    if (((_c = data.defaultAuthentication) === null || _c === void 0 ? void 0 : _c.type) === AuthenticationType.Various) {
         return true;
     }
     return false;
@@ -1270,7 +1236,7 @@ const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSc
     var _a;
     const data = untypedData;
     const authNetworkDomains = getAuthNetworkDomains(data);
-    if (!(0, object_utils_1.isDefined)(authNetworkDomains)) {
+    if (!isDefined(authNetworkDomains)) {
         // This is a Various or None auth pack.
         return;
     }
@@ -1289,7 +1255,7 @@ const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSc
     .superRefine((untypedData, context) => {
     const data = untypedData;
     const authNetworkDomains = getAuthNetworkDomains(data);
-    if (!(0, object_utils_1.isDefined)(authNetworkDomains)) {
+    if (!isDefined(authNetworkDomains)) {
         // This is a Various or None auth pack.
         return;
     }
@@ -1308,8 +1274,8 @@ const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSc
 // Returns undefined for None or Various auth, otherwise returns a string array.
 function getAuthNetworkDomains(data) {
     if (!data.defaultAuthentication ||
-        data.defaultAuthentication.type === types_1.AuthenticationType.Various ||
-        data.defaultAuthentication.type === types_1.AuthenticationType.None) {
+        data.defaultAuthentication.type === AuthenticationType.Various ||
+        data.defaultAuthentication.type === AuthenticationType.None) {
         return undefined;
     }
     if (data.defaultAuthentication.requiresEndpointUrl) {
@@ -1353,24 +1319,24 @@ const packMetadataSchemaBySdkVersion = [
                     // A blank string will fail the existing `min(1)` requirement in the zod schema, so
                     // we only need to additionally make sure there is a value present.
                     if (typeof syncTable.identityName !== 'string') {
-                        let receivedType = zod_1.ZodParsedType.unknown;
+                        let receivedType = ZodParsedType.unknown;
                         if (syncTable.identityName === undefined) {
-                            receivedType = zod_1.ZodParsedType.undefined;
+                            receivedType = ZodParsedType.undefined;
                         }
                         else if (syncTable.identityName === null) {
-                            receivedType = zod_1.ZodParsedType.null;
+                            receivedType = ZodParsedType.null;
                         }
                         context.addIssue({
                             code: z.ZodIssueCode.invalid_type,
                             path: ['syncTables', i, 'identityName'],
                             message: 'An identityName is required on all sync tables',
-                            expected: zod_1.ZodParsedType.string,
+                            expected: ZodParsedType.string,
                             received: receivedType,
                         });
                     }
                 });
                 const { defaultAuthentication: auth } = data;
-                if (auth && auth.type !== types_1.AuthenticationType.None && auth.postSetup) {
+                if (auth && auth.type !== AuthenticationType.None && auth.postSetup) {
                     auth.postSetup.forEach((step, i) => {
                         validateDeprecatedProperty({
                             obj: step,
@@ -1386,10 +1352,10 @@ const packMetadataSchemaBySdkVersion = [
     },
 ];
 function validateSchemaDeprecatedFields(schema, pathPrefix, context) {
-    if ((0, schema_15.isObject)(schema)) {
+    if (isObject(schema)) {
         validateObjectSchemaDeprecatedFields(schema, pathPrefix, context);
     }
-    if ((0, schema_14.isArray)(schema)) {
+    if (isArray(schema)) {
         validateSchemaDeprecatedFields(schema.items, [...pathPrefix, 'items'], context);
     }
 }

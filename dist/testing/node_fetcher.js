@@ -1,42 +1,15 @@
-"use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.nodeFetcher = exports.fetch = void 0;
-const http_1 = require("http");
-const https_1 = require("https");
-const nodeFetch = __importStar(require("node-fetch"));
+import { Agent as HttpAgent } from 'http';
+import { Agent as HttpsAgent } from 'https';
+import * as nodeFetch from 'node-fetch';
 /**
  * A wrapper for fetch() that allows us to
  * (1) easily stub this out in tests, and
  * (2) includes these requests automatically in distributed tracing (not yet implemented)
  */
-async function fetch(url, init) {
+export async function fetch(url, init) {
     return nodeFetch.default(url, init);
 }
-exports.fetch = fetch;
-async function nodeFetcher(options) {
+export async function nodeFetcher(options) {
     const { method = 'GET', uri, qs, followRedirect = true, gzip = true, json, headers: rawHeaders = {}, form, body, timeout, forever, resolveWithFullResponse, resolveWithRawBody, encoding, ca, maxResponseSizeBytes, legacyBlankAcceptHeader, } = options;
     const init = {
         method,
@@ -50,8 +23,8 @@ async function nodeFetcher(options) {
     }
     if (forever || ca) {
         init.agent = uri.startsWith('http:')
-            ? new http_1.Agent({ keepAlive: forever })
-            : new https_1.Agent({ keepAlive: forever, ca });
+            ? new HttpAgent({ keepAlive: forever })
+            : new HttpsAgent({ keepAlive: forever, ca });
     }
     const headers = Object.fromEntries(Object.entries(rawHeaders)
         .filter(([_key, value]) => {
@@ -108,7 +81,6 @@ async function nodeFetcher(options) {
     }
     return resultBody;
 }
-exports.nodeFetcher = nodeFetcher;
 async function getResultBody(response, { encoding, resolveWithRawBody, forceJsonResponseBody, }) {
     var _a;
     if (resolveWithRawBody) {

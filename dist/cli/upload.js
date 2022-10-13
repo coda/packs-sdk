@@ -1,99 +1,70 @@
-"use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleUpload = void 0;
-const v1_1 = require("../helpers/external-api/v1");
-const compile_1 = require("../testing/compile");
-const metadata_1 = require("../helpers/metadata");
-const crypto_1 = require("../helpers/crypto");
-const helpers_1 = require("./helpers");
-const helpers_2 = require("./helpers");
-const errors_1 = require("./errors");
-const errors_2 = require("./errors");
-const fs_extra_1 = __importDefault(require("fs-extra"));
-const config_storage_1 = require("./config_storage");
-const config_storage_2 = require("./config_storage");
-const helpers_3 = require("./helpers");
-const coda_1 = require("../helpers/external-api/coda");
-const helpers_4 = require("./helpers");
-const os_1 = __importDefault(require("os"));
-const path = __importStar(require("path"));
-const helpers_5 = require("../testing/helpers");
-const helpers_6 = require("../testing/helpers");
-const helpers_7 = require("../testing/helpers");
-const request_promise_native_1 = __importDefault(require("request-promise-native"));
-const errors_3 = require("./errors");
-const uuid_1 = require("uuid");
-const validate_1 = require("./validate");
+import { PublicApiPackSource } from '../helpers/external-api/v1';
+import { compilePackBundle } from '../testing/compile';
+import { compilePackMetadata } from '../helpers/metadata';
+import { computeSha256 } from '../helpers/crypto';
+import { createCodaClient } from './helpers';
+import { formatEndpoint } from './helpers';
+import { formatError } from './errors';
+import { formatResponseError } from './errors';
+import fs from 'fs-extra';
+import { getApiKey } from './config_storage';
+import { getPackId } from './config_storage';
+import { importManifest } from './helpers';
+import { isResponseError } from '../helpers/external-api/coda';
+import { isTestCommand } from './helpers';
+import os from 'os';
+import * as path from 'path';
+import { print } from '../testing/helpers';
+import { printAndExit as printAndExitImpl } from '../testing/helpers';
+import { readFile } from '../testing/helpers';
+import requestPromise from 'request-promise-native';
+import { tryParseSystemError } from './errors';
+import { v4 } from 'uuid';
+import { validateMetadata } from './validate';
 function cleanup(intermediateOutputDirectory, logger) {
     logger.info('\n\nCleaning up...');
-    if (fs_extra_1.default.existsSync(intermediateOutputDirectory)) {
-        const tempDirectory = fs_extra_1.default.mkdtempSync(path.join(os_1.default.tmpdir(), `coda-packs-${(0, uuid_1.v4)()}`));
-        fs_extra_1.default.moveSync(intermediateOutputDirectory, path.join(tempDirectory, 'build'));
+    if (fs.existsSync(intermediateOutputDirectory)) {
+        const tempDirectory = fs.mkdtempSync(path.join(os.tmpdir(), `coda-packs-${v4()}`));
+        fs.moveSync(intermediateOutputDirectory, path.join(tempDirectory, 'build'));
         logger.info(`Intermediate files are moved to ${tempDirectory}`);
     }
 }
-async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApiEndpoint, notes, timerStrategy, }) {
+export async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApiEndpoint, notes, timerStrategy, }) {
     const logger = console;
     function printAndExit(message) {
         cleanup(intermediateOutputDirectory, logger);
-        (0, helpers_6.printAndExit)(message);
+        printAndExitImpl(message);
     }
     const manifestDir = path.dirname(manifestFile);
-    const formattedEndpoint = (0, helpers_2.formatEndpoint)(codaApiEndpoint);
+    const formattedEndpoint = formatEndpoint(codaApiEndpoint);
     logger.info('Building Pack bundle...');
-    if (fs_extra_1.default.existsSync(intermediateOutputDirectory)) {
+    if (fs.existsSync(intermediateOutputDirectory)) {
         logger.info(`Existing directory ${intermediateOutputDirectory} detected. Probably left over from previous build. Removing it...`);
-        fs_extra_1.default.rmdirSync(intermediateOutputDirectory, { recursive: true });
+        fs.rmdirSync(intermediateOutputDirectory, { recursive: true });
     }
     // we need to generate the bundle file in the working directory instead of a temp directory in
     // order to set source map right. The source map tool chain isn't smart enough to resolve a
     // relative path in the end.
-    const { bundlePath, bundleSourceMapPath } = await (0, compile_1.compilePackBundle)({
+    const { bundlePath, bundleSourceMapPath } = await compilePackBundle({
         manifestPath: manifestFile,
         outputDirectory: intermediateOutputDirectory,
         intermediateOutputDirectory,
         timerStrategy,
     });
-    const manifest = await (0, helpers_3.importManifest)(bundlePath);
+    const manifest = await importManifest(bundlePath);
     // Since package.json isn't in dist, we grab it from the root directory instead.
-    const packageJson = await Promise.resolve().then(() => __importStar(require((0, helpers_4.isTestCommand)() ? '../package.json' : '../../package.json')));
+    const packageJson = await import(isTestCommand() ? '../package.json' : '../../package.json');
     const codaPacksSDKVersion = packageJson.version;
-    const apiKey = (0, config_storage_1.getApiKey)(codaApiEndpoint);
+    const apiKey = getApiKey(codaApiEndpoint);
     if (!apiKey) {
         printAndExit('Missing API token. Please run `coda register` to register one.');
     }
-    const client = (0, helpers_1.createCodaClient)(apiKey, formattedEndpoint);
-    const packId = (0, config_storage_2.getPackId)(manifestDir, codaApiEndpoint);
+    const client = createCodaClient(apiKey, formattedEndpoint);
+    const packId = getPackId(manifestDir, codaApiEndpoint);
     if (!packId) {
         printAndExit(`Could not find a Pack id registered in directory "${manifestDir}"`);
     }
-    const metadata = (0, metadata_1.compilePackMetadata)(manifest);
+    const metadata = compilePackMetadata(manifest);
     let packVersion = manifest.version;
     try {
         // Do local validation even if we don't have a pack version. This is faster and saves resources
@@ -102,26 +73,26 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
         // notice if there are issues with how it's returned.
         logger.info('Validating Pack metadata...');
         const metadataWithFakeVersion = !packVersion ? { ...metadata, version: '0.0.1' } : metadata;
-        await (0, validate_1.validateMetadata)(metadataWithFakeVersion, { checkDeprecationWarnings: false });
+        await validateMetadata(metadataWithFakeVersion, { checkDeprecationWarnings: false });
         if (!packVersion) {
             try {
                 const nextPackVersionInfo = await client.getNextPackVersion(packId, {}, { proposedMetadata: JSON.stringify(metadata), sdkVersion: codaPacksSDKVersion });
                 packVersion = nextPackVersionInfo.nextVersion;
-                (0, helpers_5.print)(`Pack version not provided. Generated one for you: version is ${packVersion}`);
+                print(`Pack version not provided. Generated one for you: version is ${packVersion}`);
             }
             catch (err) {
-                if ((0, coda_1.isResponseError)(err)) {
-                    printAndExit(`Error while finalizing pack version: ${await (0, errors_2.formatResponseError)(err)}`);
+                if (isResponseError(err)) {
+                    printAndExit(`Error while finalizing pack version: ${await formatResponseError(err)}`);
                 }
                 throw err;
             }
         }
         metadata.version = packVersion;
-        const bundle = (0, helpers_7.readFile)(bundlePath);
+        const bundle = readFile(bundlePath);
         if (!bundle) {
             printAndExit(`Could not find bundle file at path ${bundlePath}`);
         }
-        const sourceMap = (0, helpers_7.readFile)(bundleSourceMapPath);
+        const sourceMap = readFile(bundleSourceMapPath);
         if (!sourceMap) {
             printAndExit(`Could not find bundle source map at path ${bundleSourceMapPath}`);
         }
@@ -132,15 +103,15 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
             sourceMap: sourceMap.toString(),
         };
         const uploadPayload = JSON.stringify(upload);
-        const bundleHash = (0, crypto_1.computeSha256)(uploadPayload);
+        const bundleHash = computeSha256(uploadPayload);
         logger.info('Registering new Pack version...');
         let registerResponse;
         try {
             registerResponse = await client.registerPackVersion(packId, packVersion, {}, { bundleHash });
         }
         catch (err) {
-            if ((0, coda_1.isResponseError)(err)) {
-                return printAndExit(`Error while registering pack version: ${await (0, errors_2.formatResponseError)(err)}`);
+            if (isResponseError(err)) {
+                return printAndExit(`Error while registering pack version: ${await formatResponseError(err)}`);
             }
             throw err;
         }
@@ -150,39 +121,38 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
         logger.info('Validating upload...');
         let uploadCompleteResponse;
         try {
-            uploadCompleteResponse = await client.packVersionUploadComplete(packId, packVersion, {}, { notes, source: v1_1.PublicApiPackSource.Cli });
+            uploadCompleteResponse = await client.packVersionUploadComplete(packId, packVersion, {}, { notes, source: PublicApiPackSource.Cli });
         }
         catch (err) {
-            if ((0, coda_1.isResponseError)(err)) {
-                printAndExit(`Error while finalizing pack version: ${await (0, errors_2.formatResponseError)(err)}`);
+            if (isResponseError(err)) {
+                printAndExit(`Error while finalizing pack version: ${await formatResponseError(err)}`);
             }
             throw err;
         }
         const { deprecationWarnings } = uploadCompleteResponse;
         if (deprecationWarnings === null || deprecationWarnings === void 0 ? void 0 : deprecationWarnings.length) {
-            (0, helpers_5.print)('\nYour Pack version uploaded successfully. ' +
+            print('\nYour Pack version uploaded successfully. ' +
                 'However, your Pack is using deprecated properties or features that will become errors in a future SDK version.\n');
             for (const { path, message } of deprecationWarnings) {
-                (0, helpers_5.print)(`Warning in field at path "${path}": ${message}`);
+                print(`Warning in field at path "${path}": ${message}`);
             }
         }
     }
     catch (err) {
-        const errors = [`Unexpected error during Pack upload: ${(0, errors_1.formatError)(err)}`, (0, errors_3.tryParseSystemError)(err)];
+        const errors = [`Unexpected error during Pack upload: ${formatError(err)}`, tryParseSystemError(err)];
         printAndExit(errors.join(`\n`));
     }
     cleanup(intermediateOutputDirectory, logger);
     logger.info('Done!');
 }
-exports.handleUpload = handleUpload;
 async function uploadPack(uploadUrl, uploadPayload, headers) {
     try {
-        await request_promise_native_1.default.put(uploadUrl, {
+        await requestPromise.put(uploadUrl, {
             headers,
             body: uploadPayload,
         });
     }
     catch (err) {
-        (0, helpers_6.printAndExit)(`Error in uploading Pack to signed url: ${(0, errors_1.formatError)(err)}`);
+        printAndExitImpl(`Error in uploading Pack to signed url: ${formatError(err)}`);
     }
 }

@@ -1,35 +1,30 @@
 #!/usr/bin/env node
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const config_storage_1 = require("./config_storage");
-const auth_1 = require("../testing/auth");
-const compile_1 = require("../testing/compile");
-const auth_2 = require("./auth");
-const build_1 = require("./build");
-const clone_1 = require("./clone");
-const create_1 = require("./create");
-const execute_1 = require("./execute");
-const init_1 = require("./init");
-const link_1 = require("./link");
-const register_1 = require("./register");
-const release_1 = require("./release");
-const set_option_1 = require("./set_option");
-const upload_1 = require("./upload");
-const validate_1 = require("./validate");
-const whoami_1 = require("./whoami");
-const ivm_wrapper_1 = require("../testing/ivm_wrapper");
-const yargs_1 = __importDefault(require("yargs"));
+import { DEFAULT_API_ENDPOINT } from './config_storage';
+import { DEFAULT_OAUTH_SERVER_PORT } from '../testing/auth';
+import { TimerShimStrategy } from '../testing/compile';
+import { handleAuth } from './auth';
+import { handleBuild } from './build';
+import { handleClone } from './clone';
+import { handleCreate } from './create';
+import { handleExecute } from './execute';
+import { handleInit } from './init';
+import { handleLink } from './link';
+import { handleRegister } from './register';
+import { handleRelease } from './release';
+import { handleSetOption } from './set_option';
+import { handleUpload } from './upload';
+import { handleValidate } from './validate';
+import { handleWhoami } from './whoami';
+import { tryGetIvm } from '../testing/ivm_wrapper';
+import yargs from 'yargs';
 if (require.main === module) {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    void yargs_1.default
+    void yargs
         .parserConfiguration({ 'parse-numbers': false })
         .command({
         command: 'execute <manifestPath> <formulaName> [params..]',
         describe: 'Execute a formula',
-        handler: execute_1.handleExecute,
+        handler: handleExecute,
         builder: {
             fetch: {
                 boolean: true,
@@ -39,7 +34,7 @@ if (require.main === module) {
             vm: {
                 boolean: true,
                 desc: 'Execute the requested command in a virtual machine that mimics the environment Coda uses to execute Packs.',
-                default: Boolean((0, ivm_wrapper_1.tryGetIvm)()),
+                default: Boolean(tryGetIvm()),
             },
             dynamicUrl: {
                 string: true,
@@ -47,7 +42,7 @@ if (require.main === module) {
             },
             timerStrategy: {
                 string: true,
-                default: compile_1.TimerShimStrategy.None,
+                default: TimerShimStrategy.None,
                 desc: 'Options: none, error, fake.',
             },
         },
@@ -55,12 +50,12 @@ if (require.main === module) {
         .command({
         command: 'auth <manifestPath>',
         describe: 'Set up authentication for a Pack',
-        handler: auth_2.handleAuth,
+        handler: handleAuth,
         builder: {
             oauthServerPort: {
                 alias: 'oauth_server_port',
                 number: true,
-                default: auth_1.DEFAULT_OAUTH_SERVER_PORT,
+                default: DEFAULT_OAUTH_SERVER_PORT,
                 desc: 'Port to use for the local server that handles OAuth setup.',
             },
             extraOAuthScopes: {
@@ -75,7 +70,7 @@ if (require.main === module) {
         .command({
         command: 'init',
         describe: 'Initialize an empty Pack',
-        handler: init_1.handleInit,
+        handler: handleInit,
     })
         .command({
         command: 'clone <packIdOrUrl>',
@@ -84,10 +79,10 @@ if (require.main === module) {
             codaApiEndpoint: {
                 string: true,
                 hidden: true,
-                default: config_storage_1.DEFAULT_API_ENDPOINT,
+                default: DEFAULT_API_ENDPOINT,
             },
         },
-        handler: clone_1.handleClone,
+        handler: handleClone,
     })
         .command({
         command: 'register [apiToken]',
@@ -96,10 +91,10 @@ if (require.main === module) {
             codaApiEndpoint: {
                 string: true,
                 hidden: true,
-                default: config_storage_1.DEFAULT_API_ENDPOINT,
+                default: DEFAULT_API_ENDPOINT,
             },
         },
-        handler: register_1.handleRegister,
+        handler: handleRegister,
     })
         .command({
         command: 'whoami [apiToken]',
@@ -108,10 +103,10 @@ if (require.main === module) {
             codaApiEndpoint: {
                 string: true,
                 hidden: true,
-                default: config_storage_1.DEFAULT_API_ENDPOINT,
+                default: DEFAULT_API_ENDPOINT,
             },
         },
-        handler: whoami_1.handleWhoami,
+        handler: handleWhoami,
     })
         .command({
         command: 'build <manifestFile>',
@@ -128,7 +123,7 @@ if (require.main === module) {
             },
             timerStrategy: {
                 string: true,
-                default: compile_1.TimerShimStrategy.None,
+                default: TimerShimStrategy.None,
                 desc: 'Options: none, error, fake.',
             },
             intermediateOutputDirectory: {
@@ -136,7 +131,7 @@ if (require.main === module) {
                 default: undefined,
             },
         },
-        handler: build_1.handleBuild,
+        handler: handleBuild,
     })
         .command({
         command: 'upload <manifestFile>',
@@ -150,7 +145,7 @@ if (require.main === module) {
             codaApiEndpoint: {
                 string: true,
                 hidden: true,
-                default: config_storage_1.DEFAULT_API_ENDPOINT,
+                default: DEFAULT_API_ENDPOINT,
             },
             intermediateOutputDirectory: {
                 string: true,
@@ -159,11 +154,11 @@ if (require.main === module) {
             },
             timerStrategy: {
                 string: true,
-                default: compile_1.TimerShimStrategy.None,
+                default: TimerShimStrategy.None,
                 desc: 'Options: none, error, fake.',
             },
         },
-        handler: upload_1.handleUpload,
+        handler: handleUpload,
     })
         .command({
         command: 'create <manifestFile>',
@@ -187,10 +182,10 @@ if (require.main === module) {
             codaApiEndpoint: {
                 string: true,
                 hidden: true,
-                default: config_storage_1.DEFAULT_API_ENDPOINT,
+                default: DEFAULT_API_ENDPOINT,
             },
         },
-        handler: create_1.handleCreate,
+        handler: handleCreate,
     })
         .command({
         command: 'link <manifestDir> <packIdOrUrl>',
@@ -199,10 +194,10 @@ if (require.main === module) {
             codaApiEndpoint: {
                 string: true,
                 hidden: true,
-                default: config_storage_1.DEFAULT_API_ENDPOINT,
+                default: DEFAULT_API_ENDPOINT,
             },
         },
-        handler: link_1.handleLink,
+        handler: handleLink,
     })
         .command({
         command: 'validate <manifestFile>',
@@ -214,7 +209,7 @@ if (require.main === module) {
                 default: true,
             },
         },
-        handler: validate_1.handleValidate,
+        handler: handleValidate,
     })
         .command({
         command: 'release <manifestFile> [packVersion]',
@@ -231,10 +226,10 @@ if (require.main === module) {
             codaApiEndpoint: {
                 string: true,
                 hidden: true,
-                default: config_storage_1.DEFAULT_API_ENDPOINT,
+                default: DEFAULT_API_ENDPOINT,
             },
         },
-        handler: release_1.handleRelease,
+        handler: handleRelease,
     })
         .command({
         command: 'setOption <manifestFile> <option> <value>',
@@ -242,7 +237,7 @@ if (require.main === module) {
             'the .coda-pack.json file and it will be used for all builds of the pack. ' +
             'Currently the only supported option is `timerStrategy`. Valid values are "none", "error", or "fake".\n\n' +
             'Usage: coda setOption path/to/pack.ts timerStrategy fake',
-        handler: set_option_1.handleSetOption,
+        handler: handleSetOption,
     })
         .demandCommand()
         .strict()

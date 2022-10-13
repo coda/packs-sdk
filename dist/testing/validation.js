@@ -1,62 +1,33 @@
-"use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateResult = exports.validateParams = void 0;
-const types_1 = require("./types");
-const types_2 = require("./types");
-const types_3 = require("./types");
-const api_types_1 = require("../api_types");
-const schema_1 = require("../schema");
-const schema_2 = require("../schema");
-const ensure_1 = require("../helpers/ensure");
-const ensure_2 = require("../helpers/ensure");
-const schema_3 = require("../schema");
-const object_utils_1 = require("../helpers/object_utils");
-const string_1 = require("../helpers/string");
-const schema_4 = require("../schema");
-const api_1 = require("../api");
-const migration_1 = require("../helpers/migration");
-const objectUtils = __importStar(require("../helpers/object_utils"));
-const url_parse_1 = __importDefault(require("url-parse"));
-function validateParams(formula, args) {
+import { ParameterException } from './types';
+import { ResultValidationContext } from './types';
+import { ResultValidationException } from './types';
+import { Type } from '../api_types';
+import { ValueHintType } from '../schema';
+import { ValueType } from '../schema';
+import { ensureExists } from '../helpers/ensure';
+import { ensureUnreachable } from '../helpers/ensure';
+import { isArray } from '../schema';
+import { isDefined } from '../helpers/object_utils';
+import { isEmail } from '../helpers/string';
+import { isObject } from '../schema';
+import { isObjectPackFormula } from '../api';
+import { objectSchemaHelper } from '../helpers/migration';
+import * as objectUtils from '../helpers/object_utils';
+import urlParse from 'url-parse';
+export function validateParams(formula, args) {
     const { parameters, varargParameters } = formula;
     const numRequiredParams = parameters.filter(param => !param.optional).length;
     if (args.length < numRequiredParams) {
-        throw new types_1.ParameterException(`Expected at least ${numRequiredParams} parameter but only ${args.length} were provided.`);
+        throw new ParameterException(`Expected at least ${numRequiredParams} parameter but only ${args.length} were provided.`);
     }
     if (args.length > parameters.length && !varargParameters) {
-        throw new types_1.ParameterException(`Formula only accepts ${parameters.length} parameters but ${args.length} were provided.`);
+        throw new ParameterException(`Formula only accepts ${parameters.length} parameters but ${args.length} were provided.`);
     }
     const errors = [];
     for (let i = 0; i < parameters.length; i++) {
         const param = args[i];
         const paramDef = parameters[i];
-        if (!paramDef.optional && !(0, object_utils_1.isDefined)(param)) {
+        if (!paramDef.optional && !isDefined(param)) {
             errors.push({
                 message: `Param ${i} "${paramDef.name}" is required but a value was not provided.`,
             });
@@ -64,45 +35,43 @@ function validateParams(formula, args) {
     }
     if (errors.length) {
         const errorMsgs = errors.map(error => error.message);
-        throw new types_1.ParameterException(`The following parameter errors were found:\n${errorMsgs.join('\n')}`);
+        throw new ParameterException(`The following parameter errors were found:\n${errorMsgs.join('\n')}`);
     }
 }
-exports.validateParams = validateParams;
-function validateResult(formula, result) {
+export function validateResult(formula, result) {
     const maybeError = validateResultType(formula.resultType, result);
     if (maybeError) {
-        throw types_3.ResultValidationException.fromErrors(formula.name, [maybeError]);
+        throw ResultValidationException.fromErrors(formula.name, [maybeError]);
     }
-    if ((0, api_1.isObjectPackFormula)(formula)) {
+    if (isObjectPackFormula(formula)) {
         // We've already validated that the result type is valid by this point.
         validateObjectResult(formula, result);
     }
 }
-exports.validateResult = validateResult;
 function validateResultType(resultType, result) {
-    if (!(0, object_utils_1.isDefined)(result)) {
+    if (!isDefined(result)) {
         return { message: `Expected a ${resultType} result but got ${result}.` };
     }
     const typeOfResult = typeof result;
     switch (resultType) {
-        case api_types_1.Type.boolean:
+        case Type.boolean:
             return checkType(typeOfResult === 'boolean', 'boolean', result);
-        case api_types_1.Type.date:
+        case Type.date:
             return checkType(result instanceof Date, 'date', result);
-        case api_types_1.Type.html:
+        case Type.html:
             return checkType(typeOfResult === 'string', 'html', result);
-        case api_types_1.Type.file:
+        case Type.file:
             return checkType(typeOfResult === 'string', 'file', result);
-        case api_types_1.Type.image:
+        case Type.image:
             return checkType(typeOfResult === 'string', 'image', result);
-        case api_types_1.Type.number:
+        case Type.number:
             return checkType(typeOfResult === 'number', 'number', result);
-        case api_types_1.Type.object:
+        case Type.object:
             return checkType(typeOfResult === 'object', 'object', result);
-        case api_types_1.Type.string:
+        case Type.string:
             return checkType(typeOfResult === 'string', 'string', result);
         default:
-            return (0, ensure_2.ensureUnreachable)(resultType);
+            return ensureUnreachable(resultType);
     }
 }
 function generateErrorFromValidationContext(context, schema, result) {
@@ -115,11 +84,11 @@ function generateErrorFromValidationContext(context, schema, result) {
 function checkPropertyTypeAndCodaType(schema, result, context) {
     const errors = [generateErrorFromValidationContext(context, schema, result)];
     switch (schema.type) {
-        case schema_2.ValueType.Boolean: {
+        case ValueType.Boolean: {
             const resultValidationError = checkType(typeof result === 'boolean', 'boolean', result);
             return resultValidationError ? errors : [];
         }
-        case schema_2.ValueType.Number: {
+        case ValueType.Number: {
             const resultValidationError = checkType(typeof result === 'number', 'number', result);
             if (resultValidationError) {
                 return errors;
@@ -128,80 +97,80 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
                 return [];
             }
             switch (schema.codaType) {
-                case schema_1.ValueHintType.Slider:
-                case schema_1.ValueHintType.ProgressBar:
+                case ValueHintType.Slider:
+                case ValueHintType.ProgressBar:
                     const sliderErrorMessage = tryParseSlider(result, schema);
                     return sliderErrorMessage ? [sliderErrorMessage] : [];
-                case schema_1.ValueHintType.Scale:
+                case ValueHintType.Scale:
                     const scaleErrorMessage = tryParseScale(result, schema);
                     return scaleErrorMessage ? [scaleErrorMessage] : [];
-                case schema_1.ValueHintType.Date:
-                case schema_1.ValueHintType.DateTime:
-                case schema_1.ValueHintType.Duration:
-                case schema_1.ValueHintType.Time:
-                case schema_1.ValueHintType.Percent:
-                case schema_1.ValueHintType.Currency:
+                case ValueHintType.Date:
+                case ValueHintType.DateTime:
+                case ValueHintType.Duration:
+                case ValueHintType.Time:
+                case ValueHintType.Percent:
+                case ValueHintType.Currency:
                 case undefined:
                     // no need to coerce current result type
                     return [];
                 default:
-                    return (0, ensure_2.ensureUnreachable)(schema);
+                    return ensureUnreachable(schema);
             }
         }
-        case schema_2.ValueType.String: {
+        case ValueType.String: {
             const resultValidationError = checkType(typeof result === 'string', 'string', result);
             if (resultValidationError) {
                 return errors;
             }
             switch (schema.codaType) {
-                case schema_1.ValueHintType.Attachment:
-                case schema_1.ValueHintType.Embed:
-                case schema_1.ValueHintType.ImageReference:
-                case schema_1.ValueHintType.ImageAttachment:
-                case schema_1.ValueHintType.Url:
+                case ValueHintType.Attachment:
+                case ValueHintType.Embed:
+                case ValueHintType.ImageReference:
+                case ValueHintType.ImageAttachment:
+                case ValueHintType.Url:
                     const urlErrorMessage = tryParseUrl(result, schema);
                     return urlErrorMessage ? [urlErrorMessage] : [];
-                case schema_1.ValueHintType.Email:
+                case ValueHintType.Email:
                     const emailErrorMessage = tryParseEmail(result, schema);
                     return emailErrorMessage ? [emailErrorMessage] : [];
-                case schema_1.ValueHintType.Date:
-                case schema_1.ValueHintType.DateTime:
+                case ValueHintType.Date:
+                case ValueHintType.DateTime:
                     const dateTimeErrorMessage = tryParseDateTimeString(result, schema);
                     return dateTimeErrorMessage ? [dateTimeErrorMessage] : [];
-                case schema_1.ValueHintType.Duration:
-                case schema_1.ValueHintType.Time:
+                case ValueHintType.Duration:
+                case ValueHintType.Time:
                     // TODO: investigate how to do this in a lightweight fashion.
                     return [];
-                case schema_1.ValueHintType.Html:
-                case schema_1.ValueHintType.Markdown:
+                case ValueHintType.Html:
+                case ValueHintType.Markdown:
                 case undefined:
                     // no need to coerce current result type
                     return [];
                 default:
-                    (0, ensure_2.ensureUnreachable)(schema);
+                    ensureUnreachable(schema);
             }
         }
-        case schema_2.ValueType.Array:
+        case ValueType.Array:
             return validateArray(result, schema, context);
-        case schema_2.ValueType.Object: {
+        case ValueType.Object: {
             const resultValidationError = checkType(typeof result === 'object', 'object', result);
             if (resultValidationError) {
                 return errors;
             }
             switch (schema.codaType) {
-                case schema_1.ValueHintType.Person:
+                case ValueHintType.Person:
                     const personErrorMessage = tryParsePerson(result, schema);
                     return personErrorMessage ? [personErrorMessage] : [];
-                case schema_1.ValueHintType.Reference:
+                case ValueHintType.Reference:
                 // these are validated in the schema creation.
                 case undefined:
                     return validateObject(result, schema, context);
                 default:
-                    (0, ensure_2.ensureUnreachable)(schema);
+                    ensureUnreachable(schema);
             }
         }
         default:
-            return (0, ensure_2.ensureUnreachable)(schema);
+            return ensureUnreachable(schema);
     }
 }
 function tryParseDateTimeString(result, schema) {
@@ -215,7 +184,7 @@ function tryParseUrl(result, schema) {
         message: `Property with codaType "${schema.codaType}" must be a valid HTTP(S) url, but got "${result}".`,
     };
     try {
-        const url = (0, url_parse_1.default)(result);
+        const url = urlParse(result);
         if (!(url.protocol === 'http:' || url.protocol === 'https:')) {
             return invalidUrlError;
         }
@@ -228,7 +197,7 @@ function tryParseEmail(result, schema) {
     const invalidEmailError = {
         message: `Property with codaType "${schema.codaType}" must be a valid email address, but got "${result}".`,
     };
-    if (!(0, string_1.isEmail)(result)) {
+    if (!isEmail(result)) {
         return invalidEmailError;
     }
 }
@@ -256,13 +225,13 @@ function tryParseScale(result, schema) {
     }
 }
 function tryParsePerson(result, schema) {
-    const { id } = (0, migration_1.objectSchemaHelper)(schema);
-    const validId = (0, ensure_1.ensureExists)(id);
+    const { id } = objectSchemaHelper(schema);
+    const validId = ensureExists(id);
     const idError = checkFieldInResult(result, validId);
     if (idError) {
         return idError;
     }
-    if (!(0, string_1.isEmail)(result[validId])) {
+    if (!isEmail(result[validId])) {
         return { message: `The id field for the person result must be an email string, but got "${result[validId]}".` };
     }
 }
@@ -284,21 +253,21 @@ function validateObjectResult(formula, result) {
     if (!schema) {
         return;
     }
-    const validationContext = new types_2.ResultValidationContext();
-    if ((0, schema_3.isArray)(schema)) {
-        const arrayValidationErrors = validateArray(result, schema, new types_2.ResultValidationContext().extendForProperty(formula.name));
+    const validationContext = new ResultValidationContext();
+    if (isArray(schema)) {
+        const arrayValidationErrors = validateArray(result, schema, new ResultValidationContext().extendForProperty(formula.name));
         if (arrayValidationErrors.length) {
-            throw types_3.ResultValidationException.fromErrors(formula.name, arrayValidationErrors);
+            throw ResultValidationException.fromErrors(formula.name, arrayValidationErrors);
         }
         return;
     }
-    if (!(0, schema_4.isObject)(schema)) {
+    if (!isObject(schema)) {
         const error = { message: `Expected an object schema, but found ${JSON.stringify(schema)}.` };
-        throw types_3.ResultValidationException.fromErrors(formula.name, [error]);
+        throw ResultValidationException.fromErrors(formula.name, [error]);
     }
     const errors = validateObject(result, schema, validationContext);
     if (errors.length) {
-        throw types_3.ResultValidationException.fromErrors(formula.name, errors);
+        throw ResultValidationException.fromErrors(formula.name, errors);
     }
 }
 const ACCEPTED_FALSY_VALUES = [0];
@@ -316,7 +285,7 @@ function validateObject(result, schema, context) {
             errors.push(...propertyLevelErrors);
         }
     }
-    const schemaHelper = (0, migration_1.objectSchemaHelper)(schema);
+    const schemaHelper = objectSchemaHelper(schema);
     const idValue = schemaHelper.id && schemaHelper.id in result ? result[schemaHelper.id] : undefined;
     // Some objects will return an id field of 0, but other falsy values (i.e. '') are more likely to be actual errors
     if (schemaHelper.id &&

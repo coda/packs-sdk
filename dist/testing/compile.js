@@ -1,57 +1,28 @@
-"use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.compilePackBundle = exports.TimerShimStrategy = void 0;
-const browserify_1 = __importDefault(require("browserify"));
-const ensure_1 = require("../helpers/ensure");
-const esbuild = __importStar(require("esbuild"));
-const exorcist_1 = __importDefault(require("exorcist"));
-const fs_1 = __importDefault(require("fs"));
-const config_storage_1 = require("../cli/config_storage");
-const os_1 = __importDefault(require("os"));
-const path_1 = __importDefault(require("path"));
-const helpers_1 = require("./helpers");
-const semver_1 = __importDefault(require("semver"));
-const ivm_wrapper_1 = require("./ivm_wrapper");
-const uglify_js_1 = __importDefault(require("uglify-js"));
-const uuid_1 = require("uuid");
-var TimerShimStrategy;
+import browserify from 'browserify';
+import { ensureUnreachable } from '../helpers/ensure';
+import * as esbuild from 'esbuild';
+import exorcist from 'exorcist';
+import fs from 'fs';
+import { getPackOptions } from '../cli/config_storage';
+import os from 'os';
+import path from 'path';
+import { processVmError } from './helpers';
+import semver from 'semver';
+import { tryGetIvm } from './ivm_wrapper';
+import uglify from 'uglify-js';
+import { v4 } from 'uuid';
+export var TimerShimStrategy;
 (function (TimerShimStrategy) {
     TimerShimStrategy["None"] = "none";
     TimerShimStrategy["Error"] = "error";
     TimerShimStrategy["Fake"] = "fake";
-})(TimerShimStrategy = exports.TimerShimStrategy || (exports.TimerShimStrategy = {}));
+})(TimerShimStrategy || (TimerShimStrategy = {}));
 async function loadIntoVM(bundlePath) {
-    const ivm = (0, ivm_wrapper_1.tryGetIvm)();
+    const ivm = tryGetIvm();
     if (!ivm) {
         return;
     }
-    const bundle = fs_1.default.readFileSync(bundlePath);
+    const bundle = fs.readFileSync(bundlePath);
     const isolate = new ivm.Isolate({ memoryLimit: 128 });
     const ivmContext = await isolate.createContext();
     // Setup the global object.
@@ -64,15 +35,15 @@ async function loadIntoVM(bundlePath) {
 }
 async function browserifyBundle({ lastBundleFilename, outputBundleFilename, options, }) {
     // browserify doesn't minify by default. if necessary another pipe can be created to minify the output.
-    const browserifyCompiler = (0, browserify_1.default)(lastBundleFilename, {
+    const browserifyCompiler = browserify(lastBundleFilename, {
         debug: true,
         standalone: 'exports',
     });
-    const writer = fs_1.default.createWriteStream(outputBundleFilename);
+    const writer = fs.createWriteStream(outputBundleFilename);
     const compiledStream = browserifyCompiler.bundle();
     return new Promise(resolve => {
         compiledStream
-            .pipe((0, exorcist_1.default)(`${outputBundleFilename}.map`, undefined, `${process.cwd()}/`, options.intermediateOutputDirectory))
+            .pipe(exorcist(`${outputBundleFilename}.map`, undefined, `${process.cwd()}/`, options.intermediateOutputDirectory))
             .pipe(writer);
         writer.on('finish', () => {
             resolve(undefined);
@@ -80,8 +51,8 @@ async function browserifyBundle({ lastBundleFilename, outputBundleFilename, opti
     });
 }
 async function uglifyBundle({ lastBundleFilename, outputBundleFilename, }) {
-    const sourcemap = JSON.parse(fs_1.default.readFileSync(`${lastBundleFilename}.map`).toString());
-    const uglifyOutput = uglify_js_1.default.minify(fs_1.default.readFileSync(lastBundleFilename).toString(), {
+    const sourcemap = JSON.parse(fs.readFileSync(`${lastBundleFilename}.map`).toString());
+    const uglifyOutput = uglify.minify(fs.readFileSync(lastBundleFilename).toString(), {
         sourceMap: {
             url: `${outputBundleFilename}.map`,
             content: sourcemap,
@@ -95,8 +66,8 @@ async function uglifyBundle({ lastBundleFilename, outputBundleFilename, }) {
         // eslint-disable-next-line no-console
         console.warn(uglifyOutput.warnings);
     }
-    fs_1.default.writeFileSync(outputBundleFilename, uglifyOutput.code);
-    fs_1.default.writeFileSync(`${outputBundleFilename}.map`, uglifyOutput.map);
+    fs.writeFileSync(outputBundleFilename, uglifyOutput.code);
+    fs.writeFileSync(`${outputBundleFilename}.map`, uglifyOutput.map);
 }
 function getTimerShims(timerStrategy) {
     switch (timerStrategy) {
@@ -107,11 +78,11 @@ function getTimerShims(timerStrategy) {
         case TimerShimStrategy.Error:
             return [`${__dirname}/injections/timers_disabled_shim.js`];
         default:
-            (0, ensure_1.ensureUnreachable)(timerStrategy);
+            ensureUnreachable(timerStrategy);
     }
 }
 function getInjections({ timerStrategy = TimerShimStrategy.None, manifestPath }) {
-    const options = (0, config_storage_1.getPackOptions)(path_1.default.dirname(manifestPath));
+    const options = getPackOptions(path.dirname(manifestPath));
     const timerStrategyToUse = (options === null || options === void 0 ? void 0 : options.timerStrategy) || timerStrategy;
     const shims = [...getTimerShims(timerStrategyToUse), `${__dirname}/injections/crypto_shim.js`];
     return shims;
@@ -144,7 +115,7 @@ async function buildWithES({ lastBundleFilename, outputBundleFilename, options: 
     // https://zchee.github.io/golang-wiki/MinimumRequirements/ says macOS High Sierra 10.13 or newer
     // https://en.wikipedia.org/wiki/MacOS says OS X 10.13 corresponds to Darwin kernel version 17
     const minDarwinVersionSupportedByGo = '17.0.0';
-    if (os_1.default.platform() === 'darwin' && semver_1.default.lt(os_1.default.release(), minDarwinVersionSupportedByGo)) {
+    if (os.platform() === 'darwin' && semver.lt(os.release(), minDarwinVersionSupportedByGo)) {
         // The error message if you try to run esbuild (or any Go binary) on an old OS X version
         // is not particularly helpful (https://github.com/golang/go/issues/52757):
         // "dyld: Symbol not found: _SecTrustEvaluateWithError"
@@ -154,14 +125,14 @@ async function buildWithES({ lastBundleFilename, outputBundleFilename, options: 
     }
     await esbuild.build(options);
 }
-async function compilePackBundle({ bundleFilename = 'bundle.js', // the output bundle filename
+export async function compilePackBundle({ bundleFilename = 'bundle.js', // the output bundle filename
 outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, timerStrategy = TimerShimStrategy.None, }) {
     const esbuildBundleFilename = 'esbuild-bundle.js';
     const browserifyBundleFilename = 'browserify-bundle.js';
     const browserifyWithShimBundleFilename = 'browserify-with-shim-bundle.js';
     const uglifyBundleFilename = 'uglify-bundle.js';
     if (!intermediateOutputDirectory) {
-        intermediateOutputDirectory = fs_1.default.mkdtempSync(path_1.default.join(os_1.default.tmpdir(), `coda-packs-${(0, uuid_1.v4)()}`));
+        intermediateOutputDirectory = fs.mkdtempSync(path.join(os.tmpdir(), `coda-packs-${v4()}`));
     }
     const options = {
         bundleFilename,
@@ -193,9 +164,9 @@ outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, timer
     // let the last step of the chain use bundleFilename for output name so that we don't need to
     // apply another step to rename the filenames in sourcemap.
     buildChain[buildChain.length - 1].outputFilename = bundleFilename;
-    let filename = path_1.default.resolve(manifestPath);
+    let filename = path.resolve(manifestPath);
     for (const { builder, outputFilename } of buildChain) {
-        const outputBundleFilename = path_1.default.join(intermediateOutputDirectory, outputFilename);
+        const outputBundleFilename = path.join(intermediateOutputDirectory, outputFilename);
         await builder({
             lastBundleFilename: filename,
             outputBundleFilename,
@@ -212,7 +183,7 @@ outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, timer
         await loadIntoVM(tempBundlePath);
     }
     catch (err) {
-        throw await (0, helpers_1.processVmError)(err, tempBundlePath);
+        throw await processVmError(err, tempBundlePath);
     }
     if (!outputDirectory || outputDirectory === intermediateOutputDirectory) {
         return {
@@ -221,18 +192,17 @@ outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, timer
             bundleSourceMapPath: `${tempBundlePath}.map`,
         };
     }
-    const bundlePath = path_1.default.join(outputDirectory, bundleFilename);
+    const bundlePath = path.join(outputDirectory, bundleFilename);
     const bundleSourceMapPath = `${bundlePath}.map`;
-    if (!fs_1.default.existsSync(outputDirectory)) {
-        fs_1.default.mkdirSync(outputDirectory, { recursive: true });
+    if (!fs.existsSync(outputDirectory)) {
+        fs.mkdirSync(outputDirectory, { recursive: true });
     }
     // move over finally compiled bundle & sourcemap to the target directory.
-    fs_1.default.copyFileSync(tempBundlePath, bundlePath);
-    fs_1.default.copyFileSync(`${tempBundlePath}.map`, bundleSourceMapPath);
+    fs.copyFileSync(tempBundlePath, bundlePath);
+    fs.copyFileSync(`${tempBundlePath}.map`, bundleSourceMapPath);
     return {
         intermediateOutputDirectory,
         bundlePath,
         bundleSourceMapPath,
     };
 }
-exports.compilePackBundle = compilePackBundle;

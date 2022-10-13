@@ -1,14 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.legacyUnwrapError = exports.legacyWrapError = exports.legacyUnmarshalValue = exports.legacyMarshalValue = void 0;
-const marshal_errors_1 = require("./marshal_errors");
-const marshal_errors_2 = require("./marshal_errors");
-const marshal_buffer_1 = require("./marshal_buffer");
-const marshal_dates_1 = require("./marshal_dates");
-const marshal_numbers_1 = require("./marshal_numbers");
-const marshal_buffer_2 = require("./marshal_buffer");
-const marshal_dates_2 = require("./marshal_dates");
-const marshal_numbers_2 = require("./marshal_numbers");
+import { legacyMarshalError } from './marshal_errors';
+import { legacyUnmarshalError } from './marshal_errors';
+import { marshalBuffer } from './marshal_buffer';
+import { marshalDate } from './marshal_dates';
+import { marshalNumber } from './marshal_numbers';
+import { unmarshalBuffer } from './marshal_buffer';
+import { unmarshalDate } from './marshal_dates';
+import { unmarshalNumber } from './marshal_numbers';
 // This marshaling logic so that the calc service can marshal parameters in a format
 // that's understandable by packs that were built at old runtime versions. Newly-built
 // packs will use the non-legacy marshaling logic which is far more memory-efficient:
@@ -17,12 +14,12 @@ const marshal_numbers_2 = require("./marshal_numbers");
 // JSON has no native way to represent `undefined`.
 const HACK_UNDEFINED_JSON_VALUE = '__CODA_UNDEFINED__';
 const MaxTraverseDepth = 100;
-const customMarshalers = [marshal_errors_1.legacyMarshalError, marshal_buffer_1.marshalBuffer, marshal_numbers_1.marshalNumber, marshal_dates_1.marshalDate];
+const customMarshalers = [legacyMarshalError, marshalBuffer, marshalNumber, marshalDate];
 const customUnmarshalers = [
-    marshal_errors_2.legacyUnmarshalError,
-    marshal_buffer_2.unmarshalBuffer,
-    marshal_numbers_2.unmarshalNumber,
-    marshal_dates_2.unmarshalDate,
+    legacyUnmarshalError,
+    unmarshalBuffer,
+    unmarshalNumber,
+    unmarshalDate,
 ];
 function serialize(val) {
     for (const marshaler of customMarshalers) {
@@ -75,7 +72,7 @@ function processValue(val, depth = 0) {
     }
     return serializedValue;
 }
-function legacyMarshalValue(val) {
+export function legacyMarshalValue(val) {
     // Instead of passing a replacer to `JSON.stringify`, we chose to preprocess the value before
     // passing it to `JSON.stringify`. The reason is that `JSON.stringify` may call the object toJSON
     // method before calling the replacer. In many cases, that means the replacer can't tell if the
@@ -86,8 +83,7 @@ function legacyMarshalValue(val) {
     // identical. It will only serve the purpose of our internal marshaling use case.
     return JSON.stringify(processValue(val));
 }
-exports.legacyMarshalValue = legacyMarshalValue;
-function legacyUnmarshalValue(marshaledValue) {
+export function legacyUnmarshalValue(marshaledValue) {
     if (marshaledValue === undefined) {
         return marshaledValue;
     }
@@ -95,8 +91,7 @@ function legacyUnmarshalValue(marshaledValue) {
     // JSON parsing can't populate `undefined` in deserialize b/c it's not a valid JSON value, so we make a 2nd pass.
     return reviveUndefinedValues(parsed);
 }
-exports.legacyUnmarshalValue = legacyUnmarshalValue;
-function legacyWrapError(err) {
+export function legacyWrapError(err) {
     // TODO(huayang): we do this for the sdk.
     // if (err.name === 'TypeError' && err.message === `Cannot read property 'body' of undefined`) {
     //   err.message +=
@@ -107,8 +102,7 @@ function legacyWrapError(err) {
     // }
     return new Error(legacyMarshalValue(err));
 }
-exports.legacyWrapError = legacyWrapError;
-function legacyUnwrapError(err) {
+export function legacyUnwrapError(err) {
     try {
         const unmarshaledValue = legacyUnmarshalValue(err.message);
         if (unmarshaledValue instanceof Error) {
@@ -120,7 +114,6 @@ function legacyUnwrapError(err) {
         return err;
     }
 }
-exports.legacyUnwrapError = legacyUnwrapError;
 // Recursively traverses objects/arrays
 function reviveUndefinedValues(val) {
     // Check null first b/c typeof null === 'object'

@@ -1,13 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.MetadataFormulaType = exports.FormulaType = void 0;
-var FormulaType;
+export var FormulaType;
 (function (FormulaType) {
     FormulaType["Standard"] = "Standard";
     FormulaType["Sync"] = "Sync";
     FormulaType["Metadata"] = "Metadata";
-})(FormulaType = exports.FormulaType || (exports.FormulaType = {}));
-var MetadataFormulaType;
+})(FormulaType || (FormulaType = {}));
+export var MetadataFormulaType;
 (function (MetadataFormulaType) {
     MetadataFormulaType["GetConnectionName"] = "GetConnectionName";
     MetadataFormulaType["GetConnectionUserId"] = "GetConnectionUserId";
@@ -17,4 +14,4 @@ var MetadataFormulaType;
     MetadataFormulaType["SyncGetDisplayUrl"] = "SyncGetDisplayUrl";
     MetadataFormulaType["SyncGetTableName"] = "SyncGetTableName";
     MetadataFormulaType["SyncGetSchema"] = "SyncGetSchema";
-})(MetadataFormulaType = exports.MetadataFormulaType || (exports.MetadataFormulaType = {}));
+})(MetadataFormulaType || (MetadataFormulaType = {}));

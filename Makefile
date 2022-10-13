@@ -169,7 +169,7 @@ compile-samples:
 
 .PHONY: generated-documentation
 generated-documentation: compile-samples
-	node -r ts-node/register documentation/scripts/documentation_compiler.ts
+	ts-node --project ./documentation/tsconfig.json documentation/scripts/documentation_compiler.ts
 
 .PHONY: typedoc
 typedoc:
@@ -180,7 +180,7 @@ typedoc:
 	# Most options loaded from typedoc.js.
 	# If you changes this, also update the similar command in typedoc_coverage_test.ts.
 	${ROOTDIR}/node_modules/.bin/typedoc index.ts development.ts --options typedoc.js --gitRevision "${DOC_GIT_REVISION}" --out ${ROOTDIR}/docs/reference/sdk
-	node -r ts-node/register documentation/typedoc_post_process.ts
+	ts-node --project ./documentation/tsconfig.json documentation/typedoc_post_process.ts
 
 .PHONY: docs
 docs: typedoc generated-documentation build-mkdocs

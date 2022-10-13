@@ -1,113 +1,104 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.setUpBufferForTest = exports.handleFetcherStatusError = exports.handleError = exports.handleErrorAsync = exports.ensureSwitchUnreachable = exports.findAndExecutePackFunction = exports.marshalValuesForLogging = exports.unmarshalValueFromString = exports.marshalValueToString = exports.unmarshalValue = exports.marshalValue = void 0;
-const types_1 = require("../../types");
-const buffer_1 = require("buffer");
-const types_2 = require("../types");
-const types_3 = require("../types");
-const types_4 = require("../../types");
-const api_1 = require("../../api");
-const helpers_1 = require("../common/helpers");
-const helpers_2 = require("../common/helpers");
-const api_2 = require("../../api");
-const migration_1 = require("../../helpers/migration");
-const marshaling_1 = require("../common/marshaling");
-const marshaling_2 = require("../common/marshaling");
-var marshaling_3 = require("../common/marshaling");
-Object.defineProperty(exports, "marshalValue", { enumerable: true, get: function () { return marshaling_3.marshalValue; } });
-Object.defineProperty(exports, "unmarshalValue", { enumerable: true, get: function () { return marshaling_3.unmarshalValue; } });
-Object.defineProperty(exports, "marshalValueToString", { enumerable: true, get: function () { return marshaling_3.marshalValueToString; } });
-Object.defineProperty(exports, "unmarshalValueFromString", { enumerable: true, get: function () { return marshaling_3.unmarshalValueFromString; } });
-Object.defineProperty(exports, "marshalValuesForLogging", { enumerable: true, get: function () { return marshaling_3.marshalValuesForLogging; } });
+import { AuthenticationType } from '../../types';
+import { Buffer } from 'buffer';
+import { FormulaType } from '../types';
+import { MetadataFormulaType } from '../types';
+import { PostSetupType } from '../../types';
+import { StatusCodeError } from '../../api';
+import { findFormula } from '../common/helpers';
+import { findSyncFormula } from '../common/helpers';
+import { isDynamicSyncTable } from '../../api';
+import { setEndpointHelper } from '../../helpers/migration';
+import { unwrapError } from '../common/marshaling';
+import { wrapError } from '../common/marshaling';
+export { marshalValue, unmarshalValue, marshalValueToString, unmarshalValueFromString, marshalValuesForLogging, } from '../common/marshaling';
 /**
  * The thunk entrypoint - the first code that runs inside the v8 isolate once control is passed over.
  */
-async function findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, shouldWrapError = true) {
+export async function findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, shouldWrapError = true) {
     try {
         // in case the pack bundle is compiled in the browser, Buffer may not be browserified yet.
         if (!global.Buffer) {
-            global.Buffer = buffer_1.Buffer;
+            global.Buffer = Buffer;
         }
         return await doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext);
     }
     catch (err) {
         // all errors should be marshaled to avoid IVM dropping essential fields / name.
-        throw shouldWrapError ? (0, marshaling_2.wrapError)(err) : err;
+        throw shouldWrapError ? wrapError(err) : err;
     }
 }
-exports.findAndExecutePackFunction = findAndExecutePackFunction;
 function doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext) {
     const { syncTables, defaultAuthentication } = manifest;
     switch (formulaSpec.type) {
-        case types_2.FormulaType.Standard: {
-            const formula = (0, helpers_1.findFormula)(manifest, formulaSpec.formulaName);
+        case FormulaType.Standard: {
+            const formula = findFormula(manifest, formulaSpec.formulaName);
             // for some reasons TS can't tell that
             // `T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult` is now PackFormulaResult.
             return formula.execute(params, executionContext);
         }
-        case types_2.FormulaType.Sync: {
-            const formula = (0, helpers_2.findSyncFormula)(manifest, formulaSpec.formulaName);
+        case FormulaType.Sync: {
+            const formula = findSyncFormula(manifest, formulaSpec.formulaName);
             return formula.execute(params, executionContext);
         }
-        case types_2.FormulaType.Metadata: {
+        case FormulaType.Metadata: {
             switch (formulaSpec.metadataFormulaType) {
-                case types_3.MetadataFormulaType.GetConnectionName:
-                    if ((defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.type) !== types_1.AuthenticationType.None &&
-                        (defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.type) !== types_1.AuthenticationType.Various &&
+                case MetadataFormulaType.GetConnectionName:
+                    if ((defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.type) !== AuthenticationType.None &&
+                        (defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.type) !== AuthenticationType.Various &&
                         (defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.getConnectionName)) {
                         return defaultAuthentication.getConnectionName.execute(params, executionContext);
                     }
                     break;
-                case types_3.MetadataFormulaType.GetConnectionUserId:
-                    if ((defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.type) !== types_1.AuthenticationType.None &&
-                        (defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.type) !== types_1.AuthenticationType.Various &&
+                case MetadataFormulaType.GetConnectionUserId:
+                    if ((defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.type) !== AuthenticationType.None &&
+                        (defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.type) !== AuthenticationType.Various &&
                         (defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.getConnectionUserId)) {
                         return defaultAuthentication.getConnectionUserId.execute(params, executionContext);
                     }
                     break;
-                case types_3.MetadataFormulaType.ParameterAutocomplete:
+                case MetadataFormulaType.ParameterAutocomplete:
                     const parentFormula = findParentFormula(manifest, formulaSpec);
                     if (parentFormula) {
                         return parentFormula.execute(params, executionContext);
                     }
                     break;
-                case types_3.MetadataFormulaType.PostSetupSetEndpoint:
-                    if ((defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.type) !== types_1.AuthenticationType.None &&
-                        (defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.type) !== types_1.AuthenticationType.Various &&
+                case MetadataFormulaType.PostSetupSetEndpoint:
+                    if ((defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.type) !== AuthenticationType.None &&
+                        (defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.type) !== AuthenticationType.Various &&
                         (defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.postSetup)) {
-                        const setupStep = defaultAuthentication.postSetup.find(step => step.type === types_4.PostSetupType.SetEndpoint && step.name === formulaSpec.stepName);
+                        const setupStep = defaultAuthentication.postSetup.find(step => step.type === PostSetupType.SetEndpoint && step.name === formulaSpec.stepName);
                         if (setupStep) {
-                            return (0, migration_1.setEndpointHelper)(setupStep).getOptions.execute(params, executionContext);
+                            return setEndpointHelper(setupStep).getOptions.execute(params, executionContext);
                         }
                     }
                     break;
-                case types_3.MetadataFormulaType.SyncListDynamicUrls:
-                case types_3.MetadataFormulaType.SyncGetDisplayUrl:
-                case types_3.MetadataFormulaType.SyncGetTableName:
-                case types_3.MetadataFormulaType.SyncGetSchema:
+                case MetadataFormulaType.SyncListDynamicUrls:
+                case MetadataFormulaType.SyncGetDisplayUrl:
+                case MetadataFormulaType.SyncGetTableName:
+                case MetadataFormulaType.SyncGetSchema:
                     if (syncTables) {
                         const syncTable = syncTables.find(table => table.name === formulaSpec.syncTableName);
                         if (syncTable) {
                             let formula;
-                            if ((0, api_2.isDynamicSyncTable)(syncTable)) {
+                            if (isDynamicSyncTable(syncTable)) {
                                 switch (formulaSpec.metadataFormulaType) {
-                                    case types_3.MetadataFormulaType.SyncListDynamicUrls:
+                                    case MetadataFormulaType.SyncListDynamicUrls:
                                         formula = syncTable.listDynamicUrls;
                                         break;
-                                    case types_3.MetadataFormulaType.SyncGetDisplayUrl:
+                                    case MetadataFormulaType.SyncGetDisplayUrl:
                                         formula = syncTable.getDisplayUrl;
                                         break;
-                                    case types_3.MetadataFormulaType.SyncGetTableName:
+                                    case MetadataFormulaType.SyncGetTableName:
                                         formula = syncTable.getName;
                                         break;
-                                    case types_3.MetadataFormulaType.SyncGetSchema:
+                                    case MetadataFormulaType.SyncGetSchema:
                                         formula = syncTable.getSchema;
                                         break;
                                     default:
                                         return ensureSwitchUnreachable(formulaSpec);
                                 }
                             }
-                            else if (formulaSpec.metadataFormulaType === types_3.MetadataFormulaType.SyncGetSchema) {
+                            else if (formulaSpec.metadataFormulaType === MetadataFormulaType.SyncGetSchema) {
                                 // Certain sync tables (Jira Issues, canonically) are not "dynamic" but have a getSchema formula
                                 // in order to augment a static base schema with dynamic properties.
                                 formula = syncTable.getSchema;
@@ -133,12 +124,12 @@ function findParentFormula(manifest, formulaSpec) {
     const { formulas, syncTables } = manifest;
     let formula;
     switch (formulaSpec.parentFormulaType) {
-        case types_2.FormulaType.Standard:
+        case FormulaType.Standard:
             if (formulas) {
                 formula = formulas.find(defn => defn.name === formulaSpec.parentFormulaName);
             }
             break;
-        case types_2.FormulaType.Sync:
+        case FormulaType.Sync:
             if (syncTables) {
                 const syncTable = syncTables.find(table => table.getter.name === formulaSpec.parentFormulaName);
                 formula = syncTable === null || syncTable === void 0 ? void 0 : syncTable.getter;
@@ -153,45 +144,40 @@ function findParentFormula(manifest, formulaSpec) {
         return paramDef === null || paramDef === void 0 ? void 0 : paramDef.autocomplete;
     }
 }
-function ensureSwitchUnreachable(value) {
+export function ensureSwitchUnreachable(value) {
     throw new Error(`Unreachable code hit with value ${String(value)}`);
 }
-exports.ensureSwitchUnreachable = ensureSwitchUnreachable;
-async function handleErrorAsync(func) {
+export async function handleErrorAsync(func) {
     try {
         return await func();
     }
     catch (err) {
-        throw (0, marshaling_1.unwrapError)(err);
+        throw unwrapError(err);
     }
 }
-exports.handleErrorAsync = handleErrorAsync;
-function handleError(func) {
+export function handleError(func) {
     try {
         return func();
     }
     catch (err) {
-        throw (0, marshaling_1.unwrapError)(err);
+        throw unwrapError(err);
     }
 }
-exports.handleError = handleError;
-function handleFetcherStatusError(fetchResult, fetchRequest) {
+export function handleFetcherStatusError(fetchResult, fetchRequest) {
     // using constant here to avoid another dependency.
     if (fetchResult.status >= 300) {
         // this mimics the "request-promise" package behavior of throwing error upon non-200 responses.
         // https://github.com/request/promise-core/blob/master/lib/plumbing.js#L89
         // this usually doesn't throw for 3xx since it by default follows redirects and will end up with
         // another status code.
-        throw new api_1.StatusCodeError(fetchResult.status, fetchResult.body, fetchRequest, {
+        throw new StatusCodeError(fetchResult.status, fetchResult.body, fetchRequest, {
             body: fetchResult.body,
             headers: fetchResult.headers,
         });
     }
 }
-exports.handleFetcherStatusError = handleFetcherStatusError;
-function setUpBufferForTest() {
+export function setUpBufferForTest() {
     if (!global.Buffer) {
-        global.Buffer = buffer_1.Buffer;
+        global.Buffer = Buffer;
     }
 }
-exports.setUpBufferForTest = setUpBufferForTest;

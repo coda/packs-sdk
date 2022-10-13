@@ -1,12 +1,6 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.join = exports.getQueryParams = exports.withQueryParams = void 0;
-const ensure_1 = require("./ensure");
-const qs_1 = __importDefault(require("qs"));
-const url_parse_1 = __importDefault(require("url-parse"));
+import { ensureNonEmptyString } from './ensure';
+import qs from 'qs';
+import urlParse from 'url-parse';
 /**
  * Helper to create a new URL by appending parameters to a base URL.
  *
@@ -18,17 +12,16 @@ const url_parse_1 = __importDefault(require("url-parse"));
  * let url = withQueryParams("/someApi/someEndpoint", {token: "asdf", limit: 5});
  * ```
  */
-function withQueryParams(url, params) {
+export function withQueryParams(url, params) {
     if (!params) {
         return url;
     }
-    const parsedUrl = (0, url_parse_1.default)(url);
+    const parsedUrl = urlParse(url);
     // Merge the params together
-    const updatedParams = Object.assign({}, qs_1.default.parse(parsedUrl.query, { ignoreQueryPrefix: true }), params);
-    parsedUrl.set('query', qs_1.default.stringify(JSON.parse(JSON.stringify(updatedParams)), { addQueryPrefix: true }));
+    const updatedParams = Object.assign({}, qs.parse(parsedUrl.query, { ignoreQueryPrefix: true }), params);
+    parsedUrl.set('query', qs.stringify(JSON.parse(JSON.stringify(updatedParams)), { addQueryPrefix: true }));
     return parsedUrl.toString();
 }
-exports.withQueryParams = withQueryParams;
 /**
  * Helper to take a URL string and return the parameters (if any) as a JavaScript object.
  *
@@ -38,23 +31,22 @@ exports.withQueryParams = withQueryParams;
  * let params = getQueryParams("/someApi/someEndpoint?token=asdf&limit=5");
  * ```
  */
-function getQueryParams(url) {
-    const parsedUrl = (0, url_parse_1.default)(url);
+export function getQueryParams(url) {
+    const parsedUrl = urlParse(url);
     // Merge the params together
-    return qs_1.default.parse(parsedUrl.query, { ignoreQueryPrefix: true });
+    return qs.parse(parsedUrl.query, { ignoreQueryPrefix: true });
 }
-exports.getQueryParams = getQueryParams;
 /**
  * Joins all the tokens into a single URL string separated by '/'. Zero length tokens cause errors.
  * @param tokens Zero or more tokens to be combined. If token doesn't end with '/', one will be added as the separator
  */
-function join(...tokens) {
+export function join(...tokens) {
     if (!tokens || !tokens.length) {
         return '';
     }
     const combinedTokens = [];
     for (const token of tokens) {
-        (0, ensure_1.ensureNonEmptyString)(token);
+        ensureNonEmptyString(token);
         if (combinedTokens.length === 0) {
             combinedTokens.push(token);
         }
@@ -73,4 +65,3 @@ function join(...tokens) {
     }
     return combined;
 }
-exports.join = join;
