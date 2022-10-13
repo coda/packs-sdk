@@ -1,0 +1,31 @@
+type: object
+properties:
+  # Sets the title of the page. It's usually pulled from the first H1.
+  # https://squidfunk.github.io/mkdocs-material/reference/#setting-the-page-title
+  title:
+    type: string
+  # The meta description, used for SEO and in the social image.
+  # https://squidfunk.github.io/mkdocs-material/reference/#setting-the-page-description
+  description:
+    type: string
+  # Sets the MkDocs material icon to use for the page. Also used in auto-generated listing pages.
+  # https://squidfunk.github.io/mkdocs-material/reference/#setting-the-page-icon
+  icon:
+    type: string
+  # Allows hiding certain navigation elements on the page.
+  # https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/?h=hide#hiding-the-sidebars
+  hide:
+    type: array
+    items:
+      type: string
+  # Custom: Overrides the title of the page in the left nav only.
+  nav:
+    type: string
+  # Custom: Note shown to page editors, not rendered at all.
+  note:
+    type: string
+
+required:
+  - description  
+
+additionalProperties: false
