@@ -393,7 +393,7 @@ Dynamic sync tables created this way differ from the ones using a list of URLs i
 
 ## Dynamic schema only {: #schema-only }
 
-Dynamic sync tables are built around the idea that the external data source has a list of datasets, each with their own unique set of fields. Sometimes though there aren't different datasets to select from, but the fields available to sync do vary slightly based on the connected account or parameter values. In these cases you can use a somewhat simpler approach: a regular sync table with a dynamic schema.
+Dynamic sync tables are built around the idea that the external data source has a list of datasets, each with their own unique set of fields. Sometimes though there aren't different datasets to select from, but the fields available to sync do vary slightly based on the connected account. In these cases you can use a somewhat simpler approach: a regular sync table with a dynamic schema.
 
 To implement this, create a regular sync table using `addSyncTable` and define the function `dynamicOptions.getSchema`. You'll still need to specify a static schema in the `schema` field of the sync table, but it will be overridden during the sync with the output of `getSchema`.
 
