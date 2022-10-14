@@ -724,6 +724,17 @@ export interface SyncUpdateResult<K extends string, L extends string, SchemaT ex
   result: Array<ObjectSchemaDefinitionType<K, L, SchemaT> | Error>;
 }
 
+type ExecuteUpdateFn<
+  K extends string,
+  L extends string,
+  ParamDefsT extends ParamDefs,
+  SchemaT extends ObjectSchemaDefinition<K, L>,
+> = (
+  params: ParamValues<ParamDefsT>,
+  updates: Array<SyncUpdate<K, L, SchemaT>>,
+  context: UpdateSyncExecutionContext,
+) => Promise<SyncUpdateResult<K, L, SchemaT>>;
+
 /**
  * Inputs for creating the formula that implements a sync table.
  */
@@ -750,16 +761,12 @@ export interface SyncFormulaDef<
   /**
    * The JavaScript function that implements this sync update if the table supports updates.
    *
-   * This function takes in parameters, updated sync table objects, and a sync context, 
+   * This function takes in parameters, updated sync table objects, and a sync context,
    * and is responsible for pushing those updated objects to the external system then returning
    * the new state of each object.
    */
   /** @hidden */
-   executeUpdate?(
-    params: ParamValues<ParamDefsT>,
-    updates: Array<SyncUpdate<K, L, SchemaT>>,
-    context: UpdateSyncExecutionContext,
-  ): Promise<SyncUpdateResult<K, L, SchemaT>>;
+  executeUpdate?: ExecuteUpdateFn<K, L, ParamDefsT, SchemaT>;
 }
 
 /**
@@ -1612,17 +1619,19 @@ export function makeSyncTable<
       continuation,
     } as SyncFormulaResult<K, L, SchemaT>;
   };
-  const executeUpdate = wrappedExecuteUpdate ? async function execUpdate(
-    params: ParamValues<ParamDefsT>,
-    updates: Array<SyncUpdate<K, L, SchemaDefT>>,
-    context: SyncExecutionContext,
-  ) {
-    const {result} = (await wrappedExecuteUpdate(params, updates, context)) || {};
-    const appliedSchema = context.sync.schema;
-    return {
-      result: responseHandler({body: result || [], status: 200, headers: {}}, appliedSchema),
-    } as SyncUpdateResult<K, L, SchemaT>;
-  } : undefined;
+  const executeUpdate = wrappedExecuteUpdate
+    ? async function execUpdate(
+        params: ParamValues<ParamDefsT>,
+        updates: Array<SyncUpdate<K, L, SchemaDefT>>,
+        context: SyncExecutionContext,
+      ) {
+        const {result} = (await wrappedExecuteUpdate(params, updates, context)) || {};
+        const appliedSchema = context.sync.schema;
+        return {
+          result: responseHandler({body: result || [], status: 200, headers: {}}, appliedSchema),
+        } as SyncUpdateResult<K, L, SchemaT>;
+      }
+    : undefined;
 
   return {
     name,
@@ -1633,7 +1642,7 @@ export function makeSyncTable<
       ...definition,
       cacheTtlSecs: 0,
       execute,
-      executeUpdate: executeUpdate as any,
+      executeUpdate: executeUpdate as ExecuteUpdateFn<K, L, ParamDefsT, SchemaT> | undefined,
       schema: formulaSchema,
       isSyncFormula: true,
       supportsUpdates: Boolean(executeUpdate),
