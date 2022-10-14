@@ -777,6 +777,7 @@ export type SyncFormula<
   resultType: TypeOf<SchemaType<SchemaT>>;
   isSyncFormula: true;
   schema?: ArraySchema;
+  supportsUpdates?: boolean;
 };
 
 /**
@@ -1635,6 +1636,7 @@ export function makeSyncTable<
       executeUpdate: executeUpdate as any,
       schema: formulaSchema,
       isSyncFormula: true,
+      supportsUpdates: Boolean(executeUpdate),
       connectionRequirement: definition.connectionRequirement || connectionRequirement,
       resultType: Type.object as any,
     },

@@ -68,7 +68,10 @@ function compileSyncTable(syncTable: GenericSyncTable): PackSyncTable {
       getSchema: compileMetadataFormulaMetadata(getSchema),
       getDisplayUrl: compileMetadataFormulaMetadata(getDisplayUrl),
       listDynamicUrls: compileMetadataFormulaMetadata(listDynamicUrls),
-      getter: getterRest,
+      getter: {
+        supportsUpdates: Boolean(executeUpdate),
+        ...getterRest,
+      }
     };
   }
 
@@ -76,7 +79,10 @@ function compileSyncTable(syncTable: GenericSyncTable): PackSyncTable {
   const {execute, executeUpdate, ...getterRest} = getter;
   return {
     ...rest,
-    getter: getterRest,
+    getter: {
+      supportsUpdates: Boolean(executeUpdate),
+      ...getterRest,
+    },
   };
 }
 

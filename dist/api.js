@@ -707,6 +707,7 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
             executeUpdate: executeUpdate,
             schema: formulaSchema,
             isSyncFormula: true,
+            supportsUpdates: Boolean(executeUpdate),
             connectionRequirement: definition.connectionRequirement || connectionRequirement,
             resultType: api_types_3.Type.object,
         },

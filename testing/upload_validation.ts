@@ -1161,6 +1161,7 @@ const syncFormulaSchema = zodCompleteObject<
   resultType: z.any(),
   isSyncFormula: z.literal(true),
   maxUpdateBatchSize: z.number().min(1).max(Limits.UpdateBatchSize).optional(),
+  supportsUpdates: z.boolean().optional(),
   ...commonPackFormulaSchema,
 });
 

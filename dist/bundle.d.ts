@@ -2235,7 +2235,7 @@ export declare type Formula<ParamDefsT extends ParamDefs = ParamDefs, ResultT ex
 export declare type TypedPackFormula = Formula | GenericSyncFormula;
 export declare type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
 /** @hidden */
-export declare type PackFormulaMetadata = Omit<TypedPackFormula, "execute">;
+export declare type PackFormulaMetadata = Omit<TypedPackFormula, "execute" | "executeUpdate">;
 /** @hidden */
 export declare type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, "execute">;
 /**
@@ -2300,6 +2300,7 @@ export declare type SyncFormula<K extends string, L extends string, ParamDefsT e
 	resultType: TypeOf<SchemaType<SchemaT>>;
 	isSyncFormula: true;
 	schema?: ArraySchema;
+	supportsUpdates?: boolean;
 };
 /**
  * Creates a formula definition.
