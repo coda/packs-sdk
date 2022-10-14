@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateObjectResponseHandler = exports.transformBody = exports.generateRequestHandler = void 0;
+exports.generateObjectResponseHandler = exports.untransformBody = exports.transformBody = exports.generateRequestHandler = void 0;
 const clone_1 = __importDefault(require("clone"));
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_1 = require("./helpers/ensure");
@@ -164,6 +164,52 @@ function transformBody(body, schema) {
     return body;
 }
 exports.transformBody = transformBody;
+function unmapKeys(obj, schema) {
+    if (!(schema && (0, schema_2.isObject)(schema))) {
+        return obj;
+    }
+    const { properties } = schema;
+    // Look at the properties of the schema and invert any keys if present.
+    const remappedKeys = new Map();
+    for (const key in properties) {
+        if (properties.hasOwnProperty(key) && properties[key].fromKey) {
+            const fromKey = (0, ensure_1.ensureExists)(properties[key].fromKey);
+            remappedKeys.set(key, fromKey);
+        }
+    }
+    const remappedObject = {};
+    for (const key in obj) {
+        if (!obj.hasOwnProperty(key)) {
+            continue;
+        }
+        const newKey = remappedKeys.get(key) || key;
+        if (!schema.properties[key] && !schema.includeUnknownProperties) {
+            continue;
+        }
+        remappedObject[newKey] = (0, object_utils_1.deepCopy)(obj[key]);
+        const keySchema = schema.properties[key];
+        const currentValue = remappedObject[newKey];
+        if (Array.isArray(currentValue) && (0, schema_1.isArray)(keySchema) && (0, schema_2.isObject)(keySchema.items)) {
+            remappedObject[newKey] = currentValue.map(val => unmapKeys(val, keySchema.items));
+        }
+        else if (typeof currentValue === 'object' && (0, schema_2.isObject)(keySchema)) {
+            remappedObject[newKey] = unmapKeys(currentValue, keySchema);
+        }
+    }
+    return remappedObject;
+}
+function untransformBody(body, schema) {
+    if ((0, schema_1.isArray)(schema) && (0, schema_2.isObject)(schema.items)) {
+        const objectBody = body;
+        const mappedObjs = unmapKeys(objectBody, schema.items);
+        return mappedObjs;
+    }
+    if ((0, schema_2.isObject)(schema)) {
+        return unmapKeys(body, schema);
+    }
+    return body;
+}
+exports.untransformBody = untransformBody;
 function generateObjectResponseHandler(response) {
     const { projectKey } = response;
     return function objectResponseHandler(resp) {

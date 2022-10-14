@@ -332,6 +332,58 @@ export function transformBody(body: any, schema: Schema | undefined): any {
   return body;
 }
 
+function unmapKeys(obj: {[key: string]: any}, schema?: Schema): object {
+  if (!(schema && isObject(schema))) {
+    return obj;
+  }
+
+  const {properties} = schema;
+
+  // Look at the properties of the schema and invert any keys if present.
+  const remappedKeys: Map<string, string> = new Map();
+  for (const key in properties) {
+    if (properties.hasOwnProperty(key) && (properties[key] as ObjectSchemaProperty).fromKey) {
+      const fromKey = ensureExists((properties[key] as ObjectSchemaProperty).fromKey);
+      remappedKeys.set(key, fromKey);
+    }
+  }
+
+  const remappedObject: {[key: string]: any} = {};
+  for (const key in obj) {
+    if (!obj.hasOwnProperty(key)) {
+      continue;
+    }
+
+    const newKey = remappedKeys.get(key) || key;
+    if (!schema.properties[key] && !schema.includeUnknownProperties) {
+      continue;
+    }
+    remappedObject[newKey] = deepCopy(obj[key]);
+    const keySchema: Schema & ObjectSchemaProperty | undefined = schema.properties[key];
+    const currentValue = remappedObject[newKey];
+    if (Array.isArray(currentValue) && isArray(keySchema) && isObject(keySchema.items)) {
+      remappedObject[newKey] = currentValue.map(val => unmapKeys(val, keySchema.items));
+    } else if (typeof currentValue === 'object' && isObject(keySchema)) {
+      remappedObject[newKey] = unmapKeys(currentValue, keySchema);
+    }
+  }
+  return remappedObject;
+}
+
+export function untransformBody(body: any, schema: Schema | undefined): any {
+  if (isArray(schema) && isObject(schema.items)) {
+    const objectBody = body as Record<string, any>;
+    const mappedObjs = unmapKeys(objectBody, schema.items);
+    return mappedObjs;
+  }
+
+  if (isObject(schema)) {
+    return unmapKeys(body, schema);
+  }
+
+  return body;
+}
+
 export function generateObjectResponseHandler<T extends Schema>(
   response: ResponseHandlerTemplate<T>,
 ): (response: FetchResponse, runtimeSchema?: T) => SchemaType<T> {
