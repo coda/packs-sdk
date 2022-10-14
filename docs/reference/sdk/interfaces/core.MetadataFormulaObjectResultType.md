@@ -17,13 +17,6 @@ than is used internally.
 
 The value displayed to the user in the UI.
 
-<<<<<<< HEAD
-=======
-#### Defined in
-
-[api.ts:1045](https://github.com/coda/packs-sdk/blob/main/api.ts#L1045)
-
->>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)
 ___
 
 ### hasChildren
@@ -57,13 +50,6 @@ is invoked, but if you return a result with `hasChildren: true` and the user
 clicks on it, `listDynamicUrls` will be invoked again, with `parentValue`
 as the `value` of the result that was clicked on.
 
-<<<<<<< HEAD
-=======
-#### Defined in
-
-[api.ts:1076](https://github.com/coda/packs-sdk/blob/main/api.ts#L1076)
-
->>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)
 ___
 
 ### value
@@ -71,10 +57,3 @@ ___
 • **value**: `string` \| `number`
 
 The value used for the formula argument when the user selects this option.
-<<<<<<< HEAD
-=======
-
-#### Defined in
-
-[api.ts:1047](https://github.com/coda/packs-sdk/blob/main/api.ts#L1047)
->>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)

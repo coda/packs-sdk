@@ -17,13 +17,6 @@ sync tables that have a dynamic schema.
 
 See [defaultAddDynamicColumns](core.DynamicSyncTableOptions.md#defaultadddynamiccolumns)
 
-<<<<<<< HEAD
-=======
-#### Defined in
-
-[api.ts:1378](https://github.com/coda/packs-sdk/blob/main/api.ts#L1378)
-
->>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)
 ___
 
 ### entityName
@@ -32,13 +25,6 @@ ___
 
 See [entityName](core.DynamicSyncTableOptions.md#entityname)
 
-<<<<<<< HEAD
-=======
-#### Defined in
-
-[api.ts:1376](https://github.com/coda/packs-sdk/blob/main/api.ts#L1376)
-
->>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)
 ___
 
 ### getSchema
@@ -51,10 +37,3 @@ For a dynamic sync table, the value of [getSchema](core.DynamicSyncTableOptions.
 is passed through here. For a non-dynamic sync table, you may still implement
 this if you table has a schema that varies based on the user account, but
 does not require a [dynamicUrl](core.Sync.md#dynamicurl).
-<<<<<<< HEAD
-=======
-
-#### Defined in
-
-[api.ts:1374](https://github.com/coda/packs-sdk/blob/main/api.ts#L1374)
->>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)

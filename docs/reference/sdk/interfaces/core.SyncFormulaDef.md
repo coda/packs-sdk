@@ -200,10 +200,3 @@ as another continuation if there are more result to fetch.
 #### Returns
 
 `Promise`<[`SyncFormulaResult`](core.SyncFormulaResult.md)<`K`, `L`, `SchemaT`\>\>
-<<<<<<< HEAD
-=======
-
-#### Defined in
-
-[api.ts:742](https://github.com/coda/packs-sdk/blob/main/api.ts#L742)
->>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)

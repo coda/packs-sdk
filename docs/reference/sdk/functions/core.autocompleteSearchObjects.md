@@ -57,10 +57,3 @@ coda.makeParameter({
 #### Returns
 
 `Promise`<[`MetadataFormulaObjectResultType`](../interfaces/core.MetadataFormulaObjectResultType.md)[]\>
-<<<<<<< HEAD
-=======
-
-#### Defined in
-
-[api.ts:1272](https://github.com/coda/packs-sdk/blob/main/api.ts#L1272)
->>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)

@@ -220,10 +220,3 @@ that can then be applied to many different formulas in a pack.
 #### Returns
 
 `any`
-<<<<<<< HEAD
-=======
-
-#### Defined in
-
-[api.ts:972](https://github.com/coda/packs-sdk/blob/main/api.ts#L972)
->>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)

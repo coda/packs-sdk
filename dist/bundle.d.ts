@@ -1671,6 +1671,7 @@ export interface Sync {
 	 */
 	dynamicUrl?: string;
 }
+export declare type UpdateSync = Omit<Sync, "continuation">;
 /**
  * Information about the Coda environment and doc this formula was invoked from, for Coda internal use.
  */
@@ -1736,6 +1737,12 @@ export interface SyncExecutionContext extends ExecutionContext {
 	 * Information about state of the current sync.
 	 */
 	readonly sync: Sync;
+}
+export interface UpdateSyncExecutionContext extends ExecutionContext {
+	/**
+	 * Information about state of the current sync.
+	 */
+	readonly sync: UpdateSync;
 }
 /**
  * Special "live" date range values that can be used as the {@link ParamDef.suggestedValue}
@@ -2281,7 +2288,7 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
 	 * the new state of each object.
 	 */
 	/** @hidden */
-	executeUpdate?(params: ParamValues<ParamDefsT>, updates: Array<SyncUpdate<K, L, SchemaT>>, context: SyncExecutionContext): Promise<SyncUpdateResult<K, L, SchemaT>>;
+	executeUpdate?(params: ParamValues<ParamDefsT>, updates: Array<SyncUpdate<K, L, SchemaT>>, context: UpdateSyncExecutionContext): Promise<SyncUpdateResult<K, L, SchemaT>>;
 }
 /**
  * The result of defining the formula that implements a sync table.

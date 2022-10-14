@@ -26,13 +26,6 @@ Options provided when defining a dynamic sync table.
 A [ConnectionRequirement](../enums/core.ConnectionRequirement.md) that will be used for all formulas contained within
 this sync table (including autocomplete formulas).
 
-<<<<<<< HEAD
-=======
-#### Defined in
-
-[api.ts:1508](https://github.com/coda/packs-sdk/blob/main/api.ts#L1508)
-
->>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)
 ___
 
 ### defaultAddDynamicColumns
@@ -53,13 +46,6 @@ this can cause the number of columns to grow quickly and become overwhelming. Se
 value to false leaves the columns unchanged and puts the choice of what columns to display
 into the hands of the user.
 
-<<<<<<< HEAD
-=======
-#### Defined in
-
-[api.ts:1524](https://github.com/coda/packs-sdk/blob/main/api.ts#L1524)
-
->>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)
 ___
 
 ### description
@@ -70,13 +56,6 @@ The description of the dynamic sync table. This is shown to users in the Coda UI
 when listing what build blocks are contained within this pack.
 This should describe what the dynamic sync table does in a more detailed language.
 
-<<<<<<< HEAD
-=======
-#### Defined in
-
-[api.ts:1462](https://github.com/coda/packs-sdk/blob/main/api.ts#L1462)
-
->>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)
 ___
 
 ### entityName
@@ -87,13 +66,6 @@ A label for the kind of entities that you are syncing. This label is used in a d
 the column in this table that contains the synced data. If you don't provide an `entityName`, the value
 of `identity.name` from your schema will be used instead, so in most cases you don't need to provide this.
 
-<<<<<<< HEAD
-=======
-#### Defined in
-
-[api.ts:1503](https://github.com/coda/packs-sdk/blob/main/api.ts#L1503)
-
->>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)
 ___
 
 ### formula
@@ -105,13 +77,6 @@ that returns an array of objects fitting the given schema and optionally a [Cont
 (The [name](core.SyncFormulaDef.md#name) is redundant and should be the same as the `name` parameter here.
 These will eventually be consolidated.)
 
-<<<<<<< HEAD
-=======
-#### Defined in
-
-[api.ts:1497](https://github.com/coda/packs-sdk/blob/main/api.ts#L1497)
-
->>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)
 ___
 
 ### getDisplayUrl
@@ -123,13 +88,6 @@ resource being synced. The Coda UI links to this url as the source
 of the table data. This is typically a browser-friendly form of the
 `dynamicUrl`, which is typically an API url.
 
-<<<<<<< HEAD
-=======
-#### Defined in
-
-[api.ts:1485](https://github.com/coda/packs-sdk/blob/main/api.ts#L1485)
-
->>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)
 ___
 
 ### getName
@@ -138,13 +96,6 @@ ___
 
 A formula that returns the name of this table.
 
-<<<<<<< HEAD
-=======
-#### Defined in
-
-[api.ts:1466](https://github.com/coda/packs-sdk/blob/main/api.ts#L1466)
-
->>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)
 ___
 
 ### getSchema
@@ -153,13 +104,6 @@ ___
 
 A formula that returns the schema for this table.
 
-<<<<<<< HEAD
-=======
-#### Defined in
-
-[api.ts:1478](https://github.com/coda/packs-sdk/blob/main/api.ts#L1478)
-
->>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)
 ___
 
 ### identityName
@@ -172,13 +116,6 @@ Every dynamic schema generated from this dynamic sync table definition should al
 for their identity. Code that refers to objects in these tables will use the dynamicUrl to
 differentiate which exact table to use.
 
-<<<<<<< HEAD
-=======
-#### Defined in
-
-[api.ts:1474](https://github.com/coda/packs-sdk/blob/main/api.ts#L1474)
-
->>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)
 ___
 
 ### listDynamicUrls
@@ -188,13 +125,6 @@ ___
 A formula that returns a list of available dynamic urls that can be
 used to create an instance of this dynamic sync table.
 
-<<<<<<< HEAD
-=======
-#### Defined in
-
-[api.ts:1490](https://github.com/coda/packs-sdk/blob/main/api.ts#L1490)
-
->>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)
 ___
 
 ### name
@@ -207,13 +137,6 @@ This should describe the category of entities being synced. The actual
 table name once added to the doc will be dynamic, it will be whatever value
 is returned by the `getName` formula.
 
-<<<<<<< HEAD
-=======
-#### Defined in
-
-[api.ts:1456](https://github.com/coda/packs-sdk/blob/main/api.ts#L1456)
-
->>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)
 ___
 
 ### placeholderSchema
@@ -224,10 +147,3 @@ Optional placeholder schema before the dynamic schema is retrieved.
 
 If `defaultAddDynamicColumns` is false, only featured columns
 in placeholderSchema will be rendered by default after the sync.
-<<<<<<< HEAD
-=======
-
-#### Defined in
-
-[api.ts:1531](https://github.com/coda/packs-sdk/blob/main/api.ts#L1531)
->>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)

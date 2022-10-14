@@ -538,6 +538,7 @@ export interface Sync {
      */
     dynamicUrl?: string;
 }
+export declare type UpdateSync = Omit<Sync, 'continuation'>;
 export declare type LoggerParamType = string | number | boolean | Record<any, any>;
 export interface Logger {
     trace(message: string, ...args: LoggerParamType[]): void;
@@ -611,6 +612,12 @@ export interface SyncExecutionContext extends ExecutionContext {
      * Information about state of the current sync.
      */
     readonly sync: Sync;
+}
+export interface UpdateSyncExecutionContext extends ExecutionContext {
+    /**
+     * Information about state of the current sync.
+     */
+    readonly sync: UpdateSync;
 }
 /**
  * Special "live" date range values that can be used as the {@link ParamDef.suggestedValue}

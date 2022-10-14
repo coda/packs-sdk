@@ -16,10 +16,3 @@ A definition accepted by [makeFormula](../functions/core.makeFormula.md) for a f
 | :------ | :------ |
 | `ParamDefsT` | extends [`ParamDefs`](core.ParamDefs.md) |
 | `SchemaT` | extends [`Schema`](core.Schema.md) |
-<<<<<<< HEAD
-=======
-
-#### Defined in
-
-[api.ts:1002](https://github.com/coda/packs-sdk/blob/main/api.ts#L1002)
->>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)

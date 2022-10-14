@@ -30,6 +30,7 @@ import {Type} from './api_types';
 import type {TypeMap} from './api_types';
 import type {TypeOf} from './api_types';
 import type {UnionType} from './api_types';
+import type {UpdateSyncExecutionContext} from './api_types';
 import {ValueType} from './schema';
 import {booleanArray} from './api_types';
 import {dateArray} from './api_types';
@@ -680,7 +681,7 @@ export type TypedPackFormula = Formula | GenericSyncFormula;
 
 export type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
 /** @hidden */
-export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute'>;
+export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute' | 'executeUpdate'>;
 /** @hidden */
 export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'execute'>;
 
@@ -757,7 +758,7 @@ export interface SyncFormulaDef<
    executeUpdate?(
     params: ParamValues<ParamDefsT>,
     updates: Array<SyncUpdate<K, L, SchemaT>>,
-    context: SyncExecutionContext,
+    context: UpdateSyncExecutionContext,
   ): Promise<SyncUpdateResult<K, L, SchemaT>>;
 }
 

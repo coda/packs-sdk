@@ -655,6 +655,8 @@ export interface Sync {
   dynamicUrl?: string;
 }
 
+export type UpdateSync = Omit<Sync, 'continuation'>;
+
 export type LoggerParamType = string | number | boolean | Record<any, any>;
 
 export interface Logger {
@@ -732,6 +734,13 @@ export interface SyncExecutionContext extends ExecutionContext {
    * Information about state of the current sync.
    */
   readonly sync: Sync;
+}
+
+export interface UpdateSyncExecutionContext extends ExecutionContext {
+  /**
+   * Information about state of the current sync.
+   */
+  readonly sync: UpdateSync;
 }
 
 // A mapping exists in coda that allows these to show up in the UI.

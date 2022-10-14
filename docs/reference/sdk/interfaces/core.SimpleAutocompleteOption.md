@@ -23,13 +23,6 @@ the underlying option that will be used in the formula when selected.
 
 Text that will be displayed to the user in UI for this option.
 
-<<<<<<< HEAD
-=======
-#### Defined in
-
-[api.ts:1187](https://github.com/coda/packs-sdk/blob/main/api.ts#L1187)
-
->>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)
 ___
 
 ### value
@@ -37,10 +30,3 @@ ___
 • **value**: `TypeMap`[`AutocompleteParameterTypeMapping`[`T`]]
 
 The actual value that will get used in the formula if this option is selected.
-<<<<<<< HEAD
-=======
-
-#### Defined in
-
-[api.ts:1189](https://github.com/coda/packs-sdk/blob/main/api.ts#L1189)
->>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)

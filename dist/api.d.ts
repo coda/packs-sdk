@@ -28,6 +28,7 @@ import type { SyncExecutionContext } from './api_types';
 import { Type } from './api_types';
 import type { TypeMap } from './api_types';
 import type { TypeOf } from './api_types';
+import type { UpdateSyncExecutionContext } from './api_types';
 import { ValueType } from './schema';
 export { ExecutionContext };
 export { FetchRequest } from './api_types';
@@ -446,7 +447,7 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
      * the new state of each object.
      */
     /** @hidden */
-    executeUpdate?(params: ParamValues<ParamDefsT>, updates: Array<SyncUpdate<K, L, SchemaT>>, context: SyncExecutionContext): Promise<SyncUpdateResult<K, L, SchemaT>>;
+    executeUpdate?(params: ParamValues<ParamDefsT>, updates: Array<SyncUpdate<K, L, SchemaT>>, context: UpdateSyncExecutionContext): Promise<SyncUpdateResult<K, L, SchemaT>>;
 }
 /**
  * The result of defining the formula that implements a sync table.

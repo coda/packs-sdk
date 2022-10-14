@@ -21,10 +21,3 @@ input to [makeSyncTable](../functions/core.makeSyncTable.md) which outputs defin
 | `L` | extends `string` |
 | `ParamDefsT` | extends [`ParamDefs`](core.ParamDefs.md) |
 | `SchemaT` | extends `ObjectSchema`<`K`, `L`\> |
-<<<<<<< HEAD
-=======
-
-#### Defined in
-
-[api.ts:770](https://github.com/coda/packs-sdk/blob/main/api.ts#L770)
->>>>>>> 9b607eb7 ([TwoWaySync] Add executeUpdate method)
