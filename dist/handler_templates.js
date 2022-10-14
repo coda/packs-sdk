@@ -187,7 +187,7 @@ function unmapKeys(obj, schema) {
             continue;
         }
         remappedObject[newKey] = (0, object_utils_1.deepCopy)(obj[key]);
-        const keySchema = schema.properties[newKey];
+        const keySchema = schema.properties[key];
         const currentValue = remappedObject[newKey];
         if (Array.isArray(currentValue) && (0, schema_1.isArray)(keySchema) && (0, schema_2.isObject)(keySchema.items)) {
             remappedObject[newKey] = currentValue.map(val => unmapKeys(val, keySchema.items));

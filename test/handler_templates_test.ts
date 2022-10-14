@@ -1,7 +1,9 @@
 import './test_helper';
+import {ValueType} from '../schema';
 import {generateObjectResponseHandler} from '../handler_templates';
 import {generateRequestHandler} from '../handler_templates';
 import {makeStringParameter} from '../api';
+import {untransformBody} from '../handler_templates';
 
 describe('handler templates', () => {
   describe('generateRequestHandler', () => {
@@ -93,6 +95,92 @@ describe('handler templates', () => {
     it('projects out a key from the response', () => {
       const handler = generateObjectResponseHandler({projectKey: 'foobaz', schema: undefined as any});
       assert.deepEqual([{bleh: 42}], handler({headers: {}, body: {foobaz: [{bleh: 42}]}, status: 200}));
+    });
+  });
+
+  describe('untransformBody', () => {
+    it('empty schema', () => {
+      const inputBody = {foo: 'bar', baz: 2};
+      const body = untransformBody(inputBody, undefined);
+      assert.deepEqual(body, inputBody);
+    });
+
+    it('array schema', () => {
+      const inputBody = {Foo: 'bar', Baz: 2};
+      const body = untransformBody(inputBody, {
+        type: ValueType.Array,
+        items: {
+          type: ValueType.Object,
+          properties: {
+            Foo: {type: ValueType.String, fromKey: 'foo'},
+            Baz: {type: ValueType.Number, fromKey: 'baz'},
+          },
+        },
+      });
+      assert.deepEqual(body, {
+        foo: 'bar',
+        baz: 2,
+      });
+    });
+
+    it('object schema', () => {
+      const inputBody = {Foo: 'bar', Baz: 2};
+      const body = untransformBody(inputBody, {
+        type: ValueType.Object,
+        properties: {
+          Foo: {type: ValueType.String, fromKey: 'foo'},
+          Baz: {type: ValueType.Number, fromKey: 'baz'},
+        },
+      });
+      assert.deepEqual(body, {
+        foo: 'bar',
+        baz: 2,
+      });
+    });
+
+    it('object schema with nested array', () => {
+      const inputBody = {Foo: 'bar', Baz: 2, Biz: [{Buzz: false}]};
+      const body = untransformBody(inputBody, {
+        type: ValueType.Object,
+        properties: {
+          Foo: {type: ValueType.String, fromKey: 'foo'},
+          Baz: {type: ValueType.Number, fromKey: 'baz'},
+          Biz: {type: ValueType.Array, fromKey: 'biz', items: {
+            type: ValueType.Object,
+            properties: {
+              Buzz: {type: ValueType.Boolean, fromKey: 'buzz'},
+            },
+          }},
+        },
+      });
+      assert.deepEqual(body, {
+        foo: 'bar',
+        baz: 2,
+        biz: [{
+          buzz: false,
+        }],
+      });
+    });
+
+    it('object schema with nested object', () => {
+      const inputBody = {Foo: 'bar', Baz: 2, Biz: {Buzz: false}};
+      const body = untransformBody(inputBody, {
+        type: ValueType.Object,
+        properties: {
+          Foo: {type: ValueType.String, fromKey: 'foo'},
+          Baz: {type: ValueType.Number, fromKey: 'baz'},
+          Biz: {type: ValueType.Object, fromKey: 'biz', properties: {
+            Buzz: {type: ValueType.Boolean, fromKey: 'buzz'},
+          }},
+        },
+      });
+      assert.deepEqual(body, {
+        foo: 'bar',
+        baz: 2,
+        biz: {
+          buzz: false,
+        },
+      });
     });
   });
 });
