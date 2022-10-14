@@ -39,21 +39,27 @@ function compileFormulaMetadata(formula) {
 function compileSyncTable(syncTable) {
     if ((0, api_1.isDynamicSyncTable)(syncTable)) {
         const { getter, getName, getSchema, getDisplayUrl, listDynamicUrls, ...rest } = syncTable;
-        const { execute, ...getterRest } = getter;
+        const { execute, executeUpdate, ...getterRest } = getter;
         return {
             ...rest,
             getName: compileMetadataFormulaMetadata(getName),
             getSchema: compileMetadataFormulaMetadata(getSchema),
             getDisplayUrl: compileMetadataFormulaMetadata(getDisplayUrl),
             listDynamicUrls: compileMetadataFormulaMetadata(listDynamicUrls),
-            getter: getterRest,
+            getter: {
+                supportsUpdates: Boolean(executeUpdate),
+                ...getterRest,
+            }
         };
     }
     const { getter, ...rest } = syncTable;
-    const { execute, ...getterRest } = getter;
+    const { execute, executeUpdate, ...getterRest } = getter;
     return {
         ...rest,
-        getter: getterRest,
+        getter: {
+            supportsUpdates: Boolean(executeUpdate),
+            ...getterRest,
+        },
     };
 }
 function compileDefaultAuthenticationMetadata(authentication) {

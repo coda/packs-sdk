@@ -1671,6 +1671,7 @@ export interface Sync {
 	 */
 	dynamicUrl?: string;
 }
+export declare type UpdateSync = Omit<Sync, "continuation">;
 /**
  * Information about the Coda environment and doc this formula was invoked from, for Coda internal use.
  */
@@ -1736,6 +1737,12 @@ export interface SyncExecutionContext extends ExecutionContext {
 	 * Information about state of the current sync.
 	 */
 	readonly sync: Sync;
+}
+export interface UpdateSyncExecutionContext extends ExecutionContext {
+	/**
+	 * Information about state of the current sync.
+	 */
+	readonly sync: UpdateSync;
 }
 /**
  * Special "live" date range values that can be used as the {@link ParamDef.suggestedValue}
@@ -2228,7 +2235,7 @@ export declare type Formula<ParamDefsT extends ParamDefs = ParamDefs, ResultT ex
 export declare type TypedPackFormula = Formula | GenericSyncFormula;
 export declare type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
 /** @hidden */
-export declare type PackFormulaMetadata = Omit<TypedPackFormula, "execute">;
+export declare type PackFormulaMetadata = Omit<TypedPackFormula, "execute" | "executeUpdate">;
 /** @hidden */
 export declare type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, "execute">;
 /**
@@ -2246,6 +2253,14 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
 	 * until there is no continuation returned.
 	 */
 	continuation?: Continuation;
+}
+export interface SyncUpdate<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
+	previousValue: ObjectSchemaDefinitionType<K, L, SchemaT>;
+	newValue: ObjectSchemaDefinitionType<K, L, SchemaT>;
+	updatedFields: string[];
+}
+export interface SyncUpdateResult<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
+	result: Array<ObjectSchemaDefinitionType<K, L, SchemaT> | Error>;
 }
 /**
  * Inputs for creating the formula that implements a sync table.
@@ -2265,6 +2280,15 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
 	 */
 	/** @hidden */
 	maxUpdateBatchSize?: number;
+	/**
+	 * The JavaScript function that implements this sync update if the table supports updates.
+	 *
+	 * This function takes in parameters, updated sync table objects, and a sync context,
+	 * and is responsible for pushing those updated objects to the external system then returning
+	 * the new state of each object.
+	 */
+	/** @hidden */
+	executeUpdate?(params: ParamValues<ParamDefsT>, updates: Array<SyncUpdate<K, L, SchemaT>>, context: UpdateSyncExecutionContext): Promise<SyncUpdateResult<K, L, SchemaT>>;
 }
 /**
  * The result of defining the formula that implements a sync table.
@@ -2276,6 +2300,7 @@ export declare type SyncFormula<K extends string, L extends string, ParamDefsT e
 	resultType: TypeOf<SchemaType<SchemaT>>;
 	isSyncFormula: true;
 	schema?: ArraySchema;
+	supportsUpdates?: boolean;
 };
 /**
  * Creates a formula definition.

@@ -1154,11 +1154,14 @@ const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
     .max(Limits.NumColumnMatchersPerFormat),
 });
 
-const syncFormulaSchema = zodCompleteObject<Omit<SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>>, 'execute'>>({
+const syncFormulaSchema = zodCompleteObject<
+  Omit<SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>>, 'execute' | 'executeUpdate'>
+>({
   schema: arrayPropertySchema.optional(),
   resultType: z.any(),
   isSyncFormula: z.literal(true),
   maxUpdateBatchSize: z.number().min(1).max(Limits.UpdateBatchSize).optional(),
+  supportsUpdates: z.boolean().optional(),
   ...commonPackFormulaSchema,
 });
 

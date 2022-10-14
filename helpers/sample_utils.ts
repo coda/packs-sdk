@@ -45,7 +45,7 @@ export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata 
   }
   const syncTables: PackSyncTable[] = [];
   for (const {getter, getSchema, ...others} of originalSyncTables || []) {
-    const {execute, ...otherGetter} = getter;
+    const {execute, executeUpdate, ...otherGetter} = getter;
     syncTables.push({getter: {...otherGetter}, getSchema, ...others});
   }
   return {

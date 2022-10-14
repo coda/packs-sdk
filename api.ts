@@ -30,6 +30,7 @@ import {Type} from './api_types';
 import type {TypeMap} from './api_types';
 import type {TypeOf} from './api_types';
 import type {UnionType} from './api_types';
+import type {UpdateSyncExecutionContext} from './api_types';
 import {ValueType} from './schema';
 import {booleanArray} from './api_types';
 import {dateArray} from './api_types';
@@ -680,7 +681,7 @@ export type TypedPackFormula = Formula | GenericSyncFormula;
 
 export type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
 /** @hidden */
-export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute'>;
+export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute' | 'executeUpdate'>;
 /** @hidden */
 export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'execute'>;
 
@@ -713,6 +714,16 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
   continuation?: Continuation;
 }
 
+export interface SyncUpdate<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
+  previousValue: ObjectSchemaDefinitionType<K, L, SchemaT>;
+  newValue: ObjectSchemaDefinitionType<K, L, SchemaT>;
+  updatedFields: string[];
+}
+
+export interface SyncUpdateResult<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
+  result: Array<ObjectSchemaDefinitionType<K, L, SchemaT> | Error>;
+}
+
 /**
  * Inputs for creating the formula that implements a sync table.
  */
@@ -736,6 +747,19 @@ export interface SyncFormulaDef<
    */
   /** @hidden */
   maxUpdateBatchSize?: number;
+  /**
+   * The JavaScript function that implements this sync update if the table supports updates.
+   *
+   * This function takes in parameters, updated sync table objects, and a sync context, 
+   * and is responsible for pushing those updated objects to the external system then returning
+   * the new state of each object.
+   */
+  /** @hidden */
+   executeUpdate?(
+    params: ParamValues<ParamDefsT>,
+    updates: Array<SyncUpdate<K, L, SchemaT>>,
+    context: UpdateSyncExecutionContext,
+  ): Promise<SyncUpdateResult<K, L, SchemaT>>;
 }
 
 /**
@@ -753,6 +777,7 @@ export type SyncFormula<
   resultType: TypeOf<SchemaType<SchemaT>>;
   isSyncFormula: true;
   schema?: ArraySchema;
+  supportsUpdates?: boolean;
 };
 
 /**
@@ -1537,7 +1562,11 @@ export function makeSyncTable<
   dynamicOptions = {},
 }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT> {
   const {getSchema: getSchemaDef, entityName, defaultAddDynamicColumns} = dynamicOptions;
-  const {execute: wrappedExecute, ...definition} = maybeRewriteConnectionForFormula(formula, connectionRequirement);
+  const {
+    execute: wrappedExecute,
+    executeUpdate: wrappedExecuteUpdate,
+    ...definition
+  } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
 
   // Since we mutate schemaDef, we need to make a copy so the input schema can be reused across sync tables.
   const schemaDef = deepCopy(inputSchema);
@@ -1583,6 +1612,18 @@ export function makeSyncTable<
       continuation,
     } as SyncFormulaResult<K, L, SchemaT>;
   };
+  const executeUpdate = wrappedExecuteUpdate ? async function execUpdate(
+    params: ParamValues<ParamDefsT>,
+    updates: Array<SyncUpdate<K, L, SchemaDefT>>,
+    context: SyncExecutionContext,
+  ) {
+    const {result} = (await wrappedExecuteUpdate(params, updates, context)) || {};
+    const appliedSchema = context.sync.schema;
+    return {
+      result: responseHandler({body: result || [], status: 200, headers: {}}, appliedSchema),
+    } as SyncUpdateResult<K, L, SchemaT>;
+  } : undefined;
+
   return {
     name,
     description,
@@ -1592,8 +1633,10 @@ export function makeSyncTable<
       ...definition,
       cacheTtlSecs: 0,
       execute,
+      executeUpdate: executeUpdate as any,
       schema: formulaSchema,
       isSyncFormula: true,
+      supportsUpdates: Boolean(executeUpdate),
       connectionRequirement: definition.connectionRequirement || connectionRequirement,
       resultType: Type.object as any,
     },
