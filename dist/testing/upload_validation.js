@@ -455,7 +455,7 @@ const commonPackFormulaSchema = {
             }
         }
         return true;
-    }, { message: 'All optional parameters must be come after all non-optional parameters.' }),
+    }, { message: 'All optional parameters must come after all non-optional parameters.' }),
     varargParameters: z.array(paramDefValidator).optional(),
     isAction: z.boolean().optional(),
     connectionRequirement: z.nativeEnum(api_types_1.ConnectionRequirement).optional(),

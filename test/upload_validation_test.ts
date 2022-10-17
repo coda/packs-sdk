@@ -702,7 +702,7 @@ describe('Pack metadata Validation', () => {
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
           {
-            message: 'All optional parameters must be come after all non-optional parameters.',
+            message: 'All optional parameters must come after all non-optional parameters.',
             path: 'formulas[0].parameters',
           },
         ]);
