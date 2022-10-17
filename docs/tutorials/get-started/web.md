@@ -11,6 +11,8 @@ The fastest and easiest way to create a Pack is to use our web-based Pack Studio
 
 If you're new to Coda, [sign up][coda_sign_up] for a free account and you'll automatically be made a Doc Maker in your personal workspace.
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/nZVb8w77yqY" title="YouTube video player: Get started in the browser" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 
 ## Navigate to the Pack Studio
 
