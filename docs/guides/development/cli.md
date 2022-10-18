@@ -17,7 +17,7 @@ Local development is enabled through the `coda` command line tool (CLI). It come
 
 ## Getting started
 
-The easiest way to get started it to follow the tutorial [Get started on your local machine][quickstart_cli], which will walk you through the setup and basic usage of the CLI.
+The easiest way to get started is to follow the tutorial [Get started on your local machine][quickstart_cli], which will walk you through the setup and basic usage of the CLI.
 
 [View Tutorial][quickstart_cli]{ .md-button }
 

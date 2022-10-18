@@ -155,7 +155,7 @@ let response = await context.fetcher.fetch({
 
 ### Form data
 
-To send data to a server that expects form input (`application/x-www-form-urlencoded`) use the `form` property of the request. It takes key-value pairs and automatically encodes, passes them in the body, and sets the correct `Content-Type` header.
+To send data to a server that expects form input (`application/x-www-form-urlencoded`) use the `form` property of the request. Pass a set of key-value pairs representing the form fields, ensuring that all of the values are strings. The fetcher will format and encode the data, pass it in the body, and set the correct `Content-Type` header.
 
 ```ts
 let response = await context.fetcher.fetch({
@@ -163,8 +163,8 @@ let response = await context.fetcher.fetch({
   url: "https://httpbin.org/post",
   form: {
     name: "Alice",
-    active: true,
-    days: 15,
+    active: String(true),
+    days: String(15),
   },
 });
 ```
