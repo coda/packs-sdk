@@ -7,6 +7,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 - Added helper method `getEffectivePropertyKeysFromSchema`. This method can be used in the sync table formulas to retrieve the user manually selected property keys by `getEffectivePropertyKeysFromSchema(context.sync.schema)`.
 - Now `--notes` is a required option in `coda release` command.
 - **Breaking Change** Parameter names and sync table names now have strict limitations at build time (alphanumeric characters & underscores).
+- Added a `--maxRows` flag to the `coda execute` command, allowing you to cap a sync execution to a maximum number of rows.
 
 ## [1.1.0] - 2022-09-27
 
