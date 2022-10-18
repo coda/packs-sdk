@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newRealFetcherSyncExecutionContext = exports.newRealFetcherExecutionContext = exports.executeMetadataFormula = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeFormulaOrSyncWithRawParams = exports.VMError = exports.executeFormulaOrSyncWithVM = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = void 0;
+exports.newRealFetcherSyncExecutionContext = exports.newRealFetcherExecutionContext = exports.executeMetadataFormula = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeFormulaOrSyncWithRawParams = exports.VMError = exports.executeFormulaOrSyncWithVM = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = exports.DEFAULT_MAX_ROWS = void 0;
 const types_1 = require("../runtime/types");
 const coercion_1 = require("./coercion");
 const bootstrap_1 = require("../runtime/bootstrap");
@@ -51,6 +51,7 @@ const util_1 = __importDefault(require("util"));
 const validation_1 = require("./validation");
 const validation_2 = require("./validation");
 const MaxSyncIterations = 100;
+exports.DEFAULT_MAX_ROWS = 1000;
 function resolveFormulaNameWithNamespace(formulaNameWithNamespace) {
     const [namespace, name] = formulaNameWithNamespace.includes('::')
         ? formulaNameWithNamespace.split('::')
@@ -108,8 +109,11 @@ async function executeFormulaFromPackDef(packDef, formulaNameWithNamespace, para
     return findAndExecutePackFunction(params, { type: types_1.FormulaType.Standard, formulaName: resolveFormulaNameWithNamespace(formulaNameWithNamespace) }, packDef, executionContext || (0, mocks_1.newMockExecutionContext)(), options);
 }
 exports.executeFormulaFromPackDef = executeFormulaFromPackDef;
-async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, manifestPath, vm, dynamicUrl, bundleSourceMapPath, bundlePath, contextOptions = {}, }) {
+async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, manifestPath, vm, dynamicUrl, maxRows = exports.DEFAULT_MAX_ROWS, bundleSourceMapPath, bundlePath, contextOptions = {}, }) {
     try {
+        if (maxRows <= 0) {
+            throw new Error('The value of maxRows must be greater than zero.');
+        }
         const { useRealFetcher } = contextOptions;
         const credentials = useRealFetcher && manifestPath ? getCredentials(manifestPath) : undefined;
         // A sync context would work for both formula / syncFormula execution for now.
@@ -128,7 +132,7 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
             formulaName,
         };
         if (formulaSpecification.type === types_1.FormulaType.Sync) {
-            const result = [];
+            let result = [];
             let iterations = 1;
             do {
                 if (iterations > MaxSyncIterations) {
@@ -146,7 +150,10 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
                 result.push(...response.result);
                 executionContext.sync.continuation = response.continuation;
                 iterations++;
-            } while (executionContext.sync.continuation);
+            } while (executionContext.sync.continuation && result.length < maxRows);
+            if (result.length > maxRows) {
+                result = result.slice(0, maxRows);
+            }
             (0, helpers_5.print)(result);
         }
         else {

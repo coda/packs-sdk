@@ -8,5 +8,6 @@ export interface ExecuteArgs {
     vm?: boolean;
     dynamicUrl?: string;
     timerStrategy: TimerShimStrategy;
+    maxRows?: number;
 }
-export declare function handleExecute({ manifestPath, formulaName, params, fetch, vm, dynamicUrl, timerStrategy, }: ArgumentsCamelCase<ExecuteArgs>): Promise<undefined>;
+export declare function handleExecute({ manifestPath, formulaName, params, fetch, vm, dynamicUrl, timerStrategy, maxRows, }: ArgumentsCamelCase<ExecuteArgs>): Promise<undefined>;
