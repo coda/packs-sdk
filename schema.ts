@@ -862,6 +862,8 @@ export interface PropertyIdentifierDetails {
   property: string;
 }
 
+export const PropertyLabelValueTemplate = '{VALUE}';
+
 /**
  * An identifier for an object schema property that is comprised of either an exact property match with the top-level
  * `properties or a json path (https://github.com/json-path/JsonPath) to a nested property.
