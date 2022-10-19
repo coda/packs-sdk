@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import {DEFAULT_API_ENDPOINT} from './config_storage';
+import {DEFAULT_MAX_ROWS} from '../testing/execution';
 import {DEFAULT_OAUTH_SERVER_PORT} from '../testing/auth';
 import {TimerShimStrategy} from '../testing/compile';
 import {handleAuth} from './auth';
@@ -46,6 +47,11 @@ if (require.main === module) {
           string: true,
           default: TimerShimStrategy.None,
           desc: 'Options: none, error, fake.',
+        },
+        maxRows: {
+          number: true,
+          default: DEFAULT_MAX_ROWS,
+          desc: 'For a sync table, the maximum number of rows to sync.',
         },
       },
     })

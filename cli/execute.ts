@@ -15,6 +15,7 @@ export interface ExecuteArgs {
   vm?: boolean;
   dynamicUrl?: string;
   timerStrategy: TimerShimStrategy;
+  maxRows?: number;
 }
 
 export async function handleExecute({
@@ -25,6 +26,7 @@ export async function handleExecute({
   vm,
   dynamicUrl,
   timerStrategy,
+  maxRows,
 }: ArgumentsCamelCase<ExecuteArgs>) {
   if (vm && !tryGetIvm()) {
     return printAndExit(
@@ -46,6 +48,7 @@ export async function handleExecute({
     manifestPath,
     vm,
     dynamicUrl,
+    maxRows,
     bundleSourceMapPath,
     bundlePath,
     contextOptions: {useRealFetcher: fetch},

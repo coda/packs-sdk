@@ -11,6 +11,7 @@ import type { StandardFormulaSpecification } from '../runtime/types';
 import type { SyncExecutionContext } from '../api_types';
 import type { SyncFormulaSpecification } from '../runtime/types';
 import util from 'util';
+export declare const DEFAULT_MAX_ROWS = 1000;
 export interface ExecuteOptions {
     validateParams?: boolean;
     validateResult?: boolean;
@@ -21,13 +22,14 @@ export interface ContextOptions {
     manifestPath?: string;
 }
 export declare function executeFormulaFromPackDef<T extends PackFormulaResult | GenericSyncFormulaResult = any>(packDef: BasicPackDefinition, formulaNameWithNamespace: string, params: ParamValues<ParamDefs>, context?: ExecutionContext, options?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<T>;
-export declare function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, manifestPath, vm, dynamicUrl, bundleSourceMapPath, bundlePath, contextOptions, }: {
+export declare function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, manifestPath, vm, dynamicUrl, maxRows, bundleSourceMapPath, bundlePath, contextOptions, }: {
     formulaName: string;
     params: string[];
     manifest: BasicPackDefinition;
     manifestPath: string;
     vm?: boolean;
     dynamicUrl?: string;
+    maxRows?: number;
     bundleSourceMapPath: string;
     bundlePath: string;
     contextOptions?: ContextOptions;

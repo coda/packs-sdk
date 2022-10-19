@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const config_storage_1 = require("./config_storage");
+const execution_1 = require("../testing/execution");
 const auth_1 = require("../testing/auth");
 const compile_1 = require("../testing/compile");
 const auth_2 = require("./auth");
@@ -49,6 +50,11 @@ if (require.main === module) {
                 string: true,
                 default: compile_1.TimerShimStrategy.None,
                 desc: 'Options: none, error, fake.',
+            },
+            maxRows: {
+                number: true,
+                default: execution_1.DEFAULT_MAX_ROWS,
+                desc: 'For a sync table, the maximum number of rows to sync.',
             },
         },
     })

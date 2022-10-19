@@ -37,6 +37,7 @@ import {validateParams} from './validation';
 import {validateResult} from './validation';
 
 const MaxSyncIterations = 100;
+export const DEFAULT_MAX_ROWS = 1000;
 
 export interface ExecuteOptions {
   validateParams?: boolean;
@@ -152,6 +153,7 @@ export async function executeFormulaOrSyncFromCLI({
   manifestPath,
   vm,
   dynamicUrl,
+  maxRows = DEFAULT_MAX_ROWS,
   bundleSourceMapPath,
   bundlePath,
   contextOptions = {},
@@ -162,11 +164,16 @@ export async function executeFormulaOrSyncFromCLI({
   manifestPath: string;
   vm?: boolean;
   dynamicUrl?: string;
+  maxRows?: number;
   bundleSourceMapPath: string;
   bundlePath: string;
   contextOptions?: ContextOptions;
 }) {
   try {
+    if (maxRows <= 0) {
+      throw new Error('The value of maxRows must be greater than zero.');
+    }
+
     const {useRealFetcher} = contextOptions;
 
     const credentials = useRealFetcher && manifestPath ? getCredentials(manifestPath) : undefined;
@@ -193,7 +200,7 @@ export async function executeFormulaOrSyncFromCLI({
     };
 
     if (formulaSpecification.type === FormulaType.Sync) {
-      const result = [];
+      let result = [];
       let iterations = 1;
       do {
         if (iterations > MaxSyncIterations) {
@@ -214,7 +221,10 @@ export async function executeFormulaOrSyncFromCLI({
         result.push(...response.result);
         executionContext.sync.continuation = response.continuation;
         iterations++;
-      } while (executionContext.sync.continuation);
+      } while (executionContext.sync.continuation && result.length < maxRows);
+      if (result.length > maxRows) {
+        result = result.slice(0, maxRows);
+      }
       print(result);
     } else {
       const result = vm
