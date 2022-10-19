@@ -755,7 +755,7 @@ export interface SyncFormulaDef<
    * the new state of each object.
    */
   /** @hidden */
-   executeUpdate?(
+  executeUpdate?(
     params: ParamValues<ParamDefsT>,
     updates: Array<SyncUpdate<K, L, SchemaT>>,
     context: UpdateSyncExecutionContext,

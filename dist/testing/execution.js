@@ -72,6 +72,8 @@ useDeprecatedResultNormalization = true, } = {}) {
             formula = (0, helpers_1.findFormula)(manifest, formulaSpec.formulaName);
             break;
         case types_1.FormulaType.Sync:
+        case types_1.FormulaType.SyncUpdate:
+            // TODO(Chris): Update the CLI so a user can select which of these executors they want to run.
             formula = (0, helpers_2.findSyncFormula)(manifest, formulaSpec.formulaName);
             break;
     }
