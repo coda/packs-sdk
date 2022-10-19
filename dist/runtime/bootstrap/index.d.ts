@@ -12,6 +12,7 @@ import type { ParamDefs } from '../../api_types';
 import type { ParamValues } from '../../api_types';
 import type { Sync } from '../../api_types';
 import type { SyncFormulaSpecification } from '../types';
+import type { SyncUpdate } from '../../api';
 import type { TemporaryBlobStorage } from '../../api_types';
 /**
  * Setup an isolate context with sufficient globals needed to execute a pack.
@@ -34,9 +35,10 @@ export declare function injectFetcherFunction(context: Context, stubName: string
 /**
  * Actually execute the pack function inside the isolate by loading and passing control to the thunk.
  */
-export declare function executeThunk<T extends FormulaSpecification>(context: Context, { params, formulaSpec }: {
+export declare function executeThunk<T extends FormulaSpecification>(context: Context, { params, formulaSpec, updates }: {
     params: ParamValues<ParamDefs>;
     formulaSpec: T;
+    updates?: Array<SyncUpdate<any, any, any>>;
 }, packBundlePath: string, packBundleSourceMapPath: string): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult>;
 export declare function injectSerializer(context: Context, stubName: string): Promise<void>;
 /**

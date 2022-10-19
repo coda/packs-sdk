@@ -83,6 +83,8 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
       formula = findFormula(manifest, formulaSpec.formulaName);
       break;
     case FormulaType.Sync:
+    case FormulaType.SyncUpdate:
+      // TODO(Chris): Update the CLI so a user can select which of these executors they want to run.
       formula = findSyncFormula(manifest, formulaSpec.formulaName);
       break;
   }

@@ -6442,6 +6442,7 @@ module.exports = (() => {
   // runtime/thunk/thunk.ts
   var thunk_exports = {};
   __export(thunk_exports, {
+    ensureExists: () => ensureExists2,
     ensureSwitchUnreachable: () => ensureSwitchUnreachable,
     findAndExecutePackFunction: () => findAndExecutePackFunction,
     handleError: () => handleError,
@@ -6849,18 +6850,18 @@ module.exports = (() => {
   __name(unmarshalError, "unmarshalError");
 
   // runtime/thunk/thunk.ts
-  async function findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, shouldWrapError = true) {
+  async function findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, shouldWrapError = true, updates) {
     try {
       if (!global.Buffer) {
         global.Buffer = import_buffer.Buffer;
       }
-      return await doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext);
+      return await doFindAndExecutePackFunction({ params, formulaSpec, manifest, executionContext, updates });
     } catch (err) {
       throw shouldWrapError ? wrapError(err) : err;
     }
   }
   __name(findAndExecutePackFunction, "findAndExecutePackFunction");
-  function doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext) {
+  function doFindAndExecutePackFunction({ params, formulaSpec, manifest, executionContext, updates }) {
     const { syncTables, defaultAuthentication } = manifest;
     switch (formulaSpec.type) {
       case "Standard" /* Standard */: {
@@ -6870,6 +6871,13 @@ module.exports = (() => {
       case "Sync" /* Sync */: {
         const formula = findSyncFormula(manifest, formulaSpec.formulaName);
         return formula.execute(params, executionContext);
+      }
+      case "SyncUpdate" /* SyncUpdate */: {
+        const formula = findSyncFormula(manifest, formulaSpec.formulaName);
+        if (!formula.executeUpdate) {
+          throw new Error(`No executeUpdate function defined on sync table formula ${formulaSpec.formulaName}`);
+        }
+        return formula.executeUpdate(params, ensureExists2(updates), executionContext);
       }
       case "Metadata" /* Metadata */: {
         switch (formulaSpec.metadataFormulaType) {
@@ -6957,6 +6965,7 @@ module.exports = (() => {
         }
         break;
       case "Sync" /* Sync */:
+      case "SyncUpdate" /* SyncUpdate */:
         if (syncTables) {
           const syncTable = syncTables.find((table) => table.getter.name === formulaSpec.parentFormulaName);
           formula = syncTable?.getter;
@@ -6972,6 +6981,13 @@ module.exports = (() => {
     }
   }
   __name(findParentFormula, "findParentFormula");
+  function ensureExists2(value, message) {
+    if (typeof value === "undefined" || value === null) {
+      throw new Error(message || `Expected value for ${String(value)}`);
+    }
+    return value;
+  }
+  __name(ensureExists2, "ensureExists");
   function ensureSwitchUnreachable(value) {
     throw new Error(`Unreachable code hit with value ${String(value)}`);
   }

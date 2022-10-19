@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setUpBufferForTest = exports.handleFetcherStatusError = exports.handleError = exports.handleErrorAsync = exports.ensureSwitchUnreachable = exports.findAndExecutePackFunction = exports.marshalValuesForLogging = exports.unmarshalValueFromString = exports.marshalValueToString = exports.unmarshalValue = exports.marshalValue = void 0;
+exports.setUpBufferForTest = exports.handleFetcherStatusError = exports.handleError = exports.handleErrorAsync = exports.ensureSwitchUnreachable = exports.ensureExists = exports.findAndExecutePackFunction = exports.marshalValuesForLogging = exports.unmarshalValueFromString = exports.marshalValueToString = exports.unmarshalValue = exports.marshalValue = void 0;
 const types_1 = require("../../types");
 const buffer_1 = require("buffer");
 const types_2 = require("../types");
@@ -22,13 +22,13 @@ Object.defineProperty(exports, "marshalValuesForLogging", { enumerable: true, ge
 /**
  * The thunk entrypoint - the first code that runs inside the v8 isolate once control is passed over.
  */
-async function findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, shouldWrapError = true) {
+async function findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, shouldWrapError = true, updates) {
     try {
         // in case the pack bundle is compiled in the browser, Buffer may not be browserified yet.
         if (!global.Buffer) {
             global.Buffer = buffer_1.Buffer;
         }
-        return await doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext);
+        return await doFindAndExecutePackFunction({ params, formulaSpec, manifest, executionContext, updates });
     }
     catch (err) {
         // all errors should be marshaled to avoid IVM dropping essential fields / name.
@@ -36,7 +36,7 @@ async function findAndExecutePackFunction(params, formulaSpec, manifest, executi
     }
 }
 exports.findAndExecutePackFunction = findAndExecutePackFunction;
-function doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext) {
+function doFindAndExecutePackFunction({ params, formulaSpec, manifest, executionContext, updates }) {
     const { syncTables, defaultAuthentication } = manifest;
     switch (formulaSpec.type) {
         case types_2.FormulaType.Standard: {
@@ -48,6 +48,13 @@ function doFindAndExecutePackFunction(params, formulaSpec, manifest, executionCo
         case types_2.FormulaType.Sync: {
             const formula = (0, helpers_2.findSyncFormula)(manifest, formulaSpec.formulaName);
             return formula.execute(params, executionContext);
+        }
+        case types_2.FormulaType.SyncUpdate: {
+            const formula = (0, helpers_2.findSyncFormula)(manifest, formulaSpec.formulaName);
+            if (!formula.executeUpdate) {
+                throw new Error(`No executeUpdate function defined on sync table formula ${formulaSpec.formulaName}`);
+            }
+            return formula.executeUpdate(params, ensureExists(updates), executionContext);
         }
         case types_2.FormulaType.Metadata: {
             switch (formulaSpec.metadataFormulaType) {
@@ -139,6 +146,7 @@ function findParentFormula(manifest, formulaSpec) {
             }
             break;
         case types_2.FormulaType.Sync:
+        case types_2.FormulaType.SyncUpdate:
             if (syncTables) {
                 const syncTable = syncTables.find(table => table.getter.name === formulaSpec.parentFormulaName);
                 formula = syncTable === null || syncTable === void 0 ? void 0 : syncTable.getter;
@@ -153,6 +161,13 @@ function findParentFormula(manifest, formulaSpec) {
         return paramDef === null || paramDef === void 0 ? void 0 : paramDef.autocomplete;
     }
 }
+function ensureExists(value, message) {
+    if (typeof value === 'undefined' || value === null) {
+        throw new Error(message || `Expected value for ${String(value)}`);
+    }
+    return value;
+}
+exports.ensureExists = ensureExists;
 function ensureSwitchUnreachable(value) {
     throw new Error(`Unreachable code hit with value ${String(value)}`);
 }

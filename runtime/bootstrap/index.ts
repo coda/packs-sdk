@@ -12,6 +12,7 @@ import type {ParamDefs} from '../../api_types';
 import type {ParamValues} from '../../api_types';
 import type {Sync} from '../../api_types';
 import type {SyncFormulaSpecification} from '../types';
+import type {SyncUpdate} from '../../api';
 import type {TemporaryBlobStorage} from '../../api_types';
 import fs from 'fs';
 import {marshalValue} from '../common/marshaling';
@@ -143,14 +144,18 @@ export async function injectFetcherFunction(
  */
 export async function executeThunk<T extends FormulaSpecification>(
   context: Context,
-  {params, formulaSpec}: {params: ParamValues<ParamDefs>; formulaSpec: T},
+  {params, formulaSpec, updates}: {
+    params: ParamValues<ParamDefs>;
+    formulaSpec: T;
+    updates?: Array<SyncUpdate<any, any, any>>;
+  },
   packBundlePath: string,
   packBundleSourceMapPath: string,
 ): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult> {
   try {
     const resultRef = await context.evalClosure(
-      'return coda.findAndExecutePackFunction($0, $1, pack.pack || pack.manifest, executionContext);',
-      [params, formulaSpec],
+      'return coda.findAndExecutePackFunction($0, $1, pack.pack || pack.manifest, executionContext, $2);',
+      [params, formulaSpec, updates],
       {
         arguments: {copy: true},
         result: {reference: true, promise: true},

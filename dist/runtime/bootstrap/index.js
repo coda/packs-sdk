@@ -99,9 +99,9 @@ exports.injectFetcherFunction = injectFetcherFunction;
 /**
  * Actually execute the pack function inside the isolate by loading and passing control to the thunk.
  */
-async function executeThunk(context, { params, formulaSpec }, packBundlePath, packBundleSourceMapPath) {
+async function executeThunk(context, { params, formulaSpec, updates }, packBundlePath, packBundleSourceMapPath) {
     try {
-        const resultRef = await context.evalClosure('return coda.findAndExecutePackFunction($0, $1, pack.pack || pack.manifest, executionContext);', [params, formulaSpec], {
+        const resultRef = await context.evalClosure('return coda.findAndExecutePackFunction($0, $1, pack.pack || pack.manifest, executionContext, $2);', [params, formulaSpec, updates], {
             arguments: { copy: true },
             result: { reference: true, promise: true },
         });

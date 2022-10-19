@@ -18,7 +18,9 @@ import {PostSetupType} from '../../types';
 import {StatusCodeError} from '../../api';
 import type {SyncExecutionContext} from '../../api_types';
 import type {SyncFormulaSpecification} from '../types';
+import type {SyncUpdate} from '../../api';
 import type {TypedPackFormula} from '../../api';
+import type {UpdateSyncExecutionContext} from '../../api_types';
 import {findFormula} from '../common/helpers';
 import {findSyncFormula} from '../common/helpers';
 import {isDynamicSyncTable} from '../../api';
@@ -43,6 +45,7 @@ export async function findAndExecutePackFunction<T extends FormulaSpecification>
   manifest: BasicPackDefinition,
   executionContext: ExecutionContext | SyncExecutionContext,
   shouldWrapError: boolean = true,
+  updates?: Array<SyncUpdate<any, any, any>>,
 ): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult> {
   try {
     // in case the pack bundle is compiled in the browser, Buffer may not be browserified yet.
@@ -50,7 +53,7 @@ export async function findAndExecutePackFunction<T extends FormulaSpecification>
       global.Buffer = Buffer;
     }
 
-    return await doFindAndExecutePackFunction(params, formulaSpec, manifest, executionContext);
+    return await doFindAndExecutePackFunction({params, formulaSpec, manifest, executionContext, updates});
   } catch (err: any) {
     // all errors should be marshaled to avoid IVM dropping essential fields / name.
     throw shouldWrapError ? wrapError(err) : err;
@@ -58,10 +61,13 @@ export async function findAndExecutePackFunction<T extends FormulaSpecification>
 }
 
 function doFindAndExecutePackFunction<T extends FormulaSpecification>(
-  params: ParamValues<ParamDefs>,
-  formulaSpec: T,
-  manifest: BasicPackDefinition,
-  executionContext: ExecutionContext | SyncExecutionContext,
+  {params, formulaSpec, manifest, executionContext, updates}: {
+    params: ParamValues<ParamDefs>,
+    formulaSpec: T,
+    manifest: BasicPackDefinition,
+    executionContext: ExecutionContext | SyncExecutionContext,
+    updates?: Array<SyncUpdate<any, any, any>>,
+  },
 ): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult> {
   const {syncTables, defaultAuthentication} = manifest;
 
@@ -75,6 +81,13 @@ function doFindAndExecutePackFunction<T extends FormulaSpecification>(
     case FormulaType.Sync: {
       const formula = findSyncFormula(manifest, formulaSpec.formulaName);
       return formula.execute(params, executionContext as SyncExecutionContext);
+    }
+    case FormulaType.SyncUpdate: {
+      const formula = findSyncFormula(manifest, formulaSpec.formulaName);
+      if (!formula.executeUpdate) {
+        throw new Error(`No executeUpdate function defined on sync table formula ${formulaSpec.formulaName}`);
+      }
+      return formula.executeUpdate(params, ensureExists(updates), executionContext as UpdateSyncExecutionContext);
     }
     case FormulaType.Metadata: {
       switch (formulaSpec.metadataFormulaType) {
@@ -183,6 +196,7 @@ function findParentFormula(
       }
       break;
     case FormulaType.Sync:
+    case FormulaType.SyncUpdate:
       if (syncTables) {
         const syncTable = syncTables.find(table => table.getter.name === formulaSpec.parentFormulaName);
         formula = syncTable?.getter;
@@ -196,6 +210,13 @@ function findParentFormula(
     const paramDef = params.find(param => param.name === formulaSpec.parameterName);
     return paramDef?.autocomplete;
   }
+}
+
+export function ensureExists<T>(value: T | null | undefined, message?: string): T {
+  if (typeof value === 'undefined' || value === null) {
+    throw new Error(message || `Expected value for ${String(value)}`);
+  }
+  return value;
 }
 
 export function ensureSwitchUnreachable(value: never): never {
