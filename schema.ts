@@ -854,6 +854,8 @@ export interface Identity extends IdentityDefinition {
 export interface PropertyIdentifierDetails {
   /**
    * An optional label for the property. This will be used in locations where the label appears with the property.
+   *
+   * If set to '', the label will be omitted.
    */
   label?: string;
   /**
@@ -862,6 +864,12 @@ export interface PropertyIdentifierDetails {
   property: string;
 }
 
+/**
+ * An identifier for the value of a property for use in the {@link PropertyIdentifierDetails.label} field.
+ * When used, this will be substituted with the value of the property for the final output of the label.
+ *
+ * If not present, the label will be used as-is in the default label format of '{label}: {VALUE}'.
+ */
 export const PropertyLabelValueTemplate = '{VALUE}';
 
 /**
