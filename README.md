@@ -1,5 +1,6 @@
 <!-- NOTE: this is a test PR for debugging CircleCI builds from a forked PR -->
 <!-- NOTE: take 2; this time, after unfollowing the project on CircleCI -->
+<!-- NOTE: take 3; this time, after deleting my CircleCI user account -->
 
 [![npm release](https://img.shields.io/npm/v/@codahq/packs-sdk?color=%23F8AD40&logo=coda&logoColor=%23EE5A29&style=flat-square)](https://www.npmjs.com/package/@codahq/packs-sdk)
 [![Downloads](https://img.shields.io/npm/dt/@codahq/packs-sdk?color=%23F8AD40&label=npm%20downloads&style=flat-square)](https://coda.io/gallery?filter=Packs)
