@@ -179,6 +179,7 @@ import * as coda from "@codahq/packs-sdk";
 
 ## Variables
 
+- [PropertyLabelValueTemplate](../variables/core.PropertyLabelValueTemplate.md)
 - [ValidFetchMethods](../variables/core.ValidFetchMethods.md)
 
 ## Functions
