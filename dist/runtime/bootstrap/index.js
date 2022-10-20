@@ -101,7 +101,7 @@ exports.injectFetcherFunction = injectFetcherFunction;
  */
 async function executeThunk(context, { params, formulaSpec, updates }, packBundlePath, packBundleSourceMapPath) {
     try {
-        const resultRef = await context.evalClosure('return coda.findAndExecutePackFunction($0, $1, pack.pack || pack.manifest, executionContext, $2);', [params, formulaSpec, updates], {
+        const resultRef = await context.evalClosure('return coda.findAndExecutePackFunction({params: $0, formulaSpec: $1, updates: $2, manifest: pack.pack || pack.manifest, executionContext: executionContext});', [params, formulaSpec, updates], {
             arguments: { copy: true },
             result: { reference: true, promise: true },
         });

@@ -6442,7 +6442,6 @@ module.exports = (() => {
   // runtime/thunk/thunk.ts
   var thunk_exports = {};
   __export(thunk_exports, {
-    ensureExists: () => ensureExists2,
     ensureSwitchUnreachable: () => ensureSwitchUnreachable,
     findAndExecutePackFunction: () => findAndExecutePackFunction,
     handleError: () => handleError,
@@ -6850,12 +6849,12 @@ module.exports = (() => {
   __name(unmarshalError, "unmarshalError");
 
   // runtime/thunk/thunk.ts
-  async function findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, shouldWrapError = true, updates) {
+  async function findAndExecutePackFunction({ shouldWrapError = true, ...args }) {
     try {
       if (!global.Buffer) {
         global.Buffer = import_buffer.Buffer;
       }
-      return await doFindAndExecutePackFunction({ params, formulaSpec, manifest, executionContext, updates });
+      return await doFindAndExecutePackFunction(args);
     } catch (err) {
       throw shouldWrapError ? wrapError(err) : err;
     }
@@ -6877,7 +6876,7 @@ module.exports = (() => {
         if (!formula.executeUpdate) {
           throw new Error(`No executeUpdate function defined on sync table formula ${formulaSpec.formulaName}`);
         }
-        return formula.executeUpdate(params, ensureExists2(updates), executionContext);
+        return formula.executeUpdate(params, ensureExists(updates), executionContext);
       }
       case "Metadata" /* Metadata */: {
         switch (formulaSpec.metadataFormulaType) {
@@ -6981,13 +6980,6 @@ module.exports = (() => {
     }
   }
   __name(findParentFormula, "findParentFormula");
-  function ensureExists2(value, message) {
-    if (typeof value === "undefined" || value === null) {
-      throw new Error(message || `Expected value for ${String(value)}`);
-    }
-    return value;
-  }
-  __name(ensureExists2, "ensureExists");
   function ensureSwitchUnreachable(value) {
     throw new Error(`Unreachable code hit with value ${String(value)}`);
   }

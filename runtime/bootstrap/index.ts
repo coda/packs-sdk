@@ -154,7 +154,7 @@ export async function executeThunk<T extends FormulaSpecification>(
 ): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult> {
   try {
     const resultRef = await context.evalClosure(
-      'return coda.findAndExecutePackFunction($0, $1, pack.pack || pack.manifest, executionContext, $2);',
+      'return coda.findAndExecutePackFunction({params: $0, formulaSpec: $1, updates: $2, manifest: pack.pack || pack.manifest, executionContext: executionContext});',
       [params, formulaSpec, updates],
       {
         arguments: {copy: true},
