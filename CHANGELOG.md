@@ -4,6 +4,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+## [1.2.0] - 2022-10-20
+
 ### Added
 
 - Added helper method `getEffectivePropertyKeysFromSchema`. This method can be used in the sync table formulas to retrieve the user manually selected property keys by `getEffectivePropertyKeysFromSchema(context.sync.schema)`.
@@ -517,7 +519,8 @@ await myHelper(context);
 
 - Beginning of alpha versioning.
 
-[unreleased]: https://github.com/coda/packs-sdk/compare/v1.1.0...HEAD
+[unreleased]: https://github.com/coda/packs-sdk/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.2.0
 [1.1.0]: https://github.com/coda/packs-sdk/compare/v1.0.5...v1.1.0
 [1.0.5]: https://github.com/coda/packs-sdk/compare/v1.0.4...v1.0.5
 [1.0.4]: https://github.com/coda/packs-sdk/compare/v1.0.3...v1.0.4
