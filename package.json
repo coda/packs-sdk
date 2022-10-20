@@ -57,6 +57,7 @@
     "isolated-vm": "^4.4.1"
   },
   "devDependencies": {
+    "@brightcove/kacl": "^0.1.11",
     "@getify/eslint-plugin-proper-arrows": "^11.0.3",
     "@julian_cataldo/remark-lint-frontmatter-schema": "^3.7.4",
     "@release-it/keep-a-changelog": "^3.1.0",

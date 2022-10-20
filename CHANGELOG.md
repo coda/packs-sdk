@@ -4,53 +4,87 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## Unreleased
 
+### Added
+
 - Added helper method `getEffectivePropertyKeysFromSchema`. This method can be used in the sync table formulas to retrieve the user manually selected property keys by `getEffectivePropertyKeysFromSchema(context.sync.schema)`.
+- Added a `--maxRows` flag to the `coda execute` command, allowing you to cap a sync execution to a maximum number of rows.
+
+### Changed
+
 - Now `--notes` is a required option in `coda release` command.
 - **Breaking Change** Parameter names and sync table names now have strict limitations at build time (alphanumeric characters & underscores).
-- Added a `--maxRows` flag to the `coda execute` command, allowing you to cap a sync execution to a maximum number of rows.
 
 ## [1.1.0] - 2022-09-27
 
-- The `isolated-vm` npm package is no longer a required dependency. It will be installed automatically if your system supports it, otherwise npm will ignore it. When running `coda execute`, if `isolated-vm` is available, your formula will be executed inside of a virtual machine sandbox to better simulate the actual Coda runtime environment for packs. If not available, your formula will still be executed, just not within a sandbox.
+### Added
+
 - Adds support for render hits for progress bars, with the new `ValueHintType.ProgressBar`.
 - Also adds in the `showValue` field on `SliderSchema` to indicate whether to show the underlying numeric value associated with a slider.
-- Parameters that are declared as `optional: true` will be inferred as possibly `undefined` in the `execute` method of a formula. Previously, if you had declared, say, a string parameter as optional, the automatic type it would receive as an input to the `execute` method would be `string`, which is inaccurate. It will now be typed as `string | undefined`.
 - Added validation that building blocks of the same type do not share a name.
 
+### Changed
+
+- The `isolated-vm` npm package is no longer a required dependency. It will be installed automatically if your system supports it, otherwise npm will ignore it. When running `coda execute`, if `isolated-vm` is available, your formula will be executed inside of a virtual machine sandbox to better simulate the actual Coda runtime environment for packs. If not available, your formula will still be executed, just not within a sandbox.
+- Parameters that are declared as `optional: true` will be inferred as possibly `undefined` in the `execute` method of a formula. Previously, if you had declared, say, a string parameter as optional, the automatic type it would receive as an input to the `execute` method would be `string`, which is inaccurate. It will now be typed as `string | undefined`.
+
 ## [1.0.5] - 2022-08-05
+
+### Fixed
 
 - Fixed the CLI compiler throwing for using common node modules.
 
 ## [1.0.4] - 2022-08-04
 
+### Changed
+
 - Increased building block description limit to 1000.
+
+### Fixed
+
 - Fixed class name (e.g. `StatusCodeError.name`) which resolved to random values in the final build.
 
 ## [1.0.3] - 2022-08-03
 
+### Added
+
 - Added `ImageSchema`, for use with images. Allows packs to set two flags on a formula returning an image: if the image should be rendered with or without an outline, and whether to turn off the rounded corners. If the outline flag `ImageOutline` is not set on a schema, the default is `Solid`, and the image will be rendered with an outline. If the corners flag `ImageCornerStyle` is not set, the default is `Rounded`, and the image will be rendered with rounded corners.
 - Added `NumericDurationSchema`, which will allow packs to return `ValueType.Number` values that are interpreted in Coda as a duration in seconds.
 - Added autocomplete support for `ParameterType.StringArray` and `ParameterType.SparseStringArray` parameters.
+
+### Changed
+
 - Changed OAuth2 validation to check that authorizationUrl and tokenUrl parse as URLs.
 - Limited number of formulas, column formats, and sync tables to 100 each. Added character limits to names and descriptions, and to length of column matchers and network domains.
 
 ## [1.0.2] - 2022-07-14
+
+### Added
 
 - Added `MissingScopesError`, for use with OAuth authentication. If a user's connection is missing a scope and the Pack throws a 403 StatusCodeError, Coda will automatically prompt the user to reauthenticate. For APIs that return different status codes, or to be more explicit, the Pack can instead throw this new type of error to trigger the same reauthentication flow.
 - Added `pkceChallengeMethod` option to OAuth2 authentication to allow choosing the `code_challenge_method` of PKCE extension. The default value is `S256` but some OAuth providers may only support `plain`.
 
 ## [1.0.1] - 2022-06-22
 
+### Added
+
 - Added validation that `networkDomain` does not include slashes since it's a domain, not a path.
-- Changed Pack compilation to explicitly target Node version 14, to ensure compatibility with the Packs runtime.
 - Added parameter type validation for `execute` command.
 - Added several implicitly-allowed domains including codahosted.io to the `execute` command.
 
+### Changed
+
+- Changed Pack compilation to explicitly target Node version 14, to ensure compatibility with the Packs runtime.
+
 ## [1.0.0] - 2022-06-16
 
-- Fixed `temporaryBlobStorage.storeBlob` error from CLI built Packs.
+### Changed
+
 - The `coda init` command now installs `@codahq/packs-sdk` if it was not previously installed.
 - **Breaking Change** The `identityName` field is now required on every sync table, even ones with dynamic schemas.
+
+### Fixed
+
+- Fixed `temporaryBlobStorage.storeBlob` error from CLI built Packs.
 
 ## [0.12.1] - 2022-06-06
 
@@ -118,47 +152,71 @@ await myHelper(context);
 
 ## [0.9.0] - 2022-03-17
 
-- **Breaking Change** ValueHintType.Url will now create a column of type "Link" instead of "Text".
+### Added
+
 - Added ValueHintType.Email for new column type "Email".
 
-## [0.8.2]
+### Changed
+
+- **Breaking Change** ValueHintType.Url will now create a column of type "Link" instead of "Text".
+
+## [0.8.2] - 2022-03-04
+
+### Added
 
 - Added `coda whoami` command to see API token details.
 - Added `coda link` command to set up upload for an existing Pack ID instead of creating a new one.
 - Added `StringEmbedSchema` to handle configuration on how embed values appear in docs
 - Added "coda clone <packId>", similar to "coda init" but for packs that were already created in the Pack Studio.
 
-## 0.8.1
+## [0.8.1] - 2022-01-19
+
+### Removed
 
 - Removed postinstall to avoid patching failure for npm 6 or older versions.
 
-## 0.8.0
+## [0.8.0] - 2022-01-14
+
+### Added
+
+- An optional "description" field is added to sync table definition, that will be used to display in the UI.
+- OAuth2 authentication now supports a `scopeDelimiter` option for non-compliant APIs that use something other than a space to delimit OAuth scopes in authorization URLs.
+
+### Changed
 
 - **Breaking Change** The connection requirement for metadata formulas now defaults to optional instead of required. If your pack is using sematic versions, this will likely lead to a major version bump in your next release.
 - **Breaking Change** Updated `coda upload` to use new parameters to tag the source of Pack version uploads as coming from the CLI.
-- An optional "description" field is added to sync table definition, that will be used to display in the UI.
 - You no longer need to use the `--fetch` flag with `coda execute` to use a real fetcher. Set `--no-fetch` to use a mock fetcher (the old default behavior).
-- OAuth2 authentication now supports a `scopeDelimiter` option for non-compliant APIs that use something other than a space to delimit OAuth scopes in authorization URLs.
+
+### Deprecated
+
 - Deprecated `hidden` field is now fully removed on formula parameter.
 
-## 0.7.3
+## [0.7.3] - 2021-12-06
+
+### Changed
+
+- Formulas that use optional parameters can specify `undefined` for an omitted parameter in `examples`.
+
+### Fixed
 
 - Fixed a typo that broke local fetcher testing with a pack using the `AuthenticationType.Custom` authentication.
 - Fixed a bug where `examples` using array parameters would fail upload validation.
 - Fixed an inconsistency where `SetEndpoint.getOptionsFormulas` required using the obsolete `makeMetadataFormula` wrapper instead of allowing you to provide a raw function.
-- Formulas that use optional parameters can specify `undefined` for an omitted parameter in `examples`.
 
-## 0.7.2
+## [0.7.2] - 2021-11-24
+
+### Fixed
 
 - Fixed missing schema description in compiled metadata.
 - Fixed the fetcher to properly recognize more XML content type headers and parse those responses int objects using `xml2js`.
   - Previously only `text/xml` and `application/xml` were recognized, but headers like `application/atom+xml` were ignored and response bodies returned as strings.
 - Fixed `coda init` and `coda execute` to stop throwing errors on Windows.
 
-## 0.7.1
+## [0.7.1] - 2021-11-17
 
-- Update internal authentication mechanisms for interacting with AWS. Not currently available externally.
-- `makeObjectSchema` no longer requires you to redundantly specify `type: ValueType.Object` in your schema definition.
+### Added
+
 - Added support for `AuthenticationType.Custom` which formalizes the ability to use templating to insert secret credentials onto network requests that previously relied on `AuthenticationType.WebBasic`. This enables authenticating with APIs that use non-standard authentication methods. See an example of using this new authentication method below.
   ```typescript
   // pack authentication
@@ -189,13 +247,20 @@ await myHelper(context);
   }
   ```
 
-## 0.7.0
+### Changed
+
+- Update internal authentication mechanisms for interacting with AWS. Not currently available externally.
+- `makeObjectSchema` no longer requires you to redundantly specify `type: ValueType.Object` in your schema definition.
+
+## [0.7.0] - 2021-11-04
+
+### Changed
 
 - Pack bundle format is changed to IIFE to fix occasional stacktrace misinterpretation. Previously compiled bundles will still be supported but may suffer from inaccurate sourcemap issue until the pack is built with the new SDK.
 
-## 0.6.0
+## [0.6.0] - 2021-10-13
 
-- **Breaking Change** Column Formats must now use only real Regex objects in their `matchers` array.
+### Added
 
 - If your pack uses fake timers (to simulate setTimeout) you can now store this as a persistent
   build option. Previously, you had to remember to include the flag --timerStrategy=fake any time
@@ -203,233 +268,251 @@ await myHelper(context);
   `coda setOption path/to/pack.ts timerStrategy fake` and it will store the option persistently
   in your `.coda-pack.json` file and use it for all builds.
 
-## 0.5.0
+### Changed
+
+- **Breaking Change** Column Formats must now use only real Regex objects in their `matchers` array.
+
+## [0.5.0] - 2021-10-13
+
+### Changed
 
 - **Breaking Change** `context.logger` has been removed. It has been redundant with `console.log`
   for a while, so we've eliminated the unnecessary extra interface to avoid confusion.
   (Also `console.trace/debug/warn/info/error` are all valid.)
-
 - Formula return types are now strong-typed (except if you are using the fromKey attribute of object properties).
-
 - CLI `coda execute` now defaults to run with vm. To execute without vm, use `--no-vm`.
-
-- Bug fix: Numeric and string `codaType` properties are no longer erroneously removed in upload validation.
-
 - CLI: You may omit a Pack version in your definition, either by using the pack builder (`coda.newPack()`)
   or using the `BasicPackDefinition` type (if you are using TypeScript). When you upload your pack,
   the next available version number will be selected and assigned on your behalf. This behavior matches
   what happens in the web editor.
-
 - CLI: `coda release` no longer requires an explicit Pack version to release a Pack version (if no Pack version is supplied, the latest version is marked for release instead).
 
-## 0.4.6
+### Fixed
+
+- Bug fix: Numeric and string `codaType` properties are no longer erroneously removed in upload validation.
+
+## [0.4.6] - 2021-08-18
+
+### Fixed
 
 - Bug fix: Executing sync table formulas via CLI now validates results correctly.
 
-## 0.4.5
+## [0.4.5] - 2021-08-02
+
+### Changed
 
 - Make a few testing functions (e.g. `executeFormulaFromPackDef`) optionally typed.
-
 - Update `StatusCodeError` constructor, which now requires the fetch request.
 
-## 0.4.4
+## [0.4.4] - 2021-07-27
+
+### Fixed
 
 - Fixed a bug where using `pack.setSystemAuthentication()` would add a required connection
   parameter to every formula.
 
-## 0.4.3
+## [0.4.3] - 2021-07-26
+
+### Fixed
 
 - Fixed a bug where using `setUserAuthentication()` with `AuthenticationType.None` would
   inadvertently make accounts required.
-
 - Fixed a TypeScript bug where using `setUserAuthentication()` with authentication types like OAuth2 would give
   TypeScript errors even for valid definitions.
-
 - Parse XML fetcher responses to JSON for respones with content type `application/xml`. Previously only `text/xml` worked.
 
-## 0.4.2
+## [0.4.2] - 2021-07-14
 
-Fixed a bug preventing `coda init` from working.
+### Fixed
 
-## 0.4.1
+- Fixed a bug preventing `coda init` from working.
 
-The pack builder now sets a default connection (account) requirement when you specify authentication.
-Normally, to indicate on a particular formula or sync table that an account is required,
-you manually specify a `connectionRequirement` option. To simplify the common case, when you
-call `pack.setUserAuthentication()` or `pack.setSystemAuthentication()`, all of the formulas
-and sync tables in your pack will be set to use `ConnectionRequirement.Required` unless
-that formula/sync explicitly defines a different `connectionRequirement`.
+## [0.4.1] - 2021-07-13
 
-If you wish to use a different default, you can supply a `defaultConnectionRequirement` option
-to `setUserAuthentication()` or `setSystemAuthentication()`.
+### Changed
 
-```typescript
-export const pack = newPack();
+-   The pack builder now sets a default connection (account) requirement when you specify authentication.
+    Normally, to indicate on a particular formula or sync table that an account is required,
+    you manually specify a `connectionRequirement` option. To simplify the common case, when you
+    call `pack.setUserAuthentication()` or `pack.setSystemAuthentication()`, all of the formulas
+    and sync tables in your pack will be set to use `ConnectionRequirement.Required` unless
+    that formula/sync explicitly defines a different `connectionRequirement`.
 
-// Implicitly sets all formulas and sync tables to use `connectionRequirement: ConnectionRequirement.Required`.
-pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
-// OR, to use a different default:
-pack.setUserAuthentication({
-  type: AuthenticationType.HeaderBearerToken,
-  defaultConnectionRequirememnt: ConnectionRequirement.None,
-});
+    If you wish to use a different default, you can supply a `defaultConnectionRequirement` option
+    to `setUserAuthentication()` or `setSystemAuthentication()`.
 
-pack.addFormula(...);
-pack.addSyncTable(...);
-```
+    ```typescript
+    export const pack = newPack();
 
-## 0.4.0
+    // Implicitly sets all formulas and sync tables to use `connectionRequirement: ConnectionRequirement.Required`.
+    pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
+    // OR, to use a different default:
+    pack.setUserAuthentication({
+      type: AuthenticationType.HeaderBearerToken,
+      defaultConnectionRequirememnt: ConnectionRequirement.None,
+    });
 
-### TypedStandardFormula renamed to Formula (TypeScript only)
+    pack.addFormula(...);
+    pack.addSyncTable(...);
+    ```
 
-The type `TypedStandardFormula`, which is the type used for the `formulas` array in main
-`PackVersionDefinition` type has been renamed `Formula` to be simpler and more intuitive.
+## [0.4.0] - 2021-07-09
 
-## 0.3.1
+### Changed
 
-### Metadata formulas no longer need to be wrapped in `makeMetadataFormula()`.
+-   **TypedStandardFormula renamed to Formula (TypeScript only)** - 
+    The type `TypedStandardFormula`, which is the type used for the `formulas` array in main
+    `PackVersionDefinition` type has been renamed `Formula` to be simpler and more intuitive.
 
-Packs support various kinds of "metadata formulas", which aren't explicitly callable by the user
-but provide supporting functionality to the pack. Examples of these include `getConnectionName`
-in the authentication section of a pack def, `autocomplete` for formula and sync parameters,
-and `getSchema` for dynamic sync tables.
+## [0.3.1] - 2021-07-01
 
-You now need only provide the JavaScript function that implements your metadata formula,
-and the SDK will wrap it in `makeMetadataFormula()` on your behalf.
+### Changed
 
-```typescript
-// Old
-makeParameter({type: ParameterTypeString, name: 'p', autocomplete: makeMetadataFormula(async (context, search) => ...)});
+-   **Metadata formulas no longer need to be wrapped in `makeMetadataFormula()`** - 
+    Packs support various kinds of "metadata formulas", which aren't explicitly callable by the user
+    but provide supporting functionality to the pack. Examples of these include `getConnectionName`
+    in the authentication section of a pack def, `autocomplete` for formula and sync parameters,
+    and `getSchema` for dynamic sync tables.
 
-// New
-makeParameter({type: ParameterTypeString, name: 'p', autocomplete: async (context, search) => ...});
-```
+    You now need only provide the JavaScript function that implements your metadata formula,
+    and the SDK will wrap it in `makeMetadataFormula()` on your behalf.
 
-```typescript
-// Old
-export const pack: PackVersionDefinition = {
-  defaultAuthentication: {
-    type: AuthenticationType.HeaderBearerToken,
-    getConnectionName: makeMetadataFormula(async (context, search) => {
+    ```typescript
+    // Old
+    makeParameter({type: ParameterTypeString, name: 'p', autocomplete: makeMetadataFormula(async (context, search) => ...)});
+
+    // New
+    makeParameter({type: ParameterTypeString, name: 'p', autocomplete: async (context, search) => ...});
+    ```
+
+    ```typescript
+    // Old
+    export const pack: PackVersionDefinition = {
+      defaultAuthentication: {
+        type: AuthenticationType.HeaderBearerToken,
+        getConnectionName: makeMetadataFormula(async (context, search) => {
+          ...
+        }),
+      },
       ...
-    }),
-  },
-  ...
-};
+    };
 
-// New
-export const pack = newPack();
+    // New
+    export const pack = newPack();
 
-pack.setUserAuthentication({
-  type: AuthenticationType.HeaderBearerToken,
-  getConnectionName: async (context, search) => {
-    ...
-  },
-  ...
-};
-```
+    pack.setUserAuthentication({
+      type: AuthenticationType.HeaderBearerToken,
+      getConnectionName: async (context, search) => {
+        ...
+      },
+      ...
+    };
+    ```
 
-Additionally, if you are only using hardcoded values for your autocomplete options,
-you may specify them directly without needing to wrap them in a function. The SDK
-will create a function on your behalf that searches over the given options.
+    Additionally, if you are only using hardcoded values for your autocomplete options,
+    you may specify them directly without needing to wrap them in a function. The SDK
+    will create a function on your behalf that searches over the given options.
 
-```typescript
-makeParameter({
-  ...
-  autocomplete: ['apple', 'banana'],
-});
+    ```typescript
+    makeParameter({
+      ...
+      autocomplete: ['apple', 'banana'],
+    });
 
-// Or
+    // Or
 
-makeParameter({
-  ...
-  autocomplete: [{display: 'Apple', value: 1}, {display: 'Banana', value: 2}],
-});
-```
+    makeParameter({
+      ...
+      autocomplete: [{display: 'Apple', value: 1}, {display: 'Banana', value: 2}],
+    });
+    ```
 
-The one caveat is that if you need to override the default `connectionRequirement` for
-a metadata formula, you will still need to use `makeMetadataFormula(fn, {connectionRequirement})`
-to provide that override. This is very rare, but it is sometimes needed for autocomplete formulas
-that need not use authentication even when the parent formula does.
+    The one caveat is that if you need to override the default `connectionRequirement` for
+    a metadata formula, you will still need to use `makeMetadataFormula(fn, {connectionRequirement})`
+    to provide that override. This is very rare, but it is sometimes needed for autocomplete formulas
+    that need not use authentication even when the parent formula does.
 
-## 0.3.0
+## [0.3.0] - 2021-06-29
 
-### Clarity around sync table identities
+### Changed
 
-`makeSyncTable()` now takes a top-level field `identityName`, replacing the `identity` field
-on the sync table's schema. To migrate, you can simply remove the `identity` field of your
-schema and move the identity name string to the new `identityName` value.
+-   **Clarity around sync table identities** - 
+    `makeSyncTable()` now takes a top-level field `identityName`, replacing the `identity` field
+    on the sync table's schema. To migrate, you can simply remove the `identity` field of your
+    schema and move the identity name string to the new `identityName` value.
 
-The identity name is essentially the unique id for a sync table. It is also used if you want
-to return objects from other syncs or formulas that reference rows in this single table.
-To do that, you would use this identity name in the `identity` field of the schema
-for that other formula/sync.
+    The identity name is essentially the unique id for a sync table. It is also used if you want
+    to return objects from other syncs or formulas that reference rows in this single table.
+    To do that, you would use this identity name in the `identity` field of the schema
+    for that other formula/sync.
 
-```typescript
-// Old
-makeSyncTable({
-  name: 'MySync',
-  schema: makeObjectSchema({
-    identity: {name: 'MyIdentity'},
-    ...
-  }),
-  formula: ...
-});
+    ```typescript
+    // Old
+    makeSyncTable({
+      name: 'MySync',
+      schema: makeObjectSchema({
+        identity: {name: 'MyIdentity'},
+        ...
+      }),
+      formula: ...
+    });
 
-// New
-makeSyncTable({
-  name: 'MySync',
-  identityName: 'MyIdentity',
-  schema: makeObjectSchema({
-    ...
-  }),
-  formula: ...
-});
-```
+    // New
+    makeSyncTable({
+      name: 'MySync',
+      identityName: 'MyIdentity',
+      schema: makeObjectSchema({
+        ...
+      }),
+      formula: ...
+    });
+    ```
 
-## 0.2.0
+## [0.2.0] - 2021-06-28
 
-### `makeSyncTable()` now accepts a single parameter dictionary instead of having some positional parameters first.
+### Changed
 
-This eliminates an inconsistency between this function and most similar wrapper functions elsewhere in the SDK.
+-   **`makeSyncTable()` now accepts a single parameter dictionary instead of having some positional parameters first** - 
+    This eliminates an inconsistency between this function and most similar wrapper functions elsewhere in the SDK.
 
-To migrate existing usage:
+    To migrate existing usage:
 
-```typescript
-// Old
-makeSyncTable('Name', {<schema>}, {<formula>});
+    ```typescript
+    // Old
+    makeSyncTable('Name', {<schema>}, {<formula>});
 
-// New
-makeSynctable({name: 'Name', schema: {<schema>}, formula: {<formula>}});
-```
+    // New
+    makeSynctable({name: 'Name', schema: {<schema>}, formula: {<formula>}});
+    ```
 
-If you wish to continue using the old syntax (temporarily while we still support it), you can simply update
-your imports to this and leave your code unchanged:
+    If you wish to continue using the old syntax (temporarily while we still support it), you can simply update
+    your imports to this and leave your code unchanged:
 
-```typescript
-import {makeSyncTableLegacy as makeSyncTable} from '@codahq/packs-sdk/dist/legacy_exports';
-```
+    ```typescript
+    import {makeSyncTableLegacy as makeSyncTable} from '@codahq/packs-sdk/dist/legacy_exports';
+    ```
 
-The new syntax has also been applied to the pack builder's `addSyncTable()` method.
+    The new syntax has also been applied to the pack builder's `addSyncTable()` method.
 
-### `makeParameter()` type input change
+-   **`makeParameter()` type input change** - 
+    The recently-introduced wrapper `makeParameter()` used a confusing input enum for the parameter type
+    that was largely drawn from an internal representation parameters. It has been changed to use a new
+    enum that is specific to parameters.
 
-The recently-introduced wrapper `makeParameter()` used a confusing input enum for the parameter type
-that was largely drawn from an internal representation parameters. It has been changed to use a new
-enum that is specific to parameters.
+    ```typescript
+    // Old
+    makeParameter({type: Type.string, name: 'param', ...});
+    // New
+    makeParameter({type: ParameterType.String, name: 'param', ...});
 
-```typescript
-// Old
-makeParameter({type: Type.string, name: 'param', ...});
-// New
-makeParameter({type: ParameterType.String, name: 'param', ...});
+    // Old
+    makeParameter({arrayType: Type.string, name: 'param', ...});
+    // New
+    makeParameter({type: ParameterType.StringArray, name: 'param', ...});
+    ```
 
-// Old
-makeParameter({arrayType: Type.string, name: 'param', ...});
-// New
-makeParameter({type: ParameterType.StringArray, name: 'param', ...});
-```
+## [0.1.0] - 2021-06-22
 
-## 0.1.0
+### Added
 
-Beginning of alpha versioning.
+- Beginning of alpha versioning.
