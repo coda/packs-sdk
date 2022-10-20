@@ -2,7 +2,7 @@
 
 This changelog keeps track of all changes to the Packs SDK. We follow conventions from [keepachangelog](https://keepachangelog.com/en/1.0.0/).
 
-## Unreleased
+## [Unreleased]
 
 ### Added
 
@@ -160,7 +160,7 @@ await myHelper(context);
 
 - **Breaking Change** ValueHintType.Url will now create a column of type "Link" instead of "Text".
 
-## [0.8.2] - 2022-03-04
+## 0.8.2 - 2022-03-04
 
 ### Added
 
@@ -169,13 +169,13 @@ await myHelper(context);
 - Added `StringEmbedSchema` to handle configuration on how embed values appear in docs
 - Added "coda clone <packId>", similar to "coda init" but for packs that were already created in the Pack Studio.
 
-## [0.8.1] - 2022-01-19
+## 0.8.1 - 2022-01-19
 
 ### Removed
 
 - Removed postinstall to avoid patching failure for npm 6 or older versions.
 
-## [0.8.0] - 2022-01-14
+## 0.8.0 - 2022-01-14
 
 ### Added
 
@@ -192,7 +192,7 @@ await myHelper(context);
 
 - Deprecated `hidden` field is now fully removed on formula parameter.
 
-## [0.7.3] - 2021-12-06
+## 0.7.3 - 2021-12-06
 
 ### Changed
 
@@ -204,7 +204,7 @@ await myHelper(context);
 - Fixed a bug where `examples` using array parameters would fail upload validation.
 - Fixed an inconsistency where `SetEndpoint.getOptionsFormulas` required using the obsolete `makeMetadataFormula` wrapper instead of allowing you to provide a raw function.
 
-## [0.7.2] - 2021-11-24
+## 0.7.2 - 2021-11-24
 
 ### Fixed
 
@@ -213,7 +213,7 @@ await myHelper(context);
   - Previously only `text/xml` and `application/xml` were recognized, but headers like `application/atom+xml` were ignored and response bodies returned as strings.
 - Fixed `coda init` and `coda execute` to stop throwing errors on Windows.
 
-## [0.7.1] - 2021-11-17
+## 0.7.1 - 2021-11-17
 
 ### Added
 
@@ -252,13 +252,13 @@ await myHelper(context);
 - Update internal authentication mechanisms for interacting with AWS. Not currently available externally.
 - `makeObjectSchema` no longer requires you to redundantly specify `type: ValueType.Object` in your schema definition.
 
-## [0.7.0] - 2021-11-04
+## 0.7.0 - 2021-11-04
 
 ### Changed
 
 - Pack bundle format is changed to IIFE to fix occasional stacktrace misinterpretation. Previously compiled bundles will still be supported but may suffer from inaccurate sourcemap issue until the pack is built with the new SDK.
 
-## [0.6.0] - 2021-10-13
+## 0.6.0 - 2021-10-13
 
 ### Added
 
@@ -272,7 +272,7 @@ await myHelper(context);
 
 - **Breaking Change** Column Formats must now use only real Regex objects in their `matchers` array.
 
-## [0.5.0] - 2021-10-13
+## 0.5.0 - 2021-10-13
 
 ### Changed
 
@@ -291,27 +291,27 @@ await myHelper(context);
 
 - Bug fix: Numeric and string `codaType` properties are no longer erroneously removed in upload validation.
 
-## [0.4.6] - 2021-08-18
+## 0.4.6 - 2021-08-18
 
 ### Fixed
 
 - Bug fix: Executing sync table formulas via CLI now validates results correctly.
 
-## [0.4.5] - 2021-08-02
+## 0.4.5 - 2021-08-02
 
 ### Changed
 
 - Make a few testing functions (e.g. `executeFormulaFromPackDef`) optionally typed.
 - Update `StatusCodeError` constructor, which now requires the fetch request.
 
-## [0.4.4] - 2021-07-27
+## 0.4.4 - 2021-07-27
 
 ### Fixed
 
 - Fixed a bug where using `pack.setSystemAuthentication()` would add a required connection
   parameter to every formula.
 
-## [0.4.3] - 2021-07-26
+## 0.4.3 - 2021-07-26
 
 ### Fixed
 
@@ -321,13 +321,13 @@ await myHelper(context);
   TypeScript errors even for valid definitions.
 - Parse XML fetcher responses to JSON for respones with content type `application/xml`. Previously only `text/xml` worked.
 
-## [0.4.2] - 2021-07-14
+## 0.4.2 - 2021-07-14
 
 ### Fixed
 
 - Fixed a bug preventing `coda init` from working.
 
-## [0.4.1] - 2021-07-13
+## 0.4.1 - 2021-07-13
 
 ### Changed
 
@@ -356,7 +356,7 @@ await myHelper(context);
     pack.addSyncTable(...);
     ```
 
-## [0.4.0] - 2021-07-09
+## 0.4.0 - 2021-07-09
 
 ### Changed
 
@@ -364,7 +364,7 @@ await myHelper(context);
     The type `TypedStandardFormula`, which is the type used for the `formulas` array in main
     `PackVersionDefinition` type has been renamed `Formula` to be simpler and more intuitive.
 
-## [0.3.1] - 2021-07-01
+## 0.3.1 - 2021-07-01
 
 ### Changed
 
@@ -432,7 +432,7 @@ await myHelper(context);
     to provide that override. This is very rare, but it is sometimes needed for autocomplete formulas
     that need not use authentication even when the parent formula does.
 
-## [0.3.0] - 2021-06-29
+## 0.3.0 - 2021-06-29
 
 ### Changed
 
@@ -468,7 +468,7 @@ await myHelper(context);
     });
     ```
 
-## [0.2.0] - 2021-06-28
+## 0.2.0 - 2021-06-28
 
 ### Changed
 
@@ -511,8 +511,21 @@ await myHelper(context);
     makeParameter({type: ParameterType.StringArray, name: 'param', ...});
     ```
 
-## [0.1.0] - 2021-06-22
+## 0.1.0 - 2021-06-22
 
 ### Added
 
 - Beginning of alpha versioning.
+
+[unreleased]: https://github.com/coda/packs-sdk/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/coda/packs-sdk/compare/v1.0.5...v1.1.0
+[1.0.5]: https://github.com/coda/packs-sdk/compare/v1.0.4...v1.0.5
+[1.0.4]: https://github.com/coda/packs-sdk/compare/v1.0.3...v1.0.4
+[1.0.3]: https://github.com/coda/packs-sdk/compare/v1.0.2...v1.0.3
+[1.0.2]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.0.2
+[1.0.1]: https://github.com/coda/packs-sdk/compare/v1.0.0...v1.0.1
+[1.0.0]: https://github.com/coda/packs-sdk/compare/v0.12.1...v1.0.0
+[0.12.1]: https://github.com/coda/packs-sdk/compare/v0.12.0...v0.12.1
+[0.12.0]: https://github.com/coda/packs-sdk/compare/v0.11.0...v0.12.0
+[0.11.0]: https://github.com/coda/packs-sdk/compare/v0.9.0...v0.11.0
+[0.9.0]: https://github.com/coda/packs-sdk/compare/v0.8.2...v0.9.0
