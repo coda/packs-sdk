@@ -11,7 +11,7 @@
       "addUnreleased": true,
       "addVersionUrl": true,
       "versionUrlFormats": {
-        "repositoryUrl": "https://github.com/coda"
+        "repositoryUrl": "https://github.com/coda/packs-sdk"
       }
     }
   }
