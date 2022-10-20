@@ -7,6 +7,7 @@ import type {FetchResponse} from '../../api_types';
 import type {FormulaSpecification} from '../types';
 import {FormulaType} from '../types';
 import type {GenericSyncFormulaResult} from '../../api';
+import type {GenericSyncUpdate} from '../../api';
 import type {MetadataFormula} from '../../api';
 import {MetadataFormulaType} from '../types';
 import type {PackFormulaResult} from '../../api_types';
@@ -18,9 +19,9 @@ import {PostSetupType} from '../../types';
 import {StatusCodeError} from '../../api';
 import type {SyncExecutionContext} from '../../api_types';
 import type {SyncFormulaSpecification} from '../types';
-import type {SyncUpdate} from '../../api';
 import type {TypedPackFormula} from '../../api';
 import type {UpdateSyncExecutionContext} from '../../api_types';
+import {ensureExists} from '../../helpers/ensure';
 import {findFormula} from '../common/helpers';
 import {findSyncFormula} from '../common/helpers';
 import {isDynamicSyncTable} from '../../api';
@@ -36,16 +37,19 @@ export {
   marshalValuesForLogging,
 } from '../common/marshaling';
 
+interface FindAndExecutionPackFunctionArgs<T> {
+  params: ParamValues<ParamDefs>;
+  formulaSpec: T;
+  manifest: BasicPackDefinition;
+  executionContext: ExecutionContext | SyncExecutionContext;
+  updates?: GenericSyncUpdate[];
+}
 /**
  * The thunk entrypoint - the first code that runs inside the v8 isolate once control is passed over.
  */
 export async function findAndExecutePackFunction<T extends FormulaSpecification>(
-  params: ParamValues<ParamDefs>,
-  formulaSpec: T,
-  manifest: BasicPackDefinition,
-  executionContext: ExecutionContext | SyncExecutionContext,
-  shouldWrapError: boolean = true,
-  updates?: Array<SyncUpdate<any, any, any>>,
+  {shouldWrapError = true, ...args}:
+  {shouldWrapError: boolean} & FindAndExecutionPackFunctionArgs<T>,
 ): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult> {
   try {
     // in case the pack bundle is compiled in the browser, Buffer may not be browserified yet.
@@ -53,7 +57,7 @@ export async function findAndExecutePackFunction<T extends FormulaSpecification>
       global.Buffer = Buffer;
     }
 
-    return await doFindAndExecutePackFunction({params, formulaSpec, manifest, executionContext, updates});
+    return await doFindAndExecutePackFunction(args);
   } catch (err: any) {
     // all errors should be marshaled to avoid IVM dropping essential fields / name.
     throw shouldWrapError ? wrapError(err) : err;
@@ -61,13 +65,7 @@ export async function findAndExecutePackFunction<T extends FormulaSpecification>
 }
 
 function doFindAndExecutePackFunction<T extends FormulaSpecification>(
-  {params, formulaSpec, manifest, executionContext, updates}: {
-    params: ParamValues<ParamDefs>,
-    formulaSpec: T,
-    manifest: BasicPackDefinition,
-    executionContext: ExecutionContext | SyncExecutionContext,
-    updates?: Array<SyncUpdate<any, any, any>>,
-  },
+  {params, formulaSpec, manifest, executionContext, updates}: FindAndExecutionPackFunctionArgs<T>,
 ): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult> {
   const {syncTables, defaultAuthentication} = manifest;
 
@@ -210,13 +208,6 @@ function findParentFormula(
     const paramDef = params.find(param => param.name === formulaSpec.parameterName);
     return paramDef?.autocomplete;
   }
-}
-
-export function ensureExists<T>(value: T | null | undefined, message?: string): T {
-  if (typeof value === 'undefined' || value === null) {
-    throw new Error(message || `Expected value for ${String(value)}`);
-  }
-  return value;
 }
 
 export function ensureSwitchUnreachable(value: never): never {

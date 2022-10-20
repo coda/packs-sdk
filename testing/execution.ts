@@ -92,7 +92,9 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
   if (shouldValidateParams && formula) {
     validateParams(formula, params);
   }
-  let result = await thunk.findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, false);
+  let result = await thunk.findAndExecutePackFunction({
+    params, formulaSpec, manifest, executionContext, shouldWrapError: false,
+  });
 
   if (useDeprecatedResultNormalization && formula) {
     const resultToNormalize =

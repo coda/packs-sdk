@@ -1,12 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setUpBufferForTest = exports.handleFetcherStatusError = exports.handleError = exports.handleErrorAsync = exports.ensureSwitchUnreachable = exports.ensureExists = exports.findAndExecutePackFunction = exports.marshalValuesForLogging = exports.unmarshalValueFromString = exports.marshalValueToString = exports.unmarshalValue = exports.marshalValue = void 0;
+exports.setUpBufferForTest = exports.handleFetcherStatusError = exports.handleError = exports.handleErrorAsync = exports.ensureSwitchUnreachable = exports.findAndExecutePackFunction = exports.marshalValuesForLogging = exports.unmarshalValueFromString = exports.marshalValueToString = exports.unmarshalValue = exports.marshalValue = void 0;
 const types_1 = require("../../types");
 const buffer_1 = require("buffer");
 const types_2 = require("../types");
 const types_3 = require("../types");
 const types_4 = require("../../types");
 const api_1 = require("../../api");
+const ensure_1 = require("../../helpers/ensure");
 const helpers_1 = require("../common/helpers");
 const helpers_2 = require("../common/helpers");
 const api_2 = require("../../api");
@@ -22,13 +23,13 @@ Object.defineProperty(exports, "marshalValuesForLogging", { enumerable: true, ge
 /**
  * The thunk entrypoint - the first code that runs inside the v8 isolate once control is passed over.
  */
-async function findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, shouldWrapError = true, updates) {
+async function findAndExecutePackFunction({ shouldWrapError = true, ...args }) {
     try {
         // in case the pack bundle is compiled in the browser, Buffer may not be browserified yet.
         if (!global.Buffer) {
             global.Buffer = buffer_1.Buffer;
         }
-        return await doFindAndExecutePackFunction({ params, formulaSpec, manifest, executionContext, updates });
+        return await doFindAndExecutePackFunction(args);
     }
     catch (err) {
         // all errors should be marshaled to avoid IVM dropping essential fields / name.
@@ -54,7 +55,7 @@ function doFindAndExecutePackFunction({ params, formulaSpec, manifest, execution
             if (!formula.executeUpdate) {
                 throw new Error(`No executeUpdate function defined on sync table formula ${formulaSpec.formulaName}`);
             }
-            return formula.executeUpdate(params, ensureExists(updates), executionContext);
+            return formula.executeUpdate(params, (0, ensure_1.ensureExists)(updates), executionContext);
         }
         case types_2.FormulaType.Metadata: {
             switch (formulaSpec.metadataFormulaType) {
@@ -161,13 +162,6 @@ function findParentFormula(manifest, formulaSpec) {
         return paramDef === null || paramDef === void 0 ? void 0 : paramDef.autocomplete;
     }
 }
-function ensureExists(value, message) {
-    if (typeof value === 'undefined' || value === null) {
-        throw new Error(message || `Expected value for ${String(value)}`);
-    }
-    return value;
-}
-exports.ensureExists = ensureExists;
 function ensureSwitchUnreachable(value) {
     throw new Error(`Unreachable code hit with value ${String(value)}`);
 }
