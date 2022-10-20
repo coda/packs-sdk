@@ -614,6 +614,14 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
+"@brightcove/kacl@^0.1.11":
+  version "0.1.11"
+  resolved "https://registry.yarnpkg.com/@brightcove/kacl/-/kacl-0.1.11.tgz#c924a59a98f7d08ba294098f43d22606c341a9ca"
+  integrity sha512-1KdQpJKb6GhU5V6uAlmCIUvgVNcxyU8Wswzt2Gbe4O4sjnxCGWxNhDtbmkdvqyM0Qr+b5cvlw/Ophc9zzVl76w==
+  dependencies:
+    chalk "^2.4.1"
+    keep-a-changelog "^0.10.0"
+
 "@cspotcode/source-map-support@^0.8.0":
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/@cspotcode/source-map-support/-/source-map-support-0.8.1.tgz#00629c35a688e05a88b1cda684fb9d5e73f000a1"
@@ -2013,6 +2021,11 @@ callsites@^3.0.0:
   resolved "https://registry.npmjs.org/callsites/-/callsites-3.1.0.tgz"
   integrity sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==
 
+camelcase@^5.0.0:
+  version "5.3.1"
+  resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-5.3.1.tgz#e3c9b31569e106811df242f715725a1f4c494320"
+  integrity sha512-L28STB170nwWS63UjtlEOE3dldQApaJXZkOI1uMFfzf3rRuPegHaHesyee+YxQ+W6SvRDQV6UrdOdRiR153wJg==
+
 camelcase@^6.0.0:
   version "6.2.0"
   resolved "https://registry.npmjs.org/camelcase/-/camelcase-6.2.0.tgz"
@@ -2046,7 +2059,7 @@ chalk@5.0.1, chalk@^5.0.0, chalk@^5.0.1:
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-5.0.1.tgz#ca57d71e82bb534a296df63bbacc4a1c22b2a4b6"
   integrity sha512-Fo07WOYGqMfCWHOzSXOt2CxDbC6skS/jO9ynEcmpANMoPrD+W1r1K6Vx7iNm+AQmETU1Xr2t+n8nzkV9t6xh3w==
 
-chalk@^2.0.0:
+chalk@^2.0.0, chalk@^2.4.1:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"
   integrity sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==
@@ -2432,6 +2445,11 @@ debug@4, debug@4.3.4, debug@^4.0.0, debug@^4.1.1, debug@^4.3.2, debug@^4.3.4:
   integrity sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==
   dependencies:
     ms "2.1.2"
+
+decamelize@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/decamelize/-/decamelize-1.2.0.tgz#f6534d15148269b20352e7bee26f501f9a191290"
+  integrity sha512-z2S+W9X73hAUUki+N+9Za2lBlun89zigOyGrsax+KUQ6wKW4ZoWpEYBkGhQjwAjjDCkWxhY0VKEhk8wzY7F5cA==
 
 decamelize@^4.0.0:
   version "4.0.0"
@@ -3561,6 +3579,13 @@ git-url-parse@13.0.0:
   dependencies:
     git-up "^7.0.0"
 
+gitconfiglocal@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/gitconfiglocal/-/gitconfiglocal-2.1.0.tgz#07c28685c55cc5338b27b5acbcfe34aeb92e43d1"
+  integrity sha512-qoerOEliJn3z+Zyn1HW2F6eoYJqKwS6MgC9cztTLUB/xLWX8gD/6T60pKn4+t/d6tP7JlybI7Z3z+I572CR/Vg==
+  dependencies:
+    ini "^1.3.2"
+
 glob-parent@^5.1.2, glob-parent@~5.1.2:
   version "5.1.2"
   resolved "https://registry.npmjs.org/glob-parent/-/glob-parent-5.1.2.tgz"
@@ -3914,7 +3939,7 @@ ini@2.0.0:
   resolved "https://registry.yarnpkg.com/ini/-/ini-2.0.0.tgz#e5fd556ecdd5726be978fa1001862eacb0a94bc5"
   integrity sha512-7PnF4oN3CvZF23ADhA5wRaYEQpJ8qygSkbtTXWBeXWXmEVRXK+1ITciHWwHhsjv1TmW0MgacIv6hEi5pX5NQdA==
 
-ini@^1.3.4, ini@~1.3.0:
+ini@^1.3.2, ini@^1.3.4, ini@~1.3.0:
   version "1.3.8"
   resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.8.tgz#a29da425b48806f34767a4efce397269af28432c"
   integrity sha512-JV/yugV2uzW5iMRSiZAyDtQd+nxtUnjeLt0acNdw98kKLrvuRVyB80tsREOE7yvGVgalhZ6RNXCmEHkUKBKxew==
@@ -4455,6 +4480,15 @@ just-extend@^4.0.2:
   version "4.2.1"
   resolved "https://registry.npmjs.org/just-extend/-/just-extend-4.2.1.tgz"
   integrity sha512-g3UB796vUFIY90VIv/WX3L2c8CS2MdWUww3CNrYmqza1Fg0DURc2K/O4YrnklBdQarSJ/y8JnJYDGc+1iumQjg==
+
+keep-a-changelog@^0.10.0:
+  version "0.10.4"
+  resolved "https://registry.yarnpkg.com/keep-a-changelog/-/keep-a-changelog-0.10.4.tgz#fd2af71e7beccba26a8cf3857c7c47e524ade1cb"
+  integrity sha512-egtoaVyuQD5xFfZ/q3prVZM0TF8YYHcuWxbLg6jlPNu/PVkJba2Bvl6QukY+InoN6uXElbopE/gCLS3hNunhLg==
+  dependencies:
+    gitconfiglocal "^2.1.0"
+    semver "^7.3.2"
+    yargs-parser "^18.1.3"
 
 keyv@^4.0.0:
   version "4.3.0"
@@ -6172,6 +6206,13 @@ semver@7.3.7, semver@^7.0.0, semver@^7.3.4, semver@^7.3.5, semver@^7.3.6, semver
   dependencies:
     lru-cache "^6.0.0"
 
+semver@^7.3.2:
+  version "7.3.8"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-7.3.8.tgz#07a78feafb3f7b32347d725e33de7e2a2df67798"
+  integrity sha512-NB1ctGL5rlHrPJtFDVIVzTyQylMLu9N9VICA6HSFJo8MCGVTMW6gfpicwKmmK/dAjTOrqu5l63JJOpDSrAis3A==
+  dependencies:
+    lru-cache "^6.0.0"
+
 send@0.18.0:
   version "0.18.0"
   resolved "https://registry.yarnpkg.com/send/-/send-0.18.0.tgz#670167cc654b05f5aa4a767f9113bb371bc706be"
@@ -7383,6 +7424,14 @@ yargs-parser@21.1.1, yargs-parser@^21.0.0:
   version "21.1.1"
   resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-21.1.1.tgz#9096bceebf990d21bb31fa9516e0ede294a77d35"
   integrity sha512-tVpsJW7DdjecAiFpbIB1e3qxIQsE6NoPc5/eTdrbbIC4h0LVsWhnoa3g+m2HclBIujHzsxZ4VJVA+GUuc2/LBw==
+
+yargs-parser@^18.1.3:
+  version "18.1.3"
+  resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-18.1.3.tgz#be68c4975c6b2abf469236b0c870362fab09a7b0"
+  integrity sha512-o50j0JeToy/4K6OZcaQmW6lyXXKhq7csREXcDwk2omFPJEwUNOVtJKvmDr9EI1fAJZUyZcRF7kxGBWmRXudrCQ==
+  dependencies:
+    camelcase "^5.0.0"
+    decamelize "^1.2.0"
 
 yargs-parser@^20.2.2:
   version "20.2.9"

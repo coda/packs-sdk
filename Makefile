@@ -86,6 +86,9 @@ lint:
 	# Markdown lint.
 	npx remark docs --quiet --frail --ignore-pattern 'docs/reference/*'
 
+	# Changelog lint.
+	npx kacl lint
+
 	# release-it only understands "Unreleased" as the name of an upcoming release
 	RELEASE_NAME="$(shell egrep -m 1 '^## ' CHANGELOG.md | egrep -v "^## \[")"; \
 	if [[ "$$RELEASE_NAME" != "" && "$$RELEASE_NAME" != "## Unreleased" ]]; then \
