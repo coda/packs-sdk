@@ -18,6 +18,8 @@ label of the underlying property might not be descriptive enough at the top-leve
 
 An optional label for the property. This will be used in locations where the label appears with the property.
 
+If set to '', the label will be omitted.
+
 ___
 
 ### property

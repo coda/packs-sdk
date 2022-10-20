@@ -868,7 +868,7 @@ export interface PropertyIdentifierDetails {
  * An identifier for the value of a property for use in the {@link PropertyIdentifierDetails.label} field.
  * When used, this will be substituted with the value of the property for the final output of the label.
  *
- * If not present, the label will be used as-is in the default label format of '{label}: {VALUE}'.
+ * If not present, the label will be used as-is in the default label format of '\{label\}: \{VALUE\}'.
  */
 export const PropertyLabelValueTemplate = '{VALUE}';
 
