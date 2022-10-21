@@ -19,6 +19,26 @@ currently relevant scopes. This error exists because that default behavior is in
 the OAuth service does not set a 403 status code (the OAuth spec doesn't specifically require
 them to, after all).
 
+**`Example`**
+
+```ts
+try {
+  let response = context.fetcher.fetch({
+    // ...
+  });
+} catch (error) {
+  // Determine if the error is due to missing scopes.
+  if (error.statusCode == 400 && error.body?.message.includes("permission")) {
+    throw new coda.MissingScopesError();
+  }
+  // Else handle or throw the error as normal.
+}
+```
+
+**`See`**
+
+- [Guide: Authenticating using OAuth]({{ config.site_url }}guides/basics/authentication/oauth2/#triggering-a-prompt)
+
 ## Hierarchy
 
 - `Error`

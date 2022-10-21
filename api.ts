@@ -163,6 +163,24 @@ export class StatusCodeError extends Error {
  * currently relevant scopes. This error exists because that default behavior is insufficient if
  * the OAuth service does not set a 403 status code (the OAuth spec doesn't specifically require
  * them to, after all).
+ *
+ * @example
+ * ```ts
+ * try {
+ *   let response = context.fetcher.fetch({
+ *     // ...
+ *   });
+ * } catch (error) {
+ *   // Determine if the error is due to missing scopes.
+ *   if (error.statusCode == 400 && error.body?.message.includes("permission")) {
+ *     throw new coda.MissingScopesError();
+ *   }
+ *   // Else handle or throw the error as normal.
+ * }
+ * ```
+ *
+ * @see
+ * - [Guide: Authenticating using OAuth](https://coda.io/packs/build/latest/guides/basics/authentication/oauth2/#triggering-a-prompt)
  */
 export class MissingScopesError extends Error {
   /**
@@ -789,7 +807,7 @@ export interface SyncFormulaDef<
   /**
    * The JavaScript function that implements this sync update if the table supports updates.
    *
-   * This function takes in parameters, updated sync table objects, and a sync context, 
+   * This function takes in parameters, updated sync table objects, and a sync context,
    * and is responsible for pushing those updated objects to the external system then returning
    * the new state of each object.
    */

@@ -14,6 +14,7 @@ const NoteText = [
   'Make edits to the comments in the TypeScript file and then',
   'run `make docs` to regenerate this file.',
 ].join(' ');
+const AbsoluteUrlPrefix = 'https://coda.io/packs/build/latest/';
 
 async function main(): Promise<void> {
   const files = glob.sync(MarkdownPattern, {});
@@ -29,6 +30,7 @@ async function process(file: string) {
   let content = buf.toString();
 
   content = addFrontmatter(file, content);
+  content = replaceAbsoluteUrls(content);
 
   return fs.promises.writeFile(file, content);
 }
@@ -58,6 +60,10 @@ function addFrontmatter(file: string, content: string): string {
   ].join('\n');
 
   return [frontmatter, content].join('\n');
+}
+
+function replaceAbsoluteUrls(content: string) {
+  return content.replaceAll(AbsoluteUrlPrefix, '{{ config.site_url }}');
 }
 
 main().catch(print);
