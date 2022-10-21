@@ -14,7 +14,7 @@ const NoteText = [
   'Make edits to the comments in the TypeScript file and then',
   'run `make docs` to regenerate this file.',
 ].join(' ');
-const AbsoluteUrlPrefix = 'https://coda.io/packs/build/latest/';
+const AbsoluteUrlRegex = new RegExp('https://coda.io/packs/build/latest/', 'g');
 
 async function main(): Promise<void> {
   const files = glob.sync(MarkdownPattern, {});
@@ -63,7 +63,7 @@ function addFrontmatter(file: string, content: string): string {
 }
 
 function replaceAbsoluteUrls(content: string) {
-  return content.replaceAll(AbsoluteUrlPrefix, '{{ config.site_url }}');
+  return content.replace(AbsoluteUrlRegex, '{{ config.site_url }}');
 }
 
 main().catch(print);
