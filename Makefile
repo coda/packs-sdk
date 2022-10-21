@@ -287,11 +287,12 @@ validate-no-changes: clean compile docs
 	$(eval CHANGED_FILES := $(shell git diff --name-only))
 	if [[ -n "${UNTRACKED_FILES}" || -n "${CHANGED_FILES}" ]]; then \
 		mkdir -p /tmp/diffs; \
-	  git status > /tmp/diffs/untracked.txt; \
-		git diff > /tmp/diffs/changed.txt; \
+	  git status > /tmp/diffs/status.txt; \
+		git diff > /tmp/diffs/diff.txt; \
 		echo "The directory is not clean. Run 'make build' and commit all files."; \
 		echo "Untracked files: ${UNTRACKED_FILES}"; \
 		echo "Changed files: ${CHANGED_FILES}"; \
+		echo "More detailed information is available as build artifacts in Circle CI."; \
 		exit 1; \
 	fi
 
