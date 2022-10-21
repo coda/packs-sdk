@@ -78,6 +78,8 @@ jobs:
       - run:
           name: 'Ensure clean dist diff'
           command: make validate-no-changes
+      - store_artifacts:
+          path: /tmp/diffs
 
   build-docs-head:
     executor: default_build_environment

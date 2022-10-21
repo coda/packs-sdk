@@ -286,8 +286,9 @@ validate-no-changes: clean compile docs
 	$(eval UNTRACKED_FILES := $(shell git status --short))
 	$(eval CHANGED_FILES := $(shell git diff --name-only))
 	if [[ -n "${UNTRACKED_FILES}" || -n "${CHANGED_FILES}" ]]; then \
-	  get status; \
-		git diff --color; \
+		mkdir -p /tmp/diffs; \
+	  git status > /tmp/diffs/untracked.txt; \
+		git diff > /tmp/diffs/changed.txt; \
 		echo "The directory is not clean. Run 'make build' and commit all files."; \
 		echo "Untracked files: ${UNTRACKED_FILES}"; \
 		echo "Changed files: ${CHANGED_FILES}"; \
