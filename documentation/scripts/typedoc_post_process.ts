@@ -1,9 +1,9 @@
 import * as fs from 'fs';
 import glob from 'glob';
 import path from 'path';
-import {print} from '../testing/helpers';
+import {print} from '../../testing/helpers';
 
-const BaseDir = path.join(__dirname, '..');
+const BaseDir = path.join(__dirname, '../..');
 const TypeDocsRoot = path.join(BaseDir, 'docs/reference/sdk');
 const MarkdownPattern = path.join(TypeDocsRoot, '**/*.md');
 // Extracts the name from "# Name", "# Type: Name", and
