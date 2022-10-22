@@ -78,6 +78,8 @@ export type {GenericSyncFormula} from './api';
 export type {GenericSyncFormulaResult} from './api';
 export type {GenericSyncTable} from './api';
 export type {GenericSyncUpdate} from './api';
+export type {GenericSyncUpdateResult} from './api';
+export type {GenericSyncUpdateSingleResult} from './api';
 export type {InvocationLocation} from './api_types';
 export type {MetadataContext} from './api';
 export type {MetadataFormulaObjectResultType} from './api';
