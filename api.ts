@@ -714,6 +714,10 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
   continuation?: Continuation;
 }
 
+/**
+ * Type definition for the parameter used to pass in a batch of updates to a sync table update function.
+ * @hidden
+ */
 export interface SyncUpdate<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
   previousValue: ObjectSchemaDefinitionType<K, L, SchemaT>;
   newValue: ObjectSchemaDefinitionType<K, L, SchemaT>;
@@ -721,14 +725,43 @@ export interface SyncUpdate<K extends string, L extends string, SchemaT extends 
 }
 
 /**
- * Type definition for the parameter used to pass in updates to a sync table update function.
+ * Generic type definition for the parameter used to pass in updates to a sync table update function.
  * @hidden
  */
 export type GenericSyncUpdate = SyncUpdate<any, any, any>;
 
-export interface SyncUpdateResult<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
-  result: Array<ObjectSchemaDefinitionType<K, L, SchemaT> | Error>;
+/**
+ * Type definition for a single update result returned by a sync table update function.
+ * @hidden
+ */
+export interface SyncUpdateSingleResult<
+  K extends string,
+  L extends string,
+  SchemaT extends ObjectSchemaDefinition<K, L>,
+> {
+  newValue?: ObjectSchemaDefinitionType<K, L, SchemaT>;
+  error?: Error;
 }
+
+/**
+ * Generic type definition for a single update result returned by a sync table update function.
+ * @hidden
+ */
+export type GenericSyncUpdateSingleResult = SyncUpdateSingleResult<any, any, any>;
+
+/**
+ * Type definition for the batched result returned by a sync table update function.
+ * @hidden
+ */
+export interface SyncUpdateResult<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
+  result: Array<SyncUpdateSingleResult<K, L, SchemaT>>;
+}
+
+/**
+ * Generic type definition for the result returned by a sync table update function.
+ * @hidden
+ */
+export type GenericSyncUpdateResult = SyncUpdateResult<any, any, any>;
 
 /**
  * Inputs for creating the formula that implements a sync table.
