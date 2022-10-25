@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.unmarshalError = exports.marshalError = exports.unwrapError = exports.wrapError = exports.unmarshalValue = exports.unmarshalValueFromString = exports.marshalValueToString = exports.marshalValue = exports.marshalValuesForLogging = void 0;
+exports.unmarshalError = exports.marshalError = exports.unwrapError = exports.wrapError = exports.unmarshalValue = exports.unmarshalValueFromString = exports.marshalValueToString = exports.marshalValue = exports.marshalValuesForLogging = exports.isMarshaledValue = void 0;
 const constants_1 = require("./constants");
 const constants_2 = require("./constants");
 const api_1 = require("../../../api");
@@ -131,6 +131,7 @@ function fixUncopyableTypes(val, pathPrefix, postTransforms, depth = 0) {
 function isMarshaledValue(val) {
     return typeof val === 'object' && constants_2.MarshalingInjectedKeys.CodaMarshaler in val;
 }
+exports.isMarshaledValue = isMarshaledValue;
 function marshalValuesForLogging(val) {
     return [marshalValue((0, util_1.format)(...val))];
 }
