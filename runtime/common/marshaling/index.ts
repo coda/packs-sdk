@@ -155,7 +155,7 @@ function fixUncopyableTypes(
   return {val, hasModifications: false};
 }
 
-function isMarshaledValue(val: any): boolean {
+export function isMarshaledValue(val: any): boolean {
   return typeof val === 'object' && MarshalingInjectedKeys.CodaMarshaler in val;
 }
 
