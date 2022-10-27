@@ -136,3 +136,7 @@ div.no pre code {
 .box-item .headerlink {
   display: none;
 }
+
+.md-banner a {
+  color: var(--md-code-hl-color);
+}

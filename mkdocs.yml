@@ -110,6 +110,7 @@ theme:
   name: material
   custom_dir: documentation/theme
   features:
+    - announce.dismiss
     - navigation.tabs
     - navigation.tabs.sticky
     - navigation.sections
