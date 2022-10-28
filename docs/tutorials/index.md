@@ -18,6 +18,9 @@ The tutorials below provide step-by-step instructions and sample code to help yo
 {% for page in section.children %}
 
 <div class="box-item" markdown>
+
+{% if page.is_page %}
+
 {# Read the page's source, but don't output anything. This is required to populate the page title and metadata. #}
 {{ page.read_source(config) or "" }}
 
@@ -25,7 +28,14 @@ The tutorials below provide step-by-step instructions and sample code to help yo
 
 {% if page.meta.description %}{{page.meta.description}}{% endif %}
 
+{% elif page.is_link %}
+
+### {{ page.title }}
+
+{% endif %}
+
 [View]({{fix_url(page.url)}}){ .md-button }
+
 </div>
 
 {% endfor %}
