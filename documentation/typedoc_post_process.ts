@@ -52,6 +52,8 @@ function addFrontmatter(file: string, content: string): string {
     '---',
     `nav: "${title}"`,
     `note: "${NoteText}"`,
+    `search:`,
+    `  boost: 0.1`,
     '---',
   ].join('\n');
 

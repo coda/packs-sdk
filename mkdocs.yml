@@ -2,7 +2,7 @@
 # See: https://www.mkdocs.org/user-guide/configuration/
 site_name: Coda Pack SDK
 site_description: "Documentation for the SDK to build Coda Packs."
-site_url: !ENV MK_DOCS_SITE_URL
+site_url: !ENV [MK_DOCS_SITE_URL, "https://coda.io/packs/build/latest/"]
 repo_url: https://github.com/coda/packs-sdk
 repo_name: coda/packs-sdk
 edit_uri: https://github.com/coda/packs-sdk/blob/main/docs
