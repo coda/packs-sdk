@@ -1,9 +1,9 @@
 import * as fs from 'fs';
 import glob from 'glob';
 import path from 'path';
-import {print} from '../testing/helpers';
+import {print} from '../../testing/helpers';
 
-const BaseDir = path.join(__dirname, '..');
+const BaseDir = path.join(__dirname, '../..');
 const TypeDocsRoot = path.join(BaseDir, 'docs/reference/sdk');
 const MarkdownPattern = path.join(TypeDocsRoot, '**/*.md');
 // Extracts the name from "# Name", "# Type: Name", and
@@ -14,6 +14,7 @@ const NoteText = [
   'Make edits to the comments in the TypeScript file and then',
   'run `make docs` to regenerate this file.',
 ].join(' ');
+const AbsoluteUrlRegex = new RegExp('https://coda.io/packs/build/latest/', 'g');
 
 async function main(): Promise<void> {
   const files = glob.sync(MarkdownPattern, {});
@@ -29,6 +30,7 @@ async function process(file: string) {
   let content = buf.toString();
 
   content = addFrontmatter(file, content);
+  content = replaceAbsoluteUrls(content);
 
   return fs.promises.writeFile(file, content);
 }
@@ -58,6 +60,10 @@ function addFrontmatter(file: string, content: string): string {
   ].join('\n');
 
   return [frontmatter, content].join('\n');
+}
+
+function replaceAbsoluteUrls(content: string) {
+  return content.replace(AbsoluteUrlRegex, '{{ config.site_url }}');
 }
 
 main().catch(print);

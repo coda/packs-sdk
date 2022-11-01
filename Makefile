@@ -199,7 +199,7 @@ typedoc:
 	# Most options loaded from typedoc.js.
 	# If you changes this, also update the similar command in typedoc_coverage_test.ts.
 	${ROOTDIR}/node_modules/.bin/typedoc index.ts development.ts --options typedoc.js --disableSources "${DOC_DISABLE_SOURCES}" --gitRevision "${DOC_GIT_REVISION}" --out ${ROOTDIR}/docs/reference/sdk
-	node -r ts-node/register documentation/typedoc_post_process.ts
+	node -r ts-node/register documentation/scripts/typedoc_post_process.ts
 
 .PHONY: docs
 docs: typedoc generated-documentation build-mkdocs
@@ -286,7 +286,13 @@ validate-no-changes: clean compile docs
 	$(eval UNTRACKED_FILES := $(shell git status --short))
 	$(eval CHANGED_FILES := $(shell git diff --name-only))
 	if [[ -n "${UNTRACKED_FILES}" || -n "${CHANGED_FILES}" ]]; then \
-		echo "directory is not clean. run 'make build' and commit all files untracked: ${UNTRACKED_FILES} changed: ${CHANGED_FILES}"; \
+		mkdir -p /tmp/diffs; \
+	  git status > /tmp/diffs/status.txt; \
+		git diff > /tmp/diffs/diff.txt; \
+		echo "The directory is not clean. Run 'make build' and commit all files."; \
+		echo "Untracked files: ${UNTRACKED_FILES}"; \
+		echo "Changed files: ${CHANGED_FILES}"; \
+		echo "More detailed information is available as build artifacts in Circle CI."; \
 		exit 1; \
 	fi
 
