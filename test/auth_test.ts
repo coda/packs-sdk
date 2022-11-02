@@ -417,7 +417,7 @@ describe('Auth', () => {
         uri: 'https://example.com',
         encoding: undefined,
         resolveWithFullResponse: true,
-        followRedirect: undefined,
+        followRedirect: true,
         throwOnRedirect: false,
       });
     });
@@ -436,7 +436,7 @@ describe('Auth', () => {
           uri: 'https://example.com',
           encoding: undefined,
           resolveWithFullResponse: true,
-          followRedirect: undefined,
+          followRedirect: true,
           throwOnRedirect: false,
         });
       };
@@ -460,7 +460,7 @@ describe('Auth', () => {
           uri: 'https://example.com',
           encoding: undefined,
           resolveWithFullResponse: true,
-          followRedirect: undefined,
+          followRedirect: true,
           throwOnRedirect: false,
         });
       };
@@ -488,7 +488,7 @@ describe('Auth', () => {
           uri: 'https://some-endpoint-url.com/foo',
           encoding: undefined,
           resolveWithFullResponse: true,
-          followRedirect: undefined,
+          followRedirect: true,
           throwOnRedirect: false,
         });
       };
@@ -516,7 +516,7 @@ describe('Auth', () => {
           uri: 'https://some-endpoint-url.com/foo',
           encoding: undefined,
           resolveWithFullResponse: true,
-          followRedirect: undefined,
+          followRedirect: true,
           throwOnRedirect: false,
         });
       };
@@ -564,7 +564,7 @@ describe('Auth', () => {
           uri: 'https://example.com',
           encoding: undefined,
           resolveWithFullResponse: true,
-          followRedirect: undefined,
+          followRedirect: true,
           throwOnRedirect: false,
         });
       };
@@ -596,7 +596,7 @@ describe('Auth', () => {
           uri: 'https://example.com',
           encoding: undefined,
           resolveWithFullResponse: true,
-          followRedirect: undefined,
+          followRedirect: true,
           throwOnRedirect: false,
         });
       };
@@ -624,7 +624,7 @@ describe('Auth', () => {
           uri: 'https://example.com',
           encoding: undefined,
           resolveWithFullResponse: true,
-          followRedirect: undefined,
+          followRedirect: true,
           throwOnRedirect: false,
         });
       };
@@ -651,7 +651,7 @@ describe('Auth', () => {
           uri: 'https://example.com/foo?myParam=some-param-value&blah=123',
           encoding: undefined,
           resolveWithFullResponse: true,
-          followRedirect: undefined,
+          followRedirect: true,
           throwOnRedirect: false,
         });
       };
@@ -681,7 +681,7 @@ describe('Auth', () => {
           uri: 'https://example.com/foo?blah=123&param1=param-value-1&param2=param-value-2',
           encoding: undefined,
           resolveWithFullResponse: true,
-          followRedirect: undefined,
+          followRedirect: true,
           throwOnRedirect: false,
         });
       };
@@ -710,7 +710,7 @@ describe('Auth', () => {
           uri: 'https://example.com',
           encoding: undefined,
           resolveWithFullResponse: true,
-          followRedirect: undefined,
+          followRedirect: true,
           throwOnRedirect: false,
         });
       };
@@ -836,7 +836,7 @@ describe('Auth', () => {
           uri: 'https://example.com',
           encoding: undefined,
           resolveWithFullResponse: true,
-          followRedirect: undefined,
+          followRedirect: true,
           throwOnRedirect: false,
         });
       };
@@ -868,7 +868,7 @@ describe('Auth', () => {
           uri: 'https://some-endpoint-url.com/foo?bar=blah',
           encoding: undefined,
           resolveWithFullResponse: true,
-          followRedirect: undefined,
+          followRedirect: true,
           throwOnRedirect: false,
         });
       };
@@ -1185,7 +1185,7 @@ describe('Auth', () => {
         uri: 'https://example.com',
         encoding: undefined,
         resolveWithFullResponse: true,
-        followRedirect: undefined,
+        followRedirect: true,
         throwOnRedirect: false,
       });
     });
@@ -1223,7 +1223,7 @@ describe('Auth', () => {
           uri: 'https://example.com/some-blob.jpg',
           encoding: null,
           resolveWithFullResponse: true,
-          followRedirect: undefined,
+          followRedirect: true,
           throwOnRedirect: false,
         });
       };
@@ -1282,7 +1282,7 @@ describe('Auth', () => {
           uri: 'https://example.com',
           encoding: undefined,
           resolveWithFullResponse: true,
-          followRedirect: undefined,
+          followRedirect: true,
           throwOnRedirect: false,
         });
 
@@ -1326,7 +1326,7 @@ describe('Auth', () => {
           uri: 'https://example.com',
           encoding: undefined,
           resolveWithFullResponse: true,
-          followRedirect: undefined,
+          followRedirect: true,
           throwOnRedirect: false,
         });
 
