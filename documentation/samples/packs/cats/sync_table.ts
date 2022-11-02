@@ -62,10 +62,10 @@ pack.addSyncTable({
       let result = [];
       for (let cat of cats) {
         result.push({
-          image: "https://cataas.com/cat/" + cat.id,
+          image: "https://cataas.com/cat/" + cat._id,
           tags: cat.tags,
           created: cat.created_at,
-          id: cat.id,
+          id: cat._id,
         });
       }
       return {

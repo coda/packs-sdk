@@ -123,6 +123,7 @@ compile-isolated-vm:
 
 .PHONY: compile-thunk
 compile-thunk:
+	echo "Compiling thunk... if this fails with <Cannot find module 'isolated-vm'> errors, then run: yarn add isolated-vm";
 	# This bundle is loaded into ivm, better to use iife to avoid local symbols leak to global.
 	# We need the NODE_DEBUG=false because "util.format" depends on debuglog which depends
 	# on the value of NODE_DEBUG (https://github.com/nodejs/node/blob/6b055f385744d2ca71c19d46a0ec3bcfc51f5cd3/lib/internal/util/debuglog.js#L21)
@@ -139,6 +140,7 @@ compile-thunk:
 
 .PHONY: compile-ts
 compile-ts:
+	echo "Compiling Typescript... if this fails to build isolated-vm, you may need to install plain python (python 2 was removed in MacOS Monterey 12.3)";
 	${ROOTDIR}/node_modules/.bin/tsc
 
 	$(MAKE) compile-thunk
