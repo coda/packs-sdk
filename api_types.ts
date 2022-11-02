@@ -526,6 +526,14 @@ export interface FetchRequest {
    * wish to make an unauthenticated supporting request as part of a formula implementation.
    */
   disableAuthentication?: boolean;
+  /**
+   * Whether to follow the redirects indicated by an HTTP 301 or 302 response
+   * and fetch the URL indicated by the redirect. If false, requests returning
+   * an HTTP 301 or 302 response will be returned as-is, and you may inspect the
+   * `Location` header of the response to observe the indicated redirect URL.
+   * Defaults to true if unset.
+   */
+  followRedirects?: boolean;
 }
 
 /**
