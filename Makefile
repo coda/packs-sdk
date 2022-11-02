@@ -140,6 +140,7 @@ compile-thunk:
 
 .PHONY: compile-ts
 compile-ts:
+	echo "Compiling Typescript... if this fails to build isolated-vm, you may need to install plain python (python 2 was removed in MacOS Monterey 12.3)";
 	${ROOTDIR}/node_modules/.bin/tsc
 
 	$(MAKE) compile-thunk
