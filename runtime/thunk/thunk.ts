@@ -47,10 +47,12 @@ interface FindAndExecutionPackFunctionArgs<T> {
 /**
  * The thunk entrypoint - the first code that runs inside the v8 isolate once control is passed over.
  */
-export async function findAndExecutePackFunction<T extends FormulaSpecification>(
-  {shouldWrapError = true, ...args}:
-  {shouldWrapError: boolean} & FindAndExecutionPackFunctionArgs<T>,
-): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult> {
+export async function findAndExecutePackFunction<T extends FormulaSpecification>({
+  shouldWrapError = true,
+  ...args
+}: {shouldWrapError: boolean} & FindAndExecutionPackFunctionArgs<T>): Promise<
+  T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult
+> {
   try {
     // in case the pack bundle is compiled in the browser, Buffer may not be browserified yet.
     if (!global.Buffer) {
@@ -64,9 +66,15 @@ export async function findAndExecutePackFunction<T extends FormulaSpecification>
   }
 }
 
-function doFindAndExecutePackFunction<T extends FormulaSpecification>(
-  {params, formulaSpec, manifest, executionContext, updates}: FindAndExecutionPackFunctionArgs<T>,
-): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult> {
+function doFindAndExecutePackFunction<T extends FormulaSpecification>({
+  params,
+  formulaSpec,
+  manifest,
+  executionContext,
+  updates,
+}: FindAndExecutionPackFunctionArgs<T>): Promise<
+  T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult
+> {
   const {syncTables, defaultAuthentication} = manifest;
 
   switch (formulaSpec.type) {
@@ -232,11 +240,11 @@ export function handleError(func: () => any): any {
 
 export function handleFetcherStatusError(fetchResult: FetchResponse, fetchRequest: FetchRequest) {
   // using constant here to avoid another dependency.
-  if (fetchResult.status >= 300) {
+  if (fetchResult.status >= 400) {
     // this mimics the "request-promise" package behavior of throwing error upon non-200 responses.
     // https://github.com/request/promise-core/blob/master/lib/plumbing.js#L89
-    // this usually doesn't throw for 3xx since it by default follows redirects and will end up with
-    // another status code.
+    // Except we diverge by NOT throwing on 301/302, so that if you set followRedirects: false,
+    // you get a normal response instead of an exception.
     throw new StatusCodeError(fetchResult.status, fetchResult.body, fetchRequest, {
       body: fetchResult.body,
       headers: fetchResult.headers,

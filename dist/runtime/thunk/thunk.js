@@ -37,7 +37,7 @@ async function findAndExecutePackFunction({ shouldWrapError = true, ...args }) {
     }
 }
 exports.findAndExecutePackFunction = findAndExecutePackFunction;
-function doFindAndExecutePackFunction({ params, formulaSpec, manifest, executionContext, updates }) {
+function doFindAndExecutePackFunction({ params, formulaSpec, manifest, executionContext, updates, }) {
     const { syncTables, defaultAuthentication } = manifest;
     switch (formulaSpec.type) {
         case types_2.FormulaType.Standard: {
@@ -186,11 +186,11 @@ function handleError(func) {
 exports.handleError = handleError;
 function handleFetcherStatusError(fetchResult, fetchRequest) {
     // using constant here to avoid another dependency.
-    if (fetchResult.status >= 300) {
+    if (fetchResult.status >= 400) {
         // this mimics the "request-promise" package behavior of throwing error upon non-200 responses.
         // https://github.com/request/promise-core/blob/master/lib/plumbing.js#L89
-        // this usually doesn't throw for 3xx since it by default follows redirects and will end up with
-        // another status code.
+        // Except we diverge by NOT throwing on 301/302, so that if you set followRedirects: false,
+        // you get a normal response instead of an exception.
         throw new api_1.StatusCodeError(fetchResult.status, fetchResult.body, fetchRequest, {
             body: fetchResult.body,
             headers: fetchResult.headers,
