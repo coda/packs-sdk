@@ -6849,7 +6849,10 @@ module.exports = (() => {
   __name(unmarshalError, "unmarshalError");
 
   // runtime/thunk/thunk.ts
-  async function findAndExecutePackFunction({ shouldWrapError = true, ...args }) {
+  async function findAndExecutePackFunction({
+    shouldWrapError = true,
+    ...args
+  }) {
     try {
       if (!global.Buffer) {
         global.Buffer = import_buffer.Buffer;
@@ -6860,7 +6863,13 @@ module.exports = (() => {
     }
   }
   __name(findAndExecutePackFunction, "findAndExecutePackFunction");
-  function doFindAndExecutePackFunction({ params, formulaSpec, manifest, executionContext, updates }) {
+  function doFindAndExecutePackFunction({
+    params,
+    formulaSpec,
+    manifest,
+    executionContext,
+    updates
+  }) {
     const { syncTables, defaultAuthentication } = manifest;
     switch (formulaSpec.type) {
       case "Standard" /* Standard */: {
@@ -7001,7 +7010,7 @@ module.exports = (() => {
   }
   __name(handleError, "handleError");
   function handleFetcherStatusError(fetchResult, fetchRequest) {
-    if (fetchResult.status >= 300) {
+    if (fetchResult.status >= 400) {
       throw new StatusCodeError(fetchResult.status, fetchResult.body, fetchRequest, {
         body: fetchResult.body,
         headers: fetchResult.headers

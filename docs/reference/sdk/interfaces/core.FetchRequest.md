@@ -71,6 +71,15 @@ HTTP headers. You should NOT include authentication headers, as Coda will add th
 
 ___
 
+### ignoreRedirects
+
+• `Optional` **ignoreRedirects**: `boolean`
+
+If true, will immediatey return a response when encountering an HTTP 301
+You may inspect the `Location` header of the response to observe the indicated redirect URL.
+
+___
+
 ### isBinaryResponse
 
 • `Optional` **isBinaryResponse**: `boolean`

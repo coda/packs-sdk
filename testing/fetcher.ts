@@ -100,6 +100,8 @@ export class AuthenticatingFetcher implements Fetcher {
         body,
         resolveWithFullResponse: true,
         form,
+        followRedirect: !request.ignoreRedirects,
+        throwOnRedirect: false,
         // Omitting maxResponseSizeBytes since some packs are permitted larger values
         // in production.
       });
@@ -568,7 +570,9 @@ export class AuthenticatingFetcher implements Fetcher {
     const host = parsed.host.toLowerCase();
     const allowedDomains = this._networkDomains || [];
     if (
-      !allowedDomains.map(domain => domain.toLowerCase()).some(domain => host === domain || host.endsWith(`.${domain}`)) &&
+      !allowedDomains
+        .map(domain => domain.toLowerCase())
+        .some(domain => host === domain || host.endsWith(`.${domain}`)) &&
       !(method === 'GET' ? DEFAULT_ALLOWED_GET_DOMAINS_REGEXES : []).some(domain => domain.test(host.toLowerCase()))
     ) {
       throw new Error(`Attempted to connect to undeclared host '${host}'`);
