@@ -47,18 +47,6 @@ wish to make an unauthenticated supporting request as part of a formula implemen
 
 ___
 
-### followRedirects
-
-• `Optional` **followRedirects**: `boolean`
-
-Whether to follow the redirects indicated by an HTTP 301 or 302 response
-and fetch the URL indicated by the redirect. If false, requests returning
-an HTTP 301 or 302 response will be returned as-is, and you may inspect the
-`Location` header of the response to observe the indicated redirect URL.
-Defaults to true if unset.
-
-___
-
 ### form
 
 • `Optional` **form**: `Object`
@@ -80,6 +68,15 @@ HTTP headers. You should NOT include authentication headers, as Coda will add th
 #### Index signature
 
 ▪ [header: `string`]: `string`
+
+___
+
+### ignoreRedirects
+
+• `Optional` **ignoreRedirects**: `boolean`
+
+If true, will immediatey return a response when encountering an HTTP 301
+You may inspect the `Location` header of the response to observe the indicated redirect URL.
 
 ___
 

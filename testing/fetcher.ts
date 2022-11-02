@@ -100,7 +100,7 @@ export class AuthenticatingFetcher implements Fetcher {
         body,
         resolveWithFullResponse: true,
         form,
-        followRedirect: request.followRedirects,
+        followRedirect: !request.ignoreRedirects,
         throwOnRedirect: false,
         // Omitting maxResponseSizeBytes since some packs are permitted larger values
         // in production.
