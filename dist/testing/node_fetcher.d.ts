@@ -16,6 +16,12 @@ export interface BaseFetcherOptions {
         [key: string]: any;
     };
     followRedirect?: boolean;
+    /**
+     * With `simple: true` all non "ok" responses including 301/302 will throw
+     * StatusCodeErrors. If you want 301/302s to return instead of throwing, set
+     * this to false.
+     */
+    throwOnRedirect?: boolean;
     gzip?: boolean;
     json?: boolean;
     /** @deprecated You probably don't need this setting. */
@@ -35,6 +41,7 @@ export interface BaseFetcherOptions {
     resolveWithRawBody?: boolean;
     simple?: boolean;
     encoding?: string | null;
+    trustedSource?: boolean;
     ca?: string;
     maxResponseSizeBytes?: number;
 }
@@ -46,6 +53,7 @@ export declare type FetcherOptionsWithBodyResponse = BaseFetcherOptions & {
 };
 declare type FetcherBodyResponse = any;
 export interface FetcherFullResponse {
+    url: string;
     statusCode: number;
     statusMessage: string;
     headers: {
@@ -53,6 +61,13 @@ export interface FetcherFullResponse {
     };
     body?: FetcherBodyResponse;
 }
+export declare class StatusCodeError extends Error {
+    statusCode: number;
+    options: BaseFetcherOptions;
+    response: FetcherFullResponse;
+    constructor(statusCode: number, body: any, options: BaseFetcherOptions, response: FetcherFullResponse);
+}
+export declare function isStatusCodeError(err: any): err is StatusCodeError;
 export declare function nodeFetcher(options: FetcherOptionsWithFullResponse): Promise<FetcherFullResponse>;
 export declare function nodeFetcher(options: FetcherOptionsWithBodyResponse): Promise<FetcherBodyResponse>;
 export {};

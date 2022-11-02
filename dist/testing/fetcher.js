@@ -60,6 +60,7 @@ class AuthenticatingFetcher {
                 resolveWithFullResponse: true,
                 form,
                 followRedirect: request.followRedirects,
+                throwOnRedirect: false,
                 // Omitting maxResponseSizeBytes since some packs are permitted larger values
                 // in production.
             });
