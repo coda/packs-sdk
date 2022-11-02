@@ -388,6 +388,7 @@ describe('Auth', () => {
     ) {
       mockMakeRequest.returns(
         Promise.resolve({
+          url,
           statusCode: 200,
           statusMessage: 'OK',
           body: Buffer.isBuffer(responseBody) ? responseBody : JSON.stringify(responseBody),
@@ -417,6 +418,7 @@ describe('Auth', () => {
         encoding: undefined,
         resolveWithFullResponse: true,
         followRedirect: undefined,
+        throwOnRedirect: false,
       });
     });
 
@@ -435,6 +437,7 @@ describe('Auth', () => {
           encoding: undefined,
           resolveWithFullResponse: true,
           followRedirect: undefined,
+          throwOnRedirect: false,
         });
       };
       it('defaultAuthentication', () => execTest(createPackWithDefaultAuth(auth)));
@@ -458,6 +461,7 @@ describe('Auth', () => {
           encoding: undefined,
           resolveWithFullResponse: true,
           followRedirect: undefined,
+          throwOnRedirect: false,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
@@ -485,6 +489,7 @@ describe('Auth', () => {
           encoding: undefined,
           resolveWithFullResponse: true,
           followRedirect: undefined,
+          throwOnRedirect: false,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth, opts)));
@@ -512,6 +517,7 @@ describe('Auth', () => {
           encoding: undefined,
           resolveWithFullResponse: true,
           followRedirect: undefined,
+          throwOnRedirect: false,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth, opts)));
@@ -559,6 +565,7 @@ describe('Auth', () => {
           encoding: undefined,
           resolveWithFullResponse: true,
           followRedirect: undefined,
+          throwOnRedirect: false,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
@@ -590,6 +597,7 @@ describe('Auth', () => {
           encoding: undefined,
           resolveWithFullResponse: true,
           followRedirect: undefined,
+          throwOnRedirect: false,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
@@ -617,6 +625,7 @@ describe('Auth', () => {
           encoding: undefined,
           resolveWithFullResponse: true,
           followRedirect: undefined,
+          throwOnRedirect: false,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
@@ -643,6 +652,7 @@ describe('Auth', () => {
           encoding: undefined,
           resolveWithFullResponse: true,
           followRedirect: undefined,
+          throwOnRedirect: false,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
@@ -672,6 +682,7 @@ describe('Auth', () => {
           encoding: undefined,
           resolveWithFullResponse: true,
           followRedirect: undefined,
+          throwOnRedirect: false,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
@@ -700,6 +711,7 @@ describe('Auth', () => {
           encoding: undefined,
           resolveWithFullResponse: true,
           followRedirect: undefined,
+          throwOnRedirect: false,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
@@ -731,6 +743,7 @@ describe('Auth', () => {
 
         mockMakeRequest.returns(
           Promise.resolve({
+            url: 'https://some-url.com',
             statusCode: 200,
             statusMessage: 'OK',
             body: JSON.stringify({}),
@@ -779,6 +792,7 @@ describe('Auth', () => {
 
         mockMakeRequest.returns(
           Promise.resolve({
+            url: 'https://some-url.com',
             statusCode: 200,
             statusMessage: 'OK',
             body: JSON.stringify({}),
@@ -823,6 +837,7 @@ describe('Auth', () => {
           encoding: undefined,
           resolveWithFullResponse: true,
           followRedirect: undefined,
+          throwOnRedirect: false,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
@@ -854,6 +869,7 @@ describe('Auth', () => {
           encoding: undefined,
           resolveWithFullResponse: true,
           followRedirect: undefined,
+          throwOnRedirect: false,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth, opts)));
@@ -937,6 +953,7 @@ describe('Auth', () => {
 
         mockMakeRequest.returns(
           Promise.resolve({
+            url: 'https://some-url.com',
             statusCode: 200,
             statusMessage: 'OK',
             body: JSON.stringify({}),
@@ -985,6 +1002,7 @@ describe('Auth', () => {
 
         mockMakeRequest.returns(
           Promise.resolve({
+            url: 'https://some-url.com',
             statusCode: 200,
             statusMessage: 'OK',
             body: JSON.stringify({}),
@@ -1035,6 +1053,7 @@ describe('Auth', () => {
 
         mockMakeRequest.returns(
           Promise.resolve({
+            url: 'some-url',
             statusCode: 200,
             statusMessage: 'OK',
             body: JSON.stringify({}),
@@ -1086,6 +1105,7 @@ describe('Auth', () => {
 
         mockMakeRequest.returns(
           Promise.resolve({
+            url: 'https://some-url.com',
             statusCode: 200,
             statusMessage: 'OK',
             body: JSON.stringify({}),
@@ -1166,6 +1186,7 @@ describe('Auth', () => {
         encoding: undefined,
         resolveWithFullResponse: true,
         followRedirect: undefined,
+        throwOnRedirect: false,
       });
     });
 
@@ -1203,6 +1224,7 @@ describe('Auth', () => {
           encoding: null,
           resolveWithFullResponse: true,
           followRedirect: undefined,
+          throwOnRedirect: false,
         });
       };
       it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth, opts)));
@@ -1261,6 +1283,7 @@ describe('Auth', () => {
           encoding: undefined,
           resolveWithFullResponse: true,
           followRedirect: undefined,
+          throwOnRedirect: false,
         });
 
         sinon.assert.calledOnceWithMatch(fakeLaunchOAuthServerFlow, {
@@ -1304,6 +1327,7 @@ describe('Auth', () => {
           encoding: undefined,
           resolveWithFullResponse: true,
           followRedirect: undefined,
+          throwOnRedirect: false,
         });
 
         sinon.assert.calledOnceWithMatch(fakeLaunchOAuthServerFlow, {
