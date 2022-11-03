@@ -251,7 +251,7 @@ workflows:
       - utils/slack-notify-waiting-for-approval:
           context:
             - slack
-          slack_bot_token: ${PUSH_REMINDER_BOT_TOKEN}
+          slack_bot_token: ${SLACK_ACCESS_TOKEN}
           requires:
             - push-staging-docs
       - wait-for-approval:
