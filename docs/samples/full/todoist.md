@@ -64,7 +64,11 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
 
     // Schemas
 
+<<<<<<< HEAD
     // Schema that captures information about when a task is due. Used by
+=======
+    // Schema that captures information about when a task is due. Used by 
+>>>>>>> 7c5dc38e (Rebuild)
     // TaskSchema.
     const DueSchema = coda.makeObjectSchema({
       properties: {
@@ -144,6 +148,12 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
       // Sync table metadata.
       idProperty: "projectId",
       featuredProperties: ["url"],
+      // Card metadata.
+      linkProperty: "url",
+      subtitleProperties: ["shared", "favorite"],
+      identity: {
+        name: "Project",
+      },
     });
 
     // A reference to a synced Task. Usually you can use
@@ -222,6 +232,12 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
         // Sync table metadata.
       idProperty: "taskId",
       featuredProperties: ["project", "url"],
+      linkProperty: "url",
+      snippetProperty: "description",
+      subtitleProperties: ["priority", "completed", "due"],
+      identity: {
+        name: "Task",
+      },
     });
 
     /**
