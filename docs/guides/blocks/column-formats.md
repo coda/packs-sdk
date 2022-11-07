@@ -77,14 +77,14 @@ Column formats can use authentication to access private resources. The account u
 <img src="../../../images/column_format_options.png" srcset="../../../images/column_format_options_2x.png 2x" class="screenshot" alt="Selecting the account in the column format options">
 
 
-## Automatic formatting {: .matchers}
+## Automatic formatting {: #matchers}
 
 When creating a new column, Coda tries to guess the type of the column based on the first data entered. Column formats from Packs can be included in this process by declaring matchers. Matchers are [regular expressions][mdn_regex] that define which cell values the column format should be applied to. If one of the regular expressions matches the cell value the column format will be applied automatically.
 
 ```ts
 pack.addColumnFormat({
   name: "Task",
-  formulaName: "GetTask",
+  formulaName: "Task",
   // If the first values entered into a new column match these patterns then
   // this column format will be automatically applied.
   matchers: [
@@ -105,7 +105,7 @@ If your column format has [matchers](#matchers) defined it can also affect how l
 
 <img src="../../../images/column_format_canvas.png" srcset="../../../images/column_format_canvas_2x.png 2x" class="screenshot" alt="Selecting the account in the column format options">
 
-When selected, this will wrap the link in a call to the formula that backs the column format. For example, using the Todoist column format above, a Todoist URL would be wrapped in a `=GetTask()` formula.
+When selected, this will wrap the link in a call to the formula that backs the column format. For example, using the Todoist column format above, a Todoist URL would be wrapped in a `=Task()` formula.
 
 
 [samples]: ../../samples/topic/column-format.md

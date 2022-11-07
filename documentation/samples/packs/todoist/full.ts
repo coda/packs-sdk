@@ -122,6 +122,12 @@ const ProjectSchema = coda.makeObjectSchema({
   // Sync table metadata.
   idProperty: "projectId",
   featuredProperties: ["url"],
+  // Card metadata.
+  linkProperty: "url",
+  subtitleProperties: ["shared", "favorite"],
+  identity: {
+    name: "Project",
+  },
 });
 
 // A reference to a synced Task. Usually you can use
@@ -197,9 +203,15 @@ const TaskSchema = coda.makeObjectSchema({
     parentTask: TaskReferenceSchema,
   },
   displayProperty: "name",
-    // Sync table metadata.
+  // Sync table metadata.
   idProperty: "taskId",
   featuredProperties: ["project", "url"],
+  linkProperty: "url",
+  snippetProperty: "description",
+  subtitleProperties: ["priority", "completed", "due"],
+  identity: {
+    name: "Task",
+  },
 });
 
 /**

@@ -69,7 +69,7 @@ Formulas can use [authentication][authentication] to fetch private data. When us
     });
 
     pack.addFormula({
-      name: "GetTask",
+      name: "Task",
       description: "Gets a Todoist task by URL",
       parameters: [
         coda.makeParameter({
