@@ -754,6 +754,27 @@
     ]
   },
   {
+    "name": "Cards",
+    "description": "Samples that show how to create cards to preview content.",
+    "icon": "material/card-text",
+    "category": "Topic",
+    "triggerTokens": [],
+    "linkData": {
+      "type": "SdkReferencePath",
+      "url": "/guides/blocks/cards"
+    },
+    "exampleFooterLink": "https://coda.io/packs/build/latest/guides/blocks/cards",
+    "learnMoreLink": "/guides/blocks/cards",
+    "content": "A card is an visual way to display key information about an item, typically represented by a URL in an external application.",
+    "exampleSnippets": [
+      {
+        "name": "With link upgrade",
+        "content": "A card that can be created manually or from upgrading a link. This card shows the details of a task in Todoist.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// A schema defining the card, including all of metadata what specifically to \n// highlight in the card.\nconst TaskSchema = coda.makeObjectSchema({\n  properties: {\n    name: {\n      description: \"The name of the task.\",\n      type: coda.ValueType.String,\n      required: true,\n    },\n    description: {\n      description: \"A detailed description of the task.\",\n      type: coda.ValueType.String,\n    },\n    url: {\n      description: \"A link to the task in the Todoist app.\",\n      type: coda.ValueType.String,\n      codaType: coda.ValueHintType.Url,\n    },\n    priority: {\n      description: \"The priority of the task.\",\n      type: coda.ValueType.String,\n    },\n    taskId: {\n      description: \"The ID of the task.\",\n      type: coda.ValueType.Number,\n      required: true,\n    },\n  },\n  // Which property's content to show in the title of the card.\n  displayProperty: \"name\",\n  // Which property contains the link to open when the card is clicked.\n  linkProperty: \"url\",\n  // Which property's content to show in the body of the card.\n  snippetProperty: \"description\",\n  // Which properties' content to show in the subtitle of the card.\n  subtitleProperties: [\"priority\"],\n  // The unique identity of this schema, required to render as a card.\n  identity: {\n    name: \"Task\",\n  },\n});\n\n// Formula that renders a card for a task given it's URL. This will be shown a \n// \"Card\" in the Pack's list of building blocks, but is also a regular formula\n// that can be used elsewhere.\npack.addFormula({\n  name: \"Task\",\n  description: \"Gets a Todoist task by URL\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"url\",\n      description: \"The URL of the task\",\n    }),\n  ],\n  resultType: coda.ValueType.Object,\n  schema: TaskSchema,\n\n  execute: async function ([url], context) {\n    let taskId = extractTaskId(url);\n    let response = await context.fetcher.fetch({\n      url: \"https://api.todoist.com/rest/v1/tasks/\" + taskId,\n      method: \"GET\",\n    });\n    let task = response.body;\n    return {\n      name: task.content,\n      description: task.description,\n      url: task.url,\n      priority: task.priority,\n      taskId: task.id,\n    };\n  },\n});\n\n// Regular expressions that match Todoist task URLs. Used to match and parse \n// relevant URLs.\nconst TaskUrlPatterns: RegExp[] = [\n  new RegExp(\"^https://todoist.com/app/project/[0-9]+/task/([0-9]+)$\"),\n  new RegExp(\"^https://todoist.com/showTask\\\\?id=([0-9]+)\"),\n];\n\n// Add a column format for the Task formula, to define which URLs it should\n// trigger for. This also makes it easier to use the formula in a table column.\npack.addColumnFormat({\n  // How the option will show in the URL upgrade dialog.\n  name: \"Task\",\n  // The formula that generates the card.\n  formulaName: \"Task\",\n  // The set of regular expressions that if matched will trigger the URL upgrade\n  // dialog.\n  matchers: TaskUrlPatterns,\n});\n\n// Helper function to extract the Task ID from the URL.\nfunction extractTaskId(taskUrl: string) {\n  for (let pattern of TaskUrlPatterns) {\n    let matches = taskUrl.match(pattern);\n    if (matches && matches[1]) {\n      return matches[1];\n    }\n  }\n  throw new coda.UserVisibleError(\"Invalid task URL: \" + taskUrl);\n}\n\n// Allow the pack to make requests to Todoist.\npack.addNetworkDomain(\"todoist.com\");\n\n// Setup authentication using a Todoist API token.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.HeaderBearerToken,\n  instructionsUrl: \"https://todoist.com/app/settings/integrations\",\n});"
+      }
+    ]
+  },
+  {
     "name": "Hello World",
     "description": "A simple \"Hello World\" Pack.",
     "icon": "material/hand-wave-outline",

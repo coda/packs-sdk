@@ -905,6 +905,26 @@ export const Examples: Example[] = [
     ],
   },
   {
+    name: 'Cards',
+    description: 'Samples that show how to create cards to preview content.',
+    icon: 'material/card-text',
+    category: ExampleCategory.Topic,
+    triggerTokens: [],
+    contentFile: './samples/packs/card/README.md',
+    linkData: {
+      type: UrlType.SdkReferencePath,
+      url: '/guides/blocks/cards',
+    },
+    exampleSnippets: [
+      {
+        name: 'With link upgrade',
+        content:
+          'A card that can be created manually or from upgrading a link. This card shows the details of a task in Todoist.',
+        codeFile: './samples/packs/todoist/card.ts',
+      },
+    ],
+  },
+  {
     name: 'Hello World',
     description: 'A simple "Hello World" Pack.',
     icon: 'material/hand-wave-outline',
