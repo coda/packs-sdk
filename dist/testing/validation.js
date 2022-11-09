@@ -101,6 +101,8 @@ function validateResultType(resultType, result) {
             return checkType(typeOfResult === 'object', 'object', result);
         case api_types_1.Type.string:
             return checkType(typeOfResult === 'string', 'string', result);
+        case api_types_1.Type.row:
+            throw new Error('Row values cannot be used as return values.');
         default:
             return (0, ensure_2.ensureUnreachable)(resultType);
     }

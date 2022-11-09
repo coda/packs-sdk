@@ -113,6 +113,12 @@ Indicates a parameter that is a list of Coda number values.
 
 ___
 
+### Row
+
+• **Row** = ``"row"``
+
+___
+
 ### SparseBooleanArray
 
 • **SparseBooleanArray** = ``"sparseBooleanArray"``

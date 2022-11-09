@@ -19,6 +19,7 @@ var Type;
     Type[Type["html"] = 5] = "html";
     Type[Type["image"] = 6] = "image";
     Type[Type["file"] = 7] = "file";
+    Type[Type["row"] = 8] = "row";
 })(Type = exports.Type || (exports.Type = {}));
 function isArrayType(obj) {
     return obj && obj.type === 'array' && typeof obj.items === 'number';
@@ -92,6 +93,7 @@ var ParameterType;
      * Indicates a parameter that is a Coda file. The pack is passed a file URL.
      */
     ParameterType["File"] = "file";
+    ParameterType["Row"] = "row";
     /**
      * Indicates a parameter that is a list of Coda text values.
      */
@@ -162,6 +164,7 @@ exports.ParameterTypeInputMap = {
     [ParameterType.Html]: Type.html,
     [ParameterType.Image]: Type.image,
     [ParameterType.File]: Type.file,
+    [ParameterType.Row]: Type.row,
     [ParameterType.StringArray]: { type: 'array', items: Type.string },
     [ParameterType.NumberArray]: { type: 'array', items: Type.number },
     [ParameterType.BooleanArray]: { type: 'array', items: Type.boolean },

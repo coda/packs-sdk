@@ -20,6 +20,7 @@ export enum Type {
   html,
   image,
   file,
+  row,
 }
 
 export type ParamType = Exclude<Type, Type.object>;
@@ -88,6 +89,15 @@ export const fileArray: ArrayType<Type.file> = {
   items: Type.file,
 };
 
+export interface CellInput {
+  name: string;
+  value: any;
+}
+
+export interface RowInput {
+  cells: CellInput[];
+}
+
 // Mapping from our type enum to the JS types they are manifested as.
 export interface TypeMap {
   [Type.number]: number;
@@ -98,6 +108,7 @@ export interface TypeMap {
   [Type.html]: string;
   [Type.image]: string;
   [Type.file]: string;
+  [Type.row]: RowInput;
 }
 
 /**
@@ -153,6 +164,7 @@ export enum ParameterType {
    * Indicates a parameter that is a Coda file. The pack is passed a file URL.
    */
   File = 'file',
+  Row = 'row',
 
   /**
    * Indicates a parameter that is a list of Coda text values.
@@ -225,6 +237,7 @@ export interface ParameterTypeMap {
   [ParameterType.Html]: Type.html;
   [ParameterType.Image]: Type.image;
   [ParameterType.File]: Type.file;
+  [ParameterType.Row]: Type.row;
 
   [ParameterType.StringArray]: ArrayType<Type.string>;
   [ParameterType.NumberArray]: ArrayType<Type.number>;
@@ -251,6 +264,7 @@ export const ParameterTypeInputMap: Record<ParameterType, UnionType> = {
   [ParameterType.Html]: Type.html,
   [ParameterType.Image]: Type.image,
   [ParameterType.File]: Type.file,
+  [ParameterType.Row]: Type.row,
 
   [ParameterType.StringArray]: {type: 'array', items: Type.string},
   [ParameterType.NumberArray]: {type: 'array', items: Type.number},

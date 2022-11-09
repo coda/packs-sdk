@@ -95,6 +95,8 @@ function validateResultType<ResultT extends any>(resultType: Type, result: Resul
       return checkType(typeOfResult === 'object', 'object', result);
     case Type.string:
       return checkType(typeOfResult === 'string', 'string', result);
+    case Type.row:
+      throw new Error('Row values cannot be used as return values.');
     default:
       return ensureUnreachable(resultType);
   }

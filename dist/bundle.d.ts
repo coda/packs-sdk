@@ -1169,7 +1169,8 @@ export declare enum Type {
 	date = 4,
 	html = 5,
 	image = 6,
-	file = 7
+	file = 7,
+	row = 8
 }
 /**
  * The type of a parameter or return value that is an array.
@@ -1186,6 +1187,13 @@ export interface SparseArrayType<T extends Type> extends ArrayType<T> {
 	allowEmpty: true;
 }
 export declare type UnionType = ArrayType<Type> | Type;
+export interface CellInput {
+	name: string;
+	value: any;
+}
+export interface RowInput {
+	cells: CellInput[];
+}
 export interface TypeMap {
 	[Type.number]: number;
 	[Type.string]: string;
@@ -1195,6 +1203,7 @@ export interface TypeMap {
 	[Type.html]: string;
 	[Type.image]: string;
 	[Type.file]: string;
+	[Type.row]: RowInput;
 }
 /**
  * The union of types for arguments to the `execute` function for a formula.
@@ -1237,6 +1246,7 @@ export declare enum ParameterType {
 	 * Indicates a parameter that is a Coda file. The pack is passed a file URL.
 	 */
 	File = "file",
+	Row = "row",
 	/**
 	 * Indicates a parameter that is a list of Coda text values.
 	 */
@@ -1307,6 +1317,7 @@ export interface ParameterTypeMap {
 	[ParameterType.Html]: Type.html;
 	[ParameterType.Image]: Type.image;
 	[ParameterType.File]: Type.file;
+	[ParameterType.Row]: Type.row;
 	[ParameterType.StringArray]: ArrayType<Type.string>;
 	[ParameterType.NumberArray]: ArrayType<Type.number>;
 	[ParameterType.BooleanArray]: ArrayType<Type.boolean>;

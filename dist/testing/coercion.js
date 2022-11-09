@@ -60,6 +60,8 @@ function coerceParam(type, name, value) {
                 throw new Error(`Expected parameter ${name} to be a number value, but found ${value}`);
             }
             return Number(value);
+        case api_types_1.Type.row:
+            return (0, object_utils_1.isDefined)(value) ? JSON.parse(value) : value;
         case api_types_1.Type.html:
         case api_types_1.Type.file:
         case api_types_1.Type.image:
