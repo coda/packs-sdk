@@ -850,7 +850,6 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      *
      * Must be a {@link ValueType.String} property
      */
-    /** @hidden */
     titleProperty?: PropertyIdentifier<K>;
     /**
      * The name of a property within {@link ObjectSchemaDefinition.properties} that will
@@ -859,14 +858,12 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      * Must be a {@link ValueType.String} property with a {@link ValueHintType.Url}
      * {@link ObjectSchemaDefinition.codaType}.
      */
-    /** @hidden */
     linkProperty?: PropertyIdentifier<K>;
     /**
      * A list of property names from within {@link ObjectSchemaDefinition.properties} for the properties of the object
      * to be shown in the subtitle of a rich card preview for formulas that return this object.
      * Defaults to the value of {@link ObjectSchemaDefinition.featuredProperties} if not specified.
      */
-    /** @hidden */
     subtitleProperties?: Array<PropertyIdentifier<K>>;
     /**
      * The name of a property within {@link ObjectSchemaDefinition.properties} that be used as a textual summary
@@ -874,7 +871,6 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      *
      * Must be a {@link ValueType.String} property or {@link ValueType.Array} of {@link ValueType.String}s.
      */
-    /** @hidden */
     snippetProperty?: PropertyIdentifier<K>;
     /**
      * The name of a property within {@link ObjectSchemaDefinition.properties} that can be used as a rich image preview of
@@ -883,7 +879,6 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      * Must be a {@link ValueType.String} property with the
      * {@link ValueHintType.ImageAttachment} or {@link ValueHintType.ImageReference} hints
      */
-    /** @hidden */
     imageProperty?: PropertyIdentifier<K>;
 }
 export declare type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
