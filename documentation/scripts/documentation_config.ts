@@ -919,13 +919,19 @@ export const Examples: Example[] = [
       {
         name: 'Basic card',
         content:
-          'A formula that returns a card containing an image, subtitle, and snippet. This card shows the current weather at a given location in the United States.',
+          'A formula that returns a card containing an title, subtitle, and snippet. This sample returns a card with information about a spell in the game Dungeons & Dragons.',
+        codeFile: './samples/packs/dnd/card.ts',
+      },
+      {
+        name: 'With image',
+        content:
+          'A formula that returns a card that includes an image. This samples returns a card with the current weather at a given location in the United States.',
         codeFile: './samples/packs/card/weather.ts',
       },
       {
         name: 'With link upgrade',
         content:
-          'A card that can be created manually or from upgrading a link. This card shows the details of a task in Todoist.',
+          'A card that can be created manually or from upgrading a link. This sample returns a card with the details of a task in Todoist.',
         codeFile: './samples/packs/todoist/card.ts',
       },
     ],
