@@ -459,6 +459,53 @@ In your sync formula you only need to populate the fields of the reference objec
     Reference schemas are only resolved to rows when they are used in a sync table. If used in a formula or column format they will always appear in a broken state, even if the row they are referencing is present.
 
 
+## Schemas in cards
+
+The contents of a card are defined using an object schema. When used in a card there are additional fields that you may want to set:
+
+- [`titleProperty`][titleProperty]
+- [`subtitleProperties`][subtitleProperties]
+- [`snippetProperty`][snippetProperty]
+- [`linkProperty`][linkProperty]
+- [`imageProperty`][imageProperty]
+
+Read the [Cards guide][cards] for more information on how these fields are used.
+
+
+### Property labels
+
+A card's subtitle contains a set of properties, joined with a separator. Unlike other areas of the card where the property's value is shown, in the subtitle a label is shown instead. By default this label takes the form of `{name}: {value}`.
+
+```ts
+let MovieSchema = coda.makeObjectSchema({
+  // ...
+  subtitleProperties: ["director", "year", "rating"],
+});
+```
+
+<img src="../../../images/schemas_labels_default.png" srcset="../../../images/schemas_labels_default_2x.png 2x" class="screenshot" alt="Default labels for subtitle properties">
+
+However, there are times when the default label isn't a great fit. For instance you may want to put the property name after the value (`10 bugs` instead of `Bugs: 10`) or remove the label completely (`P1` instead of `Priority: P1`). 
+
+To customize the label, when specifying the `subtitleProperties` pass a [`PropertyIdentifierDetails`][PropertyIdentifierDetails] object instead of a string. Set the `property` field to the path of the property (what the string value normally contains) and set the `label` field to the template string to use for the label. 
+
+The constant [`PropertyLabelValueTemplate`][PropertyLabelValueTemplate] contains the placeholder value where the property's value will be inserted. To only show the value for a property, set the label to only contain that placeholder.
+
+```ts
+let MovieSchema = coda.makeObjectSchema({
+  // ...
+  subtitleProperties: [
+    "director",
+    // Customize the label for the year property.
+    { property: "year", label: `Released in ${coda.PropertyLabelValueTemplate}` },
+    // Only show the value of the rating property.
+    { property: "rating", label: `${coda.PropertyLabelValueTemplate}` },
+  ],
+});
+```
+
+<img src="../../../images/schemas_labels_custom.png" srcset="../../../images/schemas_labels_custom_2x.png 2x" class="screenshot" alt="Custom labels for subtitle properties">
+
 
 [samples]: ../../samples/topic/schema.md
 [data_types]: ../basics/data-types.md
@@ -472,3 +519,11 @@ In your sync formula you only need to populate the fields of the reference objec
 [data_types_objects]: ../basics/data-types.md#objects
 [mdn_spread_object]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax#spread_in_object_literals
 [sync_tables_actions]: ../blocks/sync-tables/index.md#actions
+[cards]: ../blocks/cards.md
+[PropertyIdentifierDetails]: ../../reference/sdk/interfaces/core.PropertyIdentifierDetails.md
+[PropertyLabelValueTemplate]: ../../reference/sdk/variables/core.PropertyLabelValueTemplate.md
+[titleProperty]: ../../reference/sdk/interfaces/core.ObjectSchemaDefinition.md#titleproperty
+[subtitleProperties]: ../../reference/sdk/interfaces/core.ObjectSchemaDefinition.md#subtitleproperties
+[snippetProperty]: ../../reference/sdk/interfaces/core.ObjectSchemaDefinition.md#snippetproperty
+[linkProperty]: ../../reference/sdk/interfaces/core.ObjectSchemaDefinition.md#linkproperty
+[imageProperty]: ../../reference/sdk/interfaces/core.ObjectSchemaDefinition.md#imageproperty
