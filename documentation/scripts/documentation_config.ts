@@ -917,6 +917,12 @@ export const Examples: Example[] = [
     },
     exampleSnippets: [
       {
+        name: 'Basic card',
+        content:
+          'A formula that returns a card containing an image, subtitle, and snippet. This card shows the current weather at a given location in the United States.',
+        codeFile: './samples/packs/card/weather.ts',
+      },
+      {
         name: 'With link upgrade',
         content:
           'A card that can be created manually or from upgrading a link. This card shows the details of a task in Todoist.',

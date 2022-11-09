@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <!-- Monaco library script is loaded from: https://cdnjs.com/libraries/monaco-editor-->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.27.0/min/vs/loader.min.js"
+      integrity="sha512-SExj71Cw3B9C9EE8BC/ad3AKia5zQXDj/2SM4THgkeKh5GIFZhKM/R3uclUG8YZwJrjcVhydAlIHmfNvsBCKZA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      require.config({
+        paths: {
+          vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.27.0/min/vs',
+        },
+      });
+
+      require(['vs/editor/editor.main'], function () {
+        var editor = monaco.editor.create(document.getElementById('container'), {
+          value: "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Define the schema that will be used to render the card.\nconst WeatherSchema = coda.makeObjectSchema({\n  properties: {\n    summary: { type: coda.ValueType.String, fromKey: \"shortForecast\" },\n    forecast: { type: coda.ValueType.String, fromKey: \"detailedForecast\" },\n    temperature: { type: coda.ValueType.String },\n    wind: { type: coda.ValueType.String, fromKey: \"windSpeed\" },\n    icon: { \n      type: coda.ValueType.String, \n      codaType: coda.ValueHintType.ImageReference,\n    },\n  },\n  displayProperty: \"summary\",\n  subtitleProperties: [\n    // Only show the value for the temperature property.\n    { property: \"temperature\", label: `${coda.PropertyLabelValueTemplate}` },\n    \"wind\",\n  ],\n  snippetProperty: \"forecast\",\n  imageProperty: \"icon\",\n  identity: {\n    name: \"Weather\",\n  },\n});\n\n// Add a formula that fetches the weather and returns it as a card.\npack.addFormula({\n  name: \"CurrentWeather\",\n  description: \"Get the current weather at a specific location (US only).\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.Number,\n      name: \"latitude\",\n      description: \"The latitude of the location.\",\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.Number,\n      name: \"longitude\",\n      description: \"The longitude of the location.\",\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.Boolean,\n      name: \"isMetric\",\n      description: \"Whether to use metric units. Default: false.\",\n      optional: true,\n    }),\n  ],\n  resultType: coda.ValueType.Object,\n  schema: WeatherSchema,\n  execute: async function ([latitude, longitude, isMetric], context) {\n    let url = await getForecastUrl(latitude, longitude, context);\n    if (isMetric) {\n      url = coda.withQueryParams(url, { units: \"si\" });\n    }\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: url,\n    });\n    let data = response.body;\n    let weather = data.properties.periods[0];\n    // Add the unit onto the temperature.\n    weather.temperature = `${weather.temperature}°${weather.temperatureUnit}`;\n    return weather;\n  },\n});\n\n// A helper function that gets the forecast URL for a given location.\nasync function getForecastUrl(latitude: number, longitude: number, \n  context: coda.ExecutionContext): Promise<string> {\n  try {\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: `https://api.weather.gov/points/${latitude},${longitude}`,\n    });\n    let data = response.body;\n    return data.properties.forecast;\n  } catch (error) {\n    // Check if the error is due to the location being outside the US.\n    if (error.statusCode === 404) {\n      let statusError = error as coda.StatusCodeError;\n      let message = statusError.body?.detail;\n      if (message) {\n        throw new coda.UserVisibleError(message);\n      }\n    }\n    throw error;\n  }\n}\n\npack.addNetworkDomain(\"weather.gov\");",
+          language: 'javascript',
+          minimap: {enabled: false},
+          readOnly: true,
+          renderValidationDecorations: 'off',
+          wordWrap: 'on',
+          contextmenu: false,
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div id="container" style="position: absolute; top: 0; right: 16; bottom: 16; left: 0"></div>
+  </body>
+</html>
