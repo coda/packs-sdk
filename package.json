@@ -90,7 +90,7 @@
     "@types/xml2js": "^0.4.11",
     "@types/yargs": "^17.0.13",
     "@typescript-eslint/eslint-plugin": "5.38.1",
-    "@typescript-eslint/experimental-utils": "5.42.0",
+    "@typescript-eslint/experimental-utils": "5.42.1",
     "@typescript-eslint/parser": "5.38.1",
     "aws-sdk": "^2.1227.0",
     "buffer": "^6.0.3",
