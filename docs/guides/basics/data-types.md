@@ -344,7 +344,7 @@ const DealSchema = coda.makeObjectSchema({
 !!! bug
     Attachments currently only work within a sync table.
     <!-- https://golinks.io/bug/21522 -->
-    Additionally, file attachments may by shown with the wrong file name.
+    Additionally, file attachments may be shown with the wrong file name.
     <!-- https://golinks.io/bug/21523 -->
 
 
