@@ -7,6 +7,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+cairosvg = "*"
+importlib_metadata = "*"
 mkdocs = "*"
 mkdocs-material = "*"
 mkdocs-awesome-pages-plugin = "*"
@@ -14,7 +16,6 @@ mkdocs-macros-plugin = "*"
 mkdocs-redirects = "*"
 mkdocs-simple-hooks = "*"
 pillow = "==9.3.0"
-cairosvg = "*"
 
 [dev-packages]
 
