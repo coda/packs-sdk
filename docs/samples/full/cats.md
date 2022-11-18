@@ -160,6 +160,7 @@ This Pack allows you to fetch random cat photos using the [Cat-as-a-service API]
         execute: async function ([tag], context) {
           let url = coda.withQueryParams("https://cataas.com/api/cats", {
             tags: tag,
+            limit: 10000,
           });
           let response = await context.fetcher.fetch({
             method: "GET",
@@ -171,7 +172,7 @@ This Pack allows you to fetch random cat photos using the [Cat-as-a-service API]
             result.push({
               image: "https://cataas.com/cat/" + cat._id,
               tags: cat.tags,
-              created: cat.created_at,
+              created: cat.createdAt,
               id: cat._id,
             });
           }
