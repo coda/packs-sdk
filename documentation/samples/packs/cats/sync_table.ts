@@ -53,6 +53,7 @@ pack.addSyncTable({
     execute: async function ([tag], context) {
       let url = coda.withQueryParams("https://cataas.com/api/cats", {
         tags: tag,
+        limit: 10000,
       });
       let response = await context.fetcher.fetch({
         method: "GET",
@@ -64,7 +65,7 @@ pack.addSyncTable({
         result.push({
           image: "https://cataas.com/cat/" + cat._id,
           tags: cat.tags,
-          created: cat.created_at,
+          created: cat.createdAt,
           id: cat._id,
         });
       }
