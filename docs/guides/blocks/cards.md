@@ -7,6 +7,8 @@ description: Display structured information as rich cards.
 
 Pack formulas can return structured data as [objects][data_types_objects], allowing a single formula to return multiple values at once. By default these objects are presented as "mentions", shown as chips in the document that you can hover over to get the full set of information.
 
+TODO: Animated gif of mention vs card.
+
 Cards are an alternative, more visual display format for objects that allow the user to easily consume key information. Additionally URLs pasted into a document can be automatically upgraded to cards, providing an easy way for users to discover and use your Pack.
 
 [View Sample Code][samples]{ .md-button }
@@ -23,14 +25,16 @@ Coda will promote cards as a distinct option in some cases, but any supported ob
 === "In the column format options"
     TODO: Screenshot of Card option in the column format options dialog
 
+    This can also be changed for the first column of a sync table, which usually contains the synced object as a mention.
+
 
 ## Creating cards
 
-Although they appear as a separate type of building block, cards are really just an alternative display format for [formulas][formulas] that return structured data. Your formula will appear as a card if it returns an [object schema][schemas_object] that:
+Although they appear as a separate type of building block, cards are really just an alternative display format for [formulas][formulas] that return structured data. Your formula will appear as a card if it returns an [object schema][schemas_object] that fulfills all of the following:
 
-- Defines one of: `displayProperty` or `titleProperty`
-- Defines one of: `linkProperty`, `snippetProperty`, or `subtitleProperties`
-- Defines an [`identity`][schemas_identity]
+- [x] Defines one of: `displayProperty` or `titleProperty`
+- [x] Defines one of: `linkProperty`, `snippetProperty`, or `subtitleProperties`
+- [x] Defines an [`identity`][schemas_identity]
 
 See the sections below for how to configure specific attributes of the card.
 
@@ -89,7 +93,7 @@ The subtitle shows a label for each property, which defaults to `{Name}: {Value}
 
 ### Body
 
-The card body can include a short snippet of content, which appears under the title (and subtitle if defined).
+The card body can include a snippet of content, which appears under the title (and subtitle if defined).
 
 TODO: Image highlighting card snippet
 

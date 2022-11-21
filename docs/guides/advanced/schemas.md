@@ -461,13 +461,19 @@ In your sync formula you only need to populate the fields of the reference objec
 
 ## Schemas in cards
 
-The contents of a card are defined using an object schema. When used in a card there are additional fields that you may want to set:
+The contents of a card are defined using an object schema. The following fields are specific to cards:
 
 - [`titleProperty`][titleProperty]
 - [`subtitleProperties`][subtitleProperties]
 - [`snippetProperty`][snippetProperty]
 - [`linkProperty`][linkProperty]
 - [`imageProperty`][imageProperty]
+
+To be eligible to be displayed as a card, the schemas must meet all of the following criteria:
+
+- [x] Defines one of: `displayProperty` or `titleProperty`
+- [x] Defines one of: `linkProperty`, `snippetProperty`, or `subtitleProperties`
+- [x] Defines an [`identity`](#schema-identity)
 
 Read the [Cards guide][cards] for more information on how these fields are used.
 
@@ -485,9 +491,9 @@ let MovieSchema = coda.makeObjectSchema({
 
 <img src="../../../images/schemas_labels_default.png" srcset="../../../images/schemas_labels_default_2x.png 2x" class="screenshot" alt="Default labels for subtitle properties">
 
-However, there are times when the default label isn't a great fit. For instance you may want to put the property name after the value (`10 bugs` instead of `Bugs: 10`) or remove the label completely (`P1` instead of `Priority: P1`). 
+However, there are times when the default label isn't a great fit. For instance you may want to put the property name after the value (`10 bugs` instead of `Bugs: 10`) or remove the label completely (`P1` instead of `Priority: P1`).
 
-To customize the label, when specifying the `subtitleProperties` pass a [`PropertyIdentifierDetails`][PropertyIdentifierDetails] object instead of a string. Set the `property` field to the path of the property (what the string value normally contains) and set the `label` field to the template string to use for the label. 
+To customize the label, when specifying the `subtitleProperties` pass a [`PropertyIdentifierDetails`][PropertyIdentifierDetails] object instead of a string. Set the `property` field to the path of the property (what the string value normally contains) and set the `label` field to the template string to use for the label.
 
 The constant [`PropertyLabelValueTemplate`][PropertyLabelValueTemplate] contains the placeholder value where the property's value will be inserted. To only show the value for a property, set the label to only contain that placeholder.
 
