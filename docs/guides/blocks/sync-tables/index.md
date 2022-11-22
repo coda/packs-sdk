@@ -246,6 +246,24 @@ A sync table is not a live view into an external data source, but rather a snaps
 It's recommended that you reduce or disable [HTTP caching][fetcher_caching] of the fetcher requests used to populate your sync table. When users manually resync a table they expect the latest results, and HTTP caching can interfere with that. Caching may still be appropriate for requests that retrieve the same data during each sync formula execution.
 
 
+## Columns selection
+
+Although only [featured columns][schemas_featured_columns] are shown in the table by default, all of the schema properties are synced and stored in the object chip in the first column of the sync table. These later be expanded out into columns of their own or accessed formulaically.
+
+For very large schemas all of these unused properties can come with a performance cost however, so users have the option to choose the exact set of columns they want to sync. This can be done by clicking the **Choose columns** button in the sync table settings, and is launched automatically when creating the sync table with a very large schema.
+
+<img src="../../../images/sync_table_select_columns.png" srcset="../../../images/sync_table_select_columns_2x.png 2x" class="screenshot" alt="Selecting columns of a sync table">
+
+Users can choose from top-level properties in the schema, and only those they select will be persisted in the document during the sync.
+
+While there is no harm in your Pack retrieving properties that won't be persisted, in some cases you can optimize your sync if you know the exact set of fields the user is requesting. This can be determined by inspecting the value of `context.sync.schema`. This will be a copy of the original schema, but with only properties that the user selected.
+
+Since the properties themselves may use the [`fromKey`][fromKey] option to load their value from a different field in the row objects, it can be somewhat involved to map the properties back to API fields. To assist with this there is a helper function [`coda.getEffectivePropertyKeysFromSchema()`][getEffectivePropertyKeysFromSchema] that will do the conversion for you.
+
+??? example "Example: Open Data NY sync table"
+    ```ts
+    --8<-- "samples/packs/dynamic-sync-table/open_data_ny.ts"
+    ```
 
 [samples]: ../../../samples/topic/sync-table.md
 [help_center]: https://help.coda.io/en/articles/3213629-using-packs-tables-to-sync-your-data-into-coda
@@ -268,3 +286,6 @@ It's recommended that you reduce or disable [HTTP caching][fetcher_caching] of t
 [fetcher_caching]: ../../basics/fetcher.md#caching
 [parameters]: ../../basics/parameters/index.md
 [two_way_sync]: ../../advanced/two-way-sync.md
+[schemas_featured_columns]: ../../advanced/schemas.md#featured-columns
+[getEffectivePropertyKeysFromSchema]: ../../../reference/sdk/functions/core.getEffectivePropertyKeysFromSchema.md
+[fromKey]: ../../../reference/sdk/interfaces/core.ObjectSchemaProperty.md#fromkey
