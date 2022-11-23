@@ -41,8 +41,28 @@ Building a template or demo document is an important part of creating a Pack, as
 Coda supports both document- and page-level icons, from a library we source from an external provider. While some this library includes the icons for some popular brands, it's not comprehensive and your brand may not be present. At the moment we don't have a process for adding new icons to the library, nor do we support using custom icons within a document. This is something we hope to address in the future, but for the time being we recommend using a generic icon.
 
 
+## Can formulas return dynamic schemas?
+
+No, unfortunately they can't. While [dynamic sync tables][dynamic_sync_tables] can flex their schema based upon the specific data source being connected to, this option isn't available for formulas. The schema for a formula must be declared statically, and there is no equivalent `getSchema()` function that formulas can provide.
+
+If you have a formula that returns a dynamic set of custom fields, there are two common approaches:
+
+1. Include an array of sub-objects representing the custom fields, with each containing a `name` and `value` property. Users can retrieve the value of a specific custom field using a formula like:
+
+    ```
+    Task.CustomFields.Filter(CurrentValue.Name="price").First().Value
+    ```
+
+2. Include the custom fields as a block of JSON, like `{"price": 10}`. Users can retrieve a specific custom field using a formula like:
+
+    ```
+    Task.CustomFieldsJson.ParseJSON("price")
+    ```
+
+
 [google_verification]: https://support.google.com/cloud/answer/9110914
 [google_verification_exceptions]: https://support.google.com/cloud/answer/9110914#exceptions-ver-reqts&zippy=%2Cexceptions-to-verification-requirements
 [google_verification_line]: https://support.google.com/cloud/answer/9110914?hl=en#zippy=%2Chow-can-i-make-sure-the-verification-process-is-as-streamlined-as-possible
 [oauth_redirect]: basics/authentication/oauth2.md#redirect-url
 [packs_apps_script]: https://coda.io/packs/apps-script-14470
+[dynamic_sync_tables]: ./blocks/sync-tables/dynamic.md

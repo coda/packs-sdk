@@ -11,7 +11,7 @@ const MaxFeaturedColumns = 50;
 const TableScanMaxRows = 100;
 
 // How many rows to fetch per-page.
-const PageSize = 500;
+const PageSize = 100;
 
 // A regular expression matching a dataset.
 const DatasetUrlRegex = new RegExp(`^https?://${Domain}/.*/([^?#]+)`);
@@ -188,10 +188,13 @@ pack.addDynamicSyncTable({
       let dataset = await getDataset(context);
       let offset = context.sync.continuation?.offset as number || 0;
 
+      // Only fetch the selected columns.
+      let fields = coda.getEffectivePropertyKeysFromSchema(context.sync.schema);
+
       // Fetch the row data.
       let baseUrl = `https://${Domain}/resource/${dataset.id}.json`;
       let url = coda.withQueryParams(baseUrl, {
-        $select: ":*, *", // Include internal fields, specifically the row ID.
+        $select: fields.join(","),
         $q: search,
         $where: filter,
         $limit: PageSize,
@@ -256,8 +259,8 @@ function formatValue(value) {
  * Get the list of dataset categories.
  */
 async function getCategories(context: coda.ExecutionContext):
-    Promise<string[]> {
-      let baseUrl = `https://${Domain}/api/catalog/v1/domain_categories`;
+  Promise<string[]> {
+  let baseUrl = `https://${Domain}/api/catalog/v1/domain_categories`;
   let url = coda.withQueryParams(baseUrl, {
     domains: Domain,
   });
@@ -272,7 +275,7 @@ async function getCategories(context: coda.ExecutionContext):
  * Search for datasets, using a flexible set of parameters.
  */
 async function searchDatasets(context: coda.ExecutionContext,
-    params: Record<string, any>): Promise<DatasetResult[]> {
+  params: Record<string, any>): Promise<DatasetResult[]> {
   let url = coda.withQueryParams(`https://${Domain}/api/catalog/v1`, params);
   let response = await context.fetcher.fetch({
     method: "GET",
@@ -280,8 +283,8 @@ async function searchDatasets(context: coda.ExecutionContext,
   });
   return response.body.results.map(result => {
     return {
-      name: result.resource.name,
-      link: result.link,
+      ...result.resource,
+      ...result,
     };
   });
 }
@@ -316,7 +319,7 @@ function getDatasetId(url: string): string {
  * dataset.
  */
 async function getFeatured(dataset: Dataset, context: coda.ExecutionContext):
-    Promise<string[]> {
+  Promise<string[]> {
   // Fetch some of the first rows from the dataset.
   let baseUrl = `https://${Domain}/resource/${dataset.id}.json`;
   let url = coda.withQueryParams(baseUrl, {
