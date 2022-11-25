@@ -219,12 +219,12 @@ function tryParseDateTimeString(result: unknown, schema: BaseStringSchema) {
 
 function tryParseUrl(result: unknown, schema: BaseStringSchema) {
   const invalidUrlError = {
-    message: `Property with codaType "${schema.codaType}" must be a valid HTTP(S) url, but got "${result}".`,
+    message: `Property with codaType "${schema.codaType}" must be a valid HTTPS or data url, but got "${result}".`,
   };
   try {
     const url = urlParse(result as string);
 
-    if (!(url.protocol === 'http:' || url.protocol === 'https:')) {
+    if (!(url.protocol === 'https:' || url.protocol === 'data:')) {
       return invalidUrlError;
     }
   } catch (error: any) {

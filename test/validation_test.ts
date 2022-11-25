@@ -286,21 +286,32 @@ describe('Property validation in objects', () => {
     );
   });
 
-  it('validates properly formatted url', async () => {
-    await executeFormulaFromPackDef(fakePack, 'Url', ['http://google.com']);
+  it('validates properly formatted https url', async () => {
+    await executeFormulaFromPackDef(fakePack, 'Url', ['https://google.com']);
+  });
+
+  it('validates properly formatted data url', async () => {
+    await executeFormulaFromPackDef(fakePack, 'Url', ['data:image/png;base64,iVBORw0KGg']);
+  });
+
+  it('rejects http url', async () => {
+    await testHelper.willBeRejectedWith(
+      executeFormulaFromPackDef(fakePack, 'Url', ['http://google.com']),
+      /The following errors were found when validating the result of the formula "Url":\nProperty with codaType "url" must be a valid HTTPS or data url, but got "http:\/\/google.com"./,
+    );
   });
 
   it('rejects improperly formatted url', async () => {
     await testHelper.willBeRejectedWith(
       executeFormulaFromPackDef(fakePack, 'Url', ['mailto:http://google.com']),
-      /The following errors were found when validating the result of the formula "Url":\nProperty with codaType "url" must be a valid HTTP\(S\) url, but got "mailto:http:\/\/google.com"./,
+      /The following errors were found when validating the result of the formula "Url":\nProperty with codaType "url" must be a valid HTTPS or data url, but got "mailto:http:\/\/google.com"./,
     );
   });
 
   it('rejects garbage url', async () => {
     await testHelper.willBeRejectedWith(
       executeFormulaFromPackDef(fakePack, 'Url', ['jasiofjsdofjiaof']),
-      /The following errors were found when validating the result of the formula "Url":\nProperty with codaType "url" must be a valid HTTP\(S\) url, but got "jasiofjsdofjiaof"./,
+      /The following errors were found when validating the result of the formula "Url":\nProperty with codaType "url" must be a valid HTTPS or data url, but got "jasiofjsdofjiaof"./,
     );
   });
 
