@@ -337,6 +337,7 @@ const defaultAuthenticationValidators = {
         pkceChallengeMethod: z.enum(['plain', 'S256']).optional(),
         scopeParamName: z.string().optional(),
         nestedResponseKey: z.string().optional(),
+        credentialsLocation: z.string().optional(),
         ...baseAuthenticationValidators,
     }),
     [types_1.AuthenticationType.WebBasic]: zodCompleteStrictObject({

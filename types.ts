@@ -450,6 +450,38 @@ export interface OAuth2Authentication extends BaseAuthentication {
    * their authentication response.
    */
   nestedResponseKey?: string;
+
+  /**
+   * When making the token exchange request, where to pass the client credentials (client ID and
+   * client secret). The default is {@link TokenExchangeCredentialsLocation#Automatic}, which should
+   * work for most providers. Pick a more specific option if the provider invalidates authorization
+   * codes when there is an error in the token exchange.
+   */
+  credentialsLocation?: TokenExchangeCredentialsLocation;
+}
+
+/**
+ * Where to pass the client credentials (client ID and client secret) when making the OAuth2 token
+ * exchange request. Used in {@link OAuth2Authentication.credentialsLocation}.
+ */
+export enum TokenExchangeCredentialsLocation {
+  /**
+   * Allow Coda to determine this automatically. Currently that means Coda tries passing the
+   * credentials in the body first, and if that fails then tries passing them in the Authorization
+   * header.
+   */
+  Automatic = 'Automatic',
+
+  /**
+   * The credentials are passed in the body of the request, encoded as
+   * `application/x-www-form-urlencoded` along with the other parameters.
+   */
+  Body = 'Body',
+
+  /**
+   * The credentials are passed in the Authorization header using the `Basic` scheme.
+   */
+  AuthorizationHeader = 'AuthorizationHeader'
 }
 
 /**
