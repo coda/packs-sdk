@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- Added an option `credentialsLocation` to `OAuth2Authentication`, to specify how the client ID and secret should be passed during the token exchange. The default `Automatic` should be sufficient for most OAuth2 providers.
+
 ## [1.2.1] - 2022-11-15
 
 ### Added

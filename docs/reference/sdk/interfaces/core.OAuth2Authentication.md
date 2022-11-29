@@ -46,6 +46,17 @@ they may be specified using [additionalParams](core.OAuth2Authentication.md#addi
 
 ___
 
+### credentialsLocation
+
+• `Optional` **credentialsLocation**: [`TokenExchangeCredentialsLocation`](../enums/core.TokenExchangeCredentialsLocation.md)
+
+When making the token exchange request, where to pass the client credentials (client ID and
+client secret). The default is [Automatic](../enums/core.TokenExchangeCredentialsLocation.md#automatic), which should
+work for most providers. Pick a more specific option if the provider invalidates authorization
+codes when there is an error in the token exchange.
+
+___
+
 ### endpointDomain
 
 • `Optional` **endpointDomain**: `string`

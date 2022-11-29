@@ -35,6 +35,7 @@ import * as coda from "@codahq/packs-sdk";
 - [PostSetupType](../enums/core.PostSetupType.md)
 - [PrecannedDateRange](../enums/core.PrecannedDateRange.md)
 - [ScaleIconSet](../enums/core.ScaleIconSet.md)
+- [TokenExchangeCredentialsLocation](../enums/core.TokenExchangeCredentialsLocation.md)
 - [Type](../enums/core.Type.md)
 - [ValueHintType](../enums/core.ValueHintType.md)
 - [ValueType](../enums/core.ValueType.md)

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
+exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
 /**
  * @deprecated
  */
@@ -114,6 +114,28 @@ var PostSetupType;
      */
     PostSetupType["SetEndpoint"] = "SetEndPoint";
 })(PostSetupType = exports.PostSetupType || (exports.PostSetupType = {}));
+/**
+ * Where to pass the client credentials (client ID and client secret) when making the OAuth2 token
+ * exchange request. Used in {@link OAuth2Authentication.credentialsLocation}.
+ */
+var TokenExchangeCredentialsLocation;
+(function (TokenExchangeCredentialsLocation) {
+    /**
+     * Allow Coda to determine this automatically. Currently that means Coda tries passing the
+     * credentials in the body first, and if that fails then tries passing them in the Authorization
+     * header.
+     */
+    TokenExchangeCredentialsLocation["Automatic"] = "Automatic";
+    /**
+     * The credentials are passed in the body of the request, encoded as
+     * `application/x-www-form-urlencoded` along with the other parameters.
+     */
+    TokenExchangeCredentialsLocation["Body"] = "Body";
+    /**
+     * The credentials are passed in the Authorization header using the `Basic` scheme.
+     */
+    TokenExchangeCredentialsLocation["AuthorizationHeader"] = "AuthorizationHeader";
+})(TokenExchangeCredentialsLocation = exports.TokenExchangeCredentialsLocation || (exports.TokenExchangeCredentialsLocation = {}));
 /**
  * @deprecated
  * @ignore
