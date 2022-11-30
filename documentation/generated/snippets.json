@@ -74,7 +74,7 @@
       "OAuth2Authentication"
     ],
     "content": "Sets per-user OAuth2 authentication for the Pack.",
-    "code": "// When registering your app in the API's developer console set the redirect URL\n// to: https://coda.io/packsAuth/oauth2\n// After building your Pack, remember to visit the Settings tab to set your\n// client ID and secret.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.OAuth2,\n  // The following two URLs are will be found in the API's documentation.\n  authorizationUrl: \"<Authorization URL>\",\n  tokenUrl: \"<Token URL>\",\n});"
+    "code": "// When registering your app in the API's developer console set the redirect URL\n// to: https://coda.io/packsAuth/oauth2/{PACK ID}\n// After building your Pack, remember to visit the Settings tab to set your\n// client ID and secret.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.OAuth2,\n  // The following two URLs are will be found in the API's documentation.\n  authorizationUrl: \"<Authorization URL>\",\n  tokenUrl: \"<Token URL>\",\n});"
   },
   {
     "triggerTokens": [
