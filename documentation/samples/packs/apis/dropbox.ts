@@ -13,6 +13,10 @@ pack.setUserAuthentication({
   additionalParams: {
     token_access_type: "offline",
   },
+
+  // Send the authentication information to both domains.
+  // Note: Using multiple domains in a Pack requires approval from Coda.
+  networkDomain: ["api.dropboxapi.com", "content.dropboxapi.com"],
 });
 
 // Allow access to the Dropbox domains.

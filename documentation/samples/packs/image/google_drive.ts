@@ -103,6 +103,8 @@ pack.setUserAuthentication({
     access_type: "offline",
     prompt: "consent",
   },
+  // Only send the authentication information to this domain.
+  networkDomain: ["googleapis.com"],
 });
 
 // Allow access to the Google domains.
