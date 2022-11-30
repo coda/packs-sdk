@@ -4,6 +4,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+## [1.2.2] - 2022-11-30
+
 ### Added
 
 - Added an option `credentialsLocation` to `OAuth2Authentication`, to specify how the client ID and secret should be passed during the token exchange. The default `Automatic` should be sufficient for most OAuth2 providers.
@@ -529,7 +531,8 @@ await myHelper(context);
 
 - Beginning of alpha versioning.
 
-[unreleased]: https://github.com/coda/packs-sdk/compare/v1.2.1...HEAD
+[unreleased]: https://github.com/coda/packs-sdk/compare/v1.2.2...HEAD
+[1.2.2]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.2.2
 [1.2.1]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.2.1
 [1.2.0]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.2.0
 [1.1.0]: https://github.com/coda/packs-sdk/compare/v1.0.5...v1.1.0
