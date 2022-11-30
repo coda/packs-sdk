@@ -104,16 +104,10 @@ pack.setUserAuthentication({
   additionalParams: {
     token_access_type: "offline",
   },
-
-  // Send the authentication information to both domains.
-  // Note: Using auth with multiple domains requires approval from Coda.
-  networkDomain: ["api.dropboxapi.com", "content.dropboxapi.com"],
 });
 
-// Allow access to the Dropbox domains.
-// Note: Using multiple domains in a Pack requires approval from Coda.
-pack.addNetworkDomain("api.dropboxapi.com");
-pack.addNetworkDomain("content.dropboxapi.com");
+// Allow access to the Dropbox domain.
+pack.addNetworkDomain("dropboxapi.com");
 ```
 ## Facebook (Meta)
 The Facebook (Meta) APIs use OAuth2 to authenticate users, prompting them to approve a specific set of scopes.
