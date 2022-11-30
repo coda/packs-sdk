@@ -21,8 +21,14 @@ const set_option_1 = require("./set_option");
 const upload_1 = require("./upload");
 const validate_1 = require("./validate");
 const whoami_1 = require("./whoami");
+const helpers_1 = require("../testing/helpers");
+const semver_1 = __importDefault(require("semver"));
 const ivm_wrapper_1 = require("../testing/ivm_wrapper");
 const yargs_1 = __importDefault(require("yargs"));
+const version = typeof process !== 'undefined' ? process.version.substring(1) : ''; // strip out first char from v19.x.x
+if (!semver_1.default.valid(version) || semver_1.default.compare(version, '19.0.0') >= 0 || semver_1.default.compare(version, '14.17')) {
+    (0, helpers_1.printAndExit)(`Unsupported node verison ${version}`);
+}
 if (require.main === module) {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     void yargs_1.default

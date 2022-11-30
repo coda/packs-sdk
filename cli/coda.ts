@@ -17,8 +17,15 @@ import {handleSetOption} from './set_option';
 import {handleUpload} from './upload';
 import {handleValidate} from './validate';
 import {handleWhoami} from './whoami';
+import {printAndExit} from '../testing/helpers';
+import semver from 'semver';
 import {tryGetIvm} from '../testing/ivm_wrapper';
 import yargs from 'yargs';
+
+const version = typeof process !== 'undefined' ? process.version.substring(1) : ''; // strip out first char from v19.x.x
+if (!semver.valid(version) || semver.compare(version, '19.0.0') >= 0 || semver.compare(version, '14.17')) {
+  printAndExit(`Unsupported node verison ${version}`);
+}
 
 if (require.main === module) {
   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
