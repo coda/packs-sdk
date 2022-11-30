@@ -69,6 +69,7 @@ import type {SyncFormula} from '../api';
 import type {SyncTable} from '../api';
 import type {SyncTableDef} from '../api';
 import type {SystemAuthenticationTypes} from '../types';
+import {TokenExchangeCredentialsLocation} from '../types';
 import {Type} from '../api_types';
 import type {UnionType} from '../api_types';
 import type {ValidationError} from './types';
@@ -424,7 +425,7 @@ const defaultAuthenticationValidators: Record<AuthenticationType, z.ZodTypeAny> 
     pkceChallengeMethod: z.enum(['plain', 'S256']).optional(),
     scopeParamName: z.string().optional(),
     nestedResponseKey: z.string().optional(),
-    credentialsLocation: z.string().optional(),
+    credentialsLocation: z.nativeEnum(TokenExchangeCredentialsLocation).optional(),
     ...baseAuthenticationValidators,
   }),
   [AuthenticationType.WebBasic]: zodCompleteStrictObject<WebBasicAuthentication>({
