@@ -15,7 +15,7 @@ pack.setUserAuthentication({
   },
 
   // Send the authentication information to both domains.
-  // Note: Using multiple domains in a Pack requires approval from Coda.
+  // Note: Using auth with multiple domains requires approval from Coda.
   networkDomain: ["api.dropboxapi.com", "content.dropboxapi.com"],
 });
 
