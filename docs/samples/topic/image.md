@@ -478,6 +478,9 @@ pack.setUserAuthentication({
   additionalParams: {
     token_access_type: "offline",
   },
+  // Send the authentication information to both domains.
+  // Note: Using auth with multiple domains requires approval from Coda.
+  networkDomain: ["api.dropboxapi.com", "content.dropboxapi.com"],
 });
 
 // Allow access to the Dropbox domains.
@@ -594,13 +597,16 @@ pack.setUserAuthentication({
     access_type: "offline",
     prompt: "consent",
   },
+  // Send the authentication information to all domains.
+  // Note: Using auth with multiple domains requires approval from Coda.
+  networkDomain: ["googleapis.com", "docs.google.com", "googleusercontent.com"],
 });
 
 // Allow access to the Google domains.
 // Note: Using multiple domains in a Pack requires approval from Coda.
 pack.addNetworkDomain("googleapis.com");
 pack.addNetworkDomain("docs.google.com");
-pack.addNetworkDomain("lh3.googleusercontent.com");
+pack.addNetworkDomain("googleusercontent.com");
 ```
 ## Generated SVG
 A formula that generated an SVG, and returns it as a data URI. This sample generates an image from the text provided.
