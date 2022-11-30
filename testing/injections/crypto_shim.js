@@ -36,7 +36,6 @@ export const crypto = {
 //
 // please note that this causes a global leak and needs be ignored in some configs.
 // Node 19 has native support for the crypto module.
-const version = typeof process !== 'undefined' ? process.version.substring(1) : ''; // strip out first char from v19.x.x
-if (!semver.valid(version) || semver.compare(version, '19.0.0') < 0) {
+if (!global.crypto?.getRandomValues) {
   global.crypto = crypto;
 }
