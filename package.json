@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@aws-crypto/sha256-js": "^2.0.2",
-    "@aws-sdk/client-sts": "^3.204.0",
+    "@aws-sdk/client-sts": "^3.218.0",
     "@aws-sdk/signature-v4": "^3.201.0",
     "browserify": "^17.0.0",
     "clone": "^2.1.2",
