@@ -69,11 +69,16 @@ These credentials identify your application and are the same for every user that
 
 #### Redirect URL
 
-When registering you application in the API provider's console you will be asked to provide a redirect URL. This is where the provider should redirect the user to after they have signed in and approved access. When building a Pack this value should always be set to:
+When registering you application in the API provider's console you will be asked to provide a redirect URL. This is where the provider should redirect the user to after they have signed in and approved access.
+
+The **Add OAuth credentials** dialog discussed above will show the redirect URL to use for your Pack and allow you to copy it to your clipboard. In general it follows the pattern:
 
 ```
-https://coda.io/packsAuth/oauth2
+https://coda.io/packsAuth/oauth2/{PACK ID}
 ```
+
+!!! warning "Legacy redirect URLs"
+    Previously the redirect URL for a Pack didn't include the Pack ID. We still support this using the **Legacy** option in the dropdown menu, but for greater security Packs should migrate to using the newer Pack-specific URLs.
 
 
 ## Token expiry and refresh

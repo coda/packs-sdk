@@ -169,29 +169,11 @@ Most API providers host a developer console for creating and managing applicatio
     </div>
     </section>
 
+---
 
-=== ":material-numeric-3-circle: Edit settings"
+### Hold tight
 
-    <section class="tutorial-row" markdown>
-    <div markdown>
-
-    The settings screen for your application includes the client ID and secret you'll need during the OAuth2 flow. You'll have to enter those into the Pack Studio later.
-
-    It's important to set the **OAuth redirect URL** field. This is the URL that the user's browser is sent to after they approve access. All packs use the same value for this URL:
-
-    ```
-    https://coda.io/packsAuth/oauth2
-    ```
-
-    Click the **Save settings** button to save your changes.
-
-    </div>
-    <div markdown>
-
-    <img src="../../../images/tutorial_oauth_settings.png" srcset="../../../images/tutorial_oauth_settings_2x.png 2x" class="screenshot" alt="The settings for the new application">
-
-    </div>
-    </section>
+There is a bit more configuration needed to complete the application setup, but we'll get to that in a later step. Keep this tab open as you'll need to refer back to it later.
 
 
 ## :material-ruler-square-compass: Design the formula
@@ -443,12 +425,48 @@ The code we've written so far includes only public information about the OAuth f
     </section>
 
 
-=== ":material-numeric-2-circle: Set credentials"
+=== ":material-numeric-2-circle: Copy redirect URL"
 
     <section class="tutorial-row" markdown>
     <div markdown>
 
-    Enter the client ID and secret you received when you registered you application with Todoist.
+    TODO
+
+    </div>
+    <div markdown>
+
+    <img src="../../../images/tutorial_oauth_pack_settings.png" srcset="../../../images/tutorial_oauth_pack_settings_2x.png 2x" class="screenshot" alt="The Pack settings">
+
+    </div>
+    </section>
+
+
+=== ":material-numeric-3-circle: Edit application settings"
+
+    <section class="tutorial-row" markdown>
+    <div markdown>
+
+    Go back to your application settings in the Todoist App Management Console.
+
+    Set the **OAuth redirect URL** field to the value you copied above and click the **Save settings** button. Todoist will use this to verify that no other applications use this set of credentials.
+
+    Next copy the **Client ID** and **Client secret** shown on that screen. We need to provide this to your Pack so Coda can properly identify it during the OAuth flow.
+
+    </div>
+    <div markdown>
+
+    <img src="../../../images/tutorial_oauth_settings.png" srcset="../../../images/tutorial_oauth_settings_2x.png 2x" class="screenshot" alt="The settings for the new application">
+
+    </div>
+    </section>
+
+
+=== ":material-numeric-4-circle: Set credentials"
+
+    <section class="tutorial-row" markdown>
+    <div markdown>
+
+    Back in the **Add OAuth credentials** dialog open in the Pack Studio, enter the client ID and secret you copied.
 
     Click the **Save** button.
 
