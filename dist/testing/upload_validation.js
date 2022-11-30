@@ -45,6 +45,7 @@ const types_3 = require("../types");
 const types_4 = require("../types");
 const schema_10 = require("../schema");
 const schema_11 = require("../schema");
+const types_5 = require("../types");
 const api_types_3 = require("../api_types");
 const schema_12 = require("../schema");
 const schema_13 = require("../schema");
@@ -337,7 +338,7 @@ const defaultAuthenticationValidators = {
         pkceChallengeMethod: z.enum(['plain', 'S256']).optional(),
         scopeParamName: z.string().optional(),
         nestedResponseKey: z.string().optional(),
-        credentialsLocation: z.string().optional(),
+        credentialsLocation: z.nativeEnum(types_5.TokenExchangeCredentialsLocation).optional(),
         ...baseAuthenticationValidators,
     }),
     [types_1.AuthenticationType.WebBasic]: zodCompleteStrictObject({
