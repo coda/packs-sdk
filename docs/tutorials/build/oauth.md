@@ -430,12 +430,14 @@ The code we've written so far includes only public information about the OAuth f
     <section class="tutorial-row" markdown>
     <div markdown>
 
-    TODO
+    The field **Redirect URL** shows the redirect URL for your Pack. This is the URL that Todoist should send users back to after they have approved access to their account.
+
+    Click the copy icon (:material-clipboard-outline:) next to the redirect URL to copy it to your clipboard.
 
     </div>
     <div markdown>
 
-    <img src="../../../images/tutorial_oauth_pack_settings.png" srcset="../../../images/tutorial_oauth_pack_settings_2x.png 2x" class="screenshot" alt="The Pack settings">
+    <img src="../../../images/tutorial_oauth_pack_redirect.png" srcset="../../../images/tutorial_oauth_pack_redirect_2x.png 2x" class="screenshot" alt="The redirect URL shown in the OAuth settings">
 
     </div>
     </section>
