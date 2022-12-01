@@ -58,7 +58,7 @@ _bootstrap-system-packages:
 	# environments.
 	# https://squidfunk.github.io/mkdocs-material/setup/setting-up-social-cards/#dependencies
 	if command -v brew &> /dev/null; then \
-		brew install cairo freetype libffi libjpeg libpng zlib parallel; \
+		brew install cairo freetype libffi libjpeg libpng zlib; \
 	fi
 
 .PHONY: _bootstrap-githooks
@@ -195,8 +195,8 @@ compile-samples:
 .PHONY: validate-samples
 validate-samples:
 	find documentation/samples/packs -name "*.ts" | \
-	parallel -k \
-	'echo "Validating {}"; node -r ts-node/register --no-deprecation cli/coda.ts validate {}'
+	xargs -I {} bash -c \
+	'echo "Validating {}"; node --no-deprecation dist/cli/coda.js validate {}'
 
 
 .PHONY: generated-documentation

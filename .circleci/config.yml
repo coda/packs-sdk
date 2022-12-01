@@ -9,7 +9,7 @@ orbs:
         steps:
           - run:
               name: Install basic tools
-              command: sudo apt-get update && sudo apt-get install -y pipenv parallel
+              command: sudo apt-get update && sudo apt-get install -y pipenv
           - run:
               # Image libraries required by the social cards plugin for MkDocs Material.
               name: Install image libraries
@@ -75,6 +75,9 @@ jobs:
       - run:
           name: 'Test'
           command: make test
+      - run:
+          name: 'Validate samples'
+          command: make validate-samples
       - setup_remote_docker:
           version: 20.10.14
       - run:
@@ -82,18 +85,6 @@ jobs:
           command: make validate-no-changes
       - store_artifacts:
           path: /tmp/diffs
-
-  validate-samples:
-    executor: default_build_environment
-    working_directory: ~/repo
-
-    steps:
-      - checkout
-      - base-tools/install
-      - bootstrap_node
-      - run:
-          name: 'Run validation'
-          command: make validate-samples
 
   build-docs-head:
     executor: default_build_environment
@@ -222,18 +213,12 @@ workflows:
             branches:
               only:
                 - main
-      - validate-samples:
-          context:
-            - dockerhub
-          requires:
-            - build
       - utils/cancel-older-awaiting-approvals:
           context:
             - circleci
           circle_token: ${CIRCLECI_TOKEN}
           requires:
             - build
-            - validate-samples
       - wait-for-docs-approval:
           type: approval
           requires:
