@@ -195,8 +195,9 @@ compile-samples:
 .PHONY: validate-samples
 validate-samples:
 	find documentation/samples/packs -name "*.ts" | \
-	xargs -I {} bash -c \
-	'echo "Validating {}"; node --no-deprecation dist/cli/coda.js validate {}'
+	xargs -P8 -I {} bash -c \
+	'node --no-deprecation dist/cli/coda.js validate {} \
+	|| echo "Error while validating {}";'
 
 
 .PHONY: generated-documentation
