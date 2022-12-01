@@ -164,7 +164,5 @@ pack.setUserAuthentication({
   },
 });
 
-// Allow access to the Dropbox domains.
-// Note: Using multiple domains in a Pack requires approval from Coda.
-pack.addNetworkDomain("api.dropboxapi.com");
-pack.addNetworkDomain("content.dropboxapi.com");
+// Allow access to the Dropbox domain.
+pack.addNetworkDomain("dropboxapi.com");

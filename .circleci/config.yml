@@ -75,6 +75,9 @@ jobs:
       - run:
           name: 'Test'
           command: make test
+      - run:
+          name: 'Validate samples'
+          command: make validate-samples
       - setup_remote_docker:
           version: 20.10.14
       - run:

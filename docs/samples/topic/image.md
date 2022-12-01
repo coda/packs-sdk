@@ -480,10 +480,8 @@ pack.setUserAuthentication({
   },
 });
 
-// Allow access to the Dropbox domains.
-// Note: Using multiple domains in a Pack requires approval from Coda.
-pack.addNetworkDomain("api.dropboxapi.com");
-pack.addNetworkDomain("content.dropboxapi.com");
+// Allow access to the Dropbox domain.
+pack.addNetworkDomain("dropboxapi.com");
 ```
 ## Attach private images
 A sync table that includes images sourced from private URLs. This sample syncs files from Google Drive, including their thumbnail images.
@@ -594,13 +592,16 @@ pack.setUserAuthentication({
     access_type: "offline",
     prompt: "consent",
   },
+  // Send the authentication information to all domains.
+  // Note: Using auth with multiple domains requires approval from Coda.
+  networkDomain: ["googleapis.com", "docs.google.com", "googleusercontent.com"],
 });
 
 // Allow access to the Google domains.
 // Note: Using multiple domains in a Pack requires approval from Coda.
 pack.addNetworkDomain("googleapis.com");
 pack.addNetworkDomain("docs.google.com");
-pack.addNetworkDomain("lh3.googleusercontent.com");
+pack.addNetworkDomain("googleusercontent.com");
 ```
 ## Generated SVG
 A formula that generated an SVG, and returns it as a data URI. This sample generates an image from the text provided.

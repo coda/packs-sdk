@@ -192,6 +192,14 @@ compile-documentation-scripts:
 compile-samples:
 	${ROOTDIR}/node_modules/.bin/tsc --project ./documentation/samples/tsconfig.json
 
+.PHONY: validate-samples
+validate-samples:
+	find documentation/samples/packs -name "*.ts" | \
+	xargs -P8 -I {} bash -c \
+	'node --no-deprecation dist/cli/coda.js validate {} \
+	|| echo "Error while validating {}";'
+
+
 .PHONY: generated-documentation
 generated-documentation: compile-samples
 	node -r ts-node/register documentation/scripts/documentation_compiler.ts
