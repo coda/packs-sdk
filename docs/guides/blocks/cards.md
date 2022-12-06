@@ -28,9 +28,7 @@ Coda will promote cards as a distinct option in some cases, but any supported ob
 
 Although they appear as a separate type of building block, cards are really just an alternative display format for [formulas][formulas] that return structured data. Your formula will appear as a card if it returns an [object schema][schemas_object] that fulfills all of the following:
 
-- [x] Defines one of: `displayProperty` or `titleProperty`
-- [x] Defines one of: `linkProperty`, `snippetProperty`, or `subtitleProperties`
-- [x] Defines an [`identity`][schemas_identity]
+--8<-- "guides/advanced/.card_schema.md"
 
 See the sections below for how to configure specific attributes of the card.
 
@@ -204,6 +202,5 @@ pack.addColumnFormat({
 [data_types_html]: ../basics/data-types.md#html
 [column_format]: column-formats.md
 [column_format_matchers]: column-formats.md#matchers
-[schemas_identity]: ../advanced/schemas.md#schema-identity
 [data_types_objects]: ../basics/data-types.md#objects
 [samples]: ../../samples/topic/card.md

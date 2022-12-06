@@ -471,9 +471,7 @@ The contents of a card are defined using an object schema. The following fields 
 
 To be eligible to be displayed as a card, the schemas must meet all of the following criteria:
 
-- [x] Defines one of: `displayProperty` or `titleProperty`
-- [x] Defines one of: `linkProperty`, `snippetProperty`, or `subtitleProperties`
-- [x] Defines an [`identity`](#schema-identity)
+--8<-- "guides/advanced/.card_schema.md"
 
 Read the [Cards guide][cards] for more information on how these fields are used.
 
