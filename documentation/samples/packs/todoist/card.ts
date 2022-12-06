@@ -1,7 +1,7 @@
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
-// A schema defining the card, including all of metadata what specifically to 
+// A schema defining the card, including all of metadata what specifically to
 // highlight in the card.
 const TaskSchema = coda.makeObjectSchema({
   properties: {
@@ -43,7 +43,7 @@ const TaskSchema = coda.makeObjectSchema({
   },
 });
 
-// Formula that renders a card for a task given it's URL. This will be shown a 
+// Formula that renders a card for a task given it's URL. This will be shown a
 // "Card" in the Pack's list of building blocks, but is also a regular formula
 // that can be used elsewhere.
 pack.addFormula({
@@ -76,7 +76,7 @@ pack.addFormula({
   },
 });
 
-// Regular expressions that match Todoist task URLs. Used to match and parse 
+// Regular expressions that match Todoist task URLs. Used to match and parse
 // relevant URLs.
 const TaskUrlPatterns: RegExp[] = [
   new RegExp("^https://todoist.com/app/project/[0-9]+/task/([0-9]+)$"),
@@ -86,12 +86,11 @@ const TaskUrlPatterns: RegExp[] = [
 // Add a column format for the Task formula, to define which URLs it should
 // trigger for. This also makes it easier to use the formula in a table column.
 pack.addColumnFormat({
-  // How the option will show in the URL upgrade dialog.
+  // How the option will show in the link and column type dialogs.
   name: "Task",
   // The formula that generates the card.
   formulaName: "Task",
-  // The set of regular expressions that if matched will trigger the URL upgrade
-  // dialog.
+  // The set of regular expressions that match Todoist task URLs.
   matchers: TaskUrlPatterns,
 });
 

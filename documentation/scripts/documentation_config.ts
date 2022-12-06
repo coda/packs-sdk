@@ -929,9 +929,9 @@ export const Examples: Example[] = [
         codeFile: './samples/packs/card/weather.ts',
       },
       {
-        name: 'With link upgrade',
+        name: 'With link matching',
         content:
-          'A card that can be created manually or from upgrading a link. This sample returns a card with the details of a task in Todoist.',
+          'A card that can be created manually or automatically when pasting a link. This sample returns a card with the details of a task in Todoist.',
         codeFile: './samples/packs/todoist/card.ts',
       },
     ],

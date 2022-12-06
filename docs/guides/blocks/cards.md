@@ -9,7 +9,7 @@ Pack formulas can return structured data as [objects][data_types_objects], allow
 
 TODO: Animated gif of mention vs card.
 
-Cards are an alternative, more visual display format for objects that allow the user to easily consume key information. Additionally URLs pasted into a document can be automatically upgraded to cards, providing an easy way for users to discover and use your Pack.
+Cards are an alternative, more visual display format for objects that allow the user to easily consume key information. Additionally URLs pasted into a document can be automatically shown as cards, providing an easy way for users to discover and use your Pack.
 
 [View Sample Code][samples]{ .md-button }
 
@@ -22,10 +22,6 @@ Coda will promote cards as a distinct option in some cases, but any supported ob
     TODO: Screenshot of Cards in side panel
 === "In the 'Display As' menu"
     TODO: Screenshot of Card option in the display as menu
-=== "In the column format options"
-    TODO: Screenshot of Card option in the column format options dialog
-
-    This can also be changed for the first column of a sync table, which usually contains the synced object as a mention.
 
 
 ## Creating cards
@@ -151,13 +147,18 @@ const ProductSchema = coda.makeObjectSchema({
 ```
 
 
-## Upgrade a link to a card
+## Display a link as a card
 
-One of the most common uses for cards is to display information about an item in an external application. For instance, to preview the details of a Slack message or Google Drive file. Coda provides an easy entry point to this functionality when a user pastes a link into the doc by offering to upgrade it into a card.
+One of the most common uses for cards is to display information about an item from an external application. For instance, to preview the details of a Slack message or Google Drive file. Coda provides an easy entry point to this functionality when a user pastes a link into the doc by offering to display it as a card instead.
 
-TODO: Image of link upgrade prompt
+TODO: Image of display link as card prompt
 
-To enable this upgrade functionality, add a [column format][column_format] pointing to a formula that accepts a URL and returns a card. Then add [`matchers`][column_format_matchers] (regular expressions) to the column format that determine which URLs the upgrade prompt should appear on.
+!!! info "Built-in card option"
+    The link "Display as" menu always has an option for "Card", which displays a fix set of metadata for public URLs. This is distinct from Pack cards, which are shown as additional options below that.
+
+Coda will automatically display a link as a card if it matches a Pack already installed in the doc, or for certain Coda-made Packs.
+
+To enable this feature for your Pack, add a [column format][column_format] pointing to a formula that accepts a URL and returns a card. Then add [`matchers`][column_format_matchers] (regular expressions) to the column format that determine which URLs the the prompt should appear on.
 
 
 ```ts
@@ -184,6 +185,9 @@ pack.addColumnFormat({
   ],
 });
 ```
+
+!!! info "Table behavior"
+    Formulas and column formats that return a card can be used in a table, but currently the resulting object can only be shown as a mention.
 
 ??? example "Example: Todoist task card"
     ```ts
