@@ -35,6 +35,11 @@ export const Snippets: AutocompleteSnippet[] = [
     codeFile: './samples/snippets/column_format.ts',
   },
   {
+    triggerTokens: ['card'],
+    content: 'Adds a everything you need for a card (schema, formula, and column format).',
+    codeFile: './samples/snippets/card.ts',
+  },
+  {
     triggerTokens: ['setUserAuthentication', 'addUserAuthentication', 'UserAuthentication'],
     content: 'Sets per-user authentication for the Pack.',
     codeFile: './samples/snippets/authentication/user.ts',
@@ -916,6 +921,11 @@ export const Examples: Example[] = [
       url: '/guides/blocks/cards',
     },
     exampleSnippets: [
+      {
+        name: 'Template',
+        content: 'The basic structure of a card.',
+        codeFile: './samples/snippets/card.ts',
+      },
       {
         name: 'Basic card',
         content:
