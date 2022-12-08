@@ -20,6 +20,7 @@ export enum Type {
   html,
   image,
   file,
+  markdown,
 }
 
 export type ParamType = Exclude<Type, Type.object>;
@@ -98,6 +99,7 @@ export interface TypeMap {
   [Type.html]: string;
   [Type.image]: string;
   [Type.file]: string;
+  [Type.markdown]: string;
 }
 
 /**
@@ -153,6 +155,10 @@ export enum ParameterType {
    * Indicates a parameter that is a Coda file. The pack is passed a file URL.
    */
   File = 'file',
+  /**
+   * Indicates a parameter that is a Coda rich text value that should be passed to the pack as Markdown.
+   */
+  Markdown = 'markdown',
 
   /**
    * Indicates a parameter that is a list of Coda text values.
@@ -215,6 +221,14 @@ export enum ParameterType {
    * {@link FileArray} that accepts unparsable values as `undefined`.
    */
   SparseFileArray = 'sparseFileArray',
+  /**
+   * Indicates a parameter that is a list of Coda rich text values that should be passed to the pack as Markdown.
+   */
+  MarkdownArray = 'markdownArray`',
+  /**
+   * {@link MarkdownArray} that accepts unparsable values as `undefined`.
+   */
+  SparseMarkdownArray = 'sparseMarkdownArray',
 }
 
 export interface ParameterTypeMap {
@@ -225,6 +239,7 @@ export interface ParameterTypeMap {
   [ParameterType.Html]: Type.html;
   [ParameterType.Image]: Type.image;
   [ParameterType.File]: Type.file;
+  [ParameterType.Markdown]: Type.markdown;
 
   [ParameterType.StringArray]: ArrayType<Type.string>;
   [ParameterType.NumberArray]: ArrayType<Type.number>;
@@ -233,6 +248,7 @@ export interface ParameterTypeMap {
   [ParameterType.HtmlArray]: ArrayType<Type.html>;
   [ParameterType.ImageArray]: ArrayType<Type.image>;
   [ParameterType.FileArray]: ArrayType<Type.file>;
+  [ParameterType.Markdown]: ArrayType<Type.markdown>;
 
   [ParameterType.SparseStringArray]: SparseArrayType<Type.string>;
   [ParameterType.SparseNumberArray]: SparseArrayType<Type.number>;
@@ -241,6 +257,7 @@ export interface ParameterTypeMap {
   [ParameterType.SparseHtmlArray]: SparseArrayType<Type.html>;
   [ParameterType.SparseImageArray]: SparseArrayType<Type.image>;
   [ParameterType.SparseFileArray]: SparseArrayType<Type.file>;
+  [ParameterType.Markdown]: SparseArrayType<Type.markdown>;
 }
 
 export const ParameterTypeInputMap: Record<ParameterType, UnionType> = {
@@ -251,6 +268,7 @@ export const ParameterTypeInputMap: Record<ParameterType, UnionType> = {
   [ParameterType.Html]: Type.html,
   [ParameterType.Image]: Type.image,
   [ParameterType.File]: Type.file,
+  [ParameterType.Markdown]: Type.markdown,
 
   [ParameterType.StringArray]: {type: 'array', items: Type.string},
   [ParameterType.NumberArray]: {type: 'array', items: Type.number},
@@ -259,6 +277,7 @@ export const ParameterTypeInputMap: Record<ParameterType, UnionType> = {
   [ParameterType.HtmlArray]: {type: 'array', items: Type.html},
   [ParameterType.ImageArray]: {type: 'array', items: Type.image},
   [ParameterType.FileArray]: {type: 'array', items: Type.file},
+  [ParameterType.MarkdownArray]: {type: 'array', items: Type.markdown},
 
   [ParameterType.SparseStringArray]: {type: 'array', items: Type.string, allowEmpty: true},
   [ParameterType.SparseNumberArray]: {type: 'array', items: Type.number, allowEmpty: true},
@@ -267,6 +286,7 @@ export const ParameterTypeInputMap: Record<ParameterType, UnionType> = {
   [ParameterType.SparseHtmlArray]: {type: 'array', items: Type.html, allowEmpty: true},
   [ParameterType.SparseImageArray]: {type: 'array', items: Type.image, allowEmpty: true},
   [ParameterType.SparseFileArray]: {type: 'array', items: Type.file, allowEmpty: true},
+  [ParameterType.SparseMarkdownArray]: {type: 'array', items: Type.markdown, allowEmpty: true},
 };
 
 /**
