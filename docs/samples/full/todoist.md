@@ -51,7 +51,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
 
       // Determines the display name of the connected account.
       getConnectionName: async function (context) {
-        let url = coda.withQueryParams("https://api.todoist.com/sync/v8/sync", {
+        let url = coda.withQueryParams("https://api.todoist.com/sync/v9/sync", {
           resource_types: JSON.stringify(["user"]),
         });
         let response = await context.fetcher.fetch({
@@ -64,6 +64,30 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
 
     // Schemas
 
+    // Schema that captures information about when a task is due. Used by
+    // TaskSchema.
+    const DueSchema = coda.makeObjectSchema({
+      properties: {
+        date: {
+          description: "The date the task is due.",
+          type: coda.ValueType.String,
+          codaType: coda.ValueHintType.Date,
+        },
+        time: {
+          description: "The specific moment the task is due.",
+          type: coda.ValueType.String,
+          codaType: coda.ValueHintType.DateTime,
+          fromKey: "datetime",
+        },
+        display: {
+          description: "The display value for the due date.",
+          type: coda.ValueType.String,
+          fromKey: "string",
+        },
+      },
+      displayProperty: "display",
+    });
+
     // A reference to a synced Project. Usually you can use
     // `coda.makeReferenceSchemaFromObjectSchema` to generate these from the primary
     // schema, but that doesn't work in this case since a Project itself can contain
@@ -72,7 +96,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
       codaType: coda.ValueHintType.Reference,
       properties: {
         name: { type: coda.ValueType.String, required: true },
-        projectId: { type: coda.ValueType.Number, required: true },
+        projectId: { type: coda.ValueType.String, required: true },
       },
       displayProperty: "name",
       idProperty: "projectId",
@@ -105,18 +129,19 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
         },
         projectId: {
           description: "The ID of the project.",
-          type: coda.ValueType.Number,
+          type: coda.ValueType.String,
           required: true,
         },
         parentProjectId: {
           description: "For sub-projects, the ID of the parent project.",
-          type: coda.ValueType.Number,
+          type: coda.ValueType.String,
         },
         // Add a reference to the sync'ed row of the parent project.
         // References only work in sync tables.
         parentProject: ProjectReferenceSchema,
       },
       displayProperty: "name",
+      // Sync table metadata.
       idProperty: "projectId",
       featuredProperties: ["url"],
     });
@@ -129,7 +154,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
       codaType: coda.ValueHintType.Reference,
       properties: {
         name: { type: coda.ValueType.String, required: true },
-        taskId: { type: coda.ValueType.Number, required: true },
+        taskId: { type: coda.ValueType.String, required: true },
       },
       displayProperty: "name",
       idProperty: "taskId",
@@ -150,11 +175,16 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
         description: {
           description: "A detailed description of the task.",
           type: coda.ValueType.String,
+          codaType: coda.ValueHintType.Markdown,
         },
         url: {
           description: "A link to the task in the Todoist app.",
           type: coda.ValueType.String,
           codaType: coda.ValueHintType.Url,
+        },
+        completed: {
+          description: "If the task has been completed.",
+          type: coda.ValueType.Boolean,
         },
         order: {
           description: "The position of the task in the project or parent task.",
@@ -164,18 +194,22 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
           description: "The priority of the task.",
           type: coda.ValueType.String,
         },
+        due: {
+          description: "When the task is due.",
+          ...DueSchema,
+        },
         taskId: {
           description: "The ID of the task.",
-          type: coda.ValueType.Number,
+          type: coda.ValueType.String,
           required: true,
         },
         projectId: {
           description: "The ID of the project that the task belongs to.",
-          type: coda.ValueType.Number,
+          type: coda.ValueType.String,
         },
         parentTaskId: {
           description: "For sub-tasks, the ID of the parent task it belongs to.",
-          type: coda.ValueType.Number,
+          type: coda.ValueType.String,
         },
         // A reference to the sync'ed row of the project.
         // References only work in sync tables.
@@ -185,6 +219,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
         parentTask: TaskReferenceSchema,
       },
       displayProperty: "name",
+        // Sync table metadata.
       idProperty: "taskId",
       featuredProperties: ["project", "url"],
     });
@@ -197,8 +232,8 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
         name: project.name,
         projectId: project.id,
         url: project.url,
-        shared: project.shared,
-        favorite: project.favorite,
+        shared: project.is_shared,
+        favorite: project.is_favorite,
         parentProjectId: project.parent_id,
       };
       if (withReferences && project.parent_id) {
@@ -218,8 +253,10 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
         name: task.content,
         description: task.description,
         url: task.url,
+        completed: task.is_completed,
         order: task.order,
         priority: task.priority,
+        due: task.due,
         taskId: task.id,
         projectId: task.project_id,
         parentTaskId: task.parent_id,
@@ -244,7 +281,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
     // Formulas (read-only).
 
     pack.addFormula({
-      name: "GetProject",
+      name: "Project",
       description: "Gets a Todoist project by URL",
       parameters: [
         coda.makeParameter({
@@ -259,7 +296,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
       execute: async function ([url], context) {
         let projectId = extractProjectId(url);
         let response = await context.fetcher.fetch({
-          url: "https://api.todoist.com/rest/v1/projects/" + projectId,
+          url: "https://api.todoist.com/rest/v2/projects/" + projectId,
           method: "GET",
         });
         return toProject(response.body);
@@ -267,7 +304,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
     });
 
     pack.addFormula({
-      name: "GetTask",
+      name: "Task",
       description: "Gets a Todoist task by URL",
       parameters: [
         coda.makeParameter({
@@ -282,7 +319,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
       execute: async function ([url], context) {
         let taskId = extractTaskId(url);
         let response = await context.fetcher.fetch({
-          url: "https://api.todoist.com/rest/v1/tasks/" + taskId,
+          url: "https://api.todoist.com/rest/v2/tasks/" + taskId,
           method: "GET",
         });
         return toTask(response.body);
@@ -293,13 +330,13 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
 
     pack.addColumnFormat({
       name: "Project",
-      formulaName: "GetProject",
+      formulaName: "Project",
       matchers: ProjectUrlPatterns,
     });
 
     pack.addColumnFormat({
       name: "Task",
-      formulaName: "GetTask",
+      formulaName: "Task",
       matchers: TaskUrlPatterns,
     });
 
@@ -318,10 +355,11 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
       resultType: coda.ValueType.String,
       isAction: true,
       extraOAuthScopes: ["data:read_write"],
+      onError: handleMissingScopes,
 
       execute: async function ([name], context) {
         let response = await context.fetcher.fetch({
-          url: "https://api.todoist.com/rest/v1/projects",
+          url: "https://api.todoist.com/rest/v2/projects",
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -344,20 +382,21 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
           description: "The name of the task.",
         }),
         coda.makeParameter({
-          type: coda.ParameterType.Number,
+          type: coda.ParameterType.String,
           name: "projectId",
           description: "The ID of the project to add it to. If blank, " +
-          "it will be added to the user's Inbox.",
+            "it will be added to the user's Inbox.",
           optional: true,
         }),
       ],
       resultType: coda.ValueType.String,
       isAction: true,
       extraOAuthScopes: ["data:read_write"],
+      onError: handleMissingScopes,
 
       execute: async function ([name, projectId], context) {
         let response = await context.fetcher.fetch({
-          url: "https://api.todoist.com/rest/v1/tasks",
+          url: "https://api.todoist.com/rest/v2/tasks",
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -393,9 +432,10 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
       schema: coda.withIdentity(TaskSchema, "Task"),
       isAction: true,
       extraOAuthScopes: ["data:read_write"],
+      onError: handleMissingScopes,
 
       execute: async function ([taskId, name], context) {
-        let url = "https://api.todoist.com/rest/v1/tasks/" + taskId;
+        let url = "https://api.todoist.com/rest/v2/tasks/" + taskId;
         await context.fetcher.fetch({
           url: url,
           method: "POST",
@@ -427,12 +467,17 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
           description: "The ID of the task to be marked as complete.",
         }),
       ],
-      resultType: coda.ValueType.String,
+      resultType: coda.ValueType.Object,
+      // For schemas returned by actions to update rows in a sync table, set the
+      // identity on the schema to match the identityName on the sync table being
+      // updated, using the helper function coda.withIdentity().
+      schema: coda.withIdentity(TaskSchema, "Task"),
       isAction: true,
       extraOAuthScopes: ["data:read_write"],
+      onError: handleMissingScopes,
 
       execute: async function ([taskId], context) {
-        let url = "https://api.todoist.com/rest/v1/tasks/" + taskId + "/close";
+        let url = "https://api.todoist.com/rest/v2/tasks/" + taskId + "/close";
         await context.fetcher.fetch({
           method: "POST",
           url: url,
@@ -440,7 +485,14 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
             "Content-Type": "application/json",
           },
         });
-        return "OK";
+        // Get the updated Task and return it, which will update the row in the sync
+        // table.
+        let response = await context.fetcher.fetch({
+          url: "https://api.todoist.com/rest/v2/tasks/" + taskId,
+          method: "GET",
+          cacheTtlSecs: 0, // Ensure we are getting the latest data.
+        });
+        return toTask(response.body);
       },
     });
 
@@ -456,7 +508,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
         parameters: [],
 
         execute: async function ([], context) {
-          let url = "https://api.todoist.com/rest/v1/projects";
+          let url = "https://api.todoist.com/rest/v2/projects";
           let response = await context.fetcher.fetch({
             method: "GET",
             url: url,
@@ -493,7 +545,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
             description: "Limit tasks to a specific project.",
             optional: true,
             autocomplete: async function (context, search) {
-              let url = "https://api.todoist.com/rest/v1/projects";
+              let url = "https://api.todoist.com/rest/v2/projects";
               let response = await context.fetcher.fetch({
                 method: "GET",
                 url: url,
@@ -504,7 +556,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
           }),
         ],
         execute: async function ([filter, project], context) {
-          let url = coda.withQueryParams("https://api.todoist.com/rest/v1/tasks", {
+          let url = coda.withQueryParams("https://api.todoist.com/rest/v2/tasks", {
             filter: filter,
             project_id: project,
           });
@@ -544,6 +596,13 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
         }
       }
       throw new coda.UserVisibleError("Invalid task URL: " + taskUrl);
+    }
+
+    function handleMissingScopes(error: coda.StatusCodeError) {
+      if (error.statusCode === 401) {
+        throw new coda.MissingScopesError();
+      }
+      throw error;
     }
     ```
 

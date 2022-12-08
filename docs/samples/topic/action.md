@@ -98,7 +98,7 @@ pack.addFormula({
 
   execute: async function ([name], context) {
     let response = await context.fetcher.fetch({
-      url: "https://api.todoist.com/rest/v1/tasks",
+      url: "https://api.todoist.com/rest/v2/tasks",
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -148,7 +148,7 @@ const TaskSchema = coda.makeObjectSchema({
     },
     taskId: {
       description: "The ID of the task.",
-      type: coda.ValueType.Number,
+      type: coda.ValueType.String,
       required: true,
     },
   },
@@ -180,10 +180,9 @@ pack.addFormula({
   // updated, using the helper function coda.withIdentity().
   schema: coda.withIdentity(TaskSchema, "Task"),
   isAction: true,
-  extraOAuthScopes: ["data:read_write"],
 
   execute: async function ([taskId, name], context) {
-    let url = "https://api.todoist.com/rest/v1/tasks/" + taskId;
+    let url = "https://api.todoist.com/rest/v2/tasks/" + taskId;
     await context.fetcher.fetch({
       url: url,
       method: "POST",
@@ -220,7 +219,7 @@ pack.addSyncTable({
     description: "Sync tasks",
     parameters: [],
     execute: async function ([], context) {
-      let url = "https://api.todoist.com/rest/v1/tasks";
+      let url = "https://api.todoist.com/rest/v2/tasks";
       let response = await context.fetcher.fetch({
         method: "GET",
         url: url,
