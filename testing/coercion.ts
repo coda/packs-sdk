@@ -49,7 +49,9 @@ function coerceParam(type: ParamType, name: string, value: any): any {
     case Type.boolean:
       const maybeBoolean = (value || '').toLowerCase();
       if (maybeBoolean !== 'true' && maybeBoolean !== 'false') {
-        throw new Error(`Expected parameter ${name} to be a boolean, but found ${value} (should be one of "true" or "false")`);
+        throw new Error(
+          `Expected parameter ${name} to be a boolean, but found ${value} (should be one of "true" or "false")`,
+        );
       }
       return maybeBoolean === 'true';
     case Type.date:
@@ -68,6 +70,7 @@ function coerceParam(type: ParamType, name: string, value: any): any {
     case Type.file:
     case Type.image:
     case Type.string:
+    case Type.markdown:
       return value;
     default:
       return ensureUnreachable(type);

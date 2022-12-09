@@ -248,7 +248,7 @@ export interface ParameterTypeMap {
   [ParameterType.HtmlArray]: ArrayType<Type.html>;
   [ParameterType.ImageArray]: ArrayType<Type.image>;
   [ParameterType.FileArray]: ArrayType<Type.file>;
-  [ParameterType.Markdown]: ArrayType<Type.markdown>;
+  [ParameterType.MarkdownArray]: ArrayType<Type.markdown>;
 
   [ParameterType.SparseStringArray]: SparseArrayType<Type.string>;
   [ParameterType.SparseNumberArray]: SparseArrayType<Type.number>;
@@ -257,7 +257,7 @@ export interface ParameterTypeMap {
   [ParameterType.SparseHtmlArray]: SparseArrayType<Type.html>;
   [ParameterType.SparseImageArray]: SparseArrayType<Type.image>;
   [ParameterType.SparseFileArray]: SparseArrayType<Type.file>;
-  [ParameterType.Markdown]: SparseArrayType<Type.markdown>;
+  [ParameterType.SparseMarkdownArray]: SparseArrayType<Type.markdown>;
 }
 
 export const ParameterTypeInputMap: Record<ParameterType, UnionType> = {

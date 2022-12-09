@@ -95,6 +95,8 @@ function validateResultType(resultType, result) {
             return checkType(typeOfResult === 'string', 'file', result);
         case api_types_1.Type.image:
             return checkType(typeOfResult === 'string', 'image', result);
+        case api_types_1.Type.markdown:
+            return checkType(typeOfResult === 'string', 'markdown', result);
         case api_types_1.Type.number:
             return checkType(typeOfResult === 'number', 'number', result);
         case api_types_1.Type.object:
