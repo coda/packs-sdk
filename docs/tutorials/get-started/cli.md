@@ -148,7 +148,7 @@ npx coda upload pack.ts --notes "Initial version."
     If you open your Pack in the online Pack Studio code editor you'll see a message like:
 
     ```ts
-    // Failed to load source code.
+    // Source code is not available for Pack versions uploaded from the command line interface (CLI).
     ```
 
     This is expected, since the CLI will only upload the built Pack and not the source code.
@@ -156,7 +156,7 @@ npx coda upload pack.ts --notes "Initial version."
 
 ## Install and use the Pack
 
-Your new Pack is now available to use in all your docs, and you can install it just any other Pack. Let's create a new document and install it:
+Your new Pack is now available to use in all your docs, and you can install it just like any other Pack. Let's create a new document and install it:
 
 1. Open [Coda][coda_home] in your browser.
 
