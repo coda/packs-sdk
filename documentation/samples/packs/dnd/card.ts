@@ -1,7 +1,7 @@
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
-// A schema defining the card, including all of metadata what specifically to 
+// A schema defining the card, including all of metadata what specifically to
 // highlight in the card.
 let SpellSchema = coda.makeObjectSchema({
   type: coda.ValueType.Object,
@@ -67,12 +67,9 @@ let SpellSchema = coda.makeObjectSchema({
     "damage_type",
   ],
   snippetProperty: "description",
-  identity: {
-    name: "Spell",
-  },
 });
 
-// Formula that renders a card for a spell given it's name. This will be shown 
+// Formula that renders a card for a spell given it's name. This will be shown
 // a "Card" in the Pack's list of building blocks, but is also a regular formula
 // that can be used elsewhere.
 pack.addFormula({

@@ -8,9 +8,13 @@ const WeatherSchema = coda.makeObjectSchema({
     forecast: { type: coda.ValueType.String, fromKey: "detailedForecast" },
     temperature: { type: coda.ValueType.String },
     wind: { type: coda.ValueType.String, fromKey: "windSpeed" },
-    icon: { 
-      type: coda.ValueType.String, 
+    icon: {
+      type: coda.ValueType.String,
       codaType: coda.ValueHintType.ImageReference,
+    },
+    link: {
+      type: coda.ValueType.String,
+      codaType: coda.ValueHintType.Url,
     },
   },
   displayProperty: "summary",
@@ -21,9 +25,7 @@ const WeatherSchema = coda.makeObjectSchema({
   ],
   snippetProperty: "forecast",
   imageProperty: "icon",
-  identity: {
-    name: "Weather",
-  },
+  linkProperty: "link",
 });
 
 // Add a formula that fetches the weather and returns it as a card.
@@ -63,12 +65,17 @@ pack.addFormula({
     let weather = data.properties.periods[0];
     // Add the unit onto the temperature.
     weather.temperature = `${weather.temperature}°${weather.temperatureUnit}`;
+    weather.link =
+      coda.withQueryParams("https://forecast.weather.gov/MapClick.php", {
+        lat: latitude,
+        lon: longitude,
+      });
     return weather;
   },
 });
 
 // A helper function that gets the forecast URL for a given location.
-async function getForecastUrl(latitude: number, longitude: number, 
+async function getForecastUrl(latitude: number, longitude: number,
   context: coda.ExecutionContext): Promise<string> {
   try {
     let response = await context.fetcher.fetch({

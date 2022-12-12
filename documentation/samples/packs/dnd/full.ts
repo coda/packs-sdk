@@ -73,9 +73,6 @@ let SpellSchema = coda.makeObjectSchema({
     "damage_type",
   ],
   snippetProperty: "description",
-  identity: {
-    name: "Spell",
-  },
 });
 
 // Reformat the API response for a spell to fit the schema.

@@ -92,9 +92,6 @@ This Pack allows you to fetch information about spells in th game Dungeons and D
         "damage_type",
       ],
       snippetProperty: "description",
-      identity: {
-        name: "Spell",
-      },
     });
 
     // Reformat the API response for a spell to fit the schema.

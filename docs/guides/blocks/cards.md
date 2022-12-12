@@ -7,21 +7,28 @@ description: Display structured information as rich cards.
 
 Pack formulas can return structured data as [objects][data_types_objects], allowing a single formula to return multiple values at once. By default these objects are presented as "mentions", shown as chips in the document that you can hover over to get the full set of information.
 
-TODO: Animated gif of mention vs card.
+<img src="../../../images/cards_demo_mention.png" srcset="../../../images/cards_demo_mention_2x.png 2x" alt="Schema shown as a mention">
 
 Cards are an alternative, more visual display format for objects that allow the user to easily consume key information. Additionally URLs pasted into a document can be automatically shown as cards, providing an easy way for users to discover and use your Pack.
+
+<img src="../../../images/cards_demo_card.png" srcset="../../../images/cards_demo_card_2x.png 2x" alt="Schema shown as a card">
 
 [View Sample Code][samples]{ .md-button }
 
 
 ## Using cards
 
-Coda will promote cards as a distinct option in some cases, but any supported object can be shown in a card view.
+Cards are shown as distinct type of building block, but any formula returning a compatible object can be displayed as a card. It will also be shown as an option for [matching links](#display).
 
-=== "In the Pack side panel"
-    TODO: Screenshot of Cards in side panel
-=== "In the 'Display As' menu"
-    TODO: Screenshot of Card option in the display as menu
+=== "Pack side panel"
+    <img src="../../../images/cards_use_side_panel.png" srcset="../../../images/cards_use_side_panel_2x.png 2x" class="screenshot" alt="Cards shown in the Pack side panel">
+=== "Object menu"
+    <img src="../../../images/cards_use_display_as.png" srcset="../../../images/cards_use_display_as_2x.png 2x" class="screenshot" alt="Changing a mention to show as a card in the display as menu">
+=== "Link menu"
+    <img src="../../../images/cards_link_installed.png" srcset="../../../images/cards_link_installed_2x.png 2x" class="screenshot" alt="Changing a mention to show as a card in the display as menu">
+=== "Link menu (Pack not installed)"
+    <img src="../../../images/cards_link_prompt.png" srcset="../../../images/cards_link_prompt_2x.png 2x" class="screenshot" alt="Changing a mention to show as a card in the display as menu">
+
 
 
 ## Creating cards
@@ -42,7 +49,7 @@ See the sections below for how to configure specific attributes of the card.
 
 The card's title appears at the top of the card, and is required.
 
-TODO: Image highlighting card title
+<img src="../../../images/cards_parts_title.png" srcset="../../../images/cards_parts_title_2x.png 2x" alt="The card's title">
 
 Many object schemas already define a [display value][schemas_display_value] (via `displayProperty`) which determines which property value is shown in the mention chip for the object. The same display value will be shown as the title of the card, but can be overridden by defining a `titleProperty`. This is useful if you want to use a different property specifically for cards, for example that is longer.
 
@@ -66,7 +73,7 @@ const ProductSchema = coda.makeObjectSchema({
 
 The card can include a subtitle that highlights key properties, which appears under the title.
 
-TODO: Image highlighting card subtitle
+<img src="../../../images/cards_parts_subtitle.png" srcset="../../../images/cards_parts_subtitle_2x.png 2x" alt="The card's subtitle">
 
 The properties displayed in the subtitle are determined via the `subtitleProperties` field of the schema, which lists the subset of properties to show and the order to show them.
 
@@ -75,7 +82,10 @@ const ProductSchema = coda.makeObjectSchema({
   properties: {
     // ...
     quantity: { type: coda.ValueType.Number },
-    price: { type: coda.ValueType.Number, codaType: coda.ValueHintType.Currency },
+    price: {
+      type: coda.ValueType.Number,
+      codaType: coda.ValueHintType.Currency,
+    },
   },
   // ...
   subtitleProperties: ["quantity", "price"],
@@ -89,7 +99,7 @@ The subtitle shows a label for each property, which defaults to `{Name}: {Value}
 
 The card body can include a snippet of content, which appears under the title (and subtitle if defined).
 
-TODO: Image highlighting card snippet
+<img src="../../../images/cards_parts_snippet.png" srcset="../../../images/cards_parts_snippet_2x.png 2x" alt="The card's body">
 
 The snippet is meant to contain a limited amount of text, although there is no size limit enforced. Which property's content to use for the snippet is defined by the field `snippetProperty`, and it can only refer to properties of type `String` or `Array` of `String`. These properties can contain rich text, such as [Markdown][data_types_markdown] and [HTML][data_types_html].
 
@@ -109,7 +119,7 @@ const ProductSchema = coda.makeObjectSchema({
 
 The card can include an image, which appears to the left of the other content.
 
-TODO: Image highlighting card image
+<img src="../../../images/cards_parts_image.png" srcset="../../../images/cards_parts_image_2x.png 2x" alt="The card's image">
 
 Which property's content to use for the image is defined by the field `imageProperty`, and it can only refer to properties of type `String` with a hint of either `ImageReference` or `ImageAttachment`.
 
@@ -117,7 +127,10 @@ Which property's content to use for the image is defined by the field `imageProp
 const ProductSchema = coda.makeObjectSchema({
   properties: {
     // ...
-    photo: { type: coda.ValueType.String, codaType: coda.ValueHintType.ImageReference },
+    photo: {
+      type: coda.ValueType.String,
+      codaType: coda.ValueHintType.ImageReference,
+    },
   },
   // ...
   imageProperty: "photo",
@@ -129,7 +142,7 @@ const ProductSchema = coda.makeObjectSchema({
 
 The card can include a link, which will be opened when the card is clicked. The domain of the link is also shown at the bottom of the card.
 
-TODO: Image highlighting card link
+<img src="../../../images/cards_parts_link.png" srcset="../../../images/cards_parts_link_2x.png 2x" alt="The card's link">
 
 Which property's content to use for the link is defined by the field `linkProperty`, and it can only refer to properties of type `String` with a hint of `Url`.
 
@@ -137,7 +150,10 @@ Which property's content to use for the link is defined by the field `linkProper
 const ProductSchema = coda.makeObjectSchema({
   properties: {
     // ...
-    websiteLink: { type: coda.ValueType.String, codaType: coda.ValueHintType.Url },
+    websiteLink: {
+      type: coda.ValueType.String,
+      codaType: coda.ValueHintType.Url,
+    },
   },
   // ...
   linkProperty: "websiteLink",
@@ -145,14 +161,16 @@ const ProductSchema = coda.makeObjectSchema({
 ```
 
 
-## Display a link as a card
+## Display a link as a card {: #display}
 
-One of the most common uses for cards is to display information about an item from an external application. For instance, to preview the details of a Slack message or Google Drive file. Coda provides an easy entry point to this functionality when a user pastes a link into the doc by offering to display it as a card instead.
+One of the most common uses for cards is to display information about an item from an external application, usually identified by a URL. For example, the Slack Pack's contains a `Message` card takes in a message URL and displays the text, author, etc.
 
-TODO: Image of display link as card prompt
+To make it easier to discover these cards, when a user pastes a link into a doc Coda will show a list of compatible Packs. Clicking one of these will install the Pack and display the link as a card.
+
+<img src="../../../images/cards_link_prompt.png" srcset="../../../images/cards_link_prompt_2x.png 2x" class="screenshot" alt="Dialog showing cards that can be used to display a link">
 
 !!! info "Built-in card option"
-    The link "Display as" menu always has an option for "Card", which displays a fix set of metadata for public URLs. This is distinct from Pack cards, which are shown as additional options below that.
+    The link "Display as" menu may include an option for "Card", which displays a fix set of metadata for public URLs. This is distinct from Pack cards, which are shown as additional options below that.
 
 Coda will automatically display a link as a card if it matches a Pack already installed in the doc, or for certain Coda-made Packs.
 
@@ -176,10 +194,10 @@ pack.addFormula({
 });
 
 pack.addColumnFormat({
-  name: "Product details",
+  name: "Product",
   formulaName: "Product",
   matchers: [
-    new RegExp("^https://example.com/products/[0-9]+$"),
+    new RegExp("^https://example.com/products/[A-Z0-9]+$"),
   ],
 });
 ```

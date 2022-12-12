@@ -22,11 +22,6 @@ const MyCardSchema = coda.makeObjectSchema({
   snippetProperty: "<Property name>", // Content shown in the card body
   imageProperty: "<Property name>", // Image shown on the card.
   linkProperty: "<Property name>", // Link opened when the card is clicked.
-
-  // Card schemas must have an identity declared.
-  identity: {
-    name: "MyCard",
-  },
 });
 
 // A formula that accepts a URL and returns an object matching the schema above.

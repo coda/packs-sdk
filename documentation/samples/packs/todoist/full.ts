@@ -125,9 +125,6 @@ const ProjectSchema = coda.makeObjectSchema({
   // Card metadata.
   linkProperty: "url",
   subtitleProperties: ["shared", "favorite"],
-  identity: {
-    name: "Project",
-  },
 });
 
 // A reference to a synced Task. Usually you can use
@@ -209,9 +206,6 @@ const TaskSchema = coda.makeObjectSchema({
   linkProperty: "url",
   snippetProperty: "description",
   subtitleProperties: ["priority", "completed", "due"],
-  identity: {
-    name: "Task",
-  },
 });
 
 /**

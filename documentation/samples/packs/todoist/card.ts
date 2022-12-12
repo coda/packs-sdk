@@ -37,10 +37,6 @@ const TaskSchema = coda.makeObjectSchema({
   snippetProperty: "description",
   // Which properties' content to show in the subtitle of the card.
   subtitleProperties: ["priority"],
-  // The unique identity of this schema, required to render as a card.
-  identity: {
-    name: "Task",
-  },
 });
 
 // Formula that renders a card for a task given it's URL. This will be shown a

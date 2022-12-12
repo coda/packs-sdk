@@ -33,11 +33,6 @@ const MyCardSchema = coda.makeObjectSchema({
   snippetProperty: "<Property name>", // Content shown in the card body
   imageProperty: "<Property name>", // Image shown on the card.
   linkProperty: "<Property name>", // Link opened when the card is clicked.
-
-  // Card schemas must have an identity declared.
-  identity: {
-    name: "MyCard",
-  },
 });
 
 // A formula that accepts a URL and returns an object matching the schema above.
@@ -81,7 +76,7 @@ A formula that returns a card containing an title, subtitle, and snippet. This s
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
-// A schema defining the card, including all of metadata what specifically to 
+// A schema defining the card, including all of metadata what specifically to
 // highlight in the card.
 let SpellSchema = coda.makeObjectSchema({
   type: coda.ValueType.Object,
@@ -147,12 +142,9 @@ let SpellSchema = coda.makeObjectSchema({
     "damage_type",
   ],
   snippetProperty: "description",
-  identity: {
-    name: "Spell",
-  },
 });
 
-// Formula that renders a card for a spell given it's name. This will be shown 
+// Formula that renders a card for a spell given it's name. This will be shown
 // a "Card" in the Pack's list of building blocks, but is also a regular formula
 // that can be used elsewhere.
 pack.addFormula({
@@ -250,9 +242,13 @@ const WeatherSchema = coda.makeObjectSchema({
     forecast: { type: coda.ValueType.String, fromKey: "detailedForecast" },
     temperature: { type: coda.ValueType.String },
     wind: { type: coda.ValueType.String, fromKey: "windSpeed" },
-    icon: { 
-      type: coda.ValueType.String, 
+    icon: {
+      type: coda.ValueType.String,
       codaType: coda.ValueHintType.ImageReference,
+    },
+    link: {
+      type: coda.ValueType.String,
+      codaType: coda.ValueHintType.Url,
     },
   },
   displayProperty: "summary",
@@ -263,9 +259,7 @@ const WeatherSchema = coda.makeObjectSchema({
   ],
   snippetProperty: "forecast",
   imageProperty: "icon",
-  identity: {
-    name: "Weather",
-  },
+  linkProperty: "link",
 });
 
 // Add a formula that fetches the weather and returns it as a card.
@@ -305,12 +299,17 @@ pack.addFormula({
     let weather = data.properties.periods[0];
     // Add the unit onto the temperature.
     weather.temperature = `${weather.temperature}°${weather.temperatureUnit}`;
+    weather.link =
+      coda.withQueryParams("https://forecast.weather.gov/MapClick.php", {
+        lat: latitude,
+        lon: longitude,
+      });
     return weather;
   },
 });
 
 // A helper function that gets the forecast URL for a given location.
-async function getForecastUrl(latitude: number, longitude: number, 
+async function getForecastUrl(latitude: number, longitude: number,
   context: coda.ExecutionContext): Promise<string> {
   try {
     let response = await context.fetcher.fetch({
@@ -377,10 +376,6 @@ const TaskSchema = coda.makeObjectSchema({
   snippetProperty: "description",
   // Which properties' content to show in the subtitle of the card.
   subtitleProperties: ["priority"],
-  // The unique identity of this schema, required to render as a card.
-  identity: {
-    name: "Task",
-  },
 });
 
 // Formula that renders a card for a task given it's URL. This will be shown a
