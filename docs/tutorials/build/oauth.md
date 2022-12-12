@@ -249,7 +249,7 @@ Now that we've got the OAuth2 URLs, scopes, client ID and secret we're ready to 
       execute: async function ([], context) {
         let response = await context.fetcher.fetch({
           method: "GET",
-          url: "https://api.todoist.com/rest/v1/tasks",
+          url: "https://api.todoist.com/rest/v2/tasks",
         });
         let tasks = response.body;
         let results = [];
@@ -387,7 +387,7 @@ All the code is written, but we're not ready to start using the Pack just yet. B
       execute: async function ([], context) {
         let response = await context.fetcher.fetch({
           method: "GET",
-          url: "https://api.todoist.com/rest/v1/tasks",
+          url: "https://api.todoist.com/rest/v2/tasks",
         });
         let tasks = response.body;
         let results = [];
@@ -580,7 +580,7 @@ Now that you have an understanding of how to use OAuth2 in Packs, here are some 
 [todoist_oauth]: https://developer.todoist.com/guides/#oauth
 [todoist_console]: https://developer.todoist.com/appconsole.html
 [oauth_standard]: https://datatracker.ietf.org/doc/html/rfc6749
-[todoist_tasks]: https://developer.todoist.com/rest/v1/#get-active-tasks
+[todoist_tasks]: https://developer.todoist.com/rest/v2/#get-active-tasks
 [authentication]: ../../guides/basics/authentication/index.md
 [samples_apis]: ../../samples/topic/apis.md
 [oauth_guide]: ../../guides/basics/authentication/oauth2.md

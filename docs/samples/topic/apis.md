@@ -466,7 +466,7 @@ pack.setUserAuthentication({
 
   // Determines the display name of the connected account.
   getConnectionName: async function (context) {
-    let url = coda.withQueryParams("https://api.todoist.com/sync/v8/sync", {
+    let url = coda.withQueryParams("https://api.todoist.com/sync/v9/sync", {
       resource_types: JSON.stringify(["user"]),
     });
     let response = await context.fetcher.fetch({

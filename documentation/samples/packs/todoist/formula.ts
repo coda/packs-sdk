@@ -20,7 +20,7 @@ const TaskSchema = coda.makeObjectSchema({
     },
     taskId: {
       description: "The ID of the task.",
-      type: coda.ValueType.Number,
+      type: coda.ValueType.String,
       required: true,
     },
   },
@@ -28,9 +28,9 @@ const TaskSchema = coda.makeObjectSchema({
   idProperty: "taskId",
 });
 
-// Formula that looks up rich metadata about a task given it's URL.
+// Formula that looks up rich metadata about a task given it's ID.
 pack.addFormula({
-  name: "GetTaskById",
+  name: "Task",
   description: "Gets a Todoist task by ID",
   parameters: [
     coda.makeParameter({
@@ -44,7 +44,7 @@ pack.addFormula({
 
   execute: async function ([taskId], context) {
     let response = await context.fetcher.fetch({
-      url: "https://api.todoist.com/rest/v1/tasks/" + taskId,
+      url: "https://api.todoist.com/rest/v2/tasks/" + taskId,
       method: "GET",
     });
     let task = response.body;

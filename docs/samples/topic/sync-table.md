@@ -326,7 +326,7 @@ const TaskSchema = coda.makeObjectSchema({
     },
     taskId: {
       description: "The ID of the task.",
-      type: coda.ValueType.Number,
+      type: coda.ValueType.String,
       required: true,
     },
   },
@@ -355,7 +355,7 @@ pack.addSyncTable({
         description: "Limit tasks to a specific project.",
         optional: true,
         autocomplete: async function (context, search) {
-          let url = "https://api.todoist.com/rest/v1/projects";
+          let url = "https://api.todoist.com/rest/v2/projects";
           let response = await context.fetcher.fetch({
             method: "GET",
             url: url,
@@ -366,7 +366,7 @@ pack.addSyncTable({
       }),
     ],
     execute: async function ([filter, project], context) {
-      let url = coda.withQueryParams("https://api.todoist.com/rest/v1/tasks", {
+      let url = coda.withQueryParams("https://api.todoist.com/rest/v2/tasks", {
         filter: filter,
         project_id: project,
       });
@@ -422,7 +422,7 @@ const ProjectSchema = coda.makeObjectSchema({
     },
     projectId: {
       description: "The ID of the project.",
-      type: coda.ValueType.Number,
+      type: coda.ValueType.String,
       required: true,
     },
   },
@@ -458,7 +458,7 @@ const TaskSchema = coda.makeObjectSchema({
     project: ProjectReferenceSchema,
     taskId: {
       description: "The ID of the task.",
-      type: coda.ValueType.Number,
+      type: coda.ValueType.String,
       required: true,
     },
   },
@@ -477,7 +477,7 @@ pack.addSyncTable({
     description: "Sync projects",
     parameters: [],
     execute: async function ([], context) {
-      let url = "https://api.todoist.com/rest/v1/projects";
+      let url = "https://api.todoist.com/rest/v2/projects";
       let response = await context.fetcher.fetch({
         method: "GET",
         url: url,
@@ -508,7 +508,7 @@ pack.addSyncTable({
     description: "Sync tasks",
     parameters: [],
     execute: async function ([], context) {
-      let url = "https://api.todoist.com/rest/v1/tasks";
+      let url = "https://api.todoist.com/rest/v2/tasks";
       let response = await context.fetcher.fetch({
         method: "GET",
         url: url,

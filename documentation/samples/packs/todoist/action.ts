@@ -17,7 +17,7 @@ pack.addFormula({
 
   execute: async function ([name], context) {
     let response = await context.fetcher.fetch({
-      url: "https://api.todoist.com/rest/v1/tasks",
+      url: "https://api.todoist.com/rest/v2/tasks",
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -136,7 +136,7 @@ const TaskReferenceSchema = coda.makeObjectSchema({
   codaType: coda.ValueHintType.Reference,
   properties: {
     name: { type: coda.ValueType.String, required: true },
-    taskId: { type: coda.ValueType.Number, required: true },
+    taskId: { type: coda.ValueType.String, required: true },
   },
   displayProperty: "name",
   idProperty: "taskId",
@@ -166,7 +166,7 @@ const TaskSchema = coda.makeObjectSchema({
     },
     taskId: {
       description: "The ID of the task.",
-      type: coda.ValueType.Number,
+      type: coda.ValueType.String,
       required: true,
     },
     // Add a reference to the sync'ed row of the parent task.
