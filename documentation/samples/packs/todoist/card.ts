@@ -1,26 +1,8 @@
 import * as coda from "@codahq/packs-sdk";
-
-// Regular expressions that match Todoist task URLs. Used by the column format
-// and also the formula that powers it.
-const TaskUrlPatterns: RegExp[] = [
-  new RegExp("^https://todoist.com/app/task/([0-9]+)$"),
-  new RegExp("^https://todoist.com/app/project/[0-9]+/task/([0-9]+)$"),
-  new RegExp("^https://todoist.com/showTask\\?id=([0-9]+)"),
-];
-
 export const pack = coda.newPack();
 
-// Add a column format that displays a task URL as rich metadata.
-pack.addColumnFormat({
-  name: "Task",
-  // The formula "Task" below will get run on the cell value.
-  formulaName: "Task",
-  // If the first values entered into a new column match these patterns then
-  // this column format will be automatically applied.
-  matchers: TaskUrlPatterns,
-});
-
-// A schema defining the rich metadata to be returned.
+// A schema defining the card, including all of metadata what specifically to
+// highlight in the card.
 const TaskSchema = coda.makeObjectSchema({
   properties: {
     name: {
@@ -37,19 +19,29 @@ const TaskSchema = coda.makeObjectSchema({
       type: coda.ValueType.String,
       codaType: coda.ValueHintType.Url,
     },
+    priority: {
+      description: "The priority of the task.",
+      type: coda.ValueType.String,
+    },
     taskId: {
       description: "The ID of the task.",
       type: coda.ValueType.String,
       required: true,
     },
   },
+  // Which property's content to show in the title of the card.
   displayProperty: "name",
-  idProperty: "taskId",
+  // Which property contains the link to open when the card is clicked.
+  linkProperty: "url",
+  // Which property's content to show in the body of the card.
+  snippetProperty: "description",
+  // Which properties' content to show in the subtitle of the card.
+  subtitleProperties: ["priority"],
 });
 
-// Formula that looks up rich metadata about a task given it's URL. This is used
-// by the "Task" column format above, but is also a regular formula that can be
-// used elsewhere.
+// Formula that renders a card for a task given it's URL. This will be shown a
+// "Card" in the Pack's list of building blocks, but is also a regular formula
+// that can be used elsewhere.
 pack.addFormula({
   name: "Task",
   description: "Gets a Todoist task by URL",
@@ -74,9 +66,29 @@ pack.addFormula({
       name: task.content,
       description: task.description,
       url: task.url,
+      priority: task.priority,
       taskId: task.id,
     };
   },
+});
+
+// Regular expressions that match Todoist task URLs. Used to match and parse
+// relevant URLs.
+const TaskUrlPatterns: RegExp[] = [
+  new RegExp("^https://todoist.com/app/task/([0-9]+)$"),
+  new RegExp("^https://todoist.com/app/project/[0-9]+/task/([0-9]+)$"),
+  new RegExp("^https://todoist.com/showTask\\?id=([0-9]+)"),
+];
+
+// Add a column format for the Task formula, to define which URLs it should
+// trigger for. This also makes it easier to use the formula in a table column.
+pack.addColumnFormat({
+  // How the option will show in the link and column type dialogs.
+  name: "Task",
+  // The formula that generates the card.
+  formulaName: "Task",
+  // The set of regular expressions that match Todoist task URLs.
+  matchers: TaskUrlPatterns,
 });
 
 // Helper function to extract the Task ID from the URL.

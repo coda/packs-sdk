@@ -133,6 +133,18 @@ See [IdentityDefinition](core.IdentityDefinition.md).
 
 ___
 
+### imageProperty
+
+• `Optional` **imageProperty**: [`PropertyIdentifier`](../types/core.PropertyIdentifier.md)<`K`\>
+
+The name of a property within [properties](core.ObjectSchemaDefinition.md#properties) that can be used as a rich image preview of
+the object.
+
+Must be a [String](../enums/core.ValueType.md#string) property with the
+[ImageAttachment](../enums/core.ValueHintType.md#imageattachment) or [ImageReference](../enums/core.ValueHintType.md#imagereference) hints
+
+___
+
 ### includeUnknownProperties
 
 • `Optional` **includeUnknownProperties**: `boolean`
@@ -144,6 +156,18 @@ rather than stripping them.
 Properties not declared in the schema will not work properly in Coda: they cannot be
 used natively in the formula language and will not have correct types in Coda. But, in certain
 scenarios they can be useful.
+
+___
+
+### linkProperty
+
+• `Optional` **linkProperty**: [`PropertyIdentifier`](../types/core.PropertyIdentifier.md)<`K`\>
+
+The name of a property within [properties](core.ObjectSchemaDefinition.md#properties) that will
+navigate users to more details about this object
+
+Must be a [String](../enums/core.ValueType.md#string) property with a [Url](../enums/core.ValueHintType.md#url)
+[codaType](core.ObjectSchemaDefinition.md#codatype).
 
 ___
 
@@ -162,6 +186,39 @@ ___
 • **properties**: [`ObjectSchemaProperties`](../types/core.ObjectSchemaProperties.md)<`K` \| `L`\>
 
 Definintion of the key-value pairs in this object.
+
+___
+
+### snippetProperty
+
+• `Optional` **snippetProperty**: [`PropertyIdentifier`](../types/core.PropertyIdentifier.md)<`K`\>
+
+The name of a property within [properties](core.ObjectSchemaDefinition.md#properties) that be used as a textual summary
+of the object.
+
+Must be a [String](../enums/core.ValueType.md#string) property or [Array](../enums/core.ValueType.md#array) of [String](../enums/core.ValueType.md#string)s.
+
+___
+
+### subtitleProperties
+
+• `Optional` **subtitleProperties**: [`PropertyIdentifier`](../types/core.PropertyIdentifier.md)<`K`\>[]
+
+A list of property names from within [properties](core.ObjectSchemaDefinition.md#properties) for the properties of the object
+to be shown in the subtitle of a rich card preview for formulas that return this object.
+Defaults to the value of [featuredProperties](core.ObjectSchemaDefinition.md#featuredproperties) if not specified.
+
+___
+
+### titleProperty
+
+• `Optional` **titleProperty**: [`PropertyIdentifier`](../types/core.PropertyIdentifier.md)<`K`\>
+
+The name of a property within [properties](core.ObjectSchemaDefinition.md#properties) that will be used as a title of a rich card preview
+for formulas that return this object.
+Defaults to the value of [displayProperty](core.ObjectSchemaDefinition.md#displayproperty) if not specified
+
+Must be a [String](../enums/core.ValueType.md#string) property
 
 ___
 

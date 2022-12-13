@@ -8,6 +8,7 @@ const ProjectUrlPatterns: RegExp[] = [
 ];
 
 const TaskUrlPatterns: RegExp[] = [
+  new RegExp("^https://todoist.com/app/task/([0-9]+)$"),
   new RegExp("^https://todoist.com/app/project/[0-9]+/task/([0-9]+)$"),
   new RegExp("^https://todoist.com/showTask\\?id=([0-9]+)"),
 ];
@@ -122,6 +123,9 @@ const ProjectSchema = coda.makeObjectSchema({
   // Sync table metadata.
   idProperty: "projectId",
   featuredProperties: ["url"],
+  // Card metadata.
+  linkProperty: "url",
+  subtitleProperties: ["shared", "favorite"],
 });
 
 // A reference to a synced Task. Usually you can use
@@ -197,9 +201,13 @@ const TaskSchema = coda.makeObjectSchema({
     parentTask: TaskReferenceSchema,
   },
   displayProperty: "name",
-    // Sync table metadata.
+  // Sync table metadata.
   idProperty: "taskId",
   featuredProperties: ["project", "url"],
+  // Card metadata.
+  linkProperty: "url",
+  snippetProperty: "description",
+  subtitleProperties: ["priority", "completed", "due"],
 });
 
 /**

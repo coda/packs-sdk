@@ -81,8 +81,17 @@ This Pack allows you to fetch information about spells in th game Dungeons and D
         },
       },
       displayProperty: "name",
+      // Sync table fields.
       idProperty: "index",
       featuredProperties: ["description", "level", "range"],
+      // Card fields.
+      subtitleProperties: [
+        "level",
+        "range",
+        "duration",
+        "damage_type",
+      ],
+      snippetProperty: "description",
     });
 
     // Reformat the API response for a spell to fit the schema.
@@ -98,8 +107,8 @@ This Pack allows you to fetch information about spells in th game Dungeons and D
 
     // A formula that looks up a spell given a name, returning the first result.
     pack.addFormula({
-      name: "LookupSpell",
-      description: "Looks up a spell by name.",
+      name: "Spell",
+      description: "Gets information about a spell, given its name.",
       parameters: [
         coda.makeParameter({
           type: coda.ParameterType.String,
@@ -141,7 +150,7 @@ This Pack allows you to fetch information about spells in th game Dungeons and D
     pack.addColumnFormat({
       name: "Spell",
       instructions: "Displays information about the spell with this name.",
-      formulaName: "LookupSpell",
+      formulaName: "Spell",
     });
 
     // A sync table that displays all spells available in the API.

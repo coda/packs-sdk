@@ -234,7 +234,7 @@ pack.addFormula({
 ```
 
 
-### Display value
+### Display value {: #display}
 
 Object schemas must define what value should be displayed within the chip when it is rendered in the doc. This is done by setting the `displayProperty` field to the name of the property containing the value to display.
 
@@ -459,6 +459,113 @@ In your sync formula you only need to populate the fields of the reference objec
     Reference schemas are only resolved to rows when they are used in a sync table. If used in a formula or column format they will always appear in a broken state, even if the row they are referencing is present.
 
 
+## Schemas in cards {: #cards}
+
+The contents of a card are defined using an object schema. The following fields are specific to cards:
+
+- [`titleProperty`][titleProperty]
+- [`subtitleProperties`][subtitleProperties]
+- [`snippetProperty`][snippetProperty]
+- [`linkProperty`][linkProperty]
+- [`imageProperty`][imageProperty]
+
+To be eligible to be displayed as a card, the schemas must meet all of the following criteria:
+
+--8<-- "guides/advanced/.card_schema.md"
+
+Read the [Cards guide][cards] for more information on how these fields are used.
+
+
+### Property labels {: #labels}
+
+A card's subtitle contains a set of properties, joined with a separator. Unlike other areas of the card where only the property's value is shown, in the subtitle a label is shown as well. By default, the label and value are shown together as `{label}: {value}`.
+
+```ts
+let MovieSchema = coda.makeObjectSchema({
+  // ...
+  subtitleProperties: ["director", "year", "rating"],
+});
+```
+
+<img src="../../../images/schemas_labels_default.png" srcset="../../../images/schemas_labels_default_2x.png 2x" class="screenshot" alt="Default labels for subtitle properties">
+
+However, there are times when the default label isn't a great fit. For instance you may want to put the property name after the value (`10 bugs` instead of `Bugs: 10`) or remove the label completely (`P1` instead of `Priority: P1`).
+
+To customize the label, when specifying the `subtitleProperties` pass a [`PropertyIdentifierDetails`][PropertyIdentifierDetails] object instead of a string. Set the `property` field to the path of the property (what the string value normally contains) and set the `label` field to the template string to use for the label.
+
+There are three options for setting the label:
+
+1.  Pass a string which will be used as an alternative label.
+1.  Pass a string containing the constant [`PropertyLabelValueTemplate`][PropertyLabelValueTemplate], which acts as a placeholder for where the property's value should be inserted.
+1.  Pass an empty string, which will remove the label completely.
+
+```ts
+let MovieSchema = coda.makeObjectSchema({
+  // ...
+  subtitleProperties: [
+    "director",
+    // Fully customize the label for the year property.
+    { property: "year", label: `Released in ${coda.PropertyLabelValueTemplate}` },
+    // Only show the value of the rating property.
+    { property: "rating", label: "" },
+  ],
+});
+```
+
+<img src="../../../images/schemas_labels_custom.png" srcset="../../../images/schemas_labels_custom_2x.png 2x" class="screenshot" alt="Custom labels for subtitle properties">
+
+
+## Property paths
+
+Object schema fields that expect a property name (`titleProperty`, `snippetProperty`, etc) also accept a path to a property on a nested object. The paths are specified using a subset of the [JSONPath syntax][jsonpath], which at it's simplest just joins the property names with a dot (like `property1.property2`).
+
+!!! warning "Only supported for card fields"
+    At the moment property paths can only be used in the object [schema fields used by cards](#cards).
+    <!-- TODO(spencer): Remove this warning when support has been added for the other fields. -->
+
+Consider the following schema for a movie:
+
+```ts
+let PersonSchema = coda.makeObjectSchema({
+  properties: {
+    name: { type: coda.ValueType.String },
+    // ...
+  },
+});
+
+let MovieSchema = coda.makeObjectSchema({
+  properties: {
+    director: PersonSchema,
+    actors: {
+      type: coda.ValueType.Array,
+      items: PersonSchema,
+    },
+    // ...
+  },
+});
+```
+
+The following property Paths are all valid:
+
+- `director.name` - The name of the director.
+- `actors[0].name` - The name of the first actor.
+- `actors[*].name` - The names of all of the actors (comma separated).
+
+If you need to further customize the value, such as combining the value of multiple properties or doing some other transformation, you'll need to create a new property to hold that value and manually populate it in your `execute` function. See the [Display value](#display) for an example of this.
+
+!!! info "Set property labels in card subtitle"
+    When using property paths to specify a card's subtitle, it's recommended that you manually set the [labels for those properties](#labels). Coda will generate a label based off of the property path, but the result is often not desirable.
+
+    ```
+    let MovieSchema = coda.makeObjectSchema({
+      // ...
+      subtitleProperties: [
+        { property: "director.name", label: "Director" },
+      ],
+    });
+    ```
+
+
 
 [samples]: ../../samples/topic/schema.md
 [data_types]: ../basics/data-types.md
@@ -472,3 +579,12 @@ In your sync formula you only need to populate the fields of the reference objec
 [data_types_objects]: ../basics/data-types.md#objects
 [mdn_spread_object]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax#spread_in_object_literals
 [sync_tables_actions]: ../blocks/sync-tables/index.md#actions
+[cards]: ../blocks/cards.md
+[PropertyIdentifierDetails]: ../../reference/sdk/interfaces/core.PropertyIdentifierDetails.md
+[PropertyLabelValueTemplate]: ../../reference/sdk/variables/core.PropertyLabelValueTemplate.md
+[titleProperty]: ../../reference/sdk/interfaces/core.ObjectSchemaDefinition.md#titleproperty
+[subtitleProperties]: ../../reference/sdk/interfaces/core.ObjectSchemaDefinition.md#subtitleproperties
+[snippetProperty]: ../../reference/sdk/interfaces/core.ObjectSchemaDefinition.md#snippetproperty
+[linkProperty]: ../../reference/sdk/interfaces/core.ObjectSchemaDefinition.md#linkproperty
+[imageProperty]: ../../reference/sdk/interfaces/core.ObjectSchemaDefinition.md#imageproperty
+[jsonpath]: https://goessner.net/articles/JsonPath/index.html

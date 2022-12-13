@@ -35,6 +35,11 @@ export const Snippets: AutocompleteSnippet[] = [
     codeFile: './samples/snippets/column_format.ts',
   },
   {
+    triggerTokens: ['card'],
+    content: 'Adds a everything you need for a card (schema, formula, and column format).',
+    codeFile: './samples/snippets/card.ts',
+  },
+  {
     triggerTokens: ['setUserAuthentication', 'addUserAuthentication', 'UserAuthentication'],
     content: 'Sets per-user authentication for the Pack.',
     codeFile: './samples/snippets/authentication/user.ts',
@@ -901,6 +906,43 @@ export const Examples: Example[] = [
         name: 'Yahoo',
         content: 'The Yahoo APIs uses OAuth2 to authenticate users.',
         codeFile: './samples/packs/apis/yahoo.ts',
+      },
+    ],
+  },
+  {
+    name: 'Cards',
+    description: 'Samples that show how to create cards to preview content.',
+    icon: 'material/card-text',
+    category: ExampleCategory.Topic,
+    triggerTokens: [],
+    contentFile: './samples/packs/card/README.md',
+    linkData: {
+      type: UrlType.SdkReferencePath,
+      url: '/guides/blocks/cards',
+    },
+    exampleSnippets: [
+      {
+        name: 'Template',
+        content: 'The basic structure of a card.',
+        codeFile: './samples/snippets/card.ts',
+      },
+      {
+        name: 'Basic card',
+        content:
+          'A formula that returns a card containing an title, subtitle, and snippet. This sample returns a card with information about a spell in the game Dungeons & Dragons.',
+        codeFile: './samples/packs/dnd/card.ts',
+      },
+      {
+        name: 'With image',
+        content:
+          'A formula that returns a card that includes an image. This samples returns a card with the current weather at a given location in the United States.',
+        codeFile: './samples/packs/card/weather.ts',
+      },
+      {
+        name: 'With link matching',
+        content:
+          'A card that can be created manually or automatically when pasting a link. This sample returns a card with the details of a task in Todoist.',
+        codeFile: './samples/packs/todoist/card.ts',
       },
     ],
   },

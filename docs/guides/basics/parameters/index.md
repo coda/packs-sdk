@@ -341,7 +341,7 @@ const ProjectParam = coda.makeParameter({
 });
 
 pack.addFormula({
-  name: "GetProject",
+  name: "Project",
   description: "Get a project.",
   parameters: [
     ProjectParam,
@@ -350,7 +350,7 @@ pack.addFormula({
 });
 
 pack.addFormula({
-  name: "GetTask",
+  name: "Task",
   description: "Get a task within a project.",
   parameters: [
     ProjectParam,

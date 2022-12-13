@@ -1,6 +1,7 @@
 title: Building blocks
 nav:
   - formulas.md
+  - cards.md
   - actions.md
   - column-formats.md
   - sync-tables

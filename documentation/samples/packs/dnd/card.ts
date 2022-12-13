@@ -1,14 +1,8 @@
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
-// How many spells to fetch in each sync formula execution.
-const BATCH_SIZE = 20;
-
-// Allow requests to the DND API.
-pack.addNetworkDomain("dnd5eapi.co");
-
-// Schema that defines the metadata to return for each spell. Shared by the
-// formula, column format, and sync table.
+// A schema defining the card, including all of metadata what specifically to
+// highlight in the card.
 let SpellSchema = coda.makeObjectSchema({
   type: coda.ValueType.Object,
   properties: {
@@ -75,18 +69,9 @@ let SpellSchema = coda.makeObjectSchema({
   snippetProperty: "description",
 });
 
-// Reformat the API response for a spell to fit the schema.
-function formatSpell(spell) {
-  return {
-    // Start with all of the properties in the API response.
-    ...spell,
-    description: spell.desc?.join("\n"),
-    higher_level: spell.higher_level?.join("\n"),
-    damage_type: spell.damage?.damage_type?.name,
-  };
-}
-
-// A formula that looks up a spell given a name, returning the first result.
+// Formula that renders a card for a spell given it's name. This will be shown
+// a "Card" in the Pack's list of building blocks, but is also a regular formula
+// that can be used elsewhere.
 pack.addFormula({
   name: "Spell",
   description: "Gets information about a spell, given its name.",
@@ -126,62 +111,8 @@ pack.addFormula({
   },
 });
 
-// A column format that displays information about the spell with the given
-// name.
-pack.addColumnFormat({
-  name: "Spell",
-  instructions: "Displays information about the spell with this name.",
-  formulaName: "Spell",
-});
-
-// A sync table that displays all spells available in the API.
-pack.addSyncTable({
-  name: "Spells",
-  identityName: "Spell",
-  schema: SpellSchema,
-  connectionRequirement: coda.ConnectionRequirement.None,
-  formula: {
-    name: "SyncSpells",
-    description: "Sync all the spells.",
-    parameters: [],
-    execute: async function ([], context) {
-      // Get the list of all spells.
-      let listUrl = "https://www.dnd5eapi.co/api/spells";
-      let response = await context.fetcher.fetch({
-        method: "GET",
-        url: listUrl,
-      });
-      let results = response.body.results;
-
-      // If there is a previous continuation, start from the index contained
-      // within, otherwise start at zero.
-      let index: number = (context.sync.continuation?.index as number) || 0;
-
-      // Get a batch of results, starting from the index determined above.
-      let batch = results.slice(index, index + BATCH_SIZE);
-
-      // Fetch the spells for the batch of results.
-      let spells = await fetchSpells(context.fetcher, batch);
-
-      // Move the index forward.
-      index += BATCH_SIZE;
-
-      // If there are more results to process, create a new continuation.
-      let continuation;
-      if (index <= results.length) {
-        continuation = {
-          index: index,
-        };
-      }
-
-      // Return the batch of spells and the next continuation, if any.
-      return {
-        result: spells,
-        continuation: continuation,
-      };
-    },
-  },
-});
+// Allow requests to the DND API.
+pack.addNetworkDomain("dnd5eapi.co");
 
 // Fetch a batch of spells from the API and return them formatted to match the
 // schema. This utility function is shared by the formula and sync table.
@@ -208,4 +139,16 @@ async function fetchSpells(fetcher: coda.Fetcher, spellResults) {
     spells.push(formatSpell(response.body));
   }
   return spells;
+}
+
+
+// Reformat the API response for a spell to fit the schema.
+function formatSpell(spell) {
+  return {
+    // Start with all of the properties in the API response.
+    ...spell,
+    description: spell.desc?.join("\n"),
+    higher_level: spell.higher_level?.join("\n"),
+    damage_type: spell.damage?.damage_type?.name,
+  };
 }
