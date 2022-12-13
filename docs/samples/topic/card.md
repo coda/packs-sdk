@@ -364,7 +364,7 @@ const TaskSchema = coda.makeObjectSchema({
     },
     taskId: {
       description: "The ID of the task.",
-      type: coda.ValueType.Number,
+      type: coda.ValueType.String,
       required: true,
     },
   },
@@ -397,7 +397,7 @@ pack.addFormula({
   execute: async function ([url], context) {
     let taskId = extractTaskId(url);
     let response = await context.fetcher.fetch({
-      url: "https://api.todoist.com/rest/v1/tasks/" + taskId,
+      url: "https://api.todoist.com/rest/v2/tasks/" + taskId,
       method: "GET",
     });
     let task = response.body;
@@ -414,6 +414,7 @@ pack.addFormula({
 // Regular expressions that match Todoist task URLs. Used to match and parse
 // relevant URLs.
 const TaskUrlPatterns: RegExp[] = [
+  new RegExp("^https://todoist.com/app/task/([0-9]+)$"),
   new RegExp("^https://todoist.com/app/project/[0-9]+/task/([0-9]+)$"),
   new RegExp("^https://todoist.com/showTask\\?id=([0-9]+)"),
 ];

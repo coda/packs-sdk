@@ -3,6 +3,7 @@ import * as coda from "@codahq/packs-sdk";
 // Regular expressions that match Todoist task URLs. Used by the column format
 // and also the formula that powers it.
 const TaskUrlPatterns: RegExp[] = [
+  new RegExp("^https://todoist.com/app/task/([0-9]+)$"),
   new RegExp("^https://todoist.com/app/project/[0-9]+/task/([0-9]+)$"),
   new RegExp("^https://todoist.com/showTask\\?id=([0-9]+)"),
 ];

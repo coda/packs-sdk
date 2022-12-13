@@ -8,6 +8,7 @@ const ProjectUrlPatterns: RegExp[] = [
 ];
 
 const TaskUrlPatterns: RegExp[] = [
+  new RegExp("^https://todoist.com/app/task/([0-9]+)$"),
   new RegExp("^https://todoist.com/app/project/[0-9]+/task/([0-9]+)$"),
   new RegExp("^https://todoist.com/showTask\\?id=([0-9]+)"),
 ];
