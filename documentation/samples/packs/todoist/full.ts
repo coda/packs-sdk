@@ -204,6 +204,7 @@ const TaskSchema = coda.makeObjectSchema({
   // Sync table metadata.
   idProperty: "taskId",
   featuredProperties: ["project", "url"],
+  // Card metadata.
   linkProperty: "url",
   snippetProperty: "description",
   subtitleProperties: ["priority", "completed", "due"],
