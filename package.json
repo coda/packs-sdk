@@ -117,6 +117,7 @@
     "typedoc-plugin-markdown": "^3.13.6"
   },
   "resolutions": {
+    "**/request/qs": "^6.5.3",
     "release-it/node-fetch": "^3.2.10",
     "ansi-regex": "^5.0.1",
     "got": "^12.1.0",
