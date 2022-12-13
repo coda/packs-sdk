@@ -4,6 +4,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+## [1.2.3] - 2022-12-13
+
 ### Added
 
 - Added a new formula parameter type `Markdown` as an alternative to `HTML` for formatted text.
@@ -535,7 +537,8 @@ await myHelper(context);
 
 - Beginning of alpha versioning.
 
-[unreleased]: https://github.com/coda/packs-sdk/compare/v1.2.2...HEAD
+[unreleased]: https://github.com/coda/packs-sdk/compare/v1.2.3...HEAD
+[1.2.3]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.2.3
 [1.2.2]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.2.2
 [1.2.1]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.2.1
 [1.2.0]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.2.0
