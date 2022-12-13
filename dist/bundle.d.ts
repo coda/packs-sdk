@@ -1169,7 +1169,8 @@ export declare enum Type {
 	date = 4,
 	html = 5,
 	image = 6,
-	file = 7
+	file = 7,
+	markdown = 8
 }
 /**
  * The type of a parameter or return value that is an array.
@@ -1195,6 +1196,7 @@ export interface TypeMap {
 	[Type.html]: string;
 	[Type.image]: string;
 	[Type.file]: string;
+	[Type.markdown]: string;
 }
 /**
  * The union of types for arguments to the `execute` function for a formula.
@@ -1237,6 +1239,10 @@ export declare enum ParameterType {
 	 * Indicates a parameter that is a Coda file. The pack is passed a file URL.
 	 */
 	File = "file",
+	/**
+	 * Indicates a parameter that is a Coda rich text value that should be passed to the pack as Markdown.
+	 */
+	Markdown = "markdown",
 	/**
 	 * Indicates a parameter that is a list of Coda text values.
 	 */
@@ -1297,7 +1303,15 @@ export declare enum ParameterType {
 	/**
 	 * {@link FileArray} that accepts unparsable values as `undefined`.
 	 */
-	SparseFileArray = "sparseFileArray"
+	SparseFileArray = "sparseFileArray",
+	/**
+	 * Indicates a parameter that is a list of Coda rich text values that should be passed to the pack as Markdown.
+	 */
+	MarkdownArray = "markdownArray`",
+	/**
+	 * {@link MarkdownArray} that accepts unparsable values as `undefined`.
+	 */
+	SparseMarkdownArray = "sparseMarkdownArray"
 }
 export interface ParameterTypeMap {
 	[ParameterType.String]: Type.string;
@@ -1307,6 +1321,7 @@ export interface ParameterTypeMap {
 	[ParameterType.Html]: Type.html;
 	[ParameterType.Image]: Type.image;
 	[ParameterType.File]: Type.file;
+	[ParameterType.Markdown]: Type.markdown;
 	[ParameterType.StringArray]: ArrayType<Type.string>;
 	[ParameterType.NumberArray]: ArrayType<Type.number>;
 	[ParameterType.BooleanArray]: ArrayType<Type.boolean>;
@@ -1314,6 +1329,7 @@ export interface ParameterTypeMap {
 	[ParameterType.HtmlArray]: ArrayType<Type.html>;
 	[ParameterType.ImageArray]: ArrayType<Type.image>;
 	[ParameterType.FileArray]: ArrayType<Type.file>;
+	[ParameterType.MarkdownArray]: ArrayType<Type.markdown>;
 	[ParameterType.SparseStringArray]: SparseArrayType<Type.string>;
 	[ParameterType.SparseNumberArray]: SparseArrayType<Type.number>;
 	[ParameterType.SparseBooleanArray]: SparseArrayType<Type.boolean>;
@@ -1321,6 +1337,7 @@ export interface ParameterTypeMap {
 	[ParameterType.SparseHtmlArray]: SparseArrayType<Type.html>;
 	[ParameterType.SparseImageArray]: SparseArrayType<Type.image>;
 	[ParameterType.SparseFileArray]: SparseArrayType<Type.file>;
+	[ParameterType.SparseMarkdownArray]: SparseArrayType<Type.markdown>;
 }
 /**
  * The definition of a formula parameter.

@@ -97,6 +97,22 @@ Indicates a parameter that is a list of Coda image values. The pack is passed a 
 
 ___
 
+### Markdown
+
+• **Markdown** = ``"markdown"``
+
+Indicates a parameter that is a Coda rich text value that should be passed to the pack as Markdown.
+
+___
+
+### MarkdownArray
+
+• **MarkdownArray** = ``"markdownArray`"``
+
+Indicates a parameter that is a list of Coda rich text values that should be passed to the pack as Markdown.
+
+___
+
 ### Number
 
 • **Number** = ``"number"``
@@ -150,6 +166,14 @@ ___
 • **SparseImageArray** = ``"sparseImageArray"``
 
 [ImageArray](core.ParameterType.md#imagearray) that accepts unparsable values as `undefined`.
+
+___
+
+### SparseMarkdownArray
+
+• **SparseMarkdownArray** = ``"sparseMarkdownArray"``
+
+[MarkdownArray](core.ParameterType.md#markdownarray) that accepts unparsable values as `undefined`.
 
 ___
 

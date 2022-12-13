@@ -47,6 +47,12 @@ ___
 
 ___
 
+### markdown
+
+• **markdown** = ``8``
+
+___
+
 ### number
 
 • **number** = ``1``

@@ -19,6 +19,7 @@ var Type;
     Type[Type["html"] = 5] = "html";
     Type[Type["image"] = 6] = "image";
     Type[Type["file"] = 7] = "file";
+    Type[Type["markdown"] = 8] = "markdown";
 })(Type = exports.Type || (exports.Type = {}));
 function isArrayType(obj) {
     return obj && obj.type === 'array' && typeof obj.items === 'number';
@@ -93,6 +94,10 @@ var ParameterType;
      */
     ParameterType["File"] = "file";
     /**
+     * Indicates a parameter that is a Coda rich text value that should be passed to the pack as Markdown.
+     */
+    ParameterType["Markdown"] = "markdown";
+    /**
      * Indicates a parameter that is a list of Coda text values.
      */
     ParameterType["StringArray"] = "stringArray";
@@ -153,6 +158,14 @@ var ParameterType;
      * {@link FileArray} that accepts unparsable values as `undefined`.
      */
     ParameterType["SparseFileArray"] = "sparseFileArray";
+    /**
+     * Indicates a parameter that is a list of Coda rich text values that should be passed to the pack as Markdown.
+     */
+    ParameterType["MarkdownArray"] = "markdownArray`";
+    /**
+     * {@link MarkdownArray} that accepts unparsable values as `undefined`.
+     */
+    ParameterType["SparseMarkdownArray"] = "sparseMarkdownArray";
 })(ParameterType = exports.ParameterType || (exports.ParameterType = {}));
 exports.ParameterTypeInputMap = {
     [ParameterType.String]: Type.string,
@@ -162,6 +175,7 @@ exports.ParameterTypeInputMap = {
     [ParameterType.Html]: Type.html,
     [ParameterType.Image]: Type.image,
     [ParameterType.File]: Type.file,
+    [ParameterType.Markdown]: Type.markdown,
     [ParameterType.StringArray]: { type: 'array', items: Type.string },
     [ParameterType.NumberArray]: { type: 'array', items: Type.number },
     [ParameterType.BooleanArray]: { type: 'array', items: Type.boolean },
@@ -169,6 +183,7 @@ exports.ParameterTypeInputMap = {
     [ParameterType.HtmlArray]: { type: 'array', items: Type.html },
     [ParameterType.ImageArray]: { type: 'array', items: Type.image },
     [ParameterType.FileArray]: { type: 'array', items: Type.file },
+    [ParameterType.MarkdownArray]: { type: 'array', items: Type.markdown },
     [ParameterType.SparseStringArray]: { type: 'array', items: Type.string, allowEmpty: true },
     [ParameterType.SparseNumberArray]: { type: 'array', items: Type.number, allowEmpty: true },
     [ParameterType.SparseBooleanArray]: { type: 'array', items: Type.boolean, allowEmpty: true },
@@ -176,6 +191,7 @@ exports.ParameterTypeInputMap = {
     [ParameterType.SparseHtmlArray]: { type: 'array', items: Type.html, allowEmpty: true },
     [ParameterType.SparseImageArray]: { type: 'array', items: Type.image, allowEmpty: true },
     [ParameterType.SparseFileArray]: { type: 'array', items: Type.file, allowEmpty: true },
+    [ParameterType.SparseMarkdownArray]: { type: 'array', items: Type.markdown, allowEmpty: true },
 };
 /**
  * Enumeration of requirement states for whether a given formula or sync table requires

@@ -64,6 +64,7 @@ function coerceParam(type, name, value) {
         case api_types_1.Type.file:
         case api_types_1.Type.image:
         case api_types_1.Type.string:
+        case api_types_1.Type.markdown:
             return value;
         default:
             return (0, ensure_1.ensureUnreachable)(type);
