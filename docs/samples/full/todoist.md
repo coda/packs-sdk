@@ -226,6 +226,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
       // Sync table metadata.
       idProperty: "taskId",
       featuredProperties: ["project", "url"],
+      // Card metadata.
       linkProperty: "url",
       snippetProperty: "description",
       subtitleProperties: ["priority", "completed", "due"],
