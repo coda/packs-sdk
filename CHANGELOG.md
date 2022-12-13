@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- Added a new formula parameter type `Markdown` as an alternative to `HTML` for formatted text.
+
 ## [1.2.2] - 2022-11-30
 
 ### Added
