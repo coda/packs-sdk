@@ -254,7 +254,7 @@ const WeatherSchema = coda.makeObjectSchema({
   displayProperty: "summary",
   subtitleProperties: [
     // Only show the value for the temperature property.
-    { property: "temperature", label: `${coda.PropertyLabelValueTemplate}` },
+    { property: "temperature", label: "" },
     "wind",
   ],
   snippetProperty: "forecast",

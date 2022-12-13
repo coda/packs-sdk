@@ -5,7 +5,7 @@ description: Display structured information as rich cards.
 
 # Preview content with rich cards
 
-Pack formulas can return structured data as [objects][data_types_objects], allowing a single formula to return multiple values at once. By default these objects are presented as "mentions", shown as chips in the document that you can hover over to get the full set of information.
+Pack formulas can return structured data as [objects][data_types_objects], allowing a single call to return a variety of related information. By default these objects are presented as "mentions", shown as chips in the document that you can hover over to get the full set of information.
 
 <img src="../../../images/cards_demo_mention.png" srcset="../../../images/cards_demo_mention_2x.png 2x" alt="Schema shown as a mention">
 
@@ -121,7 +121,8 @@ The card can include an image, which appears to the left of the other content.
 
 <img src="../../../images/cards_parts_image.png" srcset="../../../images/cards_parts_image_2x.png 2x" alt="The card's image">
 
-Which property's content to use for the image is defined by the field `imageProperty`, and it can only refer to properties of type `String` with a hint of either `ImageReference` or `ImageAttachment`.
+Which property's content to use for the image is defined by the field `imageProperty`, and it can only refer to properties of type `String` with a hint of  `ImageReference`.
+<!-- TODO(spencer): Include ImageAttachment above once the post-processing work is complete. -->
 
 ```ts
 const ProductSchema = coda.makeObjectSchema({
@@ -136,6 +137,9 @@ const ProductSchema = coda.makeObjectSchema({
   imageProperty: "photo",
 });
 ```
+
+!!! info "Creating custom images"
+    Images can make cards much more appealing, but sometimes the API you are calling does not include a relevant image for the resource. In those cases you can add a custom image to the object, for example a generic icon. [SVG data URIs][images_svg] can be a simple way to serve those images without needing a separate server to host them.
 
 
 ### Link
@@ -222,3 +226,4 @@ pack.addColumnFormat({
 [column_format_matchers]: column-formats.md#matchers
 [data_types_objects]: ../basics/data-types.md#objects
 [samples]: ../../samples/topic/card.md
+[images_svg]: ../advanced/images.md#svg-images

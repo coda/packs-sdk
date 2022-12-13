@@ -234,7 +234,7 @@ pack.addFormula({
 ```
 
 
-### Display value
+### Display value {: #display}
 
 Object schemas must define what value should be displayed within the chip when it is rendered in the doc. This is done by setting the `displayProperty` field to the name of the property containing the value to display.
 
@@ -478,7 +478,7 @@ Read the [Cards guide][cards] for more information on how these fields are used.
 
 ### Property labels {: #labels}
 
-A card's subtitle contains a set of properties, joined with a separator. Unlike other areas of the card where the property's value is shown, in the subtitle a label is shown instead. By default this label takes the form of `{name}: {value}`.
+A card's subtitle contains a set of properties, joined with a separator. Unlike other areas of the card where only the property's value is shown, in the subtitle a label is shown as well. By default, the label and value are shown together as `{label}: {value}`.
 
 ```ts
 let MovieSchema = coda.makeObjectSchema({
@@ -521,6 +521,7 @@ Object schema fields that expect a property name (`titleProperty`, `snippetPrope
 
 !!! warning "Only supported for card fields"
     At the moment property paths can only be used in the object [schema fields used by cards](#cards).
+    <!-- TODO(spencer): Remove this warning when support has been added for the other fields. -->
 
 Consider the following schema for a movie:
 
@@ -550,7 +551,7 @@ The following property Paths are all valid:
 - `actors[0].name` - The name of the first actor.
 - `actors[*].name` - The names of all of the actors (comma separated).
 
-If you need to further customize the value, such as combining the value of multiple properties or doing some other transformation, you'll need to create a new property to hold that value and manually populate it in your `execute` function.
+If you need to further customize the value, such as combining the value of multiple properties or doing some other transformation, you'll need to create a new property to hold that value and manually populate it in your `execute` function. See the [Display value](#display) for an example of this.
 
 !!! info "Set property labels in card subtitle"
     When using property paths to specify a card's subtitle, it's recommended that you manually set the [labels for those properties](#labels). Coda will generate a label based off of the property path, but the result is often not desirable.
