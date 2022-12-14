@@ -8,7 +8,7 @@ search:
 
 [core](../modules/core.md).MetadataContext
 
-Ƭ **MetadataContext**: `Record`<`string`, `any`\>
+Ƭ **MetadataContext**: `Record`<`string`, `any`\> & { `__brand`: ``"MetadataContext"``  }
 
 A context object that is provided to a metadata formula at execution time.
 For example, an autocomplete metadata formula for a parameter value may need

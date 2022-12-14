@@ -688,7 +688,9 @@ export interface MetadataFormulaObjectResultType {
  * to know the value of parameters that have already been selected. Those parameter
  * values are provided in this context object.
  */
-export declare type MetadataContext = Record<string, any>;
+export declare type MetadataContext = Record<string, any> & {
+    __brand: 'MetadataContext';
+};
 /**
  * The type of values that can be returned from a {@link MetadataFormula}.
  */

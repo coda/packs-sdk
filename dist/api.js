@@ -489,6 +489,7 @@ function makeMetadataFormula(execute, options) {
             catch (err) {
                 //  Ignore.
             }
+            formulaContext.__brand = 'MetadataContext';
             return execute(context, search, formulaContext);
         },
         parameters: [
@@ -706,13 +707,15 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
             continuation,
         };
     };
-    const executeUpdate = wrappedExecuteUpdate ? async function execUpdate(params, updates, context) {
-        const { result } = (await wrappedExecuteUpdate(params, updates, context)) || {};
-        const appliedSchema = context.sync.schema;
-        return {
-            result: responseHandler({ body: result || [], status: 200, headers: {} }, appliedSchema),
-        };
-    } : undefined;
+    const executeUpdate = wrappedExecuteUpdate
+        ? async function execUpdate(params, updates, context) {
+            const { result } = (await wrappedExecuteUpdate(params, updates, context)) || {};
+            const appliedSchema = context.sync.schema;
+            return {
+                result: responseHandler({ body: result || [], status: 200, headers: {} }, appliedSchema),
+            };
+        }
+        : undefined;
     return {
         name,
         description,
