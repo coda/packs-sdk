@@ -1141,7 +1141,7 @@ export interface MetadataFormulaObjectResultType {
  * to know the value of parameters that have already been selected. Those parameter
  * values are provided in this context object.
  */
-export type MetadataContext = Record<string, any>;
+export type MetadataContext = Record<string, any> & {__brand: 'MetadataContext'};
 
 /**
  * The type of values that can be returned from a {@link MetadataFormula}.
@@ -1220,7 +1220,7 @@ export function makeMetadataFormula(
     // Formula context is serialized here because we do not want to pass objects into
     // regular pack functions (which this is)
     execute([search, serializedFormulaContext], context) {
-      let formulaContext = {};
+      let formulaContext = {} as MetadataContext;
       try {
         formulaContext = JSON.parse(serializedFormulaContext);
       } catch (err: any) {
@@ -1669,17 +1669,19 @@ export function makeSyncTable<
       continuation,
     } as SyncFormulaResult<K, L, SchemaT>;
   };
-  const executeUpdate = wrappedExecuteUpdate ? async function execUpdate(
-    params: ParamValues<ParamDefsT>,
-    updates: Array<SyncUpdate<K, L, SchemaDefT>>,
-    context: SyncExecutionContext,
-  ) {
-    const {result} = (await wrappedExecuteUpdate(params, updates, context)) || {};
-    const appliedSchema = context.sync.schema;
-    return {
-      result: responseHandler({body: result || [], status: 200, headers: {}}, appliedSchema),
-    } as SyncUpdateResult<K, L, SchemaT>;
-  } : undefined;
+  const executeUpdate = wrappedExecuteUpdate
+    ? async function execUpdate(
+        params: ParamValues<ParamDefsT>,
+        updates: Array<SyncUpdate<K, L, SchemaDefT>>,
+        context: SyncExecutionContext,
+      ) {
+        const {result} = (await wrappedExecuteUpdate(params, updates, context)) || {};
+        const appliedSchema = context.sync.schema;
+        return {
+          result: responseHandler({body: result || [], status: 200, headers: {}}, appliedSchema),
+        } as SyncUpdateResult<K, L, SchemaT>;
+      }
+    : undefined;
 
   return {
     name,
