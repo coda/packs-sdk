@@ -14,6 +14,7 @@ export enum MetadataFormulaType {
   SyncGetDisplayUrl = 'SyncGetDisplayUrl',
   SyncGetTableName = 'SyncGetTableName',
   SyncGetSchema = 'SyncGetSchema',
+  SyncParseMatchedUrlIntoParams = 'SyncParseMatchedUrlIntoParams',
 }
 
 export interface StandardFormulaSpecification {
@@ -56,7 +57,8 @@ export interface SyncMetadataFormulaSpecification {
     | MetadataFormulaType.SyncListDynamicUrls
     | MetadataFormulaType.SyncGetDisplayUrl
     | MetadataFormulaType.SyncGetTableName
-    | MetadataFormulaType.SyncGetSchema;
+    | MetadataFormulaType.SyncGetSchema
+    | MetadataFormulaType.SyncParseMatchedUrlIntoParams;
   syncTableName: string;
 }
 

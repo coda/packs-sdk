@@ -6922,6 +6922,7 @@ module.exports = (() => {
           case "SyncGetDisplayUrl" /* SyncGetDisplayUrl */:
           case "SyncGetTableName" /* SyncGetTableName */:
           case "SyncGetSchema" /* SyncGetSchema */:
+          case "SyncParseMatchedUrlIntoParams" /* SyncParseMatchedUrlIntoParams */:
             if (syncTables) {
               const syncTable = syncTables.find((table) => table.name === formulaSpec.syncTableName);
               if (syncTable) {
@@ -6940,11 +6941,27 @@ module.exports = (() => {
                     case "SyncGetSchema" /* SyncGetSchema */:
                       formula = syncTable.getSchema;
                       break;
+                    case "SyncParseMatchedUrlIntoParams" /* SyncParseMatchedUrlIntoParams */:
+                      formula = syncTable.parseMatchedUrlIntoParams;
+                      break;
                     default:
                       return ensureSwitchUnreachable(formulaSpec);
                   }
-                } else if (formulaSpec.metadataFormulaType === "SyncGetSchema" /* SyncGetSchema */) {
-                  formula = syncTable.getSchema;
+                } else {
+                  switch (formulaSpec.metadataFormulaType) {
+                    case "SyncGetSchema" /* SyncGetSchema */:
+                      formula = syncTable.getSchema;
+                      break;
+                    case "SyncParseMatchedUrlIntoParams" /* SyncParseMatchedUrlIntoParams */:
+                      formula = syncTable.parseMatchedUrlIntoParams;
+                      break;
+                    case "SyncListDynamicUrls" /* SyncListDynamicUrls */:
+                    case "SyncGetDisplayUrl" /* SyncGetDisplayUrl */:
+                    case "SyncGetTableName" /* SyncGetTableName */:
+                      break;
+                    default:
+                      return ensureSwitchUnreachable(formulaSpec);
+                  }
                 }
                 if (formula) {
                   return formula.execute(params, executionContext);

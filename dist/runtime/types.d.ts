@@ -12,7 +12,8 @@ export declare enum MetadataFormulaType {
     SyncListDynamicUrls = "SyncListDynamicUrls",
     SyncGetDisplayUrl = "SyncGetDisplayUrl",
     SyncGetTableName = "SyncGetTableName",
-    SyncGetSchema = "SyncGetSchema"
+    SyncGetSchema = "SyncGetSchema",
+    SyncParseMatchedUrlIntoParams = "SyncParseMatchedUrlIntoParams"
 }
 export interface StandardFormulaSpecification {
     type: FormulaType.Standard;
@@ -44,7 +45,7 @@ export interface PostSetupMetadataFormulaSpecification {
 }
 export interface SyncMetadataFormulaSpecification {
     type: FormulaType.Metadata;
-    metadataFormulaType: MetadataFormulaType.SyncListDynamicUrls | MetadataFormulaType.SyncGetDisplayUrl | MetadataFormulaType.SyncGetTableName | MetadataFormulaType.SyncGetSchema;
+    metadataFormulaType: MetadataFormulaType.SyncListDynamicUrls | MetadataFormulaType.SyncGetDisplayUrl | MetadataFormulaType.SyncGetTableName | MetadataFormulaType.SyncGetSchema | MetadataFormulaType.SyncParseMatchedUrlIntoParams;
     syncTableName: string;
 }
 export declare type FormulaSpecification = StandardFormulaSpecification | SyncFormulaSpecification | SyncUpdateFormulaSpecification | MetadataFormulaSpecification | ParameterAutocompleteMetadataFormulaSpecification | PostSetupMetadataFormulaSpecification | SyncMetadataFormulaSpecification;
