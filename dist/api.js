@@ -740,7 +740,7 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
 }
 exports.makeSyncTable = makeSyncTable;
 /** @deprecated */
-function makeSyncTableLegacy(name, schema, formula, connectionRequirement, dynamicOptions = {}) {
+function makeSyncTableLegacy(name, schema, formula, connectionRequirement, dynamicOptions = {}, { matchers, parseMatchedUrlIntoParams } = {}) {
     var _a;
     if (!((_a = schema.identity) === null || _a === void 0 ? void 0 : _a.name)) {
         throw new Error('Legacy sync tables must specify identity.name');
@@ -755,6 +755,8 @@ function makeSyncTableLegacy(name, schema, formula, connectionRequirement, dynam
         formula,
         connectionRequirement,
         dynamicOptions,
+        matchers,
+        parseMatchedUrlIntoParams,
     });
 }
 exports.makeSyncTableLegacy = makeSyncTableLegacy;

@@ -1742,6 +1742,7 @@ export function makeSyncTableLegacy<
     getSchema?: MetadataFormula;
     entityName?: string;
   } = {},
+  {matchers, parseMatchedUrlIntoParams}: {matchers?: RegExp[]; parseMatchedUrlIntoParams?: MetadataFormulaDef} = {},
 ): SyncTableDef<K, L, ParamDefsT, SchemaT> {
   if (!schema.identity?.name) {
     throw new Error('Legacy sync tables must specify identity.name');
@@ -1756,6 +1757,8 @@ export function makeSyncTableLegacy<
     formula,
     connectionRequirement,
     dynamicOptions,
+    matchers,
+    parseMatchedUrlIntoParams,
   });
 }
 

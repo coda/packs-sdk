@@ -1017,6 +1017,9 @@ export declare function makeSyncTable<K extends string, L extends string, ParamD
 export declare function makeSyncTableLegacy<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT>, connectionRequirement?: ConnectionRequirement, dynamicOptions?: {
     getSchema?: MetadataFormula;
     entityName?: string;
+}, { matchers, parseMatchedUrlIntoParams }?: {
+    matchers?: RegExp[];
+    parseMatchedUrlIntoParams?: MetadataFormulaDef;
 }): SyncTableDef<K, L, ParamDefsT, SchemaT>;
 /**
  * Creates a dynamic sync table definition.

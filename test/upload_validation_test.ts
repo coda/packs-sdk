@@ -786,11 +786,15 @@ describe('Pack metadata Validation', () => {
             parameters: [],
             examples: [],
           },
+          matchers: [/https:\/\/example\.com\/.+/],
         });
 
-        const metadata = createFakePack({
-          syncTables: [syncTable],
-        });
+        const metadata = createFakePackVersionMetadata(
+          compilePackMetadata({
+            version: '1',
+            syncTables: [syncTable],
+          }),
+        );
         await validateJson(metadata);
       });
 
