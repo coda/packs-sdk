@@ -489,7 +489,6 @@ function makeMetadataFormula(execute, options) {
             catch (err) {
                 //  Ignore.
             }
-            formulaContext.__brand = 'MetadataContext';
             return execute(context, search, formulaContext);
         },
         parameters: [

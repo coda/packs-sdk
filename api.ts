@@ -1220,13 +1220,12 @@ export function makeMetadataFormula(
     // Formula context is serialized here because we do not want to pass objects into
     // regular pack functions (which this is)
     execute([search, serializedFormulaContext], context) {
-      let formulaContext: any = {};
+      let formulaContext = {} as MetadataContext;
       try {
         formulaContext = JSON.parse(serializedFormulaContext);
       } catch (err: any) {
         //  Ignore.
       }
-      formulaContext.__brand = 'MetadataContext';
       return execute(context, search, formulaContext) as any;
     },
     parameters: [
