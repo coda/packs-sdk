@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ExampleCategory = exports.UrlType = void 0;
+exports.ExampleStatus = exports.ExampleCategory = exports.UrlType = void 0;
 var UrlType;
 (function (UrlType) {
     UrlType["SamplePage"] = "SamplePage";
@@ -12,3 +12,7 @@ var ExampleCategory;
     ExampleCategory["Topic"] = "Topic";
     ExampleCategory["Full"] = "Full";
 })(ExampleCategory = exports.ExampleCategory || (exports.ExampleCategory = {}));
+var ExampleStatus;
+(function (ExampleStatus) {
+    ExampleStatus["Beta"] = "Beta";
+})(ExampleStatus = exports.ExampleStatus || (exports.ExampleStatus = {}));

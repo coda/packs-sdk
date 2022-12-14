@@ -1,5 +1,5 @@
 ---
-nav: 🚧 Cards
+nav: Cards 🚧
 description: Display structured information as rich cards.
 ---
 

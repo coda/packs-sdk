@@ -1,5 +1,5 @@
 ---
-nav: {{name}}
+nav: {{name}}{{#if (isBeta this)}} 🚧{{/if}}
 description: {{description}}
 {{#if icon}}icon: {{icon}}{{/if}}
 ---

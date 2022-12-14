@@ -3,6 +3,7 @@ import type {CompiledExample} from '../types';
 import type {CompiledExampleSnippet} from '../types';
 import type {Example} from '../types';
 import {ExampleCategory} from '../types';
+import {ExampleStatus} from '../types';
 import {Examples} from './documentation_config';
 import * as Handlebars from 'handlebars';
 import {Snippets} from './documentation_config';
@@ -73,6 +74,7 @@ function compileExamples() {
       category: example.category,
       triggerTokens: example.triggerTokens,
       linkData: example.linkData,
+      status: example.status,
       exampleFooterLink,
       learnMoreLink,
       content,
@@ -190,6 +192,10 @@ Handlebars.registerHelper('indent', (content, numSpaces) => {
 
 Handlebars.registerHelper('isTopic', (example: CompiledExample) => {
   return example.category === ExampleCategory.Topic;
+});
+
+Handlebars.registerHelper('isBeta', (example: CompiledExample) => {
+  return example.status === ExampleStatus.Beta;
 });
 
 Handlebars.registerHelper('pageTitle', (example: CompiledExample) => {

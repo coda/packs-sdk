@@ -32,6 +32,7 @@ export interface Example {
   linkData: LinkData;
   contentFile: string;
   exampleSnippets: ExampleSnippet[];
+  status?: ExampleStatus;
 }
 
 export interface CompiledExample {
@@ -44,6 +45,7 @@ export interface CompiledExample {
   learnMoreLink?: string;
   content: string;
   exampleSnippets: CompiledExampleSnippet[];
+  status?: ExampleStatus;
 }
 
 export interface LinkData {
@@ -60,4 +62,8 @@ export enum UrlType {
 export enum ExampleCategory {
   Topic = 'Topic',
   Full = 'Full',
+}
+
+export enum ExampleStatus {
+  Beta = 'Beta',
 }
