@@ -135,6 +135,18 @@ See [listDynamicUrls](core.DynamicSyncTableOptions.md#listdynamicurls)
 
 ___
 
+### matchers
+
+• `Optional` **matchers**: `RegExp`[]
+
+See [matchers](core.SyncTableOptions.md#matchers)
+
+#### Inherited from
+
+[SyncTableDef](core.SyncTableDef.md).[matchers](core.SyncTableDef.md#matchers)
+
+___
+
 ### name
 
 • **name**: `string`
@@ -144,6 +156,18 @@ See [name](core.SyncTableOptions.md#name)
 #### Inherited from
 
 [SyncTableDef](core.SyncTableDef.md).[name](core.SyncTableDef.md#name)
+
+___
+
+### parseMatchedUrlIntoParams
+
+• `Optional` **parseMatchedUrlIntoParams**: [`MetadataFormula`](../types/core.MetadataFormula.md)
+
+See [parseMatchedUrlIntoParams](core.SyncTableOptions.md#parsematchedurlintoparams)
+
+#### Inherited from
+
+[SyncTableDef](core.SyncTableDef.md).[parseMatchedUrlIntoParams](core.SyncTableDef.md#parsematchedurlintoparams)
 
 ___
 

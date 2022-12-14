@@ -964,6 +964,10 @@ const baseSyncTableSchema = {
         .max(exports.Limits.BuildingBlockName)
         .optional()
         .refine(val => !val || !SystemColumnNames.includes(val), `This property name is reserved for internal use by Coda and can't be used as an identityName, sorry!`),
+    matchers: z
+        .array(z.string().max(exports.Limits.ColumnMatcherRegex).refine(validateFormatMatcher))
+        .max(exports.Limits.NumColumnMatchersPerFormat),
+    parseMatchedUrlIntoParams: formulaMetadataSchema.optional(),
 };
 const genericSyncTableSchema = zodCompleteObject({
     ...baseSyncTableSchema,

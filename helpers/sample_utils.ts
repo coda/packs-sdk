@@ -44,9 +44,14 @@ export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata 
     };
   }
   const syncTables: PackSyncTable[] = [];
-  for (const {getter, getSchema, ...others} of originalSyncTables || []) {
+  for (const {getter, getSchema, matchers, ...others} of originalSyncTables || []) {
     const {execute, executeUpdate, ...otherGetter} = getter;
-    syncTables.push({getter: {...otherGetter}, getSchema, ...others});
+    syncTables.push({
+      getter: {...otherGetter},
+      getSchema,
+      matchers: (matchers || []).map(matcher => matcher.toString()),
+      ...others,
+    });
   }
   return {
     formulas,

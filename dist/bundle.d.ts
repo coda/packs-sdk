@@ -2090,6 +2090,10 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
 	entityName?: string;
 	/** See {@link DynamicOptions.defaultAddDynamicColumns} */
 	defaultAddDynamicColumns?: boolean;
+	/** See {@link SyncTableOptions.matchers} */
+	matchers?: RegExp[];
+	/** See {@link SyncTableOptions.parseMatchedUrlIntoParams} */
+	parseMatchedUrlIntoParams?: MetadataFormula;
 }
 /**
  * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
@@ -2745,6 +2749,17 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
 	 * sync tables that have a dynamic schema.
 	 */
 	dynamicOptions?: DynamicOptions;
+	/**
+	 * A list of regular expressions that match URLs that represent entities that this sync table
+	 * is capable of handling. When a user pastes a URL that matches one of these regualr expressions
+	 * they will be prompted to convert the URL to this sync table. This is a discovery mechanism.
+	 */
+	matchers?: RegExp[];
+	/**
+	 * A function that takes a URL that matched one of the {@link matchers} and parses
+	 * it and returns any parameters for the sync table formula that are implied by the URL.
+	 */
+	parseMatchedUrlIntoParams?: MetadataFormulaDef;
 }
 /**
  * Options provided when defining a dynamic sync table.
@@ -2847,7 +2862,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
  */
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaDefT extends ObjectSchemaDefinition<K, L>, SchemaT extends SchemaDefT & {
 	identity?: Identity;
-}>({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT>;
+}>({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions, matchers, parseMatchedUrlIntoParams, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT>;
 /**
  * Creates a dynamic sync table definition.
  *
@@ -3878,7 +3893,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * });
 	 * ```
 	 */
-	addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>({ name, description, identityName, schema, formula, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaT>): this;
+	addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>({ name, description, identityName, schema, formula, connectionRequirement, dynamicOptions, matchers, parseMatchedUrlIntoParams, }: SyncTableOptions<K, L, ParamDefsT, SchemaT>): this;
 	/**
 	 * Adds a dynamic sync table definition to this pack.
 	 *
@@ -3992,7 +4007,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	private _setDefaultConnectionRequirement;
 }
 /** @hidden */
-export declare type PackSyncTable = Omit<SyncTable, "getter" | "getName" | "getSchema" | "listDynamicUrls" | "getDisplayUrl"> & {
+export declare type PackSyncTable = Omit<SyncTable, "getter" | "getName" | "getSchema" | "listDynamicUrls" | "getDisplayUrl" | "matchers" | "parseMatchedUrlIntoParams"> & {
 	getter: PackFormulaMetadata;
 	isDynamic?: boolean;
 	hasDynamicSchema?: boolean;
@@ -4000,6 +4015,8 @@ export declare type PackSyncTable = Omit<SyncTable, "getter" | "getName" | "getS
 	getName?: MetadataFormulaMetadata;
 	getDisplayUrl?: MetadataFormulaMetadata;
 	listDynamicUrls?: MetadataFormulaMetadata;
+	matchers?: string[];
+	parseMatchedUrlIntoParams?: MetadataFormulaMetadata;
 };
 /** @hidden */
 export interface PackFormatMetadata extends Omit<Format, "matchers"> {

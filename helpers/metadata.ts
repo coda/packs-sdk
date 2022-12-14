@@ -60,7 +60,8 @@ function compileFormulaMetadata(formula: TypedPackFormula): PackFormulaMetadata 
 
 function compileSyncTable(syncTable: GenericSyncTable): PackSyncTable {
   if (isDynamicSyncTable(syncTable)) {
-    const {getter, getName, getSchema, getDisplayUrl, listDynamicUrls, ...rest} = syncTable;
+    const {getter, getName, getSchema, getDisplayUrl, listDynamicUrls, matchers, parseMatchedUrlIntoParams, ...rest} =
+      syncTable;
     const {execute, executeUpdate, ...getterRest} = getter;
     return {
       ...rest,
@@ -71,11 +72,13 @@ function compileSyncTable(syncTable: GenericSyncTable): PackSyncTable {
       getter: {
         supportsUpdates: Boolean(executeUpdate),
         ...getterRest,
-      }
+      },
+      matchers: (matchers || []).map(matcher => matcher.toString()),
+      parseMatchedUrlIntoParams: compileMetadataFormulaMetadata(parseMatchedUrlIntoParams),
     };
   }
 
-  const {getter, ...rest} = syncTable;
+  const {getter, matchers, parseMatchedUrlIntoParams, ...rest} = syncTable;
   const {execute, executeUpdate, ...getterRest} = getter;
   return {
     ...rest,
@@ -83,6 +86,8 @@ function compileSyncTable(syncTable: GenericSyncTable): PackSyncTable {
       supportsUpdates: Boolean(executeUpdate),
       ...getterRest,
     },
+    matchers: (matchers || []).map(matcher => matcher.toString()),
+    parseMatchedUrlIntoParams: compileMetadataFormulaMetadata(parseMatchedUrlIntoParams),
   };
 }
 
