@@ -1190,7 +1190,8 @@ const baseSyncTableSchema = {
     ),
   matchers: z
     .array(z.string().max(Limits.ColumnMatcherRegex).refine(validateFormatMatcher))
-    .max(Limits.NumColumnMatchersPerFormat),
+    .max(Limits.NumColumnMatchersPerFormat)
+    .optional(),
   parseMatchedUrlIntoParams: formulaMetadataSchema.optional(),
 };
 
