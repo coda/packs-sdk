@@ -78,6 +78,16 @@ of the object, and the schema is declared as `{identity: {name: 'Products'}}`.
 
 ___
 
+### matchers
+
+• `Optional` **matchers**: `RegExp`[]
+
+A list of regular expressions that match URLs that represent entities that this sync table
+is capable of handling. When a user pastes a URL that matches one of these regualr expressions
+they will be prompted to convert the URL to this sync table. This is a discovery mechanism.
+
+___
+
 ### name
 
 • **name**: `string`
@@ -85,6 +95,15 @@ ___
 The name of the sync table. This is shown to users in the Coda UI.
 This should describe the entities being synced. For example, a sync table that syncs products
 from an e-commerce platform should be called 'Products'. This name must not contain spaces.
+
+___
+
+### parseMatchedUrlIntoParams
+
+• `Optional` **parseMatchedUrlIntoParams**: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)
+
+A function that takes a URL that matched one of the [matchers](core.SyncTableOptions.md#matchers) and parses
+it and returns any parameters for the sync table formula that are implied by the URL.
 
 ___
 

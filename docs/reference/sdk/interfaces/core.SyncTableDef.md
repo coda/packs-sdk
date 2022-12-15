@@ -79,11 +79,27 @@ See [identityName](core.SyncTableOptions.md#identityname) for more details.
 
 ___
 
+### matchers
+
+• `Optional` **matchers**: `RegExp`[]
+
+See [matchers](core.SyncTableOptions.md#matchers)
+
+___
+
 ### name
 
 • **name**: `string`
 
 See [name](core.SyncTableOptions.md#name)
+
+___
+
+### parseMatchedUrlIntoParams
+
+• `Optional` **parseMatchedUrlIntoParams**: [`MetadataFormula`](../types/core.MetadataFormula.md)
+
+See [parseMatchedUrlIntoParams](core.SyncTableOptions.md#parsematchedurlintoparams)
 
 ___
 

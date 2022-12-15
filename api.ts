@@ -230,6 +230,10 @@ export interface SyncTableDef<
   entityName?: string;
   /** See {@link DynamicOptions.defaultAddDynamicColumns} */
   defaultAddDynamicColumns?: boolean;
+  /** See {@link SyncTableOptions.matchers} */
+  matchers?: RegExp[];
+  /** See {@link SyncTableOptions.parseMatchedUrlIntoParams} */
+  parseMatchedUrlIntoParams?: MetadataFormula;
 }
 
 /**
@@ -1494,6 +1498,17 @@ export interface SyncTableOptions<
    * sync tables that have a dynamic schema.
    */
   dynamicOptions?: DynamicOptions;
+  /**
+   * A list of regular expressions that match URLs that represent entities that this sync table
+   * is capable of handling. When a user pastes a URL that matches one of these regualr expressions
+   * they will be prompted to convert the URL to this sync table. This is a discovery mechanism.
+   */
+  matchers?: RegExp[];
+  /**
+   * A function that takes a URL that matched one of the {@link matchers} and parses
+   * it and returns any parameters for the sync table formula that are implied by the URL.
+   */
+  parseMatchedUrlIntoParams?: MetadataFormulaDef;
 }
 
 /**
@@ -1588,6 +1603,17 @@ export interface DynamicSyncTableOptions<
    * in placeholderSchema will be rendered by default after the sync.
    */
   placeholderSchema?: SchemaT;
+  /**
+   * A list of regular expressions that match URLs that represent entities that this sync table
+   * is capable of handling. When a user pastes a URL that matches one of these regualr expressions
+   * they will be prompted to convert the URL to this sync table. This is a discovery mechanism.
+   */
+  matchers?: RegExp[];
+  /**
+   * A function that takes a URL that matched one of the {@link matchers} and parses
+   * it and returns any parameters for the sync table formula that are implied by the URL.
+   */
+  parseMatchedUrlIntoParams?: MetadataFormulaDef;
 }
 
 /**
@@ -1617,6 +1643,8 @@ export function makeSyncTable<
   formula,
   connectionRequirement,
   dynamicOptions = {},
+  matchers,
+  parseMatchedUrlIntoParams,
 }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT> {
   const {getSchema: getSchemaDef, entityName, defaultAddDynamicColumns} = dynamicOptions;
   const {
@@ -1702,6 +1730,11 @@ export function makeSyncTable<
     getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
     entityName,
     defaultAddDynamicColumns,
+    matchers,
+    parseMatchedUrlIntoParams: maybeRewriteConnectionForFormula(
+      wrapMetadataFunction(parseMatchedUrlIntoParams),
+      connectionRequirement,
+    ),
   };
 }
 
@@ -1720,6 +1753,7 @@ export function makeSyncTableLegacy<
     getSchema?: MetadataFormula;
     entityName?: string;
   } = {},
+  {matchers, parseMatchedUrlIntoParams}: {matchers?: RegExp[]; parseMatchedUrlIntoParams?: MetadataFormulaDef} = {},
 ): SyncTableDef<K, L, ParamDefsT, SchemaT> {
   if (!schema.identity?.name) {
     throw new Error('Legacy sync tables must specify identity.name');
@@ -1734,6 +1768,8 @@ export function makeSyncTableLegacy<
     formula,
     connectionRequirement,
     dynamicOptions,
+    matchers,
+    parseMatchedUrlIntoParams,
   });
 }
 
@@ -1774,6 +1810,8 @@ export function makeDynamicSyncTable<
   connectionRequirement,
   defaultAddDynamicColumns,
   placeholderSchema: placeholderSchemaInput,
+  matchers,
+  parseMatchedUrlIntoParams,
 }: {
   name: string;
   description?: string;
@@ -1787,6 +1825,8 @@ export function makeDynamicSyncTable<
   connectionRequirement?: ConnectionRequirement;
   defaultAddDynamicColumns?: boolean;
   placeholderSchema?: SchemaT;
+  matchers?: RegExp[];
+  parseMatchedUrlIntoParams?: MetadataFormulaDef;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any> {
   const placeholderSchema: any =
     placeholderSchemaInput ||
@@ -1812,6 +1852,8 @@ export function makeDynamicSyncTable<
     formula,
     connectionRequirement,
     dynamicOptions: {getSchema, entityName, defaultAddDynamicColumns},
+    matchers,
+    parseMatchedUrlIntoParams,
   });
   return {
     ...table,

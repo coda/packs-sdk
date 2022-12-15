@@ -22,6 +22,7 @@ import type {StringFormulaDefLegacy} from '../api';
 import {Type} from '../api_types';
 import {ValueHintType} from '../schema';
 import {ValueType} from '../schema';
+import {compilePackMetadata} from '../helpers/metadata';
 import {createFakePack} from './test_utils';
 import {createFakePackFormulaMetadata} from './test_utils';
 import {createFakePackVersionMetadata} from './test_utils';
@@ -494,12 +495,15 @@ describe('Pack metadata Validation', () => {
           examples: [],
         },
       });
-      const metadata = createFakePackVersionMetadata({
-        syncTables: [syncTable],
-        defaultAuthentication: {
-          type: AuthenticationType.None,
-        },
-      });
+      const metadata = createFakePackVersionMetadata(
+        compilePackMetadata({
+          version: '1',
+          syncTables: [syncTable],
+          defaultAuthentication: {
+            type: AuthenticationType.None,
+          },
+        }),
+      );
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
@@ -533,12 +537,15 @@ describe('Pack metadata Validation', () => {
           examples: [],
         },
       });
-      const metadata = createFakePackVersionMetadata({
-        syncTables: [syncTable],
-        defaultAuthentication: {
-          type: AuthenticationType.None,
-        },
-      });
+      const metadata = createFakePackVersionMetadata(
+        compilePackMetadata({
+          version: '1',
+          syncTables: [syncTable],
+          defaultAuthentication: {
+            type: AuthenticationType.None,
+          },
+        }),
+      );
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
@@ -779,11 +786,15 @@ describe('Pack metadata Validation', () => {
             parameters: [],
             examples: [],
           },
+          matchers: [/https:\/\/example\.com\/.+/],
         });
 
-        const metadata = createFakePack({
-          syncTables: [syncTable],
-        });
+        const metadata = createFakePackVersionMetadata(
+          compilePackMetadata({
+            version: '1',
+            syncTables: [syncTable],
+          }),
+        );
         await validateJson(metadata);
       });
 
@@ -1830,10 +1841,13 @@ describe('Pack metadata Validation', () => {
           );
         }
 
-        const metadata = createFakePackVersionMetadata({
-          syncTables,
-          formulaNamespace: 'MyNamespace',
-        });
+        const metadata = createFakePackVersionMetadata(
+          compilePackMetadata({
+            version: '1',
+            syncTables,
+            formulaNamespace: 'MyNamespace',
+          }),
+        );
 
         const err = await validateJsonAndAssertFails(metadata);
 
@@ -3675,12 +3689,15 @@ describe('Pack metadata Validation', () => {
           examples: [],
         },
       });
-      const metadata = createFakePackVersionMetadata({
-        syncTables: [syncTable],
-        defaultAuthentication: {
-          type: AuthenticationType.None,
-        },
-      });
+      const metadata = createFakePackVersionMetadata(
+        compilePackMetadata({
+          version: '1',
+          syncTables: [syncTable],
+          defaultAuthentication: {
+            type: AuthenticationType.None,
+          },
+        }),
+      );
       const err = await validateJsonAndAssertFails(metadata, sdkVersionTriggeringDeprecationWarnings);
       assert.deepEqual(err.validationErrors, [
         {
@@ -3790,9 +3807,12 @@ describe('Pack metadata Validation', () => {
           },
         },
       });
-      const metadata = createFakePackVersionMetadata({
-        syncTables: [syncTable],
-      });
+      const metadata = createFakePackVersionMetadata(
+        compilePackMetadata({
+          version: '1',
+          syncTables: [syncTable],
+        }),
+      );
       const err = await validateJsonAndAssertFails(metadata, sdkVersionTriggeringDeprecationWarnings);
       assert.deepEqual(err.validationErrors, [
         {

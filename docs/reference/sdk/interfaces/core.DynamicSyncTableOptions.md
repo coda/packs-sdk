@@ -129,6 +129,16 @@ used to create an instance of this dynamic sync table.
 
 ___
 
+### matchers
+
+• `Optional` **matchers**: `RegExp`[]
+
+A list of regular expressions that match URLs that represent entities that this sync table
+is capable of handling. When a user pastes a URL that matches one of these regualr expressions
+they will be prompted to convert the URL to this sync table. This is a discovery mechanism.
+
+___
+
 ### name
 
 • **name**: `string`
@@ -138,6 +148,15 @@ when listing what build blocks are contained within this pack.
 This should describe the category of entities being synced. The actual
 table name once added to the doc will be dynamic, it will be whatever value
 is returned by the `getName` formula.
+
+___
+
+### parseMatchedUrlIntoParams
+
+• `Optional` **parseMatchedUrlIntoParams**: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)
+
+A function that takes a URL that matched one of the [matchers](core.DynamicSyncTableOptions.md#matchers) and parses
+it and returns any parameters for the sync table formula that are implied by the URL.
 
 ___
 

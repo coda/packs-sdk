@@ -1188,6 +1188,11 @@ const baseSyncTableSchema = {
       val => !val || !SystemColumnNames.includes(val),
       `This property name is reserved for internal use by Coda and can't be used as an identityName, sorry!`,
     ),
+  matchers: z
+    .array(z.string().max(Limits.ColumnMatcherRegex).refine(validateFormatMatcher))
+    .max(Limits.NumColumnMatchersPerFormat)
+    .optional(),
+  parseMatchedUrlIntoParams: formulaMetadataSchema.optional(),
 };
 
 type GenericSyncTableDef = SyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>;

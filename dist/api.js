@@ -664,7 +664,7 @@ exports.makeObjectFormula = makeObjectFormula;
  *
  * See [Normalization](/index.html#normalization) for more information about schema normalization.
  */
-function makeSyncTable({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions = {}, }) {
+function makeSyncTable({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions = {}, matchers, parseMatchedUrlIntoParams, }) {
     const { getSchema: getSchemaDef, entityName, defaultAddDynamicColumns } = dynamicOptions;
     const { execute: wrappedExecute, executeUpdate: wrappedExecuteUpdate, ...definition } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
     // Since we mutate schemaDef, we need to make a copy so the input schema can be reused across sync tables.
@@ -734,11 +734,13 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
         getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
         entityName,
         defaultAddDynamicColumns,
+        matchers,
+        parseMatchedUrlIntoParams: maybeRewriteConnectionForFormula(wrapMetadataFunction(parseMatchedUrlIntoParams), connectionRequirement),
     };
 }
 exports.makeSyncTable = makeSyncTable;
 /** @deprecated */
-function makeSyncTableLegacy(name, schema, formula, connectionRequirement, dynamicOptions = {}) {
+function makeSyncTableLegacy(name, schema, formula, connectionRequirement, dynamicOptions = {}, { matchers, parseMatchedUrlIntoParams } = {}) {
     var _a;
     if (!((_a = schema.identity) === null || _a === void 0 ? void 0 : _a.name)) {
         throw new Error('Legacy sync tables must specify identity.name');
@@ -753,6 +755,8 @@ function makeSyncTableLegacy(name, schema, formula, connectionRequirement, dynam
         formula,
         connectionRequirement,
         dynamicOptions,
+        matchers,
+        parseMatchedUrlIntoParams,
     });
 }
 exports.makeSyncTableLegacy = makeSyncTableLegacy;
@@ -775,7 +779,7 @@ exports.makeSyncTableLegacy = makeSyncTableLegacy;
  * });
  * ```
  */
-function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, }) {
+function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, matchers, parseMatchedUrlIntoParams, }) {
     const placeholderSchema = placeholderSchemaInput ||
         // default placeholder only shows a column of id, which will be replaced later by the dynamic schema.
         (0, schema_2.makeObjectSchema)({
@@ -799,6 +803,8 @@ function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchem
         formula,
         connectionRequirement,
         dynamicOptions: { getSchema, entityName, defaultAddDynamicColumns },
+        matchers,
+        parseMatchedUrlIntoParams,
     });
     return {
         ...table,
