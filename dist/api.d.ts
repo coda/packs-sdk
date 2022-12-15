@@ -998,6 +998,17 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
      * in placeholderSchema will be rendered by default after the sync.
      */
     placeholderSchema?: SchemaT;
+    /**
+     * A list of regular expressions that match URLs that represent entities that this sync table
+     * is capable of handling. When a user pastes a URL that matches one of these regualr expressions
+     * they will be prompted to convert the URL to this sync table. This is a discovery mechanism.
+     */
+    matchers?: RegExp[];
+    /**
+     * A function that takes a URL that matched one of the {@link matchers} and parses
+     * it and returns any parameters for the sync table formula that are implied by the URL.
+     */
+    parseMatchedUrlIntoParams?: MetadataFormulaDef;
 }
 /**
  * Wrapper to produce a sync table definition. All (non-dynamic) sync tables should be created
@@ -1040,7 +1051,7 @@ export declare function makeSyncTableLegacy<K extends string, L extends string, 
  * });
  * ```
  */
-export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>>({ name, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, }: {
+export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>>({ name, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, matchers, parseMatchedUrlIntoParams, }: {
     name: string;
     description?: string;
     getName: MetadataFormulaDef;
@@ -1053,6 +1064,8 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
     connectionRequirement?: ConnectionRequirement;
     defaultAddDynamicColumns?: boolean;
     placeholderSchema?: SchemaT;
+    matchers?: RegExp[];
+    parseMatchedUrlIntoParams?: MetadataFormulaDef;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any>;
 /**
  * Helper to generate a formula that fetches a list of entities from a given URL and returns them.

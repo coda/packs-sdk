@@ -53,7 +53,9 @@ coda.makeDynamicSyncTable({
 | `__namedParameters.getSchema` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) |
 | `__namedParameters.identityName` | `string` |
 | `__namedParameters.listDynamicUrls?` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) |
+| `__namedParameters.matchers?` | `RegExp`[] |
 | `__namedParameters.name` | `string` |
+| `__namedParameters.parseMatchedUrlIntoParams?` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) |
 | `__namedParameters.placeholderSchema?` | `SchemaT` |
 
 #### Returns
