@@ -6943,8 +6943,18 @@ module.exports = (() => {
                     default:
                       return ensureSwitchUnreachable(formulaSpec);
                   }
-                } else if (formulaSpec.metadataFormulaType === "SyncGetSchema" /* SyncGetSchema */) {
-                  formula = syncTable.getSchema;
+                } else {
+                  switch (formulaSpec.metadataFormulaType) {
+                    case "SyncGetSchema" /* SyncGetSchema */:
+                      formula = syncTable.getSchema;
+                      break;
+                    case "SyncListDynamicUrls" /* SyncListDynamicUrls */:
+                    case "SyncGetDisplayUrl" /* SyncGetDisplayUrl */:
+                    case "SyncGetTableName" /* SyncGetTableName */:
+                      break;
+                    default:
+                      return ensureSwitchUnreachable(formulaSpec);
+                  }
                 }
                 if (formula) {
                   return formula.execute(params, executionContext);
