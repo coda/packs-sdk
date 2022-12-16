@@ -115,10 +115,21 @@ function doFindAndExecutePackFunction({ params, formulaSpec, manifest, execution
                                         return ensureSwitchUnreachable(formulaSpec);
                                 }
                             }
-                            else if (formulaSpec.metadataFormulaType === types_3.MetadataFormulaType.SyncGetSchema) {
-                                // Certain sync tables (Jira Issues, canonically) are not "dynamic" but have a getSchema formula
-                                // in order to augment a static base schema with dynamic properties.
-                                formula = syncTable.getSchema;
+                            else {
+                                switch (formulaSpec.metadataFormulaType) {
+                                    // Certain sync tables (Jira Issues, canonically) are not "dynamic" but have a getSchema formula
+                                    // in order to augment a static base schema with dynamic properties.
+                                    case types_3.MetadataFormulaType.SyncGetSchema:
+                                        formula = syncTable.getSchema;
+                                        break;
+                                    case types_3.MetadataFormulaType.SyncListDynamicUrls:
+                                    case types_3.MetadataFormulaType.SyncGetDisplayUrl:
+                                    case types_3.MetadataFormulaType.SyncGetTableName:
+                                        // Not applicable to static tables.
+                                        break;
+                                    default:
+                                        return ensureSwitchUnreachable(formulaSpec);
+                                }
                             }
                             if (formula) {
                                 return formula.execute(params, executionContext);
