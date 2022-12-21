@@ -40,9 +40,21 @@ ___
 
 ___
 
+### Last30AndNext30Days
+
+• **Last30AndNext30Days** = ``"last_30_and_next_30_days"``
+
+___
+
 ### Last30Days
 
 • **Last30Days** = ``"last_30_days"``
+
+___
+
+### Last365Days
+
+• **Last365Days** = ``"last_365_days"``
 
 ___
 
@@ -59,6 +71,12 @@ ___
 • **Last6Months** = ``"last_6_months"``
 
 **`Deprecated`**
+
+___
+
+### Last7AndNext7Days
+
+• **Last7AndNext7Days** = ``"last_7_and_next_7_days"``
 
 ___
 
@@ -92,9 +110,21 @@ ___
 
 ___
 
+### Next180Days
+
+• **Next180Days** = ``"next_180_days"``
+
+___
+
 ### Next30Days
 
 • **Next30Days** = ``"next_30_days"``
+
+___
+
+### Next365Days
+
+• **Next365Days** = ``"next_365_days"``
 
 ___
 
@@ -102,17 +132,27 @@ ___
 
 • **Next3Months** = ``"next_3_months"``
 
+**`Deprecated`**
+
 ___
 
 ### Next6Months
 
 • **Next6Months** = ``"next_6_months"``
 
+**`Deprecated`**
+
 ___
 
 ### Next7Days
 
 • **Next7Days** = ``"next_7_days"``
+
+___
+
+### Next90Days
+
+• **Next90Days** = ``"next_90_days"``
 
 ___
 
@@ -140,33 +180,15 @@ ___
 
 ___
 
-### ThisMonthStart
-
-• **ThisMonthStart** = ``"this_month_start"``
-
-___
-
 ### ThisWeek
 
 • **ThisWeek** = ``"this_week"``
 
 ___
 
-### ThisWeekStart
-
-• **ThisWeekStart** = ``"this_week_start"``
-
-___
-
 ### ThisYear
 
 • **ThisYear** = ``"this_year"``
-
-___
-
-### ThisYearStart
-
-• **ThisYearStart** = ``"this_year_start"``
 
 ___
 
