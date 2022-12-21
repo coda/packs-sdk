@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Changed
+
+- Updated `PrecannedDateRange` to match the date range picker in the Coda UI: added `Last90Days` and `Last180Days` and deprecated `Last3Months` and `Last6Months`.
+
 ## [1.2.3] - 2022-12-13
 
 ### Added

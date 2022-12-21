@@ -34,6 +34,12 @@ and ending in the distant future (e.g. 12/31/3999). Exact dates are subject to c
 
 ___
 
+### Last180Days
+
+• **Last180Days** = ``"last_180_days"``
+
+___
+
 ### Last30Days
 
 • **Last30Days** = ``"last_30_days"``
@@ -44,17 +50,27 @@ ___
 
 • **Last3Months** = ``"last_3_months"``
 
+**`Deprecated`**
+
 ___
 
 ### Last6Months
 
 • **Last6Months** = ``"last_6_months"``
 
+**`Deprecated`**
+
 ___
 
 ### Last7Days
 
 • **Last7Days** = ``"last_7_days"``
+
+___
+
+### Last90Days
+
+• **Last90Days** = ``"last_90_days"``
 
 ___
 

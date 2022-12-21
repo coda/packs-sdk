@@ -251,9 +251,13 @@ var PrecannedDateRange;
     PrecannedDateRange["Yesterday"] = "yesterday";
     PrecannedDateRange["Last7Days"] = "last_7_days";
     PrecannedDateRange["Last30Days"] = "last_30_days";
+    PrecannedDateRange["Last90Days"] = "last_90_days";
+    PrecannedDateRange["Last180Days"] = "last_180_days";
     PrecannedDateRange["LastWeek"] = "last_week";
     PrecannedDateRange["LastMonth"] = "last_month";
+    /** @deprecated */
     PrecannedDateRange["Last3Months"] = "last_3_months";
+    /** @deprecated */
     PrecannedDateRange["Last6Months"] = "last_6_months";
     PrecannedDateRange["LastYear"] = "last_year";
     // Present

@@ -1790,9 +1790,13 @@ export declare enum PrecannedDateRange {
 	Yesterday = "yesterday",
 	Last7Days = "last_7_days",
 	Last30Days = "last_30_days",
+	Last90Days = "last_90_days",
+	Last180Days = "last_180_days",
 	LastWeek = "last_week",
 	LastMonth = "last_month",
+	/** @deprecated */
 	Last3Months = "last_3_months",
+	/** @deprecated */
 	Last6Months = "last_6_months",
 	LastYear = "last_year",
 	Today = "today",
