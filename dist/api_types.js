@@ -253,6 +253,7 @@ var PrecannedDateRange;
     PrecannedDateRange["Last30Days"] = "last_30_days";
     PrecannedDateRange["Last90Days"] = "last_90_days";
     PrecannedDateRange["Last180Days"] = "last_180_days";
+    PrecannedDateRange["Last365Days"] = "last_365_days";
     PrecannedDateRange["LastWeek"] = "last_week";
     PrecannedDateRange["LastMonth"] = "last_month";
     /** @deprecated */
@@ -263,19 +264,23 @@ var PrecannedDateRange;
     // Present
     PrecannedDateRange["Today"] = "today";
     PrecannedDateRange["ThisWeek"] = "this_week";
-    PrecannedDateRange["ThisWeekStart"] = "this_week_start";
     PrecannedDateRange["ThisMonth"] = "this_month";
-    PrecannedDateRange["ThisMonthStart"] = "this_month_start";
-    PrecannedDateRange["ThisYearStart"] = "this_year_start";
     PrecannedDateRange["YearToDate"] = "year_to_date";
     PrecannedDateRange["ThisYear"] = "this_year";
+    PrecannedDateRange["Last7AndNext7Days"] = "last_7_and_next_7_days";
+    PrecannedDateRange["Last30AndNext30Days"] = "last_30_and_next_30_days";
     // Future
     PrecannedDateRange["Tomorrow"] = "tomorrow";
     PrecannedDateRange["Next7Days"] = "next_7_days";
     PrecannedDateRange["Next30Days"] = "next_30_days";
+    PrecannedDateRange["Next90Days"] = "next_90_days";
+    PrecannedDateRange["Next180Days"] = "next_180_days";
+    PrecannedDateRange["Next365Days"] = "next_365_days";
     PrecannedDateRange["NextWeek"] = "next_week";
     PrecannedDateRange["NextMonth"] = "next_month";
+    /** @deprecated */
     PrecannedDateRange["Next3Months"] = "next_3_months";
+    /** @deprecated */
     PrecannedDateRange["Next6Months"] = "next_6_months";
     PrecannedDateRange["NextYear"] = "next_year";
     /**

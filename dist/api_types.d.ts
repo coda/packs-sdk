@@ -663,6 +663,7 @@ export declare enum PrecannedDateRange {
     Last30Days = "last_30_days",
     Last90Days = "last_90_days",
     Last180Days = "last_180_days",
+    Last365Days = "last_365_days",
     LastWeek = "last_week",
     LastMonth = "last_month",
     /** @deprecated */
@@ -672,18 +673,22 @@ export declare enum PrecannedDateRange {
     LastYear = "last_year",
     Today = "today",
     ThisWeek = "this_week",
-    ThisWeekStart = "this_week_start",
     ThisMonth = "this_month",
-    ThisMonthStart = "this_month_start",
-    ThisYearStart = "this_year_start",
     YearToDate = "year_to_date",
     ThisYear = "this_year",
+    Last7AndNext7Days = "last_7_and_next_7_days",
+    Last30AndNext30Days = "last_30_and_next_30_days",
     Tomorrow = "tomorrow",
     Next7Days = "next_7_days",
     Next30Days = "next_30_days",
+    Next90Days = "next_90_days",
+    Next180Days = "next_180_days",
+    Next365Days = "next_365_days",
     NextWeek = "next_week",
     NextMonth = "next_month",
+    /** @deprecated */
     Next3Months = "next_3_months",
+    /** @deprecated */
     Next6Months = "next_6_months",
     NextYear = "next_year",
     /**
