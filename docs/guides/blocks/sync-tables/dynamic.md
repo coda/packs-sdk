@@ -414,6 +414,21 @@ pack.addSyncTable({
 ```
 
 
+## Lifecycle
+
+Dynamic sync tables include a lot of individual functions, but they are run at different times and with different frequencies. Below is an outline of the typical lifecycle of a dynamic sync table.
+
+1.  **The table is expanded in the Pack's side panel**
+    - The `listDynamicUrls` function is called to populate the list of data sources.
+1.  **The table is added to the page**
+    - The `getDisplayUrl` function is called to calculate the display URL for the table.
+    - The `getName` function is called to calculate the initial name for the table (the user can later change it).
+    - The `getSchema` function is called to calculate the initial set of featured columns for the table.
+1.  **The table is synced (or re-synced)**
+    - The `getSchema` function is called to calculate the structure of the table.
+    - The `formula.execute` function is called to populate the table.
+
+
 [samples]: ../../../samples/topic/dynamic-sync-table.md
 [sync_tables_naming]: index.md#naming
 [MetadataFormulaObjectResultType]: ../../../reference/sdk/interfaces/core.MetadataFormulaObjectResultType.md
