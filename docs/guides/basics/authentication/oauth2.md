@@ -178,7 +178,7 @@ Depending on the OAuth provider you are connecting to, you may need to utilize t
 
 ### Proof Key for Code Exchange (PKCE)
 
-Some OAuth providers offer or require the use of [Proof Key for Code Exchange (PKCE)][auth0_pkce] during the OAuth flow. It is an additional flow layered on top of the standard Authorization Code flow that increases security by helping prevent against certain forms of attack. To use it in a Pack you simply need to enable the feature using the `useProofKeyForCodeExchange` field of the authentication configuration.
+Some OAuth providers offer or require the use of [Proof Key for Code Exchange (PKCE)][oauth_pkce] during the OAuth flow. It is an additional flow layered on top of the standard Authorization Code flow that increases security by helping prevent against certain forms of attack. To use it in a Pack you simply need to enable the feature using the `useProofKeyForCodeExchange` field of the authentication configuration.
 
 ```{.ts hl_lines="4"}
 pack.setUserAuthentication({
@@ -216,4 +216,4 @@ pack.setUserAuthentication({
 [missingscopeserror]: ../../../reference/sdk/classes/core.MissingScopesError.md
 [auth_endpoints]: index.md#endpoints
 [fetcher_network_domains]: ../fetcher.md#network-domains
-[auth0_pkce]: https://auth0.com/docs/get-started/authentication-and-authorization-flow/authorization-code-flow-with-proof-key-for-code-exchange-pkce
+[oauth_pkce]: https://www.oauth.com/oauth2-servers/pkce/
