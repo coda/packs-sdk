@@ -171,6 +171,35 @@ Additionally, in order to prevent abuse, Coda enforces the `authorizationUrl` an
     The domain of the OAuth configuration URLs does not need to match the [network domain][fetcher_network_domains] configured for fetcher requests. This is convenient for services where the OAuth provider is a 3rd party (Okta, Auth0, etc).
 
 
+## Advanced settings
+
+Depending on the OAuth provider you are connecting to, you may need to utilize these additional settings when configuring OAuth.
+
+
+### Proof Key for Code Exchange (PKCE)
+
+Some OAuth providers offer or require the use of [Proof Key for Code Exchange (PKCE)][auth0_pkce] during the OAuth flow. It is an additional flow layered on top of the standard Authorization Code flow that increases security by helping prevent against certain forms of attack. To use it in a Pack you simply need to enable the feature using the `useProofKeyForCodeExchange` field of the authentication configuration.
+
+```{.ts hl_lines="4"}
+pack.setUserAuthentication({
+  type: coda.AuthenticationType.OAuth2,
+  // ...
+  useProofKeyForCodeExchange: true,
+});
+```
+
+The PKCE standard supports two different ways of creating a challenge from the verifier: `S256` (the default) and `plain`. Coda will use the more secure `S256` method by default, but you can override it using the `pkceChallengeMethod` field.
+
+```{.ts hl_lines="5"}
+pack.setUserAuthentication({
+  type: coda.AuthenticationType.OAuth2,
+  // ...
+  useProofKeyForCodeExchange: true,
+  pkceChallengeMethod: "plain",
+});
+```
+
+
 [oauth_definition]: https://oauth.net/2/
 [authentication]: index.md
 [OAuth]: ../../../reference/sdk/enums/core.AuthenticationType.md#oauth2
@@ -187,3 +216,4 @@ Additionally, in order to prevent abuse, Coda enforces the `authorizationUrl` an
 [missingscopeserror]: ../../../reference/sdk/classes/core.MissingScopesError.md
 [auth_endpoints]: index.md#endpoints
 [fetcher_network_domains]: ../fetcher.md#network-domains
+[auth0_pkce]: https://auth0.com/docs/get-started/authentication-and-authorization-flow/authorization-code-flow-with-proof-key-for-code-exchange-pkce
