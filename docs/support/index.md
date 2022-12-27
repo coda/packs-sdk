@@ -34,6 +34,13 @@ If you are experiencing a problem with your Pack or have identified a bug you ca
 [Send email][support_email]{: .md-button .md-button--primary}
 
 
+## Feedback
+
+We're always looking for ways to improve the experience of making and using Packs, and you feedback on how we can improve please let us know. This includes requests for new features or capabilities in the SDK, Pack Studio, CLI, etc.
+
+[Submit feedback][feedback_form]{: .md-button .md-button--primary}
+
+
 ## Request multiple network domains {: #network-domains}
 
 By default all Packs are limited to only a single [network domain][fetcher_network_domains]. To request an exemption, please fill out the form linked below. Ensure you are signed in with the same Coda account you are using to develop the Pack. We'll review your request and respond with a decision within a few business days.
@@ -51,3 +58,4 @@ If the Pack uses OAuth2 authentication where its authorization url domain doesn'
 [fetcher_network_domains]: ../guides/basics/fetcher.md#network-domains
 [network_domains_form]: https://coda.io/form/Pack-Network-Domains-Request_ddvuAhFq3IZ
 [office_hours]: https://calendly.com/ekoleda/packs-office-hours
+[feedback_form]: https://coda.io/form/Submit-Feedback_dytcXWbZzr-
