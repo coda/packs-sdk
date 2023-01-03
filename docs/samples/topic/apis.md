@@ -85,6 +85,26 @@ pack.setUserAuthentication({
 // Allow the pack to make requests to the ClickUp.
 pack.addNetworkDomain("clickup.com");
 ```
+## Coda API
+The Coda API requires the user to provide an API token, passed in an Authorization header. Packs include a specific authentication type optimized for the Coda API.
+
+```ts
+import * as coda from "@codahq/packs-sdk";
+export const pack = coda.newPack();
+
+// Per-user authentication to the Coda API, using a token in the Authorization
+// header.
+// See https://coda.io/developers/apis/v1
+pack.setUserAuthentication({
+  type: coda.AuthenticationType.CodaApiHeaderBearerToken,
+
+  // Creates the token automatically when the Pack is installed.
+  shouldAutoAuthSetup: true,
+});
+
+// Allow the pack to make requests to Coda.
+pack.addNetworkDomain("coda.io");
+```
 ## Dropbox
 The Dropbox API uses OAuth2 to authenticate users, prompting them to approve a specific set of scopes. Additional parameters are requires on the authorization URL to ensure that offline access is granted.
 

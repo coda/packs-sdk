@@ -92,6 +92,26 @@ pack.setSystemAuthentication({
 // Allow the pack to make requests to Giphy.
 pack.addNetworkDomain("giphy.com");
 ```
+## Multiple query parameters
+Authentication that passes multiple long-lived tokens in query parameters. This sample connects to the Smarty API.
+
+```ts
+import * as coda from "@codahq/packs-sdk";
+export const pack = coda.newPack();
+
+// Per-user authentication to the Smarty API, using multiple query parameters.
+// See https://www.smarty.com/docs/cloud/authentication#keypairs
+pack.setUserAuthentication({
+  type: coda.AuthenticationType.MultiQueryParamToken,
+  params: [
+    { name: "auth-id", description: "The Auth ID of the secret key." },
+    { name: "auth-token", description: "The Auth Token of the secret key." },
+  ],
+});
+
+// Allow the pack to make requests to Smarty.
+pack.addNetworkDomain("smartystreets.com");
+```
 ## Username and password
 Authentication that passes a username and password in the Authorization header using the &quot;Basic&quot; scheme. This sample connects to the Twilio API.
 
@@ -125,6 +145,26 @@ pack.setUserAuthentication({
 
 // Allow the pack to make requests to Twilio.
 pack.addNetworkDomain("twilio.com");
+```
+## Coda API token
+Authentication optimized for connecting to the Coda API, which is a token passed in the Authorization header.
+
+```ts
+import * as coda from "@codahq/packs-sdk";
+export const pack = coda.newPack();
+
+// Per-user authentication to the Coda API, using a token in the Authorization
+// header.
+// See https://coda.io/developers/apis/v1
+pack.setUserAuthentication({
+  type: coda.AuthenticationType.CodaApiHeaderBearerToken,
+
+  // Creates the token automatically when the Pack is installed.
+  shouldAutoAuthSetup: true,
+});
+
+// Allow the pack to make requests to Coda.
+pack.addNetworkDomain("coda.io");
 ```
 ## OAuth2
 Authentication that uses an OAuth2 flow. This sample connects to the Todoist API.

@@ -391,7 +391,7 @@ You can set a total rate limit across all users of your Pack, or if your Pack us
 
 ## IP addresses
 
-HTTP requests originating from Packs will come from a few different IP addresses. The specific set of addresses will change over time, and without prior warning. You can query the current set of IP addresses by doing a DNS lookup on the domain `egress.coda.io`.
+HTTP requests originating from Packs can come from a few different IP addresses. While we strive to keep the set of addresses consistent, they may be subject to change over time. You can query the current set of IP addresses by doing a DNS lookup on the domain `egress.coda.io`.
 
 ```sh
 dig +short egress.coda.io

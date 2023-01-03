@@ -90,9 +90,19 @@
         "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// System-wide authentication to the Giphy API, using an API key in the query\n// string. See https://support.giphy.com/hc/en-us/articles/360020283431.\npack.setSystemAuthentication({\n  type: coda.AuthenticationType.QueryParamToken,\n  paramName: \"api_key\",\n});\n\n// Allow the pack to make requests to Giphy.\npack.addNetworkDomain(\"giphy.com\");"
       },
       {
+        "name": "Multiple query parameters",
+        "content": "Authentication that passes multiple long-lived tokens in query parameters. This sample connects to the Smarty API.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Per-user authentication to the Smarty API, using multiple query parameters.\n// See https://www.smarty.com/docs/cloud/authentication#keypairs\npack.setUserAuthentication({\n  type: coda.AuthenticationType.MultiQueryParamToken,\n  params: [\n    { name: \"auth-id\", description: \"The Auth ID of the secret key.\" },\n    { name: \"auth-token\", description: \"The Auth Token of the secret key.\" },\n  ],\n});\n\n// Allow the pack to make requests to Smarty.\npack.addNetworkDomain(\"smartystreets.com\");"
+      },
+      {
         "name": "Username and password",
         "content": "Authentication that passes a username and password in the Authorization header using the \"Basic\" scheme. This sample connects to the Twilio API.",
         "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Per-user authentication to the Twilio API, using an Account SID and token in\n// an \"Authorization: Basic ...\" header.\n// See https://www.twilio.com/docs/usage/requests-to-twilio\npack.setUserAuthentication({\n  type: coda.AuthenticationType.WebBasic,\n  instructionsUrl: \"https://www.twilio.com/docs/sms/api#sms-api-authentication\",\n\n  // Use Twilio-specific placeholders for the username and password fields.\n  uxConfig: {\n    placeholderUsername: \"Account SID\",\n    placeholderPassword: \"Auth Token\",\n  },\n\n  // Determines the display name of the connected account.\n  getConnectionName: async function(context) {\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: \"https://api.twilio.com/2010-04-01/Accounts.json\",\n    });\n    // Return the name of the main account.\n    return response.body.accounts[0].friendly_name;\n  },\n});\n\n// Allow the pack to make requests to Twilio.\npack.addNetworkDomain(\"twilio.com\");"
+      },
+      {
+        "name": "Coda API token",
+        "content": "Authentication optimized for connecting to the Coda API, which is a token passed in the Authorization header.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Per-user authentication to the Coda API, using a token in the Authorization\n// header.\n// See https://coda.io/developers/apis/v1\npack.setUserAuthentication({\n  type: coda.AuthenticationType.CodaApiHeaderBearerToken,\n\n  // Creates the token automatically when the Pack is installed.\n  shouldAutoAuthSetup: true,\n});\n\n// Allow the pack to make requests to Coda.\npack.addNetworkDomain(\"coda.io\");"
       },
       {
         "name": "OAuth2",
@@ -667,6 +677,11 @@
         "name": "ClickUp",
         "content": "The ClickUp API uses OAuth2 to authenticate users.",
         "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Per-user authentication to the ClickUp API, using OAuth2.\n// See https://clickup.com/api\npack.setUserAuthentication({\n  type: coda.AuthenticationType.OAuth2,\n  authorizationUrl: \"https://app.clickup.com/api\",\n  tokenUrl: \"https://app.clickup.com/api/v2/oauth/token\",\n\n  // Determines the display name of the connected account.\n  getConnectionName: async function (context) {\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: \"https://api.clickup.com/api/v2/user\",\n    });\n    let user = response.body.user;\n    return user.username;\n  },\n});\n\n// Allow the pack to make requests to the ClickUp.\npack.addNetworkDomain(\"clickup.com\");"
+      },
+      {
+        "name": "Coda API",
+        "content": "The Coda API requires the user to provide an API token, passed in an Authorization header. Packs include a specific authentication type optimized for the Coda API.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Per-user authentication to the Coda API, using a token in the Authorization\n// header.\n// See https://coda.io/developers/apis/v1\npack.setUserAuthentication({\n  type: coda.AuthenticationType.CodaApiHeaderBearerToken,\n\n  // Creates the token automatically when the Pack is installed.\n  shouldAutoAuthSetup: true,\n});\n\n// Allow the pack to make requests to Coda.\npack.addNetworkDomain(\"coda.io\");"
       },
       {
         "name": "Dropbox",
