@@ -293,7 +293,7 @@ Some APIs use short-lived tokens which must be obtained through an credential ex
 
 ### Coda API token
 
-Packs that connect to the Coda API should use [`CodaApiHeaderBearerToken`][CodaApiHeaderBearerToken] authentication, which works much like `HeaderBearerToken` but is optimized for the Coda API. It allows the user to easily create new Coda API tokens direction from the sign-in flow, passing them in the `Authorization` header of outgoing requests. For example:
+Packs that connect to the Coda API should use [`CodaApiHeaderBearerToken`][CodaApiHeaderBearerToken] authentication, which works much like `HeaderBearerToken` but is optimized for the Coda API. It allows the user to easily create new Coda API tokens directly from the sign-in flow, passing them in the `Authorization` header of outgoing requests. For example:
 
 ```
 GET /apis/v1/whoami

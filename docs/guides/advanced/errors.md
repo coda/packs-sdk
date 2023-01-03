@@ -10,7 +10,7 @@ Dealing with errors is a common task when building a Pack. These errors can come
 
 ## Fetcher errors
 
-When the fetcher receives a response from the API indicating there was a problem it throws an exception that needs to be handled. More information about these errors can be found in the [Fetching remote data guide][fetcher].
+When the fetcher receives a response from the API indicating there was a problem it throws an exception. You can detect and handle these exceptions if there are known error cases, or if left unhandled a generic error message will be shown to the user. More information about these errors can be found in the [Fetching remote data guide][fetcher].
 
 
 ## User-visible errors
