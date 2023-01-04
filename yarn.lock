@@ -4448,7 +4448,7 @@ isexe@^2.0.0:
   resolved "https://registry.npmjs.org/isexe/-/isexe-2.0.0.tgz"
   integrity sha1-6PvzdNxVb/iUehDcsFctYz8s+hA=
 
-isolated-vm@^4.4.1:
+"isolated-vm@=4.4.1 || >4.4.2":
   version "4.4.1"
   resolved "https://registry.yarnpkg.com/isolated-vm/-/isolated-vm-4.4.1.tgz#651ce31e435e769b2a356bb03db2553a478acebe"
   integrity sha512-5aDwxQGm78vHS+qJeUli2ILroG7OS/k3D/Mc0kcT9vyujiL4bV7PYYix1mAvuBm3v44nz2qcfAOqgAbhuACc/w==
