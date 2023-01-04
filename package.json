@@ -54,7 +54,7 @@
     "zod": "3.20.2"
   },
   "optionalDependencies": {
-    "isolated-vm": "=4.4.1 || >4.4.2"
+    "isolated-vm": "=4.4.2"
   },
   "devDependencies": {
     "@brightcove/kacl": "^0.1.11",
