@@ -63,6 +63,6 @@ If you have a formula that returns a dynamic set of custom fields, there are two
 [google_verification]: https://support.google.com/cloud/answer/9110914
 [google_verification_exceptions]: https://support.google.com/cloud/answer/9110914#exceptions-ver-reqts&zippy=%2Cexceptions-to-verification-requirements
 [google_verification_line]: https://support.google.com/cloud/answer/9110914?hl=en#zippy=%2Chow-can-i-make-sure-the-verification-process-is-as-streamlined-as-possible
-[oauth_redirect]: basics/authentication/oauth2.md#redirect-url
+[oauth_redirect]: ../guides/basics/authentication/oauth2.md#redirect-url
 [packs_apps_script]: https://coda.io/packs/apps-script-14470
-[dynamic_sync_tables]: ./blocks/sync-tables/dynamic.md
+[dynamic_sync_tables]: ../guides/blocks/sync-tables/dynamic.md

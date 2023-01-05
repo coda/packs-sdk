@@ -47,5 +47,5 @@ The following sections walk you through the migration for specific versions of t
 - [Version 0.11.0][v0.11.0]
 
 
-[changelog]: ../../reference/changes.md
+[changelog]: ../changes.md
 [v0.11.0]: v0.11.0.md
