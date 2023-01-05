@@ -114,7 +114,7 @@
     "ts-loader": "^9.4.2",
     "ts-node": "^10.9.1",
     "typedoc": "^0.23.10",
-    "typedoc-plugin-markdown": "^3.13.6"
+    "typedoc-plugin-markdown": "^3.14.0"
   },
   "resolutions": {
     "**/request/qs": "^6.5.3",
