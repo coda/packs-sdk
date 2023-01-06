@@ -8,7 +8,7 @@ search:
 
 [testing](../modules/testing.md).executeFormulaOrSyncWithVM
 
-▸ **executeFormulaOrSyncWithVM**<`T`\>(`__namedParameters`): `Promise`<`T`\>
+▸ **executeFormulaOrSyncWithVM**<`T`\>(`«destructured»`): `Promise`<`T`\>
 
 #### Type parameters
 
@@ -20,11 +20,11 @@ search:
 
 | Name | Type |
 | :------ | :------ |
-| `__namedParameters` | `Object` |
-| `__namedParameters.bundlePath` | `string` |
-| `__namedParameters.executionContext?` | [`ExecutionContext`](../interfaces/core.ExecutionContext.md) |
-| `__namedParameters.formulaName` | `string` |
-| `__namedParameters.params` | [`ParamValues`](../types/core.ParamValues.md)<[`ParamDefs`](../types/core.ParamDefs.md)\> |
+| `«destructured»` | `Object` |
+| › `bundlePath` | `string` |
+| › `executionContext?` | [`ExecutionContext`](../interfaces/core.ExecutionContext.md) |
+| › `formulaName` | `string` |
+| › `params` | [`ParamValues`](../types/core.ParamValues.md)<[`ParamDefs`](../types/core.ParamDefs.md)\> |
 
 #### Returns
 

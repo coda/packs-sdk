@@ -8,7 +8,7 @@ search:
 
 [testing](../modules/testing.md).executeSyncFormulaFromPackDefSingleIteration
 
-▸ **executeSyncFormulaFromPackDefSingleIteration**(`packDef`, `syncFormulaName`, `params`, `context?`, `options?`, `__namedParameters?`): `Promise`<[`GenericSyncFormulaResult`](../types/core.GenericSyncFormulaResult.md)\>
+▸ **executeSyncFormulaFromPackDefSingleIteration**(`packDef`, `syncFormulaName`, `params`, `context?`, `options?`, `«destructured»?`): `Promise`<[`GenericSyncFormulaResult`](../types/core.GenericSyncFormulaResult.md)\>
 
 Executes a single sync iteration, and returns the return value from the sync formula
 including the continuation, for inspection.
@@ -22,7 +22,7 @@ including the continuation, for inspection.
 | `params` | [`ParamValues`](../types/core.ParamValues.md)<[`ParamDefs`](../types/core.ParamDefs.md)\> |
 | `context?` | [`SyncExecutionContext`](../interfaces/core.SyncExecutionContext.md) |
 | `options?` | [`ExecuteOptions`](../interfaces/testing.ExecuteOptions.md) |
-| `__namedParameters` | [`ContextOptions`](../interfaces/testing.ContextOptions.md) |
+| `«destructured»` | [`ContextOptions`](../interfaces/testing.ContextOptions.md) |
 
 #### Returns
 

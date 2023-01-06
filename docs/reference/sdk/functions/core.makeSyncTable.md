@@ -8,7 +8,7 @@ search:
 
 [core](../modules/core.md).makeSyncTable
 
-▸ **makeSyncTable**<`K`, `L`, `ParamDefsT`, `SchemaDefT`, `SchemaT`\>(`__namedParameters`): [`SyncTableDef`](../interfaces/core.SyncTableDef.md)<`K`, `L`, `ParamDefsT`, `SchemaT`\>
+▸ **makeSyncTable**<`K`, `L`, `ParamDefsT`, `SchemaDefT`, `SchemaT`\>(`«destructured»`): [`SyncTableDef`](../interfaces/core.SyncTableDef.md)<`K`, `L`, `ParamDefsT`, `SchemaT`\>
 
 Wrapper to produce a sync table definition. All (non-dynamic) sync tables should be created
 using this wrapper rather than declaring a sync table definition object directly.
@@ -34,7 +34,7 @@ See [Normalization](/index.html#normalization) for more information about schema
 
 | Name | Type |
 | :------ | :------ |
-| `__namedParameters` | [`SyncTableOptions`](../interfaces/core.SyncTableOptions.md)<`K`, `L`, `ParamDefsT`, `SchemaDefT`\> |
+| `«destructured»` | [`SyncTableOptions`](../interfaces/core.SyncTableOptions.md)<`K`, `L`, `ParamDefsT`, `SchemaDefT`\> |
 
 #### Returns
 

@@ -8,7 +8,7 @@ search:
 
 [core](../modules/core.md).makeTranslateObjectFormula
 
-▸ **makeTranslateObjectFormula**<`ParamDefsT`, `ResultT`\>(`__namedParameters`): { `cacheTtlSecs?`: `number` ; `connectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md) ; `description`: `string` ; `examples?`: { `params`: (`undefined` \| [`PackFormulaValue`](../types/core.PackFormulaValue.md))[] ; `result`: [`PackFormulaResult`](../types/core.PackFormulaResult.md)  }[] ; `extraOAuthScopes?`: `string`[] ; `isAction?`: `boolean` ; `isExperimental?`: `boolean` ; `isSystem?`: `boolean` ; `name`: `string` ; `network?`: [`Network`](../interfaces/core.Network.md) ; `parameters`: `ParamDefsT` ; `varargParameters?`: [`ParamDefs`](../types/core.ParamDefs.md)  } & { `execute`: (`params`: [`ParamValues`](../types/core.ParamValues.md)<`ParamDefsT`\>, `context`: [`ExecutionContext`](../interfaces/core.ExecutionContext.md)) => `Promise`<[`SchemaType`](../types/core.SchemaType.md)<`ResultT`\>\> ; `resultType`: [`object`](../enums/core.Type.md#object) ; `schema`: `undefined` \| `ResultT` = response.schema }
+▸ **makeTranslateObjectFormula**<`ParamDefsT`, `ResultT`\>(`«destructured»`): { `cacheTtlSecs?`: `number` ; `connectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md) ; `description`: `string` ; `examples?`: { `params`: (`undefined` \| [`PackFormulaValue`](../types/core.PackFormulaValue.md))[] ; `result`: [`PackFormulaResult`](../types/core.PackFormulaResult.md)  }[] ; `extraOAuthScopes?`: `string`[] ; `isAction?`: `boolean` ; `isExperimental?`: `boolean` ; `isSystem?`: `boolean` ; `name`: `string` ; `network?`: [`Network`](../interfaces/core.Network.md) ; `parameters`: `ParamDefsT` ; `varargParameters?`: [`ParamDefs`](../types/core.ParamDefs.md)  } & { `execute`: (`params`: [`ParamValues`](../types/core.ParamValues.md)<`ParamDefsT`\>, `context`: [`ExecutionContext`](../interfaces/core.ExecutionContext.md)) => `Promise`<[`SchemaType`](../types/core.SchemaType.md)<`ResultT`\>\> ; `resultType`: [`object`](../enums/core.Type.md#object) ; `schema`: `undefined` \| `ResultT` = response.schema }
 
 Helper to generate a formula that fetches a list of entities from a given URL and returns them.
 
@@ -50,7 +50,7 @@ makeTranslateObjectFormula({
 
 | Name | Type |
 | :------ | :------ |
-| `__namedParameters` | [`ObjectArrayFormulaDef`](../interfaces/core.ObjectArrayFormulaDef.md)<`ParamDefsT`, `ResultT`\> |
+| `«destructured»` | [`ObjectArrayFormulaDef`](../interfaces/core.ObjectArrayFormulaDef.md)<`ParamDefsT`, `ResultT`\> |
 
 #### Returns
 
