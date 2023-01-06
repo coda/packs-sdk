@@ -3098,16 +3098,16 @@ module.exports = (() => {
     }
   });
 
-  // (disabled):node_modules/side-channel/node_modules/object-inspect/util.inspect
+  // (disabled):node_modules/object-inspect/util.inspect
   var require_util = __commonJS({
-    "(disabled):node_modules/side-channel/node_modules/object-inspect/util.inspect"() {
+    "(disabled):node_modules/object-inspect/util.inspect"() {
       init_buffer_shim();
     }
   });
 
-  // node_modules/side-channel/node_modules/object-inspect/index.js
+  // node_modules/object-inspect/index.js
   var require_object_inspect = __commonJS({
-    "node_modules/side-channel/node_modules/object-inspect/index.js"(exports, module) {
+    "node_modules/object-inspect/index.js"(exports, module) {
       init_buffer_shim();
       var hasMap = typeof Map === "function" && Map.prototype;
       var mapSizeDescriptor = Object.getOwnPropertyDescriptor && hasMap ? Object.getOwnPropertyDescriptor(Map.prototype, "size") : null;
