@@ -8,7 +8,7 @@ search:
 
 [testing](../modules/testing.md).executeFormulaFromPackDef
 
-▸ **executeFormulaFromPackDef**<`T`\>(`packDef`, `formulaNameWithNamespace`, `params`, `context?`, `options?`, `__namedParameters?`): `Promise`<`T`\>
+▸ **executeFormulaFromPackDef**<`T`\>(`packDef`, `formulaNameWithNamespace`, `params`, `context?`, `options?`, `«destructured»?`): `Promise`<`T`\>
 
 #### Type parameters
 
@@ -25,7 +25,7 @@ search:
 | `params` | [`ParamValues`](../types/core.ParamValues.md)<[`ParamDefs`](../types/core.ParamDefs.md)\> |
 | `context?` | [`ExecutionContext`](../interfaces/core.ExecutionContext.md) |
 | `options?` | [`ExecuteOptions`](../interfaces/testing.ExecuteOptions.md) |
-| `__namedParameters` | [`ContextOptions`](../interfaces/testing.ContextOptions.md) |
+| `«destructured»` | [`ContextOptions`](../interfaces/testing.ContextOptions.md) |
 
 #### Returns
 

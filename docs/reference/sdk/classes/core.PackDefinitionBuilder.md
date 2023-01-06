@@ -248,7 +248,7 @@ ___
 
 ### addNetworkDomain
 
-▸ **addNetworkDomain**(...`domain`): [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
+▸ **addNetworkDomain**(`...domain`): [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
 
 Adds the domain that this pack makes HTTP requests to.
 For example, if your pack makes HTTP requests to "api.example.com",
@@ -281,7 +281,7 @@ ___
 
 ### addSyncTable
 
-▸ **addSyncTable**<`K`, `L`, `ParamDefsT`, `SchemaT`\>(`__namedParameters`): [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
+▸ **addSyncTable**<`K`, `L`, `ParamDefsT`, `SchemaT`\>(`«destructured»`): [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
 
 Adds a sync table definition to this pack.
 
@@ -315,7 +315,7 @@ pack.addSyncTable({
 
 | Name | Type |
 | :------ | :------ |
-| `__namedParameters` | [`SyncTableOptions`](../interfaces/core.SyncTableOptions.md)<`K`, `L`, `ParamDefsT`, `SchemaT`\> |
+| `«destructured»` | [`SyncTableOptions`](../interfaces/core.SyncTableOptions.md)<`K`, `L`, `ParamDefsT`, `SchemaT`\> |
 
 #### Returns
 

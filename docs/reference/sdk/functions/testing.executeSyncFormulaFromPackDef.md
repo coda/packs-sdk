@@ -8,7 +8,7 @@ search:
 
 [testing](../modules/testing.md).executeSyncFormulaFromPackDef
 
-▸ **executeSyncFormulaFromPackDef**<`T`\>(`packDef`, `syncFormulaName`, `params`, `context?`, `__namedParameters?`, `__namedParameters?`): `Promise`<`T`[]\>
+▸ **executeSyncFormulaFromPackDef**<`T`\>(`packDef`, `syncFormulaName`, `params`, `context?`, `«destructured»?`, `«destructured»?`): `Promise`<`T`[]\>
 
 Executes multiple iterations of a sync formula in a loop until there is no longer
 a `continuation` returned, aggregating each page of results and returning an array
@@ -35,8 +35,8 @@ For now, use `coda execute --vm` to simulate that level of isolation.
 | `syncFormulaName` | `string` |
 | `params` | [`ParamValues`](../types/core.ParamValues.md)<[`ParamDefs`](../types/core.ParamDefs.md)\> |
 | `context?` | [`SyncExecutionContext`](../interfaces/core.SyncExecutionContext.md) |
-| `__namedParameters` | [`ExecuteOptions`](../interfaces/testing.ExecuteOptions.md) |
-| `__namedParameters` | [`ContextOptions`](../interfaces/testing.ContextOptions.md) |
+| `«destructured»` | [`ExecuteOptions`](../interfaces/testing.ExecuteOptions.md) |
+| `«destructured»` | [`ContextOptions`](../interfaces/testing.ContextOptions.md) |
 
 #### Returns
 
