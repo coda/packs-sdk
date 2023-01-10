@@ -23,6 +23,7 @@ const FileSchema = coda.makeObjectSchema({
   },
   displayProperty: "name",
   idProperty: "fileId",
+  featuredProperties: ["thumbnail", "url"],
 });
 
 // Sync table for files.
