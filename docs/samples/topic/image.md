@@ -325,7 +325,6 @@ const FileSchema = coda.makeObjectSchema({
     url: {
       type: coda.ValueType.String,
       codaType: coda.ValueHintType.Url,
-      fromKey: "webViewLink",
     },
     thumbnail: {
       type: coda.ValueType.String,
@@ -338,6 +337,7 @@ const FileSchema = coda.makeObjectSchema({
   },
   displayProperty: "name",
   idProperty: "fileId",
+  featuredProperties: ["thumbnail", "url"],
 });
 
 // Sync table for files.
@@ -352,13 +352,20 @@ pack.addSyncTable({
     execute: async function ([], context) {
       // Get a batch of files.
       let filesResponse = await getFiles(context);
-      let files = filesResponse.entries;
+      let files = filesResponse.entries
+        .filter(entry => entry[".tag"] === "file");
       let hasMore = filesResponse.has_more;
 
-      // Get the thumbnail metadata for each file.
-      let paths = filesResponse.entries.map(file => file.path_lower);
-      let thumbnailsResponse = await getThumbnails(paths, context);
-      let thumbnails = thumbnailsResponse.entries;
+      // Get the URL for each file.
+      let fileIds = files.map(file => file.id);
+      let fileUrls = await getFileUrls(fileIds, context);
+      for (let i = 0; i < files.length; i++) {
+        files[i].url = fileUrls[i];
+      }
+
+      // Get the thumbnail for each file.
+      let paths = files.map(file => file.path_lower);
+      let thumbnails = await getThumbnails(paths, context);
 
       // The thumbnail images are returned as base64-encoded strings in the
       // response body, but the doc can only ingest an image URL. We'll parse
@@ -367,11 +374,11 @@ pack.addSyncTable({
 
       // Collect the all of the temporary blob storage jobs that are started.
       let jobs = [];
-      for (let metadata of thumbnails) {
+      for (let thumbnail of thumbnails) {
         let job;
-        if (metadata.thumbnail) {
+        if (thumbnail) {
           // Parse the base64 thumbnail content.
-          let buffer = Buffer.from(metadata.thumbnail, "base64");
+          let buffer = Buffer.from(thumbnail, "base64");
           // Store it in temporary blob storage.
           job = context.temporaryBlobStorage.storeBlob(buffer, "image/png");
         } else {
@@ -406,7 +413,7 @@ pack.addSyncTable({
 });
 
 // Gets a batch of files from the API.
-async function getFiles(context: coda.ExecutionContext) {
+async function getFiles(context: coda.ExecutionContext): Promise<any> {
   let url = "https://api.dropboxapi.com/2/files/list_folder";
   let body;
 
@@ -440,7 +447,8 @@ async function getFiles(context: coda.ExecutionContext) {
 }
 
 // Get the thumbnail metadata for a list of file paths.
-async function getThumbnails(paths, context: coda.ExecutionContext) {
+async function getThumbnails(paths, context: coda.ExecutionContext):
+    Promise<string[]> {
   // Use a batch URL to get all of the thumbnail metadata in one request.
   let url = "https://content.dropboxapi.com/2/files/get_thumbnail_batch";
 
@@ -466,7 +474,27 @@ async function getThumbnails(paths, context: coda.ExecutionContext) {
       entries: entries,
     }),
   });
-  return response.body;
+  return response.body.entries.map(entry => entry.thumbnail);
+}
+
+// Get the Dropbox URLs for a list of file IDs.
+async function getFileUrls(fileIds, context: coda.ExecutionContext):
+    Promise<string[]> {
+  // Use a batch URL to get all of the thumbnail metadata in one request.
+  let url = "https://api.dropboxapi.com/2/sharing/get_file_metadata/batch";
+
+  // Make the API request and return the response.
+  let response = await context.fetcher.fetch({
+    method: "POST",
+    url: url,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      files: fileIds,
+    }),
+  });
+  return response.body.map(metadata => metadata.result.preview_url);
 }
 
 // Set per-user authentication using Dropbox's OAuth2.
@@ -474,7 +502,7 @@ pack.setUserAuthentication({
   type: coda.AuthenticationType.OAuth2,
   authorizationUrl: "https://www.dropbox.com/oauth2/authorize",
   tokenUrl: "https://api.dropbox.com/oauth2/token",
-  scopes: ["files.content.read"],
+  scopes: ["files.content.read", "sharing.read"],
   additionalParams: {
     token_access_type: "offline",
   },
@@ -512,6 +540,7 @@ const FileSchema = coda.makeObjectSchema({
   },
   displayProperty: "name",
   idProperty: "fileId",
+  featuredProperties: ["thumbnail", "url"],
 });
 
 // Sync table for files.
