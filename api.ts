@@ -699,9 +699,13 @@ export type TypedPackFormula = Formula | GenericSyncFormula;
 
 export type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
 /** @hidden */
-export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute' | 'executeUpdate'>;
+export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute' | 'executeUpdate' | 'matchers'> & {
+  matchers?: string[];
+};
 /** @hidden */
-export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'execute'>;
+export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'execute' | 'matchers'> & {
+  matchers?: string[];
+};
 
 export function isObjectPackFormula(fn: PackFormulaMetadata): fn is ObjectPackFormulaMetadata {
   return fn.resultType === Type.object;
@@ -887,6 +891,18 @@ export function makeStringFormula<ParamDefsT extends ParamDefs>(
  * what the elements of the array are. This could be a simple schema like `{type: ValueType.String}`
  * indicating that the array elements are all just strings, or it could be an object schema
  * created using {@link makeObjectSchema} if the elements are objects.
+ *
+ * You may optionally specify one or more {@link matchers}, which are regular expressions
+ * that can be matched against values that users paste into table cells, to determine if
+ * this Formula is applicable to that value. Matchers help users realize that there is a pack
+ * formula that may augment their experience of working with such values.
+ *
+ * For example, if you're building a Wikipedia pack, you may write a matcher regular expression
+ * that looks for Wikipedia article URLs, if you have a formula that can fetch structured data
+ * given an article URL. This would help users discover that there is a pack that can fetch
+ * structured data given only a url.
+ *
+ * At present, matchers will only be run on URLs and not other text values.
  *
  * @example
  * ```

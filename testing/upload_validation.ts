@@ -18,6 +18,7 @@ import type {DynamicSyncTableDef} from '../api';
 import {EmailDisplayType} from '../schema';
 import type {EmailSchema} from '../schema';
 import {FeatureSet} from '../types';
+import type {Format} from '../types';
 import type {GenericObjectSchema} from '../schema';
 import type {HeaderBearerTokenAuthentication} from '../types';
 import type {Identity} from '../schema';
@@ -579,6 +580,10 @@ const commonPackFormulaSchema = {
   isExperimental: z.boolean().optional(),
   isSystem: z.boolean().optional(),
   extraOAuthScopes: z.array(z.string()).optional(),
+  matchers: z
+    .array(z.string().max(Limits.ColumnMatcherRegex).refine(validateFormatMatcher))
+    .max(Limits.NumColumnMatchersPerFormat)
+    .optional(),
 };
 
 const booleanPackFormulaSchema = zodCompleteObject<Omit<BooleanPackFormula<any>, 'execute'>>({
@@ -1401,7 +1406,7 @@ function validateFormulas(schema: z.ZodObject<any>) {
     })
     .superRefine((data, context) => {
       const formulas = (data.formulas || []) as PackFormulaMetadata[];
-      ((data.formats as any[]) || []).forEach((format, i) => {
+      ((data.formats as Format[]) || []).forEach((format, i) => {
         const formula = formulas.find(f => f.name === format.formulaName);
         if (!formula) {
           context.addIssue({
@@ -1410,21 +1415,30 @@ function validateFormulas(schema: z.ZodObject<any>) {
             message:
               'Could not find a formula definition for this format. Each format must reference the name of a formula defined in this pack.',
           });
-        } else {
-          let hasError = !formula.parameters?.length;
-          const [_, ...extraParams] = formula.parameters || [];
-          for (const extraParam of extraParams) {
-            if (!extraParam.optional) {
-              hasError = true;
-            }
+          return;
+        }
+        let hasError = !formula.parameters?.length;
+        const [_, ...extraParams] = formula.parameters || [];
+        for (const extraParam of extraParams) {
+          if (!extraParam.optional) {
+            hasError = true;
           }
-          if (hasError) {
-            context.addIssue({
-              code: z.ZodIssueCode.custom,
-              path: ['formats', i],
-              message: 'Formats can only be implemented using formulas that take exactly one required parameter.',
-            });
-          }
+        }
+        if (hasError) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['formats', i],
+            message: 'Formats can only be implemented using formulas that take exactly one required parameter.',
+          });
+        }
+
+        if ((formula.matchers?.length || 0 > 0) && (format.matchers?.length || 0 > 0)) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['formats', i],
+            message:
+              'Formats cannot have matchers specified on both the formula and the format. Please move to just specifying it in the formula.',
+          });
         }
       });
     });

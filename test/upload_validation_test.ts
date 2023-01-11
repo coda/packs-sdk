@@ -5,7 +5,6 @@ import {AuthenticationType} from '../types';
 import {ConnectionRequirement} from '../api_types';
 import {CurrencyFormat} from '..';
 import {DurationUnit} from '..';
-import type {Formula} from '../api';
 import type {GenericSyncTable} from '../api';
 import {ImageCornerStyle} from '../schema';
 import {ImageOutline} from '../schema';
@@ -22,6 +21,7 @@ import type {StringFormulaDefLegacy} from '../api';
 import {Type} from '../api_types';
 import {ValueHintType} from '../schema';
 import {ValueType} from '../schema';
+import {compileFormulaMetadata} from '../helpers/metadata';
 import {compilePackMetadata} from '../helpers/metadata';
 import {createFakePack} from './test_utils';
 import {createFakePackFormulaMetadata} from './test_utils';
@@ -174,10 +174,7 @@ describe('Pack metadata Validation', () => {
   });
 
   describe('Formulas', () => {
-    function formulaToMetadata(formula: Formula): PackFormulaMetadata {
-      const {execute, ...rest} = formula;
-      return rest;
-    }
+    const formulaToMetadata = compileFormulaMetadata;
 
     it('valid number formula', async () => {
       const formula = makeFormula({
@@ -2534,6 +2531,37 @@ describe('Pack metadata Validation', () => {
         assert.deepEqual(err.validationErrors, [
           {
             message: 'Formats can only be implemented using formulas that take exactly one required parameter.',
+            path: 'formats[0]',
+          },
+        ]);
+      });
+
+      it('formula defines matchers', async () => {
+        const formula = makeStringFormula({
+          name: 'MyFormula',
+          description: 'My description',
+          examples: [],
+          parameters: [makeStringParameter('p1', '')],
+          execute: () => '',
+          matchers: ['/some regex/i'],
+        });
+        const metadata = createFakePackVersionMetadata({
+          formulas: [formulaToMetadata(formula)],
+          formulaNamespace: 'MyNamespace',
+          formats: [
+            {
+              name: 'MyFormat',
+              formulaNamespace: 'MyNamespace',
+              formulaName: 'MyFormula',
+              matchers: ['/some compiled regex/i'],
+            },
+          ],
+        });
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message:
+              'Formats cannot have matchers specified on both the formula and the format. Please move to just specifying it in the formula.',
             path: 'formats[0]',
           },
         ]);

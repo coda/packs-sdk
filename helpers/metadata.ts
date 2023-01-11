@@ -53,15 +53,17 @@ function compileFormulasMetadata(formulas: Formula[]): PackFormulaMetadata[] {
   return formulas.map(compileFormulaMetadata);
 }
 
-function compileFormulaMetadata(formula: TypedPackFormula): PackFormulaMetadata {
-  const {execute, ...rest} = formula;
-  return rest;
+// @hidden
+// exported for tests
+export function compileFormulaMetadata(formula: TypedPackFormula): PackFormulaMetadata {
+  const {execute, matchers, ...rest} = formula;
+  return {...rest, matchers: (matchers || []).map(matcher => matcher.toString())};
 }
 
 function compileSyncTable(syncTable: GenericSyncTable): PackSyncTable {
   if (isDynamicSyncTable(syncTable)) {
     const {getter, getName, getSchema, getDisplayUrl, listDynamicUrls, ...rest} = syncTable;
-    const {execute, executeUpdate, ...getterRest} = getter;
+    const {execute, executeUpdate, matchers, ...getterRest} = getter;
     return {
       ...rest,
       getName: compileMetadataFormulaMetadata(getName),
@@ -70,17 +72,19 @@ function compileSyncTable(syncTable: GenericSyncTable): PackSyncTable {
       listDynamicUrls: compileMetadataFormulaMetadata(listDynamicUrls),
       getter: {
         supportsUpdates: Boolean(executeUpdate),
+        matchers: (matchers || []).map(matcher => matcher.toString()),
         ...getterRest,
-      }
+      },
     };
   }
 
   const {getter, ...rest} = syncTable;
-  const {execute, executeUpdate, ...getterRest} = getter;
+  const {execute, executeUpdate, matchers, ...getterRest} = getter;
   return {
     ...rest,
     getter: {
       supportsUpdates: Boolean(executeUpdate),
+      matchers: (matchers || []).map(matcher => matcher.toString()),
       ...getterRest,
     },
   };

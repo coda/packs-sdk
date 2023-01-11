@@ -449,6 +449,16 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
    * so an end user must have both sets of permissions.
    */
   readonly extraOAuthScopes?: string[];
+
+  /**
+   * A list of regular expressions that match URLs that the formula is capable of handling.
+   * As described in {@link makeFormula}, this is a discovery mechanism.
+   *
+   * This will replace the `matchers` property in {@link Format} in a future version.
+   */
+  readonly matchers?: string[];
+  // TODO(packs-dev): add the transformMatcher to parameters and use validation to make it required if
+  // more than one required parameter.
 }
 
 /**

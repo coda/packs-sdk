@@ -481,7 +481,7 @@ export enum TokenExchangeCredentialsLocation {
   /**
    * The credentials are passed in the Authorization header using the `Basic` scheme.
    */
-  AuthorizationHeader = 'AuthorizationHeader'
+  AuthorizationHeader = 'AuthorizationHeader',
 }
 
 /**
@@ -791,8 +791,12 @@ export interface Format {
    */
   instructions?: string;
   /**
+   * to be deprecated
+   *
    * A list of regular expressions that match URLs that the formula implementing this format
    * is capable of handling. As described in {@link Format}, this is a discovery mechanism.
+   *
+   * This will be replaced by the `matchers` property in {@link makeFormula} in a future version.
    */
   matchers?: RegExp[];
   /**
