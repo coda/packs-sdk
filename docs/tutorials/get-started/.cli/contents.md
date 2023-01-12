@@ -1,0 +1,6 @@
+- `.gitignore` - Git settings that prevent certain files from being checked in, such as your Coda credentials.
+- `node_modules` - The dependencies downloaded from NPM (standard for Node.js projects).
+- `pack.ts` - The core Pack definition, where all of the formulas, sync tables, and other building blocks are added.
+- `package-lock.json` - The versions of the dependencies downloaded from NPM (standard for Node.js projects).
+- `package.json` - The project's dependencies from NPM (standard for Node.js projects).
+- `tsconfig.json` - The TypeScript settings for the project (standard for TypeScript projects).
