@@ -36,9 +36,6 @@ The `coda` CLI uses the Coda API under the hood to upload your code, and likewis
 
 This will create a new file `.coda.json` in your working directory that contains the API token.
 
-??? warning "Don't check in .coda.json"
-    If you use a version control system you will likely want to make sure this file isn't check in, as the token within provides access to your account. For example, if using Git, add `.coda.json` to your [`.gitignore` file][gitignore].
-
 
 ### Create the Pack
 
@@ -134,7 +131,6 @@ You've built your fist Pack, congrats! 🎉 Now that you have some experience wi
 
 
 [template_pack]: https://github.com/coda/packs-examples/tree/main/examples/template
-[gitignore]: https://git-scm.com/docs/gitignore
 [coda_home]: https://coda.io/docs
 [cli]: ../../guides/development/cli.md
 [github_examples]: https://github.com/coda/packs-examples
