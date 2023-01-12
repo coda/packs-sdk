@@ -74,4 +74,5 @@ Your directory should now contain the following files:
 [libraries]: ../../guides/development/libraries.md
 [npm_install]: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
 [isolated_vm_requirements]: https://github.com/laverdet/isolated-vm#requirements
+[template_pack]: https://github.com/coda/packs-examples/tree/main/examples/template
 [rebuild]: ../../images/cli_rebuild.gif
