@@ -26,7 +26,7 @@ Make sure you have `node` and `npm` available on your machine. These two tools o
 
 ## Create a directory
 
-Installing the SDK and creating a Pack creates a lot of files, so you'll want to make sure you are working in a clean directory.
+Installing the SDK and creating a Pack creates multiple files, so you'll want to make sure you are working in a clean directory.
 
 ```sh
 mkdir my-pack
