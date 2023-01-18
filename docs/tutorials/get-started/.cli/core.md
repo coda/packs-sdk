@@ -64,7 +64,7 @@ Your new Pack is now available to use in all your docs, and you can install it j
 
 1. Open [Coda][coda_home] in your browser.
 
-1. Click the **+ New doc** button and select **Start with a blank page**.
+1. Click the **+ New doc** button and select **Start blank doc**.
 
 1. In your doc, click **Insert**, then **Packs**.
 2. Find your new Pack, **Hello World**, and click on it.

@@ -55,7 +55,7 @@ From you new repository click the button **Code**. In the resulting dropdown men
 
 ---
 
-It may take a few minutes for the codespace to fully initialize and install the dependencies. When it's complete you should see a `pack.ts` file in your codespace, and you should take a moment to read through it.
+It may take a few minutes for the codespace to fully initialize and install the dependencies. When it's complete you will see a `pack.ts` file in your codespace, and you should take a moment to read through it.
 
 
 ## Test the Pack
