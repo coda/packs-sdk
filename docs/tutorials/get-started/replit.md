@@ -25,7 +25,7 @@ A project in Replit is called a "repl", and to start you'll need to create one. 
 
 [Create repl][replit_from_github]{ .md-button .md-button--primary target="_blank" }
 
-It may take a few minutes for the repl to fully initialize. When it's complete you should see a `pack.ts` file in your repl, and you should take a moment to read through it.
+It may take a few minutes for the repl to fully initialize. When it's complete you will see a `pack.ts` file in your repl, and you should take a moment to read through it.
 
 
 ## Test the Pack
