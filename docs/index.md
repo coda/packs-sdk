@@ -35,11 +35,12 @@ Packs can be created for personal use, shared with a team, or published to the w
 <div class="landing-item" markdown>
 ## :octicons-stopwatch-16: Build your first Pack in minutes.
 
-Using Coda's Pack Studio you can author, build, and deploy your Pack all from your browser. Nothing to download or install.
-
-Our templates and examples make it easy to get started, and in minutes you'll have built your first Pack and installed it in a doc.
+Using Coda's Pack Studio you can write, build, and deploy your Pack all from your browser. Nothing to download or install.
 
 [Get started][get_started]{ .md-button .md-button--primary }
+
+Or for you power users, build a Pack using the `coda` command line tool on your [local machine][tutorial_cli], [GitHub :octicons-mark-github-16:][tutorial_github], [Gitpod :simple-gitpod:][tutorial_gitpod], or [Replit :simple-replit:][tutorial_replit].
+
 </div>
 
 <div class="landing-item" markdown>
@@ -89,7 +90,7 @@ Our passionate community of Pack makers and Coda experts can help answer your qu
 <div class="landing-item" markdown>
 ## :material-youtube: Grab the popcorn.
 
-In this snippet from a recent webinar we demonstrate how to build a Pack from scratch that retrieves your task list from Todoist :simple-todoist:. It was created in under 10 minutes and with less than 30 lines of code in the Pack Studio. 
+In this snippet from a recent webinar we demonstrate how to build a Pack from scratch that retrieves your task list from Todoist :simple-todoist:. It was created in under 10 minutes and with less than 30 lines of code in the Pack Studio.
 
 [Watch webinars][webinars]{ .md-button }
 </div>
@@ -121,3 +122,7 @@ Coda makers have been busy building Packs of all types, and many have published 
 [community]: https://community.coda.io/c/developers-central/making-packs/15
 [gallery]: https://coda.io/gallery?filter=packs
 [webinars]: tutorials/webinars.md
+[tutorial_cli]: tutorials/get-started/cli.md
+[tutorial_github]: tutorials/get-started/github.md
+[tutorial_gitpod]: tutorials/get-started/gitpod.md
+[tutorial_replit]: tutorials/get-started/replit.md
