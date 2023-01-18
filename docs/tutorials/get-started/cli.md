@@ -58,11 +58,26 @@ cd my-pack
     The `coda init` command creates the basic skeleton of a Pack based off of our [template Pack][template_pack]. It's not required, but it's a fast way to get started.
 
 
-### Project contents
+When it's complete you should see a `pack.ts` file in your directory.
 
-Your directory should now contain the following files:
 
---8<-- "tutorials/get-started/.cli/contents.md"
+## Add code to the Pack
+
+Now that you've got the basic structure of a Pack it's time to add some code. In this tutorial you'll be creating a simple "Hello World" Pack with a single formula.
+
+Replace the contents of `pack.ts` with the following code, which adds a "Hello" formula:
+
+=== "pack.ts"
+    ```ts
+    --8<-- "samples/packs/hello_world/hello_world.ts"
+    ```
+
+Take a moment to read through the code and comments and get an understanding of how a formula is structured.
+
+
+## Test the Pack
+
+--8<-- "tutorials/get-started/.cli/test.md"
 
 
 --8<-- "tutorials/get-started/.cli/core.md"

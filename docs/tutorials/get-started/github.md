@@ -1,12 +1,12 @@
 ---
-nav: With GitHub Codespaces
+nav: With GitHub
 description: Build your first Pack using GitHub Codespacs and the CLI.
 icon: octicons-mark-github-16
 ---
 
 # Get started with GitHub Codespaces
 
-GitHub is a popular tool for storing and managing code, and their [Codespaces][github_codespaces] offering allows you to edit and run that code in a hosted environment. Using GitHub Codespaces to build a Pack gives you all of the same the power and flexibility that comes with building on your local machine, but without needing to worry about installing tooling or dependencies.
+GitHub is a popular tool for storing and managing code, and their [Codespaces][github_codespaces] offering allows you to write and run that code in a hosted environment. Using GitHub Codespaces to build a Pack gives you all of the same the power and flexibility that comes with building on your local machine, but without needing to worry about installing tooling or dependencies.
 
 !!! info
     While GitHub Codespaces comes with a generous free tier, be aware that it is a paid offering at higher usage levels.
@@ -19,7 +19,7 @@ You will need a GitHub account in order to create a Pack using Codespaces. If yo
 --8<-- "tutorials/get-started/.cli/before.md"
 
 
-## Create codespace
+## Create a codespace
 
 <section class="tutorial-row" markdown>
 <div markdown>
@@ -55,17 +55,12 @@ From you new repository click the button **Code**. In the resulting dropdown men
 
 ---
 
-It may take a few minutes for the codespace to fully initialize and install the dependencies.
+It may take a few minutes for the codespace to fully initialize and install the dependencies. When it's complete you should see a `pack.ts` file in your codespace, and you should take a moment to read through it.
 
 
-### Project contents
+## Test the Pack
 
-Your codespace will contain the following files:
-
---8<-- "tutorials/get-started/.cli/contents.md"
-- `test/pack_test.ts` - A suite of unit tests that ensure the Pack works as expected. You can run them using `npm run test`.
-
-Other files in the project are not required to build a Pack and you can remove or adapt them as needed.
+--8<-- "tutorials/get-started/.cli/test.md"
 
 
 --8<-- "tutorials/get-started/.cli/core.md"

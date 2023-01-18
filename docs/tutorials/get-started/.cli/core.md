@@ -1,14 +1,3 @@
-## Test the Pack
-
-One of the advantages of developing with the CLI is that you can test your Pack code without having to upload it to Coda's servers. Let's test the `Hello` formula in the Pack:
-
-```shell
-npx coda execute pack.ts Hello "World"
-```
-
-If everything works correctly this should output `Hello World!`.
-
-
 ## Upload the Pack
 
 So far everything you've built only exists on your local machine, and Coda has no knowledge of it. To see it working in a real doc you'll need to upload your Pack to Coda's servers.
@@ -26,7 +15,7 @@ The `coda` CLI uses the Coda API under the hood to upload your code, and likewis
 
 1. When prompted to create a new API token, type `y` and hit enter.
 
-    This will open your browser to the API token creation dialog.
+    This will open your browser to the API token creation dialog. If your browser fails to open, [click this link][coda_api_token]{ target="_blank" } instead.
 
 1. In the **Name** field enter "Hello World Pack" and then click **Generate API token**.
 
@@ -136,3 +125,4 @@ You've built your fist Pack, congrats! 🎉 Now that you have some experience wi
 [github_examples]: https://github.com/coda/packs-examples
 [samples]: ../../samples/topic/formula.md
 [guides]: ../../guides/blocks/formulas.md
+[coda_api_token]: https://coda.io/account?openDialog=CREATE_API_TOKEN&scopeType=pack#apiSettings
