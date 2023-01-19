@@ -1,0 +1,34 @@
+# Configuration file for the cSpell spell checker.
+version: 0.2
+language: en
+
+# List of additional words to add to the dictionary.
+words:
+  - Codans
+  - automations
+  - Precanned
+  - embeddable
+  - vararg
+  - templating
+  - typeof
+  - PKCE
+  - prepopulated
+  - Iframely
+  - sandboxed
+  - sandboxing
+  - Asana
+
+# Patterns in the content to ignore.
+ignoreRegExpList:
+  # Code blocks.
+  - "```(.|\n)*```"
+  # Inline code.
+  - "`.*`"
+  # Python macros.
+  - "{%.*%}"
+  # HTML tags.
+  - "<.*>"
+  # Icon references.
+  - ":.*:"
+  # Icons in page metadata.
+  - "^icon: .*"
