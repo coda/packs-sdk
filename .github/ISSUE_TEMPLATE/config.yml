@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Coda Community Forum
+    url: https://community.coda.io/c/15
+    about: Please ask and answer questions here.
+  - name: Coda Support
+    url: https://help.coda.io/
+    about: Coda's support site.
+  - name: Coda Security Bug Bounty
+    url: https://hackerone.com/coda_bbp
+    about: Please report security issues here.
