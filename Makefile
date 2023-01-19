@@ -222,6 +222,13 @@ view-docs:
 		PYTHONPATH=${ROOTDIR} PIPENV_IGNORE_VIRTUALENVS=1 MK_DOCS_SITE_URL=http://localhost:8000/packs-sdk MK_DOCS_GENERATE_CARDS=false pipenv run mkdocs serve; \
 	fi
 
+.PHONY: optimize-images
+optimize-images:
+	# Compress pngs.
+	npx sharp-cli -i docs/images/*.png -o docs/images/ --optimize
+	# Convert animated gifs to webp.
+	npx sharp-cli -i docs/images/*.gif -o docs/images/ --animated --optimize --limitInputPixels 9999999999 --format webp resize 800
+
 ###############################################################################
 ### Deployment of documentation ###
 

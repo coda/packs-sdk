@@ -21,7 +21,7 @@ Packs that support per-user authentication require some additional setup. Users 
 
 The listing for the Pack will display a **Sign in to install** button in place of the usual **Install** button. Upon clicking it the user will immediately be launched into a sign-in flow, which varies depending on the type of authentication used and the service the user is connecting to. After the sign-in flow is complete Coda will ask the user if that connected account should be shared with other users in the same doc.
 
-<img src="../../../images/auth_sign_in.gif" class="screenshot" alt="Sign-in when installing a Pack with authentication">
+<img src="../../../images/auth_sign_in.webp" class="screenshot" alt="Sign-in when installing a Pack with authentication">
 
 Users can sign in to additional accounts and change their sharing settings from the **Settings** tab of the Pack's side panel. Accounts can be reused across docs, and  users can manage all of their connected accounts on the [Account settings][account_settings] page.
 

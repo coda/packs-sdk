@@ -90,4 +90,4 @@ Take a moment to read through the code and comments and get an understanding of 
 [npm_install]: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
 [isolated_vm_requirements]: https://github.com/laverdet/isolated-vm#requirements
 [template_pack]: https://github.com/coda/packs-examples/tree/main/examples/template
-[rebuild]: ../../images/cli_rebuild.gif
+[rebuild]: ../../images/cli_rebuild.webp

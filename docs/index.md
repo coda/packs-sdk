@@ -23,7 +23,7 @@ Packs can be created for personal use, shared with a team, or published to the w
 </div>
 
 <div class="landing-item" markdown>
-![Packs usage demo](images/home_demo.gif)
+![Packs usage demo](images/home_demo.webp)
 </div>
 
 </section>
@@ -44,7 +44,7 @@ Or for you power users, build a Pack using the `coda` command line tool on your 
 </div>
 
 <div class="landing-item" markdown>
-![Pack building demo](images/web_ide_build.gif)
+![Pack building demo](images/web_ide_build.webp)
 </div>
 
 </section>
