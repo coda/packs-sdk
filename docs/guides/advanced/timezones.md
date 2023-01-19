@@ -1,6 +1,7 @@
 ---
 nav: Timezones
 description: Work with dates and times across the various timezone contexts in a Pack.
+cSpell:words: Luxon
 ---
 
 # Timezones in Coda

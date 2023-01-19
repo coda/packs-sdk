@@ -17,7 +17,7 @@ definition.
 
 All function-like behavior in a pack is ultimately implemented using formulas, like you would
 define using [makeFormula](core.makeFormula.md). That is, a formula with a name, description, parameter list,
-and an `execute` function body. This includes supporting utilities like paramter autocomplete functions.
+and an `execute` function body. This includes supporting utilities like parameter autocomplete functions.
 This wrapper simply adds the surrounding boilerplate for a given JavaScript function so that
 it is shaped like a Coda formula to be used at runtime.
 

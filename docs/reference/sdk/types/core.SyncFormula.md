@@ -12,7 +12,7 @@ search:
 
 The result of defining the formula that implements a sync table.
 
-There is no need to use this type directly. You provid a [SyncFormulaDef](../interfaces/core.SyncFormulaDef.md) as an
+There is no need to use this type directly. You provide a [SyncFormulaDef](../interfaces/core.SyncFormulaDef.md) as an
 input to [makeSyncTable](../functions/core.makeSyncTable.md) which outputs definitions of this type.
 
 #### Type parameters

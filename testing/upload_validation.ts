@@ -991,7 +991,7 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
             propertyValueIsPath = true;
           }
 
-          const propertyIdentiferDisplay = propertyValueIsPath
+          const propertyIdentifierDisplay = propertyValueIsPath
             ? `"${propertyKey}" path`
             : `"${propertyKey}" field name`;
 
@@ -999,7 +999,7 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
             context.addIssue({
               code: z.ZodIssueCode.custom,
               path: objectPath,
-              message: `The ${propertyIdentiferDisplay} "${propertyValue}" does not exist in the "properties" object.`,
+              message: `The ${propertyIdentifierDisplay} "${propertyValue}" does not exist in the "properties" object.`,
             });
             return;
           }
@@ -1008,7 +1008,7 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
             context.addIssue({
               code: z.ZodIssueCode.custom,
               path: objectPath,
-              message: `The ${propertyIdentiferDisplay} "${propertyValue}" ${invalidSchemaMessage}`,
+              message: `The ${propertyIdentifierDisplay} "${propertyValue}" ${invalidSchemaMessage}`,
             });
             return;
           }

@@ -63,7 +63,7 @@ Error.name
 
 ▸ `Static` **isMissingScopesError**(`err`): err is MissingScopesError
 
-Returns if the error is an instance of MissingScopesError. Note that instanceof may not work.
+Returns if the error is an instance of MissingScopesError. Note that `instanceof` may not work.
 
 #### Parameters
 

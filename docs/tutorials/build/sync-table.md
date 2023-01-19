@@ -4,6 +4,7 @@ description: Learn how to build a sync table of external data.
 icon: material/table-sync
 hide:
 - toc
+cSpell:words: Gutendex gutendex
 ---
 
 # Learn to build a sync table

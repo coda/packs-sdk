@@ -10,4 +10,4 @@ search:
 
 Ƭ **ParamDefs**: [[`ParamDef`](../interfaces/core.ParamDef.md)<`UnionType`\>, ...ParamDef<UnionType\>[]] \| []
 
-The type for the complete set of parameter definitions for a fomrula.
+The type for the complete set of parameter definitions for a formula.

@@ -75,7 +75,7 @@ ___
 
 • `Optional` **ignoreRedirects**: `boolean`
 
-If true, will immediatey return a response when encountering an HTTP 301
+If true, will immediately return a response when encountering an HTTP 301
 You may inspect the `Location` header of the response to observe the indicated redirect URL.
 
 ___

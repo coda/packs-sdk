@@ -27,7 +27,7 @@ The structure largely follows https://developer.mozilla.org/en-US/docs/Web/API/R
 The body of the response.
 
 If the response contains JSON data, either because the Content-Type header is application/json
-or if the data is JSON-parseable, this will be a parsed JavaScript object.
+or if the data is JSON-parsable, this will be a parsed JavaScript object.
 Similarly, if the response headers are text/xml or application/xml, this will be a parsed
 JavaScript object using the `xml2js` library.
 
