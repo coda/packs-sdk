@@ -62,7 +62,7 @@ class StatusCodeError extends Error {
     constructor(statusCode, body, options, response) {
         super(`${statusCode} - ${JSON.stringify(body)}`);
         /**
-         * The name of the error, for identiciation purposes.
+         * The name of the error, for identification purposes.
          */
         this.name = 'StatusCodeError';
         this.statusCode = statusCode;
@@ -78,7 +78,7 @@ class StatusCodeError extends Error {
         }
         this.response = { ...response, body: responseBody };
     }
-    /** Returns if the error is an instance of StatusCodeError. Note that instanceof may not work. */
+    /** Returns if the error is an instance of StatusCodeError. Note that `instanceof` may not work. */
     static isStatusCodeError(err) {
         return 'name' in err && err.name === StatusCodeError.name;
     }
@@ -123,7 +123,7 @@ class MissingScopesError extends Error {
          */
         this.name = 'MissingScopesError';
     }
-    /** Returns if the error is an instance of MissingScopesError. Note that instanceof may not work. */
+    /** Returns if the error is an instance of MissingScopesError. Note that `instanceof` may not work. */
     static isMissingScopesError(err) {
         return 'name' in err && err.name === MissingScopesError.name;
     }
@@ -471,7 +471,7 @@ exports.makeFormula = makeFormula;
  *
  * All function-like behavior in a pack is ultimately implemented using formulas, like you would
  * define using {@link makeFormula}. That is, a formula with a name, description, parameter list,
- * and an `execute` function body. This includes supporting utilities like paramter autocomplete functions.
+ * and an `execute` function body. This includes supporting utilities like parameter autocomplete functions.
  * This wrapper simply adds the surrounding boilerplate for a given JavaScript function so that
  * it is shaped like a Coda formula to be used at runtime.
  */

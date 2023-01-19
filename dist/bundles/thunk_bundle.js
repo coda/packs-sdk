@@ -6566,7 +6566,7 @@ module.exports = (() => {
     constructor(statusCode, body, options, response) {
       super(`${statusCode} - ${JSON.stringify(body)}`);
       /**
-       * The name of the error, for identiciation purposes.
+       * The name of the error, for identification purposes.
        */
       this.name = "StatusCodeError";
       this.statusCode = statusCode;
@@ -6579,7 +6579,7 @@ module.exports = (() => {
       }
       this.response = { ...response, body: responseBody };
     }
-    /** Returns if the error is an instance of StatusCodeError. Note that instanceof may not work. */
+    /** Returns if the error is an instance of StatusCodeError. Note that `instanceof` may not work. */
     static isStatusCodeError(err) {
       return "name" in err && err.name === StatusCodeError.name;
     }
@@ -6594,7 +6594,7 @@ module.exports = (() => {
        */
       this.name = "MissingScopesError";
     }
-    /** Returns if the error is an instance of MissingScopesError. Note that instanceof may not work. */
+    /** Returns if the error is an instance of MissingScopesError. Note that `instanceof` may not work. */
     static isMissingScopesError(err) {
       return "name" in err && err.name === MissingScopesError.name;
     }
