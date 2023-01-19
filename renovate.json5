@@ -1,0 +1,22 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "local>coda/renovate-config"
+  ],
+
+  {
+    "packageRules": [
+      // Node-fetch 3.x is ESM only; 2.x will continue to receive updates.
+      {
+        "packageNames": ["node-fetch"],
+        "allowedVersions": "<3.0.0"
+      },
+
+      // yn 5.X and above is ESM only.
+      {
+        "packageNames": ["yn"],
+        "allowedVersions": "<5.0.0"
+      },
+    ]
+  }
+}
