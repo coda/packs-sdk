@@ -40,4 +40,4 @@ It may take a few minutes for the workspace to fully initialize. When it's compl
 [gitpod_signup]: https://gitpod.io/workspaces/
 [gitpod_from_github]: https://gitpod.io/#https://github.com/coda/packs-starter
 [github_packs_starter]: https://github.com/coda/packs-starter
-[rebuild]: ../../images/cli_rebuild.gif
+[rebuild]: ../../images/cli_rebuild.webp

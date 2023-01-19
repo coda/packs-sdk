@@ -658,4 +658,4 @@ Now that you have an understanding of how to build formulas, here are some more 
 [parameters]: ../../guides/basics/parameters/index.md
 [data_types]: ../../guides/basics/data-types.md
 [javascript_key_value]: https://javascript.info/object
-[slash_gif]: ../../images/tutorial_formula_slash.gif
+[slash_gif]: ../../images/tutorial_formula_slash.webp

@@ -74,5 +74,5 @@ It may take a few minutes for the codespace to fully initialize and install the 
 [github_new]: https://github.com/new
 [github_use_template]: https://github.com/coda/packs-starter/generate
 [github_packs_starter]: https://github.com/coda/packs-starter
-[rebuild]: ../../images/cli_rebuild.gif
+[rebuild]: ../../images/cli_rebuild.webp
 [github_codespace_template]: https://docs.github.com/en/codespaces/developing-in-codespaces/creating-a-codespace-from-a-template#publishing-to-a-repository-on-github

@@ -91,9 +91,9 @@ You've built your fist Pack, congrats! 🎉 Now that you have some experience wi
 [coda_sign_up]: https://coda.io/signup
 [hc_doc_maker]: https://help.coda.io/en/articles/3388781-members-and-roles
 [coda_home]: https://coda.io/docs
-[web_ide_navigate]: ../../images/web_ide_navigate.gif
-[web_ide_build]: ../../images/web_ide_build.gif
+[web_ide_navigate]: ../../images/web_ide_navigate.webp
+[web_ide_build]: ../../images/web_ide_build.webp
 [samples_hello_world]: ../../samples/full/hello-world.md
-[rebuild]: ../../images/web_ide_rebuild.gif
+[rebuild]: ../../images/web_ide_rebuild.webp
 [samples]: ../../samples/topic/formula.md
 [guides]: ../../guides/blocks/formulas.md

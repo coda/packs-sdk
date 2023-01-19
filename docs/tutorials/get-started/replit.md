@@ -46,4 +46,4 @@ If everything works correctly this should output `Hello World!`.
 [replit_signup]: https://replit.com/signup
 [replit_from_github]: https://replit.com/new/github/coda/packs-starter
 [github_packs_starter]: https://github.com/coda/packs-starter
-[rebuild]: ../../images/cli_rebuild.gif
+[rebuild]: ../../images/cli_rebuild.webp
