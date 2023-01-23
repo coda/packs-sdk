@@ -75,7 +75,7 @@ export interface StatusCodeErrorResponse {
  */
 export declare class StatusCodeError extends Error {
     /**
-     * The name of the error, for identiciation purposes.
+     * The name of the error, for identification purposes.
      */
     name: string;
     /**
@@ -100,7 +100,7 @@ export declare class StatusCodeError extends Error {
     response: StatusCodeErrorResponse;
     /** @hidden */
     constructor(statusCode: number, body: any, options: FetchRequest, response: StatusCodeErrorResponse);
-    /** Returns if the error is an instance of StatusCodeError. Note that instanceof may not work. */
+    /** Returns if the error is an instance of StatusCodeError. Note that `instanceof` may not work. */
     static isStatusCodeError(err: any): err is StatusCodeError;
 }
 /**
@@ -140,7 +140,7 @@ export declare class MissingScopesError extends Error {
     name: string;
     /** @hidden */
     constructor(message?: string);
-    /** Returns if the error is an instance of MissingScopesError. Note that instanceof may not work. */
+    /** Returns if the error is an instance of MissingScopesError. Note that `instanceof` may not work. */
     static isMissingScopesError(err: any): err is MissingScopesError;
 }
 /**
@@ -193,7 +193,7 @@ export interface DynamicSyncTableDef<K extends string, L extends string, ParamDe
  * can be invoked quickly. The end result of a sync is the concatenation of the results from
  * each individual invocation.
  *
- * To instruct the syncer to fetch a subsequent result page, return a `Continuation` that
+ * To instruct Coda to fetch a subsequent result page, return a `Continuation` that
  * describes which page of results to fetch next. The continuation will be passed verbatim
  * as an input to the subsequent invocation of the sync formula.
  *
@@ -501,7 +501,7 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
 /**
  * The result of defining the formula that implements a sync table.
  *
- * There is no need to use this type directly. You provid a {@link SyncFormulaDef} as an
+ * There is no need to use this type directly. You provide a {@link SyncFormulaDef} as an
  * input to {@link makeSyncTable} which outputs definitions of this type.
  */
 export declare type SyncFormula<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>> = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
@@ -746,7 +746,7 @@ export declare type MetadataFormulaDef = MetadataFormula | MetadataFunction;
  *
  * All function-like behavior in a pack is ultimately implemented using formulas, like you would
  * define using {@link makeFormula}. That is, a formula with a name, description, parameter list,
- * and an `execute` function body. This includes supporting utilities like paramter autocomplete functions.
+ * and an `execute` function body. This includes supporting utilities like parameter autocomplete functions.
  * This wrapper simply adds the surrounding boilerplate for a given JavaScript function so that
  * it is shaped like a Coda formula to be used at runtime.
  */

@@ -847,7 +847,7 @@ export interface Identity extends IdentityDefinition {
 }
 
 /**
- * An identifer for a schema property for specifying labels along with the reference to the property.
+ * An identifier for a schema property for specifying labels along with the reference to the property.
  * This is useful for specifying a label for a property reference that uses a json path, where the
  * label of the underlying property might not be descriptive enough at the top-level object.
  */
@@ -895,7 +895,7 @@ export type ObjectSchemaPathProperties = Pick<
 export interface ObjectSchemaDefinition<K extends string, L extends string> extends BaseSchema {
   /** Identifies this schema as an object schema. */
   type: ValueType.Object;
-  /** Definintion of the key-value pairs in this object. */
+  /** Definition of the key-value pairs in this object. */
   properties: ObjectSchemaProperties<K | L>;
   /** @deprecated Use {@link ObjectSchemaDefinition.idProperty} */
   id?: K;

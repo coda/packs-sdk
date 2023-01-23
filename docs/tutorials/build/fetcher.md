@@ -4,6 +4,7 @@ description: Learn how to call an external API from within a Pack.
 icon: material/api
 hide:
 - toc
+cSpell:words: exchangerate
 ---
 
 # Learn to call an API

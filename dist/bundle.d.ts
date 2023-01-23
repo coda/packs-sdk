@@ -771,7 +771,7 @@ export interface Identity extends IdentityDefinition {
 	packId: number;
 }
 /**
- * An identifer for a schema property for specifying labels along with the reference to the property.
+ * An identifier for a schema property for specifying labels along with the reference to the property.
  * This is useful for specifying a label for a property reference that uses a json path, where the
  * label of the underlying property might not be descriptive enough at the top-level object.
  */
@@ -805,7 +805,7 @@ export declare type PropertyIdentifier<K extends string = string> = K | string |
 export interface ObjectSchemaDefinition<K extends string, L extends string> extends BaseSchema {
 	/** Identifies this schema as an object schema. */
 	type: ValueType.Object;
-	/** Definintion of the key-value pairs in this object. */
+	/** Definition of the key-value pairs in this object. */
 	properties: ObjectSchemaProperties<K | L>;
 	/** @deprecated Use {@link ObjectSchemaDefinition.idProperty} */
 	id?: K;
@@ -1382,7 +1382,7 @@ export interface OptionalParamDef<T extends UnionType> extends ParamDef<T> {
 	optional: true;
 }
 /**
- * The type for the complete set of parameter definitions for a fomrula.
+ * The type for the complete set of parameter definitions for a formula.
  */
 export declare type ParamDefs = [
 	ParamDef<UnionType>,
@@ -1394,7 +1394,7 @@ export declare type ParamsList = Array<ParamDef<UnionType>>;
 export declare type TypeOfMap<T extends UnionType> = T extends Type ? TypeMap[T] : T extends ArrayType<infer V> ? T extends SparseArrayType<infer V> ? Array<TypeMap[V] | undefined> : Array<TypeMap[V]> : never;
 /**
  * The type for the set of argument values that are passed to formula's `execute` function, based on
- * the parameter defintion for that formula.
+ * the parameter definition for that formula.
  */
 export declare type ParamValues<ParamDefsT extends ParamDefs> = {
 	[K in keyof ParamDefsT]: ParamDefsT[K] extends OptionalParamDef<infer S> ? TypeOfMap<S> | undefined : ParamDefsT[K] extends ParamDef<infer T> ? TypeOfMap<T> : never;
@@ -1569,7 +1569,7 @@ export interface FetchRequest {
 	 */
 	disableAuthentication?: boolean;
 	/**
-	 * If true, will immediatey return a response when encountering an HTTP 301
+	 * If true, will immediately return a response when encountering an HTTP 301
 	 * You may inspect the `Location` header of the response to observe the indicated redirect URL.
 	 */
 	ignoreRedirects?: boolean;
@@ -1586,7 +1586,7 @@ export interface FetchResponse<T extends any = any> {
 	 * The body of the response.
 	 *
 	 * If the response contains JSON data, either because the Content-Type header is application/json
-	 * or if the data is JSON-parseable, this will be a parsed JavaScript object.
+	 * or if the data is JSON-parsable, this will be a parsed JavaScript object.
 	 * Similarly, if the response headers are text/xml or application/xml, this will be a parsed
 	 * JavaScript object using the `xml2js` library.
 	 *
@@ -2005,7 +2005,7 @@ export interface StatusCodeErrorResponse {
  */
 export declare class StatusCodeError extends Error {
 	/**
-	 * The name of the error, for identiciation purposes.
+	 * The name of the error, for identification purposes.
 	 */
 	name: string;
 	/**
@@ -2030,7 +2030,7 @@ export declare class StatusCodeError extends Error {
 	response: StatusCodeErrorResponse;
 	/** @hidden */
 	constructor(statusCode: number, body: any, options: FetchRequest, response: StatusCodeErrorResponse);
-	/** Returns if the error is an instance of StatusCodeError. Note that instanceof may not work. */
+	/** Returns if the error is an instance of StatusCodeError. Note that `instanceof` may not work. */
 	static isStatusCodeError(err: any): err is StatusCodeError;
 }
 /**
@@ -2070,7 +2070,7 @@ export declare class MissingScopesError extends Error {
 	name: string;
 	/** @hidden */
 	constructor(message?: string);
-	/** Returns if the error is an instance of MissingScopesError. Note that instanceof may not work. */
+	/** Returns if the error is an instance of MissingScopesError. Note that `instanceof` may not work. */
 	static isMissingScopesError(err: any): err is MissingScopesError;
 }
 /**
@@ -2123,7 +2123,7 @@ export interface DynamicSyncTableDef<K extends string, L extends string, ParamDe
  * can be invoked quickly. The end result of a sync is the concatenation of the results from
  * each individual invocation.
  *
- * To instruct the syncer to fetch a subsequent result page, return a `Continuation` that
+ * To instruct Coda to fetch a subsequent result page, return a `Continuation` that
  * describes which page of results to fetch next. The continuation will be passed verbatim
  * as an input to the subsequent invocation of the sync formula.
  *
@@ -2377,7 +2377,7 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
 /**
  * The result of defining the formula that implements a sync table.
  *
- * There is no need to use this type directly. You provid a {@link SyncFormulaDef} as an
+ * There is no need to use this type directly. You provide a {@link SyncFormulaDef} as an
  * input to {@link makeSyncTable} which outputs definitions of this type.
  */
 export declare type SyncFormula<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>> = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
@@ -2607,7 +2607,7 @@ export declare type MetadataFormulaDef = MetadataFormula | MetadataFunction;
  *
  * All function-like behavior in a pack is ultimately implemented using formulas, like you would
  * define using {@link makeFormula}. That is, a formula with a name, description, parameter list,
- * and an `execute` function body. This includes supporting utilities like paramter autocomplete functions.
+ * and an `execute` function body. This includes supporting utilities like parameter autocomplete functions.
  * This wrapper simply adds the surrounding boilerplate for a given JavaScript function so that
  * it is shaped like a Coda formula to be used at runtime.
  */
@@ -3213,7 +3213,7 @@ export interface BaseAuthentication {
 	postSetup?: PostSetup[];
 	/**
 	 * Which domain(s) should get auth credentials, when a pack is configured with multiple domains.
-	 * Packs configured with only one domain or with requiredsEndpointUrl set to true can omit this.
+	 * Packs configured with only one domain or with requiresEndpointUrl set to true can omit this.
 	 *
 	 * Using multiple authenticated network domains is uncommon and requires Coda approval.
 	 */
@@ -3438,7 +3438,7 @@ export interface WebBasicAuthentication extends BaseAuthentication {
 	/** Identifies this as WebBasic authentication. */
 	type: AuthenticationType.WebBasic;
 	/**
-	 * Configuration for labels to show in the UI when the user sets up a new acount.
+	 * Configuration for labels to show in the UI when the user sets up a new account.
 	 */
 	uxConfig?: {
 		/**

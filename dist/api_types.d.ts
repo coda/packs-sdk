@@ -256,7 +256,7 @@ export interface OptionalParamDef<T extends UnionType> extends ParamDef<T> {
 /** @hidden */
 export declare type ParamArgs<T extends UnionType> = Omit<ParamDef<T>, 'description' | 'name' | 'type'>;
 /**
- * The type for the complete set of parameter definitions for a fomrula.
+ * The type for the complete set of parameter definitions for a formula.
  */
 export declare type ParamDefs = [ParamDef<UnionType>, ...Array<ParamDef<UnionType>>] | [];
 /** @hidden */
@@ -264,7 +264,7 @@ export declare type ParamsList = Array<ParamDef<UnionType>>;
 declare type TypeOfMap<T extends UnionType> = T extends Type ? TypeMap[T] : T extends ArrayType<infer V> ? T extends SparseArrayType<infer V> ? Array<TypeMap[V] | undefined> : Array<TypeMap[V]> : never;
 /**
  * The type for the set of argument values that are passed to formula's `execute` function, based on
- * the parameter defintion for that formula.
+ * the parameter definition for that formula.
  */
 export declare type ParamValues<ParamDefsT extends ParamDefs> = {
     [K in keyof ParamDefsT]: ParamDefsT[K] extends OptionalParamDef<infer S> ? TypeOfMap<S> | undefined : ParamDefsT[K] extends ParamDef<infer T> ? TypeOfMap<T> : never;
@@ -432,7 +432,7 @@ export interface FetchRequest {
      */
     disableAuthentication?: boolean;
     /**
-     * If true, will immediatey return a response when encountering an HTTP 301
+     * If true, will immediately return a response when encountering an HTTP 301
      * You may inspect the `Location` header of the response to observe the indicated redirect URL.
      */
     ignoreRedirects?: boolean;
@@ -449,7 +449,7 @@ export interface FetchResponse<T extends any = any> {
      * The body of the response.
      *
      * If the response contains JSON data, either because the Content-Type header is application/json
-     * or if the data is JSON-parseable, this will be a parsed JavaScript object.
+     * or if the data is JSON-parsable, this will be a parsed JavaScript object.
      * Similarly, if the response headers are text/xml or application/xml, this will be a parsed
      * JavaScript object using the `xml2js` library.
      *

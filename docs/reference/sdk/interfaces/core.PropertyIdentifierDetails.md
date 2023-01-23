@@ -8,7 +8,7 @@ search:
 
 [core](../modules/core.md).PropertyIdentifierDetails
 
-An identifer for a schema property for specifying labels along with the reference to the property.
+An identifier for a schema property for specifying labels along with the reference to the property.
 This is useful for specifying a label for a property reference that uses a json path, where the
 label of the underlying property might not be descriptive enough at the top-level object.
 

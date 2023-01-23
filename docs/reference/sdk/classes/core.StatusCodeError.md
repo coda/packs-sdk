@@ -42,7 +42,7 @@ ___
 
 • **name**: `string` = `'StatusCodeError'`
 
-The name of the error, for identiciation purposes.
+The name of the error, for identification purposes.
 
 #### Overrides
 
@@ -78,7 +78,7 @@ The HTTP status code, e.g. `404`.
 
 ▸ `Static` **isStatusCodeError**(`err`): err is StatusCodeError
 
-Returns if the error is an instance of StatusCodeError. Note that instanceof may not work.
+Returns if the error is an instance of StatusCodeError. Note that `instanceof` may not work.
 
 #### Parameters
 

@@ -2,6 +2,7 @@
 nav: With Replit
 description: Build your first Pack using Replit and the CLI.
 icon: simple-replit
+cSpell:words: Replit repl
 ---
 
 # Get started with Replit

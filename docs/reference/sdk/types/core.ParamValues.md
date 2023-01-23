@@ -11,7 +11,7 @@ search:
 Ƭ **ParamValues**<`ParamDefsT`\>: { [K in keyof ParamDefsT]: ParamDefsT[K] extends OptionalParamDef<infer S\> ? TypeOfMap<S\> \| undefined : ParamDefsT[K] extends ParamDef<infer T\> ? TypeOfMap<T\> : never } & `any`[]
 
 The type for the set of argument values that are passed to formula's `execute` function, based on
-the parameter defintion for that formula.
+the parameter definition for that formula.
 
 #### Type parameters
 

@@ -185,7 +185,7 @@ ___
 
 • **properties**: [`ObjectSchemaProperties`](../types/core.ObjectSchemaProperties.md)<`K` \| `L`\>
 
-Definintion of the key-value pairs in this object.
+Definition of the key-value pairs in this object.
 
 ___
 

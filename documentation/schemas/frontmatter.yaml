@@ -24,8 +24,12 @@ properties:
   # Custom: Note shown to page editors, not rendered at all.
   note:
     type: string
+  # Custom: Add new dictionary words to use for spell checking the page.
+  cSpell:words:
+    type: string
+
 
 required:
-  - description  
+  - description
 
 additionalProperties: false
