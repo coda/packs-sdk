@@ -770,9 +770,10 @@
       "type": "SdkReferencePath",
       "url": "/guides/blocks/cards"
     },
+    "status": "Beta",
     "exampleFooterLink": "https://coda.io/packs/build/latest/guides/blocks/cards",
     "learnMoreLink": "/guides/blocks/cards",
-    "content": "A card is an visual way to display key information about an item, typically represented by a URL in an external application.",
+    "content": "A card is an visual way to display key information about an item, typically represented by a URL in an external application.\n\n🚧 This feature is currently only available to a limited group of beta testers.",
     "exampleSnippets": [
       {
         "name": "Template",

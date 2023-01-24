@@ -1,5 +1,5 @@
 ---
-nav: Cards
+nav: Cards 🚧
 description: Samples that show how to create cards to preview content.
 icon: material/card-text
 ---
@@ -7,6 +7,8 @@ icon: material/card-text
 # Card samples
 
 A card is an visual way to display key information about an item, typically represented by a URL in an external application.
+
+🚧 This feature is currently only available to a limited group of beta testers.
 
 
 [Learn More](../../../guides/blocks/cards){ .md-button }
