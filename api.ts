@@ -65,7 +65,7 @@ export {FetchRequest} from './api_types';
  * ```
  *
  * @see
- * - [Guide: Handling errors](https://coda.io/packs/build/latest/guides/advanced/errors/#user-visible-errors)
+ * - [Handling errors - User-visible errors](https://coda.io/packs/build/latest/guides/advanced/errors/#user-visible-errors)
  */
 export class UserVisibleError extends Error {
   /** @hidden */
