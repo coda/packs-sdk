@@ -23,7 +23,7 @@ if (!url.startsWith("https://")) {
 
 **`See`**
 
-- [Guide: Handling errors]({{ config.site_url }}guides/advanced/errors/#user-visible-errors)
+- [Handling errors - User-visible errors]({{ config.site_url }}guides/advanced/errors/#user-visible-errors)
 
 ## Hierarchy
 
