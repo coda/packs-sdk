@@ -15,6 +15,7 @@ A formula is a JavaScript function that is exposed as a Coda formula, that you c
 The basic structure of a formula. This sample takes in a single string parameter and returns a string result.
 
 ```ts
+{% raw %}
 pack.addFormula({
   name: "<User-visible name of formula>",
   description: "<Help text for the formula>",
@@ -31,11 +32,13 @@ pack.addFormula({
     return "Hello " + param;
   },
 });
+{% endraw %}
 ```
 ## Image result
 A formula that returns an image. This sample gets a random cat image with an optional text overlay or filter applied.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -80,11 +83,13 @@ pack.addFormula({
 
 // Allow the pack to make requests to Cat-as-a-service API.
 pack.addNetworkDomain("cataas.com");
+{% endraw %}
 ```
 ## Rich data result
 A formula that returns rich data (a schema). This sample gets information about a task in the Todoist application.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -152,11 +157,13 @@ pack.setUserAuthentication({
   type: coda.AuthenticationType.HeaderBearerToken,
   instructionsUrl: "https://todoist.com/app/settings/integrations",
 });
+{% endraw %}
 ```
 ## With examples
 A formula that includes examples of how to use it. This sample formats text to look like screaming, with a optional parameters to override how many exclamation points to use and an alternate character to use.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -194,5 +201,6 @@ pack.addFormula({
     return text.toUpperCase() + character.repeat(volume);
   },
 });
+{% endraw %}
 ```
 

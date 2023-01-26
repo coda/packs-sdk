@@ -266,6 +266,12 @@ export const Examples: Example[] = [
         codeFile: './samples/packs/authentication/smarty.ts',
       },
       {
+        name: 'Custom tokens',
+        content:
+          'Authentication that passes any number of custom tokens in the URL, headers, or request body. This sample connects to the Vonage SMS API.',
+        codeFile: './samples/packs/authentication/vonage.ts',
+      },
+      {
         name: 'Username and password',
         content:
           'Authentication that passes a username and password in the Authorization header using the "Basic" scheme. This sample connects to the Twilio API.',

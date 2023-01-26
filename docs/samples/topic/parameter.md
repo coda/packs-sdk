@@ -15,16 +15,19 @@ Coda formulas, actions, and sync tables receive take in user input via parameter
 The basic structure of a parameter. This sample is for a string parameter.
 
 ```ts
+{% raw %}
 coda.makeParameter({
   type: coda.ParameterType.String,
   name: "<User-visible name of parameter>",
   description: "<Help text for the parameter>",
 }),
+{% endraw %}
 ```
 ## No parameters
 A formula without any parameters. This sample returns the name of the current day of the week.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -43,11 +46,13 @@ pack.addFormula({
     return formatter.format(now);
   },
 });
+{% endraw %}
 ```
 ## String parameter
 A formula that takes plain text as a parameter. This sample returns a greeting to the name provided.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -67,11 +72,13 @@ pack.addFormula({
     return "Hello " + name + "!";
   },
 });
+{% endraw %}
 ```
 ## Number parameter
 A formula that takes a number as a parameter. This sample converts a number of slices of pizza into a percentage eaten.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -92,11 +99,13 @@ pack.addFormula({
     return slices / 8;
   },
 });
+{% endraw %}
 ```
 ## Date parameter
 A formula that takes a date as a parameter. This sample determines if the year of a given date would make for good New Years Eve glasses (has two or more zeros).
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -123,11 +132,13 @@ pack.addFormula({
     return zeros?.length >= 2;
   },
 });
+{% endraw %}
 ```
 ## Image parameter
 A formula that takes an image as a parameter. This sample returns the file size of an image.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -167,11 +178,13 @@ pack.addFormula({
     return buffer.length;
   },
 });
+{% endraw %}
 ```
 ## Array parameter
 A formula that takes a string array as a parameter. This sample returns the longest string in the list.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -199,11 +212,13 @@ pack.addFormula({
     return result;
   },
 });
+{% endraw %}
 ```
 ## Sparse array parameter
 A formula that takes sparse number arrays as a parameter, useful when passing table columns. This sample returns the total cost for an order of items.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -256,11 +271,13 @@ pack.addFormula({
     return result;
   },
 });
+{% endraw %}
 ```
 ## Optional parameters
 A formula with some required and some optional parameters. This sample formats text to look like screaming, with a optional parameters to override how many exclamation points to use and an alternate character to use.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -298,11 +315,13 @@ pack.addFormula({
     return text.toUpperCase() + character.repeat(volume);
   },
 });
+{% endraw %}
 ```
 ## Parameter suggested value
 A formula with a parameter that defines a suggested value. This sample rolls virtual dice and returns the results.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -339,11 +358,13 @@ pack.addFormula({
     return results;
   },
 });
+{% endraw %}
 ```
 ## Variable argument parameters
 A formula that accepts a variable number of arguments. This sample draws a simple diagram using text, with an unknown number of arrow labels and steps.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -384,11 +405,13 @@ pack.addFormula({
     return result;
   },
 });
+{% endraw %}
 ```
 ## Reusing parameters
 A Pack that reuses a parameter across multiple formulas. This sample includes mathematical formulas that operate on a list of numbers.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -464,5 +487,6 @@ function gcd(a, b) {
   }
   return gcd(b % a, a);
 }
+{% endraw %}
 ```
 

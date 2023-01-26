@@ -20,7 +20,9 @@ description: {{description}}
 {{content}}
 
 ```ts
+{% raw %}
 {{{code}}}
+{% endraw %}
 ```
 {{/each}}
 

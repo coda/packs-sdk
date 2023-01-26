@@ -28,7 +28,7 @@ module.exports = {
     'ObjectSchema',
     'ObjectSchemaDefinitionType',
     'ObjectSchemaType',
-    'ParameterTypeMap',    
+    'ParameterTypeMap',
     'SimpleStringHintTypes',
     'StringHintTypeToSchemaType',
     'StringHintValueTypes',
@@ -37,7 +37,11 @@ module.exports = {
     'TypeOfMap',
     'UnionType',
 
-    // Deprecated features we should remove from the SDK
+    // Internal only types.
+    'AWSAssumeRoleAuthentication',
+    'VariousAuthentication',
+
+    // Deprecated features we should remove from the SDK.
     'FeatureSet',
     'PackCategory',
     'Quota',

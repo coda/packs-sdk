@@ -17,6 +17,7 @@ For example, the Weather pack has a column format `Current Weather`; when applie
 The basic structure of a column format.
 
 ```ts
+{% raw %}
 pack.addColumnFormat({
   name: "<User-visible name>",
   instructions: "<Help text for the format>",
@@ -25,11 +26,13 @@ pack.addColumnFormat({
     // If formatting a URL, a regular expression that matches that URL.
   ],
 });
+{% endraw %}
 ```
 ## Text (Reverse)
 A column format that formats text. This sample displays the text in the cell in reverse.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -73,11 +76,13 @@ pack.addFormula({
     return input.split(separator).reverse().join(separator);
   },
 });
+{% endraw %}
 ```
 ## Text (Roman Numeral)
 A column format that formats a number as text. This sample displays the number in the cell as a Roman numeral.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -122,11 +127,13 @@ const NumberMapping = {
   I: 1, IV: 4, V: 5, IX: 9, X: 10, XL: 40, L: 50, XC: 90, C: 100, CD: 400,
   D: 500, CM: 900, M: 1000,
 };
+{% endraw %}
 ```
 ## Text (Progress Bar)
 A column format that formats a number as graphic. This sample displays the number in the cell as a progress bar.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -160,11 +167,13 @@ pack.addFormula({
     return "⬛".repeat(chars) + "⬜".repeat(10 - chars);
   },
 });
+{% endraw %}
 ```
 ## Image (Cats)
 A column format that formats text as an image. This sample displays the text in the cell as an overlay on a random image of a cat.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -205,11 +214,13 @@ pack.addFormula({
 
 // Allow the pack to make requests to Cat-as-a-service API.
 pack.addNetworkDomain("cataas.com");
+{% endraw %}
 ```
 ## Rich data (Todoist)
 A column format that formats a URL as rich data. This sample displays the URL of the Todoist task in the cell as a rich data chip.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 
 // Regular expressions that match Todoist task URLs. Used by the column format
@@ -310,5 +321,6 @@ pack.setUserAuthentication({
   type: coda.AuthenticationType.HeaderBearerToken,
   instructionsUrl: "https://todoist.com/app/settings/integrations",
 });
+{% endraw %}
 ```
 

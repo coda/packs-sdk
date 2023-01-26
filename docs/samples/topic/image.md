@@ -15,6 +15,7 @@ Packs have native support for accepting images as parameters and returning them 
 A formula that takes an image as a parameter. This sample returns the file size of an image.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -54,11 +55,13 @@ pack.addFormula({
     return buffer.length;
   },
 });
+{% endraw %}
 ```
 ## Image result
 A formula that return an external image. This sample returns a random photo of a cat.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -103,11 +106,13 @@ pack.addFormula({
 
 // Allow the pack to make requests to Cat-as-a-service API.
 pack.addNetworkDomain("cataas.com");
+{% endraw %}
 ```
 ## Image result from temporary URL
 A formula that returns an image uploaded to &#x60;temporaryBlobStorage&#x60;. This sample returns a random avatar using an API that returns SVG code used to generate an avatar. You could also imagine procedurally generating a SVG or image in your packs code and uploading it to &#x60;temporaryBlobStorage&#x60;.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -140,11 +145,13 @@ pack.addFormula({
     return url;
   },
 });
+{% endraw %}
 ```
 ## Upload images
 An action that downloads images from Coda and uploads them to another service. This sample uploads a list of files to Google Photos.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -309,11 +316,13 @@ pack.setUserAuthentication({
 });
 
 pack.addNetworkDomain("googleapis.com");
+{% endraw %}
 ```
 ## Attach image data
 A sync table that includes images sourced from raw data. This sample syncs files from Dropbox, including their thumbnail images.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -510,11 +519,13 @@ pack.setUserAuthentication({
 
 // Allow access to the Dropbox domain.
 pack.addNetworkDomain("dropboxapi.com");
+{% endraw %}
 ```
 ## Attach private images
 A sync table that includes images sourced from private URLs. This sample syncs files from Google Drive, including their thumbnail images.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -631,11 +642,13 @@ pack.setUserAuthentication({
 pack.addNetworkDomain("googleapis.com");
 pack.addNetworkDomain("docs.google.com");
 pack.addNetworkDomain("googleusercontent.com");
+{% endraw %}
 ```
 ## Generated SVG
 A formula that generated an SVG, and returns it as a data URI. This sample generates an image from the text provided.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -677,11 +690,13 @@ pack.addFormula({
     return coda.SvgConstants.DataUrlPrefix + encoded;
   },
 });
+{% endraw %}
 ```
 ## Dark mode SVG
 A formula that generates an SVG that adapts if dark mode is enabled. This sample generates an image with static text, which changes color when dark mode is enabled.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -720,5 +735,6 @@ pack.addFormula({
     return coda.SvgConstants.DataUrlPrefixWithDarkModeSupport + encoded;
   },
 });
+{% endraw %}
 ```
 

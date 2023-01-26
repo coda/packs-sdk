@@ -17,6 +17,7 @@ The most common form of schema you'll need to define are object schemas. They ar
 The basic structure of an object schema.
 
 ```ts
+{% raw %}
 const MySchema = coda.makeObjectSchema({
   properties: {
     property1: { type: coda.ValueType.String },
@@ -25,11 +26,13 @@ const MySchema = coda.makeObjectSchema({
   },
   displayProperty: "property1", // Which property above to display by default.
 });
+{% endraw %}
 ```
 ## For formula
 An object schema used by a formula. This sample defines the schema for information about the daylight at a given location.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -55,11 +58,13 @@ const SunSchema = coda.makeObjectSchema({
   // Which of the properties defined above will be shown inside the chip.
   displayProperty: "daylight",
 });
+{% endraw %}
 ```
 ## For sync table
 An object schema used by a sync table. This sample defines the schema for the information about a spell in Dungeons and Dragons.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -120,11 +125,13 @@ let SpellSchema = coda.makeObjectSchema({
   idProperty: "index",
   featuredProperties: ["description", "level", "range"],
 });
+{% endraw %}
 ```
 ## With self-reference
 An object schema used by a sync table, that includes a row reference to itself. This sample defines the schema for a task in Todoist, where tasks can have parent tasks.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -177,5 +184,6 @@ const TaskSchema = coda.makeObjectSchema({
   idProperty: "taskId",
   featuredProperties: ["description", "url"],
 });
+{% endraw %}
 ```
 

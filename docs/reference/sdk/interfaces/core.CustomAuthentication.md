@@ -66,6 +66,11 @@ execute: async function([], context) {
 {% endraw %}
 ```
 
+**`See`**
+
+ - [Authenticating with other services - Custom tokens]({{ config.site_url }}guides/basics/authentication/#custom-tokens)
+ - [Authentication samples - Custom tokens]({{ config.site_url }}samples/topic/authentication/#custom-tokens)
+
 ## Hierarchy
 
 - [`BaseAuthentication`](core.BaseAuthentication.md)

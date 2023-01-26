@@ -250,6 +250,8 @@ pack.addFormula({
 ```
 {% endraw %}
 
+[View Sample Code][sample_custom]{ .md-button }
+
 
 ### Username and password
 
@@ -514,6 +516,9 @@ There are services however where each account is associated with a distinct doma
 [sample_automatic_endpoint]: ../../../samples/topic/authentication.md#automatic-endpoint
 [sample_selected_endpoint]: ../../../samples/topic/authentication.md#selected-endpoint
 [sample_connection_name]: ../../../samples/topic/authentication.md#oauth2
+[sample_coda_api]: ../../../samples/topic/authentication.md#coda-api-token
+[sample_custom]: ../../../samples/topic/authentication.md#custom-tokens
+[sample_multiple_query_params]: ../../../samples/topic/authentication.md#multiple-query-parameters
 
 [hc_account_sharing]: https://help.coda.io/en/articles/4587167-what-can-coda-access-with-packs
 [account_settings]: https://coda.io/account
@@ -532,6 +537,5 @@ There are services however where each account is associated with a distinct doma
 [autocomplete_dynamic]: ../../basics/parameters/autocomplete.md#dynamic-options
 [oauth_guide]: oauth2.md
 [MultiQueryParamToken]: ../../../reference/sdk/enums/core.AuthenticationType.md#multiqueryparamtoken
-[sample_multiple_query_params]: ../../../samples/topic/authentication.md#multiple-query-parameters
 [CodaApiHeaderBearerToken]: ../../../reference/sdk/enums/core.AuthenticationType.md#codaapiheaderbearertoken
-[sample_coda_api]: ../../../samples/topic/authentication.md#coda-api-token
+

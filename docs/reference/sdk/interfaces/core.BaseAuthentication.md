@@ -16,8 +16,6 @@ Base interface for authentication definitions.
 
   ↳ [`AWSAccessKeyAuthentication`](core.AWSAccessKeyAuthentication.md)
 
-  ↳ [`AWSAssumeRoleAuthentication`](core.AWSAssumeRoleAuthentication.md)
-
   ↳ [`CodaApiBearerTokenAuthentication`](core.CodaApiBearerTokenAuthentication.md)
 
   ↳ [`CustomAuthentication`](core.CustomAuthentication.md)

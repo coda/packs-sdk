@@ -15,6 +15,7 @@ Actions are special types of formulas that power buttons and automations. They u
 The basic structure of an action. This sample takes in a single string parameter and returns the string &quot;OK&quot; when the action is complete.
 
 ```ts
+{% raw %}
 pack.addFormula({
   name: "<User-visible name of formula>",
   description: "<Help text for the formula>",
@@ -33,11 +34,13 @@ pack.addFormula({
     return "OK";
   },
 });
+{% endraw %}
 ```
 ## Random value
 A formula that returns a random value. This sample rolls virtual dice and returns the results.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -74,11 +77,13 @@ pack.addFormula({
     return results;
   },
 });
+{% endraw %}
 ```
 ## Post to API
 A formula that posts data to an external API. This sample creates a new task in the Todoist app.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -121,11 +126,13 @@ pack.setUserAuthentication({
   type: coda.AuthenticationType.HeaderBearerToken,
   instructionsUrl: "https://todoist.com/app/settings/integrations",
 });
+{% endraw %}
 ```
 ## Update row in sync table
 A formula that updates an item on the server, and the existing row in a sync table if it exists. This sample updates the name of a task in the Todoist app.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -249,5 +256,6 @@ pack.setUserAuthentication({
   type: coda.AuthenticationType.HeaderBearerToken,
   instructionsUrl: "https://todoist.com/app/settings/integrations",
 });
+{% endraw %}
 ```
 

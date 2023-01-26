@@ -14,6 +14,7 @@ When connecting to an external API the most difficult part can be translating th
 The Asana API uses OAuth2 to authenticate users, and requires the use of PKCE.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -40,11 +41,13 @@ pack.setUserAuthentication({
 
 // Allow the pack to make requests to Asana.
 pack.addNetworkDomain("asana.com");
+{% endraw %}
 ```
 ## Board Game Atlas
 The Board Game Atlas API requires the developer to provide their client ID as query parameter.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -56,11 +59,13 @@ pack.setSystemAuthentication({
 });
 
 pack.addNetworkDomain("boardgameatlas.com");
+{% endraw %}
 ```
 ## ClickUp
 The ClickUp API uses OAuth2 to authenticate users.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -84,11 +89,13 @@ pack.setUserAuthentication({
 
 // Allow the pack to make requests to the ClickUp.
 pack.addNetworkDomain("clickup.com");
+{% endraw %}
 ```
 ## Coda API
 The Coda API requires the user to provide an API token, passed in an Authorization header. Packs include a specific authentication type optimized for the Coda API.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -104,11 +111,13 @@ pack.setUserAuthentication({
 
 // Allow the pack to make requests to Coda.
 pack.addNetworkDomain("coda.io");
+{% endraw %}
 ```
 ## Dropbox
 The Dropbox API uses OAuth2 to authenticate users, prompting them to approve a specific set of scopes. Additional parameters are requires on the authorization URL to ensure that offline access is granted.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -128,11 +137,13 @@ pack.setUserAuthentication({
 
 // Allow access to the Dropbox domain.
 pack.addNetworkDomain("dropboxapi.com");
+{% endraw %}
 ```
 ## Facebook (Meta)
 The Facebook (Meta) APIs use OAuth2 to authenticate users, prompting them to approve a specific set of scopes.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -162,11 +173,13 @@ pack.setUserAuthentication({
 
 // Allow the pack to make requests to Facebook.
 pack.addNetworkDomain("facebook.com");
+{% endraw %}
 ```
 ## Giphy
 The Giphy API requires the developer to provide their API key as query parameter.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -179,11 +192,13 @@ pack.setSystemAuthentication({
 
 // Allow the pack to make requests to Giphy.
 pack.addNetworkDomain("giphy.com");
+{% endraw %}
 ```
 ## GitHub
 The GitHub API uses OAuth2 to authenticate users, prompting them to approve a specific set of scopes. The authorization header uses the non-standard prefix &quot;token&quot; instead of the default &quot;Bearer&quot;.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -209,11 +224,13 @@ pack.setUserAuthentication({
 
 // Allow the Pack to access the GitHub domain.
 pack.addNetworkDomain("github.com");
+{% endraw %}
 ```
 ## Google
 The Google APIs use OAuth2 to authenticate users, prompting them to approve a specific set of scopes. Additional parameters are requires on the authorization URL to ensure that offline access is granted. Note: It currently isn&#x27;t possible to complete Google&#x27;s OAuth verification process with a Pack. See the [FAQ](https://coda.io/packs/build/latest/guides/faq/#google) for more information.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -248,11 +265,13 @@ pack.setUserAuthentication({
 
 // Allow the pack to make requests to Google.
 pack.addNetworkDomain("googleapis.com");
+{% endraw %}
 ```
 ## Jira
 The Jira API uses OAuth2 to authenticate users. After authenticating users must select which Jira instance to associate the account with, and all further API requests are sent to that instance&#x27;s URL.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -330,11 +349,13 @@ async function getUser(context: coda.ExecutionContext) {
 
 // Allow the pack to make requests to Jira.
 pack.addNetworkDomain("atlassian.com");
+{% endraw %}
 ```
 ## Microsoft
 The Microsoft APIs use OAuth2 to authenticate users, prompting them to approve a specific set of scopes. Additional parameters are requires on the authorization URL to ensure that offline access is granted, and PKCE is recommended.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -375,11 +396,13 @@ pack.setUserAuthentication({
 
 // Allow the pack to make requests to Microsoft.
 pack.addNetworkDomain("microsoft.com");
+{% endraw %}
 ```
 ## Okta
 The Okta API requires the user to provide an API key, passed as an Authorization header with a custom prefix. The user must also specify which Okta domain to connect to.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -410,11 +433,13 @@ pack.setUserAuthentication({
 
 // Allow the pack to make requests to Okta.
 pack.addNetworkDomain("okta.com");
+{% endraw %}
 ```
 ## Rapid API
 Rapid APIs require that the developer provide an API key, passed in a custom header.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -427,11 +452,13 @@ pack.setSystemAuthentication({
 
 // Allow the pack to make requests to RapidAPI.
 pack.addNetworkDomain("rapidapi.com");
+{% endraw %}
 ```
 ## Salesforce
 The Salesforce API uses OAuth2 to authenticate users, prompting them to approve a specific set of scopes. Additional parameters are requires on the authorization URL to ensure that offline access is granted. The URL to send API requests is returned in the OAuth2 response, and passed to other formulas.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -468,11 +495,13 @@ pack.setUserAuthentication({
 
 // Allow the pack to make requests to Salesforce.
 pack.addNetworkDomain("salesforce.com");
+{% endraw %}
 ```
 ## Todoist
 The Todoist API uses OAuth2 to authenticate users, prompting them to approve a specific set of scopes.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -499,11 +528,13 @@ pack.setUserAuthentication({
 
 // Allow the pack to make requests to Todoist.
 pack.addNetworkDomain("todoist.com");
+{% endraw %}
 ```
 ## Typeform
 The Typeform API uses OAuth2 to authenticate users, prompting them to approve a specific set of scopes.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -531,11 +562,13 @@ pack.setUserAuthentication({
 
 // Allow requests to Typeform.
 pack.addNetworkDomain("typeform.com");
+{% endraw %}
 ```
 ## Twilio
 The Twilio API requires the user to provide the SID and token for their account, passed using the Web Basic scheme.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -565,11 +598,13 @@ pack.setUserAuthentication({
 
 // Allow the pack to make requests to Twilio.
 pack.addNetworkDomain("twilio.com");
+{% endraw %}
 ```
 ## Webflow
 The Typeform API uses OAuth2 to authenticate users, and requires the developer to specify the API version in a custom header.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -599,11 +634,13 @@ pack.setUserAuthentication({
 
 // Allow the pack to make requests to Webflow.
 pack.addNetworkDomain("webflow.com");
+{% endraw %}
 ```
 ## Yahoo
 The Yahoo APIs uses OAuth2 to authenticate users.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -629,5 +666,6 @@ pack.setUserAuthentication({
 
 // Allow the Pack to access the Yahoo domain.
 pack.addNetworkDomain("yahoo.com");
+{% endraw %}
 ```
 

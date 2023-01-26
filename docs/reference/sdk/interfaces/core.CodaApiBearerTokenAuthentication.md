@@ -17,6 +17,19 @@ token into a text input.
 This is primarily for use by Coda-authored packs, as it is only relevant for interacting with the
 Coda REST API.
 
+**`Example`**
+
+```ts
+pack.setUserAuthentication({
+  type: coda.AuthenticationType.CodaApiHeaderBearerToken,
+});
+```
+
+**`See`**
+
+ - [Authenticating with other services - Coda API token]({{ config.site_url }}guides/basics/authentication/#coda-api-token)
+ - [Authentication samples - Coda API token]({{ config.site_url }}samples/topic/authentication/#coda-api-token)
+
 ## Hierarchy
 
 - [`BaseAuthentication`](core.BaseAuthentication.md)

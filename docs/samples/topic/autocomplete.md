@@ -15,6 +15,7 @@ Autocomplete can be configured for a parameter to provide a defined set of optio
 A formula with a parameter that provides autocomplete for acceptable values. This sample returns the noise that an animal makes, for a limited set of animals.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -44,11 +45,13 @@ pack.addFormula({
     }
   },
 });
+{% endraw %}
 ```
 ## Dynamic autocomplete
 A formula with a parameter that provides autocomplete for acceptable values, where the options are pulled dynamically from an API. This sample returns the price for a board game listed on the site Board Game Atlas.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -92,11 +95,13 @@ pack.setSystemAuthentication({
   type: coda.AuthenticationType.QueryParamToken,
   paramName: "client_id",
 });
+{% endraw %}
 ```
 ## Autocomplete on previous parameter
 A formula with a parameter that provides autocomplete for acceptable values, where the options depend on the value of a previous parameter. This sample generates a greeting in either English or Spanish.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -146,11 +151,13 @@ pack.addFormula({
     return result;
   },
 });
+{% endraw %}
 ```
 ## Autocomplete on vararg key-value pairs
 A formula with vararg parameters that represent key-value pairs, which provides autocomplete for available keys and for acceptable values based on the selected key. This sample generates a fictitious ice cream order. Note: This technique will not work when using vararg parameters in the builder UIs.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -201,5 +208,6 @@ pack.addFormula({
     return result;
   },
 });
+{% endraw %}
 ```
 

@@ -15,6 +15,7 @@ Working with dates and times can be tricky, especially in Coda due to documents 
 A formula that requires getting a date in the document&#x27;s timezone. This sample determines if the year of a given date would make for good New Years Eve glasses (has two or more zeros).
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -41,11 +42,13 @@ pack.addFormula({
     return zeros?.length >= 2;
   },
 });
+{% endraw %}
 ```
 ## Local time
 A formula that requires getting a time in the document&#x27;s timezone. This sample shows a time using the military format (ex: &quot;0900 hours&quot;).
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -75,11 +78,13 @@ pack.addFormula({
     return formatted + " hours";
   },
 });
+{% endraw %}
 ```
 ## Local date and time
 A formula that requires getting a date and time in the document&#x27;s timezone. This sample determines if all of the digits are the same (ex: 1/1/11 1:11).
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -113,11 +118,13 @@ pack.addFormula({
     return unique.size === 1;
   },
 });
+{% endraw %}
 ```
 ## Send to API
 A formula that requires sending a date to an API. This sample use the Calendarific API to get the holidays on a given date.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -208,11 +215,13 @@ pack.setSystemAuthentication({
 });
 
 pack.addNetworkDomain("calendarific.com");
+{% endraw %}
 ```
 ## Time math
 A formula that computes a relative time. This sample adds five minutes onto an input date and time.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -236,5 +245,6 @@ pack.addFormula({
     return seconds;
   },
 });
+{% endraw %}
 ```
 

@@ -13,6 +13,10 @@ The type of content in this attribution node.
 Multiple attribution nodes can be rendered all together, for example to have
 attribution that contains both text and a logo image.
 
+**`See`**
+
+[Structuring data with schemas - Data attribution]({{ config.site_url }}guides/advanced/schemas/#attribution)
+
 ## Enumeration Members
 
 ### Image

@@ -9,9 +9,23 @@ search:
 [core](../modules/core.md).QueryParamTokenAuthentication
 
 Authenticate using a token that is passed as a URL parameter with each request, e.g.
-https://example.com/api?paramName=token
+`https://example.com/api?paramName=token`.
 
 The parameter name is defined in the [paramName](core.QueryParamTokenAuthentication.md#paramname) property.
+
+**`Example`**
+
+```ts
+pack.setUserAuthentication({
+  type: coda.AuthenticationType.QueryParamToken,
+  paramName: "key",
+});
+```
+
+**`See`**
+
+ - [Authenticating with other services - Simple tokens]({{ config.site_url }}guides/basics/authentication/#simple-tokens)
+ - [Authentication samples - Query parameters]({{ config.site_url }}samples/topic/authentication/#query-parameter)
 
 ## Hierarchy
 

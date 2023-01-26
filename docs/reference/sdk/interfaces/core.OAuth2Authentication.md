@@ -14,6 +14,22 @@ client secret in the pack management UI, so that these can be stored securely.
 
 The API must use a (largely) standards-compliant implementation of OAuth2.
 
+**`Example`**
+
+```ts
+pack.setUserAuthentication({
+  type: coda.AuthenticationType.OAuth2,
+  // These URLs come from the API's developer documentation.
+  authorizationUrl: "https://example.com/authorize",
+  tokenUrl: "https://api.example.com/token",
+});
+```
+
+**`See`**
+
+ - [Authenticating using OAuth]({{ config.site_url }}guides/basics/authentication/oauth2/)
+ - [Authentication samples - OAuth2]({{ config.site_url }}samples/topic/authentication/#oauth2)
+
 ## Hierarchy
 
 - [`BaseAuthentication`](core.BaseAuthentication.md)

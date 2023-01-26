@@ -17,6 +17,7 @@ A card is an visual way to display key information about an item, typically repr
 The basic structure of a card.
 
 ```ts
+{% raw %}
 // A schema that defines the data shown in the card.
 const MyCardSchema = coda.makeObjectSchema({
   properties: {
@@ -70,11 +71,13 @@ pack.addColumnFormat({
     // Add more URL patterns here.
   ],
 });
+{% endraw %}
 ```
 ## Basic card
 A formula that returns a card containing an title, subtitle, and snippet. This sample returns a card with information about a spell in the game Dungeons &amp; Dragons.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -229,11 +232,13 @@ function formatSpell(spell) {
     damage_type: spell.damage?.damage_type?.name,
   };
 }
+{% endraw %}
 ```
 ## With image
 A formula that returns a card that includes an image. This samples returns a card with the current weather at a given location in the United States.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -334,11 +339,13 @@ async function getForecastUrl(latitude: number, longitude: number,
 }
 
 pack.addNetworkDomain("weather.gov");
+{% endraw %}
 ```
 ## With link matching
 A card that can be created manually or automatically when pasting a link. This sample returns a card with the details of a task in Todoist.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -451,5 +458,6 @@ pack.setUserAuthentication({
   type: coda.AuthenticationType.HeaderBearerToken,
   instructionsUrl: "https://todoist.com/app/settings/integrations",
 });
+{% endraw %}
 ```
 

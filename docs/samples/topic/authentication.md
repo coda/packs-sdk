@@ -17,22 +17,27 @@ Coda supports a fixed set of authentication types which cover the most common pa
 The basic structure of per-user authentication.
 
 ```ts
+{% raw %}
 pack.setUserAuthentication({
   type: coda.AuthenticationType.HeaderBearerToken,
 });
+{% endraw %}
 ```
 ## Template (System-wide)
 The basic structure of system-wide authentication.
 
 ```ts
+{% raw %}
 pack.setSystemAuthentication({
   type: coda.AuthenticationType.HeaderBearerToken,
 });
+{% endraw %}
 ```
 ## Authorization header
 Authentication that passes a long-lived token in the Authorization header using the &quot;Bearer&quot; scheme. This sample connects to the Todoist API.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -57,11 +62,13 @@ pack.setUserAuthentication({
 
 // Allow the pack to make requests to Todoist.
 pack.addNetworkDomain("todoist.com");
+{% endraw %}
 ```
 ## Custom header
 Authentication that passes a long-lived token in a custom header. This sample connects to RapidAPI.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -74,11 +81,13 @@ pack.setSystemAuthentication({
 
 // Allow the pack to make requests to RapidAPI.
 pack.addNetworkDomain("rapidapi.com");
+{% endraw %}
 ```
 ## Query parameter
 Authentication that passes a long-lived token in a query parameter. This sample connects to the Giphy API.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -91,11 +100,13 @@ pack.setSystemAuthentication({
 
 // Allow the pack to make requests to Giphy.
 pack.addNetworkDomain("giphy.com");
+{% endraw %}
 ```
 ## Multiple query parameters
 Authentication that passes multiple long-lived tokens in query parameters. This sample connects to the Smarty API.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -111,11 +122,92 @@ pack.setUserAuthentication({
 
 // Allow the pack to make requests to Smarty.
 pack.addNetworkDomain("smartystreets.com");
+{% endraw %}
+```
+## Custom tokens
+Authentication that passes any number of custom tokens in the URL, headers, or request body. This sample connects to the Vonage SMS API.
+
+```ts
+{% raw %}
+import * as coda from "@codahq/packs-sdk";
+export const pack = coda.newPack();
+
+// Per-user authentication to the Vonage API, using an API key and secret
+// in the request body.
+// See https://developer.vonage.com/en/api/sms
+pack.setUserAuthentication({
+  type: coda.AuthenticationType.Custom,
+  params: [
+    { name: "api_key", description: "API key." },
+    { name: "api_secret", description: "API secret." },
+  ],
+});
+
+pack.addFormula({
+  name: "SendSMS",
+  description: "Sends an SMS message.",
+  parameters: [
+    coda.makeParameter({
+      type: coda.ParameterType.String,
+      name: "from",
+      description: "The phone number to send from.",
+    }),
+    coda.makeParameter({
+      type: coda.ParameterType.String,
+      name: "to",
+      description: "The phone number to send to.",
+    }),
+    coda.makeParameter({
+      type: coda.ParameterType.String,
+      name: "text",
+      description: "The text of the message.",
+    }),
+  ],
+  resultType: coda.ValueType.String,
+  isAction: true,
+  execute: async function ([from, to, text], context) {
+    // Create the placeholders for the API key and secret.
+    let invocationToken = context.invocationToken;
+    let apiKeyPlaceholder = "{{api_key-" + invocationToken + "}}";
+    let apiSecretPlaceholder = "{{api_secret-" + invocationToken + "}}";
+
+    // Construct the JSON request body.
+    let body = {
+      from: from,
+      to: to,
+      text: text,
+      // These placeholders will be automatically replaced with the user's key
+      // and secret before the request is made.
+      api_key: apiKeyPlaceholder,
+      api_secret: apiSecretPlaceholder,
+    };
+
+    let response = await context.fetcher.fetch({
+      method: "POST",
+      url: "https://rest.nexmo.com/sms/json",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
+
+    let message = response.body.messages[0];
+    if (message.status !== "0") {
+      throw new coda.UserVisibleError(message["error-text"]);
+    }
+    return message["message-id"];
+  },
+});
+
+// Allow the pack to make requests to Vonage (former Nexmo).
+pack.addNetworkDomain("nexmo.com");
+{% endraw %}
 ```
 ## Username and password
 Authentication that passes a username and password in the Authorization header using the &quot;Basic&quot; scheme. This sample connects to the Twilio API.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -145,11 +237,13 @@ pack.setUserAuthentication({
 
 // Allow the pack to make requests to Twilio.
 pack.addNetworkDomain("twilio.com");
+{% endraw %}
 ```
 ## Coda API token
 Authentication optimized for connecting to the Coda API, which is a token passed in the Authorization header.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -165,11 +259,13 @@ pack.setUserAuthentication({
 
 // Allow the pack to make requests to Coda.
 pack.addNetworkDomain("coda.io");
+{% endraw %}
 ```
 ## OAuth2
 Authentication that uses an OAuth2 flow. This sample connects to the Todoist API.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -196,11 +292,13 @@ pack.setUserAuthentication({
 
 // Allow the pack to make requests to Todoist.
 pack.addNetworkDomain("todoist.com");
+{% endraw %}
 ```
 ## Manual endpoint
 Authentication that requires users to enter the endpoint URL for their account. This sample connects to the Okta API.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -231,11 +329,13 @@ pack.setUserAuthentication({
 
 // Allow the pack to make requests to Okta.
 pack.addNetworkDomain("okta.com");
+{% endraw %}
 ```
 ## Automatic endpoint
 Authentication that automatically determines the account-specific endpoint URL during the OAuth2 flow. This sample connects to the Salesforce API.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -272,11 +372,13 @@ pack.setUserAuthentication({
 
 // Allow the pack to make requests to Salesforce.
 pack.addNetworkDomain("salesforce.com");
+{% endraw %}
 ```
 ## User-selected endpoint
 Authentication that presents a list of endpoints to the user for them to select one. This sample connects to the Jira API.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -354,5 +456,6 @@ async function getUser(context: coda.ExecutionContext) {
 
 // Allow the pack to make requests to Jira.
 pack.addNetworkDomain("atlassian.com");
+{% endraw %}
 ```
 
