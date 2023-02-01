@@ -26,7 +26,7 @@ mkdocs-redirects==1.2.0
 mkdocs-simple-hooks==0.1.5
 natsort==8.3.1 ; python_version >= '3.6'
 packaging==21.3 ; python_version >= '3.6'
-pillow==9.3.0
+pillow==9.4.0
 pycparser==2.21
 pygments==2.13.0 ; python_version >= '3.6'
 pymdown-extensions==9.8 ; python_version >= '3.7'
