@@ -14,6 +14,37 @@ HTTP status code of 400 or greater.
 This class largely models the `StatusCodeError` from the (now deprecated) `request-promise` library,
 which has a quirky structure.
 
+**`Example`**
+
+```ts
+let response;
+try {
+  response = await context.fetcher.fetch({
+    method: "GET",
+    // Open this URL in your browser to see what the data looks like.
+    url: "https://api.artic.edu/api/v1/artworks/123",
+  });
+} catch (error) {
+  // If the request failed because the server returned a 300+ status code.
+  if (coda.StatusCodeError.isStatusCodeError(error)) {
+    // Cast the error as a StatusCodeError, for better intellisense.
+    let statusError = error as coda.StatusCodeError;
+    // If the API returned an error message in the body, show it to the user.
+    let message = statusError.body?.detail;
+    if (message) {
+      throw new coda.UserVisibleError(message);
+    }
+  }
+  // The request failed for some other reason. Re-throw the error so that it
+  // bubbles up.
+  throw error;
+}
+```
+
+**`See`**
+
+[Fetching remote data - Errors]({{ config.site_url }}guides/basics/fetcher/#errors)
+
 ## Hierarchy
 
 - `Error`

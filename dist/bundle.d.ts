@@ -927,6 +927,8 @@ export interface ObjectSchema<K extends string, L extends string> extends Object
  *
  * Multiple attribution nodes can be rendered all together, for example to have
  * attribution that contains both text and a logo image.
+ *
+ * @see [Structuring data with schemas - Data attribution](https://coda.io/packs/build/latest/guides/advanced/schemas/#attribution)
  */
 export declare enum AttributionNodeType {
 	/**
@@ -1967,6 +1969,16 @@ export interface ResponseHandlerTemplate<T extends Schema> {
  * If an error is encountered in a formula and you want to describe the error
  * to the end user, throw a UserVisibleError with a user-friendly message
  * and the Coda UI will display the message.
+ *
+ * @example
+ * ```
+ * if (!url.startsWith("https://")) {
+ *   throw new coda.UserVisibleError("Please provide a valid url.");
+ * }
+ * ```
+ *
+ * @see
+ * - [Handling errors - User-visible errors](https://coda.io/packs/build/latest/guides/advanced/errors/#user-visible-errors)
  */
 export declare class UserVisibleError extends Error {
 	/** @hidden */
@@ -1975,13 +1987,6 @@ export declare class UserVisibleError extends Error {
 	readonly internalError: Error | undefined;
 	/**
 	 * Use to construct a user-visible error.
-	 *
-	 * @example
-	 * ```
-	 * if (!url.startsWith("http")) {
-	 *   throw new coda.UserVisibleError("Please provide a valid url.");
-	 * }
-	 * ```
 	 */
 	constructor(message?: string, internalError?: Error);
 }
@@ -2002,6 +2007,34 @@ export interface StatusCodeErrorResponse {
  *
  * This class largely models the `StatusCodeError` from the (now deprecated) `request-promise` library,
  * which has a quirky structure.
+ *
+ * @example
+ * ```ts
+ * let response;
+ * try {
+ *   response = await context.fetcher.fetch({
+ *     method: "GET",
+ *     // Open this URL in your browser to see what the data looks like.
+ *     url: "https://api.artic.edu/api/v1/artworks/123",
+ *   });
+ * } catch (error) {
+ *   // If the request failed because the server returned a 300+ status code.
+ *   if (coda.StatusCodeError.isStatusCodeError(error)) {
+ *     // Cast the error as a StatusCodeError, for better intellisense.
+ *     let statusError = error as coda.StatusCodeError;
+ *     // If the API returned an error message in the body, show it to the user.
+ *     let message = statusError.body?.detail;
+ *     if (message) {
+ *       throw new coda.UserVisibleError(message);
+ *     }
+ *   }
+ *   // The request failed for some other reason. Re-throw the error so that it
+ *   // bubbles up.
+ *   throw error;
+ * }
+ * ```
+ *
+ * @see [Fetching remote data - Errors](https://coda.io/packs/build/latest/guides/basics/fetcher/#errors)
  */
 export declare class StatusCodeError extends Error {
 	/**
@@ -3005,6 +3038,9 @@ declare enum PackCategory {
 }
 /**
  * Authentication types supported by Coda Packs.
+ *
+ * @see [Authenticating with other services](https://coda.io/packs/build/latest/guides/basics/authentication/)
+ * @see [Authentication samples](https://coda.io/packs/build/latest/samples/topic/authentication/)
  */
 export declare enum AuthenticationType {
 	/**
@@ -3013,72 +3049,74 @@ export declare enum AuthenticationType {
 	None = "None",
 	/**
 	 * Authenticate using an HTTP header of the form `Authorization: Bearer <token>`.
+	 *
+	 * @see {@link HeaderBearerTokenAuthentication}
 	 */
 	HeaderBearerToken = "HeaderBearerToken",
 	/**
 	 * Authenticate using an HTTP header with a custom name and token prefix that you specify.
-	 * The header name is defined in the {@link CustomHeaderTokenAuthentication.headerName} property.
+	 *
+	 * @see {@link CustomHeaderTokenAuthentication}
 	 */
 	CustomHeaderToken = "CustomHeaderToken",
 	/**
 	 * Authenticate using a token that is passed as a URL parameter with each request, e.g.
-	 * https://example.com/api?paramName=token
+	 * `https://example.com/api?paramName=token`.
 	 *
-	 * The parameter name is defined in the {@link QueryParamTokenAuthentication.paramName} property.
+	 * @see {@link QueryParamTokenAuthentication}
 	 */
 	QueryParamToken = "QueryParamToken",
 	/**
 	 * Authenticate using multiple tokens, each passed as a different URL parameter, e.g.
-	 * https://example.com/api?param1=token1&param2=token2
+	 * `https://example.com/api?param1=token1&param2=token2`
 	 *
-	 * The parameter names are defined in the {@link MultiQueryParamTokenAuthentication.params} array property.
+	 * @see {@link MultiQueryParamTokenAuthentication}
 	 */
 	MultiQueryParamToken = "MultiQueryParamToken",
 	/**
-	 * Authenticate using OAuth2. You must specify the authorization URL, token exchange URL, and
-	 * scopes here as part of the pack definition. You'll provide the application's client ID and
-	 * client secret in the pack management UI, so that these can be stored securely.
+	 * Authenticate using OAuth2. The API must use a (largely) standards-compliant implementation of OAuth2.
 	 *
-	 * The API must use a (largely) standards-compliant implementation of OAuth2.
+	 * @see {@link OAuth2Authentication}
 	 */
 	OAuth2 = "OAuth2",
 	/**
 	 * Authenticate using HTTP Basic authorization. The user provides a username and password
 	 * (sometimes optional) which are included as an HTTP header according to the Basic auth standard.
 	 *
-	 * See https://en.wikipedia.org/wiki/Basic_access_authentication
+	 * @see {@link WebBasicAuthentication}
 	 */
 	WebBasic = "WebBasic",
 	/**
 	 * Authenticate in a custom way by having one or more arbitrary secret values inserted into the request URL, body,
-	 * headers, or the form data using template replacement. See {@link CustomAuthentication}.
+	 * headers, or the form data using template replacement.
+	 *
+	 * @see {@link CustomAuthentication}
 	 */
 	Custom = "Custom",
 	/**
 	 * Authenticate to Amazon Web Services using an IAM access key id & secret access key pair.
-	 * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
+	 *
+	 * @see {@link AWSAccessKeyAuthentication}
 	 */
 	AWSAccessKey = "AWSAccessKey",
 	/**
-	 * Authenticate to Amazon Web Services by assuming an IAM role.
-	 * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
+	 * Authenticate to Amazon Web Services by assuming an IAM role. This is not yet supported.
 	 *
-	 * This is not yet supported.
+	 * @see {@link AWSAssumeRoleAuthentication}
+	 * @hidden
 	 */
 	AWSAssumeRole = "AWSAssumeRole",
 	/**
 	 * Authenticate using a Coda REST API token, sent as an HTTP header.
 	 *
-	 * This is identical to {@link AuthenticationType.HeaderBearerToken} except the user wil be presented
-	 * with a UI to generate an API token rather than needing to paste an arbitrary API
-	 * token into a text input.
-	 *
-	 * This is primarily for use by Coda-authored packs, as it is only relevant for interacting with the
-	 * Coda REST API.
+	 * @see {@link CodaApiBearerTokenAuthentication}
 	 */
 	CodaApiHeaderBearerToken = "CodaApiHeaderBearerToken",
 	/**
 	 * Only for use by Coda-authored packs.
+	 *
+	 * @see {@link VariousAuthentication}
+	 * @hidden
 	 */
 	Various = "Various"
 }
@@ -3221,6 +3259,16 @@ export interface BaseAuthentication {
 }
 /**
  * Authenticate using an HTTP header of the form `Authorization: Bearer <token>`.
+ *
+ * @example
+ * ```ts
+ * pack.setUserAuthentication({
+ *   type: coda.AuthenticationType.HeaderBearerToken,
+ * });
+ * ```
+ *
+ * @see [Authenticating with other services - Simple tokens](https://coda.io/packs/build/latest/guides/basics/authentication/#simple-tokens)
+ * @see [Authentication samples - Authorization header](https://coda.io/packs/build/latest/samples/topic/authentication/#authorization-header)
  */
 export interface HeaderBearerTokenAuthentication extends BaseAuthentication {
 	/** Identifies this as HeaderBearerToken authentication. */
@@ -3235,6 +3283,16 @@ export interface HeaderBearerTokenAuthentication extends BaseAuthentication {
  *
  * This is primarily for use by Coda-authored packs, as it is only relevant for interacting with the
  * Coda REST API.
+ *
+ * @example
+ * ```ts
+ * pack.setUserAuthentication({
+ *   type: coda.AuthenticationType.CodaApiHeaderBearerToken,
+ * });
+ * ```
+ *
+ * @see [Authenticating with other services - Coda API token](https://coda.io/packs/build/latest/guides/basics/authentication/#coda-api-token)
+ * @see [Authentication samples - Coda API token](https://coda.io/packs/build/latest/samples/topic/authentication/#coda-api-token)
  */
 export interface CodaApiBearerTokenAuthentication extends BaseAuthentication {
 	/** Identifies this as CodaApiHeaderBearerToken authentication. */
@@ -3254,6 +3312,17 @@ export interface CodaApiBearerTokenAuthentication extends BaseAuthentication {
 /**
  * Authenticate using an HTTP header with a custom name and token prefix that you specify.
  * The header name is defined in the {@link headerName} property.
+ *
+ * @example
+ * ```ts
+ * pack.setUserAuthentication({
+ *   type: coda.AuthenticationType.CustomHeaderToken,
+ *   headerName: "X-API-Key",
+ * });
+ * ```
+ *
+ * @see [Authenticating with other services - Simple tokens](https://coda.io/packs/build/latest/guides/basics/authentication/#simple-tokens)
+ * @see [Authentication samples - Custom header](https://coda.io/packs/build/latest/samples/topic/authentication/#custom-header)
  */
 export interface CustomHeaderTokenAuthentication extends BaseAuthentication {
 	/** Identifies this as CustomHeaderToken authentication. */
@@ -3272,9 +3341,20 @@ export interface CustomHeaderTokenAuthentication extends BaseAuthentication {
 }
 /**
  * Authenticate using a token that is passed as a URL parameter with each request, e.g.
- * https://example.com/api?paramName=token
+ * `https://example.com/api?paramName=token`.
  *
  * The parameter name is defined in the {@link paramName} property.
+ *
+ * @example
+ * ```ts
+ * pack.setUserAuthentication({
+ *   type: coda.AuthenticationType.QueryParamToken,
+ *   paramName: "key",
+ * });
+ * ```
+ *
+ * @see [Authenticating with other services - Simple tokens](https://coda.io/packs/build/latest/guides/basics/authentication/#simple-tokens)
+ * @see [Authentication samples - Query parameters](https://coda.io/packs/build/latest/samples/topic/authentication/#query-parameter)
  */
 export interface QueryParamTokenAuthentication extends BaseAuthentication {
 	/** Identifies this as QueryParamToken authentication. */
@@ -3287,9 +3367,23 @@ export interface QueryParamTokenAuthentication extends BaseAuthentication {
 }
 /**
  * Authenticate using multiple tokens, each passed as a different URL parameter, e.g.
- * https://example.com/api?param1=token1&param2=token2
+ * `https://example.com/api?param1=token1&param2=token2`.
  *
  * The parameter names are defined in the {@link params} array property.
+ *
+ * @example
+ * ```ts
+ * pack.setUserAuthentication({
+ *   type: coda.AuthenticationType.MultiQueryParamToken,
+ *   params: [
+ *     { name: "key", description: "The key." },
+ *     { name: "secret", description: "The secret." },
+ *   ],
+ * });
+ * ```
+ *
+ * @see [Authenticating with other services - Simple tokens](https://coda.io/packs/build/latest/guides/basics/authentication/#simple-tokens)
+ * @see [Authentication samples - Multiple query parameters](https://coda.io/packs/build/latest/samples/topic/authentication/#multiple-query-parameters)
  */
 export interface MultiQueryParamTokenAuthentication extends BaseAuthentication {
 	/** Identifies this as MultiQueryParamToken authentication. */
@@ -3314,6 +3408,19 @@ export interface MultiQueryParamTokenAuthentication extends BaseAuthentication {
  * client secret in the pack management UI, so that these can be stored securely.
  *
  * The API must use a (largely) standards-compliant implementation of OAuth2.
+ *
+ * @example
+ * ```ts
+ * pack.setUserAuthentication({
+ *   type: coda.AuthenticationType.OAuth2,
+ *   // These URLs come from the API's developer documentation.
+ *   authorizationUrl: "https://example.com/authorize",
+ *   tokenUrl: "https://api.example.com/token",
+ * });
+ * ```
+ *
+ * @see [Authenticating using OAuth](https://coda.io/packs/build/latest/guides/basics/authentication/oauth2/)
+ * @see [Authentication samples - OAuth2](https://coda.io/packs/build/latest/samples/topic/authentication/#oauth2)
  */
 export interface OAuth2Authentication extends BaseAuthentication {
 	/** Identifies this as OAuth2 authentication. */
@@ -3432,7 +3539,20 @@ export declare enum TokenExchangeCredentialsLocation {
  * Authenticate using HTTP Basic authorization. The user provides a username and password
  * (sometimes optional) which are included as an HTTP header according to the Basic auth standard.
  *
- * See https://en.wikipedia.org/wiki/Basic_access_authentication
+ * @example
+ * ```ts
+ * pack.setUserAuthentication({
+ *   type: coda.AuthenticationType.MultiQueryParamToken,
+ *   params: [
+ *     { name: "key", description: "The key." },
+ *     { name: "secret", description: "The secret." },
+ *   ],
+ * });
+ * ```
+ *
+ * @see [Authenticating with other services - Username and password](https://coda.io/packs/build/latest/guides/basics/authentication/#username-and-password)
+ * @see [Authentication samples - Username and password](https://coda.io/packs/build/latest/samples/topic/authentication/#username-and-password)
+ * @see [Wikipedia - Basic access authentication](https://en.wikipedia.org/wiki/Basic_access_authentication)
  */
 export interface WebBasicAuthentication extends BaseAuthentication {
 	/** Identifies this as WebBasic authentication. */
@@ -3526,6 +3646,9 @@ export interface CustomAuthParameter {
  * }
  * {% endraw %}
  * ```
+ *
+ * @see [Authenticating with other services - Custom tokens](https://coda.io/packs/build/latest/guides/basics/authentication/#custom-tokens)
+ * @see [Authentication samples - Custom tokens](https://coda.io/packs/build/latest/samples/topic/authentication/#custom-tokens)
  */
 export interface CustomAuthentication extends BaseAuthentication {
 	/** Identifies this as Custom authentication. */
@@ -3539,7 +3662,8 @@ export interface CustomAuthentication extends BaseAuthentication {
 }
 /**
  * Authenticate to Amazon Web Services using an IAM access key id & secret access key pair.
- * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
+ *
+ * @see [Amazon - AWS Signature Version 4](https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html)
  */
 export interface AWSAccessKeyAuthentication extends BaseAuthentication {
 	/** Identifies this as AWSAccessKey authentication. */
@@ -3548,10 +3672,10 @@ export interface AWSAccessKeyAuthentication extends BaseAuthentication {
 	service: string;
 }
 /**
- * Authenticate to Amazon Web Services by assuming an IAM role.
- * See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
+ * Authenticate to Amazon Web Services by assuming an IAM role. This is not yet supported.
  *
- * This is not yet supported.
+ * @see [Amazon - AWS Signature Version 4](https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html)
+ * @hidden
  */
 export interface AWSAssumeRoleAuthentication extends BaseAuthentication {
 	/** Identifies this as AWSAssumeRole authentication. */
@@ -3561,6 +3685,8 @@ export interface AWSAssumeRoleAuthentication extends BaseAuthentication {
 }
 /**
  * Only for use by Coda-authored packs.
+ *
+ * @hidden
  */
 export interface VariousAuthentication {
 	/** Identifies this as Various authentication. */

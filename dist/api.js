@@ -25,17 +25,20 @@ const api_types_10 = require("./api_types");
  * If an error is encountered in a formula and you want to describe the error
  * to the end user, throw a UserVisibleError with a user-friendly message
  * and the Coda UI will display the message.
+ *
+ * @example
+ * ```
+ * if (!url.startsWith("https://")) {
+ *   throw new coda.UserVisibleError("Please provide a valid url.");
+ * }
+ * ```
+ *
+ * @see
+ * - [Handling errors - User-visible errors](https://coda.io/packs/build/latest/guides/advanced/errors/#user-visible-errors)
  */
 class UserVisibleError extends Error {
     /**
      * Use to construct a user-visible error.
-     *
-     * @example
-     * ```
-     * if (!url.startsWith("http")) {
-     *   throw new coda.UserVisibleError("Please provide a valid url.");
-     * }
-     * ```
      */
     constructor(message, internalError) {
         super(message);
@@ -56,6 +59,34 @@ exports.UserVisibleError = UserVisibleError;
  *
  * This class largely models the `StatusCodeError` from the (now deprecated) `request-promise` library,
  * which has a quirky structure.
+ *
+ * @example
+ * ```ts
+ * let response;
+ * try {
+ *   response = await context.fetcher.fetch({
+ *     method: "GET",
+ *     // Open this URL in your browser to see what the data looks like.
+ *     url: "https://api.artic.edu/api/v1/artworks/123",
+ *   });
+ * } catch (error) {
+ *   // If the request failed because the server returned a 300+ status code.
+ *   if (coda.StatusCodeError.isStatusCodeError(error)) {
+ *     // Cast the error as a StatusCodeError, for better intellisense.
+ *     let statusError = error as coda.StatusCodeError;
+ *     // If the API returned an error message in the body, show it to the user.
+ *     let message = statusError.body?.detail;
+ *     if (message) {
+ *       throw new coda.UserVisibleError(message);
+ *     }
+ *   }
+ *   // The request failed for some other reason. Re-throw the error so that it
+ *   // bubbles up.
+ *   throw error;
+ * }
+ * ```
+ *
+ * @see [Fetching remote data - Errors](https://coda.io/packs/build/latest/guides/basics/fetcher/#errors)
  */
 class StatusCodeError extends Error {
     /** @hidden */

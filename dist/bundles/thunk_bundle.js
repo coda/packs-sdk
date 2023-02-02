@@ -6545,13 +6545,6 @@ module.exports = (() => {
   var UserVisibleError = class extends Error {
     /**
      * Use to construct a user-visible error.
-     *
-     * @example
-     * ```
-     * if (!url.startsWith("http")) {
-     *   throw new coda.UserVisibleError("Please provide a valid url.");
-     * }
-     * ```
      */
     constructor(message, internalError) {
       super(message);

@@ -15,6 +15,7 @@ Packs can return various types of values, and apply hints that tell Coda how to 
 The basic structure of a formula that returns a string.
 
 ```ts
+{% raw %}
 pack.addFormula({
   name: "<User-visible name of formula>",
   description: "<Help text for the formula>",
@@ -31,11 +32,13 @@ pack.addFormula({
     return "Hello " + param;
   },
 });
+{% endraw %}
 ```
 ## Template (Number)
 The basic structure of a formula that returns a number.
 
 ```ts
+{% raw %}
 pack.addFormula({
   name: "<User-visible name of formula>",
   description: "<Help text for the formula>",
@@ -52,11 +55,13 @@ pack.addFormula({
     return param.length;
   },
 });
+{% endraw %}
 ```
 ## Template (Boolean)
 The basic structure of a formula that returns a boolean.
 
 ```ts
+{% raw %}
 pack.addFormula({
   name: "<User-visible name of formula>",
   description: "<Help text for the formula>",
@@ -73,11 +78,13 @@ pack.addFormula({
     return param === "true";
   },
 });
+{% endraw %}
 ```
 ## Template (Array)
 The basic structure of a formula that returns an array.
 
 ```ts
+{% raw %}
 pack.addFormula({
   name: "<User-visible name of formula>",
   description: "<Help text for the formula>",
@@ -97,11 +104,13 @@ pack.addFormula({
     return ["Hello", param];
   },
 });
+{% endraw %}
 ```
 ## Template (Object)
 The basic structure of a formula that returns an object.
 
 ```ts
+{% raw %}
 const MySchema = coda.makeObjectSchema({
   properties: {
     property1: { type: coda.ValueType.String },
@@ -132,11 +141,13 @@ pack.addFormula({
     };
   },
 });
+{% endraw %}
 ```
 ## Percent
 A formula that returns a number formatted as a percent value. This sample converts a number of slices of pizza into a percentage eaten.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -157,11 +168,13 @@ pack.addFormula({
     return slices / 8;
   },
 });
+{% endraw %}
 ```
 ## Currency
 A formula that returns a number formatted as a currency value. This sample converts from another currency to US dollars.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -204,11 +217,13 @@ pack.addFormula({
     return rates.USD;
   },
 });
+{% endraw %}
 ```
 ## Date and time
 A formula that returns a date and time, passed as a string. This sample adds five minutes onto the given date and time.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -232,11 +247,13 @@ pack.addFormula({
     return seconds;
   },
 });
+{% endraw %}
 ```
 ## Markdown
 A formula that returns markdown content. This sample returns the contents of the README.md file from a GitHub repository.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -265,11 +282,13 @@ pack.addFormula({
 });
 
 pack.addNetworkDomain("raw.githubusercontent.com");
+{% endraw %}
 ```
 ## HTML
 A formula that returns HTML content. This sample returns HTML with every word of the input string bolded.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -296,11 +315,13 @@ pack.addFormula({
     return words.join(" ");
   },
 });
+{% endraw %}
 ```
 ## Embed
 A formula that a URL to embed. This sample returns an embed of the infamous YouTube video for &quot;Never Gonna Give You Up&quot; by Rick Astley.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -315,11 +336,13 @@ pack.addFormula({
     return "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
   },
 });
+{% endraw %}
 ```
 ## Image
 A formula that returns an image, as a reference. This sample returns a random photo of a cat.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -364,5 +387,6 @@ pack.addFormula({
 
 // Allow the pack to make requests to Cat-as-a-service API.
 pack.addNetworkDomain("cataas.com");
+{% endraw %}
 ```
 

@@ -327,15 +327,15 @@ try {
   response = await context.fetcher.fetch({
     method: "GET",
     // Open this URL in your browser to see what the data looks like.
-    url: `https://dog.ceo/api/breed/snoopy/images`,
+    url: "https://api.artic.edu/api/v1/artworks/123",
   });
 } catch (error) {
-  // If the request failed because of a non-200 status code.
-  if (error.statusCode) {
+  // If the request failed because the server returned a 300+ status code.
+  if (coda.StatusCodeError.isStatusCodeError(error)) {
     // Cast the error as a StatusCodeError, for better intellisense.
     let statusError = error as coda.StatusCodeError;
     // If the API returned an error message in the body, show it to the user.
-    let message = statusError.body?.message;
+    let message = statusError.body?.detail;
     if (message) {
       throw new coda.UserVisibleError(message);
     }

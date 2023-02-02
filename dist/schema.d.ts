@@ -898,6 +898,8 @@ export interface ObjectSchema<K extends string, L extends string> extends Object
  *
  * Multiple attribution nodes can be rendered all together, for example to have
  * attribution that contains both text and a logo image.
+ *
+ * @see [Structuring data with schemas - Data attribution](https://coda.io/packs/build/latest/guides/advanced/schemas/#attribution)
  */
 export declare enum AttributionNodeType {
     /**

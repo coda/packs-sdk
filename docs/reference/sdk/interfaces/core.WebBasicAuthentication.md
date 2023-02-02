@@ -11,7 +11,23 @@ search:
 Authenticate using HTTP Basic authorization. The user provides a username and password
 (sometimes optional) which are included as an HTTP header according to the Basic auth standard.
 
-See https://en.wikipedia.org/wiki/Basic_access_authentication
+**`Example`**
+
+```ts
+pack.setUserAuthentication({
+  type: coda.AuthenticationType.MultiQueryParamToken,
+  params: [
+    { name: "key", description: "The key." },
+    { name: "secret", description: "The secret." },
+  ],
+});
+```
+
+**`See`**
+
+ - [Authenticating with other services - Username and password]({{ config.site_url }}guides/basics/authentication/#username-and-password)
+ - [Authentication samples - Username and password]({{ config.site_url }}samples/topic/authentication/#username-and-password)
+ - [Wikipedia - Basic access authentication](https://en.wikipedia.org/wiki/Basic_access_authentication)
 
 ## Hierarchy
 

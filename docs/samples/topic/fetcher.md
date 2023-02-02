@@ -15,16 +15,19 @@ Communicating with an API or external server is done through the `Fetcher`, a cu
 
 
 ```ts
+{% raw %}
 let response = await context.fetcher.fetch({
   method: "GET",
   url: "<The URL to fetch>",
 });
 let data = response.body;
+{% endraw %}
 ```
 ## Template (POST)
 
 
 ```ts
+{% raw %}
 let payload = {
   // Whatever JSON structure the API expects.
 };
@@ -34,11 +37,13 @@ let response = await context.fetcher.fetch({
   body: JSON.stringify(payload),
 });
 let data = response.body;
+{% endraw %}
 ```
 ## JSON Array (Bacon Ipsum)
 
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -73,5 +78,6 @@ pack.addFormula({
     return paragraphs.join("\n\n");
   },
 });
+{% endraw %}
 ```
 

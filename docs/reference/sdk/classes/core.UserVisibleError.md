@@ -13,6 +13,18 @@ If an error is encountered in a formula and you want to describe the error
 to the end user, throw a UserVisibleError with a user-friendly message
 and the Coda UI will display the message.
 
+**`Example`**
+
+```
+if (!url.startsWith("https://")) {
+  throw new coda.UserVisibleError("Please provide a valid url.");
+}
+```
+
+**`See`**
+
+- [Handling errors - User-visible errors]({{ config.site_url }}guides/advanced/errors/#user-visible-errors)
+
 ## Hierarchy
 
 - `Error`
@@ -26,14 +38,6 @@ and the Coda UI will display the message.
 • **new UserVisibleError**(`message?`, `internalError?`)
 
 Use to construct a user-visible error.
-
-**`Example`**
-
-```
-if (!url.startsWith("http")) {
-  throw new coda.UserVisibleError("Please provide a valid url.");
-}
-```
 
 #### Parameters
 

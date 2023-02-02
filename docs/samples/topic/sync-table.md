@@ -15,6 +15,7 @@ A **sync table** is how to bring structured data from a third-party into Coda. A
 The basic structure of a sync table.
 
 ```ts
+{% raw %}
 const MySchema = coda.makeObjectSchema({
   properties: {
     property1: { type: coda.ValueType.String },
@@ -55,11 +56,13 @@ pack.addSyncTable({
     },
   },
 });
+{% endraw %}
 ```
 ## With parameter
 A sync table that uses a parameter. This sample syncs cat photos from the CatAAS API.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -140,11 +143,13 @@ pack.addSyncTable({
 
 // Allow the pack to make requests to Cat-as-a-service API.
 pack.addNetworkDomain("cataas.com");
+{% endraw %}
 ```
 ## With continuation
 A sync table that uses continuations to sync data using multiple executions. This sample syncs the spells available in Dungeons and Dragons.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -299,11 +304,13 @@ async function fetchSpells(fetcher: coda.Fetcher, spellResults) {
   }
   return spells;
 }
+{% endraw %}
 ```
 ## With authentication
 A sync table that pulls from an API using authentication. This sample syncs the tasks from a user&#x27;s Todoist account.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -399,11 +406,13 @@ pack.setUserAuthentication({
   type: coda.AuthenticationType.HeaderBearerToken,
   instructionsUrl: "https://todoist.com/app/settings/integrations",
 });
+{% endraw %}
 ```
 ## With row references
 A sync table that contains a reference to a row in another sync table. This sample syncs the tasks from a user&#x27;s Todoist account.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -546,5 +555,6 @@ pack.setUserAuthentication({
   type: coda.AuthenticationType.HeaderBearerToken,
   instructionsUrl: "https://todoist.com/app/settings/integrations",
 });
+{% endraw %}
 ```
 

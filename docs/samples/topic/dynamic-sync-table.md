@@ -17,6 +17,7 @@ Dynamic sync tables typically provide a list all of the datasets that the user h
 
 
 ```ts
+{% raw %}
 pack.addDynamicSyncTable({
   name: "<User-visible name for the sync table>",
   listDynamicUrls: async function (context) {
@@ -76,11 +77,13 @@ pack.addDynamicSyncTable({
     },
   },
 });
+{% endraw %}
 ```
 ## With URL list
 A sync table that presents a list of URLs to select from. This sample shows responses to a Typeform form.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -338,11 +341,13 @@ pack.setUserAuthentication({
 
 // Allow requests to the typeform.com domain.
 pack.addNetworkDomain("typeform.com");
+{% endraw %}
 ```
 ## With grouped URL list
 A sync table that presents a list of URLs to select from, grouped into folders. This sample shows data from Open Data NY (data.ny.gov), which is powered by Socrata.
 
 ```ts
+{% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
@@ -744,5 +749,6 @@ interface DatasetColumn {
   fieldName: string;
   dataTypeName: string;
 }
+{% endraw %}
 ```
 

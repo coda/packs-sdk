@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <!-- Monaco library script is loaded from: https://cdnjs.com/libraries/monaco-editor-->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.27.0/min/vs/loader.min.js"
+      integrity="sha512-SExj71Cw3B9C9EE8BC/ad3AKia5zQXDj/2SM4THgkeKh5GIFZhKM/R3uclUG8YZwJrjcVhydAlIHmfNvsBCKZA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      require.config({
+        paths: {
+          vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.27.0/min/vs',
+        },
+      });
+
+      require(['vs/editor/editor.main'], function () {
+        var editor = monaco.editor.create(document.getElementById('container'), {
+          value: "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Per-user authentication to the Vonage API, using an API key and secret\n// in the request body.\n// See https://developer.vonage.com/en/api/sms\npack.setUserAuthentication({\n  type: coda.AuthenticationType.Custom,\n  params: [\n    { name: \"api_key\", description: \"API key.\" },\n    { name: \"api_secret\", description: \"API secret.\" },\n  ],\n});\n\npack.addFormula({\n  name: \"SendSMS\",\n  description: \"Sends an SMS message.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"from\",\n      description: \"The phone number to send from.\",\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"to\",\n      description: \"The phone number to send to.\",\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"text\",\n      description: \"The text of the message.\",\n    }),\n  ],\n  resultType: coda.ValueType.String,\n  isAction: true,\n  execute: async function ([from, to, text], context) {\n    // Create the placeholders for the API key and secret.\n    let invocationToken = context.invocationToken;\n    let apiKeyPlaceholder = \"{{api_key-\" + invocationToken + \"}}\";\n    let apiSecretPlaceholder = \"{{api_secret-\" + invocationToken + \"}}\";\n\n    // Construct the JSON request body.\n    let body = {\n      from: from,\n      to: to,\n      text: text,\n      // These placeholders will be automatically replaced with the user's key\n      // and secret before the request is made.\n      api_key: apiKeyPlaceholder,\n      api_secret: apiSecretPlaceholder,\n    };\n\n    let response = await context.fetcher.fetch({\n      method: \"POST\",\n      url: \"https://rest.nexmo.com/sms/json\",\n      headers: {\n        \"Content-Type\": \"application/json\",\n      },\n      body: JSON.stringify(body),\n    });\n\n    let message = response.body.messages[0];\n    if (message.status !== \"0\") {\n      throw new coda.UserVisibleError(message[\"error-text\"]);\n    }\n    return message[\"message-id\"];\n  },\n});\n\n// Allow the pack to make requests to Vonage (former Nexmo).\npack.addNetworkDomain(\"nexmo.com\");",
+          language: 'javascript',
+          minimap: {enabled: false},
+          readOnly: true,
+          renderValidationDecorations: 'off',
+          wordWrap: 'on',
+          contextmenu: false,
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div id="container" style="position: absolute; top: 0; right: 16; bottom: 16; left: 0"></div>
+  </body>
+</html>

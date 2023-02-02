@@ -9,9 +9,26 @@ search:
 [core](../modules/core.md).MultiQueryParamTokenAuthentication
 
 Authenticate using multiple tokens, each passed as a different URL parameter, e.g.
-https://example.com/api?param1=token1&param2=token2
+`https://example.com/api?param1=token1&param2=token2`.
 
 The parameter names are defined in the [params](core.MultiQueryParamTokenAuthentication.md#params) array property.
+
+**`Example`**
+
+```ts
+pack.setUserAuthentication({
+  type: coda.AuthenticationType.MultiQueryParamToken,
+  params: [
+    { name: "key", description: "The key." },
+    { name: "secret", description: "The secret." },
+  ],
+});
+```
+
+**`See`**
+
+ - [Authenticating with other services - Simple tokens]({{ config.site_url }}guides/basics/authentication/#simple-tokens)
+ - [Authentication samples - Multiple query parameters]({{ config.site_url }}samples/topic/authentication/#multiple-query-parameters)
 
 ## Hierarchy
 

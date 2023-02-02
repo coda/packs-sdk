@@ -9,7 +9,10 @@ search:
 [core](../modules/core.md).AWSAccessKeyAuthentication
 
 Authenticate to Amazon Web Services using an IAM access key id & secret access key pair.
-See https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
+
+**`See`**
+
+[Amazon - AWS Signature Version 4](https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html)
 
 ## Hierarchy
 

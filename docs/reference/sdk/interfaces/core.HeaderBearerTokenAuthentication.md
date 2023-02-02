@@ -10,6 +10,19 @@ search:
 
 Authenticate using an HTTP header of the form `Authorization: Bearer <token>`.
 
+**`Example`**
+
+```ts
+pack.setUserAuthentication({
+  type: coda.AuthenticationType.HeaderBearerToken,
+});
+```
+
+**`See`**
+
+ - [Authenticating with other services - Simple tokens]({{ config.site_url }}guides/basics/authentication/#simple-tokens)
+ - [Authentication samples - Authorization header]({{ config.site_url }}samples/topic/authentication/#authorization-header)
+
 ## Hierarchy
 
 - [`BaseAuthentication`](core.BaseAuthentication.md)

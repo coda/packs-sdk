@@ -50,7 +50,6 @@ import * as coda from "@codahq/packs-sdk";
 ## Interfaces
 
 - [AWSAccessKeyAuthentication](../interfaces/core.AWSAccessKeyAuthentication.md)
-- [AWSAssumeRoleAuthentication](../interfaces/core.AWSAssumeRoleAuthentication.md)
 - [ArraySchema](../interfaces/core.ArraySchema.md)
 - [ArrayType](../interfaces/core.ArrayType.md)
 - [BaseAuthentication](../interfaces/core.BaseAuthentication.md)
@@ -122,7 +121,6 @@ import * as coda from "@codahq/packs-sdk";
 - [SyncTableOptions](../interfaces/core.SyncTableOptions.md)
 - [TemporaryBlobStorage](../interfaces/core.TemporaryBlobStorage.md)
 - [TextAttributionNode](../interfaces/core.TextAttributionNode.md)
-- [VariousAuthentication](../interfaces/core.VariousAuthentication.md)
 - [WebBasicAuthentication](../interfaces/core.WebBasicAuthentication.md)
 
 ## Type Aliases

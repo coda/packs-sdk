@@ -11,6 +11,20 @@ search:
 Authenticate using an HTTP header with a custom name and token prefix that you specify.
 The header name is defined in the [headerName](core.CustomHeaderTokenAuthentication.md#headername) property.
 
+**`Example`**
+
+```ts
+pack.setUserAuthentication({
+  type: coda.AuthenticationType.CustomHeaderToken,
+  headerName: "X-API-Key",
+});
+```
+
+**`See`**
+
+ - [Authenticating with other services - Simple tokens]({{ config.site_url }}guides/basics/authentication/#simple-tokens)
+ - [Authentication samples - Custom header]({{ config.site_url }}samples/topic/authentication/#custom-header)
+
 ## Hierarchy
 
 - [`BaseAuthentication`](core.BaseAuthentication.md)
