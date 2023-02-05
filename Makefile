@@ -81,7 +81,7 @@ bootstrap:
 
 .PHONY: lint
 lint:
-	${ROOTDIR}/node_modules/.bin/eslint -c .eslintrc.js --ext .ts .
+	${ROOTDIR}/node_modules/.bin/eslint -c .eslintrc.js -f tap --ext .ts .
 
 	# Markdown lint.
 	npx remark docs --quiet --frail --ignore-pattern 'docs/reference/*'
@@ -101,7 +101,7 @@ lint:
 
 .PHONY: lint-fix
 lint-fix:
-	${ROOTDIR}/node_modules/.bin/eslint -c .eslintrc.js --ext .ts --fix .
+	${ROOTDIR}/node_modules/.bin/eslint -c .eslintrc.js -f tap --ext .ts --fix .
 
 .PHONY: do-compile-isolated-vm
 do-compile-isolated-vm:
