@@ -7,3 +7,6 @@ dist
 node_modules
 *.d.ts
 *.js
+
+# This has a separate self-contained .eslintrc.js configuration
+documentation/samples
