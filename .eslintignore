@@ -1,9 +1,9 @@
-.circleci/*
-.githooks/*
-.idea/*
-.vscode/*
+.circleci
+.githooks
+.idea
+.vscode
 .yarn*
-dist/*
-node_modules/*
+dist
+node_modules
 *.d.ts
 *.js
