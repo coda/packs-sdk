@@ -1,15 +1,12 @@
-.coda
-.coda.json
+*yarn*
+.coda*
 .DS_Store
 .vscode
 node_modules
 artifacts
 dist/test
-yarn-error.log
 local-docs
 site
-.coda-pack.json
-.coda-credentials.json
 .npmrc
 .devcontainer
 .cache
