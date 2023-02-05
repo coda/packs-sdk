@@ -2,4 +2,6 @@
 .githooks/*
 .idea/*
 .vscode/*
+dist/*
 node_modules/*
+*.d.ts
