@@ -1,12 +1,12 @@
 *yarn*
-.coda*
 .DS_Store
+.cache
+.coda*
+.devcontainer
+.npmrc
 .vscode
-node_modules
 artifacts
 dist/test
 local-docs
+node_modules
 site
-.npmrc
-.devcontainer
-.cache
