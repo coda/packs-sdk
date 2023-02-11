@@ -7,7 +7,6 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ### Changed
 
 - Updated `PrecannedDateRange` to match the date range picker in the Coda UI: added `Last90Days`, `Last180Days`, `Last365Days`, `Next90Days`, `Next180Days`, `Next365Days`, `Last7AndNext7Days`, `Last30AndNext30Days`, deprecated `Last3Months`, `Last6Months`, `Next3Months`, and `Next6Months`, and removed `ThisWeekStart`, `ThisMonthStart`, and `ThisYearStart`, which never actually worked.
-- Improved `eslint` calls in `Makefile` to ensure the associated ESLint config files are applied as expected.
 
 ## [1.2.3] - 2022-12-13
 
