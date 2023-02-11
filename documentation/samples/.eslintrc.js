@@ -1,5 +1,4 @@
 module.exports = {
-  root: true,
   plugins: [
     'prefer-let',
     '@getify/proper-arrows',
