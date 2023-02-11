@@ -81,7 +81,7 @@ bootstrap:
 
 .PHONY: lint
 lint:
-	find . -name "*.ts" | grep -v /dist/ | grep -v /node_modules/ | grep -v "\.d\.ts" | xargs ${ROOTDIR}/node_modules/.bin/eslint
+	${ROOTDIR}/node_modules/.bin/eslint --ext .ts .
 
 	# Markdown lint.
 	npx remark docs --quiet --frail --ignore-pattern 'docs/reference/*'
@@ -101,7 +101,7 @@ lint:
 
 .PHONY: lint-fix
 lint-fix:
-	find . -name "*.ts" | grep -v /dist/ | grep -v /node_modules/ | grep -v .d.ts | xargs ${ROOTDIR}/node_modules/.bin/eslint --fix
+	${ROOTDIR}/node_modules/.bin/eslint --fix --ext .ts .
 
 .PHONY: do-compile-isolated-vm
 do-compile-isolated-vm:
