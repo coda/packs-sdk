@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- Added an `--apiToken` argument to the `clone`, `create`, `link`, `release`, and `upload` CLI commands. This makes it easier to use the CLI in a CI/CD environment where the API token is passed as an environment variable (GitHub Actions, etc).
+
 ### Changed
 
 - Updated `PrecannedDateRange` to match the date range picker in the Coda UI: added `Last90Days`, `Last180Days`, `Last365Days`, `Next90Days`, `Next180Days`, `Next365Days`, `Last7AndNext7Days`, `Last30AndNext30Days`, deprecated `Last3Months`, `Last6Months`, `Next3Months`, and `Next6Months`, and removed `ThisWeekStart`, `ThisMonthStart`, and `ThisYearStart`, which never actually worked.

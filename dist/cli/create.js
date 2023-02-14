@@ -30,51 +30,46 @@ exports.createPack = exports.handleCreate = void 0;
 const config_storage_1 = require("./config_storage");
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
+const helpers_3 = require("./helpers");
 const errors_1 = require("./errors");
 const errors_2 = require("./errors");
 const fs_1 = __importDefault(require("fs"));
 const config_storage_2 = require("./config_storage");
-const config_storage_3 = require("./config_storage");
 const coda_1 = require("../helpers/external-api/coda");
 const path = __importStar(require("path"));
-const helpers_3 = require("../testing/helpers");
-const config_storage_4 = require("./config_storage");
+const helpers_4 = require("../testing/helpers");
+const config_storage_3 = require("./config_storage");
 const errors_3 = require("./errors");
-async function handleCreate({ manifestFile, codaApiEndpoint, name, description, workspace, }) {
-    await createPack(manifestFile, codaApiEndpoint, { name, description, workspace });
+async function handleCreate({ manifestFile, codaApiEndpoint, name, description, workspace, apiToken, }) {
+    await createPack(manifestFile, codaApiEndpoint, { name, description, workspace }, apiToken);
 }
 exports.handleCreate = handleCreate;
-async function createPack(manifestFile, codaApiEndpoint, { name, description, workspace }) {
+async function createPack(manifestFile, codaApiEndpoint, { name, description, workspace }, apiToken) {
     const manifestDir = path.dirname(manifestFile);
-    const formattedEndpoint = (0, helpers_2.formatEndpoint)(codaApiEndpoint);
-    // TODO(alan): we probably want to redirect them to the `coda register`
-    // flow if they don't have a Coda API token.
-    const apiKey = (0, config_storage_2.getApiKey)(codaApiEndpoint);
-    if (!apiKey) {
-        (0, helpers_3.printAndExit)('Missing API token. Please run `coda register` to register one.');
-    }
+    const formattedEndpoint = (0, helpers_3.formatEndpoint)(codaApiEndpoint);
+    apiToken = (0, helpers_1.assertApiToken)(codaApiEndpoint, apiToken);
     if (!fs_1.default.existsSync(manifestFile)) {
-        return (0, helpers_3.printAndExit)(`${manifestFile} is not a valid pack definition file. Check the filename and try again.`);
+        return (0, helpers_4.printAndExit)(`${manifestFile} is not a valid pack definition file. Check the filename and try again.`);
     }
-    const existingPackId = (0, config_storage_3.getPackId)(manifestDir, codaApiEndpoint);
+    const existingPackId = (0, config_storage_2.getPackId)(manifestDir, codaApiEndpoint);
     if (existingPackId) {
-        return (0, helpers_3.printAndExit)(`This directory has already been registered on ${codaApiEndpoint} with pack id ${existingPackId}.\n` +
+        return (0, helpers_4.printAndExit)(`This directory has already been registered on ${codaApiEndpoint} with pack id ${existingPackId}.\n` +
             `If you're trying to create a new pack from a different manifest, you should put the new manifest in a different directory.\n` +
             `If you're intentionally trying to create a new pack, you can delete ${config_storage_1.PACK_ID_FILE_NAME} in this directory and try again.`);
     }
-    const codaClient = (0, helpers_1.createCodaClient)(apiKey, formattedEndpoint);
+    const codaClient = (0, helpers_2.createCodaClient)(apiToken, formattedEndpoint);
     try {
         const response = await codaClient.createPack({}, { name, description, workspaceId: parseWorkspace(workspace) });
         const packId = response.packId;
-        (0, config_storage_4.storePackId)(manifestDir, packId, codaApiEndpoint);
-        return (0, helpers_3.printAndExit)(`Pack created successfully! You can manage pack settings at ${codaApiEndpoint}/p/${packId}`, 0);
+        (0, config_storage_3.storePackId)(manifestDir, packId, codaApiEndpoint);
+        return (0, helpers_4.printAndExit)(`Pack created successfully! You can manage pack settings at ${codaApiEndpoint}/p/${packId}`, 0);
     }
     catch (err) {
         if ((0, coda_1.isResponseError)(err)) {
-            return (0, helpers_3.printAndExit)(`Unable to create your pack, received error: ${await (0, errors_2.formatResponseError)(err)}`);
+            return (0, helpers_4.printAndExit)(`Unable to create your pack, received error: ${await (0, errors_2.formatResponseError)(err)}`);
         }
         const errors = [`Unable to create your pack, received error: ${(0, errors_1.formatError)(err)}`, (0, errors_3.tryParseSystemError)(err)];
-        return (0, helpers_3.printAndExit)(errors.join('\n'));
+        return (0, helpers_4.printAndExit)(errors.join('\n'));
     }
 }
 exports.createPack = createPack;
