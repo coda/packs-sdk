@@ -1,11 +1,11 @@
 import type {ArgumentsCamelCase} from 'yargs';
 import {PACK_ID_FILE_NAME} from './config_storage';
+import {assertApiToken} from './helpers';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import {formatError} from './errors';
 import {formatResponseError} from './errors';
 import fs from 'fs';
-import {getApiKey} from './config_storage';
 import {getPackId} from './config_storage';
 import {isResponseError} from '../helpers/external-api/coda';
 import * as path from 'path';
@@ -41,14 +41,7 @@ export async function createPack(
 ) {
   const manifestDir = path.dirname(manifestFile);
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
-  // TODO(alan): we probably want to redirect them to the `coda register`
-  // flow if they don't have a Coda API token.
-  if (!apiToken) {
-    apiToken = getApiKey(codaApiEndpoint);
-    if (!apiToken) {
-      return printAndExit('Missing API token. Please run `coda register` to register one.');
-    }
-  }
+  apiToken = assertApiToken(codaApiEndpoint, apiToken);
 
   if (!fs.existsSync(manifestFile)) {
     return printAndExit(`${manifestFile} is not a valid pack definition file. Check the filename and try again.`);

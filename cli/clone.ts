@@ -1,12 +1,12 @@
 import type {ArgumentsCamelCase} from 'yargs';
 import type {Client} from '../helpers/external-api/coda';
+import {assertApiToken} from './helpers';
+import {assertPackIdOrUrl} from './helpers';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import fs from 'fs-extra';
-import {getApiKey} from './config_storage';
 import {handleInit} from './init';
 import {isResponseError} from '../helpers/external-api/coda';
-import {parsePackIdOrUrl} from './link';
 import path from 'path';
 import {print} from '../testing/helpers';
 import {printAndExit} from '../testing/helpers';
@@ -21,19 +21,9 @@ interface CloneArgs {
 
 export async function handleClone({packIdOrUrl, codaApiEndpoint, apiToken}: ArgumentsCamelCase<CloneArgs>) {
   const manifestDir = process.cwd();
-  const packId = parsePackIdOrUrl(packIdOrUrl);
-  if (!packId) {
-    return printAndExit(`Not a valid pack ID or URL: ${packIdOrUrl}`);
-  }
-
+  const packId = assertPackIdOrUrl(packIdOrUrl);
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
-
-  if (!apiToken) {
-    apiToken = getApiKey(codaApiEndpoint);
-    if (!apiToken) {
-      return printAndExit('Missing API token. Please run `coda register` to register one.');
-    }
-  }
+  apiToken = assertApiToken(codaApiEndpoint, apiToken);
 
   const codeAlreadyExists = fs.existsSync(path.join(manifestDir, 'pack.ts'));
   if (codeAlreadyExists) {

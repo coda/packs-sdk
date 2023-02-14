@@ -6,6 +6,8 @@ import type {PublicApiCreatePackVersionResponse} from '../helpers/external-api/v
 import {PublicApiPackSource} from '../helpers/external-api/v1';
 import type {PublicApiPackVersionUploadInfo} from '../helpers/external-api/v1';
 import type {TimerShimStrategy} from '../testing/compile';
+import {assertApiToken} from './helpers';
+import {assertPackId} from './helpers';
 import {compilePackBundle} from '../testing/compile';
 import {compilePackMetadata} from '../helpers/metadata';
 import {computeSha256} from '../helpers/crypto';
@@ -14,8 +16,6 @@ import {formatEndpoint} from './helpers';
 import {formatError} from './errors';
 import {formatResponseError} from './errors';
 import fs from 'fs-extra';
-import {getApiKey} from './config_storage';
-import {getPackId} from './config_storage';
 import {importManifest} from './helpers';
 import {isResponseError} from '../helpers/external-api/coda';
 import {isTestCommand} from './helpers';
@@ -65,6 +65,9 @@ export async function handleUpload({
 
   const manifestDir = path.dirname(manifestFile);
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
+  apiToken = assertApiToken(codaApiEndpoint, apiToken);
+  const packId = assertPackId(manifestDir, codaApiEndpoint);
+
   logger.info('Building Pack bundle...');
 
   if (fs.existsSync(intermediateOutputDirectory)) {
@@ -90,19 +93,7 @@ export async function handleUpload({
   const packageJson = await import(isTestCommand() ? '../package.json' : '../../package.json');
   const codaPacksSDKVersion = packageJson.version as string;
 
-  if (!apiToken) {
-    apiToken = getApiKey(codaApiEndpoint);
-    if (!apiToken) {
-      return printAndExit('Missing API token. Please run `coda register` to register one.');
-    }
-  }
-
   const client = createCodaClient(apiToken, formattedEndpoint);
-
-  const packId = getPackId(manifestDir, codaApiEndpoint);
-  if (!packId) {
-    printAndExit(`Could not find a Pack id registered in directory "${manifestDir}"`);
-  }
 
   const metadata = compilePackMetadata(manifest);
   let packVersion = manifest.version;

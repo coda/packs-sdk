@@ -11,3 +11,6 @@ export declare function isTestCommand(): boolean;
 export declare function makeManifestFullPath(manifestPath: string): string;
 export declare function getPackAuth(packDef: BasicPackDefinition): Authentication | undefined;
 export declare function importManifest<T extends BasicPackDefinition = BasicPackDefinition>(bundleFilename: string): Promise<T>;
+export declare function assertApiToken(codaApiEndpoint: string, cliApiToken?: string): string;
+export declare function assertPackId(manifestDir: string, codaApiEndpoint: string): number;
+export declare function assertPackIdOrUrl(packIdOrUrl: string): number;

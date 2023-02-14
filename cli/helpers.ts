@@ -2,8 +2,12 @@ import type {Authentication} from '../types';
 import type {BasicPackDefinition} from '../types';
 import {Client} from '../helpers/external-api/coda';
 import type {SpawnSyncOptionsWithBufferEncoding} from 'child_process';
+import {getApiKey} from './config_storage';
+import {getPackId} from './config_storage';
+import {parsePackIdOrUrl} from './link';
 import path from 'path';
 import {print} from '../testing/helpers';
+import {printAndExit} from '../testing/helpers';
 import {spawnSync} from 'child_process';
 
 export function spawnProcess(command: string, {stdio = 'inherit'}: SpawnSyncOptionsWithBufferEncoding = {}) {
@@ -50,4 +54,33 @@ export async function importManifest<T extends BasicPackDefinition = BasicPackDe
 ): Promise<T> {
   const module = await import(path.resolve(bundleFilename));
   return module.pack || module.manifest;
+}
+
+export function assertApiToken(codaApiEndpoint: string, cliApiToken?: string): string {
+  if (cliApiToken) {
+    return cliApiToken;
+  }
+  const apiKey = getApiKey(codaApiEndpoint);
+  if (!apiKey) {
+    return printAndExit('Missing API token. Please run `coda register` to register one.');
+  }
+  return apiKey;
+}
+
+export function assertPackId(manifestDir: string, codaApiEndpoint: string): number {
+  const packId = getPackId(manifestDir, codaApiEndpoint);
+  if (!packId) {
+    return printAndExit(
+      `Could not find a Pack id in directory ${manifestDir}. You may need to run "coda create" first if this is a brand new pack.`,
+    );
+  }
+  return packId;
+}
+
+export function assertPackIdOrUrl(packIdOrUrl: string): number {
+  const packId = parsePackIdOrUrl(packIdOrUrl);
+  if (!packId) {
+    return printAndExit(`Not a valid pack ID or URL: ${packIdOrUrl}`);
+  }
+  return packId;
 }
