@@ -20,6 +20,18 @@ import {handleWhoami} from './whoami';
 import {tryGetIvm} from '../testing/ivm_wrapper';
 import yargs from 'yargs';
 
+const ApiTokenArg = {
+  string: true,
+  alias: 't',
+  desc: 'API token to use for the operation. Use the `register` command to define a default token.',
+};
+
+const CodaApiEndpointArg = {
+  string: true,
+  hidden: true,
+  default: DEFAULT_API_ENDPOINT,
+}
+
 if (require.main === module) {
   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   void yargs
@@ -85,16 +97,8 @@ if (require.main === module) {
       command: 'clone <packIdOrUrl>',
       describe: 'Clone an existing Pack that was created using Pack Studio',
       builder: {
-        apiToken: {
-          string: true,
-          alias: 't',
-          desc: 'API token to use for the operation. Use the `register` command to define a default token.',
-        },
-        codaApiEndpoint: {
-          string: true,
-          hidden: true,
-          default: DEFAULT_API_ENDPOINT,
-        },
+        apiToken: ApiTokenArg,
+        codaApiEndpoint: CodaApiEndpointArg,
       },
       handler: handleClone,
     })
@@ -102,11 +106,7 @@ if (require.main === module) {
       command: 'register [apiToken]',
       describe: 'Register API token to publish a Pack',
       builder: {
-        codaApiEndpoint: {
-          string: true,
-          hidden: true,
-          default: DEFAULT_API_ENDPOINT,
-        },
+        codaApiEndpoint: CodaApiEndpointArg,
       },
       handler: handleRegister,
     })
@@ -114,11 +114,7 @@ if (require.main === module) {
       command: 'whoami [apiToken]',
       describe: 'Looks up information about the API token that is registered in this environment',
       builder: {
-        codaApiEndpoint: {
-          string: true,
-          hidden: true,
-          default: DEFAULT_API_ENDPOINT,
-        },
+        codaApiEndpoint: CodaApiEndpointArg,
       },
       handler: handleWhoami,
     })
@@ -166,16 +162,8 @@ if (require.main === module) {
           default: TimerShimStrategy.None,
           desc: 'Options: none, error, fake.',
         },
-        apiToken: {
-          string: true,
-          alias: 't',
-          desc: 'API token to use for the operation. Use the `register` command to define a default token.',
-        },
-        codaApiEndpoint: {
-          string: true,
-          hidden: true,
-          default: DEFAULT_API_ENDPOINT,
-        },
+        apiToken: ApiTokenArg,
+        codaApiEndpoint: CodaApiEndpointArg,
       },
       handler: handleUpload,
     })
@@ -198,16 +186,8 @@ if (require.main === module) {
           alias: 'w',
           describe: 'The workspace ID, or workspace URL that you want your Pack to be created under.',
         },
-        apiToken: {
-          string: true,
-          alias: 't',
-          desc: 'API token to use for the operation. Use the `register` command to define a default token.',
-        },
-        codaApiEndpoint: {
-          string: true,
-          hidden: true,
-          default: DEFAULT_API_ENDPOINT,
-        },
+        apiToken: ApiTokenArg,
+        codaApiEndpoint: CodaApiEndpointArg,
       },
       handler: handleCreate,
     })
@@ -215,16 +195,8 @@ if (require.main === module) {
       command: 'link <manifestDir> <packIdOrUrl>',
       describe: "Link to a pre-existing Pack ID on Coda's servers",
       builder: {
-        apiToken: {
-          string: true,
-          alias: 't',
-          desc: 'API token to use for the operation. Use the `register` command to define a default token.',
-        },
-        codaApiEndpoint: {
-          string: true,
-          hidden: true,
-          default: DEFAULT_API_ENDPOINT,
-        },
+        apiToken: ApiTokenArg,
+        codaApiEndpoint: CodaApiEndpointArg,
       },
       handler: handleLink,
     })
@@ -253,16 +225,8 @@ if (require.main === module) {
           describe: 'Notes about the contents of this Pack release',
           demandOption: 'Please provide release notes, which will be shown to Pack users to understand the release.',
         },
-        apiToken: {
-          string: true,
-          alias: 't',
-          desc: 'API token to use for the operation. Use the `register` command to define a default token.',
-        },
-        codaApiEndpoint: {
-          string: true,
-          hidden: true,
-          default: DEFAULT_API_ENDPOINT,
-        },
+        apiToken: ApiTokenArg,
+        codaApiEndpoint: CodaApiEndpointArg,
       },
       handler: handleRelease,
     })
