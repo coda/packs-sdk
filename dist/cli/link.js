@@ -14,15 +14,17 @@ const PackEditUrlRegex = /^https:\/\/(?:[^/]*)coda.io(?:\:[0-9]+)?\/p\/([0-9]+)(
 const PackGalleryUrlRegex = /^https:\/\/(?:[^/]*)coda.io(?:\:[0-9]+)?\/packs\/[^/]*-([0-9]+)$/;
 const PackPlainIdRegex = /^([0-9]+)$/;
 const PackRegexes = [PackEditUrlRegex, PackGalleryUrlRegex, PackPlainIdRegex];
-async function handleLink({ manifestDir, codaApiEndpoint, packIdOrUrl }) {
+async function handleLink({ manifestDir, codaApiEndpoint, packIdOrUrl, apiToken }) {
     const formattedEndpoint = (0, helpers_2.formatEndpoint)(codaApiEndpoint);
     // TODO(dweitzman): Add a download command to fetch the latest code from
     // the server and ask people if they want to download after linking.
-    const apiKey = (0, config_storage_1.getApiKey)(codaApiEndpoint);
-    if (!apiKey) {
-        return (0, helpers_3.printAndExit)('Missing API token. Please run `coda register` to register one.');
+    if (!apiToken) {
+        apiToken = (0, config_storage_1.getApiKey)(codaApiEndpoint);
+        if (!apiToken) {
+            return (0, helpers_3.printAndExit)('Missing API token. Please run `coda register` to register one.');
+        }
     }
-    const codaClient = (0, helpers_1.createCodaClient)(apiKey, formattedEndpoint);
+    const codaClient = (0, helpers_1.createCodaClient)(apiToken, formattedEndpoint);
     const packId = parsePackIdOrUrl(packIdOrUrl);
     if (packId === null) {
         return (0, helpers_3.printAndExit)(`packIdOrUrl must be a pack ID or URL, not ${packIdOrUrl}`);

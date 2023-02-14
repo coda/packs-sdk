@@ -37,18 +37,20 @@ const path = __importStar(require("path"));
 const helpers_4 = require("../testing/helpers");
 const helpers_5 = require("../testing/helpers");
 const errors_3 = require("./errors");
-async function handleRelease({ manifestFile, packVersion: explicitPackVersion, codaApiEndpoint, notes, }) {
+async function handleRelease({ manifestFile, packVersion: explicitPackVersion, codaApiEndpoint, notes, apiToken, }) {
     const manifestDir = path.dirname(manifestFile);
-    const apiKey = (0, config_storage_1.getApiKey)(codaApiEndpoint);
     const formattedEndpoint = (0, helpers_2.formatEndpoint)(codaApiEndpoint);
-    if (!apiKey) {
-        return (0, helpers_4.printAndExit)('Missing API token. Please run `coda register` to register one.');
+    if (!apiToken) {
+        apiToken = (0, config_storage_1.getApiKey)(codaApiEndpoint);
+        if (!apiToken) {
+            return (0, helpers_4.printAndExit)('Missing API token. Please run `coda register` to register one.');
+        }
     }
     const packId = (0, config_storage_2.getPackId)(manifestDir, codaApiEndpoint);
     if (!packId) {
         return (0, helpers_4.printAndExit)(`Could not find a Pack id in directory ${manifestDir}. You may need to run "coda create" first if this is a brand new pack.`);
     }
-    const codaClient = (0, helpers_1.createCodaClient)(apiKey, formattedEndpoint);
+    const codaClient = (0, helpers_1.createCodaClient)(apiToken, formattedEndpoint);
     let packVersion = explicitPackVersion;
     if (!packVersion) {
         try {

@@ -16,16 +16,18 @@ const helpers_3 = require("../testing/helpers");
 const helpers_4 = require("../testing/helpers");
 const helpers_5 = require("../testing/helpers");
 const config_storage_2 = require("./config_storage");
-async function handleClone({ packIdOrUrl, codaApiEndpoint }) {
+async function handleClone({ packIdOrUrl, codaApiEndpoint, apiToken }) {
     const manifestDir = process.cwd();
     const packId = (0, link_1.parsePackIdOrUrl)(packIdOrUrl);
     if (!packId) {
         return (0, helpers_4.printAndExit)(`Not a valid pack ID or URL: ${packIdOrUrl}`);
     }
     const formattedEndpoint = (0, helpers_2.formatEndpoint)(codaApiEndpoint);
-    const apiKey = (0, config_storage_1.getApiKey)(codaApiEndpoint);
-    if (!apiKey) {
-        return (0, helpers_4.printAndExit)('Missing API token. Please run `coda register <apiKey>` to register one.');
+    if (!apiToken) {
+        apiToken = (0, config_storage_1.getApiKey)(codaApiEndpoint);
+        if (!apiToken) {
+            return (0, helpers_4.printAndExit)('Missing API token. Please run `coda register` to register one.');
+        }
     }
     const codeAlreadyExists = fs_extra_1.default.existsSync(path_1.default.join(manifestDir, 'pack.ts'));
     if (codeAlreadyExists) {
@@ -36,7 +38,7 @@ async function handleClone({ packIdOrUrl, codaApiEndpoint }) {
             return (0, helpers_4.printAndExit)('Aborting');
         }
     }
-    const client = (0, helpers_1.createCodaClient)(apiKey, formattedEndpoint);
+    const client = (0, helpers_1.createCodaClient)(apiToken, formattedEndpoint);
     let packVersion;
     try {
         packVersion = await getPackLatestVersion(client, packId);

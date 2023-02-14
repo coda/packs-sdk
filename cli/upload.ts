@@ -35,6 +35,7 @@ interface UploadArgs {
   notes?: string;
   intermediateOutputDirectory: string;
   timerStrategy: TimerShimStrategy;
+  apiToken?: string;
 }
 
 function cleanup(intermediateOutputDirectory: string, logger: Logger) {
@@ -54,6 +55,7 @@ export async function handleUpload({
   codaApiEndpoint,
   notes,
   timerStrategy,
+  apiToken,
 }: ArgumentsCamelCase<UploadArgs>) {
   const logger = console;
   function printAndExit(message: string): never {
@@ -88,12 +90,14 @@ export async function handleUpload({
   const packageJson = await import(isTestCommand() ? '../package.json' : '../../package.json');
   const codaPacksSDKVersion = packageJson.version as string;
 
-  const apiKey = getApiKey(codaApiEndpoint);
-  if (!apiKey) {
-    printAndExit('Missing API token. Please run `coda register` to register one.');
+  if (!apiToken) {
+    apiToken = getApiKey(codaApiEndpoint);
+    if (!apiToken) {
+      return printAndExit('Missing API token. Please run `coda register` to register one.');
+    }
   }
 
-  const client = createCodaClient(apiKey, formattedEndpoint);
+  const client = createCodaClient(apiToken, formattedEndpoint);
 
   const packId = getPackId(manifestDir, codaApiEndpoint);
   if (!packId) {

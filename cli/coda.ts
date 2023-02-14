@@ -85,6 +85,11 @@ if (require.main === module) {
       command: 'clone <packIdOrUrl>',
       describe: 'Clone an existing Pack that was created using Pack Studio',
       builder: {
+        apiToken: {
+          string: true,
+          alias: 't',
+          desc: 'API token to use for the operation. Use the `register` command to define a default token.',
+        },
         codaApiEndpoint: {
           string: true,
           hidden: true,
@@ -151,11 +156,6 @@ if (require.main === module) {
           alias: 'n',
           describe: 'Notes about the contents of this Pack version',
         },
-        codaApiEndpoint: {
-          string: true,
-          hidden: true,
-          default: DEFAULT_API_ENDPOINT,
-        },
         intermediateOutputDirectory: {
           string: true,
           alias: 'o',
@@ -165,6 +165,16 @@ if (require.main === module) {
           string: true,
           default: TimerShimStrategy.None,
           desc: 'Options: none, error, fake.',
+        },
+        apiToken: {
+          string: true,
+          alias: 't',
+          desc: 'API token to use for the operation. Use the `register` command to define a default token.',
+        },
+        codaApiEndpoint: {
+          string: true,
+          hidden: true,
+          default: DEFAULT_API_ENDPOINT,
         },
       },
       handler: handleUpload,
@@ -188,6 +198,11 @@ if (require.main === module) {
           alias: 'w',
           describe: 'The workspace ID, or workspace URL that you want your Pack to be created under.',
         },
+        apiToken: {
+          string: true,
+          alias: 't',
+          desc: 'API token to use for the operation. Use the `register` command to define a default token.',
+        },
         codaApiEndpoint: {
           string: true,
           hidden: true,
@@ -200,6 +215,11 @@ if (require.main === module) {
       command: 'link <manifestDir> <packIdOrUrl>',
       describe: "Link to a pre-existing Pack ID on Coda's servers",
       builder: {
+        apiToken: {
+          string: true,
+          alias: 't',
+          desc: 'API token to use for the operation. Use the `register` command to define a default token.',
+        },
         codaApiEndpoint: {
           string: true,
           hidden: true,
@@ -232,6 +252,11 @@ if (require.main === module) {
           alias: 'n',
           describe: 'Notes about the contents of this Pack release',
           demandOption: 'Please provide release notes, which will be shown to Pack users to understand the release.',
+        },
+        apiToken: {
+          string: true,
+          alias: 't',
+          desc: 'API token to use for the operation. Use the `register` command to define a default token.',
         },
         codaApiEndpoint: {
           string: true,

@@ -20,6 +20,7 @@ interface ReleaseArgs {
   packVersion?: string;
   codaApiEndpoint: string;
   notes: string;
+  apiToken?: string;
 }
 
 export async function handleRelease({
@@ -27,15 +28,17 @@ export async function handleRelease({
   packVersion: explicitPackVersion,
   codaApiEndpoint,
   notes,
+  apiToken,
 }: ArgumentsCamelCase<ReleaseArgs>) {
   const manifestDir = path.dirname(manifestFile);
-  const apiKey = getApiKey(codaApiEndpoint);
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
 
-  if (!apiKey) {
-    return printAndExit('Missing API token. Please run `coda register` to register one.');
+  if (!apiToken) {
+    apiToken = getApiKey(codaApiEndpoint);
+    if (!apiToken) {
+      return printAndExit('Missing API token. Please run `coda register` to register one.');
+    }
   }
-
   const packId = getPackId(manifestDir, codaApiEndpoint);
   if (!packId) {
     return printAndExit(
@@ -43,7 +46,7 @@ export async function handleRelease({
     );
   }
 
-  const codaClient = createCodaClient(apiKey, formattedEndpoint);
+  const codaClient = createCodaClient(apiToken, formattedEndpoint);
 
   let packVersion = explicitPackVersion;
   if (!packVersion) {

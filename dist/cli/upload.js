@@ -58,7 +58,7 @@ function cleanup(intermediateOutputDirectory, logger) {
         logger.info(`Intermediate files are moved to ${tempDirectory}`);
     }
 }
-async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApiEndpoint, notes, timerStrategy, }) {
+async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApiEndpoint, notes, timerStrategy, apiToken, }) {
     const logger = console;
     function printAndExit(message) {
         cleanup(intermediateOutputDirectory, logger);
@@ -84,11 +84,13 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
     // Since package.json isn't in dist, we grab it from the root directory instead.
     const packageJson = await Promise.resolve().then(() => __importStar(require((0, helpers_4.isTestCommand)() ? '../package.json' : '../../package.json')));
     const codaPacksSDKVersion = packageJson.version;
-    const apiKey = (0, config_storage_1.getApiKey)(codaApiEndpoint);
-    if (!apiKey) {
-        printAndExit('Missing API token. Please run `coda register` to register one.');
+    if (!apiToken) {
+        apiToken = (0, config_storage_1.getApiKey)(codaApiEndpoint);
+        if (!apiToken) {
+            return printAndExit('Missing API token. Please run `coda register` to register one.');
+        }
     }
-    const client = (0, helpers_1.createCodaClient)(apiKey, formattedEndpoint);
+    const client = (0, helpers_1.createCodaClient)(apiToken, formattedEndpoint);
     const packId = (0, config_storage_2.getPackId)(manifestDir, codaApiEndpoint);
     if (!packId) {
         printAndExit(`Could not find a Pack id registered in directory "${manifestDir}"`);

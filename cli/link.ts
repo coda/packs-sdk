@@ -18,18 +18,21 @@ interface LinkArgs {
   manifestDir: string;
   codaApiEndpoint: string;
   packIdOrUrl: string;
+  apiToken?: string;
 }
 
-export async function handleLink({manifestDir, codaApiEndpoint, packIdOrUrl}: ArgumentsCamelCase<LinkArgs>) {
+export async function handleLink({manifestDir, codaApiEndpoint, packIdOrUrl, apiToken}: ArgumentsCamelCase<LinkArgs>) {
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
   // TODO(dweitzman): Add a download command to fetch the latest code from
   // the server and ask people if they want to download after linking.
-  const apiKey = getApiKey(codaApiEndpoint);
-  if (!apiKey) {
-    return printAndExit('Missing API token. Please run `coda register` to register one.');
+  if (!apiToken) {
+    apiToken = getApiKey(codaApiEndpoint);
+    if (!apiToken) {
+      return printAndExit('Missing API token. Please run `coda register` to register one.');
+    }
   }
 
-  const codaClient = createCodaClient(apiKey, formattedEndpoint);
+  const codaClient = createCodaClient(apiToken, formattedEndpoint);
   const packId = parsePackIdOrUrl(packIdOrUrl);
   if (packId === null) {
     return printAndExit(`packIdOrUrl must be a pack ID or URL, not ${packIdOrUrl}`);

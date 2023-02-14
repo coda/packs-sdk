@@ -40,18 +40,20 @@ const path = __importStar(require("path"));
 const helpers_3 = require("../testing/helpers");
 const config_storage_4 = require("./config_storage");
 const errors_3 = require("./errors");
-async function handleCreate({ manifestFile, codaApiEndpoint, name, description, workspace, }) {
-    await createPack(manifestFile, codaApiEndpoint, { name, description, workspace });
+async function handleCreate({ manifestFile, codaApiEndpoint, name, description, workspace, apiToken, }) {
+    await createPack(manifestFile, codaApiEndpoint, { name, description, workspace }, apiToken);
 }
 exports.handleCreate = handleCreate;
-async function createPack(manifestFile, codaApiEndpoint, { name, description, workspace }) {
+async function createPack(manifestFile, codaApiEndpoint, { name, description, workspace }, apiToken) {
     const manifestDir = path.dirname(manifestFile);
     const formattedEndpoint = (0, helpers_2.formatEndpoint)(codaApiEndpoint);
     // TODO(alan): we probably want to redirect them to the `coda register`
     // flow if they don't have a Coda API token.
-    const apiKey = (0, config_storage_2.getApiKey)(codaApiEndpoint);
-    if (!apiKey) {
-        (0, helpers_3.printAndExit)('Missing API token. Please run `coda register` to register one.');
+    if (!apiToken) {
+        apiToken = (0, config_storage_2.getApiKey)(codaApiEndpoint);
+        if (!apiToken) {
+            return (0, helpers_3.printAndExit)('Missing API token. Please run `coda register` to register one.');
+        }
     }
     if (!fs_1.default.existsSync(manifestFile)) {
         return (0, helpers_3.printAndExit)(`${manifestFile} is not a valid pack definition file. Check the filename and try again.`);
@@ -62,7 +64,7 @@ async function createPack(manifestFile, codaApiEndpoint, { name, description, wo
             `If you're trying to create a new pack from a different manifest, you should put the new manifest in a different directory.\n` +
             `If you're intentionally trying to create a new pack, you can delete ${config_storage_1.PACK_ID_FILE_NAME} in this directory and try again.`);
     }
-    const codaClient = (0, helpers_1.createCodaClient)(apiKey, formattedEndpoint);
+    const codaClient = (0, helpers_1.createCodaClient)(apiToken, formattedEndpoint);
     try {
         const response = await codaClient.createPack({}, { name, description, workspaceId: parseWorkspace(workspace) });
         const packId = response.packId;

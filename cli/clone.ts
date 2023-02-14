@@ -16,9 +16,10 @@ import {storePackId} from './config_storage';
 interface CloneArgs {
   packIdOrUrl: string;
   codaApiEndpoint: string;
+  apiToken?: string;
 }
 
-export async function handleClone({packIdOrUrl, codaApiEndpoint}: ArgumentsCamelCase<CloneArgs>) {
+export async function handleClone({packIdOrUrl, codaApiEndpoint, apiToken}: ArgumentsCamelCase<CloneArgs>) {
   const manifestDir = process.cwd();
   const packId = parsePackIdOrUrl(packIdOrUrl);
   if (!packId) {
@@ -27,9 +28,11 @@ export async function handleClone({packIdOrUrl, codaApiEndpoint}: ArgumentsCamel
 
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
 
-  const apiKey = getApiKey(codaApiEndpoint);
-  if (!apiKey) {
-    return printAndExit('Missing API token. Please run `coda register <apiKey>` to register one.');
+  if (!apiToken) {
+    apiToken = getApiKey(codaApiEndpoint);
+    if (!apiToken) {
+      return printAndExit('Missing API token. Please run `coda register` to register one.');
+    }
   }
 
   const codeAlreadyExists = fs.existsSync(path.join(manifestDir, 'pack.ts'));
@@ -42,7 +45,7 @@ export async function handleClone({packIdOrUrl, codaApiEndpoint}: ArgumentsCamel
     }
   }
 
-  const client = createCodaClient(apiKey, formattedEndpoint);
+  const client = createCodaClient(apiToken, formattedEndpoint);
 
   let packVersion: string | null;
   try {
