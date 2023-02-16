@@ -144,4 +144,10 @@ export interface ResponseHandlerTemplate<T extends Schema> {
 export declare function generateRequestHandler<ParamDefsT extends ParamDefs>(request: RequestHandlerTemplate, parameters: ParamDefsT): (params: PackFormulaValue[]) => FetchRequest;
 export declare function transformBody(body: any, schema: Schema | undefined): any;
 export declare function untransformBody(body: any, schema: Schema | undefined): any;
+/**
+ * Reverses the transformation of schema object keys to the values expected by the pack.
+ * Useful when passing in a list of keys from Coda -> Pack, such as when sending the aggregated
+ * sync table update payload.
+ */
+export declare function untransformKeys(keys: string[], schema: Schema | undefined): string[];
 export declare function generateObjectResponseHandler<T extends Schema>(response: ResponseHandlerTemplate<T>): (response: FetchResponse, runtimeSchema?: T) => SchemaType<T>;
