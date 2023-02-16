@@ -12,6 +12,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 - Updated `PrecannedDateRange` to match the date range picker in the Coda UI: added `Last90Days`, `Last180Days`, `Last365Days`, `Next90Days`, `Next180Days`, `Next365Days`, `Last7AndNext7Days`, `Last30AndNext30Days`, deprecated `Last3Months`, `Last6Months`, `Next3Months`, and `Next6Months`, and removed `ThisWeekStart`, `ThisMonthStart`, and `ThisYearStart`, which never actually worked.
 
+### Fixed
+
+- Fixed an issue where `coda execute ... --vm=false` wasn't compatible with Node version 19+ (`Cannot set property crypto of #<Object> which has only a getter`).
+
 ## [1.2.3] - 2022-12-13
 
 ### Added
