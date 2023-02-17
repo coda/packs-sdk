@@ -124,6 +124,11 @@ function doFindAndExecutePackFunction<T extends FormulaSpecification>({
             return parentFormula.execute(params as any, executionContext);
           }
           break;
+        case MetadataFormulaType.CellAutocomplete:
+          const syncTable = syncTables?.find(table => table.name === formulaSpec.syncTableName);
+          const autocompleteFn = ensureExists(syncTable?.autocompleteCell);
+          return autocompleteFn.execute(params as any, executionContext);
+          break;
         case MetadataFormulaType.PostSetupSetEndpoint:
           if (
             defaultAuthentication?.type !== AuthenticationType.None &&

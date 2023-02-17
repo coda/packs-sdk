@@ -6945,6 +6945,11 @@ module.exports = (() => {
               return parentFormula.execute(params, executionContext);
             }
             break;
+          case "CellAutocomplete" /* CellAutocomplete */:
+            const syncTable = syncTables?.find((table) => table.name === formulaSpec.syncTableName);
+            const autocompleteFn = ensureExists(syncTable?.autocompleteCell);
+            return autocompleteFn.execute(params, executionContext);
+            break;
           case "PostSetupSetEndpoint" /* PostSetupSetEndpoint */:
             if (defaultAuthentication?.type !== "None" /* None */ && defaultAuthentication?.type !== "Various" /* Various */ && defaultAuthentication?.postSetup) {
               const setupStep = defaultAuthentication.postSetup.find(
@@ -6960,22 +6965,22 @@ module.exports = (() => {
           case "SyncGetTableName" /* SyncGetTableName */:
           case "SyncGetSchema" /* SyncGetSchema */:
             if (syncTables) {
-              const syncTable = syncTables.find((table) => table.name === formulaSpec.syncTableName);
-              if (syncTable) {
+              const syncTable2 = syncTables.find((table) => table.name === formulaSpec.syncTableName);
+              if (syncTable2) {
                 let formula;
-                if (isDynamicSyncTable(syncTable)) {
+                if (isDynamicSyncTable(syncTable2)) {
                   switch (formulaSpec.metadataFormulaType) {
                     case "SyncListDynamicUrls" /* SyncListDynamicUrls */:
-                      formula = syncTable.listDynamicUrls;
+                      formula = syncTable2.listDynamicUrls;
                       break;
                     case "SyncGetDisplayUrl" /* SyncGetDisplayUrl */:
-                      formula = syncTable.getDisplayUrl;
+                      formula = syncTable2.getDisplayUrl;
                       break;
                     case "SyncGetTableName" /* SyncGetTableName */:
-                      formula = syncTable.getName;
+                      formula = syncTable2.getName;
                       break;
                     case "SyncGetSchema" /* SyncGetSchema */:
-                      formula = syncTable.getSchema;
+                      formula = syncTable2.getSchema;
                       break;
                     default:
                       return ensureSwitchUnreachable(formulaSpec);
@@ -6983,7 +6988,7 @@ module.exports = (() => {
                 } else {
                   switch (formulaSpec.metadataFormulaType) {
                     case "SyncGetSchema" /* SyncGetSchema */:
-                      formula = syncTable.getSchema;
+                      formula = syncTable2.getSchema;
                       break;
                     case "SyncListDynamicUrls" /* SyncListDynamicUrls */:
                     case "SyncGetDisplayUrl" /* SyncGetDisplayUrl */:

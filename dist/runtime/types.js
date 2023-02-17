@@ -18,4 +18,5 @@ var MetadataFormulaType;
     MetadataFormulaType["SyncGetDisplayUrl"] = "SyncGetDisplayUrl";
     MetadataFormulaType["SyncGetTableName"] = "SyncGetTableName";
     MetadataFormulaType["SyncGetSchema"] = "SyncGetSchema";
+    MetadataFormulaType["CellAutocomplete"] = "CellAutocomplete";
 })(MetadataFormulaType = exports.MetadataFormulaType || (exports.MetadataFormulaType = {}));

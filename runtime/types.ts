@@ -14,6 +14,7 @@ export enum MetadataFormulaType {
   SyncGetDisplayUrl = 'SyncGetDisplayUrl',
   SyncGetTableName = 'SyncGetTableName',
   SyncGetSchema = 'SyncGetSchema',
+  CellAutocomplete = 'CellAutocomplete',
 }
 
 export interface StandardFormulaSpecification {
@@ -60,6 +61,12 @@ export interface SyncMetadataFormulaSpecification {
   syncTableName: string;
 }
 
+export interface CellAutocompleteFormulaSpecification {
+  type: FormulaType.Metadata;
+  metadataFormulaType: MetadataFormulaType.CellAutocomplete;
+  syncTableName: string;
+}
+
 export type FormulaSpecification =
   | StandardFormulaSpecification
   | SyncFormulaSpecification
@@ -67,4 +74,5 @@ export type FormulaSpecification =
   | MetadataFormulaSpecification
   | ParameterAutocompleteMetadataFormulaSpecification
   | PostSetupMetadataFormulaSpecification
-  | SyncMetadataFormulaSpecification;
+  | SyncMetadataFormulaSpecification
+  | CellAutocompleteFormulaSpecification;

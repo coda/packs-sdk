@@ -50,11 +50,13 @@ import * as coda from "@codahq/packs-sdk";
 ## Interfaces
 
 - [AWSAccessKeyAuthentication](../interfaces/core.AWSAccessKeyAuthentication.md)
+- [AdditionalMetadataContext](../interfaces/core.AdditionalMetadataContext.md)
 - [ArraySchema](../interfaces/core.ArraySchema.md)
 - [ArrayType](../interfaces/core.ArrayType.md)
 - [BaseAuthentication](../interfaces/core.BaseAuthentication.md)
 - [BaseFormulaDef](../interfaces/core.BaseFormulaDef.md)
 - [BooleanSchema](../interfaces/core.BooleanSchema.md)
+- [CellAutocompleteCtx](../interfaces/core.CellAutocompleteCtx.md)
 - [CodaApiBearerTokenAuthentication](../interfaces/core.CodaApiBearerTokenAuthentication.md)
 - [Continuation](../interfaces/core.Continuation.md)
 - [CurrencySchema](../interfaces/core.CurrencySchema.md)

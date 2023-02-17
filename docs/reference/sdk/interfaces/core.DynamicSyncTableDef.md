@@ -28,6 +28,16 @@ instead, define dynamic sync tables using [makeDynamicSyncTable](../functions/co
 
 ## Properties
 
+### autocompleteCell
+
+• `Optional` **autocompleteCell**: [`MetadataFormula`](../types/core.MetadataFormula.md)
+
+#### Overrides
+
+[SyncTableDef](core.SyncTableDef.md).[autocompleteCell](core.SyncTableDef.md#autocompletecell)
+
+___
+
 ### defaultAddDynamicColumns
 
 • `Optional` **defaultAddDynamicColumns**: `boolean`

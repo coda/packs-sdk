@@ -165,6 +165,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     schema,
     formula,
     connectionRequirement,
+    autocomplete,
     dynamicOptions = {},
   }: SyncTableOptions<K, L, ParamDefsT, SchemaT>): this {
     const connectionRequirementToUse = connectionRequirement || this._defaultConnectionRequirement;
@@ -175,6 +176,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       schema,
       formula,
       connectionRequirement: connectionRequirementToUse,
+      autocomplete,
       dynamicOptions,
     });
     this.syncTables.push(syncTable);

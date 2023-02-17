@@ -79,6 +79,11 @@ function doFindAndExecutePackFunction({ params, formulaSpec, manifest, execution
                         return parentFormula.execute(params, executionContext);
                     }
                     break;
+                case types_3.MetadataFormulaType.CellAutocomplete:
+                    const syncTable = syncTables === null || syncTables === void 0 ? void 0 : syncTables.find(table => table.name === formulaSpec.syncTableName);
+                    const autocompleteFn = (0, ensure_1.ensureExists)(syncTable === null || syncTable === void 0 ? void 0 : syncTable.autocompleteCell);
+                    return autocompleteFn.execute(params, executionContext);
+                    break;
                 case types_3.MetadataFormulaType.PostSetupSetEndpoint:
                     if ((defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.type) !== types_1.AuthenticationType.None &&
                         (defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.type) !== types_1.AuthenticationType.Various &&

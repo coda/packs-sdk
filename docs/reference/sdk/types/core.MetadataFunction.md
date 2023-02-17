@@ -8,11 +8,11 @@ search:
 
 [core](../modules/core.md).MetadataFunction
 
-Ƭ **MetadataFunction**: (`context`: [`ExecutionContext`](../interfaces/core.ExecutionContext.md), `search`: `string`, `formulaContext?`: [`MetadataContext`](core.MetadataContext.md)) => `Promise`<[`MetadataFormulaResultType`](core.MetadataFormulaResultType.md) \| [`MetadataFormulaResultType`](core.MetadataFormulaResultType.md)[] \| [`ArraySchema`](../interfaces/core.ArraySchema.md) \| `ObjectSchema`<`any`, `any`\>\>
+Ƭ **MetadataFunction**: (`context`: [`ExecutionContext`](../interfaces/core.ExecutionContext.md), `search`: `string`, `formulaContext?`: [`MetadataContext`](core.MetadataContext.md), `additionalMetadataContext?`: [`AdditionalMetadataContext`](../interfaces/core.AdditionalMetadataContext.md)) => `Promise`<[`MetadataFormulaResultType`](core.MetadataFormulaResultType.md) \| [`MetadataFormulaResultType`](core.MetadataFormulaResultType.md)[] \| [`ArraySchema`](../interfaces/core.ArraySchema.md) \| `ObjectSchema`<`any`, `any`\>\>
 
 #### Type declaration
 
-▸ (`context`, `search`, `formulaContext?`): `Promise`<[`MetadataFormulaResultType`](core.MetadataFormulaResultType.md) \| [`MetadataFormulaResultType`](core.MetadataFormulaResultType.md)[] \| [`ArraySchema`](../interfaces/core.ArraySchema.md) \| `ObjectSchema`<`any`, `any`\>\>
+▸ (`context`, `search`, `formulaContext?`, `additionalMetadataContext?`): `Promise`<[`MetadataFormulaResultType`](core.MetadataFormulaResultType.md) \| [`MetadataFormulaResultType`](core.MetadataFormulaResultType.md)[] \| [`ArraySchema`](../interfaces/core.ArraySchema.md) \| `ObjectSchema`<`any`, `any`\>\>
 
 A JavaScript function that can implement a [MetadataFormulaDef](core.MetadataFormulaDef.md).
 
@@ -23,6 +23,7 @@ A JavaScript function that can implement a [MetadataFormulaDef](core.MetadataFor
 | `context` | [`ExecutionContext`](../interfaces/core.ExecutionContext.md) |
 | `search` | `string` |
 | `formulaContext?` | [`MetadataContext`](core.MetadataContext.md) |
+| `additionalMetadataContext?` | [`AdditionalMetadataContext`](../interfaces/core.AdditionalMetadataContext.md) |
 
 ##### Returns
 

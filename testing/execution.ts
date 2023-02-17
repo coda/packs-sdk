@@ -1,3 +1,4 @@
+import type {AdditionalMetadataContext} from '../api';
 import type {BasicPackDefinition} from '../types';
 import type {Credentials} from './auth_types';
 import type {ExecutionContext} from '../api_types';
@@ -93,7 +94,11 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
     validateParams(formula, params);
   }
   let result = await thunk.findAndExecutePackFunction({
-    params, formulaSpec, manifest, executionContext, shouldWrapError: false,
+    params,
+    formulaSpec,
+    manifest,
+    executionContext,
+    shouldWrapError: false,
   });
 
   if (useDeprecatedResultNormalization && formula) {
@@ -451,11 +456,19 @@ export async function executeMetadataFormula(
   metadataParams: {
     search?: string;
     formulaContext?: MetadataContext;
+    additionalContext?: AdditionalMetadataContext;
   } = {},
   context: ExecutionContext = newMockExecutionContext(),
 ) {
-  const {search, formulaContext} = metadataParams;
-  return formula.execute([search || '', formulaContext ? JSON.stringify(formulaContext) : ''], context);
+  const {search, formulaContext, additionalContext} = metadataParams;
+  return formula.execute(
+    [
+      search || '',
+      formulaContext ? JSON.stringify(formulaContext) : '',
+      additionalContext ? JSON.stringify(additionalContext) : '',
+    ],
+    context,
+  );
 }
 
 function getCredentials(manifestPath: string | undefined) {

@@ -21,6 +21,26 @@ Options provided when defining a dynamic sync table.
 
 ## Properties
 
+### autocomplete
+
+• `Optional` **autocomplete**: (`ctx`: [`CellAutocompleteCtx`](core.CellAutocompleteCtx.md)) => `Promise`<`any`[]\>
+
+#### Type declaration
+
+▸ (`ctx`): `Promise`<`any`[]\>
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `ctx` | [`CellAutocompleteCtx`](core.CellAutocompleteCtx.md) |
+
+##### Returns
+
+`Promise`<`any`[]\>
+
+___
+
 ### connectionRequirement
 
 • `Optional` **connectionRequirement**: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md)

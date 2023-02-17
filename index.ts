@@ -60,7 +60,9 @@ export type {ExternalPackMetadata} from './compiled_types';
 export type {ExternalPackVersionMetadata} from './compiled_types';
 
 // Formula related interfaces
+export type {AdditionalMetadataContext} from './api';
 export type {ArrayType} from './api_types';
+export type {CellAutocompleteCtx} from './api';
 export {ConnectionRequirement} from './api_types';
 export type {Continuation} from './api';
 export type {SuggestedValueType} from './api_types';

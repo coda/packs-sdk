@@ -8,7 +8,7 @@ search:
 
 [core](../modules/core.md).MetadataFormula
 
-Ƭ **MetadataFormula**: [`BaseFormula`](core.BaseFormula.md)<[[`ParamDef`](../interfaces/core.ParamDef.md)<[`string`](../enums/core.Type.md#string)\>, [`ParamDef`](../interfaces/core.ParamDef.md)<[`string`](../enums/core.Type.md#string)\>], `any`\> & { `schema?`: `any`  }
+Ƭ **MetadataFormula**: [`BaseFormula`](core.BaseFormula.md)<[[`ParamDef`](../interfaces/core.ParamDef.md)<[`string`](../enums/core.Type.md#string)\>, [`ParamDef`](../interfaces/core.ParamDef.md)<[`string`](../enums/core.Type.md#string)\>, [`ParamDef`](../interfaces/core.ParamDef.md)<[`string`](../enums/core.Type.md#string)\>], `any`\> & { `schema?`: `any`  }
 
 A formula that returns metadata relating to a core pack building block, like a sync table,
 a formula parameter, or a user account. Examples include [getSchema](../interfaces/core.DynamicOptions.md#getschema),

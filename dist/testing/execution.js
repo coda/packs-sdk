@@ -81,7 +81,11 @@ useDeprecatedResultNormalization = true, } = {}) {
         (0, validation_1.validateParams)(formula, params);
     }
     let result = await thunk.findAndExecutePackFunction({
-        params, formulaSpec, manifest, executionContext, shouldWrapError: false,
+        params,
+        formulaSpec,
+        manifest,
+        executionContext,
+        shouldWrapError: false,
     });
     if (useDeprecatedResultNormalization && formula) {
         const resultToNormalize = formulaSpec.type === types_1.FormulaType.Sync ? result.result : result;
@@ -287,8 +291,12 @@ async function executeSyncFormulaFromPackDefSingleIteration(packDef, syncFormula
 }
 exports.executeSyncFormulaFromPackDefSingleIteration = executeSyncFormulaFromPackDefSingleIteration;
 async function executeMetadataFormula(formula, metadataParams = {}, context = (0, mocks_1.newMockExecutionContext)()) {
-    const { search, formulaContext } = metadataParams;
-    return formula.execute([search || '', formulaContext ? JSON.stringify(formulaContext) : ''], context);
+    const { search, formulaContext, additionalContext } = metadataParams;
+    return formula.execute([
+        search || '',
+        formulaContext ? JSON.stringify(formulaContext) : '',
+        additionalContext ? JSON.stringify(additionalContext) : '',
+    ], context);
 }
 exports.executeMetadataFormula = executeMetadataFormula;
 function getCredentials(manifestPath) {

@@ -1,4 +1,5 @@
 /// <reference types="node" />
+import type { AdditionalMetadataContext } from '../api';
 import type { BasicPackDefinition } from '../types';
 import type { ExecutionContext } from '../api_types';
 import type { GenericSyncFormulaResult } from '../api';
@@ -74,6 +75,7 @@ export declare function executeSyncFormulaFromPackDefSingleIteration(packDef: Ba
 export declare function executeMetadataFormula(formula: MetadataFormula, metadataParams?: {
     search?: string;
     formulaContext?: MetadataContext;
+    additionalContext?: AdditionalMetadataContext;
 }, context?: ExecutionContext): Promise<any>;
 export declare function newRealFetcherExecutionContext(packDef: BasicPackDefinition, manifestPath: string): ExecutionContext;
 export declare function newRealFetcherSyncExecutionContext(packDef: BasicPackDefinition, manifestPath: string): SyncExecutionContext;
