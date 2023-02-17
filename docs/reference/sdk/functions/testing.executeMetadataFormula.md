@@ -16,7 +16,6 @@ search:
 | :------ | :------ |
 | `formula` | [`MetadataFormula`](../types/core.MetadataFormula.md) |
 | `metadataParams` | `Object` |
-| `metadataParams.additionalContext?` | [`AdditionalMetadataContext`](../interfaces/core.AdditionalMetadataContext.md) |
 | `metadataParams.formulaContext?` | [`MetadataContext`](../types/core.MetadataContext.md) |
 | `metadataParams.search?` | `string` |
 | `context` | [`ExecutionContext`](../interfaces/core.ExecutionContext.md) |

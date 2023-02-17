@@ -1,6 +1,7 @@
 import type {ArraySchema} from './schema';
 import type {ArrayType} from './api_types';
 import type {BooleanSchema} from './schema';
+import type {CellAutocompleteExecutionContext} from './api_types';
 import type {CommonPackFormulaDef} from './api_types';
 import {ConnectionRequirement} from './api_types';
 import type {ExecutionContext} from './api_types';
@@ -35,7 +36,6 @@ import {ValueType} from './schema';
 import {booleanArray} from './api_types';
 import {dateArray} from './api_types';
 import {deepCopy} from './helpers/object_utils';
-import {ensureExists} from './helpers/ensure';
 import {ensureUnreachable} from './helpers/ensure';
 import {fileArray} from './api_types';
 import {generateObjectResponseHandler} from './handler_templates';
@@ -383,10 +383,10 @@ export function wrapGetSchema(getSchema: MetadataFormula | undefined): MetadataF
 
   return {
     ...getSchema,
-    execute<
-      ParamsT extends [ParamDef<Type.string>, ParamDef<Type.string>, ParamDef<Type.string>],
-      ResultT extends PackFormulaResult,
-    >(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<ResultT> | ResultT {
+    execute<ParamsT extends [ParamDef<Type.string>, ParamDef<Type.string>], ResultT extends PackFormulaResult>(
+      params: ParamValues<ParamsT>,
+      context: ExecutionContext,
+    ): Promise<ResultT> | ResultT {
       const schema = getSchema.execute(params, context);
       if (isPromise<ResultT>(schema)) {
         return schema.then(value => transformToArraySchema(value));
@@ -1178,15 +1178,6 @@ export interface MetadataFormulaObjectResultType {
 export type MetadataContext = Record<string, any> & {__brand: 'MetadataContext'};
 
 /**
- * Additional context for metadata formulas. For example, this may include the current property name
- * when running cell autocompletion.
- */
-export interface AdditionalMetadataContext {
-  __brand: 'AdditionalMetadataContext';
-  propertyName?: string;
-}
-
-/**
  * The type of values that can be returned from a {@link MetadataFormula}.
  */
 export type MetadataFormulaResultType = string | number | MetadataFormulaObjectResultType;
@@ -1219,10 +1210,7 @@ export type MetadataFormulaResultType = string | number | MetadataFormulaObjectR
  * values of the others. This is dictionary mapping the names of each parameter to its
  * current value.
  */
-export type MetadataFormula = BaseFormula<
-  [ParamDef<Type.string>, ParamDef<Type.string>, ParamDef<Type.string>],
-  any
-> & {
+export type MetadataFormula = BaseFormula<[ParamDef<Type.string>, ParamDef<Type.string>], any> & {
   schema?: any;
 };
 
@@ -1235,7 +1223,12 @@ export type MetadataFunction = (
   context: ExecutionContext,
   search: string,
   formulaContext?: MetadataContext,
-  additionalMetadataContext?: AdditionalMetadataContext,
+) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
+
+export type CellAutocompleteMetadataFunction = (
+  context: CellAutocompleteExecutionContext,
+  search: string,
+  formulaContext?: MetadataContext,
 ) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
 
 /**
@@ -1261,44 +1254,27 @@ export function makeMetadataFormula(
   execute: MetadataFunction,
   options?: {connectionRequirement?: ConnectionRequirement},
 ): MetadataFormula {
-  return makeInternalMetadataFormula(execute, {...options, includeInternalMetadata: false});
-}
-
-function makeInternalMetadataFormula(
-  execute: MetadataFunction,
-  options?: {connectionRequirement?: ConnectionRequirement; includeInternalMetadata?: boolean},
-): MetadataFormula {
-  const result = makeObjectFormula({
+  return makeObjectFormula({
     name: 'getMetadata',
     description: 'Gets metadata',
     // Formula context is serialized here because we do not want to pass objects into
     // regular pack functions (which this is)
-    execute([search, serializedFormulaContext, serializedInternalFormulaContext], context) {
+    execute([search, serializedFormulaContext], context) {
       let formulaContext = {} as MetadataContext;
       try {
         formulaContext = JSON.parse(serializedFormulaContext);
       } catch (err: any) {
         //  Ignore.
       }
-      let internalMetadataContext = {} as AdditionalMetadataContext;
-      if (options?.includeInternalMetadata) {
-        try {
-          internalMetadataContext = JSON.parse(serializedInternalFormulaContext);
-        } catch (err: any) {
-          //  Ignore.
-        }
-      }
-      return execute(context, search, formulaContext, internalMetadataContext) as any;
+      return execute(context, search, formulaContext) as any;
     },
     parameters: [
       makeStringParameter('search', 'Metadata to search for', {optional: true}),
       makeStringParameter('formulaContext', 'Serialized JSON for metadata', {optional: true}),
-      makeStringParameter('additionalMetadataContext', 'Serialized JSON for additional metadata', {optional: true}),
     ],
     examples: [],
     connectionRequirement: options?.connectionRequirement || ConnectionRequirement.Optional,
   });
-  return result as MetadataFormula;
 }
 
 /**
@@ -1559,7 +1535,7 @@ export interface SyncTableOptions<
    */
   dynamicOptions?: DynamicOptions;
 
-  autocomplete?: (ctx: CellAutocompleteCtx) => Promise<any[]>;
+  autocomplete?: CellAutocompleteMetadataFunction;
 }
 
 /**
@@ -1655,17 +1631,7 @@ export interface DynamicSyncTableOptions<
    */
   placeholderSchema?: SchemaT;
 
-  autocomplete?: (ctx: CellAutocompleteCtx) => Promise<any[]>;
-}
-
-/**
- * Get context related to autocomplete.
- */
-export interface CellAutocompleteCtx {
-  getPropertyName(): string;
-  getEditedValue(propName: string): any;
-  getSearchString(): string;
-  schema?: ArraySchema;
+  autocomplete?: (context: CellAutocompleteExecutionContext, search: string) => Promise<any[]>;
 }
 
 /**
@@ -1704,26 +1670,7 @@ export function makeSyncTable<
     ...definition
   } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
 
-  const wrappedAutocomplete = autocomplete
-    ? makeInternalMetadataFormula(
-        (_context, search, formulaContext, additionalMetadataContext) => {
-          const propertyName = ensureExists(additionalMetadataContext?.propertyName);
-          const context: CellAutocompleteCtx = {
-            getPropertyName() {
-              return propertyName;
-            },
-            getEditedValue(propName: string) {
-              return formulaContext?.[propName];
-            },
-            getSearchString(): string {
-              return search;
-            },
-          };
-          return autocomplete(context);
-        },
-        {includeInternalMetadata: true},
-      )
-    : undefined;
+  const wrappedAutocomplete = autocomplete ? makeMetadataFormula(autocomplete as MetadataFunction) : undefined;
 
   // Since we mutate schemaDef, we need to make a copy so the input schema can be reused across sync tables.
   const schemaDef = deepCopy(inputSchema);

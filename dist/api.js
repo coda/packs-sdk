@@ -9,7 +9,6 @@ const api_types_4 = require("./api_types");
 const api_types_5 = require("./api_types");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_1 = require("./helpers/ensure");
-const ensure_2 = require("./helpers/ensure");
 const api_types_6 = require("./api_types");
 const handler_templates_1 = require("./handler_templates");
 const handler_templates_2 = require("./handler_templates");
@@ -478,7 +477,7 @@ function makeFormula(fullDefinition) {
             break;
         }
         default:
-            return (0, ensure_2.ensureUnreachable)(fullDefinition);
+            return (0, ensure_1.ensureUnreachable)(fullDefinition);
     }
     const onError = fullDefinition.onError;
     if (onError) {
@@ -508,16 +507,12 @@ exports.makeFormula = makeFormula;
  * it is shaped like a Coda formula to be used at runtime.
  */
 function makeMetadataFormula(execute, options) {
-    return makeInternalMetadataFormula(execute, { ...options, includeInternalMetadata: false });
-}
-exports.makeMetadataFormula = makeMetadataFormula;
-function makeInternalMetadataFormula(execute, options) {
-    const result = makeObjectFormula({
+    return makeObjectFormula({
         name: 'getMetadata',
         description: 'Gets metadata',
         // Formula context is serialized here because we do not want to pass objects into
         // regular pack functions (which this is)
-        execute([search, serializedFormulaContext, serializedInternalFormulaContext], context) {
+        execute([search, serializedFormulaContext], context) {
             let formulaContext = {};
             try {
                 formulaContext = JSON.parse(serializedFormulaContext);
@@ -525,27 +520,17 @@ function makeInternalMetadataFormula(execute, options) {
             catch (err) {
                 //  Ignore.
             }
-            let internalMetadataContext = {};
-            if (options === null || options === void 0 ? void 0 : options.includeInternalMetadata) {
-                try {
-                    internalMetadataContext = JSON.parse(serializedInternalFormulaContext);
-                }
-                catch (err) {
-                    //  Ignore.
-                }
-            }
-            return execute(context, search, formulaContext, internalMetadataContext);
+            return execute(context, search, formulaContext);
         },
         parameters: [
             makeStringParameter('search', 'Metadata to search for', { optional: true }),
             makeStringParameter('formulaContext', 'Serialized JSON for metadata', { optional: true }),
-            makeStringParameter('additionalMetadataContext', 'Serialized JSON for additional metadata', { optional: true }),
         ],
         examples: [],
         connectionRequirement: (options === null || options === void 0 ? void 0 : options.connectionRequirement) || api_types_1.ConnectionRequirement.Optional,
     });
-    return result;
 }
+exports.makeMetadataFormula = makeMetadataFormula;
 /**
  * Utility to search over an array of autocomplete results and return only those that
  * match the given search string.
@@ -713,23 +698,7 @@ exports.makeObjectFormula = makeObjectFormula;
 function makeSyncTable({ name, description, identityName, schema: inputSchema, formula, autocomplete, connectionRequirement, dynamicOptions = {}, }) {
     const { getSchema: getSchemaDef, entityName, defaultAddDynamicColumns } = dynamicOptions;
     const { execute: wrappedExecute, executeUpdate: wrappedExecuteUpdate, ...definition } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
-    const wrappedAutocomplete = autocomplete
-        ? makeInternalMetadataFormula((_context, search, formulaContext, additionalMetadataContext) => {
-            const propertyName = (0, ensure_1.ensureExists)(additionalMetadataContext === null || additionalMetadataContext === void 0 ? void 0 : additionalMetadataContext.propertyName);
-            const context = {
-                getPropertyName() {
-                    return propertyName;
-                },
-                getEditedValue(propName) {
-                    return formulaContext === null || formulaContext === void 0 ? void 0 : formulaContext[propName];
-                },
-                getSearchString() {
-                    return search;
-                },
-            };
-            return autocomplete(context);
-        }, { includeInternalMetadata: true })
-        : undefined;
+    const wrappedAutocomplete = autocomplete ? makeMetadataFormula(autocomplete) : undefined;
     // Since we mutate schemaDef, we need to make a copy so the input schema can be reused across sync tables.
     const schemaDef = (0, object_utils_1.deepCopy)(inputSchema);
     // Hydrate the schema's identity.

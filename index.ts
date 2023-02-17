@@ -60,9 +60,8 @@ export type {ExternalPackMetadata} from './compiled_types';
 export type {ExternalPackVersionMetadata} from './compiled_types';
 
 // Formula related interfaces
-export type {AdditionalMetadataContext} from './api';
 export type {ArrayType} from './api_types';
-export type {CellAutocompleteCtx} from './api';
+export type {CellAutocompleteExecutionContext} from './api_types';
 export {ConnectionRequirement} from './api_types';
 export type {Continuation} from './api';
 export type {SuggestedValueType} from './api_types';
@@ -88,6 +87,7 @@ export type {MetadataFormulaObjectResultType} from './api';
 export type {MetadataFormulaResultType} from './api';
 export type {MetadataFormula} from './api';
 export type {MetadataFunction} from './api';
+export type {CellAutocompleteMetadataFunction} from './api';
 export type {Network} from './api_types';
 export {NetworkConnection} from './api_types';
 export type {PackFormulaDef} from './api';

@@ -23,17 +23,18 @@ Options provided when defining a dynamic sync table.
 
 ### autocomplete
 
-• `Optional` **autocomplete**: (`ctx`: [`CellAutocompleteCtx`](core.CellAutocompleteCtx.md)) => `Promise`<`any`[]\>
+• `Optional` **autocomplete**: (`context`: [`CellAutocompleteExecutionContext`](core.CellAutocompleteExecutionContext.md), `search`: `string`) => `Promise`<`any`[]\>
 
 #### Type declaration
 
-▸ (`ctx`): `Promise`<`any`[]\>
+▸ (`context`, `search`): `Promise`<`any`[]\>
 
 ##### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `ctx` | [`CellAutocompleteCtx`](core.CellAutocompleteCtx.md) |
+| `context` | [`CellAutocompleteExecutionContext`](core.CellAutocompleteExecutionContext.md) |
+| `search` | `string` |
 
 ##### Returns
 

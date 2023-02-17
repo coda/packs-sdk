@@ -1,4 +1,3 @@
-import type {AdditionalMetadataContext} from '../api';
 import type {BasicPackDefinition} from '../types';
 import type {Credentials} from './auth_types';
 import type {ExecutionContext} from '../api_types';
@@ -456,19 +455,11 @@ export async function executeMetadataFormula(
   metadataParams: {
     search?: string;
     formulaContext?: MetadataContext;
-    additionalContext?: AdditionalMetadataContext;
   } = {},
   context: ExecutionContext = newMockExecutionContext(),
 ) {
-  const {search, formulaContext, additionalContext} = metadataParams;
-  return formula.execute(
-    [
-      search || '',
-      formulaContext ? JSON.stringify(formulaContext) : '',
-      additionalContext ? JSON.stringify(additionalContext) : '',
-    ],
-    context,
-  );
+  const {search, formulaContext} = metadataParams;
+  return formula.execute([search || '', formulaContext ? JSON.stringify(formulaContext) : ''], context);
 }
 
 function getCredentials(manifestPath: string | undefined) {

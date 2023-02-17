@@ -37,7 +37,7 @@ async function findAndExecutePackFunction({ shouldWrapError = true, ...args }) {
     }
 }
 exports.findAndExecutePackFunction = findAndExecutePackFunction;
-function doFindAndExecutePackFunction({ params, formulaSpec, manifest, executionContext, updates, }) {
+async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, executionContext, updates, }) {
     const { syncTables, defaultAuthentication } = manifest;
     switch (formulaSpec.type) {
         case types_2.FormulaType.Standard: {
@@ -82,7 +82,27 @@ function doFindAndExecutePackFunction({ params, formulaSpec, manifest, execution
                 case types_3.MetadataFormulaType.CellAutocomplete:
                     const syncTable = syncTables === null || syncTables === void 0 ? void 0 : syncTables.find(table => table.name === formulaSpec.syncTableName);
                     const autocompleteFn = (0, ensure_1.ensureExists)(syncTable === null || syncTable === void 0 ? void 0 : syncTable.autocompleteCell);
-                    return autocompleteFn.execute(params, executionContext);
+                    const propertyValues = {};
+                    const cacheKeysUsed = [];
+                    for (const [key, value] of Object.entries(formulaSpec.propertyValues)) {
+                        Object.defineProperty(propertyValues, key, {
+                            get() {
+                                cacheKeysUsed.push(key);
+                                return value;
+                            },
+                        });
+                    }
+                    const cellAutocompleteCxecutionContext = {
+                        ...executionContext,
+                        propertyName: formulaSpec.propertyName,
+                        propertyValues,
+                    };
+                    const result = await autocompleteFn.execute(params, cellAutocompleteCxecutionContext);
+                    return {
+                        result,
+                        // TODO(dweitzman): Keys used should be an object or array, not a string
+                        cacheKey: `keys used: ${cacheKeysUsed.join(',')}`,
+                    };
                     break;
                 case types_3.MetadataFormulaType.PostSetupSetEndpoint:
                     if ((defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.type) !== types_1.AuthenticationType.None &&

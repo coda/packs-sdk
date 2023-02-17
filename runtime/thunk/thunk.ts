@@ -1,6 +1,7 @@
 import {AuthenticationType} from '../../types';
 import type {BasicPackDefinition} from '../../types';
 import {Buffer} from 'buffer';
+import type {CellAutocompleteExecutionContext} from '../../api_types';
 import type {ExecutionContext} from '../../api_types';
 import type {FetchRequest} from '../../api_types';
 import type {FetchResponse} from '../../api_types';
@@ -66,7 +67,7 @@ export async function findAndExecutePackFunction<T extends FormulaSpecification>
   }
 }
 
-function doFindAndExecutePackFunction<T extends FormulaSpecification>({
+async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
   params,
   formulaSpec,
   manifest,
@@ -127,7 +128,30 @@ function doFindAndExecutePackFunction<T extends FormulaSpecification>({
         case MetadataFormulaType.CellAutocomplete:
           const syncTable = syncTables?.find(table => table.name === formulaSpec.syncTableName);
           const autocompleteFn = ensureExists(syncTable?.autocompleteCell);
-          return autocompleteFn.execute(params as any, executionContext);
+          const propertyValues = {};
+
+          const cacheKeysUsed: string[] = [];
+
+          for (const [key, value] of Object.entries(formulaSpec.propertyValues)) {
+            Object.defineProperty(propertyValues, key, {
+              get() {
+                cacheKeysUsed.push(key);
+                return value;
+              },
+            });
+          }
+
+          const cellAutocompleteCxecutionContext: CellAutocompleteExecutionContext = {
+            ...executionContext,
+            propertyName: formulaSpec.propertyName,
+            propertyValues,
+          };
+          const result = await autocompleteFn.execute(params as any, cellAutocompleteCxecutionContext);
+          return {
+            result,
+            // TODO(dweitzman): Keys used should be an object or array, not a string
+            cacheKey: `keys used: ${cacheKeysUsed.join(',')}`,
+          } as any;
           break;
         case MetadataFormulaType.PostSetupSetEndpoint:
           if (

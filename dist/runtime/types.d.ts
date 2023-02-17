@@ -52,5 +52,7 @@ export interface CellAutocompleteFormulaSpecification {
     type: FormulaType.Metadata;
     metadataFormulaType: MetadataFormulaType.CellAutocomplete;
     syncTableName: string;
+    propertyName: string;
+    propertyValues: Record<string, any>;
 }
 export declare type FormulaSpecification = StandardFormulaSpecification | SyncFormulaSpecification | SyncUpdateFormulaSpecification | MetadataFormulaSpecification | ParameterAutocompleteMetadataFormulaSpecification | PostSetupMetadataFormulaSpecification | SyncMetadataFormulaSpecification | CellAutocompleteFormulaSpecification;

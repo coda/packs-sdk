@@ -50,13 +50,12 @@ import * as coda from "@codahq/packs-sdk";
 ## Interfaces
 
 - [AWSAccessKeyAuthentication](../interfaces/core.AWSAccessKeyAuthentication.md)
-- [AdditionalMetadataContext](../interfaces/core.AdditionalMetadataContext.md)
 - [ArraySchema](../interfaces/core.ArraySchema.md)
 - [ArrayType](../interfaces/core.ArrayType.md)
 - [BaseAuthentication](../interfaces/core.BaseAuthentication.md)
 - [BaseFormulaDef](../interfaces/core.BaseFormulaDef.md)
 - [BooleanSchema](../interfaces/core.BooleanSchema.md)
-- [CellAutocompleteCtx](../interfaces/core.CellAutocompleteCtx.md)
+- [CellAutocompleteExecutionContext](../interfaces/core.CellAutocompleteExecutionContext.md)
 - [CodaApiBearerTokenAuthentication](../interfaces/core.CodaApiBearerTokenAuthentication.md)
 - [Continuation](../interfaces/core.Continuation.md)
 - [CurrencySchema](../interfaces/core.CurrencySchema.md)
@@ -135,6 +134,7 @@ import * as coda from "@codahq/packs-sdk";
 - [BooleanFormulaDef](../types/core.BooleanFormulaDef.md)
 - [BooleanHintTypes](../types/core.BooleanHintTypes.md)
 - [BooleanPackFormula](../types/core.BooleanPackFormula.md)
+- [CellAutocompleteMetadataFunction](../types/core.CellAutocompleteMetadataFunction.md)
 - [FetchMethodType](../types/core.FetchMethodType.md)
 - [Formula](../types/core.Formula.md)
 - [FormulaDefinition](../types/core.FormulaDefinition.md)

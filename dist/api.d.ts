@@ -1,6 +1,7 @@
 import type { ArraySchema } from './schema';
 import type { ArrayType } from './api_types';
 import type { BooleanSchema } from './schema';
+import type { CellAutocompleteExecutionContext } from './api_types';
 import type { CommonPackFormulaDef } from './api_types';
 import { ConnectionRequirement } from './api_types';
 import type { ExecutionContext } from './api_types';
@@ -725,14 +726,6 @@ export declare type MetadataContext = Record<string, any> & {
     __brand: 'MetadataContext';
 };
 /**
- * Additional context for metadata formulas. For example, this may include the current property name
- * when running cell autocompletion.
- */
-export interface AdditionalMetadataContext {
-    __brand: 'AdditionalMetadataContext';
-    propertyName?: string;
-}
-/**
  * The type of values that can be returned from a {@link MetadataFormula}.
  */
 export declare type MetadataFormulaResultType = string | number | MetadataFormulaObjectResultType;
@@ -765,18 +758,15 @@ export declare type MetadataFormulaResultType = string | number | MetadataFormul
  * values of the others. This is dictionary mapping the names of each parameter to its
  * current value.
  */
-export declare type MetadataFormula = BaseFormula<[
-    ParamDef<Type.string>,
-    ParamDef<Type.string>,
-    ParamDef<Type.string>
-], any> & {
+export declare type MetadataFormula = BaseFormula<[ParamDef<Type.string>, ParamDef<Type.string>], any> & {
     schema?: any;
 };
 export declare type MetadataFormulaMetadata = Omit<MetadataFormula, 'execute'>;
 /**
  * A JavaScript function that can implement a {@link MetadataFormulaDef}.
  */
-export declare type MetadataFunction = (context: ExecutionContext, search: string, formulaContext?: MetadataContext, additionalMetadataContext?: AdditionalMetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
+export declare type MetadataFunction = (context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
+export declare type CellAutocompleteMetadataFunction = (context: CellAutocompleteExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
 /**
  * The type of values that will be accepted as a metadata formula definition. This can either
  * be the JavaScript function that implements a metadata formula (strongly recommended)
@@ -940,7 +930,7 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
      * sync tables that have a dynamic schema.
      */
     dynamicOptions?: DynamicOptions;
-    autocomplete?: (ctx: CellAutocompleteCtx) => Promise<any[]>;
+    autocomplete?: CellAutocompleteMetadataFunction;
 }
 /**
  * Options provided when defining a dynamic sync table.
@@ -1029,16 +1019,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
      * in placeholderSchema will be rendered by default after the sync.
      */
     placeholderSchema?: SchemaT;
-    autocomplete?: (ctx: CellAutocompleteCtx) => Promise<any[]>;
-}
-/**
- * Get context related to autocomplete.
- */
-export interface CellAutocompleteCtx {
-    getPropertyName(): string;
-    getEditedValue(propName: string): any;
-    getSearchString(): string;
-    schema?: ArraySchema;
+    autocomplete?: (context: CellAutocompleteExecutionContext, search: string) => Promise<any[]>;
 }
 /**
  * Wrapper to produce a sync table definition. All (non-dynamic) sync tables should be created

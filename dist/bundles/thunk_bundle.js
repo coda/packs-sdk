@@ -6900,7 +6900,7 @@ module.exports = (() => {
     }
   }
   __name(findAndExecutePackFunction, "findAndExecutePackFunction");
-  function doFindAndExecutePackFunction({
+  async function doFindAndExecutePackFunction({
     params,
     formulaSpec,
     manifest,
@@ -6948,7 +6948,27 @@ module.exports = (() => {
           case "CellAutocomplete" /* CellAutocomplete */:
             const syncTable = syncTables?.find((table) => table.name === formulaSpec.syncTableName);
             const autocompleteFn = ensureExists(syncTable?.autocompleteCell);
-            return autocompleteFn.execute(params, executionContext);
+            const propertyValues = {};
+            const cacheKeysUsed = [];
+            for (const [key, value] of Object.entries(formulaSpec.propertyValues)) {
+              Object.defineProperty(propertyValues, key, {
+                get() {
+                  cacheKeysUsed.push(key);
+                  return value;
+                }
+              });
+            }
+            const cellAutocompleteCxecutionContext = {
+              ...executionContext,
+              propertyName: formulaSpec.propertyName,
+              propertyValues
+            };
+            const result = await autocompleteFn.execute(params, cellAutocompleteCxecutionContext);
+            return {
+              result,
+              // TODO(dweitzman): Keys used should be an object or array, not a string
+              cacheKey: `keys used: ${cacheKeysUsed.join(",")}`
+            };
             break;
           case "PostSetupSetEndpoint" /* PostSetupSetEndpoint */:
             if (defaultAuthentication?.type !== "None" /* None */ && defaultAuthentication?.type !== "Various" /* Various */ && defaultAuthentication?.postSetup) {

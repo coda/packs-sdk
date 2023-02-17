@@ -291,12 +291,8 @@ async function executeSyncFormulaFromPackDefSingleIteration(packDef, syncFormula
 }
 exports.executeSyncFormulaFromPackDefSingleIteration = executeSyncFormulaFromPackDefSingleIteration;
 async function executeMetadataFormula(formula, metadataParams = {}, context = (0, mocks_1.newMockExecutionContext)()) {
-    const { search, formulaContext, additionalContext } = metadataParams;
-    return formula.execute([
-        search || '',
-        formulaContext ? JSON.stringify(formulaContext) : '',
-        additionalContext ? JSON.stringify(additionalContext) : '',
-    ], context);
+    const { search, formulaContext } = metadataParams;
+    return formula.execute([search || '', formulaContext ? JSON.stringify(formulaContext) : ''], context);
 }
 exports.executeMetadataFormula = executeMetadataFormula;
 function getCredentials(manifestPath) {

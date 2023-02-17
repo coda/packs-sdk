@@ -761,6 +761,11 @@ export interface SyncExecutionContext extends ExecutionContext {
   readonly sync: Sync;
 }
 
+export interface CellAutocompleteExecutionContext extends ExecutionContext {
+  readonly propertyName: string;
+  readonly propertyValues: {[propertyValues: string]: any};
+}
+
 export interface UpdateSyncExecutionContext extends ExecutionContext {
   /**
    * Information about state of the current sync.

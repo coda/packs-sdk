@@ -23,21 +23,7 @@ Input options for defining a sync table. See [makeSyncTable](../functions/core.m
 
 ### autocomplete
 
-• `Optional` **autocomplete**: (`ctx`: [`CellAutocompleteCtx`](core.CellAutocompleteCtx.md)) => `Promise`<`any`[]\>
-
-#### Type declaration
-
-▸ (`ctx`): `Promise`<`any`[]\>
-
-##### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `ctx` | [`CellAutocompleteCtx`](core.CellAutocompleteCtx.md) |
-
-##### Returns
-
-`Promise`<`any`[]\>
+• `Optional` **autocomplete**: [`CellAutocompleteMetadataFunction`](../types/core.CellAutocompleteMetadataFunction.md)
 
 ___
 
