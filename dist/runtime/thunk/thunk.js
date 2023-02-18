@@ -84,10 +84,15 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                     const autocompleteFn = (0, ensure_1.ensureExists)(syncTable === null || syncTable === void 0 ? void 0 : syncTable.autocompleteCell);
                     const propertyValues = {};
                     const cacheKeysUsed = [];
+                    function recordPropertyAccess(key) {
+                        if (!cacheKeysUsed.includes(key)) {
+                            cacheKeysUsed.push(key);
+                        }
+                    }
                     for (const [key, value] of Object.entries(formulaSpec.propertyValues)) {
                         Object.defineProperty(propertyValues, key, {
                             get() {
-                                cacheKeysUsed.push(key);
+                                recordPropertyAccess(key);
                                 return value;
                             },
                         });
@@ -97,11 +102,16 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                         propertyName: formulaSpec.propertyName,
                         propertyValues,
                     };
+                    Object.defineProperty(cellAutocompleteCxecutionContext, 'search', {
+                        get() {
+                            recordPropertyAccess('__search');
+                            return formulaSpec.search;
+                        },
+                    });
                     const result = await autocompleteFn.execute(params, cellAutocompleteCxecutionContext);
                     return {
                         result,
-                        // TODO(dweitzman): Keys used should be an object or array, not a string
-                        cacheKey: `keys used: ${cacheKeysUsed.join(',')}`,
+                        propertiesUsed: cacheKeysUsed,
                     };
                     break;
                 case types_3.MetadataFormulaType.PostSetupSetEndpoint:

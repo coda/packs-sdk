@@ -1771,6 +1771,7 @@ export interface CellAutocompleteExecutionContext extends ExecutionContext {
 	readonly propertyValues: {
 		[propertyValues: string]: any;
 	};
+	readonly search: string;
 }
 export interface UpdateSyncExecutionContext extends ExecutionContext {
 	/**
@@ -2634,7 +2635,7 @@ export declare type MetadataFormulaMetadata = Omit<MetadataFormula, "execute">;
  * A JavaScript function that can implement a {@link MetadataFormulaDef}.
  */
 export declare type MetadataFunction = (context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
-export declare type CellAutocompleteMetadataFunction = (context: CellAutocompleteExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
+export declare type CellAutocompleteMetadataFunction = (context: CellAutocompleteExecutionContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
 /**
  * The type of values that will be accepted as a metadata formula definition. This can either
  * be the JavaScript function that implements a metadata formula (strongly recommended)

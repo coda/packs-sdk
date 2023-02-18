@@ -764,6 +764,7 @@ export interface SyncExecutionContext extends ExecutionContext {
 export interface CellAutocompleteExecutionContext extends ExecutionContext {
   readonly propertyName: string;
   readonly propertyValues: {[propertyValues: string]: any};
+  readonly search: string;
 }
 
 export interface UpdateSyncExecutionContext extends ExecutionContext {

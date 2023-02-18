@@ -93,6 +93,12 @@ ___
 
 ___
 
+### search
+
+• `Readonly` **search**: `string`
+
+___
+
 ### sync
 
 • `Optional` `Readonly` **sync**: [`Sync`](core.Sync.md)

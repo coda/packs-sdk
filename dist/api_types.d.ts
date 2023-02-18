@@ -640,6 +640,7 @@ export interface CellAutocompleteExecutionContext extends ExecutionContext {
     readonly propertyValues: {
         [propertyValues: string]: any;
     };
+    readonly search: string;
 }
 export interface UpdateSyncExecutionContext extends ExecutionContext {
     /**

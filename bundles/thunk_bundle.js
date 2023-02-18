@@ -6946,6 +6946,13 @@ module.exports = (() => {
             }
             break;
           case "CellAutocomplete" /* CellAutocomplete */:
+            let recordPropertyAccess2 = function(key) {
+              if (!cacheKeysUsed.includes(key)) {
+                cacheKeysUsed.push(key);
+              }
+            };
+            var recordPropertyAccess = recordPropertyAccess2;
+            __name(recordPropertyAccess2, "recordPropertyAccess");
             const syncTable = syncTables?.find((table) => table.name === formulaSpec.syncTableName);
             const autocompleteFn = ensureExists(syncTable?.autocompleteCell);
             const propertyValues = {};
@@ -6953,7 +6960,7 @@ module.exports = (() => {
             for (const [key, value] of Object.entries(formulaSpec.propertyValues)) {
               Object.defineProperty(propertyValues, key, {
                 get() {
-                  cacheKeysUsed.push(key);
+                  recordPropertyAccess2(key);
                   return value;
                 }
               });
@@ -6963,11 +6970,16 @@ module.exports = (() => {
               propertyName: formulaSpec.propertyName,
               propertyValues
             };
+            Object.defineProperty(cellAutocompleteCxecutionContext, "search", {
+              get() {
+                recordPropertyAccess2("__search");
+                return formulaSpec.search;
+              }
+            });
             const result = await autocompleteFn.execute(params, cellAutocompleteCxecutionContext);
             return {
               result,
-              // TODO(dweitzman): Keys used should be an object or array, not a string
-              cacheKey: `keys used: ${cacheKeysUsed.join(",")}`
+              propertiesUsed: cacheKeysUsed
             };
             break;
           case "PostSetupSetEndpoint" /* PostSetupSetEndpoint */:

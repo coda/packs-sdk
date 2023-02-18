@@ -67,6 +67,7 @@ export interface CellAutocompleteFormulaSpecification {
   syncTableName: string;
   propertyName: string;
   propertyValues: Record<string, any>;
+  search: string;
 }
 
 export type FormulaSpecification =

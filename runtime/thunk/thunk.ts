@@ -132,25 +132,38 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
 
           const cacheKeysUsed: string[] = [];
 
+          function recordPropertyAccess(key: string) {
+            if (!cacheKeysUsed.includes(key)) {
+              cacheKeysUsed.push(key);
+            }
+          }
+
           for (const [key, value] of Object.entries(formulaSpec.propertyValues)) {
             Object.defineProperty(propertyValues, key, {
               get() {
-                cacheKeysUsed.push(key);
+                recordPropertyAccess(key);
                 return value;
               },
             });
           }
 
-          const cellAutocompleteCxecutionContext: CellAutocompleteExecutionContext = {
+          const cellAutocompleteCxecutionContext: Omit<CellAutocompleteExecutionContext, 'search'> = {
             ...executionContext,
             propertyName: formulaSpec.propertyName,
             propertyValues,
           };
+
+          Object.defineProperty(cellAutocompleteCxecutionContext, 'search', {
+            get() {
+              recordPropertyAccess('__search');
+              return formulaSpec.search;
+            },
+          });
+
           const result = await autocompleteFn.execute(params as any, cellAutocompleteCxecutionContext);
           return {
             result,
-            // TODO(dweitzman): Keys used should be an object or array, not a string
-            cacheKey: `keys used: ${cacheKeysUsed.join(',')}`,
+            propertiesUsed: cacheKeysUsed,
           } as any;
           break;
         case MetadataFormulaType.PostSetupSetEndpoint:

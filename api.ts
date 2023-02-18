@@ -1227,8 +1227,6 @@ export type MetadataFunction = (
 
 export type CellAutocompleteMetadataFunction = (
   context: CellAutocompleteExecutionContext,
-  search: string,
-  formulaContext?: MetadataContext,
 ) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
 
 /**
@@ -1631,7 +1629,7 @@ export interface DynamicSyncTableOptions<
    */
   placeholderSchema?: SchemaT;
 
-  autocomplete?: (context: CellAutocompleteExecutionContext, search: string) => Promise<any[]>;
+  autocomplete?: CellAutocompleteMetadataFunction;
 }
 
 /**
@@ -1670,7 +1668,7 @@ export function makeSyncTable<
     ...definition
   } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
 
-  const wrappedAutocomplete = autocomplete ? makeMetadataFormula(autocomplete as MetadataFunction) : undefined;
+  const wrappedAutocomplete = autocomplete ? makeMetadataFormula(autocomplete as any as MetadataFunction) : undefined;
 
   // Since we mutate schemaDef, we need to make a copy so the input schema can be reused across sync tables.
   const schemaDef = deepCopy(inputSchema);
