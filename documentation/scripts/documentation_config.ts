@@ -260,10 +260,20 @@ export const Examples: Example[] = [
         codeFile: './samples/packs/authentication/giphy.ts',
       },
       {
+        name: 'Multiple query parameters',
+        content: 'Authentication that passes multiple long-lived tokens in query parameters. This sample connects to the Smarty API.',
+        codeFile: './samples/packs/authentication/smarty.ts',
+      },
+      {
         name: 'Username and password',
         content:
           'Authentication that passes a username and password in the Authorization header using the "Basic" scheme. This sample connects to the Twilio API.',
         codeFile: './samples/packs/authentication/twilio.ts',
+      },
+      {
+        name: 'Coda API token',
+        content: 'Authentication optimized for connecting to the Coda API, which is a token passed in the Authorization header.',
+        codeFile: './samples/packs/authentication/coda.ts',
       },
       {
         name: 'OAuth2',
@@ -831,6 +841,11 @@ export const Examples: Example[] = [
         name: 'ClickUp',
         content: 'The ClickUp API uses OAuth2 to authenticate users.',
         codeFile: './samples/packs/apis/clickup.ts',
+      },
+      {
+        name: 'Coda API',
+        content: 'The Coda API requires the user to provide an API token, passed in an Authorization header. Packs include a specific authentication type optimized for the Coda API.',
+        codeFile: './samples/packs/authentication/coda.ts',
       },
       {
         name: 'Dropbox',

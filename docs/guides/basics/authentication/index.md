@@ -84,7 +84,7 @@ Coda supports a fixed set of authentication types which cover the most common pa
 The sections below will cover some of the most common types of authentication, and you can see the full set in the [`AuthenticationType`][AuthenticationType] enum.
 
 
-### Single token
+### Simple tokens
 
 Many APIs use tokens or keys for authentication. Per-user tokens are typically generated from a settings screen within the application, while API keys are often generated when registering an app in a developer portal. How you pass these tokens varies depending on the API, and Coda provides built-in support for the most common methods:
 
@@ -148,6 +148,31 @@ Many APIs use tokens or keys for authentication. Per-user tokens are typically g
     ```
 
     [View Sample Code][sample_query_param]{ .md-button }
+
+=== "Multiple query parameters"
+
+    Use [`MultiQueryParamToken`][MultiQueryParamToken] authentication for APIs that expect multiple tokens in URL query parameters. For example:
+
+    ```
+    GET /users/me?key=<token>&secret=<secret>
+    Host: api.example.com
+    ```
+
+    Can be implemented using:
+
+    ```ts
+    pack.setUserAuthentication({
+      type: coda.AuthenticationType.MultiQueryParamToken,
+      params: [
+        { name: "key", description: "The key." },
+        { name: "secret", description: "The secret." },
+      ],
+    });
+    ```
+
+    [View Sample Code][sample_multiple_query_params]{ .md-button }
+
+---
 
 When using per-user authentication, the user will be prompted to enter their token when connecting their account.
 
@@ -264,6 +289,29 @@ pack.setUserAuthentication({
 ### Token exchange
 
 Some APIs use short-lived tokens which must be obtained through an credential exchange or approval process. The industry-wide standard for this is OAuth 2.0, which is supported in the Pack SDK. You can read more about it in the [OAuth guide][oauth_guide]. Other forms of token exchange are not currently supported.
+
+
+### Coda API token
+
+Packs that connect to the Coda API should use [`CodaApiHeaderBearerToken`][CodaApiHeaderBearerToken] authentication, which works much like `HeaderBearerToken` but is optimized for the Coda API. It allows the user to easily create new Coda API tokens directly from the sign-in flow, passing them in the `Authorization` header of outgoing requests. For example:
+
+```
+GET /apis/v1/whoami
+Host: coda.io
+Authorization: Bearer <token>
+```
+
+Can be implemented using:
+
+```ts
+pack.setUserAuthentication({
+  type: coda.AuthenticationType.CodaApiHeaderBearerToken,
+});
+```
+
+Enabling the option `shouldAutoAuthSetup: true` further simplifies the sign-in experience, automatically creating the Coda API token with default settings.
+
+[View Sample Code][sample_coda_api]{ .md-button }
 
 
 ## Requiring authentication
@@ -483,3 +531,7 @@ There are services however where each account is associated with a distinct doma
 [network_domains]: ../fetcher.md#network-domains
 [autocomplete_dynamic]: ../../basics/parameters/autocomplete.md#dynamic-options
 [oauth_guide]: oauth2.md
+[MultiQueryParamToken]: ../../../reference/sdk/enums/core.AuthenticationType.md#multiqueryparamtoken
+[sample_multiple_query_params]: ../../../samples/topic/authentication.md#multiple-query-parameters
+[CodaApiHeaderBearerToken]: ../../../reference/sdk/enums/core.AuthenticationType.md#codaapiheaderbearertoken
+[sample_coda_api]: ../../../samples/topic/authentication.md#coda-api-token
