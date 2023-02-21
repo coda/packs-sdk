@@ -73,6 +73,9 @@ plugins:
           "guides/advanced/fetcher.md": "guides/basics/fetcher.md"
           # 2022-09-14: Move Overview page.
           "guides/index.md": "guides/overview.md"
+          # 2023-01-05: Move FAQ and Changelog to Support.
+          "guides/faq.md": "support/faq.md"
+          "reference/changes.md": "support/changes.md"
     # Run Python scripts during the MkDocs generation process.
     - mkdocs-simple-hooks:
         hooks:
