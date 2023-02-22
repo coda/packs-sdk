@@ -2,7 +2,6 @@
 // inspired by https://github.com/kumavis/polyfill-crypto.getrandomvalues/blob/master/index.js
 
 var MersenneTwister = require('mersenne-twister');
-var semver = require('semver');
 
 var twister = new MersenneTwister(Math.random() * Number.MAX_SAFE_INTEGER);
 
