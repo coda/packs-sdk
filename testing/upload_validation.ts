@@ -1093,6 +1093,7 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
               case ValueHintType.Toggle:
               case ValueHintType.Time:
               case ValueHintType.Url:
+              case ValueHintType.SelectList:
                 return true;
               default:
                 ensureUnreachable(subtitlePropertySchema.codaType);
