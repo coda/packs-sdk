@@ -56,6 +56,7 @@ import type {QueryParamTokenAuthentication} from '../types';
 import {ScaleIconSet} from '../schema';
 import type {ScaleSchema} from '../schema';
 import type {Schema} from '../schema';
+import type {SelectListSchema} from '../schema';
 import type {SetEndpoint} from '../types';
 import {SimpleStringHintValueTypes} from '../schema';
 import type {SimpleStringSchema} from '../schema';
@@ -786,6 +787,13 @@ const imagePropertySchema = zodCompleteStrictObject<ImageSchema & ObjectSchemaPr
   ...basePropertyValidators,
 });
 
+const stringSelectListPropertySchema = zodCompleteStrictObject<SelectListSchema & ObjectSchemaProperty>({
+  type: zodDiscriminant(ValueType.String),
+  codaType: zodDiscriminant(ValueHintType.SelectList),
+  options: z.array(z.string()).optional(),
+  ...basePropertyValidators,
+});
+
 const stringPropertySchema = z.union([
   simpleStringPropertySchema,
   stringDatePropertySchema,
@@ -796,6 +804,7 @@ const stringPropertySchema = z.union([
   emailPropertySchema,
   linkPropertySchema,
   imagePropertySchema,
+  stringSelectListPropertySchema,
 ]);
 
 const stringPackFormulaSchema = zodCompleteObject<Omit<StringPackFormula<any>, 'execute'>>({
@@ -1093,6 +1102,7 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
               case ValueHintType.Toggle:
               case ValueHintType.Time:
               case ValueHintType.Url:
+              case ValueHintType.SelectList:
                 return true;
               default:
                 ensureUnreachable(subtitlePropertySchema.codaType);

@@ -166,6 +166,8 @@ export enum ValueHintType {
    * Indicates to render a boolean value as a toggle.
    */
   Toggle = 'toggle',
+
+  SelectList = 'selectList',
 }
 
 export const StringHintValueTypes = [
@@ -181,6 +183,7 @@ export const StringHintValueTypes = [
   ValueHintType.ImageAttachment,
   ValueHintType.Markdown,
   ValueHintType.Url,
+  ValueHintType.SelectList,
 ] as const;
 export const NumberHintValueTypes = [
   ValueHintType.Date,
@@ -542,6 +545,11 @@ export interface LinkSchema extends BaseStringSchema<ValueHintType.Url> {
   force?: boolean;
 }
 
+export interface SelectListSchema extends BaseStringSchema<ValueHintType.SelectList> {
+  codaType: ValueHintType.SelectList;
+  options?: string[];
+}
+
 /**
  * A schema representing a return value or object property that is provided as a string,
  * which Coda should interpret as a date. Coda is able to flexibly parse a number of formal
@@ -731,7 +739,8 @@ export type StringSchema =
   | ImageSchema
   | LinkSchema
   | StringEmbedSchema
-  | SimpleStringSchema;
+  | SimpleStringSchema
+  | SelectListSchema;
 
 /**
  * A schema representing a return value or object property that is an array (list) of items.
