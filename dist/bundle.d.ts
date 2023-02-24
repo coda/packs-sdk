@@ -156,7 +156,11 @@ export declare enum ValueHintType {
 	/**
 	 * Indicates to render a boolean value as a toggle.
 	 */
-	Toggle = "toggle"
+	Toggle = "toggle",
+	/**
+	 * Indicates to render a string value as a select list.
+	 */
+	SelectList = "selectList"
 }
 declare const StringHintValueTypes: readonly [
 	ValueHintType.Attachment,
@@ -170,7 +174,8 @@ declare const StringHintValueTypes: readonly [
 	ValueHintType.ImageReference,
 	ValueHintType.ImageAttachment,
 	ValueHintType.Markdown,
-	ValueHintType.Url
+	ValueHintType.Url,
+	ValueHintType.SelectList
 ];
 declare const NumberHintValueTypes: readonly [
 	ValueHintType.Date,
@@ -510,6 +515,10 @@ export interface LinkSchema extends BaseStringSchema<ValueHintType.Url> {
 	/** Whether to force client embedding (only for LinkDisplayType.Embed) - for example, if user login required. */
 	force?: boolean;
 }
+export interface SelectListSchema extends BaseStringSchema<ValueHintType.SelectList> {
+	codaType: ValueHintType.SelectList;
+	options?: string[];
+}
 /**
  * A schema representing a return value or object property that is provided as a string,
  * which Coda should interpret as a date. Coda is able to flexibly parse a number of formal
@@ -675,7 +684,7 @@ export interface SimpleStringSchema<T extends SimpleStringHintTypes = SimpleStri
 /**
  * The union of schema definition types whose underlying value is a string.
  */
-export declare type StringSchema = StringDateSchema | StringTimeSchema | StringDateTimeSchema | DurationSchema | EmailSchema | ImageSchema | LinkSchema | StringEmbedSchema | SimpleStringSchema;
+export declare type StringSchema = StringDateSchema | StringTimeSchema | StringDateTimeSchema | DurationSchema | EmailSchema | ImageSchema | LinkSchema | StringEmbedSchema | SimpleStringSchema | SelectListSchema;
 /**
  * A schema representing a return value or object property that is an array (list) of items.
  * The items are themselves schema definitions, which may refer to scalars or other objects.

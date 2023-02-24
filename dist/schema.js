@@ -170,6 +170,10 @@ var ValueHintType;
      * Indicates to render a boolean value as a toggle.
      */
     ValueHintType["Toggle"] = "toggle";
+    /**
+     * Indicates to render a string value as a select list.
+     */
+    ValueHintType["SelectList"] = "selectList";
 })(ValueHintType = exports.ValueHintType || (exports.ValueHintType = {}));
 exports.StringHintValueTypes = [
     ValueHintType.Attachment,
@@ -184,6 +188,7 @@ exports.StringHintValueTypes = [
     ValueHintType.ImageAttachment,
     ValueHintType.Markdown,
     ValueHintType.Url,
+    ValueHintType.SelectList,
 ];
 exports.NumberHintValueTypes = [
     ValueHintType.Date,
