@@ -1019,7 +1019,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
      * in placeholderSchema will be rendered by default after the sync.
      */
     placeholderSchema?: SchemaT;
-    autocomplete?: (context: CellAutocompleteExecutionContext, search: string) => Promise<any[]>;
+    autocomplete?: CellAutocompleteMetadataFunction;
 }
 /**
  * Wrapper to produce a sync table definition. All (non-dynamic) sync tables should be created

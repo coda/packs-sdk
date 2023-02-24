@@ -176,6 +176,7 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
                     return [];
                 case schema_1.ValueHintType.Html:
                 case schema_1.ValueHintType.Markdown:
+                case schema_1.ValueHintType.SelectList:
                 case undefined:
                     // no need to coerce current result type
                     return [];

@@ -1022,7 +1022,7 @@
   resolved "https://registry.yarnpkg.com/@esbuild/android-x64/-/android-x64-0.16.17.tgz#c820e0fef982f99a85c4b8bfdd582835f04cd96e"
   integrity sha512-a3kTv3m0Ghh4z1DaFEuEDfz3OLONKuFvI4Xqczqx4BqLyuFaFkuaG4j2MtA6fuWEFeC5x9IvqnX7drmRq/fyAQ==
 
-"@esbuild/darwin-arm64@0.16.17":
+"@esbuild/darwin-arm64@0.16.17", "@esbuild/darwin-arm64@^0.16.16":
   version "0.16.17"
   resolved "https://registry.yarnpkg.com/@esbuild/darwin-arm64/-/darwin-arm64-0.16.17.tgz#edef4487af6b21afabba7be5132c26d22379b220"
   integrity sha512-/2agbUEfmxWHi9ARTX6OQ/KgXnOWfsNlTeLcoV7HSuSTv63E4DqtAc+2XqGw1KHxKMHGZgbVCZge7HXWX9Vn+w==

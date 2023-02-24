@@ -649,6 +649,12 @@ const imagePropertySchema = zodCompleteStrictObject({
     imageCornerStyle: z.nativeEnum(schema_6.ImageCornerStyle).optional(),
     ...basePropertyValidators,
 });
+const stringSelectListPropertySchema = zodCompleteStrictObject({
+    type: zodDiscriminant(schema_13.ValueType.String),
+    codaType: zodDiscriminant(schema_12.ValueHintType.SelectList),
+    options: z.array(z.string()).optional(),
+    ...basePropertyValidators,
+});
 const stringPropertySchema = z.union([
     simpleStringPropertySchema,
     stringDatePropertySchema,
@@ -659,6 +665,7 @@ const stringPropertySchema = z.union([
     emailPropertySchema,
     linkPropertySchema,
     imagePropertySchema,
+    stringSelectListPropertySchema,
 ]);
 const stringPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
@@ -884,6 +891,7 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
                 case schema_12.ValueHintType.Toggle:
                 case schema_12.ValueHintType.Time:
                 case schema_12.ValueHintType.Url:
+                case schema_12.ValueHintType.SelectList:
                     return true;
                 default:
                     (0, ensure_2.ensureUnreachable)(subtitlePropertySchema.codaType);
