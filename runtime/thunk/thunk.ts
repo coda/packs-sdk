@@ -147,20 +147,20 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
             });
           }
 
-          const cellAutocompleteCxecutionContext: Omit<CellAutocompleteExecutionContext, 'search'> = {
+          const cellAutocompleteExecutionContext: Omit<CellAutocompleteExecutionContext, 'search'> = {
             ...executionContext,
             propertyName: formulaSpec.propertyName,
             propertyValues,
           };
 
-          Object.defineProperty(cellAutocompleteCxecutionContext, 'search', {
+          Object.defineProperty(cellAutocompleteExecutionContext, 'search', {
             get() {
               recordPropertyAccess('__search');
               return formulaSpec.search;
             },
           });
 
-          const result = await autocompleteFn.execute(params as any, cellAutocompleteCxecutionContext);
+          const result = await autocompleteFn.execute(params as any, cellAutocompleteExecutionContext);
           return {
             result,
             propertiesUsed: cacheKeysUsed,
