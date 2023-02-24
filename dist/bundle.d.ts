@@ -158,7 +158,8 @@ export declare enum ValueHintType {
 	 */
 	Toggle = "toggle",
 	/** @hidden */
-	CodaInternalRichText = "codaInternalRichText"
+	CodaInternalRichText = "codaInternalRichText",
+	SelectList = "selectList"
 }
 declare const StringHintValueTypes: readonly [
 	ValueHintType.Attachment,
@@ -173,7 +174,8 @@ declare const StringHintValueTypes: readonly [
 	ValueHintType.ImageAttachment,
 	ValueHintType.Markdown,
 	ValueHintType.Url,
-	ValueHintType.CodaInternalRichText
+	ValueHintType.CodaInternalRichText,
+	ValueHintType.SelectList
 ];
 declare const NumberHintValueTypes: readonly [
 	ValueHintType.Date,
@@ -194,13 +196,13 @@ declare const ObjectHintValueTypes: readonly [
 	ValueHintType.Reference
 ];
 /** The subset of {@link ValueHintType} that can be used with a string value. */
-export declare type StringHintTypes = typeof StringHintValueTypes[number];
+export declare type StringHintTypes = (typeof StringHintValueTypes)[number];
 /** The subset of {@link ValueHintType} that can be used with a number value. */
-export declare type NumberHintTypes = typeof NumberHintValueTypes[number];
+export declare type NumberHintTypes = (typeof NumberHintValueTypes)[number];
 /** The subset of {@link ValueHintType} that can be used with a boolean value. */
-export declare type BooleanHintTypes = typeof BooleanHintValueTypes[number];
+export declare type BooleanHintTypes = (typeof BooleanHintValueTypes)[number];
 /** The subset of {@link ValueHintType} that can be used with an object value. */
-export declare type ObjectHintTypes = typeof ObjectHintValueTypes[number];
+export declare type ObjectHintTypes = (typeof ObjectHintValueTypes)[number];
 export interface BaseSchema {
 	/**
 	 * A explanation of this object schema property shown to the user in the UI.
@@ -512,6 +514,10 @@ export interface LinkSchema extends BaseStringSchema<ValueHintType.Url> {
 	/** Whether to force client embedding (only for LinkDisplayType.Embed) - for example, if user login required. */
 	force?: boolean;
 }
+export interface SelectListSchema extends BaseStringSchema<ValueHintType.SelectList> {
+	codaType: ValueHintType.SelectList;
+	options?: string[];
+}
 /**
  * A schema representing a return value or object property that is provided as a string,
  * which Coda should interpret as a date. Coda is able to flexibly parse a number of formal
@@ -685,7 +691,7 @@ declare const SimpleStringHintValueTypes: readonly [
 	ValueHintType.Email,
 	ValueHintType.CodaInternalRichText
 ];
-export declare type SimpleStringHintTypes = typeof SimpleStringHintValueTypes[number];
+export declare type SimpleStringHintTypes = (typeof SimpleStringHintValueTypes)[number];
 /**
  * A schema whose underlying value is a string, along with an optional hint about how Coda
  * should interpret that string.
@@ -695,7 +701,7 @@ export interface SimpleStringSchema<T extends SimpleStringHintTypes = SimpleStri
 /**
  * The union of schema definition types whose underlying value is a string.
  */
-export declare type StringSchema = StringDateSchema | StringTimeSchema | StringDateTimeSchema | CodaInternalRichTextSchema | DurationSchema | EmailSchema | ImageSchema | LinkSchema | StringEmbedSchema | SimpleStringSchema;
+export declare type StringSchema = StringDateSchema | StringTimeSchema | StringDateTimeSchema | CodaInternalRichTextSchema | DurationSchema | EmailSchema | ImageSchema | LinkSchema | StringEmbedSchema | SimpleStringSchema | SelectListSchema;
 /**
  * A schema representing a return value or object property that is an array (list) of items.
  * The items are themselves schema definitions, which may refer to scalars or other objects.

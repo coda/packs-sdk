@@ -173,6 +173,7 @@ var ValueHintType;
     ValueHintType["Toggle"] = "toggle";
     /** @hidden */
     ValueHintType["CodaInternalRichText"] = "codaInternalRichText";
+    ValueHintType["SelectList"] = "selectList";
 })(ValueHintType = exports.ValueHintType || (exports.ValueHintType = {}));
 exports.StringHintValueTypes = [
     ValueHintType.Attachment,
@@ -188,6 +189,7 @@ exports.StringHintValueTypes = [
     ValueHintType.Markdown,
     ValueHintType.Url,
     ValueHintType.CodaInternalRichText,
+    ValueHintType.SelectList,
 ];
 exports.NumberHintValueTypes = [
     ValueHintType.Date,

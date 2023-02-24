@@ -169,6 +169,8 @@ export enum ValueHintType {
   Toggle = 'toggle',
   /** @hidden */
   CodaInternalRichText = 'codaInternalRichText',
+
+  SelectList = 'selectList',
 }
 
 export const StringHintValueTypes = [
@@ -185,6 +187,7 @@ export const StringHintValueTypes = [
   ValueHintType.Markdown,
   ValueHintType.Url,
   ValueHintType.CodaInternalRichText,
+  ValueHintType.SelectList,
 ] as const;
 export const NumberHintValueTypes = [
   ValueHintType.Date,
@@ -201,13 +204,13 @@ export const BooleanHintValueTypes = [ValueHintType.Toggle] as const;
 export const ObjectHintValueTypes = [ValueHintType.Person, ValueHintType.Reference] as const;
 
 /** The subset of {@link ValueHintType} that can be used with a string value. */
-export type StringHintTypes = typeof StringHintValueTypes[number];
+export type StringHintTypes = (typeof StringHintValueTypes)[number];
 /** The subset of {@link ValueHintType} that can be used with a number value. */
-export type NumberHintTypes = typeof NumberHintValueTypes[number];
+export type NumberHintTypes = (typeof NumberHintValueTypes)[number];
 /** The subset of {@link ValueHintType} that can be used with a boolean value. */
-export type BooleanHintTypes = typeof BooleanHintValueTypes[number];
+export type BooleanHintTypes = (typeof BooleanHintValueTypes)[number];
 /** The subset of {@link ValueHintType} that can be used with an object value. */
-export type ObjectHintTypes = typeof ObjectHintValueTypes[number];
+export type ObjectHintTypes = (typeof ObjectHintValueTypes)[number];
 
 interface BaseSchema {
   /**
@@ -556,6 +559,11 @@ export interface LinkSchema extends BaseStringSchema<ValueHintType.Url> {
   force?: boolean;
 }
 
+export interface SelectListSchema extends BaseStringSchema<ValueHintType.SelectList> {
+  codaType: ValueHintType.SelectList;
+  options?: string[];
+}
+
 /**
  * A schema representing a return value or object property that is provided as a string,
  * which Coda should interpret as a date. Coda is able to flexibly parse a number of formal
@@ -743,7 +751,7 @@ export const SimpleStringHintValueTypes = [
   ValueHintType.Email,
   ValueHintType.CodaInternalRichText,
 ] as const;
-export type SimpleStringHintTypes = typeof SimpleStringHintValueTypes[number];
+export type SimpleStringHintTypes = (typeof SimpleStringHintValueTypes)[number];
 
 /**
  * A schema whose underlying value is a string, along with an optional hint about how Coda
@@ -765,7 +773,8 @@ export type StringSchema =
   | ImageSchema
   | LinkSchema
   | StringEmbedSchema
-  | SimpleStringSchema;
+  | SimpleStringSchema
+  | SelectListSchema;
 
 /**
  * A schema representing a return value or object property that is an array (list) of items.
