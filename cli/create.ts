@@ -1,11 +1,11 @@
 import type {ArgumentsCamelCase} from 'yargs';
 import {PACK_ID_FILE_NAME} from './config_storage';
+import {assertApiToken} from './helpers';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import {formatError} from './errors';
 import {formatResponseError} from './errors';
 import fs from 'fs';
-import {getApiKey} from './config_storage';
 import {getPackId} from './config_storage';
 import {isResponseError} from '../helpers/external-api/coda';
 import * as path from 'path';
@@ -19,6 +19,7 @@ interface CreateArgs {
   name?: string;
   description?: string;
   workspace?: string;
+  apiToken?: string;
 }
 
 export async function handleCreate({
@@ -27,23 +28,20 @@ export async function handleCreate({
   name,
   description,
   workspace,
+  apiToken,
 }: ArgumentsCamelCase<CreateArgs>) {
-  await createPack(manifestFile, codaApiEndpoint, {name, description, workspace});
+  await createPack(manifestFile, codaApiEndpoint, {name, description, workspace}, apiToken);
 }
 
 export async function createPack(
   manifestFile: string,
   codaApiEndpoint: string,
   {name, description, workspace}: {name?: string; description?: string; workspace?: string},
+  apiToken?: string,
 ) {
   const manifestDir = path.dirname(manifestFile);
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
-  // TODO(alan): we probably want to redirect them to the `coda register`
-  // flow if they don't have a Coda API token.
-  const apiKey = getApiKey(codaApiEndpoint);
-  if (!apiKey) {
-    printAndExit('Missing API token. Please run `coda register` to register one.');
-  }
+  apiToken = assertApiToken(codaApiEndpoint, apiToken);
 
   if (!fs.existsSync(manifestFile)) {
     return printAndExit(`${manifestFile} is not a valid pack definition file. Check the filename and try again.`);
@@ -58,7 +56,7 @@ export async function createPack(
     );
   }
 
-  const codaClient = createCodaClient(apiKey, formattedEndpoint);
+  const codaClient = createCodaClient(apiToken, formattedEndpoint);
   try {
     const response = await codaClient.createPack({}, {name, description, workspaceId: parseWorkspace(workspace)});
     const packId = response.packId;

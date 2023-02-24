@@ -1,13 +1,13 @@
 import type {ArgumentsCamelCase} from 'yargs';
 import type {BasicPackDefinition} from '..';
 import type {PackVersionDefinition} from '..';
+import {assertApiToken} from './helpers';
+import {assertPackId} from './helpers';
 import {build} from './build';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import {formatError} from './errors';
 import {formatResponseError} from './errors';
-import {getApiKey} from './config_storage';
-import {getPackId} from './config_storage';
 import {importManifest} from './helpers';
 import {isResponseError} from '../helpers/external-api/coda';
 import * as path from 'path';
@@ -20,6 +20,7 @@ interface ReleaseArgs {
   packVersion?: string;
   codaApiEndpoint: string;
   notes: string;
+  apiToken?: string;
 }
 
 export async function handleRelease({
@@ -27,23 +28,14 @@ export async function handleRelease({
   packVersion: explicitPackVersion,
   codaApiEndpoint,
   notes,
+  apiToken,
 }: ArgumentsCamelCase<ReleaseArgs>) {
   const manifestDir = path.dirname(manifestFile);
-  const apiKey = getApiKey(codaApiEndpoint);
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
+  apiToken = assertApiToken(codaApiEndpoint, apiToken);
+  const packId = assertPackId(manifestDir, codaApiEndpoint);
 
-  if (!apiKey) {
-    return printAndExit('Missing API token. Please run `coda register` to register one.');
-  }
-
-  const packId = getPackId(manifestDir, codaApiEndpoint);
-  if (!packId) {
-    return printAndExit(
-      `Could not find a Pack id in directory ${manifestDir}. You may need to run "coda create" first if this is a brand new pack.`,
-    );
-  }
-
-  const codaClient = createCodaClient(apiKey, formattedEndpoint);
+  const codaClient = createCodaClient(apiToken, formattedEndpoint);
 
   let packVersion = explicitPackVersion;
   if (!packVersion) {

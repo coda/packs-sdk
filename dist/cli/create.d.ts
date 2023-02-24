@@ -5,11 +5,12 @@ interface CreateArgs {
     name?: string;
     description?: string;
     workspace?: string;
+    apiToken?: string;
 }
-export declare function handleCreate({ manifestFile, codaApiEndpoint, name, description, workspace, }: ArgumentsCamelCase<CreateArgs>): Promise<void>;
+export declare function handleCreate({ manifestFile, codaApiEndpoint, name, description, workspace, apiToken, }: ArgumentsCamelCase<CreateArgs>): Promise<void>;
 export declare function createPack(manifestFile: string, codaApiEndpoint: string, { name, description, workspace }: {
     name?: string;
     description?: string;
     workspace?: string;
-}): Promise<never>;
+}, apiToken?: string): Promise<never>;
 export {};

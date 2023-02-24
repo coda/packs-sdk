@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateObjectResponseHandler = exports.untransformBody = exports.transformBody = exports.generateRequestHandler = void 0;
+exports.generateObjectResponseHandler = exports.untransformKeys = exports.untransformBody = exports.transformBody = exports.generateRequestHandler = void 0;
 const clone_1 = __importDefault(require("clone"));
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_1 = require("./helpers/ensure");
@@ -164,19 +164,26 @@ function transformBody(body, schema) {
     return body;
 }
 exports.transformBody = transformBody;
-function unmapKeys(obj, schema) {
+function getUnmapKeyLookup(schema) {
+    const remappedKeys = new Map();
     if (!(schema && (0, schema_2.isObject)(schema))) {
-        return obj;
+        return remappedKeys;
     }
     const { properties } = schema;
-    // Look at the properties of the schema and invert any keys if present.
-    const remappedKeys = new Map();
     for (const key in properties) {
         if (properties.hasOwnProperty(key) && properties[key].fromKey) {
             const fromKey = (0, ensure_1.ensureExists)(properties[key].fromKey);
             remappedKeys.set(key, fromKey);
         }
     }
+    return remappedKeys;
+}
+function unmapKeys(obj, schema) {
+    if (!(schema && (0, schema_2.isObject)(schema))) {
+        return obj;
+    }
+    // Look at the properties of the schema and invert any keys if present.
+    const remappedKeys = getUnmapKeyLookup(schema);
     const remappedObject = {};
     for (const key in obj) {
         if (!obj.hasOwnProperty(key)) {
@@ -210,6 +217,17 @@ function untransformBody(body, schema) {
     return body;
 }
 exports.untransformBody = untransformBody;
+/**
+ * Reverses the transformation of schema object keys to the values expected by the pack.
+ * Useful when passing in a list of keys from Coda -> Pack, such as when sending the aggregated
+ * sync table update payload.
+ */
+function untransformKeys(keys, schema) {
+    const schemaObject = (0, schema_1.isArray)(schema) && (0, schema_2.isObject)(schema.items) ? schema.items : schema;
+    const remappedKeys = getUnmapKeyLookup(schemaObject);
+    return keys.map(key => remappedKeys.get(key) || key);
+}
+exports.untransformKeys = untransformKeys;
 function generateObjectResponseHandler(response) {
     const { projectKey } = response;
     return function objectResponseHandler(resp) {

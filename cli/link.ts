@@ -1,7 +1,8 @@
 import type {ArgumentsCamelCase} from 'yargs';
+import {assertApiToken} from './helpers';
+import {assertPackIdOrUrl} from './helpers';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
-import {getApiKey} from './config_storage';
 import {getPackId} from './config_storage';
 import {isResponseError} from '../helpers/external-api/coda';
 import {printAndExit} from '../testing/helpers';
@@ -18,22 +19,17 @@ interface LinkArgs {
   manifestDir: string;
   codaApiEndpoint: string;
   packIdOrUrl: string;
+  apiToken?: string;
 }
 
-export async function handleLink({manifestDir, codaApiEndpoint, packIdOrUrl}: ArgumentsCamelCase<LinkArgs>) {
-  const formattedEndpoint = formatEndpoint(codaApiEndpoint);
+export async function handleLink({manifestDir, codaApiEndpoint, packIdOrUrl, apiToken}: ArgumentsCamelCase<LinkArgs>) {
   // TODO(dweitzman): Add a download command to fetch the latest code from
   // the server and ask people if they want to download after linking.
-  const apiKey = getApiKey(codaApiEndpoint);
-  if (!apiKey) {
-    return printAndExit('Missing API token. Please run `coda register` to register one.');
-  }
+  const formattedEndpoint = formatEndpoint(codaApiEndpoint);
+  apiToken = assertApiToken(codaApiEndpoint, apiToken);
+  const packId = assertPackIdOrUrl(packIdOrUrl);
 
-  const codaClient = createCodaClient(apiKey, formattedEndpoint);
-  const packId = parsePackIdOrUrl(packIdOrUrl);
-  if (packId === null) {
-    return printAndExit(`packIdOrUrl must be a pack ID or URL, not ${packIdOrUrl}`);
-  }
+  const codaClient = createCodaClient(apiToken, formattedEndpoint);
 
   // Verify that the user has edit access to the pack. Currently only editors
   // can call getPack().

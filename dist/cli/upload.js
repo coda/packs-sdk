@@ -28,24 +28,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleUpload = void 0;
 const v1_1 = require("../helpers/external-api/v1");
+const helpers_1 = require("./helpers");
+const helpers_2 = require("./helpers");
 const compile_1 = require("../testing/compile");
 const metadata_1 = require("../helpers/metadata");
 const crypto_1 = require("../helpers/crypto");
-const helpers_1 = require("./helpers");
-const helpers_2 = require("./helpers");
+const helpers_3 = require("./helpers");
+const helpers_4 = require("./helpers");
 const errors_1 = require("./errors");
 const errors_2 = require("./errors");
 const fs_extra_1 = __importDefault(require("fs-extra"));
-const config_storage_1 = require("./config_storage");
-const config_storage_2 = require("./config_storage");
-const helpers_3 = require("./helpers");
+const helpers_5 = require("./helpers");
 const coda_1 = require("../helpers/external-api/coda");
-const helpers_4 = require("./helpers");
+const helpers_6 = require("./helpers");
 const os_1 = __importDefault(require("os"));
 const path = __importStar(require("path"));
-const helpers_5 = require("../testing/helpers");
-const helpers_6 = require("../testing/helpers");
 const helpers_7 = require("../testing/helpers");
+const helpers_8 = require("../testing/helpers");
+const helpers_9 = require("../testing/helpers");
 const request_promise_native_1 = __importDefault(require("request-promise-native"));
 const errors_3 = require("./errors");
 const uuid_1 = require("uuid");
@@ -58,14 +58,16 @@ function cleanup(intermediateOutputDirectory, logger) {
         logger.info(`Intermediate files are moved to ${tempDirectory}`);
     }
 }
-async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApiEndpoint, notes, timerStrategy, }) {
+async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApiEndpoint, notes, timerStrategy, apiToken, }) {
     const logger = console;
     function printAndExit(message) {
         cleanup(intermediateOutputDirectory, logger);
-        (0, helpers_6.printAndExit)(message);
+        (0, helpers_8.printAndExit)(message);
     }
     const manifestDir = path.dirname(manifestFile);
-    const formattedEndpoint = (0, helpers_2.formatEndpoint)(codaApiEndpoint);
+    const formattedEndpoint = (0, helpers_4.formatEndpoint)(codaApiEndpoint);
+    apiToken = (0, helpers_1.assertApiToken)(codaApiEndpoint, apiToken);
+    const packId = (0, helpers_2.assertPackId)(manifestDir, codaApiEndpoint);
     logger.info('Building Pack bundle...');
     if (fs_extra_1.default.existsSync(intermediateOutputDirectory)) {
         logger.info(`Existing directory ${intermediateOutputDirectory} detected. Probably left over from previous build. Removing it...`);
@@ -80,19 +82,11 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
         intermediateOutputDirectory,
         timerStrategy,
     });
-    const manifest = await (0, helpers_3.importManifest)(bundlePath);
+    const manifest = await (0, helpers_5.importManifest)(bundlePath);
     // Since package.json isn't in dist, we grab it from the root directory instead.
-    const packageJson = await Promise.resolve().then(() => __importStar(require((0, helpers_4.isTestCommand)() ? '../package.json' : '../../package.json')));
+    const packageJson = await Promise.resolve().then(() => __importStar(require((0, helpers_6.isTestCommand)() ? '../package.json' : '../../package.json')));
     const codaPacksSDKVersion = packageJson.version;
-    const apiKey = (0, config_storage_1.getApiKey)(codaApiEndpoint);
-    if (!apiKey) {
-        printAndExit('Missing API token. Please run `coda register` to register one.');
-    }
-    const client = (0, helpers_1.createCodaClient)(apiKey, formattedEndpoint);
-    const packId = (0, config_storage_2.getPackId)(manifestDir, codaApiEndpoint);
-    if (!packId) {
-        printAndExit(`Could not find a Pack id registered in directory "${manifestDir}"`);
-    }
+    const client = (0, helpers_3.createCodaClient)(apiToken, formattedEndpoint);
     const metadata = (0, metadata_1.compilePackMetadata)(manifest);
     let packVersion = manifest.version;
     try {
@@ -107,7 +101,7 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
             try {
                 const nextPackVersionInfo = await client.getNextPackVersion(packId, {}, { proposedMetadata: JSON.stringify(metadata), sdkVersion: codaPacksSDKVersion });
                 packVersion = nextPackVersionInfo.nextVersion;
-                (0, helpers_5.print)(`Pack version not provided. Generated one for you: version is ${packVersion}`);
+                (0, helpers_7.print)(`Pack version not provided. Generated one for you: version is ${packVersion}`);
             }
             catch (err) {
                 if ((0, coda_1.isResponseError)(err)) {
@@ -117,11 +111,11 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
             }
         }
         metadata.version = packVersion;
-        const bundle = (0, helpers_7.readFile)(bundlePath);
+        const bundle = (0, helpers_9.readFile)(bundlePath);
         if (!bundle) {
             printAndExit(`Could not find bundle file at path ${bundlePath}`);
         }
-        const sourceMap = (0, helpers_7.readFile)(bundleSourceMapPath);
+        const sourceMap = (0, helpers_9.readFile)(bundleSourceMapPath);
         if (!sourceMap) {
             printAndExit(`Could not find bundle source map at path ${bundleSourceMapPath}`);
         }
@@ -160,10 +154,10 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
         }
         const { deprecationWarnings } = uploadCompleteResponse;
         if (deprecationWarnings === null || deprecationWarnings === void 0 ? void 0 : deprecationWarnings.length) {
-            (0, helpers_5.print)('\nYour Pack version uploaded successfully. ' +
+            (0, helpers_7.print)('\nYour Pack version uploaded successfully. ' +
                 'However, your Pack is using deprecated properties or features that will become errors in a future SDK version.\n');
             for (const { path, message } of deprecationWarnings) {
-                (0, helpers_5.print)(`Warning in field at path "${path}": ${message}`);
+                (0, helpers_7.print)(`Warning in field at path "${path}": ${message}`);
             }
         }
     }
@@ -183,6 +177,6 @@ async function uploadPack(uploadUrl, uploadPayload, headers) {
         });
     }
     catch (err) {
-        (0, helpers_6.printAndExit)(`Error in uploading Pack to signed url: ${(0, errors_1.formatError)(err)}`);
+        (0, helpers_8.printAndExit)(`Error in uploading Pack to signed url: ${(0, errors_1.formatError)(err)}`);
     }
 }

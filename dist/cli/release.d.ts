@@ -4,6 +4,7 @@ interface ReleaseArgs {
     packVersion?: string;
     codaApiEndpoint: string;
     notes: string;
+    apiToken?: string;
 }
-export declare function handleRelease({ manifestFile, packVersion: explicitPackVersion, codaApiEndpoint, notes, }: ArgumentsCamelCase<ReleaseArgs>): Promise<never>;
+export declare function handleRelease({ manifestFile, packVersion: explicitPackVersion, codaApiEndpoint, notes, apiToken, }: ArgumentsCamelCase<ReleaseArgs>): Promise<never>;
 export {};

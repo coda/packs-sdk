@@ -223,3 +223,14 @@ pack.addFormula({
   },
   cacheTtlSecs: 0,
 });
+
+pack.addFormula({
+  name: 'Random',
+  description: 'calls crypto random',
+  parameters: [],
+  resultType: coda.ValueType.Number,
+  execute: async () => {
+    return crypto.getRandomValues(new Uint32Array(10))[0];
+  },
+  cacheTtlSecs: 0,
+});

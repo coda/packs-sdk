@@ -332,22 +332,30 @@ export function transformBody(body: any, schema: Schema | undefined): any {
   return body;
 }
 
-function unmapKeys(obj: {[key: string]: any}, schema?: Schema): object {
+function getUnmapKeyLookup(schema?: Schema): Map<string, string> {
+  const remappedKeys: Map<string, string> = new Map();
+
   if (!(schema && isObject(schema))) {
-    return obj;
+    return remappedKeys;
   }
 
   const {properties} = schema;
-
-  // Look at the properties of the schema and invert any keys if present.
-  const remappedKeys: Map<string, string> = new Map();
   for (const key in properties) {
     if (properties.hasOwnProperty(key) && (properties[key] as ObjectSchemaProperty).fromKey) {
       const fromKey = ensureExists((properties[key] as ObjectSchemaProperty).fromKey);
       remappedKeys.set(key, fromKey);
     }
   }
+  return remappedKeys;
+}
 
+function unmapKeys(obj: {[key: string]: any}, schema?: Schema): object {
+  if (!(schema && isObject(schema))) {
+    return obj;
+  }
+
+  // Look at the properties of the schema and invert any keys if present.
+  const remappedKeys = getUnmapKeyLookup(schema);
   const remappedObject: {[key: string]: any} = {};
   for (const key in obj) {
     if (!obj.hasOwnProperty(key)) {
@@ -382,6 +390,17 @@ export function untransformBody(body: any, schema: Schema | undefined): any {
   }
 
   return body;
+}
+
+/**
+ * Reverses the transformation of schema object keys to the values expected by the pack.
+ * Useful when passing in a list of keys from Coda -> Pack, such as when sending the aggregated
+ * sync table update payload.
+ */
+export function untransformKeys(keys: string[], schema: Schema | undefined): string[] {
+  const schemaObject = isArray(schema) && isObject(schema.items) ? schema.items : schema;
+  const remappedKeys = getUnmapKeyLookup(schemaObject);
+  return keys.map(key => remappedKeys.get(key) || key);
 }
 
 export function generateObjectResponseHandler<T extends Schema>(
