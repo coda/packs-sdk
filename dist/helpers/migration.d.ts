@@ -13,6 +13,7 @@ declare class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string
     get primary(): string | undefined;
     get featured(): string[] | undefined;
     get identity(): import("../schema").IdentityDefinition | undefined;
+    get mutable(): boolean | undefined;
     get properties(): import("../schema").ObjectSchemaProperties<string>;
     get type(): import("../schema").ValueType.Object;
     get attribution(): import("../schema").AttributionNode[] | undefined;

@@ -1506,6 +1506,7 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
       imageProperty: imageProperty ? normalizeSchemaPropertyIdentifier(imageProperty, normalized) : undefined,
       snippetProperty: snippetProperty ? normalizeSchemaPropertyIdentifier(snippetProperty, normalized) : undefined,
       linkProperty: linkProperty ? normalizeSchemaPropertyIdentifier(linkProperty, normalized) : undefined,
+      mutable: schema.mutable,
     } as T;
 
     return normalizedSchema;
@@ -1524,7 +1525,7 @@ export function makeReferenceSchemaFromObjectSchema(
   schema: GenericObjectSchema,
   identityName?: string,
 ): GenericObjectSchema {
-  const {type, id, primary, identity, properties} = objectSchemaHelper(schema);
+  const {type, id, primary, identity, properties, mutable} = objectSchemaHelper(schema);
   ensureExists(
     identity || identityName,
     'Source schema must have an identity field, or you must provide an identity name for the reference.',
@@ -1541,6 +1542,7 @@ export function makeReferenceSchemaFromObjectSchema(
     identity: identity || {name: ensureExists(identityName)},
     displayProperty: primary,
     properties: referenceProperties,
+    mutable,
   });
 }
 

@@ -25,6 +25,9 @@ class ObjectSchemaHelper {
     get identity() {
         return this._schema.identity;
     }
+    get mutable() {
+        return this._schema.mutable;
+    }
     get properties() {
         return this._schema.properties;
     }

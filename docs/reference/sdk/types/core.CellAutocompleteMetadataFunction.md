@@ -8,11 +8,11 @@ search:
 
 [core](../modules/core.md).CellAutocompleteMetadataFunction
 
-Ƭ **CellAutocompleteMetadataFunction**: (`context`: [`CellAutocompleteExecutionContext`](../interfaces/core.CellAutocompleteExecutionContext.md)) => `Promise`<[`MetadataFormulaResultType`](core.MetadataFormulaResultType.md) \| [`MetadataFormulaResultType`](core.MetadataFormulaResultType.md)[] \| [`ArraySchema`](../interfaces/core.ArraySchema.md) \| `ObjectSchema`<`any`, `any`\>\>
+Ƭ **CellAutocompleteMetadataFunction**: (`context`: [`CellAutocompleteExecutionContext`](../interfaces/core.CellAutocompleteExecutionContext.md)) => `Promise`<`any`[]\>
 
 #### Type declaration
 
-▸ (`context`): `Promise`<[`MetadataFormulaResultType`](core.MetadataFormulaResultType.md) \| [`MetadataFormulaResultType`](core.MetadataFormulaResultType.md)[] \| [`ArraySchema`](../interfaces/core.ArraySchema.md) \| `ObjectSchema`<`any`, `any`\>\>
+▸ (`context`): `Promise`<`any`[]\>
 
 ##### Parameters
 
@@ -22,4 +22,4 @@ search:
 
 ##### Returns
 
-`Promise`<[`MetadataFormulaResultType`](core.MetadataFormulaResultType.md) \| [`MetadataFormulaResultType`](core.MetadataFormulaResultType.md)[] \| [`ArraySchema`](../interfaces/core.ArraySchema.md) \| `ObjectSchema`<`any`, `any`\>\>
+`Promise`<`any`[]\>

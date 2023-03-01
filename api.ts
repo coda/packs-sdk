@@ -1225,9 +1225,7 @@ export type MetadataFunction = (
   formulaContext?: MetadataContext,
 ) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
 
-export type CellAutocompleteMetadataFunction = (
-  context: CellAutocompleteExecutionContext,
-) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
+export type CellAutocompleteMetadataFunction = (context: CellAutocompleteExecutionContext) => Promise<any[]>;
 
 /**
  * The type of values that will be accepted as a metadata formula definition. This can either

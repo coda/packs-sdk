@@ -97,18 +97,18 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                             },
                         });
                     }
-                    const cellAutocompleteCxecutionContext = {
+                    const cellAutocompleteExecutionContext = {
                         ...executionContext,
                         propertyName: formulaSpec.propertyName,
                         propertyValues,
                     };
-                    Object.defineProperty(cellAutocompleteCxecutionContext, 'search', {
+                    Object.defineProperty(cellAutocompleteExecutionContext, 'search', {
                         get() {
                             recordPropertyAccess('__search');
                             return formulaSpec.search;
                         },
                     });
-                    const result = await autocompleteFn.execute(params, cellAutocompleteCxecutionContext);
+                    const result = await autocompleteFn.execute(params, cellAutocompleteExecutionContext);
                     return {
                         result,
                         propertiesUsed: cacheKeysUsed,
