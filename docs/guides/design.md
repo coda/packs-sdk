@@ -166,7 +166,7 @@ When designing your schema, select user-friendly names for your properties. The 
 
 ??? example "Example: Todoist task schema"
 
-    The Todoist API returns [up to 20 fields][todoist_task] for a task, but for most use cases only a few are required. Additionally the name "content" is replaced with "name", and the field "id" renamed to "taskId".
+    The Todoist API returns up to 20 fields for a task, but for most use cases only a few are required. Additionally the name "content" is replaced with "name", and the field "id" renamed to "taskId".
 
     === "API response"
         ```json
