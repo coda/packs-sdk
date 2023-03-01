@@ -21,7 +21,7 @@ Unlike other types of integrations, a Coda Pack doesn’t prescribe an exact end
 
 - Prefer parameters over hard-coding specific patterns.
   {: .yes}
-- Return [structured data][data_types], so users can to chain formulas together.
+- Return [structured data][data_types], so users can chain formulas together.
   {: .yes}
 
 <section class="tutorial-row" markdown>
@@ -207,14 +207,6 @@ For each collection, add a set of building blocks that allow users to work with 
         ```ts
         --8<-- "samples/packs/todoist/simple.ts:sync"
         ```
-
-    ??? note "Avoid formulas for listing items"
-
-        Listing items can alternatively be done with a formula, but there are a few caveats that make it non-ideal:
-
-        - Formulas can only run for 1 minute, while sync tables can run for up to an hour. If your collection contains a lot of items you may not able to return them all with a formula.
-        - Formulas lack a clear refresh mechanism, unlike sync tables which include a refresh button. While there are advanced options that make it possible they aren't as obvious.
-        - Many of Coda's features rely on tables. For example, a table can be displayed as a chart, while a formula result cannot.
 
 === ":material-numeric-2-circle: Formula"
 
