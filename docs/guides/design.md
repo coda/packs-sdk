@@ -54,6 +54,8 @@ Unlike other types of integrations, a Coda Pack doesn’t prescribe an exact end
 </div>
 </section>
 
+ While building blocks offer great flexibility, you'll still want to show users how to apply them. When you publish, make sure to create a [featured doc][best_practices_featured_doc] that includes some key use cases and demonstrates how your Pack can address them.
+
 
 ### Build for users
 
@@ -142,6 +144,8 @@ When building a Pack you don’t need to worry about name collisions, and access
     ```
 </div>
 </section>
+
+You can find more best practices for naming building blocks in the guides for [formulas][formulas_naming], [actions][actions_naming], and [sync tables][sync_tables_naming].
 
 
 ## API Integration
@@ -279,3 +283,7 @@ For each collection, add a set of building blocks that allow users to work with 
 [column_formats]: ./blocks/column-formats.md
 [actions]: ./blocks/actions.md
 [todoist_reference]: https://developer.todoist.com/rest/v2/#overview
+[best_practices_featured_doc]: https://coda.io/@joebauer/best-practices-for-launching-your-pack/building-a-great-doc-for-your-pack-15
+[formulas_naming]: ./blocks/formulas.md#naming
+[actions_naming]: ./blocks/actions.md#naming
+[sync_tables_naming]: ./blocks/sync-tables/index.md#naming
