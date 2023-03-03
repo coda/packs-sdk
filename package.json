@@ -115,7 +115,7 @@
     "sharp-cli": "4.1.0",
     "ts-loader": "9.4.2",
     "ts-node": "10.9.1",
-    "typedoc": "0.23.10",
+    "typedoc": "0.23.26",
     "typedoc-plugin-markdown": "3.14.0"
   },
   "resolutions": {
