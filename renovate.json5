@@ -21,4 +21,8 @@
       allowedVersions: '!/^4\\.4\\.2$/',
     },
   ],
+
+  postUpgradeTasks: {
+    commands: ['make bs build'],
+  },
 }
