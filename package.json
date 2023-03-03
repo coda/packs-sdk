@@ -51,7 +51,7 @@
     "xml2js": "0.4.23",
     "yargs": "17.7.1",
     "yn": "3.1.1",
-    "zod": "3.20.2"
+    "zod": "3.20.6"
   },
   "optionalDependencies": {
     "isolated-vm": "4.4.1"
