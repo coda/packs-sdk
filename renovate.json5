@@ -18,7 +18,7 @@
     // isolated-vm 4.4.2 has a known issue that should be fixed in 4.4.3
     {
       packageNames: ['isolated-vm'],
-      allowedVersions: '!/4\\.4\\.2/',
+      allowedVersions: '!/^4\\.4\\.2$/',
     },
   ],
 }
