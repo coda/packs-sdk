@@ -91,7 +91,7 @@
     "@typescript-eslint/eslint-plugin": "5.54.0",
     "@typescript-eslint/experimental-utils": "5.54.0",
     "@typescript-eslint/parser": "5.54.0",
-    "aws-sdk": "2.1325.0",
+    "aws-sdk": "2.1326.0",
     "buffer": "6.0.3",
     "chai": "4.3.7",
     "cspell": "6.27.0",
