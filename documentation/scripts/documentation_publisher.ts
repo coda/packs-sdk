@@ -154,7 +154,7 @@ if (require.main === module) {
           describe: 'Force upload of new files even if directory already exists in S3',
         },
       },
-      handler: pushDocumentation,
+      handler: pushDocumentation as any,
     })
     .demandCommand()
     .strict()
