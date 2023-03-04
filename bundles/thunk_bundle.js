@@ -6330,7 +6330,7 @@ module.exports = (() => {
         "Dec"
       ];
       function timestamp() {
-        var d = new Date();
+        var d = /* @__PURE__ */ new Date();
         var time = [
           pad(d.getHours()),
           pad(d.getMinutes()),
