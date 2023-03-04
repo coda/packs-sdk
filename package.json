@@ -34,7 +34,7 @@
     "mersenne-twister": "1.1.0",
     "node-fetch": "2.6.9",
     "open": "8.4.2",
-    "pascalcase": "1.0.0",
+    "pascalcase": "2.0.0",
     "qs": "6.11.0",
     "readline-sync": "1.4.10",
     "request": "2.88.2",
