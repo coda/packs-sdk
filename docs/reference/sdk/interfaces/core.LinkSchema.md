@@ -20,6 +20,16 @@ The link can be displayed in the UI in multiple ways, as per the above enumerati
 
 ## Properties
 
+### autocomplete
+
+• `Optional` **autocomplete**: `boolean`
+
+#### Inherited from
+
+BaseStringSchema.autocomplete
+
+___
+
 ### codaType
 
 • **codaType**: [`Url`](../enums/core.ValueHintType.md#url)

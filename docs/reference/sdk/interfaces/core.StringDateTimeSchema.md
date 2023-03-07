@@ -21,6 +21,16 @@ ISO 8601 datetime string (e.g. 2021-11-03T19:43:58): https://en.wikipedia.org/wi
 
 ## Properties
 
+### autocomplete
+
+• `Optional` **autocomplete**: `boolean`
+
+#### Inherited from
+
+BaseStringSchema.autocomplete
+
+___
+
 ### codaType
 
 • **codaType**: [`DateTime`](../enums/core.ValueHintType.md#datetime)

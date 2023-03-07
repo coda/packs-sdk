@@ -19,6 +19,16 @@ i.e. a raw number with an optional decimal precision.
 
 ## Properties
 
+### autocomplete
+
+• `Optional` **autocomplete**: `boolean`
+
+#### Inherited from
+
+BaseNumberSchema.autocomplete
+
+___
+
 ### codaType
 
 • `Optional` **codaType**: [`Percent`](../enums/core.ValueHintType.md#percent)

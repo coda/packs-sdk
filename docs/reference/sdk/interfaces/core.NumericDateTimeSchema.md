@@ -19,6 +19,16 @@ which Coda should interpret as a datetime. The given number should be in seconds
 
 ## Properties
 
+### autocomplete
+
+• `Optional` **autocomplete**: `boolean`
+
+#### Inherited from
+
+BaseNumberSchema.autocomplete
+
+___
+
 ### codaType
 
 • **codaType**: [`DateTime`](../enums/core.ValueHintType.md#datetime)

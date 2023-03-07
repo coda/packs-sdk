@@ -25,6 +25,16 @@ The items are themselves schema definitions, which may refer to scalars or other
 
 ## Properties
 
+### autocomplete
+
+• `Optional` **autocomplete**: `boolean`
+
+#### Inherited from
+
+BaseSchema.autocomplete
+
+___
+
 ### description
 
 • `Optional` **description**: `string`

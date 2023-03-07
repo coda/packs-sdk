@@ -647,6 +647,7 @@ function normalizeSchema(schema) {
             snippetProperty: snippetProperty ? normalizeSchemaPropertyIdentifier(snippetProperty, normalized) : undefined,
             linkProperty: linkProperty ? normalizeSchemaPropertyIdentifier(linkProperty, normalized) : undefined,
             mutable: schema.mutable,
+            autocomplete: schema.autocomplete,
         };
         return normalizedSchema;
     }
@@ -661,7 +662,7 @@ exports.normalizeSchema = normalizeSchema;
  * schema it provides better code reuse to derive a reference schema instead.
  */
 function makeReferenceSchemaFromObjectSchema(schema, identityName) {
-    const { type, id, primary, identity, properties, mutable } = (0, migration_1.objectSchemaHelper)(schema);
+    const { type, id, primary, identity, properties, mutable, autocomplete } = (0, migration_1.objectSchemaHelper)(schema);
     (0, ensure_2.ensureExists)(identity || identityName, 'Source schema must have an identity field, or you must provide an identity name for the reference.');
     const validId = (0, ensure_2.ensureExists)(id);
     const referenceProperties = { [validId]: properties[validId] };
@@ -676,6 +677,7 @@ function makeReferenceSchemaFromObjectSchema(schema, identityName) {
         displayProperty: primary,
         properties: referenceProperties,
         mutable,
+        autocomplete,
     });
 }
 exports.makeReferenceSchemaFromObjectSchema = makeReferenceSchemaFromObjectSchema;

@@ -480,6 +480,7 @@ const booleanPackFormulaSchema = zodCompleteObject({
         codaType: z.enum([...schema_2.BooleanHintValueTypes]).optional(),
         description: z.string().optional(),
         mutable: z.boolean().optional(),
+        autocomplete: z.boolean().optional(),
     }).optional(),
 });
 // TODO(jonathan): Use zodCompleteObject on these after exporting these types.
@@ -500,6 +501,7 @@ const imageAttributionNodeSchema = z.object({
 const basePropertyValidators = {
     description: z.string().optional(),
     mutable: z.boolean().optional(),
+    autocomplete: z.boolean().optional(),
     fromKey: z.string().optional(),
     required: z.boolean().optional(),
 };
@@ -632,7 +634,7 @@ const emailPropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.String),
     codaType: zodDiscriminant(schema_12.ValueHintType.Email),
     display: z.nativeEnum(schema_5.EmailDisplayType).optional(),
-    autocomplete: z.boolean().optional(),
+    // autocomplete: z.boolean().optional(),
     ...basePropertyValidators,
 });
 const linkPropertySchema = zodCompleteStrictObject({

@@ -215,7 +215,7 @@ describe('Schema', () => {
         primary: 'boo',
         properties: {
           boo: {type: schema.ValueType.String},
-          baz: {type: schema.ValueType.Number, mutable: true},
+          baz: {type: schema.ValueType.Number, mutable: true, autocomplete: true},
         },
       });
       const objectSchema = schema.makeObjectSchema({

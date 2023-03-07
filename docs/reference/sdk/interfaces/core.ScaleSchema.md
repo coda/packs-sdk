@@ -23,6 +23,16 @@ a numeric value. The canonical example of a scale is a star rating, which might 
 
 ## Properties
 
+### autocomplete
+
+• `Optional` **autocomplete**: `boolean`
+
+#### Inherited from
+
+BaseNumberSchema.autocomplete
+
+___
+
 ### codaType
 
 • **codaType**: [`Scale`](../enums/core.ValueHintType.md#scale)

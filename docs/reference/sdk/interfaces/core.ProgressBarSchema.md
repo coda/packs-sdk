@@ -19,6 +19,16 @@ be rendered as a progress bar.
 
 ## Properties
 
+### autocomplete
+
+• `Optional` **autocomplete**: `boolean`
+
+#### Inherited from
+
+BaseNumberSchema.autocomplete
+
+___
+
 ### codaType
 
 • **codaType**: [`ProgressBar`](../enums/core.ValueHintType.md#progressbar)

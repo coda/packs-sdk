@@ -222,6 +222,8 @@ interface BaseSchema {
    */
   /** @hidden */
   mutable?: boolean;
+
+  autocomplete?: boolean;
 }
 
 /**
@@ -1507,6 +1509,7 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
       snippetProperty: snippetProperty ? normalizeSchemaPropertyIdentifier(snippetProperty, normalized) : undefined,
       linkProperty: linkProperty ? normalizeSchemaPropertyIdentifier(linkProperty, normalized) : undefined,
       mutable: schema.mutable,
+      autocomplete: schema.autocomplete,
     } as T;
 
     return normalizedSchema;
@@ -1525,7 +1528,7 @@ export function makeReferenceSchemaFromObjectSchema(
   schema: GenericObjectSchema,
   identityName?: string,
 ): GenericObjectSchema {
-  const {type, id, primary, identity, properties, mutable} = objectSchemaHelper(schema);
+  const {type, id, primary, identity, properties, mutable, autocomplete} = objectSchemaHelper(schema);
   ensureExists(
     identity || identityName,
     'Source schema must have an identity field, or you must provide an identity name for the reference.',
@@ -1543,6 +1546,7 @@ export function makeReferenceSchemaFromObjectSchema(
     displayProperty: primary,
     properties: referenceProperties,
     mutable,
+    autocomplete,
   });
 }
 

@@ -21,6 +21,16 @@ ISO 8601 date string (e.g. 2021-10-29): https://en.wikipedia.org/wiki/ISO_8601.
 
 ## Properties
 
+### autocomplete
+
+• `Optional` **autocomplete**: `boolean`
+
+#### Inherited from
+
+BaseStringSchema.autocomplete
+
+___
+
 ### codaType
 
 • **codaType**: [`Date`](../enums/core.ValueHintType.md#date)

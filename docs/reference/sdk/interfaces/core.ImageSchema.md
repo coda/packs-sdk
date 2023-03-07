@@ -19,6 +19,16 @@ which Coda should interpret as an image.
 
 ## Properties
 
+### autocomplete
+
+• `Optional` **autocomplete**: `boolean`
+
+#### Inherited from
+
+BaseStringSchema.autocomplete
+
+___
+
 ### codaType
 
 • **codaType**: [`ImageReference`](../enums/core.ValueHintType.md#imagereference) \| [`ImageAttachment`](../enums/core.ValueHintType.md#imageattachment)

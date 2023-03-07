@@ -25,6 +25,16 @@ should interpret that string.
 
 ## Properties
 
+### autocomplete
+
+• `Optional` **autocomplete**: `boolean`
+
+#### Inherited from
+
+BaseStringSchema.autocomplete
+
+___
+
 ### codaType
 
 • `Optional` **codaType**: `T`

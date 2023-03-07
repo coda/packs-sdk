@@ -20,6 +20,16 @@ While this is a full datetime, only the time component will be rendered, so the 
 
 ## Properties
 
+### autocomplete
+
+• `Optional` **autocomplete**: `boolean`
+
+#### Inherited from
+
+BaseNumberSchema.autocomplete
+
+___
+
 ### codaType
 
 • **codaType**: [`Time`](../enums/core.ValueHintType.md#time)

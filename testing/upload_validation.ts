@@ -590,6 +590,7 @@ const booleanPackFormulaSchema = zodCompleteObject<Omit<BooleanPackFormula<any>,
     codaType: z.enum([...BooleanHintValueTypes]).optional(),
     description: z.string().optional(),
     mutable: z.boolean().optional(),
+    autocomplete: z.boolean().optional(),
   }).optional(),
 });
 
@@ -615,6 +616,7 @@ const imageAttributionNodeSchema = z.object({
 const basePropertyValidators = {
   description: z.string().optional(),
   mutable: z.boolean().optional(),
+  autocomplete: z.boolean().optional(),
   fromKey: z.string().optional(),
   required: z.boolean().optional(),
 };
@@ -767,7 +769,7 @@ const emailPropertySchema = zodCompleteStrictObject<EmailSchema & ObjectSchemaPr
   type: zodDiscriminant(ValueType.String),
   codaType: zodDiscriminant(ValueHintType.Email),
   display: z.nativeEnum(EmailDisplayType).optional(),
-  autocomplete: z.boolean().optional(),
+  // autocomplete: z.boolean().optional(),
   ...basePropertyValidators,
 });
 

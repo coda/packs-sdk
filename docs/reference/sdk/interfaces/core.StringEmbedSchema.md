@@ -21,6 +21,16 @@ you will need to use the `force` option which falls back to a generic iframe.
 
 ## Properties
 
+### autocomplete
+
+• `Optional` **autocomplete**: `boolean`
+
+#### Inherited from
+
+BaseStringSchema.autocomplete
+
+___
+
 ### codaType
 
 • **codaType**: [`Embed`](../enums/core.ValueHintType.md#embed)

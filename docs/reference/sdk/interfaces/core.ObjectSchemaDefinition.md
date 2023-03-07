@@ -35,6 +35,16 @@ See [makeAttributionNode](../functions/core.makeAttributionNode.md).
 
 ___
 
+### autocomplete
+
+• `Optional` **autocomplete**: `boolean`
+
+#### Inherited from
+
+BaseSchema.autocomplete
+
+___
+
 ### codaType
 
 • `Optional` **codaType**: [`Person`](../enums/core.ValueHintType.md#person) \| [`Reference`](../enums/core.ValueHintType.md#reference)

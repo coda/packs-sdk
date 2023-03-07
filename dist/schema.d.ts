@@ -181,6 +181,7 @@ interface BaseSchema {
      */
     /** @hidden */
     mutable?: boolean;
+    autocomplete?: boolean;
 }
 /**
  * A schema representing a return value or object property that is a boolean.

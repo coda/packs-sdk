@@ -19,6 +19,16 @@ which Coda should interpret as a time.
 
 ## Properties
 
+### autocomplete
+
+• `Optional` **autocomplete**: `boolean`
+
+#### Inherited from
+
+BaseStringSchema.autocomplete
+
+___
+
 ### codaType
 
 • **codaType**: [`Time`](../enums/core.ValueHintType.md#time)

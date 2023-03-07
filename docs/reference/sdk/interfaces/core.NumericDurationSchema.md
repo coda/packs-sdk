@@ -20,6 +20,16 @@ which Coda should interpret as a duration. The given number should be an amount 
 
 ## Properties
 
+### autocomplete
+
+• `Optional` **autocomplete**: `boolean`
+
+#### Inherited from
+
+BaseNumberSchema.autocomplete
+
+___
+
 ### codaType
 
 • **codaType**: [`Duration`](../enums/core.ValueHintType.md#duration)

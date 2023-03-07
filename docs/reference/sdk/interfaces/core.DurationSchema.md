@@ -19,6 +19,16 @@ should be provided as a string like "3 days" or "40 minutes 30 seconds".
 
 ## Properties
 
+### autocomplete
+
+• `Optional` **autocomplete**: `boolean`
+
+#### Inherited from
+
+BaseStringSchema.autocomplete
+
+___
+
 ### codaType
 
 • `Optional` **codaType**: [`Duration`](../enums/core.ValueHintType.md#duration)

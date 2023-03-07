@@ -18,6 +18,16 @@ A schema representing a return value or object property that is an amount of cur
 
 ## Properties
 
+### autocomplete
+
+• `Optional` **autocomplete**: `boolean`
+
+#### Inherited from
+
+BaseNumberSchema.autocomplete
+
+___
+
 ### codaType
 
 • **codaType**: [`Currency`](../enums/core.ValueHintType.md#currency)

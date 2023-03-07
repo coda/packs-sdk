@@ -19,6 +19,16 @@ be rendered as a slider.
 
 ## Properties
 
+### autocomplete
+
+• `Optional` **autocomplete**: `boolean`
+
+#### Inherited from
+
+BaseNumberSchema.autocomplete
+
+___
+
 ### codaType
 
 • **codaType**: [`Slider`](../enums/core.ValueHintType.md#slider)

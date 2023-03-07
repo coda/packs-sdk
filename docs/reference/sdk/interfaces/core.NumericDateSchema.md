@@ -19,6 +19,16 @@ which Coda should interpret as a date. The given number should be in seconds sin
 
 ## Properties
 
+### autocomplete
+
+• `Optional` **autocomplete**: `boolean`
+
+#### Inherited from
+
+BaseNumberSchema.autocomplete
+
+___
+
 ### codaType
 
 • **codaType**: [`Date`](../enums/core.ValueHintType.md#date)

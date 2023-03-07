@@ -18,6 +18,16 @@ A schema representing a return value or object property that is a boolean.
 
 ## Properties
 
+### autocomplete
+
+• `Optional` **autocomplete**: `boolean`
+
+#### Inherited from
+
+BaseSchema.autocomplete
+
+___
+
 ### codaType
 
 • `Optional` **codaType**: [`Toggle`](../enums/core.ValueHintType.md#toggle)
