@@ -37,7 +37,7 @@ async function findAndExecutePackFunction({ shouldWrapError = true, ...args }) {
     }
 }
 exports.findAndExecutePackFunction = findAndExecutePackFunction;
-function doFindAndExecutePackFunction({ params, formulaSpec, manifest, executionContext, updates, }) {
+async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, executionContext, updates, }) {
     const { syncTables, defaultAuthentication } = manifest;
     switch (formulaSpec.type) {
         case types_2.FormulaType.Standard: {
@@ -48,6 +48,7 @@ function doFindAndExecutePackFunction({ params, formulaSpec, manifest, execution
         }
         case types_2.FormulaType.Sync: {
             const formula = (0, helpers_2.findSyncFormula)(manifest, formulaSpec.formulaName);
+            // for some reason TS can't tell that the return type is correctly GenericSyncFormulaResult.
             return formula.execute(params, executionContext);
         }
         case types_2.FormulaType.SyncUpdate: {
@@ -55,7 +56,9 @@ function doFindAndExecutePackFunction({ params, formulaSpec, manifest, execution
             if (!formula.executeUpdate) {
                 throw new Error(`No executeUpdate function defined on sync table formula ${formulaSpec.formulaName}`);
             }
-            return formula.executeUpdate(params, (0, ensure_1.ensureExists)(updates), executionContext);
+            const response = await formula.executeUpdate(params, (0, ensure_1.ensureExists)(updates), executionContext);
+            // for some reason TS can't tell that the return type is correctly GenericSyncUpdateResultMarshaled.
+            return parseSyncUpdateResult(response);
         }
         case types_2.FormulaType.Metadata: {
             switch (formulaSpec.metadataFormulaType) {
@@ -215,3 +218,19 @@ function setUpBufferForTest() {
     }
 }
 exports.setUpBufferForTest = setUpBufferForTest;
+function parseSyncUpdateResult(response) {
+    return {
+        result: response.result.map(r => {
+            if (r instanceof Error) {
+                return {
+                    success: false,
+                    error: r,
+                };
+            }
+            return {
+                success: true,
+                finalValue: r,
+            };
+        }),
+    };
+}
