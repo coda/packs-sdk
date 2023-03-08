@@ -14,7 +14,7 @@ module.exports = {
     project: ['./tsconfig.eslint.json'],
     sourceType: 'module',
   },
-  plugins: ['ban', 'filenames', 'local', '@typescript-eslint'],
+  plugins: ['ban', 'filenames', '@kr-modules/coda-rules', '@typescript-eslint'],
   settings: {},
   rules: {
     '@typescript-eslint/restrict-plus-operands': 'error',

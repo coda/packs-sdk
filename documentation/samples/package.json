@@ -1,0 +1,14 @@
+{
+  "name": "@codahq/packs-sdk-documentation-samples",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Documentation samples",
+  "directories": {
+    "src": "."
+  },
+  "author": "David Weitzman <dweitzman@coda.io>",
+  "license": "./LICENSE",
+  "devDependencies": {
+    "@codahq/packs-sdk": "workspace:*"
+  }
+}

@@ -2,10 +2,6 @@ MAKEFLAGS = -s ${MAX_PARALLEL_MAKEFLAG}
 SHELL = /bin/bash
 ROOTDIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
-### YARN
-# CircleCI yarn cache directory may also need to be updated in sync with this
-YARN_CACHE_DIR=~/.yarncache
-
 ISOLATED_VM_VERSION_COMMAND="require('./node_modules/isolated-vm/package.json').version"
 ISOLATED_VM_VERSION=$(shell node -p -e $(ISOLATED_VM_VERSION_COMMAND))
 
@@ -22,19 +18,18 @@ bs: bootstrap
 ###############################################################################
 # Bootstrapping - get the local machine ready
 
+.PHONY: _bootstrap-install-pnpm
+_bootstrap-install-pnpm:
+	./scripts/dev/install-pnpm.sh
+
 .PHONY: _bootstrap-node
 _bootstrap-node:
-	mkdir -p ${YARN_CACHE_DIR}
-	yarn config set cache-folder ${YARN_CACHE_DIR}
+	pnpm install --frozen-lockfile
 	if [ -z ${CIRCLE_BRANCH} ]; then \
-	  yarn install; \
+	  pnpm install; \
 	else \
-	  yarn install --frozen-lockfile; \
+	  pnpm install --frozen-lockfile; \
 	fi
-	# Install a symlink of the working directory as @codahq/packs-sdk, so that the sample code compiles.
-	yarn unlink || true # Remove any existing links providing @codahq/packs-sdk
-	yarn link  # Provide @codahq/packs-sdk from this directory
-	yarn link "@codahq/packs-sdk"  # Consume the link whenever @codahq/packs-sdk is imported
 
 .PHONY: _bootstrap-python
 _bootstrap-python:
@@ -130,7 +125,7 @@ compile-isolated-vm:
 
 .PHONY: compile-thunk
 compile-thunk:
-	echo "Compiling thunk... if this fails with <Cannot find module 'isolated-vm'> errors, then run: yarn add isolated-vm";
+	echo "Compiling thunk... if this fails with <Cannot find module 'isolated-vm'> errors, then run: pnpm add isolated-vm";
 	# This bundle is loaded into ivm, better to use iife to avoid local symbols leak to global.
 	# We need the NODE_DEBUG=false because "util.format" depends on debuglog which depends
 	# on the value of NODE_DEBUG (https://github.com/nodejs/node/blob/6b055f385744d2ca71c19d46a0ec3bcfc51f5cd3/lib/internal/util/debuglog.js#L21)
