@@ -44,9 +44,9 @@ commands:
       - restore_cache:
           name: Restore Cache - pnpm
           keys:
-            - v3-dependencies-{{ checksum "package.json" }}
+            - pnpm-v1-dependencies-{{ checksum "package.json" }}
             # fallback to using the latest cache if no exact match is found
-            - v3-dependencies-
+            - pnpm-v1-dependencies-
       - run:
           name: 'Install pnpm'
           command: make _bootstrap-install-pnpm
@@ -56,7 +56,7 @@ commands:
       - save_cache:
           paths:
             - node_modules
-          key: v3-dependencies-{{ checksum "package.json" }}
+          key: pnpm-v1-dependencies-{{ checksum "package.json" }}
   bootstrap_aws_cli:
     steps:
       - utils/boostrap-aws-context-creds
