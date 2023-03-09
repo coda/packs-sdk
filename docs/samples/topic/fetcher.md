@@ -34,6 +34,9 @@ let payload = {
 let response = await context.fetcher.fetch({
   method: "POST",
   url: "<The URL to send the request to>",
+  headers: {
+    "Content-Type": "application/json",
+  },
   body: JSON.stringify(payload),
 });
 let data = response.body;
