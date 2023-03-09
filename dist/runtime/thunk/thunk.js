@@ -7,10 +7,11 @@ const types_2 = require("../types");
 const types_3 = require("../types");
 const types_4 = require("../../types");
 const api_1 = require("../../api");
+const api_2 = require("../../api");
 const ensure_1 = require("../../helpers/ensure");
 const helpers_1 = require("../common/helpers");
 const helpers_2 = require("../common/helpers");
-const api_2 = require("../../api");
+const api_3 = require("../../api");
 const migration_1 = require("../../helpers/migration");
 const marshaling_1 = require("../common/marshaling");
 const marshaling_2 = require("../common/marshaling");
@@ -37,13 +38,11 @@ async function findAndExecutePackFunction({ shouldWrapError = true, ...args }) {
     }
 }
 exports.findAndExecutePackFunction = findAndExecutePackFunction;
-function doFindAndExecutePackFunction({ params, formulaSpec, manifest, executionContext, updates, }) {
+async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, executionContext, updates, }) {
     const { syncTables, defaultAuthentication } = manifest;
     switch (formulaSpec.type) {
         case types_2.FormulaType.Standard: {
             const formula = (0, helpers_1.findFormula)(manifest, formulaSpec.formulaName);
-            // for some reasons TS can't tell that
-            // `T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult` is now PackFormulaResult.
             return formula.execute(params, executionContext);
         }
         case types_2.FormulaType.Sync: {
@@ -55,7 +54,8 @@ function doFindAndExecutePackFunction({ params, formulaSpec, manifest, execution
             if (!formula.executeUpdate) {
                 throw new Error(`No executeUpdate function defined on sync table formula ${formulaSpec.formulaName}`);
             }
-            return formula.executeUpdate(params, (0, ensure_1.ensureExists)(updates), executionContext);
+            const response = await formula.executeUpdate(params, (0, ensure_1.ensureExists)(updates), executionContext);
+            return parseSyncUpdateResult(response);
         }
         case types_2.FormulaType.Metadata: {
             switch (formulaSpec.metadataFormulaType) {
@@ -97,7 +97,7 @@ function doFindAndExecutePackFunction({ params, formulaSpec, manifest, execution
                         const syncTable = syncTables.find(table => table.name === formulaSpec.syncTableName);
                         if (syncTable) {
                             let formula;
-                            if ((0, api_2.isDynamicSyncTable)(syncTable)) {
+                            if ((0, api_3.isDynamicSyncTable)(syncTable)) {
                                 switch (formulaSpec.metadataFormulaType) {
                                     case types_3.MetadataFormulaType.SyncListDynamicUrls:
                                         formula = syncTable.listDynamicUrls;
@@ -215,3 +215,19 @@ function setUpBufferForTest() {
     }
 }
 exports.setUpBufferForTest = setUpBufferForTest;
+function parseSyncUpdateResult(response) {
+    return {
+        result: response.result.map(r => {
+            if (r instanceof Error) {
+                return {
+                    outcome: api_2.UpdateOutcome.Error,
+                    error: r,
+                };
+            }
+            return {
+                outcome: api_2.UpdateOutcome.Success,
+                finalValue: r,
+            };
+        }),
+    };
+}

@@ -3,13 +3,11 @@ import type { ExecutionContext } from '../../api_types';
 import type { FetchRequest } from '../../api_types';
 import type { FetchResponse } from '../../api_types';
 import type { FormulaSpecification } from '../types';
-import type { GenericSyncFormulaResult } from '../../api';
 import type { GenericSyncUpdate } from '../../api';
-import type { PackFormulaResult } from '../../api_types';
+import type { PackFunctionResponse } from '../types';
 import type { ParamDefs } from '../../api_types';
 import type { ParamValues } from '../../api_types';
 import type { SyncExecutionContext } from '../../api_types';
-import type { SyncFormulaSpecification } from '../types';
 export { marshalValue, unmarshalValue, marshalValueToString, unmarshalValueFromString, marshalValuesForLogging, } from '../common/marshaling';
 interface FindAndExecutionPackFunctionArgs<T> {
     params: ParamValues<ParamDefs>;
@@ -23,7 +21,7 @@ interface FindAndExecutionPackFunctionArgs<T> {
  */
 export declare function findAndExecutePackFunction<T extends FormulaSpecification>({ shouldWrapError, ...args }: {
     shouldWrapError: boolean;
-} & FindAndExecutionPackFunctionArgs<T>): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult>;
+} & FindAndExecutionPackFunctionArgs<T>): Promise<PackFunctionResponse<T>>;
 export declare function ensureSwitchUnreachable(value: never): never;
 export declare function handleErrorAsync(func: () => Promise<any>): Promise<any>;
 export declare function handleError(func: () => any): any;
