@@ -1,3 +1,7 @@
+import type {GenericSyncFormulaResult} from '../api';
+import type {GenericSyncUpdateResultMarshaled} from '../api';
+import type {PackFormulaResult} from '../api_types';
+
 export enum FormulaType {
   Standard = 'Standard',
   Sync = 'Sync',
@@ -79,3 +83,9 @@ export type FormulaSpecification =
   | PostSetupMetadataFormulaSpecification
   | SyncMetadataFormulaSpecification
   | CellAutocompleteFormulaSpecification;
+
+export type PackFunctionResponse<T extends FormulaSpecification> = T extends SyncFormulaSpecification
+  ? GenericSyncFormulaResult
+  : T extends SyncUpdateFormulaSpecification
+  ? GenericSyncUpdateResultMarshaled
+  : PackFormulaResult;

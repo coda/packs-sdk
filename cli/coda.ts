@@ -30,7 +30,7 @@ const CodaApiEndpointArg = {
   string: true,
   hidden: true,
   default: DEFAULT_API_ENDPOINT,
-}
+};
 
 if (require.main === module) {
   // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -39,7 +39,7 @@ if (require.main === module) {
     .command({
       command: 'execute <manifestPath> <formulaName> [params..]',
       describe: 'Execute a formula',
-      handler: handleExecute,
+      handler: handleExecute as any,
       builder: {
         fetch: {
           boolean: true,
@@ -70,7 +70,7 @@ if (require.main === module) {
     .command({
       command: 'auth <manifestPath>',
       describe: 'Set up authentication for a Pack',
-      handler: handleAuth,
+      handler: handleAuth as any,
       builder: {
         oauthServerPort: {
           alias: 'oauth_server_port',
@@ -100,7 +100,7 @@ if (require.main === module) {
         apiToken: ApiTokenArg,
         codaApiEndpoint: CodaApiEndpointArg,
       },
-      handler: handleClone,
+      handler: handleClone as any,
     })
     .command({
       command: 'register [apiToken]',
@@ -108,7 +108,7 @@ if (require.main === module) {
       builder: {
         codaApiEndpoint: CodaApiEndpointArg,
       },
-      handler: handleRegister,
+      handler: handleRegister as any,
     })
     .command({
       command: 'whoami [apiToken]',
@@ -116,7 +116,7 @@ if (require.main === module) {
       builder: {
         codaApiEndpoint: CodaApiEndpointArg,
       },
-      handler: handleWhoami,
+      handler: handleWhoami as any,
     })
     .command({
       command: 'build <manifestFile>',
@@ -141,7 +141,7 @@ if (require.main === module) {
           default: undefined,
         },
       },
-      handler: handleBuild,
+      handler: handleBuild as any,
     })
     .command({
       command: 'upload <manifestFile>',
@@ -165,7 +165,7 @@ if (require.main === module) {
         apiToken: ApiTokenArg,
         codaApiEndpoint: CodaApiEndpointArg,
       },
-      handler: handleUpload,
+      handler: handleUpload as any,
     })
     .command({
       command: 'create <manifestFile>',
@@ -189,7 +189,7 @@ if (require.main === module) {
         apiToken: ApiTokenArg,
         codaApiEndpoint: CodaApiEndpointArg,
       },
-      handler: handleCreate,
+      handler: handleCreate as any,
     })
     .command({
       command: 'link <manifestDir> <packIdOrUrl>',
@@ -198,7 +198,7 @@ if (require.main === module) {
         apiToken: ApiTokenArg,
         codaApiEndpoint: CodaApiEndpointArg,
       },
-      handler: handleLink,
+      handler: handleLink as any,
     })
     .command({
       command: 'validate <manifestFile>',
@@ -210,7 +210,7 @@ if (require.main === module) {
           default: true,
         },
       },
-      handler: handleValidate,
+      handler: handleValidate as any,
     })
     .command({
       command: 'release <manifestFile> [packVersion]',
@@ -228,7 +228,7 @@ if (require.main === module) {
         apiToken: ApiTokenArg,
         codaApiEndpoint: CodaApiEndpointArg,
       },
-      handler: handleRelease,
+      handler: handleRelease as any,
     })
     .command({
       command: 'setOption <manifestFile> <option> <value>',
@@ -237,7 +237,7 @@ if (require.main === module) {
         'the .coda-pack.json file and it will be used for all builds of the pack. ' +
         'Currently the only supported option is `timerStrategy`. Valid values are "none", "error", or "fake".\n\n' +
         'Usage: coda setOption path/to/pack.ts timerStrategy fake',
-      handler: handleSetOption,
+      handler: handleSetOption as any,
     })
     .demandCommand()
     .strict()

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.maybeRewriteConnectionForFormula = exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTableLegacy = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makeMetadataFormula = exports.makeFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeFileArrayParameter = exports.makeFileParameter = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeParameter = exports.wrapGetSchema = exports.wrapMetadataFunction = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.MissingScopesError = exports.StatusCodeError = exports.UserVisibleError = void 0;
+exports.maybeRewriteConnectionForFormula = exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTableLegacy = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makeMetadataFormula = exports.makeFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.UpdateOutcome = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeFileArrayParameter = exports.makeFileParameter = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeParameter = exports.wrapGetSchema = exports.wrapMetadataFunction = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.MissingScopesError = exports.StatusCodeError = exports.UserVisibleError = void 0;
 const api_types_1 = require("./api_types");
 const api_types_2 = require("./api_types");
 const api_types_3 = require("./api_types");
@@ -328,6 +328,15 @@ function isSyncPackFormula(fn) {
     return Boolean(fn.isSyncFormula);
 }
 exports.isSyncPackFormula = isSyncPackFormula;
+/**
+ * Possible outcomes for a single sync update.
+ * @hidden
+ */
+var UpdateOutcome;
+(function (UpdateOutcome) {
+    UpdateOutcome["Success"] = "success";
+    UpdateOutcome["Error"] = "error";
+})(UpdateOutcome = exports.UpdateOutcome || (exports.UpdateOutcome = {}));
 /**
  * @deprecated
  *

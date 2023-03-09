@@ -1,5 +1,6 @@
 nav:
   - overview.md
+  - design.md
   - blocks
   - basics
   - advanced

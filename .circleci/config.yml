@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   aws-cli: circleci/aws-cli@1.3.0
-  jq: circleci/jq@1.9.1
+  jq: circleci/jq@1.10.0
   utils: coda/utils@2.3.0
   base-tools:
     commands:
@@ -44,16 +44,16 @@ commands:
       - restore_cache:
           name: Restore Cache - yarn
           keys:
-            - v2-dependencies-{{ checksum "package.json" }}
+            - v4-dependencies-{{ checksum "package.json" }}
             # fallback to using the latest cache if no exact match is found
-            - v2-dependencies-
+            - v4-dependencies-
       - run:
           name: 'Install deps (node)'
           command: make _bootstrap-node
       - save_cache:
           paths:
             - node_modules
-          key: v2-dependencies-{{ checksum "package.json" }}
+          key: v4-dependencies-{{ checksum "package.json" }}
   bootstrap_aws_cli:
     steps:
       - utils/boostrap-aws-context-creds
