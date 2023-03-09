@@ -13,4 +13,3 @@ site
 .npmrc
 .devcontainer
 .cache
-yarn.lock
