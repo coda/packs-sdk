@@ -24,12 +24,7 @@ _bootstrap-install-pnpm:
 
 .PHONY: _bootstrap-node
 _bootstrap-node:
-	pnpm install --frozen-lockfile
-	if [ -z ${CIRCLE_BRANCH} ]; then \
-	  pnpm install; \
-	else \
-	  pnpm install --frozen-lockfile; \
-	fi
+	pnpm install
 
 .PHONY: _bootstrap-python
 _bootstrap-python:
