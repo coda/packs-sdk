@@ -24,8 +24,6 @@
     "@aws-crypto/sha256-js": "2.0.2",
     "@aws-sdk/client-sts": "3.282.0",
     "@aws-sdk/signature-v4": "3.282.0",
-    "@aws-sdk/types": "^3.272.0",
-    "@kr-modules/eslint-plugin-coda-rules": "workspace:*",
     "browserify": "17.0.0",
     "clone": "2.1.2",
     "cross-fetch": "3.1.5",
@@ -62,9 +60,11 @@
     "isolated-vm": "4.4.1"
   },
   "devDependencies": {
+    "@aws-sdk/types": "^3.272.0",
     "@brightcove/kacl": "0.1.11",
     "@getify/eslint-plugin-proper-arrows": "11.0.3",
     "@julian_cataldo/remark-lint-frontmatter-schema": "3.7.6",
+    "@kr-modules/eslint-plugin-coda-rules": "workspace:*",
     "@release-it/keep-a-changelog": "3.1.0",
     "@types/aws-sdk": "2.7.0",
     "@types/browserify": "12.0.37",

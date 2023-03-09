@@ -103,8 +103,6 @@ importers:
       '@aws-crypto/sha256-js': 2.0.2
       '@aws-sdk/client-sts': 3.282.0
       '@aws-sdk/signature-v4': 3.282.0
-      '@aws-sdk/types': 3.272.0
-      '@kr-modules/eslint-plugin-coda-rules': link:dev/eslint/eslint-plugin-coda-rules
       browserify: 17.0.0
       clone: 2.1.2
       cross-fetch: 3.1.5
@@ -139,9 +137,11 @@ importers:
     optionalDependencies:
       isolated-vm: 4.4.1
     devDependencies:
+      '@aws-sdk/types': 3.272.0
       '@brightcove/kacl': 0.1.11
       '@getify/eslint-plugin-proper-arrows': 11.0.3_eslint@8.35.0
       '@julian_cataldo/remark-lint-frontmatter-schema': 3.7.6
+      '@kr-modules/eslint-plugin-coda-rules': link:dev/eslint/eslint-plugin-coda-rules
       '@release-it/keep-a-changelog': 3.1.0_release-it@15.6.0
       '@types/aws-sdk': 2.7.0
       '@types/browserify': 12.0.37
@@ -748,7 +748,6 @@ packages:
     engines: {node: '>=14.0.0'}
     dependencies:
       tslib: 2.5.0
-    dev: false
 
   /@aws-sdk/url-parser/3.272.0:
     resolution: {integrity: sha512-vX/Tx02PlnQ/Kgtf5TnrNDHPNbY+amLZjW0Z1d9vzAvSZhQ4i9Y18yxoRDIaDTCNVRDjdhV8iuctW+05PB5JtQ==}
