@@ -180,6 +180,16 @@ interface BaseSchema {
      */
     /** @hidden */
     mutable?: boolean;
+    /**
+     * Whether this object schema property should run the sync table's property autocomplete
+     * function to suggest possible values on edit.
+     *
+     * For the email type, this will autocomplete emails from the doc without running the sync
+     * table's property autocomplete function.
+     *
+     * @hidden
+     */
+    autocomplete?: boolean;
 }
 /**
  * A schema representing a return value or object property that is a boolean.

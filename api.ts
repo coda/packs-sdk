@@ -19,6 +19,7 @@ import type {ParamValues} from './api_types';
 import type {ParameterType} from './api_types';
 import {ParameterTypeInputMap} from './api_types';
 import type {ParameterTypeMap} from './api_types';
+import type {PropertyAutocompleteExecutionContext} from './api_types';
 import type {RequestHandlerTemplate} from './handler_templates';
 import type {ResponseHandlerTemplate} from './handler_templates';
 import type {Schema} from './schema';
@@ -261,6 +262,11 @@ export interface SyncTableDef<
   entityName?: string;
   /** See {@link DynamicOptions.defaultAddDynamicColumns} */
   defaultAddDynamicColumns?: boolean;
+  /**
+   * See {@link SyncTableOptions.propertyAutocomplete}
+   * @hidden
+   */
+  propertyAutocomplete?: MetadataFormula;
 }
 
 /**
@@ -283,6 +289,11 @@ export interface DynamicSyncTableDef<
   getDisplayUrl: MetadataFormula;
   /** See {@link DynamicSyncTableOptions.listDynamicUrls} */
   listDynamicUrls?: MetadataFormula;
+  /**
+   * See {@link DynamicSyncTableOptions.propertyAutocomplete}
+   * @hidden
+   */
+  propertyAutocomplete?: MetadataFormula;
 }
 
 /**
@@ -783,11 +794,9 @@ export type GenericSyncUpdate = SyncUpdate<any, any, any>;
  * Type definition for a single update result returned by a sync table update function.
  * @hidden
  */
-export type SyncUpdateSingleResult<
-  K extends string,
-  L extends string,
-  SchemaT extends ObjectSchemaDefinition<K, L>,
-> = ObjectSchemaDefinitionType<K, L, SchemaT> | Error;
+export type SyncUpdateSingleResult<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> =
+  | ObjectSchemaDefinitionType<K, L, SchemaT>
+  | Error;
 
 /**
  * Generic type definition for a single update result returned by a sync table update function.
@@ -861,7 +870,9 @@ export type GenericSyncUpdateSingleResultMarshaled = SyncUpdateSingleResultMarsh
  * @hidden
  */
 export interface SyncUpdateResultMarshaled<
-  K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>
+  K extends string,
+  L extends string,
+  SchemaT extends ObjectSchemaDefinition<K, L>,
 > {
   result: Array<SyncUpdateSingleResultMarshaled<K, L, SchemaT>>;
 }
@@ -1283,6 +1294,14 @@ export type MetadataFunction = (
 ) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
 
 /**
+ * A JavaScript function for property autocomplete.
+ * @hidden
+ */
+export type PropertyAutocompleteMetadataFunction = (
+  context: PropertyAutocompleteExecutionContext,
+) => Promise<any[]> | any[];
+
+/**
  * The type of values that will be accepted as a metadata formula definition. This can either
  * be the JavaScript function that implements a metadata formula (strongly recommended)
  * or a full metadata formula definition (mostly supported for legacy code).
@@ -1320,6 +1339,29 @@ export function makeMetadataFormula(
       return execute(context, search, formulaContext) as any;
     },
     parameters: [
+      makeStringParameter('search', 'Metadata to search for', {optional: true}),
+      makeStringParameter('formulaContext', 'Serialized JSON for metadata', {optional: true}),
+    ],
+    examples: [],
+    connectionRequirement: options?.connectionRequirement || ConnectionRequirement.Optional,
+  });
+}
+
+function makePropertyAutocompleteFormula(
+  execute: PropertyAutocompleteMetadataFunction,
+  options?: {connectionRequirement?: ConnectionRequirement},
+): MetadataFormula {
+  if (!(execute instanceof Function)) {
+    throw new Error(`Value for propertyAutocomplete must be a function`);
+  }
+  return makeObjectFormula({
+    name: 'getPropertyAutocompleteMetadata',
+    description: 'Gets property autocomplete',
+    execute([], context) {
+      return execute(context as PropertyAutocompleteExecutionContext);
+    },
+    parameters: [
+      // All metadata functions get search and formula context, but we don't use them.
       makeStringParameter('search', 'Metadata to search for', {optional: true}),
       makeStringParameter('formulaContext', 'Serialized JSON for metadata', {optional: true}),
     ],
@@ -1585,6 +1627,11 @@ export interface SyncTableOptions<
    * sync tables that have a dynamic schema.
    */
   dynamicOptions?: DynamicOptions;
+  /**
+   * A function to autocomplete values for properties marked with `mutable` and `autocomplete`.
+   * @hidden
+   */
+  propertyAutocomplete?: PropertyAutocompleteMetadataFunction;
 }
 
 /**
@@ -1679,6 +1726,12 @@ export interface DynamicSyncTableOptions<
    * in placeholderSchema will be rendered by default after the sync.
    */
   placeholderSchema?: SchemaT;
+
+  /**
+   * A function to autocomplete values for properties marked with `mutable` and `autocomplete`.
+   * @hidden
+   */
+  propertyAutocomplete?: PropertyAutocompleteMetadataFunction;
 }
 
 /**
@@ -1706,6 +1759,7 @@ export function makeSyncTable<
   identityName,
   schema: inputSchema,
   formula,
+  propertyAutocomplete,
   connectionRequirement,
   dynamicOptions = {},
 }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT> {
@@ -1715,6 +1769,8 @@ export function makeSyncTable<
     executeUpdate: wrappedExecuteUpdate,
     ...definition
   } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
+
+  const wrappedAutocomplete = propertyAutocomplete ? makePropertyAutocompleteFormula(propertyAutocomplete) : undefined;
 
   // Since we mutate schemaDef, we need to make a copy so the input schema can be reused across sync tables.
   const schemaDef = deepCopy(inputSchema);
@@ -1790,6 +1846,7 @@ export function makeSyncTable<
       connectionRequirement: definition.connectionRequirement || connectionRequirement,
       resultType: Type.object as any,
     },
+    propertyAutocomplete: wrappedAutocomplete,
     getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
     entityName,
     defaultAddDynamicColumns,
@@ -1852,6 +1909,30 @@ export function makeDynamicSyncTable<
   L extends string,
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchemaDefinition<K, L>,
+>(params: {
+  name: string;
+  description?: string;
+  getName: MetadataFormulaDef;
+  getSchema: MetadataFormulaDef;
+  identityName: string;
+  formula: SyncFormulaDef<K, L, ParamDefsT, any>;
+  getDisplayUrl: MetadataFormulaDef;
+  listDynamicUrls?: MetadataFormulaDef;
+  entityName?: string;
+  connectionRequirement?: ConnectionRequirement;
+  defaultAddDynamicColumns?: boolean;
+  placeholderSchema?: SchemaT;
+}): DynamicSyncTableDef<K, L, ParamDefsT, any>;
+
+/**
+ * Includes the unreleased propertyAutocomplete parameter.
+ * @hidden
+ */
+export function makeDynamicSyncTable<
+  K extends string,
+  L extends string,
+  ParamDefsT extends ParamDefs,
+  SchemaT extends ObjectSchemaDefinition<K, L>,
 >({
   name,
   description,
@@ -1865,6 +1946,7 @@ export function makeDynamicSyncTable<
   connectionRequirement,
   defaultAddDynamicColumns,
   placeholderSchema: placeholderSchemaInput,
+  propertyAutocomplete,
 }: {
   name: string;
   description?: string;
@@ -1878,6 +1960,7 @@ export function makeDynamicSyncTable<
   connectionRequirement?: ConnectionRequirement;
   defaultAddDynamicColumns?: boolean;
   placeholderSchema?: SchemaT;
+  propertyAutocomplete?: PropertyAutocompleteMetadataFunction;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any> {
   const placeholderSchema: any =
     placeholderSchemaInput ||
@@ -1903,6 +1986,7 @@ export function makeDynamicSyncTable<
     formula,
     connectionRequirement,
     dynamicOptions: {getSchema, entityName, defaultAddDynamicColumns},
+    propertyAutocomplete,
   });
   return {
     ...table,

@@ -219,6 +219,17 @@ interface BaseSchema {
    */
   /** @hidden */
   mutable?: boolean;
+
+  /**
+   * Whether this object schema property should run the sync table's property autocomplete
+   * function to suggest possible values on edit.
+   *
+   * For the email type, this will autocomplete emails from the doc without running the sync
+   * table's property autocomplete function.
+   *
+   * @hidden
+   */
+  autocomplete?: boolean;
 }
 
 /**
@@ -1497,6 +1508,8 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
       imageProperty: imageProperty ? normalizeSchemaPropertyIdentifier(imageProperty, normalized) : undefined,
       snippetProperty: snippetProperty ? normalizeSchemaPropertyIdentifier(snippetProperty, normalized) : undefined,
       linkProperty: linkProperty ? normalizeSchemaPropertyIdentifier(linkProperty, normalized) : undefined,
+      mutable: schema.mutable,
+      autocomplete: schema.autocomplete,
     } as T;
 
     return normalizedSchema;
@@ -1515,7 +1528,7 @@ export function makeReferenceSchemaFromObjectSchema(
   schema: GenericObjectSchema,
   identityName?: string,
 ): GenericObjectSchema {
-  const {type, id, primary, identity, properties} = objectSchemaHelper(schema);
+  const {type, id, primary, identity, properties, mutable, autocomplete} = objectSchemaHelper(schema);
   ensureExists(
     identity || identityName,
     'Source schema must have an identity field, or you must provide an identity name for the reference.',
@@ -1532,6 +1545,8 @@ export function makeReferenceSchemaFromObjectSchema(
     identity: identity || {name: ensureExists(identityName)},
     displayProperty: primary,
     properties: referenceProperties,
+    mutable,
+    autocomplete,
   });
 }
 

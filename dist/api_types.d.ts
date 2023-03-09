@@ -635,6 +635,33 @@ export interface SyncExecutionContext extends ExecutionContext {
      */
     readonly sync: Sync;
 }
+/**
+ * Sub-class of {@link ExecutionContext} that is passed to the `autocomplete` function of
+ * mutable sync tables for properties with `autocomplete` enabled.
+ *
+ * @hidden
+ */
+export interface PropertyAutocompleteExecutionContext extends ExecutionContext {
+    /**
+     * Which property is being edited.
+     */
+    readonly propertyName: string;
+    /**
+     * Current values of other properties from the same row. Non-required properties may be missing
+     * if the doc owner elected not to sync them, or if they have a type that's not yet supported
+     * for autocomplete context. Properties referencing other sync tables may be missing some or
+     * all of their sub-properties if the reference is broken because the other table is not
+     * added to the doc or hasn't synced the referenced row.
+     */
+    readonly propertyValues: {
+        [propertyValues: string]: any;
+    };
+    /**
+     * What the user typed. For example, they may have type "Ja" while searching for a user named
+     * "Jane".
+     */
+    readonly search: string;
+}
 export interface UpdateSyncExecutionContext extends ExecutionContext {
     /**
      * Information about state of the current sync.

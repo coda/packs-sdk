@@ -25,6 +25,12 @@ class ObjectSchemaHelper {
     get identity() {
         return this._schema.identity;
     }
+    get mutable() {
+        return this._schema.mutable;
+    }
+    get autocomplete() {
+        return this._schema.autocomplete;
+    }
     get properties() {
         return this._schema.properties;
     }

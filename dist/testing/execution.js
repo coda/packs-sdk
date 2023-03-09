@@ -81,7 +81,11 @@ useDeprecatedResultNormalization = true, } = {}) {
         (0, validation_1.validateParams)(formula, params);
     }
     let result = await thunk.findAndExecutePackFunction({
-        params, formulaSpec, manifest, executionContext, shouldWrapError: false,
+        params,
+        formulaSpec,
+        manifest,
+        executionContext,
+        shouldWrapError: false,
     });
     if (useDeprecatedResultNormalization && formula) {
         const resultToNormalize = formulaSpec.type === types_1.FormulaType.Sync ? result.result : result;
