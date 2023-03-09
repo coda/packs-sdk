@@ -74,6 +74,7 @@ export type { SyncUpdateSingleResultMarshaledError } from './api';
 export type { SyncUpdateSingleResultMarshaledSuccess } from './api';
 export type { GenericSyncUpdateSingleResult } from './api';
 export type { GenericSyncUpdateSingleResultMarshaled } from './api';
+export { UpdateOutcome } from './api';
 export type { InvocationLocation } from './api_types';
 export type { MetadataContext } from './api';
 export type { MetadataFormulaObjectResultType } from './api';

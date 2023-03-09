@@ -3,15 +3,11 @@ import type { ExecutionContext } from '../../api_types';
 import type { FetchRequest } from '../../api_types';
 import type { FetchResponse } from '../../api_types';
 import type { FormulaSpecification } from '../types';
-import type { GenericSyncFormulaResult } from '../../api';
 import type { GenericSyncUpdate } from '../../api';
-import type { GenericSyncUpdateResultMarshaled } from '../../api';
-import type { PackFormulaResult } from '../../api_types';
+import type { PackFunctionResponse } from '../types';
 import type { ParamDefs } from '../../api_types';
 import type { ParamValues } from '../../api_types';
 import type { SyncExecutionContext } from '../../api_types';
-import type { SyncFormulaSpecification } from '../types';
-import type { SyncUpdateFormulaSpecification } from '../types';
 export { marshalValue, unmarshalValue, marshalValueToString, unmarshalValueFromString, marshalValuesForLogging, } from '../common/marshaling';
 interface FindAndExecutionPackFunctionArgs<T> {
     params: ParamValues<ParamDefs>;
@@ -20,7 +16,6 @@ interface FindAndExecutionPackFunctionArgs<T> {
     executionContext: ExecutionContext | SyncExecutionContext;
     updates?: GenericSyncUpdate[];
 }
-declare type PackFunctionResponse<T extends FormulaSpecification> = T extends SyncFormulaSpecification ? GenericSyncFormulaResult : T extends SyncUpdateFormulaSpecification ? GenericSyncUpdateResultMarshaled : PackFormulaResult;
 /**
  * The thunk entrypoint - the first code that runs inside the v8 isolate once control is passed over.
  */

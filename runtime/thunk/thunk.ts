@@ -13,6 +13,7 @@ import type {GenericSyncUpdateResultMarshaled} from '../../api';
 import type {MetadataFormula} from '../../api';
 import {MetadataFormulaType} from '../types';
 import type {PackFormulaResult} from '../../api_types';
+import type {PackFunctionResponse} from '../types';
 import type {ParamDefs} from '../../api_types';
 import type {ParamValues} from '../../api_types';
 import type {ParameterAutocompleteMetadataFormulaSpecification} from '../types';
@@ -20,9 +21,8 @@ import type {ParamsList} from '../../api_types';
 import {PostSetupType} from '../../types';
 import {StatusCodeError} from '../../api';
 import type {SyncExecutionContext} from '../../api_types';
-import type {SyncFormulaSpecification} from '../types';
-import type {SyncUpdateFormulaSpecification} from '../types';
 import type {TypedPackFormula} from '../../api';
+import {UpdateOutcome} from '../../api';
 import type {UpdateSyncExecutionContext} from '../../api_types';
 import {ensureExists} from '../../helpers/ensure';
 import {findFormula} from '../common/helpers';
@@ -47,11 +47,6 @@ interface FindAndExecutionPackFunctionArgs<T> {
   executionContext: ExecutionContext | SyncExecutionContext;
   updates?: GenericSyncUpdate[];
 }
-
-type PackFunctionResponse<T extends FormulaSpecification> = 
-  T extends SyncFormulaSpecification ? GenericSyncFormulaResult
-  : T extends SyncUpdateFormulaSpecification ? GenericSyncUpdateResultMarshaled
-  : PackFormulaResult;
 
 /**
  * The thunk entrypoint - the first code that runs inside the v8 isolate once control is passed over.
@@ -79,20 +74,26 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
   manifest,
   executionContext,
   updates,
-}: FindAndExecutionPackFunctionArgs<T>): Promise<PackFunctionResponse<T>> {
+}: FindAndExecutionPackFunctionArgs<T>): Promise<PackFunctionResponse<T>>;
+async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
+  params,
+  formulaSpec,
+  manifest,
+  executionContext,
+  updates,
+}: FindAndExecutionPackFunctionArgs<T>): Promise<
+  GenericSyncFormulaResult | GenericSyncUpdateResultMarshaled | PackFormulaResult
+> {
   const {syncTables, defaultAuthentication} = manifest;
 
   switch (formulaSpec.type) {
     case FormulaType.Standard: {
       const formula = findFormula(manifest, formulaSpec.formulaName);
-      // for some reasons TS can't tell that
-      // `T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult` is now PackFormulaResult.
-      return formula.execute(params, executionContext as ExecutionContext) as any;
+      return formula.execute(params, executionContext as ExecutionContext);
     }
     case FormulaType.Sync: {
       const formula = findSyncFormula(manifest, formulaSpec.formulaName);
-      // for some reason TS can't tell that the return type is correctly GenericSyncFormulaResult.
-      return formula.execute(params, executionContext as SyncExecutionContext) as any;
+      return formula.execute(params, executionContext as SyncExecutionContext);
     }
     case FormulaType.SyncUpdate: {
       const formula = findSyncFormula(manifest, formulaSpec.formulaName);
@@ -101,8 +102,7 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
       }
       const response = await formula.executeUpdate(
         params, ensureExists(updates), executionContext as UpdateSyncExecutionContext);
-      // for some reason TS can't tell that the return type is correctly GenericSyncUpdateResultMarshaled.
-      return parseSyncUpdateResult(response) as any;
+      return parseSyncUpdateResult(response);
     }
     case FormulaType.Metadata: {
       switch (formulaSpec.metadataFormulaType) {
@@ -283,12 +283,12 @@ function parseSyncUpdateResult(response: GenericSyncUpdateResult): GenericSyncUp
     result: response.result.map(r => {
       if (r instanceof Error) {
         return {
-          success: false,
+          outcome: UpdateOutcome.Error,
           error: r,
         };
       }
       return {
-        success: true,
+        outcome: UpdateOutcome.Success,
         finalValue: r,
       };
     }),

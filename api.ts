@@ -820,6 +820,15 @@ export type SyncUpdateSingleResultMarshaled<
 > = SyncUpdateSingleResultMarshaledSuccess<K, L, SchemaT> | SyncUpdateSingleResultMarshaledError;
 
 /**
+ * Possible outcomes for a single sync update.
+ * @hidden
+ */
+export enum UpdateOutcome {
+  Success = 'success',
+  Error = 'error',
+}
+
+/**
  * Type definition for a single marshaled update success result returned by a sync table update function.
  * @hidden
  */
@@ -828,7 +837,7 @@ export interface SyncUpdateSingleResultMarshaledSuccess<
   L extends string,
   SchemaT extends ObjectSchemaDefinition<K, L>,
 > {
-  success: true;
+  outcome: UpdateOutcome.Success;
   finalValue: ObjectSchemaDefinitionType<K, L, SchemaT>;
 }
 
@@ -837,7 +846,7 @@ export interface SyncUpdateSingleResultMarshaledSuccess<
  * @hidden
  */
 export interface SyncUpdateSingleResultMarshaledError {
-  success: false;
+  outcome: UpdateOutcome.Error;
   error: Error;
 }
 

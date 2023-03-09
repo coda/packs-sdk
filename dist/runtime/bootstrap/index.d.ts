@@ -3,18 +3,14 @@ import type { FetchRequest } from '../../api_types';
 import type { FetchResponse } from '../../api_types';
 import type { Fetcher } from '../../api_types';
 import type { FormulaSpecification } from '../types';
-import type { GenericSyncFormulaResult } from '../../api';
-import type { GenericSyncUpdateResult } from '../../api';
 import type { InvocationLocation } from '../../api_types';
 import type { Isolate } from 'isolated-vm';
 import type { Logger } from '../../api_types';
-import type { PackFormulaResult } from '../../api_types';
+import type { PackFunctionResponse } from '../types';
 import type { ParamDefs } from '../../api_types';
 import type { ParamValues } from '../../api_types';
 import type { Sync } from '../../api_types';
-import type { SyncFormulaSpecification } from '../types';
 import type { SyncUpdate } from '../../api';
-import type { SyncUpdateFormulaSpecification } from '../types';
 import type { TemporaryBlobStorage } from '../../api_types';
 /**
  * Setup an isolate context with sufficient globals needed to execute a pack.
@@ -41,7 +37,7 @@ export declare function executeThunk<T extends FormulaSpecification>(context: Co
     params: ParamValues<ParamDefs>;
     formulaSpec: T;
     updates?: Array<SyncUpdate<any, any, any>>;
-}, packBundlePath: string, packBundleSourceMapPath: string): Promise<T extends SyncUpdateFormulaSpecification ? GenericSyncUpdateResult : T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult>;
+}, packBundlePath: string, packBundleSourceMapPath: string): Promise<PackFunctionResponse<T>>;
 export declare function injectSerializer(context: Context, stubName: string): Promise<void>;
 /**
  * Injects the ExecutionContext object, including stubs for network calls, into the isolate.

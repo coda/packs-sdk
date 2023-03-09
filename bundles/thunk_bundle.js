@@ -7081,12 +7081,12 @@ module.exports = (() => {
       result: response.result.map((r) => {
         if (r instanceof Error) {
           return {
-            success: false,
+            outcome: "error" /* Error */,
             error: r
           };
         }
         return {
-          success: true,
+          outcome: "success" /* Success */,
           finalValue: r
         };
       })

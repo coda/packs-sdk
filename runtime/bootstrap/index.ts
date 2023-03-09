@@ -3,18 +3,14 @@ import type {FetchRequest} from '../../api_types';
 import type {FetchResponse} from '../../api_types';
 import type {Fetcher} from '../../api_types';
 import type {FormulaSpecification} from '../types';
-import type {GenericSyncFormulaResult} from '../../api';
-import type {GenericSyncUpdateResult} from '../../api';
 import type {InvocationLocation} from '../../api_types';
 import type {Isolate} from 'isolated-vm';
 import type {Logger} from '../../api_types';
-import type {PackFormulaResult} from '../../api_types';
+import type {PackFunctionResponse} from '../types';
 import type {ParamDefs} from '../../api_types';
 import type {ParamValues} from '../../api_types';
 import type {Sync} from '../../api_types';
-import type {SyncFormulaSpecification} from '../types';
 import type {SyncUpdate} from '../../api';
-import type {SyncUpdateFormulaSpecification} from '../types';
 import type {TemporaryBlobStorage} from '../../api_types';
 import fs from 'fs';
 import {marshalValue} from '../common/marshaling';
@@ -153,11 +149,7 @@ export async function executeThunk<T extends FormulaSpecification>(
   },
   packBundlePath: string,
   packBundleSourceMapPath: string,
-): Promise<
-  T extends SyncUpdateFormulaSpecification ? GenericSyncUpdateResult
-  : T extends SyncFormulaSpecification ? GenericSyncFormulaResult
-  : PackFormulaResult
-> {
+): Promise<PackFunctionResponse<T>> {
   try {
     const resultRef = await context.evalClosure(
       'return coda.findAndExecutePackFunction({params: $0, formulaSpec: $1, updates: $2, manifest: pack.pack || pack.manifest, executionContext: executionContext});',
