@@ -2173,7 +2173,7 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
 	 * See {@link SyncTableOptions.propertyAutocomplete}
 	 * @hidden
 	 */
-	propertyAutocomplete?: MetadataFormula;
+	propertyAutocomplete?: PropertyAutocompleteMetadataFormula;
 }
 /**
  * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
@@ -2194,7 +2194,7 @@ export interface DynamicSyncTableDef<K extends string, L extends string, ParamDe
 	 * See {@link DynamicSyncTableOptions.propertyAutocomplete}
 	 * @hidden
 	 */
-	propertyAutocomplete?: MetadataFormula;
+	propertyAutocomplete?: PropertyAutocompleteMetadataFormula;
 }
 /**
  * Container for arbitrary data about which page of data to retrieve in this sync invocation.
@@ -2711,6 +2711,13 @@ export declare type MetadataFormula = BaseFormula<[
 ], any> & {
 	schema?: any;
 };
+/**
+ * @hidden
+ */
+export declare type PropertyAutocompleteMetadataFormula = BaseFormula<[
+], any> & {
+	schema?: any;
+};
 export declare type MetadataFormulaMetadata = Omit<MetadataFormula, "execute">;
 /**
  * A JavaScript function that can implement a {@link MetadataFormulaDef}.
@@ -2720,7 +2727,7 @@ export declare type MetadataFunction = (context: ExecutionContext, search: strin
  * A JavaScript function for property autocomplete.
  * @hidden
  */
-export declare type PropertyAutocompleteMetadataFunction = (context: PropertyAutocompleteExecutionContext) => Promise<any[]>;
+export declare type PropertyAutocompleteMetadataFunction = (context: PropertyAutocompleteExecutionContext) => Promise<any[]> | any[];
 /**
  * The type of values that will be accepted as a metadata formula definition. This can either
  * be the JavaScript function that implements a metadata formula (strongly recommended)

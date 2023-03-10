@@ -541,17 +541,16 @@ function makeMetadataFormula(execute, options) {
 }
 exports.makeMetadataFormula = makeMetadataFormula;
 function makePropertyAutocompleteFormula(execute, options) {
+    if (!(execute instanceof Function)) {
+        throw new Error(`Value for propertyAutocomplete must be a function`);
+    }
     return makeObjectFormula({
         name: 'getPropertyAutocompleteMetadata',
         description: 'Gets property autocomplete',
         execute([], context) {
             return execute(context);
         },
-        parameters: [
-            // All metadata functions get search and formula context, but we don't use them.
-            makeStringParameter('search', 'Metadata to search for', { optional: true }),
-            makeStringParameter('formulaContext', 'Serialized JSON for metadata', { optional: true }),
-        ],
+        parameters: [],
         examples: [],
         connectionRequirement: (options === null || options === void 0 ? void 0 : options.connectionRequirement) || api_types_1.ConnectionRequirement.Optional,
     });

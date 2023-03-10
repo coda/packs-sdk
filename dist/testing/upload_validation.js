@@ -501,7 +501,6 @@ const imageAttributionNodeSchema = z.object({
 const basePropertyValidators = {
     description: z.string().optional(),
     mutable: z.boolean().optional(),
-    // TODO(dweitzman): Only allow autocomplete if mutable is true
     autocomplete: z.boolean().optional(),
     fromKey: z.string().optional(),
     required: z.boolean().optional(),
@@ -898,13 +897,11 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
     validateSnippetProperty();
     validateSubtitleProperties();
 }));
-const objectPropertyUnionSchema = z.union([
-    booleanPropertySchema,
-    numberPropertySchema,
-    stringPropertySchema,
-    arrayPropertySchema,
-    genericObjectSchema,
-]);
+const objectPropertyUnionSchema = z
+    .union([booleanPropertySchema, numberPropertySchema, stringPropertySchema, arrayPropertySchema, genericObjectSchema])
+    .refine(
+// BaseSchema isn't exported, so Pick<BooleanSchema | EmailSchema, ...> here is an approximation.
+(baseSchema) => baseSchema.codaType === schema_12.ValueHintType.Email || !(baseSchema === null || baseSchema === void 0 ? void 0 : baseSchema.autocomplete) || baseSchema.mutable, `"mutable" must be true to set "autocomplete" to true`);
 const objectPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
     resultType: zodDiscriminant(api_types_3.Type.object),
@@ -959,7 +956,7 @@ const baseSyncTableSchema = {
     getter: syncFormulaSchema,
     entityName: z.string().optional(),
     defaultAddDynamicColumns: z.boolean().optional(),
-    propertyAutocomplete: z.function().optional(),
+    propertyAutocomplete: objectPackFormulaSchema.optional(),
     // TODO(patrick): Make identityName non-optional after SDK v1.0.0 is required
     identityName: z
         .string()

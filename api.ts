@@ -266,7 +266,7 @@ export interface SyncTableDef<
    * See {@link SyncTableOptions.propertyAutocomplete}
    * @hidden
    */
-  propertyAutocomplete?: MetadataFormula;
+  propertyAutocomplete?: PropertyAutocompleteMetadataFormula;
 }
 
 /**
@@ -293,7 +293,7 @@ export interface DynamicSyncTableDef<
    * See {@link DynamicSyncTableOptions.propertyAutocomplete}
    * @hidden
    */
-  propertyAutocomplete?: MetadataFormula;
+  propertyAutocomplete?: PropertyAutocompleteMetadataFormula;
 }
 
 /**
@@ -1282,6 +1282,13 @@ export type MetadataFormula = BaseFormula<[ParamDef<Type.string>, ParamDef<Type.
   schema?: any;
 };
 
+/**
+ * @hidden
+ */
+export type PropertyAutocompleteMetadataFormula = BaseFormula<[], any> & {
+  schema?: any;
+};
+
 export type MetadataFormulaMetadata = Omit<MetadataFormula, 'execute'>;
 
 /**
@@ -1350,7 +1357,7 @@ export function makeMetadataFormula(
 function makePropertyAutocompleteFormula(
   execute: PropertyAutocompleteMetadataFunction,
   options?: {connectionRequirement?: ConnectionRequirement},
-): MetadataFormula {
+): PropertyAutocompleteMetadataFormula {
   if (!(execute instanceof Function)) {
     throw new Error(`Value for propertyAutocomplete must be a function`);
   }
@@ -1360,11 +1367,7 @@ function makePropertyAutocompleteFormula(
     execute([], context) {
       return execute(context as PropertyAutocompleteExecutionContext);
     },
-    parameters: [
-      // All metadata functions get search and formula context, but we don't use them.
-      makeStringParameter('search', 'Metadata to search for', {optional: true}),
-      makeStringParameter('formulaContext', 'Serialized JSON for metadata', {optional: true}),
-    ],
+    parameters: [],
     examples: [],
     connectionRequirement: options?.connectionRequirement || ConnectionRequirement.Optional,
   });
