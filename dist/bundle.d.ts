@@ -2711,9 +2711,6 @@ export declare type MetadataFormula = BaseFormula<[
 ], any> & {
 	schema?: any;
 };
-/**
- * @hidden
- */
 export declare type PropertyAutocompleteMetadataFormula = BaseFormula<[
 ], any> & {
 	schema?: any;

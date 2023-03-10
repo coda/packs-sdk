@@ -1282,10 +1282,7 @@ export type MetadataFormula = BaseFormula<[ParamDef<Type.string>, ParamDef<Type.
   schema?: any;
 };
 
-/**
- * @hidden
- */
-export type PropertyAutocompleteMetadataFormula = BaseFormula<[], any> & {
+type PropertyAutocompleteMetadataFormula = BaseFormula<[], any> & {
   schema?: any;
 };
 
