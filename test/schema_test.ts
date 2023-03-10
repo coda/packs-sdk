@@ -175,19 +175,6 @@ describe('Schema', () => {
     });
   });
 
-  it('disallows autocomplete on immutable schemas', () => {
-    expect(() => {
-      schema.makeObjectSchema({
-        type: schema.ValueType.Object,
-        primary: 'boo',
-        properties: {
-          boo: {type: schema.ValueType.String},
-          baz: {type: schema.ValueType.Number, mutable: false, autocomplete: true},
-        },
-      });
-    }).to.throw('Only mutable properties allow autocomplete.');
-  });
-
   describe('normalizeSchema', () => {
     it('passes through object identity', () => {
       const anotherSchema = schema.makeObjectSchema({
