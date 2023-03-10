@@ -1,3 +1,6 @@
+import type { GenericSyncFormulaResult } from '../api';
+import type { GenericSyncUpdateResultMarshaled } from '../api';
+import type { PackFormulaResult } from '../api_types';
 export declare enum FormulaType {
     Standard = "Standard",
     Sync = "Sync",
@@ -48,3 +51,4 @@ export interface SyncMetadataFormulaSpecification {
     syncTableName: string;
 }
 export declare type FormulaSpecification = StandardFormulaSpecification | SyncFormulaSpecification | SyncUpdateFormulaSpecification | MetadataFormulaSpecification | ParameterAutocompleteMetadataFormulaSpecification | PostSetupMetadataFormulaSpecification | SyncMetadataFormulaSpecification;
+export declare type PackFunctionResponse<T extends FormulaSpecification> = T extends SyncFormulaSpecification ? GenericSyncFormulaResult : T extends SyncUpdateFormulaSpecification ? GenericSyncUpdateResultMarshaled : PackFormulaResult;

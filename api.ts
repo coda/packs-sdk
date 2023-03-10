@@ -783,14 +783,11 @@ export type GenericSyncUpdate = SyncUpdate<any, any, any>;
  * Type definition for a single update result returned by a sync table update function.
  * @hidden
  */
-export interface SyncUpdateSingleResult<
+export type SyncUpdateSingleResult<
   K extends string,
   L extends string,
   SchemaT extends ObjectSchemaDefinition<K, L>,
-> {
-  newValue?: ObjectSchemaDefinitionType<K, L, SchemaT>;
-  error?: Error;
-}
+> = ObjectSchemaDefinitionType<K, L, SchemaT> | Error;
 
 /**
  * Generic type definition for a single update result returned by a sync table update function.
@@ -811,6 +808,69 @@ export interface SyncUpdateResult<K extends string, L extends string, SchemaT ex
  * @hidden
  */
 export type GenericSyncUpdateResult = SyncUpdateResult<any, any, any>;
+
+/**
+ * Type definition for a single marshaled update result returned by a sync table update function.
+ * @hidden
+ */
+export type SyncUpdateSingleResultMarshaled<
+  K extends string,
+  L extends string,
+  SchemaT extends ObjectSchemaDefinition<K, L>,
+> = SyncUpdateSingleResultMarshaledSuccess<K, L, SchemaT> | SyncUpdateSingleResultMarshaledError;
+
+/**
+ * Possible outcomes for a single sync update.
+ * @hidden
+ */
+export enum UpdateOutcome {
+  Success = 'success',
+  Error = 'error',
+}
+
+/**
+ * Type definition for a single marshaled update success result returned by a sync table update function.
+ * @hidden
+ */
+export interface SyncUpdateSingleResultMarshaledSuccess<
+  K extends string,
+  L extends string,
+  SchemaT extends ObjectSchemaDefinition<K, L>,
+> {
+  outcome: UpdateOutcome.Success;
+  finalValue: ObjectSchemaDefinitionType<K, L, SchemaT>;
+}
+
+/**
+ * Type definition for a single marshaled update failure result returned by a sync table update function.
+ * @hidden
+ */
+export interface SyncUpdateSingleResultMarshaledError {
+  outcome: UpdateOutcome.Error;
+  error: Error;
+}
+
+/**
+ * Generic type definition for a single marshaled update result returned by a sync table update function.
+ * @hidden
+ */
+export type GenericSyncUpdateSingleResultMarshaled = SyncUpdateSingleResultMarshaled<any, any, any>;
+
+/**
+ * Type definition for the marshaled result returned by a sync table update function.
+ * @hidden
+ */
+export interface SyncUpdateResultMarshaled<
+  K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>
+> {
+  result: Array<SyncUpdateSingleResultMarshaled<K, L, SchemaT>>;
+}
+
+/**
+ * Generic type definition for the marshaled result returned by a sync table update function.
+ * @hidden
+ */
+export type GenericSyncUpdateResultMarshaled = SyncUpdateResultMarshaled<any, any, any>;
 
 /**
  * Inputs for creating the formula that implements a sync table.

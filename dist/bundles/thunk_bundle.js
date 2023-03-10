@@ -6495,7 +6495,7 @@ module.exports = (() => {
     }
   }
   __name(findAndExecutePackFunction, "findAndExecutePackFunction");
-  function doFindAndExecutePackFunction({
+  async function doFindAndExecutePackFunction({
     params,
     formulaSpec,
     manifest,
@@ -6517,7 +6517,12 @@ module.exports = (() => {
         if (!formula.executeUpdate) {
           throw new Error(`No executeUpdate function defined on sync table formula ${formulaSpec.formulaName}`);
         }
-        return formula.executeUpdate(params, ensureExists(updates), executionContext);
+        const response = await formula.executeUpdate(
+          params,
+          ensureExists(updates),
+          executionContext
+        );
+        return parseSyncUpdateResult(response);
       }
       case "Metadata" /* Metadata */: {
         switch (formulaSpec.metadataFormulaType) {
@@ -6666,6 +6671,23 @@ module.exports = (() => {
     }
   }
   __name(setUpBufferForTest, "setUpBufferForTest");
+  function parseSyncUpdateResult(response) {
+    return {
+      result: response.result.map((r) => {
+        if (r instanceof Error) {
+          return {
+            outcome: "error" /* Error */,
+            error: r
+          };
+        }
+        return {
+          outcome: "success" /* Success */,
+          finalValue: r
+        };
+      })
+    };
+  }
+  __name(parseSyncUpdateResult, "parseSyncUpdateResult");
   return __toCommonJS(thunk_exports);
 })();
 /*! Bundled license information:
