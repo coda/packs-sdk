@@ -1299,11 +1299,8 @@ export type MetadataFunction = (
 
 /**
  * A JavaScript function for property autocomplete.
- * @hidden
  */
-export type PropertyAutocompleteMetadataFunction = (
-  context: PropertyAutocompleteExecutionContext,
-) => Promise<any[]> | any[];
+type PropertyAutocompleteMetadataFunction = (context: PropertyAutocompleteExecutionContext) => Promise<any[]> | any[];
 
 /**
  * The type of values that will be accepted as a metadata formula definition. This can either

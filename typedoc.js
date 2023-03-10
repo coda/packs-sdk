@@ -37,9 +37,6 @@ module.exports = {
     'TypeOfMap',
     'UnionType',
 
-    // Unreleased feature
-    'PropertyAutocompleteMetadataFunction',
-
     // Internal only types.
     'AWSAssumeRoleAuthentication',
     'VariousAuthentication',

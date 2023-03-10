@@ -82,7 +82,6 @@ export type { MetadataFormulaObjectResultType } from './api';
 export type { MetadataFormulaResultType } from './api';
 export type { MetadataFormula } from './api';
 export type { MetadataFunction } from './api';
-export type { PropertyAutocompleteMetadataFunction } from './api';
 export type { Network } from './api_types';
 export { NetworkConnection } from './api_types';
 export type { PackFormulaDef } from './api';
