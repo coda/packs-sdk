@@ -16,7 +16,7 @@
 
       require(['vs/editor/editor.main'], function () {
         var editor = monaco.editor.create(document.getElementById('container'), {
-          value: "let payload = {\n  // Whatever JSON structure the API expects.\n};\nlet response = await context.fetcher.fetch({\n  method: \"POST\",\n  url: \"<The URL to send the request to>\",\n  body: JSON.stringify(payload),\n});\nlet data = response.body;",
+          value: "let payload = {\n  // Whatever JSON structure the API expects.\n};\nlet response = await context.fetcher.fetch({\n  method: \"POST\",\n  url: \"<The URL to send the request to>\",\n  headers: {\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify(payload),\n});\nlet data = response.body;",
           language: 'javascript',
           minimap: {enabled: false},
           readOnly: true,

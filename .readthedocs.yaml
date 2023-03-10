@@ -11,7 +11,7 @@ build:
   jobs:
     post_create_environment:
       # Use NPM, since yarn isn't available by default.
-      - 'npm install'
+      - 'npm install -g pnpm@7 && pnpm install'
       # Run the preprocessing script.
       - 'node -r ts-node/register documentation/scripts/readthedocs_preprocess.ts'
 

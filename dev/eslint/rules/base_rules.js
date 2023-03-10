@@ -158,7 +158,7 @@ module.exports = {
     'valid-typeof': 'off',
 
     // ESLint coda rules
-    'local/coda-import-style': 'error',
-    'local/coda-import-ordering': 'error',
+    '@kr-modules/coda-rules/coda-import-style': 'error',
+    '@kr-modules/coda-rules/coda-import-ordering': 'error',
   },
 };
