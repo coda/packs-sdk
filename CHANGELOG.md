@@ -4,6 +4,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+## [1.3.0] - 2023-03-02
+
 ### Added
 
 - Added an `--apiToken` argument to the `clone`, `create`, `link`, `release`, and `upload` CLI commands. This makes it easier to use the CLI in a CI/CD environment where the API token is passed as an environment variable (GitHub Actions, etc).
@@ -549,7 +551,7 @@ await myHelper(context);
 
 - Beginning of alpha versioning.
 
-[unreleased]: https://github.com/coda/packs-sdk/compare/v1.2.3...HEAD
+[unreleased]: https://github.com/coda/packs-sdk/compare/v1.3.0...HEAD
 [1.2.3]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.2.3
 [1.2.2]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.2.2
 [1.2.1]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.2.1
@@ -565,3 +567,5 @@ await myHelper(context);
 [0.12.0]: https://github.com/coda/packs-sdk/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/coda/packs-sdk/compare/v0.9.0...v0.11.0
 [0.9.0]: https://github.com/coda/packs-sdk/compare/v0.8.2...v0.9.0
+
+[1.3.0]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.3.0

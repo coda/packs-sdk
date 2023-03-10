@@ -26,7 +26,11 @@ bs: bootstrap
 _bootstrap-node:
 	mkdir -p ${YARN_CACHE_DIR}
 	yarn config set cache-folder ${YARN_CACHE_DIR}
-	yarn install
+	if [ -z ${CIRCLE_BRANCH} ]; then \
+	  yarn install; \
+	else \
+	  yarn install --frozen-lockfile; \
+	fi
 	# Install a symlink of the working directory as @codahq/packs-sdk, so that the sample code compiles.
 	yarn unlink || true # Remove any existing links providing @codahq/packs-sdk
 	yarn link  # Provide @codahq/packs-sdk from this directory

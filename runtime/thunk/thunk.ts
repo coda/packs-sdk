@@ -9,9 +9,12 @@ import type {FormulaSpecification} from '../types';
 import {FormulaType} from '../types';
 import type {GenericSyncFormulaResult} from '../../api';
 import type {GenericSyncUpdate} from '../../api';
+import type {GenericSyncUpdateResult} from '../../api';
+import type {GenericSyncUpdateResultMarshaled} from '../../api';
 import type {MetadataFormula} from '../../api';
 import {MetadataFormulaType} from '../types';
 import type {PackFormulaResult} from '../../api_types';
+import type {PackFunctionResponse} from '../types';
 import type {ParamDefs} from '../../api_types';
 import type {ParamValues} from '../../api_types';
 import type {ParameterAutocompleteMetadataFormulaSpecification} from '../types';
@@ -19,8 +22,8 @@ import type {ParamsList} from '../../api_types';
 import {PostSetupType} from '../../types';
 import {StatusCodeError} from '../../api';
 import type {SyncExecutionContext} from '../../api_types';
-import type {SyncFormulaSpecification} from '../types';
 import type {TypedPackFormula} from '../../api';
+import {UpdateOutcome} from '../../api';
 import type {UpdateSyncExecutionContext} from '../../api_types';
 import {ensureExists} from '../../helpers/ensure';
 import {findFormula} from '../common/helpers';
@@ -45,15 +48,14 @@ interface FindAndExecutionPackFunctionArgs<T> {
   executionContext: ExecutionContext | SyncExecutionContext;
   updates?: GenericSyncUpdate[];
 }
+
 /**
  * The thunk entrypoint - the first code that runs inside the v8 isolate once control is passed over.
  */
 export async function findAndExecutePackFunction<T extends FormulaSpecification>({
   shouldWrapError = true,
   ...args
-}: {shouldWrapError: boolean} & FindAndExecutionPackFunctionArgs<T>): Promise<
-  T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult
-> {
+}: {shouldWrapError: boolean} & FindAndExecutionPackFunctionArgs<T>): Promise<PackFunctionResponse<T>> {
   try {
     // in case the pack bundle is compiled in the browser, Buffer may not be browserified yet.
     if (!global.Buffer) {
@@ -73,17 +75,22 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
   manifest,
   executionContext,
   updates,
+}: FindAndExecutionPackFunctionArgs<T>): Promise<PackFunctionResponse<T>>;
+async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
+  params,
+  formulaSpec,
+  manifest,
+  executionContext,
+  updates,
 }: FindAndExecutionPackFunctionArgs<T>): Promise<
-  T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult
+  GenericSyncFormulaResult | GenericSyncUpdateResultMarshaled | PackFormulaResult
 > {
   const {syncTables, defaultAuthentication} = manifest;
 
   switch (formulaSpec.type) {
     case FormulaType.Standard: {
       const formula = findFormula(manifest, formulaSpec.formulaName);
-      // for some reasons TS can't tell that
-      // `T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult` is now PackFormulaResult.
-      return formula.execute(params, executionContext as ExecutionContext) as any;
+      return formula.execute(params, executionContext as ExecutionContext);
     }
     case FormulaType.Sync: {
       const formula = findSyncFormula(manifest, formulaSpec.formulaName);
@@ -94,7 +101,12 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
       if (!formula.executeUpdate) {
         throw new Error(`No executeUpdate function defined on sync table formula ${formulaSpec.formulaName}`);
       }
-      return formula.executeUpdate(params, ensureExists(updates), executionContext as UpdateSyncExecutionContext);
+      const response = await formula.executeUpdate(
+        params,
+        ensureExists(updates),
+        executionContext as UpdateSyncExecutionContext,
+      );
+      return parseSyncUpdateResult(response);
     }
     case FormulaType.Metadata: {
       switch (formulaSpec.metadataFormulaType) {
@@ -309,4 +321,21 @@ export function setUpBufferForTest() {
   if (!global.Buffer) {
     global.Buffer = Buffer;
   }
+}
+
+function parseSyncUpdateResult(response: GenericSyncUpdateResult): GenericSyncUpdateResultMarshaled {
+  return {
+    result: response.result.map(r => {
+      if (r instanceof Error) {
+        return {
+          outcome: UpdateOutcome.Error,
+          error: r,
+        };
+      }
+      return {
+        outcome: UpdateOutcome.Success,
+        finalValue: r,
+      };
+    }),
+  };
 }
