@@ -1,0 +1,3 @@
+packages:
+  - dev/eslint/eslint-plugin-coda-rules
+  - documentation/samples

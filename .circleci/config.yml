@@ -42,18 +42,21 @@ commands:
   bootstrap_node:
     steps:
       - restore_cache:
-          name: Restore Cache - yarn
+          name: Restore Cache - pnpm
           keys:
-            - v4-dependencies-{{ checksum "package.json" }}
+            - &node-cache-key pnpm-v1-dependencies-{{ checksum "package.json" }}
             # fallback to using the latest cache if no exact match is found
-            - v4-dependencies-
+            - pnpm-v1-dependencies-
+      - run:
+          name: 'Install pnpm'
+          command: make _bootstrap-install-pnpm
       - run:
           name: 'Install deps (node)'
           command: make _bootstrap-node
       - save_cache:
           paths:
             - node_modules
-          key: v4-dependencies-{{ checksum "package.json" }}
+          key: *node-cache-key
   bootstrap_aws_cli:
     steps:
       - utils/boostrap-aws-context-creds

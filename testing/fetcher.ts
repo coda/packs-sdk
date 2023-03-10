@@ -1,9 +1,9 @@
 import type {AWSAccessKeyCredentials} from './auth_types';
 import type {AWSAssumeRoleCredentials} from './auth_types';
-import type {Credentials as AWSCredentials} from '@aws-sdk/types';
 import {AssumeRoleCommand} from '@aws-sdk/client-sts';
 import type {Authentication} from '../types';
 import {AuthenticationType} from '../types';
+import type {AwsCredentialIdentity} from '@aws-sdk/types';
 import type {Credentials} from './auth_types';
 import type {CustomCredentials} from './auth_types';
 import {DEFAULT_ALLOWED_GET_DOMAINS_REGEXES} from './constants';
@@ -402,7 +402,7 @@ export class AuthenticatingFetcher implements Fetcher {
       case AuthenticationType.AWSAccessKey: {
         const {accessKeyId, secretAccessKey} = this._credentials as AWSAccessKeyCredentials;
         const {service} = this._authDef;
-        const credentials: AWSCredentials = {
+        const credentials: AwsCredentialIdentity = {
           accessKeyId,
           secretAccessKey,
         };
@@ -434,7 +434,7 @@ export class AuthenticatingFetcher implements Fetcher {
           ExternalId: externalId,
         });
         const assumeRoleResult = await client.send(command);
-        const credentials: AWSCredentials = {
+        const credentials: AwsCredentialIdentity = {
           accessKeyId: ensureExists(assumeRoleResult.Credentials?.AccessKeyId),
           secretAccessKey: ensureExists(assumeRoleResult.Credentials?.SecretAccessKey),
           sessionToken: assumeRoleResult.Credentials?.SessionToken,
@@ -472,7 +472,7 @@ export class AuthenticatingFetcher implements Fetcher {
     url,
   }: {
     body?: any;
-    credentials: AWSCredentials;
+    credentials: AwsCredentialIdentity;
     headers: {[key: string]: string};
     method: string;
     service: string;

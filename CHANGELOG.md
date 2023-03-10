@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Changed
+
+- Switched the node package manager from yarn to pnpm. This only affects developers contributing changes to the packs-sdk repo.
+
 ## [1.3.0] - 2023-03-02
 
 ### Added
@@ -567,5 +571,4 @@ await myHelper(context);
 [0.12.0]: https://github.com/coda/packs-sdk/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/coda/packs-sdk/compare/v0.9.0...v0.11.0
 [0.9.0]: https://github.com/coda/packs-sdk/compare/v0.8.2...v0.9.0
-
 [1.3.0]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.3.0

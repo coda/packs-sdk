@@ -5,10 +5,9 @@ function deepFreeze(obj) {
     Object.freeze(obj);
     for (const k of Object.keys(obj)) {
         const key = k;
-        if (obj[key] !== null &&
-            (typeof obj[key] === 'object' || typeof obj[key] === 'function') &&
-            !Object.isFrozen(obj[key])) {
-            deepFreeze(obj[key]);
+        const value = obj[key];
+        if (value !== null && (typeof value === 'object' || typeof value === 'function') && !Object.isFrozen(value)) {
+            deepFreeze(value);
         }
     }
     return obj;
