@@ -28,12 +28,6 @@ instead, define sync tables using [makeSyncTable](../functions/core.makeSyncTabl
 
 ## Properties
 
-### autocompleteCell
-
-• `Optional` **autocompleteCell**: [`MetadataFormula`](../types/core.MetadataFormula.md)
-
-___
-
 ### defaultAddDynamicColumns
 
 • `Optional` **defaultAddDynamicColumns**: `boolean`

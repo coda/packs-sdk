@@ -187,12 +187,6 @@ Indicates to render a numeric value as a scale UI component (e.g. a star rating)
 
 ___
 
-### SelectList
-
-• **SelectList** = ``"selectList"``
-
-___
-
 ### Slider
 
 • **Slider** = ``"slider"``

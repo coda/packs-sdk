@@ -1,7 +1,6 @@
 import {AuthenticationType} from '../../types';
 import type {BasicPackDefinition} from '../../types';
 import {Buffer} from 'buffer';
-import type {CellAutocompleteExecutionContext} from '../../api_types';
 import type {ExecutionContext} from '../../api_types';
 import type {FetchRequest} from '../../api_types';
 import type {FetchResponse} from '../../api_types';
@@ -20,6 +19,7 @@ import type {ParamValues} from '../../api_types';
 import type {ParameterAutocompleteMetadataFormulaSpecification} from '../types';
 import type {ParamsList} from '../../api_types';
 import {PostSetupType} from '../../types';
+import type {PropertyAutocompleteExecutionContext} from '../../api_types';
 import {StatusCodeError} from '../../api';
 import type {SyncExecutionContext} from '../../api_types';
 import type {TypedPackFormula} from '../../api';
@@ -137,9 +137,9 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
             return parentFormula.execute(params as any, executionContext);
           }
           break;
-        case MetadataFormulaType.CellAutocomplete:
+        case MetadataFormulaType.PropertyAutocomplete:
           const syncTable = syncTables?.find(table => table.name === formulaSpec.syncTableName);
-          const autocompleteFn = ensureExists(syncTable?.autocompleteCell);
+          const autocompleteFn = ensureExists(syncTable?.propertyAutocomplete);
           const propertyValues = {};
 
           const cacheKeysUsed: string[] = [];
@@ -159,7 +159,7 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
             });
           }
 
-          const cellAutocompleteExecutionContext: Omit<CellAutocompleteExecutionContext, 'search'> = {
+          const cellAutocompleteExecutionContext: Omit<PropertyAutocompleteExecutionContext, 'search'> = {
             ...executionContext,
             propertyName: formulaSpec.propertyName,
             propertyValues,

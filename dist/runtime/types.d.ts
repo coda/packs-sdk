@@ -16,7 +16,7 @@ export declare enum MetadataFormulaType {
     SyncGetDisplayUrl = "SyncGetDisplayUrl",
     SyncGetTableName = "SyncGetTableName",
     SyncGetSchema = "SyncGetSchema",
-    CellAutocomplete = "CellAutocomplete"
+    PropertyAutocomplete = "PropertyAutocomplete"
 }
 export interface StandardFormulaSpecification {
     type: FormulaType.Standard;
@@ -51,13 +51,13 @@ export interface SyncMetadataFormulaSpecification {
     metadataFormulaType: MetadataFormulaType.SyncListDynamicUrls | MetadataFormulaType.SyncGetDisplayUrl | MetadataFormulaType.SyncGetTableName | MetadataFormulaType.SyncGetSchema;
     syncTableName: string;
 }
-export interface CellAutocompleteFormulaSpecification {
+export interface PropertyAutocompleteFormulaSpecification {
     type: FormulaType.Metadata;
-    metadataFormulaType: MetadataFormulaType.CellAutocomplete;
+    metadataFormulaType: MetadataFormulaType.PropertyAutocomplete;
     syncTableName: string;
     propertyName: string;
     propertyValues: Record<string, any>;
     search: string;
 }
-export declare type FormulaSpecification = StandardFormulaSpecification | SyncFormulaSpecification | SyncUpdateFormulaSpecification | MetadataFormulaSpecification | ParameterAutocompleteMetadataFormulaSpecification | PostSetupMetadataFormulaSpecification | SyncMetadataFormulaSpecification | CellAutocompleteFormulaSpecification;
+export declare type FormulaSpecification = StandardFormulaSpecification | SyncFormulaSpecification | SyncUpdateFormulaSpecification | MetadataFormulaSpecification | ParameterAutocompleteMetadataFormulaSpecification | PostSetupMetadataFormulaSpecification | SyncMetadataFormulaSpecification | PropertyAutocompleteFormulaSpecification;
 export declare type PackFunctionResponse<T extends FormulaSpecification> = T extends SyncFormulaSpecification ? GenericSyncFormulaResult : T extends SyncUpdateFormulaSpecification ? GenericSyncUpdateResultMarshaled : PackFormulaResult;

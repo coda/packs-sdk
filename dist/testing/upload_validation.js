@@ -480,6 +480,7 @@ const booleanPackFormulaSchema = zodCompleteObject({
         codaType: z.enum([...schema_2.BooleanHintValueTypes]).optional(),
         description: z.string().optional(),
         mutable: z.boolean().optional(),
+        autocomplete: z.boolean().optional(),
     }).optional(),
 });
 // TODO(jonathan): Use zodCompleteObject on these after exporting these types.
@@ -500,6 +501,8 @@ const imageAttributionNodeSchema = z.object({
 const basePropertyValidators = {
     description: z.string().optional(),
     mutable: z.boolean().optional(),
+    // TODO(dweitzman): Only allow autocomplete if mutable is true
+    autocomplete: z.boolean().optional(),
     fromKey: z.string().optional(),
     required: z.boolean().optional(),
 };
@@ -632,7 +635,6 @@ const emailPropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.String),
     codaType: zodDiscriminant(schema_12.ValueHintType.Email),
     display: z.nativeEnum(schema_5.EmailDisplayType).optional(),
-    autocomplete: z.boolean().optional(),
     ...basePropertyValidators,
 });
 const linkPropertySchema = zodCompleteStrictObject({
@@ -649,12 +651,6 @@ const imagePropertySchema = zodCompleteStrictObject({
     imageCornerStyle: z.nativeEnum(schema_6.ImageCornerStyle).optional(),
     ...basePropertyValidators,
 });
-const stringSelectListPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.String),
-    codaType: zodDiscriminant(schema_12.ValueHintType.SelectList),
-    options: z.array(z.string()).optional(),
-    ...basePropertyValidators,
-});
 const stringPropertySchema = z.union([
     simpleStringPropertySchema,
     stringDatePropertySchema,
@@ -665,7 +661,6 @@ const stringPropertySchema = z.union([
     emailPropertySchema,
     linkPropertySchema,
     imagePropertySchema,
-    stringSelectListPropertySchema,
 ]);
 const stringPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
@@ -891,7 +886,6 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
                 case schema_12.ValueHintType.Toggle:
                 case schema_12.ValueHintType.Time:
                 case schema_12.ValueHintType.Url:
-                case schema_12.ValueHintType.SelectList:
                     return true;
                 default:
                     (0, ensure_2.ensureUnreachable)(subtitlePropertySchema.codaType);
@@ -965,7 +959,7 @@ const baseSyncTableSchema = {
     getter: syncFormulaSchema,
     entityName: z.string().optional(),
     defaultAddDynamicColumns: z.boolean().optional(),
-    autocompleteCell: z.unknown().optional(),
+    propertyAutocomplete: z.function().optional(),
     // TODO(patrick): Make identityName non-optional after SDK v1.0.0 is required
     identityName: z
         .string()

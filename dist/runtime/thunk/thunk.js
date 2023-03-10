@@ -79,9 +79,9 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                         return parentFormula.execute(params, executionContext);
                     }
                     break;
-                case types_3.MetadataFormulaType.CellAutocomplete:
+                case types_3.MetadataFormulaType.PropertyAutocomplete:
                     const syncTable = syncTables === null || syncTables === void 0 ? void 0 : syncTables.find(table => table.name === formulaSpec.syncTableName);
-                    const autocompleteFn = (0, ensure_1.ensureExists)(syncTable === null || syncTable === void 0 ? void 0 : syncTable.autocompleteCell);
+                    const autocompleteFn = (0, ensure_1.ensureExists)(syncTable === null || syncTable === void 0 ? void 0 : syncTable.propertyAutocomplete);
                     const propertyValues = {};
                     const cacheKeysUsed = [];
                     function recordPropertyAccess(key) {

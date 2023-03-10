@@ -18,7 +18,7 @@ export enum MetadataFormulaType {
   SyncGetDisplayUrl = 'SyncGetDisplayUrl',
   SyncGetTableName = 'SyncGetTableName',
   SyncGetSchema = 'SyncGetSchema',
-  CellAutocomplete = 'CellAutocomplete',
+  PropertyAutocomplete = 'PropertyAutocomplete',
 }
 
 export interface StandardFormulaSpecification {
@@ -65,9 +65,9 @@ export interface SyncMetadataFormulaSpecification {
   syncTableName: string;
 }
 
-export interface CellAutocompleteFormulaSpecification {
+export interface PropertyAutocompleteFormulaSpecification {
   type: FormulaType.Metadata;
-  metadataFormulaType: MetadataFormulaType.CellAutocomplete;
+  metadataFormulaType: MetadataFormulaType.PropertyAutocomplete;
   syncTableName: string;
   propertyName: string;
   propertyValues: Record<string, any>;
@@ -82,7 +82,7 @@ export type FormulaSpecification =
   | ParameterAutocompleteMetadataFormulaSpecification
   | PostSetupMetadataFormulaSpecification
   | SyncMetadataFormulaSpecification
-  | CellAutocompleteFormulaSpecification;
+  | PropertyAutocompleteFormulaSpecification;
 
 export type PackFunctionResponse<T extends FormulaSpecification> = T extends SyncFormulaSpecification
   ? GenericSyncFormulaResult

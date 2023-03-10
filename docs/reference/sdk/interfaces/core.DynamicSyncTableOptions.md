@@ -21,12 +21,6 @@ Options provided when defining a dynamic sync table.
 
 ## Properties
 
-### autocomplete
-
-• `Optional` **autocomplete**: [`CellAutocompleteMetadataFunction`](../types/core.CellAutocompleteMetadataFunction.md)
-
-___
-
 ### connectionRequirement
 
 • `Optional` **connectionRequirement**: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md)

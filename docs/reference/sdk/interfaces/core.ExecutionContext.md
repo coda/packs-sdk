@@ -16,8 +16,6 @@ this contains the [Fetcher](core.Fetcher.md), which is used for making HTTP requ
 
 - **`ExecutionContext`**
 
-  ↳ [`CellAutocompleteExecutionContext`](core.CellAutocompleteExecutionContext.md)
-
   ↳ [`SyncExecutionContext`](core.SyncExecutionContext.md)
 
   ↳ [`MockExecutionContext`](testing.MockExecutionContext.md)

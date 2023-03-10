@@ -181,7 +181,6 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
           return [];
         case ValueHintType.Html:
         case ValueHintType.Markdown:
-        case ValueHintType.SelectList:
         case undefined:
           // no need to coerce current result type
           return [];

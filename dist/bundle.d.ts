@@ -156,8 +156,7 @@ export declare enum ValueHintType {
 	/**
 	 * Indicates to render a boolean value as a toggle.
 	 */
-	Toggle = "toggle",
-	SelectList = "selectList"
+	Toggle = "toggle"
 }
 declare const StringHintValueTypes: readonly [
 	ValueHintType.Attachment,
@@ -171,8 +170,7 @@ declare const StringHintValueTypes: readonly [
 	ValueHintType.ImageReference,
 	ValueHintType.ImageAttachment,
 	ValueHintType.Markdown,
-	ValueHintType.Url,
-	ValueHintType.SelectList
+	ValueHintType.Url
 ];
 declare const NumberHintValueTypes: readonly [
 	ValueHintType.Date,
@@ -213,6 +211,16 @@ export interface BaseSchema {
 	 */
 	/** @hidden */
 	mutable?: boolean;
+	/**
+	 * Whether this object schema property should run the sync table's property autocomplete
+	 * function to suggest possible values on edit.
+	 *
+	 * For the email type, this will autocomplete emails from the doc without running the sync
+	 * table's property autocomplete function.
+	 *
+	 * @hidden
+	 */
+	autocomplete?: boolean;
 }
 /**
  * A schema representing a return value or object property that is a boolean.
@@ -502,10 +510,6 @@ export interface LinkSchema extends BaseStringSchema<ValueHintType.Url> {
 	/** Whether to force client embedding (only for LinkDisplayType.Embed) - for example, if user login required. */
 	force?: boolean;
 }
-export interface SelectListSchema extends BaseStringSchema<ValueHintType.SelectList> {
-	codaType: ValueHintType.SelectList;
-	options?: string[];
-}
 /**
  * A schema representing a return value or object property that is provided as a string,
  * which Coda should interpret as a date. Coda is able to flexibly parse a number of formal
@@ -671,7 +675,7 @@ export interface SimpleStringSchema<T extends SimpleStringHintTypes = SimpleStri
 /**
  * The union of schema definition types whose underlying value is a string.
  */
-export declare type StringSchema = StringDateSchema | StringTimeSchema | StringDateTimeSchema | DurationSchema | EmailSchema | ImageSchema | LinkSchema | StringEmbedSchema | SimpleStringSchema | SelectListSchema;
+export declare type StringSchema = StringDateSchema | StringTimeSchema | StringDateTimeSchema | DurationSchema | EmailSchema | ImageSchema | LinkSchema | StringEmbedSchema | SimpleStringSchema;
 /**
  * A schema representing a return value or object property that is an array (list) of items.
  * The items are themselves schema definitions, which may refer to scalars or other objects.
@@ -1772,11 +1776,31 @@ export interface SyncExecutionContext extends ExecutionContext {
 	 */
 	readonly sync: Sync;
 }
-export interface CellAutocompleteExecutionContext extends ExecutionContext {
+/**
+ * Sub-class of {@link ExecutionContext} that is passed to the `autocomplete` function of
+ * mutable sync tables for properties with `autocomplete` enabled.
+ *
+ * @hidden
+ */
+export interface PropertyAutocompleteExecutionContext extends ExecutionContext {
+	/**
+	 * Which property is being edited.
+	 */
 	readonly propertyName: string;
+	/**
+	 * Current values of other properties from the same row. Non-required properties may be missing
+	 * if the doc owner elected not to sync them, or if they have a type that's not yet supported
+	 * for autocomplete context. Properties referencing other sync tables may be missing some or
+	 * all of their sub-properties if the reference is broken because the other table is not
+	 * added to the doc or hasn't synced the referenced row.
+	 */
 	readonly propertyValues: {
 		[propertyValues: string]: any;
 	};
+	/**
+	 * What the user typed. For example, they may have type "Ja" while searching for a user named
+	 * "Jane".
+	 */
 	readonly search: string;
 }
 export interface UpdateSyncExecutionContext extends ExecutionContext {
@@ -2145,7 +2169,11 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
 	entityName?: string;
 	/** See {@link DynamicOptions.defaultAddDynamicColumns} */
 	defaultAddDynamicColumns?: boolean;
-	autocompleteCell?: MetadataFormula;
+	/**
+	 * See {@link SyncTableOptions.propertyAutocomplete}
+	 * @hidden
+	 */
+	propertyAutocomplete?: MetadataFormula;
 }
 /**
  * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
@@ -2162,7 +2190,11 @@ export interface DynamicSyncTableDef<K extends string, L extends string, ParamDe
 	getDisplayUrl: MetadataFormula;
 	/** See {@link DynamicSyncTableOptions.listDynamicUrls} */
 	listDynamicUrls?: MetadataFormula;
-	autocompleteCell?: MetadataFormula;
+	/**
+	 * See {@link DynamicSyncTableOptions.propertyAutocomplete}
+	 * @hidden
+	 */
+	propertyAutocomplete?: MetadataFormula;
 }
 /**
  * Container for arbitrary data about which page of data to retrieve in this sync invocation.
@@ -2684,7 +2716,11 @@ export declare type MetadataFormulaMetadata = Omit<MetadataFormula, "execute">;
  * A JavaScript function that can implement a {@link MetadataFormulaDef}.
  */
 export declare type MetadataFunction = (context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
-export declare type CellAutocompleteMetadataFunction = (context: CellAutocompleteExecutionContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
+/**
+ * A JavaScript function for property autocomplete.
+ * @hidden
+ */
+export declare type PropertyAutocompleteMetadataFunction = (context: PropertyAutocompleteExecutionContext) => Promise<any[]>;
 /**
  * The type of values that will be accepted as a metadata formula definition. This can either
  * be the JavaScript function that implements a metadata formula (strongly recommended)
@@ -2846,7 +2882,11 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
 	 * sync tables that have a dynamic schema.
 	 */
 	dynamicOptions?: DynamicOptions;
-	autocomplete?: CellAutocompleteMetadataFunction;
+	/**
+	 * A function to autocomplete values for properties marked with `mutable` and `autocomplete`.
+	 * @hidden
+	 */
+	propertyAutocomplete?: PropertyAutocompleteMetadataFunction;
 }
 /**
  * Options provided when defining a dynamic sync table.
@@ -2935,7 +2975,11 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
 	 * in placeholderSchema will be rendered by default after the sync.
 	 */
 	placeholderSchema?: SchemaT;
-	autocomplete?: CellAutocompleteMetadataFunction;
+	/**
+	 * A function to autocomplete values for properties marked with `mutable` and `autocomplete`.
+	 * @hidden
+	 */
+	propertyAutocomplete?: PropertyAutocompleteMetadataFunction;
 }
 /**
  * Wrapper to produce a sync table definition. All (non-dynamic) sync tables should be created
@@ -2950,7 +2994,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
  */
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaDefT extends ObjectSchemaDefinition<K, L>, SchemaT extends SchemaDefT & {
 	identity?: Identity;
-}>({ name, description, identityName, schema: inputSchema, formula, autocomplete, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT>;
+}>({ name, description, identityName, schema: inputSchema, formula, propertyAutocomplete, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT>;
 /**
  * Creates a dynamic sync table definition.
  *
@@ -2970,7 +3014,7 @@ export declare function makeSyncTable<K extends string, L extends string, ParamD
  * });
  * ```
  */
-export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>>({ name, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, }: {
+export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>>(params: {
 	name: string;
 	description?: string;
 	getName: MetadataFormulaDef;
@@ -4074,7 +4118,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * });
 	 * ```
 	 */
-	addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>({ name, description, identityName, schema, formula, connectionRequirement, autocomplete, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaT>): this;
+	addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>({ name, description, identityName, schema, formula, connectionRequirement, propertyAutocomplete, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaT>): this;
 	/**
 	 * Adds a dynamic sync table definition to this pack.
 	 *

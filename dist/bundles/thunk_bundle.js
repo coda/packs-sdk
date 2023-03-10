@@ -6950,7 +6950,7 @@ module.exports = (() => {
               return parentFormula.execute(params, executionContext);
             }
             break;
-          case "CellAutocomplete" /* CellAutocomplete */:
+          case "PropertyAutocomplete" /* PropertyAutocomplete */:
             let recordPropertyAccess2 = function(key) {
               if (!cacheKeysUsed.includes(key)) {
                 cacheKeysUsed.push(key);
@@ -6959,7 +6959,7 @@ module.exports = (() => {
             var recordPropertyAccess = recordPropertyAccess2;
             __name(recordPropertyAccess2, "recordPropertyAccess");
             const syncTable = syncTables?.find((table) => table.name === formulaSpec.syncTableName);
-            const autocompleteFn = ensureExists(syncTable?.autocompleteCell);
+            const autocompleteFn = ensureExists(syncTable?.propertyAutocomplete);
             const propertyValues = {};
             const cacheKeysUsed = [];
             for (const [key, value] of Object.entries(formulaSpec.propertyValues)) {

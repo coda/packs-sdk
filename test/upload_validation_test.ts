@@ -786,6 +786,7 @@ describe('Pack metadata Validation', () => {
             parameters: [],
             examples: [],
           },
+          propertyAutocomplete: () => [],
         });
 
         const metadata = createFakePackVersionMetadata(
@@ -903,6 +904,45 @@ describe('Pack metadata Validation', () => {
           {
             message: 'Sync Table names can only contain alphanumeric characters and underscores.',
             path: 'syncTables[0].name',
+          },
+        ]);
+      });
+
+      it('autocomplete for a non-mutable property', async () => {
+        const syncTable = makeSyncTable({
+          name: 'SyncTable',
+          identityName: 'Sync',
+          schema: makeObjectSchema({
+            type: ValueType.Object,
+            primary: 'foo',
+            id: 'foo',
+            properties: {
+              Foo: {type: ValueType.String, mutable: false, autocomplete: true},
+            },
+          }),
+          formula: {
+            name: 'SyncTable',
+            description: 'A simple sync table',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            examples: [],
+          },
+        });
+
+        const metadata = createFakePack({
+          syncTables: [syncTable],
+        });
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: '"mutable" must be true to set "autocomplete" to true',
+            path: 'syncTables[0].schema.properties.Foo',
+          },
+          {
+            message: '"mutable" must be true to set "autocomplete" to true',
+            path: 'syncTables[0].getter.schema.items.properties.Foo',
           },
         ]);
       });

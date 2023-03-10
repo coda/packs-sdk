@@ -95,7 +95,7 @@ class PackDefinitionBuilder {
      * });
      * ```
      */
-    addSyncTable({ name, description, identityName, schema, formula, connectionRequirement, autocomplete, dynamicOptions = {}, }) {
+    addSyncTable({ name, description, identityName, schema, formula, connectionRequirement, propertyAutocomplete, dynamicOptions = {}, }) {
         const connectionRequirementToUse = connectionRequirement || this._defaultConnectionRequirement;
         const syncTable = (0, api_4.makeSyncTable)({
             name,
@@ -104,7 +104,7 @@ class PackDefinitionBuilder {
             schema,
             formula,
             connectionRequirement: connectionRequirementToUse,
-            autocomplete,
+            propertyAutocomplete,
             dynamicOptions,
         });
         this.syncTables.push(syncTable);
