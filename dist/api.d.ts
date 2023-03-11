@@ -812,7 +812,10 @@ export declare type MetadataFormulaResultType = string | number | MetadataFormul
 export declare type MetadataFormula = BaseFormula<[ParamDef<Type.string>, ParamDef<Type.string>], any> & {
     schema?: any;
 };
-declare type PropertyAutocompleteMetadataFormula = BaseFormula<[], any> & {
+/**
+ * @hidden
+ */
+export declare type PropertyAutocompleteMetadataFormula = BaseFormula<[], any> & {
     schema?: any;
 };
 export declare type MetadataFormulaMetadata = Omit<MetadataFormula, 'execute'>;
