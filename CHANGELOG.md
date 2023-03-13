@@ -8,6 +8,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 - Switched the node package manager from yarn to pnpm. This only affects developers contributing changes to the packs-sdk repo.
 
+### Fixed
+
+- Fixed an issue where the fetcher was converting XML responses to JSON even when setting `isBinaryResponse: true`.
+
 ## [1.3.0] - 2023-03-02
 
 ### Added
