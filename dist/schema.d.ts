@@ -182,7 +182,8 @@ interface BaseSchema {
     mutable?: boolean;
     /**
      * Whether this object schema property should run the sync table's property autocomplete
-     * function to suggest possible values on edit.
+     * function to suggest possible values on edit. This should only be set when {@link mutable}
+     * is true.
      *
      * For the email type, this will autocomplete emails from the doc without running the sync
      * table's property autocomplete function.
