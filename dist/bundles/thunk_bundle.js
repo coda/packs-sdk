@@ -6576,12 +6576,12 @@ module.exports = (() => {
                 return formulaSpec.search;
               }
             });
-            const result = await autocompleteFn.execute(params, cellAutocompleteExecutionContext);
-            return {
-              result,
+            const packResult = await autocompleteFn.execute(params, cellAutocompleteExecutionContext);
+            const result = {
+              packResult,
               propertiesUsed: cacheKeysUsed
             };
-            break;
+            return result;
           case "PostSetupSetEndpoint" /* PostSetupSetEndpoint */:
             if (defaultAuthentication?.type !== "None" /* None */ && defaultAuthentication?.type !== "Various" /* Various */ && defaultAuthentication?.postSetup) {
               const setupStep = defaultAuthentication.postSetup.find(

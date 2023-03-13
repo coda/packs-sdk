@@ -19,6 +19,7 @@ import type {ParamValues} from '../../api_types';
 import type {ParameterAutocompleteMetadataFormulaSpecification} from '../types';
 import type {ParamsList} from '../../api_types';
 import {PostSetupType} from '../../types';
+import type {PropertyAutocompleteAnnotatedResult} from '../../api';
 import type {PropertyAutocompleteExecutionContext} from '../../api_types';
 import {StatusCodeError} from '../../api';
 import type {SyncExecutionContext} from '../../api_types';
@@ -172,12 +173,12 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
             },
           });
 
-          const result = await autocompleteFn.execute(params as any, cellAutocompleteExecutionContext);
-          return {
-            result,
+          const packResult = await autocompleteFn.execute(params as any, cellAutocompleteExecutionContext);
+          const result: PropertyAutocompleteAnnotatedResult = {
+            packResult,
             propertiesUsed: cacheKeysUsed,
-          } as any;
-          break;
+          };
+          return result;
         case MetadataFormulaType.PostSetupSetEndpoint:
           if (
             defaultAuthentication?.type !== AuthenticationType.None &&

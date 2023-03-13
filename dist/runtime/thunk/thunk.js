@@ -108,12 +108,12 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                             return formulaSpec.search;
                         },
                     });
-                    const result = await autocompleteFn.execute(params, cellAutocompleteExecutionContext);
-                    return {
-                        result,
+                    const packResult = await autocompleteFn.execute(params, cellAutocompleteExecutionContext);
+                    const result = {
+                        packResult,
                         propertiesUsed: cacheKeysUsed,
                     };
-                    break;
+                    return result;
                 case types_3.MetadataFormulaType.PostSetupSetEndpoint:
                     if ((defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.type) !== types_1.AuthenticationType.None &&
                         (defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.type) !== types_1.AuthenticationType.Various &&

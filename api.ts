@@ -1283,6 +1283,32 @@ export type MetadataFormula = BaseFormula<[ParamDef<Type.string>, ParamDef<Type.
 };
 
 /**
+ * These will be created with a helper function.
+ */
+interface PropertyAutocompleteFormattedResult {
+  __brand: 'PropertyAutocompleteSimpleResult';
+  /** Text that will be displayed to the user in UI for this option. */
+  display: string;
+  /** The actual value for this option */
+  value: any;
+}
+
+type PropertyAutocompleteResults =
+  | any[]
+  | {
+      cacheTtlSecs?: number;
+      results: Array<any | PropertyAutocompleteFormattedResult>;
+    };
+
+/**
+ * @hidden
+ */
+export interface PropertyAutocompleteAnnotatedResult {
+  packResult: PropertyAutocompleteResults;
+  propertiesUsed: string[];
+}
+
+/**
  * @hidden
  */
 export type PropertyAutocompleteMetadataFormula = BaseFormula<[], any> & {
