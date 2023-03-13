@@ -11,7 +11,9 @@ build:
   jobs:
     post_create_environment:
       # Use NPM, since yarn isn't available by default.
-      - 'npm install -g pnpm@7 && pnpm install'
+      # NOTE: "npm install" is sometimes used by non-Codans to test unreleased SDK versions,
+      # so this also acts as a CI test that we haven't broken npm installation.
+      - 'npm install'
       # Run the preprocessing script.
       - 'node -r ts-node/register documentation/scripts/readthedocs_preprocess.ts'
 
