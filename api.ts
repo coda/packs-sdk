@@ -1282,6 +1282,10 @@ export type MetadataFormula = BaseFormula<[ParamDef<Type.string>, ParamDef<Type.
   schema?: any;
 };
 
+type GenericMetadataFormula = BaseFormula<ParamDefs, any> & {
+  schema?: any;
+};
+
 /**
  * These will be created with a helper function.
  */
@@ -1316,6 +1320,11 @@ export type PropertyAutocompleteMetadataFormula = BaseFormula<[], any> & {
 };
 
 export type MetadataFormulaMetadata = Omit<MetadataFormula, 'execute'>;
+
+/**
+ * @hidden
+ */
+export declare type GenericMetadataFormulaMetadata = Omit<GenericMetadataFormula, 'execute'>;
 
 /**
  * A JavaScript function that can implement a {@link MetadataFormulaDef}.
