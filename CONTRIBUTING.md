@@ -23,14 +23,15 @@ An easy way to get setup is to use [Google Cloud Shell][cloud_shell], an hosted 
 
 [![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.svg)](https://shell.cloud.google.com/cloudshell/editor?cloudshell_git_repo=https://github.com/coda/packs-sdk.git&cloudshell_workspace=.&cloudshell_open_in_editor=docs/index.md)
 
-The only dependency that needs to be installed manually in Google Cloud Shell is `pipenv`:
+Next manually install a few dependencies:
 
 ```sh
 pip install --user pipenv
 export PATH=$HOME/.local/bin:$PATH
+npm install pnpm -g
 ```
 
-You can then install the other dependencies using the Makefile using the bootstrap script:
+You can then install the other dependencies using the Makefile's bootstrap script:
 
 ```sh
 make bootstrap
