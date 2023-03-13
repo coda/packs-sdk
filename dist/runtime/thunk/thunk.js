@@ -102,9 +102,10 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                         propertyName: formulaSpec.propertyName,
                         propertyValues,
                     };
+                    const contextUsed = {};
                     Object.defineProperty(cellAutocompleteExecutionContext, 'search', {
                         get() {
-                            recordPropertyAccess('__search');
+                            contextUsed.searchUsed = true;
                             return formulaSpec.search;
                         },
                     });
@@ -112,6 +113,7 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                     const result = {
                         packResult,
                         propertiesUsed: cacheKeysUsed,
+                        ...contextUsed,
                     };
                     return result;
                 case types_3.MetadataFormulaType.PostSetupSetEndpoint:

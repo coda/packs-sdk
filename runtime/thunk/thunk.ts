@@ -166,9 +166,11 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
             propertyValues,
           };
 
+          const contextUsed: Omit<PropertyAutocompleteAnnotatedResult, 'packResult' | 'propertiesUsed'> = {};
+
           Object.defineProperty(cellAutocompleteExecutionContext, 'search', {
             get() {
-              recordPropertyAccess('__search');
+              contextUsed.searchUsed = true;
               return formulaSpec.search;
             },
           });
@@ -177,6 +179,7 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
           const result: PropertyAutocompleteAnnotatedResult = {
             packResult,
             propertiesUsed: cacheKeysUsed,
+            ...contextUsed,
           };
           return result;
         case MetadataFormulaType.PostSetupSetEndpoint:

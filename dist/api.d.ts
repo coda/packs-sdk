@@ -835,6 +835,7 @@ declare type PropertyAutocompleteResults = any[] | {
 export interface PropertyAutocompleteAnnotatedResult {
     packResult: PropertyAutocompleteResults;
     propertiesUsed: string[];
+    searchUsed?: boolean;
 }
 /**
  * @hidden
