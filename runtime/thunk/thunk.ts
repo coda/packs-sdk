@@ -19,6 +19,8 @@ import type {ParamValues} from '../../api_types';
 import type {ParameterAutocompleteMetadataFormulaSpecification} from '../types';
 import type {ParamsList} from '../../api_types';
 import {PostSetupType} from '../../types';
+import type {PropertyAutocompleteAnnotatedResult} from '../../api';
+import type {PropertyAutocompleteExecutionContext} from '../../api_types';
 import {StatusCodeError} from '../../api';
 import type {SyncExecutionContext} from '../../api_types';
 import type {TypedPackFormula} from '../../api';
@@ -101,7 +103,10 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
         throw new Error(`No executeUpdate function defined on sync table formula ${formulaSpec.formulaName}`);
       }
       const response = await formula.executeUpdate(
-        params, ensureExists(updates), executionContext as UpdateSyncExecutionContext);
+        params,
+        ensureExists(updates),
+        executionContext as UpdateSyncExecutionContext,
+      );
       return parseSyncUpdateResult(response);
     }
     case FormulaType.Metadata: {
@@ -133,6 +138,50 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
             return parentFormula.execute(params as any, executionContext);
           }
           break;
+        case MetadataFormulaType.PropertyAutocomplete:
+          const syncTable = syncTables?.find(table => table.name === formulaSpec.syncTableName);
+          const autocompleteFn = ensureExists(syncTable?.propertyAutocomplete);
+          const propertyValues = {};
+
+          const cacheKeysUsed: string[] = [];
+
+          function recordPropertyAccess(key: string) {
+            if (!cacheKeysUsed.includes(key)) {
+              cacheKeysUsed.push(key);
+            }
+          }
+
+          for (const [key, value] of Object.entries(formulaSpec.propertyValues)) {
+            Object.defineProperty(propertyValues, key, {
+              get() {
+                recordPropertyAccess(key);
+                return value;
+              },
+            });
+          }
+
+          const cellAutocompleteExecutionContext: Omit<PropertyAutocompleteExecutionContext, 'search'> = {
+            ...executionContext,
+            propertyName: formulaSpec.propertyName,
+            propertyValues,
+          };
+
+          const contextUsed: Omit<PropertyAutocompleteAnnotatedResult, 'packResult' | 'propertiesUsed'> = {};
+
+          Object.defineProperty(cellAutocompleteExecutionContext, 'search', {
+            get() {
+              contextUsed.searchUsed = true;
+              return formulaSpec.search;
+            },
+          });
+
+          const packResult = await autocompleteFn.execute(params as any, cellAutocompleteExecutionContext);
+          const result: PropertyAutocompleteAnnotatedResult = {
+            packResult,
+            propertiesUsed: cacheKeysUsed,
+            ...contextUsed,
+          };
+          return result;
         case MetadataFormulaType.PostSetupSetEndpoint:
           if (
             defaultAuthentication?.type !== AuthenticationType.None &&

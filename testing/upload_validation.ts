@@ -589,6 +589,7 @@ const booleanPackFormulaSchema = zodCompleteObject<Omit<BooleanPackFormula<any>,
     codaType: z.enum([...BooleanHintValueTypes]).optional(),
     description: z.string().optional(),
     mutable: z.boolean().optional(),
+    autocomplete: z.boolean().optional(),
   }).optional(),
 });
 
@@ -614,6 +615,7 @@ const imageAttributionNodeSchema = z.object({
 const basePropertyValidators = {
   description: z.string().optional(),
   mutable: z.boolean().optional(),
+  autocomplete: z.boolean().optional(),
   fromKey: z.string().optional(),
   required: z.boolean().optional(),
 };
@@ -766,7 +768,6 @@ const emailPropertySchema = zodCompleteStrictObject<EmailSchema & ObjectSchemaPr
   type: zodDiscriminant(ValueType.String),
   codaType: zodDiscriminant(ValueHintType.Email),
   display: z.nativeEnum(EmailDisplayType).optional(),
-  autocomplete: z.boolean().optional(),
   ...basePropertyValidators,
 });
 
@@ -1110,13 +1111,14 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
     }),
 );
 
-const objectPropertyUnionSchema = z.union([
-  booleanPropertySchema,
-  numberPropertySchema,
-  stringPropertySchema,
-  arrayPropertySchema,
-  genericObjectSchema,
-]);
+const objectPropertyUnionSchema = z
+  .union([booleanPropertySchema, numberPropertySchema, stringPropertySchema, arrayPropertySchema, genericObjectSchema])
+  .refine(
+    // BaseSchema isn't exported, so Pick<BooleanSchema | EmailSchema, ...> here is an approximation.
+    (baseSchema: Pick<BooleanSchema | EmailSchema, 'mutable' | 'autocomplete' | 'codaType'>) =>
+      baseSchema.codaType === ValueHintType.Email || !baseSchema?.autocomplete || baseSchema.mutable,
+    `"mutable" must be true to set "autocomplete" to true`,
+  );
 
 const objectPackFormulaSchema = zodCompleteObject<Omit<ObjectPackFormula<any, any>, 'execute'>>({
   ...commonPackFormulaSchema,
@@ -1178,6 +1180,7 @@ const baseSyncTableSchema = {
   getter: syncFormulaSchema,
   entityName: z.string().optional(),
   defaultAddDynamicColumns: z.boolean().optional(),
+  propertyAutocomplete: objectPackFormulaSchema.optional(),
   // TODO(patrick): Make identityName non-optional after SDK v1.0.0 is required
   identityName: z
     .string()

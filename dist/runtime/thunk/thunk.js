@@ -79,6 +79,43 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                         return parentFormula.execute(params, executionContext);
                     }
                     break;
+                case types_3.MetadataFormulaType.PropertyAutocomplete:
+                    const syncTable = syncTables === null || syncTables === void 0 ? void 0 : syncTables.find(table => table.name === formulaSpec.syncTableName);
+                    const autocompleteFn = (0, ensure_1.ensureExists)(syncTable === null || syncTable === void 0 ? void 0 : syncTable.propertyAutocomplete);
+                    const propertyValues = {};
+                    const cacheKeysUsed = [];
+                    function recordPropertyAccess(key) {
+                        if (!cacheKeysUsed.includes(key)) {
+                            cacheKeysUsed.push(key);
+                        }
+                    }
+                    for (const [key, value] of Object.entries(formulaSpec.propertyValues)) {
+                        Object.defineProperty(propertyValues, key, {
+                            get() {
+                                recordPropertyAccess(key);
+                                return value;
+                            },
+                        });
+                    }
+                    const cellAutocompleteExecutionContext = {
+                        ...executionContext,
+                        propertyName: formulaSpec.propertyName,
+                        propertyValues,
+                    };
+                    const contextUsed = {};
+                    Object.defineProperty(cellAutocompleteExecutionContext, 'search', {
+                        get() {
+                            contextUsed.searchUsed = true;
+                            return formulaSpec.search;
+                        },
+                    });
+                    const packResult = await autocompleteFn.execute(params, cellAutocompleteExecutionContext);
+                    const result = {
+                        packResult,
+                        propertiesUsed: cacheKeysUsed,
+                        ...contextUsed,
+                    };
+                    return result;
                 case types_3.MetadataFormulaType.PostSetupSetEndpoint:
                     if ((defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.type) !== types_1.AuthenticationType.None &&
                         (defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.type) !== types_1.AuthenticationType.Various &&

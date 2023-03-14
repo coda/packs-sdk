@@ -540,6 +540,21 @@ function makeMetadataFormula(execute, options) {
     });
 }
 exports.makeMetadataFormula = makeMetadataFormula;
+function makePropertyAutocompleteFormula(execute, options) {
+    if (!(execute instanceof Function)) {
+        throw new Error(`Value for propertyAutocomplete must be a function`);
+    }
+    return makeObjectFormula({
+        name: 'getPropertyAutocompleteMetadata',
+        description: 'Gets property autocomplete',
+        execute([], context) {
+            return execute(context);
+        },
+        parameters: [],
+        examples: [],
+        connectionRequirement: (options === null || options === void 0 ? void 0 : options.connectionRequirement) || api_types_1.ConnectionRequirement.Optional,
+    });
+}
 /**
  * Utility to search over an array of autocomplete results and return only those that
  * match the given search string.
@@ -704,9 +719,10 @@ exports.makeObjectFormula = makeObjectFormula;
  *
  * See [Normalization](/index.html#normalization) for more information about schema normalization.
  */
-function makeSyncTable({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions = {}, }) {
+function makeSyncTable({ name, description, identityName, schema: inputSchema, formula, propertyAutocomplete, connectionRequirement, dynamicOptions = {}, }) {
     const { getSchema: getSchemaDef, entityName, defaultAddDynamicColumns } = dynamicOptions;
     const { execute: wrappedExecute, executeUpdate: wrappedExecuteUpdate, ...definition } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
+    const wrappedAutocomplete = propertyAutocomplete ? makePropertyAutocompleteFormula(propertyAutocomplete) : undefined;
     // Since we mutate schemaDef, we need to make a copy so the input schema can be reused across sync tables.
     const schemaDef = (0, object_utils_1.deepCopy)(inputSchema);
     // Hydrate the schema's identity.
@@ -771,6 +787,7 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
             connectionRequirement: definition.connectionRequirement || connectionRequirement,
             resultType: api_types_3.Type.object,
         },
+        propertyAutocomplete: wrappedAutocomplete,
         getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
         entityName,
         defaultAddDynamicColumns,
@@ -797,25 +814,10 @@ function makeSyncTableLegacy(name, schema, formula, connectionRequirement, dynam
 }
 exports.makeSyncTableLegacy = makeSyncTableLegacy;
 /**
- * Creates a dynamic sync table definition.
- *
- * @example
- * ```
- * coda.makeDynamicSyncTable({
- *   name: "MySyncTable",
- *   getName: async function(context) => {
- *     const response = await context.fetcher.fetch({method: "GET", url: context.sync.dynamicUrl});
- *     return response.body.name;
- *   },
- *   getName: async function(context) => {
- *     const response = await context.fetcher.fetch({method: "GET", url: context.sync.dynamicUrl});
- *     return response.body.browserLink;
- *   },
- *   ...
- * });
- * ```
+ * Includes the unreleased propertyAutocomplete parameter.
+ * @hidden
  */
-function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, }) {
+function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, propertyAutocomplete, }) {
     const placeholderSchema = placeholderSchemaInput ||
         // default placeholder only shows a column of id, which will be replaced later by the dynamic schema.
         (0, schema_2.makeObjectSchema)({
@@ -839,6 +841,7 @@ function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchem
         formula,
         connectionRequirement,
         dynamicOptions: { getSchema, entityName, defaultAddDynamicColumns },
+        propertyAutocomplete,
     });
     return {
         ...table,

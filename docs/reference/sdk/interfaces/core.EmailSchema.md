@@ -28,6 +28,10 @@ also an option in the user interface.
 
 Whether to auto-complete the email domain during user input.
 
+#### Overrides
+
+BaseStringSchema.autocomplete
+
 ___
 
 ### codaType
