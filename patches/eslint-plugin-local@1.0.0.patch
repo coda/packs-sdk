@@ -1,0 +1,13 @@
+diff --git a/index.js b/index.js
+index 899cbc994c0db5ec6c9e0eb960772ecc8f8f052a..c179aebcafaad4399e70b4966b6c5e10ca420820 100644
+--- a/index.js
++++ b/index.js
+@@ -1 +1,7 @@
+-module.exports = require('../../.eslintplugin')
++// Escape from pnpm subdirectory to load .eslintplugin in project root
++const path = require('path')
++const nodeModules = path.join(__dirname.substring(0, __dirname.indexOf('node_modules'), 'node_modules'))
++const pathToNodeModules = path.relative(__dirname, nodeModules)
++const pathToPluginConfig = path.join(pathToNodeModules, '.eslintplugin')
++
++module.exports = require(pathToPluginConfig)

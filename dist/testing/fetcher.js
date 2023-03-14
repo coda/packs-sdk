@@ -96,7 +96,7 @@ class AuthenticatingFetcher {
             throw new Error(`Response body is too large for Coda. Body is ${responseBody.length} bytes.`);
         }
         try {
-            if (isXmlContentType(response.headers['content-type'])) {
+            if (isXmlContentType(response.headers['content-type']) && !request.isBinaryResponse) {
                 responseBody = await xml2js_1.default.parseStringPromise(responseBody, { explicitRoot: false });
             }
             else {

@@ -138,7 +138,7 @@ export class AuthenticatingFetcher implements Fetcher {
     }
 
     try {
-      if (isXmlContentType(response.headers['content-type'])) {
+      if (isXmlContentType(response.headers['content-type']) && !request.isBinaryResponse) {
         responseBody = await xml2js.parseStringPromise(responseBody, {explicitRoot: false});
       } else {
         responseBody = JSON.parse(responseBody);
@@ -270,7 +270,7 @@ export class AuthenticatingFetcher implements Fetcher {
     if (!this._credentials) {
       throw new Error(
         `${this._authDef.type} authentication is required for this pack, but no local credentials were found. ` +
-          'Run "coda auth path/to/pack/manifest to set up credentials."',
+        'Run "coda auth path/to/pack/manifest to set up credentials."',
       );
     }
 
@@ -554,7 +554,7 @@ export class AuthenticatingFetcher implements Fetcher {
       if (parsedUrl.hostname !== parsedEndpointUrl.hostname) {
         throw new Error(
           `The url ${rawUrl} is not authorized. The host must match the host ${parsedEndpointUrl.hostname} that was specified with the auth credentials. ` +
-            'Or leave the host blank and the host will be filled in automatically from the credentials.',
+          'Or leave the host blank and the host will be filled in automatically from the credentials.',
         );
       }
       return rawUrl;
