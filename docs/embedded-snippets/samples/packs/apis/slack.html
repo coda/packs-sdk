@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <!-- Monaco library script is loaded from: https://cdnjs.com/libraries/monaco-editor-->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs/loader.min.js"
+      integrity="sha512-BZkLVRxigK3UazsQIYAM64dYuFw4giK5YyBrjDlUhKIMeC2j+XLIAr4vs312JiDq4OaJwZEDfB27c7ffROEKBQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      require.config({
+        paths: {
+          vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs',
+        },
+      });
+
+      require(['vs/editor/editor.main'], function () {
+        var editor = monaco.editor.create(document.getElementById('container'), {
+          value: "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Per-user authentication to the Slack API, using OAuth2.\n// See https://api.slack.com/authentication/oauth-v2\npack.setUserAuthentication({\n  type: coda.AuthenticationType.OAuth2,\n  authorizationUrl: \"https://slack.com/oauth/v2/authorize\",\n  tokenUrl: \"https://slack.com/api/oauth.v2.access\",\n  scopes: [\"users.profile:read\"],\n\n  // Slack uses a comma as the scope delimiter.\n  scopeDelimiter: \",\",\n\n  // Slack uses the standard \"scope\" parameter for bot scopes.\n  // User scopes must be specified in the \"user_scope\" parameter instead.\n  scopeParamName: \"user_scope\",\n\n  // The user's OAuth tokens are returned in the nested object \"authed_user\".\n  nestedResponseKey: \"authed_user\",\n\n  // Determines the display name of the connected account.\n  getConnectionName: async function (context) {\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: \"https://slack.com/api/users.profile.get\",\n      cacheTtlSecs: 0,\n    });\n    let profile = response.body.profile;\n    return profile.display_name || profile.real_name;\n  },\n});\n\n// Allow the pack to make requests to Slack.\npack.addNetworkDomain(\"slack.com\");",
+          language: 'javascript',
+          minimap: {enabled: false},
+          readOnly: true,
+          renderValidationDecorations: 'off',
+          wordWrap: 'on',
+          contextmenu: false,
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div id="container" style="position: absolute; top: 0; right: 16; bottom: 16; left: 0"></div>
+  </body>
+</html>

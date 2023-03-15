@@ -905,6 +905,11 @@ export const Examples: Example[] = [
         codeFile: './samples/packs/authentication/salesforce.ts',
       },
       {
+        name: 'Slack',
+        content: 'The Slack API uses OAuth2 to authenticate users, prompting them to approve a specific set of scopes. Additional settings are required for compatibility with their non-standard implementation.',
+        codeFile: './samples/packs/apis/slack.ts',
+      },
+      {
         name: 'Todoist',
         content: 'The Todoist API uses OAuth2 to authenticate users, prompting them to approve a specific set of scopes.',
         codeFile: './samples/packs/todoist/auth_oauth2.ts',
