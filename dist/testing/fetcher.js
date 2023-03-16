@@ -212,6 +212,7 @@ class AuthenticatingFetcher {
                 'Run "coda auth path/to/pack/manifest to set up credentials."');
         }
         const url = this._applyAndValidateEndpoint(rawUrl);
+        const { host } = (0, url_parse_1.default)(url);
         switch (this._authDef.type) {
             case types_1.AuthenticationType.WebBasic: {
                 const { username, password = '' } = this._credentials;
@@ -315,7 +316,10 @@ class AuthenticatingFetcher {
                     method,
                     url,
                     service,
-                    headers: headers || {},
+                    headers: {
+                        ...headers,
+                        host,
+                    },
                     credentials,
                 });
                 return {
