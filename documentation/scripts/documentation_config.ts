@@ -283,6 +283,11 @@ export const Examples: Example[] = [
         codeFile: './samples/packs/authentication/coda.ts',
       },
       {
+        name: 'AWS Signature Version 4',
+        content: 'Authentication that supports Amazon Web Services (AWS), using an access key and secret. This sample connects to the S3 service.',
+        codeFile: './samples/packs/authentication/aws.ts',
+      },
+      {
         name: 'OAuth2',
         content: 'Authentication that uses an OAuth2 flow. This sample connects to the Todoist API.',
         codeFile: './samples/packs/todoist/auth_oauth2.ts',
@@ -764,11 +769,11 @@ export const Examples: Example[] = [
     ],
   },
   {
-    name: 'Images',
-    description: 'Samples that show how to work with images.',
+    name: 'Images & files',
+    description: 'Samples that show how to work with images and files.',
     icon: 'material/image',
     category: ExampleCategory.Topic,
-    triggerTokens: ['ImageReference', 'ImageAttachment', 'Image', 'ImageArray'],
+    triggerTokens: ['ImageReference', 'ImageAttachment', 'Image', 'ImageArray', 'File', 'Attachment'],
     contentFile: './samples/packs/image/README.md',
     linkData: {
       type: UrlType.SdkReferencePath,
@@ -821,6 +826,11 @@ export const Examples: Example[] = [
           'A formula that generates an SVG that adapts if dark mode is enabled. This sample generates an image with static text, which changes color when dark mode is enabled.',
         codeFile: './samples/packs/image/hello_dark_mode.ts',
       },
+      {
+        name: 'File parameter',
+        content: 'A formula that takes an file as a parameter. This sample uploads the file to an AWS S3 bucket.',
+        codeFile: './samples/packs/image/aws_s3.ts',
+      },
     ],
   },
   {
@@ -838,6 +848,11 @@ export const Examples: Example[] = [
         name: 'Asana',
         content: 'The Asana API uses OAuth2 to authenticate users, and requires the use of PKCE.',
         codeFile: './samples/packs/apis/asana.ts',
+      },
+      {
+        name: 'AWS S3',
+        content: 'The Amazon Web Services (AWS) S3 service uses their custom signature method.',
+        codeFile: './samples/packs/authentication/aws.ts',
       },
       {
         name: 'Board Game Atlas',

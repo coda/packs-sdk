@@ -110,6 +110,11 @@
         "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Per-user authentication to the Coda API, using a token in the Authorization\n// header.\n// See https://coda.io/developers/apis/v1\npack.setUserAuthentication({\n  type: coda.AuthenticationType.CodaApiHeaderBearerToken,\n\n  // Creates the token automatically when the Pack is installed.\n  shouldAutoAuthSetup: true,\n});\n\n// Allow the pack to make requests to Coda.\npack.addNetworkDomain(\"coda.io\");"
       },
       {
+        "name": "AWS Signature Version 4",
+        "content": "Authentication that supports Amazon Web Services (AWS), using an access key and secret. This sample connects to the S3 service.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Per-user authentication to the AWS S3 service, using AWS Signature Version 4.\n// The user provides the URL of their S3 bucket as the endpoint, along with an\n// access key and secret.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.AWSAccessKey,\n  instructionsUrl:\n    \"https://aws.amazon.com/premiumsupport/knowledge-center/create-access-key/\",\n\n  // The AWS service to connect to.\n  service: \"s3\",\n\n  // Prompt the user from their S3 bucket URL.\n  requiresEndpointUrl: true,\n  endpointDomain: \"amazonaws.com\",\n\n  // Use the bucket name as the display name for the account.\n  getConnectionName: async function (context) {\n    return context.endpoint.split(\"//\")[1].split(\".\")[0];\n  },\n});"
+      },
+      {
         "name": "OAuth2",
         "content": "Authentication that uses an OAuth2 flow. This sample connects to the Todoist API.",
         "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Per-user authentication to the Todoist API, using an OAuth2 flow.\n// See https://developer.todoist.com/guides/#oauth\npack.setUserAuthentication({\n  type: coda.AuthenticationType.OAuth2,\n  authorizationUrl: \"https://todoist.com/oauth/authorize\",\n  tokenUrl: \"https://todoist.com/oauth/access_token\",\n  scopes: [\"data:read_write\"],\n\n  // Determines the display name of the connected account.\n  getConnectionName: async function (context) {\n    let url = coda.withQueryParams(\"https://api.todoist.com/sync/v9/sync\", {\n      resource_types: JSON.stringify([\"user\"]),\n    });\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: url,\n    });\n    return response.body.user?.full_name;\n  },\n});\n\n// Allow the pack to make requests to Todoist.\npack.addNetworkDomain(\"todoist.com\");"
@@ -596,15 +601,17 @@
     ]
   },
   {
-    "name": "Images",
-    "description": "Samples that show how to work with images.",
+    "name": "Images & files",
+    "description": "Samples that show how to work with images and files.",
     "icon": "material/image",
     "category": "Topic",
     "triggerTokens": [
       "ImageReference",
       "ImageAttachment",
       "Image",
-      "ImageArray"
+      "ImageArray",
+      "File",
+      "Attachment"
     ],
     "linkData": {
       "type": "SdkReferencePath",
@@ -612,7 +619,7 @@
     },
     "exampleFooterLink": "https://coda.io/packs/build/latest/guides/advanced/images",
     "learnMoreLink": "/guides/advanced/images",
-    "content": "Packs have native support for accepting images as parameters and returning them as results, always passed as URLs. Packs can either return a \"live\" URL to a hosted image (`ImageReference`) or a temporary URL that Coda should upload the doc (`ImageAttachment`). The utility provided at `content.temporaryBlobStorage` can be used to save private images to a temporary location for later upload, which can be used in conjunction with the `ImageAttachment` hint type to permanently ingest an image resource using the temporary URL. Packs also provide support for embedded SVGs, including support for dark mode.",
+    "content": "Packs have native support for accepting images and files as parameters and returning them as results, always passed as URLs. Packs can either return a \"live\" URL to a hosted image (`ImageReference`) or a temporary URL that Coda should upload the doc (`ImageAttachment`). The utility provided at `content.temporaryBlobStorage` can be used to save private images to a temporary location for later upload, which can be used in conjunction with the `ImageAttachment` hint type to permanently ingest an image resource using the temporary URL. Packs also provide support for embedded SVGs, including support for dark mode.",
     "exampleSnippets": [
       {
         "name": "Image parameter",
@@ -653,6 +660,11 @@
         "name": "Dark mode SVG",
         "content": "A formula that generates an SVG that adapts if dark mode is enabled. This sample generates an image with static text, which changes color when dark mode is enabled.",
         "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// A formula that demonstrates how to generate an SVG that adapts to the user's\n// dark mode setting in Coda.\npack.addFormula({\n  name: \"HelloDarkMode\",\n  description: \"Generates an image that adapts to the dark mode setting.\",\n  parameters: [],\n  resultType: coda.ValueType.String,\n  codaType: coda.ValueHintType.ImageReference,\n  execute: async function ([], context) {\n    // When loading your image in dark mode, Coda will append the URL fragment\n    // \"#DarkMode\". Instead of hard-coding that value, it's safer to retrieve\n    // it from the SDK.\n    let darkModeId = coda.SvgConstants.DarkModeFragmentId;\n    // Generate the SVG markup. Prefer using a library for this when possible.\n    let svg = `\n      <svg viewBox=\"0 0 36 10\" xmlns=\"http://www.w3.org/2000/svg\">\n        <!-- Add the dark mode ID to the root of the SVG. -->\n        <g id=\"${darkModeId}\">\n          <text x=\"0\" y=\"8\" font-family=\"Courier\" font-size=\"10\" fill=\"black\">\n            Hello World!\n          </text>\n        </g>\n        <style>\n          /* Create a style rule that will be applied when the dark mode\n             fragment is applied. */\n          #${darkModeId}:target text { fill: white; }\n        </style>\n      </svg>\n    `.trim();\n    // Encode the markup as base64.\n    let encoded = Buffer.from(svg).toString(\"base64\");\n    // Return the SVG as a data URL (using the dark mode prefix).\n    return coda.SvgConstants.DataUrlPrefixWithDarkModeSupport + encoded;\n  },\n});"
+      },
+      {
+        "name": "File parameter",
+        "content": "A formula that takes an file as a parameter. This sample uploads the file to an AWS S3 bucket.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Action that uploads a file to Amazon S3.\npack.addFormula({\n  name: \"Upload\",\n  description: \"Upload a file to AWS S3.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.File,\n      name: \"file\",\n      description: \"The file to upload.\",\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"name\",\n      description: \"The target file name. Default: the original file name.\",\n      optional: true,\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"path\",\n      description: \"The target directory path. Default: the root directory.\",\n      optional: true,\n    }),\n  ],\n  resultType: coda.ValueType.String,\n  isAction: true,\n  execute: async function ([fileUrl, name, path=\"/\"], context) {\n    // Fetch the file contents.\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: fileUrl,\n      isBinaryResponse: true,\n      disableAuthentication: true,\n    });\n    let buffer = response.body;\n    let contentType = response.headers[\"content-type\"] as string;\n    let contentDisposition = response.headers[\"content-disposition\"] as string;\n\n    // Determine file name.\n    if (!name && contentDisposition) {\n      name = getFilename(contentDisposition);\n    }\n    if (!name) {\n      // Fallback to last segment of the URL.\n      name = fileUrl.split(\"/\").pop();\n    }\n\n    // Upload to S3.\n    let s3Url = coda.joinUrl(context.endpoint, path, name);\n    await context.fetcher.fetch({\n      method: \"PUT\",\n      url: s3Url,\n      headers: {\n        \"Content-Type\": contentType,\n        \"Content-Length\": buffer.length.toString(),\n      },\n      body: buffer,\n    });\n    return s3Url;\n  },\n});\n\n// Gets the filename from a Content-Disposition header value.\nfunction getFilename(contentDisposition) {\n  let match = contentDisposition.match(/filename=(.*?)(;|$)/);\n  if (!match) {\n    return;\n  }\n  let filename = match[1].trim();\n  // Remove quotes around the filename, if present.\n  filename = filename.replace(/^[\"'](.*)[\"']$/, \"$1\");\n  return filename;\n}\n\n// Set per-user authentication using AWS Signature Version 4 with an access key.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.AWSAccessKey,\n  service: \"s3\",\n  requiresEndpointUrl: true,\n  endpointDomain: \"amazonaws.com\",\n});\n\n// Allow the pack to make requests to AWS.\npack.addNetworkDomain(\"amazonaws.com\");"
       }
     ]
   },
@@ -672,6 +684,11 @@
         "name": "Asana",
         "content": "The Asana API uses OAuth2 to authenticate users, and requires the use of PKCE.",
         "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Per-user authentication to the Asana API, using OAuth2.\n// See https://developers.asana.com/docs/oauth\npack.setUserAuthentication({\n  type: coda.AuthenticationType.OAuth2,\n  authorizationUrl: \"https://app.asana.com/-/oauth_authorize\",\n  tokenUrl: \"https://app.asana.com/-/oauth_token\",\n\n  // Enable PKCE (required).\n  useProofKeyForCodeExchange: true,\n\n  // Determines the display name of the connected account.\n  getConnectionName: async function (context) {\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: \"https://app.asana.com/api/1.0/users/me\",\n    });\n    let user = response.body.data;\n    return user.name;\n  },\n});\n\n// Allow the pack to make requests to Asana.\npack.addNetworkDomain(\"asana.com\");"
+      },
+      {
+        "name": "AWS S3",
+        "content": "The Amazon Web Services (AWS) S3 service uses their custom signature method.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Per-user authentication to the AWS S3 service, using AWS Signature Version 4.\n// The user provides the URL of their S3 bucket as the endpoint, along with an\n// access key and secret.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.AWSAccessKey,\n  instructionsUrl:\n    \"https://aws.amazon.com/premiumsupport/knowledge-center/create-access-key/\",\n\n  // The AWS service to connect to.\n  service: \"s3\",\n\n  // Prompt the user from their S3 bucket URL.\n  requiresEndpointUrl: true,\n  endpointDomain: \"amazonaws.com\",\n\n  // Use the bucket name as the display name for the account.\n  getConnectionName: async function (context) {\n    return context.endpoint.split(\"//\")[1].split(\".\")[0];\n  },\n});"
       },
       {
         "name": "Board Game Atlas",

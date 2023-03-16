@@ -261,6 +261,36 @@ pack.setUserAuthentication({
 pack.addNetworkDomain("coda.io");
 {% endraw %}
 ```
+## AWS Signature Version 4
+Authentication that supports Amazon Web Services (AWS), using an access key and secret. This sample connects to the S3 service.
+
+```ts
+{% raw %}
+import * as coda from "@codahq/packs-sdk";
+export const pack = coda.newPack();
+
+// Per-user authentication to the AWS S3 service, using AWS Signature Version 4.
+// The user provides the URL of their S3 bucket as the endpoint, along with an
+// access key and secret.
+pack.setUserAuthentication({
+  type: coda.AuthenticationType.AWSAccessKey,
+  instructionsUrl:
+    "https://aws.amazon.com/premiumsupport/knowledge-center/create-access-key/",
+
+  // The AWS service to connect to.
+  service: "s3",
+
+  // Prompt the user from their S3 bucket URL.
+  requiresEndpointUrl: true,
+  endpointDomain: "amazonaws.com",
+
+  // Use the bucket name as the display name for the account.
+  getConnectionName: async function (context) {
+    return context.endpoint.split("//")[1].split(".")[0];
+  },
+});
+{% endraw %}
+```
 ## OAuth2
 Authentication that uses an OAuth2 flow. This sample connects to the Todoist API.
 
