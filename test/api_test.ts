@@ -419,7 +419,7 @@ describe('API test', () => {
       {display: 'bob', value: 'bob123'},
       {display: 'bob2', value: 'bob234', extra: 'field'},
     ];
-    const normalizdResultsArray = [
+    const normalizedResultsArray = [
       {display: undefined, value: 1},
       {display: undefined, value: 'a'},
       {display: undefined, value: {foo: 'bar'}},
@@ -433,7 +433,7 @@ describe('API test', () => {
       }),
       {
         cacheTtlSecs: 123,
-        results: normalizdResultsArray,
+        results: normalizedResultsArray,
       },
     );
 
