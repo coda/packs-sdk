@@ -6192,6 +6192,28 @@ module.exports = (() => {
     return "isDynamic" in syncTable;
   }
   __name(isDynamicSyncTable, "isDynamicSyncTable");
+  function normalizePropertyAutocompleteResultsArray(results) {
+    return results.map((r) => {
+      if (Object.keys(r).length === 2 && "display" in r && "value" in r) {
+        return { display: r.display, value: r.value };
+      }
+      return { display: void 0, value: r };
+    });
+  }
+  __name(normalizePropertyAutocompleteResultsArray, "normalizePropertyAutocompleteResultsArray");
+  function normalizePropertyAutocompleteResults(results) {
+    if (Array.isArray(results)) {
+      return {
+        results: normalizePropertyAutocompleteResultsArray(results)
+      };
+    }
+    const { results: resultsArray, ...otherProps } = results;
+    return {
+      results: normalizePropertyAutocompleteResultsArray(resultsArray),
+      ...otherProps
+    };
+  }
+  __name(normalizePropertyAutocompleteResults, "normalizePropertyAutocompleteResults");
 
   // runtime/common/helpers.ts
   init_buffer_shim();
@@ -6565,21 +6587,24 @@ module.exports = (() => {
                 }
               });
             }
-            const cellAutocompleteExecutionContext = {
+            const propertyAutocompleteExecutionContext = {
               ...executionContext,
               propertyName: formulaSpec.propertyName,
               propertyValues
             };
             const contextUsed = {};
-            Object.defineProperty(cellAutocompleteExecutionContext, "search", {
+            Object.defineProperty(propertyAutocompleteExecutionContext, "search", {
               get() {
                 contextUsed.searchUsed = true;
                 return formulaSpec.search;
               }
             });
-            const packResult = await autocompleteFn.execute(params, cellAutocompleteExecutionContext);
+            const packResult = await autocompleteFn.execute(
+              params,
+              propertyAutocompleteExecutionContext
+            );
             const result = {
-              packResult,
+              packResult: normalizePropertyAutocompleteResults(packResult),
               propertiesUsed: cacheKeysUsed,
               ...contextUsed
             };

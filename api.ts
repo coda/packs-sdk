@@ -1297,18 +1297,52 @@ interface PropertyAutocompleteFormattedResult {
   value: any;
 }
 
-type PropertyAutocompleteResults =
-  | any[]
+/**
+ * @hidden
+ */
+export type PropertyAutocompleteResults =
+  | Array<any | PropertyAutocompleteFormattedResult>
   | {
       cacheTtlSecs?: number;
       results: Array<any | PropertyAutocompleteFormattedResult>;
     };
 
+interface PropertyAutocompleteNormalizedResults {
+  cacheTtlSecs?: number;
+  results: Array<{display: string | undefined; value: any}>;
+}
+
+function normalizePropertyAutocompleteResultsArray(
+  results: Array<any | PropertyAutocompleteFormattedResult>,
+): PropertyAutocompleteNormalizedResults['results'] {
+  return results.map(r => {
+    if (Object.keys(r).length === 2 && 'display' in r && 'value' in r) {
+      return {display: r.display, value: r.value};
+    }
+    return {display: undefined, value: r};
+  });
+}
+
+export function normalizePropertyAutocompleteResults(
+  results: PropertyAutocompleteResults,
+): PropertyAutocompleteNormalizedResults {
+  if (Array.isArray(results)) {
+    return {
+      results: normalizePropertyAutocompleteResultsArray(results),
+    };
+  }
+  const {results: resultsArray, ...otherProps} = results;
+  return {
+    results: normalizePropertyAutocompleteResultsArray(resultsArray),
+    ...otherProps,
+  };
+}
+
 /**
  * @hidden
  */
 export interface PropertyAutocompleteAnnotatedResult {
-  packResult: PropertyAutocompleteResults;
+  packResult: PropertyAutocompleteNormalizedResults;
   propertiesUsed: string[];
   searchUsed?: boolean;
 }
