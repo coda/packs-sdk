@@ -46,7 +46,6 @@ const path = __importStar(require("path"));
 const helpers_7 = require("../testing/helpers");
 const helpers_8 = require("../testing/helpers");
 const helpers_9 = require("../testing/helpers");
-const request_promise_native_1 = __importDefault(require("request-promise-native"));
 const errors_3 = require("./errors");
 const uuid_1 = require("uuid");
 const validate_1 = require("./validate");
@@ -171,7 +170,8 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
 exports.handleUpload = handleUpload;
 async function uploadPack(uploadUrl, uploadPayload, headers) {
     try {
-        await request_promise_native_1.default.put(uploadUrl, {
+        await fetch(uploadUrl, {
+            method: 'PUT',
             headers,
             body: uploadPayload,
         });
