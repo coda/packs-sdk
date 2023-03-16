@@ -296,12 +296,14 @@ class PackDefinitionBuilder {
                     getDisplayUrl: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getDisplayUrl, connectionRequirement),
                     getSchema: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getSchema, connectionRequirement),
                     listDynamicUrls: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.listDynamicUrls, connectionRequirement),
+                    propertyAutocomplete: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.propertyAutocomplete, connectionRequirement),
                 };
             }
             else {
                 return {
                     ...syncTable,
                     getter: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getter, connectionRequirement),
+                    propertyAutocomplete: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.propertyAutocomplete, connectionRequirement),
                     getSchema: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getSchema, connectionRequirement),
                 };
             }

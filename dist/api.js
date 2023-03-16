@@ -808,7 +808,7 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
             connectionRequirement: definition.connectionRequirement || connectionRequirement,
             resultType: api_types_3.Type.object,
         },
-        propertyAutocomplete: wrappedAutocomplete,
+        propertyAutocomplete: maybeRewriteConnectionForFormula(wrappedAutocomplete, connectionRequirement),
         getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
         entityName,
         defaultAddDynamicColumns,
