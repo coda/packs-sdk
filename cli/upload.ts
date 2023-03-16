@@ -24,7 +24,6 @@ import * as path from 'path';
 import {print} from '../testing/helpers';
 import {printAndExit as printAndExitImpl} from '../testing/helpers';
 import {readFile} from '../testing/helpers';
-import requestPromise from 'request-promise-native';
 import {tryParseSystemError} from './errors';
 import {v4} from 'uuid';
 import {validateMetadata} from './validate';
@@ -198,7 +197,8 @@ export async function handleUpload({
 
 async function uploadPack(uploadUrl: string, uploadPayload: string, headers: {[header: string]: any}) {
   try {
-    await requestPromise.put(uploadUrl, {
+    await fetch(uploadUrl, {
+      method: 'PUT',
       headers,
       body: uploadPayload,
     });
