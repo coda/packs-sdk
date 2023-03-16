@@ -12,6 +12,7 @@ const ensure_1 = require("../../helpers/ensure");
 const helpers_1 = require("../common/helpers");
 const helpers_2 = require("../common/helpers");
 const api_3 = require("../../api");
+const api_4 = require("../../api");
 const migration_1 = require("../../helpers/migration");
 const marshaling_1 = require("../common/marshaling");
 const marshaling_2 = require("../common/marshaling");
@@ -97,21 +98,21 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                             },
                         });
                     }
-                    const cellAutocompleteExecutionContext = {
+                    const propertyAutocompleteExecutionContext = {
                         ...executionContext,
                         propertyName: formulaSpec.propertyName,
                         propertyValues,
                     };
                     const contextUsed = {};
-                    Object.defineProperty(cellAutocompleteExecutionContext, 'search', {
+                    Object.defineProperty(propertyAutocompleteExecutionContext, 'search', {
                         get() {
                             contextUsed.searchUsed = true;
                             return formulaSpec.search;
                         },
                     });
-                    const packResult = await autocompleteFn.execute(params, cellAutocompleteExecutionContext);
+                    const packResult = await autocompleteFn.execute(params, propertyAutocompleteExecutionContext);
                     const result = {
-                        packResult,
+                        packResult: (0, api_4.normalizePropertyAutocompleteResults)(packResult),
                         propertiesUsed: cacheKeysUsed,
                         ...contextUsed,
                     };
