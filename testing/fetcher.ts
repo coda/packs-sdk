@@ -275,6 +275,7 @@ export class AuthenticatingFetcher implements Fetcher {
     }
 
     const url = this._applyAndValidateEndpoint(rawUrl);
+    const {host} = urlParse(url);
 
     switch (this._authDef.type) {
       case AuthenticationType.WebBasic: {
@@ -411,7 +412,10 @@ export class AuthenticatingFetcher implements Fetcher {
           method,
           url,
           service,
-          headers: headers || {},
+          headers: {
+            ...headers,
+            host,
+          },
           credentials,
         });
         return {

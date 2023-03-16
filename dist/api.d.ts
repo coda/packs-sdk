@@ -825,15 +825,26 @@ interface PropertyAutocompleteFormattedResult {
     /** The actual value for this option */
     value: any;
 }
-declare type PropertyAutocompleteResults = any[] | {
+/**
+ * @hidden
+ */
+export declare type PropertyAutocompleteResults = Array<any | PropertyAutocompleteFormattedResult> | {
     cacheTtlSecs?: number;
     results: Array<any | PropertyAutocompleteFormattedResult>;
 };
+interface PropertyAutocompleteNormalizedResults {
+    cacheTtlSecs?: number;
+    results: Array<{
+        display: string | undefined;
+        value: any;
+    }>;
+}
+export declare function normalizePropertyAutocompleteResults(results: PropertyAutocompleteResults): PropertyAutocompleteNormalizedResults;
 /**
  * @hidden
  */
 export interface PropertyAutocompleteAnnotatedResult {
-    packResult: PropertyAutocompleteResults;
+    packResult: PropertyAutocompleteNormalizedResults;
     propertiesUsed: string[];
     searchUsed?: boolean;
 }

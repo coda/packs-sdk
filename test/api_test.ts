@@ -11,6 +11,7 @@ import {makeMetadataFormula} from '../api';
 import {makeParameter} from '../api';
 import {makeStringParameter} from '../api';
 import {makeSyncTable} from '../api';
+import {normalizePropertyAutocompleteResults} from '../api';
 import * as schema from '../schema';
 
 describe('API test', () => {
@@ -408,5 +409,36 @@ describe('API test', () => {
     const body = {};
     const error = new StatusCodeError(400, body, {url: '', method: 'GET'}, {body, headers: {}});
     assert.equal(error.response.body, '{}');
+  });
+
+  it('normalize property autocomplete results', () => {
+    const packResultsArray = [
+      1,
+      'a',
+      {foo: 'bar'},
+      {display: 'bob', value: 'bob123'},
+      {display: 'bob2', value: 'bob234', extra: 'field'},
+    ];
+    const normalizedResultsArray = [
+      {display: undefined, value: 1},
+      {display: undefined, value: 'a'},
+      {display: undefined, value: {foo: 'bar'}},
+      {display: 'bob', value: 'bob123'},
+      {display: undefined, value: {display: 'bob2', value: 'bob234', extra: 'field'}},
+    ];
+    assert.deepEqual(
+      normalizePropertyAutocompleteResults({
+        cacheTtlSecs: 123,
+        results: packResultsArray,
+      }),
+      {
+        cacheTtlSecs: 123,
+        results: normalizedResultsArray,
+      },
+    );
+
+    assert.deepEqual(normalizePropertyAutocompleteResults(packResultsArray), {
+      results: normalizedResultsArray,
+    });
   });
 });

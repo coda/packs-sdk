@@ -21,6 +21,7 @@ import type {ParamsList} from '../../api_types';
 import {PostSetupType} from '../../types';
 import type {PropertyAutocompleteAnnotatedResult} from '../../api';
 import type {PropertyAutocompleteExecutionContext} from '../../api_types';
+import type {PropertyAutocompleteResults} from '../../api';
 import {StatusCodeError} from '../../api';
 import type {SyncExecutionContext} from '../../api_types';
 import type {TypedPackFormula} from '../../api';
@@ -30,6 +31,7 @@ import {ensureExists} from '../../helpers/ensure';
 import {findFormula} from '../common/helpers';
 import {findSyncFormula} from '../common/helpers';
 import {isDynamicSyncTable} from '../../api';
+import {normalizePropertyAutocompleteResults} from '../../api';
 import {setEndpointHelper} from '../../helpers/migration';
 import {unwrapError} from '../common/marshaling';
 import {wrapError} from '../common/marshaling';
@@ -160,7 +162,7 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
             });
           }
 
-          const cellAutocompleteExecutionContext: Omit<PropertyAutocompleteExecutionContext, 'search'> = {
+          const propertyAutocompleteExecutionContext: Omit<PropertyAutocompleteExecutionContext, 'search'> = {
             ...executionContext,
             propertyName: formulaSpec.propertyName,
             propertyValues,
@@ -168,16 +170,19 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
 
           const contextUsed: Omit<PropertyAutocompleteAnnotatedResult, 'packResult' | 'propertiesUsed'> = {};
 
-          Object.defineProperty(cellAutocompleteExecutionContext, 'search', {
+          Object.defineProperty(propertyAutocompleteExecutionContext, 'search', {
             get() {
               contextUsed.searchUsed = true;
               return formulaSpec.search;
             },
           });
 
-          const packResult = await autocompleteFn.execute(params as any, cellAutocompleteExecutionContext);
+          const packResult: PropertyAutocompleteResults = await autocompleteFn.execute(
+            params as any,
+            propertyAutocompleteExecutionContext,
+          );
           const result: PropertyAutocompleteAnnotatedResult = {
-            packResult,
+            packResult: normalizePropertyAutocompleteResults(packResult),
             propertiesUsed: cacheKeysUsed,
             ...contextUsed,
           };

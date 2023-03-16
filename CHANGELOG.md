@@ -11,6 +11,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ### Fixed
 
 - Fixed an issue where the fetcher was converting XML responses to JSON even when setting `isBinaryResponse: true`.
+- Fixed an issue where the authentication type `AWSAccessKey` wasn't generating correct signatures when used locally.
 
 ## [1.3.0] - 2023-03-02
 
