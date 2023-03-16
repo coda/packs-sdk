@@ -438,13 +438,7 @@ describe('API test', () => {
     );
 
     assert.deepEqual(normalizePropertyAutocompleteResults(packResultsArray), {
-      results: [
-        {display: undefined, value: 1},
-        {display: undefined, value: 'a'},
-        {display: undefined, value: {foo: 'bar'}},
-        {display: 'bob', value: 'bob123'},
-        {display: undefined, value: {display: 'bob2', value: 'bob234', extra: 'field'}},
-      ],
+      results: normalizedResultsArray,
     });
   });
 });
