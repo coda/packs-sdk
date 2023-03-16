@@ -92,9 +92,9 @@ String parameters are compatible with almost every column type in Coda, as most 
 
 ### Rich text {: #rich}
 
-Use the `Html` parameter type to pass text values with formatting included. Coda will convert the formatting to an equivalent block of HTML markup, and pass it to the `execute` function as a [JavaScript String][mdn_string].
+Use the `Html` or `Markdown` parameter type to pass text values with formatting included. Coda will convert the formatting to an equivalent block of HTML or Markdown markup, and pass it to the `execute` function as a [JavaScript String][mdn_string].
 
-Like string parameters, HTML parameters can accept a wide array of column types. The generated HTML may be quite different than how it displays in Coda however, and is closer to what you'd get if you pasted that value into another rich text editor.
+These parameter types don't provide perfect fidelity, and the converted HTML or Markdown may be quite different than how the value displays in Coda. Often it is closer to what you'd get if you pasted that value into another rich text editor.
 
 !!! warning "HTML markup may change"
     The generated HTML for a given value is not a stable API surface that you should rely on. We may change it at any time without warning, so we don't recommend that you parse it to extract information. Use it for display purposes only.
@@ -314,7 +314,7 @@ There are some important differences between vararg parameters and standard para
 - You can have more than one, but if so the user is required to enter complete sets of values. For example, if you have two vararg parameters `a` and `b`, the user can't provide a value for `a` without also providing a value for `b`. These pairs of parameters can then be repeated multiple times: `Foo("a1", "b1", "a2", "b2")`.
 
 ??? info "Partially supported in actions builder or sync table settings"
-    
+
     While vararg parameters always work in the formula editor, they are only partially supported in the builder UIs. A single vararg parameter will be shown as if it was a single array parameter, and a pair of vararg parameters will be shown with a nice UI similar to that used by built-in actions. Three or more vararg parameters won’t show up in the builder UIs at all, and the user will need to visit the formula editor to set their values. <!-- go/bug/20828 -->
 
 ??? example "Example: Step diagram formula"
@@ -392,32 +392,32 @@ coda.makeParameter({
 
 The table below shows the recommended parameter type to use with various types of Coda columns and values.
 
-| Type          | Supported | Recommended   | Notes                                                             |
-| ------------- | --------- | ------------- | ----------------------------------------------------------------- |
-| Text          | ✅ Yes    | `String`      | Use `Html` if the formatting is important.                        |
-| Link          | ✅ Yes    | `String`      |                                                                   |
-| Canvas        | ✅ Yes    | `Html`        | Use `String` to discard formatting.                               |
-| Select list   | ✅ Yes    | `StringArray` | Works for both single and multi-value select lists.               |
-| Number        | ✅ Yes    | `Number`      |                                                                   |
-| Percent       | ✅ Yes    | `Number`      | Passed as a fraction.                                             |
-| Currency      | ✅ Yes    | `Number`      | Use `String` to get currency symbol.                              |
-| Slider        | ✅ Yes    | `Number`      |                                                                   |
-| Scale         | ✅ Yes    | `Number`      |                                                                   |
-| Date          | ✅ Yes    | `Date`        |                                                                   |
-| Time          | ✅ Yes    | `Date`        |                                                                   |
-| Date and time | ✅ Yes    | `Date`        |                                                                   |
-| Duration      | ✅ Yes    | `Number`      |                                                                   |
-| Checkbox      | ✅ Yes    | `Boolean`     |                                                                   |
-| People        | ❌ No     |               | Use `String` to get the person's name.                            |
-| Email         | ✅ Yes    | `String`      |                                                                   |
-| Reaction      | ❌ No     |               | Use `StringArray` to get the names of the people that reacted.    |
-| Button        | ❌ No     |               |                                                                   |
-| Image         | ✅ Yes    | `ImageArray`  | Image column can contain multiple images.                         |
-| Image URL     | ✅ Yes    | `Image`       |                                                                   |
-| File          | ✅ Yes    | `FileArray`   | File columns can contain multiple files.                          |
-| Lookup        | ❌ No     |               | Use `StringArray` to get the display name of the row(s).          |
-| Table         | ❌ No     |               | You can't pass an entire table, pass individual columns instead.  |
-| Page          | ✅ Yes    | `Html`        |                                                                   |
+| Type          | Supported | Recommended   | Notes                                                            |
+| ------------- | --------- | ------------- | ---------------------------------------------------------------- |
+| Text          | ✅ Yes    | `String`      | Use `Html` or `Markdown` if the formatting is important.         |
+| Link          | ✅ Yes    | `String`      |                                                                  |
+| Canvas        | ✅ Yes    | `Html`        | Use `String` to discard formatting.                              |
+| Select list   | ✅ Yes    | `StringArray` | Works for both single and multi-value select lists.              |
+| Number        | ✅ Yes    | `Number`      |                                                                  |
+| Percent       | ✅ Yes    | `Number`      | Passed as a fraction.                                            |
+| Currency      | ✅ Yes    | `Number`      | Use `String` to get currency symbol.                             |
+| Slider        | ✅ Yes    | `Number`      |                                                                  |
+| Scale         | ✅ Yes    | `Number`      |                                                                  |
+| Date          | ✅ Yes    | `Date`        |                                                                  |
+| Time          | ✅ Yes    | `Date`        |                                                                  |
+| Date and time | ✅ Yes    | `Date`        |                                                                  |
+| Duration      | ✅ Yes    | `Number`      |                                                                  |
+| Checkbox      | ✅ Yes    | `Boolean`     |                                                                  |
+| People        | ❌ No     |               | Use `String` to get the person's name.                           |
+| Email         | ✅ Yes    | `String`      |                                                                  |
+| Reaction      | ❌ No     |               | Use `StringArray` to get the names of the people that reacted.   |
+| Button        | ❌ No     |               |                                                                  |
+| Image         | ✅ Yes    | `ImageArray`  | Image column can contain multiple images.                        |
+| Image URL     | ✅ Yes    | `Image`       |                                                                  |
+| File          | ✅ Yes    | `FileArray`   | File columns can contain multiple files.                         |
+| Lookup        | ❌ No     |               | Use `StringArray` to get the display name of the row(s).         |
+| Table         | ❌ No     |               | You can't pass an entire table, pass individual columns instead. |
+| Page          | ✅ Yes    | `Html`        |                                                                  |
 
 
 
