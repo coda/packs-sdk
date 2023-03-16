@@ -1316,7 +1316,7 @@ function normalizePropertyAutocompleteResultsArray(
   results: Array<any | PropertyAutocompleteFormattedResult>,
 ): PropertyAutocompleteNormalizedResults['results'] {
   return results.map(r => {
-    if (Object.keys(r).length === 2 && 'display' in r && 'value' in r) {
+    if (typeof r === 'object' && Object.keys(r).length === 2 && 'display' in r && 'value' in r) {
       return {display: r.display, value: r.value};
     }
     return {display: undefined, value: r};

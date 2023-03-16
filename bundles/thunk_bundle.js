@@ -6194,7 +6194,7 @@ module.exports = (() => {
   __name(isDynamicSyncTable, "isDynamicSyncTable");
   function normalizePropertyAutocompleteResultsArray(results) {
     return results.map((r) => {
-      if (Object.keys(r).length === 2 && "display" in r && "value" in r) {
+      if (typeof r === "object" && Object.keys(r).length === 2 && "display" in r && "value" in r) {
         return { display: r.display, value: r.value };
       }
       return { display: void 0, value: r };
