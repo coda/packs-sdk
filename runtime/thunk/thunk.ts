@@ -155,6 +155,7 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
 
           for (const [key, value] of Object.entries(formulaSpec.propertyValues)) {
             Object.defineProperty(propertyValues, key, {
+              enumerable: true,
               get() {
                 recordPropertyAccess(key);
                 return value;
@@ -171,6 +172,7 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
           const contextUsed: Omit<PropertyAutocompleteAnnotatedResult, 'packResult' | 'propertiesUsed'> = {};
 
           Object.defineProperty(propertyAutocompleteExecutionContext, 'search', {
+            enumerable: true,
             get() {
               contextUsed.searchUsed = true;
               return formulaSpec.search;

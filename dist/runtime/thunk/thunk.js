@@ -92,6 +92,7 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                     }
                     for (const [key, value] of Object.entries(formulaSpec.propertyValues)) {
                         Object.defineProperty(propertyValues, key, {
+                            enumerable: true,
                             get() {
                                 recordPropertyAccess(key);
                                 return value;
@@ -105,6 +106,7 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                     };
                     const contextUsed = {};
                     Object.defineProperty(propertyAutocompleteExecutionContext, 'search', {
+                        enumerable: true,
                         get() {
                             contextUsed.searchUsed = true;
                             return formulaSpec.search;
