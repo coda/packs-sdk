@@ -6581,6 +6581,7 @@ module.exports = (() => {
             const cacheKeysUsed = [];
             for (const [key, value] of Object.entries(formulaSpec.propertyValues)) {
               Object.defineProperty(propertyValues, key, {
+                enumerable: true,
                 get() {
                   recordPropertyAccess2(key);
                   return value;
@@ -6594,6 +6595,7 @@ module.exports = (() => {
             };
             const contextUsed = {};
             Object.defineProperty(propertyAutocompleteExecutionContext, "search", {
+              enumerable: true,
               get() {
                 contextUsed.searchUsed = true;
                 return formulaSpec.search;
