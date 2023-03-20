@@ -316,6 +316,28 @@ Enabling the option `shouldAutoAuthSetup: true` further simplifies the sign-in e
 [View Sample Code][sample_coda_api]{ .md-button }
 
 
+### AWS Signautre Version 4
+
+Amazon Web Services (AWS) uses a variety of authentication methods, one of which relies on access keys and a proprietary signing mechanism. Packs support this using the [`AWSAccessKey`][AWSAccessKey] authentication type. You must specify which AWS service you are connecting to, since that is a required part of the signature. For example:
+
+```
+PUT /file.txt
+Host: mybucket.s3.us-east-1.amazonaws.com
+Authorization: <signature>
+```
+
+Can be implemented using:
+
+```ts
+pack.setUserAuthentication({
+  type: coda.AuthenticationType.AWSAccessKey,
+  service: "s3",
+});
+```
+
+[View Sample Code][sample_aws]{ .md-button }
+
+
 ## Requiring authentication
 
 If a Pack includes any form of user authentication then by default all of the building blocks within that Pack are assumed to require a connected account. You can set the `connectionRequirement` property on individual formulas or sync tables to make an account optional or not used.
@@ -519,6 +541,7 @@ There are services however where each account is associated with a distinct doma
 [sample_coda_api]: ../../../samples/topic/authentication.md#coda-api-token
 [sample_custom]: ../../../samples/topic/authentication.md#custom-tokens
 [sample_multiple_query_params]: ../../../samples/topic/authentication.md#multiple-query-parameters
+[sample_aws]: ../../../samples/topic/authentication.md#aws-signature-version-4
 
 [hc_account_sharing]: https://help.coda.io/en/articles/4587167-what-can-coda-access-with-packs
 [account_settings]: https://coda.io/account
@@ -538,4 +561,5 @@ There are services however where each account is associated with a distinct doma
 [oauth_guide]: oauth2.md
 [MultiQueryParamToken]: ../../../reference/sdk/enums/core.AuthenticationType.md#multiqueryparamtoken
 [CodaApiHeaderBearerToken]: ../../../reference/sdk/enums/core.AuthenticationType.md#codaapiheaderbearertoken
+[AWSAccessKey]: ../../../reference/sdk/enums/core.AuthenticationType.md#awsaccesskey
 

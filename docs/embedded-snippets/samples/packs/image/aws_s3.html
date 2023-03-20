@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <!-- Monaco library script is loaded from: https://cdnjs.com/libraries/monaco-editor-->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs/loader.min.js"
+      integrity="sha512-BZkLVRxigK3UazsQIYAM64dYuFw4giK5YyBrjDlUhKIMeC2j+XLIAr4vs312JiDq4OaJwZEDfB27c7ffROEKBQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      require.config({
+        paths: {
+          vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs',
+        },
+      });
+
+      require(['vs/editor/editor.main'], function () {
+        var editor = monaco.editor.create(document.getElementById('container'), {
+          value: "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Action that uploads a file to Amazon S3.\npack.addFormula({\n  name: \"Upload\",\n  description: \"Upload a file to AWS S3.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.File,\n      name: \"file\",\n      description: \"The file to upload.\",\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"name\",\n      description: \"The target file name. Default: the original file name.\",\n      optional: true,\n    }),\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"path\",\n      description: \"The target directory path. Default: the root directory.\",\n      optional: true,\n    }),\n  ],\n  resultType: coda.ValueType.String,\n  isAction: true,\n  execute: async function ([fileUrl, name, path=\"/\"], context) {\n    // Fetch the file contents.\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: fileUrl,\n      isBinaryResponse: true,\n      disableAuthentication: true,\n    });\n    let buffer = response.body;\n    let contentType = response.headers[\"content-type\"] as string;\n    let contentDisposition = response.headers[\"content-disposition\"] as string;\n\n    // Determine file name.\n    if (!name && contentDisposition) {\n      name = getFilename(contentDisposition);\n    }\n    if (!name) {\n      // Fallback to last segment of the URL.\n      name = fileUrl.split(\"/\").pop();\n    }\n\n    // Upload to S3.\n    let s3Url = coda.joinUrl(context.endpoint, path, name);\n    await context.fetcher.fetch({\n      method: \"PUT\",\n      url: s3Url,\n      headers: {\n        \"Content-Type\": contentType,\n        \"Content-Length\": buffer.length.toString(),\n      },\n      body: buffer,\n    });\n    return s3Url;\n  },\n});\n\n// Gets the filename from a Content-Disposition header value.\nfunction getFilename(contentDisposition) {\n  let match = contentDisposition.match(/filename=(.*?)(;|$)/);\n  if (!match) {\n    return;\n  }\n  let filename = match[1].trim();\n  // Remove quotes around the filename, if present.\n  filename = filename.replace(/^[\"'](.*)[\"']$/, \"$1\");\n  return filename;\n}\n\n// Set per-user authentication using AWS Signature Version 4 with an access key.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.AWSAccessKey,\n  service: \"s3\",\n  requiresEndpointUrl: true,\n  endpointDomain: \"amazonaws.com\",\n});\n\n// Allow the pack to make requests to AWS.\npack.addNetworkDomain(\"amazonaws.com\");",
+          language: 'javascript',
+          minimap: {enabled: false},
+          readOnly: true,
+          renderValidationDecorations: 'off',
+          wordWrap: 'on',
+          contextmenu: false,
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div id="container" style="position: absolute; top: 0; right: 16; bottom: 16; left: 0"></div>
+  </body>
+</html>
