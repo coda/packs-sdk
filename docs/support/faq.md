@@ -62,7 +62,7 @@ If you have a formula that returns a dynamic set of custom fields, there are two
 
 ## How can I transfer ownership of a Pack?
 
-Pack's don't have a specific owner role, so to transfer ownership you can take the following steps:
+Packs don't have a specific owner role, so to transfer ownership you can take the following steps:
 
 1. Share the Pack with the new owner, giving them **Pack admin** access.
 1. [Transfer the Pack](#transfer-workspace) to the new owner's workspace, if different.
@@ -84,7 +84,6 @@ Replace `{PACK_ID}` with the ID of your Pack. The response includes a `workspace
 ## How can I move a Pack to another workspace? {: #transfer-workspace}
 
 Only the [Coda support][support_email] team can transfer a Pack to another workspace, so please reach out if you need to make a change. If the Pack already has billing enabled, transferring it to a different workspace will require additional steps, so please note it in your request to support.
-
 
 
 [google_verification]: https://support.google.com/cloud/answer/9110914
