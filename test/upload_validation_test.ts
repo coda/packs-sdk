@@ -1368,7 +1368,8 @@ describe('Pack metadata Validation', () => {
         assert.deepEqual(err.validationErrors, [
           {
             path: 'syncTables[0]',
-            message: "Unrecognized key(s) in object: 'getDisplayUrl', 'listDynamicUrls', 'getName'",
+            message:
+              "Unrecognized key(s) in object: 'getDisplayUrl', 'listDynamicUrls', 'searchDynamicUrls', 'getName'",
           },
         ]);
 
