@@ -149,3 +149,12 @@ Optional placeholder schema before the dynamic schema is retrieved.
 
 If `defaultAddDynamicColumns` is false, only featured columns
 in placeholderSchema will be rendered by default after the sync.
+
+___
+
+### searchDynamicUrls
+
+• `Optional` **searchDynamicUrls**: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)
+
+A formula that returns a list of available dynamic urls that match a given
+search query that can be used to create an instance of this dynamic sync table.

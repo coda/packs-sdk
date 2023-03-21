@@ -2191,6 +2191,8 @@ export interface DynamicSyncTableDef<K extends string, L extends string, ParamDe
 	getDisplayUrl: MetadataFormula;
 	/** See {@link DynamicSyncTableOptions.listDynamicUrls} */
 	listDynamicUrls?: MetadataFormula;
+	/** See {@link DynamicSyncTableOptions.searchDynamicUrls} */
+	searchDynamicUrls?: MetadataFormula;
 	/**
 	 * See {@link DynamicSyncTableOptions.propertyAutocomplete}
 	 * @hidden
@@ -2942,6 +2944,11 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
 	 */
 	listDynamicUrls?: MetadataFormulaDef;
 	/**
+	 * A formula that returns a list of available dynamic urls that match a given
+	 * search query that can be used to create an instance of this dynamic sync table.
+	 */
+	searchDynamicUrls?: MetadataFormulaDef;
+	/**
 	 * The definition of the formula that implements this sync. This is a Coda packs formula
 	 * that returns an array of objects fitting the given schema and optionally a {@link Continuation}.
 	 * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
@@ -3030,6 +3037,7 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
 	formula: SyncFormulaDef<K, L, ParamDefsT, any>;
 	getDisplayUrl: MetadataFormulaDef;
 	listDynamicUrls?: MetadataFormulaDef;
+	searchDynamicUrls?: MetadataFormulaDef;
 	entityName?: string;
 	connectionRequirement?: ConnectionRequirement;
 	defaultAddDynamicColumns?: boolean;
@@ -4239,7 +4247,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	private _setDefaultConnectionRequirement;
 }
 /** @hidden */
-export declare type PackSyncTable = Omit<SyncTable, "getter" | "getName" | "getSchema" | "listDynamicUrls" | "getDisplayUrl"> & {
+export declare type PackSyncTable = Omit<SyncTable, "getter" | "getName" | "getSchema" | "listDynamicUrls" | "searchDynamicUrls" | "getDisplayUrl"> & {
 	getter: PackFormulaMetadata;
 	isDynamic?: boolean;
 	hasDynamicSchema?: boolean;
@@ -4247,6 +4255,7 @@ export declare type PackSyncTable = Omit<SyncTable, "getter" | "getName" | "getS
 	getName?: MetadataFormulaMetadata;
 	getDisplayUrl?: MetadataFormulaMetadata;
 	listDynamicUrls?: MetadataFormulaMetadata;
+	searchDynamicUrls?: MetadataFormulaMetadata;
 };
 /** @hidden */
 export interface PackFormatMetadata extends Omit<Format, "matchers"> {

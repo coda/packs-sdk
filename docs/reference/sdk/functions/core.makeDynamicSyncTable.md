@@ -55,6 +55,7 @@ coda.makeDynamicSyncTable({
 | `params.listDynamicUrls?` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) |
 | `params.name` | `string` |
 | `params.placeholderSchema?` | `SchemaT` |
+| `params.searchDynamicUrls?` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) |
 
 #### Returns
 

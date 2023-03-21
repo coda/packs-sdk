@@ -156,3 +156,11 @@ See [schema](core.SyncTableOptions.md#schema)
 #### Inherited from
 
 [SyncTableDef](core.SyncTableDef.md).[schema](core.SyncTableDef.md#schema)
+
+___
+
+### searchDynamicUrls
+
+• `Optional` **searchDynamicUrls**: [`MetadataFormula`](../types/core.MetadataFormula.md)
+
+See [searchDynamicUrls](core.DynamicSyncTableOptions.md#searchdynamicurls)

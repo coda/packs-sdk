@@ -979,6 +979,7 @@ const genericDynamicSyncTableSchema = zodCompleteObject({
     getName: formulaMetadataSchema,
     getDisplayUrl: formulaMetadataSchema,
     listDynamicUrls: formulaMetadataSchema.optional(),
+    searchDynamicUrls: formulaMetadataSchema.optional(),
     getSchema: formulaMetadataSchema,
 }).strict();
 const syncTableSchema = z

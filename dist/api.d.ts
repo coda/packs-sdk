@@ -222,6 +222,8 @@ export interface DynamicSyncTableDef<K extends string, L extends string, ParamDe
     getDisplayUrl: MetadataFormula;
     /** See {@link DynamicSyncTableOptions.listDynamicUrls} */
     listDynamicUrls?: MetadataFormula;
+    /** See {@link DynamicSyncTableOptions.searchDynamicUrls} */
+    searchDynamicUrls?: MetadataFormula;
     /**
      * See {@link DynamicSyncTableOptions.propertyAutocomplete}
      * @hidden
@@ -1083,6 +1085,11 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
      */
     listDynamicUrls?: MetadataFormulaDef;
     /**
+     * A formula that returns a list of available dynamic urls that match a given
+     * search query that can be used to create an instance of this dynamic sync table.
+     */
+    searchDynamicUrls?: MetadataFormulaDef;
+    /**
      * The definition of the formula that implements this sync. This is a Coda packs formula
      * that returns an array of objects fitting the given schema and optionally a {@link Continuation}.
      * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
@@ -1176,6 +1183,7 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
     formula: SyncFormulaDef<K, L, ParamDefsT, any>;
     getDisplayUrl: MetadataFormulaDef;
     listDynamicUrls?: MetadataFormulaDef;
+    searchDynamicUrls?: MetadataFormulaDef;
     entityName?: string;
     connectionRequirement?: ConnectionRequirement;
     defaultAddDynamicColumns?: boolean;

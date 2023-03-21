@@ -30,6 +30,7 @@ describe('API test', () => {
         ),
         getDisplayUrl: makeMetadataFormula(async () => 'sup'),
         listDynamicUrls: makeMetadataFormula(async () => []),
+        searchDynamicUrls: makeMetadataFormula(async () => []),
         formula: {
           name: 'Whatever',
           description: 'Whatever',
@@ -46,6 +47,7 @@ describe('API test', () => {
       assert.equal(ConnectionRequirement.Optional, table.getDisplayUrl.connectionRequirement);
       assert.equal(ConnectionRequirement.Optional, table.getName.connectionRequirement);
       assert.equal(ConnectionRequirement.Optional, table.listDynamicUrls?.connectionRequirement);
+      assert.equal(ConnectionRequirement.Optional, table.searchDynamicUrls?.connectionRequirement);
       assert.equal(ConnectionRequirement.Optional, table.getSchema?.connectionRequirement);
       assert.equal(ConnectionRequirement.Optional, table.getter.parameters[0].autocomplete?.connectionRequirement);
       assert.equal(
@@ -90,6 +92,7 @@ describe('API test', () => {
           getSchema: async () => s,
           getDisplayUrl: makeMetadataFormula(async () => 'sup'),
           listDynamicUrls: makeMetadataFormula(async () => []),
+          searchDynamicUrls: makeMetadataFormula(async () => []),
           formula: {
             name: 'Whatever',
             description: 'Whatever',

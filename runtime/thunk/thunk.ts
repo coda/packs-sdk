@@ -204,6 +204,7 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
           }
           break;
         case MetadataFormulaType.SyncListDynamicUrls:
+        case MetadataFormulaType.SyncSearchDynamicUrls:
         case MetadataFormulaType.SyncGetDisplayUrl:
         case MetadataFormulaType.SyncGetTableName:
         case MetadataFormulaType.SyncGetSchema:
@@ -216,6 +217,10 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
                   case MetadataFormulaType.SyncListDynamicUrls:
                     formula = syncTable.listDynamicUrls;
                     break;
+                  case MetadataFormulaType.SyncSearchDynamicUrls:
+                    formula = syncTable.searchDynamicUrls;
+                    break;
+
                   case MetadataFormulaType.SyncGetDisplayUrl:
                     formula = syncTable.getDisplayUrl;
                     break;
@@ -236,6 +241,7 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
                     formula = syncTable.getSchema;
                     break;
                   case MetadataFormulaType.SyncListDynamicUrls:
+                  case MetadataFormulaType.SyncSearchDynamicUrls:
                   case MetadataFormulaType.SyncGetDisplayUrl:
                   case MetadataFormulaType.SyncGetTableName:
                     // Not applicable to static tables.
