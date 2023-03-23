@@ -175,7 +175,7 @@ describe('Schema', () => {
     });
   });
 
-  describe('normalizeSchema', () => {
+  describe.only('normalizeSchema', () => {
     it('passes through object identity', () => {
       const anotherSchema = schema.makeObjectSchema({
         type: schema.ValueType.Object,
@@ -207,6 +207,8 @@ describe('Schema', () => {
       assert.deepEqual((normalized as any).identity, {
         name: 'hello',
       });
+
+      assert.deepEqual(schema.denormalizeSchema(normalized), objectSchema);
     });
 
     it('works', () => {
@@ -254,6 +256,7 @@ describe('Schema', () => {
       });
       assert.deepEqual((normalized as schema.GenericObjectSchema).titleProperty, 'EnterTheDateInMMDDYYYYFormat');
       assert.deepEqual((normalized as schema.GenericObjectSchema).snippetProperty, 'Another.Boo');
+      assert.deepEqual(schema.denormalizeSchema(normalized), objectSchema);
     });
   });
 });
