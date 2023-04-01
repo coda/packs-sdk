@@ -58,7 +58,7 @@
     "isolated-vm": "4.4.1"
   },
   "devDependencies": {
-    "@aws-sdk/types": "^3.272.0",
+    "@aws-sdk/types": "3.303.0",
     "@brightcove/kacl": "0.1.11",
     "@getify/eslint-plugin-proper-arrows": "11.0.3",
     "@julian_cataldo/remark-lint-frontmatter-schema": "3.7.6",
