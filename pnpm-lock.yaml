@@ -267,8 +267,8 @@ importers:
         specifier: 4.2.0
         version: 4.2.0
       sharp-cli:
-        specifier: 4.1.0
-        version: 4.1.0
+        specifier: 4.1.1
+        version: 4.1.1
       ts-loader:
         specifier: 9.4.2
         version: 9.4.2(typescript@4.7.4)(webpack@5.77.0)
@@ -6942,8 +6942,8 @@ packages:
       safe-buffer: 5.2.1
     dev: false
 
-  /sharp-cli@4.1.0:
-    resolution: {integrity: sha512-dgX374AiIMWFu25MqDhejUqcR3CK5q3dJ6hOn2Cv9hQiDYWGO00wV8lCkvbJlztx74oP1JyJy1X5tRXrB/uP8w==}
+  /sharp-cli@4.1.1:
+    resolution: {integrity: sha512-W5WAojHJbBS6fSLw06oxw8osigOXHNO4sOB3zuOw0+qe+mj4YJiETg2hbn2vUlN6qwkpkjR++gCWPMnaDpTbNQ==}
     engines: {node: '>=14.15'}
     hasBin: true
     dependencies:
