@@ -19,7 +19,7 @@ orbs:
 executors:
   default_build_environment:
     docker:
-      - image: cimg/node:14.17
+      - image: cimg/node:14.21
         auth:
           username: codainternaltools
           password: $DOCKERHUB_PASSWORD
