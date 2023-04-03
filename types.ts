@@ -1,4 +1,5 @@
 import type {$Values} from './type_utils';
+import type {Autocomplete} from './api';
 import type {Formula} from './api';
 import type {MetadataFormula} from './api';
 import type {MetadataFormulaDef} from './api';
@@ -555,7 +556,7 @@ export enum TokenExchangeCredentialsLocation {
   /**
    * The credentials are passed in the Authorization header using the `Basic` scheme.
    */
-  AuthorizationHeader = 'AuthorizationHeader'
+  AuthorizationHeader = 'AuthorizationHeader',
 }
 
 /**
@@ -1021,6 +1022,9 @@ export interface PackVersionDefinition {
    * Definitions of this pack's sync tables. See {@link SyncTable}.
    */
   syncTables?: SyncTable[];
+
+  /** @hidden */
+  autocompletes?: Autocomplete[];
 }
 
 /**

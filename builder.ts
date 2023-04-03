@@ -1,6 +1,8 @@
 import type {Authentication} from './types';
 import type {AuthenticationDef} from './types';
 import {AuthenticationType} from './types';
+import type {Autocomplete} from './api';
+import type {AutocompleteOptions} from './api';
 import type {BasicPackDefinition} from './types';
 import {ConnectionRequirement} from './api_types';
 import type {DynamicSyncTableOptions} from './api';
@@ -17,9 +19,11 @@ import type {SyncTableOptions} from './api';
 import type {SystemAuthentication} from './types';
 import type {SystemAuthenticationDef} from './types';
 import type {ValueType} from './schema';
+import {exec} from 'child_process';
 import {isDynamicSyncTable} from './api';
 import {makeDynamicSyncTable} from './api';
 import {makeFormula} from './api';
+import {makePropertyAutocompleteFormula} from './api';
 import {makeSyncTable} from './api';
 import {maybeRewriteConnectionForFormula} from './api';
 import {setEndpointDefHelper} from './helpers/migration';
@@ -62,6 +66,11 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
   networkDomains: string[];
 
   /**
+   * @hidden
+   */
+  autocompletes: Autocomplete[];
+
+  /**
    * See {@link PackVersionDefinition.defaultAuthentication}.
    */
   defaultAuthentication?: Authentication;
@@ -93,10 +102,12 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       systemConnectionAuthentication,
       version,
       formulaNamespace,
+      autocompletes,
     } = definition || {};
     this.formulas = formulas || [];
     this.formats = formats || [];
     this.syncTables = syncTables || [];
+    this.autocompletes = autocompletes || [];
     this.networkDomains = networkDomains || [];
     this.defaultAuthentication = defaultAuthentication;
     this.systemConnectionAuthentication = systemConnectionAuthentication;
@@ -165,7 +176,6 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     schema,
     formula,
     connectionRequirement,
-    propertyAutocomplete,
     dynamicOptions = {},
   }: SyncTableOptions<K, L, ParamDefsT, SchemaT>): this {
     const connectionRequirementToUse = connectionRequirement || this._defaultConnectionRequirement;
@@ -176,10 +186,25 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       schema,
       formula,
       connectionRequirement: connectionRequirementToUse,
-      propertyAutocomplete,
       dynamicOptions,
     });
     this.syncTables.push(syncTable);
+    return this;
+  }
+
+  addAutocomplete<ResultT extends ValueType, SchemaT extends Schema>({
+    name,
+    type,
+    // options,
+    execute,
+  }: AutocompleteOptions<ResultT, SchemaT>) {
+    const formula = makePropertyAutocompleteFormula({execute, type /* , schema */});
+    this.autocompletes.push({
+      name,
+      type,
+      // options,
+      formula,
+    });
     return this;
   }
 
@@ -393,13 +418,11 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
           getSchema: maybeRewriteConnectionForFormula(syncTable.getSchema, connectionRequirement),
           listDynamicUrls: maybeRewriteConnectionForFormula(syncTable.listDynamicUrls, connectionRequirement),
           searchDynamicUrls: maybeRewriteConnectionForFormula(syncTable.searchDynamicUrls, connectionRequirement),
-          propertyAutocomplete: maybeRewriteConnectionForFormula(syncTable.propertyAutocomplete, connectionRequirement),
         };
       } else {
         return {
           ...syncTable,
           getter: maybeRewriteConnectionForFormula(syncTable.getter, connectionRequirement),
-          propertyAutocomplete: maybeRewriteConnectionForFormula(syncTable.propertyAutocomplete, connectionRequirement),
           getSchema: maybeRewriteConnectionForFormula(syncTable.getSchema, connectionRequirement),
         };
       }
