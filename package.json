@@ -6,7 +6,7 @@
     "dev/eslint"
   ],
   "engines": {
-    "node": ">=14.17.x"
+    "node": "14.21.3"
   },
   "main": "dist/index.js",
   "bin": {
@@ -113,7 +113,7 @@
     "sharp-cli": "4.1.1",
     "ts-loader": "9.4.2",
     "ts-node": "10.9.1",
-    "typedoc": "0.23.10",
+    "typedoc": "0.23.28",
     "typedoc-plugin-markdown": "3.14.0"
   },
   "remarkConfig": {
