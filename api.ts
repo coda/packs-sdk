@@ -1352,7 +1352,13 @@ export interface PropertyAutocompleteAnnotatedResult {
 //   schema?: SchemaT;
 // };
 
-export type PropertyAutocompleteMetadataFormula<SchemaT extends Schema> = Formula<[], ValueType.Array, SchemaT>;
+// export type PropertyAutocompleteMetadataFormula<SchemaT extends Schema> = Formula<[], ValueType.Array, SchemaT>;
+export type PropertyAutocompleteMetadataFormula<SchemaT extends Schema> = ObjectPackFormula<
+  [],
+  ArraySchema<SchemaT>
+> & {
+  execute(params: ParamValues<[]>, context: PropertyAutocompleteExecutionContext): Promise<object> | object;
+};
 
 export type MetadataFormulaMetadata = Omit<MetadataFormula, 'execute'>;
 
@@ -1373,7 +1379,7 @@ export type MetadataFunction = (
 /**
  * A JavaScript function for property autocomplete.
  */
-type PropertyAutocompleteMetadataFunction<ResultT> = (
+type PropertyAutocompleteMetadataFunction<ResultT extends PackFormulaResult> = (
   context: PropertyAutocompleteExecutionContext,
 ) => Promise<ResultT[]> | ResultT[];
 
@@ -1426,16 +1432,21 @@ export function makeMetadataFormula(
 /**
  * @hidden
  */
-export function makePropertyAutocompleteFormula<ResultT extends ValueType.String>({
+export function makePropertyAutocompleteFormula<
+  SchemaT extends Schema,
+  ValueT extends ValueType,
+  // ResultT extends PackFormulaResult,
+>({
   execute,
-}: // type,
-{
-  execute: PropertyAutocompleteMetadataFunction<ResultT>;
-  // type: ResultT;
+  type,
+  schema,
+}: {
+  execute: PropertyAutocompleteMetadataFunction<SchemaType<ArraySchema<SchemaT>>>;
+  type: ValueT;
+  schema: SchemaT;
   // resultType: ResultT,
-  // schema: SchemaT,
 }): // options?: {connectionRequirement?: ConnectionRequirement},
-PropertyAutocompleteMetadataFormula<StringSchema> {
+PropertyAutocompleteMetadataFormula<SchemaT> {
   // const arraySchema: ArraySchema<SchemaT> = {
   //   type: ValueType.Array,
   //   items: schema,
@@ -1445,12 +1456,14 @@ PropertyAutocompleteMetadataFormula<StringSchema> {
     throw new Error(`Value for propertyAutocomplete must be a function`);
   }
 
-  const innerExecute = async ([]: ParamValues<[]>, context: ExecutionContext) => {
+  type ResultT = SchemaType<ArraySchema<SchemaT>>;
+
+  const innerExecute = async ([]: ParamValues<[]>, context: ExecutionContext): Promise<ResultT> => {
     const result = await execute(context as PropertyAutocompleteExecutionContext);
     return result;
   };
 
-  const formulaDefn: ArrayFormulaDef<[], StringSchema> = {
+  const formulaDefn: ArrayFormulaDef<[], SchemaT> = {
     connectionRequirement: ConnectionRequirement.Optional,
     execute: innerExecute,
     // async execute([], context) {
@@ -1461,9 +1474,9 @@ PropertyAutocompleteMetadataFormula<StringSchema> {
     description: '',
     parameters: [],
     resultType: ValueType.Array,
-    items: {type: ValueType.String},
+    items: {type: schema},
   };
-  const formula = makeFormula<[], ValueType.Array, StringSchema>(formulaDefn);
+  const formula = makeFormula<[], ValueType.Array, SchemaT>(formulaDefn);
   return formula;
 
   // return makeObjectFormula({
@@ -1742,7 +1755,7 @@ export interface SyncTableOptions<
  */
 export interface AutocompleteOptions<ResultT extends ValueType, SchemaT extends Schema> {
   name: string;
-  execute: PropertyAutocompleteMetadataFormula<SchemaT>;
+  execute: PropertyAutocompleteMetadataFunction<ResultT>;
   type: ResultT;
   // options: ResultT[];
 }
