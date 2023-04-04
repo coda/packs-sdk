@@ -38,7 +38,7 @@
     "node-fetch": "2.6.9",
     "open": "8.4.2",
     "pascalcase": "1.0.0",
-    "qs": "6.11.0",
+    "qs": "6.11.1",
     "readline-sync": "1.4.10",
     "semver": "7.3.8",
     "sha.js": "2.4.11",
