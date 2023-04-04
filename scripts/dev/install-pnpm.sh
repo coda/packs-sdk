@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-if [[ $OSTYPE == 'darwin'* ]]; then
-  echo 'This script is intended to be run on Linux only'
-  exit 1
-fi
-
 # The pnpm cdn seems to be quite flakey, so let's retry a few times before
 # erroring out.
 
