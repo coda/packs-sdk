@@ -22,7 +22,7 @@ import type { SyncTable } from './api';
 import type { VariousAuthentication } from './types';
 import type { WebBasicAuthentication } from './types';
 /** @hidden */
-export declare type PackSyncTable = Omit<SyncTable, 'getter' | 'getName' | 'getSchema' | 'listDynamicUrls' | 'getDisplayUrl'> & {
+export declare type PackSyncTable = Omit<SyncTable, 'getter' | 'getName' | 'getSchema' | 'listDynamicUrls' | 'searchDynamicUrls' | 'getDisplayUrl'> & {
     getter: PackFormulaMetadata;
     isDynamic?: boolean;
     hasDynamicSchema?: boolean;
@@ -30,6 +30,7 @@ export declare type PackSyncTable = Omit<SyncTable, 'getter' | 'getName' | 'getS
     getName?: MetadataFormulaMetadata;
     getDisplayUrl?: MetadataFormulaMetadata;
     listDynamicUrls?: MetadataFormulaMetadata;
+    searchDynamicUrls?: MetadataFormulaMetadata;
 };
 /** @hidden */
 export interface PackFormatMetadata extends Omit<Format, 'matchers'> {

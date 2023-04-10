@@ -82,6 +82,7 @@ describe('Builder', () => {
       getSchema,
       getDisplayUrl,
       listDynamicUrls,
+      searchDynamicUrls,
     }: {
       connectionRequirement?: ConnectionRequirement;
       getName: MetadataFormulaDef;
@@ -89,6 +90,7 @@ describe('Builder', () => {
       getSchema: MetadataFormulaDef;
       getDisplayUrl: MetadataFormulaDef;
       listDynamicUrls: MetadataFormulaDef;
+      searchDynamicUrls: MetadataFormulaDef;
     },
   ) {
     pack_.addDynamicSyncTable({
@@ -99,6 +101,7 @@ describe('Builder', () => {
       getSchema,
       getDisplayUrl,
       listDynamicUrls,
+      searchDynamicUrls,
       formula: {
         name: 'Ignored',
         description: '',
@@ -245,12 +248,14 @@ describe('Builder', () => {
         getDisplayUrl: makeMetadataFormula(async () => 'display-url'),
         getSchema: makeMetadataFormula(async () => makeSchema({type: ValueType.Array, items: dummyObjectSchema})),
         listDynamicUrls: makeMetadataFormula(async () => ['url']),
+        searchDynamicUrls: makeMetadataFormula(async () => ['url']),
       });
       const syncTable = pack.syncTables[0] as DynamicSyncTableDef<any, any, any, any>;
       assert.equal(syncTable.getName.connectionRequirement, ConnectionRequirement.Optional);
       assert.equal(syncTable.getDisplayUrl.connectionRequirement, ConnectionRequirement.Optional);
       assert.equal(syncTable.getSchema.connectionRequirement, ConnectionRequirement.Optional);
       assert.equal(syncTable.listDynamicUrls!.connectionRequirement, ConnectionRequirement.Optional);
+      assert.equal(syncTable.searchDynamicUrls!.connectionRequirement, ConnectionRequirement.Optional);
     });
 
     it('works for dynamic sync table metadata formulas after the fact', () => {
@@ -260,6 +265,7 @@ describe('Builder', () => {
         getDisplayUrl: makeMetadataFormula(async () => 'display-url'),
         getSchema: makeMetadataFormula(async () => makeSchema({type: ValueType.Array, items: dummyObjectSchema})),
         listDynamicUrls: makeMetadataFormula(async () => ['url']),
+        searchDynamicUrls: makeMetadataFormula(async () => ['url']),
       });
       pack.setUserAuthentication({
         type: AuthenticationType.HeaderBearerToken,
@@ -270,6 +276,7 @@ describe('Builder', () => {
       assert.equal(syncTable.getDisplayUrl.connectionRequirement, ConnectionRequirement.Optional);
       assert.equal(syncTable.getSchema.connectionRequirement, ConnectionRequirement.Optional);
       assert.equal(syncTable.listDynamicUrls!.connectionRequirement, ConnectionRequirement.Optional);
+      assert.equal(syncTable.searchDynamicUrls!.connectionRequirement, ConnectionRequirement.Optional);
     });
 
     // This is demonstrating a quirk of setDefaultConnectionRequirement()
@@ -288,6 +295,9 @@ describe('Builder', () => {
           connectionRequirement: ConnectionRequirement.None,
         }),
         listDynamicUrls: makeMetadataFormula(async () => ['url'], {connectionRequirement: ConnectionRequirement.None}),
+        searchDynamicUrls: makeMetadataFormula(async () => ['url'], {
+          connectionRequirement: ConnectionRequirement.None,
+        }),
       });
       pack.setUserAuthentication({
         type: AuthenticationType.HeaderBearerToken,
@@ -298,6 +308,7 @@ describe('Builder', () => {
       assert.equal(syncTable.getDisplayUrl.connectionRequirement, ConnectionRequirement.Optional);
       assert.equal(syncTable.getSchema.connectionRequirement, ConnectionRequirement.Optional);
       assert.equal(syncTable.listDynamicUrls!.connectionRequirement, ConnectionRequirement.Optional);
+      assert.equal(syncTable.searchDynamicUrls!.connectionRequirement, ConnectionRequirement.Optional);
     });
 
     it('omits codaType as a formula property but preserves it in the schema definition', () => {

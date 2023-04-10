@@ -838,7 +838,7 @@ exports.makeSyncTableLegacy = makeSyncTableLegacy;
  * Includes the unreleased propertyAutocomplete parameter.
  * @hidden
  */
-function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, propertyAutocomplete, }) {
+function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, searchDynamicUrls: searchDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, propertyAutocomplete, }) {
     const placeholderSchema = placeholderSchemaInput ||
         // default placeholder only shows a column of id, which will be replaced later by the dynamic schema.
         (0, schema_2.makeObjectSchema)({
@@ -854,6 +854,7 @@ function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchem
     const getSchema = wrapMetadataFunction(getSchemaDef);
     const getDisplayUrl = wrapMetadataFunction(getDisplayUrlDef);
     const listDynamicUrls = wrapMetadataFunction(listDynamicUrlsDef);
+    const searchDynamicUrls = wrapMetadataFunction(searchDynamicUrlsDef);
     const table = makeSyncTable({
         name,
         description,
@@ -869,6 +870,7 @@ function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchem
         isDynamic: true,
         getDisplayUrl: maybeRewriteConnectionForFormula(getDisplayUrl, connectionRequirement),
         listDynamicUrls: maybeRewriteConnectionForFormula(listDynamicUrls, connectionRequirement),
+        searchDynamicUrls: maybeRewriteConnectionForFormula(searchDynamicUrls, connectionRequirement),
         getName: maybeRewriteConnectionForFormula(getName, connectionRequirement),
     };
 }

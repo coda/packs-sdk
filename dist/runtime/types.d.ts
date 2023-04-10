@@ -13,6 +13,7 @@ export declare enum MetadataFormulaType {
     ParameterAutocomplete = "ParameterAutocomplete",
     PostSetupSetEndpoint = "PostSetupSetEndpoint",
     SyncListDynamicUrls = "SyncListDynamicUrls",
+    SyncSearchDynamicUrls = "SyncSearchDynamicUrls",
     SyncGetDisplayUrl = "SyncGetDisplayUrl",
     SyncGetTableName = "SyncGetTableName",
     SyncGetSchema = "SyncGetSchema",
@@ -48,7 +49,7 @@ export interface PostSetupMetadataFormulaSpecification {
 }
 export interface SyncMetadataFormulaSpecification {
     type: FormulaType.Metadata;
-    metadataFormulaType: MetadataFormulaType.SyncListDynamicUrls | MetadataFormulaType.SyncGetDisplayUrl | MetadataFormulaType.SyncGetTableName | MetadataFormulaType.SyncGetSchema;
+    metadataFormulaType: MetadataFormulaType.SyncListDynamicUrls | MetadataFormulaType.SyncSearchDynamicUrls | MetadataFormulaType.SyncGetDisplayUrl | MetadataFormulaType.SyncGetTableName | MetadataFormulaType.SyncGetSchema;
     syncTableName: string;
 }
 export interface PropertyAutocompleteFormulaSpecification {

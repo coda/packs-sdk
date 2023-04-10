@@ -15,6 +15,7 @@ var MetadataFormulaType;
     MetadataFormulaType["ParameterAutocomplete"] = "ParameterAutocomplete";
     MetadataFormulaType["PostSetupSetEndpoint"] = "PostSetupSetEndpoint";
     MetadataFormulaType["SyncListDynamicUrls"] = "SyncListDynamicUrls";
+    MetadataFormulaType["SyncSearchDynamicUrls"] = "SyncSearchDynamicUrls";
     MetadataFormulaType["SyncGetDisplayUrl"] = "SyncGetDisplayUrl";
     MetadataFormulaType["SyncGetTableName"] = "SyncGetTableName";
     MetadataFormulaType["SyncGetSchema"] = "SyncGetSchema";

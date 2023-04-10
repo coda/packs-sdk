@@ -289,6 +289,8 @@ export interface DynamicSyncTableDef<
   getDisplayUrl: MetadataFormula;
   /** See {@link DynamicSyncTableOptions.listDynamicUrls} */
   listDynamicUrls?: MetadataFormula;
+  /** See {@link DynamicSyncTableOptions.searchDynamicUrls} */
+  searchDynamicUrls?: MetadataFormula;
   /**
    * See {@link DynamicSyncTableOptions.propertyAutocomplete}
    * @hidden
@@ -1756,6 +1758,11 @@ export interface DynamicSyncTableOptions<
    */
   listDynamicUrls?: MetadataFormulaDef;
   /**
+   * A formula that returns a list of available dynamic urls that match a given
+   * search query that can be used to create an instance of this dynamic sync table.
+   */
+  searchDynamicUrls?: MetadataFormulaDef;
+  /**
    * The definition of the formula that implements this sync. This is a Coda packs formula
    * that returns an array of objects fitting the given schema and optionally a {@link Continuation}.
    * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
@@ -1988,6 +1995,7 @@ export function makeDynamicSyncTable<
   formula: SyncFormulaDef<K, L, ParamDefsT, any>;
   getDisplayUrl: MetadataFormulaDef;
   listDynamicUrls?: MetadataFormulaDef;
+  searchDynamicUrls?: MetadataFormulaDef;
   entityName?: string;
   connectionRequirement?: ConnectionRequirement;
   defaultAddDynamicColumns?: boolean;
@@ -2012,6 +2020,7 @@ export function makeDynamicSyncTable<
   getDisplayUrl: getDisplayUrlDef,
   formula,
   listDynamicUrls: listDynamicUrlsDef,
+  searchDynamicUrls: searchDynamicUrlsDef,
   entityName,
   connectionRequirement,
   defaultAddDynamicColumns,
@@ -2026,6 +2035,7 @@ export function makeDynamicSyncTable<
   formula: SyncFormulaDef<K, L, ParamDefsT, any>;
   getDisplayUrl: MetadataFormulaDef;
   listDynamicUrls?: MetadataFormulaDef;
+  searchDynamicUrls?: MetadataFormulaDef;
   entityName?: string;
   connectionRequirement?: ConnectionRequirement;
   defaultAddDynamicColumns?: boolean;
@@ -2048,6 +2058,7 @@ export function makeDynamicSyncTable<
   const getSchema = wrapMetadataFunction(getSchemaDef);
   const getDisplayUrl = wrapMetadataFunction(getDisplayUrlDef);
   const listDynamicUrls = wrapMetadataFunction(listDynamicUrlsDef);
+  const searchDynamicUrls = wrapMetadataFunction(searchDynamicUrlsDef);
   const table = makeSyncTable({
     name,
     description,
@@ -2063,6 +2074,7 @@ export function makeDynamicSyncTable<
     isDynamic: true,
     getDisplayUrl: maybeRewriteConnectionForFormula(getDisplayUrl, connectionRequirement),
     listDynamicUrls: maybeRewriteConnectionForFormula(listDynamicUrls, connectionRequirement),
+    searchDynamicUrls: maybeRewriteConnectionForFormula(searchDynamicUrls, connectionRequirement),
     getName: maybeRewriteConnectionForFormula(getName, connectionRequirement),
   } as DynamicSyncTableDef<K, L, ParamDefsT, any>;
 }

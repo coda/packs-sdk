@@ -30,7 +30,7 @@ import type {WebBasicAuthentication} from './types';
 /** @hidden */
 export type PackSyncTable = Omit<
   SyncTable,
-  'getter' | 'getName' | 'getSchema' | 'listDynamicUrls' | 'getDisplayUrl'
+  'getter' | 'getName' | 'getSchema' | 'listDynamicUrls' | 'searchDynamicUrls' | 'getDisplayUrl'
 > & {
   getter: PackFormulaMetadata;
   isDynamic?: boolean;
@@ -39,6 +39,7 @@ export type PackSyncTable = Omit<
   getName?: MetadataFormulaMetadata;
   getDisplayUrl?: MetadataFormulaMetadata;
   listDynamicUrls?: MetadataFormulaMetadata;
+  searchDynamicUrls?: MetadataFormulaMetadata;
 };
 
 /** @hidden */

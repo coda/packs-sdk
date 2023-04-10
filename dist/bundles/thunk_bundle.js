@@ -6320,6 +6320,7 @@ module.exports = (() => {
             }
             break;
           case "SyncListDynamicUrls" /* SyncListDynamicUrls */:
+          case "SyncSearchDynamicUrls" /* SyncSearchDynamicUrls */:
           case "SyncGetDisplayUrl" /* SyncGetDisplayUrl */:
           case "SyncGetTableName" /* SyncGetTableName */:
           case "SyncGetSchema" /* SyncGetSchema */:
@@ -6331,6 +6332,9 @@ module.exports = (() => {
                   switch (formulaSpec.metadataFormulaType) {
                     case "SyncListDynamicUrls" /* SyncListDynamicUrls */:
                       formula = syncTable2.listDynamicUrls;
+                      break;
+                    case "SyncSearchDynamicUrls" /* SyncSearchDynamicUrls */:
+                      formula = syncTable2.searchDynamicUrls;
                       break;
                     case "SyncGetDisplayUrl" /* SyncGetDisplayUrl */:
                       formula = syncTable2.getDisplayUrl;
@@ -6350,6 +6354,7 @@ module.exports = (() => {
                       formula = syncTable2.getSchema;
                       break;
                     case "SyncListDynamicUrls" /* SyncListDynamicUrls */:
+                    case "SyncSearchDynamicUrls" /* SyncSearchDynamicUrls */:
                     case "SyncGetDisplayUrl" /* SyncGetDisplayUrl */:
                     case "SyncGetTableName" /* SyncGetTableName */:
                       break;

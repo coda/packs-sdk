@@ -296,6 +296,7 @@ class PackDefinitionBuilder {
                     getDisplayUrl: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getDisplayUrl, connectionRequirement),
                     getSchema: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getSchema, connectionRequirement),
                     listDynamicUrls: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.listDynamicUrls, connectionRequirement),
+                    searchDynamicUrls: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.searchDynamicUrls, connectionRequirement),
                     propertyAutocomplete: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.propertyAutocomplete, connectionRequirement),
                 };
             }
