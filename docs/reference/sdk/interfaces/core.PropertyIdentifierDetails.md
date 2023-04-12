@@ -24,6 +24,14 @@ If set to '', the label will be omitted.
 
 ___
 
+### placeholder
+
+• `Optional` **placeholder**: `string`
+
+An optional placeholder value, in case the property value is null or undefined.
+
+___
+
 ### property
 
 • **property**: `string`

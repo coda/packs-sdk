@@ -794,6 +794,10 @@ export interface PropertyIdentifierDetails {
 	 */
 	label?: string;
 	/**
+	 * An optional placeholder value, in case the property value is null or undefined.
+	 */
+	placeholder?: string;
+	/**
 	 * The value of the property to reference. Can be either an exact property name or a json path.
 	 */
 	property: string;
