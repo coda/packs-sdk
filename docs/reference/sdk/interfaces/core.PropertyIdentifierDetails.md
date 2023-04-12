@@ -30,6 +30,7 @@ ___
 
 An optional placeholder value, which will be rendered when the property value is an empty value
 (null, undefined, "", [], {}). This will be used in the Pack card title, subtitle, and snippet.
+Not accessible within the Coda formula language.
 
 ___
 
