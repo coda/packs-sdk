@@ -890,7 +890,11 @@ const attributionSchema = z
 
 const propertySchema = z.union([
   z.string().min(1),
-  zodCompleteObject<PropertyIdentifier>({property: z.string().min(1), label: z.string().optional()}),
+  zodCompleteObject<PropertyIdentifier>({
+    property: z.string().min(1),
+    label: z.string().optional(),
+    placeholder: z.string().optional()
+  }),
 ]);
 
 const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
