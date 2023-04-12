@@ -794,7 +794,8 @@ export interface PropertyIdentifierDetails {
 	 */
 	label?: string;
 	/**
-	 * An optional placeholder value, in case the property value is null or undefined.
+	 * An optional placeholder value, which will be rendered when the property value is an empty value
+	 * (null, undefined, "", [], {}).
 	 */
 	placeholder?: string;
 	/**
