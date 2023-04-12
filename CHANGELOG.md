@@ -7,7 +7,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ### Changed
 
 - Switched the node package manager from yarn to pnpm. This only affects developers contributing changes to the packs-sdk repo.
-- Added optional `placeholder` property to Pack property identifier definition as a default value when the property is null or undefined.
+- Added optional `placeholder` property to `PropertyIdentifierDetails` definition as a default value for Pack card titles, subtitles, and snippets when value is empty.
 
 ### Fixed
 

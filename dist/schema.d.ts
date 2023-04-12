@@ -761,7 +761,7 @@ export interface PropertyIdentifierDetails {
     label?: string;
     /**
      * An optional placeholder value, which will be rendered when the property value is an empty value
-     * (null, undefined, "", [], {}).
+     * (null, undefined, "", [], \{\}). This will be used in the Pack card title, subtitle, and snippet.
      */
     placeholder?: string;
     /**
