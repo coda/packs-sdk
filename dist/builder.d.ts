@@ -1,21 +1,25 @@
 import type { Authentication } from './types';
 import type { AuthenticationDef } from './types';
+import type { Autocomplete } from './api';
+import type { AutocompleteOptions } from './api';
 import type { BasicPackDefinition } from './types';
 import { ConnectionRequirement } from './api_types';
 import type { DynamicSyncTableOptions } from './api';
 import type { Format } from './types';
 import type { Formula } from './api';
 import type { FormulaDefinition } from './api';
+import type { NumberSchema } from './schema';
 import type { ObjectSchema } from './schema';
 import type { ObjectSchemaDefinition } from './schema';
 import type { PackVersionDefinition } from './types';
 import type { ParamDefs } from './api_types';
 import type { Schema } from './schema';
+import type { StringSchema } from './schema';
 import type { SyncTable } from './api';
 import type { SyncTableOptions } from './api';
 import type { SystemAuthentication } from './types';
 import type { SystemAuthenticationDef } from './types';
-import type { ValueType } from './schema';
+import { ValueType } from './schema';
 /**
  * Creates a new skeleton pack definition that can be added to.
  *
@@ -48,6 +52,10 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * See {@link PackVersionDefinition.networkDomains}.
      */
     networkDomains: string[];
+    /**
+     * @hidden
+     */
+    autocompletes: Autocomplete[];
     /**
      * See {@link PackVersionDefinition.defaultAuthentication}.
      */
@@ -114,7 +122,11 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * });
      * ```
      */
-    addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>({ name, description, identityName, schema, formula, connectionRequirement, propertyAutocomplete, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaT>): this;
+    addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>({ name, description, identityName, schema, formula, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaT>): this;
+    /**
+     * @hidden
+     */
+    addAutocomplete<SchemaT extends Schema>({ name, type, schema, execute, }: AutocompleteOptions<ValueType.String, StringSchema> | AutocompleteOptions<ValueType.Number, NumberSchema> | AutocompleteOptions<ValueType.Object, SchemaT>): this;
     /**
      * Adds a dynamic sync table definition to this pack.
      *

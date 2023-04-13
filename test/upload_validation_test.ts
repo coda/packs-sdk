@@ -786,7 +786,7 @@ describe('Pack metadata Validation', () => {
             parameters: [],
             examples: [],
           },
-          propertyAutocomplete: () => [],
+          // propertyAutocomplete: () => [],
         });
 
         const metadata = createFakePackVersionMetadata(

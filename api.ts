@@ -347,7 +347,11 @@ export type GenericDynamicSyncTable = DynamicSyncTableDef<any, any, ParamDefs, a
 export type SyncTable = GenericSyncTable | GenericDynamicSyncTable;
 
 /** @hidden */
-export interface Autocomplete {}
+export interface Autocomplete {
+  name: string;
+  // formula: PropertyAutocompleteMetadataFunction<any>;
+  formula: PropertyAutocompleteMetadataFormula<any>;
+}
 
 /**
  * Helper to determine if an error is considered user-visible and can be shown in the UI.
@@ -1379,9 +1383,9 @@ export type MetadataFunction = (
 /**
  * A JavaScript function for property autocomplete.
  */
-type PropertyAutocompleteMetadataFunction<ResultT extends PackFormulaResult> = (
+type PropertyAutocompleteMetadataFunction<ResultT extends PackFormulaResult[]> = (
   context: PropertyAutocompleteExecutionContext,
-) => Promise<ResultT[]> | ResultT[];
+) => Promise<ResultT> | ResultT;
 
 /**
  * The type of values that will be accepted as a metadata formula definition. This can either
@@ -1432,63 +1436,38 @@ export function makeMetadataFormula(
 /**
  * @hidden
  */
-export function makePropertyAutocompleteFormula<
-  SchemaT extends Schema,
-  ValueT extends ValueType,
-  // ResultT extends PackFormulaResult,
->({
+export function makePropertyAutocompleteFormula<SchemaT extends Schema>({
   execute,
-  type,
   schema,
 }: {
-  execute: PropertyAutocompleteMetadataFunction<SchemaType<ArraySchema<SchemaT>>>;
-  type: ValueT;
+  execute: PropertyAutocompleteMetadataFunction<Array<SchemaType<SchemaT>>>;
   schema: SchemaT;
-  // resultType: ResultT,
-}): // options?: {connectionRequirement?: ConnectionRequirement},
-PropertyAutocompleteMetadataFormula<SchemaT> {
-  // const arraySchema: ArraySchema<SchemaT> = {
-  //   type: ValueType.Array,
-  //   items: schema,
-  // };
-
+}): PropertyAutocompleteMetadataFormula<SchemaT> {
   if (!(execute instanceof Function)) {
     throw new Error(`Value for propertyAutocomplete must be a function`);
   }
 
   type ResultT = SchemaType<ArraySchema<SchemaT>>;
 
+  // SchemaType<ArraySchema<T>> is equivalen to Array<SchemaType<T>>
+  const executeRetyped = execute as PropertyAutocompleteMetadataFunction<SchemaType<ArraySchema<SchemaT>>>;
+
   const innerExecute = async ([]: ParamValues<[]>, context: ExecutionContext): Promise<ResultT> => {
-    const result = await execute(context as PropertyAutocompleteExecutionContext);
+    const result = await executeRetyped(context as PropertyAutocompleteExecutionContext);
     return result;
   };
 
   const formulaDefn: ArrayFormulaDef<[], SchemaT> = {
     connectionRequirement: ConnectionRequirement.Optional,
     execute: innerExecute,
-    // async execute([], context) {
-    //   const result = await execute(context as PropertyAutocompleteExecutionContext);
-    //   return result;
-    // },
     name: '',
     description: '',
     parameters: [],
     resultType: ValueType.Array,
-    items: {type: schema},
+    items: {type: schema} as any,
   };
   const formula = makeFormula<[], ValueType.Array, SchemaT>(formulaDefn);
   return formula;
-
-  // return makeObjectFormula({
-  //   name: 'getPropertyAutocompleteMetadata',
-  //   description: 'Gets property autocomplete',
-  //   execute([], context) {
-  //     return execute(context as PropertyAutocompleteExecutionContext);
-  //   },
-  //   parameters: [],
-  //   examples: [],
-  //   connectionRequirement: options?.connectionRequirement || ConnectionRequirement.Optional,
-  // });
 }
 
 /**
@@ -1750,15 +1729,32 @@ export interface SyncTableOptions<
   dynamicOptions?: DynamicOptions;
 }
 
+// interface AutocompleteOptionsObject<SchemaT extends Schema> {
+//   execute: PropertyAutocompleteMetadataFunction<Array<SchemaType<SchemaT>>>;
+//   schema: SchemaT;
+//   type: ValueType.Object;
+// }
+
 /**
  * @hidden
  */
-export interface AutocompleteOptions<ResultT extends ValueType, SchemaT extends Schema> {
-  name: string;
-  execute: PropertyAutocompleteMetadataFunction<ResultT>;
-  type: ResultT;
-  // options: ResultT[];
-}
+export type AutocompleteOptions<ResultT extends ValueType, SchemaT extends Schema> = ResultT extends ValueType.Object
+  ? {
+      name: string;
+      execute: PropertyAutocompleteMetadataFunction<Array<SchemaType<SchemaT>>>;
+      type: ResultT;
+      schema: SchemaT;
+      // options: ResultT[];
+    }
+  : {
+      name: string;
+      execute: PropertyAutocompleteMetadataFunction<
+        ResultT extends ValueType.String ? string[] : ResultT extends ValueType.Number ? number[] : never
+      >;
+      type: ResultT;
+      schema?: undefined;
+      // options: ResultT[];
+    };
 
 /**
  * Options provided when defining a dynamic sync table.

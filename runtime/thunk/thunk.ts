@@ -88,7 +88,7 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
 }: FindAndExecutionPackFunctionArgs<T>): Promise<
   GenericSyncFormulaResult | GenericSyncUpdateResultMarshaled | PackFormulaResult
 > {
-  const {syncTables, defaultAuthentication} = manifest;
+  const {syncTables, defaultAuthentication, autocompletes} = manifest;
 
   switch (formulaSpec.type) {
     case FormulaType.Standard: {
@@ -141,8 +141,8 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
           }
           break;
         case MetadataFormulaType.PropertyAutocomplete:
-          const syncTable = syncTables?.find(table => table.name === formulaSpec.syncTableName);
-          const autocompleteFn = ensureExists(syncTable?.propertyAutocomplete);
+          const autocomplete = autocompletes?.find(autocomplete => autocomplete.name === formulaSpec.autocompleteName);
+          const autocompleteFn = ensureExists(autocomplete?.formula);
           const propertyValues = {};
 
           const cacheKeysUsed: string[] = [];
@@ -179,10 +179,10 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
             },
           });
 
-          const packResult: PropertyAutocompleteResults = await autocompleteFn.execute(
+          const packResult = (await autocompleteFn.execute(
             params as any,
             propertyAutocompleteExecutionContext,
-          );
+          )) as PropertyAutocompleteResults;
           const result: PropertyAutocompleteAnnotatedResult = {
             packResult: normalizePropertyAutocompleteResults(packResult),
             propertiesUsed: cacheKeysUsed,

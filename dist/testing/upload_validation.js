@@ -930,6 +930,10 @@ const formulaMetadataSchema = z
         paramNames.add(param.name);
     }
 });
+const autocompleteSchema = zodCompleteObject({
+    name: z.string(),
+    formula: formulaMetadataSchema,
+});
 const formatMetadataSchema = zodCompleteObject({
     name: z.string().max(exports.Limits.BuildingBlockName),
     formulaNamespace: z.string().optional(),
@@ -1032,6 +1036,20 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject({
             context.addIssue({
                 code: z.ZodIssueCode.custom,
                 message: `Formula names must be unique. Found duplicate name "${dupe}".`,
+            });
+        }
+    }),
+    autocompletes: z
+        .array(autocompleteSchema)
+        .max(exports.Limits.BuildingBlockCountPerType)
+        .optional()
+        .default([])
+        .superRefine((data, context) => {
+        const autocompleteNames = data.map(formulaDef => formulaDef.name);
+        for (const dupe of getNonUniqueElements(autocompleteNames)) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `Autocomplete names must be unique. Found duplicate name "${dupe}".`,
             });
         }
     }),

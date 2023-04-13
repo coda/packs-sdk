@@ -40,7 +40,7 @@ async function findAndExecutePackFunction({ shouldWrapError = true, ...args }) {
 }
 exports.findAndExecutePackFunction = findAndExecutePackFunction;
 async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, executionContext, updates, }) {
-    const { syncTables, defaultAuthentication } = manifest;
+    const { syncTables, defaultAuthentication, autocompletes } = manifest;
     switch (formulaSpec.type) {
         case types_2.FormulaType.Standard: {
             const formula = (0, helpers_1.findFormula)(manifest, formulaSpec.formulaName);
@@ -81,8 +81,8 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                     }
                     break;
                 case types_3.MetadataFormulaType.PropertyAutocomplete:
-                    const syncTable = syncTables === null || syncTables === void 0 ? void 0 : syncTables.find(table => table.name === formulaSpec.syncTableName);
-                    const autocompleteFn = (0, ensure_1.ensureExists)(syncTable === null || syncTable === void 0 ? void 0 : syncTable.propertyAutocomplete);
+                    const autocomplete = autocompletes === null || autocompletes === void 0 ? void 0 : autocompletes.find(autocomplete => autocomplete.name === formulaSpec.autocompleteName);
+                    const autocompleteFn = (0, ensure_1.ensureExists)(autocomplete === null || autocomplete === void 0 ? void 0 : autocomplete.formula);
                     const propertyValues = {};
                     const cacheKeysUsed = [];
                     function recordPropertyAccess(key) {
@@ -112,7 +112,7 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                             return formulaSpec.search;
                         },
                     });
-                    const packResult = await autocompleteFn.execute(params, propertyAutocompleteExecutionContext);
+                    const packResult = (await autocompleteFn.execute(params, propertyAutocompleteExecutionContext));
                     const result = {
                         packResult: (0, api_4.normalizePropertyAutocompleteResults)(packResult),
                         propertiesUsed: cacheKeysUsed,

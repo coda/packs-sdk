@@ -3,6 +3,7 @@ import type {AWSAssumeRoleAuthentication} from '../types';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '../schema';
 import {AuthenticationType} from '../types';
+import type {Autocomplete} from '../api';
 import {BooleanHintValueTypes} from '../schema';
 import type {BooleanPackFormula} from '../api';
 import type {BooleanSchema} from '../schema';
@@ -1150,6 +1151,11 @@ const formulaMetadataSchema = z
     }
   });
 
+const autocompleteSchema = zodCompleteObject<Autocomplete>({
+  name: z.string(),
+  formula: formulaMetadataSchema,
+});
+
 const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
   name: z.string().max(Limits.BuildingBlockName),
   formulaNamespace: z.string().optional(), // Will be removed once we deprecate namespace objects.
@@ -1272,6 +1278,20 @@ const unrefinedPackVersionMetadataSchema = zodCompleteObject<PackVersionMetadata
         context.addIssue({
           code: z.ZodIssueCode.custom,
           message: `Formula names must be unique. Found duplicate name "${dupe}".`,
+        });
+      }
+    }),
+  autocompletes: z
+    .array(autocompleteSchema)
+    .max(Limits.BuildingBlockCountPerType)
+    .optional()
+    .default([])
+    .superRefine((data, context) => {
+      const autocompleteNames = data.map(formulaDef => formulaDef.name);
+      for (const dupe of getNonUniqueElements(autocompleteNames)) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Autocomplete names must be unique. Found duplicate name "${dupe}".`,
         });
       }
     }),

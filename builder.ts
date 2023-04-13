@@ -9,17 +9,18 @@ import type {DynamicSyncTableOptions} from './api';
 import type {Format} from './types';
 import type {Formula} from './api';
 import type {FormulaDefinition} from './api';
+import type {NumberSchema} from './schema';
 import type {ObjectSchema} from './schema';
 import type {ObjectSchemaDefinition} from './schema';
 import type {PackVersionDefinition} from './types';
 import type {ParamDefs} from './api_types';
 import type {Schema} from './schema';
+import type {StringSchema} from './schema';
 import type {SyncTable} from './api';
 import type {SyncTableOptions} from './api';
 import type {SystemAuthentication} from './types';
 import type {SystemAuthenticationDef} from './types';
-import type {ValueType} from './schema';
-import {exec} from 'child_process';
+import {ValueType} from './schema';
 import {isDynamicSyncTable} from './api';
 import {makeDynamicSyncTable} from './api';
 import {makeFormula} from './api';
@@ -192,19 +193,46 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     return this;
   }
 
-  addAutocomplete<ResultT extends ValueType, SchemaT extends Schema>({
+  /**
+   * @hidden
+   */
+  addAutocomplete<SchemaT extends Schema>({
     name,
     type,
     // options,
+    schema,
     execute,
-  }: AutocompleteOptions<ResultT, SchemaT>) {
-    const formula = makePropertyAutocompleteFormula({execute, type /* , schema */});
-    this.autocompletes.push({
-      name,
-      type,
-      // options,
-      formula,
-    });
+  }:
+    | AutocompleteOptions<ValueType.String, StringSchema>
+    | AutocompleteOptions<ValueType.Number, NumberSchema>
+    | AutocompleteOptions<ValueType.Object, SchemaT>): this {
+    if (type === ValueType.String) {
+      const schema: StringSchema = {type: ValueType.String};
+      const formula = makePropertyAutocompleteFormula({execute, schema});
+      this.autocompletes.push({
+        name,
+        // type,
+        // options,
+        formula,
+      });
+    } else if (type === ValueType.Number) {
+      const schema: NumberSchema = {type: ValueType.Number};
+      const formula = makePropertyAutocompleteFormula({execute, schema});
+      this.autocompletes.push({
+        name,
+        // type,
+        // options,
+        formula,
+      });
+    } else {
+      const formula = makePropertyAutocompleteFormula({execute, schema});
+      this.autocompletes.push({
+        name,
+        // type,
+        // options,
+        formula,
+      });
+    }
     return this;
   }
 
