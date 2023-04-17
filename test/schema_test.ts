@@ -228,9 +228,13 @@ describe('Schema', () => {
           "What's your name?": {type: schema.ValueType.String},
           'Enter the date in MM.DD.YYYY format': {type: schema.ValueType.String},
           'fruit [choose multiple]': {type: schema.ValueType.String},
+          subtitle: {type: schema.ValueType.String},
         },
         titleProperty: 'Enter the date in MM.DD.YYYY format',
         snippetProperty: 'another.boo',
+        subtitleProperties: [
+          {property: 'subtitle', placeholder: 'Empty'},
+        ]
       });
       const normalized = schema.normalizeSchema(objectSchema);
       // Deep copy to remove undefined values
@@ -251,9 +255,11 @@ describe('Schema', () => {
             Baz: {type: schema.ValueType.Number, fromKey: 'baz', mutable: true, autocomplete: true},
           },
         },
+        Subtitle: {type: schema.ValueType.String, fromKey: 'subtitle'},
       });
       assert.deepEqual((normalized as schema.GenericObjectSchema).titleProperty, 'EnterTheDateInMMDDYYYYFormat');
       assert.deepEqual((normalized as schema.GenericObjectSchema).snippetProperty, 'Another.Boo');
+      assert.deepEqual((normalized as schema.GenericObjectSchema).subtitleProperties, [{property: 'Subtitle', label: undefined, placeholder: 'Empty'}]);
     });
   });
 });
