@@ -223,7 +223,7 @@ Learn more about this approach in the [two-way sync guide][two_way_sync].
 
 ## Referencing rows from other sync tables {: #references}
 
-It's often the case that the different synced items in a Pack are related to each other. For example, a Pack may have sync tables for projects and tasks, where each task belongs to a single project. Using references you can connect these two tables together. References in sync tables work like [Lookup columns][hc_lookups] in regular tables.
+It's often the case that the different synced items in a Pack are related to each other. For example, a Pack may have sync tables for projects and tasks, where each task belongs to a single project. Using references you can connect these two tables together. References in sync tables work like [relation columns][hc_relations] in regular tables.
 
 A reference must specify the identity of the target table as well as the ID of the target row. If that row has already been synced to the doc, then the reference is replaced with the data from that row. Otherwise a grayed out chip is displayed, indicating that the referenced row hasn't been synced yet.
 
@@ -279,7 +279,7 @@ Since the properties themselves may use the [`fromKey`][fromKey] option to load 
 [actions]: ../actions.md
 [dynamic_sync_tables]: dynamic.md
 [dynamic_sync_tables_schema_only]: dynamic.md#schema-only
-[hc_lookups]: https://help.coda.io/en/articles/1385997-using-lookups#the-lookup-column-format
+[hc_relations]: https://help.coda.io/en/articles/1385997-connect-tables-with-relation-columns
 [sample_continuation]: ../../../samples/topic/sync-table.md#with-continuation
 [sample_reference]: ../../../samples/topic/sync-table.md#with-row-references
 [parmeters]: ../../basics/parameters/index.md

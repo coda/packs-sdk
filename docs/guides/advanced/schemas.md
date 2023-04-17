@@ -409,7 +409,7 @@ let MovieSchema = coda.makeObjectSchema({
 
 ### Reference schemas {: #references}
 
-Reference schemas are used by sync tables to create lookups between tables. See the [Sync tables guide][sync_tables_references] for more information on how row references work.
+Reference schemas are used by sync tables to create relations between tables. See the [Sync tables guide][sync_tables_references] for more information on how row references work.
 
 The simplest way to create a reference schema is to use the helper function [`makeReferenceSchemaFromObjectSchema`][makeReferenceSchemaFromObjectSchema]. Simply pass in the full schema and sync table's `identityName` and it will be converted to a reference schema.
 

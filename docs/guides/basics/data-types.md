@@ -426,7 +426,7 @@ The columns of a Coda table are strongly typed, and the data types in the Pack S
 | Image         | ✅ Yes     | `String`                 | `ImageAttachment` | [`ImageSchema`][ImageSchema]                                                                  |
 | Image URL     | ✅ Yes     | `String`                 | `ImageReference`  | [`ImageSchema`][ImageSchema]                                                                  |
 | File          | ✅ Yes     | `String`                 | `Attachment`      |                                                                                               |
-| Lookup        | ✅ Yes     | `Object`                 | `Reference`       |                                                                                               |
+| Relation      | ✅ Yes     | `Object`                 | `Reference`       |                                                                                               |
 
 [^1]: Embed isn't a column type in Coda, but it can be used in a table or on the canvas to embed content.
 [^2]: Control column types will only render correctly in a sync table, and will not be interactive.
