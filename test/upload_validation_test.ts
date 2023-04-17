@@ -2208,7 +2208,7 @@ describe('Pack metadata Validation', () => {
         await validateJson(
           metadataForFormulaWithObjectSchema({
             ...baseMetadata,
-            titleProperty: {property: baseMetadata.titleProperty as string, label: 'new label'},
+            titleProperty: {property: baseMetadata.titleProperty as string, label: 'new label', placeholder: 'hos'},
           }),
         );
         await validateJson(
