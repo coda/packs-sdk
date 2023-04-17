@@ -581,10 +581,11 @@ function normalizeSchemaPropertyIdentifier(key, normalizedProperties) {
     if (typeof key === 'string') {
         return normalizeSchemaKeyPath(key, normalizedProperties);
     }
-    const { label, property: value } = key;
+    const { label, property: value, placeholder } = key;
     return {
         property: normalizeSchemaKeyPath(value, normalizedProperties),
         label,
+        placeholder,
     };
 }
 /**
