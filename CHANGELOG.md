@@ -4,6 +4,9 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Fixed
+- Fixed an issue with `placeholder` property being stripped out of the `PropertyIdentifierDetails` schema.
+
 ## [1.3.3] - 2023-04-12
 
 ### Changed
