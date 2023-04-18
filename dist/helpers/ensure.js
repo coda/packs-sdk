@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.assertCondition = exports.ensureExists = exports.ensureNonEmptyString = exports.ensureUnreachable = void 0;
+exports.ensureNever = exports.assertCondition = exports.ensureExists = exports.ensureNonEmptyString = exports.ensureUnreachable = void 0;
 const api_1 = require("../api");
 /**
  * Helper for TypeScript to make sure that handling of code forks is exhaustive,
@@ -83,3 +83,9 @@ function assertCondition(condition, message) {
     }
 }
 exports.assertCondition = assertCondition;
+/**
+ * Helper to check that a given type is empty/never at compile time.
+ * In particular, useful to check whether a given a object is empty via `ensureNever<keyof typeof obj>()`.
+ */
+function ensureNever(_) { }
+exports.ensureNever = ensureNever;
