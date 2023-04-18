@@ -81,3 +81,13 @@ export function assertCondition(condition: any, message?: string): asserts condi
     throw new (getErrorConstructor(message))(message || 'Assertion failed');
   }
 }
+
+/**
+ * Helper to check that a given array is empty at compile time.
+ * In particular, useful to check whether a given a object is empty via `ensureEmptyArray(Object.keys(obj))`
+ */
+export function ensureEmptyArray(arr: never[], message?: string): void {
+  if (arr.length !== 0) {
+    throw new Error(message || 'Unexpected non-empty array');
+  }
+}
