@@ -28,6 +28,9 @@ export declare enum ValueType {
 	 */
 	Object = "object"
 }
+declare enum AutocompleteValueType {
+	Dynamic = "dynamic"
+}
 /**
  * Synthetic types that instruct Coda how to coerce values from primitives at ingestion time.
  */
@@ -2897,17 +2900,30 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
 /**
  * @hidden
  */
-export declare type AutocompleteOptions<ResultT extends ValueType, SchemaT extends Schema> = ResultT extends ValueType.Object ? {
-	name: string;
-	execute: PropertyAutocompleteMetadataFunction<Array<SchemaType<SchemaT>>>;
-	type: ResultT;
-	schema: SchemaT;
-} : {
+export interface PrimitiveAutocompleteOptions<ResultT extends ValueType.String | ValueType.Number> {
 	name: string;
 	execute: PropertyAutocompleteMetadataFunction<ResultT extends ValueType.String ? string[] : ResultT extends ValueType.Number ? number[] : never>;
 	type: ResultT;
 	schema?: undefined;
-};
+}
+/**
+ * @hidden
+ */
+export interface ObjectAutocompleteOptions<SchemaT extends Schema> {
+	name: string;
+	execute: PropertyAutocompleteMetadataFunction<Array<SchemaType<SchemaT>>>;
+	type: ValueType.Object;
+	schema: SchemaT;
+}
+/**
+ * @hidden
+ */
+export interface DynamicAutocompleteOptions {
+	name: string;
+	execute: PropertyAutocompleteMetadataFunction<any[]>;
+	type: AutocompleteValueType.Dynamic;
+	schema?: undefined;
+}
 /**
  * Options provided when defining a dynamic sync table.
  */
@@ -4149,7 +4165,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	/**
 	 * @hidden
 	 */
-	addAutocomplete<SchemaT extends Schema>({ name, type, schema, execute, }: AutocompleteOptions<ValueType.String, StringSchema> | AutocompleteOptions<ValueType.Number, NumberSchema> | AutocompleteOptions<ValueType.Object, SchemaT>): this;
+	addAutocomplete<SchemaT extends Schema>({ name, type, schema, execute, }: PrimitiveAutocompleteOptions<ValueType.String> | PrimitiveAutocompleteOptions<ValueType.Number> | DynamicAutocompleteOptions | ObjectAutocompleteOptions<SchemaT>): this;
 	/**
 	 * Adds a dynamic sync table definition to this pack.
 	 *

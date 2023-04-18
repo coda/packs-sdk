@@ -1,20 +1,20 @@
 import type { Authentication } from './types';
 import type { AuthenticationDef } from './types';
 import type { Autocomplete } from './api';
-import type { AutocompleteOptions } from './api';
 import type { BasicPackDefinition } from './types';
 import { ConnectionRequirement } from './api_types';
+import type { DynamicAutocompleteOptions } from './api';
 import type { DynamicSyncTableOptions } from './api';
 import type { Format } from './types';
 import type { Formula } from './api';
 import type { FormulaDefinition } from './api';
-import type { NumberSchema } from './schema';
+import type { ObjectAutocompleteOptions } from './api';
 import type { ObjectSchema } from './schema';
 import type { ObjectSchemaDefinition } from './schema';
 import type { PackVersionDefinition } from './types';
 import type { ParamDefs } from './api_types';
+import type { PrimitiveAutocompleteOptions } from './api';
 import type { Schema } from './schema';
-import type { StringSchema } from './schema';
 import type { SyncTable } from './api';
 import type { SyncTableOptions } from './api';
 import type { SystemAuthentication } from './types';
@@ -126,7 +126,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
     /**
      * @hidden
      */
-    addAutocomplete<SchemaT extends Schema>({ name, type, schema, execute, }: AutocompleteOptions<ValueType.String, StringSchema> | AutocompleteOptions<ValueType.Number, NumberSchema> | AutocompleteOptions<ValueType.Object, SchemaT>): this;
+    addAutocomplete<SchemaT extends Schema>({ name, type, schema, execute, }: PrimitiveAutocompleteOptions<ValueType.String> | PrimitiveAutocompleteOptions<ValueType.Number> | DynamicAutocompleteOptions | ObjectAutocompleteOptions<SchemaT>): this;
     /**
      * Adds a dynamic sync table definition to this pack.
      *

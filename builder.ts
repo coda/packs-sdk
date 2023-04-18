@@ -2,18 +2,21 @@ import type {Authentication} from './types';
 import type {AuthenticationDef} from './types';
 import {AuthenticationType} from './types';
 import type {Autocomplete} from './api';
-import type {AutocompleteOptions} from './api';
 import type {BasicPackDefinition} from './types';
 import {ConnectionRequirement} from './api_types';
+import type {DynamicAutocompleteOptions} from './api';
 import type {DynamicSyncTableOptions} from './api';
 import type {Format} from './types';
 import type {Formula} from './api';
 import type {FormulaDefinition} from './api';
+import type {GenericObjectSchema} from './schema';
 import type {NumberSchema} from './schema';
+import type {ObjectAutocompleteOptions} from './api';
 import type {ObjectSchema} from './schema';
 import type {ObjectSchemaDefinition} from './schema';
 import type {PackVersionDefinition} from './types';
 import type {ParamDefs} from './api_types';
+import type {PrimitiveAutocompleteOptions} from './api';
 import type {Schema} from './schema';
 import type {StringSchema} from './schema';
 import type {SyncTable} from './api';
@@ -203,9 +206,10 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     schema,
     execute,
   }:
-    | AutocompleteOptions<ValueType.String, StringSchema>
-    | AutocompleteOptions<ValueType.Number, NumberSchema>
-    | AutocompleteOptions<ValueType.Object, SchemaT>): this {
+    | PrimitiveAutocompleteOptions<ValueType.String>
+    | PrimitiveAutocompleteOptions<ValueType.Number>
+    | DynamicAutocompleteOptions
+    | ObjectAutocompleteOptions<SchemaT>): this {
     if (type === ValueType.String) {
       const schema: StringSchema = {type: ValueType.String};
       const formula = makePropertyAutocompleteFormula({execute, schema, name});
@@ -225,7 +229,10 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
         formula,
       });
     } else {
-      const formula = makePropertyAutocompleteFormula({execute, schema, name});
+      // For dynamic schemas, some autocomplete functions need to be able to return more than one type.
+      const unknownSchema: GenericObjectSchema = {type: ValueType.Object, properties: {}};
+
+      const formula = makePropertyAutocompleteFormula({execute, schema: schema ?? (unknownSchema as SchemaT), name});
       this.autocompletes.push({
         name,
         // type,

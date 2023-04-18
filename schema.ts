@@ -38,6 +38,13 @@ export enum ValueType {
 }
 
 /**
+ * @hidden
+ */
+export enum AutocompleteValueType {
+  Dynamic = 'dynamic',
+}
+
+/**
  * Synthetic types that instruct Coda how to coerce values from primitives at ingestion time.
  */
 export enum ValueHintType {

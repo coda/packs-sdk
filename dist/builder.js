@@ -139,7 +139,9 @@ class PackDefinitionBuilder {
             });
         }
         else {
-            const formula = (0, api_4.makePropertyAutocompleteFormula)({ execute, schema, name });
+            // For dynamic schemas, some autocomplete functions need to be able to return more than one type.
+            const unknownSchema = { type: schema_1.ValueType.Object, properties: {} };
+            const formula = (0, api_4.makePropertyAutocompleteFormula)({ execute, schema: schema !== null && schema !== void 0 ? schema : unknownSchema, name });
             this.autocompletes.push({
                 name,
                 // type,

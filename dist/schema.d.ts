@@ -26,6 +26,12 @@ export declare enum ValueType {
     Object = "object"
 }
 /**
+ * @hidden
+ */
+export declare enum AutocompleteValueType {
+    Dynamic = "dynamic"
+}
+/**
  * Synthetic types that instruct Coda how to coerce values from primitives at ingestion time.
  */
 export declare enum ValueHintType {
