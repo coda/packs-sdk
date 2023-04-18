@@ -1,8 +1,8 @@
 import type {$Values} from './type_utils';
 import {assertCondition} from './helpers/ensure';
 import {deepCopy} from './helpers/object_utils';
-import {ensureEmptyArray} from './helpers/ensure';
 import {ensureExists} from './helpers/ensure';
+import {ensureNever} from './helpers/ensure';
 import {ensureNonEmptyString} from './helpers/ensure';
 import {ensureUnreachable} from './helpers/ensure';
 import {objectSchemaHelper} from './helpers/migration';
@@ -1441,7 +1441,7 @@ function normalizeSchemaPropertyIdentifier(
   }
 
   const {label, property: value, placeholder, ...rest} = key;
-  ensureEmptyArray(Object.keys(rest));
+  ensureNever<keyof typeof rest>();
   return {
     property: normalizeSchemaKeyPath(value, normalizedProperties),
     label,
