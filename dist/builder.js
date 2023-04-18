@@ -120,7 +120,7 @@ class PackDefinitionBuilder {
     schema, execute, }) {
         if (type === schema_1.ValueType.String) {
             const schema = { type: schema_1.ValueType.String };
-            const formula = (0, api_4.makePropertyAutocompleteFormula)({ execute, schema });
+            const formula = (0, api_4.makePropertyAutocompleteFormula)({ execute, schema, name });
             this.autocompletes.push({
                 name,
                 // type,
@@ -130,7 +130,7 @@ class PackDefinitionBuilder {
         }
         else if (type === schema_1.ValueType.Number) {
             const schema = { type: schema_1.ValueType.Number };
-            const formula = (0, api_4.makePropertyAutocompleteFormula)({ execute, schema });
+            const formula = (0, api_4.makePropertyAutocompleteFormula)({ execute, schema, name });
             this.autocompletes.push({
                 name,
                 // type,
@@ -139,7 +139,7 @@ class PackDefinitionBuilder {
             });
         }
         else {
-            const formula = (0, api_4.makePropertyAutocompleteFormula)({ execute, schema });
+            const formula = (0, api_4.makePropertyAutocompleteFormula)({ execute, schema, name });
             this.autocompletes.push({
                 name,
                 // type,

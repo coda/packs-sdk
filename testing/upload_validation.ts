@@ -590,7 +590,7 @@ const booleanPackFormulaSchema = zodCompleteObject<Omit<BooleanPackFormula<any>,
     codaType: z.enum([...BooleanHintValueTypes]).optional(),
     description: z.string().optional(),
     mutable: z.boolean().optional(),
-    autocomplete: z.boolean().optional(),
+    valueAutocomplete: z.string().optional(),
   }).optional(),
 });
 
@@ -616,7 +616,7 @@ const imageAttributionNodeSchema = z.object({
 const basePropertyValidators = {
   description: z.string().optional(),
   mutable: z.boolean().optional(),
-  autocomplete: z.boolean().optional(),
+  valueAutocomplete: z.string().optional(),
   fromKey: z.string().optional(),
   required: z.boolean().optional(),
 };
@@ -769,6 +769,7 @@ const emailPropertySchema = zodCompleteStrictObject<EmailSchema & ObjectSchemaPr
   type: zodDiscriminant(ValueType.String),
   codaType: zodDiscriminant(ValueHintType.Email),
   display: z.nativeEnum(EmailDisplayType).optional(),
+  autocomplete: z.boolean().optional(),
   ...basePropertyValidators,
 });
 
@@ -894,7 +895,7 @@ const propertySchema = z.union([
   zodCompleteObject<PropertyIdentifier>({
     property: z.string().min(1),
     label: z.string().optional(),
-    placeholder: z.string().optional()
+    placeholder: z.string().optional(),
   }),
 ]);
 
@@ -1120,9 +1121,9 @@ const objectPropertyUnionSchema = z
   .union([booleanPropertySchema, numberPropertySchema, stringPropertySchema, arrayPropertySchema, genericObjectSchema])
   .refine(
     // BaseSchema isn't exported, so Pick<BooleanSchema | EmailSchema, ...> here is an approximation.
-    (baseSchema: Pick<BooleanSchema | EmailSchema, 'mutable' | 'autocomplete' | 'codaType'>) =>
-      baseSchema.codaType === ValueHintType.Email || !baseSchema?.autocomplete || baseSchema.mutable,
-    `"mutable" must be true to set "autocomplete" to true`,
+    (baseSchema: Pick<BooleanSchema | EmailSchema, 'mutable' | 'valueAutocomplete' | 'codaType'>) =>
+      baseSchema.codaType === ValueHintType.Email || !baseSchema?.valueAutocomplete || baseSchema.mutable,
+    `"mutable" must be true to set "valueAutocomplete" `,
   );
 
 const objectPackFormulaSchema = zodCompleteObject<Omit<ObjectPackFormula<any, any>, 'execute'>>({
@@ -1607,6 +1608,24 @@ const legacyPackMetadataSchema = validateFormulas(
       }
       return;
     }
+  })
+  .superRefine((untypedData, context) => {
+    const data = untypedData as PackVersionMetadata;
+
+    const allAutocompleteNames = new Set(data.autocompletes?.map(a => a.name) ?? []);
+
+    (data.syncTables || []).forEach((syncTable, i) => {
+      const schema: ObjectSchema<any, any> = syncTable.schema;
+      for (const [propertyName, childSchema] of Object.entries(schema.properties)) {
+        if (childSchema.valueAutocomplete && !allAutocompleteNames.has(childSchema.valueAutocomplete)) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['syncTables', i, 'properties', propertyName, 'valueAutocomplete'],
+            message: `"${childSchema.valueAutocomplete}" must be registered with addAutocomplete().`,
+          });
+        }
+      }
+    });
   });
 interface SchemaExtension {
   versionRange: string;

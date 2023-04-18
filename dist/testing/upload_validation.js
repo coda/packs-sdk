@@ -480,7 +480,7 @@ const booleanPackFormulaSchema = zodCompleteObject({
         codaType: z.enum([...schema_2.BooleanHintValueTypes]).optional(),
         description: z.string().optional(),
         mutable: z.boolean().optional(),
-        autocomplete: z.boolean().optional(),
+        valueAutocomplete: z.string().optional(),
     }).optional(),
 });
 // TODO(jonathan): Use zodCompleteObject on these after exporting these types.
@@ -501,7 +501,7 @@ const imageAttributionNodeSchema = z.object({
 const basePropertyValidators = {
     description: z.string().optional(),
     mutable: z.boolean().optional(),
-    autocomplete: z.boolean().optional(),
+    valueAutocomplete: z.string().optional(),
     fromKey: z.string().optional(),
     required: z.boolean().optional(),
 };
@@ -634,6 +634,7 @@ const emailPropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.String),
     codaType: zodDiscriminant(schema_12.ValueHintType.Email),
     display: z.nativeEnum(schema_5.EmailDisplayType).optional(),
+    autocomplete: z.boolean().optional(),
     ...basePropertyValidators,
 });
 const linkPropertySchema = zodCompleteStrictObject({
@@ -732,7 +733,7 @@ const propertySchema = z.union([
     zodCompleteObject({
         property: z.string().min(1),
         label: z.string().optional(),
-        placeholder: z.string().optional()
+        placeholder: z.string().optional(),
     }),
 ]);
 const genericObjectSchema = z.lazy(() => zodCompleteObject({
@@ -905,7 +906,7 @@ const objectPropertyUnionSchema = z
     .union([booleanPropertySchema, numberPropertySchema, stringPropertySchema, arrayPropertySchema, genericObjectSchema])
     .refine(
 // BaseSchema isn't exported, so Pick<BooleanSchema | EmailSchema, ...> here is an approximation.
-(baseSchema) => baseSchema.codaType === schema_12.ValueHintType.Email || !(baseSchema === null || baseSchema === void 0 ? void 0 : baseSchema.autocomplete) || baseSchema.mutable, `"mutable" must be true to set "autocomplete" to true`);
+(baseSchema) => baseSchema.codaType === schema_12.ValueHintType.Email || !(baseSchema === null || baseSchema === void 0 ? void 0 : baseSchema.valueAutocomplete) || baseSchema.mutable, `"mutable" must be true to set "valueAutocomplete" `);
 const objectPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
     resultType: zodDiscriminant(api_types_3.Type.object),
@@ -1334,6 +1335,23 @@ const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSc
         }
         return;
     }
+})
+    .superRefine((untypedData, context) => {
+    var _a, _b;
+    const data = untypedData;
+    const allAutocompleteNames = new Set((_b = (_a = data.autocompletes) === null || _a === void 0 ? void 0 : _a.map(a => a.name)) !== null && _b !== void 0 ? _b : []);
+    (data.syncTables || []).forEach((syncTable, i) => {
+        const schema = syncTable.schema;
+        for (const [propertyName, childSchema] of Object.entries(schema.properties)) {
+            if (childSchema.valueAutocomplete && !allAutocompleteNames.has(childSchema.valueAutocomplete)) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: ['syncTables', i, 'properties', propertyName, 'valueAutocomplete'],
+                    message: `"${childSchema.valueAutocomplete}" must be registered with addAutocomplete().`,
+                });
+            }
+        }
+    });
 });
 // Returns undefined for None or Various auth, otherwise returns a string array.
 function getAuthNetworkDomains(data) {

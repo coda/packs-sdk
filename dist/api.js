@@ -564,7 +564,7 @@ exports.makeMetadataFormula = makeMetadataFormula;
 /**
  * @hidden
  */
-function makePropertyAutocompleteFormula({ execute, schema, }) {
+function makePropertyAutocompleteFormula({ execute, schema, name, }) {
     if (!(execute instanceof Function)) {
         throw new Error(`Value for propertyAutocomplete must be a function`);
     }
@@ -577,13 +577,15 @@ function makePropertyAutocompleteFormula({ execute, schema, }) {
     const formulaDefn = {
         connectionRequirement: api_types_1.ConnectionRequirement.Optional,
         execute: innerExecute,
-        name: '',
+        name,
         description: '',
         parameters: [],
         resultType: schema_1.ValueType.Array,
-        items: { type: schema },
+        items: schema,
     };
     const formula = makeFormula(formulaDefn);
+    // eslint-disable-next-line no-console
+    console.log(`WEITZMAN: Made a formula that looks like this: ${JSON.stringify(formula)}`);
     return formula;
 }
 exports.makePropertyAutocompleteFormula = makePropertyAutocompleteFormula;

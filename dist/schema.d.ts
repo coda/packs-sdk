@@ -190,7 +190,7 @@ interface BaseSchema {
      *
      * @hidden
      */
-    autocomplete?: boolean;
+    valueAutocomplete?: string;
 }
 /**
  * A schema representing a return value or object property that is a boolean.

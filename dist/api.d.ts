@@ -889,9 +889,10 @@ export declare function makeMetadataFormula(execute: MetadataFunction, options?:
 /**
  * @hidden
  */
-export declare function makePropertyAutocompleteFormula<SchemaT extends Schema>({ execute, schema, }: {
+export declare function makePropertyAutocompleteFormula<SchemaT extends Schema>({ execute, schema, name, }: {
     execute: PropertyAutocompleteMetadataFunction<Array<SchemaType<SchemaT>>>;
     schema: SchemaT;
+    name: string;
 }): PropertyAutocompleteMetadataFormula<SchemaT>;
 /**
  * A result from a parameter autocomplete function that pairs a UI display value with

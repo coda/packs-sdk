@@ -1439,9 +1439,11 @@ export function makeMetadataFormula(
 export function makePropertyAutocompleteFormula<SchemaT extends Schema>({
   execute,
   schema,
+  name,
 }: {
   execute: PropertyAutocompleteMetadataFunction<Array<SchemaType<SchemaT>>>;
   schema: SchemaT;
+  name: string;
 }): PropertyAutocompleteMetadataFormula<SchemaT> {
   if (!(execute instanceof Function)) {
     throw new Error(`Value for propertyAutocomplete must be a function`);
@@ -1460,13 +1462,15 @@ export function makePropertyAutocompleteFormula<SchemaT extends Schema>({
   const formulaDefn: ArrayFormulaDef<[], SchemaT> = {
     connectionRequirement: ConnectionRequirement.Optional,
     execute: innerExecute,
-    name: '',
+    name,
     description: '',
     parameters: [],
     resultType: ValueType.Array,
-    items: {type: schema} as any,
+    items: schema,
   };
   const formula = makeFormula<[], ValueType.Array, SchemaT>(formulaDefn);
+  // eslint-disable-next-line no-console
+  console.log(`WEITZMAN: Made a formula that looks like this: ${JSON.stringify(formula)}`);
   return formula;
 }
 

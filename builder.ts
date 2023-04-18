@@ -208,7 +208,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     | AutocompleteOptions<ValueType.Object, SchemaT>): this {
     if (type === ValueType.String) {
       const schema: StringSchema = {type: ValueType.String};
-      const formula = makePropertyAutocompleteFormula({execute, schema});
+      const formula = makePropertyAutocompleteFormula({execute, schema, name});
       this.autocompletes.push({
         name,
         // type,
@@ -217,7 +217,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       });
     } else if (type === ValueType.Number) {
       const schema: NumberSchema = {type: ValueType.Number};
-      const formula = makePropertyAutocompleteFormula({execute, schema});
+      const formula = makePropertyAutocompleteFormula({execute, schema, name});
       this.autocompletes.push({
         name,
         // type,
@@ -225,7 +225,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
         formula,
       });
     } else {
-      const formula = makePropertyAutocompleteFormula({execute, schema});
+      const formula = makePropertyAutocompleteFormula({execute, schema, name});
       this.autocompletes.push({
         name,
         // type,
