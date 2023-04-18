@@ -57,7 +57,7 @@ export declare function ensureExists<T>(value: T | null | undefined, message?: s
  */
 export declare function assertCondition(condition: any, message?: string): asserts condition;
 /**
- * Helper to check that a given array is empty at compile time.
- * In particular, useful to check whether a given a object is empty via `ensureEmptyArray(Object.keys(obj))`
+ * Helper to check that a given type is empty/never at compile time.
+ * In particular, useful to check whether a given a object is empty via `ensureNever<keyof typeof obj>()`.
  */
 export declare function ensureNever<T extends never>(_?: T): void;
