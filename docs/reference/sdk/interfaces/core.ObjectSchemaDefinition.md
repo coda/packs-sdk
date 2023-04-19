@@ -105,6 +105,19 @@ projections have been created for them.
 
 ___
 
+### fixedId
+
+• `Optional` **fixedId**: `string`
+
+Optional fixed id for this property, used to support renames of properties over time. If specified,
+changes to the name of this property will not cause the property to be treated as a new property.
+
+#### Inherited from
+
+BaseSchema.fixedId
+
+___
+
 ### id
 
 • `Optional` **id**: `K`

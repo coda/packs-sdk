@@ -46,6 +46,19 @@ BaseNumberSchema.description
 
 ___
 
+### fixedId
+
+• `Optional` **fixedId**: `string`
+
+Optional fixed id for this property, used to support renames of properties over time. If specified,
+changes to the name of this property will not cause the property to be treated as a new property.
+
+#### Inherited from
+
+BaseNumberSchema.fixedId
+
+___
+
 ### format
 
 • `Optional` **format**: `string`
