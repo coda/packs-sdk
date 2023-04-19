@@ -1,7 +1,6 @@
 import type {AutocompleteSnippet} from '../types';
 import type {Example} from '../types';
 import {ExampleCategory} from '../types';
-import {ExampleStatus} from '../types';
 import {UrlType} from '../types';
 
 export const Snippets: AutocompleteSnippet[] = [
@@ -962,7 +961,6 @@ export const Examples: Example[] = [
       type: UrlType.SdkReferencePath,
       url: '/guides/blocks/cards',
     },
-    status: ExampleStatus.Beta,
     exampleSnippets: [
       {
         name: 'Template',
