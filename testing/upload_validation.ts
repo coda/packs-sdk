@@ -4,6 +4,7 @@ import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '../schema';
 import {AuthenticationType} from '../types';
 import type {Autocomplete} from '../api';
+import {AutocompleteValueType} from '../schema';
 import {BooleanHintValueTypes} from '../schema';
 import type {BooleanPackFormula} from '../api';
 import type {BooleanSchema} from '../schema';
@@ -1155,6 +1156,7 @@ const formulaMetadataSchema = z
 const autocompleteSchema = zodCompleteObject<Autocomplete>({
   name: z.string(),
   formula: formulaMetadataSchema,
+  type: z.union([z.nativeEnum(ValueType), z.nativeEnum(AutocompleteValueType)]),
 });
 
 const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
@@ -1612,16 +1614,32 @@ const legacyPackMetadataSchema = validateFormulas(
   .superRefine((untypedData, context) => {
     const data = untypedData as PackVersionMetadata;
 
-    const allAutocompleteNames = new Set(data.autocompletes?.map(a => a.name) ?? []);
-
     (data.syncTables || []).forEach((syncTable, i) => {
       const schema: ObjectSchema<any, any> = syncTable.schema;
       for (const [propertyName, childSchema] of Object.entries(schema.properties)) {
-        if (childSchema.valueAutocomplete && !allAutocompleteNames.has(childSchema.valueAutocomplete)) {
+        if (!childSchema.valueAutocomplete) {
+          continue;
+        }
+        const autocompleter = data.autocompletes?.find(a => a.name === childSchema.valueAutocomplete);
+
+        if (!autocompleter) {
           context.addIssue({
             code: z.ZodIssueCode.custom,
             path: ['syncTables', i, 'properties', propertyName, 'valueAutocomplete'],
             message: `"${childSchema.valueAutocomplete}" must be registered with addAutocomplete().`,
+          });
+          continue;
+        }
+
+        if (
+          autocompleter.type !== AutocompleteValueType.Dynamic &&
+          autocompleter.type !== schema.properties[propertyName].type
+        ) {
+          // TODO(dweitzman): Also check object structure?... We want to be a forgiving for references if we do that.
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['syncTables', i, 'properties', propertyName, 'valueAutocomplete'],
+            message: `Autocompleter "${childSchema.valueAutocomplete}" returns type ${autocompleter.type} but this property has type ${schema.properties[propertyName].type}.`,
           });
         }
       }

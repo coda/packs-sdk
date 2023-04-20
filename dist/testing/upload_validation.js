@@ -30,34 +30,35 @@ exports.zodErrorDetailToValidationError = exports.validateSyncTableSchema = expo
 const schema_1 = require("../schema");
 const types_1 = require("../types");
 const schema_2 = require("../schema");
-const api_types_1 = require("../api_types");
 const schema_3 = require("../schema");
+const api_types_1 = require("../api_types");
 const schema_4 = require("../schema");
 const schema_5 = require("../schema");
-const types_2 = require("../types");
 const schema_6 = require("../schema");
+const types_2 = require("../types");
 const schema_7 = require("../schema");
-const jsonpath_plus_1 = require("jsonpath-plus");
 const schema_8 = require("../schema");
-const api_types_2 = require("../api_types");
+const jsonpath_plus_1 = require("jsonpath-plus");
 const schema_9 = require("../schema");
+const api_types_2 = require("../api_types");
+const schema_10 = require("../schema");
 const types_3 = require("../types");
 const types_4 = require("../types");
-const schema_10 = require("../schema");
 const schema_11 = require("../schema");
+const schema_12 = require("../schema");
 const types_5 = require("../types");
 const api_types_3 = require("../api_types");
-const schema_12 = require("../schema");
 const schema_13 = require("../schema");
+const schema_14 = require("../schema");
 const zod_1 = require("zod");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
-const schema_14 = require("../schema");
+const schema_15 = require("../schema");
 const object_utils_1 = require("../helpers/object_utils");
 const object_utils_2 = require("../helpers/object_utils");
-const schema_15 = require("../schema");
 const schema_16 = require("../schema");
 const schema_17 = require("../schema");
+const schema_18 = require("../schema");
 const migration_1 = require("../helpers/migration");
 const semver_1 = __importDefault(require("semver"));
 const z = __importStar(require("zod"));
@@ -138,8 +139,8 @@ function validateSyncTableSchema(schema) {
         return validated.data;
     }
     // In case this was an ObjectSchema (describing a single row), wrap it up as an ArraySchema.
-    const syntheticArraySchema = (0, schema_16.makeSchema)({
-        type: schema_13.ValueType.Array,
+    const syntheticArraySchema = (0, schema_17.makeSchema)({
+        type: schema_14.ValueType.Array,
         items: schema,
     });
     const validatedAsObjectSchema = arrayPropertySchema.safeParse(syntheticArraySchema);
@@ -476,8 +477,8 @@ const booleanPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
     resultType: zodDiscriminant(api_types_3.Type.boolean),
     schema: zodCompleteObject({
-        type: zodDiscriminant(schema_13.ValueType.Boolean),
-        codaType: z.enum([...schema_2.BooleanHintValueTypes]).optional(),
+        type: zodDiscriminant(schema_14.ValueType.Boolean),
+        codaType: z.enum([...schema_3.BooleanHintValueTypes]).optional(),
         description: z.string().optional(),
         mutable: z.boolean().optional(),
         valueAutocomplete: z.string().optional(),
@@ -506,28 +507,28 @@ const basePropertyValidators = {
     required: z.boolean().optional(),
 };
 const booleanPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Boolean),
-    codaType: z.enum([...schema_2.BooleanHintValueTypes]).optional(),
+    type: zodDiscriminant(schema_14.ValueType.Boolean),
+    codaType: z.enum([...schema_3.BooleanHintValueTypes]).optional(),
     ...basePropertyValidators,
 });
 const numericPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Number),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Percent).optional(),
+    type: zodDiscriminant(schema_14.ValueType.Number),
+    codaType: zodDiscriminant(schema_13.ValueHintType.Percent).optional(),
     precision: z.number().optional(),
     useThousandsSeparator: z.boolean().optional(),
     ...basePropertyValidators,
 });
 const scalePropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Number),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Scale),
+    type: zodDiscriminant(schema_14.ValueType.Number),
+    codaType: zodDiscriminant(schema_13.ValueHintType.Scale),
     maximum: z.number().optional(),
-    icon: z.nativeEnum(schema_10.ScaleIconSet).optional(),
+    icon: z.nativeEnum(schema_11.ScaleIconSet).optional(),
     ...basePropertyValidators,
 });
 const optionalStringOrNumber = z.union([z.number(), z.string()]).optional();
 const sliderPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Number),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Slider),
+    type: zodDiscriminant(schema_14.ValueType.Number),
+    codaType: zodDiscriminant(schema_13.ValueHintType.Slider),
     maximum: optionalStringOrNumber,
     minimum: optionalStringOrNumber,
     step: optionalStringOrNumber,
@@ -535,8 +536,8 @@ const sliderPropertySchema = zodCompleteStrictObject({
     ...basePropertyValidators,
 });
 const progressBarPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Number),
-    codaType: zodDiscriminant(schema_12.ValueHintType.ProgressBar),
+    type: zodDiscriminant(schema_14.ValueType.Number),
+    codaType: zodDiscriminant(schema_13.ValueHintType.ProgressBar),
     maximum: optionalStringOrNumber,
     minimum: optionalStringOrNumber,
     step: optionalStringOrNumber,
@@ -544,37 +545,37 @@ const progressBarPropertySchema = zodCompleteStrictObject({
     ...basePropertyValidators,
 });
 const currencyPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Number),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Currency),
+    type: zodDiscriminant(schema_14.ValueType.Number),
+    codaType: zodDiscriminant(schema_13.ValueHintType.Currency),
     precision: z.number().optional(),
     currencyCode: z.string().optional(),
-    format: z.nativeEnum(schema_3.CurrencyFormat).optional(),
+    format: z.nativeEnum(schema_4.CurrencyFormat).optional(),
     ...basePropertyValidators,
 });
 const numericDatePropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Number),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Date),
+    type: zodDiscriminant(schema_14.ValueType.Number),
+    codaType: zodDiscriminant(schema_13.ValueHintType.Date),
     format: z.string().optional(),
     ...basePropertyValidators,
 });
 const numericTimePropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Number),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Time),
+    type: zodDiscriminant(schema_14.ValueType.Number),
+    codaType: zodDiscriminant(schema_13.ValueHintType.Time),
     format: z.string().optional(),
     ...basePropertyValidators,
 });
 const numericDateTimePropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Number),
-    codaType: zodDiscriminant(schema_12.ValueHintType.DateTime),
+    type: zodDiscriminant(schema_14.ValueType.Number),
+    codaType: zodDiscriminant(schema_13.ValueHintType.DateTime),
     dateFormat: z.string().optional(),
     timeFormat: z.string().optional(),
     ...basePropertyValidators,
 });
 const numericDurationPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Number),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Duration),
+    type: zodDiscriminant(schema_14.ValueType.Number),
+    codaType: zodDiscriminant(schema_13.ValueHintType.Duration),
     precision: z.number().optional(),
-    maxUnit: z.nativeEnum(schema_4.DurationUnit).optional(),
+    maxUnit: z.nativeEnum(schema_5.DurationUnit).optional(),
     ...basePropertyValidators,
 });
 const numberPropertySchema = z.union([
@@ -594,61 +595,61 @@ const numericPackFormulaSchema = zodCompleteObject({
     schema: numberPropertySchema.optional(),
 });
 const simpleStringPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.String),
-    codaType: z.enum([...schema_11.SimpleStringHintValueTypes]).optional(),
+    type: zodDiscriminant(schema_14.ValueType.String),
+    codaType: z.enum([...schema_12.SimpleStringHintValueTypes]).optional(),
     ...basePropertyValidators,
 });
 const stringDatePropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.String),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Date),
+    type: zodDiscriminant(schema_14.ValueType.String),
+    codaType: zodDiscriminant(schema_13.ValueHintType.Date),
     format: z.string().optional(),
     ...basePropertyValidators,
 });
 const stringTimePropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.String),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Time),
+    type: zodDiscriminant(schema_14.ValueType.String),
+    codaType: zodDiscriminant(schema_13.ValueHintType.Time),
     format: z.string().optional(),
     ...basePropertyValidators,
 });
 const stringDateTimePropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.String),
-    codaType: zodDiscriminant(schema_12.ValueHintType.DateTime),
+    type: zodDiscriminant(schema_14.ValueType.String),
+    codaType: zodDiscriminant(schema_13.ValueHintType.DateTime),
     dateFormat: z.string().optional(),
     timeFormat: z.string().optional(),
     ...basePropertyValidators,
 });
 const durationPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.String),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Duration),
+    type: zodDiscriminant(schema_14.ValueType.String),
+    codaType: zodDiscriminant(schema_13.ValueHintType.Duration),
     precision: z.number().optional(),
-    maxUnit: z.nativeEnum(schema_4.DurationUnit).optional(),
+    maxUnit: z.nativeEnum(schema_5.DurationUnit).optional(),
     ...basePropertyValidators,
 });
 const embedPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.String),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Embed),
+    type: zodDiscriminant(schema_14.ValueType.String),
+    codaType: zodDiscriminant(schema_13.ValueHintType.Embed),
     force: z.boolean().optional(),
     ...basePropertyValidators,
 });
 const emailPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.String),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Email),
-    display: z.nativeEnum(schema_5.EmailDisplayType).optional(),
+    type: zodDiscriminant(schema_14.ValueType.String),
+    codaType: zodDiscriminant(schema_13.ValueHintType.Email),
+    display: z.nativeEnum(schema_6.EmailDisplayType).optional(),
     autocomplete: z.boolean().optional(),
     ...basePropertyValidators,
 });
 const linkPropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.String),
-    codaType: zodDiscriminant(schema_12.ValueHintType.Url),
-    display: z.nativeEnum(schema_8.LinkDisplayType).optional(),
+    type: zodDiscriminant(schema_14.ValueType.String),
+    codaType: zodDiscriminant(schema_13.ValueHintType.Url),
+    display: z.nativeEnum(schema_9.LinkDisplayType).optional(),
     force: z.boolean().optional(),
     ...basePropertyValidators,
 });
 const imagePropertySchema = zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.String),
-    codaType: z.union([zodDiscriminant(schema_12.ValueHintType.ImageAttachment), zodDiscriminant(schema_12.ValueHintType.ImageReference)]),
-    imageOutline: z.nativeEnum(schema_7.ImageOutline).optional(),
-    imageCornerStyle: z.nativeEnum(schema_6.ImageCornerStyle).optional(),
+    type: zodDiscriminant(schema_14.ValueType.String),
+    codaType: z.union([zodDiscriminant(schema_13.ValueHintType.ImageAttachment), zodDiscriminant(schema_13.ValueHintType.ImageReference)]),
+    imageOutline: z.nativeEnum(schema_8.ImageOutline).optional(),
+    imageCornerStyle: z.nativeEnum(schema_7.ImageCornerStyle).optional(),
     ...basePropertyValidators,
 });
 const stringPropertySchema = z.union([
@@ -670,7 +671,7 @@ const stringPackFormulaSchema = zodCompleteObject({
 // TODO(jonathan): Give this a better type than ZodTypeAny after figuring out
 // recursive typing better.
 const arrayPropertySchema = z.lazy(() => zodCompleteStrictObject({
-    type: zodDiscriminant(schema_13.ValueType.Array),
+    type: zodDiscriminant(schema_14.ValueType.Array),
     items: objectPropertyUnionSchema,
     ...basePropertyValidators,
 }));
@@ -738,13 +739,13 @@ const propertySchema = z.union([
 ]);
 const genericObjectSchema = z.lazy(() => zodCompleteObject({
     ...basePropertyValidators,
-    type: zodDiscriminant(schema_13.ValueType.Object),
+    type: zodDiscriminant(schema_14.ValueType.Object),
     description: z.string().optional(),
     id: z.string().min(1).optional(),
     idProperty: z.string().min(1).optional(),
     primary: z.string().min(1).optional(),
     displayProperty: z.string().min(1).optional(),
-    codaType: z.enum([...schema_9.ObjectHintValueTypes]).optional(),
+    codaType: z.enum([...schema_10.ObjectHintValueTypes]).optional(),
     featured: z.array(z.string()).optional(),
     featuredProperties: z.array(z.string()).optional(),
     identity: zodCompleteObject({
@@ -811,7 +812,7 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
                 ? schema.properties[propertyValue]
                 : undefined;
             if (!propertySchema) {
-                const schemaPropertyPath = (0, schema_17.normalizePropertyValuePathIntoSchemaPath)(propertyValue);
+                const schemaPropertyPath = (0, schema_18.normalizePropertyValuePathIntoSchemaPath)(propertyValue);
                 propertySchema = (_a = (0, jsonpath_plus_1.JSONPath)({
                     path: schemaPropertyPath,
                     json: schema.properties,
@@ -850,18 +851,18 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
         }
     }
     const validateTitleProperty = () => {
-        return validateProperty('titleProperty', propertySchema => [schema_13.ValueType.String, schema_13.ValueType.Object].includes(propertySchema.type), `must refer to a "ValueType.String" or "ValueType.Object" property.`);
+        return validateProperty('titleProperty', propertySchema => [schema_14.ValueType.String, schema_14.ValueType.Object].includes(propertySchema.type), `must refer to a "ValueType.String" or "ValueType.Object" property.`);
     };
     const validateImageProperty = () => {
-        return validateProperty('imageProperty', imagePropertySchema => imagePropertySchema.type === schema_13.ValueType.String &&
-            [schema_12.ValueHintType.ImageAttachment, schema_12.ValueHintType.ImageReference].includes(imagePropertySchema.codaType), `must refer to a "ValueType.String" property with a "ValueHintType.ImageAttachment" or "ValueHintType.ImageReference" "codaType".`);
+        return validateProperty('imageProperty', imagePropertySchema => imagePropertySchema.type === schema_14.ValueType.String &&
+            [schema_13.ValueHintType.ImageAttachment, schema_13.ValueHintType.ImageReference].includes(imagePropertySchema.codaType), `must refer to a "ValueType.String" property with a "ValueHintType.ImageAttachment" or "ValueHintType.ImageReference" "codaType".`);
     };
     const validateSnippetProperty = () => {
-        return validateProperty('snippetProperty', snippetPropertySchema => snippetPropertySchema.type === schema_13.ValueType.String ||
-            (snippetPropertySchema.type === schema_13.ValueType.Array && snippetPropertySchema.items.type === schema_13.ValueType.String), `must refer to a "ValueType.String" property or array of strings.`);
+        return validateProperty('snippetProperty', snippetPropertySchema => snippetPropertySchema.type === schema_14.ValueType.String ||
+            (snippetPropertySchema.type === schema_14.ValueType.Array && snippetPropertySchema.items.type === schema_14.ValueType.String), `must refer to a "ValueType.String" property or array of strings.`);
     };
     const validateLinkProperty = () => {
-        return validateProperty('linkProperty', linkPropertySchema => linkPropertySchema.type === schema_13.ValueType.String && linkPropertySchema.codaType === schema_12.ValueHintType.Url, `must refer to a "ValueType.String" property with a "ValueHintType.Url" "codaType".`);
+        return validateProperty('linkProperty', linkPropertySchema => linkPropertySchema.type === schema_14.ValueType.String && linkPropertySchema.codaType === schema_13.ValueHintType.Url, `must refer to a "ValueType.String" property with a "ValueHintType.Url" "codaType".`);
     };
     const validateSubtitleProperties = () => {
         return validateProperty('subtitleProperties', subtitlePropertySchema => {
@@ -869,27 +870,27 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
                 return true;
             }
             switch (subtitlePropertySchema.codaType) {
-                case schema_12.ValueHintType.ImageAttachment:
-                case schema_12.ValueHintType.Attachment:
-                case schema_12.ValueHintType.ImageReference:
-                case schema_12.ValueHintType.Embed:
-                case schema_12.ValueHintType.Scale:
+                case schema_13.ValueHintType.ImageAttachment:
+                case schema_13.ValueHintType.Attachment:
+                case schema_13.ValueHintType.ImageReference:
+                case schema_13.ValueHintType.Embed:
+                case schema_13.ValueHintType.Scale:
                     return false;
-                case schema_12.ValueHintType.Currency:
-                case schema_12.ValueHintType.Date:
-                case schema_12.ValueHintType.DateTime:
-                case schema_12.ValueHintType.Duration:
-                case schema_12.ValueHintType.Email:
-                case schema_12.ValueHintType.Html:
-                case schema_12.ValueHintType.Markdown:
-                case schema_12.ValueHintType.Percent:
-                case schema_12.ValueHintType.Person:
-                case schema_12.ValueHintType.ProgressBar:
-                case schema_12.ValueHintType.Reference:
-                case schema_12.ValueHintType.Slider:
-                case schema_12.ValueHintType.Toggle:
-                case schema_12.ValueHintType.Time:
-                case schema_12.ValueHintType.Url:
+                case schema_13.ValueHintType.Currency:
+                case schema_13.ValueHintType.Date:
+                case schema_13.ValueHintType.DateTime:
+                case schema_13.ValueHintType.Duration:
+                case schema_13.ValueHintType.Email:
+                case schema_13.ValueHintType.Html:
+                case schema_13.ValueHintType.Markdown:
+                case schema_13.ValueHintType.Percent:
+                case schema_13.ValueHintType.Person:
+                case schema_13.ValueHintType.ProgressBar:
+                case schema_13.ValueHintType.Reference:
+                case schema_13.ValueHintType.Slider:
+                case schema_13.ValueHintType.Toggle:
+                case schema_13.ValueHintType.Time:
+                case schema_13.ValueHintType.Url:
                     return true;
                 default:
                     (0, ensure_2.ensureUnreachable)(subtitlePropertySchema.codaType);
@@ -906,7 +907,7 @@ const objectPropertyUnionSchema = z
     .union([booleanPropertySchema, numberPropertySchema, stringPropertySchema, arrayPropertySchema, genericObjectSchema])
     .refine(
 // BaseSchema isn't exported, so Pick<BooleanSchema | EmailSchema, ...> here is an approximation.
-(baseSchema) => baseSchema.codaType === schema_12.ValueHintType.Email || !(baseSchema === null || baseSchema === void 0 ? void 0 : baseSchema.valueAutocomplete) || baseSchema.mutable, `"mutable" must be true to set "valueAutocomplete" `);
+(baseSchema) => baseSchema.codaType === schema_13.ValueHintType.Email || !(baseSchema === null || baseSchema === void 0 ? void 0 : baseSchema.valueAutocomplete) || baseSchema.mutable, `"mutable" must be true to set "valueAutocomplete" `);
 const objectPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
     resultType: zodDiscriminant(api_types_3.Type.object),
@@ -934,6 +935,7 @@ const formulaMetadataSchema = z
 const autocompleteSchema = zodCompleteObject({
     name: z.string(),
     formula: formulaMetadataSchema,
+    type: z.union([z.nativeEnum(schema_14.ValueType), z.nativeEnum(schema_2.AutocompleteValueType)]),
 });
 const formatMetadataSchema = zodCompleteObject({
     name: z.string().max(exports.Limits.BuildingBlockName),
@@ -1337,17 +1339,29 @@ const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSc
     }
 })
     .superRefine((untypedData, context) => {
-    var _a, _b;
     const data = untypedData;
-    const allAutocompleteNames = new Set((_b = (_a = data.autocompletes) === null || _a === void 0 ? void 0 : _a.map(a => a.name)) !== null && _b !== void 0 ? _b : []);
     (data.syncTables || []).forEach((syncTable, i) => {
+        var _a;
         const schema = syncTable.schema;
         for (const [propertyName, childSchema] of Object.entries(schema.properties)) {
-            if (childSchema.valueAutocomplete && !allAutocompleteNames.has(childSchema.valueAutocomplete)) {
+            if (!childSchema.valueAutocomplete) {
+                continue;
+            }
+            const autocompleter = (_a = data.autocompletes) === null || _a === void 0 ? void 0 : _a.find(a => a.name === childSchema.valueAutocomplete);
+            if (!autocompleter) {
                 context.addIssue({
                     code: z.ZodIssueCode.custom,
                     path: ['syncTables', i, 'properties', propertyName, 'valueAutocomplete'],
                     message: `"${childSchema.valueAutocomplete}" must be registered with addAutocomplete().`,
+                });
+                continue;
+            }
+            if (autocompleter.type !== schema_2.AutocompleteValueType.Dynamic &&
+                autocompleter.type !== schema.properties[propertyName].type) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: ['syncTables', i, 'properties', propertyName, 'valueAutocomplete'],
+                    message: `Autocompleter "${childSchema.valueAutocomplete}" returns type ${autocompleter.type} but this property has type ${schema.properties[propertyName].type}.`,
                 });
             }
         }
@@ -1434,10 +1448,10 @@ const packMetadataSchemaBySdkVersion = [
     },
 ];
 function validateSchemaDeprecatedFields(schema, pathPrefix, context) {
-    if ((0, schema_15.isObject)(schema)) {
+    if ((0, schema_16.isObject)(schema)) {
         validateObjectSchemaDeprecatedFields(schema, pathPrefix, context);
     }
-    if ((0, schema_14.isArray)(schema)) {
+    if ((0, schema_15.isArray)(schema)) {
         validateSchemaDeprecatedFields(schema.items, [...pathPrefix, 'items'], context);
     }
 }

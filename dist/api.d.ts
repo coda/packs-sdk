@@ -282,6 +282,7 @@ export declare type SyncTable = GenericSyncTable | GenericDynamicSyncTable;
 /** @hidden */
 export interface Autocomplete {
     name: string;
+    type: ValueType | AutocompleteValueType;
     formula: PropertyAutocompleteMetadataFormula<any>;
 }
 /**

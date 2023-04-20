@@ -28,7 +28,10 @@ export declare enum ValueType {
 	 */
 	Object = "object"
 }
-declare enum AutocompleteValueType {
+/**
+ * @hidden
+ */
+export declare enum AutocompleteValueType {
 	Dynamic = "dynamic"
 }
 /**
@@ -2259,6 +2262,7 @@ export declare type SyncTable = GenericSyncTable | GenericDynamicSyncTable;
 /** @hidden */
 export interface Autocomplete {
 	name: string;
+	type: ValueType | AutocompleteValueType;
 	formula: PropertyAutocompleteMetadataFormula<any>;
 }
 /**

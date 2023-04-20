@@ -215,7 +215,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       const formula = makePropertyAutocompleteFormula({execute, schema, name});
       this.autocompletes.push({
         name,
-        // type,
+        type,
         // options,
         formula,
       });
@@ -224,7 +224,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       const formula = makePropertyAutocompleteFormula({execute, schema, name});
       this.autocompletes.push({
         name,
-        // type,
+        type,
         // options,
         formula,
       });
@@ -235,7 +235,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       const formula = makePropertyAutocompleteFormula({execute, schema: schema ?? (unknownSchema as SchemaT), name});
       this.autocompletes.push({
         name,
-        // type,
+        type,
         // options,
         formula,
       });

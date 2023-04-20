@@ -351,6 +351,7 @@ export type SyncTable = GenericSyncTable | GenericDynamicSyncTable;
 export interface Autocomplete {
   name: string;
   // formula: PropertyAutocompleteMetadataFunction<any>;
+  type: ValueType | AutocompleteValueType;
   formula: PropertyAutocompleteMetadataFormula<any>;
 }
 

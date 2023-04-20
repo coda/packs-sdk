@@ -123,7 +123,7 @@ class PackDefinitionBuilder {
             const formula = (0, api_4.makePropertyAutocompleteFormula)({ execute, schema, name });
             this.autocompletes.push({
                 name,
-                // type,
+                type,
                 // options,
                 formula,
             });
@@ -133,7 +133,7 @@ class PackDefinitionBuilder {
             const formula = (0, api_4.makePropertyAutocompleteFormula)({ execute, schema, name });
             this.autocompletes.push({
                 name,
-                // type,
+                type,
                 // options,
                 formula,
             });
@@ -144,7 +144,7 @@ class PackDefinitionBuilder {
             const formula = (0, api_4.makePropertyAutocompleteFormula)({ execute, schema: schema !== null && schema !== void 0 ? schema : unknownSchema, name });
             this.autocompletes.push({
                 name,
-                // type,
+                type,
                 // options,
                 formula,
             });
