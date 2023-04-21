@@ -515,6 +515,32 @@ let MovieSchema = coda.makeObjectSchema({
 <img src="../../../images/schemas_labels_custom.png" srcset="../../../images/schemas_labels_custom_2x.png 2x" class="screenshot" alt="Custom labels for subtitle properties">
 
 
+### Property placeholders
+
+When a property used in a card doesn't have a value set the corresponding section of the card is hidden. For example, an empty subtitle property will not render any label or value in the card's subtitle. However there are cases where you may want to show some default or fallback value to the user instead. While these default values could be injected in your formula code, you can simplify the process by specifying a placeholder value in the schema.
+
+To do so, use a [`PropertyIdentifierDetails`][PropertyIdentifierDetails] object to specify the property to use and set the `placeholder` field to the default / fallback value to display when the property is empty.
+
+```ts
+let MovieSchema = coda.makeObjectSchema({
+  // ...
+  subtitleProperties: [
+    "director",
+    { property: "year", placeholder: "In production" },
+    { property: "rating", placeholder: "TBD" },
+  ],
+});
+```
+
+<img src="../../../images/schemas_placeholders.png" srcset="../../../images/schemas_placeholders_2x.png 2x" class="screenshot" alt="Placeholders for subtitle properties">
+
+A property will be considered empty and fallback to the placeholder when it's value is one of the following: `null`, `undefined`, `""`, `[]`, `{}`. The placeholder is only used to render the card, and when using the Coda Formula Language to access the property it will still return the original value. Placeholders are currently only supported on the following fields:
+
+- [`titleProperty`][titleProperty]
+- [`subtitleProperties`][subtitleProperties]
+- [`snippetProperty`][snippetProperty]
+
+
 ## Property paths
 
 Object schema fields that expect a property name (`titleProperty`, `snippetProperty`, etc) also accept a path to a property on a nested object. The paths are specified using a subset of the [JSONPath syntax][jsonpath], which at it's simplest just joins the property names with a dot (like `property1.property2`).
