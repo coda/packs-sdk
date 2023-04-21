@@ -507,8 +507,6 @@ export interface EmailSchema extends BaseStringSchema<ValueHintType.Email> {
   codaType: ValueHintType.Email;
   /** How the email should be displayed in the UI. */
   display?: EmailDisplayType;
-  /** Whether to auto-complete the email domain during user input. */
-  autocomplete?: boolean;
 }
 
 /**

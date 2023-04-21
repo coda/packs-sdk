@@ -4,9 +4,14 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Changed
+
+- **Breaking Change** Removed the "autocomplete" property from EmailSchema. It wasn't useful in practice and we want to free up the name "autocomplete" on BaseSchema for better purposes.
+
 ## [1.3.4] - 2023-04-17
 
 ### Fixed
+
 - Fixed an issue with `placeholder` property being stripped out of the `PropertyIdentifierDetails` schema.
 
 ## [1.3.3] - 2023-04-12
@@ -585,6 +590,5 @@ await myHelper(context);
 [0.11.0]: https://github.com/coda/packs-sdk/compare/v0.9.0...v0.11.0
 [0.9.0]: https://github.com/coda/packs-sdk/compare/v0.8.2...v0.9.0
 [1.3.0]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.3.0
-
-[1.3.4]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.3.4
 [1.3.3]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.3.3
+[1.3.4]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.3.4

@@ -22,18 +22,6 @@ also an option in the user interface.
 
 ## Properties
 
-### autocomplete
-
-• `Optional` **autocomplete**: `boolean`
-
-Whether to auto-complete the email domain during user input.
-
-#### Overrides
-
-BaseStringSchema.autocomplete
-
-___
-
 ### codaType
 
 • **codaType**: [`Email`](../enums/core.ValueHintType.md#email)
