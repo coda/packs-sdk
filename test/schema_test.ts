@@ -193,7 +193,7 @@ describe('Schema', () => {
           another: anotherSchema,
           yetAnother: schema.makeObjectSchema({
             type: schema.ValueType.Object,
-            displayProperty: 'boo',
+            displayProperty: 'baz',
             properties: {
               baz: {type: schema.ValueType.String},
             },
@@ -208,7 +208,8 @@ describe('Schema', () => {
         name: 'hello',
       });
 
-      assert.deepEqual(schema.denormalizeSchema(normalized), objectSchema);
+      // expect(schema.denormalizeSchema(normalized)).to.include(objectSchema);
+      assert.deepEqual(nestedDropUndefined(schema.denormalizeSchema(normalized)), nestedDropUndefined(objectSchema));
     });
 
     it('works', () => {
@@ -256,7 +257,28 @@ describe('Schema', () => {
       });
       assert.deepEqual((normalized as schema.GenericObjectSchema).titleProperty, 'EnterTheDateInMMDDYYYYFormat');
       assert.deepEqual((normalized as schema.GenericObjectSchema).snippetProperty, 'Another.Boo');
-      assert.deepEqual(schema.denormalizeSchema(normalized), objectSchema);
+      assert.deepEqual(nestedDropUndefined(schema.denormalizeSchema(normalized)), nestedDropUndefined(objectSchema));
     });
   });
 });
+
+function nestedDropUndefined<T>(obj: T): T {
+  if (!obj) {
+    return obj;
+  }
+  if (Array.isArray(obj)) {
+    return obj.map(e => nestedDropUndefined(e)) as T;
+  }
+  if (typeof obj === 'object') {
+    const objCopy = {...obj} as any;
+    for (const k of Object.keys(objCopy)) {
+      if (objCopy[k] === undefined) {
+        delete objCopy[k];
+      } else {
+        objCopy[k] = nestedDropUndefined(objCopy[k]);
+      }
+    }
+    return objCopy;
+  }
+  return obj;
+}

@@ -1423,46 +1423,6 @@ export function normalizeSchemaKeyPath(key: string, normalizedProperties: Object
     .join('.');
 }
 
-function denormalizeSchemaKeyPath(
-  key: string,
-  denormalizedProperties: ObjectSchemaProperties,
-  rootSchema: Schema | undefined,
-): string {
-  // Try an exact match on the properties first.
-  if (denormalizedProperties.hasOwnProperty(denormalizeSchemaKey(key, rootSchema))) {
-    return denormalizeSchemaKey(key, rootSchema);
-  }
-
-  let currentSchema: Schema | undefined = rootSchema;
-  // Try splitting by . to handle json paths.
-  return key
-    .split('.')
-    .map(val => {
-      let partToNormalize = val;
-      let partToIgnoreNormalization = '';
-
-      let newSchema: Schema | undefined;
-      if (currentSchema?.type === ValueType.Object) {
-        newSchema = currentSchema.properties?.[val];
-      }
-
-      // Handles array pathing.
-      if (val.includes('[')) {
-        partToNormalize = val.substring(0, val.indexOf('['));
-        partToIgnoreNormalization = val.substring(val.indexOf('['));
-
-        if (newSchema?.type === ValueType.Array) {
-          newSchema = newSchema.items;
-        }
-      }
-
-      const result = denormalizeSchemaKey(partToNormalize, currentSchema) + partToIgnoreNormalization;
-      currentSchema = newSchema;
-      return result;
-    })
-    .join('.');
-}
-
 /**
  * Normalizes a schema PropertyIdentifier by converting it to PascalCase.
  */
@@ -1477,22 +1437,6 @@ function normalizeSchemaPropertyIdentifier(
   const {label, property: value} = key;
   return {
     property: normalizeSchemaKeyPath(value, denormalizedProperties),
-    label,
-  };
-}
-
-function denormalizeSchemaPropertyIdentifier(
-  key: PropertyIdentifier,
-  normalizedProperties: ObjectSchemaProperties,
-  schema: Schema | undefined,
-): PropertyIdentifier {
-  if (typeof key === 'string') {
-    return denormalizeSchemaKeyPath(key, normalizedProperties, schema);
-  }
-
-  const {label, property: value} = key;
-  return {
-    property: denormalizeSchemaKeyPath(value, normalizedProperties, schema),
     label,
   };
 }
@@ -1540,16 +1484,13 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
       const normalizedKey = normalizeSchemaKey(key);
       const props = schema.properties[key];
       const {required, fromKey} = props as ObjectSchemaProperty;
+      const originalKeyProperty = fromKey ? {originalKeyProperty: key} : {};
       normalized[normalizedKey] = Object.assign(normalizeSchema(props), {
+        ...originalKeyProperty,
         required,
         fromKey: fromKey || (normalizedKey !== key ? key : undefined),
       });
     }
-
-    const fieldTypes: {[k: keyof Schema]: string} = {
-      identity: 'hi',
-      wrong: 'hi',
-    };
 
     const normalizedSchema = {
       type: ValueType.Object,
@@ -1581,8 +1522,12 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
   return schema;
 }
 
-function denormalizeSchemaKey(key: string, schema: Schema | undefined): string {
-  return untransformKeys([key], schema)[0];
+function denormalizeSchemaKey(key: string, prop: ObjectSchemaProperty | undefined): string {
+  // TODO(dweitzman): Check for originalKeyProperty first.
+  if (prop?.fromKey) {
+    return prop.fromKey;
+  }
+  return key;
 }
 
 export function denormalizeSchema<T extends Schema>(schema: T): T {
@@ -1608,46 +1553,47 @@ export function denormalizeSchema<T extends Schema>(schema: T): T {
       linkProperty,
     } = schema;
     for (const key of Object.keys(schema.properties)) {
-      const denormalizedKey = denormalizeSchemaKey(key, schema);
       const props = schema.properties[key];
+      const denormalizedKey = denormalizeSchemaKey(key, props);
       const {required, fromKey} = props as ObjectSchemaProperty;
+      const fromKeyProp = fromKey === denormalizedKey ? {} : {fromKey};
       denormalized[denormalizedKey] = Object.assign(denormalizeSchema(props), {
         required,
-        fromKey,
+        ...fromKeyProp,
       });
     }
-    const normalizedSchema = {
+    const denormalizedSchema = {
       type: ValueType.Object,
-      id: id ? denormalizeSchemaKey(id, schema) : undefined,
-      featured: featured ? featured.map(k => denormalizeSchemaKey(k, schema)) : undefined,
-      primary: primary ? denormalizeSchemaKey(primary, schema) : undefined,
-      idProperty: idProperty ? denormalizeSchemaKey(idProperty, schema) : undefined,
-      featuredProperties: featuredProperties ? featuredProperties.map(k => denormalizeSchemaKey(k, schema)) : undefined,
-      displayProperty: displayProperty ? denormalizeSchemaKey(displayProperty, schema) : undefined,
+      id: id ? denormalizeSchemaKey(id, schema.properties[id]) : undefined,
+      featured: featured ? featured.map(k => denormalizeSchemaKey(k, schema.properties[k])) : undefined,
+      primary: primary ? denormalizeSchemaKey(primary, schema.properties[primary]) : undefined,
+      idProperty: idProperty ? denormalizeSchemaKey(idProperty, schema.properties[idProperty]) : undefined,
+      featuredProperties: featuredProperties
+        ? featuredProperties.map(k => denormalizeSchemaKey(k, schema.properties[k]))
+        : undefined,
+      displayProperty: displayProperty
+        ? denormalizeSchemaKey(displayProperty, schema.properties[displayProperty])
+        : undefined,
       properties: denormalized,
       identity: schema.identity,
       codaType: schema.codaType,
       description: schema.description,
       attribution: schema.attribution,
       includeUnknownProperties: schema.includeUnknownProperties,
-      titleProperty: titleProperty
-        ? denormalizeSchemaPropertyIdentifier(titleProperty, denormalized, schema)
-        : undefined,
-      subtitleProperties: subtitleProperties
-        ? subtitleProperties.map(subProp => denormalizeSchemaPropertyIdentifier(subProp, denormalized, schema))
-        : undefined,
-      imageProperty: imageProperty
-        ? denormalizeSchemaPropertyIdentifier(imageProperty, denormalized, schema)
-        : undefined,
-      snippetProperty: snippetProperty
-        ? denormalizeSchemaPropertyIdentifier(snippetProperty, denormalized, schema)
-        : undefined,
-      linkProperty: linkProperty ? denormalizeSchemaPropertyIdentifier(linkProperty, denormalized, schema) : undefined,
+
+      // Denormalization isn't implemented for property keys, it seems like there's not much
+      // reason a pack author would need the denormalized property key within a formula?...
+      titleProperty,
+      subtitleProperties,
+      imageProperty,
+      snippetProperty,
+      linkProperty,
+
       mutable: schema.mutable,
       autocomplete: schema.autocomplete,
     } as T;
 
-    return normalizedSchema;
+    return denormalizedSchema;
   }
   return schema;
 }
