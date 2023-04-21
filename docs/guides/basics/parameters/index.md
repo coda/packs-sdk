@@ -415,7 +415,7 @@ The table below shows the recommended parameter type to use with various types o
 | Image         | ✅ Yes    | `ImageArray`  | Image column can contain multiple images.                        |
 | Image URL     | ✅ Yes    | `Image`       |                                                                  |
 | File          | ✅ Yes    | `FileArray`   | File columns can contain multiple files.                         |
-| Lookup        | ❌ No     |               | Use `StringArray` to get the display name of the row(s).         |
+| Relation      | ❌ No     |               | Use `StringArray` to get the display name of the row(s).         |
 | Table         | ❌ No     |               | You can't pass an entire table, pass individual columns instead. |
 | Page          | ✅ Yes    | `Html`        |                                                                  |
 

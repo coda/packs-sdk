@@ -2,6 +2,7 @@ import type {$Values} from './type_utils';
 import {assertCondition} from './helpers/ensure';
 import {deepCopy} from './helpers/object_utils';
 import {ensureExists} from './helpers/ensure';
+import {ensureNever} from './helpers/ensure';
 import {ensureNonEmptyString} from './helpers/ensure';
 import {ensureUnreachable} from './helpers/ensure';
 import {objectSchemaHelper} from './helpers/migration';
@@ -1437,10 +1438,12 @@ function normalizeSchemaPropertyIdentifier(
     return normalizeSchemaKeyPath(key, normalizedProperties);
   }
 
-  const {label, property: value} = key;
+  const {label, property: value, placeholder, ...rest} = key;
+  ensureNever<keyof typeof rest>();
   return {
     property: normalizeSchemaKeyPath(value, normalizedProperties),
     label,
+    placeholder,
   };
 }
 

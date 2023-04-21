@@ -9,6 +9,7 @@ const object_utils_1 = require("./helpers/object_utils");
 const ensure_2 = require("./helpers/ensure");
 const ensure_3 = require("./helpers/ensure");
 const ensure_4 = require("./helpers/ensure");
+const ensure_5 = require("./helpers/ensure");
 const migration_1 = require("./helpers/migration");
 const pascalcase_1 = __importDefault(require("pascalcase"));
 // Defines a subset of the JSON Object schema for use in annotating API results.
@@ -443,7 +444,7 @@ function generateSchema(obj) {
     else if (typeof obj === 'number') {
         return { type: ValueType.Number };
     }
-    return (0, ensure_4.ensureUnreachable)(obj);
+    return (0, ensure_5.ensureUnreachable)(obj);
 }
 exports.generateSchema = generateSchema;
 /**
@@ -581,10 +582,12 @@ function normalizeSchemaPropertyIdentifier(key, normalizedProperties) {
     if (typeof key === 'string') {
         return normalizeSchemaKeyPath(key, normalizedProperties);
     }
-    const { label, property: value } = key;
+    const { label, property: value, placeholder, ...rest } = key;
+    (0, ensure_3.ensureNever)();
     return {
         property: normalizeSchemaKeyPath(value, normalizedProperties),
         label,
+        placeholder,
     };
 }
 /**
@@ -687,7 +690,7 @@ exports.makeReferenceSchemaFromObjectSchema = makeReferenceSchemaFromObjectSchem
 function withIdentity(schema, identityName) {
     return makeObjectSchema({
         ...(0, object_utils_1.deepCopy)(schema),
-        identity: { name: (0, ensure_3.ensureNonEmptyString)(identityName) },
+        identity: { name: (0, ensure_4.ensureNonEmptyString)(identityName) },
     });
 }
 exports.withIdentity = withIdentity;
