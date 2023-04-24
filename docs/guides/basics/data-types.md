@@ -198,7 +198,8 @@ pack.addFormula({
 });
 ```
 
-<!-- TODO: Fully document the allowed markup. -->
+??? example "Rendering examples"
+    <iframe src="https://coda.io/embed/Yh3vyeakVr/_subS4" width=900 height=500 style="max-width: 100%;" allow="fullscreen" loading="lazy"></iframe>
 
 
 ### HTML
@@ -216,7 +217,8 @@ pack.addFormula({
 });
 ```
 
-<!-- TODO: Fully document the allowed markup. -->
+??? example "Rendering examples"
+    <iframe src="https://coda.io/embed/Yh3vyeakVr/_sudor" width=900 height=500 style="max-width: 100%;" allow="fullscreen" loading="lazy"></iframe>
 
 
 ### Dates and times {: #dates}
