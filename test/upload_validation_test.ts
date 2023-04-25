@@ -786,7 +786,7 @@ describe('Pack metadata Validation', () => {
             parameters: [],
             examples: [],
           },
-          propertyAutocomplete: () => [],
+          // propertyAutocomplete: () => [],
         });
 
         const metadata = createFakePackVersionMetadata(
@@ -917,7 +917,7 @@ describe('Pack metadata Validation', () => {
             primary: 'foo',
             id: 'foo',
             properties: {
-              Foo: {type: ValueType.String, mutable: false, autocomplete: true},
+              Foo: {type: ValueType.String, mutable: false /* , autocomplete: true */},
             },
           }),
           formula: {

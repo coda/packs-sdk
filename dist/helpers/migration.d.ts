@@ -14,7 +14,7 @@ declare class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string
     get featured(): string[] | undefined;
     get identity(): import("../schema").IdentityDefinition | undefined;
     get mutable(): boolean | undefined;
-    get autocomplete(): boolean | undefined;
+    get valueAutocomplete(): import("../schema").PropertySchemaAutocomplete<{}> | undefined;
     get properties(): import("../schema").ObjectSchemaProperties<string>;
     get type(): import("../schema").ValueType.Object;
     get attribution(): import("../schema").AttributionNode[] | undefined;

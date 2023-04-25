@@ -29,6 +29,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.zodErrorDetailToValidationError = exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.Limits = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
 const schema_1 = require("../schema");
 const types_1 = require("../types");
+// import type {Autocomplete} from '../api';
+// import {AutocompleteValueType} from '../schema';
 const schema_2 = require("../schema");
 const api_types_1 = require("../api_types");
 const schema_3 = require("../schema");
@@ -480,7 +482,7 @@ const booleanPackFormulaSchema = zodCompleteObject({
         codaType: z.enum([...schema_2.BooleanHintValueTypes]).optional(),
         description: z.string().optional(),
         mutable: z.boolean().optional(),
-        autocomplete: z.boolean().optional(),
+        autocomplete: z.union([z.string(), z.array(z.boolean())]).optional(),
     }).optional(),
 });
 // TODO(jonathan): Use zodCompleteObject on these after exporting these types.
@@ -501,7 +503,7 @@ const imageAttributionNodeSchema = z.object({
 const basePropertyValidators = {
     description: z.string().optional(),
     mutable: z.boolean().optional(),
-    autocomplete: z.boolean().optional(),
+    autocomplete: z.union([z.string(), z.array(z.object({}).passthrough())]).optional(),
     fromKey: z.string().optional(),
     required: z.boolean().optional(),
 };
@@ -732,7 +734,7 @@ const propertySchema = z.union([
     zodCompleteObject({
         property: z.string().min(1),
         label: z.string().optional(),
-        placeholder: z.string().optional()
+        placeholder: z.string().optional(),
     }),
 ]);
 const genericObjectSchema = z.lazy(() => zodCompleteObject({
@@ -905,7 +907,7 @@ const objectPropertyUnionSchema = z
     .union([booleanPropertySchema, numberPropertySchema, stringPropertySchema, arrayPropertySchema, genericObjectSchema])
     .refine(
 // BaseSchema isn't exported, so Pick<BooleanSchema | EmailSchema, ...> here is an approximation.
-(baseSchema) => baseSchema.codaType === schema_12.ValueHintType.Email || !(baseSchema === null || baseSchema === void 0 ? void 0 : baseSchema.autocomplete) || baseSchema.mutable, `"mutable" must be true to set "autocomplete" to true`);
+(baseSchema) => baseSchema.codaType === schema_12.ValueHintType.Email || !(baseSchema === null || baseSchema === void 0 ? void 0 : baseSchema.autocomplete) || baseSchema.mutable, `"mutable" must be true to set "autocomplete" `);
 const objectPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
     resultType: zodDiscriminant(api_types_3.Type.object),
@@ -960,14 +962,24 @@ const baseSyncTableSchema = {
     getter: syncFormulaSchema,
     entityName: z.string().optional(),
     defaultAddDynamicColumns: z.boolean().optional(),
-    propertyAutocomplete: objectPackFormulaSchema.optional(),
-    // TODO(patrick): Make identityName non-optional after SDK v1.0.0 is required
     identityName: z
         .string()
         .min(1)
         .max(exports.Limits.BuildingBlockName)
         .optional()
         .refine(val => !val || !SystemColumnNames.includes(val), `This property name is reserved for internal use by Coda and can't be used as an identityName, sorry!`),
+    autocompletes: z
+        .record(formulaMetadataSchema)
+        .optional()
+        .default({})
+        .superRefine((data, context) => {
+        if (Object.keys(data).length > exports.Limits.BuildingBlockName) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `Too many autocomplete formulas for sync table. Max allowed is "${exports.Limits.BuildingBlockName}".`,
+            });
+        }
+    }),
 };
 const genericSyncTableSchema = zodCompleteObject({
     ...baseSyncTableSchema,
@@ -985,6 +997,8 @@ const genericDynamicSyncTableSchema = zodCompleteObject({
     listDynamicUrls: formulaMetadataSchema.optional(),
     searchDynamicUrls: formulaMetadataSchema.optional(),
     getSchema: formulaMetadataSchema,
+    autocomplete: objectPackFormulaSchema.optional(),
+    // TODO(patrick): Make identityName non-optional after SDK v1.0.0 is required
 }).strict();
 const syncTableSchema = z
     .union([genericDynamicSyncTableSchema, genericSyncTableSchema])
@@ -1316,6 +1330,26 @@ const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSc
         }
         return;
     }
+})
+    .superRefine((untypedData, context) => {
+    const data = untypedData;
+    (data.syncTables || []).forEach((syncTable, i) => {
+        const schema = syncTable.schema;
+        for (const [propertyName, childSchema] of Object.entries(schema.properties)) {
+            const { autocomplete } = childSchema;
+            if (!autocomplete || Array.isArray(autocomplete)) {
+                continue;
+            }
+            if (typeof autocomplete !== 'string' || !(autocomplete in (syncTable.autocompletes || {}))) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: ['syncTables', i, 'properties', propertyName, 'valueAutocomplete'],
+                    message: `"${childSchema.autocomplete}" is not registered as an autocomplete function for this sync table.`,
+                });
+                continue;
+            }
+        }
+    });
 });
 // Returns undefined for None or Various auth, otherwise returns a string array.
 function getAuthNetworkDomains(data) {

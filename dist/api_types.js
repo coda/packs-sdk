@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PrecannedDateRange = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
+exports.AutocompleteValueType = exports.PrecannedDateRange = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
 /**
  * Markers used internally to represent data types for parameters and return values.
  * It should not be necessary to ever use these values directly.
@@ -289,3 +289,11 @@ var PrecannedDateRange;
      */
     PrecannedDateRange["Everything"] = "everything";
 })(PrecannedDateRange = exports.PrecannedDateRange || (exports.PrecannedDateRange = {}));
+/**
+ * @hidden
+ */
+var AutocompleteValueType;
+(function (AutocompleteValueType) {
+    AutocompleteValueType["Dynamic"] = "dynamic";
+    AutocompleteValueType["Static"] = "static";
+})(AutocompleteValueType = exports.AutocompleteValueType || (exports.AutocompleteValueType = {}));

@@ -71,6 +71,7 @@ export interface PropertyAutocompleteFormulaSpecification {
   type: FormulaType.Metadata;
   metadataFormulaType: MetadataFormulaType.PropertyAutocomplete;
   syncTableName: string;
+  autocompleteName: string;
   propertyName: string;
   propertyValues: Record<string, any>;
   search: string;

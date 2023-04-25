@@ -76,6 +76,31 @@ pack.addFormula({
   },
 });
 
+// pack.addAutocomplete({
+//   name: 'AutocompletePersonName',
+//   type: coda.ValueType.String,
+//   execute: async () => {
+//     return ['Bob'];
+//   },
+// });
+
+// pack.addAutocomplete({
+//   name: 'AutocompletePersonNumber',
+//   type: coda.ValueType.Number,
+//   execute: async () => {
+//     return [20];
+//   },
+// });
+
+// pack.addAutocomplete({
+//   name: 'AutocompletePerson',
+//   type: coda.ValueType.Object,
+//   schema: fakePersonSchema,
+//   execute: async () => {
+//     return [{name: 'bob'}];
+//   },
+// });
+
 pack.addFormula({
   name: 'Throw',
   description: 'A Hello World example.',
@@ -108,7 +133,29 @@ pack.addSyncTable({
     type: coda.ValueType.Object,
     id: 'foo',
     primary: 'foo',
-    properties: {foo: {type: coda.ValueType.String}},
+    properties: {
+      foo: {
+        type: coda.ValueType.String,
+        autocomplete: () => {
+          return ['hi'];
+        },
+      },
+      bar: {
+        type: coda.ValueType.Number,
+        autocomplete: () => {
+          return [123, 456];
+        },
+      },
+      baz: {
+        type: coda.ValueType.Object,
+        properties: {
+          bazProp: {type: coda.ValueType.String},
+        },
+        autocomplete: () => {
+          return [{bazProp: 'hmm'}];
+        },
+      },
+    },
   }),
   formula: {
     name: 'Ignored',

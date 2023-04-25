@@ -17,6 +17,7 @@ words:
   - sandboxed
   - sandboxing
   - Asana
+  - autocompletes
 
 # Patterns in the content to ignore.
 ignoreRegExpList:

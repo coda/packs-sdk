@@ -6266,49 +6266,52 @@ module.exports = (() => {
             }
             break;
           case "PropertyAutocomplete" /* PropertyAutocomplete */:
-            let recordPropertyAccess2 = function(key) {
-              if (!cacheKeysUsed.includes(key)) {
-                cacheKeysUsed.push(key);
-              }
-            };
-            var recordPropertyAccess = recordPropertyAccess2;
-            __name(recordPropertyAccess2, "recordPropertyAccess");
             const syncTable = syncTables?.find((table) => table.name === formulaSpec.syncTableName);
-            const autocompleteFn = ensureExists(syncTable?.propertyAutocomplete);
-            const propertyValues = {};
-            const cacheKeysUsed = [];
-            for (const [key, value] of Object.entries(formulaSpec.propertyValues)) {
-              Object.defineProperty(propertyValues, key, {
+            const autocompleteFormula = syncTable?.autocompletes?.[formulaSpec.autocompleteName];
+            if (autocompleteFormula) {
+              let recordPropertyAccess2 = function(key) {
+                if (!cacheKeysUsed.includes(key)) {
+                  cacheKeysUsed.push(key);
+                }
+              };
+              var recordPropertyAccess = recordPropertyAccess2;
+              __name(recordPropertyAccess2, "recordPropertyAccess");
+              const propertyValues = {};
+              const cacheKeysUsed = [];
+              for (const [key, value] of Object.entries(formulaSpec.propertyValues)) {
+                Object.defineProperty(propertyValues, key, {
+                  enumerable: true,
+                  get() {
+                    recordPropertyAccess2(key);
+                    return value;
+                  }
+                });
+              }
+              const propertyAutocompleteExecutionContext = {
+                ...executionContext,
+                propertyName: formulaSpec.propertyName,
+                propertyValues
+              };
+              const contextUsed = {};
+              Object.defineProperty(propertyAutocompleteExecutionContext, "search", {
                 enumerable: true,
                 get() {
-                  recordPropertyAccess2(key);
-                  return value;
+                  contextUsed.searchUsed = true;
+                  return formulaSpec.search;
                 }
               });
+              const packResult = await autocompleteFormula.execute(
+                params,
+                propertyAutocompleteExecutionContext
+              );
+              const result = {
+                packResult: normalizePropertyAutocompleteResults(packResult),
+                propertiesUsed: cacheKeysUsed,
+                ...contextUsed
+              };
+              return result;
             }
-            const propertyAutocompleteExecutionContext = {
-              ...executionContext,
-              propertyName: formulaSpec.propertyName,
-              propertyValues
-            };
-            const contextUsed = {};
-            Object.defineProperty(propertyAutocompleteExecutionContext, "search", {
-              enumerable: true,
-              get() {
-                contextUsed.searchUsed = true;
-                return formulaSpec.search;
-              }
-            });
-            const packResult = await autocompleteFn.execute(
-              params,
-              propertyAutocompleteExecutionContext
-            );
-            const result = {
-              packResult: normalizePropertyAutocompleteResults(packResult),
-              propertiesUsed: cacheKeysUsed,
-              ...contextUsed
-            };
-            return result;
+            break;
           case "PostSetupSetEndpoint" /* PostSetupSetEndpoint */:
             if (defaultAuthentication?.type !== "None" /* None */ && defaultAuthentication?.type !== "Various" /* Various */ && defaultAuthentication?.postSetup) {
               const setupStep = defaultAuthentication.postSetup.find(

@@ -493,7 +493,7 @@ export interface Network {
 /** The HTTP methods (verbs) supported by the fetcher. */
 export const ValidFetchMethods = ['GET', 'PATCH', 'POST', 'PUT', 'DELETE', 'HEAD'] as const;
 /** The type of the HTTP methods (verbs) supported by the fetcher. */
-export type FetchMethodType = typeof ValidFetchMethods[number];
+export type FetchMethodType = (typeof ValidFetchMethods)[number];
 
 /**
  * An HTTP request used with the {@link Fetcher}.
@@ -860,3 +860,24 @@ export enum PrecannedDateRange {
    */
   Everything = 'everything',
 }
+
+/**
+ * @hidden
+ */
+export enum AutocompleteValueType {
+  Dynamic = 'dynamic',
+  Static = 'static',
+}
+
+/** @hidden */
+export type AutocompleteReference = AutocompleteValueType & {
+  __brand: 'AutocompleteRef';
+};
+
+/**
+ * A JavaScript function for property autocomplete.
+ * @hidden
+ */
+export type PropertyAutocompleteMetadataFunction<ResultT extends PackFormulaResult[]> = (
+  context: PropertyAutocompleteExecutionContext,
+) => Promise<ResultT> | ResultT;

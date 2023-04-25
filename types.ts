@@ -555,7 +555,7 @@ export enum TokenExchangeCredentialsLocation {
   /**
    * The credentials are passed in the Authorization header using the `Basic` scheme.
    */
-  AuthorizationHeader = 'AuthorizationHeader'
+  AuthorizationHeader = 'AuthorizationHeader',
 }
 
 /**

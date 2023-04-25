@@ -61,6 +61,11 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    */
   networkDomains: string[];
 
+  // /**
+  //  * @hidden
+  //  */
+  // autocompletes: Autocomplete[];
+
   /**
    * See {@link PackVersionDefinition.defaultAuthentication}.
    */
@@ -93,10 +98,12 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       systemConnectionAuthentication,
       version,
       formulaNamespace,
+      // autocompletes,
     } = definition || {};
     this.formulas = formulas || [];
     this.formats = formats || [];
     this.syncTables = syncTables || [];
+    // this.autocompletes = autocompletes || [];
     this.networkDomains = networkDomains || [];
     this.defaultAuthentication = defaultAuthentication;
     this.systemConnectionAuthentication = systemConnectionAuthentication;
@@ -165,7 +172,6 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     schema,
     formula,
     connectionRequirement,
-    propertyAutocomplete,
     dynamicOptions = {},
   }: SyncTableOptions<K, L, ParamDefsT, SchemaT>): this {
     const connectionRequirementToUse = connectionRequirement || this._defaultConnectionRequirement;
@@ -176,12 +182,58 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       schema,
       formula,
       connectionRequirement: connectionRequirementToUse,
-      propertyAutocomplete,
       dynamicOptions,
     });
     this.syncTables.push(syncTable);
     return this;
   }
+
+  // /**
+  //  * @hidden
+  //  */
+  // addAutocomplete<SchemaT extends Schema>({
+  //   name,
+  //   type,
+  //   // options,
+  //   schema,
+  //   execute,
+  // }:
+  //   | PrimitiveAutocompleteOptions<ValueType.String>
+  //   | PrimitiveAutocompleteOptions<ValueType.Number>
+  //   | DynamicAutocompleteOptions
+  //   | ObjectAutocompleteOptions<SchemaT>): this {
+  //   if (type === ValueType.String) {
+  //     const schema: StringSchema = {type: ValueType.String};
+  //     const formula = makePropertyAutocompleteFormula({execute, schema, name});
+  //     this.autocompletes.push({
+  //       name,
+  //       type,
+  //       // options,
+  //       formula,
+  //     });
+  //   } else if (type === ValueType.Number) {
+  //     const schema: NumberSchema = {type: ValueType.Number};
+  //     const formula = makePropertyAutocompleteFormula({execute, schema, name});
+  //     this.autocompletes.push({
+  //       name,
+  //       type,
+  //       // options,
+  //       formula,
+  //     });
+  //   } else {
+  //     // For dynamic schemas, some autocomplete functions need to be able to return more than one type.
+  //     const unknownSchema: GenericObjectSchema = {type: ValueType.Object, properties: {}};
+
+  //     const formula = makePropertyAutocompleteFormula({execute, schema: schema ?? (unknownSchema as SchemaT), name});
+  //     this.autocompletes.push({
+  //       name,
+  //       type,
+  //       // options,
+  //       formula,
+  //     });
+  //   }
+  //   return this;
+  // }
 
   /**
    * Adds a dynamic sync table definition to this pack.
@@ -393,13 +445,11 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
           getSchema: maybeRewriteConnectionForFormula(syncTable.getSchema, connectionRequirement),
           listDynamicUrls: maybeRewriteConnectionForFormula(syncTable.listDynamicUrls, connectionRequirement),
           searchDynamicUrls: maybeRewriteConnectionForFormula(syncTable.searchDynamicUrls, connectionRequirement),
-          propertyAutocomplete: maybeRewriteConnectionForFormula(syncTable.propertyAutocomplete, connectionRequirement),
         };
       } else {
         return {
           ...syncTable,
           getter: maybeRewriteConnectionForFormula(syncTable.getter, connectionRequirement),
-          propertyAutocomplete: maybeRewriteConnectionForFormula(syncTable.propertyAutocomplete, connectionRequirement),
           getSchema: maybeRewriteConnectionForFormula(syncTable.getSchema, connectionRequirement),
         };
       }

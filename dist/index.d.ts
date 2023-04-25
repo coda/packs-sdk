@@ -158,6 +158,7 @@ export type { ObjectSchemaDefinition } from './schema';
 export type { ObjectSchemaProperties } from './schema';
 export type { ObjectSchemaProperty } from './schema';
 export type { ProgressBarSchema } from './schema';
+export type { PropertyAutocompleteMetadataFunction } from './api_types';
 export { PropertyIdentifier } from './schema';
 export { PropertyIdentifierDetails } from './schema';
 export { PropertyLabelValueTemplate } from './schema';

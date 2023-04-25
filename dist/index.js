@@ -99,6 +99,7 @@ var schema_8 = require("./schema");
 Object.defineProperty(exports, "LinkDisplayType", { enumerable: true, get: function () { return schema_8.LinkDisplayType; } });
 var schema_9 = require("./schema");
 Object.defineProperty(exports, "PropertyLabelValueTemplate", { enumerable: true, get: function () { return schema_9.PropertyLabelValueTemplate; } });
+// export type {PropertySchemaAutocomplete} from './schema';
 var schema_10 = require("./schema");
 Object.defineProperty(exports, "ScaleIconSet", { enumerable: true, get: function () { return schema_10.ScaleIconSet; } });
 var schema_11 = require("./schema");

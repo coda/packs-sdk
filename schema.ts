@@ -1,4 +1,7 @@
 import type {$Values} from './type_utils';
+import type {AutocompleteReference} from './api_types';
+import type {PackFormulaResult} from './api_types';
+import type {PropertyAutocompleteMetadataFunction} from './api_types';
 import {assertCondition} from './helpers/ensure';
 import {deepCopy} from './helpers/object_utils';
 import {ensureExists} from './helpers/ensure';
@@ -198,13 +201,22 @@ export const BooleanHintValueTypes = [ValueHintType.Toggle] as const;
 export const ObjectHintValueTypes = [ValueHintType.Person, ValueHintType.Reference] as const;
 
 /** The subset of {@link ValueHintType} that can be used with a string value. */
-export type StringHintTypes = typeof StringHintValueTypes[number];
+export type StringHintTypes = (typeof StringHintValueTypes)[number];
 /** The subset of {@link ValueHintType} that can be used with a number value. */
-export type NumberHintTypes = typeof NumberHintValueTypes[number];
+export type NumberHintTypes = (typeof NumberHintValueTypes)[number];
 /** The subset of {@link ValueHintType} that can be used with a boolean value. */
-export type BooleanHintTypes = typeof BooleanHintValueTypes[number];
+export type BooleanHintTypes = (typeof BooleanHintValueTypes)[number];
 /** The subset of {@link ValueHintType} that can be used with an object value. */
-export type ObjectHintTypes = typeof ObjectHintValueTypes[number];
+export type ObjectHintTypes = (typeof ObjectHintValueTypes)[number];
+
+/**
+ * A function or set of values to return for property autocomplete.
+ * @hidden
+ */
+export type PropertySchemaAutocomplete<T extends PackFormulaResult> =
+  | PropertyAutocompleteMetadataFunction<T[]>
+  | T[]
+  | AutocompleteReference;
 
 interface BaseSchema {
   /**
@@ -231,7 +243,7 @@ interface BaseSchema {
    *
    * @hidden
    */
-  autocomplete?: boolean;
+  autocomplete?: PropertySchemaAutocomplete<any>;
 }
 
 /**
@@ -242,6 +254,9 @@ export interface BooleanSchema extends BaseSchema {
   type: ValueType.Boolean;
   /** Indicates how to render values in a table. If not specified, renders a checkbox. */
   codaType?: BooleanHintTypes;
+
+  /** @hidden */
+  autocomplete?: PropertySchemaAutocomplete<boolean>;
 }
 
 /**
@@ -263,6 +278,9 @@ export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> e
   type: ValueType.Number;
   /** An optional type hint instructing Coda about how to interpret or render this value. */
   codaType?: T;
+
+  /** @hidden */
+  autocomplete?: PropertySchemaAutocomplete<number>;
 }
 
 /**
@@ -709,6 +727,9 @@ export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> e
   type: ValueType.String;
   /** An optional type hint instructing Coda about how to interpret or render this value. */
   codaType?: T;
+
+  /** @hidden */
+  autocomplete?: PropertySchemaAutocomplete<string>;
 }
 
 /**
@@ -721,7 +742,7 @@ export const SimpleStringHintValueTypes = [
   ValueHintType.Url,
   ValueHintType.Email,
 ] as const;
-export type SimpleStringHintTypes = typeof SimpleStringHintValueTypes[number];
+export type SimpleStringHintTypes = (typeof SimpleStringHintValueTypes)[number];
 
 /**
  * A schema whose underlying value is a string, along with an optional hint about how Coda
@@ -1016,6 +1037,9 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
    * {@link ValueHintType.ImageAttachment} or {@link ValueHintType.ImageReference} hints
    */
   imageProperty?: PropertyIdentifier<K>;
+
+  /** @hidden */
+  autocomplete?: PropertySchemaAutocomplete<{}>;
 }
 
 export type ObjectSchemaDefinitionType<
@@ -1536,7 +1560,7 @@ export function makeReferenceSchemaFromObjectSchema(
   schema: GenericObjectSchema,
   identityName?: string,
 ): GenericObjectSchema {
-  const {type, id, primary, identity, properties, mutable, autocomplete} = objectSchemaHelper(schema);
+  const {type, id, primary, identity, properties, mutable, valueAutocomplete} = objectSchemaHelper(schema);
   ensureExists(
     identity || identityName,
     'Source schema must have an identity field, or you must provide an identity name for the reference.',
@@ -1554,7 +1578,7 @@ export function makeReferenceSchemaFromObjectSchema(
     displayProperty: primary,
     properties: referenceProperties,
     mutable,
-    autocomplete,
+    valueAutocomplete,
   });
 }
 
