@@ -13,6 +13,9 @@ const TableScanMaxRows = 100;
 // How many rows to fetch per-page.
 const PageSize = 100;
 
+// The maximum number of datasets to return in a search.
+const MaxDatasets = 10000;
+
 // A regular expression matching a dataset.
 const DatasetUrlRegex = new RegExp(`^https?://${Domain}/.*/([^?#]+)`);
 
@@ -99,12 +102,32 @@ pack.addDynamicSyncTable({
 
     // Return all the datasets in that category.
     let datasets = await searchDatasets(context, {
+      categories: category,
       only: "datasets",
       domains: Domain,
-      order: "page_views_last_month",
-      limit: 10000,
-      categories: category,
       search_context: Domain,
+      order: "page_views_last_month",
+      limit: MaxDatasets,
+    });
+    if (!datasets?.length) {
+      return [];
+    }
+    return datasets.map(dataset => {
+      return {
+        display: dataset.name,
+        value: dataset.link,
+      };
+    });
+  },
+
+  searchDynamicUrls: async function (context, search) {
+    let datasets = await searchDatasets(context, {
+      q: search,
+      only: "datasets",
+      domains: Domain,
+      search_context: Domain,
+      order: "relevance",
+      limit: MaxDatasets,
     });
     if (!datasets?.length) {
       return [];

@@ -38,6 +38,11 @@ While it's easy to get started building a Pack, there are lots of options to exp
 - [x] Set a few [featured columns][schemas_featured_columns] on your schema, for the most commonly used properties.
 
 
+## Dynamic sync tables
+
+- [x] Add a [`searchDynamicUrls`][dyanmic_sync_tables_search] function to allow users to search for their desired dataset, if the underlying API supports it.
+
+
 ## Authentication
 
 - [x] Set a meaningful [account name][auth_name] by implementing the `getConnectionName` function. This helps users that connect to multiple accounts distinguish them.
@@ -67,6 +72,7 @@ While it's easy to get started building a Pack, there are lots of options to exp
 [sync_tables_naming]: blocks/sync-tables/index.md#naming
 [sync_tables_caching]: blocks/sync-tables/index.md#caching
 [sync_tables_parameters]: blocks/sync-tables/index.md#parameters
+[dyanmic_sync_tables_search]: blocks/sync-tables/dynamic.md#search
 [formulas_examples]: blocks/formulas.md#examples
 [parameter_suggested_value]: basics/parameters/index.md#suggested-values
 [instructionsUrl]: ../reference/sdk/interfaces/core.BaseAuthentication.md#instructionsurl
