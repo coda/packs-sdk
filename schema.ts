@@ -1560,7 +1560,7 @@ export function makeReferenceSchemaFromObjectSchema(
   schema: GenericObjectSchema,
   identityName?: string,
 ): GenericObjectSchema {
-  const {type, id, primary, identity, properties, mutable, valueAutocomplete} = objectSchemaHelper(schema);
+  const {type, id, primary, identity, properties, mutable, autocomplete} = objectSchemaHelper(schema);
   ensureExists(
     identity || identityName,
     'Source schema must have an identity field, or you must provide an identity name for the reference.',
@@ -1578,7 +1578,7 @@ export function makeReferenceSchemaFromObjectSchema(
     displayProperty: primary,
     properties: referenceProperties,
     mutable,
-    valueAutocomplete,
+    autocomplete,
   });
 }
 

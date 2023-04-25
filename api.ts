@@ -1352,17 +1352,6 @@ export interface PropertyAutocompleteAnnotatedResult {
   searchUsed?: boolean;
 }
 
-/**
- * @hidden
- */
-// export type PropertyAutocompleteMetadataFormula<ResultT extends ValueType, SchemaT extends Schema> = BaseFormula<
-//   [],
-//   ResultT
-// > & {
-//   schema?: SchemaT;
-// };
-
-// export type PropertyAutocompleteMetadataFormula<SchemaT extends Schema> = Formula<[], ValueType.Array, SchemaT>;
 /** @hidden */
 export type PropertyAutocompleteMetadataFormula<SchemaT extends Schema> = ObjectPackFormula<
   [],
@@ -1386,13 +1375,6 @@ export type MetadataFunction = (
   search: string,
   formulaContext?: MetadataContext,
 ) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
-
-// /**
-//  * A JavaScript function for property autocomplete.
-//  */
-// type PropertyAutocompleteMetadataFunction<ResultT extends PackFormulaResult[]> = (
-//   context: PropertyAutocompleteExecutionContext,
-// ) => Promise<ResultT> | ResultT;
 
 /**
  * The type of values that will be accepted as a metadata formula definition. This can either
@@ -1458,7 +1440,7 @@ export function makePropertyAutocompleteFormula<SchemaT extends Schema>({
 
   type ResultT = SchemaType<ArraySchema<SchemaT>>;
 
-  // SchemaType<ArraySchema<T>> is equivalen to Array<SchemaType<T>>
+  // SchemaType<ArraySchema<T>> is equivalent to Array<SchemaType<T>>
   const executeRetyped = execute as PropertyAutocompleteMetadataFunction<SchemaType<ArraySchema<SchemaT>>>;
 
   const innerExecute = async ([]: ParamValues<[]>, context: ExecutionContext): Promise<ResultT> => {
@@ -1738,47 +1720,6 @@ export interface SyncTableOptions<
    * sync tables that have a dynamic schema.
    */
   dynamicOptions?: DynamicOptions;
-}
-
-// interface AutocompleteOptionsObject<SchemaT extends Schema> {
-//   execute: PropertyAutocompleteMetadataFunction<Array<SchemaType<SchemaT>>>;
-//   schema: SchemaT;
-//   type: ValueType.Object;
-// }
-
-/**
- * @hidden
- */
-export interface PrimitiveAutocompleteOptions<ResultT extends ValueType.String | ValueType.Number> {
-  name: string;
-  execute: PropertyAutocompleteMetadataFunction<
-    ResultT extends ValueType.String ? string[] : ResultT extends ValueType.Number ? number[] : never
-  >;
-  type: ResultT;
-  schema?: undefined;
-  // options: ResultT[];
-}
-
-/**
- * @hidden
- */
-export interface ObjectAutocompleteOptions<SchemaT extends Schema> {
-  name: string;
-  execute: PropertyAutocompleteMetadataFunction<Array<SchemaType<SchemaT>>>;
-  type: ValueType.Object;
-  schema: SchemaT;
-  // options: ResultT[];
-}
-
-/**
- * @hidden
- */
-export interface DynamicAutocompleteOptions {
-  name: string;
-  execute: PropertyAutocompleteMetadataFunction<any[]>;
-  type: AutocompleteValueType.Dynamic;
-  schema?: undefined;
-  // options: ResultT[];
 }
 
 /**

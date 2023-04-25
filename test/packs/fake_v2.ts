@@ -76,31 +76,6 @@ pack.addFormula({
   },
 });
 
-// pack.addAutocomplete({
-//   name: 'AutocompletePersonName',
-//   type: coda.ValueType.String,
-//   execute: async () => {
-//     return ['Bob'];
-//   },
-// });
-
-// pack.addAutocomplete({
-//   name: 'AutocompletePersonNumber',
-//   type: coda.ValueType.Number,
-//   execute: async () => {
-//     return [20];
-//   },
-// });
-
-// pack.addAutocomplete({
-//   name: 'AutocompletePerson',
-//   type: coda.ValueType.Object,
-//   schema: fakePersonSchema,
-//   execute: async () => {
-//     return [{name: 'bob'}];
-//   },
-// });
-
 pack.addFormula({
   name: 'Throw',
   description: 'A Hello World example.',

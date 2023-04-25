@@ -186,7 +186,6 @@ export type {PropertyAutocompleteMetadataFunction} from './api_types';
 export {PropertyIdentifier} from './schema';
 export {PropertyIdentifierDetails} from './schema';
 export {PropertyLabelValueTemplate} from './schema';
-// export type {PropertySchemaAutocomplete} from './schema';
 export {ScaleIconSet} from './schema';
 export type {ScaleSchema} from './schema';
 export type {Schema} from './schema';

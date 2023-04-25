@@ -3,8 +3,6 @@ import type {AWSAssumeRoleAuthentication} from '../types';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '../schema';
 import {AuthenticationType} from '../types';
-// import type {Autocomplete} from '../api';
-// import {AutocompleteValueType} from '../schema';
 import {BooleanHintValueTypes} from '../schema';
 import type {BooleanPackFormula} from '../api';
 import type {BooleanSchema} from '../schema';
@@ -1615,7 +1613,7 @@ const legacyPackMetadataSchema = validateFormulas(
         if (typeof autocomplete !== 'string' || !(autocomplete in (syncTable.autocompletes || {}))) {
           context.addIssue({
             code: z.ZodIssueCode.custom,
-            path: ['syncTables', i, 'properties', propertyName, 'valueAutocomplete'],
+            path: ['syncTables', i, 'properties', propertyName, 'autocomplete'],
             message: `"${childSchema.autocomplete}" is not registered as an autocomplete function for this sync table.`,
           });
           continue;
