@@ -4,23 +4,23 @@ exports.maybeRewriteConnectionForFormula = exports.makeEmptyFormula = exports.ma
 const api_types_1 = require("./api_types");
 const api_types_2 = require("./api_types");
 const api_types_3 = require("./api_types");
-const api_types_4 = require("./api_types");
 const schema_1 = require("./schema");
+const api_types_4 = require("./api_types");
 const api_types_5 = require("./api_types");
-const api_types_6 = require("./api_types");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_1 = require("./helpers/ensure");
-const api_types_7 = require("./api_types");
+const api_types_6 = require("./api_types");
+const util_1 = require("util");
 const handler_templates_1 = require("./handler_templates");
 const handler_templates_2 = require("./handler_templates");
+const api_types_7 = require("./api_types");
 const api_types_8 = require("./api_types");
-const api_types_9 = require("./api_types");
 const object_utils_2 = require("./helpers/object_utils");
 const schema_2 = require("./schema");
 const schema_3 = require("./schema");
-const api_types_10 = require("./api_types");
+const api_types_9 = require("./api_types");
 const migration_1 = require("./helpers/migration");
-const api_types_11 = require("./api_types");
+const api_types_10 = require("./api_types");
 /**
  * An error whose message will be shown to the end user in the UI when it occurs.
  * If an error is encountered in a formula and you want to describe the error
@@ -222,7 +222,7 @@ exports.wrapGetSchema = wrapGetSchema;
  */
 function makeParameter(paramDefinition) {
     const { type, autocomplete: autocompleteDefOrItems, ...rest } = paramDefinition;
-    const actualType = api_types_3.ParameterTypeInputMap[type];
+    const actualType = api_types_2.ParameterTypeInputMap[type];
     let autocomplete;
     if (Array.isArray(autocompleteDefOrItems)) {
         const autocompleteDef = makeSimpleAutocompleteMetadataFormula(autocompleteDefOrItems);
@@ -237,72 +237,72 @@ exports.makeParameter = makeParameter;
 // Other parameter helpers below here are obsolete given the above generate parameter makers.
 /** @deprecated */
 function makeStringParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_4.Type.string });
+    return Object.freeze({ ...args, name, description, type: api_types_3.Type.string });
 }
 exports.makeStringParameter = makeStringParameter;
 /** @deprecated */
 function makeStringArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_11.stringArray });
+    return Object.freeze({ ...args, name, description, type: api_types_10.stringArray });
 }
 exports.makeStringArrayParameter = makeStringArrayParameter;
 /** @deprecated */
 function makeNumericParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_4.Type.number });
+    return Object.freeze({ ...args, name, description, type: api_types_3.Type.number });
 }
 exports.makeNumericParameter = makeNumericParameter;
 /** @deprecated */
 function makeNumericArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_10.numberArray });
+    return Object.freeze({ ...args, name, description, type: api_types_9.numberArray });
 }
 exports.makeNumericArrayParameter = makeNumericArrayParameter;
 /** @deprecated */
 function makeBooleanParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_4.Type.boolean });
+    return Object.freeze({ ...args, name, description, type: api_types_3.Type.boolean });
 }
 exports.makeBooleanParameter = makeBooleanParameter;
 /** @deprecated */
 function makeBooleanArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_5.booleanArray });
+    return Object.freeze({ ...args, name, description, type: api_types_4.booleanArray });
 }
 exports.makeBooleanArrayParameter = makeBooleanArrayParameter;
 /** @deprecated */
 function makeDateParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_4.Type.date });
+    return Object.freeze({ ...args, name, description, type: api_types_3.Type.date });
 }
 exports.makeDateParameter = makeDateParameter;
 /** @deprecated */
 function makeDateArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_6.dateArray });
+    return Object.freeze({ ...args, name, description, type: api_types_5.dateArray });
 }
 exports.makeDateArrayParameter = makeDateArrayParameter;
 /** @deprecated */
 function makeHtmlParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_4.Type.html });
+    return Object.freeze({ ...args, name, description, type: api_types_3.Type.html });
 }
 exports.makeHtmlParameter = makeHtmlParameter;
 /** @deprecated */
 function makeHtmlArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_8.htmlArray });
+    return Object.freeze({ ...args, name, description, type: api_types_7.htmlArray });
 }
 exports.makeHtmlArrayParameter = makeHtmlArrayParameter;
 /** @deprecated */
 function makeImageParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_4.Type.image });
+    return Object.freeze({ ...args, name, description, type: api_types_3.Type.image });
 }
 exports.makeImageParameter = makeImageParameter;
 /** @deprecated */
 function makeImageArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_9.imageArray });
+    return Object.freeze({ ...args, name, description, type: api_types_8.imageArray });
 }
 exports.makeImageArrayParameter = makeImageArrayParameter;
 /** @deprecated */
 function makeFileParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_4.Type.file });
+    return Object.freeze({ ...args, name, description, type: api_types_3.Type.file });
 }
 exports.makeFileParameter = makeFileParameter;
 /** @deprecated */
 function makeFileArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_7.fileArray });
+    return Object.freeze({ ...args, name, description, type: api_types_6.fileArray });
 }
 exports.makeFileArrayParameter = makeFileArrayParameter;
 /** @deprecated */
@@ -318,11 +318,11 @@ function check(condition, msg) {
 }
 exports.check = check;
 function isObjectPackFormula(fn) {
-    return fn.resultType === api_types_4.Type.object;
+    return fn.resultType === api_types_3.Type.object;
 }
 exports.isObjectPackFormula = isObjectPackFormula;
 function isStringPackFormula(fn) {
-    return fn.resultType === api_types_4.Type.string;
+    return fn.resultType === api_types_3.Type.string;
 }
 exports.isStringPackFormula = isStringPackFormula;
 function isSyncPackFormula(fn) {
@@ -347,7 +347,7 @@ var UpdateOutcome;
  * @param definition The definition of a formula that returns a number.
  */
 function makeNumericFormula(definition) {
-    return Object.assign({}, definition, { resultType: api_types_4.Type.number });
+    return Object.assign({}, definition, { resultType: api_types_3.Type.number });
 }
 exports.makeNumericFormula = makeNumericFormula;
 /**
@@ -361,7 +361,7 @@ exports.makeNumericFormula = makeNumericFormula;
 function makeStringFormula(definition) {
     const { response } = definition;
     return Object.assign({}, definition, {
-        resultType: api_types_4.Type.string,
+        resultType: api_types_3.Type.string,
         ...(response && { schema: response.schema }),
     });
 }
@@ -434,7 +434,7 @@ function makeFormula(fullDefinition) {
             const { onError: _, resultType: unused, codaType, formulaSchema, ...rest } = def;
             const stringFormula = {
                 ...rest,
-                resultType: api_types_4.Type.string,
+                resultType: api_types_3.Type.string,
                 schema: formulaSchema || (codaType ? { type: schema_1.ValueType.String, codaType } : undefined),
             };
             formula = stringFormula;
@@ -449,7 +449,7 @@ function makeFormula(fullDefinition) {
             const { onError: _, resultType: unused, codaType, formulaSchema, ...rest } = def;
             const numericFormula = {
                 ...rest,
-                resultType: api_types_4.Type.number,
+                resultType: api_types_3.Type.number,
                 schema: formulaSchema || (codaType ? { type: schema_1.ValueType.Number, codaType } : undefined),
             };
             formula = numericFormula;
@@ -459,7 +459,7 @@ function makeFormula(fullDefinition) {
             const { onError: _, resultType: unused, ...rest } = fullDefinition;
             const booleanFormula = {
                 ...rest,
-                resultType: api_types_4.Type.boolean,
+                resultType: api_types_3.Type.boolean,
             };
             formula = booleanFormula;
             break;
@@ -469,7 +469,7 @@ function makeFormula(fullDefinition) {
             const arrayFormula = {
                 ...rest,
                 // TypeOf<SchemaType<ArraySchema<SchemaT>>> is always Type.object but TS can't infer this.
-                resultType: api_types_4.Type.object,
+                resultType: api_types_3.Type.object,
                 schema: (0, schema_3.normalizeSchema)({ type: schema_1.ValueType.Array, items }),
             };
             formula = arrayFormula;
@@ -480,7 +480,7 @@ function makeFormula(fullDefinition) {
             // need a force cast since execute has a different return value due to key normalization.
             const objectFormula = {
                 ...rest,
-                resultType: api_types_4.Type.object,
+                resultType: api_types_3.Type.object,
                 schema: (0, schema_3.normalizeSchema)(schema),
             };
             formula = objectFormula;
@@ -558,7 +558,7 @@ function makeMetadataFormula(execute, options) {
             makeStringParameter('formulaContext', 'Serialized JSON for metadata', { optional: true }),
         ],
         examples: [],
-        connectionRequirement: (options === null || options === void 0 ? void 0 : options.connectionRequirement) || api_types_2.ConnectionRequirement.Optional,
+        connectionRequirement: (options === null || options === void 0 ? void 0 : options.connectionRequirement) || api_types_1.ConnectionRequirement.Optional,
     });
 }
 exports.makeMetadataFormula = makeMetadataFormula;
@@ -569,14 +569,14 @@ function makePropertyAutocompleteFormula({ execute, schema, name, }) {
     if (!(execute instanceof Function)) {
         throw new Error(`Value for propertyAutocomplete must be a function`);
     }
-    // SchemaType<ArraySchema<T>> is equivalen to Array<SchemaType<T>>
+    // SchemaType<ArraySchema<T>> is equivalent to Array<SchemaType<T>>
     const executeRetyped = execute;
     const innerExecute = async ([], context) => {
         const result = await executeRetyped(context);
         return result;
     };
     const formulaDefn = {
-        connectionRequirement: api_types_2.ConnectionRequirement.Optional,
+        connectionRequirement: api_types_1.ConnectionRequirement.Optional,
         execute: innerExecute,
         name,
         description: '',
@@ -692,7 +692,7 @@ function makeSimpleAutocompleteMetadataFormula(options) {
     return makeMetadataFormula((context, [search]) => simpleAutocomplete(search, options), {
         // A connection won't be used here, but if the parent formula uses a connection
         // the execution code is going to try to pass it here. We should fix that.
-        connectionRequirement: api_types_2.ConnectionRequirement.Optional,
+        connectionRequirement: api_types_1.ConnectionRequirement.Optional,
     });
 }
 exports.makeSimpleAutocompleteMetadataFormula = makeSimpleAutocompleteMetadataFormula;
@@ -737,7 +737,7 @@ function makeObjectFormula({ response, ...definition }) {
         };
     }
     return Object.assign({}, definition, {
-        resultType: api_types_4.Type.object,
+        resultType: api_types_3.Type.object,
         execute,
         schema,
     });
@@ -772,9 +772,22 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
     else {
         schemaDef.identity = { name: identityName };
     }
-    const autocompletes = extractSyncTableAutocompleteFormulas(identityName, schemaDef);
     const getSchema = wrapGetSchema(wrapMetadataFunction(getSchemaDef));
     const schema = (0, schema_2.makeObjectSchema)(schemaDef);
+    // Converting JS functions to strings happens on inputSchema instead of the deep copied version because the
+    // deep copy will have already thrown away any JS functions.
+    const autocompletes = {};
+    for (const propertyName of listPropertiesWithAutocompleteFunctions(inputSchema)) {
+        const formulaName = `${identityName}.${propertyName}.Autocomplete`;
+        // eslint-disable-next-line no-console
+        console.log(`WEITZMAN: Setting up autocomplete property ${propertyName}`);
+        schema.properties[propertyName].autocomplete = propertyName;
+        autocompletes[propertyName] = makePropertyAutocompleteFormula({
+            execute: inputSchema.properties[propertyName].autocomplete,
+            schema: (0, schema_3.normalizeSchema)(schema.properties[propertyName]),
+            name: formulaName,
+        });
+    }
     const formulaSchema = getSchema
         ? undefined
         : (0, schema_3.normalizeSchema)({ type: schema_1.ValueType.Array, items: schema });
@@ -820,7 +833,7 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
             isSyncFormula: true,
             supportsUpdates: Boolean(executeUpdate),
             connectionRequirement: definition.connectionRequirement || connectionRequirement,
-            resultType: api_types_4.Type.object,
+            resultType: api_types_3.Type.object,
         },
         getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
         entityName,
@@ -937,7 +950,7 @@ function makeTranslateObjectFormula({ response, ...definition }) {
     }
     return Object.assign({}, rest, {
         execute,
-        resultType: api_types_4.Type.object,
+        resultType: api_types_3.Type.object,
         schema: response.schema,
     });
 }
@@ -973,7 +986,7 @@ function makeEmptyFormula(definition) {
     }
     return Object.assign({}, rest, {
         execute,
-        resultType: api_types_4.Type.string,
+        resultType: api_types_3.Type.string,
     });
 }
 exports.makeEmptyFormula = makeEmptyFormula;
@@ -1004,25 +1017,51 @@ function maybeRewriteConnectionForFormula(formula, connectionRequirement) {
     return formula;
 }
 exports.maybeRewriteConnectionForFormula = maybeRewriteConnectionForFormula;
-function extractSyncTableAutocompleteFormulas(syncTableIdentityName, schema) {
-    const result = {};
+function listPropertiesWithAutocompleteFunctions(schema) {
+    const result = [];
+    // eslint-disable-next-line no-console
+    console.log(`WEITZMAN: Looking at original schema: ${(0, util_1.format)(schema.properties)}`);
+    // eslint-disable-next-line no-console
+    console.log(`WEITZMAN: Checking if any of these have autocomplete functions: ${Object.keys(schema.properties)}`);
     for (const propertyName of Object.keys(schema.properties)) {
         const { autocomplete } = schema.properties[propertyName];
         if (!autocomplete) {
+            // eslint-disable-next-line no-console
+            console.log(`WEITZMAN: ${propertyName} has no autocomplete`);
             continue;
         }
         if (typeof autocomplete !== 'function') {
+            // eslint-disable-next-line no-console
+            console.log(`WEITZMAN: ${propertyName} has autocomplete that isn't a fuction`);
             continue;
         }
-        // ObjectSchemaDefinition has a different identity property type that GenericObjectSchema, but
-        // we don't really even need the identity so it's simplest to drop it.
-        const { identity, ...schemaWithoutIdentity } = schema;
-        result[propertyName] = makePropertyAutocompleteFormula({
-            execute: autocomplete,
-            schema: schemaWithoutIdentity,
-            name: `${syncTableIdentityName}.${propertyName}.Autocomplete`,
-        });
-        schema.properties[propertyName].autocomplete = api_types_1.AutocompleteValueType.Static;
+        // eslint-disable-next-line no-console
+        console.log(`WEITZMAN: ${propertyName} has autocomplete function!`);
+        result.push(propertyName);
     }
     return result;
 }
+// function extractSyncTableAutocompleteFormulas(
+//   syncTableIdentityName: string,
+//   schema: ObjectSchemaDefinition<string, string>,
+// ): SyncTableAutocompleters {
+//   const result: SyncTableAutocompleters = {};
+//   for (const propertyName of Object.keys(schema.properties)) {
+//     const {autocomplete} = schema.properties[propertyName];
+//     if (!autocomplete) {
+//       continue;
+//     }
+//     if (typeof autocomplete !== 'function') {
+//       continue;
+//     }
+//     // ObjectSchemaDefinition has a different identity property type that GenericObjectSchema, but
+//     // we don't really even need the identity so it's simplest to drop it.
+//     const {identity, ...schemaWithoutIdentity} = schema;
+//     result[propertyName] = makePropertyAutocompleteFormula({
+//       execute: autocomplete as any,
+//       schema: schemaWithoutIdentity,
+//       name: `${syncTableIdentityName}.${propertyName}.Autocomplete`,
+//     });
+//   }
+//   return result;
+// }

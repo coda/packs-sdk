@@ -29,8 +29,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.zodErrorDetailToValidationError = exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.Limits = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
 const schema_1 = require("../schema");
 const types_1 = require("../types");
-// import type {Autocomplete} from '../api';
-// import {AutocompleteValueType} from '../schema';
 const schema_2 = require("../schema");
 const api_types_1 = require("../api_types");
 const schema_3 = require("../schema");
@@ -1343,7 +1341,7 @@ const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSc
             if (typeof autocomplete !== 'string' || !(autocomplete in (syncTable.autocompletes || {}))) {
                 context.addIssue({
                     code: z.ZodIssueCode.custom,
-                    path: ['syncTables', i, 'properties', propertyName, 'valueAutocomplete'],
+                    path: ['syncTables', i, 'properties', propertyName, 'autocomplete'],
                     message: `"${childSchema.autocomplete}" is not registered as an autocomplete function for this sync table.`,
                 });
                 continue;

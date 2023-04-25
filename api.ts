@@ -1,7 +1,6 @@
 import type {ArraySchema} from './schema';
 import type {ArrayType} from './api_types';
 import type {AutocompleteReference} from './api_types';
-import {AutocompleteValueType} from './api_types';
 import type {BooleanSchema} from './schema';
 import type {CommonPackFormulaDef} from './api_types';
 import {ConnectionRequirement} from './api_types';
@@ -41,6 +40,7 @@ import {dateArray} from './api_types';
 import {deepCopy} from './helpers/object_utils';
 import {ensureUnreachable} from './helpers/ensure';
 import {fileArray} from './api_types';
+import {format} from 'util';
 import {generateObjectResponseHandler} from './handler_templates';
 import {generateRequestHandler} from './handler_templates';
 import {htmlArray} from './api_types';
@@ -1874,13 +1874,28 @@ export function makeSyncTable<
     schemaDef.identity = {name: identityName};
   }
 
-  const autocompletes = extractSyncTableAutocompleteFormulas(identityName, schemaDef);
-
   const getSchema = wrapGetSchema(wrapMetadataFunction(getSchemaDef));
   const schema = makeObjectSchema<K, L, SchemaDefT>(schemaDef) as SchemaT;
+
+  // Converting JS functions to strings happens on inputSchema instead of the deep copied version because the
+  // deep copy will have already thrown away any JS functions.
+  const autocompletes: SyncTableAutocompleters = {};
+
+  for (const propertyName of listPropertiesWithAutocompleteFunctions(inputSchema)) {
+    // eslint-disable-next-line no-console
+    console.log(`WEITZMAN: Setting up autocomplete property ${propertyName}`);
+    schema.properties[propertyName].autocomplete = propertyName as AutocompleteReference;
+    autocompletes[propertyName] = makePropertyAutocompleteFormula({
+      execute: inputSchema.properties[propertyName].autocomplete as any,
+      schema: normalizeSchema(schema.properties[propertyName]),
+      name: `${identityName}.${propertyName}.Autocomplete`,
+    });
+  }
+
   const formulaSchema = getSchema
     ? undefined
     : normalizeSchema<ArraySchema<Schema>>({type: ValueType.Array, items: schema});
+
   const {identity, id, primary} = objectSchemaHelper(schema);
   if (!(primary && id)) {
     throw new Error(`Sync table schemas should have defined properties for idProperty and displayProperty`);
@@ -2210,30 +2225,55 @@ export function maybeRewriteConnectionForFormula<
   return formula;
 }
 
-function extractSyncTableAutocompleteFormulas(
-  syncTableIdentityName: string,
-  schema: ObjectSchemaDefinition<string, string>,
-): SyncTableAutocompleters {
-  const result: SyncTableAutocompleters = {};
+function listPropertiesWithAutocompleteFunctions(schema: ObjectSchemaDefinition<string, string>) {
+  const result: string[] = [];
+  // eslint-disable-next-line no-console
+  console.log(`WEITZMAN: Looking at original schema: ${format(schema.properties)}`);
+  // eslint-disable-next-line no-console
+  console.log(`WEITZMAN: Checking if any of these have autocomplete functions: ${Object.keys(schema.properties)}`);
   for (const propertyName of Object.keys(schema.properties)) {
     const {autocomplete} = schema.properties[propertyName];
     if (!autocomplete) {
+      // eslint-disable-next-line no-console
+      console.log(`WEITZMAN: ${propertyName} has no autocomplete`);
       continue;
     }
     if (typeof autocomplete !== 'function') {
+      // eslint-disable-next-line no-console
+      console.log(`WEITZMAN: ${propertyName} has autocomplete that isn't a fuction`);
       continue;
     }
 
-    // ObjectSchemaDefinition has a different identity property type that GenericObjectSchema, but
-    // we don't really even need the identity so it's simplest to drop it.
-    const {identity, ...schemaWithoutIdentity} = schema;
-
-    result[propertyName] = makePropertyAutocompleteFormula({
-      execute: autocomplete as any,
-      schema: schemaWithoutIdentity,
-      name: `${syncTableIdentityName}.${propertyName}.Autocomplete`,
-    });
-    schema.properties[propertyName].autocomplete = AutocompleteValueType.Static as AutocompleteReference;
+    // eslint-disable-next-line no-console
+    console.log(`WEITZMAN: ${propertyName} has autocomplete function!`);
+    result.push(propertyName);
   }
   return result;
 }
+
+// function extractSyncTableAutocompleteFormulas(
+//   syncTableIdentityName: string,
+//   schema: ObjectSchemaDefinition<string, string>,
+// ): SyncTableAutocompleters {
+//   const result: SyncTableAutocompleters = {};
+//   for (const propertyName of Object.keys(schema.properties)) {
+//     const {autocomplete} = schema.properties[propertyName];
+//     if (!autocomplete) {
+//       continue;
+//     }
+//     if (typeof autocomplete !== 'function') {
+//       continue;
+//     }
+
+//     // ObjectSchemaDefinition has a different identity property type that GenericObjectSchema, but
+//     // we don't really even need the identity so it's simplest to drop it.
+//     const {identity, ...schemaWithoutIdentity} = schema;
+
+//     result[propertyName] = makePropertyAutocompleteFormula({
+//       execute: autocomplete as any,
+//       schema: schemaWithoutIdentity,
+//       name: `${syncTableIdentityName}.${propertyName}.Autocomplete`,
+//     });
+//   }
+//   return result;
+// }

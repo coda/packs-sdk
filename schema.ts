@@ -1354,11 +1354,20 @@ export function makeObjectSchema<
   const schema: ObjectSchemaDefinition<K, L> = {...schemaDef, type: ValueType.Object};
   // In case a single schema object was used for multiple properties, make copies for each of them.
   for (const key of Object.keys(schema.properties)) {
+    const autocompleteFunction =
+      typeof schema.properties[key].autocomplete === 'function' ? schema.properties[key].autocomplete : undefined;
+
     // 'type' was just created from scratch above
     if (key !== 'type') {
       // Typescript doesn't like the raw schema.properties[key] (on the left only though...)
       const typedKey = key as keyof ObjectSchemaProperties<K | L>;
       schema.properties[typedKey] = deepCopy(schema.properties[key]);
+
+      // Autocomplete gets manually copied over because it may be a function, which deepCopy wouldn't
+      // support.
+      if (autocompleteFunction) {
+        schema.properties[typedKey].autocomplete = autocompleteFunction;
+      }
     }
   }
   validateObjectSchema(schema);

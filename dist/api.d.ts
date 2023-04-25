@@ -1,6 +1,5 @@
 import type { ArraySchema } from './schema';
 import type { ArrayType } from './api_types';
-import { AutocompleteValueType } from './api_types';
 import type { BooleanSchema } from './schema';
 import type { CommonPackFormulaDef } from './api_types';
 import { ConnectionRequirement } from './api_types';
@@ -849,9 +848,6 @@ export interface PropertyAutocompleteAnnotatedResult {
     propertiesUsed: string[];
     searchUsed?: boolean;
 }
-/**
- * @hidden
- */
 /** @hidden */
 export declare type PropertyAutocompleteMetadataFormula<SchemaT extends Schema> = ObjectPackFormula<[
 ], ArraySchema<SchemaT>> & {
@@ -1037,33 +1033,6 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
      * sync tables that have a dynamic schema.
      */
     dynamicOptions?: DynamicOptions;
-}
-/**
- * @hidden
- */
-export interface PrimitiveAutocompleteOptions<ResultT extends ValueType.String | ValueType.Number> {
-    name: string;
-    execute: PropertyAutocompleteMetadataFunction<ResultT extends ValueType.String ? string[] : ResultT extends ValueType.Number ? number[] : never>;
-    type: ResultT;
-    schema?: undefined;
-}
-/**
- * @hidden
- */
-export interface ObjectAutocompleteOptions<SchemaT extends Schema> {
-    name: string;
-    execute: PropertyAutocompleteMetadataFunction<Array<SchemaType<SchemaT>>>;
-    type: ValueType.Object;
-    schema: SchemaT;
-}
-/**
- * @hidden
- */
-export interface DynamicAutocompleteOptions {
-    name: string;
-    execute: PropertyAutocompleteMetadataFunction<any[]>;
-    type: AutocompleteValueType.Dynamic;
-    schema?: undefined;
 }
 /**
  * Options provided when defining a dynamic sync table.

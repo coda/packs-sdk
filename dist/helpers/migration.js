@@ -28,7 +28,7 @@ class ObjectSchemaHelper {
     get mutable() {
         return this._schema.mutable;
     }
-    get valueAutocomplete() {
+    get autocomplete() {
         return this._schema.autocomplete;
     }
     get properties() {

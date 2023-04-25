@@ -497,11 +497,17 @@ function makeObjectSchema(schemaDef) {
     const schema = { ...schemaDef, type: ValueType.Object };
     // In case a single schema object was used for multiple properties, make copies for each of them.
     for (const key of Object.keys(schema.properties)) {
+        const autocompleteFunction = typeof schema.properties[key].autocomplete === 'function' ? schema.properties[key].autocomplete : undefined;
         // 'type' was just created from scratch above
         if (key !== 'type') {
             // Typescript doesn't like the raw schema.properties[key] (on the left only though...)
             const typedKey = key;
             schema.properties[typedKey] = (0, object_utils_1.deepCopy)(schema.properties[key]);
+            // Autocomplete gets manually copied over because it may be a function, which deepCopy wouldn't
+            // support.
+            if (autocompleteFunction) {
+                schema.properties[typedKey].autocomplete = autocompleteFunction;
+            }
         }
     }
     validateObjectSchema(schema);
@@ -663,7 +669,7 @@ exports.normalizeSchema = normalizeSchema;
  * schema it provides better code reuse to derive a reference schema instead.
  */
 function makeReferenceSchemaFromObjectSchema(schema, identityName) {
-    const { type, id, primary, identity, properties, mutable, valueAutocomplete } = (0, migration_1.objectSchemaHelper)(schema);
+    const { type, id, primary, identity, properties, mutable, autocomplete } = (0, migration_1.objectSchemaHelper)(schema);
     (0, ensure_2.ensureExists)(identity || identityName, 'Source schema must have an identity field, or you must provide an identity name for the reference.');
     const validId = (0, ensure_2.ensureExists)(id);
     const referenceProperties = { [validId]: properties[validId] };
@@ -678,7 +684,7 @@ function makeReferenceSchemaFromObjectSchema(schema, identityName) {
         displayProperty: primary,
         properties: referenceProperties,
         mutable,
-        valueAutocomplete,
+        autocomplete,
     });
 }
 exports.makeReferenceSchemaFromObjectSchema = makeReferenceSchemaFromObjectSchema;

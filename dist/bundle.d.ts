@@ -2741,9 +2741,6 @@ export declare type MetadataFormula = BaseFormula<[
 ], any> & {
 	schema?: any;
 };
-/**
- * @hidden
- */
 /** @hidden */
 export declare type PropertyAutocompleteMetadataFormula<SchemaT extends Schema> = ObjectPackFormula<[
 ], ArraySchema<SchemaT>> & {
