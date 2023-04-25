@@ -7,6 +7,7 @@ import {BooleanHintValueTypes} from '../schema';
 import type {BooleanPackFormula} from '../api';
 import type {BooleanSchema} from '../schema';
 import type {CodaApiBearerTokenAuthentication} from '../types';
+import type {CodaInternalRichTextSchema} from '../schema';
 import {ConnectionRequirement} from '../api_types';
 import {CurrencyFormat} from '../schema';
 import type {CurrencySchema} from '../schema';
@@ -757,6 +758,13 @@ const durationPropertySchema = zodCompleteStrictObject<DurationSchema & ObjectSc
   ...basePropertyValidators,
 });
 
+const codaInternalRichTextSchema = zodCompleteStrictObject<CodaInternalRichTextSchema & ObjectSchemaProperty>({
+  type: zodDiscriminant(ValueType.String),
+  codaType: zodDiscriminant(ValueHintType.CodaInternalRichText),
+  isCanvas: z.boolean().optional(),
+  ...basePropertyValidators,
+});
+
 const embedPropertySchema = zodCompleteStrictObject<StringEmbedSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.String),
   codaType: zodDiscriminant(ValueHintType.Embed),
@@ -792,6 +800,7 @@ const stringPropertySchema = z.union([
   stringDatePropertySchema,
   stringTimePropertySchema,
   stringDateTimePropertySchema,
+  codaInternalRichTextSchema,
   durationPropertySchema,
   embedPropertySchema,
   emailPropertySchema,
@@ -1083,6 +1092,7 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
               case ValueHintType.Embed:
               case ValueHintType.Scale:
                 return false;
+              case ValueHintType.CodaInternalRichText:
               case ValueHintType.Currency:
               case ValueHintType.Date:
               case ValueHintType.DateTime:

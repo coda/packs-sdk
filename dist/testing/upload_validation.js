@@ -624,6 +624,12 @@ const durationPropertySchema = zodCompleteStrictObject({
     maxUnit: z.nativeEnum(schema_4.DurationUnit).optional(),
     ...basePropertyValidators,
 });
+const codaInternalRichTextSchema = zodCompleteStrictObject({
+    type: zodDiscriminant(schema_13.ValueType.String),
+    codaType: zodDiscriminant(schema_12.ValueHintType.CodaInternalRichText),
+    isCanvas: z.boolean().optional(),
+    ...basePropertyValidators,
+});
 const embedPropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.String),
     codaType: zodDiscriminant(schema_12.ValueHintType.Embed),
@@ -655,6 +661,7 @@ const stringPropertySchema = z.union([
     stringDatePropertySchema,
     stringTimePropertySchema,
     stringDateTimePropertySchema,
+    codaInternalRichTextSchema,
     durationPropertySchema,
     embedPropertySchema,
     emailPropertySchema,
@@ -874,6 +881,7 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
                 case schema_12.ValueHintType.Embed:
                 case schema_12.ValueHintType.Scale:
                     return false;
+                case schema_12.ValueHintType.CodaInternalRichText:
                 case schema_12.ValueHintType.Currency:
                 case schema_12.ValueHintType.Date:
                 case schema_12.ValueHintType.DateTime:

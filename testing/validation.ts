@@ -184,6 +184,8 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
         case undefined:
           // no need to coerce current result type
           return [];
+        case ValueHintType.CodaInternalRichText:
+          return [{message: `CodaInternalRichText is not supported in external packs.`}];
         default:
           ensureUnreachable(schema);
       }

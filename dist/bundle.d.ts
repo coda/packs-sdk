@@ -156,7 +156,9 @@ export declare enum ValueHintType {
 	/**
 	 * Indicates to render a boolean value as a toggle.
 	 */
-	Toggle = "toggle"
+	Toggle = "toggle",
+	/** @hidden */
+	CodaInternalRichText = "codaInternalRichText"
 }
 declare const StringHintValueTypes: readonly [
 	ValueHintType.Attachment,
@@ -170,7 +172,8 @@ declare const StringHintValueTypes: readonly [
 	ValueHintType.ImageReference,
 	ValueHintType.ImageAttachment,
 	ValueHintType.Markdown,
-	ValueHintType.Url
+	ValueHintType.Url,
+	ValueHintType.CodaInternalRichText
 ];
 declare const NumberHintValueTypes: readonly [
 	ValueHintType.Date,
@@ -545,6 +548,13 @@ export interface StringEmbedSchema extends BaseStringSchema<ValueHintType.Embed>
 	 */
 	force?: boolean;
 }
+/** @hidden */
+export interface CodaInternalRichTextSchema extends BaseStringSchema<ValueHintType.CodaInternalRichText> {
+	/** Instructs Coda to render this value as internal rich text. */
+	codaType: ValueHintType.CodaInternalRichText;
+	/** @hidden */
+	isCanvas?: boolean;
+}
 /**
  * A schema representing a return value or object property that is provided as a string,
  * which Coda should interpret as a time.
@@ -662,7 +672,8 @@ declare const SimpleStringHintValueTypes: readonly [
 	ValueHintType.Html,
 	ValueHintType.Markdown,
 	ValueHintType.Url,
-	ValueHintType.Email
+	ValueHintType.Email,
+	ValueHintType.CodaInternalRichText
 ];
 export declare type SimpleStringHintTypes = typeof SimpleStringHintValueTypes[number];
 /**
@@ -674,7 +685,7 @@ export interface SimpleStringSchema<T extends SimpleStringHintTypes = SimpleStri
 /**
  * The union of schema definition types whose underlying value is a string.
  */
-export declare type StringSchema = StringDateSchema | StringTimeSchema | StringDateTimeSchema | DurationSchema | EmailSchema | ImageSchema | LinkSchema | StringEmbedSchema | SimpleStringSchema;
+export declare type StringSchema = StringDateSchema | StringTimeSchema | StringDateTimeSchema | CodaInternalRichTextSchema | DurationSchema | EmailSchema | ImageSchema | LinkSchema | StringEmbedSchema | SimpleStringSchema;
 /**
  * A schema representing a return value or object property that is an array (list) of items.
  * The items are themselves schema definitions, which may refer to scalars or other objects.

@@ -179,6 +179,8 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
                 case undefined:
                     // no need to coerce current result type
                     return [];
+                case schema_1.ValueHintType.CodaInternalRichText:
+                    return [{ message: `CodaInternalRichText is not supported.` }];
                 default:
                     (0, ensure_2.ensureUnreachable)(schema);
             }
