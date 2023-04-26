@@ -40,6 +40,7 @@ module.exports = {
     // Internal only types.
     'AWSAssumeRoleAuthentication',
     'VariousAuthentication',
+    'CodaInternalRichTextSchema',
 
     // Deprecated features we should remove from the SDK.
     'FeatureSet',

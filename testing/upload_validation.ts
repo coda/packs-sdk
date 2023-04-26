@@ -7,6 +7,7 @@ import {BooleanHintValueTypes} from '../schema';
 import type {BooleanPackFormula} from '../api';
 import type {BooleanSchema} from '../schema';
 import type {CodaApiBearerTokenAuthentication} from '../types';
+import type {CodaInternalRichTextSchema} from '../schema';
 import {ConnectionRequirement} from '../api_types';
 import {CurrencyFormat} from '../schema';
 import type {CurrencySchema} from '../schema';
@@ -757,6 +758,13 @@ const durationPropertySchema = zodCompleteStrictObject<DurationSchema & ObjectSc
   ...basePropertyValidators,
 });
 
+const codaInternalRichTextSchema = zodCompleteStrictObject<CodaInternalRichTextSchema & ObjectSchemaProperty>({
+  type: zodDiscriminant(ValueType.String),
+  codaType: zodDiscriminant(ValueHintType.CodaInternalRichText),
+  isCanvas: z.boolean().optional(),
+  ...basePropertyValidators,
+});
+
 const embedPropertySchema = zodCompleteStrictObject<StringEmbedSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.String),
   codaType: zodDiscriminant(ValueHintType.Embed),
@@ -792,6 +800,7 @@ const stringPropertySchema = z.union([
   stringDatePropertySchema,
   stringTimePropertySchema,
   stringDateTimePropertySchema,
+  codaInternalRichTextSchema,
   durationPropertySchema,
   embedPropertySchema,
   emailPropertySchema,
@@ -882,6 +891,11 @@ function isValidIdentityName(packId: number | undefined, name: string): boolean 
     return true;
   }
   return isValidObjectId(name);
+}
+
+function isValidUseOfCodaInternalRichText(packId: number | undefined): boolean {
+  // CrossDoc pack is allowed to use this type hint.
+  return packId === 1054;
 }
 
 const attributionSchema = z
@@ -1083,6 +1097,7 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
               case ValueHintType.Embed:
               case ValueHintType.Scale:
                 return false;
+              case ValueHintType.CodaInternalRichText:
               case ValueHintType.Currency:
               case ValueHintType.Date:
               case ValueHintType.DateTime:
@@ -1112,6 +1127,20 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
       validateImageProperty();
       validateSnippetProperty();
       validateSubtitleProperties();
+    })
+    .superRefine((data, context) => {
+      const schemaHelper = objectSchemaHelper(data as GenericObjectSchema);
+      const internalRichTextPropertyTuple = Object.entries(schemaHelper.properties).find(([_key, prop]) => 
+        prop.type === ValueType.String && prop.codaType === ValueHintType.CodaInternalRichText);
+      if (internalRichTextPropertyTuple && !isValidUseOfCodaInternalRichText(data.identity?.packId)) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['identity', 'properties', internalRichTextPropertyTuple[0]],
+          message:
+            'Invalid codaType. CodaInternalRichText is not a supported value.',
+        });
+        return;
+      }
     }),
 );
 
