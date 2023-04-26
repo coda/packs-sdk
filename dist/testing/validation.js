@@ -180,7 +180,7 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
                     // no need to coerce current result type
                     return [];
                 case schema_1.ValueHintType.CodaInternalRichText:
-                    return [{ message: `CodaInternalRichText is not supported.` }];
+                    return [{ message: `CodaInternalRichText is not supported in external packs.` }];
                 default:
                     (0, ensure_2.ensureUnreachable)(schema);
             }
