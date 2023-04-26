@@ -41,7 +41,6 @@ import {dateArray} from './api_types';
 import {deepCopy} from './helpers/object_utils';
 import {ensureUnreachable} from './helpers/ensure';
 import {fileArray} from './api_types';
-import {format} from 'util';
 import {generateObjectResponseHandler} from './handler_templates';
 import {generateRequestHandler} from './handler_templates';
 import {htmlArray} from './api_types';
@@ -1459,8 +1458,6 @@ export function makePropertyAutocompleteFormula<SchemaT extends Schema>({
     items: schema,
   };
   const formula = makeFormula<[], ValueType.Array, SchemaT>(formulaDefn);
-  // eslint-disable-next-line no-console
-  console.log(`WEITZMAN: Made a formula that looks like this: ${JSON.stringify(formula)}`);
   return formula;
 }
 
@@ -1886,8 +1883,6 @@ export function makeSyncTable<
   const autocompletes: SyncTableAutocompleters = {};
 
   for (const propertyName of listPropertiesWithAutocompleteFunctions(inputSchema)) {
-    // eslint-disable-next-line no-console
-    console.log(`WEITZMAN: Setting up autocomplete property ${propertyName}`);
     schema.properties[propertyName].autocomplete = propertyName as AutocompleteReference;
     autocompletes[propertyName] = makePropertyAutocompleteFormula({
       execute: inputSchema.properties[propertyName].autocomplete as any,
@@ -2249,25 +2244,15 @@ export function maybeRewriteConnectionForFormula<
 
 function listPropertiesWithAutocompleteFunctions(schema: ObjectSchemaDefinition<string, string>) {
   const result: string[] = [];
-  // eslint-disable-next-line no-console
-  console.log(`WEITZMAN: Looking at original schema: ${format(schema.properties)}`);
-  // eslint-disable-next-line no-console
-  console.log(`WEITZMAN: Checking if any of these have autocomplete functions: ${Object.keys(schema.properties)}`);
   for (const propertyName of Object.keys(schema.properties)) {
     const {autocomplete} = schema.properties[propertyName];
     if (!autocomplete) {
-      // eslint-disable-next-line no-console
-      console.log(`WEITZMAN: ${propertyName} has no autocomplete`);
       continue;
     }
     if (typeof autocomplete !== 'function') {
-      // eslint-disable-next-line no-console
-      console.log(`WEITZMAN: ${propertyName} has autocomplete that isn't a fuction`);
       continue;
     }
 
-    // eslint-disable-next-line no-console
-    console.log(`WEITZMAN: ${propertyName} has autocomplete function!`);
     result.push(propertyName);
   }
   return result;

@@ -11,7 +11,6 @@ const api_types_6 = require("./api_types");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_1 = require("./helpers/ensure");
 const api_types_7 = require("./api_types");
-const util_1 = require("util");
 const handler_templates_1 = require("./handler_templates");
 const handler_templates_2 = require("./handler_templates");
 const api_types_8 = require("./api_types");
@@ -586,8 +585,6 @@ function makePropertyAutocompleteFormula({ execute, schema, name, }) {
         items: schema,
     };
     const formula = makeFormula(formulaDefn);
-    // eslint-disable-next-line no-console
-    console.log(`WEITZMAN: Made a formula that looks like this: ${JSON.stringify(formula)}`);
     return formula;
 }
 exports.makePropertyAutocompleteFormula = makePropertyAutocompleteFormula;
@@ -779,8 +776,6 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
     // deep copy will have already thrown away any JS functions.
     const autocompletes = {};
     for (const propertyName of listPropertiesWithAutocompleteFunctions(inputSchema)) {
-        // eslint-disable-next-line no-console
-        console.log(`WEITZMAN: Setting up autocomplete property ${propertyName}`);
         schema.properties[propertyName].autocomplete = propertyName;
         autocompletes[propertyName] = makePropertyAutocompleteFormula({
             execute: inputSchema.properties[propertyName].autocomplete,
@@ -1034,24 +1029,14 @@ function maybeRewriteConnectionForFormula(formula, connectionRequirement) {
 exports.maybeRewriteConnectionForFormula = maybeRewriteConnectionForFormula;
 function listPropertiesWithAutocompleteFunctions(schema) {
     const result = [];
-    // eslint-disable-next-line no-console
-    console.log(`WEITZMAN: Looking at original schema: ${(0, util_1.format)(schema.properties)}`);
-    // eslint-disable-next-line no-console
-    console.log(`WEITZMAN: Checking if any of these have autocomplete functions: ${Object.keys(schema.properties)}`);
     for (const propertyName of Object.keys(schema.properties)) {
         const { autocomplete } = schema.properties[propertyName];
         if (!autocomplete) {
-            // eslint-disable-next-line no-console
-            console.log(`WEITZMAN: ${propertyName} has no autocomplete`);
             continue;
         }
         if (typeof autocomplete !== 'function') {
-            // eslint-disable-next-line no-console
-            console.log(`WEITZMAN: ${propertyName} has autocomplete that isn't a fuction`);
             continue;
         }
-        // eslint-disable-next-line no-console
-        console.log(`WEITZMAN: ${propertyName} has autocomplete function!`);
         result.push(propertyName);
     }
     return result;

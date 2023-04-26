@@ -41,7 +41,7 @@ async function findAndExecutePackFunction({ shouldWrapError = true, ...args }) {
 }
 exports.findAndExecutePackFunction = findAndExecutePackFunction;
 async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, executionContext, updates, }) {
-    var _a, _b;
+    var _a;
     const { syncTables, defaultAuthentication } = manifest;
     switch (formulaSpec.type) {
         case types_2.FormulaType.Standard: {
@@ -85,9 +85,13 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                 case types_3.MetadataFormulaType.PropertyAutocomplete:
                     const syncTable = syncTables === null || syncTables === void 0 ? void 0 : syncTables.find(table => table.name === formulaSpec.syncTableName);
                     const autocompleteFormula = (_a = syncTable === null || syncTable === void 0 ? void 0 : syncTable.autocompletes) === null || _a === void 0 ? void 0 : _a[formulaSpec.autocompleteName];
-                    if (!autocompleteFormula) {
-                        throw new Error(`WEITZMAN: Sync table ${formulaSpec.syncTableName} autocompletes are ${JSON.stringify(Object.keys((_b = syncTable === null || syncTable === void 0 ? void 0 : syncTable.autocompletes) !== null && _b !== void 0 ? _b : {}))} but could not find ${formulaSpec.autocompleteName}`);
-                    }
+                    // if (!autocompleteFormula) {
+                    //   throw new Error(
+                    //     `WEITZMAN: Sync table ${formulaSpec.syncTableName} autocompletes are ${JSON.stringify(
+                    //       Object.keys(syncTable?.autocompletes ?? {}),
+                    //     )} but could not find ${formulaSpec.autocompleteName}`,
+                    //   );
+                    // }
                     if (autocompleteFormula) {
                         const propertyValues = {};
                         const cacheKeysUsed = [];
