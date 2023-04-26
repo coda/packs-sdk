@@ -1,6 +1,7 @@
 import type {ArraySchema} from './schema';
 import type {ArrayType} from './api_types';
 import type {AutocompleteReference} from './api_types';
+import {AutocompleteValueType} from './api_types';
 import type {BooleanSchema} from './schema';
 import type {CommonPackFormulaDef} from './api_types';
 import {ConnectionRequirement} from './api_types';
@@ -1819,6 +1820,9 @@ export interface DynamicSyncTableOptions<
    * in placeholderSchema will be rendered by default after the sync.
    */
   placeholderSchema?: SchemaT;
+
+  /** @hidden */
+  autocomplete?: PropertyAutocompleteMetadataFunction<any>;
 }
 
 /**
@@ -2027,7 +2031,7 @@ export function makeDynamicSyncTable<
 }): DynamicSyncTableDef<K, L, ParamDefsT, any>;
 
 /**
- * Includes the unreleased propertyAutocomplete parameter.
+ * Includes the unreleased autocomplete parameter.
  * @hidden
  */
 export function makeDynamicSyncTable<
@@ -2049,6 +2053,7 @@ export function makeDynamicSyncTable<
   connectionRequirement,
   defaultAddDynamicColumns,
   placeholderSchema: placeholderSchemaInput,
+  autocomplete,
 }: {
   name: string;
   description?: string;
@@ -2063,6 +2068,7 @@ export function makeDynamicSyncTable<
   connectionRequirement?: ConnectionRequirement;
   defaultAddDynamicColumns?: boolean;
   placeholderSchema?: SchemaT;
+  autocomplete?: PropertyAutocompleteMetadataFunction<any>;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any> {
   const placeholderSchema: any =
     placeholderSchemaInput ||
@@ -2090,6 +2096,22 @@ export function makeDynamicSyncTable<
     connectionRequirement,
     dynamicOptions: {getSchema, entityName, defaultAddDynamicColumns},
   });
+
+  if (autocomplete) {
+    table.autocompletes ??= {};
+    table.autocompletes[AutocompleteValueType.Dynamic] = makePropertyAutocompleteFormula({
+      execute: autocomplete,
+      schema: makeObjectSchema({
+        // A dynamic autocomplete formula can return different result types depending
+        // on which property is being autocompleted, so there's no accurate schema
+        // type to set on the formula. We just use an empty object schema, but it could
+        // be anything.
+        properties: {},
+      }),
+      name: `${identityName}.DynamicAutocomplete`,
+    });
+  }
+
   return {
     ...table,
     isDynamic: true,

@@ -5824,6 +5824,26 @@ module.exports = (() => {
 
   // schema.ts
   var import_pascalcase = __toESM(require_pascalcase());
+  function throwOnDynamicSchemaWithJsAutocompleteFunction(dynamicSchema, parentKey) {
+    if (!dynamicSchema) {
+      return;
+    }
+    if (Array.isArray(dynamicSchema)) {
+      dynamicSchema.forEach((item) => throwOnDynamicSchemaWithJsAutocompleteFunction(item));
+      return;
+    }
+    if (typeof dynamicSchema === "object") {
+      for (const key of Object.keys(dynamicSchema)) {
+        throwOnDynamicSchemaWithJsAutocompleteFunction(dynamicSchema[key], key);
+      }
+    }
+    if (typeof dynamicSchema === "function" && parentKey === "autocomplete") {
+      throw new Error(
+        'Sync tables with dynamic schemas must use "autocomplete: AutocompleteValueType.Dynamic" instead of "autocomplete: () => {...}'
+      );
+    }
+  }
+  __name(throwOnDynamicSchemaWithJsAutocompleteFunction, "throwOnDynamicSchemaWithJsAutocompleteFunction");
 
   // api.ts
   var import_util = __toESM(require_util());
@@ -6340,6 +6360,7 @@ module.exports = (() => {
             if (syncTables) {
               const syncTable2 = syncTables.find((table) => table.name === formulaSpec.syncTableName);
               if (syncTable2) {
+                let isGetSchema = false;
                 let formula;
                 if (isDynamicSyncTable(syncTable2)) {
                   switch (formulaSpec.metadataFormulaType) {
@@ -6357,6 +6378,7 @@ module.exports = (() => {
                       break;
                     case "SyncGetSchema" /* SyncGetSchema */:
                       formula = syncTable2.getSchema;
+                      isGetSchema = true;
                       break;
                     default:
                       return ensureSwitchUnreachable(formulaSpec);
@@ -6365,6 +6387,7 @@ module.exports = (() => {
                   switch (formulaSpec.metadataFormulaType) {
                     case "SyncGetSchema" /* SyncGetSchema */:
                       formula = syncTable2.getSchema;
+                      isGetSchema = true;
                       break;
                     case "SyncListDynamicUrls" /* SyncListDynamicUrls */:
                     case "SyncSearchDynamicUrls" /* SyncSearchDynamicUrls */:
@@ -6376,7 +6399,19 @@ module.exports = (() => {
                   }
                 }
                 if (formula) {
-                  return formula.execute(params, executionContext);
+                  if (isGetSchema) {
+                    console.log(`WEITZMAN: Running a getSchema formula`);
+                  }
+                  const formulaResult = formula.execute(params, executionContext);
+                  if (isGetSchema) {
+                    console.log(`WEITZMAN: Checking for funcs in ...`);
+                    console.debug(`WEITZMAN: Test value with func`, () => 1);
+                    console.debug(formulaResult);
+                    throwOnDynamicSchemaWithJsAutocompleteFunction(formulaResult);
+                    console.log(`WEITZMAN: No funcs found`);
+                    return { fakeResult: 1 };
+                  }
+                  return formulaResult;
                 }
               }
             }

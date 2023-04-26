@@ -1,5 +1,6 @@
 import type {$Values} from './type_utils';
 import type {AutocompleteReference} from './api_types';
+import type {AutocompleteValueType} from './api_types';
 import type {PackFormulaResult} from './api_types';
 import type {PropertyAutocompleteMetadataFunction} from './api_types';
 import {assertCondition} from './helpers/ensure';
@@ -216,6 +217,7 @@ export type ObjectHintTypes = (typeof ObjectHintValueTypes)[number];
 export type PropertySchemaAutocomplete<T extends PackFormulaResult> =
   | PropertyAutocompleteMetadataFunction<T[]>
   | T[]
+  | AutocompleteValueType
   | AutocompleteReference;
 
 interface BaseSchema {
@@ -1601,4 +1603,27 @@ export function withIdentity(schema: GenericObjectSchema, identityName: string):
     ...deepCopy(schema),
     identity: {name: ensureNonEmptyString(identityName)},
   });
+}
+
+export function throwOnDynamicSchemaWithJsAutocompleteFunction(dynamicSchema: any, parentKey?: string) {
+  if (!dynamicSchema) {
+    return;
+  }
+
+  if (Array.isArray(dynamicSchema)) {
+    dynamicSchema.forEach(item => throwOnDynamicSchemaWithJsAutocompleteFunction(item));
+    return;
+  }
+
+  if (typeof dynamicSchema === 'object') {
+    for (const key of Object.keys(dynamicSchema)) {
+      throwOnDynamicSchemaWithJsAutocompleteFunction(dynamicSchema[key], key);
+    }
+  }
+
+  if (typeof dynamicSchema === 'function' && parentKey === 'autocomplete') {
+    throw new Error(
+      'Sync tables with dynamic schemas must use "autocomplete: AutocompleteValueType.Dynamic" instead of "autocomplete: () => {...}',
+    );
+  }
 }

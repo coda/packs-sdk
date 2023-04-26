@@ -707,12 +707,14 @@ export declare enum PrecannedDateRange {
 	 */
 	Everything = "everything"
 }
-declare enum AutocompleteValueType {
-	Dynamic = "dynamic",
-	Static = "static"
+/**
+ * @hidden
+ */
+export declare enum AutocompleteValueType {
+	Dynamic = "__coda_dynamic"
 }
 /** @hidden */
-export declare type AutocompleteReference = AutocompleteValueType & {
+export declare type AutocompleteReference = string & {
 	__brand: "AutocompleteRef";
 };
 /**
@@ -920,7 +922,7 @@ export declare type ObjectHintTypes = (typeof ObjectHintValueTypes)[number];
  * A function or set of values to return for property autocomplete.
  * @hidden
  */
-export declare type PropertySchemaAutocomplete<T extends PackFormulaResult> = PropertyAutocompleteMetadataFunction<T[]> | T[] | AutocompleteReference;
+export declare type PropertySchemaAutocomplete<T extends PackFormulaResult> = PropertyAutocompleteMetadataFunction<T[]> | T[] | AutocompleteValueType | AutocompleteReference;
 export interface BaseSchema {
 	/**
 	 * A explanation of this object schema property shown to the user in the UI.
@@ -3006,6 +3008,8 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
 	 * in placeholderSchema will be rendered by default after the sync.
 	 */
 	placeholderSchema?: SchemaT;
+	/** @hidden */
+	autocomplete?: PropertyAutocompleteMetadataFunction<any>;
 }
 /**
  * Wrapper to produce a sync table definition. All (non-dynamic) sync tables should be created

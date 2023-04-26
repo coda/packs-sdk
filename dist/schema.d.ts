@@ -1,5 +1,6 @@
 import type { $Values } from './type_utils';
 import type { AutocompleteReference } from './api_types';
+import type { AutocompleteValueType } from './api_types';
 import type { PackFormulaResult } from './api_types';
 import type { PropertyAutocompleteMetadataFunction } from './api_types';
 /**
@@ -174,7 +175,7 @@ export declare type ObjectHintTypes = (typeof ObjectHintValueTypes)[number];
  * A function or set of values to return for property autocomplete.
  * @hidden
  */
-export declare type PropertySchemaAutocomplete<T extends PackFormulaResult> = PropertyAutocompleteMetadataFunction<T[]> | T[] | AutocompleteReference;
+export declare type PropertySchemaAutocomplete<T extends PackFormulaResult> = PropertyAutocompleteMetadataFunction<T[]> | T[] | AutocompleteValueType | AutocompleteReference;
 interface BaseSchema {
     /**
      * A explanation of this object schema property shown to the user in the UI.
@@ -1173,4 +1174,5 @@ export declare function makeReferenceSchemaFromObjectSchema(schema: GenericObjec
  * You could add the identity directly, but that would make the schema less re-usable.
  */
 export declare function withIdentity(schema: GenericObjectSchema, identityName: string): GenericObjectSchema;
+export declare function throwOnDynamicSchemaWithJsAutocompleteFunction(dynamicSchema: any, parentKey?: string): void;
 export {};

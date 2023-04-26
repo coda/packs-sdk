@@ -14,6 +14,7 @@ const helpers_2 = require("../common/helpers");
 const api_3 = require("../../api");
 const api_4 = require("../../api");
 const migration_1 = require("../../helpers/migration");
+const schema_1 = require("../../schema");
 const marshaling_1 = require("../common/marshaling");
 const marshaling_2 = require("../common/marshaling");
 var marshaling_3 = require("../common/marshaling");
@@ -144,6 +145,7 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                     if (syncTables) {
                         const syncTable = syncTables.find(table => table.name === formulaSpec.syncTableName);
                         if (syncTable) {
+                            let isGetSchema = false;
                             let formula;
                             if ((0, api_3.isDynamicSyncTable)(syncTable)) {
                                 switch (formulaSpec.metadataFormulaType) {
@@ -161,6 +163,7 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                                         break;
                                     case types_3.MetadataFormulaType.SyncGetSchema:
                                         formula = syncTable.getSchema;
+                                        isGetSchema = true;
                                         break;
                                     default:
                                         return ensureSwitchUnreachable(formulaSpec);
@@ -172,6 +175,7 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                                     // in order to augment a static base schema with dynamic properties.
                                     case types_3.MetadataFormulaType.SyncGetSchema:
                                         formula = syncTable.getSchema;
+                                        isGetSchema = true;
                                         break;
                                     case types_3.MetadataFormulaType.SyncListDynamicUrls:
                                     case types_3.MetadataFormulaType.SyncSearchDynamicUrls:
@@ -184,7 +188,24 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                                 }
                             }
                             if (formula) {
-                                return formula.execute(params, executionContext);
+                                if (isGetSchema) {
+                                    // eslint-disable-next-line no-console
+                                    console.log(`WEITZMAN: Running a getSchema formula`);
+                                }
+                                const formulaResult = formula.execute(params, executionContext);
+                                if (isGetSchema) {
+                                    // eslint-disable-next-line no-console
+                                    console.log(`WEITZMAN: Checking for funcs in ...`);
+                                    // eslint-disable-next-line no-console
+                                    console.debug(`WEITZMAN: Test value with func`, () => 1);
+                                    // eslint-disable-next-line no-console
+                                    console.debug(formulaResult);
+                                    (0, schema_1.throwOnDynamicSchemaWithJsAutocompleteFunction)(formulaResult);
+                                    // eslint-disable-next-line no-console
+                                    console.log(`WEITZMAN: No funcs found`);
+                                    return { fakeResult: 1 };
+                                }
+                                return formulaResult;
                             }
                         }
                     }

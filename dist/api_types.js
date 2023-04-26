@@ -294,6 +294,5 @@ var PrecannedDateRange;
  */
 var AutocompleteValueType;
 (function (AutocompleteValueType) {
-    AutocompleteValueType["Dynamic"] = "dynamic";
-    AutocompleteValueType["Static"] = "static";
+    AutocompleteValueType["Dynamic"] = "__coda_dynamic";
 })(AutocompleteValueType = exports.AutocompleteValueType || (exports.AutocompleteValueType = {}));

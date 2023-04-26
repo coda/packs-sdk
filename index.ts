@@ -61,6 +61,7 @@ export type {ExternalPackVersionMetadata} from './compiled_types';
 
 // Formula related interfaces
 export type {ArrayType} from './api_types';
+export {AutocompleteValueType} from './api_types';
 export type {PropertyAutocompleteExecutionContext} from './api_types';
 export {ConnectionRequirement} from './api_types';
 export type {Continuation} from './api';

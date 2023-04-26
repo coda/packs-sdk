@@ -33,6 +33,7 @@ import {findSyncFormula} from '../common/helpers';
 import {isDynamicSyncTable} from '../../api';
 import {normalizePropertyAutocompleteResults} from '../../api';
 import {setEndpointHelper} from '../../helpers/migration';
+import {throwOnDynamicSchemaWithJsAutocompleteFunction} from '../../schema';
 import {unwrapError} from '../common/marshaling';
 import {wrapError} from '../common/marshaling';
 
@@ -223,6 +224,7 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
           if (syncTables) {
             const syncTable = syncTables.find(table => table.name === formulaSpec.syncTableName);
             if (syncTable) {
+              let isGetSchema = false;
               let formula: MetadataFormula | undefined;
               if (isDynamicSyncTable(syncTable)) {
                 switch (formulaSpec.metadataFormulaType) {
@@ -241,6 +243,7 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
                     break;
                   case MetadataFormulaType.SyncGetSchema:
                     formula = syncTable.getSchema;
+                    isGetSchema = true;
                     break;
                   default:
                     return ensureSwitchUnreachable(formulaSpec);
@@ -251,6 +254,7 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
                   // in order to augment a static base schema with dynamic properties.
                   case MetadataFormulaType.SyncGetSchema:
                     formula = syncTable.getSchema;
+                    isGetSchema = true;
                     break;
                   case MetadataFormulaType.SyncListDynamicUrls:
                   case MetadataFormulaType.SyncSearchDynamicUrls:
@@ -263,7 +267,24 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
                 }
               }
               if (formula) {
-                return formula.execute(params as any, executionContext);
+                if (isGetSchema) {
+                  // eslint-disable-next-line no-console
+                  console.log(`WEITZMAN: Running a getSchema formula`);
+                }
+                const formulaResult = formula.execute(params as any, executionContext);
+                if (isGetSchema) {
+                  // eslint-disable-next-line no-console
+                  console.log(`WEITZMAN: Checking for funcs in ...`);
+                  // eslint-disable-next-line no-console
+                  console.debug(`WEITZMAN: Test value with func`, () => 1);
+                  // eslint-disable-next-line no-console
+                  console.debug(formulaResult);
+                  throwOnDynamicSchemaWithJsAutocompleteFunction(formulaResult);
+                  // eslint-disable-next-line no-console
+                  console.log(`WEITZMAN: No funcs found`);
+                  // return {fakeResult: 1};
+                }
+                return formulaResult;
               }
             }
           }
