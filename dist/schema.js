@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.throwOnDynamicSchemaWithJsAutocompleteFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+const api_1 = require("./api");
 const ensure_1 = require("./helpers/ensure");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_2 = require("./helpers/ensure");
@@ -714,7 +715,7 @@ function throwOnDynamicSchemaWithJsAutocompleteFunction(dynamicSchema, parentKey
         }
     }
     if (typeof dynamicSchema === 'function' && parentKey === 'autocomplete') {
-        throw new Error('Sync tables with dynamic schemas must use "autocomplete: AutocompleteValueType.Dynamic" instead of "autocomplete: () => {...}');
+        throw new api_1.UserVisibleError('Sync tables with dynamic schemas must use "autocomplete: AutocompleteValueType.Dynamic" instead of "autocomplete: () => {...}');
     }
 }
 exports.throwOnDynamicSchemaWithJsAutocompleteFunction = throwOnDynamicSchemaWithJsAutocompleteFunction;

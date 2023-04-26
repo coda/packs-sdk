@@ -5838,7 +5838,7 @@ module.exports = (() => {
       }
     }
     if (typeof dynamicSchema === "function" && parentKey === "autocomplete") {
-      throw new Error(
+      throw new UserVisibleError(
         'Sync tables with dynamic schemas must use "autocomplete: AutocompleteValueType.Dynamic" instead of "autocomplete: () => {...}'
       );
     }
@@ -6399,17 +6399,9 @@ module.exports = (() => {
                   }
                 }
                 if (formula) {
-                  if (isGetSchema) {
-                    console.log(`WEITZMAN: Running a getSchema formula`);
-                  }
                   const formulaResult = formula.execute(params, executionContext);
                   if (isGetSchema) {
-                    console.log(`WEITZMAN: Checking for funcs in ...`);
-                    console.debug(`WEITZMAN: Test value with func`, () => 1);
-                    console.debug(formulaResult);
-                    throwOnDynamicSchemaWithJsAutocompleteFunction(formulaResult);
-                    console.log(`WEITZMAN: No funcs found`);
-                    return { fakeResult: 1 };
+                    throwOnDynamicSchemaWithJsAutocompleteFunction(await formulaResult);
                   }
                   return formulaResult;
                 }

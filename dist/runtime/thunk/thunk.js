@@ -188,22 +188,9 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                                 }
                             }
                             if (formula) {
-                                if (isGetSchema) {
-                                    // eslint-disable-next-line no-console
-                                    console.log(`WEITZMAN: Running a getSchema formula`);
-                                }
                                 const formulaResult = formula.execute(params, executionContext);
                                 if (isGetSchema) {
-                                    // eslint-disable-next-line no-console
-                                    console.log(`WEITZMAN: Checking for funcs in ...`);
-                                    // eslint-disable-next-line no-console
-                                    console.debug(`WEITZMAN: Test value with func`, () => 1);
-                                    // eslint-disable-next-line no-console
-                                    console.debug(formulaResult);
-                                    (0, schema_1.throwOnDynamicSchemaWithJsAutocompleteFunction)(formulaResult);
-                                    // eslint-disable-next-line no-console
-                                    console.log(`WEITZMAN: No funcs found`);
-                                    return { fakeResult: 1 };
+                                    (0, schema_1.throwOnDynamicSchemaWithJsAutocompleteFunction)(await formulaResult);
                                 }
                                 return formulaResult;
                             }

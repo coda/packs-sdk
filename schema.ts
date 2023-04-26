@@ -3,6 +3,7 @@ import type {AutocompleteReference} from './api_types';
 import type {AutocompleteValueType} from './api_types';
 import type {PackFormulaResult} from './api_types';
 import type {PropertyAutocompleteMetadataFunction} from './api_types';
+import {UserVisibleError} from './api';
 import {assertCondition} from './helpers/ensure';
 import {deepCopy} from './helpers/object_utils';
 import {ensureExists} from './helpers/ensure';
@@ -1622,7 +1623,7 @@ export function throwOnDynamicSchemaWithJsAutocompleteFunction(dynamicSchema: an
   }
 
   if (typeof dynamicSchema === 'function' && parentKey === 'autocomplete') {
-    throw new Error(
+    throw new UserVisibleError(
       'Sync tables with dynamic schemas must use "autocomplete: AutocompleteValueType.Dynamic" instead of "autocomplete: () => {...}',
     );
   }
