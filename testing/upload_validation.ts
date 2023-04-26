@@ -893,6 +893,11 @@ function isValidIdentityName(packId: number | undefined, name: string): boolean 
   return isValidObjectId(name);
 }
 
+function isValidUseOfCodaInternalRichText(packId: number | undefined): boolean {
+  // CrossDoc pack is allowed to use this type hint.
+  return packId === 1054;
+}
+
 const attributionSchema = z
   .array(z.union([textAttributionNodeSchema, linkAttributionNodeSchema, imageAttributionNodeSchema]))
   .optional();
@@ -1122,6 +1127,20 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
       validateImageProperty();
       validateSnippetProperty();
       validateSubtitleProperties();
+    })
+    .superRefine((data, context) => {
+      const schemaHelper = objectSchemaHelper(data as GenericObjectSchema);
+      const internalRichTextPropertyTuple = Object.entries(schemaHelper.properties).find(([_key, prop]) => 
+        prop.type === ValueType.String && prop.codaType === ValueHintType.CodaInternalRichText);
+      if (internalRichTextPropertyTuple && !isValidUseOfCodaInternalRichText(data.identity?.packId)) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['identity', 'properties', internalRichTextPropertyTuple[0]],
+          message:
+            'Invalid codaType. CodaInternalRichText is not a supported value.',
+        });
+        return;
+      }
     }),
 );
 
