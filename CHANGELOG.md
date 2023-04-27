@@ -6,6 +6,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ### Changed
 
+- Using the empty string as a `tokenPrefix` with OAuth2 authentication will result in no prefix being used in the `Authentication` header. Previously, the empty string would be treated the same as `undefined` which would lead to the default prefix of `Bearer` being used. Note that this change took effect for live packs on April 28, 2023 indepedently of the SDK version; in this SDK version the behavior changed only here in the CLI execution simulator (the `coda execute` command).
+
+### Changed
+
 - **Breaking Change** Removed the "autocomplete" property from EmailSchema. It wasn't useful in practice and we want to free up the name "autocomplete" on BaseSchema for better purposes.
 
 ## [1.3.4] - 2023-04-17
