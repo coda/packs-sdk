@@ -1873,6 +1873,12 @@ export interface DynamicSyncTableOptions<
    * in placeholderSchema will be rendered by default after the sync.
    */
   placeholderSchema?: SchemaT;
+
+  /**
+   * See {@link SyncTableOptions.autocomplete}
+   * @hidden
+   */
+  autocomplete?: PropertyAutocompleteMetadataFunction<any>;
 }
 
 /**

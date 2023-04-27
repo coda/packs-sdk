@@ -755,7 +755,7 @@ exports.makeObjectFormula = makeObjectFormula;
  *
  * See [Normalization](/index.html#normalization) for more information about schema normalization.
  */
-function makeSyncTable({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions = {}, }) {
+function makeSyncTable({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, autocomplete, dynamicOptions = {}, }) {
     const { getSchema: getSchemaDef, entityName, defaultAddDynamicColumns } = dynamicOptions;
     const { execute: wrappedExecute, executeUpdate: wrappedExecuteUpdate, ...definition } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
     // Since we mutate schemaDef, we need to make a copy so the input schema can be reused across sync tables.
@@ -775,11 +775,25 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
     }
     const getSchema = wrapGetSchema(wrapMetadataFunction(getSchemaDef));
     const schema = (0, schema_2.makeObjectSchema)(schemaDef);
-    const namedAutocompletes = replaceInlineAutocompleteFunctionsWithNamedAutocompleteFunctions({
+    let namedAutocompletes = replaceInlineAutocompleteFunctionsWithNamedAutocompleteFunctions({
         inputSchema,
         schema,
         identityName,
     });
+    if (autocomplete) {
+        namedAutocompletes !== null && namedAutocompletes !== void 0 ? namedAutocompletes : (namedAutocompletes = {});
+        namedAutocompletes[api_types_1.AutocompleteType.Dynamic] = makePropertyAutocompleteFormula({
+            execute: autocomplete,
+            schema: (0, schema_2.makeObjectSchema)({
+                // A dynamic autocomplete formula can return different result types depending
+                // on which property is being autocompleted, so there's no accurate schema
+                // type to set on the formula. We just use an empty object schema, but it could
+                // be anything.
+                properties: {},
+            }),
+            name: `${identityName}.DynamicAutocomplete`,
+        });
+    }
     const formulaSchema = getSchema
         ? undefined
         : (0, schema_3.normalizeSchema)({ type: schema_1.ValueType.Array, items: schema });
@@ -860,7 +874,6 @@ exports.makeSyncTableLegacy = makeSyncTableLegacy;
  * @hidden
  */
 function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, searchDynamicUrls: searchDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, autocomplete, }) {
-    var _a;
     const placeholderSchema = placeholderSchemaInput ||
         // default placeholder only shows a column of id, which will be replaced later by the dynamic schema.
         (0, schema_2.makeObjectSchema)({
@@ -884,22 +897,9 @@ function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchem
         schema: placeholderSchema,
         formula,
         connectionRequirement,
+        autocomplete,
         dynamicOptions: { getSchema, entityName, defaultAddDynamicColumns },
     });
-    if (autocomplete) {
-        (_a = table.namedAutocompletes) !== null && _a !== void 0 ? _a : (table.namedAutocompletes = {});
-        table.namedAutocompletes[api_types_1.AutocompleteType.Dynamic] = makePropertyAutocompleteFormula({
-            execute: autocomplete,
-            schema: (0, schema_2.makeObjectSchema)({
-                // A dynamic autocomplete formula can return different result types depending
-                // on which property is being autocompleted, so there's no accurate schema
-                // type to set on the formula. We just use an empty object schema, but it could
-                // be anything.
-                properties: {},
-            }),
-            name: `${identityName}.DynamicAutocomplete`,
-        });
-    }
     return {
         ...table,
         isDynamic: true,
