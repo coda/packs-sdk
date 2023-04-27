@@ -294,5 +294,8 @@ var PrecannedDateRange;
  */
 var AutocompleteType;
 (function (AutocompleteType) {
-    AutocompleteType["Dynamic"] = "__coda_dynamic";
+    // These are special sentinel values for property autocomplete functions that aren't named
+    // after user-defined schema properties. Make sure the values aren't likely to collide with
+    // user-defined properties.
+    AutocompleteType["Dynamic"] = "__coda_dynamic__";
 })(AutocompleteType = exports.AutocompleteType || (exports.AutocompleteType = {}));

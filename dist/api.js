@@ -563,6 +563,8 @@ function makeMetadataFormula(execute, options) {
 }
 exports.makeMetadataFormula = makeMetadataFormula;
 /**
+ * Builds a formula to store in {@link SyncTableAutocompleters}.
+ *
  * @hidden
  */
 function makePropertyAutocompleteFormula({ execute, schema, name, }) {
@@ -773,17 +775,11 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
     }
     const getSchema = wrapGetSchema(wrapMetadataFunction(getSchemaDef));
     const schema = (0, schema_2.makeObjectSchema)(schemaDef);
-    // Converting JS functions to strings happens on inputSchema instead of the deep copied version because the
-    // deep copy will have already thrown away any JS functions.
-    const namedAutocompletes = {};
-    for (const propertyName of listPropertiesWithAutocompleteFunctions(inputSchema)) {
-        schema.properties[propertyName].autocomplete = propertyName;
-        namedAutocompletes[propertyName] = makePropertyAutocompleteFormula({
-            execute: inputSchema.properties[propertyName].autocomplete,
-            schema: (0, schema_3.normalizeSchema)(schema.properties[propertyName]),
-            name: `${identityName}.${propertyName}.Autocomplete`,
-        });
-    }
+    const namedAutocompletes = replaceInlineAutocompleteFunctionsWithNamedAutocompleteFunctions({
+        inputSchema,
+        schema,
+        identityName,
+    });
     const formulaSchema = getSchema
         ? undefined
         : (0, schema_3.normalizeSchema)({ type: schema_1.ValueType.Array, items: schema });
@@ -857,6 +853,8 @@ function makeSyncTableLegacy(name, schema, formula, connectionRequirement, dynam
     });
 }
 exports.makeSyncTableLegacy = makeSyncTableLegacy;
+// TODO(dweitzman): Merge this with the above function definition
+// to make "autocomplete" available in the public API docs.
 /**
  * Includes the unreleased autocomplete parameter.
  * @hidden
@@ -1028,6 +1026,9 @@ function maybeRewriteConnectionForFormula(formula, connectionRequirement) {
     return formula;
 }
 exports.maybeRewriteConnectionForFormula = maybeRewriteConnectionForFormula;
+// This helper method finds any inline autocomplete functions in a static sync table schema.
+// These functions will need to be extracted into the "namedAutocompletes" property on the sync
+// table and replaced with strings.
 function listPropertiesWithAutocompleteFunctions(schema) {
     const result = [];
     for (const propertyName of Object.keys(schema.properties)) {
@@ -1041,4 +1042,21 @@ function listPropertiesWithAutocompleteFunctions(schema) {
         result.push(propertyName);
     }
     return result;
+}
+// Finds any inline autocomplete functions within the inputSchema and replaces them
+// with strings references into the returned namedAutocompletes.
+function replaceInlineAutocompleteFunctionsWithNamedAutocompleteFunctions({ inputSchema, // DO NOT MUTATE inputSchema!
+schema, identityName, }) {
+    // Converting JS functions to strings happens on inputSchema instead of the deep copied version because the
+    // deep copy will have already thrown away any JS functions.
+    const namedAutocompletes = {};
+    for (const propertyName of listPropertiesWithAutocompleteFunctions(inputSchema)) {
+        schema.properties[propertyName].autocomplete = propertyName;
+        namedAutocompletes[propertyName] = makePropertyAutocompleteFormula({
+            execute: inputSchema.properties[propertyName].autocomplete,
+            schema: (0, schema_3.normalizeSchema)(schema.properties[propertyName]),
+            name: `${identityName}.${propertyName}.Autocomplete`,
+        });
+    }
+    return namedAutocompletes;
 }

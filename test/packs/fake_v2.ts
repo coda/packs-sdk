@@ -130,6 +130,10 @@ pack.addSyncTable({
           return [{bazProp: 'hmm'}];
         },
       },
+      inlineAutocomplete: {
+        type: coda.ValueType.Number,
+        autocomplete: [1, 2, 3, 4],
+      },
     },
   }),
   formula: {

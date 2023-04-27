@@ -865,9 +865,14 @@ export enum PrecannedDateRange {
  * @hidden
  */
 export enum AutocompleteType {
-  Dynamic = '__coda_dynamic',
+  // These are special sentinel values for property autocomplete functions that aren't named
+  // after user-defined schema properties. Make sure the values aren't likely to collide with
+  // user-defined properties.
+  Dynamic = '__coda_dynamic__',
 }
 
+// This is an internal type to discourage pack makers from accidentally assigning a string to
+// the autocomplete property values.
 /** @hidden */
 export type AutocompleteReference = string & {
   __brand: 'AutocompleteRef';

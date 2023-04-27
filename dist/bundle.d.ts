@@ -711,7 +711,7 @@ export declare enum PrecannedDateRange {
  * @hidden
  */
 export declare enum AutocompleteType {
-	Dynamic = "__coda_dynamic"
+	Dynamic = "__coda_dynamic__"
 }
 /** @hidden */
 export declare type AutocompleteReference = string & {
@@ -941,12 +941,30 @@ export interface BaseSchema {
 	/** @hidden */
 	mutable?: boolean;
 	/**
-	 * Whether this object schema property should run the sync table's property autocomplete
-	 * function to suggest possible values on edit. This should only be set when {@link mutable}
+	 * A list of values or a formula that returns a list of values to suggest when someone
+	 * edits this property. This should only be set when {@link mutable}
 	 * is true.
 	 *
-	 * For the email type, this will autocomplete emails from the doc without running the sync
-	 * table's property autocomplete function.
+	 * @example
+	 * ```
+	 * properties: {
+	 *   color: {
+	 *      type: coda.ValueType.String,
+	 *      mutable: true,
+	 *      autocomplete: ['red', 'green', 'blue'],
+	 *   },
+	 *   user: {
+	 *      type: coda.ValueType.String,
+	 *      mutable: true,
+	 *      autocomplete: async function (context) {
+	 *        let url = coda.withQueryParams("https://example.com/userSearch", { name: context.search });
+	 *        let response = await context.fetcher.fetch({ method: "GET", url: url });
+	 *        let results = response.body.users;
+	 *        return results.map(user => {display: user.name, value: user.id})
+	 *      },
+	 *   },
+	 * }
+	 * ```
 	 *
 	 * @hidden
 	 */
@@ -2218,7 +2236,11 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
 	entityName?: string;
 	/** See {@link DynamicOptions.defaultAddDynamicColumns} */
 	defaultAddDynamicColumns?: boolean;
-	/** @hidden */
+	/**
+	 * To configure autocomplete for properties in a sync table, use {@link SyncTableOptions.autocomplete} and/or
+	 * {@link ObjectSchemaDefinition.autocomplete}
+	 * @hidden
+	 */
 	namedAutocompletes?: SyncTableAutocompleters;
 }
 /**
@@ -2933,6 +2955,40 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
 	 * sync tables that have a dynamic schema.
 	 */
 	dynamicOptions?: DynamicOptions;
+	/**
+	 * An autocomplete function to use for any dynamic schema properties.
+	 * The name of the property that's being modified by the doc editor
+	 * is available in autocomplete function's context parameter.
+	 *
+	 * @example
+	 * ```
+	 * coda.makeDynamicSyncTable({
+	 *   name: "MySyncTable",
+	 *   getSchema: async function (context) => {
+	 *     return coda.makeObjectSchema({
+	 *       properties: {
+	 *         dynamicPropertyName: {
+	 *           type: coda.ValueType.String,
+	 *           mutable: true,
+	 *           autocomplete: coda.AutocompleteValueType.Dynamic,
+	 *         },
+	 *       },
+	 *     });
+	 *   },
+	 *   autocomplete: async function (context) => {
+	 *     if (context.propertyName === "dynamicPropertyName") {
+	 *       return ["Dynamic Value 1", "Dynamic value 2"];
+	 *     }
+	 *     throw new coda.UserVisibleError(
+	 *       `Cannot autocomplete property ${context.propertyName}`
+	 *     );
+	 *   },
+	 *   ...
+	 * ```
+	 *
+	 * @hidden
+	 */
+	autocomplete?: PropertyAutocompleteMetadataFunction<any>;
 }
 /**
  * Options provided when defining a dynamic sync table.
@@ -3026,8 +3082,6 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
 	 * in placeholderSchema will be rendered by default after the sync.
 	 */
 	placeholderSchema?: SchemaT;
-	/** @hidden */
-	autocomplete?: PropertyAutocompleteMetadataFunction<any>;
 }
 /**
  * Wrapper to produce a sync table definition. All (non-dynamic) sync tables should be created

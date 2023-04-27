@@ -194,12 +194,30 @@ interface BaseSchema {
     /** @hidden */
     mutable?: boolean;
     /**
-     * Whether this object schema property should run the sync table's property autocomplete
-     * function to suggest possible values on edit. This should only be set when {@link mutable}
+     * A list of values or a formula that returns a list of values to suggest when someone
+     * edits this property. This should only be set when {@link mutable}
      * is true.
      *
-     * For the email type, this will autocomplete emails from the doc without running the sync
-     * table's property autocomplete function.
+     * @example
+     * ```
+     * properties: {
+     *   color: {
+     *      type: coda.ValueType.String,
+     *      mutable: true,
+     *      autocomplete: ['red', 'green', 'blue'],
+     *   },
+     *   user: {
+     *      type: coda.ValueType.String,
+     *      mutable: true,
+     *      autocomplete: async function (context) {
+     *        let url = coda.withQueryParams("https://example.com/userSearch", { name: context.search });
+     *        let response = await context.fetcher.fetch({ method: "GET", url: url });
+     *        let results = response.body.users;
+     *        return results.map(user => {display: user.name, value: user.id})
+     *      },
+     *   },
+     * }
+     * ```
      *
      * @hidden
      */
