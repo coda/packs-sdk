@@ -270,7 +270,7 @@ export class AuthenticatingFetcher implements Fetcher {
     if (!this._credentials) {
       throw new Error(
         `${this._authDef.type} authentication is required for this pack, but no local credentials were found. ` +
-        'Run "coda auth path/to/pack/manifest to set up credentials."',
+          'Run "coda auth path/to/pack/manifest to set up credentials."',
       );
     }
 
@@ -385,13 +385,13 @@ export class AuthenticatingFetcher implements Fetcher {
       }
       case AuthenticationType.OAuth2: {
         const {accessToken} = this._credentials as OAuth2Credentials;
-        const prefix = this._authDef.tokenPrefix || 'Bearer';
+        const prefix = this._authDef.tokenPrefix ?? 'Bearer';
         const requestHeaders: {[header: string]: string} = headers || {};
         let requestUrl = url;
         if (this._authDef.tokenQueryParam) {
           requestUrl = addQueryParam(url, this._authDef.tokenQueryParam, ensureNonEmptyString(accessToken));
         } else {
-          requestHeaders.Authorization = `${prefix} ${ensureNonEmptyString(accessToken)}`;
+          requestHeaders.Authorization = `${prefix} ${ensureNonEmptyString(accessToken)}`.trim();
         }
         return {
           url: requestUrl,
@@ -558,7 +558,7 @@ export class AuthenticatingFetcher implements Fetcher {
       if (parsedUrl.hostname !== parsedEndpointUrl.hostname) {
         throw new Error(
           `The url ${rawUrl} is not authorized. The host must match the host ${parsedEndpointUrl.hostname} that was specified with the auth credentials. ` +
-          'Or leave the host blank and the host will be filled in automatically from the credentials.',
+            'Or leave the host blank and the host will be filled in automatically from the credentials.',
         );
       }
       return rawUrl;

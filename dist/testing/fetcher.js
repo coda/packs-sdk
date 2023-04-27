@@ -203,7 +203,7 @@ class AuthenticatingFetcher {
         this._updateCredentialsCallback(this._credentials);
     }
     async _applyAuthentication({ method, url: rawUrl, headers, body, form, disableAuthentication, }) {
-        var _a, _b, _c, _d;
+        var _a, _b, _c, _d, _e;
         if (!this._authDef || this._authDef.type === types_1.AuthenticationType.None || disableAuthentication) {
             return { url: rawUrl, headers, body, form };
         }
@@ -288,14 +288,14 @@ class AuthenticatingFetcher {
             }
             case types_1.AuthenticationType.OAuth2: {
                 const { accessToken } = this._credentials;
-                const prefix = this._authDef.tokenPrefix || 'Bearer';
+                const prefix = (_a = this._authDef.tokenPrefix) !== null && _a !== void 0 ? _a : 'Bearer';
                 const requestHeaders = headers || {};
                 let requestUrl = url;
                 if (this._authDef.tokenQueryParam) {
                     requestUrl = addQueryParam(url, this._authDef.tokenQueryParam, (0, ensure_3.ensureNonEmptyString)(accessToken));
                 }
                 else {
-                    requestHeaders.Authorization = `${prefix} ${(0, ensure_3.ensureNonEmptyString)(accessToken)}`;
+                    requestHeaders.Authorization = `${prefix} ${(0, ensure_3.ensureNonEmptyString)(accessToken)}`.trim();
                 }
                 return {
                     url: requestUrl,
@@ -342,10 +342,10 @@ class AuthenticatingFetcher {
                 });
                 const assumeRoleResult = await client.send(command);
                 const credentials = {
-                    accessKeyId: (0, ensure_2.ensureExists)((_a = assumeRoleResult.Credentials) === null || _a === void 0 ? void 0 : _a.AccessKeyId),
-                    secretAccessKey: (0, ensure_2.ensureExists)((_b = assumeRoleResult.Credentials) === null || _b === void 0 ? void 0 : _b.SecretAccessKey),
-                    sessionToken: (_c = assumeRoleResult.Credentials) === null || _c === void 0 ? void 0 : _c.SessionToken,
-                    expiration: (_d = assumeRoleResult.Credentials) === null || _d === void 0 ? void 0 : _d.Expiration,
+                    accessKeyId: (0, ensure_2.ensureExists)((_b = assumeRoleResult.Credentials) === null || _b === void 0 ? void 0 : _b.AccessKeyId),
+                    secretAccessKey: (0, ensure_2.ensureExists)((_c = assumeRoleResult.Credentials) === null || _c === void 0 ? void 0 : _c.SecretAccessKey),
+                    sessionToken: (_d = assumeRoleResult.Credentials) === null || _d === void 0 ? void 0 : _d.SessionToken,
+                    expiration: (_e = assumeRoleResult.Credentials) === null || _e === void 0 ? void 0 : _e.Expiration,
                 };
                 const resultHeaders = await this._signAwsRequest({
                     body,

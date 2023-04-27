@@ -1353,6 +1353,35 @@ describe('Auth', () => {
         });
       });
 
+      it(`${AuthenticationType.OAuth2}, with empty token prefix`, async () => {
+        const pack = createPackWithDefaultAuth({
+          type: AuthenticationType.OAuth2,
+          authorizationUrl: 'https://auth-url.com',
+          tokenUrl: 'https://token-url.com',
+          tokenPrefix: '',
+          scopes: ['scope1', 'scope2'],
+        });
+        setupReadline(['some-client-id', 'some-client-secret']);
+        doSetupAuth(pack);
+
+        await executeFetch(pack, 'https://example.com', {result: 'hello'});
+
+        sinon.assert.calledOnceWithExactly(mockMakeRequest, {
+          body: undefined,
+          form: undefined,
+          headers: {
+            Authorization: 'some-access-token',
+            'User-Agent': 'Coda-Test-Server-Fetcher',
+          },
+          method: 'GET',
+          uri: 'https://example.com',
+          encoding: undefined,
+          resolveWithFullResponse: true,
+          followRedirect: true,
+          throwOnRedirect: false,
+        });
+      });
+
       it(`${AuthenticationType.OAuth2}, leaves existing secrets in place`, async () => {
         const pack = createPackWithDefaultAuth(
           {
