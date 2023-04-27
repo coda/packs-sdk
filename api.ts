@@ -1901,6 +1901,7 @@ export function makeSyncTable<
   schema: inputSchema,
   formula,
   connectionRequirement,
+  autocomplete,
   dynamicOptions = {},
 }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT> {
   const {getSchema: getSchemaDef, entityName, defaultAddDynamicColumns} = dynamicOptions;
@@ -1931,11 +1932,26 @@ export function makeSyncTable<
   const getSchema = wrapGetSchema(wrapMetadataFunction(getSchemaDef));
   const schema = makeObjectSchema<K, L, SchemaDefT>(schemaDef) as SchemaT;
 
-  const namedAutocompletes = replaceInlineAutocompleteFunctionsWithNamedAutocompleteFunctions({
+  let namedAutocompletes = replaceInlineAutocompleteFunctionsWithNamedAutocompleteFunctions({
     inputSchema,
     schema,
     identityName,
   });
+
+  if (autocomplete) {
+    namedAutocompletes ??= {};
+    namedAutocompletes[AutocompleteType.Dynamic] = makePropertyAutocompleteFormula({
+      execute: autocomplete,
+      schema: makeObjectSchema({
+        // A dynamic autocomplete formula can return different result types depending
+        // on which property is being autocompleted, so there's no accurate schema
+        // type to set on the formula. We just use an empty object schema, but it could
+        // be anything.
+        properties: {},
+      }),
+      name: `${identityName}.DynamicAutocomplete`,
+    });
+  }
 
   const formulaSchema = getSchema
     ? undefined
@@ -2136,23 +2152,9 @@ export function makeDynamicSyncTable<
     schema: placeholderSchema,
     formula,
     connectionRequirement,
+    autocomplete,
     dynamicOptions: {getSchema, entityName, defaultAddDynamicColumns},
   });
-
-  if (autocomplete) {
-    table.namedAutocompletes ??= {};
-    table.namedAutocompletes[AutocompleteType.Dynamic] = makePropertyAutocompleteFormula({
-      execute: autocomplete,
-      schema: makeObjectSchema({
-        // A dynamic autocomplete formula can return different result types depending
-        // on which property is being autocompleted, so there's no accurate schema
-        // type to set on the formula. We just use an empty object schema, but it could
-        // be anything.
-        properties: {},
-      }),
-      name: `${identityName}.DynamicAutocomplete`,
-    });
-  }
 
   return {
     ...table,
