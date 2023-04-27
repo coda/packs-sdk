@@ -172,6 +172,8 @@ var ValueHintType;
      * Indicates to render a boolean value as a toggle.
      */
     ValueHintType["Toggle"] = "toggle";
+    /** @hidden */
+    ValueHintType["CodaInternalRichText"] = "codaInternalRichText";
 })(ValueHintType = exports.ValueHintType || (exports.ValueHintType = {}));
 exports.StringHintValueTypes = [
     ValueHintType.Attachment,
@@ -186,6 +188,7 @@ exports.StringHintValueTypes = [
     ValueHintType.ImageAttachment,
     ValueHintType.Markdown,
     ValueHintType.Url,
+    ValueHintType.CodaInternalRichText,
 ];
 exports.NumberHintValueTypes = [
     ValueHintType.Date,
@@ -349,6 +352,7 @@ exports.SimpleStringHintValueTypes = [
     ValueHintType.Markdown,
     ValueHintType.Url,
     ValueHintType.Email,
+    ValueHintType.CodaInternalRichText,
 ];
 /**
  * An identifier for the value of a property for use in the {@link PropertyIdentifierDetails.label} field.

@@ -157,9 +157,11 @@ export declare enum ValueHintType {
     /**
      * Indicates to render a boolean value as a toggle.
      */
-    Toggle = "toggle"
+    Toggle = "toggle",
+    /** @hidden */
+    CodaInternalRichText = "codaInternalRichText"
 }
-export declare const StringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Email, ValueHintType.Embed, ValueHintType.Html, ValueHintType.ImageReference, ValueHintType.ImageAttachment, ValueHintType.Markdown, ValueHintType.Url];
+export declare const StringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Email, ValueHintType.Embed, ValueHintType.Html, ValueHintType.ImageReference, ValueHintType.ImageAttachment, ValueHintType.Markdown, ValueHintType.Url, ValueHintType.CodaInternalRichText];
 export declare const NumberHintValueTypes: readonly [ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Percent, ValueHintType.Currency, ValueHintType.Slider, ValueHintType.ProgressBar, ValueHintType.Scale];
 export declare const BooleanHintValueTypes: readonly [ValueHintType.Toggle];
 export declare const ObjectHintValueTypes: readonly [ValueHintType.Person, ValueHintType.Reference];
@@ -550,6 +552,23 @@ export interface StringEmbedSchema extends BaseStringSchema<ValueHintType.Embed>
     force?: boolean;
 }
 /**
+ * A schema representing a return value or object property that is provided as a string, which Coda should
+ * interpret as its internal rich text value. For "canvas column" types, `isCanvas` should be set to `true`.
+ * @hidden
+ */
+export interface CodaInternalRichTextSchema extends BaseStringSchema<ValueHintType.CodaInternalRichText> {
+    /**
+     * Instructs Coda to render this value as internal rich text.
+     * @hidden
+     */
+    codaType: ValueHintType.CodaInternalRichText;
+    /**
+     * Whether this is a embedded canvas column type vs. a "normal" text column type.
+     * @hidden
+     */
+    isCanvas?: boolean;
+}
+/**
  * A schema representing a return value or object property that is provided as a string,
  * which Coda should interpret as a time.
  */
@@ -666,7 +685,7 @@ export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> e
 /**
  * The subset of StringHintTypes that don't have specific schema attributes.
  */
-export declare const SimpleStringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Html, ValueHintType.Markdown, ValueHintType.Url, ValueHintType.Email];
+export declare const SimpleStringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Html, ValueHintType.Markdown, ValueHintType.Url, ValueHintType.Email, ValueHintType.CodaInternalRichText];
 export declare type SimpleStringHintTypes = (typeof SimpleStringHintValueTypes)[number];
 /**
  * A schema whose underlying value is a string, along with an optional hint about how Coda
@@ -677,7 +696,7 @@ export interface SimpleStringSchema<T extends SimpleStringHintTypes = SimpleStri
 /**
  * The union of schema definition types whose underlying value is a string.
  */
-export declare type StringSchema = StringDateSchema | StringTimeSchema | StringDateTimeSchema | DurationSchema | EmailSchema | ImageSchema | LinkSchema | StringEmbedSchema | SimpleStringSchema;
+export declare type StringSchema = StringDateSchema | StringTimeSchema | StringDateTimeSchema | CodaInternalRichTextSchema | DurationSchema | EmailSchema | ImageSchema | LinkSchema | StringEmbedSchema | SimpleStringSchema;
 /**
  * A schema representing a return value or object property that is an array (list) of items.
  * The items are themselves schema definitions, which may refer to scalars or other objects.

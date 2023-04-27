@@ -87,6 +87,9 @@ A sync table that presents a list of URLs to select from. This sample shows resp
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
+// When listing forms, the maximum to return.
+const MaxForms = 200;
+
 // How many responses to fetch per-page.
 const PageSize = 100;
 
@@ -100,11 +103,7 @@ pack.addDynamicSyncTable({
   // add the table to their doc. The selected URL will be passed as
   // `context.sync.dynamicUrl` to other methods.
   listDynamicUrls: async function (context) {
-    let response = await context.fetcher.fetch({
-      method: "GET",
-      url: "https://api.typeform.com/forms",
-    });
-    let forms = response.body.items;
+    let forms = await getForms(context);
     let results = [];
     for (let form of forms) {
       // Each result should include the name and URL of the form.
@@ -113,6 +112,20 @@ pack.addDynamicSyncTable({
         // Using the API URL of the form, not the browser URL. This makes it
         // easier to use the URL in the code, and `getDisplayUrl` below can
         // show the browser URL to the user.
+        value: form.self.href,
+      });
+    }
+    return results;
+  },
+
+  // Like listDynamicUrls above, but to allow the user to search for a form by
+  // name. The second parameter is the search term the user entered.
+  searchDynamicUrls: async function (context, search) {
+    let forms = await getForms(context, search);
+    let results = [];
+    for (let form of forms) {
+      results.push({
+        display: form.title,
         value: form.self.href,
       });
     }
@@ -235,6 +248,19 @@ pack.addDynamicSyncTable({
     },
   },
 });
+
+// Gets the available forms, optionally filtered by a search string.
+async function getForms(context: coda.ExecutionContext, search?: string) {
+  let url = coda.withQueryParams("https://api.typeform.com/forms", {
+    search: search,
+    page_size: MaxForms,
+  });
+  let response = await context.fetcher.fetch({
+    method: "GET",
+    url: url,
+  });
+  return response.body.items;
+}
 
 // Get metadata about a form given it's URL.
 async function getForm(context, url) {
@@ -363,6 +389,9 @@ const TableScanMaxRows = 100;
 // How many rows to fetch per-page.
 const PageSize = 100;
 
+// The maximum number of datasets to return in a search.
+const MaxDatasets = 10000;
+
 // A regular expression matching a dataset.
 const DatasetUrlRegex = new RegExp(`^https?://${Domain}/.*/([^?#]+)`);
 
@@ -449,12 +478,32 @@ pack.addDynamicSyncTable({
 
     // Return all the datasets in that category.
     let datasets = await searchDatasets(context, {
+      categories: category,
       only: "datasets",
       domains: Domain,
-      order: "page_views_last_month",
-      limit: 10000,
-      categories: category,
       search_context: Domain,
+      order: "page_views_last_month",
+      limit: MaxDatasets,
+    });
+    if (!datasets?.length) {
+      return [];
+    }
+    return datasets.map(dataset => {
+      return {
+        display: dataset.name,
+        value: dataset.link,
+      };
+    });
+  },
+
+  searchDynamicUrls: async function (context, search) {
+    let datasets = await searchDatasets(context, {
+      q: search,
+      only: "datasets",
+      domains: Domain,
+      search_context: Domain,
+      order: "relevance",
+      limit: MaxDatasets,
     });
     if (!datasets?.length) {
       return [];

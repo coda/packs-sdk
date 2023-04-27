@@ -16,6 +16,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [1.3.3] - 2023-04-12
 
+### Added
+
+- Added the optional function `searchDynamicUrls` to dynamic sync tables. If defined, a search box will presented to users to allow them to search through all available datasets. It works just like `listDynmaicUrls`, only the 2nd parameter is the search query.
+
 ### Changed
 
 - Switched the node package manager from yarn to pnpm. This only affects developers contributing changes to the packs-sdk repo.

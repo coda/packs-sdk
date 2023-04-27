@@ -481,7 +481,8 @@ const booleanPackFormulaSchema = zodCompleteObject({
         codaType: z.enum([...schema_2.BooleanHintValueTypes]).optional(),
         description: z.string().optional(),
         mutable: z.boolean().optional(),
-        autocomplete: z.union([z.string(), z.array(z.boolean())]).optional(),
+        // Only properties in sync tables would need to define "autocomplete"
+        autocomplete: z.undefined(),
     }).optional(),
 });
 // TODO(jonathan): Use zodCompleteObject on these after exporting these types.
@@ -625,6 +626,12 @@ const durationPropertySchema = zodCompleteStrictObject({
     maxUnit: z.nativeEnum(schema_4.DurationUnit).optional(),
     ...basePropertyValidators,
 });
+const codaInternalRichTextSchema = zodCompleteStrictObject({
+    type: zodDiscriminant(schema_13.ValueType.String),
+    codaType: zodDiscriminant(schema_12.ValueHintType.CodaInternalRichText),
+    isCanvas: z.boolean().optional(),
+    ...basePropertyValidators,
+});
 const embedPropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.String),
     codaType: zodDiscriminant(schema_12.ValueHintType.Embed),
@@ -656,6 +663,7 @@ const stringPropertySchema = z.union([
     stringDatePropertySchema,
     stringTimePropertySchema,
     stringDateTimePropertySchema,
+    codaInternalRichTextSchema,
     durationPropertySchema,
     embedPropertySchema,
     emailPropertySchema,
@@ -724,6 +732,10 @@ function isValidIdentityName(packId, name) {
         return true;
     }
     return isValidObjectId(name);
+}
+function isValidUseOfCodaInternalRichText(packId) {
+    // CrossDoc pack is allowed to use this type hint.
+    return packId === 1054;
 }
 const attributionSchema = z
     .array(z.union([textAttributionNodeSchema, linkAttributionNodeSchema, imageAttributionNodeSchema]))
@@ -875,6 +887,7 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
                 case schema_12.ValueHintType.Embed:
                 case schema_12.ValueHintType.Scale:
                     return false;
+                case schema_12.ValueHintType.CodaInternalRichText:
                 case schema_12.ValueHintType.Currency:
                 case schema_12.ValueHintType.Date:
                 case schema_12.ValueHintType.DateTime:
@@ -901,6 +914,19 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
     validateImageProperty();
     validateSnippetProperty();
     validateSubtitleProperties();
+})
+    .superRefine((data, context) => {
+    var _a;
+    const schemaHelper = (0, migration_1.objectSchemaHelper)(data);
+    const internalRichTextPropertyTuple = Object.entries(schemaHelper.properties).find(([_key, prop]) => prop.type === schema_13.ValueType.String && prop.codaType === schema_12.ValueHintType.CodaInternalRichText);
+    if (internalRichTextPropertyTuple && !isValidUseOfCodaInternalRichText((_a = data.identity) === null || _a === void 0 ? void 0 : _a.packId)) {
+        context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['identity', 'properties', internalRichTextPropertyTuple[0]],
+            message: 'Invalid codaType. CodaInternalRichText is not a supported value.',
+        });
+        return;
+    }
 }));
 const objectPropertyUnionSchema = z
     .union([booleanPropertySchema, numberPropertySchema, stringPropertySchema, arrayPropertySchema, genericObjectSchema])

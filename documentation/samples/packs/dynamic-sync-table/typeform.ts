@@ -1,6 +1,9 @@
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
+// When listing forms, the maximum to return.
+const MaxForms = 200;
+
 // How many responses to fetch per-page.
 const PageSize = 100;
 
@@ -14,11 +17,7 @@ pack.addDynamicSyncTable({
   // add the table to their doc. The selected URL will be passed as
   // `context.sync.dynamicUrl` to other methods.
   listDynamicUrls: async function (context) {
-    let response = await context.fetcher.fetch({
-      method: "GET",
-      url: "https://api.typeform.com/forms",
-    });
-    let forms = response.body.items;
+    let forms = await getForms(context);
     let results = [];
     for (let form of forms) {
       // Each result should include the name and URL of the form.
@@ -27,6 +26,20 @@ pack.addDynamicSyncTable({
         // Using the API URL of the form, not the browser URL. This makes it
         // easier to use the URL in the code, and `getDisplayUrl` below can
         // show the browser URL to the user.
+        value: form.self.href,
+      });
+    }
+    return results;
+  },
+
+  // Like listDynamicUrls above, but to allow the user to search for a form by
+  // name. The second parameter is the search term the user entered.
+  searchDynamicUrls: async function (context, search) {
+    let forms = await getForms(context, search);
+    let results = [];
+    for (let form of forms) {
+      results.push({
+        display: form.title,
         value: form.self.href,
       });
     }
@@ -149,6 +162,19 @@ pack.addDynamicSyncTable({
     },
   },
 });
+
+// Gets the available forms, optionally filtered by a search string.
+async function getForms(context: coda.ExecutionContext, search?: string) {
+  let url = coda.withQueryParams("https://api.typeform.com/forms", {
+    search: search,
+    page_size: MaxForms,
+  });
+  let response = await context.fetcher.fetch({
+    method: "GET",
+    url: url,
+  });
+  return response.body.items;
+}
 
 // Get metadata about a form given it's URL.
 async function getForm(context, url) {

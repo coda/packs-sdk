@@ -172,6 +172,8 @@ export enum ValueHintType {
    * Indicates to render a boolean value as a toggle.
    */
   Toggle = 'toggle',
+  /** @hidden */
+  CodaInternalRichText = 'codaInternalRichText',
 }
 
 export const StringHintValueTypes = [
@@ -187,6 +189,7 @@ export const StringHintValueTypes = [
   ValueHintType.ImageAttachment,
   ValueHintType.Markdown,
   ValueHintType.Url,
+  ValueHintType.CodaInternalRichText,
 ] as const;
 export const NumberHintValueTypes = [
   ValueHintType.Date,
@@ -635,6 +638,24 @@ export interface StringEmbedSchema extends BaseStringSchema<ValueHintType.Embed>
 }
 
 /**
+ * A schema representing a return value or object property that is provided as a string, which Coda should
+ * interpret as its internal rich text value. For "canvas column" types, `isCanvas` should be set to `true`.
+ * @hidden
+ */
+export interface CodaInternalRichTextSchema extends BaseStringSchema<ValueHintType.CodaInternalRichText> {
+  /**
+   * Instructs Coda to render this value as internal rich text.
+   * @hidden
+   */
+  codaType: ValueHintType.CodaInternalRichText;
+  /**
+   * Whether this is a embedded canvas column type vs. a "normal" text column type.
+   * @hidden
+   */
+  isCanvas?: boolean;
+}
+
+/**
  * A schema representing a return value or object property that is provided as a string,
  * which Coda should interpret as a time.
  */
@@ -766,6 +787,7 @@ export const SimpleStringHintValueTypes = [
   ValueHintType.Markdown,
   ValueHintType.Url,
   ValueHintType.Email,
+  ValueHintType.CodaInternalRichText,
 ] as const;
 export type SimpleStringHintTypes = (typeof SimpleStringHintValueTypes)[number];
 
@@ -783,6 +805,7 @@ export type StringSchema =
   | StringDateSchema
   | StringTimeSchema
   | StringDateTimeSchema
+  | CodaInternalRichTextSchema
   | DurationSchema
   | EmailSchema
   | ImageSchema
