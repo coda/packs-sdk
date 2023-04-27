@@ -1651,6 +1651,12 @@ export function withIdentity(schema: GenericObjectSchema, identityName: string):
   });
 }
 
+/**
+ * If someone tries to put a js function into a getSchema result in a dynamic schema, it's not going to work.
+ * This method is to detect this proactively and give a clear, user-visible error message. Otherwise the error
+ * they'd get would be an internal error, and the pack maker tools logs would just mention that structured clone
+ * failed to copy a function.
+ */
 export function throwOnDynamicSchemaWithJsAutocompleteFunction(dynamicSchema: any, parentKey?: string) {
   if (!dynamicSchema) {
     return;

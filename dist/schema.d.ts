@@ -1215,5 +1215,11 @@ export declare function makeReferenceSchemaFromObjectSchema(schema: GenericObjec
  * You could add the identity directly, but that would make the schema less re-usable.
  */
 export declare function withIdentity(schema: GenericObjectSchema, identityName: string): GenericObjectSchema;
+/**
+ * If someone tries to put a js function into a getSchema result in a dynamic schema, it's not going to work.
+ * This method is to detect this proactively and give a clear, user-visible error message. Otherwise the error
+ * they'd get would be an internal error, and the pack maker tools logs would just mention that structured clone
+ * failed to copy a function.
+ */
 export declare function throwOnDynamicSchemaWithJsAutocompleteFunction(dynamicSchema: any, parentKey?: string): void;
 export {};
