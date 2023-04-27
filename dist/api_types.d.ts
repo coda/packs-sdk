@@ -727,7 +727,7 @@ export declare enum PrecannedDateRange {
 /**
  * @hidden
  */
-export declare enum AutocompleteValueType {
+export declare enum AutocompleteType {
     Dynamic = "__coda_dynamic"
 }
 /** @hidden */

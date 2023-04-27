@@ -567,9 +567,10 @@ exports.makeMetadataFormula = makeMetadataFormula;
  */
 function makePropertyAutocompleteFormula({ execute, schema, name, }) {
     if (!(execute instanceof Function)) {
-        throw new Error(`Value for propertyAutocomplete must be a function`);
+        throw new Error(`Value for execute must be a function`);
     }
-    // SchemaType<ArraySchema<T>> is equivalent to Array<SchemaType<T>>
+    // The type SchemaType<ArraySchema<T>> is equivalent to Array<SchemaType<T>>, but typescript doesn't know
+    // that unless we do a cast.
     const executeRetyped = execute;
     const innerExecute = async ([], context) => {
         const result = await executeRetyped(context);
@@ -579,7 +580,7 @@ function makePropertyAutocompleteFormula({ execute, schema, name, }) {
         connectionRequirement: api_types_2.ConnectionRequirement.Optional,
         execute: innerExecute,
         name,
-        description: '',
+        description: `A property autocomplete function for ${name}`,
         parameters: [],
         resultType: schema_1.ValueType.Array,
         items: schema,
@@ -774,10 +775,10 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
     const schema = (0, schema_2.makeObjectSchema)(schemaDef);
     // Converting JS functions to strings happens on inputSchema instead of the deep copied version because the
     // deep copy will have already thrown away any JS functions.
-    const autocompletes = {};
+    const namedAutocompletes = {};
     for (const propertyName of listPropertiesWithAutocompleteFunctions(inputSchema)) {
         schema.properties[propertyName].autocomplete = propertyName;
-        autocompletes[propertyName] = makePropertyAutocompleteFormula({
+        namedAutocompletes[propertyName] = makePropertyAutocompleteFormula({
             execute: inputSchema.properties[propertyName].autocomplete,
             schema: (0, schema_3.normalizeSchema)(schema.properties[propertyName]),
             name: `${identityName}.${propertyName}.Autocomplete`,
@@ -833,7 +834,7 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
         getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
         entityName,
         defaultAddDynamicColumns,
-        autocompletes,
+        namedAutocompletes,
     };
 }
 exports.makeSyncTable = makeSyncTable;
@@ -888,8 +889,8 @@ function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchem
         dynamicOptions: { getSchema, entityName, defaultAddDynamicColumns },
     });
     if (autocomplete) {
-        (_a = table.autocompletes) !== null && _a !== void 0 ? _a : (table.autocompletes = {});
-        table.autocompletes[api_types_1.AutocompleteValueType.Dynamic] = makePropertyAutocompleteFormula({
+        (_a = table.namedAutocompletes) !== null && _a !== void 0 ? _a : (table.namedAutocompletes = {});
+        table.namedAutocompletes[api_types_1.AutocompleteType.Dynamic] = makePropertyAutocompleteFormula({
             execute: autocomplete,
             schema: (0, schema_2.makeObjectSchema)({
                 // A dynamic autocomplete formula can return different result types depending
@@ -1041,27 +1042,3 @@ function listPropertiesWithAutocompleteFunctions(schema) {
     }
     return result;
 }
-// function extractSyncTableAutocompleteFormulas(
-//   syncTableIdentityName: string,
-//   schema: ObjectSchemaDefinition<string, string>,
-// ): SyncTableAutocompleters {
-//   const result: SyncTableAutocompleters = {};
-//   for (const propertyName of Object.keys(schema.properties)) {
-//     const {autocomplete} = schema.properties[propertyName];
-//     if (!autocomplete) {
-//       continue;
-//     }
-//     if (typeof autocomplete !== 'function') {
-//       continue;
-//     }
-//     // ObjectSchemaDefinition has a different identity property type that GenericObjectSchema, but
-//     // we don't really even need the identity so it's simplest to drop it.
-//     const {identity, ...schemaWithoutIdentity} = schema;
-//     result[propertyName] = makePropertyAutocompleteFormula({
-//       execute: autocomplete as any,
-//       schema: schemaWithoutIdentity,
-//       name: `${syncTableIdentityName}.${propertyName}.Autocomplete`,
-//     });
-//   }
-//   return result;
-// }

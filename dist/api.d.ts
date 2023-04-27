@@ -176,6 +176,15 @@ export declare class MissingScopesError extends Error {
     /** Returns if the error is an instance of MissingScopesError. Note that `instanceof` may not work. */
     static isMissingScopesError(err: any): err is MissingScopesError;
 }
+/**
+ * A map of named autocomplete methods for a particular sync table. The names need to match
+ * the values stored in the object schema. For the name, we use the property's name so that
+ * it'll be consistent across pack versions. In the future if we want to support packs
+ * being able to rename an existing property, we could try to set the names to the old
+ * property names. Alternatively, we could just say that autocomplete will briefly stop
+ * working until the sync table is refereshed so its schema matches the current pack release's
+ * schema.
+ */
 interface SyncTableAutocompleters {
     [name: string]: PropertyAutocompleteMetadataFormula<any>;
 }
@@ -206,7 +215,7 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
     /** See {@link DynamicOptions.defaultAddDynamicColumns} */
     defaultAddDynamicColumns?: boolean;
     /** @hidden */
-    autocompletes?: SyncTableAutocompleters;
+    namedAutocompletes?: SyncTableAutocompleters;
 }
 /**
  * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
@@ -848,7 +857,12 @@ export interface PropertyAutocompleteAnnotatedResult {
     propertiesUsed: string[];
     searchUsed?: boolean;
 }
-/** @hidden */
+/**
+ * Formula implementing property autocomplete.
+ * These are constructed by {@link makePropertyAutocompleteFormula}.
+ *
+ * @hidden
+ */
 export declare type PropertyAutocompleteMetadataFormula<SchemaT extends Schema> = ObjectPackFormula<[
 ], ArraySchema<SchemaT>> & {
     execute(params: ParamValues<[]>, context: PropertyAutocompleteExecutionContext): Promise<object> | object;

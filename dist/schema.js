@@ -715,7 +715,7 @@ function throwOnDynamicSchemaWithJsAutocompleteFunction(dynamicSchema, parentKey
         }
     }
     if (typeof dynamicSchema === 'function' && parentKey === 'autocomplete') {
-        throw new api_1.UserVisibleError('Sync tables with dynamic schemas must use "autocomplete: AutocompleteValueType.Dynamic" instead of "autocomplete: () => {...}');
+        throw new api_1.UserVisibleError('Sync tables with dynamic schemas must use "autocomplete: AutocompleteType.Dynamic" instead of "autocomplete: () => {...}');
     }
 }
 exports.throwOnDynamicSchemaWithJsAutocompleteFunction = throwOnDynamicSchemaWithJsAutocompleteFunction;

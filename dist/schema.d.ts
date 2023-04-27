@@ -1,6 +1,6 @@
 import type { $Values } from './type_utils';
 import type { AutocompleteReference } from './api_types';
-import type { AutocompleteValueType } from './api_types';
+import type { AutocompleteType } from './api_types';
 import type { PackFormulaResult } from './api_types';
 import type { PropertyAutocompleteMetadataFunction } from './api_types';
 /**
@@ -175,7 +175,11 @@ export declare type ObjectHintTypes = (typeof ObjectHintValueTypes)[number];
  * A function or set of values to return for property autocomplete.
  * @hidden
  */
-export declare type PropertySchemaAutocomplete<T extends PackFormulaResult> = PropertyAutocompleteMetadataFunction<T[]> | T[] | AutocompleteValueType | AutocompleteReference;
+export declare type PropertySchemaAutocomplete<T extends PackFormulaResult> = PropertyAutocompleteMetadataFunction<T[]> | T[] | AutocompleteType | AutocompleteReference;
+declare type PropertySchemaAutocompleteWithOptionalDisplay<T extends PackFormulaResult> = PropertySchemaAutocomplete<T | {
+    display: string;
+    value: T;
+}>;
 interface BaseSchema {
     /**
      * A explanation of this object schema property shown to the user in the UI.
@@ -210,7 +214,7 @@ export interface BooleanSchema extends BaseSchema {
     /** Indicates how to render values in a table. If not specified, renders a checkbox. */
     codaType?: BooleanHintTypes;
     /** @hidden */
-    autocomplete?: PropertySchemaAutocomplete<boolean>;
+    autocomplete?: PropertySchemaAutocompleteWithOptionalDisplay<boolean>;
 }
 /**
  * The union of all schemas that can represent number values.
@@ -222,7 +226,7 @@ export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> e
     /** An optional type hint instructing Coda about how to interpret or render this value. */
     codaType?: T;
     /** @hidden */
-    autocomplete?: PropertySchemaAutocomplete<number>;
+    autocomplete?: PropertySchemaAutocompleteWithOptionalDisplay<number>;
 }
 /**
  * A schema representing a return value or object property that is a numeric value,
@@ -639,7 +643,7 @@ export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> e
     /** An optional type hint instructing Coda about how to interpret or render this value. */
     codaType?: T;
     /** @hidden */
-    autocomplete?: PropertySchemaAutocomplete<string>;
+    autocomplete?: PropertySchemaAutocompleteWithOptionalDisplay<string>;
 }
 /**
  * The subset of StringHintTypes that don't have specific schema attributes.

@@ -710,7 +710,7 @@ export declare enum PrecannedDateRange {
 /**
  * @hidden
  */
-export declare enum AutocompleteValueType {
+export declare enum AutocompleteType {
 	Dynamic = "__coda_dynamic"
 }
 /** @hidden */
@@ -922,7 +922,11 @@ export declare type ObjectHintTypes = (typeof ObjectHintValueTypes)[number];
  * A function or set of values to return for property autocomplete.
  * @hidden
  */
-export declare type PropertySchemaAutocomplete<T extends PackFormulaResult> = PropertyAutocompleteMetadataFunction<T[]> | T[] | AutocompleteValueType | AutocompleteReference;
+export declare type PropertySchemaAutocomplete<T extends PackFormulaResult> = PropertyAutocompleteMetadataFunction<T[]> | T[] | AutocompleteType | AutocompleteReference;
+export declare type PropertySchemaAutocompleteWithOptionalDisplay<T extends PackFormulaResult> = PropertySchemaAutocomplete<T | {
+	display: string;
+	value: T;
+}>;
 export interface BaseSchema {
 	/**
 	 * A explanation of this object schema property shown to the user in the UI.
@@ -957,7 +961,7 @@ export interface BooleanSchema extends BaseSchema {
 	/** Indicates how to render values in a table. If not specified, renders a checkbox. */
 	codaType?: BooleanHintTypes;
 	/** @hidden */
-	autocomplete?: PropertySchemaAutocomplete<boolean>;
+	autocomplete?: PropertySchemaAutocompleteWithOptionalDisplay<boolean>;
 }
 /**
  * The union of all schemas that can represent number values.
@@ -969,7 +973,7 @@ export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> e
 	/** An optional type hint instructing Coda about how to interpret or render this value. */
 	codaType?: T;
 	/** @hidden */
-	autocomplete?: PropertySchemaAutocomplete<number>;
+	autocomplete?: PropertySchemaAutocompleteWithOptionalDisplay<number>;
 }
 /**
  * A schema representing a return value or object property that is a numeric value,
@@ -1386,7 +1390,7 @@ export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> e
 	/** An optional type hint instructing Coda about how to interpret or render this value. */
 	codaType?: T;
 	/** @hidden */
-	autocomplete?: PropertySchemaAutocomplete<string>;
+	autocomplete?: PropertySchemaAutocompleteWithOptionalDisplay<string>;
 }
 declare const SimpleStringHintValueTypes: readonly [
 	ValueHintType.Attachment,
@@ -2176,6 +2180,15 @@ export declare class MissingScopesError extends Error {
 	/** Returns if the error is an instance of MissingScopesError. Note that `instanceof` may not work. */
 	static isMissingScopesError(err: any): err is MissingScopesError;
 }
+/**
+ * A map of named autocomplete methods for a particular sync table. The names need to match
+ * the values stored in the object schema. For the name, we use the property's name so that
+ * it'll be consistent across pack versions. In the future if we want to support packs
+ * being able to rename an existing property, we could try to set the names to the old
+ * property names. Alternatively, we could just say that autocomplete will briefly stop
+ * working until the sync table is refereshed so its schema matches the current pack release's
+ * schema.
+ */
 export interface SyncTableAutocompleters {
 	[name: string]: PropertyAutocompleteMetadataFormula<any>;
 }
@@ -2206,7 +2219,7 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
 	/** See {@link DynamicOptions.defaultAddDynamicColumns} */
 	defaultAddDynamicColumns?: boolean;
 	/** @hidden */
-	autocompletes?: SyncTableAutocompleters;
+	namedAutocompletes?: SyncTableAutocompleters;
 }
 /**
  * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
@@ -2743,7 +2756,12 @@ export declare type MetadataFormula = BaseFormula<[
 ], any> & {
 	schema?: any;
 };
-/** @hidden */
+/**
+ * Formula implementing property autocomplete.
+ * These are constructed by {@link makePropertyAutocompleteFormula}.
+ *
+ * @hidden
+ */
 export declare type PropertyAutocompleteMetadataFormula<SchemaT extends Schema> = ObjectPackFormula<[
 ], ArraySchema<SchemaT>> & {
 	execute(params: ParamValues<[

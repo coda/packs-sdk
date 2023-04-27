@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AutocompleteValueType = exports.PrecannedDateRange = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
+exports.AutocompleteType = exports.PrecannedDateRange = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
 /**
  * Markers used internally to represent data types for parameters and return values.
  * It should not be necessary to ever use these values directly.
@@ -292,7 +292,7 @@ var PrecannedDateRange;
 /**
  * @hidden
  */
-var AutocompleteValueType;
-(function (AutocompleteValueType) {
-    AutocompleteValueType["Dynamic"] = "__coda_dynamic";
-})(AutocompleteValueType = exports.AutocompleteValueType || (exports.AutocompleteValueType = {}));
+var AutocompleteType;
+(function (AutocompleteType) {
+    AutocompleteType["Dynamic"] = "__coda_dynamic";
+})(AutocompleteType = exports.AutocompleteType || (exports.AutocompleteType = {}));

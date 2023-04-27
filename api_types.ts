@@ -864,7 +864,7 @@ export enum PrecannedDateRange {
 /**
  * @hidden
  */
-export enum AutocompleteValueType {
+export enum AutocompleteType {
   Dynamic = '__coda_dynamic',
 }
 
@@ -873,6 +873,7 @@ export type AutocompleteReference = string & {
   __brand: 'AutocompleteRef';
 };
 
+// TODO(dweitzman): Update the type to allow autocomplete functions to return a cache TTL.
 /**
  * A JavaScript function for property autocomplete.
  * @hidden

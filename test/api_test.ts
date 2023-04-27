@@ -66,9 +66,6 @@ describe('API test', () => {
           primary: 'id',
           properties: {id: {type: ValueType.String}},
         }),
-        // propertyAutocomplete: async _ctx => {
-        //   return ['some', 'options'];
-        // },
         formula: {
           name: 'Whatever',
           connectionRequirement: ConnectionRequirement.Optional,

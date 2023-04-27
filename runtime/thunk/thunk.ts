@@ -143,15 +143,7 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
           break;
         case MetadataFormulaType.PropertyAutocomplete:
           const syncTable = syncTables?.find(table => table.name === formulaSpec.syncTableName);
-          const autocompleteFormula = syncTable?.autocompletes?.[formulaSpec.autocompleteName];
-
-          // if (!autocompleteFormula) {
-          //   throw new Error(
-          //     `WEITZMAN: Sync table ${formulaSpec.syncTableName} autocompletes are ${JSON.stringify(
-          //       Object.keys(syncTable?.autocompletes ?? {}),
-          //     )} but could not find ${formulaSpec.autocompleteName}`,
-          //   );
-          // }
+          const autocompleteFormula = syncTable?.namedAutocompletes?.[formulaSpec.autocompleteName];
 
           if (autocompleteFormula) {
             const propertyValues = {};

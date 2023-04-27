@@ -5839,7 +5839,7 @@ module.exports = (() => {
     }
     if (typeof dynamicSchema === "function" && parentKey === "autocomplete") {
       throw new UserVisibleError(
-        'Sync tables with dynamic schemas must use "autocomplete: AutocompleteValueType.Dynamic" instead of "autocomplete: () => {...}'
+        'Sync tables with dynamic schemas must use "autocomplete: AutocompleteType.Dynamic" instead of "autocomplete: () => {...}'
       );
     }
   }
@@ -6287,7 +6287,7 @@ module.exports = (() => {
             break;
           case "PropertyAutocomplete" /* PropertyAutocomplete */:
             const syncTable = syncTables?.find((table) => table.name === formulaSpec.syncTableName);
-            const autocompleteFormula = syncTable?.autocompletes?.[formulaSpec.autocompleteName];
+            const autocompleteFormula = syncTable?.namedAutocompletes?.[formulaSpec.autocompleteName];
             if (autocompleteFormula) {
               let recordPropertyAccess2 = function(key) {
                 if (!cacheKeysUsed.includes(key)) {

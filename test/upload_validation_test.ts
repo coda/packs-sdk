@@ -2,6 +2,8 @@ import {testHelper} from './test_helper';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '..';
 import {AuthenticationType} from '../types';
+import type {AutocompleteReference} from '../api_types';
+import {AutocompleteType} from '../api_types';
 import {ConnectionRequirement} from '../api_types';
 import {CurrencyFormat} from '..';
 import {DurationUnit} from '..';
@@ -786,7 +788,6 @@ describe('Pack metadata Validation', () => {
             parameters: [],
             examples: [],
           },
-          // propertyAutocomplete: () => [],
         });
 
         const metadata = createFakePackVersionMetadata(
@@ -908,7 +909,7 @@ describe('Pack metadata Validation', () => {
         ]);
       });
 
-      it('autocomplete for a non-mutable property', async () => {
+      it('autocomplete for a non-mutable property or bad property name', async () => {
         const syncTable = makeSyncTable({
           name: 'SyncTable',
           identityName: 'Sync',
@@ -917,7 +918,10 @@ describe('Pack metadata Validation', () => {
             primary: 'foo',
             id: 'foo',
             properties: {
-              Foo: {type: ValueType.String, mutable: false /* , autocomplete: true */},
+              Foo: {type: ValueType.String, mutable: false, autocomplete: AutocompleteType.Dynamic},
+              // This next issue isn't something pack authors would normally do unless they do typecasts,
+              // but could be an error caused by a bug in makeSyncTable().
+              Bar: {type: ValueType.String, mutable: true, autocomplete: 'someProp' as AutocompleteReference},
             },
           }),
           formula: {
@@ -937,12 +941,21 @@ describe('Pack metadata Validation', () => {
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
           {
-            message: '"mutable" must be true to set "autocomplete" to true',
+            message: '"mutable" must be true to set "autocomplete"',
             path: 'syncTables[0].schema.properties.Foo',
           },
           {
-            message: '"mutable" must be true to set "autocomplete" to true',
+            message: '"mutable" must be true to set "autocomplete"',
             path: 'syncTables[0].getter.schema.items.properties.Foo',
+          },
+          {
+            message:
+              'Sync table SyncTable must define "autocomplete" for this property to use AutocompleteType.Dynamic',
+            path: 'syncTables[0].properties.Foo.autocomplete',
+          },
+          {
+            message: '"someProp" is not registered as an autocomplete function for this sync table.',
+            path: 'syncTables[0].properties.Bar.autocomplete',
           },
         ]);
       });

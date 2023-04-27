@@ -1,6 +1,6 @@
 import type {$Values} from './type_utils';
 import type {AutocompleteReference} from './api_types';
-import type {AutocompleteValueType} from './api_types';
+import type {AutocompleteType} from './api_types';
 import type {PackFormulaResult} from './api_types';
 import type {PropertyAutocompleteMetadataFunction} from './api_types';
 import {UserVisibleError} from './api';
@@ -218,8 +218,12 @@ export type ObjectHintTypes = (typeof ObjectHintValueTypes)[number];
 export type PropertySchemaAutocomplete<T extends PackFormulaResult> =
   | PropertyAutocompleteMetadataFunction<T[]>
   | T[]
-  | AutocompleteValueType
+  | AutocompleteType
   | AutocompleteReference;
+
+type PropertySchemaAutocompleteWithOptionalDisplay<T extends PackFormulaResult> = PropertySchemaAutocomplete<
+  T | {display: string; value: T}
+>;
 
 interface BaseSchema {
   /**
@@ -259,7 +263,7 @@ export interface BooleanSchema extends BaseSchema {
   codaType?: BooleanHintTypes;
 
   /** @hidden */
-  autocomplete?: PropertySchemaAutocomplete<boolean>;
+  autocomplete?: PropertySchemaAutocompleteWithOptionalDisplay<boolean>;
 }
 
 /**
@@ -283,7 +287,7 @@ export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> e
   codaType?: T;
 
   /** @hidden */
-  autocomplete?: PropertySchemaAutocomplete<number>;
+  autocomplete?: PropertySchemaAutocompleteWithOptionalDisplay<number>;
 }
 
 /**
@@ -732,7 +736,7 @@ export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> e
   codaType?: T;
 
   /** @hidden */
-  autocomplete?: PropertySchemaAutocomplete<string>;
+  autocomplete?: PropertySchemaAutocompleteWithOptionalDisplay<string>;
 }
 
 /**
@@ -1624,7 +1628,7 @@ export function throwOnDynamicSchemaWithJsAutocompleteFunction(dynamicSchema: an
 
   if (typeof dynamicSchema === 'function' && parentKey === 'autocomplete') {
     throw new UserVisibleError(
-      'Sync tables with dynamic schemas must use "autocomplete: AutocompleteValueType.Dynamic" instead of "autocomplete: () => {...}',
+      'Sync tables with dynamic schemas must use "autocomplete: AutocompleteType.Dynamic" instead of "autocomplete: () => {...}',
     );
   }
 }

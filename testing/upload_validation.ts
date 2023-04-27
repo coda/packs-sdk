@@ -3,6 +3,7 @@ import type {AWSAssumeRoleAuthentication} from '../types';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '../schema';
 import {AuthenticationType} from '../types';
+import {AutocompleteType} from '../api_types';
 import {BooleanHintValueTypes} from '../schema';
 import type {BooleanPackFormula} from '../api';
 import type {BooleanSchema} from '../schema';
@@ -1121,7 +1122,7 @@ const objectPropertyUnionSchema = z
     // BaseSchema isn't exported, so Pick<BooleanSchema | EmailSchema, ...> here is an approximation.
     (baseSchema: Pick<BooleanSchema | EmailSchema, 'mutable' | 'autocomplete' | 'codaType'>) =>
       baseSchema.codaType === ValueHintType.Email || !baseSchema?.autocomplete || baseSchema.mutable,
-    `"mutable" must be true to set "autocomplete" `,
+    `"mutable" must be true to set "autocomplete"`,
   );
 
 const objectPackFormulaSchema = zodCompleteObject<Omit<ObjectPackFormula<any, any>, 'execute'>>({
@@ -1184,6 +1185,7 @@ const baseSyncTableSchema = {
   getter: syncFormulaSchema,
   entityName: z.string().optional(),
   defaultAddDynamicColumns: z.boolean().optional(),
+  // TODO(patrick): Make identityName non-optional after SDK v1.0.0 is required
   identityName: z
     .string()
     .min(1)
@@ -1193,7 +1195,7 @@ const baseSyncTableSchema = {
       val => !val || !SystemColumnNames.includes(val),
       `This property name is reserved for internal use by Coda and can't be used as an identityName, sorry!`,
     ),
-  autocompletes: z
+  namedAutocompletes: z
     .record(formulaMetadataSchema)
     .optional()
     .default({})
@@ -1229,7 +1231,6 @@ const genericDynamicSyncTableSchema = zodCompleteObject<
   searchDynamicUrls: formulaMetadataSchema.optional(),
   getSchema: formulaMetadataSchema,
   autocomplete: objectPackFormulaSchema.optional(),
-  // TODO(patrick): Make identityName non-optional after SDK v1.0.0 is required
 }).strict();
 
 const syncTableSchema = z
@@ -1610,11 +1611,14 @@ const legacyPackMetadataSchema = validateFormulas(
         if (!autocomplete || Array.isArray(autocomplete)) {
           continue;
         }
-        if (typeof autocomplete !== 'string' || !(autocomplete in (syncTable.autocompletes || {}))) {
+        if (typeof autocomplete !== 'string' || !(autocomplete in (syncTable.namedAutocompletes || {}))) {
           context.addIssue({
             code: z.ZodIssueCode.custom,
             path: ['syncTables', i, 'properties', propertyName, 'autocomplete'],
-            message: `"${childSchema.autocomplete}" is not registered as an autocomplete function for this sync table.`,
+            message:
+              childSchema.autocomplete === AutocompleteType.Dynamic
+                ? `Sync table ${syncTable.name} must define "autocomplete" for this property to use AutocompleteType.Dynamic`
+                : `"${childSchema.autocomplete}" is not registered as an autocomplete function for this sync table.`,
           });
           continue;
         }
