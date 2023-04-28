@@ -397,6 +397,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
           ...syncTable,
           getter: maybeRewriteConnectionForFormula(syncTable.getter, connectionRequirement),
           getSchema: maybeRewriteConnectionForFormula(syncTable.getSchema, connectionRequirement),
+          // TODO(dweitzman): Also rewrite the connection requirements for syncTable.namedAutocompletes
         };
       }
     });
