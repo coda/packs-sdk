@@ -574,10 +574,8 @@ function makePropertyAutocompleteFormula({ execute, schema, name, }) {
     // The type SchemaType<ArraySchema<T>> is equivalent to Array<SchemaType<T>>, but typescript doesn't know
     // that unless we do a cast.
     const executeRetyped = execute;
-    const innerExecute = async ([], context) => {
-        const result = await executeRetyped(context);
-        return result;
-    };
+    // Bend the type to satisfy PackFormulaDef's declaration.
+    const innerExecute = async ([], context) => executeRetyped(context);
     const formulaDefn = {
         connectionRequirement: api_types_2.ConnectionRequirement.Optional,
         execute: innerExecute,
@@ -1029,6 +1027,9 @@ exports.maybeRewriteConnectionForFormula = maybeRewriteConnectionForFormula;
 // This helper method finds any inline autocomplete functions in a static sync table schema.
 // These functions will need to be extracted into the "namedAutocompletes" property on the sync
 // table and replaced with strings.
+//
+// Not that we won't detect autocomplete functions within nested object schemas, but that's not necessary
+// here: the only types you can autocomplete in a 2-way schema are the top-level ones.
 function listPropertiesWithAutocompleteFunctions(schema) {
     const result = [];
     for (const propertyName of Object.keys(schema.properties)) {

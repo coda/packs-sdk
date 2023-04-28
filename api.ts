@@ -1464,10 +1464,9 @@ export function makePropertyAutocompleteFormula<SchemaT extends Schema>({
   // that unless we do a cast.
   const executeRetyped = execute as PropertyAutocompleteMetadataFunction<SchemaType<ArraySchema<SchemaT>>>;
 
-  const innerExecute = async ([]: ParamValues<[]>, context: ExecutionContext): Promise<ResultT> => {
-    const result = await executeRetyped(context as PropertyAutocompleteExecutionContext);
-    return result;
-  };
+  // Bend the type to satisfy PackFormulaDef's declaration.
+  const innerExecute = async ([]: ParamValues<[]>, context: ExecutionContext): Promise<ResultT> =>
+    executeRetyped(context as PropertyAutocompleteExecutionContext);
 
   const formulaDefn: ArrayFormulaDef<[], SchemaT> = {
     connectionRequirement: ConnectionRequirement.Optional,
@@ -1743,7 +1742,7 @@ export interface SyncTableOptions<
   /**
    * An autocomplete function to use for any dynamic schema properties.
    * The name of the property that's being modified by the doc editor
-   * is available in autocomplete function's context parameter.
+   * is available in the autocomplete function's context parameter.
    *
    * @example
    * ```
@@ -2300,6 +2299,9 @@ export function maybeRewriteConnectionForFormula<
 // This helper method finds any inline autocomplete functions in a static sync table schema.
 // These functions will need to be extracted into the "namedAutocompletes" property on the sync
 // table and replaced with strings.
+//
+// Not that we won't detect autocomplete functions within nested object schemas, but that's not necessary
+// here: the only types you can autocomplete in a 2-way schema are the top-level ones.
 function listPropertiesWithAutocompleteFunctions(schema: ObjectSchemaDefinition<string, string>): string[] {
   const result: string[] = [];
   for (const propertyName of Object.keys(schema.properties)) {
@@ -2323,7 +2325,7 @@ function replaceInlineAutocompleteFunctionsWithNamedAutocompleteFunctions({
   schema,
   identityName,
 }: {
-  inputSchema: ObjectSchemaDefinition<any, any>;
+  inputSchema: Readonly<ObjectSchemaDefinition<any, any>>;
   schema: ObjectSchemaDefinition<any, any>;
   identityName: string;
 }): SyncTableAutocompleters {

@@ -1056,7 +1056,7 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
     /**
      * An autocomplete function to use for any dynamic schema properties.
      * The name of the property that's being modified by the doc editor
-     * is available in autocomplete function's context parameter.
+     * is available in the autocomplete function's context parameter.
      *
      * @example
      * ```
