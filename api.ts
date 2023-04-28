@@ -280,8 +280,7 @@ export interface SyncTableDef<
   defaultAddDynamicColumns?: boolean;
 
   /**
-   * To configure autocomplete for properties in a sync table, use {@link SyncTableOptions.autocomplete} and/or
-   * {@link ObjectSchemaDefinition.autocomplete}
+   * To configure autocomplete for properties in a sync table, use {@link DynamicSyncTableOptions.autocomplete}.
    * @hidden
    */
   namedAutocompletes?: SyncTableAutocompleters;
@@ -310,7 +309,10 @@ export interface DynamicSyncTableDef<
   /** See {@link DynamicSyncTableOptions.searchDynamicUrls} */
   searchDynamicUrls?: MetadataFormula;
 
-  /** @hidden */
+  /**
+   * See {@link DynamicSyncTableOptions.autocomplete}
+   * @hidden
+   */
   autocomplete?: PropertyAutocompleteMetadataFormula<any>;
 }
 
@@ -1679,6 +1681,13 @@ export interface DynamicOptions {
   entityName?: string;
   /** See {@link DynamicSyncTableOptions.defaultAddDynamicColumns} */
   defaultAddDynamicColumns?: boolean;
+
+  /**
+   * See {@link DynamicSyncTableOptions.autocomplete}
+   *
+   * @hidden
+   */
+  autocomplete?: PropertyAutocompleteMetadataFunction<any>;
 }
 
 /**
@@ -1738,41 +1747,6 @@ export interface SyncTableOptions<
    * sync tables that have a dynamic schema.
    */
   dynamicOptions?: DynamicOptions;
-
-  /**
-   * An autocomplete function to use for any dynamic schema properties.
-   * The name of the property that's being modified by the doc editor
-   * is available in the autocomplete function's context parameter.
-   *
-   * @example
-   * ```
-   * coda.makeDynamicSyncTable({
-   *   name: "MySyncTable",
-   *   getSchema: async function (context) => {
-   *     return coda.makeObjectSchema({
-   *       properties: {
-   *         dynamicPropertyName: {
-   *           type: coda.ValueType.String,
-   *           mutable: true,
-   *           autocomplete: coda.AutocompleteValueType.Dynamic,
-   *         },
-   *       },
-   *     });
-   *   },
-   *   autocomplete: async function (context) => {
-   *     if (context.propertyName === "dynamicPropertyName") {
-   *       return ["Dynamic Value 1", "Dynamic value 2"];
-   *     }
-   *     throw new coda.UserVisibleError(
-   *       `Cannot autocomplete property ${context.propertyName}`
-   *     );
-   *   },
-   *   ...
-   * ```
-   *
-   * @hidden
-   */
-  autocomplete?: PropertyAutocompleteMetadataFunction<any>;
 }
 
 /**
@@ -1874,7 +1848,36 @@ export interface DynamicSyncTableOptions<
   placeholderSchema?: SchemaT;
 
   /**
-   * See {@link SyncTableOptions.autocomplete}
+   * An autocomplete function to use for any dynamic schema properties.
+   * The name of the property that's being modified by the doc editor
+   * is available in the autocomplete function's context parameter.
+   *
+   * @example
+   * ```
+   * coda.makeDynamicSyncTable({
+   *   name: "MySyncTable",
+   *   getSchema: async function (context) => {
+   *     return coda.makeObjectSchema({
+   *       properties: {
+   *         dynamicPropertyName: {
+   *           type: coda.ValueType.String,
+   *           mutable: true,
+   *           autocomplete: coda.AutocompleteValueType.Dynamic,
+   *         },
+   *       },
+   *     });
+   *   },
+   *   autocomplete: async function (context) => {
+   *     if (context.propertyName === "dynamicPropertyName") {
+   *       return ["Dynamic Value 1", "Dynamic value 2"];
+   *     }
+   *     throw new coda.UserVisibleError(
+   *       `Cannot autocomplete property ${context.propertyName}`
+   *     );
+   *   },
+   *   ...
+   * ```
+   *
    * @hidden
    */
   autocomplete?: PropertyAutocompleteMetadataFunction<any>;
@@ -1906,7 +1909,6 @@ export function makeSyncTable<
   schema: inputSchema,
   formula,
   connectionRequirement,
-  autocomplete,
   dynamicOptions = {},
 }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT> {
   const {getSchema: getSchemaDef, entityName, defaultAddDynamicColumns} = dynamicOptions;
@@ -1943,10 +1945,10 @@ export function makeSyncTable<
     identityName,
   });
 
-  if (autocomplete) {
+  if (dynamicOptions.autocomplete) {
     namedAutocompletes ??= {};
     namedAutocompletes[AutocompleteType.Dynamic] = makePropertyAutocompleteFormula({
-      execute: autocomplete,
+      execute: dynamicOptions.autocomplete,
       schema: makeObjectSchema({
         // A dynamic autocomplete formula can return different result types depending
         // on which property is being autocompleted, so there's no accurate schema
@@ -2157,8 +2159,7 @@ export function makeDynamicSyncTable<
     schema: placeholderSchema,
     formula,
     connectionRequirement,
-    autocomplete,
-    dynamicOptions: {getSchema, entityName, defaultAddDynamicColumns},
+    dynamicOptions: {getSchema, entityName, defaultAddDynamicColumns, autocomplete},
   });
 
   return {

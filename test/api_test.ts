@@ -218,8 +218,10 @@ describe('API test', () => {
             return {result: []};
           },
         },
-        autocomplete: () => {
-          return ['baz'];
+        dynamicOptions: {
+          autocomplete: () => {
+            return ['baz'];
+          },
         },
       });
       const {namedAutocompletes} = table;
