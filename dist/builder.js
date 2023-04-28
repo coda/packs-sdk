@@ -8,8 +8,9 @@ const api_2 = require("./api");
 const api_3 = require("./api");
 const api_4 = require("./api");
 const api_5 = require("./api");
-const migration_1 = require("./helpers/migration");
 const api_6 = require("./api");
+const migration_1 = require("./helpers/migration");
+const api_7 = require("./api");
 /**
  * Creates a new skeleton pack definition that can be added to.
  *
@@ -183,10 +184,10 @@ class PackDefinitionBuilder {
         }
         else {
             const { getConnectionName: getConnectionNameDef, getConnectionUserId: getConnectionUserIdDef, postSetup: postSetupDef, ...rest } = authentication;
-            const getConnectionName = (0, api_6.wrapMetadataFunction)(getConnectionNameDef);
-            const getConnectionUserId = (0, api_6.wrapMetadataFunction)(getConnectionUserIdDef);
+            const getConnectionName = (0, api_7.wrapMetadataFunction)(getConnectionNameDef);
+            const getConnectionUserId = (0, api_7.wrapMetadataFunction)(getConnectionUserIdDef);
             const postSetup = postSetupDef === null || postSetupDef === void 0 ? void 0 : postSetupDef.map(step => {
-                return { ...step, getOptions: (0, api_6.wrapMetadataFunction)((0, migration_1.setEndpointDefHelper)(step).getOptions) };
+                return { ...step, getOptions: (0, api_7.wrapMetadataFunction)((0, migration_1.setEndpointDefHelper)(step).getOptions) };
             });
             this.defaultAuthentication = { ...rest, getConnectionName, getConnectionUserId, postSetup };
         }
@@ -214,10 +215,10 @@ class PackDefinitionBuilder {
      */
     setSystemAuthentication(systemAuthentication) {
         const { getConnectionName: getConnectionNameDef, getConnectionUserId: getConnectionUserIdDef, postSetup: postSetupDef, ...rest } = systemAuthentication;
-        const getConnectionName = (0, api_6.wrapMetadataFunction)(getConnectionNameDef);
-        const getConnectionUserId = (0, api_6.wrapMetadataFunction)(getConnectionUserIdDef);
+        const getConnectionName = (0, api_7.wrapMetadataFunction)(getConnectionNameDef);
+        const getConnectionUserId = (0, api_7.wrapMetadataFunction)(getConnectionUserIdDef);
         const postSetup = postSetupDef === null || postSetupDef === void 0 ? void 0 : postSetupDef.map(step => {
-            return { ...step, getOptions: (0, api_6.wrapMetadataFunction)((0, migration_1.setEndpointDefHelper)(step).getOptions) };
+            return { ...step, getOptions: (0, api_7.wrapMetadataFunction)((0, migration_1.setEndpointDefHelper)(step).getOptions) };
         });
         this.systemConnectionAuthentication = {
             ...rest,
@@ -296,6 +297,7 @@ class PackDefinitionBuilder {
                     getSchema: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getSchema, connectionRequirement),
                     listDynamicUrls: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.listDynamicUrls, connectionRequirement),
                     searchDynamicUrls: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.searchDynamicUrls, connectionRequirement),
+                    namedAutocompletes: (0, api_6.maybeRewriteConnectionForNamedAutocompletes)(syncTable.namedAutocompletes, connectionRequirement),
                 };
             }
             else {
@@ -303,7 +305,7 @@ class PackDefinitionBuilder {
                     ...syncTable,
                     getter: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getter, connectionRequirement),
                     getSchema: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getSchema, connectionRequirement),
-                    // TODO(dweitzman): Also rewrite the connection requirements for syncTable.namedAutocompletes
+                    namedAutocompletes: (0, api_6.maybeRewriteConnectionForNamedAutocompletes)(syncTable.namedAutocompletes, connectionRequirement),
                 };
             }
         });

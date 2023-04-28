@@ -2015,7 +2015,7 @@ export function makeSyncTable<
     getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
     entityName,
     defaultAddDynamicColumns,
-    namedAutocompletes,
+    namedAutocompletes: maybeRewriteConnectionForNamedAutocompletes(namedAutocompletes, connectionRequirement),
   };
 }
 
@@ -2265,6 +2265,22 @@ export function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: Empty
     execute,
     resultType: Type.string as const,
   });
+}
+
+export function maybeRewriteConnectionForNamedAutocompletes(
+  namedAutocompletes: SyncTableAutocompleters | undefined,
+  connectionRequirement: ConnectionRequirement | undefined,
+): SyncTableAutocompleters | undefined {
+  if (!namedAutocompletes) {
+    return namedAutocompletes;
+  }
+
+  const result: SyncTableAutocompleters = {};
+
+  for (const name of Object.keys(namedAutocompletes)) {
+    result[name] = maybeRewriteConnectionForFormula(namedAutocompletes[name], connectionRequirement);
+  }
+  return result;
 }
 
 export function maybeRewriteConnectionForFormula<

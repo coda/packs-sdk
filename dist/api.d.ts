@@ -1329,4 +1329,5 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
     execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<string>;
     resultType: Type.string;
 };
+export declare function maybeRewriteConnectionForNamedAutocompletes(namedAutocompletes: SyncTableAutocompleters | undefined, connectionRequirement: ConnectionRequirement | undefined): SyncTableAutocompleters | undefined;
 export declare function maybeRewriteConnectionForFormula<ParamDefsT extends ParamDefs, T extends CommonPackFormulaDef<ParamDefsT> | undefined>(formula: T, connectionRequirement: ConnectionRequirement | undefined): T;

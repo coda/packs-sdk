@@ -22,6 +22,7 @@ import {makeDynamicSyncTable} from './api';
 import {makeFormula} from './api';
 import {makeSyncTable} from './api';
 import {maybeRewriteConnectionForFormula} from './api';
+import {maybeRewriteConnectionForNamedAutocompletes} from './api';
 import {setEndpointDefHelper} from './helpers/migration';
 import {wrapMetadataFunction} from './api';
 
@@ -391,13 +392,20 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
           getSchema: maybeRewriteConnectionForFormula(syncTable.getSchema, connectionRequirement),
           listDynamicUrls: maybeRewriteConnectionForFormula(syncTable.listDynamicUrls, connectionRequirement),
           searchDynamicUrls: maybeRewriteConnectionForFormula(syncTable.searchDynamicUrls, connectionRequirement),
+          namedAutocompletes: maybeRewriteConnectionForNamedAutocompletes(
+            syncTable.namedAutocompletes,
+            connectionRequirement,
+          ),
         };
       } else {
         return {
           ...syncTable,
           getter: maybeRewriteConnectionForFormula(syncTable.getter, connectionRequirement),
           getSchema: maybeRewriteConnectionForFormula(syncTable.getSchema, connectionRequirement),
-          // TODO(dweitzman): Also rewrite the connection requirements for syncTable.namedAutocompletes
+          namedAutocompletes: maybeRewriteConnectionForNamedAutocompletes(
+            syncTable.namedAutocompletes,
+            connectionRequirement,
+          ),
         };
       }
     });
