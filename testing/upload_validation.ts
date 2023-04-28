@@ -592,7 +592,7 @@ const booleanPackFormulaSchema = zodCompleteObject<Omit<BooleanPackFormula<any>,
     description: z.string().optional(),
     mutable: z.boolean().optional(),
     // Only properties in sync tables would need to define "autocomplete"
-    autocomplete: z.undefined(),
+    autocomplete: z.undefined().optional(),
   }).optional(),
 });
 

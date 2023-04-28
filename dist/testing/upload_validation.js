@@ -482,7 +482,7 @@ const booleanPackFormulaSchema = zodCompleteObject({
         description: z.string().optional(),
         mutable: z.boolean().optional(),
         // Only properties in sync tables would need to define "autocomplete"
-        autocomplete: z.undefined(),
+        autocomplete: z.undefined().optional(),
     }).optional(),
 });
 // TODO(jonathan): Use zodCompleteObject on these after exporting these types.
