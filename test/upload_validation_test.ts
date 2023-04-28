@@ -984,6 +984,16 @@ describe('Pack metadata Validation', () => {
                 mutable: true,
                 autocomplete: ['this is ok', {display: 'foo', value: 'bar'}],
               },
+              Baz2: {
+                type: ValueType.Number,
+                mutable: true,
+                autocomplete: [1, {display: 'foo', value: 2}],
+              },
+              Baz3: {
+                type: ValueType.Boolean,
+                mutable: true,
+                autocomplete: [true, {display: 'foo', value: false}],
+              },
             },
           }),
           formula: {

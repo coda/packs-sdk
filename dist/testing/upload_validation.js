@@ -524,13 +524,13 @@ const baseStringPropertyValidators = {
 };
 const baseNumericPropertyValidators = {
     ...basePropertyValidators,
-    autocomplete: zodAutocompleteFieldWithValues(z.string(), true),
+    autocomplete: zodAutocompleteFieldWithValues(z.number(), true),
 };
 const booleanPropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.Boolean),
     codaType: z.enum([...schema_2.BooleanHintValueTypes]).optional(),
     ...basePropertyValidators,
-    autocomplete: zodAutocompleteFieldWithValues(z.string(), true),
+    autocomplete: zodAutocompleteFieldWithValues(z.boolean(), true),
 });
 const numericPropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.Number),

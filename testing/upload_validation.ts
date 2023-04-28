@@ -642,14 +642,14 @@ const baseStringPropertyValidators = {
 
 const baseNumericPropertyValidators = {
   ...basePropertyValidators,
-  autocomplete: zodAutocompleteFieldWithValues(z.string(), true),
+  autocomplete: zodAutocompleteFieldWithValues(z.number(), true),
 };
 
 const booleanPropertySchema = zodCompleteStrictObject<BooleanSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.Boolean),
   codaType: z.enum([...BooleanHintValueTypes]).optional(),
   ...basePropertyValidators,
-  autocomplete: zodAutocompleteFieldWithValues(z.string(), true),
+  autocomplete: zodAutocompleteFieldWithValues(z.boolean(), true),
 });
 
 const numericPropertySchema = zodCompleteStrictObject<NumericSchema & ObjectSchemaProperty>({
