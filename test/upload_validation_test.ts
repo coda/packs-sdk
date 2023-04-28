@@ -960,6 +960,68 @@ describe('Pack metadata Validation', () => {
         ]);
       });
 
+      it('autocomplete has hard-coded non-array value', async () => {
+        const syncTable = makeSyncTable({
+          name: 'SyncTable',
+          identityName: 'Sync',
+          schema: makeObjectSchema({
+            type: ValueType.Object,
+            primary: 'foo',
+            id: 'foo',
+            properties: {
+              Foo: {
+                type: ValueType.String,
+                mutable: true,
+                autocomplete: {'totally invalid value': 'here'} as any as string[],
+              },
+              Bar: {
+                type: ValueType.String,
+                mutable: true,
+                autocomplete: [{'totally invalid value': 'here'}] as any as string[],
+              },
+              Baz: {
+                type: ValueType.String,
+                mutable: true,
+                autocomplete: ['this is ok', {display: 'foo', value: 'bar'}],
+              },
+            },
+          }),
+          formula: {
+            name: 'SyncTable',
+            description: 'A simple sync table',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            examples: [],
+          },
+        });
+
+        const metadata = createFakePack({
+          syncTables: [syncTable],
+        });
+        const err = await validateJsonAndAssertFails(metadata);
+        const validationErrors = err.validationErrors ?? [];
+
+        // There are quite a few zod errors when this happens, I think because all the union
+        // types make it unsure of which one should match.
+        assert.deepInclude(validationErrors, {
+          message: 'Could not find any valid schema for this value.',
+          path: 'syncTables[0].getter.schema.items.properties.Foo.codaType',
+        });
+        assert.deepInclude(validationErrors, {
+          message: 'Expected string, received object',
+          path: 'syncTables[0].getter.schema.items.properties.Bar.autocomplete[0]',
+        });
+        assert.deepInclude(validationErrors, {
+          message: 'Required',
+          path: 'syncTables[0].getter.schema.items.properties.Bar.autocomplete[0].display',
+        });
+
+        const bazErrors = validationErrors.filter(e => e.path?.toLowerCase().includes('.baz'));
+        assert.isEmpty(bazErrors);
+      });
+
       it('identityName propagated to identity field', async () => {
         const syncTable = makeSyncTable({
           name: 'SyncTable',
