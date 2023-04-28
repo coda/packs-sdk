@@ -5838,7 +5838,7 @@ module.exports = (() => {
       }
     }
     if (typeof dynamicSchema === "function" && parentKey === "autocomplete") {
-      throw new UserVisibleError(
+      throw new Error(
         'Sync tables with dynamic schemas must use "autocomplete: AutocompleteType.Dynamic" instead of "autocomplete: () => {...}'
       );
     }
