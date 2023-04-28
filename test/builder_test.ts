@@ -3,6 +3,7 @@ import {AuthenticationType} from '../types';
 import {ConnectionRequirement} from '../api_types';
 import type {DynamicSyncTableDef} from '../api';
 import type {MetadataFormulaDef} from '../api';
+import type {ObjectSchema} from '../schema';
 import type {PackDefinitionBuilder} from '../builder';
 import type {ParamDefs} from '../api_types';
 import {ParameterType} from '../api_types';
@@ -49,18 +50,28 @@ describe('Builder', () => {
 
   function addDummySyncTable(
     pack_: PackDefinitionBuilder,
-    {connectionRequirement, parameters}: {connectionRequirement?: ConnectionRequirement; parameters?: ParamDefs} = {},
+    {
+      connectionRequirement,
+      parameters,
+      schema,
+    }: {
+      connectionRequirement?: ConnectionRequirement;
+      parameters?: ParamDefs;
+      schema?: ObjectSchema<string, string>;
+    } = {},
   ) {
     pack_.addSyncTable({
       name: 'Foos',
       identityName: 'Foo',
       connectionRequirement,
-      schema: makeObjectSchema({
-        type: ValueType.Object,
-        id: 'foo',
-        primary: 'foo',
-        properties: {foo: {type: ValueType.String}},
-      }),
+      schema: makeObjectSchema(
+        schema ?? {
+          type: ValueType.Object,
+          id: 'foo',
+          primary: 'foo',
+          properties: {foo: {type: ValueType.String}},
+        },
+      ),
       formula: {
         name: 'Ignored',
         description: '',
@@ -235,6 +246,49 @@ describe('Builder', () => {
         pack.syncTables[0].getter.parameters[0]?.autocomplete?.connectionRequirement,
         ConnectionRequirement.Required,
       );
+    });
+
+    it('works for sync table cell autocomplete', () => {
+      pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
+      addDummySyncTable(pack, {
+        schema: {
+          type: ValueType.Object,
+          id: 'foo',
+          primary: 'foo',
+          properties: {
+            foo: {
+              type: ValueType.String,
+              mutable: true,
+              autocomplete: () => {
+                return ['bar'];
+              },
+            },
+          },
+        },
+      });
+      assert.equal(pack.syncTables[0].namedAutocompletes!.foo.connectionRequirement, ConnectionRequirement.Required);
+    });
+
+    it('works for sync table cell autocomplete after the fact', () => {
+      addDummySyncTable(pack, {
+        schema: {
+          type: ValueType.Object,
+          id: 'foo',
+          primary: 'foo',
+          properties: {
+            foo: {
+              type: ValueType.String,
+              mutable: true,
+              autocomplete: () => {
+                return ['bar'];
+              },
+            },
+          },
+        },
+      });
+      assert.equal(pack.syncTables[0].namedAutocompletes!.foo.connectionRequirement, ConnectionRequirement.Optional);
+      pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
+      assert.equal(pack.syncTables[0].namedAutocompletes!.foo.connectionRequirement, ConnectionRequirement.Required);
     });
 
     it('works for dynamic sync table metadata formulas', () => {

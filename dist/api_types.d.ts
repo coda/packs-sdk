@@ -375,7 +375,7 @@ export interface Network {
 /** The HTTP methods (verbs) supported by the fetcher. */
 export declare const ValidFetchMethods: readonly ["GET", "PATCH", "POST", "PUT", "DELETE", "HEAD"];
 /** The type of the HTTP methods (verbs) supported by the fetcher. */
-export declare type FetchMethodType = typeof ValidFetchMethods[number];
+export declare type FetchMethodType = (typeof ValidFetchMethods)[number];
 /**
  * An HTTP request used with the {@link Fetcher}.
  *
@@ -724,4 +724,19 @@ export declare enum PrecannedDateRange {
      */
     Everything = "everything"
 }
+/**
+ * @hidden
+ */
+export declare enum AutocompleteType {
+    Dynamic = "__coda_dynamic__"
+}
+/** @hidden */
+export declare type AutocompleteReference = string & {
+    __brand: 'AutocompleteRef';
+};
+/**
+ * A JavaScript function for property autocomplete.
+ * @hidden
+ */
+export declare type PropertyAutocompleteMetadataFunction<ResultT extends PackFormulaResult[]> = (context: PropertyAutocompleteExecutionContext) => Promise<ResultT> | ResultT;
 export {};

@@ -12,8 +12,8 @@
  * @module core
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ValidFetchMethods = exports.withIdentity = exports.makeSchema = exports.makeReferenceSchemaFromObjectSchema = exports.makeObjectSchema = exports.makeAttributionNode = exports.generateSchema = exports.ValueType = exports.ValueHintType = exports.ScaleIconSet = exports.PropertyLabelValueTemplate = exports.LinkDisplayType = exports.ImageOutline = exports.ImageCornerStyle = exports.EmailDisplayType = exports.DurationUnit = exports.CurrencyFormat = exports.AttributionNodeType = exports.ensureUnreachable = exports.ensureNonEmptyString = exports.ensureExists = exports.assertCondition = exports.SvgConstants = exports.getEffectivePropertyKeysFromSchema = exports.withQueryParams = exports.joinUrl = exports.getQueryParams = exports.simpleAutocomplete = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.makeParameter = exports.makeTranslateObjectFormula = exports.makeSyncTable = exports.makeFormula = exports.makeEmptyFormula = exports.makeDynamicSyncTable = exports.makeMetadataFormula = exports.UserVisibleError = exports.Type = exports.MissingScopesError = exports.StatusCodeError = exports.PrecannedDateRange = exports.ParameterType = exports.NetworkConnection = exports.UpdateOutcome = exports.ConnectionRequirement = exports.PackDefinitionBuilder = exports.newPack = exports.PostSetupType = exports.AuthenticationType = void 0;
-exports.TokenExchangeCredentialsLocation = void 0;
+exports.withIdentity = exports.makeSchema = exports.makeReferenceSchemaFromObjectSchema = exports.makeObjectSchema = exports.makeAttributionNode = exports.generateSchema = exports.ValueType = exports.ValueHintType = exports.ScaleIconSet = exports.PropertyLabelValueTemplate = exports.LinkDisplayType = exports.ImageOutline = exports.ImageCornerStyle = exports.EmailDisplayType = exports.DurationUnit = exports.CurrencyFormat = exports.AttributionNodeType = exports.ensureUnreachable = exports.ensureNonEmptyString = exports.ensureExists = exports.assertCondition = exports.SvgConstants = exports.getEffectivePropertyKeysFromSchema = exports.withQueryParams = exports.joinUrl = exports.getQueryParams = exports.simpleAutocomplete = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.makeParameter = exports.makeTranslateObjectFormula = exports.makeSyncTable = exports.makeFormula = exports.makeEmptyFormula = exports.makeDynamicSyncTable = exports.makeMetadataFormula = exports.UserVisibleError = exports.Type = exports.MissingScopesError = exports.StatusCodeError = exports.PrecannedDateRange = exports.ParameterType = exports.NetworkConnection = exports.UpdateOutcome = exports.ConnectionRequirement = exports.AutocompleteType = exports.PackDefinitionBuilder = exports.newPack = exports.PostSetupType = exports.AuthenticationType = void 0;
+exports.TokenExchangeCredentialsLocation = exports.ValidFetchMethods = void 0;
 var types_1 = require("./types");
 Object.defineProperty(exports, "AuthenticationType", { enumerable: true, get: function () { return types_1.AuthenticationType; } });
 var types_2 = require("./types");
@@ -23,21 +23,23 @@ Object.defineProperty(exports, "newPack", { enumerable: true, get: function () {
 var builder_2 = require("./builder");
 Object.defineProperty(exports, "PackDefinitionBuilder", { enumerable: true, get: function () { return builder_2.PackDefinitionBuilder; } });
 var api_types_1 = require("./api_types");
-Object.defineProperty(exports, "ConnectionRequirement", { enumerable: true, get: function () { return api_types_1.ConnectionRequirement; } });
+Object.defineProperty(exports, "AutocompleteType", { enumerable: true, get: function () { return api_types_1.AutocompleteType; } });
+var api_types_2 = require("./api_types");
+Object.defineProperty(exports, "ConnectionRequirement", { enumerable: true, get: function () { return api_types_2.ConnectionRequirement; } });
 var api_1 = require("./api");
 Object.defineProperty(exports, "UpdateOutcome", { enumerable: true, get: function () { return api_1.UpdateOutcome; } });
-var api_types_2 = require("./api_types");
-Object.defineProperty(exports, "NetworkConnection", { enumerable: true, get: function () { return api_types_2.NetworkConnection; } });
 var api_types_3 = require("./api_types");
-Object.defineProperty(exports, "ParameterType", { enumerable: true, get: function () { return api_types_3.ParameterType; } });
+Object.defineProperty(exports, "NetworkConnection", { enumerable: true, get: function () { return api_types_3.NetworkConnection; } });
 var api_types_4 = require("./api_types");
-Object.defineProperty(exports, "PrecannedDateRange", { enumerable: true, get: function () { return api_types_4.PrecannedDateRange; } });
+Object.defineProperty(exports, "ParameterType", { enumerable: true, get: function () { return api_types_4.ParameterType; } });
+var api_types_5 = require("./api_types");
+Object.defineProperty(exports, "PrecannedDateRange", { enumerable: true, get: function () { return api_types_5.PrecannedDateRange; } });
 var api_2 = require("./api");
 Object.defineProperty(exports, "StatusCodeError", { enumerable: true, get: function () { return api_2.StatusCodeError; } });
 var api_3 = require("./api");
 Object.defineProperty(exports, "MissingScopesError", { enumerable: true, get: function () { return api_3.MissingScopesError; } });
-var api_types_5 = require("./api_types");
-Object.defineProperty(exports, "Type", { enumerable: true, get: function () { return api_types_5.Type; } });
+var api_types_6 = require("./api_types");
+Object.defineProperty(exports, "Type", { enumerable: true, get: function () { return api_types_6.Type; } });
 var api_4 = require("./api");
 Object.defineProperty(exports, "UserVisibleError", { enumerable: true, get: function () { return api_4.UserVisibleError; } });
 // Formula definition helpers
@@ -119,7 +121,7 @@ var schema_18 = require("./schema");
 Object.defineProperty(exports, "withIdentity", { enumerable: true, get: function () { return schema_18.withIdentity; } });
 // Exports for intermediate entities we want included in the TypeDoc documentation
 // but otherwise wouldn't care about including as top-level exports of the SDK
-var api_types_6 = require("./api_types");
-Object.defineProperty(exports, "ValidFetchMethods", { enumerable: true, get: function () { return api_types_6.ValidFetchMethods; } });
+var api_types_7 = require("./api_types");
+Object.defineProperty(exports, "ValidFetchMethods", { enumerable: true, get: function () { return api_types_7.ValidFetchMethods; } });
 var types_3 = require("./types");
 Object.defineProperty(exports, "TokenExchangeCredentialsLocation", { enumerable: true, get: function () { return types_3.TokenExchangeCredentialsLocation; } });

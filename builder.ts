@@ -22,6 +22,7 @@ import {makeDynamicSyncTable} from './api';
 import {makeFormula} from './api';
 import {makeSyncTable} from './api';
 import {maybeRewriteConnectionForFormula} from './api';
+import {maybeRewriteConnectionForNamedAutocompletes} from './api';
 import {setEndpointDefHelper} from './helpers/migration';
 import {wrapMetadataFunction} from './api';
 
@@ -165,7 +166,6 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     schema,
     formula,
     connectionRequirement,
-    propertyAutocomplete,
     dynamicOptions = {},
   }: SyncTableOptions<K, L, ParamDefsT, SchemaT>): this {
     const connectionRequirementToUse = connectionRequirement || this._defaultConnectionRequirement;
@@ -176,7 +176,6 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       schema,
       formula,
       connectionRequirement: connectionRequirementToUse,
-      propertyAutocomplete,
       dynamicOptions,
     });
     this.syncTables.push(syncTable);
@@ -393,14 +392,20 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
           getSchema: maybeRewriteConnectionForFormula(syncTable.getSchema, connectionRequirement),
           listDynamicUrls: maybeRewriteConnectionForFormula(syncTable.listDynamicUrls, connectionRequirement),
           searchDynamicUrls: maybeRewriteConnectionForFormula(syncTable.searchDynamicUrls, connectionRequirement),
-          propertyAutocomplete: maybeRewriteConnectionForFormula(syncTable.propertyAutocomplete, connectionRequirement),
+          namedAutocompletes: maybeRewriteConnectionForNamedAutocompletes(
+            syncTable.namedAutocompletes,
+            connectionRequirement,
+          ),
         };
       } else {
         return {
           ...syncTable,
           getter: maybeRewriteConnectionForFormula(syncTable.getter, connectionRequirement),
-          propertyAutocomplete: maybeRewriteConnectionForFormula(syncTable.propertyAutocomplete, connectionRequirement),
           getSchema: maybeRewriteConnectionForFormula(syncTable.getSchema, connectionRequirement),
+          namedAutocompletes: maybeRewriteConnectionForNamedAutocompletes(
+            syncTable.namedAutocompletes,
+            connectionRequirement,
+          ),
         };
       }
     });

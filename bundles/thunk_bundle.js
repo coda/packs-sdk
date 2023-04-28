@@ -5824,6 +5824,26 @@ module.exports = (() => {
 
   // schema.ts
   var import_pascalcase = __toESM(require_pascalcase());
+  function throwOnDynamicSchemaWithJsAutocompleteFunction(dynamicSchema, parentKey) {
+    if (!dynamicSchema) {
+      return;
+    }
+    if (Array.isArray(dynamicSchema)) {
+      dynamicSchema.forEach((item) => throwOnDynamicSchemaWithJsAutocompleteFunction(item));
+      return;
+    }
+    if (typeof dynamicSchema === "object") {
+      for (const key of Object.keys(dynamicSchema)) {
+        throwOnDynamicSchemaWithJsAutocompleteFunction(dynamicSchema[key], key);
+      }
+    }
+    if (typeof dynamicSchema === "function" && parentKey === "autocomplete") {
+      throw new Error(
+        'Sync tables with dynamic schemas must use "autocomplete: AutocompleteType.Dynamic" instead of "autocomplete: () => {...}'
+      );
+    }
+  }
+  __name(throwOnDynamicSchemaWithJsAutocompleteFunction, "throwOnDynamicSchemaWithJsAutocompleteFunction");
 
   // handler_templates.ts
   init_buffer_shim();
@@ -6266,49 +6286,52 @@ module.exports = (() => {
             }
             break;
           case "PropertyAutocomplete" /* PropertyAutocomplete */:
-            let recordPropertyAccess2 = function(key) {
-              if (!cacheKeysUsed.includes(key)) {
-                cacheKeysUsed.push(key);
-              }
-            };
-            var recordPropertyAccess = recordPropertyAccess2;
-            __name(recordPropertyAccess2, "recordPropertyAccess");
             const syncTable = syncTables?.find((table) => table.name === formulaSpec.syncTableName);
-            const autocompleteFn = ensureExists(syncTable?.propertyAutocomplete);
-            const propertyValues = {};
-            const cacheKeysUsed = [];
-            for (const [key, value] of Object.entries(formulaSpec.propertyValues)) {
-              Object.defineProperty(propertyValues, key, {
+            const autocompleteFormula = syncTable?.namedAutocompletes?.[formulaSpec.autocompleteName];
+            if (autocompleteFormula) {
+              let recordPropertyAccess2 = function(key) {
+                if (!cacheKeysUsed.includes(key)) {
+                  cacheKeysUsed.push(key);
+                }
+              };
+              var recordPropertyAccess = recordPropertyAccess2;
+              __name(recordPropertyAccess2, "recordPropertyAccess");
+              const propertyValues = {};
+              const cacheKeysUsed = [];
+              for (const [key, value] of Object.entries(formulaSpec.propertyValues)) {
+                Object.defineProperty(propertyValues, key, {
+                  enumerable: true,
+                  get() {
+                    recordPropertyAccess2(key);
+                    return value;
+                  }
+                });
+              }
+              const propertyAutocompleteExecutionContext = {
+                ...executionContext,
+                propertyName: formulaSpec.propertyName,
+                propertyValues
+              };
+              const contextUsed = {};
+              Object.defineProperty(propertyAutocompleteExecutionContext, "search", {
                 enumerable: true,
                 get() {
-                  recordPropertyAccess2(key);
-                  return value;
+                  contextUsed.searchUsed = true;
+                  return formulaSpec.search;
                 }
               });
+              const packResult = await autocompleteFormula.execute(
+                params,
+                propertyAutocompleteExecutionContext
+              );
+              const result = {
+                packResult: normalizePropertyAutocompleteResults(packResult),
+                propertiesUsed: cacheKeysUsed,
+                ...contextUsed
+              };
+              return result;
             }
-            const propertyAutocompleteExecutionContext = {
-              ...executionContext,
-              propertyName: formulaSpec.propertyName,
-              propertyValues
-            };
-            const contextUsed = {};
-            Object.defineProperty(propertyAutocompleteExecutionContext, "search", {
-              enumerable: true,
-              get() {
-                contextUsed.searchUsed = true;
-                return formulaSpec.search;
-              }
-            });
-            const packResult = await autocompleteFn.execute(
-              params,
-              propertyAutocompleteExecutionContext
-            );
-            const result = {
-              packResult: normalizePropertyAutocompleteResults(packResult),
-              propertiesUsed: cacheKeysUsed,
-              ...contextUsed
-            };
-            return result;
+            break;
           case "PostSetupSetEndpoint" /* PostSetupSetEndpoint */:
             if (defaultAuthentication?.type !== "None" /* None */ && defaultAuthentication?.type !== "Various" /* Various */ && defaultAuthentication?.postSetup) {
               const setupStep = defaultAuthentication.postSetup.find(
@@ -6327,6 +6350,7 @@ module.exports = (() => {
             if (syncTables) {
               const syncTable2 = syncTables.find((table) => table.name === formulaSpec.syncTableName);
               if (syncTable2) {
+                let isGetSchema = false;
                 let formula;
                 if (isDynamicSyncTable(syncTable2)) {
                   switch (formulaSpec.metadataFormulaType) {
@@ -6344,6 +6368,7 @@ module.exports = (() => {
                       break;
                     case "SyncGetSchema" /* SyncGetSchema */:
                       formula = syncTable2.getSchema;
+                      isGetSchema = true;
                       break;
                     default:
                       return ensureSwitchUnreachable(formulaSpec);
@@ -6352,6 +6377,7 @@ module.exports = (() => {
                   switch (formulaSpec.metadataFormulaType) {
                     case "SyncGetSchema" /* SyncGetSchema */:
                       formula = syncTable2.getSchema;
+                      isGetSchema = true;
                       break;
                     case "SyncListDynamicUrls" /* SyncListDynamicUrls */:
                     case "SyncSearchDynamicUrls" /* SyncSearchDynamicUrls */:
@@ -6363,7 +6389,11 @@ module.exports = (() => {
                   }
                 }
                 if (formula) {
-                  return formula.execute(params, executionContext);
+                  const formulaResult = formula.execute(params, executionContext);
+                  if (isGetSchema) {
+                    throwOnDynamicSchemaWithJsAutocompleteFunction(await formulaResult);
+                  }
+                  return formulaResult;
                 }
               }
             }

@@ -1,6 +1,9 @@
 import './test_helper';
 import type {ArrayType} from '../api_types';
+import {AutocompleteType} from '../api_types';
 import {ConnectionRequirement} from '../api_types';
+import type {ExecutionContext} from '../api_types';
+import type {ParamValues} from '../api_types';
 import {ParameterType} from '../api_types';
 import {StatusCodeError} from '../api';
 import type {Type} from '../api_types';
@@ -66,9 +69,6 @@ describe('API test', () => {
           primary: 'id',
           properties: {id: {type: ValueType.String}},
         }),
-        propertyAutocomplete: async _ctx => {
-          return ['some', 'options'];
-        },
         formula: {
           name: 'Whatever',
           connectionRequirement: ConnectionRequirement.Optional,
@@ -195,6 +195,50 @@ describe('API test', () => {
           }),
         "Identity name mismatch for sync table SomeSync. Either remove the schema's identity.name (ConflictingIdentity) or ensure it matches the table's identityName (MyIdentityName).",
       );
+    });
+
+    it('static and dynamic autocompletes', async () => {
+      const table = makeSyncTable({
+        name: 'SomeSync',
+        identityName: 'MyIdentityName',
+        schema: schema.makeObjectSchema({
+          type: ValueType.Object,
+          id: 'foo',
+          primary: 'foo',
+          properties: {
+            foo: {type: ValueType.String, mutable: true, autocomplete: () => ['bar']},
+            bar: {type: ValueType.Number, mutable: true, autocomplete: AutocompleteType.Dynamic},
+          },
+        }),
+        formula: {
+          name: 'Whatever',
+          description: 'Whatever',
+          parameters: [],
+          async execute() {
+            return {result: []};
+          },
+        },
+        dynamicOptions: {
+          autocomplete: () => {
+            return ['baz'];
+          },
+        },
+      });
+      const {namedAutocompletes} = table;
+
+      assert.hasAllKeys(namedAutocompletes!, ['foo', AutocompleteType.Dynamic]);
+
+      const fooAutocomplete = namedAutocompletes!.foo;
+      assert.equal('MyIdentityName.foo.Autocomplete', fooAutocomplete.name);
+      assert.deepEqual(await fooAutocomplete.execute([] as ParamValues<[]>, {} as ExecutionContext), ['bar']);
+
+      // The ObjectSchemaProperties cast here is because typescript doesn't know that schema normalization
+      // changed "foo" to "Foo".
+      assert.equal((table.schema.properties as schema.ObjectSchemaProperties).Foo.autocomplete, 'foo' as any);
+
+      const dynamicAutocomplete = namedAutocompletes![AutocompleteType.Dynamic];
+      assert.equal('MyIdentityName.DynamicAutocomplete', dynamicAutocomplete.name);
+      assert.deepEqual(await dynamicAutocomplete.execute([] as ParamValues<[]>, {} as ExecutionContext), ['baz']);
     });
   });
 

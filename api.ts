@@ -1,5 +1,7 @@
 import type {ArraySchema} from './schema';
 import type {ArrayType} from './api_types';
+import type {AutocompleteReference} from './api_types';
+import {AutocompleteType} from './api_types';
 import type {BooleanSchema} from './schema';
 import type {CommonPackFormulaDef} from './api_types';
 import {ConnectionRequirement} from './api_types';
@@ -20,6 +22,7 @@ import type {ParameterType} from './api_types';
 import {ParameterTypeInputMap} from './api_types';
 import type {ParameterTypeMap} from './api_types';
 import type {PropertyAutocompleteExecutionContext} from './api_types';
+import type {PropertyAutocompleteMetadataFunction} from './api_types';
 import type {RequestHandlerTemplate} from './handler_templates';
 import type {ResponseHandlerTemplate} from './handler_templates';
 import type {Schema} from './schema';
@@ -232,6 +235,19 @@ export class MissingScopesError extends Error {
 }
 
 /**
+ * A map of named autocomplete methods for a particular sync table. The names need to match
+ * the values stored in the object schema. For the name, we use the property's name so that
+ * it'll be consistent across pack versions. In the future if we want to support packs
+ * being able to rename an existing property, we could try to set the names to the old
+ * property names. Alternatively, we could just say that autocomplete will briefly stop
+ * working until the sync table is refereshed so its schema matches the current pack release's
+ * schema.
+ */
+interface SyncTableAutocompleters {
+  [name: string]: PropertyAutocompleteMetadataFormula<any>;
+}
+
+/**
  * The result of defining a sync table. Should not be necessary to use directly,
  * instead, define sync tables using {@link makeSyncTable}.
  */
@@ -262,11 +278,12 @@ export interface SyncTableDef<
   entityName?: string;
   /** See {@link DynamicOptions.defaultAddDynamicColumns} */
   defaultAddDynamicColumns?: boolean;
+
   /**
-   * See {@link SyncTableOptions.propertyAutocomplete}
+   * To configure autocomplete for properties in a sync table, use {@link DynamicSyncTableOptions.autocomplete}.
    * @hidden
    */
-  propertyAutocomplete?: PropertyAutocompleteMetadataFormula;
+  namedAutocompletes?: SyncTableAutocompleters;
 }
 
 /**
@@ -291,11 +308,12 @@ export interface DynamicSyncTableDef<
   listDynamicUrls?: MetadataFormula;
   /** See {@link DynamicSyncTableOptions.searchDynamicUrls} */
   searchDynamicUrls?: MetadataFormula;
+
   /**
-   * See {@link DynamicSyncTableOptions.propertyAutocomplete}
+   * See {@link DynamicSyncTableOptions.autocomplete}
    * @hidden
    */
-  propertyAutocomplete?: PropertyAutocompleteMetadataFormula;
+  autocomplete?: PropertyAutocompleteMetadataFormula<any>;
 }
 
 /**
@@ -1350,10 +1368,16 @@ export interface PropertyAutocompleteAnnotatedResult {
 }
 
 /**
+ * Formula implementing property autocomplete.
+ * These are constructed by {@link makePropertyAutocompleteFormula}.
+ *
  * @hidden
  */
-export type PropertyAutocompleteMetadataFormula = BaseFormula<[], any> & {
-  schema?: any;
+export type PropertyAutocompleteMetadataFormula<SchemaT extends Schema> = ObjectPackFormula<
+  [],
+  ArraySchema<SchemaT>
+> & {
+  execute(params: ParamValues<[]>, context: PropertyAutocompleteExecutionContext): Promise<object> | object;
 };
 
 export type MetadataFormulaMetadata = Omit<MetadataFormula, 'execute'>;
@@ -1371,11 +1395,6 @@ export type MetadataFunction = (
   search: string,
   formulaContext?: MetadataContext,
 ) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
-
-/**
- * A JavaScript function for property autocomplete.
- */
-type PropertyAutocompleteMetadataFunction = (context: PropertyAutocompleteExecutionContext) => Promise<any[]> | any[];
 
 /**
  * The type of values that will be accepted as a metadata formula definition. This can either
@@ -1423,23 +1442,45 @@ export function makeMetadataFormula(
   });
 }
 
-function makePropertyAutocompleteFormula(
-  execute: PropertyAutocompleteMetadataFunction,
-  options?: {connectionRequirement?: ConnectionRequirement},
-): PropertyAutocompleteMetadataFormula {
+/**
+ * Builds a formula to store in {@link SyncTableAutocompleters}.
+ *
+ * @hidden
+ */
+export function makePropertyAutocompleteFormula<SchemaT extends Schema>({
+  execute,
+  schema,
+  name,
+}: {
+  execute: PropertyAutocompleteMetadataFunction<Array<SchemaType<SchemaT>>>;
+  schema: SchemaT;
+  name: string;
+}): PropertyAutocompleteMetadataFormula<SchemaT> {
   if (!(execute instanceof Function)) {
-    throw new Error(`Value for propertyAutocomplete must be a function`);
+    throw new Error(`Value for execute must be a function`);
   }
-  return makeObjectFormula({
-    name: 'getPropertyAutocompleteMetadata',
-    description: 'Gets property autocomplete',
-    execute([], context) {
-      return execute(context as PropertyAutocompleteExecutionContext);
-    },
+
+  type ResultT = SchemaType<ArraySchema<SchemaT>>;
+
+  // The type SchemaType<ArraySchema<T>> is equivalent to Array<SchemaType<T>>, but typescript doesn't know
+  // that unless we do a cast.
+  const executeRetyped = execute as PropertyAutocompleteMetadataFunction<SchemaType<ArraySchema<SchemaT>>>;
+
+  // Bend the type to satisfy PackFormulaDef's declaration.
+  const innerExecute = async ([]: ParamValues<[]>, context: ExecutionContext): Promise<ResultT> =>
+    executeRetyped(context as PropertyAutocompleteExecutionContext);
+
+  const formulaDefn: ArrayFormulaDef<[], SchemaT> = {
+    connectionRequirement: ConnectionRequirement.Optional,
+    execute: innerExecute,
+    name,
+    description: `A property autocomplete function for ${name}`,
     parameters: [],
-    examples: [],
-    connectionRequirement: options?.connectionRequirement || ConnectionRequirement.Optional,
-  });
+    resultType: ValueType.Array,
+    items: schema,
+  };
+  const formula = makeFormula<[], ValueType.Array, SchemaT>(formulaDefn);
+  return formula;
 }
 
 /**
@@ -1640,6 +1681,13 @@ export interface DynamicOptions {
   entityName?: string;
   /** See {@link DynamicSyncTableOptions.defaultAddDynamicColumns} */
   defaultAddDynamicColumns?: boolean;
+
+  /**
+   * See {@link DynamicSyncTableOptions.autocomplete}
+   *
+   * @hidden
+   */
+  autocomplete?: PropertyAutocompleteMetadataFunction<any>;
 }
 
 /**
@@ -1699,11 +1747,6 @@ export interface SyncTableOptions<
    * sync tables that have a dynamic schema.
    */
   dynamicOptions?: DynamicOptions;
-  /**
-   * A function to autocomplete values for properties marked with `mutable` and `autocomplete`.
-   * @hidden
-   */
-  propertyAutocomplete?: PropertyAutocompleteMetadataFunction;
 }
 
 /**
@@ -1805,10 +1848,39 @@ export interface DynamicSyncTableOptions<
   placeholderSchema?: SchemaT;
 
   /**
-   * A function to autocomplete values for properties marked with `mutable` and `autocomplete`.
+   * An autocomplete function to use for any dynamic schema properties.
+   * The name of the property that's being modified by the doc editor
+   * is available in the autocomplete function's context parameter.
+   *
+   * @example
+   * ```
+   * coda.makeDynamicSyncTable({
+   *   name: "MySyncTable",
+   *   getSchema: async function (context) => {
+   *     return coda.makeObjectSchema({
+   *       properties: {
+   *         dynamicPropertyName: {
+   *           type: coda.ValueType.String,
+   *           mutable: true,
+   *           autocomplete: coda.AutocompleteValueType.Dynamic,
+   *         },
+   *       },
+   *     });
+   *   },
+   *   autocomplete: async function (context) => {
+   *     if (context.propertyName === "dynamicPropertyName") {
+   *       return ["Dynamic Value 1", "Dynamic value 2"];
+   *     }
+   *     throw new coda.UserVisibleError(
+   *       `Cannot autocomplete property ${context.propertyName}`
+   *     );
+   *   },
+   *   ...
+   * ```
+   *
    * @hidden
    */
-  propertyAutocomplete?: PropertyAutocompleteMetadataFunction;
+  autocomplete?: PropertyAutocompleteMetadataFunction<any>;
 }
 
 /**
@@ -1836,7 +1908,6 @@ export function makeSyncTable<
   identityName,
   schema: inputSchema,
   formula,
-  propertyAutocomplete,
   connectionRequirement,
   dynamicOptions = {},
 }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT> {
@@ -1846,8 +1917,6 @@ export function makeSyncTable<
     executeUpdate: wrappedExecuteUpdate,
     ...definition
   } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
-
-  const wrappedAutocomplete = propertyAutocomplete ? makePropertyAutocompleteFormula(propertyAutocomplete) : undefined;
 
   // Since we mutate schemaDef, we need to make a copy so the input schema can be reused across sync tables.
   const schemaDef = deepCopy(inputSchema);
@@ -1869,6 +1938,28 @@ export function makeSyncTable<
 
   const getSchema = wrapGetSchema(wrapMetadataFunction(getSchemaDef));
   const schema = makeObjectSchema<K, L, SchemaDefT>(schemaDef) as SchemaT;
+
+  let namedAutocompletes = replaceInlineAutocompleteFunctionsWithNamedAutocompleteFunctions({
+    inputSchema,
+    schema,
+    identityName,
+  });
+
+  if (dynamicOptions.autocomplete) {
+    namedAutocompletes ??= {};
+    namedAutocompletes[AutocompleteType.Dynamic] = makePropertyAutocompleteFormula({
+      execute: dynamicOptions.autocomplete,
+      schema: makeObjectSchema({
+        // A dynamic autocomplete formula can return different result types depending
+        // on which property is being autocompleted, so there's no accurate schema
+        // type to set on the formula. We just use an empty object schema, but it could
+        // be anything.
+        properties: {},
+      }),
+      name: `${identityName}.DynamicAutocomplete`,
+    });
+  }
+
   const formulaSchema = getSchema
     ? undefined
     : normalizeSchema<ArraySchema<Schema>>({type: ValueType.Array, items: schema});
@@ -1923,10 +2014,10 @@ export function makeSyncTable<
       connectionRequirement: definition.connectionRequirement || connectionRequirement,
       resultType: Type.object as any,
     },
-    propertyAutocomplete: maybeRewriteConnectionForFormula(wrappedAutocomplete, connectionRequirement),
     getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
     entityName,
     defaultAddDynamicColumns,
+    namedAutocompletes: maybeRewriteConnectionForNamedAutocompletes(namedAutocompletes, connectionRequirement),
   };
 }
 
@@ -2002,8 +2093,10 @@ export function makeDynamicSyncTable<
   placeholderSchema?: SchemaT;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any>;
 
+// TODO(dweitzman): Merge this with the above function definition
+// to make "autocomplete" available in the public API docs.
 /**
- * Includes the unreleased propertyAutocomplete parameter.
+ * Includes the unreleased autocomplete parameter.
  * @hidden
  */
 export function makeDynamicSyncTable<
@@ -2025,7 +2118,7 @@ export function makeDynamicSyncTable<
   connectionRequirement,
   defaultAddDynamicColumns,
   placeholderSchema: placeholderSchemaInput,
-  propertyAutocomplete,
+  autocomplete,
 }: {
   name: string;
   description?: string;
@@ -2040,7 +2133,7 @@ export function makeDynamicSyncTable<
   connectionRequirement?: ConnectionRequirement;
   defaultAddDynamicColumns?: boolean;
   placeholderSchema?: SchemaT;
-  propertyAutocomplete?: PropertyAutocompleteMetadataFunction;
+  autocomplete?: PropertyAutocompleteMetadataFunction<any>;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any> {
   const placeholderSchema: any =
     placeholderSchemaInput ||
@@ -2066,9 +2159,9 @@ export function makeDynamicSyncTable<
     schema: placeholderSchema,
     formula,
     connectionRequirement,
-    dynamicOptions: {getSchema, entityName, defaultAddDynamicColumns},
-    propertyAutocomplete,
+    dynamicOptions: {getSchema, entityName, defaultAddDynamicColumns, autocomplete},
   });
+
   return {
     ...table,
     isDynamic: true,
@@ -2175,6 +2268,22 @@ export function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: Empty
   });
 }
 
+export function maybeRewriteConnectionForNamedAutocompletes(
+  namedAutocompletes: SyncTableAutocompleters | undefined,
+  connectionRequirement: ConnectionRequirement | undefined,
+): SyncTableAutocompleters | undefined {
+  if (!namedAutocompletes) {
+    return namedAutocompletes;
+  }
+
+  const result: SyncTableAutocompleters = {};
+
+  for (const name of Object.keys(namedAutocompletes)) {
+    result[name] = maybeRewriteConnectionForFormula(namedAutocompletes[name], connectionRequirement);
+  }
+  return result;
+}
+
 export function maybeRewriteConnectionForFormula<
   ParamDefsT extends ParamDefs,
   T extends CommonPackFormulaDef<ParamDefsT> | undefined,
@@ -2202,4 +2311,53 @@ export function maybeRewriteConnectionForFormula<
     };
   }
   return formula;
+}
+
+// This helper method finds any inline autocomplete functions in a static sync table schema.
+// These functions will need to be extracted into the "namedAutocompletes" property on the sync
+// table and replaced with strings.
+//
+// Not that we won't detect autocomplete functions within nested object schemas, but that's not necessary
+// here: the only types you can autocomplete in a 2-way schema are the top-level ones.
+function listPropertiesWithAutocompleteFunctions(schema: ObjectSchemaDefinition<string, string>): string[] {
+  const result: string[] = [];
+  for (const propertyName of Object.keys(schema.properties)) {
+    const {autocomplete} = schema.properties[propertyName];
+    if (!autocomplete) {
+      continue;
+    }
+    if (typeof autocomplete !== 'function') {
+      continue;
+    }
+
+    result.push(propertyName);
+  }
+  return result;
+}
+
+// Finds any inline autocomplete functions within the inputSchema and replaces them
+// with strings references into the returned namedAutocompletes.
+function replaceInlineAutocompleteFunctionsWithNamedAutocompleteFunctions({
+  inputSchema, // DO NOT MUTATE inputSchema!
+  schema,
+  identityName,
+}: {
+  inputSchema: Readonly<ObjectSchemaDefinition<any, any>>;
+  schema: ObjectSchemaDefinition<any, any>;
+  identityName: string;
+}): SyncTableAutocompleters {
+  // Converting JS functions to strings happens on inputSchema instead of the deep copied version because the
+  // deep copy will have already thrown away any JS functions.
+  const namedAutocompletes: SyncTableAutocompleters = {};
+
+  for (const propertyName of listPropertiesWithAutocompleteFunctions(inputSchema)) {
+    schema.properties[propertyName].autocomplete = propertyName as AutocompleteReference;
+    namedAutocompletes[propertyName] = makePropertyAutocompleteFormula({
+      execute: inputSchema.properties[propertyName].autocomplete as any,
+      schema: normalizeSchema(schema.properties[propertyName]),
+      name: `${identityName}.${propertyName}.Autocomplete`,
+    });
+  }
+
+  return namedAutocompletes;
 }

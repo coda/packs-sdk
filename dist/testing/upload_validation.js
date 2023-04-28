@@ -29,8 +29,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.zodErrorDetailToValidationError = exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.Limits = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
 const schema_1 = require("../schema");
 const types_1 = require("../types");
-const schema_2 = require("../schema");
 const api_types_1 = require("../api_types");
+const schema_2 = require("../schema");
+const api_types_2 = require("../api_types");
 const schema_3 = require("../schema");
 const schema_4 = require("../schema");
 const schema_5 = require("../schema");
@@ -39,14 +40,14 @@ const schema_6 = require("../schema");
 const schema_7 = require("../schema");
 const jsonpath_plus_1 = require("jsonpath-plus");
 const schema_8 = require("../schema");
-const api_types_2 = require("../api_types");
+const api_types_3 = require("../api_types");
 const schema_9 = require("../schema");
 const types_3 = require("../types");
 const types_4 = require("../types");
 const schema_10 = require("../schema");
 const schema_11 = require("../schema");
 const types_5 = require("../types");
-const api_types_3 = require("../api_types");
+const api_types_4 = require("../api_types");
 const schema_12 = require("../schema");
 const schema_13 = require("../schema");
 const zod_1 = require("zod");
@@ -409,15 +410,15 @@ const paramDefValidator = zodCompleteObject({
         .regex(regexParameterName, 'Parameter names can only contain alphanumeric characters and underscores.'),
     type: z
         .union([
-        z.nativeEnum(api_types_3.Type),
+        z.nativeEnum(api_types_4.Type),
         z.object({
             type: zodDiscriminant('array'),
-            items: z.nativeEnum(api_types_3.Type),
+            items: z.nativeEnum(api_types_4.Type),
             allowEmpty: z.boolean().optional(),
         }),
     ])
-        .refine(paramType => paramType !== api_types_3.Type.object &&
-        !(typeof paramType === 'object' && paramType.type === 'array' && paramType.items === api_types_3.Type.object), {
+        .refine(paramType => paramType !== api_types_4.Type.object &&
+        !(typeof paramType === 'object' && paramType.type === 'array' && paramType.items === api_types_4.Type.object), {
         message: 'Object parameters are not currently supported.',
     }),
     description: z.string().max(exports.Limits.BuildingBlockDescription),
@@ -460,12 +461,12 @@ const commonPackFormulaSchema = {
     }, { message: 'All optional parameters must come after all non-optional parameters.' }),
     varargParameters: z.array(paramDefValidator).optional(),
     isAction: z.boolean().optional(),
-    connectionRequirement: z.nativeEnum(api_types_1.ConnectionRequirement).optional(),
+    connectionRequirement: z.nativeEnum(api_types_2.ConnectionRequirement).optional(),
     // TODO(jonathan): Remove after removing `network` from formula def.
     network: zodCompleteObject({
         hasSideEffect: z.boolean().optional(),
         requiresConnection: z.boolean().optional(),
-        connection: z.nativeEnum(api_types_2.NetworkConnection).optional(),
+        connection: z.nativeEnum(api_types_3.NetworkConnection).optional(),
     }).optional(),
     cacheTtlSecs: z.number().min(0).optional(),
     isExperimental: z.boolean().optional(),
@@ -474,13 +475,14 @@ const commonPackFormulaSchema = {
 };
 const booleanPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
-    resultType: zodDiscriminant(api_types_3.Type.boolean),
+    resultType: zodDiscriminant(api_types_4.Type.boolean),
     schema: zodCompleteObject({
         type: zodDiscriminant(schema_13.ValueType.Boolean),
         codaType: z.enum([...schema_2.BooleanHintValueTypes]).optional(),
         description: z.string().optional(),
         mutable: z.boolean().optional(),
-        autocomplete: z.boolean().optional(),
+        // Only properties in sync tables would need to define "autocomplete"
+        autocomplete: z.undefined().optional(),
     }).optional(),
 });
 // TODO(jonathan): Use zodCompleteObject on these after exporting these types.
@@ -498,31 +500,51 @@ const imageAttributionNodeSchema = z.object({
     anchorUrl: z.string(),
     imageUrl: z.string(),
 });
+function zodAutocompleteFieldWithValues(valueType, allowDisplayNames) {
+    const literalType = allowDisplayNames
+        ? z.union([
+            valueType,
+            z.strictObject({
+                display: z.string(),
+                value: valueType,
+            }),
+        ])
+        : valueType;
+    return z.union([z.string(), z.array(literalType)]).optional();
+}
 const basePropertyValidators = {
     description: z.string().optional(),
     mutable: z.boolean().optional(),
-    autocomplete: z.boolean().optional(),
     fromKey: z.string().optional(),
     required: z.boolean().optional(),
+};
+const baseStringPropertyValidators = {
+    ...basePropertyValidators,
+    autocomplete: zodAutocompleteFieldWithValues(z.string(), true),
+};
+const baseNumericPropertyValidators = {
+    ...basePropertyValidators,
+    autocomplete: zodAutocompleteFieldWithValues(z.number(), true),
 };
 const booleanPropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.Boolean),
     codaType: z.enum([...schema_2.BooleanHintValueTypes]).optional(),
     ...basePropertyValidators,
+    autocomplete: zodAutocompleteFieldWithValues(z.boolean(), true),
 });
 const numericPropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.Number),
     codaType: zodDiscriminant(schema_12.ValueHintType.Percent).optional(),
     precision: z.number().optional(),
     useThousandsSeparator: z.boolean().optional(),
-    ...basePropertyValidators,
+    ...baseNumericPropertyValidators,
 });
 const scalePropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.Number),
     codaType: zodDiscriminant(schema_12.ValueHintType.Scale),
     maximum: z.number().optional(),
     icon: z.nativeEnum(schema_10.ScaleIconSet).optional(),
-    ...basePropertyValidators,
+    ...baseNumericPropertyValidators,
 });
 const optionalStringOrNumber = z.union([z.number(), z.string()]).optional();
 const sliderPropertySchema = zodCompleteStrictObject({
@@ -532,7 +554,7 @@ const sliderPropertySchema = zodCompleteStrictObject({
     minimum: optionalStringOrNumber,
     step: optionalStringOrNumber,
     showValue: z.boolean().optional(),
-    ...basePropertyValidators,
+    ...baseNumericPropertyValidators,
 });
 const progressBarPropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.Number),
@@ -541,7 +563,7 @@ const progressBarPropertySchema = zodCompleteStrictObject({
     minimum: optionalStringOrNumber,
     step: optionalStringOrNumber,
     showValue: z.boolean().optional(),
-    ...basePropertyValidators,
+    ...baseNumericPropertyValidators,
 });
 const currencyPropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.Number),
@@ -549,33 +571,33 @@ const currencyPropertySchema = zodCompleteStrictObject({
     precision: z.number().optional(),
     currencyCode: z.string().optional(),
     format: z.nativeEnum(schema_3.CurrencyFormat).optional(),
-    ...basePropertyValidators,
+    ...baseNumericPropertyValidators,
 });
 const numericDatePropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.Number),
     codaType: zodDiscriminant(schema_12.ValueHintType.Date),
     format: z.string().optional(),
-    ...basePropertyValidators,
+    ...baseNumericPropertyValidators,
 });
 const numericTimePropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.Number),
     codaType: zodDiscriminant(schema_12.ValueHintType.Time),
     format: z.string().optional(),
-    ...basePropertyValidators,
+    ...baseNumericPropertyValidators,
 });
 const numericDateTimePropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.Number),
     codaType: zodDiscriminant(schema_12.ValueHintType.DateTime),
     dateFormat: z.string().optional(),
     timeFormat: z.string().optional(),
-    ...basePropertyValidators,
+    ...baseNumericPropertyValidators,
 });
 const numericDurationPropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.Number),
     codaType: zodDiscriminant(schema_12.ValueHintType.Duration),
     precision: z.number().optional(),
     maxUnit: z.nativeEnum(schema_4.DurationUnit).optional(),
-    ...basePropertyValidators,
+    ...baseNumericPropertyValidators,
 });
 const numberPropertySchema = z.union([
     numericPropertySchema,
@@ -590,71 +612,71 @@ const numberPropertySchema = z.union([
 ]);
 const numericPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
-    resultType: zodDiscriminant(api_types_3.Type.number),
+    resultType: zodDiscriminant(api_types_4.Type.number),
     schema: numberPropertySchema.optional(),
 });
 const simpleStringPropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.String),
     codaType: z.enum([...schema_11.SimpleStringHintValueTypes]).optional(),
-    ...basePropertyValidators,
+    ...baseStringPropertyValidators,
 });
 const stringDatePropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.String),
     codaType: zodDiscriminant(schema_12.ValueHintType.Date),
     format: z.string().optional(),
-    ...basePropertyValidators,
+    ...baseStringPropertyValidators,
 });
 const stringTimePropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.String),
     codaType: zodDiscriminant(schema_12.ValueHintType.Time),
     format: z.string().optional(),
-    ...basePropertyValidators,
+    ...baseStringPropertyValidators,
 });
 const stringDateTimePropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.String),
     codaType: zodDiscriminant(schema_12.ValueHintType.DateTime),
     dateFormat: z.string().optional(),
     timeFormat: z.string().optional(),
-    ...basePropertyValidators,
+    ...baseStringPropertyValidators,
 });
 const durationPropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.String),
     codaType: zodDiscriminant(schema_12.ValueHintType.Duration),
     precision: z.number().optional(),
     maxUnit: z.nativeEnum(schema_4.DurationUnit).optional(),
-    ...basePropertyValidators,
+    ...baseStringPropertyValidators,
 });
 const codaInternalRichTextSchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.String),
     codaType: zodDiscriminant(schema_12.ValueHintType.CodaInternalRichText),
     isCanvas: z.boolean().optional(),
-    ...basePropertyValidators,
+    ...baseStringPropertyValidators,
 });
 const embedPropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.String),
     codaType: zodDiscriminant(schema_12.ValueHintType.Embed),
     force: z.boolean().optional(),
-    ...basePropertyValidators,
+    ...baseStringPropertyValidators,
 });
 const emailPropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.String),
     codaType: zodDiscriminant(schema_12.ValueHintType.Email),
     display: z.nativeEnum(schema_5.EmailDisplayType).optional(),
-    ...basePropertyValidators,
+    ...baseStringPropertyValidators,
 });
 const linkPropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.String),
     codaType: zodDiscriminant(schema_12.ValueHintType.Url),
     display: z.nativeEnum(schema_8.LinkDisplayType).optional(),
     force: z.boolean().optional(),
-    ...basePropertyValidators,
+    ...baseStringPropertyValidators,
 });
 const imagePropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.String),
     codaType: z.union([zodDiscriminant(schema_12.ValueHintType.ImageAttachment), zodDiscriminant(schema_12.ValueHintType.ImageReference)]),
     imageOutline: z.nativeEnum(schema_7.ImageOutline).optional(),
     imageCornerStyle: z.nativeEnum(schema_6.ImageCornerStyle).optional(),
-    ...basePropertyValidators,
+    ...baseStringPropertyValidators,
 });
 const stringPropertySchema = z.union([
     simpleStringPropertySchema,
@@ -670,7 +692,7 @@ const stringPropertySchema = z.union([
 ]);
 const stringPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
-    resultType: zodDiscriminant(api_types_3.Type.string),
+    resultType: zodDiscriminant(api_types_4.Type.string),
     schema: stringPropertySchema.optional(),
 });
 // TODO(jonathan): Give this a better type than ZodTypeAny after figuring out
@@ -679,6 +701,8 @@ const arrayPropertySchema = z.lazy(() => zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.Array),
     items: objectPropertyUnionSchema,
     ...basePropertyValidators,
+    // TODO(dweitzman): Implement property autocomplete for multi-valued properties.
+    autocomplete: zodAutocompleteFieldWithValues(z.never(), false),
 }));
 const Base64ObjectRegex = /^[A-Za-z0-9=_-]+$/;
 // This is ripped off from isValidObjectId in coda. Violating this causes a number of downstream headaches.
@@ -743,7 +767,7 @@ const propertySchema = z.union([
     zodCompleteObject({
         property: z.string().min(1),
         label: z.string().optional(),
-        placeholder: z.string().optional()
+        placeholder: z.string().optional(),
     }),
 ]);
 const genericObjectSchema = z.lazy(() => zodCompleteObject({
@@ -772,6 +796,7 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
     subtitleProperties: z.array(propertySchema).optional(),
     snippetProperty: propertySchema.optional(),
     imageProperty: propertySchema.optional(),
+    autocomplete: zodAutocompleteFieldWithValues(z.object({}).passthrough(), false),
 })
     .superRefine((data, context) => {
     var _a, _b;
@@ -930,10 +955,10 @@ const objectPropertyUnionSchema = z
     .union([booleanPropertySchema, numberPropertySchema, stringPropertySchema, arrayPropertySchema, genericObjectSchema])
     .refine(
 // BaseSchema isn't exported, so Pick<BooleanSchema | EmailSchema, ...> here is an approximation.
-(baseSchema) => baseSchema.codaType === schema_12.ValueHintType.Email || !(baseSchema === null || baseSchema === void 0 ? void 0 : baseSchema.autocomplete) || baseSchema.mutable, `"mutable" must be true to set "autocomplete" to true`);
+(baseSchema) => baseSchema.codaType === schema_12.ValueHintType.Email || !(baseSchema === null || baseSchema === void 0 ? void 0 : baseSchema.autocomplete) || baseSchema.mutable, `"mutable" must be true to set "autocomplete"`);
 const objectPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
-    resultType: zodDiscriminant(api_types_3.Type.object),
+    resultType: zodDiscriminant(api_types_4.Type.object),
     // TODO(jonathan): See if we should really allow this. The SDK right now explicitly tolerates an undefined
     // schema for objects, but that doesn't seem like a use case we actually want to support.
     schema: z.union([genericObjectSchema, arrayPropertySchema]).optional(),
@@ -985,7 +1010,6 @@ const baseSyncTableSchema = {
     getter: syncFormulaSchema,
     entityName: z.string().optional(),
     defaultAddDynamicColumns: z.boolean().optional(),
-    propertyAutocomplete: objectPackFormulaSchema.optional(),
     // TODO(patrick): Make identityName non-optional after SDK v1.0.0 is required
     identityName: z
         .string()
@@ -993,6 +1017,18 @@ const baseSyncTableSchema = {
         .max(exports.Limits.BuildingBlockName)
         .optional()
         .refine(val => !val || !SystemColumnNames.includes(val), `This property name is reserved for internal use by Coda and can't be used as an identityName, sorry!`),
+    namedAutocompletes: z
+        .record(formulaMetadataSchema)
+        .optional()
+        .default({})
+        .superRefine((data, context) => {
+        if (Object.keys(data).length > exports.Limits.BuildingBlockName) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: `Too many autocomplete formulas for sync table. Max allowed is "${exports.Limits.BuildingBlockName}".`,
+            });
+        }
+    }),
 };
 const genericSyncTableSchema = zodCompleteObject({
     ...baseSyncTableSchema,
@@ -1010,6 +1046,7 @@ const genericDynamicSyncTableSchema = zodCompleteObject({
     listDynamicUrls: formulaMetadataSchema.optional(),
     searchDynamicUrls: formulaMetadataSchema.optional(),
     getSchema: formulaMetadataSchema,
+    autocomplete: objectPackFormulaSchema.optional(),
 }).strict();
 const syncTableSchema = z
     .union([genericDynamicSyncTableSchema, genericSyncTableSchema])
@@ -1157,7 +1194,7 @@ function validateFormulas(schema) {
         }
         // if the pack has no default authentication, make sure all formulas don't set connection requirements.
         (data.formulas || []).forEach((formula, i) => {
-            if (formula.connectionRequirement && formula.connectionRequirement !== api_types_1.ConnectionRequirement.None) {
+            if (formula.connectionRequirement && formula.connectionRequirement !== api_types_2.ConnectionRequirement.None) {
                 context.addIssue({
                     code: z.ZodIssueCode.custom,
                     path: ['formulas', i],
@@ -1167,7 +1204,7 @@ function validateFormulas(schema) {
         });
         (data.syncTables || []).forEach((syncTable, i) => {
             const connectionRequirement = syncTable.getter.connectionRequirement;
-            if (connectionRequirement && connectionRequirement !== api_types_1.ConnectionRequirement.None) {
+            if (connectionRequirement && connectionRequirement !== api_types_2.ConnectionRequirement.None) {
                 context.addIssue({
                     code: z.ZodIssueCode.custom,
                     path: ['syncTables', i, 'getter', 'connectionRequirement'],
@@ -1341,6 +1378,28 @@ const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSc
         }
         return;
     }
+})
+    .superRefine((untypedData, context) => {
+    const data = untypedData;
+    (data.syncTables || []).forEach((syncTable, i) => {
+        const schema = syncTable.schema;
+        for (const [propertyName, childSchema] of Object.entries(schema.properties)) {
+            const { autocomplete } = childSchema;
+            if (!autocomplete || Array.isArray(autocomplete)) {
+                continue;
+            }
+            if (typeof autocomplete !== 'string' || !(autocomplete in (syncTable.namedAutocompletes || {}))) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: ['syncTables', i, 'properties', propertyName, 'autocomplete'],
+                    message: childSchema.autocomplete === api_types_1.AutocompleteType.Dynamic
+                        ? `Sync table ${syncTable.name} must define "autocomplete" for this property to use AutocompleteType.Dynamic`
+                        : `"${childSchema.autocomplete}" is not registered as an autocomplete function for this sync table.`,
+                });
+                continue;
+            }
+        }
+    });
 });
 // Returns undefined for None or Various auth, otherwise returns a string array.
 function getAuthNetworkDomains(data) {

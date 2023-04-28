@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PrecannedDateRange = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
+exports.AutocompleteType = exports.PrecannedDateRange = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
 /**
  * Markers used internally to represent data types for parameters and return values.
  * It should not be necessary to ever use these values directly.
@@ -289,3 +289,13 @@ var PrecannedDateRange;
      */
     PrecannedDateRange["Everything"] = "everything";
 })(PrecannedDateRange = exports.PrecannedDateRange || (exports.PrecannedDateRange = {}));
+/**
+ * @hidden
+ */
+var AutocompleteType;
+(function (AutocompleteType) {
+    // These are special sentinel values for property autocomplete functions that aren't named
+    // after user-defined schema properties. Make sure the values aren't likely to collide with
+    // user-defined properties.
+    AutocompleteType["Dynamic"] = "__coda_dynamic__";
+})(AutocompleteType = exports.AutocompleteType || (exports.AutocompleteType = {}));

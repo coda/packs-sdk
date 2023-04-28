@@ -493,7 +493,7 @@ export interface Network {
 /** The HTTP methods (verbs) supported by the fetcher. */
 export const ValidFetchMethods = ['GET', 'PATCH', 'POST', 'PUT', 'DELETE', 'HEAD'] as const;
 /** The type of the HTTP methods (verbs) supported by the fetcher. */
-export type FetchMethodType = typeof ValidFetchMethods[number];
+export type FetchMethodType = (typeof ValidFetchMethods)[number];
 
 /**
  * An HTTP request used with the {@link Fetcher}.
@@ -860,3 +860,29 @@ export enum PrecannedDateRange {
    */
   Everything = 'everything',
 }
+
+/**
+ * @hidden
+ */
+export enum AutocompleteType {
+  // These are special sentinel values for property autocomplete functions that aren't named
+  // after user-defined schema properties. Make sure the values aren't likely to collide with
+  // user-defined properties.
+  Dynamic = '__coda_dynamic__',
+}
+
+// This is an internal type to discourage pack makers from accidentally assigning a string to
+// the autocomplete property values.
+/** @hidden */
+export type AutocompleteReference = string & {
+  __brand: 'AutocompleteRef';
+};
+
+// TODO(dweitzman): Update the type to allow autocomplete functions to return a cache TTL.
+/**
+ * A JavaScript function for property autocomplete.
+ * @hidden
+ */
+export type PropertyAutocompleteMetadataFunction<ResultT extends PackFormulaResult[]> = (
+  context: PropertyAutocompleteExecutionContext,
+) => Promise<ResultT> | ResultT;

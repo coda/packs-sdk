@@ -1,3 +1,4 @@
+import {AutocompleteType} from '../index';
 import {ValueHintType} from '../index';
 import {ValueType} from '../index';
 import {deepCopy} from '../helpers/object_utils';
@@ -215,7 +216,7 @@ describe('Schema', () => {
         primary: 'boo',
         properties: {
           boo: {type: schema.ValueType.String},
-          baz: {type: schema.ValueType.Number, mutable: true, autocomplete: true},
+          baz: {type: schema.ValueType.Number, mutable: true, autocomplete: AutocompleteType.Dynamic},
         },
       });
       const objectSchema = schema.makeObjectSchema({
@@ -232,9 +233,7 @@ describe('Schema', () => {
         },
         titleProperty: 'Enter the date in MM.DD.YYYY format',
         snippetProperty: 'another.boo',
-        subtitleProperties: [
-          {property: 'subtitle', placeholder: 'Empty'},
-        ]
+        subtitleProperties: [{property: 'subtitle', placeholder: 'Empty'}],
       });
       const normalized = schema.normalizeSchema(objectSchema);
       // Deep copy to remove undefined values
@@ -252,14 +251,16 @@ describe('Schema', () => {
           fromKey: 'another',
           properties: {
             Boo: {type: schema.ValueType.String, fromKey: 'boo'},
-            Baz: {type: schema.ValueType.Number, fromKey: 'baz', mutable: true, autocomplete: true},
+            Baz: {type: schema.ValueType.Number, fromKey: 'baz', mutable: true, autocomplete: AutocompleteType.Dynamic},
           },
         },
         Subtitle: {type: schema.ValueType.String, fromKey: 'subtitle'},
       });
       assert.deepEqual((normalized as schema.GenericObjectSchema).titleProperty, 'EnterTheDateInMMDDYYYYFormat');
       assert.deepEqual((normalized as schema.GenericObjectSchema).snippetProperty, 'Another.Boo');
-      assert.deepEqual((normalized as schema.GenericObjectSchema).subtitleProperties, [{property: 'Subtitle', label: undefined, placeholder: 'Empty'}]);
+      assert.deepEqual((normalized as schema.GenericObjectSchema).subtitleProperties, [
+        {property: 'Subtitle', label: undefined, placeholder: 'Empty'},
+      ]);
     });
   });
 });

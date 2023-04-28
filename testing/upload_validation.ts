@@ -3,6 +3,7 @@ import type {AWSAssumeRoleAuthentication} from '../types';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '../schema';
 import {AuthenticationType} from '../types';
+import {AutocompleteType} from '../api_types';
 import {BooleanHintValueTypes} from '../schema';
 import type {BooleanPackFormula} from '../api';
 import type {BooleanSchema} from '../schema';
@@ -590,7 +591,8 @@ const booleanPackFormulaSchema = zodCompleteObject<Omit<BooleanPackFormula<any>,
     codaType: z.enum([...BooleanHintValueTypes]).optional(),
     description: z.string().optional(),
     mutable: z.boolean().optional(),
-    autocomplete: z.boolean().optional(),
+    // Only properties in sync tables would need to define "autocomplete"
+    autocomplete: z.undefined().optional(),
   }).optional(),
 });
 
@@ -613,18 +615,41 @@ const imageAttributionNodeSchema = z.object({
   imageUrl: z.string(),
 });
 
+function zodAutocompleteFieldWithValues(valueType: z.ZodTypeAny, allowDisplayNames: boolean) {
+  const literalType = allowDisplayNames
+    ? z.union([
+        valueType,
+        z.strictObject({
+          display: z.string(),
+          value: valueType,
+        }),
+      ])
+    : valueType;
+  return z.union([z.string(), z.array(literalType)]).optional();
+}
+
 const basePropertyValidators = {
   description: z.string().optional(),
   mutable: z.boolean().optional(),
-  autocomplete: z.boolean().optional(),
   fromKey: z.string().optional(),
   required: z.boolean().optional(),
+};
+
+const baseStringPropertyValidators = {
+  ...basePropertyValidators,
+  autocomplete: zodAutocompleteFieldWithValues(z.string(), true),
+};
+
+const baseNumericPropertyValidators = {
+  ...basePropertyValidators,
+  autocomplete: zodAutocompleteFieldWithValues(z.number(), true),
 };
 
 const booleanPropertySchema = zodCompleteStrictObject<BooleanSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.Boolean),
   codaType: z.enum([...BooleanHintValueTypes]).optional(),
   ...basePropertyValidators,
+  autocomplete: zodAutocompleteFieldWithValues(z.boolean(), true),
 });
 
 const numericPropertySchema = zodCompleteStrictObject<NumericSchema & ObjectSchemaProperty>({
@@ -632,7 +657,7 @@ const numericPropertySchema = zodCompleteStrictObject<NumericSchema & ObjectSche
   codaType: zodDiscriminant(ValueHintType.Percent).optional(),
   precision: z.number().optional(),
   useThousandsSeparator: z.boolean().optional(),
-  ...basePropertyValidators,
+  ...baseNumericPropertyValidators,
 });
 
 const scalePropertySchema = zodCompleteStrictObject<ScaleSchema & ObjectSchemaProperty>({
@@ -640,7 +665,7 @@ const scalePropertySchema = zodCompleteStrictObject<ScaleSchema & ObjectSchemaPr
   codaType: zodDiscriminant(ValueHintType.Scale),
   maximum: z.number().optional(),
   icon: z.nativeEnum(ScaleIconSet).optional(),
-  ...basePropertyValidators,
+  ...baseNumericPropertyValidators,
 });
 
 const optionalStringOrNumber = z.union([z.number(), z.string()]).optional();
@@ -652,7 +677,7 @@ const sliderPropertySchema = zodCompleteStrictObject<SliderSchema & ObjectSchema
   minimum: optionalStringOrNumber,
   step: optionalStringOrNumber,
   showValue: z.boolean().optional(),
-  ...basePropertyValidators,
+  ...baseNumericPropertyValidators,
 });
 
 const progressBarPropertySchema = zodCompleteStrictObject<ProgressBarSchema & ObjectSchemaProperty>({
@@ -662,7 +687,7 @@ const progressBarPropertySchema = zodCompleteStrictObject<ProgressBarSchema & Ob
   minimum: optionalStringOrNumber,
   step: optionalStringOrNumber,
   showValue: z.boolean().optional(),
-  ...basePropertyValidators,
+  ...baseNumericPropertyValidators,
 });
 
 const currencyPropertySchema = zodCompleteStrictObject<CurrencySchema & ObjectSchemaProperty>({
@@ -671,21 +696,21 @@ const currencyPropertySchema = zodCompleteStrictObject<CurrencySchema & ObjectSc
   precision: z.number().optional(),
   currencyCode: z.string().optional(),
   format: z.nativeEnum(CurrencyFormat).optional(),
-  ...basePropertyValidators,
+  ...baseNumericPropertyValidators,
 });
 
 const numericDatePropertySchema = zodCompleteStrictObject<NumericDateSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.Number),
   codaType: zodDiscriminant(ValueHintType.Date),
   format: z.string().optional(),
-  ...basePropertyValidators,
+  ...baseNumericPropertyValidators,
 });
 
 const numericTimePropertySchema = zodCompleteStrictObject<NumericTimeSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.Number),
   codaType: zodDiscriminant(ValueHintType.Time),
   format: z.string().optional(),
-  ...basePropertyValidators,
+  ...baseNumericPropertyValidators,
 });
 
 const numericDateTimePropertySchema = zodCompleteStrictObject<NumericDateTimeSchema & ObjectSchemaProperty>({
@@ -693,7 +718,7 @@ const numericDateTimePropertySchema = zodCompleteStrictObject<NumericDateTimeSch
   codaType: zodDiscriminant(ValueHintType.DateTime),
   dateFormat: z.string().optional(),
   timeFormat: z.string().optional(),
-  ...basePropertyValidators,
+  ...baseNumericPropertyValidators,
 });
 
 const numericDurationPropertySchema = zodCompleteStrictObject<NumericDurationSchema & ObjectSchemaProperty>({
@@ -701,7 +726,7 @@ const numericDurationPropertySchema = zodCompleteStrictObject<NumericDurationSch
   codaType: zodDiscriminant(ValueHintType.Duration),
   precision: z.number().optional(),
   maxUnit: z.nativeEnum(DurationUnit).optional(),
-  ...basePropertyValidators,
+  ...baseNumericPropertyValidators,
 });
 
 const numberPropertySchema = z.union([
@@ -725,21 +750,21 @@ const numericPackFormulaSchema = zodCompleteObject<Omit<NumericPackFormula<any>,
 const simpleStringPropertySchema = zodCompleteStrictObject<SimpleStringSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.String),
   codaType: z.enum([...SimpleStringHintValueTypes]).optional(),
-  ...basePropertyValidators,
+  ...baseStringPropertyValidators,
 });
 
 const stringDatePropertySchema = zodCompleteStrictObject<StringDateSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.String),
   codaType: zodDiscriminant(ValueHintType.Date),
   format: z.string().optional(),
-  ...basePropertyValidators,
+  ...baseStringPropertyValidators,
 });
 
 const stringTimePropertySchema = zodCompleteStrictObject<StringTimeSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.String),
   codaType: zodDiscriminant(ValueHintType.Time),
   format: z.string().optional(),
-  ...basePropertyValidators,
+  ...baseStringPropertyValidators,
 });
 
 const stringDateTimePropertySchema = zodCompleteStrictObject<StringDateTimeSchema & ObjectSchemaProperty>({
@@ -747,7 +772,7 @@ const stringDateTimePropertySchema = zodCompleteStrictObject<StringDateTimeSchem
   codaType: zodDiscriminant(ValueHintType.DateTime),
   dateFormat: z.string().optional(),
   timeFormat: z.string().optional(),
-  ...basePropertyValidators,
+  ...baseStringPropertyValidators,
 });
 
 const durationPropertySchema = zodCompleteStrictObject<DurationSchema & ObjectSchemaProperty>({
@@ -755,28 +780,28 @@ const durationPropertySchema = zodCompleteStrictObject<DurationSchema & ObjectSc
   codaType: zodDiscriminant(ValueHintType.Duration),
   precision: z.number().optional(),
   maxUnit: z.nativeEnum(DurationUnit).optional(),
-  ...basePropertyValidators,
+  ...baseStringPropertyValidators,
 });
 
 const codaInternalRichTextSchema = zodCompleteStrictObject<CodaInternalRichTextSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.String),
   codaType: zodDiscriminant(ValueHintType.CodaInternalRichText),
   isCanvas: z.boolean().optional(),
-  ...basePropertyValidators,
+  ...baseStringPropertyValidators,
 });
 
 const embedPropertySchema = zodCompleteStrictObject<StringEmbedSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.String),
   codaType: zodDiscriminant(ValueHintType.Embed),
   force: z.boolean().optional(),
-  ...basePropertyValidators,
+  ...baseStringPropertyValidators,
 });
 
 const emailPropertySchema = zodCompleteStrictObject<EmailSchema & ObjectSchemaProperty>({
   type: zodDiscriminant(ValueType.String),
   codaType: zodDiscriminant(ValueHintType.Email),
   display: z.nativeEnum(EmailDisplayType).optional(),
-  ...basePropertyValidators,
+  ...baseStringPropertyValidators,
 });
 
 const linkPropertySchema = zodCompleteStrictObject<LinkSchema & ObjectSchemaProperty>({
@@ -784,7 +809,7 @@ const linkPropertySchema = zodCompleteStrictObject<LinkSchema & ObjectSchemaProp
   codaType: zodDiscriminant(ValueHintType.Url),
   display: z.nativeEnum(LinkDisplayType).optional(),
   force: z.boolean().optional(),
-  ...basePropertyValidators,
+  ...baseStringPropertyValidators,
 });
 
 const imagePropertySchema = zodCompleteStrictObject<ImageSchema & ObjectSchemaProperty>({
@@ -792,7 +817,7 @@ const imagePropertySchema = zodCompleteStrictObject<ImageSchema & ObjectSchemaPr
   codaType: z.union([zodDiscriminant(ValueHintType.ImageAttachment), zodDiscriminant(ValueHintType.ImageReference)]),
   imageOutline: z.nativeEnum(ImageOutline).optional(),
   imageCornerStyle: z.nativeEnum(ImageCornerStyle).optional(),
-  ...basePropertyValidators,
+  ...baseStringPropertyValidators,
 });
 
 const stringPropertySchema = z.union([
@@ -821,6 +846,8 @@ const arrayPropertySchema: z.ZodTypeAny = z.lazy(() =>
     type: zodDiscriminant(ValueType.Array),
     items: objectPropertyUnionSchema,
     ...basePropertyValidators,
+    // TODO(dweitzman): Implement property autocomplete for multi-valued properties.
+    autocomplete: zodAutocompleteFieldWithValues(z.never(), false),
   }),
 );
 
@@ -907,7 +934,7 @@ const propertySchema = z.union([
   zodCompleteObject<PropertyIdentifier>({
     property: z.string().min(1),
     label: z.string().optional(),
-    placeholder: z.string().optional()
+    placeholder: z.string().optional(),
   }),
 ]);
 
@@ -938,6 +965,7 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
     subtitleProperties: z.array(propertySchema).optional(),
     snippetProperty: propertySchema.optional(),
     imageProperty: propertySchema.optional(),
+    autocomplete: zodAutocompleteFieldWithValues(z.object({}).passthrough(), false),
   })
     .superRefine((data, context) => {
       if (!isValidIdentityName(data.identity?.packId, data.identity?.name as string)) {
@@ -1130,14 +1158,14 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
     })
     .superRefine((data, context) => {
       const schemaHelper = objectSchemaHelper(data as GenericObjectSchema);
-      const internalRichTextPropertyTuple = Object.entries(schemaHelper.properties).find(([_key, prop]) => 
-        prop.type === ValueType.String && prop.codaType === ValueHintType.CodaInternalRichText);
+      const internalRichTextPropertyTuple = Object.entries(schemaHelper.properties).find(
+        ([_key, prop]) => prop.type === ValueType.String && prop.codaType === ValueHintType.CodaInternalRichText,
+      );
       if (internalRichTextPropertyTuple && !isValidUseOfCodaInternalRichText(data.identity?.packId)) {
         context.addIssue({
           code: z.ZodIssueCode.custom,
           path: ['identity', 'properties', internalRichTextPropertyTuple[0]],
-          message:
-            'Invalid codaType. CodaInternalRichText is not a supported value.',
+          message: 'Invalid codaType. CodaInternalRichText is not a supported value.',
         });
         return;
       }
@@ -1150,7 +1178,7 @@ const objectPropertyUnionSchema = z
     // BaseSchema isn't exported, so Pick<BooleanSchema | EmailSchema, ...> here is an approximation.
     (baseSchema: Pick<BooleanSchema | EmailSchema, 'mutable' | 'autocomplete' | 'codaType'>) =>
       baseSchema.codaType === ValueHintType.Email || !baseSchema?.autocomplete || baseSchema.mutable,
-    `"mutable" must be true to set "autocomplete" to true`,
+    `"mutable" must be true to set "autocomplete"`,
   );
 
 const objectPackFormulaSchema = zodCompleteObject<Omit<ObjectPackFormula<any, any>, 'execute'>>({
@@ -1213,7 +1241,6 @@ const baseSyncTableSchema = {
   getter: syncFormulaSchema,
   entityName: z.string().optional(),
   defaultAddDynamicColumns: z.boolean().optional(),
-  propertyAutocomplete: objectPackFormulaSchema.optional(),
   // TODO(patrick): Make identityName non-optional after SDK v1.0.0 is required
   identityName: z
     .string()
@@ -1224,6 +1251,18 @@ const baseSyncTableSchema = {
       val => !val || !SystemColumnNames.includes(val),
       `This property name is reserved for internal use by Coda and can't be used as an identityName, sorry!`,
     ),
+  namedAutocompletes: z
+    .record(formulaMetadataSchema)
+    .optional()
+    .default({})
+    .superRefine((data, context) => {
+      if (Object.keys(data).length > Limits.BuildingBlockName) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Too many autocomplete formulas for sync table. Max allowed is "${Limits.BuildingBlockName}".`,
+        });
+      }
+    }),
 };
 
 type GenericSyncTableDef = SyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>;
@@ -1247,6 +1286,7 @@ const genericDynamicSyncTableSchema = zodCompleteObject<
   listDynamicUrls: formulaMetadataSchema.optional(),
   searchDynamicUrls: formulaMetadataSchema.optional(),
   getSchema: formulaMetadataSchema,
+  autocomplete: objectPackFormulaSchema.optional(),
 }).strict();
 
 const syncTableSchema = z
@@ -1616,6 +1656,30 @@ const legacyPackMetadataSchema = validateFormulas(
       }
       return;
     }
+  })
+  .superRefine((untypedData, context) => {
+    const data = untypedData as PackVersionMetadata;
+
+    (data.syncTables || []).forEach((syncTable, i) => {
+      const schema: ObjectSchema<any, any> = syncTable.schema;
+      for (const [propertyName, childSchema] of Object.entries(schema.properties)) {
+        const {autocomplete} = childSchema;
+        if (!autocomplete || Array.isArray(autocomplete)) {
+          continue;
+        }
+        if (typeof autocomplete !== 'string' || !(autocomplete in (syncTable.namedAutocompletes || {}))) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['syncTables', i, 'properties', propertyName, 'autocomplete'],
+            message:
+              childSchema.autocomplete === AutocompleteType.Dynamic
+                ? `Sync table ${syncTable.name} must define "autocomplete" for this property to use AutocompleteType.Dynamic`
+                : `"${childSchema.autocomplete}" is not registered as an autocomplete function for this sync table.`,
+          });
+          continue;
+        }
+      }
+    });
   });
 interface SchemaExtension {
   versionRange: string;

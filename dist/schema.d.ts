@@ -1,4 +1,8 @@
 import type { $Values } from './type_utils';
+import type { AutocompleteReference } from './api_types';
+import type { AutocompleteType } from './api_types';
+import type { PackFormulaResult } from './api_types';
+import type { PropertyAutocompleteMetadataFunction } from './api_types';
 /**
  * The set of primitive value types that can be used as return values for formulas
  * or in object schemas.
@@ -162,13 +166,22 @@ export declare const NumberHintValueTypes: readonly [ValueHintType.Date, ValueHi
 export declare const BooleanHintValueTypes: readonly [ValueHintType.Toggle];
 export declare const ObjectHintValueTypes: readonly [ValueHintType.Person, ValueHintType.Reference];
 /** The subset of {@link ValueHintType} that can be used with a string value. */
-export declare type StringHintTypes = typeof StringHintValueTypes[number];
+export declare type StringHintTypes = (typeof StringHintValueTypes)[number];
 /** The subset of {@link ValueHintType} that can be used with a number value. */
-export declare type NumberHintTypes = typeof NumberHintValueTypes[number];
+export declare type NumberHintTypes = (typeof NumberHintValueTypes)[number];
 /** The subset of {@link ValueHintType} that can be used with a boolean value. */
-export declare type BooleanHintTypes = typeof BooleanHintValueTypes[number];
+export declare type BooleanHintTypes = (typeof BooleanHintValueTypes)[number];
 /** The subset of {@link ValueHintType} that can be used with an object value. */
-export declare type ObjectHintTypes = typeof ObjectHintValueTypes[number];
+export declare type ObjectHintTypes = (typeof ObjectHintValueTypes)[number];
+/**
+ * A function or set of values to return for property autocomplete.
+ * @hidden
+ */
+export declare type PropertySchemaAutocomplete<T extends PackFormulaResult> = PropertyAutocompleteMetadataFunction<T[]> | T[] | AutocompleteType | AutocompleteReference;
+declare type PropertySchemaAutocompleteWithOptionalDisplay<T extends PackFormulaResult> = PropertySchemaAutocomplete<T | {
+    display: string;
+    value: T;
+}>;
 interface BaseSchema {
     /**
      * A explanation of this object schema property shown to the user in the UI.
@@ -183,16 +196,34 @@ interface BaseSchema {
     /** @hidden */
     mutable?: boolean;
     /**
-     * Whether this object schema property should run the sync table's property autocomplete
-     * function to suggest possible values on edit. This should only be set when {@link mutable}
+     * A list of values or a formula that returns a list of values to suggest when someone
+     * edits this property. This should only be set when {@link mutable}
      * is true.
      *
-     * For the email type, this will autocomplete emails from the doc without running the sync
-     * table's property autocomplete function.
+     * @example
+     * ```
+     * properties: {
+     *   color: {
+     *      type: coda.ValueType.String,
+     *      mutable: true,
+     *      autocomplete: ['red', 'green', 'blue'],
+     *   },
+     *   user: {
+     *      type: coda.ValueType.String,
+     *      mutable: true,
+     *      autocomplete: async function (context) {
+     *        let url = coda.withQueryParams("https://example.com/userSearch", { name: context.search });
+     *        let response = await context.fetcher.fetch({ method: "GET", url: url });
+     *        let results = response.body.users;
+     *        return results.map(user => {display: user.name, value: user.id})
+     *      },
+     *   },
+     * }
+     * ```
      *
      * @hidden
      */
-    autocomplete?: boolean;
+    autocomplete?: PropertySchemaAutocomplete<any>;
 }
 /**
  * A schema representing a return value or object property that is a boolean.
@@ -202,6 +233,8 @@ export interface BooleanSchema extends BaseSchema {
     type: ValueType.Boolean;
     /** Indicates how to render values in a table. If not specified, renders a checkbox. */
     codaType?: BooleanHintTypes;
+    /** @hidden */
+    autocomplete?: PropertySchemaAutocompleteWithOptionalDisplay<boolean>;
 }
 /**
  * The union of all schemas that can represent number values.
@@ -212,6 +245,8 @@ export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> e
     type: ValueType.Number;
     /** An optional type hint instructing Coda about how to interpret or render this value. */
     codaType?: T;
+    /** @hidden */
+    autocomplete?: PropertySchemaAutocompleteWithOptionalDisplay<number>;
 }
 /**
  * A schema representing a return value or object property that is a numeric value,
@@ -644,12 +679,14 @@ export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> e
     type: ValueType.String;
     /** An optional type hint instructing Coda about how to interpret or render this value. */
     codaType?: T;
+    /** @hidden */
+    autocomplete?: PropertySchemaAutocompleteWithOptionalDisplay<string>;
 }
 /**
  * The subset of StringHintTypes that don't have specific schema attributes.
  */
 export declare const SimpleStringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Html, ValueHintType.Markdown, ValueHintType.Url, ValueHintType.Email, ValueHintType.CodaInternalRichText];
-export declare type SimpleStringHintTypes = typeof SimpleStringHintValueTypes[number];
+export declare type SimpleStringHintTypes = (typeof SimpleStringHintValueTypes)[number];
 /**
  * A schema whose underlying value is a string, along with an optional hint about how Coda
  * should interpret that string.
@@ -914,6 +951,8 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      * {@link ValueHintType.ImageAttachment} or {@link ValueHintType.ImageReference} hints
      */
     imageProperty?: PropertyIdentifier<K>;
+    /** @hidden */
+    autocomplete?: PropertySchemaAutocomplete<{}>;
 }
 export declare type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
 /** @hidden */
@@ -1176,4 +1215,11 @@ export declare function makeReferenceSchemaFromObjectSchema(schema: GenericObjec
  * You could add the identity directly, but that would make the schema less re-usable.
  */
 export declare function withIdentity(schema: GenericObjectSchema, identityName: string): GenericObjectSchema;
+/**
+ * If someone tries to put a js function into a getSchema result in a dynamic schema, it's not going to work.
+ * This method is to detect this proactively and give a clear, user-visible error message. Otherwise the error
+ * they'd get would be an internal error, and the pack maker tools logs would just mention that structured clone
+ * failed to copy a function.
+ */
+export declare function throwOnDynamicSchemaWithJsAutocompleteFunction(dynamicSchema: any, parentKey?: string): void;
 export {};

@@ -108,7 +108,33 @@ pack.addSyncTable({
     type: coda.ValueType.Object,
     id: 'foo',
     primary: 'foo',
-    properties: {foo: {type: coda.ValueType.String}},
+    properties: {
+      foo: {
+        type: coda.ValueType.String,
+        autocomplete: () => {
+          return ['hi', {display: 'Goodbye!', value: 'bye'}];
+        },
+      },
+      bar: {
+        type: coda.ValueType.Number,
+        autocomplete: () => {
+          return [123, 456, {display: 'another', value: 3}];
+        },
+      },
+      baz: {
+        type: coda.ValueType.Object,
+        properties: {
+          bazProp: {type: coda.ValueType.String},
+        },
+        autocomplete: () => {
+          return [{bazProp: 'hmm'}];
+        },
+      },
+      inlineAutocomplete: {
+        type: coda.ValueType.Number,
+        autocomplete: [1, 2, 3, 4],
+      },
+    },
   }),
   formula: {
     name: 'Ignored',

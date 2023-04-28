@@ -33,6 +33,7 @@ import {findSyncFormula} from '../common/helpers';
 import {isDynamicSyncTable} from '../../api';
 import {normalizePropertyAutocompleteResults} from '../../api';
 import {setEndpointHelper} from '../../helpers/migration';
+import {throwOnDynamicSchemaWithJsAutocompleteFunction} from '../../schema';
 import {unwrapError} from '../common/marshaling';
 import {wrapError} from '../common/marshaling';
 
@@ -142,53 +143,57 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
           break;
         case MetadataFormulaType.PropertyAutocomplete:
           const syncTable = syncTables?.find(table => table.name === formulaSpec.syncTableName);
-          const autocompleteFn = ensureExists(syncTable?.propertyAutocomplete);
-          const propertyValues = {};
+          const autocompleteFormula = syncTable?.namedAutocompletes?.[formulaSpec.autocompleteName];
 
-          const cacheKeysUsed: string[] = [];
+          if (autocompleteFormula) {
+            const propertyValues = {};
 
-          function recordPropertyAccess(key: string) {
-            if (!cacheKeysUsed.includes(key)) {
-              cacheKeysUsed.push(key);
+            const cacheKeysUsed: string[] = [];
+
+            function recordPropertyAccess(key: string) {
+              if (!cacheKeysUsed.includes(key)) {
+                cacheKeysUsed.push(key);
+              }
             }
-          }
 
-          for (const [key, value] of Object.entries(formulaSpec.propertyValues)) {
-            Object.defineProperty(propertyValues, key, {
+            for (const [key, value] of Object.entries(formulaSpec.propertyValues)) {
+              Object.defineProperty(propertyValues, key, {
+                enumerable: true,
+                get() {
+                  recordPropertyAccess(key);
+                  return value;
+                },
+              });
+            }
+
+            const propertyAutocompleteExecutionContext: Omit<PropertyAutocompleteExecutionContext, 'search'> = {
+              ...executionContext,
+              propertyName: formulaSpec.propertyName,
+              propertyValues,
+            };
+
+            const contextUsed: Omit<PropertyAutocompleteAnnotatedResult, 'packResult' | 'propertiesUsed'> = {};
+
+            Object.defineProperty(propertyAutocompleteExecutionContext, 'search', {
               enumerable: true,
               get() {
-                recordPropertyAccess(key);
-                return value;
+                contextUsed.searchUsed = true;
+                return formulaSpec.search;
               },
             });
+
+            const packResult = (await autocompleteFormula.execute(
+              params as any,
+              propertyAutocompleteExecutionContext,
+            )) as PropertyAutocompleteResults;
+            const result: PropertyAutocompleteAnnotatedResult = {
+              packResult: normalizePropertyAutocompleteResults(packResult),
+              propertiesUsed: cacheKeysUsed,
+              ...contextUsed,
+            };
+            return result;
           }
-
-          const propertyAutocompleteExecutionContext: Omit<PropertyAutocompleteExecutionContext, 'search'> = {
-            ...executionContext,
-            propertyName: formulaSpec.propertyName,
-            propertyValues,
-          };
-
-          const contextUsed: Omit<PropertyAutocompleteAnnotatedResult, 'packResult' | 'propertiesUsed'> = {};
-
-          Object.defineProperty(propertyAutocompleteExecutionContext, 'search', {
-            enumerable: true,
-            get() {
-              contextUsed.searchUsed = true;
-              return formulaSpec.search;
-            },
-          });
-
-          const packResult: PropertyAutocompleteResults = await autocompleteFn.execute(
-            params as any,
-            propertyAutocompleteExecutionContext,
-          );
-          const result: PropertyAutocompleteAnnotatedResult = {
-            packResult: normalizePropertyAutocompleteResults(packResult),
-            propertiesUsed: cacheKeysUsed,
-            ...contextUsed,
-          };
-          return result;
+          break;
         case MetadataFormulaType.PostSetupSetEndpoint:
           if (
             defaultAuthentication?.type !== AuthenticationType.None &&
@@ -211,6 +216,7 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
           if (syncTables) {
             const syncTable = syncTables.find(table => table.name === formulaSpec.syncTableName);
             if (syncTable) {
+              let isGetSchema = false;
               let formula: MetadataFormula | undefined;
               if (isDynamicSyncTable(syncTable)) {
                 switch (formulaSpec.metadataFormulaType) {
@@ -229,6 +235,7 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
                     break;
                   case MetadataFormulaType.SyncGetSchema:
                     formula = syncTable.getSchema;
+                    isGetSchema = true;
                     break;
                   default:
                     return ensureSwitchUnreachable(formulaSpec);
@@ -239,6 +246,7 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
                   // in order to augment a static base schema with dynamic properties.
                   case MetadataFormulaType.SyncGetSchema:
                     formula = syncTable.getSchema;
+                    isGetSchema = true;
                     break;
                   case MetadataFormulaType.SyncListDynamicUrls:
                   case MetadataFormulaType.SyncSearchDynamicUrls:
@@ -251,7 +259,11 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
                 }
               }
               if (formula) {
-                return formula.execute(params as any, executionContext);
+                const formulaResult = formula.execute(params as any, executionContext);
+                if (isGetSchema) {
+                  throwOnDynamicSchemaWithJsAutocompleteFunction(await formulaResult);
+                }
+                return formulaResult;
               }
             }
           }
