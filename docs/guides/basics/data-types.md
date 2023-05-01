@@ -267,16 +267,13 @@ The [`Duration`][Duration] value hint represents an amount of time, rather than 
 
 | Example                     | Result              | Notes                           |
 | --------------------------- | ------------------- | ------------------------------- |
-| 6                           | 6 days              | A single number is days.        |
-| 6:01                        | 6 hrs 1 min         | Hours and minutes.              |
-| 6:01:15                     | 6 hrs 1 min 15 secs | Hours, minutes, and seconds.    |
 | 6 hours 1 minute 15 seconds | 6 hrs 1 min 15 secs | Full units.                     |
 | 6 hrs 1 min 15 secs         | 6 hrs 1 min 15 secs | Abbreviated units.              |
 | 6 hrs, 1 min, 15 secs       | 6 hrs 1 min 15 secs | Commas allowed.                 |
 | 0.25 days, 1 min, 15 secs   | 6 hrs 1 min 15 secs | Fractional amounts allowed.     |
 | 72000 minutes               | 50 days             | Don't use thousands separators. |
 
- Any duration value your Pack returns will automatically be converted into its most user-friendly form by Coda. For example, `3600 seconds` will be shown to the user as **1 hr**.
+ Any duration value your Pack returns will be automatically converted into its most user-friendly form by Coda. For example, `3600 seconds` will be shown to the user as **1 hr**.
 
 ```ts
 pack.addFormula({
