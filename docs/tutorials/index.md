@@ -44,11 +44,11 @@ The tutorials below provide step-by-step instructions and sample code to help yo
 
 {% endfor %}
 
-## Webinars
+## Videos
 
-Sometimes a video is worth a thousand tutorials. Check out recordings from some of our recent webinars.
+Sometimes a video is worth a thousand tutorials. Check out recordings from some of our recent webinars as well as other videos on Pack building.
 
-[Watch][webinars]{ .md-button }
+[Watch][videos]{ .md-button }
 
 
-[webinars]: webinars.md
+[videos]: videos.md
