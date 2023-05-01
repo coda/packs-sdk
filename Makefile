@@ -77,6 +77,13 @@ bootstrap:
 lint:
 	find . -name "*.ts" | grep -v /dist/ | grep -v /node_modules/ | grep -v "\.d\.ts" | xargs ${ROOTDIR}/node_modules/.bin/eslint
 
+	# Ensure markdown has frontmatter
+	MISSING="$(shell awk '/^[^-]/{print FILENAME}; {nextfile}' ./docs/**/*.md)"; \
+	if [[ "$$MISSING" != "" ]]; then \
+		echo "These markdown files are missing frontmatter: $$MISSING"; \
+		exit 1; \
+	fi
+
 	# Markdown lint.
 	npx remark docs --quiet --frail --ignore-pattern 'docs/reference/*'
 
