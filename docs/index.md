@@ -84,15 +84,15 @@ Our passionate community of Pack makers and Coda experts can help answer your qu
 <section class="landing-row" markdown>
 
 <div class="landing-item" markdown>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/OoR1qX9w4Js" title="YouTube video player: Build a Todoist Coda Pack from Scratch" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/z8J6kBxAod4" title="YouTube video player: Your team hub needs more photos of dogs" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </div>
 
 <div class="landing-item" markdown>
 ## :material-youtube: Grab the popcorn.
 
-In this snippet from a recent webinar we demonstrate how to build a Pack from scratch that retrieves your task list from Todoist :simple-todoist:. It was created in under 10 minutes and with less than 30 lines of code in the Pack Studio.
+Sit back, relax, and watch as Developer Advocate Eric Koleda builds a Pack from scratch in under 5 minutes and 20 lines of code. After that check out other videos covering topics like building blocks and the CLI.
 
-[Watch webinars][webinars]{ .md-button }
+[More videos][videos]{ .md-button }
 </div>
 
 </section>
@@ -121,7 +121,7 @@ Coda makers have been busy building Packs of all types, and many have published 
 [changelog]: reference/changes.md
 [community]: https://community.coda.io/c/developers-central/making-packs/15
 [gallery]: https://coda.io/gallery?filter=packs
-[webinars]: tutorials/webinars.md
+[videos]: tutorials/videos.md
 [tutorial_cli]: tutorials/get-started/cli.md
 [tutorial_github]: tutorials/get-started/github.md
 [tutorial_gitpod]: tutorials/get-started/gitpod.md

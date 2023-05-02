@@ -18,6 +18,7 @@ words:
   - sandboxing
   - Asana
   - autocompletes
+  - Koleda
 
 # Patterns in the content to ignore.
 ignoreRegExpList:

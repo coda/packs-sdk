@@ -1,6 +1,11 @@
-# Webinars
+---
+nav: Videos
+description: A collection of videos showing how to build Packs or use the SDK.
+---
 
-Coda hosts regular [webinars][webinars] on a variety of topics, including Packs and how to build them. This page includes some recordings from those webinars.
+# Videos
+
+Coda hosts regular [webinars][webinars] on a variety of topics, including Packs and how to build them. This page includes some recordings from those webinars and other videos about building Packs.
 
 
 ## An introduction to Packs in Coda
@@ -25,6 +30,14 @@ _August 2022_
 An introduction to the Pack Command Line Tool (CLI), including what it has to offer, how to set it up and use it, and how to leverage it to create better Packs.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/7K142m0aqBc" title="YouTube video player: Building Packs with the CLI" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+
+## Your team hub needs more photos of dogs
+_March 2023_
+
+Learn how to develop a simple Pack to bring random dog photos into your docs. In real-time, he shows you everything you need to develop your first Coda Pack.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/z8J6kBxAod4" title="YouTube video player: Your team hub needs more photos of dogs" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
 [webinars]: https://coda.io/webinars

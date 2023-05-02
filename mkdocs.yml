@@ -76,6 +76,8 @@ plugins:
           # 2023-01-05: Move FAQ and Changelog to Support.
           "guides/faq.md": "support/faq.md"
           "reference/changes.md": "support/changes.md"
+          # 2023-05-01: Rename Webinars to Videos.
+          "tutorials/webinars.md": "tutorials/videos.md"
     # Run Python scripts during the MkDocs generation process.
     - mkdocs-simple-hooks:
         hooks:
