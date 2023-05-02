@@ -1054,6 +1054,7 @@ function listPropertiesWithAutocompleteFunctions(schema) {
     }
     return result;
 }
+// TODO(dweitzman): Use fixedId for the autocomplete name when available to support property renames.
 // Finds any inline autocomplete functions within the inputSchema and replaces them
 // with strings references into the returned namedAutocompletes.
 function replaceInlineAutocompleteFunctionsWithNamedAutocompleteFunctions({ inputSchema, // DO NOT MUTATE inputSchema!
