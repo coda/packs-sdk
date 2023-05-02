@@ -481,6 +481,7 @@ const booleanPackFormulaSchema = zodCompleteObject({
         codaType: z.enum([...schema_2.BooleanHintValueTypes]).optional(),
         description: z.string().optional(),
         mutable: z.boolean().optional(),
+        fixedId: z.string().optional(),
         // Only properties in sync tables would need to define "autocomplete"
         autocomplete: z.undefined().optional(),
     }).optional(),
@@ -515,6 +516,7 @@ function zodAutocompleteFieldWithValues(valueType, allowDisplayNames) {
 const basePropertyValidators = {
     description: z.string().optional(),
     mutable: z.boolean().optional(),
+    fixedId: z.string().optional(),
     fromKey: z.string().optional(),
     required: z.boolean().optional(),
 };
@@ -806,6 +808,23 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
             path: ['identity', 'name'],
             message: 'Invalid name. Identity names can only contain alphanumeric characters, underscores, and dashes, and no spaces.',
         });
+    }
+})
+    .superRefine((data, context) => {
+    const schemaHelper = (0, migration_1.objectSchemaHelper)(data);
+    const fixedIds = new Set();
+    for (const prop of Object.values(schemaHelper.properties)) {
+        if (!prop.fixedId) {
+            continue;
+        }
+        if (fixedIds.has(prop.fixedId)) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['properties'],
+                message: `fixedIds must be unique. Found duplicate "${prop.fixedId}".`,
+            });
+        }
+        fixedIds.add(prop.fixedId);
     }
 })
     .refine(data => {
