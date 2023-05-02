@@ -245,6 +245,7 @@ interface BaseSchema {
   /**
    * Optional fixed id for this property, used to support renames of properties over time. If specified,
    * changes to the name of this property will not cause the property to be treated as a new property.
+   * Only supported for top-level properties.
    * Note that fixedIds must already be present on the existing schema prior to rolling out a name change in a
    * new schema; adding fixedId and a name change in a single schema version change will not work.
    * @hidden
