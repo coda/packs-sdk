@@ -99,7 +99,7 @@ For performance reasons formula results are cached by default. See the [caching 
 
 After a formula is run its value is stored in the Coda document model. Reloading the document will not cause the formula to be run again. Instead Coda's formula engine monitors for changes to the formula inputs and determines if the result needs to be recalculated.
 
-Building or releasing a new version of your Pack doesn't automatically cause existing formulas to recalculate, so users may still see old results for a while. In the **Settings** tab of the Pack's side panel there is a "Refresh now" button (**⟳**) that allows users to recalculate all formulas using the Pack, as well as options to cause them to reculate on a regular schedule.
+Building or releasing a new version of your Pack doesn't automatically cause existing formulas to recalculate, so users may still see old results for a while. In the **Settings** tab of the Pack's side panel there is a "Refresh now" button (**⟳**) that allows users to recalculate all formulas using the Pack, as well as options to cause them to recalculate on a regular schedule.
 
 <img src="../../../images/settings_recalc.png" srcset="../../../images/settings_recalc_2x.png 2x" class="screenshot" alt="Recalculation settings in the Pack side panel">
 

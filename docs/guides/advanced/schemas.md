@@ -166,11 +166,11 @@ These descriptions are shown in the formula editor when inspecting a property.
 
 <img src="../../../images/schemas_descriptions.png" srcset="../../../images/schemas_descriptions_2x.png 2x" class="screenshot" alt="A schema property description being shown in the formula editor">
 
-If the schema is used in a sync table the descritpions will also be used to populate the initial [column descriptions](#column-descriptions).
+If the schema is used in a sync table the descriptions will also be used to populate the initial [column descriptions](#column-descriptions).
 
 ??? tip "Add descriptions to object properties"
 
-    If a schema is only used by a single property, or you want to show the decription everywhere, then simply add the description to the schema.
+    If a schema is only used by a single property, or you want to show the description everywhere, then simply add the description to the schema.
 
     ```{.ts hl_lines="2"}
     let PersonSchema = coda.makeObjectSchema({

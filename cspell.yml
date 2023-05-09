@@ -4,33 +4,50 @@ language: en
 
 # List of additional words to add to the dictionary.
 words:
+  # Names
+  - Asana
+  - Astley
+  - Calendarific
   - Codans
-  - automations
-  - Precanned
-  - embeddable
-  - vararg
-  - templating
-  - typeof
-  - PKCE
-  - prepopulated
+  - Giphy
   - Iframely
+  - Koleda
+  - Replit
+  - Socrata
+  - Typeform
+  - Vonage
+  - Webflow
+  # Acronyms
+  - PKCE
+  # TsDoc
+  - keyof
+  - typeof
+  # Other
+  - autocompletes
+  - automations
+  - embeddable
+  - precanned
+  - prepopulated
   - sandboxed
   - sandboxing
-  - Asana
-  - autocompletes
-  - Koleda
+  - templating
+  - unredacted
+  - vararg
 
 # Patterns in the content to ignore.
 ignoreRegExpList:
   # Code blocks.
-  - "```(.|\n)*```"
+  - "```(.|\n)*?```"
   # Inline code.
-  - "`.*`"
+  - "`.*?`"
+  - "``.*?``"
   # Python macros.
-  - "{%.*%}"
+  - "{%.*?%}"
   # HTML tags.
-  - "<.*>"
+  - "<.*?>"
   # Icon references.
-  - ":.*:"
+  - ":.*?:"
   # Icons in page metadata.
-  - "^icon: .*"
+  - "^icon: .*?$"
+  # Markdown attributes
+  - "{:.*?}"

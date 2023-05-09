@@ -27,7 +27,7 @@ The following domains don't need to be declared as a network domain in your Pack
 - `coda-us-west-2-prod-blobs-upload.s3.us-west-2.amazonaws.com` (used by [temporary blob storage][temporaryblobstorage])
 
 !!! info "Multiple domains and authentication"
-    If you make requests to multiple network domains and utilize [per-user authentication][auth_user], you'll need to set the [`networkDomain`][baseauthentication_networkdomain] field of the authentication configuration to specify which domain it should be appied to. Authentication credentials can only be applied to a single domain.
+    If you make requests to multiple network domains and utilize [per-user authentication][auth_user], you'll need to set the [`networkDomain`][baseauthentication_networkdomain] field of the authentication configuration to specify which domain it should be applied to. Authentication credentials can only be applied to a single domain.
 
 
 ## Accessing the fetcher
