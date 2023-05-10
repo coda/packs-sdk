@@ -316,7 +316,7 @@ Enabling the option `shouldAutoAuthSetup: true` further simplifies the sign-in e
 [View Sample Code][sample_coda_api]{ .md-button }
 
 
-### AWS Signautre Version 4
+### AWS Signature Version 4
 
 Amazon Web Services (AWS) uses a variety of authentication methods, one of which relies on access keys and a proprietary signing mechanism. Packs support this using the [`AWSAccessKey`][AWSAccessKey] authentication type. You must specify which AWS service you are connecting to, since that is a required part of the signature. For example:
 

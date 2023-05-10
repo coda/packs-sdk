@@ -34,7 +34,7 @@ pack.setUserAuthentication({
 });
 ```
 
-Many APIs also support granular scopes, allowing you to request a limited set of permissions from the user. These can be speciefied as an array in the `scopes` field:
+Many APIs also support granular scopes, allowing you to request a limited set of permissions from the user. These can be specified as an array in the `scopes` field:
 
 ```ts
 pack.setUserAuthentication({

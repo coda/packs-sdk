@@ -379,7 +379,7 @@ Folders can be nested inside of other folders, allowing you to represent complex
 
 ## Search for datasets {: #search}
 
-Finding the desired dataset, even when [organized into folders](#folders), can be difficult when the there are many options to select from. If the underlying API supports it you can allow users to search for the dataset intead.
+Finding the desired dataset, even when [organized into folders](#folders), can be difficult when the there are many options to select from. If the underlying API supports it you can allow users to search for the dataset instead.
 
 <img src="../../../../images/dynamic_sync_table_search.png" srcset="../../../../images/dynamic_sync_table_search_2x.png 2x" class="screenshot" alt="Searching for a dataset.">
 

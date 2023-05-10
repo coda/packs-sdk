@@ -136,6 +136,78 @@ let MovieSchema = coda.makeObjectSchema({
 By default all properties are considered optional, but you can add `required: true` to the property's schema to indicate that the property is required. This adds some type checking to help ensure that formulas return all the required properties, but it cannot catch all cases.
 
 
+### Property descriptions
+
+While a good property name may speak for itself, it's often useful to add additional context about what kind of information the property contains. This can be done by adding a `description` field to the property schema:
+
+
+```{.ts hl_lines="5 10 14"}
+let PersonSchema = coda.makeObjectSchema({
+  properties: {
+    name: {
+      type: coda.ValueType.String,
+      description: "The full name of the person.",
+    },
+    born: {
+      type: coda.ValueType.String,
+      codaType: coda.ValueHintType.Date,
+      description: "The date when the person was born.",
+    },
+    age: {
+      type: coda.ValueType.Number,
+      description: "The age of the person, in years.",
+    },
+  },
+  // ...
+});
+```
+
+These descriptions are shown shown in various places in the Coda UI.
+
+=== "Formula editor"
+
+    When inspecting the property in the formula editor.
+
+    <img src="../../../images/schemas_descriptions.png" srcset="../../../images/schemas_descriptions_2x.png 2x" class="screenshot" alt="A schema property description being shown in the formula editor">
+
+=== "Column description"
+
+    When used in sync tables or column formats, schema properties can be broken out into their own columns, and the property's description will be used as the initial value for the column's description. This column description is set once when the column is added to the table, and it can later be edited or removed by the user.
+
+    <img src="../../../images/schemas_column_descriptions.png" srcset="../../../images/schemas_column_descriptions_2x.png 2x" class="screenshot" alt="A column description being shown in a sync table">
+
+??? tip "Add descriptions to object properties"
+
+    If a schema is only used by a single property, or you want to show the description everywhere, then simply add the description to the schema.
+
+    ```{.ts hl_lines="2"}
+    let PersonSchema = coda.makeObjectSchema({
+      description: "A person",
+      // ...
+    });
+    ```
+
+    More commonly however a schema is reused across multiple properties, where the context and meaning of the value are different. In that case you can use [JavaScript's spread syntax][mdn_spread_object] to copy of the schema and add a description.
+
+    ```{.ts hl_lines="6-7 10-11"}
+    let MovieSchema = coda.makeObjectSchema({
+      properties: {
+        title: { type: coda.ValueType.String },
+        year: { type: coda.ValueType.Number },
+        director: {
+          ...PersonSchema,
+          description: "The director of the movie.",
+        },
+        producer: {
+          ...PersonSchema,
+          description: "The primary producer of the movie.",
+        },
+      },
+      // ...
+    });
+    ```
+
+
 ### Object mapping
 
 When a formula or sync table returns an object, only the fields matching the properties defined in the schema are retained, and all others are discarded. The simplest approach is to define a schema where the property names are the same as the fields returned by the API.

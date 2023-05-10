@@ -191,9 +191,9 @@ For each collection, add a set of building blocks that allow users to work with 
     !!! abstract "Requirements"
         - [x] The API has an endpoint for retrieving all the items in the collection (ex: `GET /tasks`).
 
-    A [sync table][sync_tables] exposes a collection as a special Coda table, allowing users to work with large sets of data using familar conventions.
+    A [sync table][sync_tables] exposes a collection as a special Coda table, allowing users to work with large sets of data using familiar conventions.
 
-    - If the API endpoint support filtering the results, consider exposing those as parameters on the sync table to allow for faster, more targetted syncs.
+    - If the API endpoint support filtering the results, consider exposing those as parameters on the sync table to allow for faster, more targeted syncs.
     - If the API paginates the results, use [continuations][sync_table_continuations] to spread the requests over multiple executions and avoid timeouts.
 
     ??? example "Example: Todoist `Tasks` sync table"
