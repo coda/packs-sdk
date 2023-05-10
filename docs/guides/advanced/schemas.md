@@ -162,11 +162,19 @@ let PersonSchema = coda.makeObjectSchema({
 });
 ```
 
-These descriptions are shown in the formula editor when inspecting a property.
+These descriptions are shown shown in various places in the Coda UI.
 
-<img src="../../../images/schemas_descriptions.png" srcset="../../../images/schemas_descriptions_2x.png 2x" class="screenshot" alt="A schema property description being shown in the formula editor">
+=== "Formula editor"
 
-If the schema is used in a sync table the descriptions will also be used to populate the initial [column descriptions](#column-descriptions).
+    When inspecting the property in the formula editor.
+
+    <img src="../../../images/schemas_descriptions.png" srcset="../../../images/schemas_descriptions_2x.png 2x" class="screenshot" alt="A schema property description being shown in the formula editor">
+
+=== "Column description"
+
+    When used in sync tables or column formats, schema properties can be broken out into their own columns, and the property's description will be used as the initial value for the column's description. This column description is set once when the column is added to the table, and it can later be edited or removed by the user.
+
+    <img src="../../../images/schemas_column_descriptions.png" srcset="../../../images/schemas_column_descriptions_2x.png 2x" class="screenshot" alt="A column description being shown in a sync table">
 
 ??? tip "Add descriptions to object properties"
 
@@ -469,26 +477,6 @@ let MovieSchema = coda.makeObjectSchema({
 
 !!! tip
     Select a small but meaningful set of featured columns for your sync tables. Too few and users may not know what data is available, and too many could be overwhelming.
-
-
-### Column descriptions
-
-If a schema property has a [description set](#property-descriptions), it will be used as the initial value for the description of the corresponding column in the sync table. This description is set once when the column is added to the table, and it can later be edited or removed by the user.
-
-```{.ts hl_lines="5"}
-let MovieSchema = coda.makeObjectSchema({
-  properties: {
-    year: {
-      type: coda.ValueType.Number,
-      description: "The year the movie was released.",
-    },
-    // ...
-  },
-  // ...
-});
-```
-
-<img src="../../../images/schemas_column_descriptions.png" srcset="../../../images/schemas_column_descriptions_2x.png 2x" class="screenshot" alt="A column description being shown in a sync table">
 
 
 ### Reference schemas {: #references}
