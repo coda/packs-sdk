@@ -18,8 +18,8 @@ The basic structure of a parameter. This sample is for a string parameter.
 {% raw %}
 coda.makeParameter({
   type: coda.ParameterType.String,
-  name: "<User-visible name of parameter>",
-  description: "<Help text for the parameter>",
+  name: "myParameter",
+  description: "My description.",
 }),
 {% endraw %}
 ```

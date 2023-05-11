@@ -30,6 +30,11 @@ export const Snippets: AutocompleteSnippet[] = [
     codeFile: './samples/snippets/formula/object_formula.ts',
   },
   {
+    triggerTokens: ['addFormula:action', 'addAction', 'addButton'],
+    content: 'Adds an action formula which can be used in a button or automation.',
+    codeFile: './samples/snippets/formula/action_formula.ts',
+  },
+  {
     triggerTokens: ['addColumnFormat', 'makeColumnFormat', 'ColumnFormat'],
     content: 'Adds a custom column type that you apply to any column in any Coda table.',
     codeFile: './samples/snippets/column_format.ts',

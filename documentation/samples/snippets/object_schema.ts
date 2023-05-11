@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as coda from "@codahq/packs-sdk";
 
 // BEGIN
 
-const MySchema = coda.makeObjectSchema({
+const $1$Thing$Schema = coda.makeObjectSchema({
   properties: {
-    property1: { type: coda.ValueType.String },
-    property2: { type: coda.ValueType.Number },
-    // Add more properties here.
+    $2$name$: { type: coda.ValueType.String },
+    // TODO: Add more properties.
+    // $0
   },
-  displayProperty: "property1", // Which property above to display by default.
+  displayProperty: "$2", // Which property above to display by default.
 });

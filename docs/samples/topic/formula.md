@@ -17,19 +17,18 @@ The basic structure of a formula. This sample takes in a single string parameter
 ```ts
 {% raw %}
 pack.addFormula({
-  name: "<User-visible name of formula>",
-  description: "<Help text for the formula>",
+  name: "MyFormula",
+  description: "My description.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
-      name: "<User-visible name of parameter>",
-      description: "<Help text for the parameter>",
-    }),
-    // Add more parameters here and in the array below.
+    // TODO: Add parameters.
+    $0
   ],
   resultType: coda.ValueType.String,
-  execute: async function ([param], context) {
-    return "Hello " + param;
+  execute: async function (args, context) {
+    let [
+      // TODO: Unpack the parameter values.
+    ] = args;
+    return "Hello World!";
   },
 });
 {% endraw %}

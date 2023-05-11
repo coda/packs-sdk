@@ -26,7 +26,7 @@ const ExamplePageTemplate = Handlebars.compile(
 const SdkReferenceLink = 'https://coda.io/packs/build/latest';
 const SamplePageLink = `${SdkReferenceLink}/${ExampleDirName}`;
 const PageFileExtension = 'md';
-const IndexPageFilename = 'index.md'
+const IndexPageFilename = 'index.md';
 
 function main() {
   compileAutocompleteSnippets();
@@ -40,7 +40,7 @@ function compileAutocompleteSnippets() {
     return {
       triggerTokens: snippet.triggerTokens,
       content: snippet.content,
-      code,
+      code: formatCodeSnippet(code),
     };
   });
 
@@ -105,11 +105,12 @@ function getContentFile(file: string) {
 
 function compileExampleSnippets(example: Example): CompiledExampleSnippet[] {
   return example.exampleSnippets.map(exampleSnippet => {
+    const code = getCodeFile(exampleSnippet.codeFile);
     compileSnippetEmbed(exampleSnippet.codeFile);
     return {
       name: exampleSnippet.name,
       content: exampleSnippet.content,
-      code: getCodeFile(exampleSnippet.codeFile),
+      code: formatCodeSnippet(code, true),
     };
   });
 }
@@ -126,6 +127,20 @@ function compileSnippetEmbed(codeFile: string) {
   }
 
   fs.writeFileSync(path.join(snippetDirPath, `${snippetFileName}.html`), exampleSnippetEmbed);
+}
+
+function formatCodeSnippet(code: string, removePlaceholders=false) {
+  let result = code
+    // Replace custom placeholder syntax ($1$Foo$) with real syntax (${1:Foo}).
+    .replace(/\$(\d+)\$(.+?)\$/g, '${$1:$2}')
+    // Remove the comment around the final tab stop ($0).
+    .replace(/\/\/\s*\$0/g, '$0');
+  if (removePlaceholders) {
+    result = result
+      // Replace placeholder syntax ($1$Foo$) with default value (Foo).
+      .replace(/\$\{\d+\:(.*?)\}/g, '$1');
+  }
+  return result;
 }
 
 function compileExamplePage(example: Example, compiledExample: CompiledExample) {

@@ -8,7 +8,7 @@
       "addFormula"
     ],
     "content": "Adds a Coda formula which will return a text string in the doc.",
-    "code": "pack.addFormula({\n  name: \"<User-visible name of formula>\",\n  description: \"<Help text for the formula>\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"<User-visible name of parameter>\",\n      description: \"<Help text for the parameter>\",\n    }),\n    // Add more parameters here and in the array below.\n  ],\n  resultType: coda.ValueType.String,\n  execute: async function ([param], context) {\n    return \"Hello \" + param;\n  },\n});"
+    "code": "pack.addFormula({\n  name: \"${1:MyFormula}\",\n  description: \"${2:My description.}\",\n  parameters: [\n    // TODO: Add parameters.\n    $0\n  ],\n  resultType: coda.ValueType.String,\n  execute: async function (args, context) {\n    let [\n      // TODO: Unpack the parameter values.\n    ] = args;\n    return \"Hello World!\";\n  },\n});"
   },
   {
     "triggerTokens": [
@@ -18,7 +18,7 @@
       "ArrayFormula"
     ],
     "content": "Adds a Coda formula which will return a text string in the doc.",
-    "code": "pack.addFormula({\n  name: \"<User-visible name of formula>\",\n  description: \"<Help text for the formula>\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"<User-visible name of parameter>\",\n      description: \"<Help text for the parameter>\",\n    }),\n    // Add more parameters here and in the array below.\n  ],\n  resultType: coda.ValueType.Array,\n  items: coda.makeSchema({\n    type: coda.ValueType.String,\n  }),\n  execute: async function ([param], context) {\n    return [\"Hello\", param];\n  },\n});"
+    "code": "pack.addFormula({\n  name: \"${1:MyFormula}\",\n  description: \"${2:My description.}\",\n  parameters: [\n    // TODO: Add parameters.\n    $0\n  ],\n  resultType: coda.ValueType.Array,\n  items: coda.makeSchema({\n    type: coda.ValueType.String,\n  }),\n  execute: async function (args, context) {\n    let [\n      // TODO: Unpack the parameter values.\n    ] = args;\n    return [\"A\", \"B\", \"C\"];\n  },\n});"
   },
   {
     "triggerTokens": [
@@ -28,7 +28,7 @@
       "BooleanFormula"
     ],
     "content": "Adds a Coda formula which will return true or false in the doc.",
-    "code": "pack.addFormula({\n  name: \"<User-visible name of formula>\",\n  description: \"<Help text for the formula>\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"<User-visible name of parameter>\",\n      description: \"<Help text for the parameter>\",\n    }),\n    // Add more parameters here and in the array below.\n  ],\n  resultType: coda.ValueType.Boolean,\n  execute: async function ([param], context) {\n    return param === \"true\";\n  },\n});"
+    "code": "pack.addFormula({\n  name: \"${1:MyFormula}\",\n  description: \"${2:My description.}\",\n  parameters: [\n    // TODO: Add parameters.\n    $0\n  ],\n  resultType: coda.ValueType.Boolean,\n  execute: async function (args, context) {\n    let [\n      // TODO: Unpack the parameter values.\n    ] = args;\n    return true;\n  },\n});"
   },
   {
     "triggerTokens": [
@@ -38,7 +38,7 @@
       "NumericFormula"
     ],
     "content": "Adds a Coda formula which will return a number in the doc.",
-    "code": "pack.addFormula({\n  name: \"<User-visible name of formula>\",\n  description: \"<Help text for the formula>\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"<User-visible name of parameter>\",\n      description: \"<Help text for the parameter>\",\n    }),\n    // Add more parameters here and in the array below.\n  ],\n  resultType: coda.ValueType.Number,\n  execute: async function ([param], context) {\n    return param.length;\n  },\n});"
+    "code": "pack.addFormula({\n  name: \"${1:MyFormula}\",\n  description: \"${2:My description.}\",\n  parameters: [\n    // TODO: Add parameters.\n    $0\n  ],\n  resultType: coda.ValueType.Number,\n  execute: async function (args, context) {\n    let [\n      // TODO: Unpack the parameter values.\n    ] = args;\n    return 0;\n  },\n});"
   },
   {
     "triggerTokens": [
@@ -48,7 +48,16 @@
       "ObjectFormula"
     ],
     "content": "Adds a Coda formula which will return an object in the doc.",
-    "code": "const MySchema = coda.makeObjectSchema({\n  properties: {\n    property1: { type: coda.ValueType.String },\n    property2: { type: coda.ValueType.Number },\n    // Add more properties here.\n  },\n  displayProperty: \"property1\", // Which property above to display by default.\n});\n\npack.addFormula({\n  name: \"<User-visible name of formula>\",\n  description: \"<Help text for the formula>\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"<User-visible name of parameter>\",\n      description: \"<Help text for the parameter>\",\n    }),\n    // Add more parameters here and in the array below.\n  ],\n  resultType: coda.ValueType.Object,\n  schema: MySchema,\n  execute: async function ([param], context) {\n    return {\n      property1: param,\n      property2: 123,\n\n    };\n  },\n});"
+    "code": "pack.addFormula({\n  name: \"${1:MyFormula}\",\n  description: \"${2:My description.}\",\n  parameters: [\n    // TODO: Add parameters.\n    $0\n  ],\n  resultType: coda.ValueType.Object,\n  schema: ${3:MySchema},\n  execute: async function (args, context) {\n    let [\n      // TODO: Unpack the parameter values.\n    ] = args;\n    return {};\n  },\n});"
+  },
+  {
+    "triggerTokens": [
+      "addFormula:action",
+      "addAction",
+      "addButton"
+    ],
+    "content": "Adds an action formula which can be used in a button or automation.",
+    "code": "pack.addFormula({\n  name: \"${1:MyAction}\",\n  description: \"${2:My description.}\",\n  parameters: [\n    // TODO: Add parameters.\n    $0\n  ],\n  resultType: coda.ValueType.String,\n  isAction: true,\n  execute: async function (args, context) {\n    let [\n      // TODO: Unpack the parameter values.\n    ] = args;\n    // TODO: Do something.\n    return \"OK\";\n  },\n});"
   },
   {
     "triggerTokens": [
@@ -57,7 +66,7 @@
       "ColumnFormat"
     ],
     "content": "Adds a custom column type that you apply to any column in any Coda table.",
-    "code": "pack.addColumnFormat({\n  name: \"<User-visible name>\",\n  instructions: \"<Help text for the format>\",\n  formulaName: \"<Name of the formula to run>\",\n  matchers: [\n    // If formatting a URL, a regular expression that matches that URL.\n  ],\n});"
+    "code": "pack.addColumnFormat({\n  name: \"${1:My Column Format}\",\n  instructions: \"${2:My description.}\",\n  formulaName: \"${3:MyFormula}\",\n  matchers: [\n    // TODO: If formatting a URL, add a regular expression that matches it.\n    $0\n  ],\n});"
   },
   {
     "triggerTokens": [
@@ -81,7 +90,7 @@
       "OAuth2Authentication"
     ],
     "content": "Sets per-user OAuth2 authentication for the Pack.",
-    "code": "// When registering your app in the API's developer console set the redirect URL\n// to: https://coda.io/packsAuth/oauth2/{PACK ID}\n// After building your Pack, remember to visit the Settings tab to set your\n// client ID and secret.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.OAuth2,\n  // The following two URLs are will be found in the API's documentation.\n  authorizationUrl: \"<Authorization URL>\",\n  tokenUrl: \"<Token URL>\",\n});"
+    "code": "// When registering your app in the API's developer console set the redirect URL\n// to: https://coda.io/packsAuth/oauth2/{PACK ID}\n// After building your Pack, remember to visit the Settings tab to set your\n// client ID and secret.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.OAuth2,\n  // The following two URLs are will be found in the API's documentation.\n  authorizationUrl: \"${1:https://example.com/authorize}\",\n  tokenUrl: \"${2:https://example.com/token}\",\n});"
   },
   {
     "triggerTokens": [
@@ -99,7 +108,7 @@
       "NetworkDomain"
     ],
     "content": "Allows the pack to make requests to listed domains.",
-    "code": "pack.addNetworkDomain(\"<Domain name>\");"
+    "code": "pack.addNetworkDomain(\"${1:example.com}\");"
   },
   {
     "triggerTokens": [
@@ -109,7 +118,7 @@
       "StringParameter"
     ],
     "content": "Creates a string parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.String,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n}),"
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.String,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
   },
   {
     "triggerTokens": [
@@ -119,7 +128,7 @@
       "BooleanParameter"
     ],
     "content": "Creates a boolean parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.Boolean,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n}),"
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.Boolean,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
   },
   {
     "triggerTokens": [
@@ -129,7 +138,7 @@
       "DateParameter"
     ],
     "content": "Creates a date parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.Date,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n}),"
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.Date,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
   },
   {
     "triggerTokens": [
@@ -139,7 +148,7 @@
       "HtmlParameter"
     ],
     "content": "Creates a html parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.Html,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n}),"
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.Html,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
   },
   {
     "triggerTokens": [
@@ -149,7 +158,7 @@
       "ImageParameter"
     ],
     "content": "Creates an image parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.Image,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n}),"
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.Image,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
   },
   {
     "triggerTokens": [
@@ -159,7 +168,7 @@
       "FileParameter"
     ],
     "content": "Creates a file parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.File,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n}),"
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.File,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
   },
   {
     "triggerTokens": [
@@ -169,7 +178,7 @@
       "NumberParameter"
     ],
     "content": "Creates a number parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.Number,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n}),"
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.Number,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
   },
   {
     "triggerTokens": [
@@ -179,7 +188,7 @@
       "StringArrayParameter"
     ],
     "content": "Creates a string array parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.StringArray,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n}),"
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.StringArray,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
   },
   {
     "triggerTokens": [
@@ -189,7 +198,7 @@
       "BooleanArrayParameter"
     ],
     "content": "Creates a boolean array parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.BooleanArray,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n}),"
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.BooleanArray,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
   },
   {
     "triggerTokens": [
@@ -199,7 +208,7 @@
       "DateArrayParameter"
     ],
     "content": "Creates a date array parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.DateArray,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n}),"
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.DateArray,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
   },
   {
     "triggerTokens": [
@@ -209,7 +218,7 @@
       "HtmlArrayParameter"
     ],
     "content": "Creates a html array parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.HtmlArray,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n}),"
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.HtmlArray,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
   },
   {
     "triggerTokens": [
@@ -219,7 +228,7 @@
       "ImageArrayParameter"
     ],
     "content": "Creates a image array parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.ImageArray,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n}),"
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.ImageArray,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
   },
   {
     "triggerTokens": [
@@ -229,7 +238,7 @@
       "NumberArrayParameter"
     ],
     "content": "Creates a number array parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.NumberArray,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n}),"
+    "code": "coda.makeParameter({\n  type: coda.ParameterType.NumberArray,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
   },
   {
     "triggerTokens": [
@@ -238,7 +247,7 @@
       "SyncTable"
     ],
     "content": "Adds a sync table.",
-    "code": "const MySchema = coda.makeObjectSchema({\n  properties: {\n    property1: { type: coda.ValueType.String },\n    property2: { type: coda.ValueType.Number },\n    // Add more properties here.\n  },\n  displayProperty: \"property1\", // Which property above to display by default.\n  idProperty: \"property2\", // Which property above is a unique ID.\n});\n\npack.addSyncTable({\n  name: \"<User-visible name for the sync table>\",\n  description: \"<User-visible description for the sync table>\",\n  identityName: \"<User-visible name for the column containing the schema>\",\n  schema: MySchema,\n  formula: {\n    name: \"<Name of the sync formula, not show to the user>\",\n    description: \"<Help text for the sync formula, not show to the user>\",\n    parameters: [\n      coda.makeParameter({\n        type: coda.ParameterType.String,\n        name: \"<User-visible name of parameter>\",\n        description: \"<Help text for the parameter>\",\n      }),\n      // Add more parameters here and in the array below.\n    ],\n    execute: async function ([param], context) {\n      let url = \"<URL to pull data from>\";\n      let response = await context.fetcher.fetch({\n        method: \"GET\",\n        url: url,\n      });\n      let items = response.body.items;\n      // Adjust the items to fit the schema if required.\n      return {\n        result: items,\n      };\n    },\n  },\n});"
+    "code": "pack.addSyncTable({\n  name: \"${1:MyThings}\",\n  description: \"${2:Table description.}\",\n  identityName: \"$1\",\n  schema: ${1:MySchema},\n  formula: {\n    name: \"Sync$1\",\n    description: \"Syncs the data.\",\n    parameters: [\n      // TODO: Add parameters.\n      $0\n    ],\n    execute: async function (args, context) {\n      let [\n        // TODO: Unpack the parameter values.\n      ] = args;\n      // TODO: Fetch the rows.\n      let rows = [];\n      for (let row of rows) {\n        // TODO: If required, adjust the row to match the schema.\n      }\n      return {\n        result: rows,\n      };\n    },\n  },\n});"
   },
   {
     "triggerTokens": [
@@ -247,7 +256,7 @@
       "DynamicSyncTable"
     ],
     "content": "Adds a dynamic sync table.",
-    "code": "pack.addDynamicSyncTable({\n  name: \"<User-visible name for the sync table>\",\n  listDynamicUrls: async function (context) {\n    // TODO: Fetch the list of data sources the user can connect to.\n    return [{ display: \"<Datasource Name>\", value: \"<Datasource URL>\" }];\n  },\n  getName: async function (context) {\n    let datasourceUrl = context.sync.dynamicUrl!;\n    // TODO: Fetch metadata about the data source and return the name.\n    return \"<Datasource Name>\";\n  },\n  identityName: \"<User-visible name for the column containing the schema>\",\n  getSchema: async function (context) {\n    let datasourceUrl = context.sync.dynamicUrl!;\n    // TODO: Fetch metadata about the data source and get the list of fields.\n    let properties: coda.ObjectSchemaProperties = {\n      // TODO: Create a property for each field.\n    };\n    let idProperty = \"<Determine the field containing a unique ID>\";\n    let displayProperty = \"<Determine the field containing the display value>\";\n    let featuredProperties = [\n      // TODO: Determine which fields to show in the table by default.\n    ];\n    return coda.makeObjectSchema({\n      properties: properties,\n      idProperty: idProperty,\n      displayProperty: displayProperty,\n      featuredProperties: featuredProperties,\n    });\n  },\n  getDisplayUrl: async function (context) {\n    return context.sync.dynamicUrl!;\n  },\n  formula: {\n    name: \"<Name of the sync formula, not show to the user>\",\n    description: \"<Help text for the sync formula, not show to the user>\",\n    parameters: [\n      coda.makeParameter({\n        type: coda.ParameterType.String,\n        name: \"<User-visible name of parameter>\",\n        description: \"<Help text for the parameter>\",\n      }),\n      // Add more parameters here and in the array below.\n    ],\n    execute: async function ([param], context) {\n      let datasourceUrl = context.sync.dynamicUrl!;\n      let url = \"<URL to pull data from>\";\n      let response = await context.fetcher.fetch({\n        method: \"GET\",\n        url: url,\n      });\n      let items = response.body.items;\n      // Adjust the items to fit the schema if required.\n      return {\n        result: items,\n      };\n    },\n  },\n});"
+    "code": "pack.addDynamicSyncTable({\n  name: \"${1:MyThings}\",\n  description: \"${2:My description.}\",\n  identityName: \"${1}\",\n  listDynamicUrls: async function (context) {\n    // TODO: Fetch the list of datasets the user can connect to.\n    $0\n    let datasets = [];\n    // TODO: Replace \"name\" and \"url\" below with correct JSON keys.\n    return coda.autocompleteSearchObjects(undefined, datasets, \"name\", \"url\");\n  },\n  getName: async function (context) {\n    let datasetUrl = context.sync.dynamicUrl;\n    // TODO: Fetch metadata about the dataset and return the name.\n    return \"Table Name\";\n  },\n  getSchema: async function (context) {\n    let datasetUrl = context.sync.dynamicUrl;\n    // TODO: Fetch metadata about the dataset and use it to construct a schema.\n    let schema = coda.makeObjectSchema({\n      properties: {},\n      displayProperty: \"\",\n      idProperty: \"\",\n      featuredProperties: [],\n    });\n    return schema;\n  },\n  getDisplayUrl: async function (context) {\n    let datasetUrl = context.sync.dynamicUrl;\n    // TODO: Fetch metadata about the dataset and return a user-friendly URL.\n    return \"\";\n  },\n  formula: {\n    name: \"Sync$1\",\n    description: \"Syncs the data.\",\n    parameters: [\n      // TODO: Add parameters.\n    ],\n    execute: async function (args, context) {\n      let datasetUrl = context.sync.dynamicUrl!;\n      let [\n        // TODO: Unpack the parameter values.\n      ] = args;\n      // TODO: Fetch the rows.\n      let rows = [];\n      for (let row of rows) {\n        // TODO: If required, adjust the row to match the schema.\n      }\n      return {\n        result: rows,\n      };\n    },\n  },\n});"
   },
   {
     "triggerTokens": [
@@ -256,20 +265,20 @@
       "ObjectSchema"
     ],
     "content": "Creates an object schema definition.",
-    "code": "const MySchema = coda.makeObjectSchema({\n  properties: {\n    property1: { type: coda.ValueType.String },\n    property2: { type: coda.ValueType.Number },\n    // Add more properties here.\n  },\n  displayProperty: \"property1\", // Which property above to display by default.\n});"
+    "code": "const ${1:Thing}Schema = coda.makeObjectSchema({\n  properties: {\n    ${2:name}: { type: coda.ValueType.String },\n    // TODO: Add more properties.\n    $0\n  },\n  displayProperty: \"$2\", // Which property above to display by default.\n});"
   },
   {
     "triggerTokens": [
       "fetch:get"
     ],
     "content": "Fetches data from an API.",
-    "code": "let response = await context.fetcher.fetch({\n  method: \"GET\",\n  url: \"<The URL to fetch>\",\n});\nlet data = response.body;"
+    "code": "let response = await context.fetcher.fetch({\n  method: \"GET\",\n  url: \"${1:https://example.com}\",\n});\nlet data = response.body;"
   },
   {
     "triggerTokens": [
       "fetch:post"
     ],
     "content": "Send data to an API.",
-    "code": "let payload = {\n  // Whatever JSON structure the API expects.\n};\nlet response = await context.fetcher.fetch({\n  method: \"POST\",\n  url: \"<The URL to send the request to>\",\n  headers: {\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify(payload),\n});\nlet data = response.body;"
+    "code": "let payload = {\n  // TODO: Construct the JSON that the API expects.\n  $0\n};\nlet response = await context.fetcher.fetch({\n  method: \"POST\",\n  url: \"${1:https://example.com}\",\n  headers: {\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify(payload),\n});\nlet data = response.body;"
   }
 ]
