@@ -2,7 +2,7 @@ import * as coda from "@codahq/packs-sdk";
 
 const pack = coda.newPack();
 
-const $1$MySchema$ = undefined;
+const $3$MySchema$ = undefined;
 
 // BEGIN
 
@@ -10,13 +10,12 @@ pack.addSyncTable({
   name: "${1:MyThings}",
   description: "${2:Table description.}",
   identityName: "$1",
-  schema: $1$MySchema$,
+  schema: $3$MySchema$,
   formula: {
     name: "Sync$1",
     description: "Syncs the data.",
     parameters: [
       // TODO: Add parameters.
-      // $0
     ],
     execute: async function (args, context) {
       let [

@@ -9,13 +9,13 @@ pack.addFormula({
   description: "${2:My description.}",
   parameters: [
     // TODO: Add parameters.
-    // $0
   ],
   resultType: coda.ValueType.Number,
   execute: async function (args, context) {
     let [
       // TODO: Unpack the parameter values.
     ] = args;
+    // TODO: Compute the result.
     return 0;
   },
 });

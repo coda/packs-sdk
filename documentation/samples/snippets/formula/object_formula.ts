@@ -11,7 +11,6 @@ pack.addFormula({
   description: "${2:My description.}",
   parameters: [
     // TODO: Add parameters.
-    // $0
   ],
   resultType: coda.ValueType.Object,
   schema: $3$MySchema$,
@@ -19,6 +18,7 @@ pack.addFormula({
     let [
       // TODO: Unpack the parameter values.
     ] = args;
+    // TODO: Compute the result.
     return {};
   },
 });

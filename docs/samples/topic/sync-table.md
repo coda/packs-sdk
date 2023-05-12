@@ -26,7 +26,6 @@ pack.addSyncTable({
     description: "Syncs the data.",
     parameters: [
       // TODO: Add parameters.
-      $0
     ],
     execute: async function (args, context) {
       let [

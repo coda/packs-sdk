@@ -24,7 +24,6 @@ pack.addColumnFormat({
   formulaName: "MyFormula",
   matchers: [
     // TODO: If formatting a URL, add a regular expression that matches it.
-    $0
   ],
 });
 {% endraw %}

@@ -4,7 +4,6 @@ async function snippet(context: coda.ExecutionContext) {
   // BEGIN
   let payload = {
     // TODO: Construct the JSON that the API expects.
-    // $0
   };
   let response = await context.fetcher.fetch({
     method: "POST",

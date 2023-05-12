@@ -10,7 +10,6 @@ pack.addDynamicSyncTable({
   identityName: "${1}",
   listDynamicUrls: async function (context) {
     // TODO: Fetch the list of datasets the user can connect to.
-    // $0
     let datasets = [];
     // TODO: Replace "name" and "url" below with correct JSON keys.
     return coda.autocompleteSearchObjects(undefined, datasets, "name", "url");

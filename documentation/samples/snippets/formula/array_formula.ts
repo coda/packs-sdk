@@ -9,7 +9,6 @@ pack.addFormula({
   description: "${2:My description.}",
   parameters: [
     // TODO: Add parameters.
-    // $0
   ],
   resultType: coda.ValueType.Array,
   items: coda.makeSchema({
@@ -19,6 +18,7 @@ pack.addFormula({
     let [
       // TODO: Unpack the parameter values.
     ] = args;
-    return ["A", "B", "C"];
+    // TODO: Compute the result.
+    return [];
   },
 });

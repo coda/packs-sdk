@@ -7,7 +7,6 @@ const $1$Thing$Schema = coda.makeObjectSchema({
   properties: {
     $2$name$: { type: coda.ValueType.String },
     // TODO: Add more properties.
-    // $0
   },
   displayProperty: "$2", // Which property above to display by default.
 });

@@ -21,14 +21,14 @@ pack.addFormula({
   description: "My description.",
   parameters: [
     // TODO: Add parameters.
-    $0
   ],
   resultType: coda.ValueType.String,
   execute: async function (args, context) {
     let [
       // TODO: Unpack the parameter values.
     ] = args;
-    return "Hello World!";
+    // TODO: Compute the result.
+    return "";
   },
 });
 {% endraw %}
@@ -43,13 +43,13 @@ pack.addFormula({
   description: "My description.",
   parameters: [
     // TODO: Add parameters.
-    $0
   ],
   resultType: coda.ValueType.Number,
   execute: async function (args, context) {
     let [
       // TODO: Unpack the parameter values.
     ] = args;
+    // TODO: Compute the result.
     return 0;
   },
 });
@@ -65,13 +65,13 @@ pack.addFormula({
   description: "My description.",
   parameters: [
     // TODO: Add parameters.
-    $0
   ],
   resultType: coda.ValueType.Boolean,
   execute: async function (args, context) {
     let [
       // TODO: Unpack the parameter values.
     ] = args;
+    // TODO: Compute the result.
     return true;
   },
 });
@@ -87,7 +87,6 @@ pack.addFormula({
   description: "My description.",
   parameters: [
     // TODO: Add parameters.
-    $0
   ],
   resultType: coda.ValueType.Array,
   items: coda.makeSchema({
@@ -97,7 +96,8 @@ pack.addFormula({
     let [
       // TODO: Unpack the parameter values.
     ] = args;
-    return ["A", "B", "C"];
+    // TODO: Compute the result.
+    return [];
   },
 });
 {% endraw %}
@@ -112,7 +112,6 @@ pack.addFormula({
   description: "My description.",
   parameters: [
     // TODO: Add parameters.
-    $0
   ],
   resultType: coda.ValueType.Object,
   schema: MySchema,
@@ -120,6 +119,7 @@ pack.addFormula({
     let [
       // TODO: Unpack the parameter values.
     ] = args;
+    // TODO: Compute the result.
     return {};
   },
 });

@@ -10,7 +10,6 @@ pack.addFormula({
   description: "${2:My description.}",
   parameters: [
     // TODO: Add parameters.
-    // $0
   ],
   resultType: coda.ValueType.String,
   isAction: true,

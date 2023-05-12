@@ -14,4 +14,3 @@ pack.setUserAuthentication({
   authorizationUrl: "${1:https://example.com/authorize}",
   tokenUrl: "${2:https://example.com/token}",
 });
-

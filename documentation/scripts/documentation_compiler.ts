@@ -131,13 +131,19 @@ function compileSnippetEmbed(codeFile: string) {
 
 function formatCodeSnippet(code: string, removePlaceholders=false) {
   let result = code
-    // Replace custom placeholder syntax ($1$Foo$) with real syntax (${1:Foo}).
+    // Replace custom placeholder syntax with the real syntax.
+    // Ex: '$1$Foo$' => '${1:Foo}'
     .replace(/\$(\d+)\$(.+?)\$/g, '${$1:$2}')
-    // Remove the comment around the final tab stop ($0).
-    .replace(/\/\/\s*\$0/g, '$0');
+    // Remove the comments around tab stops.
+    // Ex: '// $1' => '$1'
+    .replace(/\/\/\s*\$(\d+)/g, '$$$1')
+    // Invert the comments around placeholders.
+    // Ex: '// ${1:Foo}' => '${1:// Foo}'
+    .replace(/\/\/\s*\$\{(\d+)\:(.+?)\}/g, '${$1:// $2}');
   if (removePlaceholders) {
     result = result
-      // Replace placeholder syntax ($1$Foo$) with default value (Foo).
+      // Replace placeholder syntax with default value.
+      // Ex: '${1:Foo}' => 'Foo'
       .replace(/\$\{\d+\:(.*?)\}/g, '$1');
   }
   return result;

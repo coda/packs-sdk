@@ -22,7 +22,6 @@ const ThingSchema = coda.makeObjectSchema({
   properties: {
     name: { type: coda.ValueType.String },
     // TODO: Add more properties.
-    $0
   },
   displayProperty: "$2", // Which property above to display by default.
 });
