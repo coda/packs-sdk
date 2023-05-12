@@ -1,59 +1,67 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as coda from "@codahq/packs-sdk";
 
 const pack = coda.newPack();
 
+const $1Schema = undefined;
+
 // BEGIN
 
 // A schema that defines the data shown in the card.
-const MyCardSchema = coda.makeObjectSchema({
+const $1$Thing$Schema = coda.makeObjectSchema({
   properties: {
-    property1: { type: coda.ValueType.String },
-    property2: { type: coda.ValueType.Number },
-    // Add more properties here.
+    $2$name$: { type: coda.ValueType.String },
+    $3$description$: { type: coda.ValueType.String },
+    $4$picture$: {
+      type: coda.ValueType.String,
+      codaType: coda.ValueHintType.ImageReference,
+    },
+    $5$link$: {
+      type: coda.ValueType.String,
+      codaType: coda.ValueHintType.Url,
+    },
+    // TODO: Add more properties.
   },
-  displayProperty: "<Property name>", // Display value shown in mention chip.
-  titleProperty: "<Property name>", // Title of the card.
+  displayProperty: "$2",
+  titleProperty: "$2",
+  snippetProperty: "$3",
+  imageProperty: "$4",
+  linkProperty: "$5",
   subtitleProperties: [
-    // Properties shown in the subtitle of the card.
-    "<Property name>",
-    { property: "<Property name>", label: "" }, // Show the value only.
-    // Add more subtitle properties here.
+    // TODO: List the properties to show under the title.
   ],
-  snippetProperty: "<Property name>", // Content shown in the card body
-  imageProperty: "<Property name>", // Image shown on the card.
-  linkProperty: "<Property name>", // Link opened when the card is clicked.
 });
 
 // A formula that accepts a URL and returns an object matching the schema above.
 pack.addFormula({
-  name: "<User-visible name of formula>",
-  description: "<Help text for the formula>",
+  name: "$1",
+  description: "${6:My description.}",
   parameters: [
     coda.makeParameter({
       type: coda.ParameterType.String,
       name: "url",
-      description: "<Help text for the parameter>",
+      description: "${6: My parameter description.}",
     }),
-    // Add more parameters here and in the array below.
   ],
   resultType: coda.ValueType.Object,
-  schema: MyCardSchema,
-  execute: async function ([url], context) {
+  schema: $1Schema,
+  execute: async function (args, context) {
+    let [url] = args;
     // TODO: Fetch information about the item represented by the URL.
     return {
       // TODO: Populate with fetched information.
-      link: url,
+      $5: url,
     };
   },
 });
 
 // A column format that defines which URL patterns the formula should match.
 pack.addColumnFormat({
-  name: "<User-visible name>",
-  instructions: "<Help text for the format>",
-  formulaName: "<Name of the formula above>",
+  name: "$1",
+  instructions: "${7:My instructions.}",
+  formulaName: "$1",
   matchers: [
-    new RegExp("<Regular expression that matches the URLs>"),
-    // Add more URL patterns here.
+    new RegExp("${8:https://example.com/.*}"),
+    // TODO: Optionally add more URL patterns.
   ],
 });

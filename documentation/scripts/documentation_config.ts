@@ -162,7 +162,17 @@ export const Snippets: AutocompleteSnippet[] = [
   {
     triggerTokens: ['makeObjectSchema', 'addObjectSchema', 'ObjectSchema'],
     content: 'Creates an object schema definition.',
-    codeFile: './samples/snippets/object_schema.ts',
+    codeFile: './samples/snippets/schema/object_schema.ts',
+  },
+  {
+    triggerTokens: ['makeObjectSchema:sync',],
+    content: 'Creates an object schema definition for a sync table.',
+    codeFile: './samples/snippets/schema/object_schema_sync.ts',
+  },
+  {
+    triggerTokens: ['makeObjectSchema:card',],
+    content: 'Creates an object schema definition for a card.',
+    codeFile: './samples/snippets/schema/object_schema_card.ts',
   },
   {
     triggerTokens: ['fetch:get'],
@@ -707,7 +717,7 @@ export const Examples: Example[] = [
       {
         name: 'Template (Object Schema)',
         content: 'The basic structure of an object schema.',
-        codeFile: './samples/snippets/object_schema.ts',
+        codeFile: './samples/snippets/schema/object_schema.ts',
       },
       {
         name: 'For formula',

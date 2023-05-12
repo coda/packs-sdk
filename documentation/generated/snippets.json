@@ -73,7 +73,7 @@
       "card"
     ],
     "content": "Adds a everything you need for a card (schema, formula, and column format).",
-    "code": "// A schema that defines the data shown in the card.\nconst MyCardSchema = coda.makeObjectSchema({\n  properties: {\n    property1: { type: coda.ValueType.String },\n    property2: { type: coda.ValueType.Number },\n    // Add more properties here.\n  },\n  displayProperty: \"<Property name>\", // Display value shown in mention chip.\n  titleProperty: \"<Property name>\", // Title of the card.\n  subtitleProperties: [\n    // Properties shown in the subtitle of the card.\n    \"<Property name>\",\n    { property: \"<Property name>\", label: \"\" }, // Show the value only.\n    // Add more subtitle properties here.\n  ],\n  snippetProperty: \"<Property name>\", // Content shown in the card body\n  imageProperty: \"<Property name>\", // Image shown on the card.\n  linkProperty: \"<Property name>\", // Link opened when the card is clicked.\n});\n\n// A formula that accepts a URL and returns an object matching the schema above.\npack.addFormula({\n  name: \"<User-visible name of formula>\",\n  description: \"<Help text for the formula>\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"url\",\n      description: \"<Help text for the parameter>\",\n    }),\n    // Add more parameters here and in the array below.\n  ],\n  resultType: coda.ValueType.Object,\n  schema: MyCardSchema,\n  execute: async function ([url], context) {\n    // TODO: Fetch information about the item represented by the URL.\n    return {\n      // TODO: Populate with fetched information.\n      link: url,\n    };\n  },\n});\n\n// A column format that defines which URL patterns the formula should match.\npack.addColumnFormat({\n  name: \"<User-visible name>\",\n  instructions: \"<Help text for the format>\",\n  formulaName: \"<Name of the formula above>\",\n  matchers: [\n    new RegExp(\"<Regular expression that matches the URLs>\"),\n    // Add more URL patterns here.\n  ],\n});"
+    "code": "// A schema that defines the data shown in the card.\nconst ${1:Thing}Schema = coda.makeObjectSchema({\n  properties: {\n    ${2:name}: { type: coda.ValueType.String },\n    ${3:description}: { type: coda.ValueType.String },\n    ${4:picture}: {\n      type: coda.ValueType.String,\n      codaType: coda.ValueHintType.ImageReference,\n    },\n    ${5:link}: {\n      type: coda.ValueType.String,\n      codaType: coda.ValueHintType.Url,\n    },\n    // TODO: Add more properties.\n  },\n  displayProperty: \"$2\",\n  titleProperty: \"$2\",\n  snippetProperty: \"$3\",\n  imageProperty: \"$4\",\n  linkProperty: \"$5\",\n  subtitleProperties: [\n    // TODO: List the properties to show under the title.\n  ],\n});\n\n// A formula that accepts a URL and returns an object matching the schema above.\npack.addFormula({\n  name: \"$1\",\n  description: \"${6:My description.}\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"url\",\n      description: \"${6: My parameter description.}\",\n    }),\n  ],\n  resultType: coda.ValueType.Object,\n  schema: $1Schema,\n  execute: async function (args, context) {\n    let [url] = args;\n    // TODO: Fetch information about the item represented by the URL.\n    return {\n      // TODO: Populate with fetched information.\n      $5: url,\n    };\n  },\n});\n\n// A column format that defines which URL patterns the formula should match.\npack.addColumnFormat({\n  name: \"$1\",\n  instructions: \"${7:My instructions.}\",\n  formulaName: \"$1\",\n  matchers: [\n    new RegExp(\"${8:https://example.com/.*}\"),\n    // TODO: Optionally add more URL patterns.\n  ],\n});"
   },
   {
     "triggerTokens": [
@@ -265,7 +265,21 @@
       "ObjectSchema"
     ],
     "content": "Creates an object schema definition.",
-    "code": "const ${1:Thing}Schema = coda.makeObjectSchema({\n  properties: {\n    ${2:name}: { type: coda.ValueType.String },\n    // TODO: Add more properties.\n  },\n  displayProperty: \"$2\", // Which property above to display by default.\n});"
+    "code": "const ${1:Thing}Schema = coda.makeObjectSchema({\n  properties: {\n    ${2:name}: { type: coda.ValueType.String },\n    // TODO: Add more properties.\n  },\n  displayProperty: \"$2\",\n});"
+  },
+  {
+    "triggerTokens": [
+      "makeObjectSchema:sync"
+    ],
+    "content": "Creates an object schema definition for a sync table.",
+    "code": "const ${1:Thing}Schema = coda.makeObjectSchema({\n  properties: {\n    ${2:name}: { type: coda.ValueType.String },\n    ${3:thingId}: { type: coda.ValueType.String },\n    // TODO: Add more properties.\n  },\n  displayProperty: \"$2\",\n  idProperty: \"$3\",\n  featuredProperties: [\n    // TODO: Add featured properties.\n  ],\n});"
+  },
+  {
+    "triggerTokens": [
+      "makeObjectSchema:card"
+    ],
+    "content": "Creates an object schema definition for a card.",
+    "code": "const ${1:Thing}Schema = coda.makeObjectSchema({\n  properties: {\n    ${2:name}: { type: coda.ValueType.String },\n    ${3:description}: { type: coda.ValueType.String },\n    ${4:picture}: {\n      type: coda.ValueType.String,\n      codaType: coda.ValueHintType.ImageReference,\n    },\n    ${5:link}: {\n      type: coda.ValueType.String,\n      codaType: coda.ValueHintType.Url,\n    },\n    // TODO: Add more properties.\n  },\n  displayProperty: \"$2\",\n  titleProperty: \"$2\",\n  snippetProperty: \"$3\",\n  imageProperty: \"$4\",\n  linkProperty: \"$5\",\n  subtitleProperties: [\n    // TODO: List the properties to show under the title.\n  ],\n});"
   },
   {
     "triggerTokens": [
