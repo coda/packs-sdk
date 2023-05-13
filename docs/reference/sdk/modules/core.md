@@ -102,6 +102,7 @@ import * as coda from "@codahq/packs-sdk";
 - [PropertyIdentifierDetails](../interfaces/core.PropertyIdentifierDetails.md)
 - [QueryParamTokenAuthentication](../interfaces/core.QueryParamTokenAuthentication.md)
 - [RequestHandlerTemplate](../interfaces/core.RequestHandlerTemplate.md)
+- [RequiredParamDef](../interfaces/core.RequiredParamDef.md)
 - [ResponseHandlerTemplate](../interfaces/core.ResponseHandlerTemplate.md)
 - [ScaleSchema](../interfaces/core.ScaleSchema.md)
 - [SetEndpoint](../interfaces/core.SetEndpoint.md)

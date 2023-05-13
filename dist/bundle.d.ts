@@ -236,6 +236,12 @@ export interface OptionalParamDef<T extends UnionType> extends ParamDef<T> {
 	optional: true;
 }
 /**
+ * Marker type for a Required {@link ParamDef}, used internally.
+ */
+export interface RequiredParamDef<T extends UnionType> extends ParamDef<T> {
+	optional?: false;
+}
+/**
  * The type for the complete set of parameter definitions for a formula.
  */
 export declare type ParamDefs = [
@@ -251,7 +257,7 @@ export declare type TypeOfMap<T extends UnionType> = T extends Type ? TypeMap[T]
  * the parameter definition for that formula.
  */
 export declare type ParamValues<ParamDefsT extends ParamDefs> = {
-	[K in keyof ParamDefsT]: ParamDefsT[K] extends OptionalParamDef<infer S> ? TypeOfMap<S> | undefined : ParamDefsT[K] extends ParamDef<infer T> ? TypeOfMap<T> : never;
+	[K in keyof ParamDefsT]: ParamDefsT[K] extends RequiredParamDef<infer S> ? TypeOfMap<S> : ParamDefsT[K] extends ParamDef<infer S> ? TypeOfMap<S> | undefined : never;
 } & any[];
 /**
  * The type of values that are allowable to be used as a {@link ParamDef.suggestedValue} for a parameter.
@@ -2825,7 +2831,7 @@ export declare type MetadataFormulaMetadata = Omit<MetadataFormula, "execute">;
 /**
  * A JavaScript function that can implement a {@link MetadataFormulaDef}.
  */
-export declare type MetadataFunction = (context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
+export declare type MetadataFunction = (context: ExecutionContext, search?: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
 /**
  * The type of values that will be accepted as a metadata formula definition. This can either
  * be the JavaScript function that implements a metadata formula (strongly recommended)

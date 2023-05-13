@@ -253,6 +253,12 @@ export interface ParamDef<T extends UnionType> {
 export interface OptionalParamDef<T extends UnionType> extends ParamDef<T> {
     optional: true;
 }
+/**
+ * Marker type for a Required {@link ParamDef}, used internally.
+ */
+export interface RequiredParamDef<T extends UnionType> extends ParamDef<T> {
+    optional?: false;
+}
 /** @hidden */
 export declare type ParamArgs<T extends UnionType> = Omit<ParamDef<T>, 'description' | 'name' | 'type'>;
 /**
@@ -267,7 +273,7 @@ declare type TypeOfMap<T extends UnionType> = T extends Type ? TypeMap[T] : T ex
  * the parameter definition for that formula.
  */
 export declare type ParamValues<ParamDefsT extends ParamDefs> = {
-    [K in keyof ParamDefsT]: ParamDefsT[K] extends OptionalParamDef<infer S> ? TypeOfMap<S> | undefined : ParamDefsT[K] extends ParamDef<infer T> ? TypeOfMap<T> : never;
+    [K in keyof ParamDefsT]: ParamDefsT[K] extends RequiredParamDef<infer S> ? TypeOfMap<S> : ParamDefsT[K] extends ParamDef<infer S> ? TypeOfMap<S> | undefined : never;
 } & any[];
 /**
  * The type of values that are allowable to be used as a {@link ParamDef.suggestedValue} for a parameter.

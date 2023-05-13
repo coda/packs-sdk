@@ -411,9 +411,8 @@ describe('API test', () => {
         type: ParameterType.String,
         name: 'p',
         description: '',
-        autocomplete: async (context, search) => {
-          context.fetcher!;
-          return [{display: search, value: search}];
+        autocomplete: async (_context, search) => {
+          return [{display: search!, value: search!}];
         },
       });
     });
@@ -442,9 +441,8 @@ describe('API test', () => {
         name: 'p',
         description: '',
         autocomplete: makeMetadataFormula(
-          async (context, search) => {
-            context.fetcher!;
-            return [{display: search, value: search}];
+          async (_context, search) => {
+            return [{display: search!, value: search!}];
           },
           {connectionRequirement: ConnectionRequirement.None},
         ),

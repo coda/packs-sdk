@@ -234,7 +234,6 @@ function makeParameter(paramDefinition) {
     return Object.freeze({ ...rest, autocomplete, type: actualType });
 }
 exports.makeParameter = makeParameter;
-// Other parameter helpers below here are obsolete given the above generate parameter makers.
 /** @deprecated */
 function makeStringParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_4.Type.string });
@@ -546,7 +545,7 @@ function makeMetadataFormula(execute, options) {
         execute([search, serializedFormulaContext], context) {
             let formulaContext = {};
             try {
-                formulaContext = JSON.parse(serializedFormulaContext);
+                formulaContext = JSON.parse(serializedFormulaContext || '');
             }
             catch (err) {
                 //  Ignore.
@@ -688,7 +687,7 @@ exports.autocompleteSearchObjects = autocompleteSearchObjects;
  * any needed to wrap a value with this formula.
  */
 function makeSimpleAutocompleteMetadataFormula(options) {
-    return makeMetadataFormula((context, [search]) => simpleAutocomplete(search, options), {
+    return makeMetadataFormula((_context, search) => simpleAutocomplete(search, options), {
         // A connection won't be used here, but if the parent formula uses a connection
         // the execution code is going to try to pass it here. We should fix that.
         connectionRequirement: api_types_2.ConnectionRequirement.Optional,

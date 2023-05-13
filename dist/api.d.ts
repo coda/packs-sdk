@@ -11,6 +11,7 @@ import type { NumberSchema } from './schema';
 import type { ObjectSchema } from './schema';
 import type { ObjectSchemaDefinition } from './schema';
 import type { ObjectSchemaDefinitionType } from './schema';
+import type { OptionalParamDef } from './api_types';
 import type { PackFormulaResult } from './api_types';
 import type { ParamArgs } from './api_types';
 import type { ParamDef } from './api_types';
@@ -21,6 +22,7 @@ import type { ParameterTypeMap } from './api_types';
 import type { PropertyAutocompleteExecutionContext } from './api_types';
 import type { PropertyAutocompleteMetadataFunction } from './api_types';
 import type { RequestHandlerTemplate } from './handler_templates';
+import type { RequiredParamDef } from './api_types';
 import type { ResponseHandlerTemplate } from './handler_templates';
 import type { Schema } from './schema';
 import type { SchemaType } from './schema';
@@ -352,33 +354,89 @@ export declare type ParamDefFromOptionsUnion<T extends ParameterType, O extends 
  */
 export declare function makeParameter<T extends ParameterType, O extends ParameterOptions<T>>(paramDefinition: O): ParamDefFromOptionsUnion<T, O>;
 /** @deprecated */
-export declare function makeStringParameter(name: string, description: string, args?: ParamArgs<Type.string>): ParamDef<Type.string>;
+export declare function makeStringParameter(name: string, description: string, args: ParamArgs<Type.string> & {
+    optional: true;
+}): OptionalParamDef<Type.string>;
 /** @deprecated */
-export declare function makeStringArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.string>>): ParamDef<ArrayType<Type.string>>;
+export declare function makeStringParameter(name: string, description: string, args?: ParamArgs<Type.string>): RequiredParamDef<Type.string>;
 /** @deprecated */
-export declare function makeNumericParameter(name: string, description: string, args?: ParamArgs<Type.number>): ParamDef<Type.number>;
+export declare function makeStringArrayParameter(name: string, description: string, args: ParamArgs<ArrayType<Type.string>> & {
+    optional: true;
+}): OptionalParamDef<ArrayType<Type.string>>;
 /** @deprecated */
-export declare function makeNumericArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.number>>): ParamDef<ArrayType<Type.number>>;
+export declare function makeStringArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.string>>): RequiredParamDef<ArrayType<Type.string>>;
 /** @deprecated */
-export declare function makeBooleanParameter(name: string, description: string, args?: ParamArgs<Type.boolean>): ParamDef<Type.boolean>;
+export declare function makeNumericParameter(name: string, description: string, args: ParamArgs<Type.number> & {
+    optional: true;
+}): OptionalParamDef<Type.number>;
 /** @deprecated */
-export declare function makeBooleanArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.boolean>>): ParamDef<ArrayType<Type.boolean>>;
+export declare function makeNumericParameter(name: string, description: string, args?: ParamArgs<Type.number>): RequiredParamDef<Type.number>;
 /** @deprecated */
-export declare function makeDateParameter(name: string, description: string, args?: ParamArgs<Type.date>): ParamDef<Type.date>;
+export declare function makeNumericArrayParameter(name: string, description: string, args: ParamArgs<ArrayType<Type.number>> & {
+    optional: true;
+}): OptionalParamDef<ArrayType<Type.number>>;
 /** @deprecated */
-export declare function makeDateArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.date>>): ParamDef<ArrayType<Type.date>>;
+export declare function makeNumericArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.number>>): RequiredParamDef<ArrayType<Type.number>>;
 /** @deprecated */
-export declare function makeHtmlParameter(name: string, description: string, args?: ParamArgs<Type.html>): ParamDef<Type.html>;
+export declare function makeBooleanParameter(name: string, description: string, args: ParamArgs<Type.boolean> & {
+    optional: true;
+}): OptionalParamDef<Type.boolean>;
 /** @deprecated */
-export declare function makeHtmlArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.html>>): ParamDef<ArrayType<Type.html>>;
+export declare function makeBooleanParameter(name: string, description: string, args?: ParamArgs<Type.boolean>): RequiredParamDef<Type.boolean>;
 /** @deprecated */
-export declare function makeImageParameter(name: string, description: string, args?: ParamArgs<Type.image>): ParamDef<Type.image>;
+export declare function makeBooleanArrayParameter(name: string, description: string, args: ParamArgs<ArrayType<Type.boolean>> & {
+    optional: true;
+}): OptionalParamDef<ArrayType<Type.boolean>>;
 /** @deprecated */
-export declare function makeImageArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.image>>): ParamDef<ArrayType<Type.image>>;
+export declare function makeBooleanArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.boolean>>): RequiredParamDef<ArrayType<Type.boolean>>;
 /** @deprecated */
-export declare function makeFileParameter(name: string, description: string, args?: ParamArgs<Type.file>): ParamDef<Type.file>;
+export declare function makeDateParameter(name: string, description: string, args: ParamArgs<Type.date> & {
+    optional: true;
+}): OptionalParamDef<Type.date>;
 /** @deprecated */
-export declare function makeFileArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.file>>): ParamDef<ArrayType<Type.file>>;
+export declare function makeDateParameter(name: string, description: string, args?: ParamArgs<Type.date>): RequiredParamDef<Type.date>;
+/** @deprecated */
+export declare function makeDateArrayParameter(name: string, description: string, args: ParamArgs<ArrayType<Type.date>> & {
+    optional: true;
+}): OptionalParamDef<ArrayType<Type.date>>;
+/** @deprecated */
+export declare function makeDateArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.date>>): RequiredParamDef<ArrayType<Type.date>>;
+/** @deprecated */
+export declare function makeHtmlParameter(name: string, description: string, args: ParamArgs<Type.html> & {
+    optional: true;
+}): OptionalParamDef<Type.html>;
+/** @deprecated */
+export declare function makeHtmlParameter(name: string, description: string, args?: ParamArgs<Type.html>): RequiredParamDef<Type.html>;
+/** @deprecated */
+export declare function makeHtmlArrayParameter(name: string, description: string, args: ParamArgs<ArrayType<Type.html>> & {
+    optional: true;
+}): OptionalParamDef<ArrayType<Type.html>>;
+/** @deprecated */
+export declare function makeHtmlArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.html>>): RequiredParamDef<ArrayType<Type.html>>;
+/** @deprecated */
+export declare function makeImageParameter(name: string, description: string, args: ParamArgs<Type.image> & {
+    optional: true;
+}): OptionalParamDef<Type.image>;
+/** @deprecated */
+export declare function makeImageParameter(name: string, description: string, args?: ParamArgs<Type.image>): RequiredParamDef<Type.image>;
+/** @deprecated */
+export declare function makeImageArrayParameter(name: string, description: string, args: ParamArgs<ArrayType<Type.image>> & {
+    optional: true;
+}): OptionalParamDef<ArrayType<Type.image>>;
+/** @deprecated */
+export declare function makeImageArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.image>>): RequiredParamDef<ArrayType<Type.image>>;
+/** @deprecated */
+export declare function makeFileParameter(name: string, description: string, args: ParamArgs<Type.file> & {
+    optional: true;
+}): OptionalParamDef<Type.file>;
+/** @deprecated */
+export declare function makeFileParameter(name: string, description: string, args?: ParamArgs<Type.file>): RequiredParamDef<Type.file>;
+/** @deprecated */
+export declare function makeFileArrayParameter(name: string, description: string, args: ParamArgs<ArrayType<Type.file>> & {
+    optional: true;
+}): OptionalParamDef<ArrayType<Type.file>>;
+/** @deprecated */
+export declare function makeFileArrayParameter(name: string, description: string, args?: ParamArgs<ArrayType<Type.file>>): RequiredParamDef<ArrayType<Type.file>>;
 /** @deprecated */
 export declare function makeUserVisibleError(msg: string): UserVisibleError;
 /** @deprecated */
@@ -881,7 +939,7 @@ export declare type GenericMetadataFormulaMetadata = Omit<GenericMetadataFormula
 /**
  * A JavaScript function that can implement a {@link MetadataFormulaDef}.
  */
-export declare type MetadataFunction = (context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
+export declare type MetadataFunction = (context: ExecutionContext, search?: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
 /**
  * The type of values that will be accepted as a metadata formula definition. This can either
  * be the JavaScript function that implements a metadata formula (strongly recommended)
