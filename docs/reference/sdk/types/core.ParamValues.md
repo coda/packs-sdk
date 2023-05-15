@@ -8,7 +8,7 @@ search:
 
 [core](../modules/core.md).ParamValues
 
-Ƭ **ParamValues**<`ParamDefsT`\>: { [K in keyof ParamDefsT]: ParamDefsT[K] extends OptionalParamDef<infer S\> ? TypeOfMap<S\> \| undefined : ParamDefsT[K] extends ParamDef<infer T\> ? TypeOfMap<T\> : never } & `any`[]
+Ƭ **ParamValues**<`ParamDefsT`\>: { [K in keyof ParamDefsT]: ParamDefsT[K] extends RequiredParamDef<infer S\> ? TypeOfMap<S\> : ParamDefsT[K] extends ParamDef<infer S\> ? TypeOfMap<S\> \| undefined : never } & `any`[]
 
 The type for the set of argument values that are passed to formula's `execute` function, based on
 the parameter definition for that formula.

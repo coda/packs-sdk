@@ -340,6 +340,13 @@ export interface OptionalParamDef<T extends UnionType> extends ParamDef<T> {
   optional: true;
 }
 
+/**
+ * Marker type for a Required {@link ParamDef}, used internally.
+ */
+export interface RequiredParamDef<T extends UnionType> extends ParamDef<T> {
+  optional?: false;
+}
+
 /** @hidden */
 export type ParamArgs<T extends UnionType> = Omit<ParamDef<T>, 'description' | 'name' | 'type'>;
 
@@ -366,10 +373,10 @@ type TypeOfMap<T extends UnionType> = T extends Type
  * the parameter definition for that formula.
  */
 export type ParamValues<ParamDefsT extends ParamDefs> = {
-  [K in keyof ParamDefsT]: ParamDefsT[K] extends OptionalParamDef<infer S>
+  [K in keyof ParamDefsT]: ParamDefsT[K] extends RequiredParamDef<infer S>
+    ? TypeOfMap<S>
+    : ParamDefsT[K] extends ParamDef<infer S>
     ? TypeOfMap<S> | undefined
-    : ParamDefsT[K] extends ParamDef<infer T>
-    ? TypeOfMap<T>
     : never;
 } & any[]; // NOTE(oleg): we need this to avoid "must have a '[Symbol.iterator]()' method that returns an iterator."
 
