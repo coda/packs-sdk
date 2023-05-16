@@ -5,22 +5,23 @@ const api_types_1 = require("./api_types");
 const api_types_2 = require("./api_types");
 const api_types_3 = require("./api_types");
 const api_types_4 = require("./api_types");
-const schema_1 = require("./schema");
 const api_types_5 = require("./api_types");
+const schema_1 = require("./schema");
 const api_types_6 = require("./api_types");
+const api_types_7 = require("./api_types");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_1 = require("./helpers/ensure");
-const api_types_7 = require("./api_types");
+const api_types_8 = require("./api_types");
 const handler_templates_1 = require("./handler_templates");
 const handler_templates_2 = require("./handler_templates");
-const api_types_8 = require("./api_types");
 const api_types_9 = require("./api_types");
+const api_types_10 = require("./api_types");
 const object_utils_2 = require("./helpers/object_utils");
 const schema_2 = require("./schema");
 const schema_3 = require("./schema");
-const api_types_10 = require("./api_types");
-const migration_1 = require("./helpers/migration");
 const api_types_11 = require("./api_types");
+const migration_1 = require("./helpers/migration");
+const api_types_12 = require("./api_types");
 /**
  * An error whose message will be shown to the end user in the UI when it occurs.
  * If an error is encountered in a formula and you want to describe the error
@@ -222,7 +223,7 @@ exports.wrapGetSchema = wrapGetSchema;
  */
 function makeParameter(paramDefinition) {
     const { type, autocomplete: autocompleteDefOrItems, ...rest } = paramDefinition;
-    const actualType = api_types_3.ParameterTypeInputMap[type];
+    const actualType = api_types_4.ParameterTypeInputMap[type];
     let autocomplete;
     if (Array.isArray(autocompleteDefOrItems)) {
         const autocompleteDef = makeSimpleAutocompleteMetadataFormula(autocompleteDefOrItems);
@@ -236,72 +237,72 @@ function makeParameter(paramDefinition) {
 exports.makeParameter = makeParameter;
 /** @deprecated */
 function makeStringParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_4.Type.string });
+    return Object.freeze({ ...args, name, description, type: api_types_5.Type.string });
 }
 exports.makeStringParameter = makeStringParameter;
 /** @deprecated */
 function makeStringArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_11.stringArray });
+    return Object.freeze({ ...args, name, description, type: api_types_12.stringArray });
 }
 exports.makeStringArrayParameter = makeStringArrayParameter;
 /** @deprecated */
 function makeNumericParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_4.Type.number });
+    return Object.freeze({ ...args, name, description, type: api_types_5.Type.number });
 }
 exports.makeNumericParameter = makeNumericParameter;
 /** @deprecated */
 function makeNumericArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_10.numberArray });
+    return Object.freeze({ ...args, name, description, type: api_types_11.numberArray });
 }
 exports.makeNumericArrayParameter = makeNumericArrayParameter;
 /** @deprecated */
 function makeBooleanParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_4.Type.boolean });
+    return Object.freeze({ ...args, name, description, type: api_types_5.Type.boolean });
 }
 exports.makeBooleanParameter = makeBooleanParameter;
 /** @deprecated */
 function makeBooleanArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_5.booleanArray });
+    return Object.freeze({ ...args, name, description, type: api_types_6.booleanArray });
 }
 exports.makeBooleanArrayParameter = makeBooleanArrayParameter;
 /** @deprecated */
 function makeDateParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_4.Type.date });
+    return Object.freeze({ ...args, name, description, type: api_types_5.Type.date });
 }
 exports.makeDateParameter = makeDateParameter;
 /** @deprecated */
 function makeDateArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_6.dateArray });
+    return Object.freeze({ ...args, name, description, type: api_types_7.dateArray });
 }
 exports.makeDateArrayParameter = makeDateArrayParameter;
 /** @deprecated */
 function makeHtmlParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_4.Type.html });
+    return Object.freeze({ ...args, name, description, type: api_types_5.Type.html });
 }
 exports.makeHtmlParameter = makeHtmlParameter;
 /** @deprecated */
 function makeHtmlArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_8.htmlArray });
+    return Object.freeze({ ...args, name, description, type: api_types_9.htmlArray });
 }
 exports.makeHtmlArrayParameter = makeHtmlArrayParameter;
 /** @deprecated */
 function makeImageParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_4.Type.image });
+    return Object.freeze({ ...args, name, description, type: api_types_5.Type.image });
 }
 exports.makeImageParameter = makeImageParameter;
 /** @deprecated */
 function makeImageArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_9.imageArray });
+    return Object.freeze({ ...args, name, description, type: api_types_10.imageArray });
 }
 exports.makeImageArrayParameter = makeImageArrayParameter;
 /** @deprecated */
 function makeFileParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_4.Type.file });
+    return Object.freeze({ ...args, name, description, type: api_types_5.Type.file });
 }
 exports.makeFileParameter = makeFileParameter;
 /** @deprecated */
 function makeFileArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_7.fileArray });
+    return Object.freeze({ ...args, name, description, type: api_types_8.fileArray });
 }
 exports.makeFileArrayParameter = makeFileArrayParameter;
 /** @deprecated */
@@ -317,11 +318,11 @@ function check(condition, msg) {
 }
 exports.check = check;
 function isObjectPackFormula(fn) {
-    return fn.resultType === api_types_4.Type.object;
+    return fn.resultType === api_types_5.Type.object;
 }
 exports.isObjectPackFormula = isObjectPackFormula;
 function isStringPackFormula(fn) {
-    return fn.resultType === api_types_4.Type.string;
+    return fn.resultType === api_types_5.Type.string;
 }
 exports.isStringPackFormula = isStringPackFormula;
 function isSyncPackFormula(fn) {
@@ -346,7 +347,7 @@ var UpdateOutcome;
  * @param definition The definition of a formula that returns a number.
  */
 function makeNumericFormula(definition) {
-    return Object.assign({}, definition, { resultType: api_types_4.Type.number });
+    return Object.assign({}, definition, { resultType: api_types_5.Type.number });
 }
 exports.makeNumericFormula = makeNumericFormula;
 /**
@@ -360,7 +361,7 @@ exports.makeNumericFormula = makeNumericFormula;
 function makeStringFormula(definition) {
     const { response } = definition;
     return Object.assign({}, definition, {
-        resultType: api_types_4.Type.string,
+        resultType: api_types_5.Type.string,
         ...(response && { schema: response.schema }),
     });
 }
@@ -433,7 +434,7 @@ function makeFormula(fullDefinition) {
             const { onError: _, resultType: unused, codaType, formulaSchema, ...rest } = def;
             const stringFormula = {
                 ...rest,
-                resultType: api_types_4.Type.string,
+                resultType: api_types_5.Type.string,
                 schema: formulaSchema || (codaType ? { type: schema_1.ValueType.String, codaType } : undefined),
             };
             formula = stringFormula;
@@ -448,7 +449,7 @@ function makeFormula(fullDefinition) {
             const { onError: _, resultType: unused, codaType, formulaSchema, ...rest } = def;
             const numericFormula = {
                 ...rest,
-                resultType: api_types_4.Type.number,
+                resultType: api_types_5.Type.number,
                 schema: formulaSchema || (codaType ? { type: schema_1.ValueType.Number, codaType } : undefined),
             };
             formula = numericFormula;
@@ -458,7 +459,7 @@ function makeFormula(fullDefinition) {
             const { onError: _, resultType: unused, ...rest } = fullDefinition;
             const booleanFormula = {
                 ...rest,
-                resultType: api_types_4.Type.boolean,
+                resultType: api_types_5.Type.boolean,
             };
             formula = booleanFormula;
             break;
@@ -468,7 +469,7 @@ function makeFormula(fullDefinition) {
             const arrayFormula = {
                 ...rest,
                 // TypeOf<SchemaType<ArraySchema<SchemaT>>> is always Type.object but TS can't infer this.
-                resultType: api_types_4.Type.object,
+                resultType: api_types_5.Type.object,
                 schema: (0, schema_3.normalizeSchema)({ type: schema_1.ValueType.Array, items }),
             };
             formula = arrayFormula;
@@ -479,7 +480,7 @@ function makeFormula(fullDefinition) {
             // need a force cast since execute has a different return value due to key normalization.
             const objectFormula = {
                 ...rest,
-                resultType: api_types_4.Type.object,
+                resultType: api_types_5.Type.object,
                 schema: (0, schema_3.normalizeSchema)(schema),
             };
             formula = objectFormula;
@@ -550,11 +551,22 @@ function makeMetadataFormula(execute, options) {
             catch (err) {
                 //  Ignore.
             }
+            // TODO(oleg): once MetadataFunction types are fixed, remove non-null assertion.
             return execute(context, search, formulaContext);
         },
         parameters: [
-            makeStringParameter('search', 'Metadata to search for', { optional: true }),
-            makeStringParameter('formulaContext', 'Serialized JSON for metadata', { optional: true }),
+            makeParameter({
+                type: api_types_3.ParameterType.String,
+                name: 'search',
+                description: 'Metadata to search for.',
+                optional: true,
+            }),
+            makeParameter({
+                type: api_types_3.ParameterType.String,
+                name: 'formulaContext',
+                description: 'Serialized JSON for metadata.',
+                optional: true,
+            }),
         ],
         examples: [],
         connectionRequirement: (options === null || options === void 0 ? void 0 : options.connectionRequirement) || api_types_2.ConnectionRequirement.Optional,
@@ -666,19 +678,21 @@ exports.simpleAutocomplete = simpleAutocomplete;
  * });
  * ```
  */
-function autocompleteSearchObjects(search, objs, displayKey, valueKey) {
+async function autocompleteSearchObjects(search, objs, displayKey, valueKey) {
     if (typeof search !== 'string') {
         throw new TypeError(`Expecting a string for "search" parameter but received ${search}`);
     }
     const normalizedSearch = search.toLowerCase();
-    const filtered = objs.filter(o => o[displayKey].toLowerCase().includes(normalizedSearch));
-    const metadataResults = filtered.map(o => {
-        return {
-            value: o[valueKey],
-            display: o[displayKey],
-        };
-    });
-    return Promise.resolve(metadataResults);
+    const metadataResults = [];
+    for (const obj of objs) {
+        const display = obj[displayKey];
+        if (!display.toLowerCase().includes(normalizedSearch)) {
+            continue;
+        }
+        const value = obj[valueKey];
+        metadataResults.push({ display, value });
+    }
+    return metadataResults;
 }
 exports.autocompleteSearchObjects = autocompleteSearchObjects;
 /**
@@ -735,7 +749,7 @@ function makeObjectFormula({ response, ...definition }) {
         };
     }
     return Object.assign({}, definition, {
-        resultType: api_types_4.Type.object,
+        resultType: api_types_5.Type.object,
         execute,
         schema,
     });
@@ -836,7 +850,7 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
             isSyncFormula: true,
             supportsUpdates: Boolean(executeUpdate),
             connectionRequirement: definition.connectionRequirement || connectionRequirement,
-            resultType: api_types_4.Type.object,
+            resultType: api_types_5.Type.object,
         },
         getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
         entityName,
@@ -955,7 +969,7 @@ function makeTranslateObjectFormula({ response, ...definition }) {
     }
     return Object.assign({}, rest, {
         execute,
-        resultType: api_types_4.Type.object,
+        resultType: api_types_5.Type.object,
         schema: response.schema,
     });
 }
@@ -991,7 +1005,7 @@ function makeEmptyFormula(definition) {
     }
     return Object.assign({}, rest, {
         execute,
-        resultType: api_types_4.Type.string,
+        resultType: api_types_5.Type.string,
     });
 }
 exports.makeEmptyFormula = makeEmptyFormula;

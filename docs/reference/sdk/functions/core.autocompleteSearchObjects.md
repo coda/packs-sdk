@@ -53,8 +53,8 @@ coda.makeParameter({
 | :------ | :------ |
 | `search` | `string` |
 | `objs` | `T`[] |
-| `displayKey` | keyof `T` |
-| `valueKey` | keyof `T` |
+| `displayKey` | { [K in string \| number \| symbol]: T[K] extends string ? K : never }[keyof `T`] |
+| `valueKey` | { [K in string \| number \| symbol]: T[K] extends string \| number ? K : never }[keyof `T`] |
 
 #### Returns
 
