@@ -109,7 +109,7 @@
       "CustomHeaderTokenAuthentication"
     ],
     "content": "Sets per-user authentication for the Pack, using a token in a custom header.",
-    "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.CustomHeaderToken,\n  headerName: \"${1:MyToken}\",\n  instructionsUrl: \"${1:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
+    "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.CustomHeaderToken,\n  headerName: \"${1:MyToken}\",\n  instructionsUrl: \"${2:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
   },
   {
     "triggerTokens": [
@@ -145,7 +145,7 @@
       "QueryParamTokenAuthentication"
     ],
     "content": "Sets per-user authentication for the Pack, using a token passed in a URL query parameter.",
-    "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.QueryParamToken,\n  paramName: \"${1:myToken}\",\n  instructionsUrl: \"${1:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
+    "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.QueryParamToken,\n  paramName: \"${1:myToken}\",\n  instructionsUrl: \"${2:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
   },
   {
     "triggerTokens": [
