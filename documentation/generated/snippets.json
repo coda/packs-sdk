@@ -82,15 +82,79 @@
       "UserAuthentication"
     ],
     "content": "Sets per-user authentication for the Pack.",
-    "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.HeaderBearerToken,\n});"
+    "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.$0,\n});"
+  },
+  {
+    "triggerTokens": [
+      "setUserAuthentication:Bearer",
+      "HeaderBearerToken",
+      "HeaderBearerTokenAuthentication"
+    ],
+    "content": "Sets per-user authentication for the Pack using a bearer token in the Authentication header.",
+    "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.HeaderBearerToken,\n  instructionsUrl: \"${1:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
+  },
+  {
+    "triggerTokens": [
+      "setUserAuthentication:CodaApi",
+      "CodaApiHeaderBearerToken",
+      "CodaApiBearerTokenAuthentication"
+    ],
+    "content": "Sets per-user authentication for the Pack, using a Coda API token.",
+    "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.CodaApiHeaderBearerToken,\n});"
+  },
+  {
+    "triggerTokens": [
+      "setUserAuthentication:Header",
+      "CustomHeaderToken",
+      "CustomHeaderTokenAuthentication"
+    ],
+    "content": "Sets per-user authentication for the Pack, using a token in a custom header.",
+    "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.CustomHeaderToken,\n  headerName: \"${1:MyToken}\",\n  instructionsUrl: \"${1:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
+  },
+  {
+    "triggerTokens": [
+      "setUserAuthentication:Custom",
+      "Custom",
+      "CustomAuthentication"
+    ],
+    "content": "Sets per-user authentication for the Pack, using a set of custom tokens.",
+    "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.Custom,\n  params: [\n    {\n      name: \"${1:myToken}\",\n      description: \"${2:My description}\",\n    },\n    // TODO: Add more parameters, if needed.\n  ],\n  instructionsUrl: \"${3:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
+  },
+  {
+    "triggerTokens": [
+      "setUserAuthentication:QueryParams",
+      "MultiQueryParamToken",
+      "MultiQueryParamTokenAuthentication"
+    ],
+    "content": "Sets per-user authentication for the Pack, using multiple tokens passed in URL query parameters.",
+    "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.MultiQueryParamToken,\n  params: [\n    { name: \"${1:myToken}\", description: \"${2:My token description}\" },\n    { name: \"${3:myKey}\", description: \"${4:My key description}\" },\n    // TODO: Add more parameters, if needed.\n  ],\n  instructionsUrl: \"${5:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
   },
   {
     "triggerTokens": [
       "setUserAuthentication:OAuth2",
+      "OAuth2",
       "OAuth2Authentication"
     ],
-    "content": "Sets per-user OAuth2 authentication for the Pack.",
-    "code": "// When registering your app in the API's developer console set the redirect URL\n// to: https://coda.io/packsAuth/oauth2/{PACK ID}\n// After building your Pack, remember to visit the Settings tab to set your\n// client ID and secret.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.OAuth2,\n  // The following two URLs are will be found in the API's documentation.\n  authorizationUrl: \"${1:https://example.com/authorize}\",\n  tokenUrl: \"${2:https://example.com/token}\",\n});"
+    "content": "Sets per-user, OAuth2 authentication for the Pack.",
+    "code": "// When registering your app in the API's developer console set the redirect URL\n// to: https://coda.io/packsAuth/oauth2/{PACK ID}\n// After building your Pack, remember to visit the Settings tab to set your\n// client ID and secret.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.OAuth2,\n  // The following two URLs are will be found in the API's documentation.\n  authorizationUrl: \"${1:https://example.com/authorize}\",\n  tokenUrl: \"${2:https://example.com/token}\",\n  scopes: [\n    // TODO: List the API scopes to request, if any.\n  ],\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
+  },
+  {
+    "triggerTokens": [
+      "setUserAuthentication:QueryParam",
+      "QueryParamToken",
+      "QueryParamTokenAuthentication"
+    ],
+    "content": "Sets per-user authentication for the Pack, using a token passed in a URL query parameter.",
+    "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.QueryParamToken,\n  paramName: \"${1:myToken}\",\n  instructionsUrl: \"${1:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
+  },
+  {
+    "triggerTokens": [
+      "setUserAuthentication:WebBasic",
+      "WebBasic",
+      "WebBasicAuthentication"
+    ],
+    "content": "Sets per-user authentication for the Pack, using a username and password passed in the Authorization header.",
+    "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.WebBasic,\n  instructionsUrl: \"${1:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
   },
   {
     "triggerTokens": [
@@ -99,7 +163,49 @@
       "SystemAuthentication"
     ],
     "content": "Sets system-wide authentication for the Pack.",
+    "code": "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.$0,\n});"
+  },
+  {
+    "triggerTokens": [
+      "setSystemAuthentication:Bearer"
+    ],
+    "content": "Sets system-wide authentication for the Pack using a bearer token in the Authentication header.",
     "code": "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.HeaderBearerToken,\n});"
+  },
+  {
+    "triggerTokens": [
+      "setSystemAuthentication:Header"
+    ],
+    "content": "Sets system-wide authentication for the Pack, using a token in a custom header.",
+    "code": "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.CustomHeaderToken,\n  headerName: \"${1:MyToken}\",\n});"
+  },
+  {
+    "triggerTokens": [
+      "setSystemAuthentication:Custom"
+    ],
+    "content": "Sets system-wide authentication for the Pack, using a set of custom tokens.",
+    "code": "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.Custom,\n  params: [\n    {\n      name: \"${1:myToken}\",\n      description: \"${2:My description}\",\n    },\n    // TODO: Add more parameters, if needed.\n  ],\n});"
+  },
+  {
+    "triggerTokens": [
+      "setSystemAuthentication:QueryParams"
+    ],
+    "content": "Sets system-wide authentication for the Pack, using multiple tokens passed in URL query parameters.",
+    "code": "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.MultiQueryParamToken,\n  params: [\n    { name: \"${1:myToken}\", description: \"${2:My token description}\" },\n    { name: \"${3:myKey}\", description: \"${4:My key description}\" },\n    // TODO: Add more parameters, if needed.\n  ],\n});"
+  },
+  {
+    "triggerTokens": [
+      "setSystemAuthentication:QueryParam"
+    ],
+    "content": "Sets system-wide authentication for the Pack, using a token passed in a URL query parameter.",
+    "code": "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.QueryParamToken,\n  paramName: \"${1:myToken}\",\n});"
+  },
+  {
+    "triggerTokens": [
+      "setSystemAuthentication:WebBasic"
+    ],
+    "content": "Sets system-wide authentication for the Pack, using a username and password passed in the Authorization header.",
+    "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.WebBasic,\n  instructionsUrl: \"${1:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
   },
   {
     "triggerTokens": [

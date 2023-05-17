@@ -50,14 +50,79 @@ export const Snippets: AutocompleteSnippet[] = [
     codeFile: './samples/snippets/authentication/user.ts',
   },
   {
-    triggerTokens: ['setUserAuthentication:OAuth2', 'OAuth2Authentication'],
-    content: 'Sets per-user OAuth2 authentication for the Pack.',
-    codeFile: './samples/snippets/authentication/oauth2.ts',
+    triggerTokens: ['setUserAuthentication:Bearer', 'HeaderBearerToken', 'HeaderBearerTokenAuthentication'],
+    content: 'Sets per-user authentication for the Pack using a bearer token in the Authentication header.',
+    codeFile: './samples/snippets/authentication/user_bearer.ts',
+  },
+  {
+    triggerTokens: ['setUserAuthentication:CodaApi', 'CodaApiHeaderBearerToken', 'CodaApiBearerTokenAuthentication'],
+    content: 'Sets per-user authentication for the Pack, using a Coda API token.',
+    codeFile: './samples/snippets/authentication/user_coda.ts',
+  },
+  {
+    triggerTokens: ['setUserAuthentication:Header', 'CustomHeaderToken', 'CustomHeaderTokenAuthentication'],
+    content: 'Sets per-user authentication for the Pack, using a token in a custom header.',
+    codeFile: './samples/snippets/authentication/user_custom_header.ts',
+  },
+  {
+    triggerTokens: ['setUserAuthentication:Custom', 'Custom', 'CustomAuthentication'],
+    content: 'Sets per-user authentication for the Pack, using a set of custom tokens.',
+    codeFile: './samples/snippets/authentication/user_custom.ts',
+  },
+  {
+    triggerTokens: ['setUserAuthentication:QueryParams', 'MultiQueryParamToken', 'MultiQueryParamTokenAuthentication'],
+    content: 'Sets per-user authentication for the Pack, using multiple tokens passed in URL query parameters.',
+    codeFile: './samples/snippets/authentication/user_multi_query_param.ts',
+  },
+  {
+    triggerTokens: ['setUserAuthentication:OAuth2', 'OAuth2', 'OAuth2Authentication'],
+    content: 'Sets per-user, OAuth2 authentication for the Pack.',
+    codeFile: './samples/snippets/authentication/user_oauth2.ts',
+  },
+  {
+    triggerTokens: ['setUserAuthentication:QueryParam', 'QueryParamToken', 'QueryParamTokenAuthentication'],
+    content: 'Sets per-user authentication for the Pack, using a token passed in a URL query parameter.',
+    codeFile: './samples/snippets/authentication/user_query_param.ts',
+  },
+  {
+    triggerTokens: ['setUserAuthentication:WebBasic', 'WebBasic', 'WebBasicAuthentication'],
+    content: 'Sets per-user authentication for the Pack, using a username and password passed in the Authorization header.',
+    codeFile: './samples/snippets/authentication/user_web_basic.ts',
   },
   {
     triggerTokens: ['setSystemAuthentication', 'addSystemAuthentication', 'SystemAuthentication'],
     content: 'Sets system-wide authentication for the Pack.',
     codeFile: './samples/snippets/authentication/system.ts',
+  },
+  {
+    triggerTokens: ['setSystemAuthentication:Bearer'],
+    content: 'Sets system-wide authentication for the Pack using a bearer token in the Authentication header.',
+    codeFile: './samples/snippets/authentication/system_bearer.ts',
+  },
+  {
+    triggerTokens: ['setSystemAuthentication:Header'],
+    content: 'Sets system-wide authentication for the Pack, using a token in a custom header.',
+    codeFile: './samples/snippets/authentication/system_custom_header.ts',
+  },
+  {
+    triggerTokens: ['setSystemAuthentication:Custom'],
+    content: 'Sets system-wide authentication for the Pack, using a set of custom tokens.',
+    codeFile: './samples/snippets/authentication/system_custom.ts',
+  },
+  {
+    triggerTokens: ['setSystemAuthentication:QueryParams'],
+    content: 'Sets system-wide authentication for the Pack, using multiple tokens passed in URL query parameters.',
+    codeFile: './samples/snippets/authentication/system_multi_query_param.ts',
+  },
+  {
+    triggerTokens: ['setSystemAuthentication:QueryParam'],
+    content: 'Sets system-wide authentication for the Pack, using a token passed in a URL query parameter.',
+    codeFile: './samples/snippets/authentication/system_query_param.ts',
+  },
+  {
+    triggerTokens: ['setSystemAuthentication:WebBasic'],
+    content: 'Sets system-wide authentication for the Pack, using a username and password passed in the Authorization header.',
+    codeFile: './samples/snippets/authentication/user_web_basic.ts',
   },
   {
     triggerTokens: ['addNetworkDomain', 'makeNetworkDomain', 'NetworkDomain'],

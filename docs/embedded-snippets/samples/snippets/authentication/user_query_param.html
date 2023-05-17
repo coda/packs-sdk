@@ -16,7 +16,7 @@
 
       require(['vs/editor/editor.main'], function () {
         var editor = monaco.editor.create(document.getElementById('container'), {
-          value: "pack.setUserAuthentication({\n  type: coda.AuthenticationType[$0],\n});",
+          value: "pack.setUserAuthentication({\n  type: coda.AuthenticationType.QueryParamToken,\n  paramName: \"${1:myToken}\",\n  instructionsUrl: \"${1:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});",
           language: 'javascript',
           minimap: {enabled: false},
           readOnly: true,

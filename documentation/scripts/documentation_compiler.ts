@@ -131,6 +131,9 @@ function compileSnippetEmbed(codeFile: string) {
 
 function formatCodeSnippet(code: string, removePlaceholders=false) {
   let result = code
+    // Replace brackets around a placeholder with a leading dot.
+    // Ex: '[$0]' => '.$0' and '[${0:foo}]' => '.${0:foo}'
+    .replace(/\[\$(.*?)\]/g, '.$$$1')
     // Replace custom placeholder syntax with the real syntax.
     // Ex: '$1$Foo$' => '${1:Foo}'
     .replace(/\$(\d+)\$(.+?)\$/g, '${$1:$2}')

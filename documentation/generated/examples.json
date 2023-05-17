@@ -67,12 +67,12 @@
       {
         "name": "Template (Per-user)",
         "content": "The basic structure of per-user authentication.",
-        "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.HeaderBearerToken,\n});"
+        "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.$0,\n});"
       },
       {
         "name": "Template (System-wide)",
         "content": "The basic structure of system-wide authentication.",
-        "code": "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.HeaderBearerToken,\n});"
+        "code": "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.$0,\n});"
       },
       {
         "name": "Authorization header",

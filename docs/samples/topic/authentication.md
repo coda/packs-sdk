@@ -19,7 +19,7 @@ The basic structure of per-user authentication.
 ```ts
 {% raw %}
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.HeaderBearerToken,
+  type: coda.AuthenticationType.$0,
 });
 {% endraw %}
 ```
@@ -29,7 +29,7 @@ The basic structure of system-wide authentication.
 ```ts
 {% raw %}
 pack.setSystemAuthentication({
-  type: coda.AuthenticationType.HeaderBearerToken,
+  type: coda.AuthenticationType.$0,
 });
 {% endraw %}
 ```
