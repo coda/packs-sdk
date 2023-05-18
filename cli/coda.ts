@@ -4,11 +4,13 @@ import {DEFAULT_API_ENDPOINT} from './config_storage';
 import {DEFAULT_MAX_ROWS} from '../testing/execution';
 import {DEFAULT_OAUTH_SERVER_PORT} from '../testing/auth';
 import {TimerShimStrategy} from '../testing/compile';
+import {Tools} from './extensions';
 import {handleAuth} from './auth';
 import {handleBuild} from './build';
 import {handleClone} from './clone';
 import {handleCreate} from './create';
 import {handleExecute} from './execute';
+import {handleExtensions} from './extensions';
 import {handleInit} from './init';
 import {handleLink} from './link';
 import {handleRegister} from './register';
@@ -92,6 +94,19 @@ if (require.main === module) {
       command: 'init',
       describe: 'Initialize an empty Pack',
       handler: handleInit,
+    })
+    .command({
+      command: 'extensions <tools..>',
+      describe: 'Installs developer extensions for working with Packs.',
+      builder: (yargs: yargs.Argv) => {
+        yargs.positional('tools', {
+          type: 'string',
+          choices: Object.values(Tools),
+          desc: 'Which tools to install extensions for.',
+        });
+        return yargs;
+      },
+      handler: handleExtensions as any,
     })
     .command({
       command: 'clone <packIdOrUrl>',
