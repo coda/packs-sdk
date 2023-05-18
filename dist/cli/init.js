@@ -31,7 +31,7 @@ function addVSCodeSnippets() {
         fs_extra_1.default.mkdirSync(vsCodeDir);
     }
     const pathToRoot = (0, helpers_1.isTestCommand)() ? '../' : '../../';
-    const filename = 'packs.code-snippets';
+    const filename = 'pack.code-snippets';
     fs_extra_1.default.copySync(path_1.default.join(__dirname, pathToRoot, 'documentation/generated', filename), path_1.default.join(vsCodeDir, filename));
 }
 function isGitAvailable() {

@@ -32,7 +32,7 @@ function addVSCodeSnippets() {
     fs.mkdirSync(vsCodeDir);
   }
   const pathToRoot = isTestCommand() ? '../' : '../../';
-  const filename = 'packs.code-snippets';
+  const filename = 'pack.code-snippets';
   fs.copySync(path.join(__dirname, pathToRoot, 'documentation/generated', filename), path.join(vsCodeDir, filename));
 }
 
