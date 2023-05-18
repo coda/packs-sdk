@@ -57,3 +57,10 @@ export declare enum ExampleCategory {
 export declare enum ExampleStatus {
     Beta = "Beta"
 }
+export interface VSCodeSnippet {
+    scope: string;
+    prefix: string;
+    body: string;
+    description: string;
+}
+export declare type VSCodeSnippets = Record<string, VSCodeSnippet>;

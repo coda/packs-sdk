@@ -1,4 +1,5 @@
 import fs from 'fs-extra';
+import {isTestCommand} from './helpers';
 import path from 'path';
 import {printAndExit} from '../testing/helpers';
 import {spawnProcess} from './helpers';
@@ -23,6 +24,16 @@ function addPatches() {
   updateMoldSourceMap();
 
   spawnProcess(`npx patch-package --exclude 'nothing' mold-source-map`);
+}
+
+function addVSCodeSnippets() {
+  const vsCodeDir = path.join(process.cwd(), '.vscode');
+  if (!fs.existsSync(vsCodeDir)){
+    fs.mkdirSync(vsCodeDir);
+  }
+  const pathToRoot = isTestCommand() ? '../' : '../../';
+  const filename = 'packs.code-snippets';
+  fs.copySync(path.join(__dirname, pathToRoot, 'documentation/generated', filename), path.join(vsCodeDir, filename));
 }
 
 function isGitAvailable(): boolean {
@@ -84,4 +95,6 @@ export async function handleInit() {
     const uninstallCommand = `npm uninstall @codahq/packs-examples`;
     spawnProcess(uninstallCommand);
   }
+
+  addVSCodeSnippets();
 }
