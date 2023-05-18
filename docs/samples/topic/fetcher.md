@@ -18,7 +18,7 @@ Communicating with an API or external server is done through the `Fetcher`, a cu
 {% raw %}
 let response = await context.fetcher.fetch({
   method: "GET",
-  url: "<The URL to fetch>",
+  url: "https://example.com",
 });
 let data = response.body;
 {% endraw %}
@@ -29,11 +29,11 @@ let data = response.body;
 ```ts
 {% raw %}
 let payload = {
-  // Whatever JSON structure the API expects.
+  // TODO: Construct the JSON that the API expects.
 };
 let response = await context.fetcher.fetch({
   method: "POST",
-  url: "<The URL to send the request to>",
+  url: "https://example.com",
   headers: {
     "Content-Type": "application/json",
   },

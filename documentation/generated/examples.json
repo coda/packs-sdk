@@ -18,7 +18,7 @@
       {
         "name": "Template",
         "content": "The basic structure of a column format.",
-        "code": "pack.addColumnFormat({\n  name: \"<User-visible name>\",\n  instructions: \"<Help text for the format>\",\n  formulaName: \"<Name of the formula to run>\",\n  matchers: [\n    // If formatting a URL, a regular expression that matches that URL.\n  ],\n});"
+        "code": "pack.addColumnFormat({\n  name: \"My Column Format\",\n  instructions: \"My description.\",\n  formulaName: \"MyFormula\",\n  matchers: [\n    // TODO: If formatting a URL, add a regular expression that matches it.\n  ],\n});"
       },
       {
         "name": "Text (Reverse)",
@@ -67,12 +67,12 @@
       {
         "name": "Template (Per-user)",
         "content": "The basic structure of per-user authentication.",
-        "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.HeaderBearerToken,\n});"
+        "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.$0,\n});"
       },
       {
         "name": "Template (System-wide)",
         "content": "The basic structure of system-wide authentication.",
-        "code": "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.HeaderBearerToken,\n});"
+        "code": "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.$0,\n});"
       },
       {
         "name": "Authorization header",
@@ -155,7 +155,7 @@
       {
         "name": "Template",
         "content": "",
-        "code": "pack.addDynamicSyncTable({\n  name: \"<User-visible name for the sync table>\",\n  listDynamicUrls: async function (context) {\n    // TODO: Fetch the list of data sources the user can connect to.\n    return [{ display: \"<Datasource Name>\", value: \"<Datasource URL>\" }];\n  },\n  getName: async function (context) {\n    let datasourceUrl = context.sync.dynamicUrl!;\n    // TODO: Fetch metadata about the data source and return the name.\n    return \"<Datasource Name>\";\n  },\n  identityName: \"<User-visible name for the column containing the schema>\",\n  getSchema: async function (context) {\n    let datasourceUrl = context.sync.dynamicUrl!;\n    // TODO: Fetch metadata about the data source and get the list of fields.\n    let properties: coda.ObjectSchemaProperties = {\n      // TODO: Create a property for each field.\n    };\n    let idProperty = \"<Determine the field containing a unique ID>\";\n    let displayProperty = \"<Determine the field containing the display value>\";\n    let featuredProperties = [\n      // TODO: Determine which fields to show in the table by default.\n    ];\n    return coda.makeObjectSchema({\n      properties: properties,\n      idProperty: idProperty,\n      displayProperty: displayProperty,\n      featuredProperties: featuredProperties,\n    });\n  },\n  getDisplayUrl: async function (context) {\n    return context.sync.dynamicUrl!;\n  },\n  formula: {\n    name: \"<Name of the sync formula, not show to the user>\",\n    description: \"<Help text for the sync formula, not show to the user>\",\n    parameters: [\n      coda.makeParameter({\n        type: coda.ParameterType.String,\n        name: \"<User-visible name of parameter>\",\n        description: \"<Help text for the parameter>\",\n      }),\n      // Add more parameters here and in the array below.\n    ],\n    execute: async function ([param], context) {\n      let datasourceUrl = context.sync.dynamicUrl!;\n      let url = \"<URL to pull data from>\";\n      let response = await context.fetcher.fetch({\n        method: \"GET\",\n        url: url,\n      });\n      let items = response.body.items;\n      // Adjust the items to fit the schema if required.\n      return {\n        result: items,\n      };\n    },\n  },\n});"
+        "code": "pack.addDynamicSyncTable({\n  name: \"MyThings\",\n  description: \"My description.\",\n  identityName: \"${1}\",\n  listDynamicUrls: async function (context) {\n    // TODO: Fetch the list of datasets the user can connect to.\n    let datasets = [];\n    // TODO: Replace \"name\" and \"url\" below with correct JSON keys.\n    return coda.autocompleteSearchObjects(undefined, datasets, \"name\", \"url\");\n  },\n  getName: async function (context) {\n    let datasetUrl = context.sync.dynamicUrl;\n    // TODO: Fetch metadata about the dataset and return the name.\n    return \"Table Name\";\n  },\n  getSchema: async function (context) {\n    let datasetUrl = context.sync.dynamicUrl;\n    // TODO: Fetch metadata about the dataset and use it to construct a schema.\n    let schema = coda.makeObjectSchema({\n      properties: {},\n      displayProperty: \"\",\n      idProperty: \"\",\n      featuredProperties: [],\n    });\n    return schema;\n  },\n  getDisplayUrl: async function (context) {\n    let datasetUrl = context.sync.dynamicUrl;\n    // TODO: Fetch metadata about the dataset and return a user-friendly URL.\n    return \"\";\n  },\n  formula: {\n    name: \"Sync$1\",\n    description: \"Syncs the data.\",\n    parameters: [\n      // TODO: Add parameters.\n    ],\n    execute: async function (args, context) {\n      let datasetUrl = context.sync.dynamicUrl!;\n      // TODO: Unpack the parameter values.\n      let [] = args;\n      // TODO: Fetch the rows.\n      let rows = [];\n      for (let row of rows) {\n        // TODO: If required, adjust the row to match the schema.\n      }\n      return {\n        result: rows,\n      };\n    },\n  },\n});"
       },
       {
         "name": "With URL list",
@@ -188,7 +188,7 @@
       {
         "name": "Template",
         "content": "The basic structure of a formula. This sample takes in a single string parameter and returns a string result.",
-        "code": "pack.addFormula({\n  name: \"<User-visible name of formula>\",\n  description: \"<Help text for the formula>\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"<User-visible name of parameter>\",\n      description: \"<Help text for the parameter>\",\n    }),\n    // Add more parameters here and in the array below.\n  ],\n  resultType: coda.ValueType.String,\n  execute: async function ([param], context) {\n    return \"Hello \" + param;\n  },\n});"
+        "code": "pack.addFormula({\n  name: \"MyFormula\",\n  description: \"My description.\",\n  parameters: [\n    // TODO: Add parameters.\n  ],\n  resultType: coda.ValueType.String,\n  execute: async function (args, context) {\n    // TODO: Unpack the parameter values.\n    let [] = args;\n    // TODO: Compute the result.\n    return \"\";\n  },\n});"
       },
       {
         "name": "Image result",
@@ -226,7 +226,7 @@
       {
         "name": "Template",
         "content": "The basic structure of an action. This sample takes in a single string parameter and returns the string \"OK\" when the action is complete.",
-        "code": "pack.addFormula({\n  name: \"<User-visible name of formula>\",\n  description: \"<Help text for the formula>\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"<User-visible name of parameter>\",\n      description: \"<Help text for the parameter>\",\n    }),\n    // Add more parameters here and in the array below.\n  ],\n  resultType: coda.ValueType.String,\n  isAction: true,\n  execute: async function ([param], context) {\n    // TODO: Do something.\n    return \"OK\";\n  },\n});"
+        "code": "pack.addFormula({\n  name: \"MyAction\",\n  description: \"My description.\",\n  parameters: [\n    // TODO: Add parameters.\n  ],\n  resultType: coda.ValueType.String,\n  isAction: true,\n  execute: async function (args, context) {\n    // TODO: Unpack the parameter values.\n    let [] = args;\n    // TODO: Do something.\n    return \"OK\";\n  },\n});"
       },
       {
         "name": "Random value",
@@ -264,7 +264,7 @@
       {
         "name": "Template",
         "content": "The basic structure of a parameter. This sample is for a string parameter.",
-        "code": "coda.makeParameter({\n  type: coda.ParameterType.String,\n  name: \"<User-visible name of parameter>\",\n  description: \"<Help text for the parameter>\",\n}),"
+        "code": "coda.makeParameter({\n  type: coda.ParameterType.String,\n  name: \"myParameter\",\n  description: \"My description.\",\n}),"
       },
       {
         "name": "No parameters",
@@ -380,7 +380,7 @@
       {
         "name": "Template",
         "content": "The basic structure of a sync table.",
-        "code": "const MySchema = coda.makeObjectSchema({\n  properties: {\n    property1: { type: coda.ValueType.String },\n    property2: { type: coda.ValueType.Number },\n    // Add more properties here.\n  },\n  displayProperty: \"property1\", // Which property above to display by default.\n  idProperty: \"property2\", // Which property above is a unique ID.\n});\n\npack.addSyncTable({\n  name: \"<User-visible name for the sync table>\",\n  description: \"<User-visible description for the sync table>\",\n  identityName: \"<User-visible name for the column containing the schema>\",\n  schema: MySchema,\n  formula: {\n    name: \"<Name of the sync formula, not show to the user>\",\n    description: \"<Help text for the sync formula, not show to the user>\",\n    parameters: [\n      coda.makeParameter({\n        type: coda.ParameterType.String,\n        name: \"<User-visible name of parameter>\",\n        description: \"<Help text for the parameter>\",\n      }),\n      // Add more parameters here and in the array below.\n    ],\n    execute: async function ([param], context) {\n      let url = \"<URL to pull data from>\";\n      let response = await context.fetcher.fetch({\n        method: \"GET\",\n        url: url,\n      });\n      let items = response.body.items;\n      // Adjust the items to fit the schema if required.\n      return {\n        result: items,\n      };\n    },\n  },\n});"
+        "code": "pack.addSyncTable({\n  name: \"MyThings\",\n  description: \"Table description.\",\n  identityName: \"$1\",\n  schema: MySchema,\n  formula: {\n    name: \"Sync$1\",\n    description: \"Syncs the data.\",\n    parameters: [\n      // TODO: Add parameters.\n    ],\n    execute: async function (args, context) {\n      // TODO: Unpack the parameter values.\n      let [] = args;\n      // TODO: Fetch the rows.\n      let rows = [];\n      for (let row of rows) {\n        // TODO: If required, adjust the row to match the schema.\n      }\n      return {\n        result: rows,\n      };\n    },\n  },\n});"
       },
       {
         "name": "With parameter",
@@ -423,12 +423,12 @@
       {
         "name": "Template (GET)",
         "content": "",
-        "code": "let response = await context.fetcher.fetch({\n  method: \"GET\",\n  url: \"<The URL to fetch>\",\n});\nlet data = response.body;"
+        "code": "let response = await context.fetcher.fetch({\n  method: \"GET\",\n  url: \"https://example.com\",\n});\nlet data = response.body;"
       },
       {
         "name": "Template (POST)",
         "content": "",
-        "code": "let payload = {\n  // Whatever JSON structure the API expects.\n};\nlet response = await context.fetcher.fetch({\n  method: \"POST\",\n  url: \"<The URL to send the request to>\",\n  headers: {\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify(payload),\n});\nlet data = response.body;"
+        "code": "let payload = {\n  // TODO: Construct the JSON that the API expects.\n};\nlet response = await context.fetcher.fetch({\n  method: \"POST\",\n  url: \"https://example.com\",\n  headers: {\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify(payload),\n});\nlet data = response.body;"
       },
       {
         "name": "JSON Array (Bacon Ipsum)",
@@ -457,27 +457,27 @@
       {
         "name": "Template (String)",
         "content": "The basic structure of a formula that returns a string.",
-        "code": "pack.addFormula({\n  name: \"<User-visible name of formula>\",\n  description: \"<Help text for the formula>\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"<User-visible name of parameter>\",\n      description: \"<Help text for the parameter>\",\n    }),\n    // Add more parameters here and in the array below.\n  ],\n  resultType: coda.ValueType.String,\n  execute: async function ([param], context) {\n    return \"Hello \" + param;\n  },\n});"
+        "code": "pack.addFormula({\n  name: \"MyFormula\",\n  description: \"My description.\",\n  parameters: [\n    // TODO: Add parameters.\n  ],\n  resultType: coda.ValueType.String,\n  execute: async function (args, context) {\n    // TODO: Unpack the parameter values.\n    let [] = args;\n    // TODO: Compute the result.\n    return \"\";\n  },\n});"
       },
       {
         "name": "Template (Number)",
         "content": "The basic structure of a formula that returns a number.",
-        "code": "pack.addFormula({\n  name: \"<User-visible name of formula>\",\n  description: \"<Help text for the formula>\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"<User-visible name of parameter>\",\n      description: \"<Help text for the parameter>\",\n    }),\n    // Add more parameters here and in the array below.\n  ],\n  resultType: coda.ValueType.Number,\n  execute: async function ([param], context) {\n    return param.length;\n  },\n});"
+        "code": "pack.addFormula({\n  name: \"MyFormula\",\n  description: \"My description.\",\n  parameters: [\n    // TODO: Add parameters.\n  ],\n  resultType: coda.ValueType.Number,\n  execute: async function (args, context) {\n    // TODO: Unpack the parameter values.\n    let [] = args;\n    // TODO: Compute the result.\n    return 0;\n  },\n});"
       },
       {
         "name": "Template (Boolean)",
         "content": "The basic structure of a formula that returns a boolean.",
-        "code": "pack.addFormula({\n  name: \"<User-visible name of formula>\",\n  description: \"<Help text for the formula>\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"<User-visible name of parameter>\",\n      description: \"<Help text for the parameter>\",\n    }),\n    // Add more parameters here and in the array below.\n  ],\n  resultType: coda.ValueType.Boolean,\n  execute: async function ([param], context) {\n    return param === \"true\";\n  },\n});"
+        "code": "pack.addFormula({\n  name: \"MyFormula\",\n  description: \"My description.\",\n  parameters: [\n    // TODO: Add parameters.\n  ],\n  resultType: coda.ValueType.Boolean,\n  execute: async function (args, context) {\n    // TODO: Unpack the parameter values.\n    let [] = args;\n    // TODO: Compute the result.\n    return true;\n  },\n});"
       },
       {
         "name": "Template (Array)",
         "content": "The basic structure of a formula that returns an array.",
-        "code": "pack.addFormula({\n  name: \"<User-visible name of formula>\",\n  description: \"<Help text for the formula>\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"<User-visible name of parameter>\",\n      description: \"<Help text for the parameter>\",\n    }),\n    // Add more parameters here and in the array below.\n  ],\n  resultType: coda.ValueType.Array,\n  items: coda.makeSchema({\n    type: coda.ValueType.String,\n  }),\n  execute: async function ([param], context) {\n    return [\"Hello\", param];\n  },\n});"
+        "code": "pack.addFormula({\n  name: \"MyFormula\",\n  description: \"My description.\",\n  parameters: [\n    // TODO: Add parameters.\n  ],\n  resultType: coda.ValueType.Array,\n  items: coda.makeSchema({\n    type: coda.ValueType.String,\n  }),\n  execute: async function (args, context) {\n    // TODO: Unpack the parameter values.\n    let [] = args;\n    // TODO: Compute the result.\n    return [];\n  },\n});"
       },
       {
         "name": "Template (Object)",
         "content": "The basic structure of a formula that returns an object.",
-        "code": "const MySchema = coda.makeObjectSchema({\n  properties: {\n    property1: { type: coda.ValueType.String },\n    property2: { type: coda.ValueType.Number },\n    // Add more properties here.\n  },\n  displayProperty: \"property1\", // Which property above to display by default.\n});\n\npack.addFormula({\n  name: \"<User-visible name of formula>\",\n  description: \"<Help text for the formula>\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"<User-visible name of parameter>\",\n      description: \"<Help text for the parameter>\",\n    }),\n    // Add more parameters here and in the array below.\n  ],\n  resultType: coda.ValueType.Object,\n  schema: MySchema,\n  execute: async function ([param], context) {\n    return {\n      property1: param,\n      property2: 123,\n\n    };\n  },\n});"
+        "code": "pack.addFormula({\n  name: \"MyFormula\",\n  description: \"My description.\",\n  parameters: [\n    // TODO: Add parameters.\n  ],\n  resultType: coda.ValueType.Object,\n  schema: MySchema,\n  execute: async function (args, context) {\n    // TODO: Unpack the parameter values.\n    let [] = args;\n    // TODO: Compute the result.\n    return {};\n  },\n});"
       },
       {
         "name": "Percent",
@@ -536,7 +536,7 @@
       {
         "name": "Template (Object Schema)",
         "content": "The basic structure of an object schema.",
-        "code": "const MySchema = coda.makeObjectSchema({\n  properties: {\n    property1: { type: coda.ValueType.String },\n    property2: { type: coda.ValueType.Number },\n    // Add more properties here.\n  },\n  displayProperty: \"property1\", // Which property above to display by default.\n});"
+        "code": "const ThingSchema = coda.makeObjectSchema({\n  properties: {\n    name: { type: coda.ValueType.String },\n    // TODO: Add more properties.\n  },\n  displayProperty: \"$2\",\n});"
       },
       {
         "name": "For formula",
@@ -804,7 +804,7 @@
       {
         "name": "Template",
         "content": "The basic structure of a card.",
-        "code": "// A schema that defines the data shown in the card.\nconst MyCardSchema = coda.makeObjectSchema({\n  properties: {\n    property1: { type: coda.ValueType.String },\n    property2: { type: coda.ValueType.Number },\n    // Add more properties here.\n  },\n  displayProperty: \"<Property name>\", // Display value shown in mention chip.\n  titleProperty: \"<Property name>\", // Title of the card.\n  subtitleProperties: [\n    // Properties shown in the subtitle of the card.\n    \"<Property name>\",\n    { property: \"<Property name>\", label: \"\" }, // Show the value only.\n    // Add more subtitle properties here.\n  ],\n  snippetProperty: \"<Property name>\", // Content shown in the card body\n  imageProperty: \"<Property name>\", // Image shown on the card.\n  linkProperty: \"<Property name>\", // Link opened when the card is clicked.\n});\n\n// A formula that accepts a URL and returns an object matching the schema above.\npack.addFormula({\n  name: \"<User-visible name of formula>\",\n  description: \"<Help text for the formula>\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"url\",\n      description: \"<Help text for the parameter>\",\n    }),\n    // Add more parameters here and in the array below.\n  ],\n  resultType: coda.ValueType.Object,\n  schema: MyCardSchema,\n  execute: async function ([url], context) {\n    // TODO: Fetch information about the item represented by the URL.\n    return {\n      // TODO: Populate with fetched information.\n      link: url,\n    };\n  },\n});\n\n// A column format that defines which URL patterns the formula should match.\npack.addColumnFormat({\n  name: \"<User-visible name>\",\n  instructions: \"<Help text for the format>\",\n  formulaName: \"<Name of the formula above>\",\n  matchers: [\n    new RegExp(\"<Regular expression that matches the URLs>\"),\n    // Add more URL patterns here.\n  ],\n});"
+        "code": "// A schema that defines the data shown in the card.\nconst ThingSchema = coda.makeObjectSchema({\n  properties: {\n    name: { type: coda.ValueType.String },\n    description: { type: coda.ValueType.String },\n    picture: {\n      type: coda.ValueType.String,\n      codaType: coda.ValueHintType.ImageReference,\n    },\n    link: {\n      type: coda.ValueType.String,\n      codaType: coda.ValueHintType.Url,\n    },\n    // TODO: Add more properties.\n  },\n  displayProperty: \"$2\",\n  titleProperty: \"$2\",\n  snippetProperty: \"$3\",\n  imageProperty: \"$4\",\n  linkProperty: \"$5\",\n  subtitleProperties: [\n    // TODO: List the properties to show under the title.\n  ],\n});\n\n// A formula that accepts a URL and returns an object matching the schema above.\npack.addFormula({\n  name: \"$1\",\n  description: \"My description.\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"url\",\n      description: \" My parameter description.\",\n    }),\n  ],\n  resultType: coda.ValueType.Object,\n  schema: $1Schema,\n  execute: async function (args, context) {\n    let [url] = args;\n    // TODO: Fetch information about the item represented by the URL.\n    return {\n      // TODO: Populate with fetched information.\n      $5: url,\n    };\n  },\n});\n\n// A column format that defines which URL patterns the formula should match.\npack.addColumnFormat({\n  name: \"$1\",\n  instructions: \"My instructions.\",\n  formulaName: \"$1\",\n  matchers: [\n    new RegExp(\"https://example.com/.*\"),\n    // TODO: Optionally add more URL patterns.\n  ],\n});"
       },
       {
         "name": "Basic card",

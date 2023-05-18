@@ -11,7 +11,14 @@ const pack = coda.newPack();
 pack.setUserAuthentication({
   type: coda.AuthenticationType.OAuth2,
   // The following two URLs are will be found in the API's documentation.
-  authorizationUrl: "<Authorization URL>",
-  tokenUrl: "<Token URL>",
+  authorizationUrl: "${1:https://example.com/authorize}",
+  tokenUrl: "${2:https://example.com/token}",
+  scopes: [
+    // TODO: List the API scopes to request, if any.
+  ],
+  getConnectionName: async function (context) {
+    // TODO: Fetch the name of the account.
+    let name = "";
+    return name;
+  },
 });
-

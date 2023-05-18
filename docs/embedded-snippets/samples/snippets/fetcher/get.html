@@ -16,7 +16,7 @@
 
       require(['vs/editor/editor.main'], function () {
         var editor = monaco.editor.create(document.getElementById('container'), {
-          value: "let response = await context.fetcher.fetch({\n  method: \"GET\",\n  url: \"<The URL to fetch>\",\n});\nlet data = response.body;",
+          value: "let response = await context.fetcher.fetch({\n  method: \"GET\",\n  url: \"${1:https://example.com}\",\n});\nlet data = response.body;",
           language: 'javascript',
           minimap: {enabled: false},
           readOnly: true,

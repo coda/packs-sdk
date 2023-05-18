@@ -18,13 +18,12 @@ The basic structure of an object schema.
 
 ```ts
 {% raw %}
-const MySchema = coda.makeObjectSchema({
+const ThingSchema = coda.makeObjectSchema({
   properties: {
-    property1: { type: coda.ValueType.String },
-    property2: { type: coda.ValueType.Number },
-    // Add more properties here.
+    name: { type: coda.ValueType.String },
+    // TODO: Add more properties.
   },
-  displayProperty: "property1", // Which property above to display by default.
+  displayProperty: "$2",
 });
 {% endraw %}
 ```

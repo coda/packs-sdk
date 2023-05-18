@@ -4,7 +4,7 @@ async function snippet(context: coda.ExecutionContext) {
   // BEGIN
   let response = await context.fetcher.fetch({
     method: "GET",
-    url: "<The URL to fetch>",
+    url: "${1:https://example.com}",
   });
   let data = response.body;
   // END

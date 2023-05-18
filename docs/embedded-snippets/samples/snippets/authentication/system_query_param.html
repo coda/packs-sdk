@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <!-- Monaco library script is loaded from: https://cdnjs.com/libraries/monaco-editor-->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs/loader.min.js"
+      integrity="sha512-BZkLVRxigK3UazsQIYAM64dYuFw4giK5YyBrjDlUhKIMeC2j+XLIAr4vs312JiDq4OaJwZEDfB27c7ffROEKBQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      require.config({
+        paths: {
+          vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs',
+        },
+      });
+
+      require(['vs/editor/editor.main'], function () {
+        var editor = monaco.editor.create(document.getElementById('container'), {
+          value: "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.QueryParamToken,\n  paramName: \"${1:myToken}\",\n});",
+          language: 'javascript',
+          minimap: {enabled: false},
+          readOnly: true,
+          renderValidationDecorations: 'off',
+          wordWrap: 'on',
+          contextmenu: false,
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div id="container" style="position: absolute; top: 0; right: 16; bottom: 16; left: 0"></div>
+  </body>
+</html>

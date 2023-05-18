@@ -4,8 +4,8 @@ let parameters = [
   // BEGIN
   coda.makeParameter({
     type: coda.ParameterType.Number,
-    name: "<User-visible name of parameter>",
-    description: "<Help text for the parameter>",
+    name: "${1:myParameter}",
+    description: "${2:My description.}",
   }),
   // END
 ];

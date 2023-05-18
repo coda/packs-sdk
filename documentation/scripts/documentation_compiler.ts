@@ -26,7 +26,7 @@ const ExamplePageTemplate = Handlebars.compile(
 const SdkReferenceLink = 'https://coda.io/packs/build/latest';
 const SamplePageLink = `${SdkReferenceLink}/${ExampleDirName}`;
 const PageFileExtension = 'md';
-const IndexPageFilename = 'index.md'
+const IndexPageFilename = 'index.md';
 
 function main() {
   compileAutocompleteSnippets();
@@ -40,7 +40,7 @@ function compileAutocompleteSnippets() {
     return {
       triggerTokens: snippet.triggerTokens,
       content: snippet.content,
-      code,
+      code: formatCodeSnippet(code),
     };
   });
 
@@ -105,11 +105,12 @@ function getContentFile(file: string) {
 
 function compileExampleSnippets(example: Example): CompiledExampleSnippet[] {
   return example.exampleSnippets.map(exampleSnippet => {
+    const code = getCodeFile(exampleSnippet.codeFile);
     compileSnippetEmbed(exampleSnippet.codeFile);
     return {
       name: exampleSnippet.name,
       content: exampleSnippet.content,
-      code: getCodeFile(exampleSnippet.codeFile),
+      code: formatCodeSnippet(code, true),
     };
   });
 }
@@ -126,6 +127,44 @@ function compileSnippetEmbed(codeFile: string) {
   }
 
   fs.writeFileSync(path.join(snippetDirPath, `${snippetFileName}.html`), exampleSnippetEmbed);
+}
+
+/**
+ * Formats the code in a snippet, primarily to handle alternate placeholder formats. The placeholder
+ * syntax supported by Monaco is `${1:Placeholder}`, which works fine in strings but isn't a valid
+ * variable name or object key in TypeScript. To work around that we define alternate placeholder
+ * formats that are also valid identifiers:
+ * - `$1$Placeholder$` for variables and object keys.
+ * - `[$0]` for placing a tab stop after an enum, prompting the user to select a value.
+ * - `// $1` For placing a tab stop on a blank line.
+ * - `// ${1:Foo}` for creating a placeholder which is a comment.
+ * When displaying snippets in the documentation the placeholder syntax may be confusing, so the
+ * `removePlaceholders` option allows replacing the placeholders with the default value.
+ * @param code The code to format.
+ * @param removePlaceholders Whether to replace the placeholders with the default value.
+ * @returns The formatted code.
+ */
+function formatCodeSnippet(code: string, removePlaceholders=false) {
+  let result = code
+    // Replace brackets around a placeholder with a leading dot.
+    // Ex: '[$0]' => '.$0' and '[${0:foo}]' => '.${0:foo}'
+    .replace(/\[\$(.*?)\]/g, '.$$$1')
+    // Replace custom placeholder syntax with the real syntax.
+    // Ex: '$1$Foo$' => '${1:Foo}'
+    .replace(/\$(\d+)\$(.+?)\$/g, '${$1:$2}')
+    // Remove the comments around tab stops.
+    // Ex: '// $1' => '$1'
+    .replace(/\/\/\s*\$(\d+)/g, '$$$1')
+    // Invert the comments around placeholders.
+    // Ex: '// ${1:Foo}' => '${1:// Foo}'
+    .replace(/\/\/\s*\$\{(\d+)\:(.+?)\}/g, '${$1:// $2}');
+  if (removePlaceholders) {
+    result = result
+      // Replace placeholder syntax with default value.
+      // Ex: '${1:Foo}' => 'Foo'
+      .replace(/\$\{\d+\:(.*?)\}/g, '$1');
+  }
+  return result;
 }
 
 function compileExamplePage(example: Example, compiledExample: CompiledExample) {

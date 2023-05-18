@@ -16,7 +16,7 @@
 
       require(['vs/editor/editor.main'], function () {
         var editor = monaco.editor.create(document.getElementById('container'), {
-          value: "pack.addNetworkDomain(\"<Domain name>\");",
+          value: "pack.addNetworkDomain(\"${1:example.com}\");",
           language: 'javascript',
           minimap: {enabled: false},
           readOnly: true,

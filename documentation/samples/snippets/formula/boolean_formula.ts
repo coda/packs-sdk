@@ -5,18 +5,16 @@ const pack = coda.newPack();
 // BEGIN
 
 pack.addFormula({
-  name: "<User-visible name of formula>",
-  description: "<Help text for the formula>",
+  name: "${1:MyFormula}",
+  description: "${2:My description.}",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
-      name: "<User-visible name of parameter>",
-      description: "<Help text for the parameter>",
-    }),
-    // Add more parameters here and in the array below.
+    // TODO: Add parameters.
   ],
   resultType: coda.ValueType.Boolean,
-  execute: async function ([param], context) {
-    return param === "true";
+  execute: async function (args, context) {
+    // TODO: Unpack the parameter values.
+    let [] = args;
+    // TODO: Compute the result.
+    return true;
   },
 });

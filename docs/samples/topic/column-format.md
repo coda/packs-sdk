@@ -19,11 +19,11 @@ The basic structure of a column format.
 ```ts
 {% raw %}
 pack.addColumnFormat({
-  name: "<User-visible name>",
-  instructions: "<Help text for the format>",
-  formulaName: "<Name of the formula to run>",
+  name: "My Column Format",
+  instructions: "My description.",
+  formulaName: "MyFormula",
   matchers: [
-    // If formatting a URL, a regular expression that matches that URL.
+    // TODO: If formatting a URL, add a regular expression that matches it.
   ],
 });
 {% endraw %}
