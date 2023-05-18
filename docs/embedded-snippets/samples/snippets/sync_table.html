@@ -16,7 +16,7 @@
 
       require(['vs/editor/editor.main'], function () {
         var editor = monaco.editor.create(document.getElementById('container'), {
-          value: "pack.addSyncTable({\n  name: \"${1:MyThings}\",\n  description: \"${2:Table description.}\",\n  identityName: \"$1\",\n  schema: $3$MySchema$,\n  formula: {\n    name: \"Sync$1\",\n    description: \"Syncs the data.\",\n    parameters: [\n      // TODO: Add parameters.\n    ],\n    execute: async function (args, context) {\n      let [\n        // TODO: Unpack the parameter values.\n      ] = args;\n      // TODO: Fetch the rows.\n      let rows = [];\n      for (let row of rows) {\n        // TODO: If required, adjust the row to match the schema.\n      }\n      return {\n        result: rows,\n      };\n    },\n  },\n});",
+          value: "pack.addSyncTable({\n  name: \"${1:MyThings}\",\n  description: \"${2:Table description.}\",\n  identityName: \"$1\",\n  schema: $3$MySchema$,\n  formula: {\n    name: \"Sync$1\",\n    description: \"Syncs the data.\",\n    parameters: [\n      // TODO: Add parameters.\n    ],\n    execute: async function (args, context) {\n      // TODO: Unpack the parameter values.\n      let [] = args;\n      // TODO: Fetch the rows.\n      let rows = [];\n      for (let row of rows) {\n        // TODO: If required, adjust the row to match the schema.\n      }\n      return {\n        result: rows,\n      };\n    },\n  },\n});",
           language: 'javascript',
           minimap: {enabled: false},
           readOnly: true,

@@ -24,9 +24,8 @@ pack.addFormula({
   ],
   resultType: coda.ValueType.String,
   execute: async function (args, context) {
-    let [
-      // TODO: Unpack the parameter values.
-    ] = args;
+    // TODO: Unpack the parameter values.
+    let [] = args;
     // TODO: Compute the result.
     return "";
   },
@@ -46,9 +45,8 @@ pack.addFormula({
   ],
   resultType: coda.ValueType.Number,
   execute: async function (args, context) {
-    let [
-      // TODO: Unpack the parameter values.
-    ] = args;
+    // TODO: Unpack the parameter values.
+    let [] = args;
     // TODO: Compute the result.
     return 0;
   },
@@ -68,9 +66,8 @@ pack.addFormula({
   ],
   resultType: coda.ValueType.Boolean,
   execute: async function (args, context) {
-    let [
-      // TODO: Unpack the parameter values.
-    ] = args;
+    // TODO: Unpack the parameter values.
+    let [] = args;
     // TODO: Compute the result.
     return true;
   },
@@ -93,9 +90,8 @@ pack.addFormula({
     type: coda.ValueType.String,
   }),
   execute: async function (args, context) {
-    let [
-      // TODO: Unpack the parameter values.
-    ] = args;
+    // TODO: Unpack the parameter values.
+    let [] = args;
     // TODO: Compute the result.
     return [];
   },
@@ -116,9 +112,8 @@ pack.addFormula({
   resultType: coda.ValueType.Object,
   schema: MySchema,
   execute: async function (args, context) {
-    let [
-      // TODO: Unpack the parameter values.
-    ] = args;
+    // TODO: Unpack the parameter values.
+    let [] = args;
     // TODO: Compute the result.
     return {};
   },

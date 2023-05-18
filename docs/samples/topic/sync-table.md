@@ -28,9 +28,8 @@ pack.addSyncTable({
       // TODO: Add parameters.
     ],
     execute: async function (args, context) {
-      let [
-        // TODO: Unpack the parameter values.
-      ] = args;
+      // TODO: Unpack the parameter values.
+      let [] = args;
       // TODO: Fetch the rows.
       let rows = [];
       for (let row of rows) {
