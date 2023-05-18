@@ -15,9 +15,8 @@ pack.addFormula({
   resultType: coda.ValueType.Object,
   schema: $3$MySchema$,
   execute: async function (args, context) {
-    let [
-      // TODO: Unpack the parameter values.
-    ] = args;
+    // TODO: Unpack the parameter values.
+    let [] = args;
     // TODO: Compute the result.
     return {};
   },

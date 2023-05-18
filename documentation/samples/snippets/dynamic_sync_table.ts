@@ -43,9 +43,8 @@ pack.addDynamicSyncTable({
     ],
     execute: async function (args, context) {
       let datasetUrl = context.sync.dynamicUrl!;
-      let [
-        // TODO: Unpack the parameter values.
-      ] = args;
+      // TODO: Unpack the parameter values.
+      let [] = args;
       // TODO: Fetch the rows.
       let rows = [];
       for (let row of rows) {

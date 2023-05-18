@@ -15,9 +15,8 @@ pack.addFormula({
     type: coda.ValueType.String,
   }),
   execute: async function (args, context) {
-    let [
-      // TODO: Unpack the parameter values.
-    ] = args;
+    // TODO: Unpack the parameter values.
+    let [] = args;
     // TODO: Compute the result.
     return [];
   },

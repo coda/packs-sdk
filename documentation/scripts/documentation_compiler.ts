@@ -129,6 +129,21 @@ function compileSnippetEmbed(codeFile: string) {
   fs.writeFileSync(path.join(snippetDirPath, `${snippetFileName}.html`), exampleSnippetEmbed);
 }
 
+/**
+ * Formats the code in a snippet, primarily to handle alternate placeholder formats. The placeholder
+ * syntax supported by Monaco is `${1:Placeholder}`, which works fine in strings but isn't a valid
+ * variable name or object key in TypeScript. To work around that we define alternate placeholder
+ * formats that are also valid identifiers:
+ * - `$1$Placeholder$` for variables and object keys.
+ * - `[$0]` for placing a tab stop after an enum, prompting the user to select a value.
+ * - `// $1` For placing a tab stop on a blank line.
+ * - `// ${1:Foo}` for creating a placeholder which is a comment.
+ * When displaying snippets in the documentation the placeholder syntax may be confusing, so the
+ * `removePlaceholders` option allows replacing the placeholders with the default value.
+ * @param code The code to format.
+ * @param removePlaceholders Whether to replace the placeholders with the default value.
+ * @returns The formatted code.
+ */
 function formatCodeSnippet(code: string, removePlaceholders=false) {
   let result = code
     // Replace brackets around a placeholder with a leading dot.
