@@ -2831,7 +2831,7 @@ export declare type MetadataFormulaMetadata = Omit<MetadataFormula, "execute">;
 /**
  * A JavaScript function that can implement a {@link MetadataFormulaDef}.
  */
-export declare type MetadataFunction = (context: ExecutionContext, search?: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
+export declare type MetadataFunction = (context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
 /**
  * The type of values that will be accepted as a metadata formula definition. This can either
  * be the JavaScript function that implements a metadata formula (strongly recommended)
@@ -2915,7 +2915,11 @@ export declare function simpleAutocomplete<T extends AutocompleteParameterTypes>
  * });
  * ```
  */
-export declare function autocompleteSearchObjects<T>(search: string, objs: T[], displayKey: keyof T, valueKey: keyof T): Promise<MetadataFormulaObjectResultType[]>;
+export declare function autocompleteSearchObjects<T>(search: string, objs: T[], displayKey: {
+	[K in keyof T]: T[K] extends string ? K : never;
+}[keyof T], valueKey: {
+	[K in keyof T]: T[K] extends string | number ? K : never;
+}[keyof T]): Promise<MetadataFormulaObjectResultType[]>;
 /**
  * @deprecated If you have a hardcoded array of autocomplete options, simply include that array
  * as the value of the `autocomplete` property in your parameter definition. There is no longer

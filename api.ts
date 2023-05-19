@@ -19,7 +19,7 @@ import type {ParamArgs} from './api_types';
 import type {ParamDef} from './api_types';
 import type {ParamDefs} from './api_types';
 import type {ParamValues} from './api_types';
-import type {ParameterType} from './api_types';
+import {ParameterType} from './api_types';
 import {ParameterTypeInputMap} from './api_types';
 import type {ParameterTypeMap} from './api_types';
 import type {PropertyAutocompleteExecutionContext} from './api_types';
@@ -1562,7 +1562,8 @@ export declare type GenericMetadataFormulaMetadata = Omit<GenericMetadataFormula
  */
 export type MetadataFunction = (
   context: ExecutionContext,
-  search?: string,
+  // TODO(oleg): this should be optional unless in an autocomplete context.
+  search: string,
   formulaContext?: MetadataContext,
 ) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
 
@@ -1601,11 +1602,22 @@ export function makeMetadataFormula(
       } catch (err: any) {
         //  Ignore.
       }
-      return execute(context, search, formulaContext) as any;
+      // TODO(oleg): once MetadataFunction types are fixed, remove non-null assertion.
+      return execute(context, search!, formulaContext) as any;
     },
     parameters: [
-      makeStringParameter('search', 'Metadata to search for', {optional: true}),
-      makeStringParameter('formulaContext', 'Serialized JSON for metadata', {optional: true}),
+      makeParameter({
+        type: ParameterType.String,
+        name: 'search',
+        description: 'Metadata to search for.',
+        optional: true,
+      }),
+      makeParameter({
+        type: ParameterType.String,
+        name: 'formulaContext',
+        description: 'Serialized JSON for metadata.',
+        optional: true,
+      }),
     ],
     examples: [],
     connectionRequirement: options?.connectionRequirement || ConnectionRequirement.Optional,
@@ -1744,25 +1756,30 @@ export function simpleAutocomplete<T extends AutocompleteParameterTypes>(
  * });
  * ```
  */
-export function autocompleteSearchObjects<T>(
+export async function autocompleteSearchObjects<T>(
   search: string,
   objs: T[],
-  displayKey: keyof T,
-  valueKey: keyof T,
+  displayKey: {[K in keyof T]: T[K] extends string ? K : never}[keyof T],
+  valueKey: {[K in keyof T]: T[K] extends string | number ? K : never}[keyof T],
 ): Promise<MetadataFormulaObjectResultType[]> {
   if (typeof search !== 'string') {
     throw new TypeError(`Expecting a string for "search" parameter but received ${search}`);
   }
 
   const normalizedSearch = search.toLowerCase();
-  const filtered = objs.filter(o => (o[displayKey] as any).toLowerCase().includes(normalizedSearch));
-  const metadataResults = filtered.map(o => {
-    return {
-      value: o[valueKey],
-      display: o[displayKey],
-    };
-  });
-  return Promise.resolve(metadataResults as any[]);
+
+  const metadataResults: MetadataFormulaObjectResultType[] = [];
+  for (const obj of objs) {
+    const display = obj[displayKey] as unknown as string;
+    if (!display.toLowerCase().includes(normalizedSearch)) {
+      continue;
+    }
+
+    const value = obj[valueKey] as unknown as string | number;
+    metadataResults.push({display, value});
+  }
+
+  return metadataResults;
 }
 
 /**
