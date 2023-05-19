@@ -88,7 +88,7 @@ lint:
 	npx remark docs --quiet --frail --ignore-pattern 'docs/reference/*'
 
 	# Spellcheck docs lint.
-	npx cspell lint '{docs,documentation}/**/*.md' --no-progress
+	npx cspell lint '{docs,documentation}/**/*.md' 'CHANGELOG.md' --no-progress
 
 	# Changelog lint.
 	npx kacl lint
