@@ -8,6 +8,8 @@ import {Examples} from './documentation_config';
 import * as Handlebars from 'handlebars';
 import {Snippets} from './documentation_config';
 import {UrlType} from '../types';
+import type {VSCodeSnippet} from '../types';
+import type {VSCodeSnippets} from '../types';
 import * as fs from 'fs';
 import path from 'path';
 
@@ -44,7 +46,23 @@ function compileAutocompleteSnippets() {
     };
   });
 
+  compileVSCodeSnippets(compiledSnippets);
   fs.writeFileSync(path.join(DocumentationRoot, 'generated/snippets.json'), JSON.stringify(compiledSnippets, null, 2));
+}
+
+function compileVSCodeSnippets(compiledSnippets: CompiledAutocompleteSnippet[]) {
+  const vsCodeSnippets: VSCodeSnippets = {};
+  for (const snippet of compiledSnippets) {
+    const trigger = snippet.triggerTokens[0];
+    const vsCodeSnippet: VSCodeSnippet = {
+      prefix: `/${trigger}`,
+      description: snippet.content,
+      body: snippet.code,
+      scope: 'javascript,typescript',
+    };
+    vsCodeSnippets[trigger] = vsCodeSnippet;
+  }
+  fs.writeFileSync(path.join(DocumentationRoot, 'generated/pack.code-snippets'), JSON.stringify(vsCodeSnippets, null, 2));
 }
 
 function compileExamples() {

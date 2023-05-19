@@ -4,12 +4,13 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- Added the command `coda extensions` to the CLI for installing developer extensions that help with building Packs. Currently it only supports Visual Studio Code (`coda extensions vscode`), creating a code snippets file which provides the same slash commands as the Pack Studio.
+
 ### Changed
 
-- Using the empty string as a `tokenPrefix` with OAuth2 authentication will result in no prefix being used in the `Authentication` header. Previously, the empty string would be treated the same as `undefined` which would lead to the default prefix of `Bearer` being used. Note that this change took effect for live packs on April 28, 2023 indepedently of the SDK version; in this SDK version the behavior changed only here in the CLI execution simulator (the `coda execute` command).
-
-### Changed
-
+- Using the empty string as a `tokenPrefix` with OAuth2 authentication will result in no prefix being used in the `Authentication` header. Previously, the empty string would be treated the same as `undefined` which would lead to the default prefix of `Bearer` being used. Note that this change took effect for live packs on April 28, 2023 independently of the SDK version; in this SDK version the behavior changed only here in the CLI execution simulator (the `coda execute` command).
 - **Breaking Change** Removed the "autocomplete" property from EmailSchema. It wasn't useful in practice and we want to free up the name "autocomplete" on BaseSchema for better purposes.
 
 ## [1.3.4] - 2023-04-17
@@ -133,7 +134,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 - Added validation that `networkDomain` does not include slashes since it's a domain, not a path.
 - Added parameter type validation for `execute` command.
-- Added several implicitly-allowed domains including codahosted.io to the `execute` command.
+- Added several implicitly-allowed domains including `codahosted.io` to the `execute` command.
 
 ### Changed
 
@@ -160,7 +161,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ### Changed
 
-- Updated the testing fetcher for `coda execute` to auto-ungzip and set the `Accept: */*` request header by default, similar to live behavior.
+- Updated the testing fetcher for `coda execute` to auto-unzip and set the `Accept: */*` request header by default, similar to live behavior.
 - Unrecognized properties in array schemas will now generate errors at upload time instead of the fields being silently stripped. While functionally the same, the explicit errors should help catch cases where a maker may expect a property to be recognized (like `codaType`) when it is actually not supported.
 - Packs using `CodaApiHeaderBearerToken` can have additional non-Coda network domains as long as the auth is restricted to coda.io, subject the the normal Coda approval for multiple domains.
 
@@ -170,7 +171,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 - Added support for multiple domains in the `networkDomain` parameter of `setUserAuthentication()`.
 - Added `useProofKeyForCodeExchange` option to OAuth2 authentication to support PKCE extension. While it's optionally supported by most OAuth2 providers, it might be required by some websites (e.g. Twitter).
-- Added new wrappers `newRealFetcherExecutionContext` and `newRealFetcherSyncExecutionContext` to create "real" execution contexts that can be HTTP requests within integration tests. If you want to test a helper function that accepts an `ExecutionContext` or `SyncExecution` context, you canuse these. The recomendation is still to use `executeFormulaFromPackDef` or `executeSyncFormulaFromPackDef`, which assume that you are testing your actual full formula implementation and creates a real execution context on your behalf if you pass `useRealFetcher: true`. However, if you wish to directly test a helper function that takes an `ExecutionContext` as a parameter, these wrappers may be of use. Usage:
+- Added new wrappers `newRealFetcherExecutionContext` and `newRealFetcherSyncExecutionContext` to create "real" execution contexts that can be HTTP requests within integration tests. If you want to test a helper function that accepts an `ExecutionContext` or `SyncExecution` context, you can use these. The recommendation is still to use `executeFormulaFromPackDef` or `executeSyncFormulaFromPackDef`, which assume that you are testing your actual full formula implementation and creates a real execution context on your behalf if you pass `useRealFetcher: true`. However, if you wish to directly test a helper function that takes an `ExecutionContext` as a parameter, these wrappers may be of use. Usage:
 
 ```typescript
 import {newRealFetcherExecutionContext} from '@codahq/packs-sdk/dist/development';
@@ -207,7 +208,7 @@ await myHelper(context);
 - **Future Breaking Change** Dynamic sync tables will require `identityName` like static sync tables do, and `identityName` will override `identity.name` in dynamic schemas. In fact, `identity` in sync table schemas will be entirely unnecessary, except for the use case of constructing references to objects in other sync tables.
 - **Future Breaking Change** `SetEndpoint.getOptionsFormula` has been renamed `SetEndpoint.getOptions` for clarity.
 - **Future Breaking Change** The `attribution` property is moving from being a child field on `identity` within an object schema to just being a top-level field on the object schema.
-- **Future Breaking Change** The `defaultValue` property of parameter definitions will be renamed to `suggestedValue` to reflect that these are values that do not act as a true default but rather prepopulates a value when used.
+- **Future Breaking Change** The `defaultValue` property of parameter definitions will be renamed to `suggestedValue` to reflect that these are values that do not act as a true default but rather prefill a value when used.
 - **Future Breaking Change** Added support for files as parameters with `ParameterType.File`. Previously, files could be used as parameters by using the `ParameterType.Image` parameter type, but an error would show in the formula builder. In the future, this error may be enforced such that only image files will be allowed to be used when a parameter is specified to be a `ParameterType.Image`.
 
 ### Removed
@@ -383,7 +384,7 @@ await myHelper(context);
   inadvertently make accounts required.
 - Fixed a TypeScript bug where using `setUserAuthentication()` with authentication types like OAuth2 would give
   TypeScript errors even for valid definitions.
-- Parse XML fetcher responses to JSON for respones with content type `application/xml`. Previously only `text/xml` worked.
+- Parse XML fetcher responses to JSON for response with content type `application/xml`. Previously only `text/xml` worked.
 
 ## 0.4.2 - 2021-07-14
 

@@ -8,11 +8,13 @@ const config_storage_1 = require("./config_storage");
 const execution_1 = require("../testing/execution");
 const auth_1 = require("../testing/auth");
 const compile_1 = require("../testing/compile");
+const extensions_1 = require("./extensions");
 const auth_2 = require("./auth");
 const build_1 = require("./build");
 const clone_1 = require("./clone");
 const create_1 = require("./create");
 const execute_1 = require("./execute");
+const extensions_2 = require("./extensions");
 const init_1 = require("./init");
 const link_1 = require("./link");
 const register_1 = require("./register");
@@ -92,6 +94,19 @@ if (require.main === module) {
         command: 'init',
         describe: 'Initialize an empty Pack',
         handler: init_1.handleInit,
+    })
+        .command({
+        command: 'extensions <tools..>',
+        describe: 'Installs developer extensions for working with Packs.',
+        builder: (yargs) => {
+            yargs.positional('tools', {
+                type: 'string',
+                choices: Object.values(extensions_1.Tools),
+                desc: 'Which tools to install extensions for.',
+            });
+            return yargs;
+        },
+        handler: extensions_2.handleExtensions,
     })
         .command({
         command: 'clone <packIdOrUrl>',

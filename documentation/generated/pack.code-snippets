@@ -1,0 +1,272 @@
+{
+  "addFormula:string": {
+    "prefix": "/addFormula:string",
+    "description": "Adds a Coda formula which will return a text string in the doc.",
+    "body": "pack.addFormula({\n  name: \"${1:MyFormula}\",\n  description: \"${2:My description.}\",\n  parameters: [\n    // TODO: Add parameters.\n  ],\n  resultType: coda.ValueType.String,\n  execute: async function (args, context) {\n    // TODO: Unpack the parameter values.\n    let [] = args;\n    // TODO: Compute the result.\n    return \"\";\n  },\n});",
+    "scope": "javascript,typescript"
+  },
+  "addFormula:array": {
+    "prefix": "/addFormula:array",
+    "description": "Adds a Coda formula which will return a text string in the doc.",
+    "body": "pack.addFormula({\n  name: \"${1:MyFormula}\",\n  description: \"${2:My description.}\",\n  parameters: [\n    // TODO: Add parameters.\n  ],\n  resultType: coda.ValueType.Array,\n  items: coda.makeSchema({\n    type: coda.ValueType.String,\n  }),\n  execute: async function (args, context) {\n    // TODO: Unpack the parameter values.\n    let [] = args;\n    // TODO: Compute the result.\n    return [];\n  },\n});",
+    "scope": "javascript,typescript"
+  },
+  "addFormula:boolean": {
+    "prefix": "/addFormula:boolean",
+    "description": "Adds a Coda formula which will return true or false in the doc.",
+    "body": "pack.addFormula({\n  name: \"${1:MyFormula}\",\n  description: \"${2:My description.}\",\n  parameters: [\n    // TODO: Add parameters.\n  ],\n  resultType: coda.ValueType.Boolean,\n  execute: async function (args, context) {\n    // TODO: Unpack the parameter values.\n    let [] = args;\n    // TODO: Compute the result.\n    return true;\n  },\n});",
+    "scope": "javascript,typescript"
+  },
+  "addFormula:number": {
+    "prefix": "/addFormula:number",
+    "description": "Adds a Coda formula which will return a number in the doc.",
+    "body": "pack.addFormula({\n  name: \"${1:MyFormula}\",\n  description: \"${2:My description.}\",\n  parameters: [\n    // TODO: Add parameters.\n  ],\n  resultType: coda.ValueType.Number,\n  execute: async function (args, context) {\n    // TODO: Unpack the parameter values.\n    let [] = args;\n    // TODO: Compute the result.\n    return 0;\n  },\n});",
+    "scope": "javascript,typescript"
+  },
+  "addFormula:object": {
+    "prefix": "/addFormula:object",
+    "description": "Adds a Coda formula which will return an object in the doc.",
+    "body": "pack.addFormula({\n  name: \"${1:MyFormula}\",\n  description: \"${2:My description.}\",\n  parameters: [\n    // TODO: Add parameters.\n  ],\n  resultType: coda.ValueType.Object,\n  schema: ${3:MySchema},\n  execute: async function (args, context) {\n    // TODO: Unpack the parameter values.\n    let [] = args;\n    // TODO: Compute the result.\n    return {};\n  },\n});",
+    "scope": "javascript,typescript"
+  },
+  "addFormula:action": {
+    "prefix": "/addFormula:action",
+    "description": "Adds an action formula which can be used in a button or automation.",
+    "body": "pack.addFormula({\n  name: \"${1:MyAction}\",\n  description: \"${2:My description.}\",\n  parameters: [\n    // TODO: Add parameters.\n  ],\n  resultType: coda.ValueType.String,\n  isAction: true,\n  execute: async function (args, context) {\n    // TODO: Unpack the parameter values.\n    let [] = args;\n    // TODO: Do something.\n    return \"OK\";\n  },\n});",
+    "scope": "javascript,typescript"
+  },
+  "addColumnFormat": {
+    "prefix": "/addColumnFormat",
+    "description": "Adds a custom column type that you apply to any column in any Coda table.",
+    "body": "pack.addColumnFormat({\n  name: \"${1:My Column Format}\",\n  instructions: \"${2:My description.}\",\n  formulaName: \"${3:MyFormula}\",\n  matchers: [\n    // TODO: If formatting a URL, add a regular expression that matches it.\n  ],\n});",
+    "scope": "javascript,typescript"
+  },
+  "card": {
+    "prefix": "/card",
+    "description": "Adds a everything you need for a card (schema, formula, and column format).",
+    "body": "// A schema that defines the data shown in the card.\nconst ${1:Thing}Schema = coda.makeObjectSchema({\n  properties: {\n    ${2:name}: { type: coda.ValueType.String },\n    ${3:description}: { type: coda.ValueType.String },\n    ${4:picture}: {\n      type: coda.ValueType.String,\n      codaType: coda.ValueHintType.ImageReference,\n    },\n    ${5:link}: {\n      type: coda.ValueType.String,\n      codaType: coda.ValueHintType.Url,\n    },\n    // TODO: Add more properties.\n  },\n  displayProperty: \"$2\",\n  titleProperty: \"$2\",\n  snippetProperty: \"$3\",\n  imageProperty: \"$4\",\n  linkProperty: \"$5\",\n  subtitleProperties: [\n    // TODO: List the properties to show under the title.\n  ],\n});\n\n// A formula that accepts a URL and returns an object matching the schema above.\npack.addFormula({\n  name: \"$1\",\n  description: \"${6:My description.}\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"url\",\n      description: \"${6: My parameter description.}\",\n    }),\n  ],\n  resultType: coda.ValueType.Object,\n  schema: $1Schema,\n  execute: async function (args, context) {\n    let [url] = args;\n    // TODO: Fetch information about the item represented by the URL.\n    return {\n      // TODO: Populate with fetched information.\n      $5: url,\n    };\n  },\n});\n\n// A column format that defines which URL patterns the formula should match.\npack.addColumnFormat({\n  name: \"$1\",\n  instructions: \"${7:My instructions.}\",\n  formulaName: \"$1\",\n  matchers: [\n    new RegExp(\"${8:https://example.com/.*}\"),\n    // TODO: Optionally add more URL patterns.\n  ],\n});",
+    "scope": "javascript,typescript"
+  },
+  "setUserAuthentication": {
+    "prefix": "/setUserAuthentication",
+    "description": "Sets per-user authentication for the Pack.",
+    "body": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.$0,\n});",
+    "scope": "javascript,typescript"
+  },
+  "setUserAuthentication:Bearer": {
+    "prefix": "/setUserAuthentication:Bearer",
+    "description": "Sets per-user authentication for the Pack using a bearer token in the Authentication header.",
+    "body": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.HeaderBearerToken,\n  instructionsUrl: \"${1:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});",
+    "scope": "javascript,typescript"
+  },
+  "setUserAuthentication:CodaApi": {
+    "prefix": "/setUserAuthentication:CodaApi",
+    "description": "Sets per-user authentication for the Pack, using a Coda API token.",
+    "body": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.CodaApiHeaderBearerToken,\n});",
+    "scope": "javascript,typescript"
+  },
+  "setUserAuthentication:Header": {
+    "prefix": "/setUserAuthentication:Header",
+    "description": "Sets per-user authentication for the Pack, using a token in a custom header.",
+    "body": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.CustomHeaderToken,\n  headerName: \"${1:MyToken}\",\n  instructionsUrl: \"${2:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});",
+    "scope": "javascript,typescript"
+  },
+  "setUserAuthentication:Custom": {
+    "prefix": "/setUserAuthentication:Custom",
+    "description": "Sets per-user authentication for the Pack, using a set of custom tokens.",
+    "body": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.Custom,\n  params: [\n    {\n      name: \"${1:myToken}\",\n      description: \"${2:My description}\",\n    },\n    // TODO: Add more parameters, if needed.\n  ],\n  instructionsUrl: \"${3:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});",
+    "scope": "javascript,typescript"
+  },
+  "setUserAuthentication:QueryParams": {
+    "prefix": "/setUserAuthentication:QueryParams",
+    "description": "Sets per-user authentication for the Pack, using multiple tokens passed in URL query parameters.",
+    "body": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.MultiQueryParamToken,\n  params: [\n    { name: \"${1:myToken}\", description: \"${2:My token description}\" },\n    { name: \"${3:myKey}\", description: \"${4:My key description}\" },\n    // TODO: Add more parameters, if needed.\n  ],\n  instructionsUrl: \"${5:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});",
+    "scope": "javascript,typescript"
+  },
+  "setUserAuthentication:OAuth2": {
+    "prefix": "/setUserAuthentication:OAuth2",
+    "description": "Sets per-user, OAuth2 authentication for the Pack.",
+    "body": "// When registering your app in the API's developer console set the redirect URL\n// to: https://coda.io/packsAuth/oauth2/{PACK ID}\n// After building your Pack, remember to visit the Settings tab to set your\n// client ID and secret.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.OAuth2,\n  // The following two URLs are will be found in the API's documentation.\n  authorizationUrl: \"${1:https://example.com/authorize}\",\n  tokenUrl: \"${2:https://example.com/token}\",\n  scopes: [\n    // TODO: List the API scopes to request, if any.\n  ],\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});",
+    "scope": "javascript,typescript"
+  },
+  "setUserAuthentication:QueryParam": {
+    "prefix": "/setUserAuthentication:QueryParam",
+    "description": "Sets per-user authentication for the Pack, using a token passed in a URL query parameter.",
+    "body": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.QueryParamToken,\n  paramName: \"${1:myToken}\",\n  instructionsUrl: \"${2:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});",
+    "scope": "javascript,typescript"
+  },
+  "setUserAuthentication:WebBasic": {
+    "prefix": "/setUserAuthentication:WebBasic",
+    "description": "Sets per-user authentication for the Pack, using a username and password passed in the Authorization header.",
+    "body": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.WebBasic,\n  instructionsUrl: \"${1:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});",
+    "scope": "javascript,typescript"
+  },
+  "setSystemAuthentication": {
+    "prefix": "/setSystemAuthentication",
+    "description": "Sets system-wide authentication for the Pack.",
+    "body": "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.$0,\n});",
+    "scope": "javascript,typescript"
+  },
+  "setSystemAuthentication:Bearer": {
+    "prefix": "/setSystemAuthentication:Bearer",
+    "description": "Sets system-wide authentication for the Pack using a bearer token in the Authentication header.",
+    "body": "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.HeaderBearerToken,\n});",
+    "scope": "javascript,typescript"
+  },
+  "setSystemAuthentication:Header": {
+    "prefix": "/setSystemAuthentication:Header",
+    "description": "Sets system-wide authentication for the Pack, using a token in a custom header.",
+    "body": "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.CustomHeaderToken,\n  headerName: \"${1:MyToken}\",\n});",
+    "scope": "javascript,typescript"
+  },
+  "setSystemAuthentication:Custom": {
+    "prefix": "/setSystemAuthentication:Custom",
+    "description": "Sets system-wide authentication for the Pack, using a set of custom tokens.",
+    "body": "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.Custom,\n  params: [\n    {\n      name: \"${1:myToken}\",\n      description: \"${2:My description}\",\n    },\n    // TODO: Add more parameters, if needed.\n  ],\n});",
+    "scope": "javascript,typescript"
+  },
+  "setSystemAuthentication:QueryParams": {
+    "prefix": "/setSystemAuthentication:QueryParams",
+    "description": "Sets system-wide authentication for the Pack, using multiple tokens passed in URL query parameters.",
+    "body": "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.MultiQueryParamToken,\n  params: [\n    { name: \"${1:myToken}\", description: \"${2:My token description}\" },\n    { name: \"${3:myKey}\", description: \"${4:My key description}\" },\n    // TODO: Add more parameters, if needed.\n  ],\n});",
+    "scope": "javascript,typescript"
+  },
+  "setSystemAuthentication:QueryParam": {
+    "prefix": "/setSystemAuthentication:QueryParam",
+    "description": "Sets system-wide authentication for the Pack, using a token passed in a URL query parameter.",
+    "body": "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.QueryParamToken,\n  paramName: \"${1:myToken}\",\n});",
+    "scope": "javascript,typescript"
+  },
+  "setSystemAuthentication:WebBasic": {
+    "prefix": "/setSystemAuthentication:WebBasic",
+    "description": "Sets system-wide authentication for the Pack, using a username and password passed in the Authorization header.",
+    "body": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.WebBasic,\n  instructionsUrl: \"${1:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});",
+    "scope": "javascript,typescript"
+  },
+  "addNetworkDomain": {
+    "prefix": "/addNetworkDomain",
+    "description": "Allows the pack to make requests to listed domains.",
+    "body": "pack.addNetworkDomain(\"${1:example.com}\");",
+    "scope": "javascript,typescript"
+  },
+  "makeParameter:string": {
+    "prefix": "/makeParameter:string",
+    "description": "Creates a string parameter.",
+    "body": "coda.makeParameter({\n  type: coda.ParameterType.String,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),",
+    "scope": "javascript,typescript"
+  },
+  "makeParameter:boolean": {
+    "prefix": "/makeParameter:boolean",
+    "description": "Creates a boolean parameter.",
+    "body": "coda.makeParameter({\n  type: coda.ParameterType.Boolean,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),",
+    "scope": "javascript,typescript"
+  },
+  "makeParameter:date": {
+    "prefix": "/makeParameter:date",
+    "description": "Creates a date parameter.",
+    "body": "coda.makeParameter({\n  type: coda.ParameterType.Date,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),",
+    "scope": "javascript,typescript"
+  },
+  "makeParameter:html": {
+    "prefix": "/makeParameter:html",
+    "description": "Creates a html parameter.",
+    "body": "coda.makeParameter({\n  type: coda.ParameterType.Html,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),",
+    "scope": "javascript,typescript"
+  },
+  "makeParameter:image": {
+    "prefix": "/makeParameter:image",
+    "description": "Creates an image parameter.",
+    "body": "coda.makeParameter({\n  type: coda.ParameterType.Image,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),",
+    "scope": "javascript,typescript"
+  },
+  "makeParameter:file": {
+    "prefix": "/makeParameter:file",
+    "description": "Creates a file parameter.",
+    "body": "coda.makeParameter({\n  type: coda.ParameterType.File,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),",
+    "scope": "javascript,typescript"
+  },
+  "makeParameter:number": {
+    "prefix": "/makeParameter:number",
+    "description": "Creates a number parameter.",
+    "body": "coda.makeParameter({\n  type: coda.ParameterType.Number,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),",
+    "scope": "javascript,typescript"
+  },
+  "makeParameter:string[]": {
+    "prefix": "/makeParameter:string[]",
+    "description": "Creates a string array parameter.",
+    "body": "coda.makeParameter({\n  type: coda.ParameterType.StringArray,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),",
+    "scope": "javascript,typescript"
+  },
+  "makeParameter:boolean[]": {
+    "prefix": "/makeParameter:boolean[]",
+    "description": "Creates a boolean array parameter.",
+    "body": "coda.makeParameter({\n  type: coda.ParameterType.BooleanArray,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),",
+    "scope": "javascript,typescript"
+  },
+  "makeParameter:date[]": {
+    "prefix": "/makeParameter:date[]",
+    "description": "Creates a date array parameter.",
+    "body": "coda.makeParameter({\n  type: coda.ParameterType.DateArray,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),",
+    "scope": "javascript,typescript"
+  },
+  "makeParameter:html[]": {
+    "prefix": "/makeParameter:html[]",
+    "description": "Creates a html array parameter.",
+    "body": "coda.makeParameter({\n  type: coda.ParameterType.HtmlArray,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),",
+    "scope": "javascript,typescript"
+  },
+  "makeParameter:image[]": {
+    "prefix": "/makeParameter:image[]",
+    "description": "Creates a image array parameter.",
+    "body": "coda.makeParameter({\n  type: coda.ParameterType.ImageArray,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),",
+    "scope": "javascript,typescript"
+  },
+  "makeParameter:number[]": {
+    "prefix": "/makeParameter:number[]",
+    "description": "Creates a number array parameter.",
+    "body": "coda.makeParameter({\n  type: coda.ParameterType.NumberArray,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),",
+    "scope": "javascript,typescript"
+  },
+  "addSyncTable": {
+    "prefix": "/addSyncTable",
+    "description": "Adds a sync table.",
+    "body": "pack.addSyncTable({\n  name: \"${1:MyThings}\",\n  description: \"${2:Table description.}\",\n  identityName: \"$1\",\n  schema: ${3:MySchema},\n  formula: {\n    name: \"Sync$1\",\n    description: \"Syncs the data.\",\n    parameters: [\n      // TODO: Add parameters.\n    ],\n    execute: async function (args, context) {\n      // TODO: Unpack the parameter values.\n      let [] = args;\n      // TODO: Fetch the rows.\n      let rows = [];\n      for (let row of rows) {\n        // TODO: If required, adjust the row to match the schema.\n      }\n      return {\n        result: rows,\n      };\n    },\n  },\n});",
+    "scope": "javascript,typescript"
+  },
+  "addDynamicSyncTable": {
+    "prefix": "/addDynamicSyncTable",
+    "description": "Adds a dynamic sync table.",
+    "body": "pack.addDynamicSyncTable({\n  name: \"${1:MyThings}\",\n  description: \"${2:My description.}\",\n  identityName: \"${1}\",\n  listDynamicUrls: async function (context) {\n    // TODO: Fetch the list of datasets the user can connect to.\n    let datasets = [];\n    // TODO: Replace \"name\" and \"url\" below with correct JSON keys.\n    return coda.autocompleteSearchObjects(undefined, datasets, \"name\", \"url\");\n  },\n  getName: async function (context) {\n    let datasetUrl = context.sync.dynamicUrl;\n    // TODO: Fetch metadata about the dataset and return the name.\n    return \"Table Name\";\n  },\n  getSchema: async function (context) {\n    let datasetUrl = context.sync.dynamicUrl;\n    // TODO: Fetch metadata about the dataset and use it to construct a schema.\n    let schema = coda.makeObjectSchema({\n      properties: {},\n      displayProperty: \"\",\n      idProperty: \"\",\n      featuredProperties: [],\n    });\n    return schema;\n  },\n  getDisplayUrl: async function (context) {\n    let datasetUrl = context.sync.dynamicUrl;\n    // TODO: Fetch metadata about the dataset and return a user-friendly URL.\n    return \"\";\n  },\n  formula: {\n    name: \"Sync$1\",\n    description: \"Syncs the data.\",\n    parameters: [\n      // TODO: Add parameters.\n    ],\n    execute: async function (args, context) {\n      let datasetUrl = context.sync.dynamicUrl!;\n      // TODO: Unpack the parameter values.\n      let [] = args;\n      // TODO: Fetch the rows.\n      let rows = [];\n      for (let row of rows) {\n        // TODO: If required, adjust the row to match the schema.\n      }\n      return {\n        result: rows,\n      };\n    },\n  },\n});",
+    "scope": "javascript,typescript"
+  },
+  "makeObjectSchema": {
+    "prefix": "/makeObjectSchema",
+    "description": "Creates an object schema definition.",
+    "body": "const ${1:Thing}Schema = coda.makeObjectSchema({\n  properties: {\n    ${2:name}: { type: coda.ValueType.String },\n    // TODO: Add more properties.\n  },\n  displayProperty: \"$2\",\n});",
+    "scope": "javascript,typescript"
+  },
+  "makeObjectSchema:sync": {
+    "prefix": "/makeObjectSchema:sync",
+    "description": "Creates an object schema definition for a sync table.",
+    "body": "const ${1:Thing}Schema = coda.makeObjectSchema({\n  properties: {\n    ${2:name}: { type: coda.ValueType.String },\n    ${3:thingId}: { type: coda.ValueType.String },\n    // TODO: Add more properties.\n  },\n  displayProperty: \"$2\",\n  idProperty: \"$3\",\n  featuredProperties: [\n    // TODO: Add featured properties.\n  ],\n});",
+    "scope": "javascript,typescript"
+  },
+  "makeObjectSchema:card": {
+    "prefix": "/makeObjectSchema:card",
+    "description": "Creates an object schema definition for a card.",
+    "body": "const ${1:Thing}Schema = coda.makeObjectSchema({\n  properties: {\n    ${2:name}: { type: coda.ValueType.String },\n    ${3:description}: { type: coda.ValueType.String },\n    ${4:picture}: {\n      type: coda.ValueType.String,\n      codaType: coda.ValueHintType.ImageReference,\n    },\n    ${5:link}: {\n      type: coda.ValueType.String,\n      codaType: coda.ValueHintType.Url,\n    },\n    // TODO: Add more properties.\n  },\n  displayProperty: \"$2\",\n  titleProperty: \"$2\",\n  snippetProperty: \"$3\",\n  imageProperty: \"$4\",\n  linkProperty: \"$5\",\n  subtitleProperties: [\n    // TODO: List the properties to show under the title.\n  ],\n});",
+    "scope": "javascript,typescript"
+  },
+  "fetch:get": {
+    "prefix": "/fetch:get",
+    "description": "Fetches data from an API.",
+    "body": "let response = await context.fetcher.fetch({\n  method: \"GET\",\n  url: \"${1:https://example.com}\",\n});\nlet data = response.body;",
+    "scope": "javascript,typescript"
+  },
+  "fetch:post": {
+    "prefix": "/fetch:post",
+    "description": "Send data to an API.",
+    "body": "let payload = {\n  // TODO: Construct the JSON that the API expects.\n};\nlet response = await context.fetcher.fetch({\n  method: \"POST\",\n  url: \"${1:https://example.com}\",\n  headers: {\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify(payload),\n});\nlet data = response.body;",
+    "scope": "javascript,typescript"
+  }
+}
