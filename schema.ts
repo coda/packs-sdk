@@ -1565,6 +1565,7 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
     const normalized: ObjectSchemaProperties = {};
     const {
       id,
+      fixedId,
       primary,
       featured,
       idProperty,
@@ -1588,6 +1589,7 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
     const normalizedSchema = {
       type: ValueType.Object,
       id: id ? normalizeSchemaKey(id) : undefined,
+      fixedId,
       featured: featured ? featured.map(normalizeSchemaKey) : undefined,
       primary: primary ? normalizeSchemaKey(primary) : undefined,
       idProperty: idProperty ? normalizeSchemaKey(idProperty) : undefined,

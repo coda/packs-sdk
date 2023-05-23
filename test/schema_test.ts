@@ -231,6 +231,7 @@ describe('Schema', () => {
           'fruit [choose multiple]': {type: schema.ValueType.String},
           subtitle: {type: schema.ValueType.String},
         },
+        fixedId: 'myFixedId',
         titleProperty: 'Enter the date in MM.DD.YYYY format',
         snippetProperty: 'another.boo',
         subtitleProperties: [{property: 'subtitle', placeholder: 'Empty'}],
@@ -256,6 +257,7 @@ describe('Schema', () => {
         },
         Subtitle: {type: schema.ValueType.String, fromKey: 'subtitle'},
       });
+      assert.equal(normalized.fixedId, 'myFixedId');
       assert.deepEqual((normalized as schema.GenericObjectSchema).titleProperty, 'EnterTheDateInMMDDYYYYFormat');
       assert.deepEqual((normalized as schema.GenericObjectSchema).snippetProperty, 'Another.Boo');
       assert.deepEqual((normalized as schema.GenericObjectSchema).subtitleProperties, [
