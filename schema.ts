@@ -1564,22 +1564,36 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
   } else if (isObject(schema)) {
     const normalized: ObjectSchemaProperties = {};
     const {
-      id,
-      fixedId,
-      primary,
-      featured,
-      idProperty,
+      attribution,
+      autocomplete,
+      codaType,
+      description,
       displayProperty,
+      featured,
       featuredProperties,
-      titleProperty,
-      subtitleProperties,
+      fixedId,
+      id,
+      identity,
+      idProperty,
       imageProperty,
-      snippetProperty,
+      includeUnknownProperties,
       linkProperty,
-    } = schema;
-    for (const key of Object.keys(schema.properties)) {
+      mutable,
+      primary,
+      properties,
+      snippetProperty,
+      subtitleProperties,
+      titleProperty,
+      type,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      __packId,
+      ...rest
+    } = schema as GenericObjectSchema;
+    // Have TS ensure we don't forget about new fields in this function.
+    ensureNever<keyof typeof rest>();
+    for (const key of Object.keys(properties)) {
       const normalizedKey = normalizeSchemaKey(key);
-      const props = schema.properties[key];
+      const props = properties[key];
       const {required, fromKey} = props as ObjectSchemaProperty;
       normalized[normalizedKey] = Object.assign(normalizeSchema(props), {
         required,
@@ -1587,29 +1601,29 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
       });
     }
     const normalizedSchema = {
-      type: ValueType.Object,
-      id: id ? normalizeSchemaKey(id) : undefined,
-      fixedId,
-      featured: featured ? featured.map(normalizeSchemaKey) : undefined,
-      primary: primary ? normalizeSchemaKey(primary) : undefined,
-      idProperty: idProperty ? normalizeSchemaKey(idProperty) : undefined,
-      featuredProperties: featuredProperties ? featuredProperties.map(normalizeSchemaKey) : undefined,
+      attribution,
+      autocomplete,
+      codaType,
+      description,
       displayProperty: displayProperty ? normalizeSchemaKey(displayProperty) : undefined,
+      featured: featured ? featured.map(normalizeSchemaKey) : undefined,
+      featuredProperties: featuredProperties ? featuredProperties.map(normalizeSchemaKey) : undefined,
+      fixedId,
+      id: id ? normalizeSchemaKey(id) : undefined,
+      identity,
+      idProperty: idProperty ? normalizeSchemaKey(idProperty) : undefined,
+      imageProperty: imageProperty ? normalizeSchemaPropertyIdentifier(imageProperty, normalized) : undefined,
+      includeUnknownProperties,
+      linkProperty: linkProperty ? normalizeSchemaPropertyIdentifier(linkProperty, normalized) : undefined,
+      mutable,
+      primary: primary ? normalizeSchemaKey(primary) : undefined,
       properties: normalized,
-      identity: schema.identity,
-      codaType: schema.codaType,
-      description: schema.description,
-      attribution: schema.attribution,
-      includeUnknownProperties: schema.includeUnknownProperties,
-      titleProperty: titleProperty ? normalizeSchemaPropertyIdentifier(titleProperty, normalized) : undefined,
+      snippetProperty: snippetProperty ? normalizeSchemaPropertyIdentifier(snippetProperty, normalized) : undefined,
       subtitleProperties: subtitleProperties
         ? subtitleProperties.map(subProp => normalizeSchemaPropertyIdentifier(subProp, normalized))
         : undefined,
-      imageProperty: imageProperty ? normalizeSchemaPropertyIdentifier(imageProperty, normalized) : undefined,
-      snippetProperty: snippetProperty ? normalizeSchemaPropertyIdentifier(snippetProperty, normalized) : undefined,
-      linkProperty: linkProperty ? normalizeSchemaPropertyIdentifier(linkProperty, normalized) : undefined,
-      mutable: schema.mutable,
-      autocomplete: schema.autocomplete,
+      titleProperty: titleProperty ? normalizeSchemaPropertyIdentifier(titleProperty, normalized) : undefined,
+      type: ValueType.Object,
     } as T;
 
     return normalizedSchema;
