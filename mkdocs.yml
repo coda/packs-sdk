@@ -93,9 +93,9 @@ plugins:
     # Generate card images for social sharing.
     - social:
         cards: !ENV [MK_DOCS_GENERATE_CARDS, true]
-        cards_color:
-          fill: "#006838"  # Emerald
-          text: "#FFFFFF"
+        cards_layout_options:
+          background_color: "#006838"  # Emerald
+          color: "#FFFFFF"
 
 
 extra:
