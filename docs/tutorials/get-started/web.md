@@ -29,7 +29,7 @@ The Pack Studio is built right in to the Coda application. To get there:
 
 You are now in the Pack Studio, ready to start building!
 
-[![How to navigate to the Pack Studio][web_ide_navigate]{: .screenshot}][web_ide_navigate]
+![type:video][web_ide_navigate]{: .screenshot}
 
 
 ## Create a Pack from an example
@@ -50,7 +50,7 @@ Next we'll use the Pack Studio to build that code and get it ready to use:
 
 Your Pack is now built and ready to use!
 
-[![How to build your Pack][web_ide_build]{: .screenshot}][web_ide_build]
+![type:video][web_ide_build]{: .screenshot}
 
 
 ## Use the Pack
@@ -91,9 +91,9 @@ You've built your fist Pack, congrats! 🎉 Now that you have some experience wi
 [coda_sign_up]: https://coda.io/signup
 [hc_doc_maker]: https://help.coda.io/en/articles/3388781-members-and-roles
 [coda_home]: https://coda.io/docs
-[web_ide_navigate]: ../../images/web_ide_navigate.webp
-[web_ide_build]: ../../images/web_ide_build.webp
+[web_ide_navigate]: ../../images/web_ide_navigate.mp4
+[web_ide_build]: ../../images/web_ide_build.mp4
 [samples_hello_world]: ../../samples/full/hello-world.md
-[rebuild]: ../../images/web_ide_rebuild.webp
+[rebuild]: ../../images/web_ide_rebuild.mp4
 [samples]: ../../samples/topic/formula.md
 [guides]: ../../guides/blocks/formulas.md
