@@ -1,6 +1,8 @@
 import type {GenericSyncFormulaResult} from '../api';
 import type {GenericSyncUpdateResultMarshaled} from '../api';
+import type {ObjectSchemaProperty} from '../schema';
 import type {PackFormulaResult} from '../api_types';
+import type {Schema} from '../schema';
 
 export enum FormulaType {
   Standard = 'Standard',
@@ -74,6 +76,7 @@ export interface PropertyAutocompleteFormulaSpecification {
   autocompleteName: string;
   propertyName: string;
   propertyValues: Record<string, any>;
+  propertySchema: Schema & ObjectSchemaProperty;
   search: string;
 }
 

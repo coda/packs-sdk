@@ -106,6 +106,7 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                             ...executionContext,
                             propertyName: formulaSpec.propertyName,
                             propertyValues,
+                            propertySchema: formulaSpec.propertySchema,
                         };
                         const contextUsed = {};
                         Object.defineProperty(propertyAutocompleteExecutionContext, 'search', {
