@@ -170,6 +170,7 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
               ...executionContext,
               propertyName: formulaSpec.propertyName,
               propertyValues,
+              propertySchema: formulaSpec.propertySchema,
             };
 
             const contextUsed: Omit<PropertyAutocompleteAnnotatedResult, 'packResult' | 'propertiesUsed'> = {};

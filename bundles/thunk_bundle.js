@@ -6310,7 +6310,8 @@ module.exports = (() => {
               const propertyAutocompleteExecutionContext = {
                 ...executionContext,
                 propertyName: formulaSpec.propertyName,
-                propertyValues
+                propertyValues,
+                propertySchema: formulaSpec.propertySchema
               };
               const contextUsed = {};
               Object.defineProperty(propertyAutocompleteExecutionContext, "search", {

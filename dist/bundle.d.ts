@@ -636,6 +636,10 @@ export interface PropertyAutocompleteExecutionContext extends ExecutionContext {
 	 */
 	readonly propertyName: string;
 	/**
+	 * Schema of the property being edited.
+	 */
+	readonly propertySchema: Schema;
+	/**
 	 * Current values of other properties from the same row. Non-required properties may be missing
 	 * if the doc owner elected not to sync them, or if they have a type that's not yet supported
 	 * for autocomplete context. Properties referencing other sync tables may be missing some or
