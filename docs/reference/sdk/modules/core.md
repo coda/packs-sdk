@@ -120,8 +120,11 @@ import * as coda from "@codahq/packs-sdk";
 - [SyncFormulaResult](../interfaces/core.SyncFormulaResult.md)
 - [SyncTableDef](../interfaces/core.SyncTableDef.md)
 - [SyncTableOptions](../interfaces/core.SyncTableOptions.md)
+- [SyncUpdate](../interfaces/core.SyncUpdate.md)
+- [SyncUpdateResult](../interfaces/core.SyncUpdateResult.md)
 - [TemporaryBlobStorage](../interfaces/core.TemporaryBlobStorage.md)
 - [TextAttributionNode](../interfaces/core.TextAttributionNode.md)
+- [UpdateSyncExecutionContext](../interfaces/core.UpdateSyncExecutionContext.md)
 - [WebBasicAuthentication](../interfaces/core.WebBasicAuthentication.md)
 
 ## Type Aliases
@@ -175,9 +178,11 @@ import * as coda from "@codahq/packs-sdk";
 - [SuggestedValueType](../types/core.SuggestedValueType.md)
 - [SyncFormula](../types/core.SyncFormula.md)
 - [SyncTable](../types/core.SyncTable.md)
+- [SyncUpdateSingleResult](../types/core.SyncUpdateSingleResult.md)
 - [SystemAuthentication](../types/core.SystemAuthentication.md)
 - [SystemAuthenticationDef](../types/core.SystemAuthenticationDef.md)
 - [TypedPackFormula](../types/core.TypedPackFormula.md)
+- [UpdateSync](../types/core.UpdateSync.md)
 
 ## Variables
 

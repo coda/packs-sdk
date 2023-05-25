@@ -2498,7 +2498,6 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
 }
 /**
  * Type definition for the parameter used to pass in a batch of updates to a sync table update function.
- * @hidden
  */
 export interface SyncUpdate<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
 	previousValue: ObjectSchemaDefinitionType<K, L, SchemaT>;
@@ -2512,7 +2511,6 @@ export interface SyncUpdate<K extends string, L extends string, SchemaT extends 
 export declare type GenericSyncUpdate = SyncUpdate<any, any, any>;
 /**
  * Type definition for a single update result returned by a sync table update function.
- * @hidden
  */
 export declare type SyncUpdateSingleResult<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> = ObjectSchemaDefinitionType<K, L, SchemaT> | Error;
 /**
@@ -2522,7 +2520,6 @@ export declare type SyncUpdateSingleResult<K extends string, L extends string, S
 export declare type GenericSyncUpdateSingleResult = SyncUpdateSingleResult<any, any, any>;
 /**
  * Type definition for the batched result returned by a sync table update function.
- * @hidden
  */
 export interface SyncUpdateResult<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
 	result: Array<SyncUpdateSingleResult<K, L, SchemaT>>;
@@ -2594,7 +2591,6 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
 	 * If the table supports object updates, the maximum number of objects that will be sent to the pack
 	 * in a single batch. Defaults to 1 if not specified.
 	 */
-	/** @hidden */
 	maxUpdateBatchSize?: number;
 	/**
 	 * The JavaScript function that implements this sync update if the table supports updates.
@@ -2603,7 +2599,6 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
 	 * and is responsible for pushing those updated objects to the external system then returning
 	 * the new state of each object.
 	 */
-	/** @hidden */
 	executeUpdate?(params: ParamValues<ParamDefsT>, updates: Array<SyncUpdate<K, L, SchemaT>>, context: UpdateSyncExecutionContext): Promise<SyncUpdateResult<K, L, SchemaT>>;
 }
 /**
