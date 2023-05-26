@@ -23,3 +23,5 @@ Type definition for the batched result returned by a sync table update function.
 ### result
 
 • **result**: [`SyncUpdateSingleResult`](../types/core.SyncUpdateSingleResult.md)<`K`, `L`, `SchemaT`\>[]
+
+The individual update results. Every incoming update should have a corresponding result, in the same order.

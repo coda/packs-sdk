@@ -968,8 +968,17 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
  * Type definition for the parameter used to pass in a batch of updates to a sync table update function.
  */
 export interface SyncUpdate<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
+  /**
+   * The previous value of the row.
+   */
   previousValue: ObjectSchemaDefinitionType<K, L, SchemaT>;
+  /**
+   * The new value of the row, with the user edits applied.
+   */
   newValue: ObjectSchemaDefinitionType<K, L, SchemaT>;
+  /**
+   * The fields of the object that have been updated.
+   */
   updatedFields: string[];
 }
 
@@ -996,6 +1005,9 @@ export type GenericSyncUpdateSingleResult = SyncUpdateSingleResult<any, any, any
  * Type definition for the batched result returned by a sync table update function.
  */
 export interface SyncUpdateResult<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
+  /**
+   * The individual update results. Every incoming update should have a corresponding result, in the same order.
+   */
   result: Array<SyncUpdateSingleResult<K, L, SchemaT>>;
 }
 

@@ -9,3 +9,6 @@ search:
 [core](../modules/core.md).UpdateSync
 
 Ƭ **UpdateSync**: `Omit`<[`Sync`](../interfaces/core.Sync.md), ``"continuation"``\>
+
+Information about the current sync, part of the [UpdateSyncExecutionContext](../interfaces/core.UpdateSyncExecutionContext.md) passed to the
+`executeUpdate` function of the sync formula.

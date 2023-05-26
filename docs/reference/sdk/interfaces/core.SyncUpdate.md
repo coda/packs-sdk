@@ -24,14 +24,20 @@ Type definition for the parameter used to pass in a batch of updates to a sync t
 
 • **newValue**: `ObjectSchemaDefinitionType`<`K`, `L`, `SchemaT`\>
 
+The new value of the row, with the user edits applied.
+
 ___
 
 ### previousValue
 
 • **previousValue**: `ObjectSchemaDefinitionType`<`K`, `L`, `SchemaT`\>
 
+The previous value of the row.
+
 ___
 
 ### updatedFields
 
 • **updatedFields**: `string`[]
+
+The fields of the object that have been updated.
