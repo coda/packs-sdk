@@ -140,3 +140,14 @@ div.no pre code {
 .md-banner a {
   color: var(--md-code-hl-color);
 }
+
+/*
+ * Work around search suggest results being too large.
+ * See: https://github.com/squidfunk/mkdocs-material/issues/4278#issuecomment-1562597537
+ */
+.md-search-result .md-typeset {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  max-height: 140px;
+}
