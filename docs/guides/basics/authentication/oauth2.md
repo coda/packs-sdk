@@ -159,13 +159,13 @@ When the Pack above is installed the user will only be required to grant access 
 When the user signs in again they will be prompted to approve the additional scopes, after which they will be able to use the formula successfully.
 
 
-## URL limitations
+## URL limitations {: #url-limitations}
 
 Some services host a unique domain or subdomain for each account, and require that API requests be sent there. The [account-specific endpoints][auth_endpoints] feature can be used to determine the endpoint for a given account, but it assumes that the user has already authenticated using a common set of OAuth URLs.
 
 It currently isn't possible to change the `authorizationUrl` and `tokenUrl` dynamically or prompt the user to specify them. One workaround is to create a copy of the Pack for each domain you want to connect to, but that obviously doesn't scale well.
 
-Additionally, in order to prevent abuse, Coda enforces the `authorizationUrl` and `tokenUrl` configured have the same domain. This is almost always true, but in rare cases an API provider may use a different URL for each. To request an exemption from this restriction fill out the [Network Domains request form][support_network_domains].
+Additionally, in order to prevent abuse, Coda enforces the `authorizationUrl` and `tokenUrl` configured have the same domain. This is almost always true, but in rare cases an API provider may use a different URL for each. To request an exemption from this restriction fill out the [Approval request form][support_network_domains].
 
 !!! info "OAuth domain and network domain"
     The domain of the OAuth configuration URLs does not need to match the [network domain][fetcher_network_domains] configured for fetcher requests. This is convenient for services where the OAuth provider is a 3rd party (Okta, Auth0, etc).

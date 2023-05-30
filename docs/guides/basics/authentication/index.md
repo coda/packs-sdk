@@ -188,9 +188,14 @@ When using per-user authentication, the user will be prompted to enter their tok
     ```
 
 
-### Custom tokens
+### Custom tokens {: #custom-tokens}
 
-Some APIs require a combination of tokens to be used, or for them to be passed in the request body or URL. In these cases you can use the [`Custom`][Custom] authentication type. Consider this example, where a key is passed in the URL and an additional token is passed in the request body:
+Some APIs require a combination of tokens to be used, or for them to be passed in the request body or URL. In these cases you can use the [`Custom`][Custom] authentication type.
+
+!!! warning "Approval required"
+    In order to use `Custom` authentication in your Pack must get approval from Coda. [Contact support][support_network_domain] to request approval.
+
+Consider this example, where a key is passed in the URL and an additional token is passed in the request body:
 
 ```
 POST /api/<key>/users
@@ -562,4 +567,4 @@ There are services however where each account is associated with a distinct doma
 [MultiQueryParamToken]: ../../../reference/sdk/enums/core.AuthenticationType.md#multiqueryparamtoken
 [CodaApiHeaderBearerToken]: ../../../reference/sdk/enums/core.AuthenticationType.md#codaapiheaderbearertoken
 [AWSAccessKey]: ../../../reference/sdk/enums/core.AuthenticationType.md#awsaccesskey
-
+[support_network_domain]: ../../../support/index.md#network-domains
