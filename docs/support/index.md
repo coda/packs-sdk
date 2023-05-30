@@ -34,13 +34,19 @@ If you are experiencing a problem with your Pack or have identified a bug you ca
 [Send email][support_email]{: .md-button .md-button--primary}
 
 
-## Request multiple network domains {: #network-domains}
+## Approvals and exemptions {: #network-domains}
 
-By default all Packs are limited to only a single [network domain][fetcher_network_domains]. To request an exemption, please fill out the form linked below. Ensure you are signed in with the same Coda account you are using to develop the Pack. We'll review your request and respond with a decision within a few business days.
+Certain Pack features are restricted by default and require approval before you can use them. Coda enforces these restrictions when you attempt to create a new version of your Pack. This means you can test your Pack locally using the CLI, but will need to have the approval granted before you can test in a real doc.
 
-If the Pack uses OAuth2 authentication where its authorization url domain doesn't match its token url domain, please use this form below as well to get help.
+The following features require approval:
 
-[Create request][network_domains_form]{: .md-button .md-button--primary}
+- Sending fetcher requests to multiple [network domains][fetcher_network_domains].
+- Using [`OAuth2` authentication][authentication_url_limitations] with an authorization and token URL on different domains.
+- Using [`Custom` authentication][authentication_custom_tokens].
+
+To request approval please fill out the form linked below. Ensure you are signed in with the same Coda account you are using to develop the Pack. We'll review your request and respond with a decision within a few business days.
+
+[Request approval][network_domains_form]{: .md-button .md-button--primary}
 
 
 [community_packs]: https://community.coda.io/c/15
@@ -51,3 +57,5 @@ If the Pack uses OAuth2 authentication where its authorization url domain doesn'
 [fetcher_network_domains]: ../guides/basics/fetcher.md#network-domains
 [network_domains_form]: https://coda.io/form/Pack-Network-Domains-Request_ddvuAhFq3IZ
 [office_hours]: https://calendly.com/ekoleda/packs-office-hours
+[authentication_custom_tokens]: ../guides/basics/authentication/index.md#custom-tokens
+[authentication_url_limitations]: ../guides/basics/authentication/oauth2.md#url-limitations

@@ -46,7 +46,7 @@ ___
 • **Custom** = ``"Custom"``
 
 Authenticate in a custom way by having one or more arbitrary secret values inserted into the request URL, body,
-headers, or the form data using template replacement.
+headers, or the form data using template replacement. Approval from Coda is required.
 
 **`See`**
 

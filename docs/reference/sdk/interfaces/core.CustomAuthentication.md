@@ -9,7 +9,7 @@ search:
 [core](../modules/core.md).CustomAuthentication
 
 Authenticate for custom, non-standard API authentication schemes by inserting one or more arbitrary secret values
-into the request (the body, URL, headers, or form data) using template replacement.
+into the request (the body, URL, headers, or form data) using template replacement. Approval from Coda is required.
 
 Some APIs use non-standard authentication schemes which often require secret credentials to be put in specific places
 in the request URL or request body. Custom authentication supports many of these cases by allowing you as the pack

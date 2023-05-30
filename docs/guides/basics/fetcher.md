@@ -19,7 +19,7 @@ pack.addNetworkDomain("example.com");
 
 The fetcher can to communicate with URLs on that domain and all sub-domains. It's usually best select the root domain of the service you are working with. For example, if you want to make requests to `api.example.com`, add the network domain `example.com`, in case you later determine you need to access related content on `images.example.com`, etc.
 
-By default a Pack is only allowed to register a single domain. This is done to limit abuse potential and provide transparency to users. If you want to combine data from multiple sources we recommend building multiple Packs and using the features of a Coda doc to bring them together. If however your use case requires making requests to multiple domains from a single Pack you may request an exemption by [contacting support][support_network_domains].
+By default a Pack is only allowed to register a single domain. This is done to limit abuse potential and provide transparency to users. If you want to combine data from multiple sources we recommend building multiple Packs and using the features of a Coda doc to bring them together. If however your use case requires making requests to multiple domains from a single Pack you may request approval by [contacting support][support_network_domains].
 
 The following domains don't need to be declared as a network domain in your Pack:
 
