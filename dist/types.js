@@ -77,7 +77,7 @@ var AuthenticationType;
     AuthenticationType["WebBasic"] = "WebBasic";
     /**
      * Authenticate in a custom way by having one or more arbitrary secret values inserted into the request URL, body,
-     * headers, or the form data using template replacement.
+     * headers, or the form data using template replacement. Approval from Coda is required.
      *
      * @see {@link CustomAuthentication}
      */
