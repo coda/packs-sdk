@@ -8,4 +8,4 @@ if [[ "$(uname -s)" == "Darwin" ]] && [[ "$(arch)" == "arm64" ]]; then
   export PATH="/opt/homebrew/bin:${PATH}"
 fi
 
-export PATH=${BASEDIR}/build/node/bin:${BASEDIR}/node_modules/.bin:${PATH}
+export PATH=${BASEDIR}/build/node/bin:${BASEDIR}/node_modules/.bin:${BASEDIR}/.pnpm_install/bin:${PATH}

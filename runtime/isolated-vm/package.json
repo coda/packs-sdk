@@ -36,7 +36,8 @@
     "isolated-vm": "."
   },
   "engines": {
-    "node": ">=10.4.0"
+    "node": ">=10.4.0",
+    "pnpm": ">=8.0.0 <8.6.0"
   },
   "gypfile": true,
   "homepage": "https://github.com/laverdet/isolated-vm#readme",
