@@ -13,3 +13,4 @@ site
 .npmrc
 .devcontainer
 .cache
+.pnpm_install
