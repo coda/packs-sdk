@@ -101,8 +101,8 @@ importers:
         specifier: 0.5.0
         version: 0.5.0
       yargs:
-        specifier: 17.7.1
-        version: 17.7.1
+        specifier: 17.7.2
+        version: 17.7.2
       yn:
         specifier: 3.1.1
         version: 3.1.1
@@ -3724,7 +3724,7 @@ packages:
     hasBin: true
     dependencies:
       typescript: 4.7.4
-      yargs: 17.7.1
+      yargs: 17.7.2
     dev: true
 
   /duplexer2@0.1.4:
@@ -7044,7 +7044,7 @@ packages:
       is-directory: 0.3.1
       lodash.pick: 4.4.0
       sharp: 0.31.2
-      yargs: 17.7.1
+      yargs: 17.7.2
     dev: true
 
   /sharp@0.31.2:
@@ -8291,8 +8291,8 @@ packages:
       yargs-parser: 20.2.4
     dev: true
 
-  /yargs@17.7.1:
-    resolution: {integrity: sha512-cwiTb08Xuv5fqF4AovYacTFNxk62th7LKJ6BL9IGUpTJrWoU7/7WdQGTP2SjKf1dUNBGzDd28p/Yfs/GI6JrLw==}
+  /yargs@17.7.2:
+    resolution: {integrity: sha512-7dSzzRQ++CKnNI/krKnYRV7JKKPUXMEh61soaHKg9mrWEhzFWhFnxPxGl+69cD1Ou63C13NUPCnmIcrvqCuM6w==}
     engines: {node: '>=12'}
     dependencies:
       cliui: 8.0.1
