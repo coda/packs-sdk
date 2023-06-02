@@ -13,7 +13,7 @@ RETRY_DELAY_SECS=15
 RETRY=0
 
 while true; do
-  curl -sSfL https://pnpm.js.org/pnpm.js | sudo node - add --global pnpm@7 && break
+  curl -sSfL https://pnpm.js.org/pnpm.js | sudo node - add --global "pnpm@~8.5.1" && break
   ERROR=$?
   RETRY=$((RETRY + 1))
   if [ "${RETRY}" -gt ${MAX_RETRIES} ]; then
