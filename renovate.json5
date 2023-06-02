@@ -31,5 +31,6 @@
 
   postUpgradeTasks: {
     commands: ['make bs build'],
+    fileFilters: ['dist/**/*', 'documentation/**/*'],
   },
 }
