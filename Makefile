@@ -24,7 +24,7 @@ _bootstrap-install-pnpm:
 
 .PHONY: _bootstrap-node
 _bootstrap-node:
-	pnpm install --frozen-lockfile
+	.pnpm_install/bin/pnpm install --frozen-lockfile
 
 .PHONY: _bootstrap-python
 _bootstrap-python:
