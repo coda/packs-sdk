@@ -61,6 +61,7 @@ _bootstrap-githooks: clean-githooks
 
 .PHONY: bootstrap
 bootstrap:
+	$(MAKE) MAKEFLAGS= _bootstrap-install-pnpm
 	$(MAKE) MAKEFLAGS= _bootstrap-node
 	$(MAKE) MAKEFLAGS= _bootstrap-system-packages
 	$(MAKE) MAKEFLAGS= _bootstrap-python
