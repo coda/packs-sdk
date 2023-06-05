@@ -38,7 +38,7 @@ export function promptForInput(
         return 'no';
       }
       const response = yn(answer, {default: undefined});
-      if (response === null) {
+      if (response === undefined) {
         continue;
       }
       return yn(answer) ? 'yes' : 'no';
