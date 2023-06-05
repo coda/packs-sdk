@@ -98,8 +98,8 @@ importers:
         specifier: 9.0.0
         version: 9.0.0
       xml2js:
-        specifier: 0.5.0
-        version: 0.5.0
+        specifier: 0.6.0
+        version: 0.6.0
       yargs:
         specifier: 17.7.2
         version: 17.7.2
@@ -2622,7 +2622,7 @@ packages:
       url: 0.10.3
       util: 0.12.5
       uuid: 8.0.0
-      xml2js: 0.5.0
+      xml2js: 0.6.0
     dev: true
 
   /bail@2.0.2:
@@ -8259,8 +8259,8 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /xml2js@0.5.0:
-    resolution: {integrity: sha512-drPFnkQJik/O+uPKpqSgr22mpuFHqKdbS835iAQrUC73L2F5WkboIRd63ai/2Yg6I1jzifPFKH2NTK+cfglkIA==}
+  /xml2js@0.6.0:
+    resolution: {integrity: sha512-eLTh0kA8uHceqesPqSE+VvO1CDDJWMwlQfB6LuN6T8w6MaDJ8Txm8P7s5cHD0miF0V+GGTZrDQfxPZQVsur33w==}
     engines: {node: '>=4.0.0'}
     dependencies:
       sax: 1.2.4
