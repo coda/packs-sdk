@@ -187,8 +187,8 @@ importers:
         specifier: 2.4.0
         version: 2.4.0
       '@types/sinon':
-        specifier: 10.0.13
-        version: 10.0.13
+        specifier: 10.0.15
+        version: 10.0.15
       '@types/uglify-js':
         specifier: 3.17.1
         version: 3.17.1
@@ -2080,8 +2080,8 @@ packages:
       '@types/node': 18.15.11
     dev: true
 
-  /@types/sinon@10.0.13:
-    resolution: {integrity: sha512-UVjDqJblVNQYvVNUsj0PuYYw0ELRmgt1Nt5Vk0pT5f16ROGfcKJY8o1HVuMOJOpD727RrGB9EGvoaTQE5tgxZQ==}
+  /@types/sinon@10.0.15:
+    resolution: {integrity: sha512-3lrFNQG0Kr2LDzvjyjB6AMJk4ge+8iYhQfdnSwIwlG88FUOV43kPcQqDZkDa/h3WSZy6i8Fr0BSjfQtB1B3xuQ==}
     dependencies:
       '@types/sinonjs__fake-timers': 8.1.2
     dev: true
