@@ -83,7 +83,7 @@
     "@types/readline-sync": "1.4.4",
     "@types/semver": "7.5.0",
     "@types/sha.js": "2.4.0",
-    "@types/sinon": "10.0.13",
+    "@types/sinon": "10.0.15",
     "@types/uglify-js": "3.17.1",
     "@types/url-parse": "1.4.8",
     "@types/uuid": "9.0.1",
