@@ -199,11 +199,15 @@ compile-samples:
 
 .PHONY: validate-samples
 validate-samples:
-	find documentation/samples/packs -name "*.ts" | \
-	xargs -P8 -I {} bash -c \
-	'node --no-deprecation dist/cli/coda.js validate {} \
-	|| echo "Error while validating {}";'
-
+	RET=0; \
+	for pack in `find documentation/samples/packs -name "*.ts"`; do \
+		echo Validating $${pack}...; \
+		node dist/cli/coda.js validate --no-checkDeprecationWarnings $${pack}; \
+		if [ $? ]; then \
+			RET=1; \
+		fi; \
+	done; \
+	exit $$RET
 
 .PHONY: generated-documentation
 generated-documentation: compile-samples
