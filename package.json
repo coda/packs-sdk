@@ -27,7 +27,7 @@
     "@aws-sdk/signature-v4": "3.342.0",
     "browserify": "17.0.0",
     "clone": "2.1.2",
-    "cross-fetch": "3.1.5",
+    "cross-fetch": "3.1.6",
     "es6-promise": "4.2.8",
     "esbuild": "0.17.19",
     "exorcist": "2.0.0",
