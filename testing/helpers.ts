@@ -27,15 +27,17 @@ export function printAndExit(msg: string, exitCode: number = 1): never {
   return process.exit(exitCode);
 }
 
-export function promptForInput(prompt: string, {mask, options, yesOrNo}:
-  {mask?: boolean; options?: string[], yesOrNo?: boolean} = {}): string {
+export function promptForInput(
+  prompt: string,
+  {mask, options, yesOrNo}: {mask?: boolean; options?: string[]; yesOrNo?: boolean} = {},
+): string {
   while (true) {
     const answer = readlineSync.question(prompt, {mask: mask ? '*' : undefined, hideEchoBack: mask});
     if (yesOrNo) {
       if (answer === '') {
         return 'no';
       }
-      const response = yn(answer, {default: null});
+      const response = yn(answer, {default: undefined});
       if (response === null) {
         continue;
       }

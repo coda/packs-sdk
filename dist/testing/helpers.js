@@ -60,7 +60,7 @@ function promptForInput(prompt, { mask, options, yesOrNo } = {}) {
             if (answer === '') {
                 return 'no';
             }
-            const response = (0, yn_1.default)(answer, { default: null });
+            const response = (0, yn_1.default)(answer, { default: undefined });
             if (response === null) {
                 continue;
             }
