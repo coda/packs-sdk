@@ -1,6 +1,7 @@
 import type {AutocompleteSnippet} from '../types';
 import type {Example} from '../types';
 import {ExampleCategory} from '../types';
+import {ExampleStatus} from '../types';
 import {UrlType} from '../types';
 
 export const Snippets: AutocompleteSnippet[] = [
@@ -1064,6 +1065,39 @@ export const Examples: Example[] = [
         content:
           'A card that can be created manually or automatically when pasting a link. This sample returns a card with the details of a task in Todoist.',
         codeFile: './samples/packs/todoist/card.ts',
+      },
+    ],
+  },
+  {
+    name: 'Two-way sync',
+    description: 'Samples that show how to create sync tables with editable values.',
+    icon: 'material/card-text',
+    category: ExampleCategory.Topic,
+    triggerTokens: [],
+    contentFile: './samples/packs/two-way/README.md',
+    linkData: {
+      type: UrlType.SdkReferencePath,
+      url: '/guides/blocks/sync-tables/two-way',
+    },
+    status: ExampleStatus.Beta,
+    exampleSnippets: [
+      {
+        name: 'Simple two-way sync',
+        content:
+          "A sync table supports user edits via two-way sync. It uses the default behavior of updating one row at a time. This sample syncs the tasks from a user's Todoist account.",
+        codeFile: './samples/packs/todoist/two_way.ts',
+      },
+      {
+        name: 'With batched updates',
+        content:
+          "A sync table supports user edits via two-way sync, batch processing multiple rows at once. This sample syncs the tasks from a user's Todoist account.",
+        codeFile: './samples/packs/todoist/two_way_batched.ts',
+      },
+      {
+        name: 'Using a batch update endpoint',
+        content:
+          "A sync table supports user edits via two-way sync, batch processing multiple rows at once using the API's batch update endpoint. This sample syncs the tasks from a user's Todoist account.",
+        codeFile: './samples/packs/todoist/two_way_batched_endpoint.ts',
       },
     ],
   },
