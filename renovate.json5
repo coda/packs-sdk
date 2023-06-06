@@ -30,6 +30,7 @@
   },
 
   postUpgradeTasks: {
-    commands: ['make bs build'],
+    commands: ['make bs _bootstrap-doc-tools build'],
+    fileFilters: ['dist/**/*', 'documentation/**/*'],
   },
 }

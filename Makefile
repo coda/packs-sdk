@@ -59,6 +59,11 @@ _bootstrap-system-packages:
 _bootstrap-githooks: clean-githooks
 	-(cd ${ROOTDIR}; scripts/dev/git-hooks.sh --install)
 
+.PHONY: _bootstrap-doc-tools
+_bootstrap-doc-tools:
+	# Image libraries required by the social cards plugin for MkDocs Material.
+	sudo apt-get install libcairo2-dev libfreetype6-dev libffi-dev libjpeg-dev libpng-dev libz-dev
+
 .PHONY: bootstrap
 bootstrap:
 	$(MAKE) MAKEFLAGS= _bootstrap-install-pnpm
