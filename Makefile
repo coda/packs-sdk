@@ -24,7 +24,7 @@ _bootstrap-install-pnpm:
 
 .PHONY: _bootstrap-node
 _bootstrap-node:
-	pnpm install --frozen-lockfile
+	.pnpm_install/bin/pnpm install --frozen-lockfile
 
 .PHONY: _bootstrap-python
 _bootstrap-python:
@@ -59,8 +59,14 @@ _bootstrap-system-packages:
 _bootstrap-githooks: clean-githooks
 	-(cd ${ROOTDIR}; scripts/dev/git-hooks.sh --install)
 
+.PHONY: _bootstrap-doc-tools
+_bootstrap-doc-tools:
+	# Image libraries required by the social cards plugin for MkDocs Material.
+	sudo apt-get install libcairo2-dev libfreetype6-dev libffi-dev libjpeg-dev libpng-dev libz-dev
+
 .PHONY: bootstrap
 bootstrap:
+	$(MAKE) MAKEFLAGS= _bootstrap-install-pnpm
 	$(MAKE) MAKEFLAGS= _bootstrap-node
 	$(MAKE) MAKEFLAGS= _bootstrap-system-packages
 	$(MAKE) MAKEFLAGS= _bootstrap-python
@@ -198,11 +204,15 @@ compile-samples:
 
 .PHONY: validate-samples
 validate-samples:
-	find documentation/samples/packs -name "*.ts" | \
-	xargs -P8 -I {} bash -c \
-	'node --no-deprecation dist/cli/coda.js validate {} \
-	|| echo "Error while validating {}";'
-
+	RET=0; \
+	for pack in `find documentation/samples/packs -name "*.ts"`; do \
+		echo Validating $${pack}...; \
+		node dist/cli/coda.js validate --no-checkDeprecationWarnings $${pack}; \
+		if [ $? ]; then \
+			RET=1; \
+		fi; \
+	done; \
+	exit $$RET
 
 .PHONY: generated-documentation
 generated-documentation: compile-samples

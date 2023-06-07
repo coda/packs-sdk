@@ -5,8 +5,9 @@ function makeInputGenerator(input: string | string[]): () => string {
   const values = input.values();
   return () => {
     const value = values.next();
-    if (value.done)
-      {throw new Error('No input left.')}
+    if (value.done) {
+      throw new Error('No input left.');
+    }
     return value.value;
   };
 }
@@ -22,7 +23,7 @@ describe('Helpers', () => {
     const readlineStub = {
       question() {
         return inputGenerator();
-      }
+      },
     };
 
     const helpers = proxyquire('../testing/helpers', {

@@ -42,6 +42,9 @@
   },
 
   postUpgradeTasks: {
-    commands: ['make bs build'],
+    // NOTE(dweitzman)): _bootstrap-doc-tools doesn't work in the renovate container
+    // at the moment so we skip building docs and just compile code.
+    commands: ['make bs clean compile'],
+    fileFilters: ['**/*.js', '**/*.d.ts'],
   },
 }
