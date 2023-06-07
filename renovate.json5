@@ -20,6 +20,18 @@
       packageNames: ['isolated-vm'],
       allowedVersions: '!/^4\\.4\\.2$/',
     },
+
+    // pnpm 8.6.0 moves to a new lockfile version.
+    {
+      packageNames: ['pnpm'],
+      allowedVersions: '<8.6.0',
+    },
+
+    // see https://github.com/coda/packs-sdk/pull/2642
+    {
+      packageNames: ['open'],
+      allowedVersions: '<9.0.0',
+    },
   ],
 
   pip_requirements: {
