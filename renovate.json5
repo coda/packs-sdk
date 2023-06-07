@@ -30,7 +30,7 @@
     // see https://github.com/coda/packs-sdk/pull/2642
     {
       packageNames: ['open'],
-      allowedVersions: '8.4.2',
+      allowedVersions: '<9.0.0',
     },
   ],
 
