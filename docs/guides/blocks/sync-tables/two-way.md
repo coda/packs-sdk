@@ -8,7 +8,9 @@ description: Allow users to edit the contents of a sync table and push those cha
 !!! warning "Limited beta"
     This feature is currently only available to a limited group of beta testers.
 
-[Sync tables][sync_tables] allow you to pull in data from external applications and sources, but by default the tables are read-only. You can make your sync tables more useful by supporting two-way sync, where you allow users to edit the table cells and push the changes back to the data source.
+[Sync tables][sync_tables] allow you to pull in data from external applications and sources, but by default these tables are read-only. You can make your sync tables more useful by supporting two-way sync, where you allow users to edit the cell values and push the changes back to the data source.
+
+[View Sample Code][samples]{ .md-button }
 
 
 ## Using two-way sync
@@ -17,14 +19,14 @@ To enable two-way sync on a sync table that supports it you need to toggle on th
 
 <img src="../../../../images/two_way_enable.png" srcset="../../../../images/two_way_enable_2x.png 2x" class="screenshot" alt="Enabling edits on a sync table.">
 
-Select columns of the table will now be editable, and you can change cell values them as you would for a normal Coda table. Use the **Update rows** link to push the changes back to the data source.
+Certain columns of the table will now be editable, and you can change cell values them as you would for a normal Coda table. Use the **Update rows** link to push the changes back to the data source.
 
 ![type:video](../../../images/two_way.mp4){: .screenshot}
 
 
 ## Adding two-way sync
 
-You can add support for two-way sync to any sync table, even after it's published. You'll have to adjust the schema used by your sync table and add a function that knows how to make the updates.
+You can add support for two-way sync to any sync table, even after it's published. You'll have to adjust the schema used by your sync table and add a function to handle the updates.
 
 
 ### Annotate the schema
@@ -87,17 +89,17 @@ pack.addSyncTable({
       // Pull down the data ...
     },
     executeUpdate: async function (args, updates, context) {
-      // Push up the changes ...
+      // Push up the changes and return the updated data...
     },
   },
 });
 ```
 
-Much like the `execute` function, the `executeUpdate` function receives the sync table's parameter values and the execution context. However it also is also provided an array of `updates` which contain information about the rows being updated.
+Much like the `execute` function, the `executeUpdate` function receives the sync table's parameter values and the execution context. However it is also provided an array of `updates` which contain information about the rows being updated.
 
 Each [`SyncUpdate`][reference_sync_update] object in the array contains the previous value for that row, the new value, and the list of fields that were updated. By default the `executeUpdate` function only receives one row at a time, but this can be increased for APIs that support [batching](#batching).
 
-Use those values to make the API requests needed to update the external data source. Lastly, return the final value for the updated row. This may differ from what the user entered if the update had side effects, for example increasing the last updated timestamp of the record.
+Use those values to make the API requests needed to update the external data source, and then return the final value for the updated row. This may differ from what the user entered if the update had side effects, for example increasing the last updated timestamp of the record.
 
 ```ts
 executeUpdate: async function (args, updates, context) {
@@ -150,7 +152,11 @@ executeUpdate: async function (args, updates, context) {
 
 By default row updates are processed one at a time, which makes the coding simple but can impact performance when many rows are being updated at once. You can greatly improve performance by batching multiple updates into a single `executeUpdate` call and processing them in parallel.
 
-The batch size can be adjusted by setting the `maxUpdateBatchSize` field of the sync formula. You'll need to adjust your `executeUpdate` function to be able to handle multiple updates at once. Use a batch update endpoint if your API provides it, or if not make fetch requests [in parallel][fetcher_parallel] to realize performance gains.
+The batch size can be adjusted by setting the `maxUpdateBatchSize` field of the sync formula. You'll also need to adjust your `executeUpdate` function to be able to handle multiple updates at once. Use a batch update endpoint if your API provides one, or if not make fetch requests [in parallel][fetcher_parallel] to realize performance gains.
+
+??? tip "Selecting a batch size"
+
+    A single execution of the `executeUpdate` function can run for at most 60 seconds, after which it will be killed and the update will fail. To allow for variability in network and server conditions it's best to set a target of 30 seconds or less for each batch. How many rows that equates to depends heavily on the API being used and the number of requests it takes to update a row, and some experimentation may be required to find an ideal size.
 
 ```ts
 pack.addSyncTable({
@@ -225,7 +231,7 @@ const ShirtSchema = coda.makeObjectSchema({
 });
 ```
 
-For sync tables with dynamic schemas, you can't define the search function on the property directly. Instead use the special value `AutocompleteType.Dynamic`, which tells Coda to call the sync table's `autocomplete` function. This is a single function that handles the auto-complete for all dynamic properties. It's defined directly on a dynamic sync table, or within the `dynamicOptions` of a regular sync table. The function can determine which property to provide autocomplete for by inspecting `context.propertyName`.
+For sync tables with dynamic schemas, you aren't allowed to define the search function directly on the property itself. Instead use the special value `AutocompleteType.Dynamic`, which tells Coda to call the sync table's `autocomplete` function. This is a single function that handles the auto-complete for all dynamic properties. It's defined directly on a dynamic sync table, or within the `dynamicOptions` of a regular sync table. The function can determine which property to provide autocomplete for by inspecting `context.propertyName`.
 
 === "Dynamic sync table"
 
@@ -283,10 +289,11 @@ When a row fails to update Coda will show an error message attached to that row.
 
 <img src="../../../../images/two_way_error.png" srcset="../../../../images/two_way_error_2x.png 2x" class="screenshot" alt="Error attached to a row.">
 
-To associate an error with a row return it at the corresponding index in the `result` array. For tables that use single row updates (`maxUpdateBatchSize == 1`) if you throw a `UserVisileError` it will be associated with the row automatically. In all other cases a thrown error will be treated as a failure of the entire sync and cancel any remaining row updates.
+To associate an error with a row return it at the corresponding index in the `result` array. For tables that use single row updates (`maxUpdateBatchSize == 1`) if you throw a `UserVisibleError` it will be associated with the row automatically. In all other cases a thrown error will be treated as a failure of the entire sync and cancel any remaining row updates.
 
 
 [sync_tables]: index.md
+[samples]: ../../../samples/topic/two-way.md
 [mdn_spread_object]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax#spread_in_object_literals
 [reference_sync_update]: ../../../reference/sdk/interfaces/core.SyncUpdate.md
 [fetcher_parallel]: ../../basics/fetcher.md#in-parallel
