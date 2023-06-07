@@ -40,4 +40,4 @@ ___
 
 • **updatedFields**: `string`[]
 
-The fields of the object that have been updated.
+The fields of the row that have been updated.

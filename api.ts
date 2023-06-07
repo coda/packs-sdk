@@ -977,7 +977,7 @@ export interface SyncUpdate<K extends string, L extends string, SchemaT extends 
    */
   newValue: ObjectSchemaDefinitionType<K, L, SchemaT>;
   /**
-   * The fields of the object that have been updated.
+   * The fields of the row that have been updated.
    */
   updatedFields: string[];
 }
