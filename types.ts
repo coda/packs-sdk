@@ -367,8 +367,8 @@ export interface CustomHeaderTokenAuthentication extends BaseAuthentication {
  * pack.setUserAuthentication({
  *   type: coda.AuthenticationType.MultiHeaderToken,
  *   headers: [
- *     {name: 'Header1', tokenPrefix: 'prefix1'},
- *     {name: 'Header2'},
+ *     {name: 'Header1', description: 'Enter the value for Header1',  tokenPrefix: 'prefix1'},
+ *     {name: 'Header2', description: 'Enter value for Header2'},
  *   ],
  * });
  * ```
@@ -376,6 +376,9 @@ export interface CustomHeaderTokenAuthentication extends BaseAuthentication {
 export interface MultiHeaderTokenAuthentication extends BaseAuthentication {
   /** Identifies this as MultiHeaderToken authentication. */
   type: AuthenticationType.MultiHeaderToken;
+  /**
+   * Names and descriptions of the headers used for authentication.
+   */
   headers: Array<{
     /**
      * The name of the HTTP header.
