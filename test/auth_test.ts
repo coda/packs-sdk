@@ -166,7 +166,7 @@ describe('Auth', () => {
         type: AuthenticationType.CustomHeaderToken,
         headerName: 'MyHeader',
       };
-      it('defaultAuthenticatio', () => testTokenAuthFlow(createFakePack({defaultAuthentication: auth})));
+      it('defaultAuthentication', () => testTokenAuthFlow(createFakePack({defaultAuthentication: auth})));
       it('systemAuthentication', () => testTokenAuthFlow(createFakePack({systemConnectionAuthentication: auth})));
     });
 
@@ -205,7 +205,7 @@ describe('Auth', () => {
         assertCredentialsFileExactly({headers: {Header1: 'token1', Header2: 'token2'}});
       };
 
-      it('defaultAuthenticatio', () => execTest(createFakePack({defaultAuthentication: auth})));
+      it('defaultAuthentication', () => execTest(createFakePack({defaultAuthentication: auth})));
       it('systemAuthentication', () => execTest(createFakePack({systemConnectionAuthentication: auth})));
     });
 

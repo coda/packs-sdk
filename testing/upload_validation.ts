@@ -403,7 +403,7 @@ const defaultAuthenticationValidators: Record<AuthenticationType, z.ZodTypeAny> 
       )
       .refine(
         headers => {
-          const keys = headers.map(header => header.name);
+          const keys = headers.map(header => header.name.toLowerCase());
           return keys.length === new Set(keys).size;
         },
         {message: 'Duplicated header names in the MultiHeaderToken authentication config'},

@@ -3136,6 +3136,25 @@ describe('Pack metadata Validation', () => {
       await validateJson(metadata);
     });
 
+    it('MultiHeaderToken on dup names', async () => {
+      const metadata = createFakePackVersionMetadata({
+        systemConnectionAuthentication: {
+          type: AuthenticationType.MultiHeaderToken,
+          headers: [
+            {name: 'Header1', description: 'description 1'},
+            {name: 'HeAdEr1', description: 'description 2'},
+          ],
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: 'Duplicated header names in the MultiHeaderToken authentication config',
+          path: 'systemConnectionAuthentication.headers',
+        },
+      ]);
+    });
+
     it('QueryParamToken', async () => {
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
