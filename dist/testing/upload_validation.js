@@ -307,6 +307,20 @@ const defaultAuthenticationValidators = {
         tokenPrefix: z.string().optional(),
         ...baseAuthenticationValidators,
     }),
+    [types_1.AuthenticationType.MultiHeaderToken]: zodCompleteStrictObject({
+        type: zodDiscriminant(types_1.AuthenticationType.MultiHeaderToken),
+        headers: z
+            .array(zodCompleteStrictObject({
+            name: z.string(),
+            description: z.string(),
+            tokenPrefix: z.string().optional(),
+        }))
+            .refine(headers => {
+            const keys = headers.map(header => header.name);
+            return keys.length === new Set(keys).size;
+        }, { message: 'Duplicated header names in the MultiHeaderToken authentication config' }),
+        ...baseAuthenticationValidators,
+    }),
     [types_1.AuthenticationType.QueryParamToken]: zodCompleteStrictObject({
         type: zodDiscriminant(types_1.AuthenticationType.QueryParamToken),
         paramName: z.string(),
@@ -322,7 +336,7 @@ const defaultAuthenticationValidators = {
             .refine(params => {
             const keys = params.map(param => param.name);
             return keys.length === new Set(keys).size;
-        }, { message: 'Duplicated parameter names in the mutli-query-token authentication config' }),
+        }, { message: 'Duplicated parameter names in the MultiQueryParamToken authentication config' }),
         ...baseAuthenticationValidators,
     }),
     [types_1.AuthenticationType.OAuth2]: zodCompleteStrictObject({
@@ -381,6 +395,7 @@ const defaultAuthenticationValidators = {
 const systemAuthenticationTypes = {
     [types_1.AuthenticationType.HeaderBearerToken]: true,
     [types_1.AuthenticationType.CustomHeaderToken]: true,
+    [types_1.AuthenticationType.MultiHeaderToken]: true,
     [types_1.AuthenticationType.MultiQueryParamToken]: true,
     [types_1.AuthenticationType.QueryParamToken]: true,
     [types_1.AuthenticationType.WebBasic]: true,
@@ -394,6 +409,7 @@ const systemAuthenticationValidators = Object.entries(defaultAuthenticationValid
 const variousSupportedAuthenticationTypes = {
     [types_1.AuthenticationType.HeaderBearerToken]: true,
     [types_1.AuthenticationType.CustomHeaderToken]: true,
+    [types_1.AuthenticationType.MultiHeaderToken]: true,
     [types_1.AuthenticationType.MultiQueryParamToken]: true,
     [types_1.AuthenticationType.QueryParamToken]: true,
     [types_1.AuthenticationType.WebBasic]: true,

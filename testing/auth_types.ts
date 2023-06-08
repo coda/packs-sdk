@@ -10,6 +10,10 @@ export interface TokenCredentials extends BaseCredentials {
   token: string;
 }
 
+export interface MultiHeaderCredentials extends BaseCredentials {
+  headers: {[headerName: string]: string};
+}
+
 export interface WebBasicCredentials extends BaseCredentials {
   username: string;
   password?: string;
@@ -51,6 +55,7 @@ export interface AWSAssumeRoleCredentials extends BaseCredentials {
 
 export type Credentials =
   | TokenCredentials
+  | MultiHeaderCredentials
   | WebBasicCredentials
   | CustomCredentials
   | QueryParamCredentials

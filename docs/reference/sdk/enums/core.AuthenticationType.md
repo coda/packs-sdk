@@ -78,6 +78,18 @@ Authenticate using an HTTP header of the form `Authorization: Bearer <token>`.
 
 ___
 
+### MultiHeaderToken
+
+• **MultiHeaderToken** = ``"MultiHeaderToken"``
+
+Authenticate using multiple HTTP headers that you specify.
+
+**`See`**
+
+[MultiHeaderTokenAuthentication](../interfaces/core.MultiHeaderTokenAuthentication.md)
+
+___
+
 ### MultiQueryParamToken
 
 • **MultiQueryParamToken** = ``"MultiQueryParamToken"``

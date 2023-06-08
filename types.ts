@@ -56,6 +56,12 @@ export enum AuthenticationType {
    */
   CustomHeaderToken = 'CustomHeaderToken',
   /**
+   * Authenticate using multiple HTTP headers that you specify.
+   *
+   * @see {@link MultiHeaderTokenAuthentication}
+   */
+  MultiHeaderToken = 'MultiHeaderToken',
+  /**
    * Authenticate using a token that is passed as a URL parameter with each request, e.g.
    * `https://example.com/api?paramName=token`.
    *
@@ -351,6 +357,44 @@ export interface CustomHeaderTokenAuthentication extends BaseAuthentication {
   tokenPrefix?: string;
 }
 
+// TODO(jonathan/ekoleda): Add samples.
+/**
+ * Authenticate using multiple HTTP headers that you specify.
+ * Each header is specified with a name and an optional token prefix.
+ *
+ * @example
+ * ```ts
+ * pack.setUserAuthentication({
+ *   type: coda.AuthenticationType.MultiHeaderToken,
+ *   headers: [
+ *     {name: 'Header1', tokenPrefix: 'prefix1'},
+ *     {name: 'Header2'},
+ *   ],
+ * });
+ * ```
+ */
+export interface MultiHeaderTokenAuthentication extends BaseAuthentication {
+  /** Identifies this as MultiHeaderToken authentication. */
+  type: AuthenticationType.MultiHeaderToken;
+  headers: Array<{
+    /**
+     * The name of the HTTP header.
+     */
+    name: string;
+    /**
+     * A description shown to the user indicating what value they should provide for this header.
+     */
+    description: string;
+    /**
+     * An optional prefix in the HTTP header value before the actual token. Omit this
+     * if the token is the entirety of the header value.
+     *
+     * The HTTP header will be of the form `<headerName>: <tokenPrefix> <token>`
+     */
+    tokenPrefix?: string;
+  }>;
+}
+
 /**
  * Authenticate using a token that is passed as a URL parameter with each request, e.g.
  * `https://example.com/api?paramName=token`.
@@ -555,7 +599,7 @@ export enum TokenExchangeCredentialsLocation {
   /**
    * The credentials are passed in the Authorization header using the `Basic` scheme.
    */
-  AuthorizationHeader = 'AuthorizationHeader'
+  AuthorizationHeader = 'AuthorizationHeader',
 }
 
 /**
@@ -732,6 +776,7 @@ export type Authentication =
   | HeaderBearerTokenAuthentication
   | CodaApiBearerTokenAuthentication
   | CustomHeaderTokenAuthentication
+  | MultiHeaderTokenAuthentication
   | QueryParamTokenAuthentication
   | MultiQueryParamTokenAuthentication
   | OAuth2Authentication
@@ -792,6 +837,7 @@ export type AuthenticationDef =
 export type SystemAuthentication =
   | HeaderBearerTokenAuthentication
   | CustomHeaderTokenAuthentication
+  | MultiHeaderTokenAuthentication
   | QueryParamTokenAuthentication
   | MultiQueryParamTokenAuthentication
   | WebBasicAuthentication
@@ -828,6 +874,7 @@ export type VariousSupportedAuthentication =
   | NoAuthentication
   | HeaderBearerTokenAuthentication
   | CustomHeaderTokenAuthentication
+  | MultiHeaderTokenAuthentication
   | QueryParamTokenAuthentication
   | MultiQueryParamTokenAuthentication
   | WebBasicAuthentication;

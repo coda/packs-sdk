@@ -49,6 +49,12 @@ var AuthenticationType;
      */
     AuthenticationType["CustomHeaderToken"] = "CustomHeaderToken";
     /**
+     * Authenticate using multiple HTTP headers that you specify.
+     *
+     * @see {@link MultiHeaderTokenAuthentication}
+     */
+    AuthenticationType["MultiHeaderToken"] = "MultiHeaderToken";
+    /**
      * Authenticate using a token that is passed as a URL parameter with each request, e.g.
      * `https://example.com/api?paramName=token`.
      *

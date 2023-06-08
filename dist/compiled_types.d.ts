@@ -9,6 +9,7 @@ import type { DistributiveOmit } from './type_utils';
 import type { Format } from './types';
 import type { HeaderBearerTokenAuthentication } from './types';
 import type { MetadataFormulaMetadata } from './api';
+import type { MultiHeaderTokenAuthentication } from './types';
 import type { MultiQueryParamTokenAuthentication } from './types';
 import type { NoAuthentication } from './types';
 import type { OAuth2Authentication } from './types';
@@ -59,6 +60,7 @@ export interface AuthenticationMetadataTypeMap {
     [AuthenticationType.AWSAssumeRole]: AuthenticationToMetadata<AWSAssumeRoleAuthentication>;
     [AuthenticationType.CodaApiHeaderBearerToken]: AuthenticationToMetadata<CodaApiBearerTokenAuthentication>;
     [AuthenticationType.CustomHeaderToken]: AuthenticationToMetadata<CustomHeaderTokenAuthentication>;
+    [AuthenticationType.MultiHeaderToken]: AuthenticationToMetadata<MultiHeaderTokenAuthentication>;
     [AuthenticationType.Custom]: AuthenticationToMetadata<CustomAuthentication>;
     [AuthenticationType.HeaderBearerToken]: AuthenticationToMetadata<HeaderBearerTokenAuthentication>;
     [AuthenticationType.MultiQueryParamToken]: AuthenticationToMetadata<MultiQueryParamTokenAuthentication>;

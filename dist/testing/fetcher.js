@@ -286,6 +286,16 @@ class AuthenticatingFetcher {
                 const valuePrefix = this._authDef.tokenPrefix ? `${this._authDef.tokenPrefix} ` : '';
                 return { url, body, form, headers: { ...headers, [this._authDef.headerName]: `${valuePrefix}${token}` } };
             }
+            case types_1.AuthenticationType.MultiHeaderToken: {
+                const { headers: headerNameToToken } = this._credentials;
+                const authHeaders = {};
+                for (const [headerName, token] of Object.entries(headerNameToToken)) {
+                    const headerDef = this._authDef.headers.find(def => def.name === headerName);
+                    const valuePrefix = (headerDef === null || headerDef === void 0 ? void 0 : headerDef.tokenPrefix) ? `${headerDef.tokenPrefix} ` : '';
+                    authHeaders[headerName] = `${valuePrefix}${token}`;
+                }
+                return { url, body, form, headers: { ...headers, ...authHeaders } };
+            }
             case types_1.AuthenticationType.OAuth2: {
                 const { accessToken } = this._credentials;
                 const prefix = (_a = this._authDef.tokenPrefix) !== null && _a !== void 0 ? _a : 'Bearer';

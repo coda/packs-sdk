@@ -34,6 +34,7 @@ export type {CustomAuthParameter} from './types';
 export type {CustomAuthentication} from './types';
 export type {CustomHeaderTokenAuthentication} from './types';
 export type {HeaderBearerTokenAuthentication} from './types';
+export type {MultiHeaderTokenAuthentication} from './types';
 export type {MultiQueryParamTokenAuthentication} from './types';
 export type {NoAuthentication} from './types';
 export type {OAuth2Authentication} from './types';
