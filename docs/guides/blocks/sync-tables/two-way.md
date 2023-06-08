@@ -231,7 +231,9 @@ const ShirtSchema = coda.makeObjectSchema({
 });
 ```
 
-For sync tables with dynamic schemas, you aren't allowed to define the search function directly on the property itself. Instead use the special value `AutocompleteType.Dynamic`, which tells Coda to call the sync table's `autocomplete` function. This is a single function that handles the auto-complete for all dynamic properties. It's defined directly on a dynamic sync table, or within the `dynamicOptions` of a regular sync table. The function can determine which property to provide autocomplete for by inspecting `context.propertyName`.
+For sync tables with dynamic schemas, you aren't able to define the search function directly on the property itself. Instead use the special value `AutocompleteType.Dynamic`, which tells Coda to call the sync table's `autocomplete` function. This is a single function that handles the auto-complete for all dynamic properties. It's defined directly on a dynamic sync table, or within the `dynamicOptions` of a regular sync table. The function can determine which property to provide autocomplete for by inspecting `context.propertyName`.
+
+<!-- TODO: Document exactly what propertyName contains (original, normalized, fromKey). -->
 
 === "Dynamic sync table"
 
@@ -240,7 +242,7 @@ For sync tables with dynamic schemas, you aren't allowed to define the search fu
       // ...
       getSchema: async function (context) {
         let attributes = await getCustomAttributes(context);
-        for (let attr of attriutes) {
+        for (let attr of attributes) {
           properties[attr] = {
             // ...
             autocomplete: coda.AutocompleteType.Dynamic,
@@ -285,7 +287,7 @@ For sync tables with dynamic schemas, you aren't allowed to define the search fu
 
 ## Handling errors
 
-When a row fails to update Coda will show an error message attached to that row. The pending edits will be retained, so that they can adjust them and try again.
+When a row fails to update Coda will show an error message attached to that row. The pending edits will be retained, so that users can adjust them and try again.
 
 <img src="../../../../images/two_way_error.png" srcset="../../../../images/two_way_error_2x.png 2x" class="screenshot" alt="Error attached to a row.">
 
