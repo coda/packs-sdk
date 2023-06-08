@@ -129,6 +129,7 @@ function compileExampleSnippets(example: Example): CompiledExampleSnippet[] {
       name: exampleSnippet.name,
       content: exampleSnippet.content,
       code: formatCodeSnippet(code, true),
+      status: exampleSnippet.status,
     };
   });
 }
@@ -251,7 +252,7 @@ Handlebars.registerHelper('isTopic', (example: CompiledExample) => {
   return example.category === ExampleCategory.Topic;
 });
 
-Handlebars.registerHelper('isBeta', (example: CompiledExample) => {
+Handlebars.registerHelper('isBeta', (example: CompiledExample|CompiledExampleSnippet ) => {
   return example.status === ExampleStatus.Beta;
 });
 
