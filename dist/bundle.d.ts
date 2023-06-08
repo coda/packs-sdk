@@ -4026,7 +4026,7 @@ export declare type AsAuthDef<T extends BaseAuthentication> = Omit<T, "getConnec
  * a pack definition builder. The builder massages these definitions into the form of
  * an {@link Authentication} value, which is the value Coda ultimately cares about.
  */
-export declare type AuthenticationDef = NoAuthentication | VariousAuthentication | AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CodaApiBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<OAuth2Authentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication> | AsAuthDef<CustomAuthentication>;
+export declare type AuthenticationDef = NoAuthentication | VariousAuthentication | AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CodaApiBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<MultiHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<OAuth2Authentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication> | AsAuthDef<CustomAuthentication>;
 /**
  * The union of authentication methods that are supported for system authentication,
  * where the pack author provides credentials used in HTTP requests rather than the user.

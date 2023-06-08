@@ -825,6 +825,7 @@ export type AuthenticationDef =
   | AsAuthDef<HeaderBearerTokenAuthentication>
   | AsAuthDef<CodaApiBearerTokenAuthentication>
   | AsAuthDef<CustomHeaderTokenAuthentication>
+  | AsAuthDef<MultiHeaderTokenAuthentication>
   | AsAuthDef<QueryParamTokenAuthentication>
   | AsAuthDef<MultiQueryParamTokenAuthentication>
   | AsAuthDef<OAuth2Authentication>
