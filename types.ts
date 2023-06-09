@@ -858,6 +858,7 @@ export type SystemAuthentication =
 export type SystemAuthenticationDef =
   | AsAuthDef<HeaderBearerTokenAuthentication>
   | AsAuthDef<CustomHeaderTokenAuthentication>
+  | AsAuthDef<MultiHeaderTokenAuthentication>
   | AsAuthDef<QueryParamTokenAuthentication>
   | AsAuthDef<MultiQueryParamTokenAuthentication>
   | AsAuthDef<WebBasicAuthentication>
