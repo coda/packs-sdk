@@ -248,10 +248,10 @@ function tryParseEmail(result: unknown, schema: BaseStringSchema): ValidationErr
 function tryParseSlider(result: unknown, schema: SliderSchema | ProgressBarSchema) {
   const value = result as number;
   const {minimum, maximum} = schema;
-  if (value < (minimum ?? 0)) {
+  if (typeof minimum !== 'string' && value < (minimum ?? 0)) {
     return {message: `Slider value ${result} is below the specified minimum value of ${minimum ?? 0}.`};
   }
-  if (maximum && value > maximum) {
+  if (typeof maximum !== 'string' && maximum && value > maximum) {
     return {message: `Slider value ${result} is greater than the specified maximum value of ${maximum}.`};
   }
 }
