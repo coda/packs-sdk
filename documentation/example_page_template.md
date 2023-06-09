@@ -16,7 +16,7 @@ description: {{description}}
 {{/if}}
 
 {{#each exampleSnippets}}
-## {{name}}
+## {{name}}{{#if (isBeta this)}} 🚧{{/if}}
 {{content}}
 
 ```ts

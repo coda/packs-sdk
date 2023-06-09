@@ -567,6 +567,10 @@ export interface Sync {
      */
     dynamicUrl?: string;
 }
+/**
+ * Information about the current sync, part of the {@link UpdateSyncExecutionContext} passed to the
+ * `executeUpdate` function of the sync formula.
+ */
 export declare type UpdateSync = Omit<Sync, 'continuation'>;
 export declare type LoggerParamType = string | number | boolean | Record<any, any>;
 export interface Logger {

@@ -39,7 +39,7 @@
     "node-fetch": "2.6.11",
     "open": "8.4.2",
     "pascalcase": "1.0.0",
-    "qs": "6.11.1",
+    "qs": "6.11.2",
     "readline-sync": "1.4.10",
     "semver": "7.5.1",
     "sha.js": "2.4.11",
@@ -152,6 +152,13 @@
     "overrides": {
       "vm2@<3.9.15": ">=3.9.15",
       "xml2js@<0.5.0": ">=0.5.0"
+    },
+    "packageExtensions": {
+      "isolated-vm": {
+        "devDependencies": {
+          "node-gyp": "*"
+        }
+      }
     }
   }
 }

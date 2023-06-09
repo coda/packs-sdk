@@ -12,11 +12,13 @@ export interface ExampleSnippet {
     name: string;
     content: string;
     codeFile: string;
+    status?: ExampleStatus;
 }
 export interface CompiledExampleSnippet {
     name: string;
     content: string;
     code: string;
+    status?: ExampleStatus;
 }
 export interface Example {
     name: string;

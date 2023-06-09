@@ -131,6 +131,15 @@ CommonPackFormulaDef.isSystem
 
 ___
 
+### maxUpdateBatchSize
+
+• `Optional` **maxUpdateBatchSize**: `number`
+
+If the table supports object updates, the maximum number of objects that will be sent to the pack
+in a single batch. Defaults to 1 if not specified.
+
+___
+
 ### name
 
 • `Readonly` **name**: `string`
@@ -202,3 +211,27 @@ as another continuation if there are more result to fetch.
 #### Returns
 
 `Promise`<[`SyncFormulaResult`](core.SyncFormulaResult.md)<`K`, `L`, `SchemaT`\>\>
+
+___
+
+### executeUpdate
+
+▸ `Optional` **executeUpdate**(`params`, `updates`, `context`): `Promise`<[`SyncUpdateResult`](core.SyncUpdateResult.md)<`K`, `L`, `SchemaT`\>\>
+
+The JavaScript function that implements this sync update if the table supports updates.
+
+This function takes in parameters, updated sync table objects, and a sync context,
+and is responsible for pushing those updated objects to the external system then returning
+the new state of each object.
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `params` | [`ParamValues`](../types/core.ParamValues.md)<`ParamDefsT`\> |
+| `updates` | [`SyncUpdate`](core.SyncUpdate.md)<`K`, `L`, `SchemaT`\>[] |
+| `context` | [`UpdateSyncExecutionContext`](core.UpdateSyncExecutionContext.md) |
+
+#### Returns
+
+`Promise`<[`SyncUpdateResult`](core.SyncUpdateResult.md)<`K`, `L`, `SchemaT`\>\>

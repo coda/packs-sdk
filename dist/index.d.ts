@@ -216,3 +216,8 @@ export type { ResponseHandlerTemplate } from './handler_templates';
 export type { OptionalParamDef } from './api_types';
 export type { RequiredParamDef } from './api_types';
 export type { ParamDefFromOptionsUnion } from './api';
+export type { SyncUpdate } from './api';
+export type { SyncUpdateSingleResult } from './api';
+export type { SyncUpdateResult } from './api';
+export type { UpdateSyncExecutionContext } from './api_types';
+export type { UpdateSync } from './api_types';
