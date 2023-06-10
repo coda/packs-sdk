@@ -50,6 +50,7 @@ export function getApiKey(codaApiEndpoint: string): string | undefined {
       }
     }
   }
+  return process.env.CODA_PACKS_API_KEY;
 }
 export function storeCodaApiKey(apiKey: string, projectDir: string = '.', codaApiEndpoint: string) {
   const filename = path.join(projectDir, API_KEY_FILE_NAME);

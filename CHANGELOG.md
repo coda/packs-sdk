@@ -7,6 +7,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ### Added
 
 - Added the command `coda extensions` to the CLI for installing developer extensions that help with building Packs. Currently it only supports Visual Studio Code (`coda extensions vscode`), creating a code snippets file which provides the same slash commands as the Pack Studio.
+- Added support for specifying an API key using `CODA_PACKS_API_KEY` environment variable
 
 ### Changed
 
