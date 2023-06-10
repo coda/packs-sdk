@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.unmarshalError = exports.marshalError = exports.unwrapError = exports.wrapError = exports.unmarshalValue = exports.unmarshalValueFromString = exports.marshalValueToString = exports.marshalValue = exports.marshalValuesForLogging = exports.isMarshaledValue = void 0;
+exports.unmarshalError = exports.marshalError = exports.unwrapError = exports.wrapError = exports.unmarshalValue = exports.unmarshalValueFromString = exports.marshalValueToString = exports.marshalValue = exports.marshalValuesForLogging = exports.isMarshaledValue = exports.TransformType = void 0;
 const constants_1 = require("./constants");
 const constants_2 = require("./constants");
 const api_1 = require("../../../api");
@@ -35,7 +35,7 @@ var TransformType;
 (function (TransformType) {
     TransformType["Buffer"] = "Buffer";
     TransformType["Error"] = "Error";
-})(TransformType || (TransformType = {}));
+})(TransformType = exports.TransformType || (exports.TransformType = {}));
 var ErrorClassType;
 (function (ErrorClassType) {
     ErrorClassType["System"] = "System";

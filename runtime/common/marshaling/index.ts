@@ -31,15 +31,15 @@ import {serialize} from './serializer';
 
 const MaxTraverseDepth = 100;
 
-enum TransformType {
+export enum TransformType {
   Buffer = 'Buffer',
   Error = 'Error',
 }
-interface PostTransform {
+export interface PostTransform {
   type: TransformType;
   path: string[];
 }
-interface MarshaledValue {
+export interface MarshaledValue {
   encoded: any;
   postTransforms: PostTransform[];
   [MarshalingInjectedKeys.CodaMarshaler]: CodaMarshalerType.Object;
