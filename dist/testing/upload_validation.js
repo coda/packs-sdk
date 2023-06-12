@@ -59,8 +59,8 @@ const object_utils_2 = require("../helpers/object_utils");
 const schema_15 = require("../schema");
 const schema_16 = require("../schema");
 const schema_17 = require("../schema");
-const migration_1 = require("../helpers/migration");
 const schema_18 = require("../schema");
+const migration_1 = require("../helpers/migration");
 const semver_1 = __importDefault(require("semver"));
 const z = __importStar(require("zod"));
 /**
@@ -870,7 +870,7 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
                 ? schema.properties[propertyValue]
                 : undefined;
             if (!propertySchema) {
-                const schemaPropertyPath = (0, schema_17.normalizePropertyValuePathIntoSchemaPath)(propertyValue);
+                const schemaPropertyPath = (0, schema_18.normalizePropertyValuePathIntoSchemaPath)(propertyValue);
                 propertySchema = (_a = (0, jsonpath_plus_1.JSONPath)({
                     path: schemaPropertyPath,
                     json: schema.properties,
@@ -979,11 +979,11 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
 const objectPropertyUnionSchema = z
     .union([booleanPropertySchema, numberPropertySchema, stringPropertySchema, arrayPropertySchema, genericObjectSchema])
     .refine((schema) => {
-    const schemaForAutocomplete = (0, schema_18.schemaWithoutArray)(schema);
+    const schemaForAutocomplete = (0, schema_17.maybeUnwrapArraySchema)(schema);
     return (schemaForAutocomplete === null || schemaForAutocomplete === void 0 ? void 0 : schemaForAutocomplete.codaType) !== schema_12.ValueHintType.SelectList || 'autocomplete' in schemaForAutocomplete;
 }, 'You must set "codaType" to ValueHintType.SelectList when setting an "autocomplete" property.')
     .refine((schema) => {
-    const schemaForAutocomplete = (0, schema_18.schemaWithoutArray)(schema);
+    const schemaForAutocomplete = (0, schema_17.maybeUnwrapArraySchema)(schema);
     return ((schemaForAutocomplete === null || schemaForAutocomplete === void 0 ? void 0 : schemaForAutocomplete.codaType) !== schema_12.ValueHintType.SelectList ||
         !(schemaForAutocomplete === null || schemaForAutocomplete === void 0 ? void 0 : schemaForAutocomplete.autocomplete) ||
         schema.mutable);
@@ -1416,7 +1416,7 @@ const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSc
     (data.syncTables || []).forEach((syncTable, i) => {
         const schema = syncTable.schema;
         for (const [propertyName, childSchema] of Object.entries(schema.properties)) {
-            const schemaForAutocomplete = (0, schema_18.schemaWithoutArray)(childSchema);
+            const schemaForAutocomplete = (0, schema_17.maybeUnwrapArraySchema)(childSchema);
             if ((schemaForAutocomplete === null || schemaForAutocomplete === void 0 ? void 0 : schemaForAutocomplete.codaType) !== schema_12.ValueHintType.SelectList) {
                 continue;
             }

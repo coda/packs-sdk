@@ -21,9 +21,9 @@ const api_types_10 = require("./api_types");
 const object_utils_2 = require("./helpers/object_utils");
 const schema_3 = require("./schema");
 const schema_4 = require("./schema");
+const schema_5 = require("./schema");
 const api_types_11 = require("./api_types");
 const migration_1 = require("./helpers/migration");
-const schema_5 = require("./schema");
 const api_types_12 = require("./api_types");
 /**
  * An error whose message will be shown to the end user in the UI when it occurs.
@@ -474,7 +474,7 @@ function makeFormula(fullDefinition) {
                 ...rest,
                 // TypeOf<SchemaType<ArraySchema<SchemaT>>> is always Type.object but TS can't infer this.
                 resultType: api_types_5.Type.object,
-                schema: (0, schema_4.normalizeSchema)({ type: schema_2.ValueType.Array, items }),
+                schema: (0, schema_5.normalizeSchema)({ type: schema_2.ValueType.Array, items }),
             };
             formula = arrayFormula;
             break;
@@ -485,7 +485,7 @@ function makeFormula(fullDefinition) {
             const objectFormula = {
                 ...rest,
                 resultType: api_types_5.Type.object,
-                schema: (0, schema_4.normalizeSchema)(schema),
+                schema: (0, schema_5.normalizeSchema)(schema),
             };
             formula = objectFormula;
             break;
@@ -723,7 +723,7 @@ function makeObjectFormula({ response, ...definition }) {
     let schema;
     if (response) {
         if (isResponseHandlerTemplate(response) && response.schema) {
-            response.schema = (0, schema_4.normalizeSchema)(response.schema);
+            response.schema = (0, schema_5.normalizeSchema)(response.schema);
             schema = response.schema;
         }
         else if (isResponseExampleTemplate(response)) {
@@ -811,7 +811,7 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
     }
     const formulaSchema = getSchema
         ? undefined
-        : (0, schema_4.normalizeSchema)({ type: schema_2.ValueType.Array, items: schema });
+        : (0, schema_5.normalizeSchema)({ type: schema_2.ValueType.Array, items: schema });
     const { identity, id, primary } = (0, migration_1.objectSchemaHelper)(schema);
     if (!(primary && id)) {
         throw new Error(`Sync table schemas should have defined properties for idProperty and displayProperty`);
@@ -843,7 +843,7 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
     return {
         name,
         description,
-        schema: (0, schema_4.normalizeSchema)(schema),
+        schema: (0, schema_5.normalizeSchema)(schema),
         identityName,
         getter: {
             ...definition,
@@ -956,7 +956,7 @@ exports.makeDynamicSyncTable = makeDynamicSyncTable;
 function makeTranslateObjectFormula({ response, ...definition }) {
     const { request, ...rest } = definition;
     const { parameters } = rest;
-    response.schema = response.schema ? (0, schema_4.normalizeSchema)(response.schema) : undefined;
+    response.schema = response.schema ? (0, schema_5.normalizeSchema)(response.schema) : undefined;
     const { onError } = response;
     const requestHandler = (0, handler_templates_2.generateRequestHandler)(request, parameters);
     const responseHandler = (0, handler_templates_1.generateObjectResponseHandler)(response);
@@ -1060,7 +1060,7 @@ exports.maybeRewriteConnectionForFormula = maybeRewriteConnectionForFormula;
 function listPropertiesWithAutocompleteFunctions(schema) {
     const result = [];
     for (const propertyName of Object.keys(schema.properties)) {
-        const propertySchema = (0, schema_5.schemaWithoutArray)(schema.properties[propertyName]);
+        const propertySchema = (0, schema_4.maybeUnwrapArraySchema)(schema.properties[propertyName]);
         if ((propertySchema === null || propertySchema === void 0 ? void 0 : propertySchema.codaType) !== schema_1.ValueHintType.SelectList) {
             continue;
         }
@@ -1084,14 +1084,14 @@ schema, identityName, }) {
     // deep copy will have already thrown away any JS functions.
     const namedAutocompletes = {};
     for (const propertyName of listPropertiesWithAutocompleteFunctions(inputSchema)) {
-        const inputSchemaWithoutArray = (0, schema_5.schemaWithoutArray)(inputSchema.properties[propertyName]);
-        const outputSchema = (0, schema_5.schemaWithoutArray)(schema.properties[propertyName]);
+        const inputSchemaWithoutArray = (0, schema_4.maybeUnwrapArraySchema)(inputSchema.properties[propertyName]);
+        const outputSchema = (0, schema_4.maybeUnwrapArraySchema)(schema.properties[propertyName]);
         (0, ensure_1.assertCondition)((outputSchema === null || outputSchema === void 0 ? void 0 : outputSchema.codaType) === schema_1.ValueHintType.SelectList);
         (0, ensure_1.assertCondition)((inputSchemaWithoutArray === null || inputSchemaWithoutArray === void 0 ? void 0 : inputSchemaWithoutArray.codaType) === schema_1.ValueHintType.SelectList);
         outputSchema.autocomplete = propertyName;
         namedAutocompletes[propertyName] = makePropertyAutocompleteFormula({
             execute: inputSchemaWithoutArray.autocomplete,
-            schema: (0, schema_4.normalizeSchema)(schema.properties[propertyName]),
+            schema: (0, schema_5.normalizeSchema)(schema.properties[propertyName]),
             name: `${identityName}.${propertyName}.Autocomplete`,
         });
     }

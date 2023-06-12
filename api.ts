@@ -51,10 +51,10 @@ import {htmlArray} from './api_types';
 import {imageArray} from './api_types';
 import {isPromise} from './helpers/object_utils';
 import {makeObjectSchema} from './schema';
+import {maybeUnwrapArraySchema} from './schema';
 import {normalizeSchema} from './schema';
 import {numberArray} from './api_types';
 import {objectSchemaHelper} from './helpers/migration';
-import {schemaWithoutArray} from './schema';
 import {stringArray} from './api_types';
 
 export {ExecutionContext};
@@ -2525,7 +2525,7 @@ export function maybeRewriteConnectionForFormula<
 function listPropertiesWithAutocompleteFunctions(schema: ObjectSchemaDefinition<string, string>): string[] {
   const result: string[] = [];
   for (const propertyName of Object.keys(schema.properties)) {
-    const propertySchema = schemaWithoutArray(schema.properties[propertyName]);
+    const propertySchema = maybeUnwrapArraySchema(schema.properties[propertyName]);
     if (propertySchema?.codaType !== ValueHintType.SelectList) {
       continue;
     }
@@ -2559,8 +2559,8 @@ function replaceInlineAutocompleteFunctionsWithNamedAutocompleteFunctions({
   const namedAutocompletes: SyncTableAutocompleters = {};
 
   for (const propertyName of listPropertiesWithAutocompleteFunctions(inputSchema)) {
-    const inputSchemaWithoutArray = schemaWithoutArray(inputSchema.properties[propertyName]);
-    const outputSchema = schemaWithoutArray(schema.properties[propertyName]);
+    const inputSchemaWithoutArray = maybeUnwrapArraySchema(inputSchema.properties[propertyName]);
+    const outputSchema = maybeUnwrapArraySchema(schema.properties[propertyName]);
     assertCondition(outputSchema?.codaType === ValueHintType.SelectList);
     assertCondition(inputSchemaWithoutArray?.codaType === ValueHintType.SelectList);
 

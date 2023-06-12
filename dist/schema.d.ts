@@ -1098,7 +1098,10 @@ export declare function makeAttributionNode<T extends AttributionNode>(node: T):
 export declare type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | GenericObjectSchema;
 export declare function isObject(val?: Schema): val is GenericObjectSchema;
 export declare function isArray(val?: Schema): val is ArraySchema;
-export declare function schemaWithoutArray(val?: Schema): BooleanSchema | NumberSchema | StringSchema | GenericObjectSchema | undefined;
+/**
+ * Pulls out the item type of an Array schema, returning undefined if the Array contains another Array.
+ */
+export declare function maybeUnwrapArraySchema(val?: Schema): BooleanSchema | NumberSchema | StringSchema | GenericObjectSchema | undefined;
 declare type PickOptional<T, K extends keyof T> = Partial<T> & {
     [P in K]: T[P];
 };

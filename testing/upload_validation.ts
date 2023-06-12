@@ -89,9 +89,9 @@ import {isDefined} from '../helpers/object_utils';
 import {isNil} from '../helpers/object_utils';
 import {isObject} from '../schema';
 import {makeSchema} from '../schema';
+import {maybeUnwrapArraySchema} from '../schema';
 import {normalizePropertyValuePathIntoSchemaPath} from '../schema';
 import {objectSchemaHelper} from '../helpers/migration';
-import {schemaWithoutArray} from '../schema';
 import semver from 'semver';
 import * as z from 'zod';
 
@@ -1203,14 +1203,15 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
 const objectPropertyUnionSchema = z
   .union([booleanPropertySchema, numberPropertySchema, stringPropertySchema, arrayPropertySchema, genericObjectSchema])
   .refine((schema: Schema) => {
-    const schemaForAutocomplete = schemaWithoutArray(schema);
+    const schemaForAutocomplete = maybeUnwrapArraySchema(schema);
     return schemaForAutocomplete?.codaType !== ValueHintType.SelectList || 'autocomplete' in schemaForAutocomplete;
   }, 'You must set "codaType" to ValueHintType.SelectList when setting an "autocomplete" property.')
   .refine((schema: Schema) => {
-    const schemaForAutocomplete = schemaWithoutArray(schema);
+    const schemaForAutocomplete = maybeUnwrapArraySchema(schema);
     return (
       schemaForAutocomplete?.codaType !== ValueHintType.SelectList ||
       !schemaForAutocomplete?.autocomplete ||
+      // NOTE: This is intentionally schema.mutable rather than schemaForAutocomplete.mtuable.
       schema.mutable
     );
   }, `"mutable" must be true to set "autocomplete"`);
@@ -1697,7 +1698,7 @@ const legacyPackMetadataSchema = validateFormulas(
     (data.syncTables || []).forEach((syncTable, i) => {
       const schema: ObjectSchema<any, any> = syncTable.schema;
       for (const [propertyName, childSchema] of Object.entries(schema.properties)) {
-        const schemaForAutocomplete = schemaWithoutArray(childSchema);
+        const schemaForAutocomplete = maybeUnwrapArraySchema(childSchema);
         if (schemaForAutocomplete?.codaType !== ValueHintType.SelectList) {
           continue;
         }

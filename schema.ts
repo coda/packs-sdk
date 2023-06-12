@@ -1268,7 +1268,10 @@ export function isArray(val?: Schema): val is ArraySchema {
   return Boolean(val && val.type === ValueType.Array);
 }
 
-export function schemaWithoutArray(
+/**
+ * Pulls out the item type of an Array schema, returning undefined if the Array contains another Array.
+ */
+export function maybeUnwrapArraySchema(
   val?: Schema,
 ): BooleanSchema | NumberSchema | StringSchema | GenericObjectSchema | undefined {
   if (!isArray(val)) {
@@ -1454,7 +1457,7 @@ export function makeObjectSchema<
       // Typescript doesn't like the raw schema.properties[key] (on the left only though...)
       const typedKey = key as keyof ObjectSchemaProperties<K | L>;
 
-      const schemaForAutocomplete = schemaWithoutArray(schema.properties[key]);
+      const schemaForAutocomplete = maybeUnwrapArraySchema(schema.properties[key]);
       const autocompleteFunction =
         schemaForAutocomplete?.codaType === ValueHintType.SelectList &&
         typeof schemaForAutocomplete.autocomplete === 'function'
@@ -1466,7 +1469,7 @@ export function makeObjectSchema<
       // Autocomplete gets manually copied over because it may be a function, which deepCopy wouldn't
       // support.
       if (autocompleteFunction) {
-        const schemaCopyForAutocomplete = schemaWithoutArray(schema.properties[typedKey]);
+        const schemaCopyForAutocomplete = maybeUnwrapArraySchema(schema.properties[typedKey]);
         if (schemaCopyForAutocomplete) {
           assertCondition(schemaCopyForAutocomplete.codaType === ValueHintType.SelectList);
           schemaCopyForAutocomplete.autocomplete = autocompleteFunction;
