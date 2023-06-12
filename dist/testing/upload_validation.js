@@ -29,9 +29,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.zodErrorDetailToValidationError = exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.Limits = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
 const schema_1 = require("../schema");
 const types_1 = require("../types");
-const api_types_1 = require("../api_types");
 const schema_2 = require("../schema");
-const api_types_2 = require("../api_types");
+const api_types_1 = require("../api_types");
 const schema_3 = require("../schema");
 const schema_4 = require("../schema");
 const schema_5 = require("../schema");
@@ -40,8 +39,9 @@ const schema_6 = require("../schema");
 const schema_7 = require("../schema");
 const jsonpath_plus_1 = require("jsonpath-plus");
 const schema_8 = require("../schema");
-const api_types_3 = require("../api_types");
+const api_types_2 = require("../api_types");
 const schema_9 = require("../schema");
+const api_types_3 = require("../api_types");
 const types_3 = require("../types");
 const types_4 = require("../types");
 const schema_10 = require("../schema");
@@ -461,12 +461,12 @@ const commonPackFormulaSchema = {
     }, { message: 'All optional parameters must come after all non-optional parameters.' }),
     varargParameters: z.array(paramDefValidator).optional(),
     isAction: z.boolean().optional(),
-    connectionRequirement: z.nativeEnum(api_types_2.ConnectionRequirement).optional(),
+    connectionRequirement: z.nativeEnum(api_types_1.ConnectionRequirement).optional(),
     // TODO(jonathan): Remove after removing `network` from formula def.
     network: zodCompleteObject({
         hasSideEffect: z.boolean().optional(),
         requiresConnection: z.boolean().optional(),
-        connection: z.nativeEnum(api_types_3.NetworkConnection).optional(),
+        connection: z.nativeEnum(api_types_2.NetworkConnection).optional(),
     }).optional(),
     cacheTtlSecs: z.number().min(0).optional(),
     isExperimental: z.boolean().optional(),
@@ -482,8 +482,8 @@ const booleanPackFormulaSchema = zodCompleteObject({
         description: z.string().optional(),
         mutable: z.boolean().optional(),
         fixedId: z.string().optional(),
-        // Only properties in sync tables would need to define "autocomplete"
-        autocomplete: z.undefined().optional(),
+        // Only properties in sync tables would need to define "options"
+        options: z.undefined().optional(),
     }).optional(),
 });
 // TODO(jonathan): Use zodCompleteObject on these after exporting these types.
@@ -501,7 +501,7 @@ const imageAttributionNodeSchema = z.object({
     anchorUrl: z.string(),
     imageUrl: z.string(),
 });
-function zodAutocompleteFieldWithValues(valueType, allowDisplayNames) {
+function zodPropertyOptionsWithValues(valueType, allowDisplayNames) {
     const literalType = allowDisplayNames
         ? z.union([
             valueType,
@@ -522,17 +522,17 @@ const basePropertyValidators = {
 };
 const baseStringPropertyValidators = {
     ...basePropertyValidators,
-    autocomplete: zodAutocompleteFieldWithValues(z.string(), true),
+    options: zodPropertyOptionsWithValues(z.string(), true),
 };
 const baseNumericPropertyValidators = {
     ...basePropertyValidators,
-    autocomplete: zodAutocompleteFieldWithValues(z.number(), true),
+    options: zodPropertyOptionsWithValues(z.number(), true),
 };
 const booleanPropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.Boolean),
     codaType: z.enum([...schema_2.BooleanHintValueTypes]).optional(),
     ...basePropertyValidators,
-    autocomplete: zodAutocompleteFieldWithValues(z.boolean(), true),
+    options: zodPropertyOptionsWithValues(z.boolean(), true),
 });
 const numericPropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.Number),
@@ -704,7 +704,7 @@ const arrayPropertySchema = z.lazy(() => zodCompleteStrictObject({
     items: objectPropertyUnionSchema,
     ...basePropertyValidators,
     // TODO(dweitzman): Implement property autocomplete for multi-valued properties.
-    autocomplete: zodAutocompleteFieldWithValues(z.never(), false),
+    options: zodPropertyOptionsWithValues(z.never(), false),
 }));
 const Base64ObjectRegex = /^[A-Za-z0-9=_-]+$/;
 // This is ripped off from isValidObjectId in coda. Violating this causes a number of downstream headaches.
@@ -798,7 +798,7 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
     subtitleProperties: z.array(propertySchema).optional(),
     snippetProperty: propertySchema.optional(),
     imageProperty: propertySchema.optional(),
-    autocomplete: zodAutocompleteFieldWithValues(z.object({}).passthrough(), false),
+    options: zodPropertyOptionsWithValues(z.object({}).passthrough(), false),
 })
     .superRefine((data, context) => {
     var _a, _b;
@@ -970,11 +970,13 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
         return;
     }
 }));
-const objectPropertyUnionSchema = z
-    .union([booleanPropertySchema, numberPropertySchema, stringPropertySchema, arrayPropertySchema, genericObjectSchema])
-    .refine(
-// BaseSchema isn't exported, so Pick<BooleanSchema | EmailSchema, ...> here is an approximation.
-(baseSchema) => baseSchema.codaType === schema_12.ValueHintType.Email || !(baseSchema === null || baseSchema === void 0 ? void 0 : baseSchema.autocomplete) || baseSchema.mutable, `"mutable" must be true to set "autocomplete"`);
+const objectPropertyUnionSchema = z.union([
+    booleanPropertySchema,
+    numberPropertySchema,
+    stringPropertySchema,
+    arrayPropertySchema,
+    genericObjectSchema,
+]);
 const objectPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
     resultType: zodDiscriminant(api_types_4.Type.object),
@@ -1036,7 +1038,7 @@ const baseSyncTableSchema = {
         .max(exports.Limits.BuildingBlockName)
         .optional()
         .refine(val => !val || !SystemColumnNames.includes(val), `This property name is reserved for internal use by Coda and can't be used as an identityName, sorry!`),
-    namedAutocompletes: z
+    namedPropertyOptions: z
         .record(formulaMetadataSchema)
         .optional()
         .default({})
@@ -1065,7 +1067,7 @@ const genericDynamicSyncTableSchema = zodCompleteObject({
     listDynamicUrls: formulaMetadataSchema.optional(),
     searchDynamicUrls: formulaMetadataSchema.optional(),
     getSchema: formulaMetadataSchema,
-    autocomplete: objectPackFormulaSchema.optional(),
+    propertyOptions: objectPackFormulaSchema.optional(),
 }).strict();
 const syncTableSchema = z
     .union([genericDynamicSyncTableSchema, genericSyncTableSchema])
@@ -1213,7 +1215,7 @@ function validateFormulas(schema) {
         }
         // if the pack has no default authentication, make sure all formulas don't set connection requirements.
         (data.formulas || []).forEach((formula, i) => {
-            if (formula.connectionRequirement && formula.connectionRequirement !== api_types_2.ConnectionRequirement.None) {
+            if (formula.connectionRequirement && formula.connectionRequirement !== api_types_1.ConnectionRequirement.None) {
                 context.addIssue({
                     code: z.ZodIssueCode.custom,
                     path: ['formulas', i],
@@ -1223,7 +1225,7 @@ function validateFormulas(schema) {
         });
         (data.syncTables || []).forEach((syncTable, i) => {
             const connectionRequirement = syncTable.getter.connectionRequirement;
-            if (connectionRequirement && connectionRequirement !== api_types_2.ConnectionRequirement.None) {
+            if (connectionRequirement && connectionRequirement !== api_types_1.ConnectionRequirement.None) {
                 context.addIssue({
                     code: z.ZodIssueCode.custom,
                     path: ['syncTables', i, 'getter', 'connectionRequirement'],
@@ -1403,17 +1405,17 @@ const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSc
     (data.syncTables || []).forEach((syncTable, i) => {
         const schema = syncTable.schema;
         for (const [propertyName, childSchema] of Object.entries(schema.properties)) {
-            const { autocomplete } = childSchema;
-            if (!autocomplete || Array.isArray(autocomplete)) {
+            const { options } = childSchema;
+            if (!options || Array.isArray(options)) {
                 continue;
             }
-            if (typeof autocomplete !== 'string' || !(autocomplete in (syncTable.namedAutocompletes || {}))) {
+            if (typeof options !== 'string' || !(options in (syncTable.namedPropertyOptions || {}))) {
                 context.addIssue({
                     code: z.ZodIssueCode.custom,
-                    path: ['syncTables', i, 'properties', propertyName, 'autocomplete'],
-                    message: childSchema.autocomplete === api_types_1.AutocompleteType.Dynamic
-                        ? `Sync table ${syncTable.name} must define "autocomplete" for this property to use AutocompleteType.Dynamic`
-                        : `"${childSchema.autocomplete}" is not registered as an autocomplete function for this sync table.`,
+                    path: ['syncTables', i, 'properties', propertyName, 'options'],
+                    message: childSchema.options === api_types_3.OptionsType.Dynamic
+                        ? `Sync table ${syncTable.name} must define "options" for this property to use OptionsType.Dynamic`
+                        : `"${childSchema.options}" is not registered as an options function for this sync table.`,
                 });
                 continue;
             }

@@ -20,8 +20,8 @@ import type {ParameterAutocompleteMetadataFormulaSpecification} from '../types';
 import type {ParamsList} from '../../api_types';
 import {PostSetupType} from '../../types';
 import type {PropertyAutocompleteAnnotatedResult} from '../../api';
-import type {PropertyAutocompleteExecutionContext} from '../../api_types';
 import type {PropertyAutocompleteResults} from '../../api';
+import type {PropertyOptionsExecutionContext} from '../../api_types';
 import {StatusCodeError} from '../../api';
 import type {SyncExecutionContext} from '../../api_types';
 import type {TypedPackFormula} from '../../api';
@@ -33,7 +33,7 @@ import {findSyncFormula} from '../common/helpers';
 import {isDynamicSyncTable} from '../../api';
 import {normalizePropertyAutocompleteResults} from '../../api';
 import {setEndpointHelper} from '../../helpers/migration';
-import {throwOnDynamicSchemaWithJsAutocompleteFunction} from '../../schema';
+import {throwOnDynamicSchemaWithJsOptionsFunction} from '../../schema';
 import {unwrapError} from '../common/marshaling';
 import {wrapError} from '../common/marshaling';
 
@@ -143,7 +143,7 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
           break;
         case MetadataFormulaType.PropertyAutocomplete:
           const syncTable = syncTables?.find(table => table.name === formulaSpec.syncTableName);
-          const autocompleteFormula = syncTable?.namedAutocompletes?.[formulaSpec.autocompleteName];
+          const autocompleteFormula = syncTable?.namedPropertyOptions?.[formulaSpec.autocompleteName];
 
           if (autocompleteFormula) {
             const propertyValues = {};
@@ -166,7 +166,7 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
               });
             }
 
-            const propertyAutocompleteExecutionContext: Omit<PropertyAutocompleteExecutionContext, 'search'> = {
+            const propertyAutocompleteExecutionContext: Omit<PropertyOptionsExecutionContext, 'search'> = {
               ...executionContext,
               propertyName: formulaSpec.propertyName,
               propertyValues,
@@ -262,7 +262,7 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
               if (formula) {
                 const formulaResult = formula.execute(params as any, executionContext);
                 if (isGetSchema) {
-                  throwOnDynamicSchemaWithJsAutocompleteFunction(await formulaResult);
+                  throwOnDynamicSchemaWithJsOptionsFunction(await formulaResult);
                 }
                 return formulaResult;
               }

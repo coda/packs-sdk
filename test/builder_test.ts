@@ -259,14 +259,14 @@ describe('Builder', () => {
             foo: {
               type: ValueType.String,
               mutable: true,
-              autocomplete: () => {
+              options: () => {
                 return ['bar'];
               },
             },
           },
         },
       });
-      assert.equal(pack.syncTables[0].namedAutocompletes!.foo.connectionRequirement, ConnectionRequirement.Required);
+      assert.equal(pack.syncTables[0].namedPropertyOptions!.foo.connectionRequirement, ConnectionRequirement.Required);
     });
 
     it('works for sync table cell autocomplete after the fact', () => {
@@ -279,16 +279,16 @@ describe('Builder', () => {
             foo: {
               type: ValueType.String,
               mutable: true,
-              autocomplete: () => {
+              options: () => {
                 return ['bar'];
               },
             },
           },
         },
       });
-      assert.equal(pack.syncTables[0].namedAutocompletes!.foo.connectionRequirement, ConnectionRequirement.Optional);
+      assert.equal(pack.syncTables[0].namedPropertyOptions!.foo.connectionRequirement, ConnectionRequirement.Optional);
       pack.setUserAuthentication({type: AuthenticationType.HeaderBearerToken});
-      assert.equal(pack.syncTables[0].namedAutocompletes!.foo.connectionRequirement, ConnectionRequirement.Required);
+      assert.equal(pack.syncTables[0].namedPropertyOptions!.foo.connectionRequirement, ConnectionRequirement.Required);
     });
 
     it('works for dynamic sync table metadata formulas', () => {

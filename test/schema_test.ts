@@ -1,4 +1,5 @@
 import {AutocompleteType} from '../index';
+import {OptionsType} from '../api_types';
 import {ValueHintType} from '../index';
 import {ValueType} from '../index';
 import {deepCopy} from '../helpers/object_utils';
@@ -216,7 +217,7 @@ describe('Schema', () => {
         primary: 'boo',
         properties: {
           boo: {type: schema.ValueType.String},
-          baz: {type: schema.ValueType.Number, mutable: true, autocomplete: AutocompleteType.Dynamic},
+          baz: {type: schema.ValueType.Number, mutable: true, options: AutocompleteType.Dynamic},
         },
       });
       const objectSchema = schema.makeObjectSchema({
@@ -252,7 +253,7 @@ describe('Schema', () => {
           fromKey: 'another',
           properties: {
             Boo: {type: schema.ValueType.String, fromKey: 'boo'},
-            Baz: {type: schema.ValueType.Number, fromKey: 'baz', mutable: true, autocomplete: AutocompleteType.Dynamic},
+            Baz: {type: schema.ValueType.Number, fromKey: 'baz', mutable: true, options: OptionsType.Dynamic},
           },
         },
         Subtitle: {type: schema.ValueType.String, fromKey: 'subtitle'},

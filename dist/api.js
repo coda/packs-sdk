@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.maybeRewriteConnectionForFormula = exports.maybeRewriteConnectionForNamedAutocompletes = exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTableLegacy = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makePropertyAutocompleteFormula = exports.makeMetadataFormula = exports.normalizePropertyAutocompleteResults = exports.makeFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.UpdateOutcome = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeFileArrayParameter = exports.makeFileParameter = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeParameter = exports.wrapGetSchema = exports.wrapMetadataFunction = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.MissingScopesError = exports.StatusCodeError = exports.UserVisibleError = void 0;
+exports.maybeRewriteConnectionForFormula = exports.maybeRewriteConnectionForNamedAutocompletes = exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTableLegacy = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makePropertyOptionsFormula = exports.makeMetadataFormula = exports.normalizePropertyAutocompleteResults = exports.makeFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.UpdateOutcome = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeFileArrayParameter = exports.makeFileParameter = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeParameter = exports.wrapGetSchema = exports.wrapMetadataFunction = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.MissingScopesError = exports.StatusCodeError = exports.UserVisibleError = void 0;
 const api_types_1 = require("./api_types");
 const api_types_2 = require("./api_types");
 const api_types_3 = require("./api_types");
@@ -569,16 +569,16 @@ function makeMetadataFormula(execute, options) {
             }),
         ],
         examples: [],
-        connectionRequirement: (options === null || options === void 0 ? void 0 : options.connectionRequirement) || api_types_2.ConnectionRequirement.Optional,
+        connectionRequirement: (options === null || options === void 0 ? void 0 : options.connectionRequirement) || api_types_1.ConnectionRequirement.Optional,
     });
 }
 exports.makeMetadataFormula = makeMetadataFormula;
 /**
- * Builds a formula to store in {@link SyncTableAutocompleters}.
+ * Builds a formula to store in {@link SyncTablePropertyOptions}.
  *
  * @hidden
  */
-function makePropertyAutocompleteFormula({ execute, schema, name, }) {
+function makePropertyOptionsFormula({ execute, schema, name, }) {
     if (!(execute instanceof Function)) {
         throw new Error(`Value for execute must be a function`);
     }
@@ -588,7 +588,7 @@ function makePropertyAutocompleteFormula({ execute, schema, name, }) {
     // Bend the type to satisfy PackFormulaDef's declaration.
     const innerExecute = async ([], context) => executeRetyped(context);
     const formulaDefn = {
-        connectionRequirement: api_types_2.ConnectionRequirement.Optional,
+        connectionRequirement: api_types_1.ConnectionRequirement.Optional,
         execute: innerExecute,
         name,
         description: `A property autocomplete function for ${name}`,
@@ -599,7 +599,7 @@ function makePropertyAutocompleteFormula({ execute, schema, name, }) {
     const formula = makeFormula(formulaDefn);
     return formula;
 }
-exports.makePropertyAutocompleteFormula = makePropertyAutocompleteFormula;
+exports.makePropertyOptionsFormula = makePropertyOptionsFormula;
 /**
  * Utility to search over an array of autocomplete results and return only those that
  * match the given search string.
@@ -704,7 +704,7 @@ function makeSimpleAutocompleteMetadataFormula(options) {
     return makeMetadataFormula((_context, search) => simpleAutocomplete(search, options), {
         // A connection won't be used here, but if the parent formula uses a connection
         // the execution code is going to try to pass it here. We should fix that.
-        connectionRequirement: api_types_2.ConnectionRequirement.Optional,
+        connectionRequirement: api_types_1.ConnectionRequirement.Optional,
     });
 }
 exports.makeSimpleAutocompleteMetadataFormula = makeSimpleAutocompleteMetadataFormula;
@@ -786,23 +786,22 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
     }
     const getSchema = wrapGetSchema(wrapMetadataFunction(getSchemaDef));
     const schema = (0, schema_2.makeObjectSchema)(schemaDef);
-    let namedAutocompletes = replaceInlineAutocompleteFunctionsWithNamedAutocompleteFunctions({
+    let namedPropertyOptions = replaceInlineOptionsFunctionsWithNamedOptionsFunctions({
         inputSchema,
         schema,
         identityName,
     });
-    if (dynamicOptions.autocomplete) {
-        namedAutocompletes !== null && namedAutocompletes !== void 0 ? namedAutocompletes : (namedAutocompletes = {});
-        namedAutocompletes[api_types_1.AutocompleteType.Dynamic] = makePropertyAutocompleteFormula({
-            execute: dynamicOptions.autocomplete,
+    if (dynamicOptions.propertyOptions) {
+        namedPropertyOptions !== null && namedPropertyOptions !== void 0 ? namedPropertyOptions : (namedPropertyOptions = {});
+        namedPropertyOptions[api_types_2.OptionsType.Dynamic] = makePropertyOptionsFormula({
+            execute: dynamicOptions.propertyOptions,
             schema: (0, schema_2.makeObjectSchema)({
-                // A dynamic autocomplete formula can return different result types depending
-                // on which property is being autocompleted, so there's no accurate schema
-                // type to set on the formula. We just use an empty object schema, but it could
-                // be anything.
+                // A dynamic options formula can return different result types depending
+                // on the specific property, so there's no accurate schema type to set on
+                // the formula. We just use an empty object schema, but it could be anything.
                 properties: {},
             }),
-            name: `${identityName}.DynamicAutocomplete`,
+            name: `${identityName}.DynamicOptions`,
         });
     }
     const formulaSchema = getSchema
@@ -855,7 +854,7 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
         getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
         entityName,
         defaultAddDynamicColumns,
-        namedAutocompletes: maybeRewriteConnectionForNamedAutocompletes(namedAutocompletes, connectionRequirement),
+        namedPropertyOptions: maybeRewriteConnectionForNamedAutocompletes(namedPropertyOptions, connectionRequirement),
     };
 }
 exports.makeSyncTable = makeSyncTable;
@@ -908,7 +907,7 @@ function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchem
         schema: placeholderSchema,
         formula,
         connectionRequirement,
-        dynamicOptions: { getSchema, entityName, defaultAddDynamicColumns, autocomplete },
+        dynamicOptions: { getSchema, entityName, defaultAddDynamicColumns, propertyOptions: autocomplete },
     });
     return {
         ...table,
@@ -1047,41 +1046,41 @@ function maybeRewriteConnectionForFormula(formula, connectionRequirement) {
     return formula;
 }
 exports.maybeRewriteConnectionForFormula = maybeRewriteConnectionForFormula;
-// This helper method finds any inline autocomplete functions in a static sync table schema.
+// This helper method finds any inline options functions in a static sync table schema.
 // These functions will need to be extracted into the "namedAutocompletes" property on the sync
 // table and replaced with strings.
 //
 // Not that we won't detect autocomplete functions within nested object schemas, but that's not necessary
 // here: the only types you can autocomplete in a 2-way schema are the top-level ones.
-function listPropertiesWithAutocompleteFunctions(schema) {
+function listPropertiesWithOptionsFunctions(schema) {
     const result = [];
     for (const propertyName of Object.keys(schema.properties)) {
-        const { autocomplete } = schema.properties[propertyName];
-        if (!autocomplete) {
+        const { options } = schema.properties[propertyName];
+        if (!options) {
             continue;
         }
-        if (typeof autocomplete !== 'function') {
+        if (typeof options !== 'function') {
             continue;
         }
         result.push(propertyName);
     }
     return result;
 }
-// TODO(dweitzman): Use fixedId for the autocomplete name when available to support property renames.
-// Finds any inline autocomplete functions within the inputSchema and replaces them
-// with strings references into the returned namedAutocompletes.
-function replaceInlineAutocompleteFunctionsWithNamedAutocompleteFunctions({ inputSchema, // DO NOT MUTATE inputSchema!
+// TODO(dweitzman): Use fixedId for the options formula name when available to support property renames.
+// Finds any inline optiohns functions within the inputSchema and replaces them
+// with strings references into the returned namedPropertyOptions.
+function replaceInlineOptionsFunctionsWithNamedOptionsFunctions({ inputSchema, // DO NOT MUTATE inputSchema!
 schema, identityName, }) {
     // Converting JS functions to strings happens on inputSchema instead of the deep copied version because the
     // deep copy will have already thrown away any JS functions.
-    const namedAutocompletes = {};
-    for (const propertyName of listPropertiesWithAutocompleteFunctions(inputSchema)) {
-        schema.properties[propertyName].autocomplete = propertyName;
-        namedAutocompletes[propertyName] = makePropertyAutocompleteFormula({
-            execute: inputSchema.properties[propertyName].autocomplete,
+    const namedOptions = {};
+    for (const propertyName of listPropertiesWithOptionsFunctions(inputSchema)) {
+        schema.properties[propertyName].options = propertyName;
+        namedOptions[propertyName] = makePropertyOptionsFormula({
+            execute: inputSchema.properties[propertyName].options,
             schema: (0, schema_3.normalizeSchema)(schema.properties[propertyName]),
-            name: `${identityName}.${propertyName}.Autocomplete`,
+            name: `${identityName}.${propertyName}.Options`,
         });
     }
-    return namedAutocompletes;
+    return namedOptions;
 }

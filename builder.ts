@@ -392,8 +392,8 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
           getSchema: maybeRewriteConnectionForFormula(syncTable.getSchema, connectionRequirement),
           listDynamicUrls: maybeRewriteConnectionForFormula(syncTable.listDynamicUrls, connectionRequirement),
           searchDynamicUrls: maybeRewriteConnectionForFormula(syncTable.searchDynamicUrls, connectionRequirement),
-          namedAutocompletes: maybeRewriteConnectionForNamedAutocompletes(
-            syncTable.namedAutocompletes,
+          namedPropertyOptions: maybeRewriteConnectionForNamedAutocompletes(
+            syncTable.namedPropertyOptions,
             connectionRequirement,
           ),
         };
@@ -402,8 +402,8 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
           ...syncTable,
           getter: maybeRewriteConnectionForFormula(syncTable.getter, connectionRequirement),
           getSchema: maybeRewriteConnectionForFormula(syncTable.getSchema, connectionRequirement),
-          namedAutocompletes: maybeRewriteConnectionForNamedAutocompletes(
-            syncTable.namedAutocompletes,
+          namedPropertyOptions: maybeRewriteConnectionForNamedAutocompletes(
+            syncTable.namedPropertyOptions,
             connectionRequirement,
           ),
         };

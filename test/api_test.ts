@@ -1,8 +1,8 @@
 import './test_helper';
 import type {ArrayType} from '../api_types';
-import {AutocompleteType} from '../api_types';
 import {ConnectionRequirement} from '../api_types';
 import type {ExecutionContext} from '../api_types';
+import {OptionsType} from '../api_types';
 import type {ParamValues} from '../api_types';
 import {ParameterType} from '../api_types';
 import {StatusCodeError} from '../api';
@@ -206,8 +206,8 @@ describe('API test', () => {
           id: 'foo',
           primary: 'foo',
           properties: {
-            foo: {type: ValueType.String, mutable: true, autocomplete: () => ['bar']},
-            bar: {type: ValueType.Number, mutable: true, autocomplete: AutocompleteType.Dynamic},
+            foo: {type: ValueType.String, mutable: true, options: () => ['bar']},
+            bar: {type: ValueType.Number, mutable: true, options: OptionsType.Dynamic},
           },
         }),
         formula: {
@@ -219,26 +219,26 @@ describe('API test', () => {
           },
         },
         dynamicOptions: {
-          autocomplete: () => {
+          propertyOptions: () => {
             return ['baz'];
           },
         },
       });
-      const {namedAutocompletes} = table;
+      const {namedPropertyOptions: namedAutocompletes} = table;
 
-      assert.hasAllKeys(namedAutocompletes!, ['foo', AutocompleteType.Dynamic]);
+      assert.hasAllKeys(namedAutocompletes!, ['foo', OptionsType.Dynamic]);
 
       const fooAutocomplete = namedAutocompletes!.foo;
-      assert.equal('MyIdentityName.foo.Autocomplete', fooAutocomplete.name);
+      assert.equal('MyIdentityName.foo.Options', fooAutocomplete.name);
       assert.deepEqual(await fooAutocomplete.execute([] as ParamValues<[]>, {} as ExecutionContext), ['bar']);
 
       // The ObjectSchemaProperties cast here is because typescript doesn't know that schema normalization
       // changed "foo" to "Foo".
-      assert.equal((table.schema.properties as schema.ObjectSchemaProperties).Foo.autocomplete, 'foo' as any);
+      assert.equal((table.schema.properties as schema.ObjectSchemaProperties).Foo.options, 'foo' as any);
 
-      const dynamicAutocomplete = namedAutocompletes![AutocompleteType.Dynamic];
-      assert.equal('MyIdentityName.DynamicAutocomplete', dynamicAutocomplete.name);
-      assert.deepEqual(await dynamicAutocomplete.execute([] as ParamValues<[]>, {} as ExecutionContext), ['baz']);
+      const dynamicPropertyOptions = namedAutocompletes![OptionsType.Dynamic];
+      assert.equal('MyIdentityName.DynamicOptions', dynamicPropertyOptions.name);
+      assert.deepEqual(await dynamicPropertyOptions.execute([] as ParamValues<[]>, {} as ExecutionContext), ['baz']);
     });
   });
 

@@ -2,8 +2,6 @@ import {testHelper} from './test_helper';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '..';
 import {AuthenticationType} from '../types';
-import type {AutocompleteReference} from '../api_types';
-import {AutocompleteType} from '../api_types';
 import {ConnectionRequirement} from '../api_types';
 import {CurrencyFormat} from '..';
 import {DurationUnit} from '..';
@@ -13,6 +11,8 @@ import {ImageCornerStyle} from '../schema';
 import {ImageOutline} from '../schema';
 import {Limits} from '../testing/upload_validation';
 import type {ObjectSchemaDefinition} from '../schema';
+import type {OptionsReference} from '../api_types';
+import {OptionsType} from '../api_types';
 import type {PackFormulaMetadata} from '../api';
 import {PackMetadataValidationError} from '../testing/upload_validation';
 import type {PackVersionMetadata} from '../compiled_types';
@@ -909,7 +909,7 @@ describe('Pack metadata Validation', () => {
         ]);
       });
 
-      it('autocomplete for a non-mutable property or bad property name', async () => {
+      it('autocomplete for non-mutable property and a bad property name', async () => {
         const syncTable = makeSyncTable({
           name: 'SyncTable',
           identityName: 'Sync',
@@ -918,10 +918,10 @@ describe('Pack metadata Validation', () => {
             primary: 'foo',
             id: 'foo',
             properties: {
-              Foo: {type: ValueType.String, mutable: false, autocomplete: AutocompleteType.Dynamic},
+              Foo: {type: ValueType.String, mutable: false, options: OptionsType.Dynamic},
               // This next issue isn't something pack authors would normally do unless they do typecasts,
               // but could be an error caused by a bug in makeSyncTable().
-              Bar: {type: ValueType.String, mutable: true, autocomplete: 'someProp' as AutocompleteReference},
+              Bar: {type: ValueType.String, mutable: true, options: 'someProp' as OptionsReference},
             },
           }),
           formula: {
@@ -941,21 +941,12 @@ describe('Pack metadata Validation', () => {
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
           {
-            message: '"mutable" must be true to set "autocomplete"',
-            path: 'syncTables[0].schema.properties.Foo',
+            message: 'Sync table SyncTable must define "options" for this property to use OptionsType.Dynamic',
+            path: 'syncTables[0].properties.Foo.options',
           },
           {
-            message: '"mutable" must be true to set "autocomplete"',
-            path: 'syncTables[0].getter.schema.items.properties.Foo',
-          },
-          {
-            message:
-              'Sync table SyncTable must define "autocomplete" for this property to use AutocompleteType.Dynamic',
-            path: 'syncTables[0].properties.Foo.autocomplete',
-          },
-          {
-            message: '"someProp" is not registered as an autocomplete function for this sync table.',
-            path: 'syncTables[0].properties.Bar.autocomplete',
+            message: '"someProp" is not registered as an options function for this sync table.',
+            path: 'syncTables[0].properties.Bar.options',
           },
         ]);
       });
@@ -972,27 +963,27 @@ describe('Pack metadata Validation', () => {
               Foo: {
                 type: ValueType.String,
                 mutable: true,
-                autocomplete: {'totally invalid value': 'here'} as any as string[],
+                options: {'totally invalid value': 'here'} as any as string[],
               },
               Bar: {
                 type: ValueType.String,
                 mutable: true,
-                autocomplete: [{'totally invalid value': 'here'}] as any as string[],
+                options: [{'totally invalid value': 'here'}] as any as string[],
               },
               Baz: {
                 type: ValueType.String,
                 mutable: true,
-                autocomplete: ['this is ok', {display: 'foo', value: 'bar'}],
+                options: ['this is ok', {display: 'foo', value: 'bar'}],
               },
               Baz2: {
                 type: ValueType.Number,
                 mutable: true,
-                autocomplete: [1, {display: 'foo', value: 2}],
+                options: [1, {display: 'foo', value: 2}],
               },
               Baz3: {
                 type: ValueType.Boolean,
                 mutable: true,
-                autocomplete: [true, {display: 'foo', value: false}],
+                options: [true, {display: 'foo', value: false}],
               },
             },
           }),
@@ -1021,11 +1012,11 @@ describe('Pack metadata Validation', () => {
         });
         assert.deepInclude(validationErrors, {
           message: 'Expected string, received object',
-          path: 'syncTables[0].getter.schema.items.properties.Bar.autocomplete[0]',
+          path: 'syncTables[0].getter.schema.items.properties.Bar.options[0]',
         });
         assert.deepInclude(validationErrors, {
           message: 'Required',
-          path: 'syncTables[0].getter.schema.items.properties.Bar.autocomplete[0].display',
+          path: 'syncTables[0].getter.schema.items.properties.Bar.options[0].display',
         });
 
         const bazErrors = validationErrors.filter(e => e.path?.toLowerCase().includes('.baz'));

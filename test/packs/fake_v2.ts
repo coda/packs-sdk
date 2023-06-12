@@ -111,13 +111,13 @@ pack.addSyncTable({
     properties: {
       foo: {
         type: coda.ValueType.String,
-        autocomplete: () => {
+        options: () => {
           return ['hi', {display: 'Goodbye!', value: 'bye'}];
         },
       },
       bar: {
         type: coda.ValueType.Number,
-        autocomplete: () => {
+        options: () => {
           return [123, 456, {display: 'another', value: 3}];
         },
       },
@@ -126,13 +126,13 @@ pack.addSyncTable({
         properties: {
           bazProp: {type: coda.ValueType.String},
         },
-        autocomplete: () => {
+        options: () => {
           return [{bazProp: 'hmm'}];
         },
       },
       inlineAutocomplete: {
         type: coda.ValueType.Number,
-        autocomplete: [1, 2, 3, 4],
+        options: [1, 2, 3, 4],
       },
     },
   }),

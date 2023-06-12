@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.throwOnDynamicSchemaWithJsAutocompleteFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+exports.throwOnDynamicSchemaWithJsOptionsFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_2 = require("./helpers/ensure");
@@ -501,7 +501,7 @@ function makeObjectSchema(schemaDef) {
     const schema = { ...schemaDef, type: ValueType.Object };
     // In case a single schema object was used for multiple properties, make copies for each of them.
     for (const key of Object.keys(schema.properties)) {
-        const autocompleteFunction = typeof schema.properties[key].autocomplete === 'function' ? schema.properties[key].autocomplete : undefined;
+        const optionsFunction = typeof schema.properties[key].options === 'function' ? schema.properties[key].options : undefined;
         // 'type' was just created from scratch above
         if (key !== 'type') {
             // Typescript doesn't like the raw schema.properties[key] (on the left only though...)
@@ -509,8 +509,8 @@ function makeObjectSchema(schemaDef) {
             schema.properties[typedKey] = (0, object_utils_1.deepCopy)(schema.properties[key]);
             // Autocomplete gets manually copied over because it may be a function, which deepCopy wouldn't
             // support.
-            if (autocompleteFunction) {
-                schema.properties[typedKey].autocomplete = autocompleteFunction;
+            if (optionsFunction) {
+                schema.properties[typedKey].options = optionsFunction;
             }
         }
     }
@@ -626,7 +626,7 @@ function normalizeSchema(schema) {
     }
     else if (isObject(schema)) {
         const normalized = {};
-        const { attribution, autocomplete, codaType, description, displayProperty, featured, featuredProperties, fixedId, id, identity, idProperty, imageProperty, includeUnknownProperties, linkProperty, mutable, primary, properties, snippetProperty, subtitleProperties, titleProperty, type, 
+        const { attribution, codaType, description, displayProperty, featured, featuredProperties, fixedId, id, identity, idProperty, imageProperty, includeUnknownProperties, linkProperty, mutable, options, primary, properties, snippetProperty, subtitleProperties, titleProperty, type, 
         // eslint-disable-next-line @typescript-eslint/naming-convention
         __packId, ...rest } = schema;
         // Have TS ensure we don't forget about new fields in this function.
@@ -642,7 +642,6 @@ function normalizeSchema(schema) {
         }
         const normalizedSchema = {
             attribution,
-            autocomplete,
             codaType,
             description,
             displayProperty: displayProperty ? normalizeSchemaKey(displayProperty) : undefined,
@@ -656,6 +655,7 @@ function normalizeSchema(schema) {
             includeUnknownProperties,
             linkProperty: linkProperty ? normalizeSchemaPropertyIdentifier(linkProperty, normalized) : undefined,
             mutable,
+            options,
             primary: primary ? normalizeSchemaKey(primary) : undefined,
             properties: normalized,
             snippetProperty: snippetProperty ? normalizeSchemaPropertyIdentifier(snippetProperty, normalized) : undefined,
@@ -678,7 +678,7 @@ exports.normalizeSchema = normalizeSchema;
  * schema it provides better code reuse to derive a reference schema instead.
  */
 function makeReferenceSchemaFromObjectSchema(schema, identityName) {
-    const { type, id, primary, identity, properties, mutable, autocomplete } = (0, migration_1.objectSchemaHelper)(schema);
+    const { type, id, primary, identity, properties, mutable, options } = (0, migration_1.objectSchemaHelper)(schema);
     (0, ensure_2.ensureExists)(identity || identityName, 'Source schema must have an identity field, or you must provide an identity name for the reference.');
     const validId = (0, ensure_2.ensureExists)(id);
     const referenceProperties = { [validId]: properties[validId] };
@@ -693,7 +693,7 @@ function makeReferenceSchemaFromObjectSchema(schema, identityName) {
         displayProperty: primary,
         properties: referenceProperties,
         mutable,
-        autocomplete,
+        options,
     });
 }
 exports.makeReferenceSchemaFromObjectSchema = makeReferenceSchemaFromObjectSchema;
@@ -715,21 +715,21 @@ exports.withIdentity = withIdentity;
  * they'd get would be an internal error, and the pack maker tools logs would just mention that structured clone
  * failed to copy a function.
  */
-function throwOnDynamicSchemaWithJsAutocompleteFunction(dynamicSchema, parentKey) {
+function throwOnDynamicSchemaWithJsOptionsFunction(dynamicSchema, parentKey) {
     if (!dynamicSchema) {
         return;
     }
     if (Array.isArray(dynamicSchema)) {
-        dynamicSchema.forEach(item => throwOnDynamicSchemaWithJsAutocompleteFunction(item));
+        dynamicSchema.forEach(item => throwOnDynamicSchemaWithJsOptionsFunction(item));
         return;
     }
     if (typeof dynamicSchema === 'object') {
         for (const key of Object.keys(dynamicSchema)) {
-            throwOnDynamicSchemaWithJsAutocompleteFunction(dynamicSchema[key], key);
+            throwOnDynamicSchemaWithJsOptionsFunction(dynamicSchema[key], key);
         }
     }
-    if (typeof dynamicSchema === 'function' && parentKey === 'autocomplete') {
-        throw new Error('Sync tables with dynamic schemas must use "autocomplete: AutocompleteType.Dynamic" instead of "autocomplete: () => {...}');
+    if (typeof dynamicSchema === 'function' && parentKey === 'options') {
+        throw new Error('Sync tables with dynamic schemas must use "options: OptionsType.Dynamic" instead of "options: () => {...}');
     }
 }
-exports.throwOnDynamicSchemaWithJsAutocompleteFunction = throwOnDynamicSchemaWithJsAutocompleteFunction;
+exports.throwOnDynamicSchemaWithJsOptionsFunction = throwOnDynamicSchemaWithJsOptionsFunction;

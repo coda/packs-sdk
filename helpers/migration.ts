@@ -38,8 +38,8 @@ class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
     return this._schema.mutable;
   }
 
-  get autocomplete() {
-    return this._schema.autocomplete;
+  get options() {
+    return this._schema.options;
   }
 
   get properties() {

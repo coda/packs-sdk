@@ -23,7 +23,7 @@ Object.defineProperty(exports, "newPack", { enumerable: true, get: function () {
 var builder_2 = require("./builder");
 Object.defineProperty(exports, "PackDefinitionBuilder", { enumerable: true, get: function () { return builder_2.PackDefinitionBuilder; } });
 var api_types_1 = require("./api_types");
-Object.defineProperty(exports, "AutocompleteType", { enumerable: true, get: function () { return api_types_1.AutocompleteType; } });
+Object.defineProperty(exports, "AutocompleteType", { enumerable: true, get: function () { return api_types_1.OptionsType; } });
 var api_types_2 = require("./api_types");
 Object.defineProperty(exports, "ConnectionRequirement", { enumerable: true, get: function () { return api_types_2.ConnectionRequirement; } });
 var api_1 = require("./api");

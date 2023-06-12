@@ -774,12 +774,12 @@ export interface SyncExecutionContext extends ExecutionContext {
 }
 
 /**
- * Sub-class of {@link ExecutionContext} that is passed to the `autocomplete` function of
- * mutable sync tables for properties with `autocomplete` enabled.
+ * Sub-class of {@link ExecutionContext} that is passed to the `options` formula of
+ * mutable sync tables.
  *
  * @hidden
  */
-export interface PropertyAutocompleteExecutionContext extends ExecutionContext {
+export interface PropertyOptionsExecutionContext extends ExecutionContext {
   /**
    * Which property is being edited.
    */
@@ -793,7 +793,7 @@ export interface PropertyAutocompleteExecutionContext extends ExecutionContext {
   /**
    * Current values of other properties from the same row. Non-required properties may be missing
    * if the doc owner elected not to sync them, or if they have a type that's not yet supported
-   * for autocomplete context. Properties referencing other sync tables may be missing some or
+   * for options context. Properties referencing other sync tables may be missing some or
    * all of their sub-properties if the reference is broken because the other table is not
    * added to the doc or hasn't synced the referenced row.
    */
@@ -881,7 +881,7 @@ export enum PrecannedDateRange {
 /**
  * @hidden
  */
-export enum AutocompleteType {
+export enum OptionsType {
   // These are special sentinel values for property autocomplete functions that aren't named
   // after user-defined schema properties. Make sure the values aren't likely to collide with
   // user-defined properties.
@@ -891,8 +891,8 @@ export enum AutocompleteType {
 // This is an internal type to discourage pack makers from accidentally assigning a string to
 // the autocomplete property values.
 /** @hidden */
-export type AutocompleteReference = string & {
-  __brand: 'AutocompleteRef';
+export type OptionsReference = string & {
+  __brand: 'OptionsRef';
 };
 
 // TODO(dweitzman): Update the type to allow autocomplete functions to return a cache TTL.
@@ -900,6 +900,6 @@ export type AutocompleteReference = string & {
  * A JavaScript function for property autocomplete.
  * @hidden
  */
-export type PropertyAutocompleteMetadataFunction<ResultT extends PackFormulaResult[]> = (
-  context: PropertyAutocompleteExecutionContext,
+export type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]> = (
+  context: PropertyOptionsExecutionContext,
 ) => Promise<ResultT> | ResultT;

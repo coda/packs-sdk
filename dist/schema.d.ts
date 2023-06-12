@@ -1,8 +1,8 @@
 import type { $Values } from './type_utils';
-import type { AutocompleteReference } from './api_types';
-import type { AutocompleteType } from './api_types';
+import type { OptionsReference } from './api_types';
+import type { OptionsType } from './api_types';
 import type { PackFormulaResult } from './api_types';
-import type { PropertyAutocompleteMetadataFunction } from './api_types';
+import type { PropertyOptionsMetadataFunction as PropertyOptionsMetadataFunction } from './api_types';
 /**
  * The set of primitive value types that can be used as return values for formulas
  * or in object schemas.
@@ -174,11 +174,11 @@ export declare type BooleanHintTypes = (typeof BooleanHintValueTypes)[number];
 /** The subset of {@link ValueHintType} that can be used with an object value. */
 export declare type ObjectHintTypes = (typeof ObjectHintValueTypes)[number];
 /**
- * A function or set of values to return for property autocomplete.
+ * A function or set of values to return for property options.
  * @hidden
  */
-export declare type PropertySchemaAutocomplete<T extends PackFormulaResult> = PropertyAutocompleteMetadataFunction<T[]> | T[] | AutocompleteType | AutocompleteReference;
-declare type PropertySchemaAutocompleteWithOptionalDisplay<T extends PackFormulaResult> = PropertySchemaAutocomplete<T | {
+export declare type PropertySchemaOptions<T extends PackFormulaResult> = PropertyOptionsMetadataFunction<T[]> | T[] | OptionsType | OptionsReference;
+declare type PropertySchemaOptionsWithOptionalDisplay<T extends PackFormulaResult> = PropertySchemaOptions<T | {
     display: string;
     value: T;
 }>;
@@ -215,12 +215,12 @@ interface BaseSchema {
      *   color: {
      *      type: coda.ValueType.String,
      *      mutable: true,
-     *      autocomplete: ['red', 'green', 'blue'],
+     *      options: ['red', 'green', 'blue'],
      *   },
      *   user: {
      *      type: coda.ValueType.String,
      *      mutable: true,
-     *      autocomplete: async function (context) {
+     *      options: async function (context) {
      *        let url = coda.withQueryParams("https://example.com/userSearch", { name: context.search });
      *        let response = await context.fetcher.fetch({ method: "GET", url: url });
      *        let results = response.body.users;
@@ -232,7 +232,7 @@ interface BaseSchema {
      *
      * @hidden
      */
-    autocomplete?: PropertySchemaAutocomplete<any>;
+    options?: PropertySchemaOptions<any>;
 }
 /**
  * A schema representing a return value or object property that is a boolean.
@@ -243,7 +243,7 @@ export interface BooleanSchema extends BaseSchema {
     /** Indicates how to render values in a table. If not specified, renders a checkbox. */
     codaType?: BooleanHintTypes;
     /** @hidden */
-    autocomplete?: PropertySchemaAutocompleteWithOptionalDisplay<boolean>;
+    options?: PropertySchemaOptionsWithOptionalDisplay<boolean>;
 }
 /**
  * The union of all schemas that can represent number values.
@@ -255,7 +255,7 @@ export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> e
     /** An optional type hint instructing Coda about how to interpret or render this value. */
     codaType?: T;
     /** @hidden */
-    autocomplete?: PropertySchemaAutocompleteWithOptionalDisplay<number>;
+    options?: PropertySchemaOptionsWithOptionalDisplay<number>;
 }
 /**
  * A schema representing a return value or object property that is a numeric value,
@@ -689,7 +689,7 @@ export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> e
     /** An optional type hint instructing Coda about how to interpret or render this value. */
     codaType?: T;
     /** @hidden */
-    autocomplete?: PropertySchemaAutocompleteWithOptionalDisplay<string>;
+    options?: PropertySchemaOptionsWithOptionalDisplay<string>;
 }
 /**
  * The subset of StringHintTypes that don't have specific schema attributes.
@@ -961,7 +961,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      */
     imageProperty?: PropertyIdentifier<K>;
     /** @hidden */
-    autocomplete?: PropertySchemaAutocomplete<{}>;
+    options?: PropertySchemaOptions<{}>;
 }
 export declare type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
 /** @hidden */
@@ -1230,5 +1230,5 @@ export declare function withIdentity(schema: GenericObjectSchema, identityName: 
  * they'd get would be an internal error, and the pack maker tools logs would just mention that structured clone
  * failed to copy a function.
  */
-export declare function throwOnDynamicSchemaWithJsAutocompleteFunction(dynamicSchema: any, parentKey?: string): void;
+export declare function throwOnDynamicSchemaWithJsOptionsFunction(dynamicSchema: any, parentKey?: string): void;
 export {};
