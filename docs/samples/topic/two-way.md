@@ -8,7 +8,7 @@ icon: material/card-text
 
 Two-way sync is an optional feature of sync tables that allows users to make edits to row data and push those changes back to the data source. Pack makers enable two-way sync on their tables by annotating their schemas and writing an `executeUpdate` function that handles the update logic.
 
-🚧 This feature is currently only available to a limited group of beta testers.
+🚧 This feature is currently only available to a limited group of alpha testers.
 
 
 [Learn More](../../../guides/blocks/sync-tables/two-way){ .md-button }
