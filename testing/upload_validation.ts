@@ -1211,7 +1211,7 @@ const objectPropertyUnionSchema = z
     return (
       schemaForAutocomplete?.codaType !== ValueHintType.SelectList ||
       !schemaForAutocomplete?.autocomplete ||
-      schemaForAutocomplete.mutable
+      schema.mutable
     );
   }, `"mutable" must be true to set "autocomplete"`);
 

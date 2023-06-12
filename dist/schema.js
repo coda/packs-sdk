@@ -516,20 +516,24 @@ function makeObjectSchema(schemaDef) {
     const schema = { ...schemaDef, type: ValueType.Object };
     // In case a single schema object was used for multiple properties, make copies for each of them.
     for (const key of Object.keys(schema.properties)) {
-        const propertySchema = schemaWithoutArray(schema.properties[key]);
-        if ((propertySchema === null || propertySchema === void 0 ? void 0 : propertySchema.codaType) !== ValueHintType.SelectList) {
-            continue;
-        }
-        const autocompleteFunction = typeof propertySchema.autocomplete === 'function' ? propertySchema.autocomplete : undefined;
         // 'type' was just created from scratch above
         if (key !== 'type') {
             // Typescript doesn't like the raw schema.properties[key] (on the left only though...)
             const typedKey = key;
-            schema.properties[typedKey] = (0, object_utils_1.deepCopy)(propertySchema);
+            const schemaForAutocomplete = schemaWithoutArray(schema.properties[key]);
+            const autocompleteFunction = (schemaForAutocomplete === null || schemaForAutocomplete === void 0 ? void 0 : schemaForAutocomplete.codaType) === ValueHintType.SelectList &&
+                typeof schemaForAutocomplete.autocomplete === 'function'
+                ? schemaForAutocomplete.autocomplete
+                : undefined;
+            schema.properties[typedKey] = (0, object_utils_1.deepCopy)(schema.properties[key]);
             // Autocomplete gets manually copied over because it may be a function, which deepCopy wouldn't
             // support.
             if (autocompleteFunction) {
-                schema.properties[typedKey].autocomplete = autocompleteFunction;
+                const schemaCopyForAutocomplete = schemaWithoutArray(schema.properties[typedKey]);
+                if (schemaCopyForAutocomplete) {
+                    (0, ensure_1.assertCondition)(schemaCopyForAutocomplete.codaType === ValueHintType.SelectList);
+                    schemaCopyForAutocomplete.autocomplete = autocompleteFunction;
+                }
             }
         }
     }
