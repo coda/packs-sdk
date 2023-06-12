@@ -4,6 +4,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+## [1.4.0] - 2023-06-12
+
 ### Added
 
 - Added the command `coda extensions` to the CLI for installing developer extensions that help with building Packs. Currently it only supports Visual Studio Code (`coda extensions vscode`), creating a code snippets file which provides the same slash commands as the Pack Studio.
@@ -582,7 +584,7 @@ await myHelper(context);
 
 - Beginning of alpha versioning.
 
-[unreleased]: https://github.com/coda/packs-sdk/compare/v1.3.4...HEAD
+[unreleased]: https://github.com/coda/packs-sdk/compare/v1.4.0...HEAD
 [1.2.3]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.2.3
 [1.2.2]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.2.2
 [1.2.1]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.2.1
@@ -601,3 +603,5 @@ await myHelper(context);
 [1.3.0]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.3.0
 [1.3.3]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.3.3
 [1.3.4]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.3.4
+
+[1.4.0]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.4.0
