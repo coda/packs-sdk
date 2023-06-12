@@ -59,6 +59,7 @@ function getApiKey(codaApiEndpoint) {
             }
         }
     }
+    return process.env.CODA_PACKS_API_KEY;
 }
 exports.getApiKey = getApiKey;
 function storeCodaApiKey(apiKey, projectDir = '.', codaApiEndpoint) {
