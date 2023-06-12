@@ -1,14 +1,14 @@
 import { CodaMarshalerType } from './constants';
 import { MarshalingInjectedKeys } from './constants';
-declare enum TransformType {
+export declare enum TransformType {
     Buffer = "Buffer",
     Error = "Error"
 }
-interface PostTransform {
+export interface PostTransform {
     type: TransformType;
     path: string[];
 }
-interface MarshaledValue {
+export interface MarshaledValue {
     encoded: any;
     postTransforms: PostTransform[];
     [MarshalingInjectedKeys.CodaMarshaler]: CodaMarshalerType.Object;
@@ -25,4 +25,3 @@ export declare function marshalError(err: any): object | undefined;
 export declare function unmarshalError(val: {
     [key: string]: any | undefined;
 }): Error | undefined;
-export {};
