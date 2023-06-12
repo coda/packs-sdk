@@ -7,6 +7,8 @@ import type {Credentials} from './auth_types';
 import type {CredentialsFile} from './auth_types';
 import type {CustomAuthParameter} from '../types';
 import type {CustomCredentials} from './auth_types';
+import type {MultiHeaderCredentials} from './auth_types';
+import type {MultiHeaderTokenAuthentication} from '../types';
 import type {MultiQueryParamCredentials} from './auth_types';
 import type {OAuth2Credentials} from './auth_types';
 import {assertCondition} from '../helpers/ensure';
@@ -63,6 +65,8 @@ export function setupAuth(manifestDir: string, packDef: BasicPackDefinition, opt
     case AuthenticationType.CustomHeaderToken:
     case AuthenticationType.HeaderBearerToken:
       return handler.handleToken();
+    case AuthenticationType.MultiHeaderToken:
+      return handler.handleMultiToken(auth.headers);
     case AuthenticationType.MultiQueryParamToken:
       return handler.handleMultiQueryParams(auth.params);
     case AuthenticationType.QueryParamToken:
@@ -105,10 +109,7 @@ class CredentialHandler {
   private checkForExistingCredential(): Credentials | undefined {
     const existingCredentials = readCredentialsFile(this._manifestDir);
     if (existingCredentials) {
-      const input = promptForInput(
-        `Credentials already exist for this Pack, overwrite? (y/N): `,
-        {yesOrNo: true}
-      );
+      const input = promptForInput(`Credentials already exist for this Pack, overwrite? (y/N): `, {yesOrNo: true});
       if (input.toLocaleLowerCase() !== 'yes') {
         throw new Error(`Input: ${input}`);
         return process.exit(1);
@@ -122,6 +123,24 @@ class CredentialHandler {
     const endpointUrl = this.maybePromptForEndpointUrl();
     const input = promptForInput(`Paste the token or API key to use for this Pack:\n`, {mask: true});
     this.storeCredential({endpointUrl, token: input});
+    print('Credentials updated!');
+  }
+
+  handleMultiToken(headers: MultiHeaderTokenAuthentication['headers']) {
+    if (headers.length === 0) {
+      printAndExit(
+        `Please define one or more entries for "headers" in the setUserAuthentication or setSystemAuthentication section of this Pack definition.`,
+      );
+    }
+
+    this.checkForExistingCredential();
+    const endpointUrl = this.maybePromptForEndpointUrl();
+    const credentials: MultiHeaderCredentials = {endpointUrl, headers: {}};
+    for (const {name} of headers) {
+      const value = promptForInput(`Enter the token to use for the "${name}" header for this Pack:\n`, {mask: true});
+      credentials.headers[name] = value;
+    }
+    this.storeCredential(credentials);
     print('Credentials updated!');
   }
 

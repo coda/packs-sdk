@@ -81,6 +81,7 @@ import * as coda from "@codahq/packs-sdk";
 - [LinkAttributionNode](../interfaces/core.LinkAttributionNode.md)
 - [LinkSchema](../interfaces/core.LinkSchema.md)
 - [MetadataFormulaObjectResultType](../interfaces/core.MetadataFormulaObjectResultType.md)
+- [MultiHeaderTokenAuthentication](../interfaces/core.MultiHeaderTokenAuthentication.md)
 - [MultiQueryParamTokenAuthentication](../interfaces/core.MultiQueryParamTokenAuthentication.md)
 - [Network](../interfaces/core.Network.md)
 - [NoAuthentication](../interfaces/core.NoAuthentication.md)

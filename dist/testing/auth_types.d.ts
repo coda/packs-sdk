@@ -7,6 +7,11 @@ interface BaseCredentials {
 export interface TokenCredentials extends BaseCredentials {
     token: string;
 }
+export interface MultiHeaderCredentials extends BaseCredentials {
+    headers: {
+        [headerName: string]: string;
+    };
+}
 export interface WebBasicCredentials extends BaseCredentials {
     username: string;
     password?: string;
@@ -40,5 +45,5 @@ export interface AWSAssumeRoleCredentials extends BaseCredentials {
     roleArn: string;
     externalId?: string;
 }
-export declare type Credentials = TokenCredentials | WebBasicCredentials | CustomCredentials | QueryParamCredentials | MultiQueryParamCredentials | OAuth2Credentials | AWSAccessKeyCredentials | AWSAssumeRoleCredentials;
+export declare type Credentials = TokenCredentials | MultiHeaderCredentials | WebBasicCredentials | CustomCredentials | QueryParamCredentials | MultiQueryParamCredentials | OAuth2Credentials | AWSAccessKeyCredentials | AWSAssumeRoleCredentials;
 export {};

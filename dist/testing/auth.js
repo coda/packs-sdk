@@ -61,6 +61,8 @@ function setupAuth(manifestDir, packDef, opts = {}) {
         case types_1.AuthenticationType.CustomHeaderToken:
         case types_1.AuthenticationType.HeaderBearerToken:
             return handler.handleToken();
+        case types_1.AuthenticationType.MultiHeaderToken:
+            return handler.handleMultiToken(auth.headers);
         case types_1.AuthenticationType.MultiQueryParamToken:
             return handler.handleMultiQueryParams(auth.params);
         case types_1.AuthenticationType.QueryParamToken:
@@ -106,6 +108,20 @@ class CredentialHandler {
         const endpointUrl = this.maybePromptForEndpointUrl();
         const input = (0, helpers_4.promptForInput)(`Paste the token or API key to use for this Pack:\n`, { mask: true });
         this.storeCredential({ endpointUrl, token: input });
+        (0, helpers_2.print)('Credentials updated!');
+    }
+    handleMultiToken(headers) {
+        if (headers.length === 0) {
+            (0, helpers_3.printAndExit)(`Please define one or more entries for "headers" in the setUserAuthentication or setSystemAuthentication section of this Pack definition.`);
+        }
+        this.checkForExistingCredential();
+        const endpointUrl = this.maybePromptForEndpointUrl();
+        const credentials = { endpointUrl, headers: {} };
+        for (const { name } of headers) {
+            const value = (0, helpers_4.promptForInput)(`Enter the token to use for the "${name}" header for this Pack:\n`, { mask: true });
+            credentials.headers[name] = value;
+        }
+        this.storeCredential(credentials);
         (0, helpers_2.print)('Credentials updated!');
     }
     handleWebBasic() {
