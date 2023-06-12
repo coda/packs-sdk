@@ -206,8 +206,18 @@ describe('API test', () => {
           id: 'foo',
           primary: 'foo',
           properties: {
-            foo: {type: ValueType.String, mutable: true, autocomplete: () => ['bar']},
-            bar: {type: ValueType.Number, mutable: true, autocomplete: AutocompleteType.Dynamic},
+            foo: {
+              type: ValueType.String,
+              codaType: schema.ValueHintType.SelectList,
+              mutable: true,
+              autocomplete: () => ['bar'],
+            },
+            bar: {
+              type: ValueType.String,
+              codaType: schema.ValueHintType.SelectList,
+              mutable: true,
+              autocomplete: AutocompleteType.Dynamic,
+            },
           },
         }),
         formula: {
@@ -234,7 +244,11 @@ describe('API test', () => {
 
       // The ObjectSchemaProperties cast here is because typescript doesn't know that schema normalization
       // changed "foo" to "Foo".
-      assert.equal((table.schema.properties as schema.ObjectSchemaProperties).Foo.autocomplete, 'foo' as any);
+      assert.equal(
+        ((table.schema.properties as schema.ObjectSchemaProperties).Foo as typeof table.schema.properties.foo)
+          .autocomplete,
+        'foo' as any,
+      );
 
       const dynamicAutocomplete = namedAutocompletes![AutocompleteType.Dynamic];
       assert.equal('MyIdentityName.DynamicAutocomplete', dynamicAutocomplete.name);

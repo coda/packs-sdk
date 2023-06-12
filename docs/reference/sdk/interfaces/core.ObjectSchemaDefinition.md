@@ -21,6 +21,8 @@ A schema definition for an object value (a value with key-value pairs).
 
 - `BaseSchema`
 
+- `PropertyWithAutocomplete`<{}\>
+
   ↳ **`ObjectSchemaDefinition`**
 
 ## Properties
@@ -37,7 +39,7 @@ ___
 
 ### codaType
 
-• `Optional` **codaType**: [`Person`](../enums/core.ValueHintType.md#person) \| [`Reference`](../enums/core.ValueHintType.md#reference)
+• `Optional` **codaType**: [`Person`](../enums/core.ValueHintType.md#person) \| [`Reference`](../enums/core.ValueHintType.md#reference) \| [`SelectList`](../enums/core.ValueHintType.md#selectlist)
 
 A hint for how Coda should interpret and render this object value.
 

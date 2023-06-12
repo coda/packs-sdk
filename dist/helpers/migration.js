@@ -41,6 +41,9 @@ class ObjectSchemaHelper {
         var _a, _b;
         return (_a = this._schema.attribution) !== null && _a !== void 0 ? _a : (_b = this._schema.identity) === null || _b === void 0 ? void 0 : _b.attribution;
     }
+    get codaType() {
+        return this._schema.codaType;
+    }
 }
 function paramDefHelper(def) {
     return new ParamDefHelper(def);

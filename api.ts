@@ -37,7 +37,9 @@ import type {TypeMap} from './api_types';
 import type {TypeOf} from './api_types';
 import type {UnionType} from './api_types';
 import type {UpdateSyncExecutionContext} from './api_types';
+import {ValueHintType} from './schema';
 import {ValueType} from './schema';
+import {assertCondition} from './helpers/ensure';
 import {booleanArray} from './api_types';
 import {dateArray} from './api_types';
 import {deepCopy} from './helpers/object_utils';
@@ -52,6 +54,7 @@ import {makeObjectSchema} from './schema';
 import {normalizeSchema} from './schema';
 import {numberArray} from './api_types';
 import {objectSchemaHelper} from './helpers/migration';
+import {schemaWithoutArray} from './schema';
 import {stringArray} from './api_types';
 
 export {ExecutionContext};
@@ -1236,6 +1239,12 @@ export function makeFormula<ParamDefsT extends ParamDefs, ResultT extends ValueT
         formulaSchema: 'schema' in fullDefinition ? fullDefinition.schema : undefined,
       };
       const {onError: _, resultType: unused, codaType, formulaSchema, ...rest} = def;
+
+      assertCondition(
+        codaType !== ValueHintType.SelectList,
+        'ValueHintType.SelectList is not supported for formula result types.',
+      );
+
       const stringFormula: StringPackFormula<ParamDefsT> = {
         ...rest,
         resultType: Type.string,
@@ -2516,7 +2525,11 @@ export function maybeRewriteConnectionForFormula<
 function listPropertiesWithAutocompleteFunctions(schema: ObjectSchemaDefinition<string, string>): string[] {
   const result: string[] = [];
   for (const propertyName of Object.keys(schema.properties)) {
-    const {autocomplete} = schema.properties[propertyName];
+    const propertySchema = schemaWithoutArray(schema.properties[propertyName]);
+    if (propertySchema?.codaType !== ValueHintType.SelectList) {
+      continue;
+    }
+    const {autocomplete} = propertySchema;
     if (!autocomplete) {
       continue;
     }
@@ -2546,9 +2559,14 @@ function replaceInlineAutocompleteFunctionsWithNamedAutocompleteFunctions({
   const namedAutocompletes: SyncTableAutocompleters = {};
 
   for (const propertyName of listPropertiesWithAutocompleteFunctions(inputSchema)) {
-    schema.properties[propertyName].autocomplete = propertyName as AutocompleteReference;
+    const inputSchemaWithoutArray = schemaWithoutArray(inputSchema.properties[propertyName]);
+    const outputSchema = schemaWithoutArray(schema.properties[propertyName]);
+    assertCondition(outputSchema?.codaType === ValueHintType.SelectList);
+    assertCondition(inputSchemaWithoutArray?.codaType === ValueHintType.SelectList);
+
+    outputSchema.autocomplete = propertyName as AutocompleteReference;
     namedAutocompletes[propertyName] = makePropertyAutocompleteFormula({
-      execute: inputSchema.properties[propertyName].autocomplete as any,
+      execute: inputSchemaWithoutArray.autocomplete as any,
       schema: normalizeSchema(schema.properties[propertyName]),
       name: `${identityName}.${propertyName}.Autocomplete`,
     });

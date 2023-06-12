@@ -3401,9 +3401,9 @@ module.exports = (() => {
     }
   });
 
-  // node_modules/.pnpm/qs@6.11.2/node_modules/qs/lib/formats.js
+  // node_modules/.pnpm/qs@6.11.1/node_modules/qs/lib/formats.js
   var require_formats = __commonJS({
-    "node_modules/.pnpm/qs@6.11.2/node_modules/qs/lib/formats.js"(exports, module) {
+    "node_modules/.pnpm/qs@6.11.1/node_modules/qs/lib/formats.js"(exports, module) {
       "use strict";
       init_buffer_shim();
       var replace = String.prototype.replace;
@@ -3428,9 +3428,9 @@ module.exports = (() => {
     }
   });
 
-  // node_modules/.pnpm/qs@6.11.2/node_modules/qs/lib/utils.js
+  // node_modules/.pnpm/qs@6.11.1/node_modules/qs/lib/utils.js
   var require_utils = __commonJS({
-    "node_modules/.pnpm/qs@6.11.2/node_modules/qs/lib/utils.js"(exports, module) {
+    "node_modules/.pnpm/qs@6.11.1/node_modules/qs/lib/utils.js"(exports, module) {
       "use strict";
       init_buffer_shim();
       var formats = require_formats();
@@ -3628,9 +3628,9 @@ module.exports = (() => {
     }
   });
 
-  // node_modules/.pnpm/qs@6.11.2/node_modules/qs/lib/stringify.js
+  // node_modules/.pnpm/qs@6.11.1/node_modules/qs/lib/stringify.js
   var require_stringify = __commonJS({
-    "node_modules/.pnpm/qs@6.11.2/node_modules/qs/lib/stringify.js"(exports, module) {
+    "node_modules/.pnpm/qs@6.11.1/node_modules/qs/lib/stringify.js"(exports, module) {
       "use strict";
       init_buffer_shim();
       var getSideChannel = require_side_channel();
@@ -3886,9 +3886,9 @@ module.exports = (() => {
     }
   });
 
-  // node_modules/.pnpm/qs@6.11.2/node_modules/qs/lib/parse.js
+  // node_modules/.pnpm/qs@6.11.1/node_modules/qs/lib/parse.js
   var require_parse = __commonJS({
-    "node_modules/.pnpm/qs@6.11.2/node_modules/qs/lib/parse.js"(exports, module) {
+    "node_modules/.pnpm/qs@6.11.1/node_modules/qs/lib/parse.js"(exports, module) {
       "use strict";
       init_buffer_shim();
       var utils = require_utils();
@@ -3926,7 +3926,7 @@ module.exports = (() => {
       var isoSentinel = "utf8=%26%2310003%3B";
       var charsetSentinel = "utf8=%E2%9C%93";
       var parseValues = /* @__PURE__ */ __name(function parseQueryStringValues(str, options) {
-        var obj = { __proto__: null };
+        var obj = {};
         var cleanStr = options.ignoreQueryPrefix ? str.replace(/^\?/, "") : str;
         var limit = options.parameterLimit === Infinity ? void 0 : options.parameterLimit;
         var parts = cleanStr.split(options.delimiter, limit);
@@ -4089,9 +4089,9 @@ module.exports = (() => {
     }
   });
 
-  // node_modules/.pnpm/qs@6.11.2/node_modules/qs/lib/index.js
+  // node_modules/.pnpm/qs@6.11.1/node_modules/qs/lib/index.js
   var require_lib = __commonJS({
-    "node_modules/.pnpm/qs@6.11.2/node_modules/qs/lib/index.js"(exports, module) {
+    "node_modules/.pnpm/qs@6.11.1/node_modules/qs/lib/index.js"(exports, module) {
       "use strict";
       init_buffer_shim();
       var stringify = require_stringify();

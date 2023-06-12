@@ -114,6 +114,7 @@ import * as coda from "@codahq/packs-sdk";
 - [StringDateTimeSchema](../interfaces/core.StringDateTimeSchema.md)
 - [StringEmbedSchema](../interfaces/core.StringEmbedSchema.md)
 - [StringTimeSchema](../interfaces/core.StringTimeSchema.md)
+- [StringWithOptionsSchema](../interfaces/core.StringWithOptionsSchema.md)
 - [Sync](../interfaces/core.Sync.md)
 - [SyncExecutionContext](../interfaces/core.SyncExecutionContext.md)
 - [SyncFormulaDef](../interfaces/core.SyncFormulaDef.md)

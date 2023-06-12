@@ -198,6 +198,7 @@ export type {StringDateTimeSchema} from './schema';
 export type {StringSchema} from './schema';
 export type {SimpleStringSchema} from './schema';
 export type {StringTimeSchema} from './schema';
+export type {StringWithOptionsSchema} from './schema';
 export type {TextAttributionNode} from './schema';
 export {ValueHintType} from './schema';
 export {ValueType} from './schema';

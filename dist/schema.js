@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.throwOnDynamicSchemaWithJsAutocompleteFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+exports.throwOnDynamicSchemaWithJsAutocompleteFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.schemaWithoutArray = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_2 = require("./helpers/ensure");
@@ -173,6 +173,10 @@ var ValueHintType;
     ValueHintType["Toggle"] = "toggle";
     /** @hidden */
     ValueHintType["CodaInternalRichText"] = "codaInternalRichText";
+    /**
+     * Indicates to render a value as a select list.
+     */
+    ValueHintType["SelectList"] = "selectList";
 })(ValueHintType = exports.ValueHintType || (exports.ValueHintType = {}));
 exports.StringHintValueTypes = [
     ValueHintType.Attachment,
@@ -188,6 +192,7 @@ exports.StringHintValueTypes = [
     ValueHintType.Markdown,
     ValueHintType.Url,
     ValueHintType.CodaInternalRichText,
+    ValueHintType.SelectList,
 ];
 exports.NumberHintValueTypes = [
     ValueHintType.Date,
@@ -201,7 +206,7 @@ exports.NumberHintValueTypes = [
     ValueHintType.Scale,
 ];
 exports.BooleanHintValueTypes = [ValueHintType.Toggle];
-exports.ObjectHintValueTypes = [ValueHintType.Person, ValueHintType.Reference];
+exports.ObjectHintValueTypes = [ValueHintType.Person, ValueHintType.Reference, ValueHintType.SelectList];
 /**
  * Enumeration of formats supported by schemas that use {@link ValueHintType.Currency}.
  *
@@ -405,6 +410,16 @@ function isArray(val) {
     return Boolean(val && val.type === ValueType.Array);
 }
 exports.isArray = isArray;
+function schemaWithoutArray(val) {
+    if (!isArray(val)) {
+        return val;
+    }
+    if (!isArray(val.items)) {
+        return val.items;
+    }
+    return undefined;
+}
+exports.schemaWithoutArray = schemaWithoutArray;
 /**
  * Utility that examines a JavaScript value and attempts to infer a schema definition
  * that describes it.
@@ -501,12 +516,16 @@ function makeObjectSchema(schemaDef) {
     const schema = { ...schemaDef, type: ValueType.Object };
     // In case a single schema object was used for multiple properties, make copies for each of them.
     for (const key of Object.keys(schema.properties)) {
-        const autocompleteFunction = typeof schema.properties[key].autocomplete === 'function' ? schema.properties[key].autocomplete : undefined;
+        const propertySchema = schemaWithoutArray(schema.properties[key]);
+        if ((propertySchema === null || propertySchema === void 0 ? void 0 : propertySchema.codaType) !== ValueHintType.SelectList) {
+            continue;
+        }
+        const autocompleteFunction = typeof propertySchema.autocomplete === 'function' ? propertySchema.autocomplete : undefined;
         // 'type' was just created from scratch above
         if (key !== 'type') {
             // Typescript doesn't like the raw schema.properties[key] (on the left only though...)
             const typedKey = key;
-            schema.properties[typedKey] = (0, object_utils_1.deepCopy)(schema.properties[key]);
+            schema.properties[typedKey] = (0, object_utils_1.deepCopy)(propertySchema);
             // Autocomplete gets manually copied over because it may be a function, which deepCopy wouldn't
             // support.
             if (autocompleteFunction) {
