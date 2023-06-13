@@ -24,7 +24,7 @@ A schema representing a value with selectable options.
 
 • **codaType**: [`SelectList`](../enums/core.ValueHintType.md#selectlist)
 
-Instructs Coda to render this value as a hyperlink.
+Instructs Coda to render this value as a select list.
 
 #### Overrides
 

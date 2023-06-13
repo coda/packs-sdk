@@ -1281,8 +1281,6 @@ export function maybeUnwrapArraySchema(
   if (!isArray(val.items)) {
     return val.items;
   }
-
-  return undefined;
 }
 
 type PickOptional<T, K extends keyof T> = Partial<T> & {[P in K]: T[P]};

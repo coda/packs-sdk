@@ -697,7 +697,7 @@ export interface DurationSchema extends BaseStringSchema<ValueHintType.Duration>
  * A schema representing a value with selectable options.
  */
 export interface StringWithOptionsSchema extends BaseStringSchema<ValueHintType.SelectList>, PropertyWithAutocompleteWithOptionalDisplay<string> {
-    /** Instructs Coda to render this value as a hyperlink. */
+    /** Instructs Coda to render this value as a select list. */
     codaType: ValueHintType.SelectList;
     /** @hidden */
     autocomplete: PropertySchemaAutocompleteWithOptionalDisplay<string>;

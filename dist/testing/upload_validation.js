@@ -980,12 +980,16 @@ const objectPropertyUnionSchema = z
     .union([booleanPropertySchema, numberPropertySchema, stringPropertySchema, arrayPropertySchema, genericObjectSchema])
     .refine((schema) => {
     const schemaForAutocomplete = (0, schema_17.maybeUnwrapArraySchema)(schema);
-    return (schemaForAutocomplete === null || schemaForAutocomplete === void 0 ? void 0 : schemaForAutocomplete.codaType) !== schema_12.ValueHintType.SelectList || 'autocomplete' in schemaForAutocomplete;
+    const result = !schemaForAutocomplete ||
+        (schemaForAutocomplete === null || schemaForAutocomplete === void 0 ? void 0 : schemaForAutocomplete.codaType) === schema_12.ValueHintType.SelectList ||
+        !('autocomplete' in schemaForAutocomplete && schemaForAutocomplete.autocomplete);
+    return result;
 }, 'You must set "codaType" to ValueHintType.SelectList when setting an "autocomplete" property.')
     .refine((schema) => {
     const schemaForAutocomplete = (0, schema_17.maybeUnwrapArraySchema)(schema);
     return ((schemaForAutocomplete === null || schemaForAutocomplete === void 0 ? void 0 : schemaForAutocomplete.codaType) !== schema_12.ValueHintType.SelectList ||
         !(schemaForAutocomplete === null || schemaForAutocomplete === void 0 ? void 0 : schemaForAutocomplete.autocomplete) ||
+        // NOTE: This is intentionally schema.mutable rather than schemaForAutocomplete.mtuable.
         schema.mutable);
 }, `"mutable" must be true to set "autocomplete"`);
 const objectPackFormulaSchema = zodCompleteObject({

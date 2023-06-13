@@ -420,7 +420,6 @@ function maybeUnwrapArraySchema(val) {
     if (!isArray(val.items)) {
         return val.items;
     }
-    return undefined;
 }
 exports.maybeUnwrapArraySchema = maybeUnwrapArraySchema;
 /**
