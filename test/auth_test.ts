@@ -166,8 +166,47 @@ describe('Auth', () => {
         type: AuthenticationType.CustomHeaderToken,
         headerName: 'MyHeader',
       };
-      it('defaultAuthenticatio', () => testTokenAuthFlow(createFakePack({defaultAuthentication: auth})));
+      it('defaultAuthentication', () => testTokenAuthFlow(createFakePack({defaultAuthentication: auth})));
       it('systemAuthentication', () => testTokenAuthFlow(createFakePack({systemConnectionAuthentication: auth})));
+    });
+
+    describe(`${AuthenticationType.MultiHeaderToken}`, () => {
+      const auth: Authentication = {
+        type: AuthenticationType.MultiHeaderToken,
+        headers: [
+          {
+            name: 'Header1',
+            description: 'description 1',
+          },
+          {
+            name: 'Header2',
+            description: 'description 2',
+          },
+        ],
+      };
+
+      const execTest = (pack: PackDefinition) => {
+        setupReadline(['token1', 'token2']);
+
+        doSetupAuth(pack);
+
+        sinon.assert.calledWithExactly(
+          mockPromptForInput,
+          'Enter the token to use for the "Header1" header for this Pack:\n',
+          {mask: true},
+        );
+        sinon.assert.calledWithExactly(
+          mockPromptForInput,
+          'Enter the token to use for the "Header2" header for this Pack:\n',
+          {mask: true},
+        );
+        sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
+
+        assertCredentialsFileExactly({headers: {Header1: 'token1', Header2: 'token2'}});
+      };
+
+      it('defaultAuthentication', () => execTest(createFakePack({defaultAuthentication: auth})));
+      it('systemAuthentication', () => execTest(createFakePack({systemConnectionAuthentication: auth})));
     });
 
     describe(`${AuthenticationType.QueryParamToken}`, () => {
@@ -620,6 +659,36 @@ describe('Auth', () => {
           body: undefined,
           form: undefined,
           headers: {MyHeader: 'MyPrefix some-token', 'User-Agent': 'Coda-Test-Server-Fetcher'},
+          method: 'GET',
+          uri: 'https://example.com',
+          encoding: undefined,
+          resolveWithFullResponse: true,
+          followRedirect: true,
+          throwOnRedirect: false,
+        });
+      };
+      it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
+      it('systemAuth', () => execTest(createPackWithSystemAuth(auth)));
+    });
+
+    describe(`${AuthenticationType.MultiHeaderToken}`, async () => {
+      const auth: Authentication = {
+        type: AuthenticationType.MultiHeaderToken,
+        headers: [
+          {name: 'Header1', description: 'description 1', tokenPrefix: 'prefix1'},
+          {name: 'Header2', description: 'description 2'},
+        ],
+      };
+      const execTest = async (pack: PackDefinition) => {
+        setupReadline(['token1', 'token2']);
+        doSetupAuth(pack);
+
+        await executeFetch(pack, 'https://example.com', {result: 'hello'});
+
+        sinon.assert.calledOnceWithExactly(mockMakeRequest, {
+          body: undefined,
+          form: undefined,
+          headers: {Header1: 'prefix1 token1', Header2: 'token2', 'User-Agent': 'Coda-Test-Server-Fetcher'},
           method: 'GET',
           uri: 'https://example.com',
           encoding: undefined,

@@ -53,6 +53,12 @@ export declare enum AuthenticationType {
      */
     CustomHeaderToken = "CustomHeaderToken",
     /**
+     * Authenticate using multiple HTTP headers that you specify.
+     *
+     * @see {@link MultiHeaderTokenAuthentication}
+     */
+    MultiHeaderToken = "MultiHeaderToken",
+    /**
      * Authenticate using a token that is passed as a URL parameter with each request, e.g.
      * `https://example.com/api?paramName=token`.
      *
@@ -331,6 +337,45 @@ export interface CustomHeaderTokenAuthentication extends BaseAuthentication {
      * The HTTP header will be of the form `<headerName>: <tokenPrefix> <token>`
      */
     tokenPrefix?: string;
+}
+/**
+ * Authenticate using multiple HTTP headers that you specify.
+ * Each header is specified with a name and an optional token prefix.
+ *
+ * @example
+ * ```ts
+ * pack.setUserAuthentication({
+ *   type: coda.AuthenticationType.MultiHeaderToken,
+ *   headers: [
+ *     {name: 'Header1', description: 'Enter the value for Header1',  tokenPrefix: 'prefix1'},
+ *     {name: 'Header2', description: 'Enter value for Header2'},
+ *   ],
+ * });
+ * ```
+ */
+export interface MultiHeaderTokenAuthentication extends BaseAuthentication {
+    /** Identifies this as MultiHeaderToken authentication. */
+    type: AuthenticationType.MultiHeaderToken;
+    /**
+     * Names and descriptions of the headers used for authentication.
+     */
+    headers: Array<{
+        /**
+         * The name of the HTTP header.
+         */
+        name: string;
+        /**
+         * A description shown to the user indicating what value they should provide for this header.
+         */
+        description: string;
+        /**
+         * An optional prefix in the HTTP header value before the actual token. Omit this
+         * if the token is the entirety of the header value.
+         *
+         * The HTTP header will be of the form `<headerName>: <tokenPrefix> <token>`
+         */
+        tokenPrefix?: string;
+    }>;
 }
 /**
  * Authenticate using a token that is passed as a URL parameter with each request, e.g.
@@ -688,7 +733,7 @@ export interface VariousAuthentication {
 /**
  * The union of supported authentication methods.
  */
-export declare type Authentication = NoAuthentication | VariousAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | CustomAuthentication;
+export declare type Authentication = NoAuthentication | VariousAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | CustomAuthentication;
 /** @ignore */
 export interface AuthenticationTypeMap {
     [AuthenticationType.None]: NoAuthentication;
@@ -718,19 +763,19 @@ declare type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionNam
  * a pack definition builder. The builder massages these definitions into the form of
  * an {@link Authentication} value, which is the value Coda ultimately cares about.
  */
-export declare type AuthenticationDef = NoAuthentication | VariousAuthentication | AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CodaApiBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<OAuth2Authentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication> | AsAuthDef<CustomAuthentication>;
+export declare type AuthenticationDef = NoAuthentication | VariousAuthentication | AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CodaApiBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<MultiHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<OAuth2Authentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication> | AsAuthDef<CustomAuthentication>;
 /**
  * The union of authentication methods that are supported for system authentication,
  * where the pack author provides credentials used in HTTP requests rather than the user.
  */
-export declare type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | CustomAuthentication;
+export declare type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | CustomAuthentication;
 /**
  * The union of supported system authentication definitions. These represent simplified
  * configurations a pack developer can specify when calling {@link PackDefinitionBuilder.setSystemAuthentication}
  * when using a pack definition builder. The builder massages these definitions into the form of
  * an {@link SystemAuthentication} value, which is the value Coda ultimately cares about.
  */
-export declare type SystemAuthenticationDef = AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication> | AsAuthDef<CustomAuthentication>;
+export declare type SystemAuthenticationDef = AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<MultiHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication> | AsAuthDef<CustomAuthentication>;
 /**
  * The subset of valid {@link AuthenticationType} enum values that can be used
  * when defining {@link SystemAuthentication}.
@@ -739,7 +784,7 @@ export declare type SystemAuthenticationTypes = $Values<Pick<SystemAuthenticatio
 /**
  * @ignore
  */
-export declare type VariousSupportedAuthentication = NoAuthentication | HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication;
+export declare type VariousSupportedAuthentication = NoAuthentication | HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication;
 /**
  * @ignore
  */

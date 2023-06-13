@@ -29,6 +29,7 @@ import type {ImageSchema} from '..';
 import {JSONPath} from 'jsonpath-plus';
 import {LinkDisplayType} from '../schema';
 import type {LinkSchema} from '../schema';
+import type {MultiHeaderTokenAuthentication} from '../types';
 import type {MultiQueryParamTokenAuthentication} from '../types';
 import type {Network} from '../api_types';
 import {NetworkConnection} from '../api_types';
@@ -392,6 +393,25 @@ const defaultAuthenticationValidators: Record<AuthenticationType, z.ZodTypeAny> 
     tokenPrefix: z.string().optional(),
     ...baseAuthenticationValidators,
   }),
+  [AuthenticationType.MultiHeaderToken]: zodCompleteStrictObject<MultiHeaderTokenAuthentication>({
+    type: zodDiscriminant(AuthenticationType.MultiHeaderToken),
+    headers: z
+      .array(
+        zodCompleteStrictObject<MultiHeaderTokenAuthentication['headers'][number]>({
+          name: z.string(),
+          description: z.string(),
+          tokenPrefix: z.string().optional(),
+        }),
+      )
+      .refine(
+        headers => {
+          const keys = headers.map(header => header.name.toLowerCase());
+          return keys.length === new Set(keys).size;
+        },
+        {message: 'Duplicated header names in the MultiHeaderToken authentication config'},
+      ),
+    ...baseAuthenticationValidators,
+  }),
   [AuthenticationType.QueryParamToken]: zodCompleteStrictObject<QueryParamTokenAuthentication>({
     type: zodDiscriminant(AuthenticationType.QueryParamToken),
     paramName: z.string(),
@@ -411,7 +431,7 @@ const defaultAuthenticationValidators: Record<AuthenticationType, z.ZodTypeAny> 
           const keys = params.map(param => param.name);
           return keys.length === new Set(keys).size;
         },
-        {message: 'Duplicated parameter names in the mutli-query-token authentication config'},
+        {message: 'Duplicated parameter names in the MultiQueryParamToken authentication config'},
       ),
     ...baseAuthenticationValidators,
   }),
@@ -476,6 +496,7 @@ const defaultAuthenticationValidators: Record<AuthenticationType, z.ZodTypeAny> 
 const systemAuthenticationTypes: {[key in SystemAuthenticationTypes]: true} = {
   [AuthenticationType.HeaderBearerToken]: true,
   [AuthenticationType.CustomHeaderToken]: true,
+  [AuthenticationType.MultiHeaderToken]: true,
   [AuthenticationType.MultiQueryParamToken]: true,
   [AuthenticationType.QueryParamToken]: true,
   [AuthenticationType.WebBasic]: true,
@@ -491,6 +512,7 @@ const systemAuthenticationValidators = Object.entries(defaultAuthenticationValid
 const variousSupportedAuthenticationTypes: {[key in VariousSupportedAuthenticationTypes]: true} = {
   [AuthenticationType.HeaderBearerToken]: true,
   [AuthenticationType.CustomHeaderToken]: true,
+  [AuthenticationType.MultiHeaderToken]: true,
   [AuthenticationType.MultiQueryParamToken]: true,
   [AuthenticationType.QueryParamToken]: true,
   [AuthenticationType.WebBasic]: true,

@@ -3225,6 +3225,45 @@ describe('Pack metadata Validation', () => {
       await validateJson(metadata);
     });
 
+    it('MultiHeaderToken', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.MultiHeaderToken,
+          headers: [
+            {name: 'Header1', description: 'desc 1', tokenPrefix: 'some-prefix'},
+            {name: 'Header2', description: 'desc 2'},
+          ],
+        },
+        systemConnectionAuthentication: {
+          type: AuthenticationType.MultiHeaderToken,
+          headers: [
+            {name: 'Header1', description: 'desc 1', tokenPrefix: 'some-prefix'},
+            {name: 'Header2', description: 'desc 2'},
+          ],
+        },
+      });
+      await validateJson(metadata);
+    });
+
+    it('MultiHeaderToken on dup names', async () => {
+      const metadata = createFakePackVersionMetadata({
+        systemConnectionAuthentication: {
+          type: AuthenticationType.MultiHeaderToken,
+          headers: [
+            {name: 'Header1', description: 'description 1'},
+            {name: 'HeAdEr1', description: 'description 2'},
+          ],
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: 'Duplicated header names in the MultiHeaderToken authentication config',
+          path: 'systemConnectionAuthentication.headers',
+        },
+      ]);
+    });
+
     it('QueryParamToken', async () => {
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
@@ -3272,7 +3311,7 @@ describe('Pack metadata Validation', () => {
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          message: 'Duplicated parameter names in the mutli-query-token authentication config',
+          message: 'Duplicated parameter names in the MultiQueryParamToken authentication config',
           path: 'systemConnectionAuthentication.params',
         },
       ]);
@@ -3663,6 +3702,12 @@ describe('Pack metadata Validation', () => {
         validateVariousAuthenticationMetadata({
           type: AuthenticationType.CustomHeaderToken,
           headerName: 'MyHeader',
+        }),
+      );
+      assert.ok(
+        validateVariousAuthenticationMetadata({
+          type: AuthenticationType.MultiHeaderToken,
+          headers: [{name: 'Header1', description: 'desc 1'}],
         }),
       );
     });

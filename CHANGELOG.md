@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- Added `AuthenticationType.MultiHeaderToken`, allowing you to specify multiple headers to include in each request. Previously, if the API you were using required multiple headers, you would need to use `AuthenticationType.Custom`.
+
 ## [1.4.0] - 2023-06-12
 
 ### Added

@@ -15,6 +15,7 @@ import type {Fetcher} from '../api_types';
 import type {FetcherFullResponse} from './node_fetcher';
 import type {FetcherOptionsWithFullResponse} from './node_fetcher';
 import {HttpStatusCode} from './constants';
+import type {MultiHeaderCredentials} from './auth_types';
 import type {MultiQueryParamCredentials} from './auth_types';
 import type {OAuth2Credentials} from './auth_types';
 import type {QueryParamCredentials} from './auth_types';
@@ -382,6 +383,16 @@ export class AuthenticatingFetcher implements Fetcher {
         const {token} = this._credentials as TokenCredentials;
         const valuePrefix = this._authDef.tokenPrefix ? `${this._authDef.tokenPrefix} ` : '';
         return {url, body, form, headers: {...headers, [this._authDef.headerName]: `${valuePrefix}${token}`}};
+      }
+      case AuthenticationType.MultiHeaderToken: {
+        const {headers: headerNameToToken} = this._credentials as MultiHeaderCredentials;
+        const authHeaders: Record<string, string> = {};
+        for (const [headerName, token] of Object.entries(headerNameToToken)) {
+          const headerDef = this._authDef.headers.find(def => def.name === headerName);
+          const valuePrefix = headerDef?.tokenPrefix ? `${headerDef.tokenPrefix} ` : '';
+          authHeaders[headerName] = `${valuePrefix}${token}`;
+        }
+        return {url, body, form, headers: {...headers, ...authHeaders}};
       }
       case AuthenticationType.OAuth2: {
         const {accessToken} = this._credentials as OAuth2Credentials;
