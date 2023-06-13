@@ -1010,6 +1010,17 @@ describe('Pack metadata Validation', () => {
                 mutable: true,
                 autocomplete: [true],
               },
+              Beep: {
+                type: ValueType.Object,
+                properties: {
+                  id: {
+                    type: ValueType.String,
+                  },
+                },
+                idProperty: 'id',
+                mutable: true,
+                autocomplete: [],
+              },
               Baz: {
                 type: ValueType.String,
                 codaType: ValueHintType.SelectList,
@@ -1065,6 +1076,10 @@ describe('Pack metadata Validation', () => {
           message: "Unrecognized key(s) in object: 'autocomplete'",
           path: 'syncTables[0].getter.schema.items.properties.Bop',
         });
+        assert.deepInclude(validationErrors, {
+          message: 'You must set "codaType" to ValueHintType.SelectList when setting an "autocomplete" property.',
+          path: 'syncTables[0].schema.properties.Beep',
+        });
 
         const bazErrors = validationErrors.filter(e => e.path?.toLowerCase().includes('.baz'));
         assert.isEmpty(bazErrors);
@@ -1084,6 +1099,18 @@ describe('Pack metadata Validation', () => {
                 codaType: ValueHintType.SelectList,
                 mutable: true,
                 autocomplete: ['this is ok', {display: 'foo', value: 'bar'}],
+              },
+              foo2: {
+                type: ValueType.Object,
+                codaType: ValueHintType.SelectList,
+                idProperty: 'id',
+                properties: {
+                  id: {
+                    type: ValueType.String,
+                  },
+                },
+                mutable: true,
+                autocomplete: [{}],
               },
               bar: {
                 type: ValueType.String,

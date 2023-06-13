@@ -1204,7 +1204,11 @@ const objectPropertyUnionSchema = z
   .union([booleanPropertySchema, numberPropertySchema, stringPropertySchema, arrayPropertySchema, genericObjectSchema])
   .refine((schema: Schema) => {
     const schemaForAutocomplete = maybeUnwrapArraySchema(schema);
-    return schemaForAutocomplete?.codaType !== ValueHintType.SelectList || 'autocomplete' in schemaForAutocomplete;
+    const result =
+      !schemaForAutocomplete ||
+      schemaForAutocomplete?.codaType === ValueHintType.SelectList ||
+      !('autocomplete' in schemaForAutocomplete && schemaForAutocomplete.autocomplete);
+    return result;
   }, 'You must set "codaType" to ValueHintType.SelectList when setting an "autocomplete" property.')
   .refine((schema: Schema) => {
     const schemaForAutocomplete = maybeUnwrapArraySchema(schema);
