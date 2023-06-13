@@ -1456,11 +1456,9 @@ export function makeObjectSchema<
       const typedKey = key as keyof ObjectSchemaProperties<K | L>;
 
       const schemaForAutocomplete = maybeUnwrapArraySchema(schema.properties[key]);
-      const autocompleteFunction =
-        schemaForAutocomplete?.codaType === ValueHintType.SelectList &&
-        typeof schemaForAutocomplete.autocomplete === 'function'
-          ? schemaForAutocomplete.autocomplete
-          : undefined;
+
+      const autocompleteValue = (schemaForAutocomplete as any | undefined)?.autocomplete;
+      const autocompleteFunction = typeof autocompleteValue === 'function' ? autocompleteValue : undefined;
 
       schema.properties[typedKey] = deepCopy(schema.properties[key]);
 
@@ -1468,10 +1466,8 @@ export function makeObjectSchema<
       // support.
       if (autocompleteFunction) {
         const schemaCopyForAutocomplete = maybeUnwrapArraySchema(schema.properties[typedKey]);
-        if (schemaCopyForAutocomplete) {
-          assertCondition(schemaCopyForAutocomplete.codaType === ValueHintType.SelectList);
-          schemaCopyForAutocomplete.autocomplete = autocompleteFunction;
-        }
+        ensureExists(schemaCopyForAutocomplete, 'deepCopy() broke maybeUnwrapArraySchema?...');
+        (schemaCopyForAutocomplete as any).autocomplete = autocompleteFunction;
       }
     }
   }

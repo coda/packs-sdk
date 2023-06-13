@@ -210,6 +210,32 @@ describe('Schema', () => {
       });
     });
 
+    it('autocomplete without select list preserves function', () => {
+      // Make sure the autocomplete function is preserved even without a codaType of ValueHintType.SelectList
+      // so that upload_validation can catch the issue later.
+      const objectSchema = schema.makeObjectSchema({
+        type: schema.ValueType.Object,
+        primary: 'boo',
+        properties: {
+          boo: {
+            type: schema.ValueType.Array,
+            mutable: true,
+            items: {
+              type: schema.ValueType.String,
+              autocomplete: () => {
+                return ['1'];
+              },
+            },
+          },
+        },
+      });
+      const normalized = schema.normalizeSchema(objectSchema);
+      const normalizedBoo = (normalized as any).properties.Boo;
+      // Make sure the function is preserved in spite of the missing value hint across
+      // the deep copy that makeObjectSchema() does.
+      assert.deepEqual(normalizedBoo.items.autocomplete(), ['1']);
+    });
+
     it('works', () => {
       const anotherSchema = schema.makeObjectSchema({
         type: schema.ValueType.Object,
