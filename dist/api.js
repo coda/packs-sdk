@@ -25,6 +25,7 @@ const schema_5 = require("./schema");
 const api_types_11 = require("./api_types");
 const migration_1 = require("./helpers/migration");
 const api_types_12 = require("./api_types");
+const schema_6 = require("./schema");
 /**
  * An error whose message will be shown to the end user in the UI when it occurs.
  * If an error is encountered in a formula and you want to describe the error
@@ -1061,7 +1062,7 @@ function listPropertiesWithAutocompleteFunctions(schema) {
     const result = [];
     for (const propertyName of Object.keys(schema.properties)) {
         const propertySchema = (0, schema_4.maybeUnwrapArraySchema)(schema.properties[propertyName]);
-        if ((propertySchema === null || propertySchema === void 0 ? void 0 : propertySchema.codaType) !== schema_1.ValueHintType.SelectList) {
+        if (!propertySchema || !('autocomplete' in propertySchema)) {
             continue;
         }
         const { autocomplete } = propertySchema;
@@ -1086,8 +1087,8 @@ schema, identityName, }) {
     for (const propertyName of listPropertiesWithAutocompleteFunctions(inputSchema)) {
         const inputSchemaWithoutArray = (0, schema_4.maybeUnwrapArraySchema)(inputSchema.properties[propertyName]);
         const outputSchema = (0, schema_4.maybeUnwrapArraySchema)(schema.properties[propertyName]);
-        (0, ensure_1.assertCondition)((outputSchema === null || outputSchema === void 0 ? void 0 : outputSchema.codaType) === schema_1.ValueHintType.SelectList);
-        (0, ensure_1.assertCondition)((inputSchemaWithoutArray === null || inputSchemaWithoutArray === void 0 ? void 0 : inputSchemaWithoutArray.codaType) === schema_1.ValueHintType.SelectList);
+        (0, ensure_1.assertCondition)((0, schema_6.unwrappedSchemaSupportsAutocomplete)(inputSchemaWithoutArray), `Property "${propertyName}" must have codaType of ValueHintType.SelectList to configure autocomplete`);
+        (0, ensure_1.assertCondition)((0, schema_6.unwrappedSchemaSupportsAutocomplete)(outputSchema), `Property "${propertyName}" lost SelectList codaType on deep copy?...`);
         outputSchema.autocomplete = propertyName;
         namedAutocompletes[propertyName] = makePropertyAutocompleteFormula({
             execute: inputSchemaWithoutArray.autocomplete,

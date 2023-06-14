@@ -169,6 +169,12 @@ export declare const StringHintValueTypes: readonly [ValueHintType.Attachment, V
 export declare const NumberHintValueTypes: readonly [ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Percent, ValueHintType.Currency, ValueHintType.Slider, ValueHintType.ProgressBar, ValueHintType.Scale];
 export declare const BooleanHintValueTypes: readonly [ValueHintType.Toggle];
 export declare const ObjectHintValueTypes: readonly [ValueHintType.Person, ValueHintType.Reference, ValueHintType.SelectList];
+export declare const AutocompleteHintValueTypes: readonly [ValueHintType.SelectList, ValueHintType.Reference];
+declare type SchemaSupportingAutocomplete = ReturnType<typeof maybeUnwrapArraySchema> & {
+    codaType: typeof AutocompleteHintValueTypes;
+    autocomplete: unknown;
+};
+export declare function unwrappedSchemaSupportsAutocomplete(schema: ReturnType<typeof maybeUnwrapArraySchema>): schema is SchemaSupportingAutocomplete;
 /** The subset of {@link ValueHintType} that can be used with a string value. */
 export declare type StringHintTypes = (typeof StringHintValueTypes)[number];
 /** The subset of {@link ValueHintType} that can be used with a number value. */

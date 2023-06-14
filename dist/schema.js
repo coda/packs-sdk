@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.throwOnDynamicSchemaWithJsAutocompleteFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+exports.throwOnDynamicSchemaWithJsAutocompleteFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.unwrappedSchemaSupportsAutocomplete = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_2 = require("./helpers/ensure");
@@ -207,6 +207,11 @@ exports.NumberHintValueTypes = [
 ];
 exports.BooleanHintValueTypes = [ValueHintType.Toggle];
 exports.ObjectHintValueTypes = [ValueHintType.Person, ValueHintType.Reference, ValueHintType.SelectList];
+exports.AutocompleteHintValueTypes = [ValueHintType.SelectList, ValueHintType.Reference];
+function unwrappedSchemaSupportsAutocomplete(schema) {
+    return Boolean(schema === null || schema === void 0 ? void 0 : schema.codaType) && [ValueHintType.SelectList, ValueHintType.Reference].includes(schema.codaType);
+}
+exports.unwrappedSchemaSupportsAutocomplete = unwrappedSchemaSupportsAutocomplete;
 /**
  * Enumeration of formats supported by schemas that use {@link ValueHintType.Currency}.
  *
@@ -523,19 +528,15 @@ function makeObjectSchema(schemaDef) {
             // Typescript doesn't like the raw schema.properties[key] (on the left only though...)
             const typedKey = key;
             const schemaForAutocomplete = maybeUnwrapArraySchema(schema.properties[key]);
-            const autocompleteFunction = (schemaForAutocomplete === null || schemaForAutocomplete === void 0 ? void 0 : schemaForAutocomplete.codaType) === ValueHintType.SelectList &&
-                typeof schemaForAutocomplete.autocomplete === 'function'
-                ? schemaForAutocomplete.autocomplete
-                : undefined;
+            const autocompleteValue = schemaForAutocomplete === null || schemaForAutocomplete === void 0 ? void 0 : schemaForAutocomplete.autocomplete;
+            const autocompleteFunction = typeof autocompleteValue === 'function' ? autocompleteValue : undefined;
             schema.properties[typedKey] = (0, object_utils_1.deepCopy)(schema.properties[key]);
             // Autocomplete gets manually copied over because it may be a function, which deepCopy wouldn't
             // support.
             if (autocompleteFunction) {
                 const schemaCopyForAutocomplete = maybeUnwrapArraySchema(schema.properties[typedKey]);
-                if (schemaCopyForAutocomplete) {
-                    (0, ensure_1.assertCondition)(schemaCopyForAutocomplete.codaType === ValueHintType.SelectList);
-                    schemaCopyForAutocomplete.autocomplete = autocompleteFunction;
-                }
+                (0, ensure_2.ensureExists)(schemaCopyForAutocomplete, 'deepCopy() broke maybeUnwrapArraySchema?...');
+                schemaCopyForAutocomplete.autocomplete = autocompleteFunction;
             }
         }
     }
