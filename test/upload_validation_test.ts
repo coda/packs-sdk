@@ -957,16 +957,8 @@ describe('Pack metadata Validation', () => {
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
           {
-            message: '"mutable" must be true to set "autocomplete"',
-            path: 'syncTables[0].schema.properties.Foo',
-          },
-          {
             message: "Unrecognized key(s) in object: 'autocomplete'",
             path: 'syncTables[0].schema.properties.Baz',
-          },
-          {
-            message: '"mutable" must be true to set "autocomplete"',
-            path: 'syncTables[0].getter.schema.items.properties.Foo',
           },
           {
             message: "Unrecognized key(s) in object: 'autocomplete'",
@@ -1077,7 +1069,8 @@ describe('Pack metadata Validation', () => {
           path: 'syncTables[0].getter.schema.items.properties.Bop',
         });
         assert.deepInclude(validationErrors, {
-          message: 'You must set "codaType" to ValueHintType.SelectList when setting an "autocomplete" property.',
+          message:
+            'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "autocomplete" property.',
           path: 'syncTables[0].schema.properties.Beep',
         });
 

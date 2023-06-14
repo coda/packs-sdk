@@ -56,6 +56,7 @@ import {normalizeSchema} from './schema';
 import {numberArray} from './api_types';
 import {objectSchemaHelper} from './helpers/migration';
 import {stringArray} from './api_types';
+import {unwrappedSchemaSupportsAutocomplete} from './schema';
 
 export {ExecutionContext};
 export {FetchRequest} from './api_types';
@@ -2526,7 +2527,7 @@ function listPropertiesWithAutocompleteFunctions(schema: ObjectSchemaDefinition<
   const result: string[] = [];
   for (const propertyName of Object.keys(schema.properties)) {
     const propertySchema = maybeUnwrapArraySchema(schema.properties[propertyName]);
-    if (propertySchema?.codaType !== ValueHintType.SelectList) {
+    if (!propertySchema || !('autocomplete' in propertySchema)) {
       continue;
     }
     const {autocomplete} = propertySchema;
@@ -2561,8 +2562,15 @@ function replaceInlineAutocompleteFunctionsWithNamedAutocompleteFunctions({
   for (const propertyName of listPropertiesWithAutocompleteFunctions(inputSchema)) {
     const inputSchemaWithoutArray = maybeUnwrapArraySchema(inputSchema.properties[propertyName]);
     const outputSchema = maybeUnwrapArraySchema(schema.properties[propertyName]);
-    assertCondition(outputSchema?.codaType === ValueHintType.SelectList);
-    assertCondition(inputSchemaWithoutArray?.codaType === ValueHintType.SelectList);
+    assertCondition(
+      unwrappedSchemaSupportsAutocomplete(inputSchemaWithoutArray),
+
+      `Property "${propertyName}" must have codaType of ValueHintType.SelectList to configure autocomplete`,
+    );
+    assertCondition(
+      unwrappedSchemaSupportsAutocomplete(outputSchema),
+      `Property "${propertyName}" lost SelectList codaType on deep copy?...`,
+    );
 
     outputSchema.autocomplete = propertyName as AutocompleteReference;
     namedAutocompletes[propertyName] = makePropertyAutocompleteFormula({

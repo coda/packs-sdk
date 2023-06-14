@@ -210,6 +210,19 @@ export const NumberHintValueTypes = [
 export const BooleanHintValueTypes = [ValueHintType.Toggle] as const;
 export const ObjectHintValueTypes = [ValueHintType.Person, ValueHintType.Reference, ValueHintType.SelectList] as const;
 
+export const AutocompleteHintValueTypes = [ValueHintType.SelectList, ValueHintType.Reference] as const;
+
+type SchemaSupportingAutocomplete = ReturnType<typeof maybeUnwrapArraySchema> & {
+  codaType: typeof AutocompleteHintValueTypes;
+  autocomplete: unknown;
+};
+
+export function unwrappedSchemaSupportsAutocomplete(
+  schema: ReturnType<typeof maybeUnwrapArraySchema>,
+): schema is SchemaSupportingAutocomplete {
+  return Boolean(schema?.codaType) && [ValueHintType.SelectList, ValueHintType.Reference].includes(schema!.codaType!);
+}
+
 /** The subset of {@link ValueHintType} that can be used with a string value. */
 export type StringHintTypes = (typeof StringHintValueTypes)[number];
 /** The subset of {@link ValueHintType} that can be used with a number value. */

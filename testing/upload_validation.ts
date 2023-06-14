@@ -94,6 +94,7 @@ import {maybeUnwrapArraySchema} from '../schema';
 import {normalizePropertyValuePathIntoSchemaPath} from '../schema';
 import {objectSchemaHelper} from '../helpers/migration';
 import semver from 'semver';
+import {unwrappedSchemaSupportsAutocomplete} from '../schema';
 import * as z from 'zod';
 
 /**
@@ -1228,20 +1229,10 @@ const objectPropertyUnionSchema = z
     const schemaForAutocomplete = maybeUnwrapArraySchema(schema);
     const result =
       !schemaForAutocomplete ||
-      schemaForAutocomplete?.codaType === ValueHintType.SelectList ||
+      unwrappedSchemaSupportsAutocomplete(schemaForAutocomplete) ||
       !('autocomplete' in schemaForAutocomplete && schemaForAutocomplete.autocomplete);
     return result;
-  }, 'You must set "codaType" to ValueHintType.SelectList when setting an "autocomplete" property.')
-  .refine((schema: Schema) => {
-    const schemaForAutocomplete = maybeUnwrapArraySchema(schema);
-    return (
-      schemaForAutocomplete?.codaType !== ValueHintType.SelectList ||
-      !schemaForAutocomplete?.autocomplete ||
-      // NOTE: This is intentionally schema.mutable rather than schemaForAutocomplete.mtuable.
-      schema.mutable
-    );
-  }, `"mutable" must be true to set "autocomplete"`);
-
+  }, 'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "autocomplete" property.');
 const objectPackFormulaSchema = zodCompleteObject<Omit<ObjectPackFormula<any, any>, 'execute'>>({
   ...commonPackFormulaSchema,
   resultType: zodDiscriminant(Type.object),
@@ -1725,7 +1716,7 @@ const legacyPackMetadataSchema = validateFormulas(
       const schema: ObjectSchema<any, any> = syncTable.schema;
       for (const [propertyName, childSchema] of Object.entries(schema.properties)) {
         const schemaForAutocomplete = maybeUnwrapArraySchema(childSchema);
-        if (schemaForAutocomplete?.codaType !== ValueHintType.SelectList) {
+        if (!unwrappedSchemaSupportsAutocomplete(schemaForAutocomplete)) {
           continue;
         }
         const {autocomplete} = schemaForAutocomplete;
