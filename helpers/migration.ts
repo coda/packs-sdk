@@ -53,6 +53,10 @@ class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
   get attribution() {
     return this._schema.attribution ?? this._schema.identity?.attribution;
   }
+
+  get codaType() {
+    return this._schema.codaType;
+  }
 }
 
 export function paramDefHelper<S extends UnionType, T extends ParamDef<S>>(def: T): ParamDefHelper<S, T> {

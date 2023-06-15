@@ -159,12 +159,17 @@ export declare enum ValueHintType {
      */
     Toggle = "toggle",
     /** @hidden */
-    CodaInternalRichText = "codaInternalRichText"
+    CodaInternalRichText = "codaInternalRichText",
+    /**
+     * Indicates to render a value as a select list.
+     */
+    SelectList = "selectList"
 }
-export declare const StringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Email, ValueHintType.Embed, ValueHintType.Html, ValueHintType.ImageReference, ValueHintType.ImageAttachment, ValueHintType.Markdown, ValueHintType.Url, ValueHintType.CodaInternalRichText];
+export declare const StringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Email, ValueHintType.Embed, ValueHintType.Html, ValueHintType.ImageReference, ValueHintType.ImageAttachment, ValueHintType.Markdown, ValueHintType.Url, ValueHintType.CodaInternalRichText, ValueHintType.SelectList];
 export declare const NumberHintValueTypes: readonly [ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Percent, ValueHintType.Currency, ValueHintType.Slider, ValueHintType.ProgressBar, ValueHintType.Scale];
 export declare const BooleanHintValueTypes: readonly [ValueHintType.Toggle];
-export declare const ObjectHintValueTypes: readonly [ValueHintType.Person, ValueHintType.Reference];
+export declare const ObjectHintValueTypes: readonly [ValueHintType.Person, ValueHintType.Reference, ValueHintType.SelectList];
+export declare const AutocompleteHintValueTypes: readonly [ValueHintType.SelectList, ValueHintType.Reference];
 /** The subset of {@link ValueHintType} that can be used with a string value. */
 export declare type StringHintTypes = (typeof StringHintValueTypes)[number];
 /** The subset of {@link ValueHintType} that can be used with a number value. */
@@ -182,28 +187,7 @@ declare type PropertySchemaAutocompleteWithOptionalDisplay<T extends PackFormula
     display: string;
     value: T;
 }>;
-interface BaseSchema {
-    /**
-     * A explanation of this object schema property shown to the user in the UI.
-     *
-     * If your pack has an object schema with many properties, it may be useful to
-     * explain the purpose or contents of any property that is not self-evident.
-     */
-    description?: string;
-    /**
-     * Whether this object schema property is editable by the user in the UI.
-     */
-    /** @hidden */
-    mutable?: boolean;
-    /**
-     * Optional fixed id for this property, used to support renames of properties over time. If specified,
-     * changes to the name of this property will not cause the property to be treated as a new property.
-     * Only supported for top-level properties.
-     * Note that fixedIds must already be present on the existing schema prior to rolling out a name change in a
-     * new schema; adding fixedId and a name change in a single schema version change will not work.
-     * @hidden
-     */
-    fixedId?: string;
+interface PropertyWithAutocomplete<T extends PackFormulaResult> {
     /**
      * A list of values or a formula that returns a list of values to suggest when someone
      * edits this property. This should only be set when {@link mutable}
@@ -232,7 +216,34 @@ interface BaseSchema {
      *
      * @hidden
      */
-    autocomplete?: PropertySchemaAutocomplete<any>;
+    autocomplete?: PropertySchemaAutocomplete<T>;
+}
+declare type PropertyWithAutocompleteWithOptionalDisplay<T extends PackFormulaResult> = PropertyWithAutocomplete<T | {
+    display: string;
+    value: T;
+}>;
+interface BaseSchema {
+    /**
+     * A explanation of this object schema property shown to the user in the UI.
+     *
+     * If your pack has an object schema with many properties, it may be useful to
+     * explain the purpose or contents of any property that is not self-evident.
+     */
+    description?: string;
+    /**
+     * Whether this object schema property is editable by the user in the UI.
+     */
+    /** @hidden */
+    mutable?: boolean;
+    /**
+     * Optional fixed id for this property, used to support renames of properties over time. If specified,
+     * changes to the name of this property will not cause the property to be treated as a new property.
+     * Only supported for top-level properties.
+     * Note that fixedIds must already be present on the existing schema prior to rolling out a name change in a
+     * new schema; adding fixedId and a name change in a single schema version change will not work.
+     * @hidden
+     */
+    fixedId?: string;
 }
 /**
  * A schema representing a return value or object property that is a boolean.
@@ -683,13 +694,20 @@ export interface DurationSchema extends BaseStringSchema<ValueHintType.Duration>
      */
     maxUnit?: DurationUnit;
 }
+/**
+ * A schema representing a value with selectable options.
+ */
+export interface StringWithOptionsSchema extends BaseStringSchema<ValueHintType.SelectList>, PropertyWithAutocompleteWithOptionalDisplay<string> {
+    /** Instructs Coda to render this value as a select list. */
+    codaType: ValueHintType.SelectList;
+    /** @hidden */
+    autocomplete: PropertySchemaAutocompleteWithOptionalDisplay<string>;
+}
 export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> extends BaseSchema {
     /** Identifies this schema as a string. */
     type: ValueType.String;
     /** An optional type hint instructing Coda about how to interpret or render this value. */
     codaType?: T;
-    /** @hidden */
-    autocomplete?: PropertySchemaAutocompleteWithOptionalDisplay<string>;
 }
 /**
  * The subset of StringHintTypes that don't have specific schema attributes.
@@ -705,7 +723,7 @@ export interface SimpleStringSchema<T extends SimpleStringHintTypes = SimpleStri
 /**
  * The union of schema definition types whose underlying value is a string.
  */
-export declare type StringSchema = StringDateSchema | StringTimeSchema | StringDateTimeSchema | CodaInternalRichTextSchema | DurationSchema | EmailSchema | ImageSchema | LinkSchema | StringEmbedSchema | SimpleStringSchema;
+export declare type StringSchema = StringDateSchema | StringTimeSchema | StringDateTimeSchema | CodaInternalRichTextSchema | DurationSchema | EmailSchema | ImageSchema | LinkSchema | StringEmbedSchema | SimpleStringSchema | StringWithOptionsSchema;
 /**
  * A schema representing a return value or object property that is an array (list) of items.
  * The items are themselves schema definitions, which may refer to scalars or other objects.
@@ -853,7 +871,7 @@ export declare type ObjectSchemaPathProperties = Pick<GenericObjectSchema, 'titl
 /**
  * A schema definition for an object value (a value with key-value pairs).
  */
-export interface ObjectSchemaDefinition<K extends string, L extends string> extends BaseSchema {
+export interface ObjectSchemaDefinition<K extends string, L extends string> extends BaseSchema, PropertyWithAutocomplete<{}> {
     /** Identifies this schema as an object schema. */
     type: ValueType.Object;
     /** Definition of the key-value pairs in this object. */
@@ -960,8 +978,6 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      * {@link ValueHintType.ImageAttachment} or {@link ValueHintType.ImageReference} hints
      */
     imageProperty?: PropertyIdentifier<K>;
-    /** @hidden */
-    autocomplete?: PropertySchemaAutocomplete<{}>;
 }
 export declare type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
 /** @hidden */
@@ -1083,6 +1099,16 @@ export declare function makeAttributionNode<T extends AttributionNode>(node: T):
 export declare type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | GenericObjectSchema;
 export declare function isObject(val?: Schema): val is GenericObjectSchema;
 export declare function isArray(val?: Schema): val is ArraySchema;
+declare type SchemaSupportingAutocomplete = ReturnType<typeof maybeUnwrapArraySchema> & {
+    codaType: typeof AutocompleteHintValueTypes;
+    autocomplete: PropertySchemaAutocomplete<PackFormulaResult>;
+};
+export declare function unwrappedSchemaSupportsAutocomplete(schema: ReturnType<typeof maybeUnwrapArraySchema>): schema is SchemaSupportingAutocomplete;
+export declare function maybeSchemaAutocompleteValue(schema: Schema | undefined): PropertySchemaAutocomplete<PackFormulaResult> | undefined;
+/**
+ * Pulls out the item type of an Array schema, returning undefined if the Array contains another Array.
+ */
+export declare function maybeUnwrapArraySchema(val?: Schema): BooleanSchema | NumberSchema | StringSchema | GenericObjectSchema | undefined;
 declare type PickOptional<T, K extends keyof T> = Partial<T> & {
     [P in K]: T[P];
 };

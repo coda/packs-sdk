@@ -918,10 +918,26 @@ describe('Pack metadata Validation', () => {
             primary: 'foo',
             id: 'foo',
             properties: {
-              Foo: {type: ValueType.String, mutable: false, autocomplete: AutocompleteType.Dynamic},
+              Foo: {
+                type: ValueType.String,
+                codaType: ValueHintType.SelectList,
+                mutable: false,
+                autocomplete: AutocompleteType.Dynamic,
+              },
               // This next issue isn't something pack authors would normally do unless they do typecasts,
               // but could be an error caused by a bug in makeSyncTable().
-              Bar: {type: ValueType.String, mutable: true, autocomplete: 'someProp' as AutocompleteReference},
+              Bar: {
+                type: ValueType.String,
+                codaType: ValueHintType.SelectList,
+                mutable: true,
+                autocomplete: 'someProp' as AutocompleteReference,
+              },
+              Baz: {
+                type: ValueType.String,
+                // Missing codaType: SelectList
+                mutable: true,
+                autocomplete: ['foo', 'bar'],
+              },
             },
           }),
           formula: {
@@ -941,12 +957,12 @@ describe('Pack metadata Validation', () => {
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
           {
-            message: '"mutable" must be true to set "autocomplete"',
-            path: 'syncTables[0].schema.properties.Foo',
+            message: "Unrecognized key(s) in object: 'autocomplete'",
+            path: 'syncTables[0].schema.properties.Baz',
           },
           {
-            message: '"mutable" must be true to set "autocomplete"',
-            path: 'syncTables[0].getter.schema.items.properties.Foo',
+            message: "Unrecognized key(s) in object: 'autocomplete'",
+            path: 'syncTables[0].getter.schema.items.properties.Baz',
           },
           {
             message:
@@ -971,28 +987,49 @@ describe('Pack metadata Validation', () => {
             properties: {
               Foo: {
                 type: ValueType.String,
+                codaType: ValueHintType.SelectList,
                 mutable: true,
                 autocomplete: {'totally invalid value': 'here'} as any as string[],
               },
               Bar: {
                 type: ValueType.String,
+                codaType: ValueHintType.SelectList,
                 mutable: true,
                 autocomplete: [{'totally invalid value': 'here'}] as any as string[],
               },
+              Bop: {
+                type: ValueType.String,
+                mutable: true,
+                autocomplete: [true],
+              },
+              Beep: {
+                type: ValueType.Object,
+                properties: {
+                  id: {
+                    type: ValueType.String,
+                  },
+                },
+                idProperty: 'id',
+                mutable: true,
+                autocomplete: [],
+              },
               Baz: {
                 type: ValueType.String,
+                codaType: ValueHintType.SelectList,
                 mutable: true,
                 autocomplete: ['this is ok', {display: 'foo', value: 'bar'}],
               },
               Baz2: {
-                type: ValueType.Number,
+                type: ValueType.String,
+                codaType: ValueHintType.SelectList,
                 mutable: true,
-                autocomplete: [1, {display: 'foo', value: 2}],
+                autocomplete: ['text', {display: 'foo', value: 'more text'}],
               },
               Baz3: {
-                type: ValueType.Boolean,
+                type: ValueType.String,
+                codaType: ValueHintType.SelectList,
                 mutable: true,
-                autocomplete: [true, {display: 'foo', value: false}],
+                autocomplete: ['text', {display: 'foo', value: 'more text'}],
               },
             },
           }),
@@ -1027,9 +1064,74 @@ describe('Pack metadata Validation', () => {
           message: 'Required',
           path: 'syncTables[0].getter.schema.items.properties.Bar.autocomplete[0].display',
         });
+        assert.deepInclude(validationErrors, {
+          message: "Unrecognized key(s) in object: 'autocomplete'",
+          path: 'syncTables[0].getter.schema.items.properties.Bop',
+        });
+        assert.deepInclude(validationErrors, {
+          message:
+            'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "autocomplete" property.',
+          path: 'syncTables[0].schema.properties.Beep',
+        });
 
         const bazErrors = validationErrors.filter(e => e.path?.toLowerCase().includes('.baz'));
         assert.isEmpty(bazErrors);
+      });
+
+      it('autocomplete valid values', async () => {
+        const syncTable = makeSyncTable({
+          name: 'SyncTable',
+          identityName: 'Sync',
+          schema: makeObjectSchema({
+            type: ValueType.Object,
+            primary: 'foo',
+            id: 'foo',
+            properties: {
+              foo: {
+                type: ValueType.String,
+                codaType: ValueHintType.SelectList,
+                mutable: true,
+                autocomplete: ['this is ok', {display: 'foo', value: 'bar'}],
+              },
+              foo2: {
+                type: ValueType.Object,
+                codaType: ValueHintType.SelectList,
+                idProperty: 'id',
+                properties: {
+                  id: {
+                    type: ValueType.String,
+                  },
+                },
+                mutable: true,
+                autocomplete: [{}],
+              },
+              bar: {
+                type: ValueType.String,
+                codaType: ValueHintType.SelectList,
+                mutable: true,
+                autocomplete: () => {
+                  return [];
+                },
+              },
+            },
+          }),
+          formula: {
+            name: 'SyncTable',
+            description: 'A simple sync table',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            examples: [],
+          },
+        });
+
+        const metadata = createFakePack({
+          syncTables: [syncTable],
+        });
+        const validatedMetadata = await validateJson(metadata);
+        assert.isArray(validatedMetadata.syncTables[0].schema.properties.Foo.autocomplete);
+        assert.isString(validatedMetadata.syncTables[0].schema.properties.Bar.autocomplete);
       });
 
       it('identityName propagated to identity field', async () => {

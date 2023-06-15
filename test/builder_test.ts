@@ -258,6 +258,7 @@ describe('Builder', () => {
           properties: {
             foo: {
               type: ValueType.String,
+              codaType: ValueHintType.SelectList,
               mutable: true,
               autocomplete: () => {
                 return ['bar'];
@@ -278,6 +279,7 @@ describe('Builder', () => {
           properties: {
             foo: {
               type: ValueType.String,
+              codaType: ValueHintType.SelectList,
               mutable: true,
               autocomplete: () => {
                 return ['bar'];

@@ -176,6 +176,7 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
                     return [];
                 case schema_1.ValueHintType.Html:
                 case schema_1.ValueHintType.Markdown:
+                case schema_1.ValueHintType.SelectList:
                 case undefined:
                     // no need to coerce current result type
                     return [];
@@ -198,6 +199,8 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
                     return personErrorMessage ? [personErrorMessage] : [];
                 case schema_1.ValueHintType.Reference:
                 // these are validated in the schema creation.
+                case schema_1.ValueHintType.SelectList:
+                // SelectList only impacts column display formats, not what values are valid.
                 case undefined:
                     return validateObject(result, schema, context);
                 default:

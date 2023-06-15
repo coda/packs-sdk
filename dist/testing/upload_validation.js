@@ -59,8 +59,11 @@ const object_utils_2 = require("../helpers/object_utils");
 const schema_15 = require("../schema");
 const schema_16 = require("../schema");
 const schema_17 = require("../schema");
+const schema_18 = require("../schema");
+const schema_19 = require("../schema");
 const migration_1 = require("../helpers/migration");
 const semver_1 = __importDefault(require("semver"));
+const schema_20 = require("../schema");
 const z = __importStar(require("zod"));
 /**
  * The uncompiled column format matchers will be expected to be actual regex objects,
@@ -538,7 +541,6 @@ const basePropertyValidators = {
 };
 const baseStringPropertyValidators = {
     ...basePropertyValidators,
-    autocomplete: zodAutocompleteFieldWithValues(z.string(), true),
 };
 const baseNumericPropertyValidators = {
     ...basePropertyValidators,
@@ -689,6 +691,12 @@ const linkPropertySchema = zodCompleteStrictObject({
     force: z.boolean().optional(),
     ...baseStringPropertyValidators,
 });
+const stringWithOptionsPropertySchema = zodCompleteStrictObject({
+    type: zodDiscriminant(schema_13.ValueType.String),
+    codaType: zodDiscriminant(schema_12.ValueHintType.SelectList),
+    ...baseStringPropertyValidators,
+    autocomplete: zodAutocompleteFieldWithValues(z.string(), true),
+});
 const imagePropertySchema = zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.String),
     codaType: z.union([zodDiscriminant(schema_12.ValueHintType.ImageAttachment), zodDiscriminant(schema_12.ValueHintType.ImageReference)]),
@@ -707,6 +715,7 @@ const stringPropertySchema = z.union([
     emailPropertySchema,
     linkPropertySchema,
     imagePropertySchema,
+    stringWithOptionsPropertySchema,
 ]);
 const stringPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
@@ -719,8 +728,6 @@ const arrayPropertySchema = z.lazy(() => zodCompleteStrictObject({
     type: zodDiscriminant(schema_13.ValueType.Array),
     items: objectPropertyUnionSchema,
     ...basePropertyValidators,
-    // TODO(dweitzman): Implement property autocomplete for multi-valued properties.
-    autocomplete: zodAutocompleteFieldWithValues(z.never(), false),
 }));
 const Base64ObjectRegex = /^[A-Za-z0-9=_-]+$/;
 // This is ripped off from isValidObjectId in coda. Violating this causes a number of downstream headaches.
@@ -881,7 +888,7 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
                 ? schema.properties[propertyValue]
                 : undefined;
             if (!propertySchema) {
-                const schemaPropertyPath = (0, schema_17.normalizePropertyValuePathIntoSchemaPath)(propertyValue);
+                const schemaPropertyPath = (0, schema_19.normalizePropertyValuePathIntoSchemaPath)(propertyValue);
                 propertySchema = (_a = (0, jsonpath_plus_1.JSONPath)({
                     path: schemaPropertyPath,
                     json: schema.properties,
@@ -957,6 +964,7 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
                 case schema_12.ValueHintType.Person:
                 case schema_12.ValueHintType.ProgressBar:
                 case schema_12.ValueHintType.Reference:
+                case schema_12.ValueHintType.SelectList:
                 case schema_12.ValueHintType.Slider:
                 case schema_12.ValueHintType.Toggle:
                 case schema_12.ValueHintType.Time:
@@ -988,9 +996,13 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
 }));
 const objectPropertyUnionSchema = z
     .union([booleanPropertySchema, numberPropertySchema, stringPropertySchema, arrayPropertySchema, genericObjectSchema])
-    .refine(
-// BaseSchema isn't exported, so Pick<BooleanSchema | EmailSchema, ...> here is an approximation.
-(baseSchema) => baseSchema.codaType === schema_12.ValueHintType.Email || !(baseSchema === null || baseSchema === void 0 ? void 0 : baseSchema.autocomplete) || baseSchema.mutable, `"mutable" must be true to set "autocomplete"`);
+    .refine((schema) => {
+    const schemaForAutocomplete = (0, schema_18.maybeUnwrapArraySchema)(schema);
+    const result = !schemaForAutocomplete ||
+        (0, schema_20.unwrappedSchemaSupportsAutocomplete)(schemaForAutocomplete) ||
+        !('autocomplete' in schemaForAutocomplete && schemaForAutocomplete.autocomplete);
+    return result;
+}, 'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "autocomplete" property.');
 const objectPackFormulaSchema = zodCompleteObject({
     ...commonPackFormulaSchema,
     resultType: zodDiscriminant(api_types_4.Type.object),
@@ -1419,7 +1431,7 @@ const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSc
     (data.syncTables || []).forEach((syncTable, i) => {
         const schema = syncTable.schema;
         for (const [propertyName, childSchema] of Object.entries(schema.properties)) {
-            const { autocomplete } = childSchema;
+            const autocomplete = (0, schema_17.maybeSchemaAutocompleteValue)(childSchema);
             if (!autocomplete || Array.isArray(autocomplete)) {
                 continue;
             }
@@ -1427,9 +1439,9 @@ const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSc
                 context.addIssue({
                     code: z.ZodIssueCode.custom,
                     path: ['syncTables', i, 'properties', propertyName, 'autocomplete'],
-                    message: childSchema.autocomplete === api_types_1.AutocompleteType.Dynamic
+                    message: autocomplete === api_types_1.AutocompleteType.Dynamic
                         ? `Sync table ${syncTable.name} must define "autocomplete" for this property to use AutocompleteType.Dynamic`
-                        : `"${childSchema.autocomplete}" is not registered as an autocomplete function for this sync table.`,
+                        : `"${autocomplete}" is not registered as an autocomplete function for this sync table.`,
                 });
                 continue;
             }
