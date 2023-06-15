@@ -1,4 +1,5 @@
-import {AutocompleteType} from '../index';
+import {OptionsType} from '../index';
+import type {PropertyOptionsExecutionContext} from '../index';
 import {ValueHintType} from '../index';
 import {ValueType} from '../index';
 import {deepCopy} from '../helpers/object_utils';
@@ -222,7 +223,7 @@ describe('Schema', () => {
             mutable: true,
             items: {
               type: schema.ValueType.String,
-              autocomplete: () => {
+              options: () => {
                 return ['1'];
               },
             },
@@ -233,7 +234,10 @@ describe('Schema', () => {
       const normalizedBoo = (normalized as any).properties.Boo;
       // Make sure the function is preserved in spite of the missing value hint across
       // the deep copy that makeObjectSchema() does.
-      assert.deepEqual(normalizedBoo.items.autocomplete(), ['1']);
+
+      const options = normalizedBoo.items.options;
+      assert.isFunction(options);
+      assert.deepEqual(options({} as PropertyOptionsExecutionContext), ['1']);
     });
 
     it('works', () => {
@@ -242,7 +246,12 @@ describe('Schema', () => {
         primary: 'boo',
         properties: {
           boo: {type: schema.ValueType.String},
-          baz: {type: schema.ValueType.Number, mutable: true, autocomplete: AutocompleteType.Dynamic},
+          baz: {
+            type: schema.ValueType.String,
+            codaType: schema.ValueHintType.SelectList,
+            mutable: true,
+            options: OptionsType.Dynamic,
+          },
         },
       });
       const objectSchema = schema.makeObjectSchema({
@@ -278,7 +287,13 @@ describe('Schema', () => {
           fromKey: 'another',
           properties: {
             Boo: {type: schema.ValueType.String, fromKey: 'boo'},
-            Baz: {type: schema.ValueType.Number, fromKey: 'baz', mutable: true, options: AutocompleteType.Dynamic},
+            Baz: {
+              type: schema.ValueType.String,
+              codaType: schema.ValueHintType.SelectList,
+              fromKey: 'baz',
+              mutable: true,
+              options: OptionsType.Dynamic,
+            },
           },
         },
         Subtitle: {type: schema.ValueType.String, fromKey: 'subtitle'},

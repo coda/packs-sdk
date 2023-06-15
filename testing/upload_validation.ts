@@ -1230,7 +1230,7 @@ const objectPropertyUnionSchema = z
       unwrappedSchemaSupportsOptions(schemaForAutocomplete) ||
       !('options' in schemaForAutocomplete && schemaForAutocomplete.options);
     return result;
-  }, 'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "autocomplete" property.');
+  }, 'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "options" property.');
 const objectPackFormulaSchema = zodCompleteObject<Omit<ObjectPackFormula<any, any>, 'execute'>>({
   ...commonPackFormulaSchema,
   resultType: zodDiscriminant(Type.object),
@@ -1713,18 +1713,18 @@ const legacyPackMetadataSchema = validateFormulas(
     (data.syncTables || []).forEach((syncTable, i) => {
       const schema: ObjectSchema<any, any> = syncTable.schema;
       for (const [propertyName, childSchema] of Object.entries(schema.properties)) {
-        const autocomplete = maybeSchemaOptionsValue(childSchema);
-        if (!autocomplete || Array.isArray(autocomplete)) {
+        const options = maybeSchemaOptionsValue(childSchema);
+        if (!options || Array.isArray(options)) {
           continue;
         }
-        if (typeof autocomplete !== 'string' || !(autocomplete in (syncTable.namedPropertyOptions || {}))) {
+        if (typeof options !== 'string' || !(options in (syncTable.namedPropertyOptions || {}))) {
           context.addIssue({
             code: z.ZodIssueCode.custom,
-            path: ['syncTables', i, 'properties', propertyName, 'autocomplete'],
+            path: ['syncTables', i, 'properties', propertyName, 'options'],
             message:
-              autocomplete === OptionsType.Dynamic
-                ? `Sync table ${syncTable.name} must define "autocomplete" for this property to use AutocompleteType.Dynamic`
-                : `"${autocomplete}" is not registered as an autocomplete function for this sync table.`,
+              options === OptionsType.Dynamic
+                ? `Sync table ${syncTable.name} must define "options" for this property to use OptionsType.Dynamic`
+                : `"${options}" is not registered as an options function for this sync table.`,
           });
           continue;
         }

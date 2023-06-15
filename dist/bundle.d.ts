@@ -628,7 +628,13 @@ export interface SyncExecutionContext extends ExecutionContext {
 	 */
 	readonly sync: Sync;
 }
-interface PropertyOptionsExecutionContext extends ExecutionContext {
+/**
+ * Sub-class of {@link ExecutionContext} that is passed to the `options` function of
+ * mutable sync tables for properties with `options` enabled.
+ *
+ * @hidden
+ */
+export interface PropertyOptionsExecutionContext extends ExecutionContext {
 	/**
 	 * Which property is being edited.
 	 */
@@ -715,14 +721,21 @@ export declare enum PrecannedDateRange {
 	 */
 	Everything = "everything"
 }
-declare enum OptionsType {
+/**
+ * @hidden
+ */
+export declare enum OptionsType {
 	Dynamic = "__coda_dynamic__"
 }
 /** @hidden */
 export declare type OptionsReference = string & {
 	__brand: "OptionsRef";
 };
-declare type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]> = (context: PropertyOptionsExecutionContext) => Promise<ResultT> | ResultT;
+/**
+ * A JavaScript function for property options.
+ * @hidden
+ */
+export declare type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]> = (context: PropertyOptionsExecutionContext) => Promise<ResultT> | ResultT;
 /**
  * The set of primitive value types that can be used as return values for formulas
  * or in object schemas.
@@ -4618,9 +4631,6 @@ export declare function ensureExists<T>(value: T | null | undefined, message?: s
 export declare function assertCondition(condition: any, message?: string): asserts condition;
 
 export {
-	OptionsType as AutocompleteType,
-	PropertyOptionsExecutionContext as PropertyAutocompleteExecutionContext,
-	PropertyOptionsMetadataFunction as PropertyAutocompleteMetadataFunction,
 	join as joinUrl,
 };
 
