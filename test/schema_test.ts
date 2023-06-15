@@ -278,7 +278,7 @@ describe('Schema', () => {
           fromKey: 'another',
           properties: {
             Boo: {type: schema.ValueType.String, fromKey: 'boo'},
-            Baz: {type: schema.ValueType.Number, fromKey: 'baz', mutable: true, autocomplete: AutocompleteType.Dynamic},
+            Baz: {type: schema.ValueType.Number, fromKey: 'baz', mutable: true, options: AutocompleteType.Dynamic},
           },
         },
         Subtitle: {type: schema.ValueType.String, fromKey: 'subtitle'},

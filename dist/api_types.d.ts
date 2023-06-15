@@ -647,12 +647,12 @@ export interface SyncExecutionContext extends ExecutionContext {
     readonly sync: Sync;
 }
 /**
- * Sub-class of {@link ExecutionContext} that is passed to the `autocomplete` function of
- * mutable sync tables for properties with `autocomplete` enabled.
+ * Sub-class of {@link ExecutionContext} that is passed to the `options` function of
+ * mutable sync tables for properties with `options` enabled.
  *
  * @hidden
  */
-export interface PropertyAutocompleteExecutionContext extends ExecutionContext {
+export interface PropertyOptionsExecutionContext extends ExecutionContext {
     /**
      * Which property is being edited.
      */
@@ -664,7 +664,7 @@ export interface PropertyAutocompleteExecutionContext extends ExecutionContext {
     /**
      * Current values of other properties from the same row. Non-required properties may be missing
      * if the doc owner elected not to sync them, or if they have a type that's not yet supported
-     * for autocomplete context. Properties referencing other sync tables may be missing some or
+     * for options context. Properties referencing other sync tables may be missing some or
      * all of their sub-properties if the reference is broken because the other table is not
      * added to the doc or hasn't synced the referenced row.
      */
@@ -742,16 +742,16 @@ export declare enum PrecannedDateRange {
 /**
  * @hidden
  */
-export declare enum AutocompleteType {
+export declare enum OptionsType {
     Dynamic = "__coda_dynamic__"
 }
 /** @hidden */
-export declare type AutocompleteReference = string & {
-    __brand: 'AutocompleteRef';
+export declare type OptionsReference = string & {
+    __brand: 'OptionsRef';
 };
 /**
- * A JavaScript function for property autocomplete.
+ * A JavaScript function for property options.
  * @hidden
  */
-export declare type PropertyAutocompleteMetadataFunction<ResultT extends PackFormulaResult[]> = (context: PropertyAutocompleteExecutionContext) => Promise<ResultT> | ResultT;
+export declare type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]> = (context: PropertyOptionsExecutionContext) => Promise<ResultT> | ResultT;
 export {};

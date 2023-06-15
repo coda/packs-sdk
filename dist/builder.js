@@ -297,7 +297,7 @@ class PackDefinitionBuilder {
                     getSchema: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getSchema, connectionRequirement),
                     listDynamicUrls: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.listDynamicUrls, connectionRequirement),
                     searchDynamicUrls: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.searchDynamicUrls, connectionRequirement),
-                    namedAutocompletes: (0, api_6.maybeRewriteConnectionForNamedAutocompletes)(syncTable.namedAutocompletes, connectionRequirement),
+                    namedPropertyOptions: (0, api_6.maybeRewriteConnectionForNamedPropertyOptions)(syncTable.namedPropertyOptions, connectionRequirement),
                 };
             }
             else {
@@ -305,7 +305,7 @@ class PackDefinitionBuilder {
                     ...syncTable,
                     getter: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getter, connectionRequirement),
                     getSchema: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getSchema, connectionRequirement),
-                    namedAutocompletes: (0, api_6.maybeRewriteConnectionForNamedAutocompletes)(syncTable.namedAutocompletes, connectionRequirement),
+                    namedPropertyOptions: (0, api_6.maybeRewriteConnectionForNamedPropertyOptions)(syncTable.namedPropertyOptions, connectionRequirement),
                 };
             }
         });

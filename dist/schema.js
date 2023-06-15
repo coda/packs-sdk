@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.throwOnDynamicSchemaWithJsAutocompleteFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.maybeSchemaAutocompleteValue = exports.unwrappedSchemaSupportsAutocomplete = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+exports.throwOnDynamicSchemaWithJsAutocompleteFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.maybeSchemaOptionsValue = exports.unwrappedSchemaSupportsOptions = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_2 = require("./helpers/ensure");
@@ -411,17 +411,17 @@ function isArray(val) {
     return Boolean(val && val.type === ValueType.Array);
 }
 exports.isArray = isArray;
-function unwrappedSchemaSupportsAutocomplete(schema) {
+function unwrappedSchemaSupportsOptions(schema) {
     return Boolean(schema === null || schema === void 0 ? void 0 : schema.codaType) && [ValueHintType.SelectList, ValueHintType.Reference].includes(schema.codaType);
 }
-exports.unwrappedSchemaSupportsAutocomplete = unwrappedSchemaSupportsAutocomplete;
-function maybeSchemaAutocompleteValue(schema) {
+exports.unwrappedSchemaSupportsOptions = unwrappedSchemaSupportsOptions;
+function maybeSchemaOptionsValue(schema) {
     const unwrappedSchema = maybeUnwrapArraySchema(schema);
-    if (unwrappedSchemaSupportsAutocomplete(unwrappedSchema)) {
-        return unwrappedSchema.autocomplete;
+    if (unwrappedSchemaSupportsOptions(unwrappedSchema)) {
+        return unwrappedSchema.options;
     }
 }
-exports.maybeSchemaAutocompleteValue = maybeSchemaAutocompleteValue;
+exports.maybeSchemaOptionsValue = maybeSchemaOptionsValue;
 /**
  * Pulls out the item type of an Array schema, returning undefined if the Array contains another Array.
  */
@@ -534,16 +534,16 @@ function makeObjectSchema(schemaDef) {
         if (key !== 'type') {
             // Typescript doesn't like the raw schema.properties[key] (on the left only though...)
             const typedKey = key;
-            const schemaForAutocomplete = maybeUnwrapArraySchema(schema.properties[key]);
-            const autocompleteValue = schemaForAutocomplete === null || schemaForAutocomplete === void 0 ? void 0 : schemaForAutocomplete.autocomplete;
-            const autocompleteFunction = typeof autocompleteValue === 'function' ? autocompleteValue : undefined;
+            const schemaForOptions = maybeUnwrapArraySchema(schema.properties[key]);
+            const optionsValue = schemaForOptions === null || schemaForOptions === void 0 ? void 0 : schemaForOptions.options;
+            const optionsFunction = typeof optionsValue === 'function' ? optionsValue : undefined;
             schema.properties[typedKey] = (0, object_utils_1.deepCopy)(schema.properties[key]);
-            // Autocomplete gets manually copied over because it may be a function, which deepCopy wouldn't
+            // Options gets manually copied over because it may be a function, which deepCopy wouldn't
             // support.
-            if (autocompleteFunction) {
-                const schemaCopyForAutocomplete = maybeUnwrapArraySchema(schema.properties[typedKey]);
-                (0, ensure_2.ensureExists)(schemaCopyForAutocomplete, 'deepCopy() broke maybeUnwrapArraySchema?...');
-                schemaCopyForAutocomplete.autocomplete = autocompleteFunction;
+            if (optionsFunction) {
+                const schemaCopyForOptions = maybeUnwrapArraySchema(schema.properties[typedKey]);
+                (0, ensure_2.ensureExists)(schemaCopyForOptions, 'deepCopy() broke maybeUnwrapArraySchema?...');
+                schemaCopyForOptions.options = optionsFunction;
             }
         }
     }
@@ -659,7 +659,7 @@ function normalizeSchema(schema) {
     }
     else if (isObject(schema)) {
         const normalized = {};
-        const { attribution, autocomplete, codaType, description, displayProperty, featured, featuredProperties, fixedId, id, identity, idProperty, imageProperty, includeUnknownProperties, linkProperty, mutable, primary, properties, snippetProperty, subtitleProperties, titleProperty, type, 
+        const { attribution, options, codaType, description, displayProperty, featured, featuredProperties, fixedId, id, identity, idProperty, imageProperty, includeUnknownProperties, linkProperty, mutable, primary, properties, snippetProperty, subtitleProperties, titleProperty, type, 
         // eslint-disable-next-line @typescript-eslint/naming-convention
         __packId, ...rest } = schema;
         // Have TS ensure we don't forget about new fields in this function.
@@ -675,7 +675,7 @@ function normalizeSchema(schema) {
         }
         const normalizedSchema = {
             attribution,
-            autocomplete,
+            options,
             codaType,
             description,
             displayProperty: displayProperty ? normalizeSchemaKey(displayProperty) : undefined,
@@ -711,7 +711,7 @@ exports.normalizeSchema = normalizeSchema;
  * schema it provides better code reuse to derive a reference schema instead.
  */
 function makeReferenceSchemaFromObjectSchema(schema, identityName) {
-    const { type, id, primary, identity, properties, mutable, autocomplete } = (0, migration_1.objectSchemaHelper)(schema);
+    const { type, id, primary, identity, properties, mutable, options } = (0, migration_1.objectSchemaHelper)(schema);
     (0, ensure_2.ensureExists)(identity || identityName, 'Source schema must have an identity field, or you must provide an identity name for the reference.');
     const validId = (0, ensure_2.ensureExists)(id);
     const referenceProperties = { [validId]: properties[validId] };
@@ -726,7 +726,7 @@ function makeReferenceSchemaFromObjectSchema(schema, identityName) {
         displayProperty: primary,
         properties: referenceProperties,
         mutable,
-        autocomplete,
+        options,
     });
 }
 exports.makeReferenceSchemaFromObjectSchema = makeReferenceSchemaFromObjectSchema;
@@ -761,8 +761,8 @@ function throwOnDynamicSchemaWithJsAutocompleteFunction(dynamicSchema, parentKey
             throwOnDynamicSchemaWithJsAutocompleteFunction(dynamicSchema[key], key);
         }
     }
-    if (typeof dynamicSchema === 'function' && parentKey === 'autocomplete') {
-        throw new Error('Sync tables with dynamic schemas must use "autocomplete: AutocompleteType.Dynamic" instead of "autocomplete: () => {...}');
+    if (typeof dynamicSchema === 'function' && parentKey === 'options') {
+        throw new Error('Sync tables with dynamic schemas must use "options: OptionsType.Dynamic" instead of "options: () => {...}');
     }
 }
 exports.throwOnDynamicSchemaWithJsAutocompleteFunction = throwOnDynamicSchemaWithJsAutocompleteFunction;

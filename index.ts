@@ -62,8 +62,8 @@ export type {ExternalPackVersionMetadata} from './compiled_types';
 
 // Formula related interfaces
 export type {ArrayType} from './api_types';
-export {AutocompleteType} from './api_types';
-export type {PropertyAutocompleteExecutionContext} from './api_types';
+export {OptionsType as AutocompleteType} from './api_types';
+export type {PropertyOptionsExecutionContext as PropertyAutocompleteExecutionContext} from './api_types';
 export {ConnectionRequirement} from './api_types';
 export type {Continuation} from './api';
 export type {SuggestedValueType} from './api_types';
@@ -184,7 +184,7 @@ export type {ObjectSchemaDefinition} from './schema';
 export type {ObjectSchemaProperties} from './schema';
 export type {ObjectSchemaProperty} from './schema';
 export type {ProgressBarSchema} from './schema';
-export type {PropertyAutocompleteMetadataFunction} from './api_types';
+export type {PropertyOptionsMetadataFunction as PropertyAutocompleteMetadataFunction} from './api_types';
 export {PropertyIdentifier} from './schema';
 export {PropertyIdentifierDetails} from './schema';
 export {PropertyLabelValueTemplate} from './schema';

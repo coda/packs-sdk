@@ -5837,9 +5837,9 @@ module.exports = (() => {
         throwOnDynamicSchemaWithJsAutocompleteFunction(dynamicSchema[key], key);
       }
     }
-    if (typeof dynamicSchema === "function" && parentKey === "autocomplete") {
+    if (typeof dynamicSchema === "function" && parentKey === "options") {
       throw new Error(
-        'Sync tables with dynamic schemas must use "autocomplete: AutocompleteType.Dynamic" instead of "autocomplete: () => {...}'
+        'Sync tables with dynamic schemas must use "options: OptionsType.Dynamic" instead of "options: () => {...}'
       );
     }
   }
@@ -5910,7 +5910,7 @@ module.exports = (() => {
     return "isDynamic" in syncTable;
   }
   __name(isDynamicSyncTable, "isDynamicSyncTable");
-  function normalizePropertyAutocompleteResultsArray(results) {
+  function normalizePropertyOptionsResultsArray(results) {
     return results.map((r) => {
       if (typeof r === "object" && Object.keys(r).length === 2 && "display" in r && "value" in r) {
         return { display: r.display, value: r.value };
@@ -5918,20 +5918,20 @@ module.exports = (() => {
       return { display: void 0, value: r };
     });
   }
-  __name(normalizePropertyAutocompleteResultsArray, "normalizePropertyAutocompleteResultsArray");
-  function normalizePropertyAutocompleteResults(results) {
+  __name(normalizePropertyOptionsResultsArray, "normalizePropertyOptionsResultsArray");
+  function normalizePropertyOptionsResults(results) {
     if (Array.isArray(results)) {
       return {
-        results: normalizePropertyAutocompleteResultsArray(results)
+        results: normalizePropertyOptionsResultsArray(results)
       };
     }
     const { results: resultsArray, ...otherProps } = results;
     return {
-      results: normalizePropertyAutocompleteResultsArray(resultsArray),
+      results: normalizePropertyOptionsResultsArray(resultsArray),
       ...otherProps
     };
   }
-  __name(normalizePropertyAutocompleteResults, "normalizePropertyAutocompleteResults");
+  __name(normalizePropertyOptionsResults, "normalizePropertyOptionsResults");
 
   // runtime/common/helpers.ts
   init_buffer_shim();
@@ -6287,7 +6287,7 @@ module.exports = (() => {
             break;
           case "PropertyAutocomplete" /* PropertyAutocomplete */:
             const syncTable = syncTables?.find((table) => table.name === formulaSpec.syncTableName);
-            const autocompleteFormula = syncTable?.namedAutocompletes?.[formulaSpec.autocompleteName];
+            const autocompleteFormula = syncTable?.namedPropertyOptions?.[formulaSpec.autocompleteName];
             if (autocompleteFormula) {
               let recordPropertyAccess2 = function(key) {
                 if (!cacheKeysUsed.includes(key)) {
@@ -6326,7 +6326,7 @@ module.exports = (() => {
                 propertyAutocompleteExecutionContext
               );
               const result = {
-                packResult: normalizePropertyAutocompleteResults(packResult),
+                packResult: normalizePropertyOptionsResults(packResult),
                 propertiesUsed: cacheKeysUsed,
                 ...contextUsed
               };

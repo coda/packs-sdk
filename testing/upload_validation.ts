@@ -3,7 +3,6 @@ import type {AWSAssumeRoleAuthentication} from '../types';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '../schema';
 import {AuthenticationType} from '../types';
-import {AutocompleteType} from '../api_types';
 import {BooleanHintValueTypes} from '../schema';
 import type {BooleanPackFormula} from '../api';
 import type {BooleanSchema} from '../schema';
@@ -46,6 +45,7 @@ import type {ObjectPackFormula} from '../api';
 import type {ObjectSchema} from '../schema';
 import type {ObjectSchemaPathProperties} from '../schema';
 import type {ObjectSchemaProperty} from '../schema';
+import {OptionsType} from '../api_types';
 import {PackCategory} from '../types';
 import type {PackFormatMetadata} from '../compiled_types';
 import type {PackFormulaMetadata} from '../api';
@@ -90,12 +90,12 @@ import {isDefined} from '../helpers/object_utils';
 import {isNil} from '../helpers/object_utils';
 import {isObject} from '../schema';
 import {makeSchema} from '../schema';
-import {maybeSchemaAutocompleteValue} from '../schema';
+import {maybeSchemaOptionsValue} from '../schema';
 import {maybeUnwrapArraySchema} from '../schema';
 import {normalizePropertyValuePathIntoSchemaPath} from '../schema';
 import {objectSchemaHelper} from '../helpers/migration';
 import semver from 'semver';
-import {unwrappedSchemaSupportsAutocomplete} from '../schema';
+import {unwrappedSchemaSupportsOptions} from '../schema';
 import * as z from 'zod';
 
 /**
@@ -618,8 +618,6 @@ const booleanPackFormulaSchema = zodCompleteObject<Omit<BooleanPackFormula<any>,
     description: z.string().optional(),
     mutable: z.boolean().optional(),
     fixedId: z.string().optional(),
-    // Only properties in sync tables would need to define "autocomplete"
-    autocomplete: z.undefined().optional(),
   }).optional(),
 });
 
@@ -676,7 +674,6 @@ const booleanPropertySchema = zodCompleteStrictObject<BooleanSchema & ObjectSche
   type: zodDiscriminant(ValueType.Boolean),
   codaType: z.enum([...BooleanHintValueTypes]).optional(),
   ...basePropertyValidators,
-  autocomplete: zodAutocompleteFieldWithValues(z.boolean(), true),
 });
 
 const numericPropertySchema = zodCompleteStrictObject<NumericSchema & ObjectSchemaProperty>({
@@ -843,7 +840,7 @@ const stringWithOptionsPropertySchema = zodCompleteStrictObject<StringWithOption
   type: zodDiscriminant(ValueType.String),
   codaType: zodDiscriminant(ValueHintType.SelectList),
   ...baseStringPropertyValidators,
-  autocomplete: zodAutocompleteFieldWithValues(z.string(), true),
+  options: zodAutocompleteFieldWithValues(z.string(), true),
 });
 
 const imagePropertySchema = zodCompleteStrictObject<ImageSchema & ObjectSchemaProperty>({
@@ -998,7 +995,7 @@ const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
     subtitleProperties: z.array(propertySchema).optional(),
     snippetProperty: propertySchema.optional(),
     imageProperty: propertySchema.optional(),
-    autocomplete: zodAutocompleteFieldWithValues(z.object({}).passthrough(), false),
+    options: zodAutocompleteFieldWithValues(z.object({}).passthrough(), false),
   })
     .superRefine((data, context) => {
       if (!isValidIdentityName(data.identity?.packId, data.identity?.name as string)) {
@@ -1230,8 +1227,8 @@ const objectPropertyUnionSchema = z
     const schemaForAutocomplete = maybeUnwrapArraySchema(schema);
     const result =
       !schemaForAutocomplete ||
-      unwrappedSchemaSupportsAutocomplete(schemaForAutocomplete) ||
-      !('autocomplete' in schemaForAutocomplete && schemaForAutocomplete.autocomplete);
+      unwrappedSchemaSupportsOptions(schemaForAutocomplete) ||
+      !('options' in schemaForAutocomplete && schemaForAutocomplete.options);
     return result;
   }, 'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "autocomplete" property.');
 const objectPackFormulaSchema = zodCompleteObject<Omit<ObjectPackFormula<any, any>, 'execute'>>({
@@ -1304,7 +1301,7 @@ const baseSyncTableSchema = {
       val => !val || !SystemColumnNames.includes(val),
       `This property name is reserved for internal use by Coda and can't be used as an identityName, sorry!`,
     ),
-  namedAutocompletes: z
+  namedPropertyOptions: z
     .record(formulaMetadataSchema)
     .optional()
     .default({})
@@ -1339,7 +1336,7 @@ const genericDynamicSyncTableSchema = zodCompleteObject<
   listDynamicUrls: formulaMetadataSchema.optional(),
   searchDynamicUrls: formulaMetadataSchema.optional(),
   getSchema: formulaMetadataSchema,
-  autocomplete: objectPackFormulaSchema.optional(),
+  propertyOptions: objectPackFormulaSchema.optional(),
 }).strict();
 
 const syncTableSchema = z
@@ -1716,16 +1713,16 @@ const legacyPackMetadataSchema = validateFormulas(
     (data.syncTables || []).forEach((syncTable, i) => {
       const schema: ObjectSchema<any, any> = syncTable.schema;
       for (const [propertyName, childSchema] of Object.entries(schema.properties)) {
-        const autocomplete = maybeSchemaAutocompleteValue(childSchema);
+        const autocomplete = maybeSchemaOptionsValue(childSchema);
         if (!autocomplete || Array.isArray(autocomplete)) {
           continue;
         }
-        if (typeof autocomplete !== 'string' || !(autocomplete in (syncTable.namedAutocompletes || {}))) {
+        if (typeof autocomplete !== 'string' || !(autocomplete in (syncTable.namedPropertyOptions || {}))) {
           context.addIssue({
             code: z.ZodIssueCode.custom,
             path: ['syncTables', i, 'properties', propertyName, 'autocomplete'],
             message:
-              autocomplete === AutocompleteType.Dynamic
+              autocomplete === OptionsType.Dynamic
                 ? `Sync table ${syncTable.name} must define "autocomplete" for this property to use AutocompleteType.Dynamic`
                 : `"${autocomplete}" is not registered as an autocomplete function for this sync table.`,
           });

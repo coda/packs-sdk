@@ -84,7 +84,7 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                     break;
                 case types_3.MetadataFormulaType.PropertyAutocomplete:
                     const syncTable = syncTables === null || syncTables === void 0 ? void 0 : syncTables.find(table => table.name === formulaSpec.syncTableName);
-                    const autocompleteFormula = (_a = syncTable === null || syncTable === void 0 ? void 0 : syncTable.namedAutocompletes) === null || _a === void 0 ? void 0 : _a[formulaSpec.autocompleteName];
+                    const autocompleteFormula = (_a = syncTable === null || syncTable === void 0 ? void 0 : syncTable.namedPropertyOptions) === null || _a === void 0 ? void 0 : _a[formulaSpec.autocompleteName];
                     if (autocompleteFormula) {
                         const propertyValues = {};
                         const cacheKeysUsed = [];
@@ -118,7 +118,7 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                         });
                         const packResult = (await autocompleteFormula.execute(params, propertyAutocompleteExecutionContext));
                         const result = {
-                            packResult: (0, api_4.normalizePropertyAutocompleteResults)(packResult),
+                            packResult: (0, api_4.normalizePropertyOptionsResults)(packResult),
                             propertiesUsed: cacheKeysUsed,
                             ...contextUsed,
                         };

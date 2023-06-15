@@ -2,8 +2,6 @@ import {testHelper} from './test_helper';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '..';
 import {AuthenticationType} from '../types';
-import type {AutocompleteReference} from '../api_types';
-import {AutocompleteType} from '../api_types';
 import {ConnectionRequirement} from '../api_types';
 import {CurrencyFormat} from '..';
 import {DurationUnit} from '..';
@@ -13,6 +11,8 @@ import {ImageCornerStyle} from '../schema';
 import {ImageOutline} from '../schema';
 import {Limits} from '../testing/upload_validation';
 import type {ObjectSchemaDefinition} from '../schema';
+import type {OptionsReference} from '../api_types';
+import {OptionsType} from '../api_types';
 import type {PackFormulaMetadata} from '../api';
 import {PackMetadataValidationError} from '../testing/upload_validation';
 import type {PackVersionMetadata} from '../compiled_types';
@@ -922,7 +922,7 @@ describe('Pack metadata Validation', () => {
                 type: ValueType.String,
                 codaType: ValueHintType.SelectList,
                 mutable: false,
-                autocomplete: AutocompleteType.Dynamic,
+                autocomplete: OptionsType.Dynamic,
               },
               // This next issue isn't something pack authors would normally do unless they do typecasts,
               // but could be an error caused by a bug in makeSyncTable().
@@ -930,7 +930,7 @@ describe('Pack metadata Validation', () => {
                 type: ValueType.String,
                 codaType: ValueHintType.SelectList,
                 mutable: true,
-                autocomplete: 'someProp' as AutocompleteReference,
+                autocomplete: 'someProp' as OptionsReference,
               },
               Baz: {
                 type: ValueType.String,

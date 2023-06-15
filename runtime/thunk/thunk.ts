@@ -19,9 +19,9 @@ import type {ParamValues} from '../../api_types';
 import type {ParameterAutocompleteMetadataFormulaSpecification} from '../types';
 import type {ParamsList} from '../../api_types';
 import {PostSetupType} from '../../types';
-import type {PropertyAutocompleteAnnotatedResult} from '../../api';
-import type {PropertyAutocompleteExecutionContext} from '../../api_types';
-import type {PropertyAutocompleteResults} from '../../api';
+import type {PropertOptionsAnnotatedResult} from '../../api';
+import type {PropertyOptionsExecutionContext} from '../../api_types';
+import type {PropertyOptionsResults} from '../../api';
 import {StatusCodeError} from '../../api';
 import type {SyncExecutionContext} from '../../api_types';
 import type {TypedPackFormula} from '../../api';
@@ -31,7 +31,7 @@ import {ensureExists} from '../../helpers/ensure';
 import {findFormula} from '../common/helpers';
 import {findSyncFormula} from '../common/helpers';
 import {isDynamicSyncTable} from '../../api';
-import {normalizePropertyAutocompleteResults} from '../../api';
+import {normalizePropertyOptionsResults} from '../../api';
 import {setEndpointHelper} from '../../helpers/migration';
 import {throwOnDynamicSchemaWithJsAutocompleteFunction} from '../../schema';
 import {unwrapError} from '../common/marshaling';
@@ -143,7 +143,7 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
           break;
         case MetadataFormulaType.PropertyAutocomplete:
           const syncTable = syncTables?.find(table => table.name === formulaSpec.syncTableName);
-          const autocompleteFormula = syncTable?.namedAutocompletes?.[formulaSpec.autocompleteName];
+          const autocompleteFormula = syncTable?.namedPropertyOptions?.[formulaSpec.autocompleteName];
 
           if (autocompleteFormula) {
             const propertyValues = {};
@@ -166,14 +166,14 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
               });
             }
 
-            const propertyAutocompleteExecutionContext: Omit<PropertyAutocompleteExecutionContext, 'search'> = {
+            const propertyAutocompleteExecutionContext: Omit<PropertyOptionsExecutionContext, 'search'> = {
               ...executionContext,
               propertyName: formulaSpec.propertyName,
               propertyValues,
               propertySchema: formulaSpec.propertySchema,
             };
 
-            const contextUsed: Omit<PropertyAutocompleteAnnotatedResult, 'packResult' | 'propertiesUsed'> = {};
+            const contextUsed: Omit<PropertOptionsAnnotatedResult, 'packResult' | 'propertiesUsed'> = {};
 
             Object.defineProperty(propertyAutocompleteExecutionContext, 'search', {
               enumerable: true,
@@ -186,9 +186,9 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
             const packResult = (await autocompleteFormula.execute(
               params as any,
               propertyAutocompleteExecutionContext,
-            )) as PropertyAutocompleteResults;
-            const result: PropertyAutocompleteAnnotatedResult = {
-              packResult: normalizePropertyAutocompleteResults(packResult),
+            )) as PropertyOptionsResults;
+            const result: PropertOptionsAnnotatedResult = {
+              packResult: normalizePropertyOptionsResults(packResult),
               propertiesUsed: cacheKeysUsed,
               ...contextUsed,
             };

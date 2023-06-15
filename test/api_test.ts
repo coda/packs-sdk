@@ -1,8 +1,8 @@
 import './test_helper';
 import type {ArrayType} from '../api_types';
-import {AutocompleteType} from '../api_types';
 import {ConnectionRequirement} from '../api_types';
 import type {ExecutionContext} from '../api_types';
+import {OptionsType} from '../api_types';
 import type {ParamValues} from '../api_types';
 import {ParameterType} from '../api_types';
 import {StatusCodeError} from '../api';
@@ -14,7 +14,7 @@ import {makeMetadataFormula} from '../api';
 import {makeParameter} from '../api';
 import {makeStringParameter} from '../api';
 import {makeSyncTable} from '../api';
-import {normalizePropertyAutocompleteResults} from '../api';
+import {normalizePropertyOptionsResults} from '../api';
 import * as schema from '../schema';
 
 describe('API test', () => {
@@ -216,7 +216,7 @@ describe('API test', () => {
               type: ValueType.String,
               codaType: schema.ValueHintType.SelectList,
               mutable: true,
-              autocomplete: AutocompleteType.Dynamic,
+              autocomplete: OptionsType.Dynamic,
             },
             baz: {
               type: ValueType.Array,
@@ -238,14 +238,14 @@ describe('API test', () => {
           },
         },
         dynamicOptions: {
-          autocomplete: () => {
+          propertyOptions: () => {
             return ['dynamicResult'];
           },
         },
       });
-      const {namedAutocompletes} = table;
+      const {namedPropertyOptions: namedAutocompletes} = table;
 
-      assert.hasAllKeys(namedAutocompletes!, ['foo', 'baz', AutocompleteType.Dynamic]);
+      assert.hasAllKeys(namedAutocompletes!, ['foo', 'baz', OptionsType.Dynamic]);
 
       const fooAutocomplete = namedAutocompletes!.foo;
       assert.equal('MyIdentityName.foo.Autocomplete', fooAutocomplete.name);
@@ -264,7 +264,7 @@ describe('API test', () => {
         'foo' as any,
       );
 
-      const dynamicAutocomplete = namedAutocompletes![AutocompleteType.Dynamic];
+      const dynamicAutocomplete = namedAutocompletes![OptionsType.Dynamic];
       assert.equal('MyIdentityName.DynamicAutocomplete', dynamicAutocomplete.name);
       assert.deepEqual(await dynamicAutocomplete.execute([] as ParamValues<[]>, {} as ExecutionContext), [
         'dynamicResult',
@@ -502,7 +502,7 @@ describe('API test', () => {
       {display: undefined, value: {display: 'bob2', value: 'bob234', extra: 'field'}},
     ];
     assert.deepEqual(
-      normalizePropertyAutocompleteResults({
+      normalizePropertyOptionsResults({
         cacheTtlSecs: 123,
         results: packResultsArray,
       }),
@@ -512,7 +512,7 @@ describe('API test', () => {
       },
     );
 
-    assert.deepEqual(normalizePropertyAutocompleteResults(packResultsArray), {
+    assert.deepEqual(normalizePropertyOptionsResults(packResultsArray), {
       results: normalizedResultsArray,
     });
   });
