@@ -170,11 +170,6 @@ export declare const NumberHintValueTypes: readonly [ValueHintType.Date, ValueHi
 export declare const BooleanHintValueTypes: readonly [ValueHintType.Toggle];
 export declare const ObjectHintValueTypes: readonly [ValueHintType.Person, ValueHintType.Reference, ValueHintType.SelectList];
 export declare const AutocompleteHintValueTypes: readonly [ValueHintType.SelectList, ValueHintType.Reference];
-declare type SchemaSupportingAutocomplete = ReturnType<typeof maybeUnwrapArraySchema> & {
-    codaType: typeof AutocompleteHintValueTypes;
-    autocomplete: unknown;
-};
-export declare function unwrappedSchemaSupportsAutocomplete(schema: ReturnType<typeof maybeUnwrapArraySchema>): schema is SchemaSupportingAutocomplete;
 /** The subset of {@link ValueHintType} that can be used with a string value. */
 export declare type StringHintTypes = (typeof StringHintValueTypes)[number];
 /** The subset of {@link ValueHintType} that can be used with a number value. */
@@ -1104,6 +1099,12 @@ export declare function makeAttributionNode<T extends AttributionNode>(node: T):
 export declare type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | GenericObjectSchema;
 export declare function isObject(val?: Schema): val is GenericObjectSchema;
 export declare function isArray(val?: Schema): val is ArraySchema;
+declare type SchemaSupportingAutocomplete = ReturnType<typeof maybeUnwrapArraySchema> & {
+    codaType: typeof AutocompleteHintValueTypes;
+    autocomplete: PropertySchemaAutocomplete<PackFormulaResult>;
+};
+export declare function unwrappedSchemaSupportsAutocomplete(schema: ReturnType<typeof maybeUnwrapArraySchema>): schema is SchemaSupportingAutocomplete;
+export declare function maybeSchemaAutocompleteValue(schema: Schema): PropertySchemaAutocomplete<PackFormulaResult> | undefined;
 /**
  * Pulls out the item type of an Array schema, returning undefined if the Array contains another Array.
  */

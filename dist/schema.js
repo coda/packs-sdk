@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.throwOnDynamicSchemaWithJsAutocompleteFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.unwrappedSchemaSupportsAutocomplete = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+exports.throwOnDynamicSchemaWithJsAutocompleteFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.maybeSchemaAutocompleteValue = exports.unwrappedSchemaSupportsAutocomplete = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_2 = require("./helpers/ensure");
@@ -208,10 +208,6 @@ exports.NumberHintValueTypes = [
 exports.BooleanHintValueTypes = [ValueHintType.Toggle];
 exports.ObjectHintValueTypes = [ValueHintType.Person, ValueHintType.Reference, ValueHintType.SelectList];
 exports.AutocompleteHintValueTypes = [ValueHintType.SelectList, ValueHintType.Reference];
-function unwrappedSchemaSupportsAutocomplete(schema) {
-    return Boolean(schema === null || schema === void 0 ? void 0 : schema.codaType) && [ValueHintType.SelectList, ValueHintType.Reference].includes(schema.codaType);
-}
-exports.unwrappedSchemaSupportsAutocomplete = unwrappedSchemaSupportsAutocomplete;
 /**
  * Enumeration of formats supported by schemas that use {@link ValueHintType.Currency}.
  *
@@ -415,6 +411,17 @@ function isArray(val) {
     return Boolean(val && val.type === ValueType.Array);
 }
 exports.isArray = isArray;
+function unwrappedSchemaSupportsAutocomplete(schema) {
+    return Boolean(schema === null || schema === void 0 ? void 0 : schema.codaType) && [ValueHintType.SelectList, ValueHintType.Reference].includes(schema.codaType);
+}
+exports.unwrappedSchemaSupportsAutocomplete = unwrappedSchemaSupportsAutocomplete;
+function maybeSchemaAutocompleteValue(schema) {
+    const unwrappedSchema = maybeUnwrapArraySchema(schema);
+    if (unwrappedSchemaSupportsAutocomplete(unwrappedSchema)) {
+        return unwrappedSchema.autocomplete;
+    }
+}
+exports.maybeSchemaAutocompleteValue = maybeSchemaAutocompleteValue;
 /**
  * Pulls out the item type of an Array schema, returning undefined if the Array contains another Array.
  */

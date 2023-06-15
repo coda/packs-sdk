@@ -212,26 +212,6 @@ export const ObjectHintValueTypes = [ValueHintType.Person, ValueHintType.Referen
 
 export const AutocompleteHintValueTypes = [ValueHintType.SelectList, ValueHintType.Reference] as const;
 
-type SchemaSupportingAutocomplete = ReturnType<typeof maybeUnwrapArraySchema> & {
-  codaType: typeof AutocompleteHintValueTypes;
-  autocomplete: PropertySchemaAutocomplete<PackFormulaResult>;
-};
-
-export function unwrappedSchemaSupportsAutocomplete(
-  schema: ReturnType<typeof maybeUnwrapArraySchema>,
-): schema is SchemaSupportingAutocomplete {
-  return Boolean(schema?.codaType) && [ValueHintType.SelectList, ValueHintType.Reference].includes(schema!.codaType!);
-}
-
-export function maybeSchemaAutocompleteValue(
-  schema: Schema,
-): PropertySchemaAutocomplete<PackFormulaResult> | undefined {
-  const unwrappedSchema = maybeUnwrapArraySchema(schema);
-  if (unwrappedSchemaSupportsAutocomplete(unwrappedSchema)) {
-    return unwrappedSchema.autocomplete;
-  }
-}
-
 /** The subset of {@link ValueHintType} that can be used with a string value. */
 export type StringHintTypes = (typeof StringHintValueTypes)[number];
 /** The subset of {@link ValueHintType} that can be used with a number value. */
@@ -1288,6 +1268,26 @@ export function isObject(val?: Schema): val is GenericObjectSchema {
 
 export function isArray(val?: Schema): val is ArraySchema {
   return Boolean(val && val.type === ValueType.Array);
+}
+
+type SchemaSupportingAutocomplete = ReturnType<typeof maybeUnwrapArraySchema> & {
+  codaType: typeof AutocompleteHintValueTypes;
+  autocomplete: PropertySchemaAutocomplete<PackFormulaResult>;
+};
+
+export function unwrappedSchemaSupportsAutocomplete(
+  schema: ReturnType<typeof maybeUnwrapArraySchema>,
+): schema is SchemaSupportingAutocomplete {
+  return Boolean(schema?.codaType) && [ValueHintType.SelectList, ValueHintType.Reference].includes(schema!.codaType!);
+}
+
+export function maybeSchemaAutocompleteValue(
+  schema: Schema,
+): PropertySchemaAutocomplete<PackFormulaResult> | undefined {
+  const unwrappedSchema = maybeUnwrapArraySchema(schema);
+  if (unwrappedSchemaSupportsAutocomplete(unwrappedSchema)) {
+    return unwrappedSchema.autocomplete;
+  }
 }
 
 /**

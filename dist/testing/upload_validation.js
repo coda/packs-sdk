@@ -60,9 +60,10 @@ const schema_15 = require("../schema");
 const schema_16 = require("../schema");
 const schema_17 = require("../schema");
 const schema_18 = require("../schema");
+const schema_19 = require("../schema");
 const migration_1 = require("../helpers/migration");
 const semver_1 = __importDefault(require("semver"));
-const schema_19 = require("../schema");
+const schema_20 = require("../schema");
 const z = __importStar(require("zod"));
 /**
  * The uncompiled column format matchers will be expected to be actual regex objects,
@@ -887,7 +888,7 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
                 ? schema.properties[propertyValue]
                 : undefined;
             if (!propertySchema) {
-                const schemaPropertyPath = (0, schema_18.normalizePropertyValuePathIntoSchemaPath)(propertyValue);
+                const schemaPropertyPath = (0, schema_19.normalizePropertyValuePathIntoSchemaPath)(propertyValue);
                 propertySchema = (_a = (0, jsonpath_plus_1.JSONPath)({
                     path: schemaPropertyPath,
                     json: schema.properties,
@@ -996,9 +997,9 @@ const genericObjectSchema = z.lazy(() => zodCompleteObject({
 const objectPropertyUnionSchema = z
     .union([booleanPropertySchema, numberPropertySchema, stringPropertySchema, arrayPropertySchema, genericObjectSchema])
     .refine((schema) => {
-    const schemaForAutocomplete = (0, schema_17.maybeUnwrapArraySchema)(schema);
+    const schemaForAutocomplete = (0, schema_18.maybeUnwrapArraySchema)(schema);
     const result = !schemaForAutocomplete ||
-        (0, schema_19.unwrappedSchemaSupportsAutocomplete)(schemaForAutocomplete) ||
+        (0, schema_20.unwrappedSchemaSupportsAutocomplete)(schemaForAutocomplete) ||
         !('autocomplete' in schemaForAutocomplete && schemaForAutocomplete.autocomplete);
     return result;
 }, 'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "autocomplete" property.');
@@ -1430,11 +1431,7 @@ const legacyPackMetadataSchema = validateFormulas(unrefinedPackVersionMetadataSc
     (data.syncTables || []).forEach((syncTable, i) => {
         const schema = syncTable.schema;
         for (const [propertyName, childSchema] of Object.entries(schema.properties)) {
-            const schemaForAutocomplete = (0, schema_17.maybeUnwrapArraySchema)(childSchema);
-            if (!(0, schema_19.unwrappedSchemaSupportsAutocomplete)(schemaForAutocomplete)) {
-                continue;
-            }
-            const { autocomplete } = schemaForAutocomplete;
+            const autocomplete = (0, schema_17.maybeSchemaAutocompleteValue)(childSchema);
             if (!autocomplete || Array.isArray(autocomplete)) {
                 continue;
             }
