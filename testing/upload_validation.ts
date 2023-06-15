@@ -90,6 +90,7 @@ import {isDefined} from '../helpers/object_utils';
 import {isNil} from '../helpers/object_utils';
 import {isObject} from '../schema';
 import {makeSchema} from '../schema';
+import {maybeSchemaAutocompleteValue} from '../schema';
 import {maybeUnwrapArraySchema} from '../schema';
 import {normalizePropertyValuePathIntoSchemaPath} from '../schema';
 import {objectSchemaHelper} from '../helpers/migration';
@@ -1715,11 +1716,7 @@ const legacyPackMetadataSchema = validateFormulas(
     (data.syncTables || []).forEach((syncTable, i) => {
       const schema: ObjectSchema<any, any> = syncTable.schema;
       for (const [propertyName, childSchema] of Object.entries(schema.properties)) {
-        const schemaForAutocomplete = maybeUnwrapArraySchema(childSchema);
-        if (!unwrappedSchemaSupportsAutocomplete(schemaForAutocomplete)) {
-          continue;
-        }
-        const {autocomplete} = schemaForAutocomplete;
+        const autocomplete = maybeSchemaAutocompleteValue(childSchema);
         if (!autocomplete || Array.isArray(autocomplete)) {
           continue;
         }
