@@ -231,10 +231,6 @@ export type PropertySchemaAutocomplete<T extends PackFormulaResult> =
   | AutocompleteType
   | AutocompleteReference;
 
-type PropertySchemaAutocompleteWithOptionalDisplay<T extends PackFormulaResult> = PropertySchemaAutocomplete<
-  T | {display: string; value: T}
->;
-
 interface PropertyWithAutocomplete<T extends PackFormulaResult> {
   /**
    * A list of values or a formula that returns a list of values to suggest when someone
@@ -305,9 +301,6 @@ export interface BooleanSchema extends BaseSchema {
   type: ValueType.Boolean;
   /** Indicates how to render values in a table. If not specified, renders a checkbox. */
   codaType?: BooleanHintTypes;
-
-  /** @hidden */
-  autocomplete?: PropertySchemaAutocompleteWithOptionalDisplay<boolean>;
 }
 
 /**
@@ -329,9 +322,6 @@ export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> e
   type: ValueType.Number;
   /** An optional type hint instructing Coda about how to interpret or render this value. */
   codaType?: T;
-
-  /** @hidden */
-  autocomplete?: PropertySchemaAutocompleteWithOptionalDisplay<number>;
 }
 
 /**
@@ -799,9 +789,6 @@ export interface StringWithOptionsSchema
     PropertyWithAutocompleteWithOptionalDisplay<string> {
   /** Instructs Coda to render this value as a select list. */
   codaType: ValueHintType.SelectList;
-
-  /** @hidden */
-  autocomplete: PropertySchemaAutocompleteWithOptionalDisplay<string>;
 }
 
 export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> extends BaseSchema {
@@ -1272,8 +1259,7 @@ export function isArray(val?: Schema): val is ArraySchema {
 
 type SchemaSupportingAutocomplete = ReturnType<typeof maybeUnwrapArraySchema> & {
   codaType: typeof AutocompleteHintValueTypes;
-  autocomplete: PropertySchemaAutocomplete<PackFormulaResult>;
-};
+} & PropertyWithAutocomplete<PackFormulaResult>;
 
 export function unwrappedSchemaSupportsAutocomplete(
   schema: ReturnType<typeof maybeUnwrapArraySchema>,
@@ -1479,7 +1465,7 @@ export function makeObjectSchema<
 
       const schemaForAutocomplete = maybeUnwrapArraySchema(schema.properties[key]);
 
-      const autocompleteValue = (schemaForAutocomplete as any | undefined)?.autocomplete;
+      const autocompleteValue = (schemaForAutocomplete as PropertyWithAutocomplete<any> | undefined)?.autocomplete;
       const autocompleteFunction = typeof autocompleteValue === 'function' ? autocompleteValue : undefined;
 
       schema.properties[typedKey] = deepCopy(schema.properties[key]);
