@@ -1,8 +1,8 @@
 import type { $Values } from './type_utils';
-import type { OptionsReference as OptionsReference } from './api_types';
-import type { OptionsType as OptionsType } from './api_types';
+import type { OptionsReference } from './api_types';
+import type { OptionsType } from './api_types';
 import type { PackFormulaResult } from './api_types';
-import type { PropertyOptionsMetadataFunction as PropertyOptionsMetadataFunction } from './api_types';
+import type { PropertyOptionsMetadataFunction } from './api_types';
 /**
  * The set of primitive value types that can be used as return values for formulas
  * or in object schemas.
@@ -1247,5 +1247,5 @@ export declare function withIdentity(schema: GenericObjectSchema, identityName: 
  * they'd get would be an internal error, and the pack maker tools logs would just mention that structured clone
  * failed to copy a function.
  */
-export declare function throwOnDynamicSchemaWithJsAutocompleteFunction(dynamicSchema: any, parentKey?: string): void;
+export declare function throwOnDynamicSchemaWithJsOptionsFunction(dynamicSchema: any, parentKey?: string): void;
 export {};

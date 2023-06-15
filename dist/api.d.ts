@@ -923,7 +923,7 @@ export declare function normalizePropertyOptionsResults(results: PropertyOptions
 /**
  * @hidden
  */
-export interface PropertOptionsAnnotatedResult {
+export interface PropertyOptionsAnnotatedResult {
     packResult: PropertyOptionsNormalizedResults;
     propertiesUsed: string[];
     searchUsed?: boolean;

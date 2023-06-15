@@ -82,10 +82,10 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                         return parentFormula.execute(params, executionContext);
                     }
                     break;
-                case types_3.MetadataFormulaType.PropertyAutocomplete:
+                case types_3.MetadataFormulaType.PropertyOptions:
                     const syncTable = syncTables === null || syncTables === void 0 ? void 0 : syncTables.find(table => table.name === formulaSpec.syncTableName);
-                    const autocompleteFormula = (_a = syncTable === null || syncTable === void 0 ? void 0 : syncTable.namedPropertyOptions) === null || _a === void 0 ? void 0 : _a[formulaSpec.autocompleteName];
-                    if (autocompleteFormula) {
+                    const optionsFormula = (_a = syncTable === null || syncTable === void 0 ? void 0 : syncTable.namedPropertyOptions) === null || _a === void 0 ? void 0 : _a[formulaSpec.optionsFormulaKey];
+                    if (optionsFormula) {
                         const propertyValues = {};
                         const cacheKeysUsed = [];
                         function recordPropertyAccess(key) {
@@ -102,21 +102,21 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                                 },
                             });
                         }
-                        const propertyAutocompleteExecutionContext = {
+                        const propertyOptionsExecutionContext = {
                             ...executionContext,
                             propertyName: formulaSpec.propertyName,
                             propertyValues,
                             propertySchema: formulaSpec.propertySchema,
                         };
                         const contextUsed = {};
-                        Object.defineProperty(propertyAutocompleteExecutionContext, 'search', {
+                        Object.defineProperty(propertyOptionsExecutionContext, 'search', {
                             enumerable: true,
                             get() {
                                 contextUsed.searchUsed = true;
                                 return formulaSpec.search;
                             },
                         });
-                        const packResult = (await autocompleteFormula.execute(params, propertyAutocompleteExecutionContext));
+                        const packResult = (await optionsFormula.execute(params, propertyOptionsExecutionContext));
                         const result = {
                             packResult: (0, api_4.normalizePropertyOptionsResults)(packResult),
                             propertiesUsed: cacheKeysUsed,
@@ -188,7 +188,7 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                             if (formula) {
                                 const formulaResult = formula.execute(params, executionContext);
                                 if (isGetSchema) {
-                                    (0, schema_1.throwOnDynamicSchemaWithJsAutocompleteFunction)(await formulaResult);
+                                    (0, schema_1.throwOnDynamicSchemaWithJsOptionsFunction)(await formulaResult);
                                 }
                                 return formulaResult;
                             }

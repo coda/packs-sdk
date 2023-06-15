@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.throwOnDynamicSchemaWithJsAutocompleteFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.maybeSchemaOptionsValue = exports.unwrappedSchemaSupportsOptions = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+exports.throwOnDynamicSchemaWithJsOptionsFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.maybeSchemaOptionsValue = exports.unwrappedSchemaSupportsOptions = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_2 = require("./helpers/ensure");
@@ -748,21 +748,21 @@ exports.withIdentity = withIdentity;
  * they'd get would be an internal error, and the pack maker tools logs would just mention that structured clone
  * failed to copy a function.
  */
-function throwOnDynamicSchemaWithJsAutocompleteFunction(dynamicSchema, parentKey) {
+function throwOnDynamicSchemaWithJsOptionsFunction(dynamicSchema, parentKey) {
     if (!dynamicSchema) {
         return;
     }
     if (Array.isArray(dynamicSchema)) {
-        dynamicSchema.forEach(item => throwOnDynamicSchemaWithJsAutocompleteFunction(item));
+        dynamicSchema.forEach(item => throwOnDynamicSchemaWithJsOptionsFunction(item));
         return;
     }
     if (typeof dynamicSchema === 'object') {
         for (const key of Object.keys(dynamicSchema)) {
-            throwOnDynamicSchemaWithJsAutocompleteFunction(dynamicSchema[key], key);
+            throwOnDynamicSchemaWithJsOptionsFunction(dynamicSchema[key], key);
         }
     }
     if (typeof dynamicSchema === 'function' && parentKey === 'options') {
         throw new Error('Sync tables with dynamic schemas must use "options: OptionsType.Dynamic" instead of "options: () => {...}');
     }
 }
-exports.throwOnDynamicSchemaWithJsAutocompleteFunction = throwOnDynamicSchemaWithJsAutocompleteFunction;
+exports.throwOnDynamicSchemaWithJsOptionsFunction = throwOnDynamicSchemaWithJsOptionsFunction;
