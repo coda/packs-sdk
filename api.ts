@@ -1546,7 +1546,7 @@ export function normalizePropertyOptionsResults(results: PropertyOptionsResults)
 /**
  * @hidden
  */
-export interface PropertOptionsAnnotatedResult {
+export interface PropertyOptionsAnnotatedResult {
   packResult: PropertyOptionsNormalizedResults;
   propertiesUsed: string[];
   searchUsed?: boolean;

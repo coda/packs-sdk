@@ -240,6 +240,28 @@ describe('Schema', () => {
       assert.deepEqual(options({} as PropertyOptionsExecutionContext), ['1']);
     });
 
+    it('options functions are disallowed in dynamic sync tables', () => {
+      const objectSchema = schema.makeObjectSchema({
+        type: schema.ValueType.Object,
+        primary: 'boo',
+        properties: {
+          boo: {
+            type: schema.ValueType.Array,
+            items: {
+              type: schema.ValueType.String,
+              options: () => {
+                return ['1'];
+              },
+            },
+          },
+        },
+      });
+      assert.throws(
+        () => schema.throwOnDynamicSchemaWithJsOptionsFunction(objectSchema),
+        'Sync tables with dynamic schemas must use "options: OptionsType.Dynamic" instead of "options: () => {...}',
+      );
+    });
+
     it('works', () => {
       const anotherSchema = schema.makeObjectSchema({
         type: schema.ValueType.Object,

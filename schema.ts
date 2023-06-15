@@ -1,8 +1,8 @@
 import type {$Values} from './type_utils';
-import type {OptionsReference as OptionsReference} from './api_types';
-import type {OptionsType as OptionsType} from './api_types';
+import type {OptionsReference} from './api_types';
+import type {OptionsType} from './api_types';
 import type {PackFormulaResult} from './api_types';
-import type {PropertyOptionsMetadataFunction as PropertyOptionsMetadataFunction} from './api_types';
+import type {PropertyOptionsMetadataFunction} from './api_types';
 import {assertCondition} from './helpers/ensure';
 import {deepCopy} from './helpers/object_utils';
 import {ensureExists} from './helpers/ensure';
@@ -1736,19 +1736,19 @@ export function withIdentity(schema: GenericObjectSchema, identityName: string):
  * they'd get would be an internal error, and the pack maker tools logs would just mention that structured clone
  * failed to copy a function.
  */
-export function throwOnDynamicSchemaWithJsAutocompleteFunction(dynamicSchema: any, parentKey?: string) {
+export function throwOnDynamicSchemaWithJsOptionsFunction(dynamicSchema: any, parentKey?: string) {
   if (!dynamicSchema) {
     return;
   }
 
   if (Array.isArray(dynamicSchema)) {
-    dynamicSchema.forEach(item => throwOnDynamicSchemaWithJsAutocompleteFunction(item));
+    dynamicSchema.forEach(item => throwOnDynamicSchemaWithJsOptionsFunction(item));
     return;
   }
 
   if (typeof dynamicSchema === 'object') {
     for (const key of Object.keys(dynamicSchema)) {
-      throwOnDynamicSchemaWithJsAutocompleteFunction(dynamicSchema[key], key);
+      throwOnDynamicSchemaWithJsOptionsFunction(dynamicSchema[key], key);
     }
   }
 
