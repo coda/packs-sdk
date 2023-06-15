@@ -1104,7 +1104,7 @@ declare type SchemaSupportingAutocomplete = ReturnType<typeof maybeUnwrapArraySc
     autocomplete: PropertySchemaAutocomplete<PackFormulaResult>;
 };
 export declare function unwrappedSchemaSupportsAutocomplete(schema: ReturnType<typeof maybeUnwrapArraySchema>): schema is SchemaSupportingAutocomplete;
-export declare function maybeSchemaAutocompleteValue(schema: Schema): PropertySchemaAutocomplete<PackFormulaResult> | undefined;
+export declare function maybeSchemaAutocompleteValue(schema: Schema | undefined): PropertySchemaAutocomplete<PackFormulaResult> | undefined;
 /**
  * Pulls out the item type of an Array schema, returning undefined if the Array contains another Array.
  */

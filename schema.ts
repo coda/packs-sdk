@@ -1282,7 +1282,7 @@ export function unwrappedSchemaSupportsAutocomplete(
 }
 
 export function maybeSchemaAutocompleteValue(
-  schema: Schema,
+  schema: Schema | undefined,
 ): PropertySchemaAutocomplete<PackFormulaResult> | undefined {
   const unwrappedSchema = maybeUnwrapArraySchema(schema);
   if (unwrappedSchemaSupportsAutocomplete(unwrappedSchema)) {
