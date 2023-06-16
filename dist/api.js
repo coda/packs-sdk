@@ -883,11 +883,24 @@ function makeSyncTableLegacy(name, schema, formula, connectionRequirement, dynam
     });
 }
 exports.makeSyncTableLegacy = makeSyncTableLegacy;
-// TODO(dweitzman): Merge this with the above function definition
-// to make "propertyOptions" available in the public API docs.
 /**
- * Includes the unreleased propertyOptions parameter.
- * @hidden
+ * Creates a dynamic sync table definition.
+ *
+ * @example
+ * ```
+ * coda.makeDynamicSyncTable({
+ *   name: "MySyncTable",
+ *   getName: async function(context) => {
+ *     const response = await context.fetcher.fetch({method: "GET", url: context.sync.dynamicUrl});
+ *     return response.body.name;
+ *   },
+ *   getName: async function(context) => {
+ *     const response = await context.fetcher.fetch({method: "GET", url: context.sync.dynamicUrl});
+ *     return response.body.browserLink;
+ *   },
+ *   ...
+ * });
+ * ```
  */
 function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, searchDynamicUrls: searchDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, propertyOptions, }) {
     const placeholderSchema = placeholderSchemaInput ||

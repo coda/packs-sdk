@@ -733,7 +733,6 @@ export declare type OptionsReference = string & {
 };
 /**
  * A JavaScript function for property options.
- * @hidden
  */
 export declare type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]> = (context: PropertyOptionsExecutionContext) => Promise<ResultT> | ResultT;
 /**
@@ -974,8 +973,6 @@ export interface PropertyWithOptions<T extends PackFormulaResult> {
 	 *   },
 	 * }
 	 * ```
-	 *
-	 * @hidden
 	 */
 	options?: PropertySchemaOptions<T>;
 }
@@ -2314,7 +2311,6 @@ export interface DynamicSyncTableDef<K extends string, L extends string, ParamDe
 	searchDynamicUrls?: MetadataFormula;
 	/**
 	 * See {@link DynamicSyncTableOptions.propertyOptions}
-	 * @hidden
 	 */
 	propertyOptions?: PropertyOptionsMetadataFormula<any>;
 }
@@ -2970,8 +2966,6 @@ export interface DynamicOptions {
 	defaultAddDynamicColumns?: boolean;
 	/**
 	 * See {@link DynamicSyncTableOptions.autocomplete}
-	 *
-	 * @hidden
 	 */
 	propertyOptions?: PropertyOptionsMetadataFunction<any>;
 }
@@ -3189,7 +3183,7 @@ export declare function makeSyncTable<K extends string, L extends string, ParamD
  * });
  * ```
  */
-export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>>(params: {
+export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>>({ name, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, searchDynamicUrls: searchDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, propertyOptions, }: {
 	name: string;
 	description?: string;
 	getName: MetadataFormulaDef;
@@ -3203,6 +3197,7 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
 	connectionRequirement?: ConnectionRequirement;
 	defaultAddDynamicColumns?: boolean;
 	placeholderSchema?: SchemaT;
+	propertyOptions?: PropertyOptionsMetadataFunction<any>;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any>;
 /**
  * Helper to generate a formula that fetches a list of entities from a given URL and returns them.

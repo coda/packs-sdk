@@ -259,8 +259,6 @@ interface PropertyWithOptions<T extends PackFormulaResult> {
    *   },
    * }
    * ```
-   *
-   * @hidden
    */
   options?: PropertySchemaOptions<T>;
 }

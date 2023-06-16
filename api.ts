@@ -317,7 +317,6 @@ export interface DynamicSyncTableDef<
 
   /**
    * See {@link DynamicSyncTableOptions.propertyOptions}
-   * @hidden
    */
   propertyOptions?: PropertyOptionsMetadataFormula<any>;
 }
@@ -1883,8 +1882,6 @@ export interface DynamicOptions {
 
   /**
    * See {@link DynamicSyncTableOptions.autocomplete}
-   *
-   * @hidden
    */
   propertyOptions?: PropertyOptionsMetadataFunction<any>;
 }
@@ -2271,33 +2268,6 @@ export function makeSyncTableLegacy<
  *   ...
  * });
  * ```
- */
-export function makeDynamicSyncTable<
-  K extends string,
-  L extends string,
-  ParamDefsT extends ParamDefs,
-  SchemaT extends ObjectSchemaDefinition<K, L>,
->(params: {
-  name: string;
-  description?: string;
-  getName: MetadataFormulaDef;
-  getSchema: MetadataFormulaDef;
-  identityName: string;
-  formula: SyncFormulaDef<K, L, ParamDefsT, any>;
-  getDisplayUrl: MetadataFormulaDef;
-  listDynamicUrls?: MetadataFormulaDef;
-  searchDynamicUrls?: MetadataFormulaDef;
-  entityName?: string;
-  connectionRequirement?: ConnectionRequirement;
-  defaultAddDynamicColumns?: boolean;
-  placeholderSchema?: SchemaT;
-}): DynamicSyncTableDef<K, L, ParamDefsT, any>;
-
-// TODO(dweitzman): Merge this with the above function definition
-// to make "propertyOptions" available in the public API docs.
-/**
- * Includes the unreleased propertyOptions parameter.
- * @hidden
  */
 export function makeDynamicSyncTable<
   K extends string,

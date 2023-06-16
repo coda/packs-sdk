@@ -751,7 +751,6 @@ export declare type OptionsReference = string & {
 };
 /**
  * A JavaScript function for property options.
- * @hidden
  */
 export declare type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]> = (context: PropertyOptionsExecutionContext) => Promise<ResultT> | ResultT;
 export {};

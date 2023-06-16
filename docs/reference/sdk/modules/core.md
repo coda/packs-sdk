@@ -170,6 +170,7 @@ import * as coda from "@codahq/packs-sdk";
 - [PostSetup](../types/core.PostSetup.md)
 - [PostSetupDef](../types/core.PostSetupDef.md)
 - [PropertyIdentifier](../types/core.PropertyIdentifier.md)
+- [PropertyOptionsMetadataFunction](../types/core.PropertyOptionsMetadataFunction.md)
 - [Schema](../types/core.Schema.md)
 - [SchemaType](../types/core.SchemaType.md)
 - [SetEndpointDef](../types/core.SetEndpointDef.md)

@@ -898,7 +898,6 @@ export type OptionsReference = string & {
 // TODO(dweitzman): Update the type to allow options functions to return a cache TTL.
 /**
  * A JavaScript function for property options.
- * @hidden
  */
 export type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]> = (
   context: PropertyOptionsExecutionContext,

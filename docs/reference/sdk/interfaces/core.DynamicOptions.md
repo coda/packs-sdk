@@ -39,3 +39,11 @@ For a dynamic sync table, the value of [getSchema](core.DynamicSyncTableOptions.
 is passed through here. For a non-dynamic sync table, you may still implement
 this if you table has a schema that varies based on the user account, but
 does not require a [dynamicUrl](core.Sync.md#dynamicurl).
+
+___
+
+### propertyOptions
+
+• `Optional` **propertyOptions**: [`PropertyOptionsMetadataFunction`](../types/core.PropertyOptionsMetadataFunction.md)<`any`\>
+
+See DynamicSyncTableOptions.autocomplete
