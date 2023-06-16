@@ -169,7 +169,7 @@ let response = await context.fetcher.fetch({
 });
 ```
 
-Sending attachments (`multipart/form-data`) is not supported.
+Sending attachments (`multipart/form-data`) is not supported natively in the SDK. When building locally with the Pack CLI you can use the [`form-data` NPM library][npm_form_data] to send mixed content, as demonstrated in the [Box example Pack][example_box].
 
 
 ### URL query parameters
@@ -205,7 +205,7 @@ let response = await context.fetcher.fetch({
 });
 ```
 
-Sending binary data along with other types of content (`multipart/form-data`) is not supported.
+Sending binary data along with other types of content (`multipart/form-data`) is not supported natively in the SDK. When building locally with the Pack CLI you can use the [`form-data` NPM library][npm_form_data] to send mixed content, as demonstrated in the [Box example Pack][example_box].
 
 
 ## Working with responses
@@ -421,3 +421,5 @@ dig +short egress.coda.io
 [auth_user]: ../basics/authentication/index.md#user
 [temporaryblobstorage]: ../../reference/sdk/interfaces/core.TemporaryBlobStorage.md
 [caching]: ../advanced/caching.md
+[npm_form_data]: https://www.npmjs.com/package/form-data
+[example_box]: https://github.com/coda/packs-examples/tree/main/examples/box

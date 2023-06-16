@@ -41,6 +41,12 @@ The following types of requests are never cached:
 
 Additionally, fetcher caching is disabled by default in the sync formula of a sync table. While caching makes sense for most formulas, sync tables only execute at a regular interval or when the user has explicitly started a sync, and in either case fresh results are expected.
 
+!!! info "In-progress request de-duplication"
+
+    If multiple, identical `GET` requests are all made at the same time they will be de-duplicated into a single request. This means that only the first request will actually be sent to the server, and the result will be returned for all of the requests. This de-duplication happens even when caching is disabled, and it won't show up in the logs as a cached response.
+
+    This is not an issue for most APIs, but if you are using a `GET` request to return a random or unique value then you could end up with duplicates. To bypass this de-duplication behavior simply add a unique query parameter to your URL for each request. The value in `context.invocationToken` is unique for each Pack execution and can be used for this purpose.
+
 
 ## Disable caching
 
