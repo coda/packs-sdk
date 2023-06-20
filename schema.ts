@@ -1716,6 +1716,7 @@ export function makeReferenceSchemaFromObjectSchema(
   const validId = ensureExists(id);
   const referenceProperties: ObjectSchemaProperties = {[validId]: properties[validId]};
   if (primary && primary !== id) {
+    ensureExists(properties[primary], `Display property "${primary}" must refer to a valid property schema.`);
     referenceProperties[primary] = properties[primary];
   }
   return makeObjectSchema({
