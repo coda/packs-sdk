@@ -183,7 +183,7 @@ export async function validatePackVersionMetadata(
 // as part of Various connections.
 export function validateVariousAuthenticationMetadata(
   auth: any,
-  options: buildMetadataSchemaArgs,
+  options: BuildMetadataSchemaArgs,
 ): VariousAuthentication {
   const {variousSupportedAuthenticationValidators} = buildMetadataSchema(options);
   const validated = z.union(zodUnionInput(variousSupportedAuthenticationValidators)).safeParse(auth);
@@ -201,7 +201,7 @@ export function validateVariousAuthenticationMetadata(
 // Note: This is called within Coda for validating the result of getSchema calls for dynamic sync tables.
 export function validateSyncTableSchema(
   schema: any,
-  options: buildMetadataSchemaArgs,
+  options: BuildMetadataSchemaArgs,
 ): ArraySchema<ObjectSchema<any, any>> {
   const {arrayPropertySchema} = buildMetadataSchema(options);
   const validated = arrayPropertySchema.safeParse(schema);
@@ -365,11 +365,12 @@ const setEndpointPostSetupValidator = zodCompleteObject<SetEndpoint>({
   'Either getOptions or getOptionsFormula must be specified.',
 );
 
-interface buildMetadataSchemaArgs {
+interface BuildMetadataSchemaArgs {
   sdkVersion?: string;
   warningMode?: boolean;
 }
-function buildMetadataSchema({sdkVersion}: buildMetadataSchemaArgs): {
+
+function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
   legacyPackMetadataSchema: z.ZodType<Partial<PackVersionMetadata>>;
   variousSupportedAuthenticationValidators: z.ZodTypeAny[];
   arrayPropertySchema: z.ZodTypeAny;
@@ -1796,6 +1797,8 @@ function getAuthNetworkDomains(data: PackVersionMetadata): string[] | undefined 
   return [];
 }
 
+// TODO(dweitzman): Migrate SchemaExtensions to use conditionals in buildMetadataSchema() and delete
+// the SchemaExtension feature.
 const packMetadataSchemaBySdkVersion: SchemaExtension[] = [
   {
     versionRange: '>=1.0.0',
@@ -1855,23 +1858,6 @@ const packMetadataSchemaBySdkVersion: SchemaExtension[] = [
             });
           });
         }
-      });
-    },
-  },
-  {
-    versionRange: '>1.4.0',
-    schemaExtend: schema => {
-      return schema.superRefine((untypedData, context) => {
-        const data = untypedData as PackVersionMetadata;
-        data.syncTables.forEach((syncTable, i) => {
-          const schemaPathPrefix = ['syncTables', i, 'schema'];
-          validateSchemaDeprecatedFields(syncTable.schema, schemaPathPrefix, context);
-          context.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ['syncTables', i, 'schema'],
-            message: 'Needs SelectList codaType',
-          });
-        });
       });
     },
   },

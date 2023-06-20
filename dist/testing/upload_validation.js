@@ -1483,6 +1483,8 @@ function getAuthNetworkDomains(data) {
     }
     return [];
 }
+// TODO(dweitzman): Migrate SchemaExtensions to use conditionals in buildMetadataSchema() and delete
+// the SchemaExtension feature.
 const packMetadataSchemaBySdkVersion = [
     {
         versionRange: '>=1.0.0',
@@ -1540,23 +1542,6 @@ const packMetadataSchemaBySdkVersion = [
                         });
                     });
                 }
-            });
-        },
-    },
-    {
-        versionRange: '>1.4.0',
-        schemaExtend: schema => {
-            return schema.superRefine((untypedData, context) => {
-                const data = untypedData;
-                data.syncTables.forEach((syncTable, i) => {
-                    const schemaPathPrefix = ['syncTables', i, 'schema'];
-                    validateSchemaDeprecatedFields(syncTable.schema, schemaPathPrefix, context);
-                    context.addIssue({
-                        code: z.ZodIssueCode.custom,
-                        path: ['syncTables', i, 'schema'],
-                        message: 'Needs SelectList codaType',
-                    });
-                });
             });
         },
     },
