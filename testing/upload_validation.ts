@@ -369,7 +369,11 @@ interface buildMetadataSchemaArgs {
   sdkVersion?: string;
   warningMode?: boolean;
 }
-function buildMetadataSchema({sdkVersion}: buildMetadataSchemaArgs) {
+function buildMetadataSchema({sdkVersion}: buildMetadataSchemaArgs): {
+  legacyPackMetadataSchema: z.ZodType<Partial<PackVersionMetadata>>;
+  variousSupportedAuthenticationValidators: z.ZodTypeAny[];
+  arrayPropertySchema: z.ZodTypeAny;
+} {
   const singleAuthDomainSchema = z
     .string()
     .nonempty()
