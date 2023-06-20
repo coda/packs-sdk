@@ -1068,14 +1068,18 @@ describe('Pack metadata Validation', () => {
           message: "Unrecognized key(s) in object: 'autocomplete'",
           path: 'syncTables[0].getter.schema.items.properties.Bop',
         });
-        assert.deepInclude(validationErrors, {
+        const selectListHintTypeError = {
           message:
             'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "autocomplete" property.',
           path: 'syncTables[0].schema.properties.Beep',
-        });
+        };
+        assert.deepInclude(validationErrors, selectListHintTypeError);
 
         const bazErrors = validationErrors.filter(e => e.path?.toLowerCase().includes('.baz'));
         assert.isEmpty(bazErrors);
+
+        const errOlderSdkVersion = await validateJsonAndAssertFails(metadata, '1.4.0');
+        assert.notDeepNestedInclude(errOlderSdkVersion.validationErrors ?? [], selectListHintTypeError);
       });
 
       it('autocomplete valid values', async () => {
@@ -3685,50 +3689,68 @@ describe('Pack metadata Validation', () => {
 
   describe('validateVariousAuthenticationMetadata', () => {
     it('succeeds', () => {
-      assert.ok(validateVariousAuthenticationMetadata({type: AuthenticationType.None}));
+      assert.ok(validateVariousAuthenticationMetadata({type: AuthenticationType.None}, {}));
       assert.ok(
-        validateVariousAuthenticationMetadata({
-          type: AuthenticationType.HeaderBearerToken,
-        }),
-      );
-      assert.ok(
-        validateVariousAuthenticationMetadata({
-          type: AuthenticationType.CustomHeaderToken,
-          headerName: 'MyHeader',
-        }),
-      );
-      assert.ok(
-        validateVariousAuthenticationMetadata({
-          type: AuthenticationType.MultiHeaderToken,
-          headers: [{name: 'Header1', description: 'desc 1'}],
-        }),
-      );
-    });
-
-    it('fails on invalid auth type', () => {
-      assert.throws(() => validateVariousAuthenticationMetadata({type: AuthenticationType.OAuth2}));
-    });
-
-    it('fails on invalid auth type', () => {
-      assert.throws(() =>
-        validateVariousAuthenticationMetadata({
-          type: AuthenticationType.CustomHeaderToken,
-        }),
-      );
-      assert.throws(() =>
-        validateVariousAuthenticationMetadata({
-          type: AuthenticationType.CustomHeaderToken,
-          headerName: {
-            not: 'a string',
+        validateVariousAuthenticationMetadata(
+          {
+            type: AuthenticationType.HeaderBearerToken,
           },
-        }),
+          {},
+        ),
+      );
+      assert.ok(
+        validateVariousAuthenticationMetadata(
+          {
+            type: AuthenticationType.CustomHeaderToken,
+            headerName: 'MyHeader',
+          },
+          {},
+        ),
+      );
+      assert.ok(
+        validateVariousAuthenticationMetadata(
+          {
+            type: AuthenticationType.MultiHeaderToken,
+            headers: [{name: 'Header1', description: 'desc 1'}],
+          },
+          {},
+        ),
+      );
+    });
+
+    it('fails on invalid auth type', () => {
+      assert.throws(() => validateVariousAuthenticationMetadata({type: AuthenticationType.OAuth2}, {}));
+    });
+
+    it('fails on invalid auth type', () => {
+      assert.throws(() =>
+        validateVariousAuthenticationMetadata(
+          {
+            type: AuthenticationType.CustomHeaderToken,
+          },
+          {},
+        ),
       );
       assert.throws(() =>
-        validateVariousAuthenticationMetadata({
-          type: AuthenticationType.CustomHeaderToken,
-          headerName: 'MyHeader',
-          evilData: 0xdeadbeef,
-        }),
+        validateVariousAuthenticationMetadata(
+          {
+            type: AuthenticationType.CustomHeaderToken,
+            headerName: {
+              not: 'a string',
+            },
+          },
+          {},
+        ),
+      );
+      assert.throws(() =>
+        validateVariousAuthenticationMetadata(
+          {
+            type: AuthenticationType.CustomHeaderToken,
+            headerName: 'MyHeader',
+            evilData: 0xdeadbeef,
+          },
+          {},
+        ),
       );
     });
   });
@@ -3736,7 +3758,7 @@ describe('Pack metadata Validation', () => {
   describe('validateSyncTableSchema', () => {
     function validateAndAssertFails(schema: any, details?: string): PackMetadataValidationError {
       try {
-        validateSyncTableSchema(schema);
+        validateSyncTableSchema(schema, {});
         assert.fail('Expected validateSyncTableSchema to fail but it succeeded');
       } catch (err: any) {
         assert.isTrue(err.message.startsWith('Schema failed validation'));
@@ -3767,10 +3789,10 @@ describe('Pack metadata Validation', () => {
         items: itemSchema,
       });
       // Test an array schema
-      const arraySchemaResult = validateSyncTableSchema(arraySchema);
+      const arraySchemaResult = validateSyncTableSchema(arraySchema, {});
       assert.ok(arraySchemaResult);
       // Test an object schema
-      const objectSchemaResult = validateSyncTableSchema(itemSchema);
+      const objectSchemaResult = validateSyncTableSchema(itemSchema, {});
       assert.ok(objectSchemaResult);
       // It should be changed into an Array schema automatically.
       assert.equal(objectSchemaResult.type, ValueType.Array);
@@ -3841,9 +3863,9 @@ describe('Pack metadata Validation', () => {
         type: ValueType.Array,
         items: itemSchema,
       });
-      const arraySchemaResult = validateSyncTableSchema(arraySchema);
+      const arraySchemaResult = validateSyncTableSchema(arraySchema, {});
       assert.ok(arraySchemaResult);
-      const objectSchemaResult = validateSyncTableSchema(itemSchema);
+      const objectSchemaResult = validateSyncTableSchema(itemSchema, {});
       assert.ok(objectSchemaResult);
     });
 

@@ -28,6 +28,11 @@ export declare class PackMetadataValidationError extends Error {
 export declare function validatePackVersionMetadata(metadata: Record<string, any>, sdkVersion: string | undefined, { warningMode }?: {
     warningMode?: boolean;
 }): Promise<PackVersionMetadata>;
-export declare function validateVariousAuthenticationMetadata(auth: any): VariousAuthentication;
-export declare function validateSyncTableSchema(schema: any): ArraySchema<ObjectSchema<any, any>>;
+export declare function validateVariousAuthenticationMetadata(auth: any, options: buildMetadataSchemaArgs): VariousAuthentication;
+export declare function validateSyncTableSchema(schema: any, options: buildMetadataSchemaArgs): ArraySchema<ObjectSchema<any, any>>;
 export declare function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError[];
+interface buildMetadataSchemaArgs {
+    sdkVersion?: string;
+    warningMode?: boolean;
+}
+export {};
