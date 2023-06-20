@@ -291,4 +291,74 @@ describe('Schema', () => {
       ]);
     });
   });
+
+  describe('makeReferenceSchemaFromObjectSchema', () => {
+    it('works', () => {
+      const thingSchema = makeObjectSchema({
+        properties: {
+          name: {type: ValueType.String, required: true},
+          id: {type: ValueType.Number, required: true},
+          other: {type: ValueType.Boolean},
+        },
+        displayProperty: 'name',
+        idProperty: 'id',
+      });
+
+      const thingReferenceSchema = schema.makeReferenceSchemaFromObjectSchema(thingSchema, 'Thing');
+      assert.deepEqual(thingReferenceSchema, {
+        codaType: ValueHintType.Reference,
+        type: ValueType.Object,
+        idProperty: 'id',
+        identity: {name: 'Thing'} as schema.Identity,
+        displayProperty: 'name',
+        properties: {
+          id: {type: ValueType.Number, required: true},
+          name: {type: ValueType.String, required: true},
+        },
+        mutable: undefined,
+        autocomplete: undefined,
+      });
+    });
+
+    it('display property is same as id', () => {
+      const thingSchema = makeObjectSchema({
+        properties: {
+          name: {type: ValueType.String},
+          id: {type: ValueType.Number, required: true},
+          other: {type: ValueType.Boolean},
+        },
+        displayProperty: 'id',
+        idProperty: 'id',
+      });
+
+      const thingReferenceSchema = schema.makeReferenceSchemaFromObjectSchema(thingSchema, 'Thing');
+      assert.deepEqual(thingReferenceSchema, {
+        codaType: ValueHintType.Reference,
+        type: ValueType.Object,
+        idProperty: 'id',
+        identity: {name: 'Thing'} as schema.Identity,
+        displayProperty: 'id',
+        properties: {
+          id: {type: ValueType.Number, required: true},
+        },
+        mutable: undefined,
+        autocomplete: undefined,
+      });
+    });
+
+    it('fails gracefully with a busted schema', () => {
+      const thingSchema = makeObjectSchema({
+        properties: {
+          name: {type: ValueType.String},
+        },
+        displayProperty: 'fake',
+        idProperty: 'name',
+      });
+
+      assert.throws(
+        () => schema.makeReferenceSchemaFromObjectSchema(thingSchema, 'Thing'),
+        'Display property "fake" must refer to a valid property schema.',
+      );
+    });
+  });
 });
