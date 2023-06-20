@@ -201,7 +201,7 @@ export function validateVariousAuthenticationMetadata(
 // Note: This is called within Coda for validating the result of getSchema calls for dynamic sync tables.
 export function validateSyncTableSchema(
   schema: any,
-  options: BuildMetadataSchemaArgs,
+  options: BuildMetadataSchemaArgs & Required<Pick<BuildMetadataSchemaArgs, 'sdkVersion'>>,
 ): ArraySchema<ObjectSchema<any, any>> {
   const {arrayPropertySchema} = buildMetadataSchema(options);
   const validated = arrayPropertySchema.safeParse(schema);

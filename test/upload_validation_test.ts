@@ -49,7 +49,14 @@ import {validatePackVersionMetadata} from '../testing/upload_validation';
 import {validateSyncTableSchema} from '../testing/upload_validation';
 import {validateVariousAuthenticationMetadata} from '../testing/upload_validation';
 
-describe('Pack metadata Validation', () => {
+describe('Pack metadata Validation', async () => {
+  async function getCurrentSdkVersion(): Promise<string> {
+    const packageJson = await import('' + '../package.json');
+    const codaPacksSDKVersion = packageJson.version as string;
+    return codaPacksSDKVersion;
+  }
+  const codaPacksSDKVersion = await getCurrentSdkVersion();
+
   async function validateJson(obj: Record<string, any>, sdkVersion?: string) {
     try {
       return await doValidateJson(obj, sdkVersion);
@@ -60,8 +67,6 @@ describe('Pack metadata Validation', () => {
   }
 
   async function doValidateJson(obj: Record<string, any>, sdkVersion?: string) {
-    const packageJson = await import('' + '../package.json');
-    const codaPacksSDKVersion = packageJson.version as string;
     return validatePackVersionMetadata(obj, sdkVersion === null ? codaPacksSDKVersion : sdkVersion);
   }
 
@@ -3758,7 +3763,7 @@ describe('Pack metadata Validation', () => {
   describe('validateSyncTableSchema', () => {
     function validateAndAssertFails(schema: any, details?: string): PackMetadataValidationError {
       try {
-        validateSyncTableSchema(schema, {});
+        validateSyncTableSchema(schema, {sdkVersion: codaPacksSDKVersion});
         assert.fail('Expected validateSyncTableSchema to fail but it succeeded');
       } catch (err: any) {
         assert.isTrue(err.message.startsWith('Schema failed validation'));
@@ -3789,10 +3794,10 @@ describe('Pack metadata Validation', () => {
         items: itemSchema,
       });
       // Test an array schema
-      const arraySchemaResult = validateSyncTableSchema(arraySchema, {});
+      const arraySchemaResult = validateSyncTableSchema(arraySchema, {sdkVersion: codaPacksSDKVersion});
       assert.ok(arraySchemaResult);
       // Test an object schema
-      const objectSchemaResult = validateSyncTableSchema(itemSchema, {});
+      const objectSchemaResult = validateSyncTableSchema(itemSchema, {sdkVersion: codaPacksSDKVersion});
       assert.ok(objectSchemaResult);
       // It should be changed into an Array schema automatically.
       assert.equal(objectSchemaResult.type, ValueType.Array);
@@ -3863,9 +3868,9 @@ describe('Pack metadata Validation', () => {
         type: ValueType.Array,
         items: itemSchema,
       });
-      const arraySchemaResult = validateSyncTableSchema(arraySchema, {});
+      const arraySchemaResult = validateSyncTableSchema(arraySchema, {sdkVersion: codaPacksSDKVersion});
       assert.ok(arraySchemaResult);
-      const objectSchemaResult = validateSyncTableSchema(itemSchema, {});
+      const objectSchemaResult = validateSyncTableSchema(itemSchema, {sdkVersion: codaPacksSDKVersion});
       assert.ok(objectSchemaResult);
     });
 

@@ -29,7 +29,7 @@ export declare function validatePackVersionMetadata(metadata: Record<string, any
     warningMode?: boolean;
 }): Promise<PackVersionMetadata>;
 export declare function validateVariousAuthenticationMetadata(auth: any, options: BuildMetadataSchemaArgs): VariousAuthentication;
-export declare function validateSyncTableSchema(schema: any, options: BuildMetadataSchemaArgs): ArraySchema<ObjectSchema<any, any>>;
+export declare function validateSyncTableSchema(schema: any, options: BuildMetadataSchemaArgs & Required<Pick<BuildMetadataSchemaArgs, 'sdkVersion'>>): ArraySchema<ObjectSchema<any, any>>;
 export declare function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError[];
 interface BuildMetadataSchemaArgs {
     sdkVersion?: string;
