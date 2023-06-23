@@ -4,6 +4,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+## [1.4.1] - 2023-06-23
+
 ### Added
 
 - Added `AuthenticationType.MultiHeaderToken`, allowing you to specify multiple headers to include in each request. Previously, if the API you were using required multiple headers, you would need to use `AuthenticationType.Custom`.
@@ -589,11 +591,16 @@ await myHelper(context);
 
 - Beginning of alpha versioning.
 
-[unreleased]: https://github.com/coda/packs-sdk/compare/v1.4.0...HEAD
-[1.2.3]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.2.3
-[1.2.2]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.2.2
-[1.2.1]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.2.1
-[1.2.0]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.2.0
+[unreleased]: https://github.com/coda/packs-sdk/compare/v1.4.1...HEAD
+[1.4.1]: https://github.com/coda/packs-sdk/compare/v1.4.0...v1.4.1
+[1.4.0]: https://github.com/coda/packs-sdk/compare/v1.3.4...v1.4.0
+[1.3.4]: https://github.com/coda/packs-sdk/compare/v1.3.3...v1.3.4
+[1.3.3]: https://github.com/coda/packs-sdk/compare/v1.3.0...v1.3.3
+[1.3.0]: https://github.com/coda/packs-sdk/compare/v1.2.3...v1.3.0
+[1.2.3]: https://github.com/coda/packs-sdk/compare/v1.2.2...v1.2.3
+[1.2.2]: https://github.com/coda/packs-sdk/compare/v1.2.1...v1.2.2
+[1.2.1]: https://github.com/coda/packs-sdk/compare/v1.2.0...v1.2.1
+[1.2.0]: https://github.com/coda/packs-sdk/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/coda/packs-sdk/compare/v1.0.5...v1.1.0
 [1.0.5]: https://github.com/coda/packs-sdk/compare/v1.0.4...v1.0.5
 [1.0.4]: https://github.com/coda/packs-sdk/compare/v1.0.3...v1.0.4
@@ -605,8 +612,3 @@ await myHelper(context);
 [0.12.0]: https://github.com/coda/packs-sdk/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/coda/packs-sdk/compare/v0.9.0...v0.11.0
 [0.9.0]: https://github.com/coda/packs-sdk/compare/v0.8.2...v0.9.0
-[1.3.0]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.3.0
-[1.3.3]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.3.3
-[1.3.4]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.3.4
-
-[1.4.0]: https://github.com/coda/packs-sdk/compare/v1.0.1...v1.4.0
