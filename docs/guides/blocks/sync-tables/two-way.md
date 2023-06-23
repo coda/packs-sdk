@@ -6,7 +6,7 @@ description: Allow users to edit the contents of a sync table and push those cha
 # Enable edits on sync tables
 
 !!! warning "Limited alpha"
-    This feature is currently only available to a limited group of alpha testers.
+    This feature is currently only available to a limited group of alpha testers. Email [partners@coda.io](mailto:partners@coda.io) to learn more and request access.
 
 [Sync tables][sync_tables] allow you to pull in data from external applications and sources, but by default these tables are read-only. You can make your sync tables more useful by supporting two-way sync, where you allow users to edit the cell values and push the changes back to the data source.
 
