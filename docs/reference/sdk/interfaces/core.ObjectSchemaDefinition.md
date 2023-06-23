@@ -21,7 +21,7 @@ A schema definition for an object value (a value with key-value pairs).
 
 - `BaseSchema`
 
-- `PropertyWithAutocomplete`<{}\>
+- `PropertyWithOptions`<{}\>
 
   ↳ **`ObjectSchemaDefinition`**
 

@@ -1,7 +1,5 @@
 import type {ArraySchema} from './schema';
 import type {ArrayType} from './api_types';
-import type {AutocompleteReference} from './api_types';
-import {AutocompleteType} from './api_types';
 import type {BooleanSchema} from './schema';
 import type {CommonPackFormulaDef} from './api_types';
 import {ConnectionRequirement} from './api_types';
@@ -14,6 +12,8 @@ import type {ObjectSchema} from './schema';
 import type {ObjectSchemaDefinition} from './schema';
 import type {ObjectSchemaDefinitionType} from './schema';
 import type {OptionalParamDef} from './api_types';
+import type {OptionsReference} from './api_types';
+import {OptionsType} from './api_types';
 import type {PackFormulaResult} from './api_types';
 import type {ParamArgs} from './api_types';
 import type {ParamDef} from './api_types';
@@ -22,8 +22,8 @@ import type {ParamValues} from './api_types';
 import {ParameterType} from './api_types';
 import {ParameterTypeInputMap} from './api_types';
 import type {ParameterTypeMap} from './api_types';
-import type {PropertyAutocompleteExecutionContext} from './api_types';
-import type {PropertyAutocompleteMetadataFunction} from './api_types';
+import type {PropertyOptionsExecutionContext} from './api_types';
+import type {PropertyOptionsMetadataFunction} from './api_types';
 import type {RequestHandlerTemplate} from './handler_templates';
 import type {RequiredParamDef} from './api_types';
 import type {ResponseHandlerTemplate} from './handler_templates';
@@ -56,7 +56,7 @@ import {normalizeSchema} from './schema';
 import {numberArray} from './api_types';
 import {objectSchemaHelper} from './helpers/migration';
 import {stringArray} from './api_types';
-import {unwrappedSchemaSupportsAutocomplete} from './schema';
+import {unwrappedSchemaSupportsOptions} from './schema';
 
 export {ExecutionContext};
 export {FetchRequest} from './api_types';
@@ -241,16 +241,16 @@ export class MissingScopesError extends Error {
 }
 
 /**
- * A map of named autocomplete methods for a particular sync table. The names need to match
+ * A map of named property options methods for a particular sync table. The names need to match
  * the values stored in the object schema. For the name, we use the property's name so that
  * it'll be consistent across pack versions. In the future if we want to support packs
  * being able to rename an existing property, we could try to set the names to the old
- * property names. Alternatively, we could just say that autocomplete will briefly stop
+ * property names. Alternatively, we could just say that property options will briefly stop
  * working until the sync table is refereshed so its schema matches the current pack release's
  * schema.
  */
-interface SyncTableAutocompleters {
-  [name: string]: PropertyAutocompleteMetadataFormula<any>;
+interface SyncTablePropertyOptions {
+  [name: string]: PropertyOptionsMetadataFormula<any>;
 }
 
 /**
@@ -286,10 +286,10 @@ export interface SyncTableDef<
   defaultAddDynamicColumns?: boolean;
 
   /**
-   * To configure autocomplete for properties in a sync table, use {@link DynamicSyncTableOptions.autocomplete}.
+   * To configure options for properties in a sync table, use {@link DynamicSyncTableOptions.propertyOptions}.
    * @hidden
    */
-  namedAutocompletes?: SyncTableAutocompleters;
+  namedPropertyOptions?: SyncTablePropertyOptions;
 }
 
 /**
@@ -316,10 +316,10 @@ export interface DynamicSyncTableDef<
   searchDynamicUrls?: MetadataFormula;
 
   /**
-   * See {@link DynamicSyncTableOptions.autocomplete}
+   * See {@link DynamicSyncTableOptions.propertyOptions}
    * @hidden
    */
-  autocomplete?: PropertyAutocompleteMetadataFormula<any>;
+  propertyOptions?: PropertyOptionsMetadataFormula<any>;
 }
 
 /**
@@ -1496,8 +1496,8 @@ type GenericMetadataFormula = BaseFormula<ParamDefs, any> & {
 /**
  * These will be created with a helper function.
  */
-interface PropertyAutocompleteFormattedResult {
-  __brand: 'PropertyAutocompleteSimpleResult';
+interface PropertyOptionsFormattedResult {
+  __brand: 'PropertyOptionsSimpleResult';
   /** Text that will be displayed to the user in UI for this option. */
   display: string;
   /** The actual value for this option */
@@ -1507,21 +1507,21 @@ interface PropertyAutocompleteFormattedResult {
 /**
  * @hidden
  */
-export type PropertyAutocompleteResults =
-  | Array<any | PropertyAutocompleteFormattedResult>
+export type PropertyOptionsResults =
+  | Array<any | PropertyOptionsFormattedResult>
   | {
       cacheTtlSecs?: number;
-      results: Array<any | PropertyAutocompleteFormattedResult>;
+      results: Array<any | PropertyOptionsFormattedResult>;
     };
 
-interface PropertyAutocompleteNormalizedResults {
+interface PropertyOptionsNormalizedResults {
   cacheTtlSecs?: number;
   results: Array<{display: string | undefined; value: any}>;
 }
 
-function normalizePropertyAutocompleteResultsArray(
-  results: Array<any | PropertyAutocompleteFormattedResult>,
-): PropertyAutocompleteNormalizedResults['results'] {
+function normalizePropertyOptionsResultsArray(
+  results: Array<any | PropertyOptionsFormattedResult>,
+): PropertyOptionsNormalizedResults['results'] {
   return results.map(r => {
     if (typeof r === 'object' && Object.keys(r).length === 2 && 'display' in r && 'value' in r) {
       return {display: r.display, value: r.value};
@@ -1530,17 +1530,15 @@ function normalizePropertyAutocompleteResultsArray(
   });
 }
 
-export function normalizePropertyAutocompleteResults(
-  results: PropertyAutocompleteResults,
-): PropertyAutocompleteNormalizedResults {
+export function normalizePropertyOptionsResults(results: PropertyOptionsResults): PropertyOptionsNormalizedResults {
   if (Array.isArray(results)) {
     return {
-      results: normalizePropertyAutocompleteResultsArray(results),
+      results: normalizePropertyOptionsResultsArray(results),
     };
   }
   const {results: resultsArray, ...otherProps} = results;
   return {
-    results: normalizePropertyAutocompleteResultsArray(resultsArray),
+    results: normalizePropertyOptionsResultsArray(resultsArray),
     ...otherProps,
   };
 }
@@ -1548,23 +1546,20 @@ export function normalizePropertyAutocompleteResults(
 /**
  * @hidden
  */
-export interface PropertyAutocompleteAnnotatedResult {
-  packResult: PropertyAutocompleteNormalizedResults;
+export interface PropertyOptionsAnnotatedResult {
+  packResult: PropertyOptionsNormalizedResults;
   propertiesUsed: string[];
   searchUsed?: boolean;
 }
 
 /**
- * Formula implementing property autocomplete.
- * These are constructed by {@link makePropertyAutocompleteFormula}.
+ * Formula implementing property options.
+ * These are constructed by {@link makePropertyOptionsFormula}.
  *
  * @hidden
  */
-export type PropertyAutocompleteMetadataFormula<SchemaT extends Schema> = ObjectPackFormula<
-  [],
-  ArraySchema<SchemaT>
-> & {
-  execute(params: ParamValues<[]>, context: PropertyAutocompleteExecutionContext): Promise<object> | object;
+export type PropertyOptionsMetadataFormula<SchemaT extends Schema> = ObjectPackFormula<[], ArraySchema<SchemaT>> & {
+  execute(params: ParamValues<[]>, context: PropertyOptionsExecutionContext): Promise<object> | object;
 };
 
 export type MetadataFormulaMetadata = Omit<MetadataFormula, 'execute'>;
@@ -1642,19 +1637,19 @@ export function makeMetadataFormula(
 }
 
 /**
- * Builds a formula to store in {@link SyncTableAutocompleters}.
+ * Builds a formula to store in {@link SyncTablePropertyOptions}.
  *
  * @hidden
  */
-export function makePropertyAutocompleteFormula<SchemaT extends Schema>({
+export function makePropertyOptionsFormula<SchemaT extends Schema>({
   execute,
   schema,
   name,
 }: {
-  execute: PropertyAutocompleteMetadataFunction<Array<SchemaType<SchemaT>>>;
+  execute: PropertyOptionsMetadataFunction<Array<SchemaType<SchemaT>>>;
   schema: SchemaT;
   name: string;
-}): PropertyAutocompleteMetadataFormula<SchemaT> {
+}): PropertyOptionsMetadataFormula<SchemaT> {
   if (!(execute instanceof Function)) {
     throw new Error(`Value for execute must be a function`);
   }
@@ -1663,17 +1658,17 @@ export function makePropertyAutocompleteFormula<SchemaT extends Schema>({
 
   // The type SchemaType<ArraySchema<T>> is equivalent to Array<SchemaType<T>>, but typescript doesn't know
   // that unless we do a cast.
-  const executeRetyped = execute as PropertyAutocompleteMetadataFunction<SchemaType<ArraySchema<SchemaT>>>;
+  const executeRetyped = execute as PropertyOptionsMetadataFunction<SchemaType<ArraySchema<SchemaT>>>;
 
   // Bend the type to satisfy PackFormulaDef's declaration.
   const innerExecute = async ([]: ParamValues<[]>, context: ExecutionContext): Promise<ResultT> =>
-    executeRetyped(context as PropertyAutocompleteExecutionContext);
+    executeRetyped(context as PropertyOptionsExecutionContext);
 
   const formulaDefn: ArrayFormulaDef<[], SchemaT> = {
     connectionRequirement: ConnectionRequirement.Optional,
     execute: innerExecute,
     name,
-    description: `A property autocomplete function for ${name}`,
+    description: `A property options function for ${name}`,
     parameters: [],
     resultType: ValueType.Array,
     items: schema,
@@ -1891,7 +1886,7 @@ export interface DynamicOptions {
    *
    * @hidden
    */
-  autocomplete?: PropertyAutocompleteMetadataFunction<any>;
+  propertyOptions?: PropertyOptionsMetadataFunction<any>;
 }
 
 /**
@@ -2052,9 +2047,9 @@ export interface DynamicSyncTableOptions<
   placeholderSchema?: SchemaT;
 
   /**
-   * An autocomplete function to use for any dynamic schema properties.
+   * An options function to use for any dynamic schema properties.
    * The name of the property that's being modified by the doc editor
-   * is available in the autocomplete function's context parameter.
+   * is available in the option function's context parameter.
    *
    * @example
    * ```
@@ -2065,13 +2060,14 @@ export interface DynamicSyncTableOptions<
    *       properties: {
    *         dynamicPropertyName: {
    *           type: coda.ValueType.String,
+   *           codaType: coda.ValueHintType.SelectList,
    *           mutable: true,
-   *           autocomplete: coda.AutocompleteValueType.Dynamic,
+   *           options: coda.OptionsType.Dynamic,
    *         },
    *       },
    *     });
    *   },
-   *   autocomplete: async function (context) => {
+   *   propertyOptions: async function (context) => {
    *     if (context.propertyName === "dynamicPropertyName") {
    *       return ["Dynamic Value 1", "Dynamic value 2"];
    *     }
@@ -2084,7 +2080,7 @@ export interface DynamicSyncTableOptions<
    *
    * @hidden
    */
-  autocomplete?: PropertyAutocompleteMetadataFunction<any>;
+  propertyOptions?: PropertyOptionsMetadataFunction<any>;
 }
 
 /**
@@ -2143,16 +2139,16 @@ export function makeSyncTable<
   const getSchema = wrapGetSchema(wrapMetadataFunction(getSchemaDef));
   const schema = makeObjectSchema<K, L, SchemaDefT>(schemaDef) as SchemaT;
 
-  let namedAutocompletes = replaceInlineAutocompleteFunctionsWithNamedAutocompleteFunctions({
+  let namedPropertyOptions = moveJsPropertyOptionsFunctionsToFormulas({
     inputSchema,
     schema,
     identityName,
   });
 
-  if (dynamicOptions.autocomplete) {
-    namedAutocompletes ??= {};
-    namedAutocompletes[AutocompleteType.Dynamic] = makePropertyAutocompleteFormula({
-      execute: dynamicOptions.autocomplete,
+  if (dynamicOptions.propertyOptions) {
+    namedPropertyOptions ??= {};
+    namedPropertyOptions[OptionsType.Dynamic] = makePropertyOptionsFormula({
+      execute: dynamicOptions.propertyOptions,
       schema: makeObjectSchema({
         // A dynamic autocomplete formula can return different result types depending
         // on which property is being autocompleted, so there's no accurate schema
@@ -2160,7 +2156,7 @@ export function makeSyncTable<
         // be anything.
         properties: {},
       }),
-      name: `${identityName}.DynamicAutocomplete`,
+      name: `${identityName}.DynamicPropertyOptions`,
     });
   }
 
@@ -2221,7 +2217,7 @@ export function makeSyncTable<
     getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
     entityName,
     defaultAddDynamicColumns,
-    namedAutocompletes: maybeRewriteConnectionForNamedAutocompletes(namedAutocompletes, connectionRequirement),
+    namedPropertyOptions: maybeRewriteConnectionForNamedPropertyOptions(namedPropertyOptions, connectionRequirement),
   };
 }
 
@@ -2298,9 +2294,9 @@ export function makeDynamicSyncTable<
 }): DynamicSyncTableDef<K, L, ParamDefsT, any>;
 
 // TODO(dweitzman): Merge this with the above function definition
-// to make "autocomplete" available in the public API docs.
+// to make "propertyOptions" available in the public API docs.
 /**
- * Includes the unreleased autocomplete parameter.
+ * Includes the unreleased propertyOptions parameter.
  * @hidden
  */
 export function makeDynamicSyncTable<
@@ -2322,7 +2318,7 @@ export function makeDynamicSyncTable<
   connectionRequirement,
   defaultAddDynamicColumns,
   placeholderSchema: placeholderSchemaInput,
-  autocomplete,
+  propertyOptions,
 }: {
   name: string;
   description?: string;
@@ -2337,7 +2333,7 @@ export function makeDynamicSyncTable<
   connectionRequirement?: ConnectionRequirement;
   defaultAddDynamicColumns?: boolean;
   placeholderSchema?: SchemaT;
-  autocomplete?: PropertyAutocompleteMetadataFunction<any>;
+  propertyOptions?: PropertyOptionsMetadataFunction<any>;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any> {
   const placeholderSchema: any =
     placeholderSchemaInput ||
@@ -2363,7 +2359,7 @@ export function makeDynamicSyncTable<
     schema: placeholderSchema,
     formula,
     connectionRequirement,
-    dynamicOptions: {getSchema, entityName, defaultAddDynamicColumns, autocomplete},
+    dynamicOptions: {getSchema, entityName, defaultAddDynamicColumns, propertyOptions},
   });
 
   return {
@@ -2472,18 +2468,18 @@ export function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: Empty
   });
 }
 
-export function maybeRewriteConnectionForNamedAutocompletes(
-  namedAutocompletes: SyncTableAutocompleters | undefined,
+export function maybeRewriteConnectionForNamedPropertyOptions(
+  namedPropertyOptions: SyncTablePropertyOptions | undefined,
   connectionRequirement: ConnectionRequirement | undefined,
-): SyncTableAutocompleters | undefined {
-  if (!namedAutocompletes) {
-    return namedAutocompletes;
+): SyncTablePropertyOptions | undefined {
+  if (!namedPropertyOptions) {
+    return namedPropertyOptions;
   }
 
-  const result: SyncTableAutocompleters = {};
+  const result: SyncTablePropertyOptions = {};
 
-  for (const name of Object.keys(namedAutocompletes)) {
-    result[name] = maybeRewriteConnectionForFormula(namedAutocompletes[name], connectionRequirement);
+  for (const name of Object.keys(namedPropertyOptions)) {
+    result[name] = maybeRewriteConnectionForFormula(namedPropertyOptions[name], connectionRequirement);
   }
   return result;
 }
@@ -2517,24 +2513,24 @@ export function maybeRewriteConnectionForFormula<
   return formula;
 }
 
-// This helper method finds any inline autocomplete functions in a static sync table schema.
-// These functions will need to be extracted into the "namedAutocompletes" property on the sync
+// This helper method finds any inline options functions in a static sync table schema.
+// These functions will need to be extracted into the "namedPropertyOptions" property on the sync
 // table and replaced with strings.
 //
-// Not that we won't detect autocomplete functions within nested object schemas, but that's not necessary
-// here: the only types you can autocomplete in a 2-way schema are the top-level ones.
-function listPropertiesWithAutocompleteFunctions(schema: ObjectSchemaDefinition<string, string>): string[] {
+// Not that we won't detect options functions within nested object schemas, but that's not necessary
+// here: the only types you can options in a 2-way schema are the top-level ones.
+function listPropertiesWithOptionsFunctions(schema: ObjectSchemaDefinition<string, string>): string[] {
   const result: string[] = [];
   for (const propertyName of Object.keys(schema.properties)) {
     const propertySchema = maybeUnwrapArraySchema(schema.properties[propertyName]);
-    if (!propertySchema || !('autocomplete' in propertySchema)) {
+    if (!propertySchema || !('options' in propertySchema)) {
       continue;
     }
-    const {autocomplete} = propertySchema;
-    if (!autocomplete) {
+    const {options} = propertySchema;
+    if (!options) {
       continue;
     }
-    if (typeof autocomplete !== 'function') {
+    if (typeof options !== 'function') {
       continue;
     }
 
@@ -2544,9 +2540,9 @@ function listPropertiesWithAutocompleteFunctions(schema: ObjectSchemaDefinition<
 }
 
 // TODO(dweitzman): Use fixedId for the autocomplete name when available to support property renames.
-// Finds any inline autocomplete functions within the inputSchema and replaces them
-// with strings references into the returned namedAutocompletes.
-function replaceInlineAutocompleteFunctionsWithNamedAutocompleteFunctions({
+// Finds any inline options functions within the inputSchema and replaces them
+// with strings references into the returned namedPropertyOptions.
+function moveJsPropertyOptionsFunctionsToFormulas({
   inputSchema, // DO NOT MUTATE inputSchema!
   schema,
   identityName,
@@ -2554,31 +2550,31 @@ function replaceInlineAutocompleteFunctionsWithNamedAutocompleteFunctions({
   inputSchema: Readonly<ObjectSchemaDefinition<any, any>>;
   schema: ObjectSchemaDefinition<any, any>;
   identityName: string;
-}): SyncTableAutocompleters {
+}): SyncTablePropertyOptions {
   // Converting JS functions to strings happens on inputSchema instead of the deep copied version because the
   // deep copy will have already thrown away any JS functions.
-  const namedAutocompletes: SyncTableAutocompleters = {};
+  const namedPropertyOptions: SyncTablePropertyOptions = {};
 
-  for (const propertyName of listPropertiesWithAutocompleteFunctions(inputSchema)) {
+  for (const propertyName of listPropertiesWithOptionsFunctions(inputSchema)) {
     const inputSchemaWithoutArray = maybeUnwrapArraySchema(inputSchema.properties[propertyName]);
     const outputSchema = maybeUnwrapArraySchema(schema.properties[propertyName]);
     assertCondition(
-      unwrappedSchemaSupportsAutocomplete(inputSchemaWithoutArray),
+      unwrappedSchemaSupportsOptions(inputSchemaWithoutArray),
 
-      `Property "${propertyName}" must have codaType of ValueHintType.SelectList to configure autocomplete`,
+      `Property "${propertyName}" must have codaType of ValueHintType.SelectList or ValueHintType.Reference to configure property options`,
     );
     assertCondition(
-      unwrappedSchemaSupportsAutocomplete(outputSchema),
-      `Property "${propertyName}" lost SelectList codaType on deep copy?...`,
+      unwrappedSchemaSupportsOptions(outputSchema),
+      `Property "${propertyName}" lost codaType on deep copy?...`,
     );
 
-    outputSchema.autocomplete = propertyName as AutocompleteReference;
-    namedAutocompletes[propertyName] = makePropertyAutocompleteFormula({
-      execute: inputSchemaWithoutArray.autocomplete as any,
+    outputSchema.options = propertyName as OptionsReference;
+    namedPropertyOptions[propertyName] = makePropertyOptionsFormula({
+      execute: inputSchemaWithoutArray.options as any,
       schema: normalizeSchema(schema.properties[propertyName]),
-      name: `${identityName}.${propertyName}.Autocomplete`,
+      name: `${identityName}.${propertyName}.Options`,
     });
   }
 
-  return namedAutocompletes;
+  return namedPropertyOptions;
 }

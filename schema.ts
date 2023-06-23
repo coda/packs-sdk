@@ -1,8 +1,8 @@
 import type {$Values} from './type_utils';
-import type {AutocompleteReference} from './api_types';
-import type {AutocompleteType} from './api_types';
+import type {OptionsReference} from './api_types';
+import type {OptionsType} from './api_types';
 import type {PackFormulaResult} from './api_types';
-import type {PropertyAutocompleteMetadataFunction} from './api_types';
+import type {PropertyOptionsMetadataFunction} from './api_types';
 import {assertCondition} from './helpers/ensure';
 import {deepCopy} from './helpers/object_utils';
 import {ensureExists} from './helpers/ensure';
@@ -222,20 +222,16 @@ export type BooleanHintTypes = (typeof BooleanHintValueTypes)[number];
 export type ObjectHintTypes = (typeof ObjectHintValueTypes)[number];
 
 /**
- * A function or set of values to return for property autocomplete.
+ * A function or set of values to return for property options.
  * @hidden
  */
-export type PropertySchemaAutocomplete<T extends PackFormulaResult> =
-  | PropertyAutocompleteMetadataFunction<T[]>
+export type PropertySchemaOptions<T extends PackFormulaResult> =
+  | PropertyOptionsMetadataFunction<T[]>
   | T[]
-  | AutocompleteType
-  | AutocompleteReference;
+  | OptionsType
+  | OptionsReference;
 
-type PropertySchemaAutocompleteWithOptionalDisplay<T extends PackFormulaResult> = PropertySchemaAutocomplete<
-  T | {display: string; value: T}
->;
-
-interface PropertyWithAutocomplete<T extends PackFormulaResult> {
+interface PropertyWithOptions<T extends PackFormulaResult> {
   /**
    * A list of values or a formula that returns a list of values to suggest when someone
    * edits this property. This should only be set when {@link mutable}
@@ -246,13 +242,15 @@ interface PropertyWithAutocomplete<T extends PackFormulaResult> {
    * properties: {
    *   color: {
    *      type: coda.ValueType.String,
+   *      codaType: coda.ValueHintType.SelectList,
    *      mutable: true,
-   *      autocomplete: ['red', 'green', 'blue'],
+   *      options: ['red', 'green', 'blue'],
    *   },
    *   user: {
    *      type: coda.ValueType.String,
+   *      codaType: coda.ValueHintType.SelectList,
    *      mutable: true,
-   *      autocomplete: async function (context) {
+   *      options: async function (context) {
    *        let url = coda.withQueryParams("https://example.com/userSearch", { name: context.search });
    *        let response = await context.fetcher.fetch({ method: "GET", url: url });
    *        let results = response.body.users;
@@ -264,10 +262,10 @@ interface PropertyWithAutocomplete<T extends PackFormulaResult> {
    *
    * @hidden
    */
-  autocomplete?: PropertySchemaAutocomplete<T>;
+  options?: PropertySchemaOptions<T>;
 }
 
-type PropertyWithAutocompleteWithOptionalDisplay<T extends PackFormulaResult> = PropertyWithAutocomplete<
+type PropertyWithAutocompleteWithOptionalDisplay<T extends PackFormulaResult> = PropertyWithOptions<
   T | {display: string; value: T}
 >;
 
@@ -305,9 +303,6 @@ export interface BooleanSchema extends BaseSchema {
   type: ValueType.Boolean;
   /** Indicates how to render values in a table. If not specified, renders a checkbox. */
   codaType?: BooleanHintTypes;
-
-  /** @hidden */
-  autocomplete?: PropertySchemaAutocompleteWithOptionalDisplay<boolean>;
 }
 
 /**
@@ -329,9 +324,6 @@ export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> e
   type: ValueType.Number;
   /** An optional type hint instructing Coda about how to interpret or render this value. */
   codaType?: T;
-
-  /** @hidden */
-  autocomplete?: PropertySchemaAutocompleteWithOptionalDisplay<number>;
 }
 
 /**
@@ -799,9 +791,6 @@ export interface StringWithOptionsSchema
     PropertyWithAutocompleteWithOptionalDisplay<string> {
   /** Instructs Coda to render this value as a select list. */
   codaType: ValueHintType.SelectList;
-
-  /** @hidden */
-  autocomplete: PropertySchemaAutocompleteWithOptionalDisplay<string>;
 }
 
 export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> extends BaseSchema {
@@ -1014,7 +1003,7 @@ export type ObjectSchemaPathProperties = Pick<
 // PropertyIdentifier.
 export interface ObjectSchemaDefinition<K extends string, L extends string>
   extends BaseSchema,
-    PropertyWithAutocomplete<{}> {
+    PropertyWithOptions<{}> {
   /** Identifies this schema as an object schema. */
   type: ValueType.Object;
   /** Definition of the key-value pairs in this object. */
@@ -1122,7 +1111,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    */
   imageProperty?: PropertyIdentifier<K>;
 
-  // TODO(dweitzman): Only support autocomplete in the typing when the codaType is ValueHintType.SelectList.
+  // TODO(dweitzman): Only support options in the typing when the codaType is ValueHintType.SelectList.
 }
 
 export type ObjectSchemaDefinitionType<
@@ -1272,21 +1261,20 @@ export function isArray(val?: Schema): val is ArraySchema {
 
 type SchemaSupportingAutocomplete = ReturnType<typeof maybeUnwrapArraySchema> & {
   codaType: typeof AutocompleteHintValueTypes;
-  autocomplete: PropertySchemaAutocomplete<PackFormulaResult>;
-};
+} & PropertyWithOptions<PackFormulaResult>;
 
-export function unwrappedSchemaSupportsAutocomplete(
+export function unwrappedSchemaSupportsOptions(
   schema: ReturnType<typeof maybeUnwrapArraySchema>,
 ): schema is SchemaSupportingAutocomplete {
   return Boolean(schema?.codaType) && [ValueHintType.SelectList, ValueHintType.Reference].includes(schema!.codaType!);
 }
 
-export function maybeSchemaAutocompleteValue(
+export function maybeSchemaOptionsValue(
   schema: Schema | undefined,
-): PropertySchemaAutocomplete<PackFormulaResult> | undefined {
+): PropertySchemaOptions<PackFormulaResult> | undefined {
   const unwrappedSchema = maybeUnwrapArraySchema(schema);
-  if (unwrappedSchemaSupportsAutocomplete(unwrappedSchema)) {
-    return unwrappedSchema.autocomplete;
+  if (unwrappedSchemaSupportsOptions(unwrappedSchema)) {
+    return unwrappedSchema.options;
   }
 }
 
@@ -1477,19 +1465,19 @@ export function makeObjectSchema<
       // Typescript doesn't like the raw schema.properties[key] (on the left only though...)
       const typedKey = key as keyof ObjectSchemaProperties<K | L>;
 
-      const schemaForAutocomplete = maybeUnwrapArraySchema(schema.properties[key]);
+      const schemaForOptions = maybeUnwrapArraySchema(schema.properties[key]);
 
-      const autocompleteValue = (schemaForAutocomplete as any | undefined)?.autocomplete;
-      const autocompleteFunction = typeof autocompleteValue === 'function' ? autocompleteValue : undefined;
+      const optionsValue = (schemaForOptions as PropertyWithOptions<any> | undefined)?.options;
+      const optionsFunction = typeof optionsValue === 'function' ? optionsValue : undefined;
 
       schema.properties[typedKey] = deepCopy(schema.properties[key]);
 
-      // Autocomplete gets manually copied over because it may be a function, which deepCopy wouldn't
+      // Options gets manually copied over because it may be a function, which deepCopy wouldn't
       // support.
-      if (autocompleteFunction) {
-        const schemaCopyForAutocomplete = maybeUnwrapArraySchema(schema.properties[typedKey]);
-        ensureExists(schemaCopyForAutocomplete, 'deepCopy() broke maybeUnwrapArraySchema?...');
-        (schemaCopyForAutocomplete as any).autocomplete = autocompleteFunction;
+      if (optionsFunction) {
+        const schemaCopyForOptions = maybeUnwrapArraySchema(schema.properties[typedKey]);
+        ensureExists(schemaCopyForOptions, 'deepCopy() broke maybeUnwrapArraySchema?...');
+        (schemaCopyForOptions as PropertyWithOptions<any>).options = optionsFunction;
       }
     }
   }
@@ -1631,7 +1619,7 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
     const normalized: ObjectSchemaProperties = {};
     const {
       attribution,
-      autocomplete,
+      options,
       codaType,
       description,
       displayProperty,
@@ -1668,7 +1656,7 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
     }
     const normalizedSchema = {
       attribution,
-      autocomplete,
+      options,
       codaType,
       description,
       displayProperty: displayProperty ? normalizeSchemaKey(displayProperty) : undefined,
@@ -1708,7 +1696,7 @@ export function makeReferenceSchemaFromObjectSchema(
   schema: GenericObjectSchema,
   identityName?: string,
 ): GenericObjectSchema {
-  const {type, id, primary, identity, properties, mutable, autocomplete} = objectSchemaHelper(schema);
+  const {type, id, primary, identity, properties, mutable, options} = objectSchemaHelper(schema);
   ensureExists(
     identity || identityName,
     'Source schema must have an identity field, or you must provide an identity name for the reference.',
@@ -1727,7 +1715,7 @@ export function makeReferenceSchemaFromObjectSchema(
     displayProperty: primary,
     properties: referenceProperties,
     mutable,
-    autocomplete,
+    options,
   });
 }
 
@@ -1749,25 +1737,25 @@ export function withIdentity(schema: GenericObjectSchema, identityName: string):
  * they'd get would be an internal error, and the pack maker tools logs would just mention that structured clone
  * failed to copy a function.
  */
-export function throwOnDynamicSchemaWithJsAutocompleteFunction(dynamicSchema: any, parentKey?: string) {
+export function throwOnDynamicSchemaWithJsOptionsFunction(dynamicSchema: any, parentKey?: string) {
   if (!dynamicSchema) {
     return;
   }
 
   if (Array.isArray(dynamicSchema)) {
-    dynamicSchema.forEach(item => throwOnDynamicSchemaWithJsAutocompleteFunction(item));
+    dynamicSchema.forEach(item => throwOnDynamicSchemaWithJsOptionsFunction(item));
     return;
   }
 
   if (typeof dynamicSchema === 'object') {
     for (const key of Object.keys(dynamicSchema)) {
-      throwOnDynamicSchemaWithJsAutocompleteFunction(dynamicSchema[key], key);
+      throwOnDynamicSchemaWithJsOptionsFunction(dynamicSchema[key], key);
     }
   }
 
-  if (typeof dynamicSchema === 'function' && parentKey === 'autocomplete') {
+  if (typeof dynamicSchema === 'function' && parentKey === 'options') {
     throw new Error(
-      'Sync tables with dynamic schemas must use "autocomplete: AutocompleteType.Dynamic" instead of "autocomplete: () => {...}',
+      'Sync tables with dynamic schemas must use "options: OptionsType.Dynamic" instead of "options: () => {...}',
     );
   }
 }

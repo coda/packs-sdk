@@ -3,7 +3,6 @@ import type {AWSAssumeRoleAuthentication} from '../types';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '../schema';
 import {AuthenticationType} from '../types';
-import {AutocompleteType} from '../api_types';
 import {BooleanHintValueTypes} from '../schema';
 import type {BooleanPackFormula} from '../api';
 import type {BooleanSchema} from '../schema';
@@ -46,6 +45,7 @@ import type {ObjectPackFormula} from '../api';
 import type {ObjectSchema} from '../schema';
 import type {ObjectSchemaPathProperties} from '../schema';
 import type {ObjectSchemaProperty} from '../schema';
+import {OptionsType} from '../api_types';
 import {PackCategory} from '../types';
 import type {PackFormatMetadata} from '../compiled_types';
 import type {PackFormulaMetadata} from '../api';
@@ -90,12 +90,12 @@ import {isDefined} from '../helpers/object_utils';
 import {isNil} from '../helpers/object_utils';
 import {isObject} from '../schema';
 import {makeSchema} from '../schema';
-import {maybeSchemaAutocompleteValue} from '../schema';
+import {maybeSchemaOptionsValue} from '../schema';
 import {maybeUnwrapArraySchema} from '../schema';
 import {normalizePropertyValuePathIntoSchemaPath} from '../schema';
 import {objectSchemaHelper} from '../helpers/migration';
 import semver from 'semver';
-import {unwrappedSchemaSupportsAutocomplete} from '../schema';
+import {unwrappedSchemaSupportsOptions} from '../schema';
 import * as z from 'zod';
 
 /**
@@ -639,8 +639,6 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       description: z.string().optional(),
       mutable: z.boolean().optional(),
       fixedId: z.string().optional(),
-      // Only properties in sync tables would need to define "autocomplete"
-      autocomplete: z.undefined().optional(),
     }).optional(),
   });
 
@@ -663,7 +661,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     imageUrl: z.string(),
   });
 
-  function zodAutocompleteFieldWithValues(valueType: z.ZodTypeAny, allowDisplayNames: boolean) {
+  function zodOptionsFieldWithValues(valueType: z.ZodTypeAny, allowDisplayNames: boolean) {
     const literalType = allowDisplayNames
       ? z.union([
           valueType,
@@ -690,14 +688,12 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
 
   const baseNumericPropertyValidators = {
     ...basePropertyValidators,
-    autocomplete: zodAutocompleteFieldWithValues(z.number(), true),
   };
 
   const booleanPropertySchema = zodCompleteStrictObject<BooleanSchema & ObjectSchemaProperty>({
     type: zodDiscriminant(ValueType.Boolean),
     codaType: z.enum([...BooleanHintValueTypes]).optional(),
     ...basePropertyValidators,
-    autocomplete: zodAutocompleteFieldWithValues(z.boolean(), true),
   });
 
   const numericPropertySchema = zodCompleteStrictObject<NumericSchema & ObjectSchemaProperty>({
@@ -864,7 +860,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     type: zodDiscriminant(ValueType.String),
     codaType: zodDiscriminant(ValueHintType.SelectList),
     ...baseStringPropertyValidators,
-    autocomplete: zodAutocompleteFieldWithValues(z.string(), true),
+    options: zodOptionsFieldWithValues(z.string(), true),
   });
 
   const imagePropertySchema = zodCompleteStrictObject<ImageSchema & ObjectSchemaProperty>({
@@ -1019,7 +1015,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       subtitleProperties: z.array(propertySchema).optional(),
       snippetProperty: propertySchema.optional(),
       imageProperty: propertySchema.optional(),
-      autocomplete: zodAutocompleteFieldWithValues(z.object({}).passthrough(), false),
+      options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
     })
       .superRefine((data, context) => {
         if (!isValidIdentityName(data.identity?.packId, data.identity?.name as string)) {
@@ -1258,13 +1254,13 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
         // ValueHintType.SelectList is only required for autocomplete starting in version 1.4.1
         return true;
       }
-      const schemaForAutocomplete = maybeUnwrapArraySchema(schema);
+      const schemaForOptions = maybeUnwrapArraySchema(schema);
       const result =
-        !schemaForAutocomplete ||
-        unwrappedSchemaSupportsAutocomplete(schemaForAutocomplete) ||
-        !('autocomplete' in schemaForAutocomplete && schemaForAutocomplete.autocomplete);
+        !schemaForOptions ||
+        unwrappedSchemaSupportsOptions(schemaForOptions) ||
+        !('options' in schemaForOptions && schemaForOptions.options);
       return result;
-    }, 'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "autocomplete" property.');
+    }, 'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "options" property.');
   const objectPackFormulaSchema = zodCompleteObject<Omit<ObjectPackFormula<any, any>, 'execute'>>({
     ...commonPackFormulaSchema,
     resultType: zodDiscriminant(Type.object),
@@ -1335,7 +1331,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
         val => !val || !SystemColumnNames.includes(val),
         `This property name is reserved for internal use by Coda and can't be used as an identityName, sorry!`,
       ),
-    namedAutocompletes: z
+    namedPropertyOptions: z
       .record(formulaMetadataSchema)
       .optional()
       .default({})
@@ -1343,7 +1339,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
         if (Object.keys(data).length > Limits.BuildingBlockName) {
           context.addIssue({
             code: z.ZodIssueCode.custom,
-            message: `Too many autocomplete formulas for sync table. Max allowed is "${Limits.BuildingBlockName}".`,
+            message: `Too many options formulas for sync table. Max allowed is "${Limits.BuildingBlockName}".`,
           });
         }
       }),
@@ -1370,7 +1366,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     listDynamicUrls: formulaMetadataSchema.optional(),
     searchDynamicUrls: formulaMetadataSchema.optional(),
     getSchema: formulaMetadataSchema,
-    autocomplete: objectPackFormulaSchema.optional(),
+    propertyOptions: objectPackFormulaSchema.optional(),
   }).strict();
 
   const syncTableSchema = z
@@ -1747,18 +1743,18 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       (data.syncTables || []).forEach((syncTable, i) => {
         const schema: ObjectSchema<any, any> = syncTable.schema;
         for (const [propertyName, childSchema] of Object.entries(schema.properties)) {
-          const autocomplete = maybeSchemaAutocompleteValue(childSchema);
-          if (!autocomplete || Array.isArray(autocomplete)) {
+          const options = maybeSchemaOptionsValue(childSchema);
+          if (!options || Array.isArray(options)) {
             continue;
           }
-          if (typeof autocomplete !== 'string' || !(autocomplete in (syncTable.namedAutocompletes || {}))) {
+          if (typeof options !== 'string' || !(options in (syncTable.namedPropertyOptions || {}))) {
             context.addIssue({
               code: z.ZodIssueCode.custom,
-              path: ['syncTables', i, 'properties', propertyName, 'autocomplete'],
+              path: ['syncTables', i, 'properties', propertyName, 'options'],
               message:
-                autocomplete === AutocompleteType.Dynamic
-                  ? `Sync table ${syncTable.name} must define "autocomplete" for this property to use AutocompleteType.Dynamic`
-                  : `"${autocomplete}" is not registered as an autocomplete function for this sync table.`,
+                options === OptionsType.Dynamic
+                  ? `Sync table ${syncTable.name} must define "options" for this property to use OptionsType.Dynamic`
+                  : `"${options}" is not registered as an options function for this sync table.`,
             });
             continue;
           }

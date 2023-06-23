@@ -629,12 +629,12 @@ export interface SyncExecutionContext extends ExecutionContext {
 	readonly sync: Sync;
 }
 /**
- * Sub-class of {@link ExecutionContext} that is passed to the `autocomplete` function of
- * mutable sync tables for properties with `autocomplete` enabled.
+ * Sub-class of {@link ExecutionContext} that is passed to the `options` function of
+ * mutable sync tables for properties with `options` enabled.
  *
  * @hidden
  */
-export interface PropertyAutocompleteExecutionContext extends ExecutionContext {
+export interface PropertyOptionsExecutionContext extends ExecutionContext {
 	/**
 	 * Which property is being edited.
 	 */
@@ -646,7 +646,7 @@ export interface PropertyAutocompleteExecutionContext extends ExecutionContext {
 	/**
 	 * Current values of other properties from the same row. Non-required properties may be missing
 	 * if the doc owner elected not to sync them, or if they have a type that's not yet supported
-	 * for autocomplete context. Properties referencing other sync tables may be missing some or
+	 * for options context. Properties referencing other sync tables may be missing some or
 	 * all of their sub-properties if the reference is broken because the other table is not
 	 * added to the doc or hasn't synced the referenced row.
 	 */
@@ -724,18 +724,18 @@ export declare enum PrecannedDateRange {
 /**
  * @hidden
  */
-export declare enum AutocompleteType {
+export declare enum OptionsType {
 	Dynamic = "__coda_dynamic__"
 }
 /** @hidden */
-export declare type AutocompleteReference = string & {
-	__brand: "AutocompleteRef";
+export declare type OptionsReference = string & {
+	__brand: "OptionsRef";
 };
 /**
- * A JavaScript function for property autocomplete.
+ * A JavaScript function for property options.
  * @hidden
  */
-export declare type PropertyAutocompleteMetadataFunction<ResultT extends PackFormulaResult[]> = (context: PropertyAutocompleteExecutionContext) => Promise<ResultT> | ResultT;
+export declare type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]> = (context: PropertyOptionsExecutionContext) => Promise<ResultT> | ResultT;
 /**
  * The set of primitive value types that can be used as return values for formulas
  * or in object schemas.
@@ -942,15 +942,11 @@ export declare type BooleanHintTypes = (typeof BooleanHintValueTypes)[number];
 /** The subset of {@link ValueHintType} that can be used with an object value. */
 export declare type ObjectHintTypes = (typeof ObjectHintValueTypes)[number];
 /**
- * A function or set of values to return for property autocomplete.
+ * A function or set of values to return for property options.
  * @hidden
  */
-export declare type PropertySchemaAutocomplete<T extends PackFormulaResult> = PropertyAutocompleteMetadataFunction<T[]> | T[] | AutocompleteType | AutocompleteReference;
-export declare type PropertySchemaAutocompleteWithOptionalDisplay<T extends PackFormulaResult> = PropertySchemaAutocomplete<T | {
-	display: string;
-	value: T;
-}>;
-export interface PropertyWithAutocomplete<T extends PackFormulaResult> {
+export declare type PropertySchemaOptions<T extends PackFormulaResult> = PropertyOptionsMetadataFunction<T[]> | T[] | OptionsType | OptionsReference;
+export interface PropertyWithOptions<T extends PackFormulaResult> {
 	/**
 	 * A list of values or a formula that returns a list of values to suggest when someone
 	 * edits this property. This should only be set when {@link mutable}
@@ -961,13 +957,15 @@ export interface PropertyWithAutocomplete<T extends PackFormulaResult> {
 	 * properties: {
 	 *   color: {
 	 *      type: coda.ValueType.String,
+	 *      codaType: coda.ValueHintType.SelectList,
 	 *      mutable: true,
-	 *      autocomplete: ['red', 'green', 'blue'],
+	 *      options: ['red', 'green', 'blue'],
 	 *   },
 	 *   user: {
 	 *      type: coda.ValueType.String,
+	 *      codaType: coda.ValueHintType.SelectList,
 	 *      mutable: true,
-	 *      autocomplete: async function (context) {
+	 *      options: async function (context) {
 	 *        let url = coda.withQueryParams("https://example.com/userSearch", { name: context.search });
 	 *        let response = await context.fetcher.fetch({ method: "GET", url: url });
 	 *        let results = response.body.users;
@@ -979,9 +977,9 @@ export interface PropertyWithAutocomplete<T extends PackFormulaResult> {
 	 *
 	 * @hidden
 	 */
-	autocomplete?: PropertySchemaAutocomplete<T>;
+	options?: PropertySchemaOptions<T>;
 }
-export declare type PropertyWithAutocompleteWithOptionalDisplay<T extends PackFormulaResult> = PropertyWithAutocomplete<T | {
+export declare type PropertyWithAutocompleteWithOptionalDisplay<T extends PackFormulaResult> = PropertyWithOptions<T | {
 	display: string;
 	value: T;
 }>;
@@ -1016,8 +1014,6 @@ export interface BooleanSchema extends BaseSchema {
 	type: ValueType.Boolean;
 	/** Indicates how to render values in a table. If not specified, renders a checkbox. */
 	codaType?: BooleanHintTypes;
-	/** @hidden */
-	autocomplete?: PropertySchemaAutocompleteWithOptionalDisplay<boolean>;
 }
 /**
  * The union of all schemas that can represent number values.
@@ -1028,8 +1024,6 @@ export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> e
 	type: ValueType.Number;
 	/** An optional type hint instructing Coda about how to interpret or render this value. */
 	codaType?: T;
-	/** @hidden */
-	autocomplete?: PropertySchemaAutocompleteWithOptionalDisplay<number>;
 }
 /**
  * A schema representing a return value or object property that is a numeric value,
@@ -1463,8 +1457,6 @@ export interface DurationSchema extends BaseStringSchema<ValueHintType.Duration>
 export interface StringWithOptionsSchema extends BaseStringSchema<ValueHintType.SelectList>, PropertyWithAutocompleteWithOptionalDisplay<string> {
 	/** Instructs Coda to render this value as a select list. */
 	codaType: ValueHintType.SelectList;
-	/** @hidden */
-	autocomplete: PropertySchemaAutocompleteWithOptionalDisplay<string>;
 }
 export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> extends BaseSchema {
 	/** Identifies this schema as a string. */
@@ -1633,7 +1625,7 @@ export declare type PropertyIdentifier<K extends string = string> = K | string |
 /**
  * A schema definition for an object value (a value with key-value pairs).
  */
-export interface ObjectSchemaDefinition<K extends string, L extends string> extends BaseSchema, PropertyWithAutocomplete<{}> {
+export interface ObjectSchemaDefinition<K extends string, L extends string> extends BaseSchema, PropertyWithOptions<{}> {
 	/** Identifies this schema as an object schema. */
 	type: ValueType.Object;
 	/** Definition of the key-value pairs in this object. */
@@ -2260,16 +2252,16 @@ export declare class MissingScopesError extends Error {
 	static isMissingScopesError(err: any): err is MissingScopesError;
 }
 /**
- * A map of named autocomplete methods for a particular sync table. The names need to match
+ * A map of named property options methods for a particular sync table. The names need to match
  * the values stored in the object schema. For the name, we use the property's name so that
  * it'll be consistent across pack versions. In the future if we want to support packs
  * being able to rename an existing property, we could try to set the names to the old
- * property names. Alternatively, we could just say that autocomplete will briefly stop
+ * property names. Alternatively, we could just say that property options will briefly stop
  * working until the sync table is refereshed so its schema matches the current pack release's
  * schema.
  */
-export interface SyncTableAutocompleters {
-	[name: string]: PropertyAutocompleteMetadataFormula<any>;
+export interface SyncTablePropertyOptions {
+	[name: string]: PropertyOptionsMetadataFormula<any>;
 }
 /**
  * The result of defining a sync table. Should not be necessary to use directly,
@@ -2298,10 +2290,10 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
 	/** See {@link DynamicOptions.defaultAddDynamicColumns} */
 	defaultAddDynamicColumns?: boolean;
 	/**
-	 * To configure autocomplete for properties in a sync table, use {@link DynamicSyncTableOptions.autocomplete}.
+	 * To configure options for properties in a sync table, use {@link DynamicSyncTableOptions.propertyOptions}.
 	 * @hidden
 	 */
-	namedAutocompletes?: SyncTableAutocompleters;
+	namedPropertyOptions?: SyncTablePropertyOptions;
 }
 /**
  * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
@@ -2321,10 +2313,10 @@ export interface DynamicSyncTableDef<K extends string, L extends string, ParamDe
 	/** See {@link DynamicSyncTableOptions.searchDynamicUrls} */
 	searchDynamicUrls?: MetadataFormula;
 	/**
-	 * See {@link DynamicSyncTableOptions.autocomplete}
+	 * See {@link DynamicSyncTableOptions.propertyOptions}
 	 * @hidden
 	 */
-	autocomplete?: PropertyAutocompleteMetadataFormula<any>;
+	propertyOptions?: PropertyOptionsMetadataFormula<any>;
 }
 /**
  * Container for arbitrary data about which page of data to retrieve in this sync invocation.
@@ -2849,15 +2841,15 @@ export declare type MetadataFormula = BaseFormula<[
 	schema?: any;
 };
 /**
- * Formula implementing property autocomplete.
- * These are constructed by {@link makePropertyAutocompleteFormula}.
+ * Formula implementing property options.
+ * These are constructed by {@link makePropertyOptionsFormula}.
  *
  * @hidden
  */
-export declare type PropertyAutocompleteMetadataFormula<SchemaT extends Schema> = ObjectPackFormula<[
+export declare type PropertyOptionsMetadataFormula<SchemaT extends Schema> = ObjectPackFormula<[
 ], ArraySchema<SchemaT>> & {
 	execute(params: ParamValues<[
-	]>, context: PropertyAutocompleteExecutionContext): Promise<object> | object;
+	]>, context: PropertyOptionsExecutionContext): Promise<object> | object;
 };
 export declare type MetadataFormulaMetadata = Omit<MetadataFormula, "execute">;
 /**
@@ -2981,7 +2973,7 @@ export interface DynamicOptions {
 	 *
 	 * @hidden
 	 */
-	autocomplete?: PropertyAutocompleteMetadataFunction<any>;
+	propertyOptions?: PropertyOptionsMetadataFunction<any>;
 }
 /**
  * Input options for defining a sync table. See {@link makeSyncTable}.
@@ -3129,9 +3121,9 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
 	 */
 	placeholderSchema?: SchemaT;
 	/**
-	 * An autocomplete function to use for any dynamic schema properties.
+	 * An options function to use for any dynamic schema properties.
 	 * The name of the property that's being modified by the doc editor
-	 * is available in the autocomplete function's context parameter.
+	 * is available in the option function's context parameter.
 	 *
 	 * @example
 	 * ```
@@ -3142,13 +3134,14 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
 	 *       properties: {
 	 *         dynamicPropertyName: {
 	 *           type: coda.ValueType.String,
+	 *           codaType: coda.ValueHintType.SelectList,
 	 *           mutable: true,
-	 *           autocomplete: coda.AutocompleteValueType.Dynamic,
+	 *           options: coda.OptionsType.Dynamic,
 	 *         },
 	 *       },
 	 *     });
 	 *   },
-	 *   autocomplete: async function (context) => {
+	 *   propertyOptions: async function (context) => {
 	 *     if (context.propertyName === "dynamicPropertyName") {
 	 *       return ["Dynamic Value 1", "Dynamic value 2"];
 	 *     }
@@ -3161,7 +3154,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
 	 *
 	 * @hidden
 	 */
-	autocomplete?: PropertyAutocompleteMetadataFunction<any>;
+	propertyOptions?: PropertyOptionsMetadataFunction<any>;
 }
 /**
  * Wrapper to produce a sync table definition. All (non-dynamic) sync tables should be created

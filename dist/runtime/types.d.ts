@@ -18,7 +18,7 @@ export declare enum MetadataFormulaType {
     SyncGetDisplayUrl = "SyncGetDisplayUrl",
     SyncGetTableName = "SyncGetTableName",
     SyncGetSchema = "SyncGetSchema",
-    PropertyAutocomplete = "PropertyAutocomplete"
+    PropertyOptions = "PropertyOptions"
 }
 export interface StandardFormulaSpecification {
     type: FormulaType.Standard;
@@ -55,9 +55,9 @@ export interface SyncMetadataFormulaSpecification {
 }
 export interface PropertyAutocompleteFormulaSpecification {
     type: FormulaType.Metadata;
-    metadataFormulaType: MetadataFormulaType.PropertyAutocomplete;
+    metadataFormulaType: MetadataFormulaType.PropertyOptions;
     syncTableName: string;
-    autocompleteName: string;
+    optionsFormulaKey: string;
     propertyName: string;
     propertyValues: Record<string, any>;
     propertySchema: Schema;

@@ -2,8 +2,6 @@ import {testHelper} from './test_helper';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '..';
 import {AuthenticationType} from '../types';
-import type {AutocompleteReference} from '../api_types';
-import {AutocompleteType} from '../api_types';
 import {ConnectionRequirement} from '../api_types';
 import {CurrencyFormat} from '..';
 import {DurationUnit} from '..';
@@ -13,6 +11,8 @@ import {ImageCornerStyle} from '../schema';
 import {ImageOutline} from '../schema';
 import {Limits} from '../testing/upload_validation';
 import type {ObjectSchemaDefinition} from '../schema';
+import type {OptionsReference} from '../api_types';
+import {OptionsType} from '../api_types';
 import type {PackFormulaMetadata} from '../api';
 import {PackMetadataValidationError} from '../testing/upload_validation';
 import type {PackVersionMetadata} from '../compiled_types';
@@ -914,7 +914,7 @@ describe('Pack metadata Validation', async () => {
         ]);
       });
 
-      it('autocomplete for a non-mutable property or bad property name', async () => {
+      it('options for a non-mutable property or bad property name', async () => {
         const syncTable = makeSyncTable({
           name: 'SyncTable',
           identityName: 'Sync',
@@ -927,7 +927,7 @@ describe('Pack metadata Validation', async () => {
                 type: ValueType.String,
                 codaType: ValueHintType.SelectList,
                 mutable: false,
-                autocomplete: AutocompleteType.Dynamic,
+                options: OptionsType.Dynamic,
               },
               // This next issue isn't something pack authors would normally do unless they do typecasts,
               // but could be an error caused by a bug in makeSyncTable().
@@ -935,13 +935,13 @@ describe('Pack metadata Validation', async () => {
                 type: ValueType.String,
                 codaType: ValueHintType.SelectList,
                 mutable: true,
-                autocomplete: 'someProp' as AutocompleteReference,
+                options: 'someProp' as OptionsReference,
               },
               Baz: {
                 type: ValueType.String,
                 // Missing codaType: SelectList
                 mutable: true,
-                autocomplete: ['foo', 'bar'],
+                options: ['foo', 'bar'],
               },
             },
           }),
@@ -962,26 +962,25 @@ describe('Pack metadata Validation', async () => {
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
           {
-            message: "Unrecognized key(s) in object: 'autocomplete'",
+            message: "Unrecognized key(s) in object: 'options'",
             path: 'syncTables[0].schema.properties.Baz',
           },
           {
-            message: "Unrecognized key(s) in object: 'autocomplete'",
+            message: "Unrecognized key(s) in object: 'options'",
             path: 'syncTables[0].getter.schema.items.properties.Baz',
           },
           {
-            message:
-              'Sync table SyncTable must define "autocomplete" for this property to use AutocompleteType.Dynamic',
-            path: 'syncTables[0].properties.Foo.autocomplete',
+            message: 'Sync table SyncTable must define "options" for this property to use OptionsType.Dynamic',
+            path: 'syncTables[0].properties.Foo.options',
           },
           {
-            message: '"someProp" is not registered as an autocomplete function for this sync table.',
-            path: 'syncTables[0].properties.Bar.autocomplete',
+            message: '"someProp" is not registered as an options function for this sync table.',
+            path: 'syncTables[0].properties.Bar.options',
           },
         ]);
       });
 
-      it('autocomplete has hard-coded non-array value', async () => {
+      it('options has hard-coded non-array value', async () => {
         const syncTable = makeSyncTable({
           name: 'SyncTable',
           identityName: 'Sync',
@@ -994,18 +993,18 @@ describe('Pack metadata Validation', async () => {
                 type: ValueType.String,
                 codaType: ValueHintType.SelectList,
                 mutable: true,
-                autocomplete: {'totally invalid value': 'here'} as any as string[],
+                options: {'totally invalid value': 'here'} as any as string[],
               },
               Bar: {
                 type: ValueType.String,
                 codaType: ValueHintType.SelectList,
                 mutable: true,
-                autocomplete: [{'totally invalid value': 'here'}] as any as string[],
+                options: [{'totally invalid value': 'here'}] as any as string[],
               },
               Bop: {
                 type: ValueType.String,
                 mutable: true,
-                autocomplete: [true],
+                options: [true],
               },
               Beep: {
                 type: ValueType.Object,
@@ -1016,25 +1015,25 @@ describe('Pack metadata Validation', async () => {
                 },
                 idProperty: 'id',
                 mutable: true,
-                autocomplete: [],
+                options: [],
               },
               Baz: {
                 type: ValueType.String,
                 codaType: ValueHintType.SelectList,
                 mutable: true,
-                autocomplete: ['this is ok', {display: 'foo', value: 'bar'}],
+                options: ['this is ok', {display: 'foo', value: 'bar'}],
               },
               Baz2: {
                 type: ValueType.String,
                 codaType: ValueHintType.SelectList,
                 mutable: true,
-                autocomplete: ['text', {display: 'foo', value: 'more text'}],
+                options: ['text', {display: 'foo', value: 'more text'}],
               },
               Baz3: {
                 type: ValueType.String,
                 codaType: ValueHintType.SelectList,
                 mutable: true,
-                autocomplete: ['text', {display: 'foo', value: 'more text'}],
+                options: ['text', {display: 'foo', value: 'more text'}],
               },
             },
           }),
@@ -1063,19 +1062,19 @@ describe('Pack metadata Validation', async () => {
         });
         assert.deepInclude(validationErrors, {
           message: 'Expected string, received object',
-          path: 'syncTables[0].getter.schema.items.properties.Bar.autocomplete[0]',
+          path: 'syncTables[0].getter.schema.items.properties.Bar.options[0]',
         });
         assert.deepInclude(validationErrors, {
           message: 'Required',
-          path: 'syncTables[0].getter.schema.items.properties.Bar.autocomplete[0].display',
+          path: 'syncTables[0].getter.schema.items.properties.Bar.options[0].display',
         });
         assert.deepInclude(validationErrors, {
-          message: "Unrecognized key(s) in object: 'autocomplete'",
+          message: "Unrecognized key(s) in object: 'options'",
           path: 'syncTables[0].getter.schema.items.properties.Bop',
         });
         const selectListHintTypeError = {
           message:
-            'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "autocomplete" property.',
+            'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "options" property.',
           path: 'syncTables[0].schema.properties.Beep',
         };
         assert.deepInclude(validationErrors, selectListHintTypeError);
@@ -1087,7 +1086,7 @@ describe('Pack metadata Validation', async () => {
         assert.notDeepNestedInclude(errOlderSdkVersion.validationErrors ?? [], selectListHintTypeError);
       });
 
-      it('autocomplete valid values', async () => {
+      it('options valid values', async () => {
         const syncTable = makeSyncTable({
           name: 'SyncTable',
           identityName: 'Sync',
@@ -1100,7 +1099,7 @@ describe('Pack metadata Validation', async () => {
                 type: ValueType.String,
                 codaType: ValueHintType.SelectList,
                 mutable: true,
-                autocomplete: ['this is ok', {display: 'foo', value: 'bar'}],
+                options: ['this is ok', {display: 'foo', value: 'bar'}],
               },
               foo2: {
                 type: ValueType.Object,
@@ -1112,13 +1111,13 @@ describe('Pack metadata Validation', async () => {
                   },
                 },
                 mutable: true,
-                autocomplete: [{}],
+                options: [{}],
               },
               bar: {
                 type: ValueType.String,
                 codaType: ValueHintType.SelectList,
                 mutable: true,
-                autocomplete: () => {
+                options: () => {
                   return [];
                 },
               },
@@ -1139,8 +1138,8 @@ describe('Pack metadata Validation', async () => {
           syncTables: [syncTable],
         });
         const validatedMetadata = await validateJson(metadata);
-        assert.isArray(validatedMetadata.syncTables[0].schema.properties.Foo.autocomplete);
-        assert.isString(validatedMetadata.syncTables[0].schema.properties.Bar.autocomplete);
+        assert.isArray(validatedMetadata.syncTables[0].schema.properties.Foo.options);
+        assert.isString(validatedMetadata.syncTables[0].schema.properties.Bar.options);
       });
 
       it('identityName propagated to identity field', async () => {

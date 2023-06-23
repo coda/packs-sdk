@@ -29,9 +29,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.zodErrorDetailToValidationError = exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.Limits = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
 const schema_1 = require("../schema");
 const types_1 = require("../types");
-const api_types_1 = require("../api_types");
 const schema_2 = require("../schema");
-const api_types_2 = require("../api_types");
+const api_types_1 = require("../api_types");
 const schema_3 = require("../schema");
 const schema_4 = require("../schema");
 const schema_5 = require("../schema");
@@ -40,8 +39,9 @@ const schema_6 = require("../schema");
 const schema_7 = require("../schema");
 const jsonpath_plus_1 = require("jsonpath-plus");
 const schema_8 = require("../schema");
-const api_types_3 = require("../api_types");
+const api_types_2 = require("../api_types");
 const schema_9 = require("../schema");
+const api_types_3 = require("../api_types");
 const types_3 = require("../types");
 const types_4 = require("../types");
 const schema_10 = require("../schema");
@@ -484,12 +484,12 @@ function buildMetadataSchema({ sdkVersion }) {
         }, { message: 'All optional parameters must come after all non-optional parameters.' }),
         varargParameters: z.array(paramDefValidator).optional(),
         isAction: z.boolean().optional(),
-        connectionRequirement: z.nativeEnum(api_types_2.ConnectionRequirement).optional(),
+        connectionRequirement: z.nativeEnum(api_types_1.ConnectionRequirement).optional(),
         // TODO(jonathan): Remove after removing `network` from formula def.
         network: zodCompleteObject({
             hasSideEffect: z.boolean().optional(),
             requiresConnection: z.boolean().optional(),
-            connection: z.nativeEnum(api_types_3.NetworkConnection).optional(),
+            connection: z.nativeEnum(api_types_2.NetworkConnection).optional(),
         }).optional(),
         cacheTtlSecs: z.number().min(0).optional(),
         isExperimental: z.boolean().optional(),
@@ -505,8 +505,6 @@ function buildMetadataSchema({ sdkVersion }) {
             description: z.string().optional(),
             mutable: z.boolean().optional(),
             fixedId: z.string().optional(),
-            // Only properties in sync tables would need to define "autocomplete"
-            autocomplete: z.undefined().optional(),
         }).optional(),
     });
     // TODO(jonathan): Use zodCompleteObject on these after exporting these types.
@@ -524,7 +522,7 @@ function buildMetadataSchema({ sdkVersion }) {
         anchorUrl: z.string(),
         imageUrl: z.string(),
     });
-    function zodAutocompleteFieldWithValues(valueType, allowDisplayNames) {
+    function zodOptionsFieldWithValues(valueType, allowDisplayNames) {
         const literalType = allowDisplayNames
             ? z.union([
                 valueType,
@@ -548,13 +546,11 @@ function buildMetadataSchema({ sdkVersion }) {
     };
     const baseNumericPropertyValidators = {
         ...basePropertyValidators,
-        autocomplete: zodAutocompleteFieldWithValues(z.number(), true),
     };
     const booleanPropertySchema = zodCompleteStrictObject({
         type: zodDiscriminant(schema_13.ValueType.Boolean),
         codaType: z.enum([...schema_2.BooleanHintValueTypes]).optional(),
         ...basePropertyValidators,
-        autocomplete: zodAutocompleteFieldWithValues(z.boolean(), true),
     });
     const numericPropertySchema = zodCompleteStrictObject({
         type: zodDiscriminant(schema_13.ValueType.Number),
@@ -699,7 +695,7 @@ function buildMetadataSchema({ sdkVersion }) {
         type: zodDiscriminant(schema_13.ValueType.String),
         codaType: zodDiscriminant(schema_12.ValueHintType.SelectList),
         ...baseStringPropertyValidators,
-        autocomplete: zodAutocompleteFieldWithValues(z.string(), true),
+        options: zodOptionsFieldWithValues(z.string(), true),
     });
     const imagePropertySchema = zodCompleteStrictObject({
         type: zodDiscriminant(schema_13.ValueType.String),
@@ -825,7 +821,7 @@ function buildMetadataSchema({ sdkVersion }) {
         subtitleProperties: z.array(propertySchema).optional(),
         snippetProperty: propertySchema.optional(),
         imageProperty: propertySchema.optional(),
-        autocomplete: zodAutocompleteFieldWithValues(z.object({}).passthrough(), false),
+        options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
     })
         .superRefine((data, context) => {
         var _a, _b;
@@ -1011,12 +1007,12 @@ function buildMetadataSchema({ sdkVersion }) {
             // ValueHintType.SelectList is only required for autocomplete starting in version 1.4.1
             return true;
         }
-        const schemaForAutocomplete = (0, schema_18.maybeUnwrapArraySchema)(schema);
-        const result = !schemaForAutocomplete ||
-            (0, schema_20.unwrappedSchemaSupportsAutocomplete)(schemaForAutocomplete) ||
-            !('autocomplete' in schemaForAutocomplete && schemaForAutocomplete.autocomplete);
+        const schemaForOptions = (0, schema_18.maybeUnwrapArraySchema)(schema);
+        const result = !schemaForOptions ||
+            (0, schema_20.unwrappedSchemaSupportsOptions)(schemaForOptions) ||
+            !('options' in schemaForOptions && schemaForOptions.options);
         return result;
-    }, 'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "autocomplete" property.');
+    }, 'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "options" property.');
     const objectPackFormulaSchema = zodCompleteObject({
         ...commonPackFormulaSchema,
         resultType: zodDiscriminant(api_types_4.Type.object),
@@ -1078,7 +1074,7 @@ function buildMetadataSchema({ sdkVersion }) {
             .max(exports.Limits.BuildingBlockName)
             .optional()
             .refine(val => !val || !SystemColumnNames.includes(val), `This property name is reserved for internal use by Coda and can't be used as an identityName, sorry!`),
-        namedAutocompletes: z
+        namedPropertyOptions: z
             .record(formulaMetadataSchema)
             .optional()
             .default({})
@@ -1086,7 +1082,7 @@ function buildMetadataSchema({ sdkVersion }) {
             if (Object.keys(data).length > exports.Limits.BuildingBlockName) {
                 context.addIssue({
                     code: z.ZodIssueCode.custom,
-                    message: `Too many autocomplete formulas for sync table. Max allowed is "${exports.Limits.BuildingBlockName}".`,
+                    message: `Too many options formulas for sync table. Max allowed is "${exports.Limits.BuildingBlockName}".`,
                 });
             }
         }),
@@ -1107,7 +1103,7 @@ function buildMetadataSchema({ sdkVersion }) {
         listDynamicUrls: formulaMetadataSchema.optional(),
         searchDynamicUrls: formulaMetadataSchema.optional(),
         getSchema: formulaMetadataSchema,
-        autocomplete: objectPackFormulaSchema.optional(),
+        propertyOptions: objectPackFormulaSchema.optional(),
     }).strict();
     const syncTableSchema = z
         .union([genericDynamicSyncTableSchema, genericSyncTableSchema])
@@ -1255,7 +1251,7 @@ function buildMetadataSchema({ sdkVersion }) {
             }
             // if the pack has no default authentication, make sure all formulas don't set connection requirements.
             (data.formulas || []).forEach((formula, i) => {
-                if (formula.connectionRequirement && formula.connectionRequirement !== api_types_2.ConnectionRequirement.None) {
+                if (formula.connectionRequirement && formula.connectionRequirement !== api_types_1.ConnectionRequirement.None) {
                     context.addIssue({
                         code: z.ZodIssueCode.custom,
                         path: ['formulas', i],
@@ -1265,7 +1261,7 @@ function buildMetadataSchema({ sdkVersion }) {
             });
             (data.syncTables || []).forEach((syncTable, i) => {
                 const connectionRequirement = syncTable.getter.connectionRequirement;
-                if (connectionRequirement && connectionRequirement !== api_types_2.ConnectionRequirement.None) {
+                if (connectionRequirement && connectionRequirement !== api_types_1.ConnectionRequirement.None) {
                     context.addIssue({
                         code: z.ZodIssueCode.custom,
                         path: ['syncTables', i, 'getter', 'connectionRequirement'],
@@ -1445,17 +1441,17 @@ function buildMetadataSchema({ sdkVersion }) {
         (data.syncTables || []).forEach((syncTable, i) => {
             const schema = syncTable.schema;
             for (const [propertyName, childSchema] of Object.entries(schema.properties)) {
-                const autocomplete = (0, schema_17.maybeSchemaAutocompleteValue)(childSchema);
-                if (!autocomplete || Array.isArray(autocomplete)) {
+                const options = (0, schema_17.maybeSchemaOptionsValue)(childSchema);
+                if (!options || Array.isArray(options)) {
                     continue;
                 }
-                if (typeof autocomplete !== 'string' || !(autocomplete in (syncTable.namedAutocompletes || {}))) {
+                if (typeof options !== 'string' || !(options in (syncTable.namedPropertyOptions || {}))) {
                     context.addIssue({
                         code: z.ZodIssueCode.custom,
-                        path: ['syncTables', i, 'properties', propertyName, 'autocomplete'],
-                        message: autocomplete === api_types_1.AutocompleteType.Dynamic
-                            ? `Sync table ${syncTable.name} must define "autocomplete" for this property to use AutocompleteType.Dynamic`
-                            : `"${autocomplete}" is not registered as an autocomplete function for this sync table.`,
+                        path: ['syncTables', i, 'properties', propertyName, 'options'],
+                        message: options === api_types_3.OptionsType.Dynamic
+                            ? `Sync table ${syncTable.name} must define "options" for this property to use OptionsType.Dynamic`
+                            : `"${options}" is not registered as an options function for this sync table.`,
                     });
                     continue;
                 }
