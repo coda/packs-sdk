@@ -543,6 +543,9 @@ function buildMetadataSchema({ sdkVersion }) {
     };
     const baseStringPropertyValidators = {
         ...basePropertyValidators,
+        autocomplete: sdkVersion && semver_1.default.satisfies(sdkVersion, '<=1.4.0')
+            ? zodOptionsFieldWithValues(z.string(), true)
+            : z.never().optional(),
     };
     const baseNumericPropertyValidators = {
         ...basePropertyValidators,
@@ -822,6 +825,9 @@ function buildMetadataSchema({ sdkVersion }) {
         snippetProperty: propertySchema.optional(),
         imageProperty: propertySchema.optional(),
         options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
+        autocomplete: sdkVersion && semver_1.default.satisfies(sdkVersion, '<=1.4.0')
+            ? zodOptionsFieldWithValues(z.string(), true)
+            : z.never().optional(),
     })
         .superRefine((data, context) => {
         var _a, _b;
@@ -1074,6 +1080,8 @@ function buildMetadataSchema({ sdkVersion }) {
             .max(exports.Limits.BuildingBlockName)
             .optional()
             .refine(val => !val || !SystemColumnNames.includes(val), `This property name is reserved for internal use by Coda and can't be used as an identityName, sorry!`),
+        // namedAutocompletes no longer does anything, but old SDK version may try to set it.
+        namedAutocompletes: sdkVersion && semver_1.default.satisfies(sdkVersion, '<=1.4.0') ? z.any().optional() : z.never().optional(),
         namedPropertyOptions: z
             .record(formulaMetadataSchema)
             .optional()
@@ -1103,6 +1111,7 @@ function buildMetadataSchema({ sdkVersion }) {
         listDynamicUrls: formulaMetadataSchema.optional(),
         searchDynamicUrls: formulaMetadataSchema.optional(),
         getSchema: formulaMetadataSchema,
+        autocomplete: sdkVersion && semver_1.default.satisfies(sdkVersion, '<=1.4.0') ? objectPackFormulaSchema.optional() : z.never().optional(),
         propertyOptions: objectPackFormulaSchema.optional(),
     }).strict();
     const syncTableSchema = z

@@ -1084,7 +1084,11 @@ schema, identityName, }) {
     // Converting JS functions to strings happens on inputSchema instead of the deep copied version because the
     // deep copy will have already thrown away any JS functions.
     const namedPropertyOptions = {};
-    for (const propertyName of listPropertiesWithOptionsFunctions(inputSchema)) {
+    const propertiesWithOptionsFunctions = listPropertiesWithOptionsFunctions(inputSchema);
+    if (!propertiesWithOptionsFunctions.length) {
+        return undefined;
+    }
+    for (const propertyName of propertiesWithOptionsFunctions) {
         const inputSchemaWithoutArray = (0, schema_4.maybeUnwrapArraySchema)(inputSchema.properties[propertyName]);
         const outputSchema = (0, schema_4.maybeUnwrapArraySchema)(schema.properties[propertyName]);
         (0, ensure_1.assertCondition)((0, schema_6.unwrappedSchemaSupportsOptions)(inputSchemaWithoutArray), `Property "${propertyName}" must have codaType of ValueHintType.SelectList or ValueHintType.Reference to configure property options`);

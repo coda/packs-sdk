@@ -197,6 +197,35 @@ describe('API test', () => {
       );
     });
 
+    it('no autocompletes adds no sync table property', async () => {
+      const table = makeSyncTable({
+        name: 'SomeSync',
+        identityName: 'MyIdentityName',
+        schema: schema.makeObjectSchema({
+          type: ValueType.Object,
+          id: 'foo',
+          primary: 'foo',
+          properties: {
+            foo: {
+              type: ValueType.String,
+              codaType: schema.ValueHintType.SelectList,
+            },
+          },
+        }),
+        formula: {
+          name: 'Whatever',
+          description: 'Whatever',
+          parameters: [],
+          async execute() {
+            return {result: []};
+          },
+        },
+      });
+      const {namedPropertyOptions} = table;
+      // Unneccessary properties can make SDK changes harder in the future.
+      assert.isUndefined(namedPropertyOptions);
+    });
+
     it('static and dynamic autocompletes', async () => {
       const table = makeSyncTable({
         name: 'SomeSync',
@@ -216,7 +245,7 @@ describe('API test', () => {
               type: ValueType.String,
               codaType: schema.ValueHintType.SelectList,
               mutable: true,
-              autocomplete: OptionsType.Dynamic,
+              options: OptionsType.Dynamic,
             },
             baz: {
               type: ValueType.Array,
@@ -261,6 +290,10 @@ describe('API test', () => {
       assert.equal(
         ((table.schema.properties as schema.ObjectSchemaProperties).Foo as typeof table.schema.properties.foo).options,
         'foo' as any,
+      );
+      assert.equal(
+        ((table.schema.properties as schema.ObjectSchemaProperties).Bar as typeof table.schema.properties.bar).options,
+        OptionsType.Dynamic,
       );
 
       const dynamicAutocomplete = namedPropertyOptions![OptionsType.Dynamic];
