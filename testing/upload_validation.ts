@@ -684,6 +684,10 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
 
   const baseStringPropertyValidators = {
     ...basePropertyValidators,
+    autocomplete:
+      sdkVersion && semver.satisfies(sdkVersion, '<=1.4.0')
+        ? zodOptionsFieldWithValues(z.string(), true)
+        : z.never().optional(),
   };
 
   const baseNumericPropertyValidators = {
@@ -856,7 +860,9 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     ...baseStringPropertyValidators,
   });
 
-  const stringWithOptionsPropertySchema = zodCompleteStrictObject<StringWithOptionsSchema & ObjectSchemaProperty>({
+  const stringWithOptionsPropertySchema = zodCompleteStrictObject<
+    StringWithOptionsSchema & ObjectSchemaProperty & {autocomplete: any}
+  >({
     type: zodDiscriminant(ValueType.String),
     codaType: zodDiscriminant(ValueHintType.SelectList),
     ...baseStringPropertyValidators,
@@ -989,7 +995,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
   ]);
 
   const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
-    zodCompleteObject<ObjectSchema<any, any>>({
+    zodCompleteObject<ObjectSchema<any, any> & {autocomplete: any}>({
       ...basePropertyValidators,
       type: zodDiscriminant(ValueType.Object),
       description: z.string().optional(),
@@ -1016,6 +1022,10 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       snippetProperty: propertySchema.optional(),
       imageProperty: propertySchema.optional(),
       options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
+      autocomplete:
+        sdkVersion && semver.satisfies(sdkVersion, '<=1.4.0')
+          ? zodOptionsFieldWithValues(z.string(), true)
+          : z.never().optional(),
     })
       .superRefine((data, context) => {
         if (!isValidIdentityName(data.identity?.packId, data.identity?.name as string)) {
@@ -1331,6 +1341,9 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
         val => !val || !SystemColumnNames.includes(val),
         `This property name is reserved for internal use by Coda and can't be used as an identityName, sorry!`,
       ),
+    // namedAutocompletes no longer does anything, but old SDK version may try to set it.
+    namedAutocompletes:
+      sdkVersion && semver.satisfies(sdkVersion, '<=1.4.0') ? z.any().optional() : z.never().optional(),
     namedPropertyOptions: z
       .record(formulaMetadataSchema)
       .optional()
@@ -1357,7 +1370,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
   }).strict();
 
   const genericDynamicSyncTableSchema = zodCompleteObject<
-    DynamicSyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>
+    DynamicSyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>> & {autocomplete: any}
   >({
     ...baseSyncTableSchema,
     isDynamic: zodDiscriminant(true),
@@ -1366,6 +1379,8 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     listDynamicUrls: formulaMetadataSchema.optional(),
     searchDynamicUrls: formulaMetadataSchema.optional(),
     getSchema: formulaMetadataSchema,
+    autocomplete:
+      sdkVersion && semver.satisfies(sdkVersion, '<=1.4.0') ? objectPackFormulaSchema.optional() : z.never().optional(),
     propertyOptions: objectPackFormulaSchema.optional(),
   }).strict();
 

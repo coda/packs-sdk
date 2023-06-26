@@ -980,6 +980,78 @@ describe('Pack metadata Validation', async () => {
         ]);
       });
 
+      it('old SDK with legacy autocomplete fields', async () => {
+        const metadata = {
+          id: 1,
+          name: 'some pack',
+          shortDescription: 'Some description',
+          description: 'Some description',
+          logoPath: '',
+          version: '1.2.3',
+          syncTables: [
+            {
+              name: 'SyncFoo',
+              identityName: 'foo',
+              namedAutocompletes: {foo: 'bar'},
+              schema: {
+                type: ValueType.Object,
+                properties: {
+                  name: {
+                    type: ValueType.String,
+                    autocomplete: ['1', '2'],
+                  },
+                },
+              },
+              getter: {
+                isSyncFormula: true,
+                name: 'SyncFoo',
+                description: 'Some description',
+                parameters: [],
+                execute: () => ({} as any),
+                resultType: Type.object,
+              },
+            },
+          ],
+        };
+        await validateJson(metadata, '1.4.0');
+      });
+
+      it('old SDK with legacy autocomplete fields', async () => {
+        const metadata = {
+          id: 1,
+          name: 'some pack',
+          shortDescription: 'Some description',
+          description: 'Some description',
+          logoPath: '',
+          version: '1.2.3',
+          syncTables: [
+            {
+              name: 'SyncFoo',
+              identityName: 'foo',
+              namedAutocompletes: {foo: 'bar'},
+              schema: {
+                type: ValueType.Object,
+                properties: {
+                  name: {
+                    type: ValueType.String,
+                    autocomplete: ['1', '2'],
+                  },
+                },
+              },
+              getter: {
+                isSyncFormula: true,
+                name: 'SyncFoo',
+                description: 'Some description',
+                parameters: [],
+                execute: () => ({} as any),
+                resultType: Type.object,
+              },
+            },
+          ],
+        };
+        await validateJsonAndAssertFails(metadata);
+      });
+
       it('options has hard-coded non-array value', async () => {
         const syncTable = makeSyncTable({
           name: 'SyncTable',
