@@ -2550,12 +2550,18 @@ function moveJsPropertyOptionsFunctionsToFormulas({
   inputSchema: Readonly<ObjectSchemaDefinition<any, any>>;
   schema: ObjectSchemaDefinition<any, any>;
   identityName: string;
-}): SyncTablePropertyOptions {
+}): SyncTablePropertyOptions | undefined {
   // Converting JS functions to strings happens on inputSchema instead of the deep copied version because the
   // deep copy will have already thrown away any JS functions.
   const namedPropertyOptions: SyncTablePropertyOptions = {};
 
-  for (const propertyName of listPropertiesWithOptionsFunctions(inputSchema)) {
+  const propertiesWithOptionsFunctions = listPropertiesWithOptionsFunctions(inputSchema);
+
+  if (!propertiesWithOptionsFunctions.length) {
+    return undefined;
+  }
+
+  for (const propertyName of propertiesWithOptionsFunctions) {
     const inputSchemaWithoutArray = maybeUnwrapArraySchema(inputSchema.properties[propertyName]);
     const outputSchema = maybeUnwrapArraySchema(schema.properties[propertyName]);
     assertCondition(
