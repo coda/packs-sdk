@@ -1016,7 +1016,7 @@ describe('Pack metadata Validation', async () => {
         await validateJson(metadata, '1.4.0');
       });
 
-      it('old SDK with legacy autocomplete fields', async () => {
+      it('new SDK with legacy autocomplete fields', async () => {
         const metadata = {
           id: 1,
           name: 'some pack',
