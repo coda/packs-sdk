@@ -1,9 +1,11 @@
+import type {PackVersionDefinition} from '../types';
 import browserify from 'browserify';
 import {ensureUnreachable} from '../helpers/ensure';
 import * as esbuild from 'esbuild';
 import exorcist from 'exorcist';
 import fs from 'fs';
 import {getPackOptions} from '../cli/config_storage';
+import {importManifest} from '../cli/helpers';
 import os from 'os';
 import path from 'path';
 import {processVmError} from './helpers';
@@ -271,6 +273,12 @@ export async function compilePackBundle({
     throw await processVmError(err, tempBundlePath);
   }
 
+  // Write the generated metadata. It's not used by the upload command, but
+  // it's helpful for debugging upload validation errors.
+  const metadata = await importManifest<PackVersionDefinition>(tempBundlePath);
+  const tempMetadataPath = path.join(intermediateOutputDirectory, 'metadata.json');
+  fs.writeFileSync(tempMetadataPath, JSON.stringify(metadata));
+
   if (!outputDirectory || outputDirectory === intermediateOutputDirectory) {
     return {
       bundlePath: tempBundlePath,
@@ -281,6 +289,7 @@ export async function compilePackBundle({
 
   const bundlePath = path.join(outputDirectory, bundleFilename);
   const bundleSourceMapPath = `${bundlePath}.map`;
+  const metadataPath = path.join(outputDirectory, 'metadata.json');
 
   if (!fs.existsSync(outputDirectory)) {
     fs.mkdirSync(outputDirectory, {recursive: true});
@@ -288,6 +297,7 @@ export async function compilePackBundle({
 
   // move over finally compiled bundle & sourcemap to the target directory.
   fs.copyFileSync(tempBundlePath, bundlePath);
+  fs.copyFileSync(tempMetadataPath, metadataPath);
   fs.copyFileSync(`${tempBundlePath}.map`, bundleSourceMapPath);
 
   return {

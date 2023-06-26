@@ -224,12 +224,6 @@ if (require.main === module) {
                 desc: 'Also check for warnings about deprecated properties and features that will become errors in a future SDK version.',
                 default: true,
             },
-            writeMetadata: {
-                boolean: true,
-                desc: 'Also write the metadata to a temporary file.',
-                hidden: true,
-                default: false,
-            },
         },
         handler: validate_1.handleValidate,
     })
