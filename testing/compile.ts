@@ -1,5 +1,6 @@
 import type {PackVersionDefinition} from '../types';
 import browserify from 'browserify';
+import {compilePackMetadata} from '../helpers/metadata';
 import {ensureUnreachable} from '../helpers/ensure';
 import * as esbuild from 'esbuild';
 import exorcist from 'exorcist';
@@ -275,7 +276,8 @@ export async function compilePackBundle({
 
   // Write the generated metadata. It's not used by the upload command, but
   // it's helpful for debugging upload validation errors.
-  const metadata = await importManifest<PackVersionDefinition>(tempBundlePath);
+  const manifest = await importManifest<PackVersionDefinition>(tempBundlePath);
+  const metadata = compilePackMetadata(manifest);
   const tempMetadataPath = path.join(intermediateOutputDirectory, 'metadata.json');
   fs.writeFileSync(tempMetadataPath, JSON.stringify(metadata));
 

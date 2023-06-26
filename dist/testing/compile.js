@@ -28,6 +28,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.compilePackBundle = exports.TimerShimStrategy = void 0;
 const browserify_1 = __importDefault(require("browserify"));
+const metadata_1 = require("../helpers/metadata");
 const ensure_1 = require("../helpers/ensure");
 const esbuild = __importStar(require("esbuild"));
 const exorcist_1 = __importDefault(require("exorcist"));
@@ -217,7 +218,8 @@ outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, timer
     }
     // Write the generated metadata. It's not used by the upload command, but
     // it's helpful for debugging upload validation errors.
-    const metadata = await (0, helpers_1.importManifest)(tempBundlePath);
+    const manifest = await (0, helpers_1.importManifest)(tempBundlePath);
+    const metadata = (0, metadata_1.compilePackMetadata)(manifest);
     const tempMetadataPath = path_1.default.join(intermediateOutputDirectory, 'metadata.json');
     fs_1.default.writeFileSync(tempMetadataPath, JSON.stringify(metadata));
     if (!outputDirectory || outputDirectory === intermediateOutputDirectory) {
