@@ -291,6 +291,10 @@ describe('API test', () => {
         ((table.schema.properties as schema.ObjectSchemaProperties).Foo as typeof table.schema.properties.foo).options,
         'foo' as any,
       );
+      assert.equal(
+        ((table.schema.properties as schema.ObjectSchemaProperties).Bar as typeof table.schema.properties.bar).options,
+        OptionsType.Dynamic,
+      );
 
       const dynamicAutocomplete = namedPropertyOptions![OptionsType.Dynamic];
       assert.equal('MyIdentityName.DynamicPropertyOptions', dynamicAutocomplete.name);
