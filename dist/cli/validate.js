@@ -22,22 +22,36 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateMetadata = exports.handleValidate = void 0;
 const compile_1 = require("../testing/compile");
 const metadata_1 = require("../helpers/metadata");
+const fs_1 = __importDefault(require("fs"));
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const helpers_3 = require("./helpers");
+const os_1 = __importDefault(require("os"));
+const path_1 = __importDefault(require("path"));
 const helpers_4 = require("../testing/helpers");
+const helpers_5 = require("../testing/helpers");
+const uuid_1 = require("uuid");
 const upload_validation_1 = require("../testing/upload_validation");
-async function handleValidate({ manifestFile, checkDeprecationWarnings }) {
+async function handleValidate({ manifestFile, checkDeprecationWarnings, writeMetadata, }) {
     const fullManifestPath = (0, helpers_3.makeManifestFullPath)(manifestFile);
     const { bundlePath } = await (0, compile_1.compilePackBundle)({ manifestPath: fullManifestPath, minify: false });
     const manifest = await (0, helpers_1.importManifest)(bundlePath);
     // Since it's okay to not specify a version, we inject one if it's not provided.
     if (!manifest.version) {
         manifest.version = '1';
+    }
+    if (writeMetadata) {
+        const temporaryOutputDirectory = fs_1.default.mkdtempSync(path_1.default.join(os_1.default.tmpdir(), `coda-packs-${(0, uuid_1.v4)()}`));
+        const outputFile = path_1.default.join(temporaryOutputDirectory, 'metadata.json');
+        fs_1.default.writeFileSync(outputFile, JSON.stringify(manifest, null, 2));
+        (0, helpers_4.print)(`Metadata written to ${outputFile}`);
     }
     const metadata = (0, metadata_1.compilePackMetadata)(manifest);
     return validateMetadata(metadata, { checkDeprecationWarnings });
@@ -54,7 +68,7 @@ async function validateMetadata(metadata, { checkDeprecationWarnings = true } = 
     catch (e) {
         const packMetadataValidationError = e;
         const validationErrors = (_a = packMetadataValidationError.validationErrors) === null || _a === void 0 ? void 0 : _a.map(makeErrorMessage).join('\n');
-        (0, helpers_4.printAndExit)(`${e.message}: \n${validationErrors}`);
+        (0, helpers_5.printAndExit)(`${e.message}: \n${validationErrors}`);
     }
     if (!checkDeprecationWarnings) {
         return;
@@ -65,7 +79,7 @@ async function validateMetadata(metadata, { checkDeprecationWarnings = true } = 
     catch (e) {
         const packMetadataValidationError = e;
         const deprecationWarnings = (_b = packMetadataValidationError.validationErrors) === null || _b === void 0 ? void 0 : _b.map(makeWarningMessage).join('\n');
-        (0, helpers_4.printAndExit)(`Your Pack is using deprecated properties or features: \n${deprecationWarnings}`, 0);
+        (0, helpers_5.printAndExit)(`Your Pack is using deprecated properties or features: \n${deprecationWarnings}`, 0);
     }
 }
 exports.validateMetadata = validateMetadata;

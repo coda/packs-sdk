@@ -5,18 +5,28 @@ import type {PackVersionMetadata} from '../compiled_types';
 import type {ValidationError} from '../testing/types';
 import {compilePackBundle} from '../testing/compile';
 import {compilePackMetadata} from '../helpers/metadata';
+import fs from 'fs';
 import {importManifest} from './helpers';
 import {isTestCommand} from './helpers';
 import {makeManifestFullPath} from './helpers';
+import os from 'os';
+import path from 'path';
+import {print} from '../testing/helpers';
 import {printAndExit} from '../testing/helpers';
+import {v4} from 'uuid';
 import {validatePackVersionMetadata} from '../testing/upload_validation';
 
 interface ValidateArgs {
   manifestFile: string;
   checkDeprecationWarnings: boolean;
+  writeMetadata: boolean;
 }
 
-export async function handleValidate({manifestFile, checkDeprecationWarnings}: ArgumentsCamelCase<ValidateArgs>) {
+export async function handleValidate({
+  manifestFile,
+  checkDeprecationWarnings,
+  writeMetadata,
+}: ArgumentsCamelCase<ValidateArgs>) {
   const fullManifestPath = makeManifestFullPath(manifestFile);
   const {bundlePath} = await compilePackBundle({manifestPath: fullManifestPath, minify: false});
   const manifest = await importManifest<PackVersionDefinition>(bundlePath);
@@ -24,6 +34,15 @@ export async function handleValidate({manifestFile, checkDeprecationWarnings}: A
   // Since it's okay to not specify a version, we inject one if it's not provided.
   if (!manifest.version) {
     manifest.version = '1';
+  }
+
+  if (writeMetadata) {
+    const temporaryOutputDirectory = fs.mkdtempSync(path.join(os.tmpdir(), `coda-packs-${v4()}`));
+    const outputFile = path.join(temporaryOutputDirectory, 'metadata.json');
+
+    fs.writeFileSync(outputFile, JSON.stringify(manifest, null, 2));
+
+    print(`Metadata written to ${outputFile}`);
   }
 
   const metadata = compilePackMetadata(manifest);
