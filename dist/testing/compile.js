@@ -28,14 +28,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.compilePackBundle = exports.TimerShimStrategy = void 0;
 const browserify_1 = __importDefault(require("browserify"));
+const metadata_1 = require("../helpers/metadata");
 const ensure_1 = require("../helpers/ensure");
 const esbuild = __importStar(require("esbuild"));
 const exorcist_1 = __importDefault(require("exorcist"));
 const fs_1 = __importDefault(require("fs"));
 const config_storage_1 = require("../cli/config_storage");
+const helpers_1 = require("../cli/helpers");
 const os_1 = __importDefault(require("os"));
 const path_1 = __importDefault(require("path"));
-const helpers_1 = require("./helpers");
+const helpers_2 = require("./helpers");
 const semver_1 = __importDefault(require("semver"));
 const ivm_wrapper_1 = require("./ivm_wrapper");
 const uglify_js_1 = __importDefault(require("uglify-js"));
@@ -212,8 +214,14 @@ outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, timer
         await loadIntoVM(tempBundlePath);
     }
     catch (err) {
-        throw await (0, helpers_1.processVmError)(err, tempBundlePath);
+        throw await (0, helpers_2.processVmError)(err, tempBundlePath);
     }
+    // Write the generated metadata. It's not used by the upload command, but
+    // it's helpful for debugging upload validation errors.
+    const manifest = await (0, helpers_1.importManifest)(tempBundlePath);
+    const metadata = (0, metadata_1.compilePackMetadata)(manifest);
+    const tempMetadataPath = path_1.default.join(intermediateOutputDirectory, 'metadata.json');
+    fs_1.default.writeFileSync(tempMetadataPath, JSON.stringify(metadata));
     if (!outputDirectory || outputDirectory === intermediateOutputDirectory) {
         return {
             bundlePath: tempBundlePath,
@@ -223,11 +231,13 @@ outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, timer
     }
     const bundlePath = path_1.default.join(outputDirectory, bundleFilename);
     const bundleSourceMapPath = `${bundlePath}.map`;
+    const metadataPath = path_1.default.join(outputDirectory, 'metadata.json');
     if (!fs_1.default.existsSync(outputDirectory)) {
         fs_1.default.mkdirSync(outputDirectory, { recursive: true });
     }
     // move over finally compiled bundle & sourcemap to the target directory.
     fs_1.default.copyFileSync(tempBundlePath, bundlePath);
+    fs_1.default.copyFileSync(tempMetadataPath, metadataPath);
     fs_1.default.copyFileSync(`${tempBundlePath}.map`, bundleSourceMapPath);
     return {
         intermediateOutputDirectory,
