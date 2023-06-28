@@ -317,7 +317,6 @@ export interface DynamicSyncTableDef<
 
   /**
    * See {@link DynamicSyncTableOptions.propertyOptions}
-   * @hidden
    */
   propertyOptions?: PropertyOptionsMetadataFormula<any>;
 }
@@ -1555,8 +1554,6 @@ export interface PropertyOptionsAnnotatedResult {
 /**
  * Formula implementing property options.
  * These are constructed by {@link makePropertyOptionsFormula}.
- *
- * @hidden
  */
 export type PropertyOptionsMetadataFormula<SchemaT extends Schema> = ObjectPackFormula<[], ArraySchema<SchemaT>> & {
   execute(params: ParamValues<[]>, context: PropertyOptionsExecutionContext): Promise<object> | object;
@@ -1638,8 +1635,6 @@ export function makeMetadataFormula(
 
 /**
  * Builds a formula to store in {@link SyncTablePropertyOptions}.
- *
- * @hidden
  */
 export function makePropertyOptionsFormula<SchemaT extends Schema>({
   execute,
@@ -1882,9 +1877,7 @@ export interface DynamicOptions {
   defaultAddDynamicColumns?: boolean;
 
   /**
-   * See {@link DynamicSyncTableOptions.autocomplete}
-   *
-   * @hidden
+   * See {@link DynamicSyncTableOptions.propertyOptions}
    */
   propertyOptions?: PropertyOptionsMetadataFunction<any>;
 }
@@ -2072,13 +2065,11 @@ export interface DynamicSyncTableOptions<
    *       return ["Dynamic Value 1", "Dynamic value 2"];
    *     }
    *     throw new coda.UserVisibleError(
-   *       `Cannot autocomplete property ${context.propertyName}`
+   *       `Cannot generate options for property ${context.propertyName}`
    *     );
    *   },
    *   ...
    * ```
-   *
-   * @hidden
    */
   propertyOptions?: PropertyOptionsMetadataFunction<any>;
 }

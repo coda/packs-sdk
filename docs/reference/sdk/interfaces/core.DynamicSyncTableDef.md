@@ -147,6 +147,14 @@ See [name](core.SyncTableOptions.md#name)
 
 ___
 
+### propertyOptions
+
+• `Optional` **propertyOptions**: [`PropertyOptionsMetadataFormula`](../types/core.PropertyOptionsMetadataFormula.md)<`any`\>
+
+See [propertyOptions](core.DynamicSyncTableOptions.md#propertyoptions)
+
+___
+
 ### schema
 
 • **schema**: `SchemaT`

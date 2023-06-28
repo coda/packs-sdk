@@ -580,8 +580,6 @@ function makeMetadataFormula(execute, options) {
 exports.makeMetadataFormula = makeMetadataFormula;
 /**
  * Builds a formula to store in {@link SyncTablePropertyOptions}.
- *
- * @hidden
  */
 function makePropertyOptionsFormula({ execute, schema, name, }) {
     if (!(execute instanceof Function)) {

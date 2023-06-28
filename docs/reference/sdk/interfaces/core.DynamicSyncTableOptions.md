@@ -152,6 +152,44 @@ in placeholderSchema will be rendered by default after the sync.
 
 ___
 
+### propertyOptions
+
+• `Optional` **propertyOptions**: [`PropertyOptionsMetadataFunction`](../types/core.PropertyOptionsMetadataFunction.md)<`any`\>
+
+An options function to use for any dynamic schema properties.
+The name of the property that's being modified by the doc editor
+is available in the option function's context parameter.
+
+**`Example`**
+
+```
+coda.makeDynamicSyncTable({
+  name: "MySyncTable",
+  getSchema: async function (context) => {
+    return coda.makeObjectSchema({
+      properties: {
+        dynamicPropertyName: {
+          type: coda.ValueType.String,
+          codaType: coda.ValueHintType.SelectList,
+          mutable: true,
+          options: coda.OptionsType.Dynamic,
+        },
+      },
+    });
+  },
+  propertyOptions: async function (context) => {
+    if (context.propertyName === "dynamicPropertyName") {
+      return ["Dynamic Value 1", "Dynamic value 2"];
+    }
+    throw new coda.UserVisibleError(
+      `Cannot generate options for property ${context.propertyName}`
+    );
+  },
+  ...
+```
+
+___
+
 ### searchDynamicUrls
 
 • `Optional` **searchDynamicUrls**: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)

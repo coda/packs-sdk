@@ -16,6 +16,8 @@ this contains the [Fetcher](core.Fetcher.md), which is used for making HTTP requ
 
 - **`ExecutionContext`**
 
+  ↳ [`PropertyOptionsExecutionContext`](core.PropertyOptionsExecutionContext.md)
+
   ↳ [`SyncExecutionContext`](core.SyncExecutionContext.md)
 
   ↳ [`UpdateSyncExecutionContext`](core.UpdateSyncExecutionContext.md)

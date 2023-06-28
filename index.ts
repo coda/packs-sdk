@@ -63,6 +63,7 @@ export type {ExternalPackVersionMetadata} from './compiled_types';
 // Formula related interfaces
 export type {ArrayType} from './api_types';
 export {OptionsType} from './api_types';
+export type {PropertyOptionsMetadataFormula} from './api';
 export type {PropertyOptionsExecutionContext} from './api_types';
 export {ConnectionRequirement} from './api_types';
 export type {Continuation} from './api';
@@ -122,6 +123,7 @@ export {UserVisibleError} from './api';
 
 // Formula definition helpers
 export {makeMetadataFormula} from './api';
+export {makePropertyOptionsFormula} from './api';
 export {makeDynamicSyncTable} from './api';
 export {makeEmptyFormula} from './api';
 export {makeFormula} from './api';
