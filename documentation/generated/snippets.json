@@ -113,6 +113,15 @@
   },
   {
     "triggerTokens": [
+      "setUserAuthentication:Headers",
+      "MultiHeaderToken",
+      "MultiHeaderTokenAuthentication"
+    ],
+    "content": "Sets per-user authentication for the Pack, using multiple tokens passed as HTTP headers.",
+    "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.MultiHeaderToken,\n  headers: [\n    { name: \"${1:X-My-Token}\", description: \"${2:My token description}\" },\n    { name: \"${3:X-My-Key}\", description: \"${4:My key description}\" },\n    // TODO: Add more headers, if needed.\n  ],\n  instructionsUrl: \"${5:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
+  },
+  {
+    "triggerTokens": [
       "setUserAuthentication:Custom",
       "Custom",
       "CustomAuthentication"

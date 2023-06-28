@@ -65,16 +65,6 @@
     "content": "Adding authentication to your Pack allows you to pass credentials with your API requests. Simply specify the type of authentication to use and Coda will collect the credentials from the user, store them, and apply them to Fetcher requests. Per-user authentication is the most common, where each user connects to their own account, while system-wide authentication is used in cases where the Pack maker's keys are used for all users.\n\nCoda supports a fixed set of authentication types which cover the most common patterns that APIs use. In addition you can define your own form of custom token authentication to support more complex scenarios. It's not possible to write completely custom authentication code however, as Coda alone has access to the user's credentials.",
     "exampleSnippets": [
       {
-        "name": "Template (Per-user)",
-        "content": "The basic structure of per-user authentication.",
-        "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.$0,\n});"
-      },
-      {
-        "name": "Template (System-wide)",
-        "content": "The basic structure of system-wide authentication.",
-        "code": "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.$0,\n});"
-      },
-      {
         "name": "Authorization header",
         "content": "Authentication that passes a long-lived token in the Authorization header using the \"Bearer\" scheme. This sample connects to the Todoist API.",
         "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Per-user authentication to the Todoist API, using a personal API token in\n// an \"Authorization: Bearer ...\" header.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.HeaderBearerToken,\n  instructionsUrl: \"https://todoist.com/app/settings/integrations\",\n\n  // Determines the display name of the connected account.\n  getConnectionName: async function (context) {\n    let url = coda.withQueryParams(\"https://api.todoist.com/sync/v9/sync\", {\n      resource_types: JSON.stringify([\"user\"]),\n    });\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: url,\n    });\n    return response.body.user?.full_name;\n  },\n});\n\n// Allow the pack to make requests to Todoist.\npack.addNetworkDomain(\"todoist.com\");"
@@ -83,6 +73,11 @@
         "name": "Custom header",
         "content": "Authentication that passes a long-lived token in a custom header. This sample connects to RapidAPI.",
         "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// System-wide authentication to RapidAPI, using an API key in a custom header.\n// See https://docs.rapidapi.com/docs/keys#how-to-find-your-api-key.\npack.setSystemAuthentication({\n  type: coda.AuthenticationType.CustomHeaderToken,\n  headerName: \"X-RapidAPI-Key\",\n});\n\n// Allow the pack to make requests to RapidAPI.\npack.addNetworkDomain(\"rapidapi.com\");"
+      },
+      {
+        "name": "Multiple headers",
+        "content": "Authentication that passes multiple long-lived token in a HTTP headers. This sample connects to the Copper API.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Per-user authentication to the Copper API, using multiple HTTP headers.\n// See https://developer.copper.com/introduction/requests.html#headers.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.MultiHeaderToken,\n  headers: [\n    { name: \"X-PW-AccessToken\", description: \"API key\" },\n    { name: \"X-PW-UserEmail\", description: \"Email address\" },\n  ],\n\n  // Determines the display name of the connected account.\n  getConnectionName: async function (context) {\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: \"https://api.copper.com/developer_api/v1/account\",\n      headers: {\n        \"X-PW-Application\": \"developer_api\",\n      },\n    });\n    let account = response.body;\n    return account.name;\n  },\n});\n\n// Allow the pack to make requests to Copper.\npack.addNetworkDomain(\"copper.com\");"
       },
       {
         "name": "Query parameter",
@@ -704,6 +699,11 @@
         "name": "Coda API",
         "content": "The Coda API requires the user to provide an API token, passed in an Authorization header. Packs include a specific authentication type optimized for the Coda API.",
         "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Per-user authentication to the Coda API, using a token in the Authorization\n// header.\n// See https://coda.io/developers/apis/v1\npack.setUserAuthentication({\n  type: coda.AuthenticationType.CodaApiHeaderBearerToken,\n\n  // Creates the token automatically when the Pack is installed.\n  shouldAutoAuthSetup: true,\n});\n\n// Allow the pack to make requests to Coda.\npack.addNetworkDomain(\"coda.io\");"
+      },
+      {
+        "name": "Copper API",
+        "content": "The Copper API requires the user to provide an API key and their email address, passed in custom HTTP headers.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Per-user authentication to the Copper API, using multiple HTTP headers.\n// See https://developer.copper.com/introduction/requests.html#headers.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.MultiHeaderToken,\n  headers: [\n    { name: \"X-PW-AccessToken\", description: \"API key\" },\n    { name: \"X-PW-UserEmail\", description: \"Email address\" },\n  ],\n\n  // Determines the display name of the connected account.\n  getConnectionName: async function (context) {\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: \"https://api.copper.com/developer_api/v1/account\",\n      headers: {\n        \"X-PW-Application\": \"developer_api\",\n      },\n    });\n    let account = response.body;\n    return account.name;\n  },\n});\n\n// Allow the pack to make requests to Copper.\npack.addNetworkDomain(\"copper.com\");"
       },
       {
         "name": "Dropbox",

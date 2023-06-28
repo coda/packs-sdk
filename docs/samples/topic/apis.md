@@ -143,6 +143,41 @@ pack.setUserAuthentication({
 pack.addNetworkDomain("coda.io");
 {% endraw %}
 ```
+## Copper API
+The Copper API requires the user to provide an API key and their email address, passed in custom HTTP headers.
+
+```ts
+{% raw %}
+import * as coda from "@codahq/packs-sdk";
+export const pack = coda.newPack();
+
+// Per-user authentication to the Copper API, using multiple HTTP headers.
+// See https://developer.copper.com/introduction/requests.html#headers.
+pack.setUserAuthentication({
+  type: coda.AuthenticationType.MultiHeaderToken,
+  headers: [
+    { name: "X-PW-AccessToken", description: "API key" },
+    { name: "X-PW-UserEmail", description: "Email address" },
+  ],
+
+  // Determines the display name of the connected account.
+  getConnectionName: async function (context) {
+    let response = await context.fetcher.fetch({
+      method: "GET",
+      url: "https://api.copper.com/developer_api/v1/account",
+      headers: {
+        "X-PW-Application": "developer_api",
+      },
+    });
+    let account = response.body;
+    return account.name;
+  },
+});
+
+// Allow the pack to make requests to Copper.
+pack.addNetworkDomain("copper.com");
+{% endraw %}
+```
 ## Dropbox
 The Dropbox API uses OAuth2 to authenticate users, prompting them to approve a specific set of scopes. Additional parameters are requires on the authorization URL to ensure that offline access is granted.
 

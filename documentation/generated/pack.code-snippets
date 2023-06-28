@@ -71,6 +71,12 @@
     "body": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.CustomHeaderToken,\n  headerName: \"${1:MyToken}\",\n  instructionsUrl: \"${2:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});",
     "scope": "javascript,typescript"
   },
+  "setUserAuthentication:Headers": {
+    "prefix": "/setUserAuthentication:Headers",
+    "description": "Sets per-user authentication for the Pack, using multiple tokens passed as HTTP headers.",
+    "body": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.MultiHeaderToken,\n  headers: [\n    { name: \"${1:X-My-Token}\", description: \"${2:My token description}\" },\n    { name: \"${3:X-My-Key}\", description: \"${4:My key description}\" },\n    // TODO: Add more headers, if needed.\n  ],\n  instructionsUrl: \"${5:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});",
+    "scope": "javascript,typescript"
+  },
   "setUserAuthentication:Custom": {
     "prefix": "/setUserAuthentication:Custom",
     "description": "Sets per-user authentication for the Pack, using a set of custom tokens.",
