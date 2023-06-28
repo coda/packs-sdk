@@ -66,6 +66,11 @@ export const Snippets: AutocompleteSnippet[] = [
     codeFile: './samples/snippets/authentication/user_custom_header.ts',
   },
   {
+    triggerTokens: ['setUserAuthentication:Headers', 'MultiHeaderToken', 'MultiHeaderTokenAuthentication'],
+    content: 'Sets per-user authentication for the Pack, using multiple tokens passed as HTTP headers.',
+    codeFile: './samples/snippets/authentication/user_multi_header.ts',
+  },
+  {
     triggerTokens: ['setUserAuthentication:Custom', 'Custom', 'CustomAuthentication'],
     content: 'Sets per-user authentication for the Pack, using a set of custom tokens.',
     codeFile: './samples/snippets/authentication/user_custom.ts',
@@ -314,16 +319,6 @@ export const Examples: Example[] = [
     },
     exampleSnippets: [
       {
-        name: 'Template (Per-user)',
-        content: 'The basic structure of per-user authentication.',
-        codeFile: './samples/snippets/authentication/user.ts',
-      },
-      {
-        name: 'Template (System-wide)',
-        content: 'The basic structure of system-wide authentication.',
-        codeFile: './samples/snippets/authentication/system.ts',
-      },
-      {
         name: 'Authorization header',
         content:
           'Authentication that passes a long-lived token in the Authorization header using the "Bearer" scheme. This sample connects to the Todoist API.',
@@ -333,6 +328,11 @@ export const Examples: Example[] = [
         name: 'Custom header',
         content: 'Authentication that passes a long-lived token in a custom header. This sample connects to RapidAPI.',
         codeFile: './samples/packs/authentication/rapidapi.ts',
+      },
+      {
+        name: 'Multiple headers',
+        content: 'Authentication that passes multiple long-lived token in a HTTP headers. This sample connects to the Copper API.',
+        codeFile: './samples/packs/authentication/copper.ts',
       },
       {
         name: 'Query parameter',
@@ -948,6 +948,11 @@ export const Examples: Example[] = [
         name: 'Coda API',
         content: 'The Coda API requires the user to provide an API token, passed in an Authorization header. Packs include a specific authentication type optimized for the Coda API.',
         codeFile: './samples/packs/authentication/coda.ts',
+      },
+      {
+        name: 'Copper API',
+        content: 'The Copper API requires the user to provide an API key and their email address, passed in custom HTTP headers.',
+        codeFile: './samples/packs/authentication/copper.ts',
       },
       {
         name: 'Dropbox',

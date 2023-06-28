@@ -129,6 +129,31 @@ Many APIs use tokens or keys for authentication. Per-user tokens are typically g
 
     [View Sample Code][sample_custom_header]{ .md-button }
 
+=== "Multiple headers"
+
+    Use [`MultiHeaderToken`][MultiHeaderToken] authentication for APIs that expect multiple tokens in HTTP headers. For example:
+
+    ```
+    GET /users/me
+    Host: api.example.com
+    X-API-Key: <token>
+    X-API-Secret: <secret>
+    ```
+
+    Can be implemented using:
+
+    ```ts
+    pack.setUserAuthentication({
+      type: coda.AuthenticationType.MultiHeaderToken,
+      headers: [
+        { name: "X-API-Key", description: "The key." },
+        { name: "X-API-Secret", description: "The secret." },
+      ],
+    });
+    ```
+
+    [View Sample Code][sample_multiple_headers]{ .md-button }
+
 === "Query parameter"
 
     Use [`QueryParamToken`][QueryParamToken] authentication for APIs that expect the token in a URL query parameter. For example:
@@ -547,6 +572,7 @@ There are services however where each account is associated with a distinct doma
 [sample_custom]: ../../../samples/topic/authentication.md#custom-tokens
 [sample_multiple_query_params]: ../../../samples/topic/authentication.md#multiple-query-parameters
 [sample_aws]: ../../../samples/topic/authentication.md#aws-signature-version-4
+[sample_multiple_headers]: ../../../samples/topic/authentication.md#multiple-headers
 
 [hc_account_sharing]: https://help.coda.io/en/articles/4587167-what-can-coda-access-with-packs
 [account_settings]: https://coda.io/account
@@ -568,3 +594,4 @@ There are services however where each account is associated with a distinct doma
 [CodaApiHeaderBearerToken]: ../../../reference/sdk/enums/core.AuthenticationType.md#codaapiheaderbearertoken
 [AWSAccessKey]: ../../../reference/sdk/enums/core.AuthenticationType.md#awsaccesskey
 [support_network_domain]: ../../../support/index.md#network-domains
+[MultiHeaderToken]: ../../../reference/sdk/enums/core.AuthenticationType.md#multiheadertoken

@@ -13,26 +13,6 @@ Coda supports a fixed set of authentication types which cover the most common pa
 
 [Learn More](../../../guides/basics/authentication){ .md-button }
 
-## Template (Per-user)
-The basic structure of per-user authentication.
-
-```ts
-{% raw %}
-pack.setUserAuthentication({
-  type: coda.AuthenticationType.$0,
-});
-{% endraw %}
-```
-## Template (System-wide)
-The basic structure of system-wide authentication.
-
-```ts
-{% raw %}
-pack.setSystemAuthentication({
-  type: coda.AuthenticationType.$0,
-});
-{% endraw %}
-```
 ## Authorization header
 Authentication that passes a long-lived token in the Authorization header using the &quot;Bearer&quot; scheme. This sample connects to the Todoist API.
 
@@ -81,6 +61,41 @@ pack.setSystemAuthentication({
 
 // Allow the pack to make requests to RapidAPI.
 pack.addNetworkDomain("rapidapi.com");
+{% endraw %}
+```
+## Multiple headers
+Authentication that passes multiple long-lived token in a HTTP headers. This sample connects to the Copper API.
+
+```ts
+{% raw %}
+import * as coda from "@codahq/packs-sdk";
+export const pack = coda.newPack();
+
+// Per-user authentication to the Copper API, using multiple HTTP headers.
+// See https://developer.copper.com/introduction/requests.html#headers.
+pack.setUserAuthentication({
+  type: coda.AuthenticationType.MultiHeaderToken,
+  headers: [
+    { name: "X-PW-AccessToken", description: "API key" },
+    { name: "X-PW-UserEmail", description: "Email address" },
+  ],
+
+  // Determines the display name of the connected account.
+  getConnectionName: async function (context) {
+    let response = await context.fetcher.fetch({
+      method: "GET",
+      url: "https://api.copper.com/developer_api/v1/account",
+      headers: {
+        "X-PW-Application": "developer_api",
+      },
+    });
+    let account = response.body;
+    return account.name;
+  },
+});
+
+// Allow the pack to make requests to Copper.
+pack.addNetworkDomain("copper.com");
 {% endraw %}
 ```
 ## Query parameter
