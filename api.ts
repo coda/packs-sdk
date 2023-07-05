@@ -1554,6 +1554,7 @@ export interface PropertyOptionsAnnotatedResult {
 /**
  * Formula implementing property options.
  * These are constructed by {@link makePropertyOptionsFormula}.
+ * @hidden
  */
 export type PropertyOptionsMetadataFormula<SchemaT extends Schema> = ObjectPackFormula<[], ArraySchema<SchemaT>> & {
   execute(params: ParamValues<[]>, context: PropertyOptionsExecutionContext): Promise<object> | object;
@@ -1635,6 +1636,7 @@ export function makeMetadataFormula(
 
 /**
  * Builds a formula to store in {@link SyncTablePropertyOptions}.
+ * @hidden
  */
 export function makePropertyOptionsFormula<SchemaT extends Schema>({
   execute,

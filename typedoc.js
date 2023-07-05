@@ -29,6 +29,7 @@ module.exports = {
     'ObjectSchemaDefinitionType',
     'ObjectSchemaType',
     'ParameterTypeMap',
+    'PropertyOptionsMetadataFormula',
     'SimpleStringHintTypes',
     'StringHintTypeToSchemaType',
     'StringHintValueTypes',

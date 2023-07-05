@@ -149,7 +149,7 @@ ___
 
 ### propertyOptions
 
-• `Optional` **propertyOptions**: [`PropertyOptionsMetadataFormula`](../types/core.PropertyOptionsMetadataFormula.md)<`any`\>
+• `Optional` **propertyOptions**: `PropertyOptionsMetadataFormula`<`any`\>
 
 See [propertyOptions](core.DynamicSyncTableOptions.md#propertyoptions)
 
