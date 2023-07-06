@@ -317,7 +317,6 @@ export interface DynamicSyncTableDef<
 
   /**
    * See {@link DynamicSyncTableOptions.propertyOptions}
-   * @hidden
    */
   propertyOptions?: PropertyOptionsMetadataFormula<any>;
 }
@@ -1555,7 +1554,6 @@ export interface PropertyOptionsAnnotatedResult {
 /**
  * Formula implementing property options.
  * These are constructed by {@link makePropertyOptionsFormula}.
- *
  * @hidden
  */
 export type PropertyOptionsMetadataFormula<SchemaT extends Schema> = ObjectPackFormula<[], ArraySchema<SchemaT>> & {
@@ -1638,7 +1636,6 @@ export function makeMetadataFormula(
 
 /**
  * Builds a formula to store in {@link SyncTablePropertyOptions}.
- *
  * @hidden
  */
 export function makePropertyOptionsFormula<SchemaT extends Schema>({
@@ -1882,9 +1879,7 @@ export interface DynamicOptions {
   defaultAddDynamicColumns?: boolean;
 
   /**
-   * See {@link DynamicSyncTableOptions.autocomplete}
-   *
-   * @hidden
+   * See {@link DynamicSyncTableOptions.propertyOptions}
    */
   propertyOptions?: PropertyOptionsMetadataFunction<any>;
 }
@@ -2072,13 +2067,11 @@ export interface DynamicSyncTableOptions<
    *       return ["Dynamic Value 1", "Dynamic value 2"];
    *     }
    *     throw new coda.UserVisibleError(
-   *       `Cannot autocomplete property ${context.propertyName}`
+   *       `Cannot generate options for property ${context.propertyName}`
    *     );
    *   },
    *   ...
    * ```
-   *
-   * @hidden
    */
   propertyOptions?: PropertyOptionsMetadataFunction<any>;
 }
@@ -2271,33 +2264,6 @@ export function makeSyncTableLegacy<
  *   ...
  * });
  * ```
- */
-export function makeDynamicSyncTable<
-  K extends string,
-  L extends string,
-  ParamDefsT extends ParamDefs,
-  SchemaT extends ObjectSchemaDefinition<K, L>,
->(params: {
-  name: string;
-  description?: string;
-  getName: MetadataFormulaDef;
-  getSchema: MetadataFormulaDef;
-  identityName: string;
-  formula: SyncFormulaDef<K, L, ParamDefsT, any>;
-  getDisplayUrl: MetadataFormulaDef;
-  listDynamicUrls?: MetadataFormulaDef;
-  searchDynamicUrls?: MetadataFormulaDef;
-  entityName?: string;
-  connectionRequirement?: ConnectionRequirement;
-  defaultAddDynamicColumns?: boolean;
-  placeholderSchema?: SchemaT;
-}): DynamicSyncTableDef<K, L, ParamDefsT, any>;
-
-// TODO(dweitzman): Merge this with the above function definition
-// to make "propertyOptions" available in the public API docs.
-/**
- * Includes the unreleased propertyOptions parameter.
- * @hidden
  */
 export function makeDynamicSyncTable<
   K extends string,

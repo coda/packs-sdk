@@ -12,8 +12,8 @@
  * @module core
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.withIdentity = exports.makeSchema = exports.makeReferenceSchemaFromObjectSchema = exports.makeObjectSchema = exports.makeAttributionNode = exports.generateSchema = exports.ValueType = exports.ValueHintType = exports.ScaleIconSet = exports.PropertyLabelValueTemplate = exports.LinkDisplayType = exports.ImageOutline = exports.ImageCornerStyle = exports.EmailDisplayType = exports.DurationUnit = exports.CurrencyFormat = exports.AttributionNodeType = exports.ensureUnreachable = exports.ensureNonEmptyString = exports.ensureExists = exports.assertCondition = exports.SvgConstants = exports.getEffectivePropertyKeysFromSchema = exports.withQueryParams = exports.joinUrl = exports.getQueryParams = exports.simpleAutocomplete = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.makeParameter = exports.makeTranslateObjectFormula = exports.makeSyncTable = exports.makeFormula = exports.makeEmptyFormula = exports.makeDynamicSyncTable = exports.makeMetadataFormula = exports.UserVisibleError = exports.Type = exports.MissingScopesError = exports.StatusCodeError = exports.PrecannedDateRange = exports.ParameterType = exports.NetworkConnection = exports.UpdateOutcome = exports.ConnectionRequirement = exports.OptionsType = exports.PackDefinitionBuilder = exports.newPack = exports.PostSetupType = exports.AuthenticationType = void 0;
-exports.TokenExchangeCredentialsLocation = exports.ValidFetchMethods = void 0;
+exports.makeSchema = exports.makeReferenceSchemaFromObjectSchema = exports.makeObjectSchema = exports.makeAttributionNode = exports.generateSchema = exports.ValueType = exports.ValueHintType = exports.ScaleIconSet = exports.PropertyLabelValueTemplate = exports.LinkDisplayType = exports.ImageOutline = exports.ImageCornerStyle = exports.EmailDisplayType = exports.DurationUnit = exports.CurrencyFormat = exports.AttributionNodeType = exports.ensureUnreachable = exports.ensureNonEmptyString = exports.ensureExists = exports.assertCondition = exports.SvgConstants = exports.getEffectivePropertyKeysFromSchema = exports.withQueryParams = exports.joinUrl = exports.getQueryParams = exports.simpleAutocomplete = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.makeParameter = exports.makeTranslateObjectFormula = exports.makeSyncTable = exports.makeFormula = exports.makeEmptyFormula = exports.makeDynamicSyncTable = exports.makePropertyOptionsFormula = exports.makeMetadataFormula = exports.UserVisibleError = exports.Type = exports.MissingScopesError = exports.StatusCodeError = exports.PrecannedDateRange = exports.ParameterType = exports.NetworkConnection = exports.UpdateOutcome = exports.ConnectionRequirement = exports.OptionsType = exports.PackDefinitionBuilder = exports.newPack = exports.PostSetupType = exports.AuthenticationType = void 0;
+exports.TokenExchangeCredentialsLocation = exports.ValidFetchMethods = exports.withIdentity = void 0;
 var types_1 = require("./types");
 Object.defineProperty(exports, "AuthenticationType", { enumerable: true, get: function () { return types_1.AuthenticationType; } });
 var types_2 = require("./types");
@@ -46,23 +46,25 @@ Object.defineProperty(exports, "UserVisibleError", { enumerable: true, get: func
 var api_5 = require("./api");
 Object.defineProperty(exports, "makeMetadataFormula", { enumerable: true, get: function () { return api_5.makeMetadataFormula; } });
 var api_6 = require("./api");
-Object.defineProperty(exports, "makeDynamicSyncTable", { enumerable: true, get: function () { return api_6.makeDynamicSyncTable; } });
+Object.defineProperty(exports, "makePropertyOptionsFormula", { enumerable: true, get: function () { return api_6.makePropertyOptionsFormula; } });
 var api_7 = require("./api");
-Object.defineProperty(exports, "makeEmptyFormula", { enumerable: true, get: function () { return api_7.makeEmptyFormula; } });
+Object.defineProperty(exports, "makeDynamicSyncTable", { enumerable: true, get: function () { return api_7.makeDynamicSyncTable; } });
 var api_8 = require("./api");
-Object.defineProperty(exports, "makeFormula", { enumerable: true, get: function () { return api_8.makeFormula; } });
+Object.defineProperty(exports, "makeEmptyFormula", { enumerable: true, get: function () { return api_8.makeEmptyFormula; } });
 var api_9 = require("./api");
-Object.defineProperty(exports, "makeSyncTable", { enumerable: true, get: function () { return api_9.makeSyncTable; } });
+Object.defineProperty(exports, "makeFormula", { enumerable: true, get: function () { return api_9.makeFormula; } });
 var api_10 = require("./api");
-Object.defineProperty(exports, "makeTranslateObjectFormula", { enumerable: true, get: function () { return api_10.makeTranslateObjectFormula; } });
+Object.defineProperty(exports, "makeSyncTable", { enumerable: true, get: function () { return api_10.makeSyncTable; } });
 var api_11 = require("./api");
-Object.defineProperty(exports, "makeParameter", { enumerable: true, get: function () { return api_11.makeParameter; } });
+Object.defineProperty(exports, "makeTranslateObjectFormula", { enumerable: true, get: function () { return api_11.makeTranslateObjectFormula; } });
 var api_12 = require("./api");
-Object.defineProperty(exports, "autocompleteSearchObjects", { enumerable: true, get: function () { return api_12.autocompleteSearchObjects; } });
+Object.defineProperty(exports, "makeParameter", { enumerable: true, get: function () { return api_12.makeParameter; } });
 var api_13 = require("./api");
-Object.defineProperty(exports, "makeSimpleAutocompleteMetadataFormula", { enumerable: true, get: function () { return api_13.makeSimpleAutocompleteMetadataFormula; } });
+Object.defineProperty(exports, "autocompleteSearchObjects", { enumerable: true, get: function () { return api_13.autocompleteSearchObjects; } });
 var api_14 = require("./api");
-Object.defineProperty(exports, "simpleAutocomplete", { enumerable: true, get: function () { return api_14.simpleAutocomplete; } });
+Object.defineProperty(exports, "makeSimpleAutocompleteMetadataFormula", { enumerable: true, get: function () { return api_14.makeSimpleAutocompleteMetadataFormula; } });
+var api_15 = require("./api");
+Object.defineProperty(exports, "simpleAutocomplete", { enumerable: true, get: function () { return api_15.simpleAutocomplete; } });
 // URL helpers.
 var url_1 = require("./helpers/url");
 Object.defineProperty(exports, "getQueryParams", { enumerable: true, get: function () { return url_1.getQueryParams; } });

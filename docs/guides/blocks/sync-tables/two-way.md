@@ -48,7 +48,7 @@ const TaskSchema = coda.makeObjectSchema({
 });
 ```
 
-Only top-level properties in the schema are eligible to be editable, since they are stored in distinct columns. Properties in nested objects, even if marked as mutable, will not be editable in the sync table. You can however still make a column containing an nested object editable, but you'll need to provide [autocomplete](#autocomplete) to generate a list of compatible objects.
+Only top-level properties in the schema are eligible to be editable, since they are stored in distinct columns. Properties in nested objects, even if marked as mutable, will not be editable in the sync table. You can however still make a column containing an nested object editable, but you'll need to provide [an options function](#options) to generate a list of compatible objects.
 
 ??? tip "Annotating a shared schema"
 
@@ -195,24 +195,32 @@ pack.addSyncTable({
 When processing updates in batches be sure to return the same number of results as there were updates, in the same order. If an individual update fails, catch the exception and return it in the results array to indicate that the row update failed. Unhandled exceptions will prevent the entire batch from completing and won't give the user a clear indication of which row was the cause. See the [Handling errors](#handling-errors) section below for more information.
 
 
-## Property autocomplete {: #autocomplete}
+## Property options {: #options}
 
-Similar to [parameter autocomplete][parameters_autocomplete], you can provide a suggested set of values for mutable properties, which will be shown to the user when they are editing a corresponding cell.
+Similar to [parameter autocomplete][parameters_autocomplete], you can provide a suggested set of options for mutable properties, which will be shown to the user when they are editing a corresponding cell.
 
-<img src="../../../../images/two_way_autocomplete.png" srcset="../../../../images/two_way_autocomplete_2x.png 2x" class="screenshot" alt="Autocomplete in a cell.">
+<img src="../../../../images/two_way_autocomplete.png" srcset="../../../../images/two_way_autocomplete_2x.png 2x" class="screenshot" alt="Suggested property options in a cell.">
 
-The valid options are defined in the `autocomplete` field of the property, which can be either an array of static values or a function that generates them dynamically. An autocomplete function can access the value of other properties in the row via `context.propertyValues` and the current search string typed by the user via `context.search`.
+!!! info "The hint `SelectList` or `Reference` is required"
+
+    Suggested options is only available for properties that have the `codaType` set to `SelectList` or `Reference`. In the future the `SelectList` hint will also change the UX of the column to be like a Coda select list.
+
+ The possible choices are defined in the `options` field of the property, which can be either an array of static values or a function that generates them dynamically. An options function can access the value of other properties in the row via `context.propertyValues` and the current search string typed by the user via `context.search`.
+
+
 
 ```ts
 const ShirtSchema = coda.makeObjectSchema({
   properties: {
     size: {
       type: coda.ValueType.String,
-      autocomplete: ["S", "M", "L", "XL"],
+      codaType: coda.ValueHintType.SelectList,
+      options: ["S", "M", "L", "XL"],
     },
     color: {
       type: coda.ValueType.String,
-      autocomplete: async function (context) {
+      codaType: coda.ValueHintType.SelectList,
+      options: async function (context) {
         let size = context.propertyValues.size;
         let availableColors = await getColorsForSize(context, size);
         return availableColors;
@@ -220,7 +228,8 @@ const ShirtSchema = coda.makeObjectSchema({
     },
     pattern: {
       type: coda.ValueType.String,
-      autocomplete: async function (context) {
+      codaType: coda.ValueHintType.SelectList,
+      options: async function (context) {
         let search = context.search;
         let patterns = await searchPatterns(context, search);
         return patterns;
@@ -231,7 +240,7 @@ const ShirtSchema = coda.makeObjectSchema({
 });
 ```
 
-For sync tables with dynamic schemas, you aren't able to define the search function directly on the property itself. Instead use the special value `AutocompleteType.Dynamic`, which tells Coda to call the sync table's `autocomplete` function. This is a single function that handles the auto-complete for all dynamic properties. It's defined directly on a dynamic sync table, or within the `dynamicOptions` of a regular sync table. The function can determine which property to provide autocomplete for by inspecting `context.propertyName`.
+For sync tables with dynamic schemas, you aren't able to define the options function directly on the property itself. Instead use the special value `OptionsType.Dynamic`, which tells Coda to call the sync table's `propertyOptions` function. This is a single function that handles the option generating for all dynamic properties. It's defined directly on a dynamic sync table, or within the `dynamicOptions` of a regular sync table. The function can determine which property to provide options for by inspecting `context.propertyName`.
 
 <!-- TODO: Document exactly what propertyName contains (original, normalized, fromKey). -->
 
@@ -245,12 +254,13 @@ For sync tables with dynamic schemas, you aren't able to define the search funct
         for (let attr of attributes) {
           properties[attr] = {
             // ...
-            autocomplete: coda.AutocompleteType.Dynamic,
+            codaType: coda.ValueHintType.SelectList,
+            options: coda.OptionsType.Dynamic,
           }
         }
         // ...
       },
-      autocomplete: async function (context) {
+      propertyOptions: async function (context) {
         let attr = context.propertyName;
         let options = await getCustomAttributeOptions(context, attr);
         return options;
@@ -270,12 +280,13 @@ For sync tables with dynamic schemas, you aren't able to define the search funct
           for (let attr of attriutes) {
             properties[attr] = {
               // ...
-              autocomplete: coda.AutocompleteType.Dynamic,
+              codaType: coda.ValueHintType.SelectList,
+              options: coda.OptionsType.Dynamic,
             }
           }
           // ...
         },
-        autocomplete: async function (context) {
+        propertyOptions: async function (context) {
           let attr = context.propertyName;
           let options = await getCustomAttributeOptions(context, attr);
           return options;
