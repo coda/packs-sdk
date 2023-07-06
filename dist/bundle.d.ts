@@ -944,7 +944,6 @@ export declare type BooleanHintTypes = (typeof BooleanHintValueTypes)[number];
 export declare type ObjectHintTypes = (typeof ObjectHintValueTypes)[number];
 /**
  * A function or set of values to return for property options.
- * @hidden
  */
 export declare type PropertySchemaOptions<T extends PackFormulaResult> = PropertyOptionsMetadataFunction<T[]> | T[] | OptionsType | OptionsReference;
 export interface PropertyWithOptions<T extends PackFormulaResult> {
@@ -3193,7 +3192,7 @@ export declare function makeSyncTable<K extends string, L extends string, ParamD
  * });
  * ```
  */
-export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>>(params: {
+export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>>({ name, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, searchDynamicUrls: searchDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, propertyOptions, }: {
 	name: string;
 	description?: string;
 	getName: MetadataFormulaDef;
@@ -3207,6 +3206,7 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
 	connectionRequirement?: ConnectionRequirement;
 	defaultAddDynamicColumns?: boolean;
 	placeholderSchema?: SchemaT;
+	propertyOptions?: PropertyOptionsMetadataFunction<any>;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any>;
 /**
  * Helper to generate a formula that fetches a list of entities from a given URL and returns them.

@@ -201,9 +201,9 @@ Similar to [parameter autocomplete][parameters_autocomplete], you can provide a 
 
 <img src="../../../../images/two_way_autocomplete.png" srcset="../../../../images/two_way_autocomplete_2x.png 2x" class="screenshot" alt="Suggested property options in a cell.">
 
-!!! info "The hint `SelectList` is required"
+!!! info "The hint `SelectList` or `Reference` is required"
 
-    Suggested options is only available for properties that have the `codaType` set to `SelectList`. In the future this will also change the UX of the column to be like a Coda select list.
+    Suggested options is only available for properties that have the `codaType` set to `SelectList` or `Reference`. In the future the `SelectList` hint will also change the UX of the column to be like a Coda select list.
 
  The possible choices are defined in the `options` field of the property, which can be either an array of static values or a function that generates them dynamically. An options function can access the value of other properties in the row via `context.propertyValues` and the current search string typed by the user via `context.search`.
 

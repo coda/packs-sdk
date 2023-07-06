@@ -8,7 +8,7 @@ search:
 
 [core](../modules/core.md).makeDynamicSyncTable
 
-▸ **makeDynamicSyncTable**<`K`, `L`, `ParamDefsT`, `SchemaT`\>(`params`): [`DynamicSyncTableDef`](../interfaces/core.DynamicSyncTableDef.md)<`K`, `L`, `ParamDefsT`, `any`\>
+▸ **makeDynamicSyncTable**<`K`, `L`, `ParamDefsT`, `SchemaT`\>(`«destructured»`): [`DynamicSyncTableDef`](../interfaces/core.DynamicSyncTableDef.md)<`K`, `L`, `ParamDefsT`, `any`\>
 
 Creates a dynamic sync table definition.
 
@@ -42,20 +42,21 @@ coda.makeDynamicSyncTable({
 
 | Name | Type |
 | :------ | :------ |
-| `params` | `Object` |
-| `params.connectionRequirement?` | [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md) |
-| `params.defaultAddDynamicColumns?` | `boolean` |
-| `params.description?` | `string` |
-| `params.entityName?` | `string` |
-| `params.formula` | [`SyncFormulaDef`](../interfaces/core.SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `any`\> |
-| `params.getDisplayUrl` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) |
-| `params.getName` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) |
-| `params.getSchema` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) |
-| `params.identityName` | `string` |
-| `params.listDynamicUrls?` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) |
-| `params.name` | `string` |
-| `params.placeholderSchema?` | `SchemaT` |
-| `params.searchDynamicUrls?` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) |
+| `«destructured»` | `Object` |
+| › `connectionRequirement?` | [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md) |
+| › `defaultAddDynamicColumns?` | `boolean` |
+| › `description?` | `string` |
+| › `entityName?` | `string` |
+| › `formula` | [`SyncFormulaDef`](../interfaces/core.SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `any`\> |
+| › `getDisplayUrl` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) |
+| › `getName` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) |
+| › `getSchema` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) |
+| › `identityName` | `string` |
+| › `listDynamicUrls?` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) |
+| › `name` | `string` |
+| › `placeholderSchema?` | `SchemaT` |
+| › `propertyOptions?` | [`PropertyOptionsMetadataFunction`](../types/core.PropertyOptionsMetadataFunction.md)<`any`\> |
+| › `searchDynamicUrls?` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) |
 
 #### Returns
 

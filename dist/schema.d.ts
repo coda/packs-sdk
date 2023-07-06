@@ -180,7 +180,6 @@ export declare type BooleanHintTypes = (typeof BooleanHintValueTypes)[number];
 export declare type ObjectHintTypes = (typeof ObjectHintValueTypes)[number];
 /**
  * A function or set of values to return for property options.
- * @hidden
  */
 export declare type PropertySchemaOptions<T extends PackFormulaResult> = PropertyOptionsMetadataFunction<T[]> | T[] | OptionsType | OptionsReference;
 interface PropertyWithOptions<T extends PackFormulaResult> {

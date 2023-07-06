@@ -223,7 +223,6 @@ export type ObjectHintTypes = (typeof ObjectHintValueTypes)[number];
 
 /**
  * A function or set of values to return for property options.
- * @hidden
  */
 export type PropertySchemaOptions<T extends PackFormulaResult> =
   | PropertyOptionsMetadataFunction<T[]>
