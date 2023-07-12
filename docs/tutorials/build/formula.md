@@ -351,7 +351,7 @@ You should see the name, description, and parameters in the help text, get back 
 ??? tip "Tip: Slash command"
     When you write Packs using the Pack Studio web editor you can use the slash command `/addFormula` to generate the scaffolding for you!
 
-    ![type:video][slash_gif]{: .screenshot}
+    <video style="width:auto" loop muted autoplay alt="Recording of using the addFormula slash command." class="screenshot"><source src="../../../images/tutorial_formula_slash.mp4" type="video/mp4"></source></video>
 
 
 ## :fontawesome-solid-laptop-code: Write the logic
@@ -658,4 +658,3 @@ Now that you have an understanding of how to build formulas, here are some more 
 [parameters]: ../../guides/basics/parameters/index.md
 [data_types]: ../../guides/basics/data-types.md
 [javascript_key_value]: https://javascript.info/object
-[slash_gif]: ../../images/tutorial_formula_slash.mp4

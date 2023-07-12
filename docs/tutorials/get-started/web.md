@@ -29,7 +29,7 @@ The Pack Studio is built right in to the Coda application. To get there:
 
 You are now in the Pack Studio, ready to start building!
 
-![type:video][web_ide_navigate]{: .screenshot}
+<video style="width:auto" loop muted autoplay alt="Recording of navigating to the Pack Studio." class="screenshot"><source src="../../../images/web_ide_navigate.mp4" type="video/mp4"></source></video>
 
 
 ## Create a Pack from an example
@@ -50,7 +50,7 @@ Next we'll use the Pack Studio to build that code and get it ready to use:
 
 Your Pack is now built and ready to use!
 
-![type:video][web_ide_build]{: .screenshot}
+<video style="width:auto" loop muted autoplay alt="Recording of building the Pack." class="screenshot"><source src="../../../images/web_ide_build.mp4" type="video/mp4"></source></video>
 
 
 ## Use the Pack
@@ -79,6 +79,8 @@ Now that you have your Pack up and running let's make a change to how it works.
 
 --8<-- "tutorials/get-started/.rebuild.md"
 
+<video style="width:auto" loop muted autoplay alt="Recording of adding a dynamic sync table." class="screenshot"><source src="../../../images/web_ide_rebuild.mp4" type="video/mp4"></source></video>
+
 
 ## Next steps
 
@@ -91,9 +93,6 @@ You've built your fist Pack, congrats! 🎉 Now that you have some experience wi
 [coda_sign_up]: https://coda.io/signup
 [hc_doc_maker]: https://help.coda.io/en/articles/3388781-members-and-roles
 [coda_home]: https://coda.io/docs
-[web_ide_navigate]: ../../images/web_ide_navigate.mp4
-[web_ide_build]: ../../images/web_ide_build.mp4
 [samples_hello_world]: ../../samples/full/hello-world.md
-[rebuild]: ../../images/web_ide_rebuild.mp4
 [samples]: ../../samples/topic/formula.md
 [guides]: ../../guides/blocks/formulas.md

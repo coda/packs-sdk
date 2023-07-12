@@ -14,7 +14,7 @@ Tables are one of the most powerful features of Coda, and many times people use 
 
 Sync tables are added directly to the document, usually by dragging them in from the side panel. Navigate to {{ coda.pack_panel_clicks }} and drag the table into the canvas.
 
-![type:video](../../../images/sync_table_use.mp4){: .screenshot}
+<video style="width:auto" loop muted autoplay alt="Recording of adding a sync table." class="screenshot"><source src="../../../images/sync_table_use.mp4" type="video/mp4"></source></video>
 
 If the sync table doesn't have any required parameters it will start syncing immediately, otherwise you'll have to configure it first. The data in the table can be synced manually or set up to sync automatically at regular intervals.
 

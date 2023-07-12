@@ -23,7 +23,7 @@ Packs can be created for personal use, shared with a team, or published to the w
 </div>
 
 <div class="landing-item" markdown>
-![type:video](images/home_demo.mp4){: .screenshot}
+<video style="width:auto" loop muted autoplay alt="Illustration video of using a Pack." class="screenshot"><source src="images/home_demo.mp4" type="video/mp4"></source></video>
 </div>
 
 </section>
@@ -44,7 +44,7 @@ Or for you power users, build a Pack using the `coda` command line tool on your 
 </div>
 
 <div class="landing-item" markdown>
-![type:video](images/web_ide_build.mp4){: .screenshot}
+<video style="width:auto" loop muted autoplay alt="Creating a Pack in the Pack Studio." class="screenshot"><source src="images/web_ide_build.mp4" type="video/mp4"></source></video>
 </div>
 
 </section>
