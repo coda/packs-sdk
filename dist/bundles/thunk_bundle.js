@@ -1712,7 +1712,8 @@ module.exports = (() => {
       }, "fill");
       var errors = {};
       function E(sym, getMessage, Base) {
-        errors[sym] = /* @__PURE__ */ __name(class NodeError extends Base {
+        var _a;
+        errors[sym] = (_a = class extends Base {
           constructor() {
             super();
             Object.defineProperty(this, "message", {
@@ -1738,7 +1739,7 @@ module.exports = (() => {
           toString() {
             return `${this.name} [${sym}]: ${this.message}`;
           }
-        }, "NodeError");
+        }, __name(_a, "NodeError"), _a);
       }
       __name(E, "E");
       E(
@@ -5812,7 +5813,7 @@ module.exports = (() => {
     return new SetEndpointHelper(step);
   }
   __name(setEndpointHelper, "setEndpointHelper");
-  var SetEndpointHelper = class {
+  var _SetEndpointHelper = class _SetEndpointHelper {
     constructor(step) {
       this._step = step;
     }
@@ -5820,7 +5821,8 @@ module.exports = (() => {
       return ensureExists(this._step.getOptions ?? this._step.getOptionsFormula);
     }
   };
-  __name(SetEndpointHelper, "SetEndpointHelper");
+  __name(_SetEndpointHelper, "SetEndpointHelper");
+  var SetEndpointHelper = _SetEndpointHelper;
 
   // schema.ts
   var import_pascalcase = __toESM(require_pascalcase());
@@ -5855,7 +5857,7 @@ module.exports = (() => {
   var import_url_parse = __toESM(require_url_parse());
 
   // api.ts
-  var UserVisibleError = class extends Error {
+  var _UserVisibleError = class _UserVisibleError extends Error {
     /**
      * Use to construct a user-visible error.
      */
@@ -5866,8 +5868,9 @@ module.exports = (() => {
       this.internalError = internalError;
     }
   };
-  __name(UserVisibleError, "UserVisibleError");
-  var StatusCodeError = class extends Error {
+  __name(_UserVisibleError, "UserVisibleError");
+  var UserVisibleError = _UserVisibleError;
+  var _StatusCodeError = class _StatusCodeError extends Error {
     /** @hidden */
     constructor(statusCode, body, options, response) {
       super(`${statusCode} - ${JSON.stringify(body)}`);
@@ -5887,11 +5890,12 @@ module.exports = (() => {
     }
     /** Returns if the error is an instance of StatusCodeError. Note that `instanceof` may not work. */
     static isStatusCodeError(err) {
-      return "name" in err && err.name === StatusCodeError.name;
+      return "name" in err && err.name === _StatusCodeError.name;
     }
   };
-  __name(StatusCodeError, "StatusCodeError");
-  var MissingScopesError = class extends Error {
+  __name(_StatusCodeError, "StatusCodeError");
+  var StatusCodeError = _StatusCodeError;
+  var _MissingScopesError = class _MissingScopesError extends Error {
     /** @hidden */
     constructor(message) {
       super(message || "Additional permissions are required");
@@ -5902,10 +5906,11 @@ module.exports = (() => {
     }
     /** Returns if the error is an instance of MissingScopesError. Note that `instanceof` may not work. */
     static isMissingScopesError(err) {
-      return "name" in err && err.name === MissingScopesError.name;
+      return "name" in err && err.name === _MissingScopesError.name;
     }
   };
-  __name(MissingScopesError, "MissingScopesError");
+  __name(_MissingScopesError, "MissingScopesError");
+  var MissingScopesError = _MissingScopesError;
   function isDynamicSyncTable(syncTable) {
     return "isDynamic" in syncTable;
   }
