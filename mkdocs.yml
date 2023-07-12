@@ -56,14 +56,6 @@ plugins:
     # Variables in markdown.
     # See: https://squidfunk.github.io/mkdocs-material/reference/variables/
     - macros
-    - mkdocs-video:
-        is_video: True
-        video_autoplay: True
-        video_loop: True
-        video_muted: True
-        video_controls: False
-        css_style:
-          width: "auto"
     - redirects:
         redirect_maps:
           # 2022-01-14: Reorganize guides and tutorials.

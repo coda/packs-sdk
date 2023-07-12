@@ -21,7 +21,7 @@ To enable two-way sync on a sync table that supports it you need to toggle on th
 
 Certain columns of the table will now be editable, and you can change cell values them as you would for a normal Coda table. Use the **Update rows** link to push the changes back to the data source.
 
-![type:video](../../../images/two_way.mp4){: .screenshot}
+<video style="width:auto" loop muted autoplay alt="Recording of editing a sync table." class="screenshot"><source src="../../../../images/two_way.mp4" type="video/mp4"></source></video>
 
 
 ## Adding two-way sync

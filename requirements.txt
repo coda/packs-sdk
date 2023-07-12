@@ -26,7 +26,6 @@ mkdocs-material==9.1.15
 mkdocs-material-extensions==1.1.1 ; python_version >= '3.7'
 mkdocs-redirects==1.2.0
 mkdocs-simple-hooks==0.1.5
-mkdocs-video==1.5.0
 natsort==8.3.1 ; python_version >= '3.7'
 packaging==23.1 ; python_version >= '3.7'
 pillow==9.5.0
