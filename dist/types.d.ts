@@ -6,7 +6,7 @@ import type { SyncTable } from './api';
 /**
  * @deprecated Use `number` in new code.
  */
-export declare type PackId = number;
+export type PackId = number;
 /**
  * @deprecated
  */
@@ -172,7 +172,7 @@ export interface SetEndpoint {
  * Simplified configuration for {@link SetEndpoint} that a pack developer can specify when calling
  * {@link PackDefinitionBuilder.setUserAuthentication} or {@link PackDefinitionBuilder.setSystemAuthentication}.
  */
-export declare type SetEndpointDef = Omit<SetEndpoint, 'getOptions' | 'getOptionsFormula'> & {
+export type SetEndpointDef = Omit<SetEndpoint, 'getOptions' | 'getOptionsFormula'> & {
     /** See {@link SetEndpoint.getOptions} */
     getOptions?: MetadataFormulaDef;
     /** @deprecated Use {@link getOptions} */
@@ -194,12 +194,12 @@ export declare enum PostSetupType {
  * This addresses only a highly-specific use case today but may grow to other
  * use cases and step types in the future.
  */
-export declare type PostSetup = SetEndpoint;
+export type PostSetup = SetEndpoint;
 /**
  * Simplified configuration for {@link PostSetup} that a pack developer can specify when calling
  * {@link PackDefinitionBuilder.setUserAuthentication} or {@link PackDefinitionBuilder.setSystemAuthentication}.
  */
-export declare type PostSetupDef = SetEndpointDef;
+export type PostSetupDef = SetEndpointDef;
 /**
  * Base interface for authentication definitions.
  */
@@ -733,7 +733,7 @@ export interface VariousAuthentication {
 /**
  * The union of supported authentication methods.
  */
-export declare type Authentication = NoAuthentication | VariousAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | CustomAuthentication;
+export type Authentication = NoAuthentication | VariousAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | CustomAuthentication;
 /** @ignore */
 export interface AuthenticationTypeMap {
     [AuthenticationType.None]: NoAuthentication;
@@ -749,7 +749,7 @@ export interface AuthenticationTypeMap {
     [AuthenticationType.AWSAssumeRole]: AWSAssumeRoleAuthentication;
     [AuthenticationType.Custom]: CustomAuthentication;
 }
-declare type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionName' | 'getConnectionUserId' | 'postSetup'> & {
+type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionName' | 'getConnectionUserId' | 'postSetup'> & {
     /** See {@link BaseAuthentication.getConnectionName} */
     getConnectionName?: MetadataFormulaDef;
     /** See {@link BaseAuthentication.getConnectionUserId} @ignore */
@@ -763,32 +763,32 @@ declare type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionNam
  * a pack definition builder. The builder massages these definitions into the form of
  * an {@link Authentication} value, which is the value Coda ultimately cares about.
  */
-export declare type AuthenticationDef = NoAuthentication | VariousAuthentication | AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CodaApiBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<MultiHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<OAuth2Authentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication> | AsAuthDef<CustomAuthentication>;
+export type AuthenticationDef = NoAuthentication | VariousAuthentication | AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CodaApiBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<MultiHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<OAuth2Authentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication> | AsAuthDef<CustomAuthentication>;
 /**
  * The union of authentication methods that are supported for system authentication,
  * where the pack author provides credentials used in HTTP requests rather than the user.
  */
-export declare type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | CustomAuthentication;
+export type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | CustomAuthentication;
 /**
  * The union of supported system authentication definitions. These represent simplified
  * configurations a pack developer can specify when calling {@link PackDefinitionBuilder.setSystemAuthentication}
  * when using a pack definition builder. The builder massages these definitions into the form of
  * an {@link SystemAuthentication} value, which is the value Coda ultimately cares about.
  */
-export declare type SystemAuthenticationDef = AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<MultiHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication> | AsAuthDef<CustomAuthentication>;
+export type SystemAuthenticationDef = AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<MultiHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication> | AsAuthDef<CustomAuthentication>;
 /**
  * The subset of valid {@link AuthenticationType} enum values that can be used
  * when defining {@link SystemAuthentication}.
  */
-export declare type SystemAuthenticationTypes = $Values<Pick<SystemAuthentication, 'type'>>;
+export type SystemAuthenticationTypes = $Values<Pick<SystemAuthentication, 'type'>>;
 /**
  * @ignore
  */
-export declare type VariousSupportedAuthentication = NoAuthentication | HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication;
+export type VariousSupportedAuthentication = NoAuthentication | HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication;
 /**
  * @ignore
  */
-export declare type VariousSupportedAuthenticationTypes = $Values<Pick<VariousSupportedAuthentication, 'type'>>;
+export type VariousSupportedAuthenticationTypes = $Values<Pick<VariousSupportedAuthentication, 'type'>>;
 /**
  * Definition for a custom column type that users can apply to any column in any Coda table.
  * A column format tells Coda to interpret the value in a cell by executing a formula
@@ -912,7 +912,7 @@ export interface RateLimits {
  * A pack definition without an author-defined semantic version, for use in the web
  * editor where Coda will manage versioning on behalf of the pack author.
  */
-export declare type BasicPackDefinition = Omit<PackVersionDefinition, 'version'>;
+export type BasicPackDefinition = Omit<PackVersionDefinition, 'version'>;
 /**
  * The definition of the contents of a Pack at a specific version. This is the
  * heart of the implementation of a Pack.

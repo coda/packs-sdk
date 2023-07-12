@@ -242,10 +242,16 @@ function tryParseEmail(result, schema) {
 function tryParseSlider(result, schema) {
     const value = result;
     const { minimum, maximum } = schema;
-    if (typeof minimum !== 'string' && value < (minimum !== null && minimum !== void 0 ? minimum : 0)) {
+    if (typeof minimum === 'string') {
+        return { message: `Slider minimum value must be a number, but got string: "${minimum}".` };
+    }
+    if (value < (minimum !== null && minimum !== void 0 ? minimum : 0)) {
         return { message: `Slider value ${result} is below the specified minimum value of ${minimum !== null && minimum !== void 0 ? minimum : 0}.` };
     }
-    if (typeof maximum !== 'string' && maximum && value > maximum) {
+    if (typeof maximum === 'string') {
+        return { message: `Slider maximum value must be a number, but got string: "${maximum}".` };
+    }
+    if (maximum && value > maximum) {
         return { message: `Slider value ${result} is greater than the specified maximum value of ${maximum}.` };
     }
 }

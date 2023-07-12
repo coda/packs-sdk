@@ -76,7 +76,7 @@ ___
 
 The definition of the formula that implements this sync. This is a Coda packs formula
 that returns an array of objects fitting the given schema and optionally a [Continuation](core.Continuation.md).
-(The [name](core.SyncFormulaDef.md#name) is redundant and should be the same as the `name` parameter here.
+(The [name](core.PackFormulaDef.md#name) is redundant and should be the same as the `name` parameter here.
 These will eventually be consolidated.)
 
 ___
