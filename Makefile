@@ -240,6 +240,8 @@ view-docs:
 optimize-images:
 	# Compress pngs.
 	npx sharp-cli -i docs/images/*.png -o docs/images/ --optimize
+	# Convert animated gifs to webp.
+	npx sharp-cli -i docs/images/*.gif -o docs/images/ --animated --optimize --limitInputPixels 9999999999 --format webp resize 800
 
 ###############################################################################
 ### Deployment of documentation ###

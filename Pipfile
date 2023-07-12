@@ -16,7 +16,6 @@ mkdocs-macros-plugin = "*"
 mkdocs-redirects = "*"
 mkdocs-simple-hooks = "*"
 pillow = "==9.5.0"
-mkdocs-video = "*"
 
 [dev-packages]
 
