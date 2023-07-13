@@ -1,6 +1,7 @@
 /// <reference types="node" />
 import type { $Values } from './type_utils';
 import type { ArraySchema } from './schema';
+import type { AuthenticationDef } from './types';
 import type { Continuation } from './api';
 import type { MetadataFormula } from './api';
 import type { Schema } from './schema';
@@ -367,6 +368,19 @@ export declare enum ConnectionRequirement {
      */
     Required = "required"
 }
+/**
+ * A full definition of a pack's user authentication settings, used in
+ * {@link PackDefinitionBuilder.setUserAuthentication}.
+ */
+export type UserAuthenticationDef = AuthenticationDef & {
+    /**
+     * It can be annoying to set {@link CommonPackFormulaDef.connectionRequirement} on every
+     * building block in a Pack. Use this setting in your Pack's auth settings to quickly say
+     * "every building block in this Pack requires an account". Without a connectionRequirement,
+     * building blocks will be assumed to not need account connections.
+     */
+    defaultConnectionRequirement?: ConnectionRequirement;
+};
 /** @deprecated use `ConnectionRequirement` instead */
 export declare enum NetworkConnection {
     None = "none",

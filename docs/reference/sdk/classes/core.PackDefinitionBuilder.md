@@ -385,7 +385,7 @@ pack.setUserAuthentication({
 
 | Name | Type |
 | :------ | :------ |
-| `authDef` | `Object` |
+| `authDef` | `UserAuthenticationDef` |
 
 #### Returns
 
