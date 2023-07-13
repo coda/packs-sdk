@@ -188,6 +188,7 @@ import * as coda from "@codahq/packs-sdk";
 - [SystemAuthenticationDef](../types/core.SystemAuthenticationDef.md)
 - [TypedPackFormula](../types/core.TypedPackFormula.md)
 - [UpdateSync](../types/core.UpdateSync.md)
+- [UserAuthenticationDef](../types/core.UserAuthenticationDef.md)
 
 ## Variables
 

@@ -109,6 +109,7 @@ export type { TemporaryBlobStorage } from './api_types';
 export { Type } from './api_types';
 export type { TypedPackFormula } from './api';
 export type { Formula } from './api';
+export type { UserAuthenticationDef } from './api_types';
 export { UserVisibleError } from './api';
 export { makeMetadataFormula } from './api';
 export { makePropertyOptionsFormula } from './api';
