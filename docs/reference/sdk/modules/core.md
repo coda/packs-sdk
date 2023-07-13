@@ -136,6 +136,7 @@ import * as coda from "@codahq/packs-sdk";
 - [ArrayFormulaDef](../types/core.ArrayFormulaDef.md)
 - [AttributionNode](../types/core.AttributionNode.md)
 - [Authentication](../types/core.Authentication.md)
+- [AuthenticationDef](../types/core.AuthenticationDef.md)
 - [BaseFormula](../types/core.BaseFormula.md)
 - [BasicPackDefinition](../types/core.BasicPackDefinition.md)
 - [BooleanFormulaDef](../types/core.BooleanFormulaDef.md)

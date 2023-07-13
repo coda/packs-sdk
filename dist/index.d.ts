@@ -11,6 +11,7 @@
  * @module core
  */
 export type { Authentication } from './types';
+export type { AuthenticationDef } from './types';
 export { AuthenticationType } from './types';
 export type { BasicPackDefinition } from './types';
 export type { Format } from './types';

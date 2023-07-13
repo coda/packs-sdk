@@ -8,7 +8,7 @@ search:
 
 [core](../modules/core.md).UserAuthenticationDef
 
-Ƭ **UserAuthenticationDef**: `AuthenticationDef` & { `defaultConnectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md)  }
+Ƭ **UserAuthenticationDef**: [`AuthenticationDef`](core.AuthenticationDef.md) & { `defaultConnectionRequirement?`: [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md)  }
 
 A full definition of a pack's user authentication settings, used in
 [setUserAuthentication](../classes/core.PackDefinitionBuilder.md#setuserauthentication).
