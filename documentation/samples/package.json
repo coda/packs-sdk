@@ -9,6 +9,6 @@
   "author": "David Weitzman <dweitzman@coda.io>",
   "license": "./LICENSE",
   "devDependencies": {
-    "@codahq/packs-sdk": "workspace:*"
+    "@codahq/packs-sdk": "file:../.."
   }
 }
