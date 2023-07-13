@@ -25,6 +25,7 @@ export type {PostSetupDef} from './types';
 export {PostSetupType} from './types';
 export {newPack} from './builder';
 export {PackDefinitionBuilder} from './builder';
+export type {UserAuthenticationDef} from './api_types';
 
 // Authentication types
 export type {AWSAccessKeyAuthentication} from './types';
@@ -120,7 +121,6 @@ export type {TemporaryBlobStorage} from './api_types';
 export {Type} from './api_types';
 export type {TypedPackFormula} from './api';
 export type {Formula} from './api';
-export type {UserAuthenticationDef} from './api_types';
 export {UserVisibleError} from './api';
 
 // Formula definition helpers

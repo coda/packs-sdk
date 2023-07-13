@@ -374,10 +374,10 @@ export declare enum ConnectionRequirement {
  */
 export type UserAuthenticationDef = AuthenticationDef & {
     /**
-     * It can be annoying to set {@link CommonPackFormulaDef.connectionRequirement} on every
-     * building block in a Pack. Use this setting in your Pack's auth settings to quickly say
-     * "every building block in this Pack requires an account". Without a connectionRequirement,
-     * building blocks will be assumed to not need account connections.
+     * It can be annoying to set `connectionRequirement` on every building block in a Pack.
+     * Use this setting in your Pack's auth settings to quickly say "every building block
+     * in this Pack requires an account". Without a connectionRequirement, building blocks
+     * will be assumed to not need account connections.
      */
     defaultConnectionRequirement?: ConnectionRequirement;
 };
