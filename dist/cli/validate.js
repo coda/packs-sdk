@@ -22,6 +22,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateMetadata = exports.handleValidate = void 0;
 const compile_1 = require("../testing/compile");
@@ -46,7 +47,7 @@ exports.handleValidate = handleValidate;
 async function validateMetadata(metadata, { checkDeprecationWarnings = true } = {}) {
     var _a, _b;
     // Since package.json isn't in dist, we grab it from the root directory instead.
-    const packageJson = await Promise.resolve().then(() => __importStar(require((0, helpers_2.isTestCommand)() ? '../package.json' : '../../package.json')));
+    const packageJson = await (_a = (0, helpers_2.isTestCommand)() ? '../package.json' : '../../package.json', Promise.resolve().then(() => __importStar(require(_a))));
     const codaPacksSDKVersion = packageJson.version;
     try {
         await (0, upload_validation_1.validatePackVersionMetadata)(metadata, codaPacksSDKVersion);

@@ -25,6 +25,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.assertPackIdOrUrl = exports.assertPackId = exports.assertApiToken = exports.importManifest = exports.getPackAuth = exports.makeManifestFullPath = exports.isTestCommand = exports.formatEndpoint = exports.createCodaClient = exports.spawnProcess = void 0;
 const coda_1 = require("../helpers/external-api/coda");
@@ -76,7 +77,7 @@ function getPackAuth(packDef) {
 }
 exports.getPackAuth = getPackAuth;
 async function importManifest(bundleFilename) {
-    const module = await Promise.resolve().then(() => __importStar(require(path_1.default.resolve(bundleFilename))));
+    const module = await (_a = path_1.default.resolve(bundleFilename), Promise.resolve().then(() => __importStar(require(_a))));
     return module.pack || module.manifest;
 }
 exports.importManifest = importManifest;

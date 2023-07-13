@@ -65,4 +65,4 @@ export interface VSCodeSnippet {
     body: string;
     description: string;
 }
-export declare type VSCodeSnippets = Record<string, VSCodeSnippet>;
+export type VSCodeSnippets = Record<string, VSCodeSnippet>;

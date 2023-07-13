@@ -45,13 +45,13 @@ export interface BaseFetcherOptions {
     ca?: string;
     maxResponseSizeBytes?: number;
 }
-export declare type FetcherOptionsWithFullResponse = BaseFetcherOptions & {
+export type FetcherOptionsWithFullResponse = BaseFetcherOptions & {
     resolveWithFullResponse: true;
 };
-export declare type FetcherOptionsWithBodyResponse = BaseFetcherOptions & {
+export type FetcherOptionsWithBodyResponse = BaseFetcherOptions & {
     resolveWithFullResponse?: false;
 };
-declare type FetcherBodyResponse = any;
+type FetcherBodyResponse = any;
 export interface FetcherFullResponse {
     url: string;
     statusCode: number;
