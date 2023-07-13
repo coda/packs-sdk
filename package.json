@@ -2,9 +2,6 @@
   "name": "@codahq/packs-sdk",
   "version": "1.4.1",
   "license": "MIT",
-  "workspaces": [
-    "dev/eslint"
-  ],
   "engines": {
     "node": ">=14.17.x",
     "pnpm": ">=8.0.0 <8.6.0"
