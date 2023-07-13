@@ -35,7 +35,7 @@ rather than constructing a builder directly.
 
 • `Optional` **defaultAuthentication**: [`Authentication`](../types/core.Authentication.md)
 
-See [defaultAuthentication](../interfaces/core.PackDefinition.md#defaultauthentication).
+See [defaultAuthentication](../interfaces/core.PackVersionDefinition.md#defaultauthentication).
 
 #### Implementation of
 
@@ -47,7 +47,7 @@ ___
 
 • **formats**: [`Format`](../interfaces/core.Format.md)[]
 
-See [formats](../interfaces/core.PackDefinition.md#formats).
+See [formats](../interfaces/core.PackVersionDefinition.md#formats).
 
 #### Implementation of
 
@@ -71,7 +71,7 @@ ___
 
 • **formulas**: [`Formula`](../types/core.Formula.md)[]
 
-See [formulas](../interfaces/core.PackDefinition.md#formulas).
+See [formulas](../interfaces/core.PackVersionDefinition.md#formulas).
 
 #### Implementation of
 
@@ -83,7 +83,7 @@ ___
 
 • **networkDomains**: `string`[]
 
-See [networkDomains](../interfaces/core.PackDefinition.md#networkdomains).
+See [networkDomains](../interfaces/core.PackVersionDefinition.md#networkdomains).
 
 #### Implementation of
 
@@ -95,7 +95,7 @@ ___
 
 • **syncTables**: [`SyncTable`](../types/core.SyncTable.md)[]
 
-See [syncTables](../interfaces/core.PackDefinition.md#synctables).
+See [syncTables](../interfaces/core.PackVersionDefinition.md#synctables).
 
 #### Implementation of
 
@@ -107,7 +107,7 @@ ___
 
 • `Optional` **systemConnectionAuthentication**: [`SystemAuthentication`](../types/core.SystemAuthentication.md)
 
-See [systemConnectionAuthentication](../interfaces/core.PackDefinition.md#systemconnectionauthentication).
+See [systemConnectionAuthentication](../interfaces/core.PackVersionDefinition.md#systemconnectionauthentication).
 
 #### Implementation of
 
@@ -119,7 +119,7 @@ ___
 
 • `Optional` **version**: `string`
 
-See [version](../interfaces/core.PackDefinition.md#version).
+See [version](../interfaces/core.PackVersionDefinition.md#version).
 
 ## Methods
 

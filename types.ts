@@ -253,7 +253,7 @@ export interface BaseAuthentication {
    * For example, this value would be "example.com" if specific endpoints looked like \{custom-subdomain\}.example.com.
    *
    * For packs that make requests to multiple domains (uncommon), this should be the domain within
-   * {@link core.PackVersionDefinition.networkDomains} that this configuration applies to.
+   * {@link PackVersionDefinition.networkDomains} that this configuration applies to.
    */
   endpointDomain?: string;
 
