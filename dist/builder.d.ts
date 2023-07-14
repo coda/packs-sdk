@@ -1,7 +1,5 @@
 import type { Authentication } from './types';
-import type { AuthenticationDef } from './types';
 import type { BasicPackDefinition } from './types';
-import { ConnectionRequirement } from './api_types';
 import type { DynamicSyncTableOptions } from './api';
 import type { Format } from './types';
 import type { Formula } from './api';
@@ -15,6 +13,7 @@ import type { SyncTable } from './api';
 import type { SyncTableOptions } from './api';
 import type { SystemAuthentication } from './types';
 import type { SystemAuthenticationDef } from './types';
+import type { UserAuthenticationDef } from './api_types';
 import type { ValueType } from './schema';
 /**
  * Creates a new skeleton pack definition that can be added to.
@@ -172,9 +171,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * });
      * ```
      */
-    setUserAuthentication(authDef: AuthenticationDef & {
-        defaultConnectionRequirement?: ConnectionRequirement;
-    }): this;
+    setUserAuthentication(authDef: UserAuthenticationDef): this;
     /**
      * Sets this pack to use authentication provided by you as the maker of this pack.
      *

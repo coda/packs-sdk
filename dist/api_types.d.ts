@@ -1,6 +1,7 @@
 /// <reference types="node" />
 import type { $Values } from './type_utils';
 import type { ArraySchema } from './schema';
+import type { AuthenticationDef } from './types';
 import type { Continuation } from './api';
 import type { MetadataFormula } from './api';
 import type { Schema } from './schema';
@@ -23,7 +24,7 @@ export declare enum Type {
     file = 7,
     markdown = 8
 }
-export declare type ParamType = Exclude<Type, Type.object>;
+export type ParamType = Exclude<Type, Type.object>;
 /**
  * The type of a parameter or return value that is an array.
  */
@@ -39,7 +40,7 @@ export interface SparseArrayType<T extends Type> extends ArrayType<T> {
     allowEmpty: true;
 }
 export declare function isArrayType(obj: any): obj is ArrayType<any>;
-export declare type UnionType = ArrayType<Type> | Type;
+export type UnionType = ArrayType<Type> | Type;
 /** @deprecated */
 export declare const stringArray: ArrayType<Type.string>;
 /** @deprecated */
@@ -68,12 +69,12 @@ export interface TypeMap {
 /**
  * The union of types for arguments to the `execute` function for a formula.
  */
-export declare type PackFormulaValue = $Values<Omit<TypeMap, Type.object>> | PackFormulaValue[];
+export type PackFormulaValue = $Values<Omit<TypeMap, Type.object>> | PackFormulaValue[];
 /**
  * The union of types that can be returned by the `execute` function for a formula.
  */
-export declare type PackFormulaResult = $Values<TypeMap> | PackFormulaResult[];
-export declare type TypeOf<T extends PackFormulaResult> = T extends number ? Type.number : T extends string ? Type.string : T extends boolean ? Type.boolean : T extends Date ? Type.date : T extends object ? Type.object : never;
+export type PackFormulaResult = $Values<TypeMap> | PackFormulaResult[];
+export type TypeOf<T extends PackFormulaResult> = T extends number ? Type.number : T extends string ? Type.string : T extends boolean ? Type.boolean : T extends Date ? Type.date : T extends object ? Type.object : never;
 /**
  * Enumeration of types of formula parameters. These describe Coda value types (as opposed to JavaScript value types).
  */
@@ -261,25 +262,25 @@ export interface RequiredParamDef<T extends UnionType> extends ParamDef<T> {
     optional?: false;
 }
 /** @hidden */
-export declare type ParamArgs<T extends UnionType> = Omit<ParamDef<T>, 'description' | 'name' | 'type'>;
+export type ParamArgs<T extends UnionType> = Omit<ParamDef<T>, 'description' | 'name' | 'type'>;
 /**
  * The type for the complete set of parameter definitions for a formula.
  */
-export declare type ParamDefs = [ParamDef<UnionType>, ...Array<ParamDef<UnionType>>] | [];
+export type ParamDefs = [ParamDef<UnionType>, ...Array<ParamDef<UnionType>>] | [];
 /** @hidden */
-export declare type ParamsList = Array<ParamDef<UnionType>>;
-declare type TypeOfMap<T extends UnionType> = T extends Type ? TypeMap[T] : T extends ArrayType<infer V> ? T extends SparseArrayType<infer V> ? Array<TypeMap[V] | undefined> : Array<TypeMap[V]> : never;
+export type ParamsList = Array<ParamDef<UnionType>>;
+type TypeOfMap<T extends UnionType> = T extends Type ? TypeMap[T] : T extends ArrayType<infer V> ? T extends SparseArrayType<infer V> ? Array<TypeMap[V] | undefined> : Array<TypeMap[V]> : never;
 /**
  * The type for the set of argument values that are passed to formula's `execute` function, based on
  * the parameter definition for that formula.
  */
-export declare type ParamValues<ParamDefsT extends ParamDefs> = {
+export type ParamValues<ParamDefsT extends ParamDefs> = {
     [K in keyof ParamDefsT]: ParamDefsT[K] extends RequiredParamDef<infer S> ? TypeOfMap<S> : ParamDefsT[K] extends ParamDef<infer S> ? TypeOfMap<S> | undefined : never;
 } & any[];
 /**
  * The type of values that are allowable to be used as a {@link ParamDef.suggestedValue} for a parameter.
  */
-export declare type SuggestedValueType<T extends UnionType> = T extends ArrayType<Type.date> ? TypeOfMap<T> | PrecannedDateRange : TypeOfMap<T>;
+export type SuggestedValueType<T extends UnionType> = T extends ArrayType<Type.date> ? TypeOfMap<T> | PrecannedDateRange : TypeOfMap<T>;
 /**
  * Inputs for creating a formula that are common between regular formulas and sync table formulas.
  */
@@ -367,6 +368,19 @@ export declare enum ConnectionRequirement {
      */
     Required = "required"
 }
+/**
+ * A full definition of a pack's user authentication settings, used in
+ * {@link PackDefinitionBuilder.setUserAuthentication}.
+ */
+export type UserAuthenticationDef = AuthenticationDef & {
+    /**
+     * It can be annoying to set `connectionRequirement` on every building block in a Pack.
+     * Use this setting in your Pack's auth settings to quickly say "every building block
+     * in this Pack requires an account". Without a connectionRequirement, building blocks
+     * will be assumed to not need account connections.
+     */
+    defaultConnectionRequirement?: ConnectionRequirement;
+};
 /** @deprecated use `ConnectionRequirement` instead */
 export declare enum NetworkConnection {
     None = "none",
@@ -382,7 +396,7 @@ export interface Network {
 /** The HTTP methods (verbs) supported by the fetcher. */
 export declare const ValidFetchMethods: readonly ["GET", "PATCH", "POST", "PUT", "DELETE", "HEAD"];
 /** The type of the HTTP methods (verbs) supported by the fetcher. */
-export declare type FetchMethodType = (typeof ValidFetchMethods)[number];
+export type FetchMethodType = (typeof ValidFetchMethods)[number];
 /**
  * An HTTP request used with the {@link Fetcher}.
  *
@@ -571,8 +585,8 @@ export interface Sync {
  * Information about the current sync, part of the {@link UpdateSyncExecutionContext} passed to the
  * `executeUpdate` function of the sync formula.
  */
-export declare type UpdateSync = Omit<Sync, 'continuation'>;
-export declare type LoggerParamType = string | number | boolean | Record<any, any>;
+export type UpdateSync = Omit<Sync, 'continuation'>;
+export type LoggerParamType = string | number | boolean | Record<any, any>;
 export interface Logger {
     trace(message: string, ...args: LoggerParamType[]): void;
     debug(message: string, ...args: LoggerParamType[]): void;
@@ -748,11 +762,11 @@ export declare enum OptionsType {
     Dynamic = "__coda_dynamic__"
 }
 /** @hidden */
-export declare type OptionsReference = string & {
+export type OptionsReference = string & {
     __brand: 'OptionsRef';
 };
 /**
  * A JavaScript function for property options.
  */
-export declare type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]> = (context: PropertyOptionsExecutionContext) => Promise<ResultT> | ResultT;
+export type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]> = (context: PropertyOptionsExecutionContext) => Promise<ResultT> | ResultT;
 export {};

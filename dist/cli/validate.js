@@ -46,7 +46,7 @@ exports.handleValidate = handleValidate;
 async function validateMetadata(metadata, { checkDeprecationWarnings = true } = {}) {
     var _a, _b;
     // Since package.json isn't in dist, we grab it from the root directory instead.
-    const packageJson = await Promise.resolve().then(() => __importStar(require((0, helpers_2.isTestCommand)() ? '../package.json' : '../../package.json')));
+    const packageJson = await Promise.resolve(`${(0, helpers_2.isTestCommand)() ? '../package.json' : '../../package.json'}`).then(s => __importStar(require(s)));
     const codaPacksSDKVersion = packageJson.version;
     try {
         await (0, upload_validation_1.validatePackVersionMetadata)(metadata, codaPacksSDKVersion);

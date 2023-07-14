@@ -1,5 +1,4 @@
 import type {Authentication} from './types';
-import type {AuthenticationDef} from './types';
 import {AuthenticationType} from './types';
 import type {BasicPackDefinition} from './types';
 import {ConnectionRequirement} from './api_types';
@@ -16,6 +15,7 @@ import type {SyncTable} from './api';
 import type {SyncTableOptions} from './api';
 import type {SystemAuthentication} from './types';
 import type {SystemAuthenticationDef} from './types';
+import type {UserAuthenticationDef} from './api_types';
 import type {ValueType} from './schema';
 import {isDynamicSyncTable} from './api';
 import {makeDynamicSyncTable} from './api';
@@ -256,7 +256,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * });
    * ```
    */
-  setUserAuthentication(authDef: AuthenticationDef & {defaultConnectionRequirement?: ConnectionRequirement}): this {
+  setUserAuthentication(authDef: UserAuthenticationDef): this {
     const {defaultConnectionRequirement = ConnectionRequirement.Required, ...authentication} = authDef;
     if (authentication.type === AuthenticationType.None || authentication.type === AuthenticationType.Various) {
       this.defaultAuthentication = authentication;
