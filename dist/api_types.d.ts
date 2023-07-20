@@ -3,6 +3,7 @@ import type { $Values } from './type_utils';
 import type { ArraySchema } from './schema';
 import type { Continuation } from './api';
 import type { MetadataFormula } from './api';
+import type { ObjectSchemaProperty } from './schema';
 import type { Schema } from './schema';
 /**
  * Markers used internally to represent data types for parameters and return values.
@@ -658,7 +659,7 @@ export interface PropertyOptionsExecutionContext extends ExecutionContext {
     /**
      * Schema of the property being edited.
      */
-    readonly propertySchema: Schema;
+    readonly propertySchema: Schema & ObjectSchemaProperty;
     /**
      * Current values of other properties from the same row. Non-required properties may be missing
      * if the doc owner elected not to sync them, or if they have a type that's not yet supported
