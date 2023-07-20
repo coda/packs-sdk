@@ -32,6 +32,12 @@ BaseStringSchema.codaType
 
 ___
 
+### customOptions
+
+• `Optional` **customOptions**: `boolean`
+
+___
+
 ### description
 
 • `Optional` **description**: `string`

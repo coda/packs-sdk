@@ -1457,6 +1457,7 @@ export interface DurationSchema extends BaseStringSchema<ValueHintType.Duration>
 export interface StringWithOptionsSchema extends BaseStringSchema<ValueHintType.SelectList>, PropertyWithAutocompleteWithOptionalDisplay<string> {
 	/** Instructs Coda to render this value as a select list. */
 	codaType: ValueHintType.SelectList;
+	customOptions?: boolean;
 }
 export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> extends BaseSchema {
 	/** Identifies this schema as a string. */
