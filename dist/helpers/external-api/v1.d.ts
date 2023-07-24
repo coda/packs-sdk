@@ -51,7 +51,7 @@ export declare enum PublicApiPrincipalType {
 /**
  * Metadata about a principal.
  */
-export declare type PublicApiPrincipal = PublicApiEmailPrincipal | PublicApiDomainPrincipal | PublicApiAnyonePrincipal;
+export type PublicApiPrincipal = PublicApiEmailPrincipal | PublicApiDomainPrincipal | PublicApiAnyonePrincipal;
 export interface PublicApiEmailPrincipal {
     type: PublicApiPrincipalType;
     /**
@@ -358,7 +358,7 @@ export declare enum PublicApiDocPublishMode {
 /**
  * The result of publishing a doc.
  */
-export declare type PublicApiPublishResult = PublicApiDocumentMutateResponse & {};
+export type PublicApiPublishResult = PublicApiDocumentMutateResponse & {};
 /**
  * The result of unpublishing a doc.
  */
@@ -517,7 +517,7 @@ export interface PublicApiPageUpdate {
 /**
  * The result of a page update.
  */
-export declare type PublicApiPageUpdateResult = PublicApiDocumentMutateResponse & {
+export type PublicApiPageUpdateResult = PublicApiDocumentMutateResponse & {
     /**
      * ID of the updated page.
      */
@@ -781,13 +781,13 @@ export interface PublicApiSimpleColumnFormat {
 /**
  * Format of a column that refers to another table.
  */
-export declare type PublicApiReferenceColumnFormat = PublicApiSimpleColumnFormat & {
+export type PublicApiReferenceColumnFormat = PublicApiSimpleColumnFormat & {
     table: {} & PublicApiTableReference;
 };
 /**
  * Format of a numeric column.
  */
-export declare type PublicApiNumericColumnFormat = PublicApiSimpleColumnFormat & {
+export type PublicApiNumericColumnFormat = PublicApiSimpleColumnFormat & {
     /**
      * The decimal precision.
      */
@@ -800,7 +800,7 @@ export declare type PublicApiNumericColumnFormat = PublicApiSimpleColumnFormat &
 /**
  * Format of a currency column.
  */
-export declare type PublicApiCurrencyColumnFormat = PublicApiSimpleColumnFormat & {
+export type PublicApiCurrencyColumnFormat = PublicApiSimpleColumnFormat & {
     /**
      * The currency symbol
      */
@@ -822,7 +822,7 @@ export declare enum PublicApiCurrencyFormatType {
 /**
  * Format of a date column.
  */
-export declare type PublicApiDateColumnFormat = PublicApiSimpleColumnFormat & {
+export type PublicApiDateColumnFormat = PublicApiSimpleColumnFormat & {
     /**
      * A format string using Moment syntax: https://momentjs.com/docs/#/displaying/
      */
@@ -831,7 +831,7 @@ export declare type PublicApiDateColumnFormat = PublicApiSimpleColumnFormat & {
 /**
  * Format of an email column.
  */
-export declare type PublicApiEmailColumnFormat = PublicApiSimpleColumnFormat & {
+export type PublicApiEmailColumnFormat = PublicApiSimpleColumnFormat & {
     display?: PublicApiEmailDisplayType;
     autocomplete?: boolean;
 };
@@ -846,7 +846,7 @@ export declare enum PublicApiEmailDisplayType {
 /**
  * Format of a link column.
  */
-export declare type PublicApiLinkColumnFormat = PublicApiSimpleColumnFormat & {
+export type PublicApiLinkColumnFormat = PublicApiSimpleColumnFormat & {
     display?: PublicApiLinkDisplayType;
     /**
      * Force embeds to render on the client instead of the server (for sites that require user login).
@@ -866,7 +866,7 @@ export declare enum PublicApiLinkDisplayType {
 /**
  * Format of a time column.
  */
-export declare type PublicApiTimeColumnFormat = PublicApiSimpleColumnFormat & {
+export type PublicApiTimeColumnFormat = PublicApiSimpleColumnFormat & {
     /**
      * A format string using Moment syntax: https://momentjs.com/docs/#/displaying/
      */
@@ -875,7 +875,7 @@ export declare type PublicApiTimeColumnFormat = PublicApiSimpleColumnFormat & {
 /**
  * Format of a date column.
  */
-export declare type PublicApiDateTimeColumnFormat = PublicApiSimpleColumnFormat & {
+export type PublicApiDateTimeColumnFormat = PublicApiSimpleColumnFormat & {
     /**
      * A format string using Moment syntax: https://momentjs.com/docs/#/displaying/
      */
@@ -888,7 +888,7 @@ export declare type PublicApiDateTimeColumnFormat = PublicApiSimpleColumnFormat 
 /**
  * Format of a duration column.
  */
-export declare type PublicApiDurationColumnFormat = PublicApiSimpleColumnFormat & {
+export type PublicApiDurationColumnFormat = PublicApiSimpleColumnFormat & {
     precision?: number;
     maxUnit?: {} & PublicApiDurationUnit;
 };
@@ -904,11 +904,11 @@ export declare enum PublicApiDurationUnit {
 /**
  * A number or a string representing a formula that evaluates to a number.
  */
-export declare type PublicApiNumberOrNumberFormula = number | string;
+export type PublicApiNumberOrNumberFormula = number | string;
 /**
  * Format of a numeric column that renders as a slider.
  */
-export declare type PublicApiSliderColumnFormat = PublicApiSimpleColumnFormat & {
+export type PublicApiSliderColumnFormat = PublicApiSimpleColumnFormat & {
     minimum?: {} & PublicApiNumberOrNumberFormula;
     maximum?: {} & PublicApiNumberOrNumberFormula;
     step?: {} & PublicApiNumberOrNumberFormula;
@@ -916,7 +916,7 @@ export declare type PublicApiSliderColumnFormat = PublicApiSimpleColumnFormat & 
 /**
  * Format of a button column.
  */
-export declare type PublicApiButtonColumnFormat = PublicApiSimpleColumnFormat & {
+export type PublicApiButtonColumnFormat = PublicApiSimpleColumnFormat & {
     /**
      * Label formula for the button.
      */
@@ -958,7 +958,7 @@ export declare enum PublicApiIconSet {
 /**
  * Format of a numeric column that renders as a scale, like star ratings.
  */
-export declare type PublicApiScaleColumnFormat = PublicApiSimpleColumnFormat & {
+export type PublicApiScaleColumnFormat = PublicApiSimpleColumnFormat & {
     /**
      * The maximum number allowed for this scale.
      */
@@ -968,7 +968,7 @@ export declare type PublicApiScaleColumnFormat = PublicApiSimpleColumnFormat & {
 /**
  * Format of a column.
  */
-export declare type PublicApiColumnFormat = PublicApiButtonColumnFormat | PublicApiDateColumnFormat | PublicApiDateTimeColumnFormat | PublicApiDurationColumnFormat | PublicApiEmailColumnFormat | PublicApiLinkColumnFormat | PublicApiCurrencyColumnFormat | PublicApiNumericColumnFormat | PublicApiReferenceColumnFormat | PublicApiSimpleColumnFormat | PublicApiScaleColumnFormat | PublicApiSliderColumnFormat | PublicApiTimeColumnFormat;
+export type PublicApiColumnFormat = PublicApiButtonColumnFormat | PublicApiDateColumnFormat | PublicApiDateTimeColumnFormat | PublicApiDurationColumnFormat | PublicApiEmailColumnFormat | PublicApiLinkColumnFormat | PublicApiCurrencyColumnFormat | PublicApiNumericColumnFormat | PublicApiReferenceColumnFormat | PublicApiSimpleColumnFormat | PublicApiScaleColumnFormat | PublicApiSliderColumnFormat | PublicApiTimeColumnFormat;
 /**
  * Format type of the column
  */
@@ -1114,24 +1114,24 @@ export interface PublicApiRowList {
 /**
  * A Coda result or entity expressed as a primitive type.
  */
-export declare type PublicApiScalarValue = string | number | boolean;
+export type PublicApiScalarValue = string | number | boolean;
 /**
  * A Coda result or entity expressed as a primitive type, or array of primitive types.
  */
-export declare type PublicApiValue = PublicApiScalarValue | (PublicApiScalarValue | PublicApiScalarValue[])[];
+export type PublicApiValue = PublicApiScalarValue | (PublicApiScalarValue | PublicApiScalarValue[])[];
 /**
  * A value that contains rich structured data. Cell values are composed of these values or arrays of these values.
  *
  */
-export declare type PublicApiRichSingleValue = PublicApiScalarValue | PublicApiCurrencyValue | PublicApiImageUrlValue | PublicApiPersonValue | PublicApiUrlValue | PublicApiRowValue;
+export type PublicApiRichSingleValue = PublicApiScalarValue | PublicApiCurrencyValue | PublicApiImageUrlValue | PublicApiPersonValue | PublicApiUrlValue | PublicApiRowValue;
 /**
  * A cell value that contains rich structured data.
  */
-export declare type PublicApiRichValue = PublicApiRichSingleValue | (PublicApiRichSingleValue | PublicApiRichSingleValue[])[];
+export type PublicApiRichValue = PublicApiRichSingleValue | (PublicApiRichSingleValue | PublicApiRichSingleValue[])[];
 /**
  * A value representing a Coda row.
  */
-export declare type PublicApiRowValue = PublicApiLinkedDataObject & {
+export type PublicApiRowValue = PublicApiLinkedDataObject & {
     /**
      * The display name of the row, based on its identifying column.
      */
@@ -1185,7 +1185,7 @@ export declare enum PublicApiLinkedDataType {
 /**
  * A named hyperlink to an arbitrary url.
  */
-export declare type PublicApiUrlValue = PublicApiLinkedDataObject & {
+export type PublicApiUrlValue = PublicApiLinkedDataObject & {
     /**
      * The user-visible text of the hyperlink.
      */
@@ -1198,7 +1198,7 @@ export declare type PublicApiUrlValue = PublicApiLinkedDataObject & {
 /**
  * A named url of an image along with metadata.
  */
-export declare type PublicApiImageUrlValue = PublicApiLinkedDataObject & {
+export type PublicApiImageUrlValue = PublicApiLinkedDataObject & {
     /**
      * The name of the image.
      */
@@ -1228,7 +1228,7 @@ export declare enum PublicApiImageStatus {
 /**
  * A named reference to a person, where the person is identified by email address.
  */
-export declare type PublicApiPersonValue = PublicApiLinkedDataObject & {
+export type PublicApiPersonValue = PublicApiLinkedDataObject & {
     /**
      * The full name of the person.
      */
@@ -1241,11 +1241,11 @@ export declare type PublicApiPersonValue = PublicApiLinkedDataObject & {
 /**
  * A numeric monetary amount as a string or number.
  */
-export declare type PublicApiCurrencyAmount = string | number;
+export type PublicApiCurrencyAmount = string | number;
 /**
  * A monetary value with its associated currency code.
  */
-export declare type PublicApiCurrencyValue = PublicApiLinkedDataObject & {
+export type PublicApiCurrencyValue = PublicApiLinkedDataObject & {
     /**
      * The 3-letter currency code.
      */
@@ -1255,7 +1255,7 @@ export declare type PublicApiCurrencyValue = PublicApiLinkedDataObject & {
 /**
  * All values that a row cell can contain.
  */
-export declare type PublicApiCellValue = PublicApiValue | PublicApiRichValue;
+export type PublicApiCellValue = PublicApiValue | PublicApiRichValue;
 /**
  * An edit made to a particular cell in a row.
  */
@@ -1269,7 +1269,7 @@ export interface PublicApiCellEdit {
 /**
  * The result of a push button.
  */
-export declare type PublicApiPushButtonResult = PublicApiDocumentMutateResponse & {
+export type PublicApiPushButtonResult = PublicApiDocumentMutateResponse & {
     /**
      * ID of the row where the button exists.
      */
@@ -1294,7 +1294,7 @@ export interface PublicApiRowUpdate {
 /**
  * The result of a row update.
  */
-export declare type PublicApiRowUpdateResult = PublicApiDocumentMutateResponse & {
+export type PublicApiRowUpdateResult = PublicApiDocumentMutateResponse & {
     /**
      * ID of the updated row.
      */
@@ -1313,7 +1313,7 @@ export interface PublicApiRowsDelete {
 /**
  * The result of a rows delete operation.
  */
-export declare type PublicApiRowsDeleteResult = PublicApiDocumentMutateResponse & {
+export type PublicApiRowsDeleteResult = PublicApiDocumentMutateResponse & {
     /**
      * Row IDs to delete.
      */
@@ -1336,7 +1336,7 @@ export interface PublicApiRowsUpsert {
 /**
  * The result of a rows insert/upsert operation.
  */
-export declare type PublicApiRowsUpsertResult = PublicApiDocumentMutateResponse & {
+export type PublicApiRowsUpsertResult = PublicApiDocumentMutateResponse & {
     /**
      * Row IDs for rows that will be added. Only applicable when keyColumns is not set or empty.
      */
@@ -1345,7 +1345,7 @@ export declare type PublicApiRowsUpsertResult = PublicApiDocumentMutateResponse 
 /**
  * The result of a row deletion.
  */
-export declare type PublicApiRowDeleteResult = PublicApiDocumentMutateResponse & {
+export type PublicApiRowDeleteResult = PublicApiDocumentMutateResponse & {
     /**
      * ID of the row to be deleted.
      */
@@ -1555,16 +1555,16 @@ export interface PublicApiUserSummary {
 /**
  * If specified, an opaque token used to fetch the next page of results.
  */
-export declare type PublicApiNextPageToken = string;
+export type PublicApiNextPageToken = string;
 /**
  * If specified, a link that can be used to fetch the next page of results.
  */
-export declare type PublicApiNextPageLink = string;
+export type PublicApiNextPageLink = string;
 /**
  * If specified, an opaque token that can be passed back later to retrieve new results that match the parameters specified when the sync token was created.
  *
  */
-export declare type PublicApiNextSyncToken = string;
+export type PublicApiNextSyncToken = string;
 /**
  * Info about a publishing category
  */
@@ -1772,7 +1772,7 @@ export interface PublicApiWebhookTriggerPayload {
 /**
  * The result of triggering a webhook
  */
-export declare type PublicApiWebhookTriggerResult = PublicApiDocumentMutateResponse & {};
+export type PublicApiWebhookTriggerResult = PublicApiDocumentMutateResponse & {};
 /**
  * Reference to a Coda folder.
  */
@@ -2048,7 +2048,7 @@ export interface PublicApiDocAnalyticsMetrics {
      */
     sessionsOther: number;
 }
-export declare type PublicApiDocAnalyticsDetails = PublicApiDocReference & {
+export type PublicApiDocAnalyticsDetails = PublicApiDocReference & {
     /**
      * The name of the doc.
      */
@@ -2471,7 +2471,7 @@ export interface PublicApiPackVersionUploadInfo {
 /**
  * Metadata about a Pack principal.
  */
-export declare type PublicApiPackPrincipal = PublicApiPackUserPrincipal | PublicApiPackWorkspacePrincipal | PublicApiPackGlobalPrincipal;
+export type PublicApiPackPrincipal = PublicApiPackUserPrincipal | PublicApiPackWorkspacePrincipal | PublicApiPackGlobalPrincipal;
 /**
  * Type of Pack permissions.
  */
@@ -2488,7 +2488,7 @@ export declare enum PublicApiPackAccessType {
 /**
  * Access types for a Pack.
  */
-export declare type PublicApiPackAccessTypes = PublicApiPackAccessType[];
+export type PublicApiPackAccessTypes = PublicApiPackAccessType[];
 export interface PublicApiPackUserPrincipal {
     type: PublicApiPackPrincipalType.User;
     email: string;
@@ -2831,7 +2831,7 @@ export interface PublicApiPackListingList {
 /**
  * Metadata of a Pack system connection.
  */
-export declare type PublicApiPackSystemConnectionMetadata = PublicApiPackConnectionHeaderMetadata | PublicApiPackConnectionUrlParamMetadata | PublicApiPackConnectionHttpBasicMetadata | PublicApiPackConnectionCustomMetadata;
+export type PublicApiPackSystemConnectionMetadata = PublicApiPackConnectionHeaderMetadata | PublicApiPackConnectionUrlParamMetadata | PublicApiPackConnectionHttpBasicMetadata | PublicApiPackConnectionCustomMetadata;
 /**
  * The Pack OAuth configuration metadata.
  */
@@ -2912,7 +2912,7 @@ export declare enum PublicApiPackConnectionType {
 /**
  * Credentials of a Pack connection.
  */
-export declare type PublicApiPackSystemConnectionCredentials = PublicApiPackConnectionHeaderCredentials | PublicApiPackConnectionUrlParamCredentials | PublicApiPackConnectionHttpBasicCredentials | PublicApiPackConnectionCustomCredentials;
+export type PublicApiPackSystemConnectionCredentials = PublicApiPackConnectionHeaderCredentials | PublicApiPackConnectionUrlParamCredentials | PublicApiPackConnectionHttpBasicCredentials | PublicApiPackConnectionCustomCredentials;
 export interface PublicApiPackConnectionHeaderMetadata {
     type: PublicApiPackConnectionType.Header;
     maskedToken?: string;
@@ -3020,11 +3020,11 @@ export interface PublicApiPackLogsList {
 /**
  * A record of grouped Pack log.
  */
-export declare type PublicApiGroupedPackLog = PublicApiGroupedPackInvocationLog | PublicApiPackAuthLog;
+export type PublicApiGroupedPackLog = PublicApiGroupedPackInvocationLog | PublicApiPackAuthLog;
 /**
  * A record of Pack log.
  */
-export declare type PublicApiPackLog = PublicApiPackCustomLog | PublicApiPackInvocationLog | PublicApiPackFetcherLog | PublicApiPackInternalLog | PublicApiPackAuthLog;
+export type PublicApiPackLog = PublicApiPackCustomLog | PublicApiPackInvocationLog | PublicApiPackFetcherLog | PublicApiPackInternalLog | PublicApiPackAuthLog;
 /**
  * Logging context that comes with a Pack log.
  */
@@ -3244,7 +3244,7 @@ export declare enum PublicApiPackFormulaType {
 /**
  * The request to patch pack system connection credentials.
  */
-export declare type PublicApiPatchPackSystemConnectionRequest = PublicApiPackConnectionHeaderPatch | PublicApiPackConnectionUrlParamPatch | PublicApiPackConnectionHttpBasicPatch | PublicApiPackConnectionCustomPatch;
+export type PublicApiPatchPackSystemConnectionRequest = PublicApiPackConnectionHeaderPatch | PublicApiPackConnectionUrlParamPatch | PublicApiPackConnectionHttpBasicPatch | PublicApiPackConnectionCustomPatch;
 /**
  * Request to set the Pack OAuth configuration.
  */

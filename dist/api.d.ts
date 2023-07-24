@@ -277,31 +277,31 @@ export interface Continuation {
  * Should not be necessary to use directly, see {@link makeSyncTable}
  * for defining a sync table.
  */
-export declare type GenericSyncFormula = SyncFormula<any, any, ParamDefs, any>;
+export type GenericSyncFormula = SyncFormula<any, any, ParamDefs, any>;
 /**
  * Type definition for the return value of a sync table.
  * Should not be necessary to use directly, see {@link makeSyncTable}
  * for defining a sync table.
  */
-export declare type GenericSyncFormulaResult = SyncFormulaResult<any, any, any>;
+export type GenericSyncFormulaResult = SyncFormulaResult<any, any, any>;
 /**
  * Type definition for a static (non-dynamic) sync table.
  * Should not be necessary to use directly, see {@link makeSyncTable}
  * for defining a sync table.
  */
-export declare type GenericSyncTable = SyncTableDef<any, any, ParamDefs, any>;
+export type GenericSyncTable = SyncTableDef<any, any, ParamDefs, any>;
 /**
  * Type definition for a dynamic sync table.
  * Should not be necessary to use directly, see {@link makeDynamicSyncTable}
  * for defining a sync table.
  */
-export declare type GenericDynamicSyncTable = DynamicSyncTableDef<any, any, ParamDefs, any>;
+export type GenericDynamicSyncTable = DynamicSyncTableDef<any, any, ParamDefs, any>;
 /**
  * Union of type definitions for sync tables..
  * Should not be necessary to use directly, see {@link makeSyncTable} or {@link makeDynamicSyncTable}
  * for defining a sync table.
  */
-export declare type SyncTable = GenericSyncTable | GenericDynamicSyncTable;
+export type SyncTable = GenericSyncTable | GenericDynamicSyncTable;
 /**
  * Helper to determine if an error is considered user-visible and can be shown in the UI.
  * See {@link UserVisibleError}.
@@ -314,7 +314,7 @@ export declare function wrapGetSchema(getSchema: MetadataFormula | undefined): M
 /**
  * List of ParameterTypes that support autocomplete.
  */
-export declare type AutocompleteParameterTypes = ParameterType.Number | ParameterType.String | ParameterType.StringArray | ParameterType.SparseStringArray;
+export type AutocompleteParameterTypes = ParameterType.Number | ParameterType.String | ParameterType.StringArray | ParameterType.SparseStringArray;
 /**
  * Mapping of autocomplete-enabled ParameterTypes to the underlying Type that should be returned
  * by the autocomplete parameter.
@@ -326,7 +326,7 @@ export interface AutocompleteParameterTypeMapping {
     [ParameterType.SparseStringArray]: Type.string;
 }
 /** Options you can specify when defining a parameter using {@link makeParameter}. */
-export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[T]>, 'type' | 'autocomplete'> & {
+export type ParameterOptions<T extends ParameterType> = Omit<ParamDef<ParameterTypeMap[T]>, 'type' | 'autocomplete'> & {
     type: T;
     autocomplete?: T extends AutocompleteParameterTypes ? MetadataFormulaDef | Array<TypeMap[AutocompleteParameterTypeMapping[T]] | SimpleAutocompleteOption<T>> : undefined;
 };
@@ -334,7 +334,7 @@ export declare type ParameterOptions<T extends ParameterType> = Omit<ParamDef<Pa
  * Equivalent to {@link ParamDef}. A helper type to generate a param def based
  * on the inputs to {@link makeParameter}.
  */
-export declare type ParamDefFromOptionsUnion<T extends ParameterType, O extends ParameterOptions<T>> = Omit<O, 'type' | 'autocomplete'> & {
+export type ParamDefFromOptionsUnion<T extends ParameterType, O extends ParameterOptions<T>> = Omit<O, 'type' | 'autocomplete'> & {
     type: O extends ParameterOptions<infer S> ? ParameterTypeMap[S] : never;
     autocomplete: MetadataFormula;
 };
@@ -485,23 +485,23 @@ export interface EmptyFormulaDef<ParamsT extends ParamDefs> extends Omit<PackFor
     request: RequestHandlerTemplate;
 }
 /** The base class for pack formula descriptors. Subclasses vary based on the return type of the formula. */
-export declare type BaseFormula<ParamDefsT extends ParamDefs, ResultT extends PackFormulaResult> = PackFormulaDef<ParamDefsT, ResultT> & {
+export type BaseFormula<ParamDefsT extends ParamDefs, ResultT extends PackFormulaResult> = PackFormulaDef<ParamDefsT, ResultT> & {
     resultType: TypeOf<ResultT>;
 };
 /** A pack formula that returns a number. */
-export declare type NumericPackFormula<ParamDefsT extends ParamDefs> = BaseFormula<ParamDefsT, number> & {
+export type NumericPackFormula<ParamDefsT extends ParamDefs> = BaseFormula<ParamDefsT, number> & {
     schema?: NumberSchema;
 };
 /** A pack formula that returns a boolean. */
-export declare type BooleanPackFormula<ParamDefsT extends ParamDefs> = BaseFormula<ParamDefsT, boolean> & {
+export type BooleanPackFormula<ParamDefsT extends ParamDefs> = BaseFormula<ParamDefsT, boolean> & {
     schema?: BooleanSchema;
 };
 /** A pack formula that returns a string. */
-export declare type StringPackFormula<ParamDefsT extends ParamDefs> = BaseFormula<ParamDefsT, SchemaType<StringSchema>> & {
+export type StringPackFormula<ParamDefsT extends ParamDefs> = BaseFormula<ParamDefsT, SchemaType<StringSchema>> & {
     schema?: StringSchema;
 };
 /** A pack formula that returns a JavaScript object. */
-export declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = Omit<BaseFormula<ParamDefsT, SchemaType<SchemaT>>, 'execute'> & {
+export type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema> = Omit<BaseFormula<ParamDefsT, SchemaType<SchemaT>>, 'execute'> & {
     schema?: SchemaT;
     execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<object> | object;
 };
@@ -512,7 +512,7 @@ export declare type ObjectPackFormula<ParamDefsT extends ParamDefs, SchemaT exte
  * This is the type for an actual user-facing formula, rather than other formula-shaped resources within a
  * pack, like an autocomplete metadata formula or a sync getter formula.
  */
-export declare type Formula<ParamDefsT extends ParamDefs = ParamDefs, ResultT extends ValueType = ValueType, SchemaT extends Schema = Schema> = ResultT extends ValueType.String ? StringPackFormula<ParamDefsT> : ResultT extends ValueType.Number ? NumericPackFormula<ParamDefsT> : ResultT extends ValueType.Boolean ? BooleanPackFormula<ParamDefsT> : ResultT extends ValueType.Array ? ObjectPackFormula<ParamDefsT, ArraySchema<SchemaT>> : ObjectPackFormula<ParamDefsT, SchemaT>;
+export type Formula<ParamDefsT extends ParamDefs = ParamDefs, ResultT extends ValueType = ValueType, SchemaT extends Schema = Schema> = ResultT extends ValueType.String ? StringPackFormula<ParamDefsT> : ResultT extends ValueType.Number ? NumericPackFormula<ParamDefsT> : ResultT extends ValueType.Boolean ? BooleanPackFormula<ParamDefsT> : ResultT extends ValueType.Array ? ObjectPackFormula<ParamDefsT, ArraySchema<SchemaT>> : ObjectPackFormula<ParamDefsT, SchemaT>;
 /**
  * The union of types that represent formula definitions, including standard formula definitions,
  * metadata formulas, and the formulas that implement sync tables.
@@ -520,12 +520,12 @@ export declare type Formula<ParamDefsT extends ParamDefs = ParamDefs, ResultT ex
  * It should be very uncommon to need to use this type, it is most common in meta analysis of the
  * contents of a pack for for Coda internal use.
  */
-export declare type TypedPackFormula = Formula | GenericSyncFormula;
-export declare type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
+export type TypedPackFormula = Formula | GenericSyncFormula;
+export type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
 /** @hidden */
-export declare type PackFormulaMetadata = Omit<TypedPackFormula, 'execute' | 'executeUpdate'>;
+export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute' | 'executeUpdate'>;
 /** @hidden */
-export declare type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'execute'>;
+export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'execute'>;
 export declare function isObjectPackFormula(fn: PackFormulaMetadata): fn is ObjectPackFormulaMetadata;
 export declare function isStringPackFormula(fn: BaseFormula<ParamDefs, any>): fn is StringPackFormula<ParamDefs>;
 export declare function isSyncPackFormula(fn: BaseFormula<ParamDefs, any>): fn is GenericSyncFormula;
@@ -566,16 +566,16 @@ export interface SyncUpdate<K extends string, L extends string, SchemaT extends 
  * Generic type definition for the parameter used to pass in updates to a sync table update function.
  * @hidden
  */
-export declare type GenericSyncUpdate = SyncUpdate<any, any, any>;
+export type GenericSyncUpdate = SyncUpdate<any, any, any>;
 /**
  * Type definition for a single update result returned by a sync table update function.
  */
-export declare type SyncUpdateSingleResult<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> = ObjectSchemaDefinitionType<K, L, SchemaT> | Error;
+export type SyncUpdateSingleResult<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> = ObjectSchemaDefinitionType<K, L, SchemaT> | Error;
 /**
  * Generic type definition for a single update result returned by a sync table update function.
  * @hidden
  */
-export declare type GenericSyncUpdateSingleResult = SyncUpdateSingleResult<any, any, any>;
+export type GenericSyncUpdateSingleResult = SyncUpdateSingleResult<any, any, any>;
 /**
  * Type definition for the batched result returned by a sync table update function.
  */
@@ -589,12 +589,12 @@ export interface SyncUpdateResult<K extends string, L extends string, SchemaT ex
  * Generic type definition for the result returned by a sync table update function.
  * @hidden
  */
-export declare type GenericSyncUpdateResult = SyncUpdateResult<any, any, any>;
+export type GenericSyncUpdateResult = SyncUpdateResult<any, any, any>;
 /**
  * Type definition for a single marshaled update result returned by a sync table update function.
  * @hidden
  */
-export declare type SyncUpdateSingleResultMarshaled<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> = SyncUpdateSingleResultMarshaledSuccess<K, L, SchemaT> | SyncUpdateSingleResultMarshaledError;
+export type SyncUpdateSingleResultMarshaled<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> = SyncUpdateSingleResultMarshaledSuccess<K, L, SchemaT> | SyncUpdateSingleResultMarshaledError;
 /**
  * Possible outcomes for a single sync update.
  * @hidden
@@ -623,7 +623,7 @@ export interface SyncUpdateSingleResultMarshaledError {
  * Generic type definition for a single marshaled update result returned by a sync table update function.
  * @hidden
  */
-export declare type GenericSyncUpdateSingleResultMarshaled = SyncUpdateSingleResultMarshaled<any, any, any>;
+export type GenericSyncUpdateSingleResultMarshaled = SyncUpdateSingleResultMarshaled<any, any, any>;
 /**
  * Type definition for the marshaled result returned by a sync table update function.
  * @hidden
@@ -635,7 +635,7 @@ export interface SyncUpdateResultMarshaled<K extends string, L extends string, S
  * Generic type definition for the marshaled result returned by a sync table update function.
  * @hidden
  */
-export declare type GenericSyncUpdateResultMarshaled = SyncUpdateResultMarshaled<any, any, any>;
+export type GenericSyncUpdateResultMarshaled = SyncUpdateResultMarshaled<any, any, any>;
 /**
  * Inputs for creating the formula that implements a sync table.
  */
@@ -668,7 +668,7 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
  * There is no need to use this type directly. You provide a {@link SyncFormulaDef} as an
  * input to {@link makeSyncTable} which outputs definitions of this type.
  */
-export declare type SyncFormula<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>> = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
+export type SyncFormula<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>> = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
     resultType: TypeOf<SchemaType<SchemaT>>;
     isSyncFormula: true;
     schema?: ArraySchema;
@@ -763,7 +763,7 @@ export interface BaseFormulaDef<ParamDefsT extends ParamDefs, ResultT extends st
 /**
  * A definition accepted by {@link makeFormula} for a formula that returns a string.
  */
-export declare type StringFormulaDef<ParamDefsT extends ParamDefs> = BaseFormulaDef<ParamDefsT, string> & {
+export type StringFormulaDef<ParamDefsT extends ParamDefs> = BaseFormulaDef<ParamDefsT, string> & {
     resultType: ValueType.String;
     execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<string> | string;
 } & ({
@@ -774,7 +774,7 @@ export declare type StringFormulaDef<ParamDefsT extends ParamDefs> = BaseFormula
 /**
  * A definition accepted by {@link makeFormula} for a formula that returns a number.
  */
-export declare type NumericFormulaDef<ParamDefsT extends ParamDefs> = BaseFormulaDef<ParamDefsT, number> & {
+export type NumericFormulaDef<ParamDefsT extends ParamDefs> = BaseFormulaDef<ParamDefsT, number> & {
     resultType: ValueType.Number;
     execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<number> | number;
 } & ({
@@ -785,28 +785,28 @@ export declare type NumericFormulaDef<ParamDefsT extends ParamDefs> = BaseFormul
 /**
  * A definition accepted by {@link makeFormula} for a formula that returns a boolean.
  */
-export declare type BooleanFormulaDef<ParamDefsT extends ParamDefs> = BaseFormulaDef<ParamDefsT, boolean> & {
+export type BooleanFormulaDef<ParamDefsT extends ParamDefs> = BaseFormulaDef<ParamDefsT, boolean> & {
     resultType: ValueType.Boolean;
     execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<boolean> | boolean;
 };
 /**
  * A definition accepted by {@link makeFormula} for a formula that returns an array.
  */
-export declare type ArrayFormulaDef<ParamDefsT extends ParamDefs, SchemaT extends Schema> = BaseFormulaDef<ParamDefsT, SchemaType<ArraySchema<SchemaT>>> & {
+export type ArrayFormulaDef<ParamDefsT extends ParamDefs, SchemaT extends Schema> = BaseFormulaDef<ParamDefsT, SchemaType<ArraySchema<SchemaT>>> & {
     resultType: ValueType.Array;
     items: SchemaT;
 };
 /**
  * A definition accepted by {@link makeFormula} for a formula that returns an object.
  */
-export declare type ObjectFormulaDef<ParamDefsT extends ParamDefs, SchemaT extends Schema> = BaseFormulaDef<ParamDefsT, SchemaType<SchemaT>> & {
+export type ObjectFormulaDef<ParamDefsT extends ParamDefs, SchemaT extends Schema> = BaseFormulaDef<ParamDefsT, SchemaType<SchemaT>> & {
     resultType: ValueType.Object;
     schema: SchemaT;
 };
 /**
  * A formula definition accepted by {@link makeFormula}.
  */
-export declare type FormulaDefinition<ParamDefsT extends ParamDefs, ResultT extends ValueType, SchemaT extends Schema> = ResultT extends ValueType.String ? StringFormulaDef<ParamDefsT> : ResultT extends ValueType.Number ? NumericFormulaDef<ParamDefsT> : ResultT extends ValueType.Boolean ? BooleanFormulaDef<ParamDefsT> : ResultT extends ValueType.Array ? ArrayFormulaDef<ParamDefsT, SchemaT> : ObjectFormulaDef<ParamDefsT, SchemaT>;
+export type FormulaDefinition<ParamDefsT extends ParamDefs, ResultT extends ValueType, SchemaT extends Schema> = ResultT extends ValueType.String ? StringFormulaDef<ParamDefsT> : ResultT extends ValueType.Number ? NumericFormulaDef<ParamDefsT> : ResultT extends ValueType.Boolean ? BooleanFormulaDef<ParamDefsT> : ResultT extends ValueType.Array ? ArrayFormulaDef<ParamDefsT, SchemaT> : ObjectFormulaDef<ParamDefsT, SchemaT>;
 /**
  * The return type for a metadata formula that should return a different display to the user
  * than is used internally.
@@ -852,13 +852,13 @@ export interface MetadataFormulaObjectResultType {
  * to know the value of parameters that have already been selected. Those parameter
  * values are provided in this context object.
  */
-export declare type MetadataContext = Record<string, any> & {
+export type MetadataContext = Record<string, any> & {
     __brand: 'MetadataContext';
 };
 /**
  * The type of values that can be returned from a {@link MetadataFormula}.
  */
-export declare type MetadataFormulaResultType = string | number | MetadataFormulaObjectResultType;
+export type MetadataFormulaResultType = string | number | MetadataFormulaObjectResultType;
 /**
  * A formula that returns metadata relating to a core pack building block, like a sync table,
  * a formula parameter, or a user account. Examples include {@link DynamicOptions.getSchema},
@@ -888,10 +888,10 @@ export declare type MetadataFormulaResultType = string | number | MetadataFormul
  * values of the others. This is dictionary mapping the names of each parameter to its
  * current value.
  */
-export declare type MetadataFormula = BaseFormula<[ParamDef<Type.string>, ParamDef<Type.string>], any> & {
+export type MetadataFormula = BaseFormula<[ParamDef<Type.string>, ParamDef<Type.string>], any> & {
     schema?: any;
 };
-declare type GenericMetadataFormula = BaseFormula<ParamDefs, any> & {
+type GenericMetadataFormula = BaseFormula<ParamDefs, any> & {
     schema?: any;
 };
 /**
@@ -907,7 +907,7 @@ interface PropertyOptionsFormattedResult {
 /**
  * @hidden
  */
-export declare type PropertyOptionsResults = Array<any | PropertyOptionsFormattedResult> | {
+export type PropertyOptionsResults = Array<any | PropertyOptionsFormattedResult> | {
     cacheTtlSecs?: number;
     results: Array<any | PropertyOptionsFormattedResult>;
 };
@@ -932,10 +932,10 @@ export interface PropertyOptionsAnnotatedResult {
  * These are constructed by {@link makePropertyOptionsFormula}.
  * @hidden
  */
-export declare type PropertyOptionsMetadataFormula<SchemaT extends Schema> = ObjectPackFormula<[], ArraySchema<SchemaT>> & {
+export type PropertyOptionsMetadataFormula<SchemaT extends Schema> = ObjectPackFormula<[], ArraySchema<SchemaT>> & {
     execute(params: ParamValues<[]>, context: PropertyOptionsExecutionContext): Promise<object> | object;
 };
-export declare type MetadataFormulaMetadata = Omit<MetadataFormula, 'execute'>;
+export type MetadataFormulaMetadata = Omit<MetadataFormula, 'execute'>;
 /**
  * @hidden
  */
@@ -943,13 +943,13 @@ export declare type GenericMetadataFormulaMetadata = Omit<GenericMetadataFormula
 /**
  * A JavaScript function that can implement a {@link MetadataFormulaDef}.
  */
-export declare type MetadataFunction = (context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
+export type MetadataFunction = (context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
 /**
  * The type of values that will be accepted as a metadata formula definition. This can either
  * be the JavaScript function that implements a metadata formula (strongly recommended)
  * or a full metadata formula definition (mostly supported for legacy code).
  */
-export declare type MetadataFormulaDef = MetadataFormula | MetadataFunction;
+export type MetadataFormulaDef = MetadataFormula | MetadataFunction;
 /**
  * A wrapper that generates a formula definition from the function that implements a metadata formula.
  * It is uncommon to ever need to call this directly, normally you would just define the JavaScript
@@ -1335,9 +1335,8 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
  * });
  */
 export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: ObjectArrayFormulaDef<ParamDefsT, ResultT>): {
-    description: string;
     name: string;
-    cacheTtlSecs?: number | undefined;
+    description: string;
     parameters: ParamDefsT;
     varargParameters?: ParamDefs | undefined;
     examples?: {
@@ -1347,6 +1346,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
     isAction?: boolean | undefined;
     connectionRequirement?: ConnectionRequirement | undefined;
     network?: import("./api_types").Network | undefined;
+    cacheTtlSecs?: number | undefined;
     isExperimental?: boolean | undefined;
     isSystem?: boolean | undefined;
     extraOAuthScopes?: string[] | undefined;
@@ -1376,9 +1376,8 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
  * ```
  */
 export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: EmptyFormulaDef<ParamDefsT>): {
-    description: string;
     name: string;
-    cacheTtlSecs?: number | undefined;
+    description: string;
     parameters: ParamDefsT;
     varargParameters?: ParamDefs | undefined;
     examples?: {
@@ -1388,6 +1387,7 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
     isAction?: boolean | undefined;
     connectionRequirement?: ConnectionRequirement | undefined;
     network?: import("./api_types").Network | undefined;
+    cacheTtlSecs?: number | undefined;
     isExperimental?: boolean | undefined;
     isSystem?: boolean | undefined;
     extraOAuthScopes?: string[] | undefined;

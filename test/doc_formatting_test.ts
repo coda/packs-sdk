@@ -1,5 +1,5 @@
 import fs from 'fs';
-import glob from 'glob';
+import {globSync} from 'glob';
 import path from 'path';
 
 /**
@@ -17,19 +17,18 @@ interface MarkdownFile {
 }
 
 async function getMarkdownFileContent(): Promise<MarkdownFile[]> {
-  const files = glob.sync(MarkdownPattern, {});
+  const files = globSync(MarkdownPattern, {});
   const buffers = files.map(file => fs.readFileSync(file));
   const content = buffers.map(buffer => buffer.toString());
   return files.map((file, i) => {
     return {
       path: file,
       content: content[i],
-    }
+    };
   });
 }
 
 describe('Documentation formatting', () => {
-
   // Matches admonitions and tabs that have been un-indented.
   it('no malformed callouts', async () => {
     const pattern = /^[!?=]{3} .*\n+[^\s].*/gm;
@@ -41,5 +40,4 @@ describe('Documentation formatting', () => {
       }
     }
   });
-
 });
