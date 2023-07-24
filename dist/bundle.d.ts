@@ -752,7 +752,7 @@ export type OptionsReference = string & {
  * is about 5 minutes, if unspecified.
  */
 export type PropertyOptionsMetadataResult<ResultT extends PackFormulaResult[]> = ResultT | {
-	results: ResultT;
+	result: ResultT;
 	cacheTtlSecs?: number;
 };
 /**

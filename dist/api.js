@@ -523,7 +523,7 @@ function normalizePropertyOptionsResults(results) {
             results: normalizePropertyOptionsResultsArray(results),
         };
     }
-    const { results: resultsArray, ...otherProps } = results;
+    const { result: resultsArray, ...otherProps } = results;
     return {
         results: normalizePropertyOptionsResultsArray(resultsArray),
         ...otherProps,

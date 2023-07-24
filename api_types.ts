@@ -919,7 +919,7 @@ export type OptionsReference = string & {
  */
 export type PropertyOptionsMetadataResult<ResultT extends PackFormulaResult[]> =
   | ResultT
-  | {results: ResultT; cacheTtlSecs?: number};
+  | {result: ResultT; cacheTtlSecs?: number};
 
 /**
  * A JavaScript function for property options.
