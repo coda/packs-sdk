@@ -24,6 +24,7 @@ import {ParameterTypeInputMap} from './api_types';
 import type {ParameterTypeMap} from './api_types';
 import type {PropertyOptionsExecutionContext} from './api_types';
 import type {PropertyOptionsMetadataFunction} from './api_types';
+import type {PropertyOptionsMetadataResult} from './api_types';
 import type {RequestHandlerTemplate} from './handler_templates';
 import type {RequiredParamDef} from './api_types';
 import type {ResponseHandlerTemplate} from './handler_templates';
@@ -1506,12 +1507,7 @@ interface PropertyOptionsFormattedResult {
 /**
  * @hidden
  */
-export type PropertyOptionsResults =
-  | Array<any | PropertyOptionsFormattedResult>
-  | {
-      cacheTtlSecs?: number;
-      results: Array<any | PropertyOptionsFormattedResult>;
-    };
+export type PropertyOptionsResults = PropertyOptionsMetadataResult<any | PropertyOptionsFormattedResult>;
 
 interface PropertyOptionsNormalizedResults {
   cacheTtlSecs?: number;
@@ -1535,7 +1531,7 @@ export function normalizePropertyOptionsResults(results: PropertyOptionsResults)
       results: normalizePropertyOptionsResultsArray(results),
     };
   }
-  const {results: resultsArray, ...otherProps} = results;
+  const {result: resultsArray, ...otherProps} = results;
   return {
     results: normalizePropertyOptionsResultsArray(resultsArray),
     ...otherProps,
@@ -1653,9 +1649,11 @@ export function makePropertyOptionsFormula<SchemaT extends Schema>({
 
   type ResultT = SchemaType<ArraySchema<SchemaT>>;
 
-  // The type SchemaType<ArraySchema<T>> is equivalent to Array<SchemaType<T>>, but typescript doesn't know
-  // that unless we do a cast.
-  const executeRetyped = execute as PropertyOptionsMetadataFunction<SchemaType<ArraySchema<SchemaT>>>;
+  // This cast is necessary for two reasons:
+  // 1) The type SchemaType<ArraySchema<T>> is equivalent to Array<SchemaType<T>>, but typescript doesn't know that.
+  // 2) This metadata function itself has a flexible return type of either Array<ResultType> or
+  //    {results: Array<ResultType>, cacheTtlSecs: number}, which is not something a pack schema can natively represent.
+  const executeRetyped = execute as (context: PropertyOptionsExecutionContext) => SchemaType<ArraySchema<SchemaT>>;
 
   // Bend the type to satisfy PackFormulaDef's declaration.
   const innerExecute = async ([]: ParamValues<[]>, context: ExecutionContext): Promise<ResultT> =>

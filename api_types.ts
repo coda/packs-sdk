@@ -912,10 +912,18 @@ export type OptionsReference = string & {
   __brand: 'OptionsRef';
 };
 
-// TODO(dweitzman): Update the type to allow options functions to return a cache TTL.
+/**
+ * The result of a property options formula. This is either an array, or an array combined with
+ * cacheTtlSecs to indicate how long the results can be cached for. The default cacheTtlSecs
+ * is about 5 minutes, if unspecified.
+ */
+export type PropertyOptionsMetadataResult<ResultT extends PackFormulaResult[]> =
+  | ResultT
+  | {result: ResultT; cacheTtlSecs?: number};
+
 /**
  * A JavaScript function for property options.
  */
 export type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]> = (
   context: PropertyOptionsExecutionContext,
-) => Promise<ResultT> | ResultT;
+) => Promise<PropertyOptionsMetadataResult<ResultT>> | PropertyOptionsMetadataResult<ResultT>;

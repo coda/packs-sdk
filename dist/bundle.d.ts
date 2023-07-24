@@ -747,9 +747,18 @@ export type OptionsReference = string & {
 	__brand: "OptionsRef";
 };
 /**
+ * The result of a property options formula. This is either an array, or an array combined with
+ * cacheTtlSecs to indicate how long the results can be cached for. The default cacheTtlSecs
+ * is about 5 minutes, if unspecified.
+ */
+export type PropertyOptionsMetadataResult<ResultT extends PackFormulaResult[]> = ResultT | {
+	result: ResultT;
+	cacheTtlSecs?: number;
+};
+/**
  * A JavaScript function for property options.
  */
-export type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]> = (context: PropertyOptionsExecutionContext) => Promise<ResultT> | ResultT;
+export type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]> = (context: PropertyOptionsExecutionContext) => Promise<PropertyOptionsMetadataResult<ResultT>> | PropertyOptionsMetadataResult<ResultT>;
 /**
  * The set of primitive value types that can be used as return values for formulas
  * or in object schemas.
