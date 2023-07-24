@@ -189,6 +189,7 @@ export type {ObjectSchemaProperties} from './schema';
 export type {ObjectSchemaProperty} from './schema';
 export type {ProgressBarSchema} from './schema';
 export type {PropertyOptionsMetadataFunction} from './api_types';
+export type {PropertyOptionsMetadataResult} from './api_types';
 export {PropertyIdentifier} from './schema';
 export {PropertyIdentifierDetails} from './schema';
 export {PropertyLabelValueTemplate} from './schema';

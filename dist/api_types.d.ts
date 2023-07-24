@@ -765,7 +765,12 @@ export declare enum OptionsType {
 export type OptionsReference = string & {
     __brand: 'OptionsRef';
 };
-type PropertyOptionsMetadataResult<ResultT extends PackFormulaResult[]> = ResultT | {
+/**
+ * The result of a property options formula. This is either an array, or an array combined with
+ * cacheTtlSecs to indicate how long the results can be cached for. The default cacheTtlSecs
+ * is about 5 minutes, if unspecified.
+ */
+export type PropertyOptionsMetadataResult<ResultT extends PackFormulaResult[]> = ResultT | {
     results: ResultT;
     cacheTtlSecs?: number;
 };
