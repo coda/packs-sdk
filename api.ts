@@ -1653,9 +1653,11 @@ export function makePropertyOptionsFormula<SchemaT extends Schema>({
 
   type ResultT = SchemaType<ArraySchema<SchemaT>>;
 
-  // The type SchemaType<ArraySchema<T>> is equivalent to Array<SchemaType<T>>, but typescript doesn't know
-  // that unless we do a cast.
-  const executeRetyped = execute as PropertyOptionsMetadataFunction<SchemaType<ArraySchema<SchemaT>>>;
+  // This cast is necessary for two reasons:
+  // 1) The type SchemaType<ArraySchema<T>> is equivalent to Array<SchemaType<T>>, but typescript doesn't know that.
+  // 2) This metadata function itself has a flexible return type of either Array<ResultType> or
+  //    {results: Array<ResultType>, cacheTtlSecs: number}, which is not something a pack schema can natively represent.
+  const executeRetyped = execute as (context: PropertyOptionsExecutionContext) => SchemaType<ArraySchema<SchemaT>>;
 
   // Bend the type to satisfy PackFormulaDef's declaration.
   const innerExecute = async ([]: ParamValues<[]>, context: ExecutionContext): Promise<ResultT> =>

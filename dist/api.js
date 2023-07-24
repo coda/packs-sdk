@@ -586,8 +586,10 @@ function makePropertyOptionsFormula({ execute, schema, name, }) {
     if (!(execute instanceof Function)) {
         throw new Error(`Value for execute must be a function`);
     }
-    // The type SchemaType<ArraySchema<T>> is equivalent to Array<SchemaType<T>>, but typescript doesn't know
-    // that unless we do a cast.
+    // This cast is necessary for two reasons:
+    // 1) The type SchemaType<ArraySchema<T>> is equivalent to Array<SchemaType<T>>, but typescript doesn't know that.
+    // 2) This metadata function itself has a flexible return type of either Array<ResultType> or
+    //    {results: Array<ResultType>, cacheTtlSecs: number}, which is not something a pack schema can natively represent.
     const executeRetyped = execute;
     // Bend the type to satisfy PackFormulaDef's declaration.
     const innerExecute = async ([], context) => executeRetyped(context);

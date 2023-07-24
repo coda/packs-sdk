@@ -8,7 +8,7 @@ search:
 
 [core](../modules/core.md).PropertyOptionsMetadataFunction
 
-Ƭ **PropertyOptionsMetadataFunction**<`ResultT`\>: (`context`: [`PropertyOptionsExecutionContext`](../interfaces/core.PropertyOptionsExecutionContext.md)) => `Promise`<`ResultT`\> \| `ResultT`
+Ƭ **PropertyOptionsMetadataFunction**<`ResultT`\>: (`context`: [`PropertyOptionsExecutionContext`](../interfaces/core.PropertyOptionsExecutionContext.md)) => `Promise`<`PropertyOptionsMetadataResult`<`ResultT`\>\> \| `PropertyOptionsMetadataResult`<`ResultT`\>
 
 #### Type parameters
 
@@ -18,7 +18,7 @@ search:
 
 #### Type declaration
 
-▸ (`context`): `Promise`<`ResultT`\> \| `ResultT`
+▸ (`context`): `Promise`<`PropertyOptionsMetadataResult`<`ResultT`\>\> \| `PropertyOptionsMetadataResult`<`ResultT`\>
 
 A JavaScript function for property options.
 
@@ -30,4 +30,4 @@ A JavaScript function for property options.
 
 ##### Returns
 
-`Promise`<`ResultT`\> \| `ResultT`
+`Promise`<`PropertyOptionsMetadataResult`<`ResultT`\>\> \| `PropertyOptionsMetadataResult`<`ResultT`\>

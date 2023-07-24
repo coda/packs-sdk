@@ -897,10 +897,13 @@ export type OptionsReference = string & {
   __brand: 'OptionsRef';
 };
 
-// TODO(dweitzman): Update the type to allow options functions to return a cache TTL.
+type PropertyOptionsMetadataResult<ResultT extends PackFormulaResult[]> =
+  | ResultT
+  | {results: ResultT; cacheTtlSecs?: number};
+
 /**
  * A JavaScript function for property options.
  */
 export type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]> = (
   context: PropertyOptionsExecutionContext,
-) => Promise<ResultT> | ResultT;
+) => Promise<PropertyOptionsMetadataResult<ResultT>> | PropertyOptionsMetadataResult<ResultT>;

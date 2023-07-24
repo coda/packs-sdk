@@ -733,10 +733,14 @@ export declare enum OptionsType {
 export type OptionsReference = string & {
 	__brand: "OptionsRef";
 };
+export type PropertyOptionsMetadataResult<ResultT extends PackFormulaResult[]> = ResultT | {
+	results: ResultT;
+	cacheTtlSecs?: number;
+};
 /**
  * A JavaScript function for property options.
  */
-export type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]> = (context: PropertyOptionsExecutionContext) => Promise<ResultT> | ResultT;
+export type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]> = (context: PropertyOptionsExecutionContext) => Promise<PropertyOptionsMetadataResult<ResultT>> | PropertyOptionsMetadataResult<ResultT>;
 /**
  * The set of primitive value types that can be used as return values for formulas
  * or in object schemas.
