@@ -20,6 +20,12 @@ A schema representing a value with selectable options.
 
 ## Properties
 
+### allowNewValues
+
+• `Optional` **allowNewValues**: `boolean`
+
+___
+
 ### codaType
 
 • **codaType**: [`SelectList`](../enums/core.ValueHintType.md#selectlist)
@@ -29,12 +35,6 @@ Instructs Coda to render this value as a select list.
 #### Overrides
 
 BaseStringSchema.codaType
-
-___
-
-### customOptions
-
-• `Optional` **customOptions**: `boolean`
 
 ___
 

@@ -791,7 +791,7 @@ export interface StringWithOptionsSchema
   /** Instructs Coda to render this value as a select list. */
   codaType: ValueHintType.SelectList;
 
-  customOptions?: boolean;
+  allowNewValues?: boolean;
 }
 
 export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> extends BaseSchema {

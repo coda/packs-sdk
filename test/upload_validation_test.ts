@@ -1172,7 +1172,7 @@ describe('Pack metadata Validation', async () => {
                 codaType: ValueHintType.SelectList,
                 mutable: true,
                 options: ['this is ok', {display: 'foo', value: 'bar'}],
-                customOptions: true,
+                allowNewValues: true,
               },
               foo2: {
                 type: ValueType.Object,
@@ -1212,7 +1212,7 @@ describe('Pack metadata Validation', async () => {
         });
         const validatedMetadata = await validateJson(metadata);
         assert.isArray(validatedMetadata.syncTables[0].schema.properties.Foo.options);
-        assert.isTrue(validatedMetadata.syncTables[0].schema.properties.Foo.customOptions);
+        assert.isTrue(validatedMetadata.syncTables[0].schema.properties.Foo.allowNewValues);
         assert.isString(validatedMetadata.syncTables[0].schema.properties.Bar.options);
       });
 
