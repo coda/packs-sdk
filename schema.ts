@@ -230,11 +230,13 @@ export type PropertySchemaOptions<T extends PackFormulaResult> =
   | OptionsType
   | OptionsReference;
 
-interface PropertyWithOptions<T extends PackFormulaResult> {
+/**
+ * A property with a list of valid options for its value.
+ */
+export interface PropertyWithOptions<T extends PackFormulaResult> {
   /**
    * A list of values or a formula that returns a list of values to suggest when someone
-   * edits this property. This should only be set when {@link mutable}
-   * is true.
+   * edits this property. This should only be set when {@link mutable} is true.
    *
    * @example
    * ```
@@ -258,8 +260,6 @@ interface PropertyWithOptions<T extends PackFormulaResult> {
    *   },
    * }
    * ```
-   *
-   * @hidden
    */
   options?: PropertySchemaOptions<T>;
 }
@@ -791,6 +791,7 @@ export interface StringWithOptionsSchema
   /** Instructs Coda to render this value as a select list. */
   codaType: ValueHintType.SelectList;
 
+  /** Allow custom, user-entered strings in addition to {@link PropertyWithOptions.options}. */
   allowNewValues?: boolean;
 }
 

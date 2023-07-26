@@ -103,6 +103,7 @@ import * as coda from "@codahq/packs-sdk";
 - [ProgressBarSchema](../interfaces/core.ProgressBarSchema.md)
 - [PropertyIdentifierDetails](../interfaces/core.PropertyIdentifierDetails.md)
 - [PropertyOptionsExecutionContext](../interfaces/core.PropertyOptionsExecutionContext.md)
+- [PropertyWithOptions](../interfaces/core.PropertyWithOptions.md)
 - [QueryParamTokenAuthentication](../interfaces/core.QueryParamTokenAuthentication.md)
 - [RequestHandlerTemplate](../interfaces/core.RequestHandlerTemplate.md)
 - [RequiredParamDef](../interfaces/core.RequiredParamDef.md)
