@@ -26,7 +26,7 @@ A property with a list of valid options for its value.
 
 ### options
 
-• `Optional` **options**: `PropertySchemaOptions`<`T`\>
+• `Optional` **options**: [`PropertySchemaOptions`](../types/core.PropertySchemaOptions.md)<`T`\>
 
 A list of values or a formula that returns a list of values to suggest when someone
 edits this property.

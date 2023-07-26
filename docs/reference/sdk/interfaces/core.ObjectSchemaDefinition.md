@@ -175,7 +175,7 @@ ___
 
 ### options
 
-• `Optional` **options**: `PropertySchemaOptions`<{}\>
+• `Optional` **options**: [`PropertySchemaOptions`](../types/core.PropertySchemaOptions.md)<{}\>
 
 A list of values or a formula that returns a list of values to suggest when someone
 edits this property.

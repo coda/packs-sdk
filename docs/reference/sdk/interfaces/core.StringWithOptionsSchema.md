@@ -57,7 +57,7 @@ ___
 
 ### options
 
-• `Optional` **options**: `PropertySchemaOptions`<`string` \| { `display`: `string` ; `value`: `string`  }\>
+• `Optional` **options**: [`PropertySchemaOptions`](../types/core.PropertySchemaOptions.md)<`string` \| { `display`: `string` ; `value`: `string`  }\>
 
 A list of values or a formula that returns a list of values to suggest when someone
 edits this property.

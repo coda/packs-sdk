@@ -29,6 +29,7 @@ module.exports = {
     'BooleanHintValueTypes',
     'GenericObjectSchema',
     'NumberHintValueTypes',
+    'OptionsReference',
     'ObjectHintValueTypes',
     'ObjectSchema',
     'ObjectSchemaDefinitionType',
