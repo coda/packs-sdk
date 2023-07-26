@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import glob from 'glob';
+import {globSync} from 'glob';
 import path from 'path';
 import {print} from '../../testing/helpers';
 
@@ -17,7 +17,7 @@ const NoteText = [
 const AbsoluteUrlRegex = new RegExp('https://coda.io/packs/build/latest/', 'g');
 
 async function main(): Promise<void> {
-  const files = glob.sync(MarkdownPattern, {});
+  const files = globSync(MarkdownPattern, {});
   const promises = [];
   for (const file of files) {
     promises.push(process(file));

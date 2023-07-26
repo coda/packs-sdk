@@ -1,5 +1,5 @@
 // Typedoc settings.
-// See: https://typedoc.org/guides/options/
+// See: https://typedoc.org/options/
 module.exports = {
   name: "Modules",
   excludeExternals: true,
@@ -8,6 +8,11 @@ module.exports = {
   plugin: 'typedoc-plugin-markdown',
   // Don't include the repo's README in the generated docs.
   readme: 'documentation/reference/README.md',
+
+  // NOTE(patrick): I'm not sure why this is necessary, but without it, we saw a strange
+  // resolution of PackVersionDefinition links being resolved as PackDefinition links in
+  // the generated docs.
+  useTsLinkResolution: false,
 
   // Markdown-specific options.
   hideBreadcrumbs: true,

@@ -1089,20 +1089,26 @@ export const Examples: Example[] = [
       {
         name: 'Simple two-way sync',
         content:
-          "A sync table supports user edits via two-way sync. It uses the default behavior of updating one row at a time. This sample syncs the tasks from a user's Todoist account.",
+          "A sync table that supports user edits via two-way sync. It uses the default behavior of updating one row at a time. This sample syncs the tasks from a user's Todoist account.",
         codeFile: './samples/packs/todoist/two_way.ts',
       },
       {
         name: 'With batched updates',
         content:
-          "A sync table supports user edits via two-way sync, batch processing multiple rows at once. This sample syncs the tasks from a user's Todoist account.",
+          "A sync table that supports user edits via two-way sync, batch processing multiple rows at once. This sample syncs the tasks from a user's Todoist account.",
         codeFile: './samples/packs/todoist/two_way_batched.ts',
       },
       {
         name: 'Using a batch update endpoint',
         content:
-          "A sync table supports user edits via two-way sync, batch processing multiple rows at once using the API's batch update endpoint. This sample syncs the tasks from a user's Todoist account.",
+          "A sync table that supports user edits via two-way sync, batch processing multiple rows at once using the API's batch update endpoint. This sample syncs the tasks from a user's Todoist account.",
         codeFile: './samples/packs/todoist/two_way_batched_endpoint.ts',
+      },
+      {
+        name: 'With property options',
+        content:
+          "A sync table that supports user edits via two-way sync, with a defined set of options for certain properties. This sample syncs a user's expenses in Splitwise.",
+        codeFile: './samples/packs/two-way/splitwise.ts',
       },
     ],
   },

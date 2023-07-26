@@ -536,7 +536,7 @@ describe('API test', () => {
     assert.deepEqual(
       normalizePropertyOptionsResults({
         cacheTtlSecs: 123,
-        results: packResultsArray,
+        result: packResultsArray,
       }),
       {
         cacheTtlSecs: 123,
