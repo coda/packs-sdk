@@ -236,7 +236,7 @@ export type PropertySchemaOptions<T extends PackFormulaResult> =
 export interface PropertyWithOptions<T extends PackFormulaResult> {
   /**
    * A list of values or a formula that returns a list of values to suggest when someone
-   * edits this property. This should only be set when {@link mutable} is true.
+   * edits this property.
    *
    * @example
    * ```

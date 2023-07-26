@@ -29,7 +29,7 @@ A property with a list of valid options for its value.
 • `Optional` **options**: `PropertySchemaOptions`<`T`\>
 
 A list of values or a formula that returns a list of values to suggest when someone
-edits this property. This should only be set when mutable is true.
+edits this property.
 
 **`Example`**
 
