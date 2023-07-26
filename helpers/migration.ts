@@ -34,10 +34,6 @@ class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
     return this._schema.identity;
   }
 
-  get mutable() {
-    return this._schema.mutable;
-  }
-
   get options() {
     return this._schema.options;
   }

@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- Started tracking the raw keys of object properties internally as `originalKey`.
+
 ## [1.4.1] - 2023-06-23
 
 ### Added

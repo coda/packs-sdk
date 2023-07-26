@@ -1820,7 +1820,9 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
   let schema: Schema | undefined;
   if (response) {
     if (isResponseHandlerTemplate(response) && response.schema) {
-      response.schema = normalizeSchema(response.schema) as SchemaT;
+      // Since the schema may be re-used, make a copy.
+      const inputSchema = deepCopy(response.schema);
+      response.schema = normalizeSchema(inputSchema) as SchemaT;
       schema = response.schema;
     } else if (isResponseExampleTemplate(response)) {
       // TODO(alexd): Figure out what to do with examples.
@@ -2151,9 +2153,10 @@ export function makeSyncTable<
     });
   }
 
-  const formulaSchema = getSchema
+  const normalizedSchema = normalizeSchema(schema);
+  const formulaSchema: ArraySchema<Schema> | undefined = getSchema
     ? undefined
-    : normalizeSchema<ArraySchema<Schema>>({type: ValueType.Array, items: schema});
+    : {type: ValueType.Array, items: normalizedSchema};
   const {identity, id, primary} = objectSchemaHelper(schema);
   if (!(primary && id)) {
     throw new Error(`Sync table schemas should have defined properties for idProperty and displayProperty`);
@@ -2192,7 +2195,7 @@ export function makeSyncTable<
   return {
     name,
     description,
-    schema: normalizeSchema(schema),
+    schema: normalizedSchema,
     identityName,
     getter: {
       ...definition,

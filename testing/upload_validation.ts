@@ -637,8 +637,6 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       type: zodDiscriminant(ValueType.Boolean),
       codaType: z.enum([...BooleanHintValueTypes]).optional(),
       description: z.string().optional(),
-      mutable: z.boolean().optional(),
-      fixedId: z.string().optional(),
     }).optional(),
   });
 
@@ -679,6 +677,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     mutable: z.boolean().optional(),
     fixedId: z.string().optional(),
     fromKey: z.string().optional(),
+    originalKey: z.string().optional(),
     required: z.boolean().optional(),
   };
 

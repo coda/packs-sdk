@@ -281,14 +281,14 @@ describe('Schema', () => {
         id: 'name',
         primary: 'name',
         properties: {
-          name: {type: schema.ValueType.String},
+          name: {type: schema.ValueType.String, fixedId: 'myFixedId'},
           another: anotherSchema,
           "What's your name?": {type: schema.ValueType.String},
           'Enter the date in MM.DD.YYYY format': {type: schema.ValueType.String},
           'fruit [choose multiple]': {type: schema.ValueType.String},
+          '!@#$%^&*()-_`~"\\/|<>[]{};:?+=a': {type: schema.ValueType.Number, fromKey: 'from'},
           subtitle: {type: schema.ValueType.String},
         },
-        fixedId: 'myFixedId',
         titleProperty: 'Enter the date in MM.DD.YYYY format',
         snippetProperty: 'another.boo',
         subtitleProperties: [{property: 'subtitle', placeholder: 'Empty'}],
@@ -296,31 +296,38 @@ describe('Schema', () => {
       const normalized = schema.normalizeSchema(objectSchema);
       // Deep copy to remove undefined values
       assert.deepEqual(deepCopy((normalized as schema.GenericObjectSchema).properties), {
-        Name: {type: schema.ValueType.String, fromKey: 'name'},
-        WhatSYourName: {type: schema.ValueType.String, fromKey: "What's your name?"},
+        Name: {type: schema.ValueType.String, fixedId: 'myFixedId', fromKey: 'name', originalKey: 'name'},
+        WhatSYourName: {type: schema.ValueType.String, fromKey: "What's your name?", originalKey: "What's your name?"},
         EnterTheDateInMMDDYYYYFormat: {
           type: schema.ValueType.String,
           fromKey: 'Enter the date in MM.DD.YYYY format',
+          originalKey: 'Enter the date in MM.DD.YYYY format',
         },
-        FruitChooseMultiple: {type: schema.ValueType.String, fromKey: 'fruit [choose multiple]'},
+        FruitChooseMultiple: {
+          type: schema.ValueType.String,
+          fromKey: 'fruit [choose multiple]',
+          originalKey: 'fruit [choose multiple]',
+        },
+        A: {type: schema.ValueType.Number, fromKey: 'from', originalKey: '!@#$%^&*()-_`~"\\/|<>[]{};:?+=a'},
         Another: {
           primary: 'Boo',
           type: schema.ValueType.Object,
           fromKey: 'another',
+          originalKey: 'another',
           properties: {
-            Boo: {type: schema.ValueType.String, fromKey: 'boo'},
+            Boo: {type: schema.ValueType.String, fromKey: 'boo', originalKey: 'boo'},
             Baz: {
               type: schema.ValueType.String,
               codaType: schema.ValueHintType.SelectList,
               fromKey: 'baz',
+              originalKey: 'baz',
               mutable: true,
               options: OptionsType.Dynamic,
             },
           },
         },
-        Subtitle: {type: schema.ValueType.String, fromKey: 'subtitle'},
+        Subtitle: {type: schema.ValueType.String, fromKey: 'subtitle', originalKey: 'subtitle'},
       });
-      assert.equal(normalized.fixedId, 'myFixedId');
       assert.deepEqual((normalized as schema.GenericObjectSchema).titleProperty, 'EnterTheDateInMMDDYYYYFormat');
       assert.deepEqual((normalized as schema.GenericObjectSchema).snippetProperty, 'Another.Boo');
       assert.deepEqual((normalized as schema.GenericObjectSchema).subtitleProperties, [
@@ -346,14 +353,13 @@ describe('Schema', () => {
         codaType: ValueHintType.Reference,
         type: ValueType.Object,
         idProperty: 'id',
+        // TODO(patrick): Remove this cast after we distinguish schema definitions from runtime schemas
         identity: {name: 'Thing'} as schema.Identity,
         displayProperty: 'name',
         properties: {
           id: {type: ValueType.Number, required: true},
           name: {type: ValueType.String, required: true},
         },
-        mutable: undefined,
-        options: undefined,
       });
     });
 
@@ -373,13 +379,12 @@ describe('Schema', () => {
         codaType: ValueHintType.Reference,
         type: ValueType.Object,
         idProperty: 'id',
+        // TODO(patrick): Remove this cast after we distinguish schema definitions from runtime schemas
         identity: {name: 'Thing'} as schema.Identity,
         displayProperty: 'id',
         properties: {
           id: {type: ValueType.Number, required: true},
         },
-        mutable: undefined,
-        options: undefined,
       });
     });
 
@@ -396,6 +401,30 @@ describe('Schema', () => {
         () => schema.makeReferenceSchemaFromObjectSchema(thingSchema, 'Thing'),
         'Display property "fake" must refer to a valid property schema.',
       );
+    });
+
+    it('allows a reference to another packId', () => {
+      const thingSchema = makeObjectSchema({
+        properties: {
+          name: {type: ValueType.String, required: true},
+          id: {type: ValueType.Number, required: true},
+        },
+        displayProperty: 'name',
+        idProperty: 'id',
+        identity: {name: 'Thing', packId: 12345},
+      });
+      const thingReferenceSchema = schema.makeReferenceSchemaFromObjectSchema(thingSchema, 'Thing');
+      assert.deepEqual(thingReferenceSchema, {
+        codaType: ValueHintType.Reference,
+        type: ValueType.Object,
+        idProperty: 'id',
+        identity: {name: 'Thing', packId: 12345},
+        displayProperty: 'name',
+        properties: {
+          id: {type: ValueType.Number, required: true},
+          name: {type: ValueType.String, required: true},
+        },
+      });
     });
   });
 });
