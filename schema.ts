@@ -894,14 +894,15 @@ export interface ObjectSchemaProperty {
   fixedId?: string;
 
   /**
-   * For internal use only.
+   * For internal use only, Pack makers cannot set this. It is auto-populated at build time
+   * and if somehow there were a value here it would be overwritten.
    * Coda table schemas use a normalized version of a property key, so this field is used
    * internally to track what the Pack maker used as the property key, verbatim.
    * E.g., if a sync table schema had `properties: { 'foo-bar': {type: coda.ValueType.String} }`,
    * then the resulting column name would be "FooBar", but 'foo-bar' will be persisted as
    * the `originalKey`.
-   * This is optional only for backwards-compatibility. It should always be defined for any new
-   * Pack builds on an updated SDK version.
+   * When we distinguish schema definitions from runtime schemas, this should be non-optional in the
+   * runtime interface.
    * @hidden
    */
   originalKey?: string;
@@ -1652,7 +1653,8 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
     // sufficient to define T === GenericObjectSchema?
     return normalizeObjectSchema(schema) as T;
   }
-  return schema;
+  // We always make a copy of the input schema so we never accidentally mutate it.
+  return {...schema};
 }
 
 export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjectSchema {
@@ -1685,25 +1687,19 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
   ensureNever<keyof typeof rest>();
   for (const key of Object.keys(properties)) {
     const normalizedKey = normalizeSchemaKey(key);
-    const props = properties[key];
-    const {fixedId, fromKey, mutable, originalKey, required} = props;
+    const property = properties[key];
+    const {fixedId, fromKey, mutable, originalKey, required} = property;
     if (originalKey) {
       throw new Error('Original key is only for internal use.');
     }
-    const normalizedProps: ObjectSchemaProperty = {
+    const normalizedPropertyAttrs: ObjectSchemaProperty = {
+      fixedId,
       fromKey: fromKey || (normalizedKey !== key ? key : undefined),
+      mutable,
       originalKey: key,
+      required,
     };
-    if (fixedId) {
-      normalizedProps.fixedId = fixedId;
-    }
-    if (mutable) {
-      normalizedProps.mutable = mutable;
-    }
-    if (required) {
-      normalizedProps.required = required;
-    }
-    normalizedProperties[normalizedKey] = Object.assign(normalizeSchema(props), normalizedProps);
+    normalizedProperties[normalizedKey] = Object.assign(normalizeSchema(property), normalizedPropertyAttrs);
   }
   return {
     attribution,
@@ -1757,18 +1753,14 @@ export function makeReferenceSchemaFromObjectSchema(
   }
   const referenceSchema: PropertyObjectSchemaDefinition = {
     codaType: ValueHintType.Reference,
-    type,
-    idProperty: id,
-    identity: identity || {name: ensureExists(identityName)},
     displayProperty: primary,
+    identity: identity || {name: ensureExists(identityName)},
+    idProperty: id,
+    mutable,
+    options,
     properties: referenceProperties,
+    type,
   };
-  if (mutable) {
-    referenceSchema.mutable = mutable;
-  }
-  if (options) {
-    referenceSchema.options = options;
-  }
   return makeObjectSchema(referenceSchema);
 }
 

@@ -360,6 +360,8 @@ describe('Schema', () => {
           id: {type: ValueType.Number, required: true},
           name: {type: ValueType.String, required: true},
         },
+        mutable: undefined,
+        options: undefined,
       });
     });
 
@@ -385,6 +387,8 @@ describe('Schema', () => {
         properties: {
           id: {type: ValueType.Number, required: true},
         },
+        mutable: undefined,
+        options: undefined,
       });
     });
 
@@ -424,6 +428,8 @@ describe('Schema', () => {
           id: {type: ValueType.Number, required: true},
           name: {type: ValueType.String, required: true},
         },
+        mutable: undefined,
+        options: undefined,
       });
     });
   });

@@ -662,7 +662,8 @@ function normalizeSchema(schema) {
         // sufficient to define T === GenericObjectSchema?
         return normalizeObjectSchema(schema);
     }
-    return schema;
+    // We always make a copy of the input schema so we never accidentally mutate it.
+    return { ...schema };
 }
 exports.normalizeSchema = normalizeSchema;
 function normalizeObjectSchema(schema) {
@@ -674,25 +675,19 @@ function normalizeObjectSchema(schema) {
     (0, ensure_3.ensureNever)();
     for (const key of Object.keys(properties)) {
         const normalizedKey = normalizeSchemaKey(key);
-        const props = properties[key];
-        const { fixedId, fromKey, mutable, originalKey, required } = props;
+        const property = properties[key];
+        const { fixedId, fromKey, mutable, originalKey, required } = property;
         if (originalKey) {
             throw new Error('Original key is only for internal use.');
         }
-        const normalizedProps = {
+        const normalizedPropertyAttrs = {
+            fixedId,
             fromKey: fromKey || (normalizedKey !== key ? key : undefined),
+            mutable,
             originalKey: key,
+            required,
         };
-        if (fixedId) {
-            normalizedProps.fixedId = fixedId;
-        }
-        if (mutable) {
-            normalizedProps.mutable = mutable;
-        }
-        if (required) {
-            normalizedProps.required = required;
-        }
-        normalizedProperties[normalizedKey] = Object.assign(normalizeSchema(props), normalizedProps);
+        normalizedProperties[normalizedKey] = Object.assign(normalizeSchema(property), normalizedPropertyAttrs);
     }
     return {
         attribution,
@@ -740,18 +735,14 @@ function makeReferenceSchemaFromObjectSchema(schema, identityName) {
     }
     const referenceSchema = {
         codaType: ValueHintType.Reference,
-        type,
-        idProperty: id,
-        identity: identity || { name: (0, ensure_2.ensureExists)(identityName) },
         displayProperty: primary,
+        identity: identity || { name: (0, ensure_2.ensureExists)(identityName) },
+        idProperty: id,
+        mutable,
+        options,
         properties: referenceProperties,
+        type,
     };
-    if (mutable) {
-        referenceSchema.mutable = mutable;
-    }
-    if (options) {
-        referenceSchema.options = options;
-    }
     return makeObjectSchema(referenceSchema);
 }
 exports.makeReferenceSchemaFromObjectSchema = makeReferenceSchemaFromObjectSchema;

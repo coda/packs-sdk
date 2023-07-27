@@ -770,14 +770,15 @@ export interface ObjectSchemaProperty {
      */
     fixedId?: string;
     /**
-     * For internal use only.
+     * For internal use only, Pack makers cannot set this. It is auto-populated at build time
+     * and if somehow there were a value here it would be overwritten.
      * Coda table schemas use a normalized version of a property key, so this field is used
      * internally to track what the Pack maker used as the property key, verbatim.
      * E.g., if a sync table schema had `properties: { 'foo-bar': {type: coda.ValueType.String} }`,
      * then the resulting column name would be "FooBar", but 'foo-bar' will be persisted as
      * the `originalKey`.
-     * This is optional only for backwards-compatibility. It should always be defined for any new
-     * Pack builds on an updated SDK version.
+     * When we distinguish schema definitions from runtime schemas, this should be non-optional in the
+     * runtime interface.
      * @hidden
      */
     originalKey?: string;
