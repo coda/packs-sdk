@@ -4,6 +4,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+## [1.5.0] - 2023-07-27
+
 ### Added
 
 - Started tracking the raw keys of object properties internally as `originalKey`.
@@ -595,7 +597,8 @@ await myHelper(context);
 
 - Beginning of alpha versioning.
 
-[unreleased]: https://github.com/coda/packs-sdk/compare/v1.4.1...HEAD
+[unreleased]: https://github.com/coda/packs-sdk/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/coda/packs-sdk/compare/v1.4.1...v1.5.0
 [1.4.1]: https://github.com/coda/packs-sdk/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/coda/packs-sdk/compare/v1.3.4...v1.4.0
 [1.3.4]: https://github.com/coda/packs-sdk/compare/v1.3.3...v1.3.4
