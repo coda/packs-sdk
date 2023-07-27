@@ -699,6 +699,7 @@ function buildMetadataSchema({ sdkVersion }) {
         codaType: zodDiscriminant(schema_12.ValueHintType.SelectList),
         ...baseStringPropertyValidators,
         options: zodOptionsFieldWithValues(z.string(), true),
+        allowNewValues: z.boolean().optional(),
     });
     const imagePropertySchema = zodCompleteStrictObject({
         type: zodDiscriminant(schema_13.ValueType.String),

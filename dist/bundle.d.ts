@@ -968,11 +968,13 @@ export type ObjectHintTypes = (typeof ObjectHintValueTypes)[number];
  * A function or set of values to return for property options.
  */
 export type PropertySchemaOptions<T extends PackFormulaResult> = PropertyOptionsMetadataFunction<T[]> | T[] | OptionsType | OptionsReference;
+/**
+ * A property with a list of valid options for its value.
+ */
 export interface PropertyWithOptions<T extends PackFormulaResult> {
 	/**
 	 * A list of values or a formula that returns a list of values to suggest when someone
-	 * edits this property. This should only be set when {@link mutable}
-	 * is true.
+	 * edits this property.
 	 *
 	 * @example
 	 * ```
@@ -996,8 +998,6 @@ export interface PropertyWithOptions<T extends PackFormulaResult> {
 	 *   },
 	 * }
 	 * ```
-	 *
-	 * @hidden
 	 */
 	options?: PropertySchemaOptions<T>;
 }
@@ -1479,6 +1479,8 @@ export interface DurationSchema extends BaseStringSchema<ValueHintType.Duration>
 export interface StringWithOptionsSchema extends BaseStringSchema<ValueHintType.SelectList>, PropertyWithAutocompleteWithOptionalDisplay<string> {
 	/** Instructs Coda to render this value as a select list. */
 	codaType: ValueHintType.SelectList;
+	/** Allow custom, user-entered strings in addition to {@link PropertyWithOptions.options}. */
+	allowNewValues?: boolean;
 }
 export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> extends BaseSchema {
 	/** Identifies this schema as a string. */
