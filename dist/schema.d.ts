@@ -794,11 +794,6 @@ export type ObjectSchemaProperties<K extends string = never> = {
 /** @hidden */
 export type GenericObjectSchema = ObjectSchema<string, string>;
 /**
- * When an object schema is being used as a property of another object, then it additionally has
- * ObjectSchemaProperty properties.
- */
-export type PropertyObjectSchema = GenericObjectSchema & ObjectSchemaProperty;
-/**
  * An identifier for a schema, allowing other schemas to reference it.
  *
  * You may optionally specify an {@link ObjectSchemaDefinition.identity} when defining an object schema.
@@ -991,11 +986,6 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
     imageProperty?: PropertyIdentifier<K>;
 }
 export type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
-/**
- * When an object schema is being used as a property of another object, then it additionally has
- * ObjectSchemaProperty properties.
- */
-export type PropertyObjectSchemaDefinition = ObjectSchemaDefinition<string, string> & ObjectSchemaProperty;
 /** @hidden */
 export interface ObjectSchema<K extends string, L extends string> extends ObjectSchemaDefinition<K, L> {
     /**
@@ -1259,7 +1249,7 @@ export declare function normalizeObjectSchema(schema: GenericObjectSchema): Gene
  * A reference schema can always be defined directly, but if you already have an object
  * schema it provides better code reuse to derive a reference schema instead.
  */
-export declare function makeReferenceSchemaFromObjectSchema(schema: PropertyObjectSchemaDefinition, identityName?: string): PropertyObjectSchema;
+export declare function makeReferenceSchemaFromObjectSchema(schema: ObjectSchemaDefinition<string, string> & ObjectSchemaProperty, identityName?: string): GenericObjectSchema & ObjectSchemaProperty;
 /**
  * Convenience for defining the result schema for an action. The identity enables Coda to
  * update the corresponding sync table row, if it exists.

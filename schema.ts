@@ -920,12 +920,6 @@ export type ObjectSchemaProperties<K extends string = never> = {
 /** @hidden */
 export type GenericObjectSchema = ObjectSchema<string, string>;
 
-/**
- * When an object schema is being used as a property of another object, then it additionally has
- * ObjectSchemaProperty properties.
- */
-export type PropertyObjectSchema = GenericObjectSchema & ObjectSchemaProperty;
-
 // TODO(jonathan, ekoleda): Link to a guide about identities and references.
 /**
  * An identifier for a schema, allowing other schemas to reference it.
@@ -1142,12 +1136,6 @@ export type ObjectSchemaDefinitionType<
   L extends string,
   T extends ObjectSchemaDefinition<K, L>,
 > = ObjectSchemaType<T>;
-
-/**
- * When an object schema is being used as a property of another object, then it additionally has
- * ObjectSchemaProperty properties.
- */
-export type PropertyObjectSchemaDefinition = ObjectSchemaDefinition<string, string> & ObjectSchemaProperty;
 
 // This is basically the same as an ObjectSchemaDefinition but includes an Identity that may be injected
 // at upload time (for static schemas) or at runtime (for dynamic schemas). This is the type that is
@@ -1735,9 +1723,9 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
  * schema it provides better code reuse to derive a reference schema instead.
  */
 export function makeReferenceSchemaFromObjectSchema(
-  schema: PropertyObjectSchemaDefinition,
+  schema: ObjectSchemaDefinition<string, string> & ObjectSchemaProperty,
   identityName?: string,
-): PropertyObjectSchema {
+): GenericObjectSchema & ObjectSchemaProperty {
   const {type, id, primary, identity, properties, options} = objectSchemaHelper(schema);
   const {mutable} = schema;
   ensureExists(
@@ -1750,7 +1738,7 @@ export function makeReferenceSchemaFromObjectSchema(
     ensureExists(properties[primary], `Display property "${primary}" must refer to a valid property schema.`);
     referenceProperties[primary] = properties[primary];
   }
-  const referenceSchema: PropertyObjectSchemaDefinition = {
+  const referenceSchema: ObjectSchemaDefinition<string, string> & ObjectSchemaProperty = {
     codaType: ValueHintType.Reference,
     displayProperty: primary,
     identity: identity || {name: ensureExists(identityName)},

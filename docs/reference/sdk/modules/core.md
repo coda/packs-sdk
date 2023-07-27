@@ -174,8 +174,6 @@ import * as coda from "@codahq/packs-sdk";
 - [PostSetup](../types/core.PostSetup.md)
 - [PostSetupDef](../types/core.PostSetupDef.md)
 - [PropertyIdentifier](../types/core.PropertyIdentifier.md)
-- [PropertyObjectSchema](../types/core.PropertyObjectSchema.md)
-- [PropertyObjectSchemaDefinition](../types/core.PropertyObjectSchemaDefinition.md)
 - [PropertyOptionsMetadataFunction](../types/core.PropertyOptionsMetadataFunction.md)
 - [PropertyOptionsMetadataResult](../types/core.PropertyOptionsMetadataResult.md)
 - [PropertySchemaOptions](../types/core.PropertySchemaOptions.md)
