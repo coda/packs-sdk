@@ -1277,10 +1277,9 @@ export function makeAttributionNode<T extends AttributionNode>(node: T): T {
 
 /**
  * The union of all of the schema types supported for return values and object properties.
- *
- * TODO(patrick): GenericObjectSchema is designed to be a runtime type, as it requires identities
- * to have a `packId` specified. We should fully distinguish schema definitions from runtime schemas.
  */
+// TODO(patrick): GenericObjectSchema is designed to be a runtime type, as it requires identities
+// to have a `packId` specified. We should fully distinguish schema definitions from runtime schemas.
 export type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | GenericObjectSchema;
 
 export function isObject(val?: Schema): val is GenericObjectSchema {

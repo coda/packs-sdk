@@ -11,6 +11,3 @@ search:
 Ƭ **Schema**: [`BooleanSchema`](../interfaces/core.BooleanSchema.md) \| [`NumberSchema`](core.NumberSchema.md) \| [`StringSchema`](core.StringSchema.md) \| [`ArraySchema`](../interfaces/core.ArraySchema.md) \| `GenericObjectSchema`
 
 The union of all of the schema types supported for return values and object properties.
-
-TODO(patrick): GenericObjectSchema is designed to be a runtime type, as it requires identities
-to have a `packId` specified. We should fully distinguish schema definitions from runtime schemas.
