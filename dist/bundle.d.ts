@@ -1013,20 +1013,6 @@ export interface BaseSchema {
 	 * explain the purpose or contents of any property that is not self-evident.
 	 */
 	description?: string;
-	/**
-	 * Whether this object schema property is editable by the user in the UI.
-	 */
-	/** @hidden */
-	mutable?: boolean;
-	/**
-	 * Optional fixed id for this property, used to support renames of properties over time. If specified,
-	 * changes to the name of this property will not cause the property to be treated as a new property.
-	 * Only supported for top-level properties.
-	 * Note that fixedIds must already be present on the existing schema prior to rolling out a name change in a
-	 * new schema; adding fixedId and a name change in a single schema version change will not work.
-	 * @hidden
-	 */
-	fixedId?: string;
 }
 /**
  * A schema representing a return value or object property that is a boolean.
@@ -1559,6 +1545,33 @@ export interface ObjectSchemaProperty {
 	 * include a non-empty value for this property.
 	 */
 	required?: boolean;
+	/**
+	 * Whether this object schema property is editable by the user in the UI.
+	 */
+	/** @hidden */
+	mutable?: boolean;
+	/**
+	 * Optional fixed id for this property, used to support renames of properties over time. If specified,
+	 * changes to the name of this property will not cause the property to be treated as a new property.
+	 * Only supported for top-level properties of a sync table.
+	 * Note that fixedIds must already be present on the existing schema prior to rolling out a name change in a
+	 * new schema; adding fixedId and a name change in a single schema version change will not work.
+	 * @hidden
+	 */
+	fixedId?: string;
+	/**
+	 * For internal use only, Pack makers cannot set this. It is auto-populated at build time
+	 * and if somehow there were a value here it would be overwritten.
+	 * Coda table schemas use a normalized version of a property key, so this field is used
+	 * internally to track what the Pack maker used as the property key, verbatim.
+	 * E.g., if a sync table schema had `properties: { 'foo-bar': {type: coda.ValueType.String} }`,
+	 * then the resulting column name would be "FooBar", but 'foo-bar' will be persisted as
+	 * the `originalKey`.
+	 * When we distinguish schema definitions from runtime schemas, this should be non-optional in the
+	 * runtime interface.
+	 * @hidden
+	 */
+	originalKey?: string;
 }
 /**
  * The type of the {@link ObjectSchemaDefinition.properties} in the definition of an object schema.
@@ -1990,7 +2003,7 @@ export declare function makeObjectSchema<K extends string, L extends string, T e
  * A reference schema can always be defined directly, but if you already have an object
  * schema it provides better code reuse to derive a reference schema instead.
  */
-export declare function makeReferenceSchemaFromObjectSchema(schema: GenericObjectSchema, identityName?: string): GenericObjectSchema;
+export declare function makeReferenceSchemaFromObjectSchema(schema: ObjectSchemaDefinition<string, string> & ObjectSchemaProperty, identityName?: string): GenericObjectSchema & ObjectSchemaProperty;
 /**
  * Convenience for defining the result schema for an action. The identity enables Coda to
  * update the corresponding sync table row, if it exists.

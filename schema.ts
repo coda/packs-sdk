@@ -276,22 +276,6 @@ interface BaseSchema {
    * explain the purpose or contents of any property that is not self-evident.
    */
   description?: string;
-
-  /**
-   * Whether this object schema property is editable by the user in the UI.
-   */
-  /** @hidden */
-  mutable?: boolean;
-
-  /**
-   * Optional fixed id for this property, used to support renames of properties over time. If specified,
-   * changes to the name of this property will not cause the property to be treated as a new property.
-   * Only supported for top-level properties.
-   * Note that fixedIds must already be present on the existing schema prior to rolling out a name change in a
-   * new schema; adding fixedId and a name change in a single schema version change will not work.
-   * @hidden
-   */
-  fixedId?: string;
 }
 
 /**
@@ -886,11 +870,42 @@ export interface ObjectSchemaProperty {
    * whose value comes another field called "duration".
    */
   fromKey?: string;
+
   /**
    * When true, indicates that an object return value for a formula that has this schema must
    * include a non-empty value for this property.
    */
   required?: boolean;
+
+  /**
+   * Whether this object schema property is editable by the user in the UI.
+   */
+  /** @hidden */
+  mutable?: boolean;
+
+  /**
+   * Optional fixed id for this property, used to support renames of properties over time. If specified,
+   * changes to the name of this property will not cause the property to be treated as a new property.
+   * Only supported for top-level properties of a sync table.
+   * Note that fixedIds must already be present on the existing schema prior to rolling out a name change in a
+   * new schema; adding fixedId and a name change in a single schema version change will not work.
+   * @hidden
+   */
+  fixedId?: string;
+
+  /**
+   * For internal use only, Pack makers cannot set this. It is auto-populated at build time
+   * and if somehow there were a value here it would be overwritten.
+   * Coda table schemas use a normalized version of a property key, so this field is used
+   * internally to track what the Pack maker used as the property key, verbatim.
+   * E.g., if a sync table schema had `properties: { 'foo-bar': {type: coda.ValueType.String} }`,
+   * then the resulting column name would be "FooBar", but 'foo-bar' will be persisted as
+   * the `originalKey`.
+   * When we distinguish schema definitions from runtime schemas, this should be non-optional in the
+   * runtime interface.
+   * @hidden
+   */
+  originalKey?: string;
 }
 
 /**
@@ -1251,6 +1266,8 @@ export function makeAttributionNode<T extends AttributionNode>(node: T): T {
 /**
  * The union of all of the schema types supported for return values and object properties.
  */
+// TODO(patrick): GenericObjectSchema is designed to be a runtime type, as it requires identities
+// to have a `packId` specified. We should fully distinguish schema definitions from runtime schemas.
 export type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | GenericObjectSchema;
 
 export function isObject(val?: Schema): val is GenericObjectSchema {
@@ -1456,6 +1473,7 @@ export function makeObjectSchema<
 >(
   schemaDef: T & {type?: ValueType.Object},
 ): T & {
+  // TODO(patrick): This should be IdentityDefinition when we distinguish schema definitions from runtime schemas
   identity?: Identity;
   type: ValueType.Object;
 } {
@@ -1618,73 +1636,83 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
       items: normalizeSchema(schema.items),
     } as T;
   } else if (isObject(schema)) {
-    const normalized: ObjectSchemaProperties = {};
-    const {
-      attribution,
-      options,
-      codaType,
-      description,
-      displayProperty,
-      featured,
-      featuredProperties,
-      fixedId,
-      id,
-      identity,
-      idProperty,
-      imageProperty,
-      includeUnknownProperties,
-      linkProperty,
-      mutable,
-      primary,
-      properties,
-      snippetProperty,
-      subtitleProperties,
-      titleProperty,
-      type,
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      __packId,
-      ...rest
-    } = schema as GenericObjectSchema;
-    // Have TS ensure we don't forget about new fields in this function.
-    ensureNever<keyof typeof rest>();
-    for (const key of Object.keys(properties)) {
-      const normalizedKey = normalizeSchemaKey(key);
-      const props = properties[key];
-      const {required, fromKey} = props as ObjectSchemaProperty;
-      normalized[normalizedKey] = Object.assign(normalizeSchema(props), {
-        required,
-        fromKey: fromKey || (normalizedKey !== key ? key : undefined),
-      });
-    }
-    const normalizedSchema = {
-      attribution,
-      options,
-      codaType,
-      description,
-      displayProperty: displayProperty ? normalizeSchemaKey(displayProperty) : undefined,
-      featured: featured ? featured.map(normalizeSchemaKey) : undefined,
-      featuredProperties: featuredProperties ? featuredProperties.map(normalizeSchemaKey) : undefined,
-      fixedId,
-      id: id ? normalizeSchemaKey(id) : undefined,
-      identity,
-      idProperty: idProperty ? normalizeSchemaKey(idProperty) : undefined,
-      imageProperty: imageProperty ? normalizeSchemaPropertyIdentifier(imageProperty, normalized) : undefined,
-      includeUnknownProperties,
-      linkProperty: linkProperty ? normalizeSchemaPropertyIdentifier(linkProperty, normalized) : undefined,
-      mutable,
-      primary: primary ? normalizeSchemaKey(primary) : undefined,
-      properties: normalized,
-      snippetProperty: snippetProperty ? normalizeSchemaPropertyIdentifier(snippetProperty, normalized) : undefined,
-      subtitleProperties: subtitleProperties
-        ? subtitleProperties.map(subProp => normalizeSchemaPropertyIdentifier(subProp, normalized))
-        : undefined,
-      titleProperty: titleProperty ? normalizeSchemaPropertyIdentifier(titleProperty, normalized) : undefined,
-      type: ValueType.Object,
-    } as T;
-
-    return normalizedSchema;
+    // The `as T` here seems like a typescript bug... shouldn't the above typeguard be
+    // sufficient to define T === GenericObjectSchema?
+    return normalizeObjectSchema(schema) as T;
   }
-  return schema;
+  // We always make a copy of the input schema so we never accidentally mutate it.
+  return {...schema};
+}
+
+export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjectSchema {
+  const normalizedProperties: ObjectSchemaProperties = {};
+  const {
+    attribution,
+    options,
+    codaType,
+    description,
+    displayProperty,
+    featured,
+    featuredProperties,
+    id,
+    identity,
+    idProperty,
+    imageProperty,
+    includeUnknownProperties,
+    linkProperty,
+    primary,
+    properties,
+    snippetProperty,
+    subtitleProperties,
+    titleProperty,
+    type,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __packId,
+    ...rest
+  } = schema;
+  // Have TS ensure we don't forget about new fields in this function.
+  ensureNever<keyof typeof rest>();
+  for (const key of Object.keys(properties)) {
+    const normalizedKey = normalizeSchemaKey(key);
+    const property = properties[key];
+    const {fixedId, fromKey, mutable, originalKey, required} = property;
+    if (originalKey) {
+      throw new Error('Original key is only for internal use.');
+    }
+    const normalizedPropertyAttrs: ObjectSchemaProperty = {
+      fixedId,
+      fromKey: fromKey || (normalizedKey !== key ? key : undefined),
+      mutable,
+      originalKey: key,
+      required,
+    };
+    normalizedProperties[normalizedKey] = Object.assign(normalizeSchema(property), normalizedPropertyAttrs);
+  }
+  return {
+    attribution,
+    options,
+    codaType,
+    description,
+    displayProperty: displayProperty ? normalizeSchemaKey(displayProperty) : undefined,
+    featured: featured ? featured.map(normalizeSchemaKey) : undefined,
+    featuredProperties: featuredProperties ? featuredProperties.map(normalizeSchemaKey) : undefined,
+    id: id ? normalizeSchemaKey(id) : undefined,
+    identity,
+    idProperty: idProperty ? normalizeSchemaKey(idProperty) : undefined,
+    imageProperty: imageProperty ? normalizeSchemaPropertyIdentifier(imageProperty, normalizedProperties) : undefined,
+    includeUnknownProperties,
+    linkProperty: linkProperty ? normalizeSchemaPropertyIdentifier(linkProperty, normalizedProperties) : undefined,
+    primary: primary ? normalizeSchemaKey(primary) : undefined,
+    properties: normalizedProperties,
+    snippetProperty: snippetProperty
+      ? normalizeSchemaPropertyIdentifier(snippetProperty, normalizedProperties)
+      : undefined,
+    subtitleProperties: subtitleProperties
+      ? subtitleProperties.map(subProp => normalizeSchemaPropertyIdentifier(subProp, normalizedProperties))
+      : undefined,
+    titleProperty: titleProperty ? normalizeSchemaPropertyIdentifier(titleProperty, normalizedProperties) : undefined,
+    type: ValueType.Object,
+  };
 }
 
 /**
@@ -1695,10 +1723,11 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
  * schema it provides better code reuse to derive a reference schema instead.
  */
 export function makeReferenceSchemaFromObjectSchema(
-  schema: GenericObjectSchema,
+  schema: ObjectSchemaDefinition<string, string> & ObjectSchemaProperty,
   identityName?: string,
-): GenericObjectSchema {
-  const {type, id, primary, identity, properties, mutable, options} = objectSchemaHelper(schema);
+): GenericObjectSchema & ObjectSchemaProperty {
+  const {type, id, primary, identity, properties, options} = objectSchemaHelper(schema);
+  const {mutable} = schema;
   ensureExists(
     identity || identityName,
     'Source schema must have an identity field, or you must provide an identity name for the reference.',
@@ -1709,16 +1738,17 @@ export function makeReferenceSchemaFromObjectSchema(
     ensureExists(properties[primary], `Display property "${primary}" must refer to a valid property schema.`);
     referenceProperties[primary] = properties[primary];
   }
-  return makeObjectSchema({
+  const referenceSchema: ObjectSchemaDefinition<string, string> & ObjectSchemaProperty = {
     codaType: ValueHintType.Reference,
-    type,
-    idProperty: id,
-    identity: identity || {name: ensureExists(identityName)},
     displayProperty: primary,
-    properties: referenceProperties,
+    identity: identity || {name: ensureExists(identityName)},
+    idProperty: id,
     mutable,
     options,
-  });
+    properties: referenceProperties,
+    type,
+  };
+  return makeObjectSchema(referenceSchema);
 }
 
 /**

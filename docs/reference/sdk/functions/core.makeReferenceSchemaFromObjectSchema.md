@@ -8,7 +8,7 @@ search:
 
 [core](../modules/core.md).makeReferenceSchemaFromObjectSchema
 
-▸ **makeReferenceSchemaFromObjectSchema**(`schema`, `identityName?`): `GenericObjectSchema`
+▸ **makeReferenceSchemaFromObjectSchema**(`schema`, `identityName?`): `GenericObjectSchema` & [`ObjectSchemaProperty`](../interfaces/core.ObjectSchemaProperty.md)
 
 Convenience for creating a reference object schema from an existing schema for the
 object. Copies over the identity, idProperty, and displayProperty from the schema,
@@ -20,9 +20,9 @@ schema it provides better code reuse to derive a reference schema instead.
 
 | Name | Type |
 | :------ | :------ |
-| `schema` | `GenericObjectSchema` |
+| `schema` | [`ObjectSchemaDefinition`](../interfaces/core.ObjectSchemaDefinition.md)<`string`, `string`\> & [`ObjectSchemaProperty`](../interfaces/core.ObjectSchemaProperty.md) |
 | `identityName?` | `string` |
 
 #### Returns
 
-`GenericObjectSchema`
+`GenericObjectSchema` & [`ObjectSchemaProperty`](../interfaces/core.ObjectSchemaProperty.md)

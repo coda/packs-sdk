@@ -503,8 +503,6 @@ function buildMetadataSchema({ sdkVersion }) {
             type: zodDiscriminant(schema_13.ValueType.Boolean),
             codaType: z.enum([...schema_2.BooleanHintValueTypes]).optional(),
             description: z.string().optional(),
-            mutable: z.boolean().optional(),
-            fixedId: z.string().optional(),
         }).optional(),
     });
     // TODO(jonathan): Use zodCompleteObject on these after exporting these types.
@@ -539,6 +537,7 @@ function buildMetadataSchema({ sdkVersion }) {
         mutable: z.boolean().optional(),
         fixedId: z.string().optional(),
         fromKey: z.string().optional(),
+        originalKey: z.string().optional(),
         required: z.boolean().optional(),
     };
     const baseStringPropertyValidators = {

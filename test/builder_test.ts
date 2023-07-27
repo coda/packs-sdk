@@ -2,13 +2,17 @@ import './test_helper';
 import {AuthenticationType} from '../types';
 import {ConnectionRequirement} from '../api_types';
 import type {DynamicSyncTableDef} from '../api';
+import type {DynamicSyncTableOptions} from '../api';
+import type {GenericObjectSchema} from '../schema';
 import type {MetadataFormulaDef} from '../api';
+import type {ObjectFormulaDef} from '../api';
 import type {ObjectSchema} from '../schema';
 import type {PackDefinitionBuilder} from '../builder';
 import type {ParamDefs} from '../api_types';
 import {ParameterType} from '../api_types';
 import {PostSetupType} from '..';
 import type {StringPackFormula} from '../api';
+import type {SyncTableOptions} from '../api';
 import {ValueHintType} from '..';
 import {ValueType} from '../schema';
 import {assertCondition} from '..';
@@ -424,6 +428,72 @@ describe('Builder', () => {
       // Make sure we converted the shorthand function into a full formula def.
       assert.ok(postSetup?.[0].getOptions!.name);
       assert.ok(postSetup?.[0].getOptions!.execute);
+    });
+  });
+
+  describe('does not re-normalize input schemas', () => {
+    it('in formulas', () => {
+      const formulaAttributes: ObjectFormulaDef<ParamDefs, GenericObjectSchema> = {
+        name: 'formula1',
+        description: '',
+        parameters: [],
+        resultType: ValueType.Object,
+        schema: dummyObjectSchema,
+        execute: () => ({}),
+      };
+      pack.addFormula({...formulaAttributes});
+      pack.addFormula({...formulaAttributes, name: 'formula2'});
+    });
+
+    it('in sync tables', () => {
+      // We don't re-use dummyObjectSchema because it has an identity.
+      const schema = makeObjectSchema({
+        id: 'foo',
+        primary: 'foo',
+        properties: {
+          foo: {type: ValueType.String},
+        },
+      });
+      const tableAttributes: SyncTableOptions<string, string, ParamDefs, GenericObjectSchema> = {
+        name: 'table1',
+        identityName: 'table1',
+        schema,
+        formula: {
+          name: 'formula',
+          description: '',
+          parameters: [],
+          execute: async () => ({result: []}),
+        },
+      };
+      pack.addSyncTable({...tableAttributes});
+      pack.addSyncTable({...tableAttributes, name: 'table2', identityName: 'table2'});
+    });
+
+    it('in dynamic sync tables (placeholder schema)', () => {
+      // We don't re-use dummyObjectSchema because it has an identity.
+      const schema = makeObjectSchema({
+        id: 'foo',
+        primary: 'foo',
+        properties: {
+          foo: {type: ValueType.String},
+        },
+      });
+      const tableAttributes: DynamicSyncTableOptions<string, string, ParamDefs, GenericObjectSchema> = {
+        name: 'table1',
+        identityName: 'table1',
+        placeholderSchema: schema,
+        getDisplayUrl: makeMetadataFormula(async () => 'display-url'),
+        getName: makeMetadataFormula(async () => 'name'),
+        getSchema: makeMetadataFormula(async () => schema),
+        formula: {
+          name: 'formula',
+          description: '',
+          parameters: [],
+          execute: async () => ({result: []}),
+        },
+      };
+      pack.addDynamicSyncTable({...tableAttributes});
+      pack.addDynamicSyncTable({...tableAttributes, name: 'table2', identityName: 'table2'});
     });
   });
 });
