@@ -1113,7 +1113,7 @@ schema, identityName, }) {
         outputSchema.options = propertyName;
         namedPropertyOptions[propertyName] = makePropertyOptionsFormula({
             execute: inputSchemaWithoutArray.options,
-            schema: (0, schema_5.normalizeSchema)(schema.properties[propertyName]),
+            schema: schema.properties[propertyName],
             name: `${identityName}.${propertyName}.Options`,
         });
     }

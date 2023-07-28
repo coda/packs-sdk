@@ -2544,7 +2544,7 @@ function moveJsPropertyOptionsFunctionsToFormulas({
     outputSchema.options = propertyName as OptionsReference;
     namedPropertyOptions[propertyName] = makePropertyOptionsFormula({
       execute: inputSchemaWithoutArray.options as any,
-      schema: normalizeSchema(schema.properties[propertyName]),
+      schema: schema.properties[propertyName],
       name: `${identityName}.${propertyName}.Options`,
     });
   }
