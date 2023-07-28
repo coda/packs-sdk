@@ -27,8 +27,8 @@ See [Normalization](/index.html#normalization) for more information about schema
 | `K` | extends `string` |
 | `L` | extends `string` |
 | `ParamDefsT` | extends [`ParamDefs`](../types/core.ParamDefs.md) |
-| `SchemaDefT` | extends [`ObjectSchemaDefinition`](../interfaces/core.ObjectSchemaDefinition.md)<`K`, `L`, `SchemaDefT`\> |
-| `SchemaT` | extends [`ObjectSchemaDefinition`](../interfaces/core.ObjectSchemaDefinition.md)<`K`, `L`, `SchemaT`\> & { `identity?`: [`Identity`](../interfaces/core.Identity.md)  } |
+| `SchemaDefT` | extends [`ObjectSchemaDefinition`](../interfaces/core.ObjectSchemaDefinition.md)<`K`, `L`\> |
+| `SchemaT` | extends [`ObjectSchemaDefinition`](../interfaces/core.ObjectSchemaDefinition.md)<`K`, `L`\> & { `identity?`: [`Identity`](../interfaces/core.Identity.md)  } |
 
 #### Parameters
 

@@ -6,13 +6,13 @@ var UrlType;
     UrlType["SamplePage"] = "SamplePage";
     UrlType["SdkReferencePath"] = "SdkReferencePath";
     UrlType["Web"] = "Web";
-})(UrlType = exports.UrlType || (exports.UrlType = {}));
+})(UrlType || (exports.UrlType = UrlType = {}));
 var ExampleCategory;
 (function (ExampleCategory) {
     ExampleCategory["Topic"] = "Topic";
     ExampleCategory["Full"] = "Full";
-})(ExampleCategory = exports.ExampleCategory || (exports.ExampleCategory = {}));
+})(ExampleCategory || (exports.ExampleCategory = ExampleCategory = {}));
 var ExampleStatus;
 (function (ExampleStatus) {
     ExampleStatus["Beta"] = "Beta";
-})(ExampleStatus = exports.ExampleStatus || (exports.ExampleStatus = {}));
+})(ExampleStatus || (exports.ExampleStatus = ExampleStatus = {}));
