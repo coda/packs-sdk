@@ -237,10 +237,15 @@ describe('API test', () => {
           primary: 'foo',
           properties: {
             foo: {
-              type: ValueType.String,
+              type: ValueType.Object,
               codaType: schema.ValueHintType.SelectList,
               mutable: true,
-              options: () => ['fooResult'],
+              properties: {
+                subFoo: {
+                  type: ValueType.String,
+                },
+              },
+              options: () => [{subFoo: 'fooResult'}],
             },
             bar: {
               type: ValueType.String,
@@ -279,7 +284,9 @@ describe('API test', () => {
 
       const fooAutocomplete = namedPropertyOptions!.foo;
       assert.equal('MyIdentityName.foo.Options', fooAutocomplete.name);
-      assert.deepEqual(await fooAutocomplete.execute([] as ParamValues<[]>, {} as ExecutionContext), ['fooResult']);
+      assert.deepEqual(await fooAutocomplete.execute([] as ParamValues<[]>, {} as ExecutionContext), [
+        {subFoo: 'fooResult'},
+      ]);
 
       // Test an array property.
       const bazAutocomplete = namedPropertyOptions!.baz;
