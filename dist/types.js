@@ -23,7 +23,7 @@ var PackCategory;
     PackCategory["Sports"] = "Sports";
     PackCategory["Travel"] = "Travel";
     PackCategory["Weather"] = "Weather";
-})(PackCategory || (exports.PackCategory = PackCategory = {}));
+})(PackCategory = exports.PackCategory || (exports.PackCategory = {}));
 /**
  * Authentication types supported by Coda Packs.
  *
@@ -114,7 +114,7 @@ var AuthenticationType;
      * @hidden
      */
     AuthenticationType["Various"] = "Various";
-})(AuthenticationType || (exports.AuthenticationType = AuthenticationType = {}));
+})(AuthenticationType = exports.AuthenticationType || (exports.AuthenticationType = {}));
 /**
  * Enumeration of post-account-setup step types. See {@link PostSetup}.
  */
@@ -124,7 +124,7 @@ var PostSetupType;
      * See {@link SetEndpoint}.
      */
     PostSetupType["SetEndpoint"] = "SetEndPoint";
-})(PostSetupType || (exports.PostSetupType = PostSetupType = {}));
+})(PostSetupType = exports.PostSetupType || (exports.PostSetupType = {}));
 /**
  * Where to pass the client credentials (client ID and client secret) when making the OAuth2 token
  * exchange request. Used in {@link OAuth2Authentication.credentialsLocation}.
@@ -146,7 +146,7 @@ var TokenExchangeCredentialsLocation;
      * The credentials are passed in the Authorization header using the `Basic` scheme.
      */
     TokenExchangeCredentialsLocation["AuthorizationHeader"] = "AuthorizationHeader";
-})(TokenExchangeCredentialsLocation || (exports.TokenExchangeCredentialsLocation = TokenExchangeCredentialsLocation = {}));
+})(TokenExchangeCredentialsLocation = exports.TokenExchangeCredentialsLocation || (exports.TokenExchangeCredentialsLocation = {}));
 /**
  * @deprecated
  * @ignore
@@ -157,7 +157,7 @@ var FeatureSet;
     FeatureSet["Pro"] = "Pro";
     FeatureSet["Team"] = "Team";
     FeatureSet["Enterprise"] = "Enterprise";
-})(FeatureSet || (exports.FeatureSet = FeatureSet = {}));
+})(FeatureSet = exports.FeatureSet || (exports.FeatureSet = {}));
 /**
  * @ignore
  * @deprecated
@@ -168,7 +168,7 @@ var QuotaLimitType;
     QuotaLimitType["Getter"] = "Getter";
     QuotaLimitType["Sync"] = "Sync";
     QuotaLimitType["Metadata"] = "Metadata";
-})(QuotaLimitType || (exports.QuotaLimitType = QuotaLimitType = {}));
+})(QuotaLimitType = exports.QuotaLimitType || (exports.QuotaLimitType = {}));
 /**
  * @ignore
  * @deprecated
@@ -179,4 +179,4 @@ var SyncInterval;
     SyncInterval["Daily"] = "Daily";
     SyncInterval["Hourly"] = "Hourly";
     SyncInterval["EveryTenMinutes"] = "EveryTenMinutes";
-})(SyncInterval || (exports.SyncInterval = SyncInterval = {}));
+})(SyncInterval = exports.SyncInterval || (exports.SyncInterval = {}));

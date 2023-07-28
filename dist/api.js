@@ -341,7 +341,7 @@ var UpdateOutcome;
 (function (UpdateOutcome) {
     UpdateOutcome["Success"] = "success";
     UpdateOutcome["Error"] = "error";
-})(UpdateOutcome || (exports.UpdateOutcome = UpdateOutcome = {}));
+})(UpdateOutcome = exports.UpdateOutcome || (exports.UpdateOutcome = {}));
 /**
  * @deprecated
  *

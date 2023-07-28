@@ -37,7 +37,7 @@ exports.PACK_ID_FILE_NAME = '.coda-pack.json';
 var PackOptionKey;
 (function (PackOptionKey) {
     PackOptionKey["timerStrategy"] = "timerStrategy";
-})(PackOptionKey || (exports.PackOptionKey = PackOptionKey = {}));
+})(PackOptionKey = exports.PackOptionKey || (exports.PackOptionKey = {}));
 function isDefaultApiEndpoint(apiEndpoint) {
     return apiEndpoint === exports.DEFAULT_API_ENDPOINT;
 }

@@ -2,7 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deserialize = exports.serialize = void 0;
 let serialize;
+exports.serialize = serialize;
 let deserialize;
+exports.deserialize = deserialize;
 // The sdk code may be running in the following environments:
 // - isolated-vm:
 //   This could either be in testing or in AWS. Either way, v8 helpers were injected to the
