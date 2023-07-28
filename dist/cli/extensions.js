@@ -12,7 +12,7 @@ const helpers_3 = require("../testing/helpers");
 var Tools;
 (function (Tools) {
     Tools["VSCode"] = "vscode";
-})(Tools = exports.Tools || (exports.Tools = {}));
+})(Tools || (exports.Tools = Tools = {}));
 async function handleExtensions(args) {
     const { tools } = args;
     for (const tool of tools) {

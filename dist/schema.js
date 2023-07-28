@@ -40,7 +40,7 @@ var ValueType;
      * Indicates a JavaScript object should be returned. The schema of each object property must also be specified.
      */
     ValueType["Object"] = "object";
-})(ValueType = exports.ValueType || (exports.ValueType = {}));
+})(ValueType || (exports.ValueType = ValueType = {}));
 /**
  * Synthetic types that instruct Coda how to coerce values from primitives at ingestion time.
  */
@@ -177,7 +177,7 @@ var ValueHintType;
      * Indicates to render a value as a select list.
      */
     ValueHintType["SelectList"] = "selectList";
-})(ValueHintType = exports.ValueHintType || (exports.ValueHintType = {}));
+})(ValueHintType || (exports.ValueHintType = ValueHintType = {}));
 exports.StringHintValueTypes = [
     ValueHintType.Attachment,
     ValueHintType.Date,
@@ -233,7 +233,7 @@ var CurrencyFormat;
      * Indicates the value should be rendered as a number without a currency symbol, e.g. `2.50`.
      */
     CurrencyFormat["Financial"] = "financial";
-})(CurrencyFormat = exports.CurrencyFormat || (exports.CurrencyFormat = {}));
+})(CurrencyFormat || (exports.CurrencyFormat = CurrencyFormat = {}));
 /**
  * Icons that can be used with a {@link ScaleSchema}.
  *
@@ -261,7 +261,7 @@ var ScaleIconSet;
     ScaleIconSet["Sun"] = "sun";
     ScaleIconSet["Checkmark"] = "checkmark";
     ScaleIconSet["LightBulb"] = "lightbulb";
-})(ScaleIconSet = exports.ScaleIconSet || (exports.ScaleIconSet = {}));
+})(ScaleIconSet || (exports.ScaleIconSet = ScaleIconSet = {}));
 /**
  * Display types that can be used with an {@link EmailSchema}.
  */
@@ -279,7 +279,7 @@ var EmailDisplayType;
      * Display email address only.
      */
     EmailDisplayType["EmailOnly"] = "emailOnly";
-})(EmailDisplayType = exports.EmailDisplayType || (exports.EmailDisplayType = {}));
+})(EmailDisplayType || (exports.EmailDisplayType = EmailDisplayType = {}));
 /**
  * Display types that can be used with a {@link LinkSchema}.
  */
@@ -305,7 +305,7 @@ var LinkDisplayType;
      * Display the referenced web page as an embed.
      */
     LinkDisplayType["Embed"] = "embed";
-})(LinkDisplayType = exports.LinkDisplayType || (exports.LinkDisplayType = {}));
+})(LinkDisplayType || (exports.LinkDisplayType = LinkDisplayType = {}));
 /**
  * State of outline on images that can be used with a {@link ImageSchema}.
  */
@@ -315,7 +315,7 @@ var ImageOutline;
     ImageOutline["Disabled"] = "disabled";
     /** Image is rendered with outline. */
     ImageOutline["Solid"] = "solid";
-})(ImageOutline = exports.ImageOutline || (exports.ImageOutline = {}));
+})(ImageOutline || (exports.ImageOutline = ImageOutline = {}));
 /**
  * State of corners on images that can be used with a {@link ImageSchema}.
  */
@@ -325,7 +325,7 @@ var ImageCornerStyle;
     ImageCornerStyle["Rounded"] = "rounded";
     /** Image is rendered with square corners. */
     ImageCornerStyle["Square"] = "square";
-})(ImageCornerStyle = exports.ImageCornerStyle || (exports.ImageCornerStyle = {}));
+})(ImageCornerStyle || (exports.ImageCornerStyle = ImageCornerStyle = {}));
 /**
  * Enumeration of units supported by duration schemas. See {@link DurationSchema.maxUnit}.
  */
@@ -347,7 +347,7 @@ var DurationUnit;
      * Indications a duration as a number of seconds.
      */
     DurationUnit["Seconds"] = "seconds";
-})(DurationUnit = exports.DurationUnit || (exports.DurationUnit = {}));
+})(DurationUnit || (exports.DurationUnit = DurationUnit = {}));
 /**
  * The subset of StringHintTypes that don't have specific schema attributes.
  */
@@ -388,7 +388,7 @@ var AttributionNodeType;
      * An image, often a logo of the data source.
      */
     AttributionNodeType[AttributionNodeType["Image"] = 3] = "Image";
-})(AttributionNodeType = exports.AttributionNodeType || (exports.AttributionNodeType = {}));
+})(AttributionNodeType || (exports.AttributionNodeType = AttributionNodeType = {}));
 /**
  * A helper for constructing attribution text, links, or images that render along with a Pack value.
  *
