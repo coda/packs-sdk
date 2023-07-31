@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed an error with property options for object properties.
+
 ## [1.5.0] - 2023-07-27
 
 ### Added
