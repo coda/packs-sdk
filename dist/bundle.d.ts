@@ -3190,7 +3190,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
  * * Normalizing the schema definition to conform to Coda-recommended syntax.
  * * Wrapping the execute formula to normalize return values to match the normalized schema.
  *
- * See [Normalization](/index.html#normalization) for more information about schema normalization.
+ * See [Normalization](https://coda.io/packs/build/latest/guides/advanced/schemas/#normalization) for more information about schema normalization.
  */
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaDefT extends ObjectSchemaDefinition<K, L>, SchemaT extends SchemaDefT & {
 	identity?: Identity;
