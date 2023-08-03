@@ -651,9 +651,9 @@ export interface PropertyOptionsExecutionContext extends ExecutionContext {
 	 */
 	readonly propertyName: string;
 	/**
-	 * Schema of the property being edited.
+	 * Schema of the property being edited. See {@link Schema}.
 	 */
-	readonly propertySchema: Schema;
+	readonly propertySchema: Schema & ObjectSchemaProperty;
 	/**
 	 * Current values of other properties from the same row. Non-required properties may be missing
 	 * if the doc owner elected not to sync them, or if they have a type that's not yet supported
