@@ -2085,7 +2085,7 @@ export interface DynamicSyncTableOptions<
  * * Normalizing the schema definition to conform to Coda-recommended syntax.
  * * Wrapping the execute formula to normalize return values to match the normalized schema.
  *
- * See [Normalization](/index.html#normalization) for more information about schema normalization.
+ * See [Normalization](https://coda.io/packs/build/latest/guides/advanced/schemas/#normalization) for more information about schema normalization.
  */
 export function makeSyncTable<
   K extends string,
