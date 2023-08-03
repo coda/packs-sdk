@@ -800,7 +800,7 @@ export interface PropertyOptionsExecutionContext extends ExecutionContext {
   readonly propertyName: string;
 
   /**
-   * Schema of the property being edited.
+   * Schema of the property being edited. See {@link Schema}.
    */
   readonly propertySchema: Schema & ObjectSchemaProperty;
 
