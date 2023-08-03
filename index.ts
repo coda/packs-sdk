@@ -13,6 +13,7 @@
 
 // Pack related interfaces
 export type {Authentication} from './types';
+export type {AuthenticationDef} from './types';
 export {AuthenticationType} from './types';
 export type {BasicPackDefinition} from './types';
 export type {Format} from './types';
@@ -24,6 +25,7 @@ export type {PostSetupDef} from './types';
 export {PostSetupType} from './types';
 export {newPack} from './builder';
 export {PackDefinitionBuilder} from './builder';
+export type {UserAuthenticationDef} from './api_types';
 
 // Authentication types
 export type {AWSAccessKeyAuthentication} from './types';
@@ -187,6 +189,9 @@ export type {ObjectSchemaProperties} from './schema';
 export type {ObjectSchemaProperty} from './schema';
 export type {ProgressBarSchema} from './schema';
 export type {PropertyOptionsMetadataFunction} from './api_types';
+export type {PropertyOptionsMetadataResult} from './api_types';
+export type {PropertySchemaOptions} from './schema';
+export type {PropertyWithOptions} from './schema';
 export {PropertyIdentifier} from './schema';
 export {PropertyIdentifierDetails} from './schema';
 export {PropertyLabelValueTemplate} from './schema';

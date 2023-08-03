@@ -23,7 +23,7 @@ import type { SyncTable } from './api';
 import type { VariousAuthentication } from './types';
 import type { WebBasicAuthentication } from './types';
 /** @hidden */
-export declare type PackSyncTable = Omit<SyncTable, 'getter' | 'getName' | 'getSchema' | 'listDynamicUrls' | 'searchDynamicUrls' | 'getDisplayUrl'> & {
+export type PackSyncTable = Omit<SyncTable, 'getter' | 'getName' | 'getSchema' | 'listDynamicUrls' | 'searchDynamicUrls' | 'getDisplayUrl'> & {
     getter: PackFormulaMetadata;
     isDynamic?: boolean;
     hasDynamicSchema?: boolean;
@@ -38,18 +38,18 @@ export interface PackFormatMetadata extends Omit<Format, 'matchers'> {
     matchers: string[];
 }
 /** @hidden */
-export declare type PostSetupMetadata = Omit<PostSetup, 'getOptions' | 'getOptionsFormula'> & {
+export type PostSetupMetadata = Omit<PostSetup, 'getOptions' | 'getOptionsFormula'> & {
     getOptions?: MetadataFormulaMetadata;
     getOptionsFormula?: MetadataFormulaMetadata;
 };
 /** @hidden */
-export declare type AuthenticationMetadata = DistributiveOmit<Authentication, 'getConnectionName' | 'getConnectionUserId' | 'postSetup'> & {
+export type AuthenticationMetadata = DistributiveOmit<Authentication, 'getConnectionName' | 'getConnectionUserId' | 'postSetup'> & {
     getConnectionName?: MetadataFormulaMetadata;
     getConnectionUserId?: MetadataFormulaMetadata;
     postSetup?: PostSetupMetadata[];
 };
 /** @hidden */
-declare type AuthenticationToMetadata<T extends Authentication> = DistributiveOmit<T, 'getConnectionName' | 'getConnectionUserId' | 'postSetup'> & {
+type AuthenticationToMetadata<T extends Authentication> = DistributiveOmit<T, 'getConnectionName' | 'getConnectionUserId' | 'postSetup'> & {
     getConnectionName?: MetadataFormulaMetadata;
     getConnectionUserId?: MetadataFormulaMetadata;
     postSetup?: PostSetupMetadata[];
@@ -71,31 +71,31 @@ export interface AuthenticationMetadataTypeMap {
     [AuthenticationType.OAuth2]: AuthenticationToMetadata<OAuth2Authentication>;
 }
 /** @hidden */
-export declare type PackVersionMetadata = Omit<PackVersionDefinition, 'formulas' | 'formats' | 'defaultAuthentication' | 'syncTables'> & {
+export type PackVersionMetadata = Omit<PackVersionDefinition, 'formulas' | 'formats' | 'defaultAuthentication' | 'syncTables'> & {
     formulas: PackFormulaMetadata[];
     formats: PackFormatMetadata[];
     syncTables: PackSyncTable[];
     defaultAuthentication?: AuthenticationMetadata;
 };
 /** @hidden */
-export declare type PackMetadata = PackVersionMetadata & Pick<PackDefinition, 'id' | 'name' | 'shortDescription' | 'description' | 'permissionsDescription' | 'category' | 'logoPath' | 'exampleImages' | 'exampleVideoIds' | 'minimumFeatureSet' | 'quotas' | 'rateLimits' | 'isSystem'>;
+export type PackMetadata = PackVersionMetadata & Pick<PackDefinition, 'id' | 'name' | 'shortDescription' | 'description' | 'permissionsDescription' | 'category' | 'logoPath' | 'exampleImages' | 'exampleVideoIds' | 'minimumFeatureSet' | 'quotas' | 'rateLimits' | 'isSystem'>;
 /** @hidden */
-export declare type ExternalPackAuthenticationType = AuthenticationType;
+export type ExternalPackAuthenticationType = AuthenticationType;
 /** @hidden */
-export declare type ExternalPackFormulas = PackFormulaMetadata[];
+export type ExternalPackFormulas = PackFormulaMetadata[];
 /** @hidden */
-export declare type ExternalObjectPackFormula = ObjectPackFormulaMetadata;
+export type ExternalObjectPackFormula = ObjectPackFormulaMetadata;
 /** @hidden */
-export declare type ExternalPackFormula = PackFormulaMetadata;
+export type ExternalPackFormula = PackFormulaMetadata;
 /** @hidden */
-export declare type ExternalPackFormat = Omit<Format, 'matchers'> & {
+export type ExternalPackFormat = Omit<Format, 'matchers'> & {
     matchers?: string[];
 };
 /** @hidden */
-export declare type ExternalPackFormatMetadata = PackFormatMetadata;
+export type ExternalPackFormatMetadata = PackFormatMetadata;
 /** @hidden */
-export declare type ExternalSyncTable = PackSyncTable;
-declare type BasePackVersionMetadata = Omit<PackVersionMetadata, 'defaultAuthentication' | 'systemConnectionAuthentication' | 'formulas' | 'formats' | 'syncTables'>;
+export type ExternalSyncTable = PackSyncTable;
+type BasePackVersionMetadata = Omit<PackVersionMetadata, 'defaultAuthentication' | 'systemConnectionAuthentication' | 'formulas' | 'formats' | 'syncTables'>;
 /** @hidden */
 export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
     authentication: {
@@ -120,7 +120,7 @@ export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
     syncTables?: ExternalSyncTable[];
 }
 /** @hidden */
-export declare type ExternalPackMetadata = ExternalPackVersionMetadata & Pick<PackMetadata, 'id' | 'name' | 'shortDescription' | 'description' | 'permissionsDescription' | 'category' | 'logoPath' | 'exampleImages' | 'exampleVideoIds' | 'minimumFeatureSet' | 'quotas' | 'rateLimits' | 'isSystem'>;
+export type ExternalPackMetadata = ExternalPackVersionMetadata & Pick<PackMetadata, 'id' | 'name' | 'shortDescription' | 'description' | 'permissionsDescription' | 'category' | 'logoPath' | 'exampleImages' | 'exampleVideoIds' | 'minimumFeatureSet' | 'quotas' | 'rateLimits' | 'isSystem'>;
 /** @hidden */
 export interface PackUpload {
     metadata: PackVersionMetadata | PackMetadata;

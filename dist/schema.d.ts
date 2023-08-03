@@ -171,22 +171,24 @@ export declare const BooleanHintValueTypes: readonly [ValueHintType.Toggle];
 export declare const ObjectHintValueTypes: readonly [ValueHintType.Person, ValueHintType.Reference, ValueHintType.SelectList];
 export declare const AutocompleteHintValueTypes: readonly [ValueHintType.SelectList, ValueHintType.Reference];
 /** The subset of {@link ValueHintType} that can be used with a string value. */
-export declare type StringHintTypes = (typeof StringHintValueTypes)[number];
+export type StringHintTypes = (typeof StringHintValueTypes)[number];
 /** The subset of {@link ValueHintType} that can be used with a number value. */
-export declare type NumberHintTypes = (typeof NumberHintValueTypes)[number];
+export type NumberHintTypes = (typeof NumberHintValueTypes)[number];
 /** The subset of {@link ValueHintType} that can be used with a boolean value. */
-export declare type BooleanHintTypes = (typeof BooleanHintValueTypes)[number];
+export type BooleanHintTypes = (typeof BooleanHintValueTypes)[number];
 /** The subset of {@link ValueHintType} that can be used with an object value. */
-export declare type ObjectHintTypes = (typeof ObjectHintValueTypes)[number];
+export type ObjectHintTypes = (typeof ObjectHintValueTypes)[number];
 /**
  * A function or set of values to return for property options.
  */
-export declare type PropertySchemaOptions<T extends PackFormulaResult> = PropertyOptionsMetadataFunction<T[]> | T[] | OptionsType | OptionsReference;
-interface PropertyWithOptions<T extends PackFormulaResult> {
+export type PropertySchemaOptions<T extends PackFormulaResult> = PropertyOptionsMetadataFunction<T[]> | T[] | OptionsType | OptionsReference;
+/**
+ * A property with a list of valid options for its value.
+ */
+export interface PropertyWithOptions<T extends PackFormulaResult> {
     /**
      * A list of values or a formula that returns a list of values to suggest when someone
-     * edits this property. This should only be set when {@link mutable}
-     * is true.
+     * edits this property.
      *
      * @example
      * ```
@@ -210,12 +212,10 @@ interface PropertyWithOptions<T extends PackFormulaResult> {
      *   },
      * }
      * ```
-     *
-     * @hidden
      */
     options?: PropertySchemaOptions<T>;
 }
-declare type PropertyWithAutocompleteWithOptionalDisplay<T extends PackFormulaResult> = PropertyWithOptions<T | {
+type PropertyWithAutocompleteWithOptionalDisplay<T extends PackFormulaResult> = PropertyWithOptions<T | {
     display: string;
     value: T;
 }>;
@@ -227,20 +227,6 @@ interface BaseSchema {
      * explain the purpose or contents of any property that is not self-evident.
      */
     description?: string;
-    /**
-     * Whether this object schema property is editable by the user in the UI.
-     */
-    /** @hidden */
-    mutable?: boolean;
-    /**
-     * Optional fixed id for this property, used to support renames of properties over time. If specified,
-     * changes to the name of this property will not cause the property to be treated as a new property.
-     * Only supported for top-level properties.
-     * Note that fixedIds must already be present on the existing schema prior to rolling out a name change in a
-     * new schema; adding fixedId and a name change in a single schema version change will not work.
-     * @hidden
-     */
-    fixedId?: string;
 }
 /**
  * A schema representing a return value or object property that is a boolean.
@@ -254,7 +240,7 @@ export interface BooleanSchema extends BaseSchema {
 /**
  * The union of all schemas that can represent number values.
  */
-export declare type NumberSchema = CurrencySchema | SliderSchema | ProgressBarSchema | ScaleSchema | NumericSchema | NumericDateSchema | NumericTimeSchema | NumericDateTimeSchema | NumericDurationSchema;
+export type NumberSchema = CurrencySchema | SliderSchema | ProgressBarSchema | ScaleSchema | NumericSchema | NumericDateSchema | NumericTimeSchema | NumericDateTimeSchema | NumericDurationSchema;
 export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> extends BaseSchema {
     /** Identifies this schema as relating to a number value. */
     type: ValueType.Number;
@@ -693,6 +679,8 @@ export interface DurationSchema extends BaseStringSchema<ValueHintType.Duration>
 export interface StringWithOptionsSchema extends BaseStringSchema<ValueHintType.SelectList>, PropertyWithAutocompleteWithOptionalDisplay<string> {
     /** Instructs Coda to render this value as a select list. */
     codaType: ValueHintType.SelectList;
+    /** Allow custom, user-entered strings in addition to {@link PropertyWithOptions.options}. */
+    allowNewValues?: boolean;
 }
 export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> extends BaseSchema {
     /** Identifies this schema as a string. */
@@ -704,7 +692,7 @@ export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> e
  * The subset of StringHintTypes that don't have specific schema attributes.
  */
 export declare const SimpleStringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Html, ValueHintType.Markdown, ValueHintType.Url, ValueHintType.Email, ValueHintType.CodaInternalRichText];
-export declare type SimpleStringHintTypes = (typeof SimpleStringHintValueTypes)[number];
+export type SimpleStringHintTypes = (typeof SimpleStringHintValueTypes)[number];
 /**
  * A schema whose underlying value is a string, along with an optional hint about how Coda
  * should interpret that string.
@@ -714,7 +702,7 @@ export interface SimpleStringSchema<T extends SimpleStringHintTypes = SimpleStri
 /**
  * The union of schema definition types whose underlying value is a string.
  */
-export declare type StringSchema = StringDateSchema | StringTimeSchema | StringDateTimeSchema | CodaInternalRichTextSchema | DurationSchema | EmailSchema | ImageSchema | LinkSchema | StringEmbedSchema | SimpleStringSchema | StringWithOptionsSchema;
+export type StringSchema = StringDateSchema | StringTimeSchema | StringDateTimeSchema | CodaInternalRichTextSchema | DurationSchema | EmailSchema | ImageSchema | LinkSchema | StringEmbedSchema | SimpleStringSchema | StringWithOptionsSchema;
 /**
  * A schema representing a return value or object property that is an array (list) of items.
  * The items are themselves schema definitions, which may refer to scalars or other objects.
@@ -767,17 +755,44 @@ export interface ObjectSchemaProperty {
      * include a non-empty value for this property.
      */
     required?: boolean;
+    /**
+     * Whether this object schema property is editable by the user in the UI.
+     */
+    /** @hidden */
+    mutable?: boolean;
+    /**
+     * Optional fixed id for this property, used to support renames of properties over time. If specified,
+     * changes to the name of this property will not cause the property to be treated as a new property.
+     * Only supported for top-level properties of a sync table.
+     * Note that fixedIds must already be present on the existing schema prior to rolling out a name change in a
+     * new schema; adding fixedId and a name change in a single schema version change will not work.
+     * @hidden
+     */
+    fixedId?: string;
+    /**
+     * For internal use only, Pack makers cannot set this. It is auto-populated at build time
+     * and if somehow there were a value here it would be overwritten.
+     * Coda table schemas use a normalized version of a property key, so this field is used
+     * internally to track what the Pack maker used as the property key, verbatim.
+     * E.g., if a sync table schema had `properties: { 'foo-bar': {type: coda.ValueType.String} }`,
+     * then the resulting column name would be "FooBar", but 'foo-bar' will be persisted as
+     * the `originalKey`.
+     * When we distinguish schema definitions from runtime schemas, this should be non-optional in the
+     * runtime interface.
+     * @hidden
+     */
+    originalKey?: string;
 }
 /**
  * The type of the {@link ObjectSchemaDefinition.properties} in the definition of an object schema.
  * This is essentially a dictionary mapping the name of a property to a schema
  * definition for that property.
  */
-export declare type ObjectSchemaProperties<K extends string = never> = {
+export type ObjectSchemaProperties<K extends string = never> = {
     [K2 in K | string]: Schema & ObjectSchemaProperty;
 };
 /** @hidden */
-export declare type GenericObjectSchema = ObjectSchema<string, string>;
+export type GenericObjectSchema = ObjectSchema<string, string>;
 /**
  * An identifier for a schema, allowing other schemas to reference it.
  *
@@ -853,12 +868,12 @@ export declare const PropertyLabelValueTemplate = "{VALUE}";
  * An identifier for an object schema property that is comprised of either an exact property match with the top-level
  * `properties or a json path (https://github.com/json-path/JsonPath) to a nested property.
  */
-export declare type PropertyIdentifier<K extends string = string> = K | string | PropertyIdentifierDetails;
+export type PropertyIdentifier<K extends string = string> = K | string | PropertyIdentifierDetails;
 /**
  * The {@link ObjectSchemaDefinition} properties that reference keys in the `properties` object. These should all be
  * {@link PropertyIdentifier} types.
  */
-export declare type ObjectSchemaPathProperties = Pick<GenericObjectSchema, 'titleProperty' | 'linkProperty' | 'imageProperty' | 'snippetProperty' | 'subtitleProperties'>;
+export type ObjectSchemaPathProperties = Pick<GenericObjectSchema, 'titleProperty' | 'linkProperty' | 'imageProperty' | 'snippetProperty' | 'subtitleProperties'>;
 /**
  * A schema definition for an object value (a value with key-value pairs).
  */
@@ -970,7 +985,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      */
     imageProperty?: PropertyIdentifier<K>;
 }
-export declare type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
+export type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
 /** @hidden */
 export interface ObjectSchema<K extends string, L extends string> extends ObjectSchemaDefinition<K, L> {
     /**
@@ -1072,7 +1087,7 @@ export interface ImageAttributionNode {
 /**
  * Union of attribution node types for rendering attribution for a pack value. See {@link makeAttributionNode}.
  */
-export declare type AttributionNode = TextAttributionNode | LinkAttributionNode | ImageAttributionNode;
+export type AttributionNode = TextAttributionNode | LinkAttributionNode | ImageAttributionNode;
 /**
  * A helper for constructing attribution text, links, or images that render along with a Pack value.
  *
@@ -1087,10 +1102,10 @@ export declare function makeAttributionNode<T extends AttributionNode>(node: T):
 /**
  * The union of all of the schema types supported for return values and object properties.
  */
-export declare type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | GenericObjectSchema;
+export type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | GenericObjectSchema;
 export declare function isObject(val?: Schema): val is GenericObjectSchema;
 export declare function isArray(val?: Schema): val is ArraySchema;
-declare type SchemaSupportingAutocomplete = ReturnType<typeof maybeUnwrapArraySchema> & {
+type SchemaSupportingAutocomplete = ReturnType<typeof maybeUnwrapArraySchema> & {
     codaType: typeof AutocompleteHintValueTypes;
 } & PropertyWithOptions<PackFormulaResult>;
 export declare function unwrappedSchemaSupportsOptions(schema: ReturnType<typeof maybeUnwrapArraySchema>): schema is SchemaSupportingAutocomplete;
@@ -1099,31 +1114,31 @@ export declare function maybeSchemaOptionsValue(schema: Schema | undefined): Pro
  * Pulls out the item type of an Array schema, returning undefined if the Array contains another Array.
  */
 export declare function maybeUnwrapArraySchema(val?: Schema): BooleanSchema | NumberSchema | StringSchema | GenericObjectSchema | undefined;
-declare type PickOptional<T, K extends keyof T> = Partial<T> & {
+type PickOptional<T, K extends keyof T> = Partial<T> & {
     [P in K]: T[P];
 };
 interface StringHintTypeToSchemaTypeMap {
     [ValueHintType.Date]: Date | string | number;
 }
-declare type StringHintTypeToSchemaType<T extends StringHintTypes | undefined> = T extends keyof StringHintTypeToSchemaTypeMap ? StringHintTypeToSchemaTypeMap[T] : string;
-declare type SchemaWithNoFromKey<T extends ObjectSchemaDefinition<any, any>> = {
+type StringHintTypeToSchemaType<T extends StringHintTypes | undefined> = T extends keyof StringHintTypeToSchemaTypeMap ? StringHintTypeToSchemaTypeMap[T] : string;
+type SchemaWithNoFromKey<T extends ObjectSchemaDefinition<any, any>> = {
     [K in keyof T['properties'] as T['properties'][K] extends {
         fromKey: string;
     } ? never : K]: T['properties'][K];
 };
-declare type SchemaFromKeyWildCard<T extends ObjectSchemaDefinition<any, any>> = {
+type SchemaFromKeyWildCard<T extends ObjectSchemaDefinition<any, any>> = {
     [K in keyof T['properties'] as T['properties'][K] extends {
         fromKey: string;
     } ? string : never]: any;
 };
-declare type ObjectSchemaNoFromKeyType<T extends ObjectSchemaDefinition<any, any>, P extends SchemaWithNoFromKey<T> = SchemaWithNoFromKey<T>> = PickOptional<{
+type ObjectSchemaNoFromKeyType<T extends ObjectSchemaDefinition<any, any>, P extends SchemaWithNoFromKey<T> = SchemaWithNoFromKey<T>> = PickOptional<{
     [K in keyof P]: SchemaType<P[K]>;
 }, $Values<{
     [K in keyof P]: P[K] extends {
         required: true;
     } ? K : never;
 }>>;
-declare type ObjectSchemaType<T extends ObjectSchemaDefinition<any, any>> = ObjectSchemaNoFromKeyType<T> & SchemaFromKeyWildCard<T>;
+type ObjectSchemaType<T extends ObjectSchemaDefinition<any, any>> = ObjectSchemaNoFromKeyType<T> & SchemaFromKeyWildCard<T>;
 /**
  * A TypeScript helper that parses the expected `execute` function return type from a given schema.
  * That is, given a schema, this utility will produce the type that an `execute` function should return
@@ -1140,9 +1155,9 @@ declare type ObjectSchemaType<T extends ObjectSchemaDefinition<any, any>> = Obje
  * It can be helpful for adding type-checking for the return value of an `execute` function
  * to ensure that it matches the schema you have declared for that formula.
  */
-export declare type SchemaType<T extends Schema> = T extends BooleanSchema ? boolean : T extends NumberSchema ? number : T extends StringSchema ? StringHintTypeToSchemaType<T['codaType']> : T extends ArraySchema ? Array<SchemaType<T['items']>> : T extends GenericObjectSchema ? ObjectSchemaType<T> : never;
+export type SchemaType<T extends Schema> = T extends BooleanSchema ? boolean : T extends NumberSchema ? number : T extends StringSchema ? StringHintTypeToSchemaType<T['codaType']> : T extends ArraySchema ? Array<SchemaType<T['items']>> : T extends GenericObjectSchema ? ObjectSchemaType<T> : never;
 /** Primitive types for which {@link generateSchema} can infer a schema. */
-export declare type InferrableTypes = boolean | number | string | object | boolean[] | number[] | string[] | object[];
+export type InferrableTypes = boolean | number | string | object | boolean[] | number[] | string[] | object[];
 /**
  * Utility that examines a JavaScript value and attempts to infer a schema definition
  * that describes it.
@@ -1226,6 +1241,7 @@ export declare function normalizeSchemaKeyPath(key: string, normalizedProperties
  */
 export declare function normalizePropertyValuePathIntoSchemaPath(propertyValue: string): string;
 export declare function normalizeSchema<T extends Schema>(schema: T): T;
+export declare function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjectSchema;
 /**
  * Convenience for creating a reference object schema from an existing schema for the
  * object. Copies over the identity, idProperty, and displayProperty from the schema,
@@ -1233,7 +1249,7 @@ export declare function normalizeSchema<T extends Schema>(schema: T): T;
  * A reference schema can always be defined directly, but if you already have an object
  * schema it provides better code reuse to derive a reference schema instead.
  */
-export declare function makeReferenceSchemaFromObjectSchema(schema: GenericObjectSchema, identityName?: string): GenericObjectSchema;
+export declare function makeReferenceSchemaFromObjectSchema(schema: ObjectSchemaDefinition<string, string> & ObjectSchemaProperty, identityName?: string): GenericObjectSchema & ObjectSchemaProperty;
 /**
  * Convenience for defining the result schema for an action. The identity enables Coda to
  * update the corresponding sync table row, if it exists.

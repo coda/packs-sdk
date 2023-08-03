@@ -350,6 +350,19 @@ export declare enum ConnectionRequirement {
 	 */
 	Required = "required"
 }
+/**
+ * A full definition of a pack's user authentication settings, used in
+ * {@link PackDefinitionBuilder.setUserAuthentication}.
+ */
+export type UserAuthenticationDef = AuthenticationDef & {
+	/**
+	 * It can be annoying to set `connectionRequirement` on every building block in a Pack.
+	 * Use this setting in your Pack's auth settings to quickly say "every building block
+	 * in this Pack requires an account". Without a connectionRequirement, building blocks
+	 * will be assumed to not need account connections.
+	 */
+	defaultConnectionRequirement?: ConnectionRequirement;
+};
 /** @deprecated use `ConnectionRequirement` instead */
 export declare enum NetworkConnection {
 	None = "none",
@@ -734,9 +747,18 @@ export type OptionsReference = string & {
 	__brand: "OptionsRef";
 };
 /**
+ * The result of a property options formula. This is either an array, or an array combined with
+ * cacheTtlSecs to indicate how long the results can be cached for. The default cacheTtlSecs
+ * is about 5 minutes, if unspecified.
+ */
+export type PropertyOptionsMetadataResult<ResultT extends PackFormulaResult[]> = ResultT | {
+	result: ResultT;
+	cacheTtlSecs?: number;
+};
+/**
  * A JavaScript function for property options.
  */
-export type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]> = (context: PropertyOptionsExecutionContext) => Promise<ResultT> | ResultT;
+export type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]> = (context: PropertyOptionsExecutionContext) => Promise<PropertyOptionsMetadataResult<ResultT>> | PropertyOptionsMetadataResult<ResultT>;
 /**
  * The set of primitive value types that can be used as return values for formulas
  * or in object schemas.
@@ -946,11 +968,13 @@ export type ObjectHintTypes = (typeof ObjectHintValueTypes)[number];
  * A function or set of values to return for property options.
  */
 export type PropertySchemaOptions<T extends PackFormulaResult> = PropertyOptionsMetadataFunction<T[]> | T[] | OptionsType | OptionsReference;
+/**
+ * A property with a list of valid options for its value.
+ */
 export interface PropertyWithOptions<T extends PackFormulaResult> {
 	/**
 	 * A list of values or a formula that returns a list of values to suggest when someone
-	 * edits this property. This should only be set when {@link mutable}
-	 * is true.
+	 * edits this property.
 	 *
 	 * @example
 	 * ```
@@ -974,8 +998,6 @@ export interface PropertyWithOptions<T extends PackFormulaResult> {
 	 *   },
 	 * }
 	 * ```
-	 *
-	 * @hidden
 	 */
 	options?: PropertySchemaOptions<T>;
 }
@@ -991,20 +1013,6 @@ export interface BaseSchema {
 	 * explain the purpose or contents of any property that is not self-evident.
 	 */
 	description?: string;
-	/**
-	 * Whether this object schema property is editable by the user in the UI.
-	 */
-	/** @hidden */
-	mutable?: boolean;
-	/**
-	 * Optional fixed id for this property, used to support renames of properties over time. If specified,
-	 * changes to the name of this property will not cause the property to be treated as a new property.
-	 * Only supported for top-level properties.
-	 * Note that fixedIds must already be present on the existing schema prior to rolling out a name change in a
-	 * new schema; adding fixedId and a name change in a single schema version change will not work.
-	 * @hidden
-	 */
-	fixedId?: string;
 }
 /**
  * A schema representing a return value or object property that is a boolean.
@@ -1457,6 +1465,8 @@ export interface DurationSchema extends BaseStringSchema<ValueHintType.Duration>
 export interface StringWithOptionsSchema extends BaseStringSchema<ValueHintType.SelectList>, PropertyWithAutocompleteWithOptionalDisplay<string> {
 	/** Instructs Coda to render this value as a select list. */
 	codaType: ValueHintType.SelectList;
+	/** Allow custom, user-entered strings in addition to {@link PropertyWithOptions.options}. */
+	allowNewValues?: boolean;
 }
 export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> extends BaseSchema {
 	/** Identifies this schema as a string. */
@@ -1535,6 +1545,33 @@ export interface ObjectSchemaProperty {
 	 * include a non-empty value for this property.
 	 */
 	required?: boolean;
+	/**
+	 * Whether this object schema property is editable by the user in the UI.
+	 */
+	/** @hidden */
+	mutable?: boolean;
+	/**
+	 * Optional fixed id for this property, used to support renames of properties over time. If specified,
+	 * changes to the name of this property will not cause the property to be treated as a new property.
+	 * Only supported for top-level properties of a sync table.
+	 * Note that fixedIds must already be present on the existing schema prior to rolling out a name change in a
+	 * new schema; adding fixedId and a name change in a single schema version change will not work.
+	 * @hidden
+	 */
+	fixedId?: string;
+	/**
+	 * For internal use only, Pack makers cannot set this. It is auto-populated at build time
+	 * and if somehow there were a value here it would be overwritten.
+	 * Coda table schemas use a normalized version of a property key, so this field is used
+	 * internally to track what the Pack maker used as the property key, verbatim.
+	 * E.g., if a sync table schema had `properties: { 'foo-bar': {type: coda.ValueType.String} }`,
+	 * then the resulting column name would be "FooBar", but 'foo-bar' will be persisted as
+	 * the `originalKey`.
+	 * When we distinguish schema definitions from runtime schemas, this should be non-optional in the
+	 * runtime interface.
+	 * @hidden
+	 */
+	originalKey?: string;
 }
 /**
  * The type of the {@link ObjectSchemaDefinition.properties} in the definition of an object schema.
@@ -1966,7 +2003,7 @@ export declare function makeObjectSchema<K extends string, L extends string, T e
  * A reference schema can always be defined directly, but if you already have an object
  * schema it provides better code reuse to derive a reference schema instead.
  */
-export declare function makeReferenceSchemaFromObjectSchema(schema: GenericObjectSchema, identityName?: string): GenericObjectSchema;
+export declare function makeReferenceSchemaFromObjectSchema(schema: ObjectSchemaDefinition<string, string> & ObjectSchemaProperty, identityName?: string): GenericObjectSchema & ObjectSchemaProperty;
 /**
  * Convenience for defining the result schema for an action. The identity enables Coda to
  * update the corresponding sync table row, if it exists.
@@ -4401,9 +4438,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * });
 	 * ```
 	 */
-	setUserAuthentication(authDef: AuthenticationDef & {
-		defaultConnectionRequirement?: ConnectionRequirement;
-	}): this;
+	setUserAuthentication(authDef: UserAuthenticationDef): this;
 	/**
 	 * Sets this pack to use authentication provided by you as the maker of this pack.
 	 *

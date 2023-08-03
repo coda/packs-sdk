@@ -341,7 +341,7 @@ var UpdateOutcome;
 (function (UpdateOutcome) {
     UpdateOutcome["Success"] = "success";
     UpdateOutcome["Error"] = "error";
-})(UpdateOutcome = exports.UpdateOutcome || (exports.UpdateOutcome = {}));
+})(UpdateOutcome || (exports.UpdateOutcome = UpdateOutcome = {}));
 /**
  * @deprecated
  *
@@ -523,7 +523,7 @@ function normalizePropertyOptionsResults(results) {
             results: normalizePropertyOptionsResultsArray(results),
         };
     }
-    const { results: resultsArray, ...otherProps } = results;
+    const { result: resultsArray, ...otherProps } = results;
     return {
         results: normalizePropertyOptionsResultsArray(resultsArray),
         ...otherProps,
@@ -586,8 +586,10 @@ function makePropertyOptionsFormula({ execute, schema, name, }) {
     if (!(execute instanceof Function)) {
         throw new Error(`Value for execute must be a function`);
     }
-    // The type SchemaType<ArraySchema<T>> is equivalent to Array<SchemaType<T>>, but typescript doesn't know
-    // that unless we do a cast.
+    // This cast is necessary for two reasons:
+    // 1) The type SchemaType<ArraySchema<T>> is equivalent to Array<SchemaType<T>>, but typescript doesn't know that.
+    // 2) This metadata function itself has a flexible return type of either Array<ResultType> or
+    //    {results: Array<ResultType>, cacheTtlSecs: number}, which is not something a pack schema can natively represent.
     const executeRetyped = execute;
     // Bend the type to satisfy PackFormulaDef's declaration.
     const innerExecute = async ([], context) => executeRetyped(context);
@@ -723,7 +725,9 @@ function makeObjectFormula({ response, ...definition }) {
     let schema;
     if (response) {
         if (isResponseHandlerTemplate(response) && response.schema) {
-            response.schema = (0, schema_5.normalizeSchema)(response.schema);
+            // Since the schema may be re-used, make a copy.
+            const inputSchema = (0, object_utils_1.deepCopy)(response.schema);
+            response.schema = (0, schema_5.normalizeSchema)(inputSchema);
             schema = response.schema;
         }
         else if (isResponseExampleTemplate(response)) {
@@ -809,9 +813,10 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
             name: `${identityName}.DynamicPropertyOptions`,
         });
     }
+    const normalizedSchema = (0, schema_5.normalizeSchema)(schema);
     const formulaSchema = getSchema
         ? undefined
-        : (0, schema_5.normalizeSchema)({ type: schema_2.ValueType.Array, items: schema });
+        : { type: schema_2.ValueType.Array, items: normalizedSchema };
     const { identity, id, primary } = (0, migration_1.objectSchemaHelper)(schema);
     if (!(primary && id)) {
         throw new Error(`Sync table schemas should have defined properties for idProperty and displayProperty`);
@@ -843,7 +848,7 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
     return {
         name,
         description,
-        schema: (0, schema_5.normalizeSchema)(schema),
+        schema: normalizedSchema,
         identityName,
         getter: {
             ...definition,
@@ -1108,7 +1113,7 @@ schema, identityName, }) {
         outputSchema.options = propertyName;
         namedPropertyOptions[propertyName] = makePropertyOptionsFormula({
             execute: inputSchemaWithoutArray.options,
-            schema: (0, schema_5.normalizeSchema)(schema.properties[propertyName]),
+            schema: schema.properties[propertyName],
             name: `${identityName}.${propertyName}.Options`,
         });
     }

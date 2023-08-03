@@ -20,6 +20,14 @@ A schema representing a value with selectable options.
 
 ## Properties
 
+### allowNewValues
+
+• `Optional` **allowNewValues**: `boolean`
+
+Allow custom, user-entered strings in addition to [options](core.PropertyWithOptions.md#options).
+
+___
+
 ### codaType
 
 • **codaType**: [`SelectList`](../enums/core.ValueHintType.md#selectlist)
@@ -44,6 +52,43 @@ explain the purpose or contents of any property that is not self-evident.
 #### Inherited from
 
 BaseStringSchema.description
+
+___
+
+### options
+
+• `Optional` **options**: [`PropertySchemaOptions`](../types/core.PropertySchemaOptions.md)<`string` \| { `display`: `string` ; `value`: `string`  }\>
+
+A list of values or a formula that returns a list of values to suggest when someone
+edits this property.
+
+**`Example`**
+
+```
+properties: {
+  color: {
+     type: coda.ValueType.String,
+     codaType: coda.ValueHintType.SelectList,
+     mutable: true,
+     options: ['red', 'green', 'blue'],
+  },
+  user: {
+     type: coda.ValueType.String,
+     codaType: coda.ValueHintType.SelectList,
+     mutable: true,
+     options: async function (context) {
+       let url = coda.withQueryParams("https://example.com/userSearch", { name: context.search });
+       let response = await context.fetcher.fetch({ method: "GET", url: url });
+       let results = response.body.users;
+       return results.map(user => {display: user.name, value: user.id})
+     },
+  },
+}
+```
+
+#### Inherited from
+
+PropertyWithAutocompleteWithOptionalDisplay.options
 
 ___
 

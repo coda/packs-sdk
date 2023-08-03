@@ -64,5 +64,5 @@ export interface PropertyAutocompleteFormulaSpecification {
     propertySchema: Schema & ObjectSchemaProperty;
     search: string;
 }
-export declare type FormulaSpecification = StandardFormulaSpecification | SyncFormulaSpecification | SyncUpdateFormulaSpecification | MetadataFormulaSpecification | ParameterAutocompleteMetadataFormulaSpecification | PostSetupMetadataFormulaSpecification | SyncMetadataFormulaSpecification | PropertyAutocompleteFormulaSpecification;
-export declare type PackFunctionResponse<T extends FormulaSpecification> = T extends SyncFormulaSpecification ? GenericSyncFormulaResult : T extends SyncUpdateFormulaSpecification ? GenericSyncUpdateResultMarshaled : PackFormulaResult;
+export type FormulaSpecification = StandardFormulaSpecification | SyncFormulaSpecification | SyncUpdateFormulaSpecification | MetadataFormulaSpecification | ParameterAutocompleteMetadataFormulaSpecification | PostSetupMetadataFormulaSpecification | SyncMetadataFormulaSpecification | PropertyAutocompleteFormulaSpecification;
+export type PackFunctionResponse<T extends FormulaSpecification> = T extends SyncFormulaSpecification ? GenericSyncFormulaResult : T extends SyncUpdateFormulaSpecification ? GenericSyncUpdateResultMarshaled : PackFormulaResult;

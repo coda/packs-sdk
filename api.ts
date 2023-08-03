@@ -24,6 +24,7 @@ import {ParameterTypeInputMap} from './api_types';
 import type {ParameterTypeMap} from './api_types';
 import type {PropertyOptionsExecutionContext} from './api_types';
 import type {PropertyOptionsMetadataFunction} from './api_types';
+import type {PropertyOptionsMetadataResult} from './api_types';
 import type {RequestHandlerTemplate} from './handler_templates';
 import type {RequiredParamDef} from './api_types';
 import type {ResponseHandlerTemplate} from './handler_templates';
@@ -1506,12 +1507,7 @@ interface PropertyOptionsFormattedResult {
 /**
  * @hidden
  */
-export type PropertyOptionsResults =
-  | Array<any | PropertyOptionsFormattedResult>
-  | {
-      cacheTtlSecs?: number;
-      results: Array<any | PropertyOptionsFormattedResult>;
-    };
+export type PropertyOptionsResults = PropertyOptionsMetadataResult<any | PropertyOptionsFormattedResult>;
 
 interface PropertyOptionsNormalizedResults {
   cacheTtlSecs?: number;
@@ -1535,7 +1531,7 @@ export function normalizePropertyOptionsResults(results: PropertyOptionsResults)
       results: normalizePropertyOptionsResultsArray(results),
     };
   }
-  const {results: resultsArray, ...otherProps} = results;
+  const {result: resultsArray, ...otherProps} = results;
   return {
     results: normalizePropertyOptionsResultsArray(resultsArray),
     ...otherProps,
@@ -1653,9 +1649,11 @@ export function makePropertyOptionsFormula<SchemaT extends Schema>({
 
   type ResultT = SchemaType<ArraySchema<SchemaT>>;
 
-  // The type SchemaType<ArraySchema<T>> is equivalent to Array<SchemaType<T>>, but typescript doesn't know
-  // that unless we do a cast.
-  const executeRetyped = execute as PropertyOptionsMetadataFunction<SchemaType<ArraySchema<SchemaT>>>;
+  // This cast is necessary for two reasons:
+  // 1) The type SchemaType<ArraySchema<T>> is equivalent to Array<SchemaType<T>>, but typescript doesn't know that.
+  // 2) This metadata function itself has a flexible return type of either Array<ResultType> or
+  //    {results: Array<ResultType>, cacheTtlSecs: number}, which is not something a pack schema can natively represent.
+  const executeRetyped = execute as (context: PropertyOptionsExecutionContext) => SchemaType<ArraySchema<SchemaT>>;
 
   // Bend the type to satisfy PackFormulaDef's declaration.
   const innerExecute = async ([]: ParamValues<[]>, context: ExecutionContext): Promise<ResultT> =>
@@ -1822,7 +1820,9 @@ export function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends 
   let schema: Schema | undefined;
   if (response) {
     if (isResponseHandlerTemplate(response) && response.schema) {
-      response.schema = normalizeSchema(response.schema) as SchemaT;
+      // Since the schema may be re-used, make a copy.
+      const inputSchema = deepCopy(response.schema);
+      response.schema = normalizeSchema(inputSchema) as SchemaT;
       schema = response.schema;
     } else if (isResponseExampleTemplate(response)) {
       // TODO(alexd): Figure out what to do with examples.
@@ -2153,9 +2153,10 @@ export function makeSyncTable<
     });
   }
 
-  const formulaSchema = getSchema
+  const normalizedSchema = normalizeSchema(schema);
+  const formulaSchema: ArraySchema<Schema> | undefined = getSchema
     ? undefined
-    : normalizeSchema<ArraySchema<Schema>>({type: ValueType.Array, items: schema});
+    : {type: ValueType.Array, items: normalizedSchema};
   const {identity, id, primary} = objectSchemaHelper(schema);
   if (!(primary && id)) {
     throw new Error(`Sync table schemas should have defined properties for idProperty and displayProperty`);
@@ -2194,7 +2195,7 @@ export function makeSyncTable<
   return {
     name,
     description,
-    schema: normalizeSchema(schema),
+    schema: normalizedSchema,
     identityName,
     getter: {
       ...definition,
@@ -2543,7 +2544,7 @@ function moveJsPropertyOptionsFunctionsToFormulas({
     outputSchema.options = propertyName as OptionsReference;
     namedPropertyOptions[propertyName] = makePropertyOptionsFormula({
       execute: inputSchemaWithoutArray.options as any,
-      schema: normalizeSchema(schema.properties[propertyName]),
+      schema: schema.properties[propertyName],
       name: `${identityName}.${propertyName}.Options`,
     });
   }

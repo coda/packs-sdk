@@ -20,7 +20,7 @@ var Type;
     Type[Type["image"] = 6] = "image";
     Type[Type["file"] = 7] = "file";
     Type[Type["markdown"] = 8] = "markdown";
-})(Type = exports.Type || (exports.Type = {}));
+})(Type || (exports.Type = Type = {}));
 function isArrayType(obj) {
     return obj && obj.type === 'array' && typeof obj.items === 'number';
 }
@@ -166,7 +166,7 @@ var ParameterType;
      * {@link MarkdownArray} that accepts unparsable values as `undefined`.
      */
     ParameterType["SparseMarkdownArray"] = "sparseMarkdownArray";
-})(ParameterType = exports.ParameterType || (exports.ParameterType = {}));
+})(ParameterType || (exports.ParameterType = ParameterType = {}));
 exports.ParameterTypeInputMap = {
     [ParameterType.String]: Type.string,
     [ParameterType.Number]: Type.number,
@@ -217,14 +217,14 @@ var ConnectionRequirement;
      * to specify an account to use.
      */
     ConnectionRequirement["Required"] = "required";
-})(ConnectionRequirement = exports.ConnectionRequirement || (exports.ConnectionRequirement = {}));
+})(ConnectionRequirement || (exports.ConnectionRequirement = ConnectionRequirement = {}));
 /** @deprecated use `ConnectionRequirement` instead */
 var NetworkConnection;
 (function (NetworkConnection) {
     NetworkConnection["None"] = "none";
     NetworkConnection["Optional"] = "optional";
     NetworkConnection["Required"] = "required";
-})(NetworkConnection = exports.NetworkConnection || (exports.NetworkConnection = {}));
+})(NetworkConnection || (exports.NetworkConnection = NetworkConnection = {}));
 /** The HTTP methods (verbs) supported by the fetcher. */
 exports.ValidFetchMethods = ['GET', 'PATCH', 'POST', 'PUT', 'DELETE', 'HEAD'];
 // A mapping exists in coda that allows these to show up in the UI.
@@ -288,7 +288,7 @@ var PrecannedDateRange;
      * and ending in the distant future (e.g. 12/31/3999). Exact dates are subject to change.
      */
     PrecannedDateRange["Everything"] = "everything";
-})(PrecannedDateRange = exports.PrecannedDateRange || (exports.PrecannedDateRange = {}));
+})(PrecannedDateRange || (exports.PrecannedDateRange = PrecannedDateRange = {}));
 /**
  * An enum defining special types options handling for properties.
  */
@@ -302,4 +302,4 @@ var OptionsType;
      * {@link DynamicSyncTableOptions.propertyOptions} function.
      */
     OptionsType["Dynamic"] = "__coda_dynamic__";
-})(OptionsType = exports.OptionsType || (exports.OptionsType = {}));
+})(OptionsType || (exports.OptionsType = OptionsType = {}));

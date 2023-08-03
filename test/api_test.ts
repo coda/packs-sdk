@@ -8,6 +8,7 @@ import {ParameterType} from '../api_types';
 import {StatusCodeError} from '../api';
 import type {Type} from '../api_types';
 import {ValueType} from '../schema';
+import {ensureExists} from '../helpers/ensure';
 import {makeDynamicSyncTable} from '../api';
 import {makeFormula} from '../api';
 import {makeMetadataFormula} from '../api';
@@ -236,10 +237,15 @@ describe('API test', () => {
           primary: 'foo',
           properties: {
             foo: {
-              type: ValueType.String,
+              type: ValueType.Object,
               codaType: schema.ValueHintType.SelectList,
               mutable: true,
-              options: () => ['fooResult'],
+              properties: {
+                subFoo: {
+                  type: ValueType.String,
+                },
+              },
+              options: () => [{subFoo: 'fooResult'}],
             },
             bar: {
               type: ValueType.String,
@@ -278,7 +284,9 @@ describe('API test', () => {
 
       const fooAutocomplete = namedPropertyOptions!.foo;
       assert.equal('MyIdentityName.foo.Options', fooAutocomplete.name);
-      assert.deepEqual(await fooAutocomplete.execute([] as ParamValues<[]>, {} as ExecutionContext), ['fooResult']);
+      assert.deepEqual(await fooAutocomplete.execute([] as ParamValues<[]>, {} as ExecutionContext), [
+        {subFoo: 'fooResult'},
+      ]);
 
       // Test an array property.
       const bazAutocomplete = namedPropertyOptions!.baz;
@@ -301,6 +309,35 @@ describe('API test', () => {
       assert.deepEqual(await dynamicAutocomplete.execute([] as ParamValues<[]>, {} as ExecutionContext), [
         'dynamicResult',
       ]);
+    });
+
+    it('does not normalize schemas twice', () => {
+      const unnormalizedKey = 'some_key-that:needs.normalization';
+      const table = makeSyncTable({
+        name: 'SomeSync',
+        identityName: 'MyIdentityName',
+        schema: schema.makeObjectSchema({
+          id: 'id',
+          displayProperty: 'id',
+          properties: {
+            id: {type: ValueType.String},
+            [unnormalizedKey]: {type: ValueType.String},
+          },
+        }),
+        formula: {
+          name: 'Whatever',
+          description: 'Whatever',
+          parameters: [],
+          async execute() {
+            return {result: []};
+          },
+        },
+      });
+      // Not sure why this cast is necessary
+      const property = ensureExists(
+        (table.schema.properties as schema.ObjectSchemaProperties).SomeKeyThatNeedsNormalization,
+      );
+      assert.equal(property.originalKey, unnormalizedKey);
     });
   });
 
@@ -536,7 +573,7 @@ describe('API test', () => {
     assert.deepEqual(
       normalizePropertyOptionsResults({
         cacheTtlSecs: 123,
-        results: packResultsArray,
+        result: packResultsArray,
       }),
       {
         cacheTtlSecs: 123,

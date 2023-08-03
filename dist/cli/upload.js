@@ -83,7 +83,7 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
     });
     const manifest = await (0, helpers_5.importManifest)(bundlePath);
     // Since package.json isn't in dist, we grab it from the root directory instead.
-    const packageJson = await Promise.resolve().then(() => __importStar(require((0, helpers_6.isTestCommand)() ? '../package.json' : '../../package.json')));
+    const packageJson = await Promise.resolve(`${(0, helpers_6.isTestCommand)() ? '../package.json' : '../../package.json'}`).then(s => __importStar(require(s)));
     const codaPacksSDKVersion = packageJson.version;
     const client = (0, helpers_3.createCodaClient)(apiToken, formattedEndpoint);
     const metadata = (0, metadata_1.compilePackMetadata)(manifest);

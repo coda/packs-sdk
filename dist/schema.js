@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.throwOnDynamicSchemaWithJsOptionsFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.maybeSchemaOptionsValue = exports.unwrappedSchemaSupportsOptions = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+exports.throwOnDynamicSchemaWithJsOptionsFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.maybeSchemaOptionsValue = exports.unwrappedSchemaSupportsOptions = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_2 = require("./helpers/ensure");
@@ -40,7 +40,7 @@ var ValueType;
      * Indicates a JavaScript object should be returned. The schema of each object property must also be specified.
      */
     ValueType["Object"] = "object";
-})(ValueType = exports.ValueType || (exports.ValueType = {}));
+})(ValueType || (exports.ValueType = ValueType = {}));
 /**
  * Synthetic types that instruct Coda how to coerce values from primitives at ingestion time.
  */
@@ -177,7 +177,7 @@ var ValueHintType;
      * Indicates to render a value as a select list.
      */
     ValueHintType["SelectList"] = "selectList";
-})(ValueHintType = exports.ValueHintType || (exports.ValueHintType = {}));
+})(ValueHintType || (exports.ValueHintType = ValueHintType = {}));
 exports.StringHintValueTypes = [
     ValueHintType.Attachment,
     ValueHintType.Date,
@@ -233,7 +233,7 @@ var CurrencyFormat;
      * Indicates the value should be rendered as a number without a currency symbol, e.g. `2.50`.
      */
     CurrencyFormat["Financial"] = "financial";
-})(CurrencyFormat = exports.CurrencyFormat || (exports.CurrencyFormat = {}));
+})(CurrencyFormat || (exports.CurrencyFormat = CurrencyFormat = {}));
 /**
  * Icons that can be used with a {@link ScaleSchema}.
  *
@@ -261,7 +261,7 @@ var ScaleIconSet;
     ScaleIconSet["Sun"] = "sun";
     ScaleIconSet["Checkmark"] = "checkmark";
     ScaleIconSet["LightBulb"] = "lightbulb";
-})(ScaleIconSet = exports.ScaleIconSet || (exports.ScaleIconSet = {}));
+})(ScaleIconSet || (exports.ScaleIconSet = ScaleIconSet = {}));
 /**
  * Display types that can be used with an {@link EmailSchema}.
  */
@@ -279,7 +279,7 @@ var EmailDisplayType;
      * Display email address only.
      */
     EmailDisplayType["EmailOnly"] = "emailOnly";
-})(EmailDisplayType = exports.EmailDisplayType || (exports.EmailDisplayType = {}));
+})(EmailDisplayType || (exports.EmailDisplayType = EmailDisplayType = {}));
 /**
  * Display types that can be used with a {@link LinkSchema}.
  */
@@ -305,7 +305,7 @@ var LinkDisplayType;
      * Display the referenced web page as an embed.
      */
     LinkDisplayType["Embed"] = "embed";
-})(LinkDisplayType = exports.LinkDisplayType || (exports.LinkDisplayType = {}));
+})(LinkDisplayType || (exports.LinkDisplayType = LinkDisplayType = {}));
 /**
  * State of outline on images that can be used with a {@link ImageSchema}.
  */
@@ -315,7 +315,7 @@ var ImageOutline;
     ImageOutline["Disabled"] = "disabled";
     /** Image is rendered with outline. */
     ImageOutline["Solid"] = "solid";
-})(ImageOutline = exports.ImageOutline || (exports.ImageOutline = {}));
+})(ImageOutline || (exports.ImageOutline = ImageOutline = {}));
 /**
  * State of corners on images that can be used with a {@link ImageSchema}.
  */
@@ -325,7 +325,7 @@ var ImageCornerStyle;
     ImageCornerStyle["Rounded"] = "rounded";
     /** Image is rendered with square corners. */
     ImageCornerStyle["Square"] = "square";
-})(ImageCornerStyle = exports.ImageCornerStyle || (exports.ImageCornerStyle = {}));
+})(ImageCornerStyle || (exports.ImageCornerStyle = ImageCornerStyle = {}));
 /**
  * Enumeration of units supported by duration schemas. See {@link DurationSchema.maxUnit}.
  */
@@ -347,7 +347,7 @@ var DurationUnit;
      * Indications a duration as a number of seconds.
      */
     DurationUnit["Seconds"] = "seconds";
-})(DurationUnit = exports.DurationUnit || (exports.DurationUnit = {}));
+})(DurationUnit || (exports.DurationUnit = DurationUnit = {}));
 /**
  * The subset of StringHintTypes that don't have specific schema attributes.
  */
@@ -388,7 +388,7 @@ var AttributionNodeType;
      * An image, often a logo of the data source.
      */
     AttributionNodeType[AttributionNodeType["Image"] = 3] = "Image";
-})(AttributionNodeType = exports.AttributionNodeType || (exports.AttributionNodeType = {}));
+})(AttributionNodeType || (exports.AttributionNodeType = AttributionNodeType = {}));
 /**
  * A helper for constructing attribution text, links, or images that render along with a Pack value.
  *
@@ -658,51 +658,64 @@ function normalizeSchema(schema) {
         };
     }
     else if (isObject(schema)) {
-        const normalized = {};
-        const { attribution, options, codaType, description, displayProperty, featured, featuredProperties, fixedId, id, identity, idProperty, imageProperty, includeUnknownProperties, linkProperty, mutable, primary, properties, snippetProperty, subtitleProperties, titleProperty, type, 
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        __packId, ...rest } = schema;
-        // Have TS ensure we don't forget about new fields in this function.
-        (0, ensure_3.ensureNever)();
-        for (const key of Object.keys(properties)) {
-            const normalizedKey = normalizeSchemaKey(key);
-            const props = properties[key];
-            const { required, fromKey } = props;
-            normalized[normalizedKey] = Object.assign(normalizeSchema(props), {
-                required,
-                fromKey: fromKey || (normalizedKey !== key ? key : undefined),
-            });
-        }
-        const normalizedSchema = {
-            attribution,
-            options,
-            codaType,
-            description,
-            displayProperty: displayProperty ? normalizeSchemaKey(displayProperty) : undefined,
-            featured: featured ? featured.map(normalizeSchemaKey) : undefined,
-            featuredProperties: featuredProperties ? featuredProperties.map(normalizeSchemaKey) : undefined,
-            fixedId,
-            id: id ? normalizeSchemaKey(id) : undefined,
-            identity,
-            idProperty: idProperty ? normalizeSchemaKey(idProperty) : undefined,
-            imageProperty: imageProperty ? normalizeSchemaPropertyIdentifier(imageProperty, normalized) : undefined,
-            includeUnknownProperties,
-            linkProperty: linkProperty ? normalizeSchemaPropertyIdentifier(linkProperty, normalized) : undefined,
-            mutable,
-            primary: primary ? normalizeSchemaKey(primary) : undefined,
-            properties: normalized,
-            snippetProperty: snippetProperty ? normalizeSchemaPropertyIdentifier(snippetProperty, normalized) : undefined,
-            subtitleProperties: subtitleProperties
-                ? subtitleProperties.map(subProp => normalizeSchemaPropertyIdentifier(subProp, normalized))
-                : undefined,
-            titleProperty: titleProperty ? normalizeSchemaPropertyIdentifier(titleProperty, normalized) : undefined,
-            type: ValueType.Object,
-        };
-        return normalizedSchema;
+        // The `as T` here seems like a typescript bug... shouldn't the above typeguard be
+        // sufficient to define T === GenericObjectSchema?
+        return normalizeObjectSchema(schema);
     }
-    return schema;
+    // We always make a copy of the input schema so we never accidentally mutate it.
+    return { ...schema };
 }
 exports.normalizeSchema = normalizeSchema;
+function normalizeObjectSchema(schema) {
+    const normalizedProperties = {};
+    const { attribution, options, codaType, description, displayProperty, featured, featuredProperties, id, identity, idProperty, imageProperty, includeUnknownProperties, linkProperty, primary, properties, snippetProperty, subtitleProperties, titleProperty, type, 
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __packId, ...rest } = schema;
+    // Have TS ensure we don't forget about new fields in this function.
+    (0, ensure_3.ensureNever)();
+    for (const key of Object.keys(properties)) {
+        const normalizedKey = normalizeSchemaKey(key);
+        const property = properties[key];
+        const { fixedId, fromKey, mutable, originalKey, required } = property;
+        if (originalKey) {
+            throw new Error('Original key is only for internal use.');
+        }
+        const normalizedPropertyAttrs = {
+            fixedId,
+            fromKey: fromKey || (normalizedKey !== key ? key : undefined),
+            mutable,
+            originalKey: key,
+            required,
+        };
+        normalizedProperties[normalizedKey] = Object.assign(normalizeSchema(property), normalizedPropertyAttrs);
+    }
+    return {
+        attribution,
+        options,
+        codaType,
+        description,
+        displayProperty: displayProperty ? normalizeSchemaKey(displayProperty) : undefined,
+        featured: featured ? featured.map(normalizeSchemaKey) : undefined,
+        featuredProperties: featuredProperties ? featuredProperties.map(normalizeSchemaKey) : undefined,
+        id: id ? normalizeSchemaKey(id) : undefined,
+        identity,
+        idProperty: idProperty ? normalizeSchemaKey(idProperty) : undefined,
+        imageProperty: imageProperty ? normalizeSchemaPropertyIdentifier(imageProperty, normalizedProperties) : undefined,
+        includeUnknownProperties,
+        linkProperty: linkProperty ? normalizeSchemaPropertyIdentifier(linkProperty, normalizedProperties) : undefined,
+        primary: primary ? normalizeSchemaKey(primary) : undefined,
+        properties: normalizedProperties,
+        snippetProperty: snippetProperty
+            ? normalizeSchemaPropertyIdentifier(snippetProperty, normalizedProperties)
+            : undefined,
+        subtitleProperties: subtitleProperties
+            ? subtitleProperties.map(subProp => normalizeSchemaPropertyIdentifier(subProp, normalizedProperties))
+            : undefined,
+        titleProperty: titleProperty ? normalizeSchemaPropertyIdentifier(titleProperty, normalizedProperties) : undefined,
+        type: ValueType.Object,
+    };
+}
+exports.normalizeObjectSchema = normalizeObjectSchema;
 /**
  * Convenience for creating a reference object schema from an existing schema for the
  * object. Copies over the identity, idProperty, and displayProperty from the schema,
@@ -711,7 +724,8 @@ exports.normalizeSchema = normalizeSchema;
  * schema it provides better code reuse to derive a reference schema instead.
  */
 function makeReferenceSchemaFromObjectSchema(schema, identityName) {
-    const { type, id, primary, identity, properties, mutable, options } = (0, migration_1.objectSchemaHelper)(schema);
+    const { type, id, primary, identity, properties, options } = (0, migration_1.objectSchemaHelper)(schema);
+    const { mutable } = schema;
     (0, ensure_2.ensureExists)(identity || identityName, 'Source schema must have an identity field, or you must provide an identity name for the reference.');
     const validId = (0, ensure_2.ensureExists)(id);
     const referenceProperties = { [validId]: properties[validId] };
@@ -719,16 +733,17 @@ function makeReferenceSchemaFromObjectSchema(schema, identityName) {
         (0, ensure_2.ensureExists)(properties[primary], `Display property "${primary}" must refer to a valid property schema.`);
         referenceProperties[primary] = properties[primary];
     }
-    return makeObjectSchema({
+    const referenceSchema = {
         codaType: ValueHintType.Reference,
-        type,
-        idProperty: id,
-        identity: identity || { name: (0, ensure_2.ensureExists)(identityName) },
         displayProperty: primary,
-        properties: referenceProperties,
+        identity: identity || { name: (0, ensure_2.ensureExists)(identityName) },
+        idProperty: id,
         mutable,
         options,
-    });
+        properties: referenceProperties,
+        type,
+    };
+    return makeObjectSchema(referenceSchema);
 }
 exports.makeReferenceSchemaFromObjectSchema = makeReferenceSchemaFromObjectSchema;
 /**
