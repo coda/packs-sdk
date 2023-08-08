@@ -4,6 +4,7 @@ import {MissingScopesError} from '../../../api';
 import {StatusCodeError} from '../../../api';
 import {deserialize} from './serializer';
 import {format} from 'util';
+import {legacyUnmarshalValue} from '../../../helpers/legacy_marshal';
 import {serialize} from './serializer';
 
 // We rely on the javascript structuredClone() algorithm to copy arguments and results into
@@ -173,12 +174,17 @@ export function marshalValue(val: any): MarshaledValue {
   };
 }
 
-export function marshalValueToString(val: any): string {
+export function marshalValueToStringForSameOrHigherNodeVersion(val: any): string {
   return serialize(marshalValue(val));
 }
 
 export function unmarshalValueFromString(marshaledValue: string): any {
-  return unmarshalValue(deserialize(marshaledValue));
+  if (marshaledValue.startsWith('/')) {
+    // Looks like a v8-serialized value
+    return unmarshalValue(deserialize(marshaledValue));
+  }
+  // Probably a legacy JSON value
+  return legacyUnmarshalValue(marshaledValue);
 }
 
 function applyTransform(input: any, path: string[], fn: (encoded: any) => any): any {
@@ -213,7 +219,7 @@ export function unmarshalValue(marshaledValue: any): any {
 // in the "message" field, which must be a string. Because of that, we use marshalValueToString()
 // instead of just putting a structuredClone()-compatible object into a custom field on a custom
 // error type.
-export function wrapError(err: Error): Error {
+export function wrapErrorForSameOrHigherNodeVersion(err: Error): Error {
   // TODO(huayang): we do this for the sdk.
   // if (err.name === 'TypeError' && err.message === `Cannot read property 'body' of undefined`) {
   //   err.message +=
@@ -223,7 +229,7 @@ export function wrapError(err: Error): Error {
   //     'to actually fetch from the remote API.';
   // }
 
-  return new Error(marshalValueToString(err));
+  return new Error(marshalValueToStringForSameOrHigherNodeVersion(err));
 }
 
 export function unwrapError(err: Error): Error {

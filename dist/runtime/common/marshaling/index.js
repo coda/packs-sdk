@@ -1,12 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.unmarshalError = exports.marshalError = exports.unwrapError = exports.wrapError = exports.unmarshalValue = exports.unmarshalValueFromString = exports.marshalValueToString = exports.marshalValue = exports.marshalValuesForLogging = exports.isMarshaledValue = exports.TransformType = void 0;
+exports.unmarshalError = exports.marshalError = exports.unwrapError = exports.wrapErrorForSameOrHigherNodeVersion = exports.unmarshalValue = exports.unmarshalValueFromString = exports.marshalValueToStringForSameOrHigherNodeVersion = exports.marshalValue = exports.marshalValuesForLogging = exports.isMarshaledValue = exports.TransformType = void 0;
 const constants_1 = require("./constants");
 const constants_2 = require("./constants");
 const api_1 = require("../../../api");
 const api_2 = require("../../../api");
 const serializer_1 = require("./serializer");
 const util_1 = require("util");
+const legacy_marshal_1 = require("../../../helpers/legacy_marshal");
 const serializer_2 = require("./serializer");
 // We rely on the javascript structuredClone() algorithm to copy arguments and results into
 // and out of isolated-vm method calls. There are a few types we want to support that aren't
@@ -146,12 +147,17 @@ function marshalValue(val) {
     };
 }
 exports.marshalValue = marshalValue;
-function marshalValueToString(val) {
+function marshalValueToStringForSameOrHigherNodeVersion(val) {
     return (0, serializer_2.serialize)(marshalValue(val));
 }
-exports.marshalValueToString = marshalValueToString;
+exports.marshalValueToStringForSameOrHigherNodeVersion = marshalValueToStringForSameOrHigherNodeVersion;
 function unmarshalValueFromString(marshaledValue) {
-    return unmarshalValue((0, serializer_1.deserialize)(marshaledValue));
+    if (marshaledValue.startsWith('/')) {
+        // Looks like a v8-serialized value
+        return unmarshalValue((0, serializer_1.deserialize)(marshaledValue));
+    }
+    // Probably a legacy JSON value
+    return (0, legacy_marshal_1.legacyUnmarshalValue)(marshaledValue);
 }
 exports.unmarshalValueFromString = unmarshalValueFromString;
 function applyTransform(input, path, fn) {
@@ -186,7 +192,7 @@ exports.unmarshalValue = unmarshalValue;
 // in the "message" field, which must be a string. Because of that, we use marshalValueToString()
 // instead of just putting a structuredClone()-compatible object into a custom field on a custom
 // error type.
-function wrapError(err) {
+function wrapErrorForSameOrHigherNodeVersion(err) {
     // TODO(huayang): we do this for the sdk.
     // if (err.name === 'TypeError' && err.message === `Cannot read property 'body' of undefined`) {
     //   err.message +=
@@ -195,9 +201,9 @@ function wrapError(err) {
     //     'add the --fetch flag ' +
     //     'to actually fetch from the remote API.';
     // }
-    return new Error(marshalValueToString(err));
+    return new Error(marshalValueToStringForSameOrHigherNodeVersion(err));
 }
-exports.wrapError = wrapError;
+exports.wrapErrorForSameOrHigherNodeVersion = wrapErrorForSameOrHigherNodeVersion;
 function unwrapError(err) {
     try {
         const unmarshaledValue = unmarshalValueFromString(err.message);

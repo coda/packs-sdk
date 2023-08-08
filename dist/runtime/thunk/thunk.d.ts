@@ -8,7 +8,7 @@ import type { PackFunctionResponse } from '../types';
 import type { ParamDefs } from '../../api_types';
 import type { ParamValues } from '../../api_types';
 import type { SyncExecutionContext } from '../../api_types';
-export { marshalValue, unmarshalValue, marshalValueToString, unmarshalValueFromString, marshalValuesForLogging, } from '../common/marshaling';
+export { marshalValue, unmarshalValue, marshalValueToStringForSameOrHigherNodeVersion, unmarshalValueFromString as unmarshalValueFromStringFromSameOrLowerNodeVersion, marshalValuesForLogging, } from '../common/marshaling';
 interface FindAndExecutionPackFunctionArgs<T> {
     params: ParamValues<ParamDefs>;
     formulaSpec: T;

@@ -1,12 +1,12 @@
 import {MissingScopesError} from '../api';
 import {StatusCodeError} from '../api';
 import {inspect} from 'util';
-import {legacyMarshalValue} from '../helpers/legacy_marshal';
 import {legacyUnmarshalValue} from '../helpers/legacy_marshal';
+import {marshalValueForAnyNodeVersion as marshalValueForAnyNodeVersion} from '../helpers/legacy_marshal';
 
 describe('Legacy marshaling', () => {
   function transform<T>(val: T): T {
-    return legacyUnmarshalValue(legacyMarshalValue(val));
+    return legacyUnmarshalValue(marshalValueForAnyNodeVersion(val));
   }
 
   it('works for regular objects', () => {

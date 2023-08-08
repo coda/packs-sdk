@@ -35,13 +35,13 @@ import {normalizePropertyOptionsResults} from '../../api';
 import {setEndpointHelper} from '../../helpers/migration';
 import {throwOnDynamicSchemaWithJsOptionsFunction} from '../../schema';
 import {unwrapError} from '../common/marshaling';
-import {wrapError} from '../common/marshaling';
+import {wrapErrorForSameOrHigherNodeVersion} from '../common/marshaling';
 
 export {
   marshalValue,
   unmarshalValue,
-  marshalValueToString,
-  unmarshalValueFromString,
+  marshalValueToStringForSameOrHigherNodeVersion,
+  unmarshalValueFromString as unmarshalValueFromStringFromSameOrLowerNodeVersion,
   marshalValuesForLogging,
 } from '../common/marshaling';
 
@@ -69,7 +69,7 @@ export async function findAndExecutePackFunction<T extends FormulaSpecification>
     return await doFindAndExecutePackFunction(args);
   } catch (err: any) {
     // all errors should be marshaled to avoid IVM dropping essential fields / name.
-    throw shouldWrapError ? wrapError(err) : err;
+    throw shouldWrapError ? wrapErrorForSameOrHigherNodeVersion(err) : err;
   }
 }
 

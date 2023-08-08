@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.legacyUnwrapError = exports.legacyWrapError = exports.legacyUnmarshalValue = exports.legacyMarshalValue = void 0;
+exports.legacyUnwrapError = exports.legacyWrapError = exports.legacyUnmarshalValue = exports.marshalValueForAnyNodeVersion = void 0;
 const marshal_errors_1 = require("./marshal_errors");
 const marshal_errors_2 = require("./marshal_errors");
 const marshal_buffer_1 = require("./marshal_buffer");
@@ -75,7 +75,7 @@ function processValue(val, depth = 0) {
     }
     return serializedValue;
 }
-function legacyMarshalValue(val) {
+function marshalValueForAnyNodeVersion(val) {
     // Instead of passing a replacer to `JSON.stringify`, we chose to preprocess the value before
     // passing it to `JSON.stringify`. The reason is that `JSON.stringify` may call the object toJSON
     // method before calling the replacer. In many cases, that means the replacer can't tell if the
@@ -86,7 +86,7 @@ function legacyMarshalValue(val) {
     // identical. It will only serve the purpose of our internal marshaling use case.
     return JSON.stringify(processValue(val));
 }
-exports.legacyMarshalValue = legacyMarshalValue;
+exports.marshalValueForAnyNodeVersion = marshalValueForAnyNodeVersion;
 function legacyUnmarshalValue(marshaledValue) {
     if (marshaledValue === undefined) {
         return marshaledValue;
@@ -105,7 +105,7 @@ function legacyWrapError(err) {
     //     'add the --fetch flag ' +
     //     'to actually fetch from the remote API.';
     // }
-    return new Error(legacyMarshalValue(err));
+    return new Error(marshalValueForAnyNodeVersion(err));
 }
 exports.legacyWrapError = legacyWrapError;
 function legacyUnwrapError(err) {

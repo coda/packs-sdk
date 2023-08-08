@@ -91,7 +91,7 @@ function processValue(val: any, depth: number = 0): any {
   return serializedValue;
 }
 
-export function legacyMarshalValue(val: any): string | undefined {
+export function marshalValueForAnyNodeVersion(val: any): string | undefined {
   // Instead of passing a replacer to `JSON.stringify`, we chose to preprocess the value before
   // passing it to `JSON.stringify`. The reason is that `JSON.stringify` may call the object toJSON
   // method before calling the replacer. In many cases, that means the replacer can't tell if the
@@ -124,7 +124,7 @@ export function legacyWrapError(err: Error): Error {
   //     'to actually fetch from the remote API.';
   // }
 
-  return new Error(legacyMarshalValue(err));
+  return new Error(marshalValueForAnyNodeVersion(err));
 }
 
 export function legacyUnwrapError(err: Error): Error {

@@ -7,7 +7,7 @@ import {marshalValuesForLogging} from '../runtime/common/marshaling';
 import {tryGetIvm} from '../testing/ivm_wrapper';
 import {unmarshalValue} from '../runtime/common/marshaling';
 import {unwrapError} from '../runtime/common/marshaling';
-import {wrapError} from '../runtime/common/marshaling';
+import {wrapErrorForSameOrHigherNodeVersion} from '../runtime/common/marshaling';
 
 describe('Marshaling', () => {
   const describeVmOnly = tryGetIvm() ? describe : describe.skip;
@@ -31,7 +31,7 @@ describe('Marshaling', () => {
   }
 
   function transformError(val: Error): Error {
-    return unwrapError(new Error(passThroughIsolatedVm(wrapError(val).message)));
+    return unwrapError(new Error(passThroughIsolatedVm(wrapErrorForSameOrHigherNodeVersion(val).message)));
   }
 
   function transformForLogging(vals: any[]): any[] {

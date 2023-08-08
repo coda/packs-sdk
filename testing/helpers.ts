@@ -5,7 +5,7 @@ import path from 'path';
 import * as readlineSync from 'readline-sync';
 import {translateErrorStackFromVM} from '../runtime/common/source_map';
 import {unwrapError} from '../runtime/common/marshaling';
-import {wrapError} from '../runtime/common/marshaling';
+import {wrapErrorForSameOrHigherNodeVersion} from '../runtime/common/marshaling';
 import yn from 'yn';
 
 export function getManifestFromModule(module: any): PackVersionDefinition {
@@ -90,7 +90,7 @@ export async function processVmError(vmError: Error, bundlePath: string): Promis
   // this is weird. the error thrown by ivm seems a standard error but somehow its stack can't be overwritten.
   // unwrapError(wrapError(err)) will recreate the same type of error in a standard way, where the stack can
   // be overwritten.
-  const err = unwrapError(wrapError(vmError));
+  const err = unwrapError(wrapErrorForSameOrHigherNodeVersion(vmError));
   const translatedStacktrace = await translateErrorStackFromVM({
     stacktrace: err.stack,
     bundleSourceMapPath: bundlePath + '.map',
