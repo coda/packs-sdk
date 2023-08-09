@@ -152,7 +152,7 @@ function marshalValueToStringForSameOrHigherNodeVersion(val) {
 }
 exports.marshalValueToStringForSameOrHigherNodeVersion = marshalValueToStringForSameOrHigherNodeVersion;
 function unmarshalValueFromString(marshaledValue) {
-    if (marshaledValue.startsWith('/')) {
+    if (marshaledValue === null || marshaledValue === void 0 ? void 0 : marshaledValue.startsWith('/')) {
         // Looks like a v8-serialized value
         return unmarshalValue((0, serializer_1.deserialize)(marshaledValue));
     }

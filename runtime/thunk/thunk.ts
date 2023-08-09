@@ -41,7 +41,7 @@ export {
   marshalValue,
   unmarshalValue,
   marshalValueToStringForSameOrHigherNodeVersion,
-  unmarshalValueFromString as unmarshalValueFromStringFromSameOrLowerNodeVersion,
+  unmarshalValueFromString,
   marshalValuesForLogging,
 } from '../common/marshaling';
 

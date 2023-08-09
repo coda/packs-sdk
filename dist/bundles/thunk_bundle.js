@@ -5768,7 +5768,7 @@ module.exports = (() => {
     marshalValuesForLogging: () => marshalValuesForLogging,
     setUpBufferForTest: () => setUpBufferForTest,
     unmarshalValue: () => unmarshalValue,
-    unmarshalValueFromStringFromSameOrLowerNodeVersion: () => unmarshalValueFromString
+    unmarshalValueFromString: () => unmarshalValueFromString
   });
   init_buffer_shim();
 
@@ -6252,7 +6252,7 @@ module.exports = (() => {
   }
   __name(marshalValueToStringForSameOrHigherNodeVersion, "marshalValueToStringForSameOrHigherNodeVersion");
   function unmarshalValueFromString(marshaledValue) {
-    if (marshaledValue.startsWith("/")) {
+    if (marshaledValue?.startsWith("/")) {
       return unmarshalValue(deserialize(marshaledValue));
     }
     return legacyUnmarshalValue(marshaledValue);

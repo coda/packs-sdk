@@ -179,7 +179,7 @@ export function marshalValueToStringForSameOrHigherNodeVersion(val: any): string
 }
 
 export function unmarshalValueFromString(marshaledValue: string): any {
-  if (marshaledValue.startsWith('/')) {
+  if (marshaledValue?.startsWith('/')) {
     // Looks like a v8-serialized value
     return unmarshalValue(deserialize(marshaledValue));
   }

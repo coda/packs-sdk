@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setUpBufferForTest = exports.handleFetcherStatusError = exports.handleError = exports.handleErrorAsync = exports.ensureSwitchUnreachable = exports.findAndExecutePackFunction = exports.marshalValuesForLogging = exports.unmarshalValueFromStringFromSameOrLowerNodeVersion = exports.marshalValueToStringForSameOrHigherNodeVersion = exports.unmarshalValue = exports.marshalValue = void 0;
+exports.setUpBufferForTest = exports.handleFetcherStatusError = exports.handleError = exports.handleErrorAsync = exports.ensureSwitchUnreachable = exports.findAndExecutePackFunction = exports.marshalValuesForLogging = exports.unmarshalValueFromString = exports.marshalValueToStringForSameOrHigherNodeVersion = exports.unmarshalValue = exports.marshalValue = void 0;
 const types_1 = require("../../types");
 const buffer_1 = require("buffer");
 const types_2 = require("../types");
@@ -21,7 +21,7 @@ var marshaling_3 = require("../common/marshaling");
 Object.defineProperty(exports, "marshalValue", { enumerable: true, get: function () { return marshaling_3.marshalValue; } });
 Object.defineProperty(exports, "unmarshalValue", { enumerable: true, get: function () { return marshaling_3.unmarshalValue; } });
 Object.defineProperty(exports, "marshalValueToStringForSameOrHigherNodeVersion", { enumerable: true, get: function () { return marshaling_3.marshalValueToStringForSameOrHigherNodeVersion; } });
-Object.defineProperty(exports, "unmarshalValueFromStringFromSameOrLowerNodeVersion", { enumerable: true, get: function () { return marshaling_3.unmarshalValueFromString; } });
+Object.defineProperty(exports, "unmarshalValueFromString", { enumerable: true, get: function () { return marshaling_3.unmarshalValueFromString; } });
 Object.defineProperty(exports, "marshalValuesForLogging", { enumerable: true, get: function () { return marshaling_3.marshalValuesForLogging; } });
 /**
  * The thunk entrypoint - the first code that runs inside the v8 isolate once control is passed over.
