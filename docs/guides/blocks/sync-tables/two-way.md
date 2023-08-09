@@ -203,11 +203,9 @@ Similar to [parameter autocomplete][parameters_autocomplete], you can provide a 
 
 !!! info "The hint `SelectList` or `Reference` is required"
 
-    Suggested options is only available for properties that have the `codaType` set to `SelectList` or `Reference`. In the future the `SelectList` hint will also change the UX of the column to be like a Coda select list.
+    Suggested options is only available for properties that have the `codaType` set to `SelectList` or `Reference`. These will cause the property to render as a Coda Select List or Relation column respectively.
 
  The possible choices are defined in the `options` field of the property, which can be either an array of static values or a function that generates them dynamically. An options function can access the value of other properties in the row via `context.propertyValues` and the current search string typed by the user via `context.search`.
-
-
 
 ```ts
 const ShirtSchema = coda.makeObjectSchema({
@@ -215,11 +213,13 @@ const ShirtSchema = coda.makeObjectSchema({
     size: {
       type: coda.ValueType.String,
       codaType: coda.ValueHintType.SelectList,
+      mutable: true,
       options: ["S", "M", "L", "XL"],
     },
     color: {
       type: coda.ValueType.String,
       codaType: coda.ValueHintType.SelectList,
+      mutable: true,
       options: async function (context) {
         let size = context.propertyValues.size;
         let availableColors = await getColorsForSize(context, size);
@@ -229,6 +229,7 @@ const ShirtSchema = coda.makeObjectSchema({
     pattern: {
       type: coda.ValueType.String,
       codaType: coda.ValueHintType.SelectList,
+      mutable: true,
       options: async function (context) {
         let search = context.search;
         let patterns = await searchPatterns(context, search);
@@ -239,6 +240,8 @@ const ShirtSchema = coda.makeObjectSchema({
   // ...
 });
 ```
+
+### In dynamic schemas
 
 For sync tables with dynamic schemas, you aren't able to define the options function directly on the property itself. Instead use the special value `OptionsType.Dynamic`, which tells Coda to call the sync table's `propertyOptions` function. This is a single function that handles the option generating for all dynamic properties. It's defined directly on a dynamic sync table, or within the `dynamicOptions` of a regular sync table. The function can determine which property to provide options for by inspecting `context.propertyName`.
 
@@ -255,6 +258,7 @@ For sync tables with dynamic schemas, you aren't able to define the options func
           properties[attr] = {
             // ...
             codaType: coda.ValueHintType.SelectList,
+            mutable: true,
             options: coda.OptionsType.Dynamic,
           }
         }
@@ -281,6 +285,7 @@ For sync tables with dynamic schemas, you aren't able to define the options func
             properties[attr] = {
               // ...
               codaType: coda.ValueHintType.SelectList,
+              mutable: true,
               options: coda.OptionsType.Dynamic,
             }
           }
@@ -294,6 +299,33 @@ For sync tables with dynamic schemas, you aren't able to define the options func
       },
     });
     ```
+
+### Allow new values
+
+The default behavior is to only allow users to select from the set of options provided. However there are times where you may want to also allow users to create new values from within the sync table. For example, a schema property that represents a set of user-defined tags. This can be controlled using the schema field `allowNewValues`.
+
+```{.ts hl_lines="13"}
+const TaskSchema = coda.makeObjectSchema({
+  properties: {
+    // ...
+    tags: {
+      type: coda.ValueType.Array,
+      items: {
+        type: coda.ValueType.String,
+        codaType: coda.ValueHintType.SelectList,
+        options: async function (context) {
+          let tags = await getTags(context);
+          return tags;
+        },
+        allowNewValues: true,
+      },
+      mutable: true,
+    },
+  },
+});
+```
+
+The `allowNewValues` setting can only be enabled for `String` properties, as there is no way to the user to define new `Object` values on the fly.
 
 
 ## Handling errors
