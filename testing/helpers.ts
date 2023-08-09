@@ -90,7 +90,7 @@ export async function processVmError(vmError: Error, bundlePath: string): Promis
   // this is weird. the error thrown by ivm seems a standard error but somehow its stack can't be overwritten.
   // unwrapError(wrapError(err)) will recreate the same type of error in a standard way, where the stack can
   // be overwritten.
-  const err = unwrapError(wrapErrorForSameOrHigherNodeVersion(vmError));
+  const err = unwrapError(wrapErrorForSameOrHigherNodeVersion(vmError, false));
   const translatedStacktrace = await translateErrorStackFromVM({
     stacktrace: err.stack,
     bundleSourceMapPath: bundlePath + '.map',

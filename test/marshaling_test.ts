@@ -1,3 +1,4 @@
+import {testHelper} from './test_helper';
 import {MissingScopesError} from '../api';
 import {StatusCodeError} from '../api';
 import {getIvm} from '../testing/ivm_wrapper';
@@ -9,7 +10,7 @@ import {unmarshalValue} from '../runtime/common/marshaling';
 import {unwrapError} from '../runtime/common/marshaling';
 import {wrapErrorForSameOrHigherNodeVersion} from '../runtime/common/marshaling';
 
-describe('Marshaling', () => {
+describe.only('Marshaling', () => {
   const describeVmOnly = tryGetIvm() ? describe : describe.skip;
 
   // The purpose of marshaling is to make sure values get into and out of isolated-vm without
@@ -31,14 +32,14 @@ describe('Marshaling', () => {
   }
 
   function transformError(val: Error): Error {
-    return unwrapError(new Error(passThroughIsolatedVm(wrapErrorForSameOrHigherNodeVersion(val).message)));
+    return unwrapError(new Error(passThroughIsolatedVm(wrapErrorForSameOrHigherNodeVersion(val, true).message)));
   }
 
   function transformForLogging(vals: any[]): any[] {
     return passThroughIsolatedVm(marshalValuesForLogging(vals)).map(unmarshalValue);
   }
 
-  it('works for regular objects', () => {
+  it('works for regular objects', async () => {
     // this test covers most of https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
 
     assert.deepEqual(transform(1), 1);
@@ -59,7 +60,10 @@ describe('Marshaling', () => {
     assert.deepEqual(transform(/123/), /123/);
     assert.deepEqual(transform(new Set([1, 2])), new Set([1, 2]));
     assert.deepEqual(transform(new Map([['a', 2]])), new Map([['a', 2]]));
-    assert.deepEqual(transform(Uint8Array.from([1, 2, 3])), Uint8Array.from([1, 2, 3]));
+    await testHelper.willBeRejectedWith(
+      async () => transform(Uint8Array.from([1, 2, 3])),
+      /Cannot marshal buffer views/,
+    );
     assert.deepEqual(transform(new ArrayBuffer(10)), new ArrayBuffer(10));
 
     class SomeClass {

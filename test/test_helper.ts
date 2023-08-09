@@ -6,9 +6,13 @@ export const testHelper = {
    * @param promise The original promise.
    * @returns The inverted promise, which fulfills if rejected and rejects if fulfilled.
    */
-  async willBeRejected<ErrorT = any>(promise: Promise<any>): Promise<ErrorT> {
+  async willBeRejected<ErrorT = any>(promise: Promise<any> | (() => Promise<any>)): Promise<ErrorT> {
     try {
-      await promise;
+      if (typeof promise === 'function') {
+        await promise();
+      } else {
+        await promise;
+      }
     } catch (err: any) {
       return err;
     }
@@ -27,7 +31,10 @@ export const testHelper = {
    * @returns {Promise<T>} The inverted promise, which fulfills if rejected and rejects if fulfilled (or if rejected
    *   with an unmatched error).
    */
-  async willBeRejectedWith<T, ErrorT = any>(promise: Promise<T>, matcher?: RegExp): Promise<ErrorT> {
+  async willBeRejectedWith<T, ErrorT = any>(
+    promise: Promise<T> | (() => Promise<any>),
+    matcher?: RegExp,
+  ): Promise<ErrorT> {
     const error = await this.willBeRejected(promise);
     if (matcher) {
       assert.match(error, matcher, 'Promise was rejected with unexpected error.');
