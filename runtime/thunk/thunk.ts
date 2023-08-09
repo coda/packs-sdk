@@ -69,7 +69,7 @@ export async function findAndExecutePackFunction<T extends FormulaSpecification>
     return await doFindAndExecutePackFunction(args);
   } catch (err: any) {
     // all errors should be marshaled to avoid IVM dropping essential fields / name.
-    throw shouldWrapError ? wrapErrorForSameOrHigherNodeVersion(err, true) : err;
+    throw shouldWrapError ? wrapErrorForSameOrHigherNodeVersion(err, {useUnsafeVersionCompatibilityHack: true}) : err;
   }
 }
 

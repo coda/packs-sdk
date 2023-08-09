@@ -6188,6 +6188,9 @@ module.exports = (() => {
       });
       return { val: val.toString("base64"), hasModifications: true };
     }
+    if (ArrayBuffer.isView(val)) {
+      throw new Error(`Cannot marshal buffer views`);
+    }
     if (Array.isArray(val)) {
       const maybeModifiedArray = [];
       let someItemHadModifications = false;
@@ -6247,8 +6250,39 @@ module.exports = (() => {
     };
   }
   __name(marshalValue, "marshalValue");
-  function marshalValueToStringForSameOrHigherNodeVersion(val) {
-    return serialize(marshalValue(val));
+  function maybeChangeWireVersionOnBase64EncodedV8SerializedData(serialized) {
+    if (serialized.length < 4) {
+      const fullyDecoded = Buffer2.from(serialized, "base64");
+      const firstByte2 = fullyDecoded[0];
+      if (firstByte2 !== 255) {
+        throw new Error("Internal error decoding v8-serialized data: " + serialized);
+      }
+      const wireVersion2 = fullyDecoded[1];
+      if (wireVersion2 <= 13 || wireVersion2 > 15) {
+        return serialized;
+      }
+      fullyDecoded[1] = 13;
+      return fullyDecoded.toString("base64");
+    }
+    const firstThreeBytesDecoded = Buffer2.from(serialized.substring(0, 4), "base64");
+    const firstByte = firstThreeBytesDecoded[0];
+    if (firstByte !== 255) {
+      throw new Error("Internal error decoding v8-serialized data. First three bytes are: " + serialized.substring(0, 4));
+    }
+    const wireVersion = firstThreeBytesDecoded[1];
+    if (wireVersion <= 13 || wireVersion > 15) {
+      return serialized;
+    }
+    firstThreeBytesDecoded[1] = 13;
+    return firstThreeBytesDecoded.toString("base64") + serialized.substring(4);
+  }
+  __name(maybeChangeWireVersionOnBase64EncodedV8SerializedData, "maybeChangeWireVersionOnBase64EncodedV8SerializedData");
+  function marshalValueToStringForSameOrHigherNodeVersion(val, { useUnsafeVersionCompatibilityHack }) {
+    const serialized = serialize(marshalValue(val));
+    if (useUnsafeVersionCompatibilityHack) {
+      return maybeChangeWireVersionOnBase64EncodedV8SerializedData(serialized);
+    }
+    return serialized;
   }
   __name(marshalValueToStringForSameOrHigherNodeVersion, "marshalValueToStringForSameOrHigherNodeVersion");
   function unmarshalValueFromString(marshaledValue) {
@@ -6284,8 +6318,8 @@ module.exports = (() => {
     return result;
   }
   __name(unmarshalValue, "unmarshalValue");
-  function wrapErrorForSameOrHigherNodeVersion(err) {
-    return new Error(marshalValueToStringForSameOrHigherNodeVersion(err));
+  function wrapErrorForSameOrHigherNodeVersion(err, { useUnsafeVersionCompatibilityHack }) {
+    return new Error(marshalValueToStringForSameOrHigherNodeVersion(err, { useUnsafeVersionCompatibilityHack }));
   }
   __name(wrapErrorForSameOrHigherNodeVersion, "wrapErrorForSameOrHigherNodeVersion");
   function unwrapError(err) {
@@ -6382,7 +6416,7 @@ module.exports = (() => {
       }
       return await doFindAndExecutePackFunction(args);
     } catch (err) {
-      throw shouldWrapError ? wrapErrorForSameOrHigherNodeVersion(err) : err;
+      throw shouldWrapError ? wrapErrorForSameOrHigherNodeVersion(err, { useUnsafeVersionCompatibilityHack: true }) : err;
     }
   }
   __name(findAndExecutePackFunction, "findAndExecutePackFunction");

@@ -10,7 +10,7 @@ import {unmarshalValue} from '../runtime/common/marshaling';
 import {unwrapError} from '../runtime/common/marshaling';
 import {wrapErrorForSameOrHigherNodeVersion} from '../runtime/common/marshaling';
 
-describe.only('Marshaling', () => {
+describe('Marshaling', () => {
   const describeVmOnly = tryGetIvm() ? describe : describe.skip;
 
   // The purpose of marshaling is to make sure values get into and out of isolated-vm without
@@ -32,7 +32,13 @@ describe.only('Marshaling', () => {
   }
 
   function transformError(val: Error): Error {
-    return unwrapError(new Error(passThroughIsolatedVm(wrapErrorForSameOrHigherNodeVersion(val, true).message)));
+    return unwrapError(
+      new Error(
+        passThroughIsolatedVm(
+          wrapErrorForSameOrHigherNodeVersion(val, {useUnsafeVersionCompatibilityHack: true}).message,
+        ),
+      ),
+    );
   }
 
   function transformForLogging(vals: any[]): any[] {

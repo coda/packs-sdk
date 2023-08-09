@@ -234,7 +234,7 @@ function maybeChangeWireVersionOnBase64EncodedV8SerializedData(serialized: strin
 
 export function marshalValueToStringForSameOrHigherNodeVersion(
   val: any,
-  useUnsafeVersionCompatibilityHack: boolean,
+  {useUnsafeVersionCompatibilityHack}: {useUnsafeVersionCompatibilityHack: boolean},
 ): string {
   const serialized = serialize(marshalValue(val));
   if (useUnsafeVersionCompatibilityHack) {
@@ -285,7 +285,10 @@ export function unmarshalValue(marshaledValue: any): any {
 // in the "message" field, which must be a string. Because of that, we use marshalValueToString()
 // instead of just putting a structuredClone()-compatible object into a custom field on a custom
 // error type.
-export function wrapErrorForSameOrHigherNodeVersion(err: Error, useUnsafeVersionCompatibilityHack: boolean): Error {
+export function wrapErrorForSameOrHigherNodeVersion(
+  err: Error,
+  {useUnsafeVersionCompatibilityHack}: {useUnsafeVersionCompatibilityHack: boolean},
+): Error {
   // TODO(huayang): we do this for the sdk.
   // if (err.name === 'TypeError' && err.message === `Cannot read property 'body' of undefined`) {
   //   err.message +=
@@ -295,7 +298,7 @@ export function wrapErrorForSameOrHigherNodeVersion(err: Error, useUnsafeVersion
   //     'to actually fetch from the remote API.';
   // }
 
-  return new Error(marshalValueToStringForSameOrHigherNodeVersion(err, useUnsafeVersionCompatibilityHack));
+  return new Error(marshalValueToStringForSameOrHigherNodeVersion(err, {useUnsafeVersionCompatibilityHack}));
 }
 
 export function unwrapError(err: Error): Error {

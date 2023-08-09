@@ -115,7 +115,7 @@ async function processVmError(vmError, bundlePath) {
     // this is weird. the error thrown by ivm seems a standard error but somehow its stack can't be overwritten.
     // unwrapError(wrapError(err)) will recreate the same type of error in a standard way, where the stack can
     // be overwritten.
-    const err = (0, marshaling_1.unwrapError)((0, marshaling_2.wrapErrorForSameOrHigherNodeVersion)(vmError));
+    const err = (0, marshaling_1.unwrapError)((0, marshaling_2.wrapErrorForSameOrHigherNodeVersion)(vmError, { useUnsafeVersionCompatibilityHack: false }));
     const translatedStacktrace = await (0, source_map_1.translateErrorStackFromVM)({
         stacktrace: err.stack,
         bundleSourceMapPath: bundlePath + '.map',

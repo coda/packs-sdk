@@ -125,7 +125,7 @@ describeVmOnly('Thunk', () => {
         buffer.writeInt8(i % 8, i);
       }
 
-      const encoded = thunk.marshalValueToStringForSameOrHigherNodeVersion(buffer, true);
+      const encoded = thunk.marshalValueToStringForSameOrHigherNodeVersion(buffer, {useUnsafeVersionCompatibilityHack: true});
       const transformedBuffer = thunk.unmarshalValueFromString(encoded);
 
       return buffer.equals(transformedBuffer) && typeof encoded === 'string';
