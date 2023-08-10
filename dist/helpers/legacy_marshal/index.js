@@ -84,7 +84,12 @@ function marshalValueForAnyNodeVersion(val) {
     //
     // processValue is trying to mimic the object processing of JSON but the behavior may not be
     // identical. It will only serve the purpose of our internal marshaling use case.
-    return JSON.stringify(processValue(val));
+    const result = JSON.stringify(processValue(val));
+    if (result === undefined) {
+        // JSON.stringify() can return undefined if the input was a function, for example.
+        return JSON.stringify(processValue(undefined));
+    }
+    return result;
 }
 exports.marshalValueForAnyNodeVersion = marshalValueForAnyNodeVersion;
 /**

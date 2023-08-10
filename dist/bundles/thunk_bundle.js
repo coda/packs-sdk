@@ -6286,6 +6286,9 @@ module.exports = (() => {
   }
   __name(marshalValueToStringForSameOrHigherNodeVersion, "marshalValueToStringForSameOrHigherNodeVersion");
   function unmarshalValueFromString(marshaledValue) {
+    if (marshaledValue === void 0) {
+      return void 0;
+    }
     if (marshaledValue.startsWith("/")) {
       return unmarshalValue(deserialize(marshaledValue));
     }

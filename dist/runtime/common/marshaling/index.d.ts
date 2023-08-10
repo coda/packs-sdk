@@ -19,7 +19,7 @@ export declare function marshalValue(val: any): MarshaledValue;
 export declare function marshalValueToStringForSameOrHigherNodeVersion(val: any, { useUnsafeVersionCompatibilityHack }: {
     useUnsafeVersionCompatibilityHack: boolean;
 }): string;
-export declare function unmarshalValueFromString(marshaledValue: string): any;
+export declare function unmarshalValueFromString(marshaledValue: string | undefined): any;
 export declare function unmarshalValue(marshaledValue: any): any;
 export declare function wrapErrorForSameOrHigherNodeVersion(err: Error, { useUnsafeVersionCompatibilityHack }: {
     useUnsafeVersionCompatibilityHack: boolean;

@@ -4,7 +4,7 @@ import {inspect} from 'util';
 import {marshalValueForAnyNodeVersion as marshalValueForAnyNodeVersion} from '../helpers/legacy_marshal';
 import {unmarshalValueFromString} from '../runtime/common/marshaling';
 
-describe.only('Legacy marshaling', () => {
+describe('Legacy marshaling', () => {
   function transform<T>(val: T): T {
     return unmarshalValueFromString(marshalValueForAnyNodeVersion(val));
   }

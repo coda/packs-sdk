@@ -103,8 +103,7 @@ export function marshalValueForAnyNodeVersion(val: any): string {
   const result = JSON.stringify(processValue(val));
 
   if (result === undefined) {
-    // JSON.stringify() can return undefined in some cases, like if you try to stringify a function.
-    // Instead of throwing an error, we just treat this as if the input was undefined
+    // JSON.stringify() can return undefined if the input was a function, for example.
     return JSON.stringify(processValue(undefined));
   }
 

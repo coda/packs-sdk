@@ -244,7 +244,14 @@ export function marshalValueToStringForSameOrHigherNodeVersion(
   return serialized;
 }
 
-export function unmarshalValueFromString(marshaledValue: string): any {
+export function unmarshalValueFromString(marshaledValue: string | undefined): any {
+  if (marshaledValue === undefined) {
+    // Historically marshalValueForAnyNodeVersion could sometimes return "undefined" even
+    // those it has a "string" return type, so it's best to keep support for undefined here
+    // to handle data from old, already-built packs
+    return undefined;
+  }
+
   if (marshaledValue.startsWith('/')) {
     // Looks like a v8-serialized value
     return unmarshalValue(deserialize(marshaledValue));
