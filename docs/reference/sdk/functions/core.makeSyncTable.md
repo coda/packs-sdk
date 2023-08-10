@@ -18,7 +18,7 @@ This wrapper does a variety of helpful things, including
 * Normalizing the schema definition to conform to Coda-recommended syntax.
 * Wrapping the execute formula to normalize return values to match the normalized schema.
 
-See [Normalization](/index.html#normalization) for more information about schema normalization.
+See [Normalization]({{ config.site_url }}guides/advanced/schemas/#normalization) for more information about schema normalization.
 
 #### Type parameters
 

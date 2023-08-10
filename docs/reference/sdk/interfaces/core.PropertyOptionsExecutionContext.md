@@ -86,9 +86,9 @@ ___
 
 ### propertySchema
 
-• `Readonly` **propertySchema**: [`Schema`](../types/core.Schema.md)
+• `Readonly` **propertySchema**: `Object`
 
-Schema of the property being edited.
+Schema of the property being edited. See [Schema](../types/core.Schema.md).
 
 ___
 

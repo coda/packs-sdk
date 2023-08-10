@@ -651,9 +651,9 @@ export interface PropertyOptionsExecutionContext extends ExecutionContext {
 	 */
 	readonly propertyName: string;
 	/**
-	 * Schema of the property being edited.
+	 * Schema of the property being edited. See {@link Schema}.
 	 */
-	readonly propertySchema: Schema;
+	readonly propertySchema: Schema & ObjectSchemaProperty;
 	/**
 	 * Current values of other properties from the same row. Non-required properties may be missing
 	 * if the doc owner elected not to sync them, or if they have a type that's not yet supported
@@ -3205,7 +3205,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
  * * Normalizing the schema definition to conform to Coda-recommended syntax.
  * * Wrapping the execute formula to normalize return values to match the normalized schema.
  *
- * See [Normalization](/index.html#normalization) for more information about schema normalization.
+ * See [Normalization](https://coda.io/packs/build/latest/guides/advanced/schemas/#normalization) for more information about schema normalization.
  */
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaDefT extends ObjectSchemaDefinition<K, L>, SchemaT extends SchemaDefT & {
 	identity?: Identity;
@@ -4560,6 +4560,7 @@ export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
 		oauthAuthorizationUrl?: string;
 		oauthTokenUrl?: string;
 		networkDomain?: string | string[];
+		endpointKey?: string;
 	};
 	instructionsUrl?: string;
 	formulas?: ExternalPackFormulas;

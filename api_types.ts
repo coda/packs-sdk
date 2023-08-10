@@ -3,6 +3,7 @@ import type {ArraySchema} from './schema';
 import type {AuthenticationDef} from './types';
 import type {Continuation} from './api';
 import type {MetadataFormula} from './api';
+import type {ObjectSchemaProperty} from './schema';
 import type {Schema} from './schema';
 
 /**
@@ -799,9 +800,9 @@ export interface PropertyOptionsExecutionContext extends ExecutionContext {
   readonly propertyName: string;
 
   /**
-   * Schema of the property being edited.
+   * Schema of the property being edited. See {@link Schema}.
    */
-  readonly propertySchema: Schema;
+  readonly propertySchema: Schema & ObjectSchemaProperty;
 
   /**
    * Current values of other properties from the same row. Non-required properties may be missing
