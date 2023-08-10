@@ -206,12 +206,12 @@ function marshalValueToStringForSameOrHigherNodeVersion(val, { useUnsafeVersionC
 }
 exports.marshalValueToStringForSameOrHigherNodeVersion = marshalValueToStringForSameOrHigherNodeVersion;
 function unmarshalValueFromString(marshaledValue) {
-    if (marshaledValue === null || marshaledValue === void 0 ? void 0 : marshaledValue.startsWith('/')) {
+    if (marshaledValue.startsWith('/')) {
         // Looks like a v8-serialized value
         return unmarshalValue((0, serializer_1.deserialize)(marshaledValue));
     }
     // Probably a legacy JSON value
-    return (0, legacy_marshal_1.legacyUnmarshalValue)(marshaledValue);
+    return (0, legacy_marshal_1.internalUnmarshalValueForAnyNodeVersion)(marshaledValue);
 }
 exports.unmarshalValueFromString = unmarshalValueFromString;
 function applyTransform(input, path, fn) {

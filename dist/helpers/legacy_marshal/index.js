@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.legacyUnwrapError = exports.legacyWrapError = exports.legacyUnmarshalValue = exports.marshalValueForAnyNodeVersion = void 0;
+exports.legacyUnwrapError = exports.legacyWrapError = exports.internalUnmarshalValueForAnyNodeVersion = exports.marshalValueForAnyNodeVersion = void 0;
 const marshal_errors_1 = require("./marshal_errors");
 const marshal_errors_2 = require("./marshal_errors");
 const marshal_buffer_1 = require("./marshal_buffer");
@@ -87,7 +87,12 @@ function marshalValueForAnyNodeVersion(val) {
     return JSON.stringify(processValue(val));
 }
 exports.marshalValueForAnyNodeVersion = marshalValueForAnyNodeVersion;
-function legacyUnmarshalValue(marshaledValue) {
+/**
+ * Use unmarshalValueFromString() instead. It can determine what type of marshaling was used and
+ * call the correct unmarshal function, which gives us more flexibility to swap between marshaling
+ * types in the future.
+ */
+function internalUnmarshalValueForAnyNodeVersion(marshaledValue) {
     if (marshaledValue === undefined) {
         return marshaledValue;
     }
@@ -95,7 +100,7 @@ function legacyUnmarshalValue(marshaledValue) {
     // JSON parsing can't populate `undefined` in deserialize b/c it's not a valid JSON value, so we make a 2nd pass.
     return reviveUndefinedValues(parsed);
 }
-exports.legacyUnmarshalValue = legacyUnmarshalValue;
+exports.internalUnmarshalValueForAnyNodeVersion = internalUnmarshalValueForAnyNodeVersion;
 function legacyWrapError(err) {
     // TODO(huayang): we do this for the sdk.
     // if (err.name === 'TypeError' && err.message === `Cannot read property 'body' of undefined`) {
@@ -110,7 +115,7 @@ function legacyWrapError(err) {
 exports.legacyWrapError = legacyWrapError;
 function legacyUnwrapError(err) {
     try {
-        const unmarshaledValue = legacyUnmarshalValue(err.message);
+        const unmarshaledValue = internalUnmarshalValueForAnyNodeVersion(err.message);
         if (unmarshaledValue instanceof Error) {
             return unmarshaledValue;
         }

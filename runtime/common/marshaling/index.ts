@@ -4,7 +4,7 @@ import {MissingScopesError} from '../../../api';
 import {StatusCodeError} from '../../../api';
 import {deserialize} from './serializer';
 import {format} from 'util';
-import {legacyUnmarshalValue} from '../../../helpers/legacy_marshal';
+import {internalUnmarshalValueForAnyNodeVersion} from '../../../helpers/legacy_marshal';
 import {serialize} from './serializer';
 
 // We rely on the javascript structuredClone() algorithm to copy arguments and results into
@@ -245,12 +245,12 @@ export function marshalValueToStringForSameOrHigherNodeVersion(
 }
 
 export function unmarshalValueFromString(marshaledValue: string): any {
-  if (marshaledValue?.startsWith('/')) {
+  if (marshaledValue.startsWith('/')) {
     // Looks like a v8-serialized value
     return unmarshalValue(deserialize(marshaledValue));
   }
   // Probably a legacy JSON value
-  return legacyUnmarshalValue(marshaledValue);
+  return internalUnmarshalValueForAnyNodeVersion(marshaledValue);
 }
 
 function applyTransform(input: any, path: string[], fn: (encoded: any) => any): any {

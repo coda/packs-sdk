@@ -6123,14 +6123,14 @@ module.exports = (() => {
     return val;
   }
   __name(deserialize2, "deserialize");
-  function legacyUnmarshalValue(marshaledValue) {
+  function internalUnmarshalValueForAnyNodeVersion(marshaledValue) {
     if (marshaledValue === void 0) {
       return marshaledValue;
     }
     const parsed = JSON.parse(marshaledValue, deserialize2);
     return reviveUndefinedValues(parsed);
   }
-  __name(legacyUnmarshalValue, "legacyUnmarshalValue");
+  __name(internalUnmarshalValueForAnyNodeVersion, "internalUnmarshalValueForAnyNodeVersion");
   function reviveUndefinedValues(val) {
     if (val === null) {
       return val;
@@ -6286,10 +6286,10 @@ module.exports = (() => {
   }
   __name(marshalValueToStringForSameOrHigherNodeVersion, "marshalValueToStringForSameOrHigherNodeVersion");
   function unmarshalValueFromString(marshaledValue) {
-    if (marshaledValue?.startsWith("/")) {
+    if (marshaledValue.startsWith("/")) {
       return unmarshalValue(deserialize(marshaledValue));
     }
-    return legacyUnmarshalValue(marshaledValue);
+    return internalUnmarshalValueForAnyNodeVersion(marshaledValue);
   }
   __name(unmarshalValueFromString, "unmarshalValueFromString");
   function applyTransform(input, path, fn) {

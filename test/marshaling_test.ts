@@ -1,4 +1,3 @@
-import {testHelper} from './test_helper';
 import {MissingScopesError} from '../api';
 import {StatusCodeError} from '../api';
 import {getIvm} from '../testing/ivm_wrapper';
@@ -67,10 +66,7 @@ describe('Marshaling', () => {
     assert.deepEqual(transform(/123/), /123/);
     assert.deepEqual(transform(new Set([1, 2])), new Set([1, 2]));
     assert.deepEqual(transform(new Map([['a', 2]])), new Map([['a', 2]]));
-    await testHelper.willBeRejectedWith(
-      async () => transform(Uint8Array.from([1, 2, 3])),
-      /Cannot marshal buffer views/,
-    );
+    assert.throws(() => transform(Uint8Array.from([1, 2, 3])), /Cannot marshal buffer views/);
     assert.deepEqual(transform(new ArrayBuffer(10)), new ArrayBuffer(10));
 
     class SomeClass {

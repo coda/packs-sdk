@@ -103,7 +103,12 @@ export function marshalValueForAnyNodeVersion(val: any): string {
   return JSON.stringify(processValue(val));
 }
 
-export function legacyUnmarshalValue(marshaledValue: string | undefined): any {
+/**
+ * Use unmarshalValueFromString() instead. It can determine what type of marshaling was used and
+ * call the correct unmarshal function, which gives us more flexibility to swap between marshaling
+ * types in the future.
+ */
+export function internalUnmarshalValueForAnyNodeVersion(marshaledValue: string | undefined): any {
   if (marshaledValue === undefined) {
     return marshaledValue;
   }
@@ -129,7 +134,7 @@ export function legacyWrapError(err: Error): Error {
 
 export function legacyUnwrapError(err: Error): Error {
   try {
-    const unmarshaledValue = legacyUnmarshalValue(err.message);
+    const unmarshaledValue = internalUnmarshalValueForAnyNodeVersion(err.message);
     if (unmarshaledValue instanceof Error) {
       return unmarshaledValue;
     }
