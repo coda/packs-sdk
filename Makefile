@@ -117,7 +117,7 @@ do-compile-isolated-vm:
 	mkdir build-isolated-vm && \
 		cd build-isolated-vm && \
 		npm init -y && \
-		docker run --rm -v `pwd`:/var/task amazon/aws-sam-cli-build-image-nodejs14.x:latest npm install isolated-vm@${ISOLATED_VM_VERSION}
+		docker run --rm -v `pwd`:/var/task public.ecr.aws/sam/build-nodejs18.x:1.89.0-20230626220239 bash -c "yum install openssl-devel -y && npm install -g pnpm && pnpm add isolated-vm@${ISOLATED_VM_VERSION} && pnpm install"
 	cp build-isolated-vm/node_modules/isolated-vm/package.json runtime/isolated-vm/
 	cp build-isolated-vm/node_modules/isolated-vm/isolated-vm.js runtime/isolated-vm/
 	cp build-isolated-vm/node_modules/isolated-vm/out/isolated_vm.node runtime/isolated-vm/out/
