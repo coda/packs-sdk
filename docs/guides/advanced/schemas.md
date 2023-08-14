@@ -535,7 +535,7 @@ In your sync formula you only need to populate the fields of the reference objec
 
 In addition to a user-visible name, each column in a sync table has a stable identifier. Although this ID isn't used today, in the future it will enable advanced features like being able to rename a column without impacting existing docs. By default a property's key in the schema will be used as the column ID.
 
-In most cases this default behavior is sufficient, but in rare cases you may want to set a different ID value for the column. For example, if you generate your schema dynamically to include custom fields returned by the API, you should use the ID of those custom fields instead of their name.
+In most cases this default behavior is sufficient, but in rare cases you may want to set a different ID value for the column. For example, if you generate your schema dynamically to include custom fields returned by an API, you should use the ID of those custom fields instead of their name.
 
 In these cases you should adjust your `getSchema` function to set the ID manually using the `fixedId` field.
 
