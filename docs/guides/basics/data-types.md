@@ -347,6 +347,48 @@ const DealSchema = coda.makeObjectSchema({
     <!-- https://golinks.io/bug/21523 -->
 
 
+### Select lists
+
+The [`SelectList`][hint_selectlist] value hint can be used to render the property as a select list. It is only supported in sync tables, and is most useful in those that support [two-way sync][two_way].
+
+It can be applied to properties of type `String` or `Object`. The possible options of the select list are set in the `options` field, which can contain an array of values or a function that generates them.
+
+```ts
+const ShirtSchema = coda.makeObjectSchema({
+  properties: {
+    size: {
+      type: coda.ValueType.String,
+      codaType: coda.ValueHintType.SelectList,
+      options: ["S", "M", "L", "XL"],
+    },
+    // ...
+  },
+  // ...
+});
+```
+
+To allow multiple selections, wrap the schema in an outer `Array` schema.
+
+```ts
+const OrderSchema = coda.makeObjectSchema({
+  properties: {
+    sizes: {
+      type: coda.ValueType.Array,
+      items: {
+        type: coda.ValueType.String,
+        codaType: coda.ValueHintType.SelectList,
+        options: ["S", "M", "L", "XL"],
+      },
+    },
+    // ...
+  },
+  // ...
+});
+```
+
+See the [Two-way Sync guide][two_way_options] for more information about property options.
+
+
 ### Embedded content
 
 The [`Embed`][Embed] value hint can be used to embed external content in the Coda doc. This value hint can be applied to `String` values, where the string contains the URL to the external content.
@@ -399,33 +441,33 @@ The [`Reference`][Reference] value hint can be used to reference a row in a sync
 
 The columns of a Coda table are strongly typed, and the data types in the Pack SDK roughly correspond to those same types. The table below indicates the value type and value hint that corresponds to a each column type.
 
-| Column type   | Supported | Value type               | Value hint        | Options                                                                                       |
-| ------------- | --------- | ------------------------ | ----------------- | --------------------------------------------------------------------------------------------- |
-| Text          | ✅ Yes     | `String`                 |                   |                                                                                               |
-| Link          | ✅ Yes     | `String`                 | `Url`             | [`LinkSchema`][LinkSchema]                                                                    |
-| Embed[^1]         | ✅ Yes     | `String`                 | `Embed`           | [`StringEmbedSchema`][StringEmbedSchema]                                                      |
-| Canvas        | ❌ No      |                          |                   |                                                                                               |
-| Select list   | ❌ No      |                          |                   |                                                                                               |
-| Number        | ✅ Yes     | `Number`                 |                   | [`NumericSchema`][NumericSchema]                                                              |
-| Percent       | ✅ Yes     | `Number`                 | `Percent`         | [`NumericSchema`][NumericSchema]                                                              |
-| Currency      | ✅ Yes     | `Number`                 | `Currency`        | [`CurrencySchema`][CurrencySchema]                                                            |
-| Slider        | ✅ Yes[^2]     | `Number`                 | `Slider`          | [`SliderSchema`][SliderSchema]                                                                |
-| Progress      | ✅ Yes[^2]     | `Number`                 | `ProgressBar`     | [`ProgressBarSchema`][ProgressBarSchema]                                                      |
-| Scale         | ✅ Yes[^2]     | `Number`                 | `Scale`           | [`Scalechema`][SliderSchema]                                                                  |
-| Date          | ✅ Yes     | `String` or<br>`Number`  | `Date`            | [`StringDateSchema`][StringDateSchema] or<br>[`NumericDateSchema`][NumericDateSchema]         |
-| Time          | ✅ Yes     | `String` or<br> `Number` | `Time`            | [`StringTimeSchema`][StringDateSchema] or<br>[`NumericTimeSchema`][NumericDateSchema]         |
-| Date and time | ✅ Yes     | `String` or<br> `Number` | `DateTime`        | [`StringDateTimeSchema`][StringDateSchema] or<br>[`NumericDateTimeSchema`][NumericDateSchema] |
-| Duration      | ✅ Yes     | `String` or<br>`Number`  | `Duration`        | [`DurationSchema`][DurationSchema] or<br>[`NumericDurationSchema`][NumericDurationSchema]     |
-| Checkbox      | ✅ Yes[^2]     | `Boolean`                |                   |                                                                                               |
-| Toggle        | ✅ Yes[^2]     | `Boolean`                | `Toggle`          |                                                                                               |
-| People        | ✅ Yes     | `Object`                 | `Person`          |                                                                                               |
-| Email         | ✅ Yes     | `String`                 | `Email`           | [`EmailSchema`][EmailSchema]                                                                  |
-| Reaction      | ❌ No      |                          |                   |                                                                                               |
-| Button        | ❌ No[^3]  |                          |                   |                                                                                               |
-| Image         | ✅ Yes     | `String`                 | `ImageAttachment` | [`ImageSchema`][ImageSchema]                                                                  |
-| Image URL     | ✅ Yes     | `String`                 | `ImageReference`  | [`ImageSchema`][ImageSchema]                                                                  |
-| File          | ✅ Yes     | `String`                 | `Attachment`      |                                                                                               |
-| Relation      | ✅ Yes     | `Object`                 | `Reference`       |                                                                                               |
+| Column type   | Supported  | Value type               | Value hint        | Options                                                                                                       |
+| ------------- | ---------- | ------------------------ | ----------------- | ------------------------------------------------------------------------------------------------------------- |
+| Text          | ✅ Yes     | `String`                 |                   |                                                                                                               |
+| Link          | ✅ Yes     | `String`                 | `Url`             | [`LinkSchema`][LinkSchema]                                                                                    |
+| Embed[^1]     | ✅ Yes     | `String`                 | `Embed`           | [`StringEmbedSchema`][StringEmbedSchema]                                                                      |
+| Canvas        | ❌ No      |                          |                   |                                                                                                               |
+| Select list   | ✅ Yes     | `String` or<br>`Object`  | `SelectList`      | [`StringWithOptionsSchema`][StringWithOptionsSchema] or<br>[`ObjectSchemaDefinition`][ObjectSchemaDefinition] |
+| Number        | ✅ Yes     | `Number`                 |                   | [`NumericSchema`][NumericSchema]                                                                              |
+| Percent       | ✅ Yes     | `Number`                 | `Percent`         | [`NumericSchema`][NumericSchema]                                                                              |
+| Currency      | ✅ Yes     | `Number`                 | `Currency`        | [`CurrencySchema`][CurrencySchema]                                                                            |
+| Slider        | ✅ Yes[^2] | `Number`                 | `Slider`          | [`SliderSchema`][SliderSchema]                                                                                |
+| Progress      | ✅ Yes[^2] | `Number`                 | `ProgressBar`     | [`ProgressBarSchema`][ProgressBarSchema]                                                                      |
+| Scale         | ✅ Yes[^2] | `Number`                 | `Scale`           | [`Scalechema`][SliderSchema]                                                                                  |
+| Date          | ✅ Yes     | `String` or<br>`Number`  | `Date`            | [`StringDateSchema`][StringDateSchema] or<br>[`NumericDateSchema`][NumericDateSchema]                         |
+| Time          | ✅ Yes     | `String` or<br> `Number` | `Time`            | [`StringTimeSchema`][StringDateSchema] or<br>[`NumericTimeSchema`][NumericDateSchema]                         |
+| Date and time | ✅ Yes     | `String` or<br> `Number` | `DateTime`        | [`StringDateTimeSchema`][StringDateSchema] or<br>[`NumericDateTimeSchema`][NumericDateSchema]                 |
+| Duration      | ✅ Yes     | `String` or<br>`Number`  | `Duration`        | [`DurationSchema`][DurationSchema] or<br>[`NumericDurationSchema`][NumericDurationSchema]                     |
+| Checkbox      | ✅ Yes[^2] | `Boolean`                |                   |                                                                                                               |
+| Toggle        | ✅ Yes[^2] | `Boolean`                | `Toggle`          |                                                                                                               |
+| People        | ✅ Yes     | `Object`                 | `Person`          |                                                                                                               |
+| Email         | ✅ Yes     | `String`                 | `Email`           | [`EmailSchema`][EmailSchema]                                                                                  |
+| Reaction      | ❌ No      |                          |                   |                                                                                                               |
+| Button        | ❌ No[^3]  |                          |                   |                                                                                                               |
+| Image         | ✅ Yes     | `String`                 | `ImageAttachment` | [`ImageSchema`][ImageSchema]                                                                                  |
+| Image URL     | ✅ Yes     | `String`                 | `ImageReference`  | [`ImageSchema`][ImageSchema]                                                                                  |
+| File          | ✅ Yes     | `String`                 | `Attachment`      |                                                                                                               |
+| Relation      | ✅ Yes     | `Object`                 | `Reference`       |                                                                                                               |
 
 [^1]: Embed isn't a column type in Coda, but it can be used in a table or on the canvas to embed content.
 [^2]: Control column types will only render correctly in a sync table, and will not be interactive.
@@ -496,6 +538,7 @@ The full set of formatting options for a given value type and hint can be found 
 [markdown_automatic_links]: https://www.markdownguide.org/extended-syntax/#automatic-url-linking
 [hint_markdown]: ../../reference/sdk/enums/core.ValueHintType.md#markdown
 [hint_html]: ../../reference/sdk/enums/core.ValueHintType.md#html
+[hint_selectlist]: ../../reference/sdk/enums/core.ValueHintType.md#selectlist
 [ISO_8601]: https://en.wikipedia.org/wiki/ISO_8601
 [unix_epoch]: https://en.wikipedia.org/wiki/Unix_time
 [iframely]: https://iframely.com/
@@ -522,6 +565,8 @@ The full set of formatting options for a given value type and hint can be found 
 [LinkSchema]: ../../reference/sdk/interfaces/core.LinkSchema.md
 [ProgressBarSchema]: ../../reference/sdk/interfaces/core.ProgressBarSchema.md
 [EmailSchema]: ../../reference/sdk/interfaces/core.EmailSchema.md
+[StringWithOptionsSchema]: ../../reference/sdk/interfaces/core.StringWithOptionsSchema.md
+[ObjectSchemaDefinition]: ../../reference/sdk/interfaces/core.ObjectSchemaDefinition.md
 [formula_list]: https://coda.io/formulas#List
 [embeds]: ../advanced/embeds.md
 [timezones]: ../advanced/timezones.md
@@ -530,3 +575,5 @@ The full set of formatting options for a given value type and hint can be found 
 [mdn_boolean]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean
 [mdn_array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
 [mdn_object]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object
+[two_way]: ../blocks/sync-tables/two-way.md
+[two_way_options]: ../blocks/sync-tables/two-way.md#options
