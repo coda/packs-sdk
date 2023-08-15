@@ -110,24 +110,46 @@ lint:
 lint-fix:
 	find . -name "*.ts" | grep -v /dist/ | grep -v /node_modules/ | grep -v .d.ts | xargs ${ROOTDIR}/node_modules/.bin/eslint --fix
 
-.PHONY: do-compile-isolated-vm
-do-compile-isolated-vm:
-	rm -rf build-isolated-vm
-
-	mkdir build-isolated-vm && \
-		cd build-isolated-vm && \
+.PHONY: do-compile-isolated-vm-14
+do-compile-isolated-vm-14:
+	rm -rf build-isolated-vm-14
+	mkdir build-isolated-vm-14 && \
+		cd build-isolated-vm-14 && \
 		npm init -y && \
 		docker run --rm --platform linux/amd64 -v `pwd`:/var/task amazon/aws-sam-cli-build-image-nodejs14.x:latest npm install isolated-vm@${ISOLATED_VM_VERSION}
-	cp build-isolated-vm/node_modules/isolated-vm/package.json runtime/isolated-vm/
-	cp build-isolated-vm/node_modules/isolated-vm/isolated-vm.js runtime/isolated-vm/
-	cp build-isolated-vm/node_modules/isolated-vm/out/isolated_vm.node runtime/isolated-vm/out/
+	mkdir -p runtime/native/node14/x86_64/isolated-vm/out
+	cp build-isolated-vm-14/node_modules/isolated-vm/package.json runtime/native/node14/x86_64/isolated-vm/
+	cp build-isolated-vm-14/node_modules/isolated-vm/isolated-vm.js runtime/native/node14/x86_64/isolated-vm/
+	cp build-isolated-vm-14/node_modules/isolated-vm/out/isolated_vm.node runtime/native/node14/x86_64/isolated-vm/out/
+	rm -rf build-isolated-vm-14
 
-	rm -rf build-isolated-vm
+.PHONY: do-compile-isolated-vm-18
+do-compile-isolated-vm-18:
+	rm -rf build-isolated-vm-18
+	mkdir build-isolated-vm-18 && \
+		cd build-isolated-vm-18 && \
+		npm init -y && \
+		docker run --rm --platform linux/amd64 -v `pwd`:/var/task public.ecr.aws/sam/build-nodejs18.x:latest \
+		  bash -c "yum -y install openssl-devel && npm install isolated-vm@${ISOLATED_VM_VERSION}"
+	mkdir -p runtime/native/node18/x86_64/isolated-vm/out
+	cp build-isolated-vm-18/node_modules/isolated-vm/package.json runtime/native/node18/x86_64/isolated-vm/
+	cp build-isolated-vm-18/node_modules/isolated-vm/isolated-vm.js runtime/native/node18/x86_64/isolated-vm/
+	cp build-isolated-vm-18/node_modules/isolated-vm/out/isolated_vm.node runtime/native/node18/x86_64/isolated-vm/out/
+	rm -rf build-isolated-vm-18
 
-.PHONY: compile-isolated-vm
-compile-isolated-vm:
-	if [ `node -p -e "require('./runtime/isolated-vm/package.json').version"` != $(ISOLATED_VM_VERSION) ]; \
-		then $(MAKE) do-compile-isolated-vm; \
+.PHONY: compile-isolated-vm-14
+compile-isolated-vm-14:
+	if [ ! -f './runtime/native/node14/x86_64/isolated-vm/package.json' ] || \
+	   [`node -p -e "require('./runtime/native/node14/x86_64/isolated-vm/package.json').version"` != $(ISOLATED_VM_VERSION) ]; \
+		then $(MAKE) do-compile-isolated-vm-14; \
+		else echo "isolated-vm version matches, skipping."; \
+	fi
+
+.PHONY: compile-isolated-vm-18
+compile-isolated-vm-18:
+	if [ ! -f './runtime/native/node18/x86_64/isolated-vm/package.json' ] || \
+	   [ `node -p -e "require('./runtime/native/node18/x86_64/isolated-vm/package.json').version"` != $(ISOLATED_VM_VERSION) ]; \
+		then $(MAKE) do-compile-isolated-vm-18; \
 		else echo "isolated-vm version matches, skipping."; \
 	fi
 
@@ -151,6 +173,7 @@ compile-thunk:
 .PHONY: compile-ts
 compile-ts:
 	echo "Compiling Typescript... if this fails to build isolated-vm, you may need to install plain python (python 2 was removed in MacOS Monterey 12.3)";
+	rm -rf dist/
 	${ROOTDIR}/node_modules/.bin/tsc
 
 	$(MAKE) compile-thunk
@@ -182,6 +205,10 @@ compile-ts:
 
 .PHONY: compile
 compile:
+	# Generate isolated-vm binaries that are compatible with Amazon Linux 2.
+	$(MAKE) compile-isolated-vm-14
+	$(MAKE) compile-isolated-vm-18
+
 	$(MAKE) compile-ts
 
 	# Generate a typescript file for use in /experimental so the web editor
@@ -189,8 +216,6 @@ compile:
 	${ROOTDIR}/node_modules/.bin/dts-bundle-generator ${ROOTDIR}/index.ts \
   	-o ${ROOTDIR}/dist/bundle.d.ts \
 		--no-banner
-	# Generate isolated-vm binaries that's compatible to Amazon Linux 2.
-	$(MAKE) compile-isolated-vm
 	# copy these esm format js files to dist directly.
 	cp -r ${ROOTDIR}/testing/injections ${ROOTDIR}/dist/testing/
 
