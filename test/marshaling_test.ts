@@ -35,7 +35,7 @@ describe('Marshaling', () => {
     return unwrapError(
       new Error(
         passThroughIsolatedVm(
-          wrapErrorForSameOrHigherNodeVersion(val, {useUnsafeVersionCompatibilityHack: true}).message,
+          wrapErrorForSameOrHigherNodeVersion(val, {unsafeHackForNode14BackwardsCompatibility: true}).message,
         ),
       ),
     );
@@ -120,7 +120,7 @@ describe('Marshaling', () => {
 
     const output = testCases.map(([input]) => [
       input,
-      marshalValueToStringForSameOrHigherNodeVersion(input, {useUnsafeVersionCompatibilityHack: true}),
+      marshalValueToStringForSameOrHigherNodeVersion(input, {unsafeHackForNode14BackwardsCompatibility: true}),
     ]);
     assert.deepEqual(output, testCases);
   });

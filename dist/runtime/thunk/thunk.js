@@ -36,7 +36,9 @@ async function findAndExecutePackFunction({ shouldWrapError = true, ...args }) {
     }
     catch (err) {
         // all errors should be marshaled to avoid IVM dropping essential fields / name.
-        throw shouldWrapError ? (0, marshaling_2.wrapErrorForSameOrHigherNodeVersion)(err, { useUnsafeVersionCompatibilityHack: true }) : err;
+        throw shouldWrapError
+            ? (0, marshaling_2.wrapErrorForSameOrHigherNodeVersion)(err, { unsafeHackForNode14BackwardsCompatibility: true })
+            : err;
     }
 }
 exports.findAndExecutePackFunction = findAndExecutePackFunction;

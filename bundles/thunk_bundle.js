@@ -6277,9 +6277,9 @@ module.exports = (() => {
     return firstThreeBytesDecoded.toString("base64") + serialized.substring(4);
   }
   __name(maybeChangeWireVersionOnBase64EncodedV8SerializedData, "maybeChangeWireVersionOnBase64EncodedV8SerializedData");
-  function marshalValueToStringForSameOrHigherNodeVersion(val, { useUnsafeVersionCompatibilityHack }) {
+  function marshalValueToStringForSameOrHigherNodeVersion(val, { unsafeHackForNode14BackwardsCompatibility }) {
     const serialized = serialize(marshalValue(val));
-    if (useUnsafeVersionCompatibilityHack) {
+    if (unsafeHackForNode14BackwardsCompatibility) {
       return maybeChangeWireVersionOnBase64EncodedV8SerializedData(serialized);
     }
     return serialized;
@@ -6321,8 +6321,8 @@ module.exports = (() => {
     return result;
   }
   __name(unmarshalValue, "unmarshalValue");
-  function wrapErrorForSameOrHigherNodeVersion(err, { useUnsafeVersionCompatibilityHack }) {
-    return new Error(marshalValueToStringForSameOrHigherNodeVersion(err, { useUnsafeVersionCompatibilityHack }));
+  function wrapErrorForSameOrHigherNodeVersion(err, { unsafeHackForNode14BackwardsCompatibility }) {
+    return new Error(marshalValueToStringForSameOrHigherNodeVersion(err, { unsafeHackForNode14BackwardsCompatibility }));
   }
   __name(wrapErrorForSameOrHigherNodeVersion, "wrapErrorForSameOrHigherNodeVersion");
   function unwrapError(err) {
@@ -6419,7 +6419,7 @@ module.exports = (() => {
       }
       return await doFindAndExecutePackFunction(args);
     } catch (err) {
-      throw shouldWrapError ? wrapErrorForSameOrHigherNodeVersion(err, { useUnsafeVersionCompatibilityHack: true }) : err;
+      throw shouldWrapError ? wrapErrorForSameOrHigherNodeVersion(err, { unsafeHackForNode14BackwardsCompatibility: true }) : err;
     }
   }
   __name(findAndExecutePackFunction, "findAndExecutePackFunction");
