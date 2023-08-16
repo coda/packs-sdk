@@ -3,11 +3,12 @@ import {StatusCodeError} from '../api';
 import {getIvm} from '../testing/ivm_wrapper';
 import {inspect} from 'util';
 import {marshalValue} from '../runtime/common/marshaling';
+import {marshalValueToStringForSameOrHigherNodeVersion} from '../runtime/common/marshaling';
 import {marshalValuesForLogging} from '../runtime/common/marshaling';
 import {tryGetIvm} from '../testing/ivm_wrapper';
 import {unmarshalValue} from '../runtime/common/marshaling';
 import {unwrapError} from '../runtime/common/marshaling';
-import {wrapError} from '../runtime/common/marshaling';
+import {wrapErrorForSameOrHigherNodeVersion} from '../runtime/common/marshaling';
 
 describe('Marshaling', () => {
   const describeVmOnly = tryGetIvm() ? describe : describe.skip;
@@ -31,14 +32,20 @@ describe('Marshaling', () => {
   }
 
   function transformError(val: Error): Error {
-    return unwrapError(new Error(passThroughIsolatedVm(wrapError(val).message)));
+    return unwrapError(
+      new Error(
+        passThroughIsolatedVm(
+          wrapErrorForSameOrHigherNodeVersion(val, {unsafeHackForNode14BackwardsCompatibility: true}).message,
+        ),
+      ),
+    );
   }
 
   function transformForLogging(vals: any[]): any[] {
     return passThroughIsolatedVm(marshalValuesForLogging(vals)).map(unmarshalValue);
   }
 
-  it('works for regular objects', () => {
+  it('works for regular objects', async () => {
     // this test covers most of https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
 
     assert.deepEqual(transform(1), 1);
@@ -59,7 +66,7 @@ describe('Marshaling', () => {
     assert.deepEqual(transform(/123/), /123/);
     assert.deepEqual(transform(new Set([1, 2])), new Set([1, 2]));
     assert.deepEqual(transform(new Map([['a', 2]])), new Map([['a', 2]]));
-    assert.deepEqual(transform(Uint8Array.from([1, 2, 3])), Uint8Array.from([1, 2, 3]));
+    assert.throws(() => transform(Uint8Array.from([1, 2, 3])), /Cannot marshal buffer views/);
     assert.deepEqual(transform(new ArrayBuffer(10)), new ArrayBuffer(10));
 
     class SomeClass {
@@ -70,6 +77,52 @@ describe('Marshaling', () => {
     }
     assert.deepEqual(transform(new (class {})()), {});
     assert.deepEqual(transform(new SomeClass('hi')), {message: 'hi'});
+  });
+
+  it('can write values readable on node 14 from node 18', async () => {
+    // We have a temporary hack so that newer node versions can write v8.serialize output that's compatible with
+    // older versions. These values were written on node14, so if we update packs-sdk to node 18 or run this
+    // test on node 18 if the hack is working then the test should still pass.
+
+    const testCases = [
+      [1, '/w1vIgdlbmNvZGVkSQIiDnBvc3RUcmFuc2Zvcm1zQQAkAAAiEl9fY29kYV9tYXJzaGFsZXJfXyIGT2JqZWN0ewM='],
+      ['1', '/w1vIgdlbmNvZGVkIgExIg5wb3N0VHJhbnNmb3Jtc0EAJAAAIhJfX2NvZGFfbWFyc2hhbGVyX18iBk9iamVjdHsD'],
+      [[1], '/w1vIgdlbmNvZGVkQQFJAiQAASIOcG9zdFRyYW5zZm9ybXNBACQAACISX19jb2RhX21hcnNoYWxlcl9fIgZPYmplY3R7Aw=='],
+      [{a: 1}, '/w1vIgdlbmNvZGVkbyIBYUkCewEiDnBvc3RUcmFuc2Zvcm1zQQAkAAAiEl9fY29kYV9tYXJzaGFsZXJfXyIGT2JqZWN0ewM='],
+      [undefined, '/w1vIgdlbmNvZGVkXyIOcG9zdFRyYW5zZm9ybXNBACQAACISX19jb2RhX21hcnNoYWxlcl9fIgZPYmplY3R7Aw=='],
+      [[undefined], '/w1vIgdlbmNvZGVkQQFfJAABIg5wb3N0VHJhbnNmb3Jtc0EAJAAAIhJfX2NvZGFfbWFyc2hhbGVyX18iBk9iamVjdHsD'],
+      [
+        {a: undefined},
+        '/w1vIgdlbmNvZGVkbyIBYV97ASIOcG9zdFRyYW5zZm9ybXNBACQAACISX19jb2RhX21hcnNoYWxlcl9fIgZPYmplY3R7Aw==',
+      ],
+      [null, '/w1vIgdlbmNvZGVkMCIOcG9zdFRyYW5zZm9ybXNBACQAACISX19jb2RhX21hcnNoYWxlcl9fIgZPYmplY3R7Aw=='],
+      [[null], '/w1vIgdlbmNvZGVkQQEwJAABIg5wb3N0VHJhbnNmb3Jtc0EAJAAAIhJfX2NvZGFfbWFyc2hhbGVyX18iBk9iamVjdHsD'],
+      [true, '/w1vIgdlbmNvZGVkVCIOcG9zdFRyYW5zZm9ybXNBACQAACISX19jb2RhX21hcnNoYWxlcl9fIgZPYmplY3R7Aw=='],
+      [NaN, '/w1vIgdlbmNvZGVkTgAAAAAAAPh/Ig5wb3N0VHJhbnNmb3Jtc0EAJAAAIhJfX2NvZGFfbWFyc2hhbGVyX18iBk9iamVjdHsD'],
+      [
+        new Date(123),
+        '/w1vIgdlbmNvZGVkRAAAAAAAwF5AIg5wb3N0VHJhbnNmb3Jtc0EAJAAAIhJfX2NvZGFfbWFyc2hhbGVyX18iBk9iamVjdHsD',
+      ],
+      [/123/, '/w1vIgdlbmNvZGVkUiIDMTIzACIOcG9zdFRyYW5zZm9ybXNBACQAACISX19jb2RhX21hcnNoYWxlcl9fIgZPYmplY3R7Aw=='],
+      [
+        new Set([1, 2]),
+        '/w1vIgdlbmNvZGVkJ0kCSQQsAiIOcG9zdFRyYW5zZm9ybXNBACQAACISX19jb2RhX21hcnNoYWxlcl9fIgZPYmplY3R7Aw==',
+      ],
+      [
+        new Map([['a', 2]]),
+        '/w1vIgdlbmNvZGVkOyIBYUkEOgIiDnBvc3RUcmFuc2Zvcm1zQQAkAAAiEl9fY29kYV9tYXJzaGFsZXJfXyIGT2JqZWN0ewM=',
+      ],
+      [
+        new ArrayBuffer(10),
+        '/w1vIgdlbmNvZGVkQgoAAAAAAAAAAAAAIg5wb3N0VHJhbnNmb3Jtc0EAJAAAIhJfX2NvZGFfbWFyc2hhbGVyX18iBk9iamVjdHsD',
+      ],
+    ];
+
+    const output = testCases.map(([input]) => [
+      input,
+      marshalValueToStringForSameOrHigherNodeVersion(input, {unsafeHackForNode14BackwardsCompatibility: true}),
+    ]);
+    assert.deepEqual(output, testCases);
   });
 
   it('does not modify input objects', () => {

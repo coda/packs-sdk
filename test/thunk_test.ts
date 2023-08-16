@@ -1,5 +1,4 @@
 import {testHelper} from './test_helper';
-import {getIvm} from '../testing/ivm_wrapper';
 import {getThunkPath} from '../runtime/bootstrap';
 import {injectLogFunction} from '../runtime/bootstrap';
 import {injectSerializer} from '../runtime/bootstrap';
@@ -10,7 +9,7 @@ import {tryGetIvm} from '../testing/ivm_wrapper';
 const describeVmOnly = tryGetIvm() ? describe : describe.skip;
 
 describeVmOnly('Thunk', () => {
-  const ivm = getIvm();
+  const ivm = tryGetIvm()!;
 
   it('invalid bundle should not pass this test', async () => {
     const isolate = new ivm.Isolate({memoryLimit: 128});
@@ -125,7 +124,7 @@ describeVmOnly('Thunk', () => {
         buffer.writeInt8(i % 8, i);
       }
 
-      const encoded = thunk.marshalValueToString(buffer);
+      const encoded = thunk.marshalValueToStringForSameOrHigherNodeVersion(buffer, {unsafeHackForNode14BackwardsCompatibility: true});
       const transformedBuffer = thunk.unmarshalValueFromString(encoded);
 
       return buffer.equals(transformedBuffer) && typeof encoded === 'string';

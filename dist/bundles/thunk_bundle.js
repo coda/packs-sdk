@@ -5764,7 +5764,7 @@ module.exports = (() => {
     handleErrorAsync: () => handleErrorAsync,
     handleFetcherStatusError: () => handleFetcherStatusError,
     marshalValue: () => marshalValue,
-    marshalValueToString: () => marshalValueToString,
+    marshalValueToStringForSameOrHigherNodeVersion: () => marshalValueToStringForSameOrHigherNodeVersion,
     marshalValuesForLogging: () => marshalValuesForLogging,
     setUpBufferForTest: () => setUpBufferForTest,
     unmarshalValue: () => unmarshalValue,
@@ -6008,7 +6008,17 @@ module.exports = (() => {
 
   // runtime/common/marshaling/index.ts
   var import_util = __toESM(require_util2());
-  var MaxTraverseDepth = 100;
+
+  // helpers/legacy_marshal/index.ts
+  init_buffer_shim();
+
+  // helpers/legacy_marshal/marshal_errors.ts
+  init_buffer_shim();
+
+  // helpers/legacy_marshal/constants.ts
+  init_buffer_shim();
+
+  // helpers/legacy_marshal/marshal_errors.ts
   var recognizableSystemErrorClasses = [
     Error,
     EvalError,
@@ -6019,6 +6029,139 @@ module.exports = (() => {
     URIError
   ];
   var recognizableCodaErrorClasses = [
+    // StatusCodeError doesn't have the new StatusCodeError(message) constructor but it's okay.
+    StatusCodeError,
+    MissingScopesError
+  ];
+  function getErrorClass(errorClassType, name) {
+    let errorClasses;
+    switch (errorClassType) {
+      case "System" /* System */:
+        errorClasses = recognizableSystemErrorClasses;
+        break;
+      case "Coda" /* Coda */:
+        errorClasses = recognizableCodaErrorClasses;
+        break;
+      default:
+        errorClasses = [];
+    }
+    return errorClasses.find((cls) => cls.name === name) || Error;
+  }
+  __name(getErrorClass, "getErrorClass");
+  function legacyUnmarshalError(val) {
+    if (typeof val !== "object" || val["__coda_marshaler__" /* CodaMarshaler */] !== "Error" /* Error */) {
+      return;
+    }
+    const {
+      name,
+      stack,
+      message,
+      ["__error_class_name__" /* ErrorClassName */]: errorClassName,
+      ["__coda_marshaler__" /* CodaMarshaler */]: _,
+      ["__error_class_type__" /* ErrorClassType */]: errorClassType,
+      ...otherProperties
+    } = val;
+    const ErrorClass = getErrorClass(errorClassType, errorClassName);
+    const error = new ErrorClass();
+    error.message = message;
+    error.stack = stack;
+    error.name = name;
+    for (const key of Object.keys(otherProperties)) {
+      error[key] = otherProperties[key];
+    }
+    return error;
+  }
+  __name(legacyUnmarshalError, "legacyUnmarshalError");
+
+  // helpers/legacy_marshal/marshal_buffer.ts
+  init_buffer_shim();
+  function unmarshalBuffer(val) {
+    if (typeof val !== "object" || val["__coda_marshaler__" /* CodaMarshaler */] !== "Buffer" /* Buffer */) {
+      return;
+    }
+    return Buffer2.from(val.data);
+  }
+  __name(unmarshalBuffer, "unmarshalBuffer");
+
+  // helpers/legacy_marshal/marshal_dates.ts
+  init_buffer_shim();
+  function unmarshalDate(val) {
+    if (typeof val !== "object" || val["__coda_marshaler__" /* CodaMarshaler */] !== "Date" /* Date */) {
+      return;
+    }
+    return new Date(Date.parse(val.date));
+  }
+  __name(unmarshalDate, "unmarshalDate");
+
+  // helpers/legacy_marshal/marshal_numbers.ts
+  init_buffer_shim();
+  function unmarshalNumber(val) {
+    if (typeof val !== "object" || val["__coda_marshaler__" /* CodaMarshaler */] !== "Number" /* Number */) {
+      return;
+    }
+    return Number(val.data);
+  }
+  __name(unmarshalNumber, "unmarshalNumber");
+
+  // helpers/legacy_marshal/index.ts
+  var HACK_UNDEFINED_JSON_VALUE = "__CODA_UNDEFINED__";
+  var customUnmarshalers = [
+    legacyUnmarshalError,
+    unmarshalBuffer,
+    unmarshalNumber,
+    unmarshalDate
+  ];
+  function deserialize2(_, val) {
+    if (val) {
+      for (const unmarshaler of customUnmarshalers) {
+        const result = unmarshaler(val);
+        if (result !== void 0) {
+          return result;
+        }
+      }
+    }
+    return val;
+  }
+  __name(deserialize2, "deserialize");
+  function internalUnmarshalValueForAnyNodeVersion(marshaledValue) {
+    if (marshaledValue === void 0) {
+      return marshaledValue;
+    }
+    const parsed = JSON.parse(marshaledValue, deserialize2);
+    return reviveUndefinedValues(parsed);
+  }
+  __name(internalUnmarshalValueForAnyNodeVersion, "internalUnmarshalValueForAnyNodeVersion");
+  function reviveUndefinedValues(val) {
+    if (val === null) {
+      return val;
+    }
+    if (val === HACK_UNDEFINED_JSON_VALUE) {
+      return void 0;
+    }
+    if (Array.isArray(val)) {
+      return val.map((x) => reviveUndefinedValues(x));
+    }
+    if (typeof val === "object") {
+      for (const key of Object.getOwnPropertyNames(val)) {
+        val[key] = reviveUndefinedValues(val[key]);
+      }
+    }
+    return val;
+  }
+  __name(reviveUndefinedValues, "reviveUndefinedValues");
+
+  // runtime/common/marshaling/index.ts
+  var MaxTraverseDepth = 100;
+  var recognizableSystemErrorClasses2 = [
+    Error,
+    EvalError,
+    RangeError,
+    ReferenceError,
+    SyntaxError,
+    TypeError,
+    URIError
+  ];
+  var recognizableCodaErrorClasses2 = [
     // StatusCodeError doesn't have the new StatusCodeError(message) constructor but it's okay.
     StatusCodeError,
     MissingScopesError
@@ -6044,6 +6187,9 @@ module.exports = (() => {
         path: [...pathPrefix]
       });
       return { val: val.toString("base64"), hasModifications: true };
+    }
+    if (ArrayBuffer.isView(val)) {
+      throw new Error(`Cannot marshal buffer views`);
     }
     if (Array.isArray(val)) {
       const maybeModifiedArray = [];
@@ -6104,12 +6250,49 @@ module.exports = (() => {
     };
   }
   __name(marshalValue, "marshalValue");
-  function marshalValueToString(val) {
-    return serialize(marshalValue(val));
+  function maybeChangeWireVersionOnBase64EncodedV8SerializedData(serialized) {
+    if (serialized.length < 4) {
+      const fullyDecoded = Buffer2.from(serialized, "base64");
+      const firstByte2 = fullyDecoded[0];
+      if (firstByte2 !== 255) {
+        throw new Error("Internal error decoding v8-serialized data: " + serialized);
+      }
+      const wireVersion2 = fullyDecoded[1];
+      if (wireVersion2 <= 13 || wireVersion2 > 15) {
+        return serialized;
+      }
+      fullyDecoded[1] = 13;
+      return fullyDecoded.toString("base64");
+    }
+    const firstThreeBytesDecoded = Buffer2.from(serialized.substring(0, 4), "base64");
+    const firstByte = firstThreeBytesDecoded[0];
+    if (firstByte !== 255) {
+      throw new Error("Internal error decoding v8-serialized data. First three bytes are: " + serialized.substring(0, 4));
+    }
+    const wireVersion = firstThreeBytesDecoded[1];
+    if (wireVersion <= 13 || wireVersion > 15) {
+      return serialized;
+    }
+    firstThreeBytesDecoded[1] = 13;
+    return firstThreeBytesDecoded.toString("base64") + serialized.substring(4);
   }
-  __name(marshalValueToString, "marshalValueToString");
+  __name(maybeChangeWireVersionOnBase64EncodedV8SerializedData, "maybeChangeWireVersionOnBase64EncodedV8SerializedData");
+  function marshalValueToStringForSameOrHigherNodeVersion(val, { unsafeHackForNode14BackwardsCompatibility }) {
+    const serialized = serialize(marshalValue(val));
+    if (unsafeHackForNode14BackwardsCompatibility) {
+      return maybeChangeWireVersionOnBase64EncodedV8SerializedData(serialized);
+    }
+    return serialized;
+  }
+  __name(marshalValueToStringForSameOrHigherNodeVersion, "marshalValueToStringForSameOrHigherNodeVersion");
   function unmarshalValueFromString(marshaledValue) {
-    return unmarshalValue(deserialize(marshaledValue));
+    if (marshaledValue === void 0) {
+      return void 0;
+    }
+    if (marshaledValue.startsWith("/")) {
+      return unmarshalValue(deserialize(marshaledValue));
+    }
+    return internalUnmarshalValueForAnyNodeVersion(marshaledValue);
   }
   __name(unmarshalValueFromString, "unmarshalValueFromString");
   function applyTransform(input, path, fn) {
@@ -6138,10 +6321,10 @@ module.exports = (() => {
     return result;
   }
   __name(unmarshalValue, "unmarshalValue");
-  function wrapError(err) {
-    return new Error(marshalValueToString(err));
+  function wrapErrorForSameOrHigherNodeVersion(err, { unsafeHackForNode14BackwardsCompatibility }) {
+    return new Error(marshalValueToStringForSameOrHigherNodeVersion(err, { unsafeHackForNode14BackwardsCompatibility }));
   }
-  __name(wrapError, "wrapError");
+  __name(wrapErrorForSameOrHigherNodeVersion, "wrapErrorForSameOrHigherNodeVersion");
   function unwrapError(err) {
     try {
       const unmarshaledValue = unmarshalValueFromString(err.message);
@@ -6155,10 +6338,10 @@ module.exports = (() => {
   }
   __name(unwrapError, "unwrapError");
   function getErrorClassType(err) {
-    if (recognizableSystemErrorClasses.some((cls) => cls === err.constructor)) {
+    if (recognizableSystemErrorClasses2.some((cls) => cls === err.constructor)) {
       return "System" /* System */;
     }
-    if (recognizableCodaErrorClasses.some((cls) => cls === err.constructor)) {
+    if (recognizableCodaErrorClasses2.some((cls) => cls === err.constructor)) {
       return "Coda" /* Coda */;
     }
     return "Other" /* Other */;
@@ -6185,21 +6368,21 @@ module.exports = (() => {
     return result;
   }
   __name(marshalError, "marshalError");
-  function getErrorClass(errorClassType, name) {
+  function getErrorClass2(errorClassType, name) {
     let errorClasses;
     switch (errorClassType) {
       case "System" /* System */:
-        errorClasses = recognizableSystemErrorClasses;
+        errorClasses = recognizableSystemErrorClasses2;
         break;
       case "Coda" /* Coda */:
-        errorClasses = recognizableCodaErrorClasses;
+        errorClasses = recognizableCodaErrorClasses2;
         break;
       default:
         errorClasses = [];
     }
     return errorClasses.find((cls) => cls.name === name) || Error;
   }
-  __name(getErrorClass, "getErrorClass");
+  __name(getErrorClass2, "getErrorClass");
   function unmarshalError(val) {
     if (typeof val !== "object" || val["__coda_marshaler__" /* CodaMarshaler */] !== "Error" /* Error */) {
       return;
@@ -6213,7 +6396,7 @@ module.exports = (() => {
       ["__error_class_type__" /* ErrorClassType */]: errorClassType,
       extraArgs
     } = val;
-    const ErrorClass = getErrorClass(errorClassType, errorClassName);
+    const ErrorClass = getErrorClass2(errorClassType, errorClassName);
     const error = new ErrorClass();
     error.message = message;
     error.stack = stack;
@@ -6236,7 +6419,7 @@ module.exports = (() => {
       }
       return await doFindAndExecutePackFunction(args);
     } catch (err) {
-      throw shouldWrapError ? wrapError(err) : err;
+      throw shouldWrapError ? wrapErrorForSameOrHigherNodeVersion(err, { unsafeHackForNode14BackwardsCompatibility: true }) : err;
     }
   }
   __name(findAndExecutePackFunction, "findAndExecutePackFunction");

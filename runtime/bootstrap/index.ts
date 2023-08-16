@@ -142,7 +142,11 @@ export async function injectFetcherFunction(
  */
 export async function executeThunk<T extends FormulaSpecification>(
   context: Context,
-  {params, formulaSpec, updates}: {
+  {
+    params,
+    formulaSpec,
+    updates,
+  }: {
     params: ParamValues<ParamDefs>;
     formulaSpec: T;
     updates?: Array<SyncUpdate<any, any, any>>;

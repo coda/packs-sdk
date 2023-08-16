@@ -33,7 +33,7 @@ export declare function injectFetcherFunction(context: Context, stubName: string
 /**
  * Actually execute the pack function inside the isolate by loading and passing control to the thunk.
  */
-export declare function executeThunk<T extends FormulaSpecification>(context: Context, { params, formulaSpec, updates }: {
+export declare function executeThunk<T extends FormulaSpecification>(context: Context, { params, formulaSpec, updates, }: {
     params: ParamValues<ParamDefs>;
     formulaSpec: T;
     updates?: Array<SyncUpdate<any, any, any>>;

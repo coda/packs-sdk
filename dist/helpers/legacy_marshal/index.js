@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.legacyUnwrapError = exports.legacyWrapError = exports.legacyUnmarshalValue = exports.legacyMarshalValue = void 0;
+exports.legacyUnwrapError = exports.legacyWrapError = exports.internalUnmarshalValueForAnyNodeVersion = exports.marshalValueForAnyNodeVersion = void 0;
 const marshal_errors_1 = require("./marshal_errors");
 const marshal_errors_2 = require("./marshal_errors");
 const marshal_buffer_1 = require("./marshal_buffer");
@@ -75,7 +75,7 @@ function processValue(val, depth = 0) {
     }
     return serializedValue;
 }
-function legacyMarshalValue(val) {
+function marshalValueForAnyNodeVersion(val) {
     // Instead of passing a replacer to `JSON.stringify`, we chose to preprocess the value before
     // passing it to `JSON.stringify`. The reason is that `JSON.stringify` may call the object toJSON
     // method before calling the replacer. In many cases, that means the replacer can't tell if the
@@ -84,10 +84,20 @@ function legacyMarshalValue(val) {
     //
     // processValue is trying to mimic the object processing of JSON but the behavior may not be
     // identical. It will only serve the purpose of our internal marshaling use case.
-    return JSON.stringify(processValue(val));
+    const result = JSON.stringify(processValue(val));
+    if (result === undefined) {
+        // JSON.stringify() can return undefined if the input was a function, for example.
+        return JSON.stringify(processValue(undefined));
+    }
+    return result;
 }
-exports.legacyMarshalValue = legacyMarshalValue;
-function legacyUnmarshalValue(marshaledValue) {
+exports.marshalValueForAnyNodeVersion = marshalValueForAnyNodeVersion;
+/**
+ * Use unmarshalValueFromString() instead. It can determine what type of marshaling was used and
+ * call the correct unmarshal function, which gives us more flexibility to swap between marshaling
+ * types in the future.
+ */
+function internalUnmarshalValueForAnyNodeVersion(marshaledValue) {
     if (marshaledValue === undefined) {
         return marshaledValue;
     }
@@ -95,7 +105,7 @@ function legacyUnmarshalValue(marshaledValue) {
     // JSON parsing can't populate `undefined` in deserialize b/c it's not a valid JSON value, so we make a 2nd pass.
     return reviveUndefinedValues(parsed);
 }
-exports.legacyUnmarshalValue = legacyUnmarshalValue;
+exports.internalUnmarshalValueForAnyNodeVersion = internalUnmarshalValueForAnyNodeVersion;
 function legacyWrapError(err) {
     // TODO(huayang): we do this for the sdk.
     // if (err.name === 'TypeError' && err.message === `Cannot read property 'body' of undefined`) {
@@ -105,12 +115,12 @@ function legacyWrapError(err) {
     //     'add the --fetch flag ' +
     //     'to actually fetch from the remote API.';
     // }
-    return new Error(legacyMarshalValue(err));
+    return new Error(marshalValueForAnyNodeVersion(err));
 }
 exports.legacyWrapError = legacyWrapError;
 function legacyUnwrapError(err) {
     try {
-        const unmarshaledValue = legacyUnmarshalValue(err.message);
+        const unmarshaledValue = internalUnmarshalValueForAnyNodeVersion(err.message);
         if (unmarshaledValue instanceof Error) {
             return unmarshaledValue;
         }

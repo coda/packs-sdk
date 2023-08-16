@@ -1,12 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.unmarshalError = exports.marshalError = exports.unwrapError = exports.wrapError = exports.unmarshalValue = exports.unmarshalValueFromString = exports.marshalValueToString = exports.marshalValue = exports.marshalValuesForLogging = exports.isMarshaledValue = exports.TransformType = void 0;
+exports.unmarshalError = exports.marshalError = exports.unwrapError = exports.wrapErrorForSameOrHigherNodeVersion = exports.unmarshalValue = exports.unmarshalValueFromString = exports.marshalValueToStringForSameOrHigherNodeVersion = exports.marshalValue = exports.marshalValuesForLogging = exports.isMarshaledValue = exports.TransformType = void 0;
 const constants_1 = require("./constants");
 const constants_2 = require("./constants");
 const api_1 = require("../../../api");
 const api_2 = require("../../../api");
 const serializer_1 = require("./serializer");
 const util_1 = require("util");
+const legacy_marshal_1 = require("../../../helpers/legacy_marshal");
 const serializer_2 = require("./serializer");
 // We rely on the javascript structuredClone() algorithm to copy arguments and results into
 // and out of isolated-vm method calls. There are a few types we want to support that aren't
@@ -89,6 +90,16 @@ function fixUncopyableTypes(val, pathPrefix, postTransforms, depth = 0) {
         });
         return { val: val.toString('base64'), hasModifications: true };
     }
+    if (ArrayBuffer.isView(val)) {
+        // This is to avoid bad data when using maybeChangeWireVersionOnBase64EncodedV8SerializedData.
+        // Wire version 14 of v8.serialize writes buffer views differently:
+        // https://chromium-review.googlesource.com/c/v8/v8/+/3386802
+        //
+        // Historically the JSON marshaling didn't support marshaling views, so this is just reverting
+        // back to how things were before July 2022:
+        // https://github.com/coda/packs-sdk/blob/81ee4c21525b105c2ba873f1b49ecec5cfc06531/test/marshaling_test.ts#L33
+        throw new Error(`Cannot marshal buffer views`);
+    }
     if (Array.isArray(val)) {
         const maybeModifiedArray = [];
         let someItemHadModifications = false;
@@ -146,12 +157,67 @@ function marshalValue(val) {
     };
 }
 exports.marshalValue = marshalValue;
-function marshalValueToString(val) {
-    return (0, serializer_2.serialize)(marshalValue(val));
+// This is a temporary hack for ease of node upgrades. It turns out node's documentation
+// is incorrect when it says v8.serialize is backwards compatible: moving from node 14/16
+// to node 18 changes the v8 serialize wire version from 13 to 15, which can't be read
+// by node 14 or 16. If we look at what actually changed in the wire format, it shouldn't
+// impact us as long as we don't try to let people serialize buffer views.
+// The changes were:
+// - https://chromium-review.googlesource.com/c/v8/v8/+/3417189 (support for shared strings)
+// - https://chromium-review.googlesource.com/c/v8/v8/+/3386802 (a change to buffer views)
+// The hacky temporary strategy here is to manually change the wire version back from 14 or 15
+// to 13 by decoding and re-encoding the first few bytes in the string.
+function maybeChangeWireVersionOnBase64EncodedV8SerializedData(serialized) {
+    // If the string is somehow version short, decode the whole thing.
+    if (serialized.length < 4) {
+        const fullyDecoded = Buffer.from(serialized, 'base64');
+        const firstByte = fullyDecoded[0];
+        if (firstByte !== 0xff) {
+            throw new Error('Internal error decoding v8-serialized data: ' + serialized);
+        }
+        const wireVersion = fullyDecoded[1];
+        if (wireVersion <= 13 || wireVersion > 15) {
+            return serialized;
+        }
+        // Change wire version back to 13
+        fullyDecoded[1] = 13;
+        return fullyDecoded.toString('base64');
+    }
+    // For longer strings, we can pull off the first 4 bytes to fix independently.
+    const firstThreeBytesDecoded = Buffer.from(serialized.substring(0, 4), 'base64');
+    const firstByte = firstThreeBytesDecoded[0];
+    if (firstByte !== 0xff) {
+        throw new Error('Internal error decoding v8-serialized data. First three bytes are: ' + serialized.substring(0, 4));
+    }
+    const wireVersion = firstThreeBytesDecoded[1];
+    if (wireVersion <= 13 || wireVersion > 15) {
+        return serialized;
+    }
+    // Change wire version back to 13
+    firstThreeBytesDecoded[1] = 13;
+    return firstThreeBytesDecoded.toString('base64') + serialized.substring(4);
 }
-exports.marshalValueToString = marshalValueToString;
+function marshalValueToStringForSameOrHigherNodeVersion(val, { unsafeHackForNode14BackwardsCompatibility }) {
+    const serialized = (0, serializer_2.serialize)(marshalValue(val));
+    if (unsafeHackForNode14BackwardsCompatibility) {
+        return maybeChangeWireVersionOnBase64EncodedV8SerializedData(serialized);
+    }
+    return serialized;
+}
+exports.marshalValueToStringForSameOrHigherNodeVersion = marshalValueToStringForSameOrHigherNodeVersion;
 function unmarshalValueFromString(marshaledValue) {
-    return unmarshalValue((0, serializer_1.deserialize)(marshaledValue));
+    if (marshaledValue === undefined) {
+        // Historically marshalValueForAnyNodeVersion could sometimes return "undefined" even
+        // those it has a "string" return type, so it's best to keep support for undefined here
+        // to handle data from old, already-built packs
+        return undefined;
+    }
+    if (marshaledValue.startsWith('/')) {
+        // Looks like a v8-serialized value
+        return unmarshalValue((0, serializer_1.deserialize)(marshaledValue));
+    }
+    // Probably a legacy JSON value
+    return (0, legacy_marshal_1.internalUnmarshalValueForAnyNodeVersion)(marshaledValue);
 }
 exports.unmarshalValueFromString = unmarshalValueFromString;
 function applyTransform(input, path, fn) {
@@ -186,7 +252,7 @@ exports.unmarshalValue = unmarshalValue;
 // in the "message" field, which must be a string. Because of that, we use marshalValueToString()
 // instead of just putting a structuredClone()-compatible object into a custom field on a custom
 // error type.
-function wrapError(err) {
+function wrapErrorForSameOrHigherNodeVersion(err, { unsafeHackForNode14BackwardsCompatibility }) {
     // TODO(huayang): we do this for the sdk.
     // if (err.name === 'TypeError' && err.message === `Cannot read property 'body' of undefined`) {
     //   err.message +=
@@ -195,9 +261,9 @@ function wrapError(err) {
     //     'add the --fetch flag ' +
     //     'to actually fetch from the remote API.';
     // }
-    return new Error(marshalValueToString(err));
+    return new Error(marshalValueToStringForSameOrHigherNodeVersion(err, { unsafeHackForNode14BackwardsCompatibility }));
 }
-exports.wrapError = wrapError;
+exports.wrapErrorForSameOrHigherNodeVersion = wrapErrorForSameOrHigherNodeVersion;
 function unwrapError(err) {
     try {
         const unmarshaledValue = unmarshalValueFromString(err.message);

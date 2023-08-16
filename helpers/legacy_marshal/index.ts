@@ -91,7 +91,7 @@ function processValue(val: any, depth: number = 0): any {
   return serializedValue;
 }
 
-export function legacyMarshalValue(val: any): string | undefined {
+export function marshalValueForAnyNodeVersion(val: any): string {
   // Instead of passing a replacer to `JSON.stringify`, we chose to preprocess the value before
   // passing it to `JSON.stringify`. The reason is that `JSON.stringify` may call the object toJSON
   // method before calling the replacer. In many cases, that means the replacer can't tell if the
@@ -100,10 +100,22 @@ export function legacyMarshalValue(val: any): string | undefined {
   //
   // processValue is trying to mimic the object processing of JSON but the behavior may not be
   // identical. It will only serve the purpose of our internal marshaling use case.
-  return JSON.stringify(processValue(val));
+  const result = JSON.stringify(processValue(val));
+
+  if (result === undefined) {
+    // JSON.stringify() can return undefined if the input was a function, for example.
+    return JSON.stringify(processValue(undefined));
+  }
+
+  return result;
 }
 
-export function legacyUnmarshalValue(marshaledValue: string | undefined): any {
+/**
+ * Use unmarshalValueFromString() instead. It can determine what type of marshaling was used and
+ * call the correct unmarshal function, which gives us more flexibility to swap between marshaling
+ * types in the future.
+ */
+export function internalUnmarshalValueForAnyNodeVersion(marshaledValue: string | undefined): any {
   if (marshaledValue === undefined) {
     return marshaledValue;
   }
@@ -124,12 +136,12 @@ export function legacyWrapError(err: Error): Error {
   //     'to actually fetch from the remote API.';
   // }
 
-  return new Error(legacyMarshalValue(err));
+  return new Error(marshalValueForAnyNodeVersion(err));
 }
 
 export function legacyUnwrapError(err: Error): Error {
   try {
-    const unmarshaledValue = legacyUnmarshalValue(err.message);
+    const unmarshaledValue = internalUnmarshalValueForAnyNodeVersion(err.message);
     if (unmarshaledValue instanceof Error) {
       return unmarshaledValue;
     }
