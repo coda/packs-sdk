@@ -375,7 +375,7 @@
       {
         "name": "Template",
         "content": "The basic structure of a sync table.",
-        "code": "pack.addSyncTable({\n  name: \"MyThings\",\n  description: \"Table description.\",\n  identityName: \"$1\",\n  schema: MySchema,\n  formula: {\n    name: \"Sync$1\",\n    description: \"Syncs the data.\",\n    parameters: [\n      // TODO: Add parameters.\n    ],\n    execute: async function (args, context) {\n      // TODO: Unpack the parameter values.\n      let [] = args;\n      // TODO: Fetch the rows.\n      let rows = [];\n      for (let row of rows) {\n        // TODO: If required, adjust the row to match the schema.\n      }\n      return {\n        result: rows,\n      };\n    },\n  },\n});"
+        "code": "pack.addSyncTable({\n  name: \"MyThings\",\n  description: \"Table description.\",\n  identityName: \"Thing\",\n  schema: ThingSchema,\n  formula: {\n    name: \"Sync$1\",\n    description: \"Syncs the data.\",\n    parameters: [\n      // TODO: Add parameters.\n    ],\n    execute: async function (args, context) {\n      // TODO: Unpack the parameter values.\n      let [] = args;\n      // TODO: Fetch the rows.\n      let rows = [];\n      for (let row of rows) {\n        // TODO: If required, adjust the row to match the schema.\n      }\n      return {\n        result: rows,\n      };\n    },\n  },\n});"
       },
       {
         "name": "With parameter",
@@ -472,7 +472,7 @@
       {
         "name": "Template (Object)",
         "content": "The basic structure of a formula that returns an object.",
-        "code": "pack.addFormula({\n  name: \"MyFormula\",\n  description: \"My description.\",\n  parameters: [\n    // TODO: Add parameters.\n  ],\n  resultType: coda.ValueType.Object,\n  schema: MySchema,\n  execute: async function (args, context) {\n    // TODO: Unpack the parameter values.\n    let [] = args;\n    // TODO: Compute the result.\n    return {};\n  },\n});"
+        "code": "pack.addFormula({\n  name: \"MyFormula\",\n  description: \"My description.\",\n  parameters: [\n    // TODO: Add parameters.\n  ],\n  resultType: coda.ValueType.Object,\n  schema: ThingSchema,\n  execute: async function (args, context) {\n    // TODO: Unpack the parameter values.\n    let [] = args;\n    // TODO: Compute the result.\n    return {};\n  },\n});"
       },
       {
         "name": "Percent",

@@ -110,7 +110,7 @@ pack.addFormula({
     // TODO: Add parameters.
   ],
   resultType: coda.ValueType.Object,
-  schema: MySchema,
+  schema: ThingSchema,
   execute: async function (args, context) {
     // TODO: Unpack the parameter values.
     let [] = args;
