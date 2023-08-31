@@ -19,8 +19,8 @@ The basic structure of a sync table.
 pack.addSyncTable({
   name: "MyThings",
   description: "Table description.",
-  identityName: "$1",
-  schema: MySchema,
+  identityName: "Thing",
+  schema: ThingSchema,
   formula: {
     name: "Sync$1",
     description: "Syncs the data.",

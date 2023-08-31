@@ -2,15 +2,15 @@ import * as coda from "@codahq/packs-sdk";
 
 const pack = coda.newPack();
 
-const $3$MySchema$ = undefined;
+const $3$ThingSchema$ = undefined;
 
 // BEGIN
 
 pack.addSyncTable({
   name: "${1:MyThings}",
   description: "${2:Table description.}",
-  identityName: "$1",
-  schema: $3$MySchema$,
+  identityName: "${3:Thing}",
+  schema: $3$ThingSchema$,
   formula: {
     name: "Sync$1",
     description: "Syncs the data.",

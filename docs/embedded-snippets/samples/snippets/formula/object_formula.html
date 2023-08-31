@@ -16,7 +16,7 @@
 
       require(['vs/editor/editor.main'], function () {
         var editor = monaco.editor.create(document.getElementById('container'), {
-          value: "pack.addFormula({\n  name: \"${1:MyFormula}\",\n  description: \"${2:My description.}\",\n  parameters: [\n    // TODO: Add parameters.\n  ],\n  resultType: coda.ValueType.Object,\n  schema: $3$MySchema$,\n  execute: async function (args, context) {\n    // TODO: Unpack the parameter values.\n    let [] = args;\n    // TODO: Compute the result.\n    return {};\n  },\n});",
+          value: "pack.addFormula({\n  name: \"${1:MyFormula}\",\n  description: \"${2:My description.}\",\n  parameters: [\n    // TODO: Add parameters.\n  ],\n  resultType: coda.ValueType.Object,\n  schema: $3$ThingSchema$,\n  execute: async function (args, context) {\n    // TODO: Unpack the parameter values.\n    let [] = args;\n    // TODO: Compute the result.\n    return {};\n  },\n});",
           language: 'javascript',
           minimap: {enabled: false},
           readOnly: true,
