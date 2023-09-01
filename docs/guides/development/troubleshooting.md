@@ -30,6 +30,17 @@ The Packs runtime only includes a subset of the [full `console` methods][mdn_con
 - `console.warn()`
 
 
+## HTTP request logs
+
+For Packs that make HTTP requests to external services and APIs it can be useful to see the details of the outgoing and request and incoming response. Whenever a Pack is run in a Coda doc the HTTP requests are automatically logged and can be inspected in the [Pack maker tools][pmt_http].
+
+When executing a Pack locally using the Pack CLI, you can use Node's built-in HTTP debug logs to see the raw requests and responses. To enable this logging, set the environment variable `NODE_DEBUG=http`. This can be done for a single execution by adding it before the execute command.
+
+```sh
+NODE_DEBUG=http npx coda execute pack.ts Hello "World"
+```
+
+
 ## Debugging
 
 When developing using the Pack CLI you can connect a JavaScript debugger to your Pack code. This allows you to set breakpoints, examine variables, and step through your code line by line. It requires a bit more setup than simply logging values but is much more flexible.
@@ -90,4 +101,5 @@ The Pack CLI uses the `esbuild` library to compile your local code, and [this er
 [isolated_vm_requirements]: https://github.com/laverdet/isolated-vm#requirements
 [actions_create]: ../blocks/actions.md#creating-actions
 [pmt]: pack-maker-tools.md
+[pmt_http]: pack-maker-tools.md#http-requests
 [esbuild_error]: https://github.com/evanw/esbuild/issues/2183

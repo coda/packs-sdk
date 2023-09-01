@@ -34,13 +34,6 @@ Although Google includes an exception for apps that don't own the domain of thei
 With enough persistence you should be able to get your Pack verified. The process may take a week or more to complete, so plan accordingly.
 
 
-## Can you add my company's icon as an option in Coda?
-
-Building a template or demo document is an important part of creating a Pack, as it shows users how to apply you Pack to real problems. Many Pack makers wish to use their company's branding on that document for visual consistency.
-
-Coda supports both document- and page-level icons, from a library we source from an external provider. While some this library includes the icons for some popular brands, it's not comprehensive and your brand may not be present. At the moment we don't have a process for adding new icons to the library, nor do we support using custom icons within a document. This is something we hope to address in the future, but for the time being we recommend using a generic icon.
-
-
 ## Can formulas return dynamic schemas?
 
 No, unfortunately they can't. While [dynamic sync tables][dynamic_sync_tables] can flex their schema based upon the specific data source being connected to, this option isn't available for formulas. The schema for a formula must be declared statically, and there is no equivalent `getSchema()` function that formulas can provide.
