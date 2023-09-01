@@ -95,7 +95,7 @@
     "aws-sdk": "2.1430.0",
     "buffer": "6.0.3",
     "chai": "4.3.8",
-    "cspell": "6.31.1",
+    "cspell": "6.31.3",
     "dts-bundle-generator": "8.0.1",
     "eslint": "8.46.0",
     "eslint-plugin-ban": "1.6.0",
