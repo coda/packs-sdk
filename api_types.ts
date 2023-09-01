@@ -2,6 +2,7 @@ import type {$Values} from './type_utils';
 import type {ArraySchema} from './schema';
 import type {AuthenticationDef} from './types';
 import type {Continuation} from './api';
+import type {MetadataContext} from './api';
 import type {MetadataFormula} from './api';
 import type {ObjectSchemaProperty} from './schema';
 import type {Schema} from './schema';
@@ -702,6 +703,11 @@ export interface Sync {
    * The dynamic URL is likely necessary for determining which API resources to fetch.
    */
   dynamicUrl?: string;
+
+  /**
+   * {@link MetadataContext}
+   */
+  metadataContext?: MetadataContext;
 }
 
 /**

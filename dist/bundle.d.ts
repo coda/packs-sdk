@@ -569,6 +569,10 @@ export interface Sync {
 	 * The dynamic URL is likely necessary for determining which API resources to fetch.
 	 */
 	dynamicUrl?: string;
+	/**
+	 * {@link MetadataContext}
+	 */
+	metadataContext?: MetadataContext;
 }
 /**
  * Information about the current sync, part of the {@link UpdateSyncExecutionContext} passed to the
