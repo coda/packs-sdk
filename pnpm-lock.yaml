@@ -217,8 +217,8 @@ importers:
         specifier: 5.59.8
         version: 5.59.8(eslint@8.48.0)(typescript@5.1.6)
       aws-sdk:
-        specifier: 2.1430.0
-        version: 2.1430.0
+        specifier: 2.1447.0
+        version: 2.1447.0
       buffer:
         specifier: 6.0.3
         version: 6.0.3
@@ -2065,7 +2065,7 @@ packages:
     resolution: {integrity: sha512-bF6brnwPN9+kheqdKCpinMgCkj+sJIUEj+0v0LPug9OQwL5/1jy+kiJwl+Nkw4Kh+7oaL1phhC4gMz6Oq60jMg==}
     deprecated: This is a stub types definition for aws-sdk (https://github.com/aws/aws-sdk-js). aws-sdk provides its own type definitions, so you don't need @types/aws-sdk installed!
     dependencies:
-      aws-sdk: 2.1430.0
+      aws-sdk: 2.1447.0
     dev: true
 
   /@types/body-parser@1.19.2:
@@ -2882,8 +2882,8 @@ packages:
     resolution: {integrity: sha512-SA5mXJWrId1TaQjfxUYghbqQ/hYioKmLJvPJyDuYRtXXenFNMjj4hSSt1Cf1xsuXSXrtxrVC5Ot4eU6cOtBDdA==}
     engines: {node: '>= 0.4'}
 
-  /aws-sdk@2.1430.0:
-    resolution: {integrity: sha512-827BjW9Q9NwUucZBHHU64dh96ihE857LC0ZOEub0C5wjxujoEqET0i4qJR7k+/wn8tFMNtWO0rIGCSGSmgrm5A==}
+  /aws-sdk@2.1447.0:
+    resolution: {integrity: sha512-7Z0VMwD679OCjZCgNbRnA0ZNxfpT8zSrI9PQXu9J0uwV7xAAfaRk3nKFpOgvobUkOXszlBiYdVubhbaHOzITtA==}
     engines: {node: '>= 10.0.0'}
     dependencies:
       buffer: 4.9.2
