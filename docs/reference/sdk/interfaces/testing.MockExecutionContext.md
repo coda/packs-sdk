@@ -89,7 +89,7 @@ ___
 
 • `Optional` **parameters**: [`MetadataContext`](../types/core.MetadataContext.md)
 
-MetadataContext
+[MetadataContext](../types/core.MetadataContext.md)
 
 #### Inherited from
 

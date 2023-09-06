@@ -652,7 +652,7 @@ export interface ExecutionContext {
      */
     readonly sync?: Sync;
     /**
-     * {@link MetadataContext}
+     * {@link core.MetadataContext}
      */
     parameters?: MetadataContext;
 }
