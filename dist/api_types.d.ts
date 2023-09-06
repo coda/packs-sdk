@@ -582,10 +582,6 @@ export interface Sync {
      * The dynamic URL is likely necessary for determining which API resources to fetch.
      */
     dynamicUrl?: string;
-    /**
-     * {@link MetadataContext}
-     */
-    metadataContext?: MetadataContext;
 }
 /**
  * Information about the current sync, part of the {@link UpdateSyncExecutionContext} passed to the
@@ -655,6 +651,10 @@ export interface ExecutionContext {
      * Information about state of the current sync. Only populated if this is a sync table formula.
      */
     readonly sync?: Sync;
+    /**
+     * {@link MetadataContext}
+     */
+    parameters?: MetadataContext;
 }
 /**
  * Sub-class of {@link ExecutionContext} that is passed to the `execute` function of every

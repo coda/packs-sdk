@@ -31,14 +31,6 @@ The dynamic URL is likely necessary for determining which API resources to fetch
 
 ___
 
-### metadataContext
-
-• `Optional` **metadataContext**: [`MetadataContext`](../types/core.MetadataContext.md)
-
-[MetadataContext](../types/core.MetadataContext.md)
-
-___
-
 ### schema
 
 • `Optional` **schema**: [`ArraySchema`](core.ArraySchema.md)<[`Schema`](../types/core.Schema.md)\>

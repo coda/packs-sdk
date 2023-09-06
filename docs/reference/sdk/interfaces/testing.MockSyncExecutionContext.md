@@ -83,6 +83,18 @@ replaced by the fetcher in secure way.
 
 ___
 
+### parameters
+
+• `Optional` **parameters**: [`MetadataContext`](../types/core.MetadataContext.md)
+
+MetadataContext
+
+#### Inherited from
+
+[MockExecutionContext](testing.MockExecutionContext.md).[parameters](testing.MockExecutionContext.md#parameters)
+
+___
+
 ### sync
 
 • `Readonly` **sync**: [`Sync`](core.Sync.md)

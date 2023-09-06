@@ -85,6 +85,18 @@ replaced by the fetcher in secure way.
 
 ___
 
+### parameters
+
+• `Optional` **parameters**: [`MetadataContext`](../types/core.MetadataContext.md)
+
+MetadataContext
+
+#### Inherited from
+
+[ExecutionContext](core.ExecutionContext.md).[parameters](core.ExecutionContext.md#parameters)
+
+___
+
 ### sync
 
 • `Optional` `Readonly` **sync**: [`Sync`](core.Sync.md)
