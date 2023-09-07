@@ -47,7 +47,7 @@ var TimerShimStrategy;
     TimerShimStrategy["None"] = "none";
     TimerShimStrategy["Error"] = "error";
     TimerShimStrategy["Fake"] = "fake";
-})(TimerShimStrategy || (exports.TimerShimStrategy = TimerShimStrategy = {}));
+})(TimerShimStrategy = exports.TimerShimStrategy || (exports.TimerShimStrategy = {}));
 async function loadIntoVM(bundlePath) {
     const ivm = (0, ivm_wrapper_1.tryGetIvm)();
     if (!ivm) {

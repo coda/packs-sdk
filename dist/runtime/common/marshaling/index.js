@@ -36,7 +36,7 @@ var TransformType;
 (function (TransformType) {
     TransformType["Buffer"] = "Buffer";
     TransformType["Error"] = "Error";
-})(TransformType || (exports.TransformType = TransformType = {}));
+})(TransformType = exports.TransformType || (exports.TransformType = {}));
 var ErrorClassType;
 (function (ErrorClassType) {
     ErrorClassType["System"] = "System";

@@ -7,7 +7,7 @@ var FormulaType;
     FormulaType["Sync"] = "Sync";
     FormulaType["SyncUpdate"] = "SyncUpdate";
     FormulaType["Metadata"] = "Metadata";
-})(FormulaType || (exports.FormulaType = FormulaType = {}));
+})(FormulaType = exports.FormulaType || (exports.FormulaType = {}));
 var MetadataFormulaType;
 (function (MetadataFormulaType) {
     MetadataFormulaType["GetConnectionName"] = "GetConnectionName";
@@ -20,4 +20,4 @@ var MetadataFormulaType;
     MetadataFormulaType["SyncGetTableName"] = "SyncGetTableName";
     MetadataFormulaType["SyncGetSchema"] = "SyncGetSchema";
     MetadataFormulaType["PropertyOptions"] = "PropertyOptions";
-})(MetadataFormulaType || (exports.MetadataFormulaType = MetadataFormulaType = {}));
+})(MetadataFormulaType = exports.MetadataFormulaType || (exports.MetadataFormulaType = {}));

@@ -7,10 +7,10 @@ var LegacyCodaMarshalerType;
     LegacyCodaMarshalerType["Buffer"] = "Buffer";
     LegacyCodaMarshalerType["Number"] = "Number";
     LegacyCodaMarshalerType["Date"] = "Date";
-})(LegacyCodaMarshalerType || (exports.LegacyCodaMarshalerType = LegacyCodaMarshalerType = {}));
+})(LegacyCodaMarshalerType = exports.LegacyCodaMarshalerType || (exports.LegacyCodaMarshalerType = {}));
 var LegacyMarshalingInjectedKeys;
 (function (LegacyMarshalingInjectedKeys) {
     LegacyMarshalingInjectedKeys["CodaMarshaler"] = "__coda_marshaler__";
     LegacyMarshalingInjectedKeys["ErrorClassName"] = "__error_class_name__";
     LegacyMarshalingInjectedKeys["ErrorClassType"] = "__error_class_type__";
-})(LegacyMarshalingInjectedKeys || (exports.LegacyMarshalingInjectedKeys = LegacyMarshalingInjectedKeys = {}));
+})(LegacyMarshalingInjectedKeys = exports.LegacyMarshalingInjectedKeys || (exports.LegacyMarshalingInjectedKeys = {}));

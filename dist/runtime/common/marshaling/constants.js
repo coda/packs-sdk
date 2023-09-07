@@ -5,10 +5,10 @@ var CodaMarshalerType;
 (function (CodaMarshalerType) {
     CodaMarshalerType["Error"] = "Error";
     CodaMarshalerType["Object"] = "Object";
-})(CodaMarshalerType || (exports.CodaMarshalerType = CodaMarshalerType = {}));
+})(CodaMarshalerType = exports.CodaMarshalerType || (exports.CodaMarshalerType = {}));
 var MarshalingInjectedKeys;
 (function (MarshalingInjectedKeys) {
     MarshalingInjectedKeys["CodaMarshaler"] = "__coda_marshaler__";
     MarshalingInjectedKeys["ErrorClassName"] = "__error_class_name__";
     MarshalingInjectedKeys["ErrorClassType"] = "__error_class_type__";
-})(MarshalingInjectedKeys || (exports.MarshalingInjectedKeys = MarshalingInjectedKeys = {}));
+})(MarshalingInjectedKeys = exports.MarshalingInjectedKeys || (exports.MarshalingInjectedKeys = {}));
