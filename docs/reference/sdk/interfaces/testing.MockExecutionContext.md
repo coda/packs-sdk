@@ -87,7 +87,7 @@ ___
 
 ### parameters
 
-• `Optional` **parameters**: [`MetadataContext`](../types/core.MetadataContext.md)
+• `Optional` `Readonly` **parameters**: [`MetadataContext`](../types/core.MetadataContext.md)
 
 [MetadataContext](../types/core.MetadataContext.md)
 

@@ -654,7 +654,7 @@ export interface ExecutionContext {
     /**
      * {@link core.MetadataContext}
      */
-    parameters?: MetadataContext;
+    readonly parameters?: MetadataContext;
 }
 /**
  * Sub-class of {@link ExecutionContext} that is passed to the `execute` function of every
