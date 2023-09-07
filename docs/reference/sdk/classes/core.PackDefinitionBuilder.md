@@ -184,7 +184,7 @@ pack.addDynamicSyncTable({
 | `K` | extends `string` |
 | `L` | extends `string` |
 | `ParamDefsT` | extends [`ParamDefs`](../types/core.ParamDefs.md) |
-| `SchemaT` | extends [`ObjectSchemaDefinition`](../interfaces/core.ObjectSchemaDefinition.md)<`K`, `L`, `SchemaT`\> |
+| `SchemaT` | extends [`ObjectSchemaDefinition`](../interfaces/core.ObjectSchemaDefinition.md)<`K`, `L`\> |
 
 #### Parameters
 
@@ -309,7 +309,7 @@ pack.addSyncTable({
 | `K` | extends `string` |
 | `L` | extends `string` |
 | `ParamDefsT` | extends [`ParamDefs`](../types/core.ParamDefs.md) |
-| `SchemaT` | extends `ObjectSchema`<`K`, `L`, `SchemaT`\> |
+| `SchemaT` | extends `ObjectSchema`<`K`, `L`\> |
 
 #### Parameters
 
