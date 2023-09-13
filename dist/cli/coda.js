@@ -179,6 +179,12 @@ if (require.main === module) {
             },
             apiToken: ApiTokenArg,
             codaApiEndpoint: CodaApiEndpointArg,
+            allowOlderSdkVersion: {
+                boolean: true,
+                desc: 'Not recommended. Allows uploading a Pack build that uses an older version of the ' +
+                    'SDK than the prior Pack build.',
+                default: false,
+            },
         },
         handler: upload_1.handleUpload,
     })

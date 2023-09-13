@@ -57,7 +57,7 @@ function cleanup(intermediateOutputDirectory, logger) {
         logger.info(`Intermediate files are moved to ${tempDirectory}`);
     }
 }
-async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApiEndpoint, notes, timerStrategy, apiToken, }) {
+async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApiEndpoint, notes, timerStrategy, apiToken, allowOlderSdkVersion, }) {
     const logger = console;
     function printAndExit(message) {
         cleanup(intermediateOutputDirectory, logger);
@@ -143,7 +143,7 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
         logger.info('Validating upload...');
         let uploadCompleteResponse;
         try {
-            uploadCompleteResponse = await client.packVersionUploadComplete(packId, packVersion, {}, { notes, source: v1_1.PublicApiPackSource.Cli });
+            uploadCompleteResponse = await client.packVersionUploadComplete(packId, packVersion, {}, { notes, source: v1_1.PublicApiPackSource.Cli, allowOlderSdkVersion: Boolean(allowOlderSdkVersion) });
         }
         catch (err) {
             if ((0, coda_1.isResponseError)(err)) {
