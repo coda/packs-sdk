@@ -8,5 +8,5 @@ interface UploadArgs {
     timerStrategy: TimerShimStrategy;
     apiToken?: string;
 }
-export declare function handleUpload({ intermediateOutputDirectory, manifestFile, codaApiEndpoint, notes, timerStrategy, apiToken, }: ArgumentsCamelCase<UploadArgs>): Promise<undefined>;
+export declare function handleUpload({ intermediateOutputDirectory, manifestFile, codaApiEndpoint, notes, timerStrategy, apiToken, allowOlderSdkVersion, }: ArgumentsCamelCase<UploadArgs>): Promise<undefined>;
 export {};

@@ -55,6 +55,7 @@ export async function handleUpload({
   notes,
   timerStrategy,
   apiToken,
+  allowOlderSdkVersion,
 }: ArgumentsCamelCase<UploadArgs>) {
   const logger = console;
   function printAndExit(message: string): never {
@@ -167,7 +168,7 @@ export async function handleUpload({
         packId,
         packVersion,
         {},
-        {notes, source: PublicApiPackSource.Cli},
+        {notes, source: PublicApiPackSource.Cli, allowOlderSdkVersion: Boolean(allowOlderSdkVersion)},
       );
     } catch (err: any) {
       if (isResponseError(err)) {

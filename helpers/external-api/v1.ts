@@ -3766,6 +3766,12 @@ export interface PublicApiCreatePackVersionRequest {
   notes?: string;
   source?: PublicApiPackSource;
   /**
+   * By default, Coda prevents a new pack version from using an older SDK version than the prior version,
+   * assuming that there are multiple dev environments trampling each other. In the rare case that you
+   * actually need to use the older SDK, use this flag.
+   */
+  allowOlderSdkVersion?: boolean;
+  /**
    * Internal field for cross-environment pack import.
    */
   dangerouslyAllowCrossEnvPack?: boolean;
