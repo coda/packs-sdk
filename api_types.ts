@@ -781,7 +781,7 @@ export interface ExecutionContext {
   /**
    * {@link core.MetadataContext}
    */
-  readonly arguments?: MetadataContext;
+  readonly parameters?: MetadataContext;
 }
 
 /**

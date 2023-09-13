@@ -26,14 +26,6 @@ this contains the [Fetcher](core.Fetcher.md), which is used for making HTTP requ
 
 ## Properties
 
-### arguments
-
-• `Optional` `Readonly` **arguments**: [`MetadataContext`](../types/core.MetadataContext.md)
-
-[MetadataContext](../types/core.MetadataContext.md)
-
-___
-
 ### endpoint
 
 • `Optional` `Readonly` **endpoint**: `string`
@@ -72,6 +64,14 @@ A random token scoped to only this request invocation.
 This is a unique identifier for the invocation, and in particular used with
 [Custom](../enums/core.AuthenticationType.md#custom) for naming template parameters that will be
 replaced by the fetcher in secure way.
+
+___
+
+### parameters
+
+• `Optional` `Readonly` **parameters**: [`MetadataContext`](../types/core.MetadataContext.md)
+
+[MetadataContext](../types/core.MetadataContext.md)
 
 ___
 

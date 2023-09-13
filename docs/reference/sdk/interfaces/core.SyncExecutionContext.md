@@ -19,18 +19,6 @@ sync formula invocation. The only different is that the presence of the `sync` p
 
 ## Properties
 
-### arguments
-
-• `Optional` `Readonly` **arguments**: [`MetadataContext`](../types/core.MetadataContext.md)
-
-[MetadataContext](../types/core.MetadataContext.md)
-
-#### Inherited from
-
-[ExecutionContext](core.ExecutionContext.md).[arguments](core.ExecutionContext.md#arguments)
-
-___
-
 ### endpoint
 
 • `Optional` `Readonly` **endpoint**: `string`
@@ -85,6 +73,18 @@ replaced by the fetcher in secure way.
 #### Inherited from
 
 [ExecutionContext](core.ExecutionContext.md).[invocationToken](core.ExecutionContext.md#invocationtoken)
+
+___
+
+### parameters
+
+• `Optional` `Readonly` **parameters**: [`MetadataContext`](../types/core.MetadataContext.md)
+
+[MetadataContext](../types/core.MetadataContext.md)
+
+#### Inherited from
+
+[ExecutionContext](core.ExecutionContext.md).[parameters](core.ExecutionContext.md#parameters)
 
 ___
 
