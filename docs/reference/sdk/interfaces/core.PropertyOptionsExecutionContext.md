@@ -8,12 +8,12 @@ search:
 
 [core](../modules/core.md).PropertyOptionsExecutionContext
 
-Sub-class of [ExecutionContext](core.ExecutionContext.md) that is passed to the `options` function of
+Sub-class of [SyncExecutionContext](core.SyncExecutionContext.md) that is passed to the `options` function of
 mutable sync tables for properties with `options` enabled.
 
 ## Hierarchy
 
-- [`ExecutionContext`](core.ExecutionContext.md)
+- [`SyncExecutionContext`](core.SyncExecutionContext.md)
 
   ↳ **`PropertyOptionsExecutionContext`**
 
@@ -32,7 +32,7 @@ to construct URLs to use with the fetcher. Alternatively, you can use relative U
 
 #### Inherited from
 
-[ExecutionContext](core.ExecutionContext.md).[endpoint](core.ExecutionContext.md#endpoint)
+[SyncExecutionContext](core.SyncExecutionContext.md).[endpoint](core.SyncExecutionContext.md#endpoint)
 
 ___
 
@@ -44,7 +44,7 @@ The [Fetcher](core.Fetcher.md) used for making HTTP requests.
 
 #### Inherited from
 
-[ExecutionContext](core.ExecutionContext.md).[fetcher](core.ExecutionContext.md#fetcher)
+[SyncExecutionContext](core.SyncExecutionContext.md).[fetcher](core.SyncExecutionContext.md#fetcher)
 
 ___
 
@@ -57,7 +57,7 @@ This is mostly for Coda internal use and we do not recommend relying on it.
 
 #### Inherited from
 
-[ExecutionContext](core.ExecutionContext.md).[invocationLocation](core.ExecutionContext.md#invocationlocation)
+[SyncExecutionContext](core.SyncExecutionContext.md).[invocationLocation](core.SyncExecutionContext.md#invocationlocation)
 
 ___
 
@@ -72,7 +72,7 @@ replaced by the fetcher in secure way.
 
 #### Inherited from
 
-[ExecutionContext](core.ExecutionContext.md).[invocationToken](core.ExecutionContext.md#invocationtoken)
+[SyncExecutionContext](core.SyncExecutionContext.md).[invocationToken](core.SyncExecutionContext.md#invocationtoken)
 
 ___
 
@@ -119,13 +119,13 @@ ___
 
 ### sync
 
-• `Optional` `Readonly` **sync**: [`Sync`](core.Sync.md)
+• `Readonly` **sync**: [`Sync`](core.Sync.md)
 
-Information about state of the current sync. Only populated if this is a sync table formula.
+Information about state of the current sync.
 
 #### Inherited from
 
-[ExecutionContext](core.ExecutionContext.md).[sync](core.ExecutionContext.md#sync)
+[SyncExecutionContext](core.SyncExecutionContext.md).[sync](core.SyncExecutionContext.md#sync)
 
 ___
 
@@ -138,7 +138,7 @@ or are too large to return inline. See [TemporaryBlobStorage](core.TemporaryBlob
 
 #### Inherited from
 
-[ExecutionContext](core.ExecutionContext.md).[temporaryBlobStorage](core.ExecutionContext.md#temporaryblobstorage)
+[SyncExecutionContext](core.SyncExecutionContext.md).[temporaryBlobStorage](core.SyncExecutionContext.md#temporaryblobstorage)
 
 ___
 
@@ -150,4 +150,4 @@ The timezone of the doc from which this formula was invoked.
 
 #### Inherited from
 
-[ExecutionContext](core.ExecutionContext.md).[timezone](core.ExecutionContext.md#timezone)
+[SyncExecutionContext](core.SyncExecutionContext.md).[timezone](core.SyncExecutionContext.md#timezone)
