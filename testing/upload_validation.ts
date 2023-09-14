@@ -907,7 +907,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     }),
   );
 
-  const Base64ObjectRegex = /^[A-Za-z0-9=_-]+$/;
+  const Base64ObjectRegex = /^[A-Za-z0-9_-]+$/;
   // This is ripped off from isValidObjectId in coda. Violating this causes a number of downstream headaches.
   function isValidObjectId(component: string): boolean {
     return Base64ObjectRegex.test(component);
