@@ -169,7 +169,7 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
             }
 
             const propertyOptionsExecutionContext: Omit<PropertyOptionsExecutionContext, 'search'> = {
-              ...executionContext,
+              ...(executionContext as SyncExecutionContext),
               propertyName: formulaSpec.propertyName,
               propertyValues,
               propertySchema: formulaSpec.propertySchema,

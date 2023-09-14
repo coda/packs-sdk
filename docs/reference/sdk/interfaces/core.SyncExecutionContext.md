@@ -17,6 +17,8 @@ sync formula invocation. The only different is that the presence of the `sync` p
 
   ↳ **`SyncExecutionContext`**
 
+  ↳↳ [`PropertyOptionsExecutionContext`](core.PropertyOptionsExecutionContext.md)
+
 ## Properties
 
 ### endpoint

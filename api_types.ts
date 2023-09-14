@@ -796,10 +796,10 @@ export interface SyncExecutionContext extends ExecutionContext {
 }
 
 /**
- * Sub-class of {@link ExecutionContext} that is passed to the `options` function of
+ * Sub-class of {@link SyncExecutionContext} that is passed to the `options` function of
  * mutable sync tables for properties with `options` enabled.
  */
-export interface PropertyOptionsExecutionContext extends ExecutionContext {
+export interface PropertyOptionsExecutionContext extends SyncExecutionContext {
   /**
    * Which property is being edited.
    */
