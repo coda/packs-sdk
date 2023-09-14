@@ -9,6 +9,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 - For CLI development, there is now a `--allowOlderSdkVersion` param for the `coda upload` command that builds a new version. Coda will soon default to preventing a Pack build to have an older SDK version than the prior version, under the assumption that it most often happens when multiple dev environments conflict with each other. This new option is a bypass for that protection, for the rare case when you actually want to downgrade the SDK.
 - Added a new `parameters` property in the `Sync` interface with sync table parameters.
 
+### Changed
+
+- "=" character is no longer supported in sync table identity names.
+
 ## [1.5.1] - 2023-07-31
 
 ### Fixed

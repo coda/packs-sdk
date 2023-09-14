@@ -732,10 +732,10 @@ function buildMetadataSchema({ sdkVersion }) {
         items: objectPropertyUnionSchema,
         ...basePropertyValidators,
     }));
-    const Base64ObjectRegex = /^[A-Za-z0-9=_-]+$/;
+    const ValidCodaObjectIdRegex = /^[A-Za-z0-9_-]+$/;
     // This is ripped off from isValidObjectId in coda. Violating this causes a number of downstream headaches.
     function isValidObjectId(component) {
-        return Base64ObjectRegex.test(component);
+        return ValidCodaObjectIdRegex.test(component);
     }
     const SystemColumnNames = ['id', 'value', 'synced', 'connection'];
     let ExemptionType;
