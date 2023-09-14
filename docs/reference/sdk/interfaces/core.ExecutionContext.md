@@ -67,14 +67,6 @@ replaced by the fetcher in secure way.
 
 ___
 
-### parameters
-
-• `Optional` `Readonly` **parameters**: [`MetadataContext`](../types/core.MetadataContext.md)
-
-[MetadataContext](../types/core.MetadataContext.md)
-
-___
-
 ### sync
 
 • `Optional` `Readonly` **sync**: [`Sync`](core.Sync.md)
