@@ -3165,6 +3165,34 @@ describe('Pack metadata Validation', async () => {
       });
       await validateJson(metadata);
     });
+
+    it('valid options formula with unused dynamic options', async () => {
+      // This is a regresson test for a past issue where function property options
+      // would cause a validation error, even though they're not used it non-sync table
+      // schemas.
+      const formula = makeFormula({
+        resultType: ValueType.Object,
+        schema: makeObjectSchema({
+          type: ValueType.Object,
+          properties: {foo: {type: ValueType.String}},
+          options: () => {
+            return [];
+          },
+        }),
+        name: 'MyFormula',
+        description: 'My description',
+        examples: [],
+        parameters: [makeStringParameter('myParam', 'param description')],
+        execute: () => {
+          return {foo: 'test'};
+        },
+      });
+      const metadata = createFakePackVersionMetadata({
+        formulas: [formulaToMetadata(formula)],
+        formulaNamespace: 'MyNamespace',
+      });
+      await validateJson(metadata);
+    });
   });
 
   describe('Authentication', () => {
