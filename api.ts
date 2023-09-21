@@ -1284,6 +1284,7 @@ export function makeFormula<ParamDefsT extends ParamDefs, ResultT extends ValueT
         ...rest,
         // TypeOf<SchemaType<ArraySchema<SchemaT>>> is always Type.object but TS can't infer this.
         resultType: Type.object as TypeOf<SchemaType<ArraySchema<SchemaT>>>,
+        // The deepCopy() is here to drop property option functions, which have no effect on non-sync formulas.
         schema: deepCopy(normalizeSchema({type: ValueType.Array, items})),
       };
       formula = arrayFormula;
@@ -1296,6 +1297,7 @@ export function makeFormula<ParamDefsT extends ParamDefs, ResultT extends ValueT
       const objectFormula = {
         ...rest,
         resultType: Type.object as TypeOf<SchemaType<SchemaT>>,
+        // The deepCopy() is here to drop property option functions, which have no effect on non-sync formulas.
         schema: deepCopy(normalizeSchema(schema)),
       } as ObjectPackFormula<ParamDefsT, SchemaT>;
 
