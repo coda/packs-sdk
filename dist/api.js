@@ -475,7 +475,8 @@ function makeFormula(fullDefinition) {
                 ...rest,
                 // TypeOf<SchemaType<ArraySchema<SchemaT>>> is always Type.object but TS can't infer this.
                 resultType: api_types_5.Type.object,
-                schema: (0, schema_5.normalizeSchema)({ type: schema_2.ValueType.Array, items }),
+                // The deepCopy() is here to drop property option functions, which have no effect on non-sync formulas.
+                schema: (0, object_utils_1.deepCopy)((0, schema_5.normalizeSchema)({ type: schema_2.ValueType.Array, items })),
             };
             formula = arrayFormula;
             break;
@@ -486,7 +487,8 @@ function makeFormula(fullDefinition) {
             const objectFormula = {
                 ...rest,
                 resultType: api_types_5.Type.object,
-                schema: (0, schema_5.normalizeSchema)(schema),
+                // The deepCopy() is here to drop property option functions, which have no effect on non-sync formulas.
+                schema: (0, object_utils_1.deepCopy)((0, schema_5.normalizeSchema)(schema)),
             };
             formula = objectFormula;
             break;
