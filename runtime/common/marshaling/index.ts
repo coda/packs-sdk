@@ -234,10 +234,10 @@ function maybeChangeWireVersionOnBase64EncodedV8SerializedData(serialized: strin
 
 export function marshalValueToStringForSameOrHigherNodeVersion(
   val: any,
-  {unsafeHackForNode14BackwardsCompatibility}: {unsafeHackForNode14BackwardsCompatibility: boolean},
+  {useUnsafeVersionCompatibilityHack}: {useUnsafeVersionCompatibilityHack: boolean},
 ): string {
   const serialized = serialize(marshalValue(val));
-  if (unsafeHackForNode14BackwardsCompatibility) {
+  if (useUnsafeVersionCompatibilityHack) {
     return maybeChangeWireVersionOnBase64EncodedV8SerializedData(serialized);
   }
 
@@ -294,7 +294,7 @@ export function unmarshalValue(marshaledValue: any): any {
 // error type.
 export function wrapErrorForSameOrHigherNodeVersion(
   err: Error,
-  {unsafeHackForNode14BackwardsCompatibility}: {unsafeHackForNode14BackwardsCompatibility: boolean},
+  {useUnsafeVersionCompatibilityHack}: {useUnsafeVersionCompatibilityHack: boolean},
 ): Error {
   // TODO(huayang): we do this for the sdk.
   // if (err.name === 'TypeError' && err.message === `Cannot read property 'body' of undefined`) {
@@ -305,7 +305,7 @@ export function wrapErrorForSameOrHigherNodeVersion(
   //     'to actually fetch from the remote API.';
   // }
 
-  return new Error(marshalValueToStringForSameOrHigherNodeVersion(err, {unsafeHackForNode14BackwardsCompatibility}));
+  return new Error(marshalValueToStringForSameOrHigherNodeVersion(err, {useUnsafeVersionCompatibilityHack}));
 }
 
 export function unwrapError(err: Error): Error {

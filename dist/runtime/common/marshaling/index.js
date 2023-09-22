@@ -197,9 +197,9 @@ function maybeChangeWireVersionOnBase64EncodedV8SerializedData(serialized) {
     firstThreeBytesDecoded[1] = 13;
     return firstThreeBytesDecoded.toString('base64') + serialized.substring(4);
 }
-function marshalValueToStringForSameOrHigherNodeVersion(val, { unsafeHackForNode14BackwardsCompatibility }) {
+function marshalValueToStringForSameOrHigherNodeVersion(val, { useUnsafeVersionCompatibilityHack }) {
     const serialized = (0, serializer_2.serialize)(marshalValue(val));
-    if (unsafeHackForNode14BackwardsCompatibility) {
+    if (useUnsafeVersionCompatibilityHack) {
         return maybeChangeWireVersionOnBase64EncodedV8SerializedData(serialized);
     }
     return serialized;
@@ -252,7 +252,7 @@ exports.unmarshalValue = unmarshalValue;
 // in the "message" field, which must be a string. Because of that, we use marshalValueToString()
 // instead of just putting a structuredClone()-compatible object into a custom field on a custom
 // error type.
-function wrapErrorForSameOrHigherNodeVersion(err, { unsafeHackForNode14BackwardsCompatibility }) {
+function wrapErrorForSameOrHigherNodeVersion(err, { useUnsafeVersionCompatibilityHack }) {
     // TODO(huayang): we do this for the sdk.
     // if (err.name === 'TypeError' && err.message === `Cannot read property 'body' of undefined`) {
     //   err.message +=
@@ -261,7 +261,7 @@ function wrapErrorForSameOrHigherNodeVersion(err, { unsafeHackForNode14Backwards
     //     'add the --fetch flag ' +
     //     'to actually fetch from the remote API.';
     // }
-    return new Error(marshalValueToStringForSameOrHigherNodeVersion(err, { unsafeHackForNode14BackwardsCompatibility }));
+    return new Error(marshalValueToStringForSameOrHigherNodeVersion(err, { useUnsafeVersionCompatibilityHack }));
 }
 exports.wrapErrorForSameOrHigherNodeVersion = wrapErrorForSameOrHigherNodeVersion;
 function unwrapError(err) {
