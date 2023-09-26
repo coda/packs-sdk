@@ -988,7 +988,6 @@ export interface SyncUpdate<K extends string, L extends string, SchemaT extends 
 
 /**
  * Generic type definition for the parameter used to pass in updates to a sync table update function.
- * @hidden
  */
 export type GenericSyncUpdate = SyncUpdate<any, any, any>;
 
@@ -1001,7 +1000,6 @@ export type SyncUpdateSingleResult<K extends string, L extends string, SchemaT e
 
 /**
  * Generic type definition for a single update result returned by a sync table update function.
- * @hidden
  */
 export type GenericSyncUpdateSingleResult = SyncUpdateSingleResult<any, any, any>;
 
