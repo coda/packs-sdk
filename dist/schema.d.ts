@@ -758,7 +758,6 @@ export interface ObjectSchemaProperty {
     /**
      * Whether this object schema property is editable by the user in the UI.
      */
-    /** @hidden */
     mutable?: boolean;
     /**
      * Optional fixed id for this property, used to support renames of properties over time. If specified,
@@ -766,7 +765,6 @@ export interface ObjectSchemaProperty {
      * Only supported for top-level properties of a sync table.
      * Note that fixedIds must already be present on the existing schema prior to rolling out a name change in a
      * new schema; adding fixedId and a name change in a single schema version change will not work.
-     * @hidden
      */
     fixedId?: string;
     /**
