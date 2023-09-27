@@ -150,6 +150,8 @@ import * as coda from "@codahq/packs-sdk";
 - [GenericSyncFormula](../types/core.GenericSyncFormula.md)
 - [GenericSyncFormulaResult](../types/core.GenericSyncFormulaResult.md)
 - [GenericSyncTable](../types/core.GenericSyncTable.md)
+- [GenericSyncUpdate](../types/core.GenericSyncUpdate.md)
+- [GenericSyncUpdateSingleResult](../types/core.GenericSyncUpdateSingleResult.md)
 - [InferrableTypes](../types/core.InferrableTypes.md)
 - [MetadataContext](../types/core.MetadataContext.md)
 - [MetadataFormula](../types/core.MetadataFormula.md)
