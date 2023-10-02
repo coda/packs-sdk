@@ -833,7 +833,6 @@
       "type": "SdkReferencePath",
       "url": "/guides/blocks/sync-tables/two-way"
     },
-    "status": "Beta",
     "exampleFooterLink": "https://coda.io/packs/build/latest/guides/blocks/sync-tables/two-way",
     "learnMoreLink": "/guides/blocks/sync-tables/two-way",
     "content": "Two-way sync is an optional feature of sync tables that allows users to make edits to row data and push those changes back to the data source. Pack makers enable two-way sync on their tables by annotating their schemas and writing an `executeUpdate` function that handles the update logic.\n\n🚧 This feature is currently only available to a limited group of alpha testers. Email [partners@coda.io](mailto:partners@coda.io) to learn more and request access.",
