@@ -21,7 +21,7 @@ markupsafe==2.1.2; python_version >= '3.7'
 mergedeep==1.3.4; python_version >= '3.6'
 mkdocs==1.5.3
 mkdocs-awesome-pages-plugin==2.9.1
-mkdocs-macros-plugin==1.0.1
+mkdocs-macros-plugin==1.0.4
 mkdocs-material==9.1.15
 mkdocs-material-extensions==1.2; python_version >= '3.7'
 mkdocs-redirects==1.2.0
