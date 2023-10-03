@@ -2661,6 +2661,13 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
 	 * the new state of each object.
 	 */
 	executeUpdate?(params: ParamValues<ParamDefsT>, updates: Array<SyncUpdate<K, L, SchemaT>>, context: UpdateSyncExecutionContext): Promise<SyncUpdateResult<K, L, SchemaT>>;
+	/**
+	 * Options that only apply {@link executeUpdate} but not {@link execute}.
+	 *
+	 * This is useful for specifying OAuth scopes that are only necessary for 2-way writes
+	 * but not for reads.
+	 */
+	updateOptions?: Pick<CommonPackFormulaDef<ParamDefsT>, "extraOAuthScopes">;
 }
 /**
  * The result of defining the formula that implements a sync table.
