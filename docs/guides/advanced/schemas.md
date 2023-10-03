@@ -413,9 +413,6 @@ let MovieSchema = coda.makeObjectSchema({
 });
 ```
 
-!!! tip
-    Avoid using the property name `id` in your schema, and instead prefer the pattern `{thing}Id`. Sync tables come with an internal "ID" field, and if you have an `id` property in your schema, when added as a column in the table it will have the name **ID 1**, which can be confusing to users.
-
 
 ### Schema identity
 
