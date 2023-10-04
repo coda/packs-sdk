@@ -152,6 +152,16 @@ If you need access to the binary content of the image or file you'll need to use
     --8<-- "samples/packs/image/file_size.ts"
     ```
 
+??? tip "Get the original filename"
+
+    The original filename of an uploaded image or file can be obtained from the `Content-Disposition` header returned when fetching it's `codahosted.io` URL.
+
+    ```
+    Content-Disposition: attachment; filename="cat1.png"
+    ```
+
+    This filename is not populated in all cases, for instance when an image was pasted into a table from the clipboard. You can see an example of how to parse this header, and fallback in cases where the filename isn't present, in the [Box sample Pack][examples_box_filename].
+
 
 ### Lists
 
@@ -447,3 +457,4 @@ The table below shows the recommended parameter type to use with various types o
 [samples_todoist]: ../../../samples/full/todoist.md
 [fetcher_binary_response]: ../../basics/fetcher.md#binary-response
 [network_domains]: ../../basics/fetcher.md#network-domains
+[examples_box_filename]: https://github.com/coda/packs-examples/blob/c565981293f14a4ca82bc2ddcf385ea9c7bbbad6/examples/box/helpers.ts#L31-L52
