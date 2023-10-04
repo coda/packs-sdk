@@ -13,6 +13,18 @@ of an object schema.
 
 ## Properties
 
+### fixedId
+
+• `Optional` **fixedId**: `string`
+
+Optional fixed id for this property, used to support renames of properties over time. If specified,
+changes to the name of this property will not cause the property to be treated as a new property.
+Only supported for top-level properties of a sync table.
+Note that fixedIds must already be present on the existing schema prior to rolling out a name change in a
+new schema; adding fixedId and a name change in a single schema version change will not work.
+
+___
+
 ### fromKey
 
 • `Optional` **fromKey**: `string`
@@ -46,6 +58,14 @@ coda.makeObjectSchema({
 
 This tells Coda to transform your formula's return value, creating a field "durationSeconds"
 whose value comes another field called "duration".
+
+___
+
+### mutable
+
+• `Optional` **mutable**: `boolean`
+
+Whether this object schema property is editable by the user in the UI.
 
 ___
 

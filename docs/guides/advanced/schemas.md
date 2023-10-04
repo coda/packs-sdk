@@ -413,16 +413,13 @@ let MovieSchema = coda.makeObjectSchema({
 });
 ```
 
-!!! tip
-    Avoid using the property name `id` in your schema, and instead prefer the pattern `{thing}Id`. Sync tables come with an internal "ID" field, and if you have an `id` property in your schema, when added as a column in the table it will have the name **ID 1**, which can be confusing to users.
-
 
 ### Schema identity
 
 Sync tables have an `identityName` field which defines the [unique identifier][sync_tables_identity] for that table, and a schema that defines the shape of the data in each row. In some cases you need to set the identity name of the sync table in the schema itself:
 
 - Manually constructing a [reference schema](#references).
-- Returning an object schema in an action formula to [approximate two-way sync][sync_tables_actions].
+- Returning an object schema in an action formula to [update the sync table row][actions_sync].
 
 This can be done by adding an `identity` to your schema and setting its `name` field.
 
@@ -695,7 +692,7 @@ If you need to further customize the value, such as combining the value of multi
 [sync_tables_references]: ../blocks/sync-tables/index.md#references
 [data_types_objects]: ../basics/data-types.md#objects
 [mdn_spread_object]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax#spread_in_object_literals
-[sync_tables_actions]: ../blocks/sync-tables/index.md#actions
+[actions_sync]: ../blocks/actions#sync
 [cards]: ../blocks/cards.md
 [PropertyIdentifierDetails]: ../../reference/sdk/interfaces/core.PropertyIdentifierDetails.md
 [PropertyLabelValueTemplate]: ../../reference/sdk/variables/core.PropertyLabelValueTemplate.md
