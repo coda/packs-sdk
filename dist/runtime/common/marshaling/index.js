@@ -157,51 +157,8 @@ function marshalValue(val) {
     };
 }
 exports.marshalValue = marshalValue;
-// This is a temporary hack for ease of node upgrades. It turns out node's documentation
-// is incorrect when it says v8.serialize is backwards compatible: moving from node 14/16
-// to node 18 changes the v8 serialize wire version from 13 to 15, which can't be read
-// by node 14 or 16. If we look at what actually changed in the wire format, it shouldn't
-// impact us as long as we don't try to let people serialize buffer views.
-// The changes were:
-// - https://chromium-review.googlesource.com/c/v8/v8/+/3417189 (support for shared strings)
-// - https://chromium-review.googlesource.com/c/v8/v8/+/3386802 (a change to buffer views)
-// The hacky temporary strategy here is to manually change the wire version back from 14 or 15
-// to 13 by decoding and re-encoding the first few bytes in the string.
-function maybeChangeWireVersionOnBase64EncodedV8SerializedData(serialized) {
-    // If the string is somehow version short, decode the whole thing.
-    if (serialized.length < 4) {
-        const fullyDecoded = Buffer.from(serialized, 'base64');
-        const firstByte = fullyDecoded[0];
-        if (firstByte !== 0xff) {
-            throw new Error('Internal error decoding v8-serialized data: ' + serialized);
-        }
-        const wireVersion = fullyDecoded[1];
-        if (wireVersion <= 13 || wireVersion > 15) {
-            return serialized;
-        }
-        // Change wire version back to 13
-        fullyDecoded[1] = 13;
-        return fullyDecoded.toString('base64');
-    }
-    // For longer strings, we can pull off the first 4 bytes to fix independently.
-    const firstThreeBytesDecoded = Buffer.from(serialized.substring(0, 4), 'base64');
-    const firstByte = firstThreeBytesDecoded[0];
-    if (firstByte !== 0xff) {
-        throw new Error('Internal error decoding v8-serialized data. First three bytes are: ' + serialized.substring(0, 4));
-    }
-    const wireVersion = firstThreeBytesDecoded[1];
-    if (wireVersion <= 13 || wireVersion > 15) {
-        return serialized;
-    }
-    // Change wire version back to 13
-    firstThreeBytesDecoded[1] = 13;
-    return firstThreeBytesDecoded.toString('base64') + serialized.substring(4);
-}
-function marshalValueToStringForSameOrHigherNodeVersion(val, { unsafeHackForNode14BackwardsCompatibility }) {
+function marshalValueToStringForSameOrHigherNodeVersion(val) {
     const serialized = (0, serializer_2.serialize)(marshalValue(val));
-    if (unsafeHackForNode14BackwardsCompatibility) {
-        return maybeChangeWireVersionOnBase64EncodedV8SerializedData(serialized);
-    }
     return serialized;
 }
 exports.marshalValueToStringForSameOrHigherNodeVersion = marshalValueToStringForSameOrHigherNodeVersion;
@@ -252,7 +209,7 @@ exports.unmarshalValue = unmarshalValue;
 // in the "message" field, which must be a string. Because of that, we use marshalValueToString()
 // instead of just putting a structuredClone()-compatible object into a custom field on a custom
 // error type.
-function wrapErrorForSameOrHigherNodeVersion(err, { unsafeHackForNode14BackwardsCompatibility }) {
+function wrapErrorForSameOrHigherNodeVersion(err) {
     // TODO(huayang): we do this for the sdk.
     // if (err.name === 'TypeError' && err.message === `Cannot read property 'body' of undefined`) {
     //   err.message +=
@@ -261,7 +218,7 @@ function wrapErrorForSameOrHigherNodeVersion(err, { unsafeHackForNode14Backwards
     //     'add the --fetch flag ' +
     //     'to actually fetch from the remote API.';
     // }
-    return new Error(marshalValueToStringForSameOrHigherNodeVersion(err, { unsafeHackForNode14BackwardsCompatibility }));
+    return new Error(marshalValueToStringForSameOrHigherNodeVersion(err));
 }
 exports.wrapErrorForSameOrHigherNodeVersion = wrapErrorForSameOrHigherNodeVersion;
 function unwrapError(err) {
