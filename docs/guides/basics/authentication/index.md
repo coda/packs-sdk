@@ -19,7 +19,7 @@ Packs that support per-user authentication require some additional setup. Users 
 
 ### Connecting an account
 
-The listing for the Pack will display a **Sign in to install** button in place of the usual **Install** button. Upon clicking it the user will immediately be launched into a sign-in flow, which varies depending on the type of authentication used and the service the user is connecting to. After the sign-in flow is complete Coda will ask the user if that connected account should be shared with other users in the same doc.
+The first time a user adds a building block that requires authentication they will be shown a **Connect an account** button. Upon clicking it the user will be launched into a sign-in flow, which varies depending on the type of authentication used and the service the user is connecting to.
 
 <video style="width:auto" loop muted autoplay alt="Recording of authenticating with a Pack." class="screenshot"><source src="../../../images/auth_sign_in.mp4" type="video/mp4"></source></video>
 
