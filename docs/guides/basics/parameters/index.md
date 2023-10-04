@@ -154,7 +154,7 @@ If you need access to the binary content of the image or file you'll need to use
 
 ??? tip "Get the original filename"
 
-    The original filename of an uploaded image or file can be obtained from the `Content-Disposition` header returned when fetching it's `codahosted.io` URL.
+    The original filename of an uploaded image or file can be obtained from the `Content-Disposition` header returned when fetching its `codahosted.io` URL.
 
     ```
     Content-Disposition: attachment; filename="cat1.png"
