@@ -181,8 +181,8 @@ importers:
         specifier: 6.9.7
         version: 6.9.7
       '@types/readline-sync':
-        specifier: 1.4.4
-        version: 1.4.4
+        specifier: 1.4.5
+        version: 1.4.5
       '@types/semver':
         specifier: 7.5.1
         version: 7.5.1
@@ -2247,8 +2247,8 @@ packages:
     resolution: {integrity: sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==}
     dev: true
 
-  /@types/readline-sync@1.4.4:
-    resolution: {integrity: sha512-cFjVIoiamX7U6zkO2VPvXyTxbFDdiRo902IarJuPVxBhpDnXhwSaVE86ip+SCuyWBbEioKCkT4C88RNTxBM1Dw==}
+  /@types/readline-sync@1.4.5:
+    resolution: {integrity: sha512-vD/LCH84gWf9CoJaqGL8Ey0/oFrgHNEf/R/SPzoDeZa5Zr8Fh5tPCaTF2UC/m1shAcAHVHHZmDQrsoWMkCj0gA==}
     dev: true
 
   /@types/semver@7.5.1:
