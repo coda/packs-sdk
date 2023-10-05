@@ -12,6 +12,11 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ### Changed
 
 - "=" character is no longer supported in sync table identity names.
+- Removed support for Node 14
+
+### Fixed
+
+- Schemas with property option JS functions can be used within return types in `addFormula()` without validation errors.
 
 ## [1.5.1] - 2023-07-31
 
