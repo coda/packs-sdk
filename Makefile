@@ -244,6 +244,31 @@ optimize-images:
 	# Compress pngs.
 	npx sharp-cli -i docs/images/*.png -o docs/images/ --optimize
 
+.PHONY: optimize-video
+optimize-video:
+	# Optimize a video being used as an embedded animation.
+	ffmpeg \
+		-i "${FILE}" \
+		-vcodec libx264 \
+		`# Ensure the output format is MP4` \
+		-f mp4 \
+		`# Set the pixel format to ensure compatibility with certain browsers` \
+		-pix_fmt yuv420p \
+		`# Crop the video so that it has even dimensions, and scale it to 800px max` \
+		-vf "crop=trunc(iw/2)*2:trunc(ih/2)*2,scale='min(800,iw)':-1" \
+		`# Set the quality of the video, higher numbers are lower quality` \
+		-crf 25 \
+		`# Lower the frame rate, to mirror an animated gif` \
+		-r 15 \
+		`# Drops any audio track` \
+		-an \
+		`# Only log errors` \
+		-loglevel error \
+		`# Say yes to overwriting an existing file` \
+		-y  \
+		${FILE}.tmp; \
+	mv ${FILE}.tmp ${FILE}
+
 ###############################################################################
 ### Deployment of documentation ###
 

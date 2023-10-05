@@ -485,26 +485,43 @@ The code we've written so far includes only public information about the OAuth f
 
 Now that the Pack is built and the credentials set, we're finally ready to sign in and try it in a doc.
 
-
-=== ":material-numeric-1-circle: Sign-in prompt"
+=== ":material-numeric-1-circle: Install the Pack"
 
     <section class="tutorial-row" markdown>
     <div markdown>
 
-    Packs with per-user authentication require that you sign in before you can add it to a doc.
+    Create a new doc, install the Pack, and then drag the `Tasks()` formula into the doc.
 
-    Click the **Sign in to add to doc** button.
+    The formula requires an account to work, so it will prompt you to connect one.
+
+    Click the **Connect to Todoist** button.
 
     </div>
     <div markdown>
 
-    <img src="../../../images/tutorial_oauth_signin.png" srcset="../../../images/tutorial_oauth_signin_2x.png 2x" class="screenshot" alt="Prompted to sign in to the Pack on install">
+    <img src="../../../images/tutorial_oauth_connect.png" srcset="../../../images/tutorial_oauth_connect_2x.png 2x" class="screenshot" alt="Prompted to connect an account">
 
     </div>
     </section>
 
 
-=== ":material-numeric-2-circle: Approving access"
+=== ":material-numeric-2-circle: Sign-in dialog"
+
+    <section class="tutorial-row" markdown>
+    <div markdown>
+
+    In the resulting dialog click the button **Sign in with Todoist**.
+
+    </div>
+    <div markdown>
+
+    <img src="../../../images/tutorial_oauth_signin.png" srcset="../../../images/tutorial_oauth_signin_2x.png 2x" class="screenshot" alt="Dialog to sign in with an account">
+
+    </div>
+    </section>
+
+
+=== ":material-numeric-3-circle: Approving access"
 
     <section class="tutorial-row" markdown>
     <div markdown>
@@ -522,14 +539,12 @@ Now that the Pack is built and the credentials set, we're finally ready to sign 
     </section>
 
 
-=== ":material-numeric-3-circle: Complete setup"
+=== ":material-numeric-4-circle: Complete setup"
 
     <section class="tutorial-row" markdown>
     <div markdown>
 
     After approving access, the Todoist tab will close and you'll be back in your Coda doc.
-
-    Depending on the features of your Pack, users may need to make additional decisions about how their account is used. For this Pack there are no choices to make.
 
     Click the **Complete setup** button.
 
