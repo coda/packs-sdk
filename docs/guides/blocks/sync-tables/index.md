@@ -248,9 +248,9 @@ It's recommended that you reduce or disable [HTTP caching][fetcher_caching] of t
 
 ## Columns selection
 
-Although only [featured columns][schemas_featured_columns] are shown in the table by default, all of the schema properties are synced and stored in the object chip in the first column of the sync table. These later can be expanded out into columns of their own or accessed formulaically.
+Although only [featured columns][schemas_featured_columns] are shown in the table by default, all of the schema properties are synced and stored in the table as their own columns. Additionally, the object chip in the first column of the sync table provides quick access to view and formulaically access the value of all properties.
 
-For very large schemas all of these unused properties can come with a performance cost however, so users have the option to choose the exact set of columns they want to sync. This can be done by clicking the **Choose columns** button in the sync table settings, and is launched automatically when creating the sync table with a very large schema.
+For very large schemas all of these unused properties can come with a performance cost however, so users have the option to choose the exact set of columns they want to sync. This can be done by clicking the **Sync more properties** button in the sync table settings, and is launched automatically when creating the sync table with a very large schema.
 
 <img src="../../../images/sync_table_select_columns.png" srcset="../../../images/sync_table_select_columns_2x.png 2x" class="screenshot" alt="Selecting columns of a sync table">
 
