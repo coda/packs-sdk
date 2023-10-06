@@ -29,7 +29,7 @@
     "clone": "2.1.2",
     "cross-fetch": "3.1.8",
     "es6-promise": "4.2.8",
-    "esbuild": "0.18.11",
+    "esbuild": "0.19.4",
     "exorcist": "2.0.0",
     "express": "4.18.2",
     "fs-extra": "11.1.1",
