@@ -184,8 +184,8 @@ importers:
         specifier: 1.4.5
         version: 1.4.5
       '@types/semver':
-        specifier: 7.5.1
-        version: 7.5.1
+        specifier: 7.5.3
+        version: 7.5.3
       '@types/sha.js':
         specifier: 2.4.2
         version: 2.4.2
@@ -2251,8 +2251,8 @@ packages:
     resolution: {integrity: sha512-vD/LCH84gWf9CoJaqGL8Ey0/oFrgHNEf/R/SPzoDeZa5Zr8Fh5tPCaTF2UC/m1shAcAHVHHZmDQrsoWMkCj0gA==}
     dev: true
 
-  /@types/semver@7.5.1:
-    resolution: {integrity: sha512-cJRQXpObxfNKkFAZbJl2yjWtJCqELQIdShsogr1d2MilP8dKD9TE/nEKHkJgUNHdGKCQaf9HbIynuV2csLGVLg==}
+  /@types/semver@7.5.3:
+    resolution: {integrity: sha512-OxepLK9EuNEIPxWNME+C6WwbRAOOI2o2BaQEGzz5Lu2e4Z5eDnEo+/aVEDMIXywoJitJ7xWd641wrGLZdtwRyw==}
     dev: true
 
   /@types/serve-static@1.15.0:
@@ -2449,7 +2449,7 @@ packages:
     dependencies:
       '@eslint-community/eslint-utils': 4.4.0(eslint@8.48.0)
       '@types/json-schema': 7.0.11
-      '@types/semver': 7.5.1
+      '@types/semver': 7.5.3
       '@typescript-eslint/scope-manager': 5.59.8
       '@typescript-eslint/types': 5.59.8
       '@typescript-eslint/typescript-estree': 5.59.8(typescript@5.1.6)
