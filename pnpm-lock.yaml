@@ -205,8 +205,8 @@ importers:
         specifier: 0.4.12
         version: 0.4.12
       '@types/yargs':
-        specifier: 17.0.24
-        version: 17.0.24
+        specifier: 17.0.26
+        version: 17.0.26
       '@typescript-eslint/eslint-plugin':
         specifier: 5.59.8
         version: 5.59.8(@typescript-eslint/parser@5.59.8)(eslint@8.48.0)(typescript@5.1.6)
@@ -2320,8 +2320,8 @@ packages:
     resolution: {integrity: sha512-iO9ZQHkZxHn4mSakYV0vFHAVDyEOIJQrV2uZ06HxEPcx+mt8swXoZHIbaaJ2crJYFfErySgktuTZ3BeLz+XmFA==}
     dev: true
 
-  /@types/yargs@17.0.24:
-    resolution: {integrity: sha512-6i0aC7jV6QzQB8ne1joVZ0eSFIstHsCrobmOtghM11yGlH0j43FKL2UhWdELkyps0zuf7qVTUVCCR+tgSlyLLw==}
+  /@types/yargs@17.0.26:
+    resolution: {integrity: sha512-Y3vDy2X6zw/ZCumcwLpdhM5L7jmyGpmBCTYMHDLqT2IKVMYRRLdv6ZakA+wxhra6Z/3bwhNbNl9bDGXaFU+6rw==}
     dependencies:
       '@types/yargs-parser': 21.0.0
     dev: true
