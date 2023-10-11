@@ -56,7 +56,7 @@
     "zod": "3.22.3"
   },
   "optionalDependencies": {
-    "isolated-vm": "4.4.1"
+    "isolated-vm": "4.6.0"
   },
   "devDependencies": {
     "@aws-sdk/types": "3.398.0",
