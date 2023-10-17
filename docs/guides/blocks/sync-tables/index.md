@@ -9,6 +9,7 @@ Tables are one of the most powerful features of Coda, and many times people use 
 
 [View Sample Code][samples]{ .md-button }
 
+
 ## Using sync tables
 
 Sync tables are added directly to the document, usually by dragging them in from the side panel. Navigate to {{ coda.pack_panel_clicks }} and drag the table into the canvas.
@@ -18,13 +19,15 @@ Sync tables are added directly to the document, usually by dragging them in from
 If the sync table doesn't have any required parameters it will start syncing immediately, otherwise you'll have to configure it first. The data in the table can be synced manually or set up to sync automatically at regular intervals.
 
 !!! info "Multiple syncs"
-Each sync table can only be added once to a document. If you want to sync data from multiple accounts or with different parameters you can add additional syncs to the table. In the table options pane click the **Add another sync** button and configure the settings. The results from all syncs will be appended to the same table, but you can use views and filters on that table to display them separately.
+    Each sync table can only be added once to a document. If you want to sync data from multiple accounts or with different parameters you can add additional syncs to the table. In the table options pane click the **Add another sync** button and configure the settings. The results from all syncs will be appended to the same table, but you can use views and filters on that table to display them separately.
 
 The data in the table is synced with the external source automatically on a schedule (at most hourly). In the table's **Options** pane users can set the sync frequency or start a manual sync. It is not possible to configure a button or automation to start a sync.
+
 
 ## Creating a sync table
 
 A sync table consists of three main parts: the schema for each row of data, the sync table definition, and the formula that populates the table.
+
 
 ### Define the schema
 
@@ -41,7 +44,8 @@ const TaskSchema = coda.makeObjectSchema({
 ```
 
 !!! info "Dynamic schemas"
-For some data sources it isn't possible to know the shape of the data upfront, and it can only be determined at runtime. In these cases instead of defining your schema upfront you can generate it dynamically. See the [Dynamic sync tables][dynamic_sync_tables] guide for more information.
+    For some data sources it isn't possible to know the shape of the data upfront, and it can only be determined at runtime. In these cases instead of defining your schema upfront you can generate it dynamically. See the [Dynamic sync tables][dynamic_sync_tables] guide for more information.
+
 
 ### Define the sync table
 
@@ -49,9 +53,9 @@ The sync table itself is defined using the `addSyncTable()` method:
 
 ```ts
 pack.addSyncTable({
-  name: 'Tasks',
+  name: "Tasks",
   schema: TaskSchema,
-  identityName: 'Task',
+  identityName: "Task",
   formula: {
     // ...
   },
@@ -59,6 +63,7 @@ pack.addSyncTable({
 ```
 
 It includes the name of the sync table, the schema for each row, and other metadata. The `identityName` property will be explained in the [Identity](#identity) section below.
+
 
 ### Write the sync formula {: #formula}
 
@@ -68,12 +73,12 @@ Inside each sync table definition is a formula definition, detailing the hidden 
 pack.addSyncTable({
   // ...
   formula: {
-    name: 'SyncTasks',
+    name: "SyncTasks",
     description: "Sync the user's tasks.",
     parameters: [],
     execute: async function ([], context) {
       // ...
-    },
+    }
   },
 });
 ```
@@ -86,22 +91,23 @@ pack.addSyncTable({
   formula: {
     // ...
     execute: async function ([], context) {
-      let url = '<URL to pull data from>';
+      let url = "<URL to pull data from>";
       let response = await context.fetcher.fetch({
-        method: 'GET',
+        method: "GET",
         url: url,
       });
       let items = response.body.items;
       // Adjust the items to fit the schema if required.
       return {
         result: items,
-      };
-    },
+      }
+    }
   },
 });
 ```
 
 On each sync your code must return the full set of items, and Coda will determine how to update existing rows, remove old rows, etc. This could take a long time for large datasets or slow APIs, and the [Long-running syncs](#longrunning) section has more information on how to handle this.
+
 
 ## Naming
 
@@ -120,7 +126,8 @@ The name of a sync table is visible to the user, and can only contain letters, n
 In some areas of the UI, such as the settings pane, the name will be rewritten to add spaces ("BugReports" => "Bug Reports") for readability.
 
 !!! warning
-Changing the name of a sync table will break any existing docs that use it. When creating your Pack select your names carefully.
+    Changing the name of a sync table will break any existing docs that use it. When creating your Pack select your names carefully.
+
 
 ## Identity {: #identity}
 
@@ -128,15 +135,18 @@ Every sync table is required to specify an [`identityName`][identityName], which
 
 By default the identity name is also used as the column name for the first column of the sync table, which contains the synced item as a chip. You can use a different name for the column by setting [`dynamicOptions.entityName`][dynamicOptions] on the sync table.
 
+
 ## Parameters
 
 The parameters defined on the sync formula are exposed to users as criteria in the sync table options. See the [parameters guide][parameters] for more information about how parameters are defined and displayed.
 
 In most sync tables, parameters are used to allow users to filter the results in the sync table. Although users can always add filters to the resulting table to hide certain rows, it's faster and simpler to do that filtering in the sync formula itself.
 
+
 ## Row limits
 
 Each sync table has a user-defined maximum number of rows, which defaults to 1000 but can be set as high as 10,000. Once a sync table reaches the limit Coda will stop the sync (even if the code returned a [continuation](#longrunning)) and truncate the resulting rows to fit within the limit.
+
 
 ## Long-running syncs {: #longrunning}
 
@@ -195,19 +205,21 @@ pack.addSyncTable({
       return {
         result: items,
         continuation: nextContinuation,
-      };
-    },
+      }
+    }
   },
 });
 ```
 
 [View Sample Code][sample_continuation]{ .md-button }
 
+
 ## Two-way sync
 
 By default the sync process used by sync tables is one-way only; data is pulled in from an external source and is displayed in a read-only column. However, if the external API supports it you can utilize the two-way sync feature to allow users to edit column values directly in the sync table and then push those changes back to the original data source.
 
 Learn more about this approach in the [two-way sync guide][two_way_sync].
+
 
 ## Referencing rows from other sync tables {: #references}
 
@@ -221,15 +233,18 @@ See the [Schemas guide][schema_references] for more information on how to create
 
 [View Sample Code][sample_reference]{ .md-button }
 
+
 ## Account-specific fields
 
 Some APIs vary the shape of the data returned based on the account being accessed. For example, an issue tracker may allow users to define custom fields for their bug reports, which the API also returns. A sync table must have a defined schema that represents the data for each item, but it is possible to expand that schema to accommodate these variations by using a dynamic schema. See the [Dynamic sync tables guide][dynamic_sync_tables_schema_only] for more information on how to use this feature.
+
 
 ## Caching & recalculation {: #caching}
 
 A sync table is not a live view into an external data source, but rather a snapshot of the data stored at the time of the last sync. Unlike formulas which are recalculated automatically when the parameters change, changes to sync table parameters will only be reflected during the next sync.
 
 It's recommended that you reduce or disable [HTTP caching][fetcher_caching] of the fetcher requests used to populate your sync table. When users manually resync a table they expect the latest results, and HTTP caching can interfere with that. Caching may still be appropriate for requests that retrieve the same data during each sync formula execution.
+
 
 ## Columns selection
 
@@ -246,9 +261,9 @@ While there is no harm in your Pack retrieving properties that won't be persiste
 Since the properties themselves may use the [`fromKey`][fromKey] option to load their value from a different field in the row objects, it can be somewhat involved to map the properties back to API fields. To assist with this there is a helper function [`coda.getEffectivePropertyKeysFromSchema()`][getEffectivePropertyKeysFromSchema] that will do the conversion for you.
 
 ??? example "Example: Open Data NY sync table"
-`ts
+    ```ts
     --8<-- "samples/packs/dynamic-sync-table/open_data_ny.ts"
-    `
+    ```
 
 [samples]: ../../../samples/topic/sync-table.md
 [help_center]: https://help.coda.io/en/articles/3213629-using-packs-tables-to-sync-your-data-into-coda
