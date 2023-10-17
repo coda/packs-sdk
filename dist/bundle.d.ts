@@ -1896,7 +1896,6 @@ export type PickOptional<T, K extends keyof T> = Partial<T> & {
 export interface StringHintTypeToSchemaTypeMap {
 	[ValueHintType.DateTime]: Date | string | number;
 	[ValueHintType.Date]: Date | string | number;
-	[ValueHintType.Time]: Date | string | number;
 }
 export type StringHintTypeToSchemaType<T extends StringHintTypes | undefined> = T extends keyof StringHintTypeToSchemaTypeMap ? StringHintTypeToSchemaTypeMap[T] : string;
 export type SchemaWithNoFromKey<T extends ObjectSchemaDefinition<any, any>> = {
