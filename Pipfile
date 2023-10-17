@@ -15,7 +15,7 @@ mkdocs-awesome-pages-plugin = "*"
 mkdocs-macros-plugin = "*"
 mkdocs-redirects = "*"
 mkdocs-simple-hooks = "*"
-pillow = "==9.5.0"
+pillow = "*"
 urllib3 = "*"
 
 [dev-packages]
