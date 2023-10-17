@@ -1,5 +1,5 @@
 ---
-nav: Two-way sync 🚧
+nav: Two-way sync
 description: Samples that show how to create sync tables with editable values.
 icon: material/card-text
 ---

@@ -4,6 +4,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+## [1.6.0] - 2023-10-05
+
 ### Added
 
 - For CLI development, there is now a `--allowOlderSdkVersion` param for the `coda upload` command that builds a new version. Coda will soon default to preventing a Pack build to have an older SDK version than the prior version, under the assumption that it most often happens when multiple dev environments conflict with each other. This new option is a bypass for that protection, for the rare case when you actually want to downgrade the SDK.
@@ -12,6 +14,11 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ### Changed
 
 - "=" character is no longer supported in sync table identity names.
+- Removed support for Node 14
+
+### Fixed
+
+- Schemas with property option JS functions can be used within return types in `addFormula()` without validation errors.
 
 ## [1.5.1] - 2023-07-31
 
@@ -612,7 +619,8 @@ await myHelper(context);
 
 - Beginning of alpha versioning.
 
-[unreleased]: https://github.com/coda/packs-sdk/compare/v1.5.1...HEAD
+[unreleased]: https://github.com/coda/packs-sdk/compare/v1.6.0...HEAD
+[1.6.0]: https://github.com/coda/packs-sdk/compare/v1.5.1...v1.6.0
 [1.5.1]: https://github.com/coda/packs-sdk/compare/v1.4.1...v1.5.1
 [1.5.0]: https://github.com/coda/packs-sdk/compare/v1.4.1...v1.5.0
 [1.4.1]: https://github.com/coda/packs-sdk/compare/v1.4.0...v1.4.1

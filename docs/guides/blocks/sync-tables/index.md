@@ -131,7 +131,7 @@ In some areas of the UI, such as the settings pane, the name will be rewritten t
 
 ## Identity {: #identity}
 
-Every sync table is required to specify an [`identityName`][identityName], which is a unique identifier for the table. By convention this is usually the singular form of the name of the item being synced. For instance, a "Tasks" table would use an identity name of "Task". This identity name is used to reference the table when [creating row references](#references) or [updating rows with actions](#actions).
+Every sync table is required to specify an [`identityName`][identityName], which is a unique identifier for the table. By convention this is usually the singular form of the name of the item being synced. For instance, a "Tasks" table would use an identity name of "Task". This identity name is used to reference the table when [creating row references](#references) or [updating rows with actions][actions_sync].
 
 By default the identity name is also used as the column name for the first column of the sync table, which contains the synced item as a chip. You can use a different name for the column by setting [`dynamicOptions.entityName`][dynamicOptions] on the sync table.
 
@@ -214,9 +214,9 @@ pack.addSyncTable({
 [View Sample Code][sample_continuation]{ .md-button }
 
 
-## Approximating two-way sync {: #actions}
+## Two-way sync
 
-The sync process used by sync tables is one-way only; data is pulled in from an external source and is displayed in a read-only column. It's not possible to directly edit the items in the sync table and sync the changes back out. However it is possible to approximate a two-way sync using a combinations of additional columns, buttons, and custom actions.
+By default the sync process used by sync tables is one-way only; data is pulled in from an external source and is displayed in a read-only column. However, if the external API supports it you can utilize the two-way sync feature to allow users to edit column values directly in the sync table and then push those changes back to the original data source.
 
 Learn more about this approach in the [two-way sync guide][two_way_sync].
 
@@ -248,9 +248,9 @@ It's recommended that you reduce or disable [HTTP caching][fetcher_caching] of t
 
 ## Columns selection
 
-Although only [featured columns][schemas_featured_columns] are shown in the table by default, all of the schema properties are synced and stored in the object chip in the first column of the sync table. These later can be expanded out into columns of their own or accessed formulaically.
+Although only [featured columns][schemas_featured_columns] are shown in the table by default, all of the schema properties are synced and stored in the table as their own columns. Additionally, the object chip in the first column of the sync table provides quick access to view and formulaically access the value of all properties.
 
-For very large schemas all of these unused properties can come with a performance cost however, so users have the option to choose the exact set of columns they want to sync. This can be done by clicking the **Choose columns** button in the sync table settings, and is launched automatically when creating the sync table with a very large schema.
+For very large schemas all of these unused properties can come with a performance cost however, so users have the option to choose the exact set of columns they want to sync. This can be done by clicking the **Sync more properties** button in the sync table settings, and is launched automatically when creating the sync table with a very large schema.
 
 <img src="../../../images/sync_table_select_columns.png" srcset="../../../images/sync_table_select_columns_2x.png 2x" class="screenshot" alt="Selecting columns of a sync table">
 
@@ -285,7 +285,8 @@ Since the properties themselves may use the [`fromKey`][fromKey] option to load 
 [parmeters]: ../../basics/parameters/index.md
 [fetcher_caching]: ../../basics/fetcher.md#caching
 [parameters]: ../../basics/parameters/index.md
-[two_way_sync]: ../../advanced/two-way-sync.md
+[two_way_sync]: two-way.md
 [schemas_featured_columns]: ../../advanced/schemas.md#featured-columns
 [getEffectivePropertyKeysFromSchema]: ../../../reference/sdk/functions/core.getEffectivePropertyKeysFromSchema.md
 [fromKey]: ../../../reference/sdk/interfaces/core.ObjectSchemaProperty.md#fromkey
+[actions_sync]: ../actions.md#sync

@@ -6250,38 +6250,8 @@ module.exports = (() => {
     };
   }
   __name(marshalValue, "marshalValue");
-  function maybeChangeWireVersionOnBase64EncodedV8SerializedData(serialized) {
-    if (serialized.length < 4) {
-      const fullyDecoded = Buffer2.from(serialized, "base64");
-      const firstByte2 = fullyDecoded[0];
-      if (firstByte2 !== 255) {
-        throw new Error("Internal error decoding v8-serialized data: " + serialized);
-      }
-      const wireVersion2 = fullyDecoded[1];
-      if (wireVersion2 <= 13 || wireVersion2 > 15) {
-        return serialized;
-      }
-      fullyDecoded[1] = 13;
-      return fullyDecoded.toString("base64");
-    }
-    const firstThreeBytesDecoded = Buffer2.from(serialized.substring(0, 4), "base64");
-    const firstByte = firstThreeBytesDecoded[0];
-    if (firstByte !== 255) {
-      throw new Error("Internal error decoding v8-serialized data. First three bytes are: " + serialized.substring(0, 4));
-    }
-    const wireVersion = firstThreeBytesDecoded[1];
-    if (wireVersion <= 13 || wireVersion > 15) {
-      return serialized;
-    }
-    firstThreeBytesDecoded[1] = 13;
-    return firstThreeBytesDecoded.toString("base64") + serialized.substring(4);
-  }
-  __name(maybeChangeWireVersionOnBase64EncodedV8SerializedData, "maybeChangeWireVersionOnBase64EncodedV8SerializedData");
-  function marshalValueToStringForSameOrHigherNodeVersion(val, { unsafeHackForNode14BackwardsCompatibility }) {
+  function marshalValueToStringForSameOrHigherNodeVersion(val) {
     const serialized = serialize(marshalValue(val));
-    if (unsafeHackForNode14BackwardsCompatibility) {
-      return maybeChangeWireVersionOnBase64EncodedV8SerializedData(serialized);
-    }
     return serialized;
   }
   __name(marshalValueToStringForSameOrHigherNodeVersion, "marshalValueToStringForSameOrHigherNodeVersion");
@@ -6321,8 +6291,8 @@ module.exports = (() => {
     return result;
   }
   __name(unmarshalValue, "unmarshalValue");
-  function wrapErrorForSameOrHigherNodeVersion(err, { unsafeHackForNode14BackwardsCompatibility }) {
-    return new Error(marshalValueToStringForSameOrHigherNodeVersion(err, { unsafeHackForNode14BackwardsCompatibility }));
+  function wrapErrorForSameOrHigherNodeVersion(err) {
+    return new Error(marshalValueToStringForSameOrHigherNodeVersion(err));
   }
   __name(wrapErrorForSameOrHigherNodeVersion, "wrapErrorForSameOrHigherNodeVersion");
   function unwrapError(err) {
@@ -6419,7 +6389,7 @@ module.exports = (() => {
       }
       return await doFindAndExecutePackFunction(args);
     } catch (err) {
-      throw shouldWrapError ? wrapErrorForSameOrHigherNodeVersion(err, { unsafeHackForNode14BackwardsCompatibility: true }) : err;
+      throw shouldWrapError ? wrapErrorForSameOrHigherNodeVersion(err) : err;
     }
   }
   __name(findAndExecutePackFunction, "findAndExecutePackFunction");

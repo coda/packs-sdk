@@ -9,7 +9,7 @@ orbs:
         steps:
           - run:
               name: Install basic tools
-              command: sudo apt-get update && sudo apt-get install -y pipenv
+              command: sudo apt-get update && sudo apt-get install -y python3-pip && sudo python3 -m pip install pipenv
           - run:
               name: Install image libraries
               command: make _bootstrap-doc-tools
@@ -18,7 +18,7 @@ orbs:
 executors:
   default_build_environment:
     docker:
-      - image: cimg/node:14.17
+      - image: cimg/node:18.16.0
         auth:
           username: codainternaltools
           password: $DOCKERHUB_PASSWORD

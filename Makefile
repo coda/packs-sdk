@@ -110,19 +110,6 @@ lint:
 lint-fix:
 	find . -name "*.ts" | grep -v /dist/ | grep -v /node_modules/ | grep -v .d.ts | xargs ${ROOTDIR}/node_modules/.bin/eslint --fix
 
-.PHONY: do-compile-isolated-vm-14
-do-compile-isolated-vm-14:
-	rm -rf build-isolated-vm-14
-	mkdir build-isolated-vm-14 && \
-		cd build-isolated-vm-14 && \
-		npm init -y && \
-		docker run --rm --platform linux/amd64 -v `pwd`:/var/task amazon/aws-sam-cli-build-image-nodejs14.x:latest npm install isolated-vm@${ISOLATED_VM_VERSION}
-	mkdir -p runtime/native/node14/x86_64/isolated-vm/out
-	cp build-isolated-vm-14/node_modules/isolated-vm/package.json runtime/native/node14/x86_64/isolated-vm/
-	cp build-isolated-vm-14/node_modules/isolated-vm/isolated-vm.js runtime/native/node14/x86_64/isolated-vm/
-	cp build-isolated-vm-14/node_modules/isolated-vm/out/isolated_vm.node runtime/native/node14/x86_64/isolated-vm/out/
-	rm -rf build-isolated-vm-14
-
 .PHONY: do-compile-isolated-vm-18
 do-compile-isolated-vm-18:
 	rm -rf build-isolated-vm-18
@@ -136,14 +123,6 @@ do-compile-isolated-vm-18:
 	cp build-isolated-vm-18/node_modules/isolated-vm/isolated-vm.js runtime/native/node18/x86_64/isolated-vm/
 	cp build-isolated-vm-18/node_modules/isolated-vm/out/isolated_vm.node runtime/native/node18/x86_64/isolated-vm/out/
 	rm -rf build-isolated-vm-18
-
-.PHONY: compile-isolated-vm-14
-compile-isolated-vm-14:
-	if [ ! -f './runtime/native/node14/x86_64/isolated-vm/package.json' ] || \
-	   [`node -p -e "require('./runtime/native/node14/x86_64/isolated-vm/package.json').version"` != $(ISOLATED_VM_VERSION) ]; \
-		then $(MAKE) do-compile-isolated-vm-14; \
-		else echo "isolated-vm version matches, skipping."; \
-	fi
 
 .PHONY: compile-isolated-vm-18
 compile-isolated-vm-18:
@@ -206,7 +185,6 @@ compile-ts:
 .PHONY: compile
 compile:
 	# Generate isolated-vm binaries that are compatible with Amazon Linux 2.
-	$(MAKE) compile-isolated-vm-14
 	$(MAKE) compile-isolated-vm-18
 
 	$(MAKE) compile-ts
@@ -265,6 +243,31 @@ view-docs:
 optimize-images:
 	# Compress pngs.
 	npx sharp-cli -i docs/images/*.png -o docs/images/ --optimize
+
+.PHONY: optimize-video
+optimize-video:
+	# Optimize a video being used as an embedded animation.
+	ffmpeg \
+		-i "${FILE}" \
+		-vcodec libx264 \
+		`# Ensure the output format is MP4` \
+		-f mp4 \
+		`# Set the pixel format to ensure compatibility with certain browsers` \
+		-pix_fmt yuv420p \
+		`# Crop the video so that it has even dimensions, and scale it to 800px max` \
+		-vf "crop=trunc(iw/2)*2:trunc(ih/2)*2,scale='min(800,iw)':-1" \
+		`# Set the quality of the video, higher numbers are lower quality` \
+		-crf 25 \
+		`# Lower the frame rate, to mirror an animated gif` \
+		-r 15 \
+		`# Drops any audio track` \
+		-an \
+		`# Only log errors` \
+		-loglevel error \
+		`# Say yes to overwriting an existing file` \
+		-y  \
+		${FILE}.tmp; \
+	mv ${FILE}.tmp ${FILE}
 
 ###############################################################################
 ### Deployment of documentation ###
