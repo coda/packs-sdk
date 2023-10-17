@@ -2,7 +2,7 @@
 nav: Tutorials
 description: An index of guided lessons to help you learn various aspects of the SDK.
 hide:
-- toc
+  - toc
 ---
 
 # Tutorials
@@ -34,7 +34,7 @@ The tutorials below provide step-by-step instructions and sample code to help yo
 
 {% endif %}
 
-[View]({{fix_url(page.url)}}){ .md-button }
+[View](<{{fix_url(page.url)[:-1]}}.md>){ .md-button }
 
 </div>
 
@@ -49,6 +49,5 @@ The tutorials below provide step-by-step instructions and sample code to help yo
 Sometimes a video is worth a thousand tutorials. Check out recordings from some of our recent webinars as well as other videos on Pack building.
 
 [Watch][videos]{ .md-button }
-
 
 [videos]: videos.md

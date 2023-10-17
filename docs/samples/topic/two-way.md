@@ -11,7 +11,7 @@ Two-way sync is an optional feature of sync tables that allows users to make edi
 🚧 This feature is currently only available to a limited group of alpha testers. Email [partners@coda.io](mailto:partners@coda.io) to learn more and request access.
 
 
-[Learn More](../../../guides/blocks/sync-tables/two-way){ .md-button }
+[Learn More](../../guides/blocks/sync-tables/two-way.md){ .md-button }
 
 ## Simple two-way sync
 A sync table that supports user edits via two-way sync. It uses the default behavior of updating one row at a time. This sample syncs the tasks from a user&#x27;s Todoist account.

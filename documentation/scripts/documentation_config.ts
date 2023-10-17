@@ -314,7 +314,7 @@ export const Examples: Example[] = [
     contentFile: './samples/packs/authentication/README.md',
     linkData: {
       type: UrlType.SdkReferencePath,
-      url: '/guides/basics/authentication',
+      url: '/guides/basics/authentication/',
     },
     exampleSnippets: [
       {
@@ -505,7 +505,7 @@ export const Examples: Example[] = [
     contentFile: './samples/packs/parameter/README.md',
     linkData: {
       type: UrlType.SdkReferencePath,
-      url: '/guides/basics/parameters',
+      url: '/guides/basics/parameters/',
     },
     exampleSnippets: [
       {
@@ -625,7 +625,7 @@ export const Examples: Example[] = [
     contentFile: './samples/packs/sync-table/README.md',
     linkData: {
       type: UrlType.SdkReferencePath,
-      url: '/guides/blocks/sync-tables',
+      url: '/guides/blocks/sync-tables/',
     },
     exampleSnippets: [
       {

@@ -11,7 +11,7 @@ Dynamic sync tables allow you to bring data from an external data source into yo
 Dynamic sync tables typically provide a list all of the datasets that the user has access to, using the `listDynamicUrls` function. Once a user selects a dataset from the side panel it will be available to other functions in `context.sync.dynamicUrl`. The dynamic sync table must also provide a user-visible URL for the selected dataset (using `getDisplayUrl`) and a name for the resulting table on the page (using `getName`).
 
 
-[Learn More](../../../guides/blocks/sync-tables/dynamic){ .md-button }
+[Learn More](../../guides/blocks/sync-tables/dynamic.md){ .md-button }
 
 ## Template
 

@@ -8,13 +8,12 @@ Many Packs use cases require fetching data from an outside source such as an API
 
 [View Sample Code][samples]{ .md-button }
 
-
 ## Network domains {: #network-domains}
 
 Before you can start making any requests using the fetcher, your Pack must declare which domain names it is going to communicate with. This can be done using the [`addNetworkDomain()`][addNetworkDomain] method of the pack:
 
 ```ts
-pack.addNetworkDomain("example.com");
+pack.addNetworkDomain('example.com');
 ```
 
 The fetcher can to communicate with URLs on that domain and all sub-domains. It's usually best select the root domain of the service you are working with. For example, if you want to make requests to `api.example.com`, add the network domain `example.com`, in case you later determine you need to access related content on `images.example.com`, etc.
@@ -27,8 +26,7 @@ The following domains don't need to be declared as a network domain in your Pack
 - `coda-us-west-2-prod-blobs-upload.s3.us-west-2.amazonaws.com` (used by [temporary blob storage][temporaryblobstorage])
 
 !!! info "Multiple domains and authentication"
-    If you make requests to multiple network domains and utilize [per-user authentication][auth_user], you'll need to set the [`networkDomain`][baseauthentication_networkdomain] field of the authentication configuration to specify which domain it should be applied to. Authentication credentials can only be applied to a single domain.
-
+If you make requests to multiple network domains and utilize [per-user authentication][auth_user], you'll need to set the [`networkDomain`][baseauthentication_networkdomain] field of the authentication configuration to specify which domain it should be applied to. Authentication credentials can only be applied to a single domain.
 
 ## Accessing the fetcher
 
@@ -56,15 +54,14 @@ coda.makeParameter({
 }),
 ```
 
-
 ## Making requests
 
 The fetcher has only one method, [`fetch`][fetch], which accepts an object containing the settings of the request. The `method` and `url` fields are required, with other fields like `headers` and `body` as optional. You can see the full list of supported fields in the [`FetchRequest` interface][FetchRequest].
 
 ```ts
 context.fetcher.fetch({
-  method: "GET",
-  url: "https://www.example.com",
+  method: 'GET',
+  url: 'https://www.example.com',
 });
 ```
 
@@ -75,8 +72,8 @@ pack.addFormula({
   // ...
   execute: async ([], context) => {
     let response = await context.fetcher.fetch({
-      method: "GET",
-      url: "https://www.example.com",
+      method: 'GET',
+      url: 'https://www.example.com',
     });
     // Any following code won't run until the response is received.
   },
@@ -84,8 +81,7 @@ pack.addFormula({
 ```
 
 !!! info "Only HTTPS supported"
-    The fetcher only supports the HTTP protocol, and requires that the connection be secured with SSL. Specifically only the protocol `https://` is supported.
-
+The fetcher only supports the HTTP protocol, and requires that the connection be secured with SSL. Specifically only the protocol `https://` is supported.
 
 ### In parallel
 
@@ -102,7 +98,7 @@ pack.addFormula({
     for (let url of urls) {
       // Kick off the request.
       let request = context.fetcher.fetch({
-        method: "GET",
+        method: 'GET',
         url: url,
       });
       requests.push(request);
@@ -117,22 +113,20 @@ pack.addFormula({
 });
 ```
 
-
 ## Sending data
 
 Many API requests involve sending data to an external server, usually using a `POST` or `PUT` request. To do so using the fetcher, just set the `method` property to the desired method and pass the data you want to send in `body` property. You'll usually want to set a `Content-Type` header as well, which tells the server what format the data is in.
 
 ```ts
 let response = await context.fetcher.fetch({
-  method: "POST",
-  url: "https://httpbin.org/post",
+  method: 'POST',
+  url: 'https://httpbin.org/post',
   headers: {
-    "Content-Type": "text/plain",
+    'Content-Type': 'text/plain',
   },
-  body: "This is some plain text.",
+  body: 'This is some plain text.',
 });
 ```
-
 
 ### JSON
 
@@ -140,18 +134,17 @@ Sending JSON is just like sending text above, except you typically define the pa
 
 ```ts
 let payload = {
-  foo: "bar",
+  foo: 'bar',
 };
 let response = await context.fetcher.fetch({
-  method: "POST",
-  url: "https://httpbin.org/post",
+  method: 'POST',
+  url: 'https://httpbin.org/post',
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
   body: JSON.stringify(payload),
 });
 ```
-
 
 ### Form data
 
@@ -159,10 +152,10 @@ To send data to a server that expects form input (`application/x-www-form-urlenc
 
 ```ts
 let response = await context.fetcher.fetch({
-  method: "POST",
-  url: "https://httpbin.org/post",
+  method: 'POST',
+  url: 'https://httpbin.org/post',
   form: {
-    name: "Alice",
+    name: 'Alice',
     active: String(true),
     days: String(15),
   },
@@ -171,35 +164,33 @@ let response = await context.fetcher.fetch({
 
 Sending attachments (`multipart/form-data`) is not supported natively in the SDK. When building locally with the Pack CLI you can use the [`form-data` NPM library][npm_form_data] to send mixed content, as demonstrated in the [Box example Pack][example_box].
 
-
 ### URL query parameters
 
 To send data in the URL query parameters, simply append those parameters to the URL passed to the fetcher. For example, `https://www.example.com?foo=bar&thing=true`. The SDK provides a helper function, [`coda.withQueryParams()`][withQueryParams] that simplifies the process of encoding and appending query parameters to a URL.
 
 ```ts
-let url = coda.withQueryParams("https://www.example.com", {
-  foo: "bar",
+let url = coda.withQueryParams('https://www.example.com', {
+  foo: 'bar',
   thing: true,
 });
 let response = await context.fetcher.fetch({
-  method: "GET",
+  method: 'GET',
   url: url,
 });
 ```
-
 
 ### Binary {: #binary-body}
 
 You can send binary data in the body of a request by passing a [Node.js `Buffer`][buffer] in the `body` field of the request. These buffers can be constructed manually, but are most often are the result of [downloading binary content](#binary-response) from another endpoint.
 
 ```ts
-let data = "SGVsbG8gV29ybGQh";
-let buffer = Buffer.from(data, "base64");
+let data = 'SGVsbG8gV29ybGQh';
+let buffer = Buffer.from(data, 'base64');
 let response = await context.fetcher.fetch({
-  method: "POST",
-  url: "https://www.example.com/upload",
+  method: 'POST',
+  url: 'https://www.example.com/upload',
   headers: {
-    "Content-Type": "text/plain",
+    'Content-Type': 'text/plain',
   },
   body: buffer,
 });
@@ -207,11 +198,9 @@ let response = await context.fetcher.fetch({
 
 Sending binary data along with other types of content (`multipart/form-data`) is not supported natively in the SDK. When building locally with the Pack CLI you can use the [`form-data` NPM library][npm_form_data] to send mixed content, as demonstrated in the [Box example Pack][example_box].
 
-
 ## Working with responses
 
 If your request was successful it will return a [`FetchResponse`][fetchresponse] object, which contains the status code, headers, and body of the response. Depending on the format of the response (determined by the `Content-Type` header) the body may already be parsed for you.
-
 
 ### Text
 
@@ -219,13 +208,12 @@ Except for the special content types described below, the response body will be 
 
 ```ts
 let response = await context.fetcher.fetch({
-  method: "GET",
-  url: "https://www.example.com", // Returns an HTML page.
+  method: 'GET',
+  url: 'https://www.example.com', // Returns an HTML page.
 });
 let html = response.body;
 let bodyStart = html.indexOf('<body>');
 ```
-
 
 ### JSON
 
@@ -233,21 +221,20 @@ Responses with the content type `application/json` will be automatically parsed 
 
 ```ts
 let response = await context.fetcher.fetch({
-  method: "GET",
-  url: "https://api.exchangerate.host/latest?format=json",
+  method: 'GET',
+  url: 'https://api.exchangerate.host/latest?format=json',
 });
 let parsed = response.body;
 // How you access data in the parsed JSON object depends on the contents.
-let rate = parsed.rates["USD"];
+let rate = parsed.rates['USD'];
 ```
-
 
 ### XML
 
 Responses with the content type `application/xml` or `text/xml` will be automatically parsed into a JavaScript object, using the library [xml2js][xml2js]. Specifically, every XML element is converted into a JavaScript object, where the keys are the name of child elements and the values are the contents of those elements. Even when an element only contains a single value it is always returned within an array. The special key `$` reserved for attributes on the element. For example:
 
 === "Original XML"
-    ```xml
+`xml
     <basket pending="true">
       <item quantity="1">
         <name>Bread</name>
@@ -258,9 +245,9 @@ Responses with the content type `application/xml` or `text/xml` will be automati
         <cost>$1</cost>
       </item>
     </basket>
-    ```
+    `
 === "Parsed JSON"
-    ```json
+`json
     {
       "$": {
         "pending": "true"
@@ -282,25 +269,24 @@ Responses with the content type `application/xml` or `text/xml` will be automati
         }
       ]
     }
-    ```
+    `
 
 During development it is a good idea to log the parsed JavaScript object, so that you can more clearly understand the structure of the parsed XML.
 
 ```ts
 let response = await context.fetcher.fetch({
-  method: "GET",
+  method: 'GET',
   // Open this URL in your browser to see what the data looks like.
-  url: "https://api.exchangerate.host/latest?format=xml",
+  url: 'https://api.exchangerate.host/latest?format=xml',
 });
 let parsed = response.body;
 
 // Log the parsed XML, for reference when developing.
 console.log(parsed);
 
-let usd = parsed.data.find(item => item.code[0] === "USD")
+let usd = parsed.data.find(item => item.code[0] === 'USD');
 let rate = usd.rate[0];
 ```
-
 
 ### Binary {: #binary-response}
 
@@ -308,14 +294,13 @@ When fetching binary data, enable the request option `isBinaryResponse` to let t
 
 ```ts
 let response = await context.fetcher.fetch({
-  method: "GET",
-  url: "https://cataas.com/cat", // Returns a random cat image.
+  method: 'GET',
+  url: 'https://cataas.com/cat', // Returns a random cat image.
   isBinaryResponse: true,
 });
 let buffer = response.body;
 let byteLength = buffer.length;
 ```
-
 
 ### Errors
 
@@ -325,9 +310,9 @@ When a request fails (a response code of 300 or higher) the fetch will fail with
 let response;
 try {
   response = await context.fetcher.fetch({
-    method: "GET",
+    method: 'GET',
     // Open this URL in your browser to see what the data looks like.
-    url: "https://api.artic.edu/api/v1/artworks/123",
+    url: 'https://api.artic.edu/api/v1/artworks/123',
   });
 } catch (error) {
   // If the request failed because the server returned a 300+ status code.
@@ -346,7 +331,6 @@ try {
 }
 ```
 
-
 ### Headers {: #headers}
 
 The HTTP headers returned can be accessed using the `headers` field of the response. The header names are normalized (changed to lowercase) for convenience, so you can access them consistently regardless of how they are sent by the server.
@@ -358,8 +342,7 @@ let contentType = response.headers["content-type"].toString();
 Unless it's a known safe header, all the header values will be redacted by Coda (contain the value `<<<REDACTED by Coda>>>` instead of the actual value). To request that a specific header be unredacted you will need to [contact support][support].
 
 !!! info "Multiple header values"
-    A server may return multiple headers with the same name. In this case, the header value will be a string array instead of a single string. As per [the spec][spec_headers], this should only happen for headers that return comma-separated values. Adding a `.toString()` call after retrieving the header value is an easy way to collapse both cases down to a single string.
-
+A server may return multiple headers with the same name. In this case, the header value will be a string array instead of a single string. As per [the spec][spec_headers], this should only happen for headers that return comma-separated values. Adding a `.toString()` call after retrieving the header value is an easy way to collapse both cases down to a single string.
 
 ## Authentication
 
@@ -369,7 +352,7 @@ To disable this behavior for a specific request within a formula, set the `fetch
 
 ```ts
 let response = await context.fetcher.fetch({
-  method: "GET",
+  method: 'GET',
   url: `https://www.example.com`,
   disableAuthentication: true, // No auth will be applied to this request.
 });
@@ -379,7 +362,6 @@ let response = await context.fetcher.fetch({
 
 For performance reasons responses for HTTP `GET` requests are cached by default. See the [caching guide][caching] for more information.
 
-
 ## Rate limits {: #rate-limits}
 
 Making a request to an external API can be expensive, either due to quotas, computing resources, or monetary cost. To help prevent your code from making too many expensive API calls you can set up rate limits for your Pack. To configure these, open the Pack editor and click on **Settings** > **Add rate limits**.
@@ -387,7 +369,6 @@ Making a request to an external API can be expensive, either due to quotas, comp
 <img src="../../../images/rate_limits.png" srcset="../../../images/rate_limits_2x.png 2x" class="screenshot" alt="Rate limit dialog.">
 
 You can set a total rate limit across all users of your Pack, or if your Pack uses [authentication][authentication] you can also set a per-user rate limit. When the limit is reached your formula will pause for a bit to see if more quota becomes available, and if not eventually fail with an error.
-
 
 ## IP addresses
 
@@ -397,13 +378,12 @@ HTTP requests originating from Packs can come from a few different IP addresses.
 dig +short egress.coda.io
 ```
 
-
 [Fetcher]: ../../reference/sdk/interfaces/core.Fetcher.md
 [samples]: ../../samples/topic/fetcher.md
 [addNetworkDomain]: ../../reference/sdk/classes/core.PackDefinitionBuilder.md#addnetworkdomain
 [support]: ../../support/index.md
 [support_network_domains]: ../../support/index.md#network-domains
-[ExecutionContext]: ../../reference/sdk/interfaces/core.ExecutionContext/
+[ExecutionContext]: ../../reference/sdk/interfaces/core.ExecutionContext.md
 [fetch]: ../../reference/sdk/interfaces/core.Fetcher.md#fetch
 [FetchRequest]: ../../reference/sdk/interfaces/core.FetchRequest.md
 [async_await]: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Async_await

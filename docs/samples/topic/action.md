@@ -9,7 +9,7 @@ icon: material/cursor-default-click-outline
 Actions are special types of formulas that power buttons and automations. They usually send data to an external API, but can also be used for other one-time calculations.
 
 
-[Learn More](../../../guides/blocks/actions){ .md-button }
+[Learn More](../../guides/blocks/actions.md){ .md-button }
 
 ## Template
 The basic structure of an action. This sample takes in a single string parameter and returns the string &quot;OK&quot; when the action is complete.

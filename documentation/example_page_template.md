@@ -12,7 +12,7 @@ description: {{description}}
 {{! Topic Sample }}
 
 {{#if learnMoreLink}}
-[Learn More](../../..{{learnMoreLink}}){ .md-button }
+[Learn More](../..{{learnMoreLink}}){ .md-button }
 {{/if}}
 
 {{#each exampleSnippets}}

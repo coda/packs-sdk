@@ -2,7 +2,7 @@
 nav: Samples
 description: An index of code examples to browse through.
 hide:
-- toc
+  - toc
 ---
 
 # Sample code
@@ -25,7 +25,8 @@ No need to start from scratch; we've got dozens of sample Packs for your to brow
 
 {{page.meta.description}}
 
-[View]({{fix_url(page.url)}}){ .md-button }
+[View](<{{ fix_url(page.url)[:-1] }}.md>){ .md-button }
+
 </div>
 
 {% endfor %}
@@ -33,6 +34,5 @@ No need to start from scratch; we've got dozens of sample Packs for your to brow
 </section>
 
 {% endfor %}
-
 
 [packs_examples]: https://github.com/coda/packs-examples

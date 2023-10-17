@@ -76,7 +76,7 @@ function compileExamples() {
         throw new Error(`${exampleFooterLink} is not a valid path`);
       }
       exampleFooterLink = `${SdkReferenceLink}${exampleFooterLink}`;
-      learnMoreLink = example.linkData.url;
+      learnMoreLink = example.linkData.url! + (example.linkData.url?.endsWith('/') ? 'index.md' : '.md');
     } else if (example.linkData.type === UrlType.SamplePage) {
       const pagePath = getExamplePagePath(example);
       const pageName = getExamplePageName(example).split('.')[0];

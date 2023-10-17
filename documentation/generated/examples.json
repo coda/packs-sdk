@@ -12,7 +12,7 @@
       "url": "/guides/blocks/column-formats"
     },
     "exampleFooterLink": "https://coda.io/packs/build/latest/guides/blocks/column-formats",
-    "learnMoreLink": "/guides/blocks/column-formats",
+    "learnMoreLink": "/guides/blocks/column-formats.md",
     "content": "A **column format** is a custom column type that you apply to any column in any Coda table. A column format tells Coda to interpret the value in a cell by executing a **formula** using that value, typically looking up data related to that value from an external API.\n\nFor example, the Weather pack has a column format `Current Weather`; when applied to a column, if you type a city or address into a cell in that column, that location will be used as an input to a formula that fetches the current weather at that location, and the resulting object with weather info will be shown in the cell.",
     "exampleSnippets": [
       {
@@ -58,10 +58,10 @@
     ],
     "linkData": {
       "type": "SdkReferencePath",
-      "url": "/guides/basics/authentication"
+      "url": "/guides/basics/authentication/"
     },
-    "exampleFooterLink": "https://coda.io/packs/build/latest/guides/basics/authentication",
-    "learnMoreLink": "/guides/basics/authentication",
+    "exampleFooterLink": "https://coda.io/packs/build/latest/guides/basics/authentication/",
+    "learnMoreLink": "/guides/basics/authentication/index.md",
     "content": "Adding authentication to your Pack allows you to pass credentials with your API requests. Simply specify the type of authentication to use and Coda will collect the credentials from the user, store them, and apply them to Fetcher requests. Per-user authentication is the most common, where each user connects to their own account, while system-wide authentication is used in cases where the Pack maker's keys are used for all users.\n\nCoda supports a fixed set of authentication types which cover the most common patterns that APIs use. In addition you can define your own form of custom token authentication to support more complex scenarios. It's not possible to write completely custom authentication code however, as Coda alone has access to the user's credentials.",
     "exampleSnippets": [
       {
@@ -144,7 +144,7 @@
       "url": "/guides/blocks/sync-tables/dynamic"
     },
     "exampleFooterLink": "https://coda.io/packs/build/latest/guides/blocks/sync-tables/dynamic",
-    "learnMoreLink": "/guides/blocks/sync-tables/dynamic",
+    "learnMoreLink": "/guides/blocks/sync-tables/dynamic.md",
     "content": "Dynamic sync tables allow you to bring data from an external data source into your doc, even when the structure of that data is not known in advance. Instead of including a static schema in your sync table definition, you include a `getSchema` function that returns a schema based on the dataset the user selects. It can use the fetcher to make authenticated HTTP requests to an API so that you can determine the shape of the data.\n\nDynamic sync tables typically provide a list all of the datasets that the user has access to, using the `listDynamicUrls` function. Once a user selects a dataset from the side panel it will be available to other functions in `context.sync.dynamicUrl`. The dynamic sync table must also provide a user-visible URL for the selected dataset (using `getDisplayUrl`) and a name for the resulting table on the page (using `getName`).",
     "exampleSnippets": [
       {
@@ -177,7 +177,7 @@
       "url": "/guides/blocks/formulas"
     },
     "exampleFooterLink": "https://coda.io/packs/build/latest/guides/blocks/formulas",
-    "learnMoreLink": "/guides/blocks/formulas",
+    "learnMoreLink": "/guides/blocks/formulas.md",
     "content": "A formula is a JavaScript function that is exposed as a Coda formula, that you can use anywhere in a Coda doc that you can use any built-in formula. Formulas take basic types as input, like strings, numbers, dates, booleans, and arrays of these types, and return any of these types or objects whose properties are any of these types.",
     "exampleSnippets": [
       {
@@ -215,7 +215,7 @@
       "url": "/guides/blocks/actions"
     },
     "exampleFooterLink": "https://coda.io/packs/build/latest/guides/blocks/actions",
-    "learnMoreLink": "/guides/blocks/actions",
+    "learnMoreLink": "/guides/blocks/actions.md",
     "content": "Actions are special types of formulas that power buttons and automations. They usually send data to an external API, but can also be used for other one-time calculations.",
     "exampleSnippets": [
       {
@@ -250,10 +250,10 @@
     ],
     "linkData": {
       "type": "SdkReferencePath",
-      "url": "/guides/basics/parameters"
+      "url": "/guides/basics/parameters/"
     },
-    "exampleFooterLink": "https://coda.io/packs/build/latest/guides/basics/parameters",
-    "learnMoreLink": "/guides/basics/parameters",
+    "exampleFooterLink": "https://coda.io/packs/build/latest/guides/basics/parameters/",
+    "learnMoreLink": "/guides/basics/parameters/index.md",
     "content": "Coda formulas, actions, and sync tables receive take in user input via parameters. They are required by default, but can by made optional. Variable argument (vararg) parameters can be used to allow for parameters to be set more than once.",
     "exampleSnippets": [
       {
@@ -331,7 +331,7 @@
       "url": "/guides/basics/parameters/autocomplete"
     },
     "exampleFooterLink": "https://coda.io/packs/build/latest/guides/basics/parameters/autocomplete",
-    "learnMoreLink": "/guides/basics/parameters/autocomplete",
+    "learnMoreLink": "/guides/basics/parameters/autocomplete.md",
     "content": "Autocomplete can be configured for a parameter to provide a defined set of options for the user to select from. You can pass either a static array or use a function to dynamically generate the options.",
     "exampleSnippets": [
       {
@@ -366,10 +366,10 @@
     ],
     "linkData": {
       "type": "SdkReferencePath",
-      "url": "/guides/blocks/sync-tables"
+      "url": "/guides/blocks/sync-tables/"
     },
-    "exampleFooterLink": "https://coda.io/packs/build/latest/guides/blocks/sync-tables",
-    "learnMoreLink": "/guides/blocks/sync-tables",
+    "exampleFooterLink": "https://coda.io/packs/build/latest/guides/blocks/sync-tables/",
+    "learnMoreLink": "/guides/blocks/sync-tables/index.md",
     "content": "A **sync table** is how to bring structured data from a third-party into Coda. A sync table is a table that you can add to a Coda doc that gets its rows from a third-party data source, that can be refreshed regularly to pull in new or updated data. A sync table is powered by a **formula** that takes parameters that represent sync options and returns an array of objects representing row data. A sync table also includes a schema describing the structure of the returned objects.",
     "exampleSnippets": [
       {
@@ -412,7 +412,7 @@
       "url": "/guides/basics/fetcher"
     },
     "exampleFooterLink": "https://coda.io/packs/build/latest/guides/basics/fetcher",
-    "learnMoreLink": "/guides/basics/fetcher",
+    "learnMoreLink": "/guides/basics/fetcher.md",
     "content": "Communicating with an API or external server is done through the `Fetcher`, a custom interface for making HTTP requests. The fetcher is made available through the `context` object passed in to formulas. The fetcher can only send requests to URLs that have have a domain name that's been registered using `addNetworkDomain`. The fetcher runs asynchronously, and is typically run within an `async` function that will `await` the result.",
     "exampleSnippets": [
       {
@@ -446,7 +446,7 @@
       "url": "/guides/basics/data-types"
     },
     "exampleFooterLink": "https://coda.io/packs/build/latest/guides/basics/data-types",
-    "learnMoreLink": "/guides/basics/data-types",
+    "learnMoreLink": "/guides/basics/data-types.md",
     "content": "Packs can return various types of values, and apply hints that tell Coda how to display that data. Formulas and schema properties must declare the these types upfront, and the values you return in your code must match.",
     "exampleSnippets": [
       {
@@ -525,7 +525,7 @@
       "url": "/guides/advanced/schemas"
     },
     "exampleFooterLink": "https://coda.io/packs/build/latest/guides/advanced/schemas",
-    "learnMoreLink": "/guides/advanced/schemas",
+    "learnMoreLink": "/guides/advanced/schemas.md",
     "content": "To return structured data in a Pack you must first define the shape of that data using a schema. Schemas describe the type of data that will be returned, as well as metadata about how Coda should render it, but not the data itself. Pack formulas and sync tables specify which schema they are using and return data that matches it.\n\nThe most common form of schema you'll need to define are object schemas. They are often used to bundle together multiple pieces of data returned by an API.",
     "exampleSnippets": [
       {
@@ -565,7 +565,7 @@
       "url": "/guides/advanced/timezones"
     },
     "exampleFooterLink": "https://coda.io/packs/build/latest/guides/advanced/timezones",
-    "learnMoreLink": "/guides/advanced/timezones",
+    "learnMoreLink": "/guides/advanced/timezones.md",
     "content": "Working with dates and times can be tricky, especially in Coda due to documents and operating in different timezones. These samples demonstrate some patterns you can use when taking them are parameters or returning them as results.",
     "exampleSnippets": [
       {
@@ -613,7 +613,7 @@
       "url": "/guides/advanced/images"
     },
     "exampleFooterLink": "https://coda.io/packs/build/latest/guides/advanced/images",
-    "learnMoreLink": "/guides/advanced/images",
+    "learnMoreLink": "/guides/advanced/images.md",
     "content": "Packs have native support for accepting images and files as parameters and returning them as results, always passed as URLs. Packs can either return a \"live\" URL to a hosted image (`ImageReference`) or a temporary URL that Coda should upload the doc (`ImageAttachment`). The utility provided at `content.temporaryBlobStorage` can be used to save private images to a temporary location for later upload, which can be used in conjunction with the `ImageAttachment` hint type to permanently ingest an image resource using the temporary URL. Packs also provide support for embedded SVGs, including support for dark mode.",
     "exampleSnippets": [
       {
@@ -798,7 +798,7 @@
       "url": "/guides/blocks/cards"
     },
     "exampleFooterLink": "https://coda.io/packs/build/latest/guides/blocks/cards",
-    "learnMoreLink": "/guides/blocks/cards",
+    "learnMoreLink": "/guides/blocks/cards.md",
     "content": "A card is an visual way to display key information about an item, typically represented by a URL in an external application.",
     "exampleSnippets": [
       {
@@ -834,7 +834,7 @@
       "url": "/guides/blocks/sync-tables/two-way"
     },
     "exampleFooterLink": "https://coda.io/packs/build/latest/guides/blocks/sync-tables/two-way",
-    "learnMoreLink": "/guides/blocks/sync-tables/two-way",
+    "learnMoreLink": "/guides/blocks/sync-tables/two-way.md",
     "content": "Two-way sync is an optional feature of sync tables that allows users to make edits to row data and push those changes back to the data source. Pack makers enable two-way sync on their tables by annotating their schemas and writing an `executeUpdate` function that handles the update logic.\n\n🚧 This feature is currently only available to a limited group of alpha testers. Email [partners@coda.io](mailto:partners@coda.io) to learn more and request access.",
     "exampleSnippets": [
       {

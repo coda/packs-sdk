@@ -9,7 +9,7 @@ icon: material/function
 A formula is a JavaScript function that is exposed as a Coda formula, that you can use anywhere in a Coda doc that you can use any built-in formula. Formulas take basic types as input, like strings, numbers, dates, booleans, and arrays of these types, and return any of these types or objects whose properties are any of these types.
 
 
-[Learn More](../../../guides/blocks/formulas){ .md-button }
+[Learn More](../../guides/blocks/formulas.md){ .md-button }
 
 ## Template
 The basic structure of a formula. This sample takes in a single string parameter and returns a string result.
