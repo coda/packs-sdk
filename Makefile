@@ -66,8 +66,9 @@ _bootstrap-doc-tools:
 
 .PHONY: _bootstrap-renovate
 _bootstrap-renovate:
-	# _bootstrap-doc-tools doesn't work in renovate
-	apt-get install libjpeg-dev
+	$(MAKE) MAKEFLAGS= _bootstrap-install-pnpm
+	$(MAKE) MAKEFLAGS= _bootstrap-node
+	$(MAKE) MAKEFLAGS= _bootstrap-python-requirements
 
 .PHONY: bootstrap
 bootstrap:
