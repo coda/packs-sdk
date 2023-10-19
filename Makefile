@@ -67,7 +67,7 @@ _bootstrap-doc-tools:
 .PHONY: _bootstrap-renovate
 _bootstrap-renovate:
 	# _bootstrap-doc-tools doesn't work in renovate
-	sudo apt-get install libjpeg-dev
+	apt-get install libjpeg-dev
 
 .PHONY: bootstrap
 bootstrap:
