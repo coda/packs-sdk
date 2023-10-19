@@ -28,8 +28,6 @@ Base interface for authentication definitions.
 
   ↳ [`MultiQueryParamTokenAuthentication`](core.MultiQueryParamTokenAuthentication.md)
 
-  ↳ [`OAuth2Authentication`](core.OAuth2Authentication.md)
-
   ↳ [`QueryParamTokenAuthentication`](core.QueryParamTokenAuthentication.md)
 
   ↳ [`WebBasicAuthentication`](core.WebBasicAuthentication.md)

@@ -123,6 +123,12 @@ Authenticate using OAuth2. The API must use a (largely) standards-compliant impl
 
 ___
 
+### OAuth2ClientCredentials
+
+• **OAuth2ClientCredentials** = ``"OAuth2ClientCredentials"``
+
+___
+
 ### QueryParamToken
 
 • **QueryParamToken** = ``"QueryParamToken"``

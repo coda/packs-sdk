@@ -13,6 +13,7 @@ import type {MultiHeaderTokenAuthentication} from './types';
 import type {MultiQueryParamTokenAuthentication} from './types';
 import type {NoAuthentication} from './types';
 import type {OAuth2Authentication} from './types';
+import type {OAuth2ClientCredentialsAuthentication} from './types';
 import type {ObjectPackFormulaMetadata} from './api';
 import type {PackDefinition} from './types';
 import type {PackFormulaMetadata} from './api';
@@ -89,6 +90,7 @@ export interface AuthenticationMetadataTypeMap {
   [AuthenticationType.Various]: AuthenticationToMetadata<VariousAuthentication>;
   [AuthenticationType.WebBasic]: AuthenticationToMetadata<WebBasicAuthentication>;
   [AuthenticationType.OAuth2]: AuthenticationToMetadata<OAuth2Authentication>;
+  [AuthenticationType.OAuth2ClientCredentials]: AuthenticationToMetadata<OAuth2ClientCredentialsAuthentication>;
 }
 
 // Stripped-down version of `PackVersionDefinition` that doesn't contain formula definitions.

@@ -74,6 +74,7 @@ var AuthenticationType;
      * @see {@link OAuth2Authentication}
      */
     AuthenticationType["OAuth2"] = "OAuth2";
+    AuthenticationType["OAuth2ClientCredentials"] = "OAuth2ClientCredentials";
     /**
      * Authenticate using HTTP Basic authorization. The user provides a username and password
      * (sometimes optional) which are included as an HTTP header according to the Basic auth standard.
