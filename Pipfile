@@ -7,16 +7,16 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-cairosvg = "*"
+cairosvg = "==2.7.0"
 importlib_metadata = "*"
-mkdocs = "*"
-mkdocs-material = "*"
-mkdocs-awesome-pages-plugin = "*"
-mkdocs-macros-plugin = "*"
-mkdocs-redirects = "*"
-mkdocs-simple-hooks = "*"
+mkdocs = "==1.4.3"
+mkdocs-material = "==9.1.15"
+mkdocs-awesome-pages-plugin = "==2.9.1"
+mkdocs-macros-plugin =  "==1.0.1"
+mkdocs-redirects = "==1.2.0"
+mkdocs-simple-hooks = "==0.1.5"
 pillow = "==9.5.0"
-urllib3 = "*"
+urllib3 = "==2.0.2"
 
 [dev-packages]
 
