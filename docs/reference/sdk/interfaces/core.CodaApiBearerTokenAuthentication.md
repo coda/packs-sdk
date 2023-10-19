@@ -42,8 +42,7 @@ pack.setUserAuthentication({
 
 • `Optional` **deferConnectionSetup**: `boolean`
 
-If true, does not require a connection to be configured in
-order to install the pack.
+**`Deprecated`**
 
 ___
 
@@ -141,7 +140,7 @@ ___
 • `Optional` **shouldAutoAuthSetup**: `boolean`
 
 If true, automatically creates and configures an account with a Coda API token with
-default settings when installing the pack: a scoped read-write token, added to the doc
+default settings when installing the pack: a read-write token, added to the doc
 as a shared account that allows actions.
 
 ___
