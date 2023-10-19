@@ -71,10 +71,6 @@ client secret). The default is [Automatic](../enums/core.TokenExchangeCredential
 work for most providers. Pick a more specific option if the provider invalidates authorization
 codes when there is an error in the token exchange.
 
-#### Inherited from
-
-BaseOAuthAuthentication.credentialsLocation
-
 ___
 
 ### endpointDomain
@@ -142,10 +138,6 @@ ___
 
 In rare cases, OAuth providers send back access tokens nested inside another object in
 their authentication response.
-
-#### Inherited from
-
-BaseOAuthAuthentication.nestedResponseKey
 
 ___
 
@@ -241,10 +233,6 @@ used if this value is omitted. However, some services require a different prefix
 When sending authenticated requests, a HTTP header of the form
 `Authorization: <tokenPrefix> <token>` will be used.
 
-#### Inherited from
-
-BaseOAuthAuthentication.tokenPrefix
-
 ___
 
 ### tokenQueryParam
@@ -254,10 +242,6 @@ ___
 In rare cases, OAuth providers ask that a token is passed as a URL parameter
 rather than an HTTP header. If so, this is the name of the URL query parameter
 that should contain the token.
-
-#### Inherited from
-
-BaseOAuthAuthentication.tokenQueryParam
 
 ___
 

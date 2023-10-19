@@ -479,10 +479,6 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     [AuthenticationType.OAuth2ClientCredentials]: zodCompleteStrictObject<OAuth2ClientCredentialsAuthentication>({
       type: zodDiscriminant(AuthenticationType.OAuth2ClientCredentials),
       tokenUrl: z.string().url(),
-      tokenPrefix: z.string().optional(),
-      tokenQueryParam: z.string().optional(),
-      nestedResponseKey: z.string().optional(),
-      credentialsLocation: z.nativeEnum(TokenExchangeCredentialsLocation).optional(),
       ...baseAuthenticationValidators,
     }),
     [AuthenticationType.WebBasic]: zodCompleteStrictObject<WebBasicAuthentication>({

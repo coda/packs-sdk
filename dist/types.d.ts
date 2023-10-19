@@ -80,8 +80,8 @@ export declare enum AuthenticationType {
     OAuth2 = "OAuth2",
     /**
      * Authenticate using OAuth2 client credentials.
-     * The API must use a (largely) standards-compliant implementation of OAuth2.
      *
+     * @see [OAuth2 client credentials spec](https://oauth.net/2/grant-types/client-credentials/)
      * @see {@link OAuth2ClientCredentials}
      */
     OAuth2ClientCredentials = "OAuth2ClientCredentials",
@@ -454,32 +454,6 @@ interface BaseOAuthAuthentication extends BaseAuthentication {
      * The URL that Coda will hit in order to exchange the temporary code for an access token.
      */
     tokenUrl: string;
-    /**
-     * In rare cases, OAuth providers ask that a token is passed as a URL parameter
-     * rather than an HTTP header. If so, this is the name of the URL query parameter
-     * that should contain the token.
-     */
-    tokenQueryParam?: string;
-    /**
-     * A custom prefix to be used when passing the access token in the HTTP Authorization
-     * header when making requests. Typically this prefix is `Bearer` which is what will be
-     * used if this value is omitted. However, some services require a different prefix.
-     * When sending authenticated requests, a HTTP header of the form
-     * `Authorization: <tokenPrefix> <token>` will be used.
-     */
-    tokenPrefix?: string;
-    /**
-     * When making the token exchange request, where to pass the client credentials (client ID and
-     * client secret). The default is {@link TokenExchangeCredentialsLocation#Automatic}, which should
-     * work for most providers. Pick a more specific option if the provider invalidates authorization
-     * codes when there is an error in the token exchange.
-     */
-    credentialsLocation?: TokenExchangeCredentialsLocation;
-    /**
-     * In rare cases, OAuth providers send back access tokens nested inside another object in
-     * their authentication response.
-     */
-    nestedResponseKey?: string;
 }
 /**
  * Authenticate using OAuth2. You must specify the authorization URL, token exchange URL, and
@@ -526,6 +500,14 @@ export interface OAuth2Authentication extends BaseOAuthAuthentication {
      */
     scopeDelimiter?: ' ' | ',' | ';';
     /**
+     * A custom prefix to be used when passing the access token in the HTTP Authorization
+     * header when making requests. Typically this prefix is `Bearer` which is what will be
+     * used if this value is omitted. However, some services require a different prefix.
+     * When sending authenticated requests, a HTTP header of the form
+     * `Authorization: <tokenPrefix> <token>` will be used.
+     */
+    tokenPrefix?: string;
+    /**
      * Option custom URL parameters and values that should be included when redirecting the
      * user to the {@link authorizationUrl}.
      */
@@ -541,6 +523,12 @@ export interface OAuth2Authentication extends BaseOAuthAuthentication {
      * as {@link ExecutionContext.endpoint}.
      */
     endpointKey?: string;
+    /**
+     * In rare cases, OAuth providers ask that a token is passed as a URL parameter
+     * rather than an HTTP header. If so, this is the name of the URL query parameter
+     * that should contain the token.
+     */
+    tokenQueryParam?: string;
     /**
      * Option to apply PKCE (Proof Key for Code Exchange) OAuth2 extension. With PKCE extension,
      * a `code_challenge` parameter and a `code_challenge_method` parameter will be sent to the
@@ -561,6 +549,18 @@ export interface OAuth2Authentication extends BaseOAuthAuthentication {
      * than `scope`.
      */
     scopeParamName?: string;
+    /**
+     * In rare cases, OAuth providers send back access tokens nested inside another object in
+     * their authentication response.
+     */
+    nestedResponseKey?: string;
+    /**
+     * When making the token exchange request, where to pass the client credentials (client ID and
+     * client secret). The default is {@link TokenExchangeCredentialsLocation#Automatic}, which should
+     * work for most providers. Pick a more specific option if the provider invalidates authorization
+     * codes when there is an error in the token exchange.
+     */
+    credentialsLocation?: TokenExchangeCredentialsLocation;
 }
 /**
  * Authenticate using OAuth2 client credentials.

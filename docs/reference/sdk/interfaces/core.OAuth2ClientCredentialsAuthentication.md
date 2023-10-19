@@ -30,21 +30,6 @@ pack.setUserAuthentication({
 
 ## Properties
 
-### credentialsLocation
-
-• `Optional` **credentialsLocation**: [`TokenExchangeCredentialsLocation`](../enums/core.TokenExchangeCredentialsLocation.md)
-
-When making the token exchange request, where to pass the client credentials (client ID and
-client secret). The default is [Automatic](../enums/core.TokenExchangeCredentialsLocation.md#automatic), which should
-work for most providers. Pick a more specific option if the provider invalidates authorization
-codes when there is an error in the token exchange.
-
-#### Inherited from
-
-BaseOAuthAuthentication.credentialsLocation
-
-___
-
 ### endpointDomain
 
 • `Optional` **endpointDomain**: `string`
@@ -91,19 +76,6 @@ BaseOAuthAuthentication.instructionsUrl
 
 ___
 
-### nestedResponseKey
-
-• `Optional` **nestedResponseKey**: `string`
-
-In rare cases, OAuth providers send back access tokens nested inside another object in
-their authentication response.
-
-#### Inherited from
-
-BaseOAuthAuthentication.nestedResponseKey
-
-___
-
 ### networkDomain
 
 • `Optional` **networkDomain**: `string` \| `string`[]
@@ -144,36 +116,6 @@ when creating a new account.
 #### Inherited from
 
 BaseOAuthAuthentication.requiresEndpointUrl
-
-___
-
-### tokenPrefix
-
-• `Optional` **tokenPrefix**: `string`
-
-A custom prefix to be used when passing the access token in the HTTP Authorization
-header when making requests. Typically this prefix is `Bearer` which is what will be
-used if this value is omitted. However, some services require a different prefix.
-When sending authenticated requests, a HTTP header of the form
-`Authorization: <tokenPrefix> <token>` will be used.
-
-#### Inherited from
-
-BaseOAuthAuthentication.tokenPrefix
-
-___
-
-### tokenQueryParam
-
-• `Optional` **tokenQueryParam**: `string`
-
-In rare cases, OAuth providers ask that a token is passed as a URL parameter
-rather than an HTTP header. If so, this is the name of the URL query parameter
-that should contain the token.
-
-#### Inherited from
-
-BaseOAuthAuthentication.tokenQueryParam
 
 ___
 

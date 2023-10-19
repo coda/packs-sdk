@@ -76,8 +76,8 @@ var AuthenticationType;
     AuthenticationType["OAuth2"] = "OAuth2";
     /**
      * Authenticate using OAuth2 client credentials.
-     * The API must use a (largely) standards-compliant implementation of OAuth2.
      *
+     * @see [OAuth2 client credentials spec](https://oauth.net/2/grant-types/client-credentials/)
      * @see {@link OAuth2ClientCredentials}
      */
     AuthenticationType["OAuth2ClientCredentials"] = "OAuth2ClientCredentials";
