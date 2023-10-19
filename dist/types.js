@@ -74,6 +74,12 @@ var AuthenticationType;
      * @see {@link OAuth2Authentication}
      */
     AuthenticationType["OAuth2"] = "OAuth2";
+    /**
+     * Authenticate using OAuth2 client credentials.
+     * The API must use a (largely) standards-compliant implementation of OAuth2.
+     *
+     * @see {@link OAuth2ClientCredentials}
+     */
     AuthenticationType["OAuth2ClientCredentials"] = "OAuth2ClientCredentials";
     /**
      * Authenticate using HTTP Basic authorization. The user provides a username and password

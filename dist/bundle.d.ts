@@ -3407,6 +3407,12 @@ export declare enum AuthenticationType {
 	 * @see {@link OAuth2Authentication}
 	 */
 	OAuth2 = "OAuth2",
+	/**
+	 * Authenticate using OAuth2 client credentials.
+	 * The API must use a (largely) standards-compliant implementation of OAuth2.
+	 *
+	 * @see {@link OAuth2ClientCredentials}
+	 */
 	OAuth2ClientCredentials = "OAuth2ClientCredentials",
 	/**
 	 * Authenticate using HTTP Basic authorization. The user provides a username and password

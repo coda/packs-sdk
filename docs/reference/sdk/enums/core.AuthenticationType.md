@@ -127,6 +127,13 @@ ___
 
 • **OAuth2ClientCredentials** = ``"OAuth2ClientCredentials"``
 
+Authenticate using OAuth2 client credentials.
+The API must use a (largely) standards-compliant implementation of OAuth2.
+
+**`See`**
+
+[OAuth2ClientCredentials](core.AuthenticationType.md#oauth2clientcredentials)
+
 ___
 
 ### QueryParamToken
