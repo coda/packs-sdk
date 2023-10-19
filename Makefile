@@ -64,6 +64,11 @@ _bootstrap-doc-tools:
 	# Image libraries required by the social cards plugin for MkDocs Material.
 	sudo apt-get install libcairo2-dev libfreetype6-dev libffi-dev libjpeg-dev libpng-dev libz-dev
 
+.PHONY: _bootstrap-renovate
+_bootstrap-renovate:
+	# _bootstrap-doc-tools doesn't work in renovate
+	sudo apt-get install libjpeg-dev
+
 .PHONY: bootstrap
 bootstrap:
 	$(MAKE) MAKEFLAGS= _bootstrap-install-pnpm
