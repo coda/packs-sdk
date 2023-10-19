@@ -45,6 +45,6 @@
     // NOTE(dweitzman)): _bootstrap-doc-tools doesn't work in the renovate container
     // at the moment so we skip building docs and just compile code.
     commands: ['make _bootstrap-renovate clean compile'],
-    fileFilters: ['**/*.js', '**/*.d.ts'],
+    fileFilters: ['**/*.js', '**/*.d.ts', 'requirements.txt'],
   },
 }
