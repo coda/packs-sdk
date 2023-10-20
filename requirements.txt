@@ -3,7 +3,7 @@
 -i https://pypi.org/simple
 bracex==2.4; python_version >= '3.8'
 cairocffi==1.6.1; python_version >= '3.7'
-cairosvg==2.7.0; python_version >= '3.5'
+cairosvg==2.7.1; python_version >= '3.5'
 certifi==2023.7.22; python_version >= '3.6'
 cffi==1.16.0; python_version >= '3.8'
 charset-normalizer==3.3.0; python_full_version >= '3.7.0'
