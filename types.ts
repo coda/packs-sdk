@@ -314,13 +314,12 @@ export interface CodaApiBearerTokenAuthentication extends BaseAuthentication {
   /** Identifies this as CodaApiHeaderBearerToken authentication. */
   type: AuthenticationType.CodaApiHeaderBearerToken;
   /**
-   * If true, does not require a connection to be configured in
-   * order to install the pack.
+   * @deprecated
    */
   deferConnectionSetup?: boolean;
   /**
    * If true, automatically creates and configures an account with a Coda API token with
-   * default settings when installing the pack: a scoped read-write token, added to the doc
+   * default settings when installing the pack: a read-write token, added to the doc
    * as a shared account that allows actions.
    */
   shouldAutoAuthSetup?: boolean;
