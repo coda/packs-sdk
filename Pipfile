@@ -7,7 +7,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-cairosvg = "==2.7.0"
+cairosvg = "==2.7.1"
 importlib_metadata = "==6.6.0"
 mkdocs = "==1.4.3"
 mkdocs-material = "==9.1.15"
