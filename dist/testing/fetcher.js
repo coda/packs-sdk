@@ -315,6 +315,7 @@ class AuthenticatingFetcher {
                 };
             }
             case types_1.AuthenticationType.OAuth2ClientCredentials:
+                // TODO(cqian): Implement this.
                 throw new Error('Not yet implemented');
             case types_1.AuthenticationType.AWSAccessKey: {
                 const { accessKeyId, secretAccessKey } = this._credentials;

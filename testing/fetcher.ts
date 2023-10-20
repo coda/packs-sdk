@@ -412,6 +412,7 @@ export class AuthenticatingFetcher implements Fetcher {
         };
       }
       case AuthenticationType.OAuth2ClientCredentials:
+        // TODO(cqian): Implement this.
         throw new Error('Not yet implemented');
       case AuthenticationType.AWSAccessKey: {
         const {accessKeyId, secretAccessKey} = this._credentials as AWSAccessKeyCredentials;

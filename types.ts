@@ -76,13 +76,16 @@ export enum AuthenticationType {
    */
   MultiQueryParamToken = 'MultiQueryParamToken',
   /**
-   * Authenticate using OAuth2. The API must use a (largely) standards-compliant implementation of OAuth2.
+   * Authenticate using OAuth2. This is the most common type of OAuth2, which involves the user approving access to
+   * their account before being granted a token.
+   * The API must use a (largely) standards-compliant implementation of OAuth2.
    *
    * @see {@link OAuth2Authentication}
    */
   OAuth2 = 'OAuth2',
   /**
-   * Authenticate using OAuth2 client credentials.
+   * Authenticate using OAuth2 client credentials. This is a less common type of OAuth2,
+   * which involves exchanging a client ID and secret for a temporary access token.
    *
    * @see [OAuth2 client credentials spec](https://oauth.net/2/grant-types/client-credentials/)
    * @see {@link OAuth2ClientCredentials}
@@ -469,14 +472,49 @@ export interface MultiQueryParamTokenAuthentication extends BaseAuthentication {
   }>;
 }
 
-/**
- * Base interface for OAuth definitions.
- */
-interface BaseOAuthAuthentication extends BaseAuthentication {
+export interface BaseOAuthAuthentication extends BaseAuthentication {
+  /**
+   * Scopes that are required to use this pack.
+   *
+   * Each API defines its own list of scopes, or none at all. You should consult
+   * the documentation for the API you are connecting to.
+   */
+  scopes?: string[];
   /**
    * The URL that Coda will hit in order to exchange the temporary code for an access token.
    */
   tokenUrl: string;
+  /**
+   * In rare cases, OAuth providers send back access tokens nested inside another object in
+   * their authentication response.
+   */
+  nestedResponseKey?: string;
+  /**
+   * When making the token exchange request, where to pass the client credentials (client ID and
+   * client secret). The default is {@link TokenExchangeCredentialsLocation#Automatic}, which should
+   * work for most providers. Pick a more specific option if the provider invalidates authorization
+   * codes when there is an error in the token exchange.
+   */
+  credentialsLocation?: TokenExchangeCredentialsLocation;
+  /**
+   * In rare cases, OAuth providers may want the permission scopes in a different query parameter
+   * than `scope`.
+   */
+  scopeParamName?: string;
+  /**
+   * A custom prefix to be used when passing the access token in the HTTP Authorization
+   * header when making requests. Typically this prefix is `Bearer` which is what will be
+   * used if this value is omitted. However, some services require a different prefix.
+   * When sending authenticated requests, a HTTP header of the form
+   * `Authorization: <tokenPrefix> <token>` will be used.
+   */
+  tokenPrefix?: string;
+  /**
+   * In rare cases, OAuth providers ask that a token is passed as a URL parameter
+   * rather than an HTTP header. If so, this is the name of the URL query parameter
+   * that should contain the token.
+   */
+  tokenQueryParam?: string;
 }
 
 /**
@@ -510,27 +548,12 @@ export interface OAuth2Authentication extends BaseOAuthAuthentication {
    */
   authorizationUrl: string;
   /**
-   * Scopes that are required to use this pack.
-   *
-   * Each API defines its own list of scopes, or none at all. You should consult
-   * the documentation for the API you are connecting to.
-   */
-  scopes?: string[];
-  /**
    * The delimiter to use when joining {@link scopes} when generating authorization URLs.
    *
    * The OAuth2 standard is to use spaces to delimit scopes, and Coda will do that by default.
    * If the API you are using requires a different delimiter, say a comma, specify it here.
    */
   scopeDelimiter?: ' ' | ',' | ';';
-  /**
-   * A custom prefix to be used when passing the access token in the HTTP Authorization
-   * header when making requests. Typically this prefix is `Bearer` which is what will be
-   * used if this value is omitted. However, some services require a different prefix.
-   * When sending authenticated requests, a HTTP header of the form
-   * `Authorization: <tokenPrefix> <token>` will be used.
-   */
-  tokenPrefix?: string;
 
   /**
    * Option custom URL parameters and values that should be included when redirecting the
@@ -549,13 +572,6 @@ export interface OAuth2Authentication extends BaseOAuthAuthentication {
   endpointKey?: string;
 
   /**
-   * In rare cases, OAuth providers ask that a token is passed as a URL parameter
-   * rather than an HTTP header. If so, this is the name of the URL query parameter
-   * that should contain the token.
-   */
-  tokenQueryParam?: string;
-
-  /**
    * Option to apply PKCE (Proof Key for Code Exchange) OAuth2 extension. With PKCE extension,
    * a `code_challenge` parameter and a `code_challenge_method` parameter will be sent to the
    * authorization page. A `code_verifier` parameter will be sent to the token exchange API as
@@ -571,26 +587,6 @@ export interface OAuth2Authentication extends BaseOAuthAuthentication {
    * See {@link useProofKeyForCodeExchange}
    */
   pkceChallengeMethod?: 'plain' | 'S256';
-
-  /**
-   * In rare cases, OAuth providers may want the permission scopes in a different query parameter
-   * than `scope`.
-   */
-  scopeParamName?: string;
-
-  /**
-   * In rare cases, OAuth providers send back access tokens nested inside another object in
-   * their authentication response.
-   */
-  nestedResponseKey?: string;
-
-  /**
-   * When making the token exchange request, where to pass the client credentials (client ID and
-   * client secret). The default is {@link TokenExchangeCredentialsLocation#Automatic}, which should
-   * work for most providers. Pick a more specific option if the provider invalidates authorization
-   * codes when there is an error in the token exchange.
-   */
-  credentialsLocation?: TokenExchangeCredentialsLocation;
 }
 
 /**

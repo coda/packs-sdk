@@ -115,7 +115,9 @@ ___
 
 • **OAuth2** = ``"OAuth2"``
 
-Authenticate using OAuth2. The API must use a (largely) standards-compliant implementation of OAuth2.
+Authenticate using OAuth2. This is the most common type of OAuth2, which involves the user approving access to
+their account before being granted a token.
+The API must use a (largely) standards-compliant implementation of OAuth2.
 
 **`See`**
 
@@ -127,7 +129,8 @@ ___
 
 • **OAuth2ClientCredentials** = ``"OAuth2ClientCredentials"``
 
-Authenticate using OAuth2 client credentials.
+Authenticate using OAuth2 client credentials. This is a less common type of OAuth2,
+which involves exchanging a client ID and secret for a temporary access token.
 
 **`See`**
 
