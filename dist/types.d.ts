@@ -73,11 +73,21 @@ export declare enum AuthenticationType {
      */
     MultiQueryParamToken = "MultiQueryParamToken",
     /**
-     * Authenticate using OAuth2. The API must use a (largely) standards-compliant implementation of OAuth2.
+     * Authenticate using OAuth2. This is the most common type of OAuth2, which involves the user approving access to
+     * their account before being granted a token.
+     * The API must use a (largely) standards-compliant implementation of OAuth2.
      *
      * @see {@link OAuth2Authentication}
      */
     OAuth2 = "OAuth2",
+    /**
+     * Authenticate using OAuth2 client credentials. This is a less common type of OAuth2,
+     * which involves exchanging a client ID and secret for a temporary access token.
+     *
+     * @see [OAuth2 client credentials spec](https://oauth.net/2/grant-types/client-credentials/)
+     * @see {@link OAuth2ClientCredentials}
+     */
+    OAuth2ClientCredentials = "OAuth2ClientCredentials",
     /**
      * Authenticate using HTTP Basic authorization. The user provides a username and password
      * (sometimes optional) which are included as an HTTP header according to the Basic auth standard.
@@ -439,6 +449,50 @@ export interface MultiQueryParamTokenAuthentication extends BaseAuthentication {
         description: string;
     }>;
 }
+export interface BaseOAuthAuthentication extends BaseAuthentication {
+    /**
+     * Scopes that are required to use this pack.
+     *
+     * Each API defines its own list of scopes, or none at all. You should consult
+     * the documentation for the API you are connecting to.
+     */
+    scopes?: string[];
+    /**
+     * The URL that Coda will hit in order to exchange the temporary code for an access token.
+     */
+    tokenUrl: string;
+    /**
+     * In rare cases, OAuth providers send back access tokens nested inside another object in
+     * their authentication response.
+     */
+    nestedResponseKey?: string;
+    /**
+     * When making the token exchange request, where to pass the client credentials (client ID and
+     * client secret). The default is {@link TokenExchangeCredentialsLocation#Automatic}, which should
+     * work for most providers. Pick a more specific option if the provider invalidates authorization
+     * codes when there is an error in the token exchange.
+     */
+    credentialsLocation?: TokenExchangeCredentialsLocation;
+    /**
+     * In rare cases, OAuth providers may want the permission scopes in a different query parameter
+     * than `scope`.
+     */
+    scopeParamName?: string;
+    /**
+     * A custom prefix to be used when passing the access token in the HTTP Authorization
+     * header when making requests. Typically this prefix is `Bearer` which is what will be
+     * used if this value is omitted. However, some services require a different prefix.
+     * When sending authenticated requests, a HTTP header of the form
+     * `Authorization: <tokenPrefix> <token>` will be used.
+     */
+    tokenPrefix?: string;
+    /**
+     * In rare cases, OAuth providers ask that a token is passed as a URL parameter
+     * rather than an HTTP header. If so, this is the name of the URL query parameter
+     * that should contain the token.
+     */
+    tokenQueryParam?: string;
+}
 /**
  * Authenticate using OAuth2. You must specify the authorization URL, token exchange URL, and
  * scopes here as part of the pack definition. You'll provide the application's client ID and
@@ -459,7 +513,7 @@ export interface MultiQueryParamTokenAuthentication extends BaseAuthentication {
  * @see [Authenticating using OAuth](https://coda.io/packs/build/latest/guides/basics/authentication/oauth2/)
  * @see [Authentication samples - OAuth2](https://coda.io/packs/build/latest/samples/topic/authentication/#oauth2)
  */
-export interface OAuth2Authentication extends BaseAuthentication {
+export interface OAuth2Authentication extends BaseOAuthAuthentication {
     /** Identifies this as OAuth2 authentication. */
     type: AuthenticationType.OAuth2;
     /**
@@ -470,32 +524,12 @@ export interface OAuth2Authentication extends BaseAuthentication {
      */
     authorizationUrl: string;
     /**
-     * The URL that Coda will hit in order to exchange the temporary code for an access token
-     * at the end of the OAuth handshake flow.
-     */
-    tokenUrl: string;
-    /**
-     * Scopes that are required to use this pack.
-     *
-     * Each API defines its own list of scopes, or none at all. You should consult
-     * the documentation for the API you are connecting to.
-     */
-    scopes?: string[];
-    /**
      * The delimiter to use when joining {@link scopes} when generating authorization URLs.
      *
      * The OAuth2 standard is to use spaces to delimit scopes, and Coda will do that by default.
      * If the API you are using requires a different delimiter, say a comma, specify it here.
      */
     scopeDelimiter?: ' ' | ',' | ';';
-    /**
-     * A custom prefix to be used when passing the access token in the HTTP Authorization
-     * header when making requests. Typically this prefix is `Bearer` which is what will be
-     * used if this value is omitted. However, some services require a different prefix.
-     * When sending authenticated requests, a HTTP header of the form
-     * `Authorization: <tokenPrefix> <token>` will be used.
-     */
-    tokenPrefix?: string;
     /**
      * Option custom URL parameters and values that should be included when redirecting the
      * user to the {@link authorizationUrl}.
@@ -513,12 +547,6 @@ export interface OAuth2Authentication extends BaseAuthentication {
      */
     endpointKey?: string;
     /**
-     * In rare cases, OAuth providers ask that a token is passed as a URL parameter
-     * rather than an HTTP header. If so, this is the name of the URL query parameter
-     * that should contain the token.
-     */
-    tokenQueryParam?: string;
-    /**
      * Option to apply PKCE (Proof Key for Code Exchange) OAuth2 extension. With PKCE extension,
      * a `code_challenge` parameter and a `code_challenge_method` parameter will be sent to the
      * authorization page. A `code_verifier` parameter will be sent to the token exchange API as
@@ -533,23 +561,24 @@ export interface OAuth2Authentication extends BaseAuthentication {
      * See {@link useProofKeyForCodeExchange}
      */
     pkceChallengeMethod?: 'plain' | 'S256';
-    /**
-     * In rare cases, OAuth providers may want the permission scopes in a different query parameter
-     * than `scope`.
-     */
-    scopeParamName?: string;
-    /**
-     * In rare cases, OAuth providers send back access tokens nested inside another object in
-     * their authentication response.
-     */
-    nestedResponseKey?: string;
-    /**
-     * When making the token exchange request, where to pass the client credentials (client ID and
-     * client secret). The default is {@link TokenExchangeCredentialsLocation#Automatic}, which should
-     * work for most providers. Pick a more specific option if the provider invalidates authorization
-     * codes when there is an error in the token exchange.
-     */
-    credentialsLocation?: TokenExchangeCredentialsLocation;
+}
+/**
+ * Authenticate using OAuth2 client credentials.
+ * You must specify the token exchange URL here as part of the pack definition.
+ * You'll provide the application's client ID and client secret when authenticating.
+ *
+ * @example
+ * ```ts
+ * pack.setUserAuthentication({
+ *   type: coda.AuthenticationType.OAuth2ClientCredentials,
+ *   // This URL comes from the API's developer documentation.
+ *   tokenUrl: "https://api.example.com/token",
+ * });
+ * ```
+ */
+export interface OAuth2ClientCredentialsAuthentication extends BaseOAuthAuthentication {
+    /** Identifies this as OAuth2 client credentials authentication. */
+    type: AuthenticationType.OAuth2ClientCredentials;
 }
 /**
  * Where to pass the client credentials (client ID and client secret) when making the OAuth2 token
@@ -732,7 +761,7 @@ export interface VariousAuthentication {
 /**
  * The union of supported authentication methods.
  */
-export type Authentication = NoAuthentication | VariousAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | CustomAuthentication;
+export type Authentication = NoAuthentication | VariousAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | OAuth2ClientCredentialsAuthentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | CustomAuthentication;
 /** @ignore */
 export interface AuthenticationTypeMap {
     [AuthenticationType.None]: NoAuthentication;
@@ -743,6 +772,7 @@ export interface AuthenticationTypeMap {
     [AuthenticationType.QueryParamToken]: QueryParamTokenAuthentication;
     [AuthenticationType.MultiQueryParamToken]: MultiQueryParamTokenAuthentication;
     [AuthenticationType.OAuth2]: OAuth2Authentication;
+    [AuthenticationType.OAuth2ClientCredentials]: OAuth2ClientCredentialsAuthentication;
     [AuthenticationType.WebBasic]: WebBasicAuthentication;
     [AuthenticationType.AWSAccessKey]: AWSAccessKeyAuthentication;
     [AuthenticationType.AWSAssumeRole]: AWSAssumeRoleAuthentication;
@@ -762,7 +792,7 @@ type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionName' | 'ge
  * a pack definition builder. The builder massages these definitions into the form of
  * an {@link Authentication} value, which is the value Coda ultimately cares about.
  */
-export type AuthenticationDef = NoAuthentication | VariousAuthentication | AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CodaApiBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<MultiHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<OAuth2Authentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication> | AsAuthDef<CustomAuthentication>;
+export type AuthenticationDef = NoAuthentication | VariousAuthentication | AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CodaApiBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<MultiHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<OAuth2Authentication> | AsAuthDef<OAuth2ClientCredentialsAuthentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication> | AsAuthDef<CustomAuthentication>;
 /**
  * The union of authentication methods that are supported for system authentication,
  * where the pack author provides credentials used in HTTP requests rather than the user.

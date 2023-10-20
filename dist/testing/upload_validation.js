@@ -363,6 +363,17 @@ function buildMetadataSchema({ sdkVersion }) {
             credentialsLocation: z.nativeEnum(types_5.TokenExchangeCredentialsLocation).optional(),
             ...baseAuthenticationValidators,
         }),
+        [types_1.AuthenticationType.OAuth2ClientCredentials]: zodCompleteStrictObject({
+            type: zodDiscriminant(types_1.AuthenticationType.OAuth2ClientCredentials),
+            tokenUrl: z.string().url(),
+            scopes: z.array(z.string()).optional(),
+            tokenPrefix: z.string().optional(),
+            tokenQueryParam: z.string().optional(),
+            scopeParamName: z.string().optional(),
+            nestedResponseKey: z.string().optional(),
+            credentialsLocation: z.nativeEnum(types_5.TokenExchangeCredentialsLocation).optional(),
+            ...baseAuthenticationValidators,
+        }),
         [types_1.AuthenticationType.WebBasic]: zodCompleteStrictObject({
             type: zodDiscriminant(types_1.AuthenticationType.WebBasic),
             uxConfig: zodCompleteStrictObject({

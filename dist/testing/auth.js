@@ -74,6 +74,9 @@ function setupAuth(manifestDir, packDef, opts = {}) {
         case types_1.AuthenticationType.OAuth2:
             (0, ensure_2.ensureExists)(packDef.defaultAuthentication, 'OAuth2 only works with defaultAuthentication, not system auth.');
             return handler.handleOAuth2();
+        case types_1.AuthenticationType.OAuth2ClientCredentials:
+            // TODO(cqian): Implement this.
+            return (0, helpers_3.printAndExit)('This authentication type is not yet implemented');
         case types_1.AuthenticationType.AWSAccessKey:
             return handler.handleAWSAccessKey();
         case types_1.AuthenticationType.AWSAssumeRole:

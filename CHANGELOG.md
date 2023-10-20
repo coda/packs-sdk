@@ -4,6 +4,9 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+- Added `OAuth2ClientCredentials` authentication type to support authenticating with OAuth client credentials.
+
 ### Changed
 
 - We deprecated `deferConnectionSetup` in the CodaApiHeaderBearerToken authentication type. The Coda app now defers all connection setup, so this setting has no practical effect anymore.

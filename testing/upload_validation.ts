@@ -40,6 +40,7 @@ import type {NumericPackFormula} from '../api';
 import type {NumericSchema} from '../schema';
 import type {NumericTimeSchema} from '../schema';
 import type {OAuth2Authentication} from '../types';
+import type {OAuth2ClientCredentialsAuthentication} from '../types';
 import {ObjectHintValueTypes} from '../schema';
 import type {ObjectPackFormula} from '../api';
 import type {ObjectSchema} from '../schema';
@@ -470,6 +471,17 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       tokenQueryParam: z.string().optional(),
       useProofKeyForCodeExchange: z.boolean().optional(),
       pkceChallengeMethod: z.enum(['plain', 'S256']).optional(),
+      scopeParamName: z.string().optional(),
+      nestedResponseKey: z.string().optional(),
+      credentialsLocation: z.nativeEnum(TokenExchangeCredentialsLocation).optional(),
+      ...baseAuthenticationValidators,
+    }),
+    [AuthenticationType.OAuth2ClientCredentials]: zodCompleteStrictObject<OAuth2ClientCredentialsAuthentication>({
+      type: zodDiscriminant(AuthenticationType.OAuth2ClientCredentials),
+      tokenUrl: z.string().url(),
+      scopes: z.array(z.string()).optional(),
+      tokenPrefix: z.string().optional(),
+      tokenQueryParam: z.string().optional(),
       scopeParamName: z.string().optional(),
       nestedResponseKey: z.string().optional(),
       credentialsLocation: z.nativeEnum(TokenExchangeCredentialsLocation).optional(),

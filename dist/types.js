@@ -69,11 +69,21 @@ var AuthenticationType;
      */
     AuthenticationType["MultiQueryParamToken"] = "MultiQueryParamToken";
     /**
-     * Authenticate using OAuth2. The API must use a (largely) standards-compliant implementation of OAuth2.
+     * Authenticate using OAuth2. This is the most common type of OAuth2, which involves the user approving access to
+     * their account before being granted a token.
+     * The API must use a (largely) standards-compliant implementation of OAuth2.
      *
      * @see {@link OAuth2Authentication}
      */
     AuthenticationType["OAuth2"] = "OAuth2";
+    /**
+     * Authenticate using OAuth2 client credentials. This is a less common type of OAuth2,
+     * which involves exchanging a client ID and secret for a temporary access token.
+     *
+     * @see [OAuth2 client credentials spec](https://oauth.net/2/grant-types/client-credentials/)
+     * @see {@link OAuth2ClientCredentials}
+     */
+    AuthenticationType["OAuth2ClientCredentials"] = "OAuth2ClientCredentials";
     /**
      * Authenticate using HTTP Basic authorization. The user provides a username and password
      * (sometimes optional) which are included as an HTTP header according to the Basic auth standard.
