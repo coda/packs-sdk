@@ -10,6 +10,7 @@ import type {CustomCredentials} from './auth_types';
 import type {MultiHeaderCredentials} from './auth_types';
 import type {MultiHeaderTokenAuthentication} from '../types';
 import type {MultiQueryParamCredentials} from './auth_types';
+import type {OAuth2ClientCredentials} from './auth_types';
 import type {OAuth2Credentials} from './auth_types';
 import {assertCondition} from '../helpers/ensure';
 import {ensureExists} from '../helpers/ensure';
@@ -19,6 +20,7 @@ import {getPackAuth} from '../cli/helpers';
 import {launchOAuthServerFlow} from './oauth_server';
 import {makeRedirectUrl} from './oauth_server';
 import * as path from 'path';
+import {performOAuthClientCredentialsServerFlow} from './oauth_server';
 import {print} from './helpers';
 import {printAndExit} from './helpers';
 import {promptForInput} from './helpers';
@@ -79,8 +81,7 @@ export function setupAuth(manifestDir: string, packDef: BasicPackDefinition, opt
       ensureExists(packDef.defaultAuthentication, 'OAuth2 only works with defaultAuthentication, not system auth.');
       return handler.handleOAuth2();
     case AuthenticationType.OAuth2ClientCredentials:
-      // TODO(cqian): Implement this.
-      return printAndExit('This authentication type is not yet implemented');
+      return handler.handleOAuth2ClientCredentials();
     case AuthenticationType.AWSAccessKey:
       return handler.handleAWSAccessKey();
     case AuthenticationType.AWSAssumeRole:
@@ -229,6 +230,23 @@ class CredentialHandler {
     print('Credentials updated!');
   }
 
+  private _promptOAuth2ClientIdAndSecret(existingCredentials: OAuth2Credentials | OAuth2ClientCredentials | undefined):
+      {clientId: string, clientSecret: string} {
+    const clientIdPrompt = existingCredentials
+        ? `Enter the OAuth client id for this Pack (or Enter to skip and use existing):\n`
+        : `Enter the OAuth client id for this Pack:\n`;
+    const newClientId = promptForInput(clientIdPrompt);
+    const clientSecretPrompt = existingCredentials
+        ? `Enter the OAuth client secret for this Pack (or Enter to skip and use existing):\n`
+        : `Enter the OAuth client secret for this Pack:\n`;
+    const newClientSecret = promptForInput(clientSecretPrompt, {mask: true});
+
+    const clientId = ensureNonEmptyString(newClientId || existingCredentials?.clientId);
+    const clientSecret = ensureNonEmptyString(newClientSecret || existingCredentials?.clientSecret);
+
+    return {clientId, clientSecret};
+  }
+
   handleOAuth2() {
     assertCondition(this._authDef.type === AuthenticationType.OAuth2);
     const existingCredentials = this.checkForExistingCredential() as OAuth2Credentials | undefined;
@@ -236,17 +254,7 @@ class CredentialHandler {
       `*** Your application must have ${makeRedirectUrl(this._oauthServerPort)} whitelisted as an OAuth redirect url ` +
         'in order for this tool to work. ***',
     );
-    const clientIdPrompt = existingCredentials
-      ? `Enter the OAuth client id for this Pack (or Enter to skip and use existing):\n`
-      : `Enter the OAuth client id for this Pack:\n`;
-    const newClientId = promptForInput(clientIdPrompt);
-    const clientSecretPrompt = existingCredentials
-      ? `Enter the OAuth client secret for this Pack (or Enter to skip and use existing):\n`
-      : `Enter the OAuth client secret for this Pack:\n`;
-    const newClientSecret = promptForInput(clientSecretPrompt, {mask: true});
-
-    const clientId = ensureNonEmptyString(newClientId || existingCredentials?.clientId);
-    const clientSecret = ensureNonEmptyString(newClientSecret || existingCredentials?.clientSecret);
+    const {clientId, clientSecret} = this._promptOAuth2ClientIdAndSecret(existingCredentials);
 
     const credentials: OAuth2Credentials = {
       clientId,
@@ -283,6 +291,44 @@ class CredentialHandler {
       scopes: requestedScopes,
     });
   }
+
+  handleOAuth2ClientCredentials() {
+    assertCondition(this._authDef.type === AuthenticationType.OAuth2ClientCredentials);
+    const existingCredentials = this.checkForExistingCredential() as OAuth2ClientCredentials | undefined;
+    const {clientId, clientSecret} = this._promptOAuth2ClientIdAndSecret(existingCredentials);
+    const credentials: OAuth2ClientCredentials = {
+      clientId,
+      clientSecret,
+      accessToken: existingCredentials?.accessToken,
+      expires: existingCredentials?.expires,
+      scopes: existingCredentials?.scopes,
+    };
+    this.storeCredential(credentials);
+
+    const manifestScopes = this._authDef.scopes || [];
+    const requestedScopes =
+        this._extraOAuthScopes.length > 0 ? [...manifestScopes, ...this._extraOAuthScopes] : manifestScopes;
+
+    performOAuthClientCredentialsServerFlow({
+      clientId,
+      clientSecret,
+      scopes: requestedScopes,
+      authDef: this._authDef,
+    }).then(({accessToken, expires}) => {
+      const credentials: OAuth2ClientCredentials = {
+        clientId,
+        clientSecret,
+        accessToken,
+        expires,
+        scopes: requestedScopes,
+      };
+      this.storeCredential(credentials);
+      print('Access token saved!');
+    }).catch(err => {
+      throw err;
+    });
+  }
+
 
   handleAWSAccessKey() {
     assertCondition(this._authDef.type === AuthenticationType.AWSAccessKey);

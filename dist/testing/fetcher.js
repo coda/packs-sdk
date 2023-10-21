@@ -296,7 +296,8 @@ class AuthenticatingFetcher {
                 }
                 return { url, body, form, headers: { ...headers, ...authHeaders } };
             }
-            case types_1.AuthenticationType.OAuth2: {
+            case types_1.AuthenticationType.OAuth2:
+            case types_1.AuthenticationType.OAuth2ClientCredentials: {
                 const { accessToken } = this._credentials;
                 const prefix = (_a = this._authDef.tokenPrefix) !== null && _a !== void 0 ? _a : 'Bearer';
                 const requestHeaders = headers || {};
@@ -314,9 +315,6 @@ class AuthenticatingFetcher {
                     headers: requestHeaders,
                 };
             }
-            case types_1.AuthenticationType.OAuth2ClientCredentials:
-                // TODO(cqian): Implement this.
-                throw new Error('Not yet implemented');
             case types_1.AuthenticationType.AWSAccessKey: {
                 const { accessKeyId, secretAccessKey } = this._credentials;
                 const { service } = this._authDef;

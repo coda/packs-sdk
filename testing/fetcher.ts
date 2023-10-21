@@ -4,6 +4,7 @@ import {AssumeRoleCommand} from '@aws-sdk/client-sts';
 import type {Authentication} from '../types';
 import {AuthenticationType} from '../types';
 import type {AwsCredentialIdentity} from '@aws-sdk/types';
+import type {BaseOAuth2Credentials} from './auth_types';
 import type {Credentials} from './auth_types';
 import type {CustomCredentials} from './auth_types';
 import {DEFAULT_ALLOWED_GET_DOMAINS_REGEXES} from './constants';
@@ -394,8 +395,9 @@ export class AuthenticatingFetcher implements Fetcher {
         }
         return {url, body, form, headers: {...headers, ...authHeaders}};
       }
-      case AuthenticationType.OAuth2: {
-        const {accessToken} = this._credentials as OAuth2Credentials;
+      case AuthenticationType.OAuth2:
+      case AuthenticationType.OAuth2ClientCredentials: {
+        const {accessToken} = this._credentials as BaseOAuth2Credentials;
         const prefix = this._authDef.tokenPrefix ?? 'Bearer';
         const requestHeaders: {[header: string]: string} = headers || {};
         let requestUrl = url;
@@ -411,9 +413,6 @@ export class AuthenticatingFetcher implements Fetcher {
           headers: requestHeaders,
         };
       }
-      case AuthenticationType.OAuth2ClientCredentials:
-        // TODO(cqian): Implement this.
-        throw new Error('Not yet implemented');
       case AuthenticationType.AWSAccessKey: {
         const {accessKeyId, secretAccessKey} = this._credentials as AWSAccessKeyCredentials;
         const {service} = this._authDef;
