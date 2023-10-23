@@ -101,6 +101,7 @@ export type {MetadataFunction} from './api';
 export type {Network} from './api_types';
 export {NetworkConnection} from './api_types';
 export type {PackFormulaDef} from './api';
+export type {CommonPackFormulaDef} from './api_types';
 export type {PackFormulaMetadata} from './api';
 export type {PackFormulaValue} from './api_types';
 export type {PackFormulaResult} from './api_types';
