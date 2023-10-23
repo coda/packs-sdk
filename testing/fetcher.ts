@@ -18,6 +18,7 @@ import type {FetcherOptionsWithFullResponse} from './node_fetcher';
 import {HttpStatusCode} from './constants';
 import type {MultiHeaderCredentials} from './auth_types';
 import type {MultiQueryParamCredentials} from './auth_types';
+import type {OAuth2ClientCredentials} from './auth_types';
 import type {OAuth2Credentials} from './auth_types';
 import type {QueryParamCredentials} from './auth_types';
 import {STSClient} from '@aws-sdk/client-sts';
@@ -34,6 +35,7 @@ import {ensureNonEmptyString} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
 import {getExpirationDate} from './helpers';
 import {nodeFetcher} from './node_fetcher';
+import {performOAuthClientCredentialsServerFlow} from './oauth_server';
 import {print} from './helpers';
 import urlParse from 'url-parse';
 import {v4} from 'uuid';
@@ -187,17 +189,28 @@ export class AuthenticatingFetcher implements Fetcher {
     if (!this._authDef || !this._credentials || !this._updateCredentialsCallback) {
       return false;
     }
-    if (requestFailure.statusCode !== HttpStatusCode.Unauthorized || this._authDef.type !== AuthenticationType.OAuth2) {
+
+    if (requestFailure.statusCode !== HttpStatusCode.Unauthorized ||
+        !([AuthenticationType.OAuth2, AuthenticationType.OAuth2ClientCredentials].includes(this._authDef.type))) {
       return false;
     }
-    const {accessToken, refreshToken} = this._credentials as OAuth2Credentials;
-    if (!accessToken || !refreshToken) {
-      return false;
+
+    if (this._authDef.type === AuthenticationType.OAuth2) {
+      const {accessToken, refreshToken} = this._credentials as OAuth2Credentials;
+      if (!accessToken || !refreshToken) {
+        return false;
+      }
+    } else { // Client credentials
+      const {accessToken} = this._credentials as OAuth2ClientCredentials;
+      if (!accessToken) {
+        return false;
+      }
     }
+
     return true;
   }
 
-  private async _refreshOAuthCredentials() {
+  private async _refreshOAuthWithRefreshToken(): Promise<OAuth2Credentials> {
     assertCondition(this._authDef?.type === AuthenticationType.OAuth2);
     assertCondition(this._credentials);
     // Reauth with the scopes from the original auth call, not what is currently defined in the manifest.
@@ -247,14 +260,46 @@ export class AuthenticatingFetcher implements Fetcher {
 
     const {access_token: newAccessToken, refresh_token: newRefreshToken, ...data} = await oauthResponse.json();
 
-    const newCredentials: Credentials = {
-      ...this._credentials,
+    return {
+      clientId,
+      clientSecret,
       accessToken: newAccessToken,
       refreshToken: newRefreshToken || refreshToken,
       expires: getExpirationDate(Number(data.expires_in)).toString(),
       scopes,
     };
-    this._credentials = newCredentials;
+  }
+
+  private async _refreshOAuthClientCredentials(): Promise<OAuth2ClientCredentials> {
+    assertCondition(this._authDef?.type === AuthenticationType.OAuth2ClientCredentials);
+    assertCondition(this._credentials);
+    const credentials = this._credentials as OAuth2ClientCredentials;
+    const {clientId, clientSecret,  scopes} = credentials;
+
+    // Refreshing client credentials is just the same as requesting the initial access token
+    const {accessToken, expires} = await performOAuthClientCredentialsServerFlow(
+        {clientId, clientSecret, authDef: this._authDef, scopes}
+    );
+    return {
+      clientId,
+      clientSecret,
+      accessToken,
+      expires,
+      scopes
+    }
+  }
+
+  private async _refreshOAuthCredentials() {
+    assertCondition(this._authDef && [AuthenticationType.OAuth2, AuthenticationType.OAuth2ClientCredentials]
+        .includes(this._authDef.type));
+    let credentials: OAuth2Credentials | OAuth2ClientCredentials;
+    if (this._authDef.type === AuthenticationType.OAuth2) {
+      credentials = await this._refreshOAuthWithRefreshToken();
+    } else {
+      credentials = await this._refreshOAuthClientCredentials();
+    }
+
+    this._credentials = credentials;
     this._updateCredentialsCallback(this._credentials);
   }
 
