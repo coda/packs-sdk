@@ -157,9 +157,16 @@ describe('Auth', () => {
       };
       it('defaultAuthentication', async () => testTokenAuthFlow(createFakePack({defaultAuthentication: auth})));
       it('fails systemAuth', async () => {
-        expect(async () =>
-          testTokenAuthFlow(createFakePack({systemConnectionAuthentication: auth as unknown as SystemAuthentication})),
-        ).to.throw('CodaApiHeaderBearerToken only works with defaultAuthentication, not system auth.');
+        try {
+          await testTokenAuthFlow(
+            createFakePack({systemConnectionAuthentication: auth as unknown as SystemAuthentication})
+          );
+        } catch (err: any) {
+          assert.match(err, /CodaApiHeaderBearerToken only works with defaultAuthentication, not system auth./);
+          return;
+        }
+
+        throw new Error('Promise unexpectedly resolved');
       });
     });
 
