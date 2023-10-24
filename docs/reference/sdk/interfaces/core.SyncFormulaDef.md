@@ -178,17 +178,6 @@ The parameter inputs to the formula, if any.
 
 ___
 
-### updateOptions
-
-• `Optional` **updateOptions**: `Pick`<[`CommonPackFormulaDef`](core.CommonPackFormulaDef.md)<`ParamDefsT`\>, ``"extraOAuthScopes"``\>
-
-Options that only apply [executeUpdate](core.SyncFormulaDef.md#executeupdate) but not [execute](core.SyncFormulaDef.md#execute).
-
-This is useful for specifying OAuth scopes that are only necessary for 2-way writes
-but not for reads.
-
-___
-
 ### varargParameters
 
 • `Optional` `Readonly` **varargParameters**: [`ParamDefs`](../types/core.ParamDefs.md)
