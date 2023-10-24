@@ -16,6 +16,7 @@ import {makeFormula} from '../api';
 import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
 import mockFs from 'mock-fs';
+import * as oauthHelpers from '../testing/oauth_helpers';
 import * as oauthServer from '../testing/oauth_server';
 import {readCredentialsFile} from '../testing/auth';
 import {requestHelper} from '../testing/fetcher';
@@ -35,7 +36,7 @@ function makeFakePromptForInput(rawResponses: string | string[]): typeof helpers
   return sinon.spy(questionHandler);
 }
 
-function doSetupAuth(pack: PackDefinition) {
+async function doSetupAuth(pack: PackDefinition) {
   return setupAuth(MANIFEST_PATH, pack);
 }
 
@@ -67,12 +68,12 @@ describe('Auth', () => {
   }
 
   describe('setup', () => {
-    it('no auth', () => {
+    it('no auth', async () => {
       const pack = createFakePack({
         defaultAuthentication: undefined,
       });
 
-      doSetupAuth(pack);
+      await doSetupAuth(pack);
 
       sinon.assert.calledOnceWithExactly(
         mockPrintAndExit,
@@ -82,14 +83,14 @@ describe('Auth', () => {
       assertCredentialsFileExactly(undefined);
     });
 
-    it(`${AuthenticationType.None}`, () => {
+    it(`${AuthenticationType.None}`, async () => {
       const pack = createFakePack({
         defaultAuthentication: {
           type: AuthenticationType.None,
         },
       });
 
-      doSetupAuth(pack);
+      await doSetupAuth(pack);
 
       sinon.assert.calledOnceWithExactly(
         mockPrintAndExit,
@@ -100,10 +101,10 @@ describe('Auth', () => {
     });
 
     // Several tests run this exact same flow.
-    const testTokenAuthFlow = (pack: PackDefinition) => {
+    const testTokenAuthFlow = async (pack: PackDefinition) => {
       setupReadline('some-token');
 
-      doSetupAuth(pack);
+      await doSetupAuth(pack);
 
       sinon.assert.calledOnceWithExactly(mockPromptForInput, 'Paste the token or API key to use for this Pack:\n', {
         mask: true,
@@ -113,15 +114,15 @@ describe('Auth', () => {
       assertCredentialsFileExactly({token: 'some-token'});
     };
 
-    describe(`${AuthenticationType.HeaderBearerToken}`, () => {
+    describe(`${AuthenticationType.HeaderBearerToken}`, async () => {
       const auth: Authentication = {
         type: AuthenticationType.HeaderBearerToken,
       };
-      it('defaultAuthentication', () => {
-        testTokenAuthFlow(createFakePack({defaultAuthentication: auth}));
+      it('defaultAuthentication', async () => {
+        await testTokenAuthFlow(createFakePack({defaultAuthentication: auth}));
       });
-      it('systemAuthentication', () => {
-        testTokenAuthFlow(createFakePack({systemConnectionAuthentication: auth}));
+      it('systemAuthentication', async () => {
+        await testTokenAuthFlow(createFakePack({systemConnectionAuthentication: auth}));
       });
     });
 
@@ -130,10 +131,10 @@ describe('Auth', () => {
         type: AuthenticationType.HeaderBearerToken,
         requiresEndpointUrl: true,
       };
-      const execTest = (pack: PackDefinition) => {
+      const execTest = async (pack: PackDefinition) => {
         setupReadline(['https://some-endpoint-url.com', 'some-token']);
 
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         sinon.assert.calledWithExactly(
           mockPromptForInput,
@@ -146,17 +147,17 @@ describe('Auth', () => {
 
         assertCredentialsFileExactly({endpointUrl: 'https://some-endpoint-url.com', token: 'some-token'});
       };
-      it('defaultAuthentication', () => execTest(createFakePack({defaultAuthentication: auth})));
-      it('systemAuthentication', () => execTest(createFakePack({systemConnectionAuthentication: auth})));
+      it('defaultAuthentication', async () => execTest(createFakePack({defaultAuthentication: auth})));
+      it('systemAuthentication', async () => execTest(createFakePack({systemConnectionAuthentication: auth})));
     });
 
     describe(`${AuthenticationType.CodaApiHeaderBearerToken}`, () => {
       const auth: Authentication = {
         type: AuthenticationType.CodaApiHeaderBearerToken,
       };
-      it('defaultAuthentication', () => testTokenAuthFlow(createFakePack({defaultAuthentication: auth})));
-      it('fails systemAuth', () => {
-        expect(() =>
+      it('defaultAuthentication', async () => testTokenAuthFlow(createFakePack({defaultAuthentication: auth})));
+      it('fails systemAuth', async () => {
+        expect(async () =>
           testTokenAuthFlow(createFakePack({systemConnectionAuthentication: auth as unknown as SystemAuthentication})),
         ).to.throw('CodaApiHeaderBearerToken only works with defaultAuthentication, not system auth.');
       });
@@ -167,8 +168,8 @@ describe('Auth', () => {
         type: AuthenticationType.CustomHeaderToken,
         headerName: 'MyHeader',
       };
-      it('defaultAuthentication', () => testTokenAuthFlow(createFakePack({defaultAuthentication: auth})));
-      it('systemAuthentication', () => testTokenAuthFlow(createFakePack({systemConnectionAuthentication: auth})));
+      it('defaultAuthentication', async () => testTokenAuthFlow(createFakePack({defaultAuthentication: auth})));
+      it('systemAuthentication', async () => testTokenAuthFlow(createFakePack({systemConnectionAuthentication: auth})));
     });
 
     describe(`${AuthenticationType.MultiHeaderToken}`, () => {
@@ -186,10 +187,10 @@ describe('Auth', () => {
         ],
       };
 
-      const execTest = (pack: PackDefinition) => {
+      const execTest = async (pack: PackDefinition) => {
         setupReadline(['token1', 'token2']);
 
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         sinon.assert.calledWithExactly(
           mockPromptForInput,
@@ -206,8 +207,8 @@ describe('Auth', () => {
         assertCredentialsFileExactly({headers: {Header1: 'token1', Header2: 'token2'}});
       };
 
-      it('defaultAuthentication', () => execTest(createFakePack({defaultAuthentication: auth})));
-      it('systemAuthentication', () => execTest(createFakePack({systemConnectionAuthentication: auth})));
+      it('defaultAuthentication', async () => execTest(createFakePack({defaultAuthentication: auth})));
+      it('systemAuthentication', async () => execTest(createFakePack({systemConnectionAuthentication: auth})));
     });
 
     describe(`${AuthenticationType.QueryParamToken}`, () => {
@@ -215,10 +216,10 @@ describe('Auth', () => {
         type: AuthenticationType.QueryParamToken,
         paramName: 'myParam',
       };
-      const execTest = (pack: PackDefinition) => {
+      const execTest = async (pack: PackDefinition) => {
         setupReadline('some-param-value');
 
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         sinon.assert.calledOnceWithExactly(
           mockPromptForInput,
@@ -229,8 +230,8 @@ describe('Auth', () => {
 
         assertCredentialsFileExactly({paramValue: 'some-param-value'});
       };
-      it('defaultAuthentication', () => execTest(createFakePack({defaultAuthentication: auth})));
-      it('systemAuthentication', () => execTest(createFakePack({systemConnectionAuthentication: auth})));
+      it('defaultAuthentication', async () => execTest(createFakePack({defaultAuthentication: auth})));
+      it('systemAuthentication', async () => execTest(createFakePack({systemConnectionAuthentication: auth})));
     });
 
     describe(`${AuthenticationType.MultiQueryParamToken}`, () => {
@@ -241,10 +242,10 @@ describe('Auth', () => {
           {name: 'param2', description: 'Description for param2'},
         ],
       };
-      const execTest = (pack: PackDefinition) => {
+      const execTest = async (pack: PackDefinition) => {
         setupReadline(['param-value-1', 'param-value-2']);
 
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         sinon.assert.calledWithExactly(
           mockPromptForInput,
@@ -260,18 +261,18 @@ describe('Auth', () => {
 
         assertCredentialsFileExactly({params: {param1: 'param-value-1', param2: 'param-value-2'}});
       };
-      it('defaultAuthentication', () => execTest(createFakePack({defaultAuthentication: auth})));
-      it('systemAuthentication', () => execTest(createFakePack({systemConnectionAuthentication: auth})));
+      it('defaultAuthentication', async () => execTest(createFakePack({defaultAuthentication: auth})));
+      it('systemAuthentication', async () => execTest(createFakePack({systemConnectionAuthentication: auth})));
     });
 
     describe(`${AuthenticationType.WebBasic}`, () => {
       const auth: Authentication = {
         type: AuthenticationType.WebBasic,
       };
-      const execTest = (pack: PackDefinition) => {
+      const execTest = async (pack: PackDefinition) => {
         setupReadline(['some-username', 'some-password']);
 
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         sinon.assert.calledWithExactly(mockPromptForInput, 'Enter the username for this Pack:\n');
         sinon.assert.calledWithExactly(mockPromptForInput, 'Enter the password for this Pack:\n', {mask: true});
@@ -279,8 +280,8 @@ describe('Auth', () => {
 
         assertCredentialsFileExactly({username: 'some-username', password: 'some-password'});
       };
-      it('defaultAuthentication', () => execTest(createFakePack({defaultAuthentication: auth})));
-      it('systemAuthentication', () => execTest(createFakePack({systemConnectionAuthentication: auth})));
+      it('defaultAuthentication', async () => execTest(createFakePack({defaultAuthentication: auth})));
+      it('systemAuthentication', async () => execTest(createFakePack({systemConnectionAuthentication: auth})));
     });
 
     describe(`${AuthenticationType.WebBasic}, username only`, () => {
@@ -290,18 +291,18 @@ describe('Auth', () => {
           usernameOnly: true,
         },
       };
-      const execTest = (pack: PackDefinition) => {
+      const execTest = async (pack: PackDefinition) => {
         setupReadline(['some-username']);
 
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         sinon.assert.calledOnceWithExactly(mockPromptForInput, 'Enter the username for this Pack:\n');
         sinon.assert.calledOnceWithExactly(mockPrint, 'Credentials updated!');
 
         assertCredentialsFileExactly({username: 'some-username'});
       };
-      it('defaultAuthentication', () => execTest(createFakePack({defaultAuthentication: auth})));
-      it('systemAuthentication', () => execTest(createFakePack({systemConnectionAuthentication: auth})));
+      it('defaultAuthentication', async () => execTest(createFakePack({defaultAuthentication: auth})));
+      it('systemAuthentication', async () => execTest(createFakePack({systemConnectionAuthentication: auth})));
     });
 
     describe(`${AuthenticationType.WebBasic}, custom field names`, () => {
@@ -312,10 +313,10 @@ describe('Auth', () => {
           placeholderPassword: 'API Password',
         },
       };
-      const execTest = (pack: PackDefinition) => {
+      const execTest = async (pack: PackDefinition) => {
         setupReadline(['some-username', 'some-password']);
 
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         sinon.assert.calledWithExactly(mockPromptForInput, 'Enter the API Key for this Pack:\n');
         sinon.assert.calledWithExactly(mockPromptForInput, 'Enter the API Password for this Pack:\n', {mask: true});
@@ -323,8 +324,8 @@ describe('Auth', () => {
 
         assertCredentialsFileExactly({username: 'some-username', password: 'some-password'});
       };
-      it('defaultAuthentication', () => execTest(createFakePack({defaultAuthentication: auth})));
-      it('systemAuthentication', () => execTest(createFakePack({systemConnectionAuthentication: auth})));
+      it('defaultAuthentication', async () => execTest(createFakePack({defaultAuthentication: auth})));
+      it('systemAuthentication', async () => execTest(createFakePack({systemConnectionAuthentication: auth})));
     });
 
     describe(`${AuthenticationType.WebBasic}, requires endpoint url`, () => {
@@ -332,10 +333,10 @@ describe('Auth', () => {
         type: AuthenticationType.WebBasic,
         requiresEndpointUrl: true,
       };
-      const execTest = (pack: PackDefinition) => {
+      const execTest = async (pack: PackDefinition) => {
         setupReadline(['https://some-endpoint-url.com', 'some-username', 'some-password']);
 
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         sinon.assert.calledWithExactly(
           mockPromptForInput,
@@ -362,10 +363,10 @@ describe('Auth', () => {
         endpointDomain: 'myservice.com',
       };
 
-      const execTest = (pack: PackDefinition) => {
+      const execTest = async (pack: PackDefinition) => {
         setupReadline(['https://some-endpoint-url.com', 'some-username', 'some-password']);
 
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         sinon.assert.calledWithExactly(
           mockPromptForInput,
@@ -488,7 +489,7 @@ describe('Auth', () => {
       const auth: Authentication = {type: AuthenticationType.HeaderBearerToken};
       const execTest = async (pack: PackDefinition) => {
         setupReadline('some-token');
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         await executeFetch(pack, 'https://example.com', {result: 'hello'});
 
@@ -504,8 +505,8 @@ describe('Auth', () => {
           throwOnRedirect: false,
         });
       };
-      it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
-      it('systemAuth', () => execTest(createPackWithSystemAuth(auth)));
+      it('defaultAuth', async () => execTest(createPackWithDefaultAuth(auth)));
+      it('systemAuth', async () => execTest(createPackWithSystemAuth(auth)));
     });
 
     describe(`${AuthenticationType.HeaderBearerToken}, endpoint url specified in auth config`, async () => {
@@ -516,7 +517,7 @@ describe('Auth', () => {
       const opts: Partial<PackDefinition> = {networkDomains: ['some-endpoint-url.com']};
       const execTest = async (pack: PackDefinition) => {
         setupReadline(['https://some-endpoint-url.com', 'some-token']);
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         await executeFetch(pack, '/foo', {result: 'hello'});
 
@@ -544,7 +545,7 @@ describe('Auth', () => {
       const opts: Partial<PackDefinition> = {networkDomains: ['some-endpoint-url.com']};
       const execTest = async (pack: PackDefinition) => {
         setupReadline(['https://some-endpoint-url.com', 'some-token']);
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         await executeFetch(pack, 'https://some-endpoint-url.com/foo', {result: 'hello'});
 
@@ -571,7 +572,7 @@ describe('Auth', () => {
       };
       const execTest = async (pack: PackDefinition) => {
         setupReadline(['https://some-endpoint-url.com', 'some-token']);
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         await testHelper.willBeRejectedWith(
           executeFetch(pack, 'https://example.com/foo', {result: 'hello'}),
@@ -592,7 +593,7 @@ describe('Auth', () => {
       const auth: Authentication = {type: AuthenticationType.CodaApiHeaderBearerToken};
       const execTest = async (pack: PackDefinition) => {
         setupReadline('some-token');
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         await executeFetch(pack, 'https://example.com', {result: 'hello'});
 
@@ -624,7 +625,7 @@ describe('Auth', () => {
       };
       const execTest = async (pack: PackDefinition) => {
         setupReadline('some-token');
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         await executeFetch(pack, 'https://example.com', {result: 'hello'});
 
@@ -652,7 +653,7 @@ describe('Auth', () => {
       };
       const execTest = async (pack: PackDefinition) => {
         setupReadline('some-token');
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         await executeFetch(pack, 'https://example.com', {result: 'hello'});
 
@@ -682,7 +683,7 @@ describe('Auth', () => {
       };
       const execTest = async (pack: PackDefinition) => {
         setupReadline(['token1', 'token2']);
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         await executeFetch(pack, 'https://example.com', {result: 'hello'});
 
@@ -709,7 +710,7 @@ describe('Auth', () => {
       };
       const execTest = async (pack: PackDefinition) => {
         setupReadline('some-param-value');
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         await executeFetch(pack, 'https://example.com/foo?blah=123', {result: 'hello'});
 
@@ -739,7 +740,7 @@ describe('Auth', () => {
       };
       const execTest = async (pack: PackDefinition) => {
         setupReadline(['param-value-1', 'param-value-2']);
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         await executeFetch(pack, 'https://example.com/foo?blah=123', {result: 'hello'});
 
@@ -765,7 +766,7 @@ describe('Auth', () => {
       };
       const execTest = async (pack: PackDefinition) => {
         setupReadline(['some-username', 'some-password']);
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         await executeFetch(pack, 'https://example.com', {result: 'hello'});
 
@@ -809,7 +810,7 @@ describe('Auth', () => {
             }),
           ],
         });
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         mockMakeRequest.returns(
           Promise.resolve({
@@ -858,7 +859,7 @@ describe('Auth', () => {
             }),
           ],
         });
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         mockMakeRequest.returns(
           Promise.resolve({
@@ -894,7 +895,7 @@ describe('Auth', () => {
       };
       const execTest = async (pack: PackDefinition) => {
         setupReadline(['some-username']);
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         await executeFetch(pack, 'https://example.com', {result: 'hello'});
 
@@ -923,7 +924,7 @@ describe('Auth', () => {
 
       const execTest = async (pack: PackDefinition) => {
         setupReadline(['https://some-endpoint-url.com', 'some-username', 'some-password']);
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         await executeFetch(pack, '/foo?bar=blah', {result: 'hello'});
 
@@ -977,7 +978,7 @@ describe('Auth', () => {
 
       const execTest = async (pack: PackDefinition) => {
         setupReadline(['secret-value', 'secret-token']);
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         sinon.assert.calledWithExactly(
           mockPromptForInput,
@@ -1019,7 +1020,7 @@ describe('Auth', () => {
             }),
           ],
         });
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         mockMakeRequest.returns(
           Promise.resolve({
@@ -1068,7 +1069,7 @@ describe('Auth', () => {
             }),
           ],
         });
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         mockMakeRequest.returns(
           Promise.resolve({
@@ -1119,7 +1120,7 @@ describe('Auth', () => {
             }),
           ],
         });
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         mockMakeRequest.returns(
           Promise.resolve({
@@ -1171,7 +1172,7 @@ describe('Auth', () => {
             }),
           ],
         });
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         mockMakeRequest.returns(
           Promise.resolve({
@@ -1243,7 +1244,7 @@ describe('Auth', () => {
       });
 
       setupReadline('some-token');
-      doSetupAuth(pack);
+      await doSetupAuth(pack);
 
       await executeFetch(pack, 'https://example.com', {result: 'hello'}, 'FetchNoAuth');
 
@@ -1281,7 +1282,7 @@ describe('Auth', () => {
 
       const execTest = async (pack: PackDefinition) => {
         setupReadline('some-token');
-        doSetupAuth(pack);
+        await doSetupAuth(pack);
 
         await executeFetch(pack, 'https://example.com/some-blob.jpg', Buffer.from('adf'), 'StoreBlob');
 
@@ -1338,7 +1339,7 @@ describe('Auth', () => {
             tokenUrl: 'https://token-url.com',
           });
           setupReadline(['some-client-id', 'some-client-secret']);
-          doSetupAuth(pack);
+          await doSetupAuth(pack);
 
           await executeFetch(pack, 'https://example.com', {result: 'hello'});
 
@@ -1382,7 +1383,7 @@ describe('Auth', () => {
             additionalParams: {foo: 'bar'},
           });
           setupReadline(['some-client-id', 'some-client-secret']);
-          doSetupAuth(pack);
+          await doSetupAuth(pack);
 
           await executeFetch(pack, 'https://example.com', {result: 'hello'});
 
@@ -1433,7 +1434,7 @@ describe('Auth', () => {
             scopes: ['scope1', 'scope2'],
           });
           setupReadline(['some-client-id', 'some-client-secret']);
-          doSetupAuth(pack);
+          await doSetupAuth(pack);
 
           await executeFetch(pack, 'https://example.com', {result: 'hello'});
 
@@ -1469,7 +1470,7 @@ describe('Auth', () => {
           });
 
           setupReadline(['yes', '', '']);
-          doSetupAuth(pack);
+          await doSetupAuth(pack);
 
           assertCredentialsFileExactly({
             clientId: 'existing-client-id',
@@ -1490,10 +1491,8 @@ describe('Auth', () => {
         let fakePerformOAuthClientCredentialsServerFlow: sinon.SinonStub;
 
         beforeEach(() => {
-          fakePerformOAuthClientCredentialsServerFlow = sinon.stub(oauthServer, 'performOAuthClientCredentialsServerFlow').callsFake(async ({afterTokenExchange}) => {
-            const credentials = {accessToken, expires: expiresString};
-            afterTokenExchange?.(credentials);
-            return credentials;
+          fakePerformOAuthClientCredentialsServerFlow = sinon.stub(oauthHelpers, 'performOAuthClientCredentialsServerFlow').callsFake(async ({}) => {
+            return {accessToken, expires: expiresString};
           });
         });
 
@@ -1503,7 +1502,7 @@ describe('Auth', () => {
             tokenUrl: 'https://token-url.com',
           });
           setupReadline([clientId, clientSecret]);
-          doSetupAuth(pack);
+          await doSetupAuth(pack);
 
           await executeFetch(pack, 'https://example.com', {result: 'hello'});
 
@@ -1532,7 +1531,7 @@ describe('Auth', () => {
             scopes: ['scope1', 'scope2'],
           });
           setupReadline([clientId, clientSecret]);
-          doSetupAuth(pack);
+          await doSetupAuth(pack);
 
           await executeFetch(pack, 'https://example.com', {result: 'hello'});
 
@@ -1552,7 +1551,6 @@ describe('Auth', () => {
           });
 
           sinon.assert.calledOnceWithMatch(fakePerformOAuthClientCredentialsServerFlow, {
-            afterTokenExchange: sinon.match.func,
             authDef: {
               type: AuthenticationType.OAuth2ClientCredentials,
               scopes: ['scope1', 'scope2'],
@@ -1581,7 +1579,7 @@ describe('Auth', () => {
             scopes: ['scope1', 'scope2'],
           });
           setupReadline([clientId, clientSecret]);
-          doSetupAuth(pack);
+          await doSetupAuth(pack);
 
           await executeFetch(pack, 'https://example.com', {result: 'hello'});
 
@@ -1616,7 +1614,7 @@ describe('Auth', () => {
           });
 
           setupReadline(['yes', '', '']);
-          doSetupAuth(pack);
+          await doSetupAuth(pack);
 
           assertCredentialsFileExactly({
             clientId: 'existing-client-id',

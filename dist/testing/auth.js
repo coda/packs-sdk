@@ -33,7 +33,7 @@ const helpers_1 = require("../cli/helpers");
 const oauth_server_1 = require("./oauth_server");
 const oauth_server_2 = require("./oauth_server");
 const path = __importStar(require("path"));
-const oauth_server_3 = require("./oauth_server");
+const oauth_helpers_1 = require("./oauth_helpers");
 const helpers_2 = require("./helpers");
 const helpers_3 = require("./helpers");
 const helpers_4 = require("./helpers");
@@ -46,7 +46,7 @@ async function setupAuthFromModule(manifestPath, manifest, opts = {}) {
     return setupAuth(manifestDir, manifest, opts);
 }
 exports.setupAuthFromModule = setupAuthFromModule;
-function setupAuth(manifestDir, packDef, opts = {}) {
+async function setupAuth(manifestDir, packDef, opts = {}) {
     const auth = (0, helpers_1.getPackAuth)(packDef);
     if (!auth) {
         return (0, helpers_3.printAndExit)(`This Pack has no declared authentication. ` +
@@ -204,7 +204,7 @@ class CredentialHandler {
     handleOAuth2() {
         (0, ensure_1.assertCondition)(this._authDef.type === types_1.AuthenticationType.OAuth2);
         const existingCredentials = this.checkForExistingCredential();
-        (0, helpers_2.print)(`*** Your application must have ${(0, oauth_server_2.makeRedirectUrl)(this._oauthServerPort)} whitelisted as an OAuth redirect url ` +
+        (0, helpers_2.print)(`*** Your application must have ${(0, oauth_server_2.makeRedirectUrl)(this._oauthServerPort)} allowlisted as an OAuth redirect url ` +
             'in order for this tool to work. ***');
         const { clientId, clientSecret } = this._promptOAuth2ClientIdAndSecret(existingCredentials);
         const credentials = {
@@ -239,7 +239,7 @@ class CredentialHandler {
             scopes: requestedScopes,
         });
     }
-    handleOAuth2ClientCredentials() {
+    async handleOAuth2ClientCredentials() {
         (0, ensure_1.assertCondition)(this._authDef.type === types_1.AuthenticationType.OAuth2ClientCredentials);
         const existingCredentials = this.checkForExistingCredential();
         const { clientId, clientSecret } = this._promptOAuth2ClientIdAndSecret(existingCredentials);
@@ -253,26 +253,20 @@ class CredentialHandler {
         this.storeCredential(credentials);
         const manifestScopes = this._authDef.scopes || [];
         const requestedScopes = this._extraOAuthScopes.length > 0 ? [...manifestScopes, ...this._extraOAuthScopes] : manifestScopes;
-        (0, oauth_server_3.performOAuthClientCredentialsServerFlow)({
+        const { accessToken, expires } = await (0, oauth_helpers_1.performOAuthClientCredentialsServerFlow)({
             clientId,
             clientSecret,
             scopes: requestedScopes,
-            authDef: this._authDef,
-            afterTokenExchange: ({ accessToken, expires }) => {
-                const credentials = {
-                    clientId,
-                    clientSecret,
-                    accessToken,
-                    expires,
-                    scopes: requestedScopes,
-                };
-                this.storeCredential(credentials);
-                (0, helpers_2.print)('Access token saved!');
-            }
-        })
-            .catch(err => {
-            throw err;
+            authDef: this._authDef
         });
+        this.storeCredential({
+            clientId,
+            clientSecret,
+            accessToken,
+            expires,
+            scopes: requestedScopes,
+        });
+        (0, helpers_2.print)('Access token saved!');
     }
     handleAWSAccessKey() {
         (0, ensure_1.assertCondition)(this._authDef.type === types_1.AuthenticationType.AWSAccessKey);

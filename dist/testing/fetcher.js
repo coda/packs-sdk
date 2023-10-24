@@ -18,7 +18,7 @@ const ensure_3 = require("../helpers/ensure");
 const ensure_4 = require("../helpers/ensure");
 const helpers_1 = require("./helpers");
 const node_fetcher_1 = require("./node_fetcher");
-const oauth_server_1 = require("./oauth_server");
+const oauth_helpers_1 = require("./oauth_helpers");
 const helpers_2 = require("./helpers");
 const url_parse_1 = __importDefault(require("url-parse"));
 const uuid_1 = require("uuid");
@@ -142,20 +142,28 @@ class AuthenticatingFetcher {
             return false;
         }
         if (requestFailure.statusCode !== constants_2.HttpStatusCode.Unauthorized ||
-            !([types_1.AuthenticationType.OAuth2, types_1.AuthenticationType.OAuth2ClientCredentials].includes(this._authDef.type))) {
+            (this._authDef.type !== types_1.AuthenticationType.OAuth2 &&
+                this._authDef.type !== types_1.AuthenticationType.OAuth2ClientCredentials)) {
             return false;
         }
-        if (this._authDef.type === types_1.AuthenticationType.OAuth2) {
-            const { accessToken, refreshToken } = this._credentials;
-            if (!accessToken || !refreshToken) {
-                return false;
+        const type = this._authDef.type;
+        switch (type) {
+            case types_1.AuthenticationType.OAuth2: {
+                const { accessToken, refreshToken } = this._credentials;
+                if (!accessToken || !refreshToken) {
+                    return false;
+                }
+                break;
             }
-        }
-        else { // Client credentials
-            const { accessToken } = this._credentials;
-            if (!accessToken) {
-                return false;
+            case types_1.AuthenticationType.OAuth2ClientCredentials: {
+                const { accessToken } = this._credentials;
+                if (!accessToken) {
+                    return false;
+                }
+                break;
             }
+            default:
+                (0, ensure_4.ensureUnreachable)(type);
         }
         return true;
     }
@@ -218,7 +226,7 @@ class AuthenticatingFetcher {
         const credentials = this._credentials;
         const { clientId, clientSecret, scopes } = credentials;
         // Refreshing client credentials is just the same as requesting the initial access token
-        const { accessToken, expires } = await (0, oauth_server_1.performOAuthClientCredentialsServerFlow)({ clientId, clientSecret, authDef: this._authDef, scopes });
+        const { accessToken, expires } = await (0, oauth_helpers_1.performOAuthClientCredentialsServerFlow)({ clientId, clientSecret, authDef: this._authDef, scopes });
         return {
             clientId,
             clientSecret,
@@ -228,14 +236,20 @@ class AuthenticatingFetcher {
         };
     }
     async _refreshOAuthCredentials() {
-        (0, ensure_1.assertCondition)(this._authDef && [types_1.AuthenticationType.OAuth2, types_1.AuthenticationType.OAuth2ClientCredentials]
-            .includes(this._authDef.type));
+        (0, ensure_1.assertCondition)(this._authDef &&
+            (this._authDef.type === types_1.AuthenticationType.OAuth2 ||
+                this._authDef.type === types_1.AuthenticationType.OAuth2ClientCredentials));
         let credentials;
-        if (this._authDef.type === types_1.AuthenticationType.OAuth2) {
-            credentials = await this._refreshOAuthWithRefreshToken();
-        }
-        else {
-            credentials = await this._refreshOAuthClientCredentials();
+        const type = this._authDef.type;
+        switch (type) {
+            case types_1.AuthenticationType.OAuth2:
+                credentials = await this._refreshOAuthWithRefreshToken();
+                break;
+            case types_1.AuthenticationType.OAuth2ClientCredentials:
+                credentials = await this._refreshOAuthClientCredentials();
+                break;
+            default:
+                (0, ensure_4.ensureUnreachable)(type);
         }
         this._credentials = credentials;
         this._updateCredentialsCallback(this._credentials);

@@ -20,7 +20,7 @@ import {getPackAuth} from '../cli/helpers';
 import {launchOAuthServerFlow} from './oauth_server';
 import {makeRedirectUrl} from './oauth_server';
 import * as path from 'path';
-import {performOAuthClientCredentialsServerFlow} from './oauth_server';
+import {performOAuthClientCredentialsServerFlow} from './oauth_helpers';
 import {print} from './helpers';
 import {printAndExit} from './helpers';
 import {promptForInput} from './helpers';
@@ -44,7 +44,8 @@ export async function setupAuthFromModule(
   return setupAuth(manifestDir, manifest, opts);
 }
 
-export function setupAuth(manifestDir: string, packDef: BasicPackDefinition, opts: SetupAuthOptions = {}): void {
+export async function setupAuth(manifestDir: string, packDef: BasicPackDefinition, opts: SetupAuthOptions = {})
+    : Promise<void> {
   const auth = getPackAuth(packDef);
   if (!auth) {
     return printAndExit(
@@ -251,7 +252,7 @@ class CredentialHandler {
     assertCondition(this._authDef.type === AuthenticationType.OAuth2);
     const existingCredentials = this.checkForExistingCredential() as OAuth2Credentials | undefined;
     print(
-      `*** Your application must have ${makeRedirectUrl(this._oauthServerPort)} whitelisted as an OAuth redirect url ` +
+      `*** Your application must have ${makeRedirectUrl(this._oauthServerPort)} allowlisted as an OAuth redirect url ` +
         'in order for this tool to work. ***',
     );
     const {clientId, clientSecret} = this._promptOAuth2ClientIdAndSecret(existingCredentials);
@@ -292,7 +293,7 @@ class CredentialHandler {
     });
   }
 
-  handleOAuth2ClientCredentials() {
+  async handleOAuth2ClientCredentials() {
     assertCondition(this._authDef.type === AuthenticationType.OAuth2ClientCredentials);
     const existingCredentials = this.checkForExistingCredential() as OAuth2ClientCredentials | undefined;
     const {clientId, clientSecret} = this._promptOAuth2ClientIdAndSecret(existingCredentials);
@@ -309,26 +310,21 @@ class CredentialHandler {
     const requestedScopes =
         this._extraOAuthScopes.length > 0 ? [...manifestScopes, ...this._extraOAuthScopes] : manifestScopes;
 
-    performOAuthClientCredentialsServerFlow({
+    const {accessToken, expires} = await performOAuthClientCredentialsServerFlow({
       clientId,
       clientSecret,
       scopes: requestedScopes,
-      authDef: this._authDef,
-      afterTokenExchange: ({accessToken, expires}) => {
-        const credentials: OAuth2ClientCredentials = {
-          clientId,
-          clientSecret,
-          accessToken,
-          expires,
-          scopes: requestedScopes,
-        };
-        this.storeCredential(credentials);
-        print('Access token saved!');
-      }
-    })
-    .catch(err => {
-      throw err;
+      authDef: this._authDef
     });
+
+    this.storeCredential({
+      clientId,
+      clientSecret,
+      accessToken,
+      expires,
+      scopes: requestedScopes,
+    });
+    print('Access token saved!');
   }
 
 

@@ -35,7 +35,7 @@ import {ensureNonEmptyString} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
 import {getExpirationDate} from './helpers';
 import {nodeFetcher} from './node_fetcher';
-import {performOAuthClientCredentialsServerFlow} from './oauth_server';
+import {performOAuthClientCredentialsServerFlow} from './oauth_helpers';
 import {print} from './helpers';
 import urlParse from 'url-parse';
 import {v4} from 'uuid';
@@ -191,21 +191,31 @@ export class AuthenticatingFetcher implements Fetcher {
     }
 
     if (requestFailure.statusCode !== HttpStatusCode.Unauthorized ||
-        !([AuthenticationType.OAuth2, AuthenticationType.OAuth2ClientCredentials].includes(this._authDef.type))) {
+        (this._authDef.type !== AuthenticationType.OAuth2 &&
+            this._authDef.type !== AuthenticationType.OAuth2ClientCredentials)) {
       return false;
     }
 
-    if (this._authDef.type === AuthenticationType.OAuth2) {
-      const {accessToken, refreshToken} = this._credentials as OAuth2Credentials;
-      if (!accessToken || !refreshToken) {
-        return false;
+    const type = this._authDef.type;
+    switch (type) {
+      case AuthenticationType.OAuth2: {
+        const {accessToken, refreshToken} = this._credentials as OAuth2Credentials;
+        if (!accessToken || !refreshToken) {
+          return false;
+        }
+        break;
       }
-    } else { // Client credentials
-      const {accessToken} = this._credentials as OAuth2ClientCredentials;
-      if (!accessToken) {
-        return false;
+      case AuthenticationType.OAuth2ClientCredentials: {
+        const {accessToken} = this._credentials as OAuth2ClientCredentials;
+        if (!accessToken) {
+          return false;
+        }
+        break;
       }
+      default:
+        ensureUnreachable(type);
     }
+
 
     return true;
   }
@@ -290,13 +300,20 @@ export class AuthenticatingFetcher implements Fetcher {
   }
 
   private async _refreshOAuthCredentials() {
-    assertCondition(this._authDef && [AuthenticationType.OAuth2, AuthenticationType.OAuth2ClientCredentials]
-        .includes(this._authDef.type));
+    assertCondition(this._authDef &&
+        (this._authDef.type === AuthenticationType.OAuth2 ||
+            this._authDef.type === AuthenticationType.OAuth2ClientCredentials));
     let credentials: OAuth2Credentials | OAuth2ClientCredentials;
-    if (this._authDef.type === AuthenticationType.OAuth2) {
-      credentials = await this._refreshOAuthWithRefreshToken();
-    } else {
-      credentials = await this._refreshOAuthClientCredentials();
+    const type = this._authDef.type;
+    switch (type) {
+      case AuthenticationType.OAuth2:
+          credentials = await this._refreshOAuthWithRefreshToken();
+          break;
+      case AuthenticationType.OAuth2ClientCredentials:
+          credentials = await this._refreshOAuthClientCredentials();
+          break;
+      default:
+          ensureUnreachable(type);
     }
 
     this._credentials = credentials;
