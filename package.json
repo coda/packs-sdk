@@ -6,7 +6,7 @@
     "dev/eslint"
   ],
   "engines": {
-    "node": ">=18.0.x <19.0.0",
+    "node": ">=18.0.x",
     "pnpm": ">=8.0.0 <8.6.0"
   },
   "main": "dist/index.js",
