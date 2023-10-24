@@ -3,6 +3,7 @@
 This changelog keeps track of all changes to the Packs SDK. We follow conventions from [keepachangelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
+
 ### Added
 
 - Added `updateOptions.extraOAuthScopes` to sync tables to support incremental OAuth with 2-way sync.
