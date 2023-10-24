@@ -11,18 +11,24 @@ import type * as http from 'http';
 import {print} from './helpers';
 import {withQueryParams} from '../helpers/url';
 
-interface AfterTokenExchangeParams {
+interface AfterTokenOAuthAuthorizationCodeExchangeParams {
   accessToken: string;
   refreshToken?: string;
   expires?: string;
 }
 
-export type AfterTokenExchangeCallback = (params: AfterTokenExchangeParams) => void;
-
-interface TokenCallbackResponse {
+interface AuthorizationCodeTokenCallbackResponse {
   accessToken: string;
   refreshToken?: string;
   data: {[key: string]: string};
+}
+
+export type AfterAuthorizationCodeTokenExchangeCallback =
+    (params: AfterTokenOAuthAuthorizationCodeExchangeParams) => void;
+
+interface AfterTokenOAuthClientCredentialsExchangeParams {
+  accessToken: string;
+  expires?: string;
 }
 
 async function requestOAuthAccessToken(
@@ -98,7 +104,7 @@ export function launchOAuthServerFlow({
   clientSecret: string;
   authDef: OAuth2Authentication;
   port: number;
-  afterTokenExchange: AfterTokenExchangeCallback;
+  afterTokenExchange: AfterAuthorizationCodeTokenExchangeCallback;
   scopes?: string[];
 }) {
   // TODO: Handle endpointKey.
@@ -107,7 +113,7 @@ export function launchOAuthServerFlow({
   const requestedScopes = scopes && scopes.length > 0 ? scopes : authDef.scopes;
   const scope = requestedScopes ? requestedScopes.join(scopeDelimiter || ' ') : requestedScopes;
   const redirectUri = makeRedirectUrl(port);
-  const callback = async (code: string): Promise<TokenCallbackResponse> => {
+  const callback = async (code: string): Promise<AuthorizationCodeTokenCallbackResponse> => {
     const params: OAuth2RequestAccessTokenParams = {
       grant_type: 'authorization_code',
       code,
@@ -155,13 +161,13 @@ function _getTokenExpiry(data: {[key: string]: string}) {
 
 class OAuthServerContainer {
   private readonly _port: number;
-  private readonly _afterTokenExchange: AfterTokenExchangeCallback;
+  private readonly _afterTokenExchange: AfterAuthorizationCodeTokenExchangeCallback;
   private _server: http.Server | undefined;
-  private _tokenCallback: (code: string) => Promise<TokenCallbackResponse>;
+  private _tokenCallback: (code: string) => Promise<AuthorizationCodeTokenCallbackResponse>;
 
   constructor(
-      tokenCallback: (code: string) => Promise<TokenCallbackResponse>,
-      afterTokenExchange: AfterTokenExchangeCallback,
+      tokenCallback: (code: string) => Promise<AuthorizationCodeTokenCallbackResponse>,
+      afterTokenExchange: AfterAuthorizationCodeTokenExchangeCallback,
       port: number,
   ) {
     this._tokenCallback = tokenCallback;
@@ -199,12 +205,14 @@ export async function performOAuthClientCredentialsServerFlow({
   clientSecret,
   authDef,
   scopes,
+  afterTokenExchange,
 }: {
   clientId: string;
   clientSecret: string;
   authDef: OAuth2ClientCredentialsAuthentication;
   scopes?: string[];
-}) {
+  afterTokenExchange?: (params: AfterTokenOAuthClientCredentialsExchangeParams) => void;
+}): Promise<AfterTokenOAuthClientCredentialsExchangeParams> {
   const {tokenUrl, nestedResponseKey, scopeParamName, scopeDelimiter} = authDef;
   // Use the manifest's scopes as a default.
   const requestedScopes = scopes && scopes.length > 0 ? scopes : authDef.scopes;
@@ -222,5 +230,7 @@ export async function performOAuthClientCredentialsServerFlow({
     scopeParamName,
   });
 
+  const credentials = {accessToken, expires: _getTokenExpiry(data)};
+  afterTokenExchange?.(credentials);
   return {accessToken, expires: _getTokenExpiry(data)}
 }

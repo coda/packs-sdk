@@ -1,5 +1,5 @@
 import {testHelper} from './test_helper';
-import type {AfterTokenExchangeCallback} from '../testing/oauth_server';
+import type {AfterAuthorizationCodeTokenExchangeCallback} from '../testing/oauth_server';
 import type {Authentication} from '../types';
 import {AuthenticationType} from '../types';
 import type {Credentials} from '../testing/auth_types';
@@ -10,6 +10,7 @@ import type {SystemAuthentication} from '../types';
 import {ValueType} from '../schema';
 import {createFakePack} from './test_utils';
 import {executeFormulaFromPackDef} from '../testing/execution';
+import {getExpirationDate} from '../testing/helpers';
 import * as helpers from '../testing/helpers';
 import {makeFormula} from '../api';
 import {makeStringFormula} from '../api';
@@ -1317,164 +1318,313 @@ describe('Auth', () => {
     });
 
     describe('OAuth', () => {
-      let fakeLaunchOAuthServerFlow: sinon.SinonSpy;
+      describe('OAuth 2 authorization code flow', () => {
+        let fakeLaunchOAuthServerFlow: sinon.SinonSpy;
 
-      beforeEach(() => {
-        fakeLaunchOAuthServerFlow = sinon.spy(
-          ({afterTokenExchange}: {afterTokenExchange: AfterTokenExchangeCallback}) => {
-            afterTokenExchange({accessToken: 'some-access-token', refreshToken: 'some-refresh-token'});
-          },
-        );
+        beforeEach(() => {
+          fakeLaunchOAuthServerFlow = sinon.spy(
+              ({afterTokenExchange}: {afterTokenExchange: AfterAuthorizationCodeTokenExchangeCallback}) => {
+                afterTokenExchange({accessToken: 'some-access-token', refreshToken: 'some-refresh-token'});
+              },
+          );
 
-        sinon.replace(oauthServer, 'launchOAuthServerFlow', fakeLaunchOAuthServerFlow);
-      });
-
-      it(`${AuthenticationType.OAuth2}`, async () => {
-        const pack = createPackWithDefaultAuth({
-          type: AuthenticationType.OAuth2,
-          authorizationUrl: 'https://auth-url.com',
-          tokenUrl: 'https://token-url.com',
-        });
-        setupReadline(['some-client-id', 'some-client-secret']);
-        doSetupAuth(pack);
-
-        await executeFetch(pack, 'https://example.com', {result: 'hello'});
-
-        sinon.assert.calledOnceWithExactly(mockMakeRequest, {
-          body: undefined,
-          form: undefined,
-          headers: {
-            Authorization: 'Bearer some-access-token',
-            'User-Agent': 'Coda-Test-Server-Fetcher',
-          },
-          method: 'GET',
-          uri: 'https://example.com',
-          encoding: undefined,
-          resolveWithFullResponse: true,
-          followRedirect: true,
-          throwOnRedirect: false,
+          sinon.replace(oauthServer, 'launchOAuthServerFlow', fakeLaunchOAuthServerFlow);
         });
 
-        sinon.assert.calledOnceWithMatch(fakeLaunchOAuthServerFlow, {
-          afterTokenExchange: sinon.match.func,
-          authDef: {
-            additionalParams: undefined,
-            authorizationUrl: 'https://auth-url.com',
-            scopes: undefined,
-            tokenUrl: 'https://token-url.com',
-            type: 'OAuth2',
-          },
-          clientId: 'some-client-id',
-          clientSecret: 'some-client-secret',
-          port: 3000,
-        });
-      });
-
-      it(`${AuthenticationType.OAuth2}, with scope, tokenPrefix, and additional params`, async () => {
-        const pack = createPackWithDefaultAuth({
-          type: AuthenticationType.OAuth2,
-          authorizationUrl: 'https://auth-url.com',
-          tokenUrl: 'https://token-url.com',
-          tokenPrefix: 'SomePrefix',
-          scopes: ['scope1', 'scope2'],
-          additionalParams: {foo: 'bar'},
-        });
-        setupReadline(['some-client-id', 'some-client-secret']);
-        doSetupAuth(pack);
-
-        await executeFetch(pack, 'https://example.com', {result: 'hello'});
-
-        sinon.assert.calledOnceWithExactly(mockMakeRequest, {
-          body: undefined,
-          form: undefined,
-          headers: {
-            Authorization: 'SomePrefix some-access-token',
-            'User-Agent': 'Coda-Test-Server-Fetcher',
-          },
-          method: 'GET',
-          uri: 'https://example.com',
-          encoding: undefined,
-          resolveWithFullResponse: true,
-          followRedirect: true,
-          throwOnRedirect: false,
-        });
-
-        sinon.assert.calledOnceWithMatch(fakeLaunchOAuthServerFlow, {
-          afterTokenExchange: sinon.match.func,
-          authDef: {
-            additionalParams: {foo: 'bar'},
-            authorizationUrl: 'https://auth-url.com',
-            scopes: ['scope1', 'scope2'],
-            tokenUrl: 'https://token-url.com',
-            type: 'OAuth2',
-          },
-          clientId: 'some-client-id',
-          clientSecret: 'some-client-secret',
-          port: 3000,
-        });
-
-        assertCredentialsFileExactly({
-          clientId: 'some-client-id',
-          clientSecret: 'some-client-secret',
-          accessToken: 'some-access-token',
-          refreshToken: 'some-refresh-token',
-          scopes: ['scope1', 'scope2'],
-        });
-      });
-
-      it(`${AuthenticationType.OAuth2}, with empty token prefix`, async () => {
-        const pack = createPackWithDefaultAuth({
-          type: AuthenticationType.OAuth2,
-          authorizationUrl: 'https://auth-url.com',
-          tokenUrl: 'https://token-url.com',
-          tokenPrefix: '',
-          scopes: ['scope1', 'scope2'],
-        });
-        setupReadline(['some-client-id', 'some-client-secret']);
-        doSetupAuth(pack);
-
-        await executeFetch(pack, 'https://example.com', {result: 'hello'});
-
-        sinon.assert.calledOnceWithExactly(mockMakeRequest, {
-          body: undefined,
-          form: undefined,
-          headers: {
-            Authorization: 'some-access-token',
-            'User-Agent': 'Coda-Test-Server-Fetcher',
-          },
-          method: 'GET',
-          uri: 'https://example.com',
-          encoding: undefined,
-          resolveWithFullResponse: true,
-          followRedirect: true,
-          throwOnRedirect: false,
-        });
-      });
-
-      it(`${AuthenticationType.OAuth2}, leaves existing secrets in place`, async () => {
-        const pack = createPackWithDefaultAuth(
-          {
+        it(`${AuthenticationType.OAuth2}`, async () => {
+          const pack = createPackWithDefaultAuth({
             type: AuthenticationType.OAuth2,
             authorizationUrl: 'https://auth-url.com',
             tokenUrl: 'https://token-url.com',
-          },
-          {name: 'Fake Pack'},
-        );
+          });
+          setupReadline(['some-client-id', 'some-client-secret']);
+          doSetupAuth(pack);
 
-        storeCredential(MANIFEST_PATH, {
-          clientId: 'existing-client-id',
-          clientSecret: 'existing-client-secret',
+          await executeFetch(pack, 'https://example.com', {result: 'hello'});
+
+          sinon.assert.calledOnceWithExactly(mockMakeRequest, {
+            body: undefined,
+            form: undefined,
+            headers: {
+              Authorization: 'Bearer some-access-token',
+              'User-Agent': 'Coda-Test-Server-Fetcher',
+            },
+            method: 'GET',
+            uri: 'https://example.com',
+            encoding: undefined,
+            resolveWithFullResponse: true,
+            followRedirect: true,
+            throwOnRedirect: false,
+          });
+
+          sinon.assert.calledOnceWithMatch(fakeLaunchOAuthServerFlow, {
+            afterTokenExchange: sinon.match.func,
+            authDef: {
+              additionalParams: undefined,
+              authorizationUrl: 'https://auth-url.com',
+              scopes: undefined,
+              tokenUrl: 'https://token-url.com',
+              type: 'OAuth2',
+            },
+            clientId: 'some-client-id',
+            clientSecret: 'some-client-secret',
+            port: 3000,
+          });
         });
 
-        setupReadline(['yes', '', '']);
-        doSetupAuth(pack);
+        it(`${AuthenticationType.OAuth2}, with scope, tokenPrefix, and additional params`, async () => {
+          const pack = createPackWithDefaultAuth({
+            type: AuthenticationType.OAuth2,
+            authorizationUrl: 'https://auth-url.com',
+            tokenUrl: 'https://token-url.com',
+            tokenPrefix: 'SomePrefix',
+            scopes: ['scope1', 'scope2'],
+            additionalParams: {foo: 'bar'},
+          });
+          setupReadline(['some-client-id', 'some-client-secret']);
+          doSetupAuth(pack);
 
-        assertCredentialsFileExactly({
-          clientId: 'existing-client-id',
-          clientSecret: 'existing-client-secret',
-          accessToken: 'some-access-token',
-          refreshToken: 'some-refresh-token',
-          scopes: [],
+          await executeFetch(pack, 'https://example.com', {result: 'hello'});
+
+          sinon.assert.calledOnceWithExactly(mockMakeRequest, {
+            body: undefined,
+            form: undefined,
+            headers: {
+              Authorization: 'SomePrefix some-access-token',
+              'User-Agent': 'Coda-Test-Server-Fetcher',
+            },
+            method: 'GET',
+            uri: 'https://example.com',
+            encoding: undefined,
+            resolveWithFullResponse: true,
+            followRedirect: true,
+            throwOnRedirect: false,
+          });
+
+          sinon.assert.calledOnceWithMatch(fakeLaunchOAuthServerFlow, {
+            afterTokenExchange: sinon.match.func,
+            authDef: {
+              additionalParams: {foo: 'bar'},
+              authorizationUrl: 'https://auth-url.com',
+              scopes: ['scope1', 'scope2'],
+              tokenUrl: 'https://token-url.com',
+              type: 'OAuth2',
+            },
+            clientId: 'some-client-id',
+            clientSecret: 'some-client-secret',
+            port: 3000,
+          });
+
+          assertCredentialsFileExactly({
+            clientId: 'some-client-id',
+            clientSecret: 'some-client-secret',
+            accessToken: 'some-access-token',
+            refreshToken: 'some-refresh-token',
+            scopes: ['scope1', 'scope2'],
+          });
+        });
+
+        it(`${AuthenticationType.OAuth2}, with empty token prefix`, async () => {
+          const pack = createPackWithDefaultAuth({
+            type: AuthenticationType.OAuth2,
+            authorizationUrl: 'https://auth-url.com',
+            tokenUrl: 'https://token-url.com',
+            tokenPrefix: '',
+            scopes: ['scope1', 'scope2'],
+          });
+          setupReadline(['some-client-id', 'some-client-secret']);
+          doSetupAuth(pack);
+
+          await executeFetch(pack, 'https://example.com', {result: 'hello'});
+
+          sinon.assert.calledOnceWithExactly(mockMakeRequest, {
+            body: undefined,
+            form: undefined,
+            headers: {
+              Authorization: 'some-access-token',
+              'User-Agent': 'Coda-Test-Server-Fetcher',
+            },
+            method: 'GET',
+            uri: 'https://example.com',
+            encoding: undefined,
+            resolveWithFullResponse: true,
+            followRedirect: true,
+            throwOnRedirect: false,
+          });
+        });
+
+        it(`${AuthenticationType.OAuth2}, leaves existing secrets in place`, async () => {
+          const pack = createPackWithDefaultAuth(
+              {
+                type: AuthenticationType.OAuth2,
+                authorizationUrl: 'https://auth-url.com',
+                tokenUrl: 'https://token-url.com',
+              },
+              {name: 'Fake Pack'},
+          );
+
+          storeCredential(MANIFEST_PATH, {
+            clientId: 'existing-client-id',
+            clientSecret: 'existing-client-secret',
+          });
+
+          setupReadline(['yes', '', '']);
+          doSetupAuth(pack);
+
+          assertCredentialsFileExactly({
+            clientId: 'existing-client-id',
+            clientSecret: 'existing-client-secret',
+            accessToken: 'some-access-token',
+            refreshToken: 'some-refresh-token',
+            scopes: [],
+          });
+        });
+      });
+
+      describe('OAuth 2 client credentials flow', () => {
+        const clientId = 'some-client-id';
+        const clientSecret = 'some-client-secret';
+        const tokenUrl = 'https://token-url.com';
+        const accessToken = 'some-access-token';
+        const expiresString =  getExpirationDate(1000).toString();
+        let fakePerformOAuthClientCredentialsServerFlow: sinon.SinonStub;
+
+        beforeEach(() => {
+          fakePerformOAuthClientCredentialsServerFlow = sinon.stub(oauthServer, 'performOAuthClientCredentialsServerFlow').callsFake(async ({afterTokenExchange}) => {
+            const credentials = {accessToken, expires: expiresString};
+            afterTokenExchange?.(credentials);
+            return credentials;
+          });
+        });
+
+        it(`${AuthenticationType.OAuth2ClientCredentials}`, async () => {
+          const pack = createPackWithDefaultAuth({
+            type: AuthenticationType.OAuth2ClientCredentials,
+            tokenUrl: 'https://token-url.com',
+          });
+          setupReadline([clientId, clientSecret]);
+          doSetupAuth(pack);
+
+          await executeFetch(pack, 'https://example.com', {result: 'hello'});
+
+          sinon.assert.calledOnceWithExactly(mockMakeRequest, {
+            body: undefined,
+            form: undefined,
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              'User-Agent': 'Coda-Test-Server-Fetcher',
+            },
+            method: 'GET',
+            uri: 'https://example.com',
+            encoding: undefined,
+            resolveWithFullResponse: true,
+            followRedirect: true,
+            throwOnRedirect: false,
+          });
+        });
+
+        it(`${AuthenticationType.OAuth2ClientCredentials}, with scope and tokenPrefix`, async () => {
+          const tokenPrefix = 'SomePrefix';
+          const pack = createPackWithDefaultAuth({
+            type: AuthenticationType.OAuth2ClientCredentials,
+            tokenUrl: 'https://token-url.com',
+            tokenPrefix,
+            scopes: ['scope1', 'scope2'],
+          });
+          setupReadline([clientId, clientSecret]);
+          doSetupAuth(pack);
+
+          await executeFetch(pack, 'https://example.com', {result: 'hello'});
+
+          sinon.assert.calledOnceWithExactly(mockMakeRequest, {
+            body: undefined,
+            form: undefined,
+            headers: {
+              Authorization: `SomePrefix ${accessToken}`,
+              'User-Agent': 'Coda-Test-Server-Fetcher',
+            },
+            method: 'GET',
+            uri: 'https://example.com',
+            encoding: undefined,
+            resolveWithFullResponse: true,
+            followRedirect: true,
+            throwOnRedirect: false,
+          });
+
+          sinon.assert.calledOnceWithMatch(fakePerformOAuthClientCredentialsServerFlow, {
+            afterTokenExchange: sinon.match.func,
+            authDef: {
+              type: AuthenticationType.OAuth2ClientCredentials,
+              scopes: ['scope1', 'scope2'],
+              tokenUrl,
+              tokenPrefix
+            },
+            clientId,
+            clientSecret,
+            scopes: ['scope1', 'scope2'],
+          });
+
+          assertCredentialsFileExactly({
+            clientId,
+            clientSecret,
+            accessToken,
+            scopes: ['scope1', 'scope2'],
+            expires: expiresString
+          });
+        });
+
+        it(`${AuthenticationType.OAuth2ClientCredentials}, with empty token prefix`, async () => {
+          const pack = createPackWithDefaultAuth({
+            type: AuthenticationType.OAuth2ClientCredentials,
+            tokenUrl,
+            tokenPrefix: '',
+            scopes: ['scope1', 'scope2'],
+          });
+          setupReadline([clientId, clientSecret]);
+          doSetupAuth(pack);
+
+          await executeFetch(pack, 'https://example.com', {result: 'hello'});
+
+          sinon.assert.calledOnceWithExactly(mockMakeRequest, {
+            body: undefined,
+            form: undefined,
+            headers: {
+              Authorization: accessToken,
+              'User-Agent': 'Coda-Test-Server-Fetcher',
+            },
+            method: 'GET',
+            uri: 'https://example.com',
+            encoding: undefined,
+            resolveWithFullResponse: true,
+            followRedirect: true,
+            throwOnRedirect: false,
+          });
+        });
+
+        it(`${AuthenticationType.OAuth2ClientCredentials}, leaves existing secrets in place`, async () => {
+          const pack = createPackWithDefaultAuth(
+              {
+                type: AuthenticationType.OAuth2ClientCredentials,
+                tokenUrl: 'https://token-url.com',
+              },
+              {name: 'Fake Pack'},
+          );
+
+          storeCredential(MANIFEST_PATH, {
+            clientId: 'existing-client-id',
+            clientSecret: 'existing-client-secret',
+          });
+
+          setupReadline(['yes', '', '']);
+          doSetupAuth(pack);
+
+          assertCredentialsFileExactly({
+            clientId: 'existing-client-id',
+            clientSecret: 'existing-client-secret',
+            accessToken,
+            expires: expiresString,
+            scopes: [],
+          });
         });
       });
     });

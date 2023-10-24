@@ -130,7 +130,7 @@ class OAuthServerContainer {
         (_a = this._server) === null || _a === void 0 ? void 0 : _a.close();
     }
 }
-async function performOAuthClientCredentialsServerFlow({ clientId, clientSecret, authDef, scopes, }) {
+async function performOAuthClientCredentialsServerFlow({ clientId, clientSecret, authDef, scopes, afterTokenExchange, }) {
     const { tokenUrl, nestedResponseKey, scopeParamName, scopeDelimiter } = authDef;
     // Use the manifest's scopes as a default.
     const requestedScopes = scopes && scopes.length > 0 ? scopes : authDef.scopes;
@@ -146,6 +146,8 @@ async function performOAuthClientCredentialsServerFlow({ clientId, clientSecret,
         nestedResponseKey,
         scopeParamName,
     });
+    const credentials = { accessToken, expires: _getTokenExpiry(data) };
+    afterTokenExchange === null || afterTokenExchange === void 0 ? void 0 : afterTokenExchange(credentials);
     return { accessToken, expires: _getTokenExpiry(data) };
 }
 exports.performOAuthClientCredentialsServerFlow = performOAuthClientCredentialsServerFlow;

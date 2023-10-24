@@ -258,17 +258,19 @@ class CredentialHandler {
             clientSecret,
             scopes: requestedScopes,
             authDef: this._authDef,
-        }).then(({ accessToken, expires }) => {
-            const credentials = {
-                clientId,
-                clientSecret,
-                accessToken,
-                expires,
-                scopes: requestedScopes,
-            };
-            this.storeCredential(credentials);
-            (0, helpers_2.print)('Access token saved!');
-        }).catch(err => {
+            afterTokenExchange: ({ accessToken, expires }) => {
+                const credentials = {
+                    clientId,
+                    clientSecret,
+                    accessToken,
+                    expires,
+                    scopes: requestedScopes,
+                };
+                this.storeCredential(credentials);
+                (0, helpers_2.print)('Access token saved!');
+            }
+        })
+            .catch(err => {
             throw err;
         });
     }
