@@ -57,6 +57,7 @@ import * as coda from "@codahq/packs-sdk";
 - [BaseFormulaDef](../interfaces/core.BaseFormulaDef.md)
 - [BooleanSchema](../interfaces/core.BooleanSchema.md)
 - [CodaApiBearerTokenAuthentication](../interfaces/core.CodaApiBearerTokenAuthentication.md)
+- [CommonPackFormulaDef](../interfaces/core.CommonPackFormulaDef.md)
 - [Continuation](../interfaces/core.Continuation.md)
 - [CurrencySchema](../interfaces/core.CurrencySchema.md)
 - [CustomAuthParameter](../interfaces/core.CustomAuthParameter.md)

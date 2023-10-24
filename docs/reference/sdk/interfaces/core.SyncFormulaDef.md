@@ -21,7 +21,7 @@ Inputs for creating the formula that implements a sync table.
 
 ## Hierarchy
 
-- `CommonPackFormulaDef`<`ParamDefsT`\>
+- [`CommonPackFormulaDef`](core.CommonPackFormulaDef.md)<`ParamDefsT`\>
 
   ↳ **`SyncFormulaDef`**
 
@@ -35,7 +35,7 @@ How long formulas running with the same values should cache their results for.
 
 #### Inherited from
 
-CommonPackFormulaDef.cacheTtlSecs
+[CommonPackFormulaDef](core.CommonPackFormulaDef.md).[cacheTtlSecs](core.CommonPackFormulaDef.md#cachettlsecs)
 
 ___
 
@@ -47,7 +47,7 @@ Does this formula require a connection (aka an account)?
 
 #### Inherited from
 
-CommonPackFormulaDef.connectionRequirement
+[CommonPackFormulaDef](core.CommonPackFormulaDef.md).[connectionRequirement](core.CommonPackFormulaDef.md#connectionrequirement)
 
 ___
 
@@ -59,7 +59,7 @@ A brief description of what the formula does.
 
 #### Inherited from
 
-CommonPackFormulaDef.description
+[CommonPackFormulaDef](core.CommonPackFormulaDef.md).[description](core.CommonPackFormulaDef.md#description)
 
 ___
 
@@ -71,7 +71,7 @@ Sample inputs and outputs demonstrating usage of this formula.
 
 #### Inherited from
 
-CommonPackFormulaDef.examples
+[CommonPackFormulaDef](core.CommonPackFormulaDef.md).[examples](core.CommonPackFormulaDef.md#examples)
 
 ___
 
@@ -88,7 +88,7 @@ so an end user must have both sets of permissions.
 
 #### Inherited from
 
-CommonPackFormulaDef.extraOAuthScopes
+[CommonPackFormulaDef](core.CommonPackFormulaDef.md).[extraOAuthScopes](core.CommonPackFormulaDef.md#extraoauthscopes)
 
 ___
 
@@ -101,7 +101,7 @@ Actions are presented as buttons in the Coda UI.
 
 #### Inherited from
 
-CommonPackFormulaDef.isAction
+[CommonPackFormulaDef](core.CommonPackFormulaDef.md).[isAction](core.CommonPackFormulaDef.md#isaction)
 
 ___
 
@@ -114,7 +114,7 @@ The formula can still be invoked by manually typing its full name.
 
 #### Inherited from
 
-CommonPackFormulaDef.isExperimental
+[CommonPackFormulaDef](core.CommonPackFormulaDef.md).[isExperimental](core.CommonPackFormulaDef.md#isexperimental)
 
 ___
 
@@ -127,7 +127,7 @@ Not for use by packs that are not authored by Coda.
 
 #### Inherited from
 
-CommonPackFormulaDef.isSystem
+[CommonPackFormulaDef](core.CommonPackFormulaDef.md).[isSystem](core.CommonPackFormulaDef.md#issystem)
 
 ___
 
@@ -148,7 +148,7 @@ The name of the formula, used to invoke it.
 
 #### Inherited from
 
-CommonPackFormulaDef.name
+[CommonPackFormulaDef](core.CommonPackFormulaDef.md).[name](core.CommonPackFormulaDef.md#name)
 
 ___
 
@@ -162,7 +162,7 @@ use `isAction` and `connectionRequirement` instead
 
 #### Inherited from
 
-CommonPackFormulaDef.network
+[CommonPackFormulaDef](core.CommonPackFormulaDef.md).[network](core.CommonPackFormulaDef.md#network)
 
 ___
 
@@ -174,7 +174,18 @@ The parameter inputs to the formula, if any.
 
 #### Inherited from
 
-CommonPackFormulaDef.parameters
+[CommonPackFormulaDef](core.CommonPackFormulaDef.md).[parameters](core.CommonPackFormulaDef.md#parameters)
+
+___
+
+### updateOptions
+
+• `Optional` **updateOptions**: `Pick`<[`CommonPackFormulaDef`](core.CommonPackFormulaDef.md)<`ParamDefsT`\>, ``"extraOAuthScopes"``\>
+
+Options that only apply [executeUpdate](core.SyncFormulaDef.md#executeupdate) but not [execute](core.SyncFormulaDef.md#execute).
+
+This is useful for specifying OAuth scopes that are only necessary for 2-way writes
+but not for reads.
 
 ___
 
@@ -187,7 +198,7 @@ numbers of inputs.
 
 #### Inherited from
 
-CommonPackFormulaDef.varargParameters
+[CommonPackFormulaDef](core.CommonPackFormulaDef.md).[varargParameters](core.CommonPackFormulaDef.md#varargparameters)
 
 ## Methods
 
