@@ -31,17 +31,22 @@ export interface MultiQueryParamCredentials extends BaseCredentials {
   params: {[paramName: string]: string};
 }
 
-export interface OAuth2Credentials extends BaseCredentials {
+export interface BaseOAuth2Credentials extends BaseCredentials {
   clientId: string;
   clientSecret: string;
   accessToken?: string;
-  refreshToken?: string;
+  scopes?: string[];
   // Optional to not break previously stored credentials.
   // Could make this non-optional in the future.
-  scopes?: string[];
   // Included only for credential debugging purposes
   expires?: string;
 }
+
+export interface OAuth2Credentials extends BaseOAuth2Credentials {
+  refreshToken?: string;
+}
+
+export interface OAuth2ClientCredentials extends BaseOAuth2Credentials {}
 
 export interface AWSAccessKeyCredentials extends BaseCredentials {
   accessKeyId: string;
@@ -61,5 +66,22 @@ export type Credentials =
   | QueryParamCredentials
   | MultiQueryParamCredentials
   | OAuth2Credentials
+  | OAuth2ClientCredentials
   | AWSAccessKeyCredentials
   | AWSAssumeRoleCredentials;
+
+interface BaseOauth2RequestAccessTokenParams {
+  client_id: string;
+  client_secret: string;
+}
+
+export interface OAuth2RequestAccessTokenParams extends BaseOauth2RequestAccessTokenParams {
+  grant_type: 'authorization_code';
+  code: string;
+  redirect_uri: string;
+}
+
+export interface OAuth2ClientCredentialsRequestAccessTokenParams extends BaseOauth2RequestAccessTokenParams {
+  grant_type: 'client_credentials';
+  scope?: string;
+}

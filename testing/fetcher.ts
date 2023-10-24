@@ -4,6 +4,7 @@ import {AssumeRoleCommand} from '@aws-sdk/client-sts';
 import type {Authentication} from '../types';
 import {AuthenticationType} from '../types';
 import type {AwsCredentialIdentity} from '@aws-sdk/types';
+import type {BaseOAuth2Credentials} from './auth_types';
 import type {Credentials} from './auth_types';
 import type {CustomCredentials} from './auth_types';
 import {DEFAULT_ALLOWED_GET_DOMAINS_REGEXES} from './constants';
@@ -17,6 +18,7 @@ import type {FetcherOptionsWithFullResponse} from './node_fetcher';
 import {HttpStatusCode} from './constants';
 import type {MultiHeaderCredentials} from './auth_types';
 import type {MultiQueryParamCredentials} from './auth_types';
+import type {OAuth2ClientCredentials} from './auth_types';
 import type {OAuth2Credentials} from './auth_types';
 import type {QueryParamCredentials} from './auth_types';
 import {STSClient} from '@aws-sdk/client-sts';
@@ -33,6 +35,7 @@ import {ensureNonEmptyString} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
 import {getExpirationDate} from './helpers';
 import {nodeFetcher} from './node_fetcher';
+import {performOAuthClientCredentialsServerFlow} from './oauth_helpers';
 import {print} from './helpers';
 import urlParse from 'url-parse';
 import {v4} from 'uuid';
@@ -186,17 +189,38 @@ export class AuthenticatingFetcher implements Fetcher {
     if (!this._authDef || !this._credentials || !this._updateCredentialsCallback) {
       return false;
     }
-    if (requestFailure.statusCode !== HttpStatusCode.Unauthorized || this._authDef.type !== AuthenticationType.OAuth2) {
+
+    if (requestFailure.statusCode !== HttpStatusCode.Unauthorized ||
+        (this._authDef.type !== AuthenticationType.OAuth2 &&
+            this._authDef.type !== AuthenticationType.OAuth2ClientCredentials)) {
       return false;
     }
-    const {accessToken, refreshToken} = this._credentials as OAuth2Credentials;
-    if (!accessToken || !refreshToken) {
-      return false;
+
+    const type = this._authDef.type;
+    switch (type) {
+      case AuthenticationType.OAuth2: {
+        const {accessToken, refreshToken} = this._credentials as OAuth2Credentials;
+        if (!accessToken || !refreshToken) {
+          return false;
+        }
+        break;
+      }
+      case AuthenticationType.OAuth2ClientCredentials: {
+        const {accessToken} = this._credentials as OAuth2ClientCredentials;
+        if (!accessToken) {
+          return false;
+        }
+        break;
+      }
+      default:
+        ensureUnreachable(type);
     }
+
+
     return true;
   }
 
-  private async _refreshOAuthCredentials() {
+  private async _refreshOAuthWithRefreshToken(): Promise<OAuth2Credentials> {
     assertCondition(this._authDef?.type === AuthenticationType.OAuth2);
     assertCondition(this._credentials);
     // Reauth with the scopes from the original auth call, not what is currently defined in the manifest.
@@ -246,14 +270,53 @@ export class AuthenticatingFetcher implements Fetcher {
 
     const {access_token: newAccessToken, refresh_token: newRefreshToken, ...data} = await oauthResponse.json();
 
-    const newCredentials: Credentials = {
-      ...this._credentials,
+    return {
+      clientId,
+      clientSecret,
       accessToken: newAccessToken,
       refreshToken: newRefreshToken || refreshToken,
       expires: getExpirationDate(Number(data.expires_in)).toString(),
       scopes,
     };
-    this._credentials = newCredentials;
+  }
+
+  private async _refreshOAuthClientCredentials(): Promise<OAuth2ClientCredentials> {
+    assertCondition(this._authDef?.type === AuthenticationType.OAuth2ClientCredentials);
+    assertCondition(this._credentials);
+    const credentials = this._credentials as OAuth2ClientCredentials;
+    const {clientId, clientSecret,  scopes} = credentials;
+
+    // Refreshing client credentials is just the same as requesting the initial access token
+    const {accessToken, expires} = await performOAuthClientCredentialsServerFlow(
+        {clientId, clientSecret, authDef: this._authDef, scopes}
+    );
+    return {
+      clientId,
+      clientSecret,
+      accessToken,
+      expires,
+      scopes
+    }
+  }
+
+  private async _refreshOAuthCredentials() {
+    assertCondition(this._authDef &&
+        (this._authDef.type === AuthenticationType.OAuth2 ||
+            this._authDef.type === AuthenticationType.OAuth2ClientCredentials));
+    let credentials: OAuth2Credentials | OAuth2ClientCredentials;
+    const type = this._authDef.type;
+    switch (type) {
+      case AuthenticationType.OAuth2:
+          credentials = await this._refreshOAuthWithRefreshToken();
+          break;
+      case AuthenticationType.OAuth2ClientCredentials:
+          credentials = await this._refreshOAuthClientCredentials();
+          break;
+      default:
+          ensureUnreachable(type);
+    }
+
+    this._credentials = credentials;
     this._updateCredentialsCallback(this._credentials);
   }
 
@@ -394,8 +457,9 @@ export class AuthenticatingFetcher implements Fetcher {
         }
         return {url, body, form, headers: {...headers, ...authHeaders}};
       }
-      case AuthenticationType.OAuth2: {
-        const {accessToken} = this._credentials as OAuth2Credentials;
+      case AuthenticationType.OAuth2:
+      case AuthenticationType.OAuth2ClientCredentials: {
+        const {accessToken} = this._credentials as BaseOAuth2Credentials;
         const prefix = this._authDef.tokenPrefix ?? 'Bearer';
         const requestHeaders: {[header: string]: string} = headers || {};
         let requestUrl = url;
@@ -411,9 +475,6 @@ export class AuthenticatingFetcher implements Fetcher {
           headers: requestHeaders,
         };
       }
-      case AuthenticationType.OAuth2ClientCredentials:
-        // TODO(cqian): Implement this.
-        throw new Error('Not yet implemented');
       case AuthenticationType.AWSAccessKey: {
         const {accessKeyId, secretAccessKey} = this._credentials as AWSAccessKeyCredentials;
         const {service} = this._authDef;

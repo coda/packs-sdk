@@ -16,6 +16,8 @@ export declare class AuthenticatingFetcher implements Fetcher {
     constructor(updateCredentialsCallback: (newCredentials: Credentials) => void | undefined, authDef: Authentication | undefined, networkDomains: string[] | undefined, credentials: Credentials | undefined, invocationToken: string);
     fetch<T = any>(request: FetchRequest, isRetry?: boolean): Promise<FetchResponse<T>>;
     private _isOAuth401;
+    private _refreshOAuthWithRefreshToken;
+    private _refreshOAuthClientCredentials;
     private _refreshOAuthCredentials;
     private _applyAuthentication;
     private _signAwsRequest;

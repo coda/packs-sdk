@@ -480,6 +480,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       type: zodDiscriminant(AuthenticationType.OAuth2ClientCredentials),
       tokenUrl: z.string().url(),
       scopes: z.array(z.string()).optional(),
+      scopeDelimiter: z.enum([' ', ',', ';']).optional(),
       tokenPrefix: z.string().optional(),
       tokenQueryParam: z.string().optional(),
       scopeParamName: z.string().optional(),

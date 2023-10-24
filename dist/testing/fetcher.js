@@ -18,6 +18,7 @@ const ensure_3 = require("../helpers/ensure");
 const ensure_4 = require("../helpers/ensure");
 const helpers_1 = require("./helpers");
 const node_fetcher_1 = require("./node_fetcher");
+const oauth_helpers_1 = require("./oauth_helpers");
 const helpers_2 = require("./helpers");
 const url_parse_1 = __importDefault(require("url-parse"));
 const uuid_1 = require("uuid");
@@ -140,16 +141,33 @@ class AuthenticatingFetcher {
         if (!this._authDef || !this._credentials || !this._updateCredentialsCallback) {
             return false;
         }
-        if (requestFailure.statusCode !== constants_2.HttpStatusCode.Unauthorized || this._authDef.type !== types_1.AuthenticationType.OAuth2) {
+        if (requestFailure.statusCode !== constants_2.HttpStatusCode.Unauthorized ||
+            (this._authDef.type !== types_1.AuthenticationType.OAuth2 &&
+                this._authDef.type !== types_1.AuthenticationType.OAuth2ClientCredentials)) {
             return false;
         }
-        const { accessToken, refreshToken } = this._credentials;
-        if (!accessToken || !refreshToken) {
-            return false;
+        const type = this._authDef.type;
+        switch (type) {
+            case types_1.AuthenticationType.OAuth2: {
+                const { accessToken, refreshToken } = this._credentials;
+                if (!accessToken || !refreshToken) {
+                    return false;
+                }
+                break;
+            }
+            case types_1.AuthenticationType.OAuth2ClientCredentials: {
+                const { accessToken } = this._credentials;
+                if (!accessToken) {
+                    return false;
+                }
+                break;
+            }
+            default:
+                (0, ensure_4.ensureUnreachable)(type);
         }
         return true;
     }
-    async _refreshOAuthCredentials() {
+    async _refreshOAuthWithRefreshToken() {
         var _a;
         (0, ensure_1.assertCondition)(((_a = this._authDef) === null || _a === void 0 ? void 0 : _a.type) === types_1.AuthenticationType.OAuth2);
         (0, ensure_1.assertCondition)(this._credentials);
@@ -192,14 +210,48 @@ class AuthenticatingFetcher {
             new Error(`OAuth provider returns error ${oauthResponse.status} ${oauthResponse.text}`);
         }
         const { access_token: newAccessToken, refresh_token: newRefreshToken, ...data } = await oauthResponse.json();
-        const newCredentials = {
-            ...this._credentials,
+        return {
+            clientId,
+            clientSecret,
             accessToken: newAccessToken,
             refreshToken: newRefreshToken || refreshToken,
             expires: (0, helpers_1.getExpirationDate)(Number(data.expires_in)).toString(),
             scopes,
         };
-        this._credentials = newCredentials;
+    }
+    async _refreshOAuthClientCredentials() {
+        var _a;
+        (0, ensure_1.assertCondition)(((_a = this._authDef) === null || _a === void 0 ? void 0 : _a.type) === types_1.AuthenticationType.OAuth2ClientCredentials);
+        (0, ensure_1.assertCondition)(this._credentials);
+        const credentials = this._credentials;
+        const { clientId, clientSecret, scopes } = credentials;
+        // Refreshing client credentials is just the same as requesting the initial access token
+        const { accessToken, expires } = await (0, oauth_helpers_1.performOAuthClientCredentialsServerFlow)({ clientId, clientSecret, authDef: this._authDef, scopes });
+        return {
+            clientId,
+            clientSecret,
+            accessToken,
+            expires,
+            scopes
+        };
+    }
+    async _refreshOAuthCredentials() {
+        (0, ensure_1.assertCondition)(this._authDef &&
+            (this._authDef.type === types_1.AuthenticationType.OAuth2 ||
+                this._authDef.type === types_1.AuthenticationType.OAuth2ClientCredentials));
+        let credentials;
+        const type = this._authDef.type;
+        switch (type) {
+            case types_1.AuthenticationType.OAuth2:
+                credentials = await this._refreshOAuthWithRefreshToken();
+                break;
+            case types_1.AuthenticationType.OAuth2ClientCredentials:
+                credentials = await this._refreshOAuthClientCredentials();
+                break;
+            default:
+                (0, ensure_4.ensureUnreachable)(type);
+        }
+        this._credentials = credentials;
         this._updateCredentialsCallback(this._credentials);
     }
     async _applyAuthentication({ method, url: rawUrl, headers, body, form, disableAuthentication, }) {
@@ -296,7 +348,8 @@ class AuthenticatingFetcher {
                 }
                 return { url, body, form, headers: { ...headers, ...authHeaders } };
             }
-            case types_1.AuthenticationType.OAuth2: {
+            case types_1.AuthenticationType.OAuth2:
+            case types_1.AuthenticationType.OAuth2ClientCredentials: {
                 const { accessToken } = this._credentials;
                 const prefix = (_a = this._authDef.tokenPrefix) !== null && _a !== void 0 ? _a : 'Bearer';
                 const requestHeaders = headers || {};
@@ -314,9 +367,6 @@ class AuthenticatingFetcher {
                     headers: requestHeaders,
                 };
             }
-            case types_1.AuthenticationType.OAuth2ClientCredentials:
-                // TODO(cqian): Implement this.
-                throw new Error('Not yet implemented');
             case types_1.AuthenticationType.AWSAccessKey: {
                 const { accessKeyId, secretAccessKey } = this._credentials;
                 const { service } = this._authDef;

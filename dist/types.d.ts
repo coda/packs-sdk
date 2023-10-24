@@ -458,6 +458,18 @@ export interface BaseOAuthAuthentication extends BaseAuthentication {
      */
     scopes?: string[];
     /**
+     * In rare cases, OAuth providers may want the permission scopes in a different query parameter
+     * than `scope`.
+     */
+    scopeParamName?: string;
+    /**
+     * The delimiter to use when joining {@link scopes} when generating authorization URLs.
+     *
+     * The OAuth2 standard is to use spaces to delimit scopes, and Coda will do that by default.
+     * If the API you are using requires a different delimiter, say a comma, specify it here.
+     */
+    scopeDelimiter?: ' ' | ',' | ';';
+    /**
      * The URL that Coda will hit in order to exchange the temporary code for an access token.
      */
     tokenUrl: string;
@@ -473,11 +485,6 @@ export interface BaseOAuthAuthentication extends BaseAuthentication {
      * codes when there is an error in the token exchange.
      */
     credentialsLocation?: TokenExchangeCredentialsLocation;
-    /**
-     * In rare cases, OAuth providers may want the permission scopes in a different query parameter
-     * than `scope`.
-     */
-    scopeParamName?: string;
     /**
      * A custom prefix to be used when passing the access token in the HTTP Authorization
      * header when making requests. Typically this prefix is `Bearer` which is what will be
@@ -523,13 +530,6 @@ export interface OAuth2Authentication extends BaseOAuthAuthentication {
      * they may be specified using {@link additionalParams}.
      */
     authorizationUrl: string;
-    /**
-     * The delimiter to use when joining {@link scopes} when generating authorization URLs.
-     *
-     * The OAuth2 standard is to use spaces to delimit scopes, and Coda will do that by default.
-     * If the API you are using requires a different delimiter, say a comma, specify it here.
-     */
-    scopeDelimiter?: ' ' | ',' | ';';
     /**
      * Option custom URL parameters and values that should be included when redirecting the
      * user to the {@link authorizationUrl}.

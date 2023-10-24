@@ -209,6 +209,10 @@ The delimiter to use when joining [scopes](core.OAuth2Authentication.md#scopes) 
 The OAuth2 standard is to use spaces to delimit scopes, and Coda will do that by default.
 If the API you are using requires a different delimiter, say a comma, specify it here.
 
+#### Inherited from
+
+BaseOAuthAuthentication.scopeDelimiter
+
 ___
 
 ### scopeParamName
