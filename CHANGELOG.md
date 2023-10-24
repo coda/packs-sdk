@@ -4,6 +4,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+## [1.7.0] - 2023-10-24
+
 ### Added
 
 - Added `OAuth2ClientCredentials` authentication type to support authenticating with OAuth client credentials.
@@ -628,7 +630,8 @@ await myHelper(context);
 
 - Beginning of alpha versioning.
 
-[unreleased]: https://github.com/coda/packs-sdk/compare/v1.6.0...HEAD
+[unreleased]: https://github.com/coda/packs-sdk/compare/v1.7.0...HEAD
+[1.7.0]: https://github.com/coda/packs-sdk/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/coda/packs-sdk/compare/v1.5.1...v1.6.0
 [1.5.1]: https://github.com/coda/packs-sdk/compare/v1.4.1...v1.5.1
 [1.5.0]: https://github.com/coda/packs-sdk/compare/v1.4.1...v1.5.0
