@@ -92,6 +92,8 @@ const ProductSchema = coda.makeObjectSchema({
 });
 ```
 
+If `subtitleProperties` are not defined the card will fall back to using the `featuredProperties` configured on the schema, if any. Featured properties are also used to determine the initial columns to show in a sync table. If you want a schema to include `featuredProperties` but not display a subtitle, set `subtitleProperties` to an empty array.
+
 The subtitle shows a label for each property, which defaults to `{Name}: {Value}`. You can customize the label for a property, such as removing the property name, in the property definition. See the [Schemas guide][schemas_property_labels] for more information.
 
 
