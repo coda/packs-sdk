@@ -56,7 +56,7 @@ module.exports = {
     '@typescript-eslint/no-namespace': ['error', {allowDeclarations: true}],
     // TODO: re-enable once violations are fixed and we have dev consensus.
     '@typescript-eslint/no-non-null-assertion': 'off',
-    '@typescript-eslint/no-parameter-properties': 'error',
+    '@typescript-eslint/parameter-properties': 'error',
     '@typescript-eslint/no-unused-expressions': ['error', {allowShortCircuit: true, allowTernary: true}],
     '@typescript-eslint/no-unused-vars': [
       'error',
