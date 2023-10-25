@@ -7,6 +7,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ### Added
 
 - Added `updateOptions.extraOAuthScopes` to sync tables to support incremental OAuth with 2-way sync.
+- Added `OAuth2ClientCredentials` authentication type as a system authentication type.
 
 ## [1.7.0] - 2023-10-24
 

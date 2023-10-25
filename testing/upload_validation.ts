@@ -539,6 +539,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     [AuthenticationType.AWSAccessKey]: true,
     [AuthenticationType.AWSAssumeRole]: true,
     [AuthenticationType.Custom]: true,
+    [AuthenticationType.OAuth2ClientCredentials]: true,
   };
 
   const systemAuthenticationValidators = Object.entries(defaultAuthenticationValidators)

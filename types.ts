@@ -877,7 +877,8 @@ export type SystemAuthentication =
   | WebBasicAuthentication
   | AWSAccessKeyAuthentication
   | AWSAssumeRoleAuthentication
-  | CustomAuthentication;
+  | CustomAuthentication
+  | OAuth2ClientCredentialsAuthentication;
 
 /**
  * The union of supported system authentication definitions. These represent simplified
@@ -894,7 +895,8 @@ export type SystemAuthenticationDef =
   | AsAuthDef<WebBasicAuthentication>
   | AsAuthDef<AWSAccessKeyAuthentication>
   | AsAuthDef<AWSAssumeRoleAuthentication>
-  | AsAuthDef<CustomAuthentication>;
+  | AsAuthDef<CustomAuthentication>
+  | AsAuthDef<OAuth2ClientCredentialsAuthentication>;
 
 /**
  * The subset of valid {@link AuthenticationType} enum values that can be used
