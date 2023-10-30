@@ -802,7 +802,7 @@ export type GenericObjectSchema = ObjectSchema<string, string>;
  *
  * Every sync table's top-level schema is required to have an identity. However, an identity
  * will be created on your behalf using the {@link SyncTableOptions.identityName} that you provide in the sync
- * table definition, so you needn't explicitly create on unless desired.
+ * table definition, so you needn't explicitly create one unless desired.
  */
 export interface IdentityDefinition {
     /**
