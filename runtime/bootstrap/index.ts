@@ -4,7 +4,8 @@ import type {FetchResponse} from '../../api_types';
 import type {Fetcher} from '../../api_types';
 import type {FormulaSpecification} from '../types';
 import type {InvocationLocation} from '../../api_types';
-import type {Isolate} from 'isolated-vm';
+import {Isolate} from 'isolated-vm';
+import type {IsolateOptions} from 'isolated-vm';
 import type {Logger} from '../../api_types';
 import type {PackFunctionResponse} from '../types';
 import type {ParamDefs} from '../../api_types';
@@ -19,6 +20,14 @@ import {translateErrorStackFromVM} from '../common/source_map';
 import {unmarshalValue} from '../common/marshaling';
 import {unwrapError} from '../common/marshaling';
 import v8 from 'v8';
+
+export type {Context} from 'isolated-vm';
+
+// This helper avoids the need for other repos to directly depend on isolated-vm and
+// know what version to import.
+export function createIsolate(options: IsolateOptions): Isolate {
+  return new Isolate(options);
+}
 
 /**
  * Setup an isolate context with sufficient globals needed to execute a pack.

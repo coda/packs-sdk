@@ -4,7 +4,8 @@ import type { FetchResponse } from '../../api_types';
 import type { Fetcher } from '../../api_types';
 import type { FormulaSpecification } from '../types';
 import type { InvocationLocation } from '../../api_types';
-import type { Isolate } from 'isolated-vm';
+import { Isolate } from 'isolated-vm';
+import type { IsolateOptions } from 'isolated-vm';
 import type { Logger } from '../../api_types';
 import type { PackFunctionResponse } from '../types';
 import type { ParamDefs } from '../../api_types';
@@ -12,6 +13,8 @@ import type { ParamValues } from '../../api_types';
 import type { Sync } from '../../api_types';
 import type { SyncUpdate } from '../../api';
 import type { TemporaryBlobStorage } from '../../api_types';
+export type { Context } from 'isolated-vm';
+export declare function createIsolate(options: IsolateOptions): Isolate;
 /**
  * Setup an isolate context with sufficient globals needed to execute a pack.
  *
