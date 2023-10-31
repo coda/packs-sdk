@@ -3,7 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getThunkPath = exports.registerBundles = exports.registerBundle = exports.injectExecutionContext = exports.injectSerializer = exports.executeThunk = exports.injectFetcherFunction = exports.injectLogFunction = exports.injectAsyncFunction = exports.createIsolateContext = void 0;
+exports.getThunkPath = exports.registerBundles = exports.registerBundle = exports.injectExecutionContext = exports.injectSerializer = exports.executeThunk = exports.injectFetcherFunction = exports.injectLogFunction = exports.injectAsyncFunction = exports.createIsolateContext = exports.createIsolate = void 0;
+const isolated_vm_1 = require("isolated-vm");
 const fs_1 = __importDefault(require("fs"));
 const marshaling_1 = require("../common/marshaling");
 const path_1 = __importDefault(require("path"));
@@ -11,6 +12,12 @@ const source_map_1 = require("../common/source_map");
 const marshaling_2 = require("../common/marshaling");
 const marshaling_3 = require("../common/marshaling");
 const v8_1 = __importDefault(require("v8"));
+// This helper avoids the need for other repos to directly depend on isolated-vm and
+// know what version to import.
+function createIsolate(options) {
+    return new isolated_vm_1.Isolate(options);
+}
+exports.createIsolate = createIsolate;
 /**
  * Setup an isolate context with sufficient globals needed to execute a pack.
  *
