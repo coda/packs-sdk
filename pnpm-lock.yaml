@@ -172,8 +172,8 @@ importers:
         specifier: 2.6.4
         version: 2.6.4
       '@types/pascalcase':
-        specifier: 1.0.1
-        version: 1.0.1
+        specifier: 1.0.2
+        version: 1.0.2
       '@types/proxyquire':
         specifier: 1.3.29
         version: 1.3.29
@@ -2224,8 +2224,8 @@ packages:
     resolution: {integrity: sha512-0OVfGupTl3NBFr8+iXpfZ8NR7jfFO+P1Q+IO/q0wbo02wYkP5gy36phojeYWpLQ6WAMjl+VfmqUk2YbUfp0irA==}
     dev: true
 
-  /@types/pascalcase@1.0.1:
-    resolution: {integrity: sha512-JYPox1hbKw66Sv9HtvTp0r5jJkaz6k+V8XjEnZUb7B+4ffIoS+3sjiAtwkX6IMO68UQtQWe9QcAjugn9VR4GJg==}
+  /@types/pascalcase@1.0.2:
+    resolution: {integrity: sha512-XkW9PnSAHH0XIq1tefSZs7hvSIkM1RKkWlSobRfUpeHjz9OjyxIlu7XjgHVkxn/qDkk8siXzjLE20tsyqc4CqQ==}
     dev: true
 
   /@types/proxyquire@1.3.29:
