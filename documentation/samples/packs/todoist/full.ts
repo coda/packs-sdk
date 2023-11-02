@@ -257,6 +257,9 @@ function formatTaskForAPI(task: any) {
     // Convert the priority back to a number.
     result.priority = 5 - Number(result.priority.substring(1));
   }
+  if (result.due === "") {
+    result.due = null;
+  }
   return result;
 }
 
