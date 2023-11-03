@@ -74,7 +74,7 @@
     "@types/glob": "8.1.0",
     "@types/js-yaml": "4.0.8",
     "@types/mocha": "10.0.2",
-    "@types/mock-fs": "4.13.2",
+    "@types/mock-fs": "4.13.3",
     "@types/node": "18.18.3",
     "@types/node-fetch": "2.6.4",
     "@types/pascalcase": "1.0.1",
