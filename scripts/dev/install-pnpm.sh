@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# We can't install pnpm using node because pnpm 8 isn't compatible with node 14, which is what
-# we use on lambda. Instead, we can install a standalone binary that doesn't depend on node.
+PNPM_VERSION=$(jq -r .engines.pnpm package.json)
 
-npm install --prefix=./.pnpm_install -g @pnpm/exe@~8.5.1
+# Install in a local directory to avoid conflicts with the local or global node_modules/
+npm install --prefix=./.pnpm_install -g "@pnpm/exe@${PNPM_VERSION}"
