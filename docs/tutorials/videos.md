@@ -40,4 +40,12 @@ Learn how to develop a simple Pack to bring random dog photos into your docs. In
 <iframe width="560" height="315" src="https://www.youtube.com/embed/z8J6kBxAod4" title="YouTube video player: Your team hub needs more photos of dogs" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
+## Adding two-way sync to your Packs
+_November 2023_
+
+Coda 4.0 included a new featured called two-way sync, that allows users to directly edit data in sync tables and push the changes back to the source. In this webinar Developer Advocate Eric Koleda will show you how use new parts of the Packs SDK to add two-way sync to your own Packs.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/jfFdBNfUta8" title="YouTube video player: Adding two-way sync to your Packs" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+
 [webinars]: https://coda.io/webinars

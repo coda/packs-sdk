@@ -9,6 +9,8 @@ description: Allow users to edit the contents of a sync table and push those cha
 
 [View Sample Code][samples]{ .md-button }
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/jfFdBNfUta8" title="YouTube video player: Adding two-way sync to your Packs" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 
 ## Using two-way sync
 
