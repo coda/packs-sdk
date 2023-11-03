@@ -279,6 +279,9 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
         // Convert the priority back to a number.
         result.priority = 5 - Number(result.priority.substring(1));
       }
+      if (result.due === "") {
+        result.due = null;
+      }
       return result;
     }
 
