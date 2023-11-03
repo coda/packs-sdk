@@ -145,8 +145,8 @@ importers:
         specifier: 2.1.3
         version: 2.1.3
       '@types/exorcist':
-        specifier: 2.0.0
-        version: 2.0.0
+        specifier: 2.0.1
+        version: 2.0.1
       '@types/express':
         specifier: 4.17.20
         version: 4.17.20
@@ -2135,8 +2135,8 @@ packages:
     resolution: {integrity: sha512-LG4opVs2ANWZ1TJoKc937iMmNstM/d0ae1vNbnBvBhqCSezgVUOzcLCqbI5elV8Vy6WKwKjaqR+zO9VKirBBCA==}
     dev: true
 
-  /@types/exorcist@2.0.0:
-    resolution: {integrity: sha512-0sRMiTzmHsn/tpL/kHklRSEBHfst5jJOiXp0mdIDX2BaL7CtITIqz9wWCMORH6wszr1vA7zoam8vYUKFB09RuQ==}
+  /@types/exorcist@2.0.1:
+    resolution: {integrity: sha512-m/Dh3GEps0KnD3gSo+8pm/kPGQm+CenpI5zzwJOAgTna30AuC5pmjGA1QXCFVqiJEVKV8QCTGnDPOqMDtIyBVQ==}
     dependencies:
       '@types/node': 18.18.8
       '@types/through': 0.0.30
