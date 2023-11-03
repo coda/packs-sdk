@@ -136,8 +136,8 @@ importers:
         specifier: 2.7.0
         version: 2.7.0
       '@types/browserify':
-        specifier: 12.0.37
-        version: 12.0.37
+        specifier: 12.0.39
+        version: 12.0.39
       '@types/chai':
         specifier: 4.3.6
         version: 4.3.6
@@ -2064,8 +2064,8 @@ packages:
       '@types/node': 18.18.3
     dev: true
 
-  /@types/browserify@12.0.37:
-    resolution: {integrity: sha512-rGVZQhqlBMdnU0Wcq/RDO6+I1tppM42SqVq5ZEXiw2ft/A55Ro+dz4aKTy28gniwOIxZhRFqb5N+qnbg7J040g==}
+  /@types/browserify@12.0.39:
+    resolution: {integrity: sha512-10PbToKgqw+thhmttL9zqZtrfaeYn2cIY2MPJLWUYWE6D0SFUFvjc0u4hJAb0qiXM2mMQ14rfTocgozZ+JEsXA==}
     dependencies:
       '@types/insert-module-globals': 7.0.2
       '@types/node': 18.18.3
