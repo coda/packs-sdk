@@ -16,14 +16,14 @@
     "test": "node test.js"
   },
   "dependencies": {
-    "prebuild-install": "^7.1.1"
+    "prebuild-install": "7.1.1"
   },
   "devDependencies": {
     "isolated-vm": ".",
-    "prebuild": "^11.0.4"
+    "prebuild": "11.0.4"
   },
   "overrides": {
-    "node-gyp": "^9.4.0"
+    "node-gyp": "9.4.1"
   },
   "binary": {
     "module_path": "out"
