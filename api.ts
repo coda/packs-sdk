@@ -1124,6 +1124,7 @@ export interface SyncFormulaDef<
    *
    * This is useful for specifying OAuth scopes that are only necessary for 2-way writes
    * but not for reads.
+   * @hidden
    */
   updateOptions?: Pick<CommonPackFormulaDef<ParamDefsT>, 'extraOAuthScopes'>;
 }
