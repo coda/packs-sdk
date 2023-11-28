@@ -262,6 +262,13 @@ export interface PropertyWithOptions<T extends PackFormulaResult> {
    * ```
    */
   options?: PropertySchemaOptions<T>;
+
+  // TODO(dweitzman): Conceptually requireForUpdates could apply to most property types (except Array?...) but
+  // for now we only support it for SelectList to control whether "Blank" appears as a dropdown option.
+  /**
+   * Blocks updates from being sent with a blank value.
+   */
+  requireForUpdates?: boolean;
 }
 
 type PropertyWithAutocompleteWithOptionalDisplay<T extends PackFormulaResult> = PropertyWithOptions<
@@ -1647,6 +1654,7 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
   const {
     attribution,
     options,
+    requireForUpdates,
     codaType,
     description,
     displayProperty,
@@ -1689,6 +1697,7 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
   return {
     attribution,
     options,
+    requireForUpdates,
     codaType,
     description,
     displayProperty: displayProperty ? normalizeSchemaKey(displayProperty) : undefined,

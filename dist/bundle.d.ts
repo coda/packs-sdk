@@ -1004,6 +1004,10 @@ export interface PropertyWithOptions<T extends PackFormulaResult> {
 	 * ```
 	 */
 	options?: PropertySchemaOptions<T>;
+	/**
+	 * Blocks updates from being sent with a blank value.
+	 */
+	requireForUpdates?: boolean;
 }
 export type PropertyWithAutocompleteWithOptionalDisplay<T extends PackFormulaResult> = PropertyWithOptions<T | {
 	display: string;

@@ -712,6 +712,7 @@ function buildMetadataSchema({ sdkVersion }) {
         ...baseStringPropertyValidators,
         options: zodOptionsFieldWithValues(z.string(), true),
         allowNewValues: z.boolean().optional(),
+        requireForUpdates: z.boolean().optional(),
     });
     const imagePropertySchema = zodCompleteStrictObject({
         type: zodDiscriminant(schema_13.ValueType.String),
@@ -838,6 +839,7 @@ function buildMetadataSchema({ sdkVersion }) {
         snippetProperty: propertySchema.optional(),
         imageProperty: propertySchema.optional(),
         options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
+        requireForUpdates: z.boolean().optional(),
         autocomplete: sdkVersion && semver_1.default.satisfies(sdkVersion, '<=1.4.0')
             ? zodOptionsFieldWithValues(z.string(), true)
             : z.never().optional(),
