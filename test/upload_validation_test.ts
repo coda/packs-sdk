@@ -9,6 +9,7 @@ import type {Formula} from '../api';
 import type {GenericSyncTable} from '../api';
 import {ImageCornerStyle} from '../schema';
 import {ImageOutline} from '../schema';
+import {ImageShapeStyle} from '../schema';
 import {Limits} from '../testing/upload_validation';
 import type {ObjectSchemaDefinition} from '../schema';
 import type {OptionsReference} from '../api_types';
@@ -2710,6 +2711,17 @@ describe('Pack metadata Validation', async () => {
           type: ValueType.Object,
           properties: {
             name: {type: ValueType.String, codaType: ValueHintType.ImageReference},
+          },
+        });
+        await validateJson(metadata);
+      });
+
+      it('image reference, custom properties', async () => {
+        const metadata = metadataForFormulaWithObjectSchema({
+          type: ValueType.Object,
+          properties: {
+            name: {type: ValueType.String, codaType: ValueHintType.ImageReference, width: 100, height: '3 + 10', 
+            imageShapeStyle: ImageShapeStyle.Circle},
           },
         });
         await validateJson(metadata);

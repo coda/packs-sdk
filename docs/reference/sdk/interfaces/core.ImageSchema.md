@@ -46,6 +46,14 @@ BaseStringSchema.description
 
 ___
 
+### height
+
+• `Optional` **height**: `string` \| `number`
+
+How tall to render the image. Use 0 for default.
+
+___
+
 ### imageCornerStyle
 
 • `Optional` **imageCornerStyle**: [`ImageCornerStyle`](../enums/core.ImageCornerStyle.md)
@@ -62,6 +70,14 @@ ImageOutline type specifying style of outline on images. If unspecified, default
 
 ___
 
+### imageShapeStyle
+
+• `Optional` **imageShapeStyle**: [`ImageShapeStyle`](../enums/core.ImageShapeStyle.md)
+
+ImageShapeStyle type specifying shape of image. If unspecified, default is Auto.
+
+___
+
 ### type
 
 • **type**: [`String`](../enums/core.ValueType.md#string)
@@ -71,3 +87,11 @@ Identifies this schema as a string.
 #### Inherited from
 
 BaseStringSchema.type
+
+___
+
+### width
+
+• `Optional` **width**: `string` \| `number`
+
+How wide to render the image. Use 0 for default.
