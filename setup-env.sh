@@ -9,3 +9,9 @@ if [[ "$(uname -s)" == "Darwin" ]] && [[ "$(arch)" == "arm64" ]]; then
 fi
 
 export PATH=${BASEDIR}/build/node/bin:${BASEDIR}/node_modules/.bin:${BASEDIR}/.pnpm_install/bin:${PATH}
+
+if command -v nvm &> /dev/null
+then
+  # Gets version from .nvmrc
+  nvm use
+fi

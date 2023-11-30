@@ -36,6 +36,12 @@ You can then install the other dependencies using the Makefile using the bootstr
 make bootstrap
 ```
 
+To develop on your own computer, make sure you have a compatible version of node install in your environment. The simplest way to make sure you're using a supported
+version of node is to install [nvm](https://github.com/nvm-sh/nvm#installing-and-updating) and run the following command each time you open a terminal in the packs-sdk repo:
+
+```sh
+source setup-env.sh
+```
 
 ### Preview documentation
 
