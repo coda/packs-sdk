@@ -715,6 +715,16 @@ export enum ImageCornerStyle {
 }
 
 /**
+ * Image shape styles supported by {@link ImageSchema}.
+ */
+export enum ImageShapeStyle {
+  /** Image is rendered normally. */
+  Auto = 'auto',
+  /** Image is rendered as a circle. */
+  Circle = 'circle',
+}
+
+/**
  * A schema representing a return value or object property that is provided as a string,
  * which Coda should interpret as an image.
  */
@@ -725,6 +735,12 @@ export interface ImageSchema extends BaseStringSchema<ValueHintType.ImageReferen
   imageOutline?: ImageOutline;
   /** ImageCornerStyle type specifying style of corners on images. If unspecified, default is Rounded. */
   imageCornerStyle?: ImageCornerStyle;
+  /** ImageShapeStyle type specifying shape of image. If unspecified, default is Auto. */
+  imageShapeStyle?: ImageShapeStyle;
+  /** How wide to render the image. Use 0 for default. */
+  width?: number | string;
+  /** How tall to render the image. Use 0 for default. */
+  height?: number | string;
 }
 
 /**
