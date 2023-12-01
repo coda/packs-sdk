@@ -50,7 +50,7 @@ ___
 
 • `Optional` **height**: `string` \| `number`
 
-How tall to render the image. Use 0 for default.
+How tall to render the image (supports number or formula). Use 0 for default.
 
 ___
 
@@ -94,4 +94,4 @@ ___
 
 • `Optional` **width**: `string` \| `number`
 
-How wide to render the image. Use 0 for default.
+How wide to render the image (supports number or formula). Use 0 for default.
