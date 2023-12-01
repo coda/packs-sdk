@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 overrides:
   fast-xml-parser: 4.2.4
   vm2@<3.9.15: '>=3.9.15'
@@ -184,8 +188,8 @@ importers:
         specifier: 1.4.6
         version: 1.4.6
       '@types/semver':
-        specifier: 7.5.4
-        version: 7.5.4
+        specifier: 7.5.6
+        version: 7.5.6
       '@types/sha.js':
         specifier: 2.4.3
         version: 2.4.3
@@ -2266,8 +2270,8 @@ packages:
     resolution: {integrity: sha512-PdvRkoeM8EYvm3XDj139uyqeYzbOSF+ytyDKuBUXqpf80NBRUtZWQm4qfFw8mhj34f+HIxWPghFnPUTlEi48Bg==}
     dev: true
 
-  /@types/semver@7.5.4:
-    resolution: {integrity: sha512-MMzuxN3GdFwskAnb6fz0orFvhfqi752yjaXylr0Rp4oDg5H0Zn1IuyRhDVvYOwAXoJirx2xuS16I3WjxnAIHiQ==}
+  /@types/semver@7.5.6:
+    resolution: {integrity: sha512-dn1l8LaMea/IjDoHNd9J52uBbInB796CDffS6VdIxvqYCPSG0V0DzHp76GpaWnlhg88uYyPbXCDIowa86ybd5A==}
     dev: true
 
   /@types/serve-static@1.15.0:
@@ -2500,7 +2504,7 @@ packages:
     dependencies:
       '@eslint-community/eslint-utils': 4.4.0(eslint@8.51.0)
       '@types/json-schema': 7.0.11
-      '@types/semver': 7.5.4
+      '@types/semver': 7.5.6
       '@typescript-eslint/scope-manager': 5.59.8
       '@typescript-eslint/types': 5.59.8
       '@typescript-eslint/typescript-estree': 5.59.8(typescript@5.1.6)
@@ -2520,7 +2524,7 @@ packages:
     dependencies:
       '@eslint-community/eslint-utils': 4.4.0(eslint@8.51.0)
       '@types/json-schema': 7.0.14
-      '@types/semver': 7.5.4
+      '@types/semver': 7.5.6
       '@typescript-eslint/scope-manager': 6.8.0
       '@typescript-eslint/types': 6.8.0
       '@typescript-eslint/typescript-estree': 6.8.0(typescript@5.1.6)
@@ -3921,6 +3925,7 @@ packages:
   /deep-extend@0.6.0:
     resolution: {integrity: sha512-LOHxIOaPYdHlJRtCQfDIVZtfw/ufM8+rVj649RIHzcm/vGwQRXFt6OPqIFWsm2XEMrNIEtWR64sY1LEKD2vAOA==}
     engines: {node: '>=4.0.0'}
+    requiresBuild: true
 
   /deep-is@0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
@@ -4526,6 +4531,7 @@ packages:
   /expand-template@2.0.3:
     resolution: {integrity: sha512-XYfuKMvj4O35f/pOXLObndIRvyQ+/+6AhODh+OKWj9S9498pHHn/IMszH+gt0fBCRWMNfk1ZSp5x3AifmnI2vg==}
     engines: {node: '>=6'}
+    requiresBuild: true
 
   /exponential-backoff@3.1.1:
     resolution: {integrity: sha512-dX7e/LHVJ6W3DE1MHWi9S1EYzDESENfLrYohG2G++ovZrYOkm4Knwa0mc1cn84xJOR4KEU0WSchhLbd0UklbHw==}
@@ -4895,6 +4901,7 @@ packages:
 
   /github-from-package@0.0.0:
     resolution: {integrity: sha512-SyHy3T1v2NUXn29OsWdxmK6RwHD+vkj3v8en8AOBZ1wBQ/hCAQ5bAQTD02kW4W9tUp/3Qh6J8r9EvntiyCmOOw==}
+    requiresBuild: true
 
   /glob-parent@5.1.2:
     resolution: {integrity: sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==}
@@ -5620,8 +5627,6 @@ packages:
     dependencies:
       node-gyp: 10.0.1
       prebuild-install: 7.1.1
-    transitivePeerDependencies:
-      - supports-color
     dev: false
     optional: true
 
@@ -6514,6 +6519,7 @@ packages:
 
   /napi-build-utils@1.0.2:
     resolution: {integrity: sha512-ONmRUqK7zj7DWX0D9ADe03wbwOBZxNAfF20PlGfCWQcD3+/MakShIHrMqx9YwPTfxDdF1zLeL+RGZiR9kGMLdg==}
+    requiresBuild: true
 
   /natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
@@ -6552,6 +6558,7 @@ packages:
   /node-abi@3.33.0:
     resolution: {integrity: sha512-7GGVawqyHF4pfd0YFybhv/eM9JwTtPqx0mAanQ146O3FlSh3pA24zf9IRQTOsfTSqXTNzPSP5iagAJ94jjuVog==}
     engines: {node: '>=10'}
+    requiresBuild: true
     dependencies:
       semver: 7.5.4
 
@@ -7940,6 +7947,7 @@ packages:
   /strip-json-comments@2.0.1:
     resolution: {integrity: sha512-4gB8na07fecVVkOI6Rs4e7T6NOTki5EmL7TUduTs6bu3EdnSycntVJ4re8kgZA+wx9IueI2Y11bfbgwtzuE0KQ==}
     engines: {node: '>=0.10.0'}
+    requiresBuild: true
 
   /strip-json-comments@3.1.1:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
