@@ -25,6 +25,7 @@ import type {Identity} from '../schema';
 import {ImageCornerStyle} from '../schema';
 import {ImageOutline} from '../schema';
 import type {ImageSchema} from '..';
+import {ImageShapeStyle} from '../schema';
 import {JSONPath} from 'jsonpath-plus';
 import {LinkDisplayType} from '../schema';
 import type {LinkSchema} from '../schema';
@@ -888,6 +889,9 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     codaType: z.union([zodDiscriminant(ValueHintType.ImageAttachment), zodDiscriminant(ValueHintType.ImageReference)]),
     imageOutline: z.nativeEnum(ImageOutline).optional(),
     imageCornerStyle: z.nativeEnum(ImageCornerStyle).optional(),
+    imageShapeStyle: z.nativeEnum(ImageShapeStyle).optional(),
+    height: z.union([z.string(), z.number()]).optional(),
+    width: z.union([z.string(), z.number()]).optional(),
     ...baseStringPropertyValidators,
   });
 

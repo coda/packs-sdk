@@ -50,7 +50,7 @@ ___
 
 • `Optional` **maximum**: `string` \| `number`
 
-The maximum value selectable by this slider.
+The maximum value selectable by this slider (supports number or formula).
 
 ___
 
@@ -58,7 +58,7 @@ ___
 
 • `Optional` **minimum**: `string` \| `number`
 
-The minimum value selectable by this slider.
+The minimum value selectable by this slider (supports number or formula).
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 • `Optional` **step**: `string` \| `number`
 
-The minimum amount the slider can be moved when dragged.
+The minimum amount the slider can be moved when dragged (supports number or formula).
 
 ___
 
