@@ -4,7 +4,7 @@ import type { FetchResponse } from '../../api_types';
 import type { Fetcher } from '../../api_types';
 import type { FormulaSpecification } from '../types';
 import type { InvocationLocation } from '../../api_types';
-import { Isolate } from 'isolated-vm';
+import type { Isolate } from 'isolated-vm';
 import type { IsolateOptions } from 'isolated-vm';
 import type { Logger } from '../../api_types';
 import type { PackFunctionResponse } from '../types';
