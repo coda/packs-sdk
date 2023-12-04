@@ -4,7 +4,7 @@ import type {FetchResponse} from '../../api_types';
 import type {Fetcher} from '../../api_types';
 import type {FormulaSpecification} from '../types';
 import type {InvocationLocation} from '../../api_types';
-import {Isolate} from 'isolated-vm';
+import type {Isolate} from 'isolated-vm';
 import type {IsolateOptions} from 'isolated-vm';
 import type {Logger} from '../../api_types';
 import type {PackFunctionResponse} from '../types';
@@ -14,6 +14,7 @@ import type {Sync} from '../../api_types';
 import type {SyncUpdate} from '../../api';
 import type {TemporaryBlobStorage} from '../../api_types';
 import fs from 'fs';
+import {getIvm} from '../../testing/ivm_wrapper';
 import {marshalValue} from '../common/marshaling';
 import path from 'path';
 import {translateErrorStackFromVM} from '../common/source_map';
@@ -26,7 +27,8 @@ export type {Context} from 'isolated-vm';
 // This helper avoids the need for other repos to directly depend on isolated-vm and
 // know what version to import.
 export function createIsolate(options: IsolateOptions): Isolate {
-  return new Isolate(options);
+  const ivm = getIvm();
+  return new ivm.Isolate(options);
 }
 
 /**
