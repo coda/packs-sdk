@@ -4,6 +4,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+## [1.7.2] - 2023-12-04
+
 ### Added
 
 - Added `updateOptions.extraOAuthScopes` to sync tables to support incremental OAuth with 2-way sync.
@@ -644,7 +646,7 @@ await myHelper(context);
 
 - Beginning of alpha versioning.
 
-[unreleased]: https://github.com/coda/packs-sdk/compare/v1.7.1...HEAD
+[unreleased]: https://github.com/coda/packs-sdk/compare/v1.7.2...HEAD
 [1.7.1]: https://github.com/coda/packs-sdk/compare/v1.6.0...v1.7.1
 [1.7.0]: https://github.com/coda/packs-sdk/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/coda/packs-sdk/compare/v1.5.1...v1.6.0
@@ -670,3 +672,5 @@ await myHelper(context);
 [0.12.0]: https://github.com/coda/packs-sdk/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/coda/packs-sdk/compare/v0.9.0...v0.11.0
 [0.9.0]: https://github.com/coda/packs-sdk/compare/v0.8.2...v0.9.0
+
+[1.7.2]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.2
