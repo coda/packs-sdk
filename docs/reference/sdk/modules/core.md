@@ -29,6 +29,7 @@ import * as coda from "@codahq/packs-sdk";
 - [EmailDisplayType](../enums/core.EmailDisplayType.md)
 - [ImageCornerStyle](../enums/core.ImageCornerStyle.md)
 - [ImageOutline](../enums/core.ImageOutline.md)
+- [ImageShapeStyle](../enums/core.ImageShapeStyle.md)
 - [LinkDisplayType](../enums/core.LinkDisplayType.md)
 - [NetworkConnection](../enums/core.NetworkConnection.md)
 - [OptionsType](../enums/core.OptionsType.md)
