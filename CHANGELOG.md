@@ -9,6 +9,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 - Added `updateOptions.extraOAuthScopes` to sync tables to support incremental OAuth with 2-way sync.
 - Added `width`, `height`, and `shapeStyle` to `ImageSchema`
 
+### Fixed
+
+- Fixed failing CLI commands when the optional isolated-vm dependency was not present
+
 ## [1.7.1] - 2023-11-15
 
 ### Added
