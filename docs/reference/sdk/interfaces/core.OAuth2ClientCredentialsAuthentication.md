@@ -8,7 +8,7 @@ search:
 
 [core](../modules/core.md).OAuth2ClientCredentialsAuthentication
 
-Authenticate using OAuth2 client credentials.
+Authenticate using the OAuth2 Client Credentials flow.
 You must specify the token exchange URL here as part of the pack definition.
 You'll provide the application's client ID and client secret when authenticating.
 

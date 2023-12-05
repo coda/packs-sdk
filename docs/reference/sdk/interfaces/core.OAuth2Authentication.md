@@ -8,9 +8,10 @@ search:
 
 [core](../modules/core.md).OAuth2Authentication
 
-Authenticate using OAuth2. You must specify the authorization URL, token exchange URL, and
-scopes here as part of the pack definition. You'll provide the application's client ID and
-client secret in the pack management UI, so that these can be stored securely.
+Authenticate using the OAuth2 Authorization Code flow. You must specify the authorization URL,
+token exchange URL, and scopes here as part of the pack definition. You'll provide the
+application's client ID and client secret in the pack management UI, so that these can be stored
+securely.
 
 The API must use a (largely) standards-compliant implementation of OAuth2.
 

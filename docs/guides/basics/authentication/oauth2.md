@@ -16,6 +16,23 @@ Read the [Authentication guide][authentication] for more information about how t
     Coda doesn't currently support the older 1.0 or 1.0a versions of the OAuth specification. If you would like to connect to an API that only supports these versions of the standard please [contact support][support] so that we can continue to gauge interest.
 
 
+## Supported OAuth flows
+
+The OAuth2 protocol supports a variety of flows, also known as grant types, which specify how exactly credentials are exchanged. The Pack SDK currently supports two of these flows:
+
+**Authorization Code** (`grant_type=authorization_code`)
+:   This is the standard OAuth2 flow that most people are familiar with, meant for accessing a user's private data. The user at the keyboard is redirected to a screen where they login to the application, approve access, and then are redirected back.
+
+    To use this flow in the Pack SDK select the authentication type [`OAuth2`][OAuth2Authentication].
+
+**Client Credentials** (`grant_type=client_credentials`)
+:   This OAuth2 flow doesn't usually involve the user and the keyboard at all, but is a way for the Pack to authenticate itself with the application. It's essentially a more secure version of an API key, since it uses short-lived tokens.
+
+    To use this flow in the Pack SDK select the authentication type [`OAuth2ClientCredentials`][OAuth2ClientCredentialsAuthentication].
+
+Other OAuth2 flows are not currently supported. The majority of this guide will assume you are using the Authorization Code flow, but see the section [Client credentials flow](#client_credentials) for more information about that flow specifically.
+
+
 ## Setup OAuth authentication
 
 To enable your Pack to authenticate users with OAuth you need to configure the OAuth flow and enter your developer credentials.
@@ -200,10 +217,30 @@ pack.setUserAuthentication({
 ```
 
 
+## Client credentials flow {: #client_credentials}
+
+While the Authorization Code flow discussed above is used to access private user data, the Client Credentials flow is typically just used to authenticate the integration itself. Therefore it's most commonly implemented as a system-wide form of authentication, although per-user authentication is also supported.
+
+To setup the authentication all you need to do is set the type and provide the URL used to token exchange.
+
+```ts
+pack.setSystemAuthentication({
+  type: coda.AuthenticationType.OAuth2ClientCredentials,
+  // This URL comes from the API's developer documentation.
+  tokenUrl: "https://api.example.com/token",
+});
+```
+
+If using system-wide authentication you'll need to set the client ID and secret in the Pack settings. If using per-user authentication the user will be prompted for their client ID and secret when connecting their account.
+
+Like with the Authorization Code flow, a variety of other advanced options are also available to support non-standard OAuth2 implementations. See the class [`OAuth2ClientCredentialsAuthentication`][OAuth2ClientCredentialsAuthentication] for more information.
+
+
 [oauth_definition]: https://oauth.net/2/
 [authentication]: index.md
 [OAuth]: ../../../reference/sdk/enums/core.AuthenticationType.md#oauth2
 [OAuth2Authentication]: ../../../reference/sdk/interfaces/core.OAuth2Authentication.md
+[OAuth2ClientCredentialsAuthentication]: ../../../reference/sdk/interfaces/core.OAuth2ClientCredentialsAuthentication.md
 [oauth2_code]: https://www.oauth.com/oauth2-servers/server-side-apps/authorization-code/
 [oauth2_client]: https://www.oauth.com/oauth2-servers/access-tokens/client-credentials/
 [extraOAuthScopes]: ../../../reference/sdk/interfaces/core.BaseFormulaDef.md#extraoauthscopes

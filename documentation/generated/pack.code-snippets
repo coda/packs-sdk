@@ -91,8 +91,14 @@
   },
   "setUserAuthentication:OAuth2": {
     "prefix": "/setUserAuthentication:OAuth2",
-    "description": "Sets per-user, OAuth2 authentication for the Pack.",
-    "body": "// When registering your app in the API's developer console set the redirect URL\n// to: https://coda.io/packsAuth/oauth2/{PACK ID}\n// After building your Pack, remember to visit the Settings tab to set your\n// client ID and secret.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.OAuth2,\n  // The following two URLs are will be found in the API's documentation.\n  authorizationUrl: \"${1:https://example.com/authorize}\",\n  tokenUrl: \"${2:https://example.com/token}\",\n  scopes: [\n    // TODO: List the API scopes to request, if any.\n  ],\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});",
+    "description": "Sets per-user, OAuth2 authentication for the Pack using the Authorization Code flow.",
+    "body": "// When registering your app in the API's developer console set the redirect URL\n// to: https://coda.io/packsAuth/oauth2/{PACK ID}\n// After building your Pack, remember to visit the Settings tab to set your\n// client ID and secret.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.OAuth2,\n  // The following two URLs will be found in the API's documentation.\n  authorizationUrl: \"${1:https://example.com/authorize}\",\n  tokenUrl: \"${2:https://example.com/token}\",\n  scopes: [\n    // TODO: List the API scopes to request, if any.\n  ],\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});",
+    "scope": "javascript,typescript"
+  },
+  "setUserAuthentication:OAuth2ClientCredentials": {
+    "prefix": "/setUserAuthentication:OAuth2ClientCredentials",
+    "description": "Sets per-user, OAuth2 authentication for the Pack using the Client Credentials flow.",
+    "body": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.OAuth2ClientCredentials,\n  // The following URL will be found in the API's documentation.\n  tokenUrl: \"${1:https://example.com/token}\",\n});",
     "scope": "javascript,typescript"
   },
   "setUserAuthentication:QueryParam": {
@@ -135,6 +141,12 @@
     "prefix": "/setSystemAuthentication:QueryParams",
     "description": "Sets system-wide authentication for the Pack, using multiple tokens passed in URL query parameters.",
     "body": "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.MultiQueryParamToken,\n  params: [\n    { name: \"${1:myToken}\", description: \"${2:My token description}\" },\n    { name: \"${3:myKey}\", description: \"${4:My key description}\" },\n    // TODO: Add more parameters, if needed.\n  ],\n});",
+    "scope": "javascript,typescript"
+  },
+  "setSystemAuthentication:OAuth2ClientCredentials": {
+    "prefix": "/setSystemAuthentication:OAuth2ClientCredentials",
+    "description": "Sets system-wide, OAuth2 authentication for the Pack using the Client Credentials flow.",
+    "body": "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.OAuth2ClientCredentials,\n  // The following URL will be found in the API's documentation.\n  tokenUrl: \"${1:https://example.com/token}\",\n});",
     "scope": "javascript,typescript"
   },
   "setSystemAuthentication:QueryParam": {

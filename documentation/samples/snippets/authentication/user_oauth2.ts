@@ -10,7 +10,7 @@ const pack = coda.newPack();
 // client ID and secret.
 pack.setUserAuthentication({
   type: coda.AuthenticationType.OAuth2,
-  // The following two URLs are will be found in the API's documentation.
+  // The following two URLs will be found in the API's documentation.
   authorizationUrl: "${1:https://example.com/authorize}",
   tokenUrl: "${2:https://example.com/token}",
   scopes: [
