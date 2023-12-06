@@ -80,9 +80,14 @@ export const Snippets: AutocompleteSnippet[] = [
     codeFile: './samples/snippets/authentication/user_multi_query_param.ts',
   },
   {
-    triggerTokens: ['setUserAuthentication:OAuth2', 'OAuth2', 'OAuth2Authentication'],
-    content: 'Sets per-user, OAuth2 authentication for the Pack.',
+    triggerTokens: ['setUserAuthentication:OAuth2', 'OAuth2', 'OAuth2Authentication', 'authorization_code'],
+    content: 'Sets per-user, OAuth2 authentication for the Pack using the Authorization Code flow.',
     codeFile: './samples/snippets/authentication/user_oauth2.ts',
+  },
+  {
+    triggerTokens: ['setUserAuthentication:OAuth2ClientCredentials'],
+    content: 'Sets per-user, OAuth2 authentication for the Pack using the Client Credentials flow.',
+    codeFile: './samples/snippets/authentication/user_oauth2_client_credentials.ts',
   },
   {
     triggerTokens: ['setUserAuthentication:QueryParam', 'QueryParamToken', 'QueryParamTokenAuthentication'],
@@ -118,6 +123,11 @@ export const Snippets: AutocompleteSnippet[] = [
     triggerTokens: ['setSystemAuthentication:QueryParams'],
     content: 'Sets system-wide authentication for the Pack, using multiple tokens passed in URL query parameters.',
     codeFile: './samples/snippets/authentication/system_multi_query_param.ts',
+  },
+  {
+    triggerTokens: ['setSystemAuthentication:OAuth2ClientCredentials', 'OAuth2ClientCredentials', 'OAuth2ClientCredentialsAuthentication', 'client_credentials'],
+    content: 'Sets system-wide, OAuth2 authentication for the Pack using the Client Credentials flow.',
+    codeFile: './samples/snippets/authentication/system_oauth2_client_credentials.ts',
   },
   {
     triggerTokens: ['setSystemAuthentication:QueryParam'],
@@ -368,8 +378,13 @@ export const Examples: Example[] = [
       },
       {
         name: 'OAuth2',
-        content: 'Authentication that uses an OAuth2 flow. This sample connects to the Todoist API.',
+        content: 'Authentication that uses the Authorization Code OAuth2 flow. This sample connects to the Todoist API.',
         codeFile: './samples/packs/todoist/auth_oauth2.ts',
+      },
+      {
+        name: 'OAuth2 client credentials',
+        content: 'Authentication that uses the Client Credentials OAuth2 flow. This sample connects to Blizzard\'s Battle.net APIs.',
+        codeFile: './samples/packs/authentication/battlenet.ts',
       },
       {
         name: 'Manual endpoint',
@@ -932,6 +947,11 @@ export const Examples: Example[] = [
         name: 'AWS S3',
         content: 'The Amazon Web Services (AWS) S3 service uses their custom signature method.',
         codeFile: './samples/packs/authentication/aws.ts',
+      },
+      {
+        name: 'Battle.net',
+        content: 'Blizzard\'s Battle.net APIs use the Client Credentials OAuth2 flow.',
+        codeFile: './samples/packs/authentication/battlenet.ts',
       },
       {
         name: 'Board Game Atlas',

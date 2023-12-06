@@ -111,8 +111,13 @@
       },
       {
         "name": "OAuth2",
-        "content": "Authentication that uses an OAuth2 flow. This sample connects to the Todoist API.",
+        "content": "Authentication that uses the Authorization Code OAuth2 flow. This sample connects to the Todoist API.",
         "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Per-user authentication to the Todoist API, using an OAuth2 flow.\n// See https://developer.todoist.com/guides/#oauth\npack.setUserAuthentication({\n  type: coda.AuthenticationType.OAuth2,\n  authorizationUrl: \"https://todoist.com/oauth/authorize\",\n  tokenUrl: \"https://todoist.com/oauth/access_token\",\n  scopes: [\"data:read_write\"],\n\n  // Determines the display name of the connected account.\n  getConnectionName: async function (context) {\n    let url = coda.withQueryParams(\"https://api.todoist.com/sync/v9/sync\", {\n      resource_types: JSON.stringify([\"user\"]),\n    });\n    let response = await context.fetcher.fetch({\n      method: \"GET\",\n      url: url,\n    });\n    return response.body.user?.full_name;\n  },\n});\n\n// Allow the pack to make requests to Todoist.\npack.addNetworkDomain(\"todoist.com\");"
+      },
+      {
+        "name": "OAuth2 client credentials",
+        "content": "Authentication that uses the Client Credentials OAuth2 flow. This sample connects to Blizzard's Battle.net APIs.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// System-wide authentication to Blizzard's Battle.net APIs, using the OAuth2\n// client_credentials flow.\n// eslint-disable-next-line max-len\n// See https://develop.battle.net/documentation/guides/using-oauth/client-credentials-flow.\npack.setSystemAuthentication({\n  type: coda.AuthenticationType.OAuth2ClientCredentials,\n  tokenUrl: \"https://oauth.battle.net/token\",\n});\n\n// Allow the pack to make requests to Battle.net.\npack.addNetworkDomain(\"blizzard.com\");"
       },
       {
         "name": "Manual endpoint",
@@ -684,6 +689,11 @@
         "name": "AWS S3",
         "content": "The Amazon Web Services (AWS) S3 service uses their custom signature method.",
         "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// Per-user authentication to the AWS S3 service, using AWS Signature Version 4.\n// The user provides the URL of their S3 bucket as the endpoint, along with an\n// access key and secret.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.AWSAccessKey,\n  instructionsUrl:\n    \"https://aws.amazon.com/premiumsupport/knowledge-center/create-access-key/\",\n\n  // The AWS service to connect to.\n  service: \"s3\",\n\n  // Prompt the user from their S3 bucket URL.\n  requiresEndpointUrl: true,\n  endpointDomain: \"amazonaws.com\",\n\n  // Use the bucket name as the display name for the account.\n  getConnectionName: async function (context) {\n    return context.endpoint.split(\"//\")[1].split(\".\")[0];\n  },\n});"
+      },
+      {
+        "name": "Battle.net",
+        "content": "Blizzard's Battle.net APIs use the Client Credentials OAuth2 flow.",
+        "code": "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\n// System-wide authentication to Blizzard's Battle.net APIs, using the OAuth2\n// client_credentials flow.\n// eslint-disable-next-line max-len\n// See https://develop.battle.net/documentation/guides/using-oauth/client-credentials-flow.\npack.setSystemAuthentication({\n  type: coda.AuthenticationType.OAuth2ClientCredentials,\n  tokenUrl: \"https://oauth.battle.net/token\",\n});\n\n// Allow the pack to make requests to Battle.net.\npack.addNetworkDomain(\"blizzard.com\");"
       },
       {
         "name": "Board Game Atlas",

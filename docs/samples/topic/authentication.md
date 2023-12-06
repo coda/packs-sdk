@@ -307,7 +307,7 @@ pack.setUserAuthentication({
 {% endraw %}
 ```
 ## OAuth2
-Authentication that uses an OAuth2 flow. This sample connects to the Todoist API.
+Authentication that uses the Authorization Code OAuth2 flow. This sample connects to the Todoist API.
 
 ```ts
 {% raw %}
@@ -337,6 +337,27 @@ pack.setUserAuthentication({
 
 // Allow the pack to make requests to Todoist.
 pack.addNetworkDomain("todoist.com");
+{% endraw %}
+```
+## OAuth2 client credentials
+Authentication that uses the Client Credentials OAuth2 flow. This sample connects to Blizzard&#x27;s Battle.net APIs.
+
+```ts
+{% raw %}
+import * as coda from "@codahq/packs-sdk";
+export const pack = coda.newPack();
+
+// System-wide authentication to Blizzard's Battle.net APIs, using the OAuth2
+// client_credentials flow.
+// eslint-disable-next-line max-len
+// See https://develop.battle.net/documentation/guides/using-oauth/client-credentials-flow.
+pack.setSystemAuthentication({
+  type: coda.AuthenticationType.OAuth2ClientCredentials,
+  tokenUrl: "https://oauth.battle.net/token",
+});
+
+// Allow the pack to make requests to Battle.net.
+pack.addNetworkDomain("blizzard.com");
 {% endraw %}
 ```
 ## Manual endpoint
