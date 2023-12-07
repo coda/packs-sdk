@@ -24,35 +24,30 @@ Before starting this tutorial, make sure you have completed:
 
 When building a Pack around data from an external API, it's usually best to first select the API and examine its capabilities and requirements, as those may have a large influence on the design of your formula.
 
-For this Pack we'll be using the API provided by [exchangerate.host][exchangerate_home], which is free to use and doesn't require any keys or credentials. As shown in their documentation, you can get the latest exchange rates using the following URL:
+For this Pack we'll be using the API provided by [ExchangeRate-API][exchangerate_home], which has a free plan that doesn't require any keys or credentials. As shown in their documentation, you can get the latest exchange rates using the following URL:
 
 ```
-https://api.exchangerate.host/latest?base=USD
-```
-
-By default this returns the exchange rate for a single Euro, but we can change the starting currency and amount using URL query parameters:
-
-```
-https://api.exchangerate.host/latest?base=CAD&amount=100
+https://open.er-api.com/v6/latest/CAD
 ```
 
 The endpoint returns a JSON response, which includes the conversion rate for all of the currencies it supports:
 
 ```js
 {
-  "success": true,
-  "base": "CAD",
-  "date": "2022-06-09",
+  "result": "success",
+  "base_code": "CAD",
+  "time_last_update_utc": "Wed, 06 Dec 2023 00:02:31 +0000",
+  // ...
   "rates": {
-    "AED": 292.51651,
-    "AFN": 7076.688907,
+    "AED": 2.704071,
+    "AFN": 52.369208,
     // ...
-    "USD": 79.659392,
+    "USD": 0.736528,
   }
 }
 ```
 
-Here we see that 100 Canadian dollars converts to 79 US dollars (at the time this request was made.) This will provide us the information we need to build our formula.
+Here we see that one Canadian dollar converts to about 0.74 US dollars (at the time this request was made.) This will provide us the information we need to build our formula.
 
 
 ## :material-ruler-square-compass: Design the formula
@@ -123,21 +118,15 @@ Now that we've got our API selected and formula designed we're ready to dive int
 
     With the formula scaffold in place, let's focus in on the `execute` function.
 
-    First we'll need to build the URL to send the request to. While it's possible to construct it manually, the utility function `coda.withQueryParameters` is easier to use and handles all of the encoding and edge cases.
-
-    The first parameter to `coda.withQueryParameters` is the base URL, and the second is a set of key-value pairs to be placed into the query string. This code will return a URL ending with `?base=<from>&amount=<amount>`.
+    First we'll need to build the URL to send the request to. We do this by concatenating the base URL with the currency code the user supplied.
 
     </div>
     <div markdown>
 
-    ```{.ts hl_lines="2-7"}
+    ```{.ts hl_lines="2-3"}
     execute: async function ([amount, from], context) {
-      let baseUrl =
-          "https://api.exchangerate.host/latest";
-      let url = coda.withQueryParams(baseUrl, {
-        base: from,
-        amount: amount,
-      });
+      let url =
+        "https://open.er-api.com/v6/latest/" + from;
     },
     ```
 
@@ -161,14 +150,10 @@ Now that we've got our API selected and formula designed we're ready to dive int
     </div>
     <div markdown>
 
-    ```{.ts hl_lines="8-11"}
+    ```{.ts hl_lines="4-7"}
     execute: async function ([amount, from], context) {
-      let baseUrl =
-          "https://api.exchangerate.host/latest";
-      let url = coda.withQueryParams(baseUrl, {
-        base: from,
-        amount: amount,
-      });
+      let url =
+        "https://open.er-api.com/v6/latest/" + from;
       let response = await context.fetcher.fetch({
         method: "GET",
         url: url
@@ -187,25 +172,23 @@ Now that we've got our API selected and formula designed we're ready to dive int
 
     The fetcher response includes lots of information about what the API sent back, but in this case we're interested in the `body` only. When Coda detects that the response is JSON it will automatically parse it for you.
 
-    Referring back to the raw API response we saw earlier, the information you need is in the `rates` sub-object under the key `USD`. Since the response is already parsed you can "dot" into that value and return it.
+    Referring back to the raw API response we saw earlier, the information you need is in the `rates` sub-object under the key `USD`. Since the response is already parsed you can "dot" into that value and use it.
+
+    The API returns the conversion rate for a single unit of currency, so before returning it you'll need to multiply it by the amount the user specified.
 
     </div>
     <div markdown>
 
-    ```{.ts hl_lines="12-13"}
+    ```{.ts hl_lines="8-9"}
     execute: async function ([amount, from], context) {
-      let baseUrl =
-          "https://api.exchangerate.host/latest";
-      let url = coda.withQueryParams(baseUrl, {
-        base: from,
-        amount: amount,
-      });
+      let url =
+        "https://open.er-api.com/v6/latest/" + from;
       let response = await context.fetcher.fetch({
         method: "GET",
         url: url
       });
       let json = response.body;
-      return json.rates.USD;
+      return json.rates.USD * amount;
     },
     ```
 
@@ -222,7 +205,7 @@ Now that we've got our API selected and formula designed we're ready to dive int
 
     The function `pack.addNetworkDomain` adds a domain to the Pack's declaration. This line can be added anywhere in your code after the boilerplate, but it's usually done at the top of the file.
 
-    Your Pack is allowed to access any sub-domains off of this domain, so it's best to select the root domain of the URLs you are making requests to. In this case, use the root domain `exchangerate.host` instead of narrower API-specific domain of `api.exchangerate.host`.
+    Your Pack is allowed to access any sub-domains off of this domain, so it's best to select the root domain of the URLs you are making requests to. In this case, use the root domain `er-api.com` instead of narrower API-specific domain of `open.er-api.com`.
 
     </div>
     <div markdown>
@@ -231,7 +214,7 @@ Now that we've got our API selected and formula designed we're ready to dive int
     import * as coda from "@codahq/packs-sdk";
     export const pack = coda.newPack();
 
-    pack.addNetworkDomain("exchangerate.host");
+    pack.addNetworkDomain("er-api.com");
 
     pack.addFormula({
       // ...
@@ -270,7 +253,7 @@ If everything is working correctly you should get back the currency value conver
     import * as coda from "@codahq/packs-sdk";
     export const pack = coda.newPack();
 
-    pack.addNetworkDomain("exchangerate.host");
+    pack.addNetworkDomain("er-api.com");
 
     pack.addFormula({
       name: "ToUSD",
@@ -290,18 +273,14 @@ If everything is working correctly you should get back the currency value conver
       resultType: coda.ValueType.Number,
       codaType: coda.ValueHintType.Currency,
       execute: async function ([amount, from], context) {
-        let baseUrl =
-            "https://api.exchangerate.host/latest";
-        let url = coda.withQueryParams(baseUrl, {
-          base: from,
-          amount: amount,
-        });
+        let url =
+          "https://open.er-api.com/v6/latest/" + from;
         let response = await context.fetcher.fetch({
           method: "GET",
           url: url
         });
         let json = response.body;
-        return json.rates.USD;
+        return json.rates.USD * amount;
       },
     });
     ```
@@ -373,7 +352,7 @@ Now that you have an understanding of how to call an external API, here are some
 [quickstart_web]: ../get-started/web.md
 [quickstart_cli]: ../get-started/cli.md
 [tutorial_formula]: formula.md
-[exchangerate_home]: https://exchangerate.host/
+[exchangerate_home]: https://www.exchangerate-api.com/
 [fetcher]: ../../guides/basics/fetcher.md
 [samples_fetcher]: ../../samples/topic/fetcher.md
 [pmt]: ../../guides/development/pack-maker-tools.md
