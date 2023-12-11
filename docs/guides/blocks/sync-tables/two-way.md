@@ -336,9 +336,16 @@ When a row fails to update Coda will show an error message attached to that row.
 To associate an error with a row return it at the corresponding index in the `result` array. For tables that use single row updates (`maxUpdateBatchSize == 1`) if you throw a `UserVisibleError` it will be associated with the row automatically. In all other cases a thrown error will be treated as a failure of the entire sync and cancel any remaining row updates.
 
 
+## Requiring additional OAuth scopes
+
+If your Pack uses [OAuth authentication][oauth] it may require that the user to approve additional permissions (scopes) in order to make the edits. Users can be hesitant to allow Packs to made changes to their data, so it can be useful to only request these scopes when the user begins making edits using two-way sync. This can be done by using incremental authorization, and you can learn more in the [OAuth guide][incremental_two_way].
+
+
 [sync_tables]: index.md
 [samples]: ../../../samples/topic/two-way.md
 [mdn_spread_object]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax#spread_in_object_literals
 [reference_sync_update]: ../../../reference/sdk/interfaces/core.SyncUpdate.md
 [fetcher_parallel]: ../../basics/fetcher.md#in-parallel
 [parameters_autocomplete]: ../../basics/parameters/autocomplete.md
+[oauth]: ../../basics/authentication/oauth2.md
+[incremental_two_way]: ../../basics/authentication/oauth2.md#incremental-two-way

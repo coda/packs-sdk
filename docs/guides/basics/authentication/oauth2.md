@@ -176,6 +176,64 @@ When the Pack above is installed the user will only be required to grant access 
 When the user signs in again they will be prompted to approve the additional scopes, after which they will be able to use the formula successfully.
 
 
+#### For two-way sync updates {:#incremental-two-way}
+
+For sync tables that support [two-way sync][two_way_sync] you may want to set additional scopes that only apply when the user is making edits to the table. To do so, set the field `updateOptions.extraOAuthScopes` to the scopes needed to send edits.
+
+```ts
+pack.setUserAuthentication({
+  type: coda.AuthenticationType.OAuth2,
+  // ...
+  scopes: ["read"],
+});
+
+pack.addSyncTable({
+  name: "Items",
+  // ...
+  formula: {
+    // ...
+    executeUpdate: async function (args, updates, context) {
+      // Send edits ...
+    },
+    updateOptions: {
+      // Additional scopes needed to send edits (run executeUpdate).
+      extraOAuthScopes: ["write"],
+    },
+  },
+});
+```
+
+The `updateOptions.extraOAuthScopes` field overrides the value of `extraOAuthScopes` if it is already set. In this case you'll want to make sure that your update scopes are inclusive of your regular sync scopes, so that the correct scopes are requested regardless of the entry point.
+
+```ts
+pack.setUserAuthentication({
+  type: coda.AuthenticationType.OAuth2,
+  // ...
+  scopes: ["user:read"],
+});
+
+pack.addSyncTable({
+  name: "Items",
+  // ...
+  formula: {
+    // ...
+    execute: async function (args, context) {
+      // Sync the rows ...
+    },
+    executeUpdate: async function (args, updates, context) {
+      // Send edits ...
+    },
+    // Additional scopes needed to sync.
+    extraOAuthScopes: ["items:read"],
+    updateOptions: {
+      // Additional scopes needed to sync and send edits.
+      extraOAuthScopes: ["items:read", "items:write"],
+    },
+  },
+});
+```
+
+
 ## URL limitations {: #url-limitations}
 
 Some services host a unique domain or subdomain for each account, and require that API requests be sent there. The [account-specific endpoints][auth_endpoints] feature can be used to determine the endpoint for a given account, but it assumes that the user has already authenticated using a common set of OAuth URLs.
@@ -254,3 +312,4 @@ Like with the Authorization Code flow, a variety of other advanced options are a
 [auth_endpoints]: index.md#endpoints
 [fetcher_network_domains]: ../fetcher.md#network-domains
 [oauth_pkce]: https://www.oauth.com/oauth2-servers/pkce/
+[two_way_sync]: ../../blocks/sync-tables/two-way.md
