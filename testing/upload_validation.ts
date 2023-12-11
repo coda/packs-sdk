@@ -882,6 +882,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     ...baseStringPropertyValidators,
     options: zodOptionsFieldWithValues(z.string(), true),
     allowNewValues: z.boolean().optional(),
+    requireForUpdates: z.boolean().optional(),
   });
 
   const imagePropertySchema = zodCompleteStrictObject<ImageSchema & ObjectSchemaProperty>({
@@ -1040,6 +1041,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       snippetProperty: propertySchema.optional(),
       imageProperty: propertySchema.optional(),
       options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
+      requireForUpdates: z.boolean().optional(),
       autocomplete:
         sdkVersion && semver.satisfies(sdkVersion, '<=1.4.0')
           ? zodOptionsFieldWithValues(z.string(), true)

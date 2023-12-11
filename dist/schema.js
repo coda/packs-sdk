@@ -678,7 +678,7 @@ function normalizeSchema(schema) {
 exports.normalizeSchema = normalizeSchema;
 function normalizeObjectSchema(schema) {
     const normalizedProperties = {};
-    const { attribution, options, codaType, description, displayProperty, featured, featuredProperties, id, identity, idProperty, imageProperty, includeUnknownProperties, linkProperty, primary, properties, snippetProperty, subtitleProperties, titleProperty, type, 
+    const { attribution, options, requireForUpdates, codaType, description, displayProperty, featured, featuredProperties, id, identity, idProperty, imageProperty, includeUnknownProperties, linkProperty, primary, properties, snippetProperty, subtitleProperties, titleProperty, type, 
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __packId, ...rest } = schema;
     // Have TS ensure we don't forget about new fields in this function.
@@ -702,6 +702,7 @@ function normalizeObjectSchema(schema) {
     return {
         attribution,
         options,
+        requireForUpdates,
         codaType,
         description,
         displayProperty: displayProperty ? normalizeSchemaKey(displayProperty) : undefined,

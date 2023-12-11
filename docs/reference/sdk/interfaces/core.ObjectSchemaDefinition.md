@@ -228,6 +228,18 @@ Definition of the key-value pairs in this object.
 
 ___
 
+### requireForUpdates
+
+• `Optional` **requireForUpdates**: `boolean`
+
+Blocks updates from being sent with a blank value.
+
+#### Inherited from
+
+[PropertyWithOptions](core.PropertyWithOptions.md).[requireForUpdates](core.PropertyWithOptions.md#requireforupdates)
+
+___
+
 ### snippetProperty
 
 • `Optional` **snippetProperty**: [`PropertyIdentifier`](../types/core.PropertyIdentifier.md)<`K`\>

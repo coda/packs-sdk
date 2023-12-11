@@ -92,6 +92,18 @@ PropertyWithAutocompleteWithOptionalDisplay.options
 
 ___
 
+### requireForUpdates
+
+• `Optional` **requireForUpdates**: `boolean`
+
+Blocks updates from being sent with a blank value.
+
+#### Inherited from
+
+PropertyWithAutocompleteWithOptionalDisplay.requireForUpdates
+
+___
+
 ### type
 
 • **type**: [`String`](../enums/core.ValueType.md#string)
