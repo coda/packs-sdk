@@ -375,6 +375,11 @@ let response = await context.fetcher.fetch({
 });
 ```
 
+??? warning "Mixed credentials not allowed"
+
+    Packs that include per-user authentication are not allowed to pass hard-coded credentials in the same location as user credentials. For example, a Pack using `HeaderBearerToken` authentication is not allowed to pass any value in the `Authorization` header, even when `disableAuthentication: true` is set on the request. This behavior exists to help prevent abuse, specifically when the Pack tries to fetch user data and then send a copy to another account on the same service.
+
+
 ## Caching
 
 For performance reasons responses for HTTP `GET` requests are cached by default. See the [caching guide][caching] for more information.
