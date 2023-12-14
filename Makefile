@@ -138,6 +138,28 @@ compile-isolated-vm-18:
 		else echo "isolated-vm version matches, skipping."; \
 	fi
 
+.PHONY: do-compile-isolated-vm-20
+do-compile-isolated-vm-20:
+	rm -rf build-isolated-vm-20
+	mkdir build-isolated-vm-20 && \
+		cd build-isolated-vm-20 && \
+		npm init -y && \
+		docker run --rm --platform linux/amd64 -v `pwd`:/var/task public.ecr.aws/sam/build-nodejs20.x:latest \
+		  bash -c "microdnf -y install openssl-devel && npm install isolated-vm@${ISOLATED_VM_VERSION}"
+	mkdir -p runtime/native/node20/x86_64/isolated-vm/out
+	cp build-isolated-vm-20/node_modules/isolated-vm/package.json runtime/native/node20/x86_64/isolated-vm/
+	cp build-isolated-vm-20/node_modules/isolated-vm/isolated-vm.js runtime/native/node20/x86_64/isolated-vm/
+	cp build-isolated-vm-20/node_modules/isolated-vm/out/isolated_vm.node runtime/native/node20/x86_64/isolated-vm/out/
+	rm -rf build-isolated-vm-20
+
+.PHONY: compile-isolated-vm-20
+compile-isolated-vm-20:
+	if [ ! -f './runtime/native/node20/x86_64/isolated-vm/package.json' ] || \
+	   [ `node -p -e "require('./runtime/native/node20/x86_64/isolated-vm/package.json').version"` != $(ISOLATED_VM_VERSION) ]; \
+		then $(MAKE) do-compile-isolated-vm-20; \
+		else echo "isolated-vm version matches, skipping."; \
+	fi
+
 .PHONY: compile-thunk
 compile-thunk:
 	echo "Compiling thunk... if this fails with <Cannot find module 'isolated-vm'> errors, then run: pnpm add isolated-vm";
@@ -192,6 +214,7 @@ compile-ts:
 compile:
 	# Generate isolated-vm binaries that are compatible with Amazon Linux 2.
 	$(MAKE) compile-isolated-vm-18
+	$(MAKE) compile-isolated-vm-20
 
 	$(MAKE) compile-ts
 
