@@ -612,7 +612,12 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
               z.null(),
             ]),
           ),
-          result: z.any(),
+          result: z.any().refine(
+            result => {
+              return !isNil(result);
+            },
+            {message: "Pack formulas can't return null or undefined."},
+          ),
         }),
       )
       .optional(),

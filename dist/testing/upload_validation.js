@@ -481,7 +481,9 @@ function buildMetadataSchema({ sdkVersion }) {
                 // to accept it here.
                 z.null(),
             ])),
-            result: z.any(),
+            result: z.any().refine(result => {
+                return !(0, object_utils_2.isNil)(result);
+            }, { message: "Pack formulas can't return null or undefined." }),
         }))
             .optional(),
         parameters: z.array(paramDefValidator).refine(params => {
