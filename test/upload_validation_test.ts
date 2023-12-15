@@ -2720,8 +2720,13 @@ describe('Pack metadata Validation', async () => {
         const metadata = metadataForFormulaWithObjectSchema({
           type: ValueType.Object,
           properties: {
-            name: {type: ValueType.String, codaType: ValueHintType.ImageReference, width: 100, height: '3 + 10', 
-            imageShapeStyle: ImageShapeStyle.Circle},
+            name: {
+              type: ValueType.String,
+              codaType: ValueHintType.ImageReference,
+              width: 100,
+              height: '3 + 10',
+              imageShapeStyle: ImageShapeStyle.Circle,
+            },
           },
         });
         await validateJson(metadata);
@@ -3103,6 +3108,42 @@ describe('Pack metadata Validation', async () => {
           },
         ]);
       });
+    });
+
+    it('example results must be defined', async () => {
+      const syncTable = makeSyncTable({
+        name: 'SyncTable',
+        identityName: 'SomeIdentity',
+        schema: makeObjectSchema({
+          type: ValueType.Object,
+          primary: 'foo',
+          id: 'foo',
+          properties: {
+            Foo: {type: ValueType.String},
+          },
+        }),
+        formula: {
+          name: 'SyncTable',
+          description: 'A simple sync table',
+          async execute([], _context) {
+            return {result: []};
+          },
+          parameters: [],
+          examples: [{params: []} as any], // missing result
+        },
+      });
+
+      const metadata = createFakePack({
+        syncTables: [syncTable],
+      });
+
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: "Pack formulas can't return null or undefined.",
+          path: 'syncTables[0].getter.examples[0].result',
+        },
+      ]);
     });
 
     it('scalar parameter examples', async () => {
@@ -3874,7 +3915,7 @@ describe('Pack metadata Validation', async () => {
   });
 
   describe('validateSyncTableSchema', () => {
-    function validateAndAssertFails(schema: any, details?: string): PackMetadataValidationError {
+    function validateAndAssertFails(schema: any, details?: string): PackMetadataValidationError | undefined {
       try {
         validateSyncTableSchema(schema, {sdkVersion: codaPacksSDKVersion});
         assert.fail('Expected validateSyncTableSchema to fail but it succeeded');
@@ -3953,7 +3994,7 @@ describe('Pack metadata Validation', async () => {
         '[{"path":"items.identity.name","message":"Invalid name. Identity names can only contain ' +
           'alphanumeric characters, underscores, and dashes, and no spaces."}]',
       );
-      assert.deepEqual(err.validationErrors, [
+      assert.deepEqual(err?.validationErrors, [
         {
           path: 'items.identity.name',
           message:
