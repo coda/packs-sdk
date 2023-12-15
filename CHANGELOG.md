@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- Added `requireForUpdates` for select list properties to remove the Blank option.
+
 ## [1.7.2] - 2023-12-04
 
 ### Added
