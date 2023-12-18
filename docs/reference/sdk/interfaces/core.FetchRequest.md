@@ -32,8 +32,6 @@ If true, Coda will cache the POST request and return the same response for subse
 This is mainly used for POST requests that do not have side effects, such as querying a
 GraphQL API.
 
-You will also need to set `cacheTtlSecs` to a non-zero value for this to work.
-
 ___
 
 ### cacheTtlSecs
