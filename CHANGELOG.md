@@ -4,6 +4,11 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- Added `cachePOSTRequest` to `FetchRequest` to support caching POST requests.
+- Updated upload validation to correctly throw errors when formula examples are missing the `result` field.
+
 ## [1.7.3] - 2023-12-15
 
 ### Added
@@ -15,11 +20,11 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ### Added
 
 - Added `updateOptions.extraOAuthScopes` to sync tables to support incremental OAuth with 2-way sync.
-- Added `width`, `height`, and `shapeStyle` to `ImageSchema`
+- Added `width`, `height`, and `shapeStyle` to `ImageSchema`.
 
 ### Fixed
 
-- Fixed failing CLI commands when the optional isolated-vm dependency was not present
+- Fixed failing CLI commands when the optional isolated-vm dependency was not present.
 
 ## [1.7.1] - 2023-11-15
 
