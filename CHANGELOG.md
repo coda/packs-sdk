@@ -6,7 +6,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ### Added
 
-- Added `cachePOSTRequest` to `FetchRequest` to support caching POST requests.
+- Added `forceCache` to `FetchRequest` to support caching non-GET requests.
 - Updated upload validation to correctly throw errors when formula examples are missing the `result` field.
 
 ## [1.7.3] - 2023-12-15
