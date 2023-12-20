@@ -2221,7 +2221,7 @@ describe('Pack metadata Validation', async () => {
             name: 'IdentityName',
           },
           properties: {
-            id: {type: ValueType.Number, fromKey: 'foo', required: true},
+            id: {type: ValueType.Number, fromKey: 'foo', required: true, displayName: 'Foo/or whatever?'},
             primary: {type: ValueType.String},
             date: {type: ValueType.String, codaType: ValueHintType.Date},
           },

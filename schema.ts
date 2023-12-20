@@ -895,6 +895,17 @@ export interface ObjectSchemaProperty {
   fromKey?: string;
 
   /**
+   * Without a `displayName`, a property's key will become the user-visible name. This isn't ideal
+   * because the key must also be used by the Coda formula language to refer to the property, requiring
+   * lossy transformation.
+   *
+   * You probably want to set displayName if:
+   * - You want a display name with punctuation (e.g., "Verion(s)", "Priority/Urgency", "Done?", "Alice's Thing")
+   * - Your property key is not appropriate to show to an end-user (e.g., "custom_field_123")
+   */
+  displayName?: string;
+
+  /**
    * When true, indicates that an object return value for a formula that has this schema must
    * include a non-empty value for this property.
    */
@@ -1697,11 +1708,12 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
   for (const key of Object.keys(properties)) {
     const normalizedKey = normalizeSchemaKey(key);
     const property = properties[key];
-    const {fixedId, fromKey, mutable, originalKey, required} = property;
+    const {displayName, fixedId, fromKey, mutable, originalKey, required} = property;
     if (originalKey) {
       throw new Error('Original key is only for internal use.');
     }
     const normalizedPropertyAttrs: ObjectSchemaProperty = {
+      displayName,
       fixedId,
       fromKey: fromKey || (normalizedKey !== key ? key : undefined),
       mutable,

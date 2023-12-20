@@ -283,7 +283,7 @@ describe('Schema', () => {
         properties: {
           name: {type: schema.ValueType.String, fixedId: 'myFixedId'},
           another: anotherSchema,
-          "What's your name?": {type: schema.ValueType.String},
+          "What's your name?": {type: schema.ValueType.String, displayName: 'A *totally* different property name?'},
           'Enter the date in MM.DD.YYYY format': {type: schema.ValueType.String},
           'fruit [choose multiple]': {type: schema.ValueType.String},
           '!@#$%^&*()-_`~"\\/|<>[]{};:?+=a': {type: schema.ValueType.Number, fromKey: 'from'},
@@ -297,7 +297,12 @@ describe('Schema', () => {
       // Deep copy to remove undefined values
       assert.deepEqual(deepCopy((normalized as schema.GenericObjectSchema).properties), {
         Name: {type: schema.ValueType.String, fixedId: 'myFixedId', fromKey: 'name', originalKey: 'name'},
-        WhatSYourName: {type: schema.ValueType.String, fromKey: "What's your name?", originalKey: "What's your name?"},
+        WhatSYourName: {
+          type: schema.ValueType.String,
+          fromKey: "What's your name?",
+          originalKey: "What's your name?",
+          displayName: 'A *totally* different property name?',
+        },
         EnterTheDateInMMDDYYYYFormat: {
           type: schema.ValueType.String,
           fromKey: 'Enter the date in MM.DD.YYYY format',
