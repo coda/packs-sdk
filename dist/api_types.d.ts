@@ -439,8 +439,20 @@ export interface FetchRequest {
      * instead of making the HTTP request. If left unspecified, Coda will automatically
      * cache all GET requests for approximately 5 minutes. To disable the default caching,
      * set this value to `0`.
+     *
+     * If you are trying to cache a POST, PUT, PATCH, or DELETE request, you must also
+     * set {@link FetchRequest.forceCache} to true.
      */
     cacheTtlSecs?: number;
+    /**
+     * If true, Coda will cache the request (including POST, PUT, PATCH, and DELETE) and return the
+     * same response for subsequent requests. This option does *not* need to be specified to cache
+     * GET requests.
+     *
+     * This is mainly used for POST requests that do not have side effects, such as querying a
+     * GraphQL API.
+     */
+    forceCache?: boolean;
     /**
      * Indicates that you expect the response to be binary data, instructing Coda
      * not to attempt to parse the response in any way. Otherwise, Coda may attempt
