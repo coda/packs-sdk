@@ -930,6 +930,7 @@ export interface PropertyOptionsAnnotatedResult {
     packResult: PropertyOptionsNormalizedResults;
     propertiesUsed: string[];
     searchUsed?: boolean;
+    propertiesNotUsed?: string[];
 }
 /**
  * Formula implementing property options.
