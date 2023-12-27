@@ -9,5 +9,6 @@ export interface ExecuteArgs {
     dynamicUrl?: string;
     timerStrategy: TimerShimStrategy;
     maxRows?: number;
+    allowMultipleNetworkDomains?: boolean;
 }
-export declare function handleExecute({ manifestPath, formulaName, params, fetch, vm, dynamicUrl, timerStrategy, maxRows, }: ArgumentsCamelCase<ExecuteArgs>): Promise<undefined>;
+export declare function handleExecute({ manifestPath, formulaName, params, fetch, vm, dynamicUrl, timerStrategy, maxRows, allowMultipleNetworkDomains, }: ArgumentsCamelCase<ExecuteArgs>): Promise<undefined>;

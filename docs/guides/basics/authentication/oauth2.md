@@ -303,7 +303,7 @@ Like with the Authorization Code flow, a variety of other advanced options are a
 [oauth2_client]: https://www.oauth.com/oauth2-servers/access-tokens/client-credentials/
 [extraOAuthScopes]: ../../../reference/sdk/interfaces/core.BaseFormulaDef.md#extraoauthscopes
 [support]: ../../../support/index.md
-[support_network_domains]: ../../../support/index.md#network-domains
+[support_network_domains]: ../../../support/index.md#approvals
 [sample_oauth2]: ../../../samples/topic/authentication.md#oauth2
 [sample_apis]: ../../../samples/topic/apis.md
 [tutorial_oauth2]: ../../../tutorials/build/oauth.md

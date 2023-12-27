@@ -9,6 +9,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 - Added `forceCache` to `FetchRequest` to support caching non-GET requests.
 - Updated upload validation to correctly throw errors when formula examples are missing the `result` field.
 
+### Changed
+
+- Running `coda execute` on a Pack that uses multiple network domains will fail with a warning unless the new flag `--allowMultipleNetworkDomains` is included. This acts as an early warning to Pack makers and hopefully encourages them to file for approval early before investing too much time into development.
+
 ## [1.7.3] - 2023-12-15
 
 ### Added

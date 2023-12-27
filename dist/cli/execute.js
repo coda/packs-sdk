@@ -7,7 +7,7 @@ const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const helpers_3 = require("../testing/helpers");
 const ivm_wrapper_1 = require("../testing/ivm_wrapper");
-async function handleExecute({ manifestPath, formulaName, params, fetch, vm, dynamicUrl, timerStrategy, maxRows, }) {
+async function handleExecute({ manifestPath, formulaName, params, fetch, vm, dynamicUrl, timerStrategy, maxRows, allowMultipleNetworkDomains, }) {
     if (vm && !(0, ivm_wrapper_1.tryGetIvm)()) {
         return (0, helpers_3.printAndExit)('The --vm flag was specified, but the isolated-vm package is not installed, likely because this package is not ' +
             'compatible with your platform. Try again but omitting the --vm flag.');
@@ -19,6 +19,9 @@ async function handleExecute({ manifestPath, formulaName, params, fetch, vm, dyn
         timerStrategy,
     });
     const manifest = await (0, helpers_1.importManifest)(bundlePath);
+    if (manifest.networkDomains && manifest.networkDomains.length > 1 && !allowMultipleNetworkDomains) {
+        return (0, helpers_3.printAndExit)('Using multiple network domains requires approval from Coda. Visit https://coda.io/packs/build/latest/support#approvals to make a request. Disable this warning by including the flag: --allowMultipleNetworkDomains');
+    }
     await (0, execution_1.executeFormulaOrSyncFromCLI)({
         formulaName,
         params,

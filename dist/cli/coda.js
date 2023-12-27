@@ -68,6 +68,11 @@ if (require.main === module) {
                 default: execution_1.DEFAULT_MAX_ROWS,
                 desc: 'For a sync table, the maximum number of rows to sync.',
             },
+            allowMultipleNetworkDomains: {
+                boolean: true,
+                default: false,
+                desc: 'Allow executing Packs that use multiple network domains. You must get approval from Coda before you can upload these Packs.',
+            },
         },
     })
         .command({
