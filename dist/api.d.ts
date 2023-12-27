@@ -921,6 +921,7 @@ interface PropertyOptionsNormalizedResults {
         display: string | undefined;
         value: any;
     }>;
+    propertiesNotUsed?: string[];
 }
 export declare function normalizePropertyOptionsResults(results: PropertyOptionsResults): PropertyOptionsNormalizedResults;
 /**
@@ -930,7 +931,6 @@ export interface PropertyOptionsAnnotatedResult {
     packResult: PropertyOptionsNormalizedResults;
     propertiesUsed: string[];
     searchUsed?: boolean;
-    propertiesNotUsed?: string[];
 }
 /**
  * Formula implementing property options.

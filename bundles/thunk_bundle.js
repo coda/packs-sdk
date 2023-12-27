@@ -6483,9 +6483,10 @@ module.exports = (() => {
                 params,
                 propertyOptionsExecutionContext
               );
+              const normalizedPackResult = normalizePropertyOptionsResults(packResult);
               const result = {
-                packResult: normalizePropertyOptionsResults(packResult),
-                propertiesUsed: cacheKeysUsed,
+                packResult: normalizedPackResult,
+                propertiesUsed: normalizedPackResult.propertiesNotUsed?.length ? cacheKeysUsed.filter((p) => !normalizedPackResult.propertiesNotUsed?.includes(p)) : cacheKeysUsed,
                 ...contextUsed
               };
               return result;
