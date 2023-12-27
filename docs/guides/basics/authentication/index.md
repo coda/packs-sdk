@@ -593,5 +593,5 @@ There are services however where each account is associated with a distinct doma
 [MultiQueryParamToken]: ../../../reference/sdk/enums/core.AuthenticationType.md#multiqueryparamtoken
 [CodaApiHeaderBearerToken]: ../../../reference/sdk/enums/core.AuthenticationType.md#codaapiheaderbearertoken
 [AWSAccessKey]: ../../../reference/sdk/enums/core.AuthenticationType.md#awsaccesskey
-[support_network_domain]: ../../../support/index.md#network-domains
+[support_network_domain]: ../../../support/index.md#approvals
 [MultiHeaderToken]: ../../../reference/sdk/enums/core.AuthenticationType.md#multiheadertoken

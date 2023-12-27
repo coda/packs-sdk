@@ -16,6 +16,7 @@ export interface ExecuteArgs {
   dynamicUrl?: string;
   timerStrategy: TimerShimStrategy;
   maxRows?: number;
+  allowMultipleNetworkDomains?: boolean;
 }
 
 export async function handleExecute({
@@ -27,6 +28,7 @@ export async function handleExecute({
   dynamicUrl,
   timerStrategy,
   maxRows,
+  allowMultipleNetworkDomains,
 }: ArgumentsCamelCase<ExecuteArgs>) {
   if (vm && !tryGetIvm()) {
     return printAndExit(
@@ -41,6 +43,9 @@ export async function handleExecute({
     timerStrategy,
   });
   const manifest = await importManifest(bundlePath);
+  if (manifest.networkDomains && manifest.networkDomains.length > 1 && !allowMultipleNetworkDomains) {
+    return printAndExit('Using multiple network domains requires approval from Coda. Visit https://coda.io/packs/build/latest/support#approvals to make a request. Disable this warning by including the flag: --allowMultipleNetworkDomains');
+  }
   await executeFormulaOrSyncFromCLI({
     formulaName,
     params,

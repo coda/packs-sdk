@@ -34,7 +34,9 @@ If you are experiencing a problem with your Pack or have identified a bug you ca
 [Send email][support_email]{: .md-button .md-button--primary}
 
 
-## Approvals and exemptions {: #network-domains}
+## Approvals and exemptions {: #approvals}
+
+<a name="network-domains"></a><!-- Keep for backwards compatibility -->
 
 Certain Pack features are restricted by default and require approval before you can use them. Coda enforces these restrictions when you attempt to create a new version of your Pack. This means you can test your Pack locally using the CLI, but will need to have the approval granted before you can test in a real doc.
 

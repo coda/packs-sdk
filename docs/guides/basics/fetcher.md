@@ -407,7 +407,7 @@ dig +short egress.coda.io
 [samples]: ../../samples/topic/fetcher.md
 [addNetworkDomain]: ../../reference/sdk/classes/core.PackDefinitionBuilder.md#addnetworkdomain
 [support]: ../../support/index.md
-[support_network_domains]: ../../support/index.md#network-domains
+[support_network_domains]: ../../support/index.md#approvals
 [ExecutionContext]: ../../reference/sdk/interfaces/core.ExecutionContext/
 [fetch]: ../../reference/sdk/interfaces/core.Fetcher.md#fetch
 [FetchRequest]: ../../reference/sdk/interfaces/core.FetchRequest.md
