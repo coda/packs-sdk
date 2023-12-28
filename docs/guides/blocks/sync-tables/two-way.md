@@ -147,6 +147,113 @@ executeUpdate: async function (args, updates, context) {
     ```
 
 
+## Transforming row values
+
+While needed for all sync tables, when implementing two-way sync you need to pay extra attention to how you transform row values between the form used by the API and that used by the table. This is not an issue if your sync table schema exactly matches the items returned by the API, but often you want or need a different representation of the data in Coda.
+
+When possible, utilize the `fromKey` field of property schemas to allow Coda to automatically map between the API results and the table columns. This works not only when syncing in rows in the `execute` function, but also in reverse when sending updates in the `executeUpdate` function. Specifically, the [`SyncUpdate`][reference_sync_update] object's `newValue`, `previousValue`, and `updatedFields` will all be keyed using the `fromKey` value if set.
+
+??? example "Using fromKey to transform automatically"
+    ```ts
+    const TaskSchema = coda.makeObjectSchema({
+      properties: {
+        id: { type: coda.ValueType.String },
+        // Map the API's "content" field to the property "name".
+        name: { type: coda.ValueType.String, fromKey: "content", mutable: true },
+      },
+      // ...
+    });
+
+    pack.addSyncTable({
+      name: "Tasks",
+      schema: TaskSchema,
+      // ...
+      formula: {
+        // ...
+        execute: async function (args, context) {
+          let tasks = await getTasks(context);
+          // Each task looks like: {"id": "123", "content": "Foo"}
+          // Coda will automatically map the "content" field to the "name" property.
+          return {
+            result: tasks,
+          };
+        },
+        executeUpdate: async function (args, updates, context) {
+          let update = updates[0];
+          let task = update.newValue;
+          // The new value looks like: {"id": "123", "content": "Bar"}
+          // Coda automatically mapped "name" property back to "content".
+          task = await updateTask(context, newValue);
+          // The final value will look like: {"id": "123", "content": "Bar"}
+          // Once again, Coda will automatically map "content" to "name".
+          return {
+            result: [task],
+          };
+        },
+      },
+    });
+    ```
+
+In cases where `fromKey` is not sufficient and you must manually transform API results to row values and back, we recommend using helper functions with clear names to handle the convert between the different representations.
+
+??? example "Using helper functions to transform manually"
+    ```ts
+    const TaskSchema = coda.makeObjectSchema({
+      properties: {
+        id: { type: coda.ValueType.String },
+        name: { type: coda.ValueType.String, mutable: true },
+      },
+      // ...
+    });
+
+    pack.addSyncTable({
+      name: "Tasks",
+      schema: TaskSchema,
+      // ...
+      formula: {
+        // ...
+        execute: async function (args, context) {
+          let tasks = await getTasks(context);
+          // Each task looks like: {"id": "123", "content": "Foo"}
+          // Manually map the "content" field to the "name" property before returning it.
+          let rows = tasks.map(task => formatTaskForSchema(task))
+          return {
+            result: rows,
+          };
+        },
+        executeUpdate: async function (args, updates, context) {
+          let update = updates[0];
+          let row = update.newValue;
+          // The new value looks like: {"id": "123", "name": "Bar"}
+          // Manually map the "name" property back to "content" before sending it to the API.
+          let task = formatTaskForApi(row);
+          task = await updateTask(context, newValue);
+          // The final value will look like: {"id": "123", "content": "Bar"}
+          // Once again, manually map "content" to "name" before returning it.
+          row = formatTaskForSchema(task);
+          return {
+            result: [row],
+          };
+        },
+      },
+    });
+
+    function formatTaskForSchema(task) {
+      return {
+        ...task,
+        name: task.content,
+      };
+    }
+
+    function formatTaskForApi(row) {
+      return {
+        ...row,
+        content: row.name,
+      };
+    }
+    ```
+
+
 ## Batching updates {: #batching}
 
 By default row updates are processed one at a time, which makes the coding simple but can impact performance when many rows are being updated at once. You can greatly improve performance by batching multiple updates into a single `executeUpdate` call and processing them in parallel.
@@ -349,3 +456,4 @@ If your Pack uses [OAuth authentication][oauth] it may require that the user to 
 [parameters_autocomplete]: ../../basics/parameters/autocomplete.md
 [oauth]: ../../basics/authentication/oauth2.md
 [incremental_two_way]: ../../basics/authentication/oauth2.md#incremental-two-way
+[schemas_object_mapping]: ../../advanced/schemas.md#object-mapping
