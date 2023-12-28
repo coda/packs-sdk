@@ -95,7 +95,7 @@ sequenceDiagram
   Pack-->>-Doc: Result
 ```
 
-Packs are run in a custom JavaScript execution environment created by Coda, compatible with the [ES2020 standard][mdn_ecmascript]. You can use all the modern JavaScript features, but browser- and Node-specific objects are not available (`window`, `fs`, etc).
+Packs are run in a custom JavaScript execution environment created by Coda, compatible with the [ES2022 standard][mdn_ecmascript]. You can use all the modern JavaScript features, but browser- and Node-specific objects are not available (`window`, `fs`, etc).
 
 
 
