@@ -456,4 +456,3 @@ If your Pack uses [OAuth authentication][oauth] it may require that the user to 
 [parameters_autocomplete]: ../../basics/parameters/autocomplete.md
 [oauth]: ../../basics/authentication/oauth2.md
 [incremental_two_way]: ../../basics/authentication/oauth2.md#incremental-two-way
-[schemas_object_mapping]: ../../advanced/schemas.md#object-mapping
