@@ -1323,7 +1323,7 @@ describe('Pack metadata Validation', async () => {
           identityName: 'IdTwo',
           schema: MySchema,
           formula: {
-            name: 'SyncThings',
+            name: 'SyncThings2',
             description: 'Sync some things.',
             parameters: [],
             async execute([]) {
@@ -1763,7 +1763,7 @@ describe('Pack metadata Validation', async () => {
             return '';
           }),
           formula: {
-            name: 'SyncTable',
+            name: 'SyncTable2',
             description: 'Sync table',
             examples: [],
             parameters: [],
@@ -1838,6 +1838,10 @@ describe('Pack metadata Validation', async () => {
             message: 'Sync table identity names must be unique. Found duplicate name "Identity".',
             path: 'syncTables',
           },
+          {
+            message: 'Sync table formula names must be unique. Found duplicate name "SyncTable".',
+            path: 'syncTables',
+          },
         ]);
       });
 
@@ -1874,7 +1878,7 @@ describe('Pack metadata Validation', async () => {
             return '';
           }),
           formula: {
-            name: 'SyncTable',
+            name: 'SyncTable2',
             description: 'Sync table',
             examples: [],
             parameters: [],
@@ -1925,7 +1929,7 @@ describe('Pack metadata Validation', async () => {
             },
           }),
           formula: {
-            name: 'SyncTable',
+            name: 'SyncTable2',
             description: 'A simple sync table',
             async execute([], _context) {
               return {result: []};
@@ -2139,7 +2143,7 @@ describe('Pack metadata Validation', async () => {
                 },
               }),
               formula: {
-                name: 'SyncTable',
+                name: `SyncTable${i}`,
                 description: 'A simple sync table',
                 async execute([], _context) {
                   return {result: []};
