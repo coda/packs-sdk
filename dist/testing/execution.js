@@ -28,6 +28,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.newRealFetcherSyncExecutionContext = exports.newRealFetcherExecutionContext = exports.executeMetadataFormula = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeFormulaOrSyncWithRawParams = exports.VMError = exports.executeFormulaOrSyncWithVM = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = exports.DEFAULT_MAX_ROWS = void 0;
 const types_1 = require("../runtime/types");
+const buffer_1 = require("buffer/");
 const coercion_1 = require("./coercion");
 const bootstrap_1 = require("../runtime/bootstrap");
 const helpers_1 = require("../runtime/common/helpers");
@@ -221,6 +222,10 @@ async function executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, par
     return (0, bootstrap_1.executeThunk)(ivmContext, { params, formulaSpec: formulaSpecification }, bundlePath, bundleSourceMapPath);
 }
 async function executeFormulaOrSyncWithRawParams({ formulaSpecification, params: rawParams, manifest, executionContext, }) {
+    // Use non-native buffer if we're testing this without using isolated-vm, because otherwise
+    // we could hit issues like Buffer.isBuffer() returning false if a non-native buffer was created
+    // in pack code and we're checking it using native buffers somewhere like node_fetcher.ts
+    global.Buffer = buffer_1.Buffer;
     let params;
     if (formulaSpecification.type === types_1.FormulaType.Standard) {
         const formula = (0, helpers_1.findFormula)(manifest, formulaSpecification.formulaName);
