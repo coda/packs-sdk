@@ -6,6 +6,7 @@ import {FormulaType} from '../runtime/types';
 import type {GenericSyncFormulaResult} from '../api';
 import type {MetadataContext} from '../api';
 import type {MetadataFormula} from '../api';
+import {Buffer as NonNativeBuffer} from 'buffer/';
 import type {PackFormulaResult} from '../api_types';
 import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
@@ -335,6 +336,11 @@ export async function executeFormulaOrSyncWithRawParams<
   manifest: BasicPackDefinition;
   executionContext: SyncExecutionContext;
 }): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult> {
+  // Use non-native buffer if we're testing this without using isolated-vm, because otherwise
+  // we could hit issues like Buffer.isBuffer() returning false if a non-native buffer was created
+  // in pack code and we're checking it using native buffers somewhere like node_fetcher.ts
+  global.Buffer = NonNativeBuffer as unknown as BufferConstructor;
+
   let params: ParamValues<ParamDefs>;
   if (formulaSpecification.type === FormulaType.Standard) {
     const formula = findFormula(manifest, formulaSpecification.formulaName);
