@@ -32,6 +32,9 @@ importers:
       browserify:
         specifier: 17.0.0
         version: 17.0.0
+      buffer:
+        specifier: 6.0.3
+        version: 6.0.3
       clone:
         specifier: 2.1.2
         version: 2.1.2
@@ -223,9 +226,6 @@ importers:
       aws-sdk:
         specifier: 2.1473.0
         version: 2.1473.0
-      buffer:
-        specifier: 6.0.3
-        version: 6.0.3
       chai:
         specifier: 4.3.10
         version: 4.3.10
@@ -3238,7 +3238,6 @@ packages:
     dependencies:
       base64-js: 1.5.1
       ieee754: 1.2.1
-    dev: true
 
   /builtin-status-codes@3.0.0:
     resolution: {integrity: sha512-HpGFw18DgFWlncDfjTa2rcQ4W88O1mC8e8yZ2AvQY5KDaktSTwo+KRf6nHK6FRI5FyRyb/5T6+TSxfP7QyGsmQ==}
