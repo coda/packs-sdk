@@ -28,8 +28,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.newRealFetcherSyncExecutionContext = exports.newRealFetcherExecutionContext = exports.executeMetadataFormula = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeFormulaOrSyncWithRawParams = exports.VMError = exports.executeFormulaOrSyncWithVM = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = exports.DEFAULT_MAX_ROWS = void 0;
 const types_1 = require("../runtime/types");
+const types_2 = require("../runtime/types");
 const buffer_1 = require("buffer/");
 const coercion_1 = require("./coercion");
+const ensure_1 = require("../helpers/ensure");
+const ensure_2 = require("../helpers/ensure");
 const bootstrap_1 = require("../runtime/bootstrap");
 const helpers_1 = require("../runtime/common/helpers");
 const helpers_2 = require("../runtime/common/helpers");
@@ -131,15 +134,7 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
             ? (0, fetcher_2.newFetcherSyncExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_3.getPackAuth)(manifest), manifest.networkDomains, credentials)
             : (0, mocks_2.newMockSyncExecutionContext)();
         executionContext.sync.dynamicUrl = dynamicUrl || undefined;
-        const syncFormula = (0, helpers_7.tryFindSyncFormula)(manifest, formulaName);
-        const formula = (0, helpers_6.tryFindFormula)(manifest, formulaName);
-        if (!(syncFormula || formula)) {
-            throw new Error(`Could not find a formula or sync named "${formulaName}".`);
-        }
-        const formulaSpecification = {
-            type: syncFormula ? types_1.FormulaType.Sync : types_1.FormulaType.Standard,
-            formulaName,
-        };
+        const formulaSpecification = makeFormulaSpec(manifest, formulaName);
         if (formulaSpecification.type === types_1.FormulaType.Sync) {
             let result = [];
             let iterations = 1;
@@ -184,6 +179,115 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
     }
 }
 exports.executeFormulaOrSyncFromCLI = executeFormulaOrSyncFromCLI;
+const SyncMetadataFormulaTokens = Object.freeze({
+    [types_2.MetadataFormulaType.SyncListDynamicUrls]: 'listDynamicUrls',
+    [types_2.MetadataFormulaType.SyncSearchDynamicUrls]: 'searchDynamicUrls',
+    [types_2.MetadataFormulaType.SyncGetDisplayUrl]: 'getDisplayUrl',
+    [types_2.MetadataFormulaType.SyncGetTableName]: 'getName',
+    [types_2.MetadataFormulaType.SyncGetSchema]: 'getSchema',
+});
+const GlobalMetadataFormulaTokens = Object.freeze({
+    [types_2.MetadataFormulaType.GetConnectionName]: 'getConnectionName',
+    [types_2.MetadataFormulaType.GetConnectionUserId]: 'getConnectionUserId',
+});
+const PostSetupMetadataFormulaTokens = Object.freeze({
+    [types_2.MetadataFormulaType.PostSetupSetEndpoint]: 'setEndpoint',
+});
+function invert(obj) {
+    return Object.fromEntries(Object.entries(obj).map(([key, value]) => [value, key]));
+}
+function makeFormulaSpec(manifest, formulaNameInput) {
+    const [formulaOrSyncName, ...parts] = formulaNameInput.split(':');
+    if (formulaOrSyncName === 'Auth') {
+        if (parts.length === 1) {
+            const metadataFormulaTypeStr = parts[0];
+            if (!manifest.defaultAuthentication) {
+                throw new Error(`Pack definition has no user authentication.`);
+            }
+            const authFormulaType = invert(GlobalMetadataFormulaTokens)[metadataFormulaTypeStr];
+            if (!authFormulaType) {
+                throw new Error(`Unrecognized authentication metadata formula type "${metadataFormulaTypeStr}".`);
+            }
+            return {
+                type: types_1.FormulaType.Metadata,
+                metadataFormulaType: authFormulaType,
+            };
+        }
+        else if (parts.length >= 2) {
+            if (parts[0] !== 'postSetup') {
+                throw new Error(`Unrecognized formula type "${parts[0]}", expected "postSetup".`);
+            }
+            const setupStepTypeStr = parts[1];
+            const setupStepType = invert(PostSetupMetadataFormulaTokens)[setupStepTypeStr];
+            if (!setupStepType) {
+                throw new Error(`Unrecognized setup step type "${setupStepTypeStr}".`);
+            }
+            const stepName = parts[2];
+            if (!stepName) {
+                throw new Error(`Expected a step name after "${setupStepTypeStr}".`);
+            }
+            return {
+                type: types_1.FormulaType.Metadata,
+                metadataFormulaType: setupStepType,
+                stepName,
+            };
+        }
+    }
+    const syncFormula = (0, helpers_7.tryFindSyncFormula)(manifest, formulaOrSyncName);
+    const standardFormula = (0, helpers_6.tryFindFormula)(manifest, formulaOrSyncName);
+    if (!(syncFormula || standardFormula)) {
+        throw new Error(`Could not find a formula or sync named "${formulaOrSyncName}".`);
+    }
+    const formula = (0, ensure_1.ensureExists)(syncFormula || standardFormula);
+    if (parts.length === 0) {
+        return {
+            type: syncFormula ? types_1.FormulaType.Sync : types_1.FormulaType.Standard,
+            formulaName: formulaOrSyncName,
+        };
+    }
+    if (parts.length === 1) {
+        const metadataFormulaTypeStr = parts[0];
+        if (metadataFormulaTypeStr === 'update') {
+            if (!syncFormula) {
+                throw new Error(`Update metadata formula "${metadataFormulaTypeStr}" is only supported for sync formulas.`);
+            }
+            return {
+                type: types_1.FormulaType.SyncUpdate,
+                formulaName: formulaOrSyncName,
+            };
+        }
+        const metadataFormulaType = invert(SyncMetadataFormulaTokens)[metadataFormulaTypeStr];
+        if (!metadataFormulaType) {
+            throw new Error(`Unrecognized metadata formula type "${metadataFormulaTypeStr}".`);
+        }
+        if (!syncFormula) {
+            throw new Error(`Metadata formula "${metadataFormulaTypeStr}" is only supported for sync formulas.`);
+        }
+        return {
+            type: types_1.FormulaType.Metadata,
+            metadataFormulaType,
+            syncTableName: formulaOrSyncName,
+        };
+    }
+    if (parts.length === 2) {
+        if (parts[0] !== 'autocomplete') {
+            throw new Error(`Unrecognized formula type "${parts[0]}", expected "autocomplete".`);
+        }
+        const parameterName = parts[1];
+        const paramDef = formula.parameters.find(p => p.name === parameterName);
+        if (!paramDef) {
+            throw new Error(`Formula "${formulaOrSyncName}" has no parameter named "${parameterName}".`);
+        }
+        return {
+            type: types_1.FormulaType.Metadata,
+            metadataFormulaType: types_2.MetadataFormulaType.ParameterAutocomplete,
+            parentFormulaName: formulaOrSyncName,
+            parentFormulaType: syncFormula ? types_1.FormulaType.Sync : types_1.FormulaType.Standard,
+            parameterName,
+        };
+    }
+    throw new Error(`Unrecognized execution command: "${formulaNameInput}".`);
+}
 // This method is used to execute a (sync) formula in testing with VM. Don't use it in lambda or calc service.
 async function executeFormulaOrSyncWithVM({ formulaName, params, bundlePath, executionContext = (0, mocks_2.newMockSyncExecutionContext)(), }) {
     const manifest = await (0, helpers_4.importManifest)(bundlePath);
@@ -211,13 +315,27 @@ async function executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, par
     const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
     const manifest = await (0, helpers_4.importManifest)(bundlePath);
     let params;
-    if (formulaSpecification.type === types_1.FormulaType.Standard) {
-        const formula = (0, helpers_1.findFormula)(manifest, formulaSpecification.formulaName);
-        params = (0, coercion_1.coerceParams)(formula, rawParams);
-    }
-    else {
-        const syncFormula = (0, helpers_2.findSyncFormula)(manifest, formulaSpecification.formulaName);
-        params = (0, coercion_1.coerceParams)(syncFormula, rawParams);
+    switch (formulaSpecification.type) {
+        case types_1.FormulaType.Standard: {
+            const formula = (0, helpers_1.findFormula)(manifest, formulaSpecification.formulaName);
+            params = (0, coercion_1.coerceParams)(formula, rawParams);
+            break;
+        }
+        case types_1.FormulaType.Sync: {
+            const syncFormula = (0, helpers_2.findSyncFormula)(manifest, formulaSpecification.formulaName);
+            params = (0, coercion_1.coerceParams)(syncFormula, rawParams);
+            break;
+        }
+        case types_1.FormulaType.Metadata: {
+            params = rawParams;
+            break;
+        }
+        case types_1.FormulaType.SyncUpdate: {
+            params = rawParams;
+            break;
+        }
+        default:
+            (0, ensure_2.ensureUnreachable)(formulaSpecification);
     }
     return (0, bootstrap_1.executeThunk)(ivmContext, { params, formulaSpec: formulaSpecification }, bundlePath, bundleSourceMapPath);
 }
@@ -227,13 +345,27 @@ async function executeFormulaOrSyncWithRawParams({ formulaSpecification, params:
     // in pack code and we're checking it using native buffers somewhere like node_fetcher.ts
     global.Buffer = buffer_1.Buffer;
     let params;
-    if (formulaSpecification.type === types_1.FormulaType.Standard) {
-        const formula = (0, helpers_1.findFormula)(manifest, formulaSpecification.formulaName);
-        params = (0, coercion_1.coerceParams)(formula, rawParams);
-    }
-    else {
-        const syncFormula = (0, helpers_2.findSyncFormula)(manifest, formulaSpecification.formulaName);
-        params = (0, coercion_1.coerceParams)(syncFormula, rawParams);
+    switch (formulaSpecification.type) {
+        case types_1.FormulaType.Standard: {
+            const formula = (0, helpers_1.findFormula)(manifest, formulaSpecification.formulaName);
+            params = (0, coercion_1.coerceParams)(formula, rawParams);
+            break;
+        }
+        case types_1.FormulaType.Sync: {
+            const syncFormula = (0, helpers_2.findSyncFormula)(manifest, formulaSpecification.formulaName);
+            params = (0, coercion_1.coerceParams)(syncFormula, rawParams);
+            break;
+        }
+        case types_1.FormulaType.Metadata: {
+            params = rawParams;
+            break;
+        }
+        case types_1.FormulaType.SyncUpdate: {
+            params = rawParams;
+            break;
+        }
+        default:
+            (0, ensure_2.ensureUnreachable)(formulaSpecification);
     }
     return findAndExecutePackFunction(params, formulaSpecification, manifest, executionContext);
 }

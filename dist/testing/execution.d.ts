@@ -1,13 +1,13 @@
 /// <reference types="node" />
 import type { BasicPackDefinition } from '../types';
 import type { ExecutionContext } from '../api_types';
+import type { FormulaSpecification } from '../runtime/types';
 import type { GenericSyncFormulaResult } from '../api';
 import type { MetadataContext } from '../api';
 import type { MetadataFormula } from '../api';
 import type { PackFormulaResult } from '../api_types';
 import type { ParamDefs } from '../api_types';
 import type { ParamValues } from '../api_types';
-import type { StandardFormulaSpecification } from '../runtime/types';
 import type { SyncExecutionContext } from '../api_types';
 import type { SyncFormulaSpecification } from '../runtime/types';
 import util from 'util';
@@ -47,7 +47,7 @@ export declare class VMError {
     constructor(name: string, message: string, stack: string);
     [util.inspect.custom](): string;
 }
-export declare function executeFormulaOrSyncWithRawParams<T extends StandardFormulaSpecification | SyncFormulaSpecification>({ formulaSpecification, params: rawParams, manifest, executionContext, }: {
+export declare function executeFormulaOrSyncWithRawParams<T extends FormulaSpecification>({ formulaSpecification, params: rawParams, manifest, executionContext, }: {
     formulaSpecification: T;
     params: string[];
     manifest: BasicPackDefinition;
