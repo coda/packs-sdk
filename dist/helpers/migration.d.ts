@@ -9,6 +9,7 @@ export declare function objectSchemaHelper<T extends ObjectSchemaDefinition<stri
 declare class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
     private readonly _schema;
     constructor(schema: T);
+    private _checkAgainstAllProperties;
     get id(): string | undefined;
     get primary(): string | undefined;
     get featured(): string[] | undefined;
@@ -18,6 +19,7 @@ declare class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string
     get type(): import("../schema").ValueType.Object;
     get attribution(): import("../schema").AttributionNode[] | undefined;
     get codaType(): import("../schema").ValueHintType.Person | import("../schema").ValueHintType.Reference | import("../schema").ValueHintType.SelectList | undefined;
+    get requireForUpdates(): boolean | undefined;
 }
 export declare function paramDefHelper<S extends UnionType, T extends ParamDef<S>>(def: T): ParamDefHelper<S, T>;
 declare class ParamDefHelper<S extends UnionType, T extends ParamDef<S>> {

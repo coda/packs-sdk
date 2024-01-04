@@ -1749,7 +1749,7 @@ export function makeReferenceSchemaFromObjectSchema(
   schema: ObjectSchemaDefinition<string, string> & ObjectSchemaProperty,
   identityName?: string,
 ): GenericObjectSchema & ObjectSchemaProperty {
-  const {type, id, primary, identity, properties, options} = objectSchemaHelper(schema);
+  const {type, id, primary, identity, properties, options, requireForUpdates} = objectSchemaHelper(schema);
   const {mutable} = schema;
   ensureExists(
     identity || identityName,
@@ -1770,6 +1770,7 @@ export function makeReferenceSchemaFromObjectSchema(
     options,
     properties: referenceProperties,
     type,
+    requireForUpdates,
   };
   return makeObjectSchema(referenceSchema);
 }

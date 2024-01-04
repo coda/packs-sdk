@@ -6,6 +6,7 @@ import type {SetEndpointDef} from '../types';
 import type {SuggestedValueType} from '../api_types';
 import type {UnionType} from '../api_types';
 import {ensureExists} from '../helpers/ensure';
+import {ensureNever} from '../helpers/ensure';
 
 export function objectSchemaHelper<T extends ObjectSchemaDefinition<string, string>>(schema: T): ObjectSchemaHelper<T> {
   return new ObjectSchemaHelper(schema);
@@ -16,6 +17,45 @@ class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
 
   constructor(schema: T) {
     this._schema = schema;
+
+    this._checkAgainstAllProperties(schema);
+  }
+
+  // This method doesn't do anything, but it gives developers a chance to double-check if they've forgotten
+  // to update a client of ObjectSchemaHelper when they add a new property to ObjectSchemaDefinition.
+  // For example, coda.makeReferenceSchemaFromObjectSchema() depends on ObjectSchemaHelper so if you
+  // add a new schema option related to property options you would likely need to add it to ObjectSchemaHelper
+  // and propagate it through coda.makeReferenceSchemaFromObjectSchema() also.
+  private _checkAgainstAllProperties(schema: ObjectSchemaDefinition<string, string>) {
+    const {
+      // Properties needed by ObjectSchemaHelper clients.
+      id,
+      idProperty,
+      primary,
+      displayProperty,
+      featuredProperties,
+      featured,
+      identity,
+      options,
+      properties,
+      type,
+      attribution,
+      codaType,
+      requireForUpdates,
+
+      // Properties not needed by ObjectSchemaHelper clients.
+      includeUnknownProperties,
+      titleProperty,
+      linkProperty,
+      subtitleProperties,
+      snippetProperty,
+      imageProperty,
+      description,
+
+      ...rest
+    } = schema;
+
+    ensureNever<keyof typeof rest>();
   }
 
   get id(): string | undefined {
@@ -52,6 +92,10 @@ class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
 
   get codaType() {
     return this._schema.codaType;
+  }
+
+  get requireForUpdates() {
+    return this._schema.requireForUpdates;
   }
 }
 
