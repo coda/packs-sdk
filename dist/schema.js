@@ -678,6 +678,8 @@ function normalizeSchema(schema) {
         };
     }
     else if (isObject(schema)) {
+        // eslint-disable-next-line no-console
+        console.log(schema.properties);
         validateSchemaProperties(schema.properties);
         // The `as T` here seems like a typescript bug... shouldn't the above typeguard be
         // sufficient to define T === GenericObjectSchema?
