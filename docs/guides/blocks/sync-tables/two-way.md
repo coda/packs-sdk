@@ -183,7 +183,7 @@ When possible, utilize the `fromKey` field of property schemas to allow Coda to 
           let task = update.newValue;
           // The new value looks like: {"id": "123", "content": "Bar"}
           // Coda automatically mapped "name" property back to "content".
-          task = await updateTask(context, newValue);
+          task = await updateTask(context, task);
           // The final value will look like: {"id": "123", "content": "Bar"}
           // Once again, Coda will automatically map "content" to "name".
           return {
@@ -227,7 +227,7 @@ In cases where `fromKey` is not sufficient and you must manually transform API r
           // The new value looks like: {"id": "123", "name": "Bar"}
           // Manually map the "name" property back to "content" before sending it to the API.
           let task = formatTaskForApi(row);
-          task = await updateTask(context, newValue);
+          task = await updateTask(context, task);
           // The final value will look like: {"id": "123", "content": "Bar"}
           // Once again, manually map "content" to "name" before returning it.
           row = formatTaskForSchema(task);
