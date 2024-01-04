@@ -4,6 +4,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+## [1.7.4] - 2024-01-04
+
 ### Fixed
 
 - Propagate the value of `requireForUpdates` in `makeReferenceSchemaFromObjectSchema`.
@@ -665,7 +667,8 @@ await myHelper(context);
 
 - Beginning of alpha versioning.
 
-[unreleased]: https://github.com/coda/packs-sdk/compare/v1.7.3...HEAD
+[unreleased]: https://github.com/coda/packs-sdk/compare/v1.7.4...HEAD
+[1.7.4]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.4
 [1.7.3]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.3
 [1.7.2]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.2
 [1.7.1]: https://github.com/coda/packs-sdk/compare/v1.6.0...v1.7.1
