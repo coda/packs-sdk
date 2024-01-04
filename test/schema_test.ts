@@ -362,6 +362,7 @@ describe('Schema', () => {
         },
         mutable: undefined,
         options: undefined,
+        requireForUpdates: undefined,
       });
     });
 
@@ -389,6 +390,7 @@ describe('Schema', () => {
         },
         mutable: undefined,
         options: undefined,
+        requireForUpdates: undefined,
       });
     });
 
@@ -430,6 +432,7 @@ describe('Schema', () => {
         },
         mutable: undefined,
         options: undefined,
+        requireForUpdates: undefined,
       });
     });
   });
