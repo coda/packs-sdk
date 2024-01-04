@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Fixed
+
+- Propagate the value of `requireForUpdates` in `makeReferenceSchemaFromObjectSchema`.
+
 ### Added
 
 - Added `forceCache` to `FetchRequest` to support caching non-GET requests.
