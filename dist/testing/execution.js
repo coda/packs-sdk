@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newRealFetcherSyncExecutionContext = exports.newRealFetcherExecutionContext = exports.executeMetadataFormula = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeFormulaOrSyncWithRawParams = exports.VMError = exports.executeFormulaOrSyncWithVM = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = exports.DEFAULT_MAX_ROWS = void 0;
+exports.newRealFetcherSyncExecutionContext = exports.newRealFetcherExecutionContext = exports.executeMetadataFormula = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeFormulaOrSyncWithRawParams = exports.VMError = exports.executeFormulaOrSyncWithVM = exports.makeFormulaSpec = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = exports.DEFAULT_MAX_ROWS = void 0;
 const types_1 = require("../runtime/types");
 const types_2 = require("../runtime/types");
 const buffer_1 = require("buffer/");
@@ -196,9 +196,10 @@ const PostSetupMetadataFormulaTokens = Object.freeze({
 function invert(obj) {
     return Object.fromEntries(Object.entries(obj).map(([key, value]) => [value, key]));
 }
+// Exported for tests.
 function makeFormulaSpec(manifest, formulaNameInput) {
     const [formulaOrSyncName, ...parts] = formulaNameInput.split(':');
-    if (formulaOrSyncName === 'Auth') {
+    if (formulaOrSyncName === 'Auth' && parts.length > 0) {
         if (parts.length === 1) {
             const metadataFormulaTypeStr = parts[0];
             if (!manifest.defaultAuthentication) {
@@ -288,6 +289,7 @@ function makeFormulaSpec(manifest, formulaNameInput) {
     }
     throw new Error(`Unrecognized execution command: "${formulaNameInput}".`);
 }
+exports.makeFormulaSpec = makeFormulaSpec;
 // This method is used to execute a (sync) formula in testing with VM. Don't use it in lambda or calc service.
 async function executeFormulaOrSyncWithVM({ formulaName, params, bundlePath, executionContext = (0, mocks_2.newMockSyncExecutionContext)(), }) {
     const manifest = await (0, helpers_4.importManifest)(bundlePath);
@@ -327,7 +329,7 @@ async function executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, par
             break;
         }
         case types_1.FormulaType.Metadata: {
-            params = rawParams;
+            params = parseMetadataFormulaParams(rawParams);
             break;
         }
         case types_1.FormulaType.SyncUpdate: {
@@ -357,7 +359,7 @@ async function executeFormulaOrSyncWithRawParams({ formulaSpecification, params:
             break;
         }
         case types_1.FormulaType.Metadata: {
-            params = rawParams;
+            params = parseMetadataFormulaParams(rawParams);
             break;
         }
         case types_1.FormulaType.SyncUpdate: {
@@ -370,6 +372,10 @@ async function executeFormulaOrSyncWithRawParams({ formulaSpecification, params:
     return findAndExecutePackFunction(params, formulaSpecification, manifest, executionContext);
 }
 exports.executeFormulaOrSyncWithRawParams = executeFormulaOrSyncWithRawParams;
+function parseMetadataFormulaParams(rawParams) {
+    const [search = '', formulaContext = '{}'] = rawParams;
+    return [search, JSON.parse(formulaContext)];
+}
 /**
  * Executes multiple iterations of a sync formula in a loop until there is no longer
  * a `continuation` returned, aggregating each page of results and returning an array

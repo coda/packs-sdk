@@ -34,6 +34,7 @@ export declare function executeFormulaOrSyncFromCLI({ formulaName, params, manif
     bundlePath: string;
     contextOptions?: ContextOptions;
 }): Promise<void>;
+export declare function makeFormulaSpec(manifest: BasicPackDefinition, formulaNameInput: string): FormulaSpecification;
 export declare function executeFormulaOrSyncWithVM<T extends PackFormulaResult | GenericSyncFormulaResult = any>({ formulaName, params, bundlePath, executionContext, }: {
     formulaName: string;
     params: ParamValues<ParamDefs>;

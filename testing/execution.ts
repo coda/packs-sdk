@@ -278,10 +278,11 @@ function invert<K extends string | number | symbol, V extends string | number | 
   return Object.fromEntries(Object.entries(obj).map(([key, value]) => [value, key]));
 }
 
-function makeFormulaSpec(manifest: BasicPackDefinition, formulaNameInput: string): FormulaSpecification {
+// Exported for tests.
+export function makeFormulaSpec(manifest: BasicPackDefinition, formulaNameInput: string): FormulaSpecification {
   const [formulaOrSyncName, ...parts] = formulaNameInput.split(':');
 
-  if (formulaOrSyncName === 'Auth') {
+  if (formulaOrSyncName === 'Auth' && parts.length > 0) {
     if (parts.length === 1) {
       const metadataFormulaTypeStr = parts[0];
       if (!manifest.defaultAuthentication) {
@@ -446,7 +447,7 @@ async function executeFormulaOrSyncWithRawParamsInVM<T extends FormulaSpecificat
       break;
     }
     case FormulaType.Metadata: {
-      params = rawParams as ParamValues<ParamDefs>;
+      params = parseMetadataFormulaParams(rawParams) as ParamValues<ParamDefs>;
       break;
     }
     case FormulaType.SyncUpdate: {
@@ -488,7 +489,7 @@ export async function executeFormulaOrSyncWithRawParams<T extends FormulaSpecifi
       break;
     }
     case FormulaType.Metadata: {
-      params = rawParams as ParamValues<ParamDefs>;
+      params = parseMetadataFormulaParams(rawParams) as ParamValues<ParamDefs>;
       break;
     }
     case FormulaType.SyncUpdate: {
@@ -499,6 +500,11 @@ export async function executeFormulaOrSyncWithRawParams<T extends FormulaSpecifi
       ensureUnreachable(formulaSpecification);
   }
   return findAndExecutePackFunction(params, formulaSpecification, manifest, executionContext);
+}
+
+function parseMetadataFormulaParams(rawParams: string[]): string[] {
+  const [search = '', formulaContext = '{}'] = rawParams;
+  return [search, JSON.parse(formulaContext)];
 }
 
 /**
