@@ -18,7 +18,11 @@ class ObjectSchemaHelper {
     // add a new schema option related to property options you would likely need to add it to ObjectSchemaHelper
     // and propagate it through coda.makeReferenceSchemaFromObjectSchema() also.
     _checkAgainstAllProperties(schema) {
-        const { id, idProperty, primary, displayProperty, featuredProperties, featured, identity, options, properties, type, attribution, codaType, requireForUpdates, includeUnknownProperties, titleProperty, linkProperty, subtitleProperties, snippetProperty, imageProperty, description, ...rest } = schema;
+        const { 
+        // Properties needed by ObjectSchemaHelper clients.
+        id, idProperty, primary, displayProperty, featuredProperties, featured, identity, options, properties, type, attribution, codaType, requireForUpdates, 
+        // Properties not needed by ObjectSchemaHelper clients.
+        includeUnknownProperties, titleProperty, linkProperty, subtitleProperties, snippetProperty, imageProperty, description, ...rest } = schema;
         (0, ensure_2.ensureNever)();
     }
     get id() {

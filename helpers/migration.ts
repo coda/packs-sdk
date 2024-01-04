@@ -28,6 +28,7 @@ class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
   // and propagate it through coda.makeReferenceSchemaFromObjectSchema() also.
   private _checkAgainstAllProperties(schema: ObjectSchemaDefinition<string, string>) {
     const {
+      // Properties needed by ObjectSchemaHelper clients.
       id,
       idProperty,
       primary,
@@ -42,6 +43,7 @@ class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
       codaType,
       requireForUpdates,
 
+      // Properties not needed by ObjectSchemaHelper clients.
       includeUnknownProperties,
       titleProperty,
       linkProperty,
