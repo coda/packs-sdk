@@ -1147,6 +1147,20 @@ function buildMetadataSchema({ sdkVersion }) {
                 message: 'Sync table formulas do not currently support varargParameters.',
             });
         }
+    })
+        .superRefine((data, context) => {
+        const syncTable = data;
+        const properties = new Set();
+        for (const property of Object.keys(syncTable.schema.properties)) {
+            if (properties.has(property.toLowerCase())) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: ['schema', 'properties', property],
+                    message: 'Sync table schema property names must be case-sensitively unique.',
+                });
+            }
+            properties.add(property.toLowerCase());
+        }
     });
     // Make sure to call the refiners on this after removing legacyPackMetadataSchema.
     // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level

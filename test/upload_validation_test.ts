@@ -4325,4 +4325,46 @@ describe('Pack metadata Validation', async () => {
       ]);
     });
   });
+
+  it('duplicate schema properties in sync table schema', async () => {
+    const syncTable = makeSyncTable({
+      name: 'SyncTable',
+      identityName: 'Sync',
+      schema: makeObjectSchema({
+        id: 'id',
+        primary: 'primary',
+        featured: ['id', 'primary'],
+        properties: {
+          id: {type: ValueType.String},
+          primary: {type: ValueType.String},
+          PRIMARY: {type: ValueType.String},
+        },
+      }),
+      formula: {
+        name: 'SyncTable',
+        description: 'A simple sync table',
+        async execute([], _context) {
+          return {result: []};
+        },
+        parameters: [],
+        examples: [],
+      },
+    });
+    const metadata = createFakePackVersionMetadata(
+      compilePackMetadata({
+        version: '1',
+        syncTables: [syncTable],
+        defaultAuthentication: {
+          type: AuthenticationType.None,
+        },
+      }),
+    );
+    const err = await validateJsonAndAssertFails(metadata);
+    assert.deepEqual(err.validationErrors, [
+      {
+        path: 'syncTables[0].schema.properties.PRIMARY',
+        message: 'Sync table schema property names must be case-sensitively unique.',
+      },
+    ]);
+  });
 });

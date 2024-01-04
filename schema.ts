@@ -1649,6 +1649,17 @@ export function normalizePropertyValuePathIntoSchemaPath(propertyValue: string):
   return normalizedValue;
 }
 
+function validateSchemaProperties(properties: ObjectSchemaProperties): void {
+  const propertiesMap = new Map<string, string[]>();
+  for (const property of Object.keys(properties)) {
+    const maybeDuplicateProperties = propertiesMap.get(property.toLowerCase());
+    if (maybeDuplicateProperties) {
+      throw new Error(`Duplicate property names found in schema: ${[property, ...maybeDuplicateProperties]}`);
+    }
+    propertiesMap.set(property.toLowerCase(), [property]);
+  }
+}
+
 export function normalizeSchema<T extends Schema>(schema: T): T {
   if (isArray(schema)) {
     return {
@@ -1657,6 +1668,7 @@ export function normalizeSchema<T extends Schema>(schema: T): T {
       items: normalizeSchema(schema.items),
     } as T;
   } else if (isObject(schema)) {
+    validateSchemaProperties(schema.properties);
     // The `as T` here seems like a typescript bug... shouldn't the above typeguard be
     // sufficient to define T === GenericObjectSchema?
     return normalizeObjectSchema(schema) as T;

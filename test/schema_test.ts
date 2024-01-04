@@ -262,6 +262,19 @@ describe('Schema', () => {
       );
     });
 
+    it('throws an error when duplicate properties are found', () => {
+      const objectSchema = schema.makeObjectSchema({
+        type: schema.ValueType.Object,
+        id: 'name',
+        primary: 'name',
+        properties: {
+          name: {type: schema.ValueType.String},
+          Name: {type: schema.ValueType.String},
+        },
+      });
+      assert.throws(() => schema.normalizeSchema(objectSchema), 'Duplicate property names found in schema: Name,name');
+    });
+
     it('works', () => {
       const anotherSchema = schema.makeObjectSchema({
         type: schema.ValueType.Object,
