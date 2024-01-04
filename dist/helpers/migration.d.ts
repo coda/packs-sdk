@@ -9,6 +9,7 @@ export declare function objectSchemaHelper<T extends ObjectSchemaDefinition<stri
 declare class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
     private readonly _schema;
     constructor(schema: T);
+    private _checkAgainstAllProperties;
     get id(): string | undefined;
     get primary(): string | undefined;
     get featured(): string[] | undefined;

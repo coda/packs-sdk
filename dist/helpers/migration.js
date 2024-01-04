@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postSetupMetadataHelper = exports.setEndpointDefHelper = exports.setEndpointHelper = exports.paramDefHelper = exports.objectSchemaHelper = void 0;
 const ensure_1 = require("../helpers/ensure");
+const ensure_2 = require("../helpers/ensure");
 function objectSchemaHelper(schema) {
     return new ObjectSchemaHelper(schema);
 }
@@ -9,6 +10,16 @@ exports.objectSchemaHelper = objectSchemaHelper;
 class ObjectSchemaHelper {
     constructor(schema) {
         this._schema = schema;
+        this._checkAgainstAllProperties(schema);
+    }
+    // This method doesn't do anything, but it gives developers a chance to double-check if they've forgotten
+    // to update a client of ObjectSchemaHelper when they add a new property to ObjectSchemaDefinition.
+    // For example, coda.makeReferenceSchemaFromObjectSchema() depends on ObjectSchemaHelper so if you
+    // add a new schema option related to property options you would likely need to add it to ObjectSchemaHelper
+    // and propagate it through coda.makeReferenceSchemaFromObjectSchema() also.
+    _checkAgainstAllProperties(schema) {
+        const { id, idProperty, primary, displayProperty, featuredProperties, featured, identity, options, properties, type, attribution, codaType, requireForUpdates, includeUnknownProperties, titleProperty, linkProperty, subtitleProperties, snippetProperty, imageProperty, description, ...rest } = schema;
+        (0, ensure_2.ensureNever)();
     }
     get id() {
         var _a;
