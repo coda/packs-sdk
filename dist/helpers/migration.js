@@ -41,6 +41,9 @@ class ObjectSchemaHelper {
     get codaType() {
         return this._schema.codaType;
     }
+    get requireForUpdates() {
+        return this._schema.requireForUpdates;
+    }
 }
 function paramDefHelper(def) {
     return new ParamDefHelper(def);

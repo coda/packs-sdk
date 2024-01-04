@@ -735,7 +735,7 @@ exports.normalizeObjectSchema = normalizeObjectSchema;
  * schema it provides better code reuse to derive a reference schema instead.
  */
 function makeReferenceSchemaFromObjectSchema(schema, identityName) {
-    const { type, id, primary, identity, properties, options } = (0, migration_1.objectSchemaHelper)(schema);
+    const { type, id, primary, identity, properties, options, requireForUpdates } = (0, migration_1.objectSchemaHelper)(schema);
     const { mutable } = schema;
     (0, ensure_2.ensureExists)(identity || identityName, 'Source schema must have an identity field, or you must provide an identity name for the reference.');
     const validId = (0, ensure_2.ensureExists)(id);
@@ -753,6 +753,7 @@ function makeReferenceSchemaFromObjectSchema(schema, identityName) {
         options,
         properties: referenceProperties,
         type,
+        requireForUpdates,
     };
     return makeObjectSchema(referenceSchema);
 }

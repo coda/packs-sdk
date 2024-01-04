@@ -53,6 +53,10 @@ class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
   get codaType() {
     return this._schema.codaType;
   }
+
+  get requireForUpdates() {
+    return this._schema.requireForUpdates;
+  }
 }
 
 export function paramDefHelper<S extends UnionType, T extends ParamDef<S>>(def: T): ParamDefHelper<S, T> {
