@@ -1207,6 +1207,7 @@ function buildMetadataSchema({ sdkVersion }) {
             .superRefine((data, context) => {
             var _a, _b;
             const identityNames = [];
+            const formulaNames = [];
             for (const tableDef of data) {
                 if (tableDef.identityName && ((_a = tableDef.schema.identity) === null || _a === void 0 ? void 0 : _a.name)) {
                     if (tableDef.identityName !== tableDef.schema.identity.name) {
@@ -1220,11 +1221,18 @@ function buildMetadataSchema({ sdkVersion }) {
                 if (tableDef.schema.identity) {
                     identityNames.push((_b = tableDef.schema.identity) === null || _b === void 0 ? void 0 : _b.name);
                 }
+                formulaNames.push(tableDef.getter.name);
             }
             for (const dupe of getNonUniqueElements(identityNames)) {
                 context.addIssue({
                     code: z.ZodIssueCode.custom,
                     message: `Sync table identity names must be unique. Found duplicate name "${dupe}".`,
+                });
+            }
+            for (const dupe of getNonUniqueElements(formulaNames)) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: `Sync table formula names must be unique. Found duplicate name "${dupe}".`,
                 });
             }
             const tableNames = data.map(tableDef => tableDef.name);
