@@ -151,6 +151,9 @@ export const manifest: PackDefinition = createFakePack({
               return {} as any;
           }
         },
+        executeUpdate: async (_params, updates, _context) => {
+          return {result: updates.map(u => u.newValue)};
+        },
         parameters: [makeStringParameter('teacher', 'teacher name')],
         examples: [],
       },

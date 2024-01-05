@@ -2,6 +2,7 @@ import {testHelper} from './test_helper';
 import {AuthenticationType} from '../types';
 import type {Formula} from '../api';
 import {FormulaType} from '../runtime/types';
+import type {GenericSyncUpdate} from '../api';
 import {MetadataFormulaType} from '../runtime/types';
 import type {PackDefinitionBuilder} from '../builder';
 import {ParameterType} from '../api_types';
@@ -468,36 +469,54 @@ describe('Execution', () => {
             assert.deepEqual(result, [{Name: 'Alice'}, {Name: 'Bob'}, {Name: 'Chris'}, {Name: 'Diana'}]);
           }
         });
-      });
 
-      it('autocomplete', async () => {
-        await executeFormulaOrSyncFromCLI({
-          vm,
-          formulaName: 'Lookup:autocomplete:query',
-          params: ['fo'],
-          manifest: fakePack,
-          manifestPath: '',
-          bundleSourceMapPath,
-          bundlePath,
-          contextOptions: {useRealFetcher: false},
+        it('sync update works', async () => {
+          const syncUpdates: GenericSyncUpdate[] = [
+            {previousValue: {name: 'Alice'}, newValue: {name: 'Alice Smith'}, updatedFields: ['name']},
+          ];
+          await executeFormulaOrSyncFromCLI({
+            vm,
+            formulaName: 'Students:update',
+            params: ['Smith', JSON.stringify(syncUpdates)],
+            manifest: fakePack,
+            manifestPath: '',
+            bundleSourceMapPath,
+            bundlePath,
+            contextOptions: {useRealFetcher: false},
+          });
+          const result = mockPrint.args[0][0];
+          assert.deepEqual(result, {result: [{outcome: 'success', finalValue: {name: 'Alice Smith'}}]});
         });
-        const result = mockPrint.args[0][0];
-        assert.deepEqual(result, [{value: 'foo', display: 'foo'}]);
-      });
 
-      it('autocomplete with formula context', async () => {
-        await executeFormulaOrSyncFromCLI({
-          vm,
-          formulaName: 'Lookup:autocomplete:query',
-          params: ['fo', JSON.stringify({blah: 'bar'})],
-          manifest: fakePack,
-          manifestPath: '',
-          bundleSourceMapPath,
-          bundlePath,
-          contextOptions: {useRealFetcher: false},
+        it('autocomplete', async () => {
+          await executeFormulaOrSyncFromCLI({
+            vm,
+            formulaName: 'Lookup:autocomplete:query',
+            params: ['fo'],
+            manifest: fakePack,
+            manifestPath: '',
+            bundleSourceMapPath,
+            bundlePath,
+            contextOptions: {useRealFetcher: false},
+          });
+          const result = mockPrint.args[0][0];
+          assert.deepEqual(result, [{value: 'foo', display: 'foo'}]);
         });
-        const result = mockPrint.args[0][0];
-        assert.deepEqual(result, [{value: 'foo', display: 'foo'}]);
+
+        it('autocomplete with formula context', async () => {
+          await executeFormulaOrSyncFromCLI({
+            vm,
+            formulaName: 'Lookup:autocomplete:query',
+            params: ['fo', JSON.stringify({blah: 'bar'})],
+            manifest: fakePack,
+            manifestPath: '',
+            bundleSourceMapPath,
+            bundlePath,
+            contextOptions: {useRealFetcher: false},
+          });
+          const result = mockPrint.args[0][0];
+          assert.deepEqual(result, [{value: 'foo', display: 'foo'}]);
+        });
       });
     }
   });
