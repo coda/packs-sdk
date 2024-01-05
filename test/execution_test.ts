@@ -3,6 +3,7 @@ import {AuthenticationType} from '../types';
 import type {Formula} from '../api';
 import {FormulaType} from '../runtime/types';
 import {MetadataFormulaType} from '../runtime/types';
+import type {PackDefinitionBuilder} from '../builder';
 import {ParameterType} from '../api_types';
 import {PostSetupType} from '../types';
 import type {ResponseHandlerTemplate} from '../handler_templates';
@@ -417,7 +418,11 @@ describe('Execution', () => {
 });
 
 describe('CLI formula spec parsing', () => {
-  const pack = newPack();
+  let pack: PackDefinitionBuilder;
+
+  beforeEach(() => {
+    pack = newPack();
+  });
 
   it('vanilla formula', () => {
     const spec = makeFormulaSpec(fakePack, 'Square');
@@ -508,6 +513,7 @@ describe('CLI formula spec parsing', () => {
           makeParameter({type: ParameterType.String, name: 'myParam', description: '', autocomplete: ['foo', 'bar']}),
         ],
         execute: async () => ({result: []}),
+        executeUpdate: async () => ({result: []}),
       },
     });
 
@@ -545,6 +551,12 @@ describe('CLI formula spec parsing', () => {
       metadataFormulaType: MetadataFormulaType.SyncGetSchema,
       syncTableName: 'MySync',
     });
+
+    const updateSpec = makeFormulaSpec(pack, 'MySync:update');
+    assert.deepEqual(updateSpec, {
+      type: FormulaType.SyncUpdate,
+      formulaName: 'MySync',
+    });
   });
 
   it('auth metadata formulas', () => {
@@ -572,6 +584,198 @@ describe('CLI formula spec parsing', () => {
       type: FormulaType.Metadata,
       metadataFormulaType: MetadataFormulaType.PostSetupSetEndpoint,
       stepName: 'step 1',
+    });
+  });
+
+  it('formula named "Auth"', () => {
+    pack.addFormula({
+      resultType: ValueType.String,
+      name: 'Auth',
+      description: '',
+      parameters: [
+        makeParameter({type: ParameterType.String, name: 'myParam', description: '', autocomplete: ['foo', 'bar']}),
+      ],
+      execute: async () => '',
+    });
+
+    const spec = makeFormulaSpec(pack, 'Auth');
+    assert.deepEqual(spec, {type: FormulaType.Standard, formulaName: 'Auth'});
+
+    const autocompleteSpec = makeFormulaSpec(pack, 'Auth:autocomplete:myParam');
+    assert.deepEqual(autocompleteSpec, {
+      type: FormulaType.Metadata,
+      metadataFormulaType: MetadataFormulaType.ParameterAutocomplete,
+      parameterName: 'myParam',
+      parentFormulaName: 'Auth',
+      parentFormulaType: FormulaType.Standard,
+    });
+  });
+
+  it('sync named "Auth"', () => {
+    pack.addDynamicSyncTable({
+      name: 'Auth',
+      description: '',
+      identityName: 'Foo',
+      getName: async () => 'name',
+      getDisplayUrl: async () => 'display url',
+      listDynamicUrls: async () => ['url1'],
+      searchDynamicUrls: async () => ['search result'],
+      getSchema: async () =>
+        makeObjectSchema({
+          properties: {
+            id: {type: ValueType.String},
+          },
+          idProperty: 'id',
+          displayProperty: 'id',
+          featuredProperties: ['id'],
+        }),
+      formula: {
+        name: 'Foo',
+        description: '',
+        parameters: [
+          makeParameter({type: ParameterType.String, name: 'myParam', description: '', autocomplete: ['foo', 'bar']}),
+        ],
+        execute: async () => ({result: []}),
+      },
+    });
+
+    const spec = makeFormulaSpec(pack, 'Auth');
+    assert.deepEqual(spec, {type: FormulaType.Sync, formulaName: 'Auth'});
+
+    const autocompleteSpec = makeFormulaSpec(pack, 'Auth:autocomplete:myParam');
+    assert.deepEqual(autocompleteSpec, {
+      type: FormulaType.Metadata,
+      metadataFormulaType: MetadataFormulaType.ParameterAutocomplete,
+      parameterName: 'myParam',
+      parentFormulaName: 'Auth',
+      parentFormulaType: FormulaType.Sync,
+    });
+
+    const getNameSpec = makeFormulaSpec(pack, 'Auth:getName');
+    assert.deepEqual(getNameSpec, {
+      type: FormulaType.Metadata,
+      metadataFormulaType: MetadataFormulaType.SyncGetTableName,
+      syncTableName: 'Auth',
+    });
+  });
+
+  describe('errors', () => {
+    it('unknown formula', () => {
+      assert.throws(() => makeFormulaSpec(pack, 'Foo'), 'Could not find a formula or sync named "Foo".');
+    });
+
+    it('no user auth', () => {
+      assert.throws(
+        () => makeFormulaSpec(pack, 'Auth:getConnectionName'),
+        'Pack definition has no user authentication.',
+      );
+    });
+
+    it('unrecognized post setup step type', () => {
+      pack.setUserAuthentication({
+        type: AuthenticationType.HeaderBearerToken,
+        postSetup: [{type: PostSetupType.SetEndpoint, name: 'step 1', description: '', getOptions: async () => []}],
+      });
+      assert.throws(
+        () => makeFormulaSpec(pack, 'Auth:postSetup:garbage:step 1'),
+        'Unrecognized setup step type "garbage".',
+      );
+    });
+
+    it('unrecognized auth metadata formula falls through', () => {
+      pack.setUserAuthentication({
+        type: AuthenticationType.HeaderBearerToken,
+      });
+      assert.throws(
+        () => makeFormulaSpec(pack, 'Auth:somethingElse'),
+        'Could not find a formula or sync named "Auth".',
+      );
+    });
+
+    it('sync updates and metadata not compatible with standard formula', () => {
+      pack.addFormula({
+        resultType: ValueType.String,
+        name: 'Foo',
+        description: '',
+        parameters: [],
+        execute: async () => '',
+      });
+      assert.throws(
+        () => makeFormulaSpec(pack, 'Foo:update'),
+        'Two-way sync formula "update" is only supported for sync formulas.',
+      );
+      assert.throws(
+        () => makeFormulaSpec(pack, 'Foo:getName'),
+        'Metadata formula "getName" is only supported for sync formulas.',
+      );
+    });
+
+    it('unrecognized sync metadata formula', () => {
+      pack.addDynamicSyncTable({
+        name: 'MySync',
+        description: '',
+        identityName: 'Foo',
+        getName: async () => 'name',
+        getDisplayUrl: async () => 'display url',
+        listDynamicUrls: async () => ['url1'],
+        searchDynamicUrls: async () => ['search result'],
+        getSchema: async () =>
+          makeObjectSchema({
+            properties: {
+              id: {type: ValueType.String},
+            },
+            idProperty: 'id',
+            displayProperty: 'id',
+            featuredProperties: ['id'],
+          }),
+        formula: {
+          name: 'Foo',
+          description: '',
+          parameters: [
+            makeParameter({type: ParameterType.String, name: 'myParam', description: '', autocomplete: ['foo', 'bar']}),
+          ],
+          execute: async () => ({result: []}),
+          executeUpdate: async () => ({result: []}),
+        },
+      });
+
+      assert.throws(() => makeFormulaSpec(pack, 'MySync:garbage'), 'Unrecognized metadata formula type "garbage".');
+    });
+
+    it('formula autocomplete', () => {
+      pack.addFormula({
+        resultType: ValueType.String,
+        name: 'Foo',
+        description: '',
+        parameters: [
+          makeParameter({type: ParameterType.String, name: 'myOtherParam', description: ''}),
+          makeParameter({type: ParameterType.String, name: 'myParam', description: '', autocomplete: ['foo', 'bar']}),
+        ],
+        execute: async () => '',
+      });
+
+      assert.throws(
+        () => makeFormulaSpec(pack, 'Foo:autocomplete'),
+        'No parameter name specified for autocomplete metadata formula.',
+      );
+      assert.throws(
+        () => makeFormulaSpec(pack, 'Foo:autocomplete:garbage'),
+        'Formula "Foo" has no parameter named "garbage".',
+      );
+    });
+
+    it('too many parts', () => {
+      pack.addFormula({
+        resultType: ValueType.String,
+        name: 'Foo',
+        description: '',
+        parameters: [],
+        execute: async () => '',
+      });
+      assert.throws(
+        () => makeFormulaSpec(pack, 'Foo:bar:baz:blah'),
+        'Unrecognized execution command: "Foo:bar:baz:blah".',
+      );
     });
   });
 });

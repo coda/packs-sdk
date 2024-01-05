@@ -246,7 +246,7 @@ export async function executeFormulaOrSyncFromCLI({
       print(result);
     }
   } catch (err: any) {
-    print(err);
+    print(err.message || err);
     process.exit(1);
   }
 }
@@ -285,21 +285,17 @@ export function makeFormulaSpec(manifest: BasicPackDefinition, formulaNameInput:
   if (formulaOrSyncName === 'Auth' && parts.length > 0) {
     if (parts.length === 1) {
       const metadataFormulaTypeStr = parts[0];
-      if (!manifest.defaultAuthentication) {
-        throw new Error(`Pack definition has no user authentication.`);
-      }
       const authFormulaType = invert(GlobalMetadataFormulaTokens)[metadataFormulaTypeStr];
-      if (!authFormulaType) {
-        throw new Error(`Unrecognized authentication metadata formula type "${metadataFormulaTypeStr}".`);
+      if (authFormulaType) {
+        if (!manifest.defaultAuthentication) {
+          throw new Error(`Pack definition has no user authentication.`);
+        }
+        return {
+          type: FormulaType.Metadata,
+          metadataFormulaType: authFormulaType,
+        };
       }
-      return {
-        type: FormulaType.Metadata,
-        metadataFormulaType: authFormulaType,
-      };
-    } else if (parts.length >= 2) {
-      if (parts[0] !== 'postSetup') {
-        throw new Error(`Unrecognized formula type "${parts[0]}", expected "postSetup".`);
-      }
+    } else if (parts.length >= 2 && parts[0] === 'postSetup') {
       const setupStepTypeStr = parts[1];
       const setupStepType = invert(PostSetupMetadataFormulaTokens)[setupStepTypeStr];
       if (!setupStepType) {
@@ -336,12 +332,14 @@ export function makeFormulaSpec(manifest: BasicPackDefinition, formulaNameInput:
     const metadataFormulaTypeStr = parts[0];
     if (metadataFormulaTypeStr === 'update') {
       if (!syncFormula) {
-        throw new Error(`Update metadata formula "${metadataFormulaTypeStr}" is only supported for sync formulas.`);
+        throw new Error(`Two-way sync formula "${metadataFormulaTypeStr}" is only supported for sync formulas.`);
       }
       return {
         type: FormulaType.SyncUpdate,
         formulaName: formulaOrSyncName,
       };
+    } else if (metadataFormulaTypeStr === 'autocomplete') {
+      throw new Error(`No parameter name specified for autocomplete metadata formula.`);
     }
     const metadataFormulaType = invert(SyncMetadataFormulaTokens)[metadataFormulaTypeStr];
     if (!metadataFormulaType) {
