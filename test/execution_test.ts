@@ -11,13 +11,15 @@ import type {Schema} from '../schema';
 import {TimerShimStrategy} from '../testing/compile';
 import {ValueType} from '../schema';
 import {assertCondition} from '../helpers/ensure';
-import {build as buildBundle} from '../cli/build';
+import {compilePackBundle} from '../testing/compile';
 import {createFakePack} from './test_utils';
 import {executeFormulaFromPackDef} from '../testing/execution';
+import {executeFormulaOrSyncFromCLI} from '../testing/execution';
 import {executeFormulaOrSyncWithVM} from '../testing/execution';
 import {executeMetadataFormula} from '../testing/execution';
 import {executeSyncFormulaFromPackDef} from '../testing/execution';
 import {manifest as fakePack} from './packs/fake';
+import * as helpers from '../testing/helpers';
 import {makeBooleanParameter} from '../api';
 import {makeFormulaSpec} from '../testing/execution';
 import {makeMetadataFormula} from '../api';
@@ -35,9 +37,13 @@ import sinon from 'sinon';
 
 describe('Execution', () => {
   let bundlePath: string;
+  let bundleSourceMapPath: string;
 
   before(async () => {
-    bundlePath = await buildBundle(`${__dirname}/packs/fake`, {timerStrategy: TimerShimStrategy.Fake});
+    ({bundlePath, bundleSourceMapPath} = await compilePackBundle({
+      manifestPath: `${__dirname}/packs/fake`,
+      timerStrategy: TimerShimStrategy.Fake,
+    }));
   });
 
   it('executes a formula by name', async () => {
@@ -414,6 +420,86 @@ describe('Execution', () => {
 
   it('works with uuid in VM', async () => {
     await executeFormulaOrSyncWithVM({formulaName: 'RandomId', params: [], bundlePath});
+  });
+
+  describe('CLI execution', () => {
+    let mockPrint: sinon.SinonStub;
+
+    beforeEach(() => {
+      mockPrint = sinon.stub(helpers, 'print');
+    });
+
+    afterEach(() => {
+      sinon.restore();
+    });
+
+    for (const vm of [true, false]) {
+      describe(`vm=${vm}`, () => {
+        it('works', async () => {
+          await executeFormulaOrSyncFromCLI({
+            vm,
+            formulaName: 'Square',
+            params: ['5'],
+            manifest: fakePack,
+            manifestPath: '',
+            bundleSourceMapPath,
+            bundlePath,
+            contextOptions: {useRealFetcher: false},
+          });
+          sinon.assert.calledOnceWithExactly(mockPrint, 25);
+        });
+
+        it('sync works', async () => {
+          await executeFormulaOrSyncFromCLI({
+            vm,
+            formulaName: 'Students',
+            params: ['Smith'],
+            manifest: fakePack,
+            manifestPath: '',
+            bundleSourceMapPath,
+            bundlePath,
+            contextOptions: {useRealFetcher: false},
+          });
+          const result = mockPrint.args[0][0];
+          // WTF? Why is this different in VM?
+          if (vm) {
+            assert.deepEqual(result, [{name: 'Alice'}, {name: 'Bob'}, {name: 'Chris'}, {name: 'Diana'}]);
+          } else {
+            assert.deepEqual(result, [{Name: 'Alice'}, {Name: 'Bob'}, {Name: 'Chris'}, {Name: 'Diana'}]);
+          }
+        });
+      });
+
+      it('autocomplete', async () => {
+        await executeFormulaOrSyncFromCLI({
+          vm,
+          formulaName: 'Lookup:autocomplete:query',
+          params: ['fo'],
+          manifest: fakePack,
+          manifestPath: '',
+          bundleSourceMapPath,
+          bundlePath,
+          contextOptions: {useRealFetcher: false},
+        });
+        const result = mockPrint.args[0][0];
+        assert.deepEqual(result, [{value: 'foo', display: 'foo'}]);
+      });
+
+      it('autocomplete with formula context', async () => {
+        await executeFormulaOrSyncFromCLI({
+          vm,
+          formulaName: 'Lookup:autocomplete:query',
+          params: ['fo', JSON.stringify({blah: 'bar'})],
+          manifest: fakePack,
+          manifestPath: '',
+          bundleSourceMapPath,
+          bundlePath,
+          contextOptions: {useRealFetcher: false},
+        });
+        const result = mockPrint.args[0][0];
+        assert.deepEqual(result, [{value: 'foo', display: 'foo'}]);
+      });
+    }
   });
 });
 

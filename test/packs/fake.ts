@@ -1,4 +1,5 @@
 import type {PackDefinition} from '../../types';
+import {ParameterType} from '../../api_types';
 import {ValueType} from '../../schema';
 import {createFakePack} from '../test_utils';
 import {makeFormula} from '../../api';
@@ -6,6 +7,7 @@ import {makeNumericFormula} from '../../api';
 import {makeNumericParameter} from '../../api';
 import {makeObjectFormula} from '../../api';
 import {makeObjectSchema} from '../../schema';
+import {makeParameter} from '../../api';
 import {makeStringFormula} from '../../api';
 import {makeStringParameter} from '../../api';
 import {makeSyncTable} from '../../api';
@@ -51,7 +53,14 @@ export const manifest: PackDefinition = createFakePack({
       name: 'Lookup',
       description: 'Lookup a value from a remote service',
       examples: [],
-      parameters: [makeStringParameter('query', 'A query to look up.')],
+      parameters: [
+        makeParameter({
+          type: ParameterType.String,
+          name: 'query',
+          description: 'A query to look up.',
+          autocomplete: ['foo', 'bar'],
+        }),
+      ],
       execute: async ([query], context) => {
         const url = withQueryParams('https://example.com/lookup', {query});
         const response = await context.fetcher.fetch({method: 'GET', url});

@@ -332,7 +332,8 @@ async function executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, par
             break;
         }
         case types_1.FormulaType.SyncUpdate: {
-            params = rawParams;
+            const syncFormula = (0, helpers_2.findSyncFormula)(manifest, formulaSpecification.formulaName);
+            params = (0, coercion_1.coerceParams)(syncFormula, rawParams);
             break;
         }
         default:
@@ -362,7 +363,8 @@ async function executeFormulaOrSyncWithRawParams({ formulaSpecification, params:
             break;
         }
         case types_1.FormulaType.SyncUpdate: {
-            params = rawParams;
+            const syncFormula = (0, helpers_2.findSyncFormula)(manifest, formulaSpecification.formulaName);
+            params = (0, coercion_1.coerceParams)(syncFormula, rawParams);
             break;
         }
         default:

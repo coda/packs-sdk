@@ -449,7 +449,8 @@ async function executeFormulaOrSyncWithRawParamsInVM<T extends FormulaSpecificat
       break;
     }
     case FormulaType.SyncUpdate: {
-      params = rawParams as ParamValues<ParamDefs>;
+      const syncFormula = findSyncFormula(manifest, formulaSpecification.formulaName);
+      params = coerceParams(syncFormula, rawParams as any);
       break;
     }
     default:
@@ -491,7 +492,8 @@ export async function executeFormulaOrSyncWithRawParams<T extends FormulaSpecifi
       break;
     }
     case FormulaType.SyncUpdate: {
-      params = rawParams as ParamValues<ParamDefs>;
+      const syncFormula = findSyncFormula(manifest, formulaSpecification.formulaName);
+      params = coerceParams(syncFormula, rawParams as any);
       break;
     }
     default:
