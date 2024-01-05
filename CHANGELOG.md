@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- `coda execute` now allows for executing metadata formulas and sync updates.
+
 ## [1.7.4] - 2024-01-04
 
 ### Fixed

@@ -333,7 +333,10 @@ async function executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, par
             break;
         }
         case types_1.FormulaType.Metadata: {
-            params = parseMetadataFormulaParams(rawParams);
+            // Interstingly we don't need special handling for the formula context dict (the optional second arg
+            // to an autocomplete metadata formula), because at execution time it gets passed as a serialized
+            // JSON string anyway which is already parsed by the compiled pack definition.
+            params = rawParams;
             break;
         }
         case types_1.FormulaType.SyncUpdate: {
@@ -364,7 +367,10 @@ async function executeFormulaOrSyncWithRawParams({ formulaSpecification, params:
             break;
         }
         case types_1.FormulaType.Metadata: {
-            params = parseMetadataFormulaParams(rawParams);
+            // Interstingly we don't need special handling for the formula context dict (the optional second arg
+            // to an autocomplete metadata formula), because at execution time it gets passed as a serialized
+            // JSON string anyway which is already parsed by the compiled pack definition.
+            params = rawParams;
             break;
         }
         case types_1.FormulaType.SyncUpdate: {
@@ -377,10 +383,6 @@ async function executeFormulaOrSyncWithRawParams({ formulaSpecification, params:
     return findAndExecutePackFunction(params, formulaSpecification, manifest, executionContext, syncUpdates);
 }
 exports.executeFormulaOrSyncWithRawParams = executeFormulaOrSyncWithRawParams;
-function parseMetadataFormulaParams(rawParams) {
-    const [search = '', formulaContext = '{}'] = rawParams;
-    return [search, JSON.parse(formulaContext)];
-}
 /**
  * Executes multiple iterations of a sync formula in a loop until there is no longer
  * a `continuation` returned, aggregating each page of results and returning an array

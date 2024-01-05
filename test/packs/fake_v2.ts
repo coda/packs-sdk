@@ -66,7 +66,10 @@ pack.addFormula({
     coda.makeParameter({
       type: coda.ParameterType.String,
       name: 'name',
-      description: 'the name of the pereson',
+      description: 'the name of the person',
+      autocomplete: async (_context, _search, formulaContext) => {
+        return [{display: formulaContext!.foo, value: formulaContext!.bar}];
+      },
     }),
   ],
   resultType: coda.ValueType.Object,
