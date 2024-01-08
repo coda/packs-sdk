@@ -333,7 +333,7 @@ async function executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, par
             break;
         }
         case types_1.FormulaType.Metadata: {
-            // Interstingly we don't need special handling for the formula context dict (the optional second arg
+            // Interestingly we don't need special handling for the formula context dict (the optional second arg
             // to an autocomplete metadata formula), because at execution time it gets passed as a serialized
             // JSON string anyway which is already parsed by the compiled pack definition.
             params = rawParams;
@@ -367,7 +367,7 @@ async function executeFormulaOrSyncWithRawParams({ formulaSpecification, params:
             break;
         }
         case types_1.FormulaType.Metadata: {
-            // Interstingly we don't need special handling for the formula context dict (the optional second arg
+            // Interestingly we don't need special handling for the formula context dict (the optional second arg
             // to an autocomplete metadata formula), because at execution time it gets passed as a serialized
             // JSON string anyway which is already parsed by the compiled pack definition.
             params = rawParams;

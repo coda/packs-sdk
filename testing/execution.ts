@@ -456,7 +456,7 @@ async function executeFormulaOrSyncWithRawParamsInVM<T extends FormulaSpecificat
       break;
     }
     case FormulaType.Metadata: {
-      // Interstingly we don't need special handling for the formula context dict (the optional second arg
+      // Interestingly we don't need special handling for the formula context dict (the optional second arg
       // to an autocomplete metadata formula), because at execution time it gets passed as a serialized
       // JSON string anyway which is already parsed by the compiled pack definition.
       params = rawParams as ParamValues<ParamDefs>;
@@ -507,7 +507,7 @@ export async function executeFormulaOrSyncWithRawParams<T extends FormulaSpecifi
       break;
     }
     case FormulaType.Metadata: {
-      // Interstingly we don't need special handling for the formula context dict (the optional second arg
+      // Interestingly we don't need special handling for the formula context dict (the optional second arg
       // to an autocomplete metadata formula), because at execution time it gets passed as a serialized
       // JSON string anyway which is already parsed by the compiled pack definition.
       params = rawParams as ParamValues<ParamDefs>;
