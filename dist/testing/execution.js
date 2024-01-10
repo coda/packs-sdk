@@ -68,7 +68,7 @@ function resolveFormulaNameWithNamespace(formulaNameWithNamespace) {
     }
     return name;
 }
-async function findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, syncUpdates, { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true,
+async function findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, syncUpdates, { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, 
 // TODO(alexd): Switch this to false or remove when we launch 1.0.0
 useDeprecatedResultNormalization = true, } = {}) {
     var _a, _b;
@@ -235,8 +235,8 @@ function makeFormulaSpec(manifest, formulaNameInput) {
             };
         }
     }
-    const syncFormula = (0, helpers_7.tryFindSyncFormula)(manifest, formulaOrSyncName);
-    const standardFormula = (0, helpers_6.tryFindFormula)(manifest, formulaOrSyncName);
+    const syncFormula = (0, helpers_8.tryFindSyncFormula)(manifest, formulaOrSyncName);
+    const standardFormula = (0, helpers_7.tryFindFormula)(manifest, formulaOrSyncName);
     if (!(syncFormula || standardFormula)) {
         throw new Error(`Could not find a formula or sync named "${formulaOrSyncName}".`);
     }
