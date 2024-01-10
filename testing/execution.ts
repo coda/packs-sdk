@@ -27,6 +27,7 @@ import {newMockExecutionContext} from './mocks';
 import {newMockSyncExecutionContext} from './mocks';
 import * as path from 'path';
 import {print} from './helpers';
+import {printFull} from './helpers';
 import {readCredentialsFile} from './auth';
 import {storeCredential} from './auth';
 import * as thunk from '../runtime/thunk/thunk';
@@ -234,7 +235,7 @@ export async function executeFormulaOrSyncFromCLI({
       if (result.length > maxRows) {
         result = result.slice(0, maxRows);
       }
-      print(result);
+      printFull(result);
     } else {
       const result = vm
         ? await executeFormulaOrSyncWithRawParamsInVM({
@@ -245,7 +246,7 @@ export async function executeFormulaOrSyncFromCLI({
             executionContext,
           })
         : await executeFormulaOrSyncWithRawParams({formulaSpecification, params, manifest, executionContext});
-      print(result);
+        printFull(result);
     }
   } catch (err: any) {
     print(err);

@@ -1,6 +1,7 @@
 import type {PackVersionDefinition} from '../types';
 import {ensureNonEmptyString} from '../helpers/ensure';
 import fs from 'fs';
+import { inspect } from 'util';
 import path from 'path';
 import * as readlineSync from 'readline-sync';
 import {translateErrorStackFromVM} from '../runtime/common/source_map';
@@ -21,6 +22,22 @@ export const print = console.log;
 export const printWarn = console.warn;
 // eslint-disable-next-line no-console
 export const printError = console.error;
+
+export function printFull(value: any){
+  if (typeof value === 'object') {
+    // eslint-disable-next-line no-console
+    console.log(inspect(value, {
+      depth: null,
+      maxArrayLength: null,
+      maxStringLength: null,
+      colors: true,
+    }));
+  } else {
+    // Fallback to console.log for backwards compatibility.
+    // eslint-disable-next-line no-console
+    console.log(value);
+  }
+}
 
 export function printAndExit(msg: string, exitCode: number = 1): never {
   print(msg);

@@ -42,12 +42,13 @@ const mocks_1 = require("./mocks");
 const mocks_2 = require("./mocks");
 const path = __importStar(require("path"));
 const helpers_5 = require("./helpers");
+const helpers_6 = require("./helpers");
 const auth_1 = require("./auth");
 const auth_2 = require("./auth");
 const thunk = __importStar(require("../runtime/thunk/thunk"));
 const handler_templates_1 = require("../handler_templates");
-const helpers_6 = require("../runtime/common/helpers");
 const helpers_7 = require("../runtime/common/helpers");
+const helpers_8 = require("../runtime/common/helpers");
 const util_1 = __importDefault(require("util"));
 const validation_1 = require("./validation");
 const validation_2 = require("./validation");
@@ -131,8 +132,8 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
             ? (0, fetcher_2.newFetcherSyncExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_3.getPackAuth)(manifest), manifest.networkDomains, credentials)
             : (0, mocks_2.newMockSyncExecutionContext)();
         executionContext.sync.dynamicUrl = dynamicUrl || undefined;
-        const syncFormula = (0, helpers_7.tryFindSyncFormula)(manifest, formulaName);
-        const formula = (0, helpers_6.tryFindFormula)(manifest, formulaName);
+        const syncFormula = (0, helpers_8.tryFindSyncFormula)(manifest, formulaName);
+        const formula = (0, helpers_7.tryFindFormula)(manifest, formulaName);
         if (!(syncFormula || formula)) {
             throw new Error(`Could not find a formula or sync named "${formulaName}".`);
         }
@@ -163,7 +164,7 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
             if (result.length > maxRows) {
                 result = result.slice(0, maxRows);
             }
-            (0, helpers_5.print)(result);
+            (0, helpers_6.printFull)(result);
         }
         else {
             const result = vm
@@ -175,7 +176,7 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
                     executionContext,
                 })
                 : await executeFormulaOrSyncWithRawParams({ formulaSpecification, params, manifest, executionContext });
-            (0, helpers_5.print)(result);
+            (0, helpers_6.printFull)(result);
         }
     }
     catch (err) {
@@ -187,7 +188,7 @@ exports.executeFormulaOrSyncFromCLI = executeFormulaOrSyncFromCLI;
 // This method is used to execute a (sync) formula in testing with VM. Don't use it in lambda or calc service.
 async function executeFormulaOrSyncWithVM({ formulaName, params, bundlePath, executionContext = (0, mocks_2.newMockSyncExecutionContext)(), }) {
     const manifest = await (0, helpers_4.importManifest)(bundlePath);
-    const syncFormula = (0, helpers_7.tryFindSyncFormula)(manifest, formulaName);
+    const syncFormula = (0, helpers_8.tryFindSyncFormula)(manifest, formulaName);
     const formulaSpecification = {
         type: syncFormula ? types_1.FormulaType.Sync : types_1.FormulaType.Standard,
         formulaName,

@@ -26,9 +26,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.processVmError = exports.getExpirationDate = exports.writeJSONFile = exports.readJSONFile = exports.readFile = exports.promptForInput = exports.printAndExit = exports.printError = exports.printWarn = exports.print = exports.getManifestFromModule = void 0;
+exports.processVmError = exports.getExpirationDate = exports.writeJSONFile = exports.readJSONFile = exports.readFile = exports.promptForInput = exports.printAndExit = exports.printFull = exports.printError = exports.printWarn = exports.print = exports.getManifestFromModule = void 0;
 const ensure_1 = require("../helpers/ensure");
 const fs_1 = __importDefault(require("fs"));
+const util_1 = require("util");
 const path_1 = __importDefault(require("path"));
 const readlineSync = __importStar(require("readline-sync"));
 const source_map_1 = require("../runtime/common/source_map");
@@ -48,6 +49,23 @@ exports.print = console.log;
 exports.printWarn = console.warn;
 // eslint-disable-next-line no-console
 exports.printError = console.error;
+function printFull(value) {
+    if (typeof value === 'object') {
+        // eslint-disable-next-line no-console
+        console.log((0, util_1.inspect)(value, {
+            depth: null,
+            maxArrayLength: null,
+            maxStringLength: null,
+            colors: true,
+        }));
+    }
+    else {
+        // Fallback to console.log for backwards compatibility.
+        // eslint-disable-next-line no-console
+        console.log(value);
+    }
+}
+exports.printFull = printFull;
 function printAndExit(msg, exitCode = 1) {
     (0, exports.print)(msg);
     return process.exit(exitCode);

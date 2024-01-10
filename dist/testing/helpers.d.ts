@@ -15,6 +15,7 @@ export declare const printError: {
     (...data: any[]): void;
     (message?: any, ...optionalParams: any[]): void;
 };
+export declare function printFull(value: any): void;
 export declare function printAndExit(msg: string, exitCode?: number): never;
 export declare function promptForInput(prompt: string, { mask, options, yesOrNo }?: {
     mask?: boolean;
