@@ -4,17 +4,25 @@ import type {ExecutionContext} from '../api_types';
 import type {FormulaSpecification} from '../runtime/types';
 import {FormulaType} from '../runtime/types';
 import type {GenericSyncFormulaResult} from '../api';
+import type {GenericSyncUpdate} from '../api';
 import type {MetadataContext} from '../api';
 import type {MetadataFormula} from '../api';
+import type {MetadataFormulaSpecification} from '../runtime/types';
+import {MetadataFormulaType} from '../runtime/types';
 import {Buffer as NonNativeBuffer} from 'buffer/';
 import type {PackFormulaResult} from '../api_types';
 import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
+import type {PostSetupMetadataFormulaSpecification} from '../runtime/types';
 import type {StandardFormulaSpecification} from '../runtime/types';
 import type {SyncExecutionContext} from '../api_types';
 import type {SyncFormulaSpecification} from '../runtime/types';
+import type {SyncMetadataFormulaSpecification} from '../runtime/types';
+import type {SyncUpdateFormulaSpecification} from '../runtime/types';
 import type {TypedPackFormula} from '../api';
 import {coerceParams} from './coercion';
+import {ensureExists} from '../helpers/ensure';
+import {ensureUnreachable} from '../helpers/ensure';
 import {executeThunk} from '../runtime/bootstrap';
 import {findFormula} from '../runtime/common/helpers';
 import {findSyncFormula} from '../runtime/common/helpers';
@@ -37,6 +45,7 @@ import {tryFindSyncFormula} from '../runtime/common/helpers';
 import util from 'util';
 import {validateParams} from './validation';
 import {validateResult} from './validation';
+import * as z from 'zod';
 
 const MaxSyncIterations = 100;
 export const DEFAULT_MAX_ROWS = 1000;
@@ -72,6 +81,7 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
   formulaSpec: T,
   manifest: BasicPackDefinition,
   executionContext: ExecutionContext | SyncExecutionContext,
+  syncUpdates?: GenericSyncUpdate[],
   {
     validateParams: shouldValidateParams = true,
     validateResult: shouldValidateResult = true,
@@ -86,7 +96,6 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
       break;
     case FormulaType.Sync:
     case FormulaType.SyncUpdate:
-      // TODO(Chris): Update the CLI so a user can select which of these executors they want to run.
       formula = findSyncFormula(manifest, formulaSpec.formulaName);
       break;
   }
@@ -100,7 +109,12 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
     manifest,
     executionContext,
     shouldWrapError: false,
+    updates: syncUpdates,
   });
+
+  if (formulaSpec.type === FormulaType.SyncUpdate) {
+    return result;
+  }
 
   if (useDeprecatedResultNormalization && formula) {
     const resultToNormalize =
@@ -122,6 +136,7 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
   if (shouldValidateResult && formula) {
     const resultToValidate =
       formulaSpec.type === FormulaType.Sync ? (result as GenericSyncFormulaResult).result : result;
+
     validateResult(formula, resultToValidate);
   }
 
@@ -152,6 +167,7 @@ export async function executeFormulaFromPackDef<T extends PackFormulaResult | Ge
     {type: FormulaType.Standard, formulaName: resolveFormulaNameWithNamespace(formulaNameWithNamespace)},
     packDef,
     executionContext || newMockExecutionContext(),
+    undefined,
     options,
   ) as T;
 }
@@ -199,15 +215,7 @@ export async function executeFormulaOrSyncFromCLI({
       : newMockSyncExecutionContext();
     executionContext.sync.dynamicUrl = dynamicUrl || undefined;
 
-    const syncFormula = tryFindSyncFormula(manifest, formulaName);
-    const formula = tryFindFormula(manifest, formulaName);
-    if (!(syncFormula || formula)) {
-      throw new Error(`Could not find a formula or sync named "${formulaName}".`);
-    }
-    const formulaSpecification: SyncFormulaSpecification | StandardFormulaSpecification = {
-      type: syncFormula ? FormulaType.Sync : FormulaType.Standard,
-      formulaName,
-    };
+    const formulaSpecification = makeFormulaSpec(manifest, formulaName);
 
     if (formulaSpecification.type === FormulaType.Sync) {
       let result = [];
@@ -249,9 +257,134 @@ export async function executeFormulaOrSyncFromCLI({
         printFull(result);
     }
   } catch (err: any) {
-    print(err);
+    print(err.message || err);
     process.exit(1);
   }
+}
+
+type SyncMetadataFormulaType = SyncMetadataFormulaSpecification['metadataFormulaType'];
+type GlobalMetadataFormulaType = MetadataFormulaSpecification['metadataFormulaType'];
+type PostSetupMetadataFormulaType = PostSetupMetadataFormulaSpecification['metadataFormulaType'];
+
+const SyncMetadataFormulaTokens: Record<SyncMetadataFormulaType, string> = Object.freeze({
+  [MetadataFormulaType.SyncListDynamicUrls]: 'listDynamicUrls',
+  [MetadataFormulaType.SyncSearchDynamicUrls]: 'searchDynamicUrls',
+  [MetadataFormulaType.SyncGetDisplayUrl]: 'getDisplayUrl',
+  [MetadataFormulaType.SyncGetTableName]: 'getName',
+  [MetadataFormulaType.SyncGetSchema]: 'getSchema',
+});
+
+const GlobalMetadataFormulaTokens: Record<GlobalMetadataFormulaType, string> = Object.freeze({
+  [MetadataFormulaType.GetConnectionName]: 'getConnectionName',
+  [MetadataFormulaType.GetConnectionUserId]: 'getConnectionUserId',
+});
+
+const PostSetupMetadataFormulaTokens: Record<PostSetupMetadataFormulaType, string> = Object.freeze({
+  [MetadataFormulaType.PostSetupSetEndpoint]: 'setEndpoint',
+});
+
+function invert<K extends string | number | symbol, V extends string | number | symbol>(
+  obj: Record<K, V>,
+): Record<V, K> {
+  return Object.fromEntries(Object.entries(obj).map(([key, value]) => [value, key]));
+}
+
+// Exported for tests.
+export function makeFormulaSpec(manifest: BasicPackDefinition, formulaNameInput: string): FormulaSpecification {
+  const [formulaOrSyncName, ...parts] = formulaNameInput.split(':');
+
+  if (formulaOrSyncName === 'Auth' && parts.length > 0) {
+    if (parts.length === 1) {
+      const metadataFormulaTypeStr = parts[0];
+      const authFormulaType = invert(GlobalMetadataFormulaTokens)[metadataFormulaTypeStr];
+      if (authFormulaType) {
+        if (!manifest.defaultAuthentication) {
+          throw new Error(`Pack definition has no user authentication.`);
+        }
+        return {
+          type: FormulaType.Metadata,
+          metadataFormulaType: authFormulaType,
+        };
+      }
+    } else if (parts.length >= 2 && parts[0] === 'postSetup') {
+      const setupStepTypeStr = parts[1];
+      const setupStepType = invert(PostSetupMetadataFormulaTokens)[setupStepTypeStr];
+      if (!setupStepType) {
+        throw new Error(`Unrecognized setup step type "${setupStepTypeStr}".`);
+      }
+      const stepName = parts[2];
+      if (!stepName) {
+        throw new Error(`Expected a step name after "${setupStepTypeStr}".`);
+      }
+      return {
+        type: FormulaType.Metadata,
+        metadataFormulaType: setupStepType,
+        stepName,
+      };
+    }
+  }
+
+  const syncFormula = tryFindSyncFormula(manifest, formulaOrSyncName);
+  const standardFormula = tryFindFormula(manifest, formulaOrSyncName);
+  if (!(syncFormula || standardFormula)) {
+    throw new Error(`Could not find a formula or sync named "${formulaOrSyncName}".`);
+  }
+
+  const formula = ensureExists(syncFormula || standardFormula);
+
+  if (parts.length === 0) {
+    return {
+      type: syncFormula ? FormulaType.Sync : FormulaType.Standard,
+      formulaName: formulaOrSyncName,
+    };
+  }
+
+  if (parts.length === 1) {
+    const metadataFormulaTypeStr = parts[0];
+    if (metadataFormulaTypeStr === 'update') {
+      if (!syncFormula) {
+        throw new Error(`Two-way sync formula "${metadataFormulaTypeStr}" is only supported for sync formulas.`);
+      }
+      return {
+        type: FormulaType.SyncUpdate,
+        formulaName: formulaOrSyncName,
+      };
+    } else if (metadataFormulaTypeStr === 'autocomplete') {
+      throw new Error(`No parameter name specified for autocomplete metadata formula.`);
+    }
+    const metadataFormulaType = invert(SyncMetadataFormulaTokens)[metadataFormulaTypeStr];
+    if (!metadataFormulaType) {
+      throw new Error(`Unrecognized metadata formula type "${metadataFormulaTypeStr}".`);
+    }
+    if (!syncFormula) {
+      throw new Error(`Metadata formula "${metadataFormulaTypeStr}" is only supported for sync formulas.`);
+    }
+    return {
+      type: FormulaType.Metadata,
+      metadataFormulaType,
+      syncTableName: formulaOrSyncName,
+    };
+  }
+
+  if (parts.length === 2) {
+    if (parts[0] !== 'autocomplete') {
+      throw new Error(`Unrecognized formula type "${parts[0]}", expected "autocomplete".`);
+    }
+    const parameterName = parts[1];
+    const paramDef = formula.parameters.find(p => p.name === parameterName);
+    if (!paramDef) {
+      throw new Error(`Formula "${formulaOrSyncName}" has no parameter named "${parameterName}".`);
+    }
+    return {
+      type: FormulaType.Metadata,
+      metadataFormulaType: MetadataFormulaType.ParameterAutocomplete,
+      parentFormulaName: formulaOrSyncName,
+      parentFormulaType: syncFormula ? FormulaType.Sync : FormulaType.Standard,
+      parameterName,
+    };
+  }
+
+  throw new Error(`Unrecognized execution command: "${formulaNameInput}".`);
 }
 
 // This method is used to execute a (sync) formula in testing with VM. Don't use it in lambda or calc service.
@@ -294,9 +427,7 @@ export class VMError {
   }
 }
 
-async function executeFormulaOrSyncWithRawParamsInVM<
-  T extends SyncFormulaSpecification | StandardFormulaSpecification,
->({
+async function executeFormulaOrSyncWithRawParamsInVM<T extends FormulaSpecification>({
   formulaSpecification,
   params: rawParams,
   bundlePath,
@@ -313,20 +444,41 @@ async function executeFormulaOrSyncWithRawParamsInVM<
 
   const manifest = await importManifest(bundlePath);
   let params: ParamValues<ParamDefs>;
-  if (formulaSpecification.type === FormulaType.Standard) {
-    const formula = findFormula(manifest, formulaSpecification.formulaName);
-    params = coerceParams(formula, rawParams as any);
-  } else {
-    const syncFormula = findSyncFormula(manifest, formulaSpecification.formulaName);
-    params = coerceParams(syncFormula, rawParams as any);
+  let syncUpdates: GenericSyncUpdate[] | undefined;
+  switch (formulaSpecification.type) {
+    case FormulaType.Standard: {
+      const formula = findFormula(manifest, formulaSpecification.formulaName);
+      params = coerceParams(formula, rawParams as any);
+      break;
+    }
+    case FormulaType.Sync: {
+      const syncFormula = findSyncFormula(manifest, formulaSpecification.formulaName);
+      params = coerceParams(syncFormula, rawParams as any);
+      break;
+    }
+    case FormulaType.Metadata: {
+      // Interestingly we don't need special handling for the formula context dict (the optional second arg
+      // to an autocomplete metadata formula), because at execution time it gets passed as a serialized
+      // JSON string anyway which is already parsed by the compiled pack definition.
+      params = rawParams as ParamValues<ParamDefs>;
+      break;
+    }
+    case FormulaType.SyncUpdate: {
+      ({params, syncUpdates} = parseSyncUpdates(manifest, formulaSpecification, rawParams));
+      break;
+    }
+    default:
+      ensureUnreachable(formulaSpecification);
   }
-
-  return executeThunk(ivmContext, {params, formulaSpec: formulaSpecification}, bundlePath, bundleSourceMapPath);
+  return executeThunk(
+    ivmContext,
+    {params, formulaSpec: formulaSpecification, updates: syncUpdates},
+    bundlePath,
+    bundleSourceMapPath,
+  );
 }
 
-export async function executeFormulaOrSyncWithRawParams<
-  T extends StandardFormulaSpecification | SyncFormulaSpecification,
->({
+export async function executeFormulaOrSyncWithRawParams<T extends FormulaSpecification>({
   formulaSpecification,
   params: rawParams,
   manifest,
@@ -343,15 +495,33 @@ export async function executeFormulaOrSyncWithRawParams<
   global.Buffer = NonNativeBuffer as unknown as BufferConstructor;
 
   let params: ParamValues<ParamDefs>;
-  if (formulaSpecification.type === FormulaType.Standard) {
-    const formula = findFormula(manifest, formulaSpecification.formulaName);
-    params = coerceParams(formula, rawParams as any);
-  } else {
-    const syncFormula = findSyncFormula(manifest, formulaSpecification.formulaName);
-    params = coerceParams(syncFormula, rawParams as any);
+  let syncUpdates: GenericSyncUpdate[] | undefined;
+  switch (formulaSpecification.type) {
+    case FormulaType.Standard: {
+      const formula = findFormula(manifest, formulaSpecification.formulaName);
+      params = coerceParams(formula, rawParams as any);
+      break;
+    }
+    case FormulaType.Sync: {
+      const syncFormula = findSyncFormula(manifest, formulaSpecification.formulaName);
+      params = coerceParams(syncFormula, rawParams as any);
+      break;
+    }
+    case FormulaType.Metadata: {
+      // Interestingly we don't need special handling for the formula context dict (the optional second arg
+      // to an autocomplete metadata formula), because at execution time it gets passed as a serialized
+      // JSON string anyway which is already parsed by the compiled pack definition.
+      params = rawParams as ParamValues<ParamDefs>;
+      break;
+    }
+    case FormulaType.SyncUpdate: {
+      ({params, syncUpdates} = parseSyncUpdates(manifest, formulaSpecification, rawParams));
+      break;
+    }
+    default:
+      ensureUnreachable(formulaSpecification);
   }
-
-  return findAndExecutePackFunction(params, formulaSpecification, manifest, executionContext);
+  return findAndExecutePackFunction(params, formulaSpecification, manifest, executionContext, syncUpdates);
 }
 
 /**
@@ -410,6 +580,7 @@ export async function executeSyncFormulaFromPackDef<T extends object = any>(
       {formulaName: syncFormulaName, type: FormulaType.Sync},
       packDef,
       executionContext,
+      undefined,
       {validateParams: false, validateResult: false, useDeprecatedResultNormalization},
     );
 
@@ -453,6 +624,7 @@ export async function executeSyncFormulaFromPackDefSingleIteration(
     {formulaName: syncFormulaName, type: FormulaType.Sync},
     packDef,
     executionContext || newMockSyncExecutionContext(),
+    undefined,
     options,
   ) as Promise<GenericSyncFormulaResult>;
 }
@@ -499,4 +671,31 @@ export function newRealFetcherSyncExecutionContext(
 ): SyncExecutionContext {
   const context = newRealFetcherExecutionContext(packDef, manifestPath);
   return {...context, sync: {}};
+}
+
+const SyncUpdateSchema = z.object({
+  previousValue: z.object({}).passthrough(),
+  newValue: z.object({}).passthrough(),
+  updatedFields: z.array(z.string()),
+});
+
+const SyncUpdatesSchema = z.array(SyncUpdateSchema);
+
+function parseSyncUpdates(
+  manifest: BasicPackDefinition,
+  formulaSpecification: SyncUpdateFormulaSpecification,
+  rawParams: string[],
+) {
+  const paramsCopy = [...rawParams];
+  const syncUpdatesStr = paramsCopy.pop();
+  if (!syncUpdatesStr) {
+    throw new Error(`Expected sync updates as last parameter.`);
+  }
+
+  const parseResult = SyncUpdatesSchema.safeParse(JSON.parse(syncUpdatesStr));
+  if (!parseResult.success) {
+    throw new Error(`Invalid sync updates: ${parseResult.error.message}`);
+  }
+  const syncFormula = findSyncFormula(manifest, formulaSpecification.formulaName);
+  return {syncUpdates: parseResult.data, params: coerceParams(syncFormula, paramsCopy as any)};
 }
