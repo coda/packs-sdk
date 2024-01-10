@@ -686,11 +686,12 @@ function normalizeObjectSchema(schema) {
     for (const key of Object.keys(properties)) {
         const normalizedKey = normalizeSchemaKey(key);
         const property = properties[key];
-        const { fixedId, fromKey, mutable, originalKey, required } = property;
+        const { displayName, fixedId, fromKey, mutable, originalKey, required } = property;
         if (originalKey) {
             throw new Error('Original key is only for internal use.');
         }
         const normalizedPropertyAttrs = {
+            displayName,
             fixedId,
             fromKey: fromKey || (normalizedKey !== key ? key : undefined),
             mutable,

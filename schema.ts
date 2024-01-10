@@ -900,7 +900,7 @@ export interface ObjectSchemaProperty {
    * lossy transformation.
    *
    * You probably want to set displayName if:
-   * - You want a display name with punctuation (e.g., "Verion(s)", "Priority/Urgency", "Done?", "Alice's Thing")
+   * - You want a display name with punctuation (e.g., "Version(s)", "Priority/Urgency", "Done?", "Alice's Thing")
    * - Your property key is not appropriate to show to an end-user (e.g., "custom_field_123")
    *
    * Only supported for top-level properties of a sync table.
