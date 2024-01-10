@@ -8,6 +8,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 - `coda execute` now allows for executing metadata formulas and sync updates.
 
+### Changed
+
+- Changed the CLI `execute` command to output the full JSON of a returned object, without any collapsing of deep objects or long arrays.
+
 ## [1.7.4] - 2024-01-04
 
 ### Fixed

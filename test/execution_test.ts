@@ -424,10 +424,10 @@ describe('Execution', () => {
   });
 
   describe('CLI execution', () => {
-    let mockPrint: sinon.SinonStub;
+    let mockPrintFull: sinon.SinonStub;
 
     beforeEach(() => {
-      mockPrint = sinon.stub(helpers, 'print');
+      mockPrintFull = sinon.stub(helpers, 'printFull');
     });
 
     afterEach(() => {
@@ -447,7 +447,7 @@ describe('Execution', () => {
             bundlePath,
             contextOptions: {useRealFetcher: false},
           });
-          sinon.assert.calledOnceWithExactly(mockPrint, 25);
+          sinon.assert.calledOnceWithExactly(mockPrintFull, 25);
         });
 
         it('sync works', async () => {
@@ -461,7 +461,7 @@ describe('Execution', () => {
             bundlePath,
             contextOptions: {useRealFetcher: false},
           });
-          const result = mockPrint.args[0][0];
+          const result = mockPrintFull.args[0][0];
           // WTF? Why is this different in VM?
           if (vm) {
             assert.deepEqual(result, [{name: 'Alice'}, {name: 'Bob'}, {name: 'Chris'}, {name: 'Diana'}]);
@@ -484,7 +484,7 @@ describe('Execution', () => {
             bundlePath,
             contextOptions: {useRealFetcher: false},
           });
-          const result = mockPrint.args[0][0];
+          const result = mockPrintFull.args[0][0];
           assert.deepEqual(result, {result: [{outcome: 'success', finalValue: {name: 'Alice Smith'}}]});
         });
 
@@ -499,7 +499,7 @@ describe('Execution', () => {
             bundlePath,
             contextOptions: {useRealFetcher: false},
           });
-          const result = mockPrint.args[0][0];
+          const result = mockPrintFull.args[0][0];
           assert.deepEqual(result, [{value: 'foo', display: 'foo'}]);
         });
 
@@ -514,7 +514,7 @@ describe('Execution', () => {
             bundlePath,
             contextOptions: {useRealFetcher: false},
           });
-          const result = mockPrint.args[0][0];
+          const result = mockPrintFull.args[0][0];
           assert.deepEqual(result, [{value: 'foo', display: 'foo'}]);
         });
       });
