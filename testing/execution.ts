@@ -461,6 +461,8 @@ async function executeFormulaOrSyncWithRawParamsInVM<T extends FormulaSpecificat
       // to an autocomplete metadata formula), because at execution time it gets passed as a serialized
       // JSON string anyway which is already parsed by the compiled pack definition.
       params = rawParams as ParamValues<ParamDefs>;
+      // Default the search string (first arg) to an empty string.
+      params[0] ??= '';
       break;
     }
     case FormulaType.SyncUpdate: {
@@ -512,6 +514,8 @@ export async function executeFormulaOrSyncWithRawParams<T extends FormulaSpecifi
       // to an autocomplete metadata formula), because at execution time it gets passed as a serialized
       // JSON string anyway which is already parsed by the compiled pack definition.
       params = rawParams as ParamValues<ParamDefs>;
+      // Default the search string (first arg) to an empty string.
+      params[0] ??= '';
       break;
     }
     case FormulaType.SyncUpdate: {
