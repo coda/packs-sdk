@@ -352,6 +352,7 @@ async function executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, par
     return (0, bootstrap_1.executeThunk)(ivmContext, { params, formulaSpec: formulaSpecification, updates: syncUpdates }, bundlePath, bundleSourceMapPath);
 }
 async function executeFormulaOrSyncWithRawParams({ formulaSpecification, params: rawParams, manifest, executionContext, }) {
+    var _a;
     // Use non-native buffer if we're testing this without using isolated-vm, because otherwise
     // we could hit issues like Buffer.isBuffer() returning false if a non-native buffer was created
     // in pack code and we're checking it using native buffers somewhere like node_fetcher.ts
@@ -374,6 +375,8 @@ async function executeFormulaOrSyncWithRawParams({ formulaSpecification, params:
             // to an autocomplete metadata formula), because at execution time it gets passed as a serialized
             // JSON string anyway which is already parsed by the compiled pack definition.
             params = rawParams;
+            // Default the search string (first arg) to an empty string.
+            (_a = params[0]) !== null && _a !== void 0 ? _a : (params[0] = '');
             break;
         }
         case types_1.FormulaType.SyncUpdate: {
