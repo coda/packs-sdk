@@ -134,7 +134,7 @@ npx coda execute src/pack.ts MyFormula "1985-10-26,1955-11-12"
     It currently isn't possible to escape commas in `StringArray` parameter values. To test your formula with arrays of strings containing commas you'll need to either [write a test case][testing] or [upload](#upload) it to Coda's servers and try it in a real doc.
 
 
-### Running Syncs
+### Running syncs
 
 The above examples shows how to execute a regular Pack formula. Executing a sync is almost identical:
 
@@ -155,6 +155,38 @@ To run a sync for a dynamic sync table, use the `--dynamicUrl` parameter to spec
 ```sh
 npx coda execute path/to/pack.ts Items --dynamicUrl=https://example.com/api/table
 ```
+
+
+### Running metadata functions
+
+More complicated Packs may have a lot of code outside of the core `execute` function, used to generate metadata like parameter autocomplete values, dynamic schemas, etc. You can run those functions using the CLI as well, using the same `execute` command but passing in additional information in name of the formula or sync table.
+
+```sh
+# Parameter autocomplete
+npx coda execute <formula name>:autocomplete:<paramName> [query] [params JSON]
+npx coda execute <sync name>:autocomplete:<paramName> [query] [params JSON]
+
+# Dynamic sync tables
+npx coda execute <sync name>:listDynamicUrls [parentUrl]
+npx coda execute <sync name>:searchDynamicUrls [query]
+npx coda execute <sync name>:getName
+npx coda execute <sync name>:getDisplayUrl
+npx coda execute <sync name>:getSchema [unused] [params JSON]
+
+# Two-way sync
+npx coda execute MySync:update [params..] [sync update array json]
+
+# Authentication
+npx coda execute Auth:getConnectionName
+npx coda execute Auth:postSetup:setEndpoint:<stepName>
+```
+
+!!! tip "Store JSON arguments in files"
+    Writing JSON on the command line can be a bit tricky, so when testing functions that require it you may want to author it in a file instead. The example below shows the updates for an `executeUpdate` call being loaded from a file called `updates.json`, making sure to remove line breaks.
+
+    ```sh
+    npx coda execute MySync:update "param1" "param2" "$(cat updates.json | tr '\n' ' ')"
+    ```
 
 
 ## Authentication {: #authentication}
