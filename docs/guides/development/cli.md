@@ -80,7 +80,7 @@ The `coda` CLI utility helps you execute formulas, via the `coda execute` sub-co
 npx coda execute path/to/pack.ts <formula> [params..]
 ```
 
-So for example, if your Pack definition was in `src/pack.ts` and you wanted to call a function named MyFormula that takes one argument, you’d run:
+So for example, if your Pack definition was in `src/pack.ts` and you wanted to call a function named "Hello" that takes one argument, you’d run:
 
 ```sh
 npx coda execute src/pack.ts Hello "World"
@@ -134,7 +134,7 @@ npx coda execute src/pack.ts MyFormula "1985-10-26,1955-11-12"
     It currently isn't possible to escape commas in `StringArray` parameter values. To test your formula with arrays of strings containing commas you'll need to either [write a test case][testing] or [upload](#upload) it to Coda's servers and try it in a real doc.
 
 
-### Running Syncs
+### Running syncs
 
 The above examples shows how to execute a regular Pack formula. Executing a sync is almost identical:
 
@@ -142,10 +142,10 @@ The above examples shows how to execute a regular Pack formula. Executing a sync
 npx coda execute path/to/pack.ts <sync name> [params..]
 ```
 
-So for example, if you had a sync called Items, that took a start date as a parameter, you would execute this as:
+So for example, if you had a sync called "Items", that took a start date as a parameter, you would execute this as:
 
 ```sh
-npx coda execute path/to/pack.ts Items "2020-12-15"
+npx coda execute src/pack.ts Items "2020-12-15"
 ```
 
 This will execute your sync formula repeatedly until there are no more results, and print the output array of all result objects to the terminal. See the [Sync tables guide][sync_tables] for more information about how and why sync formulas are invoked repeatedly for paginated results.
@@ -153,7 +153,72 @@ This will execute your sync formula repeatedly until there are no more results, 
 To run a sync for a dynamic sync table, use the `--dynamicUrl` parameter to specify which URL to sync from.
 
 ```sh
-npx coda execute path/to/pack.ts Items --dynamicUrl=https://example.com/api/table
+npx coda execute src/pack.ts Items --dynamicUrl=https://example.com/api/table
+```
+
+
+#### Two-way sync
+
+For sync tables that support two-way sync, you can run the `executeUpdate` function by appending `:update` to the name of the sync table.
+
+```sh
+npx coda execute path/to/pack.ts <sync name>:update [params..] [updates json]
+```
+
+In addition to passing parameter values you must also include the value of the `updates` array as a JSON string.
+
+```sh
+npx coda execute src/pack.ts Items:update "2020-12-15" \
+  '[{"previousValue":{}, "newValue": {}, "updatedFields": []}]'
+```
+
+Writing JSON on the command line can be a bit tricky however, so we recommend you author it in a file instead. The example below loads the value from `updates.json`, making sure to remove line breaks.
+
+```sh
+npx coda execute src/pack.ts Items:update "2020-12-15" \
+  "$(cat updates.json | tr '\n' ' ')"
+```
+
+
+### Running metadata functions
+
+More complicated Packs may have a lot of code outside of the core `execute` function, used to generate metadata like parameter autocomplete values. You can run those functions using the CLI as well, using the same `execute` command and including additional information after the name of the formula or sync table.
+
+For example, to execute the autocomplete function for the parameter "language" in the formula "Hello" you could run the following:
+
+```sh
+npx coda execute src/pack.ts Hello:autocomplete:language
+```
+
+You can pass a value for the search string as the first argument after the formula name.
+
+```sh
+npx coda execute src/pack.ts Hello:autocomplete:language "Eng"
+```
+
+In some cases the autocomplete function depends on the value of previous parameters. You can pass those parameter values as a JSON string in the second argument after the formula name. In this example, the parameter "greeting" depends on the value of the "language" parameter.
+
+```sh
+npx coda execute src/pack.ts Hello:autocomplete:greeting "" '{"language": "en"}'
+```
+
+A similar pattern is used to call a variety of metadata functions, as shown in the list below.
+
+```sh
+# Parameter autocomplete
+npx coda execute path/to/pack.ts <formula name>:autocomplete:<paramName> [query] [params JSON]
+npx coda execute path/to/pack.ts <sync name>:autocomplete:<paramName> [query] [params JSON]
+
+# Dynamic sync tables
+npx coda execute path/to/pack.ts <sync name>:listDynamicUrls [parentUrl]
+npx coda execute path/to/pack.ts <sync name>:searchDynamicUrls [query]
+npx coda execute path/to/pack.ts <sync name>:getName
+npx coda execute path/to/pack.ts <sync name>:getDisplayUrl
+npx coda execute path/to/pack.ts <sync name>:getSchema [unused] [params JSON]
+
+# Authentication
+npx coda execute path/to/pack.ts Auth:getConnectionName
+npx coda execute path/to/pack.ts Auth:postSetup:setEndpoint:<stepName>
 ```
 
 
@@ -202,7 +267,7 @@ This will create a new empty Pack on Coda’s servers. It will print out the url
 This command accepts optional flags for specifying a name and description for the Pack. You can always set or update the name and description in the Pack management UI later.
 
 ```sh
-npx coda create path/to/pack.ts --name "My Pack" --description "My pack description."
+npx coda create src/pack.ts --name "My Pack" --description "My pack description."
 ```
 
 
