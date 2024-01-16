@@ -921,6 +921,7 @@ interface PropertyOptionsNormalizedResults {
         display: string | undefined;
         value: any;
     }>;
+    unusedProperties?: string[];
 }
 export declare function normalizePropertyOptionsResults(results: PropertyOptionsResults): PropertyOptionsNormalizedResults;
 /**

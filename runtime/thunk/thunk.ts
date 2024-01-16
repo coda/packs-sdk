@@ -187,9 +187,12 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
               params as any,
               propertyOptionsExecutionContext,
             )) as PropertyOptionsResults;
+            const normalizedPackResult = normalizePropertyOptionsResults(packResult);
             const result: PropertyOptionsAnnotatedResult = {
-              packResult: normalizePropertyOptionsResults(packResult),
-              propertiesUsed: cacheKeysUsed,
+              packResult: normalizedPackResult,
+              propertiesUsed: normalizedPackResult.unusedProperties?.length
+                ? cacheKeysUsed.filter(p => !normalizedPackResult.unusedProperties?.includes(p))
+                : cacheKeysUsed,
               ...contextUsed,
             };
             return result;

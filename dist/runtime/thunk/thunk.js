@@ -41,7 +41,7 @@ async function findAndExecutePackFunction({ shouldWrapError = true, ...args }) {
 }
 exports.findAndExecutePackFunction = findAndExecutePackFunction;
 async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, executionContext, updates, }) {
-    var _a;
+    var _a, _b;
     const { syncTables, defaultAuthentication } = manifest;
     switch (formulaSpec.type) {
         case types_2.FormulaType.Standard: {
@@ -117,9 +117,12 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                             },
                         });
                         const packResult = (await optionsFormula.execute(params, propertyOptionsExecutionContext));
+                        const normalizedPackResult = (0, api_4.normalizePropertyOptionsResults)(packResult);
                         const result = {
-                            packResult: (0, api_4.normalizePropertyOptionsResults)(packResult),
-                            propertiesUsed: cacheKeysUsed,
+                            packResult: normalizedPackResult,
+                            propertiesUsed: ((_b = normalizedPackResult.unusedProperties) === null || _b === void 0 ? void 0 : _b.length)
+                                ? cacheKeysUsed.filter(p => { var _a; return !((_a = normalizedPackResult.unusedProperties) === null || _a === void 0 ? void 0 : _a.includes(p)); })
+                                : cacheKeysUsed,
                             ...contextUsed,
                         };
                         return result;
