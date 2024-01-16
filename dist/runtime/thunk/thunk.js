@@ -120,8 +120,8 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                         const normalizedPackResult = (0, api_4.normalizePropertyOptionsResults)(packResult);
                         const result = {
                             packResult: normalizedPackResult,
-                            propertiesUsed: ((_b = normalizedPackResult.propertiesNotUsed) === null || _b === void 0 ? void 0 : _b.length)
-                                ? cacheKeysUsed.filter(p => { var _a; return !((_a = normalizedPackResult.propertiesNotUsed) === null || _a === void 0 ? void 0 : _a.includes(p)); })
+                            propertiesUsed: ((_b = normalizedPackResult.unusedProperties) === null || _b === void 0 ? void 0 : _b.length)
+                                ? cacheKeysUsed.filter(p => { var _a; return !((_a = normalizedPackResult.unusedProperties) === null || _a === void 0 ? void 0 : _a.includes(p)); })
                                 : cacheKeysUsed,
                             ...contextUsed,
                         };

@@ -1525,7 +1525,7 @@ interface PropertyOptionsNormalizedResults {
   // Undocumented feature for situations when you might be using an awkward API that
   // only lets you fetch data using an overly-specific property when a more general
   // one would have sufficed.
-  propertiesNotUsed?: string[];
+  unusedProperties?: string[];
 }
 
 function normalizePropertyOptionsResultsArray(

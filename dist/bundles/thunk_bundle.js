@@ -6486,7 +6486,7 @@ module.exports = (() => {
               const normalizedPackResult = normalizePropertyOptionsResults(packResult);
               const result = {
                 packResult: normalizedPackResult,
-                propertiesUsed: normalizedPackResult.propertiesNotUsed?.length ? cacheKeysUsed.filter((p) => !normalizedPackResult.propertiesNotUsed?.includes(p)) : cacheKeysUsed,
+                propertiesUsed: normalizedPackResult.unusedProperties?.length ? cacheKeysUsed.filter((p) => !normalizedPackResult.unusedProperties?.includes(p)) : cacheKeysUsed,
                 ...contextUsed
               };
               return result;
