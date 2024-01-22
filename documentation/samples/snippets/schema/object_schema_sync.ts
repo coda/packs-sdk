@@ -6,7 +6,7 @@ import * as coda from "@codahq/packs-sdk";
 const $1$Thing$Schema = coda.makeObjectSchema({
   properties: {
     $2$name$: { type: coda.ValueType.String },
-    $3$thingId$: { type: coda.ValueType.String },
+    $3$id$: { type: coda.ValueType.String },
     // TODO: Add more properties.
   },
   displayProperty: "$2",

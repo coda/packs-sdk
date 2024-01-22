@@ -2,7 +2,7 @@ import * as coda from "@codahq/packs-sdk";
 
 const pack = coda.newPack();
 
-const $3$ThingSchema$ = undefined;
+const $3$Thing$Schema = undefined;
 
 // BEGIN
 
@@ -10,7 +10,7 @@ pack.addSyncTable({
   name: "${1:MyThings}",
   description: "${2:Table description.}",
   identityName: "${3:Thing}",
-  schema: $3$ThingSchema$,
+  schema: $3$Thing$Schema,
   formula: {
     name: "Sync$1",
     description: "Syncs the data.",
