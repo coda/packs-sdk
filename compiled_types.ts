@@ -164,6 +164,7 @@ export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
     networkDomain?: string | string[];
     endpointKey?: string;
   };
+  hasSystemAuthentication?: boolean;
   instructionsUrl?: string;
 
   // User-facing components
