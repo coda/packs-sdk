@@ -316,14 +316,14 @@ const TaskSchema = coda.makeObjectSchema({
       type: coda.ValueType.String,
       codaType: coda.ValueHintType.Url,
     },
-    taskId: {
+    id: {
       description: "The ID of the task.",
       type: coda.ValueType.String,
       required: true,
     },
   },
   displayProperty: "name",
-  idProperty: "taskId",
+  idProperty: "id",
   featuredProperties: ["description", "url"],
 });
 
@@ -373,7 +373,7 @@ pack.addSyncTable({
           name: task.content,
           description: task.description,
           url: task.url,
-          taskId: task.id,
+          id: task.id,
         });
       }
       return {
@@ -414,14 +414,14 @@ const ProjectSchema = coda.makeObjectSchema({
       type: coda.ValueType.String,
       codaType: coda.ValueHintType.Url,
     },
-    projectId: {
+    id: {
       description: "The ID of the project.",
       type: coda.ValueType.String,
       required: true,
     },
   },
   displayProperty: "name",
-  idProperty: "projectId",
+  idProperty: "id",
   featuredProperties: ["url"],
 });
 
@@ -450,14 +450,14 @@ const TaskSchema = coda.makeObjectSchema({
     },
     // Reference a project from the Projects sync table.
     project: ProjectReferenceSchema,
-    taskId: {
+    id: {
       description: "The ID of the task.",
       type: coda.ValueType.String,
       required: true,
     },
   },
   displayProperty: "name",
-  idProperty: "taskId",
+  idProperty: "id",
   featuredProperties: ["description", "url", "project"],
 });
 
@@ -482,7 +482,7 @@ pack.addSyncTable({
         results.push({
           name: project.name,
           url: project.url,
-          projectId: project.id,
+          id: project.id,
         });
       }
       return {
@@ -514,12 +514,12 @@ pack.addSyncTable({
           name: task.content,
           description: task.description,
           url: task.url,
-          taskId: task.id,
+          id: task.id,
         };
         if (task.project_id) {
           // Add a reference to the parent project in the Projects table.
           item.project = {
-            projectId: task.project_id,
+            id: task.project_id,
             name: "Not found", // Placeholder name, if not synced yet.
           };
         }
