@@ -21,10 +21,7 @@ const AuthorSchema = coda.makeObjectSchema({
 const BookSchema = coda.makeObjectSchema({
   properties: {
     title: { type: coda.ValueType.String },
-    bookId: {
-      type: coda.ValueType.Number,
-      fromKey: "id",
-    },
+    id: { type: coda.ValueType.Number },
     subjects: {
       type: coda.ValueType.Array,
       items: { type: coda.ValueType.String },
@@ -43,7 +40,7 @@ const BookSchema = coda.makeObjectSchema({
     },
   },
   displayProperty: "title",
-  idProperty: "bookId",
+  idProperty: "id",
   featuredProperties: [
     "authors", "subjects", "link", "thumbnail",
   ],

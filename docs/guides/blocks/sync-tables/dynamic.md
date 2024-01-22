@@ -156,11 +156,11 @@ pack.addDynamicSyncTable({
     // was selected.
     let properties: coda.ObjectSchemaProperties = {
       name: { type: coda.ValueType.String },
-      taskId: { type: coda.ValueType.String },
+      id: { type: coda.ValueType.String },
     };
     // Use them as the display value and ID of the rows.
     let displayProperty = "name";
-    let idProperty = "taskId";
+    let idProperty = "id";
 
     // For each custom field defined in the project, add a property to the
     // schema.
@@ -215,7 +215,7 @@ pack.addDynamicSyncTable({
         // Include the metadata common to all projects.
         let row = {
           name: task.name,
-          taskId: task.id,
+          id: task.id,
         };
 
         // For each custom field, add it to the row.

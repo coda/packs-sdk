@@ -449,19 +449,14 @@ The schema is essentially a blueprint for each row in the sync table, describing
 
     In order to function correctly a sync table's schema must include at least one property which is a unique identifier for that row. A book's title isn't guaranteed to be unique, but luckily the API response includes an `id` field you can use.
 
-    It's a best practice to avoid creating a property named exactly `id`, but instead use the pattern `{thing}Id`, or `bookId` in this case. When the name of the property differs from the key in the API response, use the `fromKey` field of the schema to connect them.
-
     </div>
     <div markdown>
 
-    ```{.ts hl_lines="4-7"}
+    ```{.ts hl_lines="4"}
     const BookSchema = coda.makeObjectSchema({
       properties: {
         title: { type: coda.ValueType.String },
-        bookId: {
-          type: coda.ValueType.Number,
-          fromKey: "id",
-        },
+        id: { type: coda.ValueType.Number },
       },
     });
     ```
@@ -478,22 +473,19 @@ The schema is essentially a blueprint for each row in the sync table, describing
 
     The `displayProperty` setting is used to specify which of the properties you defined should be used as the display value. It will be shown within the chip in the first column of the row, which by default is also the display column of the table. For this schema the `title` property would make a good display value.
 
-    The `idProperty` setting is used to specify which of the properties contains the unique ID for the row. The `bookId` property was created for this purpose.
+    The `idProperty` setting is used to specify which of the properties contains the unique ID for the row. The `id` property was created for this purpose.
 
     </div>
     <div markdown>
 
-    ```{.ts hl_lines="9-10"}
+    ```{.ts hl_lines="6-7"}
     const BookSchema = coda.makeObjectSchema({
       properties: {
         title: { type: coda.ValueType.String },
-        bookId: {
-          type: coda.ValueType.Number,
-          fromKey: "id",
-        },
+        id: { type: coda.ValueType.Number },
       },
       displayProperty: "title",
-      idProperty: "bookId",
+      idProperty: "id",
     });
     ```
 
@@ -767,7 +759,7 @@ Now that you have the basics working, extend the schema to include the full set 
         // ...
       },
       displayProperty: "title",
-      idProperty: "bookId",
+      idProperty: "id",
       featuredProperties: [
         "authors", "subjects", "link", "thumbnail"
       ],

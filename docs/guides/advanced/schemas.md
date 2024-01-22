@@ -405,10 +405,10 @@ Similar to the [display value](#display-value), this is done by setting the `idP
 ```ts
 let MovieSchema = coda.makeObjectSchema({
   properties: {
-    movieId: { type: coda.ValueType.String },
+    id: { type: coda.ValueType.String },
     // ...
   },
-  idProperty: "movieId",
+  idProperty: "id",
   // ...
 });
 ```
@@ -494,11 +494,11 @@ let PersonReferenceSchema = coda.makeObjectSchema({
   codaType: coda.ValueHintType.Reference,
   properties: {
     name: { type: coda.ValueType.String, required: true },
-    personId: { type: coda.ValueType.String, required: true },
+    id: { type: coda.ValueType.String, required: true },
     // Other properties can be omitted.
   },
   displayProperty: "name",
-  idProperty: "personId",
+  idProperty: "id",
   identity: {
     name: "Person",
   },

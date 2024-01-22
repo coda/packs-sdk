@@ -6,13 +6,10 @@ pack.addNetworkDomain("gutendex.com");
 const BookSchema = coda.makeObjectSchema({
   properties: {
     title: { type: coda.ValueType.String },
-    bookId: {
-      type: coda.ValueType.Number,
-      fromKey: "id",
-    },
+    id: { type: coda.ValueType.Number },
   },
   displayProperty: "title",
-  idProperty: "bookId",
+  idProperty: "id",
 });
 
 pack.addSyncTable({
