@@ -95,11 +95,10 @@ const ProjectSchema = coda.makeObjectSchema({
       mutable: true,
       fromKey: "is_favorite",
     },
-    projectId: {
+    id: {
       description: "The ID of the project.",
       type: coda.ValueType.String,
       required: true,
-      fromKey: "id",
     },
     parentProjectId: {
       description: "For sub-projects, the ID of the parent project.",
@@ -109,7 +108,7 @@ const ProjectSchema = coda.makeObjectSchema({
   },
   displayProperty: "name",
   // Sync table metadata.
-  idProperty: "projectId",
+  idProperty: "id",
   featuredProperties: ["url", "favorite"],
   // Card metadata.
   linkProperty: "url",
@@ -166,10 +165,9 @@ const TaskSchema = coda.makeObjectSchema({
       description: "When the task is due.",
       ...DueSchema,
     },
-    taskId: {
+    id: {
       description: "The ID of the task.",
       type: coda.ValueType.String,
-      fromKey: "id",
       required: true,
     },
     projectId: {
@@ -190,7 +188,7 @@ const TaskSchema = coda.makeObjectSchema({
   },
   displayProperty: "name",
   // Sync table metadata.
-  idProperty: "taskId",
+  idProperty: "id",
   featuredProperties: ["project", "url", "completed"],
   // Card metadata.
   linkProperty: "url",
@@ -240,7 +238,7 @@ function formatTaskForSchema(task: any, withReferences = false) {
     if (task.parent_id) {
       // Add a reference to the corresponding row in the Tasks sync table.
       result.parentTask = {
-        taskId: task.parent_id,
+        id: task.parent_id,
         name: "Not found", // If sync'ed, the real name will be shown instead.
       };
     }

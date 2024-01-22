@@ -142,10 +142,10 @@ const TaskReferenceSchema = coda.makeObjectSchema({
   codaType: coda.ValueHintType.Reference,
   properties: {
     name: { type: coda.ValueType.String, required: true },
-    taskId: { type: coda.ValueType.String, required: true },
+    id: { type: coda.ValueType.String, required: true },
   },
   displayProperty: "name",
-  idProperty: "taskId",
+  idProperty: "id",
   // For reference schemas, set identity.name the value of identityName on the
   // sync table being referenced.
   identity: {
@@ -170,7 +170,7 @@ const TaskSchema = coda.makeObjectSchema({
       type: coda.ValueType.String,
       codaType: coda.ValueHintType.Url,
     },
-    taskId: {
+    id: {
       description: "The ID of the task.",
       type: coda.ValueType.String,
       required: true,
@@ -180,7 +180,7 @@ const TaskSchema = coda.makeObjectSchema({
     parentTask: TaskReferenceSchema,
   },
   displayProperty: "name",
-  idProperty: "taskId",
+  idProperty: "id",
   featuredProperties: ["description", "url"],
 });
 {% endraw %}

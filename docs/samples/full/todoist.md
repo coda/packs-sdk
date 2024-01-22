@@ -117,11 +117,10 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
           mutable: true,
           fromKey: "is_favorite",
         },
-        projectId: {
+        id: {
           description: "The ID of the project.",
           type: coda.ValueType.String,
           required: true,
-          fromKey: "id",
         },
         parentProjectId: {
           description: "For sub-projects, the ID of the parent project.",
@@ -131,7 +130,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
       },
       displayProperty: "name",
       // Sync table metadata.
-      idProperty: "projectId",
+      idProperty: "id",
       featuredProperties: ["url", "favorite"],
       // Card metadata.
       linkProperty: "url",
@@ -188,10 +187,9 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
           description: "When the task is due.",
           ...DueSchema,
         },
-        taskId: {
+        id: {
           description: "The ID of the task.",
           type: coda.ValueType.String,
-          fromKey: "id",
           required: true,
         },
         projectId: {
@@ -212,7 +210,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
       },
       displayProperty: "name",
       // Sync table metadata.
-      idProperty: "taskId",
+      idProperty: "id",
       featuredProperties: ["project", "url", "completed"],
       // Card metadata.
       linkProperty: "url",
@@ -262,7 +260,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
         if (task.parent_id) {
           // Add a reference to the corresponding row in the Tasks sync table.
           result.parentTask = {
-            taskId: task.parent_id,
+            id: task.parent_id,
             name: "Not found", // If sync'ed, the real name will be shown instead.
           };
         }

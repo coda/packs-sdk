@@ -108,14 +108,14 @@ const TaskSchema = coda.makeObjectSchema({
       type: coda.ValueType.String,
       codaType: coda.ValueHintType.Url,
     },
-    taskId: {
+    id: {
       description: "The ID of the task.",
       type: coda.ValueType.String,
       required: true,
     },
   },
   displayProperty: "name",
-  idProperty: "taskId",
+  idProperty: "id",
 });
 
 // Formula that looks up rich metadata about a task given it's ID.
@@ -142,7 +142,7 @@ pack.addFormula({
       name: task.content,
       description: task.description,
       url: task.url,
-      taskId: task.id,
+      id: task.id,
     };
   },
 });

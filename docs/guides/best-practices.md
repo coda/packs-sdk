@@ -34,7 +34,6 @@ While it's easy to get started building a Pack, there are lots of options to exp
 - [x] Set the [`description`][SyncTableOptions.description] field for each sync table. The description is shown on the Pack's listing page and helps a user understand what data it retrieves.
 - [x] [Add parameters][sync_tables_parameters] to sync tables to allow for filtering. Filtering is particularly important when a table can return a large number of rows.
 - [x] Consider the [caching behavior][sync_tables_caching] of your sync tables. Most fetcher requests should have their caching reduced or disabled to ensure the latest results are synced.
-- [x] For the schema property containing the [row identifier][schemas_row_identifier] use a descriptive name like `{thing}Id` instead of simply `id`.
 - [x] Set a few [featured columns][schemas_featured_columns] on your schema, for the most commonly used properties.
 
 

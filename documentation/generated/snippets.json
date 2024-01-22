@@ -380,7 +380,7 @@
       "SyncTable"
     ],
     "content": "Adds a sync table.",
-    "code": "pack.addSyncTable({\n  name: \"${1:MyThings}\",\n  description: \"${2:Table description.}\",\n  identityName: \"${3:Thing}\",\n  schema: ${3:ThingSchema},\n  formula: {\n    name: \"Sync$1\",\n    description: \"Syncs the data.\",\n    parameters: [\n      // TODO: Add parameters.\n    ],\n    execute: async function (args, context) {\n      // TODO: Unpack the parameter values.\n      let [] = args;\n      // TODO: Fetch the rows.\n      let rows = [];\n      for (let row of rows) {\n        // TODO: If required, adjust the row to match the schema.\n      }\n      return {\n        result: rows,\n      };\n    },\n  },\n});"
+    "code": "pack.addSyncTable({\n  name: \"${1:MyThings}\",\n  description: \"${2:Table description.}\",\n  identityName: \"${3:Thing}\",\n  schema: ${3:Thing}Schema,\n  formula: {\n    name: \"Sync$1\",\n    description: \"Syncs the data.\",\n    parameters: [\n      // TODO: Add parameters.\n    ],\n    execute: async function (args, context) {\n      // TODO: Unpack the parameter values.\n      let [] = args;\n      // TODO: Fetch the rows.\n      let rows = [];\n      for (let row of rows) {\n        // TODO: If required, adjust the row to match the schema.\n      }\n      return {\n        result: rows,\n      };\n    },\n  },\n});"
   },
   {
     "triggerTokens": [
@@ -405,7 +405,7 @@
       "makeObjectSchema:sync"
     ],
     "content": "Creates an object schema definition for a sync table.",
-    "code": "const ${1:Thing}Schema = coda.makeObjectSchema({\n  properties: {\n    ${2:name}: { type: coda.ValueType.String },\n    ${3:thingId}: { type: coda.ValueType.String },\n    // TODO: Add more properties.\n  },\n  displayProperty: \"$2\",\n  idProperty: \"$3\",\n  featuredProperties: [\n    // TODO: Add featured properties.\n  ],\n});"
+    "code": "const ${1:Thing}Schema = coda.makeObjectSchema({\n  properties: {\n    ${2:name}: { type: coda.ValueType.String },\n    ${3:id}: { type: coda.ValueType.String },\n    // TODO: Add more properties.\n  },\n  displayProperty: \"$2\",\n  idProperty: \"$3\",\n  featuredProperties: [\n    // TODO: Add featured properties.\n  ],\n});"
   },
   {
     "triggerTokens": [

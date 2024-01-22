@@ -16,13 +16,10 @@ const FileSchema = coda.makeObjectSchema({
       // doc.
       codaType: coda.ValueHintType.ImageAttachment,
     },
-    fileId: {
-      type: coda.ValueType.String,
-      fromKey: "id",
-    },
+    id: { type: coda.ValueType.String },
   },
   displayProperty: "name",
-  idProperty: "fileId",
+  idProperty: "id",
   featuredProperties: ["thumbnail", "url"],
 });
 

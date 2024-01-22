@@ -3,10 +3,9 @@ export const pack = coda.newPack();
 
 const CategorySchema = coda.makeObjectSchema({
   properties: {
-    categoryId: {
+    id: {
       description: "A unique ID for the category.",
       type: coda.ValueType.Number,
-      fromKey: "id",
       required: true,
     },
     name: {
@@ -25,10 +24,9 @@ const CategorySchema = coda.makeObjectSchema({
 
 const ExpenseSchema = coda.makeObjectSchema({
   properties: {
-    expenseId: {
+    id: {
       description: "A unique ID for the expense.",
       type: coda.ValueType.String,
-      fromKey: "id",
     },
     description: {
       description: "The description of the expense.",
@@ -106,7 +104,7 @@ const ExpenseSchema = coda.makeObjectSchema({
     },
   },
   displayProperty: "description",
-  idProperty: "expenseId",
+  idProperty: "id",
   featuredProperties: [
     "date", "cost", "notes", "currency", "repeat", "category",
   ],

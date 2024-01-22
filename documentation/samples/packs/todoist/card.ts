@@ -23,7 +23,7 @@ const TaskSchema = coda.makeObjectSchema({
       description: "The priority of the task.",
       type: coda.ValueType.String,
     },
-    taskId: {
+    id: {
       description: "The ID of the task.",
       type: coda.ValueType.String,
       required: true,
@@ -67,7 +67,7 @@ pack.addFormula({
       description: task.description,
       url: task.url,
       priority: task.priority,
-      taskId: task.id,
+      id: task.id,
     };
   },
 });

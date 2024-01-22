@@ -146,9 +146,9 @@ Create a "base schema" for your action formula to use, which at a minimum includ
 ```ts
 const BaseTaskSchema = coda.makeObjectSchema({
   properties: {
-    taskId: { type: coda.ValueType.String },
+    id: { type: coda.ValueType.String },
   },
-  idProperty: "taskId",
+  idProperty: "id",
   includeUnknownProperties: true,
 });
 
