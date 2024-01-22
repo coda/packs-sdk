@@ -144,7 +144,7 @@ export type ExternalSyncTable = PackSyncTable;
 
 type BasePackVersionMetadata = Omit<
   PackVersionMetadata,
-  'defaultAuthentication' | 'formulas' | 'formats' | 'syncTables'
+  'defaultAuthentication' | 'systemConnectionAuthentication' | 'formulas' | 'formats' | 'syncTables'
 >;
 
 // Further stripped-down version of `PackVersionMetadata` that contains only what the browser needs.
