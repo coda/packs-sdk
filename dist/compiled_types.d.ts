@@ -97,7 +97,7 @@ export type ExternalPackFormat = Omit<Format, 'matchers'> & {
 export type ExternalPackFormatMetadata = PackFormatMetadata;
 /** @hidden */
 export type ExternalSyncTable = PackSyncTable;
-type BasePackVersionMetadata = Omit<PackVersionMetadata, 'defaultAuthentication' | 'formulas' | 'formats' | 'syncTables'>;
+type BasePackVersionMetadata = Omit<PackVersionMetadata, 'defaultAuthentication' | 'systemConnectionAuthentication' | 'formulas' | 'formats' | 'syncTables'>;
 /** @hidden */
 export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
     authentication: {
