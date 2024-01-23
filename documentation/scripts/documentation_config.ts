@@ -687,18 +687,35 @@ export const Examples: Example[] = [
     exampleSnippets: [
       {
         name: 'Template (GET)',
-        content: '',
+        content: 'The basic structure of a GET request.',
         codeFile: './samples/snippets/fetcher/get.ts',
       },
       {
         name: 'Template (POST)',
-        content: '',
+        content: 'The basic structure of a JSON POST request.',
         codeFile: './samples/snippets/fetcher/post.ts',
       },
       {
-        name: 'JSON Array (Bacon Ipsum)',
-        content: '',
+        name: 'Fetch JSON',
+        content:
+          'A formula that gets a JSON value. This sample generates random bacon-themed Lorem Ipsum text.',
         codeFile: './samples/packs/fetcher/bacon_ipsum.ts',
+      },
+      {
+        name: 'Fetch binary data',
+        content:
+          'A formula that fetches binary data. This sample gets image data and calculates the file size.',
+        codeFile: './samples/packs/image/file_size.ts',
+      },
+      {
+        name: 'GraphQL query',
+        content: 'A sync table that queries a GraphQL API. This sample lists the products in a mock online store.',
+        codeFile: './samples/packs/fetcher/mock_shop.ts',
+      },
+      {
+        name: 'Send form-encoded data',
+        content: 'An action formula that sends application/x-www-form-urlencoded data. This sample uploads an image to Imgur.',
+        codeFile: './samples/packs/fetcher/imgur.ts',
       },
     ],
   },

@@ -32,20 +32,36 @@ When making an HTTP request with the [fetcher][fetcher], the Packs runtime first
 
 <img src="../../../images/cache_fetcher_logs.png" srcset="../../../images/cache_fetcher_logs_2x.png 2x" class="screenshot" alt="Cached fetcher requests in the logs">
 
-By default the Packs runtime caches the HTTP responses for all `GET` requests, meaning that your code may not always be getting the latest response from the server. You can adjust this behavior by setting the [`cacheTtlSecs`][fetcher_cacheTtlSecs] field in the fetch request, which specifies for how many seconds the response should be cached. To disable caching for a request set that value to zero.
+By default the Packs runtime caches the HTTP responses for `GET` requests, meaning that your code may not always be getting the latest response from the server. You can adjust this behavior by setting the [`cacheTtlSecs`][fetcher_cacheTtlSecs] field in the fetch request, which specifies for how many seconds the response should be cached. To disable caching for a request set that value to zero.
 
-The following types of requests are never cached:
+Fetcher caching is disabled by default in the sync formula of a sync table. While caching makes sense for most formulas, sync tables only execute at a regular interval or when the user has explicitly started a sync, and in either case fresh results are expected.
 
-- Requests using a method other than `GET`
-- Requests that return an error (status code that isn't in the 200's).
+Requests that return an error (status code that isn't in the 200's) are never cached.
 
-Additionally, fetcher caching is disabled by default in the sync formula of a sync table. While caching makes sense for most formulas, sync tables only execute at a regular interval or when the user has explicitly started a sync, and in either case fresh results are expected.
 
-!!! info "In-progress request de-duplication"
+### Force caching for non-`GET` requests {:#forcecache}
 
-    If multiple, identical `GET` requests are all made at the same time they will be de-duplicated into a single request. This means that only the first request will actually be sent to the server, and the result will be returned for all of the requests. This de-duplication happens even when caching is disabled, and it won't show up in the logs as a cached response.
+By default non-`GET` requests (`POST`, etc) cannot be cached, since they are usually used to change state on the server. However there are times when these HTTP methods are used in a read-only way, such as submitting a GraphQL request, when caching would be desirable. In those cases you can enable caching of non-`GET` requests using the field `forceCache`.
 
-    This is not an issue for most APIs, but if you are using a `GET` request to return a random or unique value then you could end up with duplicates. To bypass this de-duplication behavior simply add a unique query parameter to your URL for each request. The value in `context.invocationToken` is unique for each Pack execution and can be used for this purpose.
+```{.ts hl_lines="8-9"}
+let response = await context.fetcher.fetch({
+  method: "POST",
+  url: "https://api.example.com",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify(payload),
+  forceCache: true,
+  cacheTtlSecs: 300,
+});
+```
+
+
+### In-progress request de-duplication
+
+If multiple, identical `GET` requests are all made at the same time they will be de-duplicated into a single request. This means that only the first request will actually be sent to the server, and the result will be returned for all of the requests. This de-duplication happens even when caching is disabled, and it won't show up in the logs as a cached response.
+
+This is not an issue for most APIs, but if you are using a `GET` request to return a random or unique value then you could end up with duplicates. To bypass this de-duplication behavior simply add a unique query parameter to your URL for each request. The value in `context.invocationToken` is unique for each Pack execution and can be used for this purpose.
 
 
 ## Disable caching

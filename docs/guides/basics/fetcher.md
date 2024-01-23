@@ -134,7 +134,23 @@ let response = await context.fetcher.fetch({
 ```
 
 
-### JSON
+### URL query parameters {:#query-parameters}
+
+To send data in the URL query parameters, simply append those parameters to the URL passed to the fetcher. For example, `https://www.example.com?foo=bar&thing=true`. The SDK provides a helper function, [`coda.withQueryParams()`][withQueryParams] that simplifies the process of encoding and appending query parameters to a URL.
+
+```ts
+let url = coda.withQueryParams("https://www.example.com", {
+  foo: "bar",
+  thing: true,
+});
+let response = await context.fetcher.fetch({
+  method: "GET",
+  url: url,
+});
+```
+
+
+### JSON {:#json-body}
 
 Sending JSON is just like sending text above, except you typically define the payload as a JavaScript object first and then convert it into a string using [`JSON.stringify()`][stringify]. In addition, you'll need to set the `Content-Type` header to `application/json`.
 
@@ -151,6 +167,60 @@ let response = await context.fetcher.fetch({
   body: JSON.stringify(payload),
 });
 ```
+
+
+### GraphQL
+
+[GraphQL][graphql] is a modern query language used by APIs to allow you to retrieve the data you want with fewer requests and smaller responses. There are two primary ways to pass a query, either in a URL query parameter named `query` or in the `query` key of a JSON payload. Refer to your API's documentation for which of these methods it supports.
+
+Both of these options are compatible with Packs, as described in [URL query parameters](#query-parameters) and [JSON](#json-body) sections above. The GraphQL query itself is just plain text in either case.
+
+=== "URL query parameters"
+
+    ```ts
+    let query = `
+      {
+        human(id: "1000") {
+          name
+          height
+        }
+      }
+    `;
+    let url = coda.withQueryParams("https://api.example.com", {
+      query: query,
+    });
+    let response = await context.fetcher.fetch({
+      method: "GET",
+      url: url,
+    });
+    ```
+
+=== "JSON"
+
+    ```ts
+    let query = `
+      {
+        human(id: "1000") {
+          name
+          height
+        }
+      }
+    `;
+    let payload = {
+      query: query,
+    };
+    let response = await context.fetcher.fetch({
+      method: "POST",
+      url: "https://api.example.com",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+    ```
+
+!!! info "POST caching"
+    The responses from `POST` requests aren't cached by default, but you can enable caching for them using the [`forceCache` option][forceCache].
 
 
 ### Form data
@@ -170,22 +240,6 @@ let response = await context.fetcher.fetch({
 ```
 
 Sending attachments (`multipart/form-data`) is not supported natively in the SDK. When building locally with the Pack CLI you can use the [`form-data` NPM library][npm_form_data] to send mixed content, as demonstrated in the [Box example Pack][example_box].
-
-
-### URL query parameters
-
-To send data in the URL query parameters, simply append those parameters to the URL passed to the fetcher. For example, `https://www.example.com?foo=bar&thing=true`. The SDK provides a helper function, [`coda.withQueryParams()`][withQueryParams] that simplifies the process of encoding and appending query parameters to a URL.
-
-```ts
-let url = coda.withQueryParams("https://www.example.com", {
-  foo: "bar",
-  thing: true,
-});
-let response = await context.fetcher.fetch({
-  method: "GET",
-  url: url,
-});
-```
 
 
 ### Binary {: #binary-body}
@@ -428,3 +482,5 @@ dig +short egress.coda.io
 [caching]: ../advanced/caching.md
 [npm_form_data]: https://www.npmjs.com/package/form-data
 [example_box]: https://github.com/coda/packs-examples/tree/main/examples/box
+[graphql]: https://graphql.org/
+[forceCache]: ../advanced/caching.md#forcecache
