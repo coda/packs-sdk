@@ -123,6 +123,12 @@ export async function injectFetcherFunction(
   func: (request: FetchRequest) => Promise<FetchResponse>,
 ): Promise<void> {
   const stub = async (marshaledValue: string) => {
+    const maxHeap = 1024 * 1024 * 128;
+    if (global.gc && process.memoryUsage().heapUsed > maxHeap / 2) {
+      // TODO(dweitzman): Test this
+      global.gc();
+    }
+
     const result = await func(unmarshalValue(marshaledValue) as FetchRequest);
     return marshalValue(result);
   };
