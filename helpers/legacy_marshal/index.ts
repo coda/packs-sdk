@@ -127,15 +127,6 @@ export function internalUnmarshalValueForAnyNodeVersion(marshaledValue: string |
 }
 
 export function legacyWrapError(err: Error): Error {
-  // TODO(huayang): we do this for the sdk.
-  // if (err.name === 'TypeError' && err.message === `Cannot read property 'body' of undefined`) {
-  //   err.message +=
-  //     '\nThis means your formula was invoked with a mock fetcher that had no response configured.' +
-  //     '\nThis usually means you invoked your formula from the commandline with `coda execute` but forgot to ' +
-  //     'add the --fetch flag ' +
-  //     'to actually fetch from the remote API.';
-  // }
-
   return new Error(marshalValueForAnyNodeVersion(err));
 }
 

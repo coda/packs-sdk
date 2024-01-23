@@ -28,8 +28,6 @@ async function setupIvmContext(bundlePath, executionContext) {
     // dist/ directory described by CompiledHelperBundlePath. If the ivm helper is running by mocha, the
     // bundle file may not be available or update-to-date, so we'd always compile it first from
     // HelperTsSourceFile.
-    //
-    // TODO(huayang): this is not efficient enough and needs optimization if to be used widely in testing.
     if (fs_1.default.existsSync(CompiledHelperBundlePath)) {
         await ivmContext.global.set('codaInternal', { serializer: {} }, { copy: true });
         await (0, bootstrap_4.injectSerializer)(ivmContext, 'codaInternal.serializer');
@@ -38,6 +36,7 @@ async function setupIvmContext(bundlePath, executionContext) {
     else if (fs_1.default.existsSync(HelperTsSourceFile)) {
         await ivmContext.global.set('codaInternal', { serializer: {} }, { copy: true });
         await (0, bootstrap_4.injectSerializer)(ivmContext, 'codaInternal.serializer');
+        // Ideally the test files should be pre-compiled to avoid this overhead or even repeated compilation.
         const bundlePath = await (0, build_1.build)(HelperTsSourceFile);
         await (0, bootstrap_5.registerBundles)(isolate, ivmContext, bundleFullPath, bundlePath, false);
     }
