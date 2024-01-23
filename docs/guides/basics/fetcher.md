@@ -219,6 +219,9 @@ Both of these options are compatible with Packs, as described in [URL query para
     });
     ```
 
+!!! info "POST caching"
+    The responses from `POST` requests aren't cached by default, but you can enable caching for them using the [`forceCache` option][forceCache].
+
 
 ### Form data
 
@@ -480,3 +483,4 @@ dig +short egress.coda.io
 [npm_form_data]: https://www.npmjs.com/package/form-data
 [example_box]: https://github.com/coda/packs-examples/tree/main/examples/box
 [graphql]: https://graphql.org/
+[forceCache]: ../advanced/caching.md#forcecache
