@@ -206,8 +206,8 @@ importers:
         specifier: 1.4.9
         version: 1.4.9
       '@types/uuid':
-        specifier: 9.0.5
-        version: 9.0.5
+        specifier: 9.0.8
+        version: 9.0.8
       '@types/xml2js':
         specifier: 0.4.12
         version: 0.4.12
@@ -2333,8 +2333,8 @@ packages:
     resolution: {integrity: sha512-pFvFO5NSAVwp8vDSENcAF13eyAcBIv/OXKvMU466CEwu/+5tyUwW05mVzhmcxaU9j9iTSYOypQqbTrYUa1emFw==}
     dev: true
 
-  /@types/uuid@9.0.5:
-    resolution: {integrity: sha512-xfHdwa1FMJ082prjSJpoEI57GZITiQz10r3vEJCHa2khEFQjKy91aWKz6+zybzssCvXUwE1LQWgWVwZ4nYUvHQ==}
+  /@types/uuid@9.0.8:
+    resolution: {integrity: sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==}
     dev: true
 
   /@types/xml2js@0.4.12:
