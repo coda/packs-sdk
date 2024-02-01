@@ -87,7 +87,7 @@
     "@types/sinon": "10.0.20",
     "@types/uglify-js": "3.17.2",
     "@types/url-parse": "1.4.9",
-    "@types/uuid": "9.0.5",
+    "@types/uuid": "9.0.8",
     "@types/xml2js": "0.4.12",
     "@types/yargs": "17.0.26",
     "@typescript-eslint/eslint-plugin": "6.8.0",
