@@ -550,6 +550,7 @@ function buildMetadataSchema({ sdkVersion }) {
     }
     const basePropertyValidators = {
         description: z.string().optional(),
+        displayName: z.string().optional(),
         mutable: z.boolean().optional(),
         fixedId: z.string().optional(),
         fromKey: z.string().optional(),

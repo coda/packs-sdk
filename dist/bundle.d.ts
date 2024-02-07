@@ -1576,18 +1576,34 @@ export interface ObjectSchemaProperty {
 	 */
 	fromKey?: string;
 	/**
+	 * Without a `displayName`, a property's key will become the user-visible name. This isn't ideal
+	 * because the key must also be used by the Coda formula language to refer to the property, requiring
+	 * lossy transformation.
+	 *
+	 * You probably want to set displayName if:
+	 * - You want a display name with punctuation (e.g., "Version(s)", "Priority/Urgency", "Done?", "Alice's Thing")
+	 * - Your property key is not appropriate to show to an end-user (e.g., "custom_field_123")
+	 *
+	 * Only supported for top-level properties of a sync table.
+	 */
+	displayName?: string;
+	/**
 	 * When true, indicates that an object return value for a formula that has this schema must
 	 * include a non-empty value for this property.
 	 */
 	required?: boolean;
 	/**
 	 * Whether this object schema property is editable by the user in the UI.
+	 *
+	 * Only supported for top-level properties of a sync table.
 	 */
 	mutable?: boolean;
 	/**
-	 * Optional fixed id for this property, used to support renames of properties over time. If specified,
+	 * Optional fixed ID for this property, used to support renames of properties over time. If specified,
 	 * changes to the name of this property will not cause the property to be treated as a new property.
+	 *
 	 * Only supported for top-level properties of a sync table.
+	 *
 	 * Note that fixedIds must already be present on the existing schema prior to rolling out a name change in a
 	 * new schema; adding fixedId and a name change in a single schema version change will not work.
 	 */
