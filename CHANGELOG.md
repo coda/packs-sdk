@@ -7,6 +7,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ### Added
 
 - `coda execute` now allows for executing metadata formulas and sync updates.
+- Sync table schema properties can now specify a `displayName` to be the user-visible column name. Only works on top-level schema properties.
 
 ### Changed
 
