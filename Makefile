@@ -372,6 +372,9 @@ release:
 	@test "" = "`git cherry`" || (echo "Refusing to publish with unpushed commits" && false)
 
 	npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
+	@npm owner ls @codahq/packs-sdk && echo
+	@echo "Check the list of owners above. If changes are needed, do that at https://www.npmjs.com/settings/codahq/teams/team/developers/users"
+	@read -r -p "Press enter to continue" -n 1
 	npx release-it --npm.tag=latest --ci ${FLAGS}
 
 .PHONY: release-manual
