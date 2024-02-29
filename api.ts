@@ -35,6 +35,7 @@ import type {Schema} from './schema';
 import type {SchemaType} from './schema';
 import type {StringHintTypes} from './schema';
 import type {StringSchema} from './schema';
+import type {SyncExecutionCompletionMetadata} from './api_types';
 import type {SyncExecutionContext} from './api_types';
 import {TableRole} from './api_types';
 import {Type} from './api_types';
@@ -985,14 +986,26 @@ export function isSyncPackFormula(fn: BaseFormula<ParamDefs, any>): fn is Generi
  * are called repeatedly until there is no continuation returned.
  */
 export interface SyncFormulaResult<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
-  /** The list of results from this page. */
+  /** The list of rows from this page. */
   result: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>;
+
   /**
    * A marker indicating where the next sync formula invocation should pick up to get the next page of results.
    * The contents of this object are entirely of your choosing. Sync formulas are called repeatedly
    * until there is no continuation returned.
    */
   continuation?: Continuation;
+
+  /**
+   * Once there is no additional continuation returned from a pack sync formula, this may be returned instead, to give
+   * metadata about the entirety of the sync execution.
+   *
+   * This is ignored if there is also a {@link continuation} on this object.
+   *
+   * TODO(patrick): Unhide this
+   * @hidden
+   */
+  completion?: SyncExecutionCompletionMetadata;
 }
 
 /**
@@ -2333,13 +2346,32 @@ export function makeSyncTable<
   }
 
   const responseHandler = generateObjectResponseHandler({schema: formulaSchema});
-  const execute = async function exec(params: ParamValues<ParamDefsT>, context: SyncExecutionContext) {
-    const {result, continuation} = (await wrappedExecute(params, context)) || {};
+  const execute = async function exec(
+    params: ParamValues<ParamDefsT>,
+    context: SyncExecutionContext,
+  ): Promise<SyncFormulaResult<K, L, SchemaT>> {
+    const syncResult = (await wrappedExecute(params, context)) || {};
     const appliedSchema = context.sync.schema;
+    const result = responseHandler({body: syncResult.result || [], status: 200, headers: {}}, appliedSchema) as Array<
+      ObjectSchemaDefinitionType<K, L, SchemaT>
+    >;
+    const {continuation, completion: syncExecutionCompletionMetadata} = syncResult;
+
+    if (continuation) {
+      if (syncExecutionCompletionMetadata) {
+        // eslint-disable-next-line no-console
+        console.warn('Ignoring syncExecutionCompletionMetadata because there is also a continuation.');
+      }
+      return {
+        result,
+        continuation: syncResult.continuation,
+      };
+    }
     return {
-      result: responseHandler({body: result || [], status: 200, headers: {}}, appliedSchema),
-      continuation,
-    } as SyncFormulaResult<K, L, SchemaT>;
+      result,
+      // This could be blank.
+      completion: syncExecutionCompletionMetadata,
+    };
   };
   const executeUpdate = wrappedExecuteUpdate
     ? async function execUpdate(
