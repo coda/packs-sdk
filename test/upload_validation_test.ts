@@ -22,6 +22,7 @@ import {ParameterType} from '../api_types';
 import {PostSetupType} from '../types';
 import {ScaleIconSet} from '../schema';
 import type {StringFormulaDefLegacy} from '../api';
+import type {SyncTable} from '../api';
 import {Type} from '../api_types';
 import {ValueHintType} from '../schema';
 import {ValueType} from '../schema';
@@ -30,6 +31,7 @@ import {createFakePack} from './test_utils';
 import {createFakePackFormulaMetadata} from './test_utils';
 import {createFakePackVersionMetadata} from './test_utils';
 import {deepCopy} from '../helpers/object_utils';
+import {getSyncTableHierarchy} from '../testing/upload_validation';
 import {makeAttributionNode} from '..';
 import {makeDynamicSyncTable} from '../api';
 import {makeFormula} from '../api';
@@ -2171,6 +2173,148 @@ describe('Pack metadata Validation', async () => {
             path: 'syncTables',
           },
         ]);
+      });
+
+      describe('crawl hierarchy', () => {
+        let parentTable: SyncTable;
+
+        beforeEach(() => {
+          parentTable = makeSyncTable({
+            name: 'Parent',
+            identityName: 'ParentIdentity',
+            schema: makeObjectSchema({
+              type: ValueType.Object,
+              id: 'foo',
+              primary: 'foo',
+              properties: {foo: {type: ValueType.String}},
+            }),
+            formula: {
+              name: 'Whatever',
+              description: '',
+              parameters: [],
+              async execute() {
+                return {result: []};
+              },
+            },
+          });
+        });
+
+        it('works', async () => {
+          const childTable = makeSyncTable({
+            name: 'Child',
+            identityName: 'ChildIdentity',
+            schema: makeObjectSchema({
+              type: ValueType.Object,
+              id: 'bar',
+              primary: 'bar',
+              properties: {bar: {type: ValueType.String}},
+            }),
+            formula: {
+              name: 'AnotherWhatever',
+              description: '',
+              parameters: [
+                makeParameter({
+                  type: ParameterType.String,
+                  name: 'parentParam',
+                  description: '',
+                  crawlStrategy: {parentTable: {tableName: 'Parent', propertyKey: 'foo'}},
+                }),
+              ],
+              async execute() {
+                return {result: []};
+              },
+            },
+          });
+          const metadata = createFakePack({
+            id: 1013,
+            syncTables: [childTable, parentTable],
+          });
+          await validateJson(metadata);
+          const hierarchy = getSyncTableHierarchy(metadata);
+          assert.deepEqual(hierarchy, {Child: 'Parent'});
+        });
+
+        it('setting a non-existent parentTable crawl fails validation', async () => {
+          const childTable = makeSyncTable({
+            name: 'Child',
+            identityName: 'ChildIdentity',
+            schema: makeObjectSchema({
+              type: ValueType.Object,
+              id: 'bar',
+              primary: 'bar',
+              properties: {bar: {type: ValueType.String}},
+            }),
+            formula: {
+              name: 'AnotherWhatever',
+              description: '',
+              parameters: [
+                makeParameter({
+                  type: ParameterType.String,
+                  name: 'parent',
+                  description: '',
+                  crawlStrategy: {parentTable: {tableName: 'FakeParent', propertyKey: 'foo'}},
+                }),
+              ],
+              async execute() {
+                return {result: []};
+              },
+            },
+          });
+          const metadata = createFakePack({
+            id: 1013,
+            syncTables: [childTable, parentTable],
+          });
+
+          const err = await validateJsonAndAssertFails(metadata);
+
+          assert.deepEqual(err.validationErrors, [
+            {
+              message: `Sync table parent hierarchy is invalid`,
+              path: 'syncTables',
+            },
+          ]);
+        });
+
+        it('setting a bad property for a parentTable crawl fails validation', async () => {
+          const childTable = makeSyncTable({
+            name: 'Child',
+            identityName: 'ChildIdentity',
+            schema: makeObjectSchema({
+              type: ValueType.Object,
+              id: 'bar',
+              primary: 'bar',
+              properties: {bar: {type: ValueType.String}},
+            }),
+            formula: {
+              name: 'AnotherWhatever',
+              description: '',
+              parameters: [
+                makeParameter({
+                  type: ParameterType.String,
+                  name: 'parent',
+                  description: '',
+                  crawlStrategy: {parentTable: {tableName: 'Parent', propertyKey: 'fakeProperty'}},
+                }),
+              ],
+              async execute() {
+                return {result: []};
+              },
+            },
+          });
+          const metadata = createFakePack({
+            id: 1013,
+            syncTables: [childTable, parentTable],
+          });
+
+          const err = await validateJsonAndAssertFails(metadata);
+
+          assert.deepEqual(err.validationErrors, [
+            {
+              message: `Sync table parent hierarchy is invalid`,
+              path: 'syncTables',
+            },
+          ]);
+        });
       });
     });
 

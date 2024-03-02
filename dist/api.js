@@ -22,10 +22,11 @@ const object_utils_2 = require("./helpers/object_utils");
 const schema_3 = require("./schema");
 const schema_4 = require("./schema");
 const schema_5 = require("./schema");
+const schema_6 = require("./schema");
 const api_types_11 = require("./api_types");
 const migration_1 = require("./helpers/migration");
 const api_types_12 = require("./api_types");
-const schema_6 = require("./schema");
+const schema_7 = require("./schema");
 /**
  * An error whose message will be shown to the end user in the UI when it occurs.
  * If an error is encountered in a formula and you want to describe the error
@@ -226,7 +227,7 @@ exports.wrapGetSchema = wrapGetSchema;
  * ```
  */
 function makeParameter(paramDefinition) {
-    const { type, autocomplete: autocompleteDefOrItems, ...rest } = paramDefinition;
+    const { type, autocomplete: autocompleteDefOrItems, crawlStrategy: crawlStrategyDef, ...rest } = paramDefinition;
     const actualType = api_types_4.ParameterTypeInputMap[type];
     let autocomplete;
     if (Array.isArray(autocompleteDefOrItems)) {
@@ -236,7 +237,22 @@ function makeParameter(paramDefinition) {
     else {
         autocomplete = wrapMetadataFunction(autocompleteDefOrItems);
     }
-    return Object.freeze({ ...rest, autocomplete, type: actualType });
+    let crawlStrategy;
+    if (crawlStrategyDef) {
+        if (crawlStrategyDef.parentTable) {
+            const { tableName, propertyKey } = crawlStrategyDef.parentTable;
+            crawlStrategy = {
+                parentTable: {
+                    tableName,
+                    propertyKey: (0, schema_6.normalizeSchemaKey)(propertyKey),
+                },
+            };
+        }
+        else {
+            crawlStrategy = crawlStrategyDef;
+        }
+    }
+    return Object.freeze({ ...rest, autocomplete, type: actualType, crawlStrategy });
 }
 exports.makeParameter = makeParameter;
 /** @deprecated */
@@ -1110,8 +1126,8 @@ schema, identityName, }) {
     for (const propertyName of propertiesWithOptionsFunctions) {
         const inputSchemaWithoutArray = (0, schema_4.maybeUnwrapArraySchema)(inputSchema.properties[propertyName]);
         const outputSchema = (0, schema_4.maybeUnwrapArraySchema)(schema.properties[propertyName]);
-        (0, ensure_1.assertCondition)((0, schema_6.unwrappedSchemaSupportsOptions)(inputSchemaWithoutArray), `Property "${propertyName}" must have codaType of ValueHintType.SelectList or ValueHintType.Reference to configure property options`);
-        (0, ensure_1.assertCondition)((0, schema_6.unwrappedSchemaSupportsOptions)(outputSchema), `Property "${propertyName}" lost codaType on deep copy?...`);
+        (0, ensure_1.assertCondition)((0, schema_7.unwrappedSchemaSupportsOptions)(inputSchemaWithoutArray), `Property "${propertyName}" must have codaType of ValueHintType.SelectList or ValueHintType.Reference to configure property options`);
+        (0, ensure_1.assertCondition)((0, schema_7.unwrappedSchemaSupportsOptions)(outputSchema), `Property "${propertyName}" lost codaType on deep copy?...`);
         outputSchema.options = propertyName;
         namedPropertyOptions[propertyName] = makePropertyOptionsFormula({
             execute: inputSchemaWithoutArray.options,

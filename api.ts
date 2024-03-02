@@ -3,6 +3,7 @@ import type {ArrayType} from './api_types';
 import type {BooleanSchema} from './schema';
 import type {CommonPackFormulaDef} from './api_types';
 import {ConnectionRequirement} from './api_types';
+import type {CrawlStrategy} from './api_types';
 import type {ExecutionContext} from './api_types';
 import type {FetchRequest} from './api_types';
 import type {Identity} from './schema';
@@ -54,6 +55,7 @@ import {isPromise} from './helpers/object_utils';
 import {makeObjectSchema} from './schema';
 import {maybeUnwrapArraySchema} from './schema';
 import {normalizeSchema} from './schema';
+import {normalizeSchemaKey} from './schema';
 import {numberArray} from './api_types';
 import {objectSchemaHelper} from './helpers/migration';
 import {stringArray} from './api_types';
@@ -487,7 +489,7 @@ export type ParamDefFromOptionsUnion<T extends ParameterType, O extends Paramete
 export function makeParameter<T extends ParameterType, O extends ParameterOptions<T>>(
   paramDefinition: O,
 ): ParamDefFromOptionsUnion<T, O> {
-  const {type, autocomplete: autocompleteDefOrItems, ...rest} = paramDefinition;
+  const {type, autocomplete: autocompleteDefOrItems, crawlStrategy: crawlStrategyDef, ...rest} = paramDefinition;
   const actualType = ParameterTypeInputMap[type];
   let autocomplete: MetadataFormula | undefined;
 
@@ -498,7 +500,22 @@ export function makeParameter<T extends ParameterType, O extends ParameterOption
     autocomplete = wrapMetadataFunction(autocompleteDefOrItems);
   }
 
-  return Object.freeze({...rest, autocomplete, type: actualType}) as ParamDefFromOptionsUnion<T, O>;
+  let crawlStrategy: CrawlStrategy | undefined;
+  if (crawlStrategyDef) {
+    if (crawlStrategyDef.parentTable) {
+      const {tableName, propertyKey} = crawlStrategyDef.parentTable;
+      crawlStrategy = {
+        parentTable: {
+          tableName,
+          propertyKey: normalizeSchemaKey(propertyKey),
+        },
+      };
+    } else {
+      crawlStrategy = crawlStrategyDef;
+    }
+  }
+
+  return Object.freeze({...rest, autocomplete, type: actualType, crawlStrategy}) as ParamDefFromOptionsUnion<T, O>;
 }
 
 // Other parameter helpers below here are obsolete given the above generate parameter makers.

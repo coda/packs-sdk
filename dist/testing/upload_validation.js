@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.zodErrorDetailToValidationError = exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.Limits = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
+exports.zodErrorDetailToValidationError = exports.getSyncTableHierarchy = exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.Limits = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
 const schema_1 = require("../schema");
 const types_1 = require("../types");
 const schema_2 = require("../schema");
@@ -157,6 +157,44 @@ function validateSyncTableSchema(schema, options) {
     throw new PackMetadataValidationError('Schema failed validation', validated.error, validated.error.errors.flatMap(zodErrorDetailToValidationError));
 }
 exports.validateSyncTableSchema = validateSyncTableSchema;
+/**
+ * Returns a map of sync table names to their parent sync table names, or undefined if the hierarchy is invalid.
+ * Example valid return: { Child: 'Parent' }
+ * {} is also a valid result, when there are no sync tables
+ * @hidden
+ */
+function getSyncTableHierarchy(pack) {
+    const result = {};
+    if (!pack.syncTables) {
+        return result;
+    }
+    const syncTableSchemasByName = {};
+    for (const syncTable of pack.syncTables) {
+        syncTableSchemasByName[syncTable.name] = syncTable.schema;
+    }
+    for (const syncTable of pack.syncTables) {
+        for (const param of syncTable.getter.parameters) {
+            if (!param.crawlStrategy) {
+                continue;
+            }
+            if (param.crawlStrategy.parentTable) {
+                const { tableName, propertyKey } = param.crawlStrategy.parentTable;
+                const tableSchema = syncTableSchemasByName[tableName];
+                if (!tableSchema) {
+                    return undefined;
+                }
+                const property = tableSchema.properties[propertyKey];
+                if (!property) {
+                    return undefined;
+                }
+                // TODO(patrick): Validate the types match
+                result[syncTable.name] = tableName;
+            }
+        }
+    }
+    return result;
+}
+exports.getSyncTableHierarchy = getSyncTableHierarchy;
 function getNonUniqueElements(items) {
     const set = new Set();
     const nonUnique = [];
@@ -463,6 +501,7 @@ function buildMetadataSchema({ sdkVersion }) {
         autocomplete: z.unknown().optional(),
         defaultValue: z.unknown().optional(),
         suggestedValue: z.unknown().optional(),
+        crawlStrategy: z.unknown().optional(),
     });
     const commonPackFormulaSchema = {
         // It would be preferable to use validateFormulaName here, but we have to exempt legacy packs with sync tables
@@ -1436,6 +1475,16 @@ function buildMetadataSchema({ sdkVersion }) {
                 });
             }
         });
+    })
+        .superRefine((data, context) => {
+        const crawlHierarchy = getSyncTableHierarchy(data);
+        if (!crawlHierarchy) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['syncTables'],
+                message: 'Sync table parent hierarchy is invalid',
+            });
+        }
     })
         .superRefine((data, context) => {
         (data.formulas || []).forEach((formula, i) => {

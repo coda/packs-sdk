@@ -51,6 +51,7 @@ import {OptionsType} from '../api_types';
 import {PackCategory} from '../types';
 import type {PackFormatMetadata} from '../compiled_types';
 import type {PackFormulaMetadata} from '../api';
+import type {PackVersionDefinition} from '..';
 import type {PackVersionMetadata} from '../compiled_types';
 import type {ParamDef} from '../api_types';
 import type {ParamDefs} from '../api_types';
@@ -225,6 +226,44 @@ export function validateSyncTableSchema(
     validated.error,
     validated.error.errors.flatMap(zodErrorDetailToValidationError),
   );
+}
+
+/**
+ * Returns a map of sync table names to their parent sync table names, or undefined if the hierarchy is invalid.
+ * Example valid return: { Child: 'Parent' }
+ * {} is also a valid result, when there are no sync tables
+ * @hidden
+ */
+export function getSyncTableHierarchy(pack: PackVersionDefinition): Record<string, string> | undefined {
+  const result: Record<string, string> = {};
+  if (!pack.syncTables) {
+    return result;
+  }
+  const syncTableSchemasByName: Record<string, ObjectSchema<any, any>> = {};
+  for (const syncTable of pack.syncTables) {
+    syncTableSchemasByName[syncTable.name] = syncTable.schema;
+  }
+  for (const syncTable of pack.syncTables) {
+    for (const param of syncTable.getter.parameters) {
+      if (!param.crawlStrategy) {
+        continue;
+      }
+      if (param.crawlStrategy.parentTable) {
+        const {tableName, propertyKey} = param.crawlStrategy.parentTable;
+        const tableSchema = syncTableSchemasByName[tableName];
+        if (!tableSchema) {
+          return undefined;
+        }
+        const property = tableSchema.properties[propertyKey];
+        if (!property) {
+          return undefined;
+        }
+        // TODO(patrick): Validate the types match
+        result[syncTable.name] = tableName;
+      }
+    }
+  }
+  return result;
 }
 
 function getNonUniqueElements<T extends string>(items: T[]): T[] {
@@ -590,6 +629,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     autocomplete: z.unknown().optional(),
     defaultValue: z.unknown().optional(),
     suggestedValue: z.unknown().optional(),
+    crawlStrategy: z.unknown().optional(),
   });
 
   const commonPackFormulaSchema = {
@@ -1756,6 +1796,16 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
           });
         }
       });
+    })
+    .superRefine((data, context) => {
+      const crawlHierarchy = getSyncTableHierarchy(data as PackVersionDefinition);
+      if (!crawlHierarchy) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['syncTables'],
+          message: 'Sync table parent hierarchy is invalid',
+        });
+      }
     })
     .superRefine((data, context) => {
       ((data.formulas as any[]) || []).forEach((formula, i) => {

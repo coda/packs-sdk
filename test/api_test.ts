@@ -585,4 +585,38 @@ describe('API test', () => {
       results: normalizedResultsArray,
     });
   });
+
+  describe('makeParameter crawlStrategy', () => {
+    it('setting a parent sync table', () => {
+      const childTable = makeSyncTable({
+        name: 'Child',
+        identityName: 'ChildIdentity',
+        schema: schema.makeObjectSchema({
+          type: ValueType.Object,
+          id: 'bar',
+          primary: 'bar',
+          properties: {bar: {type: ValueType.String}},
+        }),
+        formula: {
+          name: 'Whatever',
+          description: 'Whatever',
+          parameters: [
+            makeParameter({
+              type: ParameterType.String,
+              name: 'parent',
+              description: '',
+              crawlStrategy: {parentTable: {tableName: 'Parent', propertyKey: 'foo'}},
+            }),
+          ],
+          async execute() {
+            return {result: []};
+          },
+        },
+      });
+      // Property key should be normalized.
+      assert.deepEqual(childTable.getter.parameters[0].crawlStrategy, {
+        parentTable: {tableName: 'Parent', propertyKey: 'Foo'},
+      });
+    });
+  });
 });
