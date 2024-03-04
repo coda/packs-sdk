@@ -26,6 +26,7 @@ import type {SyncTable} from '../api';
 import {Type} from '../api_types';
 import {ValueHintType} from '../schema';
 import {ValueType} from '../schema';
+import {_hasCycle} from '../testing/upload_validation';
 import {compilePackMetadata} from '../helpers/metadata';
 import {createFakePack} from './test_utils';
 import {createFakePackFormulaMetadata} from './test_utils';
@@ -2184,9 +2185,12 @@ describe('Pack metadata Validation', async () => {
             identityName: 'ParentIdentity',
             schema: makeObjectSchema({
               type: ValueType.Object,
-              id: 'foo',
-              primary: 'foo',
-              properties: {foo: {type: ValueType.String}},
+              id: 'account',
+              primary: 'account',
+              properties: {
+                account: {type: ValueType.String},
+                group: {type: ValueType.String},
+              },
             }),
             formula: {
               name: 'Whatever',
@@ -2217,7 +2221,7 @@ describe('Pack metadata Validation', async () => {
                   type: ParameterType.String,
                   name: 'parentParam',
                   description: '',
-                  crawlStrategy: {parentTable: {tableName: 'Parent', propertyKey: 'foo'}},
+                  crawlStrategy: {parentTable: {tableName: 'Parent', propertyKey: 'account'}},
                 }),
               ],
               async execute() {
@@ -2231,7 +2235,7 @@ describe('Pack metadata Validation', async () => {
           });
           await validateJson(metadata);
           const hierarchy = getSyncTableHierarchy(metadata);
-          assert.deepEqual(hierarchy, {Child: 'Parent'});
+          assert.deepEqual(hierarchy, {Parent: ['Child']});
         });
 
         it('setting a non-existent parentTable crawl fails validation', async () => {
@@ -2252,7 +2256,7 @@ describe('Pack metadata Validation', async () => {
                   type: ParameterType.String,
                   name: 'parent',
                   description: '',
-                  crawlStrategy: {parentTable: {tableName: 'FakeParent', propertyKey: 'foo'}},
+                  crawlStrategy: {parentTable: {tableName: 'FakeParent', propertyKey: 'account'}},
                 }),
               ],
               async execute() {
@@ -2314,6 +2318,176 @@ describe('Pack metadata Validation', async () => {
               path: 'syncTables',
             },
           ]);
+        });
+
+        it('supports multiple params', async () => {
+          const childTable = makeSyncTable({
+            name: 'Child',
+            identityName: 'ChildIdentity',
+            schema: makeObjectSchema({
+              type: ValueType.Object,
+              id: 'item',
+              primary: 'item',
+              properties: {item: {type: ValueType.String}},
+            }),
+            formula: {
+              name: 'Whatever3',
+              description: '',
+              parameters: [
+                makeParameter({
+                  type: ParameterType.String,
+                  name: 'rootParam',
+                  description: '',
+                  crawlStrategy: {parentTable: {tableName: 'Parent', propertyKey: 'account'}},
+                }),
+                makeParameter({
+                  type: ParameterType.String,
+                  name: 'additionalParam',
+                  description: '',
+                  crawlStrategy: {parentTable: {tableName: 'Parent', propertyKey: 'group'}},
+                }),
+              ],
+              async execute() {
+                return {result: []};
+              },
+            },
+          });
+          const metadata = createFakePack({
+            id: 1013,
+            syncTables: [childTable, parentTable],
+          });
+          await validateJson(metadata);
+          const hierarchy = getSyncTableHierarchy(metadata);
+          assert.deepEqual(hierarchy, {Parent: ['Child']});
+        });
+
+        it('_hasCycle utility works', () => {
+          assert.isTrue(_hasCycle({a: ['b'], b: ['a']}));
+          assert.isTrue(_hasCycle({a: ['a']}));
+          assert.isTrue(_hasCycle({a: ['b'], b: ['c'], c: ['a']}));
+          assert.isTrue(_hasCycle({a: ['c', 'b'], b: ['a'], c: ['d']}));
+          assert.isFalse(_hasCycle({a: ['b'], b: ['c'], c: ['d']}));
+          // This is invalid, but not because it's a cycle
+          assert.isFalse(_hasCycle({a: ['b', 'c'], b: ['c']}));
+        });
+
+        it('does not allow a cycle', async () => {
+          const table1 = makeSyncTable({
+            name: 'Table1',
+            identityName: 'Table1Identity',
+            schema: makeObjectSchema({
+              type: ValueType.Object,
+              id: 'table1prop',
+              primary: 'table1prop',
+              properties: {table1prop: {type: ValueType.String}},
+            }),
+            formula: {
+              name: 'Whatever1',
+              description: '',
+              parameters: [
+                makeParameter({
+                  type: ParameterType.String,
+                  name: 'table2Param',
+                  description: '',
+                  crawlStrategy: {parentTable: {tableName: 'Table2', propertyKey: 'table2prop'}},
+                }),
+              ],
+              async execute() {
+                return {result: []};
+              },
+            },
+          });
+          const table2 = makeSyncTable({
+            name: 'Table2',
+            identityName: 'Table2Identity',
+            schema: makeObjectSchema({
+              type: ValueType.Object,
+              id: 'table2prop',
+              primary: 'table2prop',
+              properties: {table2prop: {type: ValueType.String}},
+            }),
+            formula: {
+              name: 'Whatever3',
+              description: '',
+              parameters: [
+                makeParameter({
+                  type: ParameterType.String,
+                  name: 'table1Param',
+                  description: '',
+                  crawlStrategy: {parentTable: {tableName: 'Table1', propertyKey: 'table1prop'}},
+                }),
+              ],
+              async execute() {
+                return {result: []};
+              },
+            },
+          });
+          const metadata = createFakePack({
+            id: 1013,
+            syncTables: [table2, table1],
+          });
+          await testHelper.willBeRejectedWith(validateJson(metadata), /Sync table parent hierarchy is invalid/);
+          const hierarchy = getSyncTableHierarchy(metadata);
+          assert.isUndefined(hierarchy);
+        });
+
+        it('does not allow multiple parents', async () => {
+          const uncleTable = makeSyncTable({
+            name: 'Uncle',
+            identityName: 'UncleIdentity',
+            schema: makeObjectSchema({
+              type: ValueType.Object,
+              id: 'group',
+              primary: 'group',
+              properties: {group: {type: ValueType.String}},
+            }),
+            formula: {
+              name: 'Whatever2',
+              description: '',
+              parameters: [],
+              async execute() {
+                return {result: []};
+              },
+            },
+          });
+          const child = makeSyncTable({
+            name: 'Child',
+            identityName: 'ChildIdentity',
+            schema: makeObjectSchema({
+              type: ValueType.Object,
+              id: 'prop',
+              primary: 'prop',
+              properties: {prop: {type: ValueType.String}},
+            }),
+            formula: {
+              name: 'Whatever3',
+              description: '',
+              parameters: [
+                makeParameter({
+                  type: ParameterType.String,
+                  name: 'parentParam',
+                  description: '',
+                  crawlStrategy: {parentTable: {tableName: 'Parent', propertyKey: 'account'}},
+                }),
+                makeParameter({
+                  type: ParameterType.String,
+                  name: 'uncleParam',
+                  description: '',
+                  crawlStrategy: {parentTable: {tableName: 'Uncle', propertyKey: 'group'}},
+                }),
+              ],
+              async execute() {
+                return {result: []};
+              },
+            },
+          });
+          const metadata = createFakePack({
+            id: 1013,
+            syncTables: [child, uncleTable, parentTable],
+          });
+          await testHelper.willBeRejectedWith(validateJson(metadata), /Sync table parent hierarchy is invalid/);
+          const hierarchy = getSyncTableHierarchy(metadata);
+          assert.isUndefined(hierarchy);
         });
       });
     });

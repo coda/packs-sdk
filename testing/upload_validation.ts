@@ -229,13 +229,13 @@ export function validateSyncTableSchema(
 }
 
 /**
- * Returns a map of sync table names to their parent sync table names, or undefined if the hierarchy is invalid.
- * Example valid return: { Child: 'Parent' }
- * {} is also a valid result, when there are no sync tables
+ * Returns a map of sync table names to their child sync table names, or undefined if the hierarchy is invalid.
+ * Example valid return: { Parent: 'Child' }
+ * {} is also a valid result, when there are no sync tables, or no parent relationships.
  * @hidden
  */
-export function getSyncTableHierarchy(pack: PackVersionDefinition): Record<string, string> | undefined {
-  const result: Record<string, string> = {};
+export function getSyncTableHierarchy(pack: PackVersionDefinition): Record<string, string[]> | undefined {
+  const result: Record<string, string[]> = {};
   if (!pack.syncTables) {
     return result;
   }
@@ -244,26 +244,79 @@ export function getSyncTableHierarchy(pack: PackVersionDefinition): Record<strin
     syncTableSchemasByName[syncTable.name] = syncTable.schema;
   }
   for (const syncTable of pack.syncTables) {
+    let parent: string | undefined;
     for (const param of syncTable.getter.parameters) {
       if (!param.crawlStrategy) {
         continue;
       }
       if (param.crawlStrategy.parentTable) {
         const {tableName, propertyKey} = param.crawlStrategy.parentTable;
+
         const tableSchema = syncTableSchemasByName[tableName];
         if (!tableSchema) {
           return undefined;
         }
+
         const property = tableSchema.properties[propertyKey];
         if (!property) {
           return undefined;
         }
+
         // TODO(patrick): Validate the types match
-        result[syncTable.name] = tableName;
+
+        // We only allow one parent per table.
+        if (parent && parent !== tableName) {
+          return undefined;
+        }
+
+        const childList = result[tableName] || [];
+        // This table may already be in the child list if it uses multiple params from the parent.
+        if (!childList.includes(syncTable.name)) {
+          childList.push(syncTable.name);
+        }
+        result[tableName] = childList;
+        parent = tableName;
       }
     }
   }
+  // Verify that there's no cycle
+  if (_hasCycle(result)) {
+    return undefined;
+  }
   return result;
+}
+
+// Exported for tests
+/** @hidden */
+export function _hasCycle(tree: Record<string, string[]>): boolean {
+  function subtreeHasCycle(currentKey: string, children: string[], visited: Set<string>): boolean {
+    if (visited.has(currentKey)) {
+      return true;
+    }
+    visited.add(currentKey);
+    for (const child of children) {
+      const subtree = tree[child];
+      if (!subtree) {
+        return false;
+      }
+      if (subtreeHasCycle(child, subtree, visited)) {
+        return true;
+      }
+    }
+    visited.delete(currentKey);
+    return false;
+  }
+
+  for (const key of Object.keys(tree)) {
+    const subtree = tree[key];
+    if (!subtree) {
+      return false;
+    }
+    if (subtreeHasCycle(key, subtree, new Set<string>())) {
+      return true;
+    }
+  }
+  return false;
 }
 
 function getNonUniqueElements<T extends string>(items: T[]): T[] {
