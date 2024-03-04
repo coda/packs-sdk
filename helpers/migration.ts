@@ -55,7 +55,6 @@ class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
       createdByProperty,
       modifiedAtProperty,
       modifiedByProperty,
-      relevantPeopleProperty,
 
       ...rest
     } = schema;

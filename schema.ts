@@ -1048,7 +1048,7 @@ export type PropertyIdentifier<K extends string = string> = K | string | Propert
  */
 export type ObjectSchemaPathProperties = Pick<
   GenericObjectSchema,
-  'titleProperty' | 'linkProperty' | 'imageProperty' | 'snippetProperty' | 'subtitleProperties' | 'createdAtProperty' | 'createdByProperty' | 'modifiedAtProperty' | 'modifiedByProperty' | 'relevantPeopleProperty'
+  'titleProperty' | 'linkProperty' | 'imageProperty' | 'snippetProperty' | 'subtitleProperties' | 'createdAtProperty' | 'createdByProperty' | 'modifiedAtProperty' | 'modifiedByProperty'
 >;
 
 /**
@@ -1169,7 +1169,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    * The name of a property within {@link ObjectSchemaDefinition.properties} that can be interpreted as the creation
    * datetime of the object.
    *
-   * Must be a {@link ValueType.String} property with the
+   * Must be a {@link ValueType.String} or {@link ValueType.Number} property with the
    * {@link ValueHintType.Date} or {@link ValueHintType.DateTime} hints
    * @hidden
    */
@@ -1187,7 +1187,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    * The name of a property within {@link ObjectSchemaDefinition.properties} that can be interpreted as the last
    * modified datetime of the object.
    *
-   * Must be a {@link ValueType.String} property with the
+   * Must be a {@link ValueType.String} or {@link ValueType.Number} property with the
    * {@link ValueHintType.Date} or {@link ValueHintType.DateTime} hints
    * @hidden
    */
@@ -1201,15 +1201,6 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    * @hidden
    */
   modifiedByProperty?: PropertyIdentifier<K>;
-  /**
-   * A list of property names from within {@link ObjectSchemaDefinition.properties} for the properties of the object
-   * that can be interpreted as people who are relevant to the object, not including the creator or last modifier.
-   *
-   * Each property must be a {@link ValueType.String} property with the {@link ValueHintType.Email} hint or
-   * a {@link ValueType.Object} with the {@link ValueHintType.Person} hint
-   * @hidden
-   */
-  relevantPeopleProperty?: Array<PropertyIdentifier<K>>;
 
   // TODO(dweitzman): Only support options in the typing when the codaType is ValueHintType.SelectList.
 }
@@ -1756,7 +1747,6 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     createdByProperty,
     modifiedAtProperty,
     modifiedByProperty,
-    relevantPeopleProperty,
     ...rest
   } = schema;
   // Have TS ensure we don't forget about new fields in this function.
@@ -1810,9 +1800,6 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
       normalizeSchemaPropertyIdentifier(modifiedAtProperty, normalizedProperties) : undefined,
     modifiedByProperty: modifiedByProperty ?
       normalizeSchemaPropertyIdentifier(modifiedByProperty, normalizedProperties) : undefined,
-    relevantPeopleProperty: relevantPeopleProperty
-      ? relevantPeopleProperty.map(subProp => normalizeSchemaPropertyIdentifier(subProp, normalizedProperties))
-      : undefined,
     type: ValueType.Object,
   };
 }
