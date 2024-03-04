@@ -32,12 +32,14 @@ export declare function validatePackVersionMetadata(metadata: Record<string, any
 export declare function validateVariousAuthenticationMetadata(auth: any, options: BuildMetadataSchemaArgs): VariousAuthentication;
 export declare function validateSyncTableSchema(schema: any, options: BuildMetadataSchemaArgs & Required<Pick<BuildMetadataSchemaArgs, 'sdkVersion'>>): ArraySchema<ObjectSchema<any, any>>;
 /**
- * Returns a map of sync table names to their parent sync table names, or undefined if the hierarchy is invalid.
- * Example valid return: { Child: 'Parent' }
- * {} is also a valid result, when there are no sync tables
+ * Returns a map of sync table names to their child sync table names, or undefined if the hierarchy is invalid.
+ * Example valid return: { Parent: 'Child' }
+ * {} is also a valid result, when there are no sync tables, or no parent relationships.
  * @hidden
  */
-export declare function getSyncTableHierarchy(pack: PackVersionDefinition): Record<string, string> | undefined;
+export declare function getSyncTableHierarchy(pack: PackVersionDefinition): Record<string, string[]> | undefined;
+/** @hidden */
+export declare function _hasCycle(tree: Record<string, string[]>): boolean;
 export declare function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError[];
 interface BuildMetadataSchemaArgs {
     sdkVersion?: string;

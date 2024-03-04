@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.zodErrorDetailToValidationError = exports.getSyncTableHierarchy = exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.Limits = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
+exports.zodErrorDetailToValidationError = exports._hasCycle = exports.getSyncTableHierarchy = exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.Limits = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
 const schema_1 = require("../schema");
 const types_1 = require("../types");
 const schema_2 = require("../schema");
@@ -158,9 +158,9 @@ function validateSyncTableSchema(schema, options) {
 }
 exports.validateSyncTableSchema = validateSyncTableSchema;
 /**
- * Returns a map of sync table names to their parent sync table names, or undefined if the hierarchy is invalid.
- * Example valid return: { Child: 'Parent' }
- * {} is also a valid result, when there are no sync tables
+ * Returns a map of sync table names to their child sync table names, or undefined if the hierarchy is invalid.
+ * Example valid return: { Parent: 'Child' }
+ * {} is also a valid result, when there are no sync tables, or no parent relationships.
  * @hidden
  */
 function getSyncTableHierarchy(pack) {
@@ -173,6 +173,7 @@ function getSyncTableHierarchy(pack) {
         syncTableSchemasByName[syncTable.name] = syncTable.schema;
     }
     for (const syncTable of pack.syncTables) {
+        let parent;
         for (const param of syncTable.getter.parameters) {
             if (!param.crawlStrategy) {
                 continue;
@@ -188,13 +189,59 @@ function getSyncTableHierarchy(pack) {
                     return undefined;
                 }
                 // TODO(patrick): Validate the types match
-                result[syncTable.name] = tableName;
+                // We only allow one parent per table.
+                if (parent && parent !== tableName) {
+                    return undefined;
+                }
+                const childList = result[tableName] || [];
+                // This table may already be in the child list if it uses multiple params from the parent.
+                if (!childList.includes(syncTable.name)) {
+                    childList.push(syncTable.name);
+                }
+                result[tableName] = childList;
+                parent = tableName;
             }
         }
+    }
+    // Verify that there's no cycle
+    if (_hasCycle(result)) {
+        return undefined;
     }
     return result;
 }
 exports.getSyncTableHierarchy = getSyncTableHierarchy;
+// Exported for tests
+/** @hidden */
+function _hasCycle(tree) {
+    function subtreeHasCycle(currentKey, children, visited) {
+        if (visited.has(currentKey)) {
+            return true;
+        }
+        visited.add(currentKey);
+        for (const child of children) {
+            const subtree = tree[child];
+            if (!subtree) {
+                return false;
+            }
+            if (subtreeHasCycle(child, subtree, visited)) {
+                return true;
+            }
+        }
+        visited.delete(currentKey);
+        return false;
+    }
+    for (const key of Object.keys(tree)) {
+        const subtree = tree[key];
+        if (!subtree) {
+            return false;
+        }
+        if (subtreeHasCycle(key, subtree, new Set())) {
+            return true;
+        }
+    }
+    return false;
+}
+exports._hasCycle = _hasCycle;
 function getNonUniqueElements(items) {
     const set = new Set();
     const nonUnique = [];
