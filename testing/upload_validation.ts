@@ -238,29 +238,30 @@ export function validateCrawlHierarchy(
   pack: PackVersionDefinition,
   context?: z.RefinementCtx,
 ): Record<string, string[]> | undefined {
-  const result: Record<string, string[]> = {};
+  const parentToChildrenMap: Record<string, string[]> = {};
   if (!pack.syncTables) {
-    return result;
+    return parentToChildrenMap;
   }
+  const syncTables: SyncTable[] = pack.syncTables;
   const syncTableSchemasByName: Record<string, ObjectSchema<any, any>> = {};
-  for (const syncTable of pack.syncTables) {
+  for (const syncTable of syncTables) {
     syncTableSchemasByName[syncTable.name] = syncTable.schema;
   }
-  for (const [index, syncTable] of pack.syncTables.entries()) {
-    let parent: string | undefined;
-    for (const param of syncTable.getter.parameters) {
+  for (const [tableIndex, syncTable] of syncTables.entries()) {
+    let firstDiscoveredParentTable: string | undefined;
+    for (const [paramIndex, param] of syncTable.getter.parameters.entries()) {
       if (!param.crawlStrategy) {
         continue;
       }
       if (param.crawlStrategy.parentTable) {
-        const {tableName, propertyKey} = param.crawlStrategy.parentTable;
+        const {tableName: parentTableName, propertyKey} = param.crawlStrategy.parentTable;
 
-        const tableSchema = syncTableSchemasByName[tableName];
+        const tableSchema = syncTableSchemasByName[parentTableName];
         if (!tableSchema) {
           context?.addIssue({
             code: z.ZodIssueCode.custom,
-            path: ['syncTables', index],
-            message: `Sync table ${syncTable.name} expects parent table ${tableName} to exist.`,
+            path: ['syncTables', tableIndex, 'parameters', paramIndex, 'crawlStrategy', 'parentTable'],
+            message: `Sync table ${syncTable.name} expects parent table ${parentTableName} to exist.`,
           });
           return undefined;
         }
@@ -269,8 +270,8 @@ export function validateCrawlHierarchy(
         if (!property) {
           context?.addIssue({
             code: z.ZodIssueCode.custom,
-            path: ['syncTables', index],
-            message: `Sync table ${syncTable.name} expects parent table ${tableName}'s schema to have the property ${propertyKey}.`,
+            path: ['syncTables', tableIndex, 'parameters', paramIndex, 'crawlStrategy', 'parentTable'],
+            message: `Sync table ${syncTable.name} expects parent table ${parentTableName}'s schema to have the property ${propertyKey}.`,
           });
           return undefined;
         }
@@ -278,27 +279,27 @@ export function validateCrawlHierarchy(
         // TODO(patrick): Validate the types match
 
         // We only allow one parent per table.
-        if (parent && parent !== tableName) {
+        if (firstDiscoveredParentTable && firstDiscoveredParentTable !== parentTableName) {
           context?.addIssue({
             code: z.ZodIssueCode.custom,
-            path: ['syncTables', index],
+            path: ['syncTables', tableIndex, 'parameters'],
             message: `Sync table ${syncTable.name} cannot reference multiple parent tables.`,
           });
           return undefined;
         }
 
-        const childList = result[tableName] || [];
+        const childList = parentToChildrenMap[parentTableName] || [];
         // This table may already be in the child list if it uses multiple params from the parent.
         if (!childList.includes(syncTable.name)) {
           childList.push(syncTable.name);
         }
-        result[tableName] = childList;
-        parent = tableName;
+        parentToChildrenMap[parentTableName] = childList;
+        firstDiscoveredParentTable = parentTableName;
       }
     }
   }
   // Verify that there's no cycle
-  if (_hasCycle(result)) {
+  if (_hasCycle(parentToChildrenMap)) {
     context?.addIssue({
       code: z.ZodIssueCode.custom,
       path: ['syncTables'],
@@ -306,7 +307,7 @@ export function validateCrawlHierarchy(
     });
     return undefined;
   }
-  return result;
+  return parentToChildrenMap;
 }
 
 // Exported for tests
@@ -320,7 +321,7 @@ export function _hasCycle(tree: Record<string, string[]>): boolean {
     for (const child of children) {
       const subtree = tree[child];
       if (!subtree) {
-        return false;
+        break;
       }
       if (subtreeHasCycle(child, subtree, visited)) {
         return true;
@@ -329,17 +330,7 @@ export function _hasCycle(tree: Record<string, string[]>): boolean {
     visited.delete(currentKey);
     return false;
   }
-
-  for (const key of Object.keys(tree)) {
-    const subtree = tree[key];
-    if (!subtree) {
-      return false;
-    }
-    if (subtreeHasCycle(key, subtree, new Set<string>())) {
-      return true;
-    }
-  }
-  return false;
+  return subtreeHasCycle('__CODA_INTERNAL_ROOT__', Object.keys(tree), new Set<string>());
 }
 
 function getNonUniqueElements<T extends string>(items: T[]): T[] {

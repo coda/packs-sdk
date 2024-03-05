@@ -2274,7 +2274,7 @@ describe('Pack metadata Validation', async () => {
           assert.deepEqual(err.validationErrors, [
             {
               message: `Sync table Child expects parent table FakeParent to exist.`,
-              path: 'syncTables[0]',
+              path: 'syncTables[0].parameters[0].crawlStrategy.parentTable',
             },
           ]);
         });
@@ -2315,7 +2315,7 @@ describe('Pack metadata Validation', async () => {
           assert.deepEqual(err.validationErrors, [
             {
               message: `Sync table Child expects parent table Parent's schema to have the property FakeProperty.`,
-              path: 'syncTables[0]',
+              path: 'syncTables[0].parameters[0].crawlStrategy.parentTable',
             },
           ]);
         });
@@ -2495,7 +2495,7 @@ describe('Pack metadata Validation', async () => {
           assert.deepEqual(err.validationErrors, [
             {
               message: `Sync table Child cannot reference multiple parent tables.`,
-              path: 'syncTables[0]',
+              path: 'syncTables[0].parameters',
             },
           ]);
           const hierarchy = validateCrawlHierarchy(metadata);
