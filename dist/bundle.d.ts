@@ -1818,6 +1818,42 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 * {@link ValueHintType.ImageAttachment} or {@link ValueHintType.ImageReference} hints
 	 */
 	imageProperty?: PropertyIdentifier<K>;
+	/**
+	 * The name of a property within {@link ObjectSchemaDefinition.properties} that can be interpreted as the creation
+	 * datetime of the object.
+	 *
+	 * Must be a {@link ValueType.String} or {@link ValueType.Number} property with the
+	 * {@link ValueHintType.Date} or {@link ValueHintType.DateTime} hints
+	 * @hidden
+	 */
+	createdAtProperty?: PropertyIdentifier<K>;
+	/**
+	 * The name of a property within {@link ObjectSchemaDefinition.properties} that can be interpreted as the creator
+	 * of the object.
+	 *
+	 * Must be a {@link ValueType.String} property with the {@link ValueHintType.Email} hint or
+	 * a {@link ValueType.Object} with the {@link ValueHintType.Person} hint
+	 * @hidden
+	 */
+	createdByProperty?: PropertyIdentifier<K>;
+	/**
+	 * The name of a property within {@link ObjectSchemaDefinition.properties} that can be interpreted as the last
+	 * modified datetime of the object.
+	 *
+	 * Must be a {@link ValueType.String} or {@link ValueType.Number} property with the
+	 * {@link ValueHintType.Date} or {@link ValueHintType.DateTime} hints
+	 * @hidden
+	 */
+	modifiedAtProperty?: PropertyIdentifier<K>;
+	/**
+	 * The name of a property within {@link ObjectSchemaDefinition.properties} that can be interpreted as the last
+	 * modifier of the object.
+	 *
+	 * Must be a {@link ValueType.String} property with the {@link ValueHintType.Email} hint or
+	 * a {@link ValueType.Object} with the {@link ValueHintType.Person} hint
+	 * @hidden
+	 */
+	modifiedByProperty?: PropertyIdentifier<K>;
 }
 export type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
 /** @hidden */
