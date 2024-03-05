@@ -37,7 +37,7 @@ export declare function validateSyncTableSchema(schema: any, options: BuildMetad
  * {} is also a valid result, when there are no sync tables, or no parent relationships.
  * @hidden
  */
-export declare function getSyncTableHierarchy(pack: PackVersionDefinition): Record<string, string[]> | undefined;
+export declare function validateCrawlHierarchy(pack: PackVersionDefinition, context?: z.RefinementCtx): Record<string, string[]> | undefined;
 /** @hidden */
 export declare function _hasCycle(tree: Record<string, string[]>): boolean;
 export declare function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError[];

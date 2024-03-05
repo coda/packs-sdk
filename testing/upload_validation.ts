@@ -234,7 +234,10 @@ export function validateSyncTableSchema(
  * {} is also a valid result, when there are no sync tables, or no parent relationships.
  * @hidden
  */
-export function getSyncTableHierarchy(pack: PackVersionDefinition): Record<string, string[]> | undefined {
+export function validateCrawlHierarchy(
+  pack: PackVersionDefinition,
+  context?: z.RefinementCtx,
+): Record<string, string[]> | undefined {
   const result: Record<string, string[]> = {};
   if (!pack.syncTables) {
     return result;
@@ -243,7 +246,7 @@ export function getSyncTableHierarchy(pack: PackVersionDefinition): Record<strin
   for (const syncTable of pack.syncTables) {
     syncTableSchemasByName[syncTable.name] = syncTable.schema;
   }
-  for (const syncTable of pack.syncTables) {
+  for (const [index, syncTable] of pack.syncTables.entries()) {
     let parent: string | undefined;
     for (const param of syncTable.getter.parameters) {
       if (!param.crawlStrategy) {
@@ -254,11 +257,21 @@ export function getSyncTableHierarchy(pack: PackVersionDefinition): Record<strin
 
         const tableSchema = syncTableSchemasByName[tableName];
         if (!tableSchema) {
+          context?.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['syncTables', index],
+            message: `Sync table ${syncTable.name} expects parent table ${tableName} to exist.`,
+          });
           return undefined;
         }
 
         const property = tableSchema.properties[propertyKey];
         if (!property) {
+          context?.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['syncTables', index],
+            message: `Sync table ${syncTable.name} expects parent table ${tableName}'s schema to have the property ${propertyKey}.`,
+          });
           return undefined;
         }
 
@@ -266,6 +279,11 @@ export function getSyncTableHierarchy(pack: PackVersionDefinition): Record<strin
 
         // We only allow one parent per table.
         if (parent && parent !== tableName) {
+          context?.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['syncTables', index],
+            message: `Sync table ${syncTable.name} cannot reference multiple parent tables.`,
+          });
           return undefined;
         }
 
@@ -281,6 +299,11 @@ export function getSyncTableHierarchy(pack: PackVersionDefinition): Record<strin
   }
   // Verify that there's no cycle
   if (_hasCycle(result)) {
+    context?.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['syncTables'],
+      message: `Sync table parent hierarchy is cyclic`,
+    });
     return undefined;
   }
   return result;
@@ -1851,14 +1874,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       });
     })
     .superRefine((data, context) => {
-      const crawlHierarchy = getSyncTableHierarchy(data as PackVersionDefinition);
-      if (!crawlHierarchy) {
-        context.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ['syncTables'],
-          message: 'Sync table parent hierarchy is invalid',
-        });
-      }
+      validateCrawlHierarchy(data as PackVersionDefinition, context);
     })
     .superRefine((data, context) => {
       ((data.formulas as any[]) || []).forEach((formula, i) => {

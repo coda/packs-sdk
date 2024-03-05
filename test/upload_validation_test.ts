@@ -32,7 +32,6 @@ import {createFakePack} from './test_utils';
 import {createFakePackFormulaMetadata} from './test_utils';
 import {createFakePackVersionMetadata} from './test_utils';
 import {deepCopy} from '../helpers/object_utils';
-import {getSyncTableHierarchy} from '../testing/upload_validation';
 import {makeAttributionNode} from '..';
 import {makeDynamicSyncTable} from '../api';
 import {makeFormula} from '../api';
@@ -49,6 +48,7 @@ import {makeStringParameter} from '../api';
 import {makeSyncTable} from '../api';
 import {makeSyncTableLegacy} from '../api';
 import {numberArray} from '../api_types';
+import {validateCrawlHierarchy} from '../testing/upload_validation';
 import {validatePackVersionMetadata} from '../testing/upload_validation';
 import {validateSyncTableSchema} from '../testing/upload_validation';
 import {validateVariousAuthenticationMetadata} from '../testing/upload_validation';
@@ -2234,7 +2234,7 @@ describe('Pack metadata Validation', async () => {
             syncTables: [childTable, parentTable],
           });
           await validateJson(metadata);
-          const hierarchy = getSyncTableHierarchy(metadata);
+          const hierarchy = validateCrawlHierarchy(metadata);
           assert.deepEqual(hierarchy, {Parent: ['Child']});
         });
 
@@ -2273,8 +2273,8 @@ describe('Pack metadata Validation', async () => {
 
           assert.deepEqual(err.validationErrors, [
             {
-              message: `Sync table parent hierarchy is invalid`,
-              path: 'syncTables',
+              message: `Sync table Child expects parent table FakeParent to exist.`,
+              path: 'syncTables[0]',
             },
           ]);
         });
@@ -2314,8 +2314,8 @@ describe('Pack metadata Validation', async () => {
 
           assert.deepEqual(err.validationErrors, [
             {
-              message: `Sync table parent hierarchy is invalid`,
-              path: 'syncTables',
+              message: `Sync table Child expects parent table Parent's schema to have the property FakeProperty.`,
+              path: 'syncTables[0]',
             },
           ]);
         });
@@ -2357,7 +2357,7 @@ describe('Pack metadata Validation', async () => {
             syncTables: [childTable, parentTable],
           });
           await validateJson(metadata);
-          const hierarchy = getSyncTableHierarchy(metadata);
+          const hierarchy = validateCrawlHierarchy(metadata);
           assert.deepEqual(hierarchy, {Parent: ['Child']});
         });
 
@@ -2426,8 +2426,14 @@ describe('Pack metadata Validation', async () => {
             id: 1013,
             syncTables: [table2, table1],
           });
-          await testHelper.willBeRejectedWith(validateJson(metadata), /Sync table parent hierarchy is invalid/);
-          const hierarchy = getSyncTableHierarchy(metadata);
+          const err = await validateJsonAndAssertFails(metadata);
+          assert.deepEqual(err.validationErrors, [
+            {
+              message: `Sync table parent hierarchy is cyclic`,
+              path: 'syncTables',
+            },
+          ]);
+          const hierarchy = validateCrawlHierarchy(metadata);
           assert.isUndefined(hierarchy);
         });
 
@@ -2485,8 +2491,14 @@ describe('Pack metadata Validation', async () => {
             id: 1013,
             syncTables: [child, uncleTable, parentTable],
           });
-          await testHelper.willBeRejectedWith(validateJson(metadata), /Sync table parent hierarchy is invalid/);
-          const hierarchy = getSyncTableHierarchy(metadata);
+          const err = await validateJsonAndAssertFails(metadata);
+          assert.deepEqual(err.validationErrors, [
+            {
+              message: `Sync table Child cannot reference multiple parent tables.`,
+              path: 'syncTables[0]',
+            },
+          ]);
+          const hierarchy = validateCrawlHierarchy(metadata);
           assert.isUndefined(hierarchy);
         });
       });
