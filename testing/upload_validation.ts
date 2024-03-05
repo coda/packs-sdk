@@ -1046,6 +1046,10 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       subtitleProperties: z.array(propertySchema).optional(),
       snippetProperty: propertySchema.optional(),
       imageProperty: propertySchema.optional(),
+      createdAtProperty: propertySchema.optional(),
+      modifiedAtProperty: propertySchema.optional(),
+      createdByProperty: propertySchema.optional(),
+      modifiedByProperty: propertySchema.optional(),
       options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
       requireForUpdates: z.boolean().optional(),
       autocomplete:
@@ -1255,11 +1259,60 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
           );
         };
 
+        const validateCreatedAtProperty = () => {
+          return validateProperty(
+            'createdAtProperty',
+            createdAtPropertySchema =>
+              (createdAtPropertySchema.type === ValueType.String ||
+                createdAtPropertySchema.type === ValueType.Number) &&
+              (createdAtPropertySchema.codaType === ValueHintType.DateTime ||
+                createdAtPropertySchema.codaType === ValueHintType.Date),
+            `must refer to a "ValueType.String" or "ValueType.Number" property with a "ValueHintType.DateTime" or "ValueHintType.Date" "codaType".`,
+          );
+        }
+        const validateModifiedAtProperty = () => {
+          return validateProperty(
+            'modifiedAtProperty',
+            modifiedAtPropertySchema =>
+              (modifiedAtPropertySchema.type === ValueType.String ||
+                modifiedAtPropertySchema.type === ValueType.Number) &&
+              (modifiedAtPropertySchema.codaType === ValueHintType.DateTime ||
+                modifiedAtPropertySchema.codaType === ValueHintType.Date),
+            `must refer to a "ValueType.String" or "ValueType.Number" property with a "ValueHintType.DateTime" or "ValueHintType.Date" "codaType".`,
+          );
+        }
+        const validateCreatedByProperty = () => {
+          return validateProperty(
+            'createdByProperty',
+            createdByPropertySchema =>
+            (createdByPropertySchema.type === ValueType.Object
+              || createdByPropertySchema.type === ValueType.String) &&
+            (createdByPropertySchema.codaType === ValueHintType.Person
+              || createdByPropertySchema.codaType === ValueHintType.Email),
+            `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`,
+          );
+        };
+        const validateModifiedByProperty = () => {
+          return validateProperty(
+            'modifiedByProperty',
+            modifiedByPropertySchema =>
+            (modifiedByPropertySchema.type === ValueType.Object ||
+              modifiedByPropertySchema.type === ValueType.String) &&
+            (modifiedByPropertySchema.codaType === ValueHintType.Person ||
+              modifiedByPropertySchema.codaType === ValueHintType.Email),
+            `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`,
+          );
+        };
+
         validateTitleProperty();
         validateLinkProperty();
         validateImageProperty();
         validateSnippetProperty();
         validateSubtitleProperties();
+        validateCreatedAtProperty();
+        validateModifiedAtProperty();
+        validateCreatedByProperty();
+        validateModifiedByProperty();
       })
       .superRefine((data, context) => {
         const schemaHelper = objectSchemaHelper(data as GenericObjectSchema);

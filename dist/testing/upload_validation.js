@@ -845,6 +845,10 @@ function buildMetadataSchema({ sdkVersion }) {
         subtitleProperties: z.array(propertySchema).optional(),
         snippetProperty: propertySchema.optional(),
         imageProperty: propertySchema.optional(),
+        createdAtProperty: propertySchema.optional(),
+        modifiedAtProperty: propertySchema.optional(),
+        createdByProperty: propertySchema.optional(),
+        modifiedByProperty: propertySchema.optional(),
         options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
         requireForUpdates: z.boolean().optional(),
         autocomplete: sdkVersion && semver_1.default.satisfies(sdkVersion, '<=1.4.0')
@@ -1003,11 +1007,39 @@ function buildMetadataSchema({ sdkVersion }) {
                 }
             }, `must refer to a value that does not have a codaType corresponding to one of ImageAttachment, Attachment, ImageReference, Embed, or Scale.`);
         };
+        const validateCreatedAtProperty = () => {
+            return validateProperty('createdAtProperty', createdAtPropertySchema => (createdAtPropertySchema.type === schema_14.ValueType.String ||
+                createdAtPropertySchema.type === schema_14.ValueType.Number) &&
+                (createdAtPropertySchema.codaType === schema_13.ValueHintType.DateTime ||
+                    createdAtPropertySchema.codaType === schema_13.ValueHintType.Date), `must refer to a "ValueType.String" or "ValueType.Number" property with a "ValueHintType.DateTime" or "ValueHintType.Date" "codaType".`);
+        };
+        const validateModifiedAtProperty = () => {
+            return validateProperty('modifiedAtProperty', modifiedAtPropertySchema => (modifiedAtPropertySchema.type === schema_14.ValueType.String ||
+                modifiedAtPropertySchema.type === schema_14.ValueType.Number) &&
+                (modifiedAtPropertySchema.codaType === schema_13.ValueHintType.DateTime ||
+                    modifiedAtPropertySchema.codaType === schema_13.ValueHintType.Date), `must refer to a "ValueType.String" or "ValueType.Number" property with a "ValueHintType.DateTime" or "ValueHintType.Date" "codaType".`);
+        };
+        const validateCreatedByProperty = () => {
+            return validateProperty('createdByProperty', createdByPropertySchema => (createdByPropertySchema.type === schema_14.ValueType.Object
+                || createdByPropertySchema.type === schema_14.ValueType.String) &&
+                (createdByPropertySchema.codaType === schema_13.ValueHintType.Person
+                    || createdByPropertySchema.codaType === schema_13.ValueHintType.Email), `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`);
+        };
+        const validateModifiedByProperty = () => {
+            return validateProperty('modifiedByProperty', modifiedByPropertySchema => (modifiedByPropertySchema.type === schema_14.ValueType.Object ||
+                modifiedByPropertySchema.type === schema_14.ValueType.String) &&
+                (modifiedByPropertySchema.codaType === schema_13.ValueHintType.Person ||
+                    modifiedByPropertySchema.codaType === schema_13.ValueHintType.Email), `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`);
+        };
         validateTitleProperty();
         validateLinkProperty();
         validateImageProperty();
         validateSnippetProperty();
         validateSubtitleProperties();
+        validateCreatedAtProperty();
+        validateModifiedAtProperty();
+        validateCreatedByProperty();
+        validateModifiedByProperty();
     })
         .superRefine((data, context) => {
         var _a;

@@ -51,6 +51,10 @@ class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
       snippetProperty,
       imageProperty,
       description,
+      createdAtProperty,
+      createdByProperty,
+      modifiedAtProperty,
+      modifiedByProperty,
 
       ...rest
     } = schema;
