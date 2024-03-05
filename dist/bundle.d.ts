@@ -228,6 +228,8 @@ export interface ParamDef<T extends UnionType> {
 	 * The suggested value to be prepopulated for this parameter if it is not specified by the user.
 	 */
 	suggestedValue?: SuggestedValueType<T>;
+	/** @hidden */
+	crawlStrategy?: CrawlStrategy;
 }
 /**
  * Marker type for an optional {@link ParamDef}, used internally.
@@ -263,6 +265,17 @@ export type ParamValues<ParamDefsT extends ParamDefs> = {
  * The type of values that are allowable to be used as a {@link ParamDef.suggestedValue} for a parameter.
  */
 export type SuggestedValueType<T extends UnionType> = T extends ArrayType<Type.date> ? TypeOfMap<T> | PrecannedDateRange : TypeOfMap<T>;
+/** @hidden */
+export interface CrawlStrategy {
+	parentTable?: SyncTableRelation;
+}
+/**
+ * A pointer to a particular property in another sync table.
+ */
+export interface SyncTableRelation {
+	tableName: string;
+	propertyKey: string;
+}
 /**
  * Inputs for creating a formula that are common between regular formulas and sync table formulas.
  */

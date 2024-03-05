@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.zodErrorDetailToValidationError = exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.Limits = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
+exports.zodErrorDetailToValidationError = exports._hasCycle = exports.validateCrawlHierarchy = exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.Limits = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
 const schema_1 = require("../schema");
 const types_1 = require("../types");
 const schema_2 = require("../schema");
@@ -157,6 +157,103 @@ function validateSyncTableSchema(schema, options) {
     throw new PackMetadataValidationError('Schema failed validation', validated.error, validated.error.errors.flatMap(zodErrorDetailToValidationError));
 }
 exports.validateSyncTableSchema = validateSyncTableSchema;
+/**
+ * Returns a map of sync table names to their child sync table names, or undefined if the hierarchy is invalid.
+ * Example valid return: { Parent: 'Child' }
+ * {} is also a valid result, when there are no sync tables, or no parent relationships.
+ * @hidden
+ */
+function validateCrawlHierarchy(pack, context) {
+    const parentToChildrenMap = {};
+    if (!pack.syncTables) {
+        return parentToChildrenMap;
+    }
+    const syncTables = pack.syncTables;
+    const syncTableSchemasByName = {};
+    for (const syncTable of syncTables) {
+        syncTableSchemasByName[syncTable.name] = syncTable.schema;
+    }
+    for (const [tableIndex, syncTable] of syncTables.entries()) {
+        let firstDiscoveredParentTable;
+        for (const [paramIndex, param] of syncTable.getter.parameters.entries()) {
+            if (!param.crawlStrategy) {
+                continue;
+            }
+            if (param.crawlStrategy.parentTable) {
+                const { tableName: parentTableName, propertyKey } = param.crawlStrategy.parentTable;
+                const tableSchema = syncTableSchemasByName[parentTableName];
+                if (!tableSchema) {
+                    context === null || context === void 0 ? void 0 : context.addIssue({
+                        code: z.ZodIssueCode.custom,
+                        path: ['syncTables', tableIndex, 'parameters', paramIndex, 'crawlStrategy', 'parentTable'],
+                        message: `Sync table ${syncTable.name} expects parent table ${parentTableName} to exist.`,
+                    });
+                    return undefined;
+                }
+                const property = tableSchema.properties[propertyKey];
+                if (!property) {
+                    context === null || context === void 0 ? void 0 : context.addIssue({
+                        code: z.ZodIssueCode.custom,
+                        path: ['syncTables', tableIndex, 'parameters', paramIndex, 'crawlStrategy', 'parentTable'],
+                        message: `Sync table ${syncTable.name} expects parent table ${parentTableName}'s schema to have the property ${propertyKey}.`,
+                    });
+                    return undefined;
+                }
+                // TODO(patrick): Validate the types match
+                // We only allow one parent per table.
+                if (firstDiscoveredParentTable && firstDiscoveredParentTable !== parentTableName) {
+                    context === null || context === void 0 ? void 0 : context.addIssue({
+                        code: z.ZodIssueCode.custom,
+                        path: ['syncTables', tableIndex, 'parameters'],
+                        message: `Sync table ${syncTable.name} cannot reference multiple parent tables.`,
+                    });
+                    return undefined;
+                }
+                const childList = parentToChildrenMap[parentTableName] || [];
+                // This table may already be in the child list if it uses multiple params from the parent.
+                if (!childList.includes(syncTable.name)) {
+                    childList.push(syncTable.name);
+                }
+                parentToChildrenMap[parentTableName] = childList;
+                firstDiscoveredParentTable = parentTableName;
+            }
+        }
+    }
+    // Verify that there's no cycle
+    if (_hasCycle(parentToChildrenMap)) {
+        context === null || context === void 0 ? void 0 : context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['syncTables'],
+            message: `Sync table parent hierarchy is cyclic`,
+        });
+        return undefined;
+    }
+    return parentToChildrenMap;
+}
+exports.validateCrawlHierarchy = validateCrawlHierarchy;
+// Exported for tests
+/** @hidden */
+function _hasCycle(tree) {
+    function subtreeHasCycle(currentKey, children, visited) {
+        if (visited.has(currentKey)) {
+            return true;
+        }
+        visited.add(currentKey);
+        for (const child of children) {
+            const subtree = tree[child];
+            if (!subtree) {
+                break;
+            }
+            if (subtreeHasCycle(child, subtree, visited)) {
+                return true;
+            }
+        }
+        visited.delete(currentKey);
+        return false;
+    }
+    return subtreeHasCycle('__CODA_INTERNAL_ROOT__', Object.keys(tree), new Set());
+}
+exports._hasCycle = _hasCycle;
 function getNonUniqueElements(items) {
     const set = new Set();
     const nonUnique = [];
@@ -463,6 +560,7 @@ function buildMetadataSchema({ sdkVersion }) {
         autocomplete: z.unknown().optional(),
         defaultValue: z.unknown().optional(),
         suggestedValue: z.unknown().optional(),
+        crawlStrategy: z.unknown().optional(),
     });
     const commonPackFormulaSchema = {
         // It would be preferable to use validateFormulaName here, but we have to exempt legacy packs with sync tables
@@ -1436,6 +1534,9 @@ function buildMetadataSchema({ sdkVersion }) {
                 });
             }
         });
+    })
+        .superRefine((data, context) => {
+        validateCrawlHierarchy(data, context);
     })
         .superRefine((data, context) => {
         (data.formulas || []).forEach((formula, i) => {

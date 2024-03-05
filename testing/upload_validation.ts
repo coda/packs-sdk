@@ -51,6 +51,7 @@ import {OptionsType} from '../api_types';
 import {PackCategory} from '../types';
 import type {PackFormatMetadata} from '../compiled_types';
 import type {PackFormulaMetadata} from '../api';
+import type {PackVersionDefinition} from '..';
 import type {PackVersionMetadata} from '../compiled_types';
 import type {ParamDef} from '../api_types';
 import type {ParamDefs} from '../api_types';
@@ -225,6 +226,111 @@ export function validateSyncTableSchema(
     validated.error,
     validated.error.errors.flatMap(zodErrorDetailToValidationError),
   );
+}
+
+/**
+ * Returns a map of sync table names to their child sync table names, or undefined if the hierarchy is invalid.
+ * Example valid return: { Parent: 'Child' }
+ * {} is also a valid result, when there are no sync tables, or no parent relationships.
+ * @hidden
+ */
+export function validateCrawlHierarchy(
+  pack: PackVersionDefinition,
+  context?: z.RefinementCtx,
+): Record<string, string[]> | undefined {
+  const parentToChildrenMap: Record<string, string[]> = {};
+  if (!pack.syncTables) {
+    return parentToChildrenMap;
+  }
+  const syncTables: SyncTable[] = pack.syncTables;
+  const syncTableSchemasByName: Record<string, ObjectSchema<any, any>> = {};
+  for (const syncTable of syncTables) {
+    syncTableSchemasByName[syncTable.name] = syncTable.schema;
+  }
+  for (const [tableIndex, syncTable] of syncTables.entries()) {
+    let firstDiscoveredParentTable: string | undefined;
+    for (const [paramIndex, param] of syncTable.getter.parameters.entries()) {
+      if (!param.crawlStrategy) {
+        continue;
+      }
+      if (param.crawlStrategy.parentTable) {
+        const {tableName: parentTableName, propertyKey} = param.crawlStrategy.parentTable;
+
+        const tableSchema = syncTableSchemasByName[parentTableName];
+        if (!tableSchema) {
+          context?.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['syncTables', tableIndex, 'parameters', paramIndex, 'crawlStrategy', 'parentTable'],
+            message: `Sync table ${syncTable.name} expects parent table ${parentTableName} to exist.`,
+          });
+          return undefined;
+        }
+
+        const property = tableSchema.properties[propertyKey];
+        if (!property) {
+          context?.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['syncTables', tableIndex, 'parameters', paramIndex, 'crawlStrategy', 'parentTable'],
+            message: `Sync table ${syncTable.name} expects parent table ${parentTableName}'s schema to have the property ${propertyKey}.`,
+          });
+          return undefined;
+        }
+
+        // TODO(patrick): Validate the types match
+
+        // We only allow one parent per table.
+        if (firstDiscoveredParentTable && firstDiscoveredParentTable !== parentTableName) {
+          context?.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['syncTables', tableIndex, 'parameters'],
+            message: `Sync table ${syncTable.name} cannot reference multiple parent tables.`,
+          });
+          return undefined;
+        }
+
+        const childList = parentToChildrenMap[parentTableName] || [];
+        // This table may already be in the child list if it uses multiple params from the parent.
+        if (!childList.includes(syncTable.name)) {
+          childList.push(syncTable.name);
+        }
+        parentToChildrenMap[parentTableName] = childList;
+        firstDiscoveredParentTable = parentTableName;
+      }
+    }
+  }
+  // Verify that there's no cycle
+  if (_hasCycle(parentToChildrenMap)) {
+    context?.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['syncTables'],
+      message: `Sync table parent hierarchy is cyclic`,
+    });
+    return undefined;
+  }
+  return parentToChildrenMap;
+}
+
+// Exported for tests
+/** @hidden */
+export function _hasCycle(tree: Record<string, string[]>): boolean {
+  function subtreeHasCycle(currentKey: string, children: string[], visited: Set<string>): boolean {
+    if (visited.has(currentKey)) {
+      return true;
+    }
+    visited.add(currentKey);
+    for (const child of children) {
+      const subtree = tree[child];
+      if (!subtree) {
+        break;
+      }
+      if (subtreeHasCycle(child, subtree, visited)) {
+        return true;
+      }
+    }
+    visited.delete(currentKey);
+    return false;
+  }
+  return subtreeHasCycle('__CODA_INTERNAL_ROOT__', Object.keys(tree), new Set<string>());
 }
 
 function getNonUniqueElements<T extends string>(items: T[]): T[] {
@@ -590,6 +696,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     autocomplete: z.unknown().optional(),
     defaultValue: z.unknown().optional(),
     suggestedValue: z.unknown().optional(),
+    crawlStrategy: z.unknown().optional(),
   });
 
   const commonPackFormulaSchema = {
@@ -1756,6 +1863,9 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
           });
         }
       });
+    })
+    .superRefine((data, context) => {
+      validateCrawlHierarchy(data as PackVersionDefinition, context);
     })
     .superRefine((data, context) => {
       ((data.formulas as any[]) || []).forEach((formula, i) => {
