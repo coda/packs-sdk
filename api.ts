@@ -1147,7 +1147,7 @@ export interface SyncFormulaDef<
   updateOptions?: Pick<CommonPackFormulaDef<ParamDefsT>, 'extraOAuthScopes'>;
 
   /**
-   * Given a set of rows, return permission lists, keyed by the row's idProperty value.
+   * Given a set of rows, return permission lists, keyed by the rows' idProperty values.
    *
    * TODO(patrick): Unhide this
    * @hidden
@@ -1156,7 +1156,7 @@ export interface SyncFormulaDef<
 
   /**
    * If the table implements {@link getPermission}, the maximum number of rows that will be sent to that
-   * function in a single batch. Defaults to 1 if not specified.
+   * function in a single batch. Defaults to 10 if not specified.
    *
    * TODO(patrick): Unhide this
    * @hidden
@@ -1991,12 +1991,20 @@ export interface SyncTableOptions<
    */
   dynamicOptions?: DynamicOptions;
 
-  // if true, schema must define a permissionUserProperty
-  /** @hidden */
+  /**
+   * If true, the schema must define a permissionUserProperty.
+   *
+   * TODO(patrick): Unhide this
+   * @hidden
+   */
   isUserPrincipalTable?: boolean;
 
-  // if true, schema must define a permissionGroupMembersProperty
-  /** @hidden */
+  /**
+   * If true, the schema must define a permissionGroupMembersProperty.
+   *
+   * TODO(patrick): Unhide this
+   * @hidden
+   */
   isGroupPrincipalTable?: boolean;
 }
 
