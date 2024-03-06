@@ -2234,7 +2234,7 @@ describe('Pack metadata Validation', async () => {
             syncTables: [childTable, parentTable],
           });
           await validateJson(metadata);
-          const hierarchy = validateCrawlHierarchy(metadata);
+          const hierarchy = validateCrawlHierarchy(metadata.syncTables || []);
           assert.deepEqual(hierarchy, {Parent: ['Child']});
         });
 
@@ -2357,7 +2357,7 @@ describe('Pack metadata Validation', async () => {
             syncTables: [childTable, parentTable],
           });
           await validateJson(metadata);
-          const hierarchy = validateCrawlHierarchy(metadata);
+          const hierarchy = validateCrawlHierarchy(metadata.syncTables || []);
           assert.deepEqual(hierarchy, {Parent: ['Child']});
         });
 
@@ -2433,7 +2433,7 @@ describe('Pack metadata Validation', async () => {
               path: 'syncTables',
             },
           ]);
-          const hierarchy = validateCrawlHierarchy(metadata);
+          const hierarchy = validateCrawlHierarchy(metadata.syncTables || []);
           assert.isUndefined(hierarchy);
         });
 
@@ -2498,7 +2498,7 @@ describe('Pack metadata Validation', async () => {
               path: 'syncTables[0].parameters',
             },
           ]);
-          const hierarchy = validateCrawlHierarchy(metadata);
+          const hierarchy = validateCrawlHierarchy(metadata.syncTables || []);
           assert.isUndefined(hierarchy);
         });
       });

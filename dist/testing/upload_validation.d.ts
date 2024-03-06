@@ -1,7 +1,7 @@
 import type { ArraySchema } from '../schema';
 import type { ObjectSchema } from '../schema';
-import type { PackVersionDefinition } from '..';
 import type { PackVersionMetadata } from '../compiled_types';
+import type { SyncTable } from '../api';
 import type { ValidationError } from './types';
 import type { VariousAuthentication } from '../types';
 import * as z from 'zod';
@@ -37,7 +37,7 @@ export declare function validateSyncTableSchema(schema: any, options: BuildMetad
  * {} is also a valid result, when there are no sync tables, or no parent relationships.
  * @hidden
  */
-export declare function validateCrawlHierarchy(pack: PackVersionDefinition, context?: z.RefinementCtx): Record<string, string[]> | undefined;
+export declare function validateCrawlHierarchy(syncTables: SyncTable[], context?: z.RefinementCtx): Record<string, string[]> | undefined;
 /** @hidden */
 export declare function _hasCycle(tree: Record<string, string[]>): boolean;
 export declare function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError[];
