@@ -155,6 +155,7 @@ pack.addDynamicSyncTable({
 
     // Add a schema property for each column.
     for (let column of dataset.columns) {
+      let name = column.name;
       let fieldName = column.fieldName;
       let dataType = column.dataTypeName;
       let description = column.description;
@@ -171,6 +172,7 @@ pack.addDynamicSyncTable({
 
       schema.properties[fieldName] = {
         ...fieldSchema,
+        displayName: name,
         description: description,
       };
     }

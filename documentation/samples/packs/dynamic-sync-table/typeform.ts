@@ -199,8 +199,8 @@ function getPropertyName(field) {
 // Generates a property schema based on a Typeform field.
 function getPropertySchema(field): coda.Schema & coda.ObjectSchemaProperty {
   let schema: any = {
-    // Use the field's full title as it's description.
-    description: field.title,
+    // Use the field's full title as the column name.
+    displayName: field.title,
     // The sync formula will return the value keyed using the field's ID.
     fromKey: getPropertyKey(field),
   };
