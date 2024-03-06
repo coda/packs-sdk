@@ -1048,7 +1048,15 @@ export type PropertyIdentifier<K extends string = string> = K | string | Propert
  */
 export type ObjectSchemaPathProperties = Pick<
   GenericObjectSchema,
-  'titleProperty' | 'linkProperty' | 'imageProperty' | 'snippetProperty' | 'subtitleProperties' | 'createdAtProperty' | 'createdByProperty' | 'modifiedAtProperty' | 'modifiedByProperty'
+  | 'titleProperty'
+  | 'linkProperty'
+  | 'imageProperty'
+  | 'snippetProperty'
+  | 'subtitleProperties'
+  | 'createdAtProperty'
+  | 'createdByProperty'
+  | 'modifiedAtProperty'
+  | 'modifiedByProperty'
 >;
 
 /**
@@ -1203,6 +1211,44 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
   modifiedByProperty?: PropertyIdentifier<K>;
 
   // TODO(dweitzman): Only support options in the typing when the codaType is ValueHintType.SelectList.
+
+  // TODO(patrick): Unhide this.
+  /**
+   * This property should be typed as either an Email or a Person.
+   * @hidden
+   */
+  permissionUserProperty?: K;
+
+  // TODO(patrick): Unhide this.
+  /**
+   * This property should be typed one of: an Email, a Person, or a reference to a sync table which has
+   * isUserPrincipalTable=true.
+   * @hidden
+   */
+  permissionGroupMembersProperty?: K;
+}
+
+// TODO(patrick): Unhide this
+/** @hidden */
+export interface Permission {
+  // The simplest ACL is just a user email.
+  userEmail?: string;
+
+  // If there is an isUserPrincipal table, you can use the idProperty of its rows to reference them.
+  userReference?: string | number;
+
+  // If more than 1 sync table isGroupPrincipal, this specifies the identityName of the group
+  // being referenced.
+  groupIdentityName?: string;
+
+  // Should be the value of idProperty for a row in the isGroupPrincipal table.
+  groupReference?: string | number;
+
+  // TODO(patrick): query-time group
+
+  // TODO(patrick): domain?: string;
+
+  // TODO(patrick): isPublicToOrg?: boolean;
 }
 
 export type ObjectSchemaDefinitionType<
@@ -1735,6 +1781,8 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     imageProperty,
     includeUnknownProperties,
     linkProperty,
+    permissionGroupMembersProperty,
+    permissionUserProperty,
     primary,
     properties,
     snippetProperty,
@@ -1783,6 +1831,9 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     imageProperty: imageProperty ? normalizeSchemaPropertyIdentifier(imageProperty, normalizedProperties) : undefined,
     includeUnknownProperties,
     linkProperty: linkProperty ? normalizeSchemaPropertyIdentifier(linkProperty, normalizedProperties) : undefined,
+    permissionGroupMembersProperty: permissionGroupMembersProperty
+      ? normalizeSchemaKey(permissionGroupMembersProperty)
+      : undefined,
     primary: primary ? normalizeSchemaKey(primary) : undefined,
     properties: normalizedProperties,
     snippetProperty: snippetProperty
@@ -1792,14 +1843,18 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
       ? subtitleProperties.map(subProp => normalizeSchemaPropertyIdentifier(subProp, normalizedProperties))
       : undefined,
     titleProperty: titleProperty ? normalizeSchemaPropertyIdentifier(titleProperty, normalizedProperties) : undefined,
-    createdAtProperty: createdAtProperty ?
-      normalizeSchemaPropertyIdentifier(createdAtProperty, normalizedProperties) : undefined,
-    createdByProperty: createdByProperty ?
-      normalizeSchemaPropertyIdentifier(createdByProperty, normalizedProperties) : undefined,
-    modifiedAtProperty: modifiedAtProperty ?
-      normalizeSchemaPropertyIdentifier(modifiedAtProperty, normalizedProperties) : undefined,
-    modifiedByProperty: modifiedByProperty ?
-      normalizeSchemaPropertyIdentifier(modifiedByProperty, normalizedProperties) : undefined,
+    createdAtProperty: createdAtProperty
+      ? normalizeSchemaPropertyIdentifier(createdAtProperty, normalizedProperties)
+      : undefined,
+    createdByProperty: createdByProperty
+      ? normalizeSchemaPropertyIdentifier(createdByProperty, normalizedProperties)
+      : undefined,
+    modifiedAtProperty: modifiedAtProperty
+      ? normalizeSchemaPropertyIdentifier(modifiedAtProperty, normalizedProperties)
+      : undefined,
+    modifiedByProperty: modifiedByProperty
+      ? normalizeSchemaPropertyIdentifier(modifiedByProperty, normalizedProperties)
+      : undefined,
     type: ValueType.Object,
   };
 }

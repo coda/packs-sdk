@@ -863,6 +863,8 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
             };
         }
         : undefined;
+    // TODO(patrick): implement
+    const getPermissions = (async () => { });
     return {
         name,
         description,
@@ -878,6 +880,7 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
             supportsUpdates: Boolean(executeUpdate),
             connectionRequirement: definition.connectionRequirement || connectionRequirement,
             resultType: api_types_5.Type.object,
+            getPermissions,
         },
         getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
         entityName,

@@ -129,6 +129,7 @@ export const Limits = {
   NumColumnMatchersPerFormat: 10,
   NetworkDomainUrl: 253,
   UpdateBatchSize: 1000,
+  PermissionBatchSize: 1000,
 };
 
 enum CustomErrorCode {
@@ -1158,6 +1159,8 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       createdByProperty: propertySchema.optional(),
       modifiedByProperty: propertySchema.optional(),
       options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
+      permissionGroupMembersProperty: z.string().min(1).optional(),
+      permissionUserProperty: z.string().min(1).optional(),
       requireForUpdates: z.boolean().optional(),
       autocomplete:
         sdkVersion && semver.satisfies(sdkVersion, '<=1.4.0')
@@ -1376,7 +1379,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
                 createdAtPropertySchema.codaType === ValueHintType.Date),
             `must refer to a "ValueType.String" or "ValueType.Number" property with a "ValueHintType.DateTime" or "ValueHintType.Date" "codaType".`,
           );
-        }
+        };
         const validateModifiedAtProperty = () => {
           return validateProperty(
             'modifiedAtProperty',
@@ -1387,15 +1390,15 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
                 modifiedAtPropertySchema.codaType === ValueHintType.Date),
             `must refer to a "ValueType.String" or "ValueType.Number" property with a "ValueHintType.DateTime" or "ValueHintType.Date" "codaType".`,
           );
-        }
+        };
         const validateCreatedByProperty = () => {
           return validateProperty(
             'createdByProperty',
             createdByPropertySchema =>
-            (createdByPropertySchema.type === ValueType.Object
-              || createdByPropertySchema.type === ValueType.String) &&
-            (createdByPropertySchema.codaType === ValueHintType.Person
-              || createdByPropertySchema.codaType === ValueHintType.Email),
+              (createdByPropertySchema.type === ValueType.Object ||
+                createdByPropertySchema.type === ValueType.String) &&
+              (createdByPropertySchema.codaType === ValueHintType.Person ||
+                createdByPropertySchema.codaType === ValueHintType.Email),
             `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`,
           );
         };
@@ -1403,10 +1406,10 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
           return validateProperty(
             'modifiedByProperty',
             modifiedByPropertySchema =>
-            (modifiedByPropertySchema.type === ValueType.Object ||
-              modifiedByPropertySchema.type === ValueType.String) &&
-            (modifiedByPropertySchema.codaType === ValueHintType.Person ||
-              modifiedByPropertySchema.codaType === ValueHintType.Email),
+              (modifiedByPropertySchema.type === ValueType.Object ||
+                modifiedByPropertySchema.type === ValueType.String) &&
+              (modifiedByPropertySchema.codaType === ValueHintType.Person ||
+                modifiedByPropertySchema.codaType === ValueHintType.Email),
             `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`,
           );
         };
@@ -1496,12 +1499,13 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
   });
 
   const syncFormulaSchema = zodCompleteObject<
-    Omit<SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>>, 'execute' | 'executeUpdate'>
+    Omit<SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>>, 'execute' | 'executeUpdate' | 'getPermissions'>
   >({
     schema: arrayPropertySchema.optional(),
     resultType: z.any(),
     isSyncFormula: z.literal(true),
     maxUpdateBatchSize: z.number().min(1).max(Limits.UpdateBatchSize).optional(),
+    maxPermissionBatchSize: z.number().min(1).max(Limits.PermissionBatchSize).optional(),
     supportsUpdates: z.boolean().optional(),
     ...commonPackFormulaSchema,
     updateOptions: z.strictObject({extraOAuthScopes: commonPackFormulaSchema.extraOAuthScopes}).optional(),

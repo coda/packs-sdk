@@ -678,7 +678,7 @@ function normalizeSchema(schema) {
 exports.normalizeSchema = normalizeSchema;
 function normalizeObjectSchema(schema) {
     const normalizedProperties = {};
-    const { attribution, options, requireForUpdates, codaType, description, displayProperty, featured, featuredProperties, id, identity, idProperty, imageProperty, includeUnknownProperties, linkProperty, primary, properties, snippetProperty, subtitleProperties, titleProperty, type, 
+    const { attribution, options, requireForUpdates, codaType, description, displayProperty, featured, featuredProperties, id, identity, idProperty, imageProperty, includeUnknownProperties, linkProperty, permissionGroupMembersProperty, permissionUserProperty, primary, properties, snippetProperty, subtitleProperties, titleProperty, type, 
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __packId, createdAtProperty, createdByProperty, modifiedAtProperty, modifiedByProperty, ...rest } = schema;
     // Have TS ensure we don't forget about new fields in this function.
@@ -715,6 +715,9 @@ function normalizeObjectSchema(schema) {
         imageProperty: imageProperty ? normalizeSchemaPropertyIdentifier(imageProperty, normalizedProperties) : undefined,
         includeUnknownProperties,
         linkProperty: linkProperty ? normalizeSchemaPropertyIdentifier(linkProperty, normalizedProperties) : undefined,
+        permissionGroupMembersProperty: permissionGroupMembersProperty
+            ? normalizeSchemaKey(permissionGroupMembersProperty)
+            : undefined,
         primary: primary ? normalizeSchemaKey(primary) : undefined,
         properties: normalizedProperties,
         snippetProperty: snippetProperty
@@ -724,14 +727,18 @@ function normalizeObjectSchema(schema) {
             ? subtitleProperties.map(subProp => normalizeSchemaPropertyIdentifier(subProp, normalizedProperties))
             : undefined,
         titleProperty: titleProperty ? normalizeSchemaPropertyIdentifier(titleProperty, normalizedProperties) : undefined,
-        createdAtProperty: createdAtProperty ?
-            normalizeSchemaPropertyIdentifier(createdAtProperty, normalizedProperties) : undefined,
-        createdByProperty: createdByProperty ?
-            normalizeSchemaPropertyIdentifier(createdByProperty, normalizedProperties) : undefined,
-        modifiedAtProperty: modifiedAtProperty ?
-            normalizeSchemaPropertyIdentifier(modifiedAtProperty, normalizedProperties) : undefined,
-        modifiedByProperty: modifiedByProperty ?
-            normalizeSchemaPropertyIdentifier(modifiedByProperty, normalizedProperties) : undefined,
+        createdAtProperty: createdAtProperty
+            ? normalizeSchemaPropertyIdentifier(createdAtProperty, normalizedProperties)
+            : undefined,
+        createdByProperty: createdByProperty
+            ? normalizeSchemaPropertyIdentifier(createdByProperty, normalizedProperties)
+            : undefined,
+        modifiedAtProperty: modifiedAtProperty
+            ? normalizeSchemaPropertyIdentifier(modifiedAtProperty, normalizedProperties)
+            : undefined,
+        modifiedByProperty: modifiedByProperty
+            ? normalizeSchemaPropertyIdentifier(modifiedByProperty, normalizedProperties)
+            : undefined,
         type: ValueType.Object,
     };
 }

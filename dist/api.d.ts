@@ -19,6 +19,7 @@ import type { ParamDefs } from './api_types';
 import type { ParamValues } from './api_types';
 import { ParameterType } from './api_types';
 import type { ParameterTypeMap } from './api_types';
+import type { Permission } from './schema';
 import type { PropertyOptionsExecutionContext } from './api_types';
 import type { PropertyOptionsMetadataFunction } from './api_types';
 import type { PropertyOptionsMetadataResult } from './api_types';
@@ -668,6 +669,21 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
      * @hidden
      */
     updateOptions?: Pick<CommonPackFormulaDef<ParamDefsT>, 'extraOAuthScopes'>;
+    /**
+     * Given a set of rows, return permission lists, keyed by the row's idProperty value.
+     *
+     * TODO(patrick): Unhide this
+     * @hidden
+     */
+    getPermissions?(rows: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>): Promise<Record<string, Permission[]>>;
+    /**
+     * If the table implements {@link getPermission}, the maximum number of rows that will be sent to that
+     * function in a single batch. Defaults to 1 if not specified.
+     *
+     * TODO(patrick): Unhide this
+     * @hidden
+     */
+    maxPermissionBatchSize?: number;
 }
 /**
  * The result of defining the formula that implements a sync table.
@@ -1129,6 +1145,10 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
      * sync tables that have a dynamic schema.
      */
     dynamicOptions?: DynamicOptions;
+    /** @hidden */
+    isUserPrincipalTable?: boolean;
+    /** @hidden */
+    isGroupPrincipalTable?: boolean;
 }
 /**
  * Options provided when defining a dynamic sync table.

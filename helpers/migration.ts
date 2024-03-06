@@ -55,6 +55,8 @@ class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
       createdByProperty,
       modifiedAtProperty,
       modifiedByProperty,
+      permissionGroupMembersProperty,
+      permissionUserProperty,
 
       ...rest
     } = schema;

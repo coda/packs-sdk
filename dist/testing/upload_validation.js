@@ -92,6 +92,7 @@ exports.Limits = {
     NumColumnMatchersPerFormat: 10,
     NetworkDomainUrl: 253,
     UpdateBatchSize: 1000,
+    PermissionBatchSize: 1000,
 };
 var CustomErrorCode;
 (function (CustomErrorCode) {
@@ -948,6 +949,8 @@ function buildMetadataSchema({ sdkVersion }) {
         createdByProperty: propertySchema.optional(),
         modifiedByProperty: propertySchema.optional(),
         options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
+        permissionGroupMembersProperty: z.string().min(1).optional(),
+        permissionUserProperty: z.string().min(1).optional(),
         requireForUpdates: z.boolean().optional(),
         autocomplete: sdkVersion && semver_1.default.satisfies(sdkVersion, '<=1.4.0')
             ? zodOptionsFieldWithValues(z.string(), true)
@@ -1118,10 +1121,10 @@ function buildMetadataSchema({ sdkVersion }) {
                     modifiedAtPropertySchema.codaType === schema_13.ValueHintType.Date), `must refer to a "ValueType.String" or "ValueType.Number" property with a "ValueHintType.DateTime" or "ValueHintType.Date" "codaType".`);
         };
         const validateCreatedByProperty = () => {
-            return validateProperty('createdByProperty', createdByPropertySchema => (createdByPropertySchema.type === schema_14.ValueType.Object
-                || createdByPropertySchema.type === schema_14.ValueType.String) &&
-                (createdByPropertySchema.codaType === schema_13.ValueHintType.Person
-                    || createdByPropertySchema.codaType === schema_13.ValueHintType.Email), `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`);
+            return validateProperty('createdByProperty', createdByPropertySchema => (createdByPropertySchema.type === schema_14.ValueType.Object ||
+                createdByPropertySchema.type === schema_14.ValueType.String) &&
+                (createdByPropertySchema.codaType === schema_13.ValueHintType.Person ||
+                    createdByPropertySchema.codaType === schema_13.ValueHintType.Email), `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`);
         };
         const validateModifiedByProperty = () => {
             return validateProperty('modifiedByProperty', modifiedByPropertySchema => (modifiedByPropertySchema.type === schema_14.ValueType.Object ||
@@ -1211,6 +1214,7 @@ function buildMetadataSchema({ sdkVersion }) {
         resultType: z.any(),
         isSyncFormula: z.literal(true),
         maxUpdateBatchSize: z.number().min(1).max(exports.Limits.UpdateBatchSize).optional(),
+        maxPermissionBatchSize: z.number().min(1).max(exports.Limits.PermissionBatchSize).optional(),
         supportsUpdates: z.boolean().optional(),
         ...commonPackFormulaSchema,
         updateOptions: z.strictObject({ extraOAuthScopes: commonPackFormulaSchema.extraOAuthScopes }).optional(),

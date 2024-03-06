@@ -371,6 +371,38 @@ describe('Schema', () => {
       });
     });
 
+    it('works with predefined identiry', () => {
+      const thingSchema = makeObjectSchema({
+        identity: {
+          name: 'Thing',
+        },
+        properties: {
+          name: {type: ValueType.String, required: true},
+          id: {type: ValueType.Number, required: true},
+          other: {type: ValueType.Boolean},
+        },
+        displayProperty: 'name',
+        idProperty: 'id',
+      });
+
+      const thingReferenceSchema = schema.makeReferenceSchemaFromObjectSchema(thingSchema);
+      assert.deepEqual(thingReferenceSchema, {
+        codaType: ValueHintType.Reference,
+        type: ValueType.Object,
+        idProperty: 'id',
+        // TODO(patrick): Remove this cast after we distinguish schema definitions from runtime schemas
+        identity: {name: 'Thing'} as schema.Identity,
+        displayProperty: 'name',
+        properties: {
+          id: {type: ValueType.Number, required: true},
+          name: {type: ValueType.String, required: true},
+        },
+        mutable: undefined,
+        options: undefined,
+        requireForUpdates: undefined,
+      });
+    });
+
     it('display property is same as id', () => {
       const thingSchema = makeObjectSchema({
         properties: {

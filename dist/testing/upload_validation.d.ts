@@ -20,6 +20,7 @@ export declare const Limits: {
     NumColumnMatchersPerFormat: number;
     NetworkDomainUrl: number;
     UpdateBatchSize: number;
+    PermissionBatchSize: number;
 };
 export declare class PackMetadataValidationError extends Error {
     readonly originalError: Error | undefined;

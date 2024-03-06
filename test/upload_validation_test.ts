@@ -19,6 +19,7 @@ import {PackMetadataValidationError} from '../testing/upload_validation';
 import type {PackVersionMetadata} from '../compiled_types';
 import type {ParamDefs} from '../api_types';
 import {ParameterType} from '../api_types';
+import type {Permission} from '../schema';
 import {PostSetupType} from '../types';
 import {ScaleIconSet} from '../schema';
 import type {StringFormulaDefLegacy} from '../api';
@@ -42,6 +43,7 @@ import {makeNumericParameter} from '../api';
 import {makeObjectFormula} from '../api';
 import {makeObjectSchema} from '../schema';
 import {makeParameter} from '../api';
+import {makeReferenceSchemaFromObjectSchema} from '../schema';
 import {makeSchema} from '../schema';
 import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
@@ -2502,6 +2504,115 @@ describe('Pack metadata Validation', async () => {
           assert.isUndefined(hierarchy);
         });
       });
+
+      describe('getPermissions', () => {
+        it('example', async () => {
+          const userSchema = makeObjectSchema({
+            type: ValueType.Object,
+            displayProperty: 'email',
+            idProperty: 'userId',
+            properties: {
+              userId: {type: ValueType.String, required: true},
+              email: {type: ValueType.String, required: true},
+            },
+            permissionUserProperty: 'email',
+          });
+
+          const users = makeSyncTable({
+            name: 'Users',
+            identityName: 'User',
+            schema: userSchema,
+            isUserPrincipalTable: true,
+            formula: {
+              name: 'Users',
+              description: '',
+              async execute([], _context) {
+                return {result: []};
+              },
+              parameters: [],
+              examples: [],
+            },
+          });
+
+          const teamSchema = makeObjectSchema({
+            type: ValueType.Object,
+            displayProperty: 'teamId',
+            idProperty: 'teamId',
+            properties: {
+              teamId: {type: ValueType.String},
+              groupName: {type: ValueType.String},
+              members: {type: ValueType.Array, items: makeReferenceSchemaFromObjectSchema(userSchema, 'User')},
+            },
+            groupMembersProperty: 'members',
+          });
+
+          const teams = makeSyncTable({
+            name: 'Teams',
+            identityName: 'Team',
+            schema: teamSchema,
+            isGroupPrincipalTable: true,
+            formula: {
+              name: 'Teams',
+              description: '',
+              async execute([], _context) {
+                return {result: []};
+              },
+              parameters: [],
+              examples: [],
+            },
+          });
+
+          const repoSchema = makeObjectSchema({
+            type: ValueType.Object,
+            displayProperty: 'name',
+            idProperty: 'id',
+            properties: {
+              id: {type: ValueType.String},
+              name: {type: ValueType.String},
+            },
+          });
+
+          const repos = makeSyncTable({
+            name: 'Repos',
+            identityName: 'Repo',
+            schema: repoSchema,
+            formula: {
+              name: 'Repos',
+              description: '',
+              async execute([], _context) {
+                return {result: []};
+              },
+              async getPermissions(rows) {
+                const permissions: Record<string, Permission[]> = {};
+                for (const row of rows) {
+                  const idValue = row[repoSchema.idProperty];
+                  if (!idValue) {
+                    continue;
+                  }
+                  permissions[idValue] = [
+                    {userEmail: 'example@foo.com'},
+                    {
+                      // groupIdentityName isn't actually necessary b/c there's only 1 group principal table
+                      groupIdentityName: 'Team',
+                      groupReference: 'myTeam',
+                    },
+                  ];
+                }
+                return permissions;
+              },
+              parameters: [],
+              examples: [],
+            },
+          });
+
+          const metadata = createFakePack({
+            id: 1013,
+            syncTables: [repos, teams, users],
+          });
+          await validateJson(metadata);
+        });
+      });
+
     });
 
     describe('object schemas', () => {

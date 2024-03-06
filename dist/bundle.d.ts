@@ -1867,6 +1867,24 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 * @hidden
 	 */
 	modifiedByProperty?: PropertyIdentifier<K>;
+	/**
+	 * This property should be typed as either an Email or a Person.
+	 * @hidden
+	 */
+	permissionUserProperty?: K;
+	/**
+	 * This property should be typed one of: an Email, a Person, or a reference to a sync table which has
+	 * isUserPrincipalTable=true.
+	 * @hidden
+	 */
+	permissionGroupMembersProperty?: K;
+}
+/** @hidden */
+export interface Permission {
+	userEmail?: string;
+	userReference?: string | number;
+	groupIdentityName?: string;
+	groupReference?: string | number;
 }
 export type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
 /** @hidden */
@@ -2765,6 +2783,21 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
 	 * @hidden
 	 */
 	updateOptions?: Pick<CommonPackFormulaDef<ParamDefsT>, "extraOAuthScopes">;
+	/**
+	 * Given a set of rows, return permission lists, keyed by the row's idProperty value.
+	 *
+	 * TODO(patrick): Unhide this
+	 * @hidden
+	 */
+	getPermissions?(rows: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>): Promise<Record<string, Permission[]>>;
+	/**
+	 * If the table implements {@link getPermission}, the maximum number of rows that will be sent to that
+	 * function in a single batch. Defaults to 1 if not specified.
+	 *
+	 * TODO(patrick): Unhide this
+	 * @hidden
+	 */
+	maxPermissionBatchSize?: number;
 }
 /**
  * The result of defining the formula that implements a sync table.
@@ -3173,6 +3206,10 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
 	 * sync tables that have a dynamic schema.
 	 */
 	dynamicOptions?: DynamicOptions;
+	/** @hidden */
+	isUserPrincipalTable?: boolean;
+	/** @hidden */
+	isGroupPrincipalTable?: boolean;
 }
 /**
  * Options provided when defining a dynamic sync table.

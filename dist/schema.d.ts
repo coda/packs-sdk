@@ -1053,6 +1053,24 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      * @hidden
      */
     modifiedByProperty?: PropertyIdentifier<K>;
+    /**
+     * This property should be typed as either an Email or a Person.
+     * @hidden
+     */
+    permissionUserProperty?: K;
+    /**
+     * This property should be typed one of: an Email, a Person, or a reference to a sync table which has
+     * isUserPrincipalTable=true.
+     * @hidden
+     */
+    permissionGroupMembersProperty?: K;
+}
+/** @hidden */
+export interface Permission {
+    userEmail?: string;
+    userReference?: string | number;
+    groupIdentityName?: string;
+    groupReference?: string | number;
 }
 export type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
 /** @hidden */
