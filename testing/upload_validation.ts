@@ -235,14 +235,10 @@ export function validateSyncTableSchema(
  * @hidden
  */
 export function validateCrawlHierarchy(
-  pack: PackVersionDefinition,
+  syncTables: SyncTable[],
   context?: z.RefinementCtx,
 ): Record<string, string[]> | undefined {
   const parentToChildrenMap: Record<string, string[]> = {};
-  if (!pack.syncTables) {
-    return parentToChildrenMap;
-  }
-  const syncTables: SyncTable[] = pack.syncTables;
   const syncTableSchemasByName: Record<string, ObjectSchema<any, any>> = {};
   for (const syncTable of syncTables) {
     syncTableSchemasByName[syncTable.name] = syncTable.schema;
@@ -1376,7 +1372,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
                 createdAtPropertySchema.codaType === ValueHintType.Date),
             `must refer to a "ValueType.String" or "ValueType.Number" property with a "ValueHintType.DateTime" or "ValueHintType.Date" "codaType".`,
           );
-        }
+        };
         const validateModifiedAtProperty = () => {
           return validateProperty(
             'modifiedAtProperty',
@@ -1387,15 +1383,15 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
                 modifiedAtPropertySchema.codaType === ValueHintType.Date),
             `must refer to a "ValueType.String" or "ValueType.Number" property with a "ValueHintType.DateTime" or "ValueHintType.Date" "codaType".`,
           );
-        }
+        };
         const validateCreatedByProperty = () => {
           return validateProperty(
             'createdByProperty',
             createdByPropertySchema =>
-            (createdByPropertySchema.type === ValueType.Object
-              || createdByPropertySchema.type === ValueType.String) &&
-            (createdByPropertySchema.codaType === ValueHintType.Person
-              || createdByPropertySchema.codaType === ValueHintType.Email),
+              (createdByPropertySchema.type === ValueType.Object ||
+                createdByPropertySchema.type === ValueType.String) &&
+              (createdByPropertySchema.codaType === ValueHintType.Person ||
+                createdByPropertySchema.codaType === ValueHintType.Email),
             `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`,
           );
         };
@@ -1403,10 +1399,10 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
           return validateProperty(
             'modifiedByProperty',
             modifiedByPropertySchema =>
-            (modifiedByPropertySchema.type === ValueType.Object ||
-              modifiedByPropertySchema.type === ValueType.String) &&
-            (modifiedByPropertySchema.codaType === ValueHintType.Person ||
-              modifiedByPropertySchema.codaType === ValueHintType.Email),
+              (modifiedByPropertySchema.type === ValueType.Object ||
+                modifiedByPropertySchema.type === ValueType.String) &&
+              (modifiedByPropertySchema.codaType === ValueHintType.Person ||
+                modifiedByPropertySchema.codaType === ValueHintType.Email),
             `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`,
           );
         };
@@ -1865,7 +1861,10 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       });
     })
     .superRefine((data, context) => {
-      validateCrawlHierarchy(data as PackVersionDefinition, context);
+      const {syncTables} = data as PackVersionDefinition;
+      if (syncTables) {
+        validateCrawlHierarchy(syncTables, context);
+      }
     })
     .superRefine((data, context) => {
       ((data.formulas as any[]) || []).forEach((formula, i) => {

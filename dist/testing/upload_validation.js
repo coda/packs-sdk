@@ -163,12 +163,8 @@ exports.validateSyncTableSchema = validateSyncTableSchema;
  * {} is also a valid result, when there are no sync tables, or no parent relationships.
  * @hidden
  */
-function validateCrawlHierarchy(pack, context) {
+function validateCrawlHierarchy(syncTables, context) {
     const parentToChildrenMap = {};
-    if (!pack.syncTables) {
-        return parentToChildrenMap;
-    }
-    const syncTables = pack.syncTables;
     const syncTableSchemasByName = {};
     for (const syncTable of syncTables) {
         syncTableSchemasByName[syncTable.name] = syncTable.schema;
@@ -1118,10 +1114,10 @@ function buildMetadataSchema({ sdkVersion }) {
                     modifiedAtPropertySchema.codaType === schema_13.ValueHintType.Date), `must refer to a "ValueType.String" or "ValueType.Number" property with a "ValueHintType.DateTime" or "ValueHintType.Date" "codaType".`);
         };
         const validateCreatedByProperty = () => {
-            return validateProperty('createdByProperty', createdByPropertySchema => (createdByPropertySchema.type === schema_14.ValueType.Object
-                || createdByPropertySchema.type === schema_14.ValueType.String) &&
-                (createdByPropertySchema.codaType === schema_13.ValueHintType.Person
-                    || createdByPropertySchema.codaType === schema_13.ValueHintType.Email), `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`);
+            return validateProperty('createdByProperty', createdByPropertySchema => (createdByPropertySchema.type === schema_14.ValueType.Object ||
+                createdByPropertySchema.type === schema_14.ValueType.String) &&
+                (createdByPropertySchema.codaType === schema_13.ValueHintType.Person ||
+                    createdByPropertySchema.codaType === schema_13.ValueHintType.Email), `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`);
         };
         const validateModifiedByProperty = () => {
             return validateProperty('modifiedByProperty', modifiedByPropertySchema => (modifiedByPropertySchema.type === schema_14.ValueType.Object ||
@@ -1536,7 +1532,10 @@ function buildMetadataSchema({ sdkVersion }) {
         });
     })
         .superRefine((data, context) => {
-        validateCrawlHierarchy(data, context);
+        const { syncTables } = data;
+        if (syncTables) {
+            validateCrawlHierarchy(syncTables, context);
+        }
     })
         .superRefine((data, context) => {
         (data.formulas || []).forEach((formula, i) => {
