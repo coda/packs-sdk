@@ -718,6 +718,7 @@ function normalizeObjectSchema(schema) {
         permissionGroupMembersProperty: permissionGroupMembersProperty
             ? normalizeSchemaKey(permissionGroupMembersProperty)
             : undefined,
+        permissionUserProperty: permissionUserProperty ? normalizeSchemaKey(permissionUserProperty) : undefined,
         primary: primary ? normalizeSchemaKey(primary) : undefined,
         properties: normalizedProperties,
         snippetProperty: snippetProperty
