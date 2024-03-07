@@ -278,8 +278,8 @@ function getPropertyName(field) {
 // Generates a property schema based on a Typeform field.
 function getPropertySchema(field): coda.Schema & coda.ObjectSchemaProperty {
   let schema: any = {
-    // Use the field's full title as it's description.
-    description: field.title,
+    // Use the field's full title as the column name.
+    displayName: field.title,
     // The sync formula will return the value keyed using the field's ID.
     fromKey: getPropertyKey(field),
   };
@@ -524,6 +524,7 @@ pack.addDynamicSyncTable({
 
     // Add a schema property for each column.
     for (let column of dataset.columns) {
+      let name = column.name;
       let fieldName = column.fieldName;
       let dataType = column.dataTypeName;
       let description = column.description;
@@ -540,6 +541,7 @@ pack.addDynamicSyncTable({
 
       schema.properties[fieldName] = {
         ...fieldSchema,
+        displayName: name,
         description: description,
       };
     }
