@@ -549,7 +549,7 @@ for (let customField of customFeilds) {
 
 ### Column names {: #column-names}
 
-By default sync table column names are derived from the [normalized name](#normalization) of the corresponding schema property. For example, a property with the key `contact_email` would be normalized to the property name `contactEmail` which would result in a column named "Contact email". This is just the default name for the column however, and users can later rename it in their doc if they so desire.
+By default sync table column names are derived from the [normalized name](#normalization) of the corresponding schema property. For example, a property with the key `contact_email` would be normalized to the property name `ContactEmail` which would result in a column named "Contact email". This is just the default name for the column however, and users can later rename it in their doc if they so desire.
 
 While these automatically derived column names are convenient, they can result in some strange column names when the original property key contains punctuation, special characters, or a mixture of casing. For example, a property key of `iPhone_version` will end up as a column named "I phone version".
 
@@ -568,7 +568,7 @@ let DeviceSchema = coda.makeObjectSchema({
 });
 ```
 
-This display name will only be used to set the default column name for that property, and won't have any affect on how the property appears in the formula editor, etc. Changes to the `displayName` will rename existing columns upon their next sync, as long as the user hasn't manually changed the column name.
+This display name will only be used to set the default column name for that property, and the normalized name will still be shown in other contexts. Changes to the `displayName` will rename existing columns upon their next sync, as long as the user hasn't manually changed the column name.
 
 
 ## Schemas in cards {: #cards}
