@@ -177,6 +177,11 @@ var ValueHintType;
      * Indicates to render a value as a select list.
      */
     ValueHintType["SelectList"] = "selectList";
+    /**
+     * Indicates an external user id
+     * @hidden
+     */
+    ValueHintType["UserId"] = "userId";
 })(ValueHintType || (exports.ValueHintType = ValueHintType = {}));
 exports.StringHintValueTypes = [
     ValueHintType.Attachment,
@@ -193,6 +198,7 @@ exports.StringHintValueTypes = [
     ValueHintType.Url,
     ValueHintType.CodaInternalRichText,
     ValueHintType.SelectList,
+    ValueHintType.UserId,
 ];
 exports.NumberHintValueTypes = [
     ValueHintType.Date,
@@ -204,6 +210,7 @@ exports.NumberHintValueTypes = [
     ValueHintType.Slider,
     ValueHintType.ProgressBar,
     ValueHintType.Scale,
+    ValueHintType.UserId,
 ];
 exports.BooleanHintValueTypes = [ValueHintType.Toggle];
 exports.ObjectHintValueTypes = [ValueHintType.Person, ValueHintType.Reference, ValueHintType.SelectList];
@@ -368,6 +375,7 @@ exports.SimpleStringHintValueTypes = [
     ValueHintType.Url,
     ValueHintType.Email,
     ValueHintType.CodaInternalRichText,
+    ValueHintType.UserId,
 ];
 /**
  * An identifier for the value of a property for use in the {@link PropertyIdentifierDetails.label} field.
@@ -680,7 +688,7 @@ function normalizeObjectSchema(schema) {
     const normalizedProperties = {};
     const { attribution, options, requireForUpdates, codaType, description, displayProperty, featured, featuredProperties, id, identity, idProperty, imageProperty, includeUnknownProperties, linkProperty, primary, properties, snippetProperty, subtitleProperties, titleProperty, type, 
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    __packId, createdAtProperty, createdByProperty, modifiedAtProperty, modifiedByProperty, ...rest } = schema;
+    __packId, createdAtProperty, createdByProperty, modifiedAtProperty, modifiedByProperty, userEmailProperty, userIdProperty, ...rest } = schema;
     // Have TS ensure we don't forget about new fields in this function.
     (0, ensure_3.ensureNever)();
     for (const key of Object.keys(properties)) {
@@ -724,14 +732,24 @@ function normalizeObjectSchema(schema) {
             ? subtitleProperties.map(subProp => normalizeSchemaPropertyIdentifier(subProp, normalizedProperties))
             : undefined,
         titleProperty: titleProperty ? normalizeSchemaPropertyIdentifier(titleProperty, normalizedProperties) : undefined,
-        createdAtProperty: createdAtProperty ?
-            normalizeSchemaPropertyIdentifier(createdAtProperty, normalizedProperties) : undefined,
-        createdByProperty: createdByProperty ?
-            normalizeSchemaPropertyIdentifier(createdByProperty, normalizedProperties) : undefined,
-        modifiedAtProperty: modifiedAtProperty ?
-            normalizeSchemaPropertyIdentifier(modifiedAtProperty, normalizedProperties) : undefined,
-        modifiedByProperty: modifiedByProperty ?
-            normalizeSchemaPropertyIdentifier(modifiedByProperty, normalizedProperties) : undefined,
+        createdAtProperty: createdAtProperty
+            ? normalizeSchemaPropertyIdentifier(createdAtProperty, normalizedProperties)
+            : undefined,
+        createdByProperty: createdByProperty
+            ? normalizeSchemaPropertyIdentifier(createdByProperty, normalizedProperties)
+            : undefined,
+        modifiedAtProperty: modifiedAtProperty
+            ? normalizeSchemaPropertyIdentifier(modifiedAtProperty, normalizedProperties)
+            : undefined,
+        modifiedByProperty: modifiedByProperty
+            ? normalizeSchemaPropertyIdentifier(modifiedByProperty, normalizedProperties)
+            : undefined,
+        userEmailProperty: userEmailProperty
+            ? normalizeSchemaPropertyIdentifier(userEmailProperty, normalizedProperties)
+            : undefined,
+        userIdProperty: userIdProperty
+            ? normalizeSchemaPropertyIdentifier(userIdProperty, normalizedProperties)
+            : undefined,
         type: ValueType.Object,
     };
 }

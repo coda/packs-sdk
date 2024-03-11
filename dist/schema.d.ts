@@ -163,10 +163,15 @@ export declare enum ValueHintType {
     /**
      * Indicates to render a value as a select list.
      */
-    SelectList = "selectList"
+    SelectList = "selectList",
+    /**
+     * Indicates an external user id
+     * @hidden
+     */
+    UserId = "userId"
 }
-export declare const StringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Email, ValueHintType.Embed, ValueHintType.Html, ValueHintType.ImageReference, ValueHintType.ImageAttachment, ValueHintType.Markdown, ValueHintType.Url, ValueHintType.CodaInternalRichText, ValueHintType.SelectList];
-export declare const NumberHintValueTypes: readonly [ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Percent, ValueHintType.Currency, ValueHintType.Slider, ValueHintType.ProgressBar, ValueHintType.Scale];
+export declare const StringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Email, ValueHintType.Embed, ValueHintType.Html, ValueHintType.ImageReference, ValueHintType.ImageAttachment, ValueHintType.Markdown, ValueHintType.Url, ValueHintType.CodaInternalRichText, ValueHintType.SelectList, ValueHintType.UserId];
+export declare const NumberHintValueTypes: readonly [ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Percent, ValueHintType.Currency, ValueHintType.Slider, ValueHintType.ProgressBar, ValueHintType.Scale, ValueHintType.UserId];
 export declare const BooleanHintValueTypes: readonly [ValueHintType.Toggle];
 export declare const ObjectHintValueTypes: readonly [ValueHintType.Person, ValueHintType.Reference, ValueHintType.SelectList];
 export declare const AutocompleteHintValueTypes: readonly [ValueHintType.SelectList, ValueHintType.Reference];
@@ -244,7 +249,7 @@ export interface BooleanSchema extends BaseSchema {
 /**
  * The union of all schemas that can represent number values.
  */
-export type NumberSchema = CurrencySchema | SliderSchema | ProgressBarSchema | ScaleSchema | NumericSchema | NumericDateSchema | NumericTimeSchema | NumericDateTimeSchema | NumericDurationSchema;
+export type NumberSchema = CurrencySchema | SliderSchema | ProgressBarSchema | ScaleSchema | NumericSchema | NumericDateSchema | NumericTimeSchema | NumericDateTimeSchema | NumericDurationSchema | BaseNumberSchema<ValueHintType.UserId>;
 export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> extends BaseSchema {
     /** Identifies this schema as relating to a number value. */
     type: ValueType.Number;
@@ -710,7 +715,7 @@ export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> e
 /**
  * The subset of StringHintTypes that don't have specific schema attributes.
  */
-export declare const SimpleStringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Html, ValueHintType.Markdown, ValueHintType.Url, ValueHintType.Email, ValueHintType.CodaInternalRichText];
+export declare const SimpleStringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Html, ValueHintType.Markdown, ValueHintType.Url, ValueHintType.Email, ValueHintType.CodaInternalRichText, ValueHintType.UserId];
 export type SimpleStringHintTypes = (typeof SimpleStringHintValueTypes)[number];
 /**
  * A schema whose underlying value is a string, along with an optional hint about how Coda
@@ -906,7 +911,7 @@ export type PropertyIdentifier<K extends string = string> = K | string | Propert
  * The {@link ObjectSchemaDefinition} properties that reference keys in the `properties` object. These should all be
  * {@link PropertyIdentifier} types.
  */
-export type ObjectSchemaPathProperties = Pick<GenericObjectSchema, 'titleProperty' | 'linkProperty' | 'imageProperty' | 'snippetProperty' | 'subtitleProperties' | 'createdAtProperty' | 'createdByProperty' | 'modifiedAtProperty' | 'modifiedByProperty'>;
+export type ObjectSchemaPathProperties = Pick<GenericObjectSchema, 'titleProperty' | 'linkProperty' | 'imageProperty' | 'snippetProperty' | 'subtitleProperties' | 'createdAtProperty' | 'createdByProperty' | 'modifiedAtProperty' | 'modifiedByProperty' | 'userEmailProperty' | 'userIdProperty'>;
 /**
  * A schema definition for an object value (a value with key-value pairs).
  */
@@ -1053,6 +1058,21 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      * @hidden
      */
     modifiedByProperty?: PropertyIdentifier<K>;
+    /**
+     * The name of a property within {@link ObjectSchemaDefinition.properties} that can be interpreted as the email
+     *
+     * Must be a {@link ValueType.String} property with the {@link ValueHintType.Email} hint or
+     * a {@link ValueType.Object} with the {@link ValueHintType.Person} hint
+     * @hidden
+     */
+    userEmailProperty?: PropertyIdentifier<K>;
+    /**
+     * The name of a property within {@link ObjectSchemaDefinition.properties} that can be interpreted as the user id
+     *
+     * Must be a {@link ValueType.String} or {@link ValueType.Number} property with the {@link ValueHintType.UserId} hint
+     * @hidden
+     */
+    userIdProperty?: PropertyIdentifier<K>;
 }
 export type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
 /** @hidden */

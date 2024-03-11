@@ -809,4 +809,7 @@ export type PropertyOptionsMetadataResult<ResultT extends PackFormulaResult[]> =
  * A JavaScript function for property options.
  */
 export type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]> = (context: PropertyOptionsExecutionContext) => Promise<PropertyOptionsMetadataResult<ResultT>> | PropertyOptionsMetadataResult<ResultT>;
+export declare enum SyncTableEntityType {
+    Users = "users"
+}
 export {};

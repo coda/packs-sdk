@@ -788,6 +788,9 @@ export type PropertyOptionsMetadataResult<ResultT extends PackFormulaResult[]> =
  * A JavaScript function for property options.
  */
 export type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]> = (context: PropertyOptionsExecutionContext) => Promise<PropertyOptionsMetadataResult<ResultT>> | PropertyOptionsMetadataResult<ResultT>;
+declare enum SyncTableEntityType {
+	Users = "users"
+}
 /**
  * The set of primitive value types that can be used as return values for formulas
  * or in object schemas.
@@ -948,7 +951,12 @@ export declare enum ValueHintType {
 	/**
 	 * Indicates to render a value as a select list.
 	 */
-	SelectList = "selectList"
+	SelectList = "selectList",
+	/**
+	 * Indicates an external user id
+	 * @hidden
+	 */
+	UserId = "userId"
 }
 declare const StringHintValueTypes: readonly [
 	ValueHintType.Attachment,
@@ -964,7 +972,8 @@ declare const StringHintValueTypes: readonly [
 	ValueHintType.Markdown,
 	ValueHintType.Url,
 	ValueHintType.CodaInternalRichText,
-	ValueHintType.SelectList
+	ValueHintType.SelectList,
+	ValueHintType.UserId
 ];
 declare const NumberHintValueTypes: readonly [
 	ValueHintType.Date,
@@ -975,7 +984,8 @@ declare const NumberHintValueTypes: readonly [
 	ValueHintType.Currency,
 	ValueHintType.Slider,
 	ValueHintType.ProgressBar,
-	ValueHintType.Scale
+	ValueHintType.Scale,
+	ValueHintType.UserId
 ];
 declare const BooleanHintValueTypes: readonly [
 	ValueHintType.Toggle
@@ -1059,7 +1069,7 @@ export interface BooleanSchema extends BaseSchema {
 /**
  * The union of all schemas that can represent number values.
  */
-export type NumberSchema = CurrencySchema | SliderSchema | ProgressBarSchema | ScaleSchema | NumericSchema | NumericDateSchema | NumericTimeSchema | NumericDateTimeSchema | NumericDurationSchema;
+export type NumberSchema = CurrencySchema | SliderSchema | ProgressBarSchema | ScaleSchema | NumericSchema | NumericDateSchema | NumericTimeSchema | NumericDateTimeSchema | NumericDurationSchema | BaseNumberSchema<ValueHintType.UserId>;
 export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> extends BaseSchema {
 	/** Identifies this schema as relating to a number value. */
 	type: ValueType.Number;
@@ -1528,7 +1538,8 @@ declare const SimpleStringHintValueTypes: readonly [
 	ValueHintType.Markdown,
 	ValueHintType.Url,
 	ValueHintType.Email,
-	ValueHintType.CodaInternalRichText
+	ValueHintType.CodaInternalRichText,
+	ValueHintType.UserId
 ];
 export type SimpleStringHintTypes = (typeof SimpleStringHintValueTypes)[number];
 /**
@@ -1867,6 +1878,21 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 * @hidden
 	 */
 	modifiedByProperty?: PropertyIdentifier<K>;
+	/**
+	 * The name of a property within {@link ObjectSchemaDefinition.properties} that can be interpreted as the email
+	 *
+	 * Must be a {@link ValueType.String} property with the {@link ValueHintType.Email} hint or
+	 * a {@link ValueType.Object} with the {@link ValueHintType.Person} hint
+	 * @hidden
+	 */
+	userEmailProperty?: PropertyIdentifier<K>;
+	/**
+	 * The name of a property within {@link ObjectSchemaDefinition.properties} that can be interpreted as the user id
+	 *
+	 * Must be a {@link ValueType.String} or {@link ValueType.Number} property with the {@link ValueHintType.UserId} hint
+	 * @hidden
+	 */
+	userIdProperty?: PropertyIdentifier<K>;
 }
 export type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
 /** @hidden */
@@ -3173,6 +3199,13 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
 	 * sync tables that have a dynamic schema.
 	 */
 	dynamicOptions?: DynamicOptions;
+	/**
+	 * Used to mark a sync table as matching a specific type of entity
+	 *
+	 * Currently used for users/groups
+	 * @hidden
+	 */
+	tableEntityType?: SyncTableEntityType.Users;
 }
 /**
  * Options provided when defining a dynamic sync table.
@@ -3313,7 +3346,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
  */
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaDefT extends ObjectSchemaDefinition<K, L>, SchemaT extends SchemaDefT & {
 	identity?: Identity;
-}>({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT>;
+}>({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions, tableEntityType, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT>;
 /**
  * Creates a dynamic sync table definition.
  *

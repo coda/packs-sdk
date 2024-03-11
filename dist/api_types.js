@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OptionsType = exports.PrecannedDateRange = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
+exports.SyncTableEntityType = exports.OptionsType = exports.PrecannedDateRange = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
 /**
  * Markers used internally to represent data types for parameters and return values.
  * It should not be necessary to ever use these values directly.
@@ -303,3 +303,7 @@ var OptionsType;
      */
     OptionsType["Dynamic"] = "__coda_dynamic__";
 })(OptionsType || (exports.OptionsType = OptionsType = {}));
+var SyncTableEntityType;
+(function (SyncTableEntityType) {
+    SyncTableEntityType["Users"] = "users";
+})(SyncTableEntityType || (exports.SyncTableEntityType = SyncTableEntityType = {}));

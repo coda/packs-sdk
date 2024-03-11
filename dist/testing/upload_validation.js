@@ -943,6 +943,8 @@ function buildMetadataSchema({ sdkVersion }) {
         modifiedAtProperty: propertySchema.optional(),
         createdByProperty: propertySchema.optional(),
         modifiedByProperty: propertySchema.optional(),
+        userIdProperty: propertySchema.optional(),
+        userEmailProperty: propertySchema.optional(),
         options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
         requireForUpdates: z.boolean().optional(),
         autocomplete: sdkVersion && semver_1.default.satisfies(sdkVersion, '<=1.4.0')
@@ -1095,6 +1097,7 @@ function buildMetadataSchema({ sdkVersion }) {
                     case schema_13.ValueHintType.Toggle:
                     case schema_13.ValueHintType.Time:
                     case schema_13.ValueHintType.Url:
+                    case schema_13.ValueHintType.UserId:
                         return true;
                     default:
                         (0, ensure_2.ensureUnreachable)(subtitlePropertySchema.codaType);
@@ -1125,6 +1128,14 @@ function buildMetadataSchema({ sdkVersion }) {
                 (modifiedByPropertySchema.codaType === schema_13.ValueHintType.Person ||
                     modifiedByPropertySchema.codaType === schema_13.ValueHintType.Email), `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`);
         };
+        const validateUserEmailProperty = () => {
+            return validateProperty('userEmailProperty', userEmail => (userEmail.type === schema_14.ValueType.Object || userEmail.type === schema_14.ValueType.String) &&
+                (userEmail.codaType === schema_13.ValueHintType.Person || userEmail.codaType === schema_13.ValueHintType.Email), `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`);
+        };
+        const validateUserIdProperty = () => {
+            return validateProperty('userIdProperty', userIdPropertySchema => (userIdPropertySchema.type === schema_14.ValueType.String || userIdPropertySchema.type === schema_14.ValueType.Number) &&
+                userIdPropertySchema.codaType === schema_13.ValueHintType.UserId, `must refer to a "ValueType.String" property with a "ValueHintType.UserId" "codaType".`);
+        };
         validateTitleProperty();
         validateLinkProperty();
         validateImageProperty();
@@ -1134,6 +1145,8 @@ function buildMetadataSchema({ sdkVersion }) {
         validateModifiedAtProperty();
         validateCreatedByProperty();
         validateModifiedByProperty();
+        validateUserEmailProperty();
+        validateUserIdProperty();
     })
         .superRefine((data, context) => {
         var _a;

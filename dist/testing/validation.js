@@ -143,6 +143,7 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
                 case schema_1.ValueHintType.Time:
                 case schema_1.ValueHintType.Percent:
                 case schema_1.ValueHintType.Currency:
+                case schema_1.ValueHintType.UserId:
                 case undefined:
                     // no need to coerce current result type
                     return [];
@@ -177,6 +178,7 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
                 case schema_1.ValueHintType.Html:
                 case schema_1.ValueHintType.Markdown:
                 case schema_1.ValueHintType.SelectList:
+                case schema_1.ValueHintType.UserId:
                 case undefined:
                     // no need to coerce current result type
                     return [];
