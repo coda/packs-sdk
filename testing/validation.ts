@@ -148,6 +148,7 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
         case ValueHintType.Time:
         case ValueHintType.Percent:
         case ValueHintType.Currency:
+        case ValueHintType.UserId:
         case undefined:
           // no need to coerce current result type
           return [];
@@ -182,6 +183,7 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
         case ValueHintType.Html:
         case ValueHintType.Markdown:
         case ValueHintType.SelectList:
+        case ValueHintType.UserId:
         case undefined:
           // no need to coerce current result type
           return [];

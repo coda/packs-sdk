@@ -1,5 +1,5 @@
 import type {ArraySchema} from './schema';
-import {ArrayType, SyncTableEntityType} from './api_types';
+import type {ArrayType} from './api_types';
 import type {BooleanSchema} from './schema';
 import type {CommonPackFormulaDef} from './api_types';
 import {ConnectionRequirement} from './api_types';
@@ -34,6 +34,7 @@ import type {SchemaType} from './schema';
 import type {StringHintTypes} from './schema';
 import type {StringSchema} from './schema';
 import type {SyncExecutionContext} from './api_types';
+import {SyncTableEntityType} from './api_types';
 import {Type} from './api_types';
 import type {TypeMap} from './api_types';
 import type {TypeOf} from './api_types';

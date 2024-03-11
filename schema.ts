@@ -315,7 +315,8 @@ export type NumberSchema =
   | NumericDateSchema
   | NumericTimeSchema
   | NumericDateTimeSchema
-  | NumericDurationSchema;
+  | NumericDurationSchema
+  | BaseNumberSchema<ValueHintType.UserId>;
 
 export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> extends BaseSchema {
   /** Identifies this schema as relating to a number value. */
