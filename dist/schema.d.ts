@@ -163,15 +163,10 @@ export declare enum ValueHintType {
     /**
      * Indicates to render a value as a select list.
      */
-    SelectList = "selectList",
-    /**
-     * Indicates an external user id
-     * @hidden
-     */
-    UserId = "userId"
+    SelectList = "selectList"
 }
-export declare const StringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Email, ValueHintType.Embed, ValueHintType.Html, ValueHintType.ImageReference, ValueHintType.ImageAttachment, ValueHintType.Markdown, ValueHintType.Url, ValueHintType.CodaInternalRichText, ValueHintType.SelectList, ValueHintType.UserId];
-export declare const NumberHintValueTypes: readonly [ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Percent, ValueHintType.Currency, ValueHintType.Slider, ValueHintType.ProgressBar, ValueHintType.Scale, ValueHintType.UserId];
+export declare const StringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Email, ValueHintType.Embed, ValueHintType.Html, ValueHintType.ImageReference, ValueHintType.ImageAttachment, ValueHintType.Markdown, ValueHintType.Url, ValueHintType.CodaInternalRichText, ValueHintType.SelectList];
+export declare const NumberHintValueTypes: readonly [ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Percent, ValueHintType.Currency, ValueHintType.Slider, ValueHintType.ProgressBar, ValueHintType.Scale];
 export declare const BooleanHintValueTypes: readonly [ValueHintType.Toggle];
 export declare const ObjectHintValueTypes: readonly [ValueHintType.Person, ValueHintType.Reference, ValueHintType.SelectList];
 export declare const AutocompleteHintValueTypes: readonly [ValueHintType.SelectList, ValueHintType.Reference];
@@ -249,7 +244,7 @@ export interface BooleanSchema extends BaseSchema {
 /**
  * The union of all schemas that can represent number values.
  */
-export type NumberSchema = CurrencySchema | SliderSchema | ProgressBarSchema | ScaleSchema | NumericSchema | NumericDateSchema | NumericTimeSchema | NumericDateTimeSchema | NumericDurationSchema | NumericUserIdSchema;
+export type NumberSchema = CurrencySchema | SliderSchema | ProgressBarSchema | ScaleSchema | NumericSchema | NumericDateSchema | NumericTimeSchema | NumericDateTimeSchema | NumericDurationSchema;
 export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> extends BaseSchema {
     /** Identifies this schema as relating to a number value. */
     type: ValueType.Number;
@@ -338,12 +333,6 @@ export interface NumericDurationSchema extends BaseNumberSchema<ValueHintType.Du
      * and a value of 273600 is provided (3 days 4 hours) is provided, it will be rendered as "3 days".
      */
     maxUnit?: DurationUnit;
-}
-/**
- * A schema representing a numeric user id
- * @hidden
- */
-export interface NumericUserIdSchema extends BaseNumberSchema<ValueHintType.UserId> {
 }
 /**
  * Enumeration of formats supported by schemas that use {@link ValueHintType.Currency}.
@@ -721,7 +710,7 @@ export interface BaseStringSchema<T extends StringHintTypes = StringHintTypes> e
 /**
  * The subset of StringHintTypes that don't have specific schema attributes.
  */
-export declare const SimpleStringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Html, ValueHintType.Markdown, ValueHintType.Url, ValueHintType.Email, ValueHintType.CodaInternalRichText, ValueHintType.UserId];
+export declare const SimpleStringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Html, ValueHintType.Markdown, ValueHintType.Url, ValueHintType.Email, ValueHintType.CodaInternalRichText];
 export type SimpleStringHintTypes = (typeof SimpleStringHintValueTypes)[number];
 /**
  * A schema whose underlying value is a string, along with an optional hint about how Coda
@@ -1075,7 +1064,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
     /**
      * The name of a property within {@link ObjectSchemaDefinition.properties} that can be interpreted as the user id
      *
-     * Must be a {@link ValueType.String} or {@link ValueType.Number} property with the {@link ValueHintType.UserId} hint
+     * Must be a {@link ValueType.String} or {@link ValueType.Number} property
      * @hidden
      */
     userIdProperty?: PropertyIdentifier<K>;

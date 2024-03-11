@@ -1097,7 +1097,6 @@ function buildMetadataSchema({ sdkVersion }) {
                     case schema_13.ValueHintType.Toggle:
                     case schema_13.ValueHintType.Time:
                     case schema_13.ValueHintType.Url:
-                    case schema_13.ValueHintType.UserId:
                         return true;
                     default:
                         (0, ensure_2.ensureUnreachable)(subtitlePropertySchema.codaType);
@@ -1133,8 +1132,7 @@ function buildMetadataSchema({ sdkVersion }) {
                 (userEmail.codaType === schema_13.ValueHintType.Person || userEmail.codaType === schema_13.ValueHintType.Email), `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`);
         };
         const validateUserIdProperty = () => {
-            return validateProperty('userIdProperty', userIdPropertySchema => (userIdPropertySchema.type === schema_14.ValueType.String || userIdPropertySchema.type === schema_14.ValueType.Number) &&
-                userIdPropertySchema.codaType === schema_13.ValueHintType.UserId, `must refer to a "ValueType.String" property with a "ValueHintType.UserId" "codaType".`);
+            return validateProperty('userIdProperty', userIdPropertySchema => userIdPropertySchema.type === schema_14.ValueType.String || userIdPropertySchema.type === schema_14.ValueType.Number, `must refer to a "ValueType.String" or "ValueType.Number".`);
         };
         validateTitleProperty();
         validateLinkProperty();

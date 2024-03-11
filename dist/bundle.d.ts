@@ -951,12 +951,7 @@ export declare enum ValueHintType {
 	/**
 	 * Indicates to render a value as a select list.
 	 */
-	SelectList = "selectList",
-	/**
-	 * Indicates an external user id
-	 * @hidden
-	 */
-	UserId = "userId"
+	SelectList = "selectList"
 }
 declare const StringHintValueTypes: readonly [
 	ValueHintType.Attachment,
@@ -972,8 +967,7 @@ declare const StringHintValueTypes: readonly [
 	ValueHintType.Markdown,
 	ValueHintType.Url,
 	ValueHintType.CodaInternalRichText,
-	ValueHintType.SelectList,
-	ValueHintType.UserId
+	ValueHintType.SelectList
 ];
 declare const NumberHintValueTypes: readonly [
 	ValueHintType.Date,
@@ -984,8 +978,7 @@ declare const NumberHintValueTypes: readonly [
 	ValueHintType.Currency,
 	ValueHintType.Slider,
 	ValueHintType.ProgressBar,
-	ValueHintType.Scale,
-	ValueHintType.UserId
+	ValueHintType.Scale
 ];
 declare const BooleanHintValueTypes: readonly [
 	ValueHintType.Toggle
@@ -1069,7 +1062,7 @@ export interface BooleanSchema extends BaseSchema {
 /**
  * The union of all schemas that can represent number values.
  */
-export type NumberSchema = CurrencySchema | SliderSchema | ProgressBarSchema | ScaleSchema | NumericSchema | NumericDateSchema | NumericTimeSchema | NumericDateTimeSchema | NumericDurationSchema | NumericUserIdSchema;
+export type NumberSchema = CurrencySchema | SliderSchema | ProgressBarSchema | ScaleSchema | NumericSchema | NumericDateSchema | NumericTimeSchema | NumericDateTimeSchema | NumericDurationSchema;
 export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> extends BaseSchema {
 	/** Identifies this schema as relating to a number value. */
 	type: ValueType.Number;
@@ -1158,12 +1151,6 @@ export interface NumericDurationSchema extends BaseNumberSchema<ValueHintType.Du
 	 * and a value of 273600 is provided (3 days 4 hours) is provided, it will be rendered as "3 days".
 	 */
 	maxUnit?: DurationUnit;
-}
-/**
- * A schema representing a numeric user id
- * @hidden
- */
-export interface NumericUserIdSchema extends BaseNumberSchema<ValueHintType.UserId> {
 }
 /**
  * Enumeration of formats supported by schemas that use {@link ValueHintType.Currency}.
@@ -1544,8 +1531,7 @@ declare const SimpleStringHintValueTypes: readonly [
 	ValueHintType.Markdown,
 	ValueHintType.Url,
 	ValueHintType.Email,
-	ValueHintType.CodaInternalRichText,
-	ValueHintType.UserId
+	ValueHintType.CodaInternalRichText
 ];
 export type SimpleStringHintTypes = (typeof SimpleStringHintValueTypes)[number];
 /**
@@ -1895,7 +1881,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	/**
 	 * The name of a property within {@link ObjectSchemaDefinition.properties} that can be interpreted as the user id
 	 *
-	 * Must be a {@link ValueType.String} or {@link ValueType.Number} property with the {@link ValueHintType.UserId} hint
+	 * Must be a {@link ValueType.String} or {@link ValueType.Number} property
 	 * @hidden
 	 */
 	userIdProperty?: PropertyIdentifier<K>;

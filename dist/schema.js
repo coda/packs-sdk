@@ -177,11 +177,6 @@ var ValueHintType;
      * Indicates to render a value as a select list.
      */
     ValueHintType["SelectList"] = "selectList";
-    /**
-     * Indicates an external user id
-     * @hidden
-     */
-    ValueHintType["UserId"] = "userId";
 })(ValueHintType || (exports.ValueHintType = ValueHintType = {}));
 exports.StringHintValueTypes = [
     ValueHintType.Attachment,
@@ -198,7 +193,6 @@ exports.StringHintValueTypes = [
     ValueHintType.Url,
     ValueHintType.CodaInternalRichText,
     ValueHintType.SelectList,
-    ValueHintType.UserId,
 ];
 exports.NumberHintValueTypes = [
     ValueHintType.Date,
@@ -210,7 +204,6 @@ exports.NumberHintValueTypes = [
     ValueHintType.Slider,
     ValueHintType.ProgressBar,
     ValueHintType.Scale,
-    ValueHintType.UserId,
 ];
 exports.BooleanHintValueTypes = [ValueHintType.Toggle];
 exports.ObjectHintValueTypes = [ValueHintType.Person, ValueHintType.Reference, ValueHintType.SelectList];
@@ -375,7 +368,6 @@ exports.SimpleStringHintValueTypes = [
     ValueHintType.Url,
     ValueHintType.Email,
     ValueHintType.CodaInternalRichText,
-    ValueHintType.UserId,
 ];
 /**
  * An identifier for the value of a property for use in the {@link PropertyIdentifierDetails.label} field.
