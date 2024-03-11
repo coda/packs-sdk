@@ -1821,7 +1821,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       })
       .superRefine((data, context) => {
         const syncTables = (data.syncTables as SyncTable[]) || [];
-        const userTables = syncTables.filter(syncTable => syncTable.roles.includes(TableRole.Users));
+        const userTables = syncTables.filter(syncTable => syncTable.roles?.includes(TableRole.Users));
         if (userTables.length > 1) {
           context.addIssue({
             code: z.ZodIssueCode.custom,
