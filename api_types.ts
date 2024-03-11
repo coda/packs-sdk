@@ -967,6 +967,6 @@ export type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]>
   context: PropertyOptionsExecutionContext,
 ) => Promise<PropertyOptionsMetadataResult<ResultT>> | PropertyOptionsMetadataResult<ResultT>;
 
-export enum SyncTableEntityType {
+export enum TableRole {
   Users = 'users',
 }

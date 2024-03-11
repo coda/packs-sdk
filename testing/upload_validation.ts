@@ -76,6 +76,7 @@ import type {SyncFormula} from '../api';
 import type {SyncTable} from '../api';
 import type {SyncTableDef} from '../api';
 import type {SystemAuthenticationTypes} from '../types';
+import {TableRole} from '../api_types';
 import {TokenExchangeCredentialsLocation} from '../types';
 import {Type} from '../api_types';
 import type {UnionType} from '../api_types';
@@ -1562,6 +1563,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
           });
         }
       }),
+    roles: z.array(z.nativeEnum(TableRole)).optional(),
   };
 
   type GenericSyncTableDef = SyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>;
@@ -1816,6 +1818,17 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
             }
           }
         });
+      })
+      .superRefine((data, context) => {
+        const syncTables = (data.syncTables as SyncTable[]) || [];
+        const userTables = syncTables.filter(syncTable => syncTable.roles.includes(TableRole.Users));
+        if (userTables.length > 1) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['syncTables'],
+            message: 'Only one sync table can have the role "Users".',
+          });
+        }
       });
   }
 

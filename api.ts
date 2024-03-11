@@ -34,7 +34,7 @@ import type {SchemaType} from './schema';
 import type {StringHintTypes} from './schema';
 import type {StringSchema} from './schema';
 import type {SyncExecutionContext} from './api_types';
-import {SyncTableEntityType} from './api_types';
+import {TableRole as TableRole} from './api_types';
 import {Type} from './api_types';
 import type {TypeMap} from './api_types';
 import type {TypeOf} from './api_types';
@@ -294,6 +294,12 @@ export interface SyncTableDef<
    * @hidden
    */
   namedPropertyOptions?: SyncTablePropertyOptions;
+
+  /**
+   * See {@link SyncTableOptions.roles}
+   * @hidden
+   */
+  roles: TableRole[];
 }
 
 /**
@@ -1975,12 +1981,12 @@ export interface SyncTableOptions<
   dynamicOptions?: DynamicOptions;
 
   /**
-   * Used to mark a sync table as matching a specific type of entity
+   * Used to mark a sync table as having a specific purpose
    *
-   * Currently used for users/groups
+   * Currently only used for the user table
    * @hidden
    */
-  tableEntityType?: SyncTableEntityType.Users;
+  roles?: TableRole[];
 }
 
 /**
@@ -2143,7 +2149,7 @@ export function makeSyncTable<
   formula,
   connectionRequirement,
   dynamicOptions = {},
-  tableEntityType,
+  roles,
 }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT> {
   const {getSchema: getSchemaDef, entityName, defaultAddDynamicColumns} = dynamicOptions;
   const {
@@ -2170,15 +2176,13 @@ export function makeSyncTable<
     schemaDef.identity = {name: identityName};
   }
 
-  if (tableEntityType === SyncTableEntityType.Users) {
+  if (roles?.includes(TableRole.Users)) {
     if (!schemaDef.userEmailProperty) {
-      throw new Error(
-        `Sync table schemas with tableEntityType ${SyncTableEntityType.Users} must set a userEmailProperty`,
-      );
+      throw new Error(`Sync table schemas with roles ${TableRole.Users} must set a userEmailProperty`);
     }
 
     if (!schemaDef.userIdProperty) {
-      throw new Error(`Sync table schemas with tableEntityType ${SyncTableEntityType.Users} must set a userIdProperty`);
+      throw new Error(`Sync table schemas with roles ${TableRole.Users} must set a userIdProperty`);
     }
   }
 
@@ -2265,6 +2269,7 @@ export function makeSyncTable<
     entityName,
     defaultAddDynamicColumns,
     namedPropertyOptions: maybeRewriteConnectionForNamedPropertyOptions(namedPropertyOptions, connectionRequirement),
+    roles,
   };
 }
 

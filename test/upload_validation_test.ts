@@ -23,7 +23,7 @@ import {PostSetupType} from '../types';
 import {ScaleIconSet} from '../schema';
 import type {StringFormulaDefLegacy} from '../api';
 import type {SyncTable} from '../api';
-import {SyncTableEntityType} from '../api_types';
+import {TableRole} from '../api_types';
 import {Type} from '../api_types';
 import {ValueHintType} from '../schema';
 import {ValueType} from '../schema';
@@ -4666,7 +4666,7 @@ describe('Pack metadata Validation', async () => {
       const syncTable = makeSyncTable({
         name: 'Users',
         identityName: 'User',
-        tableEntityType: SyncTableEntityType.Users,
+        roles: [TableRole.Users],
         schema: makeObjectSchema({
           idProperty: 'id',
           displayProperty: 'email',
@@ -4703,7 +4703,7 @@ describe('Pack metadata Validation', async () => {
       const syncTable = makeSyncTable({
         name: 'Users',
         identityName: 'User',
-        tableEntityType: SyncTableEntityType.Users,
+        roles: TableRole.Users,
         schema: makeObjectSchema({
           idProperty: 'email',
           displayProperty: 'email',
@@ -4739,7 +4739,7 @@ describe('Pack metadata Validation', async () => {
       const syncTable = makeSyncTable({
         name: 'Users',
         identityName: 'User',
-        tableEntityType: SyncTableEntityType.Users,
+        roles: TableRole.Users,
         schema: makeObjectSchema({
           idProperty: 'id',
           displayProperty: 'email',
