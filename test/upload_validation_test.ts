@@ -137,7 +137,7 @@ describe('Pack metadata Validation', async () => {
   });
 
   it('valid versions', async () => {
-    for (const version of ['1', '1.0', '1.0.0', '2147483647', '0.0.2147483647']) {
+    for (const version of ['1', '1.0', '1.0.0', '2147483647', '0.0.2147483647', '2.7.6-prerelease.1']) {
       const metadata = createFakePackVersionMetadata({version});
       const result = await validateJson(metadata);
       assert.ok(result, `Expected version identifier "${version}" to be valid.`);

@@ -1587,7 +1587,10 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
   const unrefinedPackVersionMetadataSchema = zodCompleteObject<PackVersionMetadata>({
     version: z
       .string()
-      .regex(/^\d+(\.\d+){0,2}$/, 'Pack versions must use semantic versioning, e.g. "1", "1.0" or "1.0.0".')
+      .regex(
+        /^\d+(\.\d+){0,2}(\-prerelease\.\d+)?$/,
+        'Pack versions must use semantic versioning, e.g. "1", "1.0" or "1.0.0".',
+      )
       .refine(
         // Version numbers must not be bigger than a postgres integer.
         version => version.split('.').filter(part => Number(part) > 2_147_483_647).length === 0,
