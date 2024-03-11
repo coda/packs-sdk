@@ -37,4 +37,4 @@ ___
 
 • **result**: `ObjectSchemaDefinitionType`<`K`, `L`, `SchemaT`\>[]
 
-The list of results from this page.
+The list of rows from this page.

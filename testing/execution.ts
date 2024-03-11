@@ -254,7 +254,7 @@ export async function executeFormulaOrSyncFromCLI({
             executionContext,
           })
         : await executeFormulaOrSyncWithRawParams({formulaSpecification, params, manifest, executionContext});
-        printFull(result);
+      printFull(result);
     }
   } catch (err: any) {
     print(err.message || err);
