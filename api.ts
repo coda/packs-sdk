@@ -1,5 +1,5 @@
 import type {ArraySchema} from './schema';
-import type {ArrayType} from './api_types';
+import {ArrayType, SyncTableEntityType} from './api_types';
 import type {BooleanSchema} from './schema';
 import type {CommonPackFormulaDef} from './api_types';
 import {ConnectionRequirement} from './api_types';
@@ -1972,6 +1972,14 @@ export interface SyncTableOptions<
    * sync tables that have a dynamic schema.
    */
   dynamicOptions?: DynamicOptions;
+
+  /**
+   * Used to mark a sync table as matching a specific type of entity
+   *
+   * Currently used for users/groups
+   * @hidden
+   */
+  tableEntityType?: SyncTableEntityType.Users;
 }
 
 /**
@@ -2134,6 +2142,7 @@ export function makeSyncTable<
   formula,
   connectionRequirement,
   dynamicOptions = {},
+  tableEntityType,
 }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT> {
   const {getSchema: getSchemaDef, entityName, defaultAddDynamicColumns} = dynamicOptions;
   const {
@@ -2158,6 +2167,18 @@ export function makeSyncTable<
     schemaDef.identity = {...schemaDef.identity, name: identityName};
   } else {
     schemaDef.identity = {name: identityName};
+  }
+
+  if (tableEntityType === SyncTableEntityType.Users) {
+    if (!schemaDef.userEmailProperty) {
+      throw new Error(
+        `Sync table schemas with tableEntityType ${SyncTableEntityType.Users} must set a userEmailProperty`,
+      );
+    }
+
+    if (!schemaDef.userIdProperty) {
+      throw new Error(`Sync table schemas with tableEntityType ${SyncTableEntityType.Users} must set a userIdProperty`);
+    }
   }
 
   const getSchema = wrapGetSchema(wrapMetadataFunction(getSchemaDef));

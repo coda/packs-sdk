@@ -1153,6 +1153,8 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       modifiedAtProperty: propertySchema.optional(),
       createdByProperty: propertySchema.optional(),
       modifiedByProperty: propertySchema.optional(),
+      userIdProperty: propertySchema.optional(),
+      userEmailProperty: propertySchema.optional(),
       options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
       requireForUpdates: z.boolean().optional(),
       autocomplete:
@@ -1353,6 +1355,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
                 case ValueHintType.Toggle:
                 case ValueHintType.Time:
                 case ValueHintType.Url:
+                case ValueHintType.UserId:
                   return true;
                 default:
                   ensureUnreachable(subtitlePropertySchema.codaType);
@@ -1407,6 +1410,26 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
           );
         };
 
+        const validateUserEmailProperty = () => {
+          return validateProperty(
+            'userEmailProperty',
+            userEmail =>
+              (userEmail.type === ValueType.Object || userEmail.type === ValueType.String) &&
+              (userEmail.codaType === ValueHintType.Person || userEmail.codaType === ValueHintType.Email),
+            `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`,
+          );
+        };
+
+        const validateUserIdProperty = () => {
+          return validateProperty(
+            'userIdProperty',
+            userIdPropertySchema =>
+              (userIdPropertySchema.type === ValueType.String || userIdPropertySchema.type === ValueType.Number) &&
+              userIdPropertySchema.codaType === ValueHintType.UserId,
+            `must refer to a "ValueType.String" property with a "ValueHintType.UserId" "codaType".`,
+          );
+        };
+
         validateTitleProperty();
         validateLinkProperty();
         validateImageProperty();
@@ -1416,6 +1439,8 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
         validateModifiedAtProperty();
         validateCreatedByProperty();
         validateModifiedByProperty();
+        validateUserEmailProperty();
+        validateUserIdProperty();
       })
       .superRefine((data, context) => {
         const schemaHelper = objectSchemaHelper(data as GenericObjectSchema);

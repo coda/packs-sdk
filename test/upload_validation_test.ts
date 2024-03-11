@@ -2,7 +2,7 @@ import {testHelper} from './test_helper';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '..';
 import {AuthenticationType} from '../types';
-import {ConnectionRequirement} from '../api_types';
+import {ConnectionRequirement, SyncTableEntityType} from '../api_types';
 import {CurrencyFormat} from '..';
 import {DurationUnit} from '..';
 import type {Formula} from '../api';
@@ -4657,6 +4657,118 @@ describe('Pack metadata Validation', async () => {
             'Instead of specifying `schema.identity.attribution`, simply specify `schema.attribution`.',
         },
       ]);
+    });
+  });
+
+  describe('Specific entity tables validate required properties are present', () => {
+    it('Succeeds when all required fields are present for users', async () => {
+      const syncTable = makeSyncTable({
+        name: 'Users',
+        identityName: 'User',
+        tableEntityType: SyncTableEntityType.Users,
+        schema: makeObjectSchema({
+          idProperty: 'id',
+          displayProperty: 'email',
+          userEmailProperty: 'email',
+          userIdProperty: 'id',
+          properties: {
+            id: {type: ValueType.String, codaType: ValueHintType.UserId},
+            email: {type: ValueType.String, codaType: ValueHintType.Email},
+          },
+        }),
+        formula: {
+          name: 'Users',
+          description: '',
+          async execute([], _context) {
+            return {result: []};
+          },
+          parameters: [],
+          examples: [],
+        },
+      });
+      const metadata = createFakePackVersionMetadata(
+        compilePackMetadata({
+          version: '1',
+          syncTables: [syncTable],
+          defaultAuthentication: {
+            type: AuthenticationType.None,
+          },
+        }),
+      );
+      await doValidateJson(metadata);
+    });
+
+    it('Fail when required fields are missing for users', async () => {
+      const syncTable = makeSyncTable({
+        name: 'Users',
+        identityName: 'User',
+        tableEntityType: SyncTableEntityType.Users,
+        schema: makeObjectSchema({
+          idProperty: 'email',
+          displayProperty: 'email',
+          userEmailProperty: 'email',
+          userIdProperty: 'id',
+          properties: {
+            email: {type: ValueType.String, codaType: ValueHintType.Email},
+          },
+        }),
+        formula: {
+          name: 'Users',
+          description: '',
+          async execute([], _context) {
+            return {result: []};
+          },
+          parameters: [],
+          examples: [],
+        },
+      });
+      const metadata = createFakePackVersionMetadata(
+        compilePackMetadata({
+          version: '1',
+          syncTables: [syncTable],
+          defaultAuthentication: {
+            type: AuthenticationType.None,
+          },
+        }),
+      );
+      await validateJsonAndAssertFails(metadata);
+    });
+
+    it('Fail when fields are of the wrong type', async () => {
+      const syncTable = makeSyncTable({
+        name: 'Users',
+        identityName: 'User',
+        tableEntityType: SyncTableEntityType.Users,
+        schema: makeObjectSchema({
+          idProperty: 'id',
+          displayProperty: 'email',
+          userEmailProperty: 'email',
+          userIdProperty: 'id',
+          properties: {
+            id: {type: ValueType.String, codaType: ValueHintType.UserId},
+            email: {type: ValueType.String},
+          },
+        }),
+        formula: {
+          name: 'Users',
+          description: '',
+          async execute([], _context) {
+            return {result: []};
+          },
+          parameters: [],
+          examples: [],
+        },
+      });
+      const metadata = createFakePackVersionMetadata(
+        compilePackMetadata({
+          version: '1',
+          syncTables: [syncTable],
+          defaultAuthentication: {
+            type: AuthenticationType.None,
+          },
+        }),
+      );
+      await validateJsonAndAssertFails(metadata);
     });
   });
 });
