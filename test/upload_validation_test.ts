@@ -4673,7 +4673,7 @@ describe('Pack metadata Validation', async () => {
           userEmailProperty: 'email',
           userIdProperty: 'id',
           properties: {
-            id: {type: ValueType.String, codaType: ValueHintType.UserId},
+            id: {type: ValueType.String},
             email: {type: ValueType.String, codaType: ValueHintType.Email},
           },
         }),
@@ -4746,7 +4746,7 @@ describe('Pack metadata Validation', async () => {
           userEmailProperty: 'email',
           userIdProperty: 'id',
           properties: {
-            id: {type: ValueType.String, codaType: ValueHintType.UserId},
+            id: {type: ValueType.String},
             email: {type: ValueType.String},
           },
         }),

@@ -178,12 +178,6 @@ export enum ValueHintType {
    * Indicates to render a value as a select list.
    */
   SelectList = 'selectList',
-
-  /**
-   * Indicates an external user id
-   * @hidden
-   */
-  UserId = 'userId',
 }
 
 export const StringHintValueTypes = [
@@ -201,7 +195,6 @@ export const StringHintValueTypes = [
   ValueHintType.Url,
   ValueHintType.CodaInternalRichText,
   ValueHintType.SelectList,
-  ValueHintType.UserId,
 ] as const;
 export const NumberHintValueTypes = [
   ValueHintType.Date,
@@ -213,7 +206,6 @@ export const NumberHintValueTypes = [
   ValueHintType.Slider,
   ValueHintType.ProgressBar,
   ValueHintType.Scale,
-  ValueHintType.UserId,
 ] as const;
 export const BooleanHintValueTypes = [ValueHintType.Toggle] as const;
 export const ObjectHintValueTypes = [ValueHintType.Person, ValueHintType.Reference, ValueHintType.SelectList] as const;
@@ -315,8 +307,7 @@ export type NumberSchema =
   | NumericDateSchema
   | NumericTimeSchema
   | NumericDateTimeSchema
-  | NumericDurationSchema
-  | NumericUserIdSchema;
+  | NumericDurationSchema;
 
 export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> extends BaseSchema {
   /** Identifies this schema as relating to a number value. */
@@ -412,12 +403,6 @@ export interface NumericDurationSchema extends BaseNumberSchema<ValueHintType.Du
    */
   maxUnit?: DurationUnit;
 }
-
-/**
- * A schema representing a numeric user id
- * @hidden
- */
-export interface NumericUserIdSchema extends BaseNumberSchema<ValueHintType.UserId> {}
 
 /**
  * Enumeration of formats supported by schemas that use {@link ValueHintType.Currency}.
@@ -834,7 +819,6 @@ export const SimpleStringHintValueTypes = [
   ValueHintType.Url,
   ValueHintType.Email,
   ValueHintType.CodaInternalRichText,
-  ValueHintType.UserId,
 ] as const;
 export type SimpleStringHintTypes = (typeof SimpleStringHintValueTypes)[number];
 
@@ -1238,7 +1222,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
   /**
    * The name of a property within {@link ObjectSchemaDefinition.properties} that can be interpreted as the user id
    *
-   * Must be a {@link ValueType.String} or {@link ValueType.Number} property with the {@link ValueHintType.UserId} hint
+   * Must be a {@link ValueType.String} or {@link ValueType.Number} property
    * @hidden
    */
   userIdProperty?: PropertyIdentifier<K>;

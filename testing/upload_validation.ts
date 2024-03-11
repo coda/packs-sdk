@@ -1355,7 +1355,6 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
                 case ValueHintType.Toggle:
                 case ValueHintType.Time:
                 case ValueHintType.Url:
-                case ValueHintType.UserId:
                   return true;
                 default:
                   ensureUnreachable(subtitlePropertySchema.codaType);
@@ -1424,9 +1423,8 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
           return validateProperty(
             'userIdProperty',
             userIdPropertySchema =>
-              (userIdPropertySchema.type === ValueType.String || userIdPropertySchema.type === ValueType.Number) &&
-              userIdPropertySchema.codaType === ValueHintType.UserId,
-            `must refer to a "ValueType.String" property with a "ValueHintType.UserId" "codaType".`,
+              userIdPropertySchema.type === ValueType.String || userIdPropertySchema.type === ValueType.Number,
+            `must refer to a "ValueType.String" or "ValueType.Number".`,
           );
         };
 
