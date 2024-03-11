@@ -299,7 +299,7 @@ export interface SyncTableDef<
    * See {@link SyncTableOptions.roles}
    * @hidden
    */
-  roles: TableRole[];
+  roles?: TableRole[];
 }
 
 /**
