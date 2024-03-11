@@ -316,7 +316,7 @@ export type NumberSchema =
   | NumericTimeSchema
   | NumericDateTimeSchema
   | NumericDurationSchema
-  | BaseNumberSchema<ValueHintType.UserId>;
+  | NumericUserIdSchema;
 
 export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> extends BaseSchema {
   /** Identifies this schema as relating to a number value. */
@@ -412,6 +412,12 @@ export interface NumericDurationSchema extends BaseNumberSchema<ValueHintType.Du
    */
   maxUnit?: DurationUnit;
 }
+
+/**
+ * A schema representing a numeric user id
+ * @hidden
+ */
+export interface NumericUserIdSchema extends BaseNumberSchema<ValueHintType.UserId> {}
 
 /**
  * Enumeration of formats supported by schemas that use {@link ValueHintType.Currency}.

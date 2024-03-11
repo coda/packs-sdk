@@ -249,7 +249,7 @@ export interface BooleanSchema extends BaseSchema {
 /**
  * The union of all schemas that can represent number values.
  */
-export type NumberSchema = CurrencySchema | SliderSchema | ProgressBarSchema | ScaleSchema | NumericSchema | NumericDateSchema | NumericTimeSchema | NumericDateTimeSchema | NumericDurationSchema | BaseNumberSchema<ValueHintType.UserId>;
+export type NumberSchema = CurrencySchema | SliderSchema | ProgressBarSchema | ScaleSchema | NumericSchema | NumericDateSchema | NumericTimeSchema | NumericDateTimeSchema | NumericDurationSchema | NumericUserIdSchema;
 export interface BaseNumberSchema<T extends NumberHintTypes = NumberHintTypes> extends BaseSchema {
     /** Identifies this schema as relating to a number value. */
     type: ValueType.Number;
@@ -338,6 +338,12 @@ export interface NumericDurationSchema extends BaseNumberSchema<ValueHintType.Du
      * and a value of 273600 is provided (3 days 4 hours) is provided, it will be rendered as "3 days".
      */
     maxUnit?: DurationUnit;
+}
+/**
+ * A schema representing a numeric user id
+ * @hidden
+ */
+export interface NumericUserIdSchema extends BaseNumberSchema<ValueHintType.UserId> {
 }
 /**
  * Enumeration of formats supported by schemas that use {@link ValueHintType.Currency}.
