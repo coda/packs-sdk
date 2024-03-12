@@ -1563,7 +1563,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
           });
         }
       }),
-    role: z.nativeEnum(TableRole),
+    role: z.nativeEnum(TableRole).optional(),
   };
 
   type GenericSyncTableDef = SyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>;

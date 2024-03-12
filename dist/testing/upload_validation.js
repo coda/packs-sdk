@@ -1255,7 +1255,7 @@ function buildMetadataSchema({ sdkVersion }) {
                 });
             }
         }),
-        role: z.nativeEnum(api_types_4.TableRole),
+        role: z.nativeEnum(api_types_4.TableRole).optional(),
     };
     const genericSyncTableSchema = zodCompleteObject({
         ...baseSyncTableSchema,
