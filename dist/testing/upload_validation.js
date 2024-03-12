@@ -1255,7 +1255,7 @@ function buildMetadataSchema({ sdkVersion }) {
                 });
             }
         }),
-        roles: z.array(z.nativeEnum(api_types_4.TableRole)).optional(),
+        role: z.nativeEnum(api_types_4.TableRole),
     };
     const genericSyncTableSchema = zodCompleteObject({
         ...baseSyncTableSchema,
@@ -1481,7 +1481,7 @@ function buildMetadataSchema({ sdkVersion }) {
         })
             .superRefine((data, context) => {
             const syncTables = data.syncTables || [];
-            const userTables = syncTables.filter(syncTable => { var _a; return (_a = syncTable.roles) === null || _a === void 0 ? void 0 : _a.includes(api_types_4.TableRole.Users); });
+            const userTables = syncTables.filter(syncTable => syncTable.role === api_types_4.TableRole.Users);
             if (userTables.length > 1) {
                 context.addIssue({
                     code: z.ZodIssueCode.custom,

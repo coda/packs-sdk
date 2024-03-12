@@ -1212,7 +1212,8 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    */
   modifiedByProperty?: PropertyIdentifier<K>;
   /**
-   * The name of a property within {@link ObjectSchemaDefinition.properties} that can be interpreted as the email
+   * For cases where the object being synced represents a user, the name of the property within
+   * {@link ObjectSchemaDefinition.properties} that identifies the email address of the user.
    *
    * Must be a {@link ValueType.String} property with the {@link ValueHintType.Email} hint or
    * a {@link ValueType.Object} with the {@link ValueHintType.Person} hint
@@ -1220,7 +1221,9 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    */
   userEmailProperty?: PropertyIdentifier<K>;
   /**
-   * The name of a property within {@link ObjectSchemaDefinition.properties} that can be interpreted as the user id
+   * For cases where the object being synced represents a user, the name of the property within
+   * {@link ObjectSchemaDefinition.properties} that identifies the id of the user in the service
+   * being synced from.
    *
    * Must be a {@link ValueType.String} or {@link ValueType.Number} property
    * @hidden

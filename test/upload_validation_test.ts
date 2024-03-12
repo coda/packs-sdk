@@ -4666,7 +4666,7 @@ describe('Pack metadata Validation', async () => {
       const syncTable = makeSyncTable({
         name: 'Users',
         identityName: 'User',
-        roles: [TableRole.Users],
+        role: TableRole.Users,
         schema: makeObjectSchema({
           idProperty: 'id',
           displayProperty: 'email',
@@ -4703,7 +4703,7 @@ describe('Pack metadata Validation', async () => {
       const syncTable = makeSyncTable({
         name: 'Users',
         identityName: 'User',
-        roles: [TableRole.Users],
+        role: TableRole.Users,
         schema: makeObjectSchema({
           idProperty: 'email',
           displayProperty: 'email',
@@ -4739,7 +4739,7 @@ describe('Pack metadata Validation', async () => {
       const syncTable = makeSyncTable({
         name: 'Users',
         identityName: 'User',
-        roles: [TableRole.Users],
+        role: TableRole.Users,
         schema: makeObjectSchema({
           idProperty: 'id',
           displayProperty: 'email',

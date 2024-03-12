@@ -793,7 +793,7 @@ exports.makeObjectFormula = makeObjectFormula;
  *
  * See [Normalization](https://coda.io/packs/build/latest/guides/advanced/schemas/#normalization) for more information about schema normalization.
  */
-function makeSyncTable({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions = {}, roles, }) {
+function makeSyncTable({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions = {}, role, }) {
     const { getSchema: getSchemaDef, entityName, defaultAddDynamicColumns } = dynamicOptions;
     const { execute: wrappedExecute, executeUpdate: wrappedExecuteUpdate, ...definition } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
     // Since we mutate schemaDef, we need to make a copy so the input schema can be reused across sync tables.
@@ -811,12 +811,12 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
     else {
         schemaDef.identity = { name: identityName };
     }
-    if (roles === null || roles === void 0 ? void 0 : roles.includes(api_types_5.TableRole.Users)) {
+    if (role === api_types_5.TableRole.Users) {
         if (!schemaDef.userEmailProperty) {
-            throw new Error(`Sync table schemas with roles ${api_types_5.TableRole.Users} must set a userEmailProperty`);
+            throw new Error(`Sync table schemas with role ${api_types_5.TableRole.Users} must set a userEmailProperty`);
         }
         if (!schemaDef.userIdProperty) {
-            throw new Error(`Sync table schemas with roles ${api_types_5.TableRole.Users} must set a userIdProperty`);
+            throw new Error(`Sync table schemas with role ${api_types_5.TableRole.Users} must set a userIdProperty`);
         }
     }
     const getSchema = wrapGetSchema(wrapMetadataFunction(getSchemaDef));
@@ -892,7 +892,7 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
         entityName,
         defaultAddDynamicColumns,
         namedPropertyOptions: maybeRewriteConnectionForNamedPropertyOptions(namedPropertyOptions, connectionRequirement),
-        roles,
+        role,
     };
 }
 exports.makeSyncTable = makeSyncTable;
