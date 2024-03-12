@@ -30,7 +30,7 @@ import type { SchemaType } from './schema';
 import type { StringHintTypes } from './schema';
 import type { StringSchema } from './schema';
 import type { SyncExecutionContext } from './api_types';
-import { TableRole as TableRole } from './api_types';
+import { TableRole } from './api_types';
 import { Type } from './api_types';
 import type { TypeMap } from './api_types';
 import type { TypeOf } from './api_types';
