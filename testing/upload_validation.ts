@@ -1414,8 +1414,8 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
           return validateProperty(
             'userEmailProperty',
             userEmail =>
-              (userEmail.type === ValueType.Object || userEmail.type === ValueType.String) &&
-              (userEmail.codaType === ValueHintType.Person || userEmail.codaType === ValueHintType.Email),
+              (userEmail.type === ValueType.String && userEmail.codaType === ValueHintType.Email) ||
+              (userEmail.type === ValueType.Object && userEmail.codaType === ValueHintType.Person),
             `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`,
           );
         };

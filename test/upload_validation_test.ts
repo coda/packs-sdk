@@ -4735,6 +4735,32 @@ describe('Pack metadata Validation', async () => {
       await validateJsonAndAssertFails(metadata);
     });
 
+    it('Fail when both required fields are missing for users', async () => {
+      assert.throws(() =>
+        makeSyncTable({
+          name: 'Users',
+          identityName: 'User',
+          role: TableRole.Users,
+          schema: makeObjectSchema({
+            idProperty: 'email',
+            displayProperty: 'email',
+            properties: {
+              email: {type: ValueType.String, codaType: ValueHintType.Email},
+            },
+          }),
+          formula: {
+            name: 'Users',
+            description: '',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            examples: [],
+          },
+        }),
+      );
+    });
+
     it('Fail when fields are of the wrong type', async () => {
       const syncTable = makeSyncTable({
         name: 'Users',
