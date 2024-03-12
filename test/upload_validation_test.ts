@@ -4736,28 +4736,30 @@ describe('Pack metadata Validation', async () => {
     });
 
     it('Fail when both required fields are missing for users', async () => {
-      assert.throws(() =>
-        makeSyncTable({
-          name: 'Users',
-          identityName: 'User',
-          role: TableRole.Users,
-          schema: makeObjectSchema({
-            idProperty: 'email',
-            displayProperty: 'email',
-            properties: {
-              email: {type: ValueType.String, codaType: ValueHintType.Email},
+      assert.throws(
+        () =>
+          makeSyncTable({
+            name: 'Users',
+            identityName: 'User',
+            role: TableRole.Users,
+            schema: makeObjectSchema({
+              idProperty: 'email',
+              displayProperty: 'email',
+              properties: {
+                email: {type: ValueType.String, codaType: ValueHintType.Email},
+              },
+            }),
+            formula: {
+              name: 'Users',
+              description: '',
+              async execute([], _context) {
+                return {result: []};
+              },
+              parameters: [],
+              examples: [],
             },
           }),
-          formula: {
-            name: 'Users',
-            description: '',
-            async execute([], _context) {
-              return {result: []};
-            },
-            parameters: [],
-            examples: [],
-          },
-        }),
+        'Sync table schemas with role users must set a userEmailProperty',
       );
     });
 
