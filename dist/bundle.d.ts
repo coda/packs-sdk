@@ -788,6 +788,9 @@ export type PropertyOptionsMetadataResult<ResultT extends PackFormulaResult[]> =
  * A JavaScript function for property options.
  */
 export type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]> = (context: PropertyOptionsExecutionContext) => Promise<PropertyOptionsMetadataResult<ResultT>> | PropertyOptionsMetadataResult<ResultT>;
+declare enum TableRole {
+	Users = "users"
+}
 /**
  * The set of primitive value types that can be used as return values for formulas
  * or in object schemas.
@@ -1867,6 +1870,24 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 * @hidden
 	 */
 	modifiedByProperty?: PropertyIdentifier<K>;
+	/**
+	 * For cases where the object being synced represents a user, the name of the property within
+	 * {@link ObjectSchemaDefinition.properties} that identifies the email address of the user.
+	 *
+	 * Must be a {@link ValueType.String} property with the {@link ValueHintType.Email} hint or
+	 * a {@link ValueType.Object} with the {@link ValueHintType.Person} hint
+	 * @hidden
+	 */
+	userEmailProperty?: PropertyIdentifier<K>;
+	/**
+	 * For cases where the object being synced represents a user, the name of the property within
+	 * {@link ObjectSchemaDefinition.properties} that identifies the id of the user in the service
+	 * being synced from.
+	 *
+	 * Must be a {@link ValueType.String} or {@link ValueType.Number} property
+	 * @hidden
+	 */
+	userIdProperty?: PropertyIdentifier<K>;
 }
 export type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
 /** @hidden */
@@ -2429,6 +2450,11 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
 	 * @hidden
 	 */
 	namedPropertyOptions?: SyncTablePropertyOptions;
+	/**
+	 * See {@link SyncTableOptions.role}
+	 * @hidden
+	 */
+	role?: TableRole;
 }
 /**
  * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
@@ -3173,6 +3199,13 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
 	 * sync tables that have a dynamic schema.
 	 */
 	dynamicOptions?: DynamicOptions;
+	/**
+	 * Used to indicate that the entities in this table have a specific semantic meaning,
+	 * for example, that the rows being synced each represent a user.
+	 *
+	 * @hidden
+	 */
+	role?: TableRole;
 }
 /**
  * Options provided when defining a dynamic sync table.
@@ -3313,7 +3346,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
  */
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaDefT extends ObjectSchemaDefinition<K, L>, SchemaT extends SchemaDefT & {
 	identity?: Identity;
-}>({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT>;
+}>({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions, role, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT>;
 /**
  * Creates a dynamic sync table definition.
  *

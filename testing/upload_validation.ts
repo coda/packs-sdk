@@ -76,6 +76,7 @@ import type {SyncFormula} from '../api';
 import type {SyncTable} from '../api';
 import type {SyncTableDef} from '../api';
 import type {SystemAuthenticationTypes} from '../types';
+import {TableRole} from '../api_types';
 import {TokenExchangeCredentialsLocation} from '../types';
 import {Type} from '../api_types';
 import type {UnionType} from '../api_types';
@@ -1153,6 +1154,8 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       modifiedAtProperty: propertySchema.optional(),
       createdByProperty: propertySchema.optional(),
       modifiedByProperty: propertySchema.optional(),
+      userIdProperty: propertySchema.optional(),
+      userEmailProperty: propertySchema.optional(),
       options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
       requireForUpdates: z.boolean().optional(),
       autocomplete:
@@ -1407,6 +1410,25 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
           );
         };
 
+        const validateUserEmailProperty = () => {
+          return validateProperty(
+            'userEmailProperty',
+            userEmail =>
+              (userEmail.type === ValueType.Object || userEmail.type === ValueType.String) &&
+              (userEmail.codaType === ValueHintType.Person || userEmail.codaType === ValueHintType.Email),
+            `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`,
+          );
+        };
+
+        const validateUserIdProperty = () => {
+          return validateProperty(
+            'userIdProperty',
+            userIdPropertySchema =>
+              userIdPropertySchema.type === ValueType.String || userIdPropertySchema.type === ValueType.Number,
+            `must refer to a "ValueType.String" or "ValueType.Number".`,
+          );
+        };
+
         validateTitleProperty();
         validateLinkProperty();
         validateImageProperty();
@@ -1416,6 +1438,8 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
         validateModifiedAtProperty();
         validateCreatedByProperty();
         validateModifiedByProperty();
+        validateUserEmailProperty();
+        validateUserIdProperty();
       })
       .superRefine((data, context) => {
         const schemaHelper = objectSchemaHelper(data as GenericObjectSchema);
@@ -1539,6 +1563,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
           });
         }
       }),
+    role: z.nativeEnum(TableRole).optional(),
   };
 
   type GenericSyncTableDef = SyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>;
@@ -1793,6 +1818,17 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
             }
           }
         });
+      })
+      .superRefine((data, context) => {
+        const syncTables = (data.syncTables as SyncTable[]) || [];
+        const userTables = syncTables.filter(syncTable => syncTable.role === TableRole.Users);
+        if (userTables.length > 1) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['syncTables'],
+            message: 'Only one sync table can have the role "Users".',
+          });
+        }
       });
   }
 

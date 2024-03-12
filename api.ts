@@ -34,6 +34,7 @@ import type {SchemaType} from './schema';
 import type {StringHintTypes} from './schema';
 import type {StringSchema} from './schema';
 import type {SyncExecutionContext} from './api_types';
+import {TableRole} from './api_types';
 import {Type} from './api_types';
 import type {TypeMap} from './api_types';
 import type {TypeOf} from './api_types';
@@ -293,6 +294,12 @@ export interface SyncTableDef<
    * @hidden
    */
   namedPropertyOptions?: SyncTablePropertyOptions;
+
+  /**
+   * See {@link SyncTableOptions.role}
+   * @hidden
+   */
+  role?: TableRole;
 }
 
 /**
@@ -1972,6 +1979,14 @@ export interface SyncTableOptions<
    * sync tables that have a dynamic schema.
    */
   dynamicOptions?: DynamicOptions;
+
+  /**
+   * Used to indicate that the entities in this table have a specific semantic meaning,
+   * for example, that the rows being synced each represent a user.
+   *
+   * @hidden
+   */
+  role?: TableRole;
 }
 
 /**
@@ -2134,6 +2149,7 @@ export function makeSyncTable<
   formula,
   connectionRequirement,
   dynamicOptions = {},
+  role,
 }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT> {
   const {getSchema: getSchemaDef, entityName, defaultAddDynamicColumns} = dynamicOptions;
   const {
@@ -2158,6 +2174,16 @@ export function makeSyncTable<
     schemaDef.identity = {...schemaDef.identity, name: identityName};
   } else {
     schemaDef.identity = {name: identityName};
+  }
+
+  if (role === TableRole.Users) {
+    if (!schemaDef.userEmailProperty) {
+      throw new Error(`Sync table schemas with role ${TableRole.Users} must set a userEmailProperty`);
+    }
+
+    if (!schemaDef.userIdProperty) {
+      throw new Error(`Sync table schemas with role ${TableRole.Users} must set a userIdProperty`);
+    }
   }
 
   const getSchema = wrapGetSchema(wrapMetadataFunction(getSchemaDef));
@@ -2243,6 +2269,7 @@ export function makeSyncTable<
     entityName,
     defaultAddDynamicColumns,
     namedPropertyOptions: maybeRewriteConnectionForNamedPropertyOptions(namedPropertyOptions, connectionRequirement),
+    role,
   };
 }
 

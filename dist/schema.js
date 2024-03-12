@@ -680,7 +680,7 @@ function normalizeObjectSchema(schema) {
     const normalizedProperties = {};
     const { attribution, options, requireForUpdates, codaType, description, displayProperty, featured, featuredProperties, id, identity, idProperty, imageProperty, includeUnknownProperties, linkProperty, primary, properties, snippetProperty, subtitleProperties, titleProperty, type, 
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    __packId, createdAtProperty, createdByProperty, modifiedAtProperty, modifiedByProperty, ...rest } = schema;
+    __packId, createdAtProperty, createdByProperty, modifiedAtProperty, modifiedByProperty, userEmailProperty, userIdProperty, ...rest } = schema;
     // Have TS ensure we don't forget about new fields in this function.
     (0, ensure_3.ensureNever)();
     for (const key of Object.keys(properties)) {
@@ -724,14 +724,24 @@ function normalizeObjectSchema(schema) {
             ? subtitleProperties.map(subProp => normalizeSchemaPropertyIdentifier(subProp, normalizedProperties))
             : undefined,
         titleProperty: titleProperty ? normalizeSchemaPropertyIdentifier(titleProperty, normalizedProperties) : undefined,
-        createdAtProperty: createdAtProperty ?
-            normalizeSchemaPropertyIdentifier(createdAtProperty, normalizedProperties) : undefined,
-        createdByProperty: createdByProperty ?
-            normalizeSchemaPropertyIdentifier(createdByProperty, normalizedProperties) : undefined,
-        modifiedAtProperty: modifiedAtProperty ?
-            normalizeSchemaPropertyIdentifier(modifiedAtProperty, normalizedProperties) : undefined,
-        modifiedByProperty: modifiedByProperty ?
-            normalizeSchemaPropertyIdentifier(modifiedByProperty, normalizedProperties) : undefined,
+        createdAtProperty: createdAtProperty
+            ? normalizeSchemaPropertyIdentifier(createdAtProperty, normalizedProperties)
+            : undefined,
+        createdByProperty: createdByProperty
+            ? normalizeSchemaPropertyIdentifier(createdByProperty, normalizedProperties)
+            : undefined,
+        modifiedAtProperty: modifiedAtProperty
+            ? normalizeSchemaPropertyIdentifier(modifiedAtProperty, normalizedProperties)
+            : undefined,
+        modifiedByProperty: modifiedByProperty
+            ? normalizeSchemaPropertyIdentifier(modifiedByProperty, normalizedProperties)
+            : undefined,
+        userEmailProperty: userEmailProperty
+            ? normalizeSchemaPropertyIdentifier(userEmailProperty, normalizedProperties)
+            : undefined,
+        userIdProperty: userIdProperty
+            ? normalizeSchemaPropertyIdentifier(userIdProperty, normalizedProperties)
+            : undefined,
         type: ValueType.Object,
     };
 }

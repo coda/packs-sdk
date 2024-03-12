@@ -47,8 +47,9 @@ const types_3 = require("../types");
 const types_4 = require("../types");
 const schema_11 = require("../schema");
 const schema_12 = require("../schema");
-const types_5 = require("../types");
 const api_types_4 = require("../api_types");
+const types_5 = require("../types");
+const api_types_5 = require("../api_types");
 const schema_13 = require("../schema");
 const schema_14 = require("../schema");
 const zod_1 = require("zod");
@@ -540,15 +541,15 @@ function buildMetadataSchema({ sdkVersion }) {
             .regex(regexParameterName, 'Parameter names can only contain alphanumeric characters and underscores.'),
         type: z
             .union([
-            z.nativeEnum(api_types_4.Type),
+            z.nativeEnum(api_types_5.Type),
             z.object({
                 type: zodDiscriminant('array'),
-                items: z.nativeEnum(api_types_4.Type),
+                items: z.nativeEnum(api_types_5.Type),
                 allowEmpty: z.boolean().optional(),
             }),
         ])
-            .refine(paramType => paramType !== api_types_4.Type.object &&
-            !(typeof paramType === 'object' && paramType.type === 'array' && paramType.items === api_types_4.Type.object), {
+            .refine(paramType => paramType !== api_types_5.Type.object &&
+            !(typeof paramType === 'object' && paramType.type === 'array' && paramType.items === api_types_5.Type.object), {
             message: 'Object parameters are not currently supported.',
         }),
         description: z.string().max(exports.Limits.BuildingBlockDescription),
@@ -608,7 +609,7 @@ function buildMetadataSchema({ sdkVersion }) {
     };
     const booleanPackFormulaSchema = zodCompleteObject({
         ...commonPackFormulaSchema,
-        resultType: zodDiscriminant(api_types_4.Type.boolean),
+        resultType: zodDiscriminant(api_types_5.Type.boolean),
         schema: zodCompleteObject({
             type: zodDiscriminant(schema_14.ValueType.Boolean),
             codaType: z.enum([...schema_2.BooleanHintValueTypes]).optional(),
@@ -745,7 +746,7 @@ function buildMetadataSchema({ sdkVersion }) {
     ]);
     const numericPackFormulaSchema = zodCompleteObject({
         ...commonPackFormulaSchema,
-        resultType: zodDiscriminant(api_types_4.Type.number),
+        resultType: zodDiscriminant(api_types_5.Type.number),
         schema: numberPropertySchema.optional(),
     });
     const simpleStringPropertySchema = zodCompleteStrictObject({
@@ -837,7 +838,7 @@ function buildMetadataSchema({ sdkVersion }) {
     ]);
     const stringPackFormulaSchema = zodCompleteObject({
         ...commonPackFormulaSchema,
-        resultType: zodDiscriminant(api_types_4.Type.string),
+        resultType: zodDiscriminant(api_types_5.Type.string),
         schema: stringPropertySchema.optional(),
     });
     // TODO(jonathan): Give this a better type than ZodTypeAny after figuring out
@@ -943,6 +944,8 @@ function buildMetadataSchema({ sdkVersion }) {
         modifiedAtProperty: propertySchema.optional(),
         createdByProperty: propertySchema.optional(),
         modifiedByProperty: propertySchema.optional(),
+        userIdProperty: propertySchema.optional(),
+        userEmailProperty: propertySchema.optional(),
         options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
         requireForUpdates: z.boolean().optional(),
         autocomplete: sdkVersion && semver_1.default.satisfies(sdkVersion, '<=1.4.0')
@@ -1125,6 +1128,13 @@ function buildMetadataSchema({ sdkVersion }) {
                 (modifiedByPropertySchema.codaType === schema_13.ValueHintType.Person ||
                     modifiedByPropertySchema.codaType === schema_13.ValueHintType.Email), `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`);
         };
+        const validateUserEmailProperty = () => {
+            return validateProperty('userEmailProperty', userEmail => (userEmail.type === schema_14.ValueType.Object || userEmail.type === schema_14.ValueType.String) &&
+                (userEmail.codaType === schema_13.ValueHintType.Person || userEmail.codaType === schema_13.ValueHintType.Email), `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`);
+        };
+        const validateUserIdProperty = () => {
+            return validateProperty('userIdProperty', userIdPropertySchema => userIdPropertySchema.type === schema_14.ValueType.String || userIdPropertySchema.type === schema_14.ValueType.Number, `must refer to a "ValueType.String" or "ValueType.Number".`);
+        };
         validateTitleProperty();
         validateLinkProperty();
         validateImageProperty();
@@ -1134,6 +1144,8 @@ function buildMetadataSchema({ sdkVersion }) {
         validateModifiedAtProperty();
         validateCreatedByProperty();
         validateModifiedByProperty();
+        validateUserEmailProperty();
+        validateUserIdProperty();
     })
         .superRefine((data, context) => {
         var _a;
@@ -1169,7 +1181,7 @@ function buildMetadataSchema({ sdkVersion }) {
     }, 'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "options" property.');
     const objectPackFormulaSchema = zodCompleteObject({
         ...commonPackFormulaSchema,
-        resultType: zodDiscriminant(api_types_4.Type.object),
+        resultType: zodDiscriminant(api_types_5.Type.object),
         // TODO(jonathan): See if we should really allow this. The SDK right now explicitly tolerates an undefined
         // schema for objects, but that doesn't seem like a use case we actually want to support.
         schema: z.union([genericObjectSchema, arrayPropertySchema]).optional(),
@@ -1243,6 +1255,7 @@ function buildMetadataSchema({ sdkVersion }) {
                 });
             }
         }),
+        role: z.nativeEnum(api_types_4.TableRole).optional(),
     };
     const genericSyncTableSchema = zodCompleteObject({
         ...baseSyncTableSchema,
@@ -1465,6 +1478,17 @@ function buildMetadataSchema({ sdkVersion }) {
                     }
                 }
             });
+        })
+            .superRefine((data, context) => {
+            const syncTables = data.syncTables || [];
+            const userTables = syncTables.filter(syncTable => syncTable.role === api_types_4.TableRole.Users);
+            if (userTables.length > 1) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: ['syncTables'],
+                    message: 'Only one sync table can have the role "Users".',
+                });
+            }
         });
     }
     function validateFormatMatcher(value) {

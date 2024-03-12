@@ -906,7 +906,7 @@ export type PropertyIdentifier<K extends string = string> = K | string | Propert
  * The {@link ObjectSchemaDefinition} properties that reference keys in the `properties` object. These should all be
  * {@link PropertyIdentifier} types.
  */
-export type ObjectSchemaPathProperties = Pick<GenericObjectSchema, 'titleProperty' | 'linkProperty' | 'imageProperty' | 'snippetProperty' | 'subtitleProperties' | 'createdAtProperty' | 'createdByProperty' | 'modifiedAtProperty' | 'modifiedByProperty'>;
+export type ObjectSchemaPathProperties = Pick<GenericObjectSchema, 'titleProperty' | 'linkProperty' | 'imageProperty' | 'snippetProperty' | 'subtitleProperties' | 'createdAtProperty' | 'createdByProperty' | 'modifiedAtProperty' | 'modifiedByProperty' | 'userEmailProperty' | 'userIdProperty'>;
 /**
  * A schema definition for an object value (a value with key-value pairs).
  */
@@ -1053,6 +1053,24 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      * @hidden
      */
     modifiedByProperty?: PropertyIdentifier<K>;
+    /**
+     * For cases where the object being synced represents a user, the name of the property within
+     * {@link ObjectSchemaDefinition.properties} that identifies the email address of the user.
+     *
+     * Must be a {@link ValueType.String} property with the {@link ValueHintType.Email} hint or
+     * a {@link ValueType.Object} with the {@link ValueHintType.Person} hint
+     * @hidden
+     */
+    userEmailProperty?: PropertyIdentifier<K>;
+    /**
+     * For cases where the object being synced represents a user, the name of the property within
+     * {@link ObjectSchemaDefinition.properties} that identifies the id of the user in the service
+     * being synced from.
+     *
+     * Must be a {@link ValueType.String} or {@link ValueType.Number} property
+     * @hidden
+     */
+    userIdProperty?: PropertyIdentifier<K>;
 }
 export type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
 /** @hidden */

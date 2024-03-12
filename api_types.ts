@@ -966,3 +966,7 @@ export type PropertyOptionsMetadataResult<ResultT extends PackFormulaResult[]> =
 export type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]> = (
   context: PropertyOptionsExecutionContext,
 ) => Promise<PropertyOptionsMetadataResult<ResultT>> | PropertyOptionsMetadataResult<ResultT>;
+
+export enum TableRole {
+  Users = 'users',
+}

@@ -1048,7 +1048,17 @@ export type PropertyIdentifier<K extends string = string> = K | string | Propert
  */
 export type ObjectSchemaPathProperties = Pick<
   GenericObjectSchema,
-  'titleProperty' | 'linkProperty' | 'imageProperty' | 'snippetProperty' | 'subtitleProperties' | 'createdAtProperty' | 'createdByProperty' | 'modifiedAtProperty' | 'modifiedByProperty'
+  | 'titleProperty'
+  | 'linkProperty'
+  | 'imageProperty'
+  | 'snippetProperty'
+  | 'subtitleProperties'
+  | 'createdAtProperty'
+  | 'createdByProperty'
+  | 'modifiedAtProperty'
+  | 'modifiedByProperty'
+  | 'userEmailProperty'
+  | 'userIdProperty'
 >;
 
 /**
@@ -1201,7 +1211,24 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    * @hidden
    */
   modifiedByProperty?: PropertyIdentifier<K>;
-
+  /**
+   * For cases where the object being synced represents a user, the name of the property within
+   * {@link ObjectSchemaDefinition.properties} that identifies the email address of the user.
+   *
+   * Must be a {@link ValueType.String} property with the {@link ValueHintType.Email} hint or
+   * a {@link ValueType.Object} with the {@link ValueHintType.Person} hint
+   * @hidden
+   */
+  userEmailProperty?: PropertyIdentifier<K>;
+  /**
+   * For cases where the object being synced represents a user, the name of the property within
+   * {@link ObjectSchemaDefinition.properties} that identifies the id of the user in the service
+   * being synced from.
+   *
+   * Must be a {@link ValueType.String} or {@link ValueType.Number} property
+   * @hidden
+   */
+  userIdProperty?: PropertyIdentifier<K>;
   // TODO(dweitzman): Only support options in the typing when the codaType is ValueHintType.SelectList.
 }
 
@@ -1747,6 +1774,8 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     createdByProperty,
     modifiedAtProperty,
     modifiedByProperty,
+    userEmailProperty,
+    userIdProperty,
     ...rest
   } = schema;
   // Have TS ensure we don't forget about new fields in this function.
@@ -1792,14 +1821,24 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
       ? subtitleProperties.map(subProp => normalizeSchemaPropertyIdentifier(subProp, normalizedProperties))
       : undefined,
     titleProperty: titleProperty ? normalizeSchemaPropertyIdentifier(titleProperty, normalizedProperties) : undefined,
-    createdAtProperty: createdAtProperty ?
-      normalizeSchemaPropertyIdentifier(createdAtProperty, normalizedProperties) : undefined,
-    createdByProperty: createdByProperty ?
-      normalizeSchemaPropertyIdentifier(createdByProperty, normalizedProperties) : undefined,
-    modifiedAtProperty: modifiedAtProperty ?
-      normalizeSchemaPropertyIdentifier(modifiedAtProperty, normalizedProperties) : undefined,
-    modifiedByProperty: modifiedByProperty ?
-      normalizeSchemaPropertyIdentifier(modifiedByProperty, normalizedProperties) : undefined,
+    createdAtProperty: createdAtProperty
+      ? normalizeSchemaPropertyIdentifier(createdAtProperty, normalizedProperties)
+      : undefined,
+    createdByProperty: createdByProperty
+      ? normalizeSchemaPropertyIdentifier(createdByProperty, normalizedProperties)
+      : undefined,
+    modifiedAtProperty: modifiedAtProperty
+      ? normalizeSchemaPropertyIdentifier(modifiedAtProperty, normalizedProperties)
+      : undefined,
+    modifiedByProperty: modifiedByProperty
+      ? normalizeSchemaPropertyIdentifier(modifiedByProperty, normalizedProperties)
+      : undefined,
+    userEmailProperty: userEmailProperty
+      ? normalizeSchemaPropertyIdentifier(userEmailProperty, normalizedProperties)
+      : undefined,
+    userIdProperty: userIdProperty
+      ? normalizeSchemaPropertyIdentifier(userIdProperty, normalizedProperties)
+      : undefined,
     type: ValueType.Object,
   };
 }
