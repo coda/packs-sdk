@@ -1129,8 +1129,8 @@ function buildMetadataSchema({ sdkVersion }) {
                     modifiedByPropertySchema.codaType === schema_13.ValueHintType.Email), `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`);
         };
         const validateUserEmailProperty = () => {
-            return validateProperty('userEmailProperty', userEmail => (userEmail.type === schema_14.ValueType.Object || userEmail.type === schema_14.ValueType.String) &&
-                (userEmail.codaType === schema_13.ValueHintType.Person || userEmail.codaType === schema_13.ValueHintType.Email), `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`);
+            return validateProperty('userEmailProperty', userEmail => (userEmail.type === schema_14.ValueType.String && userEmail.codaType === schema_13.ValueHintType.Email) ||
+                (userEmail.type === schema_14.ValueType.Object && userEmail.codaType === schema_13.ValueHintType.Person), `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`);
         };
         const validateUserIdProperty = () => {
             return validateProperty('userIdProperty', userIdPropertySchema => userIdPropertySchema.type === schema_14.ValueType.String || userIdPropertySchema.type === schema_14.ValueType.Number, `must refer to a "ValueType.String" or "ValueType.Number".`);
