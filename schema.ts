@@ -1287,7 +1287,7 @@ interface PublicPermission extends BasePermission {
 }
 
 /**
- * OThis represents a permission in an external system
+ * This represents a permission on an entity provided by the pack.
  *
  * @hidden
  */
