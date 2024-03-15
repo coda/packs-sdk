@@ -1232,6 +1232,43 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
   // TODO(dweitzman): Only support options in the typing when the codaType is ValueHintType.SelectList.
 }
 
+/**
+ * Represents a permission in the external system
+ *
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface Permission {
+  /**
+   * Indicates whether the permission is public to all users who have access to the ingestion
+   */
+  isPublic: boolean;
+
+  /**
+   * The ID of the user associated with the permission
+   *
+   * This must match the ids returned from {@link BaseAuthentication.getConnectionUserId}
+   * or the ids specified in the {@link ObjectSchemaDefinition.userIdProperty} column of a table
+   * with role {@link TableRole.Users}
+   */
+  userId: string;
+
+  /**
+   * The ID of the group associated with the permission.
+   *
+   * TODO(sam): Update with description of where this group id is set
+   */
+  groupId: string;
+
+  /**
+   * The domain name associated with the permission.
+   */
+  domainName: string;
+
+  // TODO(sam): Add options describing inheritance of permissions
+}
+
 export type ObjectSchemaDefinitionType<
   K extends string,
   L extends string,

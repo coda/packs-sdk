@@ -6,6 +6,7 @@ import {ConnectionRequirement} from './api_types';
 import type {CrawlStrategy} from './api_types';
 import type {ExecutionContext} from './api_types';
 import type {FetchRequest} from './api_types';
+import type {GetPermissionExecutionContext} from './api_types';
 import type {Identity} from './schema';
 import type {NumberHintTypes} from './schema';
 import type {NumberSchema} from './schema';
@@ -23,6 +24,7 @@ import type {ParamValues} from './api_types';
 import {ParameterType} from './api_types';
 import {ParameterTypeInputMap} from './api_types';
 import type {ParameterTypeMap} from './api_types';
+import type {Permission} from './schema';
 import type {PropertyOptionsExecutionContext} from './api_types';
 import type {PropertyOptionsMetadataFunction} from './api_types';
 import type {PropertyOptionsMetadataResult} from './api_types';
@@ -1151,6 +1153,33 @@ export interface SyncFormulaDef<
    * @hidden
    */
   updateOptions?: Pick<CommonPackFormulaDef<ParamDefsT>, 'extraOAuthScopes'>;
+
+  /**
+   * The javascript function that implements fetching permissions for a set of objects
+   * if the objects in this sync table have permissions in the external system.
+   *
+   * TODO(sam) pre merge:
+   * Does this need continuation? What if we fetch like 4 items and we need to continue for the last one?
+   * What are the size limits?
+   * Should we return as a flattened list or a map of lists?
+   * What do we do if there are no permissions on the objects but we just care about the permissions of the parent?
+   *
+   * TODO(sam): Unhide this
+   * @hidden
+   */
+  getPermissions?(
+    rows: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>,
+    context: GetPermissionExecutionContext,
+  ): Promise<Record<string, Permission[]>>;
+
+  /**
+   * If the table implements {@link getPermissions} the maximum number of rows that will be sent to that
+   * function in a single batch. Defaults to 10 if not specified.
+   *
+   * TODO(sam): Unhide this
+   * @hidden
+   */
+  maxPermissionBatchSize?: number;
 }
 
 /**
@@ -2155,6 +2184,8 @@ export function makeSyncTable<
   const {
     execute: wrappedExecute,
     executeUpdate: wrappedExecuteUpdate,
+    // TODO(sam): Need to rewrite permissions once we have finalized schema + API
+    getPermissions,
     ...definition
   } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
 
@@ -2264,6 +2295,7 @@ export function makeSyncTable<
       supportsUpdates: Boolean(executeUpdate),
       connectionRequirement: definition.connectionRequirement || connectionRequirement,
       resultType: Type.object as any,
+      getPermissions: getPermissions as any,
     },
     getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
     entityName,

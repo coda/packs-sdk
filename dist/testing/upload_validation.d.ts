@@ -19,6 +19,7 @@ export declare const Limits: {
     ColumnMatcherRegex: number;
     NumColumnMatchersPerFormat: number;
     NetworkDomainUrl: number;
+    PermissionsBatchSize: number;
     UpdateBatchSize: number;
 };
 export declare class PackMetadataValidationError extends Error {

@@ -865,6 +865,13 @@ export interface UpdateSyncExecutionContext extends ExecutionContext {
   readonly sync: UpdateSync;
 }
 
+/**
+ * Context provided to GetPermissionExecution calls
+ *
+ * @hidden
+ */
+export interface GetPermissionExecutionContext extends ExecutionContext {}
+
 // A mapping exists in coda that allows these to show up in the UI.
 // If adding new values here, add them to that mapping and vice versa.
 /**

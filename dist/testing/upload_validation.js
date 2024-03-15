@@ -92,6 +92,7 @@ exports.Limits = {
     ColumnMatcherRegex: 300,
     NumColumnMatchersPerFormat: 10,
     NetworkDomainUrl: 253,
+    PermissionsBatchSize: 1000,
     UpdateBatchSize: 1000,
 };
 var CustomErrorCode;
@@ -1222,6 +1223,7 @@ function buildMetadataSchema({ sdkVersion }) {
         supportsUpdates: z.boolean().optional(),
         ...commonPackFormulaSchema,
         updateOptions: z.strictObject({ extraOAuthScopes: commonPackFormulaSchema.extraOAuthScopes }).optional(),
+        maxPermissionBatchSize: z.number().min(1).max(exports.Limits.PermissionsBatchSize).optional(),
     });
     const baseSyncTableSchema = {
         name: z

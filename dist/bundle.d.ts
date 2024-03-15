@@ -706,6 +706,13 @@ export interface UpdateSyncExecutionContext extends ExecutionContext {
 	readonly sync: UpdateSync;
 }
 /**
+ * Context provided to GetPermissionExecution calls
+ *
+ * @hidden
+ */
+export interface GetPermissionExecutionContext extends ExecutionContext {
+}
+/**
  * Special "live" date range values that can be used as the {@link ParamDef.suggestedValue}
  * for a date array parameter.
  *
@@ -1889,6 +1896,37 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 */
 	userIdProperty?: PropertyIdentifier<K>;
 }
+/**
+ * Represents a permission in the external system
+ *
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface Permission {
+	/**
+	 * Indicates whether the permission is public to all users who have access to the ingestion
+	 */
+	isPublic: boolean;
+	/**
+	 * The ID of the user associated with the permission
+	 *
+	 * This must match the ids returned from {@link BaseAuthentication.getConnectionUserId}
+	 * or the ids specified in the {@link ObjectSchemaDefinition.userIdProperty} column of a table
+	 * with role {@link TableRole.Users}
+	 */
+	userId: string;
+	/**
+	 * The ID of the group associated with the permission.
+	 *
+	 * TODO(sam): Update with description of where this group id is set
+	 */
+	groupId: string;
+	/**
+	 * The domain name associated with the permission.
+	 */
+	domainName: string;
+}
 export type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
 /** @hidden */
 export interface ObjectSchema<K extends string, L extends string> extends ObjectSchemaDefinition<K, L> {
@@ -2791,6 +2829,28 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
 	 * @hidden
 	 */
 	updateOptions?: Pick<CommonPackFormulaDef<ParamDefsT>, "extraOAuthScopes">;
+	/**
+	 * The javascript function that implements fetching permissions for a set of objects
+	 * if the objects in this sync table have permissions in the external system.
+	 *
+	 * TODO(sam) pre merge:
+	 * Does this need continuation? What if we fetch like 4 items and we need to continue for the last one?
+	 * What are the size limits?
+	 * Should we return as a flattened list or a map of lists?
+	 * What do we do if there are no permissions on the objects but we just care about the permissions of the parent?
+	 *
+	 * TODO(sam): Unhide this
+	 * @hidden
+	 */
+	getPermissions?(rows: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>, context: GetPermissionExecutionContext): Promise<Record<string, Permission[]>>;
+	/**
+	 * If the table implements {@link getPermissions} the maximum number of rows that will be sent to that
+	 * function in a single batch. Defaults to 10 if not specified.
+	 *
+	 * TODO(sam): Unhide this
+	 * @hidden
+	 */
+	maxPermissionBatchSize?: number;
 }
 /**
  * The result of defining the formula that implements a sync table.

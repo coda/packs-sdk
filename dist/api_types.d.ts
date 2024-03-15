@@ -727,6 +727,13 @@ export interface UpdateSyncExecutionContext extends ExecutionContext {
     readonly sync: UpdateSync;
 }
 /**
+ * Context provided to GetPermissionExecution calls
+ *
+ * @hidden
+ */
+export interface GetPermissionExecutionContext extends ExecutionContext {
+}
+/**
  * Special "live" date range values that can be used as the {@link ParamDef.suggestedValue}
  * for a date array parameter.
  *

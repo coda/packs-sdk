@@ -795,7 +795,9 @@ exports.makeObjectFormula = makeObjectFormula;
  */
 function makeSyncTable({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions = {}, role, }) {
     const { getSchema: getSchemaDef, entityName, defaultAddDynamicColumns } = dynamicOptions;
-    const { execute: wrappedExecute, executeUpdate: wrappedExecuteUpdate, ...definition } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
+    const { execute: wrappedExecute, executeUpdate: wrappedExecuteUpdate, 
+    // TODO(sam): Need to rewrite permissions once we have finalized schema + API
+    getPermissions, ...definition } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
     // Since we mutate schemaDef, we need to make a copy so the input schema can be reused across sync tables.
     const schemaDef = (0, object_utils_1.deepCopy)(inputSchema);
     // Hydrate the schema's identity.
@@ -887,6 +889,7 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
             supportsUpdates: Boolean(executeUpdate),
             connectionRequirement: definition.connectionRequirement || connectionRequirement,
             resultType: api_types_6.Type.object,
+            getPermissions: getPermissions,
         },
         getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
         entityName,
