@@ -157,7 +157,7 @@ export const manifest: PackDefinition = createFakePack({
         executeUpdate: async (_params, updates, _context) => {
           return {result: updates.map(u => u.newValue)};
         },
-        executeGetPermissions: async (rows, _context) => {
+        executeGetPermissions: async ({rows}, _context) => {
           const permissions: Permission[] = rows
             .filter(r => r.name)
             .map(r => {

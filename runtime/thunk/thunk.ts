@@ -6,6 +6,7 @@ import type {FetchRequest} from '../../api_types';
 import type {FetchResponse} from '../../api_types';
 import type {FormulaSpecification} from '../types';
 import {FormulaType} from '../types';
+import type {GenericExecuteGetPermissionsRequest} from '../../api';
 import type {GenericSyncFormulaResult} from '../../api';
 import type {GenericSyncUpdate} from '../../api';
 import type {GenericSyncUpdateResult} from '../../api';
@@ -51,6 +52,7 @@ interface FindAndExecutionPackFunctionArgs<T> {
   manifest: BasicPackDefinition;
   executionContext: ExecutionContext | SyncExecutionContext;
   updates?: GenericSyncUpdate[];
+  getPermissionsRequest?: GenericExecuteGetPermissionsRequest;
 }
 
 /**
@@ -79,6 +81,7 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
   manifest,
   executionContext,
   updates,
+  getPermissionsRequest,
 }: FindAndExecutionPackFunctionArgs<T>): Promise<PackFunctionResponse<T>>;
 async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
   params,
@@ -86,6 +89,7 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
   manifest,
   executionContext,
   updates,
+  getPermissionsRequest,
 }: FindAndExecutionPackFunctionArgs<T>): Promise<
   GenericSyncFormulaResult | GenericSyncUpdateResultMarshaled | PackFormulaResult
 > {
@@ -111,6 +115,17 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
         executionContext as UpdateSyncExecutionContext,
       );
       return parseSyncUpdateResult(response);
+    }
+    case FormulaType.GetPermissions: {
+      const formula = findSyncFormula(manifest, formulaSpec.formulaName);
+      if (!formula.executeGetPermissions) {
+        throw new Error(`No executeGetPermissions function defined on sync table formula ${formulaSpec.formulaName}`);
+      }
+      const response = await formula.executeGetPermissions(
+        ensureExists(getPermissionsRequest),
+        executionContext as SyncExecutionContext,
+      );
+      return response;
     }
     case FormulaType.Metadata: {
       switch (formulaSpec.metadataFormulaType) {

@@ -619,6 +619,7 @@ describe('CLI formula spec parsing', () => {
         ],
         execute: async () => ({result: []}),
         executeUpdate: async () => ({result: []}),
+        executeGetPermissions: async () => ({permissions: []}),
       },
     });
 
@@ -660,6 +661,12 @@ describe('CLI formula spec parsing', () => {
     const updateSpec = makeFormulaSpec(pack, 'MySync:update');
     assert.deepEqual(updateSpec, {
       type: FormulaType.SyncUpdate,
+      formulaName: 'MySync',
+    });
+
+    const getPermissionsSpec = makeFormulaSpec(pack, 'MySync:permissions');
+    assert.deepEqual(getPermissionsSpec, {
+      type: FormulaType.GetPermissions,
       formulaName: 'MySync',
     });
   });

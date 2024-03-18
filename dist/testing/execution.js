@@ -68,7 +68,7 @@ function resolveFormulaNameWithNamespace(formulaNameWithNamespace) {
     }
     return name;
 }
-async function findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, syncUpdates, { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, 
+async function findAndExecutePackFunction(params, formulaSpec, manifest, executionContext, syncUpdates, getPermissionsRequest, { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, 
 // TODO(alexd): Switch this to false or remove when we launch 1.0.0
 useDeprecatedResultNormalization = true, } = {}) {
     var _a, _b;
@@ -92,6 +92,7 @@ useDeprecatedResultNormalization = true, } = {}) {
         executionContext,
         shouldWrapError: false,
         updates: syncUpdates,
+        getPermissionsRequest,
     });
     if (formulaSpec.type === types_1.FormulaType.SyncUpdate) {
         return result;
@@ -123,7 +124,7 @@ async function executeFormulaFromPackDef(packDef, formulaNameWithNamespace, para
         const credentials = getCredentials(manifestPath);
         executionContext = (0, fetcher_1.newFetcherExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_3.getPackAuth)(packDef), packDef.networkDomains, credentials);
     }
-    return findAndExecutePackFunction(params, { type: types_1.FormulaType.Standard, formulaName: resolveFormulaNameWithNamespace(formulaNameWithNamespace) }, packDef, executionContext || (0, mocks_1.newMockExecutionContext)(), undefined, options);
+    return findAndExecutePackFunction(params, { type: types_1.FormulaType.Standard, formulaName: resolveFormulaNameWithNamespace(formulaNameWithNamespace) }, packDef, executionContext || (0, mocks_1.newMockExecutionContext)(), undefined, undefined, options);
 }
 exports.executeFormulaFromPackDef = executeFormulaFromPackDef;
 async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, manifestPath, vm, dynamicUrl, maxRows = exports.DEFAULT_MAX_ROWS, bundleSourceMapPath, bundlePath, contextOptions = {}, }) {
@@ -261,6 +262,15 @@ function makeFormulaSpec(manifest, formulaNameInput) {
         else if (metadataFormulaTypeStr === 'autocomplete') {
             throw new Error(`No parameter name specified for autocomplete metadata formula.`);
         }
+        if (metadataFormulaTypeStr === 'permissions') {
+            if (!syncFormula) {
+                throw new Error(`Permissions formula "${metadataFormulaTypeStr}" is only supported for sync formulas.`);
+            }
+            return {
+                type: types_1.FormulaType.GetPermissions,
+                formulaName: formulaOrSyncName,
+            };
+        }
         const metadataFormulaType = invert(SyncMetadataFormulaTokens)[metadataFormulaTypeStr];
         if (!metadataFormulaType) {
             throw new Error(`Unrecognized metadata formula type "${metadataFormulaTypeStr}".`);
@@ -323,6 +333,7 @@ async function executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, par
     const manifest = await (0, helpers_4.importManifest)(bundlePath);
     let params;
     let syncUpdates;
+    let permissionRequest;
     switch (formulaSpecification.type) {
         case types_1.FormulaType.Standard: {
             const formula = (0, helpers_1.findFormula)(manifest, formulaSpecification.formulaName);
@@ -347,10 +358,14 @@ async function executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, par
             ({ params, syncUpdates } = parseSyncUpdates(manifest, formulaSpecification, rawParams));
             break;
         }
+        case types_1.FormulaType.GetPermissions:
+            permissionRequest = parseGetPermissionRequest(rawParams);
+            params = [];
+            break;
         default:
             (0, ensure_2.ensureUnreachable)(formulaSpecification);
     }
-    return (0, bootstrap_1.executeThunk)(ivmContext, { params, formulaSpec: formulaSpecification, updates: syncUpdates }, bundlePath, bundleSourceMapPath);
+    return (0, bootstrap_1.executeThunk)(ivmContext, { params, formulaSpec: formulaSpecification, updates: syncUpdates, permissionRequest }, bundlePath, bundleSourceMapPath);
 }
 async function executeFormulaOrSyncWithRawParams({ formulaSpecification, params: rawParams, manifest, executionContext, }) {
     var _a;
@@ -384,6 +399,9 @@ async function executeFormulaOrSyncWithRawParams({ formulaSpecification, params:
             ({ params, syncUpdates } = parseSyncUpdates(manifest, formulaSpecification, rawParams));
             break;
         }
+        case types_1.FormulaType.GetPermissions:
+            params = rawParams;
+            break;
         default:
             (0, ensure_2.ensureUnreachable)(formulaSpecification);
     }
@@ -423,7 +441,7 @@ async function executeSyncFormulaFromPackDef(packDef, syncFormulaName, params, c
         if (iterations > MaxSyncIterations) {
             throw new Error(`Sync is still running after ${MaxSyncIterations} iterations, this is likely due to an infinite loop.`);
         }
-        const response = await findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_1.FormulaType.Sync }, packDef, executionContext, undefined, { validateParams: false, validateResult: false, useDeprecatedResultNormalization });
+        const response = await findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_1.FormulaType.Sync }, packDef, executionContext, undefined, undefined, { validateParams: false, validateResult: false, useDeprecatedResultNormalization });
         result.push(...response.result);
         executionContext.sync.continuation = response.continuation;
         iterations++;
@@ -444,7 +462,7 @@ async function executeSyncFormulaFromPackDefSingleIteration(packDef, syncFormula
         const credentials = getCredentials(manifestPath);
         executionContext = (0, fetcher_2.newFetcherSyncExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_3.getPackAuth)(packDef), packDef.networkDomains, credentials);
     }
-    return findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_1.FormulaType.Sync }, packDef, executionContext || (0, mocks_2.newMockSyncExecutionContext)(), undefined, options);
+    return findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_1.FormulaType.Sync }, packDef, executionContext || (0, mocks_2.newMockSyncExecutionContext)(), undefined, undefined, options);
 }
 exports.executeSyncFormulaFromPackDefSingleIteration = executeSyncFormulaFromPackDefSingleIteration;
 async function executeMetadataFormula(formula, metadataParams = {}, context = (0, mocks_1.newMockExecutionContext)()) {
@@ -492,4 +510,19 @@ function parseSyncUpdates(manifest, formulaSpecification, rawParams) {
     }
     const syncFormula = (0, helpers_2.findSyncFormula)(manifest, formulaSpecification.formulaName);
     return { syncUpdates: parseResult.data, params: (0, coercion_1.coerceParams)(syncFormula, paramsCopy) };
+}
+const GetPermissionSchema = z.object({
+    rows: z.array(z.object({}).passthrough()),
+});
+function parseGetPermissionRequest(rawParams) {
+    const paramsCopy = [...rawParams];
+    const rowsString = paramsCopy.pop();
+    if (!rowsString) {
+        throw new Error(`Expected rows as last parameter.`);
+    }
+    const parseResult = GetPermissionSchema.safeParse(JSON.parse(rowsString));
+    if (!parseResult.success) {
+        throw new Error(`Invalid get permission request: ${parseResult.error.message}`);
+    }
+    return parseResult.data;
 }

@@ -7,6 +7,7 @@ export declare enum FormulaType {
     Standard = "Standard",
     Sync = "Sync",
     SyncUpdate = "SyncUpdate",
+    GetPermissions = "GetPermissions",
     Metadata = "Metadata"
 }
 export declare enum MetadataFormulaType {
@@ -31,6 +32,10 @@ export interface SyncFormulaSpecification {
 }
 export interface SyncUpdateFormulaSpecification {
     type: FormulaType.SyncUpdate;
+    formulaName: string;
+}
+export interface GetPermissionsFormulaSpecification {
+    type: FormulaType.GetPermissions;
     formulaName: string;
 }
 export interface MetadataFormulaSpecification {
@@ -64,5 +69,5 @@ export interface PropertyAutocompleteFormulaSpecification {
     propertySchema: Schema & ObjectSchemaProperty;
     search: string;
 }
-export type FormulaSpecification = StandardFormulaSpecification | SyncFormulaSpecification | SyncUpdateFormulaSpecification | MetadataFormulaSpecification | ParameterAutocompleteMetadataFormulaSpecification | PostSetupMetadataFormulaSpecification | SyncMetadataFormulaSpecification | PropertyAutocompleteFormulaSpecification;
+export type FormulaSpecification = StandardFormulaSpecification | SyncFormulaSpecification | SyncUpdateFormulaSpecification | MetadataFormulaSpecification | ParameterAutocompleteMetadataFormulaSpecification | PostSetupMetadataFormulaSpecification | SyncMetadataFormulaSpecification | PropertyAutocompleteFormulaSpecification | GetPermissionsFormulaSpecification;
 export type PackFunctionResponse<T extends FormulaSpecification> = T extends SyncFormulaSpecification ? GenericSyncFormulaResult : T extends SyncUpdateFormulaSpecification ? GenericSyncUpdateResultMarshaled : PackFormulaResult;

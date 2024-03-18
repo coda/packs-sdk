@@ -1530,6 +1530,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     ...commonPackFormulaSchema,
     updateOptions: z.strictObject({extraOAuthScopes: commonPackFormulaSchema.extraOAuthScopes}).optional(),
     maxPermissionBatchSize: z.number().min(1).max(Limits.PermissionsBatchSize).optional(),
+    supportsGetPermissions: z.boolean().optional(),
   });
 
   const baseSyncTableSchema = {

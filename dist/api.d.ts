@@ -654,6 +654,24 @@ export interface ExecuteUpdatePermissionResult {
     permissions: Permission[];
 }
 /**
+ * Type definition for the data passed to the {@link executeGetPermissions} function of a sync table.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface ExecuteGetPermissionsRequest<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
+    /**
+     * The list of rows for which to fetch permissions. These rows have been retrieved from the {@link execute} function
+     */
+    rows: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>;
+}
+/**
+ * Generic type definition for the data passed to the {@link executeGetPermissions} function of a sync table.
+ *
+ * @hidden
+ */
+export type GenericExecuteGetPermissionsRequest = ExecuteGetPermissionsRequest<any, any, any>;
+/**
  * Inputs for creating the formula that implements a sync table.
  */
 export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>> extends CommonPackFormulaDef<ParamDefsT> {
@@ -693,7 +711,7 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
      * TODO(sam): Unhide this
      * @hidden
      */
-    executeGetPermissions?(rows: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>, context: GetPermissionExecutionContext): Promise<ExecuteUpdatePermissionResult>;
+    executeGetPermissions?(request: ExecuteGetPermissionsRequest<K, L, SchemaT>, context: GetPermissionExecutionContext): Promise<ExecuteUpdatePermissionResult>;
     /**
      * If the table implements {@link executeGetPermissions} the maximum number of rows that will be sent to that
      * function in a single batch. Defaults to 10 if not specified.
@@ -714,6 +732,10 @@ export type SyncFormula<K extends string, L extends string, ParamDefsT extends P
     isSyncFormula: true;
     schema?: ArraySchema;
     supportsUpdates?: boolean;
+    /**
+     * @hidden
+     */
+    supportsGetPermissions?: boolean;
 };
 /**
  * @deprecated

@@ -880,8 +880,8 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
         }
         : undefined;
     const executeGetPermissions = wrappedExecuteGetPermissions
-        ? async function execGetPermissions(rows, context) {
-            const result = await wrappedExecuteGetPermissions(rows, context);
+        ? async function execGetPermissions(request, context) {
+            const result = await wrappedExecuteGetPermissions(request, context);
             const { permissions } = result;
             const permissionCountByRow = permissions.reduce((acc, permission) => {
                 acc[permission.rowId] = (acc[permission.rowId] || 0) + 1;
@@ -909,6 +909,7 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
             schema: formulaSchema,
             isSyncFormula: true,
             supportsUpdates: Boolean(executeUpdate),
+            supportsGetPermissions: Boolean(executeGetPermissions),
             connectionRequirement: definition.connectionRequirement || connectionRequirement,
             resultType: api_types_6.Type.object,
             executeGetPermissions: executeGetPermissions,

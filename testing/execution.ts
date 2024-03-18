@@ -3,6 +3,7 @@ import type {Credentials} from './auth_types';
 import type {ExecutionContext} from '../api_types';
 import type {FormulaSpecification} from '../runtime/types';
 import {FormulaType} from '../runtime/types';
+import type {GenericExecuteGetPermissionsRequest} from '../api';
 import type {GenericSyncFormulaResult} from '../api';
 import type {GenericSyncUpdate} from '../api';
 import type {MetadataContext} from '../api';
@@ -82,6 +83,8 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
   manifest: BasicPackDefinition,
   executionContext: ExecutionContext | SyncExecutionContext,
   syncUpdates?: GenericSyncUpdate[],
+  getPermissionsRequest?: GenericExecuteGetPermissionsRequest,
+
   {
     validateParams: shouldValidateParams = true,
     validateResult: shouldValidateResult = true,
@@ -110,6 +113,7 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
     executionContext,
     shouldWrapError: false,
     updates: syncUpdates,
+    getPermissionsRequest,
   });
 
   if (formulaSpec.type === FormulaType.SyncUpdate) {
@@ -167,6 +171,7 @@ export async function executeFormulaFromPackDef<T extends PackFormulaResult | Ge
     {type: FormulaType.Standard, formulaName: resolveFormulaNameWithNamespace(formulaNameWithNamespace)},
     packDef,
     executionContext || newMockExecutionContext(),
+    undefined,
     undefined,
     options,
   ) as T;
@@ -254,7 +259,7 @@ export async function executeFormulaOrSyncFromCLI({
             executionContext,
           })
         : await executeFormulaOrSyncWithRawParams({formulaSpecification, params, manifest, executionContext});
-        printFull(result);
+      printFull(result);
     }
   } catch (err: any) {
     print(err.message || err);
@@ -352,6 +357,16 @@ export function makeFormulaSpec(manifest: BasicPackDefinition, formulaNameInput:
     } else if (metadataFormulaTypeStr === 'autocomplete') {
       throw new Error(`No parameter name specified for autocomplete metadata formula.`);
     }
+
+    if (metadataFormulaTypeStr === 'permissions') {
+      if (!syncFormula) {
+        throw new Error(`Permissions formula "${metadataFormulaTypeStr}" is only supported for sync formulas.`);
+      }
+      return {
+        type: FormulaType.GetPermissions,
+        formulaName: formulaOrSyncName,
+      };
+    }
     const metadataFormulaType = invert(SyncMetadataFormulaTokens)[metadataFormulaTypeStr];
     if (!metadataFormulaType) {
       throw new Error(`Unrecognized metadata formula type "${metadataFormulaTypeStr}".`);
@@ -445,6 +460,7 @@ async function executeFormulaOrSyncWithRawParamsInVM<T extends FormulaSpecificat
   const manifest = await importManifest(bundlePath);
   let params: ParamValues<ParamDefs>;
   let syncUpdates: GenericSyncUpdate[] | undefined;
+  let permissionRequest: GenericExecuteGetPermissionsRequest | undefined;
   switch (formulaSpecification.type) {
     case FormulaType.Standard: {
       const formula = findFormula(manifest, formulaSpecification.formulaName);
@@ -469,12 +485,16 @@ async function executeFormulaOrSyncWithRawParamsInVM<T extends FormulaSpecificat
       ({params, syncUpdates} = parseSyncUpdates(manifest, formulaSpecification, rawParams));
       break;
     }
+    case FormulaType.GetPermissions:
+      permissionRequest = parseGetPermissionRequest(rawParams);
+      params = [];
+      break;
     default:
       ensureUnreachable(formulaSpecification);
   }
   return executeThunk(
     ivmContext,
-    {params, formulaSpec: formulaSpecification, updates: syncUpdates},
+    {params, formulaSpec: formulaSpecification, updates: syncUpdates, permissionRequest},
     bundlePath,
     bundleSourceMapPath,
   );
@@ -522,6 +542,10 @@ export async function executeFormulaOrSyncWithRawParams<T extends FormulaSpecifi
       ({params, syncUpdates} = parseSyncUpdates(manifest, formulaSpecification, rawParams));
       break;
     }
+    case FormulaType.GetPermissions:
+      params = rawParams as ParamValues<ParamDefs>;
+      break;
+
     default:
       ensureUnreachable(formulaSpecification);
   }
@@ -585,6 +609,7 @@ export async function executeSyncFormulaFromPackDef<T extends object = any>(
       packDef,
       executionContext,
       undefined,
+      undefined,
       {validateParams: false, validateResult: false, useDeprecatedResultNormalization},
     );
 
@@ -628,6 +653,7 @@ export async function executeSyncFormulaFromPackDefSingleIteration(
     {formulaName: syncFormulaName, type: FormulaType.Sync},
     packDef,
     executionContext || newMockSyncExecutionContext(),
+    undefined,
     undefined,
     options,
   ) as Promise<GenericSyncFormulaResult>;
@@ -702,4 +728,23 @@ function parseSyncUpdates(
   }
   const syncFormula = findSyncFormula(manifest, formulaSpecification.formulaName);
   return {syncUpdates: parseResult.data, params: coerceParams(syncFormula, paramsCopy as any)};
+}
+
+const GetPermissionSchema = z.object({
+  rows: z.array(z.object({}).passthrough()),
+});
+
+function parseGetPermissionRequest(rawParams: string[]): GenericExecuteGetPermissionsRequest {
+  const paramsCopy = [...rawParams];
+  const rowsString = paramsCopy.pop();
+  if (!rowsString) {
+    throw new Error(`Expected rows as last parameter.`);
+  }
+
+  const parseResult = GetPermissionSchema.safeParse(JSON.parse(rowsString));
+  if (!parseResult.success) {
+    throw new Error(`Invalid get permission request: ${parseResult.error.message}`);
+  }
+
+  return parseResult.data;
 }

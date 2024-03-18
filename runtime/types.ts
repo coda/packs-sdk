@@ -8,6 +8,7 @@ export enum FormulaType {
   Standard = 'Standard',
   Sync = 'Sync',
   SyncUpdate = 'SyncUpdate',
+  GetPermissions = 'GetPermissions',
   Metadata = 'Metadata',
 }
 
@@ -36,6 +37,11 @@ export interface SyncFormulaSpecification {
 
 export interface SyncUpdateFormulaSpecification {
   type: FormulaType.SyncUpdate;
+  formulaName: string;
+}
+
+export interface GetPermissionsFormulaSpecification {
+  type: FormulaType.GetPermissions;
   formulaName: string;
 }
 
@@ -88,7 +94,8 @@ export type FormulaSpecification =
   | ParameterAutocompleteMetadataFormulaSpecification
   | PostSetupMetadataFormulaSpecification
   | SyncMetadataFormulaSpecification
-  | PropertyAutocompleteFormulaSpecification;
+  | PropertyAutocompleteFormulaSpecification
+  | GetPermissionsFormulaSpecification;
 
 export type PackFunctionResponse<T extends FormulaSpecification> = T extends SyncFormulaSpecification
   ? GenericSyncFormulaResult

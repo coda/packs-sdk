@@ -1130,6 +1130,30 @@ export interface ExecuteUpdatePermissionResult {
 }
 
 /**
+ * Type definition for the data passed to the {@link executeGetPermissions} function of a sync table.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface ExecuteGetPermissionsRequest<
+  K extends string,
+  L extends string,
+  SchemaT extends ObjectSchemaDefinition<K, L>,
+> {
+  /**
+   * The list of rows for which to fetch permissions. These rows have been retrieved from the {@link execute} function
+   */
+  rows: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>;
+}
+
+/**
+ * Generic type definition for the data passed to the {@link executeGetPermissions} function of a sync table.
+ *
+ * @hidden
+ */
+export type GenericExecuteGetPermissionsRequest = ExecuteGetPermissionsRequest<any, any, any>;
+
+/**
  * Inputs for creating the formula that implements a sync table.
  */
 export interface SyncFormulaDef<
@@ -1181,7 +1205,7 @@ export interface SyncFormulaDef<
    * @hidden
    */
   executeGetPermissions?(
-    rows: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>,
+    request: ExecuteGetPermissionsRequest<K, L, SchemaT>,
     context: GetPermissionExecutionContext,
   ): Promise<ExecuteUpdatePermissionResult>;
 
@@ -1211,6 +1235,11 @@ export type SyncFormula<
   isSyncFormula: true;
   schema?: ArraySchema;
   supportsUpdates?: boolean;
+
+  /**
+   * @hidden
+   */
+  supportsGetPermissions?: boolean;
 };
 
 /**
@@ -2294,10 +2323,10 @@ export function makeSyncTable<
 
   const executeGetPermissions = wrappedExecuteGetPermissions
     ? async function execGetPermissions(
-        rows: Array<ObjectSchemaDefinitionType<K, L, SchemaDefT>>,
+        request: ExecuteGetPermissionsRequest<K, L, SchemaDefT>,
         context: GetPermissionExecutionContext,
       ) {
-        const result = await wrappedExecuteGetPermissions(rows, context);
+        const result = await wrappedExecuteGetPermissions(request, context);
         const {permissions} = result;
         const permissionCountByRow: {[rowId: string]: number} = permissions.reduce(
           (acc: {[rowId: string]: number}, permission: Permission) => {
@@ -2335,6 +2364,7 @@ export function makeSyncTable<
       schema: formulaSchema,
       isSyncFormula: true,
       supportsUpdates: Boolean(executeUpdate),
+      supportsGetPermissions: Boolean(executeGetPermissions),
       connectionRequirement: definition.connectionRequirement || connectionRequirement,
       resultType: Type.object as any,
       executeGetPermissions: executeGetPermissions as any,

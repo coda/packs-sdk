@@ -3,6 +3,7 @@ import type {FetchRequest} from '../../api_types';
 import type {FetchResponse} from '../../api_types';
 import type {Fetcher} from '../../api_types';
 import type {FormulaSpecification} from '../types';
+import type {GenericExecuteGetPermissionsRequest} from '../../api';
 import type {InvocationLocation} from '../../api_types';
 import type {Isolate} from 'isolated-vm';
 import type {IsolateOptions} from 'isolated-vm';
@@ -157,18 +158,20 @@ export async function executeThunk<T extends FormulaSpecification>(
     params,
     formulaSpec,
     updates,
+    permissionRequest,
   }: {
     params: ParamValues<ParamDefs>;
     formulaSpec: T;
     updates?: Array<SyncUpdate<any, any, any>>;
+    permissionRequest?: GenericExecuteGetPermissionsRequest;
   },
   packBundlePath: string,
   packBundleSourceMapPath: string,
 ): Promise<PackFunctionResponse<T>> {
   try {
     const resultRef = await context.evalClosure(
-      'return coda.findAndExecutePackFunction({params: $0, formulaSpec: $1, updates: $2, manifest: pack.pack || pack.manifest, executionContext: executionContext});',
-      [params, formulaSpec, updates],
+      'return coda.findAndExecutePackFunction({params: $0, formulaSpec: $1, updates: $2, permissionRequest: $3, manifest: pack.pack || pack.manifest, executionContext: executionContext});',
+      [params, formulaSpec, updates, permissionRequest],
       {
         arguments: {copy: true},
         result: {reference: true, promise: true},
