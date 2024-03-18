@@ -884,7 +884,7 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
             const result = await wrappedExecuteGetPermissions(rows, context);
             const { permissions } = result;
             const permissionCountByRow = permissions.reduce((acc, permission) => {
-                acc[permission.rowId] = acc[permission.rowId]++ || 1;
+                acc[permission.rowId] = (acc[permission.rowId] || 0) + 1;
                 return acc;
             }, {});
             const oversizedRowIds = Object.entries(permissionCountByRow)

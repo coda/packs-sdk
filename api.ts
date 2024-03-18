@@ -2301,7 +2301,7 @@ export function makeSyncTable<
         const {permissions} = result;
         const permissionCountByRow: {[rowId: string]: number} = permissions.reduce(
           (acc: {[rowId: string]: number}, permission: Permission) => {
-            acc[permission.rowId] = acc[permission.rowId]++ || 1;
+            acc[permission.rowId] = (acc[permission.rowId] || 0) + 1;
             return acc;
           },
           {},

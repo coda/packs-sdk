@@ -607,6 +607,9 @@ export type UpdateSync = Omit<Sync, "continuation">;
 /**
  * Information about the current sync, part of the {@link GetPermissionExecutionContext} passed to the
  * `executeGetPermissions` function of the sync formula.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
  */
 export type GetPermissionsSync = Omit<Sync, "continuation">;
 /**
@@ -713,6 +716,7 @@ export interface UpdateSyncExecutionContext extends ExecutionContext {
 /**
  * Context provided to GetPermissionExecution calls
  *
+ * TODO(sam): Unhide this
  * @hidden
  */
 export interface GetPermissionExecutionContext extends ExecutionContext {
@@ -1912,6 +1916,9 @@ declare enum PermissionType {
 	Public = "public"
 }
 /**
+ * This type definition represents properties required for all permissions.
+ *
+ * TODO(sam): Unhide this
  * @hidden
  */
 export interface BasePermission {
@@ -1920,22 +1927,28 @@ export interface BasePermission {
 }
 /**
  * This grants access to a specific user by their user ID.
+ *
+ * TODO(sam): Unhide this
  * @hidden
  */
 export interface UserPermission extends BasePermission {
 	type: PermissionType.User;
-	userId: string;
+	userId: string | number;
 }
 /**
  * This grants access to a specific group by its group ID.
+ *
+ * TODO(sam): Unhide this
  * @hidden
  */
 export interface GroupPermission extends BasePermission {
 	type: PermissionType.Group;
-	groupId: string;
+	groupId: string | number;
 }
 /**
  * This grants access to users within a specific domain.
+ *
+ * TODO(sam): Unhide this
  * @hidden
  */
 export interface DomainPermission extends BasePermission {
@@ -1944,6 +1957,8 @@ export interface DomainPermission extends BasePermission {
 }
 /**
  * This grants global access to users who can access the ingestion
+ *
+ * TODO(sam): Unhide this
  * @hidden
  */
 export interface PublicPermission extends BasePermission {
@@ -1952,6 +1967,7 @@ export interface PublicPermission extends BasePermission {
 /**
  * This represents a permission on an entity provided by the pack.
  *
+ * TODO(sam): Unhide this
  * @hidden
  */
 export type Permission = UserPermission | GroupPermission | DomainPermission | PublicPermission;

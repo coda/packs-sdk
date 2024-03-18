@@ -1,7 +1,10 @@
 import type {PackDefinition} from '../../types';
 import {ParameterType} from '../../api_types';
+import type {Permission} from '../../schema';
+import {PermissionType} from '../../schema';
 import {ValueType} from '../../schema';
 import {createFakePack} from '../test_utils';
+import {ensureExists} from '../../helpers/ensure';
 import {makeFormula} from '../../api';
 import {makeNumericFormula} from '../../api';
 import {makeNumericParameter} from '../../api';
@@ -153,6 +156,20 @@ export const manifest: PackDefinition = createFakePack({
         },
         executeUpdate: async (_params, updates, _context) => {
           return {result: updates.map(u => u.newValue)};
+        },
+        executeGetPermissions: async (rows, _context) => {
+          const permissions: Permission[] = rows
+            .filter(r => r.name)
+            .map(r => {
+              const id = ensureExists(r.name);
+
+              return {
+                type: PermissionType.User,
+                rowId: id,
+                userId: 2,
+              };
+            });
+          return {permissions};
         },
         parameters: [makeStringParameter('teacher', 'teacher name')],
         examples: [],

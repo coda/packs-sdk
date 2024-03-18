@@ -1076,13 +1076,16 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
  * Discriminent used to determine the permission type
  * @hidden
  */
-declare enum PermissionType {
+export declare enum PermissionType {
     User = "user",
     Group = "group",
     Domain = "domain",
     Public = "public"
 }
 /**
+ * This type definition represents properties required for all permissions.
+ *
+ * TODO(sam): Unhide this
  * @hidden
  */
 interface BasePermission {
@@ -1091,22 +1094,28 @@ interface BasePermission {
 }
 /**
  * This grants access to a specific user by their user ID.
+ *
+ * TODO(sam): Unhide this
  * @hidden
  */
 interface UserPermission extends BasePermission {
     type: PermissionType.User;
-    userId: string;
+    userId: string | number;
 }
 /**
  * This grants access to a specific group by its group ID.
+ *
+ * TODO(sam): Unhide this
  * @hidden
  */
 interface GroupPermission extends BasePermission {
     type: PermissionType.Group;
-    groupId: string;
+    groupId: string | number;
 }
 /**
  * This grants access to users within a specific domain.
+ *
+ * TODO(sam): Unhide this
  * @hidden
  */
 interface DomainPermission extends BasePermission {
@@ -1115,6 +1124,8 @@ interface DomainPermission extends BasePermission {
 }
 /**
  * This grants global access to users who can access the ingestion
+ *
+ * TODO(sam): Unhide this
  * @hidden
  */
 interface PublicPermission extends BasePermission {
@@ -1123,6 +1134,7 @@ interface PublicPermission extends BasePermission {
 /**
  * This represents a permission on an entity provided by the pack.
  *
+ * TODO(sam): Unhide this
  * @hidden
  */
 export type Permission = UserPermission | GroupPermission | DomainPermission | PublicPermission;

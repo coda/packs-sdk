@@ -620,6 +620,9 @@ export type UpdateSync = Omit<Sync, 'continuation'>;
 /**
  * Information about the current sync, part of the {@link GetPermissionExecutionContext} passed to the
  * `executeGetPermissions` function of the sync formula.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
  */
 export type GetPermissionsSync = Omit<Sync, 'continuation'>;
 export type LoggerParamType = string | number | boolean | Record<any, any>;
@@ -734,6 +737,7 @@ export interface UpdateSyncExecutionContext extends ExecutionContext {
 /**
  * Context provided to GetPermissionExecution calls
  *
+ * TODO(sam): Unhide this
  * @hidden
  */
 export interface GetPermissionExecutionContext extends ExecutionContext {
