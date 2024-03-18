@@ -377,6 +377,17 @@ exports.SimpleStringHintValueTypes = [
  */
 exports.PropertyLabelValueTemplate = '{VALUE}';
 /**
+ * Discriminent used to determine the permission type
+ * @hidden
+ */
+var PermissionType;
+(function (PermissionType) {
+    PermissionType["User"] = "user";
+    PermissionType["Group"] = "group";
+    PermissionType["Domain"] = "domain";
+    PermissionType["Public"] = "public";
+})(PermissionType || (PermissionType = {}));
+/**
  * The type of content in this attribution node.
  *
  * Multiple attribution nodes can be rendered all together, for example to have

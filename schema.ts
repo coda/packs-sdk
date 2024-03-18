@@ -1248,6 +1248,7 @@ enum PermissionType {
  */
 interface BasePermission {
   type: PermissionType;
+  rowId: string | number;
   // TODO(sam): Add options describing inheritance of permissions
 }
 

@@ -1111,6 +1111,25 @@ export interface SyncUpdateResultMarshaled<
 export type GenericSyncUpdateResultMarshaled = SyncUpdateResultMarshaled<any, any, any>;
 
 /**
+ * Sets a limit on the number of permissions that can be returned for a single row
+ * in a call to {@link executeGetPermissions}.
+ *
+ * @hidden
+ */
+const MaxPermissionsPerRow = 1000;
+
+/**
+ * Type definition for the result of calls to {@link executeGetPermissions}.
+ * @hidden
+ */
+export interface ExecuteUpdatePermissionResult {
+  /**
+   * The list of permissions applyingt to the passed in parameters.
+   */
+  permissions: Permission[];
+}
+
+/**
  * Inputs for creating the formula that implements a sync table.
  */
 export interface SyncFormulaDef<
@@ -1158,22 +1177,16 @@ export interface SyncFormulaDef<
    * The javascript function that implements fetching permissions for a set of objects
    * if the objects in this sync table have permissions in the external system.
    *
-   * TODO(sam) pre merge:
-   * Does this need continuation? What if we fetch like 4 items and we need to continue for the last one?
-   * What are the size limits?
-   * Should we return as a flattened list or a map of lists?
-   * What do we do if there are no permissions on the objects but we just care about the permissions of the parent?
-   *
    * TODO(sam): Unhide this
    * @hidden
    */
-  getPermissions?(
+  executeGetPermissions?(
     rows: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>,
     context: GetPermissionExecutionContext,
-  ): Promise<Record<string, Permission[]>>;
+  ): Promise<ExecuteUpdatePermissionResult>;
 
   /**
-   * If the table implements {@link getPermissions} the maximum number of rows that will be sent to that
+   * If the table implements {@link executeGetPermissions} the maximum number of rows that will be sent to that
    * function in a single batch. Defaults to 10 if not specified.
    *
    * TODO(sam): Unhide this
@@ -2184,8 +2197,7 @@ export function makeSyncTable<
   const {
     execute: wrappedExecute,
     executeUpdate: wrappedExecuteUpdate,
-    // TODO(sam): Need to rewrite permissions once we have finalized schema + API
-    getPermissions,
+    executeGetPermissions: wrappedExecuteGetPermissions,
     ...definition
   } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
 
@@ -2280,6 +2292,36 @@ export function makeSyncTable<
       }
     : undefined;
 
+  const executeGetPermissions = wrappedExecuteGetPermissions
+    ? async function execGetPermissions(
+        rows: Array<ObjectSchemaDefinitionType<K, L, SchemaDefT>>,
+        context: GetPermissionExecutionContext,
+      ) {
+        const result = await wrappedExecuteGetPermissions(rows, context);
+        const {permissions} = result;
+        const permissionCountByRow: {[rowId: string]: number} = permissions.reduce(
+          (acc: {[rowId: string]: number}, permission: Permission) => {
+            acc[permission.rowId] = acc[permission.rowId]++ || 1;
+            return acc;
+          },
+          {},
+        );
+
+        const oversizedRowIds = Object.entries(permissionCountByRow)
+          .filter(([_rowId, count]) => count > MaxPermissionsPerRow)
+          .map(([rowId, _count]) => rowId);
+
+        if (oversizedRowIds.length > 0) {
+          throw new Error(
+            `Permissions limit exceeded limit of ${MaxPermissionsPerRow} permissions for row with ids: ${oversizedRowIds.join(
+              ', ',
+            )}`,
+          );
+        }
+        return result;
+      }
+    : undefined;
+
   return {
     name,
     description,
@@ -2295,7 +2337,7 @@ export function makeSyncTable<
       supportsUpdates: Boolean(executeUpdate),
       connectionRequirement: definition.connectionRequirement || connectionRequirement,
       resultType: Type.object as any,
-      getPermissions: getPermissions as any,
+      executeGetPermissions: executeGetPermissions as any,
     },
     getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
     entityName,

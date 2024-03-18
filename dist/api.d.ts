@@ -644,6 +644,16 @@ export interface SyncUpdateResultMarshaled<K extends string, L extends string, S
  */
 export type GenericSyncUpdateResultMarshaled = SyncUpdateResultMarshaled<any, any, any>;
 /**
+ * Type definition for the result of calls to {@link executeGetPermissions}.
+ * @hidden
+ */
+export interface ExecuteUpdatePermissionResult {
+    /**
+     * The list of permissions applyingt to the passed in parameters.
+     */
+    permissions: Permission[];
+}
+/**
  * Inputs for creating the formula that implements a sync table.
  */
 export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>> extends CommonPackFormulaDef<ParamDefsT> {
@@ -680,18 +690,12 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
      * The javascript function that implements fetching permissions for a set of objects
      * if the objects in this sync table have permissions in the external system.
      *
-     * TODO(sam) pre merge:
-     * Does this need continuation? What if we fetch like 4 items and we need to continue for the last one?
-     * What are the size limits?
-     * Should we return as a flattened list or a map of lists?
-     * What do we do if there are no permissions on the objects but we just care about the permissions of the parent?
-     *
      * TODO(sam): Unhide this
      * @hidden
      */
-    getPermissions?(rows: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>, context: GetPermissionExecutionContext): Promise<Record<string, Permission[]>>;
+    executeGetPermissions?(rows: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>, context: GetPermissionExecutionContext): Promise<ExecuteUpdatePermissionResult>;
     /**
-     * If the table implements {@link getPermissions} the maximum number of rows that will be sent to that
+     * If the table implements {@link executeGetPermissions} the maximum number of rows that will be sent to that
      * function in a single batch. Defaults to 10 if not specified.
      *
      * TODO(sam): Unhide this

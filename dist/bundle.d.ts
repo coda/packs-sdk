@@ -605,6 +605,11 @@ export interface Sync {
  */
 export type UpdateSync = Omit<Sync, "continuation">;
 /**
+ * Information about the current sync, part of the {@link GetPermissionExecutionContext} passed to the
+ * `executeGetPermissions` function of the sync formula.
+ */
+export type GetPermissionsSync = Omit<Sync, "continuation">;
+/**
  * Information about the Coda environment and doc this formula was invoked from, for Coda internal use.
  */
 export interface InvocationLocation {
@@ -711,6 +716,10 @@ export interface UpdateSyncExecutionContext extends ExecutionContext {
  * @hidden
  */
 export interface GetPermissionExecutionContext extends ExecutionContext {
+	/**
+	 * Information about state of the current sync
+	 */
+	readonly sync: GetPermissionsSync;
 }
 /**
  * Special "live" date range values that can be used as the {@link ParamDef.suggestedValue}
@@ -1896,37 +1905,56 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 */
 	userIdProperty?: PropertyIdentifier<K>;
 }
+declare enum PermissionType {
+	User = "user",
+	Group = "group",
+	Domain = "domain",
+	Public = "public"
+}
 /**
- * Represents a permission in the external system
- *
- *
- * TODO(sam): Unhide this
  * @hidden
  */
-export interface Permission {
-	/**
-	 * Indicates whether the permission is public to all users who have access to the ingestion
-	 */
-	isPublic: boolean;
-	/**
-	 * The ID of the user associated with the permission
-	 *
-	 * This must match the ids returned from {@link BaseAuthentication.getConnectionUserId}
-	 * or the ids specified in the {@link ObjectSchemaDefinition.userIdProperty} column of a table
-	 * with role {@link TableRole.Users}
-	 */
+export interface BasePermission {
+	type: PermissionType;
+	rowId: string | number;
+}
+/**
+ * This grants access to a specific user by their user ID.
+ * @hidden
+ */
+export interface UserPermission extends BasePermission {
+	type: PermissionType.User;
 	userId: string;
-	/**
-	 * The ID of the group associated with the permission.
-	 *
-	 * TODO(sam): Update with description of where this group id is set
-	 */
+}
+/**
+ * This grants access to a specific group by its group ID.
+ * @hidden
+ */
+export interface GroupPermission extends BasePermission {
+	type: PermissionType.Group;
 	groupId: string;
-	/**
-	 * The domain name associated with the permission.
-	 */
+}
+/**
+ * This grants access to users within a specific domain.
+ * @hidden
+ */
+export interface DomainPermission extends BasePermission {
+	type: PermissionType.Domain;
 	domainName: string;
 }
+/**
+ * This grants global access to users who can access the ingestion
+ * @hidden
+ */
+export interface PublicPermission extends BasePermission {
+	type: PermissionType.Public;
+}
+/**
+ * This represents a permission on an entity provided by the pack.
+ *
+ * @hidden
+ */
+export type Permission = UserPermission | GroupPermission | DomainPermission | PublicPermission;
 export type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
 /** @hidden */
 export interface ObjectSchema<K extends string, L extends string> extends ObjectSchemaDefinition<K, L> {
@@ -2797,6 +2825,16 @@ export interface SyncUpdateResultMarshaled<K extends string, L extends string, S
  */
 export type GenericSyncUpdateResultMarshaled = SyncUpdateResultMarshaled<any, any, any>;
 /**
+ * Type definition for the result of calls to {@link executeGetPermissions}.
+ * @hidden
+ */
+export interface ExecuteUpdatePermissionResult {
+	/**
+	 * The list of permissions applyingt to the passed in parameters.
+	 */
+	permissions: Permission[];
+}
+/**
  * Inputs for creating the formula that implements a sync table.
  */
 export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>> extends CommonPackFormulaDef<ParamDefsT> {
@@ -2833,18 +2871,12 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
 	 * The javascript function that implements fetching permissions for a set of objects
 	 * if the objects in this sync table have permissions in the external system.
 	 *
-	 * TODO(sam) pre merge:
-	 * Does this need continuation? What if we fetch like 4 items and we need to continue for the last one?
-	 * What are the size limits?
-	 * Should we return as a flattened list or a map of lists?
-	 * What do we do if there are no permissions on the objects but we just care about the permissions of the parent?
-	 *
 	 * TODO(sam): Unhide this
 	 * @hidden
 	 */
-	getPermissions?(rows: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>, context: GetPermissionExecutionContext): Promise<Record<string, Permission[]>>;
+	executeGetPermissions?(rows: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>, context: GetPermissionExecutionContext): Promise<ExecuteUpdatePermissionResult>;
 	/**
-	 * If the table implements {@link getPermissions} the maximum number of rows that will be sent to that
+	 * If the table implements {@link executeGetPermissions} the maximum number of rows that will be sent to that
 	 * function in a single batch. Defaults to 10 if not specified.
 	 *
 	 * TODO(sam): Unhide this

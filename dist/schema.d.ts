@@ -1073,36 +1073,59 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
     userIdProperty?: PropertyIdentifier<K>;
 }
 /**
- * Represents a permission in the external system
- *
- *
- * TODO(sam): Unhide this
+ * Discriminent used to determine the permission type
  * @hidden
  */
-export interface Permission {
-    /**
-     * Indicates whether the permission is public to all users who have access to the ingestion
-     */
-    isPublic: boolean;
-    /**
-     * The ID of the user associated with the permission
-     *
-     * This must match the ids returned from {@link BaseAuthentication.getConnectionUserId}
-     * or the ids specified in the {@link ObjectSchemaDefinition.userIdProperty} column of a table
-     * with role {@link TableRole.Users}
-     */
+declare enum PermissionType {
+    User = "user",
+    Group = "group",
+    Domain = "domain",
+    Public = "public"
+}
+/**
+ * @hidden
+ */
+interface BasePermission {
+    type: PermissionType;
+    rowId: string | number;
+}
+/**
+ * This grants access to a specific user by their user ID.
+ * @hidden
+ */
+interface UserPermission extends BasePermission {
+    type: PermissionType.User;
     userId: string;
-    /**
-     * The ID of the group associated with the permission.
-     *
-     * TODO(sam): Update with description of where this group id is set
-     */
+}
+/**
+ * This grants access to a specific group by its group ID.
+ * @hidden
+ */
+interface GroupPermission extends BasePermission {
+    type: PermissionType.Group;
     groupId: string;
-    /**
-     * The domain name associated with the permission.
-     */
+}
+/**
+ * This grants access to users within a specific domain.
+ * @hidden
+ */
+interface DomainPermission extends BasePermission {
+    type: PermissionType.Domain;
     domainName: string;
 }
+/**
+ * This grants global access to users who can access the ingestion
+ * @hidden
+ */
+interface PublicPermission extends BasePermission {
+    type: PermissionType.Public;
+}
+/**
+ * This represents a permission on an entity provided by the pack.
+ *
+ * @hidden
+ */
+export type Permission = UserPermission | GroupPermission | DomainPermission | PublicPermission;
 export type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
 /** @hidden */
 export interface ObjectSchema<K extends string, L extends string> extends ObjectSchemaDefinition<K, L> {

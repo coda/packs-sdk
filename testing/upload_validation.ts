@@ -1517,7 +1517,10 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
   });
 
   const syncFormulaSchema = zodCompleteObject<
-    Omit<SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>>, 'execute' | 'executeUpdate' | 'getPermissions'>
+    Omit<
+      SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>>,
+      'execute' | 'executeUpdate' | 'executeGetPermissions'
+    >
   >({
     schema: arrayPropertySchema.optional(),
     resultType: z.any(),

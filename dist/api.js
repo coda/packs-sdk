@@ -360,6 +360,13 @@ var UpdateOutcome;
     UpdateOutcome["Error"] = "error";
 })(UpdateOutcome || (exports.UpdateOutcome = UpdateOutcome = {}));
 /**
+ * Sets a limit on the number of permissions that can be returned for a single row
+ * in a call to {@link executeGetPermissions}.
+ *
+ * @hidden
+ */
+const MaxPermissionsPerRow = 1000;
+/**
  * @deprecated
  *
  * Helper for returning the definition of a formula that returns a number. Adds result type information
@@ -795,9 +802,7 @@ exports.makeObjectFormula = makeObjectFormula;
  */
 function makeSyncTable({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions = {}, role, }) {
     const { getSchema: getSchemaDef, entityName, defaultAddDynamicColumns } = dynamicOptions;
-    const { execute: wrappedExecute, executeUpdate: wrappedExecuteUpdate, 
-    // TODO(sam): Need to rewrite permissions once we have finalized schema + API
-    getPermissions, ...definition } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
+    const { execute: wrappedExecute, executeUpdate: wrappedExecuteUpdate, executeGetPermissions: wrappedExecuteGetPermissions, ...definition } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
     // Since we mutate schemaDef, we need to make a copy so the input schema can be reused across sync tables.
     const schemaDef = (0, object_utils_1.deepCopy)(inputSchema);
     // Hydrate the schema's identity.
@@ -874,6 +879,23 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
             };
         }
         : undefined;
+    const executeGetPermissions = wrappedExecuteGetPermissions
+        ? async function execGetPermissions(rows, context) {
+            const result = await wrappedExecuteGetPermissions(rows, context);
+            const { permissions } = result;
+            const permissionCountByRow = permissions.reduce((acc, permission) => {
+                acc[permission.rowId] = acc[permission.rowId]++ || 1;
+                return acc;
+            }, {});
+            const oversizedRowIds = Object.entries(permissionCountByRow)
+                .filter(([_rowId, count]) => count > MaxPermissionsPerRow)
+                .map(([rowId, _count]) => rowId);
+            if (oversizedRowIds.length > 0) {
+                throw new Error(`Permissions limit exceeded limit of ${MaxPermissionsPerRow} permissions for row with ids: ${oversizedRowIds.join(', ')}`);
+            }
+            return result;
+        }
+        : undefined;
     return {
         name,
         description,
@@ -889,7 +911,7 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
             supportsUpdates: Boolean(executeUpdate),
             connectionRequirement: definition.connectionRequirement || connectionRequirement,
             resultType: api_types_6.Type.object,
-            getPermissions: getPermissions,
+            executeGetPermissions: executeGetPermissions,
         },
         getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
         entityName,
