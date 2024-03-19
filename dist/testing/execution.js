@@ -362,9 +362,10 @@ async function executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, par
             ({ params, syncUpdates } = parseSyncUpdates(manifest, formulaSpecification, rawParams));
             break;
         }
-        case types_1.FormulaType.GetPermissions:
+        case types_1.FormulaType.GetPermissions: {
             ({ params, permissionRequest } = parseGetPermissionRequest(manifest, formulaSpecification, rawParams));
             break;
+        }
         default:
             (0, ensure_2.ensureUnreachable)(formulaSpecification);
     }
@@ -403,10 +404,10 @@ async function executeFormulaOrSyncWithRawParams({ formulaSpecification, params:
             ({ params, syncUpdates } = parseSyncUpdates(manifest, formulaSpecification, rawParams));
             break;
         }
-        case types_1.FormulaType.GetPermissions:
+        case types_1.FormulaType.GetPermissions: {
             ({ params, permissionRequest } = parseGetPermissionRequest(manifest, formulaSpecification, rawParams));
-            params = rawParams;
             break;
+        }
         default:
             (0, ensure_2.ensureUnreachable)(formulaSpecification);
     }
