@@ -1124,7 +1124,7 @@ const MaxPermissionsPerRow = 1000;
  */
 export interface ExecuteUpdatePermissionResult {
   /**
-   * The list of permissions applyingt to the passed in parameters.
+   * The list of permissions applying to the passed in parameters.
    */
   permissions: Permission[];
 }
@@ -1198,13 +1198,14 @@ export interface SyncFormulaDef<
   updateOptions?: Pick<CommonPackFormulaDef<ParamDefsT>, 'extraOAuthScopes'>;
 
   /**
-   * The javascript function that implements fetching permissions for a set of objects
+   * The JavaScript function that implements fetching permissions for a set of objects
    * if the objects in this sync table have permissions in the external system.
    *
    * TODO(sam): Unhide this
    * @hidden
    */
   executeGetPermissions?(
+    params: ParamValues<ParamDefsT>,
     request: ExecuteGetPermissionsRequest<K, L, SchemaT>,
     context: GetPermissionExecutionContext,
   ): Promise<ExecuteUpdatePermissionResult>;
@@ -2323,10 +2324,11 @@ export function makeSyncTable<
 
   const executeGetPermissions = wrappedExecuteGetPermissions
     ? async function execGetPermissions(
+        params: ParamValues<ParamDefsT>,
         request: ExecuteGetPermissionsRequest<K, L, SchemaDefT>,
         context: GetPermissionExecutionContext,
       ) {
-        const result = await wrappedExecuteGetPermissions(request, context);
+        const result = await wrappedExecuteGetPermissions(params, request, context);
         const {permissions} = result;
         const permissionCountByRow: {[rowId: string]: number} = permissions.reduce(
           (acc: {[rowId: string]: number}, permission: Permission) => {
@@ -2342,9 +2344,9 @@ export function makeSyncTable<
 
         if (oversizedRowIds.length > 0) {
           throw new Error(
-            `Permissions limit exceeded limit of ${MaxPermissionsPerRow} permissions for row with ids: ${oversizedRowIds.join(
+            `Objects with ids: ${oversizedRowIds.join(
               ', ',
-            )}`,
+            )} returned more permissions than the maximum allowed of ${MaxPermissionsPerRow} per object`,
           );
         }
         return result;

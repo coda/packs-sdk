@@ -1236,7 +1236,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
  * Discriminent used to determine the permission type
  * @hidden
  */
-export enum PermissionType {
+export enum PrincipalType {
   User = 'user',
   Group = 'group',
   Domain = 'domain',
@@ -1250,7 +1250,7 @@ export enum PermissionType {
  * @hidden
  */
 interface BasePermission {
-  type: PermissionType;
+  type: PrincipalType;
   rowId: string | number;
   // TODO(sam): Add options describing inheritance of permissions
 }
@@ -1262,7 +1262,7 @@ interface BasePermission {
  * @hidden
  */
 interface UserPermission extends BasePermission {
-  type: PermissionType.User;
+  type: PrincipalType.User;
   userId: string | number;
 }
 
@@ -1273,7 +1273,7 @@ interface UserPermission extends BasePermission {
  * @hidden
  */
 interface GroupPermission extends BasePermission {
-  type: PermissionType.Group;
+  type: PrincipalType.Group;
   groupId: string | number;
 }
 
@@ -1284,7 +1284,7 @@ interface GroupPermission extends BasePermission {
  * @hidden
  */
 interface DomainPermission extends BasePermission {
-  type: PermissionType.Domain;
+  type: PrincipalType.Domain;
   domainName: string;
 }
 
@@ -1295,7 +1295,7 @@ interface DomainPermission extends BasePermission {
  * @hidden
  */
 interface PublicPermission extends BasePermission {
-  type: PermissionType.Public;
+  type: PrincipalType.Public;
 }
 
 /**

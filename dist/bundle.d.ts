@@ -1909,7 +1909,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 */
 	userIdProperty?: PropertyIdentifier<K>;
 }
-declare enum PermissionType {
+declare enum PrincipalType {
 	User = "user",
 	Group = "group",
 	Domain = "domain",
@@ -1922,7 +1922,7 @@ declare enum PermissionType {
  * @hidden
  */
 export interface BasePermission {
-	type: PermissionType;
+	type: PrincipalType;
 	rowId: string | number;
 }
 /**
@@ -1932,7 +1932,7 @@ export interface BasePermission {
  * @hidden
  */
 export interface UserPermission extends BasePermission {
-	type: PermissionType.User;
+	type: PrincipalType.User;
 	userId: string | number;
 }
 /**
@@ -1942,7 +1942,7 @@ export interface UserPermission extends BasePermission {
  * @hidden
  */
 export interface GroupPermission extends BasePermission {
-	type: PermissionType.Group;
+	type: PrincipalType.Group;
 	groupId: string | number;
 }
 /**
@@ -1952,7 +1952,7 @@ export interface GroupPermission extends BasePermission {
  * @hidden
  */
 export interface DomainPermission extends BasePermission {
-	type: PermissionType.Domain;
+	type: PrincipalType.Domain;
 	domainName: string;
 }
 /**
@@ -1962,7 +1962,7 @@ export interface DomainPermission extends BasePermission {
  * @hidden
  */
 export interface PublicPermission extends BasePermission {
-	type: PermissionType.Public;
+	type: PrincipalType.Public;
 }
 /**
  * This represents a permission on an entity provided by the pack.
@@ -2846,7 +2846,7 @@ export type GenericSyncUpdateResultMarshaled = SyncUpdateResultMarshaled<any, an
  */
 export interface ExecuteUpdatePermissionResult {
 	/**
-	 * The list of permissions applyingt to the passed in parameters.
+	 * The list of permissions applying to the passed in parameters.
 	 */
 	permissions: Permission[];
 }
@@ -2896,13 +2896,13 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
 	 */
 	updateOptions?: Pick<CommonPackFormulaDef<ParamDefsT>, "extraOAuthScopes">;
 	/**
-	 * The javascript function that implements fetching permissions for a set of objects
+	 * The JavaScript function that implements fetching permissions for a set of objects
 	 * if the objects in this sync table have permissions in the external system.
 	 *
 	 * TODO(sam): Unhide this
 	 * @hidden
 	 */
-	executeGetPermissions?(request: ExecuteGetPermissionsRequest<K, L, SchemaT>, context: GetPermissionExecutionContext): Promise<ExecuteUpdatePermissionResult>;
+	executeGetPermissions?(params: ParamValues<ParamDefsT>, request: ExecuteGetPermissionsRequest<K, L, SchemaT>, context: GetPermissionExecutionContext): Promise<ExecuteUpdatePermissionResult>;
 	/**
 	 * If the table implements {@link executeGetPermissions} the maximum number of rows that will be sent to that
 	 * function in a single batch. Defaults to 10 if not specified.

@@ -649,7 +649,7 @@ export type GenericSyncUpdateResultMarshaled = SyncUpdateResultMarshaled<any, an
  */
 export interface ExecuteUpdatePermissionResult {
     /**
-     * The list of permissions applyingt to the passed in parameters.
+     * The list of permissions applying to the passed in parameters.
      */
     permissions: Permission[];
 }
@@ -705,13 +705,13 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
      */
     updateOptions?: Pick<CommonPackFormulaDef<ParamDefsT>, 'extraOAuthScopes'>;
     /**
-     * The javascript function that implements fetching permissions for a set of objects
+     * The JavaScript function that implements fetching permissions for a set of objects
      * if the objects in this sync table have permissions in the external system.
      *
      * TODO(sam): Unhide this
      * @hidden
      */
-    executeGetPermissions?(request: ExecuteGetPermissionsRequest<K, L, SchemaT>, context: GetPermissionExecutionContext): Promise<ExecuteUpdatePermissionResult>;
+    executeGetPermissions?(params: ParamValues<ParamDefsT>, request: ExecuteGetPermissionsRequest<K, L, SchemaT>, context: GetPermissionExecutionContext): Promise<ExecuteUpdatePermissionResult>;
     /**
      * If the table implements {@link executeGetPermissions} the maximum number of rows that will be sent to that
      * function in a single batch. Defaults to 10 if not specified.

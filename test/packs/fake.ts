@@ -1,7 +1,7 @@
 import type {PackDefinition} from '../../types';
 import {ParameterType} from '../../api_types';
 import type {Permission} from '../../schema';
-import {PermissionType} from '../../schema';
+import {PrincipalType} from '../../schema';
 import {ValueType} from '../../schema';
 import {createFakePack} from '../test_utils';
 import {ensureExists} from '../../helpers/ensure';
@@ -157,14 +157,14 @@ export const manifest: PackDefinition = createFakePack({
         executeUpdate: async (_params, updates, _context) => {
           return {result: updates.map(u => u.newValue)};
         },
-        executeGetPermissions: async ({rows}, _context) => {
+        executeGetPermissions: async (_params, {rows}, _context) => {
           const permissions: Permission[] = rows
             .filter(r => r.name)
             .map(r => {
               const id = ensureExists(r.name);
 
               return {
-                type: PermissionType.User,
+                type: PrincipalType.User,
                 rowId: id,
                 userId: 2,
               };

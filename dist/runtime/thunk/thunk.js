@@ -65,7 +65,7 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
             if (!formula.executeGetPermissions) {
                 throw new Error(`No executeGetPermissions function defined on sync table formula ${formulaSpec.formulaName}`);
             }
-            const response = await formula.executeGetPermissions((0, ensure_1.ensureExists)(getPermissionsRequest), executionContext);
+            const response = await formula.executeGetPermissions(params, (0, ensure_1.ensureExists)(getPermissionsRequest), executionContext);
             return response;
         }
         case types_2.FormulaType.Metadata: {

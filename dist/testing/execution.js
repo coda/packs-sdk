@@ -359,8 +359,7 @@ async function executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, par
             break;
         }
         case types_1.FormulaType.GetPermissions:
-            permissionRequest = parseGetPermissionRequest(rawParams);
-            params = [];
+            ({ params, permissionRequest } = parseGetPermissionRequest(manifest, formulaSpecification, rawParams));
             break;
         default:
             (0, ensure_2.ensureUnreachable)(formulaSpecification);
@@ -514,7 +513,7 @@ function parseSyncUpdates(manifest, formulaSpecification, rawParams) {
 const GetPermissionSchema = z.object({
     rows: z.array(z.object({}).passthrough()),
 });
-function parseGetPermissionRequest(rawParams) {
+function parseGetPermissionRequest(manifest, formulaSpecification, rawParams) {
     const paramsCopy = [...rawParams];
     const rowsString = paramsCopy.pop();
     if (!rowsString) {
@@ -524,5 +523,6 @@ function parseGetPermissionRequest(rawParams) {
     if (!parseResult.success) {
         throw new Error(`Invalid get permission request: ${parseResult.error.message}`);
     }
-    return parseResult.data;
+    const syncFormula = (0, helpers_2.findSyncFormula)(manifest, formulaSpecification.formulaName);
+    return { permissionRequest: parseResult.data, params: (0, coercion_1.coerceParams)(syncFormula, paramsCopy) };
 }

@@ -880,8 +880,8 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
         }
         : undefined;
     const executeGetPermissions = wrappedExecuteGetPermissions
-        ? async function execGetPermissions(request, context) {
-            const result = await wrappedExecuteGetPermissions(request, context);
+        ? async function execGetPermissions(params, request, context) {
+            const result = await wrappedExecuteGetPermissions(params, request, context);
             const { permissions } = result;
             const permissionCountByRow = permissions.reduce((acc, permission) => {
                 acc[permission.rowId] = (acc[permission.rowId] || 0) + 1;
@@ -891,7 +891,7 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
                 .filter(([_rowId, count]) => count > MaxPermissionsPerRow)
                 .map(([rowId, _count]) => rowId);
             if (oversizedRowIds.length > 0) {
-                throw new Error(`Permissions limit exceeded limit of ${MaxPermissionsPerRow} permissions for row with ids: ${oversizedRowIds.join(', ')}`);
+                throw new Error(`Objects with ids: ${oversizedRowIds.join(', ')} returned more permissions than the maximum allowed of ${MaxPermissionsPerRow} per object`);
             }
             return result;
         }

@@ -6429,6 +6429,7 @@ module.exports = (() => {
           throw new Error(`No executeGetPermissions function defined on sync table formula ${formulaSpec.formulaName}`);
         }
         const response = await formula.executeGetPermissions(
+          params,
           ensureExists(getPermissionsRequest),
           executionContext
         );

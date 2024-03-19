@@ -6,6 +6,7 @@ import {FormulaType} from '../runtime/types';
 import type {GenericExecuteGetPermissionsRequest} from '../api';
 import type {GenericSyncFormulaResult} from '../api';
 import type {GenericSyncUpdate} from '../api';
+import type {GetPermissionsFormulaSpecification} from '../runtime/types';
 import type {MetadataContext} from '../api';
 import type {MetadataFormula} from '../api';
 import type {MetadataFormulaSpecification} from '../runtime/types';
@@ -486,8 +487,7 @@ async function executeFormulaOrSyncWithRawParamsInVM<T extends FormulaSpecificat
       break;
     }
     case FormulaType.GetPermissions:
-      permissionRequest = parseGetPermissionRequest(rawParams);
-      params = [];
+      ({params, permissionRequest} = parseGetPermissionRequest(manifest, formulaSpecification, rawParams));
       break;
     default:
       ensureUnreachable(formulaSpecification);
@@ -734,7 +734,14 @@ const GetPermissionSchema = z.object({
   rows: z.array(z.object({}).passthrough()),
 });
 
-function parseGetPermissionRequest(rawParams: string[]): GenericExecuteGetPermissionsRequest {
+function parseGetPermissionRequest(
+  manifest: BasicPackDefinition,
+  formulaSpecification: GetPermissionsFormulaSpecification,
+  rawParams: string[],
+): {
+  permissionRequest: GenericExecuteGetPermissionsRequest;
+  params: ParamValues<ParamDefs>;
+} {
   const paramsCopy = [...rawParams];
   const rowsString = paramsCopy.pop();
   if (!rowsString) {
@@ -746,5 +753,7 @@ function parseGetPermissionRequest(rawParams: string[]): GenericExecuteGetPermis
     throw new Error(`Invalid get permission request: ${parseResult.error.message}`);
   }
 
-  return parseResult.data;
+  const syncFormula = findSyncFormula(manifest, formulaSpecification.formulaName);
+
+  return {permissionRequest: parseResult.data, params: coerceParams(syncFormula, paramsCopy as any)};
 }
