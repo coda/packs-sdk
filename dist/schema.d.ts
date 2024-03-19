@@ -1123,7 +1123,9 @@ interface DomainPermission extends BasePermission {
     domainName: string;
 }
 /**
- * This grants global access to users who can access the ingestion
+ * This grants access to any user in the world.
+ *
+ * Generally this would apply to an entity where anyone with access to the url can view the item
  *
  * TODO(sam): Unhide this
  * @hidden
