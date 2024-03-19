@@ -170,7 +170,7 @@ export async function executeThunk<T extends FormulaSpecification>(
 ): Promise<PackFunctionResponse<T>> {
   try {
     const resultRef = await context.evalClosure(
-      'return coda.findAndExecutePackFunction({params: $0, formulaSpec: $1, updates: $2, permissionRequest: $3, manifest: pack.pack || pack.manifest, executionContext: executionContext});',
+      'return coda.findAndExecutePackFunction({params: $0, formulaSpec: $1, updates: $2, getPermissionsRequest: $3, manifest: pack.pack || pack.manifest, executionContext: executionContext});',
       [params, formulaSpec, updates, permissionRequest],
       {
         arguments: {copy: true},
