@@ -79,6 +79,7 @@ useDeprecatedResultNormalization = true, } = {}) {
             break;
         case types_1.FormulaType.Sync:
         case types_1.FormulaType.SyncUpdate:
+        case types_1.FormulaType.GetPermissions:
             formula = (0, helpers_2.findSyncFormula)(manifest, formulaSpec.formulaName);
             break;
     }
@@ -95,6 +96,9 @@ useDeprecatedResultNormalization = true, } = {}) {
         getPermissionsRequest,
     });
     if (formulaSpec.type === types_1.FormulaType.SyncUpdate) {
+        return result;
+    }
+    if (formulaSpec.type === types_1.FormulaType.GetPermissions) {
         return result;
     }
     if (useDeprecatedResultNormalization && formula) {
@@ -374,6 +378,7 @@ async function executeFormulaOrSyncWithRawParams({ formulaSpecification, params:
     global.Buffer = buffer_1.Buffer;
     let params;
     let syncUpdates;
+    let permissionRequest;
     switch (formulaSpecification.type) {
         case types_1.FormulaType.Standard: {
             const formula = (0, helpers_1.findFormula)(manifest, formulaSpecification.formulaName);
@@ -399,12 +404,13 @@ async function executeFormulaOrSyncWithRawParams({ formulaSpecification, params:
             break;
         }
         case types_1.FormulaType.GetPermissions:
+            ({ params, permissionRequest } = parseGetPermissionRequest(manifest, formulaSpecification, rawParams));
             params = rawParams;
             break;
         default:
             (0, ensure_2.ensureUnreachable)(formulaSpecification);
     }
-    return findAndExecutePackFunction(params, formulaSpecification, manifest, executionContext, syncUpdates);
+    return findAndExecutePackFunction(params, formulaSpecification, manifest, executionContext, syncUpdates, permissionRequest);
 }
 exports.executeFormulaOrSyncWithRawParams = executeFormulaOrSyncWithRawParams;
 /**

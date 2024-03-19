@@ -100,6 +100,7 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
       break;
     case FormulaType.Sync:
     case FormulaType.SyncUpdate:
+    case FormulaType.GetPermissions:
       formula = findSyncFormula(manifest, formulaSpec.formulaName);
       break;
   }
@@ -118,6 +119,10 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
   });
 
   if (formulaSpec.type === FormulaType.SyncUpdate) {
+    return result;
+  }
+
+  if (formulaSpec.type === FormulaType.GetPermissions) {
     return result;
   }
 
@@ -518,6 +523,7 @@ export async function executeFormulaOrSyncWithRawParams<T extends FormulaSpecifi
 
   let params: ParamValues<ParamDefs>;
   let syncUpdates: GenericSyncUpdate[] | undefined;
+  let permissionRequest: GenericExecuteGetPermissionsRequest | undefined;
   switch (formulaSpecification.type) {
     case FormulaType.Standard: {
       const formula = findFormula(manifest, formulaSpecification.formulaName);
@@ -543,13 +549,21 @@ export async function executeFormulaOrSyncWithRawParams<T extends FormulaSpecifi
       break;
     }
     case FormulaType.GetPermissions:
+      ({params, permissionRequest} = parseGetPermissionRequest(manifest, formulaSpecification, rawParams));
       params = rawParams as ParamValues<ParamDefs>;
       break;
 
     default:
       ensureUnreachable(formulaSpecification);
   }
-  return findAndExecutePackFunction(params, formulaSpecification, manifest, executionContext, syncUpdates);
+  return findAndExecutePackFunction(
+    params,
+    formulaSpecification,
+    manifest,
+    executionContext,
+    syncUpdates,
+    permissionRequest,
+  );
 }
 
 /**

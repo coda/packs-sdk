@@ -69,7 +69,7 @@ describe('Execution', () => {
     assert.deepEqual(result, [{Name: 'Alice'}, {Name: 'Bob'}, {Name: 'Chris'}, {Name: 'Diana'}]);
   });
 
-  it('executed a sync formulas without normalization', async () => {
+  it('executes a sync formulas without normalization', async () => {
     const result = await executeSyncFormulaFromPackDef(fakePack, 'Students', ['Smith'], undefined, {
       validateParams: true,
       validateResult: true,
@@ -486,6 +486,27 @@ describe('Execution', () => {
           });
           const result = mockPrintFull.args[0][0];
           assert.deepEqual(result, {result: [{outcome: 'success', finalValue: {name: 'Alice Smith'}}]});
+        });
+
+        it('get permissions works', async () => {
+          const syncRows = [{name: 'Alice'}, {name: 'Bob'}];
+          await executeFormulaOrSyncFromCLI({
+            vm,
+            formulaName: 'Students:permissions',
+            params: ['Smith', JSON.stringify({rows: syncRows})],
+            manifest: fakePack,
+            manifestPath: '',
+            bundleSourceMapPath,
+            bundlePath,
+            contextOptions: {useRealFetcher: false},
+          });
+          const result = mockPrintFull.args[0][0];
+          assert.deepEqual(result, {
+            permissions: [
+              {type: 'user', rowId: 'Alice', userId: 2},
+              {type: 'user', rowId: 'Bob', userId: 2},
+            ],
+          });
         });
 
         it('autocomplete', async () => {
