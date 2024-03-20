@@ -1,7 +1,8 @@
 import {testHelper} from './test_helper';
 import {AuthenticationType} from '../types';
-import type {ExecuteGetPermissionsRequest, Formula, GenericExecuteGetPermissionsRequest} from '../api';
+import type {Formula} from '../api';
 import {FormulaType} from '../runtime/types';
+import type {GenericExecuteGetPermissionsRequest} from '../api';
 import type {GenericSyncUpdate} from '../api';
 import {MetadataFormulaType} from '../runtime/types';
 import type {PackDefinitionBuilder} from '../builder';
