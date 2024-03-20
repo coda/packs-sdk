@@ -162,7 +162,6 @@ export const manifest: PackDefinition = createFakePack({
         executeGetPermissions: async (_params, {rows}, _context) => {
           const rowAccessDefinitions: RowAccessDefinition[] = rows
             .map(r => r.row)
-            .filter(r => r.name)
             .map(r => {
               const id = ensureExists(r.name);
 
