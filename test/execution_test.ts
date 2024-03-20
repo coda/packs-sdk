@@ -1,6 +1,6 @@
 import {testHelper} from './test_helper';
 import {AuthenticationType} from '../types';
-import type {Formula} from '../api';
+import type {ExecuteGetPermissionsRequest, Formula, GenericExecuteGetPermissionsRequest} from '../api';
 import {FormulaType} from '../runtime/types';
 import type {GenericSyncUpdate} from '../api';
 import {MetadataFormulaType} from '../runtime/types';
@@ -489,11 +489,13 @@ describe('Execution', () => {
         });
 
         it('get permissions works', async () => {
-          const syncRows = [{name: 'Alice'}, {name: 'Bob'}];
+          const syncRows: GenericExecuteGetPermissionsRequest = {
+            rows: [{row: {id: 'Alice'}}, {row: {id: 'Bob'}}],
+          };
           await executeFormulaOrSyncFromCLI({
             vm,
             formulaName: 'Students:permissions',
-            params: ['Smith', JSON.stringify({rows: syncRows})],
+            params: ['Smith', JSON.stringify(syncRows)],
             manifest: fakePack,
             manifestPath: '',
             bundleSourceMapPath,
