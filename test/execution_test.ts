@@ -491,7 +491,7 @@ describe('Execution', () => {
 
         it('get permissions works', async () => {
           const syncRows: GenericExecuteGetPermissionsRequest = {
-            rows: [{row: {id: 'Alice'}}, {row: {id: 'Bob'}}],
+            rows: [{row: {name: 'Alice'}}, {row: {name: 'Bob'}}],
           };
           await executeFormulaOrSyncFromCLI({
             vm,
