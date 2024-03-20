@@ -1912,7 +1912,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 declare enum PrincipalType {
 	User = "user",
 	Group = "group",
-	Public = "public"
+	Anyone = "anyone"
 }
 /**
  * This represents a principal that is a single user.
@@ -1935,15 +1935,15 @@ export interface GroupPrincipal {
 	groupId: string | number;
 }
 /**
- * This represents a principal corresponding to the entire world
+ * This represents a principal corresponding to anyone
  *
  * Generally this would apply to an entity where anyone with access to the url can view the item
  *
  * TODO(sam): Unhide this
  * @hidden
  */
-export interface PublicPrincipal {
-	type: PrincipalType.Public;
+export interface AnyonePrincipal {
+	type: PrincipalType.Anyone;
 }
 /**
  * This represents a principal that can be granted access.
@@ -1951,7 +1951,7 @@ export interface PublicPrincipal {
  * TODO(sam): Unhide this
  * @hidden
  */
-export type Principal = UserPrincipal | GroupPrincipal | PublicPrincipal;
+export type Principal = UserPrincipal | GroupPrincipal | AnyonePrincipal;
 /**
  * This represents the definition of a permission in the external system.
  *
@@ -2842,6 +2842,8 @@ export interface SyncUpdateResultMarshaled<K extends string, L extends string, S
 export type GenericSyncUpdateResultMarshaled = SyncUpdateResultMarshaled<any, any, any>;
 /**
  * Type definition for the result of calls to {@link executeGetPermissions}.
+ *
+ * TODO(sam): Unhide this
  * @hidden
  */
 export interface GetPermissionsResult {
@@ -2925,6 +2927,7 @@ export type SyncFormula<K extends string, L extends string, ParamDefsT extends P
 	schema?: ArraySchema;
 	supportsUpdates?: boolean;
 	/**
+	 * TODO(sam): Unhide this
 	 * @hidden
 	 */
 	supportsGetPermissions?: boolean;

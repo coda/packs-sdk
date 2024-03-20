@@ -1074,12 +1074,14 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 }
 /**
  * The type of principal that can be applied to a permission.
+ *
+ * TODO(sam): Unhide this
  * @hidden
  */
 export declare enum PrincipalType {
     User = "user",
     Group = "group",
-    Public = "public"
+    Anyone = "anyone"
 }
 /**
  * This represents a principal that is a single user.
@@ -1102,15 +1104,15 @@ export interface GroupPrincipal {
     groupId: string | number;
 }
 /**
- * This represents a principal corresponding to the entire world
+ * This represents a principal corresponding to anyone
  *
  * Generally this would apply to an entity where anyone with access to the url can view the item
  *
  * TODO(sam): Unhide this
  * @hidden
  */
-export interface PublicPrincipal {
-    type: PrincipalType.Public;
+export interface AnyonePrincipal {
+    type: PrincipalType.Anyone;
 }
 /**
  * This represents a principal that can be granted access.
@@ -1118,7 +1120,7 @@ export interface PublicPrincipal {
  * TODO(sam): Unhide this
  * @hidden
  */
-type Principal = UserPrincipal | GroupPrincipal | PublicPrincipal;
+type Principal = UserPrincipal | GroupPrincipal | AnyonePrincipal;
 /**
  * This represents the definition of a permission in the external system.
  *

@@ -378,13 +378,15 @@ exports.SimpleStringHintValueTypes = [
 exports.PropertyLabelValueTemplate = '{VALUE}';
 /**
  * The type of principal that can be applied to a permission.
+ *
+ * TODO(sam): Unhide this
  * @hidden
  */
 var PrincipalType;
 (function (PrincipalType) {
     PrincipalType["User"] = "user";
     PrincipalType["Group"] = "group";
-    PrincipalType["Public"] = "public";
+    PrincipalType["Anyone"] = "anyone";
 })(PrincipalType || (exports.PrincipalType = PrincipalType = {}));
 /**
  * The type of content in this attribution node.

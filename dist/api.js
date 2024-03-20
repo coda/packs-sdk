@@ -363,6 +363,7 @@ var UpdateOutcome;
  * Sets a limit on the number of permissions that can be returned for a single row
  * in a call to {@link executeGetPermissions}.
  *
+ * TODO(sam): Unhide this
  * @hidden
  */
 const MaxPermissionsPerRow = 1000;

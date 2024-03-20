@@ -645,6 +645,8 @@ export interface SyncUpdateResultMarshaled<K extends string, L extends string, S
 export type GenericSyncUpdateResultMarshaled = SyncUpdateResultMarshaled<any, any, any>;
 /**
  * Type definition for the result of calls to {@link executeGetPermissions}.
+ *
+ * TODO(sam): Unhide this
  * @hidden
  */
 export interface GetPermissionsResult {
@@ -734,6 +736,7 @@ export type SyncFormula<K extends string, L extends string, ParamDefsT extends P
     schema?: ArraySchema;
     supportsUpdates?: boolean;
     /**
+     * TODO(sam): Unhide this
      * @hidden
      */
     supportsGetPermissions?: boolean;
