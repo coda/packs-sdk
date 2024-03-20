@@ -1234,6 +1234,8 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
 
 /**
  * The type of principal that can be applied to a permission.
+ *
+ * TODO(sam): Unhide this
  * @hidden
  */
 export enum PrincipalType {

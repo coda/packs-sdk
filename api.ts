@@ -1114,12 +1114,15 @@ export type GenericSyncUpdateResultMarshaled = SyncUpdateResultMarshaled<any, an
  * Sets a limit on the number of permissions that can be returned for a single row
  * in a call to {@link executeGetPermissions}.
  *
+ * TODO(sam): Unhide this
  * @hidden
  */
 const MaxPermissionsPerRow = 1000;
 
 /**
  * Type definition for the result of calls to {@link executeGetPermissions}.
+ *
+ * TODO(sam): Unhide this
  * @hidden
  */
 export interface GetPermissionsResult {
@@ -1239,6 +1242,7 @@ export type SyncFormula<
   supportsUpdates?: boolean;
 
   /**
+   * TODO(sam): Unhide this
    * @hidden
    */
   supportsGetPermissions?: boolean;
