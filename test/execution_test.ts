@@ -640,7 +640,7 @@ describe('CLI formula spec parsing', () => {
         ],
         execute: async () => ({result: []}),
         executeUpdate: async () => ({result: []}),
-        executeGetPermissions: async () => ({permissions: []}),
+        executeGetPermissions: async () => ({rowAccessDefinitions: []}),
       },
     });
 

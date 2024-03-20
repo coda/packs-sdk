@@ -2,6 +2,8 @@ import type {PackDefinition} from '../../types';
 import {ParameterType} from '../../api_types';
 import type {Permission} from '../../schema';
 import {PrincipalType} from '../../schema';
+import type {RowAccessDefinition} from '../../schema';
+import type {UserPrincipal} from '../../schema';
 import {ValueType} from '../../schema';
 import {createFakePack} from '../test_utils';
 import {ensureExists} from '../../helpers/ensure';
@@ -158,18 +160,28 @@ export const manifest: PackDefinition = createFakePack({
           return {result: updates.map(u => u.newValue)};
         },
         executeGetPermissions: async (_params, {rows}, _context) => {
-          const permissions: Permission[] = rows
+          const rowAccessDefinitions: RowAccessDefinition[] = rows
             .filter(r => r.name)
             .map(r => {
               const id = ensureExists(r.name);
 
-              return {
+              const principal: UserPrincipal = {
                 type: PrincipalType.User,
+                userId: 1,
+              };
+
+              const permissions: Permission[] = [
+                {
+                  principal,
+                },
+              ];
+
+              return {
+                permissions,
                 rowId: id,
-                userId: 2,
               };
             });
-          return {permissions};
+          return {rowAccessDefinitions};
         },
         parameters: [makeStringParameter('teacher', 'teacher name')],
         examples: [],

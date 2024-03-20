@@ -11,6 +11,7 @@ import type {GenericSyncFormulaResult} from '../../api';
 import type {GenericSyncUpdate} from '../../api';
 import type {GenericSyncUpdateResult} from '../../api';
 import type {GenericSyncUpdateResultMarshaled} from '../../api';
+import type {GetPermissionExecutionContext} from '../../api_types';
 import type {MetadataFormula} from '../../api';
 import {MetadataFormulaType} from '../types';
 import type {PackFormulaResult} from '../../api_types';
@@ -124,7 +125,7 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
       const response = await formula.executeGetPermissions(
         params,
         ensureExists(getPermissionsRequest),
-        executionContext as SyncExecutionContext,
+        executionContext as GetPermissionExecutionContext,
       );
       return response;
     }

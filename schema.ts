@@ -1233,80 +1233,77 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
 }
 
 /**
- * Discriminent used to determine the permission type
+ * The type of principal that can be applied to a permission.
  * @hidden
  */
 export enum PrincipalType {
   User = 'user',
   Group = 'group',
-  Domain = 'domain',
   Public = 'public',
 }
 
 /**
- * This type definition represents properties required for all permissions.
+ * This represents a principal that is a single user.
  *
  * TODO(sam): Unhide this
  * @hidden
  */
-interface BasePermission {
-  type: PrincipalType;
-  rowId: string | number;
-  // TODO(sam): Add options describing inheritance of permissions
-}
-
-/**
- * This grants access to a specific user by their user ID.
- *
- * TODO(sam): Unhide this
- * @hidden
- */
-interface UserPermission extends BasePermission {
+export interface UserPrincipal {
   type: PrincipalType.User;
   userId: string | number;
 }
 
 /**
- * This grants access to a specific group by its group ID.
+ * This represents a principal that is a group of users.
  *
  * TODO(sam): Unhide this
  * @hidden
  */
-interface GroupPermission extends BasePermission {
+export interface GroupPrincipal {
   type: PrincipalType.Group;
   groupId: string | number;
 }
 
 /**
- * This grants access to users within a specific domain.
- *
- * TODO(sam): Unhide this
- * @hidden
- */
-interface DomainPermission extends BasePermission {
-  type: PrincipalType.Domain;
-  domainName: string;
-}
-
-/**
- * This grants access to any user in the world.
+ * This represents a principal corresponding to the entire world
  *
  * Generally this would apply to an entity where anyone with access to the url can view the item
  *
  * TODO(sam): Unhide this
  * @hidden
  */
-interface PublicPermission extends BasePermission {
+export interface PublicPrincipal {
   type: PrincipalType.Public;
 }
 
 /**
- * This represents a permission on an entity provided by the pack.
+ * This represents a principal that can be granted access.
  *
  * TODO(sam): Unhide this
  * @hidden
  */
-export type Permission = UserPermission | GroupPermission | DomainPermission | PublicPermission;
+type Principal = UserPrincipal | GroupPrincipal | PublicPrincipal;
+
+/**
+ * This represents the definition of a permission in the external system.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface Permission {
+  principal: Principal;
+}
+
+/**
+ * This represents the list of permissions on a sync table row.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface RowAccessDefinition {
+  permissions: Permission[];
+  rowId: string | number;
+}
 
 export type ObjectSchemaDefinitionType<
   K extends string,

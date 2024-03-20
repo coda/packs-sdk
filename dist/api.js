@@ -882,16 +882,12 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
     const executeGetPermissions = wrappedExecuteGetPermissions
         ? async function execGetPermissions(params, request, context) {
             const result = await wrappedExecuteGetPermissions(params, request, context);
-            const { permissions } = result;
-            const permissionCountByRow = permissions.reduce((acc, permission) => {
-                acc[permission.rowId] = (acc[permission.rowId] || 0) + 1;
-                return acc;
-            }, {});
-            const oversizedRowIds = Object.entries(permissionCountByRow)
-                .filter(([_rowId, count]) => count > MaxPermissionsPerRow)
-                .map(([rowId, _count]) => rowId);
-            if (oversizedRowIds.length > 0) {
-                throw new Error(`Objects with ids: ${oversizedRowIds.join(', ')} returned more permissions than the maximum allowed of ${MaxPermissionsPerRow} per object`);
+            const { rowAccessDefinitions: permissions } = result;
+            const oversizedRowAccessDefinitions = permissions.filter(p => p.permissions.length > MaxPermissionsPerRow);
+            if (oversizedRowAccessDefinitions.length > 0) {
+                throw new Error(`Objects with ids: ${oversizedRowAccessDefinitions
+                    .map(p => p.rowId)
+                    .join(', ')} returned more permissions than the maximum allowed of ${MaxPermissionsPerRow} per object`);
             }
             return result;
         }

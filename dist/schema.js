@@ -377,14 +377,13 @@ exports.SimpleStringHintValueTypes = [
  */
 exports.PropertyLabelValueTemplate = '{VALUE}';
 /**
- * Discriminent used to determine the permission type
+ * The type of principal that can be applied to a permission.
  * @hidden
  */
 var PrincipalType;
 (function (PrincipalType) {
     PrincipalType["User"] = "user";
     PrincipalType["Group"] = "group";
-    PrincipalType["Domain"] = "domain";
     PrincipalType["Public"] = "public";
 })(PrincipalType || (exports.PrincipalType = PrincipalType = {}));
 /**

@@ -24,13 +24,13 @@ import type {ParamValues} from './api_types';
 import {ParameterType} from './api_types';
 import {ParameterTypeInputMap} from './api_types';
 import type {ParameterTypeMap} from './api_types';
-import type {Permission} from './schema';
 import type {PropertyOptionsExecutionContext} from './api_types';
 import type {PropertyOptionsMetadataFunction} from './api_types';
 import type {PropertyOptionsMetadataResult} from './api_types';
 import type {RequestHandlerTemplate} from './handler_templates';
 import type {RequiredParamDef} from './api_types';
 import type {ResponseHandlerTemplate} from './handler_templates';
+import type {RowAccessDefinition} from './schema';
 import type {Schema} from './schema';
 import type {SchemaType} from './schema';
 import type {StringHintTypes} from './schema';
@@ -1122,11 +1122,12 @@ const MaxPermissionsPerRow = 1000;
  * Type definition for the result of calls to {@link executeGetPermissions}.
  * @hidden
  */
-export interface ExecuteUpdatePermissionResult {
+export interface GetPermissionsResult {
   /**
-   * The list of permissions applying to the passed in parameters.
+   * The access definition for each row that was passed to {@link executeGetPermissions}.
+   *
    */
-  permissions: Permission[];
+  rowAccessDefinitions: RowAccessDefinition[];
 }
 
 /**
@@ -1208,7 +1209,7 @@ export interface SyncFormulaDef<
     params: ParamValues<ParamDefsT>,
     request: ExecuteGetPermissionsRequest<K, L, SchemaT>,
     context: GetPermissionExecutionContext,
-  ): Promise<ExecuteUpdatePermissionResult>;
+  ): Promise<GetPermissionsResult>;
 
   /**
    * If the table implements {@link executeGetPermissions} the maximum number of rows that will be sent to that
@@ -2329,24 +2330,14 @@ export function makeSyncTable<
         context: GetPermissionExecutionContext,
       ) {
         const result = await wrappedExecuteGetPermissions(params, request, context);
-        const {permissions} = result;
-        const permissionCountByRow: {[rowId: string]: number} = permissions.reduce(
-          (acc: {[rowId: string]: number}, permission: Permission) => {
-            acc[permission.rowId] = (acc[permission.rowId] || 0) + 1;
-            return acc;
-          },
-          {},
-        );
+        const {rowAccessDefinitions: permissions} = result;
+        const oversizedRowAccessDefinitions = permissions.filter(p => p.permissions.length > MaxPermissionsPerRow);
 
-        const oversizedRowIds = Object.entries(permissionCountByRow)
-          .filter(([_rowId, count]) => count > MaxPermissionsPerRow)
-          .map(([rowId, _count]) => rowId);
-
-        if (oversizedRowIds.length > 0) {
+        if (oversizedRowAccessDefinitions.length > 0) {
           throw new Error(
-            `Objects with ids: ${oversizedRowIds.join(
-              ', ',
-            )} returned more permissions than the maximum allowed of ${MaxPermissionsPerRow} per object`,
+            `Objects with ids: ${oversizedRowAccessDefinitions
+              .map(p => p.rowId)
+              .join(', ')} returned more permissions than the maximum allowed of ${MaxPermissionsPerRow} per object`,
           );
         }
         return result;

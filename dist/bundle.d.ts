@@ -1912,67 +1912,65 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 declare enum PrincipalType {
 	User = "user",
 	Group = "group",
-	Domain = "domain",
 	Public = "public"
 }
 /**
- * This type definition represents properties required for all permissions.
+ * This represents a principal that is a single user.
  *
  * TODO(sam): Unhide this
  * @hidden
  */
-export interface BasePermission {
-	type: PrincipalType;
-	rowId: string | number;
-}
-/**
- * This grants access to a specific user by their user ID.
- *
- * TODO(sam): Unhide this
- * @hidden
- */
-export interface UserPermission extends BasePermission {
+export interface UserPrincipal {
 	type: PrincipalType.User;
 	userId: string | number;
 }
 /**
- * This grants access to a specific group by its group ID.
+ * This represents a principal that is a group of users.
  *
  * TODO(sam): Unhide this
  * @hidden
  */
-export interface GroupPermission extends BasePermission {
+export interface GroupPrincipal {
 	type: PrincipalType.Group;
 	groupId: string | number;
 }
 /**
- * This grants access to users within a specific domain.
- *
- * TODO(sam): Unhide this
- * @hidden
- */
-export interface DomainPermission extends BasePermission {
-	type: PrincipalType.Domain;
-	domainName: string;
-}
-/**
- * This grants access to any user in the world.
+ * This represents a principal corresponding to the entire world
  *
  * Generally this would apply to an entity where anyone with access to the url can view the item
  *
  * TODO(sam): Unhide this
  * @hidden
  */
-export interface PublicPermission extends BasePermission {
+export interface PublicPrincipal {
 	type: PrincipalType.Public;
 }
 /**
- * This represents a permission on an entity provided by the pack.
+ * This represents a principal that can be granted access.
  *
  * TODO(sam): Unhide this
  * @hidden
  */
-export type Permission = UserPermission | GroupPermission | DomainPermission | PublicPermission;
+export type Principal = UserPrincipal | GroupPrincipal | PublicPrincipal;
+/**
+ * This represents the definition of a permission in the external system.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface Permission {
+	principal: Principal;
+}
+/**
+ * This represents the list of permissions on a sync table row.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface RowAccessDefinition {
+	permissions: Permission[];
+	rowId: string | number;
+}
 export type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
 /** @hidden */
 export interface ObjectSchema<K extends string, L extends string> extends ObjectSchemaDefinition<K, L> {
@@ -2846,11 +2844,12 @@ export type GenericSyncUpdateResultMarshaled = SyncUpdateResultMarshaled<any, an
  * Type definition for the result of calls to {@link executeGetPermissions}.
  * @hidden
  */
-export interface ExecuteUpdatePermissionResult {
+export interface GetPermissionsResult {
 	/**
-	 * The list of permissions applying to the passed in parameters.
+	 * The access definition for each row that was passed to {@link executeGetPermissions}.
+	 *
 	 */
-	permissions: Permission[];
+	rowAccessDefinitions: RowAccessDefinition[];
 }
 /**
  * Type definition for the data passed to the {@link executeGetPermissions} function of a sync table.
@@ -2904,7 +2903,7 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
 	 * TODO(sam): Unhide this
 	 * @hidden
 	 */
-	executeGetPermissions?(params: ParamValues<ParamDefsT>, request: ExecuteGetPermissionsRequest<K, L, SchemaT>, context: GetPermissionExecutionContext): Promise<ExecuteUpdatePermissionResult>;
+	executeGetPermissions?(params: ParamValues<ParamDefsT>, request: ExecuteGetPermissionsRequest<K, L, SchemaT>, context: GetPermissionExecutionContext): Promise<GetPermissionsResult>;
 	/**
 	 * If the table implements {@link executeGetPermissions} the maximum number of rows that will be sent to that
 	 * function in a single batch. Defaults to 10 if not specified.

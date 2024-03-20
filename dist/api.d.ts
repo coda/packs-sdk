@@ -20,13 +20,13 @@ import type { ParamDefs } from './api_types';
 import type { ParamValues } from './api_types';
 import { ParameterType } from './api_types';
 import type { ParameterTypeMap } from './api_types';
-import type { Permission } from './schema';
 import type { PropertyOptionsExecutionContext } from './api_types';
 import type { PropertyOptionsMetadataFunction } from './api_types';
 import type { PropertyOptionsMetadataResult } from './api_types';
 import type { RequestHandlerTemplate } from './handler_templates';
 import type { RequiredParamDef } from './api_types';
 import type { ResponseHandlerTemplate } from './handler_templates';
+import type { RowAccessDefinition } from './schema';
 import type { Schema } from './schema';
 import type { SchemaType } from './schema';
 import type { StringHintTypes } from './schema';
@@ -647,11 +647,12 @@ export type GenericSyncUpdateResultMarshaled = SyncUpdateResultMarshaled<any, an
  * Type definition for the result of calls to {@link executeGetPermissions}.
  * @hidden
  */
-export interface ExecuteUpdatePermissionResult {
+export interface GetPermissionsResult {
     /**
-     * The list of permissions applying to the passed in parameters.
+     * The access definition for each row that was passed to {@link executeGetPermissions}.
+     *
      */
-    permissions: Permission[];
+    rowAccessDefinitions: RowAccessDefinition[];
 }
 /**
  * Type definition for the data passed to the {@link executeGetPermissions} function of a sync table.
@@ -711,7 +712,7 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
      * TODO(sam): Unhide this
      * @hidden
      */
-    executeGetPermissions?(params: ParamValues<ParamDefsT>, request: ExecuteGetPermissionsRequest<K, L, SchemaT>, context: GetPermissionExecutionContext): Promise<ExecuteUpdatePermissionResult>;
+    executeGetPermissions?(params: ParamValues<ParamDefsT>, request: ExecuteGetPermissionsRequest<K, L, SchemaT>, context: GetPermissionExecutionContext): Promise<GetPermissionsResult>;
     /**
      * If the table implements {@link executeGetPermissions} the maximum number of rows that will be sent to that
      * function in a single batch. Defaults to 10 if not specified.
