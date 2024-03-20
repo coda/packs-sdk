@@ -657,6 +657,18 @@ export interface GetPermissionsResult {
     rowAccessDefinitions: RowAccessDefinition[];
 }
 /**
+ * Type definition for a single row passed to the {@link executeGetPermissions} function of a sync table.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface ExecuteGetPermissionsRequestRow<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
+    /**
+     * A row for which to fetch permissions. This rows has been retrieved from the {@link execute} function
+     */
+    row: ObjectSchemaDefinitionType<K, L, SchemaT>;
+}
+/**
  * Type definition for the data passed to the {@link executeGetPermissions} function of a sync table.
  *
  * TODO(sam): Unhide this
@@ -664,9 +676,9 @@ export interface GetPermissionsResult {
  */
 export interface ExecuteGetPermissionsRequest<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
     /**
-     * The list of rows for which to fetch permissions. These rows have been retrieved from the {@link execute} function
+     * The list of rows for which to fetch permissions.
      */
-    rows: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>;
+    rows: Array<ExecuteGetPermissionsRequestRow<K, L, SchemaT>>;
 }
 /**
  * Generic type definition for the data passed to the {@link executeGetPermissions} function of a sync table.

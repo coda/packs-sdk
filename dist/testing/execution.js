@@ -517,8 +517,13 @@ function parseSyncUpdates(manifest, formulaSpecification, rawParams) {
     const syncFormula = (0, helpers_2.findSyncFormula)(manifest, formulaSpecification.formulaName);
     return { syncUpdates: parseResult.data, params: (0, coercion_1.coerceParams)(syncFormula, paramsCopy) };
 }
+const GetPermissionRowSchema = z
+    .object({
+    row: z.object({}).passthrough(),
+})
+    .passthrough();
 const GetPermissionSchema = z.object({
-    rows: z.array(z.object({}).passthrough()),
+    rows: z.array(GetPermissionRowSchema),
 });
 function parseGetPermissionRequest(manifest, formulaSpecification, rawParams) {
     const paramsCopy = [...rawParams];

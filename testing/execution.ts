@@ -745,8 +745,14 @@ function parseSyncUpdates(
   return {syncUpdates: parseResult.data, params: coerceParams(syncFormula, paramsCopy as any)};
 }
 
+const GetPermissionRowSchema = z
+  .object({
+    row: z.object({}).passthrough(),
+  })
+  .passthrough();
+
 const GetPermissionSchema = z.object({
-  rows: z.array(z.object({}).passthrough()),
+  rows: z.array(GetPermissionRowSchema),
 });
 
 function parseGetPermissionRequest(
