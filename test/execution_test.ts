@@ -502,9 +502,15 @@ describe('Execution', () => {
           });
           const result = mockPrintFull.args[0][0];
           assert.deepEqual(result, {
-            permissions: [
-              {type: 'user', rowId: 'Alice', userId: 2},
-              {type: 'user', rowId: 'Bob', userId: 2},
+            rowAccessDefinitions: [
+              {
+                rowId: 'Alice',
+                permissions: [{principal: {type: 'user', userId: 1}}],
+              },
+              {
+                rowId: 'Bob',
+                permissions: [{principal: {type: 'user', userId: 1}}],
+              },
             ],
           });
         });
