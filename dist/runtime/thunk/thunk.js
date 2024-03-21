@@ -40,7 +40,7 @@ async function findAndExecutePackFunction({ shouldWrapError = true, ...args }) {
     }
 }
 exports.findAndExecutePackFunction = findAndExecutePackFunction;
-async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, executionContext, updates, }) {
+async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, executionContext, updates, getPermissionsRequest, }) {
     var _a, _b;
     const { syncTables, defaultAuthentication } = manifest;
     switch (formulaSpec.type) {
@@ -59,6 +59,14 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
             }
             const response = await formula.executeUpdate(params, (0, ensure_1.ensureExists)(updates), executionContext);
             return parseSyncUpdateResult(response);
+        }
+        case types_2.FormulaType.GetPermissions: {
+            const formula = (0, helpers_2.findSyncFormula)(manifest, formulaSpec.formulaName);
+            if (!formula.executeGetPermissions) {
+                throw new Error(`No executeGetPermissions function defined on sync table formula ${formulaSpec.formulaName}`);
+            }
+            const response = await formula.executeGetPermissions(params, (0, ensure_1.ensureExists)(getPermissionsRequest), executionContext);
+            return response;
         }
         case types_2.FormulaType.Metadata: {
             switch (formulaSpec.metadataFormulaType) {

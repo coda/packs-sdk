@@ -2,6 +2,7 @@ import {testHelper} from './test_helper';
 import {AuthenticationType} from '../types';
 import type {Formula} from '../api';
 import {FormulaType} from '../runtime/types';
+import type {GenericExecuteGetPermissionsRequest} from '../api';
 import type {GenericSyncUpdate} from '../api';
 import {MetadataFormulaType} from '../runtime/types';
 import type {PackDefinitionBuilder} from '../builder';
@@ -69,7 +70,7 @@ describe('Execution', () => {
     assert.deepEqual(result, [{Name: 'Alice'}, {Name: 'Bob'}, {Name: 'Chris'}, {Name: 'Diana'}]);
   });
 
-  it('executed a sync formulas without normalization', async () => {
+  it('executes a sync formulas without normalization', async () => {
     const result = await executeSyncFormulaFromPackDef(fakePack, 'Students', ['Smith'], undefined, {
       validateParams: true,
       validateResult: true,
@@ -488,6 +489,35 @@ describe('Execution', () => {
           assert.deepEqual(result, {result: [{outcome: 'success', finalValue: {name: 'Alice Smith'}}]});
         });
 
+        it('get permissions works', async () => {
+          const syncRows: GenericExecuteGetPermissionsRequest = {
+            rows: [{row: {name: 'Alice'}}, {row: {name: 'Bob'}}],
+          };
+          await executeFormulaOrSyncFromCLI({
+            vm,
+            formulaName: 'Students:permissions',
+            params: ['Smith', JSON.stringify(syncRows)],
+            manifest: fakePack,
+            manifestPath: '',
+            bundleSourceMapPath,
+            bundlePath,
+            contextOptions: {useRealFetcher: false},
+          });
+          const result = mockPrintFull.args[0][0];
+          assert.deepEqual(result, {
+            rowAccessDefinitions: [
+              {
+                rowId: 'Alice',
+                permissions: [{principal: {type: 'user', userId: 1}}],
+              },
+              {
+                rowId: 'Bob',
+                permissions: [{principal: {type: 'user', userId: 1}}],
+              },
+            ],
+          });
+        });
+
         it('autocomplete', async () => {
           await executeFormulaOrSyncFromCLI({
             vm,
@@ -619,6 +649,7 @@ describe('CLI formula spec parsing', () => {
         ],
         execute: async () => ({result: []}),
         executeUpdate: async () => ({result: []}),
+        executeGetPermissions: async () => ({rowAccessDefinitions: []}),
       },
     });
 
@@ -660,6 +691,12 @@ describe('CLI formula spec parsing', () => {
     const updateSpec = makeFormulaSpec(pack, 'MySync:update');
     assert.deepEqual(updateSpec, {
       type: FormulaType.SyncUpdate,
+      formulaName: 'MySync',
+    });
+
+    const getPermissionsSpec = makeFormulaSpec(pack, 'MySync:permissions');
+    assert.deepEqual(getPermissionsSpec, {
+      type: FormulaType.GetPermissions,
       formulaName: 'MySync',
     });
   });

@@ -6398,7 +6398,8 @@ module.exports = (() => {
     formulaSpec,
     manifest,
     executionContext,
-    updates
+    updates,
+    getPermissionsRequest
   }) {
     const { syncTables, defaultAuthentication } = manifest;
     switch (formulaSpec.type) {
@@ -6421,6 +6422,18 @@ module.exports = (() => {
           executionContext
         );
         return parseSyncUpdateResult(response);
+      }
+      case "GetPermissions" /* GetPermissions */: {
+        const formula = findSyncFormula(manifest, formulaSpec.formulaName);
+        if (!formula.executeGetPermissions) {
+          throw new Error(`No executeGetPermissions function defined on sync table formula ${formulaSpec.formulaName}`);
+        }
+        const response = await formula.executeGetPermissions(
+          params,
+          ensureExists(getPermissionsRequest),
+          executionContext
+        );
+        return response;
       }
       case "Metadata" /* Metadata */: {
         switch (formulaSpec.metadataFormulaType) {

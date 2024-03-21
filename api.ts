@@ -6,6 +6,7 @@ import {ConnectionRequirement} from './api_types';
 import type {CrawlStrategy} from './api_types';
 import type {ExecutionContext} from './api_types';
 import type {FetchRequest} from './api_types';
+import type {GetPermissionExecutionContext} from './api_types';
 import type {Identity} from './schema';
 import type {NumberHintTypes} from './schema';
 import type {NumberSchema} from './schema';
@@ -29,6 +30,7 @@ import type {PropertyOptionsMetadataResult} from './api_types';
 import type {RequestHandlerTemplate} from './handler_templates';
 import type {RequiredParamDef} from './api_types';
 import type {ResponseHandlerTemplate} from './handler_templates';
+import type {RowAccessDefinition} from './schema';
 import type {Schema} from './schema';
 import type {SchemaType} from './schema';
 import type {StringHintTypes} from './schema';
@@ -1109,6 +1111,70 @@ export interface SyncUpdateResultMarshaled<
 export type GenericSyncUpdateResultMarshaled = SyncUpdateResultMarshaled<any, any, any>;
 
 /**
+ * Sets a limit on the number of permissions that can be returned for a single row
+ * in a call to {@link executeGetPermissions}.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+const MaxPermissionsPerRow = 1000;
+
+/**
+ * Type definition for the result of calls to {@link executeGetPermissions}.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface GetPermissionsResult {
+  /**
+   * The access definition for each row that was passed to {@link executeGetPermissions}.
+   *
+   */
+  rowAccessDefinitions: RowAccessDefinition[];
+}
+
+/**
+ * Type definition for a single row passed to the {@link executeGetPermissions} function of a sync table.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface ExecuteGetPermissionsRequestRow<
+  K extends string,
+  L extends string,
+  SchemaT extends ObjectSchemaDefinition<K, L>,
+> {
+  /**
+   * A row for which to fetch permissions. This rows has been retrieved from the {@link execute} function
+   */
+  row: ObjectSchemaDefinitionType<K, L, SchemaT>;
+}
+
+/**
+ * Type definition for the data passed to the {@link executeGetPermissions} function of a sync table.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface ExecuteGetPermissionsRequest<
+  K extends string,
+  L extends string,
+  SchemaT extends ObjectSchemaDefinition<K, L>,
+> {
+  /**
+   * The list of rows for which to fetch permissions.
+   */
+  rows: Array<ExecuteGetPermissionsRequestRow<K, L, SchemaT>>;
+}
+
+/**
+ * Generic type definition for the data passed to the {@link executeGetPermissions} function of a sync table.
+ *
+ * @hidden
+ */
+export type GenericExecuteGetPermissionsRequest = ExecuteGetPermissionsRequest<any, any, any>;
+
+/**
  * Inputs for creating the formula that implements a sync table.
  */
 export interface SyncFormulaDef<
@@ -1151,6 +1217,28 @@ export interface SyncFormulaDef<
    * @hidden
    */
   updateOptions?: Pick<CommonPackFormulaDef<ParamDefsT>, 'extraOAuthScopes'>;
+
+  /**
+   * The JavaScript function that implements fetching permissions for a set of objects
+   * if the objects in this sync table have permissions in the external system.
+   *
+   * TODO(sam): Unhide this
+   * @hidden
+   */
+  executeGetPermissions?(
+    params: ParamValues<ParamDefsT>,
+    request: ExecuteGetPermissionsRequest<K, L, SchemaT>,
+    context: GetPermissionExecutionContext,
+  ): Promise<GetPermissionsResult>;
+
+  /**
+   * If the table implements {@link executeGetPermissions} the maximum number of rows that will be sent to that
+   * function in a single batch. Defaults to 10 if not specified.
+   *
+   * TODO(sam): Unhide this
+   * @hidden
+   */
+  maxPermissionBatchSize?: number;
 }
 
 /**
@@ -1169,6 +1257,12 @@ export type SyncFormula<
   isSyncFormula: true;
   schema?: ArraySchema;
   supportsUpdates?: boolean;
+
+  /**
+   * TODO(sam): Unhide this
+   * @hidden
+   */
+  supportsGetPermissions?: boolean;
 };
 
 /**
@@ -2155,6 +2249,7 @@ export function makeSyncTable<
   const {
     execute: wrappedExecute,
     executeUpdate: wrappedExecuteUpdate,
+    executeGetPermissions: wrappedExecuteGetPermissions,
     ...definition
   } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
 
@@ -2249,6 +2344,27 @@ export function makeSyncTable<
       }
     : undefined;
 
+  const executeGetPermissions = wrappedExecuteGetPermissions
+    ? async function execGetPermissions(
+        params: ParamValues<ParamDefsT>,
+        request: ExecuteGetPermissionsRequest<K, L, SchemaDefT>,
+        context: GetPermissionExecutionContext,
+      ) {
+        const result = await wrappedExecuteGetPermissions(params, request, context);
+        const {rowAccessDefinitions: permissions} = result;
+        const oversizedRowAccessDefinitions = permissions.filter(p => p.permissions.length > MaxPermissionsPerRow);
+
+        if (oversizedRowAccessDefinitions.length > 0) {
+          throw new Error(
+            `Objects with ids: ${oversizedRowAccessDefinitions
+              .map(p => p.rowId)
+              .join(', ')} returned more permissions than the maximum allowed of ${MaxPermissionsPerRow} per object`,
+          );
+        }
+        return result;
+      }
+    : undefined;
+
   return {
     name,
     description,
@@ -2262,8 +2378,10 @@ export function makeSyncTable<
       schema: formulaSchema,
       isSyncFormula: true,
       supportsUpdates: Boolean(executeUpdate),
+      supportsGetPermissions: Boolean(executeGetPermissions),
       connectionRequirement: definition.connectionRequirement || connectionRequirement,
       resultType: Type.object as any,
+      executeGetPermissions: executeGetPermissions as any,
     },
     getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
     entityName,

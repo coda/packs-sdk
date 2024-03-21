@@ -5,6 +5,7 @@ import type { CommonPackFormulaDef } from './api_types';
 import { ConnectionRequirement } from './api_types';
 import type { ExecutionContext } from './api_types';
 import type { FetchRequest } from './api_types';
+import type { GetPermissionExecutionContext } from './api_types';
 import type { Identity } from './schema';
 import type { NumberHintTypes } from './schema';
 import type { NumberSchema } from './schema';
@@ -25,6 +26,7 @@ import type { PropertyOptionsMetadataResult } from './api_types';
 import type { RequestHandlerTemplate } from './handler_templates';
 import type { RequiredParamDef } from './api_types';
 import type { ResponseHandlerTemplate } from './handler_templates';
+import type { RowAccessDefinition } from './schema';
 import type { Schema } from './schema';
 import type { SchemaType } from './schema';
 import type { StringHintTypes } from './schema';
@@ -642,6 +644,49 @@ export interface SyncUpdateResultMarshaled<K extends string, L extends string, S
  */
 export type GenericSyncUpdateResultMarshaled = SyncUpdateResultMarshaled<any, any, any>;
 /**
+ * Type definition for the result of calls to {@link executeGetPermissions}.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface GetPermissionsResult {
+    /**
+     * The access definition for each row that was passed to {@link executeGetPermissions}.
+     *
+     */
+    rowAccessDefinitions: RowAccessDefinition[];
+}
+/**
+ * Type definition for a single row passed to the {@link executeGetPermissions} function of a sync table.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface ExecuteGetPermissionsRequestRow<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
+    /**
+     * A row for which to fetch permissions. This rows has been retrieved from the {@link execute} function
+     */
+    row: ObjectSchemaDefinitionType<K, L, SchemaT>;
+}
+/**
+ * Type definition for the data passed to the {@link executeGetPermissions} function of a sync table.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface ExecuteGetPermissionsRequest<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
+    /**
+     * The list of rows for which to fetch permissions.
+     */
+    rows: Array<ExecuteGetPermissionsRequestRow<K, L, SchemaT>>;
+}
+/**
+ * Generic type definition for the data passed to the {@link executeGetPermissions} function of a sync table.
+ *
+ * @hidden
+ */
+export type GenericExecuteGetPermissionsRequest = ExecuteGetPermissionsRequest<any, any, any>;
+/**
  * Inputs for creating the formula that implements a sync table.
  */
 export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>> extends CommonPackFormulaDef<ParamDefsT> {
@@ -674,6 +719,22 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
      * @hidden
      */
     updateOptions?: Pick<CommonPackFormulaDef<ParamDefsT>, 'extraOAuthScopes'>;
+    /**
+     * The JavaScript function that implements fetching permissions for a set of objects
+     * if the objects in this sync table have permissions in the external system.
+     *
+     * TODO(sam): Unhide this
+     * @hidden
+     */
+    executeGetPermissions?(params: ParamValues<ParamDefsT>, request: ExecuteGetPermissionsRequest<K, L, SchemaT>, context: GetPermissionExecutionContext): Promise<GetPermissionsResult>;
+    /**
+     * If the table implements {@link executeGetPermissions} the maximum number of rows that will be sent to that
+     * function in a single batch. Defaults to 10 if not specified.
+     *
+     * TODO(sam): Unhide this
+     * @hidden
+     */
+    maxPermissionBatchSize?: number;
 }
 /**
  * The result of defining the formula that implements a sync table.
@@ -686,6 +747,11 @@ export type SyncFormula<K extends string, L extends string, ParamDefsT extends P
     isSyncFormula: true;
     schema?: ArraySchema;
     supportsUpdates?: boolean;
+    /**
+     * TODO(sam): Unhide this
+     * @hidden
+     */
+    supportsGetPermissions?: boolean;
 };
 /**
  * @deprecated

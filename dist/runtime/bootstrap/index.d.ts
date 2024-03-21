@@ -3,6 +3,7 @@ import type { FetchRequest } from '../../api_types';
 import type { FetchResponse } from '../../api_types';
 import type { Fetcher } from '../../api_types';
 import type { FormulaSpecification } from '../types';
+import type { GenericExecuteGetPermissionsRequest } from '../../api';
 import type { InvocationLocation } from '../../api_types';
 import type { Isolate } from 'isolated-vm';
 import type { IsolateOptions } from 'isolated-vm';
@@ -36,10 +37,11 @@ export declare function injectFetcherFunction(context: Context, stubName: string
 /**
  * Actually execute the pack function inside the isolate by loading and passing control to the thunk.
  */
-export declare function executeThunk<T extends FormulaSpecification>(context: Context, { params, formulaSpec, updates, }: {
+export declare function executeThunk<T extends FormulaSpecification>(context: Context, { params, formulaSpec, updates, permissionRequest, }: {
     params: ParamValues<ParamDefs>;
     formulaSpec: T;
     updates?: Array<SyncUpdate<any, any, any>>;
+    permissionRequest?: GenericExecuteGetPermissionsRequest;
 }, packBundlePath: string, packBundleSourceMapPath: string): Promise<PackFunctionResponse<T>>;
 export declare function injectSerializer(context: Context, stubName: string): Promise<void>;
 /**

@@ -1232,6 +1232,81 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
   // TODO(dweitzman): Only support options in the typing when the codaType is ValueHintType.SelectList.
 }
 
+/**
+ * The type of principal that can be applied to a permission.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export enum PrincipalType {
+  User = 'user',
+  Group = 'group',
+  Anyone = 'anyone',
+}
+
+/**
+ * This represents a principal that is a single user.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface UserPrincipal {
+  type: PrincipalType.User;
+  userId: string | number;
+}
+
+/**
+ * This represents a principal that is a group of users.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface GroupPrincipal {
+  type: PrincipalType.Group;
+  groupId: string | number;
+}
+
+/**
+ * This represents a principal corresponding to anyone
+ *
+ * Generally this would apply to an entity where anyone with access to the url can view the item
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface AnyonePrincipal {
+  type: PrincipalType.Anyone;
+}
+
+/**
+ * This represents a principal that can be granted access.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+type Principal = UserPrincipal | GroupPrincipal | AnyonePrincipal;
+
+/**
+ * This represents the definition of a permission in the external system.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface Permission {
+  principal: Principal;
+}
+
+/**
+ * This represents the list of permissions on a sync table row.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface RowAccessDefinition {
+  permissions: Permission[];
+  rowId: string | number;
+}
+
 export type ObjectSchemaDefinitionType<
   K extends string,
   L extends string,

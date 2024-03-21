@@ -129,6 +129,7 @@ export const Limits = {
   ColumnMatcherRegex: 300,
   NumColumnMatchersPerFormat: 10,
   NetworkDomainUrl: 253,
+  PermissionsBatchSize: 1000,
   UpdateBatchSize: 1000,
 };
 
@@ -1516,7 +1517,10 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
   });
 
   const syncFormulaSchema = zodCompleteObject<
-    Omit<SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>>, 'execute' | 'executeUpdate'>
+    Omit<
+      SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>>,
+      'execute' | 'executeUpdate' | 'executeGetPermissions'
+    >
   >({
     schema: arrayPropertySchema.optional(),
     resultType: z.any(),
@@ -1525,6 +1529,8 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     supportsUpdates: z.boolean().optional(),
     ...commonPackFormulaSchema,
     updateOptions: z.strictObject({extraOAuthScopes: commonPackFormulaSchema.extraOAuthScopes}).optional(),
+    maxPermissionBatchSize: z.number().min(1).max(Limits.PermissionsBatchSize).optional(),
+    supportsGetPermissions: z.boolean().optional(),
   });
 
   const baseSyncTableSchema = {
