@@ -906,7 +906,7 @@ export type PropertyIdentifier<K extends string = string> = K | string | Propert
  * The {@link ObjectSchemaDefinition} properties that reference keys in the `properties` object. These should all be
  * {@link PropertyIdentifier} types.
  */
-export type ObjectSchemaPathProperties = Pick<GenericObjectSchema, 'titleProperty' | 'linkProperty' | 'imageProperty' | 'snippetProperty' | 'subtitleProperties' | 'createdAtProperty' | 'createdByProperty' | 'modifiedAtProperty' | 'modifiedByProperty' | 'userEmailProperty' | 'userIdProperty'>;
+export type ObjectSchemaPathProperties = Pick<GenericObjectSchema, 'titleProperty' | 'linkProperty' | 'imageProperty' | 'snippetProperty' | 'subtitleProperties' | 'createdAtProperty' | 'createdByProperty' | 'modifiedAtProperty' | 'modifiedByProperty' | 'userEmailProperty' | 'userIdProperty' | 'groupIdProperty'>;
 /**
  * A schema definition for an object value (a value with key-value pairs).
  */
@@ -1057,6 +1057,8 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      * For cases where the object being synced represents a user, the name of the property within
      * {@link ObjectSchemaDefinition.properties} that identifies the email address of the user.
      *
+     * This is required for sync tables with role {@link TableRole.User}
+     *
      * Must be a {@link ValueType.String} property with the {@link ValueHintType.Email} hint or
      * a {@link ValueType.Object} with the {@link ValueHintType.Person} hint
      * @hidden
@@ -1067,10 +1069,22 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      * {@link ObjectSchemaDefinition.properties} that identifies the id of the user in the service
      * being synced from.
      *
+     * This is required for sync tables with role {@link TableRole.User} or {@link TableRole.GroupMembers}
      * Must be a {@link ValueType.String} or {@link ValueType.Number} property
      * @hidden
      */
     userIdProperty?: PropertyIdentifier<K>;
+    /**
+     * For cases where the object being synced represents a grou, the name of the property within
+     * {@link ObjectSchemaDefinition.properties} that identifies the id of the group in the service
+     * being synced from.
+     *
+     * This is required for sync tables with role {@link TableRole.GroupMembers}
+     *
+     * Must be a {@link ValueType.String} or {@link ValueType.Number} property
+     * @hidden
+     */
+    groupIdProperty?: PropertyIdentifier<K>;
 }
 /**
  * The type of principal that can be applied to a permission.
