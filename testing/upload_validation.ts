@@ -1157,6 +1157,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       modifiedByProperty: propertySchema.optional(),
       userIdProperty: propertySchema.optional(),
       userEmailProperty: propertySchema.optional(),
+      groupIdProperty: propertySchema.optional(),
       options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
       requireForUpdates: z.boolean().optional(),
       autocomplete:
@@ -1430,6 +1431,15 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
           );
         };
 
+        const validateGroupIdProperty = () => {
+          return validateProperty(
+            'groupIdProperty',
+            groupIdPropertySchema =>
+              groupIdPropertySchema.type === ValueType.String || groupIdPropertySchema.type === ValueType.Number,
+            `must refer to a "ValueType.String" or "ValueType.Number".`,
+          );
+        };
+
         validateTitleProperty();
         validateLinkProperty();
         validateImageProperty();
@@ -1441,6 +1451,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
         validateModifiedByProperty();
         validateUserEmailProperty();
         validateUserIdProperty();
+        validateGroupIdProperty();
       })
       .superRefine((data, context) => {
         const schemaHelper = objectSchemaHelper(data as GenericObjectSchema);

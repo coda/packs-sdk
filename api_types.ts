@@ -991,4 +991,5 @@ export type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]>
 
 export enum TableRole {
   Users = 'users',
+  GroupMembers = 'groupMembers',
 }

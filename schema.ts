@@ -1059,6 +1059,7 @@ export type ObjectSchemaPathProperties = Pick<
   | 'modifiedByProperty'
   | 'userEmailProperty'
   | 'userIdProperty'
+  | 'groupIdProperty'
 >;
 
 /**
@@ -1215,6 +1216,8 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    * For cases where the object being synced represents a user, the name of the property within
    * {@link ObjectSchemaDefinition.properties} that identifies the email address of the user.
    *
+   * This is required for sync tables with role {@link TableRole.User}
+   *
    * Must be a {@link ValueType.String} property with the {@link ValueHintType.Email} hint or
    * a {@link ValueType.Object} with the {@link ValueHintType.Person} hint
    * @hidden
@@ -1225,10 +1228,22 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    * {@link ObjectSchemaDefinition.properties} that identifies the id of the user in the service
    * being synced from.
    *
+   * This is required for sync tables with role {@link TableRole.User} or {@link TableRole.GroupMembers}
    * Must be a {@link ValueType.String} or {@link ValueType.Number} property
    * @hidden
    */
   userIdProperty?: PropertyIdentifier<K>;
+  /**
+   * For cases where the object being synced represents a grou, the name of the property within
+   * {@link ObjectSchemaDefinition.properties} that identifies the id of the group in the service
+   * being synced from.
+   *
+   * This is required for sync tables with role {@link TableRole.GroupMembers}
+   *
+   * Must be a {@link ValueType.String} or {@link ValueType.Number} property
+   * @hidden
+   */
+  groupIdProperty?: PropertyIdentifier<K>;
   // TODO(dweitzman): Only support options in the typing when the codaType is ValueHintType.SelectList.
 }
 
@@ -1851,6 +1866,7 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     modifiedByProperty,
     userEmailProperty,
     userIdProperty,
+    groupIdProperty,
     ...rest
   } = schema;
   // Have TS ensure we don't forget about new fields in this function.
@@ -1913,6 +1929,9 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
       : undefined,
     userIdProperty: userIdProperty
       ? normalizeSchemaPropertyIdentifier(userIdProperty, normalizedProperties)
+      : undefined,
+    groupIdProperty: groupIdProperty
+      ? normalizeSchemaPropertyIdentifier(groupIdProperty, normalizedProperties)
       : undefined,
     type: ValueType.Object,
   };
