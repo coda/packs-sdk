@@ -200,8 +200,8 @@ importers:
         specifier: 17.0.3
         version: 17.0.3
       '@types/uglify-js':
-        specifier: 3.17.2
-        version: 3.17.2
+        specifier: 3.17.5
+        version: 3.17.5
       '@types/url-parse':
         specifier: 1.4.9
         version: 1.4.9
@@ -2522,8 +2522,8 @@ packages:
       '@types/node': 18.19.18
     dev: true
 
-  /@types/uglify-js@3.17.2:
-    resolution: {integrity: sha512-9SjrHO54LINgC/6Ehr81NjAxAYvwEZqjUHLjJYvC4Nmr9jbLQCIZbWSvl4vXQkkmR1UAuaKDycau3O1kWGFyXQ==}
+  /@types/uglify-js@3.17.5:
+    resolution: {integrity: sha512-TU+fZFBTBcXj/GpDpDaBmgWk/gn96kMZ+uocaFUlV2f8a6WdMzzI44QBCmGcCiYR0Y6ZlNRiyUyKKt5nl/lbzQ==}
     dependencies:
       source-map: 0.6.1
     dev: true
@@ -5750,8 +5750,6 @@ packages:
     requiresBuild: true
     dependencies:
       prebuild-install: 7.1.1
-    transitivePeerDependencies:
-      - supports-color
     dev: false
     optional: true
 
