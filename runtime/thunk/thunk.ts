@@ -319,7 +319,7 @@ function findParentFormula(
     case FormulaType.Sync:
     case FormulaType.SyncUpdate:
       if (syncTables) {
-        const syncTable = syncTables.find(table => table.getter.name === formulaSpec.parentFormulaName);
+        const syncTable = syncTables.find(table => table.name === formulaSpec.parentFormulaName);
         formula = syncTable?.getter;
       }
       break;
