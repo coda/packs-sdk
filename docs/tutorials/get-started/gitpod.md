@@ -1,7 +1,7 @@
 ---
 nav: With Gitpod
 description: Build your first Pack using Gitpod and the CLI.
-icon: simple-gitpod
+icon: simple/gitpod
 ---
 
 # Get started with Gitpod
