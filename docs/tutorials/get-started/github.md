@@ -1,7 +1,7 @@
 ---
 nav: With GitHub
 description: Build your first Pack using GitHub Codespaces and the CLI.
-icon: octicons-mark-github-16
+icon: octicons/mark-github-16
 cSpell:words: Codespaces codespace
 ---
 
