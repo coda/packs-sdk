@@ -1913,13 +1913,14 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 */
 	userIdProperty?: PropertyIdentifier<K>;
 	/**
-	 * For cases where the object being synced represents a grou, the name of the property within
+	 * For cases where the object being synced represents a group, the name of the property within
 	 * {@link ObjectSchemaDefinition.properties} that identifies the id of the group in the service
 	 * being synced from.
 	 *
 	 * This is required for sync tables with role {@link TableRole.GroupMembers}
 	 *
 	 * Must be a {@link ValueType.String} or {@link ValueType.Number} property
+	 * TODO(sam): Unhide this
 	 * @hidden
 	 */
 	groupIdProperty?: PropertyIdentifier<K>;
