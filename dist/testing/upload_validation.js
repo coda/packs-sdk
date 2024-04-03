@@ -947,6 +947,7 @@ function buildMetadataSchema({ sdkVersion }) {
         modifiedByProperty: propertySchema.optional(),
         userIdProperty: propertySchema.optional(),
         userEmailProperty: propertySchema.optional(),
+        groupIdProperty: propertySchema.optional(),
         options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
         requireForUpdates: z.boolean().optional(),
         autocomplete: sdkVersion && semver_1.default.satisfies(sdkVersion, '<=1.4.0')
@@ -1136,6 +1137,9 @@ function buildMetadataSchema({ sdkVersion }) {
         const validateUserIdProperty = () => {
             return validateProperty('userIdProperty', userIdPropertySchema => userIdPropertySchema.type === schema_14.ValueType.String || userIdPropertySchema.type === schema_14.ValueType.Number, `must refer to a "ValueType.String" or "ValueType.Number".`);
         };
+        const validateGroupIdProperty = () => {
+            return validateProperty('groupIdProperty', groupIdPropertySchema => groupIdPropertySchema.type === schema_14.ValueType.String || groupIdPropertySchema.type === schema_14.ValueType.Number, `must refer to a "ValueType.String" or "ValueType.Number".`);
+        };
         validateTitleProperty();
         validateLinkProperty();
         validateImageProperty();
@@ -1147,6 +1151,7 @@ function buildMetadataSchema({ sdkVersion }) {
         validateModifiedByProperty();
         validateUserEmailProperty();
         validateUserIdProperty();
+        validateGroupIdProperty();
     })
         .superRefine((data, context) => {
         var _a;

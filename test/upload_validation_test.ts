@@ -4662,142 +4662,276 @@ describe('Pack metadata Validation', async () => {
   });
 
   describe('Specific entity tables validate required properties are present', () => {
-    it('Succeeds when all required fields are present for users', async () => {
-      const syncTable = makeSyncTable({
-        name: 'Users',
-        identityName: 'User',
-        role: TableRole.Users,
-        schema: makeObjectSchema({
-          idProperty: 'id',
-          displayProperty: 'email',
-          userEmailProperty: 'email',
-          userIdProperty: 'id',
-          properties: {
-            id: {type: ValueType.String},
-            email: {type: ValueType.String, codaType: ValueHintType.Email},
-          },
-        }),
-        formula: {
+    describe('TableRole: User', () => {
+      it('Succeeds when all required fields are present', async () => {
+        const syncTable = makeSyncTable({
           name: 'Users',
-          description: '',
-          async execute([], _context) {
-            return {result: []};
-          },
-          parameters: [],
-          examples: [],
-        },
-      });
-      const metadata = createFakePackVersionMetadata(
-        compilePackMetadata({
-          version: '1',
-          syncTables: [syncTable],
-          defaultAuthentication: {
-            type: AuthenticationType.None,
-          },
-        }),
-      );
-      await doValidateJson(metadata);
-    });
-
-    it('Fail when required fields are missing for users', async () => {
-      const syncTable = makeSyncTable({
-        name: 'Users',
-        identityName: 'User',
-        role: TableRole.Users,
-        schema: makeObjectSchema({
-          idProperty: 'email',
-          displayProperty: 'email',
-          userEmailProperty: 'email',
-          userIdProperty: 'id',
-          properties: {
-            email: {type: ValueType.String, codaType: ValueHintType.Email},
-          },
-        }),
-        formula: {
-          name: 'Users',
-          description: '',
-          async execute([], _context) {
-            return {result: []};
-          },
-          parameters: [],
-          examples: [],
-        },
-      });
-      const metadata = createFakePackVersionMetadata(
-        compilePackMetadata({
-          version: '1',
-          syncTables: [syncTable],
-          defaultAuthentication: {
-            type: AuthenticationType.None,
-          },
-        }),
-      );
-      await validateJsonAndAssertFails(metadata);
-    });
-
-    it('Fail when both required fields are missing for users', async () => {
-      assert.throws(
-        () =>
-          makeSyncTable({
-            name: 'Users',
-            identityName: 'User',
-            role: TableRole.Users,
-            schema: makeObjectSchema({
-              idProperty: 'email',
-              displayProperty: 'email',
-              properties: {
-                email: {type: ValueType.String, codaType: ValueHintType.Email},
-              },
-            }),
-            formula: {
-              name: 'Users',
-              description: '',
-              async execute([], _context) {
-                return {result: []};
-              },
-              parameters: [],
-              examples: [],
+          identityName: 'User',
+          role: TableRole.Users,
+          schema: makeObjectSchema({
+            idProperty: 'id',
+            displayProperty: 'email',
+            userEmailProperty: 'email',
+            userIdProperty: 'id',
+            properties: {
+              id: {type: ValueType.String},
+              email: {type: ValueType.String, codaType: ValueHintType.Email},
             },
           }),
-        'Sync table schemas with role users must set a userEmailProperty',
-      );
+          formula: {
+            name: 'Users',
+            description: '',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            examples: [],
+          },
+        });
+        const metadata = createFakePackVersionMetadata(
+          compilePackMetadata({
+            version: '1',
+            syncTables: [syncTable],
+            defaultAuthentication: {
+              type: AuthenticationType.None,
+            },
+          }),
+        );
+        await doValidateJson(metadata);
+      });
+
+      it('Fail when required fields are missing', async () => {
+        const syncTable = makeSyncTable({
+          name: 'Users',
+          identityName: 'User',
+          role: TableRole.Users,
+          schema: makeObjectSchema({
+            idProperty: 'email',
+            displayProperty: 'email',
+            userEmailProperty: 'email',
+            userIdProperty: 'id',
+            properties: {
+              email: {type: ValueType.String, codaType: ValueHintType.Email},
+            },
+          }),
+          formula: {
+            name: 'Users',
+            description: '',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            examples: [],
+          },
+        });
+        const metadata = createFakePackVersionMetadata(
+          compilePackMetadata({
+            version: '1',
+            syncTables: [syncTable],
+            defaultAuthentication: {
+              type: AuthenticationType.None,
+            },
+          }),
+        );
+        await validateJsonAndAssertFails(metadata);
+      });
+
+      it('Fail when both required fields are missing', async () => {
+        assert.throws(
+          () =>
+            makeSyncTable({
+              name: 'Users',
+              identityName: 'User',
+              role: TableRole.Users,
+              schema: makeObjectSchema({
+                idProperty: 'email',
+                displayProperty: 'email',
+                properties: {
+                  email: {type: ValueType.String, codaType: ValueHintType.Email},
+                },
+              }),
+              formula: {
+                name: 'Users',
+                description: '',
+                async execute([], _context) {
+                  return {result: []};
+                },
+                parameters: [],
+                examples: [],
+              },
+            }),
+          'Sync table schemas with role users must set a userEmailProperty',
+        );
+      });
+
+      it('Fail when fields are of the wrong type', async () => {
+        const syncTable = makeSyncTable({
+          name: 'Users',
+          identityName: 'User',
+          role: TableRole.Users,
+          schema: makeObjectSchema({
+            idProperty: 'id',
+            displayProperty: 'email',
+            userEmailProperty: 'email',
+            userIdProperty: 'id',
+            properties: {
+              id: {type: ValueType.String},
+              email: {type: ValueType.String},
+            },
+          }),
+          formula: {
+            name: 'Users',
+            description: '',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            examples: [],
+          },
+        });
+        const metadata = createFakePackVersionMetadata(
+          compilePackMetadata({
+            version: '1',
+            syncTables: [syncTable],
+            defaultAuthentication: {
+              type: AuthenticationType.None,
+            },
+          }),
+        );
+        await validateJsonAndAssertFails(metadata);
+      });
     });
 
-    it('Fail when fields are of the wrong type', async () => {
-      const syncTable = makeSyncTable({
-        name: 'Users',
-        identityName: 'User',
-        role: TableRole.Users,
-        schema: makeObjectSchema({
-          idProperty: 'id',
-          displayProperty: 'email',
-          userEmailProperty: 'email',
-          userIdProperty: 'id',
-          properties: {
-            id: {type: ValueType.String},
-            email: {type: ValueType.String},
+    describe('TableRole: Group Members', () => {
+      it('Succeeds when all required fields are present', async () => {
+        const syncTable = makeSyncTable({
+          name: 'GroupMembers',
+          identityName: 'GroupMembers',
+          role: TableRole.GroupMembers,
+          schema: makeObjectSchema({
+            idProperty: 'id',
+            displayProperty: 'id',
+            groupIdProperty: 'id',
+            userIdProperty: 'userId',
+            properties: {
+              id: {type: ValueType.String},
+              userId: {type: ValueType.String},
+            },
+          }),
+          formula: {
+            name: 'GroupMembers',
+            description: '',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            examples: [],
           },
-        }),
-        formula: {
-          name: 'Users',
-          description: '',
-          async execute([], _context) {
-            return {result: []};
-          },
-          parameters: [],
-          examples: [],
-        },
+        });
+        const metadata = createFakePackVersionMetadata(
+          compilePackMetadata({
+            version: '1',
+            syncTables: [syncTable],
+            defaultAuthentication: {
+              type: AuthenticationType.None,
+            },
+          }),
+        );
+        await doValidateJson(metadata);
       });
-      const metadata = createFakePackVersionMetadata(
-        compilePackMetadata({
-          version: '1',
-          syncTables: [syncTable],
-          defaultAuthentication: {
-            type: AuthenticationType.None,
+
+      it('Fail when required fields are missing', async () => {
+        assert.throws(
+          () =>
+            makeSyncTable({
+              name: 'GroupMembers',
+              identityName: 'GroupMembers',
+              role: TableRole.GroupMembers,
+              schema: makeObjectSchema({
+                idProperty: 'id',
+                groupIdProperty: 'id',
+                properties: {
+                  id: {type: ValueType.String},
+                },
+              }),
+              formula: {
+                name: 'GroupMembers',
+                description: '',
+                async execute([], _context) {
+                  return {result: []};
+                },
+                parameters: [],
+                examples: [],
+              },
+            }),
+          'Sync table schemas with role groupMembers must set a userIdProperty',
+        );
+      });
+
+      it('Fail when both required fields are missing', async () => {
+        assert.throws(
+          () =>
+            makeSyncTable({
+              name: 'GroupMembers',
+              identityName: 'GroupMembers',
+              role: TableRole.GroupMembers,
+              schema: makeObjectSchema({
+                idProperty: 'name',
+                displayProperty: 'name',
+                properties: {
+                  name: {type: ValueType.String},
+                },
+              }),
+              formula: {
+                name: 'GroupMembers',
+                description: '',
+                async execute([], _context) {
+                  return {result: []};
+                },
+                parameters: [],
+                examples: [],
+              },
+            }),
+          'Sync table schemas with role groupMembers must set a groupIdProperty',
+        );
+      });
+
+      it('Fail when fields are of the wrong type', async () => {
+        const syncTable = makeSyncTable({
+          name: 'GroupMembers',
+          identityName: 'GroupMembers',
+          role: TableRole.GroupMembers,
+          schema: makeObjectSchema({
+            idProperty: 'id',
+            displayProperty: 'id',
+            groupIdProperty: 'id',
+            userIdProperty: 'email',
+            properties: {
+              id: {type: ValueType.Boolean},
+              email: {type: ValueType.String},
+            },
+          }),
+          formula: {
+            name: 'GroupMembers',
+            description: '',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            examples: [],
           },
-        }),
-      );
-      await validateJsonAndAssertFails(metadata);
+        });
+        const metadata = createFakePackVersionMetadata(
+          compilePackMetadata({
+            version: '1',
+            syncTables: [syncTable],
+            defaultAuthentication: {
+              type: AuthenticationType.None,
+            },
+          }),
+        );
+        await validateJsonAndAssertFails(metadata);
+      });
     });
   });
 });

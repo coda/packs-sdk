@@ -827,6 +827,14 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
             throw new Error(`Sync table schemas with role ${api_types_5.TableRole.Users} must set a userIdProperty`);
         }
     }
+    if (role === api_types_5.TableRole.GroupMembers) {
+        if (!schemaDef.groupIdProperty) {
+            throw new Error(`Sync table schemas with role ${api_types_5.TableRole.GroupMembers} must set a groupIdProperty`);
+        }
+        if (!schemaDef.userIdProperty) {
+            throw new Error(`Sync table schemas with role ${api_types_5.TableRole.GroupMembers} must set a userIdProperty`);
+        }
+    }
     const getSchema = wrapGetSchema(wrapMetadataFunction(getSchemaDef));
     const schema = (0, schema_3.makeObjectSchema)(schemaDef);
     let namedPropertyOptions = moveJsPropertyOptionsFunctionsToFormulas({

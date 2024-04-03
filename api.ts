@@ -2281,6 +2281,16 @@ export function makeSyncTable<
     }
   }
 
+  if (role === TableRole.GroupMembers) {
+    if (!schemaDef.groupIdProperty) {
+      throw new Error(`Sync table schemas with role ${TableRole.GroupMembers} must set a groupIdProperty`);
+    }
+
+    if (!schemaDef.userIdProperty) {
+      throw new Error(`Sync table schemas with role ${TableRole.GroupMembers} must set a userIdProperty`);
+    }
+  }
+
   const getSchema = wrapGetSchema(wrapMetadataFunction(getSchemaDef));
   const schema = makeObjectSchema<K, L, SchemaDefT>(schemaDef) as SchemaT;
 
