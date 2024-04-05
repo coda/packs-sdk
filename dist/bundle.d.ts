@@ -228,6 +228,8 @@ export interface ParamDef<T extends UnionType> {
 	 * The suggested value to be prepopulated for this parameter if it is not specified by the user.
 	 */
 	suggestedValue?: SuggestedValueType<T>;
+	/** @hidden */
+	crawlStrategy?: CrawlStrategy;
 }
 /**
  * Marker type for an optional {@link ParamDef}, used internally.
@@ -263,6 +265,17 @@ export type ParamValues<ParamDefsT extends ParamDefs> = {
  * The type of values that are allowable to be used as a {@link ParamDef.suggestedValue} for a parameter.
  */
 export type SuggestedValueType<T extends UnionType> = T extends ArrayType<Type.date> ? TypeOfMap<T> | PrecannedDateRange : TypeOfMap<T>;
+/** @hidden */
+export interface CrawlStrategy {
+	parentTable?: SyncTableRelation;
+}
+/**
+ * A pointer to a particular property in another sync table.
+ */
+export interface SyncTableRelation {
+	tableName: string;
+	propertyKey: string;
+}
 /**
  * Inputs for creating a formula that are common between regular formulas and sync table formulas.
  */
@@ -592,6 +605,14 @@ export interface Sync {
  */
 export type UpdateSync = Omit<Sync, "continuation">;
 /**
+ * Information about the current sync, part of the {@link GetPermissionExecutionContext} passed to the
+ * `executeGetPermissions` function of the sync formula.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export type GetPermissionsSync = Omit<Sync, "continuation">;
+/**
  * Information about the Coda environment and doc this formula was invoked from, for Coda internal use.
  */
 export interface InvocationLocation {
@@ -693,6 +714,18 @@ export interface UpdateSyncExecutionContext extends ExecutionContext {
 	readonly sync: UpdateSync;
 }
 /**
+ * Context provided to GetPermissionExecution calls
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface GetPermissionExecutionContext extends ExecutionContext {
+	/**
+	 * Information about state of the current sync
+	 */
+	readonly sync: GetPermissionsSync;
+}
+/**
  * Special "live" date range values that can be used as the {@link ParamDef.suggestedValue}
  * for a date array parameter.
  *
@@ -775,6 +808,9 @@ export type PropertyOptionsMetadataResult<ResultT extends PackFormulaResult[]> =
  * A JavaScript function for property options.
  */
 export type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]> = (context: PropertyOptionsExecutionContext) => Promise<PropertyOptionsMetadataResult<ResultT>> | PropertyOptionsMetadataResult<ResultT>;
+declare enum TableRole {
+	Users = "users"
+}
 /**
  * The set of primitive value types that can be used as return values for formulas
  * or in object schemas.
@@ -1818,6 +1854,122 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 * {@link ValueHintType.ImageAttachment} or {@link ValueHintType.ImageReference} hints
 	 */
 	imageProperty?: PropertyIdentifier<K>;
+	/**
+	 * The name of a property within {@link ObjectSchemaDefinition.properties} that can be interpreted as the creation
+	 * datetime of the object.
+	 *
+	 * Must be a {@link ValueType.String} or {@link ValueType.Number} property with the
+	 * {@link ValueHintType.Date} or {@link ValueHintType.DateTime} hints
+	 * @hidden
+	 */
+	createdAtProperty?: PropertyIdentifier<K>;
+	/**
+	 * The name of a property within {@link ObjectSchemaDefinition.properties} that can be interpreted as the creator
+	 * of the object.
+	 *
+	 * Must be a {@link ValueType.String} property with the {@link ValueHintType.Email} hint or
+	 * a {@link ValueType.Object} with the {@link ValueHintType.Person} hint
+	 * @hidden
+	 */
+	createdByProperty?: PropertyIdentifier<K>;
+	/**
+	 * The name of a property within {@link ObjectSchemaDefinition.properties} that can be interpreted as the last
+	 * modified datetime of the object.
+	 *
+	 * Must be a {@link ValueType.String} or {@link ValueType.Number} property with the
+	 * {@link ValueHintType.Date} or {@link ValueHintType.DateTime} hints
+	 * @hidden
+	 */
+	modifiedAtProperty?: PropertyIdentifier<K>;
+	/**
+	 * The name of a property within {@link ObjectSchemaDefinition.properties} that can be interpreted as the last
+	 * modifier of the object.
+	 *
+	 * Must be a {@link ValueType.String} property with the {@link ValueHintType.Email} hint or
+	 * a {@link ValueType.Object} with the {@link ValueHintType.Person} hint
+	 * @hidden
+	 */
+	modifiedByProperty?: PropertyIdentifier<K>;
+	/**
+	 * For cases where the object being synced represents a user, the name of the property within
+	 * {@link ObjectSchemaDefinition.properties} that identifies the email address of the user.
+	 *
+	 * Must be a {@link ValueType.String} property with the {@link ValueHintType.Email} hint or
+	 * a {@link ValueType.Object} with the {@link ValueHintType.Person} hint
+	 * @hidden
+	 */
+	userEmailProperty?: PropertyIdentifier<K>;
+	/**
+	 * For cases where the object being synced represents a user, the name of the property within
+	 * {@link ObjectSchemaDefinition.properties} that identifies the id of the user in the service
+	 * being synced from.
+	 *
+	 * Must be a {@link ValueType.String} or {@link ValueType.Number} property
+	 * @hidden
+	 */
+	userIdProperty?: PropertyIdentifier<K>;
+}
+declare enum PrincipalType {
+	User = "user",
+	Group = "group",
+	Anyone = "anyone"
+}
+/**
+ * This represents a principal that is a single user.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface UserPrincipal {
+	type: PrincipalType.User;
+	userId: string | number;
+}
+/**
+ * This represents a principal that is a group of users.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface GroupPrincipal {
+	type: PrincipalType.Group;
+	groupId: string | number;
+}
+/**
+ * This represents a principal corresponding to anyone
+ *
+ * Generally this would apply to an entity where anyone with access to the url can view the item
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface AnyonePrincipal {
+	type: PrincipalType.Anyone;
+}
+/**
+ * This represents a principal that can be granted access.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export type Principal = UserPrincipal | GroupPrincipal | AnyonePrincipal;
+/**
+ * This represents the definition of a permission in the external system.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface Permission {
+	principal: Principal;
+}
+/**
+ * This represents the list of permissions on a sync table row.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface RowAccessDefinition {
+	permissions: Permission[];
+	rowId: string | number;
 }
 export type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
 /** @hidden */
@@ -2380,6 +2532,11 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
 	 * @hidden
 	 */
 	namedPropertyOptions?: SyncTablePropertyOptions;
+	/**
+	 * See {@link SyncTableOptions.role}
+	 * @hidden
+	 */
+	role?: TableRole;
 }
 /**
  * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
@@ -2684,6 +2841,43 @@ export interface SyncUpdateResultMarshaled<K extends string, L extends string, S
  */
 export type GenericSyncUpdateResultMarshaled = SyncUpdateResultMarshaled<any, any, any>;
 /**
+ * Type definition for the result of calls to {@link executeGetPermissions}.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface GetPermissionsResult {
+	/**
+	 * The access definition for each row that was passed to {@link executeGetPermissions}.
+	 *
+	 */
+	rowAccessDefinitions: RowAccessDefinition[];
+}
+/**
+ * Type definition for a single row passed to the {@link executeGetPermissions} function of a sync table.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface ExecuteGetPermissionsRequestRow<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
+	/**
+	 * A row for which to fetch permissions. This rows has been retrieved from the {@link execute} function
+	 */
+	row: ObjectSchemaDefinitionType<K, L, SchemaT>;
+}
+/**
+ * Type definition for the data passed to the {@link executeGetPermissions} function of a sync table.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface ExecuteGetPermissionsRequest<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
+	/**
+	 * The list of rows for which to fetch permissions.
+	 */
+	rows: Array<ExecuteGetPermissionsRequestRow<K, L, SchemaT>>;
+}
+/**
  * Inputs for creating the formula that implements a sync table.
  */
 export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>> extends CommonPackFormulaDef<ParamDefsT> {
@@ -2716,6 +2910,22 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
 	 * @hidden
 	 */
 	updateOptions?: Pick<CommonPackFormulaDef<ParamDefsT>, "extraOAuthScopes">;
+	/**
+	 * The JavaScript function that implements fetching permissions for a set of objects
+	 * if the objects in this sync table have permissions in the external system.
+	 *
+	 * TODO(sam): Unhide this
+	 * @hidden
+	 */
+	executeGetPermissions?(params: ParamValues<ParamDefsT>, request: ExecuteGetPermissionsRequest<K, L, SchemaT>, context: GetPermissionExecutionContext): Promise<GetPermissionsResult>;
+	/**
+	 * If the table implements {@link executeGetPermissions} the maximum number of rows that will be sent to that
+	 * function in a single batch. Defaults to 10 if not specified.
+	 *
+	 * TODO(sam): Unhide this
+	 * @hidden
+	 */
+	maxPermissionBatchSize?: number;
 }
 /**
  * The result of defining the formula that implements a sync table.
@@ -2728,6 +2938,11 @@ export type SyncFormula<K extends string, L extends string, ParamDefsT extends P
 	isSyncFormula: true;
 	schema?: ArraySchema;
 	supportsUpdates?: boolean;
+	/**
+	 * TODO(sam): Unhide this
+	 * @hidden
+	 */
+	supportsGetPermissions?: boolean;
 };
 /**
  * Creates a formula definition.
@@ -3124,6 +3339,13 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
 	 * sync tables that have a dynamic schema.
 	 */
 	dynamicOptions?: DynamicOptions;
+	/**
+	 * Used to indicate that the entities in this table have a specific semantic meaning,
+	 * for example, that the rows being synced each represent a user.
+	 *
+	 * @hidden
+	 */
+	role?: TableRole;
 }
 /**
  * Options provided when defining a dynamic sync table.
@@ -3264,7 +3486,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
  */
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaDefT extends ObjectSchemaDefinition<K, L>, SchemaT extends SchemaDefT & {
 	identity?: Identity;
-}>({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT>;
+}>({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions, role, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT>;
 /**
  * Creates a dynamic sync table definition.
  *

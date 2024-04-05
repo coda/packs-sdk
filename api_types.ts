@@ -335,6 +335,10 @@ export interface ParamDef<T extends UnionType> {
    * The suggested value to be prepopulated for this parameter if it is not specified by the user.
    */
   suggestedValue?: SuggestedValueType<T>;
+
+  // TODO(patrick): Unhide this
+  /** @hidden */
+  crawlStrategy?: CrawlStrategy;
 }
 
 /**
@@ -390,6 +394,22 @@ export type ParamValues<ParamDefsT extends ParamDefs> = {
 export type SuggestedValueType<T extends UnionType> = T extends ArrayType<Type.date>
   ? TypeOfMap<T> | PrecannedDateRange
   : TypeOfMap<T>;
+
+// TODO(patrick): Unhide this
+/** @hidden */
+export interface CrawlStrategy {
+  parentTable?: SyncTableRelation;
+
+  // TODO(patrick): add more options here for date ranges, etc
+}
+
+/**
+ * A pointer to a particular property in another sync table.
+ */
+interface SyncTableRelation {
+  tableName: string;
+  propertyKey: string;
+}
 
 /**
  * Inputs for creating a formula that are common between regular formulas and sync table formulas.
@@ -728,6 +748,15 @@ export interface Sync {
  */
 export type UpdateSync = Omit<Sync, 'continuation'>;
 
+/**
+ * Information about the current sync, part of the {@link GetPermissionExecutionContext} passed to the
+ * `executeGetPermissions` function of the sync formula.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export type GetPermissionsSync = Omit<Sync, 'continuation'>;
+
 export type LoggerParamType = string | number | boolean | Record<any, any>;
 
 export interface Logger {
@@ -845,6 +874,19 @@ export interface UpdateSyncExecutionContext extends ExecutionContext {
   readonly sync: UpdateSync;
 }
 
+/**
+ * Context provided to GetPermissionExecution calls
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface GetPermissionExecutionContext extends ExecutionContext {
+  /**
+   * Information about state of the current sync
+   */
+  readonly sync: GetPermissionsSync;
+}
+
 // A mapping exists in coda that allows these to show up in the UI.
 // If adding new values here, add them to that mapping and vice versa.
 /**
@@ -946,3 +988,7 @@ export type PropertyOptionsMetadataResult<ResultT extends PackFormulaResult[]> =
 export type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]> = (
   context: PropertyOptionsExecutionContext,
 ) => Promise<PropertyOptionsMetadataResult<ResultT>> | PropertyOptionsMetadataResult<ResultT>;
+
+export enum TableRole {
+  Users = 'users',
+}

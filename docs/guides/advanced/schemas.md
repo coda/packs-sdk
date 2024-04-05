@@ -359,7 +359,7 @@ pack.addFormula({
 
 To ensure compatibility with the Coda Formula Language and consistency across Packs, all property names are normalized to a standard format before they are shown to the user. This process removes all punctuation and whitespace and reformats the name to upper camel case (AKA PascalCase). For example, `fooBar`, `foo_bar`, and `foo bar` will all be normalized to `FooBar`. This normalization happens after your Pack is run, and you should refer to the non-normalized property names throughout your code.
 
-The normalized name of a property is shown in the formula editor, but it also impacts the display name of that property elsewhere in the doc. In the hover dialog and in sync table columns the normalized name is again converted, this time from upper camel case to space-separated. For example, the normalized property `FooBar` will be displayed as "Foo Bar".
+The normalized name of a property is shown in the formula editor, but it also impacts the display name of that property elsewhere in the doc. In the hover dialog and in sync table columns the normalized name is again converted, this time from upper camel case to space-separated. For example, the normalized property `FooBar` will be displayed as "Foo Bar". See the section [Column Names](#column-names) to learn how to explicitly set column names and preserve special characters.
 
 
 ### Data attribution {: #attribution}
@@ -545,6 +545,30 @@ for (let customField of customFeilds) {
   }
 }
 ```
+
+
+### Column names {: #column-names}
+
+By default sync table column names are derived from the [normalized name](#normalization) of the corresponding schema property. For example, a property with the key `contact_email` would be normalized to the property name `ContactEmail` which would result in a column named "Contact email". This is just the default name for the column however, and users can later rename it in their doc if they so desire.
+
+While these automatically derived column names are convenient, they can result in some strange column names when the original property key contains punctuation, special characters, or a mixture of casing. For example, a property key of `iPhone_version` will end up as a column named "I phone version".
+
+You can more accurately control the resulting column name for a property by setting the `displayName` field of the property.
+
+```{.ts hl_lines="5"}
+let DeviceSchema = coda.makeObjectSchema({
+  properties: {
+    iPhone_version: {
+      type: coda.ValueType.String,
+      displayName: "iPhone version",
+    },
+    // ...
+  },
+  // ...
+});
+```
+
+This display name will only be used to set the default column name for that property, and the normalized name will still be shown in other contexts. Changes to the `displayName` will rename existing columns upon their next sync, as long as the user hasn't manually changed the column name.
 
 
 ## Schemas in cards {: #cards}

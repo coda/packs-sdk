@@ -6,26 +6,28 @@ const api_types_2 = require("./api_types");
 const api_types_3 = require("./api_types");
 const api_types_4 = require("./api_types");
 const api_types_5 = require("./api_types");
+const api_types_6 = require("./api_types");
 const schema_1 = require("./schema");
 const schema_2 = require("./schema");
 const ensure_1 = require("./helpers/ensure");
-const api_types_6 = require("./api_types");
 const api_types_7 = require("./api_types");
+const api_types_8 = require("./api_types");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_2 = require("./helpers/ensure");
-const api_types_8 = require("./api_types");
+const api_types_9 = require("./api_types");
 const handler_templates_1 = require("./handler_templates");
 const handler_templates_2 = require("./handler_templates");
-const api_types_9 = require("./api_types");
 const api_types_10 = require("./api_types");
+const api_types_11 = require("./api_types");
 const object_utils_2 = require("./helpers/object_utils");
 const schema_3 = require("./schema");
 const schema_4 = require("./schema");
 const schema_5 = require("./schema");
-const api_types_11 = require("./api_types");
-const migration_1 = require("./helpers/migration");
-const api_types_12 = require("./api_types");
 const schema_6 = require("./schema");
+const api_types_12 = require("./api_types");
+const migration_1 = require("./helpers/migration");
+const api_types_13 = require("./api_types");
+const schema_7 = require("./schema");
 /**
  * An error whose message will be shown to the end user in the UI when it occurs.
  * If an error is encountered in a formula and you want to describe the error
@@ -226,7 +228,7 @@ exports.wrapGetSchema = wrapGetSchema;
  * ```
  */
 function makeParameter(paramDefinition) {
-    const { type, autocomplete: autocompleteDefOrItems, ...rest } = paramDefinition;
+    const { type, autocomplete: autocompleteDefOrItems, crawlStrategy: crawlStrategyDef, ...rest } = paramDefinition;
     const actualType = api_types_4.ParameterTypeInputMap[type];
     let autocomplete;
     if (Array.isArray(autocompleteDefOrItems)) {
@@ -236,77 +238,92 @@ function makeParameter(paramDefinition) {
     else {
         autocomplete = wrapMetadataFunction(autocompleteDefOrItems);
     }
-    return Object.freeze({ ...rest, autocomplete, type: actualType });
+    let crawlStrategy;
+    if (crawlStrategyDef) {
+        if (crawlStrategyDef.parentTable) {
+            const { tableName, propertyKey } = crawlStrategyDef.parentTable;
+            crawlStrategy = {
+                parentTable: {
+                    tableName,
+                    propertyKey: (0, schema_6.normalizeSchemaKey)(propertyKey),
+                },
+            };
+        }
+        else {
+            crawlStrategy = crawlStrategyDef;
+        }
+    }
+    return Object.freeze({ ...rest, autocomplete, type: actualType, crawlStrategy });
 }
 exports.makeParameter = makeParameter;
 /** @deprecated */
 function makeStringParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_5.Type.string });
+    return Object.freeze({ ...args, name, description, type: api_types_6.Type.string });
 }
 exports.makeStringParameter = makeStringParameter;
 /** @deprecated */
 function makeStringArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_12.stringArray });
+    return Object.freeze({ ...args, name, description, type: api_types_13.stringArray });
 }
 exports.makeStringArrayParameter = makeStringArrayParameter;
 /** @deprecated */
 function makeNumericParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_5.Type.number });
+    return Object.freeze({ ...args, name, description, type: api_types_6.Type.number });
 }
 exports.makeNumericParameter = makeNumericParameter;
 /** @deprecated */
 function makeNumericArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_11.numberArray });
+    return Object.freeze({ ...args, name, description, type: api_types_12.numberArray });
 }
 exports.makeNumericArrayParameter = makeNumericArrayParameter;
 /** @deprecated */
 function makeBooleanParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_5.Type.boolean });
+    return Object.freeze({ ...args, name, description, type: api_types_6.Type.boolean });
 }
 exports.makeBooleanParameter = makeBooleanParameter;
 /** @deprecated */
 function makeBooleanArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_6.booleanArray });
+    return Object.freeze({ ...args, name, description, type: api_types_7.booleanArray });
 }
 exports.makeBooleanArrayParameter = makeBooleanArrayParameter;
 /** @deprecated */
 function makeDateParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_5.Type.date });
+    return Object.freeze({ ...args, name, description, type: api_types_6.Type.date });
 }
 exports.makeDateParameter = makeDateParameter;
 /** @deprecated */
 function makeDateArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_7.dateArray });
+    return Object.freeze({ ...args, name, description, type: api_types_8.dateArray });
 }
 exports.makeDateArrayParameter = makeDateArrayParameter;
 /** @deprecated */
 function makeHtmlParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_5.Type.html });
+    return Object.freeze({ ...args, name, description, type: api_types_6.Type.html });
 }
 exports.makeHtmlParameter = makeHtmlParameter;
 /** @deprecated */
 function makeHtmlArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_9.htmlArray });
+    return Object.freeze({ ...args, name, description, type: api_types_10.htmlArray });
 }
 exports.makeHtmlArrayParameter = makeHtmlArrayParameter;
 /** @deprecated */
 function makeImageParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_5.Type.image });
+    return Object.freeze({ ...args, name, description, type: api_types_6.Type.image });
 }
 exports.makeImageParameter = makeImageParameter;
 /** @deprecated */
 function makeImageArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_10.imageArray });
+    return Object.freeze({ ...args, name, description, type: api_types_11.imageArray });
 }
 exports.makeImageArrayParameter = makeImageArrayParameter;
 /** @deprecated */
 function makeFileParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_5.Type.file });
+    return Object.freeze({ ...args, name, description, type: api_types_6.Type.file });
 }
 exports.makeFileParameter = makeFileParameter;
 /** @deprecated */
 function makeFileArrayParameter(name, description, args = {}) {
-    return Object.freeze({ ...args, name, description, type: api_types_8.fileArray });
+    return Object.freeze({ ...args, name, description, type: api_types_9.fileArray });
 }
 exports.makeFileArrayParameter = makeFileArrayParameter;
 /** @deprecated */
@@ -322,11 +339,11 @@ function check(condition, msg) {
 }
 exports.check = check;
 function isObjectPackFormula(fn) {
-    return fn.resultType === api_types_5.Type.object;
+    return fn.resultType === api_types_6.Type.object;
 }
 exports.isObjectPackFormula = isObjectPackFormula;
 function isStringPackFormula(fn) {
-    return fn.resultType === api_types_5.Type.string;
+    return fn.resultType === api_types_6.Type.string;
 }
 exports.isStringPackFormula = isStringPackFormula;
 function isSyncPackFormula(fn) {
@@ -343,6 +360,14 @@ var UpdateOutcome;
     UpdateOutcome["Error"] = "error";
 })(UpdateOutcome || (exports.UpdateOutcome = UpdateOutcome = {}));
 /**
+ * Sets a limit on the number of permissions that can be returned for a single row
+ * in a call to {@link executeGetPermissions}.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+const MaxPermissionsPerRow = 1000;
+/**
  * @deprecated
  *
  * Helper for returning the definition of a formula that returns a number. Adds result type information
@@ -351,7 +376,7 @@ var UpdateOutcome;
  * @param definition The definition of a formula that returns a number.
  */
 function makeNumericFormula(definition) {
-    return Object.assign({}, definition, { resultType: api_types_5.Type.number });
+    return Object.assign({}, definition, { resultType: api_types_6.Type.number });
 }
 exports.makeNumericFormula = makeNumericFormula;
 /**
@@ -365,7 +390,7 @@ exports.makeNumericFormula = makeNumericFormula;
 function makeStringFormula(definition) {
     const { response } = definition;
     return Object.assign({}, definition, {
-        resultType: api_types_5.Type.string,
+        resultType: api_types_6.Type.string,
         ...(response && { schema: response.schema }),
     });
 }
@@ -439,7 +464,7 @@ function makeFormula(fullDefinition) {
             (0, ensure_1.assertCondition)(codaType !== schema_1.ValueHintType.SelectList, 'ValueHintType.SelectList is not supported for formula result types.');
             const stringFormula = {
                 ...rest,
-                resultType: api_types_5.Type.string,
+                resultType: api_types_6.Type.string,
                 schema: formulaSchema || (codaType ? { type: schema_2.ValueType.String, codaType } : undefined),
             };
             formula = stringFormula;
@@ -454,7 +479,7 @@ function makeFormula(fullDefinition) {
             const { onError: _, resultType: unused, codaType, formulaSchema, ...rest } = def;
             const numericFormula = {
                 ...rest,
-                resultType: api_types_5.Type.number,
+                resultType: api_types_6.Type.number,
                 schema: formulaSchema || (codaType ? { type: schema_2.ValueType.Number, codaType } : undefined),
             };
             formula = numericFormula;
@@ -464,7 +489,7 @@ function makeFormula(fullDefinition) {
             const { onError: _, resultType: unused, ...rest } = fullDefinition;
             const booleanFormula = {
                 ...rest,
-                resultType: api_types_5.Type.boolean,
+                resultType: api_types_6.Type.boolean,
             };
             formula = booleanFormula;
             break;
@@ -474,7 +499,7 @@ function makeFormula(fullDefinition) {
             const arrayFormula = {
                 ...rest,
                 // TypeOf<SchemaType<ArraySchema<SchemaT>>> is always Type.object but TS can't infer this.
-                resultType: api_types_5.Type.object,
+                resultType: api_types_6.Type.object,
                 // The deepCopy() is here to drop property option functions, which have no effect on non-sync formulas.
                 schema: (0, object_utils_1.deepCopy)((0, schema_5.normalizeSchema)({ type: schema_2.ValueType.Array, items })),
             };
@@ -486,7 +511,7 @@ function makeFormula(fullDefinition) {
             // need a force cast since execute has a different return value due to key normalization.
             const objectFormula = {
                 ...rest,
-                resultType: api_types_5.Type.object,
+                resultType: api_types_6.Type.object,
                 // The deepCopy() is here to drop property option functions, which have no effect on non-sync formulas.
                 schema: (0, object_utils_1.deepCopy)((0, schema_5.normalizeSchema)(schema)),
             };
@@ -759,7 +784,7 @@ function makeObjectFormula({ response, ...definition }) {
         };
     }
     return Object.assign({}, definition, {
-        resultType: api_types_5.Type.object,
+        resultType: api_types_6.Type.object,
         execute,
         schema,
     });
@@ -776,9 +801,9 @@ exports.makeObjectFormula = makeObjectFormula;
  *
  * See [Normalization](https://coda.io/packs/build/latest/guides/advanced/schemas/#normalization) for more information about schema normalization.
  */
-function makeSyncTable({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions = {}, }) {
+function makeSyncTable({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions = {}, role, }) {
     const { getSchema: getSchemaDef, entityName, defaultAddDynamicColumns } = dynamicOptions;
-    const { execute: wrappedExecute, executeUpdate: wrappedExecuteUpdate, ...definition } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
+    const { execute: wrappedExecute, executeUpdate: wrappedExecuteUpdate, executeGetPermissions: wrappedExecuteGetPermissions, ...definition } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
     // Since we mutate schemaDef, we need to make a copy so the input schema can be reused across sync tables.
     const schemaDef = (0, object_utils_1.deepCopy)(inputSchema);
     // Hydrate the schema's identity.
@@ -793,6 +818,14 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
     }
     else {
         schemaDef.identity = { name: identityName };
+    }
+    if (role === api_types_5.TableRole.Users) {
+        if (!schemaDef.userEmailProperty) {
+            throw new Error(`Sync table schemas with role ${api_types_5.TableRole.Users} must set a userEmailProperty`);
+        }
+        if (!schemaDef.userIdProperty) {
+            throw new Error(`Sync table schemas with role ${api_types_5.TableRole.Users} must set a userIdProperty`);
+        }
     }
     const getSchema = wrapGetSchema(wrapMetadataFunction(getSchemaDef));
     const schema = (0, schema_3.makeObjectSchema)(schemaDef);
@@ -847,6 +880,19 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
             };
         }
         : undefined;
+    const executeGetPermissions = wrappedExecuteGetPermissions
+        ? async function execGetPermissions(params, request, context) {
+            const result = await wrappedExecuteGetPermissions(params, request, context);
+            const { rowAccessDefinitions: permissions } = result;
+            const oversizedRowAccessDefinitions = permissions.filter(p => p.permissions.length > MaxPermissionsPerRow);
+            if (oversizedRowAccessDefinitions.length > 0) {
+                throw new Error(`Objects with ids: ${oversizedRowAccessDefinitions
+                    .map(p => p.rowId)
+                    .join(', ')} returned more permissions than the maximum allowed of ${MaxPermissionsPerRow} per object`);
+            }
+            return result;
+        }
+        : undefined;
     return {
         name,
         description,
@@ -860,13 +906,16 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
             schema: formulaSchema,
             isSyncFormula: true,
             supportsUpdates: Boolean(executeUpdate),
+            supportsGetPermissions: Boolean(executeGetPermissions),
             connectionRequirement: definition.connectionRequirement || connectionRequirement,
-            resultType: api_types_5.Type.object,
+            resultType: api_types_6.Type.object,
+            executeGetPermissions: executeGetPermissions,
         },
         getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
         entityName,
         defaultAddDynamicColumns,
         namedPropertyOptions: maybeRewriteConnectionForNamedPropertyOptions(namedPropertyOptions, connectionRequirement),
+        role,
     };
 }
 exports.makeSyncTable = makeSyncTable;
@@ -993,7 +1042,7 @@ function makeTranslateObjectFormula({ response, ...definition }) {
     }
     return Object.assign({}, rest, {
         execute,
-        resultType: api_types_5.Type.object,
+        resultType: api_types_6.Type.object,
         schema: response.schema,
     });
 }
@@ -1029,7 +1078,7 @@ function makeEmptyFormula(definition) {
     }
     return Object.assign({}, rest, {
         execute,
-        resultType: api_types_5.Type.string,
+        resultType: api_types_6.Type.string,
     });
 }
 exports.makeEmptyFormula = makeEmptyFormula;
@@ -1110,8 +1159,8 @@ schema, identityName, }) {
     for (const propertyName of propertiesWithOptionsFunctions) {
         const inputSchemaWithoutArray = (0, schema_4.maybeUnwrapArraySchema)(inputSchema.properties[propertyName]);
         const outputSchema = (0, schema_4.maybeUnwrapArraySchema)(schema.properties[propertyName]);
-        (0, ensure_1.assertCondition)((0, schema_6.unwrappedSchemaSupportsOptions)(inputSchemaWithoutArray), `Property "${propertyName}" must have codaType of ValueHintType.SelectList or ValueHintType.Reference to configure property options`);
-        (0, ensure_1.assertCondition)((0, schema_6.unwrappedSchemaSupportsOptions)(outputSchema), `Property "${propertyName}" lost codaType on deep copy?...`);
+        (0, ensure_1.assertCondition)((0, schema_7.unwrappedSchemaSupportsOptions)(inputSchemaWithoutArray), `Property "${propertyName}" must have codaType of ValueHintType.SelectList or ValueHintType.Reference to configure property options`);
+        (0, ensure_1.assertCondition)((0, schema_7.unwrappedSchemaSupportsOptions)(outputSchema), `Property "${propertyName}" lost codaType on deep copy?...`);
         outputSchema.options = propertyName;
         namedPropertyOptions[propertyName] = makePropertyOptionsFormula({
             execute: inputSchemaWithoutArray.options,

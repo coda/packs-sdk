@@ -1048,7 +1048,17 @@ export type PropertyIdentifier<K extends string = string> = K | string | Propert
  */
 export type ObjectSchemaPathProperties = Pick<
   GenericObjectSchema,
-  'titleProperty' | 'linkProperty' | 'imageProperty' | 'snippetProperty' | 'subtitleProperties'
+  | 'titleProperty'
+  | 'linkProperty'
+  | 'imageProperty'
+  | 'snippetProperty'
+  | 'subtitleProperties'
+  | 'createdAtProperty'
+  | 'createdByProperty'
+  | 'modifiedAtProperty'
+  | 'modifiedByProperty'
+  | 'userEmailProperty'
+  | 'userIdProperty'
 >;
 
 /**
@@ -1165,8 +1175,136 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    * {@link ValueHintType.ImageAttachment} or {@link ValueHintType.ImageReference} hints
    */
   imageProperty?: PropertyIdentifier<K>;
-
+  /**
+   * The name of a property within {@link ObjectSchemaDefinition.properties} that can be interpreted as the creation
+   * datetime of the object.
+   *
+   * Must be a {@link ValueType.String} or {@link ValueType.Number} property with the
+   * {@link ValueHintType.Date} or {@link ValueHintType.DateTime} hints
+   * @hidden
+   */
+  createdAtProperty?: PropertyIdentifier<K>;
+  /**
+   * The name of a property within {@link ObjectSchemaDefinition.properties} that can be interpreted as the creator
+   * of the object.
+   *
+   * Must be a {@link ValueType.String} property with the {@link ValueHintType.Email} hint or
+   * a {@link ValueType.Object} with the {@link ValueHintType.Person} hint
+   * @hidden
+   */
+  createdByProperty?: PropertyIdentifier<K>;
+  /**
+   * The name of a property within {@link ObjectSchemaDefinition.properties} that can be interpreted as the last
+   * modified datetime of the object.
+   *
+   * Must be a {@link ValueType.String} or {@link ValueType.Number} property with the
+   * {@link ValueHintType.Date} or {@link ValueHintType.DateTime} hints
+   * @hidden
+   */
+  modifiedAtProperty?: PropertyIdentifier<K>;
+  /**
+   * The name of a property within {@link ObjectSchemaDefinition.properties} that can be interpreted as the last
+   * modifier of the object.
+   *
+   * Must be a {@link ValueType.String} property with the {@link ValueHintType.Email} hint or
+   * a {@link ValueType.Object} with the {@link ValueHintType.Person} hint
+   * @hidden
+   */
+  modifiedByProperty?: PropertyIdentifier<K>;
+  /**
+   * For cases where the object being synced represents a user, the name of the property within
+   * {@link ObjectSchemaDefinition.properties} that identifies the email address of the user.
+   *
+   * Must be a {@link ValueType.String} property with the {@link ValueHintType.Email} hint or
+   * a {@link ValueType.Object} with the {@link ValueHintType.Person} hint
+   * @hidden
+   */
+  userEmailProperty?: PropertyIdentifier<K>;
+  /**
+   * For cases where the object being synced represents a user, the name of the property within
+   * {@link ObjectSchemaDefinition.properties} that identifies the id of the user in the service
+   * being synced from.
+   *
+   * Must be a {@link ValueType.String} or {@link ValueType.Number} property
+   * @hidden
+   */
+  userIdProperty?: PropertyIdentifier<K>;
   // TODO(dweitzman): Only support options in the typing when the codaType is ValueHintType.SelectList.
+}
+
+/**
+ * The type of principal that can be applied to a permission.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export enum PrincipalType {
+  User = 'user',
+  Group = 'group',
+  Anyone = 'anyone',
+}
+
+/**
+ * This represents a principal that is a single user.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface UserPrincipal {
+  type: PrincipalType.User;
+  userId: string | number;
+}
+
+/**
+ * This represents a principal that is a group of users.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface GroupPrincipal {
+  type: PrincipalType.Group;
+  groupId: string | number;
+}
+
+/**
+ * This represents a principal corresponding to anyone
+ *
+ * Generally this would apply to an entity where anyone with access to the url can view the item
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface AnyonePrincipal {
+  type: PrincipalType.Anyone;
+}
+
+/**
+ * This represents a principal that can be granted access.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+type Principal = UserPrincipal | GroupPrincipal | AnyonePrincipal;
+
+/**
+ * This represents the definition of a permission in the external system.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface Permission {
+  principal: Principal;
+}
+
+/**
+ * This represents the list of permissions on a sync table row.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface RowAccessDefinition {
+  permissions: Permission[];
+  rowId: string | number;
 }
 
 export type ObjectSchemaDefinitionType<
@@ -1707,6 +1845,12 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     type,
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __packId,
+    createdAtProperty,
+    createdByProperty,
+    modifiedAtProperty,
+    modifiedByProperty,
+    userEmailProperty,
+    userIdProperty,
     ...rest
   } = schema;
   // Have TS ensure we don't forget about new fields in this function.
@@ -1752,6 +1896,24 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
       ? subtitleProperties.map(subProp => normalizeSchemaPropertyIdentifier(subProp, normalizedProperties))
       : undefined,
     titleProperty: titleProperty ? normalizeSchemaPropertyIdentifier(titleProperty, normalizedProperties) : undefined,
+    createdAtProperty: createdAtProperty
+      ? normalizeSchemaPropertyIdentifier(createdAtProperty, normalizedProperties)
+      : undefined,
+    createdByProperty: createdByProperty
+      ? normalizeSchemaPropertyIdentifier(createdByProperty, normalizedProperties)
+      : undefined,
+    modifiedAtProperty: modifiedAtProperty
+      ? normalizeSchemaPropertyIdentifier(modifiedAtProperty, normalizedProperties)
+      : undefined,
+    modifiedByProperty: modifiedByProperty
+      ? normalizeSchemaPropertyIdentifier(modifiedByProperty, normalizedProperties)
+      : undefined,
+    userEmailProperty: userEmailProperty
+      ? normalizeSchemaPropertyIdentifier(userEmailProperty, normalizedProperties)
+      : undefined,
+    userIdProperty: userIdProperty
+      ? normalizeSchemaPropertyIdentifier(userIdProperty, normalizedProperties)
+      : undefined,
     type: ValueType.Object,
   };
 }

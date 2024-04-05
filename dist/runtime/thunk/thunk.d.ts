@@ -3,6 +3,7 @@ import type { ExecutionContext } from '../../api_types';
 import type { FetchRequest } from '../../api_types';
 import type { FetchResponse } from '../../api_types';
 import type { FormulaSpecification } from '../types';
+import type { GenericExecuteGetPermissionsRequest } from '../../api';
 import type { GenericSyncUpdate } from '../../api';
 import type { PackFunctionResponse } from '../types';
 import type { ParamDefs } from '../../api_types';
@@ -15,6 +16,7 @@ interface FindAndExecutionPackFunctionArgs<T> {
     manifest: BasicPackDefinition;
     executionContext: ExecutionContext | SyncExecutionContext;
     updates?: GenericSyncUpdate[];
+    getPermissionsRequest?: GenericExecuteGetPermissionsRequest;
 }
 /**
  * The thunk entrypoint - the first code that runs inside the v8 isolate once control is passed over.

@@ -3,8 +3,10 @@ import type {ArrayType} from './api_types';
 import type {BooleanSchema} from './schema';
 import type {CommonPackFormulaDef} from './api_types';
 import {ConnectionRequirement} from './api_types';
+import type {CrawlStrategy} from './api_types';
 import type {ExecutionContext} from './api_types';
 import type {FetchRequest} from './api_types';
+import type {GetPermissionExecutionContext} from './api_types';
 import type {Identity} from './schema';
 import type {NumberHintTypes} from './schema';
 import type {NumberSchema} from './schema';
@@ -28,11 +30,13 @@ import type {PropertyOptionsMetadataResult} from './api_types';
 import type {RequestHandlerTemplate} from './handler_templates';
 import type {RequiredParamDef} from './api_types';
 import type {ResponseHandlerTemplate} from './handler_templates';
+import type {RowAccessDefinition} from './schema';
 import type {Schema} from './schema';
 import type {SchemaType} from './schema';
 import type {StringHintTypes} from './schema';
 import type {StringSchema} from './schema';
 import type {SyncExecutionContext} from './api_types';
+import {TableRole} from './api_types';
 import {Type} from './api_types';
 import type {TypeMap} from './api_types';
 import type {TypeOf} from './api_types';
@@ -54,6 +58,7 @@ import {isPromise} from './helpers/object_utils';
 import {makeObjectSchema} from './schema';
 import {maybeUnwrapArraySchema} from './schema';
 import {normalizeSchema} from './schema';
+import {normalizeSchemaKey} from './schema';
 import {numberArray} from './api_types';
 import {objectSchemaHelper} from './helpers/migration';
 import {stringArray} from './api_types';
@@ -291,6 +296,12 @@ export interface SyncTableDef<
    * @hidden
    */
   namedPropertyOptions?: SyncTablePropertyOptions;
+
+  /**
+   * See {@link SyncTableOptions.role}
+   * @hidden
+   */
+  role?: TableRole;
 }
 
 /**
@@ -487,7 +498,7 @@ export type ParamDefFromOptionsUnion<T extends ParameterType, O extends Paramete
 export function makeParameter<T extends ParameterType, O extends ParameterOptions<T>>(
   paramDefinition: O,
 ): ParamDefFromOptionsUnion<T, O> {
-  const {type, autocomplete: autocompleteDefOrItems, ...rest} = paramDefinition;
+  const {type, autocomplete: autocompleteDefOrItems, crawlStrategy: crawlStrategyDef, ...rest} = paramDefinition;
   const actualType = ParameterTypeInputMap[type];
   let autocomplete: MetadataFormula | undefined;
 
@@ -498,7 +509,22 @@ export function makeParameter<T extends ParameterType, O extends ParameterOption
     autocomplete = wrapMetadataFunction(autocompleteDefOrItems);
   }
 
-  return Object.freeze({...rest, autocomplete, type: actualType}) as ParamDefFromOptionsUnion<T, O>;
+  let crawlStrategy: CrawlStrategy | undefined;
+  if (crawlStrategyDef) {
+    if (crawlStrategyDef.parentTable) {
+      const {tableName, propertyKey} = crawlStrategyDef.parentTable;
+      crawlStrategy = {
+        parentTable: {
+          tableName,
+          propertyKey: normalizeSchemaKey(propertyKey),
+        },
+      };
+    } else {
+      crawlStrategy = crawlStrategyDef;
+    }
+  }
+
+  return Object.freeze({...rest, autocomplete, type: actualType, crawlStrategy}) as ParamDefFromOptionsUnion<T, O>;
 }
 
 // Other parameter helpers below here are obsolete given the above generate parameter makers.
@@ -1085,6 +1111,70 @@ export interface SyncUpdateResultMarshaled<
 export type GenericSyncUpdateResultMarshaled = SyncUpdateResultMarshaled<any, any, any>;
 
 /**
+ * Sets a limit on the number of permissions that can be returned for a single row
+ * in a call to {@link executeGetPermissions}.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+const MaxPermissionsPerRow = 1000;
+
+/**
+ * Type definition for the result of calls to {@link executeGetPermissions}.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface GetPermissionsResult {
+  /**
+   * The access definition for each row that was passed to {@link executeGetPermissions}.
+   *
+   */
+  rowAccessDefinitions: RowAccessDefinition[];
+}
+
+/**
+ * Type definition for a single row passed to the {@link executeGetPermissions} function of a sync table.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface ExecuteGetPermissionsRequestRow<
+  K extends string,
+  L extends string,
+  SchemaT extends ObjectSchemaDefinition<K, L>,
+> {
+  /**
+   * A row for which to fetch permissions. This rows has been retrieved from the {@link execute} function
+   */
+  row: ObjectSchemaDefinitionType<K, L, SchemaT>;
+}
+
+/**
+ * Type definition for the data passed to the {@link executeGetPermissions} function of a sync table.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface ExecuteGetPermissionsRequest<
+  K extends string,
+  L extends string,
+  SchemaT extends ObjectSchemaDefinition<K, L>,
+> {
+  /**
+   * The list of rows for which to fetch permissions.
+   */
+  rows: Array<ExecuteGetPermissionsRequestRow<K, L, SchemaT>>;
+}
+
+/**
+ * Generic type definition for the data passed to the {@link executeGetPermissions} function of a sync table.
+ *
+ * @hidden
+ */
+export type GenericExecuteGetPermissionsRequest = ExecuteGetPermissionsRequest<any, any, any>;
+
+/**
  * Inputs for creating the formula that implements a sync table.
  */
 export interface SyncFormulaDef<
@@ -1127,6 +1217,28 @@ export interface SyncFormulaDef<
    * @hidden
    */
   updateOptions?: Pick<CommonPackFormulaDef<ParamDefsT>, 'extraOAuthScopes'>;
+
+  /**
+   * The JavaScript function that implements fetching permissions for a set of objects
+   * if the objects in this sync table have permissions in the external system.
+   *
+   * TODO(sam): Unhide this
+   * @hidden
+   */
+  executeGetPermissions?(
+    params: ParamValues<ParamDefsT>,
+    request: ExecuteGetPermissionsRequest<K, L, SchemaT>,
+    context: GetPermissionExecutionContext,
+  ): Promise<GetPermissionsResult>;
+
+  /**
+   * If the table implements {@link executeGetPermissions} the maximum number of rows that will be sent to that
+   * function in a single batch. Defaults to 10 if not specified.
+   *
+   * TODO(sam): Unhide this
+   * @hidden
+   */
+  maxPermissionBatchSize?: number;
 }
 
 /**
@@ -1145,6 +1257,12 @@ export type SyncFormula<
   isSyncFormula: true;
   schema?: ArraySchema;
   supportsUpdates?: boolean;
+
+  /**
+   * TODO(sam): Unhide this
+   * @hidden
+   */
+  supportsGetPermissions?: boolean;
 };
 
 /**
@@ -1955,6 +2073,14 @@ export interface SyncTableOptions<
    * sync tables that have a dynamic schema.
    */
   dynamicOptions?: DynamicOptions;
+
+  /**
+   * Used to indicate that the entities in this table have a specific semantic meaning,
+   * for example, that the rows being synced each represent a user.
+   *
+   * @hidden
+   */
+  role?: TableRole;
 }
 
 /**
@@ -2117,11 +2243,13 @@ export function makeSyncTable<
   formula,
   connectionRequirement,
   dynamicOptions = {},
+  role,
 }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT> {
   const {getSchema: getSchemaDef, entityName, defaultAddDynamicColumns} = dynamicOptions;
   const {
     execute: wrappedExecute,
     executeUpdate: wrappedExecuteUpdate,
+    executeGetPermissions: wrappedExecuteGetPermissions,
     ...definition
   } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
 
@@ -2141,6 +2269,16 @@ export function makeSyncTable<
     schemaDef.identity = {...schemaDef.identity, name: identityName};
   } else {
     schemaDef.identity = {name: identityName};
+  }
+
+  if (role === TableRole.Users) {
+    if (!schemaDef.userEmailProperty) {
+      throw new Error(`Sync table schemas with role ${TableRole.Users} must set a userEmailProperty`);
+    }
+
+    if (!schemaDef.userIdProperty) {
+      throw new Error(`Sync table schemas with role ${TableRole.Users} must set a userIdProperty`);
+    }
   }
 
   const getSchema = wrapGetSchema(wrapMetadataFunction(getSchemaDef));
@@ -2206,6 +2344,27 @@ export function makeSyncTable<
       }
     : undefined;
 
+  const executeGetPermissions = wrappedExecuteGetPermissions
+    ? async function execGetPermissions(
+        params: ParamValues<ParamDefsT>,
+        request: ExecuteGetPermissionsRequest<K, L, SchemaDefT>,
+        context: GetPermissionExecutionContext,
+      ) {
+        const result = await wrappedExecuteGetPermissions(params, request, context);
+        const {rowAccessDefinitions: permissions} = result;
+        const oversizedRowAccessDefinitions = permissions.filter(p => p.permissions.length > MaxPermissionsPerRow);
+
+        if (oversizedRowAccessDefinitions.length > 0) {
+          throw new Error(
+            `Objects with ids: ${oversizedRowAccessDefinitions
+              .map(p => p.rowId)
+              .join(', ')} returned more permissions than the maximum allowed of ${MaxPermissionsPerRow} per object`,
+          );
+        }
+        return result;
+      }
+    : undefined;
+
   return {
     name,
     description,
@@ -2219,13 +2378,16 @@ export function makeSyncTable<
       schema: formulaSchema,
       isSyncFormula: true,
       supportsUpdates: Boolean(executeUpdate),
+      supportsGetPermissions: Boolean(executeGetPermissions),
       connectionRequirement: definition.connectionRequirement || connectionRequirement,
       resultType: Type.object as any,
+      executeGetPermissions: executeGetPermissions as any,
     },
     getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
     entityName,
     defaultAddDynamicColumns,
     namedPropertyOptions: maybeRewriteConnectionForNamedPropertyOptions(namedPropertyOptions, connectionRequirement),
+    role,
   };
 }
 

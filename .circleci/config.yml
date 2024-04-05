@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  aws-cli: circleci/aws-cli@4.1.1
+  aws-cli: circleci/aws-cli@4.1.3
   jq: circleci/jq@2.2.1
   utils: coda/utils@2.3.0
   base-tools:
@@ -80,8 +80,7 @@ jobs:
       - run:
           name: 'Validate samples'
           command: make validate-samples
-      - setup_remote_docker:
-          version: 20.10.14
+      - setup_remote_docker
       - run:
           name: 'Ensure clean dist diff'
           command: make validate-no-changes

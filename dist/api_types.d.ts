@@ -250,6 +250,8 @@ export interface ParamDef<T extends UnionType> {
      * The suggested value to be prepopulated for this parameter if it is not specified by the user.
      */
     suggestedValue?: SuggestedValueType<T>;
+    /** @hidden */
+    crawlStrategy?: CrawlStrategy;
 }
 /**
  * Marker type for an optional {@link ParamDef}, used internally.
@@ -283,6 +285,17 @@ export type ParamValues<ParamDefsT extends ParamDefs> = {
  * The type of values that are allowable to be used as a {@link ParamDef.suggestedValue} for a parameter.
  */
 export type SuggestedValueType<T extends UnionType> = T extends ArrayType<Type.date> ? TypeOfMap<T> | PrecannedDateRange : TypeOfMap<T>;
+/** @hidden */
+export interface CrawlStrategy {
+    parentTable?: SyncTableRelation;
+}
+/**
+ * A pointer to a particular property in another sync table.
+ */
+interface SyncTableRelation {
+    tableName: string;
+    propertyKey: string;
+}
 /**
  * Inputs for creating a formula that are common between regular formulas and sync table formulas.
  */
@@ -604,6 +617,14 @@ export interface Sync {
  * `executeUpdate` function of the sync formula.
  */
 export type UpdateSync = Omit<Sync, 'continuation'>;
+/**
+ * Information about the current sync, part of the {@link GetPermissionExecutionContext} passed to the
+ * `executeGetPermissions` function of the sync formula.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export type GetPermissionsSync = Omit<Sync, 'continuation'>;
 export type LoggerParamType = string | number | boolean | Record<any, any>;
 export interface Logger {
     trace(message: string, ...args: LoggerParamType[]): void;
@@ -714,6 +735,18 @@ export interface UpdateSyncExecutionContext extends ExecutionContext {
     readonly sync: UpdateSync;
 }
 /**
+ * Context provided to GetPermissionExecution calls
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface GetPermissionExecutionContext extends ExecutionContext {
+    /**
+     * Information about state of the current sync
+     */
+    readonly sync: GetPermissionsSync;
+}
+/**
  * Special "live" date range values that can be used as the {@link ParamDef.suggestedValue}
  * for a date array parameter.
  *
@@ -796,4 +829,7 @@ export type PropertyOptionsMetadataResult<ResultT extends PackFormulaResult[]> =
  * A JavaScript function for property options.
  */
 export type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]> = (context: PropertyOptionsExecutionContext) => Promise<PropertyOptionsMetadataResult<ResultT>> | PropertyOptionsMetadataResult<ResultT>;
+export declare enum TableRole {
+    Users = "users"
+}
 export {};

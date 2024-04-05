@@ -1,7 +1,12 @@
 import type {PackDefinition} from '../../types';
 import {ParameterType} from '../../api_types';
+import type {Permission} from '../../schema';
+import {PrincipalType} from '../../schema';
+import type {RowAccessDefinition} from '../../schema';
+import type {UserPrincipal} from '../../schema';
 import {ValueType} from '../../schema';
 import {createFakePack} from '../test_utils';
+import {ensureExists} from '../../helpers/ensure';
 import {makeFormula} from '../../api';
 import {makeNumericFormula} from '../../api';
 import {makeNumericParameter} from '../../api';
@@ -153,6 +158,30 @@ export const manifest: PackDefinition = createFakePack({
         },
         executeUpdate: async (_params, updates, _context) => {
           return {result: updates.map(u => u.newValue)};
+        },
+        executeGetPermissions: async (_params, {rows}, _context) => {
+          const rowAccessDefinitions: RowAccessDefinition[] = rows
+            .map(r => r.row)
+            .map(r => {
+              const id = ensureExists(r.name);
+
+              const principal: UserPrincipal = {
+                type: PrincipalType.User,
+                userId: 1,
+              };
+
+              const permissions: Permission[] = [
+                {
+                  principal,
+                },
+              ];
+
+              return {
+                permissions,
+                rowId: id,
+              };
+            });
+          return {rowAccessDefinitions};
         },
         parameters: [makeStringParameter('teacher', 'teacher name')],
         examples: [],

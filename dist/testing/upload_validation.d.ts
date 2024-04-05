@@ -1,6 +1,7 @@
 import type { ArraySchema } from '../schema';
 import type { ObjectSchema } from '../schema';
 import type { PackVersionMetadata } from '../compiled_types';
+import type { SyncTable } from '../api';
 import type { ValidationError } from './types';
 import type { VariousAuthentication } from '../types';
 import * as z from 'zod';
@@ -18,6 +19,7 @@ export declare const Limits: {
     ColumnMatcherRegex: number;
     NumColumnMatchersPerFormat: number;
     NetworkDomainUrl: number;
+    PermissionsBatchSize: number;
     UpdateBatchSize: number;
 };
 export declare class PackMetadataValidationError extends Error {
@@ -30,6 +32,15 @@ export declare function validatePackVersionMetadata(metadata: Record<string, any
 }): Promise<PackVersionMetadata>;
 export declare function validateVariousAuthenticationMetadata(auth: any, options: BuildMetadataSchemaArgs): VariousAuthentication;
 export declare function validateSyncTableSchema(schema: any, options: BuildMetadataSchemaArgs & Required<Pick<BuildMetadataSchemaArgs, 'sdkVersion'>>): ArraySchema<ObjectSchema<any, any>>;
+/**
+ * Returns a map of sync table names to their child sync table names, or undefined if the hierarchy is invalid.
+ * Example valid return: { Parent: 'Child' }
+ * {} is also a valid result, when there are no sync tables, or no parent relationships.
+ * @hidden
+ */
+export declare function validateCrawlHierarchy(syncTables: SyncTable[], context?: z.RefinementCtx): Record<string, string[]> | undefined;
+/** @hidden */
+export declare function _hasCycle(tree: Record<string, string[]>): boolean;
 export declare function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError[];
 interface BuildMetadataSchemaArgs {
     sdkVersion?: string;

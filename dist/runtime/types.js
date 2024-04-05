@@ -6,6 +6,7 @@ var FormulaType;
     FormulaType["Standard"] = "Standard";
     FormulaType["Sync"] = "Sync";
     FormulaType["SyncUpdate"] = "SyncUpdate";
+    FormulaType["GetPermissions"] = "GetPermissions";
     FormulaType["Metadata"] = "Metadata";
 })(FormulaType || (exports.FormulaType = FormulaType = {}));
 var MetadataFormulaType;

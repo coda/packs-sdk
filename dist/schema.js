@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.throwOnDynamicSchemaWithJsOptionsFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.maybeSchemaOptionsValue = exports.unwrappedSchemaSupportsOptions = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageShapeStyle = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+exports.throwOnDynamicSchemaWithJsOptionsFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.maybeSchemaOptionsValue = exports.unwrappedSchemaSupportsOptions = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PrincipalType = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageShapeStyle = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_2 = require("./helpers/ensure");
@@ -377,6 +377,18 @@ exports.SimpleStringHintValueTypes = [
  */
 exports.PropertyLabelValueTemplate = '{VALUE}';
 /**
+ * The type of principal that can be applied to a permission.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+var PrincipalType;
+(function (PrincipalType) {
+    PrincipalType["User"] = "user";
+    PrincipalType["Group"] = "group";
+    PrincipalType["Anyone"] = "anyone";
+})(PrincipalType || (exports.PrincipalType = PrincipalType = {}));
+/**
  * The type of content in this attribution node.
  *
  * Multiple attribution nodes can be rendered all together, for example to have
@@ -680,7 +692,7 @@ function normalizeObjectSchema(schema) {
     const normalizedProperties = {};
     const { attribution, options, requireForUpdates, codaType, description, displayProperty, featured, featuredProperties, id, identity, idProperty, imageProperty, includeUnknownProperties, linkProperty, primary, properties, snippetProperty, subtitleProperties, titleProperty, type, 
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    __packId, ...rest } = schema;
+    __packId, createdAtProperty, createdByProperty, modifiedAtProperty, modifiedByProperty, userEmailProperty, userIdProperty, ...rest } = schema;
     // Have TS ensure we don't forget about new fields in this function.
     (0, ensure_3.ensureNever)();
     for (const key of Object.keys(properties)) {
@@ -724,6 +736,24 @@ function normalizeObjectSchema(schema) {
             ? subtitleProperties.map(subProp => normalizeSchemaPropertyIdentifier(subProp, normalizedProperties))
             : undefined,
         titleProperty: titleProperty ? normalizeSchemaPropertyIdentifier(titleProperty, normalizedProperties) : undefined,
+        createdAtProperty: createdAtProperty
+            ? normalizeSchemaPropertyIdentifier(createdAtProperty, normalizedProperties)
+            : undefined,
+        createdByProperty: createdByProperty
+            ? normalizeSchemaPropertyIdentifier(createdByProperty, normalizedProperties)
+            : undefined,
+        modifiedAtProperty: modifiedAtProperty
+            ? normalizeSchemaPropertyIdentifier(modifiedAtProperty, normalizedProperties)
+            : undefined,
+        modifiedByProperty: modifiedByProperty
+            ? normalizeSchemaPropertyIdentifier(modifiedByProperty, normalizedProperties)
+            : undefined,
+        userEmailProperty: userEmailProperty
+            ? normalizeSchemaPropertyIdentifier(userEmailProperty, normalizedProperties)
+            : undefined,
+        userIdProperty: userIdProperty
+            ? normalizeSchemaPropertyIdentifier(userIdProperty, normalizedProperties)
+            : undefined,
         type: ValueType.Object,
     };
 }

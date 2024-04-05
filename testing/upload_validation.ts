@@ -51,6 +51,7 @@ import {OptionsType} from '../api_types';
 import {PackCategory} from '../types';
 import type {PackFormatMetadata} from '../compiled_types';
 import type {PackFormulaMetadata} from '../api';
+import type {PackVersionDefinition} from '..';
 import type {PackVersionMetadata} from '../compiled_types';
 import type {ParamDef} from '../api_types';
 import type {ParamDefs} from '../api_types';
@@ -75,6 +76,7 @@ import type {SyncFormula} from '../api';
 import type {SyncTable} from '../api';
 import type {SyncTableDef} from '../api';
 import type {SystemAuthenticationTypes} from '../types';
+import {TableRole} from '../api_types';
 import {TokenExchangeCredentialsLocation} from '../types';
 import {Type} from '../api_types';
 import type {UnionType} from '../api_types';
@@ -127,6 +129,7 @@ export const Limits = {
   ColumnMatcherRegex: 300,
   NumColumnMatchersPerFormat: 10,
   NetworkDomainUrl: 253,
+  PermissionsBatchSize: 1000,
   UpdateBatchSize: 1000,
 };
 
@@ -225,6 +228,107 @@ export function validateSyncTableSchema(
     validated.error,
     validated.error.errors.flatMap(zodErrorDetailToValidationError),
   );
+}
+
+/**
+ * Returns a map of sync table names to their child sync table names, or undefined if the hierarchy is invalid.
+ * Example valid return: { Parent: 'Child' }
+ * {} is also a valid result, when there are no sync tables, or no parent relationships.
+ * @hidden
+ */
+export function validateCrawlHierarchy(
+  syncTables: SyncTable[],
+  context?: z.RefinementCtx,
+): Record<string, string[]> | undefined {
+  const parentToChildrenMap: Record<string, string[]> = {};
+  const syncTableSchemasByName: Record<string, ObjectSchema<any, any>> = {};
+  for (const syncTable of syncTables) {
+    syncTableSchemasByName[syncTable.name] = syncTable.schema;
+  }
+  for (const [tableIndex, syncTable] of syncTables.entries()) {
+    let firstDiscoveredParentTable: string | undefined;
+    for (const [paramIndex, param] of syncTable.getter.parameters.entries()) {
+      if (!param.crawlStrategy) {
+        continue;
+      }
+      if (param.crawlStrategy.parentTable) {
+        const {tableName: parentTableName, propertyKey} = param.crawlStrategy.parentTable;
+
+        const tableSchema = syncTableSchemasByName[parentTableName];
+        if (!tableSchema) {
+          context?.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['syncTables', tableIndex, 'parameters', paramIndex, 'crawlStrategy', 'parentTable'],
+            message: `Sync table ${syncTable.name} expects parent table ${parentTableName} to exist.`,
+          });
+          return undefined;
+        }
+
+        const property = tableSchema.properties[propertyKey];
+        if (!property) {
+          context?.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['syncTables', tableIndex, 'parameters', paramIndex, 'crawlStrategy', 'parentTable'],
+            message: `Sync table ${syncTable.name} expects parent table ${parentTableName}'s schema to have the property ${propertyKey}.`,
+          });
+          return undefined;
+        }
+
+        // TODO(patrick): Validate the types match
+
+        // We only allow one parent per table.
+        if (firstDiscoveredParentTable && firstDiscoveredParentTable !== parentTableName) {
+          context?.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['syncTables', tableIndex, 'parameters'],
+            message: `Sync table ${syncTable.name} cannot reference multiple parent tables.`,
+          });
+          return undefined;
+        }
+
+        const childList = parentToChildrenMap[parentTableName] || [];
+        // This table may already be in the child list if it uses multiple params from the parent.
+        if (!childList.includes(syncTable.name)) {
+          childList.push(syncTable.name);
+        }
+        parentToChildrenMap[parentTableName] = childList;
+        firstDiscoveredParentTable = parentTableName;
+      }
+    }
+  }
+  // Verify that there's no cycle
+  if (_hasCycle(parentToChildrenMap)) {
+    context?.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['syncTables'],
+      message: `Sync table parent hierarchy is cyclic`,
+    });
+    return undefined;
+  }
+  return parentToChildrenMap;
+}
+
+// Exported for tests
+/** @hidden */
+export function _hasCycle(tree: Record<string, string[]>): boolean {
+  function subtreeHasCycle(currentKey: string, children: string[], visited: Set<string>): boolean {
+    if (visited.has(currentKey)) {
+      return true;
+    }
+    visited.add(currentKey);
+    for (const child of children) {
+      const subtree = tree[child];
+      if (!subtree) {
+        break;
+      }
+      if (subtreeHasCycle(child, subtree, visited)) {
+        return true;
+      }
+    }
+    visited.delete(currentKey);
+    return false;
+  }
+  return subtreeHasCycle('__CODA_INTERNAL_ROOT__', Object.keys(tree), new Set<string>());
 }
 
 function getNonUniqueElements<T extends string>(items: T[]): T[] {
@@ -590,6 +694,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     autocomplete: z.unknown().optional(),
     defaultValue: z.unknown().optional(),
     suggestedValue: z.unknown().optional(),
+    crawlStrategy: z.unknown().optional(),
   });
 
   const commonPackFormulaSchema = {
@@ -1046,6 +1151,12 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       subtitleProperties: z.array(propertySchema).optional(),
       snippetProperty: propertySchema.optional(),
       imageProperty: propertySchema.optional(),
+      createdAtProperty: propertySchema.optional(),
+      modifiedAtProperty: propertySchema.optional(),
+      createdByProperty: propertySchema.optional(),
+      modifiedByProperty: propertySchema.optional(),
+      userIdProperty: propertySchema.optional(),
+      userEmailProperty: propertySchema.optional(),
       options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
       requireForUpdates: z.boolean().optional(),
       autocomplete:
@@ -1255,11 +1366,81 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
           );
         };
 
+        const validateCreatedAtProperty = () => {
+          return validateProperty(
+            'createdAtProperty',
+            createdAtPropertySchema =>
+              (createdAtPropertySchema.type === ValueType.String ||
+                createdAtPropertySchema.type === ValueType.Number) &&
+              (createdAtPropertySchema.codaType === ValueHintType.DateTime ||
+                createdAtPropertySchema.codaType === ValueHintType.Date),
+            `must refer to a "ValueType.String" or "ValueType.Number" property with a "ValueHintType.DateTime" or "ValueHintType.Date" "codaType".`,
+          );
+        };
+        const validateModifiedAtProperty = () => {
+          return validateProperty(
+            'modifiedAtProperty',
+            modifiedAtPropertySchema =>
+              (modifiedAtPropertySchema.type === ValueType.String ||
+                modifiedAtPropertySchema.type === ValueType.Number) &&
+              (modifiedAtPropertySchema.codaType === ValueHintType.DateTime ||
+                modifiedAtPropertySchema.codaType === ValueHintType.Date),
+            `must refer to a "ValueType.String" or "ValueType.Number" property with a "ValueHintType.DateTime" or "ValueHintType.Date" "codaType".`,
+          );
+        };
+        const validateCreatedByProperty = () => {
+          return validateProperty(
+            'createdByProperty',
+            createdByPropertySchema =>
+              (createdByPropertySchema.type === ValueType.Object ||
+                createdByPropertySchema.type === ValueType.String) &&
+              (createdByPropertySchema.codaType === ValueHintType.Person ||
+                createdByPropertySchema.codaType === ValueHintType.Email),
+            `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`,
+          );
+        };
+        const validateModifiedByProperty = () => {
+          return validateProperty(
+            'modifiedByProperty',
+            modifiedByPropertySchema =>
+              (modifiedByPropertySchema.type === ValueType.Object ||
+                modifiedByPropertySchema.type === ValueType.String) &&
+              (modifiedByPropertySchema.codaType === ValueHintType.Person ||
+                modifiedByPropertySchema.codaType === ValueHintType.Email),
+            `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`,
+          );
+        };
+
+        const validateUserEmailProperty = () => {
+          return validateProperty(
+            'userEmailProperty',
+            userEmail =>
+              (userEmail.type === ValueType.String && userEmail.codaType === ValueHintType.Email) ||
+              (userEmail.type === ValueType.Object && userEmail.codaType === ValueHintType.Person),
+            `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`,
+          );
+        };
+
+        const validateUserIdProperty = () => {
+          return validateProperty(
+            'userIdProperty',
+            userIdPropertySchema =>
+              userIdPropertySchema.type === ValueType.String || userIdPropertySchema.type === ValueType.Number,
+            `must refer to a "ValueType.String" or "ValueType.Number".`,
+          );
+        };
+
         validateTitleProperty();
         validateLinkProperty();
         validateImageProperty();
         validateSnippetProperty();
         validateSubtitleProperties();
+        validateCreatedAtProperty();
+        validateModifiedAtProperty();
+        validateCreatedByProperty();
+        validateModifiedByProperty();
+        validateUserEmailProperty();
+        validateUserIdProperty();
       })
       .superRefine((data, context) => {
         const schemaHelper = objectSchemaHelper(data as GenericObjectSchema);
@@ -1336,7 +1517,10 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
   });
 
   const syncFormulaSchema = zodCompleteObject<
-    Omit<SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>>, 'execute' | 'executeUpdate'>
+    Omit<
+      SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>>,
+      'execute' | 'executeUpdate' | 'executeGetPermissions'
+    >
   >({
     schema: arrayPropertySchema.optional(),
     resultType: z.any(),
@@ -1345,6 +1529,8 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     supportsUpdates: z.boolean().optional(),
     ...commonPackFormulaSchema,
     updateOptions: z.strictObject({extraOAuthScopes: commonPackFormulaSchema.extraOAuthScopes}).optional(),
+    maxPermissionBatchSize: z.number().min(1).max(Limits.PermissionsBatchSize).optional(),
+    supportsGetPermissions: z.boolean().optional(),
   });
 
   const baseSyncTableSchema = {
@@ -1383,6 +1569,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
           });
         }
       }),
+    role: z.nativeEnum(TableRole).optional(),
   };
 
   type GenericSyncTableDef = SyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>;
@@ -1431,7 +1618,10 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
   const unrefinedPackVersionMetadataSchema = zodCompleteObject<PackVersionMetadata>({
     version: z
       .string()
-      .regex(/^\d+(\.\d+){0,2}$/, 'Pack versions must use semantic versioning, e.g. "1", "1.0" or "1.0.0".')
+      .regex(
+        /^\d+(\.\d+){0,2}(\-prerelease\.\d+)?$/,
+        'Pack versions must use semantic versioning, e.g. "1", "1.0" or "1.0.0".',
+      )
       .refine(
         // Version numbers must not be bigger than a postgres integer.
         version => version.split('.').filter(part => Number(part) > 2_147_483_647).length === 0,
@@ -1634,6 +1824,17 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
             }
           }
         });
+      })
+      .superRefine((data, context) => {
+        const syncTables = (data.syncTables as SyncTable[]) || [];
+        const userTables = syncTables.filter(syncTable => syncTable.role === TableRole.Users);
+        if (userTables.length > 1) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['syncTables'],
+            message: 'Only one sync table can have the role "Users".',
+          });
+        }
       });
   }
 
@@ -1703,6 +1904,12 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
           });
         }
       });
+    })
+    .superRefine((data, context) => {
+      const {syncTables} = data as PackVersionDefinition;
+      if (syncTables) {
+        validateCrawlHierarchy(syncTables, context);
+      }
     })
     .superRefine((data, context) => {
       ((data.formulas as any[]) || []).forEach((formula, i) => {

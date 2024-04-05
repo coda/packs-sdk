@@ -906,7 +906,7 @@ export type PropertyIdentifier<K extends string = string> = K | string | Propert
  * The {@link ObjectSchemaDefinition} properties that reference keys in the `properties` object. These should all be
  * {@link PropertyIdentifier} types.
  */
-export type ObjectSchemaPathProperties = Pick<GenericObjectSchema, 'titleProperty' | 'linkProperty' | 'imageProperty' | 'snippetProperty' | 'subtitleProperties'>;
+export type ObjectSchemaPathProperties = Pick<GenericObjectSchema, 'titleProperty' | 'linkProperty' | 'imageProperty' | 'snippetProperty' | 'subtitleProperties' | 'createdAtProperty' | 'createdByProperty' | 'modifiedAtProperty' | 'modifiedByProperty' | 'userEmailProperty' | 'userIdProperty'>;
 /**
  * A schema definition for an object value (a value with key-value pairs).
  */
@@ -1017,6 +1017,128 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      * {@link ValueHintType.ImageAttachment} or {@link ValueHintType.ImageReference} hints
      */
     imageProperty?: PropertyIdentifier<K>;
+    /**
+     * The name of a property within {@link ObjectSchemaDefinition.properties} that can be interpreted as the creation
+     * datetime of the object.
+     *
+     * Must be a {@link ValueType.String} or {@link ValueType.Number} property with the
+     * {@link ValueHintType.Date} or {@link ValueHintType.DateTime} hints
+     * @hidden
+     */
+    createdAtProperty?: PropertyIdentifier<K>;
+    /**
+     * The name of a property within {@link ObjectSchemaDefinition.properties} that can be interpreted as the creator
+     * of the object.
+     *
+     * Must be a {@link ValueType.String} property with the {@link ValueHintType.Email} hint or
+     * a {@link ValueType.Object} with the {@link ValueHintType.Person} hint
+     * @hidden
+     */
+    createdByProperty?: PropertyIdentifier<K>;
+    /**
+     * The name of a property within {@link ObjectSchemaDefinition.properties} that can be interpreted as the last
+     * modified datetime of the object.
+     *
+     * Must be a {@link ValueType.String} or {@link ValueType.Number} property with the
+     * {@link ValueHintType.Date} or {@link ValueHintType.DateTime} hints
+     * @hidden
+     */
+    modifiedAtProperty?: PropertyIdentifier<K>;
+    /**
+     * The name of a property within {@link ObjectSchemaDefinition.properties} that can be interpreted as the last
+     * modifier of the object.
+     *
+     * Must be a {@link ValueType.String} property with the {@link ValueHintType.Email} hint or
+     * a {@link ValueType.Object} with the {@link ValueHintType.Person} hint
+     * @hidden
+     */
+    modifiedByProperty?: PropertyIdentifier<K>;
+    /**
+     * For cases where the object being synced represents a user, the name of the property within
+     * {@link ObjectSchemaDefinition.properties} that identifies the email address of the user.
+     *
+     * Must be a {@link ValueType.String} property with the {@link ValueHintType.Email} hint or
+     * a {@link ValueType.Object} with the {@link ValueHintType.Person} hint
+     * @hidden
+     */
+    userEmailProperty?: PropertyIdentifier<K>;
+    /**
+     * For cases where the object being synced represents a user, the name of the property within
+     * {@link ObjectSchemaDefinition.properties} that identifies the id of the user in the service
+     * being synced from.
+     *
+     * Must be a {@link ValueType.String} or {@link ValueType.Number} property
+     * @hidden
+     */
+    userIdProperty?: PropertyIdentifier<K>;
+}
+/**
+ * The type of principal that can be applied to a permission.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export declare enum PrincipalType {
+    User = "user",
+    Group = "group",
+    Anyone = "anyone"
+}
+/**
+ * This represents a principal that is a single user.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface UserPrincipal {
+    type: PrincipalType.User;
+    userId: string | number;
+}
+/**
+ * This represents a principal that is a group of users.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface GroupPrincipal {
+    type: PrincipalType.Group;
+    groupId: string | number;
+}
+/**
+ * This represents a principal corresponding to anyone
+ *
+ * Generally this would apply to an entity where anyone with access to the url can view the item
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface AnyonePrincipal {
+    type: PrincipalType.Anyone;
+}
+/**
+ * This represents a principal that can be granted access.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+type Principal = UserPrincipal | GroupPrincipal | AnyonePrincipal;
+/**
+ * This represents the definition of a permission in the external system.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface Permission {
+    principal: Principal;
+}
+/**
+ * This represents the list of permissions on a sync table row.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface RowAccessDefinition {
+    permissions: Permission[];
+    rowId: string | number;
 }
 export type ObjectSchemaDefinitionType<K extends string, L extends string, T extends ObjectSchemaDefinition<K, L>> = ObjectSchemaType<T>;
 /** @hidden */
