@@ -1137,14 +1137,48 @@ export interface AnyonePrincipal {
  */
 type Principal = UserPrincipal | GroupPrincipal | AnyonePrincipal;
 /**
+ * The type of permission that is being granted
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export declare enum PermissionType {
+    /**
+     * Represents a permission a user, group, or anyone has to view an item.
+     */
+    Principal = "principal",
+    /**
+     * Represents a permission that delegates access to permissions on a separate entity.
+     */
+    Delegated = "delegated"
+}
+/**
+ * This represents a permission that is granted to a principal.
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface PrincipalPermission {
+    type: PermissionType.Principal;
+    principal: Principal;
+}
+/**
+ * This represents a permission that delegates access to another entity
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface DelegatedPermission {
+    type: PermissionType.Delegated;
+    delegateRowId: string | number;
+}
+/**
  * This represents the definition of a permission in the external system.
  *
  * TODO(sam): Unhide this
  * @hidden
  */
-export interface Permission {
-    principal: Principal;
-}
+export type Permission = PrincipalPermission | DelegatedPermission;
 /**
  * This represents the list of permissions on a sync table row.
  *
