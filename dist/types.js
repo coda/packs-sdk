@@ -124,6 +124,14 @@ var AuthenticationType;
      * @hidden
      */
     AuthenticationType["Various"] = "Various";
+    /**
+     * Coda owns a service account that can be granted access upon a customer's data by using Coda's Client ID in the
+     * Domain Wide Delegation console.
+     *
+     * @see {@link CodaOwnedDomainWideDelegationAuthentication}
+     * @hidden
+     */
+    AuthenticationType["CodaOwnedDomainWideDelegation"] = "CodaOwnedDomainWideDelegation";
 })(AuthenticationType || (exports.AuthenticationType = AuthenticationType = {}));
 /**
  * Enumeration of post-account-setup step types. See {@link PostSetup}.

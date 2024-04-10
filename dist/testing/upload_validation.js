@@ -490,6 +490,10 @@ function buildMetadataSchema({ sdkVersion }) {
             service: z.string(),
             ...baseAuthenticationValidators,
         }),
+        [types_1.AuthenticationType.CodaOwnedDomainWideDelegation]: zodCompleteStrictObject({
+            type: zodDiscriminant(types_1.AuthenticationType.CodaOwnedDomainWideDelegation),
+            ...baseAuthenticationValidators,
+        }),
         [types_1.AuthenticationType.Custom]: zodCompleteStrictObject({
             type: zodDiscriminant(types_1.AuthenticationType.Custom),
             params: z
@@ -518,6 +522,7 @@ function buildMetadataSchema({ sdkVersion }) {
         [types_1.AuthenticationType.AWSAssumeRole]: true,
         [types_1.AuthenticationType.Custom]: true,
         [types_1.AuthenticationType.OAuth2ClientCredentials]: true,
+        [types_1.AuthenticationType.CodaOwnedDomainWideDelegation]: true,
     };
     const systemAuthenticationValidators = Object.entries(defaultAuthenticationValidators)
         .filter(([authType]) => authType in systemAuthenticationTypes)

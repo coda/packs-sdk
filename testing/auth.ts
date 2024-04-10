@@ -3,6 +3,7 @@ import type {AWSAssumeRoleCredentials} from './auth_types';
 import type {Authentication} from '../types';
 import {AuthenticationType} from '../types';
 import type {BasicPackDefinition} from '../types';
+import type {CodaOwnedDomainWideDelegationCredentials} from './auth_types';
 import type {Credentials} from './auth_types';
 import type {CredentialsFile} from './auth_types';
 import type {CustomAuthParameter} from '../types';
@@ -44,8 +45,11 @@ export async function setupAuthFromModule(
   return setupAuth(manifestDir, manifest, opts);
 }
 
-export async function setupAuth(manifestDir: string, packDef: BasicPackDefinition, opts: SetupAuthOptions = {})
-    : Promise<void> {
+export async function setupAuth(
+  manifestDir: string,
+  packDef: BasicPackDefinition,
+  opts: SetupAuthOptions = {},
+): Promise<void> {
   const auth = getPackAuth(packDef);
   if (!auth) {
     return printAndExit(
@@ -87,6 +91,8 @@ export async function setupAuth(manifestDir: string, packDef: BasicPackDefinitio
       return handler.handleAWSAccessKey();
     case AuthenticationType.AWSAssumeRole:
       return handler.handleAWSAssumeRole();
+    case AuthenticationType.CodaOwnedDomainWideDelegation:
+      return handler.handleCodaOwnedDomainWideDelegation();
     case AuthenticationType.Various:
       return printAndExit('This authentication type is not yet implemented');
     default:
@@ -231,15 +237,16 @@ class CredentialHandler {
     print('Credentials updated!');
   }
 
-  private _promptOAuth2ClientIdAndSecret(existingCredentials: OAuth2Credentials | OAuth2ClientCredentials | undefined):
-      {clientId: string, clientSecret: string} {
+  private _promptOAuth2ClientIdAndSecret(
+    existingCredentials: OAuth2Credentials | OAuth2ClientCredentials | undefined,
+  ): {clientId: string; clientSecret: string} {
     const clientIdPrompt = existingCredentials
-        ? `Enter the OAuth client id for this Pack (or Enter to skip and use existing):\n`
-        : `Enter the OAuth client id for this Pack:\n`;
+      ? `Enter the OAuth client id for this Pack (or Enter to skip and use existing):\n`
+      : `Enter the OAuth client id for this Pack:\n`;
     const newClientId = promptForInput(clientIdPrompt);
     const clientSecretPrompt = existingCredentials
-        ? `Enter the OAuth client secret for this Pack (or Enter to skip and use existing):\n`
-        : `Enter the OAuth client secret for this Pack:\n`;
+      ? `Enter the OAuth client secret for this Pack (or Enter to skip and use existing):\n`
+      : `Enter the OAuth client secret for this Pack:\n`;
     const newClientSecret = promptForInput(clientSecretPrompt, {mask: true});
 
     const clientId = ensureNonEmptyString(newClientId || existingCredentials?.clientId);
@@ -308,13 +315,13 @@ class CredentialHandler {
 
     const manifestScopes = this._authDef.scopes || [];
     const requestedScopes =
-        this._extraOAuthScopes.length > 0 ? [...manifestScopes, ...this._extraOAuthScopes] : manifestScopes;
+      this._extraOAuthScopes.length > 0 ? [...manifestScopes, ...this._extraOAuthScopes] : manifestScopes;
 
     const {accessToken, expires} = await performOAuthClientCredentialsServerFlow({
       clientId,
       clientSecret,
       scopes: requestedScopes,
-      authDef: this._authDef
+      authDef: this._authDef,
     });
 
     this.storeCredential({
@@ -326,7 +333,6 @@ class CredentialHandler {
     });
     print('Access token saved!');
   }
-
 
   handleAWSAccessKey() {
     assertCondition(this._authDef.type === AuthenticationType.AWSAccessKey);
@@ -354,6 +360,47 @@ class CredentialHandler {
     const roleArn = ensureNonEmptyString(newRoleArn || existingCredentials?.roleArn);
 
     this.storeCredential({roleArn, externalId, endpointUrl});
+    print('Credentials updated!');
+  }
+
+  handleCodaOwnedDomainWideDelegation() {
+    assertCondition(this._authDef.type === AuthenticationType.CodaOwnedDomainWideDelegation);
+    const existingCredentials = this.checkForExistingCredential() as
+      | CodaOwnedDomainWideDelegationCredentials
+      | undefined;
+
+    const pathToKeyFile =
+      promptForInput(
+        existingCredentials
+          ? `Enter the path to the service account key file (or Enter to skip and use existing):\n`
+          : `Enter the path to the service account key file:\n`,
+      ) ||
+      existingCredentials?.pathToServiceAccountKey ||
+      '';
+    const userToImpersonate =
+      promptForInput(
+        existingCredentials
+          ? `Enter the email of the user to impersonate (or Enter to skip and use existing):\n`
+          : `Enter the email of the user to impersonate:\n`,
+      ) ||
+      existingCredentials?.delegationEmail ||
+      '';
+    const scopes =
+      promptForInput(
+        existingCredentials
+          ? `Enter the scopes to request for the token when impersonating the user (or Enter to skip and use existing):\n`
+          : `Enter the scopes to request for the token when impersonating the user:\n`,
+      ).split(' ') ||
+      existingCredentials?.scopes ||
+      [];
+
+    const credentials: CodaOwnedDomainWideDelegationCredentials = {
+      pathToServiceAccountKey: pathToKeyFile,
+      delegationEmail: userToImpersonate,
+      scopes,
+    };
+
+    this.storeCredential(credentials);
     print('Credentials updated!');
   }
 

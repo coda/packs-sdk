@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.newFetcherSyncExecutionContext = exports.newFetcherExecutionContext = exports.requestHelper = exports.AuthenticatingFetcher = void 0;
 const client_sts_1 = require("@aws-sdk/client-sts");
+const googleapis_1 = require("googleapis");
 const types_1 = require("../types");
 const constants_1 = require("./constants");
 const constants_2 = require("./constants");
@@ -226,13 +227,18 @@ class AuthenticatingFetcher {
         const credentials = this._credentials;
         const { clientId, clientSecret, scopes } = credentials;
         // Refreshing client credentials is just the same as requesting the initial access token
-        const { accessToken, expires } = await (0, oauth_helpers_1.performOAuthClientCredentialsServerFlow)({ clientId, clientSecret, authDef: this._authDef, scopes });
+        const { accessToken, expires } = await (0, oauth_helpers_1.performOAuthClientCredentialsServerFlow)({
+            clientId,
+            clientSecret,
+            authDef: this._authDef,
+            scopes,
+        });
         return {
             clientId,
             clientSecret,
             accessToken,
             expires,
-            scopes
+            scopes,
         };
     }
     async _refreshOAuthCredentials() {
@@ -425,6 +431,21 @@ class AuthenticatingFetcher {
                     headers: resultHeaders,
                 };
             }
+            case types_1.AuthenticationType.CodaOwnedDomainWideDelegation:
+                const { pathToServiceAccountKey, delegationEmail, scopes } = this
+                    ._credentials;
+                const client = new googleapis_1.Auth.JWT({
+                    keyFile: pathToServiceAccountKey,
+                    scopes,
+                    subject: delegationEmail,
+                });
+                const tokens = await client.authorize();
+                return {
+                    url,
+                    body,
+                    form,
+                    headers: { ...headers, Authorization: `Bearer ${tokens.access_token}` },
+                };
             case types_1.AuthenticationType.Various:
                 throw new Error('Not yet implemented');
             default:

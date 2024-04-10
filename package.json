@@ -103,6 +103,7 @@
     "eslint-plugin-local": "1.0.0",
     "eslint-plugin-prefer-let": "3.0.1",
     "glob": "10.3.10",
+    "googleapis": "134.0.0",
     "js-yaml": "4.1.0",
     "mocha": "10.3.0",
     "mock-fs": "5.2.0",

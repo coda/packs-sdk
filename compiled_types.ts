@@ -3,6 +3,7 @@ import type {AWSAssumeRoleAuthentication} from './types';
 import type {Authentication} from './types';
 import type {AuthenticationType} from './types';
 import type {CodaApiBearerTokenAuthentication} from './types';
+import type {CodaOwnedDomainWideDelegationAuthentication} from './types';
 import type {CustomAuthentication} from './types';
 import type {CustomHeaderTokenAuthentication} from './types';
 import type {DistributiveOmit} from './type_utils';
@@ -91,6 +92,8 @@ export interface AuthenticationMetadataTypeMap {
   [AuthenticationType.WebBasic]: AuthenticationToMetadata<WebBasicAuthentication>;
   [AuthenticationType.OAuth2]: AuthenticationToMetadata<OAuth2Authentication>;
   [AuthenticationType.OAuth2ClientCredentials]: AuthenticationToMetadata<OAuth2ClientCredentialsAuthentication>;
+  // eslint-disable-next-line max-len
+  [AuthenticationType.CodaOwnedDomainWideDelegation]: AuthenticationToMetadata<CodaOwnedDomainWideDelegationAuthentication>;
 }
 
 // Stripped-down version of `PackVersionDefinition` that doesn't contain formula definitions.

@@ -131,6 +131,14 @@ export enum AuthenticationType {
    * @hidden
    */
   Various = 'Various',
+  /**
+   * Coda owns a service account that can be granted access upon a customer's data by using Coda's Client ID in the
+   * Domain Wide Delegation console.
+   *
+   * @see {@link CodaOwnedDomainWideDelegationAuthentication}
+   * @hidden
+   */
+  CodaOwnedDomainWideDelegation = 'CodaOwnedDomainWideDelegation',
 }
 
 /**
@@ -799,6 +807,20 @@ export interface VariousAuthentication {
 }
 
 /**
+ * Authenticate to Google Services by using a service account that Coda owns that can impersonate a user.
+ *
+ * This is only for use by Coda-authored packs.
+ * @see [Google - Domain-wide delegation](https://developers.google.com/workspace/guides/create-credentials#optional_set_up_domain-wide_delegation_for_a_service_account)
+ * @hidden
+ */
+export interface CodaOwnedDomainWideDelegationAuthentication extends BaseAuthentication {
+  type: AuthenticationType.CodaOwnedDomainWideDelegation;
+
+  // TODO(sam): This could maybe have scopes but all that would happen is we show the user this list of scopes
+  // and they need to add it special basically
+}
+
+/**
  * The union of supported authentication methods.
  */
 export type Authentication =
@@ -815,7 +837,8 @@ export type Authentication =
   | WebBasicAuthentication
   | AWSAccessKeyAuthentication
   | AWSAssumeRoleAuthentication
-  | CustomAuthentication;
+  | CustomAuthentication
+  | CodaOwnedDomainWideDelegationAuthentication;
 
 /** @ignore */
 export interface AuthenticationTypeMap {
@@ -832,6 +855,7 @@ export interface AuthenticationTypeMap {
   [AuthenticationType.AWSAccessKey]: AWSAccessKeyAuthentication;
   [AuthenticationType.AWSAssumeRole]: AWSAssumeRoleAuthentication;
   [AuthenticationType.Custom]: CustomAuthentication;
+  [AuthenticationType.CodaOwnedDomainWideDelegation]: CodaOwnedDomainWideDelegationAuthentication;
 }
 
 type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionName' | 'getConnectionUserId' | 'postSetup'> & {
@@ -863,7 +887,8 @@ export type AuthenticationDef =
   | AsAuthDef<WebBasicAuthentication>
   | AsAuthDef<AWSAccessKeyAuthentication>
   | AsAuthDef<AWSAssumeRoleAuthentication>
-  | AsAuthDef<CustomAuthentication>;
+  | AsAuthDef<CustomAuthentication>
+  | AsAuthDef<CodaOwnedDomainWideDelegationAuthentication>;
 
 /**
  * The union of authentication methods that are supported for system authentication,
@@ -879,7 +904,8 @@ export type SystemAuthentication =
   | AWSAccessKeyAuthentication
   | AWSAssumeRoleAuthentication
   | CustomAuthentication
-  | OAuth2ClientCredentialsAuthentication;
+  | OAuth2ClientCredentialsAuthentication
+  | CodaOwnedDomainWideDelegationAuthentication;
 
 /**
  * The union of supported system authentication definitions. These represent simplified
@@ -897,7 +923,8 @@ export type SystemAuthenticationDef =
   | AsAuthDef<AWSAccessKeyAuthentication>
   | AsAuthDef<AWSAssumeRoleAuthentication>
   | AsAuthDef<CustomAuthentication>
-  | AsAuthDef<OAuth2ClientCredentialsAuthentication>;
+  | AsAuthDef<OAuth2ClientCredentialsAuthentication>
+  | AsAuthDef<CodaOwnedDomainWideDelegationAuthentication>;
 
 /**
  * The subset of valid {@link AuthenticationType} enum values that can be used

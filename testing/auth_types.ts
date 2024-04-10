@@ -58,6 +58,23 @@ export interface AWSAssumeRoleCredentials extends BaseCredentials {
   externalId?: string;
 }
 
+export interface CodaOwnedDomainWideDelegationCredentials extends BaseCredentials {
+  /*
+   * The path to the service account key file. This file should be a JSON file.
+   */
+  pathToServiceAccountKey: string;
+
+  /*
+   * The email to impersonate.
+   */
+  delegationEmail: string;
+
+  /*
+   *  The scopes to request for the token when impersonating the user
+   */
+  scopes: string[];
+}
+
 export type Credentials =
   | TokenCredentials
   | MultiHeaderCredentials
@@ -68,7 +85,8 @@ export type Credentials =
   | OAuth2Credentials
   | OAuth2ClientCredentials
   | AWSAccessKeyCredentials
-  | AWSAssumeRoleCredentials;
+  | AWSAssumeRoleCredentials
+  | CodaOwnedDomainWideDelegationCredentials;
 
 interface BaseOauth2RequestAccessTokenParams {
   client_id: string;

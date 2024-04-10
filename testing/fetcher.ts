@@ -1,10 +1,12 @@
 import type {AWSAccessKeyCredentials} from './auth_types';
 import type {AWSAssumeRoleCredentials} from './auth_types';
 import {AssumeRoleCommand} from '@aws-sdk/client-sts';
+import {Auth} from 'googleapis';
 import type {Authentication} from '../types';
 import {AuthenticationType} from '../types';
 import type {AwsCredentialIdentity} from '@aws-sdk/types';
 import type {BaseOAuth2Credentials} from './auth_types';
+import type {CodaOwnedDomainWideDelegationCredentials} from './auth_types';
 import type {Credentials} from './auth_types';
 import type {CustomCredentials} from './auth_types';
 import {DEFAULT_ALLOWED_GET_DOMAINS_REGEXES} from './constants';
@@ -190,9 +192,11 @@ export class AuthenticatingFetcher implements Fetcher {
       return false;
     }
 
-    if (requestFailure.statusCode !== HttpStatusCode.Unauthorized ||
-        (this._authDef.type !== AuthenticationType.OAuth2 &&
-            this._authDef.type !== AuthenticationType.OAuth2ClientCredentials)) {
+    if (
+      requestFailure.statusCode !== HttpStatusCode.Unauthorized ||
+      (this._authDef.type !== AuthenticationType.OAuth2 &&
+        this._authDef.type !== AuthenticationType.OAuth2ClientCredentials)
+    ) {
       return false;
     }
 
@@ -215,7 +219,6 @@ export class AuthenticatingFetcher implements Fetcher {
       default:
         ensureUnreachable(type);
     }
-
 
     return true;
   }
@@ -284,36 +287,41 @@ export class AuthenticatingFetcher implements Fetcher {
     assertCondition(this._authDef?.type === AuthenticationType.OAuth2ClientCredentials);
     assertCondition(this._credentials);
     const credentials = this._credentials as OAuth2ClientCredentials;
-    const {clientId, clientSecret,  scopes} = credentials;
+    const {clientId, clientSecret, scopes} = credentials;
 
     // Refreshing client credentials is just the same as requesting the initial access token
-    const {accessToken, expires} = await performOAuthClientCredentialsServerFlow(
-        {clientId, clientSecret, authDef: this._authDef, scopes}
-    );
+    const {accessToken, expires} = await performOAuthClientCredentialsServerFlow({
+      clientId,
+      clientSecret,
+      authDef: this._authDef,
+      scopes,
+    });
     return {
       clientId,
       clientSecret,
       accessToken,
       expires,
-      scopes
-    }
+      scopes,
+    };
   }
 
   private async _refreshOAuthCredentials() {
-    assertCondition(this._authDef &&
+    assertCondition(
+      this._authDef &&
         (this._authDef.type === AuthenticationType.OAuth2 ||
-            this._authDef.type === AuthenticationType.OAuth2ClientCredentials));
+          this._authDef.type === AuthenticationType.OAuth2ClientCredentials),
+    );
     let credentials: OAuth2Credentials | OAuth2ClientCredentials;
     const type = this._authDef.type;
     switch (type) {
       case AuthenticationType.OAuth2:
-          credentials = await this._refreshOAuthWithRefreshToken();
-          break;
+        credentials = await this._refreshOAuthWithRefreshToken();
+        break;
       case AuthenticationType.OAuth2ClientCredentials:
-          credentials = await this._refreshOAuthClientCredentials();
-          break;
+        credentials = await this._refreshOAuthClientCredentials();
+        break;
       default:
-          ensureUnreachable(type);
+        ensureUnreachable(type);
     }
 
     this._credentials = credentials;
@@ -534,6 +542,22 @@ export class AuthenticatingFetcher implements Fetcher {
           headers: resultHeaders,
         };
       }
+      case AuthenticationType.CodaOwnedDomainWideDelegation:
+        const {pathToServiceAccountKey, delegationEmail, scopes} = this
+          ._credentials as CodaOwnedDomainWideDelegationCredentials;
+        const client = new Auth.JWT({
+          keyFile: pathToServiceAccountKey,
+          scopes,
+          subject: delegationEmail,
+        });
+        const tokens = await client.authorize();
+        return {
+          url,
+          body,
+          form,
+          headers: {...headers, Authorization: `Bearer ${tokens.access_token}`},
+        };
+
       case AuthenticationType.Various:
         throw new Error('Not yet implemented');
 

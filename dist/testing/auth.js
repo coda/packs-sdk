@@ -81,6 +81,8 @@ async function setupAuth(manifestDir, packDef, opts = {}) {
             return handler.handleAWSAccessKey();
         case types_1.AuthenticationType.AWSAssumeRole:
             return handler.handleAWSAssumeRole();
+        case types_1.AuthenticationType.CodaOwnedDomainWideDelegation:
+            return handler.handleCodaOwnedDomainWideDelegation();
         case types_1.AuthenticationType.Various:
             return (0, helpers_3.printAndExit)('This authentication type is not yet implemented');
         default:
@@ -257,7 +259,7 @@ class CredentialHandler {
             clientId,
             clientSecret,
             scopes: requestedScopes,
-            authDef: this._authDef
+            authDef: this._authDef,
         });
         this.storeCredential({
             clientId,
@@ -287,6 +289,32 @@ class CredentialHandler {
         const externalId = (0, helpers_4.promptForInput)(`[Optional] Enter the External ID for this Pack:\n`, { mask: true });
         const roleArn = (0, ensure_3.ensureNonEmptyString)(newRoleArn || (existingCredentials === null || existingCredentials === void 0 ? void 0 : existingCredentials.roleArn));
         this.storeCredential({ roleArn, externalId, endpointUrl });
+        (0, helpers_2.print)('Credentials updated!');
+    }
+    handleCodaOwnedDomainWideDelegation() {
+        (0, ensure_1.assertCondition)(this._authDef.type === types_1.AuthenticationType.CodaOwnedDomainWideDelegation);
+        const existingCredentials = this.checkForExistingCredential();
+        const pathToKeyFile = (0, helpers_4.promptForInput)(existingCredentials
+            ? `Enter the path to the service account key file (or Enter to skip and use existing):\n`
+            : `Enter the path to the service account key file:\n`) ||
+            (existingCredentials === null || existingCredentials === void 0 ? void 0 : existingCredentials.pathToServiceAccountKey) ||
+            '';
+        const userToImpersonate = (0, helpers_4.promptForInput)(existingCredentials
+            ? `Enter the email of the user to impersonate (or Enter to skip and use existing):\n`
+            : `Enter the email of the user to impersonate:\n`) ||
+            (existingCredentials === null || existingCredentials === void 0 ? void 0 : existingCredentials.delegationEmail) ||
+            '';
+        const scopes = (0, helpers_4.promptForInput)(existingCredentials
+            ? `Enter the scopes to request for the token when impersonating the user (or Enter to skip and use existing):\n`
+            : `Enter the scopes to request for the token when impersonating the user:\n`).split(' ') ||
+            (existingCredentials === null || existingCredentials === void 0 ? void 0 : existingCredentials.scopes) ||
+            [];
+        const credentials = {
+            pathToServiceAccountKey: pathToKeyFile,
+            delegationEmail: userToImpersonate,
+            scopes,
+        };
+        this.storeCredential(credentials);
         (0, helpers_2.print)('Credentials updated!');
     }
     maybePromptForEndpointUrl() {

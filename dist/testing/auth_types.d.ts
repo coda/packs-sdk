@@ -49,7 +49,12 @@ export interface AWSAssumeRoleCredentials extends BaseCredentials {
     roleArn: string;
     externalId?: string;
 }
-export type Credentials = TokenCredentials | MultiHeaderCredentials | WebBasicCredentials | CustomCredentials | QueryParamCredentials | MultiQueryParamCredentials | OAuth2Credentials | OAuth2ClientCredentials | AWSAccessKeyCredentials | AWSAssumeRoleCredentials;
+export interface CodaOwnedDomainWideDelegationCredentials extends BaseCredentials {
+    pathToServiceAccountKey: string;
+    delegationEmail: string;
+    scopes: string[];
+}
+export type Credentials = TokenCredentials | MultiHeaderCredentials | WebBasicCredentials | CustomCredentials | QueryParamCredentials | MultiQueryParamCredentials | OAuth2Credentials | OAuth2ClientCredentials | AWSAccessKeyCredentials | AWSAssumeRoleCredentials | CodaOwnedDomainWideDelegationCredentials;
 interface BaseOauth2RequestAccessTokenParams {
     client_id: string;
     client_secret: string;

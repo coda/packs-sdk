@@ -8,6 +8,7 @@ import type {BooleanPackFormula} from '../api';
 import type {BooleanSchema} from '../schema';
 import type {CodaApiBearerTokenAuthentication} from '../types';
 import type {CodaInternalRichTextSchema} from '../schema';
+import type {CodaOwnedDomainWideDelegationAuthentication} from '../types';
 import {ConnectionRequirement} from '../api_types';
 import {CurrencyFormat} from '../schema';
 import type {CurrencySchema} from '../schema';
@@ -612,6 +613,12 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       service: z.string(),
       ...baseAuthenticationValidators,
     }),
+
+    [AuthenticationType.CodaOwnedDomainWideDelegation]:
+      zodCompleteStrictObject<CodaOwnedDomainWideDelegationAuthentication>({
+        type: zodDiscriminant(AuthenticationType.CodaOwnedDomainWideDelegation),
+        ...baseAuthenticationValidators,
+      }),
     [AuthenticationType.Custom]: zodCompleteStrictObject<CustomAuthentication>({
       type: zodDiscriminant(AuthenticationType.Custom),
       params: z
@@ -645,6 +652,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     [AuthenticationType.AWSAssumeRole]: true,
     [AuthenticationType.Custom]: true,
     [AuthenticationType.OAuth2ClientCredentials]: true,
+    [AuthenticationType.CodaOwnedDomainWideDelegation]: true,
   };
 
   const systemAuthenticationValidators = Object.entries(defaultAuthenticationValidators)

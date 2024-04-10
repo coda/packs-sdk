@@ -3749,7 +3749,15 @@ export declare enum AuthenticationType {
 	 * @see {@link VariousAuthentication}
 	 * @hidden
 	 */
-	Various = "Various"
+	Various = "Various",
+	/**
+	 * Coda owns a service account that can be granted access upon a customer's data by using Coda's Client ID in the
+	 * Domain Wide Delegation console.
+	 *
+	 * @see {@link CodaOwnedDomainWideDelegationAuthentication}
+	 * @hidden
+	 */
+	CodaOwnedDomainWideDelegation = "CodaOwnedDomainWideDelegation"
 }
 /**
  * A pack or formula which does not use authentication.
@@ -4382,9 +4390,19 @@ export interface VariousAuthentication {
 	type: AuthenticationType.Various;
 }
 /**
+ * Authenticate to Google Services by using a service account that Coda owns that can impersonate a user.
+ *
+ * This is only for use by Coda-authored packs.
+ * @see [Google - Domain-wide delegation](https://developers.google.com/workspace/guides/create-credentials#optional_set_up_domain-wide_delegation_for_a_service_account)
+ * @hidden
+ */
+export interface CodaOwnedDomainWideDelegationAuthentication extends BaseAuthentication {
+	type: AuthenticationType.CodaOwnedDomainWideDelegation;
+}
+/**
  * The union of supported authentication methods.
  */
-export type Authentication = NoAuthentication | VariousAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | OAuth2ClientCredentialsAuthentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | CustomAuthentication;
+export type Authentication = NoAuthentication | VariousAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | OAuth2ClientCredentialsAuthentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | CustomAuthentication | CodaOwnedDomainWideDelegationAuthentication;
 export type AsAuthDef<T extends BaseAuthentication> = Omit<T, "getConnectionName" | "getConnectionUserId" | "postSetup"> & {
 	/** See {@link BaseAuthentication.getConnectionName} */
 	getConnectionName?: MetadataFormulaDef;
@@ -4399,19 +4417,19 @@ export type AsAuthDef<T extends BaseAuthentication> = Omit<T, "getConnectionName
  * a pack definition builder. The builder massages these definitions into the form of
  * an {@link Authentication} value, which is the value Coda ultimately cares about.
  */
-export type AuthenticationDef = NoAuthentication | VariousAuthentication | AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CodaApiBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<MultiHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<OAuth2Authentication> | AsAuthDef<OAuth2ClientCredentialsAuthentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication> | AsAuthDef<CustomAuthentication>;
+export type AuthenticationDef = NoAuthentication | VariousAuthentication | AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CodaApiBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<MultiHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<OAuth2Authentication> | AsAuthDef<OAuth2ClientCredentialsAuthentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication> | AsAuthDef<CustomAuthentication> | AsAuthDef<CodaOwnedDomainWideDelegationAuthentication>;
 /**
  * The union of authentication methods that are supported for system authentication,
  * where the pack author provides credentials used in HTTP requests rather than the user.
  */
-export type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | CustomAuthentication | OAuth2ClientCredentialsAuthentication;
+export type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | CustomAuthentication | OAuth2ClientCredentialsAuthentication | CodaOwnedDomainWideDelegationAuthentication;
 /**
  * The union of supported system authentication definitions. These represent simplified
  * configurations a pack developer can specify when calling {@link PackDefinitionBuilder.setSystemAuthentication}
  * when using a pack definition builder. The builder massages these definitions into the form of
  * an {@link SystemAuthentication} value, which is the value Coda ultimately cares about.
  */
-export type SystemAuthenticationDef = AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<MultiHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication> | AsAuthDef<CustomAuthentication> | AsAuthDef<OAuth2ClientCredentialsAuthentication>;
+export type SystemAuthenticationDef = AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<MultiHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication> | AsAuthDef<CustomAuthentication> | AsAuthDef<OAuth2ClientCredentialsAuthentication> | AsAuthDef<CodaOwnedDomainWideDelegationAuthentication>;
 /**
  * @ignore
  */
