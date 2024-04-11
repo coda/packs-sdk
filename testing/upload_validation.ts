@@ -274,7 +274,7 @@ export function validateCrawlHierarchy(
           return undefined;
         }
 
-        if (inheritPermissions && tableSchema.idProperty !== propertyKey) {
+        if (inheritPermissions && !(tableSchema.id === propertyKey || tableSchema.idProperty === propertyKey)) {
           context?.addIssue({
             code: z.ZodIssueCode.custom,
             path: ['syncTables', tableIndex, 'parameters', paramIndex, 'crawlStrategy', 'parentTable'],
