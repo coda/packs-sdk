@@ -512,11 +512,12 @@ export function makeParameter<T extends ParameterType, O extends ParameterOption
   let crawlStrategy: CrawlStrategy | undefined;
   if (crawlStrategyDef) {
     if (crawlStrategyDef.parentTable) {
-      const {tableName, propertyKey} = crawlStrategyDef.parentTable;
+      const {tableName, propertyKey, inheritPermissions} = crawlStrategyDef.parentTable;
       crawlStrategy = {
         parentTable: {
           tableName,
           propertyKey: normalizeSchemaKey(propertyKey),
+          inheritPermissions,
         },
       };
     } else {

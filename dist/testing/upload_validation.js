@@ -178,7 +178,7 @@ function validateCrawlHierarchy(syncTables, context) {
                 continue;
             }
             if (param.crawlStrategy.parentTable) {
-                const { tableName: parentTableName, propertyKey } = param.crawlStrategy.parentTable;
+                const { tableName: parentTableName, propertyKey, inheritPermissions } = param.crawlStrategy.parentTable;
                 const tableSchema = syncTableSchemasByName[parentTableName];
                 if (!tableSchema) {
                     context === null || context === void 0 ? void 0 : context.addIssue({
@@ -194,6 +194,14 @@ function validateCrawlHierarchy(syncTables, context) {
                         code: z.ZodIssueCode.custom,
                         path: ['syncTables', tableIndex, 'parameters', paramIndex, 'crawlStrategy', 'parentTable'],
                         message: `Sync table ${syncTable.name} expects parent table ${parentTableName}'s schema to have the property ${propertyKey}.`,
+                    });
+                    return undefined;
+                }
+                if (inheritPermissions && !(tableSchema.id === propertyKey || tableSchema.idProperty === propertyKey)) {
+                    context === null || context === void 0 ? void 0 : context.addIssue({
+                        code: z.ZodIssueCode.custom,
+                        path: ['syncTables', tableIndex, 'parameters', paramIndex, 'crawlStrategy', 'parentTable'],
+                        message: `Sync table ${syncTable.name} expects parent table ${parentTableName}'s schema to have inheritPermissions on the id property.`,
                     });
                     return undefined;
                 }

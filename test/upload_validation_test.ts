@@ -2222,7 +2222,7 @@ describe('Pack metadata Validation', async () => {
                   type: ParameterType.String,
                   name: 'parentParam',
                   description: '',
-                  crawlStrategy: {parentTable: {tableName: 'Parent', propertyKey: 'account'}},
+                  crawlStrategy: {parentTable: {tableName: 'Parent', propertyKey: 'account', inheritPermissions: true}},
                 }),
               ],
               async execute() {
@@ -2497,6 +2497,69 @@ describe('Pack metadata Validation', async () => {
             {
               message: `Sync table Child cannot reference multiple parent tables.`,
               path: 'syncTables[0].parameters',
+            },
+          ]);
+          const hierarchy = validateCrawlHierarchy(metadata.syncTables || []);
+          assert.isUndefined(hierarchy);
+        });
+
+        it('ensures that inheritPermissions column is the id of the parent sync table', async () => {
+          const parentTable = makeSyncTable({
+            name: 'Parent',
+            identityName: 'ParentIdentity',
+            schema: makeObjectSchema({
+              type: ValueType.Object,
+              id: 'account',
+              primary: 'account',
+              properties: {
+                account: {type: ValueType.String},
+                group: {type: ValueType.String},
+              },
+            }),
+            formula: {
+              name: 'Whatever',
+              description: '',
+              parameters: [],
+              async execute() {
+                return {result: []};
+              },
+            },
+          });
+          const childTable = makeSyncTable({
+            name: 'Child',
+            identityName: 'ChildIdentity',
+            schema: makeObjectSchema({
+              type: ValueType.Object,
+              id: 'bar',
+              primary: 'bar',
+              properties: {bar: {type: ValueType.String}},
+            }),
+            formula: {
+              name: 'AnotherWhatever',
+              description: '',
+              parameters: [
+                makeParameter({
+                  type: ParameterType.String,
+                  name: 'parentParam',
+                  description: '',
+                  crawlStrategy: {parentTable: {tableName: 'Parent', propertyKey: 'group', inheritPermissions: true}},
+                }),
+              ],
+              async execute() {
+                return {result: []};
+              },
+            },
+          });
+
+          const metadata = createFakePack({
+            id: 1013,
+            syncTables: [childTable, parentTable],
+          });
+          const err = await validateJsonAndAssertFails(metadata);
+          assert.deepEqual(err.validationErrors, [
+            {
+              message: `Sync table Child expects parent table Parent's schema to have inheritPermissions on the id property.`,
+              path: 'syncTables[0].parameters[0].crawlStrategy.parentTable',
             },
           ]);
           const hierarchy = validateCrawlHierarchy(metadata.syncTables || []);

@@ -409,6 +409,10 @@ export interface CrawlStrategy {
 interface SyncTableRelation {
   tableName: string;
   propertyKey: string;
+  /**
+   * Indiciates that permissions should be inherited from this relation using the propertyKey as the item id
+   */
+  inheritPermissions?: boolean;
 }
 
 /**
