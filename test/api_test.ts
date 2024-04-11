@@ -605,7 +605,7 @@ describe('API test', () => {
               type: ParameterType.String,
               name: 'parent',
               description: '',
-              crawlStrategy: {parentTable: {tableName: 'Parent', propertyKey: 'foo'}},
+              crawlStrategy: {parentTable: {tableName: 'Parent', propertyKey: 'foo', inheritPermissions: false}},
             }),
           ],
           async execute() {
@@ -615,7 +615,7 @@ describe('API test', () => {
       });
       // Property key should be normalized.
       assert.deepEqual(childTable.getter.parameters[0].crawlStrategy, {
-        parentTable: {tableName: 'Parent', propertyKey: 'Foo'},
+        parentTable: {tableName: 'Parent', propertyKey: 'Foo', inheritPermissions: false},
       });
     });
   });

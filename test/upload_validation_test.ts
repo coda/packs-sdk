@@ -2222,7 +2222,7 @@ describe('Pack metadata Validation', async () => {
                   type: ParameterType.String,
                   name: 'parentParam',
                   description: '',
-                  crawlStrategy: {parentTable: {tableName: 'Parent', propertyKey: 'account'}},
+                  crawlStrategy: {parentTable: {tableName: 'Parent', propertyKey: 'account', inheritPermissions: true}},
                 }),
               ],
               async execute() {
