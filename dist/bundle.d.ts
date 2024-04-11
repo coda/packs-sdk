@@ -275,6 +275,10 @@ export interface CrawlStrategy {
 export interface SyncTableRelation {
 	tableName: string;
 	propertyKey: string;
+	/**
+	 * Indiciates that permissions should be inherited from this relation using the propertyKey as the item id
+	 */
+	inheritPermissions?: boolean;
 }
 /**
  * Inputs for creating a formula that are common between regular formulas and sync table formulas.

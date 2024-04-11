@@ -241,11 +241,12 @@ function makeParameter(paramDefinition) {
     let crawlStrategy;
     if (crawlStrategyDef) {
         if (crawlStrategyDef.parentTable) {
-            const { tableName, propertyKey } = crawlStrategyDef.parentTable;
+            const { tableName, propertyKey, inheritPermissions } = crawlStrategyDef.parentTable;
             crawlStrategy = {
                 parentTable: {
                     tableName,
                     propertyKey: (0, schema_6.normalizeSchemaKey)(propertyKey),
+                    inheritPermissions,
                 },
             };
         }
