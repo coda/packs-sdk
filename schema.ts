@@ -1060,6 +1060,7 @@ export type ObjectSchemaPathProperties = Pick<
   | 'userEmailProperty'
   | 'userIdProperty'
   | 'groupIdProperty'
+  | 'bodyTextProperty'
 >;
 
 /**
@@ -1245,6 +1246,16 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    * @hidden
    */
   groupIdProperty?: PropertyIdentifier<K>;
+
+  /**
+   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be be interpreted as
+   * text representing the body of this entity.
+   *
+   * Must be a {@link ValueType.String} property.
+   * TODO(sam): Unhide this
+   * @hidden
+   */
+  bodyTextProperty?: PropertyIdentifier<K>;
   // TODO(dweitzman): Only support options in the typing when the codaType is ValueHintType.SelectList.
 }
 
@@ -1868,6 +1879,7 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     userEmailProperty,
     userIdProperty,
     groupIdProperty,
+    bodyTextProperty,
     ...rest
   } = schema;
   // Have TS ensure we don't forget about new fields in this function.
@@ -1933,6 +1945,9 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
       : undefined,
     groupIdProperty: groupIdProperty
       ? normalizeSchemaPropertyIdentifier(groupIdProperty, normalizedProperties)
+      : undefined,
+    bodyTextProperty: bodyTextProperty
+      ? normalizeSchemaPropertyIdentifier(bodyTextProperty, normalizedProperties)
       : undefined,
     type: ValueType.Object,
   };

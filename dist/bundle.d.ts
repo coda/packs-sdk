@@ -1928,6 +1928,15 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 * @hidden
 	 */
 	groupIdProperty?: PropertyIdentifier<K>;
+	/**
+	 * The name of the property within {@link ObjectSchemaDefinition.properties} that can be be interpreted as
+	 * text representing the body of this entity.
+	 *
+	 * Must be a {@link ValueType.String} property.
+	 * TODO(sam): Unhide this
+	 * @hidden
+	 */
+	bodyTextProperty?: PropertyIdentifier<K>;
 }
 declare enum PrincipalType {
 	User = "user",

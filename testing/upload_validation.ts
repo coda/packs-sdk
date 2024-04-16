@@ -1179,6 +1179,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       userIdProperty: propertySchema.optional(),
       userEmailProperty: propertySchema.optional(),
       groupIdProperty: propertySchema.optional(),
+      bodyTextProperty: propertySchema.optional(),
       options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
       requireForUpdates: z.boolean().optional(),
       autocomplete:
@@ -1461,6 +1462,14 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
           );
         };
 
+        const validatebodyTextProperty = () => {
+          return validateProperty(
+            'bodyTextProperty',
+            bodyTextPropertySchema => bodyTextPropertySchema.type === ValueType.String,
+            `must refer to a "ValueType.String" property.`,
+          );
+        };
+
         validateTitleProperty();
         validateLinkProperty();
         validateImageProperty();
@@ -1473,6 +1482,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
         validateUserEmailProperty();
         validateUserIdProperty();
         validateGroupIdProperty();
+        validatebodyTextProperty();
       })
       .superRefine((data, context) => {
         const schemaHelper = objectSchemaHelper(data as GenericObjectSchema);
