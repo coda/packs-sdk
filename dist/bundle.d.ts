@@ -3750,6 +3750,22 @@ export declare enum AuthenticationType {
 	/**
 	 * Only for use by Coda-authored packs.
 	 *
+	 * @see {@link GoogleDomainWideDelegationAuthentication}
+	 * TODO(neal): Unhide.
+	 * @hidden
+	 */
+	GoogleDomainWideDelegation = "GoogleDomainWideDelegation",
+	/**
+	 * Only for use by Coda-authored packs.
+	 *
+	 * @see {@link GoogleServiceAccountAuthentication}
+	 * TODO(neal): Unhide.
+	 * @hidden
+	 */
+	GoogleServiceAccount = "GoogleServiceAccount",
+	/**
+	 * Only for use by Coda-authored packs.
+	 *
 	 * @see {@link VariousAuthentication}
 	 * @hidden
 	 */
@@ -4379,6 +4395,28 @@ export interface AWSAssumeRoleAuthentication extends BaseAuthentication {
 /**
  * Only for use by Coda-authored packs.
  *
+ * TODO(neal): Unhide.
+ * @hidden
+ */
+export interface GoogleDomainWideDelegationAuthentication extends BaseAuthentication {
+	/** Identifies this as GoogleDomainWideDelegation authentication. */
+	type: AuthenticationType.GoogleDomainWideDelegation;
+	scopes: string[];
+}
+/**
+ * Only for use by Coda-authored packs.
+ *
+ * TODO(neal): Unhide.
+ * @hidden
+ */
+export interface GoogleServiceAccountAuthentication extends BaseAuthentication {
+	/** Identifies this as GoogleServiceAccount authentication. */
+	type: AuthenticationType.GoogleServiceAccount;
+	scopes: string[];
+}
+/**
+ * Only for use by Coda-authored packs.
+ *
  * @hidden
  */
 export interface VariousAuthentication {
@@ -4388,7 +4426,7 @@ export interface VariousAuthentication {
 /**
  * The union of supported authentication methods.
  */
-export type Authentication = NoAuthentication | VariousAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | OAuth2ClientCredentialsAuthentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | CustomAuthentication;
+export type Authentication = NoAuthentication | VariousAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | OAuth2ClientCredentialsAuthentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | GoogleDomainWideDelegationAuthentication | GoogleServiceAccountAuthentication | CustomAuthentication;
 export type AsAuthDef<T extends BaseAuthentication> = Omit<T, "getConnectionName" | "getConnectionUserId" | "postSetup"> & {
 	/** See {@link BaseAuthentication.getConnectionName} */
 	getConnectionName?: MetadataFormulaDef;
@@ -4403,7 +4441,7 @@ export type AsAuthDef<T extends BaseAuthentication> = Omit<T, "getConnectionName
  * a pack definition builder. The builder massages these definitions into the form of
  * an {@link Authentication} value, which is the value Coda ultimately cares about.
  */
-export type AuthenticationDef = NoAuthentication | VariousAuthentication | AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CodaApiBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<MultiHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<OAuth2Authentication> | AsAuthDef<OAuth2ClientCredentialsAuthentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication> | AsAuthDef<CustomAuthentication>;
+export type AuthenticationDef = NoAuthentication | VariousAuthentication | AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CodaApiBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<MultiHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<OAuth2Authentication> | AsAuthDef<OAuth2ClientCredentialsAuthentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication> | AsAuthDef<GoogleDomainWideDelegationAuthentication> | AsAuthDef<GoogleServiceAccountAuthentication> | AsAuthDef<CustomAuthentication>;
 /**
  * The union of authentication methods that are supported for system authentication,
  * where the pack author provides credentials used in HTTP requests rather than the user.

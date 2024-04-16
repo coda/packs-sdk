@@ -511,6 +511,16 @@ function buildMetadataSchema({ sdkVersion }) {
             }, { message: 'Duplicated parameter names in the mutli-query-token authentication config' }),
             ...baseAuthenticationValidators,
         }),
+        [types_1.AuthenticationType.GoogleDomainWideDelegation]: zodCompleteStrictObject({
+            type: zodDiscriminant(types_1.AuthenticationType.GoogleDomainWideDelegation),
+            scopes: z.array(z.string()),
+            ...baseAuthenticationValidators,
+        }),
+        [types_1.AuthenticationType.GoogleServiceAccount]: zodCompleteStrictObject({
+            type: zodDiscriminant(types_1.AuthenticationType.GoogleServiceAccount),
+            scopes: z.array(z.string()),
+            ...baseAuthenticationValidators,
+        }),
         [types_1.AuthenticationType.Various]: zodCompleteStrictObject({
             type: zodDiscriminant(types_1.AuthenticationType.Various),
         }),

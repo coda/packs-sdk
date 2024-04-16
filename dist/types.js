@@ -120,6 +120,22 @@ var AuthenticationType;
     /**
      * Only for use by Coda-authored packs.
      *
+     * @see {@link GoogleDomainWideDelegationAuthentication}
+     * TODO(neal): Unhide.
+     * @hidden
+     */
+    AuthenticationType["GoogleDomainWideDelegation"] = "GoogleDomainWideDelegation";
+    /**
+     * Only for use by Coda-authored packs.
+     *
+     * @see {@link GoogleServiceAccountAuthentication}
+     * TODO(neal): Unhide.
+     * @hidden
+     */
+    AuthenticationType["GoogleServiceAccount"] = "GoogleServiceAccount";
+    /**
+     * Only for use by Coda-authored packs.
+     *
      * @see {@link VariousAuthentication}
      * @hidden
      */

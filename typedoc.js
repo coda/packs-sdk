@@ -46,6 +46,8 @@ module.exports = {
 
     // Internal only types.
     'AWSAssumeRoleAuthentication',
+    'GoogleDomainWideDelegationAuthentication',
+    'GoogleServiceAccountAuthentication',
     'VariousAuthentication',
     'CodaInternalRichTextSchema',
 
