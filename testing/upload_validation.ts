@@ -20,6 +20,8 @@ import {EmailDisplayType} from '../schema';
 import type {EmailSchema} from '../schema';
 import {FeatureSet} from '../types';
 import type {GenericObjectSchema} from '../schema';
+import type {GoogleDomainWideDelegationAuthentication} from '../types';
+import type {GoogleServiceAccountAuthentication} from '../types';
 import type {HeaderBearerTokenAuthentication} from '../types';
 import type {Identity} from '../schema';
 import {ImageCornerStyle} from '../schema';
@@ -637,6 +639,16 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
           },
           {message: 'Duplicated parameter names in the mutli-query-token authentication config'},
         ),
+      ...baseAuthenticationValidators,
+    }),
+    [AuthenticationType.GoogleDomainWideDelegation]: zodCompleteStrictObject<GoogleDomainWideDelegationAuthentication>({
+      type: zodDiscriminant(AuthenticationType.GoogleDomainWideDelegation),
+      scopes: z.array(z.string()),
+      ...baseAuthenticationValidators,
+    }),
+    [AuthenticationType.GoogleServiceAccount]: zodCompleteStrictObject<GoogleServiceAccountAuthentication>({
+      type: zodDiscriminant(AuthenticationType.GoogleServiceAccount),
+      scopes: z.array(z.string()),
       ...baseAuthenticationValidators,
     }),
     [AuthenticationType.Various]: zodCompleteStrictObject<VariousAuthentication>({

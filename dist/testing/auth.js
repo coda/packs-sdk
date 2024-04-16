@@ -81,6 +81,8 @@ async function setupAuth(manifestDir, packDef, opts = {}) {
             return handler.handleAWSAccessKey();
         case types_1.AuthenticationType.AWSAssumeRole:
             return handler.handleAWSAssumeRole();
+        case types_1.AuthenticationType.GoogleDomainWideDelegation:
+        case types_1.AuthenticationType.GoogleServiceAccount:
         case types_1.AuthenticationType.Various:
             return (0, helpers_3.printAndExit)('This authentication type is not yet implemented');
         default:

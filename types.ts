@@ -127,6 +127,22 @@ export enum AuthenticationType {
   /**
    * Only for use by Coda-authored packs.
    *
+   * @see {@link GoogleDomainWideDelegationAuthentication}
+   * TODO(neal): Unhide.
+   * @hidden
+   */
+  GoogleDomainWideDelegation = 'GoogleDomainWideDelegation',
+  /**
+   * Only for use by Coda-authored packs.
+   *
+   * @see {@link GoogleServiceAccountAuthentication}
+   * TODO(neal): Unhide.
+   * @hidden
+   */
+  GoogleServiceAccount = 'GoogleServiceAccount',
+  /**
+   * Only for use by Coda-authored packs.
+   *
    * @see {@link VariousAuthentication}
    * @hidden
    */
@@ -791,6 +807,30 @@ export interface AWSAssumeRoleAuthentication extends BaseAuthentication {
 /**
  * Only for use by Coda-authored packs.
  *
+ * TODO(neal): Unhide.
+ * @hidden
+ */
+export interface GoogleDomainWideDelegationAuthentication extends BaseAuthentication {
+  /** Identifies this as GoogleDomainWideDelegation authentication. */
+  type: AuthenticationType.GoogleDomainWideDelegation;
+  scopes: string[];
+}
+
+/**
+ * Only for use by Coda-authored packs.
+ *
+ * TODO(neal): Unhide.
+ * @hidden
+ */
+export interface GoogleServiceAccountAuthentication extends BaseAuthentication {
+  /** Identifies this as GoogleServiceAccount authentication. */
+  type: AuthenticationType.GoogleServiceAccount;
+  scopes: string[];
+}
+
+/**
+ * Only for use by Coda-authored packs.
+ *
  * @hidden
  */
 export interface VariousAuthentication {
@@ -815,6 +855,8 @@ export type Authentication =
   | WebBasicAuthentication
   | AWSAccessKeyAuthentication
   | AWSAssumeRoleAuthentication
+  | GoogleDomainWideDelegationAuthentication
+  | GoogleServiceAccountAuthentication
   | CustomAuthentication;
 
 /** @ignore */
@@ -831,6 +873,8 @@ export interface AuthenticationTypeMap {
   [AuthenticationType.WebBasic]: WebBasicAuthentication;
   [AuthenticationType.AWSAccessKey]: AWSAccessKeyAuthentication;
   [AuthenticationType.AWSAssumeRole]: AWSAssumeRoleAuthentication;
+  [AuthenticationType.GoogleDomainWideDelegation]: GoogleDomainWideDelegationAuthentication;
+  [AuthenticationType.GoogleServiceAccount]: GoogleServiceAccountAuthentication;
   [AuthenticationType.Custom]: CustomAuthentication;
 }
 
@@ -863,6 +907,8 @@ export type AuthenticationDef =
   | AsAuthDef<WebBasicAuthentication>
   | AsAuthDef<AWSAccessKeyAuthentication>
   | AsAuthDef<AWSAssumeRoleAuthentication>
+  | AsAuthDef<GoogleDomainWideDelegationAuthentication>
+  | AsAuthDef<GoogleServiceAccountAuthentication>
   | AsAuthDef<CustomAuthentication>;
 
 /**
