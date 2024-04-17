@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed an issue where running `coda auth` with the CLI failed to honor the auth options `endpointKey` and `postSetup` for `OAuth2` authentication. For `postSetup` `SetEndpoint` steps it will prompt for the endpoint URL directly rather than list them out.
+
 ## [1.7.5] - 2024-02-08
 
 ### Added

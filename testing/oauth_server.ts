@@ -13,6 +13,7 @@ interface AfterTokenOAuthAuthorizationCodeExchangeParams {
   accessToken: string;
   refreshToken?: string;
   expires?: string;
+  data?: {[key: string]: string};
 }
 
 interface AuthorizationCodeTokenCallbackResponse {
@@ -39,7 +40,7 @@ export function launchOAuthServerFlow({
   afterTokenExchange: AfterAuthorizationCodeTokenExchangeCallback;
   scopes?: string[];
 }) {
-  // TODO: Handle endpointKey.
+  // TODO: Handle PKCE.
   const {authorizationUrl, tokenUrl, additionalParams, scopeDelimiter, nestedResponseKey, scopeParamName} = authDef;
   // Use the manifest's scopes as a default.
   const requestedScopes = scopes && scopes.length > 0 ? scopes : authDef.scopes;
@@ -114,7 +115,7 @@ class OAuthServerContainer {
         const tokenData = await this._tokenCallback(code);
         const {accessToken, refreshToken, data} = tokenData;
         const expires = getTokenExpiry(data);
-        this._afterTokenExchange({accessToken, refreshToken, expires});
+        this._afterTokenExchange({accessToken, refreshToken, expires, data});
         return res.send('OAuth authentication is complete! You can close this browser tab.');
       }
 

@@ -12,7 +12,7 @@ const helpers_1 = require("./helpers");
 const oauth_helpers_2 = require("./oauth_helpers");
 const url_1 = require("../helpers/url");
 function launchOAuthServerFlow({ clientId, clientSecret, authDef, port, afterTokenExchange, scopes, }) {
-    // TODO: Handle endpointKey.
+    // TODO: Handle PKCE.
     const { authorizationUrl, tokenUrl, additionalParams, scopeDelimiter, nestedResponseKey, scopeParamName } = authDef;
     // Use the manifest's scopes as a default.
     const requestedScopes = scopes && scopes.length > 0 ? scopes : authDef.scopes;
@@ -68,7 +68,7 @@ class OAuthServerContainer {
                 const tokenData = await this._tokenCallback(code);
                 const { accessToken, refreshToken, data } = tokenData;
                 const expires = (0, oauth_helpers_1.getTokenExpiry)(data);
-                this._afterTokenExchange({ accessToken, refreshToken, expires });
+                this._afterTokenExchange({ accessToken, refreshToken, expires, data });
                 return res.send('OAuth authentication is complete! You can close this browser tab.');
             }
             return res.send(`Invalid authorization code received: ${code}`);

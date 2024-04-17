@@ -25,6 +25,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.readCredentialsFile = exports.storeCredential = exports.setupAuth = exports.setupAuthFromModule = exports.DEFAULT_OAUTH_SERVER_PORT = void 0;
 const types_1 = require("../types");
+const types_2 = require("../types");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
 const ensure_3 = require("../helpers/ensure");
@@ -216,17 +217,27 @@ class CredentialHandler {
             refreshToken: existingCredentials === null || existingCredentials === void 0 ? void 0 : existingCredentials.refreshToken,
             expires: existingCredentials === null || existingCredentials === void 0 ? void 0 : existingCredentials.expires,
             scopes: existingCredentials === null || existingCredentials === void 0 ? void 0 : existingCredentials.scopes,
+            endpointUrl: existingCredentials === null || existingCredentials === void 0 ? void 0 : existingCredentials.endpointUrl,
         };
         this.storeCredential(credentials);
         (0, helpers_2.print)('Credential secrets updated! Launching OAuth handshake in browser...\n');
         const manifestScopes = this._authDef.scopes || [];
         const requestedScopes = this._extraOAuthScopes.length > 0 ? [...manifestScopes, ...this._extraOAuthScopes] : manifestScopes;
+        const { endpointKey } = this._authDef;
         (0, oauth_server_1.launchOAuthServerFlow)({
             clientId,
             clientSecret,
             authDef: this._authDef,
             port: this._oauthServerPort,
-            afterTokenExchange: ({ accessToken, refreshToken, expires }) => {
+            afterTokenExchange: token => {
+                const { accessToken, refreshToken, expires, data } = token;
+                let endpointUrl;
+                if (endpointKey) {
+                    endpointUrl = data === null || data === void 0 ? void 0 : data[endpointKey];
+                }
+                else {
+                    endpointUrl = this.maybePromptForEndpointUrl();
+                }
                 const credentials = {
                     clientId,
                     clientSecret,
@@ -234,6 +245,7 @@ class CredentialHandler {
                     refreshToken,
                     expires,
                     scopes: requestedScopes,
+                    endpointUrl,
                 };
                 this.storeCredential(credentials);
                 (0, helpers_2.print)('Access token saved! Shutting down OAuth server and exiting...');
@@ -295,8 +307,8 @@ class CredentialHandler {
         if (this._authDef.type === types_1.AuthenticationType.None || this._authDef.type === types_1.AuthenticationType.Various) {
             return;
         }
-        const { requiresEndpointUrl, endpointDomain } = this._authDef;
-        if (!requiresEndpointUrl) {
+        const { requiresEndpointUrl, endpointDomain, postSetup } = this._authDef;
+        if (!requiresEndpointUrl && !(postSetup === null || postSetup === void 0 ? void 0 : postSetup.some(step => step.type === types_2.PostSetupType.SetEndpoint))) {
             return;
         }
         const placeholder = endpointDomain ? `https://my-site.${endpointDomain}` : 'https://foo.example.com';
