@@ -12,6 +12,7 @@ import type {MultiHeaderTokenAuthentication} from '../types';
 import type {MultiQueryParamCredentials} from './auth_types';
 import type {OAuth2ClientCredentials} from './auth_types';
 import type {OAuth2Credentials} from './auth_types';
+import {PostSetupType} from '../types';
 import {assertCondition} from '../helpers/ensure';
 import {ensureExists} from '../helpers/ensure';
 import {ensureNonEmptyString} from '../helpers/ensure';
@@ -266,6 +267,7 @@ class CredentialHandler {
       refreshToken: existingCredentials?.refreshToken,
       expires: existingCredentials?.expires,
       scopes: existingCredentials?.scopes,
+      endpointUrl: existingCredentials?.endpointUrl,
     };
     this.storeCredential(credentials);
     print('Credential secrets updated! Launching OAuth handshake in browser...\n');
@@ -273,13 +275,21 @@ class CredentialHandler {
     const manifestScopes = this._authDef.scopes || [];
     const requestedScopes =
       this._extraOAuthScopes.length > 0 ? [...manifestScopes, ...this._extraOAuthScopes] : manifestScopes;
+    const {endpointKey} = this._authDef;
 
     launchOAuthServerFlow({
       clientId,
       clientSecret,
       authDef: this._authDef,
       port: this._oauthServerPort,
-      afterTokenExchange: ({accessToken, refreshToken, expires}) => {
+      afterTokenExchange: token => {
+        const {accessToken, refreshToken, expires, data} = token;
+        let endpointUrl;
+        if (endpointKey) {
+          endpointUrl = data[endpointKey];
+        } else {
+          endpointUrl = this.maybePromptForEndpointUrl();
+        }
         const credentials: OAuth2Credentials = {
           clientId,
           clientSecret,
@@ -287,6 +297,7 @@ class CredentialHandler {
           refreshToken,
           expires,
           scopes: requestedScopes,
+          endpointUrl,
         };
         this.storeCredential(credentials);
         print('Access token saved! Shutting down OAuth server and exiting...');
@@ -363,8 +374,8 @@ class CredentialHandler {
     if (this._authDef.type === AuthenticationType.None || this._authDef.type === AuthenticationType.Various) {
       return;
     }
-    const {requiresEndpointUrl, endpointDomain} = this._authDef;
-    if (!requiresEndpointUrl) {
+    const {requiresEndpointUrl, endpointDomain, postSetup} = this._authDef;
+    if (!requiresEndpointUrl && !postSetup?.some(step => step.type === PostSetupType.SetEndpoint)) {
       return;
     }
     const placeholder = endpointDomain ? `https://my-site.${endpointDomain}` : 'https://foo.example.com';
