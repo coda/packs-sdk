@@ -286,7 +286,7 @@ class CredentialHandler {
         const {accessToken, refreshToken, expires, data} = token;
         let endpointUrl;
         if (endpointKey) {
-          endpointUrl = data[endpointKey];
+          endpointUrl = data?.[endpointKey];
         } else {
           endpointUrl = this.maybePromptForEndpointUrl();
         }

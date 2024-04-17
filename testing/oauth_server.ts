@@ -13,7 +13,7 @@ interface AfterTokenOAuthAuthorizationCodeExchangeParams {
   accessToken: string;
   refreshToken?: string;
   expires?: string;
-  data: {[key: string]: string};
+  data?: {[key: string]: string};
 }
 
 interface AuthorizationCodeTokenCallbackResponse {

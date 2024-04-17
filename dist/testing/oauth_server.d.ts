@@ -4,6 +4,9 @@ interface AfterTokenOAuthAuthorizationCodeExchangeParams {
     accessToken: string;
     refreshToken?: string;
     expires?: string;
+    data?: {
+        [key: string]: string;
+    };
 }
 export type AfterAuthorizationCodeTokenExchangeCallback = (params: AfterTokenOAuthAuthorizationCodeExchangeParams) => void;
 export declare function launchOAuthServerFlow({ clientId, clientSecret, authDef, port, afterTokenExchange, scopes, }: {
