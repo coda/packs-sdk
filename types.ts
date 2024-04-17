@@ -924,6 +924,8 @@ export type SystemAuthentication =
   | WebBasicAuthentication
   | AWSAccessKeyAuthentication
   | AWSAssumeRoleAuthentication
+  | GoogleDomainWideDelegationAuthentication
+  | GoogleServiceAccountAuthentication
   | CustomAuthentication
   | OAuth2ClientCredentialsAuthentication;
 
@@ -942,6 +944,8 @@ export type SystemAuthenticationDef =
   | AsAuthDef<WebBasicAuthentication>
   | AsAuthDef<AWSAccessKeyAuthentication>
   | AsAuthDef<AWSAssumeRoleAuthentication>
+  | AsAuthDef<GoogleDomainWideDelegationAuthentication>
+  | AsAuthDef<GoogleServiceAccountAuthentication>
   | AsAuthDef<CustomAuthentication>
   | AsAuthDef<OAuth2ClientCredentialsAuthentication>;
 

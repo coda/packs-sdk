@@ -666,6 +666,8 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     [AuthenticationType.AWSAssumeRole]: true,
     [AuthenticationType.Custom]: true,
     [AuthenticationType.OAuth2ClientCredentials]: true,
+    [AuthenticationType.GoogleDomainWideDelegation]: true,
+    [AuthenticationType.GoogleServiceAccount]: true,
   };
 
   const systemAuthenticationValidators = Object.entries(defaultAuthenticationValidators)

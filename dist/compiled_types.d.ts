@@ -7,6 +7,8 @@ import type { CustomAuthentication } from './types';
 import type { CustomHeaderTokenAuthentication } from './types';
 import type { DistributiveOmit } from './type_utils';
 import type { Format } from './types';
+import type { GoogleDomainWideDelegationAuthentication } from './types';
+import type { GoogleServiceAccountAuthentication } from './types';
 import type { HeaderBearerTokenAuthentication } from './types';
 import type { MetadataFormulaMetadata } from './api';
 import type { MultiHeaderTokenAuthentication } from './types';
@@ -71,6 +73,8 @@ export interface AuthenticationMetadataTypeMap {
     [AuthenticationType.WebBasic]: AuthenticationToMetadata<WebBasicAuthentication>;
     [AuthenticationType.OAuth2]: AuthenticationToMetadata<OAuth2Authentication>;
     [AuthenticationType.OAuth2ClientCredentials]: AuthenticationToMetadata<OAuth2ClientCredentialsAuthentication>;
+    [AuthenticationType.GoogleDomainWideDelegation]: AuthenticationToMetadata<GoogleDomainWideDelegationAuthentication>;
+    [AuthenticationType.GoogleServiceAccount]: AuthenticationToMetadata<GoogleServiceAccountAuthentication>;
 }
 /** @hidden */
 export type PackVersionMetadata = Omit<PackVersionDefinition, 'formulas' | 'formats' | 'defaultAuthentication' | 'syncTables'> & {
