@@ -58,6 +58,7 @@ class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
       userEmailProperty,
       userIdProperty,
       groupIdProperty,
+      bodyTextProperty,
 
       ...rest
     } = schema;
