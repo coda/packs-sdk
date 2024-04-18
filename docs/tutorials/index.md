@@ -28,7 +28,7 @@ The tutorials below provide step-by-step instructions and sample code to help yo
 
 {% if child.meta.description %}{{child.meta.description}}{% endif %}
 
-[View]({{getRelativePath(child, page)}}){ .md-button }
+[View]({{getRelativePath(child,page)}}){ .md-button }
 
 {% elif child.is_link %}
 

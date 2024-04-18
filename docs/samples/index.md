@@ -25,7 +25,7 @@ No need to start from scratch; we've got dozens of sample Packs for your to brow
 
 {{child.meta.description}}
 
-[View]({{getRelativePath(child, page)}}){ .md-button }
+[View]({{getRelativePath(child,page)}}){ .md-button }
 </div>
 
 {% endfor %}
