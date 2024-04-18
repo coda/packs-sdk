@@ -9,6 +9,10 @@ edit_uri: edit/main/docs
 docs_dir: docs
 extra_css:
   - assets/custom.css
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
 
 markdown_extensions:
   - abbr
