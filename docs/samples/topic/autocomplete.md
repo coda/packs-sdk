@@ -9,7 +9,7 @@ icon: material/form-dropdown
 Autocomplete can be configured for a parameter to provide a defined set of options for the user to select from. You can pass either a static array or use a function to dynamically generate the options.
 
 
-[Learn More](../../../guides/basics/parameters/autocomplete){ .md-button }
+[Learn More](../../guides/basics/parameters/autocomplete.md){ .md-button }
 
 ## Simple autocomplete
 A formula with a parameter that provides autocomplete for acceptable values. This sample returns the noise that an animal makes, for a limited set of animals.

@@ -9,7 +9,7 @@ icon: material/format-textbox
 Coda formulas, actions, and sync tables receive take in user input via parameters. They are required by default, but can by made optional. Variable argument (vararg) parameters can be used to allow for parameters to be set more than once.
 
 
-[Learn More](../../../guides/basics/parameters){ .md-button }
+[Learn More](../../guides/basics/parameters/index.md){ .md-button }
 
 ## Template
 The basic structure of a parameter. This sample is for a string parameter.

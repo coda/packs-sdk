@@ -17,7 +17,7 @@ cSpell:words: Replit repl
 
 You will need a Replit account in order to create a Pack using it. If you don't already have one you can [sign up][replit_signup] for free on their website.
 
---8<-- "tutorials/get-started/.cli/before.md"
+--8<-- "tutorials/get-started/.cli-before.md"
 
 
 ## Create a repl
@@ -40,7 +40,7 @@ npx coda execute pack.ts Hello "World"
 If everything works correctly this should output `Hello World!`.
 
 
---8<-- "tutorials/get-started/.cli/core.md"
+--8<-- "tutorials/get-started/.cli.md"
 
 
 [replit_home]: https://replit.com/

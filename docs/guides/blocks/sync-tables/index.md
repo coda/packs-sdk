@@ -275,7 +275,7 @@ Since the properties themselves may use the [`fromKey`][fromKey] option to load 
 [Continuation]: ../../../reference/sdk/interfaces/core.Continuation.md
 [identityName]: ../../../reference/sdk/interfaces/core.SyncTableOptions.md#identityname
 [schema_references]: ../../advanced/schemas.md#references
-[dynamicOptions]: ../../../reference/sdk/interfaces/core.SyncTableOptions/#dynamicoptions
+[dynamicOptions]: ../../../reference/sdk/interfaces/core.SyncTableOptions.md#dynamicoptions
 [actions]: ../actions.md
 [dynamic_sync_tables]: dynamic.md
 [dynamic_sync_tables_schema_only]: dynamic.md#schema-only

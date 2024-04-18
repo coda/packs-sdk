@@ -15,17 +15,17 @@ No need to start from scratch; we've got dozens of sample Packs for your to brow
 
 <section class="box-row" markdown>
 
-{% for page in section.children %}
+{% for child in section.children %}
 
 <div class="box-item" markdown>
-{# Read the page's source, but don't output anything. This is required to populate the page title and metadata. #}
-{{ page.read_source(config) or "" }}
+{# Read the child page's source, but don't output anything. This is required to populate the child page's title and metadata. #}
+{{ child.read_source(config) or "" }}
 
-### {% if page.meta.icon %}:{{page.meta.icon|replace("/", "-")}}:{% endif %} {{ page.meta.get("nav", page.title) }}
+### {% if child.meta.icon %}:{{child.meta.icon|replace("/", "-")}}:{% endif %} {{ child.meta.get("nav", child.title) }}
 
-{{page.meta.description}}
+{{child.meta.description}}
 
-[View]({{fix_url(page.url)}}){ .md-button }
+[View]({{getRelativePath(child,page)}}){ .md-button }
 </div>
 
 {% endfor %}

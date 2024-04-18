@@ -9,7 +9,7 @@ icon: material/card-text
 Two-way sync is an optional feature of sync tables that allows users to make edits to row data and push those changes back to the data source. Pack makers enable two-way sync on their tables by annotating their schemas and writing an `executeUpdate` function that handles the update logic.
 
 
-[Learn More](../../../guides/blocks/sync-tables/two-way){ .md-button }
+[Learn More](../../guides/blocks/sync-tables/two-way.md){ .md-button }
 
 ## Simple two-way sync
 A sync table that supports user edits via two-way sync. It uses the default behavior of updating one row at a time. This sample syncs the tasks from a user&#x27;s Todoist account.

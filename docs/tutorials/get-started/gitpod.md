@@ -16,7 +16,7 @@ icon: simple/gitpod
 
 You will need a Gitpod account in order to create a Pack using it. If you don't already have one you can [sign up][gitpod_signup] for free on their website.
 
---8<-- "tutorials/get-started/.cli/before.md"
+--8<-- "tutorials/get-started/.cli-before.md"
 
 
 ## Create a workspace
@@ -30,10 +30,10 @@ It may take a few minutes for the workspace to fully initialize. When it's compl
 
 ## Test the Pack
 
---8<-- "tutorials/get-started/.cli/test.md"
+--8<-- "tutorials/get-started/.cli-test.md"
 
 
---8<-- "tutorials/get-started/.cli/core.md"
+--8<-- "tutorials/get-started/.cli.md"
 
 
 [gitpod_home]: https://www.gitpod.io/

@@ -9,7 +9,7 @@ icon: material/order-alphabetical-ascending
 Packs can return various types of values, and apply hints that tell Coda how to display that data. Formulas and schema properties must declare the these types upfront, and the values you return in your code must match.
 
 
-[Learn More](../../../guides/basics/data-types){ .md-button }
+[Learn More](../../guides/basics/data-types.md){ .md-button }
 
 ## Template (String)
 The basic structure of a formula that returns a string.

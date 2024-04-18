@@ -17,7 +17,7 @@ GitHub is a popular tool for storing and managing code, and their [Codespaces][g
 
 You will need a GitHub account in order to create a Pack using Codespaces. If you don't already have one you can [sign up][github_signup] for free on their website.
 
---8<-- "tutorials/get-started/.cli/before.md"
+--8<-- "tutorials/get-started/.cli-before.md"
 
 
 ## Create a codespace
@@ -61,10 +61,10 @@ It may take a few minutes for the codespace to fully initialize and install the 
 
 ## Test the Pack
 
---8<-- "tutorials/get-started/.cli/test.md"
+--8<-- "tutorials/get-started/.cli-test.md"
 
 
---8<-- "tutorials/get-started/.cli/core.md"
+--8<-- "tutorials/get-started/.cli.md"
 
 !!! info "Save your work"
     Your Pack code will be preserved in the codespace, but it's a good idea to publish it to a GitHub repository as well. You can read more about this in the [GitHub documentation][github_codespace_template].

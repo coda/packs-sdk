@@ -187,9 +187,17 @@ function formatCodeSnippet(code: string, removePlaceholders=false) {
 }
 
 function compileExamplePage(example: Example, compiledExample: CompiledExample) {
-  const examplePageContent = ExamplePageTemplate(compiledExample);
+  
   const pageFileName = getExamplePageName(example);
   const pagePath = path.join(ExamplePagesRoot, getExamplePagePath(example));
+  const pageData = {...compiledExample};
+  if (pageData.learnMoreLink) {
+    const learnMorePath = getReferencePath(pageData.learnMoreLink);
+    if (learnMorePath) {
+      pageData.learnMoreLink = path.relative(pagePath, learnMorePath);
+    }
+  }
+  const examplePageContent = ExamplePageTemplate(pageData);
 
   if (!fs.existsSync(pagePath)) {
     fs.mkdirSync(pagePath, {recursive: true});
@@ -206,21 +214,26 @@ function getExamplePageName(example: Example) {
   return path.basename(path.dirname(example.contentFile)).replace(/_/g, '-') + '.md';
 }
 
-function isValidReferencePath(sdkReferencePath: string): boolean {
+function getReferencePath(sdkReferencePath: string): string | undefined {
   const splitPath = sdkReferencePath.split('#');
   const page = splitPath[0];
 
   const file = page + '.' + PageFileExtension;
   const filePath = path.join(TypeDocsRoot, file);
-  const fileExists = fs.existsSync(filePath);
-  if (fileExists) {
-    return true;
+  if (fs.existsSync(filePath)) {
+    return filePath;
   }
 
   // Check if there is an index file in a directory.
   const indexFile = path.join(page, IndexPageFilename);
   const indexFilePath = path.join(TypeDocsRoot, indexFile);
-  return fs.existsSync(indexFilePath);
+  if (fs.existsSync(indexFilePath)) {
+    return indexFilePath;
+  }
+}
+
+function isValidReferencePath(sdkReferencePath: string): boolean {
+  return getReferencePath(sdkReferencePath) !== undefined;
 }
 
 

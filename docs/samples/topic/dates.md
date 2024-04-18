@@ -9,7 +9,7 @@ icon: material/calendar-clock
 Working with dates and times can be tricky, especially in Coda due to documents and operating in different timezones. These samples demonstrate some patterns you can use when taking them are parameters or returning them as results.
 
 
-[Learn More](../../../guides/advanced/timezones){ .md-button }
+[Learn More](../../guides/advanced/timezones.md){ .md-button }
 
 ## Local date
 A formula that requires getting a date in the document&#x27;s timezone. This sample determines if the year of a given date would make for good New Years Eve glasses (has two or more zeros).

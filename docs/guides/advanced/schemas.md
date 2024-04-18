@@ -716,7 +716,7 @@ If you need to further customize the value, such as combining the value of multi
 [sync_tables_references]: ../blocks/sync-tables/index.md#references
 [data_types_objects]: ../basics/data-types.md#objects
 [mdn_spread_object]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax#spread_in_object_literals
-[actions_sync]: ../blocks/actions#sync
+[actions_sync]: ../blocks/actions.md#sync
 [cards]: ../blocks/cards.md
 [PropertyIdentifierDetails]: ../../reference/sdk/interfaces/core.PropertyIdentifierDetails.md
 [PropertyLabelValueTemplate]: ../../reference/sdk/variables/core.PropertyLabelValueTemplate.md
