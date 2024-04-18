@@ -15,26 +15,28 @@ The tutorials below provide step-by-step instructions and sample code to help yo
 
 <section class="box-row" markdown>
 
-{% for page in section.children %}
+{% for child in section.children %}
 
 <div class="box-item" markdown>
 
-{% if page.is_page %}
+{% if child.is_page %}
 
-{# Read the page's source, but don't output anything. This is required to populate the page title and metadata. #}
-{{ page.read_source(config) or "" }}
+{# Read the child page's source, but don't output anything. This is required to populate the title and metadata. #}
+{{ child.read_source(config) or "" }}
 
-### {% if page.meta.icon %}:{{page.meta.icon|replace("/", "-")}}:{% endif %} {{ page.meta.get("nav", page.title) }}
+### {% if child.meta.icon %}:{{child.meta.icon|replace("/", "-")}}:{% endif %} {{ child.meta.get("nav", child.title) }}
 
-{% if page.meta.description %}{{page.meta.description}}{% endif %}
+{% if child.meta.description %}{{child.meta.description}}{% endif %}
 
-{% elif page.is_link %}
+[View]({{getRelativePath(child, page)}}){ .md-button }
 
-### {{ page.title }}
+{% elif child.is_link %}
+
+### {{ child.title }}
+
+[View]({{fix_url(child.url)}}){ .md-button }
 
 {% endif %}
-
-[View]({{fix_url(page.url)}}){ .md-button }
 
 </div>
 

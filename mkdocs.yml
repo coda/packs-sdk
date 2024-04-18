@@ -55,7 +55,8 @@ plugins:
         filename: .nav.yml
     # Variables in markdown.
     # See: https://squidfunk.github.io/mkdocs-material/reference/variables/
-    - macros
+    - macros:
+        module_name: documentation/scripts/mkdocs_macros
     - redirects:
         redirect_maps:
           # 2022-01-14: Reorganize guides and tutorials.

@@ -11,7 +11,7 @@ To return structured data in a Pack you must first define the shape of that data
 The most common form of schema you'll need to define are object schemas. They are often used to bundle together multiple pieces of data returned by an API.
 
 
-[Learn More](../../../guides/advanced/schemas){ .md-button }
+[Learn More](../../guides/advanced/schemas.md){ .md-button }
 
 ## Template (Object Schema)
 The basic structure of an object schema.

@@ -462,7 +462,7 @@ dig +short egress.coda.io
 [addNetworkDomain]: ../../reference/sdk/classes/core.PackDefinitionBuilder.md#addnetworkdomain
 [support]: ../../support/index.md
 [support_network_domains]: ../../support/index.md#approvals
-[ExecutionContext]: ../../reference/sdk/interfaces/core.ExecutionContext/
+[ExecutionContext]: ../../reference/sdk/interfaces/core.ExecutionContext.md
 [fetch]: ../../reference/sdk/interfaces/core.Fetcher.md#fetch
 [FetchRequest]: ../../reference/sdk/interfaces/core.FetchRequest.md
 [async_await]: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Async_await

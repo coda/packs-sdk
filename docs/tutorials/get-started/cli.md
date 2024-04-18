@@ -21,7 +21,7 @@ Local development is enabled through the `coda` command line tool (CLI). Keep re
 
 Make sure you have `node` and `npm` available on your machine. These two tools often come bundled together, and more information on how to install them is available in the [npm docs][npm_install].
 
---8<-- "tutorials/get-started/.cli/before.md"
+--8<-- "tutorials/get-started/.cli-before.md"
 
 
 ## Create a directory
@@ -77,10 +77,10 @@ Take a moment to read through the code and comments and get an understanding of 
 
 ## Test the Pack
 
---8<-- "tutorials/get-started/.cli/test.md"
+--8<-- "tutorials/get-started/.cli-test.md"
 
 
---8<-- "tutorials/get-started/.cli/core.md"
+--8<-- "tutorials/get-started/.cli.md"
 
 
 [vs_code]: https://code.visualstudio.com/

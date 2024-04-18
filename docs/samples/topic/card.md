@@ -9,7 +9,7 @@ icon: material/card-text
 A card is an visual way to display key information about an item, typically represented by a URL in an external application.
 
 
-[Learn More](../../../guides/blocks/cards){ .md-button }
+[Learn More](../../guides/blocks/cards.md){ .md-button }
 
 ## Template
 The basic structure of a card.
