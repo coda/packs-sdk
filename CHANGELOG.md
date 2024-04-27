@@ -4,6 +4,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+## [1.7.7] - 2024-04-26
+
 ### Fixed
 
 - Fixed an issue where running `coda auth` with the CLI failed to honor the auth options `endpointKey` and `postSetup` for `OAuth2` authentication. For `postSetup` `SetEndpoint` steps it will prompt for the endpoint URL directly rather than list them out.
@@ -682,7 +684,7 @@ await myHelper(context);
 
 - Beginning of alpha versioning.
 
-[unreleased]: https://github.com/coda/packs-sdk/compare/v1.7.5...HEAD
+[unreleased]: https://github.com/coda/packs-sdk/compare/v1.7.7...HEAD
 [1.7.5]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.5
 [1.7.4]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.4
 [1.7.3]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.3
@@ -712,3 +714,5 @@ await myHelper(context);
 [0.12.0]: https://github.com/coda/packs-sdk/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/coda/packs-sdk/compare/v0.9.0...v0.11.0
 [0.9.0]: https://github.com/coda/packs-sdk/compare/v0.8.2...v0.9.0
+
+[1.7.7]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.7
