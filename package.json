@@ -7,7 +7,7 @@
   ],
   "engines": {
     "node": ">=18.0.x",
-    "pnpm": "8.15.4"
+    "pnpm": "8.15.8"
   },
   "main": "dist/index.js",
   "bin": {
