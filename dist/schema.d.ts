@@ -1128,6 +1128,16 @@ export interface GroupPrincipal {
     groupId: string | number;
 }
 /**
+ * This represents a principal that is anyone in that domain
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface DomainPrincipal {
+    type: PrincipalType.Group;
+    domain: string;
+}
+/**
  * This represents a principal corresponding to anyone
  *
  * Generally this would apply to an entity where anyone with access to the url can view the item
@@ -1144,7 +1154,7 @@ export interface AnyonePrincipal {
  * TODO(sam): Unhide this
  * @hidden
  */
-type Principal = UserPrincipal | GroupPrincipal | AnyonePrincipal;
+type Principal = UserPrincipal | GroupPrincipal | AnyonePrincipal | DomainPrincipal;
 /**
  * This represents the definition of a permission in the external system.
  *
