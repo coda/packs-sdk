@@ -1269,6 +1269,7 @@ export enum PrincipalType {
   User = 'user',
   Group = 'group',
   Anyone = 'anyone',
+  Domain = 'domain',
 }
 
 /**
@@ -1300,7 +1301,7 @@ export interface GroupPrincipal {
  * @hidden
  */
 export interface DomainPrincipal {
-  type: PrincipalType.Group;
+  type: PrincipalType.Domain;
   domain: string;
 }
 

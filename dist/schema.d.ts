@@ -1105,7 +1105,8 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 export declare enum PrincipalType {
     User = "user",
     Group = "group",
-    Anyone = "anyone"
+    Anyone = "anyone",
+    Domain = "domain"
 }
 /**
  * This represents a principal that is a single user.
@@ -1134,7 +1135,7 @@ export interface GroupPrincipal {
  * @hidden
  */
 export interface DomainPrincipal {
-    type: PrincipalType.Group;
+    type: PrincipalType.Domain;
     domain: string;
 }
 /**
