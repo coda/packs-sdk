@@ -387,6 +387,7 @@ var PrincipalType;
     PrincipalType["User"] = "user";
     PrincipalType["Group"] = "group";
     PrincipalType["Anyone"] = "anyone";
+    PrincipalType["Domain"] = "domain";
 })(PrincipalType || (exports.PrincipalType = PrincipalType = {}));
 /**
  * The type of content in this attribution node.
