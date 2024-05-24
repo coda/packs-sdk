@@ -140,7 +140,7 @@ if (require.main === module) {
     })
     .command({
       command: 'build <manifestFile>',
-      describe: 'Generate a bundle for your Pack',
+      describe: 'Build your Pack locally (not required; for debugging purposes only)',
       builder: {
         outputDir: {
           string: true,
@@ -165,7 +165,7 @@ if (require.main === module) {
     })
     .command({
       command: 'upload <manifestFile>',
-      describe: 'Upload your Pack version to Coda',
+      describe: 'Build and upload your Pack version to Coda',
       builder: {
         notes: {
           string: true,
