@@ -772,15 +772,31 @@ export interface Logger {
 }
 
 /**
+ * TODO(patrick): Unhide this
+ * @hidden
+ */
+export enum Product {
+  Document = 'document',
+  Brain = 'brain',
+}
+
+/**
  * Information about the Coda environment and doc this formula was invoked from, for Coda internal use.
  */
 export interface InvocationLocation {
   /** The base URL of the Coda environment executing this formula. Only for Coda internal use. */
   protocolAndHost: string;
+
   /**
    * @deprecated This will be removed in a future version of the SDK.
    */
   docId?: string;
+
+  /**
+   * TODO(patrick): Unhide this
+   * @hidden
+   */
+  product?: Product;
 }
 
 /**

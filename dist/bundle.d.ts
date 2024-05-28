@@ -616,6 +616,10 @@ export type UpdateSync = Omit<Sync, "continuation">;
  * @hidden
  */
 export type GetPermissionsSync = Omit<Sync, "continuation">;
+declare enum Product {
+	Document = "document",
+	Brain = "brain"
+}
 /**
  * Information about the Coda environment and doc this formula was invoked from, for Coda internal use.
  */
@@ -626,6 +630,11 @@ export interface InvocationLocation {
 	 * @deprecated This will be removed in a future version of the SDK.
 	 */
 	docId?: string;
+	/**
+	 * TODO(patrick): Unhide this
+	 * @hidden
+	 */
+	product?: Product;
 }
 /**
  * An object passed to the `execute` function of every formula invocation

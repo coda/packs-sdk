@@ -638,6 +638,14 @@ export interface Logger {
     error(message: string, ...args: LoggerParamType[]): void;
 }
 /**
+ * TODO(patrick): Unhide this
+ * @hidden
+ */
+export declare enum Product {
+    Document = "document",
+    Brain = "brain"
+}
+/**
  * Information about the Coda environment and doc this formula was invoked from, for Coda internal use.
  */
 export interface InvocationLocation {
@@ -647,6 +655,11 @@ export interface InvocationLocation {
      * @deprecated This will be removed in a future version of the SDK.
      */
     docId?: string;
+    /**
+     * TODO(patrick): Unhide this
+     * @hidden
+     */
+    product?: Product;
 }
 /**
  * An object passed to the `execute` function of every formula invocation
