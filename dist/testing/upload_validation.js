@@ -513,12 +513,12 @@ function buildMetadataSchema({ sdkVersion }) {
         }),
         [types_1.AuthenticationType.GoogleDomainWideDelegation]: zodCompleteStrictObject({
             type: zodDiscriminant(types_1.AuthenticationType.GoogleDomainWideDelegation),
-            scopes: z.array(z.string()),
+            scopes: z.array(z.string()).nonempty(),
             ...baseAuthenticationValidators,
         }),
         [types_1.AuthenticationType.GoogleServiceAccount]: zodCompleteStrictObject({
             type: zodDiscriminant(types_1.AuthenticationType.GoogleServiceAccount),
-            scopes: z.array(z.string()),
+            scopes: z.array(z.string()).nonempty(),
             ...baseAuthenticationValidators,
         }),
         [types_1.AuthenticationType.Various]: zodCompleteStrictObject({

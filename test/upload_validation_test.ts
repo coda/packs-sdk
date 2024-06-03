@@ -4691,6 +4691,58 @@ describe('Pack metadata Validation', async () => {
       ]);
     });
 
+    it('dwd with scope', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.GoogleDomainWideDelegation,
+          scopes: ['some-scope'],
+        },
+      });
+      await validateJson(metadata);
+    });
+
+    it('dwd requires scope', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.GoogleDomainWideDelegation,
+          scopes: [],
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata, sdkVersionTriggeringDeprecationWarnings);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: 'Array must contain at least 1 element(s)',
+          path: 'defaultAuthentication.scopes'
+        },
+      ]);
+    });
+
+    it('google sa with scope', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.GoogleServiceAccount,
+          scopes: ['some-scope'],
+        },
+      });
+      await validateJson(metadata);
+    });
+
+    it('google sa requires scope', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.GoogleServiceAccount,
+          scopes: [],
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata, sdkVersionTriggeringDeprecationWarnings);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: 'Array must contain at least 1 element(s)',
+          path: 'defaultAuthentication.scopes'
+        },
+      ]);
+    });
+
     it('deprecated attribution within identity', async () => {
       const metadata = createFakePackVersionMetadata({
         formulaNamespace: 'ignored',
