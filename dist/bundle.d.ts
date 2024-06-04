@@ -2790,6 +2790,8 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
 	 * until there is no continuation returned.
 	 */
 	continuation?: Continuation;
+	/** @hidden */
+	continueAfterSeconds?: number;
 }
 /**
  * Type definition for the parameter used to pass in a batch of updates to a sync table update function.

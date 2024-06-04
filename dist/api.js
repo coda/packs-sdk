@@ -873,11 +873,12 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
     }
     const responseHandler = (0, handler_templates_1.generateObjectResponseHandler)({ schema: formulaSchema });
     const execute = async function exec(params, context) {
-        const { result, continuation } = (await wrappedExecute(params, context)) || {};
+        const { result, continuation, continueAfterSeconds } = (await wrappedExecute(params, context)) || {};
         const appliedSchema = context.sync.schema;
         return {
             result: responseHandler({ body: result || [], status: 200, headers: {} }, appliedSchema),
             continuation,
+            continueAfterSeconds,
         };
     };
     const executeUpdate = wrappedExecuteUpdate

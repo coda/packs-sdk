@@ -993,6 +993,9 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
    * until there is no continuation returned.
    */
   continuation?: Continuation;
+
+  /** @hidden */
+  continueAfterSeconds?: number;
 }
 
 /**
@@ -2334,11 +2337,12 @@ export function makeSyncTable<
 
   const responseHandler = generateObjectResponseHandler({schema: formulaSchema});
   const execute = async function exec(params: ParamValues<ParamDefsT>, context: SyncExecutionContext) {
-    const {result, continuation} = (await wrappedExecute(params, context)) || {};
+    const {result, continuation, continueAfterSeconds} = (await wrappedExecute(params, context)) || {};
     const appliedSchema = context.sync.schema;
     return {
       result: responseHandler({body: result || [], status: 200, headers: {}}, appliedSchema),
       continuation,
+      continueAfterSeconds,
     } as SyncFormulaResult<K, L, SchemaT>;
   };
   const executeUpdate = wrappedExecuteUpdate
