@@ -31,7 +31,7 @@ import type { Schema } from './schema';
 import type { SchemaType } from './schema';
 import type { StringHintTypes } from './schema';
 import type { StringSchema } from './schema';
-import type { SyncExecutionCompletionMetadata } from './api_types';
+import type { SyncCompletionMetadata } from './api_types';
 import type { SyncExecutionContext } from './api_types';
 import { TableRole } from './api_types';
 import { Type } from './api_types';
@@ -563,7 +563,7 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
      * TODO(patrick): Unhide this
      * @hidden
      */
-    completion?: SyncExecutionCompletionMetadata;
+    completion?: SyncCompletionMetadata;
 }
 /**
  * Type definition for the parameter used to pass in a batch of updates to a sync table update function.

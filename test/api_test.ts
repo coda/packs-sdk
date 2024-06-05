@@ -364,7 +364,7 @@ describe('API test', () => {
             return {
               result: [],
               completion: {
-                nextSyncContinuation: {key: 'foo'},
+                incrementalContinuation: {key: 'foo'},
               },
             };
           },
@@ -372,7 +372,7 @@ describe('API test', () => {
       });
       // TODO(patrick): Why do we need the "as any" cast?
       const result = await table.getter.execute([] as any, newMockSyncExecutionContext());
-      assert.equal(result.completion?.nextSyncContinuation?.key, 'foo');
+      assert.equal(result.completion?.incrementalContinuation?.key, 'foo');
     });
   });
 

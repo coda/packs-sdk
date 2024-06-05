@@ -588,7 +588,7 @@ export interface Sync {
 	 */
 	continuation?: Continuation;
 	/** @hidden */
-	prevSyncContinuation?: Continuation;
+	previousCompletion?: SyncCompletionMetadata;
 	/**
 	 * The schema of this sync table, if this is a dynamic sync table. It may be useful to have
 	 * access to the dynamically-generated schema of the table instance in order to construct
@@ -819,12 +819,12 @@ declare enum TableRole {
 	GroupMembers = "groupMembers"
 }
 /** @hidden */
-export interface SyncExecutionCompletionMetadata {
+export interface SyncCompletionMetadata {
 	/**
 	 * For enabling incremental syncs. If your sync execution provides this, then Coda will provide it to the
-	 * next sync execution as {@link Sync.prevSyncContinuation}
+	 * next sync execution.
 	 */
-	nextSyncContinuation?: Continuation;
+	incrementalContinuation?: Continuation;
 }
 /**
  * The set of primitive value types that can be used as return values for formulas
@@ -2809,7 +2809,7 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
 	 * TODO(patrick): Unhide this
 	 * @hidden
 	 */
-	completion?: SyncExecutionCompletionMetadata;
+	completion?: SyncCompletionMetadata;
 }
 /**
  * Type definition for the parameter used to pass in a batch of updates to a sync table update function.

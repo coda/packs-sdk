@@ -731,7 +731,7 @@ export interface Sync {
 
   // TODO(patrick): Unhide this
   /** @hidden */
-  prevSyncContinuation?: Continuation;
+  previousCompletion?: SyncCompletionMetadata;
 
   /**
    * The schema of this sync table, if this is a dynamic sync table. It may be useful to have
@@ -1006,10 +1006,10 @@ export enum TableRole {
 
 // TODO(patrick): Unhide this
 /** @hidden */
-export interface SyncExecutionCompletionMetadata {
+export interface SyncCompletionMetadata {
   /**
    * For enabling incremental syncs. If your sync execution provides this, then Coda will provide it to the
-   * next sync execution as {@link Sync.prevSyncContinuation}
+   * next sync execution.
    */
-  nextSyncContinuation?: Continuation;
+  incrementalContinuation?: Continuation;
 }
