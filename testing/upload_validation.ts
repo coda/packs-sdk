@@ -643,12 +643,12 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     }),
     [AuthenticationType.GoogleDomainWideDelegation]: zodCompleteStrictObject<GoogleDomainWideDelegationAuthentication>({
       type: zodDiscriminant(AuthenticationType.GoogleDomainWideDelegation),
-      scopes: z.array(z.string()),
+      scopes: z.array(z.string()).nonempty(),
       ...baseAuthenticationValidators,
     }),
     [AuthenticationType.GoogleServiceAccount]: zodCompleteStrictObject<GoogleServiceAccountAuthentication>({
       type: zodDiscriminant(AuthenticationType.GoogleServiceAccount),
-      scopes: z.array(z.string()),
+      scopes: z.array(z.string()).nonempty(),
       ...baseAuthenticationValidators,
     }),
     [AuthenticationType.Various]: zodCompleteStrictObject<VariousAuthentication>({
