@@ -88,6 +88,9 @@ function hasComment(data: ReflectionData): boolean {
 }
 
 function messageForEntity(data: ReflectionData): string {
+  if (!data.kindString) {
+    throw new Error(`No kindString for ${data.name}, did you forget to add /** ... */ comments?`);
+  }
   const source = data.sources?.[0];
   return `${data.name.padEnd(40)} ${data.kindString.padEnd(30)} ${source?.fileName}:${source?.line}`;
 }

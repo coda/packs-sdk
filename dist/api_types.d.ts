@@ -600,6 +600,8 @@ export interface Sync {
      * value returned in the `continuation` property of result of the prior sync.
      */
     continuation?: Continuation;
+    /** @hidden */
+    previousCompletion?: SyncCompletionMetadata;
     /**
      * The schema of this sync table, if this is a dynamic sync table. It may be useful to have
      * access to the dynamically-generated schema of the table instance in order to construct
@@ -836,5 +838,13 @@ export type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]>
 export declare enum TableRole {
     Users = "users",
     GroupMembers = "groupMembers"
+}
+/** @hidden */
+export interface SyncCompletionMetadata {
+    /**
+     * For enabling incremental syncs. If your sync execution provides this, then Coda will provide it to the
+     * next sync execution.
+     */
+    incrementalContinuation?: Continuation;
 }
 export {};

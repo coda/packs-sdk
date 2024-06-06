@@ -587,6 +587,8 @@ export interface Sync {
 	 * value returned in the `continuation` property of result of the prior sync.
 	 */
 	continuation?: Continuation;
+	/** @hidden */
+	previousCompletion?: SyncCompletionMetadata;
 	/**
 	 * The schema of this sync table, if this is a dynamic sync table. It may be useful to have
 	 * access to the dynamically-generated schema of the table instance in order to construct
@@ -815,6 +817,14 @@ export type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]>
 declare enum TableRole {
 	Users = "users",
 	GroupMembers = "groupMembers"
+}
+/** @hidden */
+export interface SyncCompletionMetadata {
+	/**
+	 * For enabling incremental syncs. If your sync execution provides this, then Coda will provide it to the
+	 * next sync execution.
+	 */
+	incrementalContinuation?: Continuation;
 }
 /**
  * The set of primitive value types that can be used as return values for formulas
@@ -2782,7 +2792,7 @@ export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, "execute">;
  * are called repeatedly until there is no continuation returned.
  */
 export interface SyncFormulaResult<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
-	/** The list of results from this page. */
+	/** The list of rows from this page. */
 	result: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>;
 	/**
 	 * A marker indicating where the next sync formula invocation should pick up to get the next page of results.
@@ -2790,6 +2800,16 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
 	 * until there is no continuation returned.
 	 */
 	continuation?: Continuation;
+	/**
+	 * Once there is no additional continuation returned from a pack sync formula, this may be returned instead, to give
+	 * metadata about the entirety of the sync execution.
+	 *
+	 * This is ignored if there is also a {@link continuation} on this object.
+	 *
+	 * TODO(patrick): Unhide this
+	 * @hidden
+	 */
+	completion?: SyncCompletionMetadata;
 }
 /**
  * Type definition for the parameter used to pass in a batch of updates to a sync table update function.

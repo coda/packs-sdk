@@ -31,6 +31,7 @@ import type { Schema } from './schema';
 import type { SchemaType } from './schema';
 import type { StringHintTypes } from './schema';
 import type { StringSchema } from './schema';
+import type { SyncCompletionMetadata } from './api_types';
 import type { SyncExecutionContext } from './api_types';
 import { TableRole } from './api_types';
 import { Type } from './api_types';
@@ -545,7 +546,7 @@ export declare function isSyncPackFormula(fn: BaseFormula<ParamDefs, any>): fn i
  * are called repeatedly until there is no continuation returned.
  */
 export interface SyncFormulaResult<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
-    /** The list of results from this page. */
+    /** The list of rows from this page. */
     result: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>;
     /**
      * A marker indicating where the next sync formula invocation should pick up to get the next page of results.
@@ -553,6 +554,16 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
      * until there is no continuation returned.
      */
     continuation?: Continuation;
+    /**
+     * Once there is no additional continuation returned from a pack sync formula, this may be returned instead, to give
+     * metadata about the entirety of the sync execution.
+     *
+     * This is ignored if there is also a {@link continuation} on this object.
+     *
+     * TODO(patrick): Unhide this
+     * @hidden
+     */
+    completion?: SyncCompletionMetadata;
 }
 /**
  * Type definition for the parameter used to pass in a batch of updates to a sync table update function.
