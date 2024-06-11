@@ -341,7 +341,7 @@ describe('API test', () => {
       assert.equal(property.originalKey, unnormalizedKey);
     });
 
-    it('allows SyncExecutionCompletionMetadata return', async () => {
+    it('allows SyncCompletionMetadata return', async () => {
       const table = makeSyncTable({
         name: 'SomeSync',
         identityName: 'MyIdentityName',

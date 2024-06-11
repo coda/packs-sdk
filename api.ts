@@ -2356,11 +2356,16 @@ export function makeSyncTable<
       ObjectSchemaDefinitionType<K, L, SchemaT>
     >;
     const {continuation, completion} = syncResult;
-    return {
+    const returnValue: SyncFormulaResult<K, L, SchemaT> = {
       result,
-      continuation,
-      completion,
     };
+    if (continuation) {
+      returnValue.continuation = continuation;
+    }
+    if (completion) {
+      returnValue.completion = completion;
+    }
+    return returnValue;
   };
   const executeUpdate = wrappedExecuteUpdate
     ? async function execUpdate(

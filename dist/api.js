@@ -877,11 +877,16 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
         const appliedSchema = context.sync.schema;
         const result = responseHandler({ body: syncResult.result || [], status: 200, headers: {} }, appliedSchema);
         const { continuation, completion } = syncResult;
-        return {
+        const returnValue = {
             result,
-            continuation,
-            completion,
         };
+        if (continuation) {
+            returnValue.continuation = continuation;
+        }
+        if (completion) {
+            returnValue.completion = completion;
+        }
+        return returnValue;
     };
     const executeUpdate = wrappedExecuteUpdate
         ? async function execUpdate(params, updates, context) {
