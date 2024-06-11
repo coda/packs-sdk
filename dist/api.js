@@ -876,21 +876,11 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
         const syncResult = (await wrappedExecute(params, context)) || {};
         const appliedSchema = context.sync.schema;
         const result = responseHandler({ body: syncResult.result || [], status: 200, headers: {} }, appliedSchema);
-        const { continuation, completion: syncExecutionCompletionMetadata } = syncResult;
-        if (continuation) {
-            if (syncExecutionCompletionMetadata) {
-                // eslint-disable-next-line no-console
-                console.warn('Ignoring syncExecutionCompletionMetadata because there is also a continuation.');
-            }
-            return {
-                result,
-                continuation: syncResult.continuation,
-            };
-        }
+        const { continuation, completion } = syncResult;
         return {
             result,
-            // This could be blank.
-            completion: syncExecutionCompletionMetadata,
+            continuation,
+            completion,
         };
     };
     const executeUpdate = wrappedExecuteUpdate
