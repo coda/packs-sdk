@@ -2355,23 +2355,17 @@ export function makeSyncTable<
     const result = responseHandler({body: syncResult.result || [], status: 200, headers: {}}, appliedSchema) as Array<
       ObjectSchemaDefinitionType<K, L, SchemaT>
     >;
-    const {continuation, completion: syncExecutionCompletionMetadata} = syncResult;
-
-    if (continuation) {
-      if (syncExecutionCompletionMetadata) {
-        // eslint-disable-next-line no-console
-        console.warn('Ignoring syncExecutionCompletionMetadata because there is also a continuation.');
-      }
-      return {
-        result,
-        continuation: syncResult.continuation,
-      };
-    }
-    return {
+    const {continuation, completion} = syncResult;
+    const returnValue: SyncFormulaResult<K, L, SchemaT> = {
       result,
-      // This could be blank.
-      completion: syncExecutionCompletionMetadata,
     };
+    if (continuation) {
+      returnValue.continuation = continuation;
+    }
+    if (completion) {
+      returnValue.completion = completion;
+    }
+    return returnValue;
   };
   const executeUpdate = wrappedExecuteUpdate
     ? async function execUpdate(
