@@ -59,6 +59,7 @@ class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
       userIdProperty,
       groupIdProperty,
       bodyTextProperty,
+      popularityRankProperty,
 
       ...rest
     } = schema;

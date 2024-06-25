@@ -1181,6 +1181,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       userEmailProperty: propertySchema.optional(),
       groupIdProperty: propertySchema.optional(),
       bodyTextProperty: propertySchema.optional(),
+      popularityRankProperty: propertySchema.optional(),
       options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
       requireForUpdates: z.boolean().optional(),
       autocomplete:
@@ -1471,6 +1472,14 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
           );
         };
 
+        const validatePopularityRankProperty = () => {
+          return validateProperty(
+            'popularityRankProperty',
+            popularityRankPropertySchema => popularityRankPropertySchema.type === ValueType.Number,
+            `must refer to a "ValueType.Number" property.`,
+          );
+        };
+
         validateTitleProperty();
         validateLinkProperty();
         validateImageProperty();
@@ -1484,6 +1493,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
         validateUserIdProperty();
         validateGroupIdProperty();
         validatebodyTextProperty();
+        validatePopularityRankProperty();
       })
       .superRefine((data, context) => {
         const schemaHelper = objectSchemaHelper(data as GenericObjectSchema);

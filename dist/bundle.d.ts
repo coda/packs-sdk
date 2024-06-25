@@ -1947,6 +1947,15 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 * @hidden
 	 */
 	bodyTextProperty?: PropertyIdentifier<K>;
+	/**
+	 * The name of the property within {@link ObjectSchemaDefinition.properties} that can be be interpreted as
+	 * a number between 0.0 and 1.0 representing the popularity rank of this entity compared to all other entities.
+	 *
+	 * Must be a {@link ValueType.Number} property.
+	 * TODO(sam): Unhide this
+	 * @hidden
+	 */
+	popularityRankProperty?: PropertyIdentifier<K>;
 }
 declare enum PrincipalType {
 	User = "user",
