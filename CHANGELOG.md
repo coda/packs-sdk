@@ -4,6 +4,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+## [1.7.8] - 2024-06-25
+
 ## [1.7.7] - 2024-04-26
 
 ### Fixed
@@ -684,7 +686,7 @@ await myHelper(context);
 
 - Beginning of alpha versioning.
 
-[unreleased]: https://github.com/coda/packs-sdk/compare/v1.7.7...HEAD
+[unreleased]: https://github.com/coda/packs-sdk/compare/v1.7.8...HEAD
 [1.7.5]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.5
 [1.7.4]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.4
 [1.7.3]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.3
@@ -714,5 +716,5 @@ await myHelper(context);
 [0.12.0]: https://github.com/coda/packs-sdk/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/coda/packs-sdk/compare/v0.9.0...v0.11.0
 [0.9.0]: https://github.com/coda/packs-sdk/compare/v0.8.2...v0.9.0
-
 [1.7.7]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.7
+[1.7.8]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.8
