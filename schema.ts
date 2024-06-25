@@ -1061,6 +1061,7 @@ export type ObjectSchemaPathProperties = Pick<
   | 'userIdProperty'
   | 'groupIdProperty'
   | 'bodyTextProperty'
+  | 'popularityRankProperty'
 >;
 
 /**
@@ -1256,6 +1257,16 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    * @hidden
    */
   bodyTextProperty?: PropertyIdentifier<K>;
+
+  /**
+   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be be interpreted as
+   * a number between 0.0 and 1.0 representing the popularity rank of this entity compared to all other entities.
+   *
+   * Must be a {@link ValueType.Number} property.
+   * TODO(sam): Unhide this
+   * @hidden
+   */
+  popularityRankProperty?: PropertyIdentifier<K>;
   // TODO(dweitzman): Only support options in the typing when the codaType is ValueHintType.SelectList.
 }
 
@@ -1892,6 +1903,7 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     userIdProperty,
     groupIdProperty,
     bodyTextProperty,
+    popularityRankProperty,
     ...rest
   } = schema;
   // Have TS ensure we don't forget about new fields in this function.
@@ -1960,6 +1972,9 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
       : undefined,
     bodyTextProperty: bodyTextProperty
       ? normalizeSchemaPropertyIdentifier(bodyTextProperty, normalizedProperties)
+      : undefined,
+    popularityRankProperty: popularityRankProperty
+      ? normalizeSchemaPropertyIdentifier(popularityRankProperty, normalizedProperties)
       : undefined,
     type: ValueType.Object,
   };
