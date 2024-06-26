@@ -252,6 +252,12 @@ export interface ParamDef<T extends UnionType> {
     suggestedValue?: SuggestedValueType<T>;
     /** @hidden */
     crawlStrategy?: CrawlStrategy;
+    /**
+     * Whether this parameter is compatible with incremental sync.
+     * If not, it will be hidden from the Coda Brain setup UI.
+     */
+    /** @hidden */
+    supportsIncrementalSync?: boolean;
 }
 /**
  * Marker type for an optional {@link ParamDef}, used internally.
