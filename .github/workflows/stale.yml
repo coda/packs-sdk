@@ -19,7 +19,7 @@ jobs:
 
     steps:
     - name: Mark Codan PRs As Stale
-      uses: actions/stale@v8
+      uses: actions/stale@v9
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         stale-pr-message: 'This pull request has been inactive for 7 days: labeled as stale. To avoid auto-closure in 7 days, please do one of the following: Add `keep-active` label, comment on PR, push new commit on PR.'
@@ -31,7 +31,7 @@ jobs:
         operations-per-run: 1000
         remove-pr-stale-when-updated: true
     - name: Mark Renovate PRs As Stale
-      uses: actions/stale@v8 # mark dependencies labeled as stale after 30 days (auto labeled by renovate)
+      uses: actions/stale@v9 # mark dependencies labeled as stale after 30 days (auto labeled by renovate)
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         stale-pr-message: 'This pull request has been inactive for 30 days: labeled as stale. Please either merge or close or add the label `keep-active`'
