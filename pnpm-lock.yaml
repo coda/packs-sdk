@@ -290,8 +290,8 @@ importers:
         specifier: 0.24.8
         version: 0.24.8(typescript@5.1.6)
       typedoc-plugin-markdown:
-        specifier: 3.15.3
-        version: 3.15.3(typedoc@0.24.8)
+        specifier: 3.17.1
+        version: 3.17.1(typedoc@0.24.8)
 
   documentation/samples:
     devDependencies:
@@ -5750,8 +5750,6 @@ packages:
     requiresBuild: true
     dependencies:
       prebuild-install: 7.1.1
-    transitivePeerDependencies:
-      - supports-color
     dev: false
     optional: true
 
@@ -8276,8 +8274,8 @@ packages:
   /typedarray@0.0.6:
     resolution: {integrity: sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==}
 
-  /typedoc-plugin-markdown@3.15.3(typedoc@0.24.8):
-    resolution: {integrity: sha512-idntFYu3vfaY3eaD+w9DeRd0PmNGqGuNLKihPU9poxFGnATJYGn9dPtEhn2QrTdishFMg7jPXAhos+2T6YCWRQ==}
+  /typedoc-plugin-markdown@3.17.1(typedoc@0.24.8):
+    resolution: {integrity: sha512-QzdU3fj0Kzw2XSdoL15ExLASt2WPqD7FbLeaqwT70+XjKyTshBnUlQA5nNREO1C2P8Uen0CDjsBLMsCQ+zd0lw==}
     peerDependencies:
       typedoc: '>=0.24.0'
     dependencies:
