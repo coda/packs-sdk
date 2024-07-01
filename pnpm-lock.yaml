@@ -137,8 +137,8 @@ importers:
         specifier: 3.7.6
         version: 3.7.6
       '@release-it/keep-a-changelog':
-        specifier: 3.1.0
-        version: 3.1.0(release-it@15.10.5)
+        specifier: 5.0.0
+        version: 5.0.0(release-it@15.10.5)
       '@types/aws-sdk':
         specifier: 2.7.0
         version: 2.7.0
@@ -1815,13 +1815,13 @@ packages:
       config-chain: 1.1.13
     dev: true
 
-  /@release-it/keep-a-changelog@3.1.0(release-it@15.10.5):
-    resolution: {integrity: sha512-o8lxZCAFwFkFpo88aIIgS5dR3kDy6yLjJVpe9QAGNY6tpKMMRHxsiJ8MS5NvrEeIC2VTzOoOjN/CDvdd3a4+/A==}
-    engines: {node: '>=14'}
+  /@release-it/keep-a-changelog@5.0.0(release-it@15.10.5):
+    resolution: {integrity: sha512-Y1xqZe50jqK8qKlzEfGLVTjSkn57e/QlQMXHhKRWGgsv8Qy/X0LN1CJphoskZu7p7sAD3RihxhXrjJhRPE4JcA==}
+    engines: {node: '>=18'}
     peerDependencies:
-      release-it: ^15.0.0-esm.4
+      release-it: ^17.0.0
     dependencies:
-      detect-newline: 4.0.0
+      detect-newline: 4.0.1
       release-it: 15.10.5
       string-template: 1.0.0
     dev: true
@@ -4214,8 +4214,8 @@ packages:
     resolution: {integrity: sha512-463v3ZeIrcWtdgIg6vI6XUncguvr2TnGl4SzDXinkt9mSLpBJKXT3mW6xT3VQdDN11+WVs29pgvivTc4Lp8v+w==}
     engines: {node: '>=8'}
 
-  /detect-newline@4.0.0:
-    resolution: {integrity: sha512-1aXUEPdfGdzVPFpzGJJNgq9o81bGg1s09uxTWsqBlo9PI332uyJRQq13+LK/UN4JfxJbFdCXonUFQ9R/p7yCtw==}
+  /detect-newline@4.0.1:
+    resolution: {integrity: sha512-qE3Veg1YXzGHQhlA6jzebZN2qVf6NX+A7m7qlhCGG30dJixrAQhYOsJjsnBjJkCSmuOPpCk30145fr8FV0bzog==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dev: true
 
@@ -5750,8 +5750,6 @@ packages:
     requiresBuild: true
     dependencies:
       prebuild-install: 7.1.1
-    transitivePeerDependencies:
-      - supports-color
     dev: false
     optional: true
 
