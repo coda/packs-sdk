@@ -95,7 +95,7 @@
     "@typescript-eslint/parser": "6.8.0",
     "aws-sdk": "2.1566.0",
     "chai": "4.4.1",
-    "cspell": "6.31.3",
+    "cspell": "8.9.1",
     "dts-bundle-generator": "8.0.1",
     "eslint": "8.57.0",
     "eslint-plugin-ban": "1.6.0",
