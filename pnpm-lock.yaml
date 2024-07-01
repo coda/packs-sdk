@@ -121,8 +121,8 @@ importers:
         version: 3.22.3
     optionalDependencies:
       isolated-vm:
-        specifier: 4.7.2
-        version: 4.7.2
+        specifier: 5.0.1
+        version: 5.0.1
     devDependencies:
       '@aws-sdk/types':
         specifier: 3.521.0
@@ -5744,14 +5744,12 @@ packages:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
     dev: true
 
-  /isolated-vm@4.7.2:
-    resolution: {integrity: sha512-JVEs5gzWObzZK5+OlBplCdYSpokMcdhLSs/xWYYxmYWVfOOFF4oZJsYh7E/FmfX8e7gMioXMpMMeEyX1afuKrg==}
-    engines: {node: '>=16.0.0'}
+  /isolated-vm@5.0.1:
+    resolution: {integrity: sha512-hs7+ff59Z2zDvavfcjuot/r1gm6Bmpt+GoZxmVfxUmXaX5scOvUq/Rnme+mUtSh5lW41hH8gAuvk/yTJDYO8Fg==}
+    engines: {node: '>=18.0.0'}
     requiresBuild: true
     dependencies:
       prebuild-install: 7.1.1
-    transitivePeerDependencies:
-      - supports-color
     dev: false
     optional: true
 
