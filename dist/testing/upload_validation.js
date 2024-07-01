@@ -26,7 +26,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.zodErrorDetailToValidationError = exports._hasCycle = exports.validateCrawlHierarchy = exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.Limits = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
+exports.PackMetadataValidationError = exports.Limits = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
+exports.validatePackVersionMetadata = validatePackVersionMetadata;
+exports.validateVariousAuthenticationMetadata = validateVariousAuthenticationMetadata;
+exports.validateSyncTableSchema = validateSyncTableSchema;
+exports.validateCrawlHierarchy = validateCrawlHierarchy;
+exports._hasCycle = _hasCycle;
+exports.zodErrorDetailToValidationError = zodErrorDetailToValidationError;
 const schema_1 = require("../schema");
 const types_1 = require("../types");
 const schema_2 = require("../schema");
@@ -128,7 +134,6 @@ async function validatePackVersionMetadata(metadata, sdkVersion, { warningMode }
     }
     return validated.data;
 }
-exports.validatePackVersionMetadata = validatePackVersionMetadata;
 // Note: This is called within Coda for validating user-provided authentication metadata
 // as part of Various connections.
 function validateVariousAuthenticationMetadata(auth, options) {
@@ -139,7 +144,6 @@ function validateVariousAuthenticationMetadata(auth, options) {
     }
     throw new PackMetadataValidationError('Various authentication failed validation', validated.error, validated.error.errors.flatMap(zodErrorDetailToValidationError));
 }
-exports.validateVariousAuthenticationMetadata = validateVariousAuthenticationMetadata;
 // Note: This is called within Coda for validating the result of getSchema calls for dynamic sync tables.
 function validateSyncTableSchema(schema, options) {
     const { arrayPropertySchema } = buildMetadataSchema(options);
@@ -158,7 +162,6 @@ function validateSyncTableSchema(schema, options) {
     }
     throw new PackMetadataValidationError('Schema failed validation', validated.error, validated.error.errors.flatMap(zodErrorDetailToValidationError));
 }
-exports.validateSyncTableSchema = validateSyncTableSchema;
 /**
  * Returns a map of sync table names to their child sync table names, or undefined if the hierarchy is invalid.
  * Example valid return: { Parent: 'Child' }
@@ -236,7 +239,6 @@ function validateCrawlHierarchy(syncTables, context) {
     }
     return parentToChildrenMap;
 }
-exports.validateCrawlHierarchy = validateCrawlHierarchy;
 // Exported for tests
 /** @hidden */
 function _hasCycle(tree) {
@@ -259,7 +261,6 @@ function _hasCycle(tree) {
     }
     return subtreeHasCycle('__CODA_INTERNAL_ROOT__', Object.keys(tree), new Set());
 }
-exports._hasCycle = _hasCycle;
 function getNonUniqueElements(items) {
     const set = new Set();
     const nonUnique = [];
@@ -336,7 +337,6 @@ function zodErrorDetailToValidationError(subError) {
         },
     ];
 }
-exports.zodErrorDetailToValidationError = zodErrorDetailToValidationError;
 function zodPathToPathString(zodPath) {
     const parts = [];
     zodPath.forEach((zodPathPart, i) => {
@@ -1243,7 +1243,7 @@ function buildMetadataSchema({ sdkVersion }) {
     });
     const formatMetadataSchema = zodCompleteObject({
         name: z.string().max(exports.Limits.BuildingBlockName),
-        formulaNamespace: z.string().optional(),
+        formulaNamespace: z.string().optional(), // Will be removed once we deprecate namespace objects.
         formulaName: z.string(),
         hasNoConnection: z.boolean().optional(),
         instructions: z.string().optional(),

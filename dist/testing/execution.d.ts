@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import type { BasicPackDefinition } from '../types';
 import type { ExecutionContext } from '../api_types';
 import type { FormulaSpecification } from '../runtime/types';

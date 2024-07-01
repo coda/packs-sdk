@@ -3,13 +3,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newJsonFetchResponse = exports.newMockExecutionContext = exports.newMockSyncExecutionContext = void 0;
+exports.newMockSyncExecutionContext = newMockSyncExecutionContext;
+exports.newMockExecutionContext = newMockExecutionContext;
+exports.newJsonFetchResponse = newJsonFetchResponse;
 const sinon_1 = __importDefault(require("sinon"));
 const uuid_1 = require("uuid");
 function newMockSyncExecutionContext(overrides) {
     return { ...newMockExecutionContext(), sync: {}, ...overrides };
 }
-exports.newMockSyncExecutionContext = newMockSyncExecutionContext;
 function newMockExecutionContext(overrides) {
     return {
         invocationLocation: {
@@ -27,9 +28,7 @@ function newMockExecutionContext(overrides) {
         ...overrides,
     };
 }
-exports.newMockExecutionContext = newMockExecutionContext;
 function newJsonFetchResponse(body, status = 200, headers) {
     const allHeaders = { 'Content-Type': 'application/json', ...headers };
     return { status, body, headers: allHeaders };
 }
-exports.newJsonFetchResponse = newJsonFetchResponse;

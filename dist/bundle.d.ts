@@ -3629,19 +3629,19 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
 export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: ObjectArrayFormulaDef<ParamDefsT, ResultT>): {
 	description: string;
 	name: string;
-	cacheTtlSecs?: number | undefined;
+	cacheTtlSecs?: number;
 	parameters: ParamDefsT;
-	varargParameters?: ParamDefs | undefined;
-	examples?: {
-		params: (PackFormulaValue | undefined)[];
+	varargParameters?: ParamDefs;
+	examples?: Array<{
+		params: Array<PackFormulaValue | undefined>;
 		result: PackFormulaResult;
-	}[] | undefined;
-	isAction?: boolean | undefined;
-	connectionRequirement?: ConnectionRequirement | undefined;
-	network?: Network | undefined;
-	isExperimental?: boolean | undefined;
-	isSystem?: boolean | undefined;
-	extraOAuthScopes?: string[] | undefined;
+	}>;
+	isAction?: boolean;
+	connectionRequirement?: ConnectionRequirement;
+	network?: Network;
+	isExperimental?: boolean;
+	isSystem?: boolean;
+	extraOAuthScopes?: string[];
 } & {
 	execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<SchemaType<ResultT>>;
 	resultType: Type.object;
@@ -3670,19 +3670,19 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
 export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: EmptyFormulaDef<ParamDefsT>): {
 	description: string;
 	name: string;
-	cacheTtlSecs?: number | undefined;
+	cacheTtlSecs?: number;
 	parameters: ParamDefsT;
-	varargParameters?: ParamDefs | undefined;
-	examples?: {
-		params: (PackFormulaValue | undefined)[];
+	varargParameters?: ParamDefs;
+	examples?: Array<{
+		params: Array<PackFormulaValue | undefined>;
 		result: PackFormulaResult;
-	}[] | undefined;
-	isAction?: boolean | undefined;
-	connectionRequirement?: ConnectionRequirement | undefined;
-	network?: Network | undefined;
-	isExperimental?: boolean | undefined;
-	isSystem?: boolean | undefined;
-	extraOAuthScopes?: string[] | undefined;
+	}>;
+	isAction?: boolean;
+	connectionRequirement?: ConnectionRequirement;
+	network?: Network;
+	isExperimental?: boolean;
+	isSystem?: boolean;
+	extraOAuthScopes?: string[];
 } & {
 	execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<string>;
 	resultType: Type.string;
