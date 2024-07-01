@@ -578,7 +578,10 @@ function buildMetadataSchema({ sdkVersion }) {
         defaultValue: z.unknown().optional(),
         suggestedValue: z.unknown().optional(),
         crawlStrategy: z.unknown().optional(),
-    });
+        supportsIncrementalSync: z.boolean().optional().default(true),
+    }).refine(param => {
+        return param.optional || param.supportsIncrementalSync;
+    }, { message: 'Required params should support incremental sync.' });
     const commonPackFormulaSchema = {
         // It would be preferable to use validateFormulaName here, but we have to exempt legacy packs with sync tables
         // whose getter names violate the validator, and those exemptions require the pack id, so this has to be

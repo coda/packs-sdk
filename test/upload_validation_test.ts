@@ -4471,6 +4471,37 @@ describe('Pack metadata Validation', async () => {
         },
       ]);
     });
+
+    it('rejects required param does not support incremental sync', async () => {
+      const formula = makeFormula({
+        resultType: ValueType.String,
+        name: 'Hi',
+        description: 'A',
+        examples: [],
+        parameters: [
+          makeParameter({
+            type: ParameterType.String,
+            name: 'myParam',
+            description: '',
+            optional: false,
+            supportsIncrementalSync: false,
+          }),
+        ],
+        execute: () => '',
+      });
+
+      const metadata = createFakePackVersionMetadata({
+        formulas: [formula],
+        formulaNamespace: 'MyNamespace',
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: `Required params should support incremental sync.`,
+          path: 'formulas[0].parameters[0]',
+        },
+      ]);
+    });
   });
 
   describe('deprecation warnings', () => {

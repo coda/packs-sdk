@@ -339,6 +339,14 @@ export interface ParamDef<T extends UnionType> {
   // TODO(patrick): Unhide this
   /** @hidden */
   crawlStrategy?: CrawlStrategy;
+
+  /**
+   * Whether this parameter is compatible with incremental sync.
+   * If not, it will be hidden from the Coda Brain setup UI.
+   */
+  // TODO(ebo): Unhide this
+  /** @hidden */
+  supportsIncrementalSync?: boolean;
 }
 
 /**
