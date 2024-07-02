@@ -76,6 +76,16 @@ The other properties can be seen when hovering over the chip.
 
 ___
 
+### entityIdProperty
+
+• `Optional` **entityIdProperty**: `K`
+
+The name of a property within [properties](core.ObjectSchemaDefinition.md#properties) that represents a unique id for a
+parent entity for the object. It is recommended for sync table schemas with a bodyTextProperty to specify an
+an entityProperty, which uniquely identifies the entity that groups 1 to multiple rows.
+
+___
+
 ### featured
 
 • `Optional` **featured**: `L`[]

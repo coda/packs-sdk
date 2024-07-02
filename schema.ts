@@ -1247,6 +1247,12 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    * @hidden
    */
   groupIdProperty?: PropertyIdentifier<K>;
+  /**
+   * The name of a property within {@link ObjectSchemaDefinition.properties} that represents a unique id for a
+   * parent entity for the object. It is recommended for sync table schemas with a bodyTextProperty to specify an
+   * an entityProperty, which uniquely identifies the entity that groups 1 to multiple rows.
+   */
+  entityIdProperty?: K;
 
   /**
    * The name of the property within {@link ObjectSchemaDefinition.properties} that can be be interpreted as
@@ -1884,6 +1890,7 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     id,
     identity,
     idProperty,
+    entityIdProperty,
     imageProperty,
     includeUnknownProperties,
     linkProperty,
@@ -1937,6 +1944,7 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     id: id ? normalizeSchemaKey(id) : undefined,
     identity,
     idProperty: idProperty ? normalizeSchemaKey(idProperty) : undefined,
+    entityIdProperty: entityIdProperty ? normalizeSchemaKey(entityIdProperty) : undefined,
     imageProperty: imageProperty ? normalizeSchemaPropertyIdentifier(imageProperty, normalizedProperties) : undefined,
     includeUnknownProperties,
     linkProperty: linkProperty ? normalizeSchemaPropertyIdentifier(linkProperty, normalizedProperties) : undefined,

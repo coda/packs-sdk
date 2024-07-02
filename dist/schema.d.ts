@@ -1087,6 +1087,12 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      */
     groupIdProperty?: PropertyIdentifier<K>;
     /**
+     * The name of a property within {@link ObjectSchemaDefinition.properties} that represents a unique id for a
+     * parent entity for the object. It is recommended for sync table schemas with a bodyTextProperty to specify an
+     * an entityProperty, which uniquely identifies the entity that groups 1 to multiple rows.
+     */
+    entityIdProperty?: K;
+    /**
      * The name of the property within {@link ObjectSchemaDefinition.properties} that can be be interpreted as
      * text representing the body of this entity.
      *

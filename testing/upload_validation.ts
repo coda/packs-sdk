@@ -1159,6 +1159,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       description: z.string().optional(),
       id: z.string().min(1).optional(),
       idProperty: z.string().min(1).optional(),
+      entityIdProperty: z.string().min(1).optional(),
       primary: z.string().min(1).optional(),
       displayProperty: z.string().min(1).optional(),
       codaType: z.enum([...ObjectHintValueTypes]).optional(),
@@ -1230,6 +1231,14 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
         },
         {
           message: 'The "idProperty" property must appear as a key in the "properties" object.',
+        },
+      )
+      .refine(
+        data => {
+          return isNil(data.entityIdProperty) || data.entityIdProperty in data.properties;
+        },
+        {
+          message: 'The "entityIdProperty" property must appear as a key in the "properties" object.',
         },
       )
       .refine(
