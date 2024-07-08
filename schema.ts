@@ -1251,10 +1251,10 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    * The name of a property within {@link ObjectSchemaDefinition.properties} that represents a unique id for a
    * parent entity for the object. It is recommended for sync table schemas with a bodyTextProperty to specify an
    * an entityProperty, which uniquely identifies the entity that groups 1 to multiple rows. For example, a sync table
-   * where each row is a partial chunk of a larger document may want to specify an entity id that represents the
+   * where each row is a partial chunk of a larger document may want to specify a parent id that represents the
    * document, while each row's id can be unique to the chunk.
    */
-  entityIdProperty?: K;
+  parentIdProperty?: K;
 
   /**
    * The name of the property within {@link ObjectSchemaDefinition.properties} that can be be interpreted as
@@ -1892,7 +1892,7 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     id,
     identity,
     idProperty,
-    entityIdProperty,
+    parentIdProperty,
     imageProperty,
     includeUnknownProperties,
     linkProperty,
@@ -1946,7 +1946,7 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     id: id ? normalizeSchemaKey(id) : undefined,
     identity,
     idProperty: idProperty ? normalizeSchemaKey(idProperty) : undefined,
-    entityIdProperty: entityIdProperty ? normalizeSchemaKey(entityIdProperty) : undefined,
+    parentIdProperty: parentIdProperty ? normalizeSchemaKey(parentIdProperty) : undefined,
     imageProperty: imageProperty ? normalizeSchemaPropertyIdentifier(imageProperty, normalizedProperties) : undefined,
     includeUnknownProperties,
     linkProperty: linkProperty ? normalizeSchemaPropertyIdentifier(linkProperty, normalizedProperties) : undefined,
