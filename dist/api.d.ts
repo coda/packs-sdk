@@ -198,7 +198,7 @@ export declare class ResponseSizeTooLargeError extends Error {
      */
     name: string;
     /** @hidden */
-    constructor(message?: string);
+    constructor(message?: string | undefined);
     /** Returns if the error is an instance of ResponseSizeTooLargeError. Note that `instanceof` may not work. */
     static isResponseSizeTooLargeError(err: any): err is ResponseSizeTooLargeError;
 }

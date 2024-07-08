@@ -263,7 +263,7 @@ export class ResponseSizeTooLargeError extends Error {
   override name: string = 'ResponseSizeTooLargeError';
 
   /** @hidden */
-  constructor(message?: string) {
+  constructor(message?: string | undefined) {
     super(message || 'Response size too large');
   }
 
