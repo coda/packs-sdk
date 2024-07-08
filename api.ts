@@ -248,6 +248,32 @@ export class MissingScopesError extends Error {
 }
 
 /**
+ * An error that will be thrown by {@link Fetcher.fetch} when the response body from the external system
+ * exceeds packs platform limits
+ *
+ * This error can be caught and retried by requesting less data from the external system through
+ * a smaller page size or omitting large fields.
+ *
+ * @hidden
+ */
+export class ResponseSizeTooLargeError extends Error {
+  /**
+   * The name of the error, for identification purposes.
+   */
+  override name: string = 'ResponseSizeTooLargeError';
+
+  /** @hidden */
+  constructor(message?: string) {
+    super(message || 'Response size too large');
+  }
+
+  /** Returns if the error is an instance of ResponseSizeTooLargeError. Note that `instanceof` may not work. */
+  static isResponseSizeTooLargeError(err: any): err is ResponseSizeTooLargeError {
+    return 'name' in err && err.name === ResponseSizeTooLargeError.name;
+  }
+}
+
+/**
  * A map of named property options methods for a particular sync table. The names need to match
  * the values stored in the object schema. For the name, we use the property's name so that
  * it'll be consistent across pack versions. In the future if we want to support packs
