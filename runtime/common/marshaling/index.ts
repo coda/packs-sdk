@@ -1,6 +1,7 @@
 import {CodaMarshalerType} from './constants';
 import {MarshalingInjectedKeys} from './constants';
 import {MissingScopesError} from '../../../api';
+import {ResponseSizeTooLargeError} from '../../../api';
 import {StatusCodeError} from '../../../api';
 import {deserialize} from './serializer';
 import {format} from 'util';
@@ -66,6 +67,7 @@ const recognizableCodaErrorClasses: ErrorConstructor[] = [
   // StatusCodeError doesn't have the new StatusCodeError(message) constructor but it's okay.
   StatusCodeError as any,
   MissingScopesError as any,
+  ResponseSizeTooLargeError as any,
 ];
 
 // pathPrefix can be temporarily modified, but needs to be restored to its original value
