@@ -691,7 +691,7 @@ function normalizeSchema(schema) {
 exports.normalizeSchema = normalizeSchema;
 function normalizeObjectSchema(schema) {
     const normalizedProperties = {};
-    const { attribution, options, requireForUpdates, codaType, description, displayProperty, featured, featuredProperties, id, identity, idProperty, imageProperty, includeUnknownProperties, linkProperty, primary, properties, snippetProperty, subtitleProperties, titleProperty, type, 
+    const { attribution, options, requireForUpdates, codaType, description, displayProperty, featured, featuredProperties, id, identity, idProperty, parentIdProperty, imageProperty, includeUnknownProperties, linkProperty, primary, properties, snippetProperty, subtitleProperties, titleProperty, type, 
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __packId, createdAtProperty, createdByProperty, modifiedAtProperty, modifiedByProperty, userEmailProperty, userIdProperty, groupIdProperty, bodyTextProperty, popularityRankProperty, ...rest } = schema;
     // Have TS ensure we don't forget about new fields in this function.
@@ -725,6 +725,7 @@ function normalizeObjectSchema(schema) {
         id: id ? normalizeSchemaKey(id) : undefined,
         identity,
         idProperty: idProperty ? normalizeSchemaKey(idProperty) : undefined,
+        parentIdProperty: parentIdProperty ? normalizeSchemaKey(parentIdProperty) : undefined,
         imageProperty: imageProperty ? normalizeSchemaPropertyIdentifier(imageProperty, normalizedProperties) : undefined,
         includeUnknownProperties,
         linkProperty: linkProperty ? normalizeSchemaPropertyIdentifier(linkProperty, normalizedProperties) : undefined,
