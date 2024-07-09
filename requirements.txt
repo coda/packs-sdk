@@ -47,4 +47,4 @@ urllib3==2.0.7; python_version >= '3.7'
 watchdog==4.0.0; python_version >= '3.8'
 wcmatch==8.5.1; python_version >= '3.8'
 webencodings==0.5.1
-zipp==3.18.1; python_version >= '3.8'
+zipp==3.19.1; python_version >= '3.8'
