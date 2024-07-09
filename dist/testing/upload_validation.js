@@ -943,7 +943,7 @@ function buildMetadataSchema({ sdkVersion }) {
         description: z.string().optional(),
         id: z.string().min(1).optional(),
         idProperty: z.string().min(1).optional(),
-        entityIdProperty: z.string().min(1).optional(),
+        parentIdProperty: z.string().min(1).optional(),
         primary: z.string().min(1).optional(),
         displayProperty: z.string().min(1).optional(),
         codaType: z.enum([...schema_10.ObjectHintValueTypes]).optional(),
@@ -1013,9 +1013,9 @@ function buildMetadataSchema({ sdkVersion }) {
         message: 'The "idProperty" property must appear as a key in the "properties" object.',
     })
         .refine(data => {
-        return (0, object_utils_2.isNil)(data.entityIdProperty) || data.entityIdProperty in data.properties;
+        return (0, object_utils_2.isNil)(data.parentIdProperty) || data.parentIdProperty in data.properties;
     }, {
-        message: 'The "entityIdProperty" property must appear as a key in the "properties" object.',
+        message: 'The "parentIdProperty" property must appear as a key in the "properties" object.',
     })
         .refine(data => {
         const schemaHelper = (0, migration_1.objectSchemaHelper)(data);

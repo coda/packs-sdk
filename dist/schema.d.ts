@@ -1089,11 +1089,13 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
     /**
      * The name of a property within {@link ObjectSchemaDefinition.properties} that represents a unique id for a
      * parent entity for the object. It is recommended for sync table schemas with a bodyTextProperty to specify an
-     * an entityProperty, which uniquely identifies the entity that groups 1 to multiple rows. For example, a sync table
-     * where each row is a partial chunk of a larger document may want to specify an entity id that represents the
-     * document, while each row's id can be unique to the chunk.
+     * a parentIdProperty, which uniquely identifies the entity that groups 1 to multiple rows. Note though that
+     * specifying a bodyTextProperty does not necessarily require it to be chunked into multiple rows. But if it is,
+     * a sync table where each row is a partial chunk of a larger document may want to specify a parent id that
+     * represents the document, while each row's id can be unique to the chunk.
+     * @hidden
      */
-    entityIdProperty?: K;
+    parentIdProperty?: K;
     /**
      * The name of the property within {@link ObjectSchemaDefinition.properties} that can be be interpreted as
      * text representing the body of this entity.

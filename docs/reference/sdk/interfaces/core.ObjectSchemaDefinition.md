@@ -76,18 +76,6 @@ The other properties can be seen when hovering over the chip.
 
 ___
 
-### entityIdProperty
-
-• `Optional` **entityIdProperty**: `K`
-
-The name of a property within [properties](core.ObjectSchemaDefinition.md#properties) that represents a unique id for a
-parent entity for the object. It is recommended for sync table schemas with a bodyTextProperty to specify an
-an entityProperty, which uniquely identifies the entity that groups 1 to multiple rows. For example, a sync table
-where each row is a partial chunk of a larger document may want to specify an entity id that represents the
-document, while each row's id can be unique to the chunk.
-
-___
-
 ### featured
 
 • `Optional` **featured**: `L`[]
