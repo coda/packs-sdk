@@ -5911,6 +5911,22 @@ module.exports = (() => {
   };
   __name(_MissingScopesError, "MissingScopesError");
   var MissingScopesError = _MissingScopesError;
+  var _ResponseSizeTooLargeError = class _ResponseSizeTooLargeError extends Error {
+    /** @hidden */
+    constructor(message) {
+      super(message || "Response size too large");
+      /**
+       * The name of the error, for identification purposes.
+       */
+      this.name = "ResponseSizeTooLargeError";
+    }
+    /** Returns if the error is an instance of ResponseSizeTooLargeError. Note that `instanceof` may not work. */
+    static isResponseSizeTooLargeError(err) {
+      return "name" in err && err.name === _ResponseSizeTooLargeError.name;
+    }
+  };
+  __name(_ResponseSizeTooLargeError, "ResponseSizeTooLargeError");
+  var ResponseSizeTooLargeError = _ResponseSizeTooLargeError;
   function isDynamicSyncTable(syncTable) {
     return "isDynamic" in syncTable;
   }
@@ -6164,7 +6180,8 @@ module.exports = (() => {
   var recognizableCodaErrorClasses2 = [
     // StatusCodeError doesn't have the new StatusCodeError(message) constructor but it's okay.
     StatusCodeError,
-    MissingScopesError
+    MissingScopesError,
+    ResponseSizeTooLargeError
   ];
   function fixUncopyableTypes(val, pathPrefix, postTransforms, depth = 0) {
     if (depth >= MaxTraverseDepth) {
