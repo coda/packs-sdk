@@ -183,7 +183,10 @@ async function registerBundle(isolate, context, path, stubName, requiresManualCl
     await context.global.set('exports', {}, { copy: true });
     await context.global.set('module', {}, { copy: true });
     // compiling the bundle allows IVM to map the stack trace.
-    const bundle = fs_1.default.readFileSync(path).toString();
+    // readFileSync does not properly close files in the lambda
+    const fileDescriptor = fs_1.default.openSync(path, 'r');
+    const bundle = fs_1.default.readFileSync(fileDescriptor).toString();
+    fs_1.default.closeSync(fileDescriptor);
     // manual closure will break sourcemap. esp if it's minified.
     const scriptCode = requiresManualClosure
         ? // {...exports, ...module.exports} is only necessary when the pack

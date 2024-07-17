@@ -296,7 +296,11 @@ export async function registerBundle(
   await context.global.set('module', {}, {copy: true});
 
   // compiling the bundle allows IVM to map the stack trace.
-  const bundle = fs.readFileSync(path).toString();
+
+  // readFileSync does not properly close files in the lambda
+  const fileDescriptor = fs.openSync(path, 'r');
+  const bundle = fs.readFileSync(fileDescriptor).toString();
+  fs.closeSync(fileDescriptor);
 
   // manual closure will break sourcemap. esp if it's minified.
   const scriptCode = requiresManualClosure
