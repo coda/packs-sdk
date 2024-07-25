@@ -104,7 +104,7 @@ return coda.SvgConstants.DataUrlPrefixWithDarkModeSupport + encoded;
 [parameters_images]: ../basics/parameters/index.md#images
 [data_types_images]: ../basics/data-types.md#images
 [reference_temporaryblobstorage]: ../../reference/sdk/interfaces/core.TemporaryBlobStorage.md
-[buffer]: https://nodejs.org/en/knowledge/advanced/buffers/how-to-use-buffers/
+[buffer]: https://nodejs.org/api/buffer.html#buffer
 [mdn_data_urls]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
 [mdn_svg]: https://developer.mozilla.org/en-US/docs/Web/SVG
 [pack_latex]: https://coda.io/packs/latex-1058
