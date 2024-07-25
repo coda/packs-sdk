@@ -478,7 +478,7 @@ You can also identify HTTP requests originating from Packs by the `User-Agent` h
 [fetchresponse]: ../../reference/sdk/interfaces/core.FetchResponse.md
 [xml2js]: https://www.npmjs.com/package/xml2js
 [status_code_error]: ../../reference/sdk/classes/core.StatusCodeError.md
-[buffer]: https://nodejs.org/en/knowledge/advanced/buffers/how-to-use-buffers/
+[buffer]: https://nodejs.org/api/buffer.html#buffer
 [withQueryParams]: ../../reference/sdk/functions/core.withQueryParams.md
 [stringify]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
 [formula_cache]: ../blocks/formulas.md#caching
