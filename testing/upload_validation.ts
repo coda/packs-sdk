@@ -717,10 +717,10 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     defaultValue: z.unknown().optional(),
     suggestedValue: z.unknown().optional(),
     crawlStrategy: z.unknown().optional(),
-    supportsIncrementalSync: z.boolean().optional().default(true),
+    supportsIncrementalSync: z.boolean().optional(),
   }).refine(
     param => {
-      return param.optional || param.supportsIncrementalSync;
+      return param.optional || param.supportsIncrementalSync !== false;
     },
     {message: 'Required params should support incremental sync.'},
   );
