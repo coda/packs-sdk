@@ -99,8 +99,8 @@ importers:
         specifier: 5.1.6
         version: 5.1.6
       uglify-js:
-        specifier: 3.17.4
-        version: 3.17.4
+        specifier: 3.19.1
+        version: 3.19.1
       url-parse:
         specifier: 1.5.10
         version: 1.5.10
@@ -200,8 +200,8 @@ importers:
         specifier: 17.0.3
         version: 17.0.3
       '@types/uglify-js':
-        specifier: 3.17.2
-        version: 3.17.2
+        specifier: 3.17.5
+        version: 3.17.5
       '@types/url-parse':
         specifier: 1.4.9
         version: 1.4.9
@@ -2522,8 +2522,8 @@ packages:
       '@types/node': 18.19.18
     dev: true
 
-  /@types/uglify-js@3.17.2:
-    resolution: {integrity: sha512-9SjrHO54LINgC/6Ehr81NjAxAYvwEZqjUHLjJYvC4Nmr9jbLQCIZbWSvl4vXQkkmR1UAuaKDycau3O1kWGFyXQ==}
+  /@types/uglify-js@3.17.5:
+    resolution: {integrity: sha512-TU+fZFBTBcXj/GpDpDaBmgWk/gn96kMZ+uocaFUlV2f8a6WdMzzI44QBCmGcCiYR0Y6ZlNRiyUyKKt5nl/lbzQ==}
     dependencies:
       source-map: 0.6.1
     dev: true
@@ -5222,7 +5222,7 @@ packages:
       source-map: 0.6.1
       wordwrap: 1.0.0
     optionalDependencies:
-      uglify-js: 3.17.4
+      uglify-js: 3.19.1
 
   /has-bigints@1.0.2:
     resolution: {integrity: sha512-tSvCKtBr9lkF0Ex0aQiP9N+OpV4zi2r/Nee5VkRDbaqv35RLYMzbwQfFSZZH0kR+Rd6302UJZ2p/bJCEoR3VoQ==}
@@ -8049,7 +8049,7 @@ packages:
       inherits: 2.0.4
       readable-stream: 3.6.0
 
-  /terser-webpack-plugin@5.3.7(esbuild@0.20.1)(uglify-js@3.17.4)(webpack@5.81.0):
+  /terser-webpack-plugin@5.3.7(esbuild@0.20.1)(uglify-js@3.19.1)(webpack@5.81.0):
     resolution: {integrity: sha512-AfKwIktyP7Cu50xNjXF/6Qb5lBNzYaWpU6YfoX3uZicTx0zTy0stDDCsvjDapKsSDvOeWo5MEq4TmdBy2cNoHw==}
     engines: {node: '>= 10.13.0'}
     peerDependencies:
@@ -8071,8 +8071,8 @@ packages:
       schema-utils: 3.1.2
       serialize-javascript: 6.0.1
       terser: 5.17.1
-      uglify-js: 3.17.4
-      webpack: 5.81.0(esbuild@0.20.1)(uglify-js@3.17.4)
+      uglify-js: 3.19.1
+      webpack: 5.81.0(esbuild@0.20.1)(uglify-js@3.19.1)
     dev: true
 
   /terser@5.17.1:
@@ -8176,7 +8176,7 @@ packages:
       micromatch: 4.0.5
       semver: 7.6.3
       typescript: 5.1.6
-      webpack: 5.81.0(esbuild@0.20.1)(uglify-js@3.17.4)
+      webpack: 5.81.0(esbuild@0.20.1)(uglify-js@3.19.1)
     dev: true
 
   /ts-node@10.9.2(@types/node@18.19.18)(typescript@5.1.6):
@@ -8323,8 +8323,8 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  /uglify-js@3.17.4:
-    resolution: {integrity: sha512-T9q82TJI9e/C1TAxYvfb16xO120tMVFZrGA3f9/P4424DNu6ypK103y0GPFVa17yotwSyZW5iYXgjYHkGrJW/g==}
+  /uglify-js@3.19.1:
+    resolution: {integrity: sha512-y/2wiW+ceTYR2TSSptAhfnEtpLaQ4Ups5zrjB2d3kuVxHj16j/QJwPl5PvuGy9uARb39J0+iKxcRPvtpsx4A4A==}
     engines: {node: '>=0.8.0'}
     hasBin: true
 
@@ -8736,7 +8736,7 @@ packages:
     engines: {node: '>=10.13.0'}
     dev: true
 
-  /webpack@5.81.0(esbuild@0.20.1)(uglify-js@3.17.4):
+  /webpack@5.81.0(esbuild@0.20.1)(uglify-js@3.19.1):
     resolution: {integrity: sha512-AAjaJ9S4hYCVODKLQTgG5p5e11hiMawBwV2v8MYLE0C/6UAGLuAF4n1qa9GOwdxnicaP+5k6M5HrLmD4+gIB8Q==}
     engines: {node: '>=10.13.0'}
     hasBin: true
@@ -8767,7 +8767,7 @@ packages:
       neo-async: 2.6.2
       schema-utils: 3.1.2
       tapable: 2.2.1
-      terser-webpack-plugin: 5.3.7(esbuild@0.20.1)(uglify-js@3.17.4)(webpack@5.81.0)
+      terser-webpack-plugin: 5.3.7(esbuild@0.20.1)(uglify-js@3.19.1)(webpack@5.81.0)
       watchpack: 2.4.0
       webpack-sources: 3.2.3
     transitivePeerDependencies:
