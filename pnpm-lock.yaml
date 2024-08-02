@@ -281,8 +281,8 @@ importers:
         specifier: 4.1.1
         version: 4.1.1
       ts-loader:
-        specifier: 9.4.4
-        version: 9.4.4(typescript@5.1.6)(webpack@5.81.0)
+        specifier: 9.5.1
+        version: 9.5.1(typescript@5.1.6)(webpack@5.81.0)
       ts-node:
         specifier: 10.9.2
         version: 10.9.2(@types/node@18.19.18)(typescript@5.1.6)
@@ -7641,12 +7641,6 @@ packages:
       - supports-color
     dev: false
 
-  /serialize-javascript@6.0.1:
-    resolution: {integrity: sha512-owoXEFjWRllis8/M1Q+Cw5k8ZH40e3zhp/ovX+Xr/vi1qj6QesbyXXViFbpNvWvPNAD62SutwEXavefrLJWj7w==}
-    dependencies:
-      randombytes: 2.1.0
-    dev: true
-
   /serialize-javascript@6.0.2:
     resolution: {integrity: sha512-Saa1xPByTTq2gdeFZYLLo+RFE35NHZkAbqZeWNd3BpzppeVisAqpDjcp8dyf6uIvEqJRd46jemmyA4iFIeVk8g==}
     dependencies:
@@ -7844,6 +7838,11 @@ packages:
   /source-map@0.6.1:
     resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
     engines: {node: '>=0.10.0'}
+
+  /source-map@0.7.4:
+    resolution: {integrity: sha512-l3BikUxvPOcn5E74dZiq5BGsTb5yEwhaTSzccU6t4sDOH8NWJCstKO5QT2CvtFoK6F0saL7p9xHAqHOlCPJygA==}
+    engines: {node: '>= 8'}
+    dev: true
 
   /source-map@0.8.0-beta.0:
     resolution: {integrity: sha512-2ymg6oRBpebeZi9UUNsgQ89bhx01TcTkmNTGnNO88imTmbSgy4nfujrgVEFKWpMTEGA11EDkTt7mqObTPdigIA==}
@@ -8069,7 +8068,7 @@ packages:
       esbuild: 0.20.1
       jest-worker: 27.5.1
       schema-utils: 3.1.2
-      serialize-javascript: 6.0.1
+      serialize-javascript: 6.0.2
       terser: 5.17.1
       uglify-js: 3.19.1
       webpack: 5.81.0(esbuild@0.20.1)(uglify-js@3.19.1)
@@ -8164,8 +8163,8 @@ packages:
       typescript: 5.1.6
     dev: true
 
-  /ts-loader@9.4.4(typescript@5.1.6)(webpack@5.81.0):
-    resolution: {integrity: sha512-MLukxDHBl8OJ5Dk3y69IsKVFRA/6MwzEqBgh+OXMPB/OD01KQuWPFd1WAQP8a5PeSCAxfnkhiuWqfmFJzJQt9w==}
+  /ts-loader@9.5.1(typescript@5.1.6)(webpack@5.81.0):
+    resolution: {integrity: sha512-rNH3sK9kGZcH9dYzC7CewQm4NtxJTjSEVRJ2DyBZR7f8/wcta+iV44UPCXc5+nzDzivKtlzV6c9P4e+oFhDLYg==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
       typescript: '*'
@@ -8175,6 +8174,7 @@ packages:
       enhanced-resolve: 5.13.0
       micromatch: 4.0.5
       semver: 7.6.3
+      source-map: 0.7.4
       typescript: 5.1.6
       webpack: 5.81.0(esbuild@0.20.1)(uglify-js@3.19.1)
     dev: true
