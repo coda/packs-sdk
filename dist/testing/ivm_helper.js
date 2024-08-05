@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setupIvmContext = void 0;
+exports.setupIvmContext = setupIvmContext;
 const build_1 = require("../cli/build");
 const bootstrap_1 = require("../runtime/bootstrap");
 const fs_1 = __importDefault(require("fs"));
@@ -56,4 +56,3 @@ async function setupIvmContext(bundlePath, executionContext) {
     });
     return ivmContext;
 }
-exports.setupIvmContext = setupIvmContext;
