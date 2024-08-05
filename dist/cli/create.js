@@ -26,7 +26,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createPack = exports.handleCreate = void 0;
+exports.handleCreate = handleCreate;
+exports.createPack = createPack;
 const config_storage_1 = require("./config_storage");
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
@@ -43,7 +44,6 @@ const errors_3 = require("./errors");
 async function handleCreate({ manifestFile, codaApiEndpoint, name, description, workspace, apiToken, }) {
     await createPack(manifestFile, codaApiEndpoint, { name, description, workspace }, apiToken);
 }
-exports.handleCreate = handleCreate;
 async function createPack(manifestFile, codaApiEndpoint, { name, description, workspace }, apiToken) {
     const manifestDir = path.dirname(manifestFile);
     const formattedEndpoint = (0, helpers_3.formatEndpoint)(codaApiEndpoint);
@@ -72,7 +72,6 @@ async function createPack(manifestFile, codaApiEndpoint, { name, description, wo
         return (0, helpers_4.printAndExit)(errors.join('\n'));
     }
 }
-exports.createPack = createPack;
 function parseWorkspace(workspace) {
     if (workspace) {
         const match = /.*\/workspaces\/(ws-[A-Za-z0-9=_-]{10})/.exec(workspace);

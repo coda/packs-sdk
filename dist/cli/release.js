@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleRelease = void 0;
+exports.handleRelease = handleRelease;
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const build_1 = require("./build");
@@ -72,7 +72,6 @@ async function handleRelease({ manifestFile, packVersion: explicitPackVersion, c
     await handleResponse(codaClient.createPackRelease(packId, {}, { packVersion, releaseNotes: notes }));
     return (0, helpers_6.printAndExit)('Success!', 0);
 }
-exports.handleRelease = handleRelease;
 async function handleResponse(p) {
     try {
         return await p;

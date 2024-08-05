@@ -1,6 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setUpBufferForTest = exports.handleFetcherStatusError = exports.handleError = exports.handleErrorAsync = exports.ensureSwitchUnreachable = exports.findAndExecutePackFunction = exports.marshalValuesForLogging = exports.unmarshalValueFromString = exports.marshalValueToStringForSameOrHigherNodeVersion = exports.unmarshalValue = exports.marshalValue = void 0;
+exports.marshalValuesForLogging = exports.unmarshalValueFromString = exports.marshalValueToStringForSameOrHigherNodeVersion = exports.unmarshalValue = exports.marshalValue = void 0;
+exports.findAndExecutePackFunction = findAndExecutePackFunction;
+exports.ensureSwitchUnreachable = ensureSwitchUnreachable;
+exports.handleErrorAsync = handleErrorAsync;
+exports.handleError = handleError;
+exports.handleFetcherStatusError = handleFetcherStatusError;
+exports.setUpBufferForTest = setUpBufferForTest;
 const types_1 = require("../../types");
 const buffer_1 = require("buffer");
 const types_2 = require("../types");
@@ -39,7 +45,6 @@ async function findAndExecutePackFunction({ shouldWrapError = true, ...args }) {
         throw shouldWrapError ? (0, marshaling_2.wrapErrorForSameOrHigherNodeVersion)(err) : err;
     }
 }
-exports.findAndExecutePackFunction = findAndExecutePackFunction;
 async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, executionContext, updates, getPermissionsRequest, }) {
     var _a, _b;
     const { syncTables, defaultAuthentication } = manifest;
@@ -245,7 +250,6 @@ function findParentFormula(manifest, formulaSpec) {
 function ensureSwitchUnreachable(value) {
     throw new Error(`Unreachable code hit with value ${String(value)}`);
 }
-exports.ensureSwitchUnreachable = ensureSwitchUnreachable;
 async function handleErrorAsync(func) {
     try {
         return await func();
@@ -254,7 +258,6 @@ async function handleErrorAsync(func) {
         throw (0, marshaling_1.unwrapError)(err);
     }
 }
-exports.handleErrorAsync = handleErrorAsync;
 function handleError(func) {
     try {
         return func();
@@ -263,7 +266,6 @@ function handleError(func) {
         throw (0, marshaling_1.unwrapError)(err);
     }
 }
-exports.handleError = handleError;
 function handleFetcherStatusError(fetchResult, fetchRequest) {
     // using constant here to avoid another dependency.
     if (fetchResult.status >= 400) {
@@ -277,13 +279,11 @@ function handleFetcherStatusError(fetchResult, fetchRequest) {
         });
     }
 }
-exports.handleFetcherStatusError = handleFetcherStatusError;
 function setUpBufferForTest() {
     if (!global.Buffer) {
         global.Buffer = buffer_1.Buffer;
     }
 }
-exports.setUpBufferForTest = setUpBufferForTest;
 function parseSyncUpdateResult(response) {
     return {
         result: response.result.map(r => {
