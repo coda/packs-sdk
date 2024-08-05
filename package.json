@@ -111,7 +111,7 @@
     "remark-cli": "11.0.0",
     "remark-frontmatter": "4.0.1",
     "remark-lint-no-undefined-references": "4.2.1",
-    "sharp-cli": "4.1.1",
+    "sharp-cli": "5.0.0",
     "ts-loader": "9.5.1",
     "ts-node": "10.9.2",
     "typedoc": "0.24.8",
