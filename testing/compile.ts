@@ -177,6 +177,8 @@ async function buildWithES({
     sourcemap: 'both',
     keepNames: true, // this is required to interpret code like `StatusCodeError.name`.
 
+    loader: { '.node': 'file' },
+
     // The pack bundle is always targeting the isolated-vm environment.
     define: {'process.env.IN_ISOLATED_VM_OR_BROWSER': 'true'},
     external: ['codaInternal'], // for serializer
