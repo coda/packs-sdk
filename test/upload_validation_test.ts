@@ -10,6 +10,7 @@ import type {GenericSyncTable} from '../api';
 import {ImageCornerStyle} from '../schema';
 import {ImageOutline} from '../schema';
 import {ImageShapeStyle} from '../schema';
+import {IndexingStrategy} from '../schema';
 import {Limits} from '../testing/upload_validation';
 import type {ObjectSchemaDefinition} from '../schema';
 import type {OptionsReference} from '../api_types';
@@ -3143,6 +3144,87 @@ describe('Pack metadata Validation', async () => {
           },
         });
         await validateJson(metadata);
+      });
+
+      describe('Index definition', () => {
+        it('works', async () => {
+          const metadata = metadataForFormulaWithObjectSchema({
+            type: ValueType.Object,
+            properties: {
+              name: {type: ValueType.String},
+              value: {type: ValueType.Number},
+            },
+            index: {
+              properties: ['name'],
+              contextProperties: ['value'],
+            },
+          });
+          await validateJson(metadata);
+        });
+
+        it('works with advanced property', async () => {
+          const metadata = metadataForFormulaWithObjectSchema({
+            type: ValueType.Object,
+            properties: {
+              name: {type: ValueType.String},
+              value: {type: ValueType.Number},
+            },
+            index: {
+              properties: [{
+                property: 'name',
+                strategy: IndexingStrategy.Raw,
+              }],
+            },
+          });
+          await validateJson(metadata);
+        });
+
+        it('fails with invalid index property', async () => {
+          const metadata = metadataForFormulaWithObjectSchema({
+            type: ValueType.Object,
+            properties: {
+              num: {type: ValueType.Number},
+            },
+            index: {
+              properties: ['num'],
+              contextProperties: ['value'],
+            },
+          });
+          const err = await validateJsonAndAssertFails(metadata);
+          assert.deepEqual(err.validationErrors, [
+            {
+              message: 'The "properties" field name "Num" must refer to a "ValueType.String" property.',
+              path: 'formulas[0].schema.index.properties[0]',
+            },
+            {
+              message: 'The "contextProperties" path "Value" does not exist in the "properties" object.',
+              path: 'formulas[0].schema.index.contextProperties[0]',
+            },
+          ]);
+        });
+
+        it('fails with advanced property', async () => {
+          const metadata = metadataForFormulaWithObjectSchema({
+            type: ValueType.Object,
+            properties: {
+              name: {type: ValueType.String},
+              value: {type: ValueType.Number},
+            },
+            index: {
+              properties: [{
+                property: 'blah',
+                strategy: IndexingStrategy.Raw,
+              }],
+            },
+          });
+          const err = await validateJsonAndAssertFails(metadata);
+          assert.deepEqual(err.validationErrors, [
+            {
+              message: 'The "properties" path "Blah" does not exist in the "properties" object.',
+              path: 'formulas[0].schema.index.properties[0].property',
+            },
+          ]);
+        });
       });
     });
 

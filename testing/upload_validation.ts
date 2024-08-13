@@ -13,6 +13,7 @@ import {CurrencyFormat} from '../schema';
 import type {CurrencySchema} from '../schema';
 import type {CustomAuthentication} from '../types';
 import type {CustomHeaderTokenAuthentication} from '../types';
+import type {DetailedIndexedProperty} from '../schema';
 import type {DurationSchema} from '../schema';
 import {DurationUnit} from '../schema';
 import type {DynamicSyncTableDef} from '../api';
@@ -28,6 +29,8 @@ import {ImageCornerStyle} from '../schema';
 import {ImageOutline} from '../schema';
 import type {ImageSchema} from '..';
 import {ImageShapeStyle} from '../schema';
+import type {IndexDefinition} from '../schema';
+import {IndexingStrategy} from '../schema';
 import {JSONPath} from 'jsonpath-plus';
 import {LinkDisplayType} from '../schema';
 import type {LinkSchema} from '../schema';
@@ -1152,6 +1155,89 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     }),
   ]);
 
+  const contextPropertiesSchema = z.array(propertySchema).min(1);
+
+  const indexedPropertySchema = z.union([
+    propertySchema,
+    zodCompleteObject<DetailedIndexedProperty>({
+      property: propertySchema,
+      strategy: z.nativeEnum(IndexingStrategy),
+    }),
+  ]);
+
+  const indexSchema = zodCompleteStrictObject<IndexDefinition>({
+    properties: z.array(indexedPropertySchema).min(1),
+    contextProperties: contextPropertiesSchema.optional(),
+    popularityRankProperty: propertySchema.optional(),
+  }); 
+
+  function makePropertyValidator(schema: GenericObjectSchema, context: z.RefinementCtx) {
+    /**
+      * Validates a PropertyIdentifier key in the object schema.
+      */
+    return function validateProperty(
+      propertyValueRaw: PropertyIdentifier<string> | Array<PropertyIdentifier<string>> | undefined,
+      fieldName: string,
+      isValidSchema: (schema: Schema & ObjectSchemaProperty) => boolean,
+      invalidSchemaMessage: string,
+      propertyObjectPath: Array<string | number> = [fieldName]
+    ) {
+      function validatePropertyIdentifier(
+        value: PropertyIdentifier,
+        objectPath: Array<string | number>,
+      ) {
+        const propertyValue = typeof value === 'string' ? value : value?.property;
+
+        let propertyValueIsPath = false;
+        let propertySchema =
+          typeof propertyValueRaw === 'string' && propertyValue in schema.properties
+            ? schema.properties[propertyValue]
+            : undefined;
+        if (!propertySchema) {
+          const schemaPropertyPath = normalizePropertyValuePathIntoSchemaPath(propertyValue);
+          propertySchema = JSONPath({
+            path: schemaPropertyPath,
+            json: schema.properties,
+          })?.[0];
+          propertyValueIsPath = true;
+        }
+
+        const propertyIdentifierDisplay = propertyValueIsPath
+          ? `"${fieldName}" path`
+          : `"${fieldName}" field name`;
+
+        if (!propertySchema) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: objectPath,
+            message: `The ${propertyIdentifierDisplay} "${propertyValue}" does not exist in the "properties" object.`,
+          });
+          return;
+        }
+
+        if (!isValidSchema(propertySchema)) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: objectPath,
+            message: `The ${propertyIdentifierDisplay} "${propertyValue}" ${invalidSchemaMessage}`,
+          });
+          return;
+        }
+      }
+
+      if (propertyValueRaw) {
+        if (Array.isArray(propertyValueRaw)) {
+          propertyValueRaw.forEach((propertyIdentifier, i) => {
+            validatePropertyIdentifier(propertyIdentifier, [...propertyObjectPath, i]);
+          });
+          return;
+        }
+
+        validatePropertyIdentifier(propertyValueRaw, propertyObjectPath);
+      }
+    }
+  }
+
   const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
     zodCompleteObject<ObjectSchema<any, any> & {autocomplete: any}>({
       ...basePropertyValidators,
@@ -1191,6 +1277,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       popularityRankProperty: propertySchema.optional(),
       options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
       requireForUpdates: z.boolean().optional(),
+      index: indexSchema.optional(),
       autocomplete:
         sdkVersion && semver.satisfies(sdkVersion, '<=1.4.0')
           ? zodOptionsFieldWithValues(z.string(), true)
@@ -1265,68 +1352,13 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       .superRefine((data, context) => {
         const schema = data as GenericObjectSchema;
 
-        /**
-         * Validates a PropertyIdentifier key in the object schema.
-         */
+        const validatePropertyValue = makePropertyValidator(schema, context);
         function validateProperty(
-          propertyKey: keyof ObjectSchemaPathProperties,
+          fieldName: keyof ObjectSchemaPathProperties,
           isValidSchema: (schema: Schema & ObjectSchemaProperty) => boolean,
           invalidSchemaMessage: string,
         ) {
-          function validatePropertyIdentifier(
-            value: PropertyIdentifier,
-            objectPath: Array<string | number> = [propertyKey],
-          ) {
-            const propertyValue = typeof value === 'string' ? value : value?.property;
-
-            let propertyValueIsPath = false;
-            let propertySchema =
-              typeof propertyValueRaw === 'string' && propertyValue in schema.properties
-                ? schema.properties[propertyValue]
-                : undefined;
-            if (!propertySchema) {
-              const schemaPropertyPath = normalizePropertyValuePathIntoSchemaPath(propertyValue);
-              propertySchema = JSONPath({
-                path: schemaPropertyPath,
-                json: schema.properties,
-              })?.[0];
-              propertyValueIsPath = true;
-            }
-
-            const propertyIdentifierDisplay = propertyValueIsPath
-              ? `"${propertyKey}" path`
-              : `"${propertyKey}" field name`;
-
-            if (!propertySchema) {
-              context.addIssue({
-                code: z.ZodIssueCode.custom,
-                path: objectPath,
-                message: `The ${propertyIdentifierDisplay} "${propertyValue}" does not exist in the "properties" object.`,
-              });
-              return;
-            }
-
-            if (!isValidSchema(propertySchema)) {
-              context.addIssue({
-                code: z.ZodIssueCode.custom,
-                path: objectPath,
-                message: `The ${propertyIdentifierDisplay} "${propertyValue}" ${invalidSchemaMessage}`,
-              });
-              return;
-            }
-          }
-
-          const propertyValueRaw = schema[propertyKey];
-          if (propertyValueRaw) {
-            if (Array.isArray(propertyValueRaw)) {
-              propertyValueRaw.forEach((propertyIdentifier, i) => {
-                validatePropertyIdentifier(propertyIdentifier, [propertyKey, i]);
-              });
-              return;
-            }
-
-            validatePropertyIdentifier(propertyValueRaw);
-          }
+          validatePropertyValue(schema[fieldName], fieldName, isValidSchema, invalidSchemaMessage);
         }
 
         const validateTitleProperty = () => {
@@ -1523,7 +1555,59 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
           });
           return;
         }
-      }),
+      })
+      .superRefine((data, context) => {
+        const schema = data as GenericObjectSchema;
+        if (!schema.index) {
+          return;
+        }
+
+        const validatePropertyValue = makePropertyValidator(schema, context);
+
+        const {properties, contextProperties, popularityRankProperty} = schema.index;
+
+        if (popularityRankProperty) {
+          validatePropertyValue(
+            popularityRankProperty,
+            'popularityRankProperty',
+            popularityRankPropertySchema => popularityRankPropertySchema.type === ValueType.Number,
+            `must refer to a "ValueType.Number" property.`,
+            ['index', 'popularityRankProperty'],
+          );
+        }
+
+        for (let i = 0; i < properties.length; i++) {
+          const indexedProperty = properties[i];
+          const objectPath = ['index', 'properties', i];
+          if (typeof indexedProperty === 'string') {
+            validatePropertyValue(
+              indexedProperty,
+              'properties',
+              indexedPropertySchema => indexedPropertySchema.type === ValueType.String,
+              `must refer to a "ValueType.String" property.`,
+              objectPath,
+            );
+          } else {
+            validatePropertyValue(
+              indexedProperty.property,
+              'properties',
+              indexedPropertySchema => indexedPropertySchema.type === ValueType.String,
+              `must refer to a "ValueType.String" property.`,
+              [...objectPath, 'property'],
+            );
+          }
+        }
+
+        if (contextProperties) {
+          validatePropertyValue(
+            contextProperties,
+            'contextProperties',
+            () => true,
+            `must be a valid property.`,
+            ['index', 'contextProperties'],
+          );
+        }
+      })
   );
 
   const objectPropertyUnionSchema = z

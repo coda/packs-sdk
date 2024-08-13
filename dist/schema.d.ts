@@ -908,6 +908,57 @@ export type PropertyIdentifier<K extends string = string> = K | string | Propert
  */
 export type ObjectSchemaPathProperties = Pick<GenericObjectSchema, 'titleProperty' | 'linkProperty' | 'imageProperty' | 'snippetProperty' | 'subtitleProperties' | 'createdAtProperty' | 'createdByProperty' | 'modifiedAtProperty' | 'modifiedByProperty' | 'userEmailProperty' | 'userIdProperty' | 'groupIdProperty' | 'bodyTextProperty' | 'popularityRankProperty'>;
 /**
+ * Specifies how this property should be indexed.
+ * @hidden
+ */
+export declare enum IndexingStrategy {
+    Standard = "standard",
+    Raw = "raw"
+}
+/**
+ * A list of properties that will be used to provide context when indexing a property for full-text search.
+ * @hidden
+ */
+export type ContextProperties = Array<PropertyIdentifier<string>>;
+export type BasicIndexedProperty = PropertyIdentifier<string>;
+/**
+ * A property to be indexed, supporting a more detailed definition than {@link BasicIndexedProperty}.
+ * TODO(alexd): Unhide this
+ * @hidden
+ */
+export interface DetailedIndexedProperty {
+    /**
+     * A property to be indexed. Must be a {@link ValueType.String} property.
+     */
+    property: PropertyIdentifier<string>;
+    /**
+     * The strategy to be used for indexing this property.
+     */
+    strategy: IndexingStrategy;
+}
+export type IndexedProperty = BasicIndexedProperty | DetailedIndexedProperty;
+/**
+  * Defines how to index objects for use with full-text indexing.
+  * TODO(alexd): Unhide this
+  * @hidden
+  */
+export interface IndexDefinition {
+    /**
+     * A list of properties from within {@link ObjectSchemaDefinition.properties} that should be indexed.
+     */
+    properties: IndexedProperty[];
+    contextProperties?: ContextProperties;
+    /**
+     * The name of the property within {@link ObjectSchemaDefinition.properties} that can be be interpreted as
+     * a number between 0.0 and 1.0 representing the popularity rank of this entity compared to all other entities.
+     *
+     * Must be a {@link ValueType.Number} property.
+     * TODO(alexd): Unhide this
+     * @hidden
+     */
+    popularityRankProperty?: PropertyIdentifier<string>;
+}
+/**
  * A schema definition for an object value (a value with key-value pairs).
  */
 export interface ObjectSchemaDefinition<K extends string, L extends string> extends BaseSchema, PropertyWithOptions<{}> {
@@ -1114,6 +1165,11 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      * @hidden
      */
     popularityRankProperty?: PropertyIdentifier<K>;
+    /**
+     * Defines how to index objects for use with full-text indexing.
+     * @hidden
+     */
+    index?: IndexDefinition;
 }
 /**
  * The type of principal that can be applied to a permission.
