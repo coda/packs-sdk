@@ -105,8 +105,8 @@ importers:
         specifier: 1.5.10
         version: 1.5.10
       uuid:
-        specifier: 9.0.1
-        version: 9.0.1
+        specifier: 10.0.0
+        version: 10.0.0
       xml2js:
         specifier: 0.6.2
         version: 0.6.2
@@ -206,8 +206,8 @@ importers:
         specifier: 1.4.9
         version: 1.4.9
       '@types/uuid':
-        specifier: 9.0.8
-        version: 9.0.8
+        specifier: 10.0.0
+        version: 10.0.0
       '@types/xml2js':
         specifier: 0.4.12
         version: 0.4.12
@@ -2392,8 +2392,8 @@ packages:
     resolution: {integrity: sha512-pFvFO5NSAVwp8vDSENcAF13eyAcBIv/OXKvMU466CEwu/+5tyUwW05mVzhmcxaU9j9iTSYOypQqbTrYUa1emFw==}
     dev: true
 
-  /@types/uuid@9.0.8:
-    resolution: {integrity: sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==}
+  /@types/uuid@10.0.0:
+    resolution: {integrity: sha512-7gqG38EyHgyP1S+7+xomFtL+ZNHcKv6DwNaCZmJmo1vgMugyF3TCnXVg4t1uk89mLNwnLtnY3TpOpCOyp1/xHQ==}
     dev: true
 
   /@types/xml2js@0.4.12:
@@ -4127,7 +4127,6 @@ packages:
   /diff@5.2.0:
     resolution: {integrity: sha512-uIFDxqpRZGZ6ThOk84hEfqWoHx2devRFvpTZcTHur85vImfaxUbTW9Ryh4CpCuDnToOP1CEtXKIgytHBPVff5A==}
     engines: {node: '>=0.3.1'}
-    dev: false
 
   /diffie-hellman@5.0.3:
     resolution: {integrity: sha512-kqag/Nl+f3GwyK25fhUMYj81BUOrZ9IuJsjIcDE5icNM9FJHAVm3VcUDxdLPoQtTuUylWm6ZIknYJwwaPxsUzg==}
@@ -8456,6 +8455,11 @@ packages:
   /utils-merge@1.0.1:
     resolution: {integrity: sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==}
     engines: {node: '>= 0.4.0'}
+    dev: false
+
+  /uuid@10.0.0:
+    resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
+    hasBin: true
     dev: false
 
   /uuid@8.0.0:
