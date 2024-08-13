@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.throwOnDynamicSchemaWithJsOptionsFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.maybeSchemaOptionsValue = exports.unwrappedSchemaSupportsOptions = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PrincipalType = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageShapeStyle = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+exports.throwOnDynamicSchemaWithJsOptionsFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.maybeSchemaOptionsValue = exports.unwrappedSchemaSupportsOptions = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PrincipalType = exports.IndexingStrategy = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageShapeStyle = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_2 = require("./helpers/ensure");
@@ -377,6 +377,15 @@ exports.SimpleStringHintValueTypes = [
  */
 exports.PropertyLabelValueTemplate = '{VALUE}';
 /**
+ * Specifies how this property should be indexed.
+ * @hidden
+ */
+var IndexingStrategy;
+(function (IndexingStrategy) {
+    IndexingStrategy["Standard"] = "standard";
+    IndexingStrategy["Raw"] = "raw";
+})(IndexingStrategy || (exports.IndexingStrategy = IndexingStrategy = {}));
+/**
  * The type of principal that can be applied to a permission.
  *
  * TODO(sam): Unhide this
@@ -656,6 +665,30 @@ function normalizeSchemaPropertyIdentifier(key, normalizedProperties) {
         placeholder,
     };
 }
+function normalizeIndexProperty(value, normalizedProperties) {
+    if (typeof value === 'object' && 'strategy' in value) {
+        const { property, strategy, ...rest } = value;
+        (0, ensure_3.ensureNever)();
+        return {
+            property: normalizeSchemaPropertyIdentifier(property, normalizedProperties),
+            strategy,
+        };
+    }
+    return normalizeSchemaPropertyIdentifier(value, normalizedProperties);
+}
+function normalizeIndexDefinition(index, normalizedProperties) {
+    const { properties, contextProperties, popularityRankProperty, ...rest } = index;
+    (0, ensure_3.ensureNever)();
+    return {
+        properties: properties.map(prop => normalizeIndexProperty(prop, normalizedProperties)),
+        contextProperties: contextProperties
+            ? contextProperties.map(prop => normalizeSchemaPropertyIdentifier(prop, normalizedProperties))
+            : undefined,
+        popularityRankProperty: popularityRankProperty
+            ? normalizeSchemaPropertyIdentifier(popularityRankProperty, normalizedProperties)
+            : undefined,
+    };
+}
 /**
  * Attempts to transform a property value (which may be a json-path string or a normal object schema property) into
  * a path to access the relevant schema. Specifically this handles the case of
@@ -693,7 +726,7 @@ function normalizeObjectSchema(schema) {
     const normalizedProperties = {};
     const { attribution, options, requireForUpdates, codaType, description, displayProperty, featured, featuredProperties, id, identity, idProperty, parentIdProperty, imageProperty, includeUnknownProperties, linkProperty, primary, properties, snippetProperty, subtitleProperties, titleProperty, type, 
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    __packId, createdAtProperty, createdByProperty, modifiedAtProperty, modifiedByProperty, userEmailProperty, userIdProperty, groupIdProperty, bodyTextProperty, popularityRankProperty, ...rest } = schema;
+    __packId, createdAtProperty, createdByProperty, modifiedAtProperty, modifiedByProperty, userEmailProperty, userIdProperty, groupIdProperty, bodyTextProperty, popularityRankProperty, index, ...rest } = schema;
     // Have TS ensure we don't forget about new fields in this function.
     (0, ensure_3.ensureNever)();
     for (const key of Object.keys(properties)) {
@@ -765,6 +798,7 @@ function normalizeObjectSchema(schema) {
         popularityRankProperty: popularityRankProperty
             ? normalizeSchemaPropertyIdentifier(popularityRankProperty, normalizedProperties)
             : undefined,
+        index: index ? normalizeIndexDefinition(index, normalizedProperties) : undefined,
         type: ValueType.Object,
     };
 }

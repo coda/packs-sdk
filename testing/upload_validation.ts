@@ -13,6 +13,7 @@ import {CurrencyFormat} from '../schema';
 import type {CurrencySchema} from '../schema';
 import type {CustomAuthentication} from '../types';
 import type {CustomHeaderTokenAuthentication} from '../types';
+import type {DetailedIndexedProperty} from '../schema';
 import type {DurationSchema} from '../schema';
 import {DurationUnit} from '../schema';
 import type {DynamicSyncTableDef} from '../api';
@@ -28,6 +29,7 @@ import {ImageCornerStyle} from '../schema';
 import {ImageOutline} from '../schema';
 import type {ImageSchema} from '..';
 import {ImageShapeStyle} from '../schema';
+import type {IndexDefinition} from '../schema';
 import {IndexingStrategy} from '../schema';
 import {JSONPath} from 'jsonpath-plus';
 import {LinkDisplayType} from '../schema';
@@ -1157,18 +1159,17 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
 
   const indexedPropertySchema = z.union([
     propertySchema,
-    z.object({
+    zodCompleteObject<DetailedIndexedProperty>({
       property: propertySchema,
       strategy: z.nativeEnum(IndexingStrategy),
-      contextProperties: contextPropertiesSchema.optional(),
-    }).strict(),
+    }),
   ]);
 
-  const indexSchema = z.object({
+  const indexSchema = zodCompleteStrictObject<IndexDefinition>({
     properties: z.array(indexedPropertySchema).min(1),
     contextProperties: contextPropertiesSchema.optional(),
     popularityRankProperty: propertySchema.optional(),
-  }).strict(); 
+  }); 
 
   function makePropertyValidator(schema: GenericObjectSchema, context: z.RefinementCtx) {
     /**

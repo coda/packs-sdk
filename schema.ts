@@ -1112,7 +1112,7 @@ export interface IndexDefinition {
   
   /*
    * The context properties to be used for indexing.
-   * If unspecified, defaults to the default context properties for the schema.
+   * If unspecified, intelligent defaults may be used..
    */
   contextProperties?: ContextProperties;
   /**
