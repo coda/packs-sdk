@@ -1065,6 +1065,68 @@ export type ObjectSchemaPathProperties = Pick<
 >;
 
 /**
+ * Specifies how this property should be indexed.
+ * @hidden
+ */
+export enum IndexingStrategy {
+  Standard = 'standard',
+  Raw = 'raw',
+}
+
+/**
+ * A list of properties that will be used to provide context when indexing a property for full-text search.
+ * @hidden
+ */
+export type ContextProperties = Array<PropertyIdentifier<string>>;
+
+export type BasicIndexedProperty = PropertyIdentifier<string>;
+
+/**
+ * A property to be indexed, supporting a more detailed definition than {@link BasicIndexedProperty}.
+ * TODO(alexd): Unhide this
+ * @hidden
+ */
+export interface DetailedIndexedProperty {
+  /**
+   * A property to be indexed. Must be a {@link ValueType.String} property.
+   */
+  property: PropertyIdentifier<string>;
+  /**
+   * The strategy to be used for indexing this property.
+   */
+  strategy: IndexingStrategy;
+}
+
+export type IndexedProperty = BasicIndexedProperty | DetailedIndexedProperty;
+
+/**
+  * Defines how to index objects for use with full-text indexing.
+  * TODO(alexd): Unhide this
+  * @hidden 
+  */
+export interface IndexDefinition {
+  /**
+   * A list of properties from within {@link ObjectSchemaDefinition.properties} that should be indexed.
+   */
+  properties: IndexedProperty[];
+  
+  /*
+   * The context properties to be used for indexing.
+   * If unspecified, defaults to the default context properties for the schema.
+   */
+  contextProperties?: ContextProperties;
+  /**
+   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be be interpreted as
+   * a number between 0.0 and 1.0 representing the popularity rank of this entity compared to all other entities.
+   *
+   * Must be a {@link ValueType.Number} property.
+   * TODO(alexd): Unhide this
+   * @hidden
+   */
+  popularityRankProperty?: PropertyIdentifier<string>;
+}
+
+/**
  * A schema definition for an object value (a value with key-value pairs).
  */
 // TODO(spencer): follow-up with converting idProperty and other existing properties to support
@@ -1277,6 +1339,13 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    * @hidden
    */
   popularityRankProperty?: PropertyIdentifier<K>;
+
+  /**
+   * Defines how to index objects for use with full-text indexing.
+   * @hidden
+   */
+  index?: IndexDefinition;
+
   // TODO(dweitzman): Only support options in the typing when the codaType is ValueHintType.SelectList.
 }
 
@@ -1847,6 +1916,35 @@ function normalizeSchemaPropertyIdentifier(
   };
 }
 
+function normalizeIndexProperty(value: IndexedProperty, normalizedProperties: ObjectSchemaProperties): IndexedProperty {
+  if (typeof value === 'object' && 'strategy' in value) {
+    const {property, strategy, ...rest} = value;
+    ensureNever<keyof typeof rest>();
+
+    return {
+      property: normalizeSchemaPropertyIdentifier(property, normalizedProperties),
+      strategy,
+    };
+  }
+  return normalizeSchemaPropertyIdentifier(value, normalizedProperties);
+}
+
+function normalizeIndexDefinition(
+  index: IndexDefinition, 
+  normalizedProperties: ObjectSchemaProperties): IndexDefinition {
+  const {properties, contextProperties, popularityRankProperty, ...rest} = index;
+  ensureNever<keyof typeof rest>();
+  return {
+    properties: properties.map(prop => normalizeIndexProperty(prop, normalizedProperties)),
+    contextProperties: contextProperties
+      ? contextProperties.map(prop => normalizeSchemaPropertyIdentifier(prop, normalizedProperties))
+      : undefined,
+    popularityRankProperty: popularityRankProperty 
+      ? normalizeSchemaPropertyIdentifier(popularityRankProperty, normalizedProperties) 
+      : undefined,
+  };
+}
+
 /**
  * Attempts to transform a property value (which may be a json-path string or a normal object schema property) into
  * a path to access the relevant schema. Specifically this handles the case of
@@ -1915,6 +2013,7 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     groupIdProperty,
     bodyTextProperty,
     popularityRankProperty,
+    index,
     ...rest
   } = schema;
   // Have TS ensure we don't forget about new fields in this function.
@@ -1956,7 +2055,7 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     properties: normalizedProperties,
     snippetProperty: snippetProperty
       ? normalizeSchemaPropertyIdentifier(snippetProperty, normalizedProperties)
-      : undefined,
+      : undefined,     
     subtitleProperties: subtitleProperties
       ? subtitleProperties.map(subProp => normalizeSchemaPropertyIdentifier(subProp, normalizedProperties))
       : undefined,
@@ -1988,6 +2087,7 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     popularityRankProperty: popularityRankProperty
       ? normalizeSchemaPropertyIdentifier(popularityRankProperty, normalizedProperties)
       : undefined,
+    index: index ? normalizeIndexDefinition(index, normalizedProperties) : undefined,
     type: ValueType.Object,
   };
 }

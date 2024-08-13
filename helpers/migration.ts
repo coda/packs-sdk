@@ -61,7 +61,7 @@ class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
       bodyTextProperty,
       popularityRankProperty,
       parentIdProperty,
-
+      index,
       ...rest
     } = schema;
 
