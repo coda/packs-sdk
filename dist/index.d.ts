@@ -156,7 +156,7 @@ export { ImageCornerStyle } from './schema';
 export { ImageShapeStyle } from './schema';
 export { ImageOutline } from './schema';
 export type { ImageSchema } from './schema';
-export type { IndexingStrategy } from './schema';
+export { IndexingStrategy } from './schema';
 export type { LinkAttributionNode } from './schema';
 export { LinkDisplayType } from './schema';
 export type { LinkSchema } from './schema';
