@@ -947,6 +947,7 @@ export enum PrecannedDateRange {
   ThisYear = 'this_year',
   Last7AndNext7Days = 'last_7_and_next_7_days',
   Last30AndNext30Days = 'last_30_and_next_30_days',
+  Last90AndNext90Days = 'last_90_and_next_90_days',
 
   // Future
   Tomorrow = 'tomorrow',

@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- Adds Last90AndNext90Days PrecannedDateRange
+
 ## [1.7.9] - 2024-07-10
 
 ## [1.7.8] - 2024-06-25
