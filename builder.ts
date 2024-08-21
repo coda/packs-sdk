@@ -159,24 +159,13 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * });
    * ```
    */
-  addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>({
-    name,
-    description,
-    identityName,
-    schema,
-    formula,
-    connectionRequirement,
-    dynamicOptions = {},
-  }: SyncTableOptions<K, L, ParamDefsT, SchemaT>): this {
-    const connectionRequirementToUse = connectionRequirement || this._defaultConnectionRequirement;
+  addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(
+    definition: SyncTableOptions<K, L, ParamDefsT, SchemaT>,
+  ): this {
+    const connectionRequirementToUse = definition.connectionRequirement || this._defaultConnectionRequirement;
     const syncTable = makeSyncTable({
-      name,
-      description,
-      identityName,
-      schema,
-      formula,
+      ...definition,
       connectionRequirement: connectionRequirementToUse,
-      dynamicOptions,
     });
     this.syncTables.push(syncTable);
     return this;
