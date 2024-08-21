@@ -281,7 +281,7 @@ ___
 
 ### addSyncTable
 
-▸ **addSyncTable**<`K`, `L`, `ParamDefsT`, `SchemaT`\>(`«destructured»`): [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
+▸ **addSyncTable**<`K`, `L`, `ParamDefsT`, `SchemaT`\>(`definition`): [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
 
 Adds a sync table definition to this pack.
 
@@ -315,7 +315,7 @@ pack.addSyncTable({
 
 | Name | Type |
 | :------ | :------ |
-| `«destructured»` | [`SyncTableOptions`](../interfaces/core.SyncTableOptions.md)<`K`, `L`, `ParamDefsT`, `SchemaT`\> |
+| `definition` | [`SyncTableOptions`](../interfaces/core.SyncTableOptions.md)<`K`, `L`, `ParamDefsT`, `SchemaT`\> |
 
 #### Returns
 
