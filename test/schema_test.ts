@@ -339,6 +339,8 @@ describe('Schema', () => {
         {property: 'Subtitle', label: undefined, placeholder: 'Empty'},
       ]);
     });
+
+    // TODO(taj): Add tests for isTopLevel: true
   });
 
   describe('makeReferenceSchemaFromObjectSchema', () => {

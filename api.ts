@@ -302,6 +302,8 @@ export interface SyncTableDef<
   description?: string;
   /** See {@link SyncTableOptions.schema} */
   schema: SchemaT;
+  /** See {@link SyncTableOptions.schemaV2} */
+  schemaV2: SchemaT;
   /**
    * The `identityName` is persisted for all sync tables so that a dynamic schema
    * can be annotated with an identity automatically.
@@ -2364,6 +2366,9 @@ export function makeSyncTable<
   }
 
   const normalizedSchema = normalizeSchema(schema);
+  const normalizedSchemaV2 = normalizeSchema(schema, {isTopLevel: true});
+  // Would we need a `formulaSchemaV2` as well? Why does this exist?
+  // There's enough information in the response that you shouldn't need formulaSchema at all.
   const formulaSchema: ArraySchema<Schema> | undefined = getSchema
     ? undefined
     : {type: ValueType.Array, items: normalizedSchema};
@@ -2379,6 +2384,7 @@ export function makeSyncTable<
     throw new Error('Sync table name should not include spaces');
   }
 
+  // The parameter passed here is not really used other than to help determine the return type
   const responseHandler = generateObjectResponseHandler({schema: formulaSchema});
   const execute = async function exec(
     params: ParamValues<ParamDefsT>,
@@ -2443,6 +2449,7 @@ export function makeSyncTable<
     name,
     description,
     schema: normalizedSchema,
+    schemaV2: normalizedSchemaV2,
     identityName,
     getter: {
       ...definition,

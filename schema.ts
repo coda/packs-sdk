@@ -1962,23 +1962,23 @@ export function normalizePropertyValuePathIntoSchemaPath(propertyValue: string):
   return normalizedValue;
 }
 
-export function normalizeSchema<T extends Schema>(schema: T): T {
+export function normalizeSchema<T extends Schema>(schema: T, {isTopLevel}: {isTopLevel?: boolean} = {}): T {
   if (isArray(schema)) {
     return {
       ...schema,
       type: ValueType.Array,
-      items: normalizeSchema(schema.items),
+      items: normalizeSchema(schema.items, {isTopLevel}),
     } as T;
   } else if (isObject(schema)) {
     // The `as T` here seems like a typescript bug... shouldn't the above typeguard be
     // sufficient to define T === GenericObjectSchema?
-    return normalizeObjectSchema(schema) as T;
+    return normalizeObjectSchema(schema, {isTopLevel}) as T;
   }
   // We always make a copy of the input schema so we never accidentally mutate it.
   return {...schema};
 }
 
-export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjectSchema {
+export function normalizeObjectSchema(schema: GenericObjectSchema, {isTopLevel}: {isTopLevel?: boolean} = {}): GenericObjectSchema {
   const normalizedProperties: ObjectSchemaProperties = {};
   const {
     attribution,
@@ -2019,7 +2019,7 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
   // Have TS ensure we don't forget about new fields in this function.
   ensureNever<keyof typeof rest>();
   for (const key of Object.keys(properties)) {
-    const normalizedKey = normalizeSchemaKey(key);
+    const maybeNormalizedKey = isTopLevel ? key : normalizeSchemaKey(key);
     const property = properties[key];
     const {displayName, fixedId, fromKey, mutable, originalKey, required} = property;
     if (originalKey) {
@@ -2028,12 +2028,12 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     const normalizedPropertyAttrs: ObjectSchemaProperty = {
       displayName,
       fixedId,
-      fromKey: fromKey || (normalizedKey !== key ? key : undefined),
+      fromKey: fromKey || (maybeNormalizedKey !== key ? key : undefined),
       mutable,
       originalKey: key,
       required,
     };
-    normalizedProperties[normalizedKey] = Object.assign(normalizeSchema(property), normalizedPropertyAttrs);
+    normalizedProperties[maybeNormalizedKey] = Object.assign(normalizeSchema(property), normalizedPropertyAttrs);
   }
   return {
     attribution,
