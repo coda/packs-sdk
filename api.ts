@@ -1032,6 +1032,14 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
    * @hidden
    */
   completion?: SyncCompletionMetadata;
+
+  /**
+   * Return the list of deleted item ids for incremental sync deletion.
+   * 
+   * TODO(ebo): Unhide this
+   * @hidden
+   */
+  deletedItemIds?: string[];
 }
 
 /**
@@ -2381,7 +2389,7 @@ export function makeSyncTable<
     const result = responseHandler({body: syncResult.result || [], status: 200, headers: {}}, appliedSchema) as Array<
       ObjectSchemaDefinitionType<K, L, SchemaT>
     >;
-    const {continuation, completion} = syncResult;
+    const {continuation, completion, deletedItemIds} = syncResult;
     const returnValue: SyncFormulaResult<K, L, SchemaT> = {
       result,
     };
@@ -2390,6 +2398,9 @@ export function makeSyncTable<
     }
     if (completion) {
       returnValue.completion = completion;
+    }
+    if (deletedItemIds) {
+      returnValue.deletedItemIds = deletedItemIds;
     }
     return returnValue;
   };
