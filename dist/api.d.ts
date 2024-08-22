@@ -583,6 +583,13 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
      * @hidden
      */
     completion?: SyncCompletionMetadata;
+    /**
+     * Return the list of deleted item ids for incremental sync deletion.
+     *
+     * TODO(ebo): Unhide this
+     * @hidden
+     */
+    deletedItemIds?: string[];
 }
 /**
  * Type definition for the parameter used to pass in a batch of updates to a sync table update function.
