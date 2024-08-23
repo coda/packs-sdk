@@ -1797,10 +1797,10 @@ export interface DetailedIndexedProperty {
 }
 export type IndexedProperty = BasicIndexedProperty | DetailedIndexedProperty;
 /**
-  * Defines how to index objects for use with full-text indexing.
-  * TODO(alexd): Unhide this
-  * @hidden
-  */
+ * Defines how to index objects for use with full-text indexing.
+ * TODO(alexd): Unhide this
+ * @hidden
+ */
 export interface IndexDefinition {
 	/**
 	 * A list of properties from within {@link ObjectSchemaDefinition.properties} that should be indexed.
@@ -2225,10 +2225,16 @@ export interface StringHintTypeToSchemaTypeMap {
 	[ValueHintType.Date]: Date | string | number;
 }
 export type StringHintTypeToSchemaType<T extends StringHintTypes | undefined> = T extends keyof StringHintTypeToSchemaTypeMap ? StringHintTypeToSchemaTypeMap[T] : string;
-export type ObjectSchemaFromKey<T extends ObjectSchemaProperties<any>, K extends keyof T["properties"]> = T[K]["fromKey"] extends string ? T[K]["fromKey"] : K;
-export type ObjectSchemaType<T extends ObjectSchemaDefinition<any, any>> = {
-	[K in keyof T["properties"] as ObjectSchemaFromKey<T["properties"], K>]: SchemaType<T["properties"][K]>;
+export type ObjectSchemaFromKey<T extends ObjectSchemaProperties<any>, K extends keyof T> = T[K]["fromKey"] extends string ? T[K]["fromKey"] : K;
+export type ObjectSchemaPropertiesSchemaType<T extends ObjectSchemaProperties<any>> = {
+	-readonly [K in keyof T as ObjectSchemaFromKey<T, K>]: SchemaType<T[K]>;
 };
+export type ObjectSchemaRequiredProperties<T extends ObjectSchemaProperties<any>> = {
+	[K in keyof T]: T[K] extends {
+		required: true;
+	} ? K : never;
+}[keyof T];
+export type ObjectSchemaType<T extends ObjectSchemaDefinition<any, any>> = ObjectSchemaPropertiesSchemaType<Pick<T["properties"], ObjectSchemaRequiredProperties<T["properties"]>>> & Partial<ObjectSchemaPropertiesSchemaType<Omit<T["properties"], ObjectSchemaRequiredProperties<T["properties"]>>>>;
 /**
  * A TypeScript helper that parses the expected `execute` function return type from a given schema.
  * That is, given a schema, this utility will produce the type that an `execute` function should return

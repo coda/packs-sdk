@@ -1099,16 +1099,16 @@ export interface DetailedIndexedProperty {
 export type IndexedProperty = BasicIndexedProperty | DetailedIndexedProperty;
 
 /**
-  * Defines how to index objects for use with full-text indexing.
-  * TODO(alexd): Unhide this
-  * @hidden 
-  */
+ * Defines how to index objects for use with full-text indexing.
+ * TODO(alexd): Unhide this
+ * @hidden
+ */
 export interface IndexDefinition {
   /**
    * A list of properties from within {@link ObjectSchemaDefinition.properties} that should be indexed.
    */
   properties: IndexedProperty[];
-  
+
   /*
    * The context properties to be used for indexing.
    * If unspecified, intelligent defaults may be used..
@@ -1623,14 +1623,20 @@ type StringHintTypeToSchemaType<T extends StringHintTypes | undefined> = T exten
   ? StringHintTypeToSchemaTypeMap[T]
   : string;
 
-type ObjectSchemaFromKey<
-  T extends ObjectSchemaProperties<any>,
-  K extends keyof T['properties'],
-> = T[K]['fromKey'] extends string ? T[K]['fromKey'] : K;
-
-type ObjectSchemaType<T extends ObjectSchemaDefinition<any, any>> = {
-  [K in keyof T['properties'] as ObjectSchemaFromKey<T['properties'], K>]: SchemaType<T['properties'][K]>;
+type ObjectSchemaFromKey<T extends ObjectSchemaProperties<any>, K extends keyof T> = T[K]['fromKey'] extends string
+  ? T[K]['fromKey']
+  : K;
+type ObjectSchemaPropertiesSchemaType<T extends ObjectSchemaProperties<any>> = {
+  -readonly [K in keyof T as ObjectSchemaFromKey<T, K>]: SchemaType<T[K]>;
 };
+type ObjectSchemaRequiredProperties<T extends ObjectSchemaProperties<any>> = {
+  [K in keyof T]: T[K] extends {required: true} ? K : never;
+}[keyof T];
+
+type ObjectSchemaType<T extends ObjectSchemaDefinition<any, any>> = ObjectSchemaPropertiesSchemaType<
+  Pick<T['properties'], ObjectSchemaRequiredProperties<T['properties']>>
+> &
+  Partial<ObjectSchemaPropertiesSchemaType<Omit<T['properties'], ObjectSchemaRequiredProperties<T['properties']>>>>;
 
 /**
  * A TypeScript helper that parses the expected `execute` function return type from a given schema.
@@ -1912,8 +1918,9 @@ function normalizeIndexProperty(value: IndexedProperty, normalizedProperties: Ob
 }
 
 function normalizeIndexDefinition(
-  index: IndexDefinition, 
-  normalizedProperties: ObjectSchemaProperties): IndexDefinition {
+  index: IndexDefinition,
+  normalizedProperties: ObjectSchemaProperties,
+): IndexDefinition {
   const {properties, contextProperties, popularityRankProperty, ...rest} = index;
   ensureNever<keyof typeof rest>();
   return {
@@ -1921,8 +1928,8 @@ function normalizeIndexDefinition(
     contextProperties: contextProperties
       ? contextProperties.map(prop => normalizeSchemaPropertyIdentifier(prop, normalizedProperties))
       : undefined,
-    popularityRankProperty: popularityRankProperty 
-      ? normalizeSchemaPropertyIdentifier(popularityRankProperty, normalizedProperties) 
+    popularityRankProperty: popularityRankProperty
+      ? normalizeSchemaPropertyIdentifier(popularityRankProperty, normalizedProperties)
       : undefined,
   };
 }
@@ -2037,7 +2044,7 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     properties: normalizedProperties,
     snippetProperty: snippetProperty
       ? normalizeSchemaPropertyIdentifier(snippetProperty, normalizedProperties)
-      : undefined,     
+      : undefined,
     subtitleProperties: subtitleProperties
       ? subtitleProperties.map(subProp => normalizeSchemaPropertyIdentifier(subProp, normalizedProperties))
       : undefined,
