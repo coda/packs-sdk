@@ -1169,23 +1169,20 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     properties: z.array(indexedPropertySchema).min(1),
     contextProperties: contextPropertiesSchema.optional(),
     popularityRankProperty: propertySchema.optional(),
-  }); 
+  });
 
   function makePropertyValidator(schema: GenericObjectSchema, context: z.RefinementCtx) {
     /**
-      * Validates a PropertyIdentifier key in the object schema.
-      */
+     * Validates a PropertyIdentifier key in the object schema.
+     */
     return function validateProperty(
       propertyValueRaw: PropertyIdentifier<string> | Array<PropertyIdentifier<string>> | undefined,
       fieldName: string,
       isValidSchema: (schema: Schema & ObjectSchemaProperty) => boolean,
       invalidSchemaMessage: string,
-      propertyObjectPath: Array<string | number> = [fieldName]
+      propertyObjectPath: Array<string | number> = [fieldName],
     ) {
-      function validatePropertyIdentifier(
-        value: PropertyIdentifier,
-        objectPath: Array<string | number>,
-      ) {
+      function validatePropertyIdentifier(value: PropertyIdentifier, objectPath: Array<string | number>) {
         const propertyValue = typeof value === 'string' ? value : value?.property;
 
         let propertyValueIsPath = false;
@@ -1202,9 +1199,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
           propertyValueIsPath = true;
         }
 
-        const propertyIdentifierDisplay = propertyValueIsPath
-          ? `"${fieldName}" path`
-          : `"${fieldName}" field name`;
+        const propertyIdentifierDisplay = propertyValueIsPath ? `"${fieldName}" path` : `"${fieldName}" field name`;
 
         if (!propertySchema) {
           context.addIssue({
@@ -1235,7 +1230,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
 
         validatePropertyIdentifier(propertyValueRaw, propertyObjectPath);
       }
-    }
+    };
   }
 
   const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
@@ -1256,6 +1251,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
         name: z.string().nonempty(),
         dynamicUrl: z.string().optional(),
         attribution: attributionSchema,
+        mergeKey: z.string().optional(),
       }).optional(),
       attribution: attributionSchema,
       properties: z.record(objectPropertyUnionSchema),
@@ -1599,15 +1595,12 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
         }
 
         if (contextProperties) {
-          validatePropertyValue(
-            contextProperties,
+          validatePropertyValue(contextProperties, 'contextProperties', () => true, `must be a valid property.`, [
+            'index',
             'contextProperties',
-            () => true,
-            `must be a valid property.`,
-            ['index', 'contextProperties'],
-          );
+          ]);
         }
-      })
+      }),
   );
 
   const objectPropertyUnionSchema = z

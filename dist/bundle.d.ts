@@ -1721,6 +1721,14 @@ export interface IdentityDefinition {
 	dynamicUrl?: string;
 	/** The ID of another pack, if you are trying to reference a value from different pack. */
 	packId?: number;
+	/**
+	 * By default, result sets returned by dynamic sync tables will not be merged together across different dynamicUrl
+	 * values for the purposes of presenting information. This value, if set, will allow results for identities for the
+	 * same Pack and name to be merged together if they share the same `mergeKey`.
+	 *
+	 * @hidden In development.
+	 */
+	mergeKey?: string;
 	/** @deprecated See {@link ObjectSchemaDefinition.attribution} */
 	attribution?: AttributionNode[];
 }
@@ -1797,10 +1805,10 @@ export interface DetailedIndexedProperty {
 }
 export type IndexedProperty = BasicIndexedProperty | DetailedIndexedProperty;
 /**
-  * Defines how to index objects for use with full-text indexing.
-  * TODO(alexd): Unhide this
-  * @hidden
-  */
+ * Defines how to index objects for use with full-text indexing.
+ * TODO(alexd): Unhide this
+ * @hidden
+ */
 export interface IndexDefinition {
 	/**
 	 * A list of properties from within {@link ObjectSchemaDefinition.properties} that should be indexed.
