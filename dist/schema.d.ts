@@ -1,4 +1,3 @@
-import type { $Values } from './type_utils';
 import type { OptionsReference } from './api_types';
 import type { OptionsType } from './api_types';
 import type { PackFormulaResult } from './api_types';
@@ -1379,31 +1378,14 @@ export declare function maybeSchemaOptionsValue(schema: Schema | undefined): Pro
  * Pulls out the item type of an Array schema, returning undefined if the Array contains another Array.
  */
 export declare function maybeUnwrapArraySchema(val?: Schema): BooleanSchema | NumberSchema | StringSchema | GenericObjectSchema | undefined;
-type PickOptional<T, K extends keyof T> = Partial<T> & {
-    [P in K]: T[P];
-};
 interface StringHintTypeToSchemaTypeMap {
     [ValueHintType.Date]: Date | string | number;
 }
 type StringHintTypeToSchemaType<T extends StringHintTypes | undefined> = T extends keyof StringHintTypeToSchemaTypeMap ? StringHintTypeToSchemaTypeMap[T] : string;
-type SchemaWithNoFromKey<T extends ObjectSchemaDefinition<any, any>> = {
-    [K in keyof T['properties'] as T['properties'][K] extends {
-        fromKey: string;
-    } ? never : K]: T['properties'][K];
+type ObjectSchemaFromKey<T extends ObjectSchemaProperties<any>, K extends keyof T['properties']> = T[K]['fromKey'] extends string ? T[K]['fromKey'] : K;
+type ObjectSchemaType<T extends ObjectSchemaDefinition<any, any>> = {
+    [K in keyof T['properties'] as ObjectSchemaFromKey<T['properties'], K>]: SchemaType<T['properties'][K]>;
 };
-type SchemaFromKeyWildCard<T extends ObjectSchemaDefinition<any, any>> = {
-    [K in keyof T['properties'] as T['properties'][K] extends {
-        fromKey: string;
-    } ? string : never]: any;
-};
-type ObjectSchemaNoFromKeyType<T extends ObjectSchemaDefinition<any, any>, P extends SchemaWithNoFromKey<T> = SchemaWithNoFromKey<T>> = PickOptional<{
-    [K in keyof P]: SchemaType<P[K]>;
-}, $Values<{
-    [K in keyof P]: P[K] extends {
-        required: true;
-    } ? K : never;
-}>>;
-type ObjectSchemaType<T extends ObjectSchemaDefinition<any, any>> = ObjectSchemaNoFromKeyType<T> & SchemaFromKeyWildCard<T>;
 /**
  * A TypeScript helper that parses the expected `execute` function return type from a given schema.
  * That is, given a schema, this utility will produce the type that an `execute` function should return
@@ -1481,7 +1463,7 @@ export declare function makeSchema<T extends Schema>(schema: T): T;
  * });
  * ```
  */
-export declare function makeObjectSchema<K extends string, L extends string, T extends Omit<ObjectSchemaDefinition<K, L>, 'type'>>(schemaDef: T & {
+export declare function makeObjectSchema<K extends string, L extends string, const T extends Omit<ObjectSchemaDefinition<K, L>, 'type'>>(schemaDef: T & {
     type?: ValueType.Object;
 }): T & {
     identity?: Identity;
