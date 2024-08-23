@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Changed
+
+- Added internal fields to sync formulas and identity
+
 ## [1.7.10] - 2024-08-21
 
 ### Added
@@ -726,7 +730,5 @@ await myHelper(context);
 [0.9.0]: https://github.com/coda/packs-sdk/compare/v0.8.2...v0.9.0
 [1.7.7]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.7
 [1.7.8]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.8
-
 [1.7.9]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.7.9
-
 [1.7.10]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.7.10

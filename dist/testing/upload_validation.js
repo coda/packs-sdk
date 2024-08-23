@@ -953,8 +953,8 @@ function buildMetadataSchema({ sdkVersion }) {
     });
     function makePropertyValidator(schema, context) {
         /**
-          * Validates a PropertyIdentifier key in the object schema.
-          */
+         * Validates a PropertyIdentifier key in the object schema.
+         */
         return function validateProperty(propertyValueRaw, fieldName, isValidSchema, invalidSchemaMessage, propertyObjectPath = [fieldName]) {
             function validatePropertyIdentifier(value, objectPath) {
                 var _a;
@@ -971,9 +971,7 @@ function buildMetadataSchema({ sdkVersion }) {
                     })) === null || _a === void 0 ? void 0 : _a[0];
                     propertyValueIsPath = true;
                 }
-                const propertyIdentifierDisplay = propertyValueIsPath
-                    ? `"${fieldName}" path`
-                    : `"${fieldName}" field name`;
+                const propertyIdentifierDisplay = propertyValueIsPath ? `"${fieldName}" path` : `"${fieldName}" field name`;
                 if (!propertySchema) {
                     context.addIssue({
                         code: z.ZodIssueCode.custom,
@@ -1019,6 +1017,7 @@ function buildMetadataSchema({ sdkVersion }) {
             name: z.string().nonempty(),
             dynamicUrl: z.string().optional(),
             attribution: attributionSchema,
+            mergeKey: z.string().optional(),
         }).optional(),
         attribution: attributionSchema,
         properties: z.record(objectPropertyUnionSchema),
@@ -1245,7 +1244,10 @@ function buildMetadataSchema({ sdkVersion }) {
             }
         }
         if (contextProperties) {
-            validatePropertyValue(contextProperties, 'contextProperties', () => true, `must be a valid property.`, ['index', 'contextProperties']);
+            validatePropertyValue(contextProperties, 'contextProperties', () => true, `must be a valid property.`, [
+                'index',
+                'contextProperties',
+            ]);
         }
     }));
     const objectPropertyUnionSchema = z
