@@ -993,9 +993,9 @@ export interface IdentityDefinition {
   /** The ID of another pack, if you are trying to reference a value from different pack. */
   packId?: number;
   /**
-   * By default, result sets returned by dynamic sync tables will not be merged together for the purposes of presenting
-   * information. This value, if set, will allow results for identities for the same Pack and name to be merged together
-   * if they share the same `mergeKey`.
+   * By default, result sets returned by dynamic sync tables will not be merged together across different dynamicUrl
+   * values for the purposes of presenting information. This value, if set, will allow results for identities for the
+   * same Pack and name to be merged together if they share the same `mergeKey`.
    *
    * @hidden In development.
    */
