@@ -85,6 +85,7 @@ This error will appear at the bottom of the screen after pressing a button, and 
 <!-- https://golinks.io/bug/22358 -->
 
 - `RESOURCE_EXHAUSTED: Received message larger than max`
+- `INTERNAL: FetchError: content size at {URL} over limit: 4194304
 
 This error indicates that a fetcher request got back a response that is larger than the Packs runtime allows. If you are querying an external API for records, see if you can use a limit or paging parameter to get back a smaller response. If you need to work with large files you'll need to build an application outside of Packs that processes them. If you only need a small increase in the size limit you can [contact support][support] to request an adjustment.
 
