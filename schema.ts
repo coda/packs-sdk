@@ -992,6 +992,14 @@ export interface IdentityDefinition {
   dynamicUrl?: string;
   /** The ID of another pack, if you are trying to reference a value from different pack. */
   packId?: number;
+  /**
+   * By default, result sets returned by dynamic sync tables will not be merged together for the purposes of presenting
+   * information. This value, if set, will allow results for identities for the same Pack and name to be merged together
+   * if they share the same `mergeKey`.
+   *
+   * @hidden In development.
+   */
+  mergeKey?: string;
   /** @deprecated See {@link ObjectSchemaDefinition.attribution} */
   attribution?: AttributionNode[];
 }
@@ -1100,16 +1108,16 @@ export interface DetailedIndexedProperty {
 export type IndexedProperty = BasicIndexedProperty | DetailedIndexedProperty;
 
 /**
-  * Defines how to index objects for use with full-text indexing.
-  * TODO(alexd): Unhide this
-  * @hidden 
-  */
+ * Defines how to index objects for use with full-text indexing.
+ * TODO(alexd): Unhide this
+ * @hidden
+ */
 export interface IndexDefinition {
   /**
    * A list of properties from within {@link ObjectSchemaDefinition.properties} that should be indexed.
    */
   properties: IndexedProperty[];
-  
+
   /*
    * The context properties to be used for indexing.
    * If unspecified, intelligent defaults may be used..
@@ -1930,8 +1938,9 @@ function normalizeIndexProperty(value: IndexedProperty, normalizedProperties: Ob
 }
 
 function normalizeIndexDefinition(
-  index: IndexDefinition, 
-  normalizedProperties: ObjectSchemaProperties): IndexDefinition {
+  index: IndexDefinition,
+  normalizedProperties: ObjectSchemaProperties,
+): IndexDefinition {
   const {properties, contextProperties, popularityRankProperty, ...rest} = index;
   ensureNever<keyof typeof rest>();
   return {
@@ -1939,8 +1948,8 @@ function normalizeIndexDefinition(
     contextProperties: contextProperties
       ? contextProperties.map(prop => normalizeSchemaPropertyIdentifier(prop, normalizedProperties))
       : undefined,
-    popularityRankProperty: popularityRankProperty 
-      ? normalizeSchemaPropertyIdentifier(popularityRankProperty, normalizedProperties) 
+    popularityRankProperty: popularityRankProperty
+      ? normalizeSchemaPropertyIdentifier(popularityRankProperty, normalizedProperties)
       : undefined,
   };
 }
@@ -2055,7 +2064,7 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     properties: normalizedProperties,
     snippetProperty: snippetProperty
       ? normalizeSchemaPropertyIdentifier(snippetProperty, normalizedProperties)
-      : undefined,     
+      : undefined,
     subtitleProperties: subtitleProperties
       ? subtitleProperties.map(subProp => normalizeSchemaPropertyIdentifier(subProp, normalizedProperties))
       : undefined,
