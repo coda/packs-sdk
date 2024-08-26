@@ -1233,11 +1233,7 @@ export interface ExecuteGetPermissionsRequest<
  */
 export type GenericExecuteGetPermissionsRequest = ExecuteGetPermissionsRequest<any, any, any>;
 
-export interface ExecuteGetIncrementalPermissionsRequest<
-  K extends string,
-  L extends string,
-  SchemaT extends ObjectSchemaDefinition<K, L>,
-> {
+export interface ExecuteGetIncrementalPermissionsRequest {
   /**
    * The start time of the prior crawl of permissions, regardless of whether it was from executing
    * {@link executeGetPermissions} or {@link executeGetIncrementalPermissions}.
@@ -1317,7 +1313,7 @@ export interface SyncFormulaDef<
 
   executeGetIncrementalPermissions?(
     params: ParamValues<ParamDefsT>,
-    request: ExecuteGetIncrementalPermissionsRequest<K, L, SchemaT>,
+    request: ExecuteGetIncrementalPermissionsRequest,
     context: GetPermissionExecutionContext,
   ): Promise<GetIncrementalPermissionsResult>;
 }
