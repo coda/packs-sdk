@@ -4,6 +4,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+- Fix inferred schema types when using fromKey
+
 ## [1.7.11] - 2024-08-23
 
 ### Changed
