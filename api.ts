@@ -1,4 +1,4 @@
-import type {ArraySchema} from './schema';
+import type {ArraySchema, IncrementalRowAccessDefinition} from './schema';
 import type {ArrayType} from './api_types';
 import type {BooleanSchema} from './schema';
 import type {CommonPackFormulaDef} from './api_types';
@@ -1045,8 +1045,10 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
    * If context.sync.getPermissions was true, one way the pack can return ACLs is with this list.
    * If this is provided, then Coda will assume it is a complete set of ACLs for the `results` and won't
    * invoke executeGetPermissions.
+   *
+   * We could also split this union into 2 separate fields.
    */
-  rowAccessDefinitions: RowAccessDefinition[];
+  rowAccessDefinitions: RowAccessDefinition[] | IncrementalRowAccessDefinition[];
 }
 
 /**
@@ -1186,6 +1188,11 @@ export interface GetPermissionsResult {
    *
    */
   rowAccessDefinitions: RowAccessDefinition[];
+
+  /**
+   * NOTE: I think we need this continuation no matter what we do about the rest of this proposal.
+   */
+  continuation?: Continuation;
 }
 
 /**

@@ -1444,6 +1444,15 @@ export interface RowAccessDefinition {
   rowId: string | number;
 }
 
+// NOTE: This is the same type from the other sketch, and I left more comments there.
+export interface IncrementalRowAccessDefinition {
+  newPermissions: Permission[];
+
+  removedPermissions: Permission[];
+
+  rowId: string | number;
+}
+
 export type ObjectSchemaDefinitionType<
   K extends string,
   L extends string,
