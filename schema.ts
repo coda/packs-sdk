@@ -1461,7 +1461,7 @@ export interface DelegatedPermission {
  * TODO(drew): Unhide this
  * @hidden
  */
-type Permission = DirectPermission | DelegatedPermission
+export type Permission = DirectPermission | DelegatedPermission
 
 /**
  * This represents the list of permissions on a sync table row.

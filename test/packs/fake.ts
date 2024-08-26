@@ -1,6 +1,7 @@
 import type {PackDefinition} from '../../types';
 import {ParameterType} from '../../api_types';
 import type {Permission} from '../../schema';
+import {PermissionType} from '../../schema';
 import {PrincipalType} from '../../schema';
 import type {RowAccessDefinition} from '../../schema';
 import type {UserPrincipal} from '../../schema';
@@ -172,6 +173,7 @@ export const manifest: PackDefinition = createFakePack({
 
               const permissions: Permission[] = [
                 {
+                  permissionType: PermissionType.Direct,
                   principal,
                 },
               ];
