@@ -1,4 +1,4 @@
-import type {ArraySchema, IncrementalRowAccessDefinition} from './schema';
+import type {ArraySchema} from './schema';
 import type {ArrayType} from './api_types';
 import type {BooleanSchema} from './schema';
 import type {CommonPackFormulaDef} from './api_types';
@@ -8,6 +8,7 @@ import type {ExecutionContext} from './api_types';
 import type {FetchRequest} from './api_types';
 import type {GetPermissionExecutionContext} from './api_types';
 import type {Identity} from './schema';
+import type {IncrementalRowAccessDefinition} from './schema';
 import type {NumberHintTypes} from './schema';
 import type {NumberSchema} from './schema';
 import type {ObjectSchema} from './schema';
