@@ -1183,11 +1183,9 @@ const MaxPermissionsPerRow = 1000;
 export interface GetPermissionsResult {
   /**
    * The access definition for each row that was passed to {@link executeGetPermissions}.
+   *
    */
   rowAccessDefinitions: RowAccessDefinition[];
-
-  // TODO(patrick): Add a `continuation` here, in case there are too many permissions to fetch in one
-  // invocation.
 }
 
 /**
