@@ -1013,6 +1013,12 @@ export enum TableRole {
   GroupMembers = 'groupMembers',
 }
 
+export enum IncrementalPermissionCrawlType {
+  RecrawlAllUpdatedItems = 'recrawl_all_updated_items',
+  RecrawlOnlyNewItems = 'recrawl_only_new_items',
+  OnlyUseIncrementalPermissions = 'only_use_incremental_permissions',
+}
+
 // TODO(patrick): Unhide this
 /** @hidden */
 export interface SyncCompletionMetadata {
@@ -1031,9 +1037,6 @@ export interface SyncCompletionMetadata {
    * {@link executeGetIncrementalPermissions} after a full sync completes. After that, the
    * {@link executeGetIncrementalPermissions} function can return its own continuation object in
    * {@link GetIncrementalPermissionsResult}, which will take precedence over this one.
-   *
-   * Note that even if an incremental sync returns this, Coda will still invoke {@link executeGetPermissions} for any
-   * items that didn't exist before the incremental sync.
    */
   incrementalPermissionsContinuation?: Continuation;
 }

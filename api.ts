@@ -8,6 +8,7 @@ import type {ExecutionContext} from './api_types';
 import type {FetchRequest} from './api_types';
 import type {GetPermissionExecutionContext} from './api_types';
 import type {Identity} from './schema';
+import type {IncrementalPermissionCrawlType} from './api_types';
 import type {IncrementalRowAccessDefinition} from './schema';
 import type {NumberHintTypes} from './schema';
 import type {NumberSchema} from './schema';
@@ -1041,6 +1042,21 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
    * @hidden
    */
   deletedItemIds?: string[];
+
+  /**
+   * During an incremental sync for a permission-aware installation, Coda needs to know how to
+   * crawl for changes in permissions. If no {@link executeGetIncrementalPermissions} exists on
+   * this sync table, Coda will default this to
+   * {@link IncrementalPermissionCrawlType.RecrawlAllUpdatedItems}. Otherwise, Coda defaults this
+   * to {@link IncrementalPermissionCrawlType.RecrawlOnlyNewItems}.
+   *
+   * If your API happens to *never* need {@link executeGetPermissions} invoked after the initial full
+   * crawl, you can set this to {@link IncrementalPermissionCrawlType.OnlyUseIncrementalPermissions}.
+   *
+   * TODO(patrick): Unhide this
+   * @hidden
+   */
+  incrementalPermissionCrawlType?: IncrementalPermissionCrawlType;
 }
 
 /**
