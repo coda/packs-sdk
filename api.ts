@@ -1035,11 +1035,18 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
 
   /**
    * Return the list of deleted item ids for incremental sync deletion.
-   * 
+   *
    * TODO(ebo): Unhide this
    * @hidden
    */
   deletedItemIds?: string[];
+
+  /**
+   * If context.sync.getPermissions was true, one way the pack can return ACLs is with this list.
+   * If this is provided, then Coda will assume it is a complete set of ACLs for the `results` and won't
+   * invoke executeGetPermissions.
+   */
+  rowAccessDefinitions: RowAccessDefinition[];
 }
 
 /**
@@ -1176,9 +1183,11 @@ const MaxPermissionsPerRow = 1000;
 export interface GetPermissionsResult {
   /**
    * The access definition for each row that was passed to {@link executeGetPermissions}.
-   *
    */
   rowAccessDefinitions: RowAccessDefinition[];
+
+  // TODO(patrick): Add a `continuation` here, in case there are too many permissions to fetch in one
+  // invocation.
 }
 
 /**

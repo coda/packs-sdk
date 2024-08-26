@@ -758,6 +758,11 @@ export interface Sync {
    * {@link core.MetadataContext} The parameters of the sync formula for the sync table.
    */
   readonly parameters?: MetadataContext;
+
+  /**
+   * True if both data and ACLs are being crawled.
+   */
+  getPermissions?: boolean;
 }
 
 /**
