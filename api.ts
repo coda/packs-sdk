@@ -1187,8 +1187,21 @@ export interface GetPermissionsResult {
 }
 
 export interface GetIncrementalPermissionsResult {
-  rowAccessDefinitions: IncrementalRowAccessDefinition[];
+  /**
+   * If the API you're calling gives you a list of changes to permissions, you can use this.
+   * You cannot use both this and {@link rowAccessDefinitions} in the same result.
+   */
+  incrementalRowAccessDefinitions?: IncrementalRowAccessDefinition[];
 
+  /**
+   * If the API you're using makes you look up the entire set of permissions for an item, use
+   * this field. You cannot use both this and {@link incrementalRowAccessDefinitions} in the same result.
+   */
+  rowAccessDefinitions?: RowAccessDefinition[];
+
+  /**
+   * If provided, we'll pass this into the next invocation of {@link executeGetIncrementalPermissions}.
+   */
   continuation?: Continuation;
 }
 
@@ -1235,14 +1248,13 @@ export type GenericExecuteGetPermissionsRequest = ExecuteGetPermissionsRequest<a
 
 export interface ExecuteGetIncrementalPermissionsRequest {
   /**
-   * The start time of the prior crawl of permissions, regardless of whether it was from executing
-   * {@link executeGetPermissions} or {@link executeGetIncrementalPermissions}.
+   * If this is the first invocation of {@link executeGetIncrementalPermissions}, this will come from the
+   * {@link SyncCompletionMetadata.incrementalPermissionsContinuation} in the sync table's return value.
+   *
+   * Subsequent invocations of {@link executeGetIncrementalPermissions} will prefer to pass in a
+   * continuation value from the prior {@link GetIncrementalPermissionsResult}, if it exists.
    */
-  startDatetime: Date;
-
-  // No continuation or completion because there's no way for the first {@link executeGetPermissions}
-  // non-incremental crawl to specify such things. Maybe we could *tell* {@link executeGetPermissions}
-  // that it's the initial invocation and let it return an incremental continuation?
+  continuation: Continuation;
 }
 
 /**
