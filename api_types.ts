@@ -1029,14 +1029,16 @@ export interface SyncCompletionMetadata {
   incrementalContinuation?: Continuation;
 
   /**
-   * Returning this tells Coda to incrementally sync permissions. Coda will invoke
-   * {@link executeGetIncrementalPermissions} immediately after incremental invocations of {@link execute}
-   * complete.
+   * Returning this tells Coda to incrementally sync permissions, and to do so immediately (since
+   * this SyncCompletionMetadata is being generated at the end of a data sync).
    *
    * This `continuation` object will always be used on the first invocation of
    * {@link executeGetIncrementalPermissions} after a full sync completes. After that, the
    * {@link executeGetIncrementalPermissions} function can return its own continuation object in
    * {@link GetIncrementalPermissionsResult}, which will take precedence over this one.
+   *
+   * Note that if {@link executeGetIncrementalPermissions} returns its own continuation object,
+   * Coda may choose to execute it on a more frequent cadence than the table's data syncs.
    */
   incrementalPermissionsContinuation?: Continuation;
 }
