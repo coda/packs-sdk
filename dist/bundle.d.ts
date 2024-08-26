@@ -2229,31 +2229,20 @@ export declare function makeAttributionNode<T extends AttributionNode>(node: T):
  * The union of all of the schema types supported for return values and object properties.
  */
 export type Schema = BooleanSchema | NumberSchema | StringSchema | ArraySchema | GenericObjectSchema;
-export type PickOptional<T, K extends keyof T> = Partial<T> & {
-	[P in K]: T[P];
-};
 export interface StringHintTypeToSchemaTypeMap {
 	[ValueHintType.Date]: Date | string | number;
 }
 export type StringHintTypeToSchemaType<T extends StringHintTypes | undefined> = T extends keyof StringHintTypeToSchemaTypeMap ? StringHintTypeToSchemaTypeMap[T] : string;
-export type SchemaWithNoFromKey<T extends ObjectSchemaDefinition<any, any>> = {
-	[K in keyof T["properties"] as T["properties"][K] extends {
-		fromKey: string;
-	} ? never : K]: T["properties"][K];
+export type ObjectSchemaFromKey<T extends ObjectSchemaProperties<any>, K extends keyof T> = T[K]["fromKey"] extends string ? T[K]["fromKey"] : K;
+export type ObjectSchemaPropertiesSchemaType<T extends ObjectSchemaProperties<any>> = {
+	-readonly [K in keyof T as ObjectSchemaFromKey<T, K>]: SchemaType<T[K]>;
 };
-export type SchemaFromKeyWildCard<T extends ObjectSchemaDefinition<any, any>> = {
-	[K in keyof T["properties"] as T["properties"][K] extends {
-		fromKey: string;
-	} ? string : never]: any;
-};
-export type ObjectSchemaNoFromKeyType<T extends ObjectSchemaDefinition<any, any>, P extends SchemaWithNoFromKey<T> = SchemaWithNoFromKey<T>> = PickOptional<{
-	[K in keyof P]: SchemaType<P[K]>;
-}, $Values<{
-	[K in keyof P]: P[K] extends {
+export type ObjectSchemaRequiredProperties<T extends ObjectSchemaProperties<any>> = {
+	[K in keyof T]: T[K] extends {
 		required: true;
 	} ? K : never;
-}>>;
-export type ObjectSchemaType<T extends ObjectSchemaDefinition<any, any>> = ObjectSchemaNoFromKeyType<T> & SchemaFromKeyWildCard<T>;
+}[keyof T];
+export type ObjectSchemaType<T extends ObjectSchemaDefinition<any, any>> = ObjectSchemaPropertiesSchemaType<Pick<T["properties"], ObjectSchemaRequiredProperties<T["properties"]>>> & Partial<ObjectSchemaPropertiesSchemaType<Omit<T["properties"], ObjectSchemaRequiredProperties<T["properties"]>>>>;
 /**
  * A TypeScript helper that parses the expected `execute` function return type from a given schema.
  * That is, given a schema, this utility will produce the type that an `execute` function should return
@@ -2331,7 +2320,7 @@ export declare function makeSchema<T extends Schema>(schema: T): T;
  * });
  * ```
  */
-export declare function makeObjectSchema<K extends string, L extends string, T extends Omit<ObjectSchemaDefinition<K, L>, "type">>(schemaDef: T & {
+export declare function makeObjectSchema<K extends string, L extends string, const T extends Omit<ObjectSchemaDefinition<K, L>, "type">>(schemaDef: T & {
 	type?: ValueType.Object;
 }): T & {
 	identity?: Identity;

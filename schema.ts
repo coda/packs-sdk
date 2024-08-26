@@ -1,4 +1,3 @@
-import type {$Values} from './type_utils';
 import type {OptionsReference} from './api_types';
 import type {OptionsType} from './api_types';
 import type {PackFormulaResult} from './api_types';
@@ -1625,8 +1624,6 @@ export function maybeUnwrapArraySchema(
   }
 }
 
-type PickOptional<T, K extends keyof T> = Partial<T> & {[P in K]: T[P]};
-
 interface StringHintTypeToSchemaTypeMap {
   [ValueHintType.Date]: Date | string | number;
 }
@@ -1634,29 +1631,20 @@ type StringHintTypeToSchemaType<T extends StringHintTypes | undefined> = T exten
   ? StringHintTypeToSchemaTypeMap[T]
   : string;
 
-type SchemaWithNoFromKey<T extends ObjectSchemaDefinition<any, any>> = {
-  [K in keyof T['properties'] as T['properties'][K] extends {fromKey: string} ? never : K]: T['properties'][K];
+type ObjectSchemaFromKey<T extends ObjectSchemaProperties<any>, K extends keyof T> = T[K]['fromKey'] extends string
+  ? T[K]['fromKey']
+  : K;
+type ObjectSchemaPropertiesSchemaType<T extends ObjectSchemaProperties<any>> = {
+  -readonly [K in keyof T as ObjectSchemaFromKey<T, K>]: SchemaType<T[K]>;
 };
+type ObjectSchemaRequiredProperties<T extends ObjectSchemaProperties<any>> = {
+  [K in keyof T]: T[K] extends {required: true} ? K : never;
+}[keyof T];
 
-// if there's a field with fromKey, inject {string: any} to fail silently.
-type SchemaFromKeyWildCard<T extends ObjectSchemaDefinition<any, any>> = {
-  [K in keyof T['properties'] as T['properties'][K] extends {fromKey: string} ? string : never]: any;
-};
-
-type ObjectSchemaNoFromKeyType<
-  T extends ObjectSchemaDefinition<any, any>,
-  P extends SchemaWithNoFromKey<T> = SchemaWithNoFromKey<T>,
-> = PickOptional<
-  {
-    [K in keyof P]: SchemaType<P[K]>;
-  },
-  $Values<{
-    [K in keyof P]: P[K] extends {required: true} ? K : never;
-  }>
->;
-
-type ObjectSchemaType<T extends ObjectSchemaDefinition<any, any>> = ObjectSchemaNoFromKeyType<T> &
-  SchemaFromKeyWildCard<T>;
+type ObjectSchemaType<T extends ObjectSchemaDefinition<any, any>> = ObjectSchemaPropertiesSchemaType<
+  Pick<T['properties'], ObjectSchemaRequiredProperties<T['properties']>>
+> &
+  Partial<ObjectSchemaPropertiesSchemaType<Omit<T['properties'], ObjectSchemaRequiredProperties<T['properties']>>>>;
 
 /**
  * A TypeScript helper that parses the expected `execute` function return type from a given schema.
@@ -1782,7 +1770,7 @@ export function makeSchema<T extends Schema>(schema: T): T {
 export function makeObjectSchema<
   K extends string,
   L extends string,
-  T extends Omit<ObjectSchemaDefinition<K, L>, 'type'>,
+  const T extends Omit<ObjectSchemaDefinition<K, L>, 'type'>,
 >(
   schemaDef: T & {type?: ValueType.Object},
 ): T & {
