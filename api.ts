@@ -1216,9 +1216,18 @@ export interface GetIncrementalPermissionsResult {
   rowAccessDefinitions?: RowAccessDefinition[];
 
   /**
-   * If provided, we'll pass this into the next invocation of {@link executeGetIncrementalPermissions}.
+   * If provided, we'll pass this into the next invocation. This enables paginating through long lists
+   * of permissions.
    */
   continuation?: Continuation;
+
+  /**
+   * This value will be provided to {@link executeGetIncrementalPermissions} the next time Coda crawls permissions.
+   *
+   * Coda assumes that if you return this, your {@link executeGetIncrementalPermissions} can be called on a
+   * different (potentially more frequent) cadence than incremental data syncs.
+   */
+  incrementalPermissionsContinuation?: Continuation;
 }
 
 /**
@@ -1267,10 +1276,11 @@ export interface ExecuteGetIncrementalPermissionsRequest {
    * If this is the first invocation of {@link executeGetIncrementalPermissions}, this will come from the
    * {@link SyncCompletionMetadata.incrementalPermissionsContinuation} in the sync table's return value.
    *
-   * Subsequent invocations of {@link executeGetIncrementalPermissions} will prefer to pass in a
-   * continuation value from the prior {@link GetIncrementalPermissionsResult}, if it exists.
+   * Subsequent invocations of {@link executeGetIncrementalPermissions} will prefer to pass in the
+   * incrementalPermissionsContinuation value from the prior {@link GetIncrementalPermissionsResult},
+   * if it exists.
    */
-  continuation: Continuation;
+  incrementalPermissionContinuation: Continuation;
 }
 
 /**
