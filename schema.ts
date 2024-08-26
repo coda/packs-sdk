@@ -1423,14 +1423,45 @@ export interface AnyonePrincipal {
 type Principal = UserPrincipal | GroupPrincipal | AnyonePrincipal | DomainPrincipal;
 
 /**
- * This represents the definition of a permission in the external system.
+ * The type of permission.
+ *
+ * TODO(drew): Unhide this
+ * @hidden
+ */
+export enum PermissionType {
+  Delegated = 'delegated',
+  Direct = 'direct',
+}
+
+/**
+ * This represents the definition of a direct permission in the external system.
  *
  * TODO(sam): Unhide this
  * @hidden
  */
-export interface Permission {
+export interface DirectPermission {
+  permissionType: PermissionType.Direct;
   principal: Principal;
 }
+
+/**
+ * This represents the definition of a delegated permission in the external system.
+ * 
+ * TODO(drew): Unhide this
+ * @hidden
+ */
+export interface DelegatedPermission {
+  permissionType: PermissionType.Delegated;
+  delegatedItemId: string | number;
+}
+
+/**
+ * This represents the different permissions in the external system.
+ *
+ * TODO(drew): Unhide this
+ * @hidden
+ */
+type Permission = DirectPermission | DelegatedPermission
 
 /**
  * This represents the list of permissions on a sync table row.
