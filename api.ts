@@ -1,4 +1,4 @@
-import type {ArraySchema} from './schema';
+import type {ArraySchema, IncrementalRowAccessDefinition} from './schema';
 import type {ArrayType} from './api_types';
 import type {BooleanSchema} from './schema';
 import type {CommonPackFormulaDef} from './api_types';
@@ -1035,7 +1035,7 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
 
   /**
    * Return the list of deleted item ids for incremental sync deletion.
-   * 
+   *
    * TODO(ebo): Unhide this
    * @hidden
    */
@@ -1176,9 +1176,19 @@ const MaxPermissionsPerRow = 1000;
 export interface GetPermissionsResult {
   /**
    * The access definition for each row that was passed to {@link executeGetPermissions}.
-   *
    */
   rowAccessDefinitions: RowAccessDefinition[];
+
+  /**
+   * NOTE: I think we need this continuation no matter what we do about the rest of this proposal.
+   */
+  continuation?: Continuation;
+}
+
+export interface GetIncrementalPermissionsResult {
+  rowAccessDefinitions: IncrementalRowAccessDefinition[];
+
+  continuation?: Continuation;
 }
 
 /**
@@ -1221,6 +1231,22 @@ export interface ExecuteGetPermissionsRequest<
  * @hidden
  */
 export type GenericExecuteGetPermissionsRequest = ExecuteGetPermissionsRequest<any, any, any>;
+
+export interface ExecuteGetIncrementalPermissionsRequest<
+  K extends string,
+  L extends string,
+  SchemaT extends ObjectSchemaDefinition<K, L>,
+> {
+  /**
+   * The start time of the prior crawl of permissions, regardless of whether it was from executing
+   * {@link executeGetPermissions} or {@link executeGetIncrementalPermissions}.
+   */
+  startDatetime: Date;
+
+  // No continuation or completion because there's no way for the first {@link executeGetPermissions}
+  // non-incremental crawl to specify such things. Maybe we could *tell* {@link executeGetPermissions}
+  // that it's the initial invocation and let it return an incremental continuation?
+}
 
 /**
  * Inputs for creating the formula that implements a sync table.
@@ -1287,6 +1313,12 @@ export interface SyncFormulaDef<
    * @hidden
    */
   maxPermissionBatchSize?: number;
+
+  executeGetIncrementalPermissions?(
+    params: ParamValues<ParamDefsT>,
+    request: ExecuteGetIncrementalPermissionsRequest<K, L, SchemaT>,
+    context: GetPermissionExecutionContext,
+  ): Promise<GetIncrementalPermissionsResult>;
 }
 
 /**

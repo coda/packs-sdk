@@ -1431,6 +1431,8 @@ type Principal = UserPrincipal | GroupPrincipal | AnyonePrincipal | DomainPrinci
  */
 export interface Permission {
   principal: Principal;
+
+  // TODO(patrick): Eventually will want VIEW vs EDIT here at least.
 }
 
 /**
@@ -1441,6 +1443,18 @@ export interface Permission {
  */
 export interface RowAccessDefinition {
   permissions: Permission[];
+  rowId: string | number;
+}
+
+export interface IncrementalRowAccessDefinition {
+  /**
+   * In a future world with VIEW vs EDIT Permissions, a newPermission for a principal that has
+   * any existing permission will replace all old permissions for that principal.
+   */
+  newPermissions: Permission[];
+
+  removedPermissions: Permission[];
+
   rowId: string | number;
 }
 
