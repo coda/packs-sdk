@@ -1579,16 +1579,22 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
             validatePropertyValue(
               indexedProperty,
               'properties',
-              indexedPropertySchema => indexedPropertySchema.type === ValueType.String,
-              `must refer to a "ValueType.String" property.`,
+              indexedPropertySchema =>
+                indexedPropertySchema.type === ValueType.String ||
+                (indexedPropertySchema.type === ValueType.Array &&
+                  indexedPropertySchema.items.type === ValueType.String),
+              `must refer to a "ValueType.String" property or a "ValueType.Array" array of "ValueType.String" properties.`,
               objectPath,
             );
           } else {
             validatePropertyValue(
               indexedProperty.property,
               'properties',
-              indexedPropertySchema => indexedPropertySchema.type === ValueType.String,
-              `must refer to a "ValueType.String" property.`,
+              indexedPropertySchema =>
+                indexedPropertySchema.type === ValueType.String ||
+                (indexedPropertySchema.type === ValueType.Array &&
+                  indexedPropertySchema.items.type === ValueType.String),
+              `must refer to a "ValueType.String" property or a "ValueType.Array" array of "ValueType.String" properties.`,
               [...objectPath, 'property'],
             );
           }
