@@ -1455,6 +1455,7 @@ export interface DirectPermission {
 export interface DelegatedPermission {
   permissionType: PermissionType.Delegated;
   delegatedItemId: string | number;
+  syncTableName: string;
 }
 
 /**
