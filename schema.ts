@@ -1424,7 +1424,9 @@ type Principal = UserPrincipal | GroupPrincipal | AnyonePrincipal | DomainPrinci
 
 /**
  * The type of permission.
- *
+ * Delegated permissions are permissions that are inherited from another object that aren't
+ * within the same sync table.
+ * Direct permissions are permissions that are directly applied to the object. E.g. a user or group, etc
  * TODO(drew): Unhide this
  * @hidden
  */
@@ -1440,7 +1442,7 @@ export enum PermissionType {
  * @hidden
  */
 export interface DirectPermission {
-  permissionType: PermissionType.Direct;
+  permissionType?: PermissionType.Direct;
   principal: Principal;
 }
 

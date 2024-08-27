@@ -2103,7 +2103,7 @@ declare enum PermissionType {
  * @hidden
  */
 export interface DirectPermission {
-	permissionType: PermissionType.Direct;
+	permissionType?: PermissionType.Direct;
 	principal: Principal;
 }
 /**
