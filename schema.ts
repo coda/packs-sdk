@@ -1448,14 +1448,42 @@ export interface DirectPermission {
 
 /**
  * This represents the definition of a delegated permission in the external system.
- * 
+ *
  * TODO(drew): Unhide this
  * @hidden
  */
 export interface DelegatedPermission {
   permissionType: PermissionType.Delegated;
-  delegatedItemId: string | number;
+  item: ItemReference;
+}
+
+/**
+ * A reference to an item elsewhere in the Pack, typically another row in the same sync
+ * table but also potentially a row in another sync table.
+ *
+ * This is specifically used only outside the context of an object schema, particularly
+ * when returning permissions for a sync table row. If just returning sync table result
+ * rows where one of the row properties is a reference to a row in another table,
+ * you would just return an object with an item id and item name, since the object schema
+ * for that property already describes the table to be referenced in the Identity on that schema.
+ * Without an object schema, the identity name of the class of item being referenced must be
+ * explicitly provided.
+ *
+ * TODO(drew): Unhide this
+ * @hidden
+ */
+export interface ItemReference {
+  id: string | number;
+  // We should only be identityName because that's how references/identities
+  // are designed to work elsewhere in the packs abstractions, but today Brain uses
+  // the sync table name to refer to things so for practical purposes we'll need to make
+  // use of the sync table name to resolve these.
+  // Here we'll ask for both names, today we'll only use syncTableName but in the future
+  // we will likely deprecated syncTableName and only use identityName, once
+  // Brain keys things by identity name and not table name.
   syncTableName: string;
+  identityName: string;
+  dynamicUrl?: string;
 }
 
 /**
@@ -1464,7 +1492,7 @@ export interface DelegatedPermission {
  * TODO(drew): Unhide this
  * @hidden
  */
-export type Permission = DirectPermission | DelegatedPermission
+export type Permission = DirectPermission | DelegatedPermission;
 
 /**
  * This represents the list of permissions on a sync table row.
