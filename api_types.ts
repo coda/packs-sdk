@@ -703,10 +703,13 @@ export interface TemporaryBlobStorage {
    *
    * If the `downloadFilename` parameter is specified, when opened in the browser the file will
    * be downloaded with the file name provided.
+   *
+   * If the `contentType` parameter is specified, any Content-Type header on the URL will be ignored
+   * in favor of the provided value.
    */
   storeUrl(
     url: string,
-    opts?: {expiryMs?: number; downloadFilename?: string},
+    opts?: {expiryMs?: number; downloadFilename?: string; contentType?: string},
     fetchOpts?: Pick<FetchRequest, 'disableAuthentication'>,
   ): Promise<string>;
   /**
