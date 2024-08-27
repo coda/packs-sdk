@@ -7,6 +7,7 @@ import type {GenericSyncUpdate} from '../api';
 import {MetadataFormulaType} from '../runtime/types';
 import type {PackDefinitionBuilder} from '../builder';
 import {ParameterType} from '../api_types';
+import {PermissionType} from '../schema';
 import {PostSetupType} from '../types';
 import type {ResponseHandlerTemplate} from '../handler_templates';
 import type {Schema} from '../schema';
@@ -508,11 +509,11 @@ describe('Execution', () => {
             rowAccessDefinitions: [
               {
                 rowId: 'Alice',
-                permissions: [{principal: {type: 'user', userId: 1}}],
+                permissions: [{permissionType: PermissionType.Direct, principal: {type: 'user', userId: 1}}],
               },
               {
                 rowId: 'Bob',
-                permissions: [{principal: {type: 'user', userId: 1}}],
+                permissions: [{permissionType: PermissionType.Direct, principal: {type: 'user', userId: 1}}],
               },
             ],
           });
