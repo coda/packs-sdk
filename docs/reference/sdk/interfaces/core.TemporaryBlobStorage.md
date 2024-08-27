@@ -78,12 +78,16 @@ Coda reserves the right to ignore long expirations.
 If the `downloadFilename` parameter is specified, when opened in the browser the file will
 be downloaded with the file name provided.
 
+If the `contentType` parameter is specified, any Content-Type header on the URL will be ignored
+in favor of the provided value.
+
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `url` | `string` |
 | `opts?` | `Object` |
+| `opts.contentType?` | `string` |
 | `opts.downloadFilename?` | `string` |
 | `opts.expiryMs?` | `number` |
 | `fetchOpts?` | `Pick`<[`FetchRequest`](core.FetchRequest.md), ``"disableAuthentication"``\> |
