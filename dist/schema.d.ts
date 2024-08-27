@@ -1268,8 +1268,28 @@ export interface DirectPermission {
  */
 export interface DelegatedPermission {
     permissionType: PermissionType.Delegated;
-    delegatedItemId: string | number;
+    item: ItemReference;
+}
+/**
+ * A reference to an item elsewhere in the Pack, typically another row in the same sync
+ * table but also potentially a row in another sync table.
+ *
+ * This is specifically used only outside the context of an object schema, particularly
+ * when returning permissions for a sync table row. If just returning sync table result
+ * rows where one of the row properties is a reference to a row in another table,
+ * you would just return an object with an item id and item name, since the object schema
+ * for that property already describes the table to be referenced in the Identity on that schema.
+ * Without an object schema, the identity name of the class of item being referenced must be
+ * explicitly provided.
+ *
+ * TODO(drew): Unhide this
+ * @hidden
+ */
+export interface ItemReference {
+    id: string | number;
     syncTableName: string;
+    identityName: string;
+    dynamicUrl?: string;
 }
 /**
  * This represents the different permissions in the external system.
