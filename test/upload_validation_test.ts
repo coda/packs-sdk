@@ -3153,9 +3153,10 @@ describe('Pack metadata Validation', async () => {
             properties: {
               name: {type: ValueType.String},
               value: {type: ValueType.Number},
+              attachments: {type: ValueType.Array, items: {type: ValueType.String}},
             },
             index: {
-              properties: ['name'],
+              properties: ['name', 'attachments'],
               contextProperties: ['value'],
             },
           });
@@ -3170,10 +3171,12 @@ describe('Pack metadata Validation', async () => {
               value: {type: ValueType.Number},
             },
             index: {
-              properties: [{
-                property: 'name',
-                strategy: IndexingStrategy.Raw,
-              }],
+              properties: [
+                {
+                  property: 'name',
+                  strategy: IndexingStrategy.Raw,
+                },
+              ],
             },
           });
           await validateJson(metadata);
@@ -3184,17 +3187,24 @@ describe('Pack metadata Validation', async () => {
             type: ValueType.Object,
             properties: {
               num: {type: ValueType.Number},
+              values: {type: ValueType.Array, items: {type: ValueType.Number}},
             },
             index: {
-              properties: ['num'],
+              properties: ['num', 'values'],
               contextProperties: ['value'],
             },
           });
           const err = await validateJsonAndAssertFails(metadata);
           assert.deepEqual(err.validationErrors, [
             {
-              message: 'The "properties" field name "Num" must refer to a "ValueType.String" property.',
+              message:
+                'The "properties" field name "Num" must refer to a "ValueType.String" property or a "ValueType.Array" array of "ValueType.String" properties.',
               path: 'formulas[0].schema.index.properties[0]',
+            },
+            {
+              message:
+                'The "properties" field name "Values" must refer to a "ValueType.String" property or a "ValueType.Array" array of "ValueType.String" properties.',
+              path: 'formulas[0].schema.index.properties[1]',
             },
             {
               message: 'The "contextProperties" path "Value" does not exist in the "properties" object.',
@@ -3211,10 +3221,12 @@ describe('Pack metadata Validation', async () => {
               value: {type: ValueType.Number},
             },
             index: {
-              properties: [{
-                property: 'blah',
-                strategy: IndexingStrategy.Raw,
-              }],
+              properties: [
+                {
+                  property: 'blah',
+                  strategy: IndexingStrategy.Raw,
+                },
+              ],
             },
           });
           const err = await validateJsonAndAssertFails(metadata);
@@ -4825,7 +4837,7 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           message: 'Array must contain at least 1 element(s)',
-          path: 'defaultAuthentication.scopes'
+          path: 'defaultAuthentication.scopes',
         },
       ]);
     });
@@ -4851,7 +4863,7 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           message: 'Array must contain at least 1 element(s)',
-          path: 'defaultAuthentication.scopes'
+          path: 'defaultAuthentication.scopes',
         },
       ]);
     });

@@ -1237,10 +1237,14 @@ function buildMetadataSchema({ sdkVersion }) {
             const indexedProperty = properties[i];
             const objectPath = ['index', 'properties', i];
             if (typeof indexedProperty === 'string') {
-                validatePropertyValue(indexedProperty, 'properties', indexedPropertySchema => indexedPropertySchema.type === schema_15.ValueType.String, `must refer to a "ValueType.String" property.`, objectPath);
+                validatePropertyValue(indexedProperty, 'properties', indexedPropertySchema => indexedPropertySchema.type === schema_15.ValueType.String ||
+                    (indexedPropertySchema.type === schema_15.ValueType.Array &&
+                        indexedPropertySchema.items.type === schema_15.ValueType.String), `must refer to a "ValueType.String" property or a "ValueType.Array" array of "ValueType.String" properties.`, objectPath);
             }
             else {
-                validatePropertyValue(indexedProperty.property, 'properties', indexedPropertySchema => indexedPropertySchema.type === schema_15.ValueType.String, `must refer to a "ValueType.String" property.`, [...objectPath, 'property']);
+                validatePropertyValue(indexedProperty.property, 'properties', indexedPropertySchema => indexedPropertySchema.type === schema_15.ValueType.String ||
+                    (indexedPropertySchema.type === schema_15.ValueType.Array &&
+                        indexedPropertySchema.items.type === schema_15.ValueType.String), `must refer to a "ValueType.String" property or a "ValueType.Array" array of "ValueType.String" properties.`, [...objectPath, 'property']);
             }
         }
         if (contextProperties) {
