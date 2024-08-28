@@ -79,7 +79,7 @@ Each Pack is its own [serverless application][wikipedia_serverless], fully manag
 
 All Pack code is run on the server, ensuring a consistent and secure environment. Each execution of a Pack can run for at most a minute, but there are features that allow for longer running operations.
 
-Unlike other scripting languages, Packs don't automatically have access to all the data the doc they are used in. Instead users pass the Pack only the specific parameters it requires. Packs can then make requests to external APIs to fetch more data, including our own [Coda API][api].
+Unlike other scripting languages, Packs don't automatically have access to all of the data within the doc. Instead users pass the Pack only the specific parameters it requires. Packs can then make requests to external APIs to fetch more data, including our own [Coda API][api].
 
 ``` mermaid
 sequenceDiagram
