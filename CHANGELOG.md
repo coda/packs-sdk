@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Changed
+
+- Internal Changes relating to permissions
+
 ## [1.7.12] - 2024-08-26
 
 ### Changed
