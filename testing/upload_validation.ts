@@ -580,8 +580,10 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     }),
     [AuthenticationType.OAuth2]: zodCompleteStrictObject<OAuth2Authentication>({
       type: zodDiscriminant(AuthenticationType.OAuth2),
-      authorizationUrl: z.string().url(),
-      tokenUrl: z.string().url(),
+      /** Accepts relative URLs when requiresEndpointUrl is true. */
+      authorizationUrl: z.string(),
+      /** Accepts relative URLs when requiresEndpointUrl is true. */
+      tokenUrl: z.string(),
       scopes: z.array(z.string()).optional(),
       scopeDelimiter: z.enum([' ', ',', ';']).optional(),
       tokenPrefix: z.string().optional(),
