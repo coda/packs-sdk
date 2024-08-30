@@ -6,7 +6,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ### Added
 
-- Internal change to execute response
+- Internal change to completion
 
 ## [1.7.13] - 2024-08-29
 
