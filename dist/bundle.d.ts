@@ -844,7 +844,7 @@ export interface SyncCompletionMetadata {
 	 * TODO(sam): Unhide this
 	 * @hidden
 	 */
-	resultsAreIncomplete?: boolean;
+	hasIncompleteResults?: boolean;
 }
 /**
  * The set of primitive value types that can be used as return values for formulas

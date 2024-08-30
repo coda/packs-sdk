@@ -1033,5 +1033,5 @@ export interface SyncCompletionMetadata {
    * TODO(sam): Unhide this
    * @hidden
    */
-  resultsAreIncomplete?: boolean;
+  hasIncompleteResults?: boolean;
 }
