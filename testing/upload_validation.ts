@@ -1269,6 +1269,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       userIdProperty: propertySchema.optional(),
       userEmailProperty: propertySchema.optional(),
       groupIdProperty: propertySchema.optional(),
+      parentGroupIdProperty: propertySchema.optional(),
       bodyTextProperty: propertySchema.optional(),
       popularityRankProperty: propertySchema.optional(),
       options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),

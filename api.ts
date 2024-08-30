@@ -1035,7 +1035,7 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
 
   /**
    * Return the list of deleted item ids for incremental sync deletion.
-   * 
+   *
    * TODO(ebo): Unhide this
    * @hidden
    */
@@ -2336,6 +2336,12 @@ export function makeSyncTable<
 
     if (!schemaDef.userIdProperty) {
       throw new Error(`Sync table schemas with role ${TableRole.GroupMembers} must set a userIdProperty`);
+    }
+  }
+
+  if (role === TableRole.Groups) {
+    if (!schemaDef.groupIdProperty) {
+      throw new Error(`Sync table schemas with role ${TableRole.Groups} must set a groupIdProperty`);
     }
   }
 

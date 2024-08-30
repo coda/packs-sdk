@@ -5173,5 +5173,70 @@ describe('Pack metadata Validation', async () => {
         await validateJsonAndAssertFails(metadata);
       });
     });
+
+    describe('TableRole: Groups', () => {
+      it('Succeeds when all required fields are present', async () => {
+        const syncTable = makeSyncTable({
+          name: 'Groups',
+          identityName: 'Groups',
+          role: TableRole.Groups,
+          schema: makeObjectSchema({
+            idProperty: 'id',
+            displayProperty: 'id',
+            groupIdProperty: 'id',
+            properties: {
+              id: {type: ValueType.String},
+            },
+          }),
+          formula: {
+            name: 'Groups',
+            description: '',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            examples: [],
+          },
+        });
+        const metadata = createFakePackVersionMetadata(
+          compilePackMetadata({
+            version: '1',
+            syncTables: [syncTable],
+            defaultAuthentication: {
+              type: AuthenticationType.None,
+            },
+          }),
+        );
+        await doValidateJson(metadata);
+      });
+
+      it('Fail when required fields are missing', async () => {
+        assert.throws(
+          () =>
+            makeSyncTable({
+              name: 'Groups',
+              identityName: 'Groups',
+              role: TableRole.Groups,
+              schema: makeObjectSchema({
+                idProperty: 'id',
+                groupIdProperty: 'id',
+                properties: {
+                  id: {type: ValueType.String},
+                },
+              }),
+              formula: {
+                name: 'Groups',
+                description: '',
+                async execute([], _context) {
+                  return {result: []};
+                },
+                parameters: [],
+                examples: [],
+              },
+            }),
+          'Sync table schemas with role groupMembers must set a userIdProperty',
+        );
+      });
+    });
   });
 });

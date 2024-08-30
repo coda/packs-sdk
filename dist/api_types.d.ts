@@ -848,7 +848,8 @@ export type PropertyOptionsMetadataResult<ResultT extends PackFormulaResult[]> =
 export type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]> = (context: PropertyOptionsExecutionContext) => Promise<PropertyOptionsMetadataResult<ResultT>> | PropertyOptionsMetadataResult<ResultT>;
 export declare enum TableRole {
     Users = "users",
-    GroupMembers = "groupMembers"
+    GroupMembers = "groupMembers",
+    Groups = "groups"
 }
 /** @hidden */
 export interface SyncCompletionMetadata {

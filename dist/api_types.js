@@ -308,4 +308,5 @@ var TableRole;
 (function (TableRole) {
     TableRole["Users"] = "users";
     TableRole["GroupMembers"] = "groupMembers";
+    TableRole["Groups"] = "groups";
 })(TableRole || (exports.TableRole = TableRole = {}));

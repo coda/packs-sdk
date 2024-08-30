@@ -1137,13 +1137,26 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      * {@link ObjectSchemaDefinition.properties} that identifies the id of the group in the service
      * being synced from.
      *
-     * This is required for sync tables with role {@link TableRole.GroupMembers}
+     * This is required for sync tables with role {@link TableRole.GroupMembers} or {@link TableRole.Groups}
      *
      * Must be a {@link ValueType.String} or {@link ValueType.Number} property
      * TODO(sam): Unhide this
      * @hidden
      */
     groupIdProperty?: PropertyIdentifier<K>;
+    /**
+     * For cases where the object being synced represents a nested group, the name of the property within
+     * {@link ObjectSchemaDefinition.properties} that represents a unique id for a parent group of this object
+     *
+     * This is optional for sync tables with role {@link TableRole.Groups}
+     *
+     * Currently we do not honor nested groups at query time but this is a placeholder for future support
+     *
+     * Must be a {@link ValueType.String} or {@link ValueType.Number} property
+     * TODO(sam): Unhide this
+     * @hidden
+     */
+    parentGroupIdProperty?: PropertyIdentifier<K>;
     /**
      * The name of a property within {@link ObjectSchemaDefinition.properties} that represents a unique id for a
      * parent entity for the object. It is recommended for sync table schemas with a bodyTextProperty to specify an
