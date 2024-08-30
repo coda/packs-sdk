@@ -836,6 +836,15 @@ export interface SyncCompletionMetadata {
 	 * next sync execution.
 	 */
 	incrementalContinuation?: Continuation;
+	/**
+	 * Returned by an incremental sync if the results are incomplete. Will be ignored during a full sync.
+	 *
+	 * This will trigger a full sync so that complete results can be obtained.
+	 *
+	 * TODO(sam): Unhide this
+	 * @hidden
+	 */
+	hasIncompleteResults?: boolean;
 }
 /**
  * The set of primitive value types that can be used as return values for formulas
