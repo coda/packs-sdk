@@ -1035,11 +1035,21 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
 
   /**
    * Return the list of deleted item ids for incremental sync deletion.
-   * 
+   *
    * TODO(ebo): Unhide this
    * @hidden
    */
   deletedItemIds?: string[];
+
+  /**
+   * Returned by an incremental sync if a full sync is needed to recalculate the items.
+   *
+   * This will trigger a full sync so it should be avoided when possible
+   *
+   * TODO(sam): Unhide this
+   * @hidden
+   */
+  triggerFullSync?: boolean;
 }
 
 /**
