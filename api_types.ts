@@ -742,7 +742,7 @@ export interface Sync {
 
   // TODO(patrick): Unhide this
   /** @hidden */
-  previousCompletion?: SyncCompletionMetadata;
+  incrementalContinuation?: Continuation;
 
   /**
    * The schema of this sync table, if this is a dynamic sync table. It may be useful to have
@@ -1018,20 +1018,4 @@ export enum TableRole {
 
 // TODO(patrick): Unhide this
 /** @hidden */
-export interface SyncCompletionMetadata {
-  /**
-   * For enabling incremental syncs. If your sync execution provides this, then Coda will provide it to the
-   * next sync execution.
-   */
-  incrementalContinuation?: Continuation;
-
-  /**
-   * Returned by an incremental sync if the results are incomplete. Will be ignored during a full sync.
-   *
-   * This will trigger a full sync so that complete results can be obtained.
-   *
-   * TODO(sam): Unhide this
-   * @hidden
-   */
-  hasIncompleteResults?: boolean;
-}
+export interface SyncCompletionMetadata {}

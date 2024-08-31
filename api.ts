@@ -35,7 +35,6 @@ import type {Schema} from './schema';
 import type {SchemaType} from './schema';
 import type {StringHintTypes} from './schema';
 import type {StringSchema} from './schema';
-import type {SyncCompletionMetadata} from './api_types';
 import type {SyncExecutionContext} from './api_types';
 import {TableRole} from './api_types';
 import {Type} from './api_types';
@@ -1023,15 +1022,30 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
   continuation?: Continuation;
 
   /**
-   * Once there is no additional continuation returned from a pack sync formula, this may be returned instead, to give
-   * metadata about the entirety of the sync execution.
+   * For enabling incremental syncs. If your sync execution provides this, then Coda will begin a parallel,
+   * more frequent incremental crawl, invoking your `execute` function with this value.
    *
-   * This is ignored if there is also a {@link continuation} on this object.
+   * Ideally, you return this value once and only once, in the first invocation of your full sync (when
+   * there is no `continuation` provided to your `execute` function). If you return an `incrementalContinuation`
+   * from a subsequent continuation, it will be ignored.
    *
-   * TODO(patrick): Unhide this
    * @hidden
    */
-  completion?: SyncCompletionMetadata;
+  incrementalContinuation?: Continuation;
+
+  /**
+   * Returned by an incremental sync if the results are incomplete. Will be ignored during a full sync.
+   *
+   * This will trigger a full sync so that complete results can be obtained. But by itself, it will not
+   * stop additional incremental syncs from running, so that the existing data can remain fresh, if
+   * incomplete, while that separate full sync runs.
+   *
+   * If you want to fully stop subsequent incremental sync attempts on this crawl, throw a TKTK error.
+   *
+   * TODO(sam): Unhide this
+   * @hidden
+   */
+  hasIncompleteResults?: boolean;
 
   /**
    * Return the list of deleted item ids for incremental sync deletion.
