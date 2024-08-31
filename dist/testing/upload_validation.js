@@ -453,8 +453,10 @@ function buildMetadataSchema({ sdkVersion }) {
         }),
         [types_1.AuthenticationType.OAuth2]: zodCompleteStrictObject({
             type: zodDiscriminant(types_1.AuthenticationType.OAuth2),
-            authorizationUrl: z.string().url(),
-            tokenUrl: z.string().url(),
+            /** Accepts relative URLs when requiresEndpointUrl is true. */
+            authorizationUrl: z.string(),
+            /** Accepts relative URLs when requiresEndpointUrl is true. */
+            tokenUrl: z.string(),
             scopes: z.array(z.string()).optional(),
             scopeDelimiter: z.enum([' ', ',', ';']).optional(),
             tokenPrefix: z.string().optional(),
@@ -467,6 +469,25 @@ function buildMetadataSchema({ sdkVersion }) {
             nestedResponseKey: z.string().optional(),
             credentialsLocation: z.nativeEnum(types_5.TokenExchangeCredentialsLocation).optional(),
             ...baseAuthenticationValidators,
+        }).superRefine(({ requiresEndpointUrl, authorizationUrl, tokenUrl }, context) => {
+            const isRelativeUrl = (url) => url.startsWith('/');
+            const isAbsoluteUrl = (url) => url.startsWith('https://');
+            const addIssue = (property) => {
+                const expectedType = requiresEndpointUrl ? 'a relative' : 'an absolute';
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: [property],
+                    message: `${property} must be ${expectedType} URL when requiresEndpointUrl is \
+${requiresEndpointUrl !== null && requiresEndpointUrl !== void 0 ? requiresEndpointUrl : 'not true'}`,
+                });
+            };
+            if ((requiresEndpointUrl && !isRelativeUrl(authorizationUrl)) ||
+                (!requiresEndpointUrl && !isAbsoluteUrl(authorizationUrl))) {
+                addIssue('authorizationUrl');
+            }
+            if ((requiresEndpointUrl && !isRelativeUrl(tokenUrl)) || (!requiresEndpointUrl && !isAbsoluteUrl(tokenUrl))) {
+                addIssue('tokenUrl');
+            }
         }),
         [types_1.AuthenticationType.OAuth2ClientCredentials]: zodCompleteStrictObject({
             type: zodDiscriminant(types_1.AuthenticationType.OAuth2ClientCredentials),

@@ -596,6 +596,28 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       nestedResponseKey: z.string().optional(),
       credentialsLocation: z.nativeEnum(TokenExchangeCredentialsLocation).optional(),
       ...baseAuthenticationValidators,
+    }).superRefine(({requiresEndpointUrl, authorizationUrl, tokenUrl}, context) => {
+      const isRelativeUrl = (url: string) => url.startsWith('/');
+      const isAbsoluteUrl = (url: string) => url.startsWith('https://');
+      const addIssue = (property: string) => {
+        const expectedType = requiresEndpointUrl ? 'a relative' : 'an absolute';
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: [property],
+          message: `${property} must be ${expectedType} URL when requiresEndpointUrl is \
+${requiresEndpointUrl ?? 'not true'}`,
+        });
+      };
+
+      if (
+        (requiresEndpointUrl && !isRelativeUrl(authorizationUrl)) ||
+        (!requiresEndpointUrl && !isAbsoluteUrl(authorizationUrl))
+      ) {
+        addIssue('authorizationUrl');
+      }
+      if ((requiresEndpointUrl && !isRelativeUrl(tokenUrl)) || (!requiresEndpointUrl && !isAbsoluteUrl(tokenUrl))) {
+        addIssue('tokenUrl');
+      }
     }),
     [AuthenticationType.OAuth2ClientCredentials]: zodCompleteStrictObject<OAuth2ClientCredentialsAuthentication>({
       type: zodDiscriminant(AuthenticationType.OAuth2ClientCredentials),

@@ -29,6 +29,7 @@ import {Type} from '../api_types';
 import {ValueHintType} from '../schema';
 import {ValueType} from '../schema';
 import {_hasCycle} from '../testing/upload_validation';
+import {assertCondition} from '..';
 import {compilePackMetadata} from '../helpers/metadata';
 import {createFakePack} from './test_utils';
 import {createFakePackFormulaMetadata} from './test_utils';
@@ -4000,7 +4001,7 @@ describe('Pack metadata Validation', async () => {
       await validateJson(metadata);
     });
 
-    it('OAuth2, errors', async () => {
+    it('OAuth2, invalid auth or token URLs', async () => {
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
           type: AuthenticationType.OAuth2,
@@ -4011,14 +4012,67 @@ describe('Pack metadata Validation', async () => {
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          message: 'Invalid url',
+          message: 'authorizationUrl must be an absolute URL when requiresEndpointUrl is not true',
           path: 'defaultAuthentication.authorizationUrl',
         },
         {
-          message: 'Invalid url',
+          message: 'tokenUrl must be an absolute URL when requiresEndpointUrl is not true',
           path: 'defaultAuthentication.tokenUrl',
         },
       ]);
+    });
+
+    it('OAuth2, requiresEndpointUrl requires relative URLs', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.OAuth2,
+          authorizationUrl: 'https://example.com/authUrl',
+          tokenUrl: 'https://example.com/tokenUrl',
+          requiresEndpointUrl: true,
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: 'authorizationUrl must be a relative URL when requiresEndpointUrl is true',
+          path: 'defaultAuthentication.authorizationUrl',
+        },
+        {
+          message: 'tokenUrl must be a relative URL when requiresEndpointUrl is true',
+          path: 'defaultAuthentication.tokenUrl',
+        },
+      ]);
+
+      assertCondition(metadata.defaultAuthentication?.type === AuthenticationType.OAuth2);
+      metadata.defaultAuthentication.authorizationUrl = '/authUrl';
+      metadata.defaultAuthentication.tokenUrl = '/tokenUrl';
+      await validateJson(metadata);
+    });
+
+    it('OAuth2, no requiresEndpointUrl requires absolute URLs', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.OAuth2,
+          authorizationUrl: '/authUrl',
+          tokenUrl: '/tokenUrl',
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: 'authorizationUrl must be an absolute URL when requiresEndpointUrl is not true',
+          path: 'defaultAuthentication.authorizationUrl',
+        },
+        {
+          message: 'tokenUrl must be an absolute URL when requiresEndpointUrl is not true',
+          path: 'defaultAuthentication.tokenUrl',
+        },
+      ]);
+
+      assertCondition(metadata.defaultAuthentication?.type === AuthenticationType.OAuth2);
+      metadata.defaultAuthentication.authorizationUrl = 'https://example.com/authUrl';
+      metadata.defaultAuthentication.tokenUrl = 'https://example.com/tokenUrl';
+      await validateJson(metadata);
     });
 
     it('WebBasic', async () => {
