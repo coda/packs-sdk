@@ -710,7 +710,7 @@ export interface TemporaryBlobStorage {
   storeUrl(
     url: string,
     opts?: {expiryMs?: number; downloadFilename?: string; contentType?: string},
-    fetchOpts?: Pick<FetchRequest, 'disableAuthentication'>,
+    fetchOpts?: Pick<FetchRequest, 'disableAuthentication' | 'headers'>,
   ): Promise<string>;
   /**
    * Stores the given data as a file with the given content type in Coda-hosted temporary storage.
