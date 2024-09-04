@@ -614,6 +614,11 @@ export interface Sync {
 	 * {@link core.MetadataContext} The parameters of the sync formula for the sync table.
 	 */
 	readonly parameters?: MetadataContext;
+	/**
+	 * TODO(patrick): Unhide this
+	 * @hidden
+	 */
+	isPermissionAwareSync?: boolean;
 }
 /**
  * Information about the current sync, part of the {@link UpdateSyncExecutionContext} passed to the
