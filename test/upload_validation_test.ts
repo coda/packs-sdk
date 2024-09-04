@@ -4049,6 +4049,34 @@ describe('Pack metadata Validation', async () => {
       await validateJson(metadata);
     });
 
+    it('OAuth2, requiresEndpointUrl and endpointKey requires absolute URLs', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.OAuth2,
+          authorizationUrl: '/authUrl',
+          tokenUrl: '/tokenUrl',
+          requiresEndpointUrl: true,
+          endpointKey: 'some-key',
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: 'authorizationUrl must be an absolute URL when endpointKey is set',
+          path: 'defaultAuthentication.authorizationUrl',
+        },
+        {
+          message: 'tokenUrl must be an absolute URL when endpointKey is set',
+          path: 'defaultAuthentication.tokenUrl',
+        },
+      ]);
+
+      assertCondition(metadata.defaultAuthentication?.type === AuthenticationType.OAuth2);
+      metadata.defaultAuthentication.authorizationUrl = 'https://example.com/authUrl';
+      metadata.defaultAuthentication.tokenUrl = 'https://example.com/tokenUrl';
+      await validateJson(metadata);
+    });
+
     it('OAuth2, no requiresEndpointUrl requires absolute URLs', async () => {
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {

@@ -596,26 +596,27 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       nestedResponseKey: z.string().optional(),
       credentialsLocation: z.nativeEnum(TokenExchangeCredentialsLocation).optional(),
       ...baseAuthenticationValidators,
-    }).superRefine(({requiresEndpointUrl, authorizationUrl, tokenUrl}, context) => {
+    }).superRefine(({requiresEndpointUrl, endpointKey, authorizationUrl, tokenUrl}, context) => {
+      const expectsRelativeUrl = requiresEndpointUrl && !endpointKey;
       const isRelativeUrl = (url: string) => url.startsWith('/');
       const isAbsoluteUrl = (url: string) => url.startsWith('https://');
       const addIssue = (property: string) => {
-        const expectedType = requiresEndpointUrl ? 'a relative' : 'an absolute';
+        const expectedType = expectsRelativeUrl ? 'a relative' : 'an absolute';
         context.addIssue({
           code: z.ZodIssueCode.custom,
           path: [property],
-          message: `${property} must be ${expectedType} URL when requiresEndpointUrl is \
-${requiresEndpointUrl ?? 'not true'}`,
+          message: `${property} must be ${expectedType} URL when \
+${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpointUrl ?? 'not true'}`}`,
         });
       };
 
       if (
-        (requiresEndpointUrl && !isRelativeUrl(authorizationUrl)) ||
-        (!requiresEndpointUrl && !isAbsoluteUrl(authorizationUrl))
+        (expectsRelativeUrl && !isRelativeUrl(authorizationUrl)) ||
+        (!expectsRelativeUrl && !isAbsoluteUrl(authorizationUrl))
       ) {
         addIssue('authorizationUrl');
       }
-      if ((requiresEndpointUrl && !isRelativeUrl(tokenUrl)) || (!requiresEndpointUrl && !isAbsoluteUrl(tokenUrl))) {
+      if ((expectsRelativeUrl && !isRelativeUrl(tokenUrl)) || (!expectsRelativeUrl && !isAbsoluteUrl(tokenUrl))) {
         addIssue('tokenUrl');
       }
     }),
