@@ -587,6 +587,10 @@ export interface TemporaryBlobStorage {
 		downloadFilename?: string;
 	}): Promise<string>;
 }
+declare enum BrainSyncType {
+	Individual = "Individual",
+	PermissionAware = "PermissionAware"
+}
 /**
  * Information about the current sync, part of the {@link SyncExecutionContext} passed to the
  * `execute` function of every sync formula.
@@ -615,10 +619,12 @@ export interface Sync {
 	 */
 	readonly parameters?: MetadataContext;
 	/**
+	 * This is only populated when `context.invocationLocation.source === InvocationSource.Brain`.
+	 *
 	 * TODO(patrick): Unhide this
 	 * @hidden
 	 */
-	isPermissionAwareSync?: boolean;
+	syncType?: BrainSyncType;
 }
 /**
  * Information about the current sync, part of the {@link UpdateSyncExecutionContext} passed to the
@@ -633,10 +639,25 @@ export type UpdateSync = Omit<Sync, "continuation">;
  * @hidden
  */
 export type GetPermissionsSync = Omit<Sync, "continuation">;
+declare enum InvocationSource {
+	Brain = "Brain",
+	Doc = "Doc",
+	NativeIntegration = "NativeIntegration"
+}
 /**
  * Information about the Coda environment and doc this formula was invoked from, for Coda internal use.
  */
 export interface InvocationLocation {
+	/**
+	 * What part of the product is invoking this formula? Certain pack functionality
+	 * may not be necessary (or feasible) in certain contexts.
+	 *
+	 * TODO(patrick): Make this non-optional after implementing support in Coda.
+	 *
+	 * TODO(patrick): Unhide this
+	 * @hidden
+	 */
+	source?: InvocationSource;
 	/** The base URL of the Coda environment executing this formula. Only for Coda internal use. */
 	protocolAndHost: string;
 	/**
