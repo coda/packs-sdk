@@ -587,8 +587,8 @@ export interface TemporaryBlobStorage {
 		downloadFilename?: string;
 	}): Promise<string>;
 }
-declare enum BrainSyncType {
-	Individual = "Individual",
+declare enum PermissionSyncMode {
+	Personal = "Personal",
 	PermissionAware = "PermissionAware"
 }
 /**
@@ -624,7 +624,7 @@ export interface Sync {
 	 * TODO(patrick): Unhide this
 	 * @hidden
 	 */
-	syncType?: BrainSyncType;
+	permissionSyncMode?: PermissionSyncMode;
 }
 /**
  * Information about the current sync, part of the {@link UpdateSyncExecutionContext} passed to the

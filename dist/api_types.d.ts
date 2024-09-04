@@ -604,8 +604,8 @@ export interface TemporaryBlobStorage {
  * TODO(patrick): Unhide this
  * @hidden
  */
-export declare enum BrainSyncType {
-    Individual = "Individual",
+export declare enum PermissionSyncMode {
+    Personal = "Personal",
     PermissionAware = "PermissionAware"
 }
 /**
@@ -641,7 +641,7 @@ export interface Sync {
      * TODO(patrick): Unhide this
      * @hidden
      */
-    syncType?: BrainSyncType;
+    permissionSyncMode?: PermissionSyncMode;
 }
 /**
  * Information about the current sync, part of the {@link UpdateSyncExecutionContext} passed to the
