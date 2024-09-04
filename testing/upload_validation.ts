@@ -580,8 +580,10 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     }),
     [AuthenticationType.OAuth2]: zodCompleteStrictObject<OAuth2Authentication>({
       type: zodDiscriminant(AuthenticationType.OAuth2),
-      authorizationUrl: z.string().url(),
-      tokenUrl: z.string().url(),
+      /** Accepts relative URLs when requiresEndpointUrl is true. */
+      authorizationUrl: z.string(),
+      /** Accepts relative URLs when requiresEndpointUrl is true. */
+      tokenUrl: z.string(),
       scopes: z.array(z.string()).optional(),
       scopeDelimiter: z.enum([' ', ',', ';']).optional(),
       tokenPrefix: z.string().optional(),
@@ -594,6 +596,29 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       nestedResponseKey: z.string().optional(),
       credentialsLocation: z.nativeEnum(TokenExchangeCredentialsLocation).optional(),
       ...baseAuthenticationValidators,
+    }).superRefine(({requiresEndpointUrl, endpointKey, authorizationUrl, tokenUrl}, context) => {
+      const expectsRelativeUrl = requiresEndpointUrl && !endpointKey;
+      const isRelativeUrl = (url: string) => url.startsWith('/');
+      const isAbsoluteUrl = (url: string) => url.startsWith('https://');
+      const addIssue = (property: string) => {
+        const expectedType = expectsRelativeUrl ? 'a relative' : 'an absolute';
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: [property],
+          message: `${property} must be ${expectedType} URL when \
+${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpointUrl ?? 'not true'}`}`,
+        });
+      };
+
+      if (
+        (expectsRelativeUrl && !isRelativeUrl(authorizationUrl)) ||
+        (!expectsRelativeUrl && !isAbsoluteUrl(authorizationUrl))
+      ) {
+        addIssue('authorizationUrl');
+      }
+      if ((expectsRelativeUrl && !isRelativeUrl(tokenUrl)) || (!expectsRelativeUrl && !isAbsoluteUrl(tokenUrl))) {
+        addIssue('tokenUrl');
+      }
     }),
     [AuthenticationType.OAuth2ClientCredentials]: zodCompleteStrictObject<OAuth2ClientCredentialsAuthentication>({
       type: zodDiscriminant(AuthenticationType.OAuth2ClientCredentials),
