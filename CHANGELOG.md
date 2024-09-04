@@ -4,9 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
-### Added
+### Changed
 
 - Internal change to completion
+- Updated `fetchOpts` in `TemporaryBlobStorage.storeUrl` to allow setting `headers` for the fetch.
 
 ## [1.7.13] - 2024-08-29
 

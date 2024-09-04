@@ -571,7 +571,7 @@ export interface TemporaryBlobStorage {
 		expiryMs?: number;
 		downloadFilename?: string;
 		contentType?: string;
-	}, fetchOpts?: Pick<FetchRequest, "disableAuthentication">): Promise<string>;
+	}, fetchOpts?: Pick<FetchRequest, "disableAuthentication" | "headers">): Promise<string>;
 	/**
 	 * Stores the given data as a file with the given content type in Coda-hosted temporary storage.
 	 * Returns a URL for the temporary file that you should return in your formula response.
