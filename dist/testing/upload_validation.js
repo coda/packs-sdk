@@ -469,23 +469,24 @@ function buildMetadataSchema({ sdkVersion }) {
             nestedResponseKey: z.string().optional(),
             credentialsLocation: z.nativeEnum(types_5.TokenExchangeCredentialsLocation).optional(),
             ...baseAuthenticationValidators,
-        }).superRefine(({ requiresEndpointUrl, authorizationUrl, tokenUrl }, context) => {
+        }).superRefine(({ requiresEndpointUrl, endpointKey, authorizationUrl, tokenUrl }, context) => {
+            const expectsRelativeUrl = requiresEndpointUrl && !endpointKey;
             const isRelativeUrl = (url) => url.startsWith('/');
             const isAbsoluteUrl = (url) => url.startsWith('https://');
             const addIssue = (property) => {
-                const expectedType = requiresEndpointUrl ? 'a relative' : 'an absolute';
+                const expectedType = expectsRelativeUrl ? 'a relative' : 'an absolute';
                 context.addIssue({
                     code: z.ZodIssueCode.custom,
                     path: [property],
-                    message: `${property} must be ${expectedType} URL when requiresEndpointUrl is \
-${requiresEndpointUrl !== null && requiresEndpointUrl !== void 0 ? requiresEndpointUrl : 'not true'}`,
+                    message: `${property} must be ${expectedType} URL when \
+${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpointUrl !== null && requiresEndpointUrl !== void 0 ? requiresEndpointUrl : 'not true'}`}`,
                 });
             };
-            if ((requiresEndpointUrl && !isRelativeUrl(authorizationUrl)) ||
-                (!requiresEndpointUrl && !isAbsoluteUrl(authorizationUrl))) {
+            if ((expectsRelativeUrl && !isRelativeUrl(authorizationUrl)) ||
+                (!expectsRelativeUrl && !isAbsoluteUrl(authorizationUrl))) {
                 addIssue('authorizationUrl');
             }
-            if ((requiresEndpointUrl && !isRelativeUrl(tokenUrl)) || (!requiresEndpointUrl && !isAbsoluteUrl(tokenUrl))) {
+            if ((expectsRelativeUrl && !isRelativeUrl(tokenUrl)) || (!expectsRelativeUrl && !isAbsoluteUrl(tokenUrl))) {
                 addIssue('tokenUrl');
             }
         }),
