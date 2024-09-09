@@ -224,8 +224,8 @@ importers:
         specifier: 6.21.0
         version: 6.21.0(eslint@8.57.0)(typescript@5.1.6)
       aws-sdk:
-        specifier: 2.1665.0
-        version: 2.1665.0
+        specifier: 2.1691.0
+        version: 2.1691.0
       chai:
         specifier: 4.4.1
         version: 4.4.1
@@ -2149,7 +2149,7 @@ packages:
     resolution: {integrity: sha512-bF6brnwPN9+kheqdKCpinMgCkj+sJIUEj+0v0LPug9OQwL5/1jy+kiJwl+Nkw4Kh+7oaL1phhC4gMz6Oq60jMg==}
     deprecated: This is a stub types definition for aws-sdk (https://github.com/aws/aws-sdk-js). aws-sdk provides its own type definitions, so you don't need @types/aws-sdk installed!
     dependencies:
-      aws-sdk: 2.1665.0
+      aws-sdk: 2.1691.0
     dev: true
 
   /@types/body-parser@1.19.2:
@@ -2981,8 +2981,8 @@ packages:
     resolution: {integrity: sha512-SA5mXJWrId1TaQjfxUYghbqQ/hYioKmLJvPJyDuYRtXXenFNMjj4hSSt1Cf1xsuXSXrtxrVC5Ot4eU6cOtBDdA==}
     engines: {node: '>= 0.4'}
 
-  /aws-sdk@2.1665.0:
-    resolution: {integrity: sha512-IhEcdGmiplF3l/pCROxEYIdi0s+LZ2VkbMAq3RgoXTHxY5cgqVRNaqsEsgIHev2Clxa9V08HttnIERTIUqb1+Q==}
+  /aws-sdk@2.1691.0:
+    resolution: {integrity: sha512-/F2YC+DlsY3UBM2Bdnh5RLHOPNibS/+IcjUuhP8XuctyrN+MlL+fWDAiela32LTDk7hMy4rx8MTgvbJ+0blO5g==}
     engines: {node: '>= 10.0.0'}
     requiresBuild: true
     dependencies:
@@ -4127,7 +4127,6 @@ packages:
   /diff@5.2.0:
     resolution: {integrity: sha512-uIFDxqpRZGZ6ThOk84hEfqWoHx2devRFvpTZcTHur85vImfaxUbTW9Ryh4CpCuDnToOP1CEtXKIgytHBPVff5A==}
     engines: {node: '>=0.3.1'}
-    dev: false
 
   /diffie-hellman@5.0.3:
     resolution: {integrity: sha512-kqag/Nl+f3GwyK25fhUMYj81BUOrZ9IuJsjIcDE5icNM9FJHAVm3VcUDxdLPoQtTuUylWm6ZIknYJwwaPxsUzg==}
