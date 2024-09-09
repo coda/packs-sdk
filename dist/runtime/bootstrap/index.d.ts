@@ -47,7 +47,7 @@ export declare function injectSerializer(context: Context, stubName: string): Pr
 /**
  * Injects the ExecutionContext object, including stubs for network calls, into the isolate.
  */
-export declare function injectExecutionContext({ context, fetcher, temporaryBlobStorage, logger, endpoint, invocationLocation, timezone, invocationToken, sync, }: {
+export declare function injectExecutionContext({ context, fetcher, temporaryBlobStorage, logger, endpoint, invocationLocation, timezone, invocationToken, sync, executionId, }: {
     context: Context;
     fetcher: Fetcher;
     temporaryBlobStorage: TemporaryBlobStorage;
@@ -57,6 +57,7 @@ export declare function injectExecutionContext({ context, fetcher, temporaryBlob
     timezone: string;
     invocationToken?: string;
     sync?: Sync;
+    executionId?: string;
 }): Promise<void>;
 export declare function registerBundle(isolate: Isolate, context: Context, path: string, stubName: string, requiresManualClosure?: boolean): Promise<void>;
 export declare function registerBundles(isolate: Isolate, context: Context, packBundlePath: string, thunkBundlePath: string, requiresManualClosure?: boolean): Promise<void>;

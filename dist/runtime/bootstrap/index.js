@@ -149,7 +149,7 @@ exports.injectSerializer = injectSerializer;
 /**
  * Injects the ExecutionContext object, including stubs for network calls, into the isolate.
  */
-async function injectExecutionContext({ context, fetcher, temporaryBlobStorage, logger, endpoint, invocationLocation, timezone, invocationToken, sync, }) {
+async function injectExecutionContext({ context, fetcher, temporaryBlobStorage, logger, endpoint, invocationLocation, timezone, invocationToken, sync, executionId, }) {
     // Inject all of the primitives into a global we'll access when we execute the pack function.
     const executionContextPrimitives = {
         fetcher: {},
@@ -160,6 +160,7 @@ async function injectExecutionContext({ context, fetcher, temporaryBlobStorage, 
         timezone,
         invocationToken,
         sync,
+        executionId,
     };
     await context.global.set('executionContext', executionContextPrimitives, { copy: true });
     await context.global.set('console', {}, { copy: true });
