@@ -232,6 +232,7 @@ export async function injectExecutionContext({
   timezone,
   invocationToken,
   sync,
+  executionId,
 }: {
   context: Context;
   fetcher: Fetcher;
@@ -242,6 +243,7 @@ export async function injectExecutionContext({
   timezone: string;
   invocationToken?: string;
   sync?: Sync;
+  executionId?: string;
 }): Promise<void> {
   // Inject all of the primitives into a global we'll access when we execute the pack function.
   const executionContextPrimitives = {
@@ -253,6 +255,7 @@ export async function injectExecutionContext({
     timezone,
     invocationToken,
     sync,
+    executionId,
   };
 
   await context.global.set('executionContext', executionContextPrimitives, {copy: true});
