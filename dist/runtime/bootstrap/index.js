@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getThunkPath = exports.registerBundles = exports.registerBundle = exports.injectExecutionContext = exports.injectSerializer = exports.executeThunk = exports.injectFetcherFunction = exports.injectLogFunction = exports.injectAsyncFunction = exports.createIsolateContext = exports.createIsolate = void 0;
+const ensure_1 = require("../../helpers/ensure");
 const fs_1 = __importDefault(require("fs"));
 const ivm_wrapper_1 = require("../../testing/ivm_wrapper");
 const marshaling_1 = require("../common/marshaling");
@@ -149,7 +150,8 @@ exports.injectSerializer = injectSerializer;
 /**
  * Injects the ExecutionContext object, including stubs for network calls, into the isolate.
  */
-async function injectExecutionContext({ context, fetcher, temporaryBlobStorage, logger, endpoint, invocationLocation, timezone, invocationToken, sync, }) {
+async function injectExecutionContext({ context, fetcher, temporaryBlobStorage, logger, endpoint, invocationLocation, timezone, invocationToken, sync, executionId, ...rest }) {
+    (0, ensure_1.ensureNever)();
     // Inject all of the primitives into a global we'll access when we execute the pack function.
     const executionContextPrimitives = {
         fetcher: {},
@@ -160,6 +162,7 @@ async function injectExecutionContext({ context, fetcher, temporaryBlobStorage, 
         timezone,
         invocationToken,
         sync,
+        executionId,
     };
     await context.global.set('executionContext', executionContextPrimitives, { copy: true });
     await context.global.set('console', {}, { copy: true });
