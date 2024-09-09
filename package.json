@@ -1,6 +1,6 @@
 {
   "name": "@codahq/packs-sdk",
-  "version": "1.7.15",
+  "version": "1.7.16-prerelease.1",
   "license": "MIT",
   "workspaces": [
     "dev/eslint"

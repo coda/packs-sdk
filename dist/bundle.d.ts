@@ -709,6 +709,15 @@ export interface ExecutionContext {
 	 * Information about state of the current sync. Only populated if this is a sync table formula.
 	 */
 	readonly sync?: Sync;
+	/**
+	 * If this invocation is a part of a crawling execution, like in Coda Brain, then this ID will be provided
+	 * to all invocations. That includes invocations of sync `execute` and `executeGetPermissions`, as well as
+	 * dynamic table features like `listDynamicUrls`, `getSchema`, and `getName`.
+	 *
+	 * @hidden
+	 * TODO(patrick): Unhide this
+	 */
+	readonly executionId?: string;
 }
 /**
  * Sub-class of {@link ExecutionContext} that is passed to the `execute` function of every
