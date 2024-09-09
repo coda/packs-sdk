@@ -1,19 +1,19 @@
 import type {Context} from 'isolated-vm';
+import type {ExecutionContext} from '../../api_types';
 import type {FetchRequest} from '../../api_types';
 import type {FetchResponse} from '../../api_types';
 import type {Fetcher} from '../../api_types';
 import type {FormulaSpecification} from '../types';
 import type {GenericExecuteGetPermissionsRequest} from '../../api';
-import type {InvocationLocation} from '../../api_types';
 import type {Isolate} from 'isolated-vm';
 import type {IsolateOptions} from 'isolated-vm';
 import type {Logger} from '../../api_types';
 import type {PackFunctionResponse} from '../types';
 import type {ParamDefs} from '../../api_types';
 import type {ParamValues} from '../../api_types';
-import type {Sync} from '../../api_types';
 import type {SyncUpdate} from '../../api';
 import type {TemporaryBlobStorage} from '../../api_types';
+import {ensureNever} from '../../helpers/ensure';
 import fs from 'fs';
 import {getIvm} from '../../testing/ivm_wrapper';
 import {marshalValue} from '../common/marshaling';
@@ -219,6 +219,8 @@ export async function injectSerializer(context: Context, stubName: string) {
   );
 }
 
+export type ExecutionContextPrimitives = Omit<ExecutionContext, 'fetcher' | 'temporaryBlobStorage'>;
+
 /**
  * Injects the ExecutionContext object, including stubs for network calls, into the isolate.
  */
@@ -233,18 +235,14 @@ export async function injectExecutionContext({
   invocationToken,
   sync,
   executionId,
+  ...rest
 }: {
   context: Context;
   fetcher: Fetcher;
   temporaryBlobStorage: TemporaryBlobStorage;
   logger: Logger;
-  endpoint?: string;
-  invocationLocation: InvocationLocation;
-  timezone: string;
-  invocationToken?: string;
-  sync?: Sync;
-  executionId?: string;
-}): Promise<void> {
+} & ExecutionContextPrimitives): Promise<void> {
+  ensureNever<keyof typeof rest>();
   // Inject all of the primitives into a global we'll access when we execute the pack function.
   const executionContextPrimitives = {
     fetcher: {},
