@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Changed
+
+- Added more invocation context information
+
 ## [1.7.15] - 2024-09-04
 
 ### Changed
@@ -757,5 +761,4 @@ await myHelper(context);
 [1.7.11]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.7.11
 [1.7.10]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.7.10
 [1.7.13]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.7.13
-
 [1.7.15]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.7.15
