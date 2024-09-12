@@ -32,7 +32,7 @@
     "es6-promise": "4.2.8",
     "esbuild": "0.20.1",
     "exorcist": "2.0.0",
-    "express": "4.18.2",
+    "express": "4.20.0",
     "fs-extra": "11.1.1",
     "handlebars": "4.7.8",
     "jsonpath-plus": "9.0.0",
