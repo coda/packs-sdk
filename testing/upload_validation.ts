@@ -1294,6 +1294,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       userIdProperty: propertySchema.optional(),
       userEmailProperty: propertySchema.optional(),
       groupIdProperty: propertySchema.optional(),
+      nestedGroupIdProperty: propertySchema.optional(),
       bodyTextProperty: propertySchema.optional(),
       popularityRankProperty: propertySchema.optional(),
       options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
@@ -1532,6 +1533,16 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           );
         };
 
+        const validateNestedGroupIdProperty = () => {
+          return validateProperty(
+            'nestedGroupIdProperty',
+            nestedGroupIdPropertySchema =>
+              nestedGroupIdPropertySchema.type === ValueType.String ||
+              nestedGroupIdPropertySchema.type === ValueType.Number,
+            `must refer to a "ValueType.String" or "ValueType.Number".`,
+          );
+        };
+
         const validatebodyTextProperty = () => {
           return validateProperty(
             'bodyTextProperty',
@@ -1560,6 +1571,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         validateUserEmailProperty();
         validateUserIdProperty();
         validateGroupIdProperty();
+        validateNestedGroupIdProperty();
         validatebodyTextProperty();
         validatePopularityRankProperty();
       })

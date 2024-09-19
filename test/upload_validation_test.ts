@@ -5162,6 +5162,43 @@ describe('Pack metadata Validation', async () => {
         await doValidateJson(metadata);
       });
 
+      it('Succeeds when all required fields are present nestedGroupId', async () => {
+        const syncTable = makeSyncTable({
+          name: 'GroupMembers',
+          identityName: 'GroupMembers',
+          role: TableRole.GroupMembers,
+          schema: makeObjectSchema({
+            idProperty: 'id',
+            displayProperty: 'id',
+            groupIdProperty: 'id',
+            nestedGroupIdProperty: 'nestedGroupId',
+            properties: {
+              id: {type: ValueType.String},
+              nestedGroupId: {type: ValueType.String},
+            },
+          }),
+          formula: {
+            name: 'GroupMembers',
+            description: '',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            examples: [],
+          },
+        });
+        const metadata = createFakePackVersionMetadata(
+          compilePackMetadata({
+            version: '1',
+            syncTables: [syncTable],
+            defaultAuthentication: {
+              type: AuthenticationType.None,
+            },
+          }),
+        );
+        await doValidateJson(metadata);
+      });
+
       it('Fail when required fields are missing', async () => {
         assert.throws(
           () =>
@@ -5186,7 +5223,7 @@ describe('Pack metadata Validation', async () => {
                 examples: [],
               },
             }),
-          'Sync table schemas with role groupMembers must set a userIdProperty',
+          'Sync table schemas with role groupMembers must set a userIdProperty or nestedGroupIdProperty',
         );
       });
 
