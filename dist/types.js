@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
+exports.HttpStatusCode = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
 /**
  * @deprecated
  */
@@ -206,3 +206,30 @@ var SyncInterval;
     SyncInterval["Hourly"] = "Hourly";
     SyncInterval["EveryTenMinutes"] = "EveryTenMinutes";
 })(SyncInterval || (exports.SyncInterval = SyncInterval = {}));
+var HttpStatusCode;
+(function (HttpStatusCode) {
+    HttpStatusCode[HttpStatusCode["Ok"] = 200] = "Ok";
+    HttpStatusCode[HttpStatusCode["Created"] = 201] = "Created";
+    HttpStatusCode[HttpStatusCode["Accepted"] = 202] = "Accepted";
+    HttpStatusCode[HttpStatusCode["NoContent"] = 204] = "NoContent";
+    HttpStatusCode[HttpStatusCode["MovedPermanently"] = 301] = "MovedPermanently";
+    HttpStatusCode[HttpStatusCode["RedirectFound"] = 302] = "RedirectFound";
+    HttpStatusCode[HttpStatusCode["PermanentRedirect"] = 308] = "PermanentRedirect";
+    HttpStatusCode[HttpStatusCode["BadRequest"] = 400] = "BadRequest";
+    HttpStatusCode[HttpStatusCode["Unauthorized"] = 401] = "Unauthorized";
+    HttpStatusCode[HttpStatusCode["PaymentRequired"] = 402] = "PaymentRequired";
+    HttpStatusCode[HttpStatusCode["Forbidden"] = 403] = "Forbidden";
+    HttpStatusCode[HttpStatusCode["NotFound"] = 404] = "NotFound";
+    HttpStatusCode[HttpStatusCode["NotAcceptable"] = 406] = "NotAcceptable";
+    HttpStatusCode[HttpStatusCode["Conflict"] = 409] = "Conflict";
+    HttpStatusCode[HttpStatusCode["Gone"] = 410] = "Gone";
+    HttpStatusCode[HttpStatusCode["PayloadTooLarge"] = 413] = "PayloadTooLarge";
+    HttpStatusCode[HttpStatusCode["UnprocessableEntity"] = 422] = "UnprocessableEntity";
+    HttpStatusCode[HttpStatusCode["Locked"] = 423] = "Locked";
+    HttpStatusCode[HttpStatusCode["ClientClosedRequest"] = 499] = "ClientClosedRequest";
+    HttpStatusCode[HttpStatusCode["NotImplemented"] = 501] = "NotImplemented";
+    HttpStatusCode[HttpStatusCode["TooManyRequests"] = 429] = "TooManyRequests";
+    HttpStatusCode[HttpStatusCode["InternalServer"] = 500] = "InternalServer";
+    HttpStatusCode[HttpStatusCode["BadGateway"] = 502] = "BadGateway";
+    HttpStatusCode[HttpStatusCode["ServiceUnavailable"] = 503] = "ServiceUnavailable";
+})(HttpStatusCode || (exports.HttpStatusCode = HttpStatusCode = {}));

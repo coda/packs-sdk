@@ -54,6 +54,7 @@ async function setupIvmContext(bundlePath, executionContext) {
         invocationToken: executionContext.invocationToken,
         sync: executionContext.sync,
         executionId: executionContext.executionId,
+        previousAttemptError: executionContext.previousAttemptError,
     });
     return ivmContext;
 }

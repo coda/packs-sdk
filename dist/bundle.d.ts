@@ -639,6 +639,38 @@ export type UpdateSync = Omit<Sync, "continuation">;
  * @hidden
  */
 export type GetPermissionsSync = Omit<Sync, "continuation">;
+declare enum InvocationErrorType {
+	Timeout = "Timeout",
+	ResponseTooLarge = "ResponseTooLarge",
+	HttpStatusError = "HttpStatusError",
+	/**
+	 * Could mean 3rd party API rate limit or a rate limit imposed by Coda.
+	 */
+	RateLimitExceeded = "RateLimitExceeded",
+	Unknown = "Unknown"
+}
+export interface BaseInvocationError {
+	type: InvocationErrorType;
+	message: string;
+	errorData?: object;
+}
+export type HttpStatusInvocationError = BaseInvocationError & {
+	type: InvocationErrorType.HttpStatusError;
+	statusCode: HttpStatusCode;
+};
+export type RateLimitExceededInvocationError = BaseInvocationError & {
+	type: InvocationErrorType.RateLimitExceeded;
+};
+export type TimeoutInvocationError = BaseInvocationError & {
+	type: InvocationErrorType.Timeout;
+};
+export type ResponseTooLargeInvocationError = BaseInvocationError & {
+	type: InvocationErrorType.ResponseTooLarge;
+};
+export type UnknownInvocationError = BaseInvocationError & {
+	type: InvocationErrorType.Unknown;
+};
+export type InvocationError = HttpStatusInvocationError | RateLimitExceededInvocationError | TimeoutInvocationError | ResponseTooLargeInvocationError | UnknownInvocationError;
 declare enum InvocationSource {
 	Brain = "Brain",
 	Doc = "Doc",
@@ -718,6 +750,14 @@ export interface ExecutionContext {
 	 * TODO(patrick): Unhide this
 	 */
 	readonly executionId?: string;
+	/**
+	 * If this invocation is a retry, this will be populated with information about what went wrong
+	 * during the previous attempt.
+	 *
+	 * TODO(patrick): Unhide this
+	 * @hidden
+	 */
+	readonly previousAttemptError?: InvocationError;
 }
 /**
  * Sub-class of {@link ExecutionContext} that is passed to the `execute` function of every
@@ -4881,6 +4921,32 @@ export interface PackDefinition extends PackVersionDefinition {
 	 * Whether this is a pack that will be used by Coda internally and not exposed directly to users.
 	 */
 	isSystem?: boolean;
+}
+declare enum HttpStatusCode {
+	Ok = 200,
+	Created = 201,
+	Accepted = 202,
+	NoContent = 204,
+	MovedPermanently = 301,
+	RedirectFound = 302,
+	PermanentRedirect = 308,
+	BadRequest = 400,
+	Unauthorized = 401,
+	PaymentRequired = 402,
+	Forbidden = 403,
+	NotFound = 404,
+	NotAcceptable = 406,
+	Conflict = 409,
+	Gone = 410,
+	PayloadTooLarge = 413,
+	UnprocessableEntity = 422,
+	Locked = 423,
+	ClientClosedRequest = 499,
+	NotImplemented = 501,
+	TooManyRequests = 429,
+	InternalServer = 500,
+	BadGateway = 502,
+	ServiceUnavailable = 503
 }
 /**
  * Creates a new skeleton pack definition that can be added to.

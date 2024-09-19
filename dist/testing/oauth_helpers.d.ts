@@ -1,7 +1,7 @@
 import type { OAuth2ClientCredentialsAuthentication } from '../types';
 import type { OAuth2ClientCredentialsRequestAccessTokenParams } from './auth_types';
 import type { OAuth2RequestAccessTokenParams } from './auth_types';
-export declare function requestOAuthAccessToken(params: OAuth2RequestAccessTokenParams | OAuth2ClientCredentialsRequestAccessTokenParams, { tokenUrl, nestedResponseKey, scopeParamName }: {
+export declare function requestOAuthAccessToken(params: OAuth2RequestAccessTokenParams | OAuth2ClientCredentialsRequestAccessTokenParams, { tokenUrl, nestedResponseKey, scopeParamName, }: {
     tokenUrl: string;
     nestedResponseKey?: string;
     scopeParamName?: string;

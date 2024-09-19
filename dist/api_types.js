@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TableRole = exports.OptionsType = exports.PrecannedDateRange = exports.InvocationSource = exports.PermissionSyncMode = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
+exports.TableRole = exports.OptionsType = exports.PrecannedDateRange = exports.InvocationSource = exports.InvocationErrorType = exports.PermissionSyncMode = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
 /**
  * Markers used internally to represent data types for parameters and return values.
  * It should not be necessary to ever use these values directly.
@@ -236,6 +236,17 @@ var PermissionSyncMode;
     PermissionSyncMode["Personal"] = "Personal";
     PermissionSyncMode["PermissionAware"] = "PermissionAware";
 })(PermissionSyncMode || (exports.PermissionSyncMode = PermissionSyncMode = {}));
+var InvocationErrorType;
+(function (InvocationErrorType) {
+    InvocationErrorType["Timeout"] = "Timeout";
+    InvocationErrorType["ResponseTooLarge"] = "ResponseTooLarge";
+    InvocationErrorType["HttpStatusError"] = "HttpStatusError";
+    /**
+     * Could mean 3rd party API rate limit or a rate limit imposed by Coda.
+     */
+    InvocationErrorType["RateLimitExceeded"] = "RateLimitExceeded";
+    InvocationErrorType["Unknown"] = "Unknown";
+})(InvocationErrorType || (exports.InvocationErrorType = InvocationErrorType = {}));
 /**
  * TODO(patrick): Unhide this
  * @hidden

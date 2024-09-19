@@ -235,6 +235,7 @@ export async function injectExecutionContext({
   invocationToken,
   sync,
   executionId,
+  previousAttemptError,
   ...rest
 }: {
   context: Context;
@@ -254,6 +255,7 @@ export async function injectExecutionContext({
     invocationToken,
     sync,
     executionId,
+    previousAttemptError,
   };
 
   await context.global.set('executionContext', executionContextPrimitives, {copy: true});
