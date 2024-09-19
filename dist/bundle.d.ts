@@ -651,8 +651,6 @@ declare enum InvocationErrorType {
 }
 export interface BaseInvocationError {
 	type: InvocationErrorType;
-	message?: string;
-	errorData?: string | object;
 }
 export type HttpStatusInvocationError = BaseInvocationError & {
 	type: InvocationErrorType.HttpStatusError;
