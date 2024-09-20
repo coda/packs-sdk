@@ -7,7 +7,7 @@ exports.newFetcherSyncExecutionContext = exports.newFetcherExecutionContext = ex
 const client_sts_1 = require("@aws-sdk/client-sts");
 const types_1 = require("../types");
 const constants_1 = require("./constants");
-const constants_2 = require("./constants");
+const types_2 = require("../types");
 const client_sts_2 = require("@aws-sdk/client-sts");
 const sha256_js_1 = require("@aws-crypto/sha256-js");
 const signature_v4_1 = require("@aws-sdk/signature-v4");
@@ -141,7 +141,7 @@ class AuthenticatingFetcher {
         if (!this._authDef || !this._credentials || !this._updateCredentialsCallback) {
             return false;
         }
-        if (requestFailure.statusCode !== constants_2.HttpStatusCode.Unauthorized ||
+        if (requestFailure.statusCode !== types_2.HttpStatusCode.Unauthorized ||
             (this._authDef.type !== types_1.AuthenticationType.OAuth2 &&
                 this._authDef.type !== types_1.AuthenticationType.OAuth2ClientCredentials)) {
             return false;
@@ -197,7 +197,7 @@ class AuthenticatingFetcher {
             body: formParamsWithSecret,
             headers,
         });
-        if (oauthResponse.status === constants_2.HttpStatusCode.Unauthorized) {
+        if (oauthResponse.status === types_2.HttpStatusCode.Unauthorized) {
             // see testing/oauth_server.ts why we retry with header auth.
             headers.append('Authorization', `Basic ${Buffer.from(`${clientId}:${clientSecret}`).toString('base64')}`);
             oauthResponse = await fetch(tokenUrl, {
@@ -226,13 +226,18 @@ class AuthenticatingFetcher {
         const credentials = this._credentials;
         const { clientId, clientSecret, scopes } = credentials;
         // Refreshing client credentials is just the same as requesting the initial access token
-        const { accessToken, expires } = await (0, oauth_helpers_1.performOAuthClientCredentialsServerFlow)({ clientId, clientSecret, authDef: this._authDef, scopes });
+        const { accessToken, expires } = await (0, oauth_helpers_1.performOAuthClientCredentialsServerFlow)({
+            clientId,
+            clientSecret,
+            authDef: this._authDef,
+            scopes,
+        });
         return {
             clientId,
             clientSecret,
             accessToken,
             expires,
-            scopes
+            scopes,
         };
     }
     async _refreshOAuthCredentials() {

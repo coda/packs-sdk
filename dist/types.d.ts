@@ -1059,4 +1059,30 @@ export interface PackDefinition extends PackVersionDefinition {
      */
     isSystem?: boolean;
 }
+export declare enum HttpStatusCode {
+    Ok = 200,
+    Created = 201,
+    Accepted = 202,
+    NoContent = 204,
+    MovedPermanently = 301,
+    RedirectFound = 302,
+    PermanentRedirect = 308,
+    BadRequest = 400,
+    Unauthorized = 401,
+    PaymentRequired = 402,
+    Forbidden = 403,
+    NotFound = 404,
+    NotAcceptable = 406,
+    Conflict = 409,
+    Gone = 410,
+    PayloadTooLarge = 413,
+    UnprocessableEntity = 422,
+    Locked = 423,
+    ClientClosedRequest = 499,
+    NotImplemented = 501,
+    TooManyRequests = 429,
+    InternalServer = 500,
+    BadGateway = 502,
+    ServiceUnavailable = 503
+}
 export {};

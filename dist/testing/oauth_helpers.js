@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getTokenExpiry = exports.performOAuthClientCredentialsServerFlow = exports.requestOAuthAccessToken = void 0;
-const constants_1 = require("./constants");
+const types_1 = require("../types");
 const helpers_1 = require("./helpers");
-async function requestOAuthAccessToken(params, { tokenUrl, nestedResponseKey, scopeParamName }) {
+async function requestOAuthAccessToken(params, { tokenUrl, nestedResponseKey, scopeParamName, }) {
     const headers = new Headers({
         'Content-Type': 'application/x-www-form-urlencoded',
         accept: 'application/json',
@@ -28,7 +28,7 @@ async function requestOAuthAccessToken(params, { tokenUrl, nestedResponseKey, sc
         body: formParamsWithSecret,
         headers,
     });
-    if (oauthResponse.status === constants_1.HttpStatusCode.Unauthorized) {
+    if (oauthResponse.status === types_1.HttpStatusCode.Unauthorized) {
         // https://datatracker.ietf.org/doc/html/rfc6749#section-3.2.1 doesn't specify how exactly client secret is
         // passed to the oauth provider. https://datatracker.ietf.org/doc/html/rfc6749#section-2.3 says that client should
         // NOT has more than one auth methods.

@@ -1,7 +1,9 @@
 import type {$Values} from './type_utils';
 import type {ArraySchema} from './schema';
+import type {Assert} from './type_utils';
 import type {AuthenticationDef} from './types';
 import type {Continuation} from './api';
+import type {HttpStatusCode} from './types';
 import type {MetadataContext} from './api';
 import type {MetadataFormula} from './api';
 import type {ObjectSchemaProperty} from './schema';
@@ -805,6 +807,61 @@ export interface Logger {
   error(message: string, ...args: LoggerParamType[]): void;
 }
 
+export enum InvocationErrorType {
+  Timeout = 'Timeout',
+
+  ResponseTooLarge = 'ResponseTooLarge',
+
+  HttpStatusError = 'HttpStatusError',
+
+  /**
+   * Could mean 3rd party API rate limit or a rate limit imposed by Coda.
+   */
+  RateLimitExceeded = 'RateLimitExceeded',
+
+  Unknown = 'Unknown',
+}
+
+interface BaseInvocationError {
+  type: InvocationErrorType;
+}
+
+export type HttpStatusInvocationError = BaseInvocationError & {
+  type: InvocationErrorType.HttpStatusError;
+  statusCode: HttpStatusCode;
+};
+
+export type RateLimitExceededInvocationError = BaseInvocationError & {
+  type: InvocationErrorType.RateLimitExceeded;
+};
+
+export type TimeoutInvocationError = BaseInvocationError & {
+  type: InvocationErrorType.Timeout;
+};
+
+export type ResponseTooLargeInvocationError = BaseInvocationError & {
+  type: InvocationErrorType.ResponseTooLarge;
+};
+
+export type UnknownInvocationError = BaseInvocationError & {
+  type: InvocationErrorType.Unknown;
+};
+
+export type InvocationError =
+  | HttpStatusInvocationError
+  | RateLimitExceededInvocationError
+  | TimeoutInvocationError
+  | ResponseTooLargeInvocationError
+  | UnknownInvocationError;
+
+type MissingInvocationErrorTypes = Exclude<InvocationErrorType, InvocationError['type']>;
+/**
+ * We export this because unfortunately, TS doesn't let you ignore only an noUnusedLocals error without also
+ * suppressing the TS error we *want* to see.
+ * @hidden
+ */
+export type _ensureInvocationErrorEnumCompletion = Assert<MissingInvocationErrorTypes extends never ? true : false>;
+
 /**
  * TODO(patrick): Unhide this
  * @hidden
@@ -893,6 +950,15 @@ export interface ExecutionContext {
    * TODO(patrick): Unhide this
    */
   readonly executionId?: string;
+
+  /**
+   * If this invocation is a retry, this will be populated with information about what went wrong
+   * during the previous attempt.
+   *
+   * TODO(patrick): Unhide this
+   * @hidden
+   */
+  readonly previousAttemptError?: InvocationError;
 }
 
 /**
