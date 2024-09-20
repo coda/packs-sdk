@@ -2037,7 +2037,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 *
 	 * This is required for sync tables with role {@link TableRole.User}
 	 *
-	 * One or both of {@link ObjectSchemaDefinition.nestedGroupIdProperty}/{@link ObjectSchemaDefinition.userIdProperty}
+	 * One or both of {@link ObjectSchemaDefinition.memberGroupIdProperty}/{@link ObjectSchemaDefinition.userIdProperty}
 	 * are required for sync tables with role {@link TableRole.GroupMembers}.
 	 *
 	 * Must be a {@link ValueType.String} or {@link ValueType.Number} property
@@ -2061,7 +2061,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 * {@link ObjectSchemaDefinition.properties} that identifies the id of the nested group in the service
 	 * being synced from.
 	 *
-	 * One or both of {@link ObjectSchemaDefinition.nestedGroupIdProperty}/{@link ObjectSchemaDefinition.userIdProperty}
+	 * One or both of {@link ObjectSchemaDefinition.memberGroupIdProperty}/{@link ObjectSchemaDefinition.userIdProperty}
 	 * are required for sync tables with role {@link TableRole.GroupMembers}.
 	 *
 	 * Must be a {@link ValueType.String} or {@link ValueType.Number} property
@@ -2070,7 +2070,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 * TODO(sam): Unhide this
 	 * @hidden
 	 */
-	nestedGroupIdProperty?: PropertyIdentifier<K>;
+	memberGroupIdProperty?: PropertyIdentifier<K>;
 	/**
 	 * The name of a property within {@link ObjectSchemaDefinition.properties} that represents a unique id for a
 	 * parent entity for the object. It is recommended for sync table schemas with a bodyTextProperty to specify an

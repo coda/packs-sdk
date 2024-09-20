@@ -1294,7 +1294,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       userIdProperty: propertySchema.optional(),
       userEmailProperty: propertySchema.optional(),
       groupIdProperty: propertySchema.optional(),
-      nestedGroupIdProperty: propertySchema.optional(),
+      memberGroupIdProperty: propertySchema.optional(),
       bodyTextProperty: propertySchema.optional(),
       popularityRankProperty: propertySchema.optional(),
       options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
@@ -1533,12 +1533,12 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           );
         };
 
-        const validateNestedGroupIdProperty = () => {
+        const validateMemberGroupIdProperty = () => {
           return validateProperty(
-            'nestedGroupIdProperty',
-            nestedGroupIdPropertySchema =>
-              nestedGroupIdPropertySchema.type === ValueType.String ||
-              nestedGroupIdPropertySchema.type === ValueType.Number,
+            'memberGroupIdProperty',
+            memberGroupIdPropertySchema =>
+              memberGroupIdPropertySchema.type === ValueType.String ||
+              memberGroupIdPropertySchema.type === ValueType.Number,
             `must refer to a "ValueType.String" or "ValueType.Number".`,
           );
         };
@@ -1571,7 +1571,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         validateUserEmailProperty();
         validateUserIdProperty();
         validateGroupIdProperty();
-        validateNestedGroupIdProperty();
+        validateMemberGroupIdProperty();
         validatebodyTextProperty();
         validatePopularityRankProperty();
       })

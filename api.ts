@@ -2334,9 +2334,9 @@ export function makeSyncTable<
       throw new Error(`Sync table schemas with role ${TableRole.GroupMembers} must set a groupIdProperty`);
     }
 
-    if (!schemaDef.userIdProperty && !schemaDef.nestedGroupIdProperty) {
+    if (!schemaDef.userIdProperty && !schemaDef.memberGroupIdProperty) {
       throw new Error(
-        `Sync table schemas with role ${TableRole.GroupMembers} must set a userIdProperty or nestedGroupIdProperty`,
+        `Sync table schemas with role ${TableRole.GroupMembers} must set a userIdProperty or memberGroupIdProperty`,
       );
     }
   }

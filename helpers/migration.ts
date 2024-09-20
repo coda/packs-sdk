@@ -58,7 +58,7 @@ class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
       userEmailProperty,
       userIdProperty,
       groupIdProperty,
-      nestedGroupIdProperty,
+      memberGroupIdProperty,
       bodyTextProperty,
       popularityRankProperty,
       parentIdProperty,

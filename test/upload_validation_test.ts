@@ -5162,7 +5162,7 @@ describe('Pack metadata Validation', async () => {
         await doValidateJson(metadata);
       });
 
-      it('Succeeds when all required fields are present nestedGroupId', async () => {
+      it('Succeeds when all required fields are present memberGroupIdProperty', async () => {
         const syncTable = makeSyncTable({
           name: 'GroupMembers',
           identityName: 'GroupMembers',
@@ -5171,10 +5171,10 @@ describe('Pack metadata Validation', async () => {
             idProperty: 'id',
             displayProperty: 'id',
             groupIdProperty: 'id',
-            nestedGroupIdProperty: 'nestedGroupId',
+            memberGroupIdProperty: 'memberGroupId',
             properties: {
               id: {type: ValueType.String},
-              nestedGroupId: {type: ValueType.String},
+              memberGroupId: {type: ValueType.String},
             },
           }),
           formula: {
@@ -5223,7 +5223,7 @@ describe('Pack metadata Validation', async () => {
                 examples: [],
               },
             }),
-          'Sync table schemas with role groupMembers must set a userIdProperty or nestedGroupIdProperty',
+          'Sync table schemas with role groupMembers must set a userIdProperty or memberGroupIdProperty',
         );
       });
 
