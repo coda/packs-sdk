@@ -1067,6 +1067,7 @@ export type ObjectSchemaPathProperties = Pick<
   | 'userEmailProperty'
   | 'userIdProperty'
   | 'groupIdProperty'
+  | 'memberGroupIdProperty'
   | 'bodyTextProperty'
   | 'popularityRankProperty'
 >;
@@ -1299,7 +1300,11 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    * {@link ObjectSchemaDefinition.properties} that identifies the id of the user in the service
    * being synced from.
    *
-   * This is required for sync tables with role {@link TableRole.User} or {@link TableRole.GroupMembers}
+   * This is required for sync tables with role {@link TableRole.User}
+   *
+   * One or both of {@link ObjectSchemaDefinition.memberGroupIdProperty}/{@link ObjectSchemaDefinition.userIdProperty}
+   * are required for sync tables with role {@link TableRole.GroupMembers}.
+   *
    * Must be a {@link ValueType.String} or {@link ValueType.Number} property
    * @hidden
    */
@@ -1316,6 +1321,22 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    * @hidden
    */
   groupIdProperty?: PropertyIdentifier<K>;
+
+  /**
+   * For cases where the object being synced represents a nested group, the name of the property within
+   * {@link ObjectSchemaDefinition.properties} that identifies the id of the nested group in the service
+   * being synced from.
+   *
+   * One or both of {@link ObjectSchemaDefinition.memberGroupIdProperty}/{@link ObjectSchemaDefinition.userIdProperty}
+   * are required for sync tables with role {@link TableRole.GroupMembers}.
+   *
+   * Must be a {@link ValueType.String} or {@link ValueType.Number} property
+   *
+   * Nested groups are additive. All children members of a nested group will be considered members of the parent group.
+   * TODO(sam): Unhide this
+   * @hidden
+   */
+  memberGroupIdProperty?: PropertyIdentifier<K>;
   /**
    * The name of a property within {@link ObjectSchemaDefinition.properties} that represents a unique id for a
    * parent entity for the object. It is recommended for sync table schemas with a bodyTextProperty to specify an
@@ -2070,6 +2091,7 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     userEmailProperty,
     userIdProperty,
     groupIdProperty,
+    memberGroupIdProperty,
     bodyTextProperty,
     popularityRankProperty,
     index,
@@ -2139,6 +2161,9 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
       : undefined,
     groupIdProperty: groupIdProperty
       ? normalizeSchemaPropertyIdentifier(groupIdProperty, normalizedProperties)
+      : undefined,
+    memberGroupIdProperty: memberGroupIdProperty
+      ? normalizeSchemaPropertyIdentifier(memberGroupIdProperty, normalizedProperties)
       : undefined,
     bodyTextProperty: bodyTextProperty
       ? normalizeSchemaPropertyIdentifier(bodyTextProperty, normalizedProperties)

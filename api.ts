@@ -2334,8 +2334,10 @@ export function makeSyncTable<
       throw new Error(`Sync table schemas with role ${TableRole.GroupMembers} must set a groupIdProperty`);
     }
 
-    if (!schemaDef.userIdProperty) {
-      throw new Error(`Sync table schemas with role ${TableRole.GroupMembers} must set a userIdProperty`);
+    if (!schemaDef.userIdProperty && !schemaDef.memberGroupIdProperty) {
+      throw new Error(
+        `Sync table schemas with role ${TableRole.GroupMembers} must set a userIdProperty or memberGroupIdProperty`,
+      );
     }
   }
 

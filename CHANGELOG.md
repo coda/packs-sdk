@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Changed
+
+- Added internal fields to schema definition
+
 ## [1.7.16] - 2024-09-10
 
 ### Changed
@@ -764,5 +768,4 @@ await myHelper(context);
 [1.7.10]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.7.10
 [1.7.13]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.7.13
 [1.7.15]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.7.15
-
 [1.7.16]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.7.16

@@ -1057,6 +1057,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         userIdProperty: propertySchema.optional(),
         userEmailProperty: propertySchema.optional(),
         groupIdProperty: propertySchema.optional(),
+        memberGroupIdProperty: propertySchema.optional(),
         bodyTextProperty: propertySchema.optional(),
         popularityRankProperty: propertySchema.optional(),
         options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
@@ -1211,6 +1212,10 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         const validateGroupIdProperty = () => {
             return validateProperty('groupIdProperty', groupIdPropertySchema => groupIdPropertySchema.type === schema_15.ValueType.String || groupIdPropertySchema.type === schema_15.ValueType.Number, `must refer to a "ValueType.String" or "ValueType.Number".`);
         };
+        const validateMemberGroupIdProperty = () => {
+            return validateProperty('memberGroupIdProperty', memberGroupIdPropertySchema => memberGroupIdPropertySchema.type === schema_15.ValueType.String ||
+                memberGroupIdPropertySchema.type === schema_15.ValueType.Number, `must refer to a "ValueType.String" or "ValueType.Number".`);
+        };
         const validatebodyTextProperty = () => {
             return validateProperty('bodyTextProperty', bodyTextPropertySchema => bodyTextPropertySchema.type === schema_15.ValueType.String, `must refer to a "ValueType.String" property.`);
         };
@@ -1229,6 +1234,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         validateUserEmailProperty();
         validateUserIdProperty();
         validateGroupIdProperty();
+        validateMemberGroupIdProperty();
         validatebodyTextProperty();
         validatePopularityRankProperty();
     })

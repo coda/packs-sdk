@@ -856,8 +856,8 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
         if (!schemaDef.groupIdProperty) {
             throw new Error(`Sync table schemas with role ${api_types_5.TableRole.GroupMembers} must set a groupIdProperty`);
         }
-        if (!schemaDef.userIdProperty) {
-            throw new Error(`Sync table schemas with role ${api_types_5.TableRole.GroupMembers} must set a userIdProperty`);
+        if (!schemaDef.userIdProperty && !schemaDef.memberGroupIdProperty) {
+            throw new Error(`Sync table schemas with role ${api_types_5.TableRole.GroupMembers} must set a userIdProperty or memberGroupIdProperty`);
         }
     }
     const getSchema = wrapGetSchema(wrapMetadataFunction(getSchemaDef));
