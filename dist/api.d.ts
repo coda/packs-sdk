@@ -7,6 +7,7 @@ import type { ExecutionContext } from './api_types';
 import type { FetchRequest } from './api_types';
 import type { GetPermissionExecutionContext } from './api_types';
 import type { Identity } from './schema';
+import type { ItemMatchingPredicate } from './api_types';
 import type { NumberHintTypes } from './schema';
 import type { NumberSchema } from './schema';
 import type { ObjectSchema } from './schema';
@@ -590,6 +591,13 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
      * @hidden
      */
     deletedItemIds?: string[];
+    /**
+     * Use this to specify items that should be deleted if you don't know their exact IDs.
+     *
+     * TODO(patrick): Unhide this
+     * @hidden
+     */
+    deletionPredicate?: ItemMatchingPredicate;
 }
 /**
  * Type definition for the parameter used to pass in a batch of updates to a sync table update function.

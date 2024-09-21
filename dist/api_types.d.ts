@@ -957,4 +957,18 @@ export interface SyncCompletionMetadata {
      */
     hasIncompleteResults?: boolean;
 }
+/**
+ * TODO(patrick): Unhide this
+ * @hidden
+ */
+export interface ItemMatchingPredicate {
+    /**
+     * The name of the property to search for matches.
+     */
+    property: string;
+    /**
+     * What value(s) to search for.
+     */
+    matches: string | string[] | number | number[] | boolean | boolean[];
+}
 export {};
