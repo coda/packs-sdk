@@ -4,6 +4,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+- Add more pre-release incremental sync support
+
 ## [1.7.17] - 2024-09-20
 
 ### Changed
