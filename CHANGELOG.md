@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+## [1.7.18] - 2024-09-20
+
+- Add more pre-release incremental sync support
+
 ## [1.7.17] - 2024-09-20
 
 ### Changed
@@ -732,7 +736,7 @@ await myHelper(context);
 
 - Beginning of alpha versioning.
 
-[unreleased]: https://github.com/coda/packs-sdk/compare/v1.7.17...HEAD
+[unreleased]: https://github.com/coda/packs-sdk/compare/v1.7.18...HEAD
 [1.7.5]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.5
 [1.7.4]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.4
 [1.7.3]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.3
@@ -770,5 +774,6 @@ await myHelper(context);
 [1.7.10]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.7.10
 [1.7.13]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.7.13
 [1.7.15]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.7.15
+[1.7.18]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.7.18
 [1.7.17]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.7.17
 [1.7.16]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.7.16
