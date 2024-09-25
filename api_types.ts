@@ -494,6 +494,15 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
    * so an end user must have both sets of permissions.
    */
   readonly extraOAuthScopes?: string[];
+
+  /**
+   * TODO(patrick): Without this set, should we allow all or only DEFAULT?
+   *
+   * Ignored if connectionRequirement is None.
+   *
+   * @hidden
+   */
+  readonly allowedAuthenticationKeys?: string[];
 }
 
 /**
@@ -942,12 +951,20 @@ export interface ExecutionContext {
   readonly sync?: Sync;
 
   /**
+   * If this function is being invoked with authentication, this indicates which authentication was used.
+   *
+   * TODO(patrick): Unhide this
+   * @hidden
+   */
+  readonly authenticationKey?: string;
+
+  /**
    * If this invocation is a part of a crawling execution, like in Coda Brain, then this ID will be provided
    * to all invocations. That includes invocations of sync `execute` and `executeGetPermissions`, as well as
    * dynamic table features like `listDynamicUrls`, `getSchema`, and `getName`.
    *
-   * @hidden
    * TODO(patrick): Unhide this
+   * @hidden
    */
   readonly executionId?: string;
 

@@ -809,6 +809,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     isExperimental: z.boolean().optional(),
     isSystem: z.boolean().optional(),
     extraOAuthScopes: z.array(z.string()).optional(),
+    allowedAuthenticationKeys: z.array(z.string()).optional(),
   };
 
   const booleanPackFormulaSchema = zodCompleteObject<Omit<BooleanPackFormula<any>, 'execute'>>({
@@ -1830,6 +1831,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       message: 'Formula namespaces can only contain alphanumeric characters and underscores.',
     }),
     systemConnectionAuthentication: z.union(zodUnionInput(systemAuthenticationValidators)).optional(),
+    // TODO(patrick): ....
+    additionalAuthentications: z.array(z.any()).optional(),
     formulas: z
       .array(formulaMetadataSchema)
       .max(Limits.BuildingBlockCountPerType)

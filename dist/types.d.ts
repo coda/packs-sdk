@@ -798,9 +798,14 @@ export interface VariousAuthentication {
     type: AuthenticationType.Various;
 }
 /**
+ * The union of authentication types that use Coda's standard authentication
+ * management UX.
+ */
+export type StandardAuthentication = HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | OAuth2ClientCredentialsAuthentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | GoogleDomainWideDelegationAuthentication | GoogleServiceAccountAuthentication | CustomAuthentication;
+/**
  * The union of supported authentication methods.
  */
-export type Authentication = NoAuthentication | VariousAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | OAuth2ClientCredentialsAuthentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | GoogleDomainWideDelegationAuthentication | GoogleServiceAccountAuthentication | CustomAuthentication;
+export type Authentication = NoAuthentication | VariousAuthentication | StandardAuthentication;
 /** @ignore */
 export interface AuthenticationTypeMap {
     [AuthenticationType.None]: NoAuthentication;
@@ -819,7 +824,7 @@ export interface AuthenticationTypeMap {
     [AuthenticationType.GoogleServiceAccount]: GoogleServiceAccountAuthentication;
     [AuthenticationType.Custom]: CustomAuthentication;
 }
-type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionName' | 'getConnectionUserId' | 'postSetup'> & {
+export type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionName' | 'getConnectionUserId' | 'postSetup'> & {
     /** See {@link BaseAuthentication.getConnectionName} */
     getConnectionName?: MetadataFormulaDef;
     /** See {@link BaseAuthentication.getConnectionUserId} @ignore */
@@ -827,13 +832,14 @@ type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionName' | 'ge
     /** {@link BaseAuthentication.postSetup} */
     postSetup?: PostSetupDef[];
 };
+export type StandardAuthenticationDef = AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CodaApiBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<MultiHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<OAuth2Authentication> | AsAuthDef<OAuth2ClientCredentialsAuthentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication> | AsAuthDef<GoogleDomainWideDelegationAuthentication> | AsAuthDef<GoogleServiceAccountAuthentication> | AsAuthDef<CustomAuthentication>;
 /**
  * The union of supported authentication definitions. These represent simplified configurations
  * a pack developer can specify when calling {@link PackDefinitionBuilder.setUserAuthentication} when using
  * a pack definition builder. The builder massages these definitions into the form of
  * an {@link Authentication} value, which is the value Coda ultimately cares about.
  */
-export type AuthenticationDef = NoAuthentication | VariousAuthentication | AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CodaApiBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<MultiHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<OAuth2Authentication> | AsAuthDef<OAuth2ClientCredentialsAuthentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication> | AsAuthDef<GoogleDomainWideDelegationAuthentication> | AsAuthDef<GoogleServiceAccountAuthentication> | AsAuthDef<CustomAuthentication>;
+export type AuthenticationDef = NoAuthentication | VariousAuthentication | StandardAuthenticationDef;
 /**
  * The union of authentication methods that are supported for system authentication,
  * where the pack author provides credentials used in HTTP requests rather than the user.
@@ -859,6 +865,38 @@ export type VariousSupportedAuthentication = NoAuthentication | HeaderBearerToke
  * @ignore
  */
 export type VariousSupportedAuthenticationTypes = $Values<Pick<VariousSupportedAuthentication, 'type'>>;
+/**
+ * @hidden
+ */
+export declare enum ReservedAuthenticationKeys {
+    /**
+     * References the default user authentication of the pack.
+     */
+    Default = "DEFAULT",
+    /**
+     * References the system authentication of the pack.
+     */
+    System = "SYSTEM"
+}
+/**
+ * TODO(patrick): Unhide this.
+ * @hidden
+ */
+export interface AuxiliaryAuthentication {
+    authentication: StandardAuthentication;
+    /**
+     * Passed into formula context.
+     * Cannot be one of the ReservedAuthenticationKeys.
+     */
+    key: string;
+    displayName: string;
+    description?: string;
+    /**
+     * If true, this authentication can be used to sync permissions associated with data
+     * in addition to the data itself.
+     */
+    canSyncPermissions?: boolean;
+}
 /**
  * Definition for a custom column type that users can apply to any column in any Coda table.
  * A column format tells Coda to interpret the value in a cell by executing a formula
@@ -1003,6 +1041,11 @@ export interface PackVersionDefinition {
      */
     systemConnectionAuthentication?: SystemAuthentication;
     /**
+     * TODO(patrick): Unhide this.
+     * @hidden
+     */
+    additionalAuthentications?: AuxiliaryAuthentication[];
+    /**
      * Any domain(s) to which this pack makes fetcher requests. The domains this pack connects to must be
      * declared up front here, both to clearly communicate to users what a pack is capable of connecting to,
      * and for security reasons. These network domains are enforced at execution time: any fetcher request
@@ -1085,4 +1128,3 @@ export declare enum HttpStatusCode {
     BadGateway = 502,
     ServiceUnavailable = 503
 }
-export {};

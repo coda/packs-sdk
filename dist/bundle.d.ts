@@ -348,6 +348,14 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
 	 * so an end user must have both sets of permissions.
 	 */
 	readonly extraOAuthScopes?: string[];
+	/**
+	 * TODO(patrick): Without this set, should we allow all or only DEFAULT?
+	 *
+	 * Ignored if connectionRequirement is None.
+	 *
+	 * @hidden
+	 */
+	readonly allowedAuthenticationKeys?: string[];
 }
 /**
  * Enumeration of requirement states for whether a given formula or sync table requires
@@ -740,12 +748,19 @@ export interface ExecutionContext {
 	 */
 	readonly sync?: Sync;
 	/**
+	 * If this function is being invoked with authentication, this indicates which authentication was used.
+	 *
+	 * TODO(patrick): Unhide this
+	 * @hidden
+	 */
+	readonly authenticationKey?: string;
+	/**
 	 * If this invocation is a part of a crawling execution, like in Coda Brain, then this ID will be provided
 	 * to all invocations. That includes invocations of sync `execute` and `executeGetPermissions`, as well as
 	 * dynamic table features like `listDynamicUrls`, `getSchema`, and `getName`.
 	 *
-	 * @hidden
 	 * TODO(patrick): Unhide this
+	 * @hidden
 	 */
 	readonly executionId?: string;
 	/**
@@ -3888,6 +3903,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
 	isExperimental?: boolean | undefined;
 	isSystem?: boolean | undefined;
 	extraOAuthScopes?: string[] | undefined;
+	allowedAuthenticationKeys?: string[] | undefined;
 } & {
 	execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<SchemaType<ResultT>>;
 	resultType: Type.object;
@@ -3929,6 +3945,7 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
 	isExperimental?: boolean | undefined;
 	isSystem?: boolean | undefined;
 	extraOAuthScopes?: string[] | undefined;
+	allowedAuthenticationKeys?: string[] | undefined;
 } & {
 	execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<string>;
 	resultType: Type.string;
@@ -4725,9 +4742,14 @@ export interface VariousAuthentication {
 	type: AuthenticationType.Various;
 }
 /**
+ * The union of authentication types that use Coda's standard authentication
+ * management UX.
+ */
+export type StandardAuthentication = HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | OAuth2ClientCredentialsAuthentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | GoogleDomainWideDelegationAuthentication | GoogleServiceAccountAuthentication | CustomAuthentication;
+/**
  * The union of supported authentication methods.
  */
-export type Authentication = NoAuthentication | VariousAuthentication | HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | OAuth2ClientCredentialsAuthentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | GoogleDomainWideDelegationAuthentication | GoogleServiceAccountAuthentication | CustomAuthentication;
+export type Authentication = NoAuthentication | VariousAuthentication | StandardAuthentication;
 export type AsAuthDef<T extends BaseAuthentication> = Omit<T, "getConnectionName" | "getConnectionUserId" | "postSetup"> & {
 	/** See {@link BaseAuthentication.getConnectionName} */
 	getConnectionName?: MetadataFormulaDef;
@@ -4736,13 +4758,14 @@ export type AsAuthDef<T extends BaseAuthentication> = Omit<T, "getConnectionName
 	/** {@link BaseAuthentication.postSetup} */
 	postSetup?: PostSetupDef[];
 };
+export type StandardAuthenticationDef = AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CodaApiBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<MultiHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<OAuth2Authentication> | AsAuthDef<OAuth2ClientCredentialsAuthentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication> | AsAuthDef<GoogleDomainWideDelegationAuthentication> | AsAuthDef<GoogleServiceAccountAuthentication> | AsAuthDef<CustomAuthentication>;
 /**
  * The union of supported authentication definitions. These represent simplified configurations
  * a pack developer can specify when calling {@link PackDefinitionBuilder.setUserAuthentication} when using
  * a pack definition builder. The builder massages these definitions into the form of
  * an {@link Authentication} value, which is the value Coda ultimately cares about.
  */
-export type AuthenticationDef = NoAuthentication | VariousAuthentication | AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CodaApiBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<MultiHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<OAuth2Authentication> | AsAuthDef<OAuth2ClientCredentialsAuthentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication> | AsAuthDef<GoogleDomainWideDelegationAuthentication> | AsAuthDef<GoogleServiceAccountAuthentication> | AsAuthDef<CustomAuthentication>;
+export type AuthenticationDef = NoAuthentication | VariousAuthentication | StandardAuthenticationDef;
 /**
  * The union of authentication methods that are supported for system authentication,
  * where the pack author provides credentials used in HTTP requests rather than the user.
@@ -4759,6 +4782,25 @@ export type SystemAuthenticationDef = AsAuthDef<HeaderBearerTokenAuthentication>
  * @ignore
  */
 export type VariousSupportedAuthentication = NoAuthentication | HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication;
+/**
+ * TODO(patrick): Unhide this.
+ * @hidden
+ */
+export interface AuxiliaryAuthentication {
+	authentication: StandardAuthentication;
+	/**
+	 * Passed into formula context.
+	 * Cannot be one of the ReservedAuthenticationKeys.
+	 */
+	key: string;
+	displayName: string;
+	description?: string;
+	/**
+	 * If true, this authentication can be used to sync permissions associated with data
+	 * in addition to the data itself.
+	 */
+	canSyncPermissions?: boolean;
+}
 /**
  * Definition for a custom column type that users can apply to any column in any Coda table.
  * A column format tells Coda to interpret the value in a cell by executing a formula
@@ -4891,6 +4933,11 @@ export interface PackVersionDefinition {
 	 */
 	systemConnectionAuthentication?: SystemAuthentication;
 	/**
+	 * TODO(patrick): Unhide this.
+	 * @hidden
+	 */
+	additionalAuthentications?: AuxiliaryAuthentication[];
+	/**
 	 * Any domain(s) to which this pack makes fetcher requests. The domains this pack connects to must be
 	 * declared up front here, both to clearly communicate to users what a pack is capable of connecting to,
 	 * and for security reasons. These network domains are enforced at execution time: any fetcher request
@@ -5014,6 +5061,11 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 */
 	systemConnectionAuthentication?: SystemAuthentication;
 	/**
+	 * See {@link PackVersionDefinition.additionalAuthentications}.
+	 * @hidden
+	 */
+	additionalAuthentications?: AuxiliaryAuthentication[];
+	/**
 	 * See {@link PackVersionDefinition.version}.
 	 */
 	version?: string;
@@ -5108,6 +5160,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * ```
 	 */
 	addColumnFormat(format: Format): this;
+	private _wrapAuthenticationFunctions;
 	/**
 	 * Sets this pack to use authentication for individual users, using the
 	 * authentication method is the given definition.
@@ -5148,6 +5201,10 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * ```
 	 */
 	setSystemAuthentication(systemAuthentication: SystemAuthenticationDef): this;
+	/**
+	 * @hidden
+	 */
+	addUserAuthentication(auxAuth: AuxiliaryAuthentication): this;
 	/**
 	 * Adds the domain that this pack makes HTTP requests to.
 	 * For example, if your pack makes HTTP requests to "api.example.com",

@@ -53,6 +53,7 @@ async function setupIvmContext(bundlePath, executionContext) {
         timezone: executionContext.timezone,
         invocationToken: executionContext.invocationToken,
         sync: executionContext.sync,
+        authenticationKey: executionContext.authenticationKey,
         executionId: executionContext.executionId,
         previousAttemptError: executionContext.previousAttemptError,
     });

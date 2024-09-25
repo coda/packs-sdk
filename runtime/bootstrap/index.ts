@@ -234,6 +234,7 @@ export async function injectExecutionContext({
   timezone,
   invocationToken,
   sync,
+  authenticationKey,
   executionId,
   previousAttemptError,
   ...rest
@@ -255,6 +256,7 @@ export async function injectExecutionContext({
     invocationToken,
     sync,
     executionId,
+    authenticationKey,
     previousAttemptError,
   };
 

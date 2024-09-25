@@ -1,5 +1,6 @@
 import type {Authentication} from './types';
 import {AuthenticationType} from './types';
+import type {AuxiliaryAuthentication} from './types';
 import type {BasicPackDefinition} from './types';
 import {ConnectionRequirement} from './api_types';
 import type {DynamicSyncTableOptions} from './api';
@@ -11,6 +12,8 @@ import type {ObjectSchemaDefinition} from './schema';
 import type {PackVersionDefinition} from './types';
 import type {ParamDefs} from './api_types';
 import type {Schema} from './schema';
+import type {StandardAuthentication} from './types';
+import type {StandardAuthenticationDef} from './types';
 import type {SyncTable} from './api';
 import type {SyncTableOptions} from './api';
 import type {SystemAuthentication} from './types';
@@ -70,6 +73,12 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * See {@link PackVersionDefinition.systemConnectionAuthentication}.
    */
   systemConnectionAuthentication?: SystemAuthentication;
+
+  /**
+   * See {@link PackVersionDefinition.additionalAuthentications}.
+   * @hidden
+   */
+  additionalAuthentications?: AuxiliaryAuthentication[];
 
   /**
    * See {@link PackVersionDefinition.version}.
@@ -224,6 +233,23 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     return this;
   }
 
+  private _wrapAuthenticationFunctions(authentication: StandardAuthenticationDef): StandardAuthentication {
+    const {
+      getConnectionName: getConnectionNameDef,
+      getConnectionUserId: getConnectionUserIdDef,
+      postSetup: postSetupDef,
+      ...rest
+    } = authentication;
+    const getConnectionName = wrapMetadataFunction(getConnectionNameDef);
+    const getConnectionUserId = wrapMetadataFunction(getConnectionUserIdDef);
+    const postSetup = postSetupDef?.map(step => {
+      const getOptions = wrapMetadataFunction(setEndpointDefHelper(step).getOptions);
+      const getOptionsFormula = wrapMetadataFunction(step.getOptionsFormula);
+      return {...step, getOptions, getOptionsFormula};
+    });
+    return {...rest, getConnectionName, getConnectionUserId, postSetup};
+  }
+
   /**
    * Sets this pack to use authentication for individual users, using the
    * authentication method is the given definition.
@@ -250,23 +276,14 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     if (authentication.type === AuthenticationType.None || authentication.type === AuthenticationType.Various) {
       this.defaultAuthentication = authentication;
     } else {
-      const {
-        getConnectionName: getConnectionNameDef,
-        getConnectionUserId: getConnectionUserIdDef,
-        postSetup: postSetupDef,
-        ...rest
-      } = authentication;
-      const getConnectionName = wrapMetadataFunction(getConnectionNameDef);
-      const getConnectionUserId = wrapMetadataFunction(getConnectionUserIdDef);
-      const postSetup = postSetupDef?.map(step => {
-        return {...step, getOptions: wrapMetadataFunction(setEndpointDefHelper(step).getOptions)};
-      });
-      this.defaultAuthentication = {...rest, getConnectionName, getConnectionUserId, postSetup} as Authentication;
+      this.defaultAuthentication = this._wrapAuthenticationFunctions(authentication);
     }
 
     if (authentication.type !== AuthenticationType.None) {
       this._setDefaultConnectionRequirement(defaultConnectionRequirement);
     }
+
+    // TODO(patrick): Set default allowedAuthenticationKeys
 
     return this;
   }
@@ -289,24 +306,23 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * ```
    */
   setSystemAuthentication(systemAuthentication: SystemAuthenticationDef): this {
-    const {
-      getConnectionName: getConnectionNameDef,
-      getConnectionUserId: getConnectionUserIdDef,
-      postSetup: postSetupDef,
-      ...rest
-    } = systemAuthentication;
-    const getConnectionName = wrapMetadataFunction(getConnectionNameDef);
-    const getConnectionUserId = wrapMetadataFunction(getConnectionUserIdDef);
-    const postSetup = postSetupDef?.map(step => {
-      return {...step, getOptions: wrapMetadataFunction(setEndpointDefHelper(step).getOptions)};
-    });
-    this.systemConnectionAuthentication = {
-      ...rest,
-      getConnectionName,
-      getConnectionUserId,
-      postSetup,
-    } as SystemAuthentication;
+    this.systemConnectionAuthentication = this._wrapAuthenticationFunctions(
+      systemAuthentication,
+    ) as SystemAuthentication;
+    return this;
+  }
 
+  /**
+   * @hidden
+   */
+  addUserAuthentication(auxAuth: AuxiliaryAuthentication): this {
+    if (!this.additionalAuthentications) {
+      this.additionalAuthentications = [];
+    }
+    this.additionalAuthentications.push({
+      ...auxAuth,
+      authentication: this._wrapAuthenticationFunctions(auxAuth.authentication),
+    });
     return this;
   }
 
