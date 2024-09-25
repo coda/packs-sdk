@@ -652,7 +652,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         isExperimental: z.boolean().optional(),
         isSystem: z.boolean().optional(),
         extraOAuthScopes: z.array(z.string()).optional(),
-        allowedAuthenticationKeys: z.array(z.string()).optional(),
+        allowedAuthenticationNames: z.array(z.string()).optional(),
     };
     const booleanPackFormulaSchema = zodCompleteObject({
         ...commonPackFormulaSchema,

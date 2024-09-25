@@ -1,6 +1,8 @@
+import type {AdminAuthentication} from './types';
+import type {AllowedAuthentication} from './types';
+import type {AllowedAuthenticationDef} from './types';
 import type {Authentication} from './types';
 import {AuthenticationType} from './types';
-import type {AuxiliaryAuthentication} from './types';
 import type {BasicPackDefinition} from './types';
 import {ConnectionRequirement} from './api_types';
 import type {DynamicSyncTableOptions} from './api';
@@ -12,8 +14,6 @@ import type {ObjectSchemaDefinition} from './schema';
 import type {PackVersionDefinition} from './types';
 import type {ParamDefs} from './api_types';
 import type {Schema} from './schema';
-import type {StandardAuthentication} from './types';
-import type {StandardAuthenticationDef} from './types';
 import type {SyncTable} from './api';
 import type {SyncTableOptions} from './api';
 import type {SystemAuthentication} from './types';
@@ -78,7 +78,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * See {@link PackVersionDefinition.additionalAuthentications}.
    * @hidden
    */
-  additionalAuthentications?: AuxiliaryAuthentication[];
+  additionalAuthentications?: AdminAuthentication[];
 
   /**
    * See {@link PackVersionDefinition.version}.
@@ -233,7 +233,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     return this;
   }
 
-  private _wrapAuthenticationFunctions(authentication: StandardAuthenticationDef): StandardAuthentication {
+  private _wrapAuthenticationFunctions(authentication: AllowedAuthenticationDef): AllowedAuthentication {
     const {
       getConnectionName: getConnectionNameDef,
       getConnectionUserId: getConnectionUserIdDef,
@@ -283,8 +283,6 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       this._setDefaultConnectionRequirement(defaultConnectionRequirement);
     }
 
-    // TODO(patrick): Set default allowedAuthenticationKeys
-
     return this;
   }
 
@@ -315,14 +313,16 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
   /**
    * @hidden
    */
-  addUserAuthentication(auxAuth: AuxiliaryAuthentication): this {
+  setAdminAuthentications(adminAuthentications: AdminAuthentication[]): this {
     if (!this.additionalAuthentications) {
       this.additionalAuthentications = [];
     }
-    this.additionalAuthentications.push({
-      ...auxAuth,
-      authentication: this._wrapAuthenticationFunctions(auxAuth.authentication),
-    });
+    for (const adminAuth of adminAuthentications) {
+      this.additionalAuthentications.push({
+        ...adminAuth,
+        authentication: this._wrapAuthenticationFunctions(adminAuth.authentication),
+      });
+    }
     return this;
   }
 

@@ -1,5 +1,5 @@
+import type { AdminAuthentication } from './types';
 import type { Authentication } from './types';
-import type { AuxiliaryAuthentication } from './types';
 import type { BasicPackDefinition } from './types';
 import type { DynamicSyncTableOptions } from './api';
 import type { Format } from './types';
@@ -60,7 +60,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * See {@link PackVersionDefinition.additionalAuthentications}.
      * @hidden
      */
-    additionalAuthentications?: AuxiliaryAuthentication[];
+    additionalAuthentications?: AdminAuthentication[];
     /**
      * See {@link PackVersionDefinition.version}.
      */
@@ -200,7 +200,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
     /**
      * @hidden
      */
-    addUserAuthentication(auxAuth: AuxiliaryAuthentication): this;
+    setAdminAuthentications(adminAuthentications: AdminAuthentication[]): this;
     /**
      * Adds the domain that this pack makes HTTP requests to.
      * For example, if your pack makes HTTP requests to "api.example.com",

@@ -839,10 +839,9 @@ export interface VariousAuthentication {
 }
 
 /**
- * The union of authentication types that use Coda's standard authentication
- * management UX.
+ * The union of authentication types that pack makers are allowed to use.
  */
-export type StandardAuthentication =
+export type AllowedAuthentication =
   | HeaderBearerTokenAuthentication
   | CodaApiBearerTokenAuthentication
   | CustomHeaderTokenAuthentication
@@ -861,7 +860,7 @@ export type StandardAuthentication =
 /**
  * The union of supported authentication methods.
  */
-export type Authentication = NoAuthentication | VariousAuthentication | StandardAuthentication;
+export type Authentication = NoAuthentication | VariousAuthentication | AllowedAuthentication;
 
 /** @ignore */
 export interface AuthenticationTypeMap {
@@ -894,7 +893,10 @@ export type AsAuthDef<T extends BaseAuthentication> = Omit<
   postSetup?: PostSetupDef[];
 };
 
-export type StandardAuthenticationDef =
+/**
+ * The union of authentication types that pack makers are allowed to use.
+ */
+export type AllowedAuthenticationDef =
   | AsAuthDef<HeaderBearerTokenAuthentication>
   | AsAuthDef<CodaApiBearerTokenAuthentication>
   | AsAuthDef<CustomHeaderTokenAuthentication>
@@ -916,7 +918,7 @@ export type StandardAuthenticationDef =
  * a pack definition builder. The builder massages these definitions into the form of
  * an {@link Authentication} value, which is the value Coda ultimately cares about.
  */
-export type AuthenticationDef = NoAuthentication | VariousAuthentication | StandardAuthenticationDef;
+export type AuthenticationDef = NoAuthentication | VariousAuthentication | AllowedAuthenticationDef;
 
 /**
  * The union of authentication methods that are supported for system authentication,
@@ -980,40 +982,51 @@ export type VariousSupportedAuthenticationTypes = $Values<Pick<VariousSupportedA
 /**
  * @hidden
  */
-export enum ReservedAuthenticationKeys {
+export enum ReservedAuthenticationNames {
   /**
    * References the default user authentication of the pack.
    */
-  Default = 'DEFAULT',
+  Default = 'defaultAuthentication',
 
   /**
    * References the system authentication of the pack.
    */
-  System = 'SYSTEM',
+  System = 'systemAuthentication',
 }
 
 /**
  * TODO(patrick): Unhide this.
  * @hidden
  */
-export interface AuxiliaryAuthentication {
-  authentication: StandardAuthentication;
+export interface AdminAuthentication {
+  authentication: AllowedAuthenticationDef;
 
   /**
-   * Passed into formula context.
-   * Cannot be one of the ReservedAuthenticationKeys.
+   * Passed into formula execution context.
+   * Cannot be one of the ReservedAuthenticationNames.
+   * Not user-facing.
+   * If changed, will break existing connected accounts.
    */
-  key: string;
+  name: string;
 
   displayName: string;
 
-  description?: string;
+  /**
+   * User-visible.
+   */
+  description: string;
 
   /**
    * If true, this authentication can be used to sync permissions associated with data
    * in addition to the data itself.
    */
   canSyncPermissions?: boolean;
+
+  /**
+   * If true, Coda will not assume that the user who sets up an account with this authentication
+   * should themselves have access to the data owned by that account.
+   */
+  isServiceAccount?: boolean;
 }
 
 /**
@@ -1172,7 +1185,7 @@ export interface PackVersionDefinition {
    * TODO(patrick): Unhide this.
    * @hidden
    */
-  additionalAuthentications?: AuxiliaryAuthentication[];
+  additionalAuthentications?: AdminAuthentication[];
 
   /**
    * Any domain(s) to which this pack makes fetcher requests. The domains this pack connects to must be

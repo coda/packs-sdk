@@ -194,7 +194,6 @@ class PackDefinitionBuilder {
         if (authentication.type !== types_1.AuthenticationType.None) {
             this._setDefaultConnectionRequirement(defaultConnectionRequirement);
         }
-        // TODO(patrick): Set default allowedAuthenticationKeys
         return this;
     }
     /**
@@ -221,14 +220,16 @@ class PackDefinitionBuilder {
     /**
      * @hidden
      */
-    addUserAuthentication(auxAuth) {
+    setAdminAuthentications(adminAuthentications) {
         if (!this.additionalAuthentications) {
             this.additionalAuthentications = [];
         }
-        this.additionalAuthentications.push({
-            ...auxAuth,
-            authentication: this._wrapAuthenticationFunctions(auxAuth.authentication),
-        });
+        for (const adminAuth of adminAuthentications) {
+            this.additionalAuthentications.push({
+                ...adminAuth,
+                authentication: this._wrapAuthenticationFunctions(adminAuth.authentication),
+            });
+        }
         return this;
     }
     /**

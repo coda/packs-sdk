@@ -1485,7 +1485,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
     isExperimental?: boolean | undefined;
     isSystem?: boolean | undefined;
     extraOAuthScopes?: string[] | undefined;
-    allowedAuthenticationKeys?: string[] | undefined;
+    allowedAuthenticationNames?: string[] | undefined;
 } & {
     execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<SchemaType<ResultT>>;
     resultType: Type.object;
@@ -1527,7 +1527,7 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
     isExperimental?: boolean | undefined;
     isSystem?: boolean | undefined;
     extraOAuthScopes?: string[] | undefined;
-    allowedAuthenticationKeys?: string[] | undefined;
+    allowedAuthenticationNames?: string[] | undefined;
 } & {
     execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<string>;
     resultType: Type.string;

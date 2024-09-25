@@ -496,13 +496,13 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
   readonly extraOAuthScopes?: string[];
 
   /**
-   * TODO(patrick): Without this set, should we allow all or only DEFAULT?
+   * Without this set, any authentication of the pack will be allowed to invoke this formula.
    *
-   * Ignored if connectionRequirement is None.
+   * This property is not allowed if connectionRequirement is None.
    *
    * @hidden
    */
-  readonly allowedAuthenticationKeys?: string[];
+  readonly allowedAuthenticationNames?: string[];
 }
 
 /**
@@ -956,7 +956,7 @@ export interface ExecutionContext {
    * TODO(patrick): Unhide this
    * @hidden
    */
-  readonly authenticationKey?: string;
+  readonly authenticationName?: string;
 
   /**
    * If this invocation is a part of a crawling execution, like in Coda Brain, then this ID will be provided

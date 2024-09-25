@@ -1,7 +1,7 @@
 // Typedoc settings.
 // See: https://typedoc.org/options/
 module.exports = {
-  name: "Modules",
+  name: 'Modules',
   excludeExternals: true,
   excludePrivate: true,
   excludeProtected: true,
@@ -18,7 +18,7 @@ module.exports = {
   hideBreadcrumbs: true,
   hideInPageTOC: true,
   allReflectionsHaveOwnDocument: true,
-  entryDocument: "index.md",
+  entryDocument: 'index.md',
 
   intentionallyNotExported: [
     // Internal intermediate or helper types that we probably don't care to export or document.
@@ -46,8 +46,9 @@ module.exports = {
 
     // Internal only types.
     'AWSAssumeRoleAuthentication',
-    'GoogleDomainWideDelegationAuthentication',
     'GoogleServiceAccountAuthentication',
+    'AllowedAuthentication',
+    'AllowedAuthenticationDef',
     'VariousAuthentication',
     'CodaInternalRichTextSchema',
 

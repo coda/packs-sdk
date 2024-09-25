@@ -8,7 +8,7 @@ search:
 
 [core](../modules/core.md).AuthenticationDef
 
-Ƭ **AuthenticationDef**: [`NoAuthentication`](../interfaces/core.NoAuthentication.md) \| `VariousAuthentication` \| `StandardAuthenticationDef`
+Ƭ **AuthenticationDef**: [`NoAuthentication`](../interfaces/core.NoAuthentication.md) \| `VariousAuthentication` \| `AllowedAuthenticationDef`
 
 The union of supported authentication definitions. These represent simplified configurations
 a pack developer can specify when calling [setUserAuthentication](../classes/core.PackDefinitionBuilder.md#setuserauthentication) when using

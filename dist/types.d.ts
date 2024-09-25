@@ -798,14 +798,13 @@ export interface VariousAuthentication {
     type: AuthenticationType.Various;
 }
 /**
- * The union of authentication types that use Coda's standard authentication
- * management UX.
+ * The union of authentication types that pack makers are allowed to use.
  */
-export type StandardAuthentication = HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | OAuth2ClientCredentialsAuthentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | GoogleDomainWideDelegationAuthentication | GoogleServiceAccountAuthentication | CustomAuthentication;
+export type AllowedAuthentication = HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | OAuth2ClientCredentialsAuthentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | GoogleDomainWideDelegationAuthentication | GoogleServiceAccountAuthentication | CustomAuthentication;
 /**
  * The union of supported authentication methods.
  */
-export type Authentication = NoAuthentication | VariousAuthentication | StandardAuthentication;
+export type Authentication = NoAuthentication | VariousAuthentication | AllowedAuthentication;
 /** @ignore */
 export interface AuthenticationTypeMap {
     [AuthenticationType.None]: NoAuthentication;
@@ -832,14 +831,17 @@ export type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionName
     /** {@link BaseAuthentication.postSetup} */
     postSetup?: PostSetupDef[];
 };
-export type StandardAuthenticationDef = AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CodaApiBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<MultiHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<OAuth2Authentication> | AsAuthDef<OAuth2ClientCredentialsAuthentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication> | AsAuthDef<GoogleDomainWideDelegationAuthentication> | AsAuthDef<GoogleServiceAccountAuthentication> | AsAuthDef<CustomAuthentication>;
+/**
+ * The union of authentication types that pack makers are allowed to use.
+ */
+export type AllowedAuthenticationDef = AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CodaApiBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<MultiHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<OAuth2Authentication> | AsAuthDef<OAuth2ClientCredentialsAuthentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication> | AsAuthDef<GoogleDomainWideDelegationAuthentication> | AsAuthDef<GoogleServiceAccountAuthentication> | AsAuthDef<CustomAuthentication>;
 /**
  * The union of supported authentication definitions. These represent simplified configurations
  * a pack developer can specify when calling {@link PackDefinitionBuilder.setUserAuthentication} when using
  * a pack definition builder. The builder massages these definitions into the form of
  * an {@link Authentication} value, which is the value Coda ultimately cares about.
  */
-export type AuthenticationDef = NoAuthentication | VariousAuthentication | StandardAuthenticationDef;
+export type AuthenticationDef = NoAuthentication | VariousAuthentication | AllowedAuthenticationDef;
 /**
  * The union of authentication methods that are supported for system authentication,
  * where the pack author provides credentials used in HTTP requests rather than the user.
@@ -868,34 +870,44 @@ export type VariousSupportedAuthenticationTypes = $Values<Pick<VariousSupportedA
 /**
  * @hidden
  */
-export declare enum ReservedAuthenticationKeys {
+export declare enum ReservedAuthenticationNames {
     /**
      * References the default user authentication of the pack.
      */
-    Default = "DEFAULT",
+    Default = "defaultAuthentication",
     /**
      * References the system authentication of the pack.
      */
-    System = "SYSTEM"
+    System = "systemAuthentication"
 }
 /**
  * TODO(patrick): Unhide this.
  * @hidden
  */
-export interface AuxiliaryAuthentication {
-    authentication: StandardAuthentication;
+export interface AdminAuthentication {
+    authentication: AllowedAuthenticationDef;
     /**
-     * Passed into formula context.
-     * Cannot be one of the ReservedAuthenticationKeys.
+     * Passed into formula execution context.
+     * Cannot be one of the ReservedAuthenticationNames.
+     * Not user-facing.
+     * If changed, will break existing connected accounts.
      */
-    key: string;
+    name: string;
     displayName: string;
-    description?: string;
+    /**
+     * User-visible.
+     */
+    description: string;
     /**
      * If true, this authentication can be used to sync permissions associated with data
      * in addition to the data itself.
      */
     canSyncPermissions?: boolean;
+    /**
+     * If true, Coda will not assume that the user who sets up an account with this authentication
+     * should themselves have access to the data owned by that account.
+     */
+    isServiceAccount?: boolean;
 }
 /**
  * Definition for a custom column type that users can apply to any column in any Coda table.
@@ -1044,7 +1056,7 @@ export interface PackVersionDefinition {
      * TODO(patrick): Unhide this.
      * @hidden
      */
-    additionalAuthentications?: AuxiliaryAuthentication[];
+    additionalAuthentications?: AdminAuthentication[];
     /**
      * Any domain(s) to which this pack makes fetcher requests. The domains this pack connects to must be
      * declared up front here, both to clearly communicate to users what a pack is capable of connecting to,

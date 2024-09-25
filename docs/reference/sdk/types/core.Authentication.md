@@ -8,6 +8,6 @@ search:
 
 [core](../modules/core.md).Authentication
 
-Ƭ **Authentication**: [`NoAuthentication`](../interfaces/core.NoAuthentication.md) \| `VariousAuthentication` \| `StandardAuthentication`
+Ƭ **Authentication**: [`NoAuthentication`](../interfaces/core.NoAuthentication.md) \| `VariousAuthentication` \| `AllowedAuthentication`
 
 The union of supported authentication methods.

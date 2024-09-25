@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HttpStatusCode = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationKeys = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
+exports.HttpStatusCode = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
 /**
  * @deprecated
  */
@@ -176,17 +176,17 @@ var TokenExchangeCredentialsLocation;
 /**
  * @hidden
  */
-var ReservedAuthenticationKeys;
-(function (ReservedAuthenticationKeys) {
+var ReservedAuthenticationNames;
+(function (ReservedAuthenticationNames) {
     /**
      * References the default user authentication of the pack.
      */
-    ReservedAuthenticationKeys["Default"] = "DEFAULT";
+    ReservedAuthenticationNames["Default"] = "defaultAuthentication";
     /**
      * References the system authentication of the pack.
      */
-    ReservedAuthenticationKeys["System"] = "SYSTEM";
-})(ReservedAuthenticationKeys || (exports.ReservedAuthenticationKeys = ReservedAuthenticationKeys = {}));
+    ReservedAuthenticationNames["System"] = "systemAuthentication";
+})(ReservedAuthenticationNames || (exports.ReservedAuthenticationNames = ReservedAuthenticationNames = {}));
 /**
  * @deprecated
  * @ignore
