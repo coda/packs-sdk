@@ -542,7 +542,7 @@ pack.setUserAuthentication({
 });
 ```
 
-The step's `getOptions` works like [dynamic autocomplete][autocomplete_dynamic], fetching the list of available endpoints and returning a display name and value for each. Note that the returned endpoints must be an object with a name and value field. Further, the value field must be a string that can be parsed by javascript's `new URL(value)` function. After the user enters their credentials they will be prompted to select one of the endpoints in a dialog.
+The step's `getOptions` works like [dynamic autocomplete][autocomplete_dynamic], fetching the list of available endpoints and returning a display name and value for each. Note that the returned endpoints must be an object with a `display` and `value` field. Further, the `value` must be a valid URL. After the user enters their credentials they will be prompted to select one of the endpoints in a dialog.
 
 <img src="../../../images/auth_setendpoint.png" srcset="../../../images/auth_setendpoint_2x.png 2x" class="screenshot" alt="Selecting from a list of endpoints">
 
