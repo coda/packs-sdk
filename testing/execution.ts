@@ -6,7 +6,9 @@ import {FormulaType} from '../runtime/types';
 import type {GenericExecuteGetPermissionsRequest} from '../api';
 import type {GenericSyncFormulaResult} from '../api';
 import type {GenericSyncUpdate} from '../api';
+import type {GenericSyncUpdateResult} from '../api';
 import type {GetPermissionsFormulaSpecification} from '../runtime/types';
+import type {GetPermissionsResult} from '../api';
 import type {MetadataContext} from '../api';
 import type {MetadataFormula} from '../api';
 import type {MetadataFormulaSpecification} from '../runtime/types';
@@ -22,6 +24,7 @@ import type {SyncFormulaSpecification} from '../runtime/types';
 import type {SyncMetadataFormulaSpecification} from '../runtime/types';
 import type {SyncUpdateFormulaSpecification} from '../runtime/types';
 import type {TypedPackFormula} from '../api';
+import type {UpdateSyncExecutionContext} from '../api_types';
 import {coerceParams} from './coercion';
 import {ensureExists} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
@@ -672,6 +675,78 @@ export async function executeSyncFormulaFromPackDefSingleIteration(
     undefined,
     options,
   ) as Promise<GenericSyncFormulaResult>;
+}
+
+/**
+ * Executes an executeGetPermissions request and returns the result.
+ *
+ * @hidden
+ */
+export async function executeGetPermissionsFormulaFromPackDef(
+  packDef: BasicPackDefinition,
+  syncFormulaName: string,
+  params: ParamValues<ParamDefs>,
+  executeGetPermissionsRequest: GenericExecuteGetPermissionsRequest,
+  context?: SyncExecutionContext,
+  options?: ExecuteOptions,
+  {useRealFetcher, manifestPath}: ContextOptions = {},
+): Promise<GetPermissionsResult> {
+  let executionContext = context;
+  if (!executionContext && useRealFetcher) {
+    const credentials = getCredentials(manifestPath);
+    executionContext = newFetcherSyncExecutionContext(
+      buildUpdateCredentialsCallback(manifestPath),
+      getPackAuth(packDef),
+      packDef.networkDomains,
+      credentials,
+    );
+  }
+
+  return findAndExecutePackFunction(
+    params,
+    {formulaName: syncFormulaName, type: FormulaType.GetPermissions},
+    packDef,
+    executionContext || newMockSyncExecutionContext(),
+    undefined,
+    executeGetPermissionsRequest,
+    options,
+  ) as Promise<GetPermissionsResult>;
+}
+
+/**
+ * Executes an executeUpdate request for an update sync formula, and returns the result.
+ *
+ * @hidden
+ */
+export async function executeUpdateFormulaFromPackDef(
+  packDef: BasicPackDefinition,
+  syncFormulaName: string,
+  params: ParamValues<ParamDefs>,
+  context: UpdateSyncExecutionContext,
+  syncUpdates: GenericSyncUpdate[],
+  options?: ExecuteOptions,
+  {useRealFetcher, manifestPath}: ContextOptions = {},
+): Promise<GenericSyncUpdateResult> {
+  let executionContext = context;
+  if (!executionContext && useRealFetcher) {
+    const credentials = getCredentials(manifestPath);
+    executionContext = newFetcherSyncExecutionContext(
+      buildUpdateCredentialsCallback(manifestPath),
+      getPackAuth(packDef),
+      packDef.networkDomains,
+      credentials,
+    );
+  }
+
+  return findAndExecutePackFunction(
+    params,
+    {formulaName: syncFormulaName, type: FormulaType.SyncUpdate},
+    packDef,
+    context,
+    syncUpdates,
+    undefined,
+    options,
+  ) as Promise<GenericSyncUpdateResult>;
 }
 
 export async function executeMetadataFormula(

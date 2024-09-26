@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Changed
+
+- Add unit testing capabilities for update and get permissions
+
 ## [1.7.18] - 2024-09-20
 
 ### Changed

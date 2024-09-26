@@ -21,6 +21,10 @@ export {executeFormulaFromPackDef} from './testing/execution';
 export {executeMetadataFormula} from './testing/execution';
 export {executeSyncFormulaFromPackDef} from './testing/execution';
 export {executeSyncFormulaFromPackDefSingleIteration} from './testing/execution';
+
+// @hidden
+export {executeGetPermissionsFormulaFromPackDef} from './testing/execution';
+export {executeUpdateFormulaFromPackDef} from './testing/execution';
 export {newRealFetcherExecutionContext} from './testing/execution';
 export {newRealFetcherSyncExecutionContext} from './testing/execution';
 
