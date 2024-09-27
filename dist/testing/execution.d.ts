@@ -2,7 +2,11 @@
 import type { BasicPackDefinition } from '../types';
 import type { ExecutionContext } from '../api_types';
 import type { FormulaSpecification } from '../runtime/types';
+import type { GenericExecuteGetPermissionsRequest } from '../api';
 import type { GenericSyncFormulaResult } from '../api';
+import type { GenericSyncUpdate } from '../api';
+import type { GenericSyncUpdateResult } from '../api';
+import type { GetPermissionsResult } from '../api';
 import type { MetadataContext } from '../api';
 import type { MetadataFormula } from '../api';
 import type { PackFormulaResult } from '../api_types';
@@ -10,6 +14,7 @@ import type { ParamDefs } from '../api_types';
 import type { ParamValues } from '../api_types';
 import type { SyncExecutionContext } from '../api_types';
 import type { SyncFormulaSpecification } from '../runtime/types';
+import type { UpdateSyncExecutionContext } from '../api_types';
 import util from 'util';
 export declare const DEFAULT_MAX_ROWS = 1000;
 export interface ExecuteOptions {
@@ -72,6 +77,18 @@ export declare function executeSyncFormulaFromPackDef<T extends object = any>(pa
  * including the continuation, for inspection.
  */
 export declare function executeSyncFormulaFromPackDefSingleIteration(packDef: BasicPackDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, options?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<GenericSyncFormulaResult>;
+/**
+ * Executes an executeGetPermissions request and returns the result.
+ *
+ * @hidden
+ */
+export declare function executeGetPermissionsFormulaFromPackDef(packDef: BasicPackDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, executeGetPermissionsRequest: GenericExecuteGetPermissionsRequest, context?: SyncExecutionContext, options?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<GetPermissionsResult>;
+/**
+ * Executes an executeUpdate request for an update sync formula, and returns the result.
+ *
+ * @hidden
+ */
+export declare function executeUpdateFormulaFromPackDef(packDef: BasicPackDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context: UpdateSyncExecutionContext, syncUpdates: GenericSyncUpdate[], options?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<GenericSyncUpdateResult>;
 export declare function executeMetadataFormula(formula: MetadataFormula, metadataParams?: {
     search?: string;
     formulaContext?: MetadataContext;

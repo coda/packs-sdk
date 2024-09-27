@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newRealFetcherSyncExecutionContext = exports.newRealFetcherExecutionContext = exports.executeMetadataFormula = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeFormulaOrSyncWithRawParams = exports.VMError = exports.executeFormulaOrSyncWithVM = exports.makeFormulaSpec = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = exports.DEFAULT_MAX_ROWS = void 0;
+exports.newRealFetcherSyncExecutionContext = exports.newRealFetcherExecutionContext = exports.executeMetadataFormula = exports.executeUpdateFormulaFromPackDef = exports.executeGetPermissionsFormulaFromPackDef = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeFormulaOrSyncWithRawParams = exports.VMError = exports.executeFormulaOrSyncWithVM = exports.makeFormulaSpec = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = exports.DEFAULT_MAX_ROWS = void 0;
 const types_1 = require("../runtime/types");
 const types_2 = require("../runtime/types");
 const buffer_1 = require("buffer/");
@@ -471,6 +471,34 @@ async function executeSyncFormulaFromPackDefSingleIteration(packDef, syncFormula
     return findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_1.FormulaType.Sync }, packDef, executionContext || (0, mocks_2.newMockSyncExecutionContext)(), undefined, undefined, options);
 }
 exports.executeSyncFormulaFromPackDefSingleIteration = executeSyncFormulaFromPackDefSingleIteration;
+/**
+ * Executes an executeGetPermissions request and returns the result.
+ *
+ * @hidden
+ */
+async function executeGetPermissionsFormulaFromPackDef(packDef, syncFormulaName, params, executeGetPermissionsRequest, context, options, { useRealFetcher, manifestPath } = {}) {
+    let executionContext = context;
+    if (!executionContext && useRealFetcher) {
+        const credentials = getCredentials(manifestPath);
+        executionContext = (0, fetcher_2.newFetcherSyncExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_3.getPackAuth)(packDef), packDef.networkDomains, credentials);
+    }
+    return findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_1.FormulaType.GetPermissions }, packDef, executionContext || (0, mocks_2.newMockSyncExecutionContext)(), undefined, executeGetPermissionsRequest, options);
+}
+exports.executeGetPermissionsFormulaFromPackDef = executeGetPermissionsFormulaFromPackDef;
+/**
+ * Executes an executeUpdate request for an update sync formula, and returns the result.
+ *
+ * @hidden
+ */
+async function executeUpdateFormulaFromPackDef(packDef, syncFormulaName, params, context, syncUpdates, options, { useRealFetcher, manifestPath } = {}) {
+    let executionContext = context;
+    if (!executionContext && useRealFetcher) {
+        const credentials = getCredentials(manifestPath);
+        executionContext = (0, fetcher_2.newFetcherSyncExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_3.getPackAuth)(packDef), packDef.networkDomains, credentials);
+    }
+    return findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_1.FormulaType.SyncUpdate }, packDef, context, syncUpdates, undefined, options);
+}
+exports.executeUpdateFormulaFromPackDef = executeUpdateFormulaFromPackDef;
 async function executeMetadataFormula(formula, metadataParams = {}, context = (0, mocks_1.newMockExecutionContext)()) {
     const { search, formulaContext } = metadataParams;
     return formula.execute([search || '', formulaContext ? JSON.stringify(formulaContext) : ''], context);
