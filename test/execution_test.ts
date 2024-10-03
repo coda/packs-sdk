@@ -149,7 +149,7 @@ describe('Execution', () => {
   describe('fetcher mocks', () => {
     it('fetch calls are mocked', async () => {
       const context = newMockExecutionContext();
-      context.fetcher.fetch.returns(newJsonFetchResponse({result: 'hello'}));
+      context.fetcher.fetch.resolves(newJsonFetchResponse({result: 'hello'}));
       const result = await executeFormulaFromPackDef(fakePack, 'Lookup', ['foo'], context);
       assert.equal(result, 'hello');
 
@@ -177,8 +177,8 @@ describe('Execution', () => {
       });
 
       const context = newMockExecutionContext();
-      context.temporaryBlobStorage.storeBlob.returns('blob-url-1');
-      context.temporaryBlobStorage.storeUrl.returns('blob-url-2');
+      context.temporaryBlobStorage.storeBlob.resolves('blob-url-1');
+      context.temporaryBlobStorage.storeUrl.resolves('blob-url-2');
       const result = await executeFormulaFromPackDef(fakeBlobPack, 'Blobs', [], context);
       assert.equal(result, 'blob-url-1,blob-url-2');
 
@@ -391,7 +391,7 @@ describe('Execution', () => {
     it('executes getConnectionName formula', async () => {
       assertCondition(fakePackWithMetadata.defaultAuthentication?.type === AuthenticationType.HeaderBearerToken);
       const context = newMockExecutionContext();
-      context.fetcher.fetch.returns(newJsonFetchResponse({username: 'some-user'}));
+      context.fetcher.fetch.resolves(newJsonFetchResponse({username: 'some-user'}));
 
       const result = await executeMetadataFormula(
         fakePackWithMetadata.defaultAuthentication.getConnectionName!,

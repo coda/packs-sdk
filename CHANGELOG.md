@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Changed
+
+- Improve types for testing
+
 ## [1.7.19] - 2024-09-27
 
 ### Changed

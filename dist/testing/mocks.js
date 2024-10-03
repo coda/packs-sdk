@@ -18,7 +18,9 @@ function newMockExecutionContext(overrides) {
         timezone: 'America/Los_Angeles',
         invocationToken: (0, uuid_1.v4)(),
         fetcher: {
-            fetch: sinon_1.default.stub(),
+            fetch: sinon_1.default.stub().callsFake(async (r) => {
+                throw new Error(`Unhandled fetch: ${r.method} ${r.url}`);
+            }),
         },
         temporaryBlobStorage: {
             storeUrl: sinon_1.default.stub(),

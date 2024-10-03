@@ -78,6 +78,12 @@ export declare function executeSyncFormulaFromPackDef<T extends object = any>(pa
  */
 export declare function executeSyncFormulaFromPackDefSingleIteration(packDef: BasicPackDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, options?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<GenericSyncFormulaResult>;
 /**
+ * Transforms a result from a sync formula execution to one that can be passed to executeGetPermissions.
+ *
+ * @hidden
+ */
+export declare function transformSyncFormulaResultToGetPermissionsRequest(packDef: BasicPackDefinition, syncFormulaName: string, result: GenericSyncFormulaResult): GenericExecuteGetPermissionsRequest;
+/**
  * Executes an executeGetPermissions request and returns the result.
  *
  * @hidden

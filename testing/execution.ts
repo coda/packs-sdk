@@ -1,5 +1,6 @@
 import type {BasicPackDefinition} from '../types';
 import type {Credentials} from './auth_types';
+import type {ExecuteGetPermissionsRequestRow} from '../api';
 import type {ExecutionContext} from '../api_types';
 import type {FormulaSpecification} from '../runtime/types';
 import {FormulaType} from '../runtime/types';
@@ -47,6 +48,7 @@ import * as thunk from '../runtime/thunk/thunk';
 import {transformBody} from '../handler_templates';
 import {tryFindFormula} from '../runtime/common/helpers';
 import {tryFindSyncFormula} from '../runtime/common/helpers';
+import {untransformBody} from '../handler_templates';
 import util from 'util';
 import {validateParams} from './validation';
 import {validateResult} from './validation';
@@ -675,6 +677,24 @@ export async function executeSyncFormulaFromPackDefSingleIteration(
     undefined,
     options,
   ) as Promise<GenericSyncFormulaResult>;
+}
+
+/**
+ * Transforms a result from a sync formula execution to one that can be passed to executeGetPermissions.
+ *
+ * @hidden
+ */
+export function transformSyncFormulaResultToGetPermissionsRequest(
+  packDef: BasicPackDefinition,
+  syncFormulaName: string,
+  result: GenericSyncFormulaResult,
+): GenericExecuteGetPermissionsRequest {
+  const formula = findSyncFormula(packDef, syncFormulaName);
+  const itemSchema = ensureExists(formula.schema).items;
+  const rows = result.result.map<ExecuteGetPermissionsRequestRow<any, any, any>>(r => ({
+    row: untransformBody(r, itemSchema),
+  }));
+  return {rows};
 }
 
 /**
