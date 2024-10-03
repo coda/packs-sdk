@@ -296,6 +296,12 @@ export interface BaseAuthentication {
    * Using multiple authenticated network domains is uncommon and requires Coda approval.
    */
   networkDomain?: string | string[];
+
+  /**
+   * If true, this authentication can be used to sync permissions associated with data
+   * in addition to the data itself.
+   */
+  canSyncPermissions?: boolean;
 }
 
 /**
@@ -1015,12 +1021,6 @@ export interface AdminAuthentication {
    * User-visible.
    */
   description: string;
-
-  /**
-   * If true, this authentication can be used to sync permissions associated with data
-   * in addition to the data itself.
-   */
-  canSyncPermissions?: boolean;
 
   /**
    * If true, Coda will not assume that the user who sets up an account with this authentication
