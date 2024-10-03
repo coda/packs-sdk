@@ -1185,7 +1185,7 @@ export interface PackVersionDefinition {
    * TODO(patrick): Unhide this.
    * @hidden
    */
-  additionalAuthentications?: AdminAuthentication[];
+  adminAuthentications?: AdminAuthentication[];
 
   /**
    * Any domain(s) to which this pack makes fetcher requests. The domains this pack connects to must be

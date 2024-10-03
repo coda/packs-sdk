@@ -398,6 +398,7 @@ function buildMetadataSchema({ sdkVersion }) {
         // The items are technically a discriminated union type but that union currently only has one member.
         postSetup: z.array(setEndpointPostSetupValidator).optional(),
         networkDomain: z.union([singleAuthDomainSchema, z.array(singleAuthDomainSchema).nonempty()]).optional(),
+        canSyncPermissions: z.boolean().optional(),
     };
     const defaultAuthenticationValidators = {
         [types_1.AuthenticationType.None]: zodCompleteStrictObject({
@@ -1437,7 +1438,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }),
         systemConnectionAuthentication: z.union(zodUnionInput(systemAuthenticationValidators)).optional(),
         // TODO(patrick): ....
-        additionalAuthentications: z.array(z.any()).optional(),
+        adminAuthentications: z.array(z.any()).optional(),
         formulas: z
             .array(formulaMetadataSchema)
             .max(exports.Limits.BuildingBlockCountPerType)

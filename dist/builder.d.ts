@@ -57,10 +57,10 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      */
     systemConnectionAuthentication?: SystemAuthentication;
     /**
-     * See {@link PackVersionDefinition.additionalAuthentications}.
+     * See {@link PackVersionDefinition.adminAuthentications}.
      * @hidden
      */
-    additionalAuthentications?: AdminAuthentication[];
+    adminAuthentications?: AdminAuthentication[];
     /**
      * See {@link PackVersionDefinition.version}.
      */

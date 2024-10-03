@@ -75,10 +75,10 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
   systemConnectionAuthentication?: SystemAuthentication;
 
   /**
-   * See {@link PackVersionDefinition.additionalAuthentications}.
+   * See {@link PackVersionDefinition.adminAuthentications}.
    * @hidden
    */
-  additionalAuthentications?: AdminAuthentication[];
+  adminAuthentications?: AdminAuthentication[];
 
   /**
    * See {@link PackVersionDefinition.version}.
@@ -304,6 +304,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * ```
    */
   setSystemAuthentication(systemAuthentication: SystemAuthenticationDef): this {
+    // TODO(patrick): Remove this cast
     this.systemConnectionAuthentication = this._wrapAuthenticationFunctions(
       systemAuthentication,
     ) as SystemAuthentication;
@@ -314,11 +315,11 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * @hidden
    */
   setAdminAuthentications(adminAuthentications: AdminAuthentication[]): this {
-    if (!this.additionalAuthentications) {
-      this.additionalAuthentications = [];
+    if (!this.adminAuthentications) {
+      this.adminAuthentications = [];
     }
     for (const adminAuth of adminAuthentications) {
-      this.additionalAuthentications.push({
+      this.adminAuthentications.push({
         ...adminAuth,
         authentication: this._wrapAuthenticationFunctions(adminAuth.authentication),
       });

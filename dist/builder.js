@@ -221,11 +221,11 @@ class PackDefinitionBuilder {
      * @hidden
      */
     setAdminAuthentications(adminAuthentications) {
-        if (!this.additionalAuthentications) {
-            this.additionalAuthentications = [];
+        if (!this.adminAuthentications) {
+            this.adminAuthentications = [];
         }
         for (const adminAuth of adminAuthentications) {
-            this.additionalAuthentications.push({
+            this.adminAuthentications.push({
                 ...adminAuth,
                 authentication: this._wrapAuthenticationFunctions(adminAuth.authentication),
             });

@@ -281,6 +281,11 @@ export interface BaseAuthentication {
      * Using multiple authenticated network domains is uncommon and requires Coda approval.
      */
     networkDomain?: string | string[];
+    /**
+     * If true, this authentication can be used to sync permissions associated with data
+     * in addition to the data itself.
+     */
+    canSyncPermissions?: boolean;
 }
 /**
  * Authenticate using an HTTP header of the form `Authorization: Bearer <token>`.
@@ -899,11 +904,6 @@ export interface AdminAuthentication {
      */
     description: string;
     /**
-     * If true, this authentication can be used to sync permissions associated with data
-     * in addition to the data itself.
-     */
-    canSyncPermissions?: boolean;
-    /**
      * If true, Coda will not assume that the user who sets up an account with this authentication
      * should themselves have access to the data owned by that account.
      */
@@ -1056,7 +1056,7 @@ export interface PackVersionDefinition {
      * TODO(patrick): Unhide this.
      * @hidden
      */
-    additionalAuthentications?: AdminAuthentication[];
+    adminAuthentications?: AdminAuthentication[];
     /**
      * Any domain(s) to which this pack makes fetcher requests. The domains this pack connects to must be
      * declared up front here, both to clearly communicate to users what a pack is capable of connecting to,
