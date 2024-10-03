@@ -2,6 +2,7 @@ import {compilePackBundle} from '../testing/compile';
 import {executeFormulaOrSyncWithVM} from '../testing/execution';
 import {newMockSyncExecutionContext} from '../testing/mocks';
 import path from 'path';
+import sinon from 'sinon';
 import {translateErrorStackFromVM} from '../runtime/common/source_map';
 
 describe('compile', () => {
@@ -79,9 +80,12 @@ describe('compile', () => {
     });
     assert.equal(response, 'okay');
     assert.isTrue(
-      executionContext.temporaryBlobStorage.storeBlob.calledWithMatch((buffer: any) => {
-        return Buffer.isBuffer(buffer);
-      }, 'text/html'),
+      executionContext.temporaryBlobStorage.storeBlob.calledWithMatch(
+        sinon.match((buffer: any) => {
+          return Buffer.isBuffer(buffer);
+        }),
+        'text/html',
+      ),
     );
   });
 });

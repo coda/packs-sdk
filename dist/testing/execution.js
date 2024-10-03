@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newRealFetcherSyncExecutionContext = exports.newRealFetcherExecutionContext = exports.executeMetadataFormula = exports.executeUpdateFormulaFromPackDef = exports.executeGetPermissionsFormulaFromPackDef = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeFormulaOrSyncWithRawParams = exports.VMError = exports.executeFormulaOrSyncWithVM = exports.makeFormulaSpec = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = exports.DEFAULT_MAX_ROWS = void 0;
+exports.newRealFetcherSyncExecutionContext = exports.newRealFetcherExecutionContext = exports.executeMetadataFormula = exports.executeUpdateFormulaFromPackDef = exports.executeGetPermissionsFormulaFromPackDef = exports.transformSyncFormulaResultToGetPermissionsRequest = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeFormulaOrSyncWithRawParams = exports.VMError = exports.executeFormulaOrSyncWithVM = exports.makeFormulaSpec = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = exports.DEFAULT_MAX_ROWS = void 0;
 const types_1 = require("../runtime/types");
 const types_2 = require("../runtime/types");
 const buffer_1 = require("buffer/");
@@ -52,6 +52,7 @@ const thunk = __importStar(require("../runtime/thunk/thunk"));
 const handler_templates_1 = require("../handler_templates");
 const helpers_7 = require("../runtime/common/helpers");
 const helpers_8 = require("../runtime/common/helpers");
+const handler_templates_2 = require("../handler_templates");
 const util_1 = __importDefault(require("util"));
 const validation_1 = require("./validation");
 const validation_2 = require("./validation");
@@ -471,6 +472,20 @@ async function executeSyncFormulaFromPackDefSingleIteration(packDef, syncFormula
     return findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_1.FormulaType.Sync }, packDef, executionContext || (0, mocks_2.newMockSyncExecutionContext)(), undefined, undefined, options);
 }
 exports.executeSyncFormulaFromPackDefSingleIteration = executeSyncFormulaFromPackDefSingleIteration;
+/**
+ * Transforms a result from a sync formula execution to one that can be passed to executeGetPermissions.
+ *
+ * @hidden
+ */
+function transformSyncFormulaResultToGetPermissionsRequest(packDef, syncFormulaName, result) {
+    const formula = (0, helpers_2.findSyncFormula)(packDef, syncFormulaName);
+    const itemSchema = (0, ensure_1.ensureExists)(formula.schema).items;
+    const rows = result.result.map(r => ({
+        row: (0, handler_templates_2.untransformBody)(r, itemSchema),
+    }));
+    return { rows };
+}
+exports.transformSyncFormulaResultToGetPermissionsRequest = transformSyncFormulaResultToGetPermissionsRequest;
 /**
  * Executes an executeGetPermissions request and returns the result.
  *

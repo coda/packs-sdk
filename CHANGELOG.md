@@ -8,6 +8,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 - Add continuation for get permissions request and response
 
+### Changed
+
+- Improve types for testing
+
 ## [1.7.19] - 2024-09-27
 
 ### Changed

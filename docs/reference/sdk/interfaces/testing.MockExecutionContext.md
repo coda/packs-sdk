@@ -49,7 +49,7 @@ The [Fetcher](core.Fetcher.md) used for making HTTP requests.
 
 | Name | Type |
 | :------ | :------ |
-| `fetch` | `SinonStub`<`any`[], `any`\> |
+| `fetch` | `SinonStub`<[request: FetchRequest], `Promise`<[`FetchResponse`](core.FetchResponse.md)<`any`\>\>\> |
 
 #### Overrides
 
@@ -108,8 +108,8 @@ or are too large to return inline. See [TemporaryBlobStorage](core.TemporaryBlob
 
 | Name | Type |
 | :------ | :------ |
-| `storeBlob` | `SinonStub`<`any`[], `any`\> |
-| `storeUrl` | `SinonStub`<`any`[], `any`\> |
+| `storeBlob` | `SinonStub`<[blobData: Buffer, contentType: string, opts?: Object], `Promise`<`string`\>\> |
+| `storeUrl` | `SinonStub`<[url: string, opts?: Object, fetchOpts?: Pick<FetchRequest, "headers" \| "disableAuthentication"\>], `Promise`<`string`\>\> |
 
 #### Overrides
 
