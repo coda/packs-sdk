@@ -104,14 +104,13 @@ useDeprecatedResultNormalization = true, } = {}) {
     }
     if (formula) {
         const resultToNormalize = formulaSpec.type === types_1.FormulaType.Sync ? result.result : result;
+        let resultToValidate = resultToNormalize;
         // Matches legacy behavior within handler_templates:generateObjectResponseHandler where we never
         // called transform body on non-object responses.
         if (typeof resultToNormalize === 'object') {
             const schema = (_b = (_a = executionContext === null || executionContext === void 0 ? void 0 : executionContext.sync) === null || _a === void 0 ? void 0 : _a.schema) !== null && _b !== void 0 ? _b : formula.schema;
             let normalizedResult = (0, handler_templates_1.transformBody)(resultToNormalize, schema);
-            if (shouldValidateResult) {
-                (0, validation_2.validateResult)(formula, normalizedResult);
-            }
+            resultToValidate = normalizedResult;
             if (!useDeprecatedResultNormalization) {
                 normalizedResult = (0, handler_templates_2.untransformBody)(normalizedResult, schema);
             }
@@ -121,6 +120,9 @@ useDeprecatedResultNormalization = true, } = {}) {
             else {
                 result = normalizedResult;
             }
+        }
+        if (shouldValidateResult) {
+            (0, validation_2.validateResult)(formula, resultToValidate);
         }
     }
     return result;
