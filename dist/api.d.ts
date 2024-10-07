@@ -700,6 +700,12 @@ export interface GetPermissionsResult {
      *
      */
     rowAccessDefinitions: RowAccessDefinition[];
+    /**
+     * A marker indicating where the next get permissions invocation should pick up to get the next page of results.
+     * The contents of this object are entirely of your choosing. Get permissions formulas are called repeatedly
+     * until there is no continuation returned.
+     */
+    continuation?: Continuation;
 }
 /**
  * Type definition for a single row passed to the {@link executeGetPermissions} function of a sync table.

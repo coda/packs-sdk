@@ -657,7 +657,7 @@ export type UpdateSync = Omit<Sync, 'continuation'>;
  * TODO(sam): Unhide this
  * @hidden
  */
-export type GetPermissionsSync = Omit<Sync, 'continuation'>;
+export type GetPermissionsSync = Sync;
 export type LoggerParamType = string | number | boolean | Record<any, any>;
 export interface Logger {
     trace(message: string, ...args: LoggerParamType[]): void;
