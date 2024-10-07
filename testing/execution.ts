@@ -1,6 +1,5 @@
 import type {BasicPackDefinition} from '../types';
 import type {Credentials} from './auth_types';
-import type {ExecuteGetPermissionsRequestRow} from '../api';
 import type {ExecutionContext} from '../api_types';
 import type {FormulaSpecification} from '../runtime/types';
 import {FormulaType} from '../runtime/types';

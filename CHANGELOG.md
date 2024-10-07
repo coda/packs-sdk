@@ -11,6 +11,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ### Changed
 
 - Improve types for testing
+- Fix `untransformBody` helper for array inputs
 
 ## [1.7.19] - 2024-09-27
 
