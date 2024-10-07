@@ -1232,6 +1232,68 @@ export interface ExecuteGetPermissionsRequest<
 export type GenericExecuteGetPermissionsRequest = ExecuteGetPermissionsRequest<any, any, any>;
 
 /**
+ * Type definition for the data passed to the {@link validatePermissions} function of a sync table.
+ *
+ * TODO(oleg,sam): Unhide this.
+ * @hidden
+ */
+export interface ValidatePermissionsRequest {
+  /**
+   * The list of item IDs for which to validate permissions. If possible, the Pack should use batch APIs to validate
+   * permissions for all items at once.
+   */
+  itemIds: string[];
+}
+
+/**
+ * The result of successfully validating a specific item in {@link validatePermissions}.
+ *
+ * TODO(oleg,sam): Unhide this.
+ * @hidden
+ */
+export interface ValidatePermissionsResultAccessibleRow {
+  /** The ID of the item validated. */
+  itemId: string;
+  /** True if the item is accessible. */
+  accessible: true;
+}
+
+/**
+ * The result of unsuccessfully validating a specific item in {@link validatePermissions}.
+ *
+ * TODO(oleg,sam): Unhide this.
+ * @hidden
+ */
+export interface ValidatePermissionsResultInaccessibleRow {
+  /** The ID of the item validated. */
+  itemId: string;
+  /** False if the item is not accessible. */
+  accessible: false;
+  /** An optional reason why the item is not accessible. */
+  reason?: string;
+}
+
+/**
+ * The result of validating a specific item in {@link validatePermissions}.
+ *
+ * TODO(oleg,sam): Unhide this.
+ * @hidden
+ */
+export type ValidatePermissionsResultRow =
+  | ValidatePermissionsResultAccessibleRow
+  | ValidatePermissionsResultInaccessibleRow;
+
+/**
+ * Type definition for the result of calls to {@link validatePermissions}.
+ *
+ * TODO(oleg,sam): Unhide this.
+ * @hidden
+ */
+export interface ValidatePermissionsResult {
+  rows: ValidatePermissionsResultRow[];
+}
+
+/**
  * Inputs for creating the formula that implements a sync table.
  */
 export interface SyncFormulaDef<
@@ -1296,6 +1358,18 @@ export interface SyncFormulaDef<
    * @hidden
    */
   maxPermissionBatchSize?: number;
+
+  /**
+   * The JavaScript function that verifies a set of rows is accessible previously synced with an admin's credentials is
+   * accessible with the contextual user's credentials.
+   *
+   * TODO(oleg,sam): Unhide this.
+   * @hidden
+   */
+  validatePermissions?(
+    request: ValidatePermissionsRequest,
+    context: ExecutionContext,
+  ): Promise<ValidatePermissionsResult>;
 }
 
 /**
@@ -2307,6 +2381,7 @@ export function makeSyncTable<
     execute: wrappedExecute,
     executeUpdate: wrappedExecuteUpdate,
     executeGetPermissions: wrappedExecuteGetPermissions,
+    validatePermissions: wrappedValidatePermissions,
     ...definition
   } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
 
@@ -2348,6 +2423,13 @@ export function makeSyncTable<
         `Sync table schemas with role ${TableRole.GroupMembers} must set a userIdProperty or memberGroupIdProperty`,
       );
     }
+  }
+
+  if (
+    wrappedValidatePermissions &&
+    !(wrappedExecuteGetPermissions || formula.parameters.some(p => p.crawlStrategy?.parentTable?.inheritPermissions))
+  ) {
+    throw new Error(`Cannot define validatePermissions without executeGetPermissions or inherited permissions.`);
   }
 
   const getSchema = wrapGetSchema(wrapMetadataFunction(getSchemaDef));
@@ -2453,6 +2535,25 @@ export function makeSyncTable<
       }
     : undefined;
 
+  const validatePermissions =
+    wrappedValidatePermissions &&
+    async function validatePermissions(request: ValidatePermissionsRequest, context: ExecutionContext) {
+      let result: ValidatePermissionsResult;
+      try {
+        result = await wrappedValidatePermissions(request, context);
+      } catch (err: any) {
+        result = {rows: request.itemIds.map(itemId => ({itemId, accessible: false, reason: err.message}))};
+      }
+
+      const resultItemIds = new Set(result.rows.map(row => row.itemId));
+      const missingRowIds = request.itemIds.filter(itemId => !resultItemIds.has(itemId));
+      for (const missingRowId of missingRowIds) {
+        result.rows.push({itemId: missingRowId, accessible: false, reason: 'No permissions returned'});
+      }
+
+      return result;
+    };
+
   return {
     name,
     description,
@@ -2462,14 +2563,15 @@ export function makeSyncTable<
       ...definition,
       cacheTtlSecs: 0,
       execute,
-      executeUpdate: executeUpdate as any,
+      executeUpdate,
       schema: formulaSchema,
       isSyncFormula: true,
       supportsUpdates: Boolean(executeUpdate),
       supportsGetPermissions: Boolean(executeGetPermissions),
       connectionRequirement: definition.connectionRequirement || connectionRequirement,
       resultType: Type.object as any,
-      executeGetPermissions: executeGetPermissions as any,
+      executeGetPermissions,
+      validatePermissions,
     },
     getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
     entityName,
