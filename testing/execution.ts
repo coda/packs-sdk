@@ -131,7 +131,7 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
     return result;
   }
 
-  if (useDeprecatedResultNormalization && formula) {
+  if (formula) {
     const resultToNormalize =
       formulaSpec.type === FormulaType.Sync ? (result as GenericSyncFormulaResult).result : result;
 
@@ -139,7 +139,12 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
     // called transform body on non-object responses.
     if (typeof resultToNormalize === 'object') {
       const schema = executionContext?.sync?.schema ?? formula.schema;
-      const normalizedResult = transformBody(resultToNormalize, schema);
+      let normalizedResult = transformBody(resultToNormalize, schema);
+
+      if (!useDeprecatedResultNormalization) {
+        normalizedResult = untransformBody(normalizedResult, schema);
+      }
+
       if (formulaSpec.type === FormulaType.Sync) {
         (result as GenericSyncFormulaResult).result = normalizedResult;
       } else {
