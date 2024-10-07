@@ -133,16 +133,14 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
   if (formula) {
     const resultToNormalize =
       formulaSpec.type === FormulaType.Sync ? (result as GenericSyncFormulaResult).result : result;
+    let resultToValidate = resultToNormalize;
 
     // Matches legacy behavior within handler_templates:generateObjectResponseHandler where we never
     // called transform body on non-object responses.
     if (typeof resultToNormalize === 'object') {
       const schema = executionContext?.sync?.schema ?? formula.schema;
       let normalizedResult = transformBody(resultToNormalize, schema);
-
-      if (shouldValidateResult) {
-        validateResult(formula, normalizedResult);
-      }
+      resultToValidate = normalizedResult;
 
       if (!useDeprecatedResultNormalization) {
         normalizedResult = untransformBody(normalizedResult, schema);
@@ -153,6 +151,10 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
       } else {
         result = normalizedResult;
       }
+    }
+
+    if (shouldValidateResult) {
+      validateResult(formula, resultToValidate);
     }
   }
 
