@@ -140,6 +140,10 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
       const schema = executionContext?.sync?.schema ?? formula.schema;
       let normalizedResult = transformBody(resultToNormalize, schema);
 
+      if (shouldValidateResult) {
+        validateResult(formula, normalizedResult);
+      }
+
       if (!useDeprecatedResultNormalization) {
         normalizedResult = untransformBody(normalizedResult, schema);
       }
@@ -150,13 +154,6 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
         result = normalizedResult;
       }
     }
-  }
-
-  if (shouldValidateResult && formula) {
-    const resultToValidate =
-      formulaSpec.type === FormulaType.Sync ? (result as GenericSyncFormulaResult).result : result;
-
-    validateResult(formula, resultToValidate);
   }
 
   return result;

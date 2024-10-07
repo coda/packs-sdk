@@ -207,8 +207,8 @@ function unmapKeys(obj, schema) {
 }
 function untransformBody(body, schema) {
     if ((0, schema_1.isArray)(schema) && (0, schema_2.isObject)(schema.items)) {
-        const objectBody = body;
-        const mappedObjs = unmapKeys(objectBody, schema.items);
+        const objects = body;
+        const mappedObjs = objects.map(obj => unmapKeys(obj, schema.items));
         return mappedObjs;
     }
     if ((0, schema_2.isObject)(schema)) {

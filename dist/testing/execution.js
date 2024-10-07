@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newRealFetcherSyncExecutionContext = exports.newRealFetcherExecutionContext = exports.executeMetadataFormula = exports.executeUpdateFormulaFromPackDef = exports.executeGetPermissionsFormulaFromPackDef = exports.transformSyncFormulaResultToGetPermissionsRequest = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeFormulaOrSyncWithRawParams = exports.VMError = exports.executeFormulaOrSyncWithVM = exports.makeFormulaSpec = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = exports.DEFAULT_MAX_ROWS = void 0;
+exports.newRealFetcherSyncExecutionContext = exports.newRealFetcherExecutionContext = exports.executeMetadataFormula = exports.executeUpdateFormulaFromPackDef = exports.executeGetPermissionsFormulaFromPackDef = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeFormulaOrSyncWithRawParams = exports.VMError = exports.executeFormulaOrSyncWithVM = exports.makeFormulaSpec = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = exports.DEFAULT_MAX_ROWS = void 0;
 const types_1 = require("../runtime/types");
 const types_2 = require("../runtime/types");
 const buffer_1 = require("buffer/");
@@ -102,13 +102,19 @@ useDeprecatedResultNormalization = true, } = {}) {
     if (formulaSpec.type === types_1.FormulaType.GetPermissions) {
         return result;
     }
-    if (useDeprecatedResultNormalization && formula) {
+    if (formula) {
         const resultToNormalize = formulaSpec.type === types_1.FormulaType.Sync ? result.result : result;
         // Matches legacy behavior within handler_templates:generateObjectResponseHandler where we never
         // called transform body on non-object responses.
         if (typeof resultToNormalize === 'object') {
             const schema = (_b = (_a = executionContext === null || executionContext === void 0 ? void 0 : executionContext.sync) === null || _a === void 0 ? void 0 : _a.schema) !== null && _b !== void 0 ? _b : formula.schema;
-            const normalizedResult = (0, handler_templates_1.transformBody)(resultToNormalize, schema);
+            let normalizedResult = (0, handler_templates_1.transformBody)(resultToNormalize, schema);
+            if (shouldValidateResult) {
+                (0, validation_2.validateResult)(formula, normalizedResult);
+            }
+            if (!useDeprecatedResultNormalization) {
+                normalizedResult = (0, handler_templates_2.untransformBody)(normalizedResult, schema);
+            }
             if (formulaSpec.type === types_1.FormulaType.Sync) {
                 result.result = normalizedResult;
             }
@@ -116,10 +122,6 @@ useDeprecatedResultNormalization = true, } = {}) {
                 result = normalizedResult;
             }
         }
-    }
-    if (shouldValidateResult && formula) {
-        const resultToValidate = formulaSpec.type === types_1.FormulaType.Sync ? result.result : result;
-        (0, validation_2.validateResult)(formula, resultToValidate);
     }
     return result;
 }
@@ -472,20 +474,6 @@ async function executeSyncFormulaFromPackDefSingleIteration(packDef, syncFormula
     return findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_1.FormulaType.Sync }, packDef, executionContext || (0, mocks_2.newMockSyncExecutionContext)(), undefined, undefined, options);
 }
 exports.executeSyncFormulaFromPackDefSingleIteration = executeSyncFormulaFromPackDefSingleIteration;
-/**
- * Transforms a result from a sync formula execution to one that can be passed to executeGetPermissions.
- *
- * @hidden
- */
-function transformSyncFormulaResultToGetPermissionsRequest(packDef, syncFormulaName, result) {
-    const formula = (0, helpers_2.findSyncFormula)(packDef, syncFormulaName);
-    const itemSchema = (0, ensure_1.ensureExists)(formula.schema).items;
-    const rows = result.result.map(r => ({
-        row: (0, handler_templates_2.untransformBody)(r, itemSchema),
-    }));
-    return { rows };
-}
-exports.transformSyncFormulaResultToGetPermissionsRequest = transformSyncFormulaResultToGetPermissionsRequest;
 /**
  * Executes an executeGetPermissions request and returns the result.
  *
