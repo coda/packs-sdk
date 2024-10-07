@@ -47,6 +47,7 @@ import * as thunk from '../runtime/thunk/thunk';
 import {transformBody} from '../handler_templates';
 import {tryFindFormula} from '../runtime/common/helpers';
 import {tryFindSyncFormula} from '../runtime/common/helpers';
+import {untransformBody} from '../handler_templates';
 import util from 'util';
 import {validateParams} from './validation';
 import {validateResult} from './validation';
@@ -129,28 +130,32 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
     return result;
   }
 
-  if (useDeprecatedResultNormalization && formula) {
+  if (formula) {
     const resultToNormalize =
       formulaSpec.type === FormulaType.Sync ? (result as GenericSyncFormulaResult).result : result;
+    let resultToValidate = resultToNormalize;
 
     // Matches legacy behavior within handler_templates:generateObjectResponseHandler where we never
     // called transform body on non-object responses.
     if (typeof resultToNormalize === 'object') {
       const schema = executionContext?.sync?.schema ?? formula.schema;
-      const normalizedResult = transformBody(resultToNormalize, schema);
+      let normalizedResult = transformBody(resultToNormalize, schema);
+      resultToValidate = normalizedResult;
+
+      if (!useDeprecatedResultNormalization) {
+        normalizedResult = untransformBody(normalizedResult, schema);
+      }
+
       if (formulaSpec.type === FormulaType.Sync) {
         (result as GenericSyncFormulaResult).result = normalizedResult;
       } else {
         result = normalizedResult;
       }
     }
-  }
 
-  if (shouldValidateResult && formula) {
-    const resultToValidate =
-      formulaSpec.type === FormulaType.Sync ? (result as GenericSyncFormulaResult).result : result;
-
-    validateResult(formula, resultToValidate);
+    if (shouldValidateResult) {
+      validateResult(formula, resultToValidate);
+    }
   }
 
   return result;

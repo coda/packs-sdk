@@ -107,7 +107,7 @@ describe('handler templates', () => {
     });
 
     it('array schema', () => {
-      const inputBody = {Foo: 'bar', Baz: 2};
+      const inputBody = [{Foo: 'bar', Baz: 2}];
       const body = untransformBody(inputBody, {
         type: ValueType.Array,
         items: {
@@ -118,10 +118,12 @@ describe('handler templates', () => {
           },
         },
       });
-      assert.deepEqual(body, {
-        foo: 'bar',
-        baz: 2,
-      });
+      assert.deepEqual(body, [
+        {
+          foo: 'bar',
+          baz: 2,
+        },
+      ]);
     });
 
     it('object schema', () => {
@@ -146,20 +148,26 @@ describe('handler templates', () => {
         properties: {
           Foo: {type: ValueType.String, fromKey: 'foo'},
           Baz: {type: ValueType.Number, fromKey: 'baz'},
-          Biz: {type: ValueType.Array, fromKey: 'biz', items: {
-            type: ValueType.Object,
-            properties: {
-              Buzz: {type: ValueType.Boolean, fromKey: 'buzz'},
+          Biz: {
+            type: ValueType.Array,
+            fromKey: 'biz',
+            items: {
+              type: ValueType.Object,
+              properties: {
+                Buzz: {type: ValueType.Boolean, fromKey: 'buzz'},
+              },
             },
-          }},
+          },
         },
       });
       assert.deepEqual(body, {
         foo: 'bar',
         baz: 2,
-        biz: [{
-          buzz: false,
-        }],
+        biz: [
+          {
+            buzz: false,
+          },
+        ],
       });
     });
 
@@ -170,9 +178,13 @@ describe('handler templates', () => {
         properties: {
           Foo: {type: ValueType.String, fromKey: 'foo'},
           Baz: {type: ValueType.Number, fromKey: 'baz'},
-          Biz: {type: ValueType.Object, fromKey: 'biz', properties: {
-            Buzz: {type: ValueType.Boolean, fromKey: 'buzz'},
-          }},
+          Biz: {
+            type: ValueType.Object,
+            fromKey: 'biz',
+            properties: {
+              Buzz: {type: ValueType.Boolean, fromKey: 'buzz'},
+            },
+          },
         },
       });
       assert.deepEqual(body, {
@@ -226,12 +238,16 @@ describe('handler templates', () => {
         properties: {
           Foo: {type: ValueType.String, fromKey: 'foo'},
           Baz: {type: ValueType.Number, fromKey: 'baz'},
-          Biz: {type: ValueType.Array, fromKey: 'biz', items: {
-            type: ValueType.Object,
-            properties: {
-              Buzz: {type: ValueType.Boolean, fromKey: 'buzz'},
+          Biz: {
+            type: ValueType.Array,
+            fromKey: 'biz',
+            items: {
+              type: ValueType.Object,
+              properties: {
+                Buzz: {type: ValueType.Boolean, fromKey: 'buzz'},
+              },
             },
-          }},
+          },
         },
       });
       assert.deepEqual(body, ['foo', 'baz', 'biz']);
@@ -244,9 +260,13 @@ describe('handler templates', () => {
         properties: {
           Foo: {type: ValueType.String, fromKey: 'foo'},
           Baz: {type: ValueType.Number, fromKey: 'baz'},
-          Biz: {type: ValueType.Object, fromKey: 'biz', properties: {
-            Buzz: {type: ValueType.Boolean, fromKey: 'buzz'},
-          }},
+          Biz: {
+            type: ValueType.Object,
+            fromKey: 'biz',
+            properties: {
+              Buzz: {type: ValueType.Boolean, fromKey: 'buzz'},
+            },
+          },
         },
       });
       assert.deepEqual(body, ['foo', 'baz', 'biz']);

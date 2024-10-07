@@ -52,6 +52,7 @@ const thunk = __importStar(require("../runtime/thunk/thunk"));
 const handler_templates_1 = require("../handler_templates");
 const helpers_7 = require("../runtime/common/helpers");
 const helpers_8 = require("../runtime/common/helpers");
+const handler_templates_2 = require("../handler_templates");
 const util_1 = __importDefault(require("util"));
 const validation_1 = require("./validation");
 const validation_2 = require("./validation");
@@ -101,13 +102,18 @@ useDeprecatedResultNormalization = true, } = {}) {
     if (formulaSpec.type === types_1.FormulaType.GetPermissions) {
         return result;
     }
-    if (useDeprecatedResultNormalization && formula) {
+    if (formula) {
         const resultToNormalize = formulaSpec.type === types_1.FormulaType.Sync ? result.result : result;
+        let resultToValidate = resultToNormalize;
         // Matches legacy behavior within handler_templates:generateObjectResponseHandler where we never
         // called transform body on non-object responses.
         if (typeof resultToNormalize === 'object') {
             const schema = (_b = (_a = executionContext === null || executionContext === void 0 ? void 0 : executionContext.sync) === null || _a === void 0 ? void 0 : _a.schema) !== null && _b !== void 0 ? _b : formula.schema;
-            const normalizedResult = (0, handler_templates_1.transformBody)(resultToNormalize, schema);
+            let normalizedResult = (0, handler_templates_1.transformBody)(resultToNormalize, schema);
+            resultToValidate = normalizedResult;
+            if (!useDeprecatedResultNormalization) {
+                normalizedResult = (0, handler_templates_2.untransformBody)(normalizedResult, schema);
+            }
             if (formulaSpec.type === types_1.FormulaType.Sync) {
                 result.result = normalizedResult;
             }
@@ -115,10 +121,9 @@ useDeprecatedResultNormalization = true, } = {}) {
                 result = normalizedResult;
             }
         }
-    }
-    if (shouldValidateResult && formula) {
-        const resultToValidate = formulaSpec.type === types_1.FormulaType.Sync ? result.result : result;
-        (0, validation_2.validateResult)(formula, resultToValidate);
+        if (shouldValidateResult) {
+            (0, validation_2.validateResult)(formula, resultToValidate);
+        }
     }
     return result;
 }

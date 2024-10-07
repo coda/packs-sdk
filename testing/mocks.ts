@@ -1,21 +1,31 @@
 import type {ExecutionContext} from '../api_types';
+import type {FetchRequest} from '../api_types';
 import type {FetchResponse} from '../api_types';
 import type {Sync} from '../api_types';
+import type {TemporaryBlobStorage} from '../api_types';
 import sinon from 'sinon';
 import {v4} from 'uuid';
 
+export type SinonFunctionSpy<T extends (...args: any[]) => any> = T extends (...args: infer ArgsT) => infer RetT
+  ? sinon.SinonSpy<ArgsT, RetT>
+  : never;
+
+export type SinonFunctionStub<T extends (...args: any[]) => any> = T extends (...args: infer ArgsT) => infer RetT
+  ? sinon.SinonStub<ArgsT, RetT>
+  : never;
+
 export interface MockExecutionContext extends ExecutionContext {
   fetcher: {
-    fetch: sinon.SinonStub;
+    fetch: sinon.SinonStub<[request: FetchRequest], Promise<FetchResponse<any>>>;
   };
   temporaryBlobStorage: {
-    storeUrl: sinon.SinonStub;
-    storeBlob: sinon.SinonStub;
+    storeUrl: SinonFunctionStub<TemporaryBlobStorage['storeUrl']>;
+    storeBlob: SinonFunctionStub<TemporaryBlobStorage['storeBlob']>;
   };
 }
 
 export interface MockSyncExecutionContext extends MockExecutionContext {
-  readonly sync: Sync;
+  sync: Sync;
 }
 
 export function newMockSyncExecutionContext(overrides?: Partial<MockSyncExecutionContext>): MockSyncExecutionContext {
@@ -30,7 +40,9 @@ export function newMockExecutionContext(overrides?: Partial<MockExecutionContext
     timezone: 'America/Los_Angeles',
     invocationToken: v4(),
     fetcher: {
-      fetch: sinon.stub(),
+      fetch: sinon.stub<[FetchRequest], Promise<FetchResponse>>().callsFake(async r => {
+        throw new Error(`Unhandled fetch: ${r.method} ${r.url}`);
+      }),
     },
     temporaryBlobStorage: {
       storeUrl: sinon.stub(),

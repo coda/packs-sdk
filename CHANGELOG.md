@@ -8,6 +8,13 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 - Add continuation for get permissions request and response
 
+### Changed
+
+- Improve types used for testing, specifically on `MockExecutionContext` returned by `newMockExecutionContext()`.
+  `fetcher.fetch`, `temporaryBlobStorage.storeUrl`, and `temporaryBlobStorage.storeBlob` should be stubbed using
+  `resolves()` and `rejects()` since the underlying methods return promises
+- Fix `untransformBody` helper for array inputs
+
 ## [1.7.19] - 2024-09-27
 
 ### Changed

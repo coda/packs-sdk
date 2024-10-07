@@ -306,7 +306,7 @@ function mapKeys(obj: {[key: string]: any}, schema?: Schema): object {
         continue;
       }
       remappedObject[newKey] = mappedKeys.length > 1 ? deepCopy(obj[key]) : obj[key];
-      const keySchema: Schema & ObjectSchemaProperty | undefined = schema.properties[newKey];
+      const keySchema: (Schema & ObjectSchemaProperty) | undefined = schema.properties[newKey];
       const currentValue = remappedObject[newKey];
       if (Array.isArray(currentValue) && isArray(keySchema) && isObject(keySchema.items)) {
         remappedObject[newKey] = currentValue.map(val => mapKeys(val, keySchema.items));
@@ -367,7 +367,7 @@ function unmapKeys(obj: {[key: string]: any}, schema?: Schema): object {
       continue;
     }
     remappedObject[newKey] = deepCopy(obj[key]);
-    const keySchema: Schema & ObjectSchemaProperty | undefined = schema.properties[key];
+    const keySchema: (Schema & ObjectSchemaProperty) | undefined = schema.properties[key];
     const currentValue = remappedObject[newKey];
     if (Array.isArray(currentValue) && isArray(keySchema) && isObject(keySchema.items)) {
       remappedObject[newKey] = currentValue.map(val => unmapKeys(val, keySchema.items));
@@ -380,8 +380,8 @@ function unmapKeys(obj: {[key: string]: any}, schema?: Schema): object {
 
 export function untransformBody(body: any, schema: Schema | undefined): any {
   if (isArray(schema) && isObject(schema.items)) {
-    const objectBody = body as Record<string, any>;
-    const mappedObjs = unmapKeys(objectBody, schema.items);
+    const objects = body as Array<Record<string, any>>;
+    const mappedObjs = objects.map(obj => unmapKeys(obj, schema.items));
     return mappedObjs;
   }
 
