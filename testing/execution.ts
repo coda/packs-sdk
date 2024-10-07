@@ -685,24 +685,6 @@ export async function executeSyncFormulaFromPackDefSingleIteration(
 }
 
 /**
- * Transforms a result from a sync formula execution to one that can be passed to executeGetPermissions.
- *
- * @hidden
- */
-export function transformSyncFormulaResultToGetPermissionsRequest(
-  packDef: BasicPackDefinition,
-  syncFormulaName: string,
-  result: GenericSyncFormulaResult,
-): GenericExecuteGetPermissionsRequest {
-  const formula = findSyncFormula(packDef, syncFormulaName);
-  const itemSchema = ensureExists(formula.schema).items;
-  const rows = result.result.map<ExecuteGetPermissionsRequestRow<any, any, any>>(r => ({
-    row: untransformBody(r, itemSchema),
-  }));
-  return {rows};
-}
-
-/**
  * Executes an executeGetPermissions request and returns the result.
  *
  * @hidden
