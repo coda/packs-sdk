@@ -4747,7 +4747,12 @@ export interface VariousAuthentication {
 	type: AuthenticationType.Various;
 }
 /**
- * The union of authentication types that pack makers are allowed to use.
+ * The union of authentication types that all pack makers are allowed to use.
+ *
+ * The only types excluded here are Various (only for use by Coda) and NoAuthentication,
+ * which should never need to be used by pack makers.
+ *
+ * These authentication types all extend BaseAuthentication.
  */
 export type AllowedAuthentication = HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | OAuth2ClientCredentialsAuthentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | GoogleDomainWideDelegationAuthentication | GoogleServiceAccountAuthentication | CustomAuthentication;
 /**
