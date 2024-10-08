@@ -315,16 +315,14 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * TODO(patrick): Unhide this
    * @hidden
    */
-  setAdminAuthentications(adminAuthentications: AdminAuthentication[]): this {
+  addAdminAuthentication(adminAuth: AdminAuthentication): this {
     if (!this.adminAuthentications) {
       this.adminAuthentications = [];
     }
-    for (const adminAuth of adminAuthentications) {
-      this.adminAuthentications.push({
-        ...adminAuth,
-        authentication: this._wrapAuthenticationFunctions(adminAuth.authentication),
-      });
-    }
+    this.adminAuthentications.push({
+      ...adminAuth,
+      authentication: this._wrapAuthenticationFunctions(adminAuth.authentication),
+    });
     return this;
   }
 

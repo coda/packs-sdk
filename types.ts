@@ -1,5 +1,4 @@
 import type {$Values} from './type_utils';
-import type {EnsureExtends} from './type_utils';
 import type {Formula} from './api';
 import type {MetadataFormula} from './api';
 import type {MetadataFormulaDef} from './api';
@@ -863,15 +862,6 @@ export type AllowedAuthentication =
   | GoogleDomainWideDelegationAuthentication
   | GoogleServiceAccountAuthentication
   | CustomAuthentication;
-
-/**
- * Exported to avoid Typescript not-used error
- * @hidden
- */
-export type _AllowedAuthenticationExtendsBaseAuthenticationCheck = EnsureExtends<
-  BaseAuthentication,
-  AllowedAuthentication
->;
 
 /**
  * The union of supported authentication methods.

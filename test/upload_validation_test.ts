@@ -4356,20 +4356,32 @@ describe('Pack metadata Validation', async () => {
       ]);
     });
 
-    it('endpointDomain gets validated, multi-domain', async () => {
+    it('endpointDomain can be substring', async () => {
       const metadata = createFakePackVersionMetadata({
-        networkDomains: ['example.com', 'other-example.com'],
+        networkDomains: ['example.com'],
         defaultAuthentication: {
           type: AuthenticationType.HeaderBearerToken,
           requiresEndpointUrl: true,
-          endpointDomain: 'other-example.com',
-          networkDomain: 'example.com',
+          endpointDomain: 'subdomain.example.com',
+        },
+      });
+      await validateJson(metadata);
+    });
+
+    it('endpointDomain gets validated, multi-domain', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['a.com', 'b.net'],
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+          requiresEndpointUrl: true,
+          endpointDomain: 'a.com',
+          networkDomain: 'b.net',
         },
       });
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          message: `Domain other-example.com is used in setUserAuthentication() but not declared in its "networkDomain".`,
+          message: `Domain a.com is used in setUserAuthentication() but not declared in its "networkDomain".`,
           path: 'authentication.defaultUserAuthentication',
         },
       ]);
@@ -4377,15 +4389,15 @@ describe('Pack metadata Validation', async () => {
       // Should be fixed via multiple network domains
       const metadataWithMultipleNetworkDomains = deepCopy(metadata);
       ensureExists(metadataWithMultipleNetworkDomains.defaultAuthentication as AllowedAuthentication).networkDomain = [
-        'other-example.com',
-        'example.com',
+        'a.com',
+        'b.net',
       ];
       await validateJson(metadataWithMultipleNetworkDomains);
 
       // Also fixed by changing the endpoint domain
       const metadataWithCorrectEndpointDomain = deepCopy(metadata);
       ensureExists(metadataWithCorrectEndpointDomain.defaultAuthentication as AllowedAuthentication).endpointDomain =
-        'example.com';
+        'b.net';
       await validateJson(metadataWithCorrectEndpointDomain);
     });
 
@@ -4510,6 +4522,7 @@ describe('Pack metadata Validation', async () => {
             {
               authentication: {
                 type: AuthenticationType.HeaderBearerToken,
+                canSyncPermissions: true,
               },
               name: 'bad name',
               displayName: 'Admin Auth',
@@ -4534,6 +4547,7 @@ describe('Pack metadata Validation', async () => {
                 type: AuthenticationType.OAuth2,
                 authorizationUrl: 'https://wrongdomain.com/oauth/authorize',
                 tokenUrl: 'https://wrongdomain.com/oauth/token',
+                canSyncPermissions: true,
               },
               name: 'goodName',
               displayName: 'Admin Auth',
@@ -4554,7 +4568,7 @@ describe('Pack metadata Validation', async () => {
         const fullMetadata = createFakePack({
           adminAuthentications: [
             {
-              authentication: {type: AuthenticationType.HeaderBearerToken},
+              authentication: {type: AuthenticationType.HeaderBearerToken, canSyncPermissions: true},
               name: 'foo',
               displayName: 'foo',
               description: 'foo',
@@ -4581,6 +4595,7 @@ describe('Pack metadata Validation', async () => {
                 type: AuthenticationType.OAuth2,
                 authorizationUrl: 'https://b.com/auth',
                 tokenUrl: 'https://b.com/token',
+                canSyncPermissions: true,
               },
               name: 'foo',
               displayName: 'foo',
@@ -4627,6 +4642,7 @@ describe('Pack metadata Validation', async () => {
                 authorizationUrl: 'https://example.com/oauth/authorize',
                 tokenUrl: 'https://example.com/oauth/token',
                 scopes: ['randomScope'],
+                canSyncPermissions: true,
               },
               name: 'adminAuth1',
               displayName: 'Admin Auth 1',
@@ -4638,6 +4654,7 @@ describe('Pack metadata Validation', async () => {
                 authorizationUrl: 'https://example.com/oauth/authorize',
                 tokenUrl: 'https://example.com/oauth/token',
                 scopes: ['admin', 'superadmin'],
+                canSyncPermissions: true,
               },
               name: 'adminAuth2',
               displayName: 'Admin Auth 2',
@@ -4646,6 +4663,7 @@ describe('Pack metadata Validation', async () => {
             {
               authentication: {
                 type: AuthenticationType.HeaderBearerToken,
+                canSyncPermissions: true,
               },
               name: 'adminAuth3',
               displayName: 'Admin Auth 3',
@@ -4693,7 +4711,7 @@ describe('Pack metadata Validation', async () => {
         const metadata = createFakePackVersionMetadata({
           adminAuthentications: [
             {
-              authentication: {type: AuthenticationType.HeaderBearerToken},
+              authentication: {type: AuthenticationType.HeaderBearerToken, canSyncPermissions: true},
               name: 'adminAuth1',
               displayName: 'Admin Auth 1',
               description: 'Admin authentication 1',
@@ -4726,6 +4744,26 @@ describe('Pack metadata Validation', async () => {
           {
             message: `fakeAuthName is not the name of an authentication`,
             path: 'SyncTable.allowedAuthenticationNames',
+          },
+        ]);
+      });
+
+      it('All admin auths must set canSyncPermissions', async () => {
+        const metadata = createFakePackVersionMetadata({
+          adminAuthentications: [
+            {
+              authentication: {type: AuthenticationType.HeaderBearerToken},
+              name: 'adminAuth1',
+              displayName: 'Admin Auth 1',
+              description: 'Admin authentication 1',
+            },
+          ],
+        });
+        const err = await validateJsonAndAssertFails(metadata, '1.0.0');
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: `All admin authentications must set "canSyncPermissions:true"`,
+            path: 'adminAuthentications[0].authentication',
           },
         ]);
       });
@@ -4768,7 +4806,15 @@ describe('Pack metadata Validation', async () => {
         const err = await validateJsonAndAssertFails(metadata, '1.0.0');
         assert.deepEqual(err.validationErrors, [
           {
-            message: `Authentication adminAuth1 must have 'canSyncPermissions:true' to be used in a sync table with executeGetPermissions`,
+            // NOTE(patrick): This test repetitive with the 'All admin auths must set canSyncPermissions' test
+            // above, but I'm leaving it in because if we ever allow admin authentications to have a purpose
+            // beyond syncing permissions, we should then expect the 2nd error message below.
+            message: 'All admin authentications must set "canSyncPermissions:true"',
+            path: 'adminAuthentications[0].authentication',
+          },
+          {
+            message:
+              "Authentication adminAuth1 must have 'canSyncPermissions:true' to be used in a sync table with executeGetPermissions",
             path: 'SyncTable.allowedAuthenticationNames',
           },
         ]);
@@ -4776,6 +4822,26 @@ describe('Pack metadata Validation', async () => {
         // Setting canSyncPermissions should fix the issue:
         ensureExists(metadata.adminAuthentications)[0].authentication.canSyncPermissions = true;
         await validateJson(metadata, '1.0.0');
+      });
+
+      it('cannot use Various auth in admin auths', async () => {
+        const metadata = createFakePackVersionMetadata({
+          adminAuthentications: [
+            {
+              authentication: {type: AuthenticationType.Various as any},
+              name: 'adminAuth1',
+              displayName: 'Admin Auth 1',
+              description: 'Admin authentication 1',
+            },
+          ],
+        });
+        const err = await validateJsonAndAssertFails(metadata, '1.0.0');
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: `Could not find any valid schema for this value.`,
+            path: 'adminAuthentications[0].authentication',
+          },
+        ]);
       });
 
       it('cannot set allowedAuthenticationNames on a formula with no connection', async () => {

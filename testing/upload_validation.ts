@@ -747,7 +747,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
 
   const reservedAuthenticationNames = Object.values(ReservedAuthenticationNames).map(value => value.toString());
   const adminAuthenticationValidator = zodCompleteObject<AdminAuthentication>({
-    authentication: z.union(zodUnionInput(Object.values(adminAuthenticationValidators))),
+    authentication: z
+      .union(zodUnionInput(Object.values(adminAuthenticationValidators)))
+      .refine(auth => Boolean(auth.canSyncPermissions), {
+        message: 'All admin authentications must set "canSyncPermissions:true"',
+      }),
     name: z
       .string()
       .min(1)
@@ -2322,7 +2326,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         const usedNetworkDomains = getUsedAuthNetworkDomains(authentication);
         if (usedNetworkDomains) {
           for (const usedNetworkDomain of usedNetworkDomains) {
-            if (!data.networkDomains.includes(usedNetworkDomain)) {
+            if (
+              !data.networkDomains.some(
+                domain => domain === usedNetworkDomain || usedNetworkDomain.endsWith('.' + domain),
+              )
+            ) {
               context.addIssue({
                 code: z.ZodIssueCode.custom,
                 path: [`authentication.${name}`],

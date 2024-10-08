@@ -1,6 +1,10 @@
 import './test_helper';
+import type {AllowedAuthentication} from '../types';
 import type {ArrayType} from '../api_types';
+import {AuthenticationType} from '../types';
+import type {BaseAuthentication} from '../types';
 import {ConnectionRequirement} from '../api_types';
+import type {EnsureExtends} from '../type_utils';
 import type {ExecutionContext} from '../api_types';
 import {OptionsType} from '../api_types';
 import type {ParamValues} from '../api_types';
@@ -651,6 +655,13 @@ describe('API test', () => {
           {connectionRequirement: ConnectionRequirement.None},
         ),
       });
+    });
+
+    it('Standard authentication types all extend BaseAuthentication', () => {
+      type ValidatedAuthentications = EnsureExtends<BaseAuthentication, AllowedAuthentication>;
+      // Useless test just to use the type.
+      const a: ValidatedAuthentications = {type: AuthenticationType.HeaderBearerToken};
+      assert.equal(a.type, AuthenticationType.HeaderBearerToken);
     });
   });
 
