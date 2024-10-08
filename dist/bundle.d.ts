@@ -3038,7 +3038,7 @@ export type Formula<ParamDefsT extends ParamDefs = ParamDefs, ResultT extends Va
 export type TypedPackFormula = Formula | GenericSyncFormula;
 export type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
 /** @hidden */
-export type PackFormulaMetadata = Omit<TypedPackFormula, "execute" | "executeUpdate">;
+export type PackFormulaMetadata = Omit<TypedPackFormula, "execute" | "executeUpdate" | "executeGetPermissions">;
 /** @hidden */
 export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, "execute">;
 /**
@@ -4794,17 +4794,26 @@ export type VariousSupportedAuthentication = NoAuthentication | HeaderBearerToke
  * @hidden
  */
 export interface AdminAuthentication {
-	authentication: AllowedAuthenticationDef;
+	authentication: AllowedAuthentication;
 	/**
-	 * Passed into formula execution context.
-	 * Cannot be one of the ReservedAuthenticationNames.
-	 * Not user-facing.
-	 * If changed, will break existing connected accounts.
+	 * A unique identifier for this authentication configuration. Coda will pass it into formulas via
+	 * the execution context. Users will not see this value.
+	 *
+	 * Names must use only alphanumeric characters and underscores, and must *not*
+	 * be one of the {@link ReservedAuthenticationNames}.
+	 *
+	 * If changed, existing connected accounts will stop working until users re-authenticate.
 	 */
 	name: string;
+	/**
+	 * User-visible name of this authentication type.
+	 */
 	displayName: string;
 	/**
-	 * User-visible.
+	 * User-visible description of this authentication type. Should cover topics like:
+	 * - What permissions in the 3rd party service are required to use this?
+	 * - What sync tables do or don't support this authentication type?
+	 * - Are there other caveats, like perhaps incremental sync not working with this authentication type?
 	 */
 	description: string;
 	/**
@@ -5214,6 +5223,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 */
 	setSystemAuthentication(systemAuthentication: SystemAuthenticationDef): this;
 	/**
+	 * TODO(patrick): Unhide this
 	 * @hidden
 	 */
 	setAdminAuthentications(adminAuthentications: AdminAuthentication[]): this;

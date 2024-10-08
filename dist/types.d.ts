@@ -1,4 +1,5 @@
 import type { $Values } from './type_utils';
+import type { EnsureExtends } from './type_utils';
 import type { Formula } from './api';
 import type { MetadataFormula } from './api';
 import type { MetadataFormulaDef } from './api';
@@ -807,6 +808,11 @@ export interface VariousAuthentication {
  */
 export type AllowedAuthentication = HeaderBearerTokenAuthentication | CodaApiBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | OAuth2Authentication | OAuth2ClientCredentialsAuthentication | WebBasicAuthentication | AWSAccessKeyAuthentication | AWSAssumeRoleAuthentication | GoogleDomainWideDelegationAuthentication | GoogleServiceAccountAuthentication | CustomAuthentication;
 /**
+ * Exported to avoid Typescript not-used error
+ * @hidden
+ */
+export type _AllowedAuthenticationExtendsBaseAuthenticationCheck = EnsureExtends<BaseAuthentication, AllowedAuthentication>;
+/**
  * The union of supported authentication methods.
  */
 export type Authentication = NoAuthentication | VariousAuthentication | AllowedAuthentication;
@@ -865,6 +871,11 @@ export type SystemAuthenticationDef = AsAuthDef<HeaderBearerTokenAuthentication>
  */
 export type SystemAuthenticationTypes = $Values<Pick<SystemAuthentication, 'type'>>;
 /**
+ * The subset of valid {@link AuthenticationType} enum values that can be used
+ * when defining admin authentications.
+ */
+export type AdminAuthenticationTypes = $Values<Pick<AllowedAuthentication, 'type'>>;
+/**
  * @ignore
  */
 export type VariousSupportedAuthentication = NoAuthentication | HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication;
@@ -879,7 +890,7 @@ export declare enum ReservedAuthenticationNames {
     /**
      * References the default user authentication of the pack.
      */
-    Default = "defaultAuthentication",
+    Default = "defaultUserAuthentication",
     /**
      * References the system authentication of the pack.
      */
@@ -890,17 +901,26 @@ export declare enum ReservedAuthenticationNames {
  * @hidden
  */
 export interface AdminAuthentication {
-    authentication: AllowedAuthenticationDef;
+    authentication: AllowedAuthentication;
     /**
-     * Passed into formula execution context.
-     * Cannot be one of the ReservedAuthenticationNames.
-     * Not user-facing.
-     * If changed, will break existing connected accounts.
+     * A unique identifier for this authentication configuration. Coda will pass it into formulas via
+     * the execution context. Users will not see this value.
+     *
+     * Names must use only alphanumeric characters and underscores, and must *not*
+     * be one of the {@link ReservedAuthenticationNames}.
+     *
+     * If changed, existing connected accounts will stop working until users re-authenticate.
      */
     name: string;
+    /**
+     * User-visible name of this authentication type.
+     */
     displayName: string;
     /**
-     * User-visible.
+     * User-visible description of this authentication type. Should cover topics like:
+     * - What permissions in the 3rd party service are required to use this?
+     * - What sync tables do or don't support this authentication type?
+     * - Are there other caveats, like perhaps incremental sync not working with this authentication type?
      */
     description: string;
     /**

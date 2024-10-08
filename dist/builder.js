@@ -214,10 +214,12 @@ class PackDefinitionBuilder {
      * ```
      */
     setSystemAuthentication(systemAuthentication) {
+        // TODO(patrick): Remove this cast
         this.systemConnectionAuthentication = this._wrapAuthenticationFunctions(systemAuthentication);
         return this;
     }
     /**
+     * TODO(patrick): Unhide this
      * @hidden
      */
     setAdminAuthentications(adminAuthentications) {

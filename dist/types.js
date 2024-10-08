@@ -181,7 +181,7 @@ var ReservedAuthenticationNames;
     /**
      * References the default user authentication of the pack.
      */
-    ReservedAuthenticationNames["Default"] = "defaultAuthentication";
+    ReservedAuthenticationNames["Default"] = "defaultUserAuthentication";
     /**
      * References the system authentication of the pack.
      */

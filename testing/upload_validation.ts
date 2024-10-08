@@ -2,6 +2,7 @@ import type {AWSAccessKeyAuthentication} from '../types';
 import type {AWSAssumeRoleAuthentication} from '../types';
 import type {AdminAuthentication} from '../types';
 import type {AdminAuthenticationTypes} from '../types';
+import type {AllowedAuthentication} from '../types';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '../schema';
 import type {AuthenticationMetadata} from '../compiled_types';
@@ -24,6 +25,7 @@ import {EmailDisplayType} from '../schema';
 import type {EmailSchema} from '../schema';
 import {FeatureSet} from '../types';
 import type {GenericObjectSchema} from '../schema';
+import type {GenericSyncFormula} from '..';
 import type {GoogleDomainWideDelegationAuthentication} from '../types';
 import type {GoogleServiceAccountAuthentication} from '../types';
 import type {HeaderBearerTokenAuthentication} from '../types';
@@ -103,6 +105,7 @@ import {isArray} from '../schema';
 import {isDefined} from '../helpers/object_utils';
 import {isNil} from '../helpers/object_utils';
 import {isObject} from '../schema';
+import {isSyncPackFormula} from '../api';
 import {makeSchema} from '../schema';
 import {maybeSchemaOptionsValue} from '../schema';
 import {maybeUnwrapArraySchema} from '../schema';
@@ -2064,6 +2067,71 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             }
           }
         });
+      })
+      .superRefine((data, context) => {
+        const metadata = data as PackVersionMetadata;
+        const {formulas, syncTables} = metadata;
+        const allFormulas = [...formulas, ...syncTables.map(table => table.getter)];
+        const authNames = getAuthentications(metadata).map(authInfo => authInfo.name);
+        for (const formula of allFormulas) {
+          const {allowedAuthenticationNames} = formula;
+          if (!allowedAuthenticationNames) {
+            continue;
+          }
+          for (const allowedAuthenticationName of allowedAuthenticationNames) {
+            if (!authNames.includes(allowedAuthenticationName)) {
+              context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: [formula.name, 'allowedAuthenticationNames'],
+                message: `${allowedAuthenticationName} is not the name of an authentication`,
+              });
+            }
+          }
+        }
+      })
+      .superRefine((data, context) => {
+        const metadata = data as PackVersionMetadata;
+        const {syncTables} = metadata;
+        const authentications = getAuthentications(metadata);
+        const authNames = authentications.map(authInfo => authInfo.name);
+        for (const syncTable of syncTables) {
+          const {getter} = syncTable;
+          let {allowedAuthenticationNames} = getter;
+          // TODO(patrick): Better typing
+          if (!isSyncPackFormula(getter as GenericSyncFormula)) {
+            continue;
+          }
+          const {supportsGetPermissions} = getter as GenericSyncFormula;
+          if (!supportsGetPermissions) {
+            continue;
+          }
+          // If no auth names are explicitly allowed, then all are assumed to be allowed.
+          if (!allowedAuthenticationNames) {
+            allowedAuthenticationNames = authNames;
+          }
+          for (const auth of authentications) {
+            const {name, authentication} = auth;
+            // If a sync table explicitly excludes an authentication, don't require it to
+            // be permission-capable.
+            if (allowedAuthenticationNames && !allowedAuthenticationNames.includes(name)) {
+              continue;
+            }
+            // Non-admin authentications are allowed to invoke a sync table without
+            // requesting permissions.
+            if (reservedAuthenticationNames.includes(name)) {
+              continue;
+            }
+            // Admin authentications are required to be permission-capable.
+            // TODO(patrick): better typing
+            if (!(authentication as AllowedAuthentication).canSyncPermissions) {
+              context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: [syncTable.name, 'allowedAuthenticationNames'],
+                message: `Authentication ${name} must have 'canSyncPermissions:true' to be used in a sync table with executeGetPermissions`,
+              });
+            }
+          }
+        }
       })
       .superRefine((data, context) => {
         const syncTables = (data.syncTables as SyncTable[]) || [];

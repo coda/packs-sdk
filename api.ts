@@ -990,7 +990,7 @@ export type TypedPackFormula = Formula | GenericSyncFormula;
 
 export type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
 /** @hidden */
-export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute' | 'executeUpdate'>;
+export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute' | 'executeUpdate' | 'executeGetPermissions'>;
 /** @hidden */
 export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'execute'>;
 

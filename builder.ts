@@ -312,6 +312,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
   }
 
   /**
+   * TODO(patrick): Unhide this
    * @hidden
    */
   setAdminAuthentications(adminAuthentications: AdminAuthentication[]): this {

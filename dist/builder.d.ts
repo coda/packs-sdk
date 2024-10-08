@@ -198,6 +198,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      */
     setSystemAuthentication(systemAuthentication: SystemAuthenticationDef): this;
     /**
+     * TODO(patrick): Unhide this
      * @hidden
      */
     setAdminAuthentications(adminAuthentications: AdminAuthentication[]): this;

@@ -21,6 +21,7 @@ import type {PackVersionMetadata} from '../compiled_types';
 import type {ParamDefs} from '../api_types';
 import {ParameterType} from '../api_types';
 import {PostSetupType} from '../types';
+import {ReservedAuthenticationNames} from '../types';
 import {ScaleIconSet} from '../schema';
 import type {StringFormulaDefLegacy} from '../api';
 import type {SyncTable} from '../api';
@@ -4598,9 +4599,130 @@ describe('Pack metadata Validation', async () => {
               description: 'Admin authentication 3',
             },
           ],
+          formulas: [
+            makeFormula({
+              resultType: ValueType.String,
+              name: 'FormulaName',
+              description: '',
+              parameters: [],
+              execute: () => '',
+              allowedAuthenticationNames: ['adminAuth2'],
+            }),
+          ],
+          syncTables: [
+            makeSyncTable({
+              name: 'SyncTable',
+              identityName: 'Identity',
+              schema: makeObjectSchema({
+                type: ValueType.Object,
+                primary: 'foo',
+                id: 'foo',
+                properties: {foo: {type: ValueType.String}},
+              }),
+              formula: {
+                name: 'SyncTable',
+                description: '',
+                async execute([], _context) {
+                  return {result: []};
+                },
+                parameters: [],
+                allowedAuthenticationNames: ['adminAuth3', ReservedAuthenticationNames.Default],
+              },
+            }),
+          ],
+          formulaNamespace: 'MyNamespace',
         });
         const result = await validateJson(deepCopy(metadata));
-        assert.deepEqual(result, metadata);
+        assert.deepEqual(result.adminAuthentications, metadata.adminAuthentications);
+      });
+
+      it('validates allowedAuthenticationNames', async () => {
+        const metadata = createFakePackVersionMetadata({
+          adminAuthentications: [
+            {
+              authentication: {type: AuthenticationType.HeaderBearerToken},
+              name: 'adminAuth1',
+              displayName: 'Admin Auth 1',
+              description: 'Admin authentication 1',
+            },
+          ],
+          syncTables: [
+            makeSyncTable({
+              name: 'SyncTable',
+              identityName: 'Identity',
+              schema: makeObjectSchema({
+                type: ValueType.Object,
+                displayProperty: 'foo',
+                idProperty: 'foo',
+                properties: {foo: {type: ValueType.String}},
+              }),
+              formula: {
+                name: 'SyncTable',
+                description: '',
+                async execute([], _context) {
+                  return {result: []};
+                },
+                parameters: [],
+                allowedAuthenticationNames: ['fakeAuthName'],
+              },
+            }),
+          ],
+        });
+        const err = await validateJsonAndAssertFails(metadata, '1.0.0');
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: `fakeAuthName is not the name of an authentication`,
+            path: 'SyncTable.allowedAuthenticationNames',
+          },
+        ]);
+      });
+
+      it('validates canSyncPermissions against sync tables that fetch permissions', async () => {
+        const metadata = createFakePackVersionMetadata({
+          adminAuthentications: [
+            {
+              authentication: {type: AuthenticationType.HeaderBearerToken},
+              name: 'adminAuth1',
+              displayName: 'Admin Auth 1',
+              description: 'Admin authentication 1',
+            },
+          ],
+          syncTables: [
+            makeSyncTable({
+              name: 'SyncTable',
+              identityName: 'Identity',
+              schema: makeObjectSchema({
+                type: ValueType.Object,
+                displayProperty: 'foo',
+                idProperty: 'foo',
+                properties: {foo: {type: ValueType.String}},
+              }),
+              formula: {
+                name: 'SyncTable',
+                description: '',
+                async execute([], _context) {
+                  return {result: []};
+                },
+                parameters: [],
+                allowedAuthenticationNames: ['adminAuth1'],
+                async executeGetPermissions(_params, _request) {
+                  return {rowAccessDefinitions: []};
+                },
+              },
+            }),
+          ],
+        });
+        const err = await validateJsonAndAssertFails(metadata, '1.0.0');
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: `Authentication adminAuth1 must have 'canSyncPermissions:true' to be used in a sync table with executeGetPermissions`,
+            path: 'SyncTable.allowedAuthenticationNames',
+          },
+        ]);
+
+        // Setting canSyncPermissions should fix the issue:
+        ensureExists(metadata.adminAuthentications)[0].authentication.canSyncPermissions = true;
+        await validateJson(metadata, '1.0.0');
       });
     });
   });
