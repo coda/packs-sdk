@@ -1,3 +1,4 @@
+import type { AdminAuthentication } from './types';
 import type { Authentication } from './types';
 import type { BasicPackDefinition } from './types';
 import type { DynamicSyncTableOptions } from './api';
@@ -55,6 +56,11 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * See {@link PackVersionDefinition.systemConnectionAuthentication}.
      */
     systemConnectionAuthentication?: SystemAuthentication;
+    /**
+     * See {@link PackVersionDefinition.adminAuthentications}.
+     * @hidden
+     */
+    adminAuthentications?: AdminAuthentication[];
     /**
      * See {@link PackVersionDefinition.version}.
      */
@@ -150,6 +156,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * ```
      */
     addColumnFormat(format: Format): this;
+    private _wrapAuthenticationFunctions;
     /**
      * Sets this pack to use authentication for individual users, using the
      * authentication method is the given definition.
@@ -190,6 +197,11 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * ```
      */
     setSystemAuthentication(systemAuthentication: SystemAuthenticationDef): this;
+    /**
+     * TODO(patrick): Unhide this
+     * @hidden
+     */
+    addAdminAuthentication(adminAuth: AdminAuthentication): this;
     /**
      * Adds the domain that this pack makes HTTP requests to.
      * For example, if your pack makes HTTP requests to "api.example.com",

@@ -1,7 +1,11 @@
 import type {AWSAccessKeyAuthentication} from '../types';
 import type {AWSAssumeRoleAuthentication} from '../types';
+import type {AdminAuthentication} from '../types';
+import type {AdminAuthenticationTypes} from '../types';
+import type {AllowedAuthentication} from '../types';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '../schema';
+import type {AuthenticationMetadata} from '../compiled_types';
 import {AuthenticationType} from '../types';
 import {BooleanHintValueTypes} from '../schema';
 import type {BooleanPackFormula} from '../api';
@@ -21,6 +25,7 @@ import {EmailDisplayType} from '../schema';
 import type {EmailSchema} from '../schema';
 import {FeatureSet} from '../types';
 import type {GenericObjectSchema} from '../schema';
+import type {GenericSyncFormula} from '..';
 import type {GoogleDomainWideDelegationAuthentication} from '../types';
 import type {GoogleServiceAccountAuthentication} from '../types';
 import type {HeaderBearerTokenAuthentication} from '../types';
@@ -64,6 +69,7 @@ import {PostSetupType} from '../types';
 import type {ProgressBarSchema} from '../schema';
 import type {PropertyIdentifier} from '../schema';
 import type {QueryParamTokenAuthentication} from '../types';
+import {ReservedAuthenticationNames} from '../types';
 import {ScaleIconSet} from '../schema';
 import type {ScaleSchema} from '../schema';
 import type {Schema} from '../schema';
@@ -84,6 +90,7 @@ import type {SystemAuthenticationTypes} from '../types';
 import {TableRole} from '../api_types';
 import {TokenExchangeCredentialsLocation} from '../types';
 import {Type} from '../api_types';
+import URLParse from 'url-parse';
 import type {UnionType} from '../api_types';
 import type {ValidationError} from './types';
 import {ValueHintType} from '../schema';
@@ -98,6 +105,7 @@ import {isArray} from '../schema';
 import {isDefined} from '../helpers/object_utils';
 import {isNil} from '../helpers/object_utils';
 import {isObject} from '../schema';
+import {isSyncPackFormula} from '../api';
 import {makeSchema} from '../schema';
 import {maybeSchemaOptionsValue} from '../schema';
 import {maybeUnwrapArraySchema} from '../schema';
@@ -514,6 +522,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     // The items are technically a discriminated union type but that union currently only has one member.
     postSetup: z.array(setEndpointPostSetupValidator).optional(),
     networkDomain: z.union([singleAuthDomainSchema, z.array(singleAuthDomainSchema).nonempty()]).optional(),
+    canSyncPermissions: z.boolean().optional(),
   };
 
   const defaultAuthenticationValidators: Record<AuthenticationType, z.ZodTypeAny> = {
@@ -581,9 +590,9 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     [AuthenticationType.OAuth2]: zodCompleteStrictObject<OAuth2Authentication>({
       type: zodDiscriminant(AuthenticationType.OAuth2),
       /** Accepts relative URLs when requiresEndpointUrl is true. */
-      authorizationUrl: z.string(),
+      authorizationUrl: z.string().refine(validateUrlParsesIfAbsolute),
       /** Accepts relative URLs when requiresEndpointUrl is true. */
-      tokenUrl: z.string(),
+      tokenUrl: z.string().refine(validateUrlParsesIfAbsolute),
       scopes: z.array(z.string()).optional(),
       scopeDelimiter: z.enum([' ', ',', ';']).optional(),
       tokenPrefix: z.string().optional(),
@@ -599,7 +608,6 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     }).superRefine(({requiresEndpointUrl, endpointKey, authorizationUrl, tokenUrl}, context) => {
       const expectsRelativeUrl = requiresEndpointUrl && !endpointKey;
       const isRelativeUrl = (url: string) => url.startsWith('/');
-      const isAbsoluteUrl = (url: string) => url.startsWith('https://');
       const addIssue = (property: string) => {
         const expectedType = expectsRelativeUrl ? 'a relative' : 'an absolute';
         context.addIssue({
@@ -622,7 +630,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     }),
     [AuthenticationType.OAuth2ClientCredentials]: zodCompleteStrictObject<OAuth2ClientCredentialsAuthentication>({
       type: zodDiscriminant(AuthenticationType.OAuth2ClientCredentials),
-      tokenUrl: z.string().url(),
+      tokenUrl: z.string().url().refine(validateUrlParsesIfAbsolute),
       scopes: z.array(z.string()).optional(),
       scopeDelimiter: z.enum([' ', ',', ';']).optional(),
       tokenPrefix: z.string().optional(),
@@ -683,6 +691,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       type: zodDiscriminant(AuthenticationType.Various),
     }),
   };
+
   const systemAuthenticationTypes: {[key in SystemAuthenticationTypes]: true} = {
     [AuthenticationType.HeaderBearerToken]: true,
     [AuthenticationType.CustomHeaderToken]: true,
@@ -701,6 +710,27 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     .filter(([authType]) => authType in systemAuthenticationTypes)
     .map(([_authType, schema]) => schema);
 
+  const adminAuthenticationTypes: {[key in AdminAuthenticationTypes]: true} = {
+    [AuthenticationType.AWSAccessKey]: true,
+    [AuthenticationType.AWSAssumeRole]: true,
+    [AuthenticationType.CodaApiHeaderBearerToken]: true,
+    [AuthenticationType.Custom]: true,
+    [AuthenticationType.CustomHeaderToken]: true,
+    [AuthenticationType.GoogleServiceAccount]: true,
+    [AuthenticationType.GoogleDomainWideDelegation]: true,
+    [AuthenticationType.HeaderBearerToken]: true,
+    [AuthenticationType.MultiHeaderToken]: true,
+    [AuthenticationType.MultiQueryParamToken]: true,
+    [AuthenticationType.OAuth2]: true,
+    [AuthenticationType.OAuth2ClientCredentials]: true,
+    [AuthenticationType.QueryParamToken]: true,
+    [AuthenticationType.WebBasic]: true,
+  };
+
+  const adminAuthenticationValidators = Object.entries(defaultAuthenticationValidators)
+    .filter(([authType]) => authType in adminAuthenticationTypes)
+    .map(([_authType, schema]) => schema);
+
   const variousSupportedAuthenticationTypes: {[key in VariousSupportedAuthenticationTypes]: true} = {
     [AuthenticationType.HeaderBearerToken]: true,
     [AuthenticationType.CustomHeaderToken]: true,
@@ -714,6 +744,26 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
   const variousSupportedAuthenticationValidators = Object.entries(defaultAuthenticationValidators)
     .filter(([authType]) => authType in variousSupportedAuthenticationTypes)
     .map(([_authType, schema]) => schema);
+
+  const reservedAuthenticationNames = Object.values(ReservedAuthenticationNames).map(value => value.toString());
+  const adminAuthenticationValidator = zodCompleteObject<AdminAuthentication>({
+    authentication: z
+      .union(zodUnionInput(Object.values(adminAuthenticationValidators)))
+      .refine(auth => Boolean(auth.canSyncPermissions), {
+        message: 'All admin authentications must set "canSyncPermissions:true"',
+      }),
+    name: z
+      .string()
+      .min(1)
+      .max(Limits.BuildingBlockName)
+      .regex(regexParameterName, 'Authentication names can only contain alphanumeric characters and underscores.')
+      .refine(name => !reservedAuthenticationNames.includes(name), {
+        message: 'Authentication names must not be one of the reserved authentication names.',
+      }),
+    displayName: z.string().min(1).max(Limits.BuildingBlockName),
+    description: z.string().min(1).max(Limits.BuildingBlockDescription),
+    isServiceAccount: z.boolean().optional(),
+  });
 
   const primitiveUnion = z.union([z.number(), z.string(), z.boolean(), z.date()]);
 
@@ -809,6 +859,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     isExperimental: z.boolean().optional(),
     isSystem: z.boolean().optional(),
     extraOAuthScopes: z.array(z.string()).optional(),
+    allowedAuthenticationNames: z.array(z.string()).optional(),
   };
 
   const booleanPackFormulaSchema = zodCompleteObject<Omit<BooleanPackFormula<any>, 'execute'>>({
@@ -1830,6 +1881,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       message: 'Formula namespaces can only contain alphanumeric characters and underscores.',
     }),
     systemConnectionAuthentication: z.union(zodUnionInput(systemAuthenticationValidators)).optional(),
+    adminAuthentications: z.array(adminAuthenticationValidator).optional(),
     formulas: z
       .array(formulaMetadataSchema)
       .max(Limits.BuildingBlockCountPerType)
@@ -1925,43 +1977,50 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         },
         {message: 'A formula namespace must be provided whenever formulas are defined.', path: ['formulaNamespace']},
       )
-      .refine(
-        untypedMetadata => {
-          const metadata = untypedMetadata as PackVersionMetadata;
-          if (metadata.defaultAuthentication?.type !== AuthenticationType.CodaApiHeaderBearerToken) {
-            return true;
+      .superRefine((untypedMetadata, context) => {
+        const metadata = untypedMetadata as PackVersionMetadata;
+
+        for (const authInfo of getAuthentications(metadata)) {
+          const {name, authentication: authentication} = authInfo;
+          if (authentication.type !== AuthenticationType.CodaApiHeaderBearerToken) {
+            return;
           }
 
           const codaDomains = ['coda.io', 'localhost'];
 
           const hasNonCodaNetwork = metadata.networkDomains?.some((domain: string) => !codaDomains.includes(domain));
           if (!hasNonCodaNetwork) {
-            return true;
+            continue;
           }
 
-          const authDomains = getAuthNetworkDomains(metadata);
+          const authDomains = getDeclaredAuthNetworkDomains(authentication);
           if (!authDomains?.length) {
             // A non-Coda network domain without auth domain restriction isn't allowed.
-            return false;
+            context.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: [`authentication.${name}.networkDomain`],
+              message: `CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict ${name}'s "networkDomain" to coda.io`,
+            });
+            continue;
           }
 
           const hasNonCodaAuthDomain = authDomains.some((domain: string) => !codaDomains.includes(domain));
-
-          // A non-coda auth domain is always an issue.
-          return !hasNonCodaAuthDomain;
-        },
-        {
-          message:
-            'CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict `defaultAuthentication.networkDomain` to coda.io',
-          path: ['defaultAuthentication.networkDomain'],
-        },
-      )
+          if (hasNonCodaAuthDomain) {
+            context.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: [`authentication.${name}.networkDomain`],
+              message: `CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict ${name}'s "networkDomain" to coda.io`,
+            });
+          }
+        }
+      })
       .superRefine((data, context) => {
         if (data.defaultAuthentication && data.defaultAuthentication.type !== AuthenticationType.None) {
           return;
         }
 
         // if the pack has no default authentication, make sure all formulas don't set connection requirements.
+        // TODO(patrick): Consider allowing a pack to *only* use admin authentications.
         ((data.formulas || []) as PackFormulaMetadata[]).forEach((formula, i) => {
           if (formula.connectionRequirement && formula.connectionRequirement !== ConnectionRequirement.None) {
             context.addIssue({
@@ -2012,6 +2071,78 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             }
           }
         });
+      })
+      .superRefine((data, context) => {
+        const metadata = data as PackVersionMetadata;
+        const {formulas, syncTables} = metadata;
+        const allFormulas = [...formulas, ...syncTables.map(table => table.getter)];
+        const authNames = getAuthentications(metadata).map(authInfo => authInfo.name);
+        for (const formula of allFormulas) {
+          const {allowedAuthenticationNames} = formula;
+          if (!allowedAuthenticationNames) {
+            continue;
+          }
+          if (formula.connectionRequirement === ConnectionRequirement.None) {
+            context.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: [formula.name, 'allowedAuthenticationNames'],
+              message: `Cannot specify 'allowedAuthenticationNames' on a formula with 'ConnectionRequirement.None'`,
+            });
+          }
+          for (const allowedAuthenticationName of allowedAuthenticationNames) {
+            if (!authNames.includes(allowedAuthenticationName)) {
+              context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: [formula.name, 'allowedAuthenticationNames'],
+                message: `${allowedAuthenticationName} is not the name of an authentication`,
+              });
+            }
+          }
+        }
+      })
+      .superRefine((data, context) => {
+        const metadata = data as PackVersionMetadata;
+        const {syncTables} = metadata;
+        const authentications = getAuthentications(metadata);
+        const authNames = authentications.map(authInfo => authInfo.name);
+        for (const syncTable of syncTables) {
+          const {getter} = syncTable;
+          let {allowedAuthenticationNames} = getter;
+          // TODO(patrick): Better typing
+          if (!isSyncPackFormula(getter as GenericSyncFormula)) {
+            continue;
+          }
+          const {supportsGetPermissions} = getter as GenericSyncFormula;
+          if (!supportsGetPermissions) {
+            continue;
+          }
+          // If no auth names are explicitly allowed, then all are assumed to be allowed.
+          if (!allowedAuthenticationNames) {
+            allowedAuthenticationNames = authNames;
+          }
+          for (const auth of authentications) {
+            const {name, authentication} = auth;
+            // If a sync table explicitly excludes an authentication, don't require it to
+            // be permission-capable.
+            if (allowedAuthenticationNames && !allowedAuthenticationNames.includes(name)) {
+              continue;
+            }
+            // Non-admin authentications are allowed to invoke a sync table without
+            // requesting permissions.
+            if (reservedAuthenticationNames.includes(name)) {
+              continue;
+            }
+            // Admin authentications are required to be permission-capable.
+            // TODO(patrick): better typing
+            if (!(authentication as AllowedAuthentication).canSyncPermissions) {
+              context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: [syncTable.name, 'allowedAuthenticationNames'],
+                message: `Authentication ${name} must have 'canSyncPermissions:true' to be used in a sync table with executeGetPermissions`,
+              });
+            }
+          }
+        }
       })
       .superRefine((data, context) => {
         const syncTables = (data.syncTables as SyncTable[]) || [];
@@ -2115,16 +2246,18 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     })
     .refine(
       data => {
-        const usesAuthentication =
-          (data.defaultAuthentication && data.defaultAuthentication.type !== AuthenticationType.None) ||
-          data.systemConnectionAuthentication;
-        if (!usesAuthentication || data.networkDomains?.length || data.defaultAuthentication?.requiresEndpointUrl) {
-          return true;
-        }
-
-        // Various is an internal authentication type that's only applicable to whitelisted Pack Ids.
-        // Skipping validation here to let it exempt from network domains.
-        if (data.defaultAuthentication?.type === AuthenticationType.Various) {
+        const authentications = getAuthentications(data as PackVersionMetadata);
+        if (
+          data.networkDomains?.length ||
+          authentications.every(
+            auth =>
+              auth.authentication.type === AuthenticationType.None ||
+              // Various is an internal authentication type that's only applicable to whitelisted Pack Ids.
+              // Skipping validation here to let it exempt from network domains.
+              auth.authentication.type === AuthenticationType.Various ||
+              (auth.authentication.requiresEndpointUrl && !auth.authentication.endpointDomain),
+          )
+        ) {
           return true;
         }
 
@@ -2140,46 +2273,101 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     .superRefine((untypedData, context) => {
       const data = untypedData as PackVersionMetadata;
 
-      const authNetworkDomains = getAuthNetworkDomains(data);
+      for (const authInfo of getAuthentications(data)) {
+        const {name, authentication: authentication} = authInfo;
+        const authNetworkDomains = getDeclaredAuthNetworkDomains(authentication);
 
-      if (!isDefined(authNetworkDomains)) {
-        // This is a Various or None auth pack.
+        if (!isDefined(authNetworkDomains)) {
+          // This is a Various or None auth pack.
+          return;
+        }
+
+        const readableAuthTitle =
+          name === ReservedAuthenticationNames.Default ? 'setUserAuthentication()' : `authentication ${name}`;
+
+        // Auth network domains must match pack network domains.
+        for (const authNetworkDomain of authNetworkDomains) {
+          if (!data.networkDomains?.includes(authNetworkDomain)) {
+            context.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: [`authentication.${name}.networkDomain`],
+              message: `The "networkDomain" in ${readableAuthTitle} must match a previously declared network domain.`,
+            });
+            return;
+          }
+        }
+
+        const usedNetworkDomains = getUsedAuthNetworkDomains(authentication);
+        if (usedNetworkDomains) {
+          for (const usedNetworkDomain of usedNetworkDomains) {
+            if (authNetworkDomains.length > 0 && !authNetworkDomains.includes(usedNetworkDomain)) {
+              context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: [`authentication.${name}`],
+                message: `Domain ${usedNetworkDomain} is used in ${readableAuthTitle} but not declared in its "networkDomain".`,
+              });
+              return;
+            }
+          }
+        }
+      }
+    })
+    .superRefine((untypedData, context) => {
+      const data = untypedData as PackVersionMetadata;
+      if (!data.networkDomains) {
         return;
       }
 
-      // Auth network domains must match pack network domains.
-      for (const authNetworkDomain of authNetworkDomains) {
-        if (!data.networkDomains?.includes(authNetworkDomain)) {
-          context.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ['defaultAuthentication.networkDomain'],
-            message: 'The `networkDomain` in setUserAuthentication() must match a previously declared network domain.',
-          });
-          return;
+      for (const authInfo of getAuthentications(data)) {
+        const {name, authentication: authentication} = authInfo;
+        const readableAuthTitle =
+          name === ReservedAuthenticationNames.Default ? 'setUserAuthentication()' : `authentication ${name}`;
+
+        const usedNetworkDomains = getUsedAuthNetworkDomains(authentication);
+        if (usedNetworkDomains) {
+          for (const usedNetworkDomain of usedNetworkDomains) {
+            if (
+              !data.networkDomains.some(
+                domain => domain === usedNetworkDomain || usedNetworkDomain.endsWith('.' + domain),
+              )
+            ) {
+              context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: [`authentication.${name}`],
+                message: `Domain ${usedNetworkDomain} is used in ${readableAuthTitle} but not declared in the pack's "networkDomains".`,
+              });
+              return;
+            }
+          }
         }
       }
     })
     .superRefine((untypedData, context) => {
       const data = untypedData as PackVersionMetadata;
 
-      const authNetworkDomains = getAuthNetworkDomains(data);
+      for (const authInfo of getAuthentications(data)) {
+        const {name, authentication: authentication} = authInfo;
+        const authNetworkDomains = getDeclaredAuthNetworkDomains(authentication);
 
-      if (!isDefined(authNetworkDomains)) {
-        // This is a Various or None auth pack.
-        return;
-      }
-
-      // A pack with multiple networks and auth must choose which domain(s) get auth on them.
-      if (!authNetworkDomains?.length) {
-        if (data.networkDomains && data.networkDomains.length > 1) {
-          context.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ['defaultAuthentication.networkDomain'],
-            message:
-              'This pack uses multiple network domains and must set one as a `networkDomain` in setUserAuthentication()',
-          });
+        if (!isDefined(authNetworkDomains)) {
+          // This is a Various or None auth pack.
+          return;
         }
-        return;
+
+        const readableAuthTitle =
+          name === ReservedAuthenticationNames.Default ? 'setUserAuthentication()' : `authentication ${name}`;
+
+        // A pack with multiple networks and auth must choose which domain(s) get auth on them.
+        if (!authNetworkDomains?.length) {
+          if (data.networkDomains && data.networkDomains.length > 1) {
+            context.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: [`authentication.${name}.networkDomain`],
+              message: `This pack uses multiple network domains and must set one as a "networkDomain" in ${readableAuthTitle}`,
+            });
+          }
+          return;
+        }
       }
     })
     .superRefine((untypedData, context) => {
@@ -2215,25 +2403,92 @@ interface SchemaExtension {
   schemaExtend: (schema: z.ZodType<Partial<PackVersionMetadata>>) => z.ZodType<Partial<PackVersionMetadata>>;
 }
 
+function getAuthentications(data: PackVersionMetadata): Array<{name: string; authentication: AuthenticationMetadata}> {
+  const authentications: Array<{name: string; authentication: AuthenticationMetadata}> = [];
+  if (data.defaultAuthentication) {
+    authentications.push({name: ReservedAuthenticationNames.Default, authentication: data.defaultAuthentication});
+  }
+  if (data.systemConnectionAuthentication) {
+    authentications.push({
+      name: ReservedAuthenticationNames.System,
+      authentication: data.systemConnectionAuthentication,
+    });
+  }
+  if (data.adminAuthentications) {
+    authentications.push(...data.adminAuthentications);
+  }
+  return authentications;
+}
+
+/**
+ * Return all the domain names that should be validated against declared network domains.
+ * This function just ignores any relative or un-parse-able URLs, trusting that other validations
+ * have already caught such issues.
+ */
+function getUsedAuthNetworkDomains(authentication: AuthenticationMetadata): string[] | undefined {
+  if (authentication.type === AuthenticationType.None || authentication.type === AuthenticationType.Various) {
+    return undefined;
+  }
+  const {endpointDomain, type} = authentication;
+  const domains: string[] = [];
+  if (endpointDomain) {
+    domains.push(endpointDomain);
+  }
+  switch (type) {
+    case AuthenticationType.OAuth2: {
+      const {authorizationUrl, tokenUrl, endpointDomain} = authentication;
+      if (endpointDomain) {
+        domains.push(endpointDomain);
+      }
+      const parsedAuthUrl = URLParse(authorizationUrl);
+      if (parsedAuthUrl.hostname) {
+        domains.push(parsedAuthUrl.hostname);
+      }
+      const parsedTokenUrl = URLParse(tokenUrl);
+      if (parsedTokenUrl.hostname) {
+        domains.push(parsedTokenUrl.hostname);
+      }
+      return domains;
+    }
+    case AuthenticationType.OAuth2ClientCredentials: {
+      const {tokenUrl, endpointDomain} = authentication;
+      if (endpointDomain) {
+        domains.push(endpointDomain);
+      }
+      const parsedTokenUrl = URLParse(tokenUrl);
+      if (parsedTokenUrl.hostname) {
+        domains.push(parsedTokenUrl.hostname);
+      }
+      return domains;
+    }
+    case AuthenticationType.AWSAccessKey:
+    case AuthenticationType.AWSAssumeRole:
+    case AuthenticationType.CodaApiHeaderBearerToken:
+    case AuthenticationType.Custom:
+    case AuthenticationType.CustomHeaderToken:
+    case AuthenticationType.GoogleDomainWideDelegation:
+    case AuthenticationType.GoogleServiceAccount:
+    case AuthenticationType.HeaderBearerToken:
+    case AuthenticationType.MultiHeaderToken:
+    case AuthenticationType.MultiQueryParamToken:
+    case AuthenticationType.QueryParamToken:
+    case AuthenticationType.WebBasic:
+      return domains;
+    default:
+      ensureUnreachable(type);
+  }
+}
+
 // Returns undefined for None or Various auth, otherwise returns a string array.
-function getAuthNetworkDomains(data: PackVersionMetadata): string[] | undefined {
-  if (
-    !data.defaultAuthentication ||
-    data.defaultAuthentication.type === AuthenticationType.Various ||
-    data.defaultAuthentication.type === AuthenticationType.None
-  ) {
+function getDeclaredAuthNetworkDomains(authentication: AuthenticationMetadata): string[] | undefined {
+  if (authentication.type === AuthenticationType.Various || authentication.type === AuthenticationType.None) {
     return undefined;
   }
 
-  if (data.defaultAuthentication.requiresEndpointUrl) {
-    // We're ok if there's a user-supplied endpoint domain.
-    return undefined;
-  }
-
-  if (Array.isArray(data.defaultAuthentication.networkDomain)) {
-    return data.defaultAuthentication.networkDomain;
-  } else if (data.defaultAuthentication.networkDomain) {
-    return [data.defaultAuthentication.networkDomain];
+  if (Array.isArray(authentication.networkDomain)) {
+    return authentication.networkDomain;
+  } else if (authentication.networkDomain) {
+    return [authentication.networkDomain];
   }
   return [];
 }
@@ -2287,17 +2542,19 @@ const packMetadataSchemaBySdkVersion: SchemaExtension[] = [
           }
         });
 
-        const {defaultAuthentication: auth} = data;
-        if (auth && auth.type !== AuthenticationType.None && auth.postSetup) {
-          auth.postSetup.forEach((step, i) => {
-            validateDeprecatedProperty({
-              obj: step,
-              oldName: 'getOptionsFormula',
-              newName: 'getOptions',
-              pathPrefix: ['defaultAuthentication', 'postSetup', i],
-              context,
+        for (const auth of getAuthentications(data)) {
+          const {authentication, name} = auth;
+          if (authentication && authentication.type !== AuthenticationType.None && authentication.postSetup) {
+            authentication.postSetup.forEach((step, i) => {
+              validateDeprecatedProperty({
+                obj: step,
+                oldName: 'getOptionsFormula',
+                newName: 'getOptions',
+                pathPrefix: ['authentication', name, 'postSetup', i],
+                context,
+              });
             });
-          });
+          }
         }
       });
     },
@@ -2397,4 +2654,23 @@ function validateDeprecatedParameterFields<T extends UnionType>(
     pathPrefix,
     context,
   });
+}
+
+function isAbsoluteUrl(url: string): boolean {
+  return url.startsWith('https://');
+}
+
+function parseDomainName(url: string): string | undefined {
+  if (!isAbsoluteUrl(url)) {
+    return;
+  }
+  const parsed = URLParse(url);
+  return parsed.hostname;
+}
+
+function validateUrlParsesIfAbsolute(url: string) {
+  if (!isAbsoluteUrl(url)) {
+    return true;
+  }
+  return Boolean(parseDomainName(url));
 }

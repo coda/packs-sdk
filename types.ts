@@ -296,6 +296,12 @@ export interface BaseAuthentication {
    * Using multiple authenticated network domains is uncommon and requires Coda approval.
    */
   networkDomain?: string | string[];
+
+  /**
+   * If true, this authentication can be used to sync permissions associated with data
+   * in addition to the data itself.
+   */
+  canSyncPermissions?: boolean;
 }
 
 /**
@@ -839,11 +845,14 @@ export interface VariousAuthentication {
 }
 
 /**
- * The union of supported authentication methods.
+ * The union of authentication types that all pack makers are allowed to use.
+ *
+ * The only types excluded here are Various (only for use by Coda) and NoAuthentication,
+ * which should never need to be used by pack makers.
+ *
+ * These authentication types all extend BaseAuthentication.
  */
-export type Authentication =
-  | NoAuthentication
-  | VariousAuthentication
+export type AllowedAuthentication =
   | HeaderBearerTokenAuthentication
   | CodaApiBearerTokenAuthentication
   | CustomHeaderTokenAuthentication
@@ -858,6 +867,11 @@ export type Authentication =
   | GoogleDomainWideDelegationAuthentication
   | GoogleServiceAccountAuthentication
   | CustomAuthentication;
+
+/**
+ * The union of supported authentication methods.
+ */
+export type Authentication = NoAuthentication | VariousAuthentication | AllowedAuthentication;
 
 /** @ignore */
 export interface AuthenticationTypeMap {
@@ -878,7 +892,10 @@ export interface AuthenticationTypeMap {
   [AuthenticationType.Custom]: CustomAuthentication;
 }
 
-type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionName' | 'getConnectionUserId' | 'postSetup'> & {
+export type AsAuthDef<T extends BaseAuthentication> = Omit<
+  T,
+  'getConnectionName' | 'getConnectionUserId' | 'postSetup'
+> & {
   /** See {@link BaseAuthentication.getConnectionName} */
   getConnectionName?: MetadataFormulaDef;
   /** See {@link BaseAuthentication.getConnectionUserId} @ignore */
@@ -888,14 +905,9 @@ type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionName' | 'ge
 };
 
 /**
- * The union of supported authentication definitions. These represent simplified configurations
- * a pack developer can specify when calling {@link PackDefinitionBuilder.setUserAuthentication} when using
- * a pack definition builder. The builder massages these definitions into the form of
- * an {@link Authentication} value, which is the value Coda ultimately cares about.
+ * The union of authentication types that pack makers are allowed to use.
  */
-export type AuthenticationDef =
-  | NoAuthentication
-  | VariousAuthentication
+export type AllowedAuthenticationDef =
   | AsAuthDef<HeaderBearerTokenAuthentication>
   | AsAuthDef<CodaApiBearerTokenAuthentication>
   | AsAuthDef<CustomHeaderTokenAuthentication>
@@ -910,6 +922,14 @@ export type AuthenticationDef =
   | AsAuthDef<GoogleDomainWideDelegationAuthentication>
   | AsAuthDef<GoogleServiceAccountAuthentication>
   | AsAuthDef<CustomAuthentication>;
+
+/**
+ * The union of supported authentication definitions. These represent simplified configurations
+ * a pack developer can specify when calling {@link PackDefinitionBuilder.setUserAuthentication} when using
+ * a pack definition builder. The builder massages these definitions into the form of
+ * an {@link Authentication} value, which is the value Coda ultimately cares about.
+ */
+export type AuthenticationDef = NoAuthentication | VariousAuthentication | AllowedAuthenticationDef;
 
 /**
  * The union of authentication methods that are supported for system authentication,
@@ -954,6 +974,12 @@ export type SystemAuthenticationDef =
 export type SystemAuthenticationTypes = $Values<Pick<SystemAuthentication, 'type'>>;
 
 /**
+ * The subset of valid {@link AuthenticationType} enum values that can be used
+ * when defining admin authentications.
+ */
+export type AdminAuthenticationTypes = $Values<Pick<AllowedAuthentication, 'type'>>;
+
+/**
  * @ignore
  */
 export type VariousSupportedAuthentication =
@@ -969,6 +995,59 @@ export type VariousSupportedAuthentication =
  * @ignore
  */
 export type VariousSupportedAuthenticationTypes = $Values<Pick<VariousSupportedAuthentication, 'type'>>;
+
+/**
+ * @hidden
+ */
+export enum ReservedAuthenticationNames {
+  /**
+   * References the default user authentication of the pack.
+   */
+  Default = 'defaultUserAuthentication',
+
+  /**
+   * References the system authentication of the pack.
+   */
+  System = 'systemAuthentication',
+}
+
+/**
+ * TODO(patrick): Unhide this.
+ * @hidden
+ */
+export interface AdminAuthentication {
+  authentication: AllowedAuthentication;
+
+  /**
+   * A unique identifier for this authentication configuration. Coda will pass it into formulas via
+   * the execution context. Users will not see this value.
+   *
+   * Names must use only alphanumeric characters and underscores, and must *not*
+   * be one of the {@link ReservedAuthenticationNames}.
+   *
+   * If changed, existing connected accounts will stop working until users re-authenticate.
+   */
+  name: string;
+
+  /**
+   * User-visible name of this authentication type.
+   */
+  displayName: string;
+
+  /**
+   * User-visible description of this authentication type. Should cover topics like:
+   * - What permissions in the 3rd party service are required to use this?
+   * - What sync tables do or don't support this authentication type?
+   * - Are there other caveats, like perhaps incremental sync not working with this authentication type?
+   */
+  description: string;
+
+  /**
+   * If true, Coda will not assume that the user who sets up an account with this authentication
+   * should themselves have access to the data owned by that account.
+   */
+  isServiceAccount?: boolean;
+}
 
 /**
  * Definition for a custom column type that users can apply to any column in any Coda table.
@@ -1121,6 +1200,13 @@ export interface PackVersionDefinition {
    * explicit connection is specified by the user.
    */
   systemConnectionAuthentication?: SystemAuthentication;
+
+  /**
+   * TODO(patrick): Unhide this.
+   * @hidden
+   */
+  adminAuthentications?: AdminAuthentication[];
+
   /**
    * Any domain(s) to which this pack makes fetcher requests. The domains this pack connects to must be
    * declared up front here, both to clearly communicate to users what a pack is capable of connecting to,

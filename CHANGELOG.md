@@ -7,6 +7,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ### Added
 
 - Add continuation for get permissions request and response
+- Add new authentication mechanisms for admins.
 
 ### Changed
 

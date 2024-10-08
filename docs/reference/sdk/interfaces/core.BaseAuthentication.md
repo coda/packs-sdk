@@ -34,6 +34,15 @@ Base interface for authentication definitions.
 
 ## Properties
 
+### canSyncPermissions
+
+• `Optional` **canSyncPermissions**: `boolean`
+
+If true, this authentication can be used to sync permissions associated with data
+in addition to the data itself.
+
+___
+
 ### endpointDomain
 
 • `Optional` **endpointDomain**: `string`

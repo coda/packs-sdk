@@ -151,6 +151,17 @@ class PackDefinitionBuilder {
         this.formats.push(format);
         return this;
     }
+    _wrapAuthenticationFunctions(authentication) {
+        const { getConnectionName: getConnectionNameDef, getConnectionUserId: getConnectionUserIdDef, postSetup: postSetupDef, ...rest } = authentication;
+        const getConnectionName = (0, api_7.wrapMetadataFunction)(getConnectionNameDef);
+        const getConnectionUserId = (0, api_7.wrapMetadataFunction)(getConnectionUserIdDef);
+        const postSetup = postSetupDef === null || postSetupDef === void 0 ? void 0 : postSetupDef.map(step => {
+            const getOptions = (0, api_7.wrapMetadataFunction)((0, migration_1.setEndpointDefHelper)(step).getOptions);
+            const getOptionsFormula = (0, api_7.wrapMetadataFunction)(step.getOptionsFormula);
+            return { ...step, getOptions, getOptionsFormula };
+        });
+        return { ...rest, getConnectionName, getConnectionUserId, postSetup };
+    }
     /**
      * Sets this pack to use authentication for individual users, using the
      * authentication method is the given definition.
@@ -178,13 +189,7 @@ class PackDefinitionBuilder {
             this.defaultAuthentication = authentication;
         }
         else {
-            const { getConnectionName: getConnectionNameDef, getConnectionUserId: getConnectionUserIdDef, postSetup: postSetupDef, ...rest } = authentication;
-            const getConnectionName = (0, api_7.wrapMetadataFunction)(getConnectionNameDef);
-            const getConnectionUserId = (0, api_7.wrapMetadataFunction)(getConnectionUserIdDef);
-            const postSetup = postSetupDef === null || postSetupDef === void 0 ? void 0 : postSetupDef.map(step => {
-                return { ...step, getOptions: (0, api_7.wrapMetadataFunction)((0, migration_1.setEndpointDefHelper)(step).getOptions) };
-            });
-            this.defaultAuthentication = { ...rest, getConnectionName, getConnectionUserId, postSetup };
+            this.defaultAuthentication = this._wrapAuthenticationFunctions(authentication);
         }
         if (authentication.type !== types_1.AuthenticationType.None) {
             this._setDefaultConnectionRequirement(defaultConnectionRequirement);
@@ -209,18 +214,22 @@ class PackDefinitionBuilder {
      * ```
      */
     setSystemAuthentication(systemAuthentication) {
-        const { getConnectionName: getConnectionNameDef, getConnectionUserId: getConnectionUserIdDef, postSetup: postSetupDef, ...rest } = systemAuthentication;
-        const getConnectionName = (0, api_7.wrapMetadataFunction)(getConnectionNameDef);
-        const getConnectionUserId = (0, api_7.wrapMetadataFunction)(getConnectionUserIdDef);
-        const postSetup = postSetupDef === null || postSetupDef === void 0 ? void 0 : postSetupDef.map(step => {
-            return { ...step, getOptions: (0, api_7.wrapMetadataFunction)((0, migration_1.setEndpointDefHelper)(step).getOptions) };
+        // TODO(patrick): Remove this cast
+        this.systemConnectionAuthentication = this._wrapAuthenticationFunctions(systemAuthentication);
+        return this;
+    }
+    /**
+     * TODO(patrick): Unhide this
+     * @hidden
+     */
+    addAdminAuthentication(adminAuth) {
+        if (!this.adminAuthentications) {
+            this.adminAuthentications = [];
+        }
+        this.adminAuthentications.push({
+            ...adminAuth,
+            authentication: this._wrapAuthenticationFunctions(adminAuth.authentication),
         });
-        this.systemConnectionAuthentication = {
-            ...rest,
-            getConnectionName,
-            getConnectionUserId,
-            postSetup,
-        };
         return this;
     }
     /**

@@ -1,3 +1,6 @@
+import type {AdminAuthentication} from './types';
+import type {AllowedAuthentication} from './types';
+import type {AllowedAuthenticationDef} from './types';
 import type {Authentication} from './types';
 import {AuthenticationType} from './types';
 import type {BasicPackDefinition} from './types';
@@ -70,6 +73,12 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * See {@link PackVersionDefinition.systemConnectionAuthentication}.
    */
   systemConnectionAuthentication?: SystemAuthentication;
+
+  /**
+   * See {@link PackVersionDefinition.adminAuthentications}.
+   * @hidden
+   */
+  adminAuthentications?: AdminAuthentication[];
 
   /**
    * See {@link PackVersionDefinition.version}.
@@ -224,6 +233,23 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     return this;
   }
 
+  private _wrapAuthenticationFunctions(authentication: AllowedAuthenticationDef): AllowedAuthentication {
+    const {
+      getConnectionName: getConnectionNameDef,
+      getConnectionUserId: getConnectionUserIdDef,
+      postSetup: postSetupDef,
+      ...rest
+    } = authentication;
+    const getConnectionName = wrapMetadataFunction(getConnectionNameDef);
+    const getConnectionUserId = wrapMetadataFunction(getConnectionUserIdDef);
+    const postSetup = postSetupDef?.map(step => {
+      const getOptions = wrapMetadataFunction(setEndpointDefHelper(step).getOptions);
+      const getOptionsFormula = wrapMetadataFunction(step.getOptionsFormula);
+      return {...step, getOptions, getOptionsFormula};
+    });
+    return {...rest, getConnectionName, getConnectionUserId, postSetup};
+  }
+
   /**
    * Sets this pack to use authentication for individual users, using the
    * authentication method is the given definition.
@@ -250,18 +276,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     if (authentication.type === AuthenticationType.None || authentication.type === AuthenticationType.Various) {
       this.defaultAuthentication = authentication;
     } else {
-      const {
-        getConnectionName: getConnectionNameDef,
-        getConnectionUserId: getConnectionUserIdDef,
-        postSetup: postSetupDef,
-        ...rest
-      } = authentication;
-      const getConnectionName = wrapMetadataFunction(getConnectionNameDef);
-      const getConnectionUserId = wrapMetadataFunction(getConnectionUserIdDef);
-      const postSetup = postSetupDef?.map(step => {
-        return {...step, getOptions: wrapMetadataFunction(setEndpointDefHelper(step).getOptions)};
-      });
-      this.defaultAuthentication = {...rest, getConnectionName, getConnectionUserId, postSetup} as Authentication;
+      this.defaultAuthentication = this._wrapAuthenticationFunctions(authentication);
     }
 
     if (authentication.type !== AuthenticationType.None) {
@@ -289,24 +304,25 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * ```
    */
   setSystemAuthentication(systemAuthentication: SystemAuthenticationDef): this {
-    const {
-      getConnectionName: getConnectionNameDef,
-      getConnectionUserId: getConnectionUserIdDef,
-      postSetup: postSetupDef,
-      ...rest
-    } = systemAuthentication;
-    const getConnectionName = wrapMetadataFunction(getConnectionNameDef);
-    const getConnectionUserId = wrapMetadataFunction(getConnectionUserIdDef);
-    const postSetup = postSetupDef?.map(step => {
-      return {...step, getOptions: wrapMetadataFunction(setEndpointDefHelper(step).getOptions)};
-    });
-    this.systemConnectionAuthentication = {
-      ...rest,
-      getConnectionName,
-      getConnectionUserId,
-      postSetup,
-    } as SystemAuthentication;
+    // TODO(patrick): Remove this cast
+    this.systemConnectionAuthentication = this._wrapAuthenticationFunctions(
+      systemAuthentication,
+    ) as SystemAuthentication;
+    return this;
+  }
 
+  /**
+   * TODO(patrick): Unhide this
+   * @hidden
+   */
+  addAdminAuthentication(adminAuth: AdminAuthentication): this {
+    if (!this.adminAuthentications) {
+      this.adminAuthentications = [];
+    }
+    this.adminAuthentications.push({
+      ...adminAuth,
+      authentication: this._wrapAuthenticationFunctions(adminAuth.authentication),
+    });
     return this;
   }
 

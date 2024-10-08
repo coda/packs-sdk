@@ -553,7 +553,7 @@ export type Formula<ParamDefsT extends ParamDefs = ParamDefs, ResultT extends Va
 export type TypedPackFormula = Formula | GenericSyncFormula;
 export type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
 /** @hidden */
-export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute' | 'executeUpdate'>;
+export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute' | 'executeUpdate' | 'executeGetPermissions'>;
 /** @hidden */
 export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'execute'>;
 export declare function isObjectPackFormula(fn: PackFormulaMetadata): fn is ObjectPackFormulaMetadata;
@@ -1485,6 +1485,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
     isExperimental?: boolean | undefined;
     isSystem?: boolean | undefined;
     extraOAuthScopes?: string[] | undefined;
+    allowedAuthenticationNames?: string[] | undefined;
 } & {
     execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<SchemaType<ResultT>>;
     resultType: Type.object;
@@ -1526,6 +1527,7 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
     isExperimental?: boolean | undefined;
     isSystem?: boolean | undefined;
     extraOAuthScopes?: string[] | undefined;
+    allowedAuthenticationNames?: string[] | undefined;
 } & {
     execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<string>;
     resultType: Type.string;

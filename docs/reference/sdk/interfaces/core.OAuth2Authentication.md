@@ -63,6 +63,19 @@ they may be specified using [additionalParams](core.OAuth2Authentication.md#addi
 
 ___
 
+### canSyncPermissions
+
+• `Optional` **canSyncPermissions**: `boolean`
+
+If true, this authentication can be used to sync permissions associated with data
+in addition to the data itself.
+
+#### Inherited from
+
+BaseOAuthAuthentication.canSyncPermissions
+
+___
+
 ### credentialsLocation
 
 • `Optional` **credentialsLocation**: [`TokenExchangeCredentialsLocation`](../enums/core.TokenExchangeCredentialsLocation.md)

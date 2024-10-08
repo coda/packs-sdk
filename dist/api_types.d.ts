@@ -370,6 +370,14 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
      * so an end user must have both sets of permissions.
      */
     readonly extraOAuthScopes?: string[];
+    /**
+     * Without this set, any authentication of the pack will be allowed to invoke this formula.
+     *
+     * This property is not allowed if connectionRequirement is None.
+     *
+     * @hidden
+     */
+    readonly allowedAuthenticationNames?: string[];
 }
 /**
  * Enumeration of requirement states for whether a given formula or sync table requires
@@ -778,12 +786,19 @@ export interface ExecutionContext {
      */
     readonly sync?: Sync;
     /**
+     * If this function is being invoked with authentication, this indicates which authentication was used.
+     *
+     * TODO(patrick): Unhide this
+     * @hidden
+     */
+    readonly authenticationName?: string;
+    /**
      * If this invocation is a part of a crawling execution, like in Coda Brain, then this ID will be provided
      * to all invocations. That includes invocations of sync `execute` and `executeGetPermissions`, as well as
      * dynamic table features like `listDynamicUrls`, `getSchema`, and `getName`.
      *
-     * @hidden
      * TODO(patrick): Unhide this
+     * @hidden
      */
     readonly executionId?: string;
     /**
