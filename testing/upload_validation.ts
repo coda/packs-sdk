@@ -2078,6 +2078,13 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           if (!allowedAuthenticationNames) {
             continue;
           }
+          if (formula.connectionRequirement === ConnectionRequirement.None) {
+            context.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: [formula.name, 'allowedAuthenticationNames'],
+              message: `Cannot specify 'allowedAuthenticationNames' on a formula with 'ConnectionRequirement.None'`,
+            });
+          }
           for (const allowedAuthenticationName of allowedAuthenticationNames) {
             if (!authNames.includes(allowedAuthenticationName)) {
               context.addIssue({
@@ -2244,7 +2251,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
               // Various is an internal authentication type that's only applicable to whitelisted Pack Ids.
               // Skipping validation here to let it exempt from network domains.
               auth.authentication.type === AuthenticationType.Various ||
-              auth.authentication.requiresEndpointUrl,
+              (auth.authentication.requiresEndpointUrl && !auth.authentication.endpointDomain),
           )
         ) {
           return true;
@@ -2289,19 +2296,37 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         const usedNetworkDomains = getUsedAuthNetworkDomains(authentication);
         if (usedNetworkDomains) {
           for (const usedNetworkDomain of usedNetworkDomains) {
-            if (!data.networkDomains?.includes(usedNetworkDomain)) {
-              context.addIssue({
-                code: z.ZodIssueCode.custom,
-                path: [`authentication.${name}`],
-                message: `Domain ${usedNetworkDomain} is used in ${readableAuthTitle} but not declared in the pack's "networkDomains".`,
-              });
-              return;
-            }
             if (authNetworkDomains.length > 0 && !authNetworkDomains.includes(usedNetworkDomain)) {
               context.addIssue({
                 code: z.ZodIssueCode.custom,
                 path: [`authentication.${name}`],
                 message: `Domain ${usedNetworkDomain} is used in ${readableAuthTitle} but not declared in its "networkDomain".`,
+              });
+              return;
+            }
+          }
+        }
+      }
+    })
+    .superRefine((untypedData, context) => {
+      const data = untypedData as PackVersionMetadata;
+      if (!data.networkDomains) {
+        return;
+      }
+
+      for (const authInfo of getAuthentications(data)) {
+        const {name, authentication: authentication} = authInfo;
+        const readableAuthTitle =
+          name === ReservedAuthenticationNames.Default ? 'setUserAuthentication()' : `authentication ${name}`;
+
+        const usedNetworkDomains = getUsedAuthNetworkDomains(authentication);
+        if (usedNetworkDomains) {
+          for (const usedNetworkDomain of usedNetworkDomains) {
+            if (!data.networkDomains.includes(usedNetworkDomain)) {
+              context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: [`authentication.${name}`],
+                message: `Domain ${usedNetworkDomain} is used in ${readableAuthTitle} but not declared in the pack's "networkDomains".`,
               });
               return;
             }
@@ -2393,8 +2418,14 @@ function getAuthentications(data: PackVersionMetadata): Array<{name: string; aut
  * have already caught such issues.
  */
 function getUsedAuthNetworkDomains(authentication: AuthenticationMetadata): string[] | undefined {
-  const {type} = authentication;
+  if (authentication.type === AuthenticationType.None || authentication.type === AuthenticationType.Various) {
+    return undefined;
+  }
+  const {endpointDomain, type} = authentication;
   const domains: string[] = [];
+  if (endpointDomain) {
+    domains.push(endpointDomain);
+  }
   switch (type) {
     case AuthenticationType.OAuth2: {
       const {authorizationUrl, tokenUrl, endpointDomain} = authentication;
@@ -2434,9 +2465,7 @@ function getUsedAuthNetworkDomains(authentication: AuthenticationMetadata): stri
     case AuthenticationType.MultiQueryParamToken:
     case AuthenticationType.QueryParamToken:
     case AuthenticationType.WebBasic:
-    case AuthenticationType.Various:
-    case AuthenticationType.None:
-      return undefined;
+      return domains;
     default:
       ensureUnreachable(type);
   }
@@ -2445,11 +2474,6 @@ function getUsedAuthNetworkDomains(authentication: AuthenticationMetadata): stri
 // Returns undefined for None or Various auth, otherwise returns a string array.
 function getDeclaredAuthNetworkDomains(authentication: AuthenticationMetadata): string[] | undefined {
   if (authentication.type === AuthenticationType.Various || authentication.type === AuthenticationType.None) {
-    return undefined;
-  }
-
-  if (authentication.requiresEndpointUrl) {
-    // We're ok if there's a user-supplied endpoint domain.
     return undefined;
   }
 

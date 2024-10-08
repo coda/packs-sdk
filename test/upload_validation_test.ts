@@ -1,4 +1,5 @@
 import {testHelper} from './test_helper';
+import type {AllowedAuthentication} from '../types';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '..';
 import {AuthenticationType} from '../types';
@@ -3755,17 +3756,18 @@ describe('Pack metadata Validation', async () => {
 
     it('HeaderBearerToken', async () => {
       const metadata = createFakePackVersionMetadata({
+        networkDomains: ['example.com'],
         defaultAuthentication: {
           type: AuthenticationType.HeaderBearerToken,
           instructionsUrl: 'some-url',
           requiresEndpointUrl: false,
-          endpointDomain: 'some-endpoint',
+          endpointDomain: 'example.com',
         },
         systemConnectionAuthentication: {
           type: AuthenticationType.HeaderBearerToken,
           instructionsUrl: 'some-url',
           requiresEndpointUrl: false,
-          endpointDomain: 'some-endpoint',
+          endpointDomain: 'example.com',
         },
       });
       await validateJson(metadata);
@@ -4336,6 +4338,57 @@ describe('Pack metadata Validation', async () => {
       await validateJson(metadata);
     });
 
+    it('endpointDomain gets validated', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['example.com'],
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+          requiresEndpointUrl: true,
+          endpointDomain: 'not-example.com',
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: `Domain not-example.com is used in setUserAuthentication() but not declared in the pack's "networkDomains".`,
+          path: 'authentication.defaultUserAuthentication',
+        },
+      ]);
+    });
+
+    it('endpointDomain gets validated, multi-domain', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['example.com', 'other-example.com'],
+        defaultAuthentication: {
+          type: AuthenticationType.HeaderBearerToken,
+          requiresEndpointUrl: true,
+          endpointDomain: 'other-example.com',
+          networkDomain: 'example.com',
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: `Domain other-example.com is used in setUserAuthentication() but not declared in its "networkDomain".`,
+          path: 'authentication.defaultUserAuthentication',
+        },
+      ]);
+
+      // Should be fixed via multiple network domains
+      const metadataWithMultipleNetworkDomains = deepCopy(metadata);
+      ensureExists(metadataWithMultipleNetworkDomains.defaultAuthentication as AllowedAuthentication).networkDomain = [
+        'other-example.com',
+        'example.com',
+      ];
+      await validateJson(metadataWithMultipleNetworkDomains);
+
+      // Also fixed by changing the endpoint domain
+      const metadataWithCorrectEndpointDomain = deepCopy(metadata);
+      ensureExists(metadataWithCorrectEndpointDomain.defaultAuthentication as AllowedAuthentication).endpointDomain =
+        'example.com';
+      await validateJson(metadataWithCorrectEndpointDomain);
+    });
+
     it('missing networkDomains when specifying system authentication', async () => {
       const metadata = createFakePackVersionMetadata({
         networkDomains: undefined,
@@ -4723,6 +4776,30 @@ describe('Pack metadata Validation', async () => {
         // Setting canSyncPermissions should fix the issue:
         ensureExists(metadata.adminAuthentications)[0].authentication.canSyncPermissions = true;
         await validateJson(metadata, '1.0.0');
+      });
+
+      it('cannot set allowedAuthenticationNames on a formula with no connection', async () => {
+        const metadata = createFakePackVersionMetadata({
+          formulas: [
+            makeFormula({
+              name: 'FormulaName',
+              description: '',
+              parameters: [],
+              execute: () => '',
+              resultType: ValueType.String,
+              connectionRequirement: ConnectionRequirement.None,
+              allowedAuthenticationNames: [ReservedAuthenticationNames.Default],
+            }),
+          ],
+          formulaNamespace: 'MyNamespace',
+        });
+        const err = await validateJsonAndAssertFails(metadata, '1.0.0');
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: `Cannot specify 'allowedAuthenticationNames' on a formula with 'ConnectionRequirement.None'`,
+            path: 'FormulaName.allowedAuthenticationNames',
+          },
+        ]);
       });
     });
   });
