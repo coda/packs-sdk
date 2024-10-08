@@ -4168,6 +4168,19 @@ describe('Pack metadata Validation', async () => {
       ]);
     });
 
+    it('allows google packs to use multiple domains', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.OAuth2,
+          authorizationUrl: 'https://accounts.google.com/o/oauth2/auth',
+          tokenUrl: 'https://accounts.google.com/o/oauth2/token',
+          scopes: [],
+        },
+        networkDomains: ['googleapis.com'],
+      });
+      await validateJson(metadata);
+    });
+
     it('missing networkDomains when specifying authentication', async () => {
       const metadata = createFakePackVersionMetadata({
         networkDomains: undefined,
@@ -4482,23 +4495,6 @@ describe('Pack metadata Validation', async () => {
       ]);
     });
 
-    it('validates oauth URL domains against network domain', async () => {
-      const metadata = createFakePackVersionMetadata({
-        defaultAuthentication: {
-          type: AuthenticationType.OAuth2,
-          authorizationUrl: 'https://wrongdomain.com/oauth/authorize',
-          tokenUrl: 'https://wrongdomain.com/oauth/token',
-        },
-      });
-      const err = await validateJsonAndAssertFails(metadata, '1.0.0');
-      assert.deepEqual(err.validationErrors, [
-        {
-          message: `Domain wrongdomain.com is used in setUserAuthentication() but not declared in the pack's "networkDomains".`,
-          path: 'authentication.defaultUserAuthentication',
-        },
-      ]);
-    });
-
     it('validates auth URL must be parse-able', async () => {
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
@@ -4544,9 +4540,8 @@ describe('Pack metadata Validation', async () => {
           adminAuthentications: [
             {
               authentication: {
-                type: AuthenticationType.OAuth2,
-                authorizationUrl: 'https://wrongdomain.com/oauth/authorize',
-                tokenUrl: 'https://wrongdomain.com/oauth/token',
+                type: AuthenticationType.HeaderBearerToken,
+                endpointDomain: 'wrongdomain.com',
                 canSyncPermissions: true,
               },
               name: 'goodName',
@@ -4592,9 +4587,8 @@ describe('Pack metadata Validation', async () => {
           adminAuthentications: [
             {
               authentication: {
-                type: AuthenticationType.OAuth2,
-                authorizationUrl: 'https://b.com/auth',
-                tokenUrl: 'https://b.com/token',
+                type: AuthenticationType.HeaderBearerToken,
+                endpointDomain: 'b.com',
                 canSyncPermissions: true,
               },
               name: 'foo',

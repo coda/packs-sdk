@@ -1572,7 +1572,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             var _a;
             const metadata = untypedMetadata;
             for (const authInfo of getAuthentications(metadata)) {
-                const { name, authentication: authentication } = authInfo;
+                const { name, authentication } = authInfo;
                 if (authentication.type !== types_1.AuthenticationType.CodaApiHeaderBearerToken) {
                     return;
                 }
@@ -1846,7 +1846,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         var _a;
         const data = untypedData;
         for (const authInfo of getAuthentications(data)) {
-            const { name, authentication: authentication } = authInfo;
+            const { name, authentication } = authInfo;
             const authNetworkDomains = getDeclaredAuthNetworkDomains(authentication);
             if (!(0, object_utils_1.isDefined)(authNetworkDomains)) {
                 // This is a Various or None auth pack.
@@ -1885,7 +1885,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             return;
         }
         for (const authInfo of getAuthentications(data)) {
-            const { name, authentication: authentication } = authInfo;
+            const { name, authentication } = authInfo;
             const readableAuthTitle = name === types_5.ReservedAuthenticationNames.Default ? 'setUserAuthentication()' : `authentication ${name}`;
             const usedNetworkDomains = getUsedAuthNetworkDomains(authentication);
             if (usedNetworkDomains) {
@@ -1905,7 +1905,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         .superRefine((untypedData, context) => {
         const data = untypedData;
         for (const authInfo of getAuthentications(data)) {
-            const { name, authentication: authentication } = authInfo;
+            const { name, authentication } = authInfo;
             const authNetworkDomains = getDeclaredAuthNetworkDomains(authentication);
             if (!(0, object_utils_1.isDefined)(authNetworkDomains)) {
                 // This is a Various or None auth pack.
@@ -1969,8 +1969,12 @@ function getAuthentications(data) {
  * Return all the domain names that should be validated against declared network domains.
  * This function just ignores any relative or un-parse-able URLs, trusting that other validations
  * have already caught such issues.
+ *
+ * We may eventually decide that includeOAuthTokenUrls should default true, but that would be
+ * backwards incompatible for packs that use services like Google, where their authorizationUrl &
+ * tokenUrl use a different domain than the API domain that is set on networkDomains.
  */
-function getUsedAuthNetworkDomains(authentication) {
+function getUsedAuthNetworkDomains(authentication, includeOAuthTokenUrls = false) {
     if (authentication.type === types_1.AuthenticationType.None || authentication.type === types_1.AuthenticationType.Various) {
         return undefined;
     }
@@ -1979,12 +1983,12 @@ function getUsedAuthNetworkDomains(authentication) {
     if (endpointDomain) {
         domains.push(endpointDomain);
     }
+    if (!includeOAuthTokenUrls) {
+        return domains;
+    }
     switch (type) {
         case types_1.AuthenticationType.OAuth2: {
-            const { authorizationUrl, tokenUrl, endpointDomain } = authentication;
-            if (endpointDomain) {
-                domains.push(endpointDomain);
-            }
+            const { authorizationUrl, tokenUrl } = authentication;
             const parsedAuthUrl = (0, url_parse_1.default)(authorizationUrl);
             if (parsedAuthUrl.hostname) {
                 domains.push(parsedAuthUrl.hostname);
@@ -1996,7 +2000,7 @@ function getUsedAuthNetworkDomains(authentication) {
             return domains;
         }
         case types_1.AuthenticationType.OAuth2ClientCredentials: {
-            const { tokenUrl, endpointDomain } = authentication;
+            const { tokenUrl } = authentication;
             if (endpointDomain) {
                 domains.push(endpointDomain);
             }

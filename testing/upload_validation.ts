@@ -1981,7 +1981,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         const metadata = untypedMetadata as PackVersionMetadata;
 
         for (const authInfo of getAuthentications(metadata)) {
-          const {name, authentication: authentication} = authInfo;
+          const {name, authentication} = authInfo;
           if (authentication.type !== AuthenticationType.CodaApiHeaderBearerToken) {
             return;
           }
@@ -2274,7 +2274,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       const data = untypedData as PackVersionMetadata;
 
       for (const authInfo of getAuthentications(data)) {
-        const {name, authentication: authentication} = authInfo;
+        const {name, authentication} = authInfo;
         const authNetworkDomains = getDeclaredAuthNetworkDomains(authentication);
 
         if (!isDefined(authNetworkDomains)) {
@@ -2319,7 +2319,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       }
 
       for (const authInfo of getAuthentications(data)) {
-        const {name, authentication: authentication} = authInfo;
+        const {name, authentication} = authInfo;
         const readableAuthTitle =
           name === ReservedAuthenticationNames.Default ? 'setUserAuthentication()' : `authentication ${name}`;
 
@@ -2346,7 +2346,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       const data = untypedData as PackVersionMetadata;
 
       for (const authInfo of getAuthentications(data)) {
-        const {name, authentication: authentication} = authInfo;
+        const {name, authentication} = authInfo;
         const authNetworkDomains = getDeclaredAuthNetworkDomains(authentication);
 
         if (!isDefined(authNetworkDomains)) {
@@ -2424,8 +2424,15 @@ function getAuthentications(data: PackVersionMetadata): Array<{name: string; aut
  * Return all the domain names that should be validated against declared network domains.
  * This function just ignores any relative or un-parse-able URLs, trusting that other validations
  * have already caught such issues.
+ *
+ * We may eventually decide that includeOAuthTokenUrls should default true, but that would be
+ * backwards incompatible for packs that use services like Google, where their authorizationUrl &
+ * tokenUrl use a different domain than the API domain that is set on networkDomains.
  */
-function getUsedAuthNetworkDomains(authentication: AuthenticationMetadata): string[] | undefined {
+function getUsedAuthNetworkDomains(
+  authentication: AuthenticationMetadata,
+  includeOAuthTokenUrls: boolean = false,
+): string[] | undefined {
   if (authentication.type === AuthenticationType.None || authentication.type === AuthenticationType.Various) {
     return undefined;
   }
@@ -2434,12 +2441,12 @@ function getUsedAuthNetworkDomains(authentication: AuthenticationMetadata): stri
   if (endpointDomain) {
     domains.push(endpointDomain);
   }
+  if (!includeOAuthTokenUrls) {
+    return domains;
+  }
   switch (type) {
     case AuthenticationType.OAuth2: {
-      const {authorizationUrl, tokenUrl, endpointDomain} = authentication;
-      if (endpointDomain) {
-        domains.push(endpointDomain);
-      }
+      const {authorizationUrl, tokenUrl} = authentication;
       const parsedAuthUrl = URLParse(authorizationUrl);
       if (parsedAuthUrl.hostname) {
         domains.push(parsedAuthUrl.hostname);
@@ -2451,7 +2458,7 @@ function getUsedAuthNetworkDomains(authentication: AuthenticationMetadata): stri
       return domains;
     }
     case AuthenticationType.OAuth2ClientCredentials: {
-      const {tokenUrl, endpointDomain} = authentication;
+      const {tokenUrl} = authentication;
       if (endpointDomain) {
         domains.push(endpointDomain);
       }
