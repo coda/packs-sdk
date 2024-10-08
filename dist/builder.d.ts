@@ -201,7 +201,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * TODO(patrick): Unhide this
      * @hidden
      */
-    setAdminAuthentications(adminAuthentications: AdminAuthentication[]): this;
+    addAdminAuthentication(adminAuth: AdminAuthentication): this;
     /**
      * Adds the domain that this pack makes HTTP requests to.
      * For example, if your pack makes HTTP requests to "api.example.com",

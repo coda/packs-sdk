@@ -222,16 +222,14 @@ class PackDefinitionBuilder {
      * TODO(patrick): Unhide this
      * @hidden
      */
-    setAdminAuthentications(adminAuthentications) {
+    addAdminAuthentication(adminAuth) {
         if (!this.adminAuthentications) {
             this.adminAuthentications = [];
         }
-        for (const adminAuth of adminAuthentications) {
-            this.adminAuthentications.push({
-                ...adminAuth,
-                authentication: this._wrapAuthenticationFunctions(adminAuth.authentication),
-            });
-        }
+        this.adminAuthentications.push({
+            ...adminAuth,
+            authentication: this._wrapAuthenticationFunctions(adminAuth.authentication),
+        });
         return this;
     }
     /**
