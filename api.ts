@@ -1168,15 +1168,6 @@ export interface SyncUpdateResultMarshaled<
 export type GenericSyncUpdateResultMarshaled = SyncUpdateResultMarshaled<any, any, any>;
 
 /**
- * Sets a limit on the number of permissions that can be returned for a single row
- * in a call to {@link executeGetPermissions}.
- *
- * TODO(sam): Unhide this
- * @hidden
- */
-const MaxPermissionsPerRow = 1000;
-
-/**
  * Type definition for the result of calls to {@link executeGetPermissions}.
  *
  * TODO(sam): Unhide this
@@ -2313,7 +2304,7 @@ export function makeSyncTable<
   const {
     execute: wrappedExecute,
     executeUpdate: wrappedExecuteUpdate,
-    executeGetPermissions: wrappedExecuteGetPermissions,
+    executeGetPermissions,
     ...definition
   } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
 
@@ -2436,27 +2427,6 @@ export function makeSyncTable<
         return {
           result: responseHandler({body: result || [], status: 200, headers: {}}, appliedSchema),
         } as SyncUpdateResult<K, L, SchemaT>;
-      }
-    : undefined;
-
-  const executeGetPermissions = wrappedExecuteGetPermissions
-    ? async function execGetPermissions(
-        params: ParamValues<ParamDefsT>,
-        request: ExecuteGetPermissionsRequest<K, L, SchemaDefT>,
-        context: GetPermissionExecutionContext,
-      ) {
-        const result = await wrappedExecuteGetPermissions(params, request, context);
-        const {rowAccessDefinitions: permissions} = result;
-        const oversizedRowAccessDefinitions = permissions.filter(p => p.permissions.length > MaxPermissionsPerRow);
-
-        if (oversizedRowAccessDefinitions.length > 0) {
-          throw new Error(
-            `Objects with ids: ${oversizedRowAccessDefinitions
-              .map(p => p.rowId)
-              .join(', ')} returned more permissions than the maximum allowed of ${MaxPermissionsPerRow} per object`,
-          );
-        }
-        return result;
       }
     : undefined;
 

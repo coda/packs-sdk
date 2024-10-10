@@ -385,14 +385,6 @@ var UpdateOutcome;
     UpdateOutcome["Error"] = "error";
 })(UpdateOutcome || (exports.UpdateOutcome = UpdateOutcome = {}));
 /**
- * Sets a limit on the number of permissions that can be returned for a single row
- * in a call to {@link executeGetPermissions}.
- *
- * TODO(sam): Unhide this
- * @hidden
- */
-const MaxPermissionsPerRow = 1000;
-/**
  * @deprecated
  *
  * Helper for returning the definition of a formula that returns a number. Adds result type information
@@ -828,7 +820,7 @@ exports.makeObjectFormula = makeObjectFormula;
  */
 function makeSyncTable({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions = {}, role, }) {
     const { getSchema: getSchemaDef, entityName, defaultAddDynamicColumns } = dynamicOptions;
-    const { execute: wrappedExecute, executeUpdate: wrappedExecuteUpdate, executeGetPermissions: wrappedExecuteGetPermissions, ...definition } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
+    const { execute: wrappedExecute, executeUpdate: wrappedExecuteUpdate, executeGetPermissions, ...definition } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
     // Since we mutate schemaDef, we need to make a copy so the input schema can be reused across sync tables.
     const schemaDef = (0, object_utils_1.deepCopy)(inputSchema);
     // Hydrate the schema's identity.
@@ -925,19 +917,6 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
             return {
                 result: responseHandler({ body: result || [], status: 200, headers: {} }, appliedSchema),
             };
-        }
-        : undefined;
-    const executeGetPermissions = wrappedExecuteGetPermissions
-        ? async function execGetPermissions(params, request, context) {
-            const result = await wrappedExecuteGetPermissions(params, request, context);
-            const { rowAccessDefinitions: permissions } = result;
-            const oversizedRowAccessDefinitions = permissions.filter(p => p.permissions.length > MaxPermissionsPerRow);
-            if (oversizedRowAccessDefinitions.length > 0) {
-                throw new Error(`Objects with ids: ${oversizedRowAccessDefinitions
-                    .map(p => p.rowId)
-                    .join(', ')} returned more permissions than the maximum allowed of ${MaxPermissionsPerRow} per object`);
-            }
-            return result;
         }
         : undefined;
     return {
