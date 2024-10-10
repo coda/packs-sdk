@@ -142,7 +142,7 @@ export const Limits = {
   ColumnMatcherRegex: 300,
   NumColumnMatchersPerFormat: 10,
   NetworkDomainUrl: 253,
-  PermissionsBatchSize: 1000,
+  PermissionsBatchSize: 5000,
   UpdateBatchSize: 1000,
 };
 

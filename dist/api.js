@@ -385,14 +385,6 @@ var UpdateOutcome;
     UpdateOutcome["Error"] = "error";
 })(UpdateOutcome || (exports.UpdateOutcome = UpdateOutcome = {}));
 /**
- * Sets a limit on the number of permissions that can be returned for a single row
- * in a call to {@link executeGetPermissions}.
- *
- * TODO(sam): Unhide this
- * @hidden
- */
-const MaxPermissionsPerRow = 1000;
-/**
  * @deprecated
  *
  * Helper for returning the definition of a formula that returns a number. Adds result type information
@@ -927,19 +919,7 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
             };
         }
         : undefined;
-    const executeGetPermissions = wrappedExecuteGetPermissions
-        ? async function execGetPermissions(params, request, context) {
-            const result = await wrappedExecuteGetPermissions(params, request, context);
-            const { rowAccessDefinitions: permissions } = result;
-            const oversizedRowAccessDefinitions = permissions.filter(p => p.permissions.length > MaxPermissionsPerRow);
-            if (oversizedRowAccessDefinitions.length > 0) {
-                throw new Error(`Objects with ids: ${oversizedRowAccessDefinitions
-                    .map(p => p.rowId)
-                    .join(', ')} returned more permissions than the maximum allowed of ${MaxPermissionsPerRow} per object`);
-            }
-            return result;
-        }
-        : undefined;
+    const executeGetPermissions = wrappedExecuteGetPermissions ? wrappedExecuteGetPermissions : undefined;
     return {
         name,
         description,
