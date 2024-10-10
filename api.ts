@@ -2304,7 +2304,7 @@ export function makeSyncTable<
   const {
     execute: wrappedExecute,
     executeUpdate: wrappedExecuteUpdate,
-    executeGetPermissions: wrappedExecuteGetPermissions,
+    executeGetPermissions,
     ...definition
   } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
 
@@ -2429,8 +2429,6 @@ export function makeSyncTable<
         } as SyncUpdateResult<K, L, SchemaT>;
       }
     : undefined;
-
-  const executeGetPermissions = wrappedExecuteGetPermissions ? wrappedExecuteGetPermissions : undefined;
 
   return {
     name,
