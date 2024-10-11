@@ -4,12 +4,20 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- Add new authentication mechanisms for admins.
+
+### Changed
+
+- Remove limit for single row in executeGetPermissions
+- Increase max batch size for executeGetPermissions calls
+
 ## [1.8.0] - 2024-10-07
 
 ### Added
 
 - Add continuation for get permissions request and response
-- Add new authentication mechanisms for admins.
 
 ### Changed
 
