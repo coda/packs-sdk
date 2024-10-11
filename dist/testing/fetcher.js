@@ -3,7 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newFetcherSyncExecutionContext = exports.newFetcherExecutionContext = exports.requestHelper = exports.AuthenticatingFetcher = void 0;
+exports.requestHelper = exports.AuthenticatingFetcher = void 0;
+exports.newFetcherExecutionContext = newFetcherExecutionContext;
+exports.newFetcherSyncExecutionContext = newFetcherSyncExecutionContext;
 const client_sts_1 = require("@aws-sdk/client-sts");
 const types_1 = require("../types");
 const constants_1 = require("./constants");
@@ -527,7 +529,7 @@ exports.requestHelper = {
         return (0, node_fetcher_1.nodeFetcher)({
             ...request,
             resolveWithFullResponse: true,
-            timeout: 60000,
+            timeout: 60000, // msec
             forever: true, // keep alive connections as long as possible.
         });
     },
@@ -558,12 +560,10 @@ function newFetcherExecutionContext(updateCredentialsCallback, authDef, networkD
         temporaryBlobStorage: new AuthenticatingBlobStorage(fetcher),
     };
 }
-exports.newFetcherExecutionContext = newFetcherExecutionContext;
 function newFetcherSyncExecutionContext(updateCredentialsCallback, authDef, networkDomains, credentials) {
     const context = newFetcherExecutionContext(updateCredentialsCallback, authDef, networkDomains, credentials);
     return { ...context, sync: {} };
 }
-exports.newFetcherSyncExecutionContext = newFetcherSyncExecutionContext;
 function addQueryParam(url, param, value) {
     const parsedUrl = new url_1.URL(url);
     // Put the key at the beginning, as some APIs expect it at the beginning.

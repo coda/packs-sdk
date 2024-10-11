@@ -23,7 +23,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.nodeFetcher = exports.isStatusCodeError = exports.StatusCodeError = exports.fetch = void 0;
+exports.StatusCodeError = void 0;
+exports.fetch = fetch;
+exports.isStatusCodeError = isStatusCodeError;
+exports.nodeFetcher = nodeFetcher;
 const nodeFetch = __importStar(require("node-fetch"));
 /**
  * A wrapper for fetch() that allows us to
@@ -33,7 +36,6 @@ const nodeFetch = __importStar(require("node-fetch"));
 async function fetch(url, init) {
     return nodeFetch.default(url, init);
 }
-exports.fetch = fetch;
 class StatusCodeError extends Error {
     constructor(statusCode, body, options, response) {
         super(`${statusCode} - ${JSON.stringify(body)}`);
@@ -47,7 +49,6 @@ exports.StatusCodeError = StatusCodeError;
 function isStatusCodeError(err) {
     return typeof err === 'object' && err.name === StatusCodeError.name;
 }
-exports.isStatusCodeError = isStatusCodeError;
 async function nodeFetcher(options) {
     const { method = 'GET', uri, qs, followRedirect = true, throwOnRedirect = true, gzip = true, json, headers: rawHeaders = {}, form, body, timeout, resolveWithFullResponse, resolveWithRawBody, simple = true, encoding, maxResponseSizeBytes, legacyBlankAcceptHeader, } = options;
     // https://github.com/node-fetch/node-fetch#options
@@ -125,7 +126,6 @@ async function nodeFetcher(options) {
     }
     return resultBody;
 }
-exports.nodeFetcher = nodeFetcher;
 async function getResultBody(response, { encoding, resolveWithRawBody, forceJsonResponseBody, }) {
     var _a;
     if (resolveWithRawBody) {

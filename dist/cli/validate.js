@@ -23,7 +23,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateMetadata = exports.handleValidate = void 0;
+exports.handleValidate = handleValidate;
+exports.validateMetadata = validateMetadata;
 const compile_1 = require("../testing/compile");
 const metadata_1 = require("../helpers/metadata");
 const helpers_1 = require("./helpers");
@@ -42,7 +43,6 @@ async function handleValidate({ manifestFile, checkDeprecationWarnings }) {
     const metadata = (0, metadata_1.compilePackMetadata)(manifest);
     return validateMetadata(metadata, { checkDeprecationWarnings });
 }
-exports.handleValidate = handleValidate;
 async function validateMetadata(metadata, { checkDeprecationWarnings = true } = {}) {
     var _a, _b;
     // Since package.json isn't in dist, we grab it from the root directory instead.
@@ -68,7 +68,6 @@ async function validateMetadata(metadata, { checkDeprecationWarnings = true } = 
         (0, helpers_4.printAndExit)(`Your Pack is using deprecated properties or features: \n${deprecationWarnings}`, 0);
     }
 }
-exports.validateMetadata = validateMetadata;
 function makeErrorMessage({ path, message }) {
     if (path) {
         return `Error in field at path "${path}": ${message}`;
