@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleSetOption = void 0;
+exports.handleSetOption = handleSetOption;
 const config_storage_1 = require("./config_storage");
 const compile_1 = require("../testing/compile");
 const __1 = require("..");
@@ -37,7 +37,6 @@ async function handleSetOption({ manifestFile, option, value }) {
     (0, config_storage_2.storePackOptions)(manifestDir, options);
     (0, helpers_1.print)('Option stored successfully.');
 }
-exports.handleSetOption = handleSetOption;
 function validateOption(option, value) {
     const validOptions = Object.values(config_storage_1.PackOptionKey);
     if (!validOptions.includes(option)) {
