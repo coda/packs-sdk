@@ -2143,17 +2143,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             }
           }
         }
-      })
-      .superRefine((data, context) => {
-        const syncTables = (data.syncTables as SyncTable[]) || [];
-        const userTables = syncTables.filter(syncTable => syncTable.role === TableRole.Users);
-        if (userTables.length > 1) {
-          context.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ['syncTables'],
-            message: 'Only one sync table can have the role "Users".',
-          });
-        }
       });
   }
 
