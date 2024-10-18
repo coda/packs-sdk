@@ -26,7 +26,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateResult = exports.validateParams = void 0;
+exports.validateParams = validateParams;
+exports.validateResult = validateResult;
 const types_1 = require("./types");
 const types_2 = require("./types");
 const types_3 = require("./types");
@@ -67,7 +68,6 @@ function validateParams(formula, args) {
         throw new types_1.ParameterException(`The following parameter errors were found:\n${errorMsgs.join('\n')}`);
     }
 }
-exports.validateParams = validateParams;
 function validateResult(formula, result) {
     const maybeError = validateResultType(formula.resultType, result);
     if (maybeError) {
@@ -78,7 +78,6 @@ function validateResult(formula, result) {
         validateObjectResult(formula, result);
     }
 }
-exports.validateResult = validateResult;
 function validateResultType(resultType, result) {
     if (!(0, object_utils_1.isDefined)(result)) {
         return { message: `Expected a ${resultType} result but got ${result}.` };
