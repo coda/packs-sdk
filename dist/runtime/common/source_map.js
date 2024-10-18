@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.translateErrorStackFromVM = void 0;
+exports.translateErrorStackFromVM = translateErrorStackFromVM;
 const source_map_1 = require("source-map");
 const fs_1 = __importDefault(require("fs"));
 const stackTraceParser = __importStar(require("stacktrace-parser"));
@@ -63,4 +63,3 @@ async function translateErrorStackFromVM({ stacktrace, bundleSourceMapPath, vmFi
         return stacktrace;
     }
 }
-exports.translateErrorStackFromVM = translateErrorStackFromVM;

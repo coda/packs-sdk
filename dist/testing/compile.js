@@ -26,7 +26,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.compilePackBundle = exports.TimerShimStrategy = void 0;
+exports.TimerShimStrategy = void 0;
+exports.compilePackBundle = compilePackBundle;
 const browserify_1 = __importDefault(require("browserify"));
 const metadata_1 = require("../helpers/metadata");
 const ensure_1 = require("../helpers/ensure");
@@ -136,9 +137,9 @@ async function buildWithES({ lastBundleFilename, outputBundleFilename, options: 
         // logical assignment
         target: 'ES2020',
         inject: getInjections(buildOptions),
-        minify: false,
+        minify: false, // don't minify here since browserify doesn't minify anyway.
         sourcemap: 'both',
-        keepNames: true,
+        keepNames: true, // this is required to interpret code like `StatusCodeError.name`.
         // The pack bundle is always targeting the isolated-vm environment.
         define: { 'process.env.IN_ISOLATED_VM_OR_BROWSER': 'true' },
         external: ['codaInternal'], // for serializer
@@ -245,4 +246,3 @@ outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, timer
         bundleSourceMapPath,
     };
 }
-exports.compilePackBundle = compilePackBundle;
