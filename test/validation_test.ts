@@ -7,7 +7,7 @@ import {ValueType} from '../schema';
 import {coerceParams} from '../testing/coercion';
 import {createFakePack} from './test_utils';
 import {executeFormulaFromPackDef} from '../testing/execution';
-import {executeSyncFormulaFromPackDef} from '../testing/execution';
+import {executeSyncFormula} from '../testing/execution';
 import {makeBooleanParameter} from '../api';
 import {makeNumericParameter} from '../api';
 import {makeObjectFormula} from '../api';
@@ -439,13 +439,13 @@ describe('validation in sync tables', () => {
 
   it('rejects bad nested object property for item in sync formula', async () => {
     await testHelper.willBeRejectedWith(
-      executeSyncFormulaFromPackDef(fakePack, 'Students', [true]),
+      executeSyncFormula(fakePack, 'Students', [true]),
       /Expected a number property for Students\[0\].Info.Age but got "100"./,
     );
   });
 
   it('validates correct items in sync formula', async () => {
-    await executeSyncFormulaFromPackDef(fakePack, 'Students', [false]);
+    await executeSyncFormula(fakePack, 'Students', [false]);
   });
 });
 

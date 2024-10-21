@@ -20,6 +20,7 @@ export type {ExecuteOptions} from './testing/execution';
 export {executeFormulaFromPackDef} from './testing/execution';
 export {executeMetadataFormula} from './testing/execution';
 export {executeSyncFormulaFromPackDef} from './testing/execution';
+export {executeSyncFormula} from './testing/execution';
 export {executeSyncFormulaFromPackDefSingleIteration} from './testing/execution';
 
 // @hidden

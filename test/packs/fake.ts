@@ -127,6 +127,7 @@ export const manifest: PackDefinition = createFakePack({
         description: "Gets students in a teacher's class",
         execute: async ([teacher], context) => {
           const {continuation} = context.sync;
+          const isIncremental = Boolean(context.sync.previousCompletion);
           const page = continuation?.page;
           switch (teacher) {
             case 'Smith':
@@ -139,6 +140,7 @@ export const manifest: PackDefinition = createFakePack({
               if (page === 2) {
                 return {
                   result: [{name: 'Chris'}, {name: 'Diana'}],
+                  deletedItemIds: isIncremental ? ['Ed'] : undefined,
                 };
               }
             case 'Brown':

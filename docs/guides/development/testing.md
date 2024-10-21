@@ -18,43 +18,39 @@ Packs built using the web editor in the Pack Studio can only be run and tested i
 
 We recommend building out a dedicated doc for testing, which you can use to validate that your Pack is working as expected. Use your Pack with a variety of inputs, and compare the output to an expected value.
 
-
 ## On your local machine {: #local}
 
 When developing locally using the [`coda` CLI][cli], you can leverage some utilities in the SDK to help you write unit tests and integration tests for your Pack. These utilities include:
 
-* Helper functions to execute a specific formula or sync from your pack definition.
-* Mock fetchers (using `sinon`) to simulate HTTP requests and responses.
-* Validation of formula inputs and return values to help catch bugs both in your test code and your formula logic.
-* Hooks to apply authentication to HTTP requests for integration tests.
+- Helper functions to execute a specific formula or sync from your pack definition.
+- Mock fetchers (using `sinon`) to simulate HTTP requests and responses.
+- Validation of formula inputs and return values to help catch bugs both in your test code and your formula logic.
+- Hooks to apply authentication to HTTP requests for integration tests.
 
 You’ll find testing and development utilities in `packs-sdk/dist/development`.
 
-The primary testing utilities are `executeFormulaFromPackDef` and `executeSyncFormulaFromPackDef`. You provide the name of a formula, a reference to your Pack definition, and a parameter list, and the utility will execute the formula for you, validate the return value, and return it to you for further assertions. These utilities provide sane default execution contexts, and in the case of a sync, will execute your sync formula repeatedly for each page of results, simulating what a real Coda sync will do.
+The primary testing utilities are `executeFormulaFromPackDef` and `executeSyncFormula`. You provide the name of a formula, a reference to your Pack definition, and a parameter list, and the utility will execute the formula for you, validate the return value, and return it to you for further assertions. These utilities provide sane default execution contexts, and in the case of a sync, will execute your sync formula repeatedly for each page of results, simulating what a real Coda sync will do.
 
 By default, these utilities will use an execution environment that includes a mock fetcher that will not actually make HTTP requests. You can pass your own mock fetcher if you wish to configure and inspect the mock requests.
-
 
 ### Basic formula unit test
 
 Here’s a very simple example test, using Mocha, for a formula that doesn’t make any fetcher requests:
 
 ```ts
-import {assert} from "chai";
-import {describe} from "mocha";
-import {executeFormulaFromPackDef} from "@codahq/packs-sdk/dist/development";
-import {it} from "mocha";
-import {pack} from "../pack";
+import {assert} from 'chai';
+import {describe} from 'mocha';
+import {executeFormulaFromPackDef} from '@codahq/packs-sdk/dist/development';
+import {it} from 'mocha';
+import {pack} from '../pack';
 
 describe('Simple Formula', () => {
   it('executes a formula', async () => {
-    const result =
-        await executeFormulaFromPackDef(pack, 'MyFormula', ['my-param']);
+    const result = await executeFormulaFromPackDef(pack, 'MyFormula', ['my-param']);
     assert.equal(result, 'my-return-value');
   });
 });
 ```
-
 
 ### Formula unit test with mock fetcher
 
@@ -62,11 +58,11 @@ A more interesting example is for a Pack that does make some kind of HTTP reques
 
 ```ts
 import {MockExecutionContext} from '@codahq/packs-sdk/dist/development';
-import {assert} from "chai";
-import {describe} from "mocha";
-import {executeFormulaFromPackDef} from "@codahq/packs-sdk/dist/development";
-import {it} from "mocha";
-import {pack} from "../pack";
+import {assert} from 'chai';
+import {describe} from 'mocha';
+import {executeFormulaFromPackDef} from '@codahq/packs-sdk/dist/development';
+import {it} from 'mocha';
+import {pack} from '../pack';
 import {newJsonFetchResponse} from '@codahq/packs-sdk/dist/development';
 import {newMockExecutionContext} from '@codahq/packs-sdk/dist/development';
 import sinon from 'sinon';
@@ -85,8 +81,7 @@ describe('Formula with Fetcher', () => {
     });
     context.fetcher.fetch.returns(fakeResponse);
 
-    const result = await executeFormulaFromPackDef(
-        pack, 'MyFormula', ['my-param'], context);
+    const result = await executeFormulaFromPackDef(pack, 'MyFormula', ['my-param'], context);
 
     assert.equal(result.Name, 'Alice');
     sinon.assert.calledOnce(context.fetcher.fetch);
@@ -94,18 +89,17 @@ describe('Formula with Fetcher', () => {
 });
 ```
 
-
 ### Sync unit test
 
 Testing a sync is very similar to testing a regular formula. However, you want to create a `MockSyncExecutionContext` instead of a vanilla execution context, and you can test that your sync handles pagination properly by setting up mock fetcher responses that will result in your sync formula return a `Continuation` at least once.
 
 ```ts
 import {MockSyncExecutionContext} from '@codahq/packs-sdk/dist/development';
-import {assert} from "chai";
-import {describe} from "mocha";
-import {executeFormulaFromPackDef} from "@codahq/packs-sdk/dist/development";
-import {it} from "mocha";
-import {pack} from "../pack";
+import {assert} from 'chai';
+import {describe} from 'mocha';
+import {executeFormulaFromPackDef} from '@codahq/packs-sdk/dist/development';
+import {it} from 'mocha';
+import {pack} from '../pack';
 import {newJsonFetchResponse} from '@codahq/packs-sdk/dist/development';
 import {newMockSyncExecutionContext} from '@codahq/packs-sdk/dist/development';
 import sinon from 'sinon';
@@ -119,11 +113,11 @@ describe('Sync Formula', () => {
 
   it('sync with pagination', async () => {
     const page1Response = newJsonFetchResponse({
-      users: [{ id: 123, name: 'Alice' }],
+      users: [{id: 123, name: 'Alice'}],
       nextPageNumber: 2,
     });
     const page2Response = newJsonFetchResponse({
-      users: [{ id: 456, name: 'Bob' }],
+      users: [{id: 456, name: 'Bob'}],
       nextPageNumber: undefined,
     });
     syncContext.fetcher.fetch
@@ -132,8 +126,7 @@ describe('Sync Formula', () => {
       .withArgs('/api/users?page=2')
       .returns(page2Response);
 
-    const result =
-        await executeSyncFormulaFromPackDef(pack, 'MySync', [], syncContext);
+    const result = await executeSyncFormulaFromPackDef(pack, 'MySync', [], syncContext);
 
     assert.equal(result.length, 2);
     assert.equal(result[0].Id, 123);
@@ -148,32 +141,24 @@ describe('Sync Formula', () => {
 If you wish to write an end-to-end integration test that actually hits the third-party API that you Pack interacts with, you can simply pass `useRealFetcher: true` when using these test utilities. The execution context will include a fetcher that will make real HTTP requests to whatever urls they are given. For example:
 
 ```ts
-import {assert} from "chai";
-import {describe} from "mocha";
-import {executeFormulaFromPackDef} from "@codahq/packs-sdk/dist/development";
-import {it} from "mocha";
-import {pack} from "../pack";
+import {assert} from 'chai';
+import {describe} from 'mocha';
+import {executeFormulaFromPackDef} from '@codahq/packs-sdk/dist/development';
+import {it} from 'mocha';
+import {pack} from '../pack';
 
 describe('Formula integration test', () => {
   it('executes the formula', async () => {
-    const result = await executeFormulaFromPackDef(
-      pack,
-      "MyFormula",
-      ["my-param"],
-      undefined,
-      undefined,
-      {
-        useRealFetcher: true,
-        manifestPath: require.resolve("../pack"),
-      },
-    );
+    const result = await executeFormulaFromPackDef(pack, 'MyFormula', ['my-param'], undefined, undefined, {
+      useRealFetcher: true,
+      manifestPath: require.resolve('../pack'),
+    });
     assert.equal(result, 'my-return-value');
   });
 });
 ```
 
 The fetcher will apply authentication to these requests if you have configured authentication locally using `coda auth`. For this to work you must specify the `manifestPath` and set it to the directory where the `.coda-credentials.json` file is located (usually the same directory as the Pack definition).
-
 
 ### Return value validation
 
@@ -191,6 +176,5 @@ The validator will check for things like:
 The validator does not perfectly represent how Coda will process your return values at runtime but is intended to help catch the most common bugs so that you can fix them before uploading your Pack to Coda.
 
 If desired, you can disable return value validation by passing `validateResult: false` in the `ExecuteOptions` argument of these testing utilities.
-
 
 [cli]: cli.md

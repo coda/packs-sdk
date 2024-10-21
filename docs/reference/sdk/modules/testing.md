@@ -27,6 +27,7 @@ import * as testing from "@codahq/packs-sdk/dist/development";
 - [executeFormulaFromPackDef](../functions/testing.executeFormulaFromPackDef.md)
 - [executeFormulaOrSyncWithVM](../functions/testing.executeFormulaOrSyncWithVM.md)
 - [executeMetadataFormula](../functions/testing.executeMetadataFormula.md)
+- [executeSyncFormula](../functions/testing.executeSyncFormula.md)
 - [executeSyncFormulaFromPackDef](../functions/testing.executeSyncFormulaFromPackDef.md)
 - [executeSyncFormulaFromPackDefSingleIteration](../functions/testing.executeSyncFormulaFromPackDefSingleIteration.md)
 - [newJsonFetchResponse](../functions/testing.newJsonFetchResponse.md)
