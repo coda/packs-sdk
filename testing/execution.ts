@@ -586,7 +586,7 @@ export async function executeFormulaOrSyncWithRawParams<T extends FormulaSpecifi
  * of state or global variables between iterations.
  *
  * For now, use `coda execute --vm` to simulate that level of isolation.
- * @deprecated use executeSyncFormula instead.
+ * @deprecated Use {@link executeSyncFormula} instead.
  */
 export async function executeSyncFormulaFromPackDef<T extends object = any>(
   packDef: BasicPackDefinition,
