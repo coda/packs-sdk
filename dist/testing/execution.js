@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newRealFetcherSyncExecutionContext = exports.newRealFetcherExecutionContext = exports.executeMetadataFormula = exports.executeUpdateFormulaFromPackDef = exports.executeGetPermissionsFormulaFromPackDef = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeFormulaOrSyncWithRawParams = exports.VMError = exports.executeFormulaOrSyncWithVM = exports.makeFormulaSpec = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = exports.DEFAULT_MAX_ROWS = void 0;
+exports.newRealFetcherSyncExecutionContext = exports.newRealFetcherExecutionContext = exports.executeMetadataFormula = exports.executeUpdateFormulaFromPackDef = exports.executeGetPermissionsFormulaFromPackDef = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeSyncFormula = exports.executeFormulaOrSyncWithRawParams = exports.VMError = exports.executeFormulaOrSyncWithVM = exports.makeFormulaSpec = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = exports.DEFAULT_MAX_ROWS = void 0;
 const types_1 = require("../runtime/types");
 const types_2 = require("../runtime/types");
 const buffer_1 = require("buffer/");
@@ -431,7 +431,7 @@ exports.executeFormulaOrSyncWithRawParams = executeFormulaOrSyncWithRawParams;
  *
  * For now, use `coda execute --vm` to simulate that level of isolation.
  */
-async function executeSyncFormulaFromPackDef(packDef, syncFormulaName, params, context, { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, useDeprecatedResultNormalization = true, } = {}, { useRealFetcher, manifestPath } = {}) {
+async function executeSyncFormula(packDef, syncFormulaName, params, context, { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, useDeprecatedResultNormalization = true, } = {}, { useRealFetcher, manifestPath } = {}) {
     const formula = (0, helpers_2.findSyncFormula)(packDef, syncFormulaName);
     if (shouldValidateParams && formula) {
         (0, validation_1.validateParams)(formula, params);
@@ -447,6 +447,7 @@ async function executeSyncFormulaFromPackDef(packDef, syncFormulaName, params, c
         }
     }
     const result = [];
+    const deletedItemIds = [];
     let iterations = 1;
     do {
         if (iterations > MaxSyncIterations) {
@@ -454,13 +455,40 @@ async function executeSyncFormulaFromPackDef(packDef, syncFormulaName, params, c
         }
         const response = await findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_1.FormulaType.Sync }, packDef, executionContext, undefined, undefined, { validateParams: false, validateResult: false, useDeprecatedResultNormalization });
         result.push(...response.result);
+        if (response.deletedItemIds) {
+            deletedItemIds.push(...response.deletedItemIds);
+        }
         executionContext.sync.continuation = response.continuation;
         iterations++;
     } while (executionContext.sync.continuation);
     if (shouldValidateResult && formula) {
         (0, validation_2.validateResult)(formula, result);
     }
-    return result;
+    return {
+        result,
+        deletedItemIds,
+    };
+}
+exports.executeSyncFormula = executeSyncFormula;
+/**
+ * Executes multiple iterations of a sync formula in a loop until there is no longer
+ * a `continuation` returned, aggregating each page of results and returning an array
+ * with results of all iterations combined and flattened.
+ *
+ * NOTE: This currently runs all the iterations in a simple loop, which does not
+ * adequately simulate the fact that in a real execution environment each iteration
+ * will be run in a completely isolated environment, with absolutely no sharing
+ * of state or global variables between iterations.
+ *
+ * For now, use `coda execute --vm` to simulate that level of isolation.
+ * @deprecated Use {@link executeSyncFormula} instead.
+ */
+async function executeSyncFormulaFromPackDef(packDef, syncFormulaName, params, context, { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, useDeprecatedResultNormalization = true, } = {}, { useRealFetcher, manifestPath } = {}) {
+    return Promise.resolve((await executeSyncFormula(packDef, syncFormulaName, params, context, {
+        validateParams: shouldValidateParams,
+        validateResult: shouldValidateResult,
+        useDeprecatedResultNormalization,
+    }, { useRealFetcher, manifestPath })).result);
 }
 exports.executeSyncFormulaFromPackDef = executeSyncFormulaFromPackDef;
 /**

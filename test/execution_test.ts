@@ -20,7 +20,7 @@ import {executeFormulaFromPackDef} from '../testing/execution';
 import {executeFormulaOrSyncFromCLI} from '../testing/execution';
 import {executeFormulaOrSyncWithVM} from '../testing/execution';
 import {executeMetadataFormula} from '../testing/execution';
-import {executeSyncFormulaFromPackDef} from '../testing/execution';
+import {executeSyncFormula} from '../testing/execution';
 import {manifest as fakePack} from './packs/fake';
 import * as helpers from '../testing/helpers';
 import {makeBooleanParameter} from '../api';
@@ -35,6 +35,7 @@ import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
 import {newJsonFetchResponse} from '../testing/mocks';
 import {newMockExecutionContext} from '../testing/mocks';
+import {newMockSyncExecutionContext} from '../testing/mocks';
 import {newPack} from '../builder';
 import sinon from 'sinon';
 
@@ -66,18 +67,35 @@ describe('Execution', () => {
     assert.deepEqual(result, {name: 'Alice'});
   });
 
+  it('executes a incremental sync formula by name', async () => {
+    const mockContext = newMockSyncExecutionContext({
+      sync: {
+        previousCompletion: {
+          incrementalContinuation: {
+            isIncremental: 'true',
+          },
+        },
+      },
+    });
+    const result = await executeSyncFormula(fakePack, 'Students', ['Smith'], mockContext);
+    assert.deepEqual(result, {
+      result: [{Name: 'Alice'}, {Name: 'Bob'}, {Name: 'Chris'}, {Name: 'Diana'}],
+      deletedItemIds: ['Ed'],
+    });
+  });
+
   it('executes a sync formula by name', async () => {
-    const result = await executeSyncFormulaFromPackDef(fakePack, 'Students', ['Smith']);
-    assert.deepEqual(result, [{Name: 'Alice'}, {Name: 'Bob'}, {Name: 'Chris'}, {Name: 'Diana'}]);
+    const result = await executeSyncFormula(fakePack, 'Students', ['Smith']);
+    assert.deepEqual(result.result, [{Name: 'Alice'}, {Name: 'Bob'}, {Name: 'Chris'}, {Name: 'Diana'}]);
   });
 
   it('executes a sync formulas without normalization', async () => {
-    const result = await executeSyncFormulaFromPackDef(fakePack, 'Students', ['Smith'], undefined, {
+    const result = await executeSyncFormula(fakePack, 'Students', ['Smith'], undefined, {
       validateParams: true,
       validateResult: true,
       useDeprecatedResultNormalization: false,
     });
-    assert.deepEqual(result, [{name: 'Alice'}, {name: 'Bob'}, {name: 'Chris'}, {name: 'Diana'}]);
+    assert.deepEqual(result.result, [{name: 'Alice'}, {name: 'Bob'}, {name: 'Chris'}, {name: 'Diana'}]);
   });
 
   it('executes a formula by name with VM', async () => {
@@ -348,14 +366,14 @@ describe('Execution', () => {
   describe('errors resolving sync formulas', () => {
     it('no sync tables', async () => {
       await testHelper.willBeRejectedWith(
-        executeSyncFormulaFromPackDef(createFakePack({formulas: undefined, syncTables: undefined}), 'Bar', []),
+        executeSyncFormula(createFakePack({formulas: undefined, syncTables: undefined}), 'Bar', []),
         /Pack definition has no sync tables./,
       );
     });
 
     it('non-existent sync formula', async () => {
       await testHelper.willBeRejectedWith(
-        executeSyncFormulaFromPackDef(fakePack, 'Foo', []),
+        executeSyncFormula(fakePack, 'Foo', []),
         /Pack definition has no sync formula "Foo" in its sync tables./,
       );
     });
