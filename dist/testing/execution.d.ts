@@ -70,8 +70,22 @@ export declare function executeFormulaOrSyncWithRawParams<T extends FormulaSpeci
  * of state or global variables between iterations.
  *
  * For now, use `coda execute --vm` to simulate that level of isolation.
+ * @deprecated use executeSyncFormula instead.
  */
 export declare function executeSyncFormulaFromPackDef<T extends object = any>(packDef: BasicPackDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, { validateParams: shouldValidateParams, validateResult: shouldValidateResult, useDeprecatedResultNormalization, }?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<T[]>;
+/**
+ * Executes multiple iterations of a sync formula in a loop until there is no longer
+ * a `continuation` returned, aggregating each page of results and returning an array
+ * with results of all iterations combined and flattened.
+ *
+ * NOTE: This currently runs all the iterations in a simple loop, which does not
+ * adequately simulate the fact that in a real execution environment each iteration
+ * will be run in a completely isolated environment, with absolutely no sharing
+ * of state or global variables between iterations.
+ *
+ * For now, use `coda execute --vm` to simulate that level of isolation.
+ */
+export declare function executeSyncFormula(packDef: BasicPackDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, { validateParams: shouldValidateParams, validateResult: shouldValidateResult, useDeprecatedResultNormalization, }?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<GenericSyncFormulaResult>;
 /**
  * Executes a single sync iteration, and returns the return value from the sync formula
  * including the continuation, for inspection.

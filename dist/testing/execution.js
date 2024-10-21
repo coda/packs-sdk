@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newRealFetcherSyncExecutionContext = exports.newRealFetcherExecutionContext = exports.executeMetadataFormula = exports.executeUpdateFormulaFromPackDef = exports.executeGetPermissionsFormulaFromPackDef = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeFormulaOrSyncWithRawParams = exports.VMError = exports.executeFormulaOrSyncWithVM = exports.makeFormulaSpec = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = exports.DEFAULT_MAX_ROWS = void 0;
+exports.newRealFetcherSyncExecutionContext = exports.newRealFetcherExecutionContext = exports.executeMetadataFormula = exports.executeUpdateFormulaFromPackDef = exports.executeGetPermissionsFormulaFromPackDef = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormula = exports.executeSyncFormulaFromPackDef = exports.executeFormulaOrSyncWithRawParams = exports.VMError = exports.executeFormulaOrSyncWithVM = exports.makeFormulaSpec = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = exports.DEFAULT_MAX_ROWS = void 0;
 const types_1 = require("../runtime/types");
 const types_2 = require("../runtime/types");
 const buffer_1 = require("buffer/");
@@ -430,6 +430,7 @@ exports.executeFormulaOrSyncWithRawParams = executeFormulaOrSyncWithRawParams;
  * of state or global variables between iterations.
  *
  * For now, use `coda execute --vm` to simulate that level of isolation.
+ * @deprecated use executeSyncFormula instead.
  */
 async function executeSyncFormulaFromPackDef(packDef, syncFormulaName, params, context, { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, useDeprecatedResultNormalization = true, } = {}, { useRealFetcher, manifestPath } = {}) {
     const formula = (0, helpers_2.findSyncFormula)(packDef, syncFormulaName);
@@ -463,6 +464,57 @@ async function executeSyncFormulaFromPackDef(packDef, syncFormulaName, params, c
     return result;
 }
 exports.executeSyncFormulaFromPackDef = executeSyncFormulaFromPackDef;
+/**
+ * Executes multiple iterations of a sync formula in a loop until there is no longer
+ * a `continuation` returned, aggregating each page of results and returning an array
+ * with results of all iterations combined and flattened.
+ *
+ * NOTE: This currently runs all the iterations in a simple loop, which does not
+ * adequately simulate the fact that in a real execution environment each iteration
+ * will be run in a completely isolated environment, with absolutely no sharing
+ * of state or global variables between iterations.
+ *
+ * For now, use `coda execute --vm` to simulate that level of isolation.
+ */
+async function executeSyncFormula(packDef, syncFormulaName, params, context, { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, useDeprecatedResultNormalization = true, } = {}, { useRealFetcher, manifestPath } = {}) {
+    const formula = (0, helpers_2.findSyncFormula)(packDef, syncFormulaName);
+    if (shouldValidateParams && formula) {
+        (0, validation_1.validateParams)(formula, params);
+    }
+    let executionContext = context;
+    if (!executionContext) {
+        if (useRealFetcher) {
+            const credentials = getCredentials(manifestPath);
+            executionContext = (0, fetcher_2.newFetcherSyncExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_3.getPackAuth)(packDef), packDef.networkDomains, credentials);
+        }
+        else {
+            executionContext = (0, mocks_2.newMockSyncExecutionContext)();
+        }
+    }
+    const result = [];
+    const deletedItemIds = [];
+    let iterations = 1;
+    do {
+        if (iterations > MaxSyncIterations) {
+            throw new Error(`Sync is still running after ${MaxSyncIterations} iterations, this is likely due to an infinite loop.`);
+        }
+        const response = await findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_1.FormulaType.Sync }, packDef, executionContext, undefined, undefined, { validateParams: false, validateResult: false, useDeprecatedResultNormalization });
+        result.push(...response.result);
+        if (response.deletedItemIds) {
+            deletedItemIds.push(...response.deletedItemIds);
+        }
+        executionContext.sync.continuation = response.continuation;
+        iterations++;
+    } while (executionContext.sync.continuation);
+    if (shouldValidateResult && formula) {
+        (0, validation_2.validateResult)(formula, result);
+    }
+    return {
+        result,
+        deletedItemIds,
+    };
+}
+exports.executeSyncFormula = executeSyncFormula;
 /**
  * Executes a single sync iteration, and returns the return value from the sync formula
  * including the continuation, for inspection.
