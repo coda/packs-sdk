@@ -8,7 +8,7 @@ search:
 
 [testing](../modules/testing.md).executeSyncFormulaFromPackDef
 
-▸ **executeSyncFormulaFromPackDef**<`T`\>(`packDef`, `syncFormulaName`, `params`, `context?`, `«destructured»?`, `«destructured»?`): `Promise`<`T`[]\>
+▸ **executeSyncFormulaFromPackDef**(`packDef`, `syncFormulaName`, `params`, `context?`, `«destructured»?`, `«destructured»?`): `Promise`<`ObjectSchemaDefinitionType`<`any`, `any`, `any`\>[]\>
 
 Executes multiple iterations of a sync formula in a loop until there is no longer
 a `continuation` returned, aggregating each page of results and returning an array
@@ -23,13 +23,7 @@ For now, use `coda execute --vm` to simulate that level of isolation.
 
 **`Deprecated`**
 
-use executeSyncFormula instead.
-
-#### Type parameters
-
-| Name | Type |
-| :------ | :------ |
-| `T` | extends `object` = `any` |
+Use [executeSyncFormula](testing.executeSyncFormula.md) instead.
 
 #### Parameters
 
@@ -44,4 +38,4 @@ use executeSyncFormula instead.
 
 #### Returns
 
-`Promise`<`T`[]\>
+`Promise`<`ObjectSchemaDefinitionType`<`any`, `any`, `any`\>[]\>

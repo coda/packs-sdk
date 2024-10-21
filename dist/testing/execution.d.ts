@@ -9,6 +9,7 @@ import type { GenericSyncUpdateResult } from '../api';
 import type { GetPermissionsResult } from '../api';
 import type { MetadataContext } from '../api';
 import type { MetadataFormula } from '../api';
+import type { ObjectSchemaDefinitionType } from '../schema';
 import type { PackFormulaResult } from '../api_types';
 import type { ParamDefs } from '../api_types';
 import type { ParamValues } from '../api_types';
@@ -70,9 +71,8 @@ export declare function executeFormulaOrSyncWithRawParams<T extends FormulaSpeci
  * of state or global variables between iterations.
  *
  * For now, use `coda execute --vm` to simulate that level of isolation.
- * @deprecated use executeSyncFormula instead.
  */
-export declare function executeSyncFormulaFromPackDef<T extends object = any>(packDef: BasicPackDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, { validateParams: shouldValidateParams, validateResult: shouldValidateResult, useDeprecatedResultNormalization, }?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<T[]>;
+export declare function executeSyncFormula(packDef: BasicPackDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, { validateParams: shouldValidateParams, validateResult: shouldValidateResult, useDeprecatedResultNormalization, }?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<GenericSyncFormulaResult>;
 /**
  * Executes multiple iterations of a sync formula in a loop until there is no longer
  * a `continuation` returned, aggregating each page of results and returning an array
@@ -84,8 +84,9 @@ export declare function executeSyncFormulaFromPackDef<T extends object = any>(pa
  * of state or global variables between iterations.
  *
  * For now, use `coda execute --vm` to simulate that level of isolation.
+ * @deprecated Use {@link executeSyncFormula} instead.
  */
-export declare function executeSyncFormula(packDef: BasicPackDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, { validateParams: shouldValidateParams, validateResult: shouldValidateResult, useDeprecatedResultNormalization, }?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<GenericSyncFormulaResult>;
+export declare function executeSyncFormulaFromPackDef(packDef: BasicPackDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, { validateParams: shouldValidateParams, validateResult: shouldValidateResult, useDeprecatedResultNormalization, }?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<Array<ObjectSchemaDefinitionType<any, any, any>>>;
 /**
  * Executes a single sync iteration, and returns the return value from the sync formula
  * including the continuation, for inspection.

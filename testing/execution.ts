@@ -14,6 +14,7 @@ import type {MetadataFormula} from '../api';
 import type {MetadataFormulaSpecification} from '../runtime/types';
 import {MetadataFormulaType} from '../runtime/types';
 import {Buffer as NonNativeBuffer} from 'buffer/';
+import type {ObjectSchemaDefinitionType} from '../schema';
 import type {PackFormulaResult} from '../api_types';
 import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
@@ -586,80 +587,6 @@ export async function executeFormulaOrSyncWithRawParams<T extends FormulaSpecifi
  * of state or global variables between iterations.
  *
  * For now, use `coda execute --vm` to simulate that level of isolation.
- * @deprecated Use {@link executeSyncFormula} instead.
- */
-export async function executeSyncFormulaFromPackDef<T extends object = any>(
-  packDef: BasicPackDefinition,
-  syncFormulaName: string,
-  params: ParamValues<ParamDefs>,
-  context?: SyncExecutionContext,
-  {
-    validateParams: shouldValidateParams = true,
-    validateResult: shouldValidateResult = true,
-    useDeprecatedResultNormalization = true,
-  }: ExecuteOptions = {},
-  {useRealFetcher, manifestPath}: ContextOptions = {},
-): Promise<T[]> {
-  const formula = findSyncFormula(packDef, syncFormulaName);
-  if (shouldValidateParams && formula) {
-    validateParams(formula, params);
-  }
-
-  let executionContext = context;
-  if (!executionContext) {
-    if (useRealFetcher) {
-      const credentials = getCredentials(manifestPath);
-      executionContext = newFetcherSyncExecutionContext(
-        buildUpdateCredentialsCallback(manifestPath),
-        getPackAuth(packDef),
-        packDef.networkDomains,
-        credentials,
-      );
-    } else {
-      executionContext = newMockSyncExecutionContext();
-    }
-  }
-  const result = [];
-  let iterations = 1;
-  do {
-    if (iterations > MaxSyncIterations) {
-      throw new Error(
-        `Sync is still running after ${MaxSyncIterations} iterations, this is likely due to an infinite loop.`,
-      );
-    }
-    const response = await findAndExecutePackFunction(
-      params,
-      {formulaName: syncFormulaName, type: FormulaType.Sync},
-      packDef,
-      executionContext,
-      undefined,
-      undefined,
-      {validateParams: false, validateResult: false, useDeprecatedResultNormalization},
-    );
-
-    result.push(...response.result);
-    executionContext.sync.continuation = response.continuation;
-    iterations++;
-  } while (executionContext.sync.continuation);
-
-  if (shouldValidateResult && formula) {
-    validateResult(formula, result);
-  }
-
-  return result as T[];
-}
-
-/**
- * Executes multiple iterations of a sync formula in a loop until there is no longer
- * a `continuation` returned, aggregating each page of results and returning an array
- * with results of all iterations combined and flattened.
- *
- * NOTE: This currently runs all the iterations in a simple loop, which does not
- * adequately simulate the fact that in a real execution environment each iteration
- * will be run in a completely isolated environment, with absolutely no sharing
- * of state or global variables between iterations.
- *
- * For now, use `coda execute --vm` to simulate that level of isolation.
  */
 export async function executeSyncFormula(
   packDef: BasicPackDefinition,
@@ -727,6 +654,49 @@ export async function executeSyncFormula(
     result,
     deletedItemIds,
   };
+}
+
+/**
+ * Executes multiple iterations of a sync formula in a loop until there is no longer
+ * a `continuation` returned, aggregating each page of results and returning an array
+ * with results of all iterations combined and flattened.
+ *
+ * NOTE: This currently runs all the iterations in a simple loop, which does not
+ * adequately simulate the fact that in a real execution environment each iteration
+ * will be run in a completely isolated environment, with absolutely no sharing
+ * of state or global variables between iterations.
+ *
+ * For now, use `coda execute --vm` to simulate that level of isolation.
+ * @deprecated Use {@link executeSyncFormula} instead.
+ */
+export async function executeSyncFormulaFromPackDef(
+  packDef: BasicPackDefinition,
+  syncFormulaName: string,
+  params: ParamValues<ParamDefs>,
+  context?: SyncExecutionContext,
+  {
+    validateParams: shouldValidateParams = true,
+    validateResult: shouldValidateResult = true,
+    useDeprecatedResultNormalization = true,
+  }: ExecuteOptions = {},
+  {useRealFetcher, manifestPath}: ContextOptions = {},
+): Promise<Array<ObjectSchemaDefinitionType<any, any, any>>> {
+  return Promise.resolve(
+    (
+      await executeSyncFormula(
+        packDef,
+        syncFormulaName,
+        params,
+        context,
+        {
+          validateParams: shouldValidateParams,
+          validateResult: shouldValidateResult,
+          useDeprecatedResultNormalization,
+        },
+        {useRealFetcher, manifestPath},
+      )
+    ).result,
+  );
 }
 
 /**
