@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleUpload = void 0;
+exports.handleUpload = handleUpload;
 const v1_1 = require("../helpers/external-api/v1");
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
@@ -167,7 +167,6 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
     cleanup(intermediateOutputDirectory, logger);
     logger.info('Done!');
 }
-exports.handleUpload = handleUpload;
 async function uploadPack(uploadUrl, uploadPayload, headers) {
     try {
         await fetch(uploadUrl, {
