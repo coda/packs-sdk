@@ -1387,6 +1387,7 @@ export enum PrincipalType {
   User = 'user',
   Group = 'group',
   Anyone = 'anyone',
+  AllUsers = 'allUsers',
   Domain = 'domain',
 }
 
@@ -1424,11 +1425,13 @@ export interface DomainPrincipal {
 }
 
 /**
- * This represents a principal corresponding to anyone who has access to the external system.
+ * This represents a principal corresponding to anyone
  *
- * This corresponds to any user who appears in the sync table with role {@link TableRole.Users}
+ * Generally this would apply to an entity where anyone with access to the url can view the item.
+ * Deprecated in favor of {@link AllUsersPrincipal}. Will be removed in a future SDK version.
  *
  * TODO(sam): Unhide this
+ * @deprecated
  * @hidden
  */
 export interface AnyonePrincipal {
@@ -1436,12 +1439,23 @@ export interface AnyonePrincipal {
 }
 
 /**
+ * This represents a principal corresponding to anyone who has access to the external system.
+ *
+ * This corresponds to any user who appears in the sync table with role {@link TableRole.Users}
+ *
+ * TODO(sam): Unhide this
+ * @hidden
+ */
+export interface AllUsersPrincipal {
+  type: PrincipalType.AllUsers;
+}
+/**
  * This represents a principal that can be granted access.
  *
  * TODO(sam): Unhide this
  * @hidden
  */
-type Principal = UserPrincipal | GroupPrincipal | AnyonePrincipal | DomainPrincipal;
+type Principal = UserPrincipal | GroupPrincipal | AnyonePrincipal | DomainPrincipal | AllUsersPrincipal;
 
 /**
  * The type of permission.
