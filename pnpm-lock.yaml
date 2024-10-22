@@ -260,8 +260,8 @@ importers:
         specifier: 10.7.0
         version: 10.7.0
       mock-fs:
-        specifier: 5.2.0
-        version: 5.2.0
+        specifier: 5.4.0
+        version: 5.4.0
       proxyquire:
         specifier: 2.1.3
         version: 2.1.3
@@ -6840,8 +6840,8 @@ packages:
       yargs-unparser: 2.0.0
     dev: true
 
-  /mock-fs@5.2.0:
-    resolution: {integrity: sha512-2dF2R6YMSZbpip1V1WHKGLNjr/k48uQClqMVb5H3MOvwc9qhYis3/IWbj02qIg/Y8MDXKFF4c5v0rxx2o6xTZw==}
+  /mock-fs@5.4.0:
+    resolution: {integrity: sha512-3ROPnEMgBOkusBMYQUW2rnT3wZwsgfOKzJDLvx/TZ7FL1WmWvwSwn3j4aDR5fLDGtgcc1WF0Z1y0di7c9L4FKw==}
     engines: {node: '>=12.0.0'}
     dev: true
 
