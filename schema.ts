@@ -1424,9 +1424,9 @@ export interface DomainPrincipal {
 }
 
 /**
- * This represents a principal corresponding to anyone
+ * This represents a principal corresponding to anyone who has access to the external system.
  *
- * Generally this would apply to an entity where anyone with access to the url can view the item
+ * This corresponds to any user who appears in the sync table with role {@link TableRole.Users}
  *
  * TODO(sam): Unhide this
  * @hidden
