@@ -1386,6 +1386,10 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
 export enum PrincipalType {
   User = 'user',
   Group = 'group',
+  /**
+   * @deprecated
+   * @hidden
+   */
   Anyone = 'anyone',
   AllUsers = 'allUsers',
   Domain = 'domain',
