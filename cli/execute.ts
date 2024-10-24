@@ -1,9 +1,12 @@
 import type {ArgumentsCamelCase} from 'yargs';
+import {PackOptionKey} from './config_storage';
 import type {TimerShimStrategy} from '../testing/compile';
 import {compilePackBundle} from '../testing/compile';
 import {executeFormulaOrSyncFromCLI} from '../testing/execution';
+import {getPackOptions} from './config_storage';
 import {importManifest} from './helpers';
 import {makeManifestFullPath} from './helpers';
+import path from 'path';
 import {printAndExit} from '../testing/helpers';
 import {tryGetIvm} from '../testing/ivm_wrapper';
 
@@ -43,9 +46,14 @@ export async function handleExecute({
     timerStrategy,
   });
   const manifest = await importManifest(bundlePath);
+
+  // If using multiple network domains, check that they set the flag or option.
+  const options = getPackOptions(path.dirname(manifestPath));
+  allowMultipleNetworkDomains ||= options?.[PackOptionKey.allowMultipleNetworkDomains];
   if (manifest.networkDomains && manifest.networkDomains.length > 1 && !allowMultipleNetworkDomains) {
     return printAndExit('Using multiple network domains requires approval from Coda. Visit https://coda.io/packs/build/latest/support#approvals to make a request. Disable this warning by including the flag: --allowMultipleNetworkDomains');
   }
+
   await executeFormulaOrSyncFromCLI({
     formulaName,
     params,

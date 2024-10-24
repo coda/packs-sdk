@@ -261,8 +261,10 @@ if (require.main === module) {
       command: 'setOption <manifestFile> <option> <value>',
       describe:
         'Set a persistent build option for the pack. This will store the option alongside the pack id in ' +
-        'the .coda-pack.json file and it will be used for all builds of the pack. ' +
-        'Currently the only supported option is `timerStrategy`. Valid values are "none", "error", or "fake".\n\n' +
+        'the .coda-pack.json file and it will be used for all builds of the pack.\n\n' +
+        'Supported options:\n' +
+        '- timerStrategy: "none", "error", or "fake"\n' +
+        '- allowMultipleNetworkDomains: "true" or "false"\n\n' +
         'Usage: coda setOption path/to/pack.ts timerStrategy fake',
       handler: handleSetOption as any,
     })

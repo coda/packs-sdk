@@ -17,10 +17,12 @@ export interface ApiKeyFile {
 
 export enum PackOptionKey {
   timerStrategy = 'timerStrategy',
+  allowMultipleNetworkDomains = 'allowMultipleNetworkDomains',
 }
 
 export interface PackOptions {
   [PackOptionKey.timerStrategy]?: TimerShimStrategy;
+  [PackOptionKey.allowMultipleNetworkDomains]?: boolean;
 }
 
 export interface PackIdFile {
