@@ -1,10 +1,16 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleExecute = void 0;
+const config_storage_1 = require("./config_storage");
 const compile_1 = require("../testing/compile");
 const execution_1 = require("../testing/execution");
+const config_storage_2 = require("./config_storage");
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
+const path_1 = __importDefault(require("path"));
 const helpers_3 = require("../testing/helpers");
 const ivm_wrapper_1 = require("../testing/ivm_wrapper");
 async function handleExecute({ manifestPath, formulaName, params, fetch, vm, dynamicUrl, timerStrategy, maxRows, allowMultipleNetworkDomains, }) {
@@ -19,6 +25,9 @@ async function handleExecute({ manifestPath, formulaName, params, fetch, vm, dyn
         timerStrategy,
     });
     const manifest = await (0, helpers_1.importManifest)(bundlePath);
+    // If using multiple network domains, check that they set the flag or option.
+    const options = (0, config_storage_2.getPackOptions)(path_1.default.dirname(manifestPath));
+    allowMultipleNetworkDomains || (allowMultipleNetworkDomains = options === null || options === void 0 ? void 0 : options[config_storage_1.PackOptionKey.allowMultipleNetworkDomains]);
     if (manifest.networkDomains && manifest.networkDomains.length > 1 && !allowMultipleNetworkDomains) {
         return (0, helpers_3.printAndExit)('Using multiple network domains requires approval from Coda. Visit https://coda.io/packs/build/latest/support#approvals to make a request. Disable this warning by including the flag: --allowMultipleNetworkDomains');
     }

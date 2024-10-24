@@ -46,12 +46,26 @@ function validateOption(option, value) {
     const key = option;
     switch (key) {
         case config_storage_1.PackOptionKey.timerStrategy:
-            const validValues = Object.values(compile_1.TimerShimStrategy);
-            if (!validValues.includes(value)) {
-                return (0, helpers_2.printAndExit)(`Invalid option value "${value}". Valid values are ${validValues.join(', ')}`);
-            }
+            validateTimerStrategyValue(value);
             return { [key]: value };
+        case config_storage_1.PackOptionKey.allowMultipleNetworkDomains:
+            validateAllowMultipleNetworkDomainsValue(value);
+            return { [key]: value === 'true' };
         default:
             return (0, __1.ensureUnreachable)(key);
     }
+}
+function validateTimerStrategyValue(value) {
+    const validValues = Object.values(compile_1.TimerShimStrategy);
+    if (!validValues.includes(value)) {
+        return (0, helpers_2.printAndExit)(`Invalid option value "${value}". Valid values are ${validValues.join(', ')}`);
+    }
+    return value;
+}
+function validateAllowMultipleNetworkDomainsValue(value) {
+    const validValues = ['true', 'false'];
+    if (!validValues.includes(value)) {
+        return (0, helpers_2.printAndExit)(`Invalid option value "${value}". Valid values are ${validValues.join(', ')}`);
+    }
+    return value;
 }
