@@ -251,6 +251,11 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
      * @hidden
      */
     role?: TableRole;
+    /**
+     * Not supported docs.
+     * @hidden
+     */
+    displayName?: string;
 }
 /**
  * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
@@ -1259,6 +1264,11 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
      * @hidden
      */
     role?: TableRole;
+    /**
+     * Not supported docs.
+     * @hidden
+     */
+    displayName?: string;
 }
 /**
  * Options provided when defining a dynamic sync table.
@@ -1399,7 +1409,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
  */
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaDefT extends ObjectSchemaDefinition<K, L>, SchemaT extends SchemaDefT & {
     identity?: Identity;
-}>({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions, role, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT>;
+}>({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions, role, displayName, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT>;
 /** @deprecated */
 export declare function makeSyncTableLegacy<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(name: string, schema: SchemaT, formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT>, connectionRequirement?: ConnectionRequirement, dynamicOptions?: {
     getSchema?: MetadataFormula;

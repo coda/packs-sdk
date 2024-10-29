@@ -1422,6 +1422,12 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             }
         }),
         role: z.nativeEnum(api_types_4.TableRole).optional(),
+        displayName: z
+            .string()
+            .min(1)
+            .max(exports.Limits.BuildingBlockName)
+            .regex(regexFormulaName, 'Sync Table names can only contain alphanumeric characters and underscores.')
+            .optional(),
     };
     const genericSyncTableSchema = zodCompleteObject({
         ...baseSyncTableSchema,
