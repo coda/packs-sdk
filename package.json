@@ -1,13 +1,13 @@
 {
   "name": "@codahq/packs-sdk",
-  "version": "1.8.1-prerelease.4",
+  "version": "1.8.1-prerelease.5",
   "license": "MIT",
   "workspaces": [
     "dev/eslint"
   ],
   "engines": {
     "node": ">=18.0.x",
-    "pnpm": "8.15.9"
+    "pnpm": "8.15.8"
   },
   "main": "dist/index.js",
   "bin": {

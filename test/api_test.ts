@@ -203,6 +203,29 @@ describe('API test', () => {
       );
     });
 
+    it('displayName persists', () => {
+      const table = makeSyncTable({
+        name: 'SomeSync',
+        identityName: 'MyIdentityName',
+        displayName: 'MyDisplayName',
+        schema: schema.makeObjectSchema({
+          type: ValueType.Object,
+          id: 'id',
+          primary: 'id',
+          properties: {id: {type: ValueType.String}},
+        }),
+        formula: {
+          name: 'Whatever',
+          description: 'Whatever',
+          parameters: [],
+          async execute() {
+            return {result: []};
+          },
+        },
+      });
+      assert.equal(table.displayName, 'MyDisplayName');
+    });
+
     it('no autocompletes adds no sync table property', async () => {
       const table = makeSyncTable({
         name: 'SomeSync',

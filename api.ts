@@ -330,6 +330,12 @@ export interface SyncTableDef<
    * @hidden
    */
   role?: TableRole;
+
+  /**
+   * Not supported docs.
+   * @hidden
+   */
+  displayName?: string;
 }
 
 /**
@@ -2136,6 +2142,12 @@ export interface SyncTableOptions<
    * @hidden
    */
   role?: TableRole;
+
+  /**
+   * Not supported docs.
+   * @hidden
+   */
+  displayName?: string;
 }
 
 /**
@@ -2299,6 +2311,7 @@ export function makeSyncTable<
   connectionRequirement,
   dynamicOptions = {},
   role,
+  displayName,
 }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT> {
   const {getSchema: getSchemaDef, entityName, defaultAddDynamicColumns} = dynamicOptions;
   const {
@@ -2453,6 +2466,7 @@ export function makeSyncTable<
     defaultAddDynamicColumns,
     namedPropertyOptions: maybeRewriteConnectionForNamedPropertyOptions(namedPropertyOptions, connectionRequirement),
     role,
+    displayName,
   };
 }
 

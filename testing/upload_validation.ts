@@ -1809,6 +1809,12 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }
       }),
     role: z.nativeEnum(TableRole).optional(),
+    displayName: z
+      .string()
+      .min(1)
+      .max(Limits.BuildingBlockName)
+      .regex(regexFormulaName, 'Sync Table names can only contain alphanumeric characters and underscores.')
+      .optional(),
   };
 
   type GenericSyncTableDef = SyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>;
