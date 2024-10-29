@@ -7,6 +7,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ### Added
 
 - Add new authentication mechanisms for admins.
+- Add all users principal type
 
 ### Changed
 
