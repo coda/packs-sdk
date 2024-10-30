@@ -530,7 +530,10 @@ export class AuthenticatingFetcher implements Fetcher {
           method,
           url,
           service,
-          headers: headers || {},
+          headers: {
+            ...headers,
+            host,
+          },
           credentials,
         });
         return {
