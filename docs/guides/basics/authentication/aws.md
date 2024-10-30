@@ -52,7 +52,7 @@ You can learn more about how to create roles in the [AWS documentation][awsdocs_
 
 ### Trust policy
 
-Before Coda can generate temporary credentials for the role, a trust relationship must first be established between Coda's AWS user and your role. This is done by setting a trust policy on the role, associating the role with the account and an external ID.
+In addition to supplying the role and external ID, the user authenticating the Pack must also create a trust relationship between Coda's AWS account and their role. This is done by setting a trust policy on the role, associating the role with the account and an external ID.
 
 ```json
 {
@@ -77,12 +77,12 @@ Before Coda can generate temporary credentials for the role, a trust relationshi
 }
 ```
 
-Coda's AWS user has the ID `arn:aws:iam::029208794193:root`, and this is same for all Packs. To ensure that other Packs can't access your role, generate an external ID (usually a UUID) to act as a shared secret.
+Coda's AWS account has the ID `arn:aws:iam::029208794193:root`, and this is same for all Packs. To ensure that other Packs can't access the role, users must generate an external ID (usually a UUID) to act as a shared secret.
 
 
 ### Running locally
 
-If you are developing your Pack locally using the CLI, when you run your Pack using `coda execute` it won't be running under Coda's AWS user. Instead you'll need to create your own AWS user and setup your local environment to use it.
+If you are developing your Pack locally using the CLI, when you run your Pack using `coda execute` it won't be running under Coda's AWS account. Instead you'll need to create your own AWS user and setup your local environment to use it.
 
 First update your policy to include the ID of the user you created.
 
