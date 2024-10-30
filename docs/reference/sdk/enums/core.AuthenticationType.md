@@ -29,6 +29,18 @@ Authenticate to Amazon Web Services using an IAM access key id & secret access k
 
 ___
 
+### AWSAssumeRole
+
+• **AWSAssumeRole** = ``"AWSAssumeRole"``
+
+Authenticate to Amazon Web Services by assuming an IAM role.
+
+**`See`**
+
+[AWSAssumeRoleAuthentication](../interfaces/core.AWSAssumeRoleAuthentication.md)
+
+___
+
 ### CodaApiHeaderBearerToken
 
 • **CodaApiHeaderBearerToken** = ``"CodaApiHeaderBearerToken"``
