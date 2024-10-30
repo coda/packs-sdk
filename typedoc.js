@@ -45,7 +45,6 @@ module.exports = {
     'UnionType',
 
     // Internal only types.
-    'AWSAssumeRoleAuthentication',
     'GoogleServiceAccountAuthentication',
     'AllowedAuthentication',
     'AllowedAuthenticationDef',
