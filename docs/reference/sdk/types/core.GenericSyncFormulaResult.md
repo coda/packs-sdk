@@ -8,7 +8,7 @@ search:
 
 [core](../modules/core.md).GenericSyncFormulaResult
 
-Ƭ **GenericSyncFormulaResult**: [`SyncFormulaResult`](../interfaces/core.SyncFormulaResult.md)<`any`, `any`, `any`\>
+Ƭ **GenericSyncFormulaResult**: [`SyncFormulaResult`](../interfaces/core.SyncFormulaResult.md)<`any`, `any`, `any`, `any`\>
 
 Type definition for the return value of a sync table.
 Should not be necessary to use directly, see [makeSyncTable](../functions/core.makeSyncTable.md)

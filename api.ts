@@ -36,7 +36,6 @@ import type {Schema} from './schema';
 import type {SchemaType} from './schema';
 import type {StringHintTypes} from './schema';
 import type {StringSchema} from './schema';
-import type {SyncCompletionMetadata} from './api_types';
 import type {SyncExecutionContext} from './api_types';
 import {TableRole} from './api_types';
 import {Type} from './api_types';
@@ -399,7 +398,7 @@ export type GenericSyncFormula = SyncFormula<any, any, ParamDefs, any>;
  * Should not be necessary to use directly, see {@link makeSyncTable}
  * for defining a sync table.
  */
-export type GenericSyncFormulaResult = SyncFormulaResult<any, any, any>;
+export type GenericSyncFormulaResult = SyncFormulaResult<any, any, any, any>;
 /**
  * Type definition for a static (non-dynamic) sync table.
  * Should not be necessary to use directly, see {@link makeSyncTable}
@@ -1012,7 +1011,12 @@ export function isSyncPackFormula(fn: BaseFormula<ParamDefs, any>): fn is Generi
  * that the sync formula should be invoked again to get a next page of results. Sync functions
  * are called repeatedly until there is no continuation returned.
  */
-export interface SyncFormulaResult<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
+export interface SyncFormulaResult<
+  K extends string,
+  L extends string,
+  SchemaT extends ObjectSchemaDefinition<K, L>,
+  ContextT extends SyncExecutionContext<any, any> = SyncExecutionContext,
+> {
   /** The list of rows from this page. */
   result: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>;
 
@@ -1021,7 +1025,7 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
    * The contents of this object are entirely of your choosing. Sync formulas are called repeatedly
    * until there is no continuation returned.
    */
-  continuation?: Continuation;
+  continuation?: ContextT['sync']['continuation'];
 
   /**
    * Once there is no additional continuation returned from a pack sync formula, this may be returned instead, to give
@@ -1032,7 +1036,7 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
    * TODO(patrick): Unhide this
    * @hidden
    */
-  completion?: SyncCompletionMetadata;
+  completion?: ContextT['sync']['previousCompletion'];
 
   /**
    * Return the list of deleted item ids for incremental sync deletion.
@@ -1245,7 +1249,10 @@ export interface SyncFormulaDef<
    * from a previous invocation, and fetches and returns one page of results, as well
    * as another continuation if there are more result to fetch.
    */
-  execute(params: ParamValues<ParamDefsT>, context: SyncExecutionContext): Promise<SyncFormulaResult<K, L, SchemaT>>;
+  execute<ContextT extends SyncExecutionContext<any, any>>(
+    params: ParamValues<ParamDefsT>,
+    context: ContextT,
+  ): Promise<SyncFormulaResult<K, L, SchemaT, ContextT>>;
   /**
    * If the table supports object updates, the maximum number of objects that will be sent to the pack
    * in a single batch. Defaults to 1 if not specified.
@@ -2389,17 +2396,17 @@ export function makeSyncTable<
   }
 
   const responseHandler = generateObjectResponseHandler({schema: formulaSchema});
-  const execute = async function exec(
+  const execute = async function exec<ContextT extends SyncExecutionContext>(
     params: ParamValues<ParamDefsT>,
-    context: SyncExecutionContext,
-  ): Promise<SyncFormulaResult<K, L, SchemaT>> {
+    context: ContextT,
+  ): Promise<SyncFormulaResult<K, L, SchemaT, ContextT>> {
     const syncResult = (await wrappedExecute(params, context)) || {};
     const appliedSchema = context.sync.schema;
     const result = responseHandler({body: syncResult.result || [], status: 200, headers: {}}, appliedSchema) as Array<
       ObjectSchemaDefinitionType<K, L, SchemaT>
     >;
     const {continuation, completion, deletedItemIds, deletionPredicate} = syncResult;
-    const returnValue: SyncFormulaResult<K, L, SchemaT> = {
+    const returnValue: SyncFormulaResult<K, L, SchemaT, ContextT> = {
       result,
     };
     if (continuation) {

@@ -193,7 +193,7 @@ numbers of inputs.
 
 ### execute
 
-▸ **execute**(`params`, `context`): `Promise`<[`SyncFormulaResult`](core.SyncFormulaResult.md)<`K`, `L`, `SchemaT`\>\>
+▸ **execute**<`ContextT`\>(`params`, `context`): `Promise`<[`SyncFormulaResult`](core.SyncFormulaResult.md)<`K`, `L`, `SchemaT`, `ContextT`\>\>
 
 The JavaScript function that implements this sync.
 
@@ -201,16 +201,22 @@ This function takes in parameters and a sync context which may have a continuati
 from a previous invocation, and fetches and returns one page of results, as well
 as another continuation if there are more result to fetch.
 
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `ContextT` | extends [`SyncExecutionContext`](core.SyncExecutionContext.md)<`any`, `any`\> |
+
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `params` | [`ParamValues`](../types/core.ParamValues.md)<`ParamDefsT`\> |
-| `context` | [`SyncExecutionContext`](core.SyncExecutionContext.md) |
+| `context` | `ContextT` |
 
 #### Returns
 
-`Promise`<[`SyncFormulaResult`](core.SyncFormulaResult.md)<`K`, `L`, `SchemaT`\>\>
+`Promise`<[`SyncFormulaResult`](core.SyncFormulaResult.md)<`K`, `L`, `SchemaT`, `ContextT`\>\>
 
 ___
 

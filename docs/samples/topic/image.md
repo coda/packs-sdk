@@ -422,7 +422,7 @@ pack.addSyncTable({
 });
 
 // Gets a batch of files from the API.
-async function getFiles(context: coda.ExecutionContext): Promise<any> {
+async function getFiles(context: coda.SyncExecutionContext): Promise<any> {
   let url = "https://api.dropboxapi.com/2/files/list_folder";
   let body;
 

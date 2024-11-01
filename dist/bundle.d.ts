@@ -603,14 +603,14 @@ declare enum PermissionSyncMode {
  * Information about the current sync, part of the {@link SyncExecutionContext} passed to the
  * `execute` function of every sync formula.
  */
-export interface Sync {
+export interface Sync<ContinuationT = Continuation, IncrementalContinuationT = ContinuationT> {
 	/**
 	 * The continuation that was returned from the prior sync invocation. The is the exact
 	 * value returned in the `continuation` property of result of the prior sync.
 	 */
-	continuation?: Continuation;
+	continuation?: ContinuationT;
 	/** @hidden */
-	previousCompletion?: SyncCompletionMetadata;
+	previousCompletion?: SyncCompletionMetadata<IncrementalContinuationT>;
 	/**
 	 * The schema of this sync table, if this is a dynamic sync table. It may be useful to have
 	 * access to the dynamically-generated schema of the table instance in order to construct
@@ -746,7 +746,7 @@ export interface ExecutionContext {
 	/**
 	 * Information about state of the current sync. Only populated if this is a sync table formula.
 	 */
-	readonly sync?: Sync;
+	readonly sync?: Sync<unknown, unknown>;
 	/**
 	 * If this function is being invoked with authentication, this indicates which authentication was used.
 	 *
@@ -776,11 +776,11 @@ export interface ExecutionContext {
  * Sub-class of {@link ExecutionContext} that is passed to the `execute` function of every
  * sync formula invocation. The only different is that the presence of the `sync` property
  */
-export interface SyncExecutionContext extends ExecutionContext {
+export interface SyncExecutionContext<ContinuationT = Continuation, IncrementalContinuationT = ContinuationT> extends ExecutionContext {
 	/**
 	 * Information about state of the current sync.
 	 */
-	readonly sync: Sync;
+	readonly sync: Sync<ContinuationT, IncrementalContinuationT>;
 }
 /**
  * Sub-class of {@link SyncExecutionContext} that is passed to the `options` function of
@@ -918,12 +918,12 @@ declare enum TableRole {
 	GroupMembers = "groupMembers"
 }
 /** @hidden */
-export interface SyncCompletionMetadata {
+export interface SyncCompletionMetadata<IncrementalContinuationT = Continuation> {
 	/**
 	 * For enabling incremental syncs. If your sync execution provides this, then Coda will provide it to the
 	 * next sync execution.
 	 */
-	incrementalContinuation?: Continuation;
+	incrementalContinuation?: IncrementalContinuationT;
 	/**
 	 * Returned by an incremental sync if the results are incomplete. Will be ignored during a full sync.
 	 *
@@ -2923,7 +2923,7 @@ export type GenericSyncFormula = SyncFormula<any, any, ParamDefs, any>;
  * Should not be necessary to use directly, see {@link makeSyncTable}
  * for defining a sync table.
  */
-export type GenericSyncFormulaResult = SyncFormulaResult<any, any, any>;
+export type GenericSyncFormulaResult = SyncFormulaResult<any, any, any, any>;
 /**
  * Type definition for a static (non-dynamic) sync table.
  * Should not be necessary to use directly, see {@link makeSyncTable}
@@ -3065,7 +3065,7 @@ export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, "execute">;
  * that the sync formula should be invoked again to get a next page of results. Sync functions
  * are called repeatedly until there is no continuation returned.
  */
-export interface SyncFormulaResult<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
+export interface SyncFormulaResult<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any> = SyncExecutionContext> {
 	/** The list of rows from this page. */
 	result: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>;
 	/**
@@ -3073,7 +3073,7 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
 	 * The contents of this object are entirely of your choosing. Sync formulas are called repeatedly
 	 * until there is no continuation returned.
 	 */
-	continuation?: Continuation;
+	continuation?: ContextT["sync"]["continuation"];
 	/**
 	 * Once there is no additional continuation returned from a pack sync formula, this may be returned instead, to give
 	 * metadata about the entirety of the sync execution.
@@ -3083,7 +3083,7 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
 	 * TODO(patrick): Unhide this
 	 * @hidden
 	 */
-	completion?: SyncCompletionMetadata;
+	completion?: ContextT["sync"]["previousCompletion"];
 	/**
 	 * Return the list of deleted item ids for incremental sync deletion.
 	 *
@@ -3242,7 +3242,7 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
 	 * from a previous invocation, and fetches and returns one page of results, as well
 	 * as another continuation if there are more result to fetch.
 	 */
-	execute(params: ParamValues<ParamDefsT>, context: SyncExecutionContext): Promise<SyncFormulaResult<K, L, SchemaT>>;
+	execute<ContextT extends SyncExecutionContext<any, any>>(params: ParamValues<ParamDefsT>, context: ContextT): Promise<SyncFormulaResult<K, L, SchemaT, ContextT>>;
 	/**
 	 * If the table supports object updates, the maximum number of objects that will be sent to the pack
 	 * in a single batch. Defaults to 1 if not specified.

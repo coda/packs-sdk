@@ -85,7 +85,7 @@ ___
 
 ### sync
 
-• **sync**: [`Sync`](core.Sync.md)
+• **sync**: [`Sync`](core.Sync.md)<[`Continuation`](core.Continuation.md), [`Continuation`](core.Continuation.md)\>
 
 Information about state of the current sync. Only populated if this is a sync table formula.
 
