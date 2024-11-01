@@ -24,6 +24,8 @@ Inputs for creating the formula that implements a sync table.
 
 - [`CommonPackFormulaDef`](core.CommonPackFormulaDef.md)<`ParamDefsT`\>
 
+- `OnErrorFormulaOptions`
+
   ↳ **`SyncFormulaDef`**
 
 ## Properties
@@ -242,3 +244,29 @@ the new state of each object.
 #### Returns
 
 `Promise`<[`SyncUpdateResult`](core.SyncUpdateResult.md)<`K`, `L`, `SchemaT`\>\>
+
+___
+
+### onError
+
+▸ `Optional` **onError**(`error`): `any`
+
+If specified, will catch errors in the [execute](core.SyncFormulaDef.md#execute) function and call this
+function with the error, instead of letting them throw and the formula failing.
+
+This is helpful for writing common error handling into a singular helper function
+that can then be applied to many different formulas in a pack.
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `error` | `Error` |
+
+#### Returns
+
+`any`
+
+#### Inherited from
+
+OnErrorFormulaOptions.onError

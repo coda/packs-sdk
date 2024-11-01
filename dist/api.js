@@ -820,7 +820,7 @@ exports.makeObjectFormula = makeObjectFormula;
  */
 function makeSyncTable({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions = {}, role, }) {
     const { getSchema: getSchemaDef, entityName, defaultAddDynamicColumns } = dynamicOptions;
-    const { execute: wrappedExecute, executeUpdate: wrappedExecuteUpdate, executeGetPermissions, ...definition } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
+    const { execute: wrappedExecute, executeUpdate: wrappedExecuteUpdate, executeGetPermissions, onError, ...definition } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
     // Since we mutate schemaDef, we need to make a copy so the input schema can be reused across sync tables.
     const schemaDef = (0, object_utils_1.deepCopy)(inputSchema);
     // Hydrate the schema's identity.
@@ -889,7 +889,15 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
     }
     const responseHandler = (0, handler_templates_1.generateObjectResponseHandler)({ schema: formulaSchema });
     const execute = async function exec(params, context) {
-        const syncResult = (await wrappedExecute(params, context)) || {};
+        let syncResult;
+        try {
+            syncResult = (await wrappedExecute(params, context)) || {};
+        }
+        catch (err) {
+            // onError should throw, but if it doesn't we'll just rethrow the original error.
+            onError === null || onError === void 0 ? void 0 : onError(err);
+            throw err;
+        }
         const appliedSchema = context.sync.schema;
         const result = responseHandler({ body: syncResult.result || [], status: 200, headers: {} }, appliedSchema);
         const { continuation, completion, deletedItemIds, deletionPredicate } = syncResult;
@@ -928,7 +936,7 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
             ...definition,
             cacheTtlSecs: 0,
             execute,
-            executeUpdate: executeUpdate,
+            executeUpdate,
             schema: formulaSchema,
             isSyncFormula: true,
             supportsUpdates: Boolean(executeUpdate),
@@ -1059,9 +1067,8 @@ function makeTranslateObjectFormula({ response, ...definition }) {
         return context.fetcher
             .fetch(requestHandler(params))
             .catch(err => {
-            if (onError) {
-                return onError(err);
-            }
+            // onError should throw, but if it doesn't we'll just rethrow the original error.
+            onError === null || onError === void 0 ? void 0 : onError(err);
             throw err;
         })
             .then(responseHandler);
