@@ -8,7 +8,7 @@ search:
 
 [core](../modules/core.md).GenericSyncTable
 
-Ƭ **GenericSyncTable**: [`SyncTableDef`](../interfaces/core.SyncTableDef.md)<`any`, `any`, [`ParamDefs`](core.ParamDefs.md), `any`\>
+Ƭ **GenericSyncTable**: [`SyncTableDef`](../interfaces/core.SyncTableDef.md)<`any`, `any`, [`ParamDefs`](core.ParamDefs.md), `any`, [`SyncExecutionContext`](../interfaces/core.SyncExecutionContext.md)\>
 
 Type definition for a static (non-dynamic) sync table.
 Should not be necessary to use directly, see [makeSyncTable](../functions/core.makeSyncTable.md)

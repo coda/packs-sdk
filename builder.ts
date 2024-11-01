@@ -14,6 +14,7 @@ import type {ObjectSchemaDefinition} from './schema';
 import type {PackVersionDefinition} from './types';
 import type {ParamDefs} from './api_types';
 import type {Schema} from './schema';
+import type {SyncExecutionContext} from './api_types';
 import type {SyncTable} from './api';
 import type {SyncTableOptions} from './api';
 import type {SystemAuthentication} from './types';
@@ -168,9 +169,13 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * });
    * ```
    */
-  addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>>(
-    definition: SyncTableOptions<K, L, ParamDefsT, SchemaT>,
-  ): this {
+  addSyncTable<
+    K extends string,
+    L extends string,
+    ParamDefsT extends ParamDefs,
+    SchemaT extends ObjectSchema<K, L>,
+    ContextT extends SyncExecutionContext<any, any>,
+  >(definition: SyncTableOptions<K, L, ParamDefsT, SchemaT, ContextT>): this {
     const connectionRequirementToUse = definition.connectionRequirement || this._defaultConnectionRequirement;
     const syncTable = makeSyncTable({
       ...definition,
@@ -206,7 +211,8 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     L extends string,
     ParamDefsT extends ParamDefs,
     SchemaT extends ObjectSchemaDefinition<K, L>,
-  >(definition: DynamicSyncTableOptions<K, L, ParamDefsT, SchemaT>): this {
+    ContextT extends SyncExecutionContext<any, any>,
+  >(definition: DynamicSyncTableOptions<K, L, ParamDefsT, SchemaT, ContextT>): this {
     const dynamicSyncTable = makeDynamicSyncTable({
       ...definition,
       connectionRequirement: definition.connectionRequirement || this._defaultConnectionRequirement,

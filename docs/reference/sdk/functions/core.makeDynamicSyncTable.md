@@ -8,7 +8,7 @@ search:
 
 [core](../modules/core.md).makeDynamicSyncTable
 
-▸ **makeDynamicSyncTable**<`K`, `L`, `ParamDefsT`, `SchemaT`\>(`«destructured»`): [`DynamicSyncTableDef`](../interfaces/core.DynamicSyncTableDef.md)<`K`, `L`, `ParamDefsT`, `any`\>
+▸ **makeDynamicSyncTable**<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`\>(`«destructured»`): [`DynamicSyncTableDef`](../interfaces/core.DynamicSyncTableDef.md)<`K`, `L`, `ParamDefsT`, `any`, `ContextT`\>
 
 Creates a dynamic sync table definition.
 
@@ -37,6 +37,7 @@ coda.makeDynamicSyncTable({
 | `L` | extends `string` |
 | `ParamDefsT` | extends [`ParamDefs`](../types/core.ParamDefs.md) |
 | `SchemaT` | extends [`ObjectSchemaDefinition`](../interfaces/core.ObjectSchemaDefinition.md)<`K`, `L`\> |
+| `ContextT` | extends [`SyncExecutionContext`](../interfaces/core.SyncExecutionContext.md)<`any`, `any`\> |
 
 #### Parameters
 
@@ -47,7 +48,7 @@ coda.makeDynamicSyncTable({
 | › `defaultAddDynamicColumns?` | `boolean` |
 | › `description?` | `string` |
 | › `entityName?` | `string` |
-| › `formula` | [`SyncFormulaDef`](../interfaces/core.SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `any`\> |
+| › `formula` | [`SyncFormulaDef`](../interfaces/core.SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `any`, `ContextT`\> |
 | › `getDisplayUrl` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) |
 | › `getName` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) |
 | › `getSchema` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) |
@@ -60,4 +61,4 @@ coda.makeDynamicSyncTable({
 
 #### Returns
 
-[`DynamicSyncTableDef`](../interfaces/core.DynamicSyncTableDef.md)<`K`, `L`, `ParamDefsT`, `any`\>
+[`DynamicSyncTableDef`](../interfaces/core.DynamicSyncTableDef.md)<`K`, `L`, `ParamDefsT`, `any`, `ContextT`\>

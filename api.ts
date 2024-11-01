@@ -295,6 +295,7 @@ export interface SyncTableDef<
   L extends string,
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>,
+  ContextT extends SyncExecutionContext<any, any>,
 > {
   /** See {@link SyncTableOptions.name} */
   name: string;
@@ -310,7 +311,7 @@ export interface SyncTableDef<
    */
   identityName: string;
   /** See {@link SyncTableOptions.formula} */
-  getter: SyncFormula<K, L, ParamDefsT, SchemaT>;
+  getter: SyncFormula<K, L, ParamDefsT, SchemaT, ContextT>;
   /** See {@link DynamicOptions.getSchema} */
   getSchema?: MetadataFormula;
   /** See {@link DynamicOptions.entityName} */
@@ -340,7 +341,8 @@ export interface DynamicSyncTableDef<
   L extends string,
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>,
-> extends SyncTableDef<K, L, ParamDefsT, SchemaT> {
+  ContextT extends SyncExecutionContext<any, any>,
+> extends SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT> {
   /** Identifies this sync table as dynamic. */
   isDynamic: true;
   /** See {@link DynamicSyncTableOptions.getSchema} */
@@ -392,7 +394,7 @@ export interface Continuation {
  * Should not be necessary to use directly, see {@link makeSyncTable}
  * for defining a sync table.
  */
-export type GenericSyncFormula = SyncFormula<any, any, ParamDefs, any>;
+export type GenericSyncFormula = SyncFormula<any, any, ParamDefs, any, SyncExecutionContext>;
 /**
  * Type definition for the return value of a sync table.
  * Should not be necessary to use directly, see {@link makeSyncTable}
@@ -404,13 +406,13 @@ export type GenericSyncFormulaResult = SyncFormulaResult<any, any, any, any>;
  * Should not be necessary to use directly, see {@link makeSyncTable}
  * for defining a sync table.
  */
-export type GenericSyncTable = SyncTableDef<any, any, ParamDefs, any>;
+export type GenericSyncTable = SyncTableDef<any, any, ParamDefs, any, SyncExecutionContext>;
 /**
  * Type definition for a dynamic sync table.
  * Should not be necessary to use directly, see {@link makeDynamicSyncTable}
  * for defining a sync table.
  */
-export type GenericDynamicSyncTable = DynamicSyncTableDef<any, any, ParamDefs, any>;
+export type GenericDynamicSyncTable = DynamicSyncTableDef<any, any, ParamDefs, any, SyncExecutionContext>;
 /**
  * Union of type definitions for sync tables..
  * Should not be necessary to use directly, see {@link makeSyncTable} or {@link makeDynamicSyncTable}
@@ -1241,6 +1243,7 @@ export interface SyncFormulaDef<
   L extends string,
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchemaDefinition<K, L>,
+  ContextT extends SyncExecutionContext<any, any>,
 > extends CommonPackFormulaDef<ParamDefsT> {
   /**
    * The JavaScript function that implements this sync.
@@ -1249,10 +1252,11 @@ export interface SyncFormulaDef<
    * from a previous invocation, and fetches and returns one page of results, as well
    * as another continuation if there are more result to fetch.
    */
-  execute<ContextT extends SyncExecutionContext<any, any>>(
+  execute<ContextReturnT extends ContextT>(
     params: ParamValues<ParamDefsT>,
     context: ContextT,
-  ): Promise<SyncFormulaResult<K, L, SchemaT, ContextT>>;
+    // Create a separate type for the return value to ensure it's validated against any explicit context type.
+  ): Promise<SyncFormulaResult<K, L, SchemaT, ContextReturnT>>;
   /**
    * If the table supports object updates, the maximum number of objects that will be sent to the pack
    * in a single batch. Defaults to 1 if not specified.
@@ -1314,7 +1318,8 @@ export type SyncFormula<
   L extends string,
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>,
-> = SyncFormulaDef<K, L, ParamDefsT, SchemaT> & {
+  ContextT extends SyncExecutionContext<any, any>,
+> = SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT> & {
   resultType: TypeOf<SchemaType<SchemaT>>;
   isSyncFormula: true;
   schema?: ArraySchema;
@@ -2086,6 +2091,7 @@ export interface SyncTableOptions<
   L extends string,
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchemaDefinition<K, L>,
+  ContextT extends SyncExecutionContext<any, any>,
 > {
   /**
    * The name of the sync table. This is shown to users in the Coda UI.
@@ -2124,7 +2130,7 @@ export interface SyncTableOptions<
    * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
    * These will eventually be consolidated.)
    */
-  formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT>;
+  formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT>;
   /**
    * A {@link ConnectionRequirement} that will be used for all formulas contained within
    * this sync table (including autocomplete formulas).
@@ -2153,6 +2159,7 @@ export interface DynamicSyncTableOptions<
   L extends string,
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchemaDefinition<K, L>,
+  ContextT extends SyncExecutionContext<any, any>,
 > {
   /**
    * The name of the dynamic sync table. This is shown to users in the Coda UI
@@ -2207,7 +2214,7 @@ export interface DynamicSyncTableOptions<
    * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
    * These will eventually be consolidated.)
    */
-  formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT>;
+  formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT>;
   /**
    * A label for the kind of entities that you are syncing. This label is used in a doc to identify
    * the column in this table that contains the synced data. If you don't provide an `entityName`, the value
@@ -2297,6 +2304,7 @@ export function makeSyncTable<
   SchemaT extends SchemaDefT & {
     identity?: Identity;
   },
+  ContextT extends SyncExecutionContext<any, any>,
 >({
   name,
   description,
@@ -2306,7 +2314,7 @@ export function makeSyncTable<
   connectionRequirement,
   dynamicOptions = {},
   role,
-}: SyncTableOptions<K, L, ParamDefsT, SchemaDefT>): SyncTableDef<K, L, ParamDefsT, SchemaT> {
+}: SyncTableOptions<K, L, ParamDefsT, SchemaDefT, ContextT>): SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT> {
   const {getSchema: getSchemaDef, entityName, defaultAddDynamicColumns} = dynamicOptions;
   const {
     execute: wrappedExecute,
@@ -2396,7 +2404,7 @@ export function makeSyncTable<
   }
 
   const responseHandler = generateObjectResponseHandler({schema: formulaSchema});
-  const execute = async function exec<ContextT extends SyncExecutionContext>(
+  const execute = async function exec(
     params: ParamValues<ParamDefsT>,
     context: ContextT,
   ): Promise<SyncFormulaResult<K, L, SchemaT, ContextT>> {
@@ -2469,16 +2477,17 @@ export function makeSyncTableLegacy<
   L extends string,
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>,
+  ContextT extends SyncExecutionContext<any, any>,
 >(
   name: string,
   schema: SchemaT,
-  formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT>,
+  formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT>,
   connectionRequirement?: ConnectionRequirement,
   dynamicOptions: {
     getSchema?: MetadataFormula;
     entityName?: string;
   } = {},
-): SyncTableDef<K, L, ParamDefsT, SchemaT> {
+): SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT> {
   if (!schema.identity?.name) {
     throw new Error('Legacy sync tables must specify identity.name');
   }
@@ -2519,6 +2528,7 @@ export function makeDynamicSyncTable<
   L extends string,
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchemaDefinition<K, L>,
+  ContextT extends SyncExecutionContext<any, any>,
 >({
   name,
   description,
@@ -2540,7 +2550,7 @@ export function makeDynamicSyncTable<
   getName: MetadataFormulaDef;
   getSchema: MetadataFormulaDef;
   identityName: string;
-  formula: SyncFormulaDef<K, L, ParamDefsT, any>;
+  formula: SyncFormulaDef<K, L, ParamDefsT, any, ContextT>;
   getDisplayUrl: MetadataFormulaDef;
   listDynamicUrls?: MetadataFormulaDef;
   searchDynamicUrls?: MetadataFormulaDef;
@@ -2549,7 +2559,7 @@ export function makeDynamicSyncTable<
   defaultAddDynamicColumns?: boolean;
   placeholderSchema?: SchemaT;
   propertyOptions?: PropertyOptionsMetadataFunction<any>;
-}): DynamicSyncTableDef<K, L, ParamDefsT, any> {
+}): DynamicSyncTableDef<K, L, ParamDefsT, any, ContextT> {
   const placeholderSchema: any =
     placeholderSchemaInput ||
     // default placeholder only shows a column of id, which will be replaced later by the dynamic schema.
@@ -2584,7 +2594,7 @@ export function makeDynamicSyncTable<
     listDynamicUrls: maybeRewriteConnectionForFormula(listDynamicUrls, connectionRequirement),
     searchDynamicUrls: maybeRewriteConnectionForFormula(searchDynamicUrls, connectionRequirement),
     getName: maybeRewriteConnectionForFormula(getName, connectionRequirement),
-  } as DynamicSyncTableDef<K, L, ParamDefsT, any>;
+  } as DynamicSyncTableDef<K, L, ParamDefsT, any, ContextT>;
 }
 
 /**
