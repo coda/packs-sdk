@@ -38,7 +38,7 @@ To use this form of authentication, simply set the authentication type to [`AWSA
 
 ```ts
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.AWSAccessKey,
+  type: coda.AuthenticationType.AWSAssumeRole,
   service: "s3",
 });
 ```

@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- Added support for the authentication type `AWSAssumeRole`, a more secure method of connecting to AWS services.
+
 ## [1.8.1] - 2024-10-29
 
 ### Added
