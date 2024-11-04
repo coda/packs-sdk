@@ -348,24 +348,7 @@ Enabling the option `shouldAutoAuthSetup: true` further simplifies the sign-in e
 
 ### AWS Signature Version 4
 
-Amazon Web Services (AWS) uses a variety of authentication methods, one of which relies on access keys and a proprietary signing mechanism. Packs support this using the [`AWSAccessKey`][AWSAccessKey] authentication type. You must specify which AWS service you are connecting to, since that is a required part of the signature. For example:
-
-```
-PUT /file.txt
-Host: mybucket.s3.us-east-1.amazonaws.com
-Authorization: <signature>
-```
-
-Can be implemented using:
-
-```ts
-pack.setUserAuthentication({
-  type: coda.AuthenticationType.AWSAccessKey,
-  service: "s3",
-});
-```
-
-[View Sample Code][sample_aws]{ .md-button }
+Amazon Web Services (AWS) use a proprietary authentication scheme, and Coda provides built-in support for it. You can read more about it in the [AWS authentication guide][aws_guide].
 
 
 ## Requiring authentication
@@ -571,7 +554,6 @@ There are services however where each account is associated with a distinct doma
 [sample_coda_api]: ../../../samples/topic/authentication.md#coda-api-token
 [sample_custom]: ../../../samples/topic/authentication.md#custom-tokens
 [sample_multiple_query_params]: ../../../samples/topic/authentication.md#multiple-query-parameters
-[sample_aws]: ../../../samples/topic/authentication.md#aws-signature-version-4
 [sample_multiple_headers]: ../../../samples/topic/authentication.md#multiple-headers
 
 [hc_account_sharing]: https://help.coda.io/en/articles/4587167-what-can-coda-access-with-packs
@@ -595,3 +577,4 @@ There are services however where each account is associated with a distinct doma
 [AWSAccessKey]: ../../../reference/sdk/enums/core.AuthenticationType.md#awsaccesskey
 [support_network_domain]: ../../../support/index.md#approvals
 [MultiHeaderToken]: ../../../reference/sdk/enums/core.AuthenticationType.md#multiheadertoken
+[aws_guide]: aws.md

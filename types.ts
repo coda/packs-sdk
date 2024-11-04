@@ -112,10 +112,9 @@ export enum AuthenticationType {
    */
   AWSAccessKey = 'AWSAccessKey',
   /**
-   * Authenticate to Amazon Web Services by assuming an IAM role. This is not yet supported.
+   * Authenticate to Amazon Web Services by assuming an IAM role.
    *
    * @see {@link AWSAssumeRoleAuthentication}
-   * @hidden
    */
   AWSAssumeRole = 'AWSAssumeRole',
   /**
@@ -798,10 +797,10 @@ export interface AWSAccessKeyAuthentication extends BaseAuthentication {
 }
 
 /**
- * Authenticate to Amazon Web Services by assuming an IAM role. This is not yet supported.
+ * Authenticate to Amazon Web Services by assuming an IAM role.
  *
  * @see [Amazon - AWS Signature Version 4](https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html)
- * @hidden
+ * @see [Amazon - STS Assume Role API](https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html)
  */
 export interface AWSAssumeRoleAuthentication extends BaseAuthentication {
   /** Identifies this as AWSAssumeRole authentication. */

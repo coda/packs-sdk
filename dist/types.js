@@ -105,10 +105,9 @@ var AuthenticationType;
      */
     AuthenticationType["AWSAccessKey"] = "AWSAccessKey";
     /**
-     * Authenticate to Amazon Web Services by assuming an IAM role. This is not yet supported.
+     * Authenticate to Amazon Web Services by assuming an IAM role.
      *
      * @see {@link AWSAssumeRoleAuthentication}
-     * @hidden
      */
     AuthenticationType["AWSAssumeRole"] = "AWSAssumeRole";
     /**
