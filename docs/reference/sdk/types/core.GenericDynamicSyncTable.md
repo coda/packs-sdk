@@ -8,7 +8,7 @@ search:
 
 [core](../modules/core.md).GenericDynamicSyncTable
 
-Ƭ **GenericDynamicSyncTable**: [`DynamicSyncTableDef`](../interfaces/core.DynamicSyncTableDef.md)<`any`, `any`, [`ParamDefs`](core.ParamDefs.md), `any`\>
+Ƭ **GenericDynamicSyncTable**: [`DynamicSyncTableDef`](../interfaces/core.DynamicSyncTableDef.md)<`any`, `any`, [`ParamDefs`](core.ParamDefs.md), `any`, [`SyncExecutionContext`](../interfaces/core.SyncExecutionContext.md)\>
 
 Type definition for a dynamic sync table.
 Should not be necessary to use directly, see [makeDynamicSyncTable](../functions/core.makeDynamicSyncTable.md)

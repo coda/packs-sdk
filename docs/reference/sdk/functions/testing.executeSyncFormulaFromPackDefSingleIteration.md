@@ -20,7 +20,7 @@ including the continuation, for inspection.
 | `packDef` | [`BasicPackDefinition`](../types/core.BasicPackDefinition.md) |
 | `syncFormulaName` | `string` |
 | `params` | [`ParamValues`](../types/core.ParamValues.md)<[`ParamDefs`](../types/core.ParamDefs.md)\> |
-| `context?` | [`SyncExecutionContext`](../interfaces/core.SyncExecutionContext.md) |
+| `context?` | [`SyncExecutionContext`](../interfaces/core.SyncExecutionContext.md)<[`Continuation`](../interfaces/core.Continuation.md), [`Continuation`](../interfaces/core.Continuation.md)\> |
 | `options?` | [`ExecuteOptions`](../interfaces/testing.ExecuteOptions.md) |
 | `«destructured»` | [`ContextOptions`](../interfaces/testing.ContextOptions.md) |
 

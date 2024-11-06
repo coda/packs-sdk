@@ -83,6 +83,7 @@ import type {StringEmbedSchema} from '../schema';
 import type {StringPackFormula} from '../api';
 import type {StringTimeSchema} from '../schema';
 import type {StringWithOptionsSchema} from '../schema';
+import type {SyncExecutionContext} from '..';
 import type {SyncFormula} from '../api';
 import type {SyncTable} from '../api';
 import type {SyncTableDef} from '../api';
@@ -1757,7 +1758,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
 
   const syncFormulaSchema = zodCompleteObject<
     Omit<
-      SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>>,
+      SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>, SyncExecutionContext>,
       'execute' | 'executeUpdate' | 'executeGetPermissions'
     >
   >({
@@ -1811,7 +1812,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     role: z.nativeEnum(TableRole).optional(),
   };
 
-  type GenericSyncTableDef = SyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>>;
+  type GenericSyncTableDef = SyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>, SyncExecutionContext>;
 
   const genericSyncTableSchema = zodCompleteObject<GenericSyncTableDef & {isDynamic?: false}>({
     ...baseSyncTableSchema,
@@ -1823,7 +1824,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
   }).strict();
 
   const genericDynamicSyncTableSchema = zodCompleteObject<
-    DynamicSyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>> & {autocomplete: any}
+    DynamicSyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>, SyncExecutionContext> & {autocomplete: any}
   >({
     ...baseSyncTableSchema,
     isDynamic: zodDiscriminant(true),
