@@ -539,8 +539,8 @@ class AuthenticatingBlobStorage {
     constructor(fetcher) {
         this._fetcher = fetcher;
     }
-    async storeUrl(url, _opts) {
-        await this._fetcher.fetch({ method: 'GET', url, isBinaryResponse: true });
+    async storeUrl(url, _opts, fetchOpts) {
+        await this._fetcher.fetch({ method: 'GET', url, isBinaryResponse: true, ...fetchOpts, });
         return `https://not-a-real-url.s3.amazonaws.com/tempBlob/${(0, uuid_1.v4)()}`;
     }
     async storeBlob(_blobData, _contentType, _opts) {
