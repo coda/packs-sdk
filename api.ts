@@ -1244,7 +1244,8 @@ export interface SyncFormulaDef<
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchemaDefinition<K, L>,
   ContextT extends SyncExecutionContext<any, any>,
-> extends CommonPackFormulaDef<ParamDefsT> {
+> extends CommonPackFormulaDef<ParamDefsT>,
+    OnErrorFormulaOptions {
   /**
    * The JavaScript function that implements this sync.
    *
@@ -1519,11 +1520,7 @@ export function makeFormula<ParamDefsT extends ParamDefs, ResultT extends ValueT
   >;
 }
 
-/**
- * Base type for formula definitions accepted by {@link makeFormula}.
- */
-export interface BaseFormulaDef<ParamDefsT extends ParamDefs, ResultT extends string | number | boolean | object>
-  extends PackFormulaDef<ParamDefsT, ResultT> {
+export interface OnErrorFormulaOptions {
   /**
    * If specified, will catch errors in the {@link execute} function and call this
    * function with the error, instead of letting them throw and the formula failing.
@@ -1533,6 +1530,13 @@ export interface BaseFormulaDef<ParamDefsT extends ParamDefs, ResultT extends st
    */
   onError?(error: Error): any;
 }
+
+/**
+ * Base type for formula definitions accepted by {@link makeFormula}.
+ */
+export interface BaseFormulaDef<ParamDefsT extends ParamDefs, ResultT extends string | number | boolean | object>
+  extends PackFormulaDef<ParamDefsT, ResultT>,
+    OnErrorFormulaOptions {}
 
 /**
  * A definition accepted by {@link makeFormula} for a formula that returns a string.
@@ -2320,6 +2324,7 @@ export function makeSyncTable<
     execute: wrappedExecute,
     executeUpdate: wrappedExecuteUpdate,
     executeGetPermissions,
+    onError,
     ...definition
   } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
 
@@ -2388,7 +2393,7 @@ export function makeSyncTable<
   }
 
   const normalizedSchema = normalizeSchema(schema);
-  const formulaSchema: ArraySchema<Schema> | undefined = getSchema
+  const formulaSchema: ArraySchema<SchemaT> | undefined = getSchema
     ? undefined
     : {type: ValueType.Array, items: normalizedSchema};
   const {identity, id, primary} = objectSchemaHelper(schema);
@@ -2408,8 +2413,16 @@ export function makeSyncTable<
     params: ParamValues<ParamDefsT>,
     context: ContextT,
   ): Promise<SyncFormulaResult<K, L, SchemaT, ContextT>> {
-    const syncResult = (await wrappedExecute(params, context)) || {};
-    const appliedSchema = context.sync.schema;
+    let syncResult: SyncFormulaResult<K, L, SchemaDefT>;
+    try {
+      syncResult = (await wrappedExecute(params, context)) || {};
+    } catch (err: any) {
+      // onError should throw, but if it doesn't we'll just rethrow the original error.
+      onError?.(err);
+      throw err;
+    }
+
+    const appliedSchema = context.sync.schema as ArraySchema<SchemaT> | undefined;
     const result = responseHandler({body: syncResult.result || [], status: 200, headers: {}}, appliedSchema) as Array<
       ObjectSchemaDefinitionType<K, L, SchemaT>
     >;
@@ -2438,7 +2451,7 @@ export function makeSyncTable<
         context: SyncExecutionContext,
       ) {
         const {result} = (await wrappedExecuteUpdate(params, updates, context)) || {};
-        const appliedSchema = context.sync.schema;
+        const appliedSchema = context.sync.schema as ArraySchema<SchemaT> | undefined;
         return {
           result: responseHandler({body: result || [], status: 200, headers: {}}, appliedSchema),
         } as SyncUpdateResult<K, L, SchemaT>;
@@ -2454,13 +2467,13 @@ export function makeSyncTable<
       ...definition,
       cacheTtlSecs: 0,
       execute,
-      executeUpdate: executeUpdate as any,
+      executeUpdate,
       schema: formulaSchema,
       isSyncFormula: true,
       supportsUpdates: Boolean(executeUpdate),
       supportsGetPermissions: Boolean(executeGetPermissions),
       connectionRequirement: definition.connectionRequirement || connectionRequirement,
-      resultType: Type.object as any,
+      resultType: Type.object as TypeOf<SchemaType<SchemaT>>,
       executeGetPermissions: executeGetPermissions as any,
     },
     getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
@@ -2641,9 +2654,8 @@ export function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT
     return context.fetcher
       .fetch(requestHandler(params))
       .catch(err => {
-        if (onError) {
-          return onError(err);
-        }
+        // onError should throw, but if it doesn't we'll just rethrow the original error.
+        onError?.(err);
         throw err;
       })
       .then(responseHandler);

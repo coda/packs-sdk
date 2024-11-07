@@ -21,6 +21,8 @@ Base type for formula definitions accepted by [makeFormula](../functions/core.ma
 
 - [`PackFormulaDef`](core.PackFormulaDef.md)<`ParamDefsT`, `ResultT`\>
 
+- `OnErrorFormulaOptions`
+
   ↳ **`BaseFormulaDef`**
 
 ## Properties
@@ -222,3 +224,7 @@ that can then be applied to many different formulas in a pack.
 #### Returns
 
 `any`
+
+#### Inherited from
+
+OnErrorFormulaOptions.onError

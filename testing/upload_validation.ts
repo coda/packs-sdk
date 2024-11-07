@@ -1759,7 +1759,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
   const syncFormulaSchema = zodCompleteObject<
     Omit<
       SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>, SyncExecutionContext>,
-      'execute' | 'executeUpdate' | 'executeGetPermissions'
+      'execute' | 'executeUpdate' | 'executeGetPermissions' | 'onError'
     >
   >({
     schema: arrayPropertySchema.optional(),

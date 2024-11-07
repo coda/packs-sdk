@@ -3234,7 +3234,7 @@ export interface ExecuteGetPermissionsRequest<K extends string, L extends string
 /**
  * Inputs for creating the formula that implements a sync table.
  */
-export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any>> extends CommonPackFormulaDef<ParamDefsT> {
+export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any>> extends CommonPackFormulaDef<ParamDefsT>, OnErrorFormulaOptions {
 	/**
 	 * The JavaScript function that implements this sync.
 	 *
@@ -3353,10 +3353,7 @@ export type SyncFormula<K extends string, L extends string, ParamDefsT extends P
  * ```
  */
 export declare function makeFormula<ParamDefsT extends ParamDefs, ResultT extends ValueType, SchemaT extends Schema = Schema>(fullDefinition: FormulaDefinition<ParamDefsT, ResultT, SchemaT>): Formula<ParamDefsT, ResultT, SchemaT>;
-/**
- * Base type for formula definitions accepted by {@link makeFormula}.
- */
-export interface BaseFormulaDef<ParamDefsT extends ParamDefs, ResultT extends string | number | boolean | object> extends PackFormulaDef<ParamDefsT, ResultT> {
+export interface OnErrorFormulaOptions {
 	/**
 	 * If specified, will catch errors in the {@link execute} function and call this
 	 * function with the error, instead of letting them throw and the formula failing.
@@ -3365,6 +3362,11 @@ export interface BaseFormulaDef<ParamDefsT extends ParamDefs, ResultT extends st
 	 * that can then be applied to many different formulas in a pack.
 	 */
 	onError?(error: Error): any;
+}
+/**
+ * Base type for formula definitions accepted by {@link makeFormula}.
+ */
+export interface BaseFormulaDef<ParamDefsT extends ParamDefs, ResultT extends string | number | boolean | object> extends PackFormulaDef<ParamDefsT, ResultT>, OnErrorFormulaOptions {
 }
 /**
  * A definition accepted by {@link makeFormula} for a formula that returns a string.
