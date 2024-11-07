@@ -1349,6 +1349,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       memberGroupIdProperty: propertySchema.optional(),
       bodyTextProperty: propertySchema.optional(),
       popularityRankProperty: propertySchema.optional(),
+      itemVersionProperty: propertySchema.optional(),
       options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
       requireForUpdates: z.boolean().optional(),
       index: indexSchema.optional(),
@@ -1611,6 +1612,15 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           );
         };
 
+        const validateItemVersionProperty = () => {
+          return validateProperty(
+            'itemVersionProperty',
+            itemStatePropertySchema => itemStatePropertySchema.type === ValueType.String 
+            || itemStatePropertySchema.type === ValueType.Number,
+            `must refer to a "ValueType.String" or "ValueType.Number" property.`,
+          );
+        }
+
         validateTitleProperty();
         validateLinkProperty();
         validateImageProperty();
@@ -1626,6 +1636,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         validateMemberGroupIdProperty();
         validatebodyTextProperty();
         validatePopularityRankProperty();
+        validateItemVersionProperty();
       })
       .superRefine((data, context) => {
         const schemaHelper = objectSchemaHelper(data as GenericObjectSchema);

@@ -913,7 +913,7 @@ export type PropertyIdentifier<K extends string = string> = K | string | Propert
  * The {@link ObjectSchemaDefinition} properties that reference keys in the `properties` object. These should all be
  * {@link PropertyIdentifier} types.
  */
-export type ObjectSchemaPathProperties = Pick<GenericObjectSchema, 'titleProperty' | 'linkProperty' | 'imageProperty' | 'snippetProperty' | 'subtitleProperties' | 'createdAtProperty' | 'createdByProperty' | 'modifiedAtProperty' | 'modifiedByProperty' | 'userEmailProperty' | 'userIdProperty' | 'groupIdProperty' | 'memberGroupIdProperty' | 'bodyTextProperty' | 'popularityRankProperty'>;
+export type ObjectSchemaPathProperties = Pick<GenericObjectSchema, 'titleProperty' | 'linkProperty' | 'imageProperty' | 'snippetProperty' | 'subtitleProperties' | 'createdAtProperty' | 'createdByProperty' | 'modifiedAtProperty' | 'modifiedByProperty' | 'userEmailProperty' | 'userIdProperty' | 'groupIdProperty' | 'memberGroupIdProperty' | 'bodyTextProperty' | 'popularityRankProperty' | 'itemVersionProperty'>;
 /**
  * Specifies how this property should be indexed.
  * @hidden
@@ -1196,6 +1196,15 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      * @hidden
      */
     index?: IndexDefinition;
+    /**
+     * The name of the property within {@link ObjectSchemaDefinition.properties} that can be be interpreted as
+     * text/number representing the version of an item.
+     *
+     * Must be a {@link ValueType.String} property.
+     * TODO(ebo): Unhide this
+     * @hidden
+     */
+    itemVersionProperty?: PropertyIdentifier<K>;
 }
 /**
  * The type of principal that can be applied to a permission.
