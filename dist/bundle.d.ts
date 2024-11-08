@@ -2175,7 +2175,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 * The name of the property within {@link ObjectSchemaDefinition.properties} that can be be interpreted as
 	 * text/number representing the version of an item.
 	 *
-	 * Must be a {@link ValueType.String} property.
+	 * Must be a {@link ValueType.String} or {@link ValueType.Number} property.
 	 * TODO(ebo): Unhide this
 	 * @hidden
 	 */
