@@ -2201,7 +2201,7 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     popularityRankProperty: popularityRankProperty
       ? normalizeSchemaPropertyIdentifier(popularityRankProperty, normalizedProperties)
       : undefined,
-      versionProperty: versionProperty
+    versionProperty: versionProperty
       ? normalizeSchemaPropertyIdentifier(versionProperty, normalizedProperties)
       : undefined,
     index: index ? normalizeIndexDefinition(index, normalizedProperties) : undefined,
