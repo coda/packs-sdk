@@ -1102,7 +1102,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         memberGroupIdProperty: propertySchema.optional(),
         bodyTextProperty: propertySchema.optional(),
         popularityRankProperty: propertySchema.optional(),
-        itemVersionProperty: propertySchema.optional(),
+        versionProperty: propertySchema.optional(),
         options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
         requireForUpdates: z.boolean().optional(),
         index: indexSchema.optional(),
@@ -1265,9 +1265,9 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         const validatePopularityRankProperty = () => {
             return validateProperty('popularityRankProperty', popularityRankPropertySchema => popularityRankPropertySchema.type === schema_15.ValueType.Number, `must refer to a "ValueType.Number" property.`);
         };
-        const validateItemVersionProperty = () => {
-            return validateProperty('itemVersionProperty', itemStatePropertySchema => itemStatePropertySchema.type === schema_15.ValueType.String
-                || itemStatePropertySchema.type === schema_15.ValueType.Number, `must refer to a "ValueType.String" or "ValueType.Number" property.`);
+        const validateVersionProperty = () => {
+            return validateProperty('versionProperty', versionPropertySchema => versionPropertySchema.type === schema_15.ValueType.String
+                || versionPropertySchema.type === schema_15.ValueType.Number, `must refer to a "ValueType.String" or "ValueType.Number" property.`);
         };
         validateTitleProperty();
         validateLinkProperty();
@@ -1284,7 +1284,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         validateMemberGroupIdProperty();
         validatebodyTextProperty();
         validatePopularityRankProperty();
-        validateItemVersionProperty();
+        validateVersionProperty();
     })
         .superRefine((data, context) => {
         var _a;

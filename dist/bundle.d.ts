@@ -2179,7 +2179,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 * TODO(ebo): Unhide this
 	 * @hidden
 	 */
-	itemVersionProperty?: PropertyIdentifier<K>;
+	versionProperty?: PropertyIdentifier<K>;
 }
 declare enum PrincipalType {
 	User = "user",
