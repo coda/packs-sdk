@@ -1615,9 +1615,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         const validateVersionProperty = () => {
           return validateProperty(
             'versionProperty',
-            versionPropertySchema => versionPropertySchema.type === ValueType.String 
-            || versionPropertySchema.type === ValueType.Number,
-            `must refer to a "ValueType.String" or "ValueType.Number" property.`,
+            versionPropertySchema => versionPropertySchema.type === ValueType.String,
+            `must refer to a "ValueType.String" property.`,
           );
         }
 

@@ -1266,8 +1266,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             return validateProperty('popularityRankProperty', popularityRankPropertySchema => popularityRankPropertySchema.type === schema_15.ValueType.Number, `must refer to a "ValueType.Number" property.`);
         };
         const validateVersionProperty = () => {
-            return validateProperty('versionProperty', versionPropertySchema => versionPropertySchema.type === schema_15.ValueType.String
-                || versionPropertySchema.type === schema_15.ValueType.Number, `must refer to a "ValueType.String" or "ValueType.Number" property.`);
+            return validateProperty('versionProperty', versionPropertySchema => versionPropertySchema.type === schema_15.ValueType.String, `must refer to a "ValueType.String" property.`);
         };
         validateTitleProperty();
         validateLinkProperty();
