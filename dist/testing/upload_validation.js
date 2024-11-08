@@ -1102,6 +1102,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         memberGroupIdProperty: propertySchema.optional(),
         bodyTextProperty: propertySchema.optional(),
         popularityRankProperty: propertySchema.optional(),
+        versionProperty: propertySchema.optional(),
         options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
         requireForUpdates: z.boolean().optional(),
         index: indexSchema.optional(),
@@ -1264,6 +1265,9 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         const validatePopularityRankProperty = () => {
             return validateProperty('popularityRankProperty', popularityRankPropertySchema => popularityRankPropertySchema.type === schema_15.ValueType.Number, `must refer to a "ValueType.Number" property.`);
         };
+        const validateVersionProperty = () => {
+            return validateProperty('versionProperty', versionPropertySchema => versionPropertySchema.type === schema_15.ValueType.String, `must refer to a "ValueType.String" property.`);
+        };
         validateTitleProperty();
         validateLinkProperty();
         validateImageProperty();
@@ -1279,6 +1283,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         validateMemberGroupIdProperty();
         validatebodyTextProperty();
         validatePopularityRankProperty();
+        validateVersionProperty();
     })
         .superRefine((data, context) => {
         var _a;

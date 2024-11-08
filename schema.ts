@@ -1070,6 +1070,7 @@ export type ObjectSchemaPathProperties = Pick<
   | 'memberGroupIdProperty'
   | 'bodyTextProperty'
   | 'popularityRankProperty'
+  | 'versionProperty'
 >;
 
 /**
@@ -1373,6 +1374,16 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    * @hidden
    */
   index?: IndexDefinition;
+
+  /**
+   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be be interpreted as
+   * text representing the version of an item.
+   *
+   * Must be a {@link ValueType.String} property.
+   * TODO(ebo): Unhide this
+   * @hidden
+   */
+  versionProperty? : PropertyIdentifier<K>;
 
   // TODO(dweitzman): Only support options in the typing when the codaType is ValueHintType.SelectList.
 }
@@ -2112,6 +2123,7 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     memberGroupIdProperty,
     bodyTextProperty,
     popularityRankProperty,
+    versionProperty,
     index,
     ...rest
   } = schema;
@@ -2188,6 +2200,9 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
       : undefined,
     popularityRankProperty: popularityRankProperty
       ? normalizeSchemaPropertyIdentifier(popularityRankProperty, normalizedProperties)
+      : undefined,
+    versionProperty: versionProperty
+      ? normalizeSchemaPropertyIdentifier(versionProperty, normalizedProperties)
       : undefined,
     index: index ? normalizeIndexDefinition(index, normalizedProperties) : undefined,
     type: ValueType.Object,
