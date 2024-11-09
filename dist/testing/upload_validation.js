@@ -27,10 +27,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.zodErrorDetailToValidationError = exports._hasCycle = exports.validateCrawlHierarchy = exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.Limits = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
+const api_types_1 = require("../api_types");
 const schema_1 = require("../schema");
 const types_1 = require("../types");
 const schema_2 = require("../schema");
-const api_types_1 = require("../api_types");
+const api_types_2 = require("../api_types");
 const schema_3 = require("../schema");
 const schema_4 = require("../schema");
 const schema_5 = require("../schema");
@@ -41,17 +42,18 @@ const schema_8 = require("../schema");
 const schema_9 = require("../schema");
 const jsonpath_plus_1 = require("jsonpath-plus");
 const schema_10 = require("../schema");
-const api_types_2 = require("../api_types");
-const schema_11 = require("../schema");
 const api_types_3 = require("../api_types");
+const schema_11 = require("../schema");
+const api_types_4 = require("../api_types");
 const types_3 = require("../types");
 const types_4 = require("../types");
+const __1 = require("..");
 const types_5 = require("../types");
 const schema_12 = require("../schema");
 const schema_13 = require("../schema");
-const api_types_4 = require("../api_types");
-const types_6 = require("../types");
 const api_types_5 = require("../api_types");
+const types_6 = require("../types");
+const api_types_6 = require("../api_types");
 const url_parse_1 = __importDefault(require("url-parse"));
 const schema_14 = require("../schema");
 const schema_15 = require("../schema");
@@ -59,6 +61,7 @@ const zod_1 = require("zod");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
 const schema_16 = require("../schema");
+const api_types_7 = require("../api_types");
 const object_utils_1 = require("../helpers/object_utils");
 const object_utils_2 = require("../helpers/object_utils");
 const schema_17 = require("../schema");
@@ -625,15 +628,15 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             .regex(regexParameterName, 'Parameter names can only contain alphanumeric characters and underscores.'),
         type: z
             .union([
-            z.nativeEnum(api_types_5.Type),
+            z.nativeEnum(api_types_6.Type),
             z.object({
                 type: zodDiscriminant('array'),
-                items: z.nativeEnum(api_types_5.Type),
+                items: z.nativeEnum(api_types_6.Type),
                 allowEmpty: z.boolean().optional(),
             }),
         ])
-            .refine(paramType => paramType !== api_types_5.Type.object &&
-            !(typeof paramType === 'object' && paramType.type === 'array' && paramType.items === api_types_5.Type.object), {
+            .refine(paramType => paramType !== api_types_6.Type.object &&
+            !(typeof paramType === 'object' && paramType.type === 'array' && paramType.items === api_types_6.Type.object), {
             message: 'Object parameters are not currently supported.',
         }),
         description: z.string().max(exports.Limits.BuildingBlockDescription),
@@ -641,11 +644,34 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         autocomplete: z.unknown().optional(),
         defaultValue: z.unknown().optional(),
         suggestedValue: z.unknown().optional(),
+        allowedPrecannedValues: z.array(z.unknown()).optional(),
         crawlStrategy: z.unknown().optional(),
         supportsIncrementalSync: z.boolean().optional(),
-    }).refine(param => {
+    })
+        .refine(param => {
         return param.optional || param.supportsIncrementalSync !== false;
-    }, { message: 'Required params should support incremental sync.' });
+    }, { message: 'Required params should support incremental sync.' })
+        .refine(param => {
+        if (!param.allowedPrecannedValues) {
+            return true;
+        }
+        return param.type === api_types_6.Type.date || ((0, api_types_7.isArrayType)(param.type) && param.type.items === api_types_6.Type.date);
+    }, { message: 'Allowed values is not allowed on parameters of this type.' })
+        .refine(param => {
+        var _a;
+        if (!param.allowedPrecannedValues || param.type !== api_types_6.Type.date) {
+            return true;
+        }
+        return (_a = param.allowedPrecannedValues) === null || _a === void 0 ? void 0 : _a.every((value) => typeof value === 'string' && api_types_1.AllRelativeDates.includes(value));
+    }, { message: 'Allowed values for a date parameter can only be a list of relative dates.' })
+        .refine(param => {
+        var _a;
+        if (!param.allowedPrecannedValues || !((0, api_types_7.isArrayType)(param.type) && param.type.items === api_types_6.Type.date)) {
+            return true;
+        }
+        const relativeDateRanges = Object.values(__1.PrecannedDateRange);
+        return (_a = param.allowedPrecannedValues) === null || _a === void 0 ? void 0 : _a.every((value) => typeof value === 'string' && relativeDateRanges.includes(value));
+    }, { message: 'Allowed values for a date array parameter can only be a list of relative date ranges.' });
     const commonPackFormulaSchema = {
         // It would be preferable to use validateFormulaName here, but we have to exempt legacy packs with sync tables
         // whose getter names violate the validator, and those exemptions require the pack id, so this has to be
@@ -682,12 +708,12 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }, { message: 'All optional parameters must come after all non-optional parameters.' }),
         varargParameters: z.array(paramDefValidator).optional(),
         isAction: z.boolean().optional(),
-        connectionRequirement: z.nativeEnum(api_types_1.ConnectionRequirement).optional(),
+        connectionRequirement: z.nativeEnum(api_types_2.ConnectionRequirement).optional(),
         // TODO(jonathan): Remove after removing `network` from formula def.
         network: zodCompleteObject({
             hasSideEffect: z.boolean().optional(),
             requiresConnection: z.boolean().optional(),
-            connection: z.nativeEnum(api_types_2.NetworkConnection).optional(),
+            connection: z.nativeEnum(api_types_3.NetworkConnection).optional(),
         }).optional(),
         cacheTtlSecs: z.number().min(0).optional(),
         isExperimental: z.boolean().optional(),
@@ -697,7 +723,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     };
     const booleanPackFormulaSchema = zodCompleteObject({
         ...commonPackFormulaSchema,
-        resultType: zodDiscriminant(api_types_5.Type.boolean),
+        resultType: zodDiscriminant(api_types_6.Type.boolean),
         schema: zodCompleteObject({
             type: zodDiscriminant(schema_15.ValueType.Boolean),
             codaType: z.enum([...schema_2.BooleanHintValueTypes]).optional(),
@@ -834,7 +860,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     ]);
     const numericPackFormulaSchema = zodCompleteObject({
         ...commonPackFormulaSchema,
-        resultType: zodDiscriminant(api_types_5.Type.number),
+        resultType: zodDiscriminant(api_types_6.Type.number),
         schema: numberPropertySchema.optional(),
     });
     const simpleStringPropertySchema = zodCompleteStrictObject({
@@ -926,7 +952,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     ]);
     const stringPackFormulaSchema = zodCompleteObject({
         ...commonPackFormulaSchema,
-        resultType: zodDiscriminant(api_types_5.Type.string),
+        resultType: zodDiscriminant(api_types_6.Type.string),
         schema: stringPropertySchema.optional(),
     });
     // TODO(jonathan): Give this a better type than ZodTypeAny after figuring out
@@ -1350,7 +1376,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     }, 'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "options" property.');
     const objectPackFormulaSchema = zodCompleteObject({
         ...commonPackFormulaSchema,
-        resultType: zodDiscriminant(api_types_5.Type.object),
+        resultType: zodDiscriminant(api_types_6.Type.object),
         // TODO(jonathan): See if we should really allow this. The SDK right now explicitly tolerates an undefined
         // schema for objects, but that doesn't seem like a use case we actually want to support.
         schema: z.union([genericObjectSchema, arrayPropertySchema]).optional(),
@@ -1426,7 +1452,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 });
             }
         }),
-        role: z.nativeEnum(api_types_4.TableRole).optional(),
+        role: z.nativeEnum(api_types_5.TableRole).optional(),
     };
     const genericSyncTableSchema = zodCompleteObject({
         ...baseSyncTableSchema,
@@ -1613,7 +1639,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             // if the pack has no default authentication, make sure all formulas don't set connection requirements.
             // TODO(patrick): Consider allowing a pack to *only* use admin authentications.
             (data.formulas || []).forEach((formula, i) => {
-                if (formula.connectionRequirement && formula.connectionRequirement !== api_types_1.ConnectionRequirement.None) {
+                if (formula.connectionRequirement && formula.connectionRequirement !== api_types_2.ConnectionRequirement.None) {
                     context.addIssue({
                         code: z.ZodIssueCode.custom,
                         path: ['formulas', i],
@@ -1623,7 +1649,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             });
             (data.syncTables || []).forEach((syncTable, i) => {
                 const connectionRequirement = syncTable.getter.connectionRequirement;
-                if (connectionRequirement && connectionRequirement !== api_types_1.ConnectionRequirement.None) {
+                if (connectionRequirement && connectionRequirement !== api_types_2.ConnectionRequirement.None) {
                     context.addIssue({
                         code: z.ZodIssueCode.custom,
                         path: ['syncTables', i, 'getter', 'connectionRequirement'],
@@ -1672,7 +1698,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 if (!allowedAuthenticationNames) {
                     continue;
                 }
-                if (formula.connectionRequirement === api_types_1.ConnectionRequirement.None) {
+                if (formula.connectionRequirement === api_types_2.ConnectionRequirement.None) {
                     context.addIssue({
                         code: z.ZodIssueCode.custom,
                         path: [formula.name, 'allowedAuthenticationNames'],
@@ -1932,7 +1958,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                     context.addIssue({
                         code: z.ZodIssueCode.custom,
                         path: ['syncTables', i, 'properties', propertyName, 'options'],
-                        message: options === api_types_3.OptionsType.Dynamic
+                        message: options === api_types_4.OptionsType.Dynamic
                             ? `Sync table ${syncTable.name} must define "options" for this property to use OptionsType.Dynamic`
                             : `"${options}" is not registered as an options function for this sync table.`,
                     });

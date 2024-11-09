@@ -2,6 +2,7 @@ import type {AWSAccessKeyAuthentication} from '../types';
 import type {AWSAssumeRoleAuthentication} from '../types';
 import type {AdminAuthentication} from '../types';
 import type {AdminAuthenticationTypes} from '../types';
+import {AllRelativeDates} from '../api_types';
 import type {AllowedAuthentication} from '../types';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '../schema';
@@ -66,6 +67,8 @@ import type {PackVersionMetadata} from '../compiled_types';
 import type {ParamDef} from '../api_types';
 import type {ParamDefs} from '../api_types';
 import {PostSetupType} from '../types';
+import type {PrecannedDate} from '../api_types';
+import {PrecannedDateRange} from '..';
 import type {ProgressBarSchema} from '../schema';
 import type {PropertyIdentifier} from '../schema';
 import type {QueryParamTokenAuthentication} from '../types';
@@ -103,6 +106,7 @@ import {ZodParsedType} from 'zod';
 import {assertCondition} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
 import {isArray} from '../schema';
+import {isArrayType} from '../api_types';
 import {isDefined} from '../helpers/object_utils';
 import {isNil} from '../helpers/object_utils';
 import {isObject} from '../schema';
@@ -795,14 +799,48 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     autocomplete: z.unknown().optional(),
     defaultValue: z.unknown().optional(),
     suggestedValue: z.unknown().optional(),
+    allowedPrecannedValues: z.array(z.unknown()).optional(),
     crawlStrategy: z.unknown().optional(),
     supportsIncrementalSync: z.boolean().optional(),
-  }).refine(
-    param => {
-      return param.optional || param.supportsIncrementalSync !== false;
-    },
-    {message: 'Required params should support incremental sync.'},
-  );
+  })
+    .refine(
+      param => {
+        return param.optional || param.supportsIncrementalSync !== false;
+      },
+      {message: 'Required params should support incremental sync.'},
+    )
+    .refine(
+      param => {
+        if (!param.allowedPrecannedValues) {
+          return true;
+        }
+        return param.type === Type.date || (isArrayType(param.type) && param.type.items === Type.date);
+      },
+      {message: 'Allowed values is not allowed on parameters of this type.'},
+    )
+    .refine(
+      param => {
+        if (!param.allowedPrecannedValues || param.type !== Type.date) {
+          return true;
+        }
+        return param.allowedPrecannedValues?.every(
+          (value: unknown) => typeof value === 'string' && AllRelativeDates.includes(value as PrecannedDate),
+        );
+      },
+      {message: 'Allowed values for a date parameter can only be a list of relative dates.'},
+    )
+    .refine(
+      param => {
+        if (!param.allowedPrecannedValues || !(isArrayType(param.type) && param.type.items === Type.date)) {
+          return true;
+        }
+        const relativeDateRanges = Object.values(PrecannedDateRange);
+        return param.allowedPrecannedValues?.every(
+          (value: unknown) => typeof value === 'string' && relativeDateRanges.includes(value as PrecannedDateRange),
+        );
+      },
+      {message: 'Allowed values for a date array parameter can only be a list of relative date ranges.'},
+    );
 
   const commonPackFormulaSchema = {
     // It would be preferable to use validateFormulaName here, but we have to exempt legacy packs with sync tables
@@ -1618,7 +1656,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             versionPropertySchema => versionPropertySchema.type === ValueType.String,
             `must refer to a "ValueType.String" property.`,
           );
-        }
+        };
 
         validateTitleProperty();
         validateLinkProperty();

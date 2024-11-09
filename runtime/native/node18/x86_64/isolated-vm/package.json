@@ -1,15 +1,17 @@
 {
   "name": "isolated-vm",
-  "version": "5.0.1",
+  "version": "4.7.2",
   "description": "Access to multiple isolates",
   "main": "isolated-vm.js",
   "types": "isolated-vm.d.ts",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=16.0.0"
   },
   "scripts": {
     "install": "prebuild-install || (node-gyp rebuild --release -j max && node-gyp clean)",
     "rebuild": "node-gyp rebuild --release -j max",
+    "prebuild": "prebuild",
+    "upload": "prebuild --upload ${GITHUB_TOKEN}",
     "lint": "find src -name '*.cc' | xargs -n1 clang-tidy",
     "test": "node test.js"
   },
@@ -18,7 +20,7 @@
   },
   "devDependencies": {
     "isolated-vm": ".",
-    "prebuild": "^13.0.0"
+    "prebuild": "^12.1.0"
   },
   "binary": {
     "module_path": "out"

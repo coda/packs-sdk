@@ -228,6 +228,15 @@ export interface ParamDef<T extends UnionType> {
 	 * The suggested value to be prepopulated for this parameter if it is not specified by the user.
 	 */
 	suggestedValue?: SuggestedValueType<T>;
+	/**
+	 * An array of Precanned values that are valid for this parameter. Users will also be allowed to
+	 * enter custom values.
+	 *
+	 * Only supported for Date & DateArray parameters.
+	 *
+	 * @hidden
+	 */
+	allowedPrecannedValues?: Array<SuggestedValueType<T>>;
 	/** @hidden */
 	crawlStrategy?: CrawlStrategy;
 	/**

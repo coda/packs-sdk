@@ -21,7 +21,11 @@ import {PackMetadataValidationError} from '../testing/upload_validation';
 import type {PackVersionMetadata} from '../compiled_types';
 import type {ParamDefs} from '../api_types';
 import {ParameterType} from '../api_types';
+import {PastRelativeDateRanges} from '../api_types';
+import {PastRelativeDates} from '../api_types';
 import {PostSetupType} from '../types';
+import {PrecannedDate} from '../api_types';
+import {PrecannedDateRange} from '..';
 import {ReservedAuthenticationNames} from '../types';
 import {ScaleIconSet} from '../schema';
 import type {StringFormulaDefLegacy} from '../api';
@@ -776,6 +780,79 @@ describe('Pack metadata Validation', async () => {
           {
             message: `String must contain at most ${Limits.BuildingBlockDescription} character(s)`,
             path: 'formulas[0].parameters[0].description',
+          },
+        ]);
+      });
+
+      it('allows relative dates for Date parameters', async () => {
+        const metadata = makeMetadataFromParams([
+          makeParameter({
+            type: ParameterType.Date,
+            name: 'myParam',
+            description: '',
+            suggestedValue: PrecannedDate.Today,
+            allowedPrecannedValues: PastRelativeDates,
+          }),
+        ]);
+        await validateJson(metadata);
+      });
+
+      it('validates allowedPrecannedValues for date range parameters', async () => {
+        const metadata = makeMetadataFromParams([
+          makeParameter({
+            type: ParameterType.DateArray,
+            name: 'myParam',
+            description: '',
+            suggestedValue: PrecannedDateRange.Last30Days,
+            allowedPrecannedValues: PastRelativeDateRanges,
+          }),
+        ]);
+        await validateJson(metadata);
+
+        const metadataWithBadType = makeMetadataFromParams([
+          makeParameter({
+            type: ParameterType.DateArray,
+            name: 'myParam',
+            description: '',
+            suggestedValue: PrecannedDateRange.LastYear,
+            allowedPrecannedValues: PastRelativeDates,
+          }),
+        ]);
+        const err = await validateJsonAndAssertFails(metadataWithBadType);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'Allowed values for a date array parameter can only be a list of relative date ranges.',
+            path: 'formulas[0].parameters[0]',
+          },
+        ]);
+      });
+
+      it('validates allowedPrecannedValues for date parameters', async () => {
+        const metadata = makeMetadataFromParams([
+          makeParameter({
+            type: ParameterType.Date,
+            name: 'myParam',
+            description: '',
+            suggestedValue: PrecannedDate.DaysAgo7,
+            allowedPrecannedValues: PastRelativeDates,
+          }),
+        ]);
+        await validateJson(metadata);
+
+        const metadataWithBadType = makeMetadataFromParams([
+          makeParameter({
+            type: ParameterType.Date,
+            name: 'myParam',
+            description: '',
+            suggestedValue: PrecannedDateRange.LastYear,
+            allowedPrecannedValues: PastRelativeDateRanges,
+          }),
+        ]);
+        const err1 = await validateJsonAndAssertFails(metadataWithBadType);
+        assert.deepEqual(err1.validationErrors, [
+          {
+            message: 'Allowed values for a date parameter can only be a list of relative dates.',
+            path: 'formulas[0].parameters[0]',
           },
         ]);
       });

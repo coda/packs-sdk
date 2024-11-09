@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TableRole = exports.OptionsType = exports.PrecannedDateRange = exports.InvocationSource = exports.InvocationErrorType = exports.PermissionSyncMode = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
+exports.TableRole = exports.OptionsType = exports.FutureRelativeDates = exports.PastRelativeDates = exports.AllRelativeDates = exports.PrecannedDate = exports.FutureRelativeDateRanges = exports.PastRelativeDateRanges = exports.PrecannedDateRange = exports.InvocationSource = exports.InvocationErrorType = exports.PermissionSyncMode = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
 /**
  * Markers used internally to represent data types for parameters and return values.
  * It should not be necessary to ever use these values directly.
@@ -320,6 +320,78 @@ var PrecannedDateRange;
      */
     PrecannedDateRange["Everything"] = "everything";
 })(PrecannedDateRange || (exports.PrecannedDateRange = PrecannedDateRange = {}));
+/**
+ * The set of date ranges whose end dates are today.
+ */
+exports.PastRelativeDateRanges = [
+    PrecannedDateRange.Today,
+    PrecannedDateRange.Last7Days,
+    PrecannedDateRange.Last30Days,
+    PrecannedDateRange.Last90Days,
+    PrecannedDateRange.Last180Days,
+    PrecannedDateRange.Last365Days,
+    PrecannedDateRange.YearToDate,
+];
+/**
+ * The set of date ranges whose startdates are today.
+ */
+exports.FutureRelativeDateRanges = [
+    PrecannedDateRange.Today,
+    PrecannedDateRange.Next7Days,
+    PrecannedDateRange.Next30Days,
+    PrecannedDateRange.Next90Days,
+    PrecannedDateRange.Next180Days,
+    PrecannedDateRange.Next365Days,
+];
+/**
+ * Some APIs require relative dates only. Before we supported {@link ParamDef.allowedPrecannedValues},
+ * some packs decided to use a Date parameter for an input like this, because not all
+ * PrecannedDateRange values were valid.
+ *
+ * We want such packs to be able to use relative date ranges without needing to change their
+ * parameter type, to maintain backwards compatibility.
+ */
+var PrecannedDate;
+(function (PrecannedDate) {
+    PrecannedDate["Today"] = "today";
+    PrecannedDate["Yesterday"] = "yesterday";
+    PrecannedDate["Tomorrow"] = "tomorrow";
+    PrecannedDate["DaysAgo7"] = "7 days ago";
+    PrecannedDate["DaysAgo30"] = "30 days ago";
+    PrecannedDate["DaysAgo90"] = "90 days ago";
+    PrecannedDate["DaysAgo180"] = "180 days ago";
+    PrecannedDate["DaysAgo365"] = "365 days ago";
+    PrecannedDate["DaysAhead7"] = "7 days ahead";
+    PrecannedDate["DaysAhead30"] = "30 days ahead";
+    PrecannedDate["DaysAhead90"] = "90 days ahead";
+    PrecannedDate["DaysAhead180"] = "180 days ahead";
+    PrecannedDate["DaysAhead365"] = "365 days ahead";
+})(PrecannedDate || (exports.PrecannedDate = PrecannedDate = {}));
+exports.AllRelativeDates = Object.values(PrecannedDate);
+/**
+ * The set of relative dates that are today or earlier.
+ */
+exports.PastRelativeDates = [
+    PrecannedDate.Today,
+    PrecannedDate.Yesterday,
+    PrecannedDate.DaysAgo7,
+    PrecannedDate.DaysAgo30,
+    PrecannedDate.DaysAgo90,
+    PrecannedDate.DaysAgo180,
+    PrecannedDate.DaysAgo365,
+];
+/**
+ * The set of relative dates that are today or later.
+ */
+exports.FutureRelativeDates = [
+    PrecannedDate.Today,
+    PrecannedDate.Tomorrow,
+    PrecannedDate.DaysAhead7,
+    PrecannedDate.DaysAhead30,
+    PrecannedDate.DaysAhead90,
+    PrecannedDate.DaysAhead180,
+    PrecannedDate.DaysAhead365,
+];
 /**
  * An enum defining special types options handling for properties.
  */

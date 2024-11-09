@@ -338,6 +338,17 @@ export interface ParamDef<T extends UnionType> {
    */
   suggestedValue?: SuggestedValueType<T>;
 
+  /**
+   * An array of Precanned values that are valid for this parameter. Users will also be allowed to
+   * enter custom values.
+   *
+   * Only supported for Date & DateArray parameters.
+   *
+   * @hidden
+   */
+  // TODO(patrick): Unhide this
+  allowedPrecannedValues?: Array<SuggestedValueType<T>>;
+
   // TODO(patrick): Unhide this
   /** @hidden */
   crawlStrategy?: CrawlStrategy;
@@ -1106,6 +1117,83 @@ export enum PrecannedDateRange {
    */
   Everything = 'everything',
 }
+
+/**
+ * The set of date ranges whose end dates are today.
+ */
+export const PastRelativeDateRanges = [
+  PrecannedDateRange.Today,
+  PrecannedDateRange.Last7Days,
+  PrecannedDateRange.Last30Days,
+  PrecannedDateRange.Last90Days,
+  PrecannedDateRange.Last180Days,
+  PrecannedDateRange.Last365Days,
+  PrecannedDateRange.YearToDate,
+];
+
+/**
+ * The set of date ranges whose startdates are today.
+ */
+export const FutureRelativeDateRanges = [
+  PrecannedDateRange.Today,
+  PrecannedDateRange.Next7Days,
+  PrecannedDateRange.Next30Days,
+  PrecannedDateRange.Next90Days,
+  PrecannedDateRange.Next180Days,
+  PrecannedDateRange.Next365Days,
+];
+
+/**
+ * Some APIs require relative dates only. Before we supported {@link ParamDef.allowedPrecannedValues},
+ * some packs decided to use a Date parameter for an input like this, because not all
+ * PrecannedDateRange values were valid.
+ *
+ * We want such packs to be able to use relative date ranges without needing to change their
+ * parameter type, to maintain backwards compatibility.
+ */
+export enum PrecannedDate {
+  Today = 'today',
+  Yesterday = 'yesterday',
+  Tomorrow = 'tomorrow',
+  DaysAgo7 = '7 days ago',
+  DaysAgo30 = '30 days ago',
+  DaysAgo90 = '90 days ago',
+  DaysAgo180 = '180 days ago',
+  DaysAgo365 = '365 days ago',
+  DaysAhead7 = '7 days ahead',
+  DaysAhead30 = '30 days ahead',
+  DaysAhead90 = '90 days ahead',
+  DaysAhead180 = '180 days ahead',
+  DaysAhead365 = '365 days ahead',
+}
+
+export const AllRelativeDates = Object.values(PrecannedDate);
+
+/**
+ * The set of relative dates that are today or earlier.
+ */
+export const PastRelativeDates = [
+  PrecannedDate.Today,
+  PrecannedDate.Yesterday,
+  PrecannedDate.DaysAgo7,
+  PrecannedDate.DaysAgo30,
+  PrecannedDate.DaysAgo90,
+  PrecannedDate.DaysAgo180,
+  PrecannedDate.DaysAgo365,
+];
+
+/**
+ * The set of relative dates that are today or later.
+ */
+export const FutureRelativeDates = [
+  PrecannedDate.Today,
+  PrecannedDate.Tomorrow,
+  PrecannedDate.DaysAhead7,
+  PrecannedDate.DaysAhead30,
+  PrecannedDate.DaysAhead90,
+  PrecannedDate.DaysAhead180,
+  PrecannedDate.DaysAhead365,
+];
 
 /**
  * An enum defining special types options handling for properties.

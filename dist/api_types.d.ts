@@ -252,6 +252,15 @@ export interface ParamDef<T extends UnionType> {
      * The suggested value to be prepopulated for this parameter if it is not specified by the user.
      */
     suggestedValue?: SuggestedValueType<T>;
+    /**
+     * An array of Precanned values that are valid for this parameter. Users will also be allowed to
+     * enter custom values.
+     *
+     * Only supported for Date & DateArray parameters.
+     *
+     * @hidden
+     */
+    allowedPrecannedValues?: Array<SuggestedValueType<T>>;
     /** @hidden */
     crawlStrategy?: CrawlStrategy;
     /**
@@ -924,6 +933,46 @@ export declare enum PrecannedDateRange {
      */
     Everything = "everything"
 }
+/**
+ * The set of date ranges whose end dates are today.
+ */
+export declare const PastRelativeDateRanges: PrecannedDateRange[];
+/**
+ * The set of date ranges whose startdates are today.
+ */
+export declare const FutureRelativeDateRanges: PrecannedDateRange[];
+/**
+ * Some APIs require relative dates only. Before we supported {@link ParamDef.allowedPrecannedValues},
+ * some packs decided to use a Date parameter for an input like this, because not all
+ * PrecannedDateRange values were valid.
+ *
+ * We want such packs to be able to use relative date ranges without needing to change their
+ * parameter type, to maintain backwards compatibility.
+ */
+export declare enum PrecannedDate {
+    Today = "today",
+    Yesterday = "yesterday",
+    Tomorrow = "tomorrow",
+    DaysAgo7 = "7 days ago",
+    DaysAgo30 = "30 days ago",
+    DaysAgo90 = "90 days ago",
+    DaysAgo180 = "180 days ago",
+    DaysAgo365 = "365 days ago",
+    DaysAhead7 = "7 days ahead",
+    DaysAhead30 = "30 days ahead",
+    DaysAhead90 = "90 days ahead",
+    DaysAhead180 = "180 days ahead",
+    DaysAhead365 = "365 days ahead"
+}
+export declare const AllRelativeDates: PrecannedDate[];
+/**
+ * The set of relative dates that are today or earlier.
+ */
+export declare const PastRelativeDates: PrecannedDate[];
+/**
+ * The set of relative dates that are today or later.
+ */
+export declare const FutureRelativeDates: PrecannedDate[];
 /**
  * An enum defining special types options handling for properties.
  */
