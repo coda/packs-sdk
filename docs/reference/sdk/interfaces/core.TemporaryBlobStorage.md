@@ -90,7 +90,7 @@ in favor of the provided value.
 | `opts.contentType?` | `string` |
 | `opts.downloadFilename?` | `string` |
 | `opts.expiryMs?` | `number` |
-| `fetchOpts?` | `Pick`<[`FetchRequest`](core.FetchRequest.md), ``"headers"`` \| ``"disableAuthentication"``\> |
+| `fetchOpts?` | `Pick`<[`FetchRequest`](core.FetchRequest.md), ``"headers"`` \| ``"cacheTtlSecs"`` \| ``"disableAuthentication"``\> |
 
 #### Returns
 

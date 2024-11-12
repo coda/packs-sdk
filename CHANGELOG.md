@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- Added the ability to specify the `cacheTtlSecs` option when using `TemporaryBlobStorage.storeUrl`.
+
 ## [1.8.2] - 2024-11-08
 
 ### Added

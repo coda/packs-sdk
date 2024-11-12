@@ -107,7 +107,7 @@ or are too large to return inline. See [TemporaryBlobStorage](core.TemporaryBlob
 | Name | Type |
 | :------ | :------ |
 | `storeBlob` | `SinonStub`<[blobData: Buffer, contentType: string, opts?: Object], `Promise`<`string`\>\> |
-| `storeUrl` | `SinonStub`<[url: string, opts?: Object, fetchOpts?: Pick<FetchRequest, "headers" \| "disableAuthentication"\>], `Promise`<`string`\>\> |
+| `storeUrl` | `SinonStub`<[url: string, opts?: Object, fetchOpts?: Pick<FetchRequest, "headers" \| "cacheTtlSecs" \| "disableAuthentication"\>], `Promise`<`string`\>\> |
 
 #### Inherited from
 
