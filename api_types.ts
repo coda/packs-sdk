@@ -339,6 +339,16 @@ export interface ParamDef<T extends UnionType> {
   suggestedValue?: SuggestedValueType<T>;
 
   /**
+   * In certain contexts, Coda's default behavior is to crawl *all* data available, in which case
+   * the {@link ParamDef.suggestedValue} will not be ideal, as most use cases will prefer efficiency
+   * over completeness. Use this field to specify a default value when Coda is crawling all data.
+   *
+   * @hidden
+   */
+  // TODO(patrick): Unhide this
+  fullCrawlSuggestedValue?: SuggestedValueType<T>;
+
+  /**
    * An array of Precanned values that are valid for this parameter. Users will also be allowed to
    * enter custom values.
    *
@@ -348,6 +358,19 @@ export interface ParamDef<T extends UnionType> {
    */
   // TODO(patrick): Unhide this
   allowedPrecannedValues?: Array<SuggestedValueType<T>>;
+
+  /**
+   * For a parameter that has an autocomplete providing options, or a one that uses an allowedPrecannedValues
+   * list, this setting controls whether the user can also enter a custom value.
+   *
+   * Defaults to true.
+   *
+   * Not yet fully supported.
+   *
+   * @hidden
+   */
+  // TODO(patrick): Unhide this
+  allowManualInput?: boolean;
 
   // TODO(patrick): Unhide this
   /** @hidden */
@@ -420,8 +443,6 @@ export type SuggestedValueType<T extends UnionType> = T extends ArrayType<Type.d
 /** @hidden */
 export interface CrawlStrategy {
   parentTable?: SyncTableRelation;
-
-  // TODO(patrick): add more options here for date ranges, etc
 }
 
 /**
@@ -1132,7 +1153,23 @@ export const PastRelativeDateRanges = [
 ];
 
 /**
- * The set of date ranges whose startdates are today.
+ * The set of date ranges that are useful for filtering datasets that don't include
+ * future dates.
+ */
+export const PastDateRanges = [
+  ...PastRelativeDateRanges,
+  PrecannedDateRange.Yesterday,
+  PrecannedDateRange.LastWeek,
+  PrecannedDateRange.LastMonth,
+  PrecannedDateRange.LastYear,
+  PrecannedDateRange.ThisWeek,
+  PrecannedDateRange.ThisMonth,
+  PrecannedDateRange.ThisYear,
+  PrecannedDateRange.Everything,
+];
+
+/**
+ * The set of date ranges whose start dates are today.
  */
 export const FutureRelativeDateRanges = [
   PrecannedDateRange.Today,

@@ -467,6 +467,7 @@ exports.makeStringFormula = makeStringFormula;
  * ```
  */
 function makeFormula(fullDefinition) {
+    var _a;
     let formula;
     switch (fullDefinition.resultType) {
         case schema_2.ValueType.String: {
@@ -537,6 +538,13 @@ function makeFormula(fullDefinition) {
         }
         default:
             return (0, ensure_2.ensureUnreachable)(fullDefinition);
+    }
+    // Normalize parameter options.
+    const allParameters = [...formula.parameters, ...((_a = formula.varargParameters) !== null && _a !== void 0 ? _a : [])];
+    for (const param of allParameters) {
+        if (param.allowManualInput !== false) {
+            param.allowManualInput = true;
+        }
     }
     const onError = fullDefinition.onError;
     if (onError) {

@@ -253,6 +253,14 @@ export interface ParamDef<T extends UnionType> {
      */
     suggestedValue?: SuggestedValueType<T>;
     /**
+     * In certain contexts, Coda's default behavior is to crawl *all* data available, in which case
+     * the {@link ParamDef.suggestedValue} will not be ideal, as most use cases will prefer efficiency
+     * over completeness. Use this field to specify a default value when Coda is crawling all data.
+     *
+     * @hidden
+     */
+    fullCrawlSuggestedValue?: SuggestedValueType<T>;
+    /**
      * An array of Precanned values that are valid for this parameter. Users will also be allowed to
      * enter custom values.
      *
@@ -261,6 +269,17 @@ export interface ParamDef<T extends UnionType> {
      * @hidden
      */
     allowedPrecannedValues?: Array<SuggestedValueType<T>>;
+    /**
+     * For a parameter that has an autocomplete providing options, or a one that uses an allowedPrecannedValues
+     * list, this setting controls whether the user can also enter a custom value.
+     *
+     * Defaults to true.
+     *
+     * Not yet fully supported.
+     *
+     * @hidden
+     */
+    allowManualInput?: boolean;
     /** @hidden */
     crawlStrategy?: CrawlStrategy;
     /**
@@ -938,7 +957,12 @@ export declare enum PrecannedDateRange {
  */
 export declare const PastRelativeDateRanges: PrecannedDateRange[];
 /**
- * The set of date ranges whose startdates are today.
+ * The set of date ranges that are useful for filtering datasets that don't include
+ * future dates.
+ */
+export declare const PastDateRanges: PrecannedDateRange[];
+/**
+ * The set of date ranges whose start dates are today.
  */
 export declare const FutureRelativeDateRanges: PrecannedDateRange[];
 /**

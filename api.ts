@@ -1501,6 +1501,14 @@ export function makeFormula<ParamDefsT extends ParamDefs, ResultT extends ValueT
       return ensureUnreachable(fullDefinition);
   }
 
+  // Normalize parameter options.
+  const allParameters = [...formula.parameters, ...(formula.varargParameters ?? [])];
+  for (const param of allParameters) {
+    if (param.allowManualInput !== false) {
+      param.allowManualInput = true;
+    }
+  }
+
   const onError = fullDefinition.onError;
   if (onError) {
     const wrappedExecute = formula.execute;

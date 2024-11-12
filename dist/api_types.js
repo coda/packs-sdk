@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TableRole = exports.OptionsType = exports.FutureRelativeDates = exports.PastRelativeDates = exports.AllRelativeDates = exports.PrecannedDate = exports.FutureRelativeDateRanges = exports.PastRelativeDateRanges = exports.PrecannedDateRange = exports.InvocationSource = exports.InvocationErrorType = exports.PermissionSyncMode = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
+exports.TableRole = exports.OptionsType = exports.FutureRelativeDates = exports.PastRelativeDates = exports.AllRelativeDates = exports.PrecannedDate = exports.FutureRelativeDateRanges = exports.PastDateRanges = exports.PastRelativeDateRanges = exports.PrecannedDateRange = exports.InvocationSource = exports.InvocationErrorType = exports.PermissionSyncMode = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
 /**
  * Markers used internally to represent data types for parameters and return values.
  * It should not be necessary to ever use these values directly.
@@ -333,7 +333,22 @@ exports.PastRelativeDateRanges = [
     PrecannedDateRange.YearToDate,
 ];
 /**
- * The set of date ranges whose startdates are today.
+ * The set of date ranges that are useful for filtering datasets that don't include
+ * future dates.
+ */
+exports.PastDateRanges = [
+    ...exports.PastRelativeDateRanges,
+    PrecannedDateRange.Yesterday,
+    PrecannedDateRange.LastWeek,
+    PrecannedDateRange.LastMonth,
+    PrecannedDateRange.LastYear,
+    PrecannedDateRange.ThisWeek,
+    PrecannedDateRange.ThisMonth,
+    PrecannedDateRange.ThisYear,
+    PrecannedDateRange.Everything,
+];
+/**
+ * The set of date ranges whose start dates are today.
  */
 exports.FutureRelativeDateRanges = [
     PrecannedDateRange.Today,

@@ -799,7 +799,9 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     autocomplete: z.unknown().optional(),
     defaultValue: z.unknown().optional(),
     suggestedValue: z.unknown().optional(),
+    fullCrawlSuggestedValue: z.unknown().optional(),
     allowedPrecannedValues: z.array(z.unknown()).optional(),
+    allowManualInput: z.boolean().optional(),
     crawlStrategy: z.unknown().optional(),
     supportsIncrementalSync: z.boolean().optional(),
   })
@@ -816,7 +818,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }
         return param.type === Type.date || (isArrayType(param.type) && param.type.items === Type.date);
       },
-      {message: 'Allowed values is not allowed on parameters of this type.'},
+      {message: 'allowedPrecannedValues is not allowed on parameters of this type.'},
     )
     .refine(
       param => {
@@ -827,7 +829,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           (value: unknown) => typeof value === 'string' && AllRelativeDates.includes(value as PrecannedDate),
         );
       },
-      {message: 'Allowed values for a date parameter can only be a list of relative dates.'},
+      {message: 'allowedPrecannedValues for a date parameter can only be a list of relative dates.'},
     )
     .refine(
       param => {
@@ -839,7 +841,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           (value: unknown) => typeof value === 'string' && relativeDateRanges.includes(value as PrecannedDateRange),
         );
       },
-      {message: 'Allowed values for a date array parameter can only be a list of relative date ranges.'},
+      {message: 'allowedPrecannedValues for a date array parameter can only be a list of relative date ranges.'},
     );
 
   const commonPackFormulaSchema = {

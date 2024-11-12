@@ -5786,6 +5786,26 @@ module.exports = (() => {
 
   // api_types.ts
   init_buffer_shim();
+  var PastRelativeDateRanges = [
+    "today" /* Today */,
+    "last_7_days" /* Last7Days */,
+    "last_30_days" /* Last30Days */,
+    "last_90_days" /* Last90Days */,
+    "last_180_days" /* Last180Days */,
+    "last_365_days" /* Last365Days */,
+    "year_to_date" /* YearToDate */
+  ];
+  var PastDateRanges = [
+    ...PastRelativeDateRanges,
+    "yesterday" /* Yesterday */,
+    "last_week" /* LastWeek */,
+    "last_month" /* LastMonth */,
+    "last_year" /* LastYear */,
+    "this_week" /* ThisWeek */,
+    "this_month" /* ThisMonth */,
+    "this_year" /* ThisYear */,
+    "everything" /* Everything */
+  ];
   var PrecannedDate = /* @__PURE__ */ ((PrecannedDate2) => {
     PrecannedDate2["Today"] = "today";
     PrecannedDate2["Yesterday"] = "yesterday";
