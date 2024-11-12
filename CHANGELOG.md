@@ -8,6 +8,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 - Added the ability to specify the `cacheTtlSecs` option when using `TemporaryBlobStorage.storeUrl`.
 
+### Changed
+
+- Fix upgraded isolated-vm
+
 ## [1.8.2] - 2024-11-08
 
 ### Added
@@ -829,5 +833,4 @@ await myHelper(context);
 [1.7.17]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.7.17
 [1.7.16]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.7.16
 [1.8.1]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.8.1
-
 [1.8.2]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.8.2
