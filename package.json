@@ -150,9 +150,13 @@
       "eslint-plugin-local@1.0.0": "patches/eslint-plugin-local@1.0.0.patch"
     },
     "overrides": {
-      "fast-xml-parser": "4.2.4",
+      "fast-xml-parser": "4.2.5",
       "vm2@<3.9.15": ">=3.9.15",
-      "xml2js@<0.5.0": ">=0.5.0"
+      "xml2js@<0.5.0": ">=0.5.0",
+      "sharp@<0.32.6": ">=0.32.6",
+      "fast-xml-parser@=4.2.4": ">=4.2.5",
+      "semver@>=7.0.0 <7.5.2": ">=7.5.2",
+      "elliptic@<6.6.0": ">=6.6.0"
     },
     "packageExtensions": {
       "isolated-vm": {
