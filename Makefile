@@ -188,6 +188,8 @@ compile-ts:
 		--keep-names \
 		--target=es2020;
 
+	chmod +x ${ROOTDIR}/dist/cli/coda.js
+
 .PHONY: compile
 compile:
 	# Generate isolated-vm binaries that are compatible with Amazon Linux 2.
