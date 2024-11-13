@@ -527,7 +527,13 @@ export type ParamDefFromOptionsUnion<T extends ParameterType, O extends Paramete
 export function makeParameter<T extends ParameterType, O extends ParameterOptions<T>>(
   paramDefinition: O,
 ): ParamDefFromOptionsUnion<T, O> {
-  const {type, autocomplete: autocompleteDefOrItems, crawlStrategy: crawlStrategyDef, ...rest} = paramDefinition;
+  const {
+    type,
+    autocomplete: autocompleteDefOrItems,
+    crawlStrategy: crawlStrategyDef,
+    allowManualInput: allowManualInputDef,
+    ...rest
+  } = paramDefinition;
   const actualType = ParameterTypeInputMap[type];
   let autocomplete: MetadataFormula | undefined;
 
@@ -554,7 +560,16 @@ export function makeParameter<T extends ParameterType, O extends ParameterOption
     }
   }
 
-  return Object.freeze({...rest, autocomplete, type: actualType, crawlStrategy}) as ParamDefFromOptionsUnion<T, O>;
+  // Default to true if not specified.
+  const allowManualInput = !(allowManualInputDef === false);
+
+  return Object.freeze({
+    ...rest,
+    allowManualInput,
+    autocomplete,
+    type: actualType,
+    crawlStrategy,
+  }) as ParamDefFromOptionsUnion<T, O>;
 }
 
 // Other parameter helpers below here are obsolete given the above generate parameter makers.
@@ -1499,14 +1514,6 @@ export function makeFormula<ParamDefsT extends ParamDefs, ResultT extends ValueT
     }
     default:
       return ensureUnreachable(fullDefinition);
-  }
-
-  // Normalize parameter options.
-  const allParameters = [...formula.parameters, ...(formula.varargParameters ?? [])];
-  for (const param of allParameters) {
-    if (param.allowManualInput !== false) {
-      param.allowManualInput = true;
-    }
   }
 
   const onError = fullDefinition.onError;

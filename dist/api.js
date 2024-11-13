@@ -252,7 +252,7 @@ exports.wrapGetSchema = wrapGetSchema;
  * ```
  */
 function makeParameter(paramDefinition) {
-    const { type, autocomplete: autocompleteDefOrItems, crawlStrategy: crawlStrategyDef, ...rest } = paramDefinition;
+    const { type, autocomplete: autocompleteDefOrItems, crawlStrategy: crawlStrategyDef, allowManualInput: allowManualInputDef, ...rest } = paramDefinition;
     const actualType = api_types_4.ParameterTypeInputMap[type];
     let autocomplete;
     if (Array.isArray(autocompleteDefOrItems)) {
@@ -278,7 +278,15 @@ function makeParameter(paramDefinition) {
             crawlStrategy = crawlStrategyDef;
         }
     }
-    return Object.freeze({ ...rest, autocomplete, type: actualType, crawlStrategy });
+    // Default to true if not specified.
+    const allowManualInput = !(allowManualInputDef === false);
+    return Object.freeze({
+        ...rest,
+        allowManualInput,
+        autocomplete,
+        type: actualType,
+        crawlStrategy,
+    });
 }
 exports.makeParameter = makeParameter;
 /** @deprecated */
@@ -467,7 +475,6 @@ exports.makeStringFormula = makeStringFormula;
  * ```
  */
 function makeFormula(fullDefinition) {
-    var _a;
     let formula;
     switch (fullDefinition.resultType) {
         case schema_2.ValueType.String: {
@@ -538,13 +545,6 @@ function makeFormula(fullDefinition) {
         }
         default:
             return (0, ensure_2.ensureUnreachable)(fullDefinition);
-    }
-    // Normalize parameter options.
-    const allParameters = [...formula.parameters, ...((_a = formula.varargParameters) !== null && _a !== void 0 ? _a : [])];
-    for (const param of allParameters) {
-        if (param.allowManualInput !== false) {
-            param.allowManualInput = true;
-        }
     }
     const onError = fullDefinition.onError;
     if (onError) {
