@@ -955,7 +955,7 @@ export declare enum PrecannedDateRange {
 /**
  * The set of date ranges whose end dates are today.
  */
-export declare const PastRelativeDateRanges: PrecannedDateRange[];
+export declare const UntilNowDateRanges: PrecannedDateRange[];
 /**
  * The set of date ranges that are useful for filtering datasets that don't include
  * future dates.
@@ -964,7 +964,7 @@ export declare const PastLiveDateRanges: PrecannedDateRange[];
 /**
  * The set of date ranges whose start dates are today.
  */
-export declare const FutureRelativeDateRanges: PrecannedDateRange[];
+export declare const FromNowDateRanges: PrecannedDateRange[];
 /**
  * Some APIs require relative dates only, assuming "now" as either the start or end of the effective range.
  * Before we supported {@link ParamDef.allowedPrecannedValues}, some packs decided to use a Date parameter

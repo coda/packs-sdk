@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TableRole = exports.OptionsType = exports.FutureLiveDates = exports.PastLiveDates = exports.AllPrecannedDates = exports.PrecannedDate = exports.FutureRelativeDateRanges = exports.PastLiveDateRanges = exports.PastRelativeDateRanges = exports.PrecannedDateRange = exports.InvocationSource = exports.InvocationErrorType = exports.PermissionSyncMode = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
+exports.TableRole = exports.OptionsType = exports.FutureLiveDates = exports.PastLiveDates = exports.AllPrecannedDates = exports.PrecannedDate = exports.FromNowDateRanges = exports.PastLiveDateRanges = exports.UntilNowDateRanges = exports.PrecannedDateRange = exports.InvocationSource = exports.InvocationErrorType = exports.PermissionSyncMode = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
 /**
  * Markers used internally to represent data types for parameters and return values.
  * It should not be necessary to ever use these values directly.
@@ -323,7 +323,7 @@ var PrecannedDateRange;
 /**
  * The set of date ranges whose end dates are today.
  */
-exports.PastRelativeDateRanges = [
+exports.UntilNowDateRanges = [
     PrecannedDateRange.Today,
     PrecannedDateRange.Last7Days,
     PrecannedDateRange.Last30Days,
@@ -337,7 +337,7 @@ exports.PastRelativeDateRanges = [
  * future dates.
  */
 exports.PastLiveDateRanges = [
-    ...exports.PastRelativeDateRanges,
+    ...exports.UntilNowDateRanges,
     PrecannedDateRange.Yesterday,
     PrecannedDateRange.LastWeek,
     PrecannedDateRange.LastMonth,
@@ -350,7 +350,7 @@ exports.PastLiveDateRanges = [
 /**
  * The set of date ranges whose start dates are today.
  */
-exports.FutureRelativeDateRanges = [
+exports.FromNowDateRanges = [
     PrecannedDateRange.Today,
     PrecannedDateRange.Next7Days,
     PrecannedDateRange.Next30Days,

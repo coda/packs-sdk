@@ -22,7 +22,6 @@ import type {PackVersionMetadata} from '../compiled_types';
 import type {ParamDefs} from '../api_types';
 import {ParameterType} from '../api_types';
 import {PastLiveDates} from '../api_types';
-import {PastRelativeDateRanges} from '../api_types';
 import {PostSetupType} from '../types';
 import {PrecannedDate} from '../api_types';
 import {PrecannedDateRange} from '..';
@@ -32,6 +31,7 @@ import type {StringFormulaDefLegacy} from '../api';
 import type {SyncTable} from '../api';
 import {TableRole} from '../api_types';
 import {Type} from '../api_types';
+import {UntilNowDateRanges} from '../api_types';
 import {ValueHintType} from '../schema';
 import {ValueType} from '../schema';
 import {_hasCycle} from '../testing/upload_validation';
@@ -804,7 +804,7 @@ describe('Pack metadata Validation', async () => {
             name: 'myParam',
             description: '',
             suggestedValue: PrecannedDateRange.Last30Days,
-            allowedPrecannedValues: PastRelativeDateRanges,
+            allowedPrecannedValues: UntilNowDateRanges,
           }),
         ]);
         await validateJson(metadata);
@@ -845,7 +845,7 @@ describe('Pack metadata Validation', async () => {
             name: 'myParam',
             description: '',
             suggestedValue: PrecannedDateRange.LastYear,
-            allowedPrecannedValues: PastRelativeDateRanges,
+            allowedPrecannedValues: UntilNowDateRanges,
           }),
         ]);
         const err1 = await validateJsonAndAssertFails(metadataWithBadType);

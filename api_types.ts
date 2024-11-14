@@ -1142,7 +1142,7 @@ export enum PrecannedDateRange {
 /**
  * The set of date ranges whose end dates are today.
  */
-export const PastRelativeDateRanges = [
+export const UntilNowDateRanges = [
   PrecannedDateRange.Today,
   PrecannedDateRange.Last7Days,
   PrecannedDateRange.Last30Days,
@@ -1157,7 +1157,7 @@ export const PastRelativeDateRanges = [
  * future dates.
  */
 export const PastLiveDateRanges = [
-  ...PastRelativeDateRanges,
+  ...UntilNowDateRanges,
   PrecannedDateRange.Yesterday,
   PrecannedDateRange.LastWeek,
   PrecannedDateRange.LastMonth,
@@ -1171,7 +1171,7 @@ export const PastLiveDateRanges = [
 /**
  * The set of date ranges whose start dates are today.
  */
-export const FutureRelativeDateRanges = [
+export const FromNowDateRanges = [
   PrecannedDateRange.Today,
   PrecannedDateRange.Next7Days,
   PrecannedDateRange.Next30Days,

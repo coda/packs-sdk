@@ -6186,7 +6186,7 @@ module.exports = (() => {
 
   // api_types.ts
   init_buffer_shim();
-  var PastRelativeDateRanges = [
+  var UntilNowDateRanges = [
     "today" /* Today */,
     "last_7_days" /* Last7Days */,
     "last_30_days" /* Last30Days */,
@@ -6196,7 +6196,7 @@ module.exports = (() => {
     "year_to_date" /* YearToDate */
   ];
   var PastLiveDateRanges = [
-    ...PastRelativeDateRanges,
+    ...UntilNowDateRanges,
     "yesterday" /* Yesterday */,
     "last_week" /* LastWeek */,
     "last_month" /* LastMonth */,
