@@ -141,8 +141,8 @@ importers:
         specifier: 3.7.6
         version: 3.7.6
       '@release-it/keep-a-changelog':
-        specifier: 3.1.0
-        version: 3.1.0(release-it@17.10.0)
+        specifier: 5.0.0
+        version: 5.0.0(release-it@17.10.0)
       '@types/aws-sdk':
         specifier: 2.7.0
         version: 2.7.0
@@ -1935,11 +1935,11 @@ packages:
       config-chain: 1.1.13
     dev: true
 
-  /@release-it/keep-a-changelog@3.1.0(release-it@17.10.0):
-    resolution: {integrity: sha512-o8lxZCAFwFkFpo88aIIgS5dR3kDy6yLjJVpe9QAGNY6tpKMMRHxsiJ8MS5NvrEeIC2VTzOoOjN/CDvdd3a4+/A==}
-    engines: {node: '>=14'}
+  /@release-it/keep-a-changelog@5.0.0(release-it@17.10.0):
+    resolution: {integrity: sha512-Y1xqZe50jqK8qKlzEfGLVTjSkn57e/QlQMXHhKRWGgsv8Qy/X0LN1CJphoskZu7p7sAD3RihxhXrjJhRPE4JcA==}
+    engines: {node: '>=18'}
     peerDependencies:
-      release-it: ^15.0.0-esm.4
+      release-it: ^17.0.0
     dependencies:
       detect-newline: 4.0.1
       release-it: 17.10.0(typescript@5.1.6)
