@@ -664,8 +664,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         if (!param.allowedPrecannedValues || param.type !== api_types_6.Type.date) {
             return true;
         }
-        return (_a = param.allowedPrecannedValues) === null || _a === void 0 ? void 0 : _a.every((value) => typeof value === 'string' && api_types_1.AllRelativeDates.includes(value));
-    }, { message: 'allowedPrecannedValues for a date parameter can only be a list of relative dates.' })
+        return (_a = param.allowedPrecannedValues) === null || _a === void 0 ? void 0 : _a.every((value) => typeof value === 'string' && api_types_1.AllPrecannedDates.includes(value));
+    }, { message: 'allowedPrecannedValues for a date parameter can only be a list of PrecannedDate values.' })
         .refine(param => {
         var _a;
         if (!param.allowedPrecannedValues || !((0, api_types_7.isArrayType)(param.type) && param.type.items === api_types_6.Type.date)) {
@@ -673,7 +673,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }
         const relativeDateRanges = Object.values(__1.PrecannedDateRange);
         return (_a = param.allowedPrecannedValues) === null || _a === void 0 ? void 0 : _a.every((value) => typeof value === 'string' && relativeDateRanges.includes(value));
-    }, { message: 'allowedPrecannedValues for a date array parameter can only be a list of relative date ranges.' });
+    }, { message: 'allowedPrecannedValues for a date array parameter can only be a list of PrecannedDateRange values.' });
     const commonPackFormulaSchema = {
         // It would be preferable to use validateFormulaName here, but we have to exempt legacy packs with sync tables
         // whose getter names violate the validator, and those exemptions require the pack id, so this has to be

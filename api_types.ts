@@ -360,7 +360,7 @@ export interface ParamDef<T extends UnionType> {
   allowedPrecannedValues?: Array<SuggestedValueType<T>>;
 
   /**
-   * For a parameter that has an autocomplete providing options, or a one that uses an allowedPrecannedValues
+   * For a parameter that has an autocomplete providing options, or one that uses an allowedPrecannedValues
    * list, this setting controls whether the user can also enter a custom value.
    *
    * Defaults to true.
@@ -1192,24 +1192,24 @@ export enum PrecannedDate {
   Today = 'today',
   Yesterday = 'yesterday',
   Tomorrow = 'tomorrow',
-  DaysAgo7 = '7 days ago',
-  DaysAgo30 = '30 days ago',
-  DaysAgo90 = '90 days ago',
-  DaysAgo180 = '180 days ago',
-  DaysAgo365 = '365 days ago',
-  DaysAhead7 = '7 days ahead',
-  DaysAhead30 = '30 days ahead',
-  DaysAhead90 = '90 days ahead',
-  DaysAhead180 = '180 days ahead',
-  DaysAhead365 = '365 days ahead',
+  DaysAgo7 = '7_days_ago',
+  DaysAgo30 = '30_days_ago',
+  DaysAgo90 = '90_days_ago',
+  DaysAgo180 = '180_days_ago',
+  DaysAgo365 = '365_days_ago',
+  DaysAhead7 = '7_days_ahead',
+  DaysAhead30 = '30_days_ahead',
+  DaysAhead90 = '90_days_ahead',
+  DaysAhead180 = '180_days_ahead',
+  DaysAhead365 = '365_days_ahead',
 }
 
-export const AllRelativeDates = Object.values(PrecannedDate);
+export const AllPrecannedDates = Object.values(PrecannedDate);
 
 /**
  * The set of relative dates that are today or earlier.
  */
-export const PastRelativeDates = [
+export const PastLiveDates = [
   PrecannedDate.Today,
   PrecannedDate.Yesterday,
   PrecannedDate.DaysAgo7,

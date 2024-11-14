@@ -6210,19 +6210,19 @@ module.exports = (() => {
     PrecannedDate2["Today"] = "today";
     PrecannedDate2["Yesterday"] = "yesterday";
     PrecannedDate2["Tomorrow"] = "tomorrow";
-    PrecannedDate2["DaysAgo7"] = "7 days ago";
-    PrecannedDate2["DaysAgo30"] = "30 days ago";
-    PrecannedDate2["DaysAgo90"] = "90 days ago";
-    PrecannedDate2["DaysAgo180"] = "180 days ago";
-    PrecannedDate2["DaysAgo365"] = "365 days ago";
-    PrecannedDate2["DaysAhead7"] = "7 days ahead";
-    PrecannedDate2["DaysAhead30"] = "30 days ahead";
-    PrecannedDate2["DaysAhead90"] = "90 days ahead";
-    PrecannedDate2["DaysAhead180"] = "180 days ahead";
-    PrecannedDate2["DaysAhead365"] = "365 days ahead";
+    PrecannedDate2["DaysAgo7"] = "7_days_ago";
+    PrecannedDate2["DaysAgo30"] = "30_days_ago";
+    PrecannedDate2["DaysAgo90"] = "90_days_ago";
+    PrecannedDate2["DaysAgo180"] = "180_days_ago";
+    PrecannedDate2["DaysAgo365"] = "365_days_ago";
+    PrecannedDate2["DaysAhead7"] = "7_days_ahead";
+    PrecannedDate2["DaysAhead30"] = "30_days_ahead";
+    PrecannedDate2["DaysAhead90"] = "90_days_ahead";
+    PrecannedDate2["DaysAhead180"] = "180_days_ahead";
+    PrecannedDate2["DaysAhead365"] = "365_days_ahead";
     return PrecannedDate2;
   })(PrecannedDate || {});
-  var AllRelativeDates = Object.values(PrecannedDate);
+  var AllPrecannedDates = Object.values(PrecannedDate);
 
   // schema.ts
   init_buffer_shim();

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TableRole = exports.OptionsType = exports.FutureRelativeDates = exports.PastRelativeDates = exports.AllRelativeDates = exports.PrecannedDate = exports.FutureRelativeDateRanges = exports.PastDateRanges = exports.PastRelativeDateRanges = exports.PrecannedDateRange = exports.InvocationSource = exports.InvocationErrorType = exports.PermissionSyncMode = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
+exports.TableRole = exports.OptionsType = exports.FutureRelativeDates = exports.PastLiveDates = exports.AllPrecannedDates = exports.PrecannedDate = exports.FutureRelativeDateRanges = exports.PastDateRanges = exports.PastRelativeDateRanges = exports.PrecannedDateRange = exports.InvocationSource = exports.InvocationErrorType = exports.PermissionSyncMode = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
 /**
  * Markers used internally to represent data types for parameters and return values.
  * It should not be necessary to ever use these values directly.
@@ -371,22 +371,22 @@ var PrecannedDate;
     PrecannedDate["Today"] = "today";
     PrecannedDate["Yesterday"] = "yesterday";
     PrecannedDate["Tomorrow"] = "tomorrow";
-    PrecannedDate["DaysAgo7"] = "7 days ago";
-    PrecannedDate["DaysAgo30"] = "30 days ago";
-    PrecannedDate["DaysAgo90"] = "90 days ago";
-    PrecannedDate["DaysAgo180"] = "180 days ago";
-    PrecannedDate["DaysAgo365"] = "365 days ago";
-    PrecannedDate["DaysAhead7"] = "7 days ahead";
-    PrecannedDate["DaysAhead30"] = "30 days ahead";
-    PrecannedDate["DaysAhead90"] = "90 days ahead";
-    PrecannedDate["DaysAhead180"] = "180 days ahead";
-    PrecannedDate["DaysAhead365"] = "365 days ahead";
+    PrecannedDate["DaysAgo7"] = "7_days_ago";
+    PrecannedDate["DaysAgo30"] = "30_days_ago";
+    PrecannedDate["DaysAgo90"] = "90_days_ago";
+    PrecannedDate["DaysAgo180"] = "180_days_ago";
+    PrecannedDate["DaysAgo365"] = "365_days_ago";
+    PrecannedDate["DaysAhead7"] = "7_days_ahead";
+    PrecannedDate["DaysAhead30"] = "30_days_ahead";
+    PrecannedDate["DaysAhead90"] = "90_days_ahead";
+    PrecannedDate["DaysAhead180"] = "180_days_ahead";
+    PrecannedDate["DaysAhead365"] = "365_days_ahead";
 })(PrecannedDate || (exports.PrecannedDate = PrecannedDate = {}));
-exports.AllRelativeDates = Object.values(PrecannedDate);
+exports.AllPrecannedDates = Object.values(PrecannedDate);
 /**
  * The set of relative dates that are today or earlier.
  */
-exports.PastRelativeDates = [
+exports.PastLiveDates = [
     PrecannedDate.Today,
     PrecannedDate.Yesterday,
     PrecannedDate.DaysAgo7,

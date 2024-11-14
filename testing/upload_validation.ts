@@ -2,7 +2,7 @@ import type {AWSAccessKeyAuthentication} from '../types';
 import type {AWSAssumeRoleAuthentication} from '../types';
 import type {AdminAuthentication} from '../types';
 import type {AdminAuthenticationTypes} from '../types';
-import {AllRelativeDates} from '../api_types';
+import {AllPrecannedDates} from '../api_types';
 import type {AllowedAuthentication} from '../types';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '../schema';
@@ -826,10 +826,10 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           return true;
         }
         return param.allowedPrecannedValues?.every(
-          (value: unknown) => typeof value === 'string' && AllRelativeDates.includes(value as PrecannedDate),
+          (value: unknown) => typeof value === 'string' && AllPrecannedDates.includes(value as PrecannedDate),
         );
       },
-      {message: 'allowedPrecannedValues for a date parameter can only be a list of relative dates.'},
+      {message: 'allowedPrecannedValues for a date parameter can only be a list of PrecannedDate values.'},
     )
     .refine(
       param => {
@@ -841,7 +841,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           (value: unknown) => typeof value === 'string' && relativeDateRanges.includes(value as PrecannedDateRange),
         );
       },
-      {message: 'allowedPrecannedValues for a date array parameter can only be a list of relative date ranges.'},
+      {message: 'allowedPrecannedValues for a date array parameter can only be a list of PrecannedDateRange values.'},
     );
 
   const commonPackFormulaSchema = {

@@ -21,8 +21,8 @@ import {PackMetadataValidationError} from '../testing/upload_validation';
 import type {PackVersionMetadata} from '../compiled_types';
 import type {ParamDefs} from '../api_types';
 import {ParameterType} from '../api_types';
+import {PastLiveDates} from '../api_types';
 import {PastRelativeDateRanges} from '../api_types';
-import {PastRelativeDates} from '../api_types';
 import {PostSetupType} from '../types';
 import {PrecannedDate} from '../api_types';
 import {PrecannedDateRange} from '..';
@@ -791,7 +791,7 @@ describe('Pack metadata Validation', async () => {
             name: 'myParam',
             description: '',
             suggestedValue: PrecannedDate.Today,
-            allowedPrecannedValues: PastRelativeDates,
+            allowedPrecannedValues: PastLiveDates,
           }),
         ]);
         await validateJson(metadata);
@@ -815,7 +815,7 @@ describe('Pack metadata Validation', async () => {
             name: 'myParam',
             description: '',
             suggestedValue: PrecannedDateRange.LastYear,
-            allowedPrecannedValues: PastRelativeDates,
+            allowedPrecannedValues: PastLiveDates,
           }),
         ]);
         const err = await validateJsonAndAssertFails(metadataWithBadType);
@@ -834,7 +834,7 @@ describe('Pack metadata Validation', async () => {
             name: 'myParam',
             description: '',
             suggestedValue: PrecannedDate.DaysAgo7,
-            allowedPrecannedValues: PastRelativeDates,
+            allowedPrecannedValues: PastLiveDates,
           }),
         ]);
         await validateJson(metadata);
