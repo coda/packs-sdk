@@ -360,7 +360,7 @@ exports.FromNowDateRanges = [
 ];
 /**
  * Some APIs require relative dates only, assuming "now" as either the start or end of the effective range.
- * Before we supported {@link ParamDef.allowedPrecannedValues}, some packs decided to use a Date parameter
+ * Before we supported {@link ParamDef.allowedPresetValues}, some packs decided to use a Date parameter
  * for an input like this, because not all {@link PrecannedDateRange} values were valid.
  *
  * We want such packs to be able to use relative date ranges without needing to change their

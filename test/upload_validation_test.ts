@@ -791,20 +791,20 @@ describe('Pack metadata Validation', async () => {
             name: 'myParam',
             description: '',
             suggestedValue: PrecannedDate.Today,
-            allowedPrecannedValues: PastLiveDates,
+            allowedPresetValues: PastLiveDates,
           }),
         ]);
         await validateJson(metadata);
       });
 
-      it('validates allowedPrecannedValues for date range parameters', async () => {
+      it('validates allowedPresetValues for date range parameters', async () => {
         const metadata = makeMetadataFromParams([
           makeParameter({
             type: ParameterType.DateArray,
             name: 'myParam',
             description: '',
             suggestedValue: PrecannedDateRange.Last30Days,
-            allowedPrecannedValues: UntilNowDateRanges,
+            allowedPresetValues: UntilNowDateRanges,
           }),
         ]);
         await validateJson(metadata);
@@ -815,27 +815,26 @@ describe('Pack metadata Validation', async () => {
             name: 'myParam',
             description: '',
             suggestedValue: PrecannedDateRange.LastYear,
-            allowedPrecannedValues: PastLiveDates,
+            allowedPresetValues: PastLiveDates,
           }),
         ]);
         const err = await validateJsonAndAssertFails(metadataWithBadType);
         assert.deepEqual(err.validationErrors, [
           {
-            message:
-              'allowedPrecannedValues for a date array parameter can only be a list of PrecannedDateRange values.',
+            message: 'allowedPresetValues for a date array parameter can only be a list of PrecannedDateRange values.',
             path: 'formulas[0].parameters[0]',
           },
         ]);
       });
 
-      it('validates allowedPrecannedValues for date parameters', async () => {
+      it('validates allowedPresetValues for date parameters', async () => {
         const metadata = makeMetadataFromParams([
           makeParameter({
             type: ParameterType.Date,
             name: 'myParam',
             description: '',
             suggestedValue: PrecannedDate.DaysAgo7,
-            allowedPrecannedValues: PastLiveDates,
+            allowedPresetValues: PastLiveDates,
           }),
         ]);
         await validateJson(metadata);
@@ -846,13 +845,13 @@ describe('Pack metadata Validation', async () => {
             name: 'myParam',
             description: '',
             suggestedValue: PrecannedDateRange.LastYear,
-            allowedPrecannedValues: UntilNowDateRanges,
+            allowedPresetValues: UntilNowDateRanges,
           }),
         ]);
         const err1 = await validateJsonAndAssertFails(metadataWithBadType);
         assert.deepEqual(err1.validationErrors, [
           {
-            message: 'allowedPrecannedValues for a date parameter can only be a list of PrecannedDate values.',
+            message: 'allowedPresetValues for a date parameter can only be a list of PrecannedDate values.',
             path: 'formulas[0].parameters[0]',
           },
         ]);

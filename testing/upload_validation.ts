@@ -800,7 +800,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     defaultValue: z.unknown().optional(),
     suggestedValue: z.unknown().optional(),
     fullCrawlSuggestedValue: z.unknown().optional(),
-    allowedPrecannedValues: z.array(z.unknown()).optional(),
+    allowedPresetValues: z.array(z.unknown()).optional(),
     allowManualInput: z.boolean().optional(),
     crawlStrategy: z.unknown().optional(),
     supportsIncrementalSync: z.boolean().optional(),
@@ -813,35 +813,35 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     )
     .refine(
       param => {
-        if (!param.allowedPrecannedValues) {
+        if (!param.allowedPresetValues) {
           return true;
         }
         return param.type === Type.date || (isArrayType(param.type) && param.type.items === Type.date);
       },
-      {message: 'allowedPrecannedValues is not allowed on parameters of this type.'},
+      {message: 'allowedPresetValues is not allowed on parameters of this type.'},
     )
     .refine(
       param => {
-        if (!param.allowedPrecannedValues || param.type !== Type.date) {
+        if (!param.allowedPresetValues || param.type !== Type.date) {
           return true;
         }
-        return param.allowedPrecannedValues?.every(
+        return param.allowedPresetValues?.every(
           (value: unknown) => typeof value === 'string' && AllPrecannedDates.includes(value as PrecannedDate),
         );
       },
-      {message: 'allowedPrecannedValues for a date parameter can only be a list of PrecannedDate values.'},
+      {message: 'allowedPresetValues for a date parameter can only be a list of PrecannedDate values.'},
     )
     .refine(
       param => {
-        if (!param.allowedPrecannedValues || !(isArrayType(param.type) && param.type.items === Type.date)) {
+        if (!param.allowedPresetValues || !(isArrayType(param.type) && param.type.items === Type.date)) {
           return true;
         }
         const relativeDateRanges = Object.values(PrecannedDateRange);
-        return param.allowedPrecannedValues?.every(
+        return param.allowedPresetValues?.every(
           (value: unknown) => typeof value === 'string' && relativeDateRanges.includes(value as PrecannedDateRange),
         );
       },
-      {message: 'allowedPrecannedValues for a date array parameter can only be a list of PrecannedDateRange values.'},
+      {message: 'allowedPresetValues for a date array parameter can only be a list of PrecannedDateRange values.'},
     );
 
   const commonPackFormulaSchema = {

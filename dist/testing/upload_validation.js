@@ -645,7 +645,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         defaultValue: z.unknown().optional(),
         suggestedValue: z.unknown().optional(),
         fullCrawlSuggestedValue: z.unknown().optional(),
-        allowedPrecannedValues: z.array(z.unknown()).optional(),
+        allowedPresetValues: z.array(z.unknown()).optional(),
         allowManualInput: z.boolean().optional(),
         crawlStrategy: z.unknown().optional(),
         supportsIncrementalSync: z.boolean().optional(),
@@ -654,26 +654,26 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         return param.optional || param.supportsIncrementalSync !== false;
     }, { message: 'Required params should support incremental sync.' })
         .refine(param => {
-        if (!param.allowedPrecannedValues) {
+        if (!param.allowedPresetValues) {
             return true;
         }
         return param.type === api_types_6.Type.date || ((0, api_types_7.isArrayType)(param.type) && param.type.items === api_types_6.Type.date);
-    }, { message: 'allowedPrecannedValues is not allowed on parameters of this type.' })
+    }, { message: 'allowedPresetValues is not allowed on parameters of this type.' })
         .refine(param => {
         var _a;
-        if (!param.allowedPrecannedValues || param.type !== api_types_6.Type.date) {
+        if (!param.allowedPresetValues || param.type !== api_types_6.Type.date) {
             return true;
         }
-        return (_a = param.allowedPrecannedValues) === null || _a === void 0 ? void 0 : _a.every((value) => typeof value === 'string' && api_types_1.AllPrecannedDates.includes(value));
-    }, { message: 'allowedPrecannedValues for a date parameter can only be a list of PrecannedDate values.' })
+        return (_a = param.allowedPresetValues) === null || _a === void 0 ? void 0 : _a.every((value) => typeof value === 'string' && api_types_1.AllPrecannedDates.includes(value));
+    }, { message: 'allowedPresetValues for a date parameter can only be a list of PrecannedDate values.' })
         .refine(param => {
         var _a;
-        if (!param.allowedPrecannedValues || !((0, api_types_7.isArrayType)(param.type) && param.type.items === api_types_6.Type.date)) {
+        if (!param.allowedPresetValues || !((0, api_types_7.isArrayType)(param.type) && param.type.items === api_types_6.Type.date)) {
             return true;
         }
         const relativeDateRanges = Object.values(__1.PrecannedDateRange);
-        return (_a = param.allowedPrecannedValues) === null || _a === void 0 ? void 0 : _a.every((value) => typeof value === 'string' && relativeDateRanges.includes(value));
-    }, { message: 'allowedPrecannedValues for a date array parameter can only be a list of PrecannedDateRange values.' });
+        return (_a = param.allowedPresetValues) === null || _a === void 0 ? void 0 : _a.every((value) => typeof value === 'string' && relativeDateRanges.includes(value));
+    }, { message: 'allowedPresetValues for a date array parameter can only be a list of PrecannedDateRange values.' });
     const commonPackFormulaSchema = {
         // It would be preferable to use validateFormulaName here, but we have to exempt legacy packs with sync tables
         // whose getter names violate the validator, and those exemptions require the pack id, so this has to be

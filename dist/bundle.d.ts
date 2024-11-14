@@ -244,9 +244,9 @@ export interface ParamDef<T extends UnionType> {
 	 *
 	 * @hidden
 	 */
-	allowedPrecannedValues?: Array<SuggestedValueType<T>>;
+	allowedPresetValues?: Array<SuggestedValueType<T>>;
 	/**
-	 * For a parameter that has an autocomplete providing options, or one that uses an allowedPrecannedValues
+	 * For a parameter that has an autocomplete providing options, or one that uses an allowedPresetValues
 	 * list, this setting controls whether the user can also enter a custom value.
 	 *
 	 * Defaults to true.

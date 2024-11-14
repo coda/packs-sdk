@@ -357,10 +357,10 @@ export interface ParamDef<T extends UnionType> {
    * @hidden
    */
   // TODO(patrick): Unhide this
-  allowedPrecannedValues?: Array<SuggestedValueType<T>>;
+  allowedPresetValues?: Array<SuggestedValueType<T>>;
 
   /**
-   * For a parameter that has an autocomplete providing options, or one that uses an allowedPrecannedValues
+   * For a parameter that has an autocomplete providing options, or one that uses an allowedPresetValues
    * list, this setting controls whether the user can also enter a custom value.
    *
    * Defaults to true.
@@ -1182,7 +1182,7 @@ export const FromNowDateRanges = [
 
 /**
  * Some APIs require relative dates only, assuming "now" as either the start or end of the effective range.
- * Before we supported {@link ParamDef.allowedPrecannedValues}, some packs decided to use a Date parameter
+ * Before we supported {@link ParamDef.allowedPresetValues}, some packs decided to use a Date parameter
  * for an input like this, because not all {@link PrecannedDateRange} values were valid.
  *
  * We want such packs to be able to use relative date ranges without needing to change their
