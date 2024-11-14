@@ -821,7 +821,8 @@ describe('Pack metadata Validation', async () => {
         const err = await validateJsonAndAssertFails(metadataWithBadType);
         assert.deepEqual(err.validationErrors, [
           {
-            message: 'allowedPrecannedValues for a date array parameter can only be a list of relative date ranges.',
+            message:
+              'allowedPrecannedValues for a date array parameter can only be a list of PrecannedDateRange values.',
             path: 'formulas[0].parameters[0]',
           },
         ]);
@@ -851,7 +852,7 @@ describe('Pack metadata Validation', async () => {
         const err1 = await validateJsonAndAssertFails(metadataWithBadType);
         assert.deepEqual(err1.validationErrors, [
           {
-            message: 'allowedPrecannedValues for a date parameter can only be a list of relative dates.',
+            message: 'allowedPrecannedValues for a date parameter can only be a list of PrecannedDate values.',
             path: 'formulas[0].parameters[0]',
           },
         ]);
