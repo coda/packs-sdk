@@ -6195,7 +6195,7 @@ module.exports = (() => {
     "last_365_days" /* Last365Days */,
     "year_to_date" /* YearToDate */
   ];
-  var PastDateRanges = [
+  var PastLiveDateRanges = [
     ...PastRelativeDateRanges,
     "yesterday" /* Yesterday */,
     "last_week" /* LastWeek */,

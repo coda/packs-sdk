@@ -1156,7 +1156,7 @@ export const PastRelativeDateRanges = [
  * The set of date ranges that are useful for filtering datasets that don't include
  * future dates.
  */
-export const PastDateRanges = [
+export const PastLiveDateRanges = [
   ...PastRelativeDateRanges,
   PrecannedDateRange.Yesterday,
   PrecannedDateRange.LastWeek,
@@ -1181,9 +1181,9 @@ export const FutureRelativeDateRanges = [
 ];
 
 /**
- * Some APIs require relative dates only. Before we supported {@link ParamDef.allowedPrecannedValues},
- * some packs decided to use a Date parameter for an input like this, because not all
- * PrecannedDateRange values were valid.
+ * Some APIs require relative dates only, assuming "now" as either the start or end of the effective range.
+ * Before we supported {@link ParamDef.allowedPrecannedValues}, some packs decided to use a Date parameter
+ * for an input like this, because not all {@link PrecannedDateRange} values were valid.
  *
  * We want such packs to be able to use relative date ranges without needing to change their
  * parameter type, to maintain backwards compatibility.
@@ -1207,7 +1207,7 @@ export enum PrecannedDate {
 export const AllPrecannedDates = Object.values(PrecannedDate);
 
 /**
- * The set of relative dates that are today or earlier.
+ * The set of live/precanned dates that are today or earlier.
  */
 export const PastLiveDates = [
   PrecannedDate.Today,
@@ -1220,9 +1220,9 @@ export const PastLiveDates = [
 ];
 
 /**
- * The set of relative dates that are today or later.
+ * The set of live/precanned dates that are today or later.
  */
-export const FutureRelativeDates = [
+export const FutureLiveDates = [
   PrecannedDate.Today,
   PrecannedDate.Tomorrow,
   PrecannedDate.DaysAhead7,

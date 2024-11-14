@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TableRole = exports.OptionsType = exports.FutureRelativeDates = exports.PastLiveDates = exports.AllPrecannedDates = exports.PrecannedDate = exports.FutureRelativeDateRanges = exports.PastDateRanges = exports.PastRelativeDateRanges = exports.PrecannedDateRange = exports.InvocationSource = exports.InvocationErrorType = exports.PermissionSyncMode = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
+exports.TableRole = exports.OptionsType = exports.FutureLiveDates = exports.PastLiveDates = exports.AllPrecannedDates = exports.PrecannedDate = exports.FutureRelativeDateRanges = exports.PastLiveDateRanges = exports.PastRelativeDateRanges = exports.PrecannedDateRange = exports.InvocationSource = exports.InvocationErrorType = exports.PermissionSyncMode = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
 /**
  * Markers used internally to represent data types for parameters and return values.
  * It should not be necessary to ever use these values directly.
@@ -336,7 +336,7 @@ exports.PastRelativeDateRanges = [
  * The set of date ranges that are useful for filtering datasets that don't include
  * future dates.
  */
-exports.PastDateRanges = [
+exports.PastLiveDateRanges = [
     ...exports.PastRelativeDateRanges,
     PrecannedDateRange.Yesterday,
     PrecannedDateRange.LastWeek,
@@ -359,9 +359,9 @@ exports.FutureRelativeDateRanges = [
     PrecannedDateRange.Next365Days,
 ];
 /**
- * Some APIs require relative dates only. Before we supported {@link ParamDef.allowedPrecannedValues},
- * some packs decided to use a Date parameter for an input like this, because not all
- * PrecannedDateRange values were valid.
+ * Some APIs require relative dates only, assuming "now" as either the start or end of the effective range.
+ * Before we supported {@link ParamDef.allowedPrecannedValues}, some packs decided to use a Date parameter
+ * for an input like this, because not all {@link PrecannedDateRange} values were valid.
  *
  * We want such packs to be able to use relative date ranges without needing to change their
  * parameter type, to maintain backwards compatibility.
@@ -384,7 +384,7 @@ var PrecannedDate;
 })(PrecannedDate || (exports.PrecannedDate = PrecannedDate = {}));
 exports.AllPrecannedDates = Object.values(PrecannedDate);
 /**
- * The set of relative dates that are today or earlier.
+ * The set of live/precanned dates that are today or earlier.
  */
 exports.PastLiveDates = [
     PrecannedDate.Today,
@@ -396,9 +396,9 @@ exports.PastLiveDates = [
     PrecannedDate.DaysAgo365,
 ];
 /**
- * The set of relative dates that are today or later.
+ * The set of live/precanned dates that are today or later.
  */
-exports.FutureRelativeDates = [
+exports.FutureLiveDates = [
     PrecannedDate.Today,
     PrecannedDate.Tomorrow,
     PrecannedDate.DaysAhead7,
