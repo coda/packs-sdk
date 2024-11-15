@@ -228,6 +228,34 @@ export interface ParamDef<T extends UnionType> {
 	 * The suggested value to be prepopulated for this parameter if it is not specified by the user.
 	 */
 	suggestedValue?: SuggestedValueType<T>;
+	/**
+	 * In certain contexts, Coda's default behavior is to crawl *all* data available, in which case
+	 * the {@link ParamDef.suggestedValue} will not be ideal, as most use cases will prefer efficiency
+	 * over completeness. Use this field to specify a default value when Coda is crawling all data.
+	 *
+	 * @hidden
+	 */
+	fullCrawlSuggestedValue?: SuggestedValueType<T>;
+	/**
+	 * An array of Precanned values that are valid for this parameter. Users will also be allowed to
+	 * enter custom values.
+	 *
+	 * Only supported for Date & DateArray parameters.
+	 *
+	 * @hidden
+	 */
+	allowedPresetValues?: Array<SuggestedValueType<T>>;
+	/**
+	 * For a parameter that has an autocomplete providing options, or one that uses an allowedPresetValues
+	 * list, this setting controls whether the user can also enter a custom value.
+	 *
+	 * Defaults to true.
+	 *
+	 * Not yet fully supported.
+	 *
+	 * @hidden
+	 */
+	allowManualInput?: boolean;
 	/** @hidden */
 	crawlStrategy?: CrawlStrategy;
 	/**

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TableRole = exports.OptionsType = exports.PrecannedDateRange = exports.InvocationSource = exports.InvocationErrorType = exports.PermissionSyncMode = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
+exports.TableRole = exports.OptionsType = exports.FutureLiveDates = exports.PastLiveDates = exports.AllPrecannedDates = exports.PrecannedDate = exports.FromNowDateRanges = exports.PastLiveDateRanges = exports.UntilNowDateRanges = exports.PrecannedDateRange = exports.InvocationSource = exports.InvocationErrorType = exports.PermissionSyncMode = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
 /**
  * Markers used internally to represent data types for parameters and return values.
  * It should not be necessary to ever use these values directly.
@@ -320,6 +320,93 @@ var PrecannedDateRange;
      */
     PrecannedDateRange["Everything"] = "everything";
 })(PrecannedDateRange || (exports.PrecannedDateRange = PrecannedDateRange = {}));
+/**
+ * The set of date ranges whose end dates are today.
+ */
+exports.UntilNowDateRanges = [
+    PrecannedDateRange.Today,
+    PrecannedDateRange.Last7Days,
+    PrecannedDateRange.Last30Days,
+    PrecannedDateRange.Last90Days,
+    PrecannedDateRange.Last180Days,
+    PrecannedDateRange.Last365Days,
+    PrecannedDateRange.YearToDate,
+];
+/**
+ * The set of date ranges that are useful for filtering datasets that don't include
+ * future dates.
+ */
+exports.PastLiveDateRanges = [
+    ...exports.UntilNowDateRanges,
+    PrecannedDateRange.Yesterday,
+    PrecannedDateRange.LastWeek,
+    PrecannedDateRange.LastMonth,
+    PrecannedDateRange.LastYear,
+    PrecannedDateRange.ThisWeek,
+    PrecannedDateRange.ThisMonth,
+    PrecannedDateRange.ThisYear,
+    PrecannedDateRange.Everything,
+];
+/**
+ * The set of date ranges whose start dates are today.
+ */
+exports.FromNowDateRanges = [
+    PrecannedDateRange.Today,
+    PrecannedDateRange.Next7Days,
+    PrecannedDateRange.Next30Days,
+    PrecannedDateRange.Next90Days,
+    PrecannedDateRange.Next180Days,
+    PrecannedDateRange.Next365Days,
+];
+/**
+ * Some APIs require relative dates only, assuming "now" as either the start or end of the effective range.
+ * Before we supported {@link ParamDef.allowedPresetValues}, some packs decided to use a Date parameter
+ * for an input like this, because not all {@link PrecannedDateRange} values were valid.
+ *
+ * We want such packs to be able to use relative date ranges without needing to change their
+ * parameter type, to maintain backwards compatibility.
+ */
+var PrecannedDate;
+(function (PrecannedDate) {
+    PrecannedDate["Today"] = "today";
+    PrecannedDate["Yesterday"] = "yesterday";
+    PrecannedDate["Tomorrow"] = "tomorrow";
+    PrecannedDate["DaysAgo7"] = "7_days_ago";
+    PrecannedDate["DaysAgo30"] = "30_days_ago";
+    PrecannedDate["DaysAgo90"] = "90_days_ago";
+    PrecannedDate["DaysAgo180"] = "180_days_ago";
+    PrecannedDate["DaysAgo365"] = "365_days_ago";
+    PrecannedDate["DaysAhead7"] = "7_days_ahead";
+    PrecannedDate["DaysAhead30"] = "30_days_ahead";
+    PrecannedDate["DaysAhead90"] = "90_days_ahead";
+    PrecannedDate["DaysAhead180"] = "180_days_ahead";
+    PrecannedDate["DaysAhead365"] = "365_days_ahead";
+})(PrecannedDate || (exports.PrecannedDate = PrecannedDate = {}));
+exports.AllPrecannedDates = Object.values(PrecannedDate);
+/**
+ * The set of live/precanned dates that are today or earlier.
+ */
+exports.PastLiveDates = [
+    PrecannedDate.Today,
+    PrecannedDate.Yesterday,
+    PrecannedDate.DaysAgo7,
+    PrecannedDate.DaysAgo30,
+    PrecannedDate.DaysAgo90,
+    PrecannedDate.DaysAgo180,
+    PrecannedDate.DaysAgo365,
+];
+/**
+ * The set of live/precanned dates that are today or later.
+ */
+exports.FutureLiveDates = [
+    PrecannedDate.Today,
+    PrecannedDate.Tomorrow,
+    PrecannedDate.DaysAhead7,
+    PrecannedDate.DaysAhead30,
+    PrecannedDate.DaysAhead90,
+    PrecannedDate.DaysAhead180,
+    PrecannedDate.DaysAhead365,
+];
 /**
  * An enum defining special types options handling for properties.
  */

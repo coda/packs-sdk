@@ -338,6 +338,40 @@ export interface ParamDef<T extends UnionType> {
    */
   suggestedValue?: SuggestedValueType<T>;
 
+  /**
+   * In certain contexts, Coda's default behavior is to crawl *all* data available, in which case
+   * the {@link ParamDef.suggestedValue} will not be ideal, as most use cases will prefer efficiency
+   * over completeness. Use this field to specify a default value when Coda is crawling all data.
+   *
+   * @hidden
+   */
+  // TODO(patrick): Unhide this
+  fullCrawlSuggestedValue?: SuggestedValueType<T>;
+
+  /**
+   * An array of Precanned values that are valid for this parameter. Users will also be allowed to
+   * enter custom values.
+   *
+   * Only supported for Date & DateArray parameters.
+   *
+   * @hidden
+   */
+  // TODO(patrick): Unhide this
+  allowedPresetValues?: Array<SuggestedValueType<T>>;
+
+  /**
+   * For a parameter that has an autocomplete providing options, or one that uses an allowedPresetValues
+   * list, this setting controls whether the user can also enter a custom value.
+   *
+   * Defaults to true.
+   *
+   * Not yet fully supported.
+   *
+   * @hidden
+   */
+  // TODO(patrick): Unhide this
+  allowManualInput?: boolean;
+
   // TODO(patrick): Unhide this
   /** @hidden */
   crawlStrategy?: CrawlStrategy;
@@ -409,8 +443,6 @@ export type SuggestedValueType<T extends UnionType> = T extends ArrayType<Type.d
 /** @hidden */
 export interface CrawlStrategy {
   parentTable?: SyncTableRelation;
-
-  // TODO(patrick): add more options here for date ranges, etc
 }
 
 /**
@@ -1106,6 +1138,99 @@ export enum PrecannedDateRange {
    */
   Everything = 'everything',
 }
+
+/**
+ * The set of date ranges whose end dates are today.
+ */
+export const UntilNowDateRanges = [
+  PrecannedDateRange.Today,
+  PrecannedDateRange.Last7Days,
+  PrecannedDateRange.Last30Days,
+  PrecannedDateRange.Last90Days,
+  PrecannedDateRange.Last180Days,
+  PrecannedDateRange.Last365Days,
+  PrecannedDateRange.YearToDate,
+];
+
+/**
+ * The set of date ranges that are useful for filtering datasets that don't include
+ * future dates.
+ */
+export const PastLiveDateRanges = [
+  ...UntilNowDateRanges,
+  PrecannedDateRange.Yesterday,
+  PrecannedDateRange.LastWeek,
+  PrecannedDateRange.LastMonth,
+  PrecannedDateRange.LastYear,
+  PrecannedDateRange.ThisWeek,
+  PrecannedDateRange.ThisMonth,
+  PrecannedDateRange.ThisYear,
+  PrecannedDateRange.Everything,
+];
+
+/**
+ * The set of date ranges whose start dates are today.
+ */
+export const FromNowDateRanges = [
+  PrecannedDateRange.Today,
+  PrecannedDateRange.Next7Days,
+  PrecannedDateRange.Next30Days,
+  PrecannedDateRange.Next90Days,
+  PrecannedDateRange.Next180Days,
+  PrecannedDateRange.Next365Days,
+];
+
+/**
+ * Some APIs require relative dates only, assuming "now" as either the start or end of the effective range.
+ * Before we supported {@link ParamDef.allowedPresetValues}, some packs decided to use a Date parameter
+ * for an input like this, because not all {@link PrecannedDateRange} values were valid.
+ *
+ * We want such packs to be able to use relative date ranges without needing to change their
+ * parameter type, to maintain backwards compatibility.
+ */
+export enum PrecannedDate {
+  Today = 'today',
+  Yesterday = 'yesterday',
+  Tomorrow = 'tomorrow',
+  DaysAgo7 = '7_days_ago',
+  DaysAgo30 = '30_days_ago',
+  DaysAgo90 = '90_days_ago',
+  DaysAgo180 = '180_days_ago',
+  DaysAgo365 = '365_days_ago',
+  DaysAhead7 = '7_days_ahead',
+  DaysAhead30 = '30_days_ahead',
+  DaysAhead90 = '90_days_ahead',
+  DaysAhead180 = '180_days_ahead',
+  DaysAhead365 = '365_days_ahead',
+}
+
+export const AllPrecannedDates = Object.values(PrecannedDate);
+
+/**
+ * The set of live/precanned dates that are today or earlier.
+ */
+export const PastLiveDates = [
+  PrecannedDate.Today,
+  PrecannedDate.Yesterday,
+  PrecannedDate.DaysAgo7,
+  PrecannedDate.DaysAgo30,
+  PrecannedDate.DaysAgo90,
+  PrecannedDate.DaysAgo180,
+  PrecannedDate.DaysAgo365,
+];
+
+/**
+ * The set of live/precanned dates that are today or later.
+ */
+export const FutureLiveDates = [
+  PrecannedDate.Today,
+  PrecannedDate.Tomorrow,
+  PrecannedDate.DaysAhead7,
+  PrecannedDate.DaysAhead30,
+  PrecannedDate.DaysAhead90,
+  PrecannedDate.DaysAhead180,
+  PrecannedDate.DaysAhead365,
+];
 
 /**
  * An enum defining special types options handling for properties.

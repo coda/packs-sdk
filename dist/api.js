@@ -252,7 +252,7 @@ exports.wrapGetSchema = wrapGetSchema;
  * ```
  */
 function makeParameter(paramDefinition) {
-    const { type, autocomplete: autocompleteDefOrItems, crawlStrategy: crawlStrategyDef, ...rest } = paramDefinition;
+    const { type, autocomplete: autocompleteDefOrItems, crawlStrategy: crawlStrategyDef, allowManualInput: allowManualInputDef, ...rest } = paramDefinition;
     const actualType = api_types_4.ParameterTypeInputMap[type];
     let autocomplete;
     if (Array.isArray(autocompleteDefOrItems)) {
@@ -278,7 +278,15 @@ function makeParameter(paramDefinition) {
             crawlStrategy = crawlStrategyDef;
         }
     }
-    return Object.freeze({ ...rest, autocomplete, type: actualType, crawlStrategy });
+    // Default to true if not specified.
+    const allowManualInput = !(allowManualInputDef === false);
+    return Object.freeze({
+        ...rest,
+        allowManualInput,
+        autocomplete,
+        type: actualType,
+        crawlStrategy,
+    });
 }
 exports.makeParameter = makeParameter;
 /** @deprecated */
