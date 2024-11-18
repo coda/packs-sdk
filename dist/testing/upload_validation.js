@@ -644,7 +644,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         autocomplete: z.unknown().optional(),
         defaultValue: z.unknown().optional(),
         suggestedValue: z.unknown().optional(),
-        fullCrawlSuggestedValue: z.unknown().optional(),
+        fullSyncSuggestedValue: z.unknown().optional(),
         allowedPresetValues: z.array(z.unknown()).optional(),
         allowManualInput: z.boolean().optional(),
         crawlStrategy: z.unknown().optional(),

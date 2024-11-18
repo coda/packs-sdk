@@ -253,13 +253,13 @@ export interface ParamDef<T extends UnionType> {
      */
     suggestedValue?: SuggestedValueType<T>;
     /**
-     * In certain contexts, Coda's default behavior is to crawl *all* data available, in which case
+     * In certain contexts (like Coda Brain), Coda's default behavior is to sync *all* data available, in which case
      * the {@link ParamDef.suggestedValue} will not be ideal, as most use cases will prefer efficiency
-     * over completeness. Use this field to specify a default value when Coda is crawling all data.
+     * over completeness. Use this field to specify a default value when Coda is syncing all data.
      *
      * @hidden
      */
-    fullCrawlSuggestedValue?: SuggestedValueType<T>;
+    fullSyncSuggestedValue?: SuggestedValueType<T>;
     /**
      * An array of Precanned values that are valid for this parameter. Users will also be allowed to
      * enter custom values.
@@ -271,7 +271,11 @@ export interface ParamDef<T extends UnionType> {
     allowedPresetValues?: Array<SuggestedValueType<T>>;
     /**
      * For a parameter that has an autocomplete providing options, or one that uses an allowedPresetValues
-     * list, this setting controls whether the user can also enter a custom value.
+     * list, this setting controls whether the user is given an option to enter a custom value.
+     *
+     * Pack code cannot completely assume it will never see other values, though. For example, if this
+     * parameter's value is being set via a formula (instead of a user manually picking a value from
+     * Coda's UI), Coda will do nothing to validate that input before passing it to the pack.
      *
      * Defaults to true.
      *
