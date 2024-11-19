@@ -42,6 +42,7 @@ import {createFakePackFormulaMetadata} from './test_utils';
 import {createFakePackVersionMetadata} from './test_utils';
 import {deepCopy} from '../helpers/object_utils';
 import {ensureExists} from '../helpers/ensure';
+import {isObject} from '../schema';
 import {makeAttributionNode} from '..';
 import {makeDynamicSyncTable} from '../api';
 import {makeFormula} from '../api';
@@ -3237,7 +3238,7 @@ describe('Pack metadata Validation', async () => {
               attachments: {type: ValueType.Array, items: {type: ValueType.String}},
             },
             index: {
-              properties: ['name', 'attachments'],
+              properties: ['name', {property: 'attachments'}],
               contextProperties: ['value'],
             },
           });
@@ -3260,7 +3261,16 @@ describe('Pack metadata Validation', async () => {
               ],
             },
           });
-          await validateJson(metadata);
+          const validated = await validateJson(metadata);
+          assert(
+            validated.formulas.some(
+              f =>
+                isObject(f.schema) &&
+                f.schema.index?.properties.some(
+                  p => typeof p === 'object' && 'strategy' in p && p.strategy === IndexingStrategy.Raw,
+                ),
+            ),
+          );
         });
 
         it('fails with invalid index property', async () => {
@@ -3317,6 +3327,19 @@ describe('Pack metadata Validation', async () => {
               path: 'formulas[0].schema.index.properties[0].property',
             },
           ]);
+        });
+
+        it('fails with invalid indexing strategy', async () => {
+          const metadata = metadataForFormulaWithObjectSchema({
+            type: ValueType.Object,
+            properties: {
+              name: {type: ValueType.String},
+            },
+            index: {
+              properties: [{property: 'name', strategy: 'chicken'} as any],
+            },
+          });
+          await validateJsonAndAssertFails(metadata);
         });
       });
     });

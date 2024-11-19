@@ -1265,7 +1265,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
 
   const propertySchema = z.union([
     z.string().min(1),
-    zodCompleteObject<PropertyIdentifier>({
+    zodCompleteStrictObject<PropertyIdentifier>({
       property: z.string().min(1),
       label: z.string().optional(),
       placeholder: z.string().optional(),
@@ -1276,7 +1276,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
 
   const indexedPropertySchema = z.union([
     propertySchema,
-    zodCompleteObject<DetailedIndexedProperty>({
+    zodCompleteStrictObject<DetailedIndexedProperty>({
       property: propertySchema,
       strategy: z.nativeEnum(IndexingStrategy),
     }),
