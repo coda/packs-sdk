@@ -1024,7 +1024,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         .optional();
     const propertySchema = z.union([
         z.string().min(1),
-        zodCompleteObject({
+        zodCompleteStrictObject({
             property: z.string().min(1),
             label: z.string().optional(),
             placeholder: z.string().optional(),
@@ -1032,11 +1032,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     ]);
     const contextPropertiesSchema = z.array(propertySchema).min(1);
     const indexedPropertySchema = z.union([
+        propertySchema,
         zodCompleteStrictObject({
             property: propertySchema,
             strategy: z.nativeEnum(schema_9.IndexingStrategy),
         }),
-        propertySchema,
     ]);
     const indexSchema = zodCompleteStrictObject({
         properties: z.array(indexedPropertySchema).min(1),
