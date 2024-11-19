@@ -996,13 +996,22 @@ export interface ExecutionContext {
 
   /**
    * If this invocation is a part of a crawling execution, like in Coda Brain, then this ID will be provided
-   * to all invocations. That includes invocations of sync `execute` and `executeGetPermissions`, as well as
-   * dynamic table features like `listDynamicUrls`, `getSchema`, and `getName`.
+   * to all invocations as incremental execution id. That includes invocations of sync `execute` 
+   * and `executeGetPermissions`, as well as dynamic table features like `listDynamicUrls`,
+   * `getSchema`, and `getName`.
    *
    * TODO(patrick): Unhide this
    * @hidden
    */
   readonly executionId?: string;
+
+  /**
+   * Provided by a crawling execution, like in Coda Brain, this ID will be the full execution id.
+   *
+   * TODO(ebo): Unhide this
+   * @hidden
+   */
+  readonly fullExecutionId?: string;
 
   /**
    * If this invocation is a retry, this will be populated with information about what went wrong
