@@ -1751,7 +1751,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                         continue;
                     }
                     // Admin authentications are required to be permission-capable.
-                    // TODO(patrick): better typing
+                    // TODO(patrick/alan): better typing
                     if (!authentication.canSyncPermissions) {
                         context.addIssue({
                             code: z.ZodIssueCode.custom,

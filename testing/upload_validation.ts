@@ -1,9 +1,9 @@
 import type {AWSAccessKeyAuthentication} from '../types';
 import type {AWSAssumeRoleAuthentication} from '../types';
 import type {AdminAuthentication} from '../types';
+import type {AdminAuthenticationDefinition} from '../types';
 import type {AdminAuthenticationTypes} from '../types';
 import {AllPrecannedDates} from '../api_types';
-import type {AllowedAuthentication} from '../types';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '../schema';
 import type {AuthenticationMetadata} from '../compiled_types';
@@ -2184,8 +2184,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
               continue;
             }
             // Admin authentications are required to be permission-capable.
-            // TODO(patrick): better typing
-            if (!(authentication as AllowedAuthentication).canSyncPermissions) {
+            // TODO(patrick/alan): better typing
+            if (!(authentication as AdminAuthenticationDefinition).canSyncPermissions) {
               context.addIssue({
                 code: z.ZodIssueCode.custom,
                 path: [syncTable.name, 'allowedAuthenticationNames'],

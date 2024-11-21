@@ -22,19 +22,6 @@ Authenticate to Amazon Web Services using an IAM access key id & secret access k
 
 ## Properties
 
-### canSyncPermissions
-
-• `Optional` **canSyncPermissions**: `boolean`
-
-If true, this authentication can be used to sync permissions associated with data
-in addition to the data itself.
-
-#### Inherited from
-
-[BaseAuthentication](core.BaseAuthentication.md).[canSyncPermissions](core.BaseAuthentication.md#cansyncpermissions)
-
-___
-
 ### endpointDomain
 
 • `Optional` **endpointDomain**: `string`

@@ -4285,11 +4285,6 @@ export interface BaseAuthentication {
 	 * Using multiple authenticated network domains is uncommon and requires Coda approval.
 	 */
 	networkDomain?: string | string[];
-	/**
-	 * If true, this authentication can be used to sync permissions associated with data
-	 * in addition to the data itself.
-	 */
-	canSyncPermissions?: boolean;
 }
 /**
  * Authenticate using an HTTP header of the form `Authorization: Bearer <token>`.
@@ -4854,12 +4849,19 @@ export type SystemAuthenticationDef = AsAuthDef<HeaderBearerTokenAuthentication>
  * @ignore
  */
 export type VariousSupportedAuthentication = NoAuthentication | HeaderBearerTokenAuthentication | CustomHeaderTokenAuthentication | MultiHeaderTokenAuthentication | QueryParamTokenAuthentication | MultiQueryParamTokenAuthentication | WebBasicAuthentication;
+export type AdminAuthenticationDefinition = AllowedAuthentication & {
+	/**
+	 * If true, this authentication can be used to sync permissions associated with data
+	 * in addition to the data itself.
+	 */
+	canSyncPermissions?: boolean;
+};
 /**
  * TODO(patrick): Unhide this.
  * @hidden
  */
 export interface AdminAuthentication {
-	authentication: AllowedAuthentication;
+	authentication: AdminAuthenticationDefinition;
 	/**
 	 * A unique identifier for this authentication configuration. Coda will pass it into formulas via
 	 * the execution context. Users will not see this value.
