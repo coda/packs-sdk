@@ -50,6 +50,14 @@ wish to make an unauthenticated supporting request as part of a formula implemen
 
 ___
 
+### disableDecompression
+
+• `Optional` **disableDecompression**: `boolean`
+
+If true, the response [body](core.FetchResponse.md#body) will not be automatically decompressed.
+
+___
+
 ### forceCache
 
 • `Optional` **forceCache**: `boolean`

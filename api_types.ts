@@ -667,6 +667,10 @@ export interface FetchRequest {
    * You may inspect the `Location` header of the response to observe the indicated redirect URL.
    */
   ignoreRedirects?: boolean;
+  /**
+   * If true, the response {@link FetchResponse.body} will not be automatically decompressed.
+   */
+  disableDecompression?: boolean;
 }
 
 /**
@@ -689,6 +693,17 @@ export interface FetchResponse<T extends any = any> {
    * to disable any parsing. Note however that this will result in the body being a NodeJS Buffer.
    */
   body?: T;
+  /**
+   * The compression used for body in the raw HTTP response (e.g. gzip, deflate).
+   * 
+   * Note that the response {@link FetchResponse.body} is automatically decompressed if this is gzip or deflate,
+   * otherwise, you will need to handle decompression, including cases where multiple compressions are used.
+   * 
+   * If automatic decompression is undesirable, or if you are seeing issues with automatic decompression, you may
+   * consider using {@link FetchRequest.disableDecompression} on the request to disable automatic decompression.
+   * Note however that you will need to handle decompression in your pack.
+   */
+  bodyCompression?: string;
   /**
    * HTTP response headers. The contents of many headers will be redacted for security reasons.
    */
