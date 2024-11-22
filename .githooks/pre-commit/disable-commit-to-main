@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+branch="$(git rev-parse --abbrev-ref HEAD)"
+
+if [ "$branch" = "main" ]; then
+  echo "Committing to main directly is not allowed."
+  exit 1
+fi
