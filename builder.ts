@@ -1,4 +1,5 @@
 import type {AdminAuthentication} from './types';
+import type {AdminAuthenticationDef} from './types';
 import type {AllowedAuthentication} from './types';
 import type {AllowedAuthenticationDef} from './types';
 import type {Authentication} from './types';
@@ -321,7 +322,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * TODO(patrick): Unhide this
    * @hidden
    */
-  addAdminAuthentication(adminAuth: AdminAuthentication): this {
+  addAdminAuthentication(adminAuth: AdminAuthenticationDef): this {
     if (!this.adminAuthentications) {
       this.adminAuthentications = [];
     }
