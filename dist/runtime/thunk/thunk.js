@@ -6,6 +6,7 @@ const buffer_1 = require("buffer");
 const types_2 = require("../types");
 const types_3 = require("../types");
 const types_4 = require("../../types");
+const types_5 = require("../../types");
 const api_1 = require("../../api");
 const api_2 = require("../../api");
 const ensure_1 = require("../../helpers/ensure");
@@ -40,9 +41,18 @@ async function findAndExecutePackFunction({ shouldWrapError = true, ...args }) {
     }
 }
 exports.findAndExecutePackFunction = findAndExecutePackFunction;
+function getSelectedAuthentication(manifest, authenticationName) {
+    var _a;
+    const { defaultAuthentication, adminAuthentications } = manifest;
+    if (!authenticationName || authenticationName === types_5.ReservedAuthenticationNames.Default) {
+        return defaultAuthentication;
+    }
+    return (0, ensure_1.ensureExists)((_a = adminAuthentications === null || adminAuthentications === void 0 ? void 0 : adminAuthentications.find(auth => auth.name === authenticationName)) === null || _a === void 0 ? void 0 : _a.authentication, `Authentication ${authenticationName} not found`);
+}
 async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, executionContext, updates, getPermissionsRequest, }) {
     var _a, _b;
-    const { syncTables, defaultAuthentication } = manifest;
+    const { syncTables } = manifest;
+    const selectedAuthentication = getSelectedAuthentication(manifest, executionContext.authenticationName);
     switch (formulaSpec.type) {
         case types_2.FormulaType.Standard: {
             const formula = (0, helpers_1.findFormula)(manifest, formulaSpec.formulaName);
@@ -71,17 +81,17 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
         case types_2.FormulaType.Metadata: {
             switch (formulaSpec.metadataFormulaType) {
                 case types_3.MetadataFormulaType.GetConnectionName:
-                    if ((defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.type) !== types_1.AuthenticationType.None &&
-                        (defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.type) !== types_1.AuthenticationType.Various &&
-                        (defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.getConnectionName)) {
-                        return defaultAuthentication.getConnectionName.execute(params, executionContext);
+                    if ((selectedAuthentication === null || selectedAuthentication === void 0 ? void 0 : selectedAuthentication.type) !== types_1.AuthenticationType.None &&
+                        (selectedAuthentication === null || selectedAuthentication === void 0 ? void 0 : selectedAuthentication.type) !== types_1.AuthenticationType.Various &&
+                        (selectedAuthentication === null || selectedAuthentication === void 0 ? void 0 : selectedAuthentication.getConnectionName)) {
+                        return selectedAuthentication.getConnectionName.execute(params, executionContext);
                     }
                     break;
                 case types_3.MetadataFormulaType.GetConnectionUserId:
-                    if ((defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.type) !== types_1.AuthenticationType.None &&
-                        (defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.type) !== types_1.AuthenticationType.Various &&
-                        (defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.getConnectionUserId)) {
-                        return defaultAuthentication.getConnectionUserId.execute(params, executionContext);
+                    if ((selectedAuthentication === null || selectedAuthentication === void 0 ? void 0 : selectedAuthentication.type) !== types_1.AuthenticationType.None &&
+                        (selectedAuthentication === null || selectedAuthentication === void 0 ? void 0 : selectedAuthentication.type) !== types_1.AuthenticationType.Various &&
+                        (selectedAuthentication === null || selectedAuthentication === void 0 ? void 0 : selectedAuthentication.getConnectionUserId)) {
+                        return selectedAuthentication.getConnectionUserId.execute(params, executionContext);
                     }
                     break;
                 case types_3.MetadataFormulaType.ParameterAutocomplete:
@@ -137,10 +147,10 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                     }
                     break;
                 case types_3.MetadataFormulaType.PostSetupSetEndpoint:
-                    if ((defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.type) !== types_1.AuthenticationType.None &&
-                        (defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.type) !== types_1.AuthenticationType.Various &&
-                        (defaultAuthentication === null || defaultAuthentication === void 0 ? void 0 : defaultAuthentication.postSetup)) {
-                        const setupStep = defaultAuthentication.postSetup.find(step => step.type === types_4.PostSetupType.SetEndpoint && step.name === formulaSpec.stepName);
+                    if ((selectedAuthentication === null || selectedAuthentication === void 0 ? void 0 : selectedAuthentication.type) !== types_1.AuthenticationType.None &&
+                        (selectedAuthentication === null || selectedAuthentication === void 0 ? void 0 : selectedAuthentication.type) !== types_1.AuthenticationType.Various &&
+                        (selectedAuthentication === null || selectedAuthentication === void 0 ? void 0 : selectedAuthentication.postSetup)) {
+                        const setupStep = selectedAuthentication.postSetup.find(step => step.type === types_4.PostSetupType.SetEndpoint && step.name === formulaSpec.stepName);
                         if (setupStep) {
                             return (0, migration_1.setEndpointHelper)(setupStep).getOptions.execute(params, executionContext);
                         }

@@ -927,6 +927,9 @@ export interface AdminAuthentication {
      */
     isServiceAccount?: boolean;
 }
+export interface AdminAuthenticationDef extends Omit<AdminAuthentication, 'authentication'> {
+    authentication: AllowedAuthenticationDef;
+}
 /**
  * Definition for a custom column type that users can apply to any column in any Coda table.
  * A column format tells Coda to interpret the value in a cell by executing a formula

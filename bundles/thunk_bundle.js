@@ -6847,6 +6847,17 @@ module.exports = (() => {
     }
   }
   __name(findAndExecutePackFunction, "findAndExecutePackFunction");
+  function getSelectedAuthentication(manifest, authenticationName) {
+    const { defaultAuthentication, adminAuthentications } = manifest;
+    if (!authenticationName || authenticationName === "defaultUserAuthentication" /* Default */) {
+      return defaultAuthentication;
+    }
+    return ensureExists(
+      adminAuthentications?.find((auth) => auth.name === authenticationName)?.authentication,
+      `Authentication ${authenticationName} not found`
+    );
+  }
+  __name(getSelectedAuthentication, "getSelectedAuthentication");
   async function doFindAndExecutePackFunction({
     params,
     formulaSpec,
@@ -6855,7 +6866,8 @@ module.exports = (() => {
     updates,
     getPermissionsRequest
   }) {
-    const { syncTables, defaultAuthentication } = manifest;
+    const { syncTables } = manifest;
+    const selectedAuthentication = getSelectedAuthentication(manifest, executionContext.authenticationName);
     switch (formulaSpec.type) {
       case "Standard" /* Standard */: {
         const formula = findFormula(manifest, formulaSpec.formulaName);
@@ -6892,16 +6904,13 @@ module.exports = (() => {
       case "Metadata" /* Metadata */: {
         switch (formulaSpec.metadataFormulaType) {
           case "GetConnectionName" /* GetConnectionName */:
-            if (defaultAuthentication?.type !== "None" /* None */ && defaultAuthentication?.type !== "Various" /* Various */ && defaultAuthentication?.getConnectionName) {
-              return defaultAuthentication.getConnectionName.execute(params, executionContext);
+            if (selectedAuthentication?.type !== "None" /* None */ && selectedAuthentication?.type !== "Various" /* Various */ && selectedAuthentication?.getConnectionName) {
+              return selectedAuthentication.getConnectionName.execute(params, executionContext);
             }
             break;
           case "GetConnectionUserId" /* GetConnectionUserId */:
-            if (defaultAuthentication?.type !== "None" /* None */ && defaultAuthentication?.type !== "Various" /* Various */ && defaultAuthentication?.getConnectionUserId) {
-              return defaultAuthentication.getConnectionUserId.execute(
-                params,
-                executionContext
-              );
+            if (selectedAuthentication?.type !== "None" /* None */ && selectedAuthentication?.type !== "Various" /* Various */ && selectedAuthentication?.getConnectionUserId) {
+              return selectedAuthentication.getConnectionUserId.execute(params, executionContext);
             }
             break;
           case "ParameterAutocomplete" /* ParameterAutocomplete */:
@@ -6960,12 +6969,15 @@ module.exports = (() => {
             }
             break;
           case "PostSetupSetEndpoint" /* PostSetupSetEndpoint */:
-            if (defaultAuthentication?.type !== "None" /* None */ && defaultAuthentication?.type !== "Various" /* Various */ && defaultAuthentication?.postSetup) {
-              const setupStep = defaultAuthentication.postSetup.find(
+            if (selectedAuthentication?.type !== "None" /* None */ && selectedAuthentication?.type !== "Various" /* Various */ && selectedAuthentication?.postSetup) {
+              const setupStep = selectedAuthentication.postSetup.find(
                 (step) => step.type === "SetEndPoint" /* SetEndpoint */ && step.name === formulaSpec.stepName
               );
               if (setupStep) {
-                return setEndpointHelper(setupStep).getOptions.execute(params, executionContext);
+                return setEndpointHelper(setupStep).getOptions.execute(
+                  params,
+                  executionContext
+                );
               }
             }
             break;
