@@ -36,6 +36,17 @@ to disable any parsing. Note however that this will result in the body being a N
 
 ___
 
+### bodyCompression
+
+• `Optional` **bodyCompression**: `string`
+
+The compression used for body in the raw HTTP response (e.g. gzip, deflate).
+
+Note that the response [body](core.FetchResponse.md#body) is automatically decompressed if this is gzip or deflate,
+otherwise, you will need to handle decompression, including cases where multiple compressions are used.
+
+___
+
 ### headers
 
 • **headers**: `Object`

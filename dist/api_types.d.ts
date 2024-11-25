@@ -558,6 +558,13 @@ export interface FetchResponse<T extends any = any> {
      */
     body?: T;
     /**
+     * The compression used for body in the raw HTTP response (e.g. gzip, deflate).
+     *
+     * Note that the response {@link FetchResponse.body} is automatically decompressed if this is gzip or deflate,
+     * otherwise, you will need to handle decompression, including cases where multiple compressions are used.
+     */
+    bodyCompression?: string;
+    /**
      * HTTP response headers. The contents of many headers will be redacted for security reasons.
      */
     headers: {
