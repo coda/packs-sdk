@@ -841,7 +841,6 @@ await myHelper(context);
 [1.7.17]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.7.17
 [1.7.16]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.7.16
 [1.8.1]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.8.1
-[1.8.3]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.8.3
 [1.8.2]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.8.2
-
+[1.8.3]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.8.3
 [1.8.4]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.8.4
