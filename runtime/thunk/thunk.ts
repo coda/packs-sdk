@@ -24,6 +24,7 @@ import {PostSetupType} from '../../types';
 import type {PropertyOptionsAnnotatedResult} from '../../api';
 import type {PropertyOptionsExecutionContext} from '../../api_types';
 import type {PropertyOptionsResults} from '../../api';
+import {ReservedAuthenticationNames} from '../../types';
 import {StatusCodeError} from '../../api';
 import type {SyncExecutionContext} from '../../api_types';
 import type {TypedPackFormula} from '../../api';
@@ -76,6 +77,18 @@ export async function findAndExecutePackFunction<T extends FormulaSpecification>
   }
 }
 
+function getSelectedAuthentication(manifest: BasicPackDefinition, authenticationName?: string) {
+  const {defaultAuthentication, adminAuthentications} = manifest;
+  if (!authenticationName || authenticationName === ReservedAuthenticationNames.Default) {
+    return defaultAuthentication;
+  }
+
+  return ensureExists(
+    adminAuthentications?.find(auth => auth.name === authenticationName)?.authentication,
+    `Authentication ${authenticationName} not found`,
+  );
+}
+
 async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
   params,
   formulaSpec,
@@ -94,7 +107,8 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
 }: FindAndExecutionPackFunctionArgs<T>): Promise<
   GenericSyncFormulaResult | GenericSyncUpdateResultMarshaled | PackFormulaResult
 > {
-  const {syncTables, defaultAuthentication} = manifest;
+  const {syncTables} = manifest;
+  const selectedAuthentication = getSelectedAuthentication(manifest, executionContext.authenticationName);
 
   switch (formulaSpec.type) {
     case FormulaType.Standard: {
@@ -133,23 +147,20 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
       switch (formulaSpec.metadataFormulaType) {
         case MetadataFormulaType.GetConnectionName:
           if (
-            defaultAuthentication?.type !== AuthenticationType.None &&
-            defaultAuthentication?.type !== AuthenticationType.Various &&
-            defaultAuthentication?.getConnectionName
+            selectedAuthentication?.type !== AuthenticationType.None &&
+            selectedAuthentication?.type !== AuthenticationType.Various &&
+            selectedAuthentication?.getConnectionName
           ) {
-            return defaultAuthentication.getConnectionName.execute(params as any, executionContext as ExecutionContext);
+            return selectedAuthentication.getConnectionName.execute(params as [string, string], executionContext);
           }
           break;
         case MetadataFormulaType.GetConnectionUserId:
           if (
-            defaultAuthentication?.type !== AuthenticationType.None &&
-            defaultAuthentication?.type !== AuthenticationType.Various &&
-            defaultAuthentication?.getConnectionUserId
+            selectedAuthentication?.type !== AuthenticationType.None &&
+            selectedAuthentication?.type !== AuthenticationType.Various &&
+            selectedAuthentication?.getConnectionUserId
           ) {
-            return defaultAuthentication.getConnectionUserId.execute(
-              params as any,
-              executionContext as ExecutionContext,
-            );
+            return selectedAuthentication.getConnectionUserId.execute(params as [string, string], executionContext);
           }
           break;
         case MetadataFormulaType.ParameterAutocomplete:
@@ -217,15 +228,18 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
           break;
         case MetadataFormulaType.PostSetupSetEndpoint:
           if (
-            defaultAuthentication?.type !== AuthenticationType.None &&
-            defaultAuthentication?.type !== AuthenticationType.Various &&
-            defaultAuthentication?.postSetup
+            selectedAuthentication?.type !== AuthenticationType.None &&
+            selectedAuthentication?.type !== AuthenticationType.Various &&
+            selectedAuthentication?.postSetup
           ) {
-            const setupStep = defaultAuthentication.postSetup.find(
+            const setupStep = selectedAuthentication.postSetup.find(
               step => step.type === PostSetupType.SetEndpoint && step.name === formulaSpec.stepName,
             );
             if (setupStep) {
-              return setEndpointHelper(setupStep).getOptions.execute(params as any, executionContext);
+              return setEndpointHelper(setupStep).getOptions.execute(
+                params as [undefined, undefined],
+                executionContext,
+              );
             }
           }
           break;

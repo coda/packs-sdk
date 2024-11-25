@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Changed
+
+- Support connection names for admin authentications
+
 ## [1.8.3] - 2024-11-12
 
 ### Added
