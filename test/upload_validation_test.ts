@@ -4618,7 +4618,6 @@ describe('Pack metadata Validation', async () => {
             {
               authentication: {
                 type: AuthenticationType.HeaderBearerToken,
-                canSyncPermissions: true,
               },
               name: 'bad name',
               displayName: 'Admin Auth',
@@ -4642,7 +4641,6 @@ describe('Pack metadata Validation', async () => {
               authentication: {
                 type: AuthenticationType.HeaderBearerToken,
                 endpointDomain: 'wrongdomain.com',
-                canSyncPermissions: true,
               },
               name: 'goodName',
               displayName: 'Admin Auth',
@@ -4663,7 +4661,7 @@ describe('Pack metadata Validation', async () => {
         const fullMetadata = createFakePack({
           adminAuthentications: [
             {
-              authentication: {type: AuthenticationType.HeaderBearerToken, canSyncPermissions: true},
+              authentication: {type: AuthenticationType.HeaderBearerToken},
               name: 'foo',
               displayName: 'foo',
               description: 'foo',
@@ -4689,7 +4687,6 @@ describe('Pack metadata Validation', async () => {
               authentication: {
                 type: AuthenticationType.HeaderBearerToken,
                 endpointDomain: 'b.com',
-                canSyncPermissions: true,
               },
               name: 'foo',
               displayName: 'foo',
@@ -4736,7 +4733,6 @@ describe('Pack metadata Validation', async () => {
                 authorizationUrl: 'https://example.com/oauth/authorize',
                 tokenUrl: 'https://example.com/oauth/token',
                 scopes: ['randomScope'],
-                canSyncPermissions: true,
               },
               name: 'adminAuth1',
               displayName: 'Admin Auth 1',
@@ -4748,7 +4744,6 @@ describe('Pack metadata Validation', async () => {
                 authorizationUrl: 'https://example.com/oauth/authorize',
                 tokenUrl: 'https://example.com/oauth/token',
                 scopes: ['admin', 'superadmin'],
-                canSyncPermissions: true,
               },
               name: 'adminAuth2',
               displayName: 'Admin Auth 2',
@@ -4757,7 +4752,6 @@ describe('Pack metadata Validation', async () => {
             {
               authentication: {
                 type: AuthenticationType.HeaderBearerToken,
-                canSyncPermissions: true,
               },
               name: 'adminAuth3',
               displayName: 'Admin Auth 3',
@@ -4805,7 +4799,7 @@ describe('Pack metadata Validation', async () => {
         const metadata = createFakePackVersionMetadata({
           adminAuthentications: [
             {
-              authentication: {type: AuthenticationType.HeaderBearerToken, canSyncPermissions: true},
+              authentication: {type: AuthenticationType.HeaderBearerToken},
               name: 'adminAuth1',
               displayName: 'Admin Auth 1',
               description: 'Admin authentication 1',
@@ -4840,82 +4834,6 @@ describe('Pack metadata Validation', async () => {
             path: 'SyncTable.allowedAuthenticationNames',
           },
         ]);
-      });
-
-      it('All admin auths must set canSyncPermissions', async () => {
-        const metadata = createFakePackVersionMetadata({
-          adminAuthentications: [
-            {
-              authentication: {type: AuthenticationType.HeaderBearerToken},
-              name: 'adminAuth1',
-              displayName: 'Admin Auth 1',
-              description: 'Admin authentication 1',
-            },
-          ],
-        });
-        const err = await validateJsonAndAssertFails(metadata, '1.0.0');
-        assert.deepEqual(err.validationErrors, [
-          {
-            message: `All admin authentications must set "canSyncPermissions:true"`,
-            path: 'adminAuthentications[0].authentication',
-          },
-        ]);
-      });
-
-      it('validates canSyncPermissions against sync tables that fetch permissions', async () => {
-        const metadata = createFakePackVersionMetadata({
-          adminAuthentications: [
-            {
-              authentication: {type: AuthenticationType.HeaderBearerToken},
-              name: 'adminAuth1',
-              displayName: 'Admin Auth 1',
-              description: 'Admin authentication 1',
-            },
-          ],
-          syncTables: [
-            makeSyncTable({
-              name: 'SyncTable',
-              identityName: 'Identity',
-              schema: makeObjectSchema({
-                type: ValueType.Object,
-                displayProperty: 'foo',
-                idProperty: 'foo',
-                properties: {foo: {type: ValueType.String}},
-              }),
-              formula: {
-                name: 'SyncTable',
-                description: '',
-                async execute([], _context) {
-                  return {result: []};
-                },
-                parameters: [],
-                allowedAuthenticationNames: ['adminAuth1'],
-                async executeGetPermissions(_params, _request) {
-                  return {rowAccessDefinitions: []};
-                },
-              },
-            }),
-          ],
-        });
-        const err = await validateJsonAndAssertFails(metadata, '1.0.0');
-        assert.deepEqual(err.validationErrors, [
-          {
-            // NOTE(patrick): This test repetitive with the 'All admin auths must set canSyncPermissions' test
-            // above, but I'm leaving it in because if we ever allow admin authentications to have a purpose
-            // beyond syncing permissions, we should then expect the 2nd error message below.
-            message: 'All admin authentications must set "canSyncPermissions:true"',
-            path: 'adminAuthentications[0].authentication',
-          },
-          {
-            message:
-              "Authentication adminAuth1 must have 'canSyncPermissions:true' to be used in a sync table with executeGetPermissions",
-            path: 'SyncTable.allowedAuthenticationNames',
-          },
-        ]);
-
-        // Setting canSyncPermissions should fix the issue:
-        ensureExists(metadata.adminAuthentications)[0].authentication.canSyncPermissions = true;
-        await validateJson(metadata, '1.0.0');
       });
 
       it('cannot use Various auth in admin auths', async () => {

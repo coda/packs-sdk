@@ -1,7 +1,6 @@
 import type {AWSAccessKeyAuthentication} from '../types';
 import type {AWSAssumeRoleAuthentication} from '../types';
 import type {AdminAuthentication} from '../types';
-import type {AdminAuthenticationDefinition} from '../types';
 import type {AdminAuthenticationTypes} from '../types';
 import {AllPrecannedDates} from '../api_types';
 import type {ArraySchema} from '../schema';
@@ -527,7 +526,6 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     // The items are technically a discriminated union type but that union currently only has one member.
     postSetup: z.array(setEndpointPostSetupValidator).optional(),
     networkDomain: z.union([singleAuthDomainSchema, z.array(singleAuthDomainSchema).nonempty()]).optional(),
-    canSyncPermissions: z.boolean().optional(),
   };
 
   const defaultAuthenticationValidators: Record<AuthenticationType, z.ZodTypeAny> = {
@@ -753,10 +751,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
   const reservedAuthenticationNames = Object.values(ReservedAuthenticationNames).map(value => value.toString());
   const adminAuthenticationValidator = zodCompleteObject<AdminAuthentication>({
     authentication: z
-      .union(zodUnionInput(Object.values(adminAuthenticationValidators)))
-      .refine(auth => Boolean(auth.canSyncPermissions), {
-        message: 'All admin authentications must set "canSyncPermissions:true"',
-      }),
+      .union(zodUnionInput(Object.values(adminAuthenticationValidators))),
     name: z
       .string()
       .min(1)
@@ -2151,7 +2146,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           }
         }
       })
-      .superRefine((data, context) => {
+      .superRefine((data, _context) => {
         const metadata = data as PackVersionMetadata;
         const {syncTables} = metadata;
         const authentications = getAuthentications(metadata);
@@ -2172,7 +2167,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             allowedAuthenticationNames = authNames;
           }
           for (const auth of authentications) {
-            const {name, authentication} = auth;
+            const {name} = auth;
             // If a sync table explicitly excludes an authentication, don't require it to
             // be permission-capable.
             if (allowedAuthenticationNames && !allowedAuthenticationNames.includes(name)) {
@@ -2182,15 +2177,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             // requesting permissions.
             if (reservedAuthenticationNames.includes(name)) {
               continue;
-            }
-            // Admin authentications are required to be permission-capable.
-            // TODO(patrick/alan): better typing
-            if (!(authentication as AdminAuthenticationDefinition).canSyncPermissions) {
-              context.addIssue({
-                code: z.ZodIssueCode.custom,
-                path: [syncTable.name, 'allowedAuthenticationNames'],
-                message: `Authentication ${name} must have 'canSyncPermissions:true' to be used in a sync table with executeGetPermissions`,
-              });
             }
           }
         }

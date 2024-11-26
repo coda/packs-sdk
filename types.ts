@@ -1004,20 +1004,12 @@ export enum ReservedAuthenticationNames {
   System = 'systemAuthentication',
 }
 
-export type AdminAuthenticationDefinition = AllowedAuthentication & {
-  /**
-   * If true, this authentication can be used to sync permissions associated with data
-   * in addition to the data itself.
-   */
-  canSyncPermissions?: boolean;
-};
-
 /**
  * TODO(patrick): Unhide this.
  * @hidden
  */
 export interface AdminAuthentication {
-  authentication: AdminAuthenticationDefinition;
+  authentication: AllowedAuthentication;
 
   /**
    * A unique identifier for this authentication configuration. Coda will pass it into formulas via
