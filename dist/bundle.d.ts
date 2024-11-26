@@ -4285,11 +4285,6 @@ export interface BaseAuthentication {
 	 * Using multiple authenticated network domains is uncommon and requires Coda approval.
 	 */
 	networkDomain?: string | string[];
-	/**
-	 * If true, this authentication can be used to sync permissions associated with data
-	 * in addition to the data itself.
-	 */
-	canSyncPermissions?: boolean;
 }
 /**
  * Authenticate using an HTTP header of the form `Authorization: Bearer <token>`.

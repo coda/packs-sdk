@@ -38,19 +38,6 @@ pack.setUserAuthentication({
 
 ## Properties
 
-### canSyncPermissions
-
-• `Optional` **canSyncPermissions**: `boolean`
-
-If true, this authentication can be used to sync permissions associated with data
-in addition to the data itself.
-
-#### Inherited from
-
-[BaseAuthentication](core.BaseAuthentication.md).[canSyncPermissions](core.BaseAuthentication.md#cansyncpermissions)
-
-___
-
 ### deferConnectionSetup
 
 • `Optional` **deferConnectionSetup**: `boolean`
