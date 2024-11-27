@@ -6393,7 +6393,21 @@ module.exports = (() => {
 
   // runtime/common/helpers.ts
   init_buffer_shim();
-  function findFormula(packDef, formulaNameWithNamespace) {
+  function verifyFormulaSupportsAuthenticationName(formulaName, allowedAuthenticationNames, authenticationName) {
+    if (!allowedAuthenticationNames) {
+      return;
+    }
+    if (!authenticationName) {
+      throw new Error(`Formula ${formulaName} requires an authentication but none was provided`);
+    }
+    if (!allowedAuthenticationNames.includes(authenticationName)) {
+      throw new Error(`Formula ${formulaName} is not allowed for connection with authentication ${authenticationName}`);
+    }
+  }
+  __name(verifyFormulaSupportsAuthenticationName, "verifyFormulaSupportsAuthenticationName");
+  function findFormula(packDef, formulaNameWithNamespace, authenticationName, {
+    verifyFormulaForAuthenticationName
+  } = { verifyFormulaForAuthenticationName: true }) {
     const packFormulas = packDef.formulas;
     if (!packFormulas) {
       throw new Error(`Pack definition has no formulas.`);
@@ -6410,19 +6424,31 @@ module.exports = (() => {
     }
     for (const formula of formulas) {
       if (formula.name === name) {
+        if (verifyFormulaForAuthenticationName) {
+          verifyFormulaSupportsAuthenticationName(name, formula.allowedAuthenticationNames, authenticationName);
+        }
         return formula;
       }
     }
     throw new Error(`Pack definition has no formula "${name}"${namespace ?? ` in namespace "${namespace}"`}.`);
   }
   __name(findFormula, "findFormula");
-  function findSyncFormula(packDef, syncFormulaName) {
+  function findSyncFormula(packDef, syncFormulaName, authenticationName, {
+    verifyFormulaForAuthenticationName
+  } = { verifyFormulaForAuthenticationName: true }) {
     if (!packDef.syncTables) {
       throw new Error(`Pack definition has no sync tables.`);
     }
     for (const syncTable of packDef.syncTables) {
       const syncFormula = syncTable.getter;
       if (syncTable.name === syncFormulaName) {
+        if (verifyFormulaForAuthenticationName) {
+          verifyFormulaSupportsAuthenticationName(
+            syncFormulaName,
+            syncFormula.allowedAuthenticationNames,
+            authenticationName
+          );
+        }
         return syncFormula;
       }
     }
@@ -6873,15 +6899,15 @@ module.exports = (() => {
     const selectedAuthentication = getSelectedAuthentication(manifest, executionContext.authenticationName);
     switch (formulaSpec.type) {
       case "Standard" /* Standard */: {
-        const formula = findFormula(manifest, formulaSpec.formulaName);
+        const formula = findFormula(manifest, formulaSpec.formulaName, executionContext.authenticationName);
         return formula.execute(params, executionContext);
       }
       case "Sync" /* Sync */: {
-        const formula = findSyncFormula(manifest, formulaSpec.formulaName);
+        const formula = findSyncFormula(manifest, formulaSpec.formulaName, executionContext.authenticationName);
         return formula.execute(params, executionContext);
       }
       case "SyncUpdate" /* SyncUpdate */: {
-        const formula = findSyncFormula(manifest, formulaSpec.formulaName);
+        const formula = findSyncFormula(manifest, formulaSpec.formulaName, executionContext.authenticationName);
         if (!formula.executeUpdate) {
           throw new Error(`No executeUpdate function defined on sync table formula ${formulaSpec.formulaName}`);
         }
@@ -6893,7 +6919,7 @@ module.exports = (() => {
         return parseSyncUpdateResult(response);
       }
       case "GetPermissions" /* GetPermissions */: {
-        const formula = findSyncFormula(manifest, formulaSpec.formulaName);
+        const formula = findSyncFormula(manifest, formulaSpec.formulaName, executionContext.authenticationName);
         if (!formula.executeGetPermissions) {
           throw new Error(`No executeGetPermissions function defined on sync table formula ${formulaSpec.formulaName}`);
         }
