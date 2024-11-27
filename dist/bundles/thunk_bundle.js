@@ -6848,9 +6848,12 @@ module.exports = (() => {
   }
   __name(findAndExecutePackFunction, "findAndExecutePackFunction");
   function getSelectedAuthentication(manifest, authenticationName) {
-    const { defaultAuthentication, adminAuthentications } = manifest;
+    const { defaultAuthentication, systemConnectionAuthentication, adminAuthentications } = manifest;
     if (!authenticationName || authenticationName === "defaultUserAuthentication" /* Default */) {
       return defaultAuthentication;
+    }
+    if (authenticationName === "systemAuthentication" /* System */) {
+      return ensureExists(systemConnectionAuthentication, "System connection authentication not found");
     }
     return ensureExists(
       adminAuthentications?.find((auth) => auth.name === authenticationName)?.authentication,

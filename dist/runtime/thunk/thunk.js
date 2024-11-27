@@ -43,9 +43,12 @@ async function findAndExecutePackFunction({ shouldWrapError = true, ...args }) {
 exports.findAndExecutePackFunction = findAndExecutePackFunction;
 function getSelectedAuthentication(manifest, authenticationName) {
     var _a;
-    const { defaultAuthentication, adminAuthentications } = manifest;
+    const { defaultAuthentication, systemConnectionAuthentication, adminAuthentications } = manifest;
     if (!authenticationName || authenticationName === types_5.ReservedAuthenticationNames.Default) {
         return defaultAuthentication;
+    }
+    if (authenticationName === types_5.ReservedAuthenticationNames.System) {
+        return (0, ensure_1.ensureExists)(systemConnectionAuthentication, 'System connection authentication not found');
     }
     return (0, ensure_1.ensureExists)((_a = adminAuthentications === null || adminAuthentications === void 0 ? void 0 : adminAuthentications.find(auth => auth.name === authenticationName)) === null || _a === void 0 ? void 0 : _a.authentication, `Authentication ${authenticationName} not found`);
 }
