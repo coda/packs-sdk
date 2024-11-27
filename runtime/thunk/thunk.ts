@@ -78,9 +78,12 @@ export async function findAndExecutePackFunction<T extends FormulaSpecification>
 }
 
 function getSelectedAuthentication(manifest: BasicPackDefinition, authenticationName?: string) {
-  const {defaultAuthentication, adminAuthentications} = manifest;
+  const {defaultAuthentication, systemConnectionAuthentication, adminAuthentications} = manifest;
   if (!authenticationName || authenticationName === ReservedAuthenticationNames.Default) {
     return defaultAuthentication;
+  }
+  if (authenticationName === ReservedAuthenticationNames.System) {
+    return ensureExists(systemConnectionAuthentication, 'System connection authentication not found');
   }
 
   return ensureExists(
