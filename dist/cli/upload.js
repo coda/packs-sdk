@@ -70,7 +70,7 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
     logger.info('Building Pack bundle...');
     if (fs_extra_1.default.existsSync(intermediateOutputDirectory)) {
         logger.info(`Existing directory ${intermediateOutputDirectory} detected. Probably left over from previous build. Removing it...`);
-        fs_extra_1.default.rmdirSync(intermediateOutputDirectory, { recursive: true });
+        fs_extra_1.default.rmSync(intermediateOutputDirectory, { recursive: true, force: true });
     }
     // we need to generate the bundle file in the working directory instead of a temp directory in
     // order to set source map right. The source map tool chain isn't smart enough to resolve a
