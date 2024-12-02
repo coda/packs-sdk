@@ -1580,7 +1580,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         for (const [identityName, allowedAuthenticationNames] of identityInfo) {
             const seenAuthNames = new Set();
             for (const allowedAuthName of allowedAuthenticationNames) {
-                if (seenAuthNames.has(allowedAuthName)) {
+                // If no allowedAuthName is provided, the sync table is allowed to use any authentication.
+                if (seenAuthNames.has(allowedAuthName) || seenAuthNames.has(undefined)) {
                     context.addIssue({
                         code: z.ZodIssueCode.custom,
                         message: allowedAuthName ? `Identity "${identityName}" is used by multiple sync tables with non-distinct allowedAuthenticationNames: ${allowedAuthName}` : `Sync table identity names must be unique. Found duplicate name "${identityName}".`,

@@ -2021,6 +2021,66 @@ describe('Pack metadata Validation', async () => {
         ]);
       });
 
+      it('duplicate sync table identity names, with undefined', async () => {
+        const syncTable1 = makeSyncTable({
+          name: 'SyncTable1',
+          identityName: 'Identity',
+          schema: makeObjectSchema({
+            type: ValueType.Object,
+            primary: 'foo',
+            id: 'foo',
+            properties: {
+              Foo: {type: ValueType.String},
+            },
+          }),
+          formula: {
+            name: 'SyncTable',
+            description: 'A simple sync table',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+          },
+        });
+        const syncTable2 = makeSyncTable({
+          name: 'SyncTable2',
+          identityName: 'Identity',
+          schema: makeObjectSchema({
+            type: ValueType.Object,
+            primary: 'foo',
+            id: 'foo',
+            properties: {
+              Foo: {type: ValueType.String},
+            },
+          }),
+          formula: {
+            name: 'SyncTable',
+            description: 'A simple sync table',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            // This will still be considered a duplicate because table 1 implicitly allows all auths.
+            allowedAuthenticationNames: [ReservedAuthenticationNames.Default]
+          },
+        });
+
+        const metadata = createFakePack({
+          syncTables: [syncTable1, syncTable2],
+        });
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'Identity "Identity" is used by multiple sync tables with non-distinct allowedAuthenticationNames: defaultUserAuthentication',
+            path: 'syncTables',
+          },
+          {
+            message: 'Sync table formula names must be unique. Found duplicate name "SyncTable".',
+            path: 'syncTables',
+          },
+        ]);
+      });
+
       it('duplicate sync table identity names not triggered for dynamic sync tables', async () => {
         const syncTable1 = makeDynamicSyncTable({
           name: 'DynamicSyncTable1',
