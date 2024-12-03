@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleAuth = void 0;
+exports.handleAuth = handleAuth;
 const build_1 = require("./build");
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
@@ -11,4 +11,3 @@ async function handleAuth({ manifestPath, oauthServerPort, extraOAuthScopes }) {
     const manifest = await (0, helpers_1.importManifest)(bundleFilename);
     await (0, auth_1.setupAuthFromModule)(fullManifestPath, manifest, { oauthServerPort, extraOAuthScopes });
 }
-exports.handleAuth = handleAuth;
