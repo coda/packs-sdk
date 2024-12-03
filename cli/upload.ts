@@ -74,7 +74,7 @@ export async function handleUpload({
     logger.info(
       `Existing directory ${intermediateOutputDirectory} detected. Probably left over from previous build. Removing it...`,
     );
-    fs.rmdirSync(intermediateOutputDirectory, {recursive: true});
+    fs.rmSync(intermediateOutputDirectory, {recursive: true, force: true});
   }
 
   // we need to generate the bundle file in the working directory instead of a temp directory in
