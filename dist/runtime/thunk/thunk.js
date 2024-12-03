@@ -58,15 +58,15 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
     const selectedAuthentication = getSelectedAuthentication(manifest, executionContext.authenticationName);
     switch (formulaSpec.type) {
         case types_2.FormulaType.Standard: {
-            const formula = (0, helpers_1.findFormula)(manifest, formulaSpec.formulaName);
+            const formula = (0, helpers_1.findFormula)(manifest, formulaSpec.formulaName, executionContext.authenticationName);
             return formula.execute(params, executionContext);
         }
         case types_2.FormulaType.Sync: {
-            const formula = (0, helpers_2.findSyncFormula)(manifest, formulaSpec.formulaName);
+            const formula = (0, helpers_2.findSyncFormula)(manifest, formulaSpec.formulaName, executionContext.authenticationName);
             return formula.execute(params, executionContext);
         }
         case types_2.FormulaType.SyncUpdate: {
-            const formula = (0, helpers_2.findSyncFormula)(manifest, formulaSpec.formulaName);
+            const formula = (0, helpers_2.findSyncFormula)(manifest, formulaSpec.formulaName, executionContext.authenticationName);
             if (!formula.executeUpdate) {
                 throw new Error(`No executeUpdate function defined on sync table formula ${formulaSpec.formulaName}`);
             }
@@ -74,7 +74,7 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
             return parseSyncUpdateResult(response);
         }
         case types_2.FormulaType.GetPermissions: {
-            const formula = (0, helpers_2.findSyncFormula)(manifest, formulaSpec.formulaName);
+            const formula = (0, helpers_2.findSyncFormula)(manifest, formulaSpec.formulaName, executionContext.authenticationName);
             if (!formula.executeGetPermissions) {
                 throw new Error(`No executeGetPermissions function defined on sync table formula ${formulaSpec.formulaName}`);
             }

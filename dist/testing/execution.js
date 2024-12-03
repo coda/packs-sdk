@@ -76,12 +76,12 @@ useDeprecatedResultNormalization = true, } = {}) {
     let formula;
     switch (formulaSpec.type) {
         case types_1.FormulaType.Standard:
-            formula = (0, helpers_1.findFormula)(manifest, formulaSpec.formulaName);
+            formula = (0, helpers_1.findFormula)(manifest, formulaSpec.formulaName, executionContext.authenticationName);
             break;
         case types_1.FormulaType.Sync:
         case types_1.FormulaType.SyncUpdate:
         case types_1.FormulaType.GetPermissions:
-            formula = (0, helpers_2.findSyncFormula)(manifest, formulaSpec.formulaName);
+            formula = (0, helpers_2.findSyncFormula)(manifest, formulaSpec.formulaName, executionContext.authenticationName);
             break;
     }
     if (shouldValidateParams && formula) {
@@ -345,12 +345,12 @@ async function executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, par
     let permissionRequest;
     switch (formulaSpecification.type) {
         case types_1.FormulaType.Standard: {
-            const formula = (0, helpers_1.findFormula)(manifest, formulaSpecification.formulaName);
+            const formula = (0, helpers_1.findFormula)(manifest, formulaSpecification.formulaName, executionContext.authenticationName);
             params = (0, coercion_1.coerceParams)(formula, rawParams);
             break;
         }
         case types_1.FormulaType.Sync: {
-            const syncFormula = (0, helpers_2.findSyncFormula)(manifest, formulaSpecification.formulaName);
+            const syncFormula = (0, helpers_2.findSyncFormula)(manifest, formulaSpecification.formulaName, executionContext.authenticationName);
             params = (0, coercion_1.coerceParams)(syncFormula, rawParams);
             break;
         }
@@ -387,12 +387,12 @@ async function executeFormulaOrSyncWithRawParams({ formulaSpecification, params:
     let permissionRequest;
     switch (formulaSpecification.type) {
         case types_1.FormulaType.Standard: {
-            const formula = (0, helpers_1.findFormula)(manifest, formulaSpecification.formulaName);
+            const formula = (0, helpers_1.findFormula)(manifest, formulaSpecification.formulaName, executionContext.authenticationName);
             params = (0, coercion_1.coerceParams)(formula, rawParams);
             break;
         }
         case types_1.FormulaType.Sync: {
-            const syncFormula = (0, helpers_2.findSyncFormula)(manifest, formulaSpecification.formulaName);
+            const syncFormula = (0, helpers_2.findSyncFormula)(manifest, formulaSpecification.formulaName, executionContext.authenticationName);
             params = (0, coercion_1.coerceParams)(syncFormula, rawParams);
             break;
         }
@@ -432,7 +432,7 @@ exports.executeFormulaOrSyncWithRawParams = executeFormulaOrSyncWithRawParams;
  * For now, use `coda execute --vm` to simulate that level of isolation.
  */
 async function executeSyncFormula(packDef, syncFormulaName, params, context, { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, useDeprecatedResultNormalization = true, } = {}, { useRealFetcher, manifestPath } = {}) {
-    const formula = (0, helpers_2.findSyncFormula)(packDef, syncFormulaName);
+    const formula = (0, helpers_2.findSyncFormula)(packDef, syncFormulaName, context === null || context === void 0 ? void 0 : context.authenticationName);
     if (shouldValidateParams && formula) {
         (0, validation_1.validateParams)(formula, params);
     }
@@ -575,7 +575,7 @@ function parseSyncUpdates(manifest, formulaSpecification, rawParams) {
     if (!parseResult.success) {
         throw new Error(`Invalid sync updates: ${parseResult.error.message}`);
     }
-    const syncFormula = (0, helpers_2.findSyncFormula)(manifest, formulaSpecification.formulaName);
+    const syncFormula = (0, helpers_2.findSyncFormula)(manifest, formulaSpecification.formulaName, undefined, { verifyFormulaForAuthenticationName: false });
     return { syncUpdates: parseResult.data, params: (0, coercion_1.coerceParams)(syncFormula, paramsCopy) };
 }
 const GetPermissionSchema = z.object({
@@ -591,6 +591,6 @@ function parseGetPermissionRequest(manifest, formulaSpecification, rawParams) {
     if (!parseResult.success) {
         throw new Error(`Invalid get permission request: ${parseResult.error.message}`);
     }
-    const syncFormula = (0, helpers_2.findSyncFormula)(manifest, formulaSpecification.formulaName);
+    const syncFormula = (0, helpers_2.findSyncFormula)(manifest, formulaSpecification.formulaName, undefined, { verifyFormulaForAuthenticationName: false });
     return { permissionRequest: parseResult.data, params: (0, coercion_1.coerceParams)(syncFormula, paramsCopy) };
 }
