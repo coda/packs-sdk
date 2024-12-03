@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.tryFindSyncFormula = exports.tryFindFormula = exports.findSyncFormula = exports.findFormula = void 0;
-function verifyFormulaSupportsAuthenticationName(formulaName, allowedAuthenticationNames, authenticationName) {
+function verifyFormulaSupportsAuthenticationName(formula, authenticationName) {
+    const { allowedAuthenticationNames, name: formulaName } = formula;
     if (!allowedAuthenticationNames) {
         return;
     }
@@ -31,7 +32,7 @@ function findFormula(packDef, formulaNameWithNamespace, authenticationName, { ve
     for (const formula of formulas) {
         if (formula.name === name) {
             if (verifyFormulaForAuthenticationName) {
-                verifyFormulaSupportsAuthenticationName(name, formula.allowedAuthenticationNames, authenticationName);
+                verifyFormulaSupportsAuthenticationName(formula, authenticationName);
             }
             return formula;
         }
@@ -47,7 +48,7 @@ function findSyncFormula(packDef, syncFormulaName, authenticationName, { verifyF
         const syncFormula = syncTable.getter;
         if (syncTable.name === syncFormulaName) {
             if (verifyFormulaForAuthenticationName) {
-                verifyFormulaSupportsAuthenticationName(syncFormulaName, syncFormula.allowedAuthenticationNames, authenticationName);
+                verifyFormulaSupportsAuthenticationName(syncFormula, authenticationName);
             }
             return syncFormula;
         }

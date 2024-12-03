@@ -4,10 +4,10 @@ import type {GenericSyncFormula} from '../../api';
 
 
 function verifyFormulaSupportsAuthenticationName(
-  formulaName: string,
-  allowedAuthenticationNames: string[] | undefined,
+  formula: Formula,
   authenticationName: string | undefined,
 ) {
+  const {allowedAuthenticationNames, name: formulaName} = formula;
   if (!allowedAuthenticationNames) {
     return;
   }
@@ -52,7 +52,7 @@ export function findFormula(
   for (const formula of formulas) {
     if (formula.name === name) {
       if (verifyFormulaForAuthenticationName) {
-        verifyFormulaSupportsAuthenticationName(name, formula.allowedAuthenticationNames, authenticationName);
+        verifyFormulaSupportsAuthenticationName(formula, authenticationName);
       }
       return formula;
     }
@@ -76,9 +76,7 @@ export function findSyncFormula(
     const syncFormula = syncTable.getter;
     if (syncTable.name === syncFormulaName) {
       if (verifyFormulaForAuthenticationName) {
-        verifyFormulaSupportsAuthenticationName(
-          syncFormulaName, syncFormula.allowedAuthenticationNames, authenticationName
-        );
+        verifyFormulaSupportsAuthenticationName(syncFormula, authenticationName);
       }
       return syncFormula;
     }

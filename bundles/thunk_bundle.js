@@ -6393,7 +6393,8 @@ module.exports = (() => {
 
   // runtime/common/helpers.ts
   init_buffer_shim();
-  function verifyFormulaSupportsAuthenticationName(formulaName, allowedAuthenticationNames, authenticationName) {
+  function verifyFormulaSupportsAuthenticationName(formula, authenticationName) {
+    const { allowedAuthenticationNames, name: formulaName } = formula;
     if (!allowedAuthenticationNames) {
       return;
     }
@@ -6425,7 +6426,7 @@ module.exports = (() => {
     for (const formula of formulas) {
       if (formula.name === name) {
         if (verifyFormulaForAuthenticationName) {
-          verifyFormulaSupportsAuthenticationName(name, formula.allowedAuthenticationNames, authenticationName);
+          verifyFormulaSupportsAuthenticationName(formula, authenticationName);
         }
         return formula;
       }
@@ -6443,11 +6444,7 @@ module.exports = (() => {
       const syncFormula = syncTable.getter;
       if (syncTable.name === syncFormulaName) {
         if (verifyFormulaForAuthenticationName) {
-          verifyFormulaSupportsAuthenticationName(
-            syncFormulaName,
-            syncFormula.allowedAuthenticationNames,
-            authenticationName
-          );
+          verifyFormulaSupportsAuthenticationName(syncFormula, authenticationName);
         }
         return syncFormula;
       }
