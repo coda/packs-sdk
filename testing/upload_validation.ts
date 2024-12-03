@@ -1962,7 +1962,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       .optional()
       .default([])
       .superRefine((data, context) => {
-        const identityNames: string[] = [];
+        const identityInfo: Map<string, string[]> = new Map();
         const formulaNames: string[] = [];
         for (const tableDef of data) {
           if (tableDef.identityName && tableDef.schema.identity?.name) {
@@ -1975,16 +1975,17 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           }
           // only add identity names that are not undefined to check for dupes
           if (tableDef.schema.identity) {
-            identityNames.push(tableDef.schema.identity?.name);
+            const allowedAuthenticationNames = identityInfo.get(tableDef.schema.identity.name) || [];
+            identityInfo.set(
+              tableDef.schema.identity.name, 
+              [...allowedAuthenticationNames, ...(tableDef.getter?.allowedAuthenticationNames || [undefined])],
+            );
+  
           }
           formulaNames.push(tableDef.getter.name);
         }
-        for (const dupe of getNonUniqueElements(identityNames)) {
-          context.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: `Sync table identity names must be unique. Found duplicate name "${dupe}".`,
-          });
-        }
+        
+        validateIdentityNames(context, identityInfo);
         for (const dupe of getNonUniqueElements(formulaNames)) {
           context.addIssue({
             code: z.ZodIssueCode.custom,
@@ -2000,6 +2001,22 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }
       }),
   });
+
+  function validateIdentityNames(context: z.RefinementCtx, identityInfo: Map<string, string[]>) {
+    for (const [identityName, allowedAuthenticationNames] of identityInfo) {
+      const seenAuthNames = new Set<string | undefined>();
+      for (const allowedAuthName of allowedAuthenticationNames) {
+        // If no allowedAuthName is provided, the sync table is allowed to use any authentication.
+        if (seenAuthNames.has(allowedAuthName) || seenAuthNames.has(undefined)) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: allowedAuthName ?  `Identity "${identityName}" is used by multiple sync tables with non-distinct allowedAuthenticationNames: ${allowedAuthName}`: `Sync table identity names must be unique. Found duplicate name "${identityName}".` ,
+          });
+        }
+        seenAuthNames.add(allowedAuthName);
+      }
+    }
+  }
 
   function validateNamespace(namespace: string | undefined): boolean {
     if (typeof namespace === 'undefined') {
@@ -2136,7 +2153,10 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             });
           }
           for (const allowedAuthenticationName of allowedAuthenticationNames) {
-            if (!authNames.includes(allowedAuthenticationName)) {
+            if (
+              !authNames.includes(allowedAuthenticationName) &&
+              !reservedAuthenticationNames.includes(allowedAuthenticationName)
+            ) {
               context.addIssue({
                 code: z.ZodIssueCode.custom,
                 path: [formula.name, 'allowedAuthenticationNames'],

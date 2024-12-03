@@ -1916,13 +1916,162 @@ describe('Pack metadata Validation', async () => {
           },
         });
 
+        // No violation between 3 and 4 because they use allowedAuthenticationNames and those are disjoint.
+        const syncTable3 = makeSyncTable({
+          name: 'SyncTable3',
+          identityName: 'IdentityAdminAuth',
+          schema: makeObjectSchema({
+            type: ValueType.Object,
+            primary: 'foo',
+            id: 'foo',
+            properties: {
+              Foo: {type: ValueType.String},
+            },
+          }),
+          formula: {
+            name: 'SyncTable3',
+            description: 'A simple sync table',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            allowedAuthenticationNames: [ReservedAuthenticationNames.System]
+          },
+        });
+        const syncTable4 = makeSyncTable({
+          name: 'SyncTable4',
+          identityName: 'IdentityAdminAuth',
+          schema: makeObjectSchema({
+            type: ValueType.Object,
+            primary: 'foo',
+            id: 'foo',
+            properties: {
+              Foo: {type: ValueType.String},
+            },
+          }),
+          formula: {
+            name: 'SyncTable4',
+            description: 'A simple sync table',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            allowedAuthenticationNames: [ReservedAuthenticationNames.Default]
+          },
+        });
+
+
+        let metadata = createFakePack({
+          syncTables: [syncTable1, syncTable2, syncTable3, syncTable4],
+        });
+        let err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'Sync table identity names must be unique. Found duplicate name "Identity".',
+            path: 'syncTables',
+          },
+          {
+            message: 'Sync table formula names must be unique. Found duplicate name "SyncTable".',
+            path: 'syncTables',
+          },
+        ]);
+
+        const syncTable5 = makeSyncTable({
+          name: 'SyncTable5',
+          identityName: 'IdentityAdminAuth',
+          schema: makeObjectSchema({
+            type: ValueType.Object,
+            primary: 'foo',
+            id: 'foo',
+            properties: {
+              Foo: {type: ValueType.String},
+            },
+          }),
+          formula: {
+            name: 'SyncTable5',
+            description: 'A simple sync table',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            allowedAuthenticationNames: [ReservedAuthenticationNames.Default, ReservedAuthenticationNames.System]
+          },
+        });
+         metadata = createFakePack({
+          syncTables: [syncTable1, syncTable2, syncTable3, syncTable4, syncTable5],
+        });
+        err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'Sync table identity names must be unique. Found duplicate name "Identity".',
+            path: 'syncTables',
+          },
+          {
+            message: 'Identity "IdentityAdminAuth" is used by multiple sync tables with non-distinct allowedAuthenticationNames: defaultUserAuthentication',
+            path: 'syncTables'
+          },
+          {
+            message: 'Identity "IdentityAdminAuth" is used by multiple sync tables with non-distinct allowedAuthenticationNames: systemAuthentication',
+            path: 'syncTables'
+          },
+          {
+            message: 'Sync table formula names must be unique. Found duplicate name "SyncTable".',
+            path: 'syncTables',
+          },
+        ]);
+      });
+
+      it('duplicate sync table identity names, with undefined', async () => {
+        const syncTable1 = makeSyncTable({
+          name: 'SyncTable1',
+          identityName: 'Identity',
+          schema: makeObjectSchema({
+            type: ValueType.Object,
+            primary: 'foo',
+            id: 'foo',
+            properties: {
+              Foo: {type: ValueType.String},
+            },
+          }),
+          formula: {
+            name: 'SyncTable',
+            description: 'A simple sync table',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+          },
+        });
+        const syncTable2 = makeSyncTable({
+          name: 'SyncTable2',
+          identityName: 'Identity',
+          schema: makeObjectSchema({
+            type: ValueType.Object,
+            primary: 'foo',
+            id: 'foo',
+            properties: {
+              Foo: {type: ValueType.String},
+            },
+          }),
+          formula: {
+            name: 'SyncTable',
+            description: 'A simple sync table',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            // This will still be considered a duplicate because table 1 implicitly allows all auths.
+            allowedAuthenticationNames: [ReservedAuthenticationNames.Default]
+          },
+        });
+
         const metadata = createFakePack({
           syncTables: [syncTable1, syncTable2],
         });
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
           {
-            message: 'Sync table identity names must be unique. Found duplicate name "Identity".',
+            message: 'Identity "Identity" is used by multiple sync tables with non-distinct allowedAuthenticationNames: defaultUserAuthentication',
             path: 'syncTables',
           },
           {
@@ -4823,6 +4972,25 @@ describe('Pack metadata Validation', async () => {
                 },
                 parameters: [],
                 allowedAuthenticationNames: ['fakeAuthName'],
+              },
+            }),
+            makeSyncTable({
+              name: 'SyncTable2',
+              identityName: 'Identity2',
+              schema: makeObjectSchema({
+                type: ValueType.Object,
+                displayProperty: 'foo',
+                idProperty: 'foo',
+                properties: {foo: {type: ValueType.String}},
+              }),
+              formula: {
+                name: 'SyncTable2',
+                description: '',
+                async execute([], _context) {
+                  return {result: []};
+                },
+                parameters: [],
+                allowedAuthenticationNames: [ReservedAuthenticationNames.System, ReservedAuthenticationNames.Default],
               },
             }),
           ],
