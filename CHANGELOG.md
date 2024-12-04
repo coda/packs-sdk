@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Changed
+
+- Improved `Sync` and `SyncExecutionContext` types to better handle full vs. incremental sync
+
 ## [1.8.4] - 2024-11-25
 
 ### Changed
