@@ -575,7 +575,9 @@ function parseSyncUpdates(manifest, formulaSpecification, rawParams) {
     if (!parseResult.success) {
         throw new Error(`Invalid sync updates: ${parseResult.error.message}`);
     }
-    const syncFormula = (0, helpers_2.findSyncFormula)(manifest, formulaSpecification.formulaName, undefined, { verifyFormulaForAuthenticationName: false });
+    const syncFormula = (0, helpers_2.findSyncFormula)(manifest, formulaSpecification.formulaName, undefined, {
+        verifyFormulaForAuthenticationName: false,
+    });
     return { syncUpdates: parseResult.data, params: (0, coercion_1.coerceParams)(syncFormula, paramsCopy) };
 }
 const GetPermissionSchema = z.object({
@@ -591,6 +593,8 @@ function parseGetPermissionRequest(manifest, formulaSpecification, rawParams) {
     if (!parseResult.success) {
         throw new Error(`Invalid get permission request: ${parseResult.error.message}`);
     }
-    const syncFormula = (0, helpers_2.findSyncFormula)(manifest, formulaSpecification.formulaName, undefined, { verifyFormulaForAuthenticationName: false });
+    const syncFormula = (0, helpers_2.findSyncFormula)(manifest, formulaSpecification.formulaName, undefined, {
+        verifyFormulaForAuthenticationName: false,
+    });
     return { permissionRequest: parseResult.data, params: (0, coercion_1.coerceParams)(syncFormula, paramsCopy) };
 }

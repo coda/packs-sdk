@@ -8,7 +8,7 @@ search:
 
 [core](../modules/core.md).makeMetadataFormula
 
-▸ **makeMetadataFormula**(`execute`, `options?`): [`MetadataFormula`](../types/core.MetadataFormula.md)
+▸ **makeMetadataFormula**<`ContextT`\>(`execute`, `options?`): [`MetadataFormula`](../types/core.MetadataFormula.md)<`ContextT`\>
 
 A wrapper that generates a formula definition from the function that implements a metadata formula.
 It is uncommon to ever need to call this directly, normally you would just define the JavaScript
@@ -21,14 +21,20 @@ and an `execute` function body. This includes supporting utilities like paramete
 This wrapper simply adds the surrounding boilerplate for a given JavaScript function so that
 it is shaped like a Coda formula to be used at runtime.
 
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `ContextT` | extends [`ExecutionContext`](../interfaces/core.ExecutionContext.md) |
+
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `execute` | [`MetadataFunction`](../types/core.MetadataFunction.md) |
+| `execute` | [`MetadataFunction`](../types/core.MetadataFunction.md)<`ContextT`\> |
 | `options?` | `Object` |
 | `options.connectionRequirement?` | [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md) |
 
 #### Returns
 
-[`MetadataFormula`](../types/core.MetadataFormula.md)
+[`MetadataFormula`](../types/core.MetadataFormula.md)<`ContextT`\>

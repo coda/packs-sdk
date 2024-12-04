@@ -20,7 +20,7 @@ are called repeatedly until there is no continuation returned.
 | `K` | extends `string` |
 | `L` | extends `string` |
 | `SchemaT` | extends [`ObjectSchemaDefinition`](core.ObjectSchemaDefinition.md)<`K`, `L`\> |
-| `ContextT` | extends [`SyncExecutionContext`](core.SyncExecutionContext.md)<`any`, `any`\> = [`SyncExecutionContext`](core.SyncExecutionContext.md) |
+| `ContextT` | extends [`SyncExecutionContext`](core.SyncExecutionContext.md)<`any`\> = [`SyncExecutionContext`](core.SyncExecutionContext.md) |
 
 ## Properties
 

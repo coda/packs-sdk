@@ -36,6 +36,7 @@ import type {Schema} from './schema';
 import type {SchemaType} from './schema';
 import type {StringHintTypes} from './schema';
 import type {StringSchema} from './schema';
+import type {SyncCompletionMetadataResult} from './api_types';
 import type {SyncExecutionContext} from './api_types';
 import {TableRole} from './api_types';
 import {Type} from './api_types';
@@ -346,11 +347,11 @@ export interface DynamicSyncTableDef<
   /** Identifies this sync table as dynamic. */
   isDynamic: true;
   /** See {@link DynamicSyncTableOptions.getSchema} */
-  getSchema: MetadataFormula;
+  getSchema: MetadataFormula<ContextT>;
   /** See {@link DynamicSyncTableOptions.getName} */
-  getName: MetadataFormula;
+  getName: MetadataFormula<ContextT>;
   /** See {@link DynamicSyncTableOptions.getDisplayUrl} */
-  getDisplayUrl: MetadataFormula;
+  getDisplayUrl: MetadataFormula<ContextT>;
   /** See {@link DynamicSyncTableOptions.listDynamicUrls} */
   listDynamicUrls?: MetadataFormula;
   /** See {@link DynamicSyncTableOptions.searchDynamicUrls} */
@@ -433,9 +434,9 @@ export function isDynamicSyncTable(syncTable: SyncTable): syncTable is GenericDy
   return 'isDynamic' in syncTable;
 }
 
-export function wrapMetadataFunction(
-  fnOrFormula: MetadataFormula | MetadataFunction | undefined,
-): MetadataFormula | undefined {
+export function wrapMetadataFunction<ContextT extends ExecutionContext>(
+  fnOrFormula: MetadataFormula<ContextT> | MetadataFunction<ContextT> | undefined,
+): MetadataFormula<ContextT> | undefined {
   return typeof fnOrFormula === 'function' ? makeMetadataFormula(fnOrFormula) : fnOrFormula;
 }
 
@@ -883,10 +884,13 @@ export function check(condition: boolean, msg: string) {
 /**
  * Base type for the inputs for creating a pack formula.
  */
-export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackFormulaResult>
-  extends CommonPackFormulaDef<ParamsT> {
+export interface PackFormulaDef<
+  ParamsT extends ParamDefs,
+  ResultT extends PackFormulaResult,
+  ContextT extends ExecutionContext = ExecutionContext,
+> extends CommonPackFormulaDef<ParamsT> {
   /** The JavaScript function that implements this formula */
-  execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<ResultT> | ResultT;
+  execute(params: ParamValues<ParamsT>, context: ContextT): Promise<ResultT> | ResultT;
 }
 
 export interface StringFormulaDefLegacy<ParamsT extends ParamDefs> extends CommonPackFormulaDef<ParamsT> {
@@ -933,10 +937,11 @@ export interface EmptyFormulaDef<ParamsT extends ParamDefs> extends Omit<PackFor
 }
 
 /** The base class for pack formula descriptors. Subclasses vary based on the return type of the formula. */
-export type BaseFormula<ParamDefsT extends ParamDefs, ResultT extends PackFormulaResult> = PackFormulaDef<
-  ParamDefsT,
-  ResultT
-> & {
+export type BaseFormula<
+  ParamDefsT extends ParamDefs,
+  ResultT extends PackFormulaResult,
+  ContextT extends ExecutionContext = ExecutionContext,
+> = PackFormulaDef<ParamDefsT, ResultT, ContextT> & {
   resultType: TypeOf<ResultT>;
 };
 
@@ -1032,7 +1037,7 @@ export interface SyncFormulaResult<
   K extends string,
   L extends string,
   SchemaT extends ObjectSchemaDefinition<K, L>,
-  ContextT extends SyncExecutionContext<any, any> = SyncExecutionContext,
+  ContextT extends SyncExecutionContext<any> = SyncExecutionContext,
 > {
   /** The list of rows from this page. */
   result: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>;
@@ -1053,7 +1058,9 @@ export interface SyncFormulaResult<
    * TODO(patrick): Unhide this
    * @hidden
    */
-  completion?: ContextT['sync']['previousCompletion'];
+  completion?: SyncCompletionMetadataResult<
+    NonNullable<ContextT['sync']['previousCompletion']>['incrementalContinuation']
+  >;
 
   /**
    * Return the list of deleted item ids for incremental sync deletion.
@@ -1070,6 +1077,12 @@ export interface SyncFormulaResult<
    * @hidden
    */
   deletionPredicate?: ItemMatchingPredicate;
+}
+
+/** @hidden */
+export interface TypedSyncFormulaResult<T extends object, ContextT extends SyncExecutionContext<any>>
+  extends SyncFormulaResult<string, string, any, ContextT> {
+  result: T[];
 }
 
 /**
@@ -1268,7 +1281,7 @@ export interface SyncFormulaDef<
    * from a previous invocation, and fetches and returns one page of results, as well
    * as another continuation if there are more result to fetch.
    */
-  execute<ContextReturnT extends ContextT>(
+  execute<const ContextReturnT extends ContextT>(
     params: ParamValues<ParamDefsT>,
     context: ContextT,
     // Create a separate type for the return value to ensure it's validated against any explicit context type.
@@ -1698,7 +1711,11 @@ export type MetadataFormulaResultType = string | number | MetadataFormulaObjectR
  * values of the others. This is dictionary mapping the names of each parameter to its
  * current value.
  */
-export type MetadataFormula = BaseFormula<[ParamDef<Type.string>, ParamDef<Type.string>], any> & {
+export type MetadataFormula<ContextT extends ExecutionContext = ExecutionContext> = BaseFormula<
+  [ParamDef<Type.string>, ParamDef<Type.string>],
+  any,
+  ContextT
+> & {
   schema?: any;
 };
 
@@ -1784,8 +1801,8 @@ export declare type GenericMetadataFormulaMetadata = Omit<GenericMetadataFormula
 /**
  * A JavaScript function that can implement a {@link MetadataFormulaDef}.
  */
-export type MetadataFunction = (
-  context: ExecutionContext,
+export type MetadataFunction<ContextT extends ExecutionContext = ExecutionContext> = (
+  context: ContextT,
   // TODO(oleg): this should be optional unless in an autocomplete context.
   search: string,
   formulaContext?: MetadataContext,
@@ -1796,7 +1813,9 @@ export type MetadataFunction = (
  * be the JavaScript function that implements a metadata formula (strongly recommended)
  * or a full metadata formula definition (mostly supported for legacy code).
  */
-export type MetadataFormulaDef = MetadataFormula | MetadataFunction;
+export type MetadataFormulaDef<ContextT extends ExecutionContext = ExecutionContext> =
+  | MetadataFormula<ContextT>
+  | MetadataFunction<ContextT>;
 
 /**
  * A wrapper that generates a formula definition from the function that implements a metadata formula.
@@ -1810,16 +1829,16 @@ export type MetadataFormulaDef = MetadataFormula | MetadataFunction;
  * This wrapper simply adds the surrounding boilerplate for a given JavaScript function so that
  * it is shaped like a Coda formula to be used at runtime.
  */
-export function makeMetadataFormula(
-  execute: MetadataFunction,
+export function makeMetadataFormula<ContextT extends ExecutionContext>(
+  execute: MetadataFunction<ContextT>,
   options?: {connectionRequirement?: ConnectionRequirement},
-): MetadataFormula {
+): MetadataFormula<ContextT> {
   return makeObjectFormula({
     name: 'getMetadata',
     description: 'Gets metadata',
     // Formula context is serialized here because we do not want to pass objects into
     // regular pack functions (which this is)
-    execute([search, serializedFormulaContext], context) {
+    execute([search, serializedFormulaContext], context: ContextT) {
       let formulaContext = {} as MetadataContext;
       try {
         formulaContext = JSON.parse(serializedFormulaContext || '');
@@ -2088,7 +2107,7 @@ export interface DynamicOptions {
    * For a dynamic sync table, the value of {@link DynamicSyncTableOptions.getSchema}
    * is passed through here. For a non-dynamic sync table, you may still implement
    * this if you table has a schema that varies based on the user account, but
-   * does not require a {@link Sync.dynamicUrl}.
+   * does not require a {@link SyncBase.dynamicUrl}.
    */
   getSchema?: MetadataFormulaDef;
   /** See {@link DynamicSyncTableOptions.entityName} */
@@ -2197,7 +2216,7 @@ export interface DynamicSyncTableOptions<
   /**
    * A formula that returns the name of this table.
    */
-  getName: MetadataFormulaDef;
+  getName: MetadataFormulaDef<ContextT>;
   /**
    * See {@link SyncTableOptions.identityName} for an introduction.
    *
@@ -2209,14 +2228,14 @@ export interface DynamicSyncTableOptions<
   /**
    * A formula that returns the schema for this table.
    */
-  getSchema: MetadataFormulaDef;
+  getSchema: MetadataFormulaDef<ContextT>;
   /**
    * A formula that that returns a browser-friendly url representing the
    * resource being synced. The Coda UI links to this url as the source
    * of the table data. This is typically a browser-friendly form of the
    * `dynamicUrl`, which is typically an API url.
    */
-  getDisplayUrl: MetadataFormulaDef;
+  getDisplayUrl: MetadataFormulaDef<ContextT>;
   /**
    * A formula that returns a list of available dynamic urls that can be
    * used to create an instance of this dynamic sync table.
@@ -2428,7 +2447,7 @@ export function makeSyncTable<
     params: ParamValues<ParamDefsT>,
     context: ContextT,
   ): Promise<SyncFormulaResult<K, L, SchemaT, ContextT>> {
-    let syncResult: SyncFormulaResult<K, L, SchemaDefT>;
+    let syncResult: SyncFormulaResult<K, L, SchemaDefT, ContextT>;
     try {
       syncResult = (await wrappedExecute(params, context)) || {};
     } catch (err: any) {
@@ -2575,11 +2594,11 @@ export function makeDynamicSyncTable<
 }: {
   name: string;
   description?: string;
-  getName: MetadataFormulaDef;
-  getSchema: MetadataFormulaDef;
+  getName: MetadataFormulaDef<ContextT>;
+  getSchema: MetadataFormulaDef<ContextT>;
   identityName: string;
   formula: SyncFormulaDef<K, L, ParamDefsT, any, ContextT>;
-  getDisplayUrl: MetadataFormulaDef;
+  getDisplayUrl: MetadataFormulaDef<ContextT>;
   listDynamicUrls?: MetadataFormulaDef;
   searchDynamicUrls?: MetadataFormulaDef;
   entityName?: string;

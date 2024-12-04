@@ -67,7 +67,7 @@ ___
 
 ### sync
 
-• `Optional` `Readonly` **sync**: [`Sync`](core.Sync.md)<`unknown`, `unknown`\>
+• `Optional` `Readonly` **sync**: [`Sync`](../types/core.Sync.md)<`unknown`, `unknown`, `unknown`\>
 
 Information about state of the current sync. Only populated if this is a sync table formula.
 

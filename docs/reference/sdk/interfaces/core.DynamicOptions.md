@@ -31,14 +31,14 @@ ___
 
 ### getSchema
 
-• `Optional` **getSchema**: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)
+• `Optional` **getSchema**: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<[`ExecutionContext`](core.ExecutionContext.md)\>
 
 A formula that returns the schema for this table.
 
 For a dynamic sync table, the value of [getSchema](core.DynamicSyncTableOptions.md#getschema)
 is passed through here. For a non-dynamic sync table, you may still implement
 this if you table has a schema that varies based on the user account, but
-does not require a [dynamicUrl](core.Sync.md#dynamicurl).
+does not require a [dynamicUrl](core.SyncBase.md#dynamicurl).
 
 ___
 

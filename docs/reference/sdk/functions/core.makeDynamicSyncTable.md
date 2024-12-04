@@ -37,7 +37,7 @@ coda.makeDynamicSyncTable({
 | `L` | extends `string` |
 | `ParamDefsT` | extends [`ParamDefs`](../types/core.ParamDefs.md) |
 | `SchemaT` | extends [`ObjectSchemaDefinition`](../interfaces/core.ObjectSchemaDefinition.md)<`K`, `L`\> |
-| `ContextT` | extends [`SyncExecutionContext`](../interfaces/core.SyncExecutionContext.md)<`any`, `any`\> |
+| `ContextT` | extends [`SyncExecutionContext`](../interfaces/core.SyncExecutionContext.md)<`any`, `any`, `any`\> |
 
 #### Parameters
 
@@ -49,15 +49,15 @@ coda.makeDynamicSyncTable({
 | › `description?` | `string` |
 | › `entityName?` | `string` |
 | › `formula` | [`SyncFormulaDef`](../interfaces/core.SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `any`, `ContextT`\> |
-| › `getDisplayUrl` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) |
-| › `getName` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) |
-| › `getSchema` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) |
+| › `getDisplayUrl` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<`ContextT`\> |
+| › `getName` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<`ContextT`\> |
+| › `getSchema` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<`ContextT`\> |
 | › `identityName` | `string` |
-| › `listDynamicUrls?` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) |
+| › `listDynamicUrls?` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<[`ExecutionContext`](../interfaces/core.ExecutionContext.md)\> |
 | › `name` | `string` |
 | › `placeholderSchema?` | `SchemaT` |
 | › `propertyOptions?` | [`PropertyOptionsMetadataFunction`](../types/core.PropertyOptionsMetadataFunction.md)<`any`\> |
-| › `searchDynamicUrls?` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md) |
+| › `searchDynamicUrls?` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<[`ExecutionContext`](../interfaces/core.ExecutionContext.md)\> |
 
 #### Returns
 

@@ -208,7 +208,7 @@ as another continuation if there are more result to fetch.
 
 | Name | Type |
 | :------ | :------ |
-| `ContextReturnT` | extends [`SyncExecutionContext`](core.SyncExecutionContext.md)<`any`, `any`\> |
+| `ContextReturnT` | extends [`SyncExecutionContext`](core.SyncExecutionContext.md)<`any`, `any`, `any`\> |
 
 #### Parameters
 

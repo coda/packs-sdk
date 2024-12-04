@@ -10,6 +10,7 @@ import {OptionsType} from '../api_types';
 import type {ParamValues} from '../api_types';
 import {ParameterType} from '../api_types';
 import {StatusCodeError} from '../api';
+import type {SyncExecutionContext} from '../api_types';
 import type {Type} from '../api_types';
 import {ValueType} from '../schema';
 import {ensureExists} from '../helpers/ensure';
@@ -346,6 +347,24 @@ describe('API test', () => {
     });
 
     it('allows SyncCompletionMetadata return', async () => {
+      // NOTE(oleg): testing that sync context types work as expected.
+      interface Continuation {
+        token: string;
+      }
+      interface IncrementalContinuation {
+        deltaToken: string;
+      }
+
+      interface IncrementalSyncContinuation {
+        incrementalToken: string;
+      }
+
+      type TestSyncExecutionContext = SyncExecutionContext<
+        Continuation,
+        IncrementalContinuation,
+        IncrementalSyncContinuation
+      >;
+
       const table = makeSyncTable({
         name: 'SomeSync',
         identityName: 'MyIdentityName',
@@ -364,19 +383,33 @@ describe('API test', () => {
           name: 'Whatever',
           description: 'Whatever',
           parameters: [],
-          async execute() {
+          async execute([], context: TestSyncExecutionContext) {
+            if (context.sync.previousCompletion) {
+              if (context.sync.continuation?.incrementalToken === 'last') {
+                return {
+                  result: [],
+                  completion: {incrementalContinuation: {deltaToken: 'delta'}},
+                };
+              }
+
+              return {
+                result: [],
+                continuation: {incrementalToken: context.sync.previousCompletion.incrementalContinuation.deltaToken},
+              };
+            }
+
             return {
               result: [],
               completion: {
-                incrementalContinuation: {key: 'foo'},
+                incrementalContinuation: {deltaToken: context.sync.continuation?.token ?? 'someToken'},
               },
             };
           },
         },
       });
-      // TODO(patrick): Why do we need the "as any" cast?
-      const result = await table.getter.execute([] as any, newMockSyncExecutionContext());
-      assert.equal(result.completion?.incrementalContinuation?.key, 'foo');
+      // TODO(patrick): Why do we need the "as []" cast?
+      const result = await table.getter.execute([] as [], newMockSyncExecutionContext<TestSyncExecutionContext>());
+      assert.equal(result.completion?.incrementalContinuation?.deltaToken, 'someToken');
     });
 
     it('allows deletedItemIds return', async () => {

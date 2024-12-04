@@ -119,7 +119,7 @@ ___
 
 ### sync
 
-• `Readonly` **sync**: [`Sync`](core.Sync.md)<[`Continuation`](core.Continuation.md), [`Continuation`](core.Continuation.md)\>
+• `Readonly` **sync**: [`Sync`](../types/core.Sync.md)<[`Continuation`](core.Continuation.md), [`Continuation`](core.Continuation.md), [`Continuation`](core.Continuation.md)\>
 
 Information about state of the current sync.
 

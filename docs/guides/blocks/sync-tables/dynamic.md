@@ -465,7 +465,7 @@ Dynamic sync tables include a lot of individual functions, but they are run at d
 [getName]: ../../../reference/sdk/interfaces/core.DynamicSyncTableOptions.md#getname
 [getDisplayUrl]: ../../../reference/sdk/interfaces/core.DynamicSyncTableOptions.md#getdisplayurl
 [getSchema]: ../../../reference/sdk/interfaces/core.DynamicSyncTableOptions.md#getschema
-[dynamicUrl]: ../../../reference/sdk/interfaces/core.Sync.md#dynamicurl
+[dynamicUrl]: ../../../reference/sdk/interfaces/core.SyncBase.md#dynamicurl
 [sync_tables_identity]: index.md#identity
 [autocomplete_parameter]: ../../basics/parameters/autocomplete.md#parameters
 [sync_tables_reference]: index.md#references

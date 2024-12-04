@@ -789,17 +789,38 @@ export enum PermissionSyncMode {
  * Information about the current sync, part of the {@link SyncExecutionContext} passed to the
  * `execute` function of every sync formula.
  */
-export interface Sync<ContinuationT = Continuation, IncrementalContinuationT = ContinuationT> {
+export type Sync<
+  ContinuationT = Continuation,
+  IncrementalContinuationT = ContinuationT,
+  IncrementalSyncContinuationT = ContinuationT,
+> = SyncFull<ContinuationT> | SyncIncremental<IncrementalSyncContinuationT, IncrementalContinuationT>;
+
+/** Information about the current full sync. */
+export interface SyncFull<ContinuationT = Continuation> extends SyncBase {
   /**
    * The continuation that was returned from the prior sync invocation. The is the exact
    * value returned in the `continuation` property of result of the prior sync.
    */
   continuation?: ContinuationT;
-
-  // TODO(patrick): Unhide this
   /** @hidden */
-  previousCompletion?: SyncCompletionMetadata<IncrementalContinuationT>;
+  previousCompletion?: never;
+}
 
+/**
+ * Information about the current incremental sync.
+ */
+export interface SyncIncremental<ContinuationT, IncrementalContinuationT> extends SyncBase {
+  /**
+   * The continuation that was returned from the prior sync invocation. The is the exact
+   * value returned in the `continuation` property of result of the prior sync.
+   */
+  continuation?: ContinuationT;
+  /** @hidden */
+  previousCompletion: SyncCompletionMetadata<IncrementalContinuationT>;
+}
+
+/** Information about the current sync. */
+export interface SyncBase {
   /**
    * The schema of this sync table, if this is a dynamic sync table. It may be useful to have
    * access to the dynamically-generated schema of the table instance in order to construct
@@ -831,7 +852,7 @@ export interface Sync<ContinuationT = Continuation, IncrementalContinuationT = C
  * Information about the current sync, part of the {@link UpdateSyncExecutionContext} passed to the
  * `executeUpdate` function of the sync formula.
  */
-export type UpdateSync = Omit<Sync, 'continuation'>;
+export interface UpdateSync extends SyncBase {}
 
 /**
  * Information about the current sync, part of the {@link GetPermissionExecutionContext} passed to the
@@ -984,8 +1005,7 @@ export interface ExecutionContext {
   /**
    * Information about state of the current sync. Only populated if this is a sync table formula.
    */
-  readonly sync?: Sync<unknown, unknown>;
-
+  readonly sync?: Sync<unknown>;
   /**
    * If this function is being invoked with authentication, this indicates which authentication was used.
    *
@@ -1018,12 +1038,15 @@ export interface ExecutionContext {
  * Sub-class of {@link ExecutionContext} that is passed to the `execute` function of every
  * sync formula invocation. The only different is that the presence of the `sync` property
  */
-export interface SyncExecutionContext<ContinuationT = Continuation, IncrementalContinuationT = ContinuationT>
-  extends ExecutionContext {
+export interface SyncExecutionContext<
+  ContinuationT = Continuation,
+  IncrementalContinuationT = ContinuationT,
+  IncrementalSyncContinuationT = ContinuationT,
+> extends ExecutionContext {
   /**
    * Information about state of the current sync.
    */
-  readonly sync: Sync<ContinuationT, IncrementalContinuationT>;
+  readonly sync: Sync<ContinuationT, IncrementalContinuationT, IncrementalSyncContinuationT>;
 }
 
 /**
@@ -1280,7 +1303,7 @@ export enum TableRole {
 
 // TODO(patrick): Unhide this
 /** @hidden */
-export interface SyncCompletionMetadata<IncrementalContinuationT = Continuation> {
+export interface SyncCompletionMetadataResult<IncrementalContinuationT = Continuation> {
   /**
    * For enabling incremental syncs. If your sync execution provides this, then Coda will provide it to the
    * next sync execution.
@@ -1296,6 +1319,16 @@ export interface SyncCompletionMetadata<IncrementalContinuationT = Continuation>
    * @hidden
    */
   hasIncompleteResults?: boolean;
+}
+
+// TODO(patrick): Unhide this
+/** @hidden */
+export interface SyncCompletionMetadata<IncrementalContinuationT = Continuation> {
+  /**
+   * For enabling incremental syncs. If your sync execution provides this, then Coda will provide it to the
+   * next sync execution.
+   */
+  incrementalContinuation: IncrementalContinuationT;
 }
 
 /**

@@ -79,7 +79,7 @@ ___
 
 ### sync
 
-• `Readonly` **sync**: [`UpdateSync`](../types/core.UpdateSync.md)
+• `Readonly` **sync**: [`UpdateSync`](core.UpdateSync.md)
 
 Information about state of the current sync.
 

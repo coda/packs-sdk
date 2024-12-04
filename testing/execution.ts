@@ -90,14 +90,19 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
   executionContext: ExecutionContext | SyncExecutionContext,
   syncUpdates?: GenericSyncUpdate[],
   getPermissionsRequest?: GenericExecuteGetPermissionsRequest,
-
   {
     validateParams: shouldValidateParams = true,
     validateResult: shouldValidateResult = true,
     // TODO(alexd): Switch this to false or remove when we launch 1.0.0
     useDeprecatedResultNormalization = true,
   }: ExecuteOptions = {},
-): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult> {
+): Promise<
+  T extends SyncFormulaSpecification
+    ? GenericSyncFormulaResult
+    : T extends SyncUpdateFormulaSpecification
+    ? GenericSyncUpdateResult
+    : PackFormulaResult
+> {
   let formula: TypedPackFormula | undefined;
   switch (formulaSpec.type) {
     case FormulaType.Standard:
@@ -484,7 +489,10 @@ async function executeFormulaOrSyncWithRawParamsInVM<T extends FormulaSpecificat
     }
     case FormulaType.Sync: {
       const syncFormula = findSyncFormula(
-        manifest, formulaSpecification.formulaName, executionContext.authenticationName);
+        manifest,
+        formulaSpecification.formulaName,
+        executionContext.authenticationName,
+      );
       params = coerceParams(syncFormula, rawParams as any);
       break;
     }
@@ -543,7 +551,10 @@ export async function executeFormulaOrSyncWithRawParams<T extends FormulaSpecifi
     }
     case FormulaType.Sync: {
       const syncFormula = findSyncFormula(
-        manifest, formulaSpecification.formulaName, executionContext.authenticationName);
+        manifest,
+        formulaSpecification.formulaName,
+        executionContext.authenticationName,
+      );
       params = coerceParams(syncFormula, rawParams as any);
       break;
     }
@@ -732,7 +743,7 @@ export async function executeSyncFormulaFromPackDefSingleIteration(
     undefined,
     undefined,
     options,
-  ) as Promise<GenericSyncFormulaResult>;
+  );
 }
 
 /**
@@ -804,7 +815,7 @@ export async function executeUpdateFormulaFromPackDef(
     syncUpdates,
     undefined,
     options,
-  ) as Promise<GenericSyncUpdateResult>;
+  );
 }
 
 export async function executeMetadataFormula(
@@ -874,12 +885,9 @@ function parseSyncUpdates(
   if (!parseResult.success) {
     throw new Error(`Invalid sync updates: ${parseResult.error.message}`);
   }
-  const syncFormula = findSyncFormula(
-    manifest,
-    formulaSpecification.formulaName,
-    undefined,
-    {verifyFormulaForAuthenticationName: false},
-  );
+  const syncFormula = findSyncFormula(manifest, formulaSpecification.formulaName, undefined, {
+    verifyFormulaForAuthenticationName: false,
+  });
   return {syncUpdates: parseResult.data, params: coerceParams(syncFormula, paramsCopy as any)};
 }
 
@@ -906,12 +914,9 @@ function parseGetPermissionRequest(
     throw new Error(`Invalid get permission request: ${parseResult.error.message}`);
   }
 
-  const syncFormula = findSyncFormula(
-    manifest,
-    formulaSpecification.formulaName,
-    undefined,
-    {verifyFormulaForAuthenticationName: false},
-  );
+  const syncFormula = findSyncFormula(manifest, formulaSpecification.formulaName, undefined, {
+    verifyFormulaForAuthenticationName: false,
+  });
 
   return {permissionRequest: parseResult.data, params: coerceParams(syncFormula, paramsCopy as any)};
 }

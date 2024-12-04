@@ -686,7 +686,8 @@ async function searchDatasets(context: coda.ExecutionContext,
 /**
  * Get a dataset by ID.
  */
-async function getDataset(context: coda.ExecutionContext): Promise<Dataset> {
+async function getDataset(context: coda.SyncExecutionContext):
+  Promise<Dataset> {
   let datasetUrl = context.sync.dynamicUrl;
   let datasetId = getDatasetId(datasetUrl);
   let url = `https://${Domain}/api/views/${datasetId}.json`;
