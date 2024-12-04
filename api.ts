@@ -1281,7 +1281,7 @@ export interface SyncFormulaDef<
    * from a previous invocation, and fetches and returns one page of results, as well
    * as another continuation if there are more result to fetch.
    */
-  execute<const ContextReturnT extends ContextT>(
+  execute<ContextReturnT extends ContextT>(
     params: ParamValues<ParamDefsT>,
     context: ContextT,
     // Create a separate type for the return value to ensure it's validated against any explicit context type.

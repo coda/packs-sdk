@@ -752,7 +752,7 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
      * from a previous invocation, and fetches and returns one page of results, as well
      * as another continuation if there are more result to fetch.
      */
-    execute<const ContextReturnT extends ContextT>(params: ParamValues<ParamDefsT>, context: ContextT): Promise<SyncFormulaResult<K, L, SchemaT, ContextReturnT>>;
+    execute<ContextReturnT extends ContextT>(params: ParamValues<ParamDefsT>, context: ContextT): Promise<SyncFormulaResult<K, L, SchemaT, ContextReturnT>>;
     /**
      * If the table supports object updates, the maximum number of objects that will be sent to the pack
      * in a single batch. Defaults to 1 if not specified.
