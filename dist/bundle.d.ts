@@ -968,12 +968,18 @@ declare enum TableRole {
 	GroupMembers = "groupMembers"
 }
 /** @hidden */
-export interface SyncCompletionMetadataResult<IncrementalContinuationT = Continuation> {
+export type SyncCompletionMetadataResult<IncrementalContinuationT = Continuation> = SyncCompletionMetadata<IncrementalContinuationT> | SyncCompletionMetadataIncomplete;
+/** @hidden */
+export interface SyncCompletionMetadata<IncrementalContinuationT = Continuation> {
 	/**
 	 * For enabling incremental syncs. If your sync execution provides this, then Coda will provide it to the
 	 * next sync execution.
 	 */
-	incrementalContinuation?: IncrementalContinuationT;
+	incrementalContinuation: IncrementalContinuationT;
+	hasIncompleteResults?: false;
+}
+/** @hidden */
+export interface SyncCompletionMetadataIncomplete {
 	/**
 	 * Returned by an incremental sync if the results are incomplete. Will be ignored during a full sync.
 	 *
@@ -982,15 +988,8 @@ export interface SyncCompletionMetadataResult<IncrementalContinuationT = Continu
 	 * TODO(sam): Unhide this
 	 * @hidden
 	 */
-	hasIncompleteResults?: boolean;
-}
-/** @hidden */
-export interface SyncCompletionMetadata<IncrementalContinuationT = Continuation> {
-	/**
-	 * For enabling incremental syncs. If your sync execution provides this, then Coda will provide it to the
-	 * next sync execution.
-	 */
-	incrementalContinuation: IncrementalContinuationT;
+	hasIncompleteResults: true;
+	incrementalContinuation?: never;
 }
 /**
  * TODO(patrick): Unhide this

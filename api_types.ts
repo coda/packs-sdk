@@ -1303,13 +1303,23 @@ export enum TableRole {
 
 // TODO(patrick): Unhide this
 /** @hidden */
-export interface SyncCompletionMetadataResult<IncrementalContinuationT = Continuation> {
+export type SyncCompletionMetadataResult<IncrementalContinuationT = Continuation> =
+  | SyncCompletionMetadata<IncrementalContinuationT>
+  | SyncCompletionMetadataIncomplete;
+
+/** @hidden */
+export interface SyncCompletionMetadata<IncrementalContinuationT = Continuation> {
   /**
    * For enabling incremental syncs. If your sync execution provides this, then Coda will provide it to the
    * next sync execution.
    */
-  incrementalContinuation?: IncrementalContinuationT;
+  incrementalContinuation: IncrementalContinuationT;
 
+  hasIncompleteResults?: false;
+}
+
+/** @hidden */
+export interface SyncCompletionMetadataIncomplete {
   /**
    * Returned by an incremental sync if the results are incomplete. Will be ignored during a full sync.
    *
@@ -1318,17 +1328,9 @@ export interface SyncCompletionMetadataResult<IncrementalContinuationT = Continu
    * TODO(sam): Unhide this
    * @hidden
    */
-  hasIncompleteResults?: boolean;
-}
+  hasIncompleteResults: true;
 
-// TODO(patrick): Unhide this
-/** @hidden */
-export interface SyncCompletionMetadata<IncrementalContinuationT = Continuation> {
-  /**
-   * For enabling incremental syncs. If your sync execution provides this, then Coda will provide it to the
-   * next sync execution.
-   */
-  incrementalContinuation: IncrementalContinuationT;
+  incrementalContinuation?: never;
 }
 
 /**
