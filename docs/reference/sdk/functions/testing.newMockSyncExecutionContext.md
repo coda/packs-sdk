@@ -8,14 +8,20 @@ search:
 
 [testing](../modules/testing.md).newMockSyncExecutionContext
 
-▸ **newMockSyncExecutionContext**(`overrides?`): [`MockSyncExecutionContext`](../interfaces/testing.MockSyncExecutionContext.md)
+▸ **newMockSyncExecutionContext**<`T`\>(`overrides?`): [`SyncExecutionContextAsMock`](../types/testing.SyncExecutionContextAsMock.md)<`T`\>
+
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `T` | extends [`SyncExecutionContext`](../interfaces/core.SyncExecutionContext.md)<`any`, `any`, `any`\> |
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `overrides?` | `Partial`<[`MockSyncExecutionContext`](../interfaces/testing.MockSyncExecutionContext.md)\> |
+| `overrides?` | `Partial`<`T`\> |
 
 #### Returns
 
-[`MockSyncExecutionContext`](../interfaces/testing.MockSyncExecutionContext.md)
+[`SyncExecutionContextAsMock`](../types/testing.SyncExecutionContextAsMock.md)<`T`\>

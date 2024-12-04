@@ -67,7 +67,7 @@ ___
 
 ### getDisplayUrl
 
-• **getDisplayUrl**: [`MetadataFormula`](../types/core.MetadataFormula.md)
+• **getDisplayUrl**: [`MetadataFormula`](../types/core.MetadataFormula.md)<`ContextT`\>
 
 See [getDisplayUrl](core.DynamicSyncTableOptions.md#getdisplayurl)
 
@@ -75,7 +75,7 @@ ___
 
 ### getName
 
-• **getName**: [`MetadataFormula`](../types/core.MetadataFormula.md)
+• **getName**: [`MetadataFormula`](../types/core.MetadataFormula.md)<`ContextT`\>
 
 See [getName](core.DynamicSyncTableOptions.md#getname)
 
@@ -83,7 +83,7 @@ ___
 
 ### getSchema
 
-• **getSchema**: [`MetadataFormula`](../types/core.MetadataFormula.md)
+• **getSchema**: [`MetadataFormula`](../types/core.MetadataFormula.md)<`ContextT`\>
 
 See [getSchema](core.DynamicSyncTableOptions.md#getschema)
 
@@ -130,7 +130,7 @@ ___
 
 ### listDynamicUrls
 
-• `Optional` **listDynamicUrls**: [`MetadataFormula`](../types/core.MetadataFormula.md)
+• `Optional` **listDynamicUrls**: [`MetadataFormula`](../types/core.MetadataFormula.md)<[`ExecutionContext`](core.ExecutionContext.md)\>
 
 See [listDynamicUrls](core.DynamicSyncTableOptions.md#listdynamicurls)
 
@@ -170,6 +170,6 @@ ___
 
 ### searchDynamicUrls
 
-• `Optional` **searchDynamicUrls**: [`MetadataFormula`](../types/core.MetadataFormula.md)
+• `Optional` **searchDynamicUrls**: [`MetadataFormula`](../types/core.MetadataFormula.md)<[`ExecutionContext`](core.ExecutionContext.md)\>
 
 See [searchDynamicUrls](core.DynamicSyncTableOptions.md#searchdynamicurls)

@@ -22,6 +22,10 @@ import * as testing from "@codahq/packs-sdk/dist/development";
 - [MockExecutionContext](../interfaces/testing.MockExecutionContext.md)
 - [MockSyncExecutionContext](../interfaces/testing.MockSyncExecutionContext.md)
 
+## Type Aliases
+
+- [SyncExecutionContextAsMock](../types/testing.SyncExecutionContextAsMock.md)
+
 ## Functions
 
 - [executeFormulaFromPackDef](../functions/testing.executeFormulaFromPackDef.md)

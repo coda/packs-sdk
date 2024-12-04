@@ -28,7 +28,7 @@ For now, use `coda execute --vm` to simulate that level of isolation.
 | `packDef` | [`BasicPackDefinition`](../types/core.BasicPackDefinition.md) |
 | `syncFormulaName` | `string` |
 | `params` | [`ParamValues`](../types/core.ParamValues.md)<[`ParamDefs`](../types/core.ParamDefs.md)\> |
-| `context?` | [`SyncExecutionContext`](../interfaces/core.SyncExecutionContext.md)<[`Continuation`](../interfaces/core.Continuation.md), [`Continuation`](../interfaces/core.Continuation.md)\> |
+| `context?` | [`SyncExecutionContext`](../interfaces/core.SyncExecutionContext.md)<[`Continuation`](../interfaces/core.Continuation.md), [`Continuation`](../interfaces/core.Continuation.md), [`Continuation`](../interfaces/core.Continuation.md)\> |
 | `«destructured»` | [`ExecuteOptions`](../interfaces/testing.ExecuteOptions.md) |
 | `«destructured»` | [`ContextOptions`](../interfaces/testing.ContextOptions.md) |
 

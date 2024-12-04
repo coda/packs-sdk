@@ -1,7 +1,9 @@
+import type {Continuation} from '../api';
 import type {ExecutionContext} from '../api_types';
 import type {FetchRequest} from '../api_types';
 import type {FetchResponse} from '../api_types';
 import type {Sync} from '../api_types';
+import type {SyncExecutionContext} from '../api_types';
 import type {TemporaryBlobStorage} from '../api_types';
 import sinon from 'sinon';
 import {v4} from 'uuid';
@@ -24,12 +26,27 @@ export interface MockExecutionContext extends ExecutionContext {
   };
 }
 
-export interface MockSyncExecutionContext extends MockExecutionContext {
-  sync: Sync;
+export interface MockSyncExecutionContext<
+  ContinuationT = Continuation,
+  IncrementalContinuationT = ContinuationT,
+  IncrementalSyncContinuationT = ContinuationT,
+> extends MockExecutionContext {
+  sync: Sync<ContinuationT, IncrementalContinuationT, IncrementalSyncContinuationT>;
 }
 
-export function newMockSyncExecutionContext(overrides?: Partial<MockSyncExecutionContext>): MockSyncExecutionContext {
-  return {...newMockExecutionContext(), sync: {}, ...overrides};
+/** Mock type of the specified `SyncExecutionContext`. */
+export type SyncExecutionContextAsMock<T extends SyncExecutionContext> = T extends SyncExecutionContext<
+  infer ContinuationT,
+  infer IncrementalContinuationT,
+  infer IncrementalSyncContinuationT
+>
+  ? MockSyncExecutionContext<ContinuationT, IncrementalContinuationT, IncrementalSyncContinuationT>
+  : never;
+
+export function newMockSyncExecutionContext<T extends SyncExecutionContext<any>>(
+  overrides?: Partial<T>,
+): SyncExecutionContextAsMock<T> {
+  return {...newMockExecutionContext(), sync: {}, ...overrides} as SyncExecutionContextAsMock<T>;
 }
 
 export function newMockExecutionContext(overrides?: Partial<MockExecutionContext>): MockExecutionContext {

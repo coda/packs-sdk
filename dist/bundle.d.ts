@@ -635,14 +635,31 @@ declare enum PermissionSyncMode {
  * Information about the current sync, part of the {@link SyncExecutionContext} passed to the
  * `execute` function of every sync formula.
  */
-export interface Sync<ContinuationT = Continuation, IncrementalContinuationT = ContinuationT> {
+export type Sync<ContinuationT = Continuation, IncrementalContinuationT = ContinuationT, IncrementalSyncContinuationT = ContinuationT> = SyncFull<ContinuationT> | SyncIncremental<IncrementalSyncContinuationT, IncrementalContinuationT>;
+/** Information about the current full sync. */
+export interface SyncFull<ContinuationT = Continuation> extends SyncBase {
 	/**
 	 * The continuation that was returned from the prior sync invocation. The is the exact
 	 * value returned in the `continuation` property of result of the prior sync.
 	 */
 	continuation?: ContinuationT;
 	/** @hidden */
-	previousCompletion?: SyncCompletionMetadata<IncrementalContinuationT>;
+	previousCompletion?: never;
+}
+/**
+ * Information about the current incremental sync.
+ */
+export interface SyncIncremental<ContinuationT, IncrementalContinuationT> extends SyncBase {
+	/**
+	 * The continuation that was returned from the prior sync invocation. The is the exact
+	 * value returned in the `continuation` property of result of the prior sync.
+	 */
+	continuation?: ContinuationT;
+	/** @hidden */
+	previousCompletion: SyncCompletionMetadata<IncrementalContinuationT>;
+}
+/** Information about the current sync. */
+export interface SyncBase {
 	/**
 	 * The schema of this sync table, if this is a dynamic sync table. It may be useful to have
 	 * access to the dynamically-generated schema of the table instance in order to construct
@@ -670,7 +687,8 @@ export interface Sync<ContinuationT = Continuation, IncrementalContinuationT = C
  * Information about the current sync, part of the {@link UpdateSyncExecutionContext} passed to the
  * `executeUpdate` function of the sync formula.
  */
-export type UpdateSync = Omit<Sync, "continuation">;
+export interface UpdateSync extends SyncBase {
+}
 /**
  * Information about the current sync, part of the {@link GetPermissionExecutionContext} passed to the
  * `executeGetPermissions` function of the sync formula.
@@ -778,7 +796,7 @@ export interface ExecutionContext {
 	/**
 	 * Information about state of the current sync. Only populated if this is a sync table formula.
 	 */
-	readonly sync?: Sync<unknown, unknown>;
+	readonly sync?: Sync<unknown>;
 	/**
 	 * If this function is being invoked with authentication, this indicates which authentication was used.
 	 *
@@ -808,11 +826,11 @@ export interface ExecutionContext {
  * Sub-class of {@link ExecutionContext} that is passed to the `execute` function of every
  * sync formula invocation. The only different is that the presence of the `sync` property
  */
-export interface SyncExecutionContext<ContinuationT = Continuation, IncrementalContinuationT = ContinuationT> extends ExecutionContext {
+export interface SyncExecutionContext<ContinuationT = Continuation, IncrementalContinuationT = ContinuationT, IncrementalSyncContinuationT = ContinuationT> extends ExecutionContext {
 	/**
 	 * Information about state of the current sync.
 	 */
-	readonly sync: Sync<ContinuationT, IncrementalContinuationT>;
+	readonly sync: Sync<ContinuationT, IncrementalContinuationT, IncrementalSyncContinuationT>;
 }
 /**
  * Sub-class of {@link SyncExecutionContext} that is passed to the `options` function of
@@ -950,12 +968,18 @@ declare enum TableRole {
 	GroupMembers = "groupMembers"
 }
 /** @hidden */
+export type SyncCompletionMetadataResult<IncrementalContinuationT = Continuation> = SyncCompletionMetadata<IncrementalContinuationT> | SyncCompletionMetadataIncomplete;
+/** @hidden */
 export interface SyncCompletionMetadata<IncrementalContinuationT = Continuation> {
 	/**
 	 * For enabling incremental syncs. If your sync execution provides this, then Coda will provide it to the
 	 * next sync execution.
 	 */
-	incrementalContinuation?: IncrementalContinuationT;
+	incrementalContinuation: IncrementalContinuationT;
+	hasIncompleteResults?: false;
+}
+/** @hidden */
+export interface SyncCompletionMetadataIncomplete {
 	/**
 	 * Returned by an incremental sync if the results are incomplete. Will be ignored during a full sync.
 	 *
@@ -964,7 +988,8 @@ export interface SyncCompletionMetadata<IncrementalContinuationT = Continuation>
 	 * TODO(sam): Unhide this
 	 * @hidden
 	 */
-	hasIncompleteResults?: boolean;
+	hasIncompleteResults: true;
+	incrementalContinuation?: never;
 }
 /**
  * TODO(patrick): Unhide this
@@ -2911,11 +2936,11 @@ export interface DynamicSyncTableDef<K extends string, L extends string, ParamDe
 	/** Identifies this sync table as dynamic. */
 	isDynamic: true;
 	/** See {@link DynamicSyncTableOptions.getSchema} */
-	getSchema: MetadataFormula;
+	getSchema: MetadataFormula<ContextT>;
 	/** See {@link DynamicSyncTableOptions.getName} */
-	getName: MetadataFormula;
+	getName: MetadataFormula<ContextT>;
 	/** See {@link DynamicSyncTableOptions.getDisplayUrl} */
-	getDisplayUrl: MetadataFormula;
+	getDisplayUrl: MetadataFormula<ContextT>;
 	/** See {@link DynamicSyncTableOptions.listDynamicUrls} */
 	listDynamicUrls?: MetadataFormula;
 	/** See {@link DynamicSyncTableOptions.searchDynamicUrls} */
@@ -3027,9 +3052,9 @@ export declare function makeParameter<T extends ParameterType, O extends Paramet
 /**
  * Base type for the inputs for creating a pack formula.
  */
-export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackFormulaResult> extends CommonPackFormulaDef<ParamsT> {
+export interface PackFormulaDef<ParamsT extends ParamDefs, ResultT extends PackFormulaResult, ContextT extends ExecutionContext = ExecutionContext> extends CommonPackFormulaDef<ParamsT> {
 	/** The JavaScript function that implements this formula */
-	execute(params: ParamValues<ParamsT>, context: ExecutionContext): Promise<ResultT> | ResultT;
+	execute(params: ParamValues<ParamsT>, context: ContextT): Promise<ResultT> | ResultT;
 }
 /**
  * Inputs to declaratively define a formula that returns a list of objects.
@@ -3059,7 +3084,7 @@ export interface EmptyFormulaDef<ParamsT extends ParamDefs> extends Omit<PackFor
 	request: RequestHandlerTemplate;
 }
 /** The base class for pack formula descriptors. Subclasses vary based on the return type of the formula. */
-export type BaseFormula<ParamDefsT extends ParamDefs, ResultT extends PackFormulaResult> = PackFormulaDef<ParamDefsT, ResultT> & {
+export type BaseFormula<ParamDefsT extends ParamDefs, ResultT extends PackFormulaResult, ContextT extends ExecutionContext = ExecutionContext> = PackFormulaDef<ParamDefsT, ResultT, ContextT> & {
 	resultType: TypeOf<ResultT>;
 };
 /** A pack formula that returns a number. */
@@ -3106,7 +3131,7 @@ export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, "execute">;
  * that the sync formula should be invoked again to get a next page of results. Sync functions
  * are called repeatedly until there is no continuation returned.
  */
-export interface SyncFormulaResult<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any> = SyncExecutionContext> {
+export interface SyncFormulaResult<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any> = SyncExecutionContext> {
 	/** The list of rows from this page. */
 	result: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>;
 	/**
@@ -3124,7 +3149,7 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
 	 * TODO(patrick): Unhide this
 	 * @hidden
 	 */
-	completion?: ContextT["sync"]["previousCompletion"];
+	completion?: SyncCompletionMetadataResult<NonNullable<ContextT["sync"]["previousCompletion"]>["incrementalContinuation"]>;
 	/**
 	 * Return the list of deleted item ids for incremental sync deletion.
 	 *
@@ -3537,10 +3562,10 @@ export type MetadataFormulaResultType = string | number | MetadataFormulaObjectR
  * values of the others. This is dictionary mapping the names of each parameter to its
  * current value.
  */
-export type MetadataFormula = BaseFormula<[
+export type MetadataFormula<ContextT extends ExecutionContext = ExecutionContext> = BaseFormula<[
 	ParamDef<Type.string>,
 	ParamDef<Type.string>
-], any> & {
+], any, ContextT> & {
 	schema?: any;
 };
 /**
@@ -3557,13 +3582,13 @@ export type MetadataFormulaMetadata = Omit<MetadataFormula, "execute">;
 /**
  * A JavaScript function that can implement a {@link MetadataFormulaDef}.
  */
-export type MetadataFunction = (context: ExecutionContext, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
+export type MetadataFunction<ContextT extends ExecutionContext = ExecutionContext> = (context: ContextT, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
 /**
  * The type of values that will be accepted as a metadata formula definition. This can either
  * be the JavaScript function that implements a metadata formula (strongly recommended)
  * or a full metadata formula definition (mostly supported for legacy code).
  */
-export type MetadataFormulaDef = MetadataFormula | MetadataFunction;
+export type MetadataFormulaDef<ContextT extends ExecutionContext = ExecutionContext> = MetadataFormula<ContextT> | MetadataFunction<ContextT>;
 /**
  * A wrapper that generates a formula definition from the function that implements a metadata formula.
  * It is uncommon to ever need to call this directly, normally you would just define the JavaScript
@@ -3576,9 +3601,9 @@ export type MetadataFormulaDef = MetadataFormula | MetadataFunction;
  * This wrapper simply adds the surrounding boilerplate for a given JavaScript function so that
  * it is shaped like a Coda formula to be used at runtime.
  */
-export declare function makeMetadataFormula(execute: MetadataFunction, options?: {
+export declare function makeMetadataFormula<ContextT extends ExecutionContext>(execute: MetadataFunction<ContextT>, options?: {
 	connectionRequirement?: ConnectionRequirement;
-}): MetadataFormula;
+}): MetadataFormula<ContextT>;
 /**
  * Builds a formula to store in {@link SyncTablePropertyOptions}.
  * @hidden
@@ -3672,7 +3697,7 @@ export interface DynamicOptions {
 	 * For a dynamic sync table, the value of {@link DynamicSyncTableOptions.getSchema}
 	 * is passed through here. For a non-dynamic sync table, you may still implement
 	 * this if you table has a schema that varies based on the user account, but
-	 * does not require a {@link Sync.dynamicUrl}.
+	 * does not require a {@link SyncBase.dynamicUrl}.
 	 */
 	getSchema?: MetadataFormulaDef;
 	/** See {@link DynamicSyncTableOptions.entityName} */
@@ -3765,7 +3790,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
 	/**
 	 * A formula that returns the name of this table.
 	 */
-	getName: MetadataFormulaDef;
+	getName: MetadataFormulaDef<ContextT>;
 	/**
 	 * See {@link SyncTableOptions.identityName} for an introduction.
 	 *
@@ -3777,14 +3802,14 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
 	/**
 	 * A formula that returns the schema for this table.
 	 */
-	getSchema: MetadataFormulaDef;
+	getSchema: MetadataFormulaDef<ContextT>;
 	/**
 	 * A formula that that returns a browser-friendly url representing the
 	 * resource being synced. The Coda UI links to this url as the source
 	 * of the table data. This is typically a browser-friendly form of the
 	 * `dynamicUrl`, which is typically an API url.
 	 */
-	getDisplayUrl: MetadataFormulaDef;
+	getDisplayUrl: MetadataFormulaDef<ContextT>;
 	/**
 	 * A formula that returns a list of available dynamic urls that can be
 	 * used to create an instance of this dynamic sync table.
@@ -3906,11 +3931,11 @@ export declare function makeSyncTable<K extends string, L extends string, ParamD
 export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any>>({ name, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, searchDynamicUrls: searchDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, propertyOptions, }: {
 	name: string;
 	description?: string;
-	getName: MetadataFormulaDef;
-	getSchema: MetadataFormulaDef;
+	getName: MetadataFormulaDef<ContextT>;
+	getSchema: MetadataFormulaDef<ContextT>;
 	identityName: string;
 	formula: SyncFormulaDef<K, L, ParamDefsT, any, ContextT>;
-	getDisplayUrl: MetadataFormulaDef;
+	getDisplayUrl: MetadataFormulaDef<ContextT>;
 	listDynamicUrls?: MetadataFormulaDef;
 	searchDynamicUrls?: MetadataFormulaDef;
 	entityName?: string;

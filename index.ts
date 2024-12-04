@@ -241,17 +241,20 @@ export type {ObjectPackFormula} from './api';
 export type {StringPackFormula} from './api';
 export type {StringFormulaDef} from './api';
 
-export {DynamicSyncTableOptions} from './api';
-export {MetadataFormulaDef} from './api';
-export {ObjectArrayFormulaDef} from './api';
-export {SyncFormula} from './api';
-export {SyncFormulaDef} from './api';
-export {SyncTable} from './api';
+export type {DynamicSyncTableOptions} from './api';
+export type {MetadataFormulaDef} from './api';
+export type {ObjectArrayFormulaDef} from './api';
+export type {SyncFormula} from './api';
+export type {SyncFormulaDef} from './api';
+export type {SyncTable} from './api';
 
-export {SetEndpoint} from './types';
-export {SetEndpointDef} from './types';
-export {Sync} from './api_types';
-export {SystemAuthenticationDef} from './types';
+export type {SetEndpoint} from './types';
+export type {SetEndpointDef} from './types';
+export type {Sync} from './api_types';
+export type {SyncBase} from './api_types';
+export type {SyncFull} from './api_types';
+export type {SyncIncremental} from './api_types';
+export type {SystemAuthenticationDef} from './types';
 export {TokenExchangeCredentialsLocation} from './types';
 
 export type {BooleanHintTypes} from './schema';
