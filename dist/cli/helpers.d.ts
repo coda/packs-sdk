@@ -1,5 +1,6 @@
 /// <reference types="node" />
 /// <reference types="node" />
+/// <reference types="node" />
 import type { Authentication } from '../types';
 import type { BasicPackDefinition } from '../types';
 import { Client } from '../helpers/external-api/coda';

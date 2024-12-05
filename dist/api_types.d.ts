@@ -1,4 +1,5 @@
 /// <reference types="node" />
+/// <reference types="node" />
 import type { $Values } from './type_utils';
 import type { ArraySchema } from './schema';
 import type { Assert } from './type_utils';
