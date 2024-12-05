@@ -339,14 +339,14 @@ export interface ParamDef<T extends UnionType> {
   suggestedValue?: SuggestedValueType<T>;
 
   /**
-   * In certain contexts (like Coda Brain), Coda's default behavior is to sync *all* data available, in which case
-   * the {@link ParamDef.suggestedValue} will not be ideal, as most use cases will prefer efficiency
-   * over completeness. Use this field to specify a default value when Coda is syncing all data.
+   * In crawl syncs, where we want to load *all* data available, the {@link ParamDef.suggestedValue}
+   * will not be ideal, as most use cases will prefer efficiency over completeness.
+   * Use this field to specify a default value for crawl syncs.
    *
    * @hidden
    */
   // TODO(patrick): Unhide this
-  fullSyncSuggestedValue?: SuggestedValueType<T>;
+  crawlSuggestedValue?: SuggestedValueType<T>;
 
   /**
    * An array of Precanned values that are valid for this parameter. Users will also be allowed to
@@ -377,12 +377,13 @@ export interface ParamDef<T extends UnionType> {
   allowManualInput?: boolean;
 
   // TODO(patrick): Unhide this
+  // TODO(patrick): Rename this property and class now that "crawl" means something different
   /** @hidden */
   crawlStrategy?: CrawlStrategy;
 
   /**
    * Whether this parameter is compatible with incremental sync.
-   * If not, it will be hidden from the Coda Brain setup UI.
+   * If not, it will be hidden from crawl setup UIs.
    */
   // TODO(ebo): Unhide this
   /** @hidden */
@@ -1015,14 +1016,18 @@ export interface ExecutionContext {
   readonly authenticationName?: string;
 
   /**
-   * If this invocation is a part of a crawling execution, like in Coda Brain, then this ID will be provided
+   * If this invocation is a part of a crawl sync, then this ID will be provided
    * to all invocations. That includes invocations of sync `execute` and `executeGetPermissions`, as well as
    * dynamic table features like `listDynamicUrls`, `getSchema`, and `getName`.
+   *
+   * This may be a full sync ID or an incremental sync ID.
+   *
+   * TODO(patrick): May want to support this in doc syncs too.
    *
    * TODO(patrick): Unhide this
    * @hidden
    */
-  readonly executionId?: string;
+  readonly syncId?: string;
 
   /**
    * If this invocation is a retry, this will be populated with information about what went wrong
