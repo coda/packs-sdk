@@ -235,7 +235,7 @@ export async function injectExecutionContext({
   invocationToken,
   sync,
   authenticationName,
-  syncId: executionId,
+  executionId,
   previousAttemptError,
   ...rest
 }: {

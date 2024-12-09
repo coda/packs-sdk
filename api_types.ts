@@ -346,7 +346,12 @@ export interface ParamDef<T extends UnionType> {
    * @hidden
    */
   // TODO(patrick): Unhide this
-  crawlSuggestedValue?: SuggestedValueType<T>;
+  ingestionSuggestedValue?: SuggestedValueType<T>;
+  /**
+   * @deprecated Use {@link ParamDef.ingestionSuggestedValue} instead.
+   * @hidden
+   */
+  fullSyncSuggestedValue?: SuggestedValueType<T>;
 
   /**
    * An array of Precanned values that are valid for this parameter. Users will also be allowed to
@@ -377,7 +382,6 @@ export interface ParamDef<T extends UnionType> {
   allowManualInput?: boolean;
 
   // TODO(patrick): Unhide this
-  // TODO(patrick): Rename this property and class now that "crawl" means something different
   /** @hidden */
   crawlStrategy?: CrawlStrategy;
 
@@ -841,6 +845,20 @@ export interface SyncBase {
   readonly parameters?: MetadataContext;
 
   /**
+   * If this invocation is a part of a crawl sync, then this ID will be provided to all invocations.
+   * It may be a full sync execution ID or an incremental sync execution ID.
+   *
+   * This includes invocations of sync `execute` and `executeGetPermissions`, as well as
+   * dynamic table features like `listDynamicUrls`, `getSchema`, and `getName`.
+   *
+   * TODO(patrick): May want to support this in doc syncs too.
+   *
+   * TODO(patrick): Unhide this
+   * @hidden
+   */
+  executionId?: string;
+
+  /**
    * This is only populated when `context.invocationLocation.source === InvocationSource.Brain`.
    *
    * TODO(patrick): Unhide this
@@ -1016,18 +1034,10 @@ export interface ExecutionContext {
   readonly authenticationName?: string;
 
   /**
-   * If this invocation is a part of a crawl sync, then this ID will be provided
-   * to all invocations. That includes invocations of sync `execute` and `executeGetPermissions`, as well as
-   * dynamic table features like `listDynamicUrls`, `getSchema`, and `getName`.
-   *
-   * This may be a full sync ID or an incremental sync ID.
-   *
-   * TODO(patrick): May want to support this in doc syncs too.
-   *
-   * TODO(patrick): Unhide this
+   * @deprecated Replace this with {@link SyncBase.executionId}
    * @hidden
    */
-  readonly syncId?: string;
+  readonly executionId?: string;
 
   /**
    * If this invocation is a retry, this will be populated with information about what went wrong

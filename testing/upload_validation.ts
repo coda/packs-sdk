@@ -750,8 +750,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
 
   const reservedAuthenticationNames = Object.values(ReservedAuthenticationNames).map(value => value.toString());
   const adminAuthenticationValidator = zodCompleteObject<AdminAuthentication>({
-    authentication: z
-      .union(zodUnionInput(Object.values(adminAuthenticationValidators))),
+    authentication: z.union(zodUnionInput(Object.values(adminAuthenticationValidators))),
     name: z
       .string()
       .min(1)
@@ -794,7 +793,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     autocomplete: z.unknown().optional(),
     defaultValue: z.unknown().optional(),
     suggestedValue: z.unknown().optional(),
-    crawlSuggestedValue: z.unknown().optional(),
+    ingestionSuggestedValue: z.unknown().optional(),
+    fullSyncSuggestedValue: z.unknown().optional(),
     allowedPresetValues: z.array(z.unknown()).optional(),
     allowManualInput: z.boolean().optional(),
     crawlStrategy: z.unknown().optional(),
@@ -1976,15 +1976,14 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           // only add identity names that are not undefined to check for dupes
           if (tableDef.schema.identity) {
             const allowedAuthenticationNames = identityInfo.get(tableDef.schema.identity.name) || [];
-            identityInfo.set(
-              tableDef.schema.identity.name, 
-              [...allowedAuthenticationNames, ...(tableDef.getter?.allowedAuthenticationNames || [undefined])],
-            );
-  
+            identityInfo.set(tableDef.schema.identity.name, [
+              ...allowedAuthenticationNames,
+              ...(tableDef.getter?.allowedAuthenticationNames || [undefined]),
+            ]);
           }
           formulaNames.push(tableDef.getter.name);
         }
-        
+
         validateIdentityNames(context, identityInfo);
         for (const dupe of getNonUniqueElements(formulaNames)) {
           context.addIssue({
@@ -2010,7 +2009,9 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         if (seenAuthNames.has(allowedAuthName) || seenAuthNames.has(undefined)) {
           context.addIssue({
             code: z.ZodIssueCode.custom,
-            message: allowedAuthName ?  `Identity "${identityName}" is used by multiple sync tables with non-distinct allowedAuthenticationNames: ${allowedAuthName}`: `Sync table identity names must be unique. Found duplicate name "${identityName}".` ,
+            message: allowedAuthName
+              ? `Identity "${identityName}" is used by multiple sync tables with non-distinct allowedAuthenticationNames: ${allowedAuthName}`
+              : `Sync table identity names must be unique. Found duplicate name "${identityName}".`,
           });
         }
         seenAuthNames.add(allowedAuthName);
