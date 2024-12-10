@@ -447,7 +447,7 @@ async function executeSyncFormula(packDef, syncFormulaName, params, context, { v
         }
     }
     const result = [];
-    const deletedItemIds = [];
+    const deletedRowIds = [];
     let iterations = 1;
     do {
         if (iterations > MaxSyncIterations) {
@@ -455,8 +455,8 @@ async function executeSyncFormula(packDef, syncFormulaName, params, context, { v
         }
         const response = await findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_1.FormulaType.Sync }, packDef, executionContext, undefined, undefined, { validateParams: false, validateResult: false, useDeprecatedResultNormalization });
         result.push(...response.result);
-        if (response.deletedItemIds) {
-            deletedItemIds.push(...response.deletedItemIds);
+        if (response.deletedRowIds) {
+            deletedRowIds.push(...response.deletedRowIds);
         }
         executionContext.sync.continuation = response.continuation;
         iterations++;
@@ -466,7 +466,7 @@ async function executeSyncFormula(packDef, syncFormulaName, params, context, { v
     }
     return {
         result,
-        deletedItemIds,
+        deletedRowIds,
     };
 }
 exports.executeSyncFormula = executeSyncFormula;

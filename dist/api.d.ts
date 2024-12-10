@@ -7,7 +7,6 @@ import type { ExecutionContext } from './api_types';
 import type { FetchRequest } from './api_types';
 import type { GetPermissionExecutionContext } from './api_types';
 import type { Identity } from './schema';
-import type { ItemMatchingPredicate } from './api_types';
 import type { NumberHintTypes } from './schema';
 import type { NumberSchema } from './schema';
 import type { ObjectSchema } from './schema';
@@ -28,6 +27,7 @@ import type { RequestHandlerTemplate } from './handler_templates';
 import type { RequiredParamDef } from './api_types';
 import type { ResponseHandlerTemplate } from './handler_templates';
 import type { RowAccessDefinition } from './schema';
+import type { RowMatchingPredicate } from './api_types';
 import type { Schema } from './schema';
 import type { SchemaType } from './schema';
 import type { StringHintTypes } from './schema';
@@ -590,6 +590,11 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
      * TODO(ebo): Unhide this
      * @hidden
      */
+    deletedRowIds?: string[];
+    /**
+     * @deprecated Use {@link deletedRowIds} instead.
+     * @hidden
+     */
     deletedItemIds?: string[];
     /**
      * Use this to specify items that should be deleted if you don't know their exact IDs.
@@ -597,7 +602,7 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
      * TODO(patrick): Unhide this
      * @hidden
      */
-    deletionPredicate?: ItemMatchingPredicate;
+    deletionPredicate?: RowMatchingPredicate;
 }
 /** @hidden */
 export interface TypedSyncFormulaResult<T extends object, ContextT extends SyncExecutionContext<any>> extends SyncFormulaResult<string, string, any, ContextT> {
