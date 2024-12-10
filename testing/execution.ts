@@ -858,8 +858,12 @@ export function newRealFetcherSyncExecutionContext(
   packDef: BasicPackDefinition,
   manifestPath: string,
 ): SyncExecutionContext {
-  const context = newRealFetcherExecutionContext(packDef, manifestPath);
-  return {...context, sync: {}};
+  return newFetcherSyncExecutionContext(
+    buildUpdateCredentialsCallback(manifestPath),
+    getPackAuth(packDef),
+    packDef.networkDomains,
+    getCredentials(manifestPath),
+  );
 }
 
 const SyncUpdateSchema = z.object({
