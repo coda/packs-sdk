@@ -750,8 +750,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
 
   const reservedAuthenticationNames = Object.values(ReservedAuthenticationNames).map(value => value.toString());
   const adminAuthenticationValidator = zodCompleteObject<AdminAuthentication>({
-    authentication: z
-      .union(zodUnionInput(Object.values(adminAuthenticationValidators))),
+    authentication: z.union(zodUnionInput(Object.values(adminAuthenticationValidators))),
     name: z
       .string()
       .min(1)
@@ -1283,6 +1282,12 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     popularityRankProperty: propertySchema.optional(),
   });
 
+  const reverseLookupInfoSchema = z.object({
+    sourceGridId: z.string(),
+    sourceColumnId: z.string(),
+    isStandard: z.boolean(),
+  });
+
   function makePropertyValidator(schema: GenericObjectSchema, context: z.RefinementCtx) {
     /**
      * Validates a PropertyIdentifier key in the object schema.
@@ -1392,6 +1397,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         sdkVersion && semver.satisfies(sdkVersion, '<=1.4.0')
           ? zodOptionsFieldWithValues(z.string(), true)
           : z.never().optional(),
+      reverseLookupInfo: reverseLookupInfoSchema.optional(),
     })
       .superRefine((data, context) => {
         if (!isValidIdentityName(data.identity?.packId, data.identity?.name as string)) {
@@ -1976,15 +1982,14 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           // only add identity names that are not undefined to check for dupes
           if (tableDef.schema.identity) {
             const allowedAuthenticationNames = identityInfo.get(tableDef.schema.identity.name) || [];
-            identityInfo.set(
-              tableDef.schema.identity.name, 
-              [...allowedAuthenticationNames, ...(tableDef.getter?.allowedAuthenticationNames || [undefined])],
-            );
-  
+            identityInfo.set(tableDef.schema.identity.name, [
+              ...allowedAuthenticationNames,
+              ...(tableDef.getter?.allowedAuthenticationNames || [undefined]),
+            ]);
           }
           formulaNames.push(tableDef.getter.name);
         }
-        
+
         validateIdentityNames(context, identityInfo);
         for (const dupe of getNonUniqueElements(formulaNames)) {
           context.addIssue({
@@ -2010,7 +2015,9 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         if (seenAuthNames.has(allowedAuthName) || seenAuthNames.has(undefined)) {
           context.addIssue({
             code: z.ZodIssueCode.custom,
-            message: allowedAuthName ?  `Identity "${identityName}" is used by multiple sync tables with non-distinct allowedAuthenticationNames: ${allowedAuthName}`: `Sync table identity names must be unique. Found duplicate name "${identityName}".` ,
+            message: allowedAuthName
+              ? `Identity "${identityName}" is used by multiple sync tables with non-distinct allowedAuthenticationNames: ${allowedAuthName}`
+              : `Sync table identity names must be unique. Found duplicate name "${identityName}".`,
           });
         }
         seenAuthNames.add(allowedAuthName);

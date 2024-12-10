@@ -744,7 +744,7 @@ function normalizeObjectSchema(schema) {
     const normalizedProperties = {};
     const { attribution, options, requireForUpdates, codaType, description, displayProperty, featured, featuredProperties, id, identity, idProperty, parentIdProperty, imageProperty, includeUnknownProperties, linkProperty, primary, properties, snippetProperty, subtitleProperties, titleProperty, type, 
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    __packId, createdAtProperty, createdByProperty, modifiedAtProperty, modifiedByProperty, userEmailProperty, userIdProperty, groupIdProperty, memberGroupIdProperty, bodyTextProperty, popularityRankProperty, versionProperty, index, ...rest } = schema;
+    __packId, createdAtProperty, createdByProperty, modifiedAtProperty, modifiedByProperty, userEmailProperty, userIdProperty, groupIdProperty, memberGroupIdProperty, bodyTextProperty, popularityRankProperty, versionProperty, index, reverseLookupInfo, ...rest } = schema;
     // Have TS ensure we don't forget about new fields in this function.
     (0, ensure_3.ensureNever)();
     for (const key of Object.keys(properties)) {
@@ -770,6 +770,7 @@ function normalizeObjectSchema(schema) {
         requireForUpdates,
         codaType,
         description,
+        reverseLookupInfo,
         displayProperty: displayProperty ? normalizeSchemaKey(displayProperty) : undefined,
         featured: featured ? featured.map(normalizeSchemaKey) : undefined,
         featuredProperties: featuredProperties ? featuredProperties.map(normalizeSchemaKey) : undefined,

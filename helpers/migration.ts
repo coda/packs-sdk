@@ -64,6 +64,7 @@ class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
       parentIdProperty,
       versionProperty,
       index,
+      reverseLookupInfo,
       ...rest
     } = schema;
 
