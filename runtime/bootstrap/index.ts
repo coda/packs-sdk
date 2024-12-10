@@ -11,6 +11,7 @@ import type {Logger} from '../../api_types';
 import type {PackFunctionResponse} from '../types';
 import type {ParamDefs} from '../../api_types';
 import type {ParamValues} from '../../api_types';
+import type {SyncStateService} from '../../api_types';
 import type {SyncUpdate} from '../../api';
 import type {TemporaryBlobStorage} from '../../api_types';
 import {ensureNever} from '../../helpers/ensure';
@@ -228,6 +229,7 @@ export async function injectExecutionContext({
   context,
   fetcher,
   temporaryBlobStorage,
+  syncState,
   logger,
   endpoint,
   invocationLocation,
@@ -242,6 +244,7 @@ export async function injectExecutionContext({
   context: Context;
   fetcher: Fetcher;
   temporaryBlobStorage: TemporaryBlobStorage;
+  syncState: SyncStateService;
   logger: Logger;
 } & ExecutionContextPrimitives): Promise<void> {
   ensureNever<keyof typeof rest>();
@@ -249,6 +252,7 @@ export async function injectExecutionContext({
   const executionContextPrimitives = {
     fetcher: {},
     temporaryBlobStorage: {},
+    syncState: {},
     logger: {},
     endpoint,
     invocationLocation,
@@ -285,6 +289,12 @@ export async function injectExecutionContext({
     context,
     'executionContext.temporaryBlobStorage.storeUrl',
     temporaryBlobStorage.storeUrl.bind(temporaryBlobStorage),
+  );
+
+  await injectAsyncFunction(
+    context,
+    'executionContext.syncState.getLatestRowVersions',
+    syncState.getLatestRowVersions.bind(syncState),
   );
 }
 

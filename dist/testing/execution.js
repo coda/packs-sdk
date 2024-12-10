@@ -555,8 +555,7 @@ function newRealFetcherExecutionContext(packDef, manifestPath) {
 }
 exports.newRealFetcherExecutionContext = newRealFetcherExecutionContext;
 function newRealFetcherSyncExecutionContext(packDef, manifestPath) {
-    const context = newRealFetcherExecutionContext(packDef, manifestPath);
-    return { ...context, sync: {} };
+    return (0, fetcher_2.newFetcherSyncExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_3.getPackAuth)(packDef), packDef.networkDomains, getCredentials(manifestPath));
 }
 exports.newRealFetcherSyncExecutionContext = newRealFetcherSyncExecutionContext;
 const SyncUpdateSchema = z.object({

@@ -432,7 +432,7 @@ export async function executeFormulaOrSyncWithVM<T extends PackFormulaResult | G
   formulaName: string;
   params: ParamValues<ParamDefs>;
   bundlePath: string;
-  executionContext?: ExecutionContext;
+  executionContext?: SyncExecutionContext;
 }): Promise<T> {
   const manifest = await importManifest(bundlePath);
   const syncFormula = tryFindSyncFormula(manifest, formulaName);
@@ -858,8 +858,12 @@ export function newRealFetcherSyncExecutionContext(
   packDef: BasicPackDefinition,
   manifestPath: string,
 ): SyncExecutionContext {
-  const context = newRealFetcherExecutionContext(packDef, manifestPath);
-  return {...context, sync: {}};
+  return newFetcherSyncExecutionContext(
+    buildUpdateCredentialsCallback(manifestPath),
+    getPackAuth(packDef),
+    packDef.networkDomains,
+    getCredentials(manifestPath),
+  );
 }
 
 const SyncUpdateSchema = z.object({

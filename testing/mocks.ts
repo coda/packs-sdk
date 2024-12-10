@@ -4,6 +4,7 @@ import type {FetchRequest} from '../api_types';
 import type {FetchResponse} from '../api_types';
 import type {Sync} from '../api_types';
 import type {SyncExecutionContext} from '../api_types';
+import type {SyncStateService} from '../api_types';
 import type {TemporaryBlobStorage} from '../api_types';
 import sinon from 'sinon';
 import {v4} from 'uuid';
@@ -32,6 +33,9 @@ export interface MockSyncExecutionContext<
   IncrementalSyncContinuationT = ContinuationT,
 > extends MockExecutionContext {
   sync: Sync<ContinuationT, IncrementalContinuationT, IncrementalSyncContinuationT>;
+  syncState: {
+    getLatestRowVersions: SinonFunctionStub<SyncStateService['getLatestRowVersions']>;
+  };
 }
 
 /** Mock type of the specified `SyncExecutionContext`. */
@@ -46,7 +50,12 @@ export type SyncExecutionContextAsMock<T extends SyncExecutionContext> = T exten
 export function newMockSyncExecutionContext<T extends SyncExecutionContext<any>>(
   overrides?: Partial<T>,
 ): SyncExecutionContextAsMock<T> {
-  return {...newMockExecutionContext(), sync: {}, ...overrides} as SyncExecutionContextAsMock<T>;
+  return {
+    ...newMockExecutionContext(),
+    sync: {},
+    syncState: {getLatestRowVersions: sinon.stub()},
+    ...overrides,
+  } as SyncExecutionContextAsMock<T>;
 }
 
 export function newMockExecutionContext(overrides?: Partial<MockExecutionContext>): MockExecutionContext {
