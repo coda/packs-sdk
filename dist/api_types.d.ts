@@ -915,6 +915,10 @@ export interface SyncExecutionContext<ContinuationT = Continuation, IncrementalC
     readonly syncState: SyncStateService;
 }
 /**
+ * A function to check if a given {@link ExecutionContext} is a {@link SyncExecutionContext}.
+ */
+export declare function isSyncExecutionContext(context: ExecutionContext): context is SyncExecutionContext;
+/**
  * Sub-class of {@link SyncExecutionContext} that is passed to the `options` function of
  * mutable sync tables for properties with `options` enabled.
  */
@@ -948,13 +952,6 @@ export interface UpdateSyncExecutionContext extends ExecutionContext {
      * Information about state of the current sync.
      */
     readonly sync: UpdateSync;
-    /**
-     * A service for retrieving the sync state in Coda Brain.
-     * @hidden
-     *
-     * TODO(ebo): unhide this
-     */
-    readonly syncState: SyncStateService;
 }
 /**
  * Context provided to GetPermissionExecution calls

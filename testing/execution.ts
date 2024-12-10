@@ -432,7 +432,7 @@ export async function executeFormulaOrSyncWithVM<T extends PackFormulaResult | G
   formulaName: string;
   params: ParamValues<ParamDefs>;
   bundlePath: string;
-  executionContext?: SyncExecutionContext;
+  executionContext?: ExecutionContext;
 }): Promise<T> {
   const manifest = await importManifest(bundlePath);
   const syncFormula = tryFindSyncFormula(manifest, formulaName);

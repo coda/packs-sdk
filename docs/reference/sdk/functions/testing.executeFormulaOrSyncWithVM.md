@@ -22,7 +22,7 @@ search:
 | :------ | :------ |
 | `«destructured»` | `Object` |
 | › `bundlePath` | `string` |
-| › `executionContext?` | [`SyncExecutionContext`](../interfaces/core.SyncExecutionContext.md)<[`Continuation`](../interfaces/core.Continuation.md), [`Continuation`](../interfaces/core.Continuation.md), [`Continuation`](../interfaces/core.Continuation.md)\> |
+| › `executionContext?` | [`ExecutionContext`](../interfaces/core.ExecutionContext.md) |
 | › `formulaName` | `string` |
 | › `params` | [`ParamValues`](../types/core.ParamValues.md)<[`ParamDefs`](../types/core.ParamDefs.md)\> |
 

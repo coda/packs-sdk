@@ -11,6 +11,7 @@ const ivm_wrapper_1 = require("./ivm_wrapper");
 const bootstrap_2 = require("../runtime/bootstrap");
 const bootstrap_3 = require("../runtime/bootstrap");
 const bootstrap_4 = require("../runtime/bootstrap");
+const api_types_1 = require("../api_types");
 const path_1 = __importDefault(require("path"));
 const bootstrap_5 = require("../runtime/bootstrap");
 const IsolateMemoryLimit = 128;
@@ -56,7 +57,7 @@ async function setupIvmContext(bundlePath, executionContext) {
         authenticationName: executionContext.authenticationName,
         executionId: executionContext.executionId,
         previousAttemptError: executionContext.previousAttemptError,
-        syncState: executionContext.syncState,
+        syncState: (0, api_types_1.isSyncExecutionContext)(executionContext) ? executionContext.syncState : undefined,
     });
     return ivmContext;
 }

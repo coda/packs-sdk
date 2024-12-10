@@ -244,7 +244,7 @@ export async function injectExecutionContext({
   context: Context;
   fetcher: Fetcher;
   temporaryBlobStorage: TemporaryBlobStorage;
-  syncState: SyncStateService;
+  syncState: SyncStateService | undefined;
   logger: Logger;
 } & ExecutionContextPrimitives): Promise<void> {
   ensureNever<keyof typeof rest>();
@@ -291,11 +291,13 @@ export async function injectExecutionContext({
     temporaryBlobStorage.storeUrl.bind(temporaryBlobStorage),
   );
 
-  await injectAsyncFunction(
-    context,
-    'executionContext.syncState.getLatestRowVersions',
-    syncState.getLatestRowVersions.bind(syncState),
-  );
+  if (syncState) {
+    await injectAsyncFunction(
+      context,
+      'executionContext.syncState.getLatestRowVersions',
+      syncState.getLatestRowVersions.bind(syncState),
+    );
+  }
 }
 
 export async function registerBundle(

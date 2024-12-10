@@ -52,7 +52,7 @@ export declare function injectExecutionContext({ context, fetcher, temporaryBlob
     context: Context;
     fetcher: Fetcher;
     temporaryBlobStorage: TemporaryBlobStorage;
-    syncState: SyncStateService;
+    syncState: SyncStateService | undefined;
     logger: Logger;
 } & ExecutionContextPrimitives): Promise<void>;
 export declare function registerBundle(isolate: Isolate, context: Context, path: string, stubName: string, requiresManualClosure?: boolean): Promise<void>;

@@ -910,13 +910,6 @@ export interface UpdateSyncExecutionContext extends ExecutionContext {
 	 * Information about state of the current sync.
 	 */
 	readonly sync: UpdateSync;
-	/**
-	 * A service for retrieving the sync state in Coda Brain.
-	 * @hidden
-	 *
-	 * TODO(ebo): unhide this
-	 */
-	readonly syncState: SyncStateService;
 }
 /**
  * Context provided to GetPermissionExecution calls

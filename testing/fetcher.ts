@@ -704,7 +704,7 @@ class AuthenticatingBlobStorage implements TemporaryBlobStorage {
   }
 }
 
-class AuthenticatingSyncStateService implements SyncStateService {
+class FakeSyncStateService implements SyncStateService {
   async getLatestRowVersions(rowIds: string[]): Promise<{[rowId: string]: string}> {
     return rowIds.reduce((acc, rowId) => {
       acc[rowId] = '1.0.0';
@@ -746,7 +746,7 @@ export function newFetcherSyncExecutionContext(
   credentials?: Credentials,
 ): SyncExecutionContext {
   const context = newFetcherExecutionContext(updateCredentialsCallback, authDef, networkDomains, credentials);
-  return {...context, sync: {}, syncState: new AuthenticatingSyncStateService()};
+  return {...context, sync: {}, syncState: new FakeSyncStateService()};
 }
 
 function addQueryParam(url: string, param: string, value: string): string {

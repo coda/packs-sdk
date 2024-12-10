@@ -1,5 +1,5 @@
+import type {ExecutionContext} from '../api_types';
 import type {Context as IVMContext} from 'isolated-vm';
-import type {SyncExecutionContext} from '../api_types';
 import {build as buildBundle} from '../cli/build';
 import {createIsolateContext} from '../runtime/bootstrap';
 import fs from 'fs';
@@ -7,6 +7,7 @@ import {getIvm} from './ivm_wrapper';
 import {getThunkPath} from '../runtime/bootstrap';
 import {injectExecutionContext} from '../runtime/bootstrap';
 import {injectSerializer} from '../runtime/bootstrap';
+import { isSyncExecutionContext} from '../api_types';
 import path from 'path';
 import {registerBundles} from '../runtime/bootstrap';
 
@@ -17,7 +18,7 @@ const IsolateMemoryLimit = 128;
 const CompiledHelperBundlePath = getThunkPath();
 const HelperTsSourceFile = `${__dirname}/../runtime/thunk/thunk.ts`;
 
-export async function setupIvmContext(bundlePath: string, executionContext: SyncExecutionContext): Promise<IVMContext> {
+export async function setupIvmContext(bundlePath: string, executionContext: ExecutionContext): Promise<IVMContext> {
   const ivm = getIvm();
   // creating an isolate with 128M memory limit.
   const isolate = new ivm.Isolate({memoryLimit: IsolateMemoryLimit});
@@ -58,7 +59,7 @@ export async function setupIvmContext(bundlePath: string, executionContext: Sync
     authenticationName: executionContext.authenticationName,
     executionId: executionContext.executionId,
     previousAttemptError: executionContext.previousAttemptError,
-    syncState: executionContext.syncState,
+    syncState: isSyncExecutionContext(executionContext) ? executionContext.syncState : undefined,
   });
 
   return ivmContext;

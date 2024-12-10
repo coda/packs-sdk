@@ -45,7 +45,7 @@ export declare function executeFormulaOrSyncWithVM<T extends PackFormulaResult |
     formulaName: string;
     params: ParamValues<ParamDefs>;
     bundlePath: string;
-    executionContext?: SyncExecutionContext;
+    executionContext?: ExecutionContext;
 }): Promise<T>;
 export declare class VMError {
     name: string;

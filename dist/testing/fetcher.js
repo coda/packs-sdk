@@ -547,7 +547,7 @@ class AuthenticatingBlobStorage {
         return `https://not-a-real-url.s3.amazonaws.com/tempBlob/${(0, uuid_1.v4)()}`;
     }
 }
-class AuthenticatingSyncStateService {
+class FakeSyncStateService {
     async getLatestRowVersions(rowIds) {
         return rowIds.reduce((acc, rowId) => {
             acc[rowId] = '1.0.0';
@@ -572,7 +572,7 @@ function newFetcherExecutionContext(updateCredentialsCallback, authDef, networkD
 exports.newFetcherExecutionContext = newFetcherExecutionContext;
 function newFetcherSyncExecutionContext(updateCredentialsCallback, authDef, networkDomains, credentials) {
     const context = newFetcherExecutionContext(updateCredentialsCallback, authDef, networkDomains, credentials);
-    return { ...context, sync: {}, syncState: new AuthenticatingSyncStateService() };
+    return { ...context, sync: {}, syncState: new FakeSyncStateService() };
 }
 exports.newFetcherSyncExecutionContext = newFetcherSyncExecutionContext;
 function addQueryParam(url, param, value) {

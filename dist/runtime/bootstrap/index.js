@@ -181,7 +181,9 @@ async function injectExecutionContext({ context, fetcher, temporaryBlobStorage, 
     await injectLogFunction(context, 'console.log', logger.info.bind(logger));
     await injectAsyncFunction(context, 'executionContext.temporaryBlobStorage.storeBlob', temporaryBlobStorage.storeBlob.bind(temporaryBlobStorage));
     await injectAsyncFunction(context, 'executionContext.temporaryBlobStorage.storeUrl', temporaryBlobStorage.storeUrl.bind(temporaryBlobStorage));
-    await injectAsyncFunction(context, 'executionContext.syncState.getLatestRowVersions', syncState.getLatestRowVersions.bind(syncState));
+    if (syncState) {
+        await injectAsyncFunction(context, 'executionContext.syncState.getLatestRowVersions', syncState.getLatestRowVersions.bind(syncState));
+    }
 }
 exports.injectExecutionContext = injectExecutionContext;
 async function registerBundle(isolate, context, path, stubName, requiresManualClosure = true) {
