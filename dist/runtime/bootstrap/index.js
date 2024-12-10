@@ -150,12 +150,13 @@ exports.injectSerializer = injectSerializer;
 /**
  * Injects the ExecutionContext object, including stubs for network calls, into the isolate.
  */
-async function injectExecutionContext({ context, fetcher, temporaryBlobStorage, logger, endpoint, invocationLocation, timezone, invocationToken, sync, authenticationName, executionId, previousAttemptError, ...rest }) {
+async function injectExecutionContext({ context, fetcher, temporaryBlobStorage, syncState, logger, endpoint, invocationLocation, timezone, invocationToken, sync, authenticationName, executionId, previousAttemptError, ...rest }) {
     (0, ensure_1.ensureNever)();
     // Inject all of the primitives into a global we'll access when we execute the pack function.
     const executionContextPrimitives = {
         fetcher: {},
         temporaryBlobStorage: {},
+        syncState: {},
         logger: {},
         endpoint,
         invocationLocation,
@@ -180,6 +181,7 @@ async function injectExecutionContext({ context, fetcher, temporaryBlobStorage, 
     await injectLogFunction(context, 'console.log', logger.info.bind(logger));
     await injectAsyncFunction(context, 'executionContext.temporaryBlobStorage.storeBlob', temporaryBlobStorage.storeBlob.bind(temporaryBlobStorage));
     await injectAsyncFunction(context, 'executionContext.temporaryBlobStorage.storeUrl', temporaryBlobStorage.storeUrl.bind(temporaryBlobStorage));
+    await injectAsyncFunction(context, 'executionContext.syncState.getLatestRowVersions', syncState.getLatestRowVersions.bind(syncState));
 }
 exports.injectExecutionContext = injectExecutionContext;
 async function registerBundle(isolate, context, path, stubName, requiresManualClosure = true) {

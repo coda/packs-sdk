@@ -1,3 +1,3 @@
-import type { ExecutionContext } from '../api';
 import type { Context as IVMContext } from 'isolated-vm';
-export declare function setupIvmContext(bundlePath: string, executionContext: ExecutionContext): Promise<IVMContext>;
+import type { SyncExecutionContext } from '../api_types';
+export declare function setupIvmContext(bundlePath: string, executionContext: SyncExecutionContext): Promise<IVMContext>;
