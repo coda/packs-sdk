@@ -140,7 +140,7 @@ export const manifest: PackDefinition = createFakePack({
               if (page === 2) {
                 return {
                   result: [{name: 'Chris'}, {name: 'Diana'}],
-                  deletedItemIds: isIncremental ? ['Ed'] : undefined,
+                  deletedRowIds: isIncremental ? ['Ed'] : undefined,
                 };
               }
             case 'Brown':

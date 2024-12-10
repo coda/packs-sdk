@@ -633,7 +633,7 @@ export async function executeSyncFormula(
     }
   }
   const result = [];
-  const deletedItemIds = [];
+  const deletedRowIds = [];
   let iterations = 1;
   do {
     if (iterations > MaxSyncIterations) {
@@ -652,8 +652,8 @@ export async function executeSyncFormula(
     );
 
     result.push(...response.result);
-    if (response.deletedItemIds) {
-      deletedItemIds.push(...response.deletedItemIds);
+    if (response.deletedRowIds) {
+      deletedRowIds.push(...response.deletedRowIds);
     }
     executionContext.sync.continuation = response.continuation;
     iterations++;
@@ -665,7 +665,7 @@ export async function executeSyncFormula(
 
   return {
     result,
-    deletedItemIds,
+    deletedRowIds,
   };
 }
 
