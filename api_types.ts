@@ -339,13 +339,18 @@ export interface ParamDef<T extends UnionType> {
   suggestedValue?: SuggestedValueType<T>;
 
   /**
-   * In certain contexts (like Coda Brain), Coda's default behavior is to sync *all* data available, in which case
-   * the {@link ParamDef.suggestedValue} will not be ideal, as most use cases will prefer efficiency
-   * over completeness. Use this field to specify a default value when Coda is syncing all data.
+   * In ingestions, where we want to load *all* data available, the {@link ParamDef.suggestedValue}
+   * will not be ideal, as most use cases will prefer efficiency over completeness.
+   * Use this field to specify a default value for ingestions.
    *
    * @hidden
    */
   // TODO(patrick): Unhide this
+  ingestionSuggestedValue?: SuggestedValueType<T>;
+  /**
+   * @deprecated Use {@link ParamDef.ingestionSuggestedValue} instead.
+   * @hidden
+   */
   fullSyncSuggestedValue?: SuggestedValueType<T>;
 
   /**
@@ -382,7 +387,7 @@ export interface ParamDef<T extends UnionType> {
 
   /**
    * Whether this parameter is compatible with incremental sync.
-   * If not, it will be hidden from the Coda Brain setup UI.
+   * If not, it will be hidden from crawl setup UIs.
    */
   // TODO(ebo): Unhide this
   /** @hidden */
@@ -840,6 +845,20 @@ export interface SyncBase {
   readonly parameters?: MetadataContext;
 
   /**
+   * If this invocation is a part of an ingestion, then this ID will be provided to all invocations.
+   * It may be a full sync execution ID or an incremental sync execution ID.
+   *
+   * This includes invocations of sync `execute` and `executeGetPermissions`, as well as
+   * dynamic table features like `listDynamicUrls`, `getSchema`, and `getName`.
+   *
+   * TODO(patrick): May want to support this in doc syncs too.
+   *
+   * TODO(patrick): Unhide this
+   * @hidden
+   */
+  executionId?: string;
+
+  /**
    * This is only populated when `context.invocationLocation.source === InvocationSource.Brain`.
    *
    * TODO(patrick): Unhide this
@@ -1015,11 +1034,7 @@ export interface ExecutionContext {
   readonly authenticationName?: string;
 
   /**
-   * If this invocation is a part of a crawling execution, like in Coda Brain, then this ID will be provided
-   * to all invocations. That includes invocations of sync `execute` and `executeGetPermissions`, as well as
-   * dynamic table features like `listDynamicUrls`, `getSchema`, and `getName`.
-   *
-   * TODO(patrick): Unhide this
+   * @deprecated Replace this with {@link SyncBase.executionId}
    * @hidden
    */
   readonly executionId?: string;
