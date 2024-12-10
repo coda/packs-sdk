@@ -1205,6 +1205,16 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      * @hidden
      */
     versionProperty?: PropertyIdentifier<K>;
+    /**
+     * In case this Object schema is that of a reverse lookup column, store the info to link it back to the source column.
+     * Currently only used for Crossdoc
+     * @hidden
+     */
+    reverseLookupInfo?: {
+        sourceGridId: string;
+        sourceColumnId: string;
+        isStandard: boolean;
+    };
 }
 /**
  * The type of principal that can be applied to a permission.
