@@ -253,9 +253,9 @@ export interface ParamDef<T extends UnionType> {
      */
     suggestedValue?: SuggestedValueType<T>;
     /**
-     * In crawl syncs, where we want to load *all* data available, the {@link ParamDef.suggestedValue}
+     * In ingestions, where we want to load *all* data available, the {@link ParamDef.suggestedValue}
      * will not be ideal, as most use cases will prefer efficiency over completeness.
-     * Use this field to specify a default value for crawl syncs.
+     * Use this field to specify a default value for ingestions.
      *
      * @hidden
      */
@@ -700,7 +700,7 @@ export interface SyncBase {
      */
     readonly parameters?: MetadataContext;
     /**
-     * If this invocation is a part of a crawl sync, then this ID will be provided to all invocations.
+     * If this invocation is a part of an ingestion, then this ID will be provided to all invocations.
      * It may be a full sync execution ID or an incremental sync execution ID.
      *
      * This includes invocations of sync `execute` and `executeGetPermissions`, as well as
