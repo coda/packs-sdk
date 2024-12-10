@@ -80,7 +80,7 @@ describe('Execution', () => {
     const result = await executeSyncFormula(fakePack, 'Students', ['Smith'], mockContext);
     assert.deepEqual(result, {
       result: [{Name: 'Alice'}, {Name: 'Bob'}, {Name: 'Chris'}, {Name: 'Diana'}],
-      deletedItemIds: ['Ed'],
+      deletedRowIds: ['Ed'],
     });
   });
 

@@ -1352,7 +1352,7 @@ export interface SyncCompletionMetadataIncomplete {
  * TODO(patrick): Unhide this
  * @hidden
  */
-export interface ItemMatchingPredicate {
+export interface RowMatchingPredicate {
   /**
    * The name of the property to search for matches.
    */
