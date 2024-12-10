@@ -1383,7 +1383,18 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    * TODO(ebo): Unhide this
    * @hidden
    */
-  versionProperty? : PropertyIdentifier<K>;
+  versionProperty?: PropertyIdentifier<K>;
+
+  /**
+   * In case this Object schema is that of a reverse lookup column, store the info to link it back to the source column.
+   * Currently only used for Crossdoc
+   * @hidden
+   */
+  reverseLookupInfo?: {
+    sourceGridId: string;
+    sourceColumnId: string;
+    isStandard: boolean;
+  };
 
   // TODO(dweitzman): Only support options in the typing when the codaType is ValueHintType.SelectList.
 }
@@ -2125,6 +2136,7 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     popularityRankProperty,
     versionProperty,
     index,
+    reverseLookupInfo,
     ...rest
   } = schema;
   // Have TS ensure we don't forget about new fields in this function.

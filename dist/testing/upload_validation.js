@@ -1039,6 +1039,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         contextProperties: contextPropertiesSchema.optional(),
         popularityRankProperty: propertySchema.optional(),
     });
+    const reverseLookupInfoSchema = z.object({
+        sourceGridId: z.string(),
+        sourceColumnId: z.string(),
+        isStandard: z.boolean(),
+    });
     function makePropertyValidator(schema, context) {
         /**
          * Validates a PropertyIdentifier key in the object schema.
@@ -1133,6 +1138,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         autocomplete: sdkVersion && semver_1.default.satisfies(sdkVersion, '<=1.4.0')
             ? zodOptionsFieldWithValues(z.string(), true)
             : z.never().optional(),
+        reverseLookupInfo: reverseLookupInfoSchema.optional(),
     })
         .superRefine((data, context) => {
         var _a, _b;
