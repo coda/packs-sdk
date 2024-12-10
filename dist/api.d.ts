@@ -1487,19 +1487,19 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
     name: string;
     description: string;
     parameters: ParamDefsT;
-    varargParameters?: ParamDefs | undefined;
-    examples?: {
-        params: (import("./api_types").PackFormulaValue | undefined)[];
+    varargParameters?: ParamDefs;
+    examples?: Array<{
+        params: Array<import("./api_types").PackFormulaValue | undefined>;
         result: PackFormulaResult;
-    }[] | undefined;
-    isAction?: boolean | undefined;
-    connectionRequirement?: ConnectionRequirement | undefined;
-    network?: import("./api_types").Network | undefined;
-    cacheTtlSecs?: number | undefined;
-    isExperimental?: boolean | undefined;
-    isSystem?: boolean | undefined;
-    extraOAuthScopes?: string[] | undefined;
-    allowedAuthenticationNames?: string[] | undefined;
+    }>;
+    isAction?: boolean;
+    connectionRequirement?: ConnectionRequirement;
+    network?: import("./api_types").Network;
+    cacheTtlSecs?: number;
+    isExperimental?: boolean;
+    isSystem?: boolean;
+    extraOAuthScopes?: string[];
+    allowedAuthenticationNames?: string[];
 } & {
     execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<SchemaType<ResultT>>;
     resultType: Type.object;
@@ -1529,19 +1529,19 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
     name: string;
     description: string;
     parameters: ParamDefsT;
-    varargParameters?: ParamDefs | undefined;
-    examples?: {
-        params: (import("./api_types").PackFormulaValue | undefined)[];
+    varargParameters?: ParamDefs;
+    examples?: Array<{
+        params: Array<import("./api_types").PackFormulaValue | undefined>;
         result: PackFormulaResult;
-    }[] | undefined;
-    isAction?: boolean | undefined;
-    connectionRequirement?: ConnectionRequirement | undefined;
-    network?: import("./api_types").Network | undefined;
-    cacheTtlSecs?: number | undefined;
-    isExperimental?: boolean | undefined;
-    isSystem?: boolean | undefined;
-    extraOAuthScopes?: string[] | undefined;
-    allowedAuthenticationNames?: string[] | undefined;
+    }>;
+    isAction?: boolean;
+    connectionRequirement?: ConnectionRequirement;
+    network?: import("./api_types").Network;
+    cacheTtlSecs?: number;
+    isExperimental?: boolean;
+    isSystem?: boolean;
+    extraOAuthScopes?: string[];
+    allowedAuthenticationNames?: string[];
 } & {
     execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<string>;
     resultType: Type.string;
