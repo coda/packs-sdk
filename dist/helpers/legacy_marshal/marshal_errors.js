@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.legacyUnmarshalError = exports.legacyMarshalError = void 0;
+exports.legacyMarshalError = legacyMarshalError;
+exports.legacyUnmarshalError = legacyUnmarshalError;
 const constants_1 = require("./constants");
 const constants_2 = require("./constants");
 const api_1 = require("../../api");
@@ -55,7 +56,6 @@ function legacyMarshalError(err) {
         ...args,
     };
 }
-exports.legacyMarshalError = legacyMarshalError;
 function getErrorClass(errorClassType, name) {
     let errorClasses;
     switch (errorClassType) {
@@ -87,4 +87,3 @@ function legacyUnmarshalError(val) {
     }
     return error;
 }
-exports.legacyUnmarshalError = legacyUnmarshalError;
