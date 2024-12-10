@@ -412,7 +412,7 @@ describe('API test', () => {
       assert.equal(result.completion?.incrementalContinuation?.deltaToken, 'someToken');
     });
 
-    it('allows deletedItemIds return', async () => {
+    it('allows deletedRowIds return', async () => {
       const table = makeSyncTable({
         name: 'SomeSync',
         identityName: 'MyIdentityName',
@@ -434,14 +434,14 @@ describe('API test', () => {
           async execute() {
             return {
               result: [],
-              deletedItemIds: ['foo', 'foo2'],
+              deletedRowIds: ['foo', 'foo2'],
             };
           },
         },
       });
       // TODO(patrick): Why do we need the "as any" cast?
       const result = await table.getter.execute([] as any, newMockSyncExecutionContext());
-      assert.deepEqual(result.deletedItemIds, ['foo', 'foo2']);
+      assert.deepEqual(result.deletedRowIds, ['foo', 'foo2']);
     });
 
     it('allows deletionPredicate return', async () => {

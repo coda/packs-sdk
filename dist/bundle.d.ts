@@ -1009,7 +1009,7 @@ export interface SyncCompletionMetadataIncomplete {
  * TODO(patrick): Unhide this
  * @hidden
  */
-export interface ItemMatchingPredicate {
+export interface RowMatchingPredicate {
 	/**
 	 * The name of the property to search for matches.
 	 */
@@ -3170,6 +3170,11 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
 	 * TODO(ebo): Unhide this
 	 * @hidden
 	 */
+	deletedRowIds?: string[];
+	/**
+	 * @deprecated Use {@link deletedRowIds} instead.
+	 * @hidden
+	 */
 	deletedItemIds?: string[];
 	/**
 	 * Use this to specify items that should be deleted if you don't know their exact IDs.
@@ -3177,7 +3182,7 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
 	 * TODO(patrick): Unhide this
 	 * @hidden
 	 */
-	deletionPredicate?: ItemMatchingPredicate;
+	deletionPredicate?: RowMatchingPredicate;
 }
 /**
  * Type definition for the parameter used to pass in a batch of updates to a sync table update function.
