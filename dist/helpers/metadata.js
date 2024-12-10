@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.compilePackMetadata = void 0;
+exports.compilePackMetadata = compilePackMetadata;
 const types_1 = require("../types");
 const api_1 = require("../api");
 function compilePackMetadata(manifest) {
@@ -20,7 +20,6 @@ function compilePackMetadata(manifest) {
     };
     return metadata;
 }
-exports.compilePackMetadata = compilePackMetadata;
 function compileFormatsMetadata(formats) {
     return formats.map(format => {
         return {
