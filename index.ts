@@ -122,6 +122,7 @@ export type {SyncExecutionContext} from './api_types';
 export type {SyncFormulaResult} from './api';
 export type {SyncTableDef} from './api';
 export type {SyncTableOptions} from './api';
+export type {SyncStateService} from './api_types';
 export type {TemporaryBlobStorage} from './api_types';
 export {Type} from './api_types';
 export type {TypedPackFormula} from './api';

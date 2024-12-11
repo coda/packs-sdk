@@ -4,6 +4,7 @@ import type { FetchRequest } from '../api_types';
 import type { FetchResponse } from '../api_types';
 import type { Sync } from '../api_types';
 import type { SyncExecutionContext } from '../api_types';
+import type { SyncStateService } from '../api_types';
 import type { TemporaryBlobStorage } from '../api_types';
 import sinon from 'sinon';
 export type SinonFunctionSpy<T extends (...args: any[]) => any> = T extends (...args: infer ArgsT) => infer RetT ? sinon.SinonSpy<ArgsT, RetT> : never;
@@ -19,6 +20,9 @@ export interface MockExecutionContext extends ExecutionContext {
 }
 export interface MockSyncExecutionContext<ContinuationT = Continuation, IncrementalContinuationT = ContinuationT, IncrementalSyncContinuationT = ContinuationT> extends MockExecutionContext {
     sync: Sync<ContinuationT, IncrementalContinuationT, IncrementalSyncContinuationT>;
+    syncStateService: {
+        getLatestRowVersions: SinonFunctionStub<SyncStateService['getLatestRowVersions']>;
+    };
 }
 /** Mock type of the specified `SyncExecutionContext`. */
 export type SyncExecutionContextAsMock<T extends SyncExecutionContext> = T extends SyncExecutionContext<infer ContinuationT, infer IncrementalContinuationT, infer IncrementalSyncContinuationT> ? MockSyncExecutionContext<ContinuationT, IncrementalContinuationT, IncrementalSyncContinuationT> : never;

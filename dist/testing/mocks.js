@@ -7,7 +7,12 @@ exports.newJsonFetchResponse = exports.newMockExecutionContext = exports.newMock
 const sinon_1 = __importDefault(require("sinon"));
 const uuid_1 = require("uuid");
 function newMockSyncExecutionContext(overrides) {
-    return { ...newMockExecutionContext(), sync: {}, ...overrides };
+    return {
+        ...newMockExecutionContext(),
+        sync: {},
+        syncStateService: { getLatestRowVersions: sinon_1.default.stub() },
+        ...overrides,
+    };
 }
 exports.newMockSyncExecutionContext = newMockSyncExecutionContext;
 function newMockExecutionContext(overrides) {

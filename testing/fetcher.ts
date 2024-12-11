@@ -25,6 +25,7 @@ import {STSClient} from '@aws-sdk/client-sts';
 import {Sha256} from '@aws-crypto/sha256-js';
 import {SignatureV4} from '@aws-sdk/signature-v4';
 import type {SyncExecutionContext} from '../api_types';
+import type {SyncStateService} from '../api_types';
 import type {TemporaryBlobStorage} from '../api_types';
 import type {TokenCredentials} from './auth_types';
 import {URL} from 'url';
@@ -703,6 +704,15 @@ class AuthenticatingBlobStorage implements TemporaryBlobStorage {
   }
 }
 
+class FakeSyncStateService implements SyncStateService {
+  async getLatestRowVersions(rowIds: string[]): Promise<{[rowId: string]: string}> {
+    return rowIds.reduce((acc, rowId) => {
+      acc[rowId] = '1.0.0';
+      return acc;
+    }, {} as {[rowId: string]: string});
+  }
+}
+
 export function newFetcherExecutionContext(
   updateCredentialsCallback: (newCreds: Credentials) => void | undefined,
   authDef: Authentication | undefined,
@@ -736,7 +746,7 @@ export function newFetcherSyncExecutionContext(
   credentials?: Credentials,
 ): SyncExecutionContext {
   const context = newFetcherExecutionContext(updateCredentialsCallback, authDef, networkDomains, credentials);
-  return {...context, sync: {}};
+  return {...context, sync: {}, syncStateService: new FakeSyncStateService()};
 }
 
 function addQueryParam(url: string, param: string, value: string): string {

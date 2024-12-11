@@ -1,4 +1,4 @@
-import type {ExecutionContext} from '../api';
+import type {ExecutionContext} from '../api_types';
 import type {Context as IVMContext} from 'isolated-vm';
 import {build as buildBundle} from '../cli/build';
 import {createIsolateContext} from '../runtime/bootstrap';
@@ -7,6 +7,7 @@ import {getIvm} from './ivm_wrapper';
 import {getThunkPath} from '../runtime/bootstrap';
 import {injectExecutionContext} from '../runtime/bootstrap';
 import {injectSerializer} from '../runtime/bootstrap';
+import { isSyncExecutionContext} from '../api_types';
 import path from 'path';
 import {registerBundles} from '../runtime/bootstrap';
 
@@ -58,6 +59,7 @@ export async function setupIvmContext(bundlePath: string, executionContext: Exec
     authenticationName: executionContext.authenticationName,
     executionId: executionContext.executionId,
     previousAttemptError: executionContext.previousAttemptError,
+    syncStateService: isSyncExecutionContext(executionContext) ? executionContext.syncStateService : undefined,
   });
 
   return ivmContext;

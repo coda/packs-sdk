@@ -103,6 +103,18 @@ Information about state of the current sync. Only populated if this is a sync ta
 
 ___
 
+### syncStateService
+
+• **syncStateService**: `Object`
+
+#### Type declaration
+
+| Name | Type |
+| :------ | :------ |
+| `getLatestRowVersions` | `SinonStub`<[rowIds: string[]], `Promise`<{ `[rowId: string]`: `string`;  }\>\> |
+
+___
+
 ### temporaryBlobStorage
 
 • **temporaryBlobStorage**: `Object`

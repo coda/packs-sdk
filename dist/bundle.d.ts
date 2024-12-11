@@ -632,6 +632,29 @@ export interface TemporaryBlobStorage {
 		downloadFilename?: string;
 	}): Promise<string>;
 }
+/**
+ * A service for retrieving the sync state in Coda Brain.
+ * @hidden
+ *
+ * TODO(ebo): unhide this
+ */
+export interface SyncStateService {
+	/**
+	 * Retrieve the latest version of rows with the given row ids and returns a mapping of row ids to
+	 * their latest version, e.g. {"Id-123": "1.0.0"}.
+	 *
+	 * If the row id is not found, it will not be included in the response.
+	 *
+	 * If the row version is not defined, it will be set to an empty string.
+	 *
+	 * @hidden
+	 *
+	 * TODO(ebo): unhide this
+	 */
+	getLatestRowVersions(rowIds: string[]): Promise<{
+		[rowId: string]: string;
+	}>;
+}
 declare enum PermissionSyncMode {
 	Personal = "Personal",
 	PermissionAware = "PermissionAware"
@@ -845,6 +868,13 @@ export interface SyncExecutionContext<ContinuationT = Continuation, IncrementalC
 	 * Information about state of the current sync.
 	 */
 	readonly sync: Sync<ContinuationT, IncrementalContinuationT, IncrementalSyncContinuationT>;
+	/**
+	 * A service for retrieving the sync state in Coda Brain.
+	 * @hidden
+	 *
+	 * TODO(ebo): unhide this
+	 */
+	readonly syncStateService: SyncStateService;
 }
 /**
  * Sub-class of {@link SyncExecutionContext} that is passed to the `options` function of
