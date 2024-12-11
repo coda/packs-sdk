@@ -1,6 +1,7 @@
 nav:
   - index.md
   - faq.md
+  - errors.md
   - changes.md
   - migration
   - contributing
