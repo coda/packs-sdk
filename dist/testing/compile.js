@@ -71,7 +71,11 @@ async function browserifyBundle({ lastBundleFilename, outputBundleFilename, opti
         standalone: 'exports',
     });
     const writer = fs_1.default.createWriteStream(outputBundleFilename);
-    const compiledStream = browserifyCompiler.bundle();
+    const compiledStream = browserifyCompiler
+        // The polyfill for vm doesn't work in the Packs runtime, and contains an eval() that breaks validation on upload.
+        // Ignore it so that the polyfill isn't added.
+        .ignore('vm')
+        .bundle();
     return new Promise(resolve => {
         compiledStream
             .pipe((0, exorcist_1.default)(`${outputBundleFilename}.map`, undefined, `${process.cwd()}/`, options.intermediateOutputDirectory))
