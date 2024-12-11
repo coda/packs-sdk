@@ -33,7 +33,7 @@ export interface MockSyncExecutionContext<
   IncrementalSyncContinuationT = ContinuationT,
 > extends MockExecutionContext {
   sync: Sync<ContinuationT, IncrementalContinuationT, IncrementalSyncContinuationT>;
-  syncState: {
+  syncStateService: {
     getLatestRowVersions: SinonFunctionStub<SyncStateService['getLatestRowVersions']>;
   };
 }
@@ -53,7 +53,7 @@ export function newMockSyncExecutionContext<T extends SyncExecutionContext<any>>
   return {
     ...newMockExecutionContext(),
     sync: {},
-    syncState: {getLatestRowVersions: sinon.stub()},
+    syncStateService: {getLatestRowVersions: sinon.stub()},
     ...overrides,
   } as SyncExecutionContextAsMock<T>;
 }

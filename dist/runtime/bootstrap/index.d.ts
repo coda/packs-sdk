@@ -48,11 +48,11 @@ export type ExecutionContextPrimitives = Omit<ExecutionContext, 'fetcher' | 'tem
 /**
  * Injects the ExecutionContext object, including stubs for network calls, into the isolate.
  */
-export declare function injectExecutionContext({ context, fetcher, temporaryBlobStorage, syncState, logger, endpoint, invocationLocation, timezone, invocationToken, sync, authenticationName, executionId, previousAttemptError, ...rest }: {
+export declare function injectExecutionContext({ context, fetcher, temporaryBlobStorage, syncStateService, logger, endpoint, invocationLocation, timezone, invocationToken, sync, authenticationName, executionId, previousAttemptError, ...rest }: {
     context: Context;
     fetcher: Fetcher;
     temporaryBlobStorage: TemporaryBlobStorage;
-    syncState: SyncStateService | undefined;
+    syncStateService: SyncStateService | undefined;
     logger: Logger;
 } & ExecutionContextPrimitives): Promise<void>;
 export declare function registerBundle(isolate: Isolate, context: Context, path: string, stubName: string, requiresManualClosure?: boolean): Promise<void>;

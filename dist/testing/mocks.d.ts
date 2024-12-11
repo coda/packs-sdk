@@ -20,7 +20,7 @@ export interface MockExecutionContext extends ExecutionContext {
 }
 export interface MockSyncExecutionContext<ContinuationT = Continuation, IncrementalContinuationT = ContinuationT, IncrementalSyncContinuationT = ContinuationT> extends MockExecutionContext {
     sync: Sync<ContinuationT, IncrementalContinuationT, IncrementalSyncContinuationT>;
-    syncState: {
+    syncStateService: {
         getLatestRowVersions: SinonFunctionStub<SyncStateService['getLatestRowVersions']>;
     };
 }

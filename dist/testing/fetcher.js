@@ -572,7 +572,7 @@ function newFetcherExecutionContext(updateCredentialsCallback, authDef, networkD
 exports.newFetcherExecutionContext = newFetcherExecutionContext;
 function newFetcherSyncExecutionContext(updateCredentialsCallback, authDef, networkDomains, credentials) {
     const context = newFetcherExecutionContext(updateCredentialsCallback, authDef, networkDomains, credentials);
-    return { ...context, sync: {}, syncState: new FakeSyncStateService() };
+    return { ...context, sync: {}, syncStateService: new FakeSyncStateService() };
 }
 exports.newFetcherSyncExecutionContext = newFetcherSyncExecutionContext;
 function addQueryParam(url, param, value) {

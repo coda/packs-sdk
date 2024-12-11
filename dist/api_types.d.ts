@@ -912,7 +912,7 @@ export interface SyncExecutionContext<ContinuationT = Continuation, IncrementalC
      *
      * TODO(ebo): unhide this
      */
-    readonly syncState: SyncStateService;
+    readonly syncStateService: SyncStateService;
 }
 /**
  * A function to check if a given {@link ExecutionContext} is a {@link SyncExecutionContext}.

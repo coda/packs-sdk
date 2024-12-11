@@ -103,9 +103,9 @@ Information about state of the current sync. Only populated if this is a sync ta
 
 ___
 
-### syncState
+### syncStateService
 
-• **syncState**: `Object`
+• **syncStateService**: `Object`
 
 #### Type declaration
 

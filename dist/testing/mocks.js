@@ -10,7 +10,7 @@ function newMockSyncExecutionContext(overrides) {
     return {
         ...newMockExecutionContext(),
         sync: {},
-        syncState: { getLatestRowVersions: sinon_1.default.stub() },
+        syncStateService: { getLatestRowVersions: sinon_1.default.stub() },
         ...overrides,
     };
 }

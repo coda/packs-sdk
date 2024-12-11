@@ -229,7 +229,7 @@ export async function injectExecutionContext({
   context,
   fetcher,
   temporaryBlobStorage,
-  syncState,
+  syncStateService,
   logger,
   endpoint,
   invocationLocation,
@@ -244,7 +244,7 @@ export async function injectExecutionContext({
   context: Context;
   fetcher: Fetcher;
   temporaryBlobStorage: TemporaryBlobStorage;
-  syncState: SyncStateService | undefined;
+  syncStateService: SyncStateService | undefined;
   logger: Logger;
 } & ExecutionContextPrimitives): Promise<void> {
   ensureNever<keyof typeof rest>();
@@ -252,7 +252,7 @@ export async function injectExecutionContext({
   const executionContextPrimitives = {
     fetcher: {},
     temporaryBlobStorage: {},
-    syncState: {},
+    syncStateService: {},
     logger: {},
     endpoint,
     invocationLocation,
@@ -291,11 +291,11 @@ export async function injectExecutionContext({
     temporaryBlobStorage.storeUrl.bind(temporaryBlobStorage),
   );
 
-  if (syncState) {
+  if (syncStateService) {
     await injectAsyncFunction(
       context,
-      'executionContext.syncState.getLatestRowVersions',
-      syncState.getLatestRowVersions.bind(syncState),
+      'executionContext.syncStateService.getLatestRowVersions',
+      syncStateService.getLatestRowVersions.bind(syncStateService),
     );
   }
 }

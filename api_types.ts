@@ -1092,14 +1092,14 @@ export interface SyncExecutionContext<
    *
    * TODO(ebo): unhide this
    */
-  readonly syncState: SyncStateService;
+  readonly syncStateService: SyncStateService;
 }
 
 /**
  * A function to check if a given {@link ExecutionContext} is a {@link SyncExecutionContext}.
  */
 export function isSyncExecutionContext(context: ExecutionContext): context is SyncExecutionContext {
-  return context.hasOwnProperty('sync') && context.hasOwnProperty('syncState');
+  return context.hasOwnProperty('sync') && context.hasOwnProperty('syncStateService');
 }
 
 /**

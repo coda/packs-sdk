@@ -261,7 +261,7 @@ var InvocationSource;
  * A function to check if a given {@link ExecutionContext} is a {@link SyncExecutionContext}.
  */
 function isSyncExecutionContext(context) {
-    return context.hasOwnProperty('sync') && context.hasOwnProperty('syncState');
+    return context.hasOwnProperty('sync') && context.hasOwnProperty('syncStateService');
 }
 exports.isSyncExecutionContext = isSyncExecutionContext;
 // A mapping exists in coda that allows these to show up in the UI.

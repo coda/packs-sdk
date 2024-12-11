@@ -874,7 +874,7 @@ export interface SyncExecutionContext<ContinuationT = Continuation, IncrementalC
 	 *
 	 * TODO(ebo): unhide this
 	 */
-	readonly syncState: SyncStateService;
+	readonly syncStateService: SyncStateService;
 }
 /**
  * Sub-class of {@link SyncExecutionContext} that is passed to the `options` function of
