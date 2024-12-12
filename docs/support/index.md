@@ -45,6 +45,7 @@ The following features require approval:
 - Sending fetcher requests to multiple [network domains][fetcher_network_domains].
 - Using [`OAuth2` authentication][authentication_url_limitations] with an authorization and token URL on different domains.
 - Using [`Custom` authentication][authentication_custom_tokens].
+- Increase the [maximum response size][errors_max_fetcher_response_size] for fetch requests.
 
 To request approval please fill out the form linked below. Ensure you are signed in with the same Coda account you are using to develop the Pack. We'll review your request and respond with a decision within a few business days.
 
@@ -61,3 +62,4 @@ To request approval please fill out the form linked below. Ensure you are signed
 [office_hours]: https://calendly.com/ekoleda/packs-office-hours
 [authentication_custom_tokens]: ../guides/basics/authentication/index.md#custom-tokens
 [authentication_url_limitations]: ../guides/basics/authentication/oauth2.md#url-limitations
+[errors_max_fetcher_response_size]: errors.md#fetcherresponsesize
