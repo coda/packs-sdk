@@ -1337,7 +1337,7 @@ describe('Auth', () => {
                 afterTokenExchange({
                   accessToken: 'some-access-token', 
                   refreshToken: 'some-refresh-token',
-                  data: { server: 'https://foo.example.com' },
+                  data: {server: 'https://foo.example.com'},
                 });
               },
           );
