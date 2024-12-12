@@ -910,9 +910,9 @@ export interface SyncExecutionContext<ContinuationT = Continuation, IncrementalC
      * A service for retrieving the sync state in Coda Brain.
      * @hidden
      *
-     * TODO(ebo): unhide this
+     * TODO(ebo): make it non-optional and unhide this.
      */
-    readonly syncStateService: SyncStateService;
+    readonly syncStateService?: SyncStateService;
 }
 /**
  * A function to check if a given {@link ExecutionContext} is a {@link SyncExecutionContext}.

@@ -1090,9 +1090,9 @@ export interface SyncExecutionContext<
    * A service for retrieving the sync state in Coda Brain.
    * @hidden
    *
-   * TODO(ebo): unhide this
+   * TODO(ebo): make it non-optional and unhide this.
    */
-  readonly syncStateService: SyncStateService;
+  readonly syncStateService?: SyncStateService;
 }
 
 /**
