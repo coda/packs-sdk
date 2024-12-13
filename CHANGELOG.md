@@ -4,6 +4,12 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Changed
+
+- Certain ingestion-specific fields were renamed.
+- Added `SyncStateService` to retrieve the row sync state in Coda Brain.
+
+
 ## [1.8.5] - 2024-12-04
 
 ### Changed
