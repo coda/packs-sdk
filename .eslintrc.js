@@ -30,6 +30,10 @@ module.exports = {
         ignorePattern: '^import ',
       },
     ],
+    'object-curly-spacing': [
+      'error',
+      'never'
+    ],
   },
   overrides: [
     {

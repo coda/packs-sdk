@@ -4,7 +4,7 @@
  */
 
 import fs from 'fs';
-import { print } from '../../testing/helpers';
+import {print} from '../../testing/helpers';
 import * as yaml from 'js-yaml';
 
 const FilePath = 'mkdocs.yml';

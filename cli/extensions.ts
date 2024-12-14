@@ -1,9 +1,9 @@
-import type { ArgumentsCamelCase } from 'yargs';
+import type {ArgumentsCamelCase} from 'yargs';
 import fs from 'fs-extra';
 import {isTestCommand} from './helpers';
 import path from 'path';
 import {print} from '../testing/helpers';
-import { printAndExit } from '../testing/helpers';
+import {printAndExit} from '../testing/helpers';
 
 export enum Tools {
   VSCode = 'vscode',

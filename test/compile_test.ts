@@ -2,6 +2,7 @@ import {compilePackBundle} from '../testing/compile';
 import {executeFormulaOrSyncWithVM} from '../testing/execution';
 import {newMockSyncExecutionContext} from '../testing/mocks';
 import path from 'path';
+import {readFileSync} from 'fs';
 import sinon from 'sinon';
 import {translateErrorStackFromVM} from '../runtime/common/source_map';
 
@@ -87,5 +88,14 @@ describe('compile', () => {
         'text/html',
       ),
     );
+  });
+
+  it('no polyfill for vm', async () => {
+    const {bundlePath} = await compilePackBundle({
+      manifestPath: `${__dirname}/packs/fake_with_vm.ts`,
+      minify: false,
+    });
+    const bundleCode = readFileSync(bundlePath);
+    assert.notInclude(bundleCode.toString(), 'Script.prototype.runInNewContext');
   });
 });

@@ -62,6 +62,12 @@ type BuildFunction = (options: {
   options: CompilePackBundleOptions;
 }) => Promise<void>;
 
+// Modules that Browserify should ignore, and not try to polyfill.
+const ModulesToDisableBrowserifyPolyfill = [
+  // The polyfill for vm doesn't work in the Packs runtime, and contains an eval() that breaks validation on upload.
+  'vm',
+];
+
 async function browserifyBundle({
   lastBundleFilename,
   outputBundleFilename,
@@ -76,6 +82,9 @@ async function browserifyBundle({
     debug: true,
     standalone: 'exports',
   });
+  for (const module of ModulesToDisableBrowserifyPolyfill) {
+    browserifyCompiler.ignore(module);
+  }
   const writer = fs.createWriteStream(outputBundleFilename);
   const compiledStream = browserifyCompiler.bundle();
   return new Promise(resolve => {
