@@ -1383,7 +1383,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    * TODO(ebo): Unhide this
    * @hidden
    */
-  versionProperty? : PropertyIdentifier<K>;
+  versionProperty?: PropertyIdentifier<K>;
 
   // TODO(dweitzman): Only support options in the typing when the codaType is ValueHintType.SelectList.
 }

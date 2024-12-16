@@ -764,13 +764,14 @@ function normalizeObjectSchema(schema) {
         };
         normalizedProperties[normalizedKey] = Object.assign(normalizeSchema(property), normalizedPropertyAttrs);
     }
+    const normalizedDisplayProperty = displayProperty ? normalizeSchemaKey(displayProperty) : undefined;
     return {
         attribution,
         options,
         requireForUpdates,
         codaType,
         description,
-        displayProperty: displayProperty ? normalizeSchemaKey(displayProperty) : undefined,
+        displayProperty: normalizedDisplayProperty,
         featured: featured ? featured.map(normalizeSchemaKey) : undefined,
         featuredProperties: featuredProperties ? featuredProperties.map(normalizeSchemaKey) : undefined,
         id: id ? normalizeSchemaKey(id) : undefined,
@@ -788,7 +789,9 @@ function normalizeObjectSchema(schema) {
         subtitleProperties: subtitleProperties
             ? subtitleProperties.map(subProp => normalizeSchemaPropertyIdentifier(subProp, normalizedProperties))
             : undefined,
-        titleProperty: titleProperty ? normalizeSchemaPropertyIdentifier(titleProperty, normalizedProperties) : undefined,
+        titleProperty: titleProperty
+            ? normalizeSchemaPropertyIdentifier(titleProperty, normalizedProperties)
+            : normalizedDisplayProperty,
         createdAtProperty: createdAtProperty
             ? normalizeSchemaPropertyIdentifier(createdAtProperty, normalizedProperties)
             : undefined,
