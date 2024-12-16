@@ -1935,7 +1935,7 @@ describe('Pack metadata Validation', async () => {
               return {result: []};
             },
             parameters: [],
-            allowedAuthenticationNames: [ReservedAuthenticationNames.System]
+            allowedAuthenticationNames: [ReservedAuthenticationNames.System],
           },
         });
         const syncTable4 = makeSyncTable({
@@ -1956,10 +1956,9 @@ describe('Pack metadata Validation', async () => {
               return {result: []};
             },
             parameters: [],
-            allowedAuthenticationNames: [ReservedAuthenticationNames.Default]
+            allowedAuthenticationNames: [ReservedAuthenticationNames.Default],
           },
         });
-
 
         let metadata = createFakePack({
           syncTables: [syncTable1, syncTable2, syncTable3, syncTable4],
@@ -1994,10 +1993,10 @@ describe('Pack metadata Validation', async () => {
               return {result: []};
             },
             parameters: [],
-            allowedAuthenticationNames: [ReservedAuthenticationNames.Default, ReservedAuthenticationNames.System]
+            allowedAuthenticationNames: [ReservedAuthenticationNames.Default, ReservedAuthenticationNames.System],
           },
         });
-         metadata = createFakePack({
+        metadata = createFakePack({
           syncTables: [syncTable1, syncTable2, syncTable3, syncTable4, syncTable5],
         });
         err = await validateJsonAndAssertFails(metadata);
@@ -2007,12 +2006,14 @@ describe('Pack metadata Validation', async () => {
             path: 'syncTables',
           },
           {
-            message: 'Identity "IdentityAdminAuth" is used by multiple sync tables with non-distinct allowedAuthenticationNames: defaultUserAuthentication',
-            path: 'syncTables'
+            message:
+              'Identity "IdentityAdminAuth" is used by multiple sync tables with non-distinct allowedAuthenticationNames: defaultUserAuthentication',
+            path: 'syncTables',
           },
           {
-            message: 'Identity "IdentityAdminAuth" is used by multiple sync tables with non-distinct allowedAuthenticationNames: systemAuthentication',
-            path: 'syncTables'
+            message:
+              'Identity "IdentityAdminAuth" is used by multiple sync tables with non-distinct allowedAuthenticationNames: systemAuthentication',
+            path: 'syncTables',
           },
           {
             message: 'Sync table formula names must be unique. Found duplicate name "SyncTable".',
@@ -2061,7 +2062,7 @@ describe('Pack metadata Validation', async () => {
             },
             parameters: [],
             // This will still be considered a duplicate because table 1 implicitly allows all auths.
-            allowedAuthenticationNames: [ReservedAuthenticationNames.Default]
+            allowedAuthenticationNames: [ReservedAuthenticationNames.Default],
           },
         });
 
@@ -2071,7 +2072,8 @@ describe('Pack metadata Validation', async () => {
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
           {
-            message: 'Identity "Identity" is used by multiple sync tables with non-distinct allowedAuthenticationNames: defaultUserAuthentication',
+            message:
+              'Identity "Identity" is used by multiple sync tables with non-distinct allowedAuthenticationNames: defaultUserAuthentication',
             path: 'syncTables',
           },
           {

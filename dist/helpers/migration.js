@@ -59,6 +59,10 @@ class ObjectSchemaHelper {
     get requireForUpdates() {
         return this._schema.requireForUpdates;
     }
+    get titleProperty() {
+        var _a;
+        return (_a = this._schema.titleProperty) !== null && _a !== void 0 ? _a : this._schema.displayProperty;
+    }
 }
 function paramDefHelper(def) {
     return new ParamDefHelper(def);

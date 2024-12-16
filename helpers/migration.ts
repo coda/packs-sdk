@@ -109,6 +109,10 @@ class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
   get requireForUpdates() {
     return this._schema.requireForUpdates;
   }
+
+  get titleProperty() {
+    return this._schema.titleProperty ?? this._schema.displayProperty;
+  }
 }
 
 export function paramDefHelper<S extends UnionType, T extends ParamDef<S>>(def: T): ParamDefHelper<S, T> {
