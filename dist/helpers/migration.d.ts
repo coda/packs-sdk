@@ -20,6 +20,7 @@ declare class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string
     get attribution(): import("../schema").AttributionNode[] | undefined;
     get codaType(): import("../schema").ValueHintType.Person | import("../schema").ValueHintType.Reference | import("../schema").ValueHintType.SelectList | undefined;
     get requireForUpdates(): boolean | undefined;
+    get titleProperty(): import("../schema").PropertyIdentifier<string> | undefined;
 }
 export declare function paramDefHelper<S extends UnionType, T extends ParamDef<S>>(def: T): ParamDefHelper<S, T>;
 declare class ParamDefHelper<S extends UnionType, T extends ParamDef<S>> {
