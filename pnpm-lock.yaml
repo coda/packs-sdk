@@ -35,8 +35,8 @@ importers:
         specifier: 3.370.0
         version: 3.370.0
       browserify:
-        specifier: 17.0.0
-        version: 17.0.0
+        specifier: 17.0.1
+        version: 17.0.1
       buffer:
         specifier: 6.0.3
         version: 6.0.3
@@ -3425,8 +3425,8 @@ packages:
       pako: 1.0.11
     dev: false
 
-  /browserify@17.0.0:
-    resolution: {integrity: sha512-SaHqzhku9v/j6XsQMRxPyBrSP3gnwmE27gLJYZgMT2GeK3J0+0toN+MnuNYDfHwVGQfLiMZ7KSNSIXHemy905w==}
+  /browserify@17.0.1:
+    resolution: {integrity: sha512-pxhT00W3ylMhCHwG5yfqtZjNnFuX5h2IJdaBfSo4ChaaBsIp9VLrEMQ1bHV+Xr1uLPXuNDDM1GlJkjli0qkRsw==}
     engines: {node: '>= 0.8'}
     hasBin: true
     dependencies:
@@ -3447,7 +3447,7 @@ packages:
       duplexer2: 0.1.4
       events: 3.3.0
       glob: 7.2.3
-      has: 1.0.4
+      hasown: 2.0.2
       htmlescape: 1.1.1
       https-browserify: 1.0.0
       inherits: 2.0.4
@@ -5248,11 +5248,6 @@ packages:
     engines: {node: '>= 0.4'}
     dependencies:
       has-symbols: 1.0.3
-
-  /has@1.0.4:
-    resolution: {integrity: sha512-qdSAmqLF6209RFj4VVItywPMbm3vWylknmB3nvNiUIs72xAimcM8nVYxYr7ncvZq5qzk9MKIZR8ijqD/1QuYjQ==}
-    engines: {node: '>= 0.4.0'}
-    dev: false
 
   /hash-base@3.0.4:
     resolution: {integrity: sha512-EeeoJKjTyt868liAlVmcv2ZsUfGHlE3Q+BICOXcZiwN3osr5Q/zFGYmTJpoIzuaSTAwndFy+GqhEwlU4L3j4Ow==}

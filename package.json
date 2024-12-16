@@ -25,7 +25,7 @@
     "@aws-crypto/sha256-js": "4.0.0",
     "@aws-sdk/client-sts": "3.670.0",
     "@aws-sdk/signature-v4": "3.370.0",
-    "browserify": "17.0.0",
+    "browserify": "17.0.1",
     "buffer": "6.0.3",
     "clone": "2.1.2",
     "cross-fetch": "4.0.0",
