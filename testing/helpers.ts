@@ -1,7 +1,7 @@
 import type {PackVersionDefinition} from '../types';
 import {ensureNonEmptyString} from '../helpers/ensure';
 import fs from 'fs';
-import { inspect } from 'util';
+import {inspect} from 'util';
 import path from 'path';
 import * as readlineSync from 'readline-sync';
 import {translateErrorStackFromVM} from '../runtime/common/source_map';

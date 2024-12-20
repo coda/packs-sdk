@@ -55,7 +55,7 @@ export async function handleLink({manifestDir, codaApiEndpoint, packIdOrUrl, api
 
     const input = promptForInput(
       `Overwrite existing deploy to pack https://coda.io/p/${existingPackId} with https://coda.io/p/${packId} instead? (y/N): `,
-      { yesOrNo: true }
+      {yesOrNo: true}
     );
     if (input.toLocaleLowerCase() !== 'yes') {
       return process.exit(1);

@@ -64,12 +64,20 @@ async function loadIntoVM(bundlePath) {
     const script = await isolate.compileScript(bundle.toString(), { filename: bundlePath });
     await script.run(ivmContext);
 }
+// Modules that Browserify should ignore, and not try to polyfill.
+const ModulesToDisableBrowserifyPolyfill = [
+    // The polyfill for vm doesn't work in the Packs runtime, and contains an eval() that breaks validation on upload.
+    'vm',
+];
 async function browserifyBundle({ lastBundleFilename, outputBundleFilename, options, }) {
     // browserify doesn't minify by default. if necessary another pipe can be created to minify the output.
     const browserifyCompiler = (0, browserify_1.default)(lastBundleFilename, {
         debug: true,
         standalone: 'exports',
     });
+    for (const module of ModulesToDisableBrowserifyPolyfill) {
+        browserifyCompiler.ignore(module);
+    }
     const writer = fs_1.default.createWriteStream(outputBundleFilename);
     const compiledStream = browserifyCompiler.bundle();
     return new Promise(resolve => {
