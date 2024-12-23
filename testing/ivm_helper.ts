@@ -7,7 +7,7 @@ import {getIvm} from './ivm_wrapper';
 import {getThunkPath} from '../runtime/bootstrap';
 import {injectExecutionContext} from '../runtime/bootstrap';
 import {injectSerializer} from '../runtime/bootstrap';
-import { isSyncExecutionContext} from '../api_types';
+import {isSyncExecutionContext} from '../api_types';
 import path from 'path';
 import {registerBundles} from '../runtime/bootstrap';
 
