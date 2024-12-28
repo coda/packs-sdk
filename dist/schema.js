@@ -3,7 +3,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.throwOnDynamicSchemaWithJsOptionsFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.maybeSchemaOptionsValue = exports.unwrappedSchemaSupportsOptions = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PermissionType = exports.PrincipalType = exports.IndexingStrategy = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageShapeStyle = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+exports.AttributionNodeType = exports.PermissionType = exports.PrincipalType = exports.IndexingStrategy = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageShapeStyle = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+exports.makeAttributionNode = makeAttributionNode;
+exports.isObject = isObject;
+exports.isArray = isArray;
+exports.unwrappedSchemaSupportsOptions = unwrappedSchemaSupportsOptions;
+exports.maybeSchemaOptionsValue = maybeSchemaOptionsValue;
+exports.maybeUnwrapArraySchema = maybeUnwrapArraySchema;
+exports.generateSchema = generateSchema;
+exports.makeSchema = makeSchema;
+exports.makeObjectSchema = makeObjectSchema;
+exports.normalizeSchemaKey = normalizeSchemaKey;
+exports.normalizeSchemaKeyPath = normalizeSchemaKeyPath;
+exports.normalizePropertyValuePathIntoSchemaPath = normalizePropertyValuePathIntoSchemaPath;
+exports.normalizeSchema = normalizeSchema;
+exports.normalizeObjectSchema = normalizeObjectSchema;
+exports.makeReferenceSchemaFromObjectSchema = makeReferenceSchemaFromObjectSchema;
+exports.withIdentity = withIdentity;
+exports.throwOnDynamicSchemaWithJsOptionsFunction = throwOnDynamicSchemaWithJsOptionsFunction;
 const ensure_1 = require("./helpers/ensure");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_2 = require("./helpers/ensure");
@@ -452,26 +469,21 @@ var AttributionNodeType;
 function makeAttributionNode(node) {
     return node;
 }
-exports.makeAttributionNode = makeAttributionNode;
 function isObject(val) {
     return Boolean(val && val.type === ValueType.Object);
 }
-exports.isObject = isObject;
 function isArray(val) {
     return Boolean(val && val.type === ValueType.Array);
 }
-exports.isArray = isArray;
 function unwrappedSchemaSupportsOptions(schema) {
     return Boolean(schema === null || schema === void 0 ? void 0 : schema.codaType) && [ValueHintType.SelectList, ValueHintType.Reference].includes(schema.codaType);
 }
-exports.unwrappedSchemaSupportsOptions = unwrappedSchemaSupportsOptions;
 function maybeSchemaOptionsValue(schema) {
     const unwrappedSchema = maybeUnwrapArraySchema(schema);
     if (unwrappedSchemaSupportsOptions(unwrappedSchema)) {
         return unwrappedSchema.options;
     }
 }
-exports.maybeSchemaOptionsValue = maybeSchemaOptionsValue;
 /**
  * Pulls out the item type of an Array schema, returning undefined if the Array contains another Array.
  */
@@ -483,7 +495,6 @@ function maybeUnwrapArraySchema(val) {
         return val.items;
     }
 }
-exports.maybeUnwrapArraySchema = maybeUnwrapArraySchema;
 /**
  * Utility that examines a JavaScript value and attempts to infer a schema definition
  * that describes it.
@@ -529,7 +540,6 @@ function generateSchema(obj) {
     }
     return (0, ensure_5.ensureUnreachable)(obj);
 }
-exports.generateSchema = generateSchema;
 /**
  * A wrapper for creating any schema definition.
  *
@@ -555,7 +565,6 @@ exports.generateSchema = generateSchema;
 function makeSchema(schema) {
     return schema;
 }
-exports.makeSchema = makeSchema;
 /**
  * A wrapper for creating a schema definition for an object value.
  *
@@ -600,7 +609,6 @@ function makeObjectSchema(schemaDef) {
     validateObjectSchema(schema);
     return schema;
 }
-exports.makeObjectSchema = makeObjectSchema;
 function validateObjectSchema(schema) {
     // TODO(jonathan): These should all move to upload_validation checks, since these aren't getting
     // enforced on upload and a hacked CLI could just bypass these.
@@ -640,7 +648,6 @@ function normalizeSchemaKey(key) {
     // Colons cause problems in our formula handling.
     return (0, pascalcase_1.default)(key).replace(/:/g, '_');
 }
-exports.normalizeSchemaKey = normalizeSchemaKey;
 /**
  * Normalizes a schema property key path. This interprets "."s as accessing object properties
  * and "[]" as accessing array items. Uses normalizeSchemaKey to normalize each part in-between.
@@ -667,7 +674,6 @@ function normalizeSchemaKeyPath(key, normalizedProperties) {
     })
         .join('.');
 }
-exports.normalizeSchemaKeyPath = normalizeSchemaKeyPath;
 /**
  * Normalizes a schema PropertyIdentifier by converting it to PascalCase.
  */
@@ -722,7 +728,6 @@ function normalizePropertyValuePathIntoSchemaPath(propertyValue) {
         .join('.properties.');
     return normalizedValue;
 }
-exports.normalizePropertyValuePathIntoSchemaPath = normalizePropertyValuePathIntoSchemaPath;
 function normalizeSchema(schema) {
     if (isArray(schema)) {
         return {
@@ -739,7 +744,6 @@ function normalizeSchema(schema) {
     // We always make a copy of the input schema so we never accidentally mutate it.
     return { ...schema };
 }
-exports.normalizeSchema = normalizeSchema;
 function normalizeObjectSchema(schema) {
     const normalizedProperties = {};
     const { attribution, options, requireForUpdates, codaType, description, displayProperty, featured, featuredProperties, id, identity, idProperty, parentIdProperty, imageProperty, includeUnknownProperties, linkProperty, primary, properties, snippetProperty, subtitleProperties, titleProperty, type, 
@@ -826,7 +830,6 @@ function normalizeObjectSchema(schema) {
         type: ValueType.Object,
     };
 }
-exports.normalizeObjectSchema = normalizeObjectSchema;
 /**
  * Convenience for creating a reference object schema from an existing schema for the
  * object. Copies over the identity, idProperty, and displayProperty from the schema,
@@ -857,7 +860,6 @@ function makeReferenceSchemaFromObjectSchema(schema, identityName) {
     };
     return makeObjectSchema(referenceSchema);
 }
-exports.makeReferenceSchemaFromObjectSchema = makeReferenceSchemaFromObjectSchema;
 /**
  * Convenience for defining the result schema for an action. The identity enables Coda to
  * update the corresponding sync table row, if it exists.
@@ -869,7 +871,6 @@ function withIdentity(schema, identityName) {
         identity: { name: (0, ensure_4.ensureNonEmptyString)(identityName) },
     });
 }
-exports.withIdentity = withIdentity;
 /**
  * If someone tries to put a js function into a getSchema result in a dynamic schema, it's not going to work.
  * This method is to detect this proactively and give a clear, user-visible error message. Otherwise the error
@@ -893,4 +894,3 @@ function throwOnDynamicSchemaWithJsOptionsFunction(dynamicSchema, parentKey) {
         throw new Error('Sync tables with dynamic schemas must use "options: OptionsType.Dynamic" instead of "options: () => {...}');
     }
 }
-exports.throwOnDynamicSchemaWithJsOptionsFunction = throwOnDynamicSchemaWithJsOptionsFunction;
