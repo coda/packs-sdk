@@ -7,6 +7,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ### Changed
 
 - SDK requires node version 20 or higher
+- Update `Sync` parameter type names for clarity
 
 ## [1.8.6] - 2024-12-13
 

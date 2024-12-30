@@ -18,8 +18,8 @@ export interface MockExecutionContext extends ExecutionContext {
         storeBlob: SinonFunctionStub<TemporaryBlobStorage['storeBlob']>;
     };
 }
-export interface MockSyncExecutionContext<ContinuationT = Continuation, IncrementalContinuationT = ContinuationT, IncrementalSyncContinuationT = ContinuationT> extends MockExecutionContext {
-    sync: Sync<ContinuationT, IncrementalContinuationT, IncrementalSyncContinuationT>;
+export interface MockSyncExecutionContext<SyncContinuationT = Continuation, IncrementalCheckpointContinuationT = SyncContinuationT, IncrementalSyncContinuationT = SyncContinuationT> extends MockExecutionContext {
+    sync: Sync<SyncContinuationT, IncrementalCheckpointContinuationT, IncrementalSyncContinuationT>;
     syncStateService: {
         getLatestRowVersions: SinonFunctionStub<SyncStateService['getLatestRowVersions']>;
     };
