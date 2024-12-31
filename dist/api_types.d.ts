@@ -683,7 +683,7 @@ export declare enum PermissionSyncMode {
  * Information about the current sync, part of the {@link SyncExecutionContext} passed to the
  * `execute` function of every sync formula.
  */
-export type Sync<ContinuationT = Continuation, IncrementalContinuationT = ContinuationT, IncrementalSyncContinuationT = ContinuationT> = SyncFull<ContinuationT> | SyncIncremental<IncrementalSyncContinuationT, IncrementalContinuationT>;
+export type Sync<SyncContinuationT = Continuation, IncrementalCheckpointContinuationT = SyncContinuationT, IncrementalSyncContinuationT = SyncContinuationT> = SyncFull<SyncContinuationT> | SyncIncremental<IncrementalSyncContinuationT, IncrementalCheckpointContinuationT>;
 /** Information about the current full sync. */
 export interface SyncFull<ContinuationT = Continuation> extends SyncBase {
     /**
@@ -697,14 +697,14 @@ export interface SyncFull<ContinuationT = Continuation> extends SyncBase {
 /**
  * Information about the current incremental sync.
  */
-export interface SyncIncremental<ContinuationT, IncrementalContinuationT> extends SyncBase {
+export interface SyncIncremental<SyncContinuationT, CheckpointContinuationT> extends SyncBase {
     /**
      * The continuation that was returned from the prior sync invocation. The is the exact
      * value returned in the `continuation` property of result of the prior sync.
      */
-    continuation?: ContinuationT;
+    continuation?: SyncContinuationT;
     /** @hidden */
-    previousCompletion: SyncCompletionMetadata<IncrementalContinuationT>;
+    previousCompletion: SyncCompletionMetadata<CheckpointContinuationT>;
 }
 /** Information about the current sync. */
 export interface SyncBase {
@@ -902,11 +902,11 @@ export interface ExecutionContext {
  * Sub-class of {@link ExecutionContext} that is passed to the `execute` function of every
  * sync formula invocation. The only different is that the presence of the `sync` property
  */
-export interface SyncExecutionContext<ContinuationT = Continuation, IncrementalContinuationT = ContinuationT, IncrementalSyncContinuationT = ContinuationT> extends ExecutionContext {
+export interface SyncExecutionContext<SyncContinuationT = Continuation, IncrementalCheckpointContinuationT = SyncContinuationT, IncrementalSyncContinuationT = SyncContinuationT> extends ExecutionContext {
     /**
      * Information about state of the current sync.
      */
-    readonly sync: Sync<ContinuationT, IncrementalContinuationT, IncrementalSyncContinuationT>;
+    readonly sync: Sync<SyncContinuationT, IncrementalCheckpointContinuationT, IncrementalSyncContinuationT>;
     /**
      * A service for retrieving the sync state in Coda Brain.
      * @hidden
