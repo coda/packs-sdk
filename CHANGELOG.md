@@ -4,13 +4,16 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Changed
+
+- SDK requires node version 20 or higher
+
 ## [1.8.6] - 2024-12-13
 
 ### Changed
 
 - Certain ingestion-specific fields were renamed.
 - Added `SyncStateService` to retrieve the row sync state in Coda Brain.
-
 
 ## [1.8.5] - 2024-12-04
 
@@ -859,5 +862,4 @@ await myHelper(context);
 [1.8.3]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.8.3
 [1.8.4]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.8.4
 [1.8.5]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.8.5
-
 [1.8.6]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.8.6

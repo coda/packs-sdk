@@ -8,10 +8,12 @@ if [[ "$(uname -s)" == "Darwin" ]] && [[ "$(arch)" == "arm64" ]]; then
   export PATH="/opt/homebrew/bin:${PATH}"
 fi
 
-export PATH=${BASEDIR}/build/node/bin:${BASEDIR}/node_modules/.bin:${BASEDIR}/.pnpm_install/bin:${PATH}
-
 if command -v nvm &> /dev/null
 then
   # Gets version from .nvmrc
   nvm use
 fi
+
+
+export PATH=${BASEDIR}/.pnpm_install/bin:${BASEDIR}/build/node/bin:${BASEDIR}/node_modules/.bin:${PATH}
+export NODE_OPTIONS="--no-node-snapshot ${NODE_OPTIONS}"
