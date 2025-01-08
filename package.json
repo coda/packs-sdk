@@ -157,7 +157,8 @@
       "fast-xml-parser@=4.2.4": ">=4.2.5",
       "semver@>=7.0.0 <7.5.2": ">=7.5.2",
       "elliptic@<6.6.0": ">=6.6.0",
-      "path-to-regexp@<0.1.12": "^0.1.12"
+      "path-to-regexp@<0.1.12": "^0.1.12",
+      "glob@<9.0.0": ">=9.0.0"
     },
     "packageExtensions": {
       "isolated-vm": {
