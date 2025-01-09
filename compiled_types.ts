@@ -1,5 +1,7 @@
 import type {AWSAccessKeyAuthentication} from './types';
 import type {AWSAssumeRoleAuthentication} from './types';
+import type {AdminAuthentication} from './types';
+import type {AllowedAuthentication} from './types';
 import type {Authentication} from './types';
 import type {AuthenticationType} from './types';
 import type {CodaApiBearerTokenAuthentication} from './types';
@@ -151,6 +153,10 @@ type BasePackVersionMetadata = Omit<
   'defaultAuthentication' | 'systemConnectionAuthentication' | 'formulas' | 'formats' | 'syncTables'
 >;
 
+type ExternalAdminAuthentication = AdminAuthentication & {
+  authentication: AllowedAuthentication & {params?: Array<{name: string; description: string}>};
+}
+
 // Further stripped-down version of `PackVersionMetadata` that contains only what the browser needs.
 /** @hidden */
 export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
@@ -169,6 +175,7 @@ export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
     endpointKey?: string;
   };
   instructionsUrl?: string;
+  adminAuthentications?: ExternalAdminAuthentication[]; 
 
   // User-facing components
   formulas?: ExternalPackFormulas;
