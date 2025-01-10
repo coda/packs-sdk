@@ -28,11 +28,11 @@ export interface MockExecutionContext extends ExecutionContext {
 }
 
 export interface MockSyncExecutionContext<
-  ContinuationT = Continuation,
-  IncrementalContinuationT = ContinuationT,
-  IncrementalSyncContinuationT = ContinuationT,
+  SyncContinuationT = Continuation,
+  IncrementalCheckpointContinuationT = SyncContinuationT,
+  IncrementalSyncContinuationT = SyncContinuationT,
 > extends MockExecutionContext {
-  sync: Sync<ContinuationT, IncrementalContinuationT, IncrementalSyncContinuationT>;
+  sync: Sync<SyncContinuationT, IncrementalCheckpointContinuationT, IncrementalSyncContinuationT>;
   syncStateService: {
     getLatestRowVersions: SinonFunctionStub<SyncStateService['getLatestRowVersions']>;
   };
