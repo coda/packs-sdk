@@ -70,6 +70,7 @@ class OAuthServerContainer {
                 const expires = (0, oauth_helpers_1.getTokenExpiry)(data);
                 this._afterTokenExchange({ accessToken, refreshToken, expires, data });
                 res.send('OAuth authentication is complete! You can close this browser tab.');
+                return;
             }
             res.send(`Invalid authorization code received: ${code}`);
         });
