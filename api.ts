@@ -4,6 +4,7 @@ import type {BooleanSchema} from './schema';
 import type {CommonPackFormulaDef} from './api_types';
 import {ConnectionRequirement} from './api_types';
 import type {CrawlStrategy} from './api_types';
+import type {DefaultRowLimit} from './api_types';
 import type {ExecutionContext} from './api_types';
 import type {FetchRequest} from './api_types';
 import type {GetPermissionExecutionContext} from './api_types';
@@ -331,6 +332,11 @@ export interface SyncTableDef<
    * @hidden
    */
   role?: TableRole;
+
+  /**
+   * See {@link SyncTableOptions.defaultRowLimit}
+   */
+  defaultRowLimit?: DefaultRowLimit;
 }
 
 /**
@@ -1364,7 +1370,7 @@ export type SyncFormula<
    * @hidden
    */
   supportsGetPermissions?: boolean;
-};
+  };
 
 /**
  * @deprecated
@@ -2192,6 +2198,13 @@ export interface SyncTableOptions<
    * @hidden
    */
   role?: TableRole;
+
+  /**
+   * If specified, sets the sync table row limit to be used when syncing this table. Note
+   * that this limit is also subject to row limit enforcements set by Coda's pricing tiers,
+   * so a doc on a free plan will still be limited to 100 rows per table.
+   */
+  defaultRowLimit?: DefaultRowLimit;
 }
 
 /**
@@ -2357,6 +2370,7 @@ export function makeSyncTable<
   connectionRequirement,
   dynamicOptions = {},
   role,
+  defaultRowLimit,
 }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT, ContextT>): SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT> {
   const {getSchema: getSchemaDef, entityName, defaultAddDynamicColumns} = dynamicOptions;
   const {
@@ -2521,6 +2535,7 @@ export function makeSyncTable<
     defaultAddDynamicColumns,
     namedPropertyOptions: maybeRewriteConnectionForNamedPropertyOptions(namedPropertyOptions, connectionRequirement),
     role,
+    defaultRowLimit
   };
 }
 

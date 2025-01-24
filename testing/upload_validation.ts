@@ -17,6 +17,7 @@ import {CurrencyFormat} from '../schema';
 import type {CurrencySchema} from '../schema';
 import type {CustomAuthentication} from '../types';
 import type {CustomHeaderTokenAuthentication} from '../types';
+import {DefaultRowLimit} from '../api_types';
 import type {DetailedIndexedProperty} from '../schema';
 import type {DurationSchema} from '../schema';
 import {DurationUnit} from '../schema';
@@ -1855,6 +1856,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }
       }),
     role: z.nativeEnum(TableRole).optional(),
+    defaultRowLimit: z.nativeEnum(DefaultRowLimit).optional(),
   };
 
   type GenericSyncTableDef = SyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>, SyncExecutionContext>;

@@ -1011,6 +1011,11 @@ declare enum TableRole {
 	Users = "users",
 	GroupMembers = "groupMembers"
 }
+declare enum DefaultRowLimit {
+	OneHundred = 100,
+	OneThousand = 1000,
+	TenThousands = 10000
+}
 /** @hidden */
 export type SyncCompletionMetadataResult<IncrementalContinuationT = Continuation> = SyncCompletionMetadata<IncrementalContinuationT> | SyncCompletionMetadataIncomplete;
 /** @hidden */
@@ -2971,6 +2976,10 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
 	 * @hidden
 	 */
 	role?: TableRole;
+	/**
+	 * See {@link SyncTableOptions.defaultRowLimit}
+	 */
+	defaultRowLimit?: DefaultRowLimit;
 }
 /**
  * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
@@ -3817,6 +3826,12 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
 	 * @hidden
 	 */
 	role?: TableRole;
+	/**
+	 * If specified, sets the sync table row limit to be used when syncing this table. Note
+	 * that this limit is also subject to row limit enforcements set by Coda's pricing tiers,
+	 * so a doc on a free plan will still be limited to 100 rows per table.
+	 */
+	defaultRowLimit?: DefaultRowLimit;
 }
 /**
  * Options provided when defining a dynamic sync table.
@@ -3957,7 +3972,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
  */
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaDefT extends ObjectSchemaDefinition<K, L>, SchemaT extends SchemaDefT & {
 	identity?: Identity;
-}, ContextT extends SyncExecutionContext<any, any>>({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions, role, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT, ContextT>): SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT>;
+}, ContextT extends SyncExecutionContext<any, any>>({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions, role, defaultRowLimit, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT, ContextT>): SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT>;
 /**
  * Creates a dynamic sync table definition.
  *
