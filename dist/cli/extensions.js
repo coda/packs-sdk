@@ -3,7 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleExtensions = exports.Tools = void 0;
+exports.Tools = void 0;
+exports.handleExtensions = handleExtensions;
 const fs_extra_1 = __importDefault(require("fs-extra"));
 const helpers_1 = require("./helpers");
 const path_1 = __importDefault(require("path"));
@@ -26,7 +27,6 @@ async function handleExtensions(args) {
         }
     }
 }
-exports.handleExtensions = handleExtensions;
 function installVSCodeExtensions() {
     const vsCodeDir = path_1.default.join(process.cwd(), '.vscode');
     if (!fs_extra_1.default.existsSync(vsCodeDir)) {
