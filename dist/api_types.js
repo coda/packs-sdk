@@ -433,6 +433,9 @@ var TableRole;
     TableRole["Users"] = "users";
     TableRole["GroupMembers"] = "groupMembers";
 })(TableRole || (exports.TableRole = TableRole = {}));
+/**
+ * Default row limits for a sync table.
+ */
 var DefaultRowLimit;
 (function (DefaultRowLimit) {
     DefaultRowLimit[DefaultRowLimit["OneHundred"] = 100] = "OneHundred";

@@ -1348,11 +1348,15 @@ export type PropertyOptionsMetadataFunction<ResultT extends PackFormulaResult[]>
   context: PropertyOptionsExecutionContext,
 ) => Promise<PropertyOptionsMetadataResult<ResultT>> | PropertyOptionsMetadataResult<ResultT>;
 
+
 export enum TableRole {
   Users = 'users',
   GroupMembers = 'groupMembers',
 }
 
+/**
+ * Default row limits for a sync table.
+ */
 export enum DefaultRowLimit {
   OneHundred = 100,
   OneThousand = 1000,
