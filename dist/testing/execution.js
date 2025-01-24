@@ -15,18 +15,41 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newRealFetcherSyncExecutionContext = exports.newRealFetcherExecutionContext = exports.executeMetadataFormula = exports.executeUpdateFormulaFromPackDef = exports.executeGetPermissionsFormulaFromPackDef = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeSyncFormula = exports.executeFormulaOrSyncWithRawParams = exports.VMError = exports.executeFormulaOrSyncWithVM = exports.makeFormulaSpec = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = exports.DEFAULT_MAX_ROWS = void 0;
+exports.VMError = exports.DEFAULT_MAX_ROWS = void 0;
+exports.executeFormulaFromPackDef = executeFormulaFromPackDef;
+exports.executeFormulaOrSyncFromCLI = executeFormulaOrSyncFromCLI;
+exports.makeFormulaSpec = makeFormulaSpec;
+exports.executeFormulaOrSyncWithVM = executeFormulaOrSyncWithVM;
+exports.executeFormulaOrSyncWithRawParams = executeFormulaOrSyncWithRawParams;
+exports.executeSyncFormula = executeSyncFormula;
+exports.executeSyncFormulaFromPackDef = executeSyncFormulaFromPackDef;
+exports.executeSyncFormulaFromPackDefSingleIteration = executeSyncFormulaFromPackDefSingleIteration;
+exports.executeGetPermissionsFormulaFromPackDef = executeGetPermissionsFormulaFromPackDef;
+exports.executeUpdateFormulaFromPackDef = executeUpdateFormulaFromPackDef;
+exports.executeMetadataFormula = executeMetadataFormula;
+exports.newRealFetcherExecutionContext = newRealFetcherExecutionContext;
+exports.newRealFetcherSyncExecutionContext = newRealFetcherSyncExecutionContext;
 const types_1 = require("../runtime/types");
 const types_2 = require("../runtime/types");
 const buffer_1 = require("buffer/");
@@ -135,7 +158,6 @@ async function executeFormulaFromPackDef(packDef, formulaNameWithNamespace, para
     }
     return findAndExecutePackFunction(params, { type: types_1.FormulaType.Standard, formulaName: resolveFormulaNameWithNamespace(formulaNameWithNamespace) }, packDef, executionContext || (0, mocks_1.newMockExecutionContext)(), undefined, undefined, options);
 }
-exports.executeFormulaFromPackDef = executeFormulaFromPackDef;
 async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, manifestPath, vm, dynamicUrl, maxRows = exports.DEFAULT_MAX_ROWS, bundleSourceMapPath, bundlePath, contextOptions = {}, }) {
     try {
         if (maxRows <= 0) {
@@ -193,7 +215,6 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
         process.exit(1);
     }
 }
-exports.executeFormulaOrSyncFromCLI = executeFormulaOrSyncFromCLI;
 const SyncMetadataFormulaTokens = Object.freeze({
     [types_2.MetadataFormulaType.SyncListDynamicUrls]: 'listDynamicUrls',
     [types_2.MetadataFormulaType.SyncSearchDynamicUrls]: 'searchDynamicUrls',
@@ -312,7 +333,6 @@ function makeFormulaSpec(manifest, formulaNameInput) {
     }
     throw new Error(`Unrecognized execution command: "${formulaNameInput}".`);
 }
-exports.makeFormulaSpec = makeFormulaSpec;
 // This method is used to execute a (sync) formula in testing with VM. Don't use it in lambda or calc service.
 async function executeFormulaOrSyncWithVM({ formulaName, params, bundlePath, executionContext = (0, mocks_2.newMockSyncExecutionContext)(), }) {
     const manifest = await (0, helpers_4.importManifest)(bundlePath);
@@ -324,7 +344,6 @@ async function executeFormulaOrSyncWithVM({ formulaName, params, bundlePath, exe
     const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
     return (0, bootstrap_1.executeThunk)(ivmContext, { params, formulaSpec: formulaSpecification }, bundlePath, bundlePath + '.map');
 }
-exports.executeFormulaOrSyncWithVM = executeFormulaOrSyncWithVM;
 class VMError {
     constructor(name, message, stack) {
         this.name = name;
@@ -418,7 +437,6 @@ async function executeFormulaOrSyncWithRawParams({ formulaSpecification, params:
     }
     return findAndExecutePackFunction(params, formulaSpecification, manifest, executionContext, syncUpdates, permissionRequest);
 }
-exports.executeFormulaOrSyncWithRawParams = executeFormulaOrSyncWithRawParams;
 /**
  * Executes multiple iterations of a sync formula in a loop until there is no longer
  * a `continuation` returned, aggregating each page of results and returning an array
@@ -469,7 +487,6 @@ async function executeSyncFormula(packDef, syncFormulaName, params, context, { v
         deletedRowIds,
     };
 }
-exports.executeSyncFormula = executeSyncFormula;
 /**
  * Executes multiple iterations of a sync formula in a loop until there is no longer
  * a `continuation` returned, aggregating each page of results and returning an array
@@ -490,7 +507,6 @@ async function executeSyncFormulaFromPackDef(packDef, syncFormulaName, params, c
         useDeprecatedResultNormalization,
     }, { useRealFetcher, manifestPath })).result);
 }
-exports.executeSyncFormulaFromPackDef = executeSyncFormulaFromPackDef;
 /**
  * Executes a single sync iteration, and returns the return value from the sync formula
  * including the continuation, for inspection.
@@ -503,7 +519,6 @@ async function executeSyncFormulaFromPackDefSingleIteration(packDef, syncFormula
     }
     return findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_1.FormulaType.Sync }, packDef, executionContext || (0, mocks_2.newMockSyncExecutionContext)(), undefined, undefined, options);
 }
-exports.executeSyncFormulaFromPackDefSingleIteration = executeSyncFormulaFromPackDefSingleIteration;
 /**
  * Executes an executeGetPermissions request and returns the result.
  *
@@ -517,7 +532,6 @@ async function executeGetPermissionsFormulaFromPackDef(packDef, syncFormulaName,
     }
     return findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_1.FormulaType.GetPermissions }, packDef, executionContext || (0, mocks_2.newMockSyncExecutionContext)(), undefined, executeGetPermissionsRequest, options);
 }
-exports.executeGetPermissionsFormulaFromPackDef = executeGetPermissionsFormulaFromPackDef;
 /**
  * Executes an executeUpdate request for an update sync formula, and returns the result.
  *
@@ -531,12 +545,10 @@ async function executeUpdateFormulaFromPackDef(packDef, syncFormulaName, params,
     }
     return findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_1.FormulaType.SyncUpdate }, packDef, context, syncUpdates, undefined, options);
 }
-exports.executeUpdateFormulaFromPackDef = executeUpdateFormulaFromPackDef;
 async function executeMetadataFormula(formula, metadataParams = {}, context = (0, mocks_1.newMockExecutionContext)()) {
     const { search, formulaContext } = metadataParams;
     return formula.execute([search || '', formulaContext ? JSON.stringify(formulaContext) : ''], context);
 }
-exports.executeMetadataFormula = executeMetadataFormula;
 function getCredentials(manifestPath) {
     if (manifestPath) {
         const manifestDir = path.dirname(manifestPath);
@@ -553,11 +565,9 @@ function buildUpdateCredentialsCallback(manifestPath) {
 function newRealFetcherExecutionContext(packDef, manifestPath) {
     return (0, fetcher_1.newFetcherExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_3.getPackAuth)(packDef), packDef.networkDomains, getCredentials(manifestPath));
 }
-exports.newRealFetcherExecutionContext = newRealFetcherExecutionContext;
 function newRealFetcherSyncExecutionContext(packDef, manifestPath) {
     return (0, fetcher_2.newFetcherSyncExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_3.getPackAuth)(packDef), packDef.networkDomains, getCredentials(manifestPath));
 }
-exports.newRealFetcherSyncExecutionContext = newRealFetcherSyncExecutionContext;
 const SyncUpdateSchema = z.object({
     previousValue: z.object({}).passthrough(),
     newValue: z.object({}).passthrough(),
