@@ -119,8 +119,8 @@ importers:
         version: 3.23.8
     optionalDependencies:
       isolated-vm:
-        specifier: 5.0.1
-        version: 5.0.1
+        specifier: 5.0.3
+        version: 5.0.3
     devDependencies:
       '@aws-sdk/types':
         specifier: 3.664.0
@@ -3064,8 +3064,8 @@ packages:
   isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
 
-  isolated-vm@5.0.1:
-    resolution: {integrity: sha512-hs7+ff59Z2zDvavfcjuot/r1gm6Bmpt+GoZxmVfxUmXaX5scOvUq/Rnme+mUtSh5lW41hH8gAuvk/yTJDYO8Fg==}
+  isolated-vm@5.0.3:
+    resolution: {integrity: sha512-GNqX0j7dkwdaNQfFogLLb/tSuPZbXtKlk5ldaJ084ngjaW9/bn34x9FQFL856p20KSZoubIIummmiJf+2hzhCw==}
     engines: {node: '>=18.0.0'}
 
   issue-parser@7.0.1:
@@ -3214,6 +3214,7 @@ packages:
 
   lodash.get@4.4.2:
     resolution: {integrity: sha512-z+Uw/vLuy6gQe8cfaFWD7p0wVv8fJl3mbzXh33RS+0oW2wvUqiRXiQ69gLWSLpgB5/6sU+r6BlQR0MBILadqTQ==}
+    deprecated: This package is deprecated. Use the optional chaining (?.) operator instead.
 
   lodash.isarguments@3.1.0:
     resolution: {integrity: sha512-chi4NHZlZqZD18a0imDHnZPrDeBbTtVN7GXMwuGdRH9qotxAjYs3aVLKc7zNOG9eddR5Ksd8rvFEBc9SsggPpg==}
@@ -3241,6 +3242,7 @@ packages:
 
   lodash.pick@3.1.0:
     resolution: {integrity: sha512-Y04wnFghB7l1dkYINfjdMLpeAGM1IYEjlsGFxvjeewCbVQUlD9jw3M20ThuNrsf6yGmuPLwj60PKP+D6gZ+o2w==}
+    deprecated: This package is deprecated. Use destructuring assignment syntax instead.
 
   lodash.restparam@3.6.1:
     resolution: {integrity: sha512-L4/arjjuq4noiUJpt3yS6KIKDtJwNe2fIYgMqyYYKoeIfV1iEqvPwhCx23o+R9dzouGihDAPN1dTIRWa7zk8tw==}
@@ -8116,7 +8118,7 @@ snapshots:
 
   isexe@2.0.0: {}
 
-  isolated-vm@5.0.1:
+  isolated-vm@5.0.3:
     dependencies:
       prebuild-install: 7.1.2
     optional: true
