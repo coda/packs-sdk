@@ -31,6 +31,16 @@ this sync table (including autocomplete formulas).
 
 ___
 
+### defaultRowLimit
+
+• `Optional` **defaultRowLimit**: `DefaultRowLimit`
+
+If specified, sets the sync table row limit to be used when syncing this table. Note
+that this limit is also subject to row limit enforcements set by Coda's pricing tiers,
+so a doc on a free plan will still be limited to 100 rows per table.
+
+___
+
 ### description
 
 • `Optional` **description**: `string`

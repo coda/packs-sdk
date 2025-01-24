@@ -3,6 +3,7 @@ import type { ArrayType } from './api_types';
 import type { BooleanSchema } from './schema';
 import type { CommonPackFormulaDef } from './api_types';
 import { ConnectionRequirement } from './api_types';
+import type { DefaultRowLimit } from './api_types';
 import type { ExecutionContext } from './api_types';
 import type { FetchRequest } from './api_types';
 import type { GetPermissionExecutionContext } from './api_types';
@@ -251,6 +252,10 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
      * @hidden
      */
     role?: TableRole;
+    /**
+     * See {@link SyncTableOptions.defaultRowLimit}
+     */
+    defaultRowLimit?: DefaultRowLimit;
 }
 /**
  * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
@@ -1273,6 +1278,12 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
      * @hidden
      */
     role?: TableRole;
+    /**
+     * If specified, sets the sync table row limit to be used when syncing this table. Note
+     * that this limit is also subject to row limit enforcements set by Coda's pricing tiers,
+     * so a doc on a free plan will still be limited to 100 rows per table.
+     */
+    defaultRowLimit?: DefaultRowLimit;
 }
 /**
  * Options provided when defining a dynamic sync table.
@@ -1413,7 +1424,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
  */
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaDefT extends ObjectSchemaDefinition<K, L>, SchemaT extends SchemaDefT & {
     identity?: Identity;
-}, ContextT extends SyncExecutionContext<any, any>>({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions, role, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT, ContextT>): SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT>;
+}, ContextT extends SyncExecutionContext<any, any>>({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions, role, defaultRowLimit, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT, ContextT>): SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT>;
 /** @deprecated */
 export declare function makeSyncTableLegacy<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>, ContextT extends SyncExecutionContext<any, any>>(name: string, schema: SchemaT, formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT>, connectionRequirement?: ConnectionRequirement, dynamicOptions?: {
     getSchema?: MetadataFormula;

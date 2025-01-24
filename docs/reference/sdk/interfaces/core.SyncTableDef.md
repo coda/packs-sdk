@@ -37,6 +37,14 @@ See [defaultAddDynamicColumns](core.DynamicOptions.md#defaultadddynamiccolumns)
 
 ___
 
+### defaultRowLimit
+
+• `Optional` **defaultRowLimit**: `DefaultRowLimit`
+
+See [defaultRowLimit](core.SyncTableOptions.md#defaultrowlimit)
+
+___
+
 ### description
 
 • `Optional` **description**: `string`

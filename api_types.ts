@@ -1353,6 +1353,12 @@ export enum TableRole {
   GroupMembers = 'groupMembers',
 }
 
+export enum DefaultRowLimit {
+  OneHundred = 100,
+  OneThousand = 1000,
+  TenThousands = 10000,
+}
+
 // TODO(patrick): Unhide this
 /** @hidden */
 export type SyncCompletionMetadataResult<IncrementalContinuationT = Continuation> =

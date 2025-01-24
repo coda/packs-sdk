@@ -1099,6 +1099,11 @@ export declare enum TableRole {
     Users = "users",
     GroupMembers = "groupMembers"
 }
+export declare enum DefaultRowLimit {
+    OneHundred = 100,
+    OneThousand = 1000,
+    TenThousands = 10000
+}
 /** @hidden */
 export type SyncCompletionMetadataResult<IncrementalContinuationT = Continuation> = SyncCompletionMetadata<IncrementalContinuationT> | SyncCompletionMetadataIncomplete;
 /** @hidden */
