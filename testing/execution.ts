@@ -282,7 +282,10 @@ export async function executeFormulaOrSyncFromCLI({
       printFull(result);
     }
   } catch (err: any) {
-    print(err.message || err);
+    print(err);
+    if (!vm && !isSourceMapsEnabled()) {
+      print('\nEnable the Node flag --enable-source-maps to get an accurate stack trace.');
+    }
     process.exit(1);
   }
 }
@@ -923,4 +926,12 @@ function parseGetPermissionRequest(
   });
 
   return {permissionRequest: parseResult.data, params: coerceParams(syncFormula, paramsCopy as any)};
+}
+
+function isSourceMapsEnabled() {
+  const flags = [
+    ...process.execArgv,
+    ...process.env.NODE_OPTIONS?.split(/\s+/) ?? [],
+  ];
+  return flags.includes('--enable-source-maps');
 }

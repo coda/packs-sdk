@@ -189,7 +189,10 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
         }
     }
     catch (err) {
-        (0, helpers_5.print)(err.message || err);
+        (0, helpers_5.print)(err);
+        if (!vm && !isSourceMapsEnabled()) {
+            (0, helpers_5.print)('\nEnable the Node flag --enable-source-maps to get an accurate stack trace.');
+        }
         process.exit(1);
     }
 }
@@ -596,4 +599,12 @@ function parseGetPermissionRequest(manifest, formulaSpecification, rawParams) {
         verifyFormulaForAuthenticationName: false,
     });
     return { permissionRequest: parseResult.data, params: (0, coercion_1.coerceParams)(syncFormula, paramsCopy) };
+}
+function isSourceMapsEnabled() {
+    var _a, _b;
+    const flags = [
+        ...process.execArgv,
+        ...(_b = (_a = process.env.NODE_OPTIONS) === null || _a === void 0 ? void 0 : _a.split(/\s+/)) !== null && _b !== void 0 ? _b : [],
+    ];
+    return flags.includes('--enable-source-maps');
 }
