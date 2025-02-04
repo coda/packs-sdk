@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TableRole = exports.OptionsType = exports.FutureLiveDates = exports.PastLiveDates = exports.AllPrecannedDates = exports.PrecannedDate = exports.FromNowDateRanges = exports.PastLiveDateRanges = exports.UntilNowDateRanges = exports.PrecannedDateRange = exports.isSyncExecutionContext = exports.InvocationSource = exports.InvocationErrorType = exports.PermissionSyncMode = exports.ResponseChunkingStrategyType = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
+exports.TableRole = exports.OptionsType = exports.FutureLiveDates = exports.PastLiveDates = exports.AllPrecannedDates = exports.PrecannedDate = exports.FromNowDateRanges = exports.PastLiveDateRanges = exports.UntilNowDateRanges = exports.PrecannedDateRange = exports.isSyncExecutionContext = exports.InvocationSource = exports.InvocationErrorType = exports.PermissionSyncMode = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
 /**
  * Markers used internally to represent data types for parameters and return values.
  * It should not be necessary to ever use these values directly.
@@ -227,11 +227,6 @@ var NetworkConnection;
 })(NetworkConnection || (exports.NetworkConnection = NetworkConnection = {}));
 /** The HTTP methods (verbs) supported by the fetcher. */
 exports.ValidFetchMethods = ['GET', 'PATCH', 'POST', 'PUT', 'DELETE', 'HEAD'];
-/** @hidden */
-var ResponseChunkingStrategyType;
-(function (ResponseChunkingStrategyType) {
-    ResponseChunkingStrategyType["Csv"] = "Csv";
-})(ResponseChunkingStrategyType || (exports.ResponseChunkingStrategyType = ResponseChunkingStrategyType = {}));
 /**
  * TODO(patrick): Unhide this
  * @hidden
