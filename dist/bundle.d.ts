@@ -527,23 +527,11 @@ export interface FetchRequest {
 	 */
 	ignoreRedirects?: boolean;
 	/**
-	 * If set, the response will be chunked to allow for handling larger responses as if they were smaller.  Useful when
-	 * dealing with APIs that return large responses or when making fewer larger requests is more performant than making
-	 * more smaller requests.
+	 * If true, the response will be chunked to allow for larger responses.
 	 * @hidden
 	 */
-	responseChunkingStrategy?: ResponseChunkingStrategy;
+	chunkResponse?: boolean;
 }
-declare enum ResponseChunkingStrategyType {
-	Csv = "Csv"
-}
-/** @hidden */
-export interface CsvResponseChunkingStrategy {
-	type: ResponseChunkingStrategyType.Csv;
-	includeHeader: boolean;
-}
-/** @hidden */
-export type ResponseChunkingStrategy = CsvResponseChunkingStrategy;
 /**
  * The response of a call to {@link Fetcher.fetch}.
  *
