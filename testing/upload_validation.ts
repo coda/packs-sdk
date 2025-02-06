@@ -1307,6 +1307,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           propertySchema = JSONPath({
             path: schemaPropertyPath,
             json: schema.properties,
+            eval: false,
           })?.[0];
           propertyValueIsPath = true;
         }
