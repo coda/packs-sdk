@@ -288,8 +288,8 @@ export async function executeFormulaOrSyncFromCLI({
     }
   } catch (err: any) {
     if (isDeveloperError(err)) {
-      // The error came from the Pack code. Print the full error, including the stack trace.
-      print(err);
+      // The error came from the Pack code. Print the inner error, including the stack trace.
+      print(err.cause);
       // If source maps are not enabled, print a warning.
       if (!vm && !isSourceMapsEnabled()) {
         print(`
@@ -942,21 +942,20 @@ function isSourceMapsEnabled() {
   return flags.includes('--enable-source-maps');
 }
 
-interface DeveloperError extends Error {
-  isDeveloperError: true;
+class DeveloperError extends Error {
+  constructor(err: Error) {
+    super('The Pack code threw an error.', {
+      cause: err,
+    });
+    this.name = 'DeveloperError';
+    Object.setPrototypeOf(this, DeveloperError.prototype);
+  }
 }
 
 function asDeveloperError(err: Error) {
-  return new Proxy(err, {
-    get(target, prop) {
-      if (prop === 'isDeveloperError') {
-        return true;
-      }
-      return prop in target ? target[prop as keyof typeof target] : undefined;
-    }
-  }) as DeveloperError;
+  throw new DeveloperError(err);
 }
 
-function isDeveloperError(err: Error): err is DeveloperError {
-  return (err as DeveloperError).isDeveloperError;
+function isDeveloperError(err: Error) {
+  return err.name === 'DeveloperError';
 }
