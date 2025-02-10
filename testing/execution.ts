@@ -49,7 +49,6 @@ import {transformBody} from '../handler_templates';
 import {tryFindFormula} from '../runtime/common/helpers';
 import {tryFindSyncFormula} from '../runtime/common/helpers';
 import {untransformBody} from '../handler_templates';
-import util from 'util';
 import {validateParams} from './validation';
 import {validateResult} from './validation';
 import * as z from 'zod';
@@ -118,15 +117,21 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
   if (shouldValidateParams && formula) {
     validateParams(formula, params);
   }
-  let result = await thunk.findAndExecutePackFunction({
-    params,
-    formulaSpec,
-    manifest,
-    executionContext,
-    shouldWrapError: false,
-    updates: syncUpdates,
-    getPermissionsRequest,
-  });
+
+  let result;
+  try {
+    result = await thunk.findAndExecutePackFunction({
+      params,
+      formulaSpec,
+      manifest,
+      executionContext,
+      shouldWrapError: false,
+      updates: syncUpdates,
+      getPermissionsRequest,
+    });
+  } catch (err: any) {
+    throw asDeveloperError(err);
+  }
 
   if (formulaSpec.type === FormulaType.SyncUpdate) {
     return result;
@@ -282,9 +287,18 @@ export async function executeFormulaOrSyncFromCLI({
       printFull(result);
     }
   } catch (err: any) {
-    print(err);
-    if (!vm && !isSourceMapsEnabled()) {
-      print('\nEnable the Node flag --enable-source-maps to get an accurate stack trace.');
+    if (isDeveloperError(err)) {
+      // The error came from the Pack code. Print the full error, including the stack trace.
+      print(err);
+      // If source maps are not enabled, print a warning.
+      if (!vm && !isSourceMapsEnabled()) {
+        print(`
+Enable the Node flag --enable-source-maps to get an accurate stack trace. For example:
+NODE_OPTIONS="--enable-source-maps" npx coda execute ...`);
+      }
+    } else {
+      // Just print the error message.
+      print(err.message);
     }
     process.exit(1);
   }
@@ -446,22 +460,10 @@ export async function executeFormulaOrSyncWithVM<T extends PackFormulaResult | G
 
   const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
 
-  return executeThunk(ivmContext, {params, formulaSpec: formulaSpecification}, bundlePath, bundlePath + '.map') as T;
-}
-
-export class VMError {
-  name: string;
-  message: string;
-  stack: string;
-
-  constructor(name: string, message: string, stack: string) {
-    this.name = name;
-    this.message = message;
-    this.stack = stack;
-  }
-
-  [util.inspect.custom]() {
-    return `${this.name}: ${this.message}\n${this.stack}`;
+  try {
+    return await executeThunk(ivmContext, {params, formulaSpec: formulaSpecification}, bundlePath, bundlePath + '.map') as T;
+  } catch (err: any) {
+    throw asDeveloperError(err);
   }
 }
 
@@ -519,12 +521,16 @@ async function executeFormulaOrSyncWithRawParamsInVM<T extends FormulaSpecificat
     default:
       ensureUnreachable(formulaSpecification);
   }
-  return executeThunk(
-    ivmContext,
-    {params, formulaSpec: formulaSpecification, updates: syncUpdates, permissionRequest},
-    bundlePath,
-    bundleSourceMapPath,
-  );
+  try {
+    return await executeThunk(
+      ivmContext,
+      {params, formulaSpec: formulaSpecification, updates: syncUpdates, permissionRequest},
+      bundlePath,
+      bundleSourceMapPath,
+    );
+  } catch (err: any) {
+    throw asDeveloperError(err);
+  }
 }
 
 export async function executeFormulaOrSyncWithRawParams<T extends FormulaSpecification>({
@@ -934,4 +940,23 @@ function isSourceMapsEnabled() {
     ...process.env.NODE_OPTIONS?.split(/\s+/) ?? [],
   ];
   return flags.includes('--enable-source-maps');
+}
+
+interface DeveloperError extends Error {
+  isDeveloperError: true;
+}
+
+function asDeveloperError(err: Error) {
+  return new Proxy(err, {
+    get(target, prop) {
+      if (prop === 'isDeveloperError') {
+        return true;
+      }
+      return prop in target ? target[prop as keyof typeof target] : undefined;
+    }
+  }) as DeveloperError;
+}
+
+function isDeveloperError(err: Error): err is DeveloperError {
+  return (err as DeveloperError).isDeveloperError;
 }

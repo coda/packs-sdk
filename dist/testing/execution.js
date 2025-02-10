@@ -22,11 +22,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newRealFetcherSyncExecutionContext = exports.newRealFetcherExecutionContext = exports.executeMetadataFormula = exports.executeUpdateFormulaFromPackDef = exports.executeGetPermissionsFormulaFromPackDef = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeSyncFormula = exports.executeFormulaOrSyncWithRawParams = exports.VMError = exports.executeFormulaOrSyncWithVM = exports.makeFormulaSpec = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = exports.DEFAULT_MAX_ROWS = void 0;
+exports.newRealFetcherSyncExecutionContext = exports.newRealFetcherExecutionContext = exports.executeMetadataFormula = exports.executeUpdateFormulaFromPackDef = exports.executeGetPermissionsFormulaFromPackDef = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeSyncFormula = exports.executeFormulaOrSyncWithRawParams = exports.executeFormulaOrSyncWithVM = exports.makeFormulaSpec = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = exports.DEFAULT_MAX_ROWS = void 0;
 const types_1 = require("../runtime/types");
 const types_2 = require("../runtime/types");
 const buffer_1 = require("buffer/");
@@ -53,7 +50,6 @@ const handler_templates_1 = require("../handler_templates");
 const helpers_7 = require("../runtime/common/helpers");
 const helpers_8 = require("../runtime/common/helpers");
 const handler_templates_2 = require("../handler_templates");
-const util_1 = __importDefault(require("util"));
 const validation_1 = require("./validation");
 const validation_2 = require("./validation");
 const z = __importStar(require("zod"));
@@ -87,15 +83,21 @@ useDeprecatedResultNormalization = true, } = {}) {
     if (shouldValidateParams && formula) {
         (0, validation_1.validateParams)(formula, params);
     }
-    let result = await thunk.findAndExecutePackFunction({
-        params,
-        formulaSpec,
-        manifest,
-        executionContext,
-        shouldWrapError: false,
-        updates: syncUpdates,
-        getPermissionsRequest,
-    });
+    let result;
+    try {
+        result = await thunk.findAndExecutePackFunction({
+            params,
+            formulaSpec,
+            manifest,
+            executionContext,
+            shouldWrapError: false,
+            updates: syncUpdates,
+            getPermissionsRequest,
+        });
+    }
+    catch (err) {
+        throw asDeveloperError(err);
+    }
     if (formulaSpec.type === types_1.FormulaType.SyncUpdate) {
         return result;
     }
@@ -189,9 +191,19 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
         }
     }
     catch (err) {
-        (0, helpers_5.print)(err);
-        if (!vm && !isSourceMapsEnabled()) {
-            (0, helpers_5.print)('\nEnable the Node flag --enable-source-maps to get an accurate stack trace.');
+        if (isDeveloperError(err)) {
+            // The error came from the Pack code. Print the full error, including the stack trace.
+            (0, helpers_5.print)(err);
+            // If source maps are not enabled, print a warning.
+            if (!vm && !isSourceMapsEnabled()) {
+                (0, helpers_5.print)(`
+Enable the Node flag --enable-source-maps to get an accurate stack trace. For example:
+NODE_OPTIONS="--enable-source-maps" npx coda execute ...`);
+            }
+        }
+        else {
+            // Just print the error message.
+            (0, helpers_5.print)(err.message);
         }
         process.exit(1);
     }
@@ -325,20 +337,14 @@ async function executeFormulaOrSyncWithVM({ formulaName, params, bundlePath, exe
         formulaName,
     };
     const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
-    return (0, bootstrap_1.executeThunk)(ivmContext, { params, formulaSpec: formulaSpecification }, bundlePath, bundlePath + '.map');
+    try {
+        return await (0, bootstrap_1.executeThunk)(ivmContext, { params, formulaSpec: formulaSpecification }, bundlePath, bundlePath + '.map');
+    }
+    catch (err) {
+        throw asDeveloperError(err);
+    }
 }
 exports.executeFormulaOrSyncWithVM = executeFormulaOrSyncWithVM;
-class VMError {
-    constructor(name, message, stack) {
-        this.name = name;
-        this.message = message;
-        this.stack = stack;
-    }
-    [util_1.default.inspect.custom]() {
-        return `${this.name}: ${this.message}\n${this.stack}`;
-    }
-}
-exports.VMError = VMError;
 async function executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, params: rawParams, bundlePath, bundleSourceMapPath, executionContext = (0, mocks_2.newMockSyncExecutionContext)(), }) {
     var _a;
     const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
@@ -377,7 +383,12 @@ async function executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, par
         default:
             (0, ensure_2.ensureUnreachable)(formulaSpecification);
     }
-    return (0, bootstrap_1.executeThunk)(ivmContext, { params, formulaSpec: formulaSpecification, updates: syncUpdates, permissionRequest }, bundlePath, bundleSourceMapPath);
+    try {
+        return await (0, bootstrap_1.executeThunk)(ivmContext, { params, formulaSpec: formulaSpecification, updates: syncUpdates, permissionRequest }, bundlePath, bundleSourceMapPath);
+    }
+    catch (err) {
+        throw asDeveloperError(err);
+    }
 }
 async function executeFormulaOrSyncWithRawParams({ formulaSpecification, params: rawParams, manifest, executionContext, }) {
     var _a;
@@ -607,4 +618,17 @@ function isSourceMapsEnabled() {
         ...(_b = (_a = process.env.NODE_OPTIONS) === null || _a === void 0 ? void 0 : _a.split(/\s+/)) !== null && _b !== void 0 ? _b : [],
     ];
     return flags.includes('--enable-source-maps');
+}
+function asDeveloperError(err) {
+    return new Proxy(err, {
+        get(target, prop) {
+            if (prop === 'isDeveloperError') {
+                return true;
+            }
+            return prop in target ? target[prop] : undefined;
+        }
+    });
+}
+function isDeveloperError(err) {
+    return err.isDeveloperError;
 }

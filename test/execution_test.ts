@@ -572,7 +572,7 @@ describe('Execution', () => {
           assert.deepEqual(result, [{value: 'foo', display: 'foo'}]);
         });
 
-        it('include stacktrace', async () => {
+        it('pack exceptions print stacktrace', async () => {
           await executeFormulaOrSyncFromCLI({
             vm,
             formulaName: 'Throw',
@@ -587,6 +587,24 @@ describe('Execution', () => {
           const exitValue = mockExit.args[0][0];
           assert.instanceOf(error, Error);
           assert.include(error.stack, path.join(__dirname, 'packs/fake.ts'));
+          assert.equal(exitValue, 1);
+        });
+
+        it('CLI errors don\'t print stacktrace', async () => {
+          await executeFormulaOrSyncFromCLI({
+            vm,
+            formulaName: 'NotRealFormula',
+            params: [],
+            manifest: fakePack,
+            manifestPath: '',
+            bundleSourceMapPath,
+            bundlePath,
+            contextOptions: {useRealFetcher: false},
+          });
+          const message = mockPrint.args[0][0];
+          const exitValue = mockExit.args[0][0];
+          assert.typeOf(message, 'string');
+          assert.notInclude(message, path.join(__dirname, '/packs-sdk/dist/'));
           assert.equal(exitValue, 1);
         });
       });
