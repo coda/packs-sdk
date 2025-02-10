@@ -944,9 +944,10 @@ function isSourceMapsEnabled() {
 
 class DeveloperError extends Error {
   constructor(err: Error) {
-    super('The Pack code threw an error.', {
+    super('The Pack code threw an error: ' + err.message, {
       cause: err,
     });
+    this.stack = err.stack;
     this.name = 'DeveloperError';
     Object.setPrototypeOf(this, DeveloperError.prototype);
   }
