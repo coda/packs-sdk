@@ -9,6 +9,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 - SDK requires node version 20 or higher
 - Update `Sync` parameter type names for clarity
 
+### Fixed
+
+- When using `coda execute`, if the Pack fails due to an error the stack trace will be included in the output again.
+
 ## [1.8.6] - 2024-12-13
 
 ### Changed

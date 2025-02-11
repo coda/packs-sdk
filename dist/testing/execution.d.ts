@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import type { BasicPackDefinition } from '../types';
 import type { ExecutionContext } from '../api_types';
 import type { FormulaSpecification } from '../runtime/types';
@@ -16,7 +15,6 @@ import type { ParamValues } from '../api_types';
 import type { SyncExecutionContext } from '../api_types';
 import type { SyncFormulaSpecification } from '../runtime/types';
 import type { UpdateSyncExecutionContext } from '../api_types';
-import util from 'util';
 export declare const DEFAULT_MAX_ROWS = 1000;
 export interface ExecuteOptions {
     validateParams?: boolean;
@@ -47,13 +45,6 @@ export declare function executeFormulaOrSyncWithVM<T extends PackFormulaResult |
     bundlePath: string;
     executionContext?: ExecutionContext;
 }): Promise<T>;
-export declare class VMError {
-    name: string;
-    message: string;
-    stack: string;
-    constructor(name: string, message: string, stack: string);
-    [util.inspect.custom](): string;
-}
 export declare function executeFormulaOrSyncWithRawParams<T extends FormulaSpecification>({ formulaSpecification, params: rawParams, manifest, executionContext, }: {
     formulaSpecification: T;
     params: string[];
