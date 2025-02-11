@@ -130,7 +130,7 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
       getPermissionsRequest,
     });
   } catch (err: any) {
-    throw asDeveloperError(err);
+    throw new DeveloperError(err);
   }
 
   if (formulaSpec.type === FormulaType.SyncUpdate) {
@@ -287,7 +287,7 @@ export async function executeFormulaOrSyncFromCLI({
       printFull(result);
     }
   } catch (err: any) {
-    if (isDeveloperError(err)) {
+    if (err instanceof DeveloperError) {
       // The error came from the Pack code. Print the inner error, including the stack trace.
       print(err.cause);
       // If source maps are not enabled, print a warning.
@@ -463,7 +463,7 @@ export async function executeFormulaOrSyncWithVM<T extends PackFormulaResult | G
   try {
     return await executeThunk(ivmContext, {params, formulaSpec: formulaSpecification}, bundlePath, bundlePath + '.map') as T;
   } catch (err: any) {
-    throw asDeveloperError(err);
+    throw new DeveloperError(err);
   }
 }
 
@@ -529,7 +529,7 @@ async function executeFormulaOrSyncWithRawParamsInVM<T extends FormulaSpecificat
       bundleSourceMapPath,
     );
   } catch (err: any) {
-    throw asDeveloperError(err);
+    throw new DeveloperError(err);
   }
 }
 
@@ -948,15 +948,6 @@ class DeveloperError extends Error {
       cause: err,
     });
     this.stack = err.stack;
-    this.name = 'DeveloperError';
     Object.setPrototypeOf(this, DeveloperError.prototype);
   }
-}
-
-function asDeveloperError(err: Error) {
-  throw new DeveloperError(err);
-}
-
-function isDeveloperError(err: Error) {
-  return err.name === 'DeveloperError';
 }

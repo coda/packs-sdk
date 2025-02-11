@@ -96,7 +96,7 @@ useDeprecatedResultNormalization = true, } = {}) {
         });
     }
     catch (err) {
-        throw asDeveloperError(err);
+        throw new DeveloperError(err);
     }
     if (formulaSpec.type === types_1.FormulaType.SyncUpdate) {
         return result;
@@ -191,7 +191,7 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
         }
     }
     catch (err) {
-        if (isDeveloperError(err)) {
+        if (err instanceof DeveloperError) {
             // The error came from the Pack code. Print the inner error, including the stack trace.
             (0, helpers_5.print)(err.cause);
             // If source maps are not enabled, print a warning.
@@ -341,7 +341,7 @@ async function executeFormulaOrSyncWithVM({ formulaName, params, bundlePath, exe
         return await (0, bootstrap_1.executeThunk)(ivmContext, { params, formulaSpec: formulaSpecification }, bundlePath, bundlePath + '.map');
     }
     catch (err) {
-        throw asDeveloperError(err);
+        throw new DeveloperError(err);
     }
 }
 exports.executeFormulaOrSyncWithVM = executeFormulaOrSyncWithVM;
@@ -387,7 +387,7 @@ async function executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, par
         return await (0, bootstrap_1.executeThunk)(ivmContext, { params, formulaSpec: formulaSpecification, updates: syncUpdates, permissionRequest }, bundlePath, bundleSourceMapPath);
     }
     catch (err) {
-        throw asDeveloperError(err);
+        throw new DeveloperError(err);
     }
 }
 async function executeFormulaOrSyncWithRawParams({ formulaSpecification, params: rawParams, manifest, executionContext, }) {
@@ -625,13 +625,6 @@ class DeveloperError extends Error {
             cause: err,
         });
         this.stack = err.stack;
-        this.name = 'DeveloperError';
         Object.setPrototypeOf(this, DeveloperError.prototype);
     }
-}
-function asDeveloperError(err) {
-    throw new DeveloperError(err);
-}
-function isDeveloperError(err) {
-    return err.name === 'DeveloperError';
 }
