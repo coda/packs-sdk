@@ -1036,20 +1036,6 @@ export interface SyncCompletionMetadataIncomplete {
 	incrementalContinuation?: never;
 }
 /**
- * TODO(patrick): Unhide this
- * @hidden
- */
-export interface RowMatchingPredicate {
-	/**
-	 * The name of the property to search for matches.
-	 */
-	property: string;
-	/**
-	 * What value(s) to search for.
-	 */
-	matches: string | string[] | number | number[] | boolean | boolean[];
-}
-/**
  * The set of primitive value types that can be used as return values for formulas
  * or in object schemas.
  */
@@ -3206,13 +3192,6 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
 	 * @hidden
 	 */
 	deletedItemIds?: string[];
-	/**
-	 * Use this to specify items that should be deleted if you don't know their exact IDs.
-	 *
-	 * TODO(patrick): Unhide this
-	 * @hidden
-	 */
-	deletionPredicate?: RowMatchingPredicate;
 }
 /**
  * Type definition for the parameter used to pass in a batch of updates to a sync table update function.
