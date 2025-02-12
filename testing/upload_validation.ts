@@ -65,6 +65,7 @@ import type {PackVersionDefinition} from '..';
 import type {PackVersionMetadata} from '../compiled_types';
 import type {ParamDef} from '../api_types';
 import type {ParamDefs} from '../api_types';
+import type {ParentDefinition} from '../schema';
 import {PostSetupType} from '../types';
 import type {PrecannedDate} from '../api_types';
 import {PrecannedDateRange} from '..';
@@ -1283,6 +1284,10 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     popularityRankProperty: propertySchema.optional(),
   });
 
+  const parentSchema = zodCompleteStrictObject<ParentDefinition>({
+    parentIdProperty: propertySchema,
+  });
+
   function makePropertyValidator(schema: GenericObjectSchema, context: z.RefinementCtx) {
     /**
      * Validates a PropertyIdentifier key in the object schema.
@@ -1353,7 +1358,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       description: z.string().optional(),
       id: z.string().min(1).optional(),
       idProperty: z.string().min(1).optional(),
-      parentIdProperty: z.string().min(1).optional(),
       primary: z.string().min(1).optional(),
       displayProperty: z.string().min(1).optional(),
       codaType: z.enum([...ObjectHintValueTypes]).optional(),
@@ -1383,12 +1387,12 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       userEmailProperty: propertySchema.optional(),
       groupIdProperty: propertySchema.optional(),
       memberGroupIdProperty: propertySchema.optional(),
-      bodyTextProperty: propertySchema.optional(),
       popularityRankProperty: propertySchema.optional(),
       versionProperty: propertySchema.optional(),
       options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
       requireForUpdates: z.boolean().optional(),
       index: indexSchema.optional(),
+      parent: parentSchema.optional(),
       autocomplete:
         sdkVersion && semver.satisfies(sdkVersion, '<=1.4.0')
           ? zodOptionsFieldWithValues(z.string(), true)
@@ -1632,14 +1636,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           );
         };
 
-        const validatebodyTextProperty = () => {
-          return validateProperty(
-            'bodyTextProperty',
-            bodyTextPropertySchema => bodyTextPropertySchema.type === ValueType.String,
-            `must refer to a "ValueType.String" property.`,
-          );
-        };
-
         const validatePopularityRankProperty = () => {
           return validateProperty(
             'popularityRankProperty',
@@ -1669,7 +1665,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         validateUserIdProperty();
         validateGroupIdProperty();
         validateMemberGroupIdProperty();
-        validatebodyTextProperty();
         validatePopularityRankProperty();
         validateVersionProperty();
       })
@@ -1741,6 +1736,48 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             'contextProperties',
           ]);
         }
+      })
+      .superRefine((data, context) => {
+        const schemaHelper = objectSchemaHelper(data as GenericObjectSchema);
+        const internalRichTextPropertyTuple = Object.entries(schemaHelper.properties).find(
+          ([_key, prop]) => prop.type === ValueType.String && prop.codaType === ValueHintType.CodaInternalRichText,
+        );
+        if (internalRichTextPropertyTuple && !isValidUseOfCodaInternalRichText(data.identity?.packId)) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['identity', 'properties', internalRichTextPropertyTuple[0]],
+            message: 'Invalid codaType. CodaInternalRichText is not a supported value.',
+          });
+          return;
+        }
+      })
+      .superRefine((data, context) => {
+        const schema = data as GenericObjectSchema;
+        if (!schema.parent) {
+          return;
+        }
+
+        const validatePropertyValue = makePropertyValidator(schema, context);
+
+        const {parentIdProperty} = schema.parent;
+
+        validatePropertyValue(
+          parentIdProperty,
+          'parentIdProperty',
+          parentIdPropertySchema => parentIdPropertySchema.type !== ValueType.Array,
+          `must not refer to a "ValueType.Array" property.`,
+          ['parent', 'parentIdProperty'],
+        );
+
+        validatePropertyValue(
+          parentIdProperty,
+          'parentIdProperty',
+          parentIdPropertySchema =>
+            parentIdPropertySchema.type !== ValueType.Object ||
+            parentIdPropertySchema.codaType === ValueHintType.Reference,
+          `must refer to a "ValueType.Object" property that is a "ValueType.Reference".`,
+          ['parent', 'parentIdProperty'],
+        );
       }),
   );
 

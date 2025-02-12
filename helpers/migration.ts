@@ -59,11 +59,10 @@ class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
       userIdProperty,
       groupIdProperty,
       memberGroupIdProperty,
-      bodyTextProperty,
       popularityRankProperty,
-      parentIdProperty,
       versionProperty,
       index,
+      parent,
       ...rest
     } = schema;
 

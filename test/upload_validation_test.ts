@@ -3493,6 +3493,72 @@ describe('Pack metadata Validation', async () => {
           await validateJsonAndAssertFails(metadata);
         });
       });
+
+      describe('Parent definition', () => {
+        it('works with references', async () => {
+          const metadata = metadataForFormulaWithObjectSchema({
+            type: ValueType.Object,
+            properties: {
+              name: {type: ValueType.String},
+              value: {type: ValueType.Number},
+              parentId: {
+                type: ValueType.Object,
+                codaType: ValueHintType.Reference,
+                identity: {
+                  packId: 42,
+                  name: 'Parent',
+                },
+                properties: {
+                  id: {type: ValueType.String, required: true},
+                  name: {type: ValueType.String, required: true},
+                },
+                idProperty: 'id',
+                displayProperty: 'name',
+              },
+            },
+            parent: {
+              parentIdProperty: 'parentId',
+            },
+          });
+          await validateJson(metadata);
+        });
+
+        it('works with simple values', async () => {
+          const metadata = metadataForFormulaWithObjectSchema({
+            type: ValueType.Object,
+            properties: {
+              name: {type: ValueType.String},
+              value: {type: ValueType.Number},
+              parentId: {type: ValueType.String},
+            },
+            parent: {
+              parentIdProperty: 'parentId',
+            },
+          });
+          await validateJson(metadata);
+        });
+
+        it('fails with array property', async () => {
+          const metadata = metadataForFormulaWithObjectSchema({
+            type: ValueType.Object,
+            properties: {
+              name: {type: ValueType.String},
+              value: {type: ValueType.Number},
+              parentId: {type: ValueType.Array, items: {type: ValueType.String}},
+            },
+            parent: {
+              parentIdProperty: 'parentId',
+            },
+          });
+          const err = await validateJsonAndAssertFails(metadata);
+          assert.deepEqual(err.validationErrors, [
+            {
+              message: 'The "parentIdProperty" field name "ParentId" must not refer to a "ValueType.Array" property.',
+              path: 'formulas[0].schema.parent.parentIdProperty',
+            },
+          ]);
+        });
+      });
     });
 
     describe('Formats', () => {
