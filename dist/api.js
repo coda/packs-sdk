@@ -908,7 +908,7 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
         }
         const appliedSchema = context.sync.schema;
         const result = responseHandler({ body: syncResult.result || [], status: 200, headers: {} }, appliedSchema);
-        const { continuation, completion, deletedItemIds, deletedRowIds, deletionPredicate } = syncResult;
+        const { continuation, completion, deletedItemIds, deletedRowIds } = syncResult;
         const returnValue = {
             result,
         };
@@ -921,9 +921,6 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
         if (deletedRowIds !== null && deletedRowIds !== void 0 ? deletedRowIds : deletedItemIds) {
             returnValue.deletedRowIds = deletedRowIds !== null && deletedRowIds !== void 0 ? deletedRowIds : deletedItemIds;
             returnValue.deletedItemIds = returnValue.deletedRowIds;
-        }
-        if (deletionPredicate) {
-            returnValue.deletionPredicate = deletionPredicate;
         }
         return returnValue;
     };

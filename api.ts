@@ -31,7 +31,6 @@ import type {RequestHandlerTemplate} from './handler_templates';
 import type {RequiredParamDef} from './api_types';
 import type {ResponseHandlerTemplate} from './handler_templates';
 import type {RowAccessDefinition} from './schema';
-import type {RowMatchingPredicate} from './api_types';
 import type {Schema} from './schema';
 import type {SchemaType} from './schema';
 import type {StringHintTypes} from './schema';
@@ -1074,14 +1073,6 @@ export interface SyncFormulaResult<
    * @hidden
    */
   deletedItemIds?: string[];
-
-  /**
-   * Use this to specify items that should be deleted if you don't know their exact IDs.
-   *
-   * TODO(patrick): Unhide this
-   * @hidden
-   */
-  deletionPredicate?: RowMatchingPredicate;
 }
 
 /** @hidden */
@@ -2465,7 +2456,7 @@ export function makeSyncTable<
     const result = responseHandler({body: syncResult.result || [], status: 200, headers: {}}, appliedSchema) as Array<
       ObjectSchemaDefinitionType<K, L, SchemaT>
     >;
-    const {continuation, completion, deletedItemIds, deletedRowIds, deletionPredicate} = syncResult;
+    const {continuation, completion, deletedItemIds, deletedRowIds} = syncResult;
     const returnValue: SyncFormulaResult<K, L, SchemaT, ContextT> = {
       result,
     };
@@ -2478,9 +2469,6 @@ export function makeSyncTable<
     if (deletedRowIds ?? deletedItemIds) {
       returnValue.deletedRowIds = deletedRowIds ?? deletedItemIds;
       returnValue.deletedItemIds = returnValue.deletedRowIds;
-    }
-    if (deletionPredicate) {
-      returnValue.deletionPredicate = deletionPredicate;
     }
     return returnValue;
   };

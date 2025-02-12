@@ -1384,19 +1384,3 @@ export interface SyncCompletionMetadataIncomplete {
 
   incrementalContinuation?: never;
 }
-
-/**
- * TODO(patrick): Unhide this
- * @hidden
- */
-export interface RowMatchingPredicate {
-  /**
-   * The name of the property to search for matches.
-   */
-  property: string;
-
-  /**
-   * What value(s) to search for.
-   */
-  matches: string | string[] | number | number[] | boolean | boolean[];
-}

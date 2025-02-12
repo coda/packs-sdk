@@ -443,44 +443,6 @@ describe('API test', () => {
       const result = await table.getter.execute([] as any, newMockSyncExecutionContext());
       assert.deepEqual(result.deletedRowIds, ['foo', 'foo2']);
     });
-
-    it('allows deletionPredicate return', async () => {
-      const table = makeSyncTable({
-        name: 'SomeSync',
-        identityName: 'MyIdentityName',
-        schema: schema.makeObjectSchema({
-          type: ValueType.Object,
-          id: 'foo',
-          primary: 'foo',
-          properties: {
-            foo: {
-              type: ValueType.String,
-              codaType: schema.ValueHintType.SelectList,
-            },
-          },
-        }),
-        formula: {
-          name: 'Whatever',
-          description: 'Whatever',
-          parameters: [],
-          async execute() {
-            return {
-              result: [],
-              deletionPredicate: {
-                property: 'foo',
-                matches: 'bar',
-              },
-            };
-          },
-        },
-      });
-      // TODO(patrick): Why do we need the "as any" cast?
-      const result = await table.getter.execute([] as any, newMockSyncExecutionContext());
-      assert.deepEqual(result.deletionPredicate, {
-        property: 'foo',
-        matches: 'bar',
-      });
-    });
   });
 
   describe('makeFormula', () => {
