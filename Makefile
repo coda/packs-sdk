@@ -405,10 +405,12 @@ release:
 .PHONY: release-manual
 release-manual:
 	# this set is taken from esbuild's process https://github.com/evanw/esbuild/blob/master/Makefile#L330
-	@npm --version > /dev/null || (echo "The 'npm' command must be in your path to-*///// publish" && false)
+	@npm --version > /dev/null || (echo "The 'npm' command must be in your path to publish" && false)
 	@echo "Checking for uncommitted/untracked changes..." && test -z "`git status --porcelain | grep -vE ''`" || \
 		(echo "Refusing to publish with these uncommitted/untracked changes:" && \
 		git status --porcelain | grep -vE '' && false)
+	@echo "Checking that we're not on main branch..." && test main != "`git rev-parse --abbrev-ref HEAD`" || \
+		(echo "Refusing to publish from main branch. Please create a new branch and push it up first." && false)
 	@echo "Checking for unpushed commits..." && git fetch
 	@test "" = "`git cherry`" || (echo "Refusing to publish with unpushed commits" && false)
 
