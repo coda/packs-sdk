@@ -70,6 +70,7 @@ export type {ArrayType} from './api_types';
 export {OptionsType} from './api_types';
 export type {PropertyOptionsMetadataFormula} from './api';
 export type {PropertyOptionsExecutionContext} from './api_types';
+export type {ChunkedResponseBody} from './api_types';
 export {ConnectionRequirement} from './api_types';
 export type {Continuation} from './api';
 export type {CrawlStrategy} from './api_types';

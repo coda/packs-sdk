@@ -549,6 +549,17 @@ export interface FetchRequest {
     chunkResponse?: boolean;
 }
 /**
+ * The response returned if {@link FetchRequest.chunkResponse} is true.
+ * @hidden
+ */
+export interface ChunkedResponseBody {
+    chunks: Array<{
+        url: string;
+        size: number;
+    }>;
+    totalSize: number;
+}
+/**
  * The response of a call to {@link Fetcher.fetch}.
  *
  * The structure largely follows https://developer.mozilla.org/en-US/docs/Web/API/Response
