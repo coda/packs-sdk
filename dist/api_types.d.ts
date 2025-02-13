@@ -542,6 +542,22 @@ export interface FetchRequest {
      * You may inspect the `Location` header of the response to observe the indicated redirect URL.
      */
     ignoreRedirects?: boolean;
+    /**
+     * If true, the response will be chunked to allow for larger responses.
+     * @hidden
+     */
+    chunkResponse?: boolean;
+}
+/**
+ * The response returned if {@link FetchRequest.chunkResponse} is true.
+ * @hidden
+ */
+export interface ChunkedResponseBody {
+    chunks: Array<{
+        url: string;
+        size: number;
+    }>;
+    totalSize: number;
 }
 /**
  * The response of a call to {@link Fetcher.fetch}.
