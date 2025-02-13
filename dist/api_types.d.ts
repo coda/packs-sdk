@@ -290,6 +290,7 @@ export interface ParamDef<T extends UnionType> {
      * @hidden
      */
     allowManualInput?: boolean;
+    /** @deprecated use `ParentDefinition` instead */
     /** @hidden */
     crawlStrategy?: CrawlStrategy;
     /**
@@ -331,6 +332,7 @@ export type ParamValues<ParamDefsT extends ParamDefs> = {
  * The type of values that are allowable to be used as a {@link ParamDef.suggestedValue} for a parameter.
  */
 export type SuggestedValueType<T extends UnionType> = T extends ArrayType<Type.date> ? TypeOfMap<T> | PrecannedDateRange : TypeOfMap<T>;
+/** @deprecated use `ParentDefinition` instead */
 /** @hidden */
 export interface CrawlStrategy {
     parentTable?: SyncTableRelation;

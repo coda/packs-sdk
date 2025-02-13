@@ -22,7 +22,7 @@ class ObjectSchemaHelper {
         // Properties needed by ObjectSchemaHelper clients.
         id, idProperty, primary, displayProperty, featuredProperties, featured, identity, options, properties, type, attribution, codaType, requireForUpdates, 
         // Properties not needed by ObjectSchemaHelper clients.
-        includeUnknownProperties, titleProperty, linkProperty, subtitleProperties, snippetProperty, imageProperty, description, createdAtProperty, createdByProperty, modifiedAtProperty, modifiedByProperty, userEmailProperty, userIdProperty, groupIdProperty, memberGroupIdProperty, bodyTextProperty, popularityRankProperty, parentIdProperty, versionProperty, index, ...rest } = schema;
+        includeUnknownProperties, titleProperty, linkProperty, subtitleProperties, snippetProperty, imageProperty, description, createdAtProperty, createdByProperty, modifiedAtProperty, modifiedByProperty, userEmailProperty, userIdProperty, groupIdProperty, memberGroupIdProperty, popularityRankProperty, versionProperty, index, parent, ...rest } = schema;
         (0, ensure_2.ensureNever)();
     }
     get id() {

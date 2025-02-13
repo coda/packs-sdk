@@ -1134,12 +1134,19 @@ export interface IndexDefinition {
   popularityRankProperty?: PropertyIdentifier<string>;
 }
 
+export interface BaseParentDefinition {
+  /**
+   * Whether this object inherits permissions from its parent.`
+   */
+  inheritsPermissions?: boolean;
+}
+
 /**
- * Defines the parent of an object, which controls various behaviors for this object.
- * TODO(alexd): Unhide this
- * @hidden
+ * Defines that this object can have a dynamic parent (e.g. a parent that is not known at schema definition time).
+ * When this object is ingested, the parent is determined by the value of the
+ * {@link DynamicParentDefinition.parentIdProperty}.
  */
-export interface ParentDefinition {
+export interface DynamicParentDefinition extends BaseParentDefinition {
   /**
    * The name of the property within {@link ObjectSchemaDefinition.properties} that
    * identifies the parent of this object.
@@ -1153,6 +1160,51 @@ export interface ParentDefinition {
    */
   parentIdProperty: PropertyIdentifier<string>;
 }
+
+export interface ParentChildParameterMapping {
+  /**
+   * The name of the parameter for the child sync table.
+   */
+  childParameterName: string;
+
+  /**
+   * The name of the property within {@link ObjectSchemaDefinition.properties} that
+   * identifies the parent of this object.
+   */
+  parentProperty: PropertyIdentifier<string>;
+}
+
+/**
+ * Defines that this object has a static parent (e.g. a parent that is known at schema definition time).
+ * Specifying this will cause a child sync table to get created for every parent object.
+ */
+export interface StaticParentDefinition extends BaseParentDefinition {
+  /**
+   * The identityName of the parent object.
+   */
+  parentIdentityName: string;
+
+  /**
+   * Whether the parent object should be crawled for children.
+   */
+  shouldCrawl: true;
+
+  /**
+   * Whether or not the the child objects should be deleted when the parent object is deleted.
+   */
+  inheritsLifecycle: true;
+
+  /**
+   * A mapping of child parameters to parent properties.
+   */
+  mapping: ParentChildParameterMapping[];
+}
+
+/**
+ * A definition of a parent object.
+ * @hidden
+ */
+export type ParentDefinition = DynamicParentDefinition | StaticParentDefinition;
 
 /**
  * A schema definition for an object value (a value with key-value pairs).
@@ -2064,11 +2116,22 @@ function normalizeParentDefinition(
   parent: ParentDefinition,
   normalizedProperties: ObjectSchemaProperties,
 ): ParentDefinition {
-  const {parentIdProperty, ...rest} = parent;
-  ensureNever<keyof typeof rest>();
-  return {
-    parentIdProperty: normalizeSchemaPropertyIdentifier(parentIdProperty, normalizedProperties),
-  };
+  if ('parentIdProperty' in parent) {
+    return {
+      parentIdProperty: normalizeSchemaPropertyIdentifier(parent.parentIdProperty, normalizedProperties),
+      inheritsPermissions: parent.inheritsPermissions,
+    };
+  } else if ('parentIdentityName' in parent) {
+    return {
+      parentIdentityName: parent.parentIdentityName,
+      mapping: parent.mapping,
+      shouldCrawl: parent.shouldCrawl,
+      inheritsPermissions: parent.inheritsPermissions,
+      inheritsLifecycle: parent.inheritsLifecycle,
+    };
+  }
+
+  ensureUnreachable(parent);
 }
 
 /**

@@ -707,6 +707,24 @@ function normalizeIndexDefinition(index, normalizedProperties) {
             : undefined,
     };
 }
+function normalizeParentDefinition(parent, normalizedProperties) {
+    if ('parentIdProperty' in parent) {
+        return {
+            parentIdProperty: normalizeSchemaPropertyIdentifier(parent.parentIdProperty, normalizedProperties),
+            inheritsPermissions: parent.inheritsPermissions,
+        };
+    }
+    else if ('parentIdentityName' in parent) {
+        return {
+            parentIdentityName: parent.parentIdentityName,
+            mapping: parent.mapping,
+            shouldCrawl: parent.shouldCrawl,
+            inheritsPermissions: parent.inheritsPermissions,
+            inheritsLifecycle: parent.inheritsLifecycle,
+        };
+    }
+    (0, ensure_5.ensureUnreachable)(parent);
+}
 /**
  * Attempts to transform a property value (which may be a json-path string or a normal object schema property) into
  * a path to access the relevant schema. Specifically this handles the case of
@@ -742,9 +760,9 @@ function normalizeSchema(schema) {
 exports.normalizeSchema = normalizeSchema;
 function normalizeObjectSchema(schema) {
     const normalizedProperties = {};
-    const { attribution, options, requireForUpdates, codaType, description, displayProperty, featured, featuredProperties, id, identity, idProperty, parentIdProperty, imageProperty, includeUnknownProperties, linkProperty, primary, properties, snippetProperty, subtitleProperties, titleProperty, type, 
+    const { attribution, options, requireForUpdates, codaType, description, displayProperty, featured, featuredProperties, id, identity, idProperty, imageProperty, includeUnknownProperties, linkProperty, primary, properties, snippetProperty, subtitleProperties, titleProperty, type, 
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    __packId, createdAtProperty, createdByProperty, modifiedAtProperty, modifiedByProperty, userEmailProperty, userIdProperty, groupIdProperty, memberGroupIdProperty, bodyTextProperty, popularityRankProperty, versionProperty, index, ...rest } = schema;
+    __packId, createdAtProperty, createdByProperty, modifiedAtProperty, modifiedByProperty, userEmailProperty, userIdProperty, groupIdProperty, memberGroupIdProperty, popularityRankProperty, versionProperty, index, parent, ...rest } = schema;
     // Have TS ensure we don't forget about new fields in this function.
     (0, ensure_3.ensureNever)();
     for (const key of Object.keys(properties)) {
@@ -776,7 +794,6 @@ function normalizeObjectSchema(schema) {
         id: id ? normalizeSchemaKey(id) : undefined,
         identity,
         idProperty: idProperty ? normalizeSchemaKey(idProperty) : undefined,
-        parentIdProperty: parentIdProperty ? normalizeSchemaKey(parentIdProperty) : undefined,
         imageProperty: imageProperty ? normalizeSchemaPropertyIdentifier(imageProperty, normalizedProperties) : undefined,
         includeUnknownProperties,
         linkProperty: linkProperty ? normalizeSchemaPropertyIdentifier(linkProperty, normalizedProperties) : undefined,
@@ -813,9 +830,6 @@ function normalizeObjectSchema(schema) {
         memberGroupIdProperty: memberGroupIdProperty
             ? normalizeSchemaPropertyIdentifier(memberGroupIdProperty, normalizedProperties)
             : undefined,
-        bodyTextProperty: bodyTextProperty
-            ? normalizeSchemaPropertyIdentifier(bodyTextProperty, normalizedProperties)
-            : undefined,
         popularityRankProperty: popularityRankProperty
             ? normalizeSchemaPropertyIdentifier(popularityRankProperty, normalizedProperties)
             : undefined,
@@ -823,6 +837,7 @@ function normalizeObjectSchema(schema) {
             ? normalizeSchemaPropertyIdentifier(versionProperty, normalizedProperties)
             : undefined,
         index: index ? normalizeIndexDefinition(index, normalizedProperties) : undefined,
+        parent: parent ? normalizeParentDefinition(parent, normalizedProperties) : undefined,
         type: ValueType.Object,
     };
 }

@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.zodErrorDetailToValidationError = exports._hasCycle = exports.validateCrawlHierarchy = exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.Limits = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
+exports.zodErrorDetailToValidationError = exports._hasCycle = exports.validateDynamicParents = exports.validateCrawlHierarchy = exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.Limits = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
 const api_types_1 = require("../api_types");
 const schema_1 = require("../schema");
 const types_1 = require("../types");
@@ -60,6 +60,7 @@ const schema_15 = require("../schema");
 const zod_1 = require("zod");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
+const ensure_3 = require("../helpers/ensure");
 const schema_16 = require("../schema");
 const api_types_7 = require("../api_types");
 const object_utils_1 = require("../helpers/object_utils");
@@ -166,6 +167,56 @@ function validateSyncTableSchema(schema, options) {
     throw new PackMetadataValidationError('Schema failed validation', validated.error, validated.error.errors.flatMap(zodErrorDetailToValidationError));
 }
 exports.validateSyncTableSchema = validateSyncTableSchema;
+function makePropertyValidator(schema, context) {
+    /**
+     * Validates a PropertyIdentifier key in the object schema.
+     */
+    return function validateProperty(propertyValueRaw, fieldName, isValidSchema, invalidSchemaMessage, propertyObjectPath = [fieldName]) {
+        function validatePropertyIdentifier(value, objectPath) {
+            var _a;
+            const propertyValue = typeof value === 'string' ? value : value === null || value === void 0 ? void 0 : value.property;
+            let propertyValueIsPath = false;
+            let propertySchema = typeof propertyValueRaw === 'string' && propertyValue in schema.properties
+                ? schema.properties[propertyValue]
+                : undefined;
+            if (!propertySchema) {
+                const schemaPropertyPath = (0, schema_21.normalizePropertyValuePathIntoSchemaPath)(propertyValue);
+                propertySchema = (_a = (0, jsonpath_plus_1.JSONPath)({
+                    path: schemaPropertyPath,
+                    json: schema.properties,
+                    eval: false,
+                })) === null || _a === void 0 ? void 0 : _a[0];
+                propertyValueIsPath = true;
+            }
+            const propertyIdentifierDisplay = propertyValueIsPath ? `"${fieldName}" path` : `"${fieldName}" field name`;
+            if (!propertySchema) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: objectPath,
+                    message: `The ${propertyIdentifierDisplay} "${propertyValue}" does not exist in the "properties" object.`,
+                });
+                return;
+            }
+            if (!isValidSchema(propertySchema)) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: objectPath,
+                    message: `The ${propertyIdentifierDisplay} "${propertyValue}" ${invalidSchemaMessage}`,
+                });
+                return;
+            }
+        }
+        if (propertyValueRaw) {
+            if (Array.isArray(propertyValueRaw)) {
+                propertyValueRaw.forEach((propertyIdentifier, i) => {
+                    validatePropertyIdentifier(propertyIdentifier, [...propertyObjectPath, i]);
+                });
+                return;
+            }
+            validatePropertyIdentifier(propertyValueRaw, propertyObjectPath);
+        }
+    };
+}
 /**
  * Returns a map of sync table names to their child sync table names, or undefined if the hierarchy is invalid.
  * Example valid return: { Parent: 'Child' }
@@ -244,6 +295,66 @@ function validateCrawlHierarchy(syncTables, context) {
     return parentToChildrenMap;
 }
 exports.validateCrawlHierarchy = validateCrawlHierarchy;
+function validateDynamicParents(syncTables, context) {
+    const parentToChildrenMap = {};
+    const syncTableSchemasByName = {};
+    for (const syncTable of syncTables) {
+        syncTableSchemasByName[syncTable.identityName] = syncTable.schema;
+    }
+    for (const [tableIndex, syncTable] of syncTables.entries()) {
+        const parentDefinition = syncTable.schema.parent;
+        if (!parentDefinition || !('parentIdentityName' in parentDefinition)) {
+            continue;
+        }
+        const parentTableName = parentDefinition.parentIdentityName;
+        const parentTableSchema = syncTableSchemasByName[parentTableName];
+        if (!parentTableSchema) {
+            context === null || context === void 0 ? void 0 : context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['syncTables', tableIndex, 'schema', 'parent', 'parentIdentityName'],
+                message: `Sync table ${syncTable.name} expects parent table ${parentTableName} to exist.`,
+            });
+            return undefined;
+        }
+        const validateParentPropertyValue = makePropertyValidator(parentTableSchema, context);
+        for (const [mappingIndex, { parentProperty, childParameterName }] of parentDefinition.mapping.entries()) {
+            validateParentPropertyValue(parentProperty, 'parentProperty', () => true, `DEBUG -.`, [
+                'syncTables',
+                tableIndex,
+                'schema',
+                'parent',
+                'mapping',
+                mappingIndex,
+                'parentProperty',
+            ]);
+            if (!syncTable.getter.parameters.some(param => param.name === childParameterName)) {
+                context === null || context === void 0 ? void 0 : context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: ['syncTables', tableIndex, 'schema', 'parent', 'mapping', mappingIndex, 'childParameterName'],
+                    message: `Sync table ${syncTable.name} expects child parameter ${childParameterName} to exist.`,
+                });
+                return undefined;
+            }
+        }
+        const childList = parentToChildrenMap[parentTableName] || [];
+        // This table may already be in the child list if it uses multiple params from the parent.
+        if (!childList.includes(syncTable.identityName)) {
+            childList.push(syncTable.identityName);
+        }
+        parentToChildrenMap[parentTableName] = childList;
+    }
+    // Verify that there's no cycle
+    if (_hasCycle(parentToChildrenMap)) {
+        context === null || context === void 0 ? void 0 : context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['syncTables'],
+            message: `Sync table parent hierarchy is cyclic`,
+        });
+        return undefined;
+    }
+    return parentToChildrenMap;
+}
+exports.validateDynamicParents = validateDynamicParents;
 // Exported for tests
 /** @hidden */
 function _hasCycle(tree) {
@@ -1039,63 +1150,29 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         contextProperties: contextPropertiesSchema.optional(),
         popularityRankProperty: propertySchema.optional(),
     });
-    function makePropertyValidator(schema, context) {
-        /**
-         * Validates a PropertyIdentifier key in the object schema.
-         */
-        return function validateProperty(propertyValueRaw, fieldName, isValidSchema, invalidSchemaMessage, propertyObjectPath = [fieldName]) {
-            function validatePropertyIdentifier(value, objectPath) {
-                var _a;
-                const propertyValue = typeof value === 'string' ? value : value === null || value === void 0 ? void 0 : value.property;
-                let propertyValueIsPath = false;
-                let propertySchema = typeof propertyValueRaw === 'string' && propertyValue in schema.properties
-                    ? schema.properties[propertyValue]
-                    : undefined;
-                if (!propertySchema) {
-                    const schemaPropertyPath = (0, schema_21.normalizePropertyValuePathIntoSchemaPath)(propertyValue);
-                    propertySchema = (_a = (0, jsonpath_plus_1.JSONPath)({
-                        path: schemaPropertyPath,
-                        json: schema.properties,
-                        eval: false,
-                    })) === null || _a === void 0 ? void 0 : _a[0];
-                    propertyValueIsPath = true;
-                }
-                const propertyIdentifierDisplay = propertyValueIsPath ? `"${fieldName}" path` : `"${fieldName}" field name`;
-                if (!propertySchema) {
-                    context.addIssue({
-                        code: z.ZodIssueCode.custom,
-                        path: objectPath,
-                        message: `The ${propertyIdentifierDisplay} "${propertyValue}" does not exist in the "properties" object.`,
-                    });
-                    return;
-                }
-                if (!isValidSchema(propertySchema)) {
-                    context.addIssue({
-                        code: z.ZodIssueCode.custom,
-                        path: objectPath,
-                        message: `The ${propertyIdentifierDisplay} "${propertyValue}" ${invalidSchemaMessage}`,
-                    });
-                    return;
-                }
-            }
-            if (propertyValueRaw) {
-                if (Array.isArray(propertyValueRaw)) {
-                    propertyValueRaw.forEach((propertyIdentifier, i) => {
-                        validatePropertyIdentifier(propertyIdentifier, [...propertyObjectPath, i]);
-                    });
-                    return;
-                }
-                validatePropertyIdentifier(propertyValueRaw, propertyObjectPath);
-            }
-        };
-    }
+    const dynamicParentSchema = zodCompleteStrictObject({
+        parentIdProperty: propertySchema,
+        inheritsPermissions: z.boolean().optional(),
+    });
+    const staticParentSchema = zodCompleteStrictObject({
+        parentIdentityName: z.string().min(1),
+        shouldCrawl: z.literal(true),
+        inheritsPermissions: z.boolean().optional(),
+        inheritsLifecycle: z.literal(true),
+        mapping: z
+            .array(zodCompleteStrictObject({
+            childParameterName: z.string().min(1),
+            parentProperty: propertySchema,
+        }))
+            .min(1),
+    });
+    const parentSchema = z.union([dynamicParentSchema, staticParentSchema]);
     const genericObjectSchema = z.lazy(() => zodCompleteObject({
         ...basePropertyValidators,
         type: zodDiscriminant(schema_15.ValueType.Object),
         description: z.string().optional(),
         id: z.string().min(1).optional(),
         idProperty: z.string().min(1).optional(),
-        parentIdProperty: z.string().min(1).optional(),
         primary: z.string().min(1).optional(),
         displayProperty: z.string().min(1).optional(),
         codaType: z.enum([...schema_11.ObjectHintValueTypes]).optional(),
@@ -1125,12 +1202,12 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         userEmailProperty: propertySchema.optional(),
         groupIdProperty: propertySchema.optional(),
         memberGroupIdProperty: propertySchema.optional(),
-        bodyTextProperty: propertySchema.optional(),
         popularityRankProperty: propertySchema.optional(),
         versionProperty: propertySchema.optional(),
         options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
         requireForUpdates: z.boolean().optional(),
         index: indexSchema.optional(),
+        parent: parentSchema.optional(),
         autocomplete: sdkVersion && semver_1.default.satisfies(sdkVersion, '<=1.4.0')
             ? zodOptionsFieldWithValues(z.string(), true)
             : z.never().optional(),
@@ -1167,11 +1244,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         return (0, object_utils_2.isNil)(schemaHelper.id) || schemaHelper.id in schemaHelper.properties;
     }, {
         message: 'The "idProperty" property must appear as a key in the "properties" object.',
-    })
-        .refine(data => {
-        return (0, object_utils_2.isNil)(data.parentIdProperty) || data.parentIdProperty in data.properties;
-    }, {
-        message: 'The "parentIdProperty" property must appear as a key in the "properties" object.',
     })
         .refine(data => {
         const schemaHelper = (0, migration_1.objectSchemaHelper)(data);
@@ -1242,7 +1314,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                     case schema_14.ValueHintType.Url:
                         return true;
                     default:
-                        (0, ensure_2.ensureUnreachable)(subtitlePropertySchema.codaType);
+                        (0, ensure_3.ensureUnreachable)(subtitlePropertySchema.codaType);
                 }
             }, `must refer to a value that does not have a codaType corresponding to one of ImageAttachment, Attachment, ImageReference, Embed, or Scale.`);
         };
@@ -1284,9 +1356,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             return validateProperty('memberGroupIdProperty', memberGroupIdPropertySchema => memberGroupIdPropertySchema.type === schema_15.ValueType.String ||
                 memberGroupIdPropertySchema.type === schema_15.ValueType.Number, `must refer to a "ValueType.String" or "ValueType.Number".`);
         };
-        const validatebodyTextProperty = () => {
-            return validateProperty('bodyTextProperty', bodyTextPropertySchema => bodyTextPropertySchema.type === schema_15.ValueType.String, `must refer to a "ValueType.String" property.`);
-        };
         const validatePopularityRankProperty = () => {
             return validateProperty('popularityRankProperty', popularityRankPropertySchema => popularityRankPropertySchema.type === schema_15.ValueType.Number, `must refer to a "ValueType.Number" property.`);
         };
@@ -1306,7 +1375,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         validateUserIdProperty();
         validateGroupIdProperty();
         validateMemberGroupIdProperty();
-        validatebodyTextProperty();
         validatePopularityRankProperty();
         validateVersionProperty();
     })
@@ -1352,6 +1420,36 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 'index',
                 'contextProperties',
             ]);
+        }
+    })
+        .superRefine((data, context) => {
+        var _a;
+        const schemaHelper = (0, migration_1.objectSchemaHelper)(data);
+        const internalRichTextPropertyTuple = Object.entries(schemaHelper.properties).find(([_key, prop]) => prop.type === schema_15.ValueType.String && prop.codaType === schema_14.ValueHintType.CodaInternalRichText);
+        if (internalRichTextPropertyTuple && !isValidUseOfCodaInternalRichText((_a = data.identity) === null || _a === void 0 ? void 0 : _a.packId)) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['identity', 'properties', internalRichTextPropertyTuple[0]],
+                message: 'Invalid codaType. CodaInternalRichText is not a supported value.',
+            });
+            return;
+        }
+    })
+        .superRefine((data, context) => {
+        const schema = data;
+        if (!schema.parent) {
+            return;
+        }
+        const validatePropertyValue = makePropertyValidator(schema, context);
+        if ('parentIdProperty' in schema.parent) {
+            const { parentIdProperty } = schema.parent;
+            validatePropertyValue(parentIdProperty, 'parentIdProperty', parentIdPropertySchema => parentIdPropertySchema.type !== schema_15.ValueType.Array, `must not refer to a "ValueType.Array" property.`, ['parent', 'parentIdProperty']);
+            validatePropertyValue(parentIdProperty, 'parentIdProperty', parentIdPropertySchema => parentIdPropertySchema.type !== schema_15.ValueType.Object ||
+                parentIdPropertySchema.codaType === schema_14.ValueHintType.Reference, `must refer to a "ValueType.Object" property that is a "ValueType.Reference".`, ['parent', 'parentIdProperty']);
+        }
+        else if (!('parentIdentityName' in schema.parent)) {
+            // parentIdentityName validation is in validateDynamicParents
+            (0, ensure_2.ensureNever)(schema.parent);
         }
     }));
     const objectPropertyUnionSchema = z
@@ -1836,6 +1934,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         const { syncTables } = data;
         if (syncTables) {
             validateCrawlHierarchy(syncTables, context);
+            validateDynamicParents(syncTables, context);
         }
     })
         .superRefine((data, context) => {
@@ -2051,7 +2150,7 @@ function getUsedAuthNetworkDomains(authentication, includeOAuthTokenUrls = false
         case types_1.AuthenticationType.WebBasic:
             return domains;
         default:
-            (0, ensure_2.ensureUnreachable)(type);
+            (0, ensure_3.ensureUnreachable)(type);
     }
 }
 // Returns undefined for None or Various auth, otherwise returns a string array.

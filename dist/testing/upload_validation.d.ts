@@ -39,6 +39,7 @@ export declare function validateSyncTableSchema(schema: any, options: BuildMetad
  * @hidden
  */
 export declare function validateCrawlHierarchy(syncTables: SyncTable[], context?: z.RefinementCtx): Record<string, string[]> | undefined;
+export declare function validateDynamicParents(syncTables: SyncTable[], context: z.RefinementCtx): Record<string, string[]> | undefined;
 /** @hidden */
 export declare function _hasCycle(tree: Record<string, string[]>): boolean;
 export declare function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError[];

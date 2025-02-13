@@ -382,6 +382,7 @@ export interface ParamDef<T extends UnionType> {
   allowManualInput?: boolean;
 
   // TODO(patrick): Unhide this
+  /** @deprecated use `ParentDefinition` instead */
   /** @hidden */
   crawlStrategy?: CrawlStrategy;
 
@@ -449,6 +450,7 @@ export type SuggestedValueType<T extends UnionType> = T extends ArrayType<Type.d
   : TypeOfMap<T>;
 
 // TODO(patrick): Unhide this
+/** @deprecated use `ParentDefinition` instead */
 /** @hidden */
 export interface CrawlStrategy {
   parentTable?: SyncTableRelation;
