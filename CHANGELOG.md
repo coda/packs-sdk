@@ -4,6 +4,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+## [1.9.1] - 2025-02-12
+
 ### Changed
 
 - SDK requires node version 20 or higher
@@ -819,7 +821,7 @@ await myHelper(context);
 
 - Beginning of alpha versioning.
 
-[unreleased]: https://github.com/coda/packs-sdk/compare/v1.8.6...HEAD
+[unreleased]: https://github.com/coda/packs-sdk/compare/v1.9.1...HEAD
 [1.7.5]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.5
 [1.7.4]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.4
 [1.7.3]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.3
@@ -868,3 +870,5 @@ await myHelper(context);
 [1.8.4]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.8.4
 [1.8.5]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.8.5
 [1.8.6]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.8.6
+
+[1.9.1]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.1
