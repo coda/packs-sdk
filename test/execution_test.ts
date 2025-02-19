@@ -495,11 +495,12 @@ describe('Execution', () => {
           }
         });
 
-        it('sync works and returns passthrough data', async () => {
+        it('sync works and returns passthrough', async () => {
           await executeFormulaOrSyncFromCLI({
             vm,
             formulaName: 'Students',
-            params: ['Smith'],
+            // params is expecting a list of strings even though passThrough parameter is a boolean. We can just check for existence instead
+            params: ['Smith', 'true'],
             manifest: fakePack,
             manifestPath: '',
             bundleSourceMapPath,
@@ -507,6 +508,8 @@ describe('Execution', () => {
             contextOptions: {useRealFetcher: false},
           });
           const result = mockPrintFull.args[0][0];
+          const passthroughData = mockPrintFull.args[1][0];
+          assert.deepEqual(passthroughData, [{'userId' : 42},{'userId' : 123},{'userId' : 53},{'userId' : 22}]);
           // WTF? Why is this different in VM?
           if (vm) {
             assert.deepEqual(result, [{name: 'Alice'}, {name: 'Bob'}, {name: 'Chris'}, {name: 'Diana'}]);
@@ -565,7 +568,7 @@ describe('Execution', () => {
         it('get permissions works with passthrough data', async () => {
           const syncRows: GenericExecuteGetPermissionsRequest = {
             rows: [{row: {name: 'Alice'}}, {row: {name: 'Bob'}}],
-            passThroughData: [
+            passthroughData: [
               {userId: 42},  // For first row
               {userId: 123}    // For second row
             ]

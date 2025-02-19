@@ -249,6 +249,7 @@ export async function executeFormulaOrSyncFromCLI({
 
     if (formulaSpecification.type === FormulaType.Sync) {
       let result = [];
+      let passthroughData = [];
       let iterations = 1;
       do {
         if (iterations > MaxSyncIterations) {
@@ -267,13 +268,16 @@ export async function executeFormulaOrSyncFromCLI({
           : await executeFormulaOrSyncWithRawParams({formulaSpecification, params, manifest, executionContext});
 
         result.push(...response.result);
+        passthroughData.push(...response?.passthroughData ?? []);
         executionContext.sync.continuation = response.continuation;
         iterations++;
       } while (executionContext.sync.continuation && result.length < maxRows);
       if (result.length > maxRows) {
         result = result.slice(0, maxRows);
+        passthroughData = passthroughData.slice(0, maxRows);
       }
       printFull(result);
+      printFull(passthroughData);
     } else {
       const result = vm
         ? await executeFormulaOrSyncWithRawParamsInVM({

@@ -8,7 +8,7 @@ import type {UserPrincipal} from '../../schema';
 import {ValueType} from '../../schema';
 import {createFakePack} from '../test_utils';
 import {ensureExists} from '../../helpers/ensure';
-import {makeFormula} from '../../api';
+import {makeBooleanParameter, makeFormula} from '../../api';
 import {makeNumericFormula} from '../../api';
 import {makeNumericParameter} from '../../api';
 import {makeObjectFormula} from '../../api';
@@ -125,19 +125,33 @@ export const manifest: PackDefinition = createFakePack({
       formula: {
         name: 'Students',
         description: "Gets students in a teacher's class",
-        execute: async ([teacher], context) => {
+        execute: async ([teacher, shouldPassthrough], context) => {
           const {continuation} = context.sync;
           const isIncremental = Boolean(context.sync.previousCompletion);
           const page = continuation?.page;
           switch (teacher) {
             case 'Smith':
               if (!page || page === 1) {
+                if (shouldPassthrough) {
+                  return {
+                    result: [{name: 'Alice'}, {name: 'Bob'}],
+                    passthroughData: [{userId: 42}, {userId: 123}],
+                    continuation: {page: 2},
+                  };
+                }
                 return {
                   result: [{name: 'Alice'}, {name: 'Bob'}],
                   continuation: {page: 2},
                 };
               }
               if (page === 2) {
+                if (shouldPassthrough) {
+                  return {
+                    result: [{name: 'Chris'}, {name: 'Diana'}],
+                    passthroughData: [{userId: 53}, {userId: 22}],
+                    deletedRowIds: isIncremental ? ['Ed'] : undefined,
+                  };
+                }
                 return {
                   result: [{name: 'Chris'}, {name: 'Diana'}],
                   deletedRowIds: isIncremental ? ['Ed'] : undefined,
@@ -162,12 +176,12 @@ export const manifest: PackDefinition = createFakePack({
         executeUpdate: async (_params, updates, _context) => {
           return {result: updates.map(u => u.newValue)};
         },
-        executeGetPermissions: async (_params, {rows, passThroughData}, _context) => {
+        executeGetPermissions: async (_params, {rows, passthroughData}, _context) => {
           const rowAccessDefinitions: RowAccessDefinition[] = rows
             .map(r => r.row)
             .map((r, index) => {
               const id = ensureExists(r.name);
-              const currPassthrough = passThroughData ? passThroughData[index] : undefined;
+              const currPassthrough = passthroughData ? passthroughData[index] : undefined;
               // Default to 1 if no passthrough data is provided
               const userId = currPassthrough?.userId ?? 1;
               const principal: UserPrincipal = {
@@ -189,7 +203,7 @@ export const manifest: PackDefinition = createFakePack({
             });
           return {rowAccessDefinitions};
         },
-        parameters: [makeStringParameter('teacher', 'teacher name')],
+        parameters: [makeStringParameter('teacher', 'teacher name'), makeStringParameter('shouldPassthrough', 'should passthrough', {optional: true})],
         examples: [],
       },
     }),

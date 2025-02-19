@@ -296,6 +296,7 @@ export interface SyncTableDef<
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>,
   ContextT extends SyncExecutionContext<any, any>,
+  PassthroughT extends SyncPassthroughData,
 > {
   /** See {@link SyncTableOptions.name} */
   name: string;
@@ -311,7 +312,7 @@ export interface SyncTableDef<
    */
   identityName: string;
   /** See {@link SyncTableOptions.formula} */
-  getter: SyncFormula<K, L, ParamDefsT, SchemaT, ContextT>;
+  getter: SyncFormula<K, L, ParamDefsT, SchemaT, ContextT, PassthroughT>;
   /** See {@link DynamicOptions.getSchema} */
   getSchema?: MetadataFormula;
   /** See {@link DynamicOptions.entityName} */
@@ -388,7 +389,9 @@ export interface DynamicSyncTableDef<
 export interface Continuation {
   [key: string]: string | number | {[key: string]: string | number};
 }
-
+/**
+ * See {@link SyncFormulaResult.passthroughData}.
+ */
 export type SyncPassthroughData = Record<string, any>;
 
 /**
@@ -396,7 +399,7 @@ export type SyncPassthroughData = Record<string, any>;
  * Should not be necessary to use directly, see {@link makeSyncTable}
  * for defining a sync table.
  */
-export type GenericSyncFormula = SyncFormula<any, any, ParamDefs, any, SyncExecutionContext>;
+export type GenericSyncFormula = SyncFormula<any, any, ParamDefs, any, SyncExecutionContext, SyncPassthroughData>;
 /**
  * Type definition for the return value of a sync table.
  * Should not be necessary to use directly, see {@link makeSyncTable}
@@ -408,7 +411,7 @@ export type GenericSyncFormulaResult = SyncFormulaResult<any, any, any, any>;
  * Should not be necessary to use directly, see {@link makeSyncTable}
  * for defining a sync table.
  */
-export type GenericSyncTable = SyncTableDef<any, any, ParamDefs, any, SyncExecutionContext>;
+export type GenericSyncTable = SyncTableDef<any, any, ParamDefs, any, SyncExecutionContext, SyncPassthroughData>;
 /**
  * Type definition for a dynamic sync table.
  * Should not be necessary to use directly, see {@link makeDynamicSyncTable}
@@ -1045,9 +1048,13 @@ export interface SyncFormulaResult<
   result: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>;
 
   /**
-   * Some additional data that we don't  for each row in the result.
-   * This field is used to pass through data during the executeGetPermissions call
-   * TODO(drew): Unhide this
+   * Additional side data to pass through to `executeGetPermissions`. Because each result item
+   * is also passed through, this is only needed for cases where you have data that doesn't need
+   * to be part of the result item but is nonetheless useful for fetching permissions, for example,
+   * the API requests to get item data may include permissions inline, so there is no need to
+   * re-fetch permission data if you can just pass it through.
+   *
+   * This array must be the same length as the `result` array.
    * @hidden
    */
   passthroughData?: PassthroughT[];
@@ -1087,8 +1094,8 @@ export interface SyncFormulaResult<
 }
 
 /** @hidden */
-export interface TypedSyncFormulaResult<T extends object, ContextT extends SyncExecutionContext<any>>
-  extends SyncFormulaResult<string, string, any, ContextT> {
+export interface TypedSyncFormulaResult<T extends object, ContextT extends SyncExecutionContext<any>, PassthroughT extends SyncPassthroughData>
+  extends SyncFormulaResult<string, string, any, ContextT, PassthroughT> {
   result: T[];
 }
 
@@ -1262,7 +1269,7 @@ export interface ExecuteGetPermissionsRequest<
    * The list of rows for which to fetch permissions.
    */
   rows: Array<ExecuteGetPermissionsRequestRow<K, L, SchemaT>>;
-  passThroughData?: PassthroughT[];
+  passthroughData?: PassthroughT[];
 }
 
 /**
@@ -1281,7 +1288,7 @@ export interface SyncFormulaDef<
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchemaDefinition<K, L>,
   ContextT extends SyncExecutionContext<any, any>,
-  PassthroughT extends SyncPassthroughData = SyncPassthroughData,
+  PassthroughT extends SyncPassthroughData,
 > extends CommonPackFormulaDef<ParamDefsT>,
     OnErrorFormulaOptions {
   /**
@@ -1291,11 +1298,11 @@ export interface SyncFormulaDef<
    * from a previous invocation, and fetches and returns one page of results, as well
    * as another continuation if there are more result to fetch.
    */
-  execute<ContextReturnT extends ContextT>(
+  execute<ContextReturnT extends ContextT, PassthroughReturnT extends PassthroughT>(
     params: ParamValues<ParamDefsT>,
     context: ContextT,
     // Create a separate type for the return value to ensure it's validated against any explicit context type.
-  ): Promise<SyncFormulaResult<K, L, SchemaT, ContextReturnT>>;
+  ): Promise<SyncFormulaResult<K, L, SchemaT, ContextReturnT, PassthroughReturnT>>;
   /**
    * If the table supports object updates, the maximum number of objects that will be sent to the pack
    * in a single batch. Defaults to 1 if not specified.
@@ -1358,7 +1365,8 @@ export type SyncFormula<
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>,
   ContextT extends SyncExecutionContext<any, any>,
-> = SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT> & {
+  PassthroughT extends SyncPassthroughData,
+> = SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT, PassthroughT> & {
   resultType: TypeOf<SchemaType<SchemaT>>;
   isSyncFormula: true;
   schema?: ArraySchema;
@@ -2140,6 +2148,7 @@ export interface SyncTableOptions<
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchemaDefinition<K, L>,
   ContextT extends SyncExecutionContext<any, any>,
+  PassthroughT extends SyncPassthroughData,
 > {
   /**
    * The name of the sync table. This is shown to users in the Coda UI.
@@ -2178,7 +2187,7 @@ export interface SyncTableOptions<
    * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
    * These will eventually be consolidated.)
    */
-  formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT>;
+  formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT, PassthroughT>;
   /**
    * A {@link ConnectionRequirement} that will be used for all formulas contained within
    * this sync table (including autocomplete formulas).
@@ -2353,6 +2362,7 @@ export function makeSyncTable<
     identity?: Identity;
   },
   ContextT extends SyncExecutionContext<any, any>,
+  PassthroughT extends SyncPassthroughData,
 >({
   name,
   description,
@@ -2362,7 +2372,7 @@ export function makeSyncTable<
   connectionRequirement,
   dynamicOptions = {},
   role,
-}: SyncTableOptions<K, L, ParamDefsT, SchemaDefT, ContextT>): SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT> {
+}: SyncTableOptions<K, L, ParamDefsT, SchemaDefT, ContextT, PassthroughT>): SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT, PassthroughT> {
   const {getSchema: getSchemaDef, entityName, defaultAddDynamicColumns} = dynamicOptions;
   const {
     execute: wrappedExecute,
@@ -2456,8 +2466,8 @@ export function makeSyncTable<
   const execute = async function exec(
     params: ParamValues<ParamDefsT>,
     context: ContextT,
-  ): Promise<SyncFormulaResult<K, L, SchemaT, ContextT>> {
-    let syncResult: SyncFormulaResult<K, L, SchemaDefT, ContextT>;
+  ): Promise<SyncFormulaResult<K, L, SchemaT, ContextT, PassthroughT>> {
+    let syncResult: SyncFormulaResult<K, L, SchemaDefT, ContextT, PassthroughT>;
     try {
       syncResult = (await wrappedExecute(params, context)) || {};
     } catch (err: any) {
@@ -2470,8 +2480,8 @@ export function makeSyncTable<
     const result = responseHandler({body: syncResult.result || [], status: 200, headers: {}}, appliedSchema) as Array<
       ObjectSchemaDefinitionType<K, L, SchemaT>
     >;
-    const {continuation, completion, deletedItemIds, deletedRowIds} = syncResult;
-    const returnValue: SyncFormulaResult<K, L, SchemaT, ContextT> = {
+    const {continuation, completion, deletedItemIds, deletedRowIds, passthroughData} = syncResult;
+    const returnValue: SyncFormulaResult<K, L, SchemaT, ContextT, PassthroughT> = {
       result,
     };
     if (continuation) {
@@ -2483,6 +2493,9 @@ export function makeSyncTable<
     if (deletedRowIds ?? deletedItemIds) {
       returnValue.deletedRowIds = deletedRowIds ?? deletedItemIds;
       returnValue.deletedItemIds = returnValue.deletedRowIds;
+    }
+    if (passthroughData) {
+      returnValue.passthroughData = passthroughData;
     }
     return returnValue;
   };
