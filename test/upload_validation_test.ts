@@ -4,6 +4,7 @@ import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '..';
 import {AuthenticationType} from '../types';
 import {ConnectionRequirement} from '../api_types';
+import {CrawlingBehavior} from '../schema';
 import {CurrencyFormat} from '..';
 import {DurationUnit} from '..';
 import type {Formula} from '../api';
@@ -12,6 +13,7 @@ import {ImageCornerStyle} from '../schema';
 import {ImageOutline} from '../schema';
 import {ImageShapeStyle} from '../schema';
 import {IndexingStrategy} from '../schema';
+import {LifecycleBehavior} from '../schema';
 import {Limits} from '../testing/upload_validation';
 import type {ObjectSchemaDefinition} from '../schema';
 import type {OptionsReference} from '../api_types';
@@ -3519,6 +3521,10 @@ describe('Pack metadata Validation', async () => {
               },
               parent: {
                 parentIdProperty: 'parentId',
+                parentIdentity: {
+                  packId: 42,
+                  name: 'Parent',
+                },
               },
             });
             await validateJson(metadata);
@@ -3534,6 +3540,10 @@ describe('Pack metadata Validation', async () => {
               },
               parent: {
                 parentIdProperty: 'parentId',
+                parentIdentity: {
+                  packId: 42,
+                  name: 'Parent',
+                },
               },
             });
             await validateJson(metadata);
@@ -3549,6 +3559,10 @@ describe('Pack metadata Validation', async () => {
               },
               parent: {
                 parentIdProperty: 'parentId',
+                parentIdentity: {
+                  packId: 42,
+                  name: 'Parent',
+                },
               },
             });
             const err = await validateJsonAndAssertFails(metadata);
@@ -3599,10 +3613,10 @@ describe('Pack metadata Validation', async () => {
               primary: 'bar',
               properties: {bar: {type: ValueType.String}},
               parent: {
-                parentIdentityName: parentTable.identityName,
-                shouldCrawl: true,
+                parentIdentity: parentTable.schema.identity,
+                crawling: CrawlingBehavior.Enabled,
                 mapping: [{parentProperty: 'Account', childParameterName: 'parentParam'}],
-                inheritsLifecycle: true,
+                lifecycle: LifecycleBehavior.Inherit,
               },
             }),
             formula: {
@@ -3637,10 +3651,13 @@ describe('Pack metadata Validation', async () => {
               primary: 'bar',
               properties: {bar: {type: ValueType.String}},
               parent: {
-                parentIdentityName: 'RandomIdentity',
-                shouldCrawl: true,
+                parentIdentity: {
+                  packId: 42,
+                  name: 'RandomIdentity',
+                },
+                crawling: CrawlingBehavior.Enabled,
                 mapping: [{parentProperty: 'SomethingElse', childParameterName: 'parentParam'}],
-                inheritsLifecycle: true,
+                lifecycle: LifecycleBehavior.Inherit,
               },
             }),
             formula: {
@@ -3668,7 +3685,7 @@ describe('Pack metadata Validation', async () => {
           assert.deepEqual(err.validationErrors, [
             {
               message: `Sync table Child expects parent table RandomIdentity to exist.`,
-              path: 'syncTables[0].schema.parent.parentIdentityName',
+              path: 'syncTables[0].schema.parent.parentIdentity',
             },
           ]);
         });
@@ -3683,9 +3700,9 @@ describe('Pack metadata Validation', async () => {
               primary: 'bar',
               properties: {bar: {type: ValueType.String}},
               parent: {
-                parentIdentityName: parentTable.identityName,
-                shouldCrawl: true,
-                inheritsLifecycle: true,
+                parentIdentity: parentTable.schema.identity,
+                crawling: CrawlingBehavior.Enabled,
+                lifecycle: LifecycleBehavior.Inherit,
                 mapping: [{parentProperty: 'someRandomProperty', childParameterName: 'parent'}],
               },
             }),
@@ -3729,9 +3746,9 @@ describe('Pack metadata Validation', async () => {
               primary: 'bar',
               properties: {bar: {type: ValueType.String}},
               parent: {
-                parentIdentityName: parentTable.identityName,
-                shouldCrawl: true,
-                inheritsLifecycle: true,
+                parentIdentity: parentTable.schema.identity,
+                crawling: CrawlingBehavior.Enabled,
+                lifecycle: LifecycleBehavior.Inherit,
                 mapping: [{parentProperty: 'Account', childParameterName: 'randomParam'}],
               },
             }),
@@ -3775,9 +3792,9 @@ describe('Pack metadata Validation', async () => {
               primary: 'item',
               properties: {item: {type: ValueType.String}},
               parent: {
-                parentIdentityName: parentTable.identityName,
-                shouldCrawl: true,
-                inheritsLifecycle: true,
+                parentIdentity: parentTable.schema.identity,
+                crawling: CrawlingBehavior.Enabled,
+                lifecycle: LifecycleBehavior.Inherit,
                 mapping: [
                   {parentProperty: 'Account', childParameterName: 'rootParam'},
                   {parentProperty: 'Group', childParameterName: 'additionalParam'},
@@ -3831,9 +3848,12 @@ describe('Pack metadata Validation', async () => {
               primary: 'table1prop',
               properties: {table1prop: {type: ValueType.String}},
               parent: {
-                parentIdentityName: 'Table2Identity',
-                shouldCrawl: true,
-                inheritsLifecycle: true,
+                parentIdentity: {
+                  packId: 42,
+                  name: 'Table2Identity',
+                },
+                crawling: CrawlingBehavior.Enabled,
+                lifecycle: LifecycleBehavior.Inherit,
                 mapping: [{parentProperty: 'Table2prop', childParameterName: 'table2Param'}],
               },
             }),
@@ -3861,9 +3881,12 @@ describe('Pack metadata Validation', async () => {
               primary: 'table2prop',
               properties: {table2prop: {type: ValueType.String}},
               parent: {
-                parentIdentityName: 'Table1Identity',
-                shouldCrawl: true,
-                inheritsLifecycle: true,
+                parentIdentity: {
+                  packId: 42,
+                  name: 'Table1Identity',
+                },
+                crawling: CrawlingBehavior.Enabled,
+                lifecycle: LifecycleBehavior.Inherit,
                 mapping: [{parentProperty: 'Table1prop', childParameterName: 'table1Param'}],
               },
             }),

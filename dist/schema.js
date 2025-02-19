@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.throwOnDynamicSchemaWithJsOptionsFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.maybeSchemaOptionsValue = exports.unwrappedSchemaSupportsOptions = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PermissionType = exports.PrincipalType = exports.IndexingStrategy = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageShapeStyle = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+exports.throwOnDynamicSchemaWithJsOptionsFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.maybeSchemaOptionsValue = exports.unwrappedSchemaSupportsOptions = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PermissionType = exports.PrincipalType = exports.LifecycleBehavior = exports.CrawlingBehavior = exports.PermissionsBehavior = exports.IndexingStrategy = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageShapeStyle = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_2 = require("./helpers/ensure");
@@ -386,6 +386,33 @@ var IndexingStrategy;
     IndexingStrategy["Raw"] = "raw";
 })(IndexingStrategy || (exports.IndexingStrategy = IndexingStrategy = {}));
 /**
+ * Determines how permissions are handled for this object.
+ */
+var PermissionsBehavior;
+(function (PermissionsBehavior) {
+    /**
+     * The object will inherit permissions from its parent.
+     */
+    PermissionsBehavior["Inherit"] = "Inherit";
+})(PermissionsBehavior || (exports.PermissionsBehavior = PermissionsBehavior = {}));
+/**
+ * Determines how the parent object should be crawled for children.
+ */
+var CrawlingBehavior;
+(function (CrawlingBehavior) {
+    /**
+     * The parent object should be crawled for children.
+     */
+    CrawlingBehavior["Enabled"] = "Enabled";
+})(CrawlingBehavior || (exports.CrawlingBehavior = CrawlingBehavior = {}));
+var LifecycleBehavior;
+(function (LifecycleBehavior) {
+    /**
+     * The child objects should be deleted when the parent object is deleted.
+     */
+    LifecycleBehavior["Inherit"] = "Inherit";
+})(LifecycleBehavior || (exports.LifecycleBehavior = LifecycleBehavior = {}));
+/**
  * The type of principal that can be applied to a permission.
  *
  * TODO(sam): Unhide this
@@ -711,16 +738,17 @@ function normalizeParentDefinition(parent, normalizedProperties) {
     if ('parentIdProperty' in parent) {
         return {
             parentIdProperty: normalizeSchemaPropertyIdentifier(parent.parentIdProperty, normalizedProperties),
-            inheritsPermissions: parent.inheritsPermissions,
+            parentIdentity: parent.parentIdentity,
+            permissions: parent.permissions,
         };
     }
-    else if ('parentIdentityName' in parent) {
+    else if ('crawling' in parent) {
         return {
-            parentIdentityName: parent.parentIdentityName,
+            parentIdentity: parent.parentIdentity,
             mapping: parent.mapping,
-            shouldCrawl: parent.shouldCrawl,
-            inheritsPermissions: parent.inheritsPermissions,
-            inheritsLifecycle: parent.inheritsLifecycle,
+            crawling: parent.crawling,
+            permissions: parent.permissions,
+            lifecycle: parent.lifecycle,
         };
     }
     (0, ensure_5.ensureUnreachable)(parent);

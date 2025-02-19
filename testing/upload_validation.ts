@@ -13,6 +13,8 @@ import type {BooleanSchema} from '../schema';
 import type {CodaApiBearerTokenAuthentication} from '../types';
 import type {CodaInternalRichTextSchema} from '../schema';
 import {ConnectionRequirement} from '../api_types';
+import type {CrawlableParentDefinition} from '../schema';
+import {CrawlingBehavior} from '../schema';
 import {CurrencyFormat} from '../schema';
 import type {CurrencySchema} from '../schema';
 import type {CustomAuthentication} from '../types';
@@ -20,7 +22,6 @@ import type {CustomHeaderTokenAuthentication} from '../types';
 import type {DetailedIndexedProperty} from '../schema';
 import type {DurationSchema} from '../schema';
 import {DurationUnit} from '../schema';
-import type {DynamicParentDefinition} from '../schema';
 import type {DynamicSyncTableDef} from '../api';
 import {EmailDisplayType} from '../schema';
 import type {EmailSchema} from '../schema';
@@ -38,6 +39,7 @@ import {ImageShapeStyle} from '../schema';
 import type {IndexDefinition} from '../schema';
 import {IndexingStrategy} from '../schema';
 import {JSONPath} from 'jsonpath-plus';
+import {LifecycleBehavior} from '../schema';
 import {LinkDisplayType} from '../schema';
 import type {LinkSchema} from '../schema';
 import type {MultiHeaderTokenAuthentication} from '../types';
@@ -45,6 +47,7 @@ import type {MultiQueryParamTokenAuthentication} from '../types';
 import type {Network} from '../api_types';
 import {NetworkConnection} from '../api_types';
 import type {NoAuthentication} from '../types';
+import type {NotCrawlableParentDefinition} from '../schema';
 import type {NumericDateSchema} from '../schema';
 import type {NumericDateTimeSchema} from '../schema';
 import type {NumericDurationSchema} from '../schema';
@@ -68,6 +71,7 @@ import type {ParamDef} from '../api_types';
 import type {ParamDefs} from '../api_types';
 import type {ParentChildParameterMapping} from '../schema';
 import type {ParentDefinition} from '../schema';
+import {PermissionsBehavior} from '../schema';
 import {PostSetupType} from '../types';
 import type {PrecannedDate} from '../api_types';
 import {PrecannedDateRange} from '..';
@@ -82,7 +86,6 @@ import type {SetEndpoint} from '../types';
 import {SimpleStringHintValueTypes} from '../schema';
 import type {SimpleStringSchema} from '../schema';
 import type {SliderSchema} from '../schema';
-import type {StaticParentDefinition} from '../schema';
 import type {StringDateSchema} from '../schema';
 import type {StringDateTimeSchema} from '../schema';
 import type {StringEmbedSchema} from '../schema';
@@ -402,7 +405,7 @@ export function validateCrawlHierarchy(
   return parentToChildrenMap;
 }
 
-export function validateDynamicParents(
+export function validateCrawlParents(
   syncTables: SyncTable[],
   context: z.RefinementCtx,
 ): Record<string, string[]> | undefined {
@@ -413,16 +416,16 @@ export function validateDynamicParents(
   }
   for (const [tableIndex, syncTable] of syncTables.entries()) {
     const parentDefinition = syncTable.schema.parent as ParentDefinition | undefined;
-    if (!parentDefinition || !('parentIdentityName' in parentDefinition)) {
+    if (!parentDefinition || !('crawling' in parentDefinition)) {
       continue;
     }
 
-    const parentTableName = parentDefinition.parentIdentityName;
+    const parentTableName = parentDefinition.parentIdentity.name;
     const parentTableSchema = syncTableSchemasByName[parentTableName];
     if (!parentTableSchema) {
       context?.addIssue({
         code: z.ZodIssueCode.custom,
-        path: ['syncTables', tableIndex, 'schema', 'parent', 'parentIdentityName'],
+        path: ['syncTables', tableIndex, 'schema', 'parent', 'parentIdentity'],
         message: `Sync table ${syncTable.name} expects parent table ${parentTableName} to exist.`,
       });
       return undefined;
@@ -1420,15 +1423,24 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     popularityRankProperty: propertySchema.optional(),
   });
 
-  const dynamicParentSchema = zodCompleteStrictObject<DynamicParentDefinition>({
-    parentIdProperty: propertySchema,
-    inheritsPermissions: z.boolean().optional(),
+  const identitySchema = zodCompleteObject<Identity>({
+    packId: z.number().optional(),
+    name: z.string().nonempty(),
+    dynamicUrl: z.string().optional(),
+    attribution: attributionSchema,
+    mergeKey: z.string().optional(),
   });
-  const staticParentSchema = zodCompleteStrictObject<StaticParentDefinition>({
-    parentIdentityName: z.string().min(1),
-    shouldCrawl: z.literal(true),
-    inheritsPermissions: z.boolean().optional(),
-    inheritsLifecycle: z.literal(true),
+
+  const dynamicParentSchema = zodCompleteStrictObject<NotCrawlableParentDefinition>({
+    parentIdProperty: propertySchema,
+    parentIdentity: identitySchema,
+    permissions: z.nativeEnum(PermissionsBehavior).optional(),
+  });
+  const staticParentSchema = zodCompleteStrictObject<CrawlableParentDefinition>({
+    parentIdentity: identitySchema,
+    crawling: z.nativeEnum(CrawlingBehavior),
+    permissions: z.nativeEnum(PermissionsBehavior).optional(),
+    lifecycle: z.nativeEnum(LifecycleBehavior),
     mapping: z
       .array(
         zodCompleteStrictObject<ParentChildParameterMapping>({
@@ -1453,13 +1465,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       codaType: z.enum([...ObjectHintValueTypes]).optional(),
       featured: z.array(z.string()).optional(),
       featuredProperties: z.array(z.string()).optional(),
-      identity: zodCompleteObject<Identity>({
-        packId: z.number().optional(),
-        name: z.string().nonempty(),
-        dynamicUrl: z.string().optional(),
-        attribution: attributionSchema,
-        mergeKey: z.string().optional(),
-      }).optional(),
+      identity: identitySchema.optional(),
       attribution: attributionSchema,
       properties: z.record(objectPropertyUnionSchema),
       includeUnknownProperties: z.boolean().optional(),
@@ -1842,7 +1848,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         const validatePropertyValue = makePropertyValidator(schema, context);
 
         if ('parentIdProperty' in schema.parent) {
-          const {parentIdProperty} = schema.parent;
+          const {parentIdProperty, parentIdentity} = schema.parent;
 
           validatePropertyValue(
             parentIdProperty,
@@ -1861,8 +1867,19 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             `must refer to a "ValueType.Object" property that is a "ValueType.Reference".`,
             ['parent', 'parentIdProperty'],
           );
-        } else if (!('parentIdentityName' in schema.parent)) {
-          // parentIdentityName validation is in validateDynamicParents
+
+          validatePropertyValue(
+            parentIdProperty,
+            'parentIdProperty',
+            parentIdPropertySchema =>
+              parentIdPropertySchema.type !== ValueType.Object ||
+              !parentIdPropertySchema.identity ||
+              parentIdPropertySchema.identity.name === parentIdentity.name,
+            `must match identity to the identity given in the parent definition.`,
+            ['parent', 'parentIdProperty'],
+          );
+        } else if (!('crawling' in schema.parent)) {
+          // parentIdentityName validation is in validateCrawlParents
           ensureNever(schema.parent);
         }
       }),
@@ -2400,7 +2417,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       const {syncTables} = data as PackVersionDefinition;
       if (syncTables) {
         validateCrawlHierarchy(syncTables, context);
-        validateDynamicParents(syncTables, context);
+        validateCrawlParents(syncTables, context);
       }
     })
     .superRefine((data, context) => {
