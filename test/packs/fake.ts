@@ -167,11 +167,12 @@ export const manifest: PackDefinition = createFakePack({
             .map(r => r.row)
             .map((r, index) => {
               const id = ensureExists(r.name);
-              const currMetadata = passThroughData ? passThroughData.at(index) : undefined;
-              const metadataUserId = currMetadata && 'id' in currMetadata ? currMetadata[id] as string : undefined;
+              const currPassthrough = passThroughData ? passThroughData[index] : undefined;
+              // Default to 1 if no passthrough data is provided
+              const userId = currPassthrough?.userId ?? 1;
               const principal: UserPrincipal = {
                 type: PrincipalType.User,
-                userId: metadataUserId ?? 1,
+                userId,
               };
 
               const permissions: Permission[] = [

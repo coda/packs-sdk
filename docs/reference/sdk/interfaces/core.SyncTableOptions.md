@@ -52,7 +52,7 @@ ___
 
 ### formula
 
-• **formula**: [`SyncFormulaDef`](core.SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`\>
+• **formula**: [`SyncFormulaDef`](core.SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`, `SyncPassthroughData`\>
 
 The definition of the formula that implements this sync. This is a Coda packs formula
 that returns an array of objects fitting the given schema and optionally a [Continuation](core.Continuation.md).

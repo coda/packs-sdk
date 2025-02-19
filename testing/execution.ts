@@ -906,6 +906,7 @@ function parseSyncUpdates(
 
 const GetPermissionSchema = z.object({
   rows: z.array(z.object({row: z.object({}).passthrough()})),
+  passThroughData: z.array(z.object({}).passthrough()).optional(),
 });
 
 function parseGetPermissionRequest(

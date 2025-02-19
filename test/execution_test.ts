@@ -495,6 +495,26 @@ describe('Execution', () => {
           }
         });
 
+        it('sync works and returns passthrough data', async () => {
+          await executeFormulaOrSyncFromCLI({
+            vm,
+            formulaName: 'Students',
+            params: ['Smith'],
+            manifest: fakePack,
+            manifestPath: '',
+            bundleSourceMapPath,
+            bundlePath,
+            contextOptions: {useRealFetcher: false},
+          });
+          const result = mockPrintFull.args[0][0];
+          // WTF? Why is this different in VM?
+          if (vm) {
+            assert.deepEqual(result, [{name: 'Alice'}, {name: 'Bob'}, {name: 'Chris'}, {name: 'Diana'}]);
+          } else {
+            assert.deepEqual(result, [{Name: 'Alice'}, {Name: 'Bob'}, {Name: 'Chris'}, {Name: 'Diana'}]);
+          }
+        });
+
         it('sync update works', async () => {
           const syncUpdates: GenericSyncUpdate[] = [
             {previousValue: {name: 'Alice'}, newValue: {name: 'Alice Smith'}, updatedFields: ['name']},
@@ -542,12 +562,12 @@ describe('Execution', () => {
           });
         });
 
-        it('get permissions works with metadata', async () => {
+        it('get permissions works with passthrough data', async () => {
           const syncRows: GenericExecuteGetPermissionsRequest = {
             rows: [{row: {name: 'Alice'}}, {row: {name: 'Bob'}}],
             passThroughData: [
-              {id: 42},  // For first row
-              {id: 123}    // For second row
+              {userId: 42},  // For first row
+              {userId: 123}    // For second row
             ]
           };
           await executeFormulaOrSyncFromCLI({

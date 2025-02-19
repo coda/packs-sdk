@@ -1270,7 +1270,7 @@ export interface ExecuteGetPermissionsRequest<
  *
  * @hidden
  */
-export type GenericExecuteGetPermissionsRequest = ExecuteGetPermissionsRequest<any, any, any>;
+export type GenericExecuteGetPermissionsRequest = ExecuteGetPermissionsRequest<any, any, any, any>;
 
 /**
  * Inputs for creating the formula that implements a sync table.
@@ -1281,6 +1281,7 @@ export interface SyncFormulaDef<
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchemaDefinition<K, L>,
   ContextT extends SyncExecutionContext<any, any>,
+  PassthroughT extends SyncPassthroughData = SyncPassthroughData,
 > extends CommonPackFormulaDef<ParamDefsT>,
     OnErrorFormulaOptions {
   /**
@@ -1331,7 +1332,7 @@ export interface SyncFormulaDef<
    */
   executeGetPermissions?(
     params: ParamValues<ParamDefsT>,
-    request: ExecuteGetPermissionsRequest<K, L, SchemaT>,
+    request: ExecuteGetPermissionsRequest<K, L, SchemaT, PassthroughT>,
     context: GetPermissionExecutionContext,
   ): Promise<GetPermissionsResult>;
 

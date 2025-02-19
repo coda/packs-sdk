@@ -3375,7 +3375,7 @@ export interface ExecuteGetPermissionsRequest<K extends string, L extends string
 /**
  * Inputs for creating the formula that implements a sync table.
  */
-export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any>> extends CommonPackFormulaDef<ParamDefsT>, OnErrorFormulaOptions {
+export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any>, PassthroughT extends SyncPassthroughData = SyncPassthroughData> extends CommonPackFormulaDef<ParamDefsT>, OnErrorFormulaOptions {
 	/**
 	 * The JavaScript function that implements this sync.
 	 *
@@ -3412,7 +3412,7 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
 	 * TODO(sam): Unhide this
 	 * @hidden
 	 */
-	executeGetPermissions?(params: ParamValues<ParamDefsT>, request: ExecuteGetPermissionsRequest<K, L, SchemaT>, context: GetPermissionExecutionContext): Promise<GetPermissionsResult>;
+	executeGetPermissions?(params: ParamValues<ParamDefsT>, request: ExecuteGetPermissionsRequest<K, L, SchemaT, PassthroughT>, context: GetPermissionExecutionContext): Promise<GetPermissionsResult>;
 	/**
 	 * If the table implements {@link executeGetPermissions} the maximum number of rows that will be sent to that
 	 * function in a single batch. Defaults to 10 if not specified.
