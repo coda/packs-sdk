@@ -92,7 +92,6 @@ function getSelectedAuthentication(manifest: BasicPackDefinition, authentication
   );
 }
 
-
 async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
   params,
   formulaSpec,

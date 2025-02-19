@@ -28,3 +28,11 @@ export declare function readJSONFile(fileName: string): any | undefined;
 export declare function writeJSONFile(fileName: string, payload: any, mode?: fs.Mode): void;
 export declare function getExpirationDate(expiresInSeconds: number): Date;
 export declare function processVmError(vmError: Error, bundlePath: string): Promise<Error>;
+/**
+ * This function splits an array into chunks of a maximum size.
+ *
+ * @param array The flat list of values
+ * @param size The maximum chunk size
+ * @returns A list of chunks of the input array
+ */
+export declare function chunkArray<T>(array: T[], size: number): T[][];

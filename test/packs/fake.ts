@@ -169,6 +169,57 @@ export const manifest: PackDefinition = createFakePack({
                   result: [{name: 'Christina'}, {name: 'Donald'}],
                 };
               }
+            case 'Cunningham':
+              if (!page || page === 1) {
+                return {
+                  result: [
+                    {name: 'Albert'},
+                    {name: 'Brenda'},
+                    {name: 'Cory'},
+                    {name: 'Dylan'},
+                    {name: 'Ethan'},
+                    {name: 'Fiona'},
+                    {name: 'Gina'},
+                    {name: 'Hank'},
+                    {name: 'Ivy'},
+                    {name: 'Jack'},
+                    {name: 'Kyle'},
+                    {name: 'Liam'},
+                    {name: 'Mia'},
+                    {name: 'Noah'},
+                    {name: 'Olivia'},
+                    {name: 'Pam'},
+                    {name: 'Quinn'},
+                    {name: 'Ryan'},
+                    {name: 'Sam'},
+                    {name: 'Tia'},
+                    {name: 'Uma'},
+                    {name: 'Vince'},
+                  ],
+                  continuation: {page: 2},
+                };
+              }
+              if (page === 2) {
+                return {
+                  result: [
+                    {name: 'Wendy'},
+                    {name: 'Xavier'},
+                    {name: 'Yara'},
+                    {name: 'Zack'},
+                    {name: 'Aaron'},
+                    {name: 'Bella'},
+                    {name: 'Charlie'},
+                    {name: 'Diana'},
+                    {name: 'Easton'},
+                    {name: 'Frank'},
+                    {name: 'Greg'},
+                    {name: 'Hannah'},
+                    {name: 'Ian'},
+                    {name: 'Julia'},
+                  ],
+                };
+              }
+
             default:
               return {} as any;
           }
