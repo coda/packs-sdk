@@ -542,6 +542,39 @@ describe('Execution', () => {
           });
         });
 
+        it('get permissions works with metadata', async () => {
+          const syncRows: GenericExecuteGetPermissionsRequest = {
+            rows: [{row: {name: 'Alice'}}, {row: {name: 'Bob'}}],
+            metadata: [
+              {id: 42},  // For first row
+              {id: 123}    // For second row
+            ]
+          };
+          await executeFormulaOrSyncFromCLI({
+            vm,
+            formulaName: 'Students:permissions',
+            params: ['Smith', JSON.stringify(syncRows)],
+            manifest: fakePack,
+            manifestPath: '',
+            bundleSourceMapPath,
+            bundlePath,
+            contextOptions: {useRealFetcher: false},
+          });
+          const result = mockPrintFull.args[0][0];
+          assert.deepEqual(result, {
+            rowAccessDefinitions: [
+              {
+                rowId: 'Alice',
+                permissions: [{permissionType: PermissionType.Direct, principal: {type: 'user', userId: 42}}],
+              },
+              {
+                rowId: 'Bob',
+                permissions: [{permissionType: PermissionType.Direct, principal: {type: 'user', userId: 123}}],
+              },
+            ],
+          });
+        });
+
         it('autocomplete', async () => {
           await executeFormulaOrSyncFromCLI({
             vm,

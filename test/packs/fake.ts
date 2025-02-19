@@ -162,15 +162,16 @@ export const manifest: PackDefinition = createFakePack({
         executeUpdate: async (_params, updates, _context) => {
           return {result: updates.map(u => u.newValue)};
         },
-        executeGetPermissions: async (_params, {rows}, _context) => {
+        executeGetPermissions: async (_params, {rows, metadata}, _context) => {
           const rowAccessDefinitions: RowAccessDefinition[] = rows
             .map(r => r.row)
-            .map(r => {
+            .map((r, index) => {
               const id = ensureExists(r.name);
-
+              const currMetadata = metadata ? metadata.at(index) : undefined;
+              const metadataUserId = currMetadata && 'id' in currMetadata ? currMetadata[id] as string : undefined;
               const principal: UserPrincipal = {
                 type: PrincipalType.User,
-                userId: 1,
+                userId: metadataUserId ?? 1,
               };
 
               const permissions: Permission[] = [
