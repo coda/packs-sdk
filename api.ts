@@ -389,7 +389,7 @@ export interface Continuation {
   [key: string]: string | number | {[key: string]: string | number};
 }
 
-export type SyncTableMetadata = Array<Record<string, any>>;
+export type SyncPassthroughData = Record<string, any>;
 
 /**
  * Type definition for the formula that implements a sync table.
@@ -1037,20 +1037,20 @@ export function isSyncPackFormula(fn: BaseFormula<ParamDefs, any>): fn is Generi
 export interface SyncFormulaResult<
   K extends string,
   L extends string,
-  // M extends string,
   SchemaT extends ObjectSchemaDefinition<K, L>,
   ContextT extends SyncExecutionContext<any> = SyncExecutionContext,
+  PassthroughT extends SyncPassthroughData = SyncPassthroughData,
 > {
   /** The list of rows from this page. */
   result: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>;
 
   /**
-   * The metadata for each row in the result.
-   * This field is used to pass in metadata during the executeGetPermissions call
+   * Some additional data that we don't  for each row in the result.
+   * This field is used to pass through data during the executeGetPermissions call
    * TODO(drew): Unhide this
    * @hidden
    */
-  metadata?: SyncTableMetadata;
+  passthroughData?: PassthroughT[];
 
   /**
    * A marker indicating where the next sync formula invocation should pick up to get the next page of results.
@@ -1256,12 +1256,13 @@ export interface ExecuteGetPermissionsRequest<
   K extends string,
   L extends string,
   SchemaT extends ObjectSchemaDefinition<K, L>,
+  PassthroughT extends SyncPassthroughData = SyncPassthroughData,
 > {
   /**
    * The list of rows for which to fetch permissions.
    */
   rows: Array<ExecuteGetPermissionsRequestRow<K, L, SchemaT>>;
-  metadata?: SyncTableMetadata;
+  passThroughData?: PassthroughT[];
 }
 
 /**

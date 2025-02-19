@@ -196,7 +196,7 @@ numbers of inputs.
 
 ### execute
 
-▸ **execute**<`ContextReturnT`\>(`params`, `context`): `Promise`<[`SyncFormulaResult`](core.SyncFormulaResult.md)<`K`, `L`, `SchemaT`, `ContextReturnT`\>\>
+▸ **execute**<`ContextReturnT`\>(`params`, `context`): `Promise`<[`SyncFormulaResult`](core.SyncFormulaResult.md)<`K`, `L`, `SchemaT`, `ContextReturnT`, `SyncPassthroughData`\>\>
 
 The JavaScript function that implements this sync.
 
@@ -219,7 +219,7 @@ as another continuation if there are more result to fetch.
 
 #### Returns
 
-`Promise`<[`SyncFormulaResult`](core.SyncFormulaResult.md)<`K`, `L`, `SchemaT`, `ContextReturnT`\>\>
+`Promise`<[`SyncFormulaResult`](core.SyncFormulaResult.md)<`K`, `L`, `SchemaT`, `ContextReturnT`, `SyncPassthroughData`\>\>
 
 ___
 

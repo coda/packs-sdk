@@ -545,7 +545,7 @@ describe('Execution', () => {
         it('get permissions works with metadata', async () => {
           const syncRows: GenericExecuteGetPermissionsRequest = {
             rows: [{row: {name: 'Alice'}}, {row: {name: 'Bob'}}],
-            metadata: [
+            passThroughData: [
               {id: 42},  // For first row
               {id: 123}    // For second row
             ]
