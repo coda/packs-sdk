@@ -3046,6 +3046,7 @@ export interface Continuation {
 		[key: string]: string | number;
 	};
 }
+export type SyncTableMetadata = Array<Record<string, any>>;
 /**
  * Type definition for the formula that implements a sync table.
  * Should not be necessary to use directly, see {@link makeSyncTable}
@@ -3202,6 +3203,13 @@ export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, "execute">;
 export interface SyncFormulaResult<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any> = SyncExecutionContext> {
 	/** The list of rows from this page. */
 	result: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>;
+	/**
+	 * The metadata for each row in the result.
+	 * This field is used to pass in metadata during the executeGetPermissions call
+	 * TODO(drew): Unhide this
+	 * @hidden
+	 */
+	metadata?: SyncTableMetadata;
 	/**
 	 * A marker indicating where the next sync formula invocation should pick up to get the next page of results.
 	 * The contents of this object are entirely of your choosing. Sync formulas are called repeatedly
@@ -3362,6 +3370,7 @@ export interface ExecuteGetPermissionsRequest<K extends string, L extends string
 	 * The list of rows for which to fetch permissions.
 	 */
 	rows: Array<ExecuteGetPermissionsRequestRow<K, L, SchemaT>>;
+	metadata?: SyncTableMetadata;
 }
 /**
  * Inputs for creating the formula that implements a sync table.
