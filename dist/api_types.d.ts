@@ -343,8 +343,11 @@ interface SyncTableRelation {
     propertyKey: string;
     /**
      * Indiciates that permissions should be inherited from this relation using the propertyKey as the item id
+<<<<<<< HEAD
      *
      * @deprecated use `ParentDefinition` instead
+=======
+>>>>>>> 00ea41fc (Fix dist missing)
      */
     inheritPermissions?: boolean;
 }

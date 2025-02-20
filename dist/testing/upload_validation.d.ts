@@ -39,7 +39,10 @@ export declare function validateSyncTableSchema(schema: any, options: BuildMetad
  * @hidden
  */
 export declare function validateCrawlHierarchy(syncTables: SyncTable[], context?: z.RefinementCtx): Record<string, string[]> | undefined;
+<<<<<<< HEAD
 export declare function validateParents(syncTables: SyncTable[], context: z.RefinementCtx): void;
+=======
+>>>>>>> 00ea41fc (Fix dist missing)
 /** @hidden */
 export declare function _hasCycle(tree: Record<string, string[]>): boolean;
 export declare function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError[];
