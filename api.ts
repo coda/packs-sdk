@@ -343,7 +343,8 @@ export interface DynamicSyncTableDef<
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>,
   ContextT extends SyncExecutionContext<any, any>,
-> extends SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT> {
+  PassthroughT extends SyncPassthroughData,
+> extends SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT, PassthroughT> {
   /** Identifies this sync table as dynamic. */
   isDynamic: true;
   /** See {@link DynamicSyncTableOptions.getSchema} */
@@ -417,7 +418,14 @@ export type GenericSyncTable = SyncTableDef<any, any, ParamDefs, any, SyncExecut
  * Should not be necessary to use directly, see {@link makeDynamicSyncTable}
  * for defining a sync table.
  */
-export type GenericDynamicSyncTable = DynamicSyncTableDef<any, any, ParamDefs, any, SyncExecutionContext>;
+export type GenericDynamicSyncTable = DynamicSyncTableDef<
+  any,
+  any,
+  ParamDefs,
+  any,
+  SyncExecutionContext,
+  SyncPassthroughData
+>;
 /**
  * Union of type definitions for sync tables..
  * Should not be necessary to use directly, see {@link makeSyncTable} or {@link makeDynamicSyncTable}
@@ -1094,8 +1102,11 @@ export interface SyncFormulaResult<
 }
 
 /** @hidden */
-export interface TypedSyncFormulaResult<T extends object, ContextT extends SyncExecutionContext<any>, PassthroughT extends SyncPassthroughData>
-  extends SyncFormulaResult<string, string, any, ContextT, PassthroughT> {
+export interface TypedSyncFormulaResult<
+  T extends object,
+  ContextT extends SyncExecutionContext<any>,
+  PassthroughT extends SyncPassthroughData,
+> extends SyncFormulaResult<string, string, any, ContextT, PassthroughT> {
   result: T[];
 }
 
@@ -1298,11 +1309,11 @@ export interface SyncFormulaDef<
    * from a previous invocation, and fetches and returns one page of results, as well
    * as another continuation if there are more result to fetch.
    */
-  execute<ContextReturnT extends ContextT, PassthroughReturnT extends PassthroughT>(
+  execute<ContextReturnT extends ContextT>(
     params: ParamValues<ParamDefsT>,
     context: ContextT,
     // Create a separate type for the return value to ensure it's validated against any explicit context type.
-  ): Promise<SyncFormulaResult<K, L, SchemaT, ContextReturnT, PassthroughReturnT>>;
+  ): Promise<SyncFormulaResult<K, L, SchemaT, ContextReturnT, PassthroughT>>;
   /**
    * If the table supports object updates, the maximum number of objects that will be sent to the pack
    * in a single batch. Defaults to 1 if not specified.
@@ -2217,6 +2228,7 @@ export interface DynamicSyncTableOptions<
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchemaDefinition<K, L>,
   ContextT extends SyncExecutionContext<any, any>,
+  PassthroughT extends SyncPassthroughData,
 > {
   /**
    * The name of the dynamic sync table. This is shown to users in the Coda UI
@@ -2271,7 +2283,7 @@ export interface DynamicSyncTableOptions<
    * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
    * These will eventually be consolidated.)
    */
-  formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT>;
+  formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT, PassthroughT>;
   /**
    * A label for the kind of entities that you are syncing. This label is used in a doc to identify
    * the column in this table that contains the synced data. If you don't provide an `entityName`, the value
@@ -2372,7 +2384,8 @@ export function makeSyncTable<
   connectionRequirement,
   dynamicOptions = {},
   role,
-}: SyncTableOptions<K, L, ParamDefsT, SchemaDefT, ContextT, PassthroughT>): SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT, PassthroughT> {
+}: SyncTableOptions<K, L, ParamDefsT, SchemaDefT, ContextT, PassthroughT>): 
+    SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT, PassthroughT> {
   const {getSchema: getSchemaDef, entityName, defaultAddDynamicColumns} = dynamicOptions;
   const {
     execute: wrappedExecute,
@@ -2546,16 +2559,17 @@ export function makeSyncTableLegacy<
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>,
   ContextT extends SyncExecutionContext<any, any>,
+  PassthroughT extends SyncPassthroughData,
 >(
   name: string,
   schema: SchemaT,
-  formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT>,
+  formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT, PassthroughT>,
   connectionRequirement?: ConnectionRequirement,
   dynamicOptions: {
     getSchema?: MetadataFormula;
     entityName?: string;
   } = {},
-): SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT> {
+): SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT, PassthroughT> {
   if (!schema.identity?.name) {
     throw new Error('Legacy sync tables must specify identity.name');
   }
@@ -2597,6 +2611,7 @@ export function makeDynamicSyncTable<
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchemaDefinition<K, L>,
   ContextT extends SyncExecutionContext<any, any>,
+  PassthroughT extends SyncPassthroughData,
 >({
   name,
   description,
@@ -2618,7 +2633,7 @@ export function makeDynamicSyncTable<
   getName: MetadataFormulaDef<ContextT>;
   getSchema: MetadataFormulaDef<ContextT>;
   identityName: string;
-  formula: SyncFormulaDef<K, L, ParamDefsT, any, ContextT>;
+  formula: SyncFormulaDef<K, L, ParamDefsT, any, ContextT, PassthroughT>;
   getDisplayUrl: MetadataFormulaDef<ContextT>;
   listDynamicUrls?: MetadataFormulaDef;
   searchDynamicUrls?: MetadataFormulaDef;
@@ -2627,7 +2642,7 @@ export function makeDynamicSyncTable<
   defaultAddDynamicColumns?: boolean;
   placeholderSchema?: SchemaT;
   propertyOptions?: PropertyOptionsMetadataFunction<any>;
-}): DynamicSyncTableDef<K, L, ParamDefsT, any, ContextT> {
+}): DynamicSyncTableDef<K, L, ParamDefsT, any, ContextT, PassthroughT> {
   const placeholderSchema: any =
     placeholderSchemaInput ||
     // default placeholder only shows a column of id, which will be replaced later by the dynamic schema.
@@ -2662,7 +2677,7 @@ export function makeDynamicSyncTable<
     listDynamicUrls: maybeRewriteConnectionForFormula(listDynamicUrls, connectionRequirement),
     searchDynamicUrls: maybeRewriteConnectionForFormula(searchDynamicUrls, connectionRequirement),
     getName: maybeRewriteConnectionForFormula(getName, connectionRequirement),
-  } as DynamicSyncTableDef<K, L, ParamDefsT, any, ContextT>;
+  } as DynamicSyncTableDef<K, L, ParamDefsT, any, ContextT, PassthroughT>;
 }
 
 /**

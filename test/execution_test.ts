@@ -499,7 +499,8 @@ describe('Execution', () => {
           await executeFormulaOrSyncFromCLI({
             vm,
             formulaName: 'Students',
-            // params is expecting a list of strings even though passThrough parameter is a boolean. We can just check for existence instead
+            // params is expecting a list of strings even though passThrough parameter is a boolean. 
+            // We can just check for existence instead in the fake pack
             params: ['Smith', 'true'],
             manifest: fakePack,
             manifestPath: '',
@@ -509,7 +510,7 @@ describe('Execution', () => {
           });
           const result = mockPrintFull.args[0][0];
           const passthroughData = mockPrintFull.args[1][0];
-          assert.deepEqual(passthroughData, [{'userId' : 42},{'userId' : 123},{'userId' : 53},{'userId' : 22}]);
+          assert.deepEqual(passthroughData, [{userId : 42},{userId : 123},{userId : 53},{userId : 22}]);
           // WTF? Why is this different in VM?
           if (vm) {
             assert.deepEqual(result, [{name: 'Alice'}, {name: 'Bob'}, {name: 'Chris'}, {name: 'Diana'}]);

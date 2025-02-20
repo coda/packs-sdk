@@ -90,6 +90,7 @@ import type {StringTimeSchema} from '../schema';
 import type {StringWithOptionsSchema} from '../schema';
 import type {SyncExecutionContext} from '..';
 import type {SyncFormula} from '../api';
+import type {SyncPassthroughData} from '../api';
 import type {SyncTable} from '../api';
 import type {SyncTableDef} from '../api';
 import type {SystemAuthenticationTypes} from '../types';
@@ -1826,7 +1827,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
 
   const syncFormulaSchema = zodCompleteObject<
     Omit<
-      SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>, SyncExecutionContext>,
+      SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>, SyncExecutionContext, SyncPassthroughData>,
       'execute' | 'executeUpdate' | 'executeGetPermissions' | 'onError'
     >
   >({
@@ -1880,7 +1881,14 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     role: z.nativeEnum(TableRole).optional(),
   };
 
-  type GenericSyncTableDef = SyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>, SyncExecutionContext>;
+  type GenericSyncTableDef = SyncTableDef<
+    any, 
+    any, 
+    ParamDefs, 
+    ObjectSchema<any, any>, 
+    SyncExecutionContext, 
+    SyncPassthroughData
+    >;
 
   const genericSyncTableSchema = zodCompleteObject<GenericSyncTableDef & {isDynamic?: false}>({
     ...baseSyncTableSchema,
@@ -1892,7 +1900,13 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
   }).strict();
 
   const genericDynamicSyncTableSchema = zodCompleteObject<
-    DynamicSyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>, SyncExecutionContext> & {autocomplete: any}
+    DynamicSyncTableDef<any, 
+                        any, 
+                        ParamDefs, 
+                        ObjectSchema<any, any>, 
+                        SyncExecutionContext, 
+                        SyncPassthroughData
+                      > & {autocomplete: any}
   >({
     ...baseSyncTableSchema,
     isDynamic: zodDiscriminant(true),

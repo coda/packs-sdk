@@ -8,7 +8,7 @@ import type {UserPrincipal} from '../../schema';
 import {ValueType} from '../../schema';
 import {createFakePack} from '../test_utils';
 import {ensureExists} from '../../helpers/ensure';
-import {makeBooleanParameter, makeFormula} from '../../api';
+import {makeFormula} from '../../api';
 import {makeNumericFormula} from '../../api';
 import {makeNumericParameter} from '../../api';
 import {makeObjectFormula} from '../../api';

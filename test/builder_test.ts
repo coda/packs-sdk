@@ -310,7 +310,7 @@ describe('Builder', () => {
         listDynamicUrls: makeMetadataFormula(async () => ['url']),
         searchDynamicUrls: makeMetadataFormula(async () => ['url']),
       });
-      const syncTable = pack.syncTables[0] as DynamicSyncTableDef<any, any, any, any, any>;
+      const syncTable = pack.syncTables[0] as DynamicSyncTableDef<any, any, any, any, any, any>;
       assert.equal(syncTable.getName.connectionRequirement, ConnectionRequirement.Optional);
       assert.equal(syncTable.getDisplayUrl.connectionRequirement, ConnectionRequirement.Optional);
       assert.equal(syncTable.getSchema.connectionRequirement, ConnectionRequirement.Optional);
@@ -331,7 +331,7 @@ describe('Builder', () => {
         type: AuthenticationType.HeaderBearerToken,
         defaultConnectionRequirement: ConnectionRequirement.Optional,
       });
-      const syncTable = pack.syncTables[0] as DynamicSyncTableDef<any, any, any, any, any>;
+      const syncTable = pack.syncTables[0] as DynamicSyncTableDef<any, any, any, any, any, any>;
       assert.equal(syncTable.getName.connectionRequirement, ConnectionRequirement.Optional);
       assert.equal(syncTable.getDisplayUrl.connectionRequirement, ConnectionRequirement.Optional);
       assert.equal(syncTable.getSchema.connectionRequirement, ConnectionRequirement.Optional);
@@ -363,7 +363,7 @@ describe('Builder', () => {
         type: AuthenticationType.HeaderBearerToken,
         defaultConnectionRequirement: ConnectionRequirement.Optional,
       });
-      const syncTable = pack.syncTables[0] as DynamicSyncTableDef<any, any, any, any, any>;
+      const syncTable = pack.syncTables[0] as DynamicSyncTableDef<any, any, any, any, any, any>;
       assert.equal(syncTable.getName.connectionRequirement, ConnectionRequirement.Optional);
       assert.equal(syncTable.getDisplayUrl.connectionRequirement, ConnectionRequirement.Optional);
       assert.equal(syncTable.getSchema.connectionRequirement, ConnectionRequirement.Optional);
@@ -454,7 +454,7 @@ describe('Builder', () => {
           foo: {type: ValueType.String},
         },
       });
-      const tableAttributes: SyncTableOptions<string, string, ParamDefs, GenericObjectSchema, any> = {
+      const tableAttributes: SyncTableOptions<string, string, ParamDefs, GenericObjectSchema, any, any> = {
         name: 'table1',
         identityName: 'table1',
         schema,
@@ -478,7 +478,7 @@ describe('Builder', () => {
           foo: {type: ValueType.String},
         },
       });
-      const tableAttributes: DynamicSyncTableOptions<string, string, ParamDefs, GenericObjectSchema, any> = {
+      const tableAttributes: DynamicSyncTableOptions<string, string, ParamDefs, GenericObjectSchema, any, any> = {
         name: 'table1',
         identityName: 'table1',
         placeholderSchema: schema,

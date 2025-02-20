@@ -19,7 +19,7 @@ Inputs for creating the formula that implements a sync table.
 | `ParamDefsT` | extends [`ParamDefs`](../types/core.ParamDefs.md) |
 | `SchemaT` | extends [`ObjectSchemaDefinition`](core.ObjectSchemaDefinition.md)<`K`, `L`\> |
 | `ContextT` | extends [`SyncExecutionContext`](core.SyncExecutionContext.md)<`any`, `any`\> |
-| `PassthroughT` | extends `SyncPassthroughData` = `SyncPassthroughData` |
+| `PassthroughT` | extends `SyncPassthroughData` |
 
 ## Hierarchy
 
@@ -197,7 +197,7 @@ numbers of inputs.
 
 ### execute
 
-▸ **execute**<`ContextReturnT`\>(`params`, `context`): `Promise`<[`SyncFormulaResult`](core.SyncFormulaResult.md)<`K`, `L`, `SchemaT`, `ContextReturnT`, `SyncPassthroughData`\>\>
+▸ **execute**<`ContextReturnT`\>(`params`, `context`): `Promise`<[`SyncFormulaResult`](core.SyncFormulaResult.md)<`K`, `L`, `SchemaT`, `ContextReturnT`, `PassthroughT`\>\>
 
 The JavaScript function that implements this sync.
 
@@ -220,7 +220,7 @@ as another continuation if there are more result to fetch.
 
 #### Returns
 
-`Promise`<[`SyncFormulaResult`](core.SyncFormulaResult.md)<`K`, `L`, `SchemaT`, `ContextReturnT`, `SyncPassthroughData`\>\>
+`Promise`<[`SyncFormulaResult`](core.SyncFormulaResult.md)<`K`, `L`, `SchemaT`, `ContextReturnT`, `PassthroughT`\>\>
 
 ___
 
