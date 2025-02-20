@@ -462,6 +462,8 @@ interface SyncTableRelation {
   propertyKey: string;
   /**
    * Indiciates that permissions should be inherited from this relation using the propertyKey as the item id
+   *
+   * @deprecated use `ParentDefinition` instead
    */
   inheritPermissions?: boolean;
 }
