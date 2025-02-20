@@ -320,6 +320,8 @@ export interface SyncTableRelation {
 	propertyKey: string;
 	/**
 	 * Indiciates that permissions should be inherited from this relation using the propertyKey as the item id
+	 *
+	 * @deprecated use `ParentDefinition` instead
 	 */
 	inheritPermissions?: boolean;
 }
@@ -2043,6 +2045,39 @@ export interface IndexDefinition {
 	 */
 	popularityRankProperty?: PropertyIdentifier<string>;
 }
+declare enum PermissionsBehavior {
+	/**
+	 * The object will inherit permissions from its parent.
+	 */
+	Inherit = "Inherit"
+}
+declare enum LifecycleBehavior {
+	/**
+	 * The child objects should be deleted when the parent object is deleted.
+	 */
+	Inherit = "Inherit"
+}
+/**
+ * A definition of a parent object.
+ */
+export interface ParentDefinition {
+	/**
+	 * The name of the property within {@link ObjectSchemaDefinition.properties} that
+	 * identifies the parent of this object.
+	 *
+	 * Must be a {@link ValueType.Object} property with {@link ValueHintType.Reference} and contain
+	 * a valid {@link IdentityDefinition}.
+	 */
+	parentIdProperty: PropertyIdentifier<string>;
+	/**
+	 * Determines how permissions are handled for this object.
+	 */
+	permissions?: PermissionsBehavior;
+	/**
+	 * Determines how the lifecycle of the child objects is handled.
+	 */
+	lifecycle?: LifecycleBehavior;
+}
 /**
  * A schema definition for an object value (a value with key-value pairs).
  */
@@ -2242,25 +2277,6 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 */
 	memberGroupIdProperty?: PropertyIdentifier<K>;
 	/**
-	 * The name of a property within {@link ObjectSchemaDefinition.properties} that represents a unique id for a
-	 * parent entity for the object. It is recommended for sync table schemas with a bodyTextProperty to specify an
-	 * a parentIdProperty, which uniquely identifies the entity that groups 1 to multiple rows. Note though that
-	 * specifying a bodyTextProperty does not necessarily require it to be chunked into multiple rows. But if it is,
-	 * a sync table where each row is a partial chunk of a larger document may want to specify a parent id that
-	 * represents the document, while each row's id can be unique to the chunk.
-	 * @hidden
-	 */
-	parentIdProperty?: K;
-	/**
-	 * The name of the property within {@link ObjectSchemaDefinition.properties} that can be be interpreted as
-	 * text representing the body of this entity.
-	 *
-	 * Must be a {@link ValueType.String} property.
-	 * TODO(sam): Unhide this
-	 * @hidden
-	 */
-	bodyTextProperty?: PropertyIdentifier<K>;
-	/**
 	 * The name of the property within {@link ObjectSchemaDefinition.properties} that can be be interpreted as
 	 * a number between 0.0 and 1.0 representing the popularity rank of this entity compared to all other entities.
 	 *
@@ -2283,6 +2299,12 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 * @hidden
 	 */
 	versionProperty?: PropertyIdentifier<K>;
+	/**
+	 * Defines the parent of an object, if applicable.
+	 * TODO(alexd): Unhide this
+	 * @hidden
+	 */
+	parent?: ParentDefinition;
 }
 declare enum PrincipalType {
 	User = "user",

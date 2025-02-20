@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.throwOnDynamicSchemaWithJsOptionsFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.maybeSchemaOptionsValue = exports.unwrappedSchemaSupportsOptions = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PermissionType = exports.PrincipalType = exports.IndexingStrategy = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageShapeStyle = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+exports.throwOnDynamicSchemaWithJsOptionsFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.maybeSchemaOptionsValue = exports.unwrappedSchemaSupportsOptions = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PermissionType = exports.PrincipalType = exports.LifecycleBehavior = exports.PermissionsBehavior = exports.IndexingStrategy = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageShapeStyle = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_2 = require("./helpers/ensure");
@@ -386,6 +386,26 @@ var IndexingStrategy;
     IndexingStrategy["Raw"] = "raw";
 })(IndexingStrategy || (exports.IndexingStrategy = IndexingStrategy = {}));
 /**
+ * Determines how permissions are handled for this object.
+ */
+var PermissionsBehavior;
+(function (PermissionsBehavior) {
+    /**
+     * The object will inherit permissions from its parent.
+     */
+    PermissionsBehavior["Inherit"] = "Inherit";
+})(PermissionsBehavior || (exports.PermissionsBehavior = PermissionsBehavior = {}));
+/**
+ * Determines how the lifecycle of the child objects is handled.
+ */
+var LifecycleBehavior;
+(function (LifecycleBehavior) {
+    /**
+     * The child objects should be deleted when the parent object is deleted.
+     */
+    LifecycleBehavior["Inherit"] = "Inherit";
+})(LifecycleBehavior || (exports.LifecycleBehavior = LifecycleBehavior = {}));
+/**
  * The type of principal that can be applied to a permission.
  *
  * TODO(sam): Unhide this
@@ -707,6 +727,13 @@ function normalizeIndexDefinition(index, normalizedProperties) {
             : undefined,
     };
 }
+function normalizeParentDefinition(parent, normalizedProperties) {
+    return {
+        parentIdProperty: normalizeSchemaPropertyIdentifier(parent.parentIdProperty, normalizedProperties),
+        permissions: parent.permissions,
+        lifecycle: parent.lifecycle,
+    };
+}
 /**
  * Attempts to transform a property value (which may be a json-path string or a normal object schema property) into
  * a path to access the relevant schema. Specifically this handles the case of
@@ -742,9 +769,9 @@ function normalizeSchema(schema) {
 exports.normalizeSchema = normalizeSchema;
 function normalizeObjectSchema(schema) {
     const normalizedProperties = {};
-    const { attribution, options, requireForUpdates, codaType, description, displayProperty, featured, featuredProperties, id, identity, idProperty, parentIdProperty, imageProperty, includeUnknownProperties, linkProperty, primary, properties, snippetProperty, subtitleProperties, titleProperty, type, 
+    const { attribution, options, requireForUpdates, codaType, description, displayProperty, featured, featuredProperties, id, identity, idProperty, imageProperty, includeUnknownProperties, linkProperty, primary, properties, snippetProperty, subtitleProperties, titleProperty, type, 
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    __packId, createdAtProperty, createdByProperty, modifiedAtProperty, modifiedByProperty, userEmailProperty, userIdProperty, groupIdProperty, memberGroupIdProperty, bodyTextProperty, popularityRankProperty, versionProperty, index, ...rest } = schema;
+    __packId, createdAtProperty, createdByProperty, modifiedAtProperty, modifiedByProperty, userEmailProperty, userIdProperty, groupIdProperty, memberGroupIdProperty, popularityRankProperty, versionProperty, index, parent, ...rest } = schema;
     // Have TS ensure we don't forget about new fields in this function.
     (0, ensure_3.ensureNever)();
     for (const key of Object.keys(properties)) {
@@ -776,7 +803,6 @@ function normalizeObjectSchema(schema) {
         id: id ? normalizeSchemaKey(id) : undefined,
         identity,
         idProperty: idProperty ? normalizeSchemaKey(idProperty) : undefined,
-        parentIdProperty: parentIdProperty ? normalizeSchemaKey(parentIdProperty) : undefined,
         imageProperty: imageProperty ? normalizeSchemaPropertyIdentifier(imageProperty, normalizedProperties) : undefined,
         includeUnknownProperties,
         linkProperty: linkProperty ? normalizeSchemaPropertyIdentifier(linkProperty, normalizedProperties) : undefined,
@@ -813,9 +839,6 @@ function normalizeObjectSchema(schema) {
         memberGroupIdProperty: memberGroupIdProperty
             ? normalizeSchemaPropertyIdentifier(memberGroupIdProperty, normalizedProperties)
             : undefined,
-        bodyTextProperty: bodyTextProperty
-            ? normalizeSchemaPropertyIdentifier(bodyTextProperty, normalizedProperties)
-            : undefined,
         popularityRankProperty: popularityRankProperty
             ? normalizeSchemaPropertyIdentifier(popularityRankProperty, normalizedProperties)
             : undefined,
@@ -823,6 +846,7 @@ function normalizeObjectSchema(schema) {
             ? normalizeSchemaPropertyIdentifier(versionProperty, normalizedProperties)
             : undefined,
         index: index ? normalizeIndexDefinition(index, normalizedProperties) : undefined,
+        parent: parent ? normalizeParentDefinition(parent, normalizedProperties) : undefined,
         type: ValueType.Object,
     };
 }

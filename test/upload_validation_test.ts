@@ -53,6 +53,7 @@ import {makeNumericParameter} from '../api';
 import {makeObjectFormula} from '../api';
 import {makeObjectSchema} from '../schema';
 import {makeParameter} from '../api';
+import {makeReferenceSchemaFromObjectSchema} from '..';
 import {makeSchema} from '../schema';
 import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
@@ -3492,6 +3493,202 @@ describe('Pack metadata Validation', async () => {
           });
           await validateJsonAndAssertFails(metadata);
         });
+      });
+
+      describe('Parent definition', () => {
+        it('works', async () => {
+          const parentSchema = makeObjectSchema({
+            type: ValueType.Object,
+            identity: {name: 'ParentIdentity'},
+            id: 'account',
+            primary: 'account',
+            properties: {
+              account: {type: ValueType.String, required: true},
+              group: {type: ValueType.String},
+            },
+          });
+          const parentTable = makeSyncTable({
+            name: 'Parent',
+            identityName: 'ParentIdentity',
+            schema: parentSchema,
+            formula: {
+              name: 'Whatever',
+              description: '',
+              parameters: [],
+              async execute() {
+                return {result: []};
+              },
+            },
+          });
+          const childTable = makeSyncTable({
+            name: 'Child',
+            identityName: 'ChildIdentity',
+            schema: makeObjectSchema({
+              type: ValueType.Object,
+              id: 'bar',
+              primary: 'bar',
+              properties: {
+                bar: {type: ValueType.String},
+                parent: makeReferenceSchemaFromObjectSchema(parentSchema),
+              },
+              parent: {
+                parentIdProperty: 'parent',
+              },
+            }),
+            formula: {
+              name: 'AnotherWhatever',
+              description: '',
+              parameters: [
+                makeParameter({
+                  type: ParameterType.String,
+                  name: 'parentParam',
+                  description: '',
+                }),
+              ],
+              async execute() {
+                return {result: []};
+              },
+            },
+          });
+          const metadata = createFakePack({
+            id: 1013,
+            syncTables: [childTable, parentTable],
+          });
+          await validateJson(metadata);
+        });
+      });
+
+      it('with missing property', async () => {
+        const parentSchema = makeObjectSchema({
+          type: ValueType.Object,
+          identity: {name: 'ParentIdentity'},
+          id: 'account',
+          primary: 'account',
+          properties: {
+            account: {type: ValueType.String, required: true},
+            group: {type: ValueType.String},
+          },
+        });
+
+        const childTable = makeSyncTable({
+          name: 'Child',
+          identityName: 'ChildIdentity',
+          schema: makeObjectSchema({
+            type: ValueType.Object,
+            id: 'bar',
+            primary: 'bar',
+            properties: {
+              bar: {type: ValueType.String},
+              parent: makeReferenceSchemaFromObjectSchema(parentSchema),
+            },
+            parent: {
+              parentIdProperty: 'notParent',
+            },
+          }),
+          formula: {
+            name: 'AnotherWhatever',
+            description: '',
+            parameters: [
+              makeParameter({
+                type: ParameterType.String,
+                name: 'parentParam',
+                description: '',
+              }),
+            ],
+            async execute() {
+              return {result: []};
+            },
+          },
+        });
+        const metadata = createFakePack({
+          id: 1013,
+          syncTables: [childTable],
+        });
+
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'The "parentIdProperty" path "NotParent" does not exist in the "properties" object.',
+            path: 'syncTables[0].schema.parent.parentIdProperty',
+          },
+        ]);
+      });
+
+      it('fails with invalid parent identity', async () => {
+        const parentTable = makeSyncTable({
+          name: 'Parent',
+          identityName: 'ParentIdentity',
+          schema: {
+            type: ValueType.Object,
+            identity: {name: 'ParentIdentity'},
+            id: 'account',
+            primary: 'account',
+            properties: {
+              account: {type: ValueType.String, required: true},
+              group: {type: ValueType.String},
+            },
+          },
+          formula: {
+            name: 'Whatever',
+            description: '',
+            parameters: [],
+            async execute() {
+              return {result: []};
+            },
+          },
+        });
+        const childTable = makeSyncTable({
+          name: 'Child',
+          identityName: 'ChildIdentity',
+          schema: makeObjectSchema({
+            type: ValueType.Object,
+            id: 'bar',
+            primary: 'bar',
+            properties: {
+              bar: {type: ValueType.String},
+              parent: {
+                type: ValueType.Object,
+                codaType: ValueHintType.Reference,
+                identity: {name: 'SomeRandomIdentity', packId: 1013},
+                id: 'account',
+                primary: 'account',
+                properties: {
+                  account: {type: ValueType.String, required: true},
+                  group: {type: ValueType.String},
+                },
+              },
+            },
+            parent: {
+              parentIdProperty: 'parent',
+            },
+          }),
+          formula: {
+            name: 'AnotherWhatever',
+            description: '',
+            parameters: [
+              makeParameter({
+                type: ParameterType.String,
+                name: 'parentParam',
+                description: '',
+              }),
+            ],
+            async execute() {
+              return {result: []};
+            },
+          },
+        });
+        const metadata = createFakePack({
+          id: 1013,
+          syncTables: [childTable, parentTable],
+        });
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message:
+              'The "parentIdProperty" field name "Parent" must reference a property with a valid identity in the pack.',
+            path: 'syncTables[0].schema.parent.parentIdProperty',
+          },
+        ]);
       });
     });
 
