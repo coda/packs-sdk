@@ -13,8 +13,6 @@ import type {BooleanSchema} from '../schema';
 import type {CodaApiBearerTokenAuthentication} from '../types';
 import type {CodaInternalRichTextSchema} from '../schema';
 import {ConnectionRequirement} from '../api_types';
-import type {CrawlableParentDefinition} from '../schema';
-import {CrawlingBehavior} from '../schema';
 import {CurrencyFormat} from '../schema';
 import type {CurrencySchema} from '../schema';
 import type {CustomAuthentication} from '../types';
@@ -47,7 +45,6 @@ import type {MultiQueryParamTokenAuthentication} from '../types';
 import type {Network} from '../api_types';
 import {NetworkConnection} from '../api_types';
 import type {NoAuthentication} from '../types';
-import type {NotCrawlableParentDefinition} from '../schema';
 import type {NumericDateSchema} from '../schema';
 import type {NumericDateTimeSchema} from '../schema';
 import type {NumericDurationSchema} from '../schema';
@@ -69,7 +66,6 @@ import type {PackVersionDefinition} from '..';
 import type {PackVersionMetadata} from '../compiled_types';
 import type {ParamDef} from '../api_types';
 import type {ParamDefs} from '../api_types';
-import type {ParentChildParameterMapping} from '../schema';
 import type {ParentDefinition} from '../schema';
 import {PermissionsBehavior} from '../schema';
 import {PostSetupType} from '../types';
@@ -110,7 +106,6 @@ import type {VariousSupportedAuthenticationTypes} from '../types';
 import type {WebBasicAuthentication} from '../types';
 import {ZodParsedType} from 'zod';
 import {assertCondition} from '../helpers/ensure';
-import {ensureNever} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
 import {isArray} from '../schema';
 import {isArrayType} from '../api_types';
@@ -405,73 +400,33 @@ export function validateCrawlHierarchy(
   return parentToChildrenMap;
 }
 
-export function validateCrawlParents(
-  syncTables: SyncTable[],
-  context: z.RefinementCtx,
-): Record<string, string[]> | undefined {
-  const parentToChildrenMap: Record<string, string[]> = {};
+export function validateParents(syncTables: SyncTable[], context: z.RefinementCtx) {
   const syncTableSchemasByName: Record<string, ObjectSchema<any, any>> = {};
   for (const syncTable of syncTables) {
     syncTableSchemasByName[syncTable.identityName] = syncTable.schema;
   }
+
   for (const [tableIndex, syncTable] of syncTables.entries()) {
     const parentDefinition = syncTable.schema.parent as ParentDefinition | undefined;
-    if (!parentDefinition || !('crawling' in parentDefinition)) {
+    if (!parentDefinition) {
       continue;
     }
 
-    const parentTableName = parentDefinition.parentIdentity.name;
-    const parentTableSchema = syncTableSchemasByName[parentTableName];
-    if (!parentTableSchema) {
-      context?.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ['syncTables', tableIndex, 'schema', 'parent', 'parentIdentity'],
-        message: `Sync table ${syncTable.name} expects parent table ${parentTableName} to exist.`,
-      });
-      return undefined;
-    }
-
-    const validateParentPropertyValue = makePropertyValidator(parentTableSchema, context);
-
-    for (const [mappingIndex, {parentProperty, childParameterName}] of parentDefinition.mapping.entries()) {
-      validateParentPropertyValue(parentProperty, 'parentProperty', () => true, `DEBUG -.`, [
-        'syncTables',
-        tableIndex,
-        'schema',
-        'parent',
-        'mapping',
-        mappingIndex,
-        'parentProperty',
-      ]);
-
-      if (!syncTable.getter.parameters.some(param => param.name === childParameterName)) {
-        context?.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ['syncTables', tableIndex, 'schema', 'parent', 'mapping', mappingIndex, 'childParameterName'],
-          message: `Sync table ${syncTable.name} expects child parameter ${childParameterName} to exist.`,
-        });
-        return undefined;
-      }
-    }
-
-    const childList = parentToChildrenMap[parentTableName] || [];
-    // This table may already be in the child list if it uses multiple params from the parent.
-    if (!childList.includes(syncTable.identityName)) {
-      childList.push(syncTable.identityName);
-    }
-    parentToChildrenMap[parentTableName] = childList;
+    const propertyValidator = makePropertyValidator(syncTable.schema, context);
+    propertyValidator(
+      parentDefinition.parentIdProperty,
+      'parentIdProperty',
+      parentIdPropertySchema =>
+        Boolean(
+          parentIdPropertySchema.type === ValueType.Object &&
+            parentIdPropertySchema.codaType === ValueHintType.Reference &&
+            parentIdPropertySchema.identity?.name &&
+            syncTableSchemasByName[parentIdPropertySchema.identity.name],
+        ),
+      `must reference a property with a valid identity in the pack.`,
+      ['syncTables', tableIndex, 'schema', 'parent', 'parentIdProperty'],
+    );
   }
-
-  // Verify that there's no cycle
-  if (_hasCycle(parentToChildrenMap)) {
-    context?.addIssue({
-      code: z.ZodIssueCode.custom,
-      path: ['syncTables'],
-      message: `Sync table parent hierarchy is cyclic`,
-    });
-    return undefined;
-  }
-  return parentToChildrenMap;
 }
 
 // Exported for tests
@@ -1431,27 +1386,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     mergeKey: z.string().optional(),
   });
 
-  const dynamicParentSchema = zodCompleteStrictObject<NotCrawlableParentDefinition>({
+  const parentSchema = zodCompleteStrictObject<ParentDefinition>({
     parentIdProperty: propertySchema,
-    parentIdentity: identitySchema,
+    lifecycle: z.nativeEnum(LifecycleBehavior).optional(),
     permissions: z.nativeEnum(PermissionsBehavior).optional(),
   });
-  const staticParentSchema = zodCompleteStrictObject<CrawlableParentDefinition>({
-    parentIdentity: identitySchema,
-    crawling: z.nativeEnum(CrawlingBehavior),
-    permissions: z.nativeEnum(PermissionsBehavior).optional(),
-    lifecycle: z.nativeEnum(LifecycleBehavior),
-    mapping: z
-      .array(
-        zodCompleteStrictObject<ParentChildParameterMapping>({
-          childParameterName: z.string().min(1),
-          parentProperty: propertySchema,
-        }),
-      )
-      .min(1),
-  });
-
-  const parentSchema = z.union([dynamicParentSchema, staticParentSchema]);
 
   const genericObjectSchema: z.ZodTypeAny = z.lazy(() =>
     zodCompleteObject<ObjectSchema<any, any> & {autocomplete: any}>({
@@ -1823,64 +1762,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             'index',
             'contextProperties',
           ]);
-        }
-      })
-      .superRefine((data, context) => {
-        const schemaHelper = objectSchemaHelper(data as GenericObjectSchema);
-        const internalRichTextPropertyTuple = Object.entries(schemaHelper.properties).find(
-          ([_key, prop]) => prop.type === ValueType.String && prop.codaType === ValueHintType.CodaInternalRichText,
-        );
-        if (internalRichTextPropertyTuple && !isValidUseOfCodaInternalRichText(data.identity?.packId)) {
-          context.addIssue({
-            code: z.ZodIssueCode.custom,
-            path: ['identity', 'properties', internalRichTextPropertyTuple[0]],
-            message: 'Invalid codaType. CodaInternalRichText is not a supported value.',
-          });
-          return;
-        }
-      })
-      .superRefine((data, context) => {
-        const schema = data as GenericObjectSchema;
-        if (!schema.parent) {
-          return;
-        }
-
-        const validatePropertyValue = makePropertyValidator(schema, context);
-
-        if ('parentIdProperty' in schema.parent) {
-          const {parentIdProperty, parentIdentity} = schema.parent;
-
-          validatePropertyValue(
-            parentIdProperty,
-            'parentIdProperty',
-            parentIdPropertySchema => parentIdPropertySchema.type !== ValueType.Array,
-            `must not refer to a "ValueType.Array" property.`,
-            ['parent', 'parentIdProperty'],
-          );
-
-          validatePropertyValue(
-            parentIdProperty,
-            'parentIdProperty',
-            parentIdPropertySchema =>
-              parentIdPropertySchema.type !== ValueType.Object ||
-              parentIdPropertySchema.codaType === ValueHintType.Reference,
-            `must refer to a "ValueType.Object" property that is a "ValueType.Reference".`,
-            ['parent', 'parentIdProperty'],
-          );
-
-          validatePropertyValue(
-            parentIdProperty,
-            'parentIdProperty',
-            parentIdPropertySchema =>
-              parentIdPropertySchema.type !== ValueType.Object ||
-              !parentIdPropertySchema.identity ||
-              parentIdPropertySchema.identity.name === parentIdentity.name,
-            `must match identity to the identity given in the parent definition.`,
-            ['parent', 'parentIdProperty'],
-          );
-        } else if (!('crawling' in schema.parent)) {
-          // parentIdentityName validation is in validateCrawlParents
-          ensureNever(schema.parent);
         }
       }),
   );
@@ -2417,7 +2298,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       const {syncTables} = data as PackVersionDefinition;
       if (syncTables) {
         validateCrawlHierarchy(syncTables, context);
-        validateCrawlParents(syncTables, context);
+        validateParents(syncTables, context);
       }
     })
     .superRefine((data, context) => {
