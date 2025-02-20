@@ -196,7 +196,6 @@ import * as coda from "@codahq/packs-sdk";
 - [SuggestedValueType](../types/core.SuggestedValueType.md)
 - [Sync](../types/core.Sync.md)
 - [SyncFormula](../types/core.SyncFormula.md)
-- [SyncPassthroughData](../types/core.SyncPassthroughData.md)
 - [SyncTable](../types/core.SyncTable.md)
 - [SyncUpdateSingleResult](../types/core.SyncUpdateSingleResult.md)
 - [SystemAuthentication](../types/core.SystemAuthentication.md)

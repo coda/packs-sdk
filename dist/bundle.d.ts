@@ -3096,6 +3096,8 @@ export interface Continuation {
  * in addition to the data itself. This data is not stored in Coda, but
  * is passed to the executeGetPermissions function of the sync table
  * See {@link SyncFormulaResult.passthroughData}.
+ * TODO(drew): Remove hidden
+ * @hidden
  */
 >>>>>>> 00ea41fc (Fix dist missing)
 export type SyncPassthroughData = Record<string, any>;

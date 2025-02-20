@@ -24,4 +24,4 @@ input to [makeSyncTable](../functions/core.makeSyncTable.md) which outputs defin
 | `ParamDefsT` | extends [`ParamDefs`](core.ParamDefs.md) |
 | `SchemaT` | extends `ObjectSchema`<`K`, `L`\> |
 | `ContextT` | extends [`SyncExecutionContext`](../interfaces/core.SyncExecutionContext.md)<`any`, `any`\> |
-| `PassthroughT` | extends [`SyncPassthroughData`](core.SyncPassthroughData.md) |
+| `PassthroughT` | extends `SyncPassthroughData` |
