@@ -1274,7 +1274,7 @@ export interface ExecuteGetPermissionsRequest<
   K extends string,
   L extends string,
   SchemaT extends ObjectSchemaDefinition<K, L>,
-  PassthroughT extends SyncPassthroughData = SyncPassthroughData,
+  PassthroughT extends SyncPassthroughData,
 > {
   /**
    * The list of rows for which to fetch permissions.
