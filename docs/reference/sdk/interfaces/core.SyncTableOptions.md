@@ -19,7 +19,7 @@ Input options for defining a sync table. See [makeSyncTable](../functions/core.m
 | `ParamDefsT` | extends [`ParamDefs`](../types/core.ParamDefs.md) |
 | `SchemaT` | extends [`ObjectSchemaDefinition`](core.ObjectSchemaDefinition.md)<`K`, `L`\> |
 | `ContextT` | extends [`SyncExecutionContext`](core.SyncExecutionContext.md)<`any`, `any`\> |
-| `PassthroughT` | extends `SyncPassthroughData` |
+| `PassthroughT` | extends [`SyncPassthroughData`](../types/core.SyncPassthroughData.md) |
 
 ## Properties
 

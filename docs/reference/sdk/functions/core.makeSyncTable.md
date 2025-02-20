@@ -30,7 +30,7 @@ See [Normalization]({{ config.site_url }}guides/advanced/schemas/#normalization)
 | `SchemaDefT` | extends [`ObjectSchemaDefinition`](../interfaces/core.ObjectSchemaDefinition.md)<`K`, `L`\> |
 | `SchemaT` | extends [`ObjectSchemaDefinition`](../interfaces/core.ObjectSchemaDefinition.md)<`K`, `L`\> & { `identity?`: [`Identity`](../interfaces/core.Identity.md)  } |
 | `ContextT` | extends [`SyncExecutionContext`](../interfaces/core.SyncExecutionContext.md)<`any`, `any`, `any`\> |
-| `PassthroughT` | extends `SyncPassthroughData` |
+| `PassthroughT` | extends [`SyncPassthroughData`](../types/core.SyncPassthroughData.md) |
 
 #### Parameters
 
