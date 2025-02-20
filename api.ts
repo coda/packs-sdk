@@ -390,7 +390,11 @@ export interface DynamicSyncTableDef<
 export interface Continuation {
   [key: string]: string | number | {[key: string]: string | number};
 }
+
 /**
+ * Type definition for some additional data that is returned by a sync table
+ * in addition to the data itself. This data is not stored in Coda, but
+ * is passed to the executeGetPermissions function of the sync table
  * See {@link SyncFormulaResult.passthroughData}.
  */
 export type SyncPassthroughData = Record<string, any>;

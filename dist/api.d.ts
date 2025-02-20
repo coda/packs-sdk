@@ -302,6 +302,9 @@ export interface Continuation {
     };
 }
 /**
+ * Type definition for some additional data that is returned by a sync table
+ * in addition to the data itself. This data is not stored in Coda, but
+ * is passed to the executeGetPermissions function of the sync table
  * See {@link SyncFormulaResult.passthroughData}.
  */
 export type SyncPassthroughData = Record<string, any>;
@@ -741,7 +744,7 @@ export interface ExecuteGetPermissionsRequestRow<K extends string, L extends str
  * TODO(sam): Unhide this
  * @hidden
  */
-export interface ExecuteGetPermissionsRequest<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>, PassthroughT extends SyncPassthroughData = SyncPassthroughData> {
+export interface ExecuteGetPermissionsRequest<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>, PassthroughT extends SyncPassthroughData> {
     /**
      * The list of rows for which to fetch permissions.
      */

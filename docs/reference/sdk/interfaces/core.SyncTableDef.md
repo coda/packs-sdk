@@ -20,7 +20,7 @@ instead, define sync tables using [makeSyncTable](../functions/core.makeSyncTabl
 | `ParamDefsT` | extends [`ParamDefs`](../types/core.ParamDefs.md) |
 | `SchemaT` | extends `ObjectSchema`<`K`, `L`\> |
 | `ContextT` | extends [`SyncExecutionContext`](core.SyncExecutionContext.md)<`any`, `any`\> |
-| `PassthroughT` | extends `SyncPassthroughData` |
+| `PassthroughT` | extends [`SyncPassthroughData`](../types/core.SyncPassthroughData.md) |
 
 ## Hierarchy
 

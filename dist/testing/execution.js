@@ -600,7 +600,7 @@ function parseSyncUpdates(manifest, formulaSpecification, rawParams) {
 }
 const GetPermissionSchema = z.object({
     rows: z.array(z.object({ row: z.object({}).passthrough() })),
-    passThroughData: z.array(z.object({}).passthrough()).optional(),
+    passthroughData: z.array(z.object({}).passthrough()).optional(),
 });
 function parseGetPermissionRequest(manifest, formulaSpecification, rawParams) {
     const paramsCopy = [...rawParams];

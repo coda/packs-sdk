@@ -517,6 +517,7 @@ describe('Execution', () => {
           } else {
             assert.deepEqual(result, [{Name: 'Alice'}, {Name: 'Bob'}, {Name: 'Chris'}, {Name: 'Diana'}]);
           }
+          assert.equal(passthroughData.length, result.length);
         });
 
         it('sync update works', async () => {

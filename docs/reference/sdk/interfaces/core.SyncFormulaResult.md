@@ -21,7 +21,7 @@ are called repeatedly until there is no continuation returned.
 | `L` | extends `string` |
 | `SchemaT` | extends [`ObjectSchemaDefinition`](core.ObjectSchemaDefinition.md)<`K`, `L`\> |
 | `ContextT` | extends [`SyncExecutionContext`](core.SyncExecutionContext.md)<`any`\> = [`SyncExecutionContext`](core.SyncExecutionContext.md) |
-| `PassthroughT` | extends `SyncPassthroughData` = `SyncPassthroughData` |
+| `PassthroughT` | extends [`SyncPassthroughData`](../types/core.SyncPassthroughData.md) = [`SyncPassthroughData`](../types/core.SyncPassthroughData.md) |
 
 ## Properties
 

@@ -19,7 +19,7 @@ Inputs for creating the formula that implements a sync table.
 | `ParamDefsT` | extends [`ParamDefs`](../types/core.ParamDefs.md) |
 | `SchemaT` | extends [`ObjectSchemaDefinition`](core.ObjectSchemaDefinition.md)<`K`, `L`\> |
 | `ContextT` | extends [`SyncExecutionContext`](core.SyncExecutionContext.md)<`any`, `any`\> |
-| `PassthroughT` | extends `SyncPassthroughData` |
+| `PassthroughT` | extends [`SyncPassthroughData`](../types/core.SyncPassthroughData.md) |
 
 ## Hierarchy
 
