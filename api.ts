@@ -396,6 +396,8 @@ export interface Continuation {
  * in addition to the data itself. This data is not stored in Coda, but
  * is passed to the executeGetPermissions function of the sync table
  * See {@link SyncFormulaResult.passthroughData}.
+ * TODO(drew): Unhide this
+ * @hidden
  */
 export type SyncPassthroughData = Record<string, any>;
 
@@ -1067,6 +1069,8 @@ export interface SyncFormulaResult<
    * re-fetch permission data if you can just pass it through.
    *
    * This array must be the same length as the `result` array.
+   * TODO(drew): Unhide this
+   * @hidden
    */
   passthroughData?: PassthroughT[];
 

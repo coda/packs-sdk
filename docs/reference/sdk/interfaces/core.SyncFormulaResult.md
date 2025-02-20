@@ -21,7 +21,7 @@ are called repeatedly until there is no continuation returned.
 | `L` | extends `string` |
 | `SchemaT` | extends [`ObjectSchemaDefinition`](core.ObjectSchemaDefinition.md)<`K`, `L`\> |
 | `ContextT` | extends [`SyncExecutionContext`](core.SyncExecutionContext.md)<`any`\> = [`SyncExecutionContext`](core.SyncExecutionContext.md) |
-| `PassthroughT` | extends [`SyncPassthroughData`](../types/core.SyncPassthroughData.md) = [`SyncPassthroughData`](../types/core.SyncPassthroughData.md) |
+| `PassthroughT` | extends `SyncPassthroughData` = `SyncPassthroughData` |
 
 ## Properties
 
@@ -32,20 +32,6 @@ are called repeatedly until there is no continuation returned.
 A marker indicating where the next sync formula invocation should pick up to get the next page of results.
 The contents of this object are entirely of your choosing. Sync formulas are called repeatedly
 until there is no continuation returned.
-
-___
-
-### passthroughData
-
-• `Optional` **passthroughData**: `PassthroughT`[]
-
-Additional side data to pass through to `executeGetPermissions`. Because each result item
-is also passed through, this is only needed for cases where you have data that doesn't need
-to be part of the result item but is nonetheless useful for fetching permissions, for example,
-the API requests to get item data may include permissions inline, so there is no need to
-re-fetch permission data if you can just pass it through.
-
-This array must be the same length as the `result` array.
 
 ___
 

@@ -170,6 +170,9 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
                         executionContext,
                     })
                     : await executeFormulaOrSyncWithRawParams({ formulaSpecification, params, manifest, executionContext });
+                if (response.passthroughData && response.passthroughData.length !== response.result.length) {
+                    throw new Error(`Got ${response.result.length} results but only ${response.passthroughData.length} passthrough items (on page ${iterations})`);
+                }
                 result.push(...response.result);
                 passthroughData.push(...(_a = response === null || response === void 0 ? void 0 : response.passthroughData) !== null && _a !== void 0 ? _a : []);
                 executionContext.sync.continuation = response.continuation;
