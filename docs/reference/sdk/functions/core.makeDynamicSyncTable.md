@@ -8,7 +8,7 @@ search:
 
 [core](../modules/core.md).makeDynamicSyncTable
 
-▸ **makeDynamicSyncTable**<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`, `PassthroughT`\>(`«destructured»`): [`DynamicSyncTableDef`](../interfaces/core.DynamicSyncTableDef.md)<`K`, `L`, `ParamDefsT`, `any`, `ContextT`, `PassthroughT`\>
+▸ **makeDynamicSyncTable**<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`, `PermissionsContextT`\>(`«destructured»`): [`DynamicSyncTableDef`](../interfaces/core.DynamicSyncTableDef.md)<`K`, `L`, `ParamDefsT`, `any`, `ContextT`, `PermissionsContextT`\>
 
 Creates a dynamic sync table definition.
 
@@ -38,7 +38,7 @@ coda.makeDynamicSyncTable({
 | `ParamDefsT` | extends [`ParamDefs`](../types/core.ParamDefs.md) |
 | `SchemaT` | extends [`ObjectSchemaDefinition`](../interfaces/core.ObjectSchemaDefinition.md)<`K`, `L`\> |
 | `ContextT` | extends [`SyncExecutionContext`](../interfaces/core.SyncExecutionContext.md)<`any`, `any`, `any`\> |
-| `PassthroughT` | extends `SyncPassthroughData` |
+| `PermissionsContextT` | extends `SyncPermissionsContext` |
 
 #### Parameters
 
@@ -49,7 +49,7 @@ coda.makeDynamicSyncTable({
 | › `defaultAddDynamicColumns?` | `boolean` |
 | › `description?` | `string` |
 | › `entityName?` | `string` |
-| › `formula` | [`SyncFormulaDef`](../interfaces/core.SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `any`, `ContextT`, `PassthroughT`\> |
+| › `formula` | [`SyncFormulaDef`](../interfaces/core.SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `any`, `ContextT`, `PermissionsContextT`\> |
 | › `getDisplayUrl` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<`ContextT`\> |
 | › `getName` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<`ContextT`\> |
 | › `getSchema` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<`ContextT`\> |
@@ -62,4 +62,4 @@ coda.makeDynamicSyncTable({
 
 #### Returns
 
-[`DynamicSyncTableDef`](../interfaces/core.DynamicSyncTableDef.md)<`K`, `L`, `ParamDefsT`, `any`, `ContextT`, `PassthroughT`\>
+[`DynamicSyncTableDef`](../interfaces/core.DynamicSyncTableDef.md)<`K`, `L`, `ParamDefsT`, `any`, `ContextT`, `PermissionsContextT`\>

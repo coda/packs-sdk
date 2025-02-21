@@ -135,7 +135,7 @@ export const manifest: PackDefinition = createFakePack({
                 if (shouldPassthrough) {
                   return {
                     result: [{name: 'Alice'}, {name: 'Bob'}],
-                    passthroughData: [{userId: 42}, {userId: 123}],
+                    permissionsContext: [{userId: 42}, {userId: 123}],
                     continuation: {page: 2},
                   };
                 }
@@ -148,7 +148,7 @@ export const manifest: PackDefinition = createFakePack({
                 if (shouldPassthrough) {
                   return {
                     result: [{name: 'Chris'}, {name: 'Diana'}],
-                    passthroughData: [{userId: 53}, {userId: 22}],
+                    permissionsContext: [{userId: 53}, {userId: 22}],
                     deletedRowIds: isIncremental ? ['Ed'] : undefined,
                   };
                 }
@@ -176,12 +176,12 @@ export const manifest: PackDefinition = createFakePack({
         executeUpdate: async (_params, updates, _context) => {
           return {result: updates.map(u => u.newValue)};
         },
-        executeGetPermissions: async (_params, {rows, passthroughData}, _context) => {
+        executeGetPermissions: async (_params, {rows, permissionsContext}, _context) => {
           const rowAccessDefinitions: RowAccessDefinition[] = rows
             .map(r => r.row)
             .map((r, index) => {
               const id = ensureExists(r.name);
-              const currPassthrough = passthroughData ? passthroughData[index] : undefined;
+              const currPassthrough = permissionsContext ? permissionsContext[index] : undefined;
               // Default to 1 if no passthrough data is provided
               const userId = currPassthrough?.userId ?? 1;
               const principal: UserPrincipal = {

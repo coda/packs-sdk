@@ -121,7 +121,7 @@ export {MissingScopesError} from './api';
 export type {StatusCodeErrorResponse} from './api';
 export type {SyncExecutionContext} from './api_types';
 export type {SyncFormulaResult} from './api';
-export type {SyncPassthroughData}from './api';
+export type {SyncPermissionsContext}from './api';
 export type {SyncTableDef} from './api';
 export type {SyncTableOptions} from './api';
 export type {SyncStateService} from './api_types';

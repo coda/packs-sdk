@@ -8,7 +8,7 @@ search:
 
 [core](../modules/core.md).makeSyncTable
 
-▸ **makeSyncTable**<`K`, `L`, `ParamDefsT`, `SchemaDefT`, `SchemaT`, `ContextT`, `PassthroughT`\>(`«destructured»`): [`SyncTableDef`](../interfaces/core.SyncTableDef.md)<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`, `PassthroughT`\>
+▸ **makeSyncTable**<`K`, `L`, `ParamDefsT`, `SchemaDefT`, `SchemaT`, `ContextT`, `PermissionsContextT`\>(`«destructured»`): [`SyncTableDef`](../interfaces/core.SyncTableDef.md)<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`, `PermissionsContextT`\>
 
 Wrapper to produce a sync table definition. All (non-dynamic) sync tables should be created
 using this wrapper rather than declaring a sync table definition object directly.
@@ -30,14 +30,14 @@ See [Normalization]({{ config.site_url }}guides/advanced/schemas/#normalization)
 | `SchemaDefT` | extends [`ObjectSchemaDefinition`](../interfaces/core.ObjectSchemaDefinition.md)<`K`, `L`\> |
 | `SchemaT` | extends [`ObjectSchemaDefinition`](../interfaces/core.ObjectSchemaDefinition.md)<`K`, `L`\> & { `identity?`: [`Identity`](../interfaces/core.Identity.md)  } |
 | `ContextT` | extends [`SyncExecutionContext`](../interfaces/core.SyncExecutionContext.md)<`any`, `any`, `any`\> |
-| `PassthroughT` | extends `SyncPassthroughData` |
+| `PermissionsContextT` | extends `SyncPermissionsContext` |
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `«destructured»` | [`SyncTableOptions`](../interfaces/core.SyncTableOptions.md)<`K`, `L`, `ParamDefsT`, `SchemaDefT`, `ContextT`, `PassthroughT`\> |
+| `«destructured»` | [`SyncTableOptions`](../interfaces/core.SyncTableOptions.md)<`K`, `L`, `ParamDefsT`, `SchemaDefT`, `ContextT`, `PermissionsContextT`\> |
 
 #### Returns
 
-[`SyncTableDef`](../interfaces/core.SyncTableDef.md)<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`, `PassthroughT`\>
+[`SyncTableDef`](../interfaces/core.SyncTableDef.md)<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`, `PermissionsContextT`\>

@@ -296,7 +296,7 @@ export interface SyncTableDef<
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>,
   ContextT extends SyncExecutionContext<any, any>,
-  PassthroughT extends SyncPassthroughData,
+  PermissionsContextT extends SyncPermissionsContext,
 > {
   /** See {@link SyncTableOptions.name} */
   name: string;
@@ -312,7 +312,7 @@ export interface SyncTableDef<
    */
   identityName: string;
   /** See {@link SyncTableOptions.formula} */
-  getter: SyncFormula<K, L, ParamDefsT, SchemaT, ContextT, PassthroughT>;
+  getter: SyncFormula<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>;
   /** See {@link DynamicOptions.getSchema} */
   getSchema?: MetadataFormula;
   /** See {@link DynamicOptions.entityName} */
@@ -343,8 +343,8 @@ export interface DynamicSyncTableDef<
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>,
   ContextT extends SyncExecutionContext<any, any>,
-  PassthroughT extends SyncPassthroughData,
-> extends SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT, PassthroughT> {
+  PermissionsContextT extends SyncPermissionsContext,
+> extends SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT> {
   /** Identifies this sync table as dynamic. */
   isDynamic: true;
   /** See {@link DynamicSyncTableOptions.getSchema} */
@@ -395,18 +395,18 @@ export interface Continuation {
  * Type definition for some additional data that is returned by a sync table
  * in addition to the data itself. This data is not stored in Coda, but
  * is passed to the executeGetPermissions function of the sync table
- * See {@link SyncFormulaResult.passthroughData}.
+ * See {@link SyncFormulaResult.permissionsContext}.
  * TODO(drew): Unhide this
  * @hidden
  */
-export type SyncPassthroughData = Record<string, any>;
+export type SyncPermissionsContext = Record<string, any>;
 
 /**
  * Type definition for the formula that implements a sync table.
  * Should not be necessary to use directly, see {@link makeSyncTable}
  * for defining a sync table.
  */
-export type GenericSyncFormula = SyncFormula<any, any, ParamDefs, any, SyncExecutionContext, SyncPassthroughData>;
+export type GenericSyncFormula = SyncFormula<any, any, ParamDefs, any, SyncExecutionContext, SyncPermissionsContext>;
 /**
  * Type definition for the return value of a sync table.
  * Should not be necessary to use directly, see {@link makeSyncTable}
@@ -418,7 +418,7 @@ export type GenericSyncFormulaResult = SyncFormulaResult<any, any, any, any>;
  * Should not be necessary to use directly, see {@link makeSyncTable}
  * for defining a sync table.
  */
-export type GenericSyncTable = SyncTableDef<any, any, ParamDefs, any, SyncExecutionContext, SyncPassthroughData>;
+export type GenericSyncTable = SyncTableDef<any, any, ParamDefs, any, SyncExecutionContext, SyncPermissionsContext>;
 /**
  * Type definition for a dynamic sync table.
  * Should not be necessary to use directly, see {@link makeDynamicSyncTable}
@@ -430,7 +430,7 @@ export type GenericDynamicSyncTable = DynamicSyncTableDef<
   ParamDefs,
   any,
   SyncExecutionContext,
-  SyncPassthroughData
+  SyncPermissionsContext
 >;
 /**
  * Union of type definitions for sync tables..
@@ -1056,7 +1056,7 @@ export interface SyncFormulaResult<
   L extends string,
   SchemaT extends ObjectSchemaDefinition<K, L>,
   ContextT extends SyncExecutionContext<any> = SyncExecutionContext,
-  PassthroughT extends SyncPassthroughData = SyncPassthroughData,
+  PermissionsContextT extends SyncPermissionsContext = SyncPermissionsContext,
 > {
   /** The list of rows from this page. */
   result: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>;
@@ -1072,7 +1072,7 @@ export interface SyncFormulaResult<
    * TODO(drew): Unhide this
    * @hidden
    */
-  passthroughData?: PassthroughT[];
+  permissionsContext?: PermissionsContextT[];
 
   /**
    * A marker indicating where the next sync formula invocation should pick up to get the next page of results.
@@ -1112,8 +1112,8 @@ export interface SyncFormulaResult<
 export interface TypedSyncFormulaResult<
   T extends object,
   ContextT extends SyncExecutionContext<any>,
-  PassthroughT extends SyncPassthroughData,
-> extends SyncFormulaResult<string, string, any, ContextT, PassthroughT> {
+  PermissionsContextT extends SyncPermissionsContext,
+> extends SyncFormulaResult<string, string, any, ContextT, PermissionsContextT> {
   result: T[];
 }
 
@@ -1281,13 +1281,13 @@ export interface ExecuteGetPermissionsRequest<
   K extends string,
   L extends string,
   SchemaT extends ObjectSchemaDefinition<K, L>,
-  PassthroughT extends SyncPassthroughData,
+  PermissionsContextT extends SyncPermissionsContext,
 > {
   /**
    * The list of rows for which to fetch permissions.
    */
   rows: Array<ExecuteGetPermissionsRequestRow<K, L, SchemaT>>;
-  passthroughData?: PassthroughT[];
+  permissionsContext?: PermissionsContextT[];
 }
 
 /**
@@ -1306,7 +1306,7 @@ export interface SyncFormulaDef<
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchemaDefinition<K, L>,
   ContextT extends SyncExecutionContext<any, any>,
-  PassthroughT extends SyncPassthroughData,
+  PermissionsContextT extends SyncPermissionsContext,
 > extends CommonPackFormulaDef<ParamDefsT>,
     OnErrorFormulaOptions {
   /**
@@ -1320,7 +1320,7 @@ export interface SyncFormulaDef<
     params: ParamValues<ParamDefsT>,
     context: ContextT,
     // Create a separate type for the return value to ensure it's validated against any explicit context type.
-  ): Promise<SyncFormulaResult<K, L, SchemaT, ContextReturnT, PassthroughT>>;
+  ): Promise<SyncFormulaResult<K, L, SchemaT, ContextReturnT, PermissionsContextT>>;
   /**
    * If the table supports object updates, the maximum number of objects that will be sent to the pack
    * in a single batch. Defaults to 1 if not specified.
@@ -1357,7 +1357,7 @@ export interface SyncFormulaDef<
    */
   executeGetPermissions?(
     params: ParamValues<ParamDefsT>,
-    request: ExecuteGetPermissionsRequest<K, L, SchemaT, PassthroughT>,
+    request: ExecuteGetPermissionsRequest<K, L, SchemaT, PermissionsContextT>,
     context: GetPermissionExecutionContext,
   ): Promise<GetPermissionsResult>;
 
@@ -1383,8 +1383,8 @@ export type SyncFormula<
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>,
   ContextT extends SyncExecutionContext<any, any>,
-  PassthroughT extends SyncPassthroughData,
-> = SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT, PassthroughT> & {
+  PermissionsContextT extends SyncPermissionsContext,
+> = SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT> & {
   resultType: TypeOf<SchemaType<SchemaT>>;
   isSyncFormula: true;
   schema?: ArraySchema;
@@ -2166,7 +2166,7 @@ export interface SyncTableOptions<
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchemaDefinition<K, L>,
   ContextT extends SyncExecutionContext<any, any>,
-  PassthroughT extends SyncPassthroughData,
+  PermissionsContextT extends SyncPermissionsContext,
 > {
   /**
    * The name of the sync table. This is shown to users in the Coda UI.
@@ -2205,7 +2205,7 @@ export interface SyncTableOptions<
    * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
    * These will eventually be consolidated.)
    */
-  formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT, PassthroughT>;
+  formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>;
   /**
    * A {@link ConnectionRequirement} that will be used for all formulas contained within
    * this sync table (including autocomplete formulas).
@@ -2235,7 +2235,7 @@ export interface DynamicSyncTableOptions<
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchemaDefinition<K, L>,
   ContextT extends SyncExecutionContext<any, any>,
-  PassthroughT extends SyncPassthroughData,
+  PermissionsContextT extends SyncPermissionsContext,
 > {
   /**
    * The name of the dynamic sync table. This is shown to users in the Coda UI
@@ -2290,7 +2290,7 @@ export interface DynamicSyncTableOptions<
    * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
    * These will eventually be consolidated.)
    */
-  formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT, PassthroughT>;
+  formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>;
   /**
    * A label for the kind of entities that you are syncing. This label is used in a doc to identify
    * the column in this table that contains the synced data. If you don't provide an `entityName`, the value
@@ -2381,7 +2381,7 @@ export function makeSyncTable<
     identity?: Identity;
   },
   ContextT extends SyncExecutionContext<any, any>,
-  PassthroughT extends SyncPassthroughData,
+  PermissionsContextT extends SyncPermissionsContext,
 >({
   name,
   description,
@@ -2391,8 +2391,8 @@ export function makeSyncTable<
   connectionRequirement,
   dynamicOptions = {},
   role,
-}: SyncTableOptions<K, L, ParamDefsT, SchemaDefT, ContextT, PassthroughT>): 
-    SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT, PassthroughT> {
+}: SyncTableOptions<K, L, ParamDefsT, SchemaDefT, ContextT, PermissionsContextT>): 
+    SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT> {
   const {getSchema: getSchemaDef, entityName, defaultAddDynamicColumns} = dynamicOptions;
   const {
     execute: wrappedExecute,
@@ -2486,8 +2486,8 @@ export function makeSyncTable<
   const execute = async function exec(
     params: ParamValues<ParamDefsT>,
     context: ContextT,
-  ): Promise<SyncFormulaResult<K, L, SchemaT, ContextT, PassthroughT>> {
-    let syncResult: SyncFormulaResult<K, L, SchemaDefT, ContextT, PassthroughT>;
+  ): Promise<SyncFormulaResult<K, L, SchemaT, ContextT, PermissionsContextT>> {
+    let syncResult: SyncFormulaResult<K, L, SchemaDefT, ContextT, PermissionsContextT>;
     try {
       syncResult = (await wrappedExecute(params, context)) || {};
     } catch (err: any) {
@@ -2500,8 +2500,8 @@ export function makeSyncTable<
     const result = responseHandler({body: syncResult.result || [], status: 200, headers: {}}, appliedSchema) as Array<
       ObjectSchemaDefinitionType<K, L, SchemaT>
     >;
-    const {continuation, completion, deletedItemIds, deletedRowIds, passthroughData} = syncResult;
-    const returnValue: SyncFormulaResult<K, L, SchemaT, ContextT, PassthroughT> = {
+    const {continuation, completion, deletedItemIds, deletedRowIds, permissionsContext} = syncResult;
+    const returnValue: SyncFormulaResult<K, L, SchemaT, ContextT, PermissionsContextT> = {
       result,
     };
     if (continuation) {
@@ -2514,8 +2514,8 @@ export function makeSyncTable<
       returnValue.deletedRowIds = deletedRowIds ?? deletedItemIds;
       returnValue.deletedItemIds = returnValue.deletedRowIds;
     }
-    if (passthroughData) {
-      returnValue.passthroughData = passthroughData;
+    if (permissionsContext) {
+      returnValue.permissionsContext = permissionsContext;
     }
     return returnValue;
   };
@@ -2566,17 +2566,17 @@ export function makeSyncTableLegacy<
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchema<K, L>,
   ContextT extends SyncExecutionContext<any, any>,
-  PassthroughT extends SyncPassthroughData,
+  PermissionsContextT extends SyncPermissionsContext,
 >(
   name: string,
   schema: SchemaT,
-  formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT, PassthroughT>,
+  formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>,
   connectionRequirement?: ConnectionRequirement,
   dynamicOptions: {
     getSchema?: MetadataFormula;
     entityName?: string;
   } = {},
-): SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT, PassthroughT> {
+): SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT> {
   if (!schema.identity?.name) {
     throw new Error('Legacy sync tables must specify identity.name');
   }
@@ -2618,7 +2618,7 @@ export function makeDynamicSyncTable<
   ParamDefsT extends ParamDefs,
   SchemaT extends ObjectSchemaDefinition<K, L>,
   ContextT extends SyncExecutionContext<any, any>,
-  PassthroughT extends SyncPassthroughData,
+  PermissionsContextT extends SyncPermissionsContext,
 >({
   name,
   description,
@@ -2640,7 +2640,7 @@ export function makeDynamicSyncTable<
   getName: MetadataFormulaDef<ContextT>;
   getSchema: MetadataFormulaDef<ContextT>;
   identityName: string;
-  formula: SyncFormulaDef<K, L, ParamDefsT, any, ContextT, PassthroughT>;
+  formula: SyncFormulaDef<K, L, ParamDefsT, any, ContextT, PermissionsContextT>;
   getDisplayUrl: MetadataFormulaDef<ContextT>;
   listDynamicUrls?: MetadataFormulaDef;
   searchDynamicUrls?: MetadataFormulaDef;
@@ -2649,7 +2649,7 @@ export function makeDynamicSyncTable<
   defaultAddDynamicColumns?: boolean;
   placeholderSchema?: SchemaT;
   propertyOptions?: PropertyOptionsMetadataFunction<any>;
-}): DynamicSyncTableDef<K, L, ParamDefsT, any, ContextT, PassthroughT> {
+}): DynamicSyncTableDef<K, L, ParamDefsT, any, ContextT, PermissionsContextT> {
   const placeholderSchema: any =
     placeholderSchemaInput ||
     // default placeholder only shows a column of id, which will be replaced later by the dynamic schema.
@@ -2684,7 +2684,7 @@ export function makeDynamicSyncTable<
     listDynamicUrls: maybeRewriteConnectionForFormula(listDynamicUrls, connectionRequirement),
     searchDynamicUrls: maybeRewriteConnectionForFormula(searchDynamicUrls, connectionRequirement),
     getName: maybeRewriteConnectionForFormula(getName, connectionRequirement),
-  } as DynamicSyncTableDef<K, L, ParamDefsT, any, ContextT, PassthroughT>;
+  } as DynamicSyncTableDef<K, L, ParamDefsT, any, ContextT, PermissionsContextT>;
 }
 
 /**

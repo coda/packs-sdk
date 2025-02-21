@@ -139,7 +139,6 @@ async function executeFormulaFromPackDef(packDef, formulaNameWithNamespace, para
 }
 exports.executeFormulaFromPackDef = executeFormulaFromPackDef;
 async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, manifestPath, vm, dynamicUrl, maxRows = exports.DEFAULT_MAX_ROWS, bundleSourceMapPath, bundlePath, contextOptions = {}, }) {
-    var _a;
     try {
         if (maxRows <= 0) {
             throw new Error('The value of maxRows must be greater than zero.');
@@ -155,7 +154,6 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
         const formulaSpecification = makeFormulaSpec(manifest, formulaName);
         if (formulaSpecification.type === types_1.FormulaType.Sync) {
             let result = [];
-            let passthroughData = [];
             let iterations = 1;
             do {
                 if (iterations > MaxSyncIterations) {
@@ -170,20 +168,17 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
                         executionContext,
                     })
                     : await executeFormulaOrSyncWithRawParams({ formulaSpecification, params, manifest, executionContext });
-                if (response.passthroughData && response.passthroughData.length !== response.result.length) {
-                    throw new Error(`Got ${response.result.length} results but only ${response.passthroughData.length} passthrough items (on page ${iterations})`);
+                if (response.permissionsContext && response.permissionsContext.length !== response.result.length) {
+                    throw new Error(`Got ${response.result.length} results but only ${response.permissionsContext.length} passthrough items (on page ${iterations})`);
                 }
                 result.push(...response.result);
-                passthroughData.push(...(_a = response === null || response === void 0 ? void 0 : response.passthroughData) !== null && _a !== void 0 ? _a : []);
                 executionContext.sync.continuation = response.continuation;
                 iterations++;
             } while (executionContext.sync.continuation && result.length < maxRows);
             if (result.length > maxRows) {
                 result = result.slice(0, maxRows);
-                passthroughData = passthroughData.slice(0, maxRows);
             }
             (0, helpers_6.printFull)(result);
-            (0, helpers_6.printFull)(passthroughData);
         }
         else {
             const result = vm
@@ -469,6 +464,7 @@ async function executeSyncFormula(packDef, syncFormulaName, params, context, { v
         }
     }
     const result = [];
+    const permissionsContext = [];
     const deletedRowIds = [];
     let iterations = 1;
     do {
@@ -477,6 +473,9 @@ async function executeSyncFormula(packDef, syncFormulaName, params, context, { v
         }
         const response = await findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_1.FormulaType.Sync }, packDef, executionContext, undefined, undefined, { validateParams: false, validateResult: false, useDeprecatedResultNormalization });
         result.push(...response.result);
+        if (response.permissionsContext) {
+            permissionsContext.push(...response.permissionsContext);
+        }
         if (response.deletedRowIds) {
             deletedRowIds.push(...response.deletedRowIds);
         }
@@ -489,6 +488,7 @@ async function executeSyncFormula(packDef, syncFormulaName, params, context, { v
     return {
         result,
         deletedRowIds,
+        permissionsContext,
     };
 }
 exports.executeSyncFormula = executeSyncFormula;
@@ -603,7 +603,7 @@ function parseSyncUpdates(manifest, formulaSpecification, rawParams) {
 }
 const GetPermissionSchema = z.object({
     rows: z.array(z.object({ row: z.object({}).passthrough() })),
-    passthroughData: z.array(z.object({}).passthrough()).optional(),
+    permissionsContext: z.array(z.object({}).passthrough()).optional(),
 });
 function parseGetPermissionRequest(manifest, formulaSpecification, rawParams) {
     const paramsCopy = [...rawParams];

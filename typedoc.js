@@ -52,7 +52,7 @@ module.exports = {
     'CodaInternalRichTextSchema',
 
     // In-development types that we're not ready to expose yet
-    'SyncPassthroughData',
+    'SyncPermissionsContext',
 
     // Deprecated features we should remove from the SDK.
     'FeatureSet',
