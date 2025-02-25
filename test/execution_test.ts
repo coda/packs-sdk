@@ -81,6 +81,7 @@ describe('Execution', () => {
     const result = await executeSyncFormula(fakePack, 'Students', ['Smith'], mockContext);
     assert.deepEqual(result, {
       result: [{Name: 'Alice'}, {Name: 'Bob'}, {Name: 'Chris'}, {Name: 'Diana'}],
+      permissionsContext: [],
       deletedRowIds: ['Ed'],
     });
   });
@@ -125,6 +126,14 @@ describe('Execution', () => {
     });
     assert.equal(result, 1);
   });
+
+  it('execute sync works and returns passthrough', async () => {
+    const results = await executeSyncFormula(fakePack, 'Students', ['Smith', 'true'], undefined, {}, {useRealFetcher: false});
+    assert.deepEqual(results.permissionsContext, [{userId : 42},{userId : 123},{userId : 53},{userId : 22}]);
+    assert.deepEqual(results.result, [{Name: 'Alice'}, {Name: 'Bob'}, {Name: 'Chris'}, {Name: 'Diana'}]);
+    assert.equal(results.permissionsContext?.length, results.result.length);
+  });
+
 
   describe('execution errors', () => {
     it('not enough params', async () => {
@@ -537,6 +546,39 @@ describe('Execution', () => {
               {
                 rowId: 'Bob',
                 permissions: [{permissionType: PermissionType.Direct, principal: {type: 'user', userId: 1}}],
+              },
+            ],
+          });
+        });
+
+        it('get permissions works with passthrough data', async () => {
+          const syncRows: GenericExecuteGetPermissionsRequest = {
+            rows: [{row: {name: 'Alice'}}, {row: {name: 'Bob'}}],
+            permissionsContext: [
+              {userId: 42},  // For first row
+              {userId: 123}    // For second row
+            ]
+          };
+          await executeFormulaOrSyncFromCLI({
+            vm,
+            formulaName: 'Students:permissions',
+            params: ['Smith', JSON.stringify(syncRows)],
+            manifest: fakePack,
+            manifestPath: '',
+            bundleSourceMapPath,
+            bundlePath,
+            contextOptions: {useRealFetcher: false},
+          });
+          const result = mockPrintFull.args[0][0];
+          assert.deepEqual(result, {
+            rowAccessDefinitions: [
+              {
+                rowId: 'Alice',
+                permissions: [{permissionType: PermissionType.Direct, principal: {type: 'user', userId: 42}}],
+              },
+              {
+                rowId: 'Bob',
+                permissions: [{permissionType: PermissionType.Direct, principal: {type: 'user', userId: 123}}],
               },
             ],
           });

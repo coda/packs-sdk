@@ -51,6 +51,9 @@ module.exports = {
     'VariousAuthentication',
     'CodaInternalRichTextSchema',
 
+    // In-development types that we're not ready to expose yet
+    'SyncPassthroughData',
+
     // Deprecated features we should remove from the SDK.
     'FeatureSet',
     'PackCategory',

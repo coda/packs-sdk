@@ -2963,7 +2963,7 @@ export interface SyncTablePropertyOptions {
  * The result of defining a sync table. Should not be necessary to use directly,
  * instead, define sync tables using {@link makeSyncTable}.
  */
-export interface SyncTableDef<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>, ContextT extends SyncExecutionContext<any, any>> {
+export interface SyncTableDef<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData> {
 	/** See {@link SyncTableOptions.name} */
 	name: string;
 	/** See {@link SyncTableOptions.description} */
@@ -2978,7 +2978,7 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
 	 */
 	identityName: string;
 	/** See {@link SyncTableOptions.formula} */
-	getter: SyncFormula<K, L, ParamDefsT, SchemaT, ContextT>;
+	getter: SyncFormula<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>;
 	/** See {@link DynamicOptions.getSchema} */
 	getSchema?: MetadataFormula;
 	/** See {@link DynamicOptions.entityName} */
@@ -3000,7 +3000,7 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
  * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
  * instead, define dynamic sync tables using {@link makeDynamicSyncTable}.
  */
-export interface DynamicSyncTableDef<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>, ContextT extends SyncExecutionContext<any, any>> extends SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT> {
+export interface DynamicSyncTableDef<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData> extends SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT> {
 	/** Identifies this sync table as dynamic. */
 	isDynamic: true;
 	/** See {@link DynamicSyncTableOptions.getSchema} */
@@ -3047,11 +3047,20 @@ export interface Continuation {
 	};
 }
 /**
+ * Type definition for some additional data that is returned by a sync table
+ * in addition to the data itself. This data is not stored in Coda, but
+ * is passed to the executeGetPermissions function of the sync table
+ * See {@link SyncFormulaResult.permissionsContext}.
+ * TODO(drew): Unhide this
+ * @hidden
+ */
+export type SyncPassthroughData = Record<string, any>;
+/**
  * Type definition for the formula that implements a sync table.
  * Should not be necessary to use directly, see {@link makeSyncTable}
  * for defining a sync table.
  */
-export type GenericSyncFormula = SyncFormula<any, any, ParamDefs, any, SyncExecutionContext>;
+export type GenericSyncFormula = SyncFormula<any, any, ParamDefs, any, SyncExecutionContext, SyncPassthroughData>;
 /**
  * Type definition for the return value of a sync table.
  * Should not be necessary to use directly, see {@link makeSyncTable}
@@ -3063,13 +3072,13 @@ export type GenericSyncFormulaResult = SyncFormulaResult<any, any, any, any>;
  * Should not be necessary to use directly, see {@link makeSyncTable}
  * for defining a sync table.
  */
-export type GenericSyncTable = SyncTableDef<any, any, ParamDefs, any, SyncExecutionContext>;
+export type GenericSyncTable = SyncTableDef<any, any, ParamDefs, any, SyncExecutionContext, SyncPassthroughData>;
 /**
  * Type definition for a dynamic sync table.
  * Should not be necessary to use directly, see {@link makeDynamicSyncTable}
  * for defining a sync table.
  */
-export type GenericDynamicSyncTable = DynamicSyncTableDef<any, any, ParamDefs, any, SyncExecutionContext>;
+export type GenericDynamicSyncTable = DynamicSyncTableDef<any, any, ParamDefs, any, SyncExecutionContext, SyncPassthroughData>;
 /**
  * Union of type definitions for sync tables..
  * Should not be necessary to use directly, see {@link makeSyncTable} or {@link makeDynamicSyncTable}
@@ -3199,9 +3208,21 @@ export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, "execute">;
  * that the sync formula should be invoked again to get a next page of results. Sync functions
  * are called repeatedly until there is no continuation returned.
  */
-export interface SyncFormulaResult<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any> = SyncExecutionContext> {
+export interface SyncFormulaResult<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any> = SyncExecutionContext, PermissionsContextT extends SyncPassthroughData = SyncPassthroughData> {
 	/** The list of rows from this page. */
 	result: Array<ObjectSchemaDefinitionType<K, L, SchemaT>>;
+	/**
+	 * Additional side data to pass through to `executeGetPermissions`. Because each result item
+	 * is also passed through, this is only needed for cases where you have data that doesn't need
+	 * to be part of the result item but is nonetheless useful for fetching permissions, for example,
+	 * the API requests to get item data may include permissions inline, so there is no need to
+	 * re-fetch permission data if you can just pass it through.
+	 *
+	 * This array must be the same length as the `result` array.
+	 * TODO(drew): Unhide this
+	 * @hidden
+	 */
+	permissionsContext?: PermissionsContextT[];
 	/**
 	 * A marker indicating where the next sync formula invocation should pick up to get the next page of results.
 	 * The contents of this object are entirely of your choosing. Sync formulas are called repeatedly
@@ -3357,16 +3378,17 @@ export interface ExecuteGetPermissionsRequestRow<K extends string, L extends str
  * TODO(sam): Unhide this
  * @hidden
  */
-export interface ExecuteGetPermissionsRequest<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>> {
+export interface ExecuteGetPermissionsRequest<K extends string, L extends string, SchemaT extends ObjectSchemaDefinition<K, L>, PermissionsContextT extends SyncPassthroughData> {
 	/**
 	 * The list of rows for which to fetch permissions.
 	 */
 	rows: Array<ExecuteGetPermissionsRequestRow<K, L, SchemaT>>;
+	permissionsContext?: PermissionsContextT[];
 }
 /**
  * Inputs for creating the formula that implements a sync table.
  */
-export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any>> extends CommonPackFormulaDef<ParamDefsT>, OnErrorFormulaOptions {
+export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData> extends CommonPackFormulaDef<ParamDefsT>, OnErrorFormulaOptions {
 	/**
 	 * The JavaScript function that implements this sync.
 	 *
@@ -3374,7 +3396,7 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
 	 * from a previous invocation, and fetches and returns one page of results, as well
 	 * as another continuation if there are more result to fetch.
 	 */
-	execute<ContextReturnT extends ContextT>(params: ParamValues<ParamDefsT>, context: ContextT): Promise<SyncFormulaResult<K, L, SchemaT, ContextReturnT>>;
+	execute<ContextReturnT extends ContextT>(params: ParamValues<ParamDefsT>, context: ContextT): Promise<SyncFormulaResult<K, L, SchemaT, ContextReturnT, PermissionsContextT>>;
 	/**
 	 * If the table supports object updates, the maximum number of objects that will be sent to the pack
 	 * in a single batch. Defaults to 1 if not specified.
@@ -3403,7 +3425,7 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
 	 * TODO(sam): Unhide this
 	 * @hidden
 	 */
-	executeGetPermissions?(params: ParamValues<ParamDefsT>, request: ExecuteGetPermissionsRequest<K, L, SchemaT>, context: GetPermissionExecutionContext): Promise<GetPermissionsResult>;
+	executeGetPermissions?(params: ParamValues<ParamDefsT>, request: ExecuteGetPermissionsRequest<K, L, SchemaT, PermissionsContextT>, context: GetPermissionExecutionContext): Promise<GetPermissionsResult>;
 	/**
 	 * If the table implements {@link executeGetPermissions} the maximum number of rows that will be sent to that
 	 * function in a single batch. Defaults to 10 if not specified.
@@ -3419,7 +3441,7 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
  * There is no need to use this type directly. You provide a {@link SyncFormulaDef} as an
  * input to {@link makeSyncTable} which outputs definitions of this type.
  */
-export type SyncFormula<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>, ContextT extends SyncExecutionContext<any, any>> = SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT> & {
+export type SyncFormula<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData> = SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT> & {
 	resultType: TypeOf<SchemaType<SchemaT>>;
 	isSyncFormula: true;
 	schema?: ArraySchema;
@@ -3778,7 +3800,7 @@ export interface DynamicOptions {
 /**
  * Input options for defining a sync table. See {@link makeSyncTable}.
  */
-export interface SyncTableOptions<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any>> {
+export interface SyncTableOptions<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData> {
 	/**
 	 * The name of the sync table. This is shown to users in the Coda UI.
 	 * This should describe the entities being synced. For example, a sync table that syncs products
@@ -3816,7 +3838,7 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
 	 * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
 	 * These will eventually be consolidated.)
 	 */
-	formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT>;
+	formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>;
 	/**
 	 * A {@link ConnectionRequirement} that will be used for all formulas contained within
 	 * this sync table (including autocomplete formulas).
@@ -3838,7 +3860,7 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
 /**
  * Options provided when defining a dynamic sync table.
  */
-export interface DynamicSyncTableOptions<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any>> {
+export interface DynamicSyncTableOptions<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData> {
 	/**
 	 * The name of the dynamic sync table. This is shown to users in the Coda UI
 	 * when listing what build blocks are contained within this pack.
@@ -3892,7 +3914,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
 	 * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
 	 * These will eventually be consolidated.)
 	 */
-	formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT>;
+	formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>;
 	/**
 	 * A label for the kind of entities that you are syncing. This label is used in a doc to identify
 	 * the column in this table that contains the synced data. If you don't provide an `entityName`, the value
@@ -3974,7 +3996,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
  */
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaDefT extends ObjectSchemaDefinition<K, L>, SchemaT extends SchemaDefT & {
 	identity?: Identity;
-}, ContextT extends SyncExecutionContext<any, any>>({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions, role, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT, ContextT>): SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT>;
+}, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData>({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions, role, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT, ContextT, PermissionsContextT>): SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>;
 /**
  * Creates a dynamic sync table definition.
  *
@@ -3994,13 +4016,13 @@ export declare function makeSyncTable<K extends string, L extends string, ParamD
  * });
  * ```
  */
-export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any>>({ name, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, searchDynamicUrls: searchDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, propertyOptions, }: {
+export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData>({ name, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, searchDynamicUrls: searchDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, propertyOptions, }: {
 	name: string;
 	description?: string;
 	getName: MetadataFormulaDef<ContextT>;
 	getSchema: MetadataFormulaDef<ContextT>;
 	identityName: string;
-	formula: SyncFormulaDef<K, L, ParamDefsT, any, ContextT>;
+	formula: SyncFormulaDef<K, L, ParamDefsT, any, ContextT, PermissionsContextT>;
 	getDisplayUrl: MetadataFormulaDef<ContextT>;
 	listDynamicUrls?: MetadataFormulaDef;
 	searchDynamicUrls?: MetadataFormulaDef;
@@ -4009,7 +4031,7 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
 	defaultAddDynamicColumns?: boolean;
 	placeholderSchema?: SchemaT;
 	propertyOptions?: PropertyOptionsMetadataFunction<any>;
-}): DynamicSyncTableDef<K, L, ParamDefsT, any, ContextT>;
+}): DynamicSyncTableDef<K, L, ParamDefsT, any, ContextT, PermissionsContextT>;
 /**
  * Helper to generate a formula that fetches a list of entities from a given URL and returns them.
  *
@@ -5298,7 +5320,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * });
 	 * ```
 	 */
-	addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>, ContextT extends SyncExecutionContext<any, any>>(definition: SyncTableOptions<K, L, ParamDefsT, SchemaT, ContextT>): this;
+	addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData>(definition: SyncTableOptions<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>): this;
 	/**
 	 * Adds a dynamic sync table definition to this pack.
 	 *
@@ -5320,7 +5342,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * });
 	 * ```
 	 */
-	addDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any>>(definition: DynamicSyncTableOptions<K, L, ParamDefsT, SchemaT, ContextT>): this;
+	addDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData>(definition: DynamicSyncTableOptions<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>): this;
 	/**
 	 * Adds a column format definition to this pack.
 	 *

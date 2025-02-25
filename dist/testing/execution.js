@@ -168,6 +168,9 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
                         executionContext,
                     })
                     : await executeFormulaOrSyncWithRawParams({ formulaSpecification, params, manifest, executionContext });
+                if (response.permissionsContext && response.permissionsContext.length !== response.result.length) {
+                    throw new Error(`Got ${response.result.length} results but only ${response.permissionsContext.length} passthrough items (on page ${iterations})`);
+                }
                 result.push(...response.result);
                 executionContext.sync.continuation = response.continuation;
                 iterations++;
@@ -461,6 +464,7 @@ async function executeSyncFormula(packDef, syncFormulaName, params, context, { v
         }
     }
     const result = [];
+    const permissionsContext = [];
     const deletedRowIds = [];
     let iterations = 1;
     do {
@@ -469,6 +473,9 @@ async function executeSyncFormula(packDef, syncFormulaName, params, context, { v
         }
         const response = await findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_1.FormulaType.Sync }, packDef, executionContext, undefined, undefined, { validateParams: false, validateResult: false, useDeprecatedResultNormalization });
         result.push(...response.result);
+        if (response.permissionsContext) {
+            permissionsContext.push(...response.permissionsContext);
+        }
         if (response.deletedRowIds) {
             deletedRowIds.push(...response.deletedRowIds);
         }
@@ -481,6 +488,7 @@ async function executeSyncFormula(packDef, syncFormulaName, params, context, { v
     return {
         result,
         deletedRowIds,
+        permissionsContext,
     };
 }
 exports.executeSyncFormula = executeSyncFormula;
@@ -595,6 +603,7 @@ function parseSyncUpdates(manifest, formulaSpecification, rawParams) {
 }
 const GetPermissionSchema = z.object({
     rows: z.array(z.object({ row: z.object({}).passthrough() })),
+    permissionsContext: z.array(z.object({}).passthrough()).optional(),
 });
 function parseGetPermissionRequest(manifest, formulaSpecification, rawParams) {
     const paramsCopy = [...rawParams];

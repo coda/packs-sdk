@@ -266,6 +266,9 @@ export async function executeFormulaOrSyncFromCLI({
             })
           : await executeFormulaOrSyncWithRawParams({formulaSpecification, params, manifest, executionContext});
 
+        if (response.permissionsContext && response.permissionsContext.length !== response.result.length) {
+          throw new Error(`Got ${response.result.length} results but only ${response.permissionsContext.length} passthrough items (on page ${iterations})`)
+        }
         result.push(...response.result);
         executionContext.sync.continuation = response.continuation;
         iterations++;
@@ -642,6 +645,7 @@ export async function executeSyncFormula(
     }
   }
   const result = [];
+  const permissionsContext = []
   const deletedRowIds = [];
   let iterations = 1;
   do {
@@ -661,6 +665,9 @@ export async function executeSyncFormula(
     );
 
     result.push(...response.result);
+    if (response.permissionsContext) {
+      permissionsContext.push(...response.permissionsContext);
+    }
     if (response.deletedRowIds) {
       deletedRowIds.push(...response.deletedRowIds);
     }
@@ -675,6 +682,7 @@ export async function executeSyncFormula(
   return {
     result,
     deletedRowIds,
+    permissionsContext,
   };
 }
 
@@ -906,6 +914,7 @@ function parseSyncUpdates(
 
 const GetPermissionSchema = z.object({
   rows: z.array(z.object({row: z.object({}).passthrough()})),
+  permissionsContext: z.array(z.object({}).passthrough()).optional(),
 });
 
 function parseGetPermissionRequest(
