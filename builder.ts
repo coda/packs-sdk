@@ -16,7 +16,7 @@ import type {PackVersionDefinition} from './types';
 import type {ParamDefs} from './api_types';
 import type {Schema} from './schema';
 import type {SyncExecutionContext} from './api_types';
-import type {SyncPermissionsContext} from './api';
+import type {SyncPassthroughData} from './api';
 import type {SyncTable} from './api';
 import type {SyncTableOptions} from './api';
 import type {SystemAuthentication} from './types';
@@ -177,8 +177,8 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     ParamDefsT extends ParamDefs,
     SchemaT extends ObjectSchema<K, L>,
     ContextT extends SyncExecutionContext<any, any>,
-    PassthroughT extends SyncPermissionsContext,
-  >(definition: SyncTableOptions<K, L, ParamDefsT, SchemaT, ContextT, PassthroughT>): this {
+    PermissionsContextT extends SyncPassthroughData,
+  >(definition: SyncTableOptions<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>): this {
     const connectionRequirementToUse = definition.connectionRequirement || this._defaultConnectionRequirement;
     const syncTable = makeSyncTable({
       ...definition,
@@ -215,8 +215,8 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     ParamDefsT extends ParamDefs,
     SchemaT extends ObjectSchemaDefinition<K, L>,
     ContextT extends SyncExecutionContext<any, any>,
-    PassthroughT extends SyncPermissionsContext,
-  >(definition: DynamicSyncTableOptions<K, L, ParamDefsT, SchemaT, ContextT, PassthroughT>): this {
+    PermissionsContextT extends SyncPassthroughData,
+  >(definition: DynamicSyncTableOptions<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>): this {
     const dynamicSyncTable = makeDynamicSyncTable({
       ...definition,
       connectionRequirement: definition.connectionRequirement || this._defaultConnectionRequirement,

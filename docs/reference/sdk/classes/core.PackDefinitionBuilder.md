@@ -154,7 +154,7 @@ ___
 
 ### addDynamicSyncTable
 
-▸ **addDynamicSyncTable**<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`, `PassthroughT`\>(`definition`): [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
+▸ **addDynamicSyncTable**<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`, `PermissionsContextT`\>(`definition`): [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
 
 Adds a dynamic sync table definition to this pack.
 
@@ -186,13 +186,13 @@ pack.addDynamicSyncTable({
 | `ParamDefsT` | extends [`ParamDefs`](../types/core.ParamDefs.md) |
 | `SchemaT` | extends [`ObjectSchemaDefinition`](../interfaces/core.ObjectSchemaDefinition.md)<`K`, `L`\> |
 | `ContextT` | extends [`SyncExecutionContext`](../interfaces/core.SyncExecutionContext.md)<`any`, `any`, `any`\> |
-| `PassthroughT` | extends `SyncPermissionsContext` |
+| `PermissionsContextT` | extends `SyncPassthroughData` |
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `definition` | [`DynamicSyncTableOptions`](../interfaces/core.DynamicSyncTableOptions.md)<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`, `PassthroughT`\> |
+| `definition` | [`DynamicSyncTableOptions`](../interfaces/core.DynamicSyncTableOptions.md)<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`, `PermissionsContextT`\> |
 
 #### Returns
 
@@ -283,7 +283,7 @@ ___
 
 ### addSyncTable
 
-▸ **addSyncTable**<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`, `PassthroughT`\>(`definition`): [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
+▸ **addSyncTable**<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`, `PermissionsContextT`\>(`definition`): [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
 
 Adds a sync table definition to this pack.
 
@@ -313,13 +313,13 @@ pack.addSyncTable({
 | `ParamDefsT` | extends [`ParamDefs`](../types/core.ParamDefs.md) |
 | `SchemaT` | extends `ObjectSchema`<`K`, `L`\> |
 | `ContextT` | extends [`SyncExecutionContext`](../interfaces/core.SyncExecutionContext.md)<`any`, `any`, `any`\> |
-| `PassthroughT` | extends `SyncPermissionsContext` |
+| `PermissionsContextT` | extends `SyncPassthroughData` |
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `definition` | [`SyncTableOptions`](../interfaces/core.SyncTableOptions.md)<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`, `PassthroughT`\> |
+| `definition` | [`SyncTableOptions`](../interfaces/core.SyncTableOptions.md)<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`, `PermissionsContextT`\> |
 
 #### Returns
 

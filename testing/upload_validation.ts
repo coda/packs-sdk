@@ -90,7 +90,7 @@ import type {StringTimeSchema} from '../schema';
 import type {StringWithOptionsSchema} from '../schema';
 import type {SyncExecutionContext} from '..';
 import type {SyncFormula} from '../api';
-import type {SyncPermissionsContext} from '../api';
+import type {SyncPassthroughData} from '../api';
 import type {SyncTable} from '../api';
 import type {SyncTableDef} from '../api';
 import type {SystemAuthenticationTypes} from '../types';
@@ -1827,7 +1827,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
 
   const syncFormulaSchema = zodCompleteObject<
     Omit<
-      SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>, SyncExecutionContext, SyncPermissionsContext>,
+      SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>, SyncExecutionContext, SyncPassthroughData>,
       'execute' | 'executeUpdate' | 'executeGetPermissions' | 'onError'
     >
   >({
@@ -1887,7 +1887,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     ParamDefs, 
     ObjectSchema<any, any>, 
     SyncExecutionContext, 
-    SyncPermissionsContext
+    SyncPassthroughData
     >;
 
   const genericSyncTableSchema = zodCompleteObject<GenericSyncTableDef & {isDynamic?: false}>({
@@ -1905,7 +1905,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                         ParamDefs, 
                         ObjectSchema<any, any>, 
                         SyncExecutionContext, 
-                        SyncPermissionsContext
+                        SyncPassthroughData
                       > & {autocomplete: any}
   >({
     ...baseSyncTableSchema,

@@ -38,7 +38,7 @@ coda.makeDynamicSyncTable({
 | `ParamDefsT` | extends [`ParamDefs`](../types/core.ParamDefs.md) |
 | `SchemaT` | extends [`ObjectSchemaDefinition`](../interfaces/core.ObjectSchemaDefinition.md)<`K`, `L`\> |
 | `ContextT` | extends [`SyncExecutionContext`](../interfaces/core.SyncExecutionContext.md)<`any`, `any`, `any`\> |
-| `PermissionsContextT` | extends `SyncPermissionsContext` |
+| `PermissionsContextT` | extends `SyncPassthroughData` |
 
 #### Parameters
 

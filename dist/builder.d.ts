@@ -12,7 +12,7 @@ import type { PackVersionDefinition } from './types';
 import type { ParamDefs } from './api_types';
 import type { Schema } from './schema';
 import type { SyncExecutionContext } from './api_types';
-import type { SyncPermissionsContext } from './api';
+import type { SyncPassthroughData } from './api';
 import type { SyncTable } from './api';
 import type { SyncTableOptions } from './api';
 import type { SystemAuthentication } from './types';
@@ -122,7 +122,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * });
      * ```
      */
-    addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>, ContextT extends SyncExecutionContext<any, any>, PassthroughT extends SyncPermissionsContext>(definition: SyncTableOptions<K, L, ParamDefsT, SchemaT, ContextT, PassthroughT>): this;
+    addSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData>(definition: SyncTableOptions<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>): this;
     /**
      * Adds a dynamic sync table definition to this pack.
      *
@@ -144,7 +144,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * });
      * ```
      */
-    addDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any>, PassthroughT extends SyncPermissionsContext>(definition: DynamicSyncTableOptions<K, L, ParamDefsT, SchemaT, ContextT, PassthroughT>): this;
+    addDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData>(definition: DynamicSyncTableOptions<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>): this;
     /**
      * Adds a column format definition to this pack.
      *
