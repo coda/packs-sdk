@@ -36,6 +36,7 @@ export async function handleExecute({
         'compatible with your platform. Try again but omitting the --vm flag.',
     );
   }
+
   const fullManifestPath = makeManifestFullPath(manifestPath);
   const {bundlePath, bundleSourceMapPath} = await compilePackBundle({
     manifestPath: fullManifestPath,
@@ -44,7 +45,9 @@ export async function handleExecute({
   });
   const manifest = await importManifest(bundlePath);
   if (manifest.networkDomains && manifest.networkDomains.length > 1 && !allowMultipleNetworkDomains) {
-    return printAndExit('Using multiple network domains requires approval from Coda. Visit https://coda.io/packs/build/latest/support#approvals to make a request. Disable this warning by including the flag: --allowMultipleNetworkDomains');
+    return printAndExit(
+      'Using multiple network domains requires approval from Coda. Visit https://coda.io/packs/build/latest/support#approvals to make a request. Disable this warning by including the flag: --allowMultipleNetworkDomains',
+    );
   }
   await executeFormulaOrSyncFromCLI({
     formulaName,

@@ -97,6 +97,8 @@ export type FormulaSpecification =
   | PropertyAutocompleteFormulaSpecification
   | GetPermissionsFormulaSpecification;
 
+export type ChainedCommandFormulaSpecification = GetPermissionsFormulaSpecification;
+
 export type PackFunctionResponse<T extends FormulaSpecification> = T extends SyncFormulaSpecification
   ? GenericSyncFormulaResult
   : T extends SyncUpdateFormulaSpecification

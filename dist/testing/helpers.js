@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.processVmError = exports.getExpirationDate = exports.writeJSONFile = exports.readJSONFile = exports.readFile = exports.promptForInput = exports.printAndExit = exports.printFull = exports.printError = exports.printWarn = exports.print = exports.getManifestFromModule = void 0;
+exports.chunkArray = exports.processVmError = exports.getExpirationDate = exports.writeJSONFile = exports.readJSONFile = exports.readFile = exports.promptForInput = exports.printAndExit = exports.printFull = exports.printError = exports.printWarn = exports.print = exports.getManifestFromModule = void 0;
 const ensure_1 = require("../helpers/ensure");
 const fs_1 = __importDefault(require("fs"));
 const util_1 = require("util");
@@ -144,3 +144,18 @@ async function processVmError(vmError, bundlePath) {
     return err;
 }
 exports.processVmError = processVmError;
+/**
+ * This function splits an array into chunks of a maximum size.
+ *
+ * @param array The flat list of values
+ * @param size The maximum chunk size
+ * @returns A list of chunks of the input array
+ */
+function chunkArray(array, size) {
+    const chunks = [];
+    for (let i = 0; i < array.length; i += size) {
+        chunks.push(array.slice(i, i + size));
+    }
+    return chunks;
+}
+exports.chunkArray = chunkArray;

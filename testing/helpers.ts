@@ -23,15 +23,17 @@ export const printWarn = console.warn;
 // eslint-disable-next-line no-console
 export const printError = console.error;
 
-export function printFull(value: any){
+export function printFull(value: any) {
   if (typeof value === 'object') {
     // eslint-disable-next-line no-console
-    console.log(inspect(value, {
-      depth: null,
-      maxArrayLength: null,
-      maxStringLength: null,
-      colors: true,
-    }));
+    console.log(
+      inspect(value, {
+        depth: null,
+        maxArrayLength: null,
+        maxStringLength: null,
+        colors: true,
+      }),
+    );
   } else {
     // Fallback to console.log for backwards compatibility.
     // eslint-disable-next-line no-console
@@ -116,4 +118,19 @@ export async function processVmError(vmError: Error, bundlePath: string): Promis
   const messageSuffix = err.message ? `: ${err.message}` : '';
   err.stack = `${err.constructor.name}${messageSuffix}\n${translatedStacktrace}`;
   return err;
+}
+
+/**
+ * This function splits an array into chunks of a maximum size.
+ *
+ * @param array The flat list of values
+ * @param size The maximum chunk size
+ * @returns A list of chunks of the input array
+ */
+export function chunkArray<T>(array: T[], size: number): T[][] {
+  const chunks = [];
+  for (let i = 0; i < array.length; i += size) {
+    chunks.push(array.slice(i, i + size));
+  }
+  return chunks;
 }

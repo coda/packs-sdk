@@ -27,28 +27,29 @@ exports.newRealFetcherSyncExecutionContext = exports.newRealFetcherExecutionCont
 const types_1 = require("../runtime/types");
 const types_2 = require("../runtime/types");
 const buffer_1 = require("buffer/");
+const helpers_1 = require("./helpers");
 const coercion_1 = require("./coercion");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
 const bootstrap_1 = require("../runtime/bootstrap");
-const helpers_1 = require("../runtime/common/helpers");
 const helpers_2 = require("../runtime/common/helpers");
-const helpers_3 = require("../cli/helpers");
+const helpers_3 = require("../runtime/common/helpers");
 const helpers_4 = require("../cli/helpers");
+const helpers_5 = require("../cli/helpers");
 const ivmHelper = __importStar(require("./ivm_helper"));
 const fetcher_1 = require("./fetcher");
 const fetcher_2 = require("./fetcher");
 const mocks_1 = require("./mocks");
 const mocks_2 = require("./mocks");
 const path = __importStar(require("path"));
-const helpers_5 = require("./helpers");
 const helpers_6 = require("./helpers");
+const helpers_7 = require("./helpers");
 const auth_1 = require("./auth");
 const auth_2 = require("./auth");
 const thunk = __importStar(require("../runtime/thunk/thunk"));
 const handler_templates_1 = require("../handler_templates");
-const helpers_7 = require("../runtime/common/helpers");
 const helpers_8 = require("../runtime/common/helpers");
+const helpers_9 = require("../runtime/common/helpers");
 const handler_templates_2 = require("../handler_templates");
 const validation_1 = require("./validation");
 const validation_2 = require("./validation");
@@ -72,12 +73,12 @@ useDeprecatedResultNormalization = true, } = {}) {
     let formula;
     switch (formulaSpec.type) {
         case types_1.FormulaType.Standard:
-            formula = (0, helpers_1.findFormula)(manifest, formulaSpec.formulaName, executionContext.authenticationName);
+            formula = (0, helpers_2.findFormula)(manifest, formulaSpec.formulaName, executionContext.authenticationName);
             break;
         case types_1.FormulaType.Sync:
         case types_1.FormulaType.SyncUpdate:
         case types_1.FormulaType.GetPermissions:
-            formula = (0, helpers_2.findSyncFormula)(manifest, formulaSpec.formulaName, executionContext.authenticationName);
+            formula = (0, helpers_3.findSyncFormula)(manifest, formulaSpec.formulaName, executionContext.authenticationName);
             break;
     }
     if (shouldValidateParams && formula) {
@@ -133,7 +134,7 @@ async function executeFormulaFromPackDef(packDef, formulaNameWithNamespace, para
     let executionContext = context;
     if (!executionContext && useRealFetcher) {
         const credentials = getCredentials(manifestPath);
-        executionContext = (0, fetcher_1.newFetcherExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_3.getPackAuth)(packDef), packDef.networkDomains, credentials);
+        executionContext = (0, fetcher_1.newFetcherExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_4.getPackAuth)(packDef), packDef.networkDomains, credentials);
     }
     return findAndExecutePackFunction(params, { type: types_1.FormulaType.Standard, formulaName: resolveFormulaNameWithNamespace(formulaNameWithNamespace) }, packDef, executionContext || (0, mocks_1.newMockExecutionContext)(), undefined, undefined, options);
 }
@@ -148,37 +149,22 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
         // A sync context would work for both formula / syncFormula execution for now.
         // TODO(jonathan): Pass the right context, just to set user expectations correctly for runtime values.
         const executionContext = useRealFetcher
-            ? (0, fetcher_2.newFetcherSyncExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_3.getPackAuth)(manifest), manifest.networkDomains, credentials)
+            ? (0, fetcher_2.newFetcherSyncExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_4.getPackAuth)(manifest), manifest.networkDomains, credentials)
             : (0, mocks_2.newMockSyncExecutionContext)();
         executionContext.sync.dynamicUrl = dynamicUrl || undefined;
-        const formulaSpecification = makeFormulaSpec(manifest, formulaName);
+        const { formulaSpecification, chainedCommand } = getFormulaSpecAndChainedCommand(manifest, formulaName);
         if (formulaSpecification.type === types_1.FormulaType.Sync) {
-            let result = [];
-            let iterations = 1;
-            do {
-                if (iterations > MaxSyncIterations) {
-                    throw new Error(`Sync is still running after ${MaxSyncIterations} iterations, this is likely due to an infinite loop.`);
-                }
-                const response = vm
-                    ? await executeFormulaOrSyncWithRawParamsInVM({
-                        formulaSpecification,
-                        params,
-                        bundleSourceMapPath,
-                        bundlePath,
-                        executionContext,
-                    })
-                    : await executeFormulaOrSyncWithRawParams({ formulaSpecification, params, manifest, executionContext });
-                if (response.permissionsContext && response.permissionsContext.length !== response.result.length) {
-                    throw new Error(`Got ${response.result.length} results but only ${response.permissionsContext.length} passthrough items (on page ${iterations})`);
-                }
-                result.push(...response.result);
-                executionContext.sync.continuation = response.continuation;
-                iterations++;
-            } while (executionContext.sync.continuation && result.length < maxRows);
-            if (result.length > maxRows) {
-                result = result.slice(0, maxRows);
-            }
-            (0, helpers_6.printFull)(result);
+            const { result, chainedCommandResults } = await executeSyncFormulaWithContinuations({
+                formulaSpecification,
+                chainedCommand,
+                params,
+                manifest,
+                executionContext,
+                vm,
+                bundleSourceMapPath,
+                bundlePath,
+            });
+            (0, helpers_7.printFull)(chainedCommand ? chainedCommandResults : result);
         }
         else {
             const result = vm
@@ -190,23 +176,23 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
                     executionContext,
                 })
                 : await executeFormulaOrSyncWithRawParams({ formulaSpecification, params, manifest, executionContext });
-            (0, helpers_6.printFull)(result);
+            (0, helpers_7.printFull)(result);
         }
     }
     catch (err) {
         if (err instanceof DeveloperError) {
             // The error came from the Pack code. Print the inner error, including the stack trace.
-            (0, helpers_5.print)(err.cause);
+            (0, helpers_6.print)(err.cause);
             // If source maps are not enabled, print a warning.
             if (!vm && !isSourceMapsEnabled()) {
-                (0, helpers_5.print)(`
+                (0, helpers_6.print)(`
 Enable the Node flag --enable-source-maps to get an accurate stack trace. For example:
 NODE_OPTIONS="--enable-source-maps" npx coda execute ...`);
             }
         }
         else {
             // Just print the error message.
-            (0, helpers_5.print)(err.message);
+            (0, helpers_6.print)(err.message);
         }
         process.exit(1);
     }
@@ -228,6 +214,28 @@ const PostSetupMetadataFormulaTokens = Object.freeze({
 });
 function invert(obj) {
     return Object.fromEntries(Object.entries(obj).map(([key, value]) => [value, key]));
+}
+/**
+ * Given a formula name with a > delimited chained command, returns the formula specification and the chained command.
+ *
+ * @param manifest The manifest of the pack.
+ * @param formulaNameInput The formula name with a chained command.
+ * @returns The formula specification and the chained command.
+ */
+function getFormulaSpecAndChainedCommand(manifest, formulaNameInput) {
+    const chainedCommands = formulaNameInput.split('>');
+    const formulaSpecification = makeFormulaSpec(manifest, chainedCommands[0]);
+    if (chainedCommands.length === 1) {
+        return { formulaSpecification };
+    }
+    if (formulaSpecification.type !== types_1.FormulaType.Sync) {
+        throw new Error(`Chained commands are only supported for sync formulas. Received: ${formulaSpecification.type}`);
+    }
+    const chainedCommand = makeFormulaSpec(manifest, [formulaSpecification.formulaName, chainedCommands[1]].join(':'));
+    if (chainedCommand.type !== types_1.FormulaType.GetPermissions) {
+        throw new Error(`Chained commands are only supported for GetPermissions formulas. Received: ${chainedCommand.type}`);
+    }
+    return { formulaSpecification, chainedCommand };
 }
 // Exported for tests.
 function makeFormulaSpec(manifest, formulaNameInput) {
@@ -263,8 +271,8 @@ function makeFormulaSpec(manifest, formulaNameInput) {
             };
         }
     }
-    const syncFormula = (0, helpers_8.tryFindSyncFormula)(manifest, formulaOrSyncName);
-    const standardFormula = (0, helpers_7.tryFindFormula)(manifest, formulaOrSyncName);
+    const syncFormula = (0, helpers_9.tryFindSyncFormula)(manifest, formulaOrSyncName);
+    const standardFormula = (0, helpers_8.tryFindFormula)(manifest, formulaOrSyncName);
     if (!(syncFormula || standardFormula)) {
         throw new Error(`Could not find a formula or sync named "${formulaOrSyncName}".`);
     }
@@ -333,15 +341,15 @@ function makeFormulaSpec(manifest, formulaNameInput) {
 exports.makeFormulaSpec = makeFormulaSpec;
 // This method is used to execute a (sync) formula in testing with VM. Don't use it in lambda or calc service.
 async function executeFormulaOrSyncWithVM({ formulaName, params, bundlePath, executionContext = (0, mocks_2.newMockSyncExecutionContext)(), }) {
-    const manifest = await (0, helpers_4.importManifest)(bundlePath);
-    const syncFormula = (0, helpers_8.tryFindSyncFormula)(manifest, formulaName);
+    const manifest = await (0, helpers_5.importManifest)(bundlePath);
+    const syncFormula = (0, helpers_9.tryFindSyncFormula)(manifest, formulaName);
     const formulaSpecification = {
         type: syncFormula ? types_1.FormulaType.Sync : types_1.FormulaType.Standard,
         formulaName,
     };
     const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
     try {
-        return await (0, bootstrap_1.executeThunk)(ivmContext, { params, formulaSpec: formulaSpecification }, bundlePath, bundlePath + '.map');
+        return (await (0, bootstrap_1.executeThunk)(ivmContext, { params, formulaSpec: formulaSpecification }, bundlePath, bundlePath + '.map'));
     }
     catch (err) {
         throw new DeveloperError(err);
@@ -351,18 +359,18 @@ exports.executeFormulaOrSyncWithVM = executeFormulaOrSyncWithVM;
 async function executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, params: rawParams, bundlePath, bundleSourceMapPath, executionContext = (0, mocks_2.newMockSyncExecutionContext)(), }) {
     var _a;
     const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
-    const manifest = await (0, helpers_4.importManifest)(bundlePath);
+    const manifest = await (0, helpers_5.importManifest)(bundlePath);
     let params;
     let syncUpdates;
     let permissionRequest;
     switch (formulaSpecification.type) {
         case types_1.FormulaType.Standard: {
-            const formula = (0, helpers_1.findFormula)(manifest, formulaSpecification.formulaName, executionContext.authenticationName);
+            const formula = (0, helpers_2.findFormula)(manifest, formulaSpecification.formulaName, executionContext.authenticationName);
             params = (0, coercion_1.coerceParams)(formula, rawParams);
             break;
         }
         case types_1.FormulaType.Sync: {
-            const syncFormula = (0, helpers_2.findSyncFormula)(manifest, formulaSpecification.formulaName, executionContext.authenticationName);
+            const syncFormula = (0, helpers_3.findSyncFormula)(manifest, formulaSpecification.formulaName, executionContext.authenticationName);
             params = (0, coercion_1.coerceParams)(syncFormula, rawParams);
             break;
         }
@@ -404,12 +412,12 @@ async function executeFormulaOrSyncWithRawParams({ formulaSpecification, params:
     let permissionRequest;
     switch (formulaSpecification.type) {
         case types_1.FormulaType.Standard: {
-            const formula = (0, helpers_1.findFormula)(manifest, formulaSpecification.formulaName, executionContext.authenticationName);
+            const formula = (0, helpers_2.findFormula)(manifest, formulaSpecification.formulaName, executionContext.authenticationName);
             params = (0, coercion_1.coerceParams)(formula, rawParams);
             break;
         }
         case types_1.FormulaType.Sync: {
-            const syncFormula = (0, helpers_2.findSyncFormula)(manifest, formulaSpecification.formulaName, executionContext.authenticationName);
+            const syncFormula = (0, helpers_3.findSyncFormula)(manifest, formulaSpecification.formulaName, executionContext.authenticationName);
             params = (0, coercion_1.coerceParams)(syncFormula, rawParams);
             break;
         }
@@ -449,7 +457,7 @@ exports.executeFormulaOrSyncWithRawParams = executeFormulaOrSyncWithRawParams;
  * For now, use `coda execute --vm` to simulate that level of isolation.
  */
 async function executeSyncFormula(packDef, syncFormulaName, params, context, { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, useDeprecatedResultNormalization = true, } = {}, { useRealFetcher, manifestPath } = {}) {
-    const formula = (0, helpers_2.findSyncFormula)(packDef, syncFormulaName, context === null || context === void 0 ? void 0 : context.authenticationName);
+    const formula = (0, helpers_3.findSyncFormula)(packDef, syncFormulaName, context === null || context === void 0 ? void 0 : context.authenticationName);
     if (shouldValidateParams && formula) {
         (0, validation_1.validateParams)(formula, params);
     }
@@ -457,7 +465,7 @@ async function executeSyncFormula(packDef, syncFormulaName, params, context, { v
     if (!executionContext) {
         if (useRealFetcher) {
             const credentials = getCredentials(manifestPath);
-            executionContext = (0, fetcher_2.newFetcherSyncExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_3.getPackAuth)(packDef), packDef.networkDomains, credentials);
+            executionContext = (0, fetcher_2.newFetcherSyncExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_4.getPackAuth)(packDef), packDef.networkDomains, credentials);
         }
         else {
             executionContext = (0, mocks_2.newMockSyncExecutionContext)();
@@ -521,7 +529,7 @@ async function executeSyncFormulaFromPackDefSingleIteration(packDef, syncFormula
     let executionContext = context;
     if (!executionContext && useRealFetcher) {
         const credentials = getCredentials(manifestPath);
-        executionContext = (0, fetcher_2.newFetcherSyncExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_3.getPackAuth)(packDef), packDef.networkDomains, credentials);
+        executionContext = (0, fetcher_2.newFetcherSyncExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_4.getPackAuth)(packDef), packDef.networkDomains, credentials);
     }
     return findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_1.FormulaType.Sync }, packDef, executionContext || (0, mocks_2.newMockSyncExecutionContext)(), undefined, undefined, options);
 }
@@ -535,7 +543,7 @@ async function executeGetPermissionsFormulaFromPackDef(packDef, syncFormulaName,
     let executionContext = context;
     if (!executionContext && useRealFetcher) {
         const credentials = getCredentials(manifestPath);
-        executionContext = (0, fetcher_2.newFetcherSyncExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_3.getPackAuth)(packDef), packDef.networkDomains, credentials);
+        executionContext = (0, fetcher_2.newFetcherSyncExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_4.getPackAuth)(packDef), packDef.networkDomains, credentials);
     }
     return findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_1.FormulaType.GetPermissions }, packDef, executionContext || (0, mocks_2.newMockSyncExecutionContext)(), undefined, executeGetPermissionsRequest, options);
 }
@@ -549,7 +557,7 @@ async function executeUpdateFormulaFromPackDef(packDef, syncFormulaName, params,
     let executionContext = context;
     if (!executionContext && useRealFetcher) {
         const credentials = getCredentials(manifestPath);
-        executionContext = (0, fetcher_2.newFetcherSyncExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_3.getPackAuth)(packDef), packDef.networkDomains, credentials);
+        executionContext = (0, fetcher_2.newFetcherSyncExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_4.getPackAuth)(packDef), packDef.networkDomains, credentials);
     }
     return findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_1.FormulaType.SyncUpdate }, packDef, context, syncUpdates, undefined, options);
 }
@@ -573,11 +581,11 @@ function buildUpdateCredentialsCallback(manifestPath) {
     };
 }
 function newRealFetcherExecutionContext(packDef, manifestPath) {
-    return (0, fetcher_1.newFetcherExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_3.getPackAuth)(packDef), packDef.networkDomains, getCredentials(manifestPath));
+    return (0, fetcher_1.newFetcherExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_4.getPackAuth)(packDef), packDef.networkDomains, getCredentials(manifestPath));
 }
 exports.newRealFetcherExecutionContext = newRealFetcherExecutionContext;
 function newRealFetcherSyncExecutionContext(packDef, manifestPath) {
-    return (0, fetcher_2.newFetcherSyncExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_3.getPackAuth)(packDef), packDef.networkDomains, getCredentials(manifestPath));
+    return (0, fetcher_2.newFetcherSyncExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_4.getPackAuth)(packDef), packDef.networkDomains, getCredentials(manifestPath));
 }
 exports.newRealFetcherSyncExecutionContext = newRealFetcherSyncExecutionContext;
 const SyncUpdateSchema = z.object({
@@ -596,7 +604,7 @@ function parseSyncUpdates(manifest, formulaSpecification, rawParams) {
     if (!parseResult.success) {
         throw new Error(`Invalid sync updates: ${parseResult.error.message}`);
     }
-    const syncFormula = (0, helpers_2.findSyncFormula)(manifest, formulaSpecification.formulaName, undefined, {
+    const syncFormula = (0, helpers_3.findSyncFormula)(manifest, formulaSpecification.formulaName, undefined, {
         verifyFormulaForAuthenticationName: false,
     });
     return { syncUpdates: parseResult.data, params: (0, coercion_1.coerceParams)(syncFormula, paramsCopy) };
@@ -615,17 +623,14 @@ function parseGetPermissionRequest(manifest, formulaSpecification, rawParams) {
     if (!parseResult.success) {
         throw new Error(`Invalid get permission request: ${parseResult.error.message}`);
     }
-    const syncFormula = (0, helpers_2.findSyncFormula)(manifest, formulaSpecification.formulaName, undefined, {
+    const syncFormula = (0, helpers_3.findSyncFormula)(manifest, formulaSpecification.formulaName, undefined, {
         verifyFormulaForAuthenticationName: false,
     });
     return { permissionRequest: parseResult.data, params: (0, coercion_1.coerceParams)(syncFormula, paramsCopy) };
 }
 function isSourceMapsEnabled() {
     var _a, _b;
-    const flags = [
-        ...process.execArgv,
-        ...(_b = (_a = process.env.NODE_OPTIONS) === null || _a === void 0 ? void 0 : _a.split(/\s+/)) !== null && _b !== void 0 ? _b : [],
-    ];
+    const flags = [...process.execArgv, ...((_b = (_a = process.env.NODE_OPTIONS) === null || _a === void 0 ? void 0 : _a.split(/\s+/)) !== null && _b !== void 0 ? _b : [])];
     return flags.includes('--enable-source-maps');
 }
 class DeveloperError extends Error {
@@ -635,5 +640,117 @@ class DeveloperError extends Error {
         });
         this.stack = err.stack;
         Object.setPrototypeOf(this, DeveloperError.prototype);
+    }
+}
+/**
+ * This function handles running a sync formula with continuations, looping until
+ * we no longer have a continuation or we pass the maxRows limit.
+ *
+ * @param formulaSpecification The formula specification we want to run, should be a Sync formula
+ * @param chainedCommand The chained command to run after the formula specification
+ * @param params The params to pass to the formula
+ * @param manifest The manifest of the pack
+ * @param executionContext The execution context
+ * @param bundleSourceMapPath The source map path
+ * @param bundlePath The bundle path
+ * @param maxRows The max rows to sync
+ * @param vm Whether to run in a VM
+ * @param contextOptions The context options.
+ * @returns Returns an object with result (the sync table rows) and rowAccessDefinitions (if we opt into it)
+ */
+async function executeSyncFormulaWithContinuations({ formulaSpecification, chainedCommand, params, manifest, executionContext, bundleSourceMapPath, bundlePath, maxRows = exports.DEFAULT_MAX_ROWS, vm, }) {
+    let result = [];
+    const chainedCommandResults = [];
+    let iterations = 1;
+    do {
+        if (iterations > MaxSyncIterations) {
+            throw new Error(`Sync is still running after ${MaxSyncIterations} iterations, this is likely due to an infinite loop.`);
+        }
+        const response = vm
+            ? await executeFormulaOrSyncWithRawParamsInVM({
+                formulaSpecification,
+                params,
+                bundleSourceMapPath,
+                bundlePath,
+                executionContext,
+            })
+            : await executeFormulaOrSyncWithRawParams({ formulaSpecification, params, manifest, executionContext });
+        if (response.permissionsContext && response.permissionsContext.length !== response.result.length) {
+            throw new Error(`Got ${response.result.length} results but only ${response.permissionsContext.length} passthrough items (on page ${iterations})`);
+        }
+        result.push(...response.result);
+        if (chainedCommand) {
+            chainedCommandResults.push(...(await chainCommandOnSyncResult({
+                rows: response.result,
+                formulaSpecification,
+                chainedCommand,
+                params,
+                manifest,
+                executionContext,
+                vm,
+                bundleSourceMapPath,
+                bundlePath,
+            })));
+        }
+        executionContext.sync.continuation = response.continuation;
+        iterations++;
+    } while (executionContext.sync.continuation && result.length < maxRows);
+    if (result.length > maxRows) {
+        result = result.slice(0, maxRows);
+    }
+    return { result, chainedCommandResults };
+}
+/**
+ * This function handles running a chained command formula for a given set of rows.
+ *
+ * @param rows The rows to run the chained command on
+ * @param formulaSpecification The Sync formula specification that is driving the rows we want to run
+ *    the chained command on.
+ * @param chainedCommand The chained command to run after the formula specification
+ * @param params The params to pass to the formula
+ * @param manifest The manifest of the pack
+ * @param executionContext The execution context
+ * @param vm Whether to run in a VM
+ * @param bundleSourceMapPath The source map path
+ * @param bundlePath The bundle path
+ * @returns Returns the result from the chained command
+ */
+async function chainCommandOnSyncResult({ rows, formulaSpecification, chainedCommand, params, manifest, executionContext, vm, bundleSourceMapPath, bundlePath, }) {
+    var _a;
+    if (!chainedCommand) {
+        return [];
+    }
+    // Denormalize the sync result before passing back into chained command
+    const formula = (0, helpers_3.findSyncFormula)(manifest, formulaSpecification.formulaName, executionContext.authenticationName);
+    const schema = (_a = executionContext.sync.schema) !== null && _a !== void 0 ? _a : formula === null || formula === void 0 ? void 0 : formula.schema;
+    const denormalizedSyncResult = vm ? rows : (0, handler_templates_2.untransformBody)(rows, schema);
+    switch (chainedCommand.type) {
+        case types_1.FormulaType.GetPermissions:
+            const mappedRows = denormalizedSyncResult.map((row) => ({ row }));
+            // 10 hardcoded as fallback to match process_csb_ingestion.ts
+            const maxPermissionBatchSize = (formula === null || formula === void 0 ? void 0 : formula.maxPermissionBatchSize) || 10;
+            const chunks = (0, helpers_1.chunkArray)(mappedRows, maxPermissionBatchSize);
+            const chunkResponses = [];
+            for (const chunk of chunks) {
+                const getPermissionsParams = [...params, JSON.stringify({ rows: chunk })];
+                const response = vm
+                    ? (await executeFormulaOrSyncWithRawParamsInVM({
+                        formulaSpecification: chainedCommand,
+                        params: getPermissionsParams,
+                        bundleSourceMapPath,
+                        bundlePath,
+                        executionContext,
+                    }))
+                    : (await executeFormulaOrSyncWithRawParams({
+                        formulaSpecification: chainedCommand,
+                        params: getPermissionsParams,
+                        manifest,
+                        executionContext,
+                    }));
+                chunkResponses.push(response.rowAccessDefinitions);
+            }
+            return chunkResponses.flat();
+        default:
+            (0, ensure_2.ensureUnreachable)(chainedCommand.type);
     }
 }
