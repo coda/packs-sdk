@@ -1126,13 +1126,21 @@ export interface IndexDefinition {
   contextProperties?: ContextProperties;
   /**
    * The name of the property within {@link ObjectSchemaDefinition.properties} that can be be interpreted as
-   * a number between 0.0 and 1.0 representing the popularity rank of this entity compared to all other entities.
+   * a number between -1.0 and 1.0 representing the authority rank of this entity compared to all other entities.
    *
    * Must be a {@link ValueType.Number} property.
    * TODO(alexd): Unhide this
    * @hidden
    */
   authorityRankProperty?: PropertyIdentifier<string>;
+  /**
+   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be be interpreted as
+   * a number between -1.0 and 1.0 representing the popularity rank of this entity compared to all other entities.
+   *
+   * Must be a {@link ValueType.Number} property.
+   * TODO(alexd): Unhide this
+   * @hidden
+   */
   popularityRankProperty?: PropertyIdentifier<string>;
 }
 
