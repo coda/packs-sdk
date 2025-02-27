@@ -1,6 +1,5 @@
 /// <reference types="node" />
 /// <reference types="node" />
-/// <reference types="node" />
 import type { PackVersionDefinition } from '../types';
 import fs from 'fs';
 export declare function getManifestFromModule(module: any): PackVersionDefinition;

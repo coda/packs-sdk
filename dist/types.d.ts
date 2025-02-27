@@ -916,11 +916,6 @@ export interface AdminAuthentication {
      * - Are there other caveats, like perhaps incremental sync not working with this authentication type?
      */
     description: string;
-    /**
-     * If true, Coda will not assume that the user who sets up an account with this authentication
-     * should themselves have access to the data owned by that account.
-     */
-    isServiceAccount?: boolean;
 }
 export interface AdminAuthenticationDef extends Omit<AdminAuthentication, 'authentication'> {
     authentication: AllowedAuthenticationDef;

@@ -62,7 +62,8 @@ module.exports = (() => {
           throw new Error("Invalid string. Length must be a multiple of 4");
         }
         var validLen = b64.indexOf("=");
-        if (validLen === -1) validLen = len2;
+        if (validLen === -1)
+          validLen = len2;
         var placeHoldersLen = validLen === len2 ? 0 : 4 - validLen % 4;
         return [validLen, placeHoldersLen];
       }
@@ -251,9 +252,9 @@ module.exports = (() => {
       function typedArraySupport() {
         try {
           const arr = new Uint8Array(1);
-          const proto = { foo: /* @__PURE__ */ __name(function() {
+          const proto = { foo: function() {
             return 42;
-          }, "foo") };
+          } };
           Object.setPrototypeOf(proto, Uint8Array.prototype);
           Object.setPrototypeOf(arr, proto);
           return arr.foo() === 42;
@@ -264,17 +265,19 @@ module.exports = (() => {
       __name(typedArraySupport, "typedArraySupport");
       Object.defineProperty(Buffer4.prototype, "parent", {
         enumerable: true,
-        get: /* @__PURE__ */ __name(function() {
-          if (!Buffer4.isBuffer(this)) return void 0;
+        get: function() {
+          if (!Buffer4.isBuffer(this))
+            return void 0;
           return this.buffer;
-        }, "get")
+        }
       });
       Object.defineProperty(Buffer4.prototype, "offset", {
         enumerable: true,
-        get: /* @__PURE__ */ __name(function() {
-          if (!Buffer4.isBuffer(this)) return void 0;
+        get: function() {
+          if (!Buffer4.isBuffer(this))
+            return void 0;
           return this.byteOffset;
-        }, "get")
+        }
       });
       function createBuffer(length) {
         if (length > K_MAX_LENGTH) {
@@ -326,7 +329,8 @@ module.exports = (() => {
           return Buffer4.from(valueOf, encodingOrOffset, length);
         }
         const b = fromObject(value);
-        if (b) return b;
+        if (b)
+          return b;
         if (typeof Symbol !== "undefined" && Symbol.toPrimitive != null && typeof value[Symbol.toPrimitive] === "function") {
           return Buffer4.from(value[Symbol.toPrimitive]("string"), encodingOrOffset, length);
         }
@@ -464,14 +468,17 @@ module.exports = (() => {
         return b != null && b._isBuffer === true && b !== Buffer4.prototype;
       }, "isBuffer");
       Buffer4.compare = /* @__PURE__ */ __name(function compare(a, b) {
-        if (isInstance(a, Uint8Array)) a = Buffer4.from(a, a.offset, a.byteLength);
-        if (isInstance(b, Uint8Array)) b = Buffer4.from(b, b.offset, b.byteLength);
+        if (isInstance(a, Uint8Array))
+          a = Buffer4.from(a, a.offset, a.byteLength);
+        if (isInstance(b, Uint8Array))
+          b = Buffer4.from(b, b.offset, b.byteLength);
         if (!Buffer4.isBuffer(a) || !Buffer4.isBuffer(b)) {
           throw new TypeError(
             'The "buf1", "buf2" arguments must be one of type Buffer or Uint8Array'
           );
         }
-        if (a === b) return 0;
+        if (a === b)
+          return 0;
         let x = a.length;
         let y = b.length;
         for (let i = 0, len = Math.min(x, y); i < len; ++i) {
@@ -481,8 +488,10 @@ module.exports = (() => {
             break;
           }
         }
-        if (x < y) return -1;
-        if (y < x) return 1;
+        if (x < y)
+          return -1;
+        if (y < x)
+          return 1;
         return 0;
       }, "compare");
       Buffer4.isEncoding = /* @__PURE__ */ __name(function isEncoding(encoding) {
@@ -523,7 +532,8 @@ module.exports = (() => {
           let buf = list[i];
           if (isInstance(buf, Uint8Array)) {
             if (pos + buf.length > buffer.length) {
-              if (!Buffer4.isBuffer(buf)) buf = Buffer4.from(buf);
+              if (!Buffer4.isBuffer(buf))
+                buf = Buffer4.from(buf);
               buf.copy(buffer, pos);
             } else {
               Uint8Array.prototype.set.call(
@@ -555,7 +565,8 @@ module.exports = (() => {
         }
         const len = string.length;
         const mustMatch = arguments.length > 2 && arguments[2] === true;
-        if (!mustMatch && len === 0) return 0;
+        if (!mustMatch && len === 0)
+          return 0;
         let loweredCase = false;
         for (; ; ) {
           switch (encoding) {
@@ -605,7 +616,8 @@ module.exports = (() => {
         if (end <= start) {
           return "";
         }
-        if (!encoding) encoding = "utf8";
+        if (!encoding)
+          encoding = "utf8";
         while (true) {
           switch (encoding) {
             case "hex":
@@ -626,7 +638,8 @@ module.exports = (() => {
             case "utf-16le":
               return utf16leSlice(this, start, end);
             default:
-              if (loweredCase) throw new TypeError("Unknown encoding: " + encoding);
+              if (loweredCase)
+                throw new TypeError("Unknown encoding: " + encoding);
               encoding = (encoding + "").toLowerCase();
               loweredCase = true;
           }
@@ -676,21 +689,26 @@ module.exports = (() => {
       }, "swap64");
       Buffer4.prototype.toString = /* @__PURE__ */ __name(function toString() {
         const length = this.length;
-        if (length === 0) return "";
-        if (arguments.length === 0) return utf8Slice(this, 0, length);
+        if (length === 0)
+          return "";
+        if (arguments.length === 0)
+          return utf8Slice(this, 0, length);
         return slowToString.apply(this, arguments);
       }, "toString");
       Buffer4.prototype.toLocaleString = Buffer4.prototype.toString;
       Buffer4.prototype.equals = /* @__PURE__ */ __name(function equals(b) {
-        if (!Buffer4.isBuffer(b)) throw new TypeError("Argument must be a Buffer");
-        if (this === b) return true;
+        if (!Buffer4.isBuffer(b))
+          throw new TypeError("Argument must be a Buffer");
+        if (this === b)
+          return true;
         return Buffer4.compare(this, b) === 0;
       }, "equals");
       Buffer4.prototype.inspect = /* @__PURE__ */ __name(function inspect() {
         let str = "";
         const max = exports.INSPECT_MAX_BYTES;
         str = this.toString("hex", 0, max).replace(/(.{2})/g, "$1 ").trim();
-        if (this.length > max) str += " ... ";
+        if (this.length > max)
+          str += " ... ";
         return "<Buffer " + str + ">";
       }, "inspect");
       if (customInspectSymbol) {
@@ -733,7 +751,8 @@ module.exports = (() => {
         end >>>= 0;
         thisStart >>>= 0;
         thisEnd >>>= 0;
-        if (this === target) return 0;
+        if (this === target)
+          return 0;
         let x = thisEnd - thisStart;
         let y = end - start;
         const len = Math.min(x, y);
@@ -746,12 +765,15 @@ module.exports = (() => {
             break;
           }
         }
-        if (x < y) return -1;
-        if (y < x) return 1;
+        if (x < y)
+          return -1;
+        if (y < x)
+          return 1;
         return 0;
       }, "compare");
       function bidirectionalIndexOf(buffer, val, byteOffset, encoding, dir) {
-        if (buffer.length === 0) return -1;
+        if (buffer.length === 0)
+          return -1;
         if (typeof byteOffset === "string") {
           encoding = byteOffset;
           byteOffset = 0;
@@ -764,13 +786,18 @@ module.exports = (() => {
         if (numberIsNaN(byteOffset)) {
           byteOffset = dir ? 0 : buffer.length - 1;
         }
-        if (byteOffset < 0) byteOffset = buffer.length + byteOffset;
+        if (byteOffset < 0)
+          byteOffset = buffer.length + byteOffset;
         if (byteOffset >= buffer.length) {
-          if (dir) return -1;
-          else byteOffset = buffer.length - 1;
+          if (dir)
+            return -1;
+          else
+            byteOffset = buffer.length - 1;
         } else if (byteOffset < 0) {
-          if (dir) byteOffset = 0;
-          else return -1;
+          if (dir)
+            byteOffset = 0;
+          else
+            return -1;
         }
         if (typeof val === "string") {
           val = Buffer4.from(val, encoding);
@@ -823,15 +850,19 @@ module.exports = (() => {
           let foundIndex = -1;
           for (i = byteOffset; i < arrLength; i++) {
             if (read(arr, i) === read(val, foundIndex === -1 ? 0 : i - foundIndex)) {
-              if (foundIndex === -1) foundIndex = i;
-              if (i - foundIndex + 1 === valLength) return foundIndex * indexSize;
+              if (foundIndex === -1)
+                foundIndex = i;
+              if (i - foundIndex + 1 === valLength)
+                return foundIndex * indexSize;
             } else {
-              if (foundIndex !== -1) i -= i - foundIndex;
+              if (foundIndex !== -1)
+                i -= i - foundIndex;
               foundIndex = -1;
             }
           }
         } else {
-          if (byteOffset + valLength > arrLength) byteOffset = arrLength - valLength;
+          if (byteOffset + valLength > arrLength)
+            byteOffset = arrLength - valLength;
           for (i = byteOffset; i >= 0; i--) {
             let found = true;
             for (let j = 0; j < valLength; j++) {
@@ -840,7 +871,8 @@ module.exports = (() => {
                 break;
               }
             }
-            if (found) return i;
+            if (found)
+              return i;
           }
         }
         return -1;
@@ -873,7 +905,8 @@ module.exports = (() => {
         let i;
         for (i = 0; i < length; ++i) {
           const parsed = parseInt(string.substr(i * 2, 2), 16);
-          if (numberIsNaN(parsed)) return i;
+          if (numberIsNaN(parsed))
+            return i;
           buf[offset + i] = parsed;
         }
         return i;
@@ -908,7 +941,8 @@ module.exports = (() => {
           offset = offset >>> 0;
           if (isFinite(length)) {
             length = length >>> 0;
-            if (encoding === void 0) encoding = "utf8";
+            if (encoding === void 0)
+              encoding = "utf8";
           } else {
             encoding = length;
             length = void 0;
@@ -919,11 +953,13 @@ module.exports = (() => {
           );
         }
         const remaining = this.length - offset;
-        if (length === void 0 || length > remaining) length = remaining;
+        if (length === void 0 || length > remaining)
+          length = remaining;
         if (string.length > 0 && (length < 0 || offset < 0) || offset > this.length) {
           throw new RangeError("Attempt to write outside buffer bounds");
         }
-        if (!encoding) encoding = "utf8";
+        if (!encoding)
+          encoding = "utf8";
         let loweredCase = false;
         for (; ; ) {
           switch (encoding) {
@@ -944,7 +980,8 @@ module.exports = (() => {
             case "utf-16le":
               return ucs2Write(this, string, offset, length);
             default:
-              if (loweredCase) throw new TypeError("Unknown encoding: " + encoding);
+              if (loweredCase)
+                throw new TypeError("Unknown encoding: " + encoding);
               encoding = ("" + encoding).toLowerCase();
               loweredCase = true;
           }
@@ -1062,8 +1099,10 @@ module.exports = (() => {
       __name(latin1Slice, "latin1Slice");
       function hexSlice(buf, start, end) {
         const len = buf.length;
-        if (!start || start < 0) start = 0;
-        if (!end || end < 0 || end > len) end = len;
+        if (!start || start < 0)
+          start = 0;
+        if (!end || end < 0 || end > len)
+          end = len;
         let out = "";
         for (let i = start; i < end; ++i) {
           out += hexSliceLookupTable[buf[i]];
@@ -1086,30 +1125,36 @@ module.exports = (() => {
         end = end === void 0 ? len : ~~end;
         if (start < 0) {
           start += len;
-          if (start < 0) start = 0;
+          if (start < 0)
+            start = 0;
         } else if (start > len) {
           start = len;
         }
         if (end < 0) {
           end += len;
-          if (end < 0) end = 0;
+          if (end < 0)
+            end = 0;
         } else if (end > len) {
           end = len;
         }
-        if (end < start) end = start;
+        if (end < start)
+          end = start;
         const newBuf = this.subarray(start, end);
         Object.setPrototypeOf(newBuf, Buffer4.prototype);
         return newBuf;
       }, "slice");
       function checkOffset(offset, ext, length) {
-        if (offset % 1 !== 0 || offset < 0) throw new RangeError("offset is not uint");
-        if (offset + ext > length) throw new RangeError("Trying to access beyond buffer length");
+        if (offset % 1 !== 0 || offset < 0)
+          throw new RangeError("offset is not uint");
+        if (offset + ext > length)
+          throw new RangeError("Trying to access beyond buffer length");
       }
       __name(checkOffset, "checkOffset");
       Buffer4.prototype.readUintLE = Buffer4.prototype.readUIntLE = /* @__PURE__ */ __name(function readUIntLE(offset, byteLength2, noAssert) {
         offset = offset >>> 0;
         byteLength2 = byteLength2 >>> 0;
-        if (!noAssert) checkOffset(offset, byteLength2, this.length);
+        if (!noAssert)
+          checkOffset(offset, byteLength2, this.length);
         let val = this[offset];
         let mul = 1;
         let i = 0;
@@ -1133,27 +1178,32 @@ module.exports = (() => {
       }, "readUIntBE");
       Buffer4.prototype.readUint8 = Buffer4.prototype.readUInt8 = /* @__PURE__ */ __name(function readUInt8(offset, noAssert) {
         offset = offset >>> 0;
-        if (!noAssert) checkOffset(offset, 1, this.length);
+        if (!noAssert)
+          checkOffset(offset, 1, this.length);
         return this[offset];
       }, "readUInt8");
       Buffer4.prototype.readUint16LE = Buffer4.prototype.readUInt16LE = /* @__PURE__ */ __name(function readUInt16LE(offset, noAssert) {
         offset = offset >>> 0;
-        if (!noAssert) checkOffset(offset, 2, this.length);
+        if (!noAssert)
+          checkOffset(offset, 2, this.length);
         return this[offset] | this[offset + 1] << 8;
       }, "readUInt16LE");
       Buffer4.prototype.readUint16BE = Buffer4.prototype.readUInt16BE = /* @__PURE__ */ __name(function readUInt16BE(offset, noAssert) {
         offset = offset >>> 0;
-        if (!noAssert) checkOffset(offset, 2, this.length);
+        if (!noAssert)
+          checkOffset(offset, 2, this.length);
         return this[offset] << 8 | this[offset + 1];
       }, "readUInt16BE");
       Buffer4.prototype.readUint32LE = Buffer4.prototype.readUInt32LE = /* @__PURE__ */ __name(function readUInt32LE(offset, noAssert) {
         offset = offset >>> 0;
-        if (!noAssert) checkOffset(offset, 4, this.length);
+        if (!noAssert)
+          checkOffset(offset, 4, this.length);
         return (this[offset] | this[offset + 1] << 8 | this[offset + 2] << 16) + this[offset + 3] * 16777216;
       }, "readUInt32LE");
       Buffer4.prototype.readUint32BE = Buffer4.prototype.readUInt32BE = /* @__PURE__ */ __name(function readUInt32BE(offset, noAssert) {
         offset = offset >>> 0;
-        if (!noAssert) checkOffset(offset, 4, this.length);
+        if (!noAssert)
+          checkOffset(offset, 4, this.length);
         return this[offset] * 16777216 + (this[offset + 1] << 16 | this[offset + 2] << 8 | this[offset + 3]);
       }, "readUInt32BE");
       Buffer4.prototype.readBigUInt64LE = defineBigIntMethod(/* @__PURE__ */ __name(function readBigUInt64LE(offset) {
@@ -1183,7 +1233,8 @@ module.exports = (() => {
       Buffer4.prototype.readIntLE = /* @__PURE__ */ __name(function readIntLE(offset, byteLength2, noAssert) {
         offset = offset >>> 0;
         byteLength2 = byteLength2 >>> 0;
-        if (!noAssert) checkOffset(offset, byteLength2, this.length);
+        if (!noAssert)
+          checkOffset(offset, byteLength2, this.length);
         let val = this[offset];
         let mul = 1;
         let i = 0;
@@ -1191,13 +1242,15 @@ module.exports = (() => {
           val += this[offset + i] * mul;
         }
         mul *= 128;
-        if (val >= mul) val -= Math.pow(2, 8 * byteLength2);
+        if (val >= mul)
+          val -= Math.pow(2, 8 * byteLength2);
         return val;
       }, "readIntLE");
       Buffer4.prototype.readIntBE = /* @__PURE__ */ __name(function readIntBE(offset, byteLength2, noAssert) {
         offset = offset >>> 0;
         byteLength2 = byteLength2 >>> 0;
-        if (!noAssert) checkOffset(offset, byteLength2, this.length);
+        if (!noAssert)
+          checkOffset(offset, byteLength2, this.length);
         let i = byteLength2;
         let mul = 1;
         let val = this[offset + --i];
@@ -1205,35 +1258,42 @@ module.exports = (() => {
           val += this[offset + --i] * mul;
         }
         mul *= 128;
-        if (val >= mul) val -= Math.pow(2, 8 * byteLength2);
+        if (val >= mul)
+          val -= Math.pow(2, 8 * byteLength2);
         return val;
       }, "readIntBE");
       Buffer4.prototype.readInt8 = /* @__PURE__ */ __name(function readInt8(offset, noAssert) {
         offset = offset >>> 0;
-        if (!noAssert) checkOffset(offset, 1, this.length);
-        if (!(this[offset] & 128)) return this[offset];
+        if (!noAssert)
+          checkOffset(offset, 1, this.length);
+        if (!(this[offset] & 128))
+          return this[offset];
         return (255 - this[offset] + 1) * -1;
       }, "readInt8");
       Buffer4.prototype.readInt16LE = /* @__PURE__ */ __name(function readInt16LE(offset, noAssert) {
         offset = offset >>> 0;
-        if (!noAssert) checkOffset(offset, 2, this.length);
+        if (!noAssert)
+          checkOffset(offset, 2, this.length);
         const val = this[offset] | this[offset + 1] << 8;
         return val & 32768 ? val | 4294901760 : val;
       }, "readInt16LE");
       Buffer4.prototype.readInt16BE = /* @__PURE__ */ __name(function readInt16BE(offset, noAssert) {
         offset = offset >>> 0;
-        if (!noAssert) checkOffset(offset, 2, this.length);
+        if (!noAssert)
+          checkOffset(offset, 2, this.length);
         const val = this[offset + 1] | this[offset] << 8;
         return val & 32768 ? val | 4294901760 : val;
       }, "readInt16BE");
       Buffer4.prototype.readInt32LE = /* @__PURE__ */ __name(function readInt32LE(offset, noAssert) {
         offset = offset >>> 0;
-        if (!noAssert) checkOffset(offset, 4, this.length);
+        if (!noAssert)
+          checkOffset(offset, 4, this.length);
         return this[offset] | this[offset + 1] << 8 | this[offset + 2] << 16 | this[offset + 3] << 24;
       }, "readInt32LE");
       Buffer4.prototype.readInt32BE = /* @__PURE__ */ __name(function readInt32BE(offset, noAssert) {
         offset = offset >>> 0;
-        if (!noAssert) checkOffset(offset, 4, this.length);
+        if (!noAssert)
+          checkOffset(offset, 4, this.length);
         return this[offset] << 24 | this[offset + 1] << 16 | this[offset + 2] << 8 | this[offset + 3];
       }, "readInt32BE");
       Buffer4.prototype.readBigInt64LE = defineBigIntMethod(/* @__PURE__ */ __name(function readBigInt64LE(offset) {
@@ -1261,28 +1321,35 @@ module.exports = (() => {
       }, "readBigInt64BE"));
       Buffer4.prototype.readFloatLE = /* @__PURE__ */ __name(function readFloatLE(offset, noAssert) {
         offset = offset >>> 0;
-        if (!noAssert) checkOffset(offset, 4, this.length);
+        if (!noAssert)
+          checkOffset(offset, 4, this.length);
         return ieee754.read(this, offset, true, 23, 4);
       }, "readFloatLE");
       Buffer4.prototype.readFloatBE = /* @__PURE__ */ __name(function readFloatBE(offset, noAssert) {
         offset = offset >>> 0;
-        if (!noAssert) checkOffset(offset, 4, this.length);
+        if (!noAssert)
+          checkOffset(offset, 4, this.length);
         return ieee754.read(this, offset, false, 23, 4);
       }, "readFloatBE");
       Buffer4.prototype.readDoubleLE = /* @__PURE__ */ __name(function readDoubleLE(offset, noAssert) {
         offset = offset >>> 0;
-        if (!noAssert) checkOffset(offset, 8, this.length);
+        if (!noAssert)
+          checkOffset(offset, 8, this.length);
         return ieee754.read(this, offset, true, 52, 8);
       }, "readDoubleLE");
       Buffer4.prototype.readDoubleBE = /* @__PURE__ */ __name(function readDoubleBE(offset, noAssert) {
         offset = offset >>> 0;
-        if (!noAssert) checkOffset(offset, 8, this.length);
+        if (!noAssert)
+          checkOffset(offset, 8, this.length);
         return ieee754.read(this, offset, false, 52, 8);
       }, "readDoubleBE");
       function checkInt(buf, value, offset, ext, max, min) {
-        if (!Buffer4.isBuffer(buf)) throw new TypeError('"buffer" argument must be a Buffer instance');
-        if (value > max || value < min) throw new RangeError('"value" argument is out of bounds');
-        if (offset + ext > buf.length) throw new RangeError("Index out of range");
+        if (!Buffer4.isBuffer(buf))
+          throw new TypeError('"buffer" argument must be a Buffer instance');
+        if (value > max || value < min)
+          throw new RangeError('"value" argument is out of bounds');
+        if (offset + ext > buf.length)
+          throw new RangeError("Index out of range");
       }
       __name(checkInt, "checkInt");
       Buffer4.prototype.writeUintLE = Buffer4.prototype.writeUIntLE = /* @__PURE__ */ __name(function writeUIntLE(value, offset, byteLength2, noAssert) {
@@ -1320,14 +1387,16 @@ module.exports = (() => {
       Buffer4.prototype.writeUint8 = Buffer4.prototype.writeUInt8 = /* @__PURE__ */ __name(function writeUInt8(value, offset, noAssert) {
         value = +value;
         offset = offset >>> 0;
-        if (!noAssert) checkInt(this, value, offset, 1, 255, 0);
+        if (!noAssert)
+          checkInt(this, value, offset, 1, 255, 0);
         this[offset] = value & 255;
         return offset + 1;
       }, "writeUInt8");
       Buffer4.prototype.writeUint16LE = Buffer4.prototype.writeUInt16LE = /* @__PURE__ */ __name(function writeUInt16LE(value, offset, noAssert) {
         value = +value;
         offset = offset >>> 0;
-        if (!noAssert) checkInt(this, value, offset, 2, 65535, 0);
+        if (!noAssert)
+          checkInt(this, value, offset, 2, 65535, 0);
         this[offset] = value & 255;
         this[offset + 1] = value >>> 8;
         return offset + 2;
@@ -1335,7 +1404,8 @@ module.exports = (() => {
       Buffer4.prototype.writeUint16BE = Buffer4.prototype.writeUInt16BE = /* @__PURE__ */ __name(function writeUInt16BE(value, offset, noAssert) {
         value = +value;
         offset = offset >>> 0;
-        if (!noAssert) checkInt(this, value, offset, 2, 65535, 0);
+        if (!noAssert)
+          checkInt(this, value, offset, 2, 65535, 0);
         this[offset] = value >>> 8;
         this[offset + 1] = value & 255;
         return offset + 2;
@@ -1343,7 +1413,8 @@ module.exports = (() => {
       Buffer4.prototype.writeUint32LE = Buffer4.prototype.writeUInt32LE = /* @__PURE__ */ __name(function writeUInt32LE(value, offset, noAssert) {
         value = +value;
         offset = offset >>> 0;
-        if (!noAssert) checkInt(this, value, offset, 4, 4294967295, 0);
+        if (!noAssert)
+          checkInt(this, value, offset, 4, 4294967295, 0);
         this[offset + 3] = value >>> 24;
         this[offset + 2] = value >>> 16;
         this[offset + 1] = value >>> 8;
@@ -1353,7 +1424,8 @@ module.exports = (() => {
       Buffer4.prototype.writeUint32BE = Buffer4.prototype.writeUInt32BE = /* @__PURE__ */ __name(function writeUInt32BE(value, offset, noAssert) {
         value = +value;
         offset = offset >>> 0;
-        if (!noAssert) checkInt(this, value, offset, 4, 4294967295, 0);
+        if (!noAssert)
+          checkInt(this, value, offset, 4, 4294967295, 0);
         this[offset] = value >>> 24;
         this[offset + 1] = value >>> 16;
         this[offset + 2] = value >>> 8;
@@ -1449,15 +1521,18 @@ module.exports = (() => {
       Buffer4.prototype.writeInt8 = /* @__PURE__ */ __name(function writeInt8(value, offset, noAssert) {
         value = +value;
         offset = offset >>> 0;
-        if (!noAssert) checkInt(this, value, offset, 1, 127, -128);
-        if (value < 0) value = 255 + value + 1;
+        if (!noAssert)
+          checkInt(this, value, offset, 1, 127, -128);
+        if (value < 0)
+          value = 255 + value + 1;
         this[offset] = value & 255;
         return offset + 1;
       }, "writeInt8");
       Buffer4.prototype.writeInt16LE = /* @__PURE__ */ __name(function writeInt16LE(value, offset, noAssert) {
         value = +value;
         offset = offset >>> 0;
-        if (!noAssert) checkInt(this, value, offset, 2, 32767, -32768);
+        if (!noAssert)
+          checkInt(this, value, offset, 2, 32767, -32768);
         this[offset] = value & 255;
         this[offset + 1] = value >>> 8;
         return offset + 2;
@@ -1465,7 +1540,8 @@ module.exports = (() => {
       Buffer4.prototype.writeInt16BE = /* @__PURE__ */ __name(function writeInt16BE(value, offset, noAssert) {
         value = +value;
         offset = offset >>> 0;
-        if (!noAssert) checkInt(this, value, offset, 2, 32767, -32768);
+        if (!noAssert)
+          checkInt(this, value, offset, 2, 32767, -32768);
         this[offset] = value >>> 8;
         this[offset + 1] = value & 255;
         return offset + 2;
@@ -1473,7 +1549,8 @@ module.exports = (() => {
       Buffer4.prototype.writeInt32LE = /* @__PURE__ */ __name(function writeInt32LE(value, offset, noAssert) {
         value = +value;
         offset = offset >>> 0;
-        if (!noAssert) checkInt(this, value, offset, 4, 2147483647, -2147483648);
+        if (!noAssert)
+          checkInt(this, value, offset, 4, 2147483647, -2147483648);
         this[offset] = value & 255;
         this[offset + 1] = value >>> 8;
         this[offset + 2] = value >>> 16;
@@ -1483,8 +1560,10 @@ module.exports = (() => {
       Buffer4.prototype.writeInt32BE = /* @__PURE__ */ __name(function writeInt32BE(value, offset, noAssert) {
         value = +value;
         offset = offset >>> 0;
-        if (!noAssert) checkInt(this, value, offset, 4, 2147483647, -2147483648);
-        if (value < 0) value = 4294967295 + value + 1;
+        if (!noAssert)
+          checkInt(this, value, offset, 4, 2147483647, -2147483648);
+        if (value < 0)
+          value = 4294967295 + value + 1;
         this[offset] = value >>> 24;
         this[offset + 1] = value >>> 16;
         this[offset + 2] = value >>> 8;
@@ -1498,8 +1577,10 @@ module.exports = (() => {
         return wrtBigUInt64BE(this, value, offset, -BigInt("0x8000000000000000"), BigInt("0x7fffffffffffffff"));
       }, "writeBigInt64BE"));
       function checkIEEE754(buf, value, offset, ext, max, min) {
-        if (offset + ext > buf.length) throw new RangeError("Index out of range");
-        if (offset < 0) throw new RangeError("Index out of range");
+        if (offset + ext > buf.length)
+          throw new RangeError("Index out of range");
+        if (offset < 0)
+          throw new RangeError("Index out of range");
       }
       __name(checkIEEE754, "checkIEEE754");
       function writeFloat(buf, value, offset, littleEndian, noAssert) {
@@ -1535,20 +1616,31 @@ module.exports = (() => {
         return writeDouble(this, value, offset, false, noAssert);
       }, "writeDoubleBE");
       Buffer4.prototype.copy = /* @__PURE__ */ __name(function copy(target, targetStart, start, end) {
-        if (!Buffer4.isBuffer(target)) throw new TypeError("argument should be a Buffer");
-        if (!start) start = 0;
-        if (!end && end !== 0) end = this.length;
-        if (targetStart >= target.length) targetStart = target.length;
-        if (!targetStart) targetStart = 0;
-        if (end > 0 && end < start) end = start;
-        if (end === start) return 0;
-        if (target.length === 0 || this.length === 0) return 0;
+        if (!Buffer4.isBuffer(target))
+          throw new TypeError("argument should be a Buffer");
+        if (!start)
+          start = 0;
+        if (!end && end !== 0)
+          end = this.length;
+        if (targetStart >= target.length)
+          targetStart = target.length;
+        if (!targetStart)
+          targetStart = 0;
+        if (end > 0 && end < start)
+          end = start;
+        if (end === start)
+          return 0;
+        if (target.length === 0 || this.length === 0)
+          return 0;
         if (targetStart < 0) {
           throw new RangeError("targetStart out of bounds");
         }
-        if (start < 0 || start >= this.length) throw new RangeError("Index out of range");
-        if (end < 0) throw new RangeError("sourceEnd out of bounds");
-        if (end > this.length) end = this.length;
+        if (start < 0 || start >= this.length)
+          throw new RangeError("Index out of range");
+        if (end < 0)
+          throw new RangeError("sourceEnd out of bounds");
+        if (end > this.length)
+          end = this.length;
         if (target.length - targetStart < end - start) {
           end = target.length - targetStart + start;
         }
@@ -1599,7 +1691,8 @@ module.exports = (() => {
         }
         start = start >>> 0;
         end = end === void 0 ? this.length : end >>> 0;
-        if (!val) val = 0;
+        if (!val)
+          val = 0;
         let i;
         if (typeof val === "number") {
           for (i = start; i < end; ++i) {
@@ -1745,7 +1838,8 @@ module.exports = (() => {
       function base64clean(str) {
         str = str.split("=")[0];
         str = str.trim().replace(INVALID_BASE64_RE, "");
-        if (str.length < 2) return "";
+        if (str.length < 2)
+          return "";
         while (str.length % 4 !== 0) {
           str = str + "=";
         }
@@ -1763,43 +1857,51 @@ module.exports = (() => {
           if (codePoint > 55295 && codePoint < 57344) {
             if (!leadSurrogate) {
               if (codePoint > 56319) {
-                if ((units -= 3) > -1) bytes.push(239, 191, 189);
+                if ((units -= 3) > -1)
+                  bytes.push(239, 191, 189);
                 continue;
               } else if (i + 1 === length) {
-                if ((units -= 3) > -1) bytes.push(239, 191, 189);
+                if ((units -= 3) > -1)
+                  bytes.push(239, 191, 189);
                 continue;
               }
               leadSurrogate = codePoint;
               continue;
             }
             if (codePoint < 56320) {
-              if ((units -= 3) > -1) bytes.push(239, 191, 189);
+              if ((units -= 3) > -1)
+                bytes.push(239, 191, 189);
               leadSurrogate = codePoint;
               continue;
             }
             codePoint = (leadSurrogate - 55296 << 10 | codePoint - 56320) + 65536;
           } else if (leadSurrogate) {
-            if ((units -= 3) > -1) bytes.push(239, 191, 189);
+            if ((units -= 3) > -1)
+              bytes.push(239, 191, 189);
           }
           leadSurrogate = null;
           if (codePoint < 128) {
-            if ((units -= 1) < 0) break;
+            if ((units -= 1) < 0)
+              break;
             bytes.push(codePoint);
           } else if (codePoint < 2048) {
-            if ((units -= 2) < 0) break;
+            if ((units -= 2) < 0)
+              break;
             bytes.push(
               codePoint >> 6 | 192,
               codePoint & 63 | 128
             );
           } else if (codePoint < 65536) {
-            if ((units -= 3) < 0) break;
+            if ((units -= 3) < 0)
+              break;
             bytes.push(
               codePoint >> 12 | 224,
               codePoint >> 6 & 63 | 128,
               codePoint & 63 | 128
             );
           } else if (codePoint < 1114112) {
-            if ((units -= 4) < 0) break;
+            if ((units -= 4) < 0)
+              break;
             bytes.push(
               codePoint >> 18 | 240,
               codePoint >> 12 & 63 | 128,
@@ -1825,7 +1927,8 @@ module.exports = (() => {
         let c, hi, lo;
         const byteArray = [];
         for (let i = 0; i < str.length; ++i) {
-          if ((units -= 2) < 0) break;
+          if ((units -= 2) < 0)
+            break;
           c = str.charCodeAt(i);
           hi = c >> 8;
           lo = c % 256;
@@ -1842,7 +1945,8 @@ module.exports = (() => {
       function blitBuffer(src, dst, offset, length) {
         let i;
         for (i = 0; i < length; ++i) {
-          if (i + offset >= dst.length || i >= src.length) break;
+          if (i + offset >= dst.length || i >= src.length)
+            break;
           dst[i + offset] = src[i];
         }
         return i;
@@ -1893,11 +1997,15 @@ module.exports = (() => {
       init_buffer_shim();
       var titlecase = /* @__PURE__ */ __name((input) => input[0].toLocaleUpperCase() + input.slice(1), "titlecase");
       module.exports = (value) => {
-        if (value === null || value === void 0) return "";
-        if (typeof value.toString !== "function") return "";
+        if (value === null || value === void 0)
+          return "";
+        if (typeof value.toString !== "function")
+          return "";
         let input = value.toString().trim();
-        if (input === "") return "";
-        if (input.length === 1) return input.toLocaleUpperCase();
+        if (input === "")
+          return "";
+        if (input.length === 1)
+          return input.toLocaleUpperCase();
         let match = input.match(/[a-zA-Z0-9]+/g);
         if (match) {
           return match.map((m) => titlecase(m)).join("");
@@ -1978,7 +2086,8 @@ module.exports = (() => {
               child = [];
             } else if (clone3.__isRegExp(parent2)) {
               child = new RegExp(parent2.source, __getRegExpFlags(parent2));
-              if (parent2.lastIndex) child.lastIndex = parent2.lastIndex;
+              if (parent2.lastIndex)
+                child.lastIndex = parent2.lastIndex;
             } else if (clone3.__isDate(parent2)) {
               child = new Date(parent2.getTime());
             } else if (useBuffer && Buffer2.isBuffer(parent2)) {
@@ -2097,9 +2206,12 @@ module.exports = (() => {
         clone3.__isRegExp = __isRegExp;
         function __getRegExpFlags(re) {
           var flags = "";
-          if (re.global) flags += "g";
-          if (re.ignoreCase) flags += "i";
-          if (re.multiline) flags += "m";
+          if (re.global)
+            flags += "g";
+          if (re.ignoreCase)
+            flags += "i";
+          if (re.multiline)
+            flags += "m";
           return flags;
         }
         __name(__getRegExpFlags, "__getRegExpFlags");
@@ -2659,7 +2771,7 @@ module.exports = (() => {
               if (!allowMissing) {
                 throw new $TypeError("base intrinsic for " + name + " exists, but the property is not available.");
               }
-              return void undefined2;
+              return void 0;
             }
             if ($gOPD && i + 1 >= parts.length) {
               var desc = $gOPD(value, part);
@@ -3510,12 +3622,12 @@ module.exports = (() => {
         var $m;
         var $o;
         var channel = {
-          assert: /* @__PURE__ */ __name(function(key) {
+          assert: function(key) {
             if (!channel.has(key)) {
               throw new $TypeError("Side channel does not contain " + inspect(key));
             }
-          }, "assert"),
-          get: /* @__PURE__ */ __name(function(key) {
+          },
+          get: function(key) {
             if ($WeakMap && key && (typeof key === "object" || typeof key === "function")) {
               if ($wm) {
                 return $weakMapGet($wm, key);
@@ -3529,8 +3641,8 @@ module.exports = (() => {
                 return listGet($o, key);
               }
             }
-          }, "get"),
-          has: /* @__PURE__ */ __name(function(key) {
+          },
+          has: function(key) {
             if ($WeakMap && key && (typeof key === "object" || typeof key === "function")) {
               if ($wm) {
                 return $weakMapHas($wm, key);
@@ -3545,8 +3657,8 @@ module.exports = (() => {
               }
             }
             return false;
-          }, "has"),
-          set: /* @__PURE__ */ __name(function(key, value) {
+          },
+          set: function(key, value) {
             if ($WeakMap && key && (typeof key === "object" || typeof key === "function")) {
               if (!$wm) {
                 $wm = new $WeakMap();
@@ -3563,7 +3675,7 @@ module.exports = (() => {
               }
               listSet($o, key, value);
             }
-          }, "set")
+          }
         };
         return channel;
       }, "getSideChannel");
@@ -3584,12 +3696,12 @@ module.exports = (() => {
       module.exports = {
         "default": Format.RFC3986,
         formatters: {
-          RFC1738: /* @__PURE__ */ __name(function(value) {
+          RFC1738: function(value) {
             return replace.call(value, percentTwenties, "+");
-          }, "RFC1738"),
-          RFC3986: /* @__PURE__ */ __name(function(value) {
+          },
+          RFC3986: function(value) {
             return String(value);
-          }, "RFC3986")
+          }
         },
         RFC1738: Format.RFC1738,
         RFC3986: Format.RFC3986
@@ -4282,7 +4394,8 @@ module.exports = (() => {
       module.exports = /* @__PURE__ */ __name(function required(port, protocol) {
         protocol = protocol.split(":")[0];
         port = +port;
-        if (!port) return false;
+        if (!port)
+          return false;
         switch (protocol) {
           case "http":
           case "ws":
@@ -4329,7 +4442,8 @@ module.exports = (() => {
         var parser = /([^=?#&]+)=?([^&]*)/g, result = {}, part;
         while (part = parser.exec(query)) {
           var key = decode(part[1]), value = decode(part[2]);
-          if (key === null || value === null || key in result) continue;
+          if (key === null || value === null || key in result)
+            continue;
           result[key] = value;
         }
         return result;
@@ -4338,7 +4452,8 @@ module.exports = (() => {
       function querystringify(obj, prefix) {
         prefix = prefix || "";
         var pairs = [], value, key;
-        if ("string" !== typeof prefix) prefix = "?";
+        if ("string" !== typeof prefix)
+          prefix = "?";
         for (key in obj) {
           if (has.call(obj, key)) {
             value = obj[key];
@@ -4347,7 +4462,8 @@ module.exports = (() => {
             }
             key = encode(key);
             value = encode(value);
-            if (key === null || value === null) continue;
+            if (key === null || value === null)
+              continue;
             pairs.push(key + "=" + value);
           }
         }
@@ -4398,10 +4514,14 @@ module.exports = (() => {
       var ignore = { hash: 1, query: 1 };
       function lolcation(loc) {
         var globalVar;
-        if (typeof window !== "undefined") globalVar = window;
-        else if (typeof global !== "undefined") globalVar = global;
-        else if (typeof self !== "undefined") globalVar = self;
-        else globalVar = {};
+        if (typeof window !== "undefined")
+          globalVar = window;
+        else if (typeof global !== "undefined")
+          globalVar = global;
+        else if (typeof self !== "undefined")
+          globalVar = self;
+        else
+          globalVar = {};
         var location = globalVar.location || {};
         loc = loc || location;
         var finaldestination = {}, type = typeof loc, key;
@@ -4409,10 +4529,12 @@ module.exports = (() => {
           finaldestination = new Url(unescape(loc.pathname), {});
         } else if ("string" === type) {
           finaldestination = new Url(loc, {});
-          for (key in ignore) delete finaldestination[key];
+          for (key in ignore)
+            delete finaldestination[key];
         } else if ("object" === type) {
           for (key in loc) {
-            if (key in ignore) continue;
+            if (key in ignore)
+              continue;
             finaldestination[key] = loc[key];
           }
           if (finaldestination.slashes === void 0) {
@@ -4474,7 +4596,8 @@ module.exports = (() => {
       }
       __name(extractProtocol, "extractProtocol");
       function resolve(relative, base) {
-        if (relative === "") return base;
+        if (relative === "")
+          return base;
         var path = (base || "/").split("/").slice(0, -1).concat(relative.split("/")), i = path.length, last = path[i - 1], unshift = false, up = 0;
         while (i--) {
           if (path[i] === ".") {
@@ -4483,13 +4606,16 @@ module.exports = (() => {
             path.splice(i, 1);
             up++;
           } else if (up) {
-            if (i === 0) unshift = true;
+            if (i === 0)
+              unshift = true;
             path.splice(i, 1);
             up--;
           }
         }
-        if (unshift) path.unshift("");
-        if (last === "." || last === "..") path.push("");
+        if (unshift)
+          path.unshift("");
+        if (last === "." || last === "..")
+          path.push("");
         return path.join("/");
       }
       __name(resolve, "resolve");
@@ -4504,7 +4630,8 @@ module.exports = (() => {
           parser = location;
           location = null;
         }
-        if (parser && "function" !== typeof parser) parser = qs2.parse;
+        if (parser && "function" !== typeof parser)
+          parser = qs2.parse;
         location = lolcation(location);
         extracted = extractProtocol(address || "", location);
         relative = !extracted.protocol && !extracted.slashes;
@@ -4540,9 +4667,11 @@ module.exports = (() => {
             address = address.slice(0, index.index);
           }
           url[key] = url[key] || (relative && instruction[3] ? location[key] || "" : "");
-          if (instruction[4]) url[key] = url[key].toLowerCase();
+          if (instruction[4])
+            url[key] = url[key].toLowerCase();
         }
-        if (parser) url.query = parser(url.query);
+        if (parser)
+          url.query = parser(url.query);
         if (relative && location.slashes && url.pathname.charAt(0) !== "/" && (url.pathname !== "" || location.pathname !== "")) {
           url.pathname = resolve(url.pathname, location.pathname);
         }
@@ -4590,7 +4719,8 @@ module.exports = (() => {
             break;
           case "hostname":
             url[part] = value;
-            if (url.port) value += ":" + url.port;
+            if (url.port)
+              value += ":" + url.port;
             url.host = value;
             break;
           case "host":
@@ -4634,7 +4764,8 @@ module.exports = (() => {
         }
         for (var i = 0; i < rules.length; i++) {
           var ins = rules[i];
-          if (ins[4]) url[ins[1]] = url[ins[1]].toLowerCase();
+          if (ins[4])
+            url[ins[1]] = url[ins[1]].toLowerCase();
         }
         url.auth = url.password ? url.username + ":" + url.password : url.username;
         url.origin = url.protocol !== "file:" && isSpecial(url.protocol) && url.host ? url.protocol + "//" + url.host : "null";
@@ -4643,13 +4774,16 @@ module.exports = (() => {
       }
       __name(set, "set");
       function toString(stringify) {
-        if (!stringify || "function" !== typeof stringify) stringify = qs2.stringify;
+        if (!stringify || "function" !== typeof stringify)
+          stringify = qs2.stringify;
         var query, url = this, host = url.host, protocol = url.protocol;
-        if (protocol && protocol.charAt(protocol.length - 1) !== ":") protocol += ":";
+        if (protocol && protocol.charAt(protocol.length - 1) !== ":")
+          protocol += ":";
         var result = protocol + (url.protocol && url.slashes || isSpecial(url.protocol) ? "//" : "");
         if (url.username) {
           result += url.username;
-          if (url.password) result += ":" + url.password;
+          if (url.password)
+            result += ":" + url.password;
           result += "@";
         } else if (url.password) {
           result += ":" + url.password;
@@ -4662,8 +4796,10 @@ module.exports = (() => {
         }
         result += host + url.pathname;
         query = "object" === typeof url.query ? stringify(url.query) : url.query;
-        if (query) result += "?" !== query.charAt(0) ? "?" + query : query;
-        if (url.hash) result += url.hash;
+        if (query)
+          result += "?" !== query.charAt(0) ? "?" + query : query;
+        if (url.hash)
+          result += url.hash;
         return result;
       }
       __name(toString, "toString");
@@ -4771,9 +4907,9 @@ module.exports = (() => {
       if (typeof reflectApply === "function" && typeof Object.defineProperty === "function") {
         try {
           badArrayLike = Object.defineProperty({}, "length", {
-            get: /* @__PURE__ */ __name(function() {
+            get: function() {
               throw isCallableMarker;
-            }, "get")
+            }
           });
           isCallableMarker = {};
           reflectApply(function() {
@@ -5363,9 +5499,9 @@ module.exports = (() => {
       ["isProxy", "isExternal", "isModuleNamespaceObject"].forEach(function(method) {
         Object.defineProperty(exports, method, {
           enumerable: false,
-          value: /* @__PURE__ */ __name(function() {
+          value: function() {
             throw new Error(method + " is not supported in userland");
-          }, "value")
+          }
         });
       });
     }
@@ -5439,8 +5575,10 @@ module.exports = (() => {
         var args = arguments;
         var len = args.length;
         var str = String(f).replace(formatRegExp, function(x2) {
-          if (x2 === "%%") return "%";
-          if (i >= len) return x2;
+          if (x2 === "%%")
+            return "%";
+          if (i >= len)
+            return x2;
           switch (x2) {
             case "%s":
               return String(args[i++]);
@@ -5520,18 +5658,25 @@ module.exports = (() => {
           seen: [],
           stylize: stylizeNoColor
         };
-        if (arguments.length >= 3) ctx.depth = arguments[2];
-        if (arguments.length >= 4) ctx.colors = arguments[3];
+        if (arguments.length >= 3)
+          ctx.depth = arguments[2];
+        if (arguments.length >= 4)
+          ctx.colors = arguments[3];
         if (isBoolean(opts)) {
           ctx.showHidden = opts;
         } else if (opts) {
           exports._extend(ctx, opts);
         }
-        if (isUndefined(ctx.showHidden)) ctx.showHidden = false;
-        if (isUndefined(ctx.depth)) ctx.depth = 2;
-        if (isUndefined(ctx.colors)) ctx.colors = false;
-        if (isUndefined(ctx.customInspect)) ctx.customInspect = true;
-        if (ctx.colors) ctx.stylize = stylizeWithColor;
+        if (isUndefined(ctx.showHidden))
+          ctx.showHidden = false;
+        if (isUndefined(ctx.depth))
+          ctx.depth = 2;
+        if (isUndefined(ctx.colors))
+          ctx.colors = false;
+        if (isUndefined(ctx.customInspect))
+          ctx.customInspect = true;
+        if (ctx.colors)
+          ctx.stylize = stylizeWithColor;
         return formatValue(ctx, obj, ctx.depth);
       }
       __name(inspect, "inspect");
@@ -5770,7 +5915,8 @@ module.exports = (() => {
         var numLinesEst = 0;
         var length = output.reduce(function(prev, cur) {
           numLinesEst++;
-          if (cur.indexOf("\n") >= 0) numLinesEst++;
+          if (cur.indexOf("\n") >= 0)
+            numLinesEst++;
           return prev + cur.replace(/\u001b\[\d\d?m/g, "").length + 1;
         }, 0);
         if (length > 60) {
@@ -5892,7 +6038,8 @@ module.exports = (() => {
       };
       exports.inherits = require_inherits_browser();
       exports._extend = function(origin, add) {
-        if (!add || !isObject2(add)) return origin;
+        if (!add || !isObject2(add))
+          return origin;
         var keys = Object.keys(add);
         var i = keys.length;
         while (i--) {
@@ -5947,12 +6094,13 @@ module.exports = (() => {
         }
         __name(fn, "fn");
         Object.setPrototypeOf(fn, Object.getPrototypeOf(original));
-        if (kCustomPromisifiedSymbol) Object.defineProperty(fn, kCustomPromisifiedSymbol, {
-          value: fn,
-          enumerable: false,
-          writable: false,
-          configurable: true
-        });
+        if (kCustomPromisifiedSymbol)
+          Object.defineProperty(fn, kCustomPromisifiedSymbol, {
+            value: fn,
+            enumerable: false,
+            writable: false,
+            configurable: true
+          });
         return Object.defineProperties(
           fn,
           getOwnPropertyDescriptors(original)
@@ -6892,8 +7040,6 @@ module.exports = (() => {
                   }
                 } else {
                   switch (formulaSpec.metadataFormulaType) {
-                    // Certain sync tables (Jira Issues, canonically) are not "dynamic" but have a getSchema formula
-                    // in order to augment a static base schema with dynamic properties.
                     case "SyncGetSchema" /* SyncGetSchema */:
                       formula = syncTable2.getSchema;
                       isGetSchema = true;

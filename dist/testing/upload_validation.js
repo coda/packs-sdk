@@ -686,7 +686,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }),
         displayName: z.string().min(1).max(exports.Limits.BuildingBlockName),
         description: z.string().min(1).max(exports.Limits.BuildingBlockDescription),
-        isServiceAccount: z.boolean().optional(),
     });
     const primitiveUnion = z.union([z.number(), z.string(), z.boolean(), z.date()]);
     const paramDefValidator = zodCompleteObject({
