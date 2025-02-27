@@ -1068,6 +1068,7 @@ export type ObjectSchemaPathProperties = Pick<
   | 'userIdProperty'
   | 'groupIdProperty'
   | 'memberGroupIdProperty'
+  | 'authorityRankProperty'
   | 'popularityRankProperty'
   | 'versionProperty'
 >;
@@ -1131,6 +1132,7 @@ export interface IndexDefinition {
    * TODO(alexd): Unhide this
    * @hidden
    */
+  authorityRankProperty?: PropertyIdentifier<string>;
   popularityRankProperty?: PropertyIdentifier<string>;
 }
 
@@ -1381,6 +1383,16 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    * @hidden
    */
   memberGroupIdProperty?: PropertyIdentifier<K>;
+
+  /**
+   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be be interpreted as
+   * a number between 0.0 and 1.0 representing the authority rank of this entity compared to all other entities.
+   *
+   * Must be a {@link ValueType.Number} property.
+   * TODO(sam): Unhide this
+   * @hidden
+   */
+  authorityRankProperty?: PropertyIdentifier<K>;
 
   /**
    * The name of the property within {@link ObjectSchemaDefinition.properties} that can be be interpreted as
@@ -2071,12 +2083,15 @@ function normalizeIndexDefinition(
   index: IndexDefinition,
   normalizedProperties: ObjectSchemaProperties,
 ): IndexDefinition {
-  const {properties, contextProperties, popularityRankProperty, ...rest} = index;
+  const {properties, contextProperties, authorityRankProperty, popularityRankProperty, ...rest} = index;
   ensureNever<keyof typeof rest>();
   return {
     properties: properties.map(prop => normalizeIndexProperty(prop, normalizedProperties)),
     contextProperties: contextProperties
       ? contextProperties.map(prop => normalizeSchemaPropertyIdentifier(prop, normalizedProperties))
+      : undefined,
+    authorityRankProperty: authorityRankProperty
+      ? normalizeSchemaPropertyIdentifier(authorityRankProperty, normalizedProperties)
       : undefined,
     popularityRankProperty: popularityRankProperty
       ? normalizeSchemaPropertyIdentifier(popularityRankProperty, normalizedProperties)
@@ -2161,6 +2176,7 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     userIdProperty,
     groupIdProperty,
     memberGroupIdProperty,
+    authorityRankProperty,
     popularityRankProperty,
     versionProperty,
     index,
@@ -2233,6 +2249,9 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
       : undefined,
     memberGroupIdProperty: memberGroupIdProperty
       ? normalizeSchemaPropertyIdentifier(memberGroupIdProperty, normalizedProperties)
+      : undefined,
+    authorityRankProperty: authorityRankProperty
+      ? normalizeSchemaPropertyIdentifier(authorityRankProperty, normalizedProperties)
       : undefined,
     popularityRankProperty: popularityRankProperty
       ? normalizeSchemaPropertyIdentifier(popularityRankProperty, normalizedProperties)

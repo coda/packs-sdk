@@ -1376,6 +1376,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
   const indexSchema = zodCompleteStrictObject<IndexDefinition>({
     properties: z.array(indexedPropertySchema).min(1),
     contextProperties: contextPropertiesSchema.optional(),
+    authorityRankProperty: propertySchema.optional(),
     popularityRankProperty: propertySchema.optional(),
   });
 
@@ -1423,6 +1424,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       userEmailProperty: propertySchema.optional(),
       groupIdProperty: propertySchema.optional(),
       memberGroupIdProperty: propertySchema.optional(),
+      authorityRankProperty: propertySchema.optional(),
       popularityRankProperty: propertySchema.optional(),
       versionProperty: propertySchema.optional(),
       options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
@@ -1664,6 +1666,14 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           );
         };
 
+        const validateAuthorityRankProperty = () => {
+          return validateProperty(
+            'authorityRankProperty',
+            authorityRankPropertySchema => authorityRankPropertySchema.type === ValueType.Number,
+            `must refer to a "ValueType.Number" property.`,
+          );
+        };
+
         const validatePopularityRankProperty = () => {
           return validateProperty(
             'popularityRankProperty',
@@ -1693,6 +1703,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         validateUserIdProperty();
         validateGroupIdProperty();
         validateMemberGroupIdProperty();
+        validateAuthorityRankProperty();
         validatePopularityRankProperty();
         validateVersionProperty();
       })
@@ -1718,7 +1729,17 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
 
         const validatePropertyValue = makePropertyValidator(schema, context);
 
-        const {properties, contextProperties, popularityRankProperty} = schema.index;
+        const {properties, contextProperties, authorityRankProperty, popularityRankProperty} = schema.index;
+
+        if (authorityRankProperty) {
+          validatePropertyValue(
+            authorityRankProperty,
+            'authorityRankProperty',
+            authorityRankPropertySchema => authorityRankPropertySchema.type === ValueType.Number,
+            `must refer to a "ValueType.Number" property.`,
+            ['index', 'authorityRankProperty'],
+          );
+        }
 
         if (popularityRankProperty) {
           validatePropertyValue(
