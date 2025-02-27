@@ -857,7 +857,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       }),
     displayName: z.string().min(1).max(Limits.BuildingBlockName),
     description: z.string().min(1).max(Limits.BuildingBlockDescription),
-    isServiceAccount: z.boolean().optional(),
   });
 
   const primitiveUnion = z.union([z.number(), z.string(), z.boolean(), z.date()]);
@@ -1882,13 +1881,13 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
   };
 
   type GenericSyncTableDef = SyncTableDef<
-    any, 
-    any, 
-    ParamDefs, 
-    ObjectSchema<any, any>, 
-    SyncExecutionContext, 
+    any,
+    any,
+    ParamDefs,
+    ObjectSchema<any, any>,
+    SyncExecutionContext,
     SyncPassthroughData
-    >;
+  >;
 
   const genericSyncTableSchema = zodCompleteObject<GenericSyncTableDef & {isDynamic?: false}>({
     ...baseSyncTableSchema,
@@ -1900,13 +1899,9 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
   }).strict();
 
   const genericDynamicSyncTableSchema = zodCompleteObject<
-    DynamicSyncTableDef<any, 
-                        any, 
-                        ParamDefs, 
-                        ObjectSchema<any, any>, 
-                        SyncExecutionContext, 
-                        SyncPassthroughData
-                      > & {autocomplete: any}
+    DynamicSyncTableDef<any, any, ParamDefs, ObjectSchema<any, any>, SyncExecutionContext, SyncPassthroughData> & {
+      autocomplete: any;
+    }
   >({
     ...baseSyncTableSchema,
     isDynamic: zodDiscriminant(true),
