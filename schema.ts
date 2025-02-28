@@ -1068,7 +1068,8 @@ export type ObjectSchemaPathProperties = Pick<
   | 'userIdProperty'
   | 'groupIdProperty'
   | 'memberGroupIdProperty'
-  | 'authorityRankProperty'
+  | 'authorityNormProperty'
+  | 'popularityNormProperty'
   | 'popularityRankProperty'
   | 'versionProperty'
 >;
@@ -1125,20 +1126,30 @@ export interface IndexDefinition {
    */
   contextProperties?: ContextProperties;
   /**
-   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be be interpreted as
-   * a number between -1.0 and 1.0 representing the authority rank of this entity compared to all other entities.
+   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as
+   * a number between -1.0 and 1.0 representing the normalized authority score of this entity compared to all other entities.
    *
    * Must be a {@link ValueType.Number} property.
    * TODO(alexd): Unhide this
    * @hidden
    */
-  authorityRankProperty?: PropertyIdentifier<string>;
+  authorityNormProperty?: PropertyIdentifier<string>;
   /**
-   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be be interpreted as
-   * a number between -1.0 and 1.0 representing the popularity rank of this entity compared to all other entities.
+   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as
+   * a number between -1.0 and 1.0 representing the normalized popularity score of this entity compared to all other entities.
    *
    * Must be a {@link ValueType.Number} property.
    * TODO(alexd): Unhide this
+   * @hidden
+   */
+  popularityNormProperty?: PropertyIdentifier<string>;
+  /**
+   * @deprecated Use {@link IndexDefinition.popularityNormProperty} instead.
+   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as
+   * a number between -1.0 and 1.0 representing the normalized popularity score of this entity compared to all other entities.
+   *
+   * Must be a {@link ValueType.Number} property.
+   * TODO(solomon): Remove this when all Packs' popularityRank is migrated to popularityNorm
    * @hidden
    */
   popularityRankProperty?: PropertyIdentifier<string>;
@@ -1393,21 +1404,31 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
   memberGroupIdProperty?: PropertyIdentifier<K>;
 
   /**
-   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be be interpreted as
-   * a number between 0.0 and 1.0 representing the authority rank of this entity compared to all other entities.
+   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as
+   * a number between -1.0 and 1.0 representing the normalized authority score of this entity compared to all other entities.
    *
    * Must be a {@link ValueType.Number} property.
    * TODO(sam): Unhide this
    * @hidden
    */
-  authorityRankProperty?: PropertyIdentifier<K>;
+  authorityNormProperty?: PropertyIdentifier<K>;
 
   /**
-   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be be interpreted as
-   * a number between 0.0 and 1.0 representing the popularity rank of this entity compared to all other entities.
+   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as
+   * a number between -1.0 and 1.0 representing the normalized popularity score of this entity compared to all other entities.
    *
    * Must be a {@link ValueType.Number} property.
    * TODO(sam): Unhide this
+   * @hidden
+   */
+  popularityNormProperty?: PropertyIdentifier<K>;
+  /**
+   * @deprecated Use {@link ObjectSchemaDefinition.popularityNormProperty} instead.
+   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as
+   * a number between -1.0 and 1.0 representing the normalized popularity score of this entity compared to all other entities.
+   *
+   * Must be a {@link ValueType.Number} property.
+   * TODO(solomon): Remove this when all Packs' popularityRank is migrated to popularityNorm
    * @hidden
    */
   popularityRankProperty?: PropertyIdentifier<K>;
@@ -2091,15 +2112,18 @@ function normalizeIndexDefinition(
   index: IndexDefinition,
   normalizedProperties: ObjectSchemaProperties,
 ): IndexDefinition {
-  const {properties, contextProperties, authorityRankProperty, popularityRankProperty, ...rest} = index;
+  const {properties, contextProperties, authorityNormProperty, popularityNormProperty, popularityRankProperty, ...rest} = index;
   ensureNever<keyof typeof rest>();
   return {
     properties: properties.map(prop => normalizeIndexProperty(prop, normalizedProperties)),
     contextProperties: contextProperties
       ? contextProperties.map(prop => normalizeSchemaPropertyIdentifier(prop, normalizedProperties))
       : undefined,
-    authorityRankProperty: authorityRankProperty
-      ? normalizeSchemaPropertyIdentifier(authorityRankProperty, normalizedProperties)
+    authorityNormProperty: authorityNormProperty
+      ? normalizeSchemaPropertyIdentifier(authorityNormProperty, normalizedProperties)
+      : undefined,
+    popularityNormProperty: popularityNormProperty
+      ? normalizeSchemaPropertyIdentifier(popularityNormProperty, normalizedProperties)
       : undefined,
     popularityRankProperty: popularityRankProperty
       ? normalizeSchemaPropertyIdentifier(popularityRankProperty, normalizedProperties)
@@ -2184,7 +2208,8 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     userIdProperty,
     groupIdProperty,
     memberGroupIdProperty,
-    authorityRankProperty,
+    authorityNormProperty,
+    popularityNormProperty,
     popularityRankProperty,
     versionProperty,
     index,
@@ -2258,8 +2283,11 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     memberGroupIdProperty: memberGroupIdProperty
       ? normalizeSchemaPropertyIdentifier(memberGroupIdProperty, normalizedProperties)
       : undefined,
-    authorityRankProperty: authorityRankProperty
-      ? normalizeSchemaPropertyIdentifier(authorityRankProperty, normalizedProperties)
+    authorityNormProperty: authorityNormProperty
+      ? normalizeSchemaPropertyIdentifier(authorityNormProperty, normalizedProperties)
+      : undefined,
+    popularityNormProperty: popularityNormProperty
+      ? normalizeSchemaPropertyIdentifier(popularityNormProperty, normalizedProperties)
       : undefined,
     popularityRankProperty: popularityRankProperty
       ? normalizeSchemaPropertyIdentifier(popularityRankProperty, normalizedProperties)
