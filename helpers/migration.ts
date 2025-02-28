@@ -59,6 +59,8 @@ class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
       userIdProperty,
       groupIdProperty,
       memberGroupIdProperty,
+      authorityNormProperty,
+      popularityNormProperty,
       popularityRankProperty,
       versionProperty,
       index,
