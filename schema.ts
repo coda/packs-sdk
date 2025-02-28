@@ -1126,8 +1126,8 @@ export interface IndexDefinition {
    */
   contextProperties?: ContextProperties;
   /**
-   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as
-   * a number between -1.0 and 1.0 representing the normalized authority score of this entity compared to all other entities.
+   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as a number
+   * between -1.0 and 1.0 representing the normalized authority score of this entity compared to all other entities.
    *
    * Must be a {@link ValueType.Number} property.
    * TODO(alexd): Unhide this
@@ -1135,8 +1135,8 @@ export interface IndexDefinition {
    */
   authorityNormProperty?: PropertyIdentifier<string>;
   /**
-   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as
-   * a number between -1.0 and 1.0 representing the normalized popularity score of this entity compared to all other entities.
+   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as a number
+   * between -1.0 and 1.0 representing the normalized popularity score of this entity compared to all other entities.
    *
    * Must be a {@link ValueType.Number} property.
    * TODO(alexd): Unhide this
@@ -1145,8 +1145,8 @@ export interface IndexDefinition {
   popularityNormProperty?: PropertyIdentifier<string>;
   /**
    * @deprecated Use {@link IndexDefinition.popularityNormProperty} instead.
-   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as
-   * a number between -1.0 and 1.0 representing the normalized popularity score of this entity compared to all other entities.
+   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as a number
+   * between -1.0 and 1.0 representing the normalized popularity score of this entity compared to all other entities.
    *
    * Must be a {@link ValueType.Number} property.
    * TODO(solomon): Remove this when all Packs' popularityRank is migrated to popularityNorm
@@ -1404,8 +1404,8 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
   memberGroupIdProperty?: PropertyIdentifier<K>;
 
   /**
-   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as
-   * a number between -1.0 and 1.0 representing the normalized authority score of this entity compared to all other entities.
+   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as a number
+   * between -1.0 and 1.0 representing the normalized authority score of this entity compared to all other entities.
    *
    * Must be a {@link ValueType.Number} property.
    * TODO(sam): Unhide this
@@ -1414,8 +1414,8 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
   authorityNormProperty?: PropertyIdentifier<K>;
 
   /**
-   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as
-   * a number between -1.0 and 1.0 representing the normalized popularity score of this entity compared to all other entities.
+   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as a number
+   * between -1.0 and 1.0 representing the normalized popularity score of this entity compared to all other entities.
    *
    * Must be a {@link ValueType.Number} property.
    * TODO(sam): Unhide this
@@ -1424,8 +1424,8 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
   popularityNormProperty?: PropertyIdentifier<K>;
   /**
    * @deprecated Use {@link ObjectSchemaDefinition.popularityNormProperty} instead.
-   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as
-   * a number between -1.0 and 1.0 representing the normalized popularity score of this entity compared to all other entities.
+   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as a number
+   * between -1.0 and 1.0 representing the normalized popularity score of this entity compared to all other entities.
    *
    * Must be a {@link ValueType.Number} property.
    * TODO(solomon): Remove this when all Packs' popularityRank is migrated to popularityNorm
@@ -2112,7 +2112,14 @@ function normalizeIndexDefinition(
   index: IndexDefinition,
   normalizedProperties: ObjectSchemaProperties,
 ): IndexDefinition {
-  const {properties, contextProperties, authorityNormProperty, popularityNormProperty, popularityRankProperty, ...rest} = index;
+  const {
+    properties,
+    contextProperties,
+    authorityNormProperty,
+    popularityNormProperty,
+    popularityRankProperty,
+    ...rest
+  } = index;
   ensureNever<keyof typeof rest>();
   return {
     properties: properties.map(prop => normalizeIndexProperty(prop, normalizedProperties)),

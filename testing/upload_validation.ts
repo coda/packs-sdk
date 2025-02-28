@@ -1740,7 +1740,13 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
 
         const validatePropertyValue = makePropertyValidator(schema, context);
 
-        const {properties, contextProperties, authorityNormProperty, popularityNormProperty, popularityRankProperty} = schema.index;
+        const {
+          properties,
+          contextProperties,
+          authorityNormProperty,
+          popularityNormProperty,
+          popularityRankProperty,
+        } = schema.index;
 
         if (authorityNormProperty) {
           validatePropertyValue(
