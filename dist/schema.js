@@ -715,12 +715,18 @@ function normalizeIndexProperty(value, normalizedProperties) {
     return normalizeSchemaPropertyIdentifier(value, normalizedProperties);
 }
 function normalizeIndexDefinition(index, normalizedProperties) {
-    const { properties, contextProperties, popularityRankProperty, ...rest } = index;
+    const { properties, contextProperties, authorityNormProperty, popularityNormProperty, popularityRankProperty, ...rest } = index;
     (0, ensure_3.ensureNever)();
     return {
         properties: properties.map(prop => normalizeIndexProperty(prop, normalizedProperties)),
         contextProperties: contextProperties
             ? contextProperties.map(prop => normalizeSchemaPropertyIdentifier(prop, normalizedProperties))
+            : undefined,
+        authorityNormProperty: authorityNormProperty
+            ? normalizeSchemaPropertyIdentifier(authorityNormProperty, normalizedProperties)
+            : undefined,
+        popularityNormProperty: popularityNormProperty
+            ? normalizeSchemaPropertyIdentifier(popularityNormProperty, normalizedProperties)
             : undefined,
         popularityRankProperty: popularityRankProperty
             ? normalizeSchemaPropertyIdentifier(popularityRankProperty, normalizedProperties)
@@ -771,7 +777,7 @@ function normalizeObjectSchema(schema) {
     const normalizedProperties = {};
     const { attribution, options, requireForUpdates, codaType, description, displayProperty, featured, featuredProperties, id, identity, idProperty, imageProperty, includeUnknownProperties, linkProperty, primary, properties, snippetProperty, subtitleProperties, titleProperty, type, 
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    __packId, createdAtProperty, createdByProperty, modifiedAtProperty, modifiedByProperty, userEmailProperty, userIdProperty, groupIdProperty, memberGroupIdProperty, popularityRankProperty, versionProperty, index, parent, ...rest } = schema;
+    __packId, createdAtProperty, createdByProperty, modifiedAtProperty, modifiedByProperty, userEmailProperty, userIdProperty, groupIdProperty, memberGroupIdProperty, authorityNormProperty, popularityNormProperty, popularityRankProperty, versionProperty, index, parent, ...rest } = schema;
     // Have TS ensure we don't forget about new fields in this function.
     (0, ensure_3.ensureNever)();
     for (const key of Object.keys(properties)) {
@@ -838,6 +844,12 @@ function normalizeObjectSchema(schema) {
             : undefined,
         memberGroupIdProperty: memberGroupIdProperty
             ? normalizeSchemaPropertyIdentifier(memberGroupIdProperty, normalizedProperties)
+            : undefined,
+        authorityNormProperty: authorityNormProperty
+            ? normalizeSchemaPropertyIdentifier(authorityNormProperty, normalizedProperties)
+            : undefined,
+        popularityNormProperty: popularityNormProperty
+            ? normalizeSchemaPropertyIdentifier(popularityNormProperty, normalizedProperties)
             : undefined,
         popularityRankProperty: popularityRankProperty
             ? normalizeSchemaPropertyIdentifier(popularityRankProperty, normalizedProperties)
