@@ -1,6 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ensureNever = exports.assertCondition = exports.ensureExists = exports.ensureNonEmptyString = exports.ensureUnreachable = void 0;
+exports.ensureUnreachable = ensureUnreachable;
+exports.ensureNonEmptyString = ensureNonEmptyString;
+exports.ensureExists = ensureExists;
+exports.assertCondition = assertCondition;
+exports.ensureNever = ensureNever;
 const api_1 = require("../api");
 /**
  * Helper for TypeScript to make sure that handling of code forks is exhaustive,
@@ -31,7 +35,6 @@ const api_1 = require("../api");
 function ensureUnreachable(value, message) {
     throw new Error(message || `Unreachable code hit with value ${String(value)}`);
 }
-exports.ensureUnreachable = ensureUnreachable;
 /**
  * Helper to check that a given value is a string, and is not the empty string.
  * If the value is not a string or is empty, an error will be raised at runtime.
@@ -42,7 +45,6 @@ function ensureNonEmptyString(value, message) {
     }
     return value;
 }
-exports.ensureNonEmptyString = ensureNonEmptyString;
 /**
  * Helper to check that a given value is defined, that is, is neither `undefined` nor `null`.
  * If the value is `undefined` or `null`, an error will be raised at runtime.
@@ -56,7 +58,6 @@ function ensureExists(value, message) {
     }
     return value;
 }
-exports.ensureExists = ensureExists;
 function getErrorConstructor(message) {
     return message ? api_1.UserVisibleError : Error;
 }
@@ -82,10 +83,8 @@ function assertCondition(condition, message) {
         throw new (getErrorConstructor(message))(message || 'Assertion failed');
     }
 }
-exports.assertCondition = assertCondition;
 /**
  * Helper to check that a given type is empty/never at compile time.
  * In particular, useful to check whether a given a object is empty via `ensureNever<keyof typeof obj>()`.
  */
 function ensureNever(_) { }
-exports.ensureNever = ensureNever;
