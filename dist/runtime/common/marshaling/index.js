@@ -2,10 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.unmarshalError = exports.marshalError = exports.unwrapError = exports.wrapErrorForSameOrHigherNodeVersion = exports.unmarshalValue = exports.unmarshalValueFromString = exports.marshalValueToStringForSameOrHigherNodeVersion = exports.marshalValue = exports.marshalValuesForLogging = exports.isMarshaledValue = exports.TransformType = void 0;
 const constants_1 = require("./constants");
-const constants_2 = require("./constants");
 const api_1 = require("../../../api");
+const constants_2 = require("./constants");
 const api_2 = require("../../../api");
 const api_3 = require("../../../api");
+const api_4 = require("../../../api");
 const serializer_1 = require("./serializer");
 const util_1 = require("util");
 const legacy_marshal_1 = require("../../../helpers/legacy_marshal");
@@ -55,9 +56,10 @@ const recognizableSystemErrorClasses = [
 ];
 const recognizableCodaErrorClasses = [
     // StatusCodeError doesn't have the new StatusCodeError(message) constructor but it's okay.
-    api_3.StatusCodeError,
-    api_1.MissingScopesError,
-    api_2.ResponseSizeTooLargeError,
+    api_4.StatusCodeError,
+    api_2.MissingScopesError,
+    api_1.GoogleDwdError,
+    api_3.ResponseSizeTooLargeError,
 ];
 // pathPrefix can be temporarily modified, but needs to be restored to its original value
 // before returning.

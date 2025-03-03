@@ -6200,6 +6200,18 @@ module.exports = (() => {
   };
   __name(_MissingScopesError, "MissingScopesError");
   var MissingScopesError = _MissingScopesError;
+  var _GoogleDwdError = class _GoogleDwdError extends Error {
+    /** @hidden */
+    constructor(message) {
+      super(message || "Google DWD error");
+      this.name = "GoogleDwdError";
+    }
+    static isGoogleDwdError(err) {
+      return "name" in err && err.name === _GoogleDwdError.name;
+    }
+  };
+  __name(_GoogleDwdError, "GoogleDwdError");
+  var GoogleDwdError = _GoogleDwdError;
   var _ResponseSizeTooLargeError = class _ResponseSizeTooLargeError extends Error {
     /** @hidden */
     constructor(message) {
@@ -6493,6 +6505,7 @@ module.exports = (() => {
     // StatusCodeError doesn't have the new StatusCodeError(message) constructor but it's okay.
     StatusCodeError,
     MissingScopesError,
+    GoogleDwdError,
     ResponseSizeTooLargeError
   ];
   function fixUncopyableTypes(val, pathPrefix, postTransforms, depth = 0) {

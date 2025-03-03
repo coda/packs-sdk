@@ -1,4 +1,5 @@
 import {CodaMarshalerType} from './constants';
+import {GoogleDwdError} from '../../../api';
 import {MarshalingInjectedKeys} from './constants';
 import {MissingScopesError} from '../../../api';
 import {ResponseSizeTooLargeError} from '../../../api';
@@ -67,6 +68,7 @@ const recognizableCodaErrorClasses: ErrorConstructor[] = [
   // StatusCodeError doesn't have the new StatusCodeError(message) constructor but it's okay.
   StatusCodeError as any,
   MissingScopesError as any,
+  GoogleDwdError as any,
   ResponseSizeTooLargeError as any,
 ];
 
