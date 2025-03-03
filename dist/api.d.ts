@@ -184,6 +184,15 @@ export declare class MissingScopesError extends Error {
     static isMissingScopesError(err: any): err is MissingScopesError;
 }
 /**
+ * This error will be thrown by the fetcher if it fails to generate a valid DWD impersonation token.
+ */
+export declare class GoogleDwdError extends Error {
+    name: string;
+    /** @hidden */
+    constructor(message?: string);
+    static isGoogleDwdError(err: any): err is GoogleDwdError;
+}
+/**
  * An error that will be thrown by {@link Fetcher.fetch} when the response body from the external system
  * exceeds packs platform limits
  *

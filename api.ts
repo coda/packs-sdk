@@ -248,6 +248,22 @@ export class MissingScopesError extends Error {
 }
 
 /**
+ * This error will be thrown by the fetcher if it fails to generate a valid DWD impersonation token.
+ */
+export class GoogleDwdError extends Error {
+  override name: string = 'GoogleDwdError';
+
+  /** @hidden */
+  constructor(message?: string) {
+    super(message || 'Google DWD error');
+  }
+
+  static isGoogleDwdError(err: any): err is GoogleDwdError {
+    return 'name' in err && err.name === GoogleDwdError.name;
+  }
+}
+
+/**
  * An error that will be thrown by {@link Fetcher.fetch} when the response body from the external system
  * exceeds packs platform limits
  *
@@ -2391,8 +2407,14 @@ export function makeSyncTable<
   connectionRequirement,
   dynamicOptions = {},
   role,
-}: SyncTableOptions<K, L, ParamDefsT, SchemaDefT, ContextT, PermissionsContextT>): 
-    SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT> {
+}: SyncTableOptions<K, L, ParamDefsT, SchemaDefT, ContextT, PermissionsContextT>): SyncTableDef<
+  K,
+  L,
+  ParamDefsT,
+  SchemaT,
+  ContextT,
+  PermissionsContextT
+> {
   const {getSchema: getSchemaDef, entityName, defaultAddDynamicColumns} = dynamicOptions;
   const {
     execute: wrappedExecute,

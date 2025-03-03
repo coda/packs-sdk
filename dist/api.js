@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.maybeRewriteConnectionForFormula = exports.maybeRewriteConnectionForNamedPropertyOptions = exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTableLegacy = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makePropertyOptionsFormula = exports.makeMetadataFormula = exports.normalizePropertyOptionsResults = exports.makeFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.UpdateOutcome = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeFileArrayParameter = exports.makeFileParameter = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeParameter = exports.wrapGetSchema = exports.wrapMetadataFunction = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.ResponseSizeTooLargeError = exports.MissingScopesError = exports.StatusCodeError = exports.UserVisibleError = void 0;
+exports.maybeRewriteConnectionForFormula = exports.maybeRewriteConnectionForNamedPropertyOptions = exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTableLegacy = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makePropertyOptionsFormula = exports.makeMetadataFormula = exports.normalizePropertyOptionsResults = exports.makeFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.UpdateOutcome = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeFileArrayParameter = exports.makeFileParameter = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeParameter = exports.wrapGetSchema = exports.wrapMetadataFunction = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.ResponseSizeTooLargeError = exports.GoogleDwdError = exports.MissingScopesError = exports.StatusCodeError = exports.UserVisibleError = void 0;
 const api_types_1 = require("./api_types");
 const api_types_2 = require("./api_types");
 const api_types_3 = require("./api_types");
@@ -168,6 +168,20 @@ class MissingScopesError extends Error {
     }
 }
 exports.MissingScopesError = MissingScopesError;
+/**
+ * This error will be thrown by the fetcher if it fails to generate a valid DWD impersonation token.
+ */
+class GoogleDwdError extends Error {
+    /** @hidden */
+    constructor(message) {
+        super(message || 'Google DWD error');
+        this.name = 'GoogleDwdError';
+    }
+    static isGoogleDwdError(err) {
+        return 'name' in err && err.name === GoogleDwdError.name;
+    }
+}
+exports.GoogleDwdError = GoogleDwdError;
 /**
  * An error that will be thrown by {@link Fetcher.fetch} when the response body from the external system
  * exceeds packs platform limits
