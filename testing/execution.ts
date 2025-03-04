@@ -1,5 +1,6 @@
 import type {BasicPackDefinition} from '../types';
 import type {ChainedCommandFormulaSpecification} from '../runtime/types';
+import type {Continuation} from '../api';
 import type {Credentials} from './auth_types';
 import type {ExecutionContext} from '../api_types';
 import type {FormulaSpecification} from '../runtime/types';
@@ -21,6 +22,7 @@ import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
 import type {PostSetupMetadataFormulaSpecification} from '../runtime/types';
 import type {StandardFormulaSpecification} from '../runtime/types';
+import type {SyncCompletionMetadata} from '../api_types';
 import type {SyncExecutionContext} from '../api_types';
 import type {SyncFormulaSpecification} from '../runtime/types';
 import type {SyncMetadataFormulaSpecification} from '../runtime/types';
@@ -248,7 +250,7 @@ export async function executeFormulaOrSyncFromCLI({
 
     const {formulaSpecification, chainedCommand} = getFormulaSpecAndChainedCommand(manifest, formulaName);
 
-    if (formulaSpecification.type === FormulaType.Sync) {
+    if (formulaSpecification.type === FormulaType.Sync && chainedCommand?.type !== FormulaType.Sync) {
       const {result, chainedCommandResults} = await executeSyncFormulaWithContinuations({
         formulaSpecification,
         chainedCommand,
@@ -260,6 +262,30 @@ export async function executeFormulaOrSyncFromCLI({
         bundlePath,
       });
       printFull(chainedCommand ? chainedCommandResults : result);
+    } else if (formulaSpecification.type === FormulaType.Sync && chainedCommand?.type === FormulaType.Sync) {
+      await executeSyncFormulaWithContinuations({
+        formulaSpecification,
+        chainedCommand,
+        params,
+        manifest,
+        executionContext,
+        vm,
+        bundleSourceMapPath,
+        bundlePath,
+      });
+
+      const {result} = await executeSyncFormulaWithContinuations({
+        formulaSpecification,
+        chainedCommand,
+        params,
+        manifest,
+        executionContext,
+        vm,
+        bundleSourceMapPath,
+        bundlePath,
+      });
+
+      printFull(result);
     } else {
       const result = vm
         ? await executeFormulaOrSyncWithRawParamsInVM({
@@ -342,12 +368,24 @@ function getFormulaSpecAndChainedCommand(
     throw new Error(`Chained commands are only supported for sync formulas. Received: ${formulaSpecification.type}`);
   }
 
+  // Special case for now, since this is effectively <TableName>:sync
+  if (chainedCommands[1] === 'incremental') {
+    return {
+      formulaSpecification,
+      chainedCommand: {type: FormulaType.Sync, formulaName: formulaSpecification.formulaName},
+    };
+  }
+
   const chainedCommand = makeFormulaSpec(manifest, [formulaSpecification.formulaName, chainedCommands[1]].join(':'));
 
-  if (chainedCommand.type !== FormulaType.GetPermissions) {
-    throw new Error(
-      `Chained commands are only supported for GetPermissions formulas. Received: ${chainedCommand.type}`,
-    );
+  switch (chainedCommand.type) {
+    case FormulaType.GetPermissions:
+    case FormulaType.Sync:
+      break;
+    default:
+      throw new Error(
+        `Chained commands are only supported for GetPermissions and SyncUpdate formulas. Received: ${chainedCommand.type}`,
+      );
   }
 
   return {formulaSpecification, chainedCommand};
@@ -1044,7 +1082,8 @@ async function executeSyncFormulaWithContinuations({
       );
     }
     result.push(...response.result);
-    if (chainedCommand) {
+    // Skip Sync here, since we'll handle incremental syncs after this full sync loop happens
+    if (chainedCommand && chainedCommand.type !== FormulaType.Sync) {
       chainedCommandResults.push(
         ...(await chainCommandOnSyncResult({
           rows: response.result,
@@ -1060,6 +1099,10 @@ async function executeSyncFormulaWithContinuations({
       );
     }
     executionContext.sync.continuation = response.continuation;
+    if (response.completion) {
+      executionContext.sync.previousCompletion = response.completion as SyncCompletionMetadata<Continuation>;
+      break;
+    }
     iterations++;
   } while (executionContext.sync.continuation && result.length < maxRows);
   if (result.length > maxRows) {
@@ -1097,7 +1140,7 @@ async function chainCommandOnSyncResult({
 }: {
   rows: any[];
   formulaSpecification: SyncFormulaSpecification;
-  chainedCommand: ChainedCommandFormulaSpecification;
+  chainedCommand: GetPermissionsFormulaSpecification;
   params: string[];
   manifest: BasicPackDefinition;
   executionContext: SyncExecutionContext;

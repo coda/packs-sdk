@@ -126,9 +126,10 @@ export const manifest: PackDefinition = createFakePack({
         name: 'Students',
         description: "Gets students in a teacher's class",
         execute: async ([teacher, shouldPassthrough], context) => {
-          const {continuation} = context.sync;
+          const {continuation, previousCompletion} = context.sync;
           const isIncremental = Boolean(context.sync.previousCompletion);
           const page = continuation?.page;
+          const incrementalPage = previousCompletion?.incrementalContinuation?.page;
           switch (teacher) {
             case 'Smith':
               if (!page || page === 1) {
@@ -219,7 +220,21 @@ export const manifest: PackDefinition = createFakePack({
                   ],
                 };
               }
-
+            case 'Mr. Incremental':
+              if (!incrementalPage || incrementalPage === 1) {
+                return {
+                  result: [{name: 'Alice'}, {name: 'Bob'}, {name: 'Chris'}, {name: 'Diana'}],
+                  completion: {
+                    hasIncompleteResults: true,
+                    incrementalContinuation: {page: 2},
+                  },
+                };
+              }
+              if (incrementalPage === 2) {
+                return {
+                  result: [{name: 'Ethan'}, {name: 'Fiona'}, {name: 'Gina'}, {name: 'Hank'}],
+                };
+              }
             default:
               return {} as any;
           }
@@ -254,7 +269,10 @@ export const manifest: PackDefinition = createFakePack({
             });
           return {rowAccessDefinitions};
         },
-        parameters: [makeStringParameter('teacher', 'teacher name'), makeStringParameter('shouldPassthrough', 'should passthrough', {optional: true})],
+        parameters: [
+          makeStringParameter('teacher', 'teacher name'),
+          makeStringParameter('shouldPassthrough', 'should passthrough', {optional: true}),
+        ],
         examples: [],
       },
     }),

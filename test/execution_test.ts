@@ -128,12 +128,18 @@ describe('Execution', () => {
   });
 
   it('execute sync works and returns passthrough', async () => {
-    const results = await executeSyncFormula(fakePack, 'Students', ['Smith', 'true'], undefined, {}, {useRealFetcher: false});
-    assert.deepEqual(results.permissionsContext, [{userId : 42},{userId : 123},{userId : 53},{userId : 22}]);
+    const results = await executeSyncFormula(
+      fakePack,
+      'Students',
+      ['Smith', 'true'],
+      undefined,
+      {},
+      {useRealFetcher: false},
+    );
+    assert.deepEqual(results.permissionsContext, [{userId: 42}, {userId: 123}, {userId: 53}, {userId: 22}]);
     assert.deepEqual(results.result, [{Name: 'Alice'}, {Name: 'Bob'}, {Name: 'Chris'}, {Name: 'Diana'}]);
     assert.equal(results.permissionsContext?.length, results.result.length);
   });
-
 
   describe('execution errors', () => {
     it('not enough params', async () => {
@@ -565,6 +571,28 @@ describe('Execution', () => {
           );
         });
 
+        it('sync with incremental chaining works', async () => {
+          await executeFormulaOrSyncFromCLI({
+            vm,
+            formulaName: 'Students>incremental',
+            params: ['Mr. Incremental'],
+            manifest: fakePack,
+            manifestPath: '',
+            bundleSourceMapPath,
+            bundlePath,
+            contextOptions: {useRealFetcher: false},
+          });
+          const result = mockPrintFull.args[0][0];
+
+          // What happens if we have multiple incremental syncs?
+          // Assuming we sync the first page in the normal sync, and then passing
+          // >incremental just gets the next page.
+          assert.deepEqual(
+            result,
+            ['Ethan', 'Fiona', 'Gina', 'Hank'].map(name => (vm ? {name} : {Name: name})),
+          );
+        });
+
         it('sync update works', async () => {
           const syncUpdates: GenericSyncUpdate[] = [
             {previousValue: {name: 'Alice'}, newValue: {name: 'Alice Smith'}, updatedFields: ['name']},
@@ -616,9 +644,9 @@ describe('Execution', () => {
           const syncRows: GenericExecuteGetPermissionsRequest = {
             rows: [{row: {name: 'Alice'}}, {row: {name: 'Bob'}}],
             permissionsContext: [
-              {userId: 42},  // For first row
-              {userId: 123}    // For second row
-            ]
+              {userId: 42}, // For first row
+              {userId: 123}, // For second row
+            ],
           };
           await executeFormulaOrSyncFromCLI({
             vm,
