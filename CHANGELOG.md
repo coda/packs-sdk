@@ -6,6 +6,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [1.9.2] - 2025-03-05
 
+### Changed
+
 - Add `GoogleDwdError` from fetcher service
 
 ## [1.9.1] - 2025-02-12
