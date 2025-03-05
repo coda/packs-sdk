@@ -4,6 +4,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+- Add `GoogleDwdError` from fetcher service
+
 ## [1.9.1] - 2025-02-12
 
 ### Changed
@@ -872,3 +874,4 @@ await myHelper(context);
 [1.8.6]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.8.6
 
 [1.9.1]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.1
+[1.9.2]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.2
