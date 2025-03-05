@@ -112,7 +112,7 @@
     "remark-frontmatter": "4.0.1",
     "remark-lint-no-undefined-references": "4.2.1",
     "sharp-cli": "5.1.0",
-    "ts-loader": "9.5.1",
+    "ts-loader": "9.5.2",
     "ts-node": "10.9.2",
     "typedoc": "0.24.8",
     "typedoc-plugin-markdown": "3.15.3"
