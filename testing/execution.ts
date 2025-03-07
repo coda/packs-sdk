@@ -1209,7 +1209,7 @@ async function chainCommandOnSyncResult({
 }: {
   rows: any[];
   formulaSpecification: SyncFormulaSpecification;
-  chainedCommand: GetPermissionsFormulaSpecification;
+  chainedCommand: InterleavedChainedCommandFormulaSpecification;
   params: string[];
   manifest: BasicPackDefinition;
   executionContext: SyncExecutionContext;

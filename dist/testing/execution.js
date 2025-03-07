@@ -152,11 +152,12 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
             ? (0, fetcher_2.newFetcherSyncExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_4.getPackAuth)(manifest), manifest.networkDomains, credentials)
             : (0, mocks_2.newMockSyncExecutionContext)();
         executionContext.sync.dynamicUrl = dynamicUrl || undefined;
-        const { formulaSpecification, chainedCommand } = getFormulaSpecAndChainedCommand(manifest, formulaName);
+        const { formulaSpecification, interleavedChainedCommand, subsequentChainedCommand } = getFormulaSpecAndChainedCommands(manifest, formulaName);
         if (formulaSpecification.type === types_1.FormulaType.Sync) {
-            const { result, chainedCommandResults } = await executeSyncFormulaWithContinuations({
+            const result = await executeSyncFormulaWithOptionalChaining({
                 formulaSpecification,
-                chainedCommand,
+                interleavedChainedCommand,
+                subsequentChainedCommand,
                 params,
                 manifest,
                 executionContext,
@@ -164,7 +165,7 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
                 bundleSourceMapPath,
                 bundlePath,
             });
-            (0, helpers_7.printFull)(chainedCommand ? chainedCommandResults : result);
+            (0, helpers_7.printFull)(result);
         }
         else {
             const result = vm
@@ -218,11 +219,17 @@ function invert(obj) {
 /**
  * Given a formula name with a > delimited chained command, returns the formula specification and the chained command.
  *
+ * Chained commands can either be:
+ * - interleaved (runs in the same loop as continuations)
+ * - subsequent (runs in the completion loop, after the first completion is returned)
+ *
+ * We will only return at most a single command across these two types
+ *
  * @param manifest The manifest of the pack.
  * @param formulaNameInput The formula name with a chained command.
  * @returns The formula specification and the chained command.
  */
-function getFormulaSpecAndChainedCommand(manifest, formulaNameInput) {
+function getFormulaSpecAndChainedCommands(manifest, formulaNameInput) {
     const chainedCommands = formulaNameInput.split('>');
     const formulaSpecification = makeFormulaSpec(manifest, chainedCommands[0]);
     if (chainedCommands.length === 1) {
@@ -232,10 +239,17 @@ function getFormulaSpecAndChainedCommand(manifest, formulaNameInput) {
         throw new Error(`Chained commands are only supported for sync formulas. Received: ${formulaSpecification.type}`);
     }
     const chainedCommand = makeFormulaSpec(manifest, [formulaSpecification.formulaName, chainedCommands[1]].join(':'));
-    if (chainedCommand.type !== types_1.FormulaType.GetPermissions) {
-        throw new Error(`Chained commands are only supported for GetPermissions formulas. Received: ${chainedCommand.type}`);
+    if (chainedCommand) {
+        switch (chainedCommand.type) {
+            case types_1.FormulaType.GetPermissions:
+                return { formulaSpecification, interleavedChainedCommand: chainedCommand };
+            case types_1.FormulaType.Sync:
+                return { formulaSpecification, subsequentChainedCommand: chainedCommand };
+            default:
+                throw new Error(`Chained commands are only supported for GetPermissions and Sync formulas. Received: ${chainedCommand.type}`);
+        }
     }
-    return { formulaSpecification, chainedCommand };
+    return { formulaSpecification };
 }
 // Exported for tests.
 function makeFormulaSpec(manifest, formulaNameInput) {
@@ -303,6 +317,15 @@ function makeFormulaSpec(manifest, formulaNameInput) {
             }
             return {
                 type: types_1.FormulaType.GetPermissions,
+                formulaName: formulaOrSyncName,
+            };
+        }
+        if (metadataFormulaTypeStr === 'incremental') {
+            if (!syncFormula) {
+                throw new Error(`Incremental sync formula "${metadataFormulaTypeStr}" is only supported for sync formulas.`);
+            }
+            return {
+                type: types_1.FormulaType.Sync,
                 formulaName: formulaOrSyncName,
             };
         }
@@ -643,6 +666,57 @@ class DeveloperError extends Error {
     }
 }
 /**
+ * Executes a sync formula with optional chaining.
+ *
+ * @param formulaSpecification The formula specification we want to run, should be a Sync formula
+ * @param interleavedChainedCommand The interleaved chained command, which runs after each continuation chunk.
+ * @param subsequentChainedCommand Command to run after the first full continuation loop (up until a completion)
+ * @param params The params to pass to the formula
+ * @param manifest The manifest of the pack
+ * @param executionContext The execution context
+ * @param vm Whether to run in a VM
+ * @param bundleSourceMapPath The source map path
+ * @param bundlePath The bundle path
+ * @returns Returns either the sync result (if there is no chaining), the interleaved chained command results,
+ *   or the result from the subsequent chained command.
+ */
+async function executeSyncFormulaWithOptionalChaining({ formulaSpecification, interleavedChainedCommand, subsequentChainedCommand, params, manifest, executionContext, vm, bundleSourceMapPath, bundlePath, }) {
+    if (formulaSpecification.type !== types_1.FormulaType.Sync) {
+        throw new Error(`Expected a Sync formula, received: ${formulaSpecification.type}`);
+    }
+    const { result, chainedCommandResults, completion } = await executeSyncFormulaWithContinuations({
+        formulaSpecification,
+        chainedCommand: interleavedChainedCommand,
+        params,
+        manifest,
+        executionContext,
+        vm,
+        bundleSourceMapPath,
+        bundlePath,
+    });
+    if (interleavedChainedCommand) {
+        return chainedCommandResults;
+    }
+    if (subsequentChainedCommand) {
+        switch (subsequentChainedCommand.type) {
+            case types_1.FormulaType.Sync:
+                const { result: resultFromIncrementalSync } = await executeSyncFormulaWithContinuations({
+                    formulaSpecification: subsequentChainedCommand,
+                    params,
+                    manifest,
+                    executionContext: completion
+                        ? { ...executionContext, sync: { ...executionContext.sync, previousCompletion: completion } }
+                        : executionContext,
+                    vm,
+                    bundleSourceMapPath,
+                    bundlePath,
+                });
+                return resultFromIncrementalSync;
+        }
+    }
+    return result;
+}
+/**
  * This function handles running a sync formula with continuations, looping until
  * we no longer have a continuation or we pass the maxRows limit.
  *
@@ -656,12 +730,13 @@ class DeveloperError extends Error {
  * @param maxRows The max rows to sync
  * @param vm Whether to run in a VM
  * @param contextOptions The context options.
- * @returns Returns an object with result (the sync table rows) and rowAccessDefinitions (if we opt into it)
+ * @returns Returns an object with the sync result, chained command results, and completion if they exist
  */
 async function executeSyncFormulaWithContinuations({ formulaSpecification, chainedCommand, params, manifest, executionContext, bundleSourceMapPath, bundlePath, maxRows = exports.DEFAULT_MAX_ROWS, vm, }) {
     let result = [];
     const chainedCommandResults = [];
     let iterations = 1;
+    let completion;
     do {
         if (iterations > MaxSyncIterations) {
             throw new Error(`Sync is still running after ${MaxSyncIterations} iterations, this is likely due to an infinite loop.`);
@@ -679,7 +754,8 @@ async function executeSyncFormulaWithContinuations({ formulaSpecification, chain
             throw new Error(`Got ${response.result.length} results but only ${response.permissionsContext.length} passthrough items (on page ${iterations})`);
         }
         result.push(...response.result);
-        if (chainedCommand) {
+        // Skip Sync here, since we'll handle incremental syncs after this full sync loop happens
+        if (chainedCommand && chainedCommand.type !== types_1.FormulaType.Sync) {
             chainedCommandResults.push(...(await chainCommandOnSyncResult({
                 rows: response.result,
                 formulaSpecification,
@@ -693,12 +769,17 @@ async function executeSyncFormulaWithContinuations({ formulaSpecification, chain
             })));
         }
         executionContext.sync.continuation = response.continuation;
+        // If we happen to have both a completion and a continuation, we ignore the completion
+        if (response.completion && !response.continuation) {
+            completion = response.completion;
+            break;
+        }
         iterations++;
     } while (executionContext.sync.continuation && result.length < maxRows);
     if (result.length > maxRows) {
         result = result.slice(0, maxRows);
     }
-    return { result, chainedCommandResults };
+    return { result, chainedCommandResults, completion };
 }
 /**
  * This function handles running a chained command formula for a given set of rows.
