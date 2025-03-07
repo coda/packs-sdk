@@ -1,3 +1,5 @@
+import type { GetPermissionsFormulaSpecification } from '../runtime/types';
+import type { SyncFormulaSpecification } from '../runtime/types';
 export interface ParameterError {
     message: string;
 }
@@ -24,3 +26,6 @@ export declare class ResultValidationException extends Error {
     constructor(message: string, errors: ValidationError[]);
     static fromErrors(formulaName: string, errors: ValidationError[]): ResultValidationException;
 }
+export type InterleavedChainedCommandFormulaSpecification = GetPermissionsFormulaSpecification;
+export type SubsequentChainedCommandFormulaSpecification = SyncFormulaSpecification;
+export type ChainedCommandFormulaSpecification = InterleavedChainedCommandFormulaSpecification | SubsequentChainedCommandFormulaSpecification;
