@@ -1,3 +1,5 @@
+import type {GetPermissionsFormulaSpecification} from '../runtime/types';
+import type {SyncFormulaSpecification} from '../runtime/types';
 import {deepCopy} from '../helpers/object_utils';
 
 export interface ParameterError {
@@ -60,3 +62,9 @@ export class ResultValidationException extends Error {
     return new ResultValidationException(message, errors);
   }
 }
+
+export type InterleavedChainedCommandFormulaSpecification = GetPermissionsFormulaSpecification;
+export type SubsequentChainedCommandFormulaSpecification = SyncFormulaSpecification;
+export type ChainedCommandFormulaSpecification =
+  | InterleavedChainedCommandFormulaSpecification
+  | SubsequentChainedCommandFormulaSpecification;

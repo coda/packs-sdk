@@ -584,9 +584,6 @@ describe('Execution', () => {
           });
           const result = mockPrintFull.args[0][0];
 
-          // What happens if we have multiple incremental syncs?
-          // Assuming we sync the first page in the normal sync, and then passing
-          // >incremental just gets the next page.
           assert.deepEqual(
             result,
             ['Ethan', 'Fiona', 'Gina', 'Hank'].map(name => (vm ? {name} : {Name: name})),

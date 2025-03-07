@@ -222,18 +222,39 @@ export const manifest: PackDefinition = createFakePack({
               }
             case 'Mr. Incremental':
               if (!incrementalPage || incrementalPage === 1) {
-                return {
-                  result: [{name: 'Alice'}, {name: 'Bob'}, {name: 'Chris'}, {name: 'Diana'}],
-                  completion: {
-                    hasIncompleteResults: true,
-                    incrementalContinuation: {page: 2},
-                  },
-                };
+                if (!page || page === 1) {
+                  return {
+                    result: [{name: 'Alice'}, {name: 'Bob'}],
+                    continuation: {page: 2},
+
+                    // This should be ignored, since we have a continuation
+                    completion: {
+                      hasIncompleteResults: true,
+                      incrementalContinuation: {page: -1},
+                    },
+                  };
+                } else {
+                  return {
+                    result: [{name: 'Chris'}, {name: 'Diana'}],
+                    completion: {
+                      hasIncompleteResults: true,
+                      incrementalContinuation: {page: 3},
+                    },
+                  };
+                }
               }
-              if (incrementalPage === 2) {
-                return {
-                  result: [{name: 'Ethan'}, {name: 'Fiona'}, {name: 'Gina'}, {name: 'Hank'}],
-                };
+              if (incrementalPage === 3) {
+                if (!page || page === 1) {
+                  return {
+                    result: [{name: 'Ethan'}, {name: 'Fiona'}],
+                    continuation: {page: 2},
+                  };
+                }
+                if (page === 2) {
+                  return {
+                    result: [{name: 'Gina'}, {name: 'Hank'}],
+                  };
+                }
               }
             default:
               return {} as any;
