@@ -63,8 +63,19 @@ export class ResultValidationException extends Error {
   }
 }
 
-export type InterleavedChainedCommandFormulaSpecification = GetPermissionsFormulaSpecification;
-export type SubsequentChainedCommandFormulaSpecification = SyncFormulaSpecification;
-export type ChainedCommandFormulaSpecification =
-  | InterleavedChainedCommandFormulaSpecification
-  | SubsequentChainedCommandFormulaSpecification;
+export enum ChainedCommandType {
+  Interleaved = 'Interleaved',
+  Subsequent = 'Subsequent',
+}
+
+export interface InterleavedChainedCommand {
+  type: ChainedCommandType.Interleaved;
+  formulaSpec: GetPermissionsFormulaSpecification;
+}
+
+interface SubsequentChainedCommand {
+  type: ChainedCommandType.Subsequent;
+  formulaSpec: SyncFormulaSpecification;
+}
+
+export type ChainedCommand = InterleavedChainedCommand | SubsequentChainedCommand;

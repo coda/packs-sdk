@@ -26,6 +26,17 @@ export declare class ResultValidationException extends Error {
     constructor(message: string, errors: ValidationError[]);
     static fromErrors(formulaName: string, errors: ValidationError[]): ResultValidationException;
 }
-export type InterleavedChainedCommandFormulaSpecification = GetPermissionsFormulaSpecification;
-export type SubsequentChainedCommandFormulaSpecification = SyncFormulaSpecification;
-export type ChainedCommandFormulaSpecification = InterleavedChainedCommandFormulaSpecification | SubsequentChainedCommandFormulaSpecification;
+export declare enum ChainedCommandType {
+    Interleaved = "Interleaved",
+    Subsequent = "Subsequent"
+}
+export interface InterleavedChainedCommand {
+    type: ChainedCommandType.Interleaved;
+    formulaSpec: GetPermissionsFormulaSpecification;
+}
+interface SubsequentChainedCommand {
+    type: ChainedCommandType.Subsequent;
+    formulaSpec: SyncFormulaSpecification;
+}
+export type ChainedCommand = InterleavedChainedCommand | SubsequentChainedCommand;
+export {};
