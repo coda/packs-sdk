@@ -68,14 +68,21 @@ export enum ChainedCommandType {
   Subsequent = 'Subsequent',
 }
 
+export enum ChainableCommandType {
+  GetPermissions = 'GetPermissions',
+  IncrementalSync = 'IncrementalSync',
+}
+
 export interface InterleavedChainedCommand {
   type: ChainedCommandType.Interleaved;
   formulaSpec: GetPermissionsFormulaSpecification;
+  commandType: ChainableCommandType.GetPermissions;
 }
 
 interface SubsequentChainedCommand {
   type: ChainedCommandType.Subsequent;
   formulaSpec: SyncFormulaSpecification;
+  commandType: ChainableCommandType.IncrementalSync;
 }
 
 export type ChainedCommand = InterleavedChainedCommand | SubsequentChainedCommand;

@@ -1,4 +1,5 @@
 import type {BasicPackDefinition} from '../types';
+import {ChainableCommandType} from './types';
 import type {ChainedCommand} from './types';
 import {ChainedCommandType} from './types';
 import type {Continuation} from '../api';
@@ -371,6 +372,7 @@ function getFormulaSpecAndChainedCommand(
         chainedCommand: {
           type: ChainedCommandType.Interleaved,
           formulaSpec: chainedCommandFormulaSpecification,
+          commandType: ChainableCommandType.GetPermissions,
         },
       };
     case FormulaType.Sync:
@@ -379,6 +381,7 @@ function getFormulaSpecAndChainedCommand(
         chainedCommand: {
           type: ChainedCommandType.Subsequent,
           formulaSpec: chainedCommandFormulaSpecification,
+          commandType: ChainableCommandType.IncrementalSync,
         },
       };
     default:
@@ -1083,8 +1086,8 @@ async function executeSyncFormulaWithOptionalChaining({
     return chainedCommandResults;
   }
 
-  switch (chainedCommand.formulaSpec.type) {
-    case FormulaType.Sync:
+  switch (chainedCommand.commandType) {
+    case ChainableCommandType.IncrementalSync:
       const {result: resultFromIncrementalSync} = await executeSyncFormulaWithContinuations({
         formulaSpecification: chainedCommand.formulaSpec,
         params,
@@ -1098,7 +1101,7 @@ async function executeSyncFormulaWithOptionalChaining({
       });
       return resultFromIncrementalSync;
     default:
-      ensureUnreachable(chainedCommand.formulaSpec.type);
+      ensureUnreachable(chainedCommand);
   }
 }
 

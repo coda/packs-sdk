@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ChainedCommandType = exports.ResultValidationException = exports.ResultValidationContext = exports.ParameterException = void 0;
+exports.ChainableCommandType = exports.ChainedCommandType = exports.ResultValidationException = exports.ResultValidationContext = exports.ParameterException = void 0;
 const object_utils_1 = require("../helpers/object_utils");
 class ParameterException extends Error {
 }
@@ -46,3 +46,8 @@ var ChainedCommandType;
     ChainedCommandType["Interleaved"] = "Interleaved";
     ChainedCommandType["Subsequent"] = "Subsequent";
 })(ChainedCommandType || (exports.ChainedCommandType = ChainedCommandType = {}));
+var ChainableCommandType;
+(function (ChainableCommandType) {
+    ChainableCommandType["GetPermissions"] = "GetPermissions";
+    ChainableCommandType["IncrementalSync"] = "IncrementalSync";
+})(ChainableCommandType || (exports.ChainableCommandType = ChainableCommandType = {}));

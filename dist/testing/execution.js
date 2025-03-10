@@ -25,8 +25,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.newRealFetcherSyncExecutionContext = exports.newRealFetcherExecutionContext = exports.executeMetadataFormula = exports.executeUpdateFormulaFromPackDef = exports.executeGetPermissionsFormulaFromPackDef = exports.executeSyncFormulaFromPackDefSingleIteration = exports.executeSyncFormulaFromPackDef = exports.executeSyncFormula = exports.executeFormulaOrSyncWithRawParams = exports.executeFormulaOrSyncWithVM = exports.makeFormulaSpec = exports.executeFormulaOrSyncFromCLI = exports.executeFormulaFromPackDef = exports.DEFAULT_MAX_ROWS = void 0;
 const types_1 = require("./types");
-const types_2 = require("../runtime/types");
+const types_2 = require("./types");
 const types_3 = require("../runtime/types");
+const types_4 = require("../runtime/types");
 const buffer_1 = require("buffer/");
 const helpers_1 = require("./helpers");
 const coercion_1 = require("./coercion");
@@ -73,12 +74,12 @@ useDeprecatedResultNormalization = true, } = {}) {
     var _a, _b;
     let formula;
     switch (formulaSpec.type) {
-        case types_2.FormulaType.Standard:
+        case types_3.FormulaType.Standard:
             formula = (0, helpers_2.findFormula)(manifest, formulaSpec.formulaName, executionContext.authenticationName);
             break;
-        case types_2.FormulaType.Sync:
-        case types_2.FormulaType.SyncUpdate:
-        case types_2.FormulaType.GetPermissions:
+        case types_3.FormulaType.Sync:
+        case types_3.FormulaType.SyncUpdate:
+        case types_3.FormulaType.GetPermissions:
             formula = (0, helpers_3.findSyncFormula)(manifest, formulaSpec.formulaName, executionContext.authenticationName);
             break;
     }
@@ -100,14 +101,14 @@ useDeprecatedResultNormalization = true, } = {}) {
     catch (err) {
         throw new DeveloperError(err);
     }
-    if (formulaSpec.type === types_2.FormulaType.SyncUpdate) {
+    if (formulaSpec.type === types_3.FormulaType.SyncUpdate) {
         return result;
     }
-    if (formulaSpec.type === types_2.FormulaType.GetPermissions) {
+    if (formulaSpec.type === types_3.FormulaType.GetPermissions) {
         return result;
     }
     if (formula) {
-        const resultToNormalize = formulaSpec.type === types_2.FormulaType.Sync ? result.result : result;
+        const resultToNormalize = formulaSpec.type === types_3.FormulaType.Sync ? result.result : result;
         let resultToValidate = resultToNormalize;
         // Matches legacy behavior within handler_templates:generateObjectResponseHandler where we never
         // called transform body on non-object responses.
@@ -118,7 +119,7 @@ useDeprecatedResultNormalization = true, } = {}) {
             if (!useDeprecatedResultNormalization) {
                 normalizedResult = (0, handler_templates_2.untransformBody)(normalizedResult, schema);
             }
-            if (formulaSpec.type === types_2.FormulaType.Sync) {
+            if (formulaSpec.type === types_3.FormulaType.Sync) {
                 result.result = normalizedResult;
             }
             else {
@@ -137,7 +138,7 @@ async function executeFormulaFromPackDef(packDef, formulaNameWithNamespace, para
         const credentials = getCredentials(manifestPath);
         executionContext = (0, fetcher_1.newFetcherExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_4.getPackAuth)(packDef), packDef.networkDomains, credentials);
     }
-    return findAndExecutePackFunction(params, { type: types_2.FormulaType.Standard, formulaName: resolveFormulaNameWithNamespace(formulaNameWithNamespace) }, packDef, executionContext || (0, mocks_1.newMockExecutionContext)(), undefined, undefined, options);
+    return findAndExecutePackFunction(params, { type: types_3.FormulaType.Standard, formulaName: resolveFormulaNameWithNamespace(formulaNameWithNamespace) }, packDef, executionContext || (0, mocks_1.newMockExecutionContext)(), undefined, undefined, options);
 }
 exports.executeFormulaFromPackDef = executeFormulaFromPackDef;
 async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, manifestPath, vm, dynamicUrl, maxRows = exports.DEFAULT_MAX_ROWS, bundleSourceMapPath, bundlePath, contextOptions = {}, }) {
@@ -154,7 +155,7 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
             : (0, mocks_2.newMockSyncExecutionContext)();
         executionContext.sync.dynamicUrl = dynamicUrl || undefined;
         const { formulaSpecification, chainedCommand } = getFormulaSpecAndChainedCommand(manifest, formulaName);
-        if (formulaSpecification.type === types_2.FormulaType.Sync) {
+        if (formulaSpecification.type === types_3.FormulaType.Sync) {
             const result = await executeSyncFormulaWithOptionalChaining({
                 formulaSpecification,
                 chainedCommand,
@@ -200,18 +201,18 @@ NODE_OPTIONS="--enable-source-maps" npx coda execute ...`);
 }
 exports.executeFormulaOrSyncFromCLI = executeFormulaOrSyncFromCLI;
 const SyncMetadataFormulaTokens = Object.freeze({
-    [types_3.MetadataFormulaType.SyncListDynamicUrls]: 'listDynamicUrls',
-    [types_3.MetadataFormulaType.SyncSearchDynamicUrls]: 'searchDynamicUrls',
-    [types_3.MetadataFormulaType.SyncGetDisplayUrl]: 'getDisplayUrl',
-    [types_3.MetadataFormulaType.SyncGetTableName]: 'getName',
-    [types_3.MetadataFormulaType.SyncGetSchema]: 'getSchema',
+    [types_4.MetadataFormulaType.SyncListDynamicUrls]: 'listDynamicUrls',
+    [types_4.MetadataFormulaType.SyncSearchDynamicUrls]: 'searchDynamicUrls',
+    [types_4.MetadataFormulaType.SyncGetDisplayUrl]: 'getDisplayUrl',
+    [types_4.MetadataFormulaType.SyncGetTableName]: 'getName',
+    [types_4.MetadataFormulaType.SyncGetSchema]: 'getSchema',
 });
 const GlobalMetadataFormulaTokens = Object.freeze({
-    [types_3.MetadataFormulaType.GetConnectionName]: 'getConnectionName',
-    [types_3.MetadataFormulaType.GetConnectionUserId]: 'getConnectionUserId',
+    [types_4.MetadataFormulaType.GetConnectionName]: 'getConnectionName',
+    [types_4.MetadataFormulaType.GetConnectionUserId]: 'getConnectionUserId',
 });
 const PostSetupMetadataFormulaTokens = Object.freeze({
-    [types_3.MetadataFormulaType.PostSetupSetEndpoint]: 'setEndpoint',
+    [types_4.MetadataFormulaType.PostSetupSetEndpoint]: 'setEndpoint',
 });
 function invert(obj) {
     return Object.fromEntries(Object.entries(obj).map(([key, value]) => [value, key]));
@@ -239,7 +240,7 @@ function getFormulaSpecAndChainedCommand(manifest, formulaNameInput) {
     if (chainedCommands.length === 1) {
         return { formulaSpecification };
     }
-    if (formulaSpecification.type !== types_2.FormulaType.Sync) {
+    if (formulaSpecification.type !== types_3.FormulaType.Sync) {
         throw new Error(`Chained commands are only supported for sync formulas. Received: ${formulaSpecification.type}`);
     }
     const chainedCommandFormulaSpecification = makeFormulaSpec(manifest, [formulaSpecification.formulaName, chainedCommands[1]].join(':'));
@@ -247,20 +248,22 @@ function getFormulaSpecAndChainedCommand(manifest, formulaNameInput) {
         throw new Error(`Could not find a formula or sync named "${chainedCommands[1]}".`);
     }
     switch (chainedCommandFormulaSpecification.type) {
-        case types_2.FormulaType.GetPermissions:
+        case types_3.FormulaType.GetPermissions:
             return {
                 formulaSpecification,
                 chainedCommand: {
-                    type: types_1.ChainedCommandType.Interleaved,
+                    type: types_2.ChainedCommandType.Interleaved,
                     formulaSpec: chainedCommandFormulaSpecification,
+                    commandType: types_1.ChainableCommandType.GetPermissions,
                 },
             };
-        case types_2.FormulaType.Sync:
+        case types_3.FormulaType.Sync:
             return {
                 formulaSpecification,
                 chainedCommand: {
-                    type: types_1.ChainedCommandType.Subsequent,
+                    type: types_2.ChainedCommandType.Subsequent,
                     formulaSpec: chainedCommandFormulaSpecification,
+                    commandType: types_1.ChainableCommandType.IncrementalSync,
                 },
             };
         default:
@@ -279,7 +282,7 @@ function makeFormulaSpec(manifest, formulaNameInput) {
                     throw new Error(`Pack definition has no user authentication.`);
                 }
                 return {
-                    type: types_2.FormulaType.Metadata,
+                    type: types_3.FormulaType.Metadata,
                     metadataFormulaType: authFormulaType,
                 };
             }
@@ -295,7 +298,7 @@ function makeFormulaSpec(manifest, formulaNameInput) {
                 throw new Error(`Expected a step name after "${setupStepTypeStr}".`);
             }
             return {
-                type: types_2.FormulaType.Metadata,
+                type: types_3.FormulaType.Metadata,
                 metadataFormulaType: setupStepType,
                 stepName,
             };
@@ -309,7 +312,7 @@ function makeFormulaSpec(manifest, formulaNameInput) {
     const formula = (0, ensure_1.ensureExists)(syncFormula || standardFormula);
     if (parts.length === 0) {
         return {
-            type: syncFormula ? types_2.FormulaType.Sync : types_2.FormulaType.Standard,
+            type: syncFormula ? types_3.FormulaType.Sync : types_3.FormulaType.Standard,
             formulaName: formulaOrSyncName,
         };
     }
@@ -320,7 +323,7 @@ function makeFormulaSpec(manifest, formulaNameInput) {
                 throw new Error(`Two-way sync formula "${metadataFormulaTypeStr}" is only supported for sync formulas.`);
             }
             return {
-                type: types_2.FormulaType.SyncUpdate,
+                type: types_3.FormulaType.SyncUpdate,
                 formulaName: formulaOrSyncName,
             };
         }
@@ -332,7 +335,7 @@ function makeFormulaSpec(manifest, formulaNameInput) {
                 throw new Error(`Permissions formula "${metadataFormulaTypeStr}" is only supported for sync formulas.`);
             }
             return {
-                type: types_2.FormulaType.GetPermissions,
+                type: types_3.FormulaType.GetPermissions,
                 formulaName: formulaOrSyncName,
             };
         }
@@ -341,7 +344,7 @@ function makeFormulaSpec(manifest, formulaNameInput) {
                 throw new Error(`Incremental sync formula "${metadataFormulaTypeStr}" is only supported for sync formulas.`);
             }
             return {
-                type: types_2.FormulaType.Sync,
+                type: types_3.FormulaType.Sync,
                 formulaName: formulaOrSyncName,
             };
         }
@@ -353,7 +356,7 @@ function makeFormulaSpec(manifest, formulaNameInput) {
             throw new Error(`Metadata formula "${metadataFormulaTypeStr}" is only supported for sync formulas.`);
         }
         return {
-            type: types_2.FormulaType.Metadata,
+            type: types_3.FormulaType.Metadata,
             metadataFormulaType,
             syncTableName: formulaOrSyncName,
         };
@@ -368,10 +371,10 @@ function makeFormulaSpec(manifest, formulaNameInput) {
             throw new Error(`Formula "${formulaOrSyncName}" has no parameter named "${parameterName}".`);
         }
         return {
-            type: types_2.FormulaType.Metadata,
-            metadataFormulaType: types_3.MetadataFormulaType.ParameterAutocomplete,
+            type: types_3.FormulaType.Metadata,
+            metadataFormulaType: types_4.MetadataFormulaType.ParameterAutocomplete,
             parentFormulaName: formulaOrSyncName,
-            parentFormulaType: syncFormula ? types_2.FormulaType.Sync : types_2.FormulaType.Standard,
+            parentFormulaType: syncFormula ? types_3.FormulaType.Sync : types_3.FormulaType.Standard,
             parameterName,
         };
     }
@@ -383,7 +386,7 @@ async function executeFormulaOrSyncWithVM({ formulaName, params, bundlePath, exe
     const manifest = await (0, helpers_5.importManifest)(bundlePath);
     const syncFormula = (0, helpers_9.tryFindSyncFormula)(manifest, formulaName);
     const formulaSpecification = {
-        type: syncFormula ? types_2.FormulaType.Sync : types_2.FormulaType.Standard,
+        type: syncFormula ? types_3.FormulaType.Sync : types_3.FormulaType.Standard,
         formulaName,
     };
     const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
@@ -403,17 +406,17 @@ async function executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, par
     let syncUpdates;
     let permissionRequest;
     switch (formulaSpecification.type) {
-        case types_2.FormulaType.Standard: {
+        case types_3.FormulaType.Standard: {
             const formula = (0, helpers_2.findFormula)(manifest, formulaSpecification.formulaName, executionContext.authenticationName);
             params = (0, coercion_1.coerceParams)(formula, rawParams);
             break;
         }
-        case types_2.FormulaType.Sync: {
+        case types_3.FormulaType.Sync: {
             const syncFormula = (0, helpers_3.findSyncFormula)(manifest, formulaSpecification.formulaName, executionContext.authenticationName);
             params = (0, coercion_1.coerceParams)(syncFormula, rawParams);
             break;
         }
-        case types_2.FormulaType.Metadata: {
+        case types_3.FormulaType.Metadata: {
             // Interestingly we don't need special handling for the formula context dict (the optional second arg
             // to an autocomplete metadata formula), because at execution time it gets passed as a serialized
             // JSON string anyway which is already parsed by the compiled pack definition.
@@ -422,11 +425,11 @@ async function executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, par
             (_a = params[0]) !== null && _a !== void 0 ? _a : (params[0] = '');
             break;
         }
-        case types_2.FormulaType.SyncUpdate: {
+        case types_3.FormulaType.SyncUpdate: {
             ({ params, syncUpdates } = parseSyncUpdates(manifest, formulaSpecification, rawParams));
             break;
         }
-        case types_2.FormulaType.GetPermissions: {
+        case types_3.FormulaType.GetPermissions: {
             ({ params, permissionRequest } = parseGetPermissionRequest(manifest, formulaSpecification, rawParams));
             break;
         }
@@ -450,17 +453,17 @@ async function executeFormulaOrSyncWithRawParams({ formulaSpecification, params:
     let syncUpdates;
     let permissionRequest;
     switch (formulaSpecification.type) {
-        case types_2.FormulaType.Standard: {
+        case types_3.FormulaType.Standard: {
             const formula = (0, helpers_2.findFormula)(manifest, formulaSpecification.formulaName, executionContext.authenticationName);
             params = (0, coercion_1.coerceParams)(formula, rawParams);
             break;
         }
-        case types_2.FormulaType.Sync: {
+        case types_3.FormulaType.Sync: {
             const syncFormula = (0, helpers_3.findSyncFormula)(manifest, formulaSpecification.formulaName, executionContext.authenticationName);
             params = (0, coercion_1.coerceParams)(syncFormula, rawParams);
             break;
         }
-        case types_2.FormulaType.Metadata: {
+        case types_3.FormulaType.Metadata: {
             // Interestingly we don't need special handling for the formula context dict (the optional second arg
             // to an autocomplete metadata formula), because at execution time it gets passed as a serialized
             // JSON string anyway which is already parsed by the compiled pack definition.
@@ -469,11 +472,11 @@ async function executeFormulaOrSyncWithRawParams({ formulaSpecification, params:
             (_a = params[0]) !== null && _a !== void 0 ? _a : (params[0] = '');
             break;
         }
-        case types_2.FormulaType.SyncUpdate: {
+        case types_3.FormulaType.SyncUpdate: {
             ({ params, syncUpdates } = parseSyncUpdates(manifest, formulaSpecification, rawParams));
             break;
         }
-        case types_2.FormulaType.GetPermissions: {
+        case types_3.FormulaType.GetPermissions: {
             ({ params, permissionRequest } = parseGetPermissionRequest(manifest, formulaSpecification, rawParams));
             break;
         }
@@ -518,7 +521,7 @@ async function executeSyncFormula(packDef, syncFormulaName, params, context, { v
         if (iterations > MaxSyncIterations) {
             throw new Error(`Sync is still running after ${MaxSyncIterations} iterations, this is likely due to an infinite loop.`);
         }
-        const response = await findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_2.FormulaType.Sync }, packDef, executionContext, undefined, undefined, { validateParams: false, validateResult: false, useDeprecatedResultNormalization });
+        const response = await findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_3.FormulaType.Sync }, packDef, executionContext, undefined, undefined, { validateParams: false, validateResult: false, useDeprecatedResultNormalization });
         result.push(...response.result);
         if (response.permissionsContext) {
             permissionsContext.push(...response.permissionsContext);
@@ -570,7 +573,7 @@ async function executeSyncFormulaFromPackDefSingleIteration(packDef, syncFormula
         const credentials = getCredentials(manifestPath);
         executionContext = (0, fetcher_2.newFetcherSyncExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_4.getPackAuth)(packDef), packDef.networkDomains, credentials);
     }
-    return findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_2.FormulaType.Sync }, packDef, executionContext || (0, mocks_2.newMockSyncExecutionContext)(), undefined, undefined, options);
+    return findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_3.FormulaType.Sync }, packDef, executionContext || (0, mocks_2.newMockSyncExecutionContext)(), undefined, undefined, options);
 }
 exports.executeSyncFormulaFromPackDefSingleIteration = executeSyncFormulaFromPackDefSingleIteration;
 /**
@@ -584,7 +587,7 @@ async function executeGetPermissionsFormulaFromPackDef(packDef, syncFormulaName,
         const credentials = getCredentials(manifestPath);
         executionContext = (0, fetcher_2.newFetcherSyncExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_4.getPackAuth)(packDef), packDef.networkDomains, credentials);
     }
-    return findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_2.FormulaType.GetPermissions }, packDef, executionContext || (0, mocks_2.newMockSyncExecutionContext)(), undefined, executeGetPermissionsRequest, options);
+    return findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_3.FormulaType.GetPermissions }, packDef, executionContext || (0, mocks_2.newMockSyncExecutionContext)(), undefined, executeGetPermissionsRequest, options);
 }
 exports.executeGetPermissionsFormulaFromPackDef = executeGetPermissionsFormulaFromPackDef;
 /**
@@ -598,7 +601,7 @@ async function executeUpdateFormulaFromPackDef(packDef, syncFormulaName, params,
         const credentials = getCredentials(manifestPath);
         executionContext = (0, fetcher_2.newFetcherSyncExecutionContext)(buildUpdateCredentialsCallback(manifestPath), (0, helpers_4.getPackAuth)(packDef), packDef.networkDomains, credentials);
     }
-    return findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_2.FormulaType.SyncUpdate }, packDef, context, syncUpdates, undefined, options);
+    return findAndExecutePackFunction(params, { formulaName: syncFormulaName, type: types_3.FormulaType.SyncUpdate }, packDef, context, syncUpdates, undefined, options);
 }
 exports.executeUpdateFormulaFromPackDef = executeUpdateFormulaFromPackDef;
 async function executeMetadataFormula(formula, metadataParams = {}, context = (0, mocks_1.newMockExecutionContext)()) {
@@ -697,12 +700,12 @@ class DeveloperError extends Error {
  *   or the result from the subsequent chained command.
  */
 async function executeSyncFormulaWithOptionalChaining({ formulaSpecification, chainedCommand, params, manifest, executionContext, vm, bundleSourceMapPath, bundlePath, }) {
-    if (formulaSpecification.type !== types_2.FormulaType.Sync) {
+    if (formulaSpecification.type !== types_3.FormulaType.Sync) {
         throw new Error(`Expected a Sync formula, received: ${formulaSpecification.type}`);
     }
     const { result, chainedCommandResults, completion } = await executeSyncFormulaWithContinuations({
         formulaSpecification,
-        chainedCommand: (chainedCommand === null || chainedCommand === void 0 ? void 0 : chainedCommand.type) === types_1.ChainedCommandType.Interleaved ? chainedCommand : undefined,
+        chainedCommand: (chainedCommand === null || chainedCommand === void 0 ? void 0 : chainedCommand.type) === types_2.ChainedCommandType.Interleaved ? chainedCommand : undefined,
         params,
         manifest,
         executionContext,
@@ -713,11 +716,11 @@ async function executeSyncFormulaWithOptionalChaining({ formulaSpecification, ch
     if (!chainedCommand) {
         return result;
     }
-    if (chainedCommand.type === types_1.ChainedCommandType.Interleaved) {
+    if (chainedCommand.type === types_2.ChainedCommandType.Interleaved) {
         return chainedCommandResults;
     }
-    switch (chainedCommand.formulaSpec.type) {
-        case types_2.FormulaType.Sync:
+    switch (chainedCommand.commandType) {
+        case types_1.ChainableCommandType.IncrementalSync:
             const { result: resultFromIncrementalSync } = await executeSyncFormulaWithContinuations({
                 formulaSpecification: chainedCommand.formulaSpec,
                 params,
@@ -731,7 +734,7 @@ async function executeSyncFormulaWithOptionalChaining({ formulaSpecification, ch
             });
             return resultFromIncrementalSync;
         default:
-            (0, ensure_2.ensureUnreachable)(chainedCommand.formulaSpec.type);
+            (0, ensure_2.ensureUnreachable)(chainedCommand);
     }
 }
 /**
@@ -823,7 +826,7 @@ async function chainCommandOnSyncResult({ rows, formulaSpecification, chainedCom
     const schema = (_a = executionContext.sync.schema) !== null && _a !== void 0 ? _a : formula === null || formula === void 0 ? void 0 : formula.schema;
     const denormalizedSyncResult = vm ? rows : (0, handler_templates_2.untransformBody)(rows, schema);
     switch (chainedCommand.formulaSpec.type) {
-        case types_2.FormulaType.GetPermissions:
+        case types_3.FormulaType.GetPermissions:
             const mappedRows = denormalizedSyncResult.map((row) => ({ row }));
             // 10 hardcoded as fallback to match process_csb_ingestion.ts
             const maxPermissionBatchSize = (formula === null || formula === void 0 ? void 0 : formula.maxPermissionBatchSize) || 10;
