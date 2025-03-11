@@ -1,3 +1,5 @@
+import type {GetPermissionsFormulaSpecification} from '../runtime/types';
+import type {SyncFormulaSpecification} from '../runtime/types';
 import {deepCopy} from '../helpers/object_utils';
 
 export interface ParameterError {
@@ -60,3 +62,27 @@ export class ResultValidationException extends Error {
     return new ResultValidationException(message, errors);
   }
 }
+
+export enum ChainedCommandType {
+  Interleaved = 'Interleaved',
+  Subsequent = 'Subsequent',
+}
+
+export enum ChainableCommandType {
+  GetPermissions = 'GetPermissions',
+  IncrementalSync = 'IncrementalSync',
+}
+
+export interface InterleavedChainedCommand {
+  type: ChainedCommandType.Interleaved;
+  formulaSpec: GetPermissionsFormulaSpecification;
+  commandType: ChainableCommandType.GetPermissions;
+}
+
+interface SubsequentChainedCommand {
+  type: ChainedCommandType.Subsequent;
+  formulaSpec: SyncFormulaSpecification;
+  commandType: ChainableCommandType.IncrementalSync;
+}
+
+export type ChainedCommand = InterleavedChainedCommand | SubsequentChainedCommand;

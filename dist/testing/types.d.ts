@@ -1,3 +1,5 @@
+import type { GetPermissionsFormulaSpecification } from '../runtime/types';
+import type { SyncFormulaSpecification } from '../runtime/types';
 export interface ParameterError {
     message: string;
 }
@@ -24,3 +26,23 @@ export declare class ResultValidationException extends Error {
     constructor(message: string, errors: ValidationError[]);
     static fromErrors(formulaName: string, errors: ValidationError[]): ResultValidationException;
 }
+export declare enum ChainedCommandType {
+    Interleaved = "Interleaved",
+    Subsequent = "Subsequent"
+}
+export declare enum ChainableCommandType {
+    GetPermissions = "GetPermissions",
+    IncrementalSync = "IncrementalSync"
+}
+export interface InterleavedChainedCommand {
+    type: ChainedCommandType.Interleaved;
+    formulaSpec: GetPermissionsFormulaSpecification;
+    commandType: ChainableCommandType.GetPermissions;
+}
+interface SubsequentChainedCommand {
+    type: ChainedCommandType.Subsequent;
+    formulaSpec: SyncFormulaSpecification;
+    commandType: ChainableCommandType.IncrementalSync;
+}
+export type ChainedCommand = InterleavedChainedCommand | SubsequentChainedCommand;
+export {};

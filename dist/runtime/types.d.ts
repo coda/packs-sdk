@@ -70,5 +70,4 @@ export interface PropertyAutocompleteFormulaSpecification {
     search: string;
 }
 export type FormulaSpecification = StandardFormulaSpecification | SyncFormulaSpecification | SyncUpdateFormulaSpecification | MetadataFormulaSpecification | ParameterAutocompleteMetadataFormulaSpecification | PostSetupMetadataFormulaSpecification | SyncMetadataFormulaSpecification | PropertyAutocompleteFormulaSpecification | GetPermissionsFormulaSpecification;
-export type ChainedCommandFormulaSpecification = GetPermissionsFormulaSpecification;
 export type PackFunctionResponse<T extends FormulaSpecification> = T extends SyncFormulaSpecification ? GenericSyncFormulaResult : T extends SyncUpdateFormulaSpecification ? GenericSyncUpdateResultMarshaled : PackFormulaResult;
