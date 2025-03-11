@@ -316,6 +316,10 @@ export interface SyncTableDef<
 > {
   /** See {@link SyncTableOptions.name} */
   name: string;
+
+  /** See {@link SyncTableOptions.displayName} */
+  displayName?: string;
+
   /** See {@link SyncTableOptions.description} */
   description?: string;
   /** See {@link SyncTableOptions.schema} */
@@ -2185,11 +2189,19 @@ export interface SyncTableOptions<
   PermissionsContextT extends SyncPassthroughData,
 > {
   /**
-   * The name of the sync table. This is shown to users in the Coda UI.
+   * The name of the sync table. This is shown to users in the Coda UI if displayName is not present.
    * This should describe the entities being synced. For example, a sync table that syncs products
    * from an e-commerce platform should be called 'Products'. This name must not contain spaces.
+   *
+   * Important: This should not be updated after the first time a table is included in the pack version.
    */
   name: string;
+
+  /**
+   * This is the name shown to users in the Coda UI. If not present, name will be used. This is safe to update.
+   */
+  displayName?: string;
+
   /**
    * The description of the sync table. This is shown to users in the Coda UI.
    * This should describe what the sync table does in more detailed language. For example, the
@@ -2400,6 +2412,7 @@ export function makeSyncTable<
   PermissionsContextT extends SyncPassthroughData,
 >({
   name,
+  displayName,
   description,
   identityName,
   schema: inputSchema,
@@ -2557,6 +2570,7 @@ export function makeSyncTable<
 
   return {
     name,
+    displayName,
     description,
     schema: normalizedSchema,
     identityName,
@@ -2598,6 +2612,7 @@ export function makeSyncTableLegacy<
     getSchema?: MetadataFormula;
     entityName?: string;
   } = {},
+  displayName?: string,
 ): SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT> {
   if (!schema.identity?.name) {
     throw new Error('Legacy sync tables must specify identity.name');
@@ -2607,6 +2622,7 @@ export function makeSyncTableLegacy<
   }
   return makeSyncTable({
     name,
+    displayName,
     identityName: schema.identity.name,
     schema,
     formula,
@@ -2643,6 +2659,7 @@ export function makeDynamicSyncTable<
   PermissionsContextT extends SyncPassthroughData,
 >({
   name,
+  displayName,
   description,
   getName: getNameDef,
   getSchema: getSchemaDef,
@@ -2658,6 +2675,7 @@ export function makeDynamicSyncTable<
   propertyOptions,
 }: {
   name: string;
+  displayName?: string;
   description?: string;
   getName: MetadataFormulaDef<ContextT>;
   getSchema: MetadataFormulaDef<ContextT>;
@@ -2691,6 +2709,7 @@ export function makeDynamicSyncTable<
   const searchDynamicUrls = wrapMetadataFunction(searchDynamicUrlsDef);
   const table = makeSyncTable({
     name,
+    displayName,
     description,
     identityName,
     schema: placeholderSchema,
