@@ -15,18 +15,29 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.compilePackBundle = exports.TimerShimStrategy = void 0;
+exports.TimerShimStrategy = void 0;
+exports.compilePackBundle = compilePackBundle;
 const browserify_1 = __importDefault(require("browserify"));
 const metadata_1 = require("../helpers/metadata");
 const ensure_1 = require("../helpers/ensure");
@@ -144,9 +155,9 @@ async function buildWithES({ lastBundleFilename, outputBundleFilename, options: 
         // logical assignment
         target: 'ES2020',
         inject: getInjections(buildOptions),
-        minify: false,
+        minify: false, // don't minify here since browserify doesn't minify anyway.
         sourcemap: 'both',
-        keepNames: true,
+        keepNames: true, // this is required to interpret code like `StatusCodeError.name`.
         // The pack bundle is always targeting the isolated-vm environment.
         define: { 'process.env.IN_ISOLATED_VM_OR_BROWSER': 'true' },
         external: ['codaInternal'], // for serializer
@@ -253,4 +264,3 @@ outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, timer
         bundleSourceMapPath,
     };
 }
-exports.compilePackBundle = compilePackBundle;
