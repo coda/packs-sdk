@@ -2200,6 +2200,7 @@ export interface SyncTableOptions<
 
   /**
    * This is the name shown to users in the Coda UI. If not present, {@link SyncTableOptions.name} will be used.
+   * Changing this value will not affect existing tables and only affects newly created tables. 
    */
   displayName?: string;
 
