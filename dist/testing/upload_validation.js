@@ -1461,6 +1461,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             .nonempty()
             .max(exports.Limits.BuildingBlockName)
             .regex(regexFormulaName, 'Sync Table names can only contain alphanumeric characters and underscores.'),
+        displayName: z.string().max(exports.Limits.BuildingBlockName).optional(),
         description: z.string().max(exports.Limits.BuildingBlockDescription).optional(),
         schema: genericObjectSchema,
         getter: syncFormulaSchema,

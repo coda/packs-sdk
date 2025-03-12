@@ -840,7 +840,7 @@ exports.makeObjectFormula = makeObjectFormula;
  *
  * See [Normalization](https://coda.io/packs/build/latest/guides/advanced/schemas/#normalization) for more information about schema normalization.
  */
-function makeSyncTable({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions = {}, role, }) {
+function makeSyncTable({ name, displayName, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions = {}, role, }) {
     const { getSchema: getSchemaDef, entityName, defaultAddDynamicColumns } = dynamicOptions;
     const { execute: wrappedExecute, executeUpdate: wrappedExecuteUpdate, executeGetPermissions, onError, ...definition } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
     // Since we mutate schemaDef, we need to make a copy so the input schema can be reused across sync tables.
@@ -952,6 +952,7 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
         : undefined;
     return {
         name,
+        displayName,
         description,
         schema: normalizedSchema,
         identityName,
@@ -977,7 +978,7 @@ function makeSyncTable({ name, description, identityName, schema: inputSchema, f
 }
 exports.makeSyncTable = makeSyncTable;
 /** @deprecated */
-function makeSyncTableLegacy(name, schema, formula, connectionRequirement, dynamicOptions = {}) {
+function makeSyncTableLegacy(name, schema, formula, connectionRequirement, dynamicOptions = {}, displayName) {
     var _a;
     if (!((_a = schema.identity) === null || _a === void 0 ? void 0 : _a.name)) {
         throw new Error('Legacy sync tables must specify identity.name');
@@ -987,6 +988,7 @@ function makeSyncTableLegacy(name, schema, formula, connectionRequirement, dynam
     }
     return makeSyncTable({
         name,
+        displayName,
         identityName: schema.identity.name,
         schema,
         formula,
@@ -1014,7 +1016,7 @@ exports.makeSyncTableLegacy = makeSyncTableLegacy;
  * });
  * ```
  */
-function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, searchDynamicUrls: searchDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, propertyOptions, }) {
+function makeDynamicSyncTable({ name, displayName, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, searchDynamicUrls: searchDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, propertyOptions, }) {
     const placeholderSchema = placeholderSchemaInput ||
         // default placeholder only shows a column of id, which will be replaced later by the dynamic schema.
         (0, schema_3.makeObjectSchema)({
@@ -1033,6 +1035,7 @@ function makeDynamicSyncTable({ name, description, getName: getNameDef, getSchem
     const searchDynamicUrls = wrapMetadataFunction(searchDynamicUrlsDef);
     const table = makeSyncTable({
         name,
+        displayName,
         description,
         identityName,
         schema: placeholderSchema,

@@ -42,6 +42,14 @@ description for a 'Products' sync table could be: 'Returns products from the e-c
 
 ___
 
+### displayName
+
+• `Optional` **displayName**: `string`
+
+This is the name shown to users in the Coda UI. If not present, [name](core.SyncTableOptions.md#name) will be used.
+
+___
+
 ### dynamicOptions
 
 • `Optional` **dynamicOptions**: [`DynamicOptions`](core.DynamicOptions.md)
@@ -84,9 +92,12 @@ ___
 
 • **name**: `string`
 
-The name of the sync table. This is shown to users in the Coda UI.
+The name of the sync table. This is shown to users in the Coda UI if displayName is not present.
 This should describe the entities being synced. For example, a sync table that syncs products
 from an e-commerce platform should be called 'Products'. This name must not contain spaces.
+
+Important: This value acts as a unique ID for the table, and updating it later is a breaking change. 
+If you want to change the value shown to the users, set `displayName` instead.
 
 ___
 
