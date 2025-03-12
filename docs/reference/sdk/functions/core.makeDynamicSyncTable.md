@@ -48,6 +48,7 @@ coda.makeDynamicSyncTable({
 | › `connectionRequirement?` | [`ConnectionRequirement`](../enums/core.ConnectionRequirement.md) |
 | › `defaultAddDynamicColumns?` | `boolean` |
 | › `description?` | `string` |
+| › `displayName?` | `string` |
 | › `entityName?` | `string` |
 | › `formula` | [`SyncFormulaDef`](../interfaces/core.SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `any`, `ContextT`, `PermissionsContextT`\> |
 | › `getDisplayUrl` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<`ContextT`\> |

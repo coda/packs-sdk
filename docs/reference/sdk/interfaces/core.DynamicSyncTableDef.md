@@ -54,6 +54,18 @@ See [description](core.SyncTableOptions.md#description)
 
 ___
 
+### displayName
+
+• `Optional` **displayName**: `string`
+
+See [displayName](core.SyncTableOptions.md#displayname)
+
+#### Inherited from
+
+[SyncTableDef](core.SyncTableDef.md).[displayName](core.SyncTableDef.md#displayname)
+
+___
+
 ### entityName
 
 • `Optional` **entityName**: `string`

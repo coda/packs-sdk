@@ -3004,6 +3004,8 @@ export interface SyncTablePropertyOptions {
 export interface SyncTableDef<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData> {
 	/** See {@link SyncTableOptions.name} */
 	name: string;
+	/** See {@link SyncTableOptions.displayName} */
+	displayName?: string;
 	/** See {@link SyncTableOptions.description} */
 	description?: string;
 	/** See {@link SyncTableOptions.schema} */
@@ -3840,11 +3842,19 @@ export interface DynamicOptions {
  */
 export interface SyncTableOptions<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData> {
 	/**
-	 * The name of the sync table. This is shown to users in the Coda UI.
+	 * The name of the sync table. This is shown to users in the Coda UI if displayName is not present.
 	 * This should describe the entities being synced. For example, a sync table that syncs products
 	 * from an e-commerce platform should be called 'Products'. This name must not contain spaces.
+	 *
+	 * Important: This value acts as a unique ID for the table, and updating it later is a breaking change.
+	 * If you want to change the value shown to the users, set `displayName` instead.
 	 */
 	name: string;
+	/**
+	 * This is the name shown to users in the Coda UI. If not present, {@link SyncTableOptions.name} will be used.
+	 * Changing this value will not affect existing tables and only affects newly created tables.
+	 */
+	displayName?: string;
 	/**
 	 * The description of the sync table. This is shown to users in the Coda UI.
 	 * This should describe what the sync table does in more detailed language. For example, the
@@ -4034,7 +4044,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
  */
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaDefT extends ObjectSchemaDefinition<K, L>, SchemaT extends SchemaDefT & {
 	identity?: Identity;
-}, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData>({ name, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions, role, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT, ContextT, PermissionsContextT>): SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>;
+}, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData>({ name, displayName, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions, role, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT, ContextT, PermissionsContextT>): SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>;
 /**
  * Creates a dynamic sync table definition.
  *
@@ -4054,8 +4064,9 @@ export declare function makeSyncTable<K extends string, L extends string, ParamD
  * });
  * ```
  */
-export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData>({ name, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, searchDynamicUrls: searchDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, propertyOptions, }: {
+export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData>({ name, displayName, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, searchDynamicUrls: searchDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, propertyOptions, }: {
 	name: string;
+	displayName?: string;
 	description?: string;
 	getName: MetadataFormulaDef<ContextT>;
 	getSchema: MetadataFormulaDef<ContextT>;
