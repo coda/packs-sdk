@@ -2193,7 +2193,8 @@ export interface SyncTableOptions<
    * This should describe the entities being synced. For example, a sync table that syncs products
    * from an e-commerce platform should be called 'Products'. This name must not contain spaces.
    *
-   * Important: This should not be updated after the first time a table is included in the pack version.
+   * Important: This value acts as a unique ID for the table, and updating it later is a breaking change. 
+   * If you want to change the value shown to the users, set `displayName` instead.
    */
   name: string;
 

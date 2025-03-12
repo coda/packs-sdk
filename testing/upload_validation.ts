@@ -1895,8 +1895,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       .nonempty()
       .max(Limits.BuildingBlockName)
       .regex(regexFormulaName, 'Sync Table names can only contain alphanumeric characters and underscores.'),
-    displayName: z.string().max(Limits.BuildingBlockDescription).optional(),
-    description: z.string().max(Limits.BuildingBlockName).optional(),
+    displayName: z.string().max(Limits.BuildingBlockName).optional(),
+    description: z.string().max(Limits.BuildingBlockDescription).optional(),
     schema: genericObjectSchema,
     getter: syncFormulaSchema,
     entityName: z.string().optional(),
@@ -1966,7 +1966,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
 
   const syncTableSchema = z
     .union([genericDynamicSyncTableSchema, genericSyncTableSchema])
-    .superRefine((data, context) => {
+    .superRefine((data, context) => { 
       const syncTable = data as SyncTable;
 
       if (syncTable.getter.varargParameters && syncTable.getter.varargParameters.length > 0) {
