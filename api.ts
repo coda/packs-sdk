@@ -2199,7 +2199,7 @@ export interface SyncTableOptions<
   name: string;
 
   /**
-   * This is the name shown to users in the Coda UI. If not present, name will be used. This is safe to update.
+   * This is the name shown to users in the Coda UI. If not present, {@link SyncTableOptions.name} will be used.
    */
   displayName?: string;
 
