@@ -219,9 +219,9 @@ pack.addColumnFormat({
 
 [formulas]: formulas.md
 [schemas_object]: ../advanced/schemas.md#object
-[schemas_display_value]: ../advanced/schemas.md#display-value
+[schemas_display_value]: ../advanced/schemas.md#display
 [schemas_featured_columns]: ../advanced/schemas.md#featured-columns
-[schemas_property_labels]: ../advanced/schemas.md#property-labels
+[schemas_property_labels]: ../advanced/schemas.md#labels
 [data_types_markdown]: ../basics/data-types.md#markdown
 [data_types_html]: ../basics/data-types.md#html
 [column_format]: column-formats.md

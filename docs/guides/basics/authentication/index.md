@@ -532,7 +532,7 @@ The step's `getOptions` works like [dynamic autocomplete][autocomplete_dynamic],
 [View Sample Code][sample_selected_endpoint]{ .md-button }
 
 !!! warning "Connection name generated twice"
-    When using this feature the [`getConnectionName` function](#setting-account-names) is run multiple times: once before the endpoint is selected and again after. Make sure your code works correctly in both cases. Before the endpoint is available you can return a generic name, which will get overwritten later.
+    When using this feature the [`getConnectionName` function](#name) is run multiple times: once before the endpoint is selected and again after. Make sure your code works correctly in both cases. Before the endpoint is available you can return a generic name, which will get overwritten later.
 
 
 ### Network domains
@@ -549,7 +549,7 @@ There are services however where each account is associated with a distinct doma
 [sample_web_basic]: ../../../samples/topic/authentication.md#username-and-password
 [sample_manual_endpoint]: ../../../samples/topic/authentication.md#manual-endpoint
 [sample_automatic_endpoint]: ../../../samples/topic/authentication.md#automatic-endpoint
-[sample_selected_endpoint]: ../../../samples/topic/authentication.md#selected-endpoint
+[sample_selected_endpoint]: ../../../samples/topic/authentication.md#user-selected-endpoint
 [sample_connection_name]: ../../../samples/topic/authentication.md#oauth2
 [sample_coda_api]: ../../../samples/topic/authentication.md#coda-api-token
 [sample_custom]: ../../../samples/topic/authentication.md#custom-tokens

@@ -400,7 +400,7 @@ The columns of a sync table are defined using an object schema. When used in a s
 
 Object schemas used in a sync table must specify which property value should be used as a unique identifier for that row. This ID is needed by the syncing logic to ensure that rows are added, updated, and removed correctly. The ID only needs to be unique within that sync table.
 
-Similar to the [display value](#display-value), this is done by setting the `idProperty` field to the name of the property containing the unique identifier.
+Similar to the [display value](#display), this is done by setting the `idProperty` field to the name of the property containing the unique identifier.
 
 ```ts
 let MovieSchema = coda.makeObjectSchema({
