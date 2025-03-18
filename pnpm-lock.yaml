@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  cross-spawn: '>=7.0.6'
+  cross-spawn: 7.0.6
   elliptic@<=6.6.0: '>=6.6.1'
 
 packageExtensionsChecksum: 380851e2db75863824bdde5716c4ef00
