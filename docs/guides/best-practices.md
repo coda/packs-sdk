@@ -73,7 +73,7 @@ While it's easy to get started building a Pack, there are lots of options to exp
 [sync_tables_parameters]: blocks/sync-tables/index.md#parameters
 [dyanmic_sync_tables_search]: blocks/sync-tables/dynamic.md#search
 [formulas_examples]: blocks/formulas.md#examples
-[parameter_suggested_value]: basics/parameters/index.md#suggested-values
+[parameter_suggested_value]: basics/parameters/index.md#suggested
 [instructionsUrl]: ../reference/sdk/interfaces/core.BaseAuthentication.md#instructionsurl
 [UserVisibleError]: ../reference/sdk/classes/core.UserVisibleError.md
 [SyncTableOptions.description]: ../reference/sdk/interfaces/core.SyncTableOptions.md#description
