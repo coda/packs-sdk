@@ -671,17 +671,53 @@ describe('Execution', () => {
         });
 
         it('get permissions works with passthrough data', async () => {
+          const names = [
+            'Albert',
+            'Brenda',
+            'Cory',
+            'Dylan',
+            'Ethan',
+            'Fiona',
+            'Gina',
+            'Hank',
+            'Ivy',
+            'Jack',
+            'Kyle',
+            'Liam',
+            'Mia',
+            'Noah',
+            'Olivia',
+            'Pam',
+            'Quinn',
+            'Ryan',
+            'Sam',
+            'Tia',
+            'Uma',
+            'Vince',
+            'Wendy',
+            'Xavier',
+            'Yara',
+            'Zack',
+            'Aaron',
+            'Bella',
+            'Charlie',
+            'Diana',
+            'Easton',
+            'Frank',
+            'Greg',
+            'Hannah',
+            'Ian',
+            'Julia',
+          ];
+
           const syncRows: GenericExecuteGetPermissionsRequest = {
-            rows: [{row: {name: 'Alice'}}, {row: {name: 'Bob'}}],
-            permissionsContext: [
-              {userId: 42}, // For first row
-              {userId: 123}, // For second row
-            ],
+            rows: names.map(name => ({row: {name}})),
+            permissionsContext: names.map((name, index) => ({userId: index % 2})),
           };
           await executeFormulaOrSyncFromCLI({
             vm,
             formulaName: 'Students:permissions',
-            params: ['Smith', JSON.stringify(syncRows)],
+            params: ['Cunningham', JSON.stringify(syncRows)],
             manifest: fakePack,
             manifestPath: '',
             bundleSourceMapPath,
@@ -690,16 +726,10 @@ describe('Execution', () => {
           });
           const result = mockPrintFull.args[0][0];
           assert.deepEqual(result, {
-            rowAccessDefinitions: [
-              {
-                rowId: 'Alice',
-                permissions: [{permissionType: PermissionType.Direct, principal: {type: 'user', userId: 42}}],
-              },
-              {
-                rowId: 'Bob',
-                permissions: [{permissionType: PermissionType.Direct, principal: {type: 'user', userId: 123}}],
-              },
-            ],
+            rowAccessDefinitions: names.map((name, index) => ({
+              rowId: name,
+              permissions: [{permissionType: PermissionType.Direct, principal: {type: 'user', userId: index % 2}}],
+            })),
           });
         });
 
