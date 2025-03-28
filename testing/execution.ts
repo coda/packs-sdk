@@ -264,6 +264,17 @@ export async function executeFormulaOrSyncFromCLI({
         bundlePath,
       });
       printFull(result);
+    } else if (formulaSpecification.type === FormulaType.GetPermissions) {
+      const result = await executeGetPermissionsFormulaWithContinuations({
+        formulaSpecification,
+        params,
+        manifest,
+        executionContext,
+        vm,
+        bundleSourceMapPath,
+        bundlePath,
+      });
+      printFull(result);
     } else {
       const result = vm
         ? await executeFormulaOrSyncWithRawParamsInVM({
@@ -1199,6 +1210,70 @@ async function executeSyncFormulaWithContinuations({
   return {result, chainedCommandResults, completion};
 }
 
+async function executeGetPermissionsFormulaWithContinuations({
+  formulaSpecification,
+  params,
+  manifest,
+  executionContext,
+  bundleSourceMapPath,
+  bundlePath,
+  maxRows = DEFAULT_MAX_ROWS,
+  vm,
+}: {
+  formulaSpecification: GetPermissionsFormulaSpecification;
+  params: string[];
+  manifest: BasicPackDefinition;
+  executionContext: SyncExecutionContext;
+  bundleSourceMapPath: string;
+  bundlePath: string;
+  maxRows?: number;
+  vm?: boolean;
+}) {
+  let result = [];
+  let iterations = 1;
+
+  // We need to make a copy of the execution context so we don't pollute the continuation on the Sync formula
+  // if we are running inside of an actual Sync continuation loop.
+  const executionContextCopy: SyncExecutionContext = {
+    ...executionContext,
+    sync: {...executionContext.sync, continuation: undefined},
+  };
+  do {
+    if (iterations > MaxSyncIterations) {
+      throw new Error(
+        `Sync is still running after ${MaxSyncIterations} iterations, this is likely due to an infinite loop.`,
+      );
+    }
+    const response = vm
+      ? await executeFormulaOrSyncWithRawParamsInVM({
+          formulaSpecification,
+          params,
+          bundleSourceMapPath,
+          bundlePath,
+          executionContext: executionContextCopy,
+        })
+      : await executeFormulaOrSyncWithRawParams({
+          formulaSpecification,
+          params,
+          manifest,
+          executionContext: executionContextCopy,
+        });
+
+    // XXX need to fix type inference in executeFormulaOrSyncWithRawParams
+    const castedResponse = response as GetPermissionsResult;
+
+    result.push(...castedResponse.rowAccessDefinitions);
+    executionContextCopy.sync.continuation = castedResponse.continuation;
+
+    iterations++;
+  } while (executionContextCopy.sync.continuation && result.length < maxRows);
+  if (result.length > maxRows) {
+    result = result.slice(0, maxRows);
+  }
+
+  return {rowAccessDefinitions: result};
+}
+
 /**
  * This function handles running a chained command formula for a given set of rows.
  *
@@ -1255,21 +1330,17 @@ async function chainCommandOnSyncResult({
       const chunkResponses = [];
       for (const chunk of chunks) {
         const getPermissionsParams = [...params, JSON.stringify({rows: chunk})];
-        const response = vm
-          ? ((await executeFormulaOrSyncWithRawParamsInVM<GetPermissionsFormulaSpecification>({
-              formulaSpecification: chainedCommand.formulaSpec,
-              params: getPermissionsParams,
-              bundleSourceMapPath,
-              bundlePath,
-              executionContext,
-            })) as GetPermissionsResult)
-          : ((await executeFormulaOrSyncWithRawParams<GetPermissionsFormulaSpecification>({
-              formulaSpecification: chainedCommand.formulaSpec,
-              params: getPermissionsParams,
-              manifest,
-              executionContext,
-            })) as GetPermissionsResult);
-        chunkResponses.push(response.rowAccessDefinitions);
+
+        const result = await executeGetPermissionsFormulaWithContinuations({
+          formulaSpecification: chainedCommand.formulaSpec,
+          params: getPermissionsParams,
+          manifest,
+          executionContext,
+          vm,
+          bundleSourceMapPath,
+          bundlePath,
+        });
+        chunkResponses.push(...result.rowAccessDefinitions);
       }
       return chunkResponses.flat();
     default:
