@@ -165,6 +165,19 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
                 vm,
                 bundleSourceMapPath,
                 bundlePath,
+                maxRows,
+            });
+            (0, helpers_7.printFull)(result);
+        }
+        else if (formulaSpecification.type === types_3.FormulaType.GetPermissions) {
+            const result = await executeGetPermissionsFormulaWithContinuations({
+                formulaSpecification,
+                params,
+                manifest,
+                executionContext,
+                vm,
+                bundleSourceMapPath,
+                bundlePath,
             });
             (0, helpers_7.printFull)(result);
         }
@@ -437,7 +450,7 @@ async function executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, par
             (0, ensure_2.ensureUnreachable)(formulaSpecification);
     }
     try {
-        return await (0, bootstrap_1.executeThunk)(ivmContext, { params, formulaSpec: formulaSpecification, updates: syncUpdates, permissionRequest }, bundlePath, bundleSourceMapPath);
+        return (await (0, bootstrap_1.executeThunk)(ivmContext, { params, formulaSpec: formulaSpecification, updates: syncUpdates, permissionRequest }, bundlePath, bundleSourceMapPath));
     }
     catch (err) {
         throw new DeveloperError(err);
@@ -688,18 +701,18 @@ class DeveloperError extends Error {
  * Executes a sync formula with optional chaining.
  *
  * @param formulaSpecification The formula specification we want to run, should be a Sync formula
- * @param chainedCommand The chained command to run after the formula specification. Can either be interleaved in the
- *   continuation loop or a subsequent command to run after the first full completion.
+ * @param chainedCommand The chained command to run after the formula specification.
  * @param params The params to pass to the formula
  * @param manifest The manifest of the pack
  * @param executionContext The execution context
  * @param vm Whether to run in a VM
  * @param bundleSourceMapPath The source map path
  * @param bundlePath The bundle path
+ * @param maxRows The max rows to sync
  * @returns Returns either the sync result (if there is no chaining), the interleaved chained command results,
  *   or the result from the subsequent chained command.
  */
-async function executeSyncFormulaWithOptionalChaining({ formulaSpecification, chainedCommand, params, manifest, executionContext, vm, bundleSourceMapPath, bundlePath, }) {
+async function executeSyncFormulaWithOptionalChaining({ formulaSpecification, chainedCommand, params, manifest, executionContext, vm, bundleSourceMapPath, bundlePath, maxRows = exports.DEFAULT_MAX_ROWS, }) {
     if (formulaSpecification.type !== types_3.FormulaType.Sync) {
         throw new Error(`Expected a Sync formula, received: ${formulaSpecification.type}`);
     }
@@ -712,6 +725,7 @@ async function executeSyncFormulaWithOptionalChaining({ formulaSpecification, ch
         vm,
         bundleSourceMapPath,
         bundlePath,
+        maxRows,
     });
     if (!chainedCommand) {
         return result;
@@ -731,6 +745,7 @@ async function executeSyncFormulaWithOptionalChaining({ formulaSpecification, ch
                 vm,
                 bundleSourceMapPath,
                 bundlePath,
+                maxRows,
             });
             return resultFromIncrementalSync;
         default:
@@ -774,10 +789,13 @@ async function executeSyncFormulaWithContinuations({ formulaSpecification, chain
         if (response.permissionsContext && response.permissionsContext.length !== response.result.length) {
             throw new Error(`Got ${response.result.length} results but only ${response.permissionsContext.length} passthrough items (on page ${iterations})`);
         }
-        result.push(...response.result);
+        // We may go over the maxRows limit within a single iteration, so make sure to only pass as many
+        // as will actually fit into the result array through to the chained command.
+        const resultSlice = response.result.slice(0, maxRows - result.length);
+        result.push(...resultSlice);
         if (chainedCommand) {
             chainedCommandResults.push(...(await chainCommandOnSyncResult({
-                rows: response.result,
+                rows: resultSlice,
                 formulaSpecification,
                 chainedCommand,
                 params,
@@ -800,6 +818,55 @@ async function executeSyncFormulaWithContinuations({ formulaSpecification, chain
         result = result.slice(0, maxRows);
     }
     return { result, chainedCommandResults, completion };
+}
+/**
+ * Executes a get permissions formula with continuations, looping until
+ * we no longer have a continuation.
+ *
+ * Note, there is no maxRows limit here. Limiting is expected to be handled on the actual
+ * set of item rows, on the assumption that we can use that to roughly control how
+ * many rowAccessDefinitions we will get back.
+ *
+ * @param formulaSpecification The formula specification we want to run, should be a GetPermissions formula
+ * @param params The params to pass to the formula
+ * @param manifest The manifest of the pack
+ * @param executionContext The execution context *of the sync loop*. We clone this for the getPermissions loop
+ *   to avoid polluting the continuation on the sync loop.
+ * @param vm Whether to run in a VM
+ * @returns Returns an object with the row access definitions
+ */
+async function executeGetPermissionsFormulaWithContinuations({ formulaSpecification, params, manifest, executionContext: itemsExecutionContext, bundleSourceMapPath, bundlePath, vm, }) {
+    const result = [];
+    let iterations = 1;
+    // We need to make a copy of the execution context so we don't pollute the continuation on the Sync formula
+    // if we are running inside of an actual Sync continuation loop.
+    const executionContextCopy = {
+        ...itemsExecutionContext,
+        sync: { ...itemsExecutionContext.sync, continuation: undefined },
+    };
+    do {
+        if (iterations > MaxSyncIterations) {
+            throw new Error(`GetPermissions is still running after ${MaxSyncIterations} iterations, this is likely due to an infinite loop.`);
+        }
+        const response = vm
+            ? await executeFormulaOrSyncWithRawParamsInVM({
+                formulaSpecification,
+                params,
+                bundleSourceMapPath,
+                bundlePath,
+                executionContext: executionContextCopy,
+            })
+            : await executeFormulaOrSyncWithRawParams({
+                formulaSpecification,
+                params,
+                manifest,
+                executionContext: executionContextCopy,
+            });
+        result.push(...response.rowAccessDefinitions);
+        executionContextCopy.sync.continuation = response.continuation;
+        iterations++;
+    } while (executionContextCopy.sync.continuation);
+    return { rowAccessDefinitions: result };
 }
 /**
  * This function handles running a chained command formula for a given set of rows.
@@ -834,21 +901,16 @@ async function chainCommandOnSyncResult({ rows, formulaSpecification, chainedCom
             const chunkResponses = [];
             for (const chunk of chunks) {
                 const getPermissionsParams = [...params, JSON.stringify({ rows: chunk })];
-                const response = vm
-                    ? (await executeFormulaOrSyncWithRawParamsInVM({
-                        formulaSpecification: chainedCommand.formulaSpec,
-                        params: getPermissionsParams,
-                        bundleSourceMapPath,
-                        bundlePath,
-                        executionContext,
-                    }))
-                    : (await executeFormulaOrSyncWithRawParams({
-                        formulaSpecification: chainedCommand.formulaSpec,
-                        params: getPermissionsParams,
-                        manifest,
-                        executionContext,
-                    }));
-                chunkResponses.push(response.rowAccessDefinitions);
+                const result = await executeGetPermissionsFormulaWithContinuations({
+                    formulaSpecification: chainedCommand.formulaSpec,
+                    params: getPermissionsParams,
+                    manifest,
+                    executionContext,
+                    vm,
+                    bundleSourceMapPath,
+                    bundlePath,
+                });
+                chunkResponses.push(...result.rowAccessDefinitions);
             }
             return chunkResponses.flat();
         default:
