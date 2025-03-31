@@ -571,6 +571,49 @@ describe('Execution', () => {
           );
         });
 
+        it('sync with includePermissions works with maxRows', async () => {
+          await executeFormulaOrSyncFromCLI({
+            vm,
+            formulaName: 'Students>permissions',
+            params: ['Cunningham'],
+            manifest: fakePack,
+            manifestPath: '',
+            bundleSourceMapPath,
+            bundlePath,
+            contextOptions: {useRealFetcher: false},
+            maxRows: 17,
+          });
+          const result = mockPrintFull.args[0][0];
+
+          assert.deepEqual(
+            result,
+            [
+              {name: 'Albert'},
+              {name: 'Brenda'},
+              {name: 'Cory'},
+              {name: 'Dylan'},
+              {name: 'Ethan'},
+              {name: 'Fiona'},
+              {name: 'Gina'},
+              {name: 'Hank'},
+              {name: 'Ivy'},
+              {name: 'Jack'},
+              {name: 'Kyle'},
+              {name: 'Liam'},
+              {name: 'Mia'},
+              {name: 'Noah'},
+              {name: 'Olivia'},
+              {name: 'Pam'},
+              {name: 'Quinn'},
+            ].map(student => {
+              return {
+                rowId: student.name,
+                permissions: [{permissionType: PermissionType.Direct, principal: {type: 'user', userId: 1}}],
+              };
+            }),
+          );
+        });
+
         it('sync with incremental chaining works', async () => {
           await executeFormulaOrSyncFromCLI({
             vm,

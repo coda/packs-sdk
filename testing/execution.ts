@@ -24,6 +24,7 @@ import type {PackFormulaResult} from '../api_types';
 import type {ParamDefs} from '../api_types';
 import type {ParamValues} from '../api_types';
 import type {PostSetupMetadataFormulaSpecification} from '../runtime/types';
+import type {RowAccessDefinition} from '../schema';
 import type {StandardFormulaSpecification} from '../runtime/types';
 import type {SyncCompletionMetadata} from '../api_types';
 import type {SyncExecutionContext} from '../api_types';
@@ -262,6 +263,7 @@ export async function executeFormulaOrSyncFromCLI({
         vm,
         bundleSourceMapPath,
         bundlePath,
+        maxRows,
       });
       printFull(result);
     } else if (formulaSpecification.type === FormulaType.GetPermissions) {
@@ -1052,6 +1054,7 @@ class DeveloperError extends Error {
  * @param vm Whether to run in a VM
  * @param bundleSourceMapPath The source map path
  * @param bundlePath The bundle path
+ * @param maxRows The max rows to sync
  * @returns Returns either the sync result (if there is no chaining), the interleaved chained command results,
  *   or the result from the subsequent chained command.
  */
@@ -1064,6 +1067,7 @@ async function executeSyncFormulaWithOptionalChaining({
   vm,
   bundleSourceMapPath,
   bundlePath,
+  maxRows = DEFAULT_MAX_ROWS,
 }: {
   formulaSpecification: SyncFormulaSpecification;
   chainedCommand?: ChainedCommand;
@@ -1073,6 +1077,7 @@ async function executeSyncFormulaWithOptionalChaining({
   vm?: boolean;
   bundleSourceMapPath: string;
   bundlePath: string;
+  maxRows?: number;
 }) {
   if (formulaSpecification.type !== FormulaType.Sync) {
     throw new Error(`Expected a Sync formula, received: ${formulaSpecification.type}`);
@@ -1087,6 +1092,7 @@ async function executeSyncFormulaWithOptionalChaining({
     vm,
     bundleSourceMapPath,
     bundlePath,
+    maxRows,
   });
 
   if (!chainedCommand) {
@@ -1109,6 +1115,7 @@ async function executeSyncFormulaWithOptionalChaining({
         vm,
         bundleSourceMapPath,
         bundlePath,
+        maxRows,
       });
       return resultFromIncrementalSync;
     default:
@@ -1178,11 +1185,15 @@ async function executeSyncFormulaWithContinuations({
         `Got ${response.result.length} results but only ${response.permissionsContext.length} passthrough items (on page ${iterations})`,
       );
     }
-    result.push(...response.result);
+    // We may go over the maxRows limit within a single iteration, so make sure to only pass as many
+    // as will actually fit into the result array through to the chained command.
+    const resultSlice = response.result.slice(0, maxRows - result.length);
+    result.push(...resultSlice);
+
     if (chainedCommand) {
       chainedCommandResults.push(
         ...(await chainCommandOnSyncResult({
-          rows: response.result,
+          rows: resultSlice,
           formulaSpecification,
           chainedCommand,
           params,
@@ -1210,14 +1221,29 @@ async function executeSyncFormulaWithContinuations({
   return {result, chainedCommandResults, completion};
 }
 
+/**
+ * Executes a get permissions formula with continuations, looping until
+ * we no longer have a continuation.
+ *
+ * Note, there is no maxRows limit here. Limiting is expected to be handled on the actual
+ * set of item rows, on the assumption that we can use that to roughly control how
+ * many rowAccessDefinitions we will get back.
+ *
+ * @param formulaSpecification The formula specification we want to run, should be a GetPermissions formula
+ * @param params The params to pass to the formula
+ * @param manifest The manifest of the pack
+ * @param executionContext The execution context *of the sync loop*. We clone this for the getPermissions loop
+ *   to avoid polluting the continuation on the sync loop.
+ * @param vm Whether to run in a VM
+ * @returns Returns an object with the row access definitions
+ */
 async function executeGetPermissionsFormulaWithContinuations({
   formulaSpecification,
   params,
   manifest,
-  executionContext,
+  executionContext: itemsExecutionContext,
   bundleSourceMapPath,
   bundlePath,
-  maxRows = DEFAULT_MAX_ROWS,
   vm,
 }: {
   formulaSpecification: GetPermissionsFormulaSpecification;
@@ -1226,22 +1252,21 @@ async function executeGetPermissionsFormulaWithContinuations({
   executionContext: SyncExecutionContext;
   bundleSourceMapPath: string;
   bundlePath: string;
-  maxRows?: number;
   vm?: boolean;
 }) {
-  let result = [];
+  const result: RowAccessDefinition[] = [];
   let iterations = 1;
 
   // We need to make a copy of the execution context so we don't pollute the continuation on the Sync formula
   // if we are running inside of an actual Sync continuation loop.
   const executionContextCopy: SyncExecutionContext = {
-    ...executionContext,
-    sync: {...executionContext.sync, continuation: undefined},
+    ...itemsExecutionContext,
+    sync: {...itemsExecutionContext.sync, continuation: undefined},
   };
   do {
     if (iterations > MaxSyncIterations) {
       throw new Error(
-        `Sync is still running after ${MaxSyncIterations} iterations, this is likely due to an infinite loop.`,
+        `GetPermissions is still running after ${MaxSyncIterations} iterations, this is likely due to an infinite loop.`,
       );
     }
     const response = vm
@@ -1266,10 +1291,7 @@ async function executeGetPermissionsFormulaWithContinuations({
     executionContextCopy.sync.continuation = castedResponse.continuation;
 
     iterations++;
-  } while (executionContextCopy.sync.continuation && result.length < maxRows);
-  if (result.length > maxRows) {
-    result = result.slice(0, maxRows);
-  }
+  } while (executionContextCopy.sync.continuation);
 
   return {rowAccessDefinitions: result};
 }
