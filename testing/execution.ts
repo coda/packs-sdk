@@ -5,6 +5,7 @@ import {ChainedCommandType} from './types';
 import type {Continuation} from '../api';
 import type {Credentials} from './auth_types';
 import type {ExecutionContext} from '../api_types';
+import type {FormulaResultType} from './types';
 import type {FormulaSpecification} from '../runtime/types';
 import {FormulaType} from '../runtime/types';
 import type {GenericExecuteGetPermissionsRequest} from '../api';
@@ -101,13 +102,7 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
     // TODO(alexd): Switch this to false or remove when we launch 1.0.0
     useDeprecatedResultNormalization = true,
   }: ExecuteOptions = {},
-): Promise<
-  T extends SyncFormulaSpecification
-    ? GenericSyncFormulaResult
-    : T extends SyncUpdateFormulaSpecification
-    ? GenericSyncUpdateResult
-    : PackFormulaResult
-> {
+): Promise<FormulaResultType<T>> {
   let formula: TypedPackFormula | undefined;
   switch (formulaSpec.type) {
     case FormulaType.Standard:
@@ -140,11 +135,11 @@ async function findAndExecutePackFunction<T extends FormulaSpecification>(
   }
 
   if (formulaSpec.type === FormulaType.SyncUpdate) {
-    return result;
+    return result as FormulaResultType<T>;
   }
 
   if (formulaSpec.type === FormulaType.GetPermissions) {
-    return result;
+    return result as FormulaResultType<T>;
   }
 
   if (formula) {
@@ -567,7 +562,7 @@ async function executeFormulaOrSyncWithRawParamsInVM<T extends FormulaSpecificat
   executionContext?: SyncExecutionContext;
   bundleSourceMapPath: string;
   bundlePath: string;
-}): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult> {
+}): Promise<FormulaResultType<T>> {
   const ivmContext = await ivmHelper.setupIvmContext(bundlePath, executionContext);
 
   const manifest = await importManifest(bundlePath);
@@ -610,12 +605,12 @@ async function executeFormulaOrSyncWithRawParamsInVM<T extends FormulaSpecificat
       ensureUnreachable(formulaSpecification);
   }
   try {
-    return await executeThunk(
+    return (await executeThunk(
       ivmContext,
       {params, formulaSpec: formulaSpecification, updates: syncUpdates, permissionRequest},
       bundlePath,
       bundleSourceMapPath,
-    );
+    )) as FormulaResultType<T>;
   } catch (err: any) {
     throw new DeveloperError(err);
   }
@@ -631,7 +626,7 @@ export async function executeFormulaOrSyncWithRawParams<T extends FormulaSpecifi
   params: string[];
   manifest: BasicPackDefinition;
   executionContext: SyncExecutionContext;
-}): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult> {
+}): Promise<FormulaResultType<T>> {
   // Use non-native buffer if we're testing this without using isolated-vm, because otherwise
   // we could hit issues like Buffer.isBuffer() returning false if a non-native buffer was created
   // in pack code and we're checking it using native buffers somewhere like node_fetcher.ts
@@ -1046,8 +1041,7 @@ class DeveloperError extends Error {
  * Executes a sync formula with optional chaining.
  *
  * @param formulaSpecification The formula specification we want to run, should be a Sync formula
- * @param chainedCommand The chained command to run after the formula specification. Can either be interleaved in the
- *   continuation loop or a subsequent command to run after the first full completion.
+ * @param chainedCommand The chained command to run after the formula specification.
  * @param params The params to pass to the formula
  * @param manifest The manifest of the pack
  * @param executionContext The execution context
@@ -1284,11 +1278,8 @@ async function executeGetPermissionsFormulaWithContinuations({
           executionContext: executionContextCopy,
         });
 
-    // XXX need to fix type inference in executeFormulaOrSyncWithRawParams
-    const castedResponse = response as GetPermissionsResult;
-
-    result.push(...castedResponse.rowAccessDefinitions);
-    executionContextCopy.sync.continuation = castedResponse.continuation;
+    result.push(...response.rowAccessDefinitions);
+    executionContextCopy.sync.continuation = response.continuation;
 
     iterations++;
   } while (executionContextCopy.sync.continuation);
