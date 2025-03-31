@@ -1,6 +1,6 @@
 {
   "name": "@codahq/packs-sdk",
-  "version": "1.9.3-prerelease.1",
+  "version": "1.9.3-prerelease.2",
   "license": "MIT",
   "workspaces": [
     "dev/eslint"
@@ -151,7 +151,8 @@
     },
     "overrides": {
       "cross-spawn": ">=7.0.6",
-      "elliptic@<=6.6.0": ">=6.6.1"
+      "elliptic@<=6.6.0": ">=6.6.1",
+      "tar-fs@<2.1.2": ">=2.1.2"
     },
     "packageExtensions": {
       "isolated-vm": {
