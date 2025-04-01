@@ -571,6 +571,49 @@ describe('Execution', () => {
           );
         });
 
+        it('sync with includePermissions works with maxRows', async () => {
+          await executeFormulaOrSyncFromCLI({
+            vm,
+            formulaName: 'Students>permissions',
+            params: ['Cunningham'],
+            manifest: fakePack,
+            manifestPath: '',
+            bundleSourceMapPath,
+            bundlePath,
+            contextOptions: {useRealFetcher: false},
+            maxRows: 17,
+          });
+          const result = mockPrintFull.args[0][0];
+
+          assert.deepEqual(
+            result,
+            [
+              {name: 'Albert'},
+              {name: 'Brenda'},
+              {name: 'Cory'},
+              {name: 'Dylan'},
+              {name: 'Ethan'},
+              {name: 'Fiona'},
+              {name: 'Gina'},
+              {name: 'Hank'},
+              {name: 'Ivy'},
+              {name: 'Jack'},
+              {name: 'Kyle'},
+              {name: 'Liam'},
+              {name: 'Mia'},
+              {name: 'Noah'},
+              {name: 'Olivia'},
+              {name: 'Pam'},
+              {name: 'Quinn'},
+            ].map(student => {
+              return {
+                rowId: student.name,
+                permissions: [{permissionType: PermissionType.Direct, principal: {type: 'user', userId: 1}}],
+              };
+            }),
+          );
+        });
+
         it('sync with incremental chaining works', async () => {
           await executeFormulaOrSyncFromCLI({
             vm,
@@ -609,13 +652,52 @@ describe('Execution', () => {
         });
 
         it('get permissions works', async () => {
+          const names = [
+            'Albert',
+            'Brenda',
+            'Cory',
+            'Dylan',
+            'Ethan',
+            'Fiona',
+            'Gina',
+            'Hank',
+            'Ivy',
+            'Jack',
+            'Kyle',
+            'Liam',
+            'Mia',
+            'Noah',
+            'Olivia',
+            'Pam',
+            'Quinn',
+            'Ryan',
+            'Sam',
+            'Tia',
+            'Uma',
+            'Vince',
+            'Wendy',
+            'Xavier',
+            'Yara',
+            'Zack',
+            'Aaron',
+            'Bella',
+            'Charlie',
+            'Diana',
+            'Easton',
+            'Frank',
+            'Greg',
+            'Hannah',
+            'Ian',
+            'Julia',
+          ];
+
           const syncRows: GenericExecuteGetPermissionsRequest = {
-            rows: [{row: {name: 'Alice'}}, {row: {name: 'Bob'}}],
+            rows: names.map(name => ({row: {name}})),
           };
           await executeFormulaOrSyncFromCLI({
             vm,
             formulaName: 'Students:permissions',
-            params: ['Smith', JSON.stringify(syncRows)],
+            params: ['Cunningham', JSON.stringify(syncRows)],
             manifest: fakePack,
             manifestPath: '',
             bundleSourceMapPath,
@@ -624,31 +706,61 @@ describe('Execution', () => {
           });
           const result = mockPrintFull.args[0][0];
           assert.deepEqual(result, {
-            rowAccessDefinitions: [
-              {
-                rowId: 'Alice',
-                permissions: [{permissionType: PermissionType.Direct, principal: {type: 'user', userId: 1}}],
-              },
-              {
-                rowId: 'Bob',
-                permissions: [{permissionType: PermissionType.Direct, principal: {type: 'user', userId: 1}}],
-              },
-            ],
+            rowAccessDefinitions: names.map(name => ({
+              rowId: name,
+              permissions: [{permissionType: PermissionType.Direct, principal: {type: 'user', userId: 1}}],
+            })),
           });
         });
 
         it('get permissions works with passthrough data', async () => {
+          const names = [
+            'Albert',
+            'Brenda',
+            'Cory',
+            'Dylan',
+            'Ethan',
+            'Fiona',
+            'Gina',
+            'Hank',
+            'Ivy',
+            'Jack',
+            'Kyle',
+            'Liam',
+            'Mia',
+            'Noah',
+            'Olivia',
+            'Pam',
+            'Quinn',
+            'Ryan',
+            'Sam',
+            'Tia',
+            'Uma',
+            'Vince',
+            'Wendy',
+            'Xavier',
+            'Yara',
+            'Zack',
+            'Aaron',
+            'Bella',
+            'Charlie',
+            'Diana',
+            'Easton',
+            'Frank',
+            'Greg',
+            'Hannah',
+            'Ian',
+            'Julia',
+          ];
+
           const syncRows: GenericExecuteGetPermissionsRequest = {
-            rows: [{row: {name: 'Alice'}}, {row: {name: 'Bob'}}],
-            permissionsContext: [
-              {userId: 42}, // For first row
-              {userId: 123}, // For second row
-            ],
+            rows: names.map(name => ({row: {name}})),
+            permissionsContext: names.map((name, index) => ({userId: index % 2})),
           };
           await executeFormulaOrSyncFromCLI({
             vm,
             formulaName: 'Students:permissions',
-            params: ['Smith', JSON.stringify(syncRows)],
+            params: ['Cunningham', JSON.stringify(syncRows)],
             manifest: fakePack,
             manifestPath: '',
             bundleSourceMapPath,
@@ -657,16 +769,10 @@ describe('Execution', () => {
           });
           const result = mockPrintFull.args[0][0];
           assert.deepEqual(result, {
-            rowAccessDefinitions: [
-              {
-                rowId: 'Alice',
-                permissions: [{permissionType: PermissionType.Direct, principal: {type: 'user', userId: 42}}],
-              },
-              {
-                rowId: 'Bob',
-                permissions: [{permissionType: PermissionType.Direct, principal: {type: 'user', userId: 123}}],
-              },
-            ],
+            rowAccessDefinitions: names.map((name, index) => ({
+              rowId: name,
+              permissions: [{permissionType: PermissionType.Direct, principal: {type: 'user', userId: index % 2}}],
+            })),
           });
         });
 

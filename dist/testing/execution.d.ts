@@ -1,5 +1,6 @@
 import type { BasicPackDefinition } from '../types';
 import type { ExecutionContext } from '../api_types';
+import type { FormulaResultType } from './types';
 import type { FormulaSpecification } from '../runtime/types';
 import type { GenericExecuteGetPermissionsRequest } from '../api';
 import type { GenericSyncFormulaResult } from '../api';
@@ -13,7 +14,6 @@ import type { PackFormulaResult } from '../api_types';
 import type { ParamDefs } from '../api_types';
 import type { ParamValues } from '../api_types';
 import type { SyncExecutionContext } from '../api_types';
-import type { SyncFormulaSpecification } from '../runtime/types';
 import type { UpdateSyncExecutionContext } from '../api_types';
 export declare const DEFAULT_MAX_ROWS = 1000;
 export interface ExecuteOptions {
@@ -50,7 +50,7 @@ export declare function executeFormulaOrSyncWithRawParams<T extends FormulaSpeci
     params: string[];
     manifest: BasicPackDefinition;
     executionContext: SyncExecutionContext;
-}): Promise<T extends SyncFormulaSpecification ? GenericSyncFormulaResult : PackFormulaResult>;
+}): Promise<FormulaResultType<T>>;
 /**
  * Executes multiple iterations of a sync formula in a loop until there is no longer
  * a `continuation` returned, aggregating each page of results and returning an array

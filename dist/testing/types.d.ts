@@ -1,5 +1,11 @@
+import type { FormulaSpecification } from '../runtime/types';
+import type { GenericSyncFormulaResult } from '../api';
+import type { GenericSyncUpdateResult } from '../api';
 import type { GetPermissionsFormulaSpecification } from '../runtime/types';
+import type { GetPermissionsResult } from '../api';
+import type { PackFormulaResult } from '../api_types';
 import type { SyncFormulaSpecification } from '../runtime/types';
+import type { SyncUpdateFormulaSpecification } from '../runtime/types';
 export interface ParameterError {
     message: string;
 }
@@ -45,4 +51,5 @@ interface SubsequentChainedCommand {
     commandType: ChainableCommandType.IncrementalSync;
 }
 export type ChainedCommand = InterleavedChainedCommand | SubsequentChainedCommand;
+export type FormulaResultType<T extends FormulaSpecification> = T extends SyncFormulaSpecification ? GenericSyncFormulaResult : T extends SyncUpdateFormulaSpecification ? GenericSyncUpdateResult : T extends GetPermissionsFormulaSpecification ? GetPermissionsResult : PackFormulaResult;
 export {};

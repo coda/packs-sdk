@@ -263,7 +263,10 @@ export const manifest: PackDefinition = createFakePack({
         executeUpdate: async (_params, updates, _context) => {
           return {result: updates.map(u => u.newValue)};
         },
-        executeGetPermissions: async (_params, {rows, permissionsContext}, _context) => {
+        executeGetPermissions: async (_params, {rows, permissionsContext}, context) => {
+          const {continuation} = context.sync;
+          const page = continuation?.page;
+
           const rowAccessDefinitions: RowAccessDefinition[] = rows
             .map(r => r.row)
             .map((r, index) => {
@@ -288,7 +291,30 @@ export const manifest: PackDefinition = createFakePack({
                 rowId: id,
               };
             });
-          return {rowAccessDefinitions};
+
+          const pages: RowAccessDefinition[][] = [];
+          const pageSize = 3;
+          for (const [index, rowAccessDefinition] of rowAccessDefinitions.entries()) {
+            const pageIndex = Math.floor(index / pageSize);
+            if (!pages[pageIndex]) {
+              pages[pageIndex] = [];
+            }
+            pages[pageIndex].push(rowAccessDefinition);
+          }
+
+          const pageToReturn = typeof page === 'number' ? page : 0;
+          const resultsInPage = pages[pageToReturn];
+          const resultsInNextPage = pages.length > pageToReturn + 1 ? pages[pageToReturn + 1] : [];
+          const newContinuation = resultsInNextPage.length === 0 ? undefined : {page: pageToReturn + 1};
+
+          return newContinuation
+            ? {
+                rowAccessDefinitions: resultsInPage,
+                continuation: newContinuation,
+              }
+            : {
+                rowAccessDefinitions: resultsInPage,
+              };
         },
         parameters: [
           makeStringParameter('teacher', 'teacher name'),
