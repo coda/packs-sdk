@@ -4,6 +4,11 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Changed
+
+- Bump various dependencies.
+- Add display name property for sync tables.
+
 ## [1.9.2] - 2025-03-05
 
 ### Changed
