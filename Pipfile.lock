@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "5bf978762a33846ce6e7c3b97b138e0d46f5825fe7f54998e8d55a2c49745c85"
+            "sha256": "6164b8343ebb1ff8b36faf215607298776d5f350854d6e3acf48f7f3fca359ae"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -431,12 +431,12 @@
         },
         "mkdocs-material": {
             "hashes": [
-                "sha256:6e61b7fb623ce2aa4622056592b155a9eea56ff3487d0835075360be45a4c8d1",
-                "sha256:a4872139715a1f27b2aa3f3dc31a9794b7bbf36333c0ba4607cf04786c94f89c"
+                "sha256:0b7f4a0145c5074cdd692e4362d232fb25ef5b23328d0ec1ab287af77cc0deff",
+                "sha256:47f21ef9cbf4f0ebdce78a2ceecaa5d413581a55141e4464902224ebbc0b1263"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.8'",
-            "version": "==9.6.9"
+            "version": "==9.6.11"
         },
         "mkdocs-material-extensions": {
             "hashes": [
@@ -583,11 +583,11 @@
         },
         "platformdirs": {
             "hashes": [
-                "sha256:357fb2acbc885b0419afd3ce3ed34564c13c9b95c89360cd9563f73aa5e2b907",
-                "sha256:73e575e1408ab8103900836b97580d5307456908a03e92031bab39e4554cc3fb"
+                "sha256:a03875334331946f13c549dbd8f4bac7a13a50a895a0eb1e8c6a8ace80d40a94",
+                "sha256:eb437d586b6a0986388f0d6f74aa0cde27b48d0e3d66843640bfb6bdcdb6e351"
             ],
-            "markers": "python_version >= '3.8'",
-            "version": "==4.3.6"
+            "markers": "python_version >= '3.9'",
+            "version": "==4.3.7"
         },
         "pycparser": {
             "hashes": [
@@ -714,11 +714,11 @@
         },
         "termcolor": {
             "hashes": [
-                "sha256:37b17b5fc1e604945c2642c872a3764b5d547a48009871aea3edd3afa180afb8",
-                "sha256:998d8d27da6d48442e8e1f016119076b690d962507531df4890fcd2db2ef8a6f"
+                "sha256:a6abd5c6e1284cea2934443ba806e70e5ec8fd2449021be55c280f8a3731b611",
+                "sha256:da1ed4ec8a5dc5b2e17476d859febdb3cccb612be1c36e64511a6f2485c10c69"
             ],
             "markers": "python_version >= '3.9'",
-            "version": "==2.5.0"
+            "version": "==3.0.1"
         },
         "tinycss2": {
             "hashes": [
