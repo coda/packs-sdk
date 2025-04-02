@@ -4,6 +4,11 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Changed
+
+- Remove `popularityNormProperty` and `authorityNormProperty` from top-level `schema` since they reside primarily in `schema.index`.
+- Remove deprecated `popularityRankProperty` from `schema`.
+
 ## [1.9.3] - 2025-04-01
 
 ### Changed

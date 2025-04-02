@@ -913,7 +913,7 @@ export type PropertyIdentifier<K extends string = string> = K | string | Propert
  * The {@link ObjectSchemaDefinition} properties that reference keys in the `properties` object. These should all be
  * {@link PropertyIdentifier} types.
  */
-export type ObjectSchemaPathProperties = Pick<GenericObjectSchema, 'titleProperty' | 'linkProperty' | 'imageProperty' | 'snippetProperty' | 'subtitleProperties' | 'createdAtProperty' | 'createdByProperty' | 'modifiedAtProperty' | 'modifiedByProperty' | 'userEmailProperty' | 'userIdProperty' | 'groupIdProperty' | 'memberGroupIdProperty' | 'authorityNormProperty' | 'popularityNormProperty' | 'popularityRankProperty' | 'versionProperty'>;
+export type ObjectSchemaPathProperties = Pick<GenericObjectSchema, 'titleProperty' | 'linkProperty' | 'imageProperty' | 'snippetProperty' | 'subtitleProperties' | 'createdAtProperty' | 'createdByProperty' | 'modifiedAtProperty' | 'modifiedByProperty' | 'userEmailProperty' | 'userIdProperty' | 'groupIdProperty' | 'memberGroupIdProperty' | 'versionProperty'>;
 /**
  * Specifies how this property should be indexed.
  * @hidden
@@ -973,16 +973,6 @@ export interface IndexDefinition {
      * @hidden
      */
     popularityNormProperty?: PropertyIdentifier<string>;
-    /**
-     * @deprecated Use {@link IndexDefinition.popularityNormProperty} instead.
-     * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as a number
-     * between -1.0 and 1.0 representing the normalized popularity score of this entity compared to all other entities.
-     *
-     * Must be a {@link ValueType.Number} property.
-     * TODO(solomon): Remove this when all Packs' popularityRank is migrated to popularityNorm
-     * @hidden
-     */
-    popularityRankProperty?: PropertyIdentifier<string>;
 }
 /**
  * Determines how permissions are handled for this object.
@@ -1221,34 +1211,6 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      * @hidden
      */
     memberGroupIdProperty?: PropertyIdentifier<K>;
-    /**
-     * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as a number
-     * between -1.0 and 1.0 representing the normalized authority score of this entity compared to all other entities.
-     *
-     * Must be a {@link ValueType.Number} property.
-     * TODO(sam): Unhide this
-     * @hidden
-     */
-    authorityNormProperty?: PropertyIdentifier<K>;
-    /**
-     * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as a number
-     * between -1.0 and 1.0 representing the normalized popularity score of this entity compared to all other entities.
-     *
-     * Must be a {@link ValueType.Number} property.
-     * TODO(sam): Unhide this
-     * @hidden
-     */
-    popularityNormProperty?: PropertyIdentifier<K>;
-    /**
-     * @deprecated Use {@link ObjectSchemaDefinition.popularityNormProperty} instead.
-     * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as a number
-     * between -1.0 and 1.0 representing the normalized popularity score of this entity compared to all other entities.
-     *
-     * Must be a {@link ValueType.Number} property.
-     * TODO(solomon): Remove this when all Packs' popularityRank is migrated to popularityNorm
-     * @hidden
-     */
-    popularityRankProperty?: PropertyIdentifier<K>;
     /**
      * Defines how to index objects for use with full-text indexing.
      * @hidden
