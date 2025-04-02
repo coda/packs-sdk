@@ -1068,8 +1068,6 @@ export type ObjectSchemaPathProperties = Pick<
   | 'userIdProperty'
   | 'groupIdProperty'
   | 'memberGroupIdProperty'
-  | 'authorityNormProperty'
-  | 'popularityNormProperty'
   | 'versionProperty'
 >;
 
@@ -1391,26 +1389,6 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    * @hidden
    */
   memberGroupIdProperty?: PropertyIdentifier<K>;
-
-  /**
-   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as a number
-   * between -1.0 and 1.0 representing the normalized authority score of this entity compared to all other entities.
-   *
-   * Must be a {@link ValueType.Number} property.
-   * TODO(sam): Unhide this
-   * @hidden
-   */
-  authorityNormProperty?: PropertyIdentifier<K>;
-
-  /**
-   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as a number
-   * between -1.0 and 1.0 representing the normalized popularity score of this entity compared to all other entities.
-   *
-   * Must be a {@link ValueType.Number} property.
-   * TODO(sam): Unhide this
-   * @hidden
-   */
-  popularityNormProperty?: PropertyIdentifier<K>;
 
   /**
    * Defines how to index objects for use with full-text indexing.
@@ -2190,8 +2168,6 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     userIdProperty,
     groupIdProperty,
     memberGroupIdProperty,
-    authorityNormProperty,
-    popularityNormProperty,
     versionProperty,
     index,
     parent,
@@ -2263,12 +2239,6 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
       : undefined,
     memberGroupIdProperty: memberGroupIdProperty
       ? normalizeSchemaPropertyIdentifier(memberGroupIdProperty, normalizedProperties)
-      : undefined,
-    authorityNormProperty: authorityNormProperty
-      ? normalizeSchemaPropertyIdentifier(authorityNormProperty, normalizedProperties)
-      : undefined,
-    popularityNormProperty: popularityNormProperty
-      ? normalizeSchemaPropertyIdentifier(popularityNormProperty, normalizedProperties)
       : undefined,
     versionProperty: versionProperty
       ? normalizeSchemaPropertyIdentifier(versionProperty, normalizedProperties)

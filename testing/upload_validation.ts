@@ -1423,8 +1423,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       userEmailProperty: propertySchema.optional(),
       groupIdProperty: propertySchema.optional(),
       memberGroupIdProperty: propertySchema.optional(),
-      authorityNormProperty: propertySchema.optional(),
-      popularityNormProperty: propertySchema.optional(),
       versionProperty: propertySchema.optional(),
       options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
       requireForUpdates: z.boolean().optional(),
@@ -1665,22 +1663,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           );
         };
 
-        const validateAuthorityNormProperty = () => {
-          return validateProperty(
-            'authorityNormProperty',
-            authorityNormPropertySchema => authorityNormPropertySchema.type === ValueType.Number,
-            `must refer to a "ValueType.Number" property.`,
-          );
-        };
-
-        const validatePopularityNormProperty = () => {
-          return validateProperty(
-            'popularityNormProperty',
-            popularityNormPropertySchema => popularityNormPropertySchema.type === ValueType.Number,
-            `must refer to a "ValueType.Number" property.`,
-          );
-        };
-
         const validateVersionProperty = () => {
           return validateProperty(
             'versionProperty',
@@ -1702,8 +1684,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         validateUserIdProperty();
         validateGroupIdProperty();
         validateMemberGroupIdProperty();
-        validateAuthorityNormProperty();
-        validatePopularityNormProperty();
         validateVersionProperty();
       })
       .superRefine((data, context) => {
