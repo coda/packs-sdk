@@ -1111,7 +1111,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         contextProperties: contextPropertiesSchema.optional(),
         authorityNormProperty: propertySchema.optional(),
         popularityNormProperty: propertySchema.optional(),
-        popularityRankProperty: propertySchema.optional(),
     });
     const identitySchema = zodCompleteObject({
         packId: z.number().optional(),
@@ -1154,9 +1153,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         userEmailProperty: propertySchema.optional(),
         groupIdProperty: propertySchema.optional(),
         memberGroupIdProperty: propertySchema.optional(),
-        authorityNormProperty: propertySchema.optional(),
-        popularityNormProperty: propertySchema.optional(),
-        popularityRankProperty: propertySchema.optional(),
         versionProperty: propertySchema.optional(),
         options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
         requireForUpdates: z.boolean().optional(),
@@ -1310,15 +1306,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             return validateProperty('memberGroupIdProperty', memberGroupIdPropertySchema => memberGroupIdPropertySchema.type === schema_17.ValueType.String ||
                 memberGroupIdPropertySchema.type === schema_17.ValueType.Number, `must refer to a "ValueType.String" or "ValueType.Number".`);
         };
-        const validateAuthorityNormProperty = () => {
-            return validateProperty('authorityNormProperty', authorityNormPropertySchema => authorityNormPropertySchema.type === schema_17.ValueType.Number, `must refer to a "ValueType.Number" property.`);
-        };
-        const validatePopularityNormProperty = () => {
-            return validateProperty('popularityNormProperty', popularityNormPropertySchema => popularityNormPropertySchema.type === schema_17.ValueType.Number, `must refer to a "ValueType.Number" property.`);
-        };
-        const validatePopularityRankProperty = () => {
-            return validateProperty('popularityRankProperty', popularityRankPropertySchema => popularityRankPropertySchema.type === schema_17.ValueType.Number, `must refer to a "ValueType.Number" property.`);
-        };
         const validateVersionProperty = () => {
             return validateProperty('versionProperty', versionPropertySchema => versionPropertySchema.type === schema_17.ValueType.String, `must refer to a "ValueType.String" property.`);
         };
@@ -1335,9 +1322,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         validateUserIdProperty();
         validateGroupIdProperty();
         validateMemberGroupIdProperty();
-        validateAuthorityNormProperty();
-        validatePopularityNormProperty();
-        validatePopularityRankProperty();
         validateVersionProperty();
     })
         .superRefine((data, context) => {
@@ -1359,15 +1343,12 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             return;
         }
         const validatePropertyValue = makePropertyValidator(schema, context);
-        const { properties, contextProperties, authorityNormProperty, popularityNormProperty, popularityRankProperty, } = schema.index;
+        const { properties, contextProperties, authorityNormProperty, popularityNormProperty, } = schema.index;
         if (authorityNormProperty) {
             validatePropertyValue(authorityNormProperty, 'authorityNormProperty', authorityNormPropertySchema => authorityNormPropertySchema.type === schema_17.ValueType.Number, `must refer to a "ValueType.Number" property.`, ['index', 'authorityNormProperty']);
         }
         if (popularityNormProperty) {
             validatePropertyValue(popularityNormProperty, 'popularityNormProperty', popularityNormPropertySchema => popularityNormPropertySchema.type === schema_17.ValueType.Number, `must refer to a "ValueType.Number" property.`, ['index', 'popularityNormProperty']);
-        }
-        if (popularityRankProperty) {
-            validatePropertyValue(popularityRankProperty, 'popularityRankProperty', popularityRankPropertySchema => popularityRankPropertySchema.type === schema_17.ValueType.Number, `must refer to a "ValueType.Number" property.`, ['index', 'popularityRankProperty']);
         }
         for (let i = 0; i < properties.length; i++) {
             const indexedProperty = properties[i];
