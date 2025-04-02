@@ -1377,7 +1377,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     contextProperties: contextPropertiesSchema.optional(),
     authorityNormProperty: propertySchema.optional(),
     popularityNormProperty: propertySchema.optional(),
-    popularityRankProperty: propertySchema.optional(),
   });
 
   const identitySchema = zodCompleteObject<Identity>({
@@ -1426,7 +1425,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       memberGroupIdProperty: propertySchema.optional(),
       authorityNormProperty: propertySchema.optional(),
       popularityNormProperty: propertySchema.optional(),
-      popularityRankProperty: propertySchema.optional(),
       versionProperty: propertySchema.optional(),
       options: zodOptionsFieldWithValues(z.object({}).passthrough(), false),
       requireForUpdates: z.boolean().optional(),
@@ -1683,14 +1681,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           );
         };
 
-        const validatePopularityRankProperty = () => {
-          return validateProperty(
-            'popularityRankProperty',
-            popularityRankPropertySchema => popularityRankPropertySchema.type === ValueType.Number,
-            `must refer to a "ValueType.Number" property.`,
-          );
-        };
-
         const validateVersionProperty = () => {
           return validateProperty(
             'versionProperty',
@@ -1714,7 +1704,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         validateMemberGroupIdProperty();
         validateAuthorityNormProperty();
         validatePopularityNormProperty();
-        validatePopularityRankProperty();
         validateVersionProperty();
       })
       .superRefine((data, context) => {
@@ -1744,7 +1733,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           contextProperties,
           authorityNormProperty,
           popularityNormProperty,
-          popularityRankProperty,
         } = schema.index;
 
         if (authorityNormProperty) {
@@ -1764,16 +1752,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             popularityNormPropertySchema => popularityNormPropertySchema.type === ValueType.Number,
             `must refer to a "ValueType.Number" property.`,
             ['index', 'popularityNormProperty'],
-          );
-        }
-
-        if (popularityRankProperty) {
-          validatePropertyValue(
-            popularityRankProperty,
-            'popularityRankProperty',
-            popularityRankPropertySchema => popularityRankPropertySchema.type === ValueType.Number,
-            `must refer to a "ValueType.Number" property.`,
-            ['index', 'popularityRankProperty'],
           );
         }
 

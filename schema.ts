@@ -1070,7 +1070,6 @@ export type ObjectSchemaPathProperties = Pick<
   | 'memberGroupIdProperty'
   | 'authorityNormProperty'
   | 'popularityNormProperty'
-  | 'popularityRankProperty'
   | 'versionProperty'
 >;
 
@@ -1143,16 +1142,6 @@ export interface IndexDefinition {
    * @hidden
    */
   popularityNormProperty?: PropertyIdentifier<string>;
-  /**
-   * @deprecated Use {@link IndexDefinition.popularityNormProperty} instead.
-   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as a number
-   * between -1.0 and 1.0 representing the normalized popularity score of this entity compared to all other entities.
-   *
-   * Must be a {@link ValueType.Number} property.
-   * TODO(solomon): Remove this when all Packs' popularityRank is migrated to popularityNorm
-   * @hidden
-   */
-  popularityRankProperty?: PropertyIdentifier<string>;
 }
 
 /**
@@ -1422,16 +1411,6 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    * @hidden
    */
   popularityNormProperty?: PropertyIdentifier<K>;
-  /**
-   * @deprecated Use {@link ObjectSchemaDefinition.popularityNormProperty} instead.
-   * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as a number
-   * between -1.0 and 1.0 representing the normalized popularity score of this entity compared to all other entities.
-   *
-   * Must be a {@link ValueType.Number} property.
-   * TODO(solomon): Remove this when all Packs' popularityRank is migrated to popularityNorm
-   * @hidden
-   */
-  popularityRankProperty?: PropertyIdentifier<K>;
 
   /**
    * Defines how to index objects for use with full-text indexing.
@@ -2117,7 +2096,6 @@ function normalizeIndexDefinition(
     contextProperties,
     authorityNormProperty,
     popularityNormProperty,
-    popularityRankProperty,
     ...rest
   } = index;
   ensureNever<keyof typeof rest>();
@@ -2131,9 +2109,6 @@ function normalizeIndexDefinition(
       : undefined,
     popularityNormProperty: popularityNormProperty
       ? normalizeSchemaPropertyIdentifier(popularityNormProperty, normalizedProperties)
-      : undefined,
-    popularityRankProperty: popularityRankProperty
-      ? normalizeSchemaPropertyIdentifier(popularityRankProperty, normalizedProperties)
       : undefined,
   };
 }
@@ -2217,7 +2192,6 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     memberGroupIdProperty,
     authorityNormProperty,
     popularityNormProperty,
-    popularityRankProperty,
     versionProperty,
     index,
     parent,
@@ -2295,9 +2269,6 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
       : undefined,
     popularityNormProperty: popularityNormProperty
       ? normalizeSchemaPropertyIdentifier(popularityNormProperty, normalizedProperties)
-      : undefined,
-    popularityRankProperty: popularityRankProperty
-      ? normalizeSchemaPropertyIdentifier(popularityRankProperty, normalizedProperties)
       : undefined,
     versionProperty: versionProperty
       ? normalizeSchemaPropertyIdentifier(versionProperty, normalizedProperties)
