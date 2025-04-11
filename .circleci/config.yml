@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  aws-cli: circleci/aws-cli@4.1.3
+  aws-cli: circleci/aws-cli@3.2.0
   jq: circleci/jq@3.0.1
   utils: coda/utils@2.3.0
   base-tools:
@@ -13,7 +13,6 @@ orbs:
           - run:
               name: Install image libraries
               command: make _bootstrap-doc-tools
-
 
 executors:
   default_build_environment:
@@ -56,10 +55,6 @@ commands:
           paths:
             - node_modules
           key: *node-cache-key
-  bootstrap_aws_cli:
-    steps:
-      - utils/boostrap-aws-context-creds
-      - aws-cli/install
 
 jobs:
   build:
@@ -100,7 +95,7 @@ jobs:
           name: 'Typedoc'
           command: DOC_DISABLE_SOURCES=false DOC_GIT_REVISION="$(git rev-parse HEAD)" make docs
       - run:
-          name: "MkDocs"
+          name: 'MkDocs'
           command: MK_DOCS_SITE_URL="https://head.coda.io/packs/build/latest/" make build-mkdocs
       - persist_to_workspace:
           root: ~/repo
@@ -120,7 +115,7 @@ jobs:
           name: 'Typedoc'
           command: DOC_DISABLE_SOURCES=false DOC_GIT_REVISION="$(git rev-parse HEAD)" make docs
       - run:
-          name: "MkDocs"
+          name: 'MkDocs'
           command: MK_DOCS_SITE_URL="https://staging.coda.io/packs/build/latest/" make build-mkdocs
       - persist_to_workspace:
           root: ~/repo
@@ -140,7 +135,7 @@ jobs:
           name: 'Typedoc'
           command: DOC_DISABLE_SOURCES=false DOC_GIT_REVISION="$(git rev-parse HEAD)" make docs
       - run:
-          name: "MkDocs"
+          name: 'MkDocs'
           command: MK_DOCS_SITE_URL="https://coda.io/packs/build/latest/" make build-mkdocs
       - persist_to_workspace:
           root: ~/repo
@@ -154,7 +149,13 @@ jobs:
     steps:
       - checkout
       - bootstrap_node
-      - bootstrap_aws_cli
+      - aws-cli/install
+      - aws-cli/setup:
+          role-arn: 'arn:aws:iam::020355488663:role/automation/CICDRole'
+          aws-region: AWS_REGION
+          profile-name: 'head'
+          role-session-name: 'circleci-packs-sdk-push-head-docs'
+          session-duration: '900'
       - attach_workspace:
           at: ~/repo
       - run:
@@ -169,7 +170,13 @@ jobs:
     steps:
       - checkout
       - bootstrap_node
-      - bootstrap_aws_cli
+      - aws-cli/install
+      - aws-cli/setup:
+          role-arn: 'arn:aws:iam::053716345611:role/automation/CICDRole'
+          aws-region: AWS_REGION
+          profile-name: 'staging'
+          role-session-name: 'circleci-packs-sdk-push-staging-docs'
+          session-duration: '900'
       - attach_workspace:
           at: ~/repo
       - run:
@@ -184,7 +191,13 @@ jobs:
     steps:
       - checkout
       - bootstrap_node
-      - bootstrap_aws_cli
+      - aws-cli/install
+      - aws-cli/setup:
+          role-arn: 'arn:aws:iam::029208794193:role/automation/CICDRole'
+          aws-region: AWS_REGION
+          profile-name: 'prod'
+          role-session-name: 'circleci-packs-sdk-push-prod-docs'
+          session-duration: '900'
       - attach_workspace:
           at: ~/repo
       - run:
@@ -231,7 +244,6 @@ workflows:
             - wait-for-docs-approval
       - push-head-docs:
           context:
-            - aws-head
             - dockerhub
           requires:
             - build-docs-head
@@ -242,7 +254,6 @@ workflows:
             - push-head-docs
       - push-staging-docs:
           context:
-            - aws-staging
             - dockerhub
           requires:
             - push-head-docs
@@ -264,7 +275,6 @@ workflows:
             - push-staging-docs
       - push-prod-docs:
           context:
-            - aws-prod
             - dockerhub
           requires:
             - wait-for-approval
