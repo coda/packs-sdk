@@ -1,6 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.tryFindSyncFormula = exports.tryFindFormula = exports.findSyncFormula = exports.findFormula = void 0;
+exports.findFormula = findFormula;
+exports.findSyncFormula = findSyncFormula;
+exports.tryFindFormula = tryFindFormula;
+exports.tryFindSyncFormula = tryFindSyncFormula;
 function verifyFormulaSupportsAuthenticationName(formula, authenticationName) {
     const { allowedAuthenticationNames, name: formulaName } = formula;
     if (!allowedAuthenticationNames) {
@@ -39,7 +42,6 @@ function findFormula(packDef, formulaNameWithNamespace, authenticationName, { ve
     }
     throw new Error(`Pack definition has no formula "${name}"${namespace !== null && namespace !== void 0 ? namespace : ` in namespace "${namespace}"`}.`);
 }
-exports.findFormula = findFormula;
 function findSyncFormula(packDef, syncFormulaName, authenticationName, { verifyFormulaForAuthenticationName, } = { verifyFormulaForAuthenticationName: true }) {
     if (!packDef.syncTables) {
         throw new Error(`Pack definition has no sync tables.`);
@@ -55,18 +57,15 @@ function findSyncFormula(packDef, syncFormulaName, authenticationName, { verifyF
     }
     throw new Error(`Pack definition has no sync formula "${syncFormulaName}" in its sync tables.`);
 }
-exports.findSyncFormula = findSyncFormula;
 function tryFindFormula(packDef, formulaNameWithNamespace) {
     try {
         return findFormula(packDef, formulaNameWithNamespace, undefined, { verifyFormulaForAuthenticationName: false });
     }
     catch (_err) { }
 }
-exports.tryFindFormula = tryFindFormula;
 function tryFindSyncFormula(packDef, syncFormulaName) {
     try {
         return findSyncFormula(packDef, syncFormulaName, undefined, { verifyFormulaForAuthenticationName: false });
     }
     catch (_err) { }
 }
-exports.tryFindSyncFormula = tryFindSyncFormula;
