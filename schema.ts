@@ -1425,10 +1425,6 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
 export enum PrincipalType {
   User = 'user',
   Group = 'group',
-  /**
-   * @deprecated
-   * @hidden
-   */
   Anyone = 'anyone',
   AllUsers = 'allUsers',
   Domain = 'domain',
@@ -2069,13 +2065,7 @@ function normalizeIndexDefinition(
   index: IndexDefinition,
   normalizedProperties: ObjectSchemaProperties,
 ): IndexDefinition {
-  const {
-    properties,
-    contextProperties,
-    authorityNormProperty,
-    popularityNormProperty,
-    ...rest
-  } = index;
+  const {properties, contextProperties, authorityNormProperty, popularityNormProperty, ...rest} = index;
   ensureNever<keyof typeof rest>();
   return {
     properties: properties.map(prop => normalizeIndexProperty(prop, normalizedProperties)),

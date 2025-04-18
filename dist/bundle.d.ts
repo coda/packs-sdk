@@ -2309,10 +2309,6 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 declare enum PrincipalType {
 	User = "user",
 	Group = "group",
-	/**
-	 * @deprecated
-	 * @hidden
-	 */
 	Anyone = "anyone",
 	AllUsers = "allUsers",
 	Domain = "domain"
