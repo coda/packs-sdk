@@ -415,10 +415,6 @@ var PrincipalType;
 (function (PrincipalType) {
     PrincipalType["User"] = "user";
     PrincipalType["Group"] = "group";
-    /**
-     * @deprecated
-     * @hidden
-     */
     PrincipalType["Anyone"] = "anyone";
     PrincipalType["AllUsers"] = "allUsers";
     PrincipalType["Domain"] = "domain";
