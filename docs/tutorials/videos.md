@@ -40,12 +40,23 @@ Learn how to develop a simple Pack to bring random dog photos into your docs. In
 <iframe width="560" height="315" src="https://www.youtube.com/embed/z8J6kBxAod4" title="YouTube video player: Your team hub needs more photos of dogs" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
+## Building a custom Pack in under 5 minutes
+_June 2023_
+
+Developer Advocate Eric Koleda shows the process of creating a custom Pack from start for finish, using the API IPinfo.io to get information about an IP address.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/yyk0Y5J1qpI" title="YouTube video player: Building a custom Pack in under 5 minutes" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+
 ## Adding two-way sync to your Packs
 _November 2023_
 
 Coda 4.0 included a new featured called two-way sync, that allows users to directly edit data in sync tables and push the changes back to the source. In this webinar Developer Advocate Eric Koleda will show you how use new parts of the Packs SDK to add two-way sync to your own Packs.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/jfFdBNfUta8" title="YouTube video player: Adding two-way sync to your Packs" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+
+https://www.youtube.com/watch?v=yyk0Y5J1qpI
 
 
 [webinars]: https://coda.io/webinars
