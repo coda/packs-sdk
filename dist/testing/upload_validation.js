@@ -541,6 +541,7 @@ function buildMetadataSchema({ sdkVersion }) {
             scopeDelimiter: z.enum([' ', ',', ';']).optional(),
             tokenPrefix: z.string().optional(),
             additionalParams: z.record(z.any()).optional(),
+            additionalTokenParams: z.record(z.any()).optional(),
             endpointKey: z.string().optional(),
             tokenQueryParam: z.string().optional(),
             useProofKeyForCodeExchange: z.boolean().optional(),
@@ -579,6 +580,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             scopeParamName: z.string().optional(),
             nestedResponseKey: z.string().optional(),
             credentialsLocation: z.nativeEnum(types_6.TokenExchangeCredentialsLocation).optional(),
+            additionalTokenParams: z.record(z.any()).optional(),
             ...baseAuthenticationValidators,
         }),
         [types_1.AuthenticationType.WebBasic]: zodCompleteStrictObject({

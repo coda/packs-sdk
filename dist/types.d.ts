@@ -514,6 +514,13 @@ export interface BaseOAuthAuthentication extends BaseAuthentication {
      * that should contain the token.
      */
     tokenQueryParam?: string;
+    /**
+     * Optional parameters and values that should be included when fetching the access token
+     * from the {@link tokenUrl}.
+     */
+    additionalTokenParams?: {
+        [key: string]: any;
+    };
 }
 /**
  * Authenticate using the OAuth2 Authorization Code flow. You must specify the authorization URL,
@@ -547,7 +554,7 @@ export interface OAuth2Authentication extends BaseOAuthAuthentication {
      */
     authorizationUrl: string;
     /**
-     * Option custom URL parameters and values that should be included when redirecting the
+     * Optional custom URL parameters and values that should be included when redirecting the
      * user to the {@link authorizationUrl}.
      */
     additionalParams?: {

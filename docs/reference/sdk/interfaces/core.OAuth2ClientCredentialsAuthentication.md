@@ -30,6 +30,23 @@ pack.setUserAuthentication({
 
 ## Properties
 
+### additionalTokenParams
+
+• `Optional` **additionalTokenParams**: `Object`
+
+Optional parameters and values that should be included when fetching the access token
+from the [tokenUrl](core.OAuth2ClientCredentialsAuthentication.md#tokenurl).
+
+#### Index signature
+
+▪ [key: `string`]: `any`
+
+#### Inherited from
+
+BaseOAuthAuthentication.additionalTokenParams
+
+___
+
 ### credentialsLocation
 
 • `Optional` **credentialsLocation**: [`TokenExchangeCredentialsLocation`](../enums/core.TokenExchangeCredentialsLocation.md)

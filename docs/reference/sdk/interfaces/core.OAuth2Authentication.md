@@ -43,12 +43,29 @@ pack.setUserAuthentication({
 
 • `Optional` **additionalParams**: `Object`
 
-Option custom URL parameters and values that should be included when redirecting the
+Optional custom URL parameters and values that should be included when redirecting the
 user to the [authorizationUrl](core.OAuth2Authentication.md#authorizationurl).
 
 #### Index signature
 
 ▪ [key: `string`]: `any`
+
+___
+
+### additionalTokenParams
+
+• `Optional` **additionalTokenParams**: `Object`
+
+Optional parameters and values that should be included when fetching the access token
+from the [tokenUrl](core.OAuth2Authentication.md#tokenurl).
+
+#### Index signature
+
+▪ [key: `string`]: `any`
+
+#### Inherited from
+
+BaseOAuthAuthentication.additionalTokenParams
 
 ___
 
