@@ -400,6 +400,10 @@ try {
 }
 ```
 
+!!! info "429 responses automatically retried"
+
+    Many APIs have internal rate limits that they enforce on their clients, and will return a 429 response code when the rate limit is exceeded. When the fetcher receives a 429 response it will automatically retry the request until it succeeds or fails.
+
 
 ### Headers {: #headers}
 
@@ -437,6 +441,11 @@ let response = await context.fetcher.fetch({
 ## Caching
 
 For performance reasons responses for HTTP `GET` requests are cached by default. See the [caching guide][caching] for more information.
+
+
+## Timeouts
+
+The fetcher will wait for a response for at most 50 seconds, after which it will fail with an error like `DEADLINE_EXCEEDED: Deadline exceeded after 50s`. Fifty seconds was chosen so that the request would fail before the 60 second Pack execution timeout would be triggered, giving your code a chance to catch and handle the exception.
 
 
 ## Rate limits {: #rate-limits}
