@@ -711,7 +711,7 @@ function normalizeIndexProperty(value, normalizedProperties) {
     return normalizeSchemaPropertyIdentifier(value, normalizedProperties);
 }
 function normalizeIndexDefinition(index, normalizedProperties) {
-    const { properties, contextProperties, authorityNormProperty, popularityNormProperty, ...rest } = index;
+    const { properties, contextProperties, authorityNormProperty, popularityNormProperty, filterableProperties, ...rest } = index;
     (0, ensure_3.ensureNever)();
     return {
         properties: properties.map(prop => normalizeIndexProperty(prop, normalizedProperties)),
@@ -724,6 +724,7 @@ function normalizeIndexDefinition(index, normalizedProperties) {
         popularityNormProperty: popularityNormProperty
             ? normalizeSchemaPropertyIdentifier(popularityNormProperty, normalizedProperties)
             : undefined,
+        filterableProperties: filterableProperties === null || filterableProperties === void 0 ? void 0 : filterableProperties.map(prop => normalizeSchemaPropertyIdentifier(prop, normalizedProperties)),
     };
 }
 function normalizeParentDefinition(parent, normalizedProperties) {

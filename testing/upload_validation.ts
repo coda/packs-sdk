@@ -1377,6 +1377,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     contextProperties: contextPropertiesSchema.optional(),
     authorityNormProperty: propertySchema.optional(),
     popularityNormProperty: propertySchema.optional(),
+    filterableProperties: z.array(propertySchema).optional(),
   });
 
   const identitySchema = zodCompleteObject<Identity>({
@@ -1713,6 +1714,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           contextProperties,
           authorityNormProperty,
           popularityNormProperty,
+          filterableProperties
         } = schema.index;
 
         if (authorityNormProperty) {
@@ -1768,6 +1770,44 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             'index',
             'contextProperties',
           ]);
+        }
+
+        if (filterableProperties) {
+          if (filterableProperties.length > 5) {
+            context.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: ['index', 'filterableProperties'],
+              message: 'Filterable properties must be an array of at most 5 properties.',
+            });
+          }
+          for (let i = 0; i < filterableProperties.length; i++) {
+            const filterableProperty = filterableProperties[i];
+            const objectPath = ['index', 'filterableProperty', i];
+            validatePropertyValue(
+              filterableProperty,
+              'filterableProperty',
+              filterablePropertySchema => {
+                if (filterablePropertySchema.type === ValueType.Boolean) {
+                  return true;
+                }
+                if (filterablePropertySchema.type === ValueType.Number) {
+                  return true;
+                }
+                if (!('codaType' in filterablePropertySchema && filterablePropertySchema.codaType)) {
+                  return false;
+                }
+                switch (filterablePropertySchema.codaType) {
+                  case ValueHintType.DateTime:
+                  case ValueHintType.SelectList:
+                    return true;
+                  default: 
+                    return false;
+                }
+              },
+              `must be a "ValueType.Boolean", "ValueType.Number", or a property with a "ValueHintType.DateTime" or "ValueHintType.SelectList" "codaType".`,
+              objectPath,
+            );
+          }
         }
       }),
   );

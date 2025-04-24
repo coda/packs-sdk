@@ -1089,6 +1089,19 @@ export type ContextProperties = Array<PropertyIdentifier<string>>;
 export type BasicIndexedProperty = PropertyIdentifier<string>;
 
 /**
+ * A property that will be used to filter the results of a search.
+ * 
+ * For example, if you are trying to query for all emails last modified in the last 30 days,
+ * you would set the filterableProperties to the property that represents the last modified date.
+ * 
+ * Filterable properties must be one of type 
+ * {@link ValueHintType.SelectList} {@link ValueType.Boolean} {@link ValueHintType.DateTime} or 
+ * {@link ValueType.Number} (the number must be an integer)
+ * @hidden
+ */
+export type FilterableProperty = PropertyIdentifier<string>;
+
+/**
  * A property to be indexed, supporting a more detailed definition than {@link BasicIndexedProperty}.
  * TODO(alexd): Unhide this
  * @hidden
@@ -1117,6 +1130,12 @@ export interface IndexDefinition {
    */
   properties: IndexedProperty[];
 
+  /**
+   * A list of properties from within {@link ObjectSchemaDefinition.properties} 
+   * that should be used to filter the results of a search.
+   */
+  filterableProperties?: FilterableProperty[];
+  
   /*
    * The context properties to be used for indexing.
    * If unspecified, intelligent defaults may be used..
@@ -2065,7 +2084,14 @@ function normalizeIndexDefinition(
   index: IndexDefinition,
   normalizedProperties: ObjectSchemaProperties,
 ): IndexDefinition {
-  const {properties, contextProperties, authorityNormProperty, popularityNormProperty, ...rest} = index;
+  const {
+    properties,
+    contextProperties,
+    authorityNormProperty,
+    popularityNormProperty,
+    filterableProperties,
+    ...rest
+  } = index;
   ensureNever<keyof typeof rest>();
   return {
     properties: properties.map(prop => normalizeIndexProperty(prop, normalizedProperties)),
@@ -2078,6 +2104,9 @@ function normalizeIndexDefinition(
     popularityNormProperty: popularityNormProperty
       ? normalizeSchemaPropertyIdentifier(popularityNormProperty, normalizedProperties)
       : undefined,
+    filterableProperties: filterableProperties?.map(prop => 
+      normalizeSchemaPropertyIdentifier(prop, normalizedProperties)
+    ),
   };
 }
 

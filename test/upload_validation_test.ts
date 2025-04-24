@@ -3425,6 +3425,43 @@ describe('Pack metadata Validation', async () => {
           );
         });
 
+        it('works with filterable properties', async () => {
+          const metadata = metadataForFormulaWithObjectSchema({
+            type: ValueType.Object,
+            properties: {
+              name: {type: ValueType.String},
+              value: {type: ValueType.Number},
+              attachments: {type: ValueType.Array, items: {type: ValueType.String}},
+            },
+            index: {
+              properties: ['name', 'attachments'],
+              filterableProperties: ['value'],
+            },
+          });
+          await validateJson(metadata);
+        });
+
+        it('works with the specified filterable properties', async () => {
+          const metadata = metadataForFormulaWithObjectSchema({
+            type: ValueType.Object,
+            properties: {
+              name: {type: ValueType.String},
+              value: {type: ValueType.Number},
+              attachments: {type: ValueType.Array, items: {type: ValueType.String}},
+              enums: {type: ValueType.String, codaType: ValueHintType.SelectList},
+              boolean: {type: ValueType.Boolean},
+              datetime: {type: ValueType.String, codaType: ValueHintType.DateTime},
+              numberDateTime: {type: ValueType.Number, codaType: ValueHintType.DateTime},
+              anotherValue: {type: ValueType.Number},
+            },
+            index: {
+              properties: ['name', 'attachments'],
+              filterableProperties: ['value', 'enums', 'boolean', 'datetime'],
+            }
+          });
+          await validateJson(metadata);
+        })
+
         it('fails with invalid index property', async () => {
           const metadata = metadataForFormulaWithObjectSchema({
             type: ValueType.Object,
@@ -3492,6 +3529,56 @@ describe('Pack metadata Validation', async () => {
             },
           });
           await validateJsonAndAssertFails(metadata);
+        });
+
+        it('fails with too many filterable properties', async () => {
+          const metadata = metadataForFormulaWithObjectSchema({
+            type: ValueType.Object,
+            properties: {
+              name: {type: ValueType.String},
+              value: {type: ValueType.Number},
+              attachments: {type: ValueType.Array, items: {type: ValueType.String}},
+              enums: {type: ValueType.String, codaType: ValueHintType.SelectList},
+              boolean: {type: ValueType.Boolean},
+              datetime: {type: ValueType.String, codaType: ValueHintType.DateTime},
+              numberDateTime: {type: ValueType.Number, codaType: ValueHintType.DateTime},
+              anotherValue: {type: ValueType.Number},
+            },
+            index: {
+              properties: ['name', 'attachments'],
+              filterableProperties: ['value', 'enums', 'boolean', 'datetime', 'numberDateTime', 'anotherValue'],
+            }
+          });
+          const err = await validateJsonAndAssertFails(metadata);
+          assert.deepEqual(err.validationErrors, [
+            {
+              message: 'Filterable properties must be an array of at most 5 properties.',
+              path: 'formulas[0].schema.index.filterableProperties',
+            },
+          ]);
+        });
+
+        it('fails with invalid filterable property', async () => {
+          const metadata = metadataForFormulaWithObjectSchema({
+            type: ValueType.Object,
+            properties: {
+              name: {type: ValueType.String},
+              value: {type: ValueType.Number},
+              attachments: {type: ValueType.Array, items: {type: ValueType.String}},
+              badProperty: {type: ValueType.String},
+            },
+            index: {
+              properties: ['name', 'attachments'],
+              filterableProperties: ['value', 'badProperty'],
+            }
+          });
+          const err = await validateJsonAndAssertFails(metadata);
+          assert.deepEqual(err.validationErrors, [
+            {
+              message: 'The "filterableProperty" field name "BadProperty" must be a "ValueType.Boolean", "ValueType.Number", or a property with a "ValueHintType.DateTime" or "ValueHintType.SelectList" "codaType".',
+              path: 'formulas[0].schema.index.filterableProperty[1]',
+            },
+          ]);        
         });
       });
 
