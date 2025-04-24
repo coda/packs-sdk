@@ -3552,7 +3552,7 @@ describe('Pack metadata Validation', async () => {
           const err = await validateJsonAndAssertFails(metadata);
           assert.deepEqual(err.validationErrors, [
             {
-              message: 'Filterable properties must be an array of at most 5 properties.',
+              message: 'Array must contain at most 5 element(s)',
               path: 'formulas[0].schema.index.filterableProperties',
             },
           ]);

@@ -152,6 +152,7 @@ export const Limits = {
   NetworkDomainUrl: 253,
   PermissionsBatchSize: 5000,
   UpdateBatchSize: 1000,
+  FilterableProperties: 5,
 };
 
 enum CustomErrorCode {
@@ -1377,7 +1378,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     contextProperties: contextPropertiesSchema.optional(),
     authorityNormProperty: propertySchema.optional(),
     popularityNormProperty: propertySchema.optional(),
-    filterableProperties: z.array(propertySchema).optional(),
+    filterableProperties: z.array(propertySchema).max(Limits.FilterableProperties).optional(),
   });
 
   const identitySchema = zodCompleteObject<Identity>({
@@ -1773,13 +1774,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }
 
         if (filterableProperties) {
-          if (filterableProperties.length > 5) {
-            context.addIssue({
-              code: z.ZodIssueCode.custom,
-              path: ['index', 'filterableProperties'],
-              message: 'Filterable properties must be an array of at most 5 properties.',
-            });
-          }
           for (let i = 0; i < filterableProperties.length; i++) {
             const filterableProperty = filterableProperties[i];
             const objectPath = ['index', 'filterableProperty', i];

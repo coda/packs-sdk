@@ -2016,7 +2016,7 @@ export type BasicIndexedProperty = PropertyIdentifier<string>;
  *
  * Filterable properties must be one of type
  * {@link ValueHintType.SelectList} {@link ValueType.Boolean} {@link ValueHintType.DateTime} or
- * {@link ValueType.Number} (the number must be an integer)
+ * {@link ValueType.Number} (Floats will be supported in the future, today they will be truncated to an integer)
  * @hidden
  */
 export type FilterableProperty = PropertyIdentifier<string>;
@@ -2048,7 +2048,8 @@ export interface IndexDefinition {
 	properties: IndexedProperty[];
 	/**
 	 * A list of properties from within {@link ObjectSchemaDefinition.properties}
-	 * that should be used to filter the results of a search.
+	 * that will be made available to filter the results of a search. Limited to 5 properties,
+	 * so these should be the properties most likely to be useful as filters.
 	 */
 	filterableProperties?: FilterableProperty[];
 	contextProperties?: ContextProperties;
