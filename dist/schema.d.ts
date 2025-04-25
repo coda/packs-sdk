@@ -931,12 +931,12 @@ export type BasicIndexedProperty = PropertyIdentifier<string>;
 /**
  * A property that will be used to filter the results of a search.
  *
- * For example, if you are trying to query for all emails last modified in the last 30 days,
- * you would set the filterableProperties to the property that represents the last modified date.
+ * For example, if you want to allow users to query for all emails last modified in the last 30 days,
+ * you would add the property that represents the last modified date to filterableProperties.
  *
- * Filterable properties must be one of type
- * {@link ValueHintType.SelectList} {@link ValueType.Boolean} {@link ValueHintType.DateTime} or
- * {@link ValueType.Number} (Floats will be supported in the future, today they will be truncated to an integer)
+ * Filterable properties must be one of the following types:
+ * {@link ValueHintType.SelectList}, {@link ValueType.Boolean}, {@link ValueHintType.DateTime} or
+ * {@link ValueType.Number}. For filtering purposes, number values will be rounded down to the nearest integer.
  * @hidden
  */
 export type FilterableProperty = PropertyIdentifier<string>;
