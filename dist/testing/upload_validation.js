@@ -103,6 +103,7 @@ exports.Limits = {
     NetworkDomainUrl: 253,
     PermissionsBatchSize: 5000,
     UpdateBatchSize: 1000,
+    FilterableProperties: 5,
 };
 var CustomErrorCode;
 (function (CustomErrorCode) {
@@ -1111,6 +1112,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         contextProperties: contextPropertiesSchema.optional(),
         authorityNormProperty: propertySchema.optional(),
         popularityNormProperty: propertySchema.optional(),
+        filterableProperties: z.array(propertySchema).max(exports.Limits.FilterableProperties).optional(),
     });
     const identitySchema = zodCompleteObject({
         packId: z.number().optional(),
@@ -1343,7 +1345,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             return;
         }
         const validatePropertyValue = makePropertyValidator(schema, context);
-        const { properties, contextProperties, authorityNormProperty, popularityNormProperty, } = schema.index;
+        const { properties, contextProperties, authorityNormProperty, popularityNormProperty, filterableProperties } = schema.index;
         if (authorityNormProperty) {
             validatePropertyValue(authorityNormProperty, 'authorityNormProperty', authorityNormPropertySchema => authorityNormPropertySchema.type === schema_17.ValueType.Number, `must refer to a "ValueType.Number" property.`, ['index', 'authorityNormProperty']);
         }
@@ -1369,6 +1371,30 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 'index',
                 'contextProperties',
             ]);
+        }
+        if (filterableProperties) {
+            for (let i = 0; i < filterableProperties.length; i++) {
+                const filterableProperty = filterableProperties[i];
+                const objectPath = ['index', 'filterableProperty', i];
+                validatePropertyValue(filterableProperty, 'filterableProperty', filterablePropertySchema => {
+                    if (filterablePropertySchema.type === schema_17.ValueType.Boolean) {
+                        return true;
+                    }
+                    if (filterablePropertySchema.type === schema_17.ValueType.Number) {
+                        return true;
+                    }
+                    if (!('codaType' in filterablePropertySchema && filterablePropertySchema.codaType)) {
+                        return false;
+                    }
+                    switch (filterablePropertySchema.codaType) {
+                        case schema_16.ValueHintType.DateTime:
+                        case schema_16.ValueHintType.SelectList:
+                            return true;
+                        default:
+                            return false;
+                    }
+                }, `must be a "ValueType.Boolean", "ValueType.Number", or a property with a "ValueHintType.DateTime" or "ValueHintType.SelectList" "codaType".`, objectPath);
+            }
         }
     }));
     const objectPropertyUnionSchema = z

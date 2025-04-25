@@ -1089,6 +1089,19 @@ export type ContextProperties = Array<PropertyIdentifier<string>>;
 export type BasicIndexedProperty = PropertyIdentifier<string>;
 
 /**
+ * A property that will be used to filter the results of a search.
+ * 
+ * For example, if you want to allow users to query for all emails last modified in the last 30 days,
+ * you would add the property that represents the last modified date to filterableProperties.
+ * 
+ * Filterable properties must be one of the following types: 
+ * {@link ValueHintType.SelectList}, {@link ValueType.Boolean}, {@link ValueHintType.DateTime} or 
+ * {@link ValueType.Number}. For filtering purposes, number values will be rounded down to the nearest integer.
+ * @hidden
+ */
+export type FilterableProperty = PropertyIdentifier<string>;
+
+/**
  * A property to be indexed, supporting a more detailed definition than {@link BasicIndexedProperty}.
  * TODO(alexd): Unhide this
  * @hidden
@@ -1117,6 +1130,13 @@ export interface IndexDefinition {
    */
   properties: IndexedProperty[];
 
+  /**
+   * A list of properties from within {@link ObjectSchemaDefinition.properties} 
+   * that will be made available to filter the results of a search. Limited to 5 properties, 
+   * so these should be the properties most likely to be useful as filters.
+   */
+  filterableProperties?: FilterableProperty[];
+  
   /*
    * The context properties to be used for indexing.
    * If unspecified, intelligent defaults may be used..
@@ -2065,7 +2085,14 @@ function normalizeIndexDefinition(
   index: IndexDefinition,
   normalizedProperties: ObjectSchemaProperties,
 ): IndexDefinition {
-  const {properties, contextProperties, authorityNormProperty, popularityNormProperty, ...rest} = index;
+  const {
+    properties,
+    contextProperties,
+    authorityNormProperty,
+    popularityNormProperty,
+    filterableProperties,
+    ...rest
+  } = index;
   ensureNever<keyof typeof rest>();
   return {
     properties: properties.map(prop => normalizeIndexProperty(prop, normalizedProperties)),
@@ -2078,6 +2105,9 @@ function normalizeIndexDefinition(
     popularityNormProperty: popularityNormProperty
       ? normalizeSchemaPropertyIdentifier(popularityNormProperty, normalizedProperties)
       : undefined,
+    filterableProperties: filterableProperties?.map(prop => 
+      normalizeSchemaPropertyIdentifier(prop, normalizedProperties)
+    ),
   };
 }
 

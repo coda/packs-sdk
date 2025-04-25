@@ -21,6 +21,7 @@ export declare const Limits: {
     NetworkDomainUrl: number;
     PermissionsBatchSize: number;
     UpdateBatchSize: number;
+    FilterableProperties: number;
 };
 export declare class PackMetadataValidationError extends Error {
     readonly originalError: Error | undefined;
