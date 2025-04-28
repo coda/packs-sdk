@@ -13,6 +13,7 @@ import type {BooleanSchema} from '../schema';
 import type {CodaApiBearerTokenAuthentication} from '../types';
 import type {CodaInternalRichTextSchema} from '../schema';
 import {ConnectionRequirement} from '../api_types';
+import {ContentCategory} from '../api_types';
 import {CurrencyFormat} from '../schema';
 import type {CurrencySchema} from '../schema';
 import type {CustomAuthentication} from '../types';
@@ -34,7 +35,6 @@ import {ImageCornerStyle} from '../schema';
 import {ImageOutline} from '../schema';
 import type {ImageSchema} from '..';
 import {ImageShapeStyle} from '../schema';
-import {IndexCategory} from '../api_types';
 import type {IndexDefinition} from '../schema';
 import {IndexingStrategy} from '../schema';
 import {JSONPath} from 'jsonpath-plus';
@@ -1920,7 +1920,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }
       }),
     role: z.nativeEnum(TableRole).optional(),
-    category: z.nativeEnum(IndexCategory).optional(),
+    contentCategory: z.nativeEnum(ContentCategory).optional(),
   };
 
   type GenericSyncTableDef = SyncTableDef<

@@ -32,6 +32,7 @@ const schema_1 = require("../schema");
 const types_1 = require("../types");
 const schema_2 = require("../schema");
 const api_types_2 = require("../api_types");
+const api_types_3 = require("../api_types");
 const schema_3 = require("../schema");
 const schema_4 = require("../schema");
 const schema_5 = require("../schema");
@@ -39,7 +40,6 @@ const types_2 = require("../types");
 const schema_6 = require("../schema");
 const schema_7 = require("../schema");
 const schema_8 = require("../schema");
-const api_types_3 = require("../api_types");
 const schema_9 = require("../schema");
 const jsonpath_plus_1 = require("jsonpath-plus");
 const schema_10 = require("../schema");
@@ -1497,7 +1497,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             }
         }),
         role: z.nativeEnum(api_types_6.TableRole).optional(),
-        category: z.nativeEnum(api_types_3.IndexCategory).optional(),
+        contentCategory: z.nativeEnum(api_types_3.ContentCategory).optional(),
     };
     const genericSyncTableSchema = zodCompleteObject({
         ...baseSyncTableSchema,

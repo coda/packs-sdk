@@ -3,12 +3,12 @@ import type {ArrayType} from './api_types';
 import type {BooleanSchema} from './schema';
 import type {CommonPackFormulaDef} from './api_types';
 import {ConnectionRequirement} from './api_types';
+import type {ContentCategory} from './api_types';
 import type {CrawlStrategy} from './api_types';
 import type {ExecutionContext} from './api_types';
 import type {FetchRequest} from './api_types';
 import type {GetPermissionExecutionContext} from './api_types';
 import type {Identity} from './schema';
-import type {IndexCategory} from './api_types';
 import type {NumberHintTypes} from './schema';
 import type {NumberSchema} from './schema';
 import type {ObjectSchema} from './schema';
@@ -323,10 +323,10 @@ export interface SyncTableDef<
 
   /** See {@link SyncTableOptions.description} */
   description?: string;
-  /** See {@link SyncTableOptions.category} 
+  /** See {@link SyncTableOptions.contentCategory}
    * @hidden
    */
-  category?: IndexCategory;
+  contentCategory?: ContentCategory;
   /** See {@link SyncTableOptions.schema} */
   schema: SchemaT;
   /**
@@ -2217,11 +2217,11 @@ export interface SyncTableOptions<
   description?: string;
   /**
    * The category of the sync table. Used to determine how to support the indexing
-   * and querying for the table. Must be one of {@link IndexCategory}.
+   * and querying for the table. Must be one of {@link ContentCategory}.
    *
    * @hidden
    */
-  category?: IndexCategory;
+  contentCategory?: ContentCategory;
   /**
    * The "unique identifier" for the entity being synced. This will serve as the unique id for this
    * table, and must be unique across other sync tables for your pack. This is often the singular

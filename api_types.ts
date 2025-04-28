@@ -837,7 +837,7 @@ export enum PermissionSyncMode {
  * Help: Help documentation or support content
  * @hidden
  */
-export enum IndexCategory {
+export enum ContentCategory {
   Messaging = 'Messaging',
   Document = 'Document',
   Email = 'Email',

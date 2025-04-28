@@ -677,7 +677,7 @@ declare enum PermissionSyncMode {
 	Personal = "Personal",
 	PermissionAware = "PermissionAware"
 }
-declare enum IndexCategory {
+declare enum ContentCategory {
 	Messaging = "Messaging",
 	Document = "Document",
 	Email = "Email",
@@ -2991,10 +2991,10 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
 	displayName?: string;
 	/** See {@link SyncTableOptions.description} */
 	description?: string;
-	/** See {@link SyncTableOptions.category}
+	/** See {@link SyncTableOptions.contentCategory}
 	 * @hidden
 	 */
-	category?: IndexCategory;
+	contentCategory?: ContentCategory;
 	/** See {@link SyncTableOptions.schema} */
 	schema: SchemaT;
 	/**
@@ -3850,11 +3850,11 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
 	description?: string;
 	/**
 	 * The category of the sync table. Used to determine how to support the indexing
-	 * and querying for the table. Must be one of {@link IndexCategory}.
+	 * and querying for the table. Must be one of {@link ContentCategory}.
 	 *
 	 * @hidden
 	 */
-	category?: IndexCategory;
+	contentCategory?: ContentCategory;
 	/**
 	 * The "unique identifier" for the entity being synced. This will serve as the unique id for this
 	 * table, and must be unique across other sync tables for your pack. This is often the singular
