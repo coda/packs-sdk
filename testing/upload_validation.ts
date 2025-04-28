@@ -34,6 +34,7 @@ import {ImageCornerStyle} from '../schema';
 import {ImageOutline} from '../schema';
 import type {ImageSchema} from '..';
 import {ImageShapeStyle} from '../schema';
+import {IndexCategory} from '../api_types';
 import type {IndexDefinition} from '../schema';
 import {IndexingStrategy} from '../schema';
 import {JSONPath} from 'jsonpath-plus';
@@ -1919,6 +1920,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }
       }),
     role: z.nativeEnum(TableRole).optional(),
+    category: z.nativeEnum(IndexCategory).optional(),
   };
 
   type GenericSyncTableDef = SyncTableDef<

@@ -829,6 +829,23 @@ export enum PermissionSyncMode {
 }
 
 /**
+ * The type of content being indexed, which determines how the property is processed and queried.
+ * Messaging: Chat or instant messaging content
+ * Document: General document content
+ * Email: Email message content
+ * Comment: User comments or feedback
+ * Help: Help documentation or support content
+ * @hidden
+ */
+export enum IndexCategory {
+  Messaging = 'Messaging',
+  Document = 'Document',
+  Email = 'Email',
+  Comment = 'Comment',
+  Help = 'Help',
+}
+
+/**
  * Information about the current sync, part of the {@link SyncExecutionContext} passed to the
  * `execute` function of every sync formula.
  */

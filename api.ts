@@ -8,6 +8,7 @@ import type {ExecutionContext} from './api_types';
 import type {FetchRequest} from './api_types';
 import type {GetPermissionExecutionContext} from './api_types';
 import type {Identity} from './schema';
+import type {IndexCategory} from './api_types';
 import type {NumberHintTypes} from './schema';
 import type {NumberSchema} from './schema';
 import type {ObjectSchema} from './schema';
@@ -322,6 +323,10 @@ export interface SyncTableDef<
 
   /** See {@link SyncTableOptions.description} */
   description?: string;
+  /** See {@link SyncTableOptions.category} 
+   * @hidden
+   */
+  category?: IndexCategory;
   /** See {@link SyncTableOptions.schema} */
   schema: SchemaT;
   /**
@@ -2210,6 +2215,13 @@ export interface SyncTableOptions<
    * description for a 'Products' sync table could be: 'Returns products from the e-commerce platform.'
    */
   description?: string;
+  /**
+   * The category of the sync table. Used to determine how to support the indexing
+   * and querying for the table. Must be one of {@link IndexCategory}.
+   *
+   * @hidden
+   */
+  category?: IndexCategory;
   /**
    * The "unique identifier" for the entity being synced. This will serve as the unique id for this
    * table, and must be unique across other sync tables for your pack. This is often the singular
