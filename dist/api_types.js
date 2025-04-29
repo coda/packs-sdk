@@ -238,19 +238,19 @@ var PermissionSyncMode;
 })(PermissionSyncMode || (exports.PermissionSyncMode = PermissionSyncMode = {}));
 /**
  * The type of content being indexed, which determines how the property is processed and queried.
- * Messaging: Chat or instant messaging content
- * Document: General document content
- * Email: Email message content
- * Comment: User comments or feedback
- * Help: Help documentation or support content
  * @hidden
  */
 var ContentCategory;
 (function (ContentCategory) {
+    // Messaging: Chat or instant messaging content
     ContentCategory["Messaging"] = "Messaging";
+    // Document: General document content
     ContentCategory["Document"] = "Document";
+    // Email: Email message content
     ContentCategory["Email"] = "Email";
+    // Comment: User comments or feedback
     ContentCategory["Comment"] = "Comment";
+    // Help: Help documentation or support content
     ContentCategory["Help"] = "Help";
 })(ContentCategory || (exports.ContentCategory = ContentCategory = {}));
 var InvocationErrorType;

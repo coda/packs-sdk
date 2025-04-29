@@ -830,18 +830,18 @@ export enum PermissionSyncMode {
 
 /**
  * The type of content being indexed, which determines how the property is processed and queried.
- * Messaging: Chat or instant messaging content
- * Document: General document content
- * Email: Email message content
- * Comment: User comments or feedback
- * Help: Help documentation or support content
  * @hidden
  */
 export enum ContentCategory {
+  // Messaging: Chat or instant messaging content
   Messaging = 'Messaging',
+  // Document: General document content
   Document = 'Document',
+  // Email: Email message content
   Email = 'Email',
+  // Comment: User comments or feedback
   Comment = 'Comment',
+  // Help: Help documentation or support content
   Help = 'Help',
 }
 
