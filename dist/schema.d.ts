@@ -1,3 +1,4 @@
+import type { ContentCategorization } from './api_types';
 import type { OptionsReference } from './api_types';
 import type { OptionsType } from './api_types';
 import type { PackFormulaResult } from './api_types';
@@ -972,6 +973,11 @@ export interface IndexDefinition {
      * so these should be the properties most likely to be useful as filters.
      */
     filterableProperties?: FilterableProperty[];
+    /**
+     * The category of the content to be indexed. Used to determine how to support the indexing
+     * and querying for the text. Must be one of {@link ContentCategorization}.
+     */
+    contentCategorization?: ContentCategorization;
     contextProperties?: ContextProperties;
     /**
      * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as a number

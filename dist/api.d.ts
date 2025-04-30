@@ -3,7 +3,6 @@ import type { ArrayType } from './api_types';
 import type { BooleanSchema } from './schema';
 import type { CommonPackFormulaDef } from './api_types';
 import { ConnectionRequirement } from './api_types';
-import type { ContentCategory } from './api_types';
 import type { ExecutionContext } from './api_types';
 import type { FetchRequest } from './api_types';
 import type { GetPermissionExecutionContext } from './api_types';
@@ -238,7 +237,6 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
     /** See {@link SyncTableOptions.contentCategory}
      * @hidden
      */
-    contentCategory?: ContentCategory;
     /** See {@link SyncTableOptions.schema} */
     schema: SchemaT;
     /**
@@ -1268,13 +1266,6 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
      * description for a 'Products' sync table could be: 'Returns products from the e-commerce platform.'
      */
     description?: string;
-    /**
-     * The category of the sync table. Used to determine how to support the indexing
-     * and querying for the table. Must be one of {@link ContentCategory}.
-     *
-     * @hidden
-     */
-    contentCategory?: ContentCategory;
     /**
      * The "unique identifier" for the entity being synced. This will serve as the unique id for this
      * table, and must be unique across other sync tables for your pack. This is often the singular

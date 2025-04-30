@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.throwOnDynamicSchemaWithJsOptionsFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.maybeSchemaOptionsValue = exports.unwrappedSchemaSupportsOptions = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PermissionType = exports.PrincipalType = exports.LifecycleBehavior = exports.PermissionsBehavior = exports.IndexingStrategy = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageShapeStyle = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+const api_types_1 = require("./api_types");
 const ensure_1 = require("./helpers/ensure");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_2 = require("./helpers/ensure");
@@ -710,8 +711,32 @@ function normalizeIndexProperty(value, normalizedProperties) {
     }
     return normalizeSchemaPropertyIdentifier(value, normalizedProperties);
 }
+function normalizeContentCategorization(value, normalizedProperties) {
+    switch (value.type) {
+        case api_types_1.ContentCategorizationType.Messaging:
+        case api_types_1.ContentCategorizationType.Document:
+        case api_types_1.ContentCategorizationType.Comment:
+            const { type, ...rest } = value;
+            (0, ensure_3.ensureNever)();
+            return { type };
+        case api_types_1.ContentCategorizationType.Email: {
+            const { type: emailType, toProperty, fromProperty, subjectProperty, htmlBodyProperty, plainTextBodyProperty, ...emailRest } = value;
+            (0, ensure_3.ensureNever)();
+            return {
+                type: emailType,
+                toProperty: normalizeSchemaPropertyIdentifier(toProperty, normalizedProperties),
+                fromProperty: normalizeSchemaPropertyIdentifier(fromProperty, normalizedProperties),
+                subjectProperty: normalizeSchemaPropertyIdentifier(subjectProperty, normalizedProperties),
+                htmlBodyProperty: normalizeSchemaPropertyIdentifier(htmlBodyProperty, normalizedProperties),
+                plainTextBodyProperty: normalizeSchemaPropertyIdentifier(plainTextBodyProperty, normalizedProperties),
+            };
+        }
+        default:
+            return (0, ensure_5.ensureUnreachable)(value);
+    }
+}
 function normalizeIndexDefinition(index, normalizedProperties) {
-    const { properties, contextProperties, authorityNormProperty, popularityNormProperty, filterableProperties, ...rest } = index;
+    const { properties, contextProperties, contentCategorization, authorityNormProperty, popularityNormProperty, filterableProperties, ...rest } = index;
     (0, ensure_3.ensureNever)();
     return {
         properties: properties.map(prop => normalizeIndexProperty(prop, normalizedProperties)),
@@ -725,6 +750,9 @@ function normalizeIndexDefinition(index, normalizedProperties) {
             ? normalizeSchemaPropertyIdentifier(popularityNormProperty, normalizedProperties)
             : undefined,
         filterableProperties: filterableProperties === null || filterableProperties === void 0 ? void 0 : filterableProperties.map(prop => normalizeSchemaPropertyIdentifier(prop, normalizedProperties)),
+        contentCategorization: contentCategorization
+            ? normalizeContentCategorization(contentCategorization, normalizedProperties)
+            : undefined,
     };
 }
 function normalizeParentDefinition(parent, normalizedProperties) {

@@ -677,13 +677,33 @@ declare enum PermissionSyncMode {
 	Personal = "Personal",
 	PermissionAware = "PermissionAware"
 }
-declare enum ContentCategory {
+declare enum ContentCategorizationType {
 	Messaging = "Messaging",
 	Document = "Document",
 	Email = "Email",
-	Comment = "Comment",
-	Help = "Help"
+	Comment = "Comment"
 }
+export interface BaseContentCategorization {
+	type: ContentCategorizationType;
+}
+export interface MessagingContentCategorization extends BaseContentCategorization {
+	type: ContentCategorizationType.Messaging;
+}
+export interface DocumentContentCategorization extends BaseContentCategorization {
+	type: ContentCategorizationType.Document;
+}
+export interface EmailContentCategorization extends BaseContentCategorization {
+	type: ContentCategorizationType.Email;
+	toProperty: PropertyIdentifier<string>;
+	fromProperty: PropertyIdentifier<string>;
+	subjectProperty: PropertyIdentifier<string>;
+	htmlBodyProperty: PropertyIdentifier<string>;
+	plainTextBodyProperty: PropertyIdentifier<string>;
+}
+export interface CommentContentCategorization extends BaseContentCategorization {
+	type: ContentCategorizationType.Comment;
+}
+export type ContentCategorization = MessagingContentCategorization | DocumentContentCategorization | EmailContentCategorization | CommentContentCategorization;
 /**
  * Information about the current sync, part of the {@link SyncExecutionContext} passed to the
  * `execute` function of every sync formula.
@@ -2059,6 +2079,11 @@ export interface IndexDefinition {
 	 * so these should be the properties most likely to be useful as filters.
 	 */
 	filterableProperties?: FilterableProperty[];
+	/**
+	 * The category of the content to be indexed. Used to determine how to support the indexing
+	 * and querying for the text. Must be one of {@link ContentCategorization}.
+	 */
+	contentCategorization?: ContentCategorization;
 	contextProperties?: ContextProperties;
 	/**
 	 * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as a number
@@ -2994,7 +3019,6 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
 	/** See {@link SyncTableOptions.contentCategory}
 	 * @hidden
 	 */
-	contentCategory?: ContentCategory;
 	/** See {@link SyncTableOptions.schema} */
 	schema: SchemaT;
 	/**
@@ -3848,13 +3872,6 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
 	 * description for a 'Products' sync table could be: 'Returns products from the e-commerce platform.'
 	 */
 	description?: string;
-	/**
-	 * The category of the sync table. Used to determine how to support the indexing
-	 * and querying for the table. Must be one of {@link ContentCategory}.
-	 *
-	 * @hidden
-	 */
-	contentCategory?: ContentCategory;
 	/**
 	 * The "unique identifier" for the entity being synced. This will serve as the unique id for this
 	 * table, and must be unique across other sync tables for your pack. This is often the singular

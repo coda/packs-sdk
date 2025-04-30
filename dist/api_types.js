@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TableRole = exports.OptionsType = exports.FutureLiveDates = exports.PastLiveDates = exports.AllPrecannedDates = exports.PrecannedDate = exports.FromNowDateRanges = exports.PastLiveDateRanges = exports.UntilNowDateRanges = exports.PrecannedDateRange = exports.isSyncExecutionContext = exports.InvocationSource = exports.InvocationErrorType = exports.ContentCategory = exports.PermissionSyncMode = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
+exports.TableRole = exports.OptionsType = exports.FutureLiveDates = exports.PastLiveDates = exports.AllPrecannedDates = exports.PrecannedDate = exports.FromNowDateRanges = exports.PastLiveDateRanges = exports.UntilNowDateRanges = exports.PrecannedDateRange = exports.isSyncExecutionContext = exports.InvocationSource = exports.InvocationErrorType = exports.ContentCategorizationType = exports.PermissionSyncMode = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
 /**
  * Markers used internally to represent data types for parameters and return values.
  * It should not be necessary to ever use these values directly.
@@ -240,19 +240,17 @@ var PermissionSyncMode;
  * The type of content being indexed, which determines how the property is processed and queried.
  * @hidden
  */
-var ContentCategory;
-(function (ContentCategory) {
+var ContentCategorizationType;
+(function (ContentCategorizationType) {
     // Messaging: Chat or instant messaging content
-    ContentCategory["Messaging"] = "Messaging";
+    ContentCategorizationType["Messaging"] = "Messaging";
     // Document: General document content
-    ContentCategory["Document"] = "Document";
+    ContentCategorizationType["Document"] = "Document";
     // Email: Email message content
-    ContentCategory["Email"] = "Email";
+    ContentCategorizationType["Email"] = "Email";
     // Comment: User comments or feedback
-    ContentCategory["Comment"] = "Comment";
-    // Help: Help documentation or support content
-    ContentCategory["Help"] = "Help";
-})(ContentCategory || (exports.ContentCategory = ContentCategory = {}));
+    ContentCategorizationType["Comment"] = "Comment";
+})(ContentCategorizationType || (exports.ContentCategorizationType = ContentCategorizationType = {}));
 var InvocationErrorType;
 (function (InvocationErrorType) {
     InvocationErrorType["Timeout"] = "Timeout";

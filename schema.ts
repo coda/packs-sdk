@@ -1,3 +1,5 @@
+import type {ContentCategorization} from './api_types';
+import {ContentCategorizationType} from './api_types';
 import type {OptionsReference} from './api_types';
 import type {OptionsType} from './api_types';
 import type {PackFormulaResult} from './api_types';
@@ -1136,7 +1138,11 @@ export interface IndexDefinition {
    * so these should be the properties most likely to be useful as filters.
    */
   filterableProperties?: FilterableProperty[];
-  
+  /**
+   * The category of the content to be indexed. Used to determine how to support the indexing
+   * and querying for the text. Must be one of {@link ContentCategorization}.
+   */
+  contentCategorization?: ContentCategorization;
   /*
    * The context properties to be used for indexing.
    * If unspecified, intelligent defaults may be used..
@@ -2081,6 +2087,42 @@ function normalizeIndexProperty(value: IndexedProperty, normalizedProperties: Ob
   return normalizeSchemaPropertyIdentifier(value, normalizedProperties);
 }
 
+function normalizeContentCategorization(
+  value: ContentCategorization,
+  normalizedProperties: ObjectSchemaProperties,
+): ContentCategorization {
+  switch (value.type) {
+    case ContentCategorizationType.Messaging:
+    case ContentCategorizationType.Document:
+    case ContentCategorizationType.Comment:
+      const {type, ...rest} = value;
+      ensureNever<keyof typeof rest>();
+      return {type};
+    case ContentCategorizationType.Email: {
+      const {
+        type: emailType,
+        toProperty,
+        fromProperty,
+        subjectProperty,
+        htmlBodyProperty,
+        plainTextBodyProperty,
+        ...emailRest
+      } = value;
+      ensureNever<keyof typeof emailRest>();
+      return {
+        type: emailType,
+        toProperty: normalizeSchemaPropertyIdentifier(toProperty, normalizedProperties),
+        fromProperty: normalizeSchemaPropertyIdentifier(fromProperty, normalizedProperties),
+        subjectProperty: normalizeSchemaPropertyIdentifier(subjectProperty, normalizedProperties),
+        htmlBodyProperty: normalizeSchemaPropertyIdentifier(htmlBodyProperty, normalizedProperties),
+        plainTextBodyProperty: normalizeSchemaPropertyIdentifier(plainTextBodyProperty, normalizedProperties),
+      };
+    }
+    default:
+      return ensureUnreachable(value);
+  }
+}
+
 function normalizeIndexDefinition(
   index: IndexDefinition,
   normalizedProperties: ObjectSchemaProperties,
@@ -2088,6 +2130,7 @@ function normalizeIndexDefinition(
   const {
     properties,
     contextProperties,
+    contentCategorization,
     authorityNormProperty,
     popularityNormProperty,
     filterableProperties,
@@ -2106,8 +2149,11 @@ function normalizeIndexDefinition(
       ? normalizeSchemaPropertyIdentifier(popularityNormProperty, normalizedProperties)
       : undefined,
     filterableProperties: filterableProperties?.map(prop => 
-      normalizeSchemaPropertyIdentifier(prop, normalizedProperties)
+      normalizeSchemaPropertyIdentifier(prop, normalizedProperties),
     ),
+    contentCategorization: contentCategorization 
+      ? normalizeContentCategorization(contentCategorization, normalizedProperties) 
+      : undefined,
   };
 }
 

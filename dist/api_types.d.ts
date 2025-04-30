@@ -9,6 +9,7 @@ import type { HttpStatusCode } from './types';
 import type { MetadataContext } from './api';
 import type { MetadataFormula } from './api';
 import type { ObjectSchemaProperty } from './schema';
+import type { PropertyIdentifier } from './schema';
 import type { Schema } from './schema';
 /**
  * Markers used internally to represent data types for parameters and return values.
@@ -701,12 +702,38 @@ export declare enum PermissionSyncMode {
  * The type of content being indexed, which determines how the property is processed and queried.
  * @hidden
  */
-export declare enum ContentCategory {
+export declare enum ContentCategorizationType {
     Messaging = "Messaging",
     Document = "Document",
     Email = "Email",
-    Comment = "Comment",
-    Help = "Help"
+    Comment = "Comment"
+}
+export interface BaseContentCategorization {
+    type: ContentCategorizationType;
+}
+export interface MessagingContentCategorization extends BaseContentCategorization {
+    type: ContentCategorizationType.Messaging;
+}
+export interface DocumentContentCategorization extends BaseContentCategorization {
+    type: ContentCategorizationType.Document;
+}
+export interface EmailContentCategorization extends BaseContentCategorization {
+    type: ContentCategorizationType.Email;
+    toProperty: PropertyIdentifier<string>;
+    fromProperty: PropertyIdentifier<string>;
+    subjectProperty: PropertyIdentifier<string>;
+    htmlBodyProperty: PropertyIdentifier<string>;
+    plainTextBodyProperty: PropertyIdentifier<string>;
+}
+export interface CommentContentCategorization extends BaseContentCategorization {
+    type: ContentCategorizationType.Comment;
+}
+export type ContentCategorization = MessagingContentCategorization | DocumentContentCategorization | EmailContentCategorization | CommentContentCategorization;
+export interface ContentCategorizationTypeMap {
+    [ContentCategorizationType.Messaging]: MessagingContentCategorization;
+    [ContentCategorizationType.Document]: DocumentContentCategorization;
+    [ContentCategorizationType.Email]: EmailContentCategorization;
+    [ContentCategorizationType.Comment]: CommentContentCategorization;
 }
 /**
  * Information about the current sync, part of the {@link SyncExecutionContext} passed to the

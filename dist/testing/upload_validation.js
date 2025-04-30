@@ -1100,6 +1100,25 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             placeholder: z.string().optional(),
         }),
     ]);
+    const contentCategorizationSchema = z.discriminatedUnion('type', [
+        zodCompleteStrictObject({
+            type: z.literal(api_types_3.ContentCategorizationType.Messaging),
+        }),
+        zodCompleteStrictObject({
+            type: z.literal(api_types_3.ContentCategorizationType.Document),
+        }),
+        zodCompleteStrictObject({
+            type: z.literal(api_types_3.ContentCategorizationType.Email),
+            toProperty: propertySchema,
+            fromProperty: propertySchema,
+            subjectProperty: propertySchema,
+            htmlBodyProperty: propertySchema,
+            plainTextBodyProperty: propertySchema,
+        }),
+        zodCompleteStrictObject({
+            type: z.literal(api_types_3.ContentCategorizationType.Comment),
+        }),
+    ]);
     const contextPropertiesSchema = z.array(propertySchema).min(1);
     const indexedPropertySchema = z.union([
         propertySchema,
@@ -1114,6 +1133,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         authorityNormProperty: propertySchema.optional(),
         popularityNormProperty: propertySchema.optional(),
         filterableProperties: z.array(propertySchema).max(exports.Limits.FilterableProperties).optional(),
+        contentCategorization: contentCategorizationSchema.optional(),
     });
     const identitySchema = zodCompleteObject({
         packId: z.number().optional(),
@@ -1497,7 +1517,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             }
         }),
         role: z.nativeEnum(api_types_6.TableRole).optional(),
-        contentCategory: z.nativeEnum(api_types_3.ContentCategory).optional(),
     };
     const genericSyncTableSchema = zodCompleteObject({
         ...baseSyncTableSchema,

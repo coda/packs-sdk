@@ -7,6 +7,7 @@ import type {HttpStatusCode} from './types';
 import type {MetadataContext} from './api';
 import type {MetadataFormula} from './api';
 import type {ObjectSchemaProperty} from './schema';
+import type {PropertyIdentifier} from './schema';
 import type {Schema} from './schema';
 
 /**
@@ -832,7 +833,7 @@ export enum PermissionSyncMode {
  * The type of content being indexed, which determines how the property is processed and queried.
  * @hidden
  */
-export enum ContentCategory {
+export enum ContentCategorizationType {
   // Messaging: Chat or instant messaging content
   Messaging = 'Messaging',
   // Document: General document content
@@ -841,8 +842,44 @@ export enum ContentCategory {
   Email = 'Email',
   // Comment: User comments or feedback
   Comment = 'Comment',
-  // Help: Help documentation or support content
-  Help = 'Help',
+}
+
+export interface BaseContentCategorization {
+  type: ContentCategorizationType;
+}
+
+export interface MessagingContentCategorization extends BaseContentCategorization {
+  type: ContentCategorizationType.Messaging;
+}
+
+export interface DocumentContentCategorization extends BaseContentCategorization {
+  type: ContentCategorizationType.Document;
+}
+
+export interface EmailContentCategorization extends BaseContentCategorization {
+  type: ContentCategorizationType.Email;
+  toProperty: PropertyIdentifier<string>
+  fromProperty: PropertyIdentifier<string>
+  subjectProperty: PropertyIdentifier<string>
+  htmlBodyProperty: PropertyIdentifier<string>
+  plainTextBodyProperty: PropertyIdentifier<string>
+}
+
+export interface CommentContentCategorization extends BaseContentCategorization {
+  type: ContentCategorizationType.Comment;
+}
+
+export type ContentCategorization =
+  | MessagingContentCategorization
+  | DocumentContentCategorization
+  | EmailContentCategorization
+  | CommentContentCategorization;
+
+export interface ContentCategorizationTypeMap {
+  [ContentCategorizationType.Messaging]: MessagingContentCategorization;
+  [ContentCategorizationType.Document]: DocumentContentCategorization;
+  [ContentCategorizationType.Email]: EmailContentCategorization;
+  [ContentCategorizationType.Comment]: CommentContentCategorization;
 }
 
 /**

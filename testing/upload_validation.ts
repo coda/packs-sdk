@@ -12,16 +12,19 @@ import type {BooleanPackFormula} from '../api';
 import type {BooleanSchema} from '../schema';
 import type {CodaApiBearerTokenAuthentication} from '../types';
 import type {CodaInternalRichTextSchema} from '../schema';
+import type {CommentContentCategorization} from '../api_types';
 import {ConnectionRequirement} from '../api_types';
-import {ContentCategory} from '../api_types';
+import {ContentCategorizationType} from '../api_types';
 import {CurrencyFormat} from '../schema';
 import type {CurrencySchema} from '../schema';
 import type {CustomAuthentication} from '../types';
 import type {CustomHeaderTokenAuthentication} from '../types';
 import type {DetailedIndexedProperty} from '../schema';
+import type {DocumentContentCategorization} from '../api_types';
 import type {DurationSchema} from '../schema';
 import {DurationUnit} from '../schema';
 import type {DynamicSyncTableDef} from '../api';
+import type {EmailContentCategorization} from '../api_types';
 import {EmailDisplayType} from '../schema';
 import type {EmailSchema} from '../schema';
 import {FeatureSet} from '../types';
@@ -41,6 +44,7 @@ import {JSONPath} from 'jsonpath-plus';
 import {LifecycleBehavior} from '../schema';
 import {LinkDisplayType} from '../schema';
 import type {LinkSchema} from '../schema';
+import type {MessagingContentCategorization} from '../api_types';
 import type {MultiHeaderTokenAuthentication} from '../types';
 import type {MultiQueryParamTokenAuthentication} from '../types';
 import type {Network} from '../api_types';
@@ -1364,6 +1368,26 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     }),
   ]);
 
+  const contentCategorizationSchema = z.discriminatedUnion('type', [
+    zodCompleteStrictObject<MessagingContentCategorization>({
+      type: z.literal(ContentCategorizationType.Messaging),
+    }),
+    zodCompleteStrictObject<DocumentContentCategorization>({
+      type: z.literal(ContentCategorizationType.Document),
+    }),
+    zodCompleteStrictObject<EmailContentCategorization>({
+      type: z.literal(ContentCategorizationType.Email),
+      toProperty: propertySchema,
+      fromProperty: propertySchema,
+      subjectProperty: propertySchema,
+      htmlBodyProperty: propertySchema,
+      plainTextBodyProperty: propertySchema,
+    }),
+    zodCompleteStrictObject<CommentContentCategorization>({
+      type: z.literal(ContentCategorizationType.Comment),
+    }),
+  ]);
+
   const contextPropertiesSchema = z.array(propertySchema).min(1);
 
   const indexedPropertySchema = z.union([
@@ -1380,6 +1404,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     authorityNormProperty: propertySchema.optional(),
     popularityNormProperty: propertySchema.optional(),
     filterableProperties: z.array(propertySchema).max(Limits.FilterableProperties).optional(),
+    contentCategorization: contentCategorizationSchema.optional(),
   });
 
   const identitySchema = zodCompleteObject<Identity>({
@@ -1920,7 +1945,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }
       }),
     role: z.nativeEnum(TableRole).optional(),
-    contentCategory: z.nativeEnum(ContentCategory).optional(),
   };
 
   type GenericSyncTableDef = SyncTableDef<
