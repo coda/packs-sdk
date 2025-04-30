@@ -4,6 +4,7 @@ import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '..';
 import {AuthenticationType} from '../types';
 import {ConnectionRequirement} from '../api_types';
+import {ContentCategorizationType} from '../api_types';
 import {CurrencyFormat} from '..';
 import {DurationUnit} from '..';
 import type {Formula} from '../api';
@@ -3462,6 +3463,50 @@ describe('Pack metadata Validation', async () => {
           await validateJson(metadata);
         })
 
+        it('works with content categorization', async () => {
+          const metadata = metadataForFormulaWithObjectSchema({
+            type: ValueType.Object,
+            properties: {
+              body: {type: ValueType.String},
+              value: {type: ValueType.Number},
+            },
+            index: {
+              properties: ['body'],
+              contentCategorization: {
+                type: ContentCategorizationType.Document,
+              }
+            },
+          });
+          await validateJson(metadata);
+        });
+        
+        it('works with content email categorization', async () => {
+          const metadata = metadataForFormulaWithObjectSchema({
+            type: ValueType.Object,
+            properties: {
+              body: {type: ValueType.String},
+              value: {type: ValueType.Number},
+              to: {type: ValueType.String},
+              from: {type: ValueType.String},
+              subject: {type: ValueType.String},
+              htmlBody: {type: ValueType.String},
+              plainTextBody: {type: ValueType.String},
+            },
+            index: {
+              properties: ['body'],
+              contentCategorization: {
+                type: ContentCategorizationType.Email,
+                toProperty: 'to',
+                fromProperty: 'from',
+                subjectProperty: 'subject',
+                htmlBodyProperty: 'htmlBody',
+                plainTextBodyProperty: 'plainTextBody',
+              }
+            },
+          });
+          await validateJson(metadata);
+          });
+
         it('fails with invalid index property', async () => {
           const metadata = metadataForFormulaWithObjectSchema({
             type: ValueType.Object,
@@ -3579,6 +3624,46 @@ describe('Pack metadata Validation', async () => {
               path: 'formulas[0].schema.index.filterableProperty[1]',
             },
           ]);        
+        });
+
+        it('fails with invalid content categorization', async () => {
+          assert.throws(() => metadataForFormulaWithObjectSchema({
+            type: ValueType.Object,
+            properties: {
+              body: {type: ValueType.String},
+            },
+            index: {
+              properties: ['body'],
+              contentCategorization: {type: 'invalid'} as any,
+            },
+          }));
+
+        });
+
+        it('fails with invalid email content categorization', async () => {
+          const metadata = metadataForFormulaWithObjectSchema({
+            type: ValueType.Object,
+            properties: {
+              body: {type: ValueType.Number},
+              to: {type: ValueType.Number},
+              from: {type: ValueType.Number},
+              subject: {type: ValueType.Number},
+              htmlBody: {type: ValueType.Number},
+              plainTextBody: {type: ValueType.Number},
+            },
+            index: {
+              properties: ['body'],
+              contentCategorization: {
+                type: ContentCategorizationType.Email,
+                toProperty: 'to',
+                fromProperty: 'from',
+                subjectProperty: 'subject',
+                htmlBodyProperty: 'htmlBody',
+                plainTextBodyProperty: 'plainTextBody'
+              } as any,
+            },
+          });
+          await validateJsonAndAssertFails(metadata);
         });
       });
 

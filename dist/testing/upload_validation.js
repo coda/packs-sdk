@@ -1118,7 +1118,10 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         zodCompleteStrictObject({
             type: z.literal(api_types_3.ContentCategorizationType.Comment),
         }),
-    ]);
+    ]).refine(data => { return data.type && Object.values(api_types_3.ContentCategorizationType).includes(data.type); }, {
+        message: `must be a valid content categorization type.`,
+        path: ['contentCategorization', 'type'],
+    });
     const contextPropertiesSchema = z.array(propertySchema).min(1);
     const indexedPropertySchema = z.union([
         propertySchema,
@@ -1366,7 +1369,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             return;
         }
         const validatePropertyValue = makePropertyValidator(schema, context);
-        const { properties, contextProperties, authorityNormProperty, popularityNormProperty, filterableProperties } = schema.index;
+        const { properties, contextProperties, authorityNormProperty, popularityNormProperty, filterableProperties, contentCategorization, } = schema.index;
         if (authorityNormProperty) {
             validatePropertyValue(authorityNormProperty, 'authorityNormProperty', authorityNormPropertySchema => authorityNormPropertySchema.type === schema_17.ValueType.Number, `must refer to a "ValueType.Number" property.`, ['index', 'authorityNormProperty']);
         }
@@ -1385,6 +1388,37 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 validatePropertyValue(indexedProperty.property, 'properties', indexedPropertySchema => indexedPropertySchema.type === schema_17.ValueType.String ||
                     (indexedPropertySchema.type === schema_17.ValueType.Array &&
                         indexedPropertySchema.items.type === schema_17.ValueType.String), `must refer to a "ValueType.String" property or a "ValueType.Array" array of "ValueType.String" properties.`, [...objectPath, 'property']);
+            }
+        }
+        if (contentCategorization) {
+            const { type } = contentCategorization;
+            if (type === api_types_3.ContentCategorizationType.Email) {
+                const { toProperty, fromProperty, subjectProperty, htmlBodyProperty, plainTextBodyProperty, } = contentCategorization;
+                validatePropertyValue(toProperty, 'toProperty', property => property.type === schema_17.ValueType.String, `must be a valid property.`, [
+                    'index',
+                    'contentCategorization',
+                    'toProperty',
+                ]);
+                validatePropertyValue(fromProperty, 'fromProperty', property => property.type === schema_17.ValueType.String, `must be a valid property.`, [
+                    'index',
+                    'contentCategorization',
+                    'fromProperty',
+                ]);
+                validatePropertyValue(subjectProperty, 'subjectProperty', property => property.type === schema_17.ValueType.String, `must be a valid property.`, [
+                    'index',
+                    'contentCategorization',
+                    'subjectProperty',
+                ]);
+                validatePropertyValue(htmlBodyProperty, 'htmlBodyProperty', property => property.type === schema_17.ValueType.String, `must be a valid property.`, [
+                    'index',
+                    'contentCategorization',
+                    'htmlBodyProperty',
+                ]);
+                validatePropertyValue(plainTextBodyProperty, 'plainTextBodyProperty', property => property.type === schema_17.ValueType.String, `must be a valid property.`, [
+                    'index',
+                    'contentCategorization',
+                    'plainTextBodyProperty',
+                ]);
             }
         }
         if (contextProperties) {

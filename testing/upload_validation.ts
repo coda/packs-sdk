@@ -1386,7 +1386,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     zodCompleteStrictObject<CommentContentCategorization>({
       type: z.literal(ContentCategorizationType.Comment),
     }),
-  ]);
+  ]).refine(data => 
+    {return data.type && Object.values(ContentCategorizationType).includes(data.type)}, {
+    message: `must be a valid content categorization type.`,
+    path: ['contentCategorization', 'type'],
+  });
 
   const contextPropertiesSchema = z.array(propertySchema).min(1);
 
@@ -1741,7 +1745,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           contextProperties,
           authorityNormProperty,
           popularityNormProperty,
-          filterableProperties
+          filterableProperties,
+          contentCategorization,
         } = schema.index;
 
         if (authorityNormProperty) {
@@ -1792,6 +1797,44 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           }
         }
 
+        if (contentCategorization) {
+          const {type} = contentCategorization;
+          if (type === ContentCategorizationType.Email) {
+            const {
+              toProperty,
+              fromProperty,
+              subjectProperty,
+              htmlBodyProperty,
+              plainTextBodyProperty,
+            } = contentCategorization;
+            validatePropertyValue(toProperty, 'toProperty', property => property.type === ValueType.String, `must be a valid property.`, [
+              'index',
+              'contentCategorization',
+              'toProperty',
+            ]);
+            validatePropertyValue(fromProperty, 'fromProperty', property => property.type === ValueType.String, `must be a valid property.`, [
+              'index',
+              'contentCategorization',
+              'fromProperty',
+            ]);
+            validatePropertyValue(subjectProperty, 'subjectProperty', property => property.type === ValueType.String, `must be a valid property.`, [
+              'index',
+              'contentCategorization',
+              'subjectProperty',
+            ]);
+            validatePropertyValue(htmlBodyProperty, 'htmlBodyProperty', property => property.type === ValueType.String, `must be a valid property.`, [
+              'index',
+              'contentCategorization',
+              'htmlBodyProperty',
+            ]);
+            validatePropertyValue(plainTextBodyProperty, 'plainTextBodyProperty', property => property.type === ValueType.String, `must be a valid property.`, [
+              'index',
+              'contentCategorization',
+              'plainTextBodyProperty',
+            ]);
+          }
+        }
+        
         if (contextProperties) {
           validatePropertyValue(contextProperties, 'contextProperties', () => true, `must be a valid property.`, [
             'index',
