@@ -12,6 +12,7 @@ import {getPackOptions} from '../cli/config_storage';
 import {importManifest} from '../cli/helpers';
 import os from 'os';
 import path from 'path';
+import {print} from '../testing/helpers';
 import {processVmError} from './helpers';
 import semver from 'semver';
 import {tryGetIvm} from './ivm_wrapper';
@@ -219,6 +220,7 @@ export async function compilePackBundle({
   intermediateOutputDirectory,
   timerStrategy = TimerShimStrategy.None,
 }: CompilePackBundleOptions): Promise<CompilePackBundleResult> {
+  print('Compiling pack bundle...');
   const esbuildBundleFilename = 'esbuild-bundle.js';
   const browserifyBundleFilename = 'browserify-bundle.js';
   const browserifyWithShimBundleFilename = 'browserify-with-shim-bundle.js';
