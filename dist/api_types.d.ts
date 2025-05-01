@@ -703,9 +703,13 @@ export declare enum PermissionSyncMode {
  * @hidden
  */
 export declare enum ContentCategorizationType {
+    /** Messaging: Chat or instant messaging content */
     Messaging = "Messaging",
+    /** Document: General document content */
     Document = "Document",
+    /** Email: Email message content */
     Email = "Email",
+    /** Comment: User comments or feedback */
     Comment = "Comment"
 }
 export interface BaseContentCategorization {

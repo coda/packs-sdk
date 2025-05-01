@@ -1122,32 +1122,10 @@ export interface DetailedIndexedProperty {
 export type IndexedProperty = BasicIndexedProperty | DetailedIndexedProperty;
 
 /**
- * Defines how to index objects for use with full-text indexing.
- * TODO(alexd): Unhide this
+ * Base definition for all index definitions.
  * @hidden
  */
-export interface IndexDefinition {
-  /**
-   * A list of properties from within {@link ObjectSchemaDefinition.properties} that should be indexed.
-   */
-  properties: IndexedProperty[];
-
-  /**
-   * A list of properties from within {@link ObjectSchemaDefinition.properties} 
-   * that will be made available to filter the results of a search. Limited to 5 properties, 
-   * so these should be the properties most likely to be useful as filters.
-   */
-  filterableProperties?: FilterableProperty[];
-  /**
-   * The category of the content to be indexed. Used to determine how to support the indexing
-   * and querying for the text. Must be one of {@link ContentCategorization}.
-   */
-  contentCategorization?: ContentCategorization;
-  /*
-   * The context properties to be used for indexing.
-   * If unspecified, intelligent defaults may be used..
-   */
-  contextProperties?: ContextProperties;
+export interface BaseIndexDefinition {
   /**
    * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as a number
    * between -1.0 and 1.0 representing the normalized authority score of this entity compared to all other entities.
@@ -1166,7 +1144,50 @@ export interface IndexDefinition {
    * @hidden
    */
   popularityNormProperty?: PropertyIdentifier<string>;
+  /**
+   * A list of properties from within {@link ObjectSchemaDefinition.properties} 
+   * that will be made available to filter the results of a search. Limited to 5 properties, 
+   * so these should be the properties most likely to be useful as filters.
+   */
+  filterableProperties?: FilterableProperty[];
 }
+
+/**
+ * Defines how to index custom objects for use with full-text indexing.
+ * TODO(alexd): Unhide this
+ * @hidden
+ */
+export interface CustomIndexDefinition extends BaseIndexDefinition {
+  /**
+   * A list of properties from within {@link ObjectSchemaDefinition.properties} that should be indexed.
+   */
+  properties: IndexedProperty[];
+  /*
+   * The context properties to be used for indexing.
+   * If unspecified, intelligent defaults may be used..
+   */
+  contextProperties?: ContextProperties;
+}
+
+/**
+ * Defines how to index categorized objects for use with full-text indexing.
+ * These categories are predefined by the system and expect to specific properties
+ * to be present in the object.
+ * @hidden
+ */
+export interface CategorizationIndexDefinition extends BaseIndexDefinition {
+  /**
+   * The category of the content to be indexed. Used to determine how to support the indexing
+   * and querying for the text. Must be one of {@link ContentCategorization}.
+   */
+  contentCategorization: ContentCategorization;
+}
+
+/**
+ * Defines how to index objects for use with full-text indexing.
+ * @hidden
+ */
+export type IndexDefinition = CustomIndexDefinition | CategorizationIndexDefinition;
 
 /**
  * Determines how permissions are handled for this object.
@@ -2122,15 +2143,45 @@ function normalizeContentCategorization(
       return ensureUnreachable(value);
   }
 }
+export function isCategorizationIndexDefinition(index: IndexDefinition): index is CategorizationIndexDefinition {
+  return 'contentCategorization' in index;
+}
+
+export function isCustomIndexDefinition(index: IndexDefinition): index is CustomIndexDefinition {
+  return 'properties' in index;
+}
 
 function normalizeIndexDefinition(
   index: IndexDefinition,
   normalizedProperties: ObjectSchemaProperties,
 ): IndexDefinition {
+  // Handle categorization index definitions.
+  if (isCategorizationIndexDefinition(index)) {
+    const {
+      contentCategorization,
+      authorityNormProperty,
+      popularityNormProperty,
+      filterableProperties,
+      ...rest
+    } = index;
+    ensureNever<keyof typeof rest>();
+    return {
+      contentCategorization: normalizeContentCategorization(contentCategorization, normalizedProperties),
+      authorityNormProperty: authorityNormProperty
+        ? normalizeSchemaPropertyIdentifier(authorityNormProperty, normalizedProperties)
+        : undefined,
+      popularityNormProperty: popularityNormProperty
+        ? normalizeSchemaPropertyIdentifier(popularityNormProperty, normalizedProperties)
+        : undefined,
+      filterableProperties: filterableProperties?.map(prop => 
+        normalizeSchemaPropertyIdentifier(prop, normalizedProperties),
+      ),
+    };
+  }
+  // Handle custom index definitions.
   const {
     properties,
     contextProperties,
-    contentCategorization,
     authorityNormProperty,
     popularityNormProperty,
     filterableProperties,
@@ -2151,9 +2202,6 @@ function normalizeIndexDefinition(
     filterableProperties: filterableProperties?.map(prop => 
       normalizeSchemaPropertyIdentifier(prop, normalizedProperties),
     ),
-    contentCategorization: contentCategorization 
-      ? normalizeContentCategorization(contentCategorization, normalizedProperties) 
-      : undefined,
   };
 }
 

@@ -834,13 +834,13 @@ export enum PermissionSyncMode {
  * @hidden
  */
 export enum ContentCategorizationType {
-  // Messaging: Chat or instant messaging content
+  /** Messaging: Chat or instant messaging content */
   Messaging = 'Messaging',
-  // Document: General document content
+  /** Document: General document content */
   Document = 'Document',
-  // Email: Email message content
+  /** Email: Email message content */
   Email = 'Email',
-  // Comment: User comments or feedback
+  /** Comment: User comments or feedback */
   Comment = 'Comment',
 }
 

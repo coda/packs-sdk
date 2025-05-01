@@ -43,6 +43,7 @@ import {createFakePackFormulaMetadata} from './test_utils';
 import {createFakePackVersionMetadata} from './test_utils';
 import {deepCopy} from '../helpers/object_utils';
 import {ensureExists} from '../helpers/ensure';
+import {isCustomIndexDefinition} from '../schema';
 import {isObject} from '../schema';
 import {makeAttributionNode} from '..';
 import {makeDynamicSyncTable} from '../api';
@@ -3382,7 +3383,7 @@ describe('Pack metadata Validation', async () => {
       });
 
       describe('Index definition', () => {
-        it('works', async () => {
+        it('works for custom index', async () => {
           const metadata = metadataForFormulaWithObjectSchema({
             type: ValueType.Object,
             properties: {
@@ -3398,7 +3399,7 @@ describe('Pack metadata Validation', async () => {
           await validateJson(metadata);
         });
 
-        it('works with advanced property', async () => {
+        it('works with advanced property for custom index', async () => {
           const metadata = metadataForFormulaWithObjectSchema({
             type: ValueType.Object,
             properties: {
@@ -3419,6 +3420,7 @@ describe('Pack metadata Validation', async () => {
             validated.formulas.some(
               f =>
                 isObject(f.schema) &&
+                f.schema.index && isCustomIndexDefinition(f.schema.index) &&
                 f.schema.index?.properties.some(
                   p => typeof p === 'object' && 'strategy' in p && p.strategy === IndexingStrategy.Raw,
                 ),
@@ -3484,7 +3486,6 @@ describe('Pack metadata Validation', async () => {
           const metadata = metadataForFormulaWithObjectSchema({
             type: ValueType.Object,
             properties: {
-              body: {type: ValueType.String},
               value: {type: ValueType.Number},
               to: {type: ValueType.String},
               from: {type: ValueType.String},
@@ -3493,7 +3494,6 @@ describe('Pack metadata Validation', async () => {
               plainTextBody: {type: ValueType.String},
             },
             index: {
-              properties: ['body'],
               contentCategorization: {
                 type: ContentCategorizationType.Email,
                 toProperty: 'to',
@@ -3633,7 +3633,6 @@ describe('Pack metadata Validation', async () => {
               body: {type: ValueType.String},
             },
             index: {
-              properties: ['body'],
               contentCategorization: {type: 'invalid'} as any,
             },
           }));
@@ -3652,7 +3651,6 @@ describe('Pack metadata Validation', async () => {
               plainTextBody: {type: ValueType.Number},
             },
             index: {
-              properties: ['body'],
               contentCategorization: {
                 type: ContentCategorizationType.Email,
                 toProperty: 'to',

@@ -958,27 +958,10 @@ export interface DetailedIndexedProperty {
 }
 export type IndexedProperty = BasicIndexedProperty | DetailedIndexedProperty;
 /**
- * Defines how to index objects for use with full-text indexing.
- * TODO(alexd): Unhide this
+ * Base definition for all index definitions.
  * @hidden
  */
-export interface IndexDefinition {
-    /**
-     * A list of properties from within {@link ObjectSchemaDefinition.properties} that should be indexed.
-     */
-    properties: IndexedProperty[];
-    /**
-     * A list of properties from within {@link ObjectSchemaDefinition.properties}
-     * that will be made available to filter the results of a search. Limited to 5 properties,
-     * so these should be the properties most likely to be useful as filters.
-     */
-    filterableProperties?: FilterableProperty[];
-    /**
-     * The category of the content to be indexed. Used to determine how to support the indexing
-     * and querying for the text. Must be one of {@link ContentCategorization}.
-     */
-    contentCategorization?: ContentCategorization;
-    contextProperties?: ContextProperties;
+export interface BaseIndexDefinition {
     /**
      * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as a number
      * between -1.0 and 1.0 representing the normalized authority score of this entity compared to all other entities.
@@ -997,7 +980,43 @@ export interface IndexDefinition {
      * @hidden
      */
     popularityNormProperty?: PropertyIdentifier<string>;
+    /**
+     * A list of properties from within {@link ObjectSchemaDefinition.properties}
+     * that will be made available to filter the results of a search. Limited to 5 properties,
+     * so these should be the properties most likely to be useful as filters.
+     */
+    filterableProperties?: FilterableProperty[];
 }
+/**
+ * Defines how to index custom objects for use with full-text indexing.
+ * TODO(alexd): Unhide this
+ * @hidden
+ */
+export interface CustomIndexDefinition extends BaseIndexDefinition {
+    /**
+     * A list of properties from within {@link ObjectSchemaDefinition.properties} that should be indexed.
+     */
+    properties: IndexedProperty[];
+    contextProperties?: ContextProperties;
+}
+/**
+ * Defines how to index categorized objects for use with full-text indexing.
+ * These categories are predefined by the system and expect to specific properties
+ * to be present in the object.
+ * @hidden
+ */
+export interface CategorizationIndexDefinition extends BaseIndexDefinition {
+    /**
+     * The category of the content to be indexed. Used to determine how to support the indexing
+     * and querying for the text. Must be one of {@link ContentCategorization}.
+     */
+    contentCategorization: ContentCategorization;
+}
+/**
+ * Defines how to index objects for use with full-text indexing.
+ * @hidden
+ */
+export type IndexDefinition = CustomIndexDefinition | CategorizationIndexDefinition;
 /**
  * Determines how permissions are handled for this object.
  */
@@ -1637,6 +1656,8 @@ export declare function normalizeSchemaKey(key: string): string;
  * This is used for object schema properties that support path projection.
  */
 export declare function normalizeSchemaKeyPath(key: string, normalizedProperties: ObjectSchemaProperties): string;
+export declare function isCategorizationIndexDefinition(index: IndexDefinition): index is CategorizationIndexDefinition;
+export declare function isCustomIndexDefinition(index: IndexDefinition): index is CustomIndexDefinition;
 /**
  * Attempts to transform a property value (which may be a json-path string or a normal object schema property) into
  * a path to access the relevant schema. Specifically this handles the case of

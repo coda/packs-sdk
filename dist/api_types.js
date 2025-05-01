@@ -242,13 +242,13 @@ var PermissionSyncMode;
  */
 var ContentCategorizationType;
 (function (ContentCategorizationType) {
-    // Messaging: Chat or instant messaging content
+    /** Messaging: Chat or instant messaging content */
     ContentCategorizationType["Messaging"] = "Messaging";
-    // Document: General document content
+    /** Document: General document content */
     ContentCategorizationType["Document"] = "Document";
-    // Email: Email message content
+    /** Email: Email message content */
     ContentCategorizationType["Email"] = "Email";
-    // Comment: User comments or feedback
+    /** Comment: User comments or feedback */
     ContentCategorizationType["Comment"] = "Comment";
 })(ContentCategorizationType || (exports.ContentCategorizationType = ContentCategorizationType = {}));
 var InvocationErrorType;

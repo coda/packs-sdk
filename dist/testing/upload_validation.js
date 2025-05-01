@@ -65,17 +65,18 @@ const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
 const schema_18 = require("../schema");
 const api_types_8 = require("../api_types");
+const schema_19 = require("../schema");
 const object_utils_1 = require("../helpers/object_utils");
 const object_utils_2 = require("../helpers/object_utils");
-const schema_19 = require("../schema");
-const api_1 = require("../api");
 const schema_20 = require("../schema");
+const api_1 = require("../api");
 const schema_21 = require("../schema");
 const schema_22 = require("../schema");
 const schema_23 = require("../schema");
+const schema_24 = require("../schema");
 const migration_1 = require("../helpers/migration");
 const semver_1 = __importDefault(require("semver"));
-const schema_24 = require("../schema");
+const schema_25 = require("../schema");
 const z = __importStar(require("zod"));
 /**
  * The uncompiled column format matchers will be expected to be actual regex objects,
@@ -159,7 +160,7 @@ function validateSyncTableSchema(schema, options) {
         return validated.data;
     }
     // In case this was an ObjectSchema (describing a single row), wrap it up as an ArraySchema.
-    const syntheticArraySchema = (0, schema_20.makeSchema)({
+    const syntheticArraySchema = (0, schema_21.makeSchema)({
         type: schema_17.ValueType.Array,
         items: schema,
     });
@@ -183,7 +184,7 @@ function makePropertyValidator(schema, context) {
                 ? schema.properties[propertyValue]
                 : undefined;
             if (!propertySchema) {
-                const schemaPropertyPath = (0, schema_23.normalizePropertyValuePathIntoSchemaPath)(propertyValue);
+                const schemaPropertyPath = (0, schema_24.normalizePropertyValuePathIntoSchemaPath)(propertyValue);
                 propertySchema = (_a = (0, jsonpath_plus_1.JSONPath)({
                     path: schemaPropertyPath,
                     json: schema.properties,
@@ -1130,14 +1131,21 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             strategy: z.nativeEnum(schema_9.IndexingStrategy),
         }),
     ]);
-    const indexSchema = zodCompleteStrictObject({
+    const filterablePropertiesSchema = z.array(propertySchema).max(exports.Limits.FilterableProperties);
+    const customIndexSchema = zodCompleteStrictObject({
         properties: z.array(indexedPropertySchema).min(1),
         contextProperties: contextPropertiesSchema.optional(),
         authorityNormProperty: propertySchema.optional(),
         popularityNormProperty: propertySchema.optional(),
-        filterableProperties: z.array(propertySchema).max(exports.Limits.FilterableProperties).optional(),
-        contentCategorization: contentCategorizationSchema.optional(),
+        filterableProperties: filterablePropertiesSchema.optional(),
     });
+    const categorizationIndexSchema = zodCompleteStrictObject({
+        contentCategorization: contentCategorizationSchema,
+        authorityNormProperty: propertySchema.optional(),
+        popularityNormProperty: propertySchema.optional(),
+        filterableProperties: filterablePropertiesSchema.optional(),
+    });
+    const indexSchema = z.union([customIndexSchema, categorizationIndexSchema]);
     const identitySchema = zodCompleteObject({
         packId: z.number().optional(),
         name: z.string().nonempty(),
@@ -1369,28 +1377,10 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             return;
         }
         const validatePropertyValue = makePropertyValidator(schema, context);
-        const { properties, contextProperties, authorityNormProperty, popularityNormProperty, filterableProperties, contentCategorization, } = schema.index;
-        if (authorityNormProperty) {
-            validatePropertyValue(authorityNormProperty, 'authorityNormProperty', authorityNormPropertySchema => authorityNormPropertySchema.type === schema_17.ValueType.Number, `must refer to a "ValueType.Number" property.`, ['index', 'authorityNormProperty']);
-        }
-        if (popularityNormProperty) {
-            validatePropertyValue(popularityNormProperty, 'popularityNormProperty', popularityNormPropertySchema => popularityNormPropertySchema.type === schema_17.ValueType.Number, `must refer to a "ValueType.Number" property.`, ['index', 'popularityNormProperty']);
-        }
-        for (let i = 0; i < properties.length; i++) {
-            const indexedProperty = properties[i];
-            const objectPath = ['index', 'properties', i];
-            if (typeof indexedProperty === 'string') {
-                validatePropertyValue(indexedProperty, 'properties', indexedPropertySchema => indexedPropertySchema.type === schema_17.ValueType.String ||
-                    (indexedPropertySchema.type === schema_17.ValueType.Array &&
-                        indexedPropertySchema.items.type === schema_17.ValueType.String), `must refer to a "ValueType.String" property or a "ValueType.Array" array of "ValueType.String" properties.`, objectPath);
-            }
-            else {
-                validatePropertyValue(indexedProperty.property, 'properties', indexedPropertySchema => indexedPropertySchema.type === schema_17.ValueType.String ||
-                    (indexedPropertySchema.type === schema_17.ValueType.Array &&
-                        indexedPropertySchema.items.type === schema_17.ValueType.String), `must refer to a "ValueType.String" property or a "ValueType.Array" array of "ValueType.String" properties.`, [...objectPath, 'property']);
-            }
-        }
-        if (contentCategorization) {
+        const { authorityNormProperty, popularityNormProperty, filterableProperties, } = schema.index;
+        // validate the categorization index
+        if ((0, schema_19.isCategorizationIndexDefinition)(schema.index)) {
+            const { contentCategorization } = schema.index;
             const { type } = contentCategorization;
             if (type === api_types_3.ContentCategorizationType.Email) {
                 const { toProperty, fromProperty, subjectProperty, htmlBodyProperty, plainTextBodyProperty, } = contentCategorization;
@@ -1420,12 +1410,36 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                     'plainTextBodyProperty',
                 ]);
             }
+            // validate the custom index
         }
-        if (contextProperties) {
-            validatePropertyValue(contextProperties, 'contextProperties', () => true, `must be a valid property.`, [
-                'index',
-                'contextProperties',
-            ]);
+        else {
+            const { properties, contextProperties } = schema.index;
+            for (let i = 0; i < properties.length; i++) {
+                const indexedProperty = properties[i];
+                const objectPath = ['index', 'properties', i];
+                if (typeof indexedProperty === 'string') {
+                    validatePropertyValue(indexedProperty, 'properties', indexedPropertySchema => indexedPropertySchema.type === schema_17.ValueType.String ||
+                        (indexedPropertySchema.type === schema_17.ValueType.Array &&
+                            indexedPropertySchema.items.type === schema_17.ValueType.String), `must refer to a "ValueType.String" property or a "ValueType.Array" array of "ValueType.String" properties.`, objectPath);
+                }
+                else {
+                    validatePropertyValue(indexedProperty.property, 'properties', indexedPropertySchema => indexedPropertySchema.type === schema_17.ValueType.String ||
+                        (indexedPropertySchema.type === schema_17.ValueType.Array &&
+                            indexedPropertySchema.items.type === schema_17.ValueType.String), `must refer to a "ValueType.String" property or a "ValueType.Array" array of "ValueType.String" properties.`, [...objectPath, 'property']);
+                }
+            }
+            if (contextProperties) {
+                validatePropertyValue(contextProperties, 'contextProperties', () => true, `must be a valid property.`, [
+                    'index',
+                    'contextProperties',
+                ]);
+            }
+        }
+        if (authorityNormProperty) {
+            validatePropertyValue(authorityNormProperty, 'authorityNormProperty', authorityNormPropertySchema => authorityNormPropertySchema.type === schema_17.ValueType.Number, `must refer to a "ValueType.Number" property.`, ['index', 'authorityNormProperty']);
+        }
+        if (popularityNormProperty) {
+            validatePropertyValue(popularityNormProperty, 'popularityNormProperty', popularityNormPropertySchema => popularityNormPropertySchema.type === schema_17.ValueType.Number, `must refer to a "ValueType.Number" property.`, ['index', 'popularityNormProperty']);
         }
         if (filterableProperties) {
             for (let i = 0; i < filterableProperties.length; i++) {
@@ -1465,9 +1479,9 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             // ValueHintType.SelectList is only required for autocomplete starting in version 1.4.1
             return true;
         }
-        const schemaForOptions = (0, schema_22.maybeUnwrapArraySchema)(schema);
+        const schemaForOptions = (0, schema_23.maybeUnwrapArraySchema)(schema);
         const result = !schemaForOptions ||
-            (0, schema_24.unwrappedSchemaSupportsOptions)(schemaForOptions) ||
+            (0, schema_25.unwrappedSchemaSupportsOptions)(schemaForOptions) ||
             !('options' in schemaForOptions && schemaForOptions.options);
         return result;
     }, 'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "options" property.');
@@ -2057,7 +2071,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         (data.syncTables || []).forEach((syncTable, i) => {
             const schema = syncTable.schema;
             for (const [propertyName, childSchema] of Object.entries(schema.properties)) {
-                const options = (0, schema_21.maybeSchemaOptionsValue)(childSchema);
+                const options = (0, schema_22.maybeSchemaOptionsValue)(childSchema);
                 if (!options || Array.isArray(options)) {
                     continue;
                 }
@@ -2233,7 +2247,7 @@ const packMetadataSchemaBySdkVersion = [
     },
 ];
 function validateSchemaDeprecatedFields(schema, pathPrefix, context) {
-    if ((0, schema_19.isObject)(schema)) {
+    if ((0, schema_20.isObject)(schema)) {
         validateObjectSchemaDeprecatedFields(schema, pathPrefix, context);
     }
     if ((0, schema_18.isArray)(schema)) {

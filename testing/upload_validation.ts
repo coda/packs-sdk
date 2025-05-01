@@ -10,6 +10,7 @@ import {AuthenticationType} from '../types';
 import {BooleanHintValueTypes} from '../schema';
 import type {BooleanPackFormula} from '../api';
 import type {BooleanSchema} from '../schema';
+import type {CategorizationIndexDefinition} from '../schema';
 import type {CodaApiBearerTokenAuthentication} from '../types';
 import type {CodaInternalRichTextSchema} from '../schema';
 import type {CommentContentCategorization} from '../api_types';
@@ -19,6 +20,7 @@ import {CurrencyFormat} from '../schema';
 import type {CurrencySchema} from '../schema';
 import type {CustomAuthentication} from '../types';
 import type {CustomHeaderTokenAuthentication} from '../types';
+import type {CustomIndexDefinition} from '../schema';
 import type {DetailedIndexedProperty} from '../schema';
 import type {DocumentContentCategorization} from '../api_types';
 import type {DurationSchema} from '../schema';
@@ -38,7 +40,6 @@ import {ImageCornerStyle} from '../schema';
 import {ImageOutline} from '../schema';
 import type {ImageSchema} from '..';
 import {ImageShapeStyle} from '../schema';
-import type {IndexDefinition} from '../schema';
 import {IndexingStrategy} from '../schema';
 import {JSONPath} from 'jsonpath-plus';
 import {LifecycleBehavior} from '../schema';
@@ -115,6 +116,7 @@ import {assertCondition} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
 import {isArray} from '../schema';
 import {isArrayType} from '../api_types';
+import {isCategorizationIndexDefinition} from '../schema';
 import {isDefined} from '../helpers/object_utils';
 import {isNil} from '../helpers/object_utils';
 import {isObject} from '../schema';
@@ -1402,14 +1404,24 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     }),
   ]);
 
-  const indexSchema = zodCompleteStrictObject<IndexDefinition>({
+  const filterablePropertiesSchema = z.array(propertySchema).max(Limits.FilterableProperties);
+
+  const customIndexSchema = zodCompleteStrictObject<CustomIndexDefinition>({
     properties: z.array(indexedPropertySchema).min(1),
     contextProperties: contextPropertiesSchema.optional(),
     authorityNormProperty: propertySchema.optional(),
     popularityNormProperty: propertySchema.optional(),
-    filterableProperties: z.array(propertySchema).max(Limits.FilterableProperties).optional(),
-    contentCategorization: contentCategorizationSchema.optional(),
+    filterableProperties: filterablePropertiesSchema.optional(),
   });
+
+  const categorizationIndexSchema = zodCompleteStrictObject<CategorizationIndexDefinition>({
+    contentCategorization: contentCategorizationSchema,
+    authorityNormProperty: propertySchema.optional(),
+    popularityNormProperty: propertySchema.optional(),
+    filterableProperties: filterablePropertiesSchema.optional(),
+  });
+
+  const indexSchema = z.union([customIndexSchema, categorizationIndexSchema]);
 
   const identitySchema = zodCompleteObject<Identity>({
     packId: z.number().optional(),
@@ -1741,63 +1753,14 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         const validatePropertyValue = makePropertyValidator(schema, context);
 
         const {
-          properties,
-          contextProperties,
           authorityNormProperty,
           popularityNormProperty,
           filterableProperties,
-          contentCategorization,
         } = schema.index;
 
-        if (authorityNormProperty) {
-          validatePropertyValue(
-            authorityNormProperty,
-            'authorityNormProperty',
-            authorityNormPropertySchema => authorityNormPropertySchema.type === ValueType.Number,
-            `must refer to a "ValueType.Number" property.`,
-            ['index', 'authorityNormProperty'],
-          );
-        }
-
-        if (popularityNormProperty) {
-          validatePropertyValue(
-            popularityNormProperty,
-            'popularityNormProperty',
-            popularityNormPropertySchema => popularityNormPropertySchema.type === ValueType.Number,
-            `must refer to a "ValueType.Number" property.`,
-            ['index', 'popularityNormProperty'],
-          );
-        }
-
-        for (let i = 0; i < properties.length; i++) {
-          const indexedProperty = properties[i];
-          const objectPath = ['index', 'properties', i];
-          if (typeof indexedProperty === 'string') {
-            validatePropertyValue(
-              indexedProperty,
-              'properties',
-              indexedPropertySchema =>
-                indexedPropertySchema.type === ValueType.String ||
-                (indexedPropertySchema.type === ValueType.Array &&
-                  indexedPropertySchema.items.type === ValueType.String),
-              `must refer to a "ValueType.String" property or a "ValueType.Array" array of "ValueType.String" properties.`,
-              objectPath,
-            );
-          } else {
-            validatePropertyValue(
-              indexedProperty.property,
-              'properties',
-              indexedPropertySchema =>
-                indexedPropertySchema.type === ValueType.String ||
-                (indexedPropertySchema.type === ValueType.Array &&
-                  indexedPropertySchema.items.type === ValueType.String),
-              `must refer to a "ValueType.String" property or a "ValueType.Array" array of "ValueType.String" properties.`,
-              [...objectPath, 'property'],
-            );
-          }
-        }
-
-        if (contentCategorization) {
+        // validate the categorization index
+        if (isCategorizationIndexDefinition(schema.index)) {
+          const {contentCategorization} = schema.index;
           const {type} = contentCategorization;
           if (type === ContentCategorizationType.Email) {
             const {
@@ -1833,13 +1796,63 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
               'plainTextBodyProperty',
             ]);
           }
+        // validate the custom index
+        } else {
+          const {properties, contextProperties} = schema.index;
+          for (let i = 0; i < properties.length; i++) {
+            const indexedProperty = properties[i];
+            const objectPath = ['index', 'properties', i];
+            if (typeof indexedProperty === 'string') {
+              validatePropertyValue(
+                indexedProperty,
+                'properties',
+                indexedPropertySchema =>
+                  indexedPropertySchema.type === ValueType.String ||
+                  (indexedPropertySchema.type === ValueType.Array &&
+                    indexedPropertySchema.items.type === ValueType.String),
+                `must refer to a "ValueType.String" property or a "ValueType.Array" array of "ValueType.String" properties.`,
+                objectPath,
+              );
+            } else {
+              validatePropertyValue(
+                indexedProperty.property,
+                'properties',
+                indexedPropertySchema =>
+                  indexedPropertySchema.type === ValueType.String ||
+                  (indexedPropertySchema.type === ValueType.Array &&
+                    indexedPropertySchema.items.type === ValueType.String),
+                `must refer to a "ValueType.String" property or a "ValueType.Array" array of "ValueType.String" properties.`,
+                [...objectPath, 'property'],
+              );
+            }
+          }
+
+          if (contextProperties) {
+            validatePropertyValue(contextProperties, 'contextProperties', () => true, `must be a valid property.`, [
+              'index',
+              'contextProperties',
+            ]);
+          }
         }
-        
-        if (contextProperties) {
-          validatePropertyValue(contextProperties, 'contextProperties', () => true, `must be a valid property.`, [
-            'index',
-            'contextProperties',
-          ]);
+
+        if (authorityNormProperty) {
+          validatePropertyValue(
+            authorityNormProperty,
+            'authorityNormProperty',
+            authorityNormPropertySchema => authorityNormPropertySchema.type === ValueType.Number,
+            `must refer to a "ValueType.Number" property.`,
+            ['index', 'authorityNormProperty'],
+          );
+        }
+
+        if (popularityNormProperty) {
+          validatePropertyValue(
+            popularityNormProperty,
+            'popularityNormProperty',
+            popularityNormPropertySchema => popularityNormPropertySchema.type === ValueType.Number,
+            `must refer to a "ValueType.Number" property.`,
+            ['index', 'popularityNormProperty'],
+          );
         }
 
         if (filterableProperties) {

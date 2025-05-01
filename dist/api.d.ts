@@ -234,9 +234,6 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
     displayName?: string;
     /** See {@link SyncTableOptions.description} */
     description?: string;
-    /** See {@link SyncTableOptions.contentCategory}
-     * @hidden
-     */
     /** See {@link SyncTableOptions.schema} */
     schema: SchemaT;
     /**
