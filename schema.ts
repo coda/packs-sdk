@@ -1120,28 +1120,10 @@ export interface DetailedIndexedProperty {
 export type IndexedProperty = BasicIndexedProperty | DetailedIndexedProperty;
 
 /**
- * Defines how to index objects for use with full-text indexing.
- * TODO(alexd): Unhide this
+ * Base definition for all index definitions.
  * @hidden
  */
-export interface IndexDefinition {
-  /**
-   * A list of properties from within {@link ObjectSchemaDefinition.properties} that should be indexed.
-   */
-  properties: IndexedProperty[];
-
-  /**
-   * A list of properties from within {@link ObjectSchemaDefinition.properties} 
-   * that will be made available to filter the results of a search. Limited to 5 properties, 
-   * so these should be the properties most likely to be useful as filters.
-   */
-  filterableProperties?: FilterableProperty[];
-  
-  /*
-   * The context properties to be used for indexing.
-   * If unspecified, intelligent defaults may be used..
-   */
-  contextProperties?: ContextProperties;
+interface BaseIndexDefinition {
   /**
    * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as a number
    * between -1.0 and 1.0 representing the normalized authority score of this entity compared to all other entities.
@@ -1160,7 +1142,104 @@ export interface IndexDefinition {
    * @hidden
    */
   popularityNormProperty?: PropertyIdentifier<string>;
+  /**
+   * A list of properties from within {@link ObjectSchemaDefinition.properties} 
+   * that will be made available to filter the results of a search. Limited to 5 properties, 
+   * so these should be the properties most likely to be useful as filters.
+   */
+  filterableProperties?: FilterableProperty[];
 }
+
+/**
+ * Defines how to index custom objects for use with full-text indexing.
+ * TODO(alexd): Unhide this
+ * @hidden
+ */
+export interface CustomIndexDefinition extends BaseIndexDefinition {
+  /**
+   * A list of properties from within {@link ObjectSchemaDefinition.properties} that should be indexed.
+   */
+  properties: IndexedProperty[];
+  /*
+   * The context properties to be used for indexing.
+   * If unspecified, intelligent defaults may be used..
+   */
+  contextProperties?: ContextProperties;
+}
+
+/**
+ * The type of content being indexed, which determines how the property is processed and queried.
+ * @hidden
+ */
+export enum ContentCategorizationType {
+  /** Messaging: Chat or instant messaging content */
+  Messaging = 'Messaging',
+  /** Document: General document content */
+  Document = 'Document',
+  /** Email: Email message content */
+  Email = 'Email',
+  /** Comment: User comments or feedback */
+  Comment = 'Comment',
+}
+
+export interface BaseContentCategorization {
+  type: ContentCategorizationType;
+}
+
+export interface MessagingContentCategorization extends BaseContentCategorization {
+  type: ContentCategorizationType.Messaging;
+}
+
+export interface DocumentContentCategorization extends BaseContentCategorization {
+  type: ContentCategorizationType.Document;
+}
+
+export interface EmailContentCategorization extends BaseContentCategorization {
+  type: ContentCategorizationType.Email;
+  toProperty: PropertyIdentifier<string>
+  fromProperty: PropertyIdentifier<string>
+  subjectProperty: PropertyIdentifier<string>
+  htmlBodyProperty: PropertyIdentifier<string>
+  plainTextBodyProperty: PropertyIdentifier<string>
+}
+
+export interface CommentContentCategorization extends BaseContentCategorization {
+  type: ContentCategorizationType.Comment;
+}
+
+export type ContentCategorization =
+  | MessagingContentCategorization
+  | DocumentContentCategorization
+  | EmailContentCategorization
+  | CommentContentCategorization;
+
+export interface ContentCategorizationTypeMap {
+  [ContentCategorizationType.Messaging]: MessagingContentCategorization;
+  [ContentCategorizationType.Document]: DocumentContentCategorization;
+  [ContentCategorizationType.Email]: EmailContentCategorization;
+  [ContentCategorizationType.Comment]: CommentContentCategorization;
+}
+
+
+/**
+ * Defines how to index categorized objects for use with full-text indexing.
+ * These categories are predefined by the system and expect to specific properties
+ * to be present in the object.
+ * @hidden
+ */
+export interface CategorizationIndexDefinition extends BaseIndexDefinition {
+  /**
+   * The category of the content to be indexed. Used to determine how to support the indexing
+   * and querying for the text. Must be one of {@link ContentCategorization}.
+   */
+  contentCategorization: ContentCategorization;
+}
+
+/**
+ * Defines how to index objects for use with full-text indexing.
+ * @hidden
+ */
+export type IndexDefinition = CustomIndexDefinition | CategorizationIndexDefinition;
 
 /**
  * Determines how permissions are handled for this object.
@@ -2081,10 +2160,78 @@ function normalizeIndexProperty(value: IndexedProperty, normalizedProperties: Ob
   return normalizeSchemaPropertyIdentifier(value, normalizedProperties);
 }
 
+function normalizeContentCategorization(
+  value: ContentCategorization,
+  normalizedProperties: ObjectSchemaProperties,
+): ContentCategorization {
+  switch (value.type) {
+    case ContentCategorizationType.Messaging:
+    case ContentCategorizationType.Document:
+    case ContentCategorizationType.Comment: {
+      const {type, ...rest} = value;
+      ensureNever<keyof typeof rest>();
+      return {type};
+    }
+    case ContentCategorizationType.Email: {
+      const {
+        type,
+        toProperty,
+        fromProperty,
+        subjectProperty,
+        htmlBodyProperty,
+        plainTextBodyProperty,
+        ...rest
+      } = value;
+      ensureNever<keyof typeof rest>();
+      return {
+        type,
+        toProperty: normalizeSchemaPropertyIdentifier(toProperty, normalizedProperties),
+        fromProperty: normalizeSchemaPropertyIdentifier(fromProperty, normalizedProperties),
+        subjectProperty: normalizeSchemaPropertyIdentifier(subjectProperty, normalizedProperties),
+        htmlBodyProperty: normalizeSchemaPropertyIdentifier(htmlBodyProperty, normalizedProperties),
+        plainTextBodyProperty: normalizeSchemaPropertyIdentifier(plainTextBodyProperty, normalizedProperties),
+      };
+    }
+    default:
+      return ensureUnreachable(value);
+  }
+}
+export function isCategorizationIndexDefinition(index: IndexDefinition): index is CategorizationIndexDefinition {
+  return 'contentCategorization' in index;
+}
+
+export function isCustomIndexDefinition(index: IndexDefinition): index is CustomIndexDefinition {
+  return 'properties' in index;
+}
+
 function normalizeIndexDefinition(
   index: IndexDefinition,
   normalizedProperties: ObjectSchemaProperties,
 ): IndexDefinition {
+  // Handle categorization index definitions.
+  if (isCategorizationIndexDefinition(index)) {
+    const {
+      contentCategorization,
+      authorityNormProperty,
+      popularityNormProperty,
+      filterableProperties,
+      ...rest
+    } = index;
+    ensureNever<keyof typeof rest>();
+    return {
+      contentCategorization: normalizeContentCategorization(contentCategorization, normalizedProperties),
+      authorityNormProperty: authorityNormProperty
+        ? normalizeSchemaPropertyIdentifier(authorityNormProperty, normalizedProperties)
+        : undefined,
+      popularityNormProperty: popularityNormProperty
+        ? normalizeSchemaPropertyIdentifier(popularityNormProperty, normalizedProperties)
+        : undefined,
+      filterableProperties: filterableProperties?.map(prop => 
+        normalizeSchemaPropertyIdentifier(prop, normalizedProperties),
+      ),
+    };
+  }
+  // Handle custom index definitions.
   const {
     properties,
     contextProperties,
@@ -2106,7 +2253,7 @@ function normalizeIndexDefinition(
       ? normalizeSchemaPropertyIdentifier(popularityNormProperty, normalizedProperties)
       : undefined,
     filterableProperties: filterableProperties?.map(prop => 
-      normalizeSchemaPropertyIdentifier(prop, normalizedProperties)
+      normalizeSchemaPropertyIdentifier(prop, normalizedProperties),
     ),
   };
 }

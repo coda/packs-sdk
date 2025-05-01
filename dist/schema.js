@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.throwOnDynamicSchemaWithJsOptionsFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.maybeSchemaOptionsValue = exports.unwrappedSchemaSupportsOptions = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PermissionType = exports.PrincipalType = exports.LifecycleBehavior = exports.PermissionsBehavior = exports.IndexingStrategy = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageShapeStyle = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
+exports.throwOnDynamicSchemaWithJsOptionsFunction = exports.withIdentity = exports.makeReferenceSchemaFromObjectSchema = exports.normalizeObjectSchema = exports.normalizeSchema = exports.normalizePropertyValuePathIntoSchemaPath = exports.isCustomIndexDefinition = exports.isCategorizationIndexDefinition = exports.normalizeSchemaKeyPath = exports.normalizeSchemaKey = exports.makeObjectSchema = exports.makeSchema = exports.generateSchema = exports.maybeUnwrapArraySchema = exports.maybeSchemaOptionsValue = exports.unwrappedSchemaSupportsOptions = exports.isArray = exports.isObject = exports.makeAttributionNode = exports.AttributionNodeType = exports.PermissionType = exports.PrincipalType = exports.LifecycleBehavior = exports.PermissionsBehavior = exports.ContentCategorizationType = exports.IndexingStrategy = exports.PropertyLabelValueTemplate = exports.SimpleStringHintValueTypes = exports.DurationUnit = exports.ImageShapeStyle = exports.ImageCornerStyle = exports.ImageOutline = exports.LinkDisplayType = exports.EmailDisplayType = exports.ScaleIconSet = exports.CurrencyFormat = exports.AutocompleteHintValueTypes = exports.ObjectHintValueTypes = exports.BooleanHintValueTypes = exports.NumberHintValueTypes = exports.StringHintValueTypes = exports.ValueHintType = exports.ValueType = void 0;
 const ensure_1 = require("./helpers/ensure");
 const object_utils_1 = require("./helpers/object_utils");
 const ensure_2 = require("./helpers/ensure");
@@ -386,6 +386,21 @@ var IndexingStrategy;
     IndexingStrategy["Raw"] = "raw";
 })(IndexingStrategy || (exports.IndexingStrategy = IndexingStrategy = {}));
 /**
+ * The type of content being indexed, which determines how the property is processed and queried.
+ * @hidden
+ */
+var ContentCategorizationType;
+(function (ContentCategorizationType) {
+    /** Messaging: Chat or instant messaging content */
+    ContentCategorizationType["Messaging"] = "Messaging";
+    /** Document: General document content */
+    ContentCategorizationType["Document"] = "Document";
+    /** Email: Email message content */
+    ContentCategorizationType["Email"] = "Email";
+    /** Comment: User comments or feedback */
+    ContentCategorizationType["Comment"] = "Comment";
+})(ContentCategorizationType || (exports.ContentCategorizationType = ContentCategorizationType = {}));
+/**
  * Determines how permissions are handled for this object.
  */
 var PermissionsBehavior;
@@ -710,7 +725,56 @@ function normalizeIndexProperty(value, normalizedProperties) {
     }
     return normalizeSchemaPropertyIdentifier(value, normalizedProperties);
 }
+function normalizeContentCategorization(value, normalizedProperties) {
+    switch (value.type) {
+        case ContentCategorizationType.Messaging:
+        case ContentCategorizationType.Document:
+        case ContentCategorizationType.Comment: {
+            const { type, ...rest } = value;
+            (0, ensure_3.ensureNever)();
+            return { type };
+        }
+        case ContentCategorizationType.Email: {
+            const { type, toProperty, fromProperty, subjectProperty, htmlBodyProperty, plainTextBodyProperty, ...rest } = value;
+            (0, ensure_3.ensureNever)();
+            return {
+                type,
+                toProperty: normalizeSchemaPropertyIdentifier(toProperty, normalizedProperties),
+                fromProperty: normalizeSchemaPropertyIdentifier(fromProperty, normalizedProperties),
+                subjectProperty: normalizeSchemaPropertyIdentifier(subjectProperty, normalizedProperties),
+                htmlBodyProperty: normalizeSchemaPropertyIdentifier(htmlBodyProperty, normalizedProperties),
+                plainTextBodyProperty: normalizeSchemaPropertyIdentifier(plainTextBodyProperty, normalizedProperties),
+            };
+        }
+        default:
+            return (0, ensure_5.ensureUnreachable)(value);
+    }
+}
+function isCategorizationIndexDefinition(index) {
+    return 'contentCategorization' in index;
+}
+exports.isCategorizationIndexDefinition = isCategorizationIndexDefinition;
+function isCustomIndexDefinition(index) {
+    return 'properties' in index;
+}
+exports.isCustomIndexDefinition = isCustomIndexDefinition;
 function normalizeIndexDefinition(index, normalizedProperties) {
+    // Handle categorization index definitions.
+    if (isCategorizationIndexDefinition(index)) {
+        const { contentCategorization, authorityNormProperty, popularityNormProperty, filterableProperties, ...rest } = index;
+        (0, ensure_3.ensureNever)();
+        return {
+            contentCategorization: normalizeContentCategorization(contentCategorization, normalizedProperties),
+            authorityNormProperty: authorityNormProperty
+                ? normalizeSchemaPropertyIdentifier(authorityNormProperty, normalizedProperties)
+                : undefined,
+            popularityNormProperty: popularityNormProperty
+                ? normalizeSchemaPropertyIdentifier(popularityNormProperty, normalizedProperties)
+                : undefined,
+            filterableProperties: filterableProperties === null || filterableProperties === void 0 ? void 0 : filterableProperties.map(prop => normalizeSchemaPropertyIdentifier(prop, normalizedProperties)),
+        };
+    }
+    // Handle custom index definitions.
     const { properties, contextProperties, authorityNormProperty, popularityNormProperty, filterableProperties, ...rest } = index;
     (0, ensure_3.ensureNever)();
     return {

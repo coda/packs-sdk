@@ -35,46 +35,48 @@ const api_types_2 = require("../api_types");
 const schema_3 = require("../schema");
 const schema_4 = require("../schema");
 const schema_5 = require("../schema");
-const types_2 = require("../types");
 const schema_6 = require("../schema");
+const types_2 = require("../types");
 const schema_7 = require("../schema");
 const schema_8 = require("../schema");
 const schema_9 = require("../schema");
-const jsonpath_plus_1 = require("jsonpath-plus");
 const schema_10 = require("../schema");
+const jsonpath_plus_1 = require("jsonpath-plus");
 const schema_11 = require("../schema");
-const api_types_3 = require("../api_types");
 const schema_12 = require("../schema");
+const api_types_3 = require("../api_types");
+const schema_13 = require("../schema");
 const api_types_4 = require("../api_types");
 const types_3 = require("../types");
-const schema_13 = require("../schema");
+const schema_14 = require("../schema");
 const types_4 = require("../types");
 const __1 = require("..");
 const types_5 = require("../types");
-const schema_14 = require("../schema");
 const schema_15 = require("../schema");
+const schema_16 = require("../schema");
 const api_types_5 = require("../api_types");
 const types_6 = require("../types");
 const api_types_6 = require("../api_types");
 const url_parse_1 = __importDefault(require("url-parse"));
-const schema_16 = require("../schema");
 const schema_17 = require("../schema");
+const schema_18 = require("../schema");
 const zod_1 = require("zod");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
-const schema_18 = require("../schema");
+const schema_19 = require("../schema");
 const api_types_7 = require("../api_types");
+const schema_20 = require("../schema");
 const object_utils_1 = require("../helpers/object_utils");
 const object_utils_2 = require("../helpers/object_utils");
-const schema_19 = require("../schema");
-const api_1 = require("../api");
-const schema_20 = require("../schema");
 const schema_21 = require("../schema");
+const api_1 = require("../api");
 const schema_22 = require("../schema");
 const schema_23 = require("../schema");
+const schema_24 = require("../schema");
+const schema_25 = require("../schema");
 const migration_1 = require("../helpers/migration");
 const semver_1 = __importDefault(require("semver"));
-const schema_24 = require("../schema");
+const schema_26 = require("../schema");
 const z = __importStar(require("zod"));
 /**
  * The uncompiled column format matchers will be expected to be actual regex objects,
@@ -158,8 +160,8 @@ function validateSyncTableSchema(schema, options) {
         return validated.data;
     }
     // In case this was an ObjectSchema (describing a single row), wrap it up as an ArraySchema.
-    const syntheticArraySchema = (0, schema_20.makeSchema)({
-        type: schema_17.ValueType.Array,
+    const syntheticArraySchema = (0, schema_22.makeSchema)({
+        type: schema_18.ValueType.Array,
         items: schema,
     });
     const validatedAsObjectSchema = arrayPropertySchema.safeParse(syntheticArraySchema);
@@ -182,7 +184,7 @@ function makePropertyValidator(schema, context) {
                 ? schema.properties[propertyValue]
                 : undefined;
             if (!propertySchema) {
-                const schemaPropertyPath = (0, schema_23.normalizePropertyValuePathIntoSchemaPath)(propertyValue);
+                const schemaPropertyPath = (0, schema_25.normalizePropertyValuePathIntoSchemaPath)(propertyValue);
                 propertySchema = (_a = (0, jsonpath_plus_1.JSONPath)({
                     path: schemaPropertyPath,
                     json: schema.properties,
@@ -310,8 +312,8 @@ function validateParents(syncTables, context) {
         const propertyValidator = makePropertyValidator(syncTable.schema, context);
         propertyValidator(parentDefinition.parentIdProperty, 'parentIdProperty', parentIdPropertySchema => {
             var _a;
-            return Boolean(parentIdPropertySchema.type === schema_17.ValueType.Object &&
-                parentIdPropertySchema.codaType === schema_16.ValueHintType.Reference &&
+            return Boolean(parentIdPropertySchema.type === schema_18.ValueType.Object &&
+                parentIdPropertySchema.codaType === schema_17.ValueHintType.Reference &&
                 ((_a = parentIdPropertySchema.identity) === null || _a === void 0 ? void 0 : _a.name) &&
                 syncTableSchemasByName[parentIdPropertySchema.identity.name]);
         }, `must reference a property with a valid identity in the pack.`, ['syncTables', tableIndex, 'schema', 'parent', 'parentIdProperty']);
@@ -796,7 +798,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         ...commonPackFormulaSchema,
         resultType: zodDiscriminant(api_types_6.Type.boolean),
         schema: zodCompleteObject({
-            type: zodDiscriminant(schema_17.ValueType.Boolean),
+            type: zodDiscriminant(schema_18.ValueType.Boolean),
             codaType: z.enum([...schema_2.BooleanHintValueTypes]).optional(),
             description: z.string().optional(),
         }).optional(),
@@ -847,28 +849,28 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         ...basePropertyValidators,
     };
     const booleanPropertySchema = zodCompleteStrictObject({
-        type: zodDiscriminant(schema_17.ValueType.Boolean),
+        type: zodDiscriminant(schema_18.ValueType.Boolean),
         codaType: z.enum([...schema_2.BooleanHintValueTypes]).optional(),
         ...basePropertyValidators,
     });
     const numericPropertySchema = zodCompleteStrictObject({
-        type: zodDiscriminant(schema_17.ValueType.Number),
-        codaType: zodDiscriminant(schema_16.ValueHintType.Percent).optional(),
+        type: zodDiscriminant(schema_18.ValueType.Number),
+        codaType: zodDiscriminant(schema_17.ValueHintType.Percent).optional(),
         precision: z.number().optional(),
         useThousandsSeparator: z.boolean().optional(),
         ...baseNumericPropertyValidators,
     });
     const scalePropertySchema = zodCompleteStrictObject({
-        type: zodDiscriminant(schema_17.ValueType.Number),
-        codaType: zodDiscriminant(schema_16.ValueHintType.Scale),
+        type: zodDiscriminant(schema_18.ValueType.Number),
+        codaType: zodDiscriminant(schema_17.ValueHintType.Scale),
         maximum: z.number().optional(),
-        icon: z.nativeEnum(schema_14.ScaleIconSet).optional(),
+        icon: z.nativeEnum(schema_15.ScaleIconSet).optional(),
         ...baseNumericPropertyValidators,
     });
     const optionalStringOrNumber = z.union([z.number(), z.string()]).optional();
     const sliderPropertySchema = zodCompleteStrictObject({
-        type: zodDiscriminant(schema_17.ValueType.Number),
-        codaType: zodDiscriminant(schema_16.ValueHintType.Slider),
+        type: zodDiscriminant(schema_18.ValueType.Number),
+        codaType: zodDiscriminant(schema_17.ValueHintType.Slider),
         maximum: optionalStringOrNumber,
         minimum: optionalStringOrNumber,
         step: optionalStringOrNumber,
@@ -876,8 +878,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         ...baseNumericPropertyValidators,
     });
     const progressBarPropertySchema = zodCompleteStrictObject({
-        type: zodDiscriminant(schema_17.ValueType.Number),
-        codaType: zodDiscriminant(schema_16.ValueHintType.ProgressBar),
+        type: zodDiscriminant(schema_18.ValueType.Number),
+        codaType: zodDiscriminant(schema_17.ValueHintType.ProgressBar),
         maximum: optionalStringOrNumber,
         minimum: optionalStringOrNumber,
         step: optionalStringOrNumber,
@@ -885,37 +887,37 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         ...baseNumericPropertyValidators,
     });
     const currencyPropertySchema = zodCompleteStrictObject({
-        type: zodDiscriminant(schema_17.ValueType.Number),
-        codaType: zodDiscriminant(schema_16.ValueHintType.Currency),
+        type: zodDiscriminant(schema_18.ValueType.Number),
+        codaType: zodDiscriminant(schema_17.ValueHintType.Currency),
         precision: z.number().optional(),
         currencyCode: z.string().optional(),
-        format: z.nativeEnum(schema_3.CurrencyFormat).optional(),
+        format: z.nativeEnum(schema_4.CurrencyFormat).optional(),
         ...baseNumericPropertyValidators,
     });
     const numericDatePropertySchema = zodCompleteStrictObject({
-        type: zodDiscriminant(schema_17.ValueType.Number),
-        codaType: zodDiscriminant(schema_16.ValueHintType.Date),
+        type: zodDiscriminant(schema_18.ValueType.Number),
+        codaType: zodDiscriminant(schema_17.ValueHintType.Date),
         format: z.string().optional(),
         ...baseNumericPropertyValidators,
     });
     const numericTimePropertySchema = zodCompleteStrictObject({
-        type: zodDiscriminant(schema_17.ValueType.Number),
-        codaType: zodDiscriminant(schema_16.ValueHintType.Time),
+        type: zodDiscriminant(schema_18.ValueType.Number),
+        codaType: zodDiscriminant(schema_17.ValueHintType.Time),
         format: z.string().optional(),
         ...baseNumericPropertyValidators,
     });
     const numericDateTimePropertySchema = zodCompleteStrictObject({
-        type: zodDiscriminant(schema_17.ValueType.Number),
-        codaType: zodDiscriminant(schema_16.ValueHintType.DateTime),
+        type: zodDiscriminant(schema_18.ValueType.Number),
+        codaType: zodDiscriminant(schema_17.ValueHintType.DateTime),
         dateFormat: z.string().optional(),
         timeFormat: z.string().optional(),
         ...baseNumericPropertyValidators,
     });
     const numericDurationPropertySchema = zodCompleteStrictObject({
-        type: zodDiscriminant(schema_17.ValueType.Number),
-        codaType: zodDiscriminant(schema_16.ValueHintType.Duration),
+        type: zodDiscriminant(schema_18.ValueType.Number),
+        codaType: zodDiscriminant(schema_17.ValueHintType.Duration),
         precision: z.number().optional(),
-        maxUnit: z.nativeEnum(schema_4.DurationUnit).optional(),
+        maxUnit: z.nativeEnum(schema_5.DurationUnit).optional(),
         ...baseNumericPropertyValidators,
     });
     const numberPropertySchema = z.union([
@@ -935,75 +937,75 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         schema: numberPropertySchema.optional(),
     });
     const simpleStringPropertySchema = zodCompleteStrictObject({
-        type: zodDiscriminant(schema_17.ValueType.String),
-        codaType: z.enum([...schema_15.SimpleStringHintValueTypes]).optional(),
+        type: zodDiscriminant(schema_18.ValueType.String),
+        codaType: z.enum([...schema_16.SimpleStringHintValueTypes]).optional(),
         ...baseStringPropertyValidators,
     });
     const stringDatePropertySchema = zodCompleteStrictObject({
-        type: zodDiscriminant(schema_17.ValueType.String),
-        codaType: zodDiscriminant(schema_16.ValueHintType.Date),
+        type: zodDiscriminant(schema_18.ValueType.String),
+        codaType: zodDiscriminant(schema_17.ValueHintType.Date),
         format: z.string().optional(),
         ...baseStringPropertyValidators,
     });
     const stringTimePropertySchema = zodCompleteStrictObject({
-        type: zodDiscriminant(schema_17.ValueType.String),
-        codaType: zodDiscriminant(schema_16.ValueHintType.Time),
+        type: zodDiscriminant(schema_18.ValueType.String),
+        codaType: zodDiscriminant(schema_17.ValueHintType.Time),
         format: z.string().optional(),
         ...baseStringPropertyValidators,
     });
     const stringDateTimePropertySchema = zodCompleteStrictObject({
-        type: zodDiscriminant(schema_17.ValueType.String),
-        codaType: zodDiscriminant(schema_16.ValueHintType.DateTime),
+        type: zodDiscriminant(schema_18.ValueType.String),
+        codaType: zodDiscriminant(schema_17.ValueHintType.DateTime),
         dateFormat: z.string().optional(),
         timeFormat: z.string().optional(),
         ...baseStringPropertyValidators,
     });
     const durationPropertySchema = zodCompleteStrictObject({
-        type: zodDiscriminant(schema_17.ValueType.String),
-        codaType: zodDiscriminant(schema_16.ValueHintType.Duration),
+        type: zodDiscriminant(schema_18.ValueType.String),
+        codaType: zodDiscriminant(schema_17.ValueHintType.Duration),
         precision: z.number().optional(),
-        maxUnit: z.nativeEnum(schema_4.DurationUnit).optional(),
+        maxUnit: z.nativeEnum(schema_5.DurationUnit).optional(),
         ...baseStringPropertyValidators,
     });
     const codaInternalRichTextSchema = zodCompleteStrictObject({
-        type: zodDiscriminant(schema_17.ValueType.String),
-        codaType: zodDiscriminant(schema_16.ValueHintType.CodaInternalRichText),
+        type: zodDiscriminant(schema_18.ValueType.String),
+        codaType: zodDiscriminant(schema_17.ValueHintType.CodaInternalRichText),
         isCanvas: z.boolean().optional(),
         ...baseStringPropertyValidators,
     });
     const embedPropertySchema = zodCompleteStrictObject({
-        type: zodDiscriminant(schema_17.ValueType.String),
-        codaType: zodDiscriminant(schema_16.ValueHintType.Embed),
+        type: zodDiscriminant(schema_18.ValueType.String),
+        codaType: zodDiscriminant(schema_17.ValueHintType.Embed),
         force: z.boolean().optional(),
         ...baseStringPropertyValidators,
     });
     const emailPropertySchema = zodCompleteStrictObject({
-        type: zodDiscriminant(schema_17.ValueType.String),
-        codaType: zodDiscriminant(schema_16.ValueHintType.Email),
-        display: z.nativeEnum(schema_5.EmailDisplayType).optional(),
+        type: zodDiscriminant(schema_18.ValueType.String),
+        codaType: zodDiscriminant(schema_17.ValueHintType.Email),
+        display: z.nativeEnum(schema_6.EmailDisplayType).optional(),
         ...baseStringPropertyValidators,
     });
     const linkPropertySchema = zodCompleteStrictObject({
-        type: zodDiscriminant(schema_17.ValueType.String),
-        codaType: zodDiscriminant(schema_16.ValueHintType.Url),
-        display: z.nativeEnum(schema_11.LinkDisplayType).optional(),
+        type: zodDiscriminant(schema_18.ValueType.String),
+        codaType: zodDiscriminant(schema_17.ValueHintType.Url),
+        display: z.nativeEnum(schema_12.LinkDisplayType).optional(),
         force: z.boolean().optional(),
         ...baseStringPropertyValidators,
     });
     const stringWithOptionsPropertySchema = zodCompleteStrictObject({
-        type: zodDiscriminant(schema_17.ValueType.String),
-        codaType: zodDiscriminant(schema_16.ValueHintType.SelectList),
+        type: zodDiscriminant(schema_18.ValueType.String),
+        codaType: zodDiscriminant(schema_17.ValueHintType.SelectList),
         ...baseStringPropertyValidators,
         options: zodOptionsFieldWithValues(z.string(), true),
         allowNewValues: z.boolean().optional(),
         requireForUpdates: z.boolean().optional(),
     });
     const imagePropertySchema = zodCompleteStrictObject({
-        type: zodDiscriminant(schema_17.ValueType.String),
-        codaType: z.union([zodDiscriminant(schema_16.ValueHintType.ImageAttachment), zodDiscriminant(schema_16.ValueHintType.ImageReference)]),
-        imageOutline: z.nativeEnum(schema_7.ImageOutline).optional(),
-        imageCornerStyle: z.nativeEnum(schema_6.ImageCornerStyle).optional(),
-        imageShapeStyle: z.nativeEnum(schema_8.ImageShapeStyle).optional(),
+        type: zodDiscriminant(schema_18.ValueType.String),
+        codaType: z.union([zodDiscriminant(schema_17.ValueHintType.ImageAttachment), zodDiscriminant(schema_17.ValueHintType.ImageReference)]),
+        imageOutline: z.nativeEnum(schema_8.ImageOutline).optional(),
+        imageCornerStyle: z.nativeEnum(schema_7.ImageCornerStyle).optional(),
+        imageShapeStyle: z.nativeEnum(schema_9.ImageShapeStyle).optional(),
         height: z.union([z.string(), z.number()]).optional(),
         width: z.union([z.string(), z.number()]).optional(),
         ...baseStringPropertyValidators,
@@ -1029,7 +1031,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     // TODO(jonathan): Give this a better type than ZodTypeAny after figuring out
     // recursive typing better.
     const arrayPropertySchema = z.lazy(() => zodCompleteStrictObject({
-        type: zodDiscriminant(schema_17.ValueType.Array),
+        type: zodDiscriminant(schema_18.ValueType.Array),
         items: objectPropertyUnionSchema,
         ...basePropertyValidators,
     }));
@@ -1099,21 +1101,51 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             placeholder: z.string().optional(),
         }),
     ]);
+    const contentCategorizationSchema = z.discriminatedUnion('type', [
+        zodCompleteStrictObject({
+            type: z.literal(schema_3.ContentCategorizationType.Messaging),
+        }),
+        zodCompleteStrictObject({
+            type: z.literal(schema_3.ContentCategorizationType.Document),
+        }),
+        zodCompleteStrictObject({
+            type: z.literal(schema_3.ContentCategorizationType.Email),
+            toProperty: propertySchema,
+            fromProperty: propertySchema,
+            subjectProperty: propertySchema,
+            htmlBodyProperty: propertySchema,
+            plainTextBodyProperty: propertySchema,
+        }),
+        zodCompleteStrictObject({
+            type: z.literal(schema_3.ContentCategorizationType.Comment),
+        }),
+    ]).refine(data => { return data.type && Object.values(schema_3.ContentCategorizationType).includes(data.type); }, {
+        message: `must be a valid content categorization type.`,
+        path: ['contentCategorization', 'type'],
+    });
     const contextPropertiesSchema = z.array(propertySchema).min(1);
     const indexedPropertySchema = z.union([
         propertySchema,
         zodCompleteStrictObject({
             property: propertySchema,
-            strategy: z.nativeEnum(schema_9.IndexingStrategy),
+            strategy: z.nativeEnum(schema_10.IndexingStrategy),
         }),
     ]);
-    const indexSchema = zodCompleteStrictObject({
+    const filterablePropertiesSchema = z.array(propertySchema).max(exports.Limits.FilterableProperties);
+    const customIndexSchema = zodCompleteStrictObject({
         properties: z.array(indexedPropertySchema).min(1),
         contextProperties: contextPropertiesSchema.optional(),
         authorityNormProperty: propertySchema.optional(),
         popularityNormProperty: propertySchema.optional(),
-        filterableProperties: z.array(propertySchema).max(exports.Limits.FilterableProperties).optional(),
+        filterableProperties: filterablePropertiesSchema.optional(),
     });
+    const categorizationIndexSchema = zodCompleteStrictObject({
+        contentCategorization: contentCategorizationSchema,
+        authorityNormProperty: propertySchema.optional(),
+        popularityNormProperty: propertySchema.optional(),
+        filterableProperties: filterablePropertiesSchema.optional(),
+    });
+    const indexSchema = z.union([customIndexSchema, categorizationIndexSchema]);
     const identitySchema = zodCompleteObject({
         packId: z.number().optional(),
         name: z.string().nonempty(),
@@ -1123,18 +1155,18 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     });
     const parentSchema = zodCompleteStrictObject({
         parentIdProperty: propertySchema,
-        lifecycle: z.nativeEnum(schema_10.LifecycleBehavior).optional(),
-        permissions: z.nativeEnum(schema_13.PermissionsBehavior).optional(),
+        lifecycle: z.nativeEnum(schema_11.LifecycleBehavior).optional(),
+        permissions: z.nativeEnum(schema_14.PermissionsBehavior).optional(),
     });
     const genericObjectSchema = z.lazy(() => zodCompleteObject({
         ...basePropertyValidators,
-        type: zodDiscriminant(schema_17.ValueType.Object),
+        type: zodDiscriminant(schema_18.ValueType.Object),
         description: z.string().optional(),
         id: z.string().min(1).optional(),
         idProperty: z.string().min(1).optional(),
         primary: z.string().min(1).optional(),
         displayProperty: z.string().min(1).optional(),
-        codaType: z.enum([...schema_12.ObjectHintValueTypes]).optional(),
+        codaType: z.enum([...schema_13.ObjectHintValueTypes]).optional(),
         featured: z.array(z.string()).optional(),
         featuredProperties: z.array(z.string()).optional(),
         identity: identitySchema.optional(),
@@ -1222,18 +1254,18 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             validatePropertyValue(schema[fieldName], fieldName, isValidSchema, invalidSchemaMessage);
         }
         const validateTitleProperty = () => {
-            return validateProperty('titleProperty', propertySchema => [schema_17.ValueType.String, schema_17.ValueType.Object].includes(propertySchema.type), `must refer to a "ValueType.String" or "ValueType.Object" property.`);
+            return validateProperty('titleProperty', propertySchema => [schema_18.ValueType.String, schema_18.ValueType.Object].includes(propertySchema.type), `must refer to a "ValueType.String" or "ValueType.Object" property.`);
         };
         const validateImageProperty = () => {
-            return validateProperty('imageProperty', imagePropertySchema => imagePropertySchema.type === schema_17.ValueType.String &&
-                [schema_16.ValueHintType.ImageAttachment, schema_16.ValueHintType.ImageReference].includes(imagePropertySchema.codaType), `must refer to a "ValueType.String" property with a "ValueHintType.ImageAttachment" or "ValueHintType.ImageReference" "codaType".`);
+            return validateProperty('imageProperty', imagePropertySchema => imagePropertySchema.type === schema_18.ValueType.String &&
+                [schema_17.ValueHintType.ImageAttachment, schema_17.ValueHintType.ImageReference].includes(imagePropertySchema.codaType), `must refer to a "ValueType.String" property with a "ValueHintType.ImageAttachment" or "ValueHintType.ImageReference" "codaType".`);
         };
         const validateSnippetProperty = () => {
-            return validateProperty('snippetProperty', snippetPropertySchema => snippetPropertySchema.type === schema_17.ValueType.String ||
-                (snippetPropertySchema.type === schema_17.ValueType.Array && snippetPropertySchema.items.type === schema_17.ValueType.String), `must refer to a "ValueType.String" property or array of strings.`);
+            return validateProperty('snippetProperty', snippetPropertySchema => snippetPropertySchema.type === schema_18.ValueType.String ||
+                (snippetPropertySchema.type === schema_18.ValueType.Array && snippetPropertySchema.items.type === schema_18.ValueType.String), `must refer to a "ValueType.String" property or array of strings.`);
         };
         const validateLinkProperty = () => {
-            return validateProperty('linkProperty', linkPropertySchema => linkPropertySchema.type === schema_17.ValueType.String && linkPropertySchema.codaType === schema_16.ValueHintType.Url, `must refer to a "ValueType.String" property with a "ValueHintType.Url" "codaType".`);
+            return validateProperty('linkProperty', linkPropertySchema => linkPropertySchema.type === schema_18.ValueType.String && linkPropertySchema.codaType === schema_17.ValueHintType.Url, `must refer to a "ValueType.String" property with a "ValueHintType.Url" "codaType".`);
         };
         const validateSubtitleProperties = () => {
             return validateProperty('subtitleProperties', subtitlePropertySchema => {
@@ -1241,29 +1273,29 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                     return true;
                 }
                 switch (subtitlePropertySchema.codaType) {
-                    case schema_16.ValueHintType.ImageAttachment:
-                    case schema_16.ValueHintType.Attachment:
-                    case schema_16.ValueHintType.ImageReference:
-                    case schema_16.ValueHintType.Embed:
-                    case schema_16.ValueHintType.Scale:
+                    case schema_17.ValueHintType.ImageAttachment:
+                    case schema_17.ValueHintType.Attachment:
+                    case schema_17.ValueHintType.ImageReference:
+                    case schema_17.ValueHintType.Embed:
+                    case schema_17.ValueHintType.Scale:
                         return false;
-                    case schema_16.ValueHintType.CodaInternalRichText:
-                    case schema_16.ValueHintType.Currency:
-                    case schema_16.ValueHintType.Date:
-                    case schema_16.ValueHintType.DateTime:
-                    case schema_16.ValueHintType.Duration:
-                    case schema_16.ValueHintType.Email:
-                    case schema_16.ValueHintType.Html:
-                    case schema_16.ValueHintType.Markdown:
-                    case schema_16.ValueHintType.Percent:
-                    case schema_16.ValueHintType.Person:
-                    case schema_16.ValueHintType.ProgressBar:
-                    case schema_16.ValueHintType.Reference:
-                    case schema_16.ValueHintType.SelectList:
-                    case schema_16.ValueHintType.Slider:
-                    case schema_16.ValueHintType.Toggle:
-                    case schema_16.ValueHintType.Time:
-                    case schema_16.ValueHintType.Url:
+                    case schema_17.ValueHintType.CodaInternalRichText:
+                    case schema_17.ValueHintType.Currency:
+                    case schema_17.ValueHintType.Date:
+                    case schema_17.ValueHintType.DateTime:
+                    case schema_17.ValueHintType.Duration:
+                    case schema_17.ValueHintType.Email:
+                    case schema_17.ValueHintType.Html:
+                    case schema_17.ValueHintType.Markdown:
+                    case schema_17.ValueHintType.Percent:
+                    case schema_17.ValueHintType.Person:
+                    case schema_17.ValueHintType.ProgressBar:
+                    case schema_17.ValueHintType.Reference:
+                    case schema_17.ValueHintType.SelectList:
+                    case schema_17.ValueHintType.Slider:
+                    case schema_17.ValueHintType.Toggle:
+                    case schema_17.ValueHintType.Time:
+                    case schema_17.ValueHintType.Url:
                         return true;
                     default:
                         (0, ensure_2.ensureUnreachable)(subtitlePropertySchema.codaType);
@@ -1271,45 +1303,45 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             }, `must refer to a value that does not have a codaType corresponding to one of ImageAttachment, Attachment, ImageReference, Embed, or Scale.`);
         };
         const validateCreatedAtProperty = () => {
-            return validateProperty('createdAtProperty', createdAtPropertySchema => (createdAtPropertySchema.type === schema_17.ValueType.String ||
-                createdAtPropertySchema.type === schema_17.ValueType.Number) &&
-                (createdAtPropertySchema.codaType === schema_16.ValueHintType.DateTime ||
-                    createdAtPropertySchema.codaType === schema_16.ValueHintType.Date), `must refer to a "ValueType.String" or "ValueType.Number" property with a "ValueHintType.DateTime" or "ValueHintType.Date" "codaType".`);
+            return validateProperty('createdAtProperty', createdAtPropertySchema => (createdAtPropertySchema.type === schema_18.ValueType.String ||
+                createdAtPropertySchema.type === schema_18.ValueType.Number) &&
+                (createdAtPropertySchema.codaType === schema_17.ValueHintType.DateTime ||
+                    createdAtPropertySchema.codaType === schema_17.ValueHintType.Date), `must refer to a "ValueType.String" or "ValueType.Number" property with a "ValueHintType.DateTime" or "ValueHintType.Date" "codaType".`);
         };
         const validateModifiedAtProperty = () => {
-            return validateProperty('modifiedAtProperty', modifiedAtPropertySchema => (modifiedAtPropertySchema.type === schema_17.ValueType.String ||
-                modifiedAtPropertySchema.type === schema_17.ValueType.Number) &&
-                (modifiedAtPropertySchema.codaType === schema_16.ValueHintType.DateTime ||
-                    modifiedAtPropertySchema.codaType === schema_16.ValueHintType.Date), `must refer to a "ValueType.String" or "ValueType.Number" property with a "ValueHintType.DateTime" or "ValueHintType.Date" "codaType".`);
+            return validateProperty('modifiedAtProperty', modifiedAtPropertySchema => (modifiedAtPropertySchema.type === schema_18.ValueType.String ||
+                modifiedAtPropertySchema.type === schema_18.ValueType.Number) &&
+                (modifiedAtPropertySchema.codaType === schema_17.ValueHintType.DateTime ||
+                    modifiedAtPropertySchema.codaType === schema_17.ValueHintType.Date), `must refer to a "ValueType.String" or "ValueType.Number" property with a "ValueHintType.DateTime" or "ValueHintType.Date" "codaType".`);
         };
         const validateCreatedByProperty = () => {
-            return validateProperty('createdByProperty', createdByPropertySchema => (createdByPropertySchema.type === schema_17.ValueType.Object ||
-                createdByPropertySchema.type === schema_17.ValueType.String) &&
-                (createdByPropertySchema.codaType === schema_16.ValueHintType.Person ||
-                    createdByPropertySchema.codaType === schema_16.ValueHintType.Email), `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`);
+            return validateProperty('createdByProperty', createdByPropertySchema => (createdByPropertySchema.type === schema_18.ValueType.Object ||
+                createdByPropertySchema.type === schema_18.ValueType.String) &&
+                (createdByPropertySchema.codaType === schema_17.ValueHintType.Person ||
+                    createdByPropertySchema.codaType === schema_17.ValueHintType.Email), `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`);
         };
         const validateModifiedByProperty = () => {
-            return validateProperty('modifiedByProperty', modifiedByPropertySchema => (modifiedByPropertySchema.type === schema_17.ValueType.Object ||
-                modifiedByPropertySchema.type === schema_17.ValueType.String) &&
-                (modifiedByPropertySchema.codaType === schema_16.ValueHintType.Person ||
-                    modifiedByPropertySchema.codaType === schema_16.ValueHintType.Email), `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`);
+            return validateProperty('modifiedByProperty', modifiedByPropertySchema => (modifiedByPropertySchema.type === schema_18.ValueType.Object ||
+                modifiedByPropertySchema.type === schema_18.ValueType.String) &&
+                (modifiedByPropertySchema.codaType === schema_17.ValueHintType.Person ||
+                    modifiedByPropertySchema.codaType === schema_17.ValueHintType.Email), `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`);
         };
         const validateUserEmailProperty = () => {
-            return validateProperty('userEmailProperty', userEmail => (userEmail.type === schema_17.ValueType.String && userEmail.codaType === schema_16.ValueHintType.Email) ||
-                (userEmail.type === schema_17.ValueType.Object && userEmail.codaType === schema_16.ValueHintType.Person), `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`);
+            return validateProperty('userEmailProperty', userEmail => (userEmail.type === schema_18.ValueType.String && userEmail.codaType === schema_17.ValueHintType.Email) ||
+                (userEmail.type === schema_18.ValueType.Object && userEmail.codaType === schema_17.ValueHintType.Person), `must refer to a "ValueType.Object" or "ValueType.String" property with a "ValueHintType.Person" or "ValueHintType.Email" "codaType".`);
         };
         const validateUserIdProperty = () => {
-            return validateProperty('userIdProperty', userIdPropertySchema => userIdPropertySchema.type === schema_17.ValueType.String || userIdPropertySchema.type === schema_17.ValueType.Number, `must refer to a "ValueType.String" or "ValueType.Number".`);
+            return validateProperty('userIdProperty', userIdPropertySchema => userIdPropertySchema.type === schema_18.ValueType.String || userIdPropertySchema.type === schema_18.ValueType.Number, `must refer to a "ValueType.String" or "ValueType.Number".`);
         };
         const validateGroupIdProperty = () => {
-            return validateProperty('groupIdProperty', groupIdPropertySchema => groupIdPropertySchema.type === schema_17.ValueType.String || groupIdPropertySchema.type === schema_17.ValueType.Number, `must refer to a "ValueType.String" or "ValueType.Number".`);
+            return validateProperty('groupIdProperty', groupIdPropertySchema => groupIdPropertySchema.type === schema_18.ValueType.String || groupIdPropertySchema.type === schema_18.ValueType.Number, `must refer to a "ValueType.String" or "ValueType.Number".`);
         };
         const validateMemberGroupIdProperty = () => {
-            return validateProperty('memberGroupIdProperty', memberGroupIdPropertySchema => memberGroupIdPropertySchema.type === schema_17.ValueType.String ||
-                memberGroupIdPropertySchema.type === schema_17.ValueType.Number, `must refer to a "ValueType.String" or "ValueType.Number".`);
+            return validateProperty('memberGroupIdProperty', memberGroupIdPropertySchema => memberGroupIdPropertySchema.type === schema_18.ValueType.String ||
+                memberGroupIdPropertySchema.type === schema_18.ValueType.Number, `must refer to a "ValueType.String" or "ValueType.Number".`);
         };
         const validateVersionProperty = () => {
-            return validateProperty('versionProperty', versionPropertySchema => versionPropertySchema.type === schema_17.ValueType.String, `must refer to a "ValueType.String" property.`);
+            return validateProperty('versionProperty', versionPropertySchema => versionPropertySchema.type === schema_18.ValueType.String, `must refer to a "ValueType.String" property.`);
         };
         validateTitleProperty();
         validateLinkProperty();
@@ -1329,7 +1361,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         .superRefine((data, context) => {
         var _a;
         const schemaHelper = (0, migration_1.objectSchemaHelper)(data);
-        const internalRichTextPropertyTuple = Object.entries(schemaHelper.properties).find(([_key, prop]) => prop.type === schema_17.ValueType.String && prop.codaType === schema_16.ValueHintType.CodaInternalRichText);
+        const internalRichTextPropertyTuple = Object.entries(schemaHelper.properties).find(([_key, prop]) => prop.type === schema_18.ValueType.String && prop.codaType === schema_17.ValueHintType.CodaInternalRichText);
         if (internalRichTextPropertyTuple && !isValidUseOfCodaInternalRichText((_a = data.identity) === null || _a === void 0 ? void 0 : _a.packId)) {
             context.addIssue({
                 code: z.ZodIssueCode.custom,
@@ -1345,50 +1377,87 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             return;
         }
         const validatePropertyValue = makePropertyValidator(schema, context);
-        const { properties, contextProperties, authorityNormProperty, popularityNormProperty, filterableProperties } = schema.index;
+        const { authorityNormProperty, popularityNormProperty, filterableProperties, } = schema.index;
+        // validate the categorization index
+        if ((0, schema_20.isCategorizationIndexDefinition)(schema.index)) {
+            const { contentCategorization } = schema.index;
+            const { type } = contentCategorization;
+            if (type === schema_3.ContentCategorizationType.Email) {
+                const { toProperty, fromProperty, subjectProperty, htmlBodyProperty, plainTextBodyProperty, } = contentCategorization;
+                validatePropertyValue(toProperty, 'toProperty', property => property.type === schema_18.ValueType.String, `must be a valid property.`, [
+                    'index',
+                    'contentCategorization',
+                    'toProperty',
+                ]);
+                validatePropertyValue(fromProperty, 'fromProperty', property => property.type === schema_18.ValueType.String, `must be a valid property.`, [
+                    'index',
+                    'contentCategorization',
+                    'fromProperty',
+                ]);
+                validatePropertyValue(subjectProperty, 'subjectProperty', property => property.type === schema_18.ValueType.String, `must be a valid property.`, [
+                    'index',
+                    'contentCategorization',
+                    'subjectProperty',
+                ]);
+                validatePropertyValue(htmlBodyProperty, 'htmlBodyProperty', property => property.type === schema_18.ValueType.String, `must be a valid property.`, [
+                    'index',
+                    'contentCategorization',
+                    'htmlBodyProperty',
+                ]);
+                validatePropertyValue(plainTextBodyProperty, 'plainTextBodyProperty', property => property.type === schema_18.ValueType.String, `must be a valid property.`, [
+                    'index',
+                    'contentCategorization',
+                    'plainTextBodyProperty',
+                ]);
+            }
+            // validate the custom index
+        }
+        else {
+            const { properties, contextProperties } = schema.index;
+            for (let i = 0; i < properties.length; i++) {
+                const indexedProperty = properties[i];
+                const objectPath = ['index', 'properties', i];
+                if (typeof indexedProperty === 'string') {
+                    validatePropertyValue(indexedProperty, 'properties', indexedPropertySchema => indexedPropertySchema.type === schema_18.ValueType.String ||
+                        (indexedPropertySchema.type === schema_18.ValueType.Array &&
+                            indexedPropertySchema.items.type === schema_18.ValueType.String), `must refer to a "ValueType.String" property or a "ValueType.Array" array of "ValueType.String" properties.`, objectPath);
+                }
+                else {
+                    validatePropertyValue(indexedProperty.property, 'properties', indexedPropertySchema => indexedPropertySchema.type === schema_18.ValueType.String ||
+                        (indexedPropertySchema.type === schema_18.ValueType.Array &&
+                            indexedPropertySchema.items.type === schema_18.ValueType.String), `must refer to a "ValueType.String" property or a "ValueType.Array" array of "ValueType.String" properties.`, [...objectPath, 'property']);
+                }
+            }
+            if (contextProperties) {
+                validatePropertyValue(contextProperties, 'contextProperties', () => true, `must be a valid property.`, [
+                    'index',
+                    'contextProperties',
+                ]);
+            }
+        }
         if (authorityNormProperty) {
-            validatePropertyValue(authorityNormProperty, 'authorityNormProperty', authorityNormPropertySchema => authorityNormPropertySchema.type === schema_17.ValueType.Number, `must refer to a "ValueType.Number" property.`, ['index', 'authorityNormProperty']);
+            validatePropertyValue(authorityNormProperty, 'authorityNormProperty', authorityNormPropertySchema => authorityNormPropertySchema.type === schema_18.ValueType.Number, `must refer to a "ValueType.Number" property.`, ['index', 'authorityNormProperty']);
         }
         if (popularityNormProperty) {
-            validatePropertyValue(popularityNormProperty, 'popularityNormProperty', popularityNormPropertySchema => popularityNormPropertySchema.type === schema_17.ValueType.Number, `must refer to a "ValueType.Number" property.`, ['index', 'popularityNormProperty']);
-        }
-        for (let i = 0; i < properties.length; i++) {
-            const indexedProperty = properties[i];
-            const objectPath = ['index', 'properties', i];
-            if (typeof indexedProperty === 'string') {
-                validatePropertyValue(indexedProperty, 'properties', indexedPropertySchema => indexedPropertySchema.type === schema_17.ValueType.String ||
-                    (indexedPropertySchema.type === schema_17.ValueType.Array &&
-                        indexedPropertySchema.items.type === schema_17.ValueType.String), `must refer to a "ValueType.String" property or a "ValueType.Array" array of "ValueType.String" properties.`, objectPath);
-            }
-            else {
-                validatePropertyValue(indexedProperty.property, 'properties', indexedPropertySchema => indexedPropertySchema.type === schema_17.ValueType.String ||
-                    (indexedPropertySchema.type === schema_17.ValueType.Array &&
-                        indexedPropertySchema.items.type === schema_17.ValueType.String), `must refer to a "ValueType.String" property or a "ValueType.Array" array of "ValueType.String" properties.`, [...objectPath, 'property']);
-            }
-        }
-        if (contextProperties) {
-            validatePropertyValue(contextProperties, 'contextProperties', () => true, `must be a valid property.`, [
-                'index',
-                'contextProperties',
-            ]);
+            validatePropertyValue(popularityNormProperty, 'popularityNormProperty', popularityNormPropertySchema => popularityNormPropertySchema.type === schema_18.ValueType.Number, `must refer to a "ValueType.Number" property.`, ['index', 'popularityNormProperty']);
         }
         if (filterableProperties) {
             for (let i = 0; i < filterableProperties.length; i++) {
                 const filterableProperty = filterableProperties[i];
                 const objectPath = ['index', 'filterableProperty', i];
                 validatePropertyValue(filterableProperty, 'filterableProperty', filterablePropertySchema => {
-                    if (filterablePropertySchema.type === schema_17.ValueType.Boolean) {
+                    if (filterablePropertySchema.type === schema_18.ValueType.Boolean) {
                         return true;
                     }
-                    if (filterablePropertySchema.type === schema_17.ValueType.Number) {
+                    if (filterablePropertySchema.type === schema_18.ValueType.Number) {
                         return true;
                     }
                     if (!('codaType' in filterablePropertySchema && filterablePropertySchema.codaType)) {
                         return false;
                     }
                     switch (filterablePropertySchema.codaType) {
-                        case schema_16.ValueHintType.DateTime:
-                        case schema_16.ValueHintType.SelectList:
+                        case schema_17.ValueHintType.DateTime:
+                        case schema_17.ValueHintType.SelectList:
                             return true;
                         default:
                             return false;
@@ -1410,9 +1479,9 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             // ValueHintType.SelectList is only required for autocomplete starting in version 1.4.1
             return true;
         }
-        const schemaForOptions = (0, schema_22.maybeUnwrapArraySchema)(schema);
+        const schemaForOptions = (0, schema_24.maybeUnwrapArraySchema)(schema);
         const result = !schemaForOptions ||
-            (0, schema_24.unwrappedSchemaSupportsOptions)(schemaForOptions) ||
+            (0, schema_26.unwrappedSchemaSupportsOptions)(schemaForOptions) ||
             !('options' in schemaForOptions && schemaForOptions.options);
         return result;
     }, 'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "options" property.');
@@ -2002,7 +2071,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         (data.syncTables || []).forEach((syncTable, i) => {
             const schema = syncTable.schema;
             for (const [propertyName, childSchema] of Object.entries(schema.properties)) {
-                const options = (0, schema_21.maybeSchemaOptionsValue)(childSchema);
+                const options = (0, schema_23.maybeSchemaOptionsValue)(childSchema);
                 if (!options || Array.isArray(options)) {
                     continue;
                 }
@@ -2178,10 +2247,10 @@ const packMetadataSchemaBySdkVersion = [
     },
 ];
 function validateSchemaDeprecatedFields(schema, pathPrefix, context) {
-    if ((0, schema_19.isObject)(schema)) {
+    if ((0, schema_21.isObject)(schema)) {
         validateObjectSchemaDeprecatedFields(schema, pathPrefix, context);
     }
-    if ((0, schema_18.isArray)(schema)) {
+    if ((0, schema_19.isArray)(schema)) {
         validateSchemaDeprecatedFields(schema.items, [...pathPrefix, 'items'], context);
     }
 }

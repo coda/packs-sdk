@@ -10,17 +10,23 @@ import {AuthenticationType} from '../types';
 import {BooleanHintValueTypes} from '../schema';
 import type {BooleanPackFormula} from '../api';
 import type {BooleanSchema} from '../schema';
+import type {CategorizationIndexDefinition} from '../schema';
 import type {CodaApiBearerTokenAuthentication} from '../types';
 import type {CodaInternalRichTextSchema} from '../schema';
+import type {CommentContentCategorization} from '../schema';
 import {ConnectionRequirement} from '../api_types';
+import {ContentCategorizationType} from '../schema';
 import {CurrencyFormat} from '../schema';
 import type {CurrencySchema} from '../schema';
 import type {CustomAuthentication} from '../types';
 import type {CustomHeaderTokenAuthentication} from '../types';
+import type {CustomIndexDefinition} from '../schema';
 import type {DetailedIndexedProperty} from '../schema';
+import type {DocumentContentCategorization} from '../schema';
 import type {DurationSchema} from '../schema';
 import {DurationUnit} from '../schema';
 import type {DynamicSyncTableDef} from '../api';
+import type {EmailContentCategorization} from '../schema';
 import {EmailDisplayType} from '../schema';
 import type {EmailSchema} from '../schema';
 import {FeatureSet} from '../types';
@@ -34,12 +40,12 @@ import {ImageCornerStyle} from '../schema';
 import {ImageOutline} from '../schema';
 import type {ImageSchema} from '..';
 import {ImageShapeStyle} from '../schema';
-import type {IndexDefinition} from '../schema';
 import {IndexingStrategy} from '../schema';
 import {JSONPath} from 'jsonpath-plus';
 import {LifecycleBehavior} from '../schema';
 import {LinkDisplayType} from '../schema';
 import type {LinkSchema} from '../schema';
+import type {MessagingContentCategorization} from '../schema';
 import type {MultiHeaderTokenAuthentication} from '../types';
 import type {MultiQueryParamTokenAuthentication} from '../types';
 import type {Network} from '../api_types';
@@ -110,6 +116,7 @@ import {assertCondition} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
 import {isArray} from '../schema';
 import {isArrayType} from '../api_types';
+import {isCategorizationIndexDefinition} from '../schema';
 import {isDefined} from '../helpers/object_utils';
 import {isNil} from '../helpers/object_utils';
 import {isObject} from '../schema';
@@ -1363,6 +1370,30 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     }),
   ]);
 
+  const contentCategorizationSchema = z.discriminatedUnion('type', [
+    zodCompleteStrictObject<MessagingContentCategorization>({
+      type: z.literal(ContentCategorizationType.Messaging),
+    }),
+    zodCompleteStrictObject<DocumentContentCategorization>({
+      type: z.literal(ContentCategorizationType.Document),
+    }),
+    zodCompleteStrictObject<EmailContentCategorization>({
+      type: z.literal(ContentCategorizationType.Email),
+      toProperty: propertySchema,
+      fromProperty: propertySchema,
+      subjectProperty: propertySchema,
+      htmlBodyProperty: propertySchema,
+      plainTextBodyProperty: propertySchema,
+    }),
+    zodCompleteStrictObject<CommentContentCategorization>({
+      type: z.literal(ContentCategorizationType.Comment),
+    }),
+  ]).refine(data => 
+    {return data.type && Object.values(ContentCategorizationType).includes(data.type)}, {
+    message: `must be a valid content categorization type.`,
+    path: ['contentCategorization', 'type'],
+  });
+
   const contextPropertiesSchema = z.array(propertySchema).min(1);
 
   const indexedPropertySchema = z.union([
@@ -1373,13 +1404,24 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     }),
   ]);
 
-  const indexSchema = zodCompleteStrictObject<IndexDefinition>({
+  const filterablePropertiesSchema = z.array(propertySchema).max(Limits.FilterableProperties);
+
+  const customIndexSchema = zodCompleteStrictObject<CustomIndexDefinition>({
     properties: z.array(indexedPropertySchema).min(1),
     contextProperties: contextPropertiesSchema.optional(),
     authorityNormProperty: propertySchema.optional(),
     popularityNormProperty: propertySchema.optional(),
-    filterableProperties: z.array(propertySchema).max(Limits.FilterableProperties).optional(),
+    filterableProperties: filterablePropertiesSchema.optional(),
   });
+
+  const categorizationIndexSchema = zodCompleteStrictObject<CategorizationIndexDefinition>({
+    contentCategorization: contentCategorizationSchema,
+    authorityNormProperty: propertySchema.optional(),
+    popularityNormProperty: propertySchema.optional(),
+    filterableProperties: filterablePropertiesSchema.optional(),
+  });
+
+  const indexSchema = z.union([customIndexSchema, categorizationIndexSchema]);
 
   const identitySchema = zodCompleteObject<Identity>({
     packId: z.number().optional(),
@@ -1711,12 +1753,87 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         const validatePropertyValue = makePropertyValidator(schema, context);
 
         const {
-          properties,
-          contextProperties,
           authorityNormProperty,
           popularityNormProperty,
-          filterableProperties
+          filterableProperties,
         } = schema.index;
+
+        // validate the categorization index
+        if (isCategorizationIndexDefinition(schema.index)) {
+          const {contentCategorization} = schema.index;
+          const {type} = contentCategorization;
+          if (type === ContentCategorizationType.Email) {
+            const {
+              toProperty,
+              fromProperty,
+              subjectProperty,
+              htmlBodyProperty,
+              plainTextBodyProperty,
+            } = contentCategorization;
+            validatePropertyValue(toProperty, 'toProperty', property => property.type === ValueType.String, `must be a valid property.`, [
+              'index',
+              'contentCategorization',
+              'toProperty',
+            ]);
+            validatePropertyValue(fromProperty, 'fromProperty', property => property.type === ValueType.String, `must be a valid property.`, [
+              'index',
+              'contentCategorization',
+              'fromProperty',
+            ]);
+            validatePropertyValue(subjectProperty, 'subjectProperty', property => property.type === ValueType.String, `must be a valid property.`, [
+              'index',
+              'contentCategorization',
+              'subjectProperty',
+            ]);
+            validatePropertyValue(htmlBodyProperty, 'htmlBodyProperty', property => property.type === ValueType.String, `must be a valid property.`, [
+              'index',
+              'contentCategorization',
+              'htmlBodyProperty',
+            ]);
+            validatePropertyValue(plainTextBodyProperty, 'plainTextBodyProperty', property => property.type === ValueType.String, `must be a valid property.`, [
+              'index',
+              'contentCategorization',
+              'plainTextBodyProperty',
+            ]);
+          }
+        // validate the custom index
+        } else {
+          const {properties, contextProperties} = schema.index;
+          for (let i = 0; i < properties.length; i++) {
+            const indexedProperty = properties[i];
+            const objectPath = ['index', 'properties', i];
+            if (typeof indexedProperty === 'string') {
+              validatePropertyValue(
+                indexedProperty,
+                'properties',
+                indexedPropertySchema =>
+                  indexedPropertySchema.type === ValueType.String ||
+                  (indexedPropertySchema.type === ValueType.Array &&
+                    indexedPropertySchema.items.type === ValueType.String),
+                `must refer to a "ValueType.String" property or a "ValueType.Array" array of "ValueType.String" properties.`,
+                objectPath,
+              );
+            } else {
+              validatePropertyValue(
+                indexedProperty.property,
+                'properties',
+                indexedPropertySchema =>
+                  indexedPropertySchema.type === ValueType.String ||
+                  (indexedPropertySchema.type === ValueType.Array &&
+                    indexedPropertySchema.items.type === ValueType.String),
+                `must refer to a "ValueType.String" property or a "ValueType.Array" array of "ValueType.String" properties.`,
+                [...objectPath, 'property'],
+              );
+            }
+          }
+
+          if (contextProperties) {
+            validatePropertyValue(contextProperties, 'contextProperties', () => true, `must be a valid property.`, [
+              'index',
+              'contextProperties',
+            ]);
+          }
+        }
 
         if (authorityNormProperty) {
           validatePropertyValue(
@@ -1736,41 +1853,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             `must refer to a "ValueType.Number" property.`,
             ['index', 'popularityNormProperty'],
           );
-        }
-
-        for (let i = 0; i < properties.length; i++) {
-          const indexedProperty = properties[i];
-          const objectPath = ['index', 'properties', i];
-          if (typeof indexedProperty === 'string') {
-            validatePropertyValue(
-              indexedProperty,
-              'properties',
-              indexedPropertySchema =>
-                indexedPropertySchema.type === ValueType.String ||
-                (indexedPropertySchema.type === ValueType.Array &&
-                  indexedPropertySchema.items.type === ValueType.String),
-              `must refer to a "ValueType.String" property or a "ValueType.Array" array of "ValueType.String" properties.`,
-              objectPath,
-            );
-          } else {
-            validatePropertyValue(
-              indexedProperty.property,
-              'properties',
-              indexedPropertySchema =>
-                indexedPropertySchema.type === ValueType.String ||
-                (indexedPropertySchema.type === ValueType.Array &&
-                  indexedPropertySchema.items.type === ValueType.String),
-              `must refer to a "ValueType.String" property or a "ValueType.Array" array of "ValueType.String" properties.`,
-              [...objectPath, 'property'],
-            );
-          }
-        }
-
-        if (contextProperties) {
-          validatePropertyValue(contextProperties, 'contextProperties', () => true, `must be a valid property.`, [
-            'index',
-            'contextProperties',
-          ]);
         }
 
         if (filterableProperties) {
