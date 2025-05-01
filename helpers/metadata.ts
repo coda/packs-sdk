@@ -1,3 +1,5 @@
+import type {AgentConfigMetadata} from '../compiled_types';
+import {AgentType} from '../api_types';
 import type {Authentication} from '../types';
 import type {AuthenticationMetadata} from '../compiled_types';
 import {AuthenticationType} from '../types';
@@ -38,6 +40,21 @@ export function compilePackMetadata(manifest: PackVersionDefinition): PackVersio
   };
 
   return metadata;
+}
+
+export function compileAgentConfigsMetadata(manifest: PackVersionDefinition, packId: number): AgentConfigMetadata[] {
+  const agentConfigs: AgentConfigMetadata[] = [];
+
+  // Construct default agent that wraps around the existing tools of the pack
+  agentConfigs.push({
+    type: AgentType.PackToolWrapper,
+    packId: packId.toString(),
+    packVersion: manifest.version,
+  });
+
+  // TODO(richard): Add other agent configs that the developer has explicitly defined
+
+  return agentConfigs;
 }
 
 function compileFormatsMetadata(formats: Format[]): PackFormatMetadata[] {

@@ -1,5 +1,6 @@
 import type {AWSAccessKeyAuthentication} from './types';
 import type {AWSAssumeRoleAuthentication} from './types';
+import type {AgentConfig} from './api_types';
 import type {Authentication} from './types';
 import type {AuthenticationType} from './types';
 import type {CodaApiBearerTokenAuthentication} from './types';
@@ -50,6 +51,11 @@ export type PackSyncTable = Omit<
 export interface PackFormatMetadata extends Omit<Format, 'matchers'> {
   matchers: string[];
 }
+
+// TODO(richard): Custom agents will eventually use custom code stored in a separate bundle. Omit
+// that custom code in the metadata
+/** @hidden */
+export interface AgentConfigMetadata extends AgentConfig {}
 
 /** @hidden */
 export type PostSetupMetadata = Omit<PostSetup, 'getOptions' | 'getOptionsFormula'> & {

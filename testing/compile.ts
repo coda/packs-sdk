@@ -1,5 +1,8 @@
+import {DEFAULT_API_ENDPOINT} from '../cli/config_storage';
 import type {PackVersionDefinition} from '../types';
+import {assertPackId} from '../cli/helpers';
 import browserify from 'browserify';
+import {compileAgentConfigsMetadata} from '../helpers/metadata';
 import {compilePackMetadata} from '../helpers/metadata';
 import {ensureUnreachable} from '../helpers/ensure';
 import * as esbuild from 'esbuild';
@@ -17,6 +20,7 @@ import {v4} from 'uuid';
 
 export interface CompilePackBundleOptions {
   bundleFilename?: string;
+  codaApiEndpoint?: string;
   manifestPath: string;
   outputDirectory?: string;
   intermediateOutputDirectory?: string;
@@ -208,6 +212,7 @@ async function buildWithES({
 
 export async function compilePackBundle({
   bundleFilename = 'bundle.js', // the output bundle filename
+  codaApiEndpoint = DEFAULT_API_ENDPOINT,
   outputDirectory,
   manifestPath,
   minify = true,
@@ -289,6 +294,11 @@ export async function compilePackBundle({
   const metadata = compilePackMetadata(manifest);
   const tempMetadataPath = path.join(intermediateOutputDirectory, 'metadata.json');
   fs.writeFileSync(tempMetadataPath, JSON.stringify(metadata));
+  const manifestDir = path.dirname(manifestPath);
+  const packId = assertPackId(manifestDir, codaApiEndpoint);
+  const agentConfigsMetadata = compileAgentConfigsMetadata(manifest, packId);
+  const tempAgentConfigsMetadataPath = path.join(intermediateOutputDirectory, 'agent_configs_metadata.json');
+  fs.writeFileSync(tempAgentConfigsMetadataPath, JSON.stringify(agentConfigsMetadata));
 
   if (!outputDirectory || outputDirectory === intermediateOutputDirectory) {
     return {
@@ -301,6 +311,7 @@ export async function compilePackBundle({
   const bundlePath = path.join(outputDirectory, bundleFilename);
   const bundleSourceMapPath = `${bundlePath}.map`;
   const metadataPath = path.join(outputDirectory, 'metadata.json');
+  const agentConfigsMetadataPath = path.join(outputDirectory, 'agent_configs_metadata.json');
 
   if (!fs.existsSync(outputDirectory)) {
     fs.mkdirSync(outputDirectory, {recursive: true});
@@ -309,6 +320,7 @@ export async function compilePackBundle({
   // move over finally compiled bundle & sourcemap to the target directory.
   fs.copyFileSync(tempBundlePath, bundlePath);
   fs.copyFileSync(tempMetadataPath, metadataPath);
+  fs.copyFileSync(tempAgentConfigsMetadataPath, agentConfigsMetadataPath);
   fs.copyFileSync(`${tempBundlePath}.map`, bundleSourceMapPath);
 
   return {
