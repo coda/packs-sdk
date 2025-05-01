@@ -1123,7 +1123,7 @@ export type IndexedProperty = BasicIndexedProperty | DetailedIndexedProperty;
  * Base definition for all index definitions.
  * @hidden
  */
-export interface BaseIndexDefinition {
+interface BaseIndexDefinition {
   /**
    * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as a number
    * between -1.0 and 1.0 representing the normalized authority score of this entity compared to all other entities.
@@ -2167,23 +2167,24 @@ function normalizeContentCategorization(
   switch (value.type) {
     case ContentCategorizationType.Messaging:
     case ContentCategorizationType.Document:
-    case ContentCategorizationType.Comment:
+    case ContentCategorizationType.Comment: {
       const {type, ...rest} = value;
       ensureNever<keyof typeof rest>();
       return {type};
+    }
     case ContentCategorizationType.Email: {
       const {
-        type: emailType,
+        type,
         toProperty,
         fromProperty,
         subjectProperty,
         htmlBodyProperty,
         plainTextBodyProperty,
-        ...emailRest
+        ...rest
       } = value;
-      ensureNever<keyof typeof emailRest>();
+      ensureNever<keyof typeof rest>();
       return {
-        type: emailType,
+        type,
         toProperty: normalizeSchemaPropertyIdentifier(toProperty, normalizedProperties),
         fromProperty: normalizeSchemaPropertyIdentifier(fromProperty, normalizedProperties),
         subjectProperty: normalizeSchemaPropertyIdentifier(subjectProperty, normalizedProperties),

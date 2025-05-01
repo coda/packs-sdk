@@ -960,7 +960,7 @@ export type IndexedProperty = BasicIndexedProperty | DetailedIndexedProperty;
  * Base definition for all index definitions.
  * @hidden
  */
-export interface BaseIndexDefinition {
+interface BaseIndexDefinition {
     /**
      * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as a number
      * between -1.0 and 1.0 representing the normalized authority score of this entity compared to all other entities.

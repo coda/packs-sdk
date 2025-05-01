@@ -729,15 +729,16 @@ function normalizeContentCategorization(value, normalizedProperties) {
     switch (value.type) {
         case ContentCategorizationType.Messaging:
         case ContentCategorizationType.Document:
-        case ContentCategorizationType.Comment:
+        case ContentCategorizationType.Comment: {
             const { type, ...rest } = value;
             (0, ensure_3.ensureNever)();
             return { type };
+        }
         case ContentCategorizationType.Email: {
-            const { type: emailType, toProperty, fromProperty, subjectProperty, htmlBodyProperty, plainTextBodyProperty, ...emailRest } = value;
+            const { type, toProperty, fromProperty, subjectProperty, htmlBodyProperty, plainTextBodyProperty, ...rest } = value;
             (0, ensure_3.ensureNever)();
             return {
-                type: emailType,
+                type,
                 toProperty: normalizeSchemaPropertyIdentifier(toProperty, normalizedProperties),
                 fromProperty: normalizeSchemaPropertyIdentifier(fromProperty, normalizedProperties),
                 subjectProperty: normalizeSchemaPropertyIdentifier(subjectProperty, normalizedProperties),
