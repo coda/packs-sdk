@@ -538,8 +538,8 @@ export interface BaseOAuthAuthentication extends BaseAuthentication {
    */
   tokenQueryParam?: string;
   /**
-   * Optional parameters and values that should be included when fetching the access token
-   * from the {@link tokenUrl}.
+   * Optional parameters and values that should be included in the request body when fetching 
+   * the access token from the {@link tokenUrl}.
    */
   additionalTokenParams?: {[key: string]: any};
 }

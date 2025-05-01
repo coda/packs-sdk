@@ -56,8 +56,8 @@ ___
 
 • `Optional` **additionalTokenParams**: `Object`
 
-Optional parameters and values that should be included when fetching the access token
-from the [tokenUrl](core.OAuth2Authentication.md#tokenurl).
+Optional parameters and values that should be included in the request body when fetching 
+the access token from the [tokenUrl](core.OAuth2Authentication.md#tokenurl).
 
 #### Index signature
 
