@@ -4,7 +4,7 @@ import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '..';
 import {AuthenticationType} from '../types';
 import {ConnectionRequirement} from '../api_types';
-import {ContentCategorizationType} from '../api_types';
+import {ContentCategorizationType} from '../schema';
 import {CurrencyFormat} from '..';
 import {DurationUnit} from '..';
 import type {Formula} from '../api';

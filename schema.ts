@@ -1,5 +1,3 @@
-import type {ContentCategorization} from './api_types';
-import {ContentCategorizationType} from './api_types';
 import type {OptionsReference} from './api_types';
 import type {OptionsType} from './api_types';
 import type {PackFormulaResult} from './api_types';
@@ -1168,6 +1166,60 @@ export interface CustomIndexDefinition extends BaseIndexDefinition {
    */
   contextProperties?: ContextProperties;
 }
+
+/**
+ * The type of content being indexed, which determines how the property is processed and queried.
+ * @hidden
+ */
+export enum ContentCategorizationType {
+  /** Messaging: Chat or instant messaging content */
+  Messaging = 'Messaging',
+  /** Document: General document content */
+  Document = 'Document',
+  /** Email: Email message content */
+  Email = 'Email',
+  /** Comment: User comments or feedback */
+  Comment = 'Comment',
+}
+
+export interface BaseContentCategorization {
+  type: ContentCategorizationType;
+}
+
+export interface MessagingContentCategorization extends BaseContentCategorization {
+  type: ContentCategorizationType.Messaging;
+}
+
+export interface DocumentContentCategorization extends BaseContentCategorization {
+  type: ContentCategorizationType.Document;
+}
+
+export interface EmailContentCategorization extends BaseContentCategorization {
+  type: ContentCategorizationType.Email;
+  toProperty: PropertyIdentifier<string>
+  fromProperty: PropertyIdentifier<string>
+  subjectProperty: PropertyIdentifier<string>
+  htmlBodyProperty: PropertyIdentifier<string>
+  plainTextBodyProperty: PropertyIdentifier<string>
+}
+
+export interface CommentContentCategorization extends BaseContentCategorization {
+  type: ContentCategorizationType.Comment;
+}
+
+export type ContentCategorization =
+  | MessagingContentCategorization
+  | DocumentContentCategorization
+  | EmailContentCategorization
+  | CommentContentCategorization;
+
+export interface ContentCategorizationTypeMap {
+  [ContentCategorizationType.Messaging]: MessagingContentCategorization;
+  [ContentCategorizationType.Document]: DocumentContentCategorization;
+  [ContentCategorizationType.Email]: EmailContentCategorization;
+  [ContentCategorizationType.Comment]: CommentContentCategorization;
+}
+
 
 /**
  * Defines how to index categorized objects for use with full-text indexing.

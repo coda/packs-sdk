@@ -322,7 +322,6 @@ export interface SyncTableDef<
 
   /** See {@link SyncTableOptions.description} */
   description?: string;
-  
   /** See {@link SyncTableOptions.schema} */
   schema: SchemaT;
   /**

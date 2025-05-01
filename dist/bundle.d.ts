@@ -677,37 +677,6 @@ declare enum PermissionSyncMode {
 	Personal = "Personal",
 	PermissionAware = "PermissionAware"
 }
-declare enum ContentCategorizationType {
-	/** Messaging: Chat or instant messaging content */
-	Messaging = "Messaging",
-	/** Document: General document content */
-	Document = "Document",
-	/** Email: Email message content */
-	Email = "Email",
-	/** Comment: User comments or feedback */
-	Comment = "Comment"
-}
-export interface BaseContentCategorization {
-	type: ContentCategorizationType;
-}
-export interface MessagingContentCategorization extends BaseContentCategorization {
-	type: ContentCategorizationType.Messaging;
-}
-export interface DocumentContentCategorization extends BaseContentCategorization {
-	type: ContentCategorizationType.Document;
-}
-export interface EmailContentCategorization extends BaseContentCategorization {
-	type: ContentCategorizationType.Email;
-	toProperty: PropertyIdentifier<string>;
-	fromProperty: PropertyIdentifier<string>;
-	subjectProperty: PropertyIdentifier<string>;
-	htmlBodyProperty: PropertyIdentifier<string>;
-	plainTextBodyProperty: PropertyIdentifier<string>;
-}
-export interface CommentContentCategorization extends BaseContentCategorization {
-	type: ContentCategorizationType.Comment;
-}
-export type ContentCategorization = MessagingContentCategorization | DocumentContentCategorization | EmailContentCategorization | CommentContentCategorization;
 /**
  * Information about the current sync, part of the {@link SyncExecutionContext} passed to the
  * `execute` function of every sync formula.
@@ -2109,6 +2078,37 @@ export interface CustomIndexDefinition extends BaseIndexDefinition {
 	properties: IndexedProperty[];
 	contextProperties?: ContextProperties;
 }
+declare enum ContentCategorizationType {
+	/** Messaging: Chat or instant messaging content */
+	Messaging = "Messaging",
+	/** Document: General document content */
+	Document = "Document",
+	/** Email: Email message content */
+	Email = "Email",
+	/** Comment: User comments or feedback */
+	Comment = "Comment"
+}
+export interface BaseContentCategorization {
+	type: ContentCategorizationType;
+}
+export interface MessagingContentCategorization extends BaseContentCategorization {
+	type: ContentCategorizationType.Messaging;
+}
+export interface DocumentContentCategorization extends BaseContentCategorization {
+	type: ContentCategorizationType.Document;
+}
+export interface EmailContentCategorization extends BaseContentCategorization {
+	type: ContentCategorizationType.Email;
+	toProperty: PropertyIdentifier<string>;
+	fromProperty: PropertyIdentifier<string>;
+	subjectProperty: PropertyIdentifier<string>;
+	htmlBodyProperty: PropertyIdentifier<string>;
+	plainTextBodyProperty: PropertyIdentifier<string>;
+}
+export interface CommentContentCategorization extends BaseContentCategorization {
+	type: ContentCategorizationType.Comment;
+}
+export type ContentCategorization = MessagingContentCategorization | DocumentContentCategorization | EmailContentCategorization | CommentContentCategorization;
 /**
  * Defines how to index categorized objects for use with full-text indexing.
  * These categories are predefined by the system and expect to specific properties
