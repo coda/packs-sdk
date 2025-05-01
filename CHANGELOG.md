@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- Added the field `additionalTokenParams` to OAuth2 authentication types, to allow passing extra information in the body of the token exchange, as required by some APIs.
+
 ### Changed
 
 - Remove `popularityNormProperty` and `authorityNormProperty` from top-level `schema` since they reside primarily in `schema.index`.

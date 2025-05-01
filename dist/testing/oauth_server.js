@@ -20,6 +20,7 @@ function launchOAuthServerFlow({ clientId, clientSecret, authDef, port, afterTok
     const redirectUri = makeRedirectUrl(port);
     const callback = async (code) => {
         const params = {
+            ...authDef.additionalTokenParams,
             grant_type: 'authorization_code',
             code,
             client_id: clientId,

@@ -48,6 +48,7 @@ export function launchOAuthServerFlow({
   const redirectUri = makeRedirectUrl(port);
   const callback = async (code: string): Promise<AuthorizationCodeTokenCallbackResponse> => {
     const params: OAuth2RequestAccessTokenParams = {
+      ...authDef.additionalTokenParams,
       grant_type: 'authorization_code',
       code,
       client_id: clientId,

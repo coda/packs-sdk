@@ -57,6 +57,7 @@ async function performOAuthClientCredentialsServerFlow({ clientId, clientSecret,
     const requestedScopes = scopes && scopes.length > 0 ? scopes : authDef.scopes;
     const scope = requestedScopes ? requestedScopes.join(scopeDelimiter || ' ') : requestedScopes;
     const params = {
+        ...authDef.additionalTokenParams,
         grant_type: 'client_credentials',
         client_id: clientId,
         client_secret: clientSecret,
