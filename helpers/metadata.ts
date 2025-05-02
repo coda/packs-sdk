@@ -1,5 +1,5 @@
 import type {AgentConfigMetadata} from '../compiled_types';
-import {AgentType} from '../api_types';
+import {AgentType} from '../types';
 import type {Authentication} from '../types';
 import type {AuthenticationMetadata} from '../compiled_types';
 import {AuthenticationType} from '../types';
@@ -47,12 +47,14 @@ export function compileAgentConfigsMetadata(manifest: PackVersionDefinition, pac
 
   // Construct default agent that wraps around the existing tools of the pack
   agentConfigs.push({
-    type: AgentType.PackToolWrapper,
+    type: AgentType.PackDefault,
     packId: packId.toString(),
     packVersion: manifest.version,
   });
 
-  // TODO(richard): Add other agent configs that the developer has explicitly defined
+  for (const agentConfig of manifest.agentConfigs ?? []) {
+    agentConfigs.push(agentConfig);
+  }
 
   return agentConfigs;
 }

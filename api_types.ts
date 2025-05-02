@@ -1400,15 +1400,3 @@ export interface SyncCompletionMetadataIncomplete {
 
   incrementalContinuation?: never;
 }
-
-export enum AgentType {
-  PackToolWrapper = 'packToolWrapper',
-}
-
-interface ToolWrapperAgentConfig {
-  type: AgentType.PackToolWrapper;
-  packId: string;
-  packVersion: string;
-}
-
-export type AgentConfig = ToolWrapperAgentConfig;

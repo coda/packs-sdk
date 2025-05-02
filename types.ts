@@ -1231,6 +1231,11 @@ export interface PackVersionDefinition {
    * Definitions of this pack's sync tables. See {@link SyncTable}.
    */
   syncTables?: SyncTable[];
+
+  /**
+   * Definitions of this pack's agent configs. See {@link AgentConfig}.
+   */
+  agentConfigs?: NonDefaultAgentConfig[];
 }
 
 /**
@@ -1284,3 +1289,39 @@ export enum HttpStatusCode {
   BadGateway = 502,
   ServiceUnavailable = 503,
 }
+
+export enum AgentType {
+  PackDefault = 'packDefault',
+  ReAct = 'reAct',
+}
+
+interface PackDefaultAgentConfig {
+  type: AgentType.PackDefault;
+  packId: string;
+  packVersion: string;
+}
+
+interface PackToolConfig {
+  packId: string;
+  packVersion: string;
+  formulaName: string;
+}
+
+interface BaseAgentConfig {
+  name: string;
+  description: string;
+}
+
+export interface ReActAgentConfig extends BaseAgentConfig {
+  type: AgentType.ReAct;
+  prompt: string;
+  tools: PackToolConfig[];
+}
+
+export type AgentConfig = PackDefaultAgentConfig | ReActAgentConfig;
+export type NonDefaultAgentConfig = Exclude<AgentConfig, PackDefaultAgentConfig>;
+
+// Def here refers to inputs while config refers to what's actually stored
+// For now this is the same
+export type AgentDef = AgentConfig;
+export type NonDefaultAgentDef = NonDefaultAgentConfig;
