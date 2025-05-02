@@ -6,6 +6,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [1.9.5] - 2025-05-02
 
+### Changed
+
 - Update `IndexDefinition` to encompass either `CustomIndexDefinition` or `CategorizedIndexDefinition`. `CustomIndexDefinition` will be backwards compatible with releases from before 1.9.4 and refer to the old `IndexDefinition`. The `CategorizedIndexDefinition` will support specific types of indexable content that has been predefined in the sdk.
 - Add a new `filteredProperities` field to `schema.index` to specify additional columns that can be used to filter down query results.
 - Minor documentation updates.
