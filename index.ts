@@ -228,6 +228,9 @@ export {makeSchema} from './schema';
 export {withIdentity} from './schema';
 export {makeQueryBrainTool} from './tool';
 export {makeGetEditorTool} from './tool';
+export {makeAnnotateTextTool} from './tool';
+export {ToolType} from './api';
+export {AgentType} from './api';
 
 // Exports for intermediate entities we want included in the TypeDoc documentation
 // but otherwise wouldn't care about including as top-level exports of the SDK
