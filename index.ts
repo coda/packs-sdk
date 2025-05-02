@@ -121,7 +121,7 @@ export {MissingScopesError} from './api';
 export type {StatusCodeErrorResponse} from './api';
 export type {SyncExecutionContext} from './api_types';
 export type {SyncFormulaResult} from './api';
-export type {SyncPassthroughData}from './api';
+export type {SyncPassthroughData} from './api';
 export type {SyncTableDef} from './api';
 export type {SyncTableOptions} from './api';
 export type {SyncStateService} from './api_types';
@@ -226,6 +226,8 @@ export {makeObjectSchema} from './schema';
 export {makeReferenceSchemaFromObjectSchema} from './schema';
 export {makeSchema} from './schema';
 export {withIdentity} from './schema';
+export {makeQueryBrainTool} from './tool';
+export {makeGetEditorTool} from './tool';
 
 // Exports for intermediate entities we want included in the TypeDoc documentation
 // but otherwise wouldn't care about including as top-level exports of the SDK

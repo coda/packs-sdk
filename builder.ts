@@ -1,6 +1,6 @@
 import type {AdminAuthentication} from './types';
 import type {AdminAuthenticationDef} from './types';
-import {AgentType} from './types';
+import {AgentType} from './api';
 import type {AllowedAuthentication} from './types';
 import type {AllowedAuthenticationDef} from './types';
 import type {Authentication} from './types';
@@ -11,8 +11,8 @@ import type {DynamicSyncTableOptions} from './api';
 import type {Format} from './types';
 import type {Formula} from './api';
 import type {FormulaDefinition} from './api';
-import type {NonDefaultAgentConfig} from './types';
-import type {NonDefaultAgentDef} from './types';
+import type {NonDefaultAgentConfig} from './api';
+import type {NonDefaultAgentDef} from './api';
 import type {ObjectSchema} from './schema';
 import type {ObjectSchemaDefinition} from './schema';
 import type {PackVersionDefinition} from './types';
@@ -446,7 +446,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
           name: agentDef.name,
           description: agentDef.description,
           prompt: agentDef.prompt,
-          tools: [],
+          tools: agentDef.tools,
         };
         break;
       }

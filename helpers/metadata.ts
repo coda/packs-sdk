@@ -1,5 +1,5 @@
 import type {AgentConfigMetadata} from '../compiled_types';
-import {AgentType} from '../types';
+import {AgentType} from '../api';
 import type {Authentication} from '../types';
 import type {AuthenticationMetadata} from '../compiled_types';
 import {AuthenticationType} from '../types';
@@ -46,11 +46,16 @@ export function compileAgentConfigsMetadata(manifest: PackVersionDefinition, pac
   const agentConfigs: AgentConfigMetadata[] = [];
 
   // Construct default agent that wraps around the existing tools of the pack
-  agentConfigs.push({
-    type: AgentType.PackDefault,
-    packId: packId.toString(),
-    packVersion: manifest.version,
-  });
+  // Only include the default agent if the pack has skills that Brain can use
+  const hasSyncTables = (manifest.syncTables || []).length > 0;
+  const hasActionFormulas = (manifest.formulas || []).some(formula => formula.isAction);
+  if (hasSyncTables || hasActionFormulas) {
+    agentConfigs.push({
+      type: AgentType.PackDefault,
+      packId,
+      packVersion: manifest.version,
+    });
+  }
 
   for (const agentConfig of manifest.agentConfigs ?? []) {
     agentConfigs.push(agentConfig);

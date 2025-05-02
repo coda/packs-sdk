@@ -2193,14 +2193,14 @@ export interface SyncTableOptions<
    * This should describe the entities being synced. For example, a sync table that syncs products
    * from an e-commerce platform should be called 'Products'. This name must not contain spaces.
    *
-   * Important: This value acts as a unique ID for the table, and updating it later is a breaking change. 
+   * Important: This value acts as a unique ID for the table, and updating it later is a breaking change.
    * If you want to change the value shown to the users, set `displayName` instead.
    */
   name: string;
 
   /**
    * This is the name shown to users in the Coda UI. If not present, {@link SyncTableOptions.name} will be used.
-   * Changing this value will not affect existing tables and only affects newly created tables. 
+   * Changing this value will not affect existing tables and only affects newly created tables.
    */
   displayName?: string;
 
@@ -2941,3 +2941,59 @@ function moveJsPropertyOptionsFunctionsToFormulas({
 
   return namedPropertyOptions;
 }
+
+export enum ToolType {
+  AnnotateText = 'annotateText',
+  GetEditor = 'getEditor',
+  QueryBrain = 'queryBrain',
+}
+
+interface BaseToolConfig {
+  type: ToolType;
+  description?: string;
+}
+
+export interface GetEditorToolConfig extends BaseToolConfig {
+  type: ToolType.GetEditor;
+}
+
+export interface QueryBrainToolConfig extends BaseToolConfig {
+  type: ToolType.QueryBrain;
+  packId: number;
+}
+
+export interface AnnotateTextToolConfig extends BaseToolConfig {
+  type: ToolType.AnnotateText;
+}
+
+export type ToolConfig = GetEditorToolConfig | QueryBrainToolConfig | AnnotateTextToolConfig;
+
+export enum AgentType {
+  PackDefault = 'packDefault',
+  ReAct = 'reAct',
+}
+
+interface PackDefaultAgentConfig {
+  type: AgentType.PackDefault;
+  packId: number;
+  packVersion: string;
+}
+
+interface BaseAgentConfig {
+  name: string;
+  description: string;
+}
+
+export interface ReActAgentConfig extends BaseAgentConfig {
+  type: AgentType.ReAct;
+  prompt: string;
+  tools: ToolConfig[];
+}
+
+export type AgentConfig = PackDefaultAgentConfig | ReActAgentConfig;
+export type NonDefaultAgentConfig = Exclude<AgentConfig, PackDefaultAgentConfig>;
+
+// Def here refers to inputs while config refers to what's actually stored
+// For now this is the same
+export type AgentDef = AgentConfig;
+export type NonDefaultAgentDef = NonDefaultAgentConfig;

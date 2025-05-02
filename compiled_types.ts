@@ -1,6 +1,6 @@
 import type {AWSAccessKeyAuthentication} from './types';
 import type {AWSAssumeRoleAuthentication} from './types';
-import type {AgentConfig} from './types';
+import type {AgentConfig} from './api';
 import type {Authentication} from './types';
 import type {AuthenticationType} from './types';
 import type {CodaApiBearerTokenAuthentication} from './types';
