@@ -2973,15 +2973,15 @@ export enum AgentType {
   ReAct = 'reAct',
 }
 
-interface PackDefaultAgentConfig {
-  type: AgentType.PackDefault;
-  packId: number;
-  packVersion: string;
-}
-
 interface BaseAgentConfig {
   name: string;
   description: string;
+  brainDependencies: Array<{packId: number}>;
+}
+
+export interface PackDefaultAgentConfig extends BaseAgentConfig {
+  type: AgentType.PackDefault;
+  packId: number;
 }
 
 export interface ReActAgentConfig extends BaseAgentConfig {
@@ -2993,7 +2993,5 @@ export interface ReActAgentConfig extends BaseAgentConfig {
 export type AgentConfig = PackDefaultAgentConfig | ReActAgentConfig;
 export type NonDefaultAgentConfig = Exclude<AgentConfig, PackDefaultAgentConfig>;
 
-// Def here refers to inputs while config refers to what's actually stored
-// For now this is the same
-export type AgentDef = AgentConfig;
-export type NonDefaultAgentDef = NonDefaultAgentConfig;
+export type AgentDef = Omit<AgentConfig, 'brainDependencies'>;
+export type NonDefaultAgentDef = Omit<NonDefaultAgentConfig, 'brainDependencies'>;

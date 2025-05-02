@@ -53,7 +53,14 @@ export function compileAgentConfigsMetadata(manifest: PackVersionDefinition, pac
     agentConfigs.push({
       type: AgentType.PackDefault,
       packId,
-      packVersion: manifest.version,
+      brainDependencies: [
+        {
+          packId,
+        },
+      ],
+      // TODO(richard): Use the pack name and description here
+      name: 'Pack Default',
+      description: 'The default agent for this pack',
     });
   }
 

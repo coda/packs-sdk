@@ -24,6 +24,7 @@ import type {SyncTable} from './api';
 import type {SyncTableOptions} from './api';
 import type {SystemAuthentication} from './types';
 import type {SystemAuthenticationDef} from './types';
+import {ToolType} from './api';
 import type {UserAuthenticationDef} from './api_types';
 import type {ValueType} from './schema';
 import {ensureUnreachable} from './helpers/ensure';
@@ -441,12 +442,18 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
 
     switch (agentDef.type) {
       case AgentType.ReAct: {
+        const brainDependencies = agentDef.tools
+          .filter(tool => tool.type === ToolType.QueryBrain)
+          .map(tool => ({
+            packId: tool.packId,
+          }));
         agentConfig = {
           type: AgentType.ReAct,
           name: agentDef.name,
           description: agentDef.description,
           prompt: agentDef.prompt,
           tools: agentDef.tools,
+          brainDependencies,
         };
         break;
       }
