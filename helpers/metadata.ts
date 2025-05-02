@@ -1,3 +1,5 @@
+import type {AgentConfigMetadata} from '../compiled_types';
+import {AgentType} from '../api';
 import type {Authentication} from '../types';
 import type {AuthenticationMetadata} from '../compiled_types';
 import {AuthenticationType} from '../types';
@@ -38,6 +40,35 @@ export function compilePackMetadata(manifest: PackVersionDefinition): PackVersio
   };
 
   return metadata;
+}
+
+export function compileAgentConfigsMetadata(manifest: PackVersionDefinition, packId: number): AgentConfigMetadata[] {
+  const agentConfigs: AgentConfigMetadata[] = [];
+
+  // Construct default agent that wraps around the existing tools of the pack
+  // Only include the default agent if the pack has skills that Brain can use
+  const hasSyncTables = (manifest.syncTables || []).length > 0;
+  const hasActionFormulas = (manifest.formulas || []).some(formula => formula.isAction);
+  if (hasSyncTables || hasActionFormulas) {
+    agentConfigs.push({
+      type: AgentType.PackDefault,
+      packId,
+      brainDependencies: [
+        {
+          packId,
+        },
+      ],
+      // TODO(richard): Use the pack name and description here
+      name: 'Pack Default',
+      description: 'The default agent for this pack',
+    });
+  }
+
+  for (const agentConfig of manifest.agentConfigs ?? []) {
+    agentConfigs.push(agentConfig);
+  }
+
+  return agentConfigs;
 }
 
 function compileFormatsMetadata(formats: Format[]): PackFormatMetadata[] {

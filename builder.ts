@@ -1,5 +1,6 @@
 import type {AdminAuthentication} from './types';
 import type {AdminAuthenticationDef} from './types';
+import {AgentType} from './api';
 import type {AllowedAuthentication} from './types';
 import type {AllowedAuthenticationDef} from './types';
 import type {Authentication} from './types';
@@ -10,6 +11,8 @@ import type {DynamicSyncTableOptions} from './api';
 import type {Format} from './types';
 import type {Formula} from './api';
 import type {FormulaDefinition} from './api';
+import type {NonDefaultAgentConfig} from './api';
+import type {NonDefaultAgentDef} from './api';
 import type {ObjectSchema} from './schema';
 import type {ObjectSchemaDefinition} from './schema';
 import type {PackVersionDefinition} from './types';
@@ -21,8 +24,10 @@ import type {SyncTable} from './api';
 import type {SyncTableOptions} from './api';
 import type {SystemAuthentication} from './types';
 import type {SystemAuthenticationDef} from './types';
+import {ToolType} from './api';
 import type {UserAuthenticationDef} from './api_types';
 import type {ValueType} from './schema';
+import {ensureUnreachable} from './helpers/ensure';
 import {isDynamicSyncTable} from './api';
 import {makeDynamicSyncTable} from './api';
 import {makeFormula} from './api';
@@ -83,6 +88,8 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    */
   adminAuthentications?: AdminAuthentication[];
 
+  agentConfigs: NonDefaultAgentConfig[];
+
   /**
    * See {@link PackVersionDefinition.version}.
    */
@@ -98,6 +105,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    */
   constructor(definition?: Partial<PackVersionDefinition>) {
     const {
+      agentConfigs,
       formulas,
       formats,
       syncTables,
@@ -107,6 +115,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       version,
       formulaNamespace,
     } = definition || {};
+    this.agentConfigs = agentConfigs || [];
     this.formulas = formulas || [];
     this.formats = formats || [];
     this.syncTables = syncTables || [];
@@ -424,6 +433,35 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
         };
       }
     });
+
+    return this;
+  }
+
+  addAgent(agentDef: NonDefaultAgentDef): this {
+    let agentConfig: NonDefaultAgentConfig;
+
+    switch (agentDef.type) {
+      case AgentType.ReAct: {
+        const brainDependencies = agentDef.tools
+          .filter(tool => tool.type === ToolType.QueryBrain)
+          .map(tool => ({
+            packId: tool.packId,
+          }));
+        agentConfig = {
+          type: AgentType.ReAct,
+          name: agentDef.name,
+          description: agentDef.description,
+          prompt: agentDef.prompt,
+          tools: agentDef.tools,
+          brainDependencies,
+        };
+        break;
+      }
+      default:
+        ensureUnreachable(agentDef.type);
+    }
+
+    this.agentConfigs?.push(agentConfig);
 
     return this;
   }

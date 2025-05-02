@@ -2,6 +2,7 @@ import type {$Values} from './type_utils';
 import type {Formula} from './api';
 import type {MetadataFormula} from './api';
 import type {MetadataFormulaDef} from './api';
+import type {NonDefaultAgentConfig} from './api';
 import type {SyncTable} from './api';
 
 /**
@@ -1231,6 +1232,11 @@ export interface PackVersionDefinition {
    * Definitions of this pack's sync tables. See {@link SyncTable}.
    */
   syncTables?: SyncTable[];
+
+  /**
+   * Definitions of this pack's agent configs. See {@link AgentConfig}.
+   */
+  agentConfigs?: NonDefaultAgentConfig[];
 }
 
 /**
