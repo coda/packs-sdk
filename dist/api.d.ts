@@ -1589,6 +1589,7 @@ export declare enum ToolType {
 }
 interface BaseToolConfig {
     type: ToolType;
+    name?: string;
     description?: string;
 }
 export interface GetEditorToolConfig extends BaseToolConfig {
