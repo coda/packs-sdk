@@ -1938,12 +1938,18 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     z.object({
       type: z.literal(ToolType.QueryBrain),
       packId: z.number().optional(),
+      name: z.string().optional(),
+      description: z.string().optional(),
     }),
     z.object({
       type: z.literal(ToolType.GetEditor),
+      name: z.string().optional(),
+      description: z.string().optional(),
     }),
     z.object({
       type: z.literal(ToolType.AnnotateText),
+      name: z.string().optional(),
+      description: z.string().optional(),
     }),
   ]);
 

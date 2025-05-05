@@ -2950,6 +2950,7 @@ export enum ToolType {
 
 interface BaseToolConfig {
   type: ToolType;
+  name?: string;
   description?: string;
 }
 
