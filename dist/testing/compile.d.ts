@@ -1,5 +1,6 @@
 export interface CompilePackBundleOptions {
     bundleFilename?: string;
+    codaApiEndpoint?: string;
     manifestPath: string;
     outputDirectory?: string;
     intermediateOutputDirectory?: string;
@@ -18,4 +19,4 @@ export interface CompilePackBundleResult {
     intermediateOutputDirectory: string;
 }
 export declare function compilePackBundle({ bundleFilename, // the output bundle filename
-outputDirectory, manifestPath, minify, intermediateOutputDirectory, timerStrategy, }: CompilePackBundleOptions): Promise<CompilePackBundleResult>;
+codaApiEndpoint, outputDirectory, manifestPath, minify, intermediateOutputDirectory, timerStrategy, }: CompilePackBundleOptions): Promise<CompilePackBundleResult>;

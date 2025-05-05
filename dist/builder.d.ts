@@ -6,6 +6,8 @@ import type { DynamicSyncTableOptions } from './api';
 import type { Format } from './types';
 import type { Formula } from './api';
 import type { FormulaDefinition } from './api';
+import type { NonDefaultAgentConfig } from './api';
+import type { NonDefaultAgentDef } from './api';
 import type { ObjectSchema } from './schema';
 import type { ObjectSchemaDefinition } from './schema';
 import type { PackVersionDefinition } from './types';
@@ -64,6 +66,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * @hidden
      */
     adminAuthentications?: AdminAuthentication[];
+    agentConfigs: NonDefaultAgentConfig[];
     /**
      * See {@link PackVersionDefinition.version}.
      */
@@ -238,4 +241,5 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      */
     setVersion(version: string): this;
     private _setDefaultConnectionRequirement;
+    addAgent(agentDef: NonDefaultAgentDef): this;
 }

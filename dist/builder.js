@@ -1,16 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PackDefinitionBuilder = exports.newPack = void 0;
+const api_1 = require("./api");
 const types_1 = require("./types");
 const api_types_1 = require("./api_types");
-const api_1 = require("./api");
 const api_2 = require("./api");
+const ensure_1 = require("./helpers/ensure");
 const api_3 = require("./api");
 const api_4 = require("./api");
 const api_5 = require("./api");
 const api_6 = require("./api");
-const migration_1 = require("./helpers/migration");
 const api_7 = require("./api");
+const api_8 = require("./api");
+const migration_1 = require("./helpers/migration");
+const api_9 = require("./api");
 /**
  * Creates a new skeleton pack definition that can be added to.
  *
@@ -35,7 +38,8 @@ class PackDefinitionBuilder {
      * rather than constructing a builder directly.
      */
     constructor(definition) {
-        const { formulas, formats, syncTables, networkDomains, defaultAuthentication, systemConnectionAuthentication, version, formulaNamespace, } = definition || {};
+        const { agentConfigs, formulas, formats, syncTables, networkDomains, defaultAuthentication, systemConnectionAuthentication, version, formulaNamespace, } = definition || {};
+        this.agentConfigs = agentConfigs || [];
         this.formulas = formulas || [];
         this.formats = formats || [];
         this.syncTables = syncTables || [];
@@ -70,7 +74,7 @@ class PackDefinitionBuilder {
      * ```
      */
     addFormula(definition) {
-        const formula = (0, api_3.makeFormula)({
+        const formula = (0, api_5.makeFormula)({
             ...definition,
             connectionRequirement: definition.connectionRequirement || this._defaultConnectionRequirement,
         });
@@ -98,7 +102,7 @@ class PackDefinitionBuilder {
      */
     addSyncTable(definition) {
         const connectionRequirementToUse = definition.connectionRequirement || this._defaultConnectionRequirement;
-        const syncTable = (0, api_4.makeSyncTable)({
+        const syncTable = (0, api_6.makeSyncTable)({
             ...definition,
             connectionRequirement: connectionRequirementToUse,
         });
@@ -127,7 +131,7 @@ class PackDefinitionBuilder {
      * ```
      */
     addDynamicSyncTable(definition) {
-        const dynamicSyncTable = (0, api_2.makeDynamicSyncTable)({
+        const dynamicSyncTable = (0, api_4.makeDynamicSyncTable)({
             ...definition,
             connectionRequirement: definition.connectionRequirement || this._defaultConnectionRequirement,
         });
@@ -153,11 +157,11 @@ class PackDefinitionBuilder {
     }
     _wrapAuthenticationFunctions(authentication) {
         const { getConnectionName: getConnectionNameDef, getConnectionUserId: getConnectionUserIdDef, postSetup: postSetupDef, ...rest } = authentication;
-        const getConnectionName = (0, api_7.wrapMetadataFunction)(getConnectionNameDef);
-        const getConnectionUserId = (0, api_7.wrapMetadataFunction)(getConnectionUserIdDef);
+        const getConnectionName = (0, api_9.wrapMetadataFunction)(getConnectionNameDef);
+        const getConnectionUserId = (0, api_9.wrapMetadataFunction)(getConnectionUserIdDef);
         const postSetup = postSetupDef === null || postSetupDef === void 0 ? void 0 : postSetupDef.map(step => {
-            const getOptions = (0, api_7.wrapMetadataFunction)((0, migration_1.setEndpointDefHelper)(step).getOptions);
-            const getOptionsFormula = (0, api_7.wrapMetadataFunction)(step.getOptionsFormula);
+            const getOptions = (0, api_9.wrapMetadataFunction)((0, migration_1.setEndpointDefHelper)(step).getOptions);
+            const getOptionsFormula = (0, api_9.wrapMetadataFunction)(step.getOptionsFormula);
             return { ...step, getOptions, getOptionsFormula };
         });
         return { ...rest, getConnectionName, getConnectionUserId, postSetup };
@@ -275,16 +279,16 @@ class PackDefinitionBuilder {
         // Rewrite any formulas or sync tables that were already defined, in case the maker sets the default
         // after the fact.
         this.formulas = this.formulas.map(formula => {
-            return formula.connectionRequirement ? formula : (0, api_5.maybeRewriteConnectionForFormula)(formula, connectionRequirement);
+            return formula.connectionRequirement ? formula : (0, api_7.maybeRewriteConnectionForFormula)(formula, connectionRequirement);
         });
         this.syncTables = this.syncTables.map(syncTable => {
             if (syncTable.getter.connectionRequirement) {
                 return syncTable;
             }
-            else if ((0, api_1.isDynamicSyncTable)(syncTable)) {
+            else if ((0, api_3.isDynamicSyncTable)(syncTable)) {
                 return {
                     ...syncTable,
-                    getter: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getter, connectionRequirement),
+                    getter: (0, api_7.maybeRewriteConnectionForFormula)(syncTable.getter, connectionRequirement),
                     // These 4 are metadata formulas, so they use ConnectionRequirement.Required
                     // by default if you don't specify a connection requirement (a legacy behavior
                     // that is confusing and perhaps undesirable now that we have better builders).
@@ -296,23 +300,50 @@ class PackDefinitionBuilder {
                     // always work, but it does give rise to confusing behavior that calling
                     // setDefaultConnectionRequirement() can wipe away an explicit connection
                     // requirement override set on one of these 4 metadata formulas.
-                    getName: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getName, connectionRequirement),
-                    getDisplayUrl: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getDisplayUrl, connectionRequirement),
-                    getSchema: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getSchema, connectionRequirement),
-                    listDynamicUrls: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.listDynamicUrls, connectionRequirement),
-                    searchDynamicUrls: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.searchDynamicUrls, connectionRequirement),
-                    namedPropertyOptions: (0, api_6.maybeRewriteConnectionForNamedPropertyOptions)(syncTable.namedPropertyOptions, connectionRequirement),
+                    getName: (0, api_7.maybeRewriteConnectionForFormula)(syncTable.getName, connectionRequirement),
+                    getDisplayUrl: (0, api_7.maybeRewriteConnectionForFormula)(syncTable.getDisplayUrl, connectionRequirement),
+                    getSchema: (0, api_7.maybeRewriteConnectionForFormula)(syncTable.getSchema, connectionRequirement),
+                    listDynamicUrls: (0, api_7.maybeRewriteConnectionForFormula)(syncTable.listDynamicUrls, connectionRequirement),
+                    searchDynamicUrls: (0, api_7.maybeRewriteConnectionForFormula)(syncTable.searchDynamicUrls, connectionRequirement),
+                    namedPropertyOptions: (0, api_8.maybeRewriteConnectionForNamedPropertyOptions)(syncTable.namedPropertyOptions, connectionRequirement),
                 };
             }
             else {
                 return {
                     ...syncTable,
-                    getter: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getter, connectionRequirement),
-                    getSchema: (0, api_5.maybeRewriteConnectionForFormula)(syncTable.getSchema, connectionRequirement),
-                    namedPropertyOptions: (0, api_6.maybeRewriteConnectionForNamedPropertyOptions)(syncTable.namedPropertyOptions, connectionRequirement),
+                    getter: (0, api_7.maybeRewriteConnectionForFormula)(syncTable.getter, connectionRequirement),
+                    getSchema: (0, api_7.maybeRewriteConnectionForFormula)(syncTable.getSchema, connectionRequirement),
+                    namedPropertyOptions: (0, api_8.maybeRewriteConnectionForNamedPropertyOptions)(syncTable.namedPropertyOptions, connectionRequirement),
                 };
             }
         });
+        return this;
+    }
+    addAgent(agentDef) {
+        var _a;
+        let agentConfig;
+        switch (agentDef.type) {
+            case api_1.AgentType.ReAct: {
+                // TODO(richard):
+                const brainDependencies = agentDef.tools
+                    .filter(tool => tool.type === api_2.ToolType.QueryBrain && tool.packId !== undefined)
+                    .map(tool => ({
+                    packId: tool.packId,
+                }));
+                agentConfig = {
+                    type: api_1.AgentType.ReAct,
+                    name: agentDef.name,
+                    description: agentDef.description,
+                    prompt: agentDef.prompt,
+                    tools: agentDef.tools,
+                    brainDependencies,
+                };
+                break;
+            }
+            default:
+                (0, ensure_1.ensureUnreachable)(agentDef.type);
+        }
+        (_a = this.agentConfigs) === null || _a === void 0 ? void 0 : _a.push(agentConfig);
         return this;
     }
 }

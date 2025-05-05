@@ -76,6 +76,7 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApi
     // order to set source map right. The source map tool chain isn't smart enough to resolve a
     // relative path in the end.
     const { bundlePath, bundleSourceMapPath } = await (0, compile_1.compilePackBundle)({
+        codaApiEndpoint,
         manifestPath: manifestFile,
         outputDirectory: intermediateOutputDirectory,
         intermediateOutputDirectory,

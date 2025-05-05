@@ -1582,3 +1582,47 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
 };
 export declare function maybeRewriteConnectionForNamedPropertyOptions(namedPropertyOptions: SyncTablePropertyOptions | undefined, connectionRequirement: ConnectionRequirement | undefined): SyncTablePropertyOptions | undefined;
 export declare function maybeRewriteConnectionForFormula<ParamDefsT extends ParamDefs, T extends CommonPackFormulaDef<ParamDefsT> | undefined>(formula: T, connectionRequirement: ConnectionRequirement | undefined): T;
+export declare enum ToolType {
+    AnnotateText = "annotateText",
+    GetEditor = "getEditor",
+    QueryBrain = "queryBrain"
+}
+interface BaseToolConfig {
+    type: ToolType;
+    description?: string;
+}
+export interface GetEditorToolConfig extends BaseToolConfig {
+    type: ToolType.GetEditor;
+}
+export interface QueryBrainToolConfig extends BaseToolConfig {
+    type: ToolType.QueryBrain;
+    packId?: number;
+}
+export interface AnnotateTextToolConfig extends BaseToolConfig {
+    type: ToolType.AnnotateText;
+}
+export type ToolConfig = GetEditorToolConfig | QueryBrainToolConfig | AnnotateTextToolConfig;
+export declare enum AgentType {
+    PackDefault = "packDefault",
+    ReAct = "reAct"
+}
+interface BaseAgentConfig {
+    name: string;
+    description: string;
+    brainDependencies: Array<{
+        packId: number;
+    }>;
+}
+export interface PackDefaultAgentConfig extends BaseAgentConfig {
+    type: AgentType.PackDefault;
+    packId: number;
+}
+export interface ReActAgentConfig extends BaseAgentConfig {
+    type: AgentType.ReAct;
+    prompt: string;
+    tools: ToolConfig[];
+}
+export type AgentConfig = PackDefaultAgentConfig | ReActAgentConfig;
+export type NonDefaultAgentConfig = Exclude<AgentConfig, PackDefaultAgentConfig>;
+export type AgentDef = Omit<AgentConfig, 'brainDependencies'>;
+export type NonDefaultAgentDef = Omit<NonDefaultAgentConfig, 'brainDependencies'>;

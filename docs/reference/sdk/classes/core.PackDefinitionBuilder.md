@@ -31,6 +31,16 @@ rather than constructing a builder directly.
 
 ## Properties
 
+### agentConfigs
+
+• **agentConfigs**: `ReActAgentConfig`[]
+
+#### Implementation of
+
+BasicPackDefinition.agentConfigs
+
+___
+
 ### defaultAuthentication
 
 • `Optional` **defaultAuthentication**: [`Authentication`](../types/core.Authentication.md)
@@ -122,6 +132,22 @@ ___
 See [version](../interfaces/core.PackVersionDefinition.md#version).
 
 ## Methods
+
+### addAgent
+
+▸ **addAgent**(`agentDef`): [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `agentDef` | `NonDefaultAgentDef` |
+
+#### Returns
+
+[`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
+
+___
 
 ### addColumnFormat
 

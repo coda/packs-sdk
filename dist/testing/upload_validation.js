@@ -27,6 +27,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.zodErrorDetailToValidationError = exports._hasCycle = exports.validateParents = exports.validateCrawlHierarchy = exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.Limits = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
+const api_1 = require("../api");
 const api_types_1 = require("../api_types");
 const schema_1 = require("../schema");
 const types_1 = require("../types");
@@ -55,6 +56,7 @@ const schema_14 = require("../schema");
 const schema_15 = require("../schema");
 const api_types_5 = require("../api_types");
 const types_6 = require("../types");
+const __2 = require("..");
 const api_types_6 = require("../api_types");
 const url_parse_1 = __importDefault(require("url-parse"));
 const schema_16 = require("../schema");
@@ -67,7 +69,7 @@ const api_types_7 = require("../api_types");
 const object_utils_1 = require("../helpers/object_utils");
 const object_utils_2 = require("../helpers/object_utils");
 const schema_19 = require("../schema");
-const api_1 = require("../api");
+const api_2 = require("../api");
 const schema_20 = require("../schema");
 const schema_21 = require("../schema");
 const schema_22 = require("../schema");
@@ -1343,7 +1345,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             return;
         }
         const validatePropertyValue = makePropertyValidator(schema, context);
-        const { properties, contextProperties, authorityNormProperty, popularityNormProperty, } = schema.index;
+        const { properties, contextProperties, authorityNormProperty, popularityNormProperty } = schema.index;
         if (authorityNormProperty) {
             validatePropertyValue(authorityNormProperty, 'authorityNormProperty', authorityNormPropertySchema => authorityNormPropertySchema.type === schema_17.ValueType.Number, `must refer to a "ValueType.Number" property.`, ['index', 'authorityNormProperty']);
         }
@@ -1502,6 +1504,33 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             });
         }
     });
+    // Agents
+    const toolConfigSchema = z.union([
+        z.object({
+            type: z.literal(__2.ToolType.QueryBrain),
+            packId: z.number().optional(),
+        }),
+        z.object({
+            type: z.literal(__2.ToolType.GetEditor),
+        }),
+        z.object({
+            type: z.literal(__2.ToolType.AnnotateText),
+        }),
+    ]);
+    const agentConfigSchema = z.union([
+        z.object({
+            type: z.literal(api_1.AgentType.PackDefault),
+            packId: z.number(),
+            name: z.string(),
+            description: z.string(),
+        }),
+        z.object({
+            type: z.literal(api_1.AgentType.ReAct),
+            name: z.string(),
+            description: z.string(),
+            tools: z.array(toolConfigSchema),
+        }),
+    ]);
     // Make sure to call the refiners on this after removing legacyPackMetadataSchema.
     // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level
     // schema we actually use.)
@@ -1597,6 +1626,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 });
             }
         }),
+        agentConfigs: z.array(agentConfigSchema).optional().default([]),
     });
     function validateIdentityNames(context, identityInfo) {
         for (const [identityName, allowedAuthenticationNames] of identityInfo) {
@@ -1759,7 +1789,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 const { getter } = syncTable;
                 let { allowedAuthenticationNames } = getter;
                 // TODO(patrick): Better typing
-                if (!(0, api_1.isSyncPackFormula)(getter)) {
+                if (!(0, api_2.isSyncPackFormula)(getter)) {
                     continue;
                 }
                 const { supportsGetPermissions } = getter;

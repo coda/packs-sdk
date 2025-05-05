@@ -4135,6 +4135,49 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
 	execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<string>;
 	resultType: Type.string;
 };
+export declare enum ToolType {
+	AnnotateText = "annotateText",
+	GetEditor = "getEditor",
+	QueryBrain = "queryBrain"
+}
+export interface BaseToolConfig {
+	type: ToolType;
+	description?: string;
+}
+export interface GetEditorToolConfig extends BaseToolConfig {
+	type: ToolType.GetEditor;
+}
+export interface QueryBrainToolConfig extends BaseToolConfig {
+	type: ToolType.QueryBrain;
+	packId?: number;
+}
+export interface AnnotateTextToolConfig extends BaseToolConfig {
+	type: ToolType.AnnotateText;
+}
+export type ToolConfig = GetEditorToolConfig | QueryBrainToolConfig | AnnotateTextToolConfig;
+export declare enum AgentType {
+	PackDefault = "packDefault",
+	ReAct = "reAct"
+}
+export interface BaseAgentConfig {
+	name: string;
+	description: string;
+	brainDependencies: Array<{
+		packId: number;
+	}>;
+}
+export interface PackDefaultAgentConfig extends BaseAgentConfig {
+	type: AgentType.PackDefault;
+	packId: number;
+}
+export interface ReActAgentConfig extends BaseAgentConfig {
+	type: AgentType.ReAct;
+	prompt: string;
+	tools: ToolConfig[];
+}
+export type AgentConfig = PackDefaultAgentConfig | ReActAgentConfig;
+export type NonDefaultAgentConfig = Exclude<AgentConfig, PackDefaultAgentConfig>;
+export type NonDefaultAgentDef = Omit<NonDefaultAgentConfig, "brainDependencies">;
 /**
  * @deprecated Use `number` in new code.
  */
@@ -5170,6 +5213,10 @@ export interface PackVersionDefinition {
 	 * Definitions of this pack's sync tables. See {@link SyncTable}.
 	 */
 	syncTables?: SyncTable[];
+	/**
+	 * Definitions of this pack's agent configs. See {@link AgentConfig}.
+	 */
+	agentConfigs?: NonDefaultAgentConfig[];
 }
 /**
  * @deprecated use `#PackVersionDefinition`
@@ -5268,6 +5315,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * @hidden
 	 */
 	adminAuthentications?: AdminAuthentication[];
+	agentConfigs: NonDefaultAgentConfig[];
 	/**
 	 * See {@link PackVersionDefinition.version}.
 	 */
@@ -5442,6 +5490,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 */
 	setVersion(version: string): this;
 	private _setDefaultConnectionRequirement;
+	addAgent(agentDef: NonDefaultAgentDef): this;
 }
 /** @hidden */
 export type PackSyncTable = Omit<SyncTable, "getter" | "getName" | "getSchema" | "listDynamicUrls" | "searchDynamicUrls" | "getDisplayUrl"> & {
@@ -5625,6 +5674,16 @@ export declare function ensureExists<T>(value: T | null | undefined, message?: s
  * ```
  */
 export declare function assertCondition(condition: any, message?: string): asserts condition;
+export declare function makeGetEditorTool(opts?: {
+	description?: string;
+}): GetEditorToolConfig;
+export declare function makeAnnotateTextTool(opts: {
+	description?: string;
+}): AnnotateTextToolConfig;
+export declare function makeQueryBrainTool(opts: {
+	description?: string;
+	packId: number;
+}): QueryBrainToolConfig;
 
 export {
 	join as joinUrl,

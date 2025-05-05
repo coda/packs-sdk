@@ -2,6 +2,7 @@ import type {AWSAccessKeyAuthentication} from '../types';
 import type {AWSAssumeRoleAuthentication} from '../types';
 import type {AdminAuthentication} from '../types';
 import type {AdminAuthenticationTypes} from '../types';
+import {AgentType} from '../api';
 import {AllPrecannedDates} from '../api_types';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '../schema';
@@ -96,6 +97,7 @@ import type {SyncTableDef} from '../api';
 import type {SystemAuthenticationTypes} from '../types';
 import {TableRole} from '../api_types';
 import {TokenExchangeCredentialsLocation} from '../types';
+import {ToolType} from '..';
 import {Type} from '../api_types';
 import URLParse from 'url-parse';
 import type {UnionType} from '../api_types';
@@ -1708,12 +1710,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
 
         const validatePropertyValue = makePropertyValidator(schema, context);
 
-        const {
-          properties,
-          contextProperties,
-          authorityNormProperty,
-          popularityNormProperty,
-        } = schema.index;
+        const {properties, contextProperties, authorityNormProperty, popularityNormProperty} = schema.index;
 
         if (authorityNormProperty) {
           validatePropertyValue(
@@ -1924,7 +1921,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
 
   const syncTableSchema = z
     .union([genericDynamicSyncTableSchema, genericSyncTableSchema])
-    .superRefine((data, context) => { 
+    .superRefine((data, context) => {
       const syncTable = data as SyncTable;
 
       if (syncTable.getter.varargParameters && syncTable.getter.varargParameters.length > 0) {
@@ -1935,6 +1932,35 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         });
       }
     });
+
+  // Agents
+  const toolConfigSchema = z.union([
+    z.object({
+      type: z.literal(ToolType.QueryBrain),
+      packId: z.number().optional(),
+    }),
+    z.object({
+      type: z.literal(ToolType.GetEditor),
+    }),
+    z.object({
+      type: z.literal(ToolType.AnnotateText),
+    }),
+  ]);
+
+  const agentConfigSchema = z.union([
+    z.object({
+      type: z.literal(AgentType.PackDefault),
+      packId: z.number(),
+      name: z.string(),
+      description: z.string(),
+    }),
+    z.object({
+      type: z.literal(AgentType.ReAct),
+      name: z.string(),
+      description: z.string(),
+      tools: z.array(toolConfigSchema),
+    }),
+  ]);
 
   // Make sure to call the refiners on this after removing legacyPackMetadataSchema.
   // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level
@@ -2038,6 +2064,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           });
         }
       }),
+    agentConfigs: z.array(agentConfigSchema).optional().default([]),
   });
 
   function validateIdentityNames(context: z.RefinementCtx, identityInfo: Map<string, string[]>) {

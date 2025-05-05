@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.compilePackMetadata = void 0;
-const types_1 = require("../types");
+exports.compileAgentConfigsMetadata = exports.compilePackMetadata = void 0;
 const api_1 = require("../api");
+const types_1 = require("../types");
+const api_2 = require("../api");
 function compilePackMetadata(manifest) {
     const { formats, formulas, formulaNamespace, syncTables, defaultAuthentication, ...definition } = manifest;
     const compiledFormats = compileFormatsMetadata(formats || []);
@@ -21,6 +22,33 @@ function compilePackMetadata(manifest) {
     return metadata;
 }
 exports.compilePackMetadata = compilePackMetadata;
+function compileAgentConfigsMetadata(manifest, packId) {
+    var _a;
+    const agentConfigs = [];
+    // Construct default agent that wraps around the existing tools of the pack
+    // Only include the default agent if the pack has skills that Brain can use
+    const hasSyncTables = (manifest.syncTables || []).length > 0;
+    const hasActionFormulas = (manifest.formulas || []).some(formula => formula.isAction);
+    if (hasSyncTables || hasActionFormulas) {
+        agentConfigs.push({
+            type: api_1.AgentType.PackDefault,
+            packId,
+            brainDependencies: [
+                {
+                    packId,
+                },
+            ],
+            // TODO(richard): Use the pack name and description here
+            name: 'Pack Default',
+            description: 'The default agent for this pack',
+        });
+    }
+    for (const agentConfig of (_a = manifest.agentConfigs) !== null && _a !== void 0 ? _a : []) {
+        agentConfigs.push(agentConfig);
+    }
+    return agentConfigs;
+}
+exports.compileAgentConfigsMetadata = compileAgentConfigsMetadata;
 function compileFormatsMetadata(formats) {
     return formats.map(format => {
         return {
@@ -37,7 +65,7 @@ function compileFormulaMetadata(formula) {
     return rest;
 }
 function compileSyncTable(syncTable) {
-    if ((0, api_1.isDynamicSyncTable)(syncTable)) {
+    if ((0, api_2.isDynamicSyncTable)(syncTable)) {
         const { getter, getName, getSchema, getDisplayUrl, listDynamicUrls, searchDynamicUrls, ...rest } = syncTable;
         const { execute, executeUpdate, executeGetPermissions, ...getterRest } = getter;
         return {

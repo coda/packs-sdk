@@ -27,17 +27,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.compilePackBundle = exports.TimerShimStrategy = void 0;
+const config_storage_1 = require("../cli/config_storage");
+const helpers_1 = require("../cli/helpers");
 const browserify_1 = __importDefault(require("browserify"));
 const metadata_1 = require("../helpers/metadata");
+const metadata_2 = require("../helpers/metadata");
 const ensure_1 = require("../helpers/ensure");
 const esbuild = __importStar(require("esbuild"));
 const exorcist_1 = __importDefault(require("exorcist"));
 const fs_1 = __importDefault(require("fs"));
-const config_storage_1 = require("../cli/config_storage");
-const helpers_1 = require("../cli/helpers");
+const config_storage_2 = require("../cli/config_storage");
+const helpers_2 = require("../cli/helpers");
 const os_1 = __importDefault(require("os"));
 const path_1 = __importDefault(require("path"));
-const helpers_2 = require("./helpers");
+const helpers_3 = require("../testing/helpers");
+const helpers_4 = require("./helpers");
 const semver_1 = __importDefault(require("semver"));
 const ivm_wrapper_1 = require("./ivm_wrapper");
 const uglify_js_1 = __importDefault(require("uglify-js"));
@@ -121,7 +125,7 @@ function getTimerShims(timerStrategy) {
     }
 }
 function getInjections({ timerStrategy = TimerShimStrategy.None, manifestPath }) {
-    const options = (0, config_storage_1.getPackOptions)(path_1.default.dirname(manifestPath));
+    const options = (0, config_storage_2.getPackOptions)(path_1.default.dirname(manifestPath));
     const timerStrategyToUse = (options === null || options === void 0 ? void 0 : options.timerStrategy) || timerStrategy;
     const shims = [...getTimerShims(timerStrategyToUse), `${__dirname}/injections/crypto_shim.js`];
     return shims;
@@ -165,7 +169,8 @@ async function buildWithES({ lastBundleFilename, outputBundleFilename, options: 
     await esbuild.build(options);
 }
 async function compilePackBundle({ bundleFilename = 'bundle.js', // the output bundle filename
-outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, timerStrategy = TimerShimStrategy.None, }) {
+codaApiEndpoint = config_storage_1.DEFAULT_API_ENDPOINT, outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, timerStrategy = TimerShimStrategy.None, }) {
+    (0, helpers_3.print)('Compiling pack bundle...');
     const esbuildBundleFilename = 'esbuild-bundle.js';
     const browserifyBundleFilename = 'browserify-bundle.js';
     const browserifyWithShimBundleFilename = 'browserify-with-shim-bundle.js';
@@ -222,14 +227,19 @@ outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, timer
         await loadIntoVM(tempBundlePath);
     }
     catch (err) {
-        throw await (0, helpers_2.processVmError)(err, tempBundlePath);
+        throw await (0, helpers_4.processVmError)(err, tempBundlePath);
     }
     // Write the generated metadata. It's not used by the upload command, but
     // it's helpful for debugging upload validation errors.
-    const manifest = await (0, helpers_1.importManifest)(tempBundlePath);
-    const metadata = (0, metadata_1.compilePackMetadata)(manifest);
+    const manifest = await (0, helpers_2.importManifest)(tempBundlePath);
+    const metadata = (0, metadata_2.compilePackMetadata)(manifest);
     const tempMetadataPath = path_1.default.join(intermediateOutputDirectory, 'metadata.json');
     fs_1.default.writeFileSync(tempMetadataPath, JSON.stringify(metadata));
+    const manifestDir = path_1.default.dirname(manifestPath);
+    const packId = (0, helpers_1.assertPackId)(manifestDir, codaApiEndpoint);
+    const agentConfigsMetadata = (0, metadata_1.compileAgentConfigsMetadata)(manifest, packId);
+    const tempAgentConfigsMetadataPath = path_1.default.join(intermediateOutputDirectory, 'agent_configs_metadata.json');
+    fs_1.default.writeFileSync(tempAgentConfigsMetadataPath, JSON.stringify(agentConfigsMetadata));
     if (!outputDirectory || outputDirectory === intermediateOutputDirectory) {
         return {
             bundlePath: tempBundlePath,
@@ -240,12 +250,14 @@ outputDirectory, manifestPath, minify = true, intermediateOutputDirectory, timer
     const bundlePath = path_1.default.join(outputDirectory, bundleFilename);
     const bundleSourceMapPath = `${bundlePath}.map`;
     const metadataPath = path_1.default.join(outputDirectory, 'metadata.json');
+    const agentConfigsMetadataPath = path_1.default.join(outputDirectory, 'agent_configs_metadata.json');
     if (!fs_1.default.existsSync(outputDirectory)) {
         fs_1.default.mkdirSync(outputDirectory, { recursive: true });
     }
     // move over finally compiled bundle & sourcemap to the target directory.
     fs_1.default.copyFileSync(tempBundlePath, bundlePath);
     fs_1.default.copyFileSync(tempMetadataPath, metadataPath);
+    fs_1.default.copyFileSync(tempAgentConfigsMetadataPath, agentConfigsMetadataPath);
     fs_1.default.copyFileSync(`${tempBundlePath}.map`, bundleSourceMapPath);
     return {
         intermediateOutputDirectory,

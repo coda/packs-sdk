@@ -13,7 +13,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.makeObjectSchema = exports.makeAttributionNode = exports.generateSchema = exports.ValueType = exports.ValueHintType = exports.ScaleIconSet = exports.PropertyLabelValueTemplate = exports.LinkDisplayType = exports.IndexingStrategy = exports.ImageOutline = exports.ImageShapeStyle = exports.ImageCornerStyle = exports.EmailDisplayType = exports.DurationUnit = exports.CurrencyFormat = exports.AttributionNodeType = exports.ensureUnreachable = exports.ensureNonEmptyString = exports.ensureExists = exports.assertCondition = exports.SvgConstants = exports.getEffectivePropertyKeysFromSchema = exports.withQueryParams = exports.joinUrl = exports.getQueryParams = exports.simpleAutocomplete = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.makeParameter = exports.makeTranslateObjectFormula = exports.makeSyncTable = exports.makeFormula = exports.makeEmptyFormula = exports.makeDynamicSyncTable = exports.makePropertyOptionsFormula = exports.makeMetadataFormula = exports.UserVisibleError = exports.Type = exports.MissingScopesError = exports.StatusCodeError = exports.PrecannedDateRange = exports.ParameterType = exports.NetworkConnection = exports.UpdateOutcome = exports.ConnectionRequirement = exports.OptionsType = exports.PackDefinitionBuilder = exports.newPack = exports.PostSetupType = exports.AuthenticationType = void 0;
-exports.TokenExchangeCredentialsLocation = exports.ValidFetchMethods = exports.withIdentity = exports.makeSchema = exports.makeReferenceSchemaFromObjectSchema = void 0;
+exports.TokenExchangeCredentialsLocation = exports.ValidFetchMethods = exports.AgentType = exports.ToolType = exports.makeAnnotateTextTool = exports.makeGetEditorTool = exports.makeQueryBrainTool = exports.withIdentity = exports.makeSchema = exports.makeReferenceSchemaFromObjectSchema = void 0;
 var types_1 = require("./types");
 Object.defineProperty(exports, "AuthenticationType", { enumerable: true, get: function () { return types_1.AuthenticationType; } });
 var types_2 = require("./types");
@@ -125,6 +125,16 @@ var schema_19 = require("./schema");
 Object.defineProperty(exports, "makeSchema", { enumerable: true, get: function () { return schema_19.makeSchema; } });
 var schema_20 = require("./schema");
 Object.defineProperty(exports, "withIdentity", { enumerable: true, get: function () { return schema_20.withIdentity; } });
+var tool_1 = require("./tool");
+Object.defineProperty(exports, "makeQueryBrainTool", { enumerable: true, get: function () { return tool_1.makeQueryBrainTool; } });
+var tool_2 = require("./tool");
+Object.defineProperty(exports, "makeGetEditorTool", { enumerable: true, get: function () { return tool_2.makeGetEditorTool; } });
+var tool_3 = require("./tool");
+Object.defineProperty(exports, "makeAnnotateTextTool", { enumerable: true, get: function () { return tool_3.makeAnnotateTextTool; } });
+var api_16 = require("./api");
+Object.defineProperty(exports, "ToolType", { enumerable: true, get: function () { return api_16.ToolType; } });
+var api_17 = require("./api");
+Object.defineProperty(exports, "AgentType", { enumerable: true, get: function () { return api_17.AgentType; } });
 // Exports for intermediate entities we want included in the TypeDoc documentation
 // but otherwise wouldn't care about including as top-level exports of the SDK
 var api_types_7 = require("./api_types");

@@ -21,6 +21,7 @@ import * as coda from "@codahq/packs-sdk";
 
 ## Enumerations
 
+- [AgentType](../enums/core.AgentType.md)
 - [AttributionNodeType](../enums/core.AttributionNodeType.md)
 - [AuthenticationType](../enums/core.AuthenticationType.md)
 - [ConnectionRequirement](../enums/core.ConnectionRequirement.md)
@@ -38,6 +39,7 @@ import * as coda from "@codahq/packs-sdk";
 - [PrecannedDateRange](../enums/core.PrecannedDateRange.md)
 - [ScaleIconSet](../enums/core.ScaleIconSet.md)
 - [TokenExchangeCredentialsLocation](../enums/core.TokenExchangeCredentialsLocation.md)
+- [ToolType](../enums/core.ToolType.md)
 - [Type](../enums/core.Type.md)
 - [ValueHintType](../enums/core.ValueHintType.md)
 - [ValueType](../enums/core.ValueType.md)
@@ -219,13 +221,16 @@ import * as coda from "@codahq/packs-sdk";
 - [getEffectivePropertyKeysFromSchema](../functions/core.getEffectivePropertyKeysFromSchema.md)
 - [getQueryParams](../functions/core.getQueryParams.md)
 - [joinUrl](../functions/core.joinUrl.md)
+- [makeAnnotateTextTool](../functions/core.makeAnnotateTextTool.md)
 - [makeAttributionNode](../functions/core.makeAttributionNode.md)
 - [makeDynamicSyncTable](../functions/core.makeDynamicSyncTable.md)
 - [makeEmptyFormula](../functions/core.makeEmptyFormula.md)
 - [makeFormula](../functions/core.makeFormula.md)
+- [makeGetEditorTool](../functions/core.makeGetEditorTool.md)
 - [makeMetadataFormula](../functions/core.makeMetadataFormula.md)
 - [makeObjectSchema](../functions/core.makeObjectSchema.md)
 - [makeParameter](../functions/core.makeParameter.md)
+- [makeQueryBrainTool](../functions/core.makeQueryBrainTool.md)
 - [makeReferenceSchemaFromObjectSchema](../functions/core.makeReferenceSchemaFromObjectSchema.md)
 - [makeSchema](../functions/core.makeSchema.md)
 - [makeSimpleAutocompleteMetadataFormula](../functions/core.makeSimpleAutocompleteMetadataFormula.md)

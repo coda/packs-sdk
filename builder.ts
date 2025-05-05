@@ -17,6 +17,7 @@ import type {ObjectSchema} from './schema';
 import type {ObjectSchemaDefinition} from './schema';
 import type {PackVersionDefinition} from './types';
 import type {ParamDefs} from './api_types';
+import type {QueryBrainToolConfig} from './api';
 import type {Schema} from './schema';
 import type {SyncExecutionContext} from './api_types';
 import type {SyncPassthroughData} from './api';
@@ -442,10 +443,11 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
 
     switch (agentDef.type) {
       case AgentType.ReAct: {
-        const brainDependencies = agentDef.tools
-          .filter(tool => tool.type === ToolType.QueryBrain)
+        // TODO(richard):
+        const brainDependencies: Array<{packId: number}> = agentDef.tools
+          .filter(tool => tool.type === ToolType.QueryBrain && tool.packId !== undefined)
           .map(tool => ({
-            packId: tool.packId,
+            packId: (tool as QueryBrainToolConfig).packId!,
           }));
         agentConfig = {
           type: AgentType.ReAct,

@@ -2959,7 +2959,7 @@ export interface GetEditorToolConfig extends BaseToolConfig {
 
 export interface QueryBrainToolConfig extends BaseToolConfig {
   type: ToolType.QueryBrain;
-  packId: number;
+  packId?: number;
 }
 
 export interface AnnotateTextToolConfig extends BaseToolConfig {

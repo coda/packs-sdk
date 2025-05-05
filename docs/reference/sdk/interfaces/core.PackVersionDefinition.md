@@ -19,6 +19,14 @@ heart of the implementation of a Pack.
 
 ## Properties
 
+### agentConfigs
+
+• `Optional` **agentConfigs**: `ReActAgentConfig`[]
+
+Definitions of this pack's agent configs. See AgentConfig.
+
+___
+
 ### defaultAuthentication
 
 • `Optional` **defaultAuthentication**: [`Authentication`](../types/core.Authentication.md)

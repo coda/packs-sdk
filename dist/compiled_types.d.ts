@@ -1,5 +1,6 @@
 import type { AWSAccessKeyAuthentication } from './types';
 import type { AWSAssumeRoleAuthentication } from './types';
+import type { AgentConfig } from './api';
 import type { Authentication } from './types';
 import type { AuthenticationType } from './types';
 import type { CodaApiBearerTokenAuthentication } from './types';
@@ -40,6 +41,8 @@ export type PackSyncTable = Omit<SyncTable, 'getter' | 'getName' | 'getSchema' |
 export interface PackFormatMetadata extends Omit<Format, 'matchers'> {
     matchers: string[];
 }
+/** @hidden */
+export type AgentConfigMetadata = AgentConfig & {};
 /** @hidden */
 export type PostSetupMetadata = Omit<PostSetup, 'getOptions' | 'getOptionsFormula'> & {
     getOptions?: MetadataFormulaMetadata;

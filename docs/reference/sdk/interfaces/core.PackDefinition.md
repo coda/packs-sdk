@@ -23,6 +23,18 @@ This should only be used by legacy Coda pack implementations.
 
 ## Properties
 
+### agentConfigs
+
+• `Optional` **agentConfigs**: `ReActAgentConfig`[]
+
+Definitions of this pack's agent configs. See AgentConfig.
+
+#### Inherited from
+
+[PackVersionDefinition](core.PackVersionDefinition.md).[agentConfigs](core.PackVersionDefinition.md#agentconfigs)
+
+___
+
 ### category
 
 • `Optional` **category**: `PackCategory`
