@@ -97,7 +97,7 @@ The name of the sync table. This is shown to users in the Coda UI if displayName
 This should describe the entities being synced. For example, a sync table that syncs products
 from an e-commerce platform should be called 'Products'. This name must not contain spaces.
 
-Important: This value acts as a unique ID for the table, and updating it later is a breaking change. 
+Important: This value acts as a unique ID for the table, and updating it later is a breaking change.
 If you want to change the value shown to the users, set `displayName` instead.
 
 ___

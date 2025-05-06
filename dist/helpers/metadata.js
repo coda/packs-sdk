@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.compilePackMetadata = void 0;
+exports.compileMetadataFormulaMetadata = exports.compileSyncTable = exports.compileFormulaMetadata = exports.compileFormulasMetadata = exports.compilePackMetadata = void 0;
 const types_1 = require("../types");
 const api_1 = require("../api");
+const api_2 = require("../api");
 function compilePackMetadata(manifest) {
     const { formats, formulas, formulaNamespace, syncTables, defaultAuthentication, ...definition } = manifest;
     const compiledFormats = compileFormatsMetadata(formats || []);
@@ -32,14 +33,20 @@ function compileFormatsMetadata(formats) {
 function compileFormulasMetadata(formulas) {
     return formulas.map(compileFormulaMetadata);
 }
+exports.compileFormulasMetadata = compileFormulasMetadata;
 function compileFormulaMetadata(formula) {
-    const { execute, ...rest } = formula;
-    return rest;
+    const { execute, validateParameters, ...rest } = formula;
+    return {
+        ...rest,
+        validateParameters: validateParameters ?
+            compileMetadataFormulaMetadata((0, api_2.makeMetadataFormula)(validateParameters)) : undefined,
+    };
 }
+exports.compileFormulaMetadata = compileFormulaMetadata;
 function compileSyncTable(syncTable) {
     if ((0, api_1.isDynamicSyncTable)(syncTable)) {
         const { getter, getName, getSchema, getDisplayUrl, listDynamicUrls, searchDynamicUrls, ...rest } = syncTable;
-        const { execute, executeUpdate, executeGetPermissions, ...getterRest } = getter;
+        const { execute, executeUpdate, executeGetPermissions, validateParameters, ...getterRest } = getter;
         return {
             ...rest,
             getName: compileMetadataFormulaMetadata(getName),
@@ -50,21 +57,26 @@ function compileSyncTable(syncTable) {
             getter: {
                 supportsUpdates: Boolean(executeUpdate),
                 supportsGetPermissions: Boolean(executeGetPermissions),
+                validateParameters: validateParameters ?
+                    compileMetadataFormulaMetadata((0, api_2.makeMetadataFormula)(validateParameters)) : undefined,
                 ...getterRest,
             },
         };
     }
     const { getter, ...rest } = syncTable;
-    const { execute, executeUpdate, executeGetPermissions, ...getterRest } = getter;
+    const { execute, executeUpdate, executeGetPermissions, validateParameters, ...getterRest } = getter;
     return {
         ...rest,
         getter: {
             supportsUpdates: Boolean(executeUpdate),
             supportsGetPermissions: Boolean(executeGetPermissions),
+            validateParameters: validateParameters ?
+                compileMetadataFormulaMetadata((0, api_2.makeMetadataFormula)(validateParameters)) : undefined,
             ...getterRest,
         },
     };
 }
+exports.compileSyncTable = compileSyncTable;
 function compileDefaultAuthenticationMetadata(authentication) {
     if (!authentication) {
         return;
@@ -84,9 +96,10 @@ function compileMetadataFormulaMetadata(formula) {
     if (!formula) {
         return;
     }
-    const { execute, ...rest } = formula;
+    const { execute, validateParameters, ...rest } = formula;
     return rest;
 }
+exports.compileMetadataFormulaMetadata = compileMetadataFormulaMetadata;
 function compilePostSetupStepMetadata(step) {
     const { getOptions, getOptionsFormula, ...rest } = step;
     return {

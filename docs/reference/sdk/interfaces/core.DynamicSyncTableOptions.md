@@ -85,7 +85,7 @@ ___
 
 ### getDisplayUrl
 
-• **getDisplayUrl**: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<`ContextT`\>
+• **getDisplayUrl**: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<`ContextT`, [`LegacyDefaultMetadataReturnType`](../types/core.LegacyDefaultMetadataReturnType.md)\>
 
 A formula that that returns a browser-friendly url representing the
 resource being synced. The Coda UI links to this url as the source
@@ -96,7 +96,7 @@ ___
 
 ### getName
 
-• **getName**: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<`ContextT`\>
+• **getName**: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<`ContextT`, [`LegacyDefaultMetadataReturnType`](../types/core.LegacyDefaultMetadataReturnType.md)\>
 
 A formula that returns the name of this table.
 
@@ -104,7 +104,7 @@ ___
 
 ### getSchema
 
-• **getSchema**: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<`ContextT`\>
+• **getSchema**: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<`ContextT`, [`LegacyDefaultMetadataReturnType`](../types/core.LegacyDefaultMetadataReturnType.md)\>
 
 A formula that returns the schema for this table.
 
@@ -124,7 +124,7 @@ ___
 
 ### listDynamicUrls
 
-• `Optional` **listDynamicUrls**: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<[`ExecutionContext`](core.ExecutionContext.md)\>
+• `Optional` **listDynamicUrls**: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<[`ExecutionContext`](core.ExecutionContext.md), [`LegacyDefaultMetadataReturnType`](../types/core.LegacyDefaultMetadataReturnType.md)\>
 
 A formula that returns a list of available dynamic urls that can be
 used to create an instance of this dynamic sync table.
@@ -194,7 +194,7 @@ ___
 
 ### searchDynamicUrls
 
-• `Optional` **searchDynamicUrls**: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<[`ExecutionContext`](core.ExecutionContext.md)\>
+• `Optional` **searchDynamicUrls**: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<[`ExecutionContext`](core.ExecutionContext.md), [`LegacyDefaultMetadataReturnType`](../types/core.LegacyDefaultMetadataReturnType.md)\>
 
 A formula that returns a list of available dynamic urls that match a given
 search query that can be used to create an instance of this dynamic sync table.

@@ -395,6 +395,35 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
 	 * @hidden
 	 */
 	readonly allowedAuthenticationNames?: string[];
+	/**
+	 * The JavaScript function that implements parameter validation.
+	 *
+	 * This function takes in parameters and a context containing a {@link PermissionSyncMode}
+	 * and validates the parameters. A formula may want to validate parameters differently
+	 * for permissionSyncMode 'PermissionAware' vs 'Personal' vs undefined (which represents a formula).
+	 *
+	 * @returns if the parameters are valid
+	 * @throws {@link ParameterValidationError} if the parameters are invalid.
+	 *
+	 * @example
+	 * ```
+	 * validateParameters: async function (context, _, formulaContext) {
+	 *   let [quantity, sku] = formulaContext?.params;
+	 *   let errors = [];
+	 *   if (quantity < 0) {
+	 *     errors.push({message: "Must be a positive number.", propertyName: "quantity"});
+	 *   }
+	 *   if (!isValidSku(context, sku)) {
+	 *     errors.push({message: `Product SKU not found.`, propertyName: "sku"});
+	 *   }
+	 *   if (errors.length > 0) {
+	 *     throw new ParameterValidationError("Invalid parameter values.", errors);
+	 *   }
+	 * return true;
+	 * },
+	 * ```
+	 */
+	validateParameters?: MetadataFunction<ExecutionContext, boolean>;
 }
 /**
  * Enumeration of requirement states for whether a given formula or sync table requires
@@ -673,8 +702,19 @@ export interface SyncStateService {
 		[rowId: string]: string;
 	}>;
 }
-declare enum PermissionSyncMode {
+/**
+ * The sync mode of the current sync.
+ */
+export declare enum PermissionSyncMode {
+	/**
+	 * In doc syncs are always Personal.
+	 * Personal and shared syncs for Coda Brain are Personal.
+	 */
 	Personal = "Personal",
+	/**
+	 * In Coda Brain, if the org admin selects that a sync should match
+	 * the permissions of the source, then the sync will be 'PermissionAware'.
+	 */
 	PermissionAware = "PermissionAware"
 }
 /**
@@ -725,8 +765,9 @@ export interface SyncBase {
 	 * If this invocation is a part of an ingestion, then this ID will be provided to all invocations.
 	 * It may be a full sync execution ID or an incremental sync execution ID.
 	 *
-	 * This includes invocations of sync `execute` and `executeGetPermissions`, as well as
-	 * dynamic table features like `listDynamicUrls`, `getSchema`, and `getName`.
+	 * This includes invocations of sync `execute` and `executeGetPermissions`,
+	 * invocations of `validateParameters`,
+	 * as well as dynamic table features like `listDynamicUrls`, `getSchema`, and `getName`.
 	 *
 	 * TODO(patrick): May want to support this in doc syncs too.
 	 *
@@ -2901,6 +2942,28 @@ export declare class UserVisibleError extends Error {
 	constructor(message?: string, internalError?: Error);
 }
 /**
+ * An error that occurs when validating parameters.
+ */
+export interface ParameterError {
+	/** The error message for the parameter. */
+	message: string;
+	/** The name of the parameter that caused the error. */
+	parameterName: string;
+}
+/**
+ * An error that occurs when validating parameters.
+ */
+export declare class ParameterValidationError extends UserVisibleError {
+	/**
+	 * The parameters that were invalid, alongside a message describing the error for the parameter.
+	 */
+	readonly errors: ParameterError[];
+	/**
+	 * Use to construct a parameter validation error.
+	 */
+	constructor(message: string, errors: ParameterError[]);
+}
+/**
  * The raw HTTP response from a {@link StatusCodeError}.
  */
 export interface StatusCodeErrorResponse {
@@ -3270,9 +3333,13 @@ export type Formula<ParamDefsT extends ParamDefs = ParamDefs, ResultT extends Va
 export type TypedPackFormula = Formula | GenericSyncFormula;
 export type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
 /** @hidden */
-export type PackFormulaMetadata = Omit<TypedPackFormula, "execute" | "executeUpdate" | "executeGetPermissions">;
+export type PackFormulaMetadata = Omit<TypedPackFormula, "execute" | "executeUpdate" | "executeGetPermissions" | "validateParameters"> & {
+	validateParameters?: MetadataFormulaMetadata;
+};
 /** @hidden */
-export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, "execute">;
+export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, "execute" | "validateParameters"> & {
+	validateParameters?: MetadataFormulaMetadata;
+};
 /**
  * The return value from the formula that implements a sync table. Each sync formula invocation
  * returns one reasonable size page of results. The formula may also return a continuation, indicating
@@ -3737,17 +3804,24 @@ export type PropertyOptionsMetadataFormula<SchemaT extends Schema> = ObjectPackF
 	execute(params: ParamValues<[
 	]>, context: PropertyOptionsExecutionContext): Promise<object> | object;
 };
-export type MetadataFormulaMetadata = Omit<MetadataFormula, "execute">;
+export type MetadataFormulaMetadata = Omit<MetadataFormula, "execute" | "validateParameters">;
+/**
+ * Historically, metadata formulas could return a variety of types.
+ * This type is used to represent the legacy return types.
+ * Metadata formulas now work with generics and in the future, will
+ * be updated to declare a more precise return type for each formula.
+ */
+export type LegacyDefaultMetadataReturnType = MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>;
 /**
  * A JavaScript function that can implement a {@link MetadataFormulaDef}.
  */
-export type MetadataFunction<ContextT extends ExecutionContext = ExecutionContext> = (context: ContextT, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
+export type MetadataFunction<ContextT extends ExecutionContext = ExecutionContext, ReturnT = LegacyDefaultMetadataReturnType> = (context: ContextT, search: string, formulaContext?: MetadataContext) => Promise<ReturnT>;
 /**
  * The type of values that will be accepted as a metadata formula definition. This can either
  * be the JavaScript function that implements a metadata formula (strongly recommended)
  * or a full metadata formula definition (mostly supported for legacy code).
  */
-export type MetadataFormulaDef<ContextT extends ExecutionContext = ExecutionContext> = MetadataFormula<ContextT> | MetadataFunction<ContextT>;
+export type MetadataFormulaDef<ContextT extends ExecutionContext = ExecutionContext, ReturnT = LegacyDefaultMetadataReturnType> = MetadataFormula<ContextT> | MetadataFunction<ContextT, ReturnT>;
 /**
  * A wrapper that generates a formula definition from the function that implements a metadata formula.
  * It is uncommon to ever need to call this directly, normally you would just define the JavaScript
@@ -3760,7 +3834,7 @@ export type MetadataFormulaDef<ContextT extends ExecutionContext = ExecutionCont
  * This wrapper simply adds the surrounding boilerplate for a given JavaScript function so that
  * it is shaped like a Coda formula to be used at runtime.
  */
-export declare function makeMetadataFormula<ContextT extends ExecutionContext>(execute: MetadataFunction<ContextT>, options?: {
+export declare function makeMetadataFormula<ContextT extends ExecutionContext, ReturnT = LegacyDefaultMetadataReturnType>(execute: MetadataFunction<ContextT, ReturnT>, options?: {
 	connectionRequirement?: ConnectionRequirement;
 }): MetadataFormula<ContextT>;
 /**
@@ -4158,6 +4232,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
 	isSystem?: boolean | undefined;
 	extraOAuthScopes?: string[] | undefined;
 	allowedAuthenticationNames?: string[] | undefined;
+	validateParameters?: MetadataFunction<ExecutionContext, boolean> | undefined;
 } & {
 	execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<SchemaType<ResultT>>;
 	resultType: Type.object;
@@ -4200,6 +4275,7 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
 	isSystem?: boolean | undefined;
 	extraOAuthScopes?: string[] | undefined;
 	allowedAuthenticationNames?: string[] | undefined;
+	validateParameters?: MetadataFunction<ExecutionContext, boolean> | undefined;
 } & {
 	execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<string>;
 	resultType: Type.string;

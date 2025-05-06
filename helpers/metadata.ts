@@ -17,6 +17,7 @@ import type {PostSetup} from '../types';
 import type {PostSetupMetadata} from '../compiled_types';
 import type {TypedPackFormula} from '../api';
 import {isDynamicSyncTable} from '../api';
+import {makeMetadataFormula} from '../api';
 
 // Legacy metadata compilation kept around until we migrate first-party packs.
 export function compilePackMetadata(manifest: PackDefinition): PackMetadata;
@@ -49,19 +50,23 @@ function compileFormatsMetadata(formats: Format[]): PackFormatMetadata[] {
   });
 }
 
-function compileFormulasMetadata(formulas: Formula[]): PackFormulaMetadata[] {
+export function compileFormulasMetadata(formulas: Formula[]): PackFormulaMetadata[] {
   return formulas.map(compileFormulaMetadata);
 }
 
-function compileFormulaMetadata(formula: TypedPackFormula): PackFormulaMetadata {
-  const {execute, ...rest} = formula;
-  return rest;
+export function compileFormulaMetadata(formula: TypedPackFormula): PackFormulaMetadata {
+  const {execute, validateParameters, ...rest} = formula;
+  return {
+    ...rest,
+    validateParameters: validateParameters ?
+      compileMetadataFormulaMetadata(makeMetadataFormula(validateParameters)) : undefined,
+  };
 }
 
-function compileSyncTable(syncTable: GenericSyncTable): PackSyncTable {
+export function compileSyncTable(syncTable: GenericSyncTable): PackSyncTable {
   if (isDynamicSyncTable(syncTable)) {
     const {getter, getName, getSchema, getDisplayUrl, listDynamicUrls, searchDynamicUrls, ...rest} = syncTable;
-    const {execute, executeUpdate, executeGetPermissions, ...getterRest} = getter;
+    const {execute, executeUpdate, executeGetPermissions, validateParameters, ...getterRest} = getter;
     return {
       ...rest,
       getName: compileMetadataFormulaMetadata(getName),
@@ -72,18 +77,22 @@ function compileSyncTable(syncTable: GenericSyncTable): PackSyncTable {
       getter: {
         supportsUpdates: Boolean(executeUpdate),
         supportsGetPermissions: Boolean(executeGetPermissions),
+        validateParameters: validateParameters ?
+          compileMetadataFormulaMetadata(makeMetadataFormula(validateParameters)) : undefined,
         ...getterRest,
       },
     };
   }
 
   const {getter, ...rest} = syncTable;
-  const {execute, executeUpdate, executeGetPermissions, ...getterRest} = getter;
+  const {execute, executeUpdate, executeGetPermissions, validateParameters, ...getterRest} = getter;
   return {
     ...rest,
     getter: {
       supportsUpdates: Boolean(executeUpdate),
       supportsGetPermissions: Boolean(executeGetPermissions),
+      validateParameters: validateParameters ?
+        compileMetadataFormulaMetadata(makeMetadataFormula(validateParameters)) : undefined,
       ...getterRest,
     },
   };
@@ -107,11 +116,13 @@ function compileDefaultAuthenticationMetadata(
   };
 }
 
-function compileMetadataFormulaMetadata(formula: MetadataFormula | undefined): MetadataFormulaMetadata | undefined {
+export function compileMetadataFormulaMetadata(
+  formula: MetadataFormula | undefined
+): MetadataFormulaMetadata | undefined {
   if (!formula) {
     return;
   }
-  const {execute, ...rest} = formula;
+  const {execute, validateParameters, ...rest} = formula;
   return rest;
 }
 

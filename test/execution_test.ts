@@ -776,6 +776,70 @@ describe('Execution', () => {
           });
         });
 
+        it('context includes sync for validateParameters and parameters on sync formula', async () => {
+          await executeFormulaOrSyncFromCLI({
+            vm,
+            formulaName: 'Students:validateParameters',
+            params: ['Personal'],
+            manifest: fakePack,
+            manifestPath: '',
+            bundleSourceMapPath,
+            bundlePath,
+            contextOptions: {useRealFetcher: false},
+          });
+          const result = mockPrintFull.args;
+          assert.deepEqual(result, []);
+        });
+
+        // TODO(gary): Add a test for validateParameters passed through permission mode correctly
+
+        it('validateParameters on formula does not include sync in context', async () => {
+          await executeFormulaOrSyncFromCLI({
+            vm,
+            formulaName: 'ValidateParametersFailsDueToNonSync:validateParameters',
+            params: [],
+            manifest: fakePack,
+            manifestPath: '',
+            bundleSourceMapPath,
+            bundlePath,
+            contextOptions: {useRealFetcher: false},
+          });
+          const result = mockPrint.args[0][0];
+          assert.instanceOf(result, Error);
+          assert.include(result.message, 'Validate parameters fails due to non-sync formula');
+        });
+
+        it('validateParameters on formula returns ParameterValidationError', async () => {
+          await executeFormulaOrSyncFromCLI({
+            vm,
+            formulaName: 'ValidateParametersFailsIfParamIsNotPositive:validateParameters',
+            params: ['0'],
+            manifest: fakePack,
+            manifestPath: '',
+            bundleSourceMapPath,
+            bundlePath,
+            contextOptions: {useRealFetcher: false},
+          });
+          const result = mockPrint.args[0][0];
+          assert.instanceOf(result, Error);
+          assert.include(result.message, 'Validate parameters fails if value is not positive');
+        });
+
+        it('validateParameters on formula can return valid result', async () => {
+          await executeFormulaOrSyncFromCLI({
+            vm,
+            formulaName: 'ValidateParametersFailsIfParamIsNotPositive:validateParameters',
+            params: ['1'],
+            manifest: fakePack,
+            manifestPath: '',
+            bundleSourceMapPath,
+            bundlePath,
+            contextOptions: {useRealFetcher: false},
+          });
+          const result = mockPrint.args;
+          assert.deepEqual(result, []);
+        });
+
         it('autocomplete', async () => {
           await executeFormulaOrSyncFromCLI({
             vm,

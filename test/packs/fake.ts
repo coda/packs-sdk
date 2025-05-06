@@ -1,6 +1,8 @@
 import type {PackDefinition} from '../../types';
 import {ParameterType} from '../../api_types';
+import {ParameterValidationError} from '../../api';
 import type {Permission} from '../../schema';
+import {PermissionSyncMode} from '../../api_types';
 import {PermissionType} from '../../schema';
 import {PrincipalType} from '../../schema';
 import type {RowAccessDefinition} from '../../schema';
@@ -116,6 +118,36 @@ export const manifest: PackDefinition = createFakePack({
         return students.find(student => student.name === name) as any;
       },
     }),
+    makeNumericFormula({
+      name: 'ValidateParametersFailsDueToNonSync',
+      description: 'Validate parameters fails due to non-sync formula',
+      parameters: [],
+      execute: async ([], _context) => 1,
+      validateParameters: async context => {
+        if (context.sync?.permissionSyncMode) {
+          return true;
+        }
+        throw new ParameterValidationError('Validate parameters fails due to non-sync formula', []);
+      },
+    }),
+    makeNumericFormula({
+      name: 'ValidateParametersFailsIfParamIsNotPositive',
+      description: 'Validate parameters fails if param is not positive',
+      parameters: [makeNumericParameter('value', 'The value to validate.')],
+      execute: async ([_value], _context) => 1,
+      validateParameters: async (_context, _search, formulaContext) => {
+        const [value] = formulaContext?.params;
+        if (value > 0) {
+          return true;
+        }
+        throw new ParameterValidationError('Validate parameters fails if value is not positive', [
+          {
+            parameterName: 'value',
+            message: `Value must be positive, got ${JSON.stringify(formulaContext?.params)}`,
+          },
+        ]);
+      },
+    }),
   ],
   syncTables: [
     makeSyncTable({
@@ -125,6 +157,18 @@ export const manifest: PackDefinition = createFakePack({
       formula: {
         name: 'Students',
         description: "Gets students in a teacher's class",
+        validateParameters: async (context, _search, formulaContext) => {
+          const [teacher] = formulaContext?.params;
+          // This will be valid if the teacher is Permission and the context permissionSyncMode is PermissionAware
+          if (teacher === 'Permission' && context.sync?.permissionSyncMode === PermissionSyncMode.PermissionAware) {
+            return true;
+          }
+          // Also valid if the teacher is Personal and the context permissionSyncMode is Personal
+          if (teacher === 'Personal' && context.sync?.permissionSyncMode === PermissionSyncMode.Personal) {
+            return true;
+          }
+          throw new ParameterValidationError('Validate parameters fails if teacher does not match permissionSyncMode', []);
+        },
         execute: async ([teacher, shouldPassthrough], context) => {
           const {continuation, previousCompletion} = context.sync;
           const isIncremental = Boolean(context.sync.previousCompletion);

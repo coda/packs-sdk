@@ -6804,12 +6804,13 @@ module.exports = (() => {
               return selectedAuthentication.getConnectionUserId.execute(params, executionContext);
             }
             break;
-          case "ParameterAutocomplete" /* ParameterAutocomplete */:
-            const parentFormula = findParentFormula(manifest, formulaSpec);
-            if (parentFormula) {
-              return parentFormula.execute(params, executionContext);
+          case "ParameterAutocomplete" /* ParameterAutocomplete */: {
+            const autocompleteFormula = findParameterAutocompleteFormula(manifest, formulaSpec);
+            if (autocompleteFormula) {
+              return autocompleteFormula.execute(params, executionContext);
             }
             break;
+          }
           case "PropertyOptions" /* PropertyOptions */:
             const syncTable = syncTables?.find((table) => table.name === formulaSpec.syncTableName);
             const optionsFormula = syncTable?.namedPropertyOptions?.[formulaSpec.optionsFormulaKey];
@@ -6930,6 +6931,13 @@ module.exports = (() => {
               }
             }
             break;
+          case "ValidateParameters" /* ValidateParameters */: {
+            const validateParametersFormula = findValidateParametersFormula(manifest, formulaSpec);
+            if (validateParametersFormula) {
+              return validateParametersFormula(executionContext, "", { params, __brand: "MetadataContext" });
+            }
+            break;
+          }
           default:
             return ensureSwitchUnreachable(formulaSpec);
         }
@@ -6941,29 +6949,38 @@ module.exports = (() => {
     throw new Error(`Could not find a formula matching formula spec ${JSON.stringify(formulaSpec)}`);
   }
   __name(doFindAndExecutePackFunction, "doFindAndExecutePackFunction");
+  function findParameterAutocompleteFormula(manifest, formulaSpec) {
+    const parentFormula = findParentFormula(manifest, formulaSpec);
+    if (parentFormula) {
+      const params = parentFormula.parameters.concat(parentFormula.varargParameters || []);
+      const paramDef = params.find((param) => param.name === formulaSpec.parameterName);
+      return paramDef?.autocomplete;
+    }
+  }
+  __name(findParameterAutocompleteFormula, "findParameterAutocompleteFormula");
+  function findValidateParametersFormula(manifest, formulaSpec) {
+    const parentFormula = findParentFormula(manifest, formulaSpec);
+    return parentFormula?.validateParameters;
+  }
+  __name(findValidateParametersFormula, "findValidateParametersFormula");
   function findParentFormula(manifest, formulaSpec) {
     const { formulas, syncTables } = manifest;
-    let formula;
-    switch (formulaSpec.parentFormulaType) {
+    const parentFormulaType = formulaSpec.parentFormulaType;
+    switch (parentFormulaType) {
       case "Standard" /* Standard */:
         if (formulas) {
-          formula = formulas.find((defn) => defn.name === formulaSpec.parentFormulaName);
+          return formulas.find((defn) => defn.name === formulaSpec.parentFormulaName);
         }
         break;
       case "Sync" /* Sync */:
       case "SyncUpdate" /* SyncUpdate */:
         if (syncTables) {
           const syncTable = syncTables.find((table) => table.getter.name === formulaSpec.parentFormulaName);
-          formula = syncTable?.getter;
+          return syncTable?.getter;
         }
         break;
       default:
-        return ensureSwitchUnreachable(formulaSpec.parentFormulaType);
-    }
-    if (formula) {
-      const params = formula.parameters.concat(formula.varargParameters || []);
-      const paramDef = params.find((param) => param.name === formulaSpec.parameterName);
-      return paramDef?.autocomplete;
+        return ensureSwitchUnreachable(parentFormulaType);
     }
   }
   __name(findParentFormula, "findParentFormula");

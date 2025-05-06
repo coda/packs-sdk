@@ -34,6 +34,7 @@ import * as coda from "@codahq/packs-sdk";
 - [NetworkConnection](../enums/core.NetworkConnection.md)
 - [OptionsType](../enums/core.OptionsType.md)
 - [ParameterType](../enums/core.ParameterType.md)
+- [PermissionSyncMode](../enums/core.PermissionSyncMode.md)
 - [PostSetupType](../enums/core.PostSetupType.md)
 - [PrecannedDateRange](../enums/core.PrecannedDateRange.md)
 - [ScaleIconSet](../enums/core.ScaleIconSet.md)
@@ -46,6 +47,7 @@ import * as coda from "@codahq/packs-sdk";
 
 - [MissingScopesError](../classes/core.MissingScopesError.md)
 - [PackDefinitionBuilder](../classes/core.PackDefinitionBuilder.md)
+- [ParameterValidationError](../classes/core.ParameterValidationError.md)
 - [StatusCodeError](../classes/core.StatusCodeError.md)
 - [UserVisibleError](../classes/core.UserVisibleError.md)
 
@@ -104,6 +106,7 @@ import * as coda from "@codahq/packs-sdk";
 - [PackFormulaDef](../interfaces/core.PackFormulaDef.md)
 - [PackVersionDefinition](../interfaces/core.PackVersionDefinition.md)
 - [ParamDef](../interfaces/core.ParamDef.md)
+- [ParameterError](../interfaces/core.ParameterError.md)
 - [ProgressBarSchema](../interfaces/core.ProgressBarSchema.md)
 - [PropertyIdentifierDetails](../interfaces/core.PropertyIdentifierDetails.md)
 - [PropertyOptionsExecutionContext](../interfaces/core.PropertyOptionsExecutionContext.md)
@@ -160,6 +163,7 @@ import * as coda from "@codahq/packs-sdk";
 - [GenericSyncUpdate](../types/core.GenericSyncUpdate.md)
 - [GenericSyncUpdateSingleResult](../types/core.GenericSyncUpdateSingleResult.md)
 - [InferrableTypes](../types/core.InferrableTypes.md)
+- [LegacyDefaultMetadataReturnType](../types/core.LegacyDefaultMetadataReturnType.md)
 - [MetadataContext](../types/core.MetadataContext.md)
 - [MetadataFormula](../types/core.MetadataFormula.md)
 - [MetadataFormulaDef](../types/core.MetadataFormulaDef.md)

@@ -97,12 +97,13 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                         return selectedAuthentication.getConnectionUserId.execute(params, executionContext);
                     }
                     break;
-                case types_3.MetadataFormulaType.ParameterAutocomplete:
-                    const parentFormula = findParentFormula(manifest, formulaSpec);
-                    if (parentFormula) {
-                        return parentFormula.execute(params, executionContext);
+                case types_3.MetadataFormulaType.ParameterAutocomplete: {
+                    const autocompleteFormula = findParameterAutocompleteFormula(manifest, formulaSpec);
+                    if (autocompleteFormula) {
+                        return autocompleteFormula.execute(params, executionContext);
                     }
                     break;
+                }
                 case types_3.MetadataFormulaType.PropertyOptions:
                     const syncTable = syncTables === null || syncTables === void 0 ? void 0 : syncTables.find(table => table.name === formulaSpec.syncTableName);
                     const optionsFormula = (_a = syncTable === null || syncTable === void 0 ? void 0 : syncTable.namedPropertyOptions) === null || _a === void 0 ? void 0 : _a[formulaSpec.optionsFormulaKey];
@@ -219,6 +220,13 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                         }
                     }
                     break;
+                case types_3.MetadataFormulaType.ValidateParameters: {
+                    const validateParametersFormula = findValidateParametersFormula(manifest, formulaSpec);
+                    if (validateParametersFormula) {
+                        return validateParametersFormula(executionContext, '', { params: params, __brand: 'MetadataContext' });
+                    }
+                    break;
+                }
                 default:
                     return ensureSwitchUnreachable(formulaSpec);
             }
@@ -230,29 +238,36 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
     // TODO(Chris): Log an error
     throw new Error(`Could not find a formula matching formula spec ${JSON.stringify(formulaSpec)}`);
 }
+function findParameterAutocompleteFormula(manifest, formulaSpec) {
+    const parentFormula = findParentFormula(manifest, formulaSpec);
+    if (parentFormula) {
+        const params = parentFormula.parameters.concat(parentFormula.varargParameters || []);
+        const paramDef = params.find(param => param.name === formulaSpec.parameterName);
+        return paramDef === null || paramDef === void 0 ? void 0 : paramDef.autocomplete;
+    }
+}
+function findValidateParametersFormula(manifest, formulaSpec) {
+    const parentFormula = findParentFormula(manifest, formulaSpec);
+    return parentFormula === null || parentFormula === void 0 ? void 0 : parentFormula.validateParameters;
+}
 function findParentFormula(manifest, formulaSpec) {
     const { formulas, syncTables } = manifest;
-    let formula;
-    switch (formulaSpec.parentFormulaType) {
+    const parentFormulaType = formulaSpec.parentFormulaType;
+    switch (parentFormulaType) {
         case types_2.FormulaType.Standard:
             if (formulas) {
-                formula = formulas.find(defn => defn.name === formulaSpec.parentFormulaName);
+                return formulas.find(defn => defn.name === formulaSpec.parentFormulaName);
             }
             break;
         case types_2.FormulaType.Sync:
         case types_2.FormulaType.SyncUpdate:
             if (syncTables) {
                 const syncTable = syncTables.find(table => table.getter.name === formulaSpec.parentFormulaName);
-                formula = syncTable === null || syncTable === void 0 ? void 0 : syncTable.getter;
+                return syncTable === null || syncTable === void 0 ? void 0 : syncTable.getter;
             }
             break;
         default:
-            return ensureSwitchUnreachable(formulaSpec.parentFormulaType);
-    }
-    if (formula) {
-        const params = formula.parameters.concat(formula.varargParameters || []);
-        const paramDef = params.find(param => param.name === formulaSpec.parameterName);
-        return paramDef === null || paramDef === void 0 ? void 0 : paramDef.autocomplete;
+            return ensureSwitchUnreachable(parentFormulaType);
     }
 }
 function ensureSwitchUnreachable(value) {

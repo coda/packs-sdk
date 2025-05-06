@@ -18,6 +18,7 @@ import type {TypedPackFormula} from '../api';
 import type {ValidationError} from './types';
 import {ValueHintType} from '../schema';
 import {ValueType} from '../schema';
+import {compileFormulaMetadata} from '../helpers/metadata';
 import {ensureExists} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
 import {isArray} from '../schema';
@@ -67,9 +68,10 @@ export function validateResult<ResultT extends any>(formula: TypedPackFormula, r
     throw ResultValidationException.fromErrors(formula.name, [maybeError]);
   }
 
-  if (isObjectPackFormula(formula)) {
+  const compiledFormula = compileFormulaMetadata(formula);
+  if (isObjectPackFormula(compiledFormula)) {
     // We've already validated that the result type is valid by this point.
-    validateObjectResult(formula, result as Record<string, unknown>);
+    validateObjectResult(compiledFormula, result as Record<string, unknown>);
   }
 }
 

@@ -182,6 +182,45 @@ The parameter inputs to the formula, if any.
 
 ___
 
+### validateParameters
+
+• `Optional` **validateParameters**: [`MetadataFunction`](../types/core.MetadataFunction.md)<[`ExecutionContext`](core.ExecutionContext.md), `boolean`\>
+
+The JavaScript function that implements parameter validation.
+
+This function takes in parameters and a context containing a [PermissionSyncMode](../enums/core.PermissionSyncMode.md)
+and validates the parameters. A formula may want to validate parameters differently
+for permissionSyncMode 'PermissionAware' vs 'Personal' vs undefined (which represents a formula).
+
+**`Throws`**
+
+[ParameterValidationError](../classes/core.ParameterValidationError.md) if the parameters are invalid.
+
+**`Example`**
+
+```
+validateParameters: async function (context, _, formulaContext) {
+  let [quantity, sku] = formulaContext?.params;
+  let errors = [];
+  if (quantity < 0) {
+    errors.push({message: "Must be a positive number.", propertyName: "quantity"});
+  }
+  if (!isValidSku(context, sku)) {
+    errors.push({message: `Product SKU not found.`, propertyName: "sku"});
+  }
+  if (errors.length > 0) {
+    throw new ParameterValidationError("Invalid parameter values.", errors);
+  }
+return true;
+},
+```
+
+#### Inherited from
+
+[CommonPackFormulaDef](core.CommonPackFormulaDef.md).[validateParameters](core.CommonPackFormulaDef.md#validateparameters)
+
+___
+
 ### varargParameters
 
 • `Optional` `Readonly` **varargParameters**: [`ParamDefs`](../types/core.ParamDefs.md)

@@ -100,6 +100,34 @@ export class UserVisibleError extends Error {
 }
 
 /**
+ * An error that occurs when validating parameters.
+ */
+export interface ParameterError {
+  /** The error message for the parameter. */
+  message: string;
+  /** The name of the parameter that caused the error. */
+  parameterName: string;
+}
+
+/**
+ * An error that occurs when validating parameters.
+ */
+export class ParameterValidationError extends UserVisibleError {
+  /**
+   * The parameters that were invalid, alongside a message describing the error for the parameter.
+   */
+  readonly errors: ParameterError[];
+
+  /**
+   * Use to construct a parameter validation error.
+   */
+  constructor(message: string, errors: ParameterError[]) {
+    super(message);
+    this.errors = errors;
+  }
+}
+
+/**
  * The raw HTTP response from a {@link StatusCodeError}.
  */
 export interface StatusCodeErrorResponse {
@@ -1049,9 +1077,13 @@ export type TypedPackFormula = Formula | GenericSyncFormula;
 
 export type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
 /** @hidden */
-export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute' | 'executeUpdate' | 'executeGetPermissions'>;
+export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute' | 'executeUpdate' | 'executeGetPermissions' | 'validateParameters'> & {
+  validateParameters?: MetadataFormulaMetadata;
+};
 /** @hidden */
-export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'execute'>;
+export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'execute' | 'validateParameters'> & {
+  validateParameters?: MetadataFormulaMetadata;
+};
 
 export function isObjectPackFormula(fn: PackFormulaMetadata): fn is ObjectPackFormulaMetadata {
   return fn.resultType === Type.object;
@@ -1847,14 +1879,20 @@ export type PropertyOptionsMetadataFormula<SchemaT extends Schema> = ObjectPackF
   execute(params: ParamValues<[]>, context: PropertyOptionsExecutionContext): Promise<object> | object;
 };
 
-export type MetadataFormulaMetadata = Omit<MetadataFormula, 'execute'>;
+export type MetadataFormulaMetadata = Omit<MetadataFormula, 'execute' | 'validateParameters'>;
 
 /**
  * @hidden
  */
-export declare type GenericMetadataFormulaMetadata = Omit<GenericMetadataFormula, 'execute'>;
+export declare type GenericMetadataFormulaMetadata = Omit<GenericMetadataFormula, 'execute' | 'validateParameters'>;
 
-type LegacyDefaultMetadataReturnType =
+/**
+ * Historically, metadata formulas could return a variety of types.
+ * This type is used to represent the legacy return types.
+ * Metadata formulas now work with generics and in the future, will
+ * be updated to declare a more precise return type for each formula.
+ */
+export type LegacyDefaultMetadataReturnType =
   | MetadataFormulaResultType
   | MetadataFormulaResultType[]
   | ArraySchema
@@ -1895,7 +1933,7 @@ export type MetadataFormulaDef<
  * This wrapper simply adds the surrounding boilerplate for a given JavaScript function so that
  * it is shaped like a Coda formula to be used at runtime.
  */
-export function makeMetadataFormula<ContextT extends ExecutionContext, ReturnT extends LegacyDefaultMetadataReturnType>(
+export function makeMetadataFormula<ContextT extends ExecutionContext, ReturnT = LegacyDefaultMetadataReturnType>(
   execute: MetadataFunction<ContextT, ReturnT>,
   options?: {connectionRequirement?: ConnectionRequirement},
 ): MetadataFormula<ContextT> {

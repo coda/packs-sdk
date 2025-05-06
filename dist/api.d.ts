@@ -68,6 +68,28 @@ export declare class UserVisibleError extends Error {
     constructor(message?: string, internalError?: Error);
 }
 /**
+ * An error that occurs when validating parameters.
+ */
+export interface ParameterError {
+    /** The error message for the parameter. */
+    message: string;
+    /** The name of the parameter that caused the error. */
+    parameterName: string;
+}
+/**
+ * An error that occurs when validating parameters.
+ */
+export declare class ParameterValidationError extends UserVisibleError {
+    /**
+     * The parameters that were invalid, alongside a message describing the error for the parameter.
+     */
+    readonly errors: ParameterError[];
+    /**
+     * Use to construct a parameter validation error.
+     */
+    constructor(message: string, errors: ParameterError[]);
+}
+/**
  * The raw HTTP response from a {@link StatusCodeError}.
  */
 export interface StatusCodeErrorResponse {
@@ -572,9 +594,13 @@ export type Formula<ParamDefsT extends ParamDefs = ParamDefs, ResultT extends Va
 export type TypedPackFormula = Formula | GenericSyncFormula;
 export type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
 /** @hidden */
-export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute' | 'executeUpdate' | 'executeGetPermissions'>;
+export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute' | 'executeUpdate' | 'executeGetPermissions' | 'validateParameters'> & {
+    validateParameters?: MetadataFormulaMetadata;
+};
 /** @hidden */
-export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'execute'>;
+export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'execute' | 'validateParameters'> & {
+    validateParameters?: MetadataFormulaMetadata;
+};
 export declare function isObjectPackFormula(fn: PackFormulaMetadata): fn is ObjectPackFormulaMetadata;
 export declare function isStringPackFormula(fn: BaseFormula<ParamDefs, any>): fn is StringPackFormula<ParamDefs>;
 export declare function isSyncPackFormula(fn: BaseFormula<ParamDefs, any>): fn is GenericSyncFormula;
@@ -1102,21 +1128,28 @@ export interface PropertyOptionsAnnotatedResult {
 export type PropertyOptionsMetadataFormula<SchemaT extends Schema> = ObjectPackFormula<[], ArraySchema<SchemaT>> & {
     execute(params: ParamValues<[]>, context: PropertyOptionsExecutionContext): Promise<object> | object;
 };
-export type MetadataFormulaMetadata = Omit<MetadataFormula, 'execute'>;
+export type MetadataFormulaMetadata = Omit<MetadataFormula, 'execute' | 'validateParameters'>;
 /**
  * @hidden
  */
-export declare type GenericMetadataFormulaMetadata = Omit<GenericMetadataFormula, 'execute'>;
+export declare type GenericMetadataFormulaMetadata = Omit<GenericMetadataFormula, 'execute' | 'validateParameters'>;
+/**
+ * Historically, metadata formulas could return a variety of types.
+ * This type is used to represent the legacy return types.
+ * Metadata formulas now work with generics and in the future, will
+ * be updated to declare a more precise return type for each formula.
+ */
+export type LegacyDefaultMetadataReturnType = MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>;
 /**
  * A JavaScript function that can implement a {@link MetadataFormulaDef}.
  */
-export type MetadataFunction<ContextT extends ExecutionContext = ExecutionContext> = (context: ContextT, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
+export type MetadataFunction<ContextT extends ExecutionContext = ExecutionContext, ReturnT = LegacyDefaultMetadataReturnType> = (context: ContextT, search: string, formulaContext?: MetadataContext) => Promise<ReturnT>;
 /**
  * The type of values that will be accepted as a metadata formula definition. This can either
  * be the JavaScript function that implements a metadata formula (strongly recommended)
  * or a full metadata formula definition (mostly supported for legacy code).
  */
-export type MetadataFormulaDef<ContextT extends ExecutionContext = ExecutionContext> = MetadataFormula<ContextT> | MetadataFunction<ContextT>;
+export type MetadataFormulaDef<ContextT extends ExecutionContext = ExecutionContext, ReturnT = LegacyDefaultMetadataReturnType> = MetadataFormula<ContextT> | MetadataFunction<ContextT, ReturnT>;
 /**
  * A wrapper that generates a formula definition from the function that implements a metadata formula.
  * It is uncommon to ever need to call this directly, normally you would just define the JavaScript
@@ -1129,7 +1162,7 @@ export type MetadataFormulaDef<ContextT extends ExecutionContext = ExecutionCont
  * This wrapper simply adds the surrounding boilerplate for a given JavaScript function so that
  * it is shaped like a Coda formula to be used at runtime.
  */
-export declare function makeMetadataFormula<ContextT extends ExecutionContext>(execute: MetadataFunction<ContextT>, options?: {
+export declare function makeMetadataFormula<ContextT extends ExecutionContext, ReturnT = LegacyDefaultMetadataReturnType>(execute: MetadataFunction<ContextT, ReturnT>, options?: {
     connectionRequirement?: ConnectionRequirement;
 }): MetadataFormula<ContextT>;
 /**
@@ -1534,6 +1567,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
     isSystem?: boolean | undefined;
     extraOAuthScopes?: string[] | undefined;
     allowedAuthenticationNames?: string[] | undefined;
+    validateParameters?: MetadataFunction<ExecutionContext, boolean> | undefined;
 } & {
     execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<SchemaType<ResultT>>;
     resultType: Type.object;
@@ -1576,6 +1610,7 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
     isSystem?: boolean | undefined;
     extraOAuthScopes?: string[] | undefined;
     allowedAuthenticationNames?: string[] | undefined;
+    validateParameters?: MetadataFunction<ExecutionContext, boolean> | undefined;
 } & {
     execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<string>;
     resultType: Type.string;
