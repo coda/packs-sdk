@@ -1854,24 +1854,34 @@ export type MetadataFormulaMetadata = Omit<MetadataFormula, 'execute'>;
  */
 export declare type GenericMetadataFormulaMetadata = Omit<GenericMetadataFormula, 'execute'>;
 
+type LegacyDefaultMetadataReturnType =
+  | MetadataFormulaResultType
+  | MetadataFormulaResultType[]
+  | ArraySchema
+  | ObjectSchema<any, any>;
+
 /**
  * A JavaScript function that can implement a {@link MetadataFormulaDef}.
  */
-export type MetadataFunction<ContextT extends ExecutionContext = ExecutionContext> = (
+export type MetadataFunction<
+  ContextT extends ExecutionContext = ExecutionContext,
+  ReturnT = LegacyDefaultMetadataReturnType,
+> = (
   context: ContextT,
   // TODO(oleg): this should be optional unless in an autocomplete context.
   search: string,
   formulaContext?: MetadataContext,
-) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
+) => Promise<ReturnT>;
 
 /**
  * The type of values that will be accepted as a metadata formula definition. This can either
  * be the JavaScript function that implements a metadata formula (strongly recommended)
  * or a full metadata formula definition (mostly supported for legacy code).
  */
-export type MetadataFormulaDef<ContextT extends ExecutionContext = ExecutionContext> =
-  | MetadataFormula<ContextT>
-  | MetadataFunction<ContextT>;
+export type MetadataFormulaDef<
+  ContextT extends ExecutionContext = ExecutionContext,
+  ReturnT = LegacyDefaultMetadataReturnType,
+> = MetadataFormula<ContextT> | MetadataFunction<ContextT, ReturnT>;
 
 /**
  * A wrapper that generates a formula definition from the function that implements a metadata formula.
@@ -1885,8 +1895,8 @@ export type MetadataFormulaDef<ContextT extends ExecutionContext = ExecutionCont
  * This wrapper simply adds the surrounding boilerplate for a given JavaScript function so that
  * it is shaped like a Coda formula to be used at runtime.
  */
-export function makeMetadataFormula<ContextT extends ExecutionContext>(
-  execute: MetadataFunction<ContextT>,
+export function makeMetadataFormula<ContextT extends ExecutionContext, ReturnT extends LegacyDefaultMetadataReturnType>(
+  execute: MetadataFunction<ContextT, ReturnT>,
   options?: {connectionRequirement?: ConnectionRequirement},
 ): MetadataFormula<ContextT> {
   return makeObjectFormula({
@@ -2193,14 +2203,14 @@ export interface SyncTableOptions<
    * This should describe the entities being synced. For example, a sync table that syncs products
    * from an e-commerce platform should be called 'Products'. This name must not contain spaces.
    *
-   * Important: This value acts as a unique ID for the table, and updating it later is a breaking change. 
+   * Important: This value acts as a unique ID for the table, and updating it later is a breaking change.
    * If you want to change the value shown to the users, set `displayName` instead.
    */
   name: string;
 
   /**
    * This is the name shown to users in the Coda UI. If not present, {@link SyncTableOptions.name} will be used.
-   * Changing this value will not affect existing tables and only affects newly created tables. 
+   * Changing this value will not affect existing tables and only affects newly created tables.
    */
   displayName?: string;
 
