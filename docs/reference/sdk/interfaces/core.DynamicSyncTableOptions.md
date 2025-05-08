@@ -74,7 +74,7 @@ ___
 
 ### formula
 
-• **formula**: [`SyncFormulaDef`](core.SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`, `PermissionsContextT`\>
+• **formula**: [`FormulaOptions`](../types/core.FormulaOptions.md)<`ParamDefsT`, [`SyncFormulaDef`](core.SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`, `PermissionsContextT`\>\>
 
 The definition of the formula that implements this sync. This is a Coda packs formula
 that returns an array of objects fitting the given schema and optionally a [Continuation](core.Continuation.md).

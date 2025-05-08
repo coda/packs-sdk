@@ -1,0 +1,17 @@
+import type { Formula } from '../api';
+import type { GenericSyncTable } from '../api';
+import type { MetadataFormula } from '../api';
+import type { MetadataFormulaMetadata } from '../api';
+import type { PackDefinition } from '../types';
+import type { PackFormulaMetadata } from '../api';
+import type { PackMetadata } from '../compiled_types';
+import type { PackSyncTable } from '../compiled_types';
+import type { PackVersionDefinition } from '../types';
+import type { PackVersionMetadata } from '../compiled_types';
+import type { TypedPackFormula } from '../api';
+export declare function compilePackMetadata(manifest: PackDefinition): PackMetadata;
+export declare function compilePackMetadata(manifest: PackVersionDefinition): PackVersionMetadata;
+export declare function compileFormulasMetadata(formulas: Formula[]): PackFormulaMetadata[];
+export declare function compileFormulaMetadata(formula: TypedPackFormula): PackFormulaMetadata;
+export declare function compileSyncTable(syncTable: GenericSyncTable): PackSyncTable;
+export declare function compileMetadataFormulaMetadata(formula: MetadataFormula | undefined): MetadataFormulaMetadata | undefined;

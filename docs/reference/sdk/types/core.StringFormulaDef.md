@@ -8,7 +8,7 @@ search:
 
 [core](../modules/core.md).StringFormulaDef
 
-Ƭ **StringFormulaDef**<`ParamDefsT`\>: [`BaseFormulaDef`](../interfaces/core.BaseFormulaDef.md)<`ParamDefsT`, `string`\> & { `resultType`: [`String`](../enums/core.ValueType.md#string) ; `execute`: (`params`: [`ParamValues`](core.ParamValues.md)<`ParamDefsT`\>, `context`: [`ExecutionContext`](../interfaces/core.ExecutionContext.md)) => `string` \| `Promise`<`string`\>  } & { `schema?`: [`StringSchema`](core.StringSchema.md)  } \| { `codaType?`: [`StringHintTypes`](core.StringHintTypes.md)  }
+Ƭ **StringFormulaDef**<`ParamDefsT`\>: [`BaseFormulaDef`](../interfaces/core.BaseFormulaDef.md)<`ParamDefsT`, `string`\> & { `resultType`: [`String`](../enums/core.ValueType.md#string) ; `execute`: (`params`: [`ParamValues`](core.ParamValues.md)<`ParamDefsT`\>, `context`: [`ExecutionContext`](../interfaces/core.ExecutionContext.md)) => `string` \| `Promise`<`string`\>  } & { `codaType?`: [`StringHintTypes`](core.StringHintTypes.md) ; `schema?`: [`StringSchema`](core.StringSchema.md)  }
 
 A definition accepted by [makeFormula](../functions/core.makeFormula.md) for a formula that returns a string.
 

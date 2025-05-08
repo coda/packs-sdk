@@ -50,7 +50,7 @@ coda.makeDynamicSyncTable({
 | › `description?` | `string` |
 | › `displayName?` | `string` |
 | › `entityName?` | `string` |
-| › `formula` | [`SyncFormulaDef`](../interfaces/core.SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `any`, `ContextT`, `PermissionsContextT`\> |
+| › `formula` | [`FormulaOptions`](../types/core.FormulaOptions.md)<`ParamDefsT`, [`SyncFormulaDef`](../interfaces/core.SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `any`, `ContextT`, `PermissionsContextT`\>\> |
 | › `getDisplayUrl` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<`ContextT`, [`LegacyDefaultMetadataReturnType`](../types/core.LegacyDefaultMetadataReturnType.md)\> |
 | › `getName` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<`ContextT`, [`LegacyDefaultMetadataReturnType`](../types/core.LegacyDefaultMetadataReturnType.md)\> |
 | › `getSchema` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<`ContextT`, [`LegacyDefaultMetadataReturnType`](../types/core.LegacyDefaultMetadataReturnType.md)\> |
