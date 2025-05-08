@@ -17,7 +17,7 @@ import type {PostSetup} from '../types';
 import type {PostSetupMetadata} from '../compiled_types';
 import type {TypedPackFormula} from '../api';
 import {isDynamicSyncTable} from '../api';
-import {makeMetadataFormula} from '../api';
+import {wrapMetadataFunction} from '../api';
 
 // Legacy metadata compilation kept around until we migrate first-party packs.
 export function compilePackMetadata(manifest: PackDefinition): PackMetadata;
@@ -56,10 +56,10 @@ export function compileFormulasMetadata(formulas: Formula[]): PackFormulaMetadat
 
 export function compileFormulaMetadata(formula: TypedPackFormula): PackFormulaMetadata {
   const {execute, validateParameters, ...rest} = formula;
+  const validateParametersAsFormula = wrapMetadataFunction(validateParameters);
   return {
     ...rest,
-    validateParameters: validateParameters ?
-      compileMetadataFormulaMetadata(makeMetadataFormula(validateParameters)) : undefined,
+    validateParameters: compileMetadataFormulaMetadata(validateParametersAsFormula),
   };
 }
 
@@ -67,6 +67,7 @@ export function compileSyncTable(syncTable: GenericSyncTable): PackSyncTable {
   if (isDynamicSyncTable(syncTable)) {
     const {getter, getName, getSchema, getDisplayUrl, listDynamicUrls, searchDynamicUrls, ...rest} = syncTable;
     const {execute, executeUpdate, executeGetPermissions, validateParameters, ...getterRest} = getter;
+    const validateParametersAsFormula = wrapMetadataFunction(validateParameters);
     return {
       ...rest,
       getName: compileMetadataFormulaMetadata(getName),
@@ -77,8 +78,7 @@ export function compileSyncTable(syncTable: GenericSyncTable): PackSyncTable {
       getter: {
         supportsUpdates: Boolean(executeUpdate),
         supportsGetPermissions: Boolean(executeGetPermissions),
-        validateParameters: validateParameters ?
-          compileMetadataFormulaMetadata(makeMetadataFormula(validateParameters)) : undefined,
+        validateParameters: compileMetadataFormulaMetadata(validateParametersAsFormula),
         ...getterRest,
       },
     };
@@ -86,13 +86,13 @@ export function compileSyncTable(syncTable: GenericSyncTable): PackSyncTable {
 
   const {getter, ...rest} = syncTable;
   const {execute, executeUpdate, executeGetPermissions, validateParameters, ...getterRest} = getter;
+  const validateParametersAsFormula = wrapMetadataFunction(validateParameters);
   return {
     ...rest,
     getter: {
       supportsUpdates: Boolean(executeUpdate),
       supportsGetPermissions: Boolean(executeGetPermissions),
-      validateParameters: validateParameters ?
-        compileMetadataFormulaMetadata(makeMetadataFormula(validateParameters)) : undefined,
+      validateParameters: compileMetadataFormulaMetadata(validateParametersAsFormula),
       ...getterRest,
     },
   };

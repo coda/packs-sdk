@@ -500,8 +500,8 @@ export function isDynamicSyncTable(syncTable: SyncTable): syncTable is GenericDy
   return 'isDynamic' in syncTable;
 }
 
-export function wrapMetadataFunction<ContextT extends ExecutionContext>(
-  fnOrFormula: MetadataFormula<ContextT> | MetadataFunction<ContextT> | undefined,
+export function wrapMetadataFunction<ContextT extends ExecutionContext, ReturnT = LegacyDefaultMetadataReturnType>(
+  fnOrFormula: MetadataFormula<ContextT> | MetadataFunction<ContextT, ReturnT> | undefined,
 ): MetadataFormula<ContextT> | undefined {
   return typeof fnOrFormula === 'function' ? makeMetadataFormula(fnOrFormula) : fnOrFormula;
 }

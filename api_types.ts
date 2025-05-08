@@ -6,7 +6,7 @@ import type {Continuation} from './api';
 import type {HttpStatusCode} from './types';
 import type {MetadataContext} from './api';
 import type {MetadataFormula} from './api';
-import type {MetadataFunction} from './api';
+import type {MetadataFormulaDef} from './api';
 import type {ObjectSchemaProperty} from './schema';
 import type {Schema} from './schema';
 
@@ -576,7 +576,7 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
    * },
    * ```
    */
-  validateParameters?: MetadataFunction<ExecutionContext, boolean>;
+  validateParameters?: MetadataFormulaDef<ExecutionContext, boolean>;
 }
 
 /**

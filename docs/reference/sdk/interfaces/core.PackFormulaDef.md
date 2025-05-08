@@ -172,7 +172,7 @@ ___
 
 ### validateParameters
 
-• `Optional` **validateParameters**: [`MetadataFunction`](../types/core.MetadataFunction.md)<[`ExecutionContext`](core.ExecutionContext.md), `boolean`\>
+• `Optional` **validateParameters**: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<[`ExecutionContext`](core.ExecutionContext.md), `boolean`\>
 
 The JavaScript function that implements parameter validation.
 

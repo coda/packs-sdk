@@ -39,6 +39,7 @@ import {setEndpointHelper} from '../../helpers/migration';
 import {throwOnDynamicSchemaWithJsOptionsFunction} from '../../schema';
 import {unwrapError} from '../common/marshaling';
 import {wrapErrorForSameOrHigherNodeVersion} from '../common/marshaling';
+import {wrapMetadataFunction} from '../../api';
 
 export {
   marshalValue,
@@ -309,9 +310,9 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
 
           break;
         case MetadataFormulaType.ValidateParameters: {
-          const validateParametersFormula = findValidateParametersFormula(manifest, formulaSpec);
+          const validateParametersFormula = wrapMetadataFunction(findValidateParametersFormula(manifest, formulaSpec));
           if (validateParametersFormula) {
-            return validateParametersFormula(executionContext, '', {params: params as any, __brand: 'MetadataContext'});
+            return validateParametersFormula.execute(['', JSON.stringify({params: params as any, __brand: 'MetadataContext'})], executionContext);
           }
           break;
         }

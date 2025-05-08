@@ -6038,6 +6038,32 @@ module.exports = (() => {
 
   // api_types.ts
   init_buffer_shim();
+  var ParameterTypeInputMap = {
+    ["string" /* String */]: 0 /* string */,
+    ["number" /* Number */]: 1 /* number */,
+    ["boolean" /* Boolean */]: 3 /* boolean */,
+    ["date" /* Date */]: 4 /* date */,
+    ["html" /* Html */]: 5 /* html */,
+    ["image" /* Image */]: 6 /* image */,
+    ["file" /* File */]: 7 /* file */,
+    ["markdown" /* Markdown */]: 8 /* markdown */,
+    ["stringArray" /* StringArray */]: { type: "array", items: 0 /* string */ },
+    ["numberArray" /* NumberArray */]: { type: "array", items: 1 /* number */ },
+    ["booleanArray" /* BooleanArray */]: { type: "array", items: 3 /* boolean */ },
+    ["dateArray" /* DateArray */]: { type: "array", items: 4 /* date */ },
+    ["htmlArray`" /* HtmlArray */]: { type: "array", items: 5 /* html */ },
+    ["imageArray" /* ImageArray */]: { type: "array", items: 6 /* image */ },
+    ["fileArray" /* FileArray */]: { type: "array", items: 7 /* file */ },
+    ["markdownArray`" /* MarkdownArray */]: { type: "array", items: 8 /* markdown */ },
+    ["sparseStringArray" /* SparseStringArray */]: { type: "array", items: 0 /* string */, allowEmpty: true },
+    ["sparseNumberArray" /* SparseNumberArray */]: { type: "array", items: 1 /* number */, allowEmpty: true },
+    ["sparseBooleanArray" /* SparseBooleanArray */]: { type: "array", items: 3 /* boolean */, allowEmpty: true },
+    ["sparseDateArray" /* SparseDateArray */]: { type: "array", items: 4 /* date */, allowEmpty: true },
+    ["sparseHtmlArray" /* SparseHtmlArray */]: { type: "array", items: 5 /* html */, allowEmpty: true },
+    ["sparseImageArray" /* SparseImageArray */]: { type: "array", items: 6 /* image */, allowEmpty: true },
+    ["sparseFileArray" /* SparseFileArray */]: { type: "array", items: 7 /* file */, allowEmpty: true },
+    ["sparseMarkdownArray" /* SparseMarkdownArray */]: { type: "array", items: 8 /* markdown */, allowEmpty: true }
+  };
   var UntilNowDateRanges = [
     "today" /* Today */,
     "last_7_days" /* Last7Days */,
@@ -6081,6 +6107,10 @@ module.exports = (() => {
 
   // helpers/ensure.ts
   init_buffer_shim();
+  function ensureUnreachable(value, message) {
+    throw new Error(message || `Unreachable code hit with value ${String(value)}`);
+  }
+  __name(ensureUnreachable, "ensureUnreachable");
   function ensureExists(value, message) {
     if (typeof value === "undefined" || value === null) {
       throw new (getErrorConstructor(message))(message || `Expected value for ${String(value)}`);
@@ -6092,9 +6122,16 @@ module.exports = (() => {
     return message ? UserVisibleError : Error;
   }
   __name(getErrorConstructor, "getErrorConstructor");
+  function ensureNever(_) {
+  }
+  __name(ensureNever, "ensureNever");
 
   // helpers/object_utils.ts
   init_buffer_shim();
+  function deepCopy(obj) {
+    return JSON.parse(JSON.stringify(obj));
+  }
+  __name(deepCopy, "deepCopy");
 
   // helpers/migration.ts
   init_buffer_shim();
@@ -6115,6 +6152,247 @@ module.exports = (() => {
 
   // schema.ts
   var import_pascalcase = __toESM(require_pascalcase());
+  function isObject(val) {
+    return Boolean(val && val.type === "object" /* Object */);
+  }
+  __name(isObject, "isObject");
+  function isArray(val) {
+    return Boolean(val && val.type === "array" /* Array */);
+  }
+  __name(isArray, "isArray");
+  function normalizeSchemaKey(key) {
+    return (0, import_pascalcase.default)(key).replace(/:/g, "_");
+  }
+  __name(normalizeSchemaKey, "normalizeSchemaKey");
+  function normalizeSchemaKeyPath(key, normalizedProperties) {
+    if (normalizedProperties.hasOwnProperty(normalizeSchemaKey(key))) {
+      return normalizeSchemaKey(key);
+    }
+    return key.split(".").map((val) => {
+      let partToNormalize = val;
+      let partToIgnoreNormalization = "";
+      if (val.includes("[")) {
+        partToNormalize = val.substring(0, val.indexOf("["));
+        partToIgnoreNormalization = val.substring(val.indexOf("["));
+      }
+      return normalizeSchemaKey(partToNormalize) + partToIgnoreNormalization;
+    }).join(".");
+  }
+  __name(normalizeSchemaKeyPath, "normalizeSchemaKeyPath");
+  function normalizeSchemaPropertyIdentifier(key, normalizedProperties) {
+    if (typeof key === "string") {
+      return normalizeSchemaKeyPath(key, normalizedProperties);
+    }
+    const { label, property: value, placeholder, ...rest } = key;
+    ensureNever();
+    return {
+      property: normalizeSchemaKeyPath(value, normalizedProperties),
+      label,
+      placeholder
+    };
+  }
+  __name(normalizeSchemaPropertyIdentifier, "normalizeSchemaPropertyIdentifier");
+  function normalizeIndexProperty(value, normalizedProperties) {
+    if (typeof value === "object" && "strategy" in value) {
+      const { property, strategy, ...rest } = value;
+      ensureNever();
+      return {
+        property: normalizeSchemaPropertyIdentifier(property, normalizedProperties),
+        strategy
+      };
+    }
+    return normalizeSchemaPropertyIdentifier(value, normalizedProperties);
+  }
+  __name(normalizeIndexProperty, "normalizeIndexProperty");
+  function normalizeContentCategorization(value, normalizedProperties) {
+    switch (value.type) {
+      case "Messaging" /* Messaging */:
+      case "Document" /* Document */:
+      case "Comment" /* Comment */: {
+        const { type, ...rest } = value;
+        ensureNever();
+        return { type };
+      }
+      case "Email" /* Email */: {
+        const {
+          type,
+          toProperty,
+          fromProperty,
+          subjectProperty,
+          htmlBodyProperty,
+          plainTextBodyProperty,
+          ...rest
+        } = value;
+        ensureNever();
+        return {
+          type,
+          toProperty: normalizeSchemaPropertyIdentifier(toProperty, normalizedProperties),
+          fromProperty: normalizeSchemaPropertyIdentifier(fromProperty, normalizedProperties),
+          subjectProperty: normalizeSchemaPropertyIdentifier(subjectProperty, normalizedProperties),
+          htmlBodyProperty: normalizeSchemaPropertyIdentifier(htmlBodyProperty, normalizedProperties),
+          plainTextBodyProperty: normalizeSchemaPropertyIdentifier(plainTextBodyProperty, normalizedProperties)
+        };
+      }
+      default:
+        return ensureUnreachable(value);
+    }
+  }
+  __name(normalizeContentCategorization, "normalizeContentCategorization");
+  function isCategorizationIndexDefinition(index) {
+    return "contentCategorization" in index;
+  }
+  __name(isCategorizationIndexDefinition, "isCategorizationIndexDefinition");
+  function normalizeIndexDefinition(index, normalizedProperties) {
+    if (isCategorizationIndexDefinition(index)) {
+      const {
+        contentCategorization,
+        authorityNormProperty: authorityNormProperty2,
+        popularityNormProperty: popularityNormProperty2,
+        filterableProperties: filterableProperties2,
+        ...rest2
+      } = index;
+      ensureNever();
+      return {
+        contentCategorization: normalizeContentCategorization(contentCategorization, normalizedProperties),
+        authorityNormProperty: authorityNormProperty2 ? normalizeSchemaPropertyIdentifier(authorityNormProperty2, normalizedProperties) : void 0,
+        popularityNormProperty: popularityNormProperty2 ? normalizeSchemaPropertyIdentifier(popularityNormProperty2, normalizedProperties) : void 0,
+        filterableProperties: filterableProperties2?.map(
+          (prop) => normalizeSchemaPropertyIdentifier(prop, normalizedProperties)
+        )
+      };
+    }
+    const {
+      properties,
+      contextProperties,
+      authorityNormProperty,
+      popularityNormProperty,
+      filterableProperties,
+      ...rest
+    } = index;
+    ensureNever();
+    return {
+      properties: properties.map((prop) => normalizeIndexProperty(prop, normalizedProperties)),
+      contextProperties: contextProperties ? contextProperties.map((prop) => normalizeSchemaPropertyIdentifier(prop, normalizedProperties)) : void 0,
+      authorityNormProperty: authorityNormProperty ? normalizeSchemaPropertyIdentifier(authorityNormProperty, normalizedProperties) : void 0,
+      popularityNormProperty: popularityNormProperty ? normalizeSchemaPropertyIdentifier(popularityNormProperty, normalizedProperties) : void 0,
+      filterableProperties: filterableProperties?.map(
+        (prop) => normalizeSchemaPropertyIdentifier(prop, normalizedProperties)
+      )
+    };
+  }
+  __name(normalizeIndexDefinition, "normalizeIndexDefinition");
+  function normalizeParentDefinition(parent, normalizedProperties) {
+    return {
+      parentIdProperty: normalizeSchemaPropertyIdentifier(parent.parentIdProperty, normalizedProperties),
+      permissions: parent.permissions,
+      lifecycle: parent.lifecycle
+    };
+  }
+  __name(normalizeParentDefinition, "normalizeParentDefinition");
+  function normalizeSchema(schema) {
+    if (isArray(schema)) {
+      return {
+        ...schema,
+        type: "array" /* Array */,
+        items: normalizeSchema(schema.items)
+      };
+    } else if (isObject(schema)) {
+      return normalizeObjectSchema(schema);
+    }
+    return { ...schema };
+  }
+  __name(normalizeSchema, "normalizeSchema");
+  function normalizeObjectSchema(schema) {
+    const normalizedProperties = {};
+    const {
+      attribution,
+      options,
+      requireForUpdates,
+      codaType,
+      description,
+      displayProperty,
+      featured,
+      featuredProperties,
+      id,
+      identity,
+      idProperty,
+      imageProperty,
+      includeUnknownProperties,
+      linkProperty,
+      primary,
+      properties,
+      snippetProperty,
+      subtitleProperties,
+      titleProperty,
+      type,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      __packId,
+      createdAtProperty,
+      createdByProperty,
+      modifiedAtProperty,
+      modifiedByProperty,
+      userEmailProperty,
+      userIdProperty,
+      groupIdProperty,
+      memberGroupIdProperty,
+      versionProperty,
+      index,
+      parent,
+      ...rest
+    } = schema;
+    ensureNever();
+    for (const key of Object.keys(properties)) {
+      const normalizedKey = normalizeSchemaKey(key);
+      const property = properties[key];
+      const { displayName, fixedId, fromKey, mutable, originalKey, required } = property;
+      if (originalKey) {
+        throw new Error("Original key is only for internal use.");
+      }
+      const normalizedPropertyAttrs = {
+        displayName,
+        fixedId,
+        fromKey: fromKey || (normalizedKey !== key ? key : void 0),
+        mutable,
+        originalKey: key,
+        required
+      };
+      normalizedProperties[normalizedKey] = Object.assign(normalizeSchema(property), normalizedPropertyAttrs);
+    }
+    return {
+      attribution,
+      options,
+      requireForUpdates,
+      codaType,
+      description,
+      displayProperty: displayProperty ? normalizeSchemaKey(displayProperty) : void 0,
+      featured: featured ? featured.map(normalizeSchemaKey) : void 0,
+      featuredProperties: featuredProperties ? featuredProperties.map(normalizeSchemaKey) : void 0,
+      id: id ? normalizeSchemaKey(id) : void 0,
+      identity,
+      idProperty: idProperty ? normalizeSchemaKey(idProperty) : void 0,
+      imageProperty: imageProperty ? normalizeSchemaPropertyIdentifier(imageProperty, normalizedProperties) : void 0,
+      includeUnknownProperties,
+      linkProperty: linkProperty ? normalizeSchemaPropertyIdentifier(linkProperty, normalizedProperties) : void 0,
+      primary: primary ? normalizeSchemaKey(primary) : void 0,
+      properties: normalizedProperties,
+      snippetProperty: snippetProperty ? normalizeSchemaPropertyIdentifier(snippetProperty, normalizedProperties) : void 0,
+      subtitleProperties: subtitleProperties ? subtitleProperties.map((subProp) => normalizeSchemaPropertyIdentifier(subProp, normalizedProperties)) : void 0,
+      titleProperty: titleProperty ? normalizeSchemaPropertyIdentifier(titleProperty, normalizedProperties) : void 0,
+      createdAtProperty: createdAtProperty ? normalizeSchemaPropertyIdentifier(createdAtProperty, normalizedProperties) : void 0,
+      createdByProperty: createdByProperty ? normalizeSchemaPropertyIdentifier(createdByProperty, normalizedProperties) : void 0,
+      modifiedAtProperty: modifiedAtProperty ? normalizeSchemaPropertyIdentifier(modifiedAtProperty, normalizedProperties) : void 0,
+      modifiedByProperty: modifiedByProperty ? normalizeSchemaPropertyIdentifier(modifiedByProperty, normalizedProperties) : void 0,
+      userEmailProperty: userEmailProperty ? normalizeSchemaPropertyIdentifier(userEmailProperty, normalizedProperties) : void 0,
+      userIdProperty: userIdProperty ? normalizeSchemaPropertyIdentifier(userIdProperty, normalizedProperties) : void 0,
+      groupIdProperty: groupIdProperty ? normalizeSchemaPropertyIdentifier(groupIdProperty, normalizedProperties) : void 0,
+      memberGroupIdProperty: memberGroupIdProperty ? normalizeSchemaPropertyIdentifier(memberGroupIdProperty, normalizedProperties) : void 0,
+      versionProperty: versionProperty ? normalizeSchemaPropertyIdentifier(versionProperty, normalizedProperties) : void 0,
+      index: index ? normalizeIndexDefinition(index, normalizedProperties) : void 0,
+      parent: parent ? normalizeParentDefinition(parent, normalizedProperties) : void 0,
+      type: "object" /* Object */
+    };
+  }
+  __name(normalizeObjectSchema, "normalizeObjectSchema");
   function throwOnDynamicSchemaWithJsOptionsFunction(dynamicSchema, parentKey) {
     if (!dynamicSchema) {
       return;
@@ -6144,6 +6422,20 @@ module.exports = (() => {
   init_buffer_shim();
   var import_qs = __toESM(require_lib());
   var import_url_parse = __toESM(require_url_parse());
+
+  // handler_templates.ts
+  function generateObjectResponseHandler(response) {
+    const { projectKey } = response;
+    return /* @__PURE__ */ __name(function objectResponseHandler(resp) {
+      const { body } = resp;
+      if (typeof body !== "object") {
+        return body;
+      }
+      const projectedBody = projectKey ? body[projectKey] : body;
+      return projectedBody;
+    }, "objectResponseHandler");
+  }
+  __name(generateObjectResponseHandler, "generateObjectResponseHandler");
 
   // api.ts
   var _UserVisibleError = class _UserVisibleError extends Error {
@@ -6232,6 +6524,51 @@ module.exports = (() => {
     return "isDynamic" in syncTable;
   }
   __name(isDynamicSyncTable, "isDynamicSyncTable");
+  function wrapMetadataFunction(fnOrFormula) {
+    return typeof fnOrFormula === "function" ? makeMetadataFormula(fnOrFormula) : fnOrFormula;
+  }
+  __name(wrapMetadataFunction, "wrapMetadataFunction");
+  function makeParameter(paramDefinition) {
+    const {
+      type,
+      autocomplete: autocompleteDefOrItems,
+      crawlStrategy: crawlStrategyDef,
+      allowManualInput: allowManualInputDef,
+      ...rest
+    } = paramDefinition;
+    const actualType = ParameterTypeInputMap[type];
+    let autocomplete;
+    if (Array.isArray(autocompleteDefOrItems)) {
+      const autocompleteDef = makeSimpleAutocompleteMetadataFormula(autocompleteDefOrItems);
+      autocomplete = wrapMetadataFunction(autocompleteDef);
+    } else {
+      autocomplete = wrapMetadataFunction(autocompleteDefOrItems);
+    }
+    let crawlStrategy;
+    if (crawlStrategyDef) {
+      if (crawlStrategyDef.parentTable) {
+        const { tableName, propertyKey, inheritPermissions } = crawlStrategyDef.parentTable;
+        crawlStrategy = {
+          parentTable: {
+            tableName,
+            propertyKey: normalizeSchemaKey(propertyKey),
+            inheritPermissions
+          }
+        };
+      } else {
+        crawlStrategy = crawlStrategyDef;
+      }
+    }
+    const allowManualInput = !(allowManualInputDef === false);
+    return Object.freeze({
+      ...rest,
+      allowManualInput,
+      autocomplete,
+      type: actualType,
+      crawlStrategy
+    });
+  }
+  __name(makeParameter, "makeParameter");
   function normalizePropertyOptionsResultsArray(results) {
     return results.map((r) => {
       if (typeof r === "object" && Object.keys(r).length === 2 && "display" in r && "value" in r) {
@@ -6254,6 +6591,119 @@ module.exports = (() => {
     };
   }
   __name(normalizePropertyOptionsResults, "normalizePropertyOptionsResults");
+  function makeMetadataFormula(execute, options) {
+    return makeObjectFormula({
+      name: "getMetadata",
+      description: "Gets metadata",
+      // Formula context is serialized here because we do not want to pass objects into
+      // regular pack functions (which this is)
+      execute([search, serializedFormulaContext], context) {
+        let formulaContext = {};
+        try {
+          formulaContext = JSON.parse(serializedFormulaContext || "");
+        } catch (err) {
+        }
+        return execute(context, search, formulaContext);
+      },
+      parameters: [
+        makeParameter({
+          type: "string" /* String */,
+          name: "search",
+          description: "Metadata to search for.",
+          optional: true
+        }),
+        makeParameter({
+          type: "string" /* String */,
+          name: "formulaContext",
+          description: "Serialized JSON for metadata.",
+          optional: true
+        })
+      ],
+      examples: [],
+      connectionRequirement: options?.connectionRequirement || "optional" /* Optional */
+    });
+  }
+  __name(makeMetadataFormula, "makeMetadataFormula");
+  function simpleAutocomplete(search, options) {
+    const normalizedSearch = (search || "").toLowerCase();
+    const filtered = options.filter((option) => {
+      const display = typeof option === "string" || typeof option === "number" ? option : option.display;
+      return display.toString().toLowerCase().includes(normalizedSearch);
+    });
+    const metadataResults = [];
+    for (const option of filtered) {
+      if (typeof option === "string") {
+        metadataResults.push({
+          value: option,
+          display: option
+        });
+      } else if (typeof option === "number") {
+        metadataResults.push({
+          value: option,
+          display: option.toString()
+        });
+      } else {
+        metadataResults.push(option);
+      }
+    }
+    return Promise.resolve(metadataResults);
+  }
+  __name(simpleAutocomplete, "simpleAutocomplete");
+  function makeSimpleAutocompleteMetadataFormula(options) {
+    return makeMetadataFormula((_context, search) => simpleAutocomplete(search, options), {
+      // A connection won't be used here, but if the parent formula uses a connection
+      // the execution code is going to try to pass it here. We should fix that.
+      connectionRequirement: "optional" /* Optional */
+    });
+  }
+  __name(makeSimpleAutocompleteMetadataFormula, "makeSimpleAutocompleteMetadataFormula");
+  function isResponseHandlerTemplate(obj) {
+    return obj && obj.schema;
+  }
+  __name(isResponseHandlerTemplate, "isResponseHandlerTemplate");
+  function isResponseExampleTemplate(obj) {
+    return obj && obj.example;
+  }
+  __name(isResponseExampleTemplate, "isResponseExampleTemplate");
+  function makeObjectFormula({
+    response,
+    ...definition
+  }) {
+    let schema;
+    if (response) {
+      if (isResponseHandlerTemplate(response) && response.schema) {
+        const inputSchema = deepCopy(response.schema);
+        response.schema = normalizeSchema(inputSchema);
+        schema = response.schema;
+      } else if (isResponseExampleTemplate(response)) {
+      }
+    }
+    let execute = definition.execute;
+    if (isResponseHandlerTemplate(response)) {
+      const { onError } = response;
+      const wrappedExecute = execute;
+      const responseHandler = generateObjectResponseHandler(response);
+      execute = /* @__PURE__ */ __name(async function exec(params, context) {
+        let result;
+        try {
+          result = await wrappedExecute(params, context);
+        } catch (err) {
+          if (onError) {
+            result = onError(err);
+          } else {
+            throw err;
+          }
+        }
+        return responseHandler({ body: result || {}, status: 200, headers: {} });
+      }, "exec");
+    }
+    return Object.assign({}, definition, {
+      resultType: 2 /* object */,
+      execute,
+      schema
+    });
+  }
+  __name(makeObjectFormula, "makeObjectFormula");
 
   // runtime/common/helpers.ts
   init_buffer_shim();
@@ -6932,9 +7382,9 @@ module.exports = (() => {
             }
             break;
           case "ValidateParameters" /* ValidateParameters */: {
-            const validateParametersFormula = findValidateParametersFormula(manifest, formulaSpec);
+            const validateParametersFormula = wrapMetadataFunction(findValidateParametersFormula(manifest, formulaSpec));
             if (validateParametersFormula) {
-              return validateParametersFormula(executionContext, "", { params, __brand: "MetadataContext" });
+              return validateParametersFormula.execute(params, executionContext);
             }
             break;
           }

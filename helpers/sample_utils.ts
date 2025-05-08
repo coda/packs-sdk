@@ -4,7 +4,7 @@ import type {PackFormatMetadata} from '../compiled_types';
 import type {PackMetadata} from '../compiled_types';
 import type {PackSyncTable} from '../compiled_types';
 import {compileMetadataFormulaMetadata} from './metadata';
-import {makeMetadataFormula} from '../api';
+import {wrapMetadataFunction} from '../api';
 
 // Used to avoid needing promises when exporting fake `PackMetadata`s.
 export interface FakePackDefinition extends Omit<PackDefinition, 'formulas'> {
@@ -25,10 +25,10 @@ export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata 
   } = def;
   const formulas = originalFormulas!.map(formula => {
     const {execute, validateParameters, ...formulaMetadata} = formula;
+    const validateParametersAsFormula = wrapMetadataFunction(validateParameters);
     return {
       ...formulaMetadata,
-      validateParameters: validateParameters ?
-        compileMetadataFormulaMetadata(makeMetadataFormula(validateParameters)) : undefined,
+      validateParameters: compileMetadataFormulaMetadata(validateParametersAsFormula),
     };
   });
 
@@ -52,11 +52,11 @@ export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata 
   const syncTables: PackSyncTable[] = [];
   for (const {getter, getSchema, ...others} of originalSyncTables || []) {
     const {execute, executeUpdate, validateParameters, ...otherGetter} = getter;
+    const validateParametersAsFormula = wrapMetadataFunction(validateParameters);
     syncTables.push({
       getter: {
         ...otherGetter,
-        validateParameters: validateParameters ?
-          compileMetadataFormulaMetadata(makeMetadataFormula(validateParameters)) : undefined,
+        validateParameters: compileMetadataFormulaMetadata(validateParametersAsFormula),
       },
       getSchema,
       ...others,
