@@ -1424,6 +1424,12 @@ export interface SyncFormulaDef<
    * @hidden
    */
   maxPermissionBatchSize?: number;
+
+  /**
+   * The JavaScript function that implements parameter validation.
+   * For sync tables, the execution context will include a `sync` field.
+   */
+  validateParameters?: MetadataFormula<SyncExecutionContext, boolean>;
 }
 
 /**
@@ -2011,6 +2017,7 @@ export function makeMetadataFormula<
     ],
     examples: [],
     connectionRequirement: options?.connectionRequirement || ConnectionRequirement.Optional,
+    // TODO(gary): remove once we stop using makeObjectFormula above
   }) as MetadataFormula<ContextT, ReturnT>;
 }
 

@@ -6621,6 +6621,7 @@ module.exports = (() => {
       ],
       examples: [],
       connectionRequirement: options?.connectionRequirement || "optional" /* Optional */
+      // TODO(gary): remove once we stop using makeObjectFormula above
     });
   }
   __name(makeMetadataFormula, "makeMetadataFormula");

@@ -3572,6 +3572,11 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
 	 * @hidden
 	 */
 	maxPermissionBatchSize?: number;
+	/**
+	 * The JavaScript function that implements parameter validation.
+	 * For sync tables, the execution context will include a `sync` field.
+	 */
+	validateParameters?: MetadataFormula<SyncExecutionContext, boolean>;
 }
 /**
  * The result of defining the formula that implements a sync table.
@@ -5094,7 +5099,7 @@ export type AllowedAuthentication = HeaderBearerTokenAuthentication | CodaApiBea
 export type Authentication = NoAuthentication | VariousAuthentication | AllowedAuthentication;
 export type AsAuthDef<T extends BaseAuthentication> = Omit<T, "getConnectionName" | "getConnectionUserId" | "postSetup"> & {
 	/** See {@link BaseAuthentication.getConnectionName} */
-	getConnectionName?: MetadataFormulaDef;
+	getConnectionName?: MetadataFormulaDef<ExecutionContext, string>;
 	/** See {@link BaseAuthentication.getConnectionUserId} @ignore */
 	getConnectionUserId?: MetadataFormulaDef;
 	/** {@link BaseAuthentication.postSetup} */

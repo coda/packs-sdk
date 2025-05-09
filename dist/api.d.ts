@@ -846,6 +846,11 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
      * @hidden
      */
     maxPermissionBatchSize?: number;
+    /**
+     * The JavaScript function that implements parameter validation.
+     * For sync tables, the execution context will include a `sync` field.
+     */
+    validateParameters?: MetadataFormula<SyncExecutionContext, boolean>;
 }
 /**
  * The result of defining the formula that implements a sync table.

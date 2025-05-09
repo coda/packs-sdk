@@ -668,6 +668,7 @@ function makeMetadataFormula(execute, options) {
         ],
         examples: [],
         connectionRequirement: (options === null || options === void 0 ? void 0 : options.connectionRequirement) || api_types_1.ConnectionRequirement.Optional,
+        // TODO(gary): remove once we stop using makeObjectFormula above
     });
 }
 exports.makeMetadataFormula = makeMetadataFormula;

@@ -33,7 +33,6 @@ const types_3 = require("./types");
 const api_types_1 = require("../api_types");
 const schema_1 = require("../schema");
 const schema_2 = require("../schema");
-const metadata_1 = require("../helpers/metadata");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
 const schema_3 = require("../schema");
@@ -74,10 +73,9 @@ function validateResult(formula, result) {
     if (maybeError) {
         throw types_3.ResultValidationException.fromErrors(formula.name, [maybeError]);
     }
-    const compiledFormula = (0, metadata_1.compileFormulaMetadata)(formula);
-    if ((0, api_1.isObjectPackFormula)(compiledFormula)) {
+    if ((0, api_1.isObjectPackFormula)(formula)) {
         // We've already validated that the result type is valid by this point.
-        validateObjectResult(compiledFormula, result);
+        validateObjectResult(formula, result);
     }
 }
 exports.validateResult = validateResult;
