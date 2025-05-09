@@ -64,7 +64,7 @@ ___
 
 ### getSchema
 
-• `Optional` **getSchema**: [`MetadataFormula`](../types/core.MetadataFormula.md)<[`ExecutionContext`](core.ExecutionContext.md)\>
+• `Optional` **getSchema**: [`MetadataFormula`](../types/core.MetadataFormula.md)<[`ExecutionContext`](core.ExecutionContext.md), [`LegacyDefaultMetadataReturnType`](../types/core.LegacyDefaultMetadataReturnType.md)\>
 
 See [getSchema](core.DynamicOptions.md#getschema)
 

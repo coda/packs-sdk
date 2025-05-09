@@ -7,7 +7,6 @@ import {ConnectionRequirement} from '../api_types';
 import {ContentCategorizationType} from '../schema';
 import {CurrencyFormat} from '..';
 import {DurationUnit} from '..';
-import type {Formula} from '../api';
 import type {GenericSyncTable} from '../api';
 import {ImageCornerStyle} from '../schema';
 import {ImageOutline} from '../schema';
@@ -37,7 +36,10 @@ import {ValueHintType} from '../schema';
 import {ValueType} from '../schema';
 import {_hasCycle} from '../testing/upload_validation';
 import {assertCondition} from '..';
+import {compileFormulaMetadata} from '../helpers/metadata';
+import {compileFormulasMetadata} from '../helpers/metadata';
 import {compilePackMetadata} from '../helpers/metadata';
+import {compileSyncTable} from '../helpers/metadata';
 import {createFakePack} from './test_utils';
 import {createFakePackFormulaMetadata} from './test_utils';
 import {createFakePackVersionMetadata} from './test_utils';
@@ -119,13 +121,13 @@ describe('Pack metadata Validation', async () => {
     const metadata = createFakePackVersionMetadata({
       formulaNamespace: 'namespace',
       formulas: [
-        makeStringFormula({
+        compileFormulaMetadata(makeStringFormula({
           extraneous: 'evil long string',
           name: 'formula',
           description: '',
           execute: () => '',
           parameters: [],
-        } as StringFormulaDefLegacy<any>),
+        } as StringFormulaDefLegacy<any>)),
       ],
     });
     const result = await validateJson({
@@ -199,11 +201,6 @@ describe('Pack metadata Validation', async () => {
   });
 
   describe('Formulas', () => {
-    function formulaToMetadata(formula: Formula): PackFormulaMetadata {
-      const {execute, ...rest} = formula;
-      return rest;
-    }
-
     it('valid number formula', async () => {
       const formula = makeFormula({
         resultType: ValueType.Number,
@@ -214,7 +211,7 @@ describe('Pack metadata Validation', async () => {
         execute: () => 1,
       });
       const metadata = createFakePackVersionMetadata({
-        formulas: [formulaToMetadata(formula)],
+        formulas: [compileFormulaMetadata(formula)],
         formulaNamespace: 'MyNamespace',
       });
       await validateJson(metadata);
@@ -230,7 +227,7 @@ describe('Pack metadata Validation', async () => {
         execute: () => '',
       });
       const metadata = createFakePackVersionMetadata({
-        formulas: [formulaToMetadata(formula)],
+        formulas: [compileFormulaMetadata(formula)],
         formulaNamespace: 'MyNamespace',
       });
       await validateJson(metadata);
@@ -246,7 +243,7 @@ describe('Pack metadata Validation', async () => {
         execute: () => true,
       });
       const metadata = createFakePackVersionMetadata({
-        formulas: [formulaToMetadata(formula)],
+        formulas: [compileFormulaMetadata(formula)],
         formulaNamespace: 'MyNamespace',
       });
       await validateJson(metadata);
@@ -267,7 +264,7 @@ describe('Pack metadata Validation', async () => {
         execute: () => ['hello'],
       });
       const metadata = createFakePackVersionMetadata({
-        formulas: [formulaToMetadata(formula)],
+        formulas: [compileFormulaMetadata(formula)],
         formulaNamespace: 'MyNamespace',
       });
       const validatedMetadata = await validateJson(metadata);
@@ -289,7 +286,7 @@ describe('Pack metadata Validation', async () => {
         execute: () => [{foo: 'test'}],
       });
       const metadata = createFakePackVersionMetadata({
-        formulas: [formulaToMetadata(formula)],
+        formulas: [compileFormulaMetadata(formula)],
         formulaNamespace: 'MyNamespace',
       });
       await validateJson(metadata);
@@ -311,7 +308,7 @@ describe('Pack metadata Validation', async () => {
         },
       });
       const metadata = createFakePackVersionMetadata({
-        formulas: [formulaToMetadata(formula)],
+        formulas: [compileFormulaMetadata(formula)],
         formulaNamespace: 'MyNamespace',
       });
       await validateJson(metadata);
@@ -327,7 +324,7 @@ describe('Pack metadata Validation', async () => {
           execute: () => 1,
         });
         const metadata = createFakePackVersionMetadata({
-          formulas: [formulaToMetadata(formula)],
+          formulas: [compileFormulaMetadata(formula)],
           formulaNamespace: 'MyNamespace',
         });
         await validateJson(metadata);
@@ -343,7 +340,7 @@ describe('Pack metadata Validation', async () => {
           parameters: [],
         } as any);
         const metadata = createFakePackVersionMetadata({
-          formulas: [formulaToMetadata(formula)],
+          formulas: [compileFormulaMetadata(formula)],
           formulaNamespace: 'MyNamespace',
         });
         const err = await validateJsonAndAssertFails(metadata);
@@ -360,7 +357,7 @@ describe('Pack metadata Validation', async () => {
       const formulas = [];
       for (const name of ['foo', 'Foo', 'foo_bar', 'Foo123', 'føø']) {
         formulas.push(
-          formulaToMetadata(
+          compileFormulaMetadata(
             makeNumericFormula({
               name,
               description: 'My description',
@@ -395,7 +392,7 @@ describe('Pack metadata Validation', async () => {
       });
 
       const metadata = createFakePackVersionMetadata({
-        formulas: [formulaToMetadata(formula)],
+        formulas: [compileFormulaMetadata(formula)],
         formulaNamespace: 'MyNamespace',
       });
       const err = await validateJsonAndAssertFails(metadata);
@@ -418,7 +415,7 @@ describe('Pack metadata Validation', async () => {
       });
 
       const metadata = createFakePackVersionMetadata({
-        formulas: [formulaToMetadata(formula)],
+        formulas: [compileFormulaMetadata(formula)],
         formulaNamespace: 'MyNamespace',
       });
       const err = await validateJsonAndAssertFails(metadata);
@@ -439,7 +436,7 @@ describe('Pack metadata Validation', async () => {
         execute: () => '',
       });
       const metadata = createFakePackVersionMetadata({
-        formulas: [formulaToMetadata(formula)],
+        formulas: [compileFormulaMetadata(formula)],
         formulaNamespace: 'MyNamespace',
       });
       await validateJson(metadata);
@@ -465,7 +462,7 @@ describe('Pack metadata Validation', async () => {
           execute: () => '',
         });
         const metadata = createFakePackVersionMetadata({
-          formulas: [formulaToMetadata(formula)],
+          formulas: [compileFormulaMetadata(formula)],
           formulaNamespace: 'MyNamespace',
         });
         await validateJson(metadata);
@@ -482,7 +479,7 @@ describe('Pack metadata Validation', async () => {
         execute: () => '',
       });
       const metadata = createFakePackVersionMetadata({
-        formulas: [formulaToMetadata(formula)],
+        formulas: [compileFormulaMetadata(formula)],
         formulaNamespace: 'MyNamespace',
         defaultAuthentication: {
           type: AuthenticationType.None,
@@ -590,7 +587,7 @@ describe('Pack metadata Validation', async () => {
         execute: () => ({}),
       });
       const metadata = createFakePackVersionMetadata({
-        formulas: [formulaToMetadata(formula)],
+        formulas: [compileFormulaMetadata(formula)],
         formulaNamespace: 'MyNamespace',
       });
       await validateJson(metadata);
@@ -603,7 +600,7 @@ describe('Pack metadata Validation', async () => {
         parameters: [makeNumericParameter('myParam', 'param description')],
       } as any);
       const metadata = createFakePackVersionMetadata({
-        formulas: [formulaToMetadata(formula)],
+        formulas: [compileFormulaMetadata(formula)],
         formulaNamespace: 'MyNamespace',
       });
       const err = await validateJsonAndAssertFails(metadata);
@@ -628,7 +625,7 @@ describe('Pack metadata Validation', async () => {
         });
       }
       const metadata = createFakePackVersionMetadata({
-        formulas,
+        formulas: compileFormulasMetadata(formulas),
         formulaNamespace: 'MyNamespace',
       });
 
@@ -652,7 +649,7 @@ describe('Pack metadata Validation', async () => {
           execute: () => 1,
         });
         return createFakePackVersionMetadata({
-          formulas: [formulaToMetadata(formula)],
+          formulas: [compileFormulaMetadata(formula)],
           formulaNamespace: 'MyNamespace',
         });
       }
@@ -2821,7 +2818,7 @@ describe('Pack metadata Validation', async () => {
           execute: () => ({}),
         });
         return createFakePackVersionMetadata({
-          formulas: [formulaToMetadata(formula)],
+          formulas: [compileFormulaMetadata(formula)],
           formulaNamespace: 'MyNamespace',
         });
       }
@@ -2838,7 +2835,7 @@ describe('Pack metadata Validation', async () => {
           execute: () => ({}),
         });
         return createFakePackVersionMetadata({
-          formulas: [formulaToMetadata(formula)],
+          formulas: [compileFormulaMetadata(formula)],
           formulaNamespace: 'MyNamespace',
         });
       }
@@ -3481,7 +3478,7 @@ describe('Pack metadata Validation', async () => {
           });
           await validateJson(metadata);
         });
-        
+
         it('works with content email categorization', async () => {
           const metadata = metadataForFormulaWithObjectSchema({
             type: ValueType.Object,
@@ -3623,7 +3620,7 @@ describe('Pack metadata Validation', async () => {
               message: 'The "filterableProperty" field name "BadProperty" must be a "ValueType.Boolean", "ValueType.Number", or a property with a "ValueHintType.DateTime" or "ValueHintType.SelectList" "codaType".',
               path: 'formulas[0].schema.index.filterableProperty[1]',
             },
-          ]);        
+          ]);
         });
 
         it('fails with invalid content categorization', async () => {
@@ -3872,7 +3869,7 @@ describe('Pack metadata Validation', async () => {
           execute: () => '',
         });
         const metadata = createFakePackVersionMetadata({
-          formulas: [formulaToMetadata(formula)],
+          formulas: [compileFormulaMetadata(formula)],
           formulaNamespace: 'MyNamespace',
           formats: [
             {
@@ -3898,7 +3895,7 @@ describe('Pack metadata Validation', async () => {
           execute: () => '',
         });
         const metadata = createFakePackVersionMetadata({
-          formulas: [formulaToMetadata(formula)],
+          formulas: [compileFormulaMetadata(formula)],
           formulaNamespace: 'MyNamespace',
           formats: [
             {
@@ -3928,7 +3925,7 @@ describe('Pack metadata Validation', async () => {
           execute: () => '',
         });
         const metadata = createFakePackVersionMetadata({
-          formulas: [formulaToMetadata(formula)],
+          formulas: [compileFormulaMetadata(formula)],
           formulaNamespace: 'MyNamespace',
           formats: [
             {
@@ -3960,7 +3957,7 @@ describe('Pack metadata Validation', async () => {
           execute: () => '',
         });
         const metadata = createFakePackVersionMetadata({
-          formulas: [formulaToMetadata(formula)],
+          formulas: [compileFormulaMetadata(formula)],
           formulaNamespace: 'MyNamespace',
           formats: [
             {
@@ -3989,7 +3986,7 @@ describe('Pack metadata Validation', async () => {
           execute: () => '',
         });
         const metadata = createFakePackVersionMetadata({
-          formulas: [formulaToMetadata(formula)],
+          formulas: [compileFormulaMetadata(formula)],
           formulaNamespace: 'MyNamespace',
           formats: [
             {
@@ -4018,7 +4015,7 @@ describe('Pack metadata Validation', async () => {
           execute: () => '',
         });
         const metadata = createFakePackVersionMetadata({
-          formulas: [formulaToMetadata(formula)],
+          formulas: [compileFormulaMetadata(formula)],
           formulaNamespace: 'MyNamespace',
           formats: [
             {
@@ -4044,7 +4041,7 @@ describe('Pack metadata Validation', async () => {
           execute: () => '',
         });
         const metadata = createFakePackVersionMetadata({
-          formulas: [formulaToMetadata(formula)],
+          formulas: [compileFormulaMetadata(formula)],
           formulaNamespace: 'MyNamespace',
           formats: [
             {
@@ -4078,7 +4075,7 @@ describe('Pack metadata Validation', async () => {
           execute: () => '',
         });
         const metadata = createFakePackVersionMetadata({
-          formulas: [formulaToMetadata(formula)],
+          formulas: [compileFormulaMetadata(formula)],
           formulaNamespace: 'MyNamespace',
           formats: [
             {
@@ -4121,7 +4118,7 @@ describe('Pack metadata Validation', async () => {
           execute: () => '',
         });
         const metadata = createFakePackVersionMetadata({
-          formulas: [formulaToMetadata(formula)],
+          formulas: [compileFormulaMetadata(formula)],
           formulaNamespace: 'MyNamespace',
           formats: [
             {
@@ -4155,7 +4152,7 @@ describe('Pack metadata Validation', async () => {
           execute: () => '',
         });
         const metadata = createFakePackVersionMetadata({
-          formulas: [formulaToMetadata(formula)],
+          formulas: [compileFormulaMetadata(formula)],
           formulaNamespace: 'MyNamespace',
           formats: [
             {
@@ -4208,7 +4205,7 @@ describe('Pack metadata Validation', async () => {
         }
 
         const metadata = createFakePackVersionMetadata({
-          formulas: [formula],
+          formulas: [compileFormulaMetadata(formula)],
           formats,
           formulaNamespace: 'MyNamespace',
         });
@@ -4270,7 +4267,7 @@ describe('Pack metadata Validation', async () => {
         examples: [{params: ['param'], result: 'result'}],
       });
       const metadata = createFakePackVersionMetadata({
-        formulas: [formula],
+        formulas: [compileFormulaMetadata(formula)],
         formulaNamespace: 'ignored',
       });
       await validateJson(metadata);
@@ -4286,7 +4283,7 @@ describe('Pack metadata Validation', async () => {
         examples: [{params: [['item1']], result: 'item1'}],
       });
       const metadata = createFakePackVersionMetadata({
-        formulas: [formula],
+        formulas: [compileFormulaMetadata(formula)],
         formulaNamespace: 'ignored',
       });
       await validateJson(metadata);
@@ -4327,7 +4324,7 @@ describe('Pack metadata Validation', async () => {
         },
       });
       const metadata = createFakePackVersionMetadata({
-        formulas: [formula],
+        formulas: [compileFormulaMetadata(formula)],
         formulaNamespace: 'ignored',
       });
       await validateJson(metadata);
@@ -4355,7 +4352,7 @@ describe('Pack metadata Validation', async () => {
         },
       });
       const metadata = createFakePackVersionMetadata({
-        formulas: [formulaToMetadata(formula)],
+        formulas: [compileFormulaMetadata(formula)],
         formulaNamespace: 'MyNamespace',
       });
       await validateJson(metadata);
@@ -5277,17 +5274,17 @@ describe('Pack metadata Validation', async () => {
             },
           ],
           formulas: [
-            makeFormula({
+            compileFormulaMetadata(makeFormula({
               resultType: ValueType.String,
               name: 'FormulaName',
               description: '',
               parameters: [],
               execute: () => '',
               allowedAuthenticationNames: ['adminAuth2'],
-            }),
+            })),
           ],
           syncTables: [
-            makeSyncTable({
+            compileSyncTable(makeSyncTable({
               name: 'SyncTable',
               identityName: 'Identity',
               schema: makeObjectSchema({
@@ -5305,7 +5302,7 @@ describe('Pack metadata Validation', async () => {
                 parameters: [],
                 allowedAuthenticationNames: ['adminAuth3', ReservedAuthenticationNames.Default],
               },
-            }),
+            })),
           ],
           formulaNamespace: 'MyNamespace',
         });
@@ -5324,7 +5321,7 @@ describe('Pack metadata Validation', async () => {
             },
           ],
           syncTables: [
-            makeSyncTable({
+            compileSyncTable(makeSyncTable({
               name: 'SyncTable',
               identityName: 'Identity',
               schema: makeObjectSchema({
@@ -5342,8 +5339,8 @@ describe('Pack metadata Validation', async () => {
                 parameters: [],
                 allowedAuthenticationNames: ['fakeAuthName'],
               },
-            }),
-            makeSyncTable({
+            })),
+            compileSyncTable(makeSyncTable({
               name: 'SyncTable2',
               identityName: 'Identity2',
               schema: makeObjectSchema({
@@ -5361,7 +5358,7 @@ describe('Pack metadata Validation', async () => {
                 parameters: [],
                 allowedAuthenticationNames: [ReservedAuthenticationNames.System, ReservedAuthenticationNames.Default],
               },
-            }),
+            })),
           ],
         });
         const err = await validateJsonAndAssertFails(metadata, '1.0.0');
@@ -5396,7 +5393,7 @@ describe('Pack metadata Validation', async () => {
       it('cannot set allowedAuthenticationNames on a formula with no connection', async () => {
         const metadata = createFakePackVersionMetadata({
           formulas: [
-            makeFormula({
+            compileFormulaMetadata(makeFormula({
               name: 'FormulaName',
               description: '',
               parameters: [],
@@ -5404,7 +5401,7 @@ describe('Pack metadata Validation', async () => {
               resultType: ValueType.String,
               connectionRequirement: ConnectionRequirement.None,
               allowedAuthenticationNames: [ReservedAuthenticationNames.Default],
-            }),
+            })),
           ],
           formulaNamespace: 'MyNamespace',
         });
@@ -5612,7 +5609,7 @@ describe('Pack metadata Validation', async () => {
       });
 
       const metadata = createFakePackVersionMetadata({
-        formulas: [formula],
+        formulas: [compileFormulaMetadata(formula)],
         formulaNamespace: 'MyNamespace',
       });
       const err = await validateJsonAndAssertFails(metadata);
@@ -5635,7 +5632,7 @@ describe('Pack metadata Validation', async () => {
       });
 
       const metadata = createFakePackVersionMetadata({
-        formulas: [formula],
+        formulas: [compileFormulaMetadata(formula)],
         formulaNamespace: 'MyNamespace',
       });
       const err = await validateJsonAndAssertFails(metadata);
@@ -5666,7 +5663,7 @@ describe('Pack metadata Validation', async () => {
       });
 
       const metadata = createFakePackVersionMetadata({
-        formulas: [formula],
+        formulas: [compileFormulaMetadata(formula)],
         formulaNamespace: 'MyNamespace',
       });
       const err = await validateJsonAndAssertFails(metadata);

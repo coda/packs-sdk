@@ -182,6 +182,19 @@ The parameter inputs to the formula, if any.
 
 ___
 
+### validateParameters
+
+• `Optional` **validateParameters**: [`MetadataFormula`](../types/core.MetadataFormula.md)<[`SyncExecutionContext`](core.SyncExecutionContext.md)<[`Continuation`](core.Continuation.md), [`Continuation`](core.Continuation.md), [`Continuation`](core.Continuation.md)\>, `boolean`\>
+
+The JavaScript function that implements parameter validation.
+For sync tables, the execution context will include a `sync` field.
+
+#### Overrides
+
+[CommonPackFormulaDef](core.CommonPackFormulaDef.md).[validateParameters](core.CommonPackFormulaDef.md#validateparameters)
+
+___
+
 ### varargParameters
 
 • `Optional` `Readonly` **varargParameters**: [`ParamDefs`](../types/core.ParamDefs.md)

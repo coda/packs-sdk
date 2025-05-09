@@ -228,12 +228,19 @@ var NetworkConnection;
 /** The HTTP methods (verbs) supported by the fetcher. */
 exports.ValidFetchMethods = ['GET', 'PATCH', 'POST', 'PUT', 'DELETE', 'HEAD'];
 /**
- * TODO(patrick): Unhide this
- * @hidden
+ * The sync mode of the current sync.
  */
 var PermissionSyncMode;
 (function (PermissionSyncMode) {
+    /**
+     * In doc syncs are always Personal.
+     * Personal and shared syncs for Coda Brain are Personal.
+     */
     PermissionSyncMode["Personal"] = "Personal";
+    /**
+     * In Coda Brain, if the org admin selects that a sync should match
+     * the permissions of the source, then the sync will be 'PermissionAware'.
+     */
     PermissionSyncMode["PermissionAware"] = "PermissionAware";
 })(PermissionSyncMode || (exports.PermissionSyncMode = PermissionSyncMode = {}));
 var InvocationErrorType;

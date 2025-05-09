@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.maybeRewriteConnectionForFormula = exports.maybeRewriteConnectionForNamedPropertyOptions = exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTableLegacy = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makePropertyOptionsFormula = exports.makeMetadataFormula = exports.normalizePropertyOptionsResults = exports.makeFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.UpdateOutcome = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeFileArrayParameter = exports.makeFileParameter = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeParameter = exports.wrapGetSchema = exports.wrapMetadataFunction = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.ResponseSizeTooLargeError = exports.GoogleDwdError = exports.MissingScopesError = exports.StatusCodeError = exports.UserVisibleError = void 0;
+exports.maybeRewriteConnectionForFormula = exports.maybeRewriteConnectionForNamedPropertyOptions = exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTableLegacy = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makePropertyOptionsFormula = exports.makeMetadataFormula = exports.normalizePropertyOptionsResults = exports.makeFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.UpdateOutcome = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeFileArrayParameter = exports.makeFileParameter = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeParameter = exports.wrapGetSchema = exports.wrapMetadataFunction = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.ResponseSizeTooLargeError = exports.GoogleDwdError = exports.MissingScopesError = exports.StatusCodeError = exports.ParameterValidationError = exports.UserVisibleError = void 0;
 const api_types_1 = require("./api_types");
 const api_types_2 = require("./api_types");
 const api_types_3 = require("./api_types");
@@ -56,6 +56,19 @@ class UserVisibleError extends Error {
     }
 }
 exports.UserVisibleError = UserVisibleError;
+/**
+ * An error that occurs when validating parameters.
+ */
+class ParameterValidationError extends UserVisibleError {
+    /**
+     * Use to construct a parameter validation error.
+     */
+    constructor(message, errors) {
+        super(message);
+        this.errors = errors;
+    }
+}
+exports.ParameterValidationError = ParameterValidationError;
 // StatusCodeError is a simple version of StatusCodeError in request-promise to keep backwards compatibility.
 // This tries to replicate its exact structure, massaging as necessary to handle the various transforms
 // in our stack.
@@ -415,7 +428,10 @@ var UpdateOutcome;
  * @param definition The definition of a formula that returns a number.
  */
 function makeNumericFormula(definition) {
-    return Object.assign({}, definition, { resultType: api_types_6.Type.number });
+    return Object.assign({}, definition, {
+        resultType: api_types_6.Type.number,
+        validateParameters: wrapMetadataFunction(definition.validateParameters),
+    });
 }
 exports.makeNumericFormula = makeNumericFormula;
 /**
@@ -430,6 +446,7 @@ function makeStringFormula(definition) {
     const { response } = definition;
     return Object.assign({}, definition, {
         resultType: api_types_6.Type.string,
+        validateParameters: wrapMetadataFunction(definition.validateParameters),
         ...(response && { schema: response.schema }),
     });
 }
@@ -498,6 +515,7 @@ function makeFormula(fullDefinition) {
                 ...fullDefinition,
                 codaType: 'codaType' in fullDefinition ? fullDefinition.codaType : undefined,
                 formulaSchema: 'schema' in fullDefinition ? fullDefinition.schema : undefined,
+                validateParameters: wrapMetadataFunction(fullDefinition.validateParameters),
             };
             const { onError: _, resultType: unused, codaType, formulaSchema, ...rest } = def;
             (0, ensure_1.assertCondition)(codaType !== schema_1.ValueHintType.SelectList, 'ValueHintType.SelectList is not supported for formula result types.');
@@ -514,6 +532,7 @@ function makeFormula(fullDefinition) {
                 ...fullDefinition,
                 codaType: 'codaType' in fullDefinition ? fullDefinition.codaType : undefined,
                 formulaSchema: 'schema' in fullDefinition ? fullDefinition.schema : undefined,
+                validateParameters: wrapMetadataFunction(fullDefinition.validateParameters),
             };
             const { onError: _, resultType: unused, codaType, formulaSchema, ...rest } = def;
             const numericFormula = {
@@ -529,6 +548,7 @@ function makeFormula(fullDefinition) {
             const booleanFormula = {
                 ...rest,
                 resultType: api_types_6.Type.boolean,
+                validateParameters: wrapMetadataFunction(fullDefinition.validateParameters),
             };
             formula = booleanFormula;
             break;
@@ -541,6 +561,7 @@ function makeFormula(fullDefinition) {
                 resultType: api_types_6.Type.object,
                 // The deepCopy() is here to drop property option functions, which have no effect on non-sync formulas.
                 schema: (0, object_utils_1.deepCopy)((0, schema_5.normalizeSchema)({ type: schema_2.ValueType.Array, items })),
+                validateParameters: wrapMetadataFunction(fullDefinition.validateParameters),
             };
             formula = arrayFormula;
             break;
@@ -553,6 +574,7 @@ function makeFormula(fullDefinition) {
                 resultType: api_types_6.Type.object,
                 // The deepCopy() is here to drop property option functions, which have no effect on non-sync formulas.
                 schema: (0, object_utils_1.deepCopy)((0, schema_5.normalizeSchema)(schema)),
+                validateParameters: wrapMetadataFunction(fullDefinition.validateParameters),
             };
             formula = objectFormula;
             break;
@@ -609,6 +631,11 @@ exports.normalizePropertyOptionsResults = normalizePropertyOptionsResults;
  * it is shaped like a Coda formula to be used at runtime.
  */
 function makeMetadataFormula(execute, options) {
+    // NOTE(gary): makeObjectFormula is not correct here. A metadata formula is not guaranteed to return an object.
+    // This previously worked because we cast the return type of the call to execute to any.
+    // Now that we have a more precise return type, we should write a different wrapper to use here.
+    // For now, hackily cast the return type, but we should actually switch over to makeFormula, but
+    // that change should be isolated and verified.
     return makeObjectFormula({
         name: 'getMetadata',
         description: 'Gets metadata',
@@ -641,6 +668,7 @@ function makeMetadataFormula(execute, options) {
         ],
         examples: [],
         connectionRequirement: (options === null || options === void 0 ? void 0 : options.connectionRequirement) || api_types_1.ConnectionRequirement.Optional,
+        // TODO(gary): remove once we stop using makeObjectFormula above
     });
 }
 exports.makeMetadataFormula = makeMetadataFormula;
@@ -826,6 +854,7 @@ function makeObjectFormula({ response, ...definition }) {
         resultType: api_types_6.Type.object,
         execute,
         schema,
+        validateParameters: wrapMetadataFunction(definition.validateParameters),
     });
 }
 exports.makeObjectFormula = makeObjectFormula;
@@ -968,6 +997,7 @@ function makeSyncTable({ name, displayName, description, identityName, schema: i
             connectionRequirement: definition.connectionRequirement || connectionRequirement,
             resultType: api_types_6.Type.object,
             executeGetPermissions: executeGetPermissions,
+            validateParameters: wrapMetadataFunction(definition.validateParameters),
         },
         getSchema: maybeRewriteConnectionForFormula(getSchema, connectionRequirement),
         entityName,
@@ -1103,6 +1133,7 @@ function makeTranslateObjectFormula({ response, ...definition }) {
         execute,
         resultType: api_types_6.Type.object,
         schema: response.schema,
+        validateParameters: wrapMetadataFunction(definition.validateParameters),
     });
 }
 exports.makeTranslateObjectFormula = makeTranslateObjectFormula;
@@ -1138,6 +1169,7 @@ function makeEmptyFormula(definition) {
     return Object.assign({}, rest, {
         execute,
         resultType: api_types_6.Type.string,
+        validateParameters: wrapMetadataFunction(definition.validateParameters),
     });
 }
 exports.makeEmptyFormula = makeEmptyFormula;

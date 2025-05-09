@@ -50,16 +50,16 @@ coda.makeDynamicSyncTable({
 | › `description?` | `string` |
 | › `displayName?` | `string` |
 | › `entityName?` | `string` |
-| › `formula` | [`SyncFormulaDef`](../interfaces/core.SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `any`, `ContextT`, `PermissionsContextT`\> |
-| › `getDisplayUrl` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<`ContextT`\> |
-| › `getName` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<`ContextT`\> |
-| › `getSchema` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<`ContextT`\> |
+| › `formula` | [`FormulaOptions`](../types/core.FormulaOptions.md)<`ParamDefsT`, [`SyncFormulaDef`](../interfaces/core.SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `any`, `ContextT`, `PermissionsContextT`\>\> |
+| › `getDisplayUrl` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<`ContextT`, [`LegacyDefaultMetadataReturnType`](../types/core.LegacyDefaultMetadataReturnType.md)\> |
+| › `getName` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<`ContextT`, [`LegacyDefaultMetadataReturnType`](../types/core.LegacyDefaultMetadataReturnType.md)\> |
+| › `getSchema` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<`ContextT`, [`LegacyDefaultMetadataReturnType`](../types/core.LegacyDefaultMetadataReturnType.md)\> |
 | › `identityName` | `string` |
-| › `listDynamicUrls?` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<[`ExecutionContext`](../interfaces/core.ExecutionContext.md)\> |
+| › `listDynamicUrls?` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<[`ExecutionContext`](../interfaces/core.ExecutionContext.md), [`LegacyDefaultMetadataReturnType`](../types/core.LegacyDefaultMetadataReturnType.md)\> |
 | › `name` | `string` |
 | › `placeholderSchema?` | `SchemaT` |
 | › `propertyOptions?` | [`PropertyOptionsMetadataFunction`](../types/core.PropertyOptionsMetadataFunction.md)<`any`\> |
-| › `searchDynamicUrls?` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<[`ExecutionContext`](../interfaces/core.ExecutionContext.md)\> |
+| › `searchDynamicUrls?` | [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<[`ExecutionContext`](../interfaces/core.ExecutionContext.md), [`LegacyDefaultMetadataReturnType`](../types/core.LegacyDefaultMetadataReturnType.md)\> |
 
 #### Returns
 

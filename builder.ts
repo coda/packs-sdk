@@ -9,7 +9,7 @@ import {ConnectionRequirement} from './api_types';
 import type {DynamicSyncTableOptions} from './api';
 import type {Format} from './types';
 import type {Formula} from './api';
-import type {FormulaDefinition} from './api';
+import type {FormulaDefinitionOptions} from './api';
 import type {ObjectSchema} from './schema';
 import type {ObjectSchemaDefinition} from './schema';
 import type {PackVersionDefinition} from './types';
@@ -142,7 +142,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * ```
    */
   addFormula<ParamDefsT extends ParamDefs, ResultT extends ValueType, SchemaT extends Schema>(
-    definition: {resultType: ResultT} & FormulaDefinition<ParamDefsT, ResultT, SchemaT>,
+    definition: {resultType: ResultT} & FormulaDefinitionOptions<ParamDefsT, ResultT, SchemaT>,
   ): this {
     const formula = makeFormula<ParamDefsT, ResultT, SchemaT>({
       ...definition,

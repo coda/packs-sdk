@@ -20,7 +20,8 @@ export declare enum MetadataFormulaType {
     SyncGetDisplayUrl = "SyncGetDisplayUrl",
     SyncGetTableName = "SyncGetTableName",
     SyncGetSchema = "SyncGetSchema",
-    PropertyOptions = "PropertyOptions"
+    PropertyOptions = "PropertyOptions",
+    ValidateParameters = "ValidateParameters"
 }
 export interface StandardFormulaSpecification {
     type: FormulaType.Standard;
@@ -59,6 +60,12 @@ export interface SyncMetadataFormulaSpecification {
     metadataFormulaType: MetadataFormulaType.SyncListDynamicUrls | MetadataFormulaType.SyncSearchDynamicUrls | MetadataFormulaType.SyncGetDisplayUrl | MetadataFormulaType.SyncGetTableName | MetadataFormulaType.SyncGetSchema;
     syncTableName: string;
 }
+export interface ValidateParametersFormulaSpecification {
+    type: FormulaType.Metadata;
+    metadataFormulaType: MetadataFormulaType.ValidateParameters;
+    parentFormulaName: string;
+    parentFormulaType: FormulaType.Standard | FormulaType.Sync;
+}
 export interface PropertyAutocompleteFormulaSpecification {
     type: FormulaType.Metadata;
     metadataFormulaType: MetadataFormulaType.PropertyOptions;
@@ -69,5 +76,5 @@ export interface PropertyAutocompleteFormulaSpecification {
     propertySchema: Schema & ObjectSchemaProperty;
     search: string;
 }
-export type FormulaSpecification = StandardFormulaSpecification | SyncFormulaSpecification | SyncUpdateFormulaSpecification | MetadataFormulaSpecification | ParameterAutocompleteMetadataFormulaSpecification | PostSetupMetadataFormulaSpecification | SyncMetadataFormulaSpecification | PropertyAutocompleteFormulaSpecification | GetPermissionsFormulaSpecification;
+export type FormulaSpecification = StandardFormulaSpecification | SyncFormulaSpecification | SyncUpdateFormulaSpecification | MetadataFormulaSpecification | ParameterAutocompleteMetadataFormulaSpecification | PostSetupMetadataFormulaSpecification | SyncMetadataFormulaSpecification | PropertyAutocompleteFormulaSpecification | GetPermissionsFormulaSpecification | ValidateParametersFormulaSpecification;
 export type PackFunctionResponse<T extends FormulaSpecification> = T extends SyncFormulaSpecification ? GenericSyncFormulaResult : T extends SyncUpdateFormulaSpecification ? GenericSyncUpdateResultMarshaled : PackFormulaResult;

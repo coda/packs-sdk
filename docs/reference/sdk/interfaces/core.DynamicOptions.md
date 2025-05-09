@@ -31,7 +31,7 @@ ___
 
 ### getSchema
 
-• `Optional` **getSchema**: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<[`ExecutionContext`](core.ExecutionContext.md)\>
+• `Optional` **getSchema**: [`MetadataFormulaDef`](../types/core.MetadataFormulaDef.md)<[`ExecutionContext`](core.ExecutionContext.md), [`LegacyDefaultMetadataReturnType`](../types/core.LegacyDefaultMetadataReturnType.md)\>
 
 A formula that returns the schema for this table.
 

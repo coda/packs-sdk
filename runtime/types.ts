@@ -23,6 +23,7 @@ export enum MetadataFormulaType {
   SyncGetTableName = 'SyncGetTableName',
   SyncGetSchema = 'SyncGetSchema',
   PropertyOptions = 'PropertyOptions',
+  ValidateParameters = 'ValidateParameters',
 }
 
 export interface StandardFormulaSpecification {
@@ -75,6 +76,13 @@ export interface SyncMetadataFormulaSpecification {
   syncTableName: string;
 }
 
+export interface ValidateParametersFormulaSpecification {
+  type: FormulaType.Metadata;
+  metadataFormulaType: MetadataFormulaType.ValidateParameters;
+  parentFormulaName: string;
+  parentFormulaType: FormulaType.Standard | FormulaType.Sync;
+}
+
 export interface PropertyAutocompleteFormulaSpecification {
   type: FormulaType.Metadata;
   metadataFormulaType: MetadataFormulaType.PropertyOptions;
@@ -95,7 +103,8 @@ export type FormulaSpecification =
   | PostSetupMetadataFormulaSpecification
   | SyncMetadataFormulaSpecification
   | PropertyAutocompleteFormulaSpecification
-  | GetPermissionsFormulaSpecification;
+  | GetPermissionsFormulaSpecification
+  | ValidateParametersFormulaSpecification;
 
 export type PackFunctionResponse<T extends FormulaSpecification> = T extends SyncFormulaSpecification
   ? GenericSyncFormulaResult

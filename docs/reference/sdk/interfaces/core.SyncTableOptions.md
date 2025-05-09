@@ -62,7 +62,7 @@ ___
 
 ### formula
 
-• **formula**: [`SyncFormulaDef`](core.SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`, `PermissionsContextT`\>
+• **formula**: [`FormulaOptions`](../types/core.FormulaOptions.md)<`ParamDefsT`, [`SyncFormulaDef`](core.SyncFormulaDef.md)<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`, `PermissionsContextT`\>\>
 
 The definition of the formula that implements this sync. This is a Coda packs formula
 that returns an array of objects fitting the given schema and optionally a [Continuation](core.Continuation.md).
@@ -97,7 +97,7 @@ The name of the sync table. This is shown to users in the Coda UI if displayName
 This should describe the entities being synced. For example, a sync table that syncs products
 from an e-commerce platform should be called 'Products'. This name must not contain spaces.
 
-Important: This value acts as a unique ID for the table, and updating it later is a breaking change. 
+Important: This value acts as a unique ID for the table, and updating it later is a breaking change.
 If you want to change the value shown to the users, set `displayName` instead.
 
 ___

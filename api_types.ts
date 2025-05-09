@@ -546,6 +546,36 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
    * @hidden
    */
   readonly allowedAuthenticationNames?: string[];
+
+  /**
+   * The JavaScript function that implements parameter validation.
+   *
+   * This function takes in parameters and a context containing a {@link PermissionSyncMode}
+   * and validates the parameters. A formula may want to validate parameters differently
+   * for permissionSyncMode 'PermissionAware' vs 'Personal' vs undefined (which represents a formula).
+   *
+   * @returns if the parameters are valid
+   * @throws {@link ParameterValidationError} if the parameters are invalid.
+   *
+   * @example
+   * ```
+   * validateParameters: async function (context, _, formulaContext) {
+   *   let [quantity, sku] = formulaContext?.params;
+   *   let errors = [];
+   *   if (quantity < 0) {
+   *     errors.push({message: "Must be a positive number.", propertyName: "quantity"});
+   *   }
+   *   if (!isValidSku(context, sku)) {
+   *     errors.push({message: `Product SKU not found.`, propertyName: "sku"});
+   *   }
+   *   if (errors.length > 0) {
+   *     throw new ParameterValidationError("Invalid parameter values.", errors);
+   *   }
+   * return true;
+   * },
+   * ```
+   */
+  validateParameters?: MetadataFormula<ExecutionContext, boolean>;
 }
 
 /**
@@ -820,11 +850,18 @@ export interface SyncStateService {
 }
 
 /**
- * TODO(patrick): Unhide this
- * @hidden
+ * The sync mode of the current sync.
  */
 export enum PermissionSyncMode {
+  /**
+   * In doc syncs are always Personal.
+   * Personal and shared syncs for Coda Brain are Personal.
+   */
   Personal = 'Personal',
+  /**
+   * In Coda Brain, if the org admin selects that a sync should match
+   * the permissions of the source, then the sync will be 'PermissionAware'.
+   */
   PermissionAware = 'PermissionAware',
 }
 
@@ -886,8 +923,9 @@ export interface SyncBase {
    * If this invocation is a part of an ingestion, then this ID will be provided to all invocations.
    * It may be a full sync execution ID or an incremental sync execution ID.
    *
-   * This includes invocations of sync `execute` and `executeGetPermissions`, as well as
-   * dynamic table features like `listDynamicUrls`, `getSchema`, and `getName`.
+   * This includes invocations of sync `execute` and `executeGetPermissions`,
+   * invocations of `validateParameters`,
+   * as well as dynamic table features like `listDynamicUrls`, `getSchema`, and `getName`.
    *
    * TODO(patrick): May want to support this in doc syncs too.
    *

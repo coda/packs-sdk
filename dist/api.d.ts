@@ -68,6 +68,28 @@ export declare class UserVisibleError extends Error {
     constructor(message?: string, internalError?: Error);
 }
 /**
+ * An error that occurs when validating parameters.
+ */
+export interface ParameterError {
+    /** The error message for the parameter. */
+    message: string;
+    /** The name of the parameter that caused the error. */
+    parameterName: string;
+}
+/**
+ * An error that occurs when validating parameters.
+ */
+export declare class ParameterValidationError extends UserVisibleError {
+    /**
+     * The parameters that were invalid, alongside a message describing the error for the parameter.
+     */
+    readonly errors: ParameterError[];
+    /**
+     * Use to construct a parameter validation error.
+     */
+    constructor(message: string, errors: ParameterError[]);
+}
+/**
  * The raw HTTP response from a {@link StatusCodeError}.
  */
 export interface StatusCodeErrorResponse {
@@ -358,7 +380,7 @@ export type SyncTable = GenericSyncTable | GenericDynamicSyncTable;
  */
 export declare function isUserVisibleError(error: Error): error is UserVisibleError;
 export declare function isDynamicSyncTable(syncTable: SyncTable): syncTable is GenericDynamicSyncTable;
-export declare function wrapMetadataFunction<ContextT extends ExecutionContext>(fnOrFormula: MetadataFormula<ContextT> | MetadataFunction<ContextT> | undefined): MetadataFormula<ContextT> | undefined;
+export declare function wrapMetadataFunction<ContextT extends ExecutionContext, ReturnT extends PackFormulaResult = LegacyDefaultMetadataReturnType>(fnOrFormula: MetadataFormula<ContextT, ReturnT> | MetadataFunction<ContextT, ReturnT> | undefined): MetadataFormula<ContextT, ReturnT> | undefined;
 export declare function wrapGetSchema(getSchema: MetadataFormula | undefined): MetadataFormula | undefined;
 /**
  * List of ParameterTypes that support autocomplete.
@@ -572,9 +594,13 @@ export type Formula<ParamDefsT extends ParamDefs = ParamDefs, ResultT extends Va
 export type TypedPackFormula = Formula | GenericSyncFormula;
 export type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
 /** @hidden */
-export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute' | 'executeUpdate' | 'executeGetPermissions'>;
+export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute' | 'executeUpdate' | 'executeGetPermissions' | 'validateParameters'> & {
+    validateParameters?: MetadataFormulaMetadata<ExecutionContext, boolean>;
+};
 /** @hidden */
-export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'execute'>;
+export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'execute' | 'validateParameters'> & {
+    validateParameters?: MetadataFormulaMetadata<ExecutionContext, boolean>;
+};
 export declare function isObjectPackFormula(fn: PackFormulaMetadata): fn is ObjectPackFormulaMetadata;
 export declare function isStringPackFormula(fn: BaseFormula<ParamDefs, any>): fn is StringPackFormula<ParamDefs>;
 export declare function isSyncPackFormula(fn: BaseFormula<ParamDefs, any>): fn is GenericSyncFormula;
@@ -820,6 +846,11 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
      * @hidden
      */
     maxPermissionBatchSize?: number;
+    /**
+     * The JavaScript function that implements parameter validation.
+     * For sync tables, the execution context will include a `sync` field.
+     */
+    validateParameters?: MetadataFormula<SyncExecutionContext, boolean>;
 }
 /**
  * The result of defining the formula that implements a sync table.
@@ -846,7 +877,7 @@ export type SyncFormula<K extends string, L extends string, ParamDefsT extends P
  *
  * @param definition The definition of a formula that returns a number.
  */
-export declare function makeNumericFormula<ParamDefsT extends ParamDefs>(definition: PackFormulaDef<ParamDefsT, number>): NumericPackFormula<ParamDefsT>;
+export declare function makeNumericFormula<ParamDefsT extends ParamDefs>(definition: FormulaOptions<ParamDefsT, PackFormulaDef<ParamDefsT, number>>): NumericPackFormula<ParamDefsT>;
 /**
  * @deprecated
  *
@@ -855,7 +886,7 @@ export declare function makeNumericFormula<ParamDefsT extends ParamDefs>(definit
  *
  * @param definition The definition of a formula that returns a string.
  */
-export declare function makeStringFormula<ParamDefsT extends ParamDefs>(definition: StringFormulaDefLegacy<ParamDefsT>): StringPackFormula<ParamDefsT>;
+export declare function makeStringFormula<ParamDefsT extends ParamDefs>(definition: FormulaOptions<ParamDefsT, StringFormulaDefLegacy<ParamDefsT>>): StringPackFormula<ParamDefsT>;
 /**
  * Creates a formula definition.
  *
@@ -910,7 +941,7 @@ export declare function makeStringFormula<ParamDefsT extends ParamDefs>(definiti
  * });
  * ```
  */
-export declare function makeFormula<ParamDefsT extends ParamDefs, ResultT extends ValueType, SchemaT extends Schema = Schema>(fullDefinition: FormulaDefinition<ParamDefsT, ResultT, SchemaT>): Formula<ParamDefsT, ResultT, SchemaT>;
+export declare function makeFormula<ParamDefsT extends ParamDefs, ResultT extends ValueType, SchemaT extends Schema = Schema>(fullDefinition: FormulaDefinitionOptions<ParamDefsT, ResultT, SchemaT>): Formula<ParamDefsT, ResultT, SchemaT>;
 export interface OnErrorFormulaOptions {
     /**
      * If specified, will catch errors in the {@link execute} function and call this
@@ -932,22 +963,14 @@ export interface BaseFormulaDef<ParamDefsT extends ParamDefs, ResultT extends st
 export type StringFormulaDef<ParamDefsT extends ParamDefs> = BaseFormulaDef<ParamDefsT, string> & {
     resultType: ValueType.String;
     execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<string> | string;
-} & ({
-    schema?: StringSchema;
-} | {
-    codaType?: StringHintTypes;
-});
+};
 /**
  * A definition accepted by {@link makeFormula} for a formula that returns a number.
  */
 export type NumericFormulaDef<ParamDefsT extends ParamDefs> = BaseFormulaDef<ParamDefsT, number> & {
     resultType: ValueType.Number;
     execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<number> | number;
-} & ({
-    schema?: NumberSchema;
-} | {
-    codaType?: NumberHintTypes;
-});
+};
 /**
  * A definition accepted by {@link makeFormula} for a formula that returns a boolean.
  */
@@ -970,9 +993,24 @@ export type ObjectFormulaDef<ParamDefsT extends ParamDefs, SchemaT extends Schem
     schema: SchemaT;
 };
 /**
+ * A wrapper type that allows you to specify a formula definition where the `validateParameters`
+ * function may be a function definition or a metadata formula definition.
+ */
+export type FormulaOptions<ParamDefsT extends ParamDefs, DefT extends CommonPackFormulaDef<ParamDefsT>> = Omit<DefT, 'validateParameters'> & {
+    validateParameters?: MetadataFormulaDef<ExecutionContext, boolean>;
+};
+/**
  * A formula definition accepted by {@link makeFormula}.
  */
-export type FormulaDefinition<ParamDefsT extends ParamDefs, ResultT extends ValueType, SchemaT extends Schema> = ResultT extends ValueType.String ? StringFormulaDef<ParamDefsT> : ResultT extends ValueType.Number ? NumericFormulaDef<ParamDefsT> : ResultT extends ValueType.Boolean ? BooleanFormulaDef<ParamDefsT> : ResultT extends ValueType.Array ? ArrayFormulaDef<ParamDefsT, SchemaT> : ObjectFormulaDef<ParamDefsT, SchemaT>;
+export type FormulaDefinitionOptions<ParamDefsT extends ParamDefs, ResultT extends ValueType, SchemaT extends Schema> = ResultT extends ValueType.String ? FormulaOptions<ParamDefsT, StringFormulaDef<ParamDefsT>> & ({
+    schema?: StringSchema;
+} | {
+    codaType?: StringHintTypes;
+}) : ResultT extends ValueType.Number ? FormulaOptions<ParamDefsT, NumericFormulaDef<ParamDefsT>> & ({
+    schema?: NumberSchema;
+} | {
+    codaType?: NumberHintTypes;
+}) : ResultT extends ValueType.Boolean ? FormulaOptions<ParamDefsT, BooleanFormulaDef<ParamDefsT>> : ResultT extends ValueType.Array ? FormulaOptions<ParamDefsT, ArrayFormulaDef<ParamDefsT, SchemaT>> : FormulaOptions<ParamDefsT, ObjectFormulaDef<ParamDefsT, SchemaT>>;
 /**
  * The return type for a metadata formula that should return a different display to the user
  * than is used internally.
@@ -1054,10 +1092,10 @@ export type MetadataFormulaResultType = string | number | MetadataFormulaObjectR
  * values of the others. This is dictionary mapping the names of each parameter to its
  * current value.
  */
-export type MetadataFormula<ContextT extends ExecutionContext = ExecutionContext> = BaseFormula<[
+export type MetadataFormula<ContextT extends ExecutionContext = ExecutionContext, ResultT extends PackFormulaResult = LegacyDefaultMetadataReturnType> = BaseFormula<[
     ParamDef<Type.string>,
     ParamDef<Type.string>
-], any, ContextT> & {
+], ResultT, ContextT> & {
     schema?: any;
 };
 type GenericMetadataFormula = BaseFormula<ParamDefs, any> & {
@@ -1102,21 +1140,28 @@ export interface PropertyOptionsAnnotatedResult {
 export type PropertyOptionsMetadataFormula<SchemaT extends Schema> = ObjectPackFormula<[], ArraySchema<SchemaT>> & {
     execute(params: ParamValues<[]>, context: PropertyOptionsExecutionContext): Promise<object> | object;
 };
-export type MetadataFormulaMetadata = Omit<MetadataFormula, 'execute'>;
+export type MetadataFormulaMetadata<ContextT extends ExecutionContext = ExecutionContext, ResultT extends PackFormulaResult = LegacyDefaultMetadataReturnType> = Omit<MetadataFormula<ContextT, ResultT>, 'execute' | 'validateParameters'>;
 /**
  * @hidden
  */
-export declare type GenericMetadataFormulaMetadata = Omit<GenericMetadataFormula, 'execute'>;
+export declare type GenericMetadataFormulaMetadata = Omit<GenericMetadataFormula, 'execute' | 'validateParameters'>;
+/**
+ * Historically, metadata formulas could return a variety of types.
+ * This type is used to represent the legacy return types.
+ * Metadata formulas now work with generics and in the future, will
+ * be updated to declare a more precise return type for each formula.
+ */
+export type LegacyDefaultMetadataReturnType = MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>;
 /**
  * A JavaScript function that can implement a {@link MetadataFormulaDef}.
  */
-export type MetadataFunction<ContextT extends ExecutionContext = ExecutionContext> = (context: ContextT, search: string, formulaContext?: MetadataContext) => Promise<MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>>;
+export type MetadataFunction<ContextT extends ExecutionContext = ExecutionContext, ReturnT = LegacyDefaultMetadataReturnType> = (context: ContextT, search: string, formulaContext?: MetadataContext) => Promise<ReturnT>;
 /**
  * The type of values that will be accepted as a metadata formula definition. This can either
  * be the JavaScript function that implements a metadata formula (strongly recommended)
  * or a full metadata formula definition (mostly supported for legacy code).
  */
-export type MetadataFormulaDef<ContextT extends ExecutionContext = ExecutionContext> = MetadataFormula<ContextT> | MetadataFunction<ContextT>;
+export type MetadataFormulaDef<ContextT extends ExecutionContext = ExecutionContext, ReturnT extends PackFormulaResult = LegacyDefaultMetadataReturnType> = MetadataFormula<ContextT, ReturnT> | MetadataFunction<ContextT, ReturnT>;
 /**
  * A wrapper that generates a formula definition from the function that implements a metadata formula.
  * It is uncommon to ever need to call this directly, normally you would just define the JavaScript
@@ -1129,9 +1174,9 @@ export type MetadataFormulaDef<ContextT extends ExecutionContext = ExecutionCont
  * This wrapper simply adds the surrounding boilerplate for a given JavaScript function so that
  * it is shaped like a Coda formula to be used at runtime.
  */
-export declare function makeMetadataFormula<ContextT extends ExecutionContext>(execute: MetadataFunction<ContextT>, options?: {
+export declare function makeMetadataFormula<ContextT extends ExecutionContext, ReturnT extends PackFormulaResult = LegacyDefaultMetadataReturnType>(execute: MetadataFunction<ContextT, ReturnT>, options?: {
     connectionRequirement?: ConnectionRequirement;
-}): MetadataFormula<ContextT>;
+}): MetadataFormula<ContextT, ReturnT>;
 /**
  * Builds a formula to store in {@link SyncTablePropertyOptions}.
  * @hidden
@@ -1215,7 +1260,7 @@ export declare function autocompleteSearchObjects<T>(search: string, objs: T[], 
  */
 export declare function makeSimpleAutocompleteMetadataFormula<T extends AutocompleteParameterTypes>(options: Array<TypeMap[AutocompleteParameterTypeMapping[T]] | SimpleAutocompleteOption<T>>): MetadataFormula;
 /** @deprecated */
-export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({ response, ...definition }: ObjectResultFormulaDef<ParamDefsT, SchemaT>): ObjectPackFormula<ParamDefsT, SchemaT>;
+export declare function makeObjectFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema>({ response, ...definition }: FormulaOptions<ParamDefsT, ObjectResultFormulaDef<ParamDefsT, SchemaT>>): ObjectPackFormula<ParamDefsT, SchemaT>;
 /**
  * A set of options used internally by {@link makeDynamicSyncTable}, or for static
  * sync tables that have a dynamic schema.
@@ -1288,7 +1333,7 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
      * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
      * These will eventually be consolidated.)
      */
-    formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>;
+    formula: FormulaOptions<ParamDefsT, SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>>;
     /**
      * A {@link ConnectionRequirement} that will be used for all formulas contained within
      * this sync table (including autocomplete formulas).
@@ -1364,7 +1409,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
      * (The {@link SyncFormulaDef.name} is redundant and should be the same as the `name` parameter here.
      * These will eventually be consolidated.)
      */
-    formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>;
+    formula: FormulaOptions<ParamDefsT, SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>>;
     /**
      * A label for the kind of entities that you are syncing. This label is used in a doc to identify
      * the column in this table that contains the synced data. If you don't provide an `entityName`, the value
@@ -1448,7 +1493,7 @@ export declare function makeSyncTable<K extends string, L extends string, ParamD
     identity?: Identity;
 }, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData>({ name, displayName, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions, role, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT, ContextT, PermissionsContextT>): SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>;
 /** @deprecated */
-export declare function makeSyncTableLegacy<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData>(name: string, schema: SchemaT, formula: SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>, connectionRequirement?: ConnectionRequirement, dynamicOptions?: {
+export declare function makeSyncTableLegacy<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchema<K, L>, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData>(name: string, schema: SchemaT, formula: FormulaOptions<ParamDefsT, SyncFormulaDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>>, connectionRequirement?: ConnectionRequirement, dynamicOptions?: {
     getSchema?: MetadataFormula;
     entityName?: string;
 }, displayName?: string): SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>;
@@ -1478,7 +1523,7 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
     getName: MetadataFormulaDef<ContextT>;
     getSchema: MetadataFormulaDef<ContextT>;
     identityName: string;
-    formula: SyncFormulaDef<K, L, ParamDefsT, any, ContextT, PermissionsContextT>;
+    formula: FormulaOptions<ParamDefsT, SyncFormulaDef<K, L, ParamDefsT, any, ContextT, PermissionsContextT>>;
     getDisplayUrl: MetadataFormulaDef<ContextT>;
     listDynamicUrls?: MetadataFormulaDef;
     searchDynamicUrls?: MetadataFormulaDef;
@@ -1517,7 +1562,7 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
  *   },
  * });
  */
-export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: ObjectArrayFormulaDef<ParamDefsT, ResultT>): {
+export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: FormulaOptions<ParamDefsT, ObjectArrayFormulaDef<ParamDefsT, ResultT>>): {
     name: string;
     description: string;
     parameters: ParamDefsT;
@@ -1534,10 +1579,12 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
     isSystem?: boolean | undefined;
     extraOAuthScopes?: string[] | undefined;
     allowedAuthenticationNames?: string[] | undefined;
+    validateParameters?: MetadataFormulaDef<ExecutionContext, boolean> | undefined;
 } & {
     execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<SchemaType<ResultT>>;
     resultType: Type.object;
     schema: ResultT | undefined;
+    validateParameters: MetadataFormula<ExecutionContext, boolean> | undefined;
 };
 /**
  * Creates the definition of an "empty" formula, that is, a formula that uses a {@link RequestHandlerTemplate}
@@ -1559,7 +1606,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
   }),
  * ```
  */
-export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: EmptyFormulaDef<ParamDefsT>): {
+export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: FormulaOptions<ParamDefsT, EmptyFormulaDef<ParamDefsT>>): {
     name: string;
     description: string;
     parameters: ParamDefsT;
@@ -1576,9 +1623,11 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
     isSystem?: boolean | undefined;
     extraOAuthScopes?: string[] | undefined;
     allowedAuthenticationNames?: string[] | undefined;
+    validateParameters?: MetadataFormulaDef<ExecutionContext, boolean> | undefined;
 } & {
     execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<string>;
     resultType: Type.string;
+    validateParameters: MetadataFormula<ExecutionContext, boolean> | undefined;
 };
 export declare function maybeRewriteConnectionForNamedPropertyOptions(namedPropertyOptions: SyncTablePropertyOptions | undefined, connectionRequirement: ConnectionRequirement | undefined): SyncTablePropertyOptions | undefined;
-export declare function maybeRewriteConnectionForFormula<ParamDefsT extends ParamDefs, T extends CommonPackFormulaDef<ParamDefsT> | undefined>(formula: T, connectionRequirement: ConnectionRequirement | undefined): T;
+export declare function maybeRewriteConnectionForFormula<ParamDefsT extends ParamDefs, T extends FormulaOptions<ParamDefsT, CommonPackFormulaDef<ParamDefsT>> | undefined>(formula: T, connectionRequirement: ConnectionRequirement | undefined): T;
