@@ -80,7 +80,7 @@ ___
 
 ### getDisplayUrl
 
-• **getDisplayUrl**: [`MetadataFormula`](../types/core.MetadataFormula.md)<`ContextT`\>
+• **getDisplayUrl**: [`MetadataFormula`](../types/core.MetadataFormula.md)<`ContextT`, [`LegacyDefaultMetadataReturnType`](../types/core.LegacyDefaultMetadataReturnType.md)\>
 
 See [getDisplayUrl](core.DynamicSyncTableOptions.md#getdisplayurl)
 
@@ -88,7 +88,7 @@ ___
 
 ### getName
 
-• **getName**: [`MetadataFormula`](../types/core.MetadataFormula.md)<`ContextT`\>
+• **getName**: [`MetadataFormula`](../types/core.MetadataFormula.md)<`ContextT`, [`LegacyDefaultMetadataReturnType`](../types/core.LegacyDefaultMetadataReturnType.md)\>
 
 See [getName](core.DynamicSyncTableOptions.md#getname)
 
@@ -96,7 +96,7 @@ ___
 
 ### getSchema
 
-• **getSchema**: [`MetadataFormula`](../types/core.MetadataFormula.md)<`ContextT`\>
+• **getSchema**: [`MetadataFormula`](../types/core.MetadataFormula.md)<`ContextT`, [`LegacyDefaultMetadataReturnType`](../types/core.LegacyDefaultMetadataReturnType.md)\>
 
 See [getSchema](core.DynamicSyncTableOptions.md#getschema)
 
@@ -143,7 +143,7 @@ ___
 
 ### listDynamicUrls
 
-• `Optional` **listDynamicUrls**: [`MetadataFormula`](../types/core.MetadataFormula.md)<[`ExecutionContext`](core.ExecutionContext.md)\>
+• `Optional` **listDynamicUrls**: [`MetadataFormula`](../types/core.MetadataFormula.md)<[`ExecutionContext`](core.ExecutionContext.md), [`LegacyDefaultMetadataReturnType`](../types/core.LegacyDefaultMetadataReturnType.md)\>
 
 See [listDynamicUrls](core.DynamicSyncTableOptions.md#listdynamicurls)
 
@@ -183,6 +183,6 @@ ___
 
 ### searchDynamicUrls
 
-• `Optional` **searchDynamicUrls**: [`MetadataFormula`](../types/core.MetadataFormula.md)<[`ExecutionContext`](core.ExecutionContext.md)\>
+• `Optional` **searchDynamicUrls**: [`MetadataFormula`](../types/core.MetadataFormula.md)<[`ExecutionContext`](core.ExecutionContext.md), [`LegacyDefaultMetadataReturnType`](../types/core.LegacyDefaultMetadataReturnType.md)\>
 
 See [searchDynamicUrls](core.DynamicSyncTableOptions.md#searchdynamicurls)

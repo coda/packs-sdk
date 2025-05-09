@@ -8,7 +8,7 @@ search:
 
 [core](../modules/core.md).makeMetadataFormula
 
-▸ **makeMetadataFormula**<`ContextT`, `ReturnT`\>(`execute`, `options?`): [`MetadataFormula`](../types/core.MetadataFormula.md)<`ContextT`\>
+▸ **makeMetadataFormula**<`ContextT`, `ReturnT`\>(`execute`, `options?`): [`MetadataFormula`](../types/core.MetadataFormula.md)<`ContextT`, `ReturnT`\>
 
 A wrapper that generates a formula definition from the function that implements a metadata formula.
 It is uncommon to ever need to call this directly, normally you would just define the JavaScript
@@ -26,7 +26,7 @@ it is shaped like a Coda formula to be used at runtime.
 | Name | Type |
 | :------ | :------ |
 | `ContextT` | extends [`ExecutionContext`](../interfaces/core.ExecutionContext.md) |
-| `ReturnT` | [`LegacyDefaultMetadataReturnType`](../types/core.LegacyDefaultMetadataReturnType.md) |
+| `ReturnT` | extends [`PackFormulaResult`](../types/core.PackFormulaResult.md) = [`LegacyDefaultMetadataReturnType`](../types/core.LegacyDefaultMetadataReturnType.md) |
 
 #### Parameters
 
@@ -38,4 +38,4 @@ it is shaped like a Coda formula to be used at runtime.
 
 #### Returns
 
-[`MetadataFormula`](../types/core.MetadataFormula.md)<`ContextT`\>
+[`MetadataFormula`](../types/core.MetadataFormula.md)<`ContextT`, `ReturnT`\>

@@ -1,9 +1,12 @@
+import type { ExecutionContext } from '../api';
 import type { Formula } from '../api';
 import type { GenericSyncTable } from '../api';
+import type { LegacyDefaultMetadataReturnType } from '../api';
 import type { MetadataFormula } from '../api';
 import type { MetadataFormulaMetadata } from '../api';
 import type { PackDefinition } from '../types';
 import type { PackFormulaMetadata } from '../api';
+import type { PackFormulaResult } from '../api_types';
 import type { PackMetadata } from '../compiled_types';
 import type { PackSyncTable } from '../compiled_types';
 import type { PackVersionDefinition } from '../types';
@@ -14,4 +17,4 @@ export declare function compilePackMetadata(manifest: PackVersionDefinition): Pa
 export declare function compileFormulasMetadata(formulas: Formula[]): PackFormulaMetadata[];
 export declare function compileFormulaMetadata(formula: TypedPackFormula): PackFormulaMetadata;
 export declare function compileSyncTable(syncTable: GenericSyncTable): PackSyncTable;
-export declare function compileMetadataFormulaMetadata(formula: MetadataFormula | undefined): MetadataFormulaMetadata | undefined;
+export declare function compileMetadataFormulaMetadata<ContextT extends ExecutionContext = ExecutionContext, ResultT extends PackFormulaResult = LegacyDefaultMetadataReturnType>(formula: MetadataFormula<ContextT, ResultT> | undefined): MetadataFormulaMetadata<ContextT, ResultT> | undefined;

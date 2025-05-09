@@ -446,7 +446,7 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
      * },
      * ```
      */
-    validateParameters?: MetadataFormula;
+    validateParameters?: MetadataFormula<ExecutionContext, boolean>;
 }
 /**
  * Enumeration of requirement states for whether a given formula or sync table requires

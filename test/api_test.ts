@@ -116,13 +116,13 @@ describe('API test', () => {
       it('wraps', async () => {
         const table = makeTable({type: ValueType.Object, properties: {}});
         const schema = await table.getSchema.execute([] as any, {} as any);
-        assert.deepEqual(schema, {type: 'array', items: {type: 'object', properties: {}}});
+        assert.deepEqual(schema, {type: ValueType.Array, items: {type: ValueType.Object, properties: {}}});
       });
 
       it('no wraps for array schema', async () => {
         const table = makeTable({type: ValueType.Array, items: {type: ValueType.Object, properties: {}}});
         const schema = await table.getSchema.execute([] as any, {} as any);
-        assert.deepEqual(schema, {type: 'array', items: {type: 'object', properties: {}}});
+        assert.deepEqual(schema, {type: ValueType.Array, items: {type: ValueType.Object, properties: {}}});
       });
     });
   });

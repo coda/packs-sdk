@@ -500,10 +500,13 @@ export function isDynamicSyncTable(syncTable: SyncTable): syncTable is GenericDy
   return 'isDynamic' in syncTable;
 }
 
-export function wrapMetadataFunction<ContextT extends ExecutionContext, ReturnT = LegacyDefaultMetadataReturnType>(
-  fnOrFormula: MetadataFormula<ContextT> | MetadataFunction<ContextT, ReturnT> | undefined,
-): MetadataFormula<ContextT> | undefined {
-  return typeof fnOrFormula === 'function' ? makeMetadataFormula(fnOrFormula) : fnOrFormula;
+export function wrapMetadataFunction<
+  ContextT extends ExecutionContext,
+  ReturnT extends PackFormulaResult = LegacyDefaultMetadataReturnType,
+>(
+  fnOrFormula: MetadataFormula<ContextT, ReturnT> | MetadataFunction<ContextT, ReturnT> | undefined,
+): MetadataFormula<ContextT, ReturnT> | undefined {
+  return typeof fnOrFormula === 'function' ? makeMetadataFormula<ContextT, ReturnT>(fnOrFormula) : fnOrFormula;
 }
 
 function transformToArraySchema<ResultT extends PackFormulaResult>(schema?: any): ResultT {
@@ -1078,11 +1081,11 @@ export type TypedPackFormula = Formula | GenericSyncFormula;
 export type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
 /** @hidden */
 export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute' | 'executeUpdate' | 'executeGetPermissions' | 'validateParameters'> & {
-  validateParameters?: MetadataFormulaMetadata;
+  validateParameters?: MetadataFormulaMetadata<ExecutionContext, boolean>;
 };
 /** @hidden */
 export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, 'execute' | 'validateParameters'> & {
-  validateParameters?: MetadataFormulaMetadata;
+  validateParameters?: MetadataFormulaMetadata<ExecutionContext, boolean>;
 };
 
 export function isObjectPackFormula(fn: PackFormulaMetadata): fn is ObjectPackFormulaMetadata {
@@ -1683,7 +1686,7 @@ export interface BaseFormulaDef<ParamDefsT extends ParamDefs, ResultT extends st
 export type StringFormulaDef<ParamDefsT extends ParamDefs> = BaseFormulaDef<ParamDefsT, string> & {
   resultType: ValueType.String;
   execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<string> | string;
-} & {schema?: StringSchema; codaType?: StringHintTypes};
+};
 
 /**
  * A definition accepted by {@link makeFormula} for a formula that returns a number.
@@ -1691,7 +1694,7 @@ export type StringFormulaDef<ParamDefsT extends ParamDefs> = BaseFormulaDef<Para
 export type NumericFormulaDef<ParamDefsT extends ParamDefs> = BaseFormulaDef<ParamDefsT, number> & {
   resultType: ValueType.Number;
   execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<number> | number;
-} & {schema?: NumberSchema; codaType?: NumberHintTypes};
+};
 
 /**
  * A definition accepted by {@link makeFormula} for a formula that returns a boolean.
@@ -1738,9 +1741,9 @@ export type FormulaDefinitionOptions<
   ResultT extends ValueType,
   SchemaT extends Schema,
 > = ResultT extends ValueType.String
-  ? FormulaOptions<ParamDefsT, StringFormulaDef<ParamDefsT>>
+  ? FormulaOptions<ParamDefsT, StringFormulaDef<ParamDefsT>> & ({schema?: StringSchema} | {codaType?: StringHintTypes})
   : ResultT extends ValueType.Number
-  ? FormulaOptions<ParamDefsT, NumericFormulaDef<ParamDefsT>>
+  ? FormulaOptions<ParamDefsT, NumericFormulaDef<ParamDefsT>> & ({schema?: NumberSchema} | {codaType?: NumberHintTypes})
   : ResultT extends ValueType.Boolean
   ? FormulaOptions<ParamDefsT, BooleanFormulaDef<ParamDefsT>>
   : ResultT extends ValueType.Array
@@ -1828,9 +1831,12 @@ export type MetadataFormulaResultType = string | number | MetadataFormulaObjectR
  * values of the others. This is dictionary mapping the names of each parameter to its
  * current value.
  */
-export type MetadataFormula<ContextT extends ExecutionContext = ExecutionContext> = BaseFormula<
+export type MetadataFormula<
+  ContextT extends ExecutionContext = ExecutionContext,
+  ResultT extends PackFormulaResult = LegacyDefaultMetadataReturnType,
+> = BaseFormula<
   [ParamDef<Type.string>, ParamDef<Type.string>],
-  any,
+  ResultT,
   ContextT
 > & {
   schema?: any;
@@ -1908,7 +1914,7 @@ export type PropertyOptionsMetadataFormula<SchemaT extends Schema> = ObjectPackF
   execute(params: ParamValues<[]>, context: PropertyOptionsExecutionContext): Promise<object> | object;
 };
 
-export type MetadataFormulaMetadata = Omit<MetadataFormula, 'execute' | 'validateParameters'>;
+export type MetadataFormulaMetadata<ContextT extends ExecutionContext = ExecutionContext, ResultT extends PackFormulaResult = LegacyDefaultMetadataReturnType> = Omit<MetadataFormula<ContextT, ResultT>, 'execute' | 'validateParameters'>;
 
 /**
  * @hidden
@@ -1947,8 +1953,8 @@ export type MetadataFunction<
  */
 export type MetadataFormulaDef<
   ContextT extends ExecutionContext = ExecutionContext,
-  ReturnT = LegacyDefaultMetadataReturnType,
-> = MetadataFormula<ContextT> | MetadataFunction<ContextT, ReturnT>;
+  ReturnT extends PackFormulaResult = LegacyDefaultMetadataReturnType,
+> = MetadataFormula<ContextT, ReturnT> | MetadataFunction<ContextT, ReturnT>;
 
 /**
  * A wrapper that generates a formula definition from the function that implements a metadata formula.
@@ -1962,10 +1968,18 @@ export type MetadataFormulaDef<
  * This wrapper simply adds the surrounding boilerplate for a given JavaScript function so that
  * it is shaped like a Coda formula to be used at runtime.
  */
-export function makeMetadataFormula<ContextT extends ExecutionContext, ReturnT = LegacyDefaultMetadataReturnType>(
+export function makeMetadataFormula<
+  ContextT extends ExecutionContext,
+  ReturnT extends PackFormulaResult = LegacyDefaultMetadataReturnType,
+>(
   execute: MetadataFunction<ContextT, ReturnT>,
   options?: {connectionRequirement?: ConnectionRequirement},
-): MetadataFormula<ContextT> {
+): MetadataFormula<ContextT, ReturnT> {
+  // NOTE(gary): makeObjectFormula is not correct here. A metadata formula is not guaranteed to return an object.
+  // This previously worked because we cast the return type of the call to execute to any.
+  // Now that we have a more precise return type, we should write a different wrapper to use here.
+  // For now, hackily cast the return type, but we should actually switch over to makeFormula, but
+  // that change should be isolated and verified.
   return makeObjectFormula({
     name: 'getMetadata',
     description: 'Gets metadata',
@@ -1997,7 +2011,7 @@ export function makeMetadataFormula<ContextT extends ExecutionContext, ReturnT =
     ],
     examples: [],
     connectionRequirement: options?.connectionRequirement || ConnectionRequirement.Optional,
-  });
+  }) as MetadataFormula<ContextT, ReturnT>;
 }
 
 /**

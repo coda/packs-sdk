@@ -38,7 +38,7 @@ export declare function setEndpointDefHelper(step: SetEndpointDef): SetEndpointD
 declare class SetEndpointDefHelper {
     private readonly _step;
     constructor(step: SetEndpointDef);
-    get getOptions(): import("..").MetadataFormula<import("../api_types").ExecutionContext> | import("..").MetadataFunction<import("../api_types").ExecutionContext, import("..").LegacyDefaultMetadataReturnType>;
+    get getOptions(): import("..").MetadataFormula<import("../api_types").ExecutionContext, import("..").LegacyDefaultMetadataReturnType> | import("..").MetadataFunction<import("../api_types").ExecutionContext, import("..").LegacyDefaultMetadataReturnType>;
 }
 export declare function postSetupMetadataHelper(metadata: PostSetupMetadata): PostSetupMetadataHelper;
 declare class PostSetupMetadataHelper {

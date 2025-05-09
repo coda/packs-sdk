@@ -575,7 +575,7 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
    * },
    * ```
    */
-  validateParameters?: MetadataFormula;
+  validateParameters?: MetadataFormula<ExecutionContext, boolean>;
 }
 
 /**

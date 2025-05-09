@@ -310,7 +310,8 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
 
           break;
         case MetadataFormulaType.ValidateParameters: {
-          const validateParametersFormula = wrapMetadataFunction(findValidateParametersFormula(manifest, formulaSpec));
+          const validateParametersFormula =
+            wrapMetadataFunction<ExecutionContext, boolean>(findValidateParametersFormula(manifest, formulaSpec));
           if (validateParametersFormula) {
             return validateParametersFormula.execute(['', JSON.stringify({params: params as any, __brand: 'MetadataContext'})], executionContext);
           }

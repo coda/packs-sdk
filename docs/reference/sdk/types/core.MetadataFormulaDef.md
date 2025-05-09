@@ -8,7 +8,7 @@ search:
 
 [core](../modules/core.md).MetadataFormulaDef
 
-Ƭ **MetadataFormulaDef**<`ContextT`, `ReturnT`\>: [`MetadataFormula`](core.MetadataFormula.md)<`ContextT`\> \| [`MetadataFunction`](core.MetadataFunction.md)<`ContextT`, `ReturnT`\>
+Ƭ **MetadataFormulaDef**<`ContextT`, `ReturnT`\>: [`MetadataFormula`](core.MetadataFormula.md)<`ContextT`, `ReturnT`\> \| [`MetadataFunction`](core.MetadataFunction.md)<`ContextT`, `ReturnT`\>
 
 The type of values that will be accepted as a metadata formula definition. This can either
 be the JavaScript function that implements a metadata formula (strongly recommended)
@@ -19,4 +19,4 @@ or a full metadata formula definition (mostly supported for legacy code).
 | Name | Type |
 | :------ | :------ |
 | `ContextT` | extends [`ExecutionContext`](../interfaces/core.ExecutionContext.md) = [`ExecutionContext`](../interfaces/core.ExecutionContext.md) |
-| `ReturnT` | [`LegacyDefaultMetadataReturnType`](core.LegacyDefaultMetadataReturnType.md) |
+| `ReturnT` | extends [`PackFormulaResult`](core.PackFormulaResult.md) = [`LegacyDefaultMetadataReturnType`](core.LegacyDefaultMetadataReturnType.md) |

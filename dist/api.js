@@ -631,6 +631,11 @@ exports.normalizePropertyOptionsResults = normalizePropertyOptionsResults;
  * it is shaped like a Coda formula to be used at runtime.
  */
 function makeMetadataFormula(execute, options) {
+    // NOTE(gary): makeObjectFormula is not correct here. A metadata formula is not guaranteed to return an object.
+    // This previously worked because we cast the return type of the call to execute to any.
+    // Now that we have a more precise return type, we should write a different wrapper to use here.
+    // For now, hackily cast the return type, but we should actually switch over to makeFormula, but
+    // that change should be isolated and verified.
     return makeObjectFormula({
         name: 'getMetadata',
         description: 'Gets metadata',

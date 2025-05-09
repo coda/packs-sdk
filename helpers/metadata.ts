@@ -1,14 +1,17 @@
 import type {Authentication} from '../types';
 import type {AuthenticationMetadata} from '../compiled_types';
 import {AuthenticationType} from '../types';
+import type {ExecutionContext} from '../api';
 import type {Format} from '../types';
 import type {Formula} from '../api';
 import type {GenericSyncTable} from '../api';
+import type {LegacyDefaultMetadataReturnType} from '../api';
 import type {MetadataFormula} from '../api';
 import type {MetadataFormulaMetadata} from '../api';
 import type {PackDefinition} from '../types';
 import type {PackFormatMetadata} from '../compiled_types';
 import type {PackFormulaMetadata} from '../api';
+import type {PackFormulaResult} from '../api_types';
 import type {PackMetadata} from '../compiled_types';
 import type {PackSyncTable} from '../compiled_types';
 import type {PackVersionDefinition} from '../types';
@@ -57,7 +60,7 @@ export function compileFormulaMetadata(formula: TypedPackFormula): PackFormulaMe
   const {execute, validateParameters, ...rest} = formula;
   return {
     ...rest,
-    validateParameters: compileMetadataFormulaMetadata(validateParameters),
+    validateParameters: compileMetadataFormulaMetadata<ExecutionContext, boolean>(validateParameters),
   };
 }
 
@@ -88,7 +91,7 @@ export function compileSyncTable(syncTable: GenericSyncTable): PackSyncTable {
     getter: {
       supportsUpdates: Boolean(executeUpdate),
       supportsGetPermissions: Boolean(executeGetPermissions),
-      validateParameters: compileMetadataFormulaMetadata(validateParameters),
+      validateParameters: compileMetadataFormulaMetadata<ExecutionContext, boolean>(validateParameters),
       ...getterRest,
     },
   };
@@ -112,9 +115,12 @@ function compileDefaultAuthenticationMetadata(
   };
 }
 
-export function compileMetadataFormulaMetadata(
-  formula: MetadataFormula | undefined
-): MetadataFormulaMetadata | undefined {
+export function compileMetadataFormulaMetadata<
+  ContextT extends ExecutionContext = ExecutionContext,
+  ResultT extends PackFormulaResult = LegacyDefaultMetadataReturnType,
+>(
+  formula: MetadataFormula<ContextT, ResultT> | undefined
+): MetadataFormulaMetadata<ContextT, ResultT> | undefined {
   if (!formula) {
     return;
   }

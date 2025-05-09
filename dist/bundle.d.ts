@@ -423,7 +423,7 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
 	 * },
 	 * ```
 	 */
-	validateParameters?: MetadataFormula;
+	validateParameters?: MetadataFormula<ExecutionContext, boolean>;
 }
 /**
  * Enumeration of requirement states for whether a given formula or sync table requires
@@ -3334,11 +3334,11 @@ export type TypedPackFormula = Formula | GenericSyncFormula;
 export type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
 /** @hidden */
 export type PackFormulaMetadata = Omit<TypedPackFormula, "execute" | "executeUpdate" | "executeGetPermissions" | "validateParameters"> & {
-	validateParameters?: MetadataFormulaMetadata;
+	validateParameters?: MetadataFormulaMetadata<ExecutionContext, boolean>;
 };
 /** @hidden */
 export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, "execute" | "validateParameters"> & {
-	validateParameters?: MetadataFormulaMetadata;
+	validateParameters?: MetadataFormulaMetadata<ExecutionContext, boolean>;
 };
 /**
  * The return value from the formula that implements a sync table. Each sync formula invocation
@@ -3666,9 +3666,6 @@ export interface BaseFormulaDef<ParamDefsT extends ParamDefs, ResultT extends st
 export type StringFormulaDef<ParamDefsT extends ParamDefs> = BaseFormulaDef<ParamDefsT, string> & {
 	resultType: ValueType.String;
 	execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<string> | string;
-} & {
-	schema?: StringSchema;
-	codaType?: StringHintTypes;
 };
 /**
  * A definition accepted by {@link makeFormula} for a formula that returns a number.
@@ -3676,9 +3673,6 @@ export type StringFormulaDef<ParamDefsT extends ParamDefs> = BaseFormulaDef<Para
 export type NumericFormulaDef<ParamDefsT extends ParamDefs> = BaseFormulaDef<ParamDefsT, number> & {
 	resultType: ValueType.Number;
 	execute(params: ParamValues<ParamDefsT>, context: ExecutionContext): Promise<number> | number;
-} & {
-	schema?: NumberSchema;
-	codaType?: NumberHintTypes;
 };
 /**
  * A definition accepted by {@link makeFormula} for a formula that returns a boolean.
@@ -3711,7 +3705,15 @@ export type FormulaOptions<ParamDefsT extends ParamDefs, DefT extends CommonPack
 /**
  * A formula definition accepted by {@link makeFormula}.
  */
-export type FormulaDefinitionOptions<ParamDefsT extends ParamDefs, ResultT extends ValueType, SchemaT extends Schema> = ResultT extends ValueType.String ? FormulaOptions<ParamDefsT, StringFormulaDef<ParamDefsT>> : ResultT extends ValueType.Number ? FormulaOptions<ParamDefsT, NumericFormulaDef<ParamDefsT>> : ResultT extends ValueType.Boolean ? FormulaOptions<ParamDefsT, BooleanFormulaDef<ParamDefsT>> : ResultT extends ValueType.Array ? FormulaOptions<ParamDefsT, ArrayFormulaDef<ParamDefsT, SchemaT>> : FormulaOptions<ParamDefsT, ObjectFormulaDef<ParamDefsT, SchemaT>>;
+export type FormulaDefinitionOptions<ParamDefsT extends ParamDefs, ResultT extends ValueType, SchemaT extends Schema> = ResultT extends ValueType.String ? FormulaOptions<ParamDefsT, StringFormulaDef<ParamDefsT>> & ({
+	schema?: StringSchema;
+} | {
+	codaType?: StringHintTypes;
+}) : ResultT extends ValueType.Number ? FormulaOptions<ParamDefsT, NumericFormulaDef<ParamDefsT>> & ({
+	schema?: NumberSchema;
+} | {
+	codaType?: NumberHintTypes;
+}) : ResultT extends ValueType.Boolean ? FormulaOptions<ParamDefsT, BooleanFormulaDef<ParamDefsT>> : ResultT extends ValueType.Array ? FormulaOptions<ParamDefsT, ArrayFormulaDef<ParamDefsT, SchemaT>> : FormulaOptions<ParamDefsT, ObjectFormulaDef<ParamDefsT, SchemaT>>;
 /**
  * The return type for a metadata formula that should return a different display to the user
  * than is used internally.
@@ -3793,10 +3795,10 @@ export type MetadataFormulaResultType = string | number | MetadataFormulaObjectR
  * values of the others. This is dictionary mapping the names of each parameter to its
  * current value.
  */
-export type MetadataFormula<ContextT extends ExecutionContext = ExecutionContext> = BaseFormula<[
+export type MetadataFormula<ContextT extends ExecutionContext = ExecutionContext, ResultT extends PackFormulaResult = LegacyDefaultMetadataReturnType> = BaseFormula<[
 	ParamDef<Type.string>,
 	ParamDef<Type.string>
-], any, ContextT> & {
+], ResultT, ContextT> & {
 	schema?: any;
 };
 /**
@@ -3809,7 +3811,7 @@ export type PropertyOptionsMetadataFormula<SchemaT extends Schema> = ObjectPackF
 	execute(params: ParamValues<[
 	]>, context: PropertyOptionsExecutionContext): Promise<object> | object;
 };
-export type MetadataFormulaMetadata = Omit<MetadataFormula, "execute" | "validateParameters">;
+export type MetadataFormulaMetadata<ContextT extends ExecutionContext = ExecutionContext, ResultT extends PackFormulaResult = LegacyDefaultMetadataReturnType> = Omit<MetadataFormula<ContextT, ResultT>, "execute" | "validateParameters">;
 /**
  * Historically, metadata formulas could return a variety of types.
  * This type is used to represent the legacy return types.
@@ -3826,7 +3828,7 @@ export type MetadataFunction<ContextT extends ExecutionContext = ExecutionContex
  * be the JavaScript function that implements a metadata formula (strongly recommended)
  * or a full metadata formula definition (mostly supported for legacy code).
  */
-export type MetadataFormulaDef<ContextT extends ExecutionContext = ExecutionContext, ReturnT = LegacyDefaultMetadataReturnType> = MetadataFormula<ContextT> | MetadataFunction<ContextT, ReturnT>;
+export type MetadataFormulaDef<ContextT extends ExecutionContext = ExecutionContext, ReturnT extends PackFormulaResult = LegacyDefaultMetadataReturnType> = MetadataFormula<ContextT, ReturnT> | MetadataFunction<ContextT, ReturnT>;
 /**
  * A wrapper that generates a formula definition from the function that implements a metadata formula.
  * It is uncommon to ever need to call this directly, normally you would just define the JavaScript
@@ -3839,9 +3841,9 @@ export type MetadataFormulaDef<ContextT extends ExecutionContext = ExecutionCont
  * This wrapper simply adds the surrounding boilerplate for a given JavaScript function so that
  * it is shaped like a Coda formula to be used at runtime.
  */
-export declare function makeMetadataFormula<ContextT extends ExecutionContext, ReturnT = LegacyDefaultMetadataReturnType>(execute: MetadataFunction<ContextT, ReturnT>, options?: {
+export declare function makeMetadataFormula<ContextT extends ExecutionContext, ReturnT extends PackFormulaResult = LegacyDefaultMetadataReturnType>(execute: MetadataFunction<ContextT, ReturnT>, options?: {
 	connectionRequirement?: ConnectionRequirement;
-}): MetadataFormula<ContextT>;
+}): MetadataFormula<ContextT, ReturnT>;
 /**
  * Builds a formula to store in {@link SyncTablePropertyOptions}.
  * @hidden
@@ -4242,7 +4244,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
 	execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<SchemaType<ResultT>>;
 	resultType: Type.object;
 	schema: ResultT | undefined;
-	validateParameters: MetadataFormula<ExecutionContext> | undefined;
+	validateParameters: MetadataFormula<ExecutionContext, boolean> | undefined;
 };
 /**
  * Creates the definition of an "empty" formula, that is, a formula that uses a {@link RequestHandlerTemplate}
@@ -4285,7 +4287,7 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
 } & {
 	execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<string>;
 	resultType: Type.string;
-	validateParameters: MetadataFormula<ExecutionContext> | undefined;
+	validateParameters: MetadataFormula<ExecutionContext, boolean> | undefined;
 };
 /**
  * @deprecated Use `number` in new code.

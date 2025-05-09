@@ -1,5 +1,6 @@
 import {testHelper} from './test_helper';
 import {AuthenticationType} from '../types';
+import type {ExecutionContext} from '../api';
 import type {Formula} from '../api';
 import {FormulaType} from '../runtime/types';
 import type {GenericExecuteGetPermissionsRequest} from '../api';
@@ -399,7 +400,7 @@ describe('Execution', () => {
     const fakePackWithMetadata = createFakePack({
       defaultAuthentication: {
         type: AuthenticationType.HeaderBearerToken,
-        getConnectionName: makeMetadataFormula(async context => {
+        getConnectionName: makeMetadataFormula<ExecutionContext, string>(async context => {
           const response = await context.fetcher.fetch({method: 'GET', url: 'https://example.com/whoami'});
           return response.body.username;
         }),
