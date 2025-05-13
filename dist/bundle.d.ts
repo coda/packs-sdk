@@ -5329,6 +5329,10 @@ export interface PackVersionDefinition {
 	 * Definitions of this pack's sync tables. See {@link SyncTable}.
 	 */
 	syncTables?: SyncTable[];
+	/**
+	 * The system prompt to use for the pack.
+	 */
+	systemPrompt?: string;
 }
 /**
  * @deprecated use `#PackVersionDefinition`
@@ -5433,6 +5437,10 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	version?: string;
 	/** @deprecated */
 	formulaNamespace?: string;
+	/**
+	 * See {@link PackVersionDefinition.systemPrompt}.
+	 */
+	systemPrompt: string | undefined;
 	private _defaultConnectionRequirement;
 	/**
 	 * Constructs a {@link PackDefinitionBuilder}. However, `coda.newPack()` should be used instead
@@ -5563,6 +5571,15 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * ```
 	 */
 	setSystemAuthentication(systemAuthentication: SystemAuthenticationDef): this;
+	/**
+	 * Sets the system prompt to use for the pack.
+	 *
+	 * @example
+	 * ```
+	 * pack.setSystemPrompt('You are a helpful assistant.');
+	 * ```
+	 */
+	setSystemPrompt(systemPrompt: string): this;
 	/**
 	 * TODO(patrick): Unhide this
 	 * @hidden

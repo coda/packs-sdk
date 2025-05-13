@@ -35,7 +35,7 @@ class PackDefinitionBuilder {
      * rather than constructing a builder directly.
      */
     constructor(definition) {
-        const { formulas, formats, syncTables, networkDomains, defaultAuthentication, systemConnectionAuthentication, version, formulaNamespace, } = definition || {};
+        const { formulas, formats, syncTables, networkDomains, defaultAuthentication, systemConnectionAuthentication, version, formulaNamespace, systemPrompt, } = definition || {};
         this.formulas = formulas || [];
         this.formats = formats || [];
         this.syncTables = syncTables || [];
@@ -44,6 +44,7 @@ class PackDefinitionBuilder {
         this.systemConnectionAuthentication = systemConnectionAuthentication;
         this.version = version;
         this.formulaNamespace = formulaNamespace || 'Deprecated';
+        this.systemPrompt = systemPrompt;
     }
     /**
      * Adds a formula definition to this pack.
@@ -216,6 +217,18 @@ class PackDefinitionBuilder {
     setSystemAuthentication(systemAuthentication) {
         // TODO(patrick): Remove this cast
         this.systemConnectionAuthentication = this._wrapAuthenticationFunctions(systemAuthentication);
+        return this;
+    }
+    /**
+     * Sets the system prompt to use for the pack.
+     *
+     * @example
+     * ```
+     * pack.setSystemPrompt('You are a helpful assistant.');
+     * ```
+     */
+    setSystemPrompt(systemPrompt) {
+        this.systemPrompt = systemPrompt;
         return this;
     }
     /**

@@ -85,6 +85,14 @@ explicit connection is specified by the user.
 
 ___
 
+### systemPrompt
+
+• `Optional` **systemPrompt**: `string`
+
+The system prompt to use for the pack.
+
+___
+
 ### version
 
 • **version**: `string`

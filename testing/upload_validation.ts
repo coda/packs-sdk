@@ -2111,6 +2111,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           });
         }
       }),
+    systemPrompt: z.string().optional(),
     syncTables: z
       .array(syncTableSchema)
       .max(Limits.BuildingBlockCountPerType)

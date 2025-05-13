@@ -1098,6 +1098,10 @@ export interface PackVersionDefinition {
      * Definitions of this pack's sync tables. See {@link SyncTable}.
      */
     syncTables?: SyncTable[];
+    /**
+     * The system prompt to use for the pack.
+     */
+    systemPrompt?: string;
 }
 /**
  * @deprecated use `#PackVersionDefinition`

@@ -90,6 +90,11 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
   /** @deprecated */
   formulaNamespace?: string;
 
+  /**
+   * See {@link PackVersionDefinition.systemPrompt}.
+   */
+  systemPrompt: string | undefined;
+
   private _defaultConnectionRequirement: ConnectionRequirement | undefined;
 
   /**
@@ -106,6 +111,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       systemConnectionAuthentication,
       version,
       formulaNamespace,
+      systemPrompt,
     } = definition || {};
     this.formulas = formulas || [];
     this.formats = formats || [];
@@ -115,6 +121,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     this.systemConnectionAuthentication = systemConnectionAuthentication;
     this.version = version;
     this.formulaNamespace = formulaNamespace || 'Deprecated';
+    this.systemPrompt = systemPrompt;
   }
 
   /**
@@ -318,6 +325,19 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     this.systemConnectionAuthentication = this._wrapAuthenticationFunctions(
       systemAuthentication,
     ) as SystemAuthentication;
+    return this;
+  }
+
+  /**
+   * Sets the system prompt to use for the pack.
+   *
+   * @example
+   * ```
+   * pack.setSystemPrompt('You are a helpful assistant.');
+   * ```
+   */
+  setSystemPrompt(systemPrompt: string): this {
+    this.systemPrompt = systemPrompt;
     return this;
   }
 

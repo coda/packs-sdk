@@ -115,6 +115,18 @@ BasicPackDefinition.systemConnectionAuthentication
 
 ___
 
+### systemPrompt
+
+• **systemPrompt**: `undefined` \| `string`
+
+See [systemPrompt](../interfaces/core.PackVersionDefinition.md#systemprompt).
+
+#### Implementation of
+
+BasicPackDefinition.systemPrompt
+
+___
+
 ### version
 
 • `Optional` **version**: `string`
@@ -353,6 +365,30 @@ pack.setSystemAuthentication({
 | Name | Type |
 | :------ | :------ |
 | `systemAuthentication` | [`SystemAuthenticationDef`](../types/core.SystemAuthenticationDef.md) |
+
+#### Returns
+
+[`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
+
+___
+
+### setSystemPrompt
+
+▸ **setSystemPrompt**(`systemPrompt`): [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
+
+Sets the system prompt to use for the pack.
+
+**`Example`**
+
+```
+pack.setSystemPrompt('You are a helpful assistant.');
+```
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `systemPrompt` | `string` |
 
 #### Returns
 
