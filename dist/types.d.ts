@@ -1,5 +1,4 @@
 import type { $Values } from './type_utils';
-import type { ExecutionContext } from './api';
 import type { Formula } from './api';
 import type { MetadataFormula } from './api';
 import type { MetadataFormulaDef } from './api';
@@ -830,7 +829,7 @@ export interface AuthenticationTypeMap {
 }
 export type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionName' | 'getConnectionUserId' | 'postSetup'> & {
     /** See {@link BaseAuthentication.getConnectionName} */
-    getConnectionName?: MetadataFormulaDef<ExecutionContext, string>;
+    getConnectionName?: MetadataFormulaDef;
     /** See {@link BaseAuthentication.getConnectionUserId} @ignore */
     getConnectionUserId?: MetadataFormulaDef;
     /** {@link BaseAuthentication.postSetup} */

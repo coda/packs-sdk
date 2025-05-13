@@ -5099,7 +5099,7 @@ export type AllowedAuthentication = HeaderBearerTokenAuthentication | CodaApiBea
 export type Authentication = NoAuthentication | VariousAuthentication | AllowedAuthentication;
 export type AsAuthDef<T extends BaseAuthentication> = Omit<T, "getConnectionName" | "getConnectionUserId" | "postSetup"> & {
 	/** See {@link BaseAuthentication.getConnectionName} */
-	getConnectionName?: MetadataFormulaDef<ExecutionContext, string>;
+	getConnectionName?: MetadataFormulaDef;
 	/** See {@link BaseAuthentication.getConnectionUserId} @ignore */
 	getConnectionUserId?: MetadataFormulaDef;
 	/** {@link BaseAuthentication.postSetup} */
