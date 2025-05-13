@@ -98,6 +98,6 @@ export declare function executeUpdateFormulaFromPackDef(packDef: BasicPackDefini
 export declare function executeMetadataFormula(formula: MetadataFormula, metadataParams?: {
     search?: string;
     formulaContext?: MetadataContext;
-}, context?: ExecutionContext): Promise<any>;
+}, context?: ExecutionContext): Promise<import("../api").LegacyDefaultMetadataReturnType>;
 export declare function newRealFetcherExecutionContext(packDef: BasicPackDefinition, manifestPath: string): ExecutionContext;
 export declare function newRealFetcherSyncExecutionContext(packDef: BasicPackDefinition, manifestPath: string): SyncExecutionContext;

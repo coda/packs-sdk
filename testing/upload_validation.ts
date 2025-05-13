@@ -1001,7 +1001,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     allowedAuthenticationNames: z.array(z.string()).optional(),
   };
 
-  const booleanPackFormulaSchema = zodCompleteObject<Omit<BooleanPackFormula<any>, 'execute'>>({
+  const booleanPackFormulaSchema = zodCompleteObject<Omit<BooleanPackFormula<any>, 'execute' | 'validateParameters'>>({
     ...commonPackFormulaSchema,
     resultType: zodDiscriminant(Type.boolean),
     schema: zodCompleteObject<BooleanSchema>({
@@ -1160,7 +1160,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     numericDurationPropertySchema,
   ]);
 
-  const numericPackFormulaSchema = zodCompleteObject<Omit<NumericPackFormula<any>, 'execute'>>({
+  const numericPackFormulaSchema = zodCompleteObject<Omit<NumericPackFormula<any>, 'execute' | 'validateParameters'>>({
     ...commonPackFormulaSchema,
     resultType: zodDiscriminant(Type.number),
     schema: numberPropertySchema.optional(),
@@ -1267,7 +1267,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     stringWithOptionsPropertySchema,
   ]);
 
-  const stringPackFormulaSchema = zodCompleteObject<Omit<StringPackFormula<any>, 'execute'>>({
+  const stringPackFormulaSchema = zodCompleteObject<Omit<StringPackFormula<any>, 'execute' | 'validateParameters'>>({
     ...commonPackFormulaSchema,
     resultType: zodDiscriminant(Type.string),
     schema: stringPropertySchema.optional(),
@@ -1388,7 +1388,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     zodCompleteStrictObject<CommentContentCategorization>({
       type: z.literal(ContentCategorizationType.Comment),
     }),
-  ]).refine(data => 
+  ]).refine(data =>
     {return data.type && Object.values(ContentCategorizationType).includes(data.type)}, {
     message: `must be a valid content categorization type.`,
     path: ['contentCategorization', 'type'],
@@ -1876,7 +1876,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                   case ValueHintType.DateTime:
                   case ValueHintType.SelectList:
                     return true;
-                  default: 
+                  default:
                     return false;
                 }
               },
@@ -1908,7 +1908,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         !('options' in schemaForOptions && schemaForOptions.options);
       return result;
     }, 'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "options" property.');
-  const objectPackFormulaSchema = zodCompleteObject<Omit<ObjectPackFormula<any, any>, 'execute'>>({
+  const objectPackFormulaSchema = zodCompleteObject<Omit<ObjectPackFormula<any, any>, 'execute' | 'validateParameters'>>({
     ...commonPackFormulaSchema,
     resultType: zodDiscriminant(Type.object),
     // TODO(jonathan): See if we should really allow this. The SDK right now explicitly tolerates an undefined
@@ -1949,7 +1949,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
   const syncFormulaSchema = zodCompleteObject<
     Omit<
       SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>, SyncExecutionContext, SyncPassthroughData>,
-      'execute' | 'executeUpdate' | 'executeGetPermissions' | 'onError'
+      'execute' | 'executeUpdate' | 'executeGetPermissions' | 'onError' | 'validateParameters'
     >
   >({
     schema: arrayPropertySchema.optional(),
@@ -2040,7 +2040,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
 
   const syncTableSchema = z
     .union([genericDynamicSyncTableSchema, genericSyncTableSchema])
-    .superRefine((data, context) => { 
+    .superRefine((data, context) => {
       const syncTable = data as SyncTable;
 
       if (syncTable.getter.varargParameters && syncTable.getter.varargParameters.length > 0) {

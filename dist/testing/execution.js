@@ -361,6 +361,14 @@ function makeFormulaSpec(manifest, formulaNameInput) {
                 formulaName: formulaOrSyncName,
             };
         }
+        if (metadataFormulaTypeStr === 'validateParameters') {
+            return {
+                type: types_3.FormulaType.Metadata,
+                metadataFormulaType: types_4.MetadataFormulaType.ValidateParameters,
+                parentFormulaName: formulaOrSyncName,
+                parentFormulaType: syncFormula ? types_3.FormulaType.Sync : types_3.FormulaType.Standard,
+            };
+        }
         const metadataFormulaType = invert(SyncMetadataFormulaTokens)[metadataFormulaTypeStr];
         if (!metadataFormulaType) {
             throw new Error(`Unrecognized metadata formula type "${metadataFormulaTypeStr}".`);

@@ -240,7 +240,7 @@ pack.addFormula({
 
 | Name | Type |
 | :------ | :------ |
-| `definition` | { `resultType`: `ResultT`  } & [`FormulaDefinition`](../types/core.FormulaDefinition.md)<`ParamDefsT`, `ResultT`, `SchemaT`\> |
+| `definition` | { `resultType`: `ResultT`  } & [`FormulaDefinitionOptions`](../types/core.FormulaDefinitionOptions.md)<`ParamDefsT`, `ResultT`, `SchemaT`\> |
 
 #### Returns
 

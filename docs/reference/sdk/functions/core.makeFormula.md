@@ -80,7 +80,7 @@ makeFormula({
 
 | Name | Type |
 | :------ | :------ |
-| `fullDefinition` | [`FormulaDefinition`](../types/core.FormulaDefinition.md)<`ParamDefsT`, `ResultT`, `SchemaT`\> |
+| `fullDefinition` | [`FormulaDefinitionOptions`](../types/core.FormulaDefinitionOptions.md)<`ParamDefsT`, `ResultT`, `SchemaT`\> |
 
 #### Returns
 

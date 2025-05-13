@@ -8,7 +8,7 @@ search:
 
 [testing](../modules/testing.md).executeMetadataFormula
 
-▸ **executeMetadataFormula**(`formula`, `metadataParams?`, `context?`): `Promise`<`any`\>
+▸ **executeMetadataFormula**(`formula`, `metadataParams?`, `context?`): `Promise`<[`LegacyDefaultMetadataReturnType`](../types/core.LegacyDefaultMetadataReturnType.md)\>
 
 #### Parameters
 
@@ -22,4 +22,4 @@ search:
 
 #### Returns
 
-`Promise`<`any`\>
+`Promise`<[`LegacyDefaultMetadataReturnType`](../types/core.LegacyDefaultMetadataReturnType.md)\>

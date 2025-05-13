@@ -1,8 +1,11 @@
+import type {ExecutionContext} from '../api';
 import type {Formula} from '../api';
 import type {PackDefinition} from '../types';
 import type {PackFormatMetadata} from '../compiled_types';
 import type {PackMetadata} from '../compiled_types';
 import type {PackSyncTable} from '../compiled_types';
+import {compileMetadataFormulaMetadata} from './metadata';
+import {wrapMetadataFunction} from '../api';
 
 // Used to avoid needing promises when exporting fake `PackMetadata`s.
 export interface FakePackDefinition extends Omit<PackDefinition, 'formulas'> {
@@ -22,8 +25,12 @@ export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata 
     ...packMetadata
   } = def;
   const formulas = originalFormulas!.map(formula => {
-    const {execute, ...formulaMetadata} = formula;
-    return formulaMetadata;
+    const {execute, validateParameters, ...formulaMetadata} = formula;
+    const validateParametersAsFormula = wrapMetadataFunction<ExecutionContext, boolean>(validateParameters);
+    return {
+      ...formulaMetadata,
+      validateParameters: compileMetadataFormulaMetadata<ExecutionContext, boolean>(validateParametersAsFormula),
+    };
   });
 
   const formats: PackFormatMetadata[] = [];
@@ -45,8 +52,16 @@ export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata 
   }
   const syncTables: PackSyncTable[] = [];
   for (const {getter, getSchema, ...others} of originalSyncTables || []) {
-    const {execute, executeUpdate, ...otherGetter} = getter;
-    syncTables.push({getter: {...otherGetter}, getSchema, ...others});
+    const {execute, executeUpdate, validateParameters, ...otherGetter} = getter;
+    const validateParametersAsFormula = wrapMetadataFunction(validateParameters);
+    syncTables.push({
+      getter: {
+        ...otherGetter,
+        validateParameters: compileMetadataFormulaMetadata(validateParametersAsFormula),
+      },
+      getSchema,
+      ...others,
+    });
   }
   return {
     formulas,
@@ -56,3 +71,4 @@ export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata 
     ...packMetadata,
   };
 }
+

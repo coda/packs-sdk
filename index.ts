@@ -83,7 +83,8 @@ export type {Fetcher} from './api_types';
 export type {FetchMethodType} from './api_types';
 export type {FetchRequest} from './api_types';
 export type {FetchResponse} from './api_types';
-export type {FormulaDefinition} from './api';
+export type {FormulaDefinitionOptions} from './api';
+export type {FormulaOptions} from './api';
 export type {GenericDynamicSyncTable} from './api';
 export type {GenericSyncFormula} from './api';
 export type {GenericSyncFormulaResult} from './api';
@@ -130,6 +131,9 @@ export {Type} from './api_types';
 export type {TypedPackFormula} from './api';
 export type {Formula} from './api';
 export {UserVisibleError} from './api';
+export {ParameterValidationError} from './api';
+export {ParameterError} from './api';
+export {LegacyDefaultMetadataReturnType} from './api';
 
 // Formula definition helpers
 export {makeMetadataFormula} from './api';
@@ -259,6 +263,7 @@ export type {SyncFull} from './api_types';
 export type {SyncIncremental} from './api_types';
 export type {SystemAuthenticationDef} from './types';
 export {TokenExchangeCredentialsLocation} from './types';
+export {PermissionSyncMode} from './api_types';
 
 export type {BooleanHintTypes} from './schema';
 export type {InferrableTypes} from './schema';

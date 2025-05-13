@@ -21,4 +21,5 @@ var MetadataFormulaType;
     MetadataFormulaType["SyncGetTableName"] = "SyncGetTableName";
     MetadataFormulaType["SyncGetSchema"] = "SyncGetSchema";
     MetadataFormulaType["PropertyOptions"] = "PropertyOptions";
+    MetadataFormulaType["ValidateParameters"] = "ValidateParameters";
 })(MetadataFormulaType || (exports.MetadataFormulaType = MetadataFormulaType = {}));
