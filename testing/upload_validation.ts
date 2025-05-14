@@ -30,6 +30,7 @@ import type {EmailContentCategorization} from '../schema';
 import {EmailDisplayType} from '../schema';
 import type {EmailSchema} from '../schema';
 import {FeatureSet} from '../types';
+import type {FormulaOptions} from '../api';
 import type {GenericObjectSchema} from '../schema';
 import type {GenericSyncFormula} from '..';
 import type {GoogleDomainWideDelegationAuthentication} from '../types';
@@ -999,9 +1000,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     isSystem: z.boolean().optional(),
     extraOAuthScopes: z.array(z.string()).optional(),
     allowedAuthenticationNames: z.array(z.string()).optional(),
+    // Has to be any to avoid circular dependency.
+    validateParameters: z.any().optional(),
   };
 
-  const booleanPackFormulaSchema = zodCompleteObject<Omit<BooleanPackFormula<any>, 'execute' | 'validateParameters'>>({
+  const booleanPackFormulaSchema = zodCompleteObject<Omit<FormulaOptions<any, BooleanPackFormula<any>>, 'execute'>>({
     ...commonPackFormulaSchema,
     resultType: zodDiscriminant(Type.boolean),
     schema: zodCompleteObject<BooleanSchema>({
@@ -1160,7 +1163,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     numericDurationPropertySchema,
   ]);
 
-  const numericPackFormulaSchema = zodCompleteObject<Omit<NumericPackFormula<any>, 'execute' | 'validateParameters'>>({
+  const numericPackFormulaSchema = zodCompleteObject<Omit<FormulaOptions<any, NumericPackFormula<any>>, 'execute'>>({
     ...commonPackFormulaSchema,
     resultType: zodDiscriminant(Type.number),
     schema: numberPropertySchema.optional(),
@@ -1267,7 +1270,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     stringWithOptionsPropertySchema,
   ]);
 
-  const stringPackFormulaSchema = zodCompleteObject<Omit<StringPackFormula<any>, 'execute' | 'validateParameters'>>({
+  const stringPackFormulaSchema = zodCompleteObject<Omit<FormulaOptions<any, StringPackFormula<any>>, 'execute'>>({
     ...commonPackFormulaSchema,
     resultType: zodDiscriminant(Type.string),
     schema: stringPropertySchema.optional(),
@@ -1908,7 +1911,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         !('options' in schemaForOptions && schemaForOptions.options);
       return result;
     }, 'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "options" property.');
-  const objectPackFormulaSchema = zodCompleteObject<Omit<ObjectPackFormula<any, any>, 'execute' | 'validateParameters'>>({
+  const objectPackFormulaSchema = zodCompleteObject<Omit<FormulaOptions<any, ObjectPackFormula<any, any>>, 'execute'>>({
     ...commonPackFormulaSchema,
     resultType: zodDiscriminant(Type.object),
     // TODO(jonathan): See if we should really allow this. The SDK right now explicitly tolerates an undefined
@@ -1948,8 +1951,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
 
   const syncFormulaSchema = zodCompleteObject<
     Omit<
-      SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>, SyncExecutionContext, SyncPassthroughData>,
-      'execute' | 'executeUpdate' | 'executeGetPermissions' | 'onError' | 'validateParameters'
+      FormulaOptions<
+        any,
+        SyncFormula<any, any, ParamDefs, ObjectSchema<any, any>, SyncExecutionContext, SyncPassthroughData>
+      >,
+      'execute' | 'executeUpdate' | 'executeGetPermissions' | 'onError'
     >
   >({
     schema: arrayPropertySchema.optional(),

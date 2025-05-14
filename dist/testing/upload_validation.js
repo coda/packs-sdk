@@ -793,6 +793,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         isSystem: z.boolean().optional(),
         extraOAuthScopes: z.array(z.string()).optional(),
         allowedAuthenticationNames: z.array(z.string()).optional(),
+        // Has to be any to avoid circular dependency.
+        validateParameters: z.any().optional(),
     };
     const booleanPackFormulaSchema = zodCompleteObject({
         ...commonPackFormulaSchema,
