@@ -559,8 +559,8 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
    *
    * @example
    * ```
-   * validateParameters: async function (context, _, formulaContext) {
-   *   let [quantity, sku] = formulaContext?.params;
+   * validateParameters: async function (context, _, params) {
+   *   let {quantity, sku} = ensureExists(params);
    *   let errors = [];
    *   if (quantity < 0) {
    *     errors.push({message: "Must be a positive number.", propertyName: "quantity"});

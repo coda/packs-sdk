@@ -187,8 +187,8 @@ for permissionSyncMode 'PermissionAware' vs 'Personal' vs undefined (which repre
 **`Example`**
 
 ```
-validateParameters: async function (context, _, formulaContext) {
-  let [quantity, sku] = formulaContext?.params;
+validateParameters: async function (context, _, params) {
+  let {quantity, sku} = ensureExists(params);
   let errors = [];
   if (quantity < 0) {
     errors.push({message: "Must be a positive number.", propertyName: "quantity"});

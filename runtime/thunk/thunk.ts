@@ -313,7 +313,7 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
           const validateParametersFormula =
             wrapMetadataFunction<ExecutionContext, boolean>(findValidateParametersFormula(manifest, formulaSpec));
           if (validateParametersFormula) {
-            return validateParametersFormula.execute(['', JSON.stringify({params: params as any, __brand: 'MetadataContext'})], executionContext);
+            return validateParametersFormula.execute(params as any, executionContext);
           }
           break;
         }
