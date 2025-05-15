@@ -9,7 +9,6 @@ APIs that are part of Amazon Web Services (AWS) use a proprietary authentication
 
 The SDK supports two different ways of authenticating with an AWS service: access keys and by assuming a role.
 
-
 ## Access key
 
 The simplest method of authentication requires that the Coda user provides an access key and secret associated with an AWS user. Coda will use these values to sign outgoing requests. Simply set the authentication type to [`AWSAccessKey`][sdk_awsaccesskey] and specify the AWS service you are connecting to.
@@ -17,7 +16,7 @@ The simplest method of authentication requires that the Coda user provides an ac
 ```ts
 pack.setUserAuthentication({
   type: coda.AuthenticationType.AWSAccessKey,
-  service: "s3",
+  service: 's3',
 });
 ```
 
@@ -29,7 +28,6 @@ You can learn more about how to generate access keys in the [AWS documentation][
 
 [View Sample Code][sample_aws]{ .md-button }
 
-
 ## Assume role
 
 A more secure way to authenticate is by using a the [`AssumeRole` feature][awsdocs_assumerole] of the Security Token Service (STS). Trust is first established between the AWS user running Packs code and a role you created in your AWS account. When the Pack is run, temporary credentials are generated and used to sign outgoing requests.
@@ -39,16 +37,16 @@ To use this form of authentication, simply set the authentication type to [`AWSA
 ```ts
 pack.setUserAuthentication({
   type: coda.AuthenticationType.AWSAssumeRole,
-  service: "s3",
+  service: 's3',
 });
 ```
 
-When authenticating, the user will be prompted to enter the Amazon Resource Name (ARN) of the role to assume, as well as an associated external ID.
+When authenticating, the user will be prompted to enter the Amazon Resource Name (ARN) of the role to assume, as well as an associated external ID. Coda will prepend your pack ID to the external ID before passing on the request to STS, ensuring only your pack can utilize this role.
+The external ID that Coda uses to assume the role is of the form `${packId}:${userProvidedExternalId}`, so be sure that is what appears in your AWS assume role policy.
 
 <img src="../../../../images/auth_aws_assume_role.png" srcset="../../../../images/auth_aws_assume_role_2x.png 2x" class="screenshot" alt="Prompting the user for their role and external ID">
 
 You can learn more about how to create roles in the [AWS documentation][awsdocs_createrole].
-
 
 ### Trust policy
 
@@ -62,9 +60,7 @@ In addition to supplying the role and external ID, the user authenticating the P
       "Sid": "GrantCodaPackAssumeRole",
       "Effect": "Allow",
       "Principal": {
-        "AWS": [
-          "arn:aws:iam::029208794193:root"
-        ]
+        "AWS": ["arn:aws:iam::029208794193:root"]
       },
       "Action": "sts:AssumeRole",
       "Condition": {
@@ -78,7 +74,6 @@ In addition to supplying the role and external ID, the user authenticating the P
 ```
 
 Coda's AWS account has the ID `arn:aws:iam::029208794193:root`, and this is same for all Packs. To ensure that other Packs can't access the role, users must generate an external ID (usually a UUID) to act as a shared secret. While AWS doesn't strictly require an external ID to use the `AssumeRole` flow, it is recommended for cross-account access scenarios like this and Coda enforces it as a best practice.
-
 
 ### Running locally
 
@@ -94,11 +89,8 @@ First update your policy to include the ID of the user you created.
       "Sid": "GrantCodaPackAssumeRole",
       "Effect": "Allow",
       "Principal": {
-        "AWS": [
-          "arn:aws:iam::029208794193:root",
-          "<ARN_OF_USER>"
-        ]
-      },
+        "AWS": ["arn:aws:iam::029208794193:root", "<ARN_OF_USER>"]
+      }
       // ...
     }
   ]
@@ -113,7 +105,6 @@ npx coda execute pack.ts <FormulaName>
 ```
 
 You can alternatively use the AWS CLI to manage these credentials for you.
-
 
 [awsdocs_sv4]: https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
 [sdk_awsaccesskey]: ../../../reference/sdk/enums/core.AuthenticationType.md#awsaccesskey

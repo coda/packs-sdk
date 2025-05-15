@@ -67,6 +67,7 @@ function replaceAll(str: string, find: string, replace: string): string {
 }
 
 export class AuthenticatingFetcher implements Fetcher {
+  private readonly _packId: string;
   private readonly _updateCredentialsCallback: (newCredentials: Credentials) => void | undefined;
   private readonly _authDef: Authentication | undefined;
   private readonly _networkDomains: string[] | undefined;
@@ -74,12 +75,14 @@ export class AuthenticatingFetcher implements Fetcher {
   private readonly _invocationToken: string;
 
   constructor(
+    packId: string,
     updateCredentialsCallback: (newCredentials: Credentials) => void | undefined,
     authDef: Authentication | undefined,
     networkDomains: string[] | undefined,
     credentials: Credentials | undefined,
     invocationToken: string,
   ) {
+    this._packId = packId;
     this._updateCredentialsCallback = updateCredentialsCallback;
     this._authDef = authDef;
     this._networkDomains = networkDomains;
@@ -517,7 +520,7 @@ export class AuthenticatingFetcher implements Fetcher {
         const command = new AssumeRoleCommand({
           RoleSessionName: FetcherUserAgent,
           RoleArn: roleArn,
-          ExternalId: externalId,
+          ExternalId: `${this._packId}:${externalId}`,
         });
         const assumeRoleResult = await client.send(command);
         const credentials: AwsCredentialIdentity = {
@@ -691,7 +694,7 @@ class AuthenticatingBlobStorage implements TemporaryBlobStorage {
   }
 
   async storeUrl(url: string, _opts?: {expiryMs?: number}, fetchOpts?: Partial<FetchRequest>): Promise<string> {
-    await this._fetcher.fetch({method: 'GET', url, isBinaryResponse: true, ...fetchOpts,});
+    await this._fetcher.fetch({method: 'GET', url, isBinaryResponse: true, ...fetchOpts});
     return `https://not-a-real-url.s3.amazonaws.com/tempBlob/${v4()}`;
   }
 
@@ -714,6 +717,7 @@ class FakeSyncStateService implements SyncStateService {
 }
 
 export function newFetcherExecutionContext(
+  packId: string,
   updateCredentialsCallback: (newCreds: Credentials) => void | undefined,
   authDef: Authentication | undefined,
   networkDomains: string[] | undefined,
@@ -721,6 +725,7 @@ export function newFetcherExecutionContext(
 ): ExecutionContext {
   const invocationToken = v4();
   const fetcher = new AuthenticatingFetcher(
+    packId,
     updateCredentialsCallback,
     authDef,
     networkDomains,
@@ -740,12 +745,13 @@ export function newFetcherExecutionContext(
 }
 
 export function newFetcherSyncExecutionContext(
+  packId: string,
   updateCredentialsCallback: (newCreds: Credentials) => void | undefined,
   authDef: Authentication | undefined,
   networkDomains: string[] | undefined,
   credentials?: Credentials,
 ): SyncExecutionContext {
-  const context = newFetcherExecutionContext(updateCredentialsCallback, authDef, networkDomains, credentials);
+  const context = newFetcherExecutionContext(packId, updateCredentialsCallback, authDef, networkDomains, credentials);
   return {...context, sync: {}, syncStateService: new FakeSyncStateService()};
 }
 

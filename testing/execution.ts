@@ -185,6 +185,7 @@ export async function executeFormulaFromPackDef<T extends PackFormulaResult | Ge
   if (!executionContext && useRealFetcher) {
     const credentials = getCredentials(manifestPath);
     executionContext = newFetcherExecutionContext(
+      packId,
       buildUpdateCredentialsCallback(manifestPath),
       getPackAuth(packDef),
       packDef.networkDomains,
@@ -238,6 +239,7 @@ export async function executeFormulaOrSyncFromCLI({
     // TODO(jonathan): Pass the right context, just to set user expectations correctly for runtime values.
     const executionContext = useRealFetcher
       ? newFetcherSyncExecutionContext(
+          packId,
           buildUpdateCredentialsCallback(manifestPath),
           getPackAuth(manifest),
           manifest.networkDomains,
@@ -721,6 +723,7 @@ export async function executeSyncFormula(
     if (useRealFetcher) {
       const credentials = getCredentials(manifestPath);
       executionContext = newFetcherSyncExecutionContext(
+        packId,
         buildUpdateCredentialsCallback(manifestPath),
         getPackAuth(packDef),
         packDef.networkDomains,
@@ -831,6 +834,7 @@ export async function executeSyncFormulaFromPackDefSingleIteration(
   if (!executionContext && useRealFetcher) {
     const credentials = getCredentials(manifestPath);
     executionContext = newFetcherSyncExecutionContext(
+      packId,
       buildUpdateCredentialsCallback(manifestPath),
       getPackAuth(packDef),
       packDef.networkDomains,
@@ -867,6 +871,7 @@ export async function executeGetPermissionsFormulaFromPackDef(
   if (!executionContext && useRealFetcher) {
     const credentials = getCredentials(manifestPath);
     executionContext = newFetcherSyncExecutionContext(
+      packId,
       buildUpdateCredentialsCallback(manifestPath),
       getPackAuth(packDef),
       packDef.networkDomains,
@@ -903,6 +908,7 @@ export async function executeUpdateFormulaFromPackDef(
   if (!executionContext && useRealFetcher) {
     const credentials = getCredentials(manifestPath);
     executionContext = newFetcherSyncExecutionContext(
+      packId,
       buildUpdateCredentialsCallback(manifestPath),
       getPackAuth(packDef),
       packDef.networkDomains,
@@ -962,6 +968,7 @@ export function newRealFetcherSyncExecutionContext(
   manifestPath: string,
 ): SyncExecutionContext {
   return newFetcherSyncExecutionContext(
+    packId,
     buildUpdateCredentialsCallback(manifestPath),
     getPackAuth(packDef),
     packDef.networkDomains,
