@@ -135,15 +135,15 @@ export const manifest: PackDefinition = createFakePack({
       description: 'Validate parameters fails if param is not positive',
       parameters: [makeNumericParameter('value', 'The value to validate.')],
       execute: async ([_value], _context) => 1,
-      validateParameters: async (_context, _search, formulaContext) => {
-        const [value] = formulaContext?.params;
+      validateParameters: async (_context, _search, params) => {
+        const {value} = ensureExists(params);
         if (value > 0) {
           return true;
         }
         throw new ParameterValidationError('Validate parameters fails if value is not positive', [
           {
             parameterName: 'value',
-            message: `Value must be positive, got ${JSON.stringify(formulaContext?.params)}`,
+            message: `Value must be positive, got ${JSON.stringify(value)}`,
           },
         ]);
       },
@@ -157,8 +157,8 @@ export const manifest: PackDefinition = createFakePack({
       formula: {
         name: 'Students',
         description: "Gets students in a teacher's class",
-        validateParameters: async (context, _search, formulaContext) => {
-          const [teacher] = formulaContext?.params;
+        validateParameters: async (context, _search, params) => {
+          const {teacher} = ensureExists(params);
           // This will be valid if the teacher is Permission and the context permissionSyncMode is PermissionAware
           if (teacher === 'Permission' && context.sync?.permissionSyncMode === PermissionSyncMode.PermissionAware) {
             return true;

@@ -224,7 +224,7 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                 case types_3.MetadataFormulaType.ValidateParameters: {
                     const validateParametersFormula = (0, api_5.wrapMetadataFunction)(findValidateParametersFormula(manifest, formulaSpec));
                     if (validateParametersFormula) {
-                        return validateParametersFormula.execute(['', JSON.stringify({ params: params, __brand: 'MetadataContext' })], executionContext);
+                        return validateParametersFormula.execute(params, executionContext);
                     }
                     break;
                 }
