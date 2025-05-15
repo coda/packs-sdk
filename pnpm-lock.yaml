@@ -5,9 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  cross-spawn: '>=7.0.6'
-  elliptic@<=6.6.0: '>=6.6.1'
-  tar-fs@<2.1.2: '>=2.1.2'
+  cross-spawn: 7.0.6
+  elliptic@<=6.6.0: 6.6.1
+  tar-fs@<2.1.2: 3.0.8
 
 packageExtensionsChecksum: 380851e2db75863824bdde5716c4ef00
 
