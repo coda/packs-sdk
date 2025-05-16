@@ -67,7 +67,7 @@ function replaceAll(str: string, find: string, replace: string): string {
 }
 
 export class AuthenticatingFetcher implements Fetcher {
-  private readonly _packId: string;
+  private readonly _packId: number | undefined;
   private readonly _updateCredentialsCallback: (newCredentials: Credentials) => void | undefined;
   private readonly _authDef: Authentication | undefined;
   private readonly _networkDomains: string[] | undefined;
@@ -75,7 +75,7 @@ export class AuthenticatingFetcher implements Fetcher {
   private readonly _invocationToken: string;
 
   constructor(
-    packId: string,
+    packId: number | undefined,
     updateCredentialsCallback: (newCredentials: Credentials) => void | undefined,
     authDef: Authentication | undefined,
     networkDomains: string[] | undefined,
@@ -717,7 +717,7 @@ class FakeSyncStateService implements SyncStateService {
 }
 
 export function newFetcherExecutionContext(
-  packId: string,
+  packId: number | undefined,
   updateCredentialsCallback: (newCreds: Credentials) => void | undefined,
   authDef: Authentication | undefined,
   networkDomains: string[] | undefined,
@@ -745,7 +745,7 @@ export function newFetcherExecutionContext(
 }
 
 export function newFetcherSyncExecutionContext(
-  packId: string,
+  packId: number | undefined,
   updateCredentialsCallback: (newCreds: Credentials) => void | undefined,
   authDef: Authentication | undefined,
   networkDomains: string[] | undefined,

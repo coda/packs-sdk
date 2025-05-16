@@ -73,6 +73,7 @@ export interface ExecuteOptions {
 export interface ContextOptions {
   useRealFetcher?: boolean;
   manifestPath?: string;
+  packId?: number;
 }
 function resolveFormulaNameWithNamespace(formulaNameWithNamespace: string): string {
   const [namespace, name] = formulaNameWithNamespace.includes('::')
@@ -179,7 +180,7 @@ export async function executeFormulaFromPackDef<T extends PackFormulaResult | Ge
   params: ParamValues<ParamDefs>,
   context?: ExecutionContext,
   options?: ExecuteOptions,
-  {useRealFetcher, manifestPath}: ContextOptions = {},
+  {useRealFetcher, manifestPath, packId}: ContextOptions = {},
 ): Promise<T> {
   let executionContext = context;
   if (!executionContext && useRealFetcher) {
@@ -239,7 +240,7 @@ export async function executeFormulaOrSyncFromCLI({
     // TODO(jonathan): Pass the right context, just to set user expectations correctly for runtime values.
     const executionContext = useRealFetcher
       ? newFetcherSyncExecutionContext(
-          packId,
+          contextOptions.packId,
           buildUpdateCredentialsCallback(manifestPath),
           getPackAuth(manifest),
           manifest.networkDomains,
@@ -711,7 +712,7 @@ export async function executeSyncFormula(
     validateResult: shouldValidateResult = true,
     useDeprecatedResultNormalization = true,
   }: ExecuteOptions = {},
-  {useRealFetcher, manifestPath}: ContextOptions = {},
+  {useRealFetcher, manifestPath, packId}: ContextOptions = {},
 ): Promise<GenericSyncFormulaResult> {
   const formula = findSyncFormula(packDef, syncFormulaName, context?.authenticationName);
   if (shouldValidateParams && formula) {
@@ -798,7 +799,7 @@ export async function executeSyncFormulaFromPackDef(
     validateResult: shouldValidateResult = true,
     useDeprecatedResultNormalization = true,
   }: ExecuteOptions = {},
-  {useRealFetcher, manifestPath}: ContextOptions = {},
+  {useRealFetcher, manifestPath, packId}: ContextOptions = {},
 ): Promise<Array<ObjectSchemaDefinitionType<any, any, any>>> {
   return Promise.resolve(
     (
@@ -812,7 +813,7 @@ export async function executeSyncFormulaFromPackDef(
           validateResult: shouldValidateResult,
           useDeprecatedResultNormalization,
         },
-        {useRealFetcher, manifestPath},
+        {useRealFetcher, manifestPath, packId},
       )
     ).result,
   );
@@ -828,7 +829,7 @@ export async function executeSyncFormulaFromPackDefSingleIteration(
   params: ParamValues<ParamDefs>,
   context?: SyncExecutionContext,
   options?: ExecuteOptions,
-  {useRealFetcher, manifestPath}: ContextOptions = {},
+  {useRealFetcher, manifestPath, packId}: ContextOptions = {},
 ): Promise<GenericSyncFormulaResult> {
   let executionContext = context;
   if (!executionContext && useRealFetcher) {
@@ -865,7 +866,7 @@ export async function executeGetPermissionsFormulaFromPackDef(
   executeGetPermissionsRequest: GenericExecuteGetPermissionsRequest,
   context?: SyncExecutionContext,
   options?: ExecuteOptions,
-  {useRealFetcher, manifestPath}: ContextOptions = {},
+  {useRealFetcher, manifestPath, packId}: ContextOptions = {},
 ): Promise<GetPermissionsResult> {
   let executionContext = context;
   if (!executionContext && useRealFetcher) {
@@ -902,7 +903,7 @@ export async function executeUpdateFormulaFromPackDef(
   context: UpdateSyncExecutionContext,
   syncUpdates: GenericSyncUpdate[],
   options?: ExecuteOptions,
-  {useRealFetcher, manifestPath}: ContextOptions = {},
+  {useRealFetcher, manifestPath, packId}: ContextOptions = {},
 ): Promise<GenericSyncUpdateResult> {
   let executionContext = context;
   if (!executionContext && useRealFetcher) {
@@ -954,8 +955,13 @@ function buildUpdateCredentialsCallback(manifestPath: string | undefined): (newC
   };
 }
 
-export function newRealFetcherExecutionContext(packDef: BasicPackDefinition, manifestPath: string): ExecutionContext {
+export function newRealFetcherExecutionContext(
+  packDef: BasicPackDefinition,
+  manifestPath: string,
+  packId: number | undefined,
+): ExecutionContext {
   return newFetcherExecutionContext(
+    packId,
     buildUpdateCredentialsCallback(manifestPath),
     getPackAuth(packDef),
     packDef.networkDomains,
@@ -966,6 +972,7 @@ export function newRealFetcherExecutionContext(packDef: BasicPackDefinition, man
 export function newRealFetcherSyncExecutionContext(
   packDef: BasicPackDefinition,
   manifestPath: string,
+  packId: number | undefined,
 ): SyncExecutionContext {
   return newFetcherSyncExecutionContext(
     packId,
