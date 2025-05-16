@@ -2,6 +2,7 @@ import type {ArgumentsCamelCase} from 'yargs';
 import type {TimerShimStrategy} from '../testing/compile';
 import {compilePackBundle} from '../testing/compile';
 import {executeFormulaOrSyncFromCLI} from '../testing/execution';
+import {getPackId} from './config_storage';
 import {importManifest} from './helpers';
 import {makeManifestFullPath} from './helpers';
 import {printAndExit} from '../testing/helpers';
@@ -17,6 +18,7 @@ export interface ExecuteArgs {
   timerStrategy: TimerShimStrategy;
   maxRows?: number;
   allowMultipleNetworkDomains?: boolean;
+  codaApiEndpoint: string;
 }
 
 export async function handleExecute({
@@ -29,6 +31,7 @@ export async function handleExecute({
   timerStrategy,
   maxRows,
   allowMultipleNetworkDomains,
+  codaApiEndpoint,
 }: ArgumentsCamelCase<ExecuteArgs>) {
   if (vm && !tryGetIvm()) {
     return printAndExit(
@@ -59,6 +62,6 @@ export async function handleExecute({
     maxRows,
     bundleSourceMapPath,
     bundlePath,
-    contextOptions: {useRealFetcher: fetch},
+    contextOptions: {useRealFetcher: fetch, packId: getPackId(manifestPath, codaApiEndpoint)},
   });
 }
