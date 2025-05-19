@@ -444,6 +444,10 @@ async function executeFormulaOrSyncWithRawParamsInVM({ formulaSpecification, par
             params = rawParams;
             // Default the search string (first arg) to an empty string.
             (_a = params[0]) !== null && _a !== void 0 ? _a : (params[0] = '');
+            if (formulaSpecification.metadataFormulaType === types_4.MetadataFormulaType.ValidateParameters) {
+                // insert empty string at front of params to use as the search string
+                params.unshift('');
+            }
             break;
         }
         case types_3.FormulaType.SyncUpdate: {
@@ -491,6 +495,10 @@ async function executeFormulaOrSyncWithRawParams({ formulaSpecification, params:
             params = rawParams;
             // Default the search string (first arg) to an empty string.
             (_a = params[0]) !== null && _a !== void 0 ? _a : (params[0] = '');
+            if (formulaSpecification.metadataFormulaType === types_4.MetadataFormulaType.ValidateParameters) {
+                // insert empty string at front of params to use as the search string
+                params.unshift('');
+            }
             break;
         }
         case types_3.FormulaType.SyncUpdate: {

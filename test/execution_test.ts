@@ -781,7 +781,7 @@ describe('Execution', () => {
           await executeFormulaOrSyncFromCLI({
             vm,
             formulaName: 'Students:validateParameters',
-            params: ['', '{"teacher": "Personal"}'],
+            params: ['{"teacher": "Personal"}'],
             manifest: fakePack,
             manifestPath: '',
             bundleSourceMapPath,
@@ -798,7 +798,7 @@ describe('Execution', () => {
           await executeFormulaOrSyncFromCLI({
             vm,
             formulaName: 'ValidateParametersFailsDueToNonSync:validateParameters',
-            params: ['', '{}'],
+            params: ['{}'],
             manifest: fakePack,
             manifestPath: '',
             bundleSourceMapPath,
@@ -814,7 +814,7 @@ describe('Execution', () => {
           await executeFormulaOrSyncFromCLI({
             vm,
             formulaName: 'ValidateParametersFailsIfParamIsNotPositive:validateParameters',
-            params: ['', '{"value": 0}'],
+            params: ['{"value": 0}'],
             manifest: fakePack,
             manifestPath: '',
             bundleSourceMapPath,
@@ -830,7 +830,7 @@ describe('Execution', () => {
           await executeFormulaOrSyncFromCLI({
             vm,
             formulaName: 'ValidateParametersFailsIfParamIsNotPositive:validateParameters',
-            params: ['', '{"value": 1}'],
+            params: ['{"value": 1}'],
             manifest: fakePack,
             manifestPath: '',
             bundleSourceMapPath,
