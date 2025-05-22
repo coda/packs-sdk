@@ -3585,10 +3585,11 @@ describe('Pack metadata Validation', async () => {
               datetime: {type: ValueType.String, codaType: ValueHintType.DateTime},
               numberDateTime: {type: ValueType.Number, codaType: ValueHintType.DateTime},
               anotherValue: {type: ValueType.Number},
+              date: {type: ValueType.String, codaType: ValueHintType.Date},
             },
             index: {
               properties: ['name', 'attachments'],
-              filterableProperties: ['value', 'enums', 'boolean', 'datetime', 'numberDateTime', 'anotherValue'],
+              filterableProperties: ['value', 'enums', 'boolean', 'datetime', 'numberDateTime', 'date'],
             }
           });
           const err = await validateJsonAndAssertFails(metadata);

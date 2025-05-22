@@ -7,6 +7,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ### Changed
 
 - Add `validateParameters` metadata formula to CommonPackFormulaDef
+- Add `ValueHintType.Date` as a valid type for the `FilterableProperty` in `IndexDefinition`.
 
 ## [1.9.5] - 2025-05-02
 
