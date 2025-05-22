@@ -252,7 +252,9 @@ For example, if you define a property with the name `GitHub (Beta)`, it will be 
 Similar to property names, you must also determine the schema for each property. In many cases this involves a large `switch` statement that translates from the type descriptors in the dataset to the equivalent schemas in Coda. If a given field type doesn't have an equivalent schema in Coda it usually makes sense to fallback to a string.
 
 ```ts
-function getPropertySchema(customField): coda.Schema & coda.ObjectSchemaProperty {
+function getPropertySchema(customField)
+  :coda.Schema & coda.ObjectSchemaProperty 
+{
   // Select the schema type depending on the custom field type.
   switch (customField.type) {
     case "yes_no":
@@ -329,7 +331,7 @@ The `getSchema` function can access the values of the parameters defined in the 
 ```ts
 pack.addDynamicSyncTable({
   // ...
-  getSchema: async function (context, _, {query}) {
+  getSchema: async function (context, _, { query }) {
     // ...
   },
   formula: {
@@ -344,7 +346,7 @@ pack.addDynamicSyncTable({
     execute: async function ([query], context) {
       // ...
     },
-  }
+  },
   // ...
 });
 ```

@@ -31,8 +31,8 @@ coda.makeParameter({
   type: coda.ParameterType.String,
   name: "animal",
   description: "The selected animal.",
-  autocomplete: ["cow", "pig", "sheep"]
-})
+  autocomplete: ["cow", "pig", "sheep"],
+});
 ```
 
 
@@ -50,7 +50,7 @@ coda.makeParameter({
     { display: "Messy Pig", value: "pig" },
     { display: "Quiet Sheep", value: "sheep" },
   ],
-})
+});
 ```
 
 The values can be either strings or numbers, and should match the type of the parameter.
@@ -65,7 +65,7 @@ coda.makeParameter({
   type: coda.ParameterType.String,
   name: "gameId",
   description: "The ID of the game on boardgameatlas.com",
-  autocomplete: async function (context, search) {
+  autocomplete: async function(context, search) {
     let url = coda.withQueryParams(
       "https://api.boardgameatlas.com/api/search",
       { fuzzy_match: true, name: search });
@@ -75,7 +75,7 @@ coda.makeParameter({
     // label and its ID for the value.
     return coda.autocompleteSearchObjects(search, results, "name", "id");
   },
-}),
+});
 ```
 
 
@@ -84,7 +84,7 @@ coda.makeParameter({
 The `autocomplete` function also has access to the values entered for previous parameters. Unlike in the `execute` function where these are passed in as an array and accessed by position, in `autocomplete` functions they are passed as an object of key/value pairs and accessed by name.
 
 ```ts
-coda.makeParameter({
+const LanguageParameter = coda.makeParameter({
   type: coda.ParameterType.String,
   name: "language",
   description: "The language to use.",
@@ -92,12 +92,13 @@ coda.makeParameter({
     { display: "English", value: "en" },
     { display: "Spanish", value: "es" },
   ],
-}),
-coda.makeParameter({
+});
+
+const GreetingParameter = coda.makeParameter({
   type: coda.ParameterType.String,
   name: "greeting",
   description: "The greeting to use.",
-  autocomplete: async function (context, search, {language}) {
+  autocomplete: async function (context, search, { language }) {
     let options;
     if (language === "es") {
       options = ["Hola", "Buenos días"];
@@ -106,7 +107,7 @@ coda.makeParameter({
     }
     return coda.simpleAutocomplete(search, options);
   },
-}),
+});
 ```
 
 ??? info "Object destructuring"
@@ -150,7 +151,7 @@ pack.addFormula({
     if (!AnimalOptions.includes(animal)) {
       throw new coda.UserVisibleError("Unknown animal: " + animal);
     }
-  }
+  },
 });
 ```
 

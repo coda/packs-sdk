@@ -290,7 +290,7 @@ The `function` keyword makes it very clear to readers that you are defining a fu
 
 The order of keys in the formula declaration should be:
 
-```ts
+```ts no_lint
 pack.addFormula({
   name: ...,
   description: ...,

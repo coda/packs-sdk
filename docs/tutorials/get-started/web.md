@@ -66,7 +66,7 @@ Now that you have your Pack up and running let's make a change to how it works.
 
 1. Back in the Pack Studio, update your code to say "Howdy" instead of "Hello":
 
-    ```ts hl_lines="2"
+    ```ts hl_lines="2" no_lint
     execute: async function ([name]) {
         return "Howdy " + name + "!";
     },

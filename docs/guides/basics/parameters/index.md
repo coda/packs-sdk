@@ -29,7 +29,7 @@ coda.makeParameter({
   type: coda.ParameterType.String,
   name: "type",
   description: "The type of cookie.",
-})
+});
 ```
 
 See [`ParamDef`][ParamDef] for the full set of properties you can define for a parameter.
@@ -270,7 +270,7 @@ coda.makeParameter({
   name: "days",
   description: "How many days of data to fetch.",
   suggestedValue: 30,
-})
+});
 ```
 
 Currently suggested values are only used for required parameters, and setting them for optional parameters has no effect.
@@ -394,7 +394,7 @@ coda.makeParameter({
   name: "dateRange",
   description: "The date range over which data should be fetched.",
   suggestedValue: coda.PrecannedDateRange.Last30Days,
-})
+});
 ```
 
 
