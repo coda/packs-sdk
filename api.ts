@@ -112,7 +112,7 @@ export interface ParameterError {
 /**
  * An parameter validation result where the parameters are invalid.
  */
-interface InvalidParameterValidationResult {
+export interface InvalidParameterValidationResult {
   /**
    * The parameters that were invalid, alongside a message describing the error for the parameter.
    */
@@ -130,7 +130,7 @@ interface InvalidParameterValidationResult {
 /**
  * An parameter validation result where the parameters are valid.
  */
-interface ValidParameterValidationResult {
+export interface ValidParameterValidationResult {
   /**
    * Whether the parameters are valid.
    */

@@ -82,6 +82,7 @@ import * as coda from "@codahq/packs-sdk";
 - [IdentityDefinition](../interfaces/core.IdentityDefinition.md)
 - [ImageAttributionNode](../interfaces/core.ImageAttributionNode.md)
 - [ImageSchema](../interfaces/core.ImageSchema.md)
+- [InvalidParameterValidationResult](../interfaces/core.InvalidParameterValidationResult.md)
 - [InvocationLocation](../interfaces/core.InvocationLocation.md)
 - [LinkAttributionNode](../interfaces/core.LinkAttributionNode.md)
 - [LinkSchema](../interfaces/core.LinkSchema.md)
@@ -139,6 +140,7 @@ import * as coda from "@codahq/packs-sdk";
 - [TextAttributionNode](../interfaces/core.TextAttributionNode.md)
 - [UpdateSync](../interfaces/core.UpdateSync.md)
 - [UpdateSyncExecutionContext](../interfaces/core.UpdateSyncExecutionContext.md)
+- [ValidParameterValidationResult](../interfaces/core.ValidParameterValidationResult.md)
 - [WebBasicAuthentication](../interfaces/core.WebBasicAuthentication.md)
 
 ## Type Aliases
@@ -184,6 +186,7 @@ import * as coda from "@codahq/packs-sdk";
 - [ParamDefs](../types/core.ParamDefs.md)
 - [ParamValues](../types/core.ParamValues.md)
 - [ParameterOptions](../types/core.ParameterOptions.md)
+- [ParameterValidationResult](../types/core.ParameterValidationResult.md)
 - [PostSetup](../types/core.PostSetup.md)
 - [PostSetupDef](../types/core.PostSetupDef.md)
 - [PropertyIdentifier](../types/core.PropertyIdentifier.md)
