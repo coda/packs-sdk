@@ -166,13 +166,18 @@ export const manifest: PackDefinition = createFakePack({
             return {isValid: true};
           }
           // Also valid if the teacher is Personal and the context permissionSyncMode is Personal
-          if (teacher === 'Personal' && context.sync?.permissionSyncMode === PermissionSyncMode.Personal) {
+          if (
+            (teacher === 'Personal' && (
+              context.sync?.permissionSyncMode === PermissionSyncMode.Personal ||
+              context.sync?.permissionSyncMode === undefined
+            ))
+          ) {
             return {isValid: true};
           }
           return {
             isValid: false,
             message: 'Validate parameters fails if teacher does not match permissionSyncMode',
-            errors: [],
+            errors: [{parameterName: 'teacher', message: 'Teacher does not match permissionSyncMode'}],
           };
         },
         execute: async ([teacher, shouldPassthrough], context) => {
