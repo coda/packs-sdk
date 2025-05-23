@@ -588,7 +588,9 @@ export class AuthenticatingFetcher implements Fetcher {
       body,
       protocol,
       hostname,
-      path: pathname,
+      // signRequest ultimately calls encodeForAwsAuthHeader(), which expects an unencoded path, but
+      // URL().pathname is encoded, so we decode it here so we don't double-encode the path when signing.
+      path: decodeURIComponent(pathname),
       query,
     });
 
@@ -691,7 +693,7 @@ class AuthenticatingBlobStorage implements TemporaryBlobStorage {
   }
 
   async storeUrl(url: string, _opts?: {expiryMs?: number}, fetchOpts?: Partial<FetchRequest>): Promise<string> {
-    await this._fetcher.fetch({method: 'GET', url, isBinaryResponse: true, ...fetchOpts,});
+    await this._fetcher.fetch({method: 'GET', url, isBinaryResponse: true, ...fetchOpts});
     return `https://not-a-real-url.s3.amazonaws.com/tempBlob/${v4()}`;
   }
 
