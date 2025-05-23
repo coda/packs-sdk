@@ -2,6 +2,7 @@ version: 2.1
 orbs:
   aws-cli: circleci/aws-cli@3.2.0
   jq: circleci/jq@3.0.1
+  python: circleci/python@3.1.0
   utils: coda/utils@2.3.0
   base-tools:
     commands:
@@ -10,6 +11,12 @@ orbs:
           - run:
               name: Install basic tools
               command: sudo apt-get update && sudo apt-get install -y python3-pip && sudo python3 -m pip install pipenv
+          - run:
+              name: Install pyenv and required libraries
+              command: curl https://pyenv.run | bash && sudo apt-get install -y make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev curl git libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+          - run:
+              name: Install required python version
+              command: PYTHON_VERSION=$(grep "python_version" Pipfile | awk -F' = ' '{print $2}' | tr -d '"') && $HOME/.pyenv/bin/pyenv install $PYTHON_VERSION
           - run:
               name: Install image libraries
               command: make _bootstrap-doc-tools
