@@ -935,8 +935,9 @@ export type BasicIndexedProperty = PropertyIdentifier<string>;
  * you would add the property that represents the last modified date to filterableProperties.
  *
  * Filterable properties must be one of the following types:
- * {@link ValueHintType.SelectList}, {@link ValueType.Boolean}, {@link ValueHintType.DateTime} or
- * {@link ValueType.Number}. For filtering purposes, number values will be rounded down to the nearest integer.
+ * {@link ValueHintType.SelectList}, {@link ValueType.Boolean}, {@link ValueHintType.DateTime},
+ * {@link ValueHintType.Date}, or {@link ValueType.Number}.
+ * For filtering purposes, number values will be rounded down to the nearest integer.
  * @hidden
  */
 export type FilterableProperty = PropertyIdentifier<string>;

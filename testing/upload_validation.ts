@@ -1877,6 +1877,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 }
                 switch (filterablePropertySchema.codaType) {
                   case ValueHintType.DateTime:
+                  case ValueHintType.Date:
                   case ValueHintType.SelectList:
                     return true;
                   default:
