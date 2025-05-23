@@ -16,6 +16,7 @@ import type {PackMetadata} from '../compiled_types';
 import type {PackSyncTable} from '../compiled_types';
 import type {PackVersionDefinition} from '../types';
 import type {PackVersionMetadata} from '../compiled_types';
+import type {ParameterValidationResult} from '../api';
 import type {PostSetup} from '../types';
 import type {PostSetupMetadata} from '../compiled_types';
 import type {TypedPackFormula} from '../api';
@@ -60,7 +61,7 @@ export function compileFormulaMetadata(formula: TypedPackFormula): PackFormulaMe
   const {execute, validateParameters, ...rest} = formula;
   return {
     ...rest,
-    validateParameters: compileMetadataFormulaMetadata<ExecutionContext, boolean>(validateParameters),
+    validateParameters: compileMetadataFormulaMetadata<ExecutionContext, ParameterValidationResult>(validateParameters),
   };
 }
 
@@ -91,7 +92,8 @@ export function compileSyncTable(syncTable: GenericSyncTable): PackSyncTable {
     getter: {
       supportsUpdates: Boolean(executeUpdate),
       supportsGetPermissions: Boolean(executeGetPermissions),
-      validateParameters: compileMetadataFormulaMetadata<ExecutionContext, boolean>(validateParameters),
+      validateParameters:
+        compileMetadataFormulaMetadata<ExecutionContext, ParameterValidationResult>(validateParameters),
       ...getterRest,
     },
   };

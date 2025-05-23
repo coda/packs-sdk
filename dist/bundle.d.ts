@@ -402,8 +402,7 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
 	 * and validates the parameters. A formula may want to validate parameters differently
 	 * for permissionSyncMode 'PermissionAware' vs 'Personal' vs undefined (which represents a formula).
 	 *
-	 * @returns if the parameters are valid
-	 * @throws {@link ParameterValidationError} if the parameters are invalid.
+	 * @returns a {@link ParameterValidationResult}
 	 *
 	 * @example
 	 * ```
@@ -417,13 +416,19 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
 	 *     errors.push({message: `Product SKU not found.`, propertyName: "sku"});
 	 *   }
 	 *   if (errors.length > 0) {
-	 *     throw new ParameterValidationError("Invalid parameter values.", errors);
+	 *     return {
+	 *       isValid: false,
+	 *       message: "Invalid parameter values.",
+	 *       errors,
+	 *     };
 	 *   }
-	 * return true;
+	 *   return {
+	 *     isValid: true,
+	 *   };
 	 * },
 	 * ```
 	 */
-	validateParameters?: MetadataFormula<ExecutionContext, boolean>;
+	validateParameters?: MetadataFormula<ExecutionContext, ParameterValidationResult>;
 }
 /**
  * Enumeration of requirement states for whether a given formula or sync table requires
@@ -2952,18 +2957,35 @@ export interface ParameterError {
 	parameterName: string;
 }
 /**
- * An error that occurs when validating parameters.
+ * An parameter validation result where the parameters are invalid.
  */
-export declare class ParameterValidationError extends UserVisibleError {
+export interface InvalidParameterValidationResult {
 	/**
 	 * The parameters that were invalid, alongside a message describing the error for the parameter.
 	 */
-	readonly errors: ParameterError[];
+	errors: ParameterError[];
 	/**
-	 * Use to construct a parameter validation error.
+	 * Whether the parameters are valid.
 	 */
-	constructor(message: string, errors: ParameterError[]);
+	isValid: false;
+	/**
+	 * The message to display to the user. Each ParameterError will also have a message.
+	 */
+	message: string;
 }
+/**
+ * An parameter validation result where the parameters are valid.
+ */
+export interface ValidParameterValidationResult {
+	/**
+	 * Whether the parameters are valid.
+	 */
+	isValid: true;
+}
+/**
+ * A parameter validation result.
+ */
+export type ParameterValidationResult = InvalidParameterValidationResult | ValidParameterValidationResult;
 /**
  * The raw HTTP response from a {@link StatusCodeError}.
  */
@@ -3335,11 +3357,11 @@ export type TypedPackFormula = Formula | GenericSyncFormula;
 export type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
 /** @hidden */
 export type PackFormulaMetadata = Omit<TypedPackFormula, "execute" | "executeUpdate" | "executeGetPermissions" | "validateParameters"> & {
-	validateParameters?: MetadataFormulaMetadata<ExecutionContext, boolean>;
+	validateParameters?: MetadataFormulaMetadata<ExecutionContext, ParameterValidationResult>;
 };
 /** @hidden */
 export type ObjectPackFormulaMetadata = Omit<TypedObjectPackFormula, "execute" | "validateParameters"> & {
-	validateParameters?: MetadataFormulaMetadata<ExecutionContext, boolean>;
+	validateParameters?: MetadataFormulaMetadata<ExecutionContext, ParameterValidationResult>;
 };
 /**
  * The return value from the formula that implements a sync table. Each sync formula invocation
@@ -3577,7 +3599,7 @@ export interface SyncFormulaDef<K extends string, L extends string, ParamDefsT e
 	 * The JavaScript function that implements parameter validation.
 	 * For sync tables, the execution context will include a `sync` field.
 	 */
-	validateParameters?: MetadataFormula<SyncExecutionContext, boolean>;
+	validateParameters?: MetadataFormula<SyncExecutionContext, ParameterValidationResult>;
 }
 /**
  * The result of defining the formula that implements a sync table.
@@ -3706,7 +3728,7 @@ export type ObjectFormulaDef<ParamDefsT extends ParamDefs, SchemaT extends Schem
  * function may be a function definition or a metadata formula definition.
  */
 export type FormulaOptions<ParamDefsT extends ParamDefs, DefT extends CommonPackFormulaDef<ParamDefsT>> = Omit<DefT, "validateParameters"> & {
-	validateParameters?: MetadataFormulaDef<ExecutionContext, boolean>;
+	validateParameters?: MetadataFormulaDef<ExecutionContext, ParameterValidationResult>;
 };
 /**
  * A formula definition accepted by {@link makeFormula}.
@@ -4245,12 +4267,12 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
 	isSystem?: boolean | undefined;
 	extraOAuthScopes?: string[] | undefined;
 	allowedAuthenticationNames?: string[] | undefined;
-	validateParameters?: MetadataFormulaDef<ExecutionContext, boolean> | undefined;
+	validateParameters?: MetadataFormulaDef<ExecutionContext, ParameterValidationResult> | undefined;
 } & {
 	execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<SchemaType<ResultT>>;
 	resultType: Type.object;
 	schema: ResultT | undefined;
-	validateParameters: MetadataFormula<ExecutionContext, boolean> | undefined;
+	validateParameters: MetadataFormula<ExecutionContext, ParameterValidationResult> | undefined;
 };
 /**
  * Creates the definition of an "empty" formula, that is, a formula that uses a {@link RequestHandlerTemplate}
@@ -4289,11 +4311,11 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
 	isSystem?: boolean | undefined;
 	extraOAuthScopes?: string[] | undefined;
 	allowedAuthenticationNames?: string[] | undefined;
-	validateParameters?: MetadataFormulaDef<ExecutionContext, boolean> | undefined;
+	validateParameters?: MetadataFormulaDef<ExecutionContext, ParameterValidationResult> | undefined;
 } & {
 	execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<string>;
 	resultType: Type.string;
-	validateParameters: MetadataFormula<ExecutionContext, boolean> | undefined;
+	validateParameters: MetadataFormula<ExecutionContext, ParameterValidationResult> | undefined;
 };
 /**
  * @deprecated Use `number` in new code.
