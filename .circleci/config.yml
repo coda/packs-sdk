@@ -15,6 +15,9 @@ orbs:
               name: Install pyenv
               command: curl https://pyenv.run | bash
           - run:
+              name: Install required python version
+              command: PYTHON_VERSION=$(grep "python_version" Pipfile | awk -F' = ' '{print $2}' | tr -d '"') && pyenv install $PYTHON_VERSION
+          - run:
               name: Install image libraries
               command: make _bootstrap-doc-tools
 
