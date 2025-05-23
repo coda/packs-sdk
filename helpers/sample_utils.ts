@@ -4,6 +4,7 @@ import type {PackDefinition} from '../types';
 import type {PackFormatMetadata} from '../compiled_types';
 import type {PackMetadata} from '../compiled_types';
 import type {PackSyncTable} from '../compiled_types';
+import type {ParameterValidationResult} from '../api';
 import {compileMetadataFormulaMetadata} from './metadata';
 import {wrapMetadataFunction} from '../api';
 
@@ -26,10 +27,11 @@ export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata 
   } = def;
   const formulas = originalFormulas!.map(formula => {
     const {execute, validateParameters, ...formulaMetadata} = formula;
-    const validateParametersAsFormula = wrapMetadataFunction<ExecutionContext, boolean>(validateParameters);
     return {
       ...formulaMetadata,
-      validateParameters: compileMetadataFormulaMetadata<ExecutionContext, boolean>(validateParametersAsFormula),
+      validateParameters: compileMetadataFormulaMetadata<ExecutionContext, ParameterValidationResult>(
+        wrapMetadataFunction<ExecutionContext, ParameterValidationResult>(validateParameters)
+      ),
     };
   });
 

@@ -7,6 +7,7 @@ import type {HttpStatusCode} from './types';
 import type {MetadataContext} from './api';
 import type {MetadataFormula} from './api';
 import type {ObjectSchemaProperty} from './schema';
+import type {ParameterValidationResult} from './api';
 import type {Schema} from './schema';
 
 /**
@@ -554,8 +555,7 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
    * and validates the parameters. A formula may want to validate parameters differently
    * for permissionSyncMode 'PermissionAware' vs 'Personal' vs undefined (which represents a formula).
    *
-   * @returns if the parameters are valid
-   * @throws {@link ParameterValidationError} if the parameters are invalid.
+   * @returns a {@link ParameterValidationResult}
    *
    * @example
    * ```
@@ -569,13 +569,19 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
    *     errors.push({message: `Product SKU not found.`, propertyName: "sku"});
    *   }
    *   if (errors.length > 0) {
-   *     throw new ParameterValidationError("Invalid parameter values.", errors);
+   *     return {
+   *       isValid: false,
+   *       message: "Invalid parameter values.",
+   *       errors,
+   *     };
    *   }
-   * return true;
+   *   return {
+   *     isValid: true,
+   *   };
    * },
    * ```
    */
-  validateParameters?: MetadataFormula<ExecutionContext, boolean>;
+  validateParameters?: MetadataFormula<ExecutionContext, ParameterValidationResult>;
 }
 
 /**

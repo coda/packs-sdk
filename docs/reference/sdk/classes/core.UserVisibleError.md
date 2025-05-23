@@ -31,8 +31,6 @@ if (!url.startsWith("https://")) {
 
   ↳ **`UserVisibleError`**
 
-  ↳↳ [`ParameterValidationError`](core.ParameterValidationError.md)
-
 ## Constructors
 
 ### constructor

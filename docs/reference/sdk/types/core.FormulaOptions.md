@@ -8,7 +8,7 @@ search:
 
 [core](../modules/core.md).FormulaOptions
 
-Ƭ **FormulaOptions**<`ParamDefsT`, `DefT`\>: `Omit`<`DefT`, ``"validateParameters"``\> & { `validateParameters?`: [`MetadataFormulaDef`](core.MetadataFormulaDef.md)<[`ExecutionContext`](../interfaces/core.ExecutionContext.md), `boolean`\>  }
+Ƭ **FormulaOptions**<`ParamDefsT`, `DefT`\>: `Omit`<`DefT`, ``"validateParameters"``\> & { `validateParameters?`: [`MetadataFormulaDef`](core.MetadataFormulaDef.md)<[`ExecutionContext`](../interfaces/core.ExecutionContext.md), `ParameterValidationResult`\>  }
 
 A wrapper type that allows you to specify a formula definition where the `validateParameters`
 function may be a function definition or a metadata formula definition.

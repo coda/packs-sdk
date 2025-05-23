@@ -810,7 +810,7 @@ describe('Execution', () => {
           assert.include(result.message, 'Validate parameters fails due to non-sync formula');
         });
 
-        it('validateParameters on formula returns ParameterValidationError', async () => {
+        it('validateParameters on formula returns InvalidParameterValidationResult', async () => {
           await executeFormulaOrSyncFromCLI({
             vm,
             formulaName: 'ValidateParametersFailsIfParamIsNotPositive:validateParameters',

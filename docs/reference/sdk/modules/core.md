@@ -47,7 +47,6 @@ import * as coda from "@codahq/packs-sdk";
 
 - [MissingScopesError](../classes/core.MissingScopesError.md)
 - [PackDefinitionBuilder](../classes/core.PackDefinitionBuilder.md)
-- [ParameterValidationError](../classes/core.ParameterValidationError.md)
 - [StatusCodeError](../classes/core.StatusCodeError.md)
 - [UserVisibleError](../classes/core.UserVisibleError.md)
 

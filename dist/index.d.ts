@@ -121,7 +121,6 @@ export { Type } from './api_types';
 export type { TypedPackFormula } from './api';
 export type { Formula } from './api';
 export { UserVisibleError } from './api';
-export { ParameterValidationError } from './api';
 export { ParameterError } from './api';
 export { LegacyDefaultMetadataReturnType } from './api';
 export { makeMetadataFormula } from './api';

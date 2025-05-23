@@ -7384,7 +7384,9 @@ module.exports = (() => {
             }
             break;
           case "ValidateParameters" /* ValidateParameters */: {
-            const validateParametersFormula = wrapMetadataFunction(findValidateParametersFormula(manifest, formulaSpec));
+            const validateParametersFormula = wrapMetadataFunction(
+              findValidateParametersFormula(manifest, formulaSpec)
+            );
             if (validateParametersFormula) {
               return validateParametersFormula.execute(params, executionContext);
             }

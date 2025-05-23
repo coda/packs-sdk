@@ -184,7 +184,7 @@ ___
 
 ### validateParameters
 
-• `Optional` **validateParameters**: [`MetadataFormula`](../types/core.MetadataFormula.md)<[`SyncExecutionContext`](core.SyncExecutionContext.md)<[`Continuation`](core.Continuation.md), [`Continuation`](core.Continuation.md), [`Continuation`](core.Continuation.md)\>, `boolean`\>
+• `Optional` **validateParameters**: [`MetadataFormula`](../types/core.MetadataFormula.md)<[`SyncExecutionContext`](core.SyncExecutionContext.md)<[`Continuation`](core.Continuation.md), [`Continuation`](core.Continuation.md), [`Continuation`](core.Continuation.md)\>, `ParameterValidationResult`\>
 
 The JavaScript function that implements parameter validation.
 For sync tables, the execution context will include a `sync` field.
