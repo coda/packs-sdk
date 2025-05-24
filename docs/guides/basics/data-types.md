@@ -415,7 +415,7 @@ The [`Person`][Person] value hint can be used to @-reference a Coda user account
 const MyPersonSchema = coda.makeObjectSchema({
   codaType: coda.ValueHintType.Person,
   properties: {
-    name: {type: coda.ValueType.String},
+    name: { type: coda.ValueType.String },
     email: { type: coda.ValueType.String, required: true },
   },
   displayProperty: "name",

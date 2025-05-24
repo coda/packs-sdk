@@ -239,8 +239,8 @@ This can be accomplished using a `Custom` authentication configuration like:
 pack.setSystemAuthentication({
   type: coda.AuthenticationType.Custom,
   params: [
-    {name: "key", description: "The API key"},
-    {name: "token", description: "The account token"},
+    { name: "key", description: "The API key" },
+    { name: "token", description: "The account token" },
   ],
 });
 ```

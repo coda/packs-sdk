@@ -78,7 +78,7 @@ pack.addSyncTable({
     parameters: [],
     execute: async function ([], context) {
       // ...
-    }
+    },
   },
 });
 ```
@@ -100,8 +100,8 @@ pack.addSyncTable({
       // Adjust the items to fit the schema if required.
       return {
         result: items,
-      }
-    }
+      };
+    },
   },
 });
 ```
@@ -195,7 +195,7 @@ pack.addSyncTable({
 
       // Sync some items...
 
-      let nextContinuation = undefined;
+      let nextContinuation;
       // Determine if there are more items left to sync...
       if (moreItemsLeft) {
         nextContinuation = {
@@ -205,8 +205,8 @@ pack.addSyncTable({
       return {
         result: items,
         continuation: nextContinuation,
-      }
-    }
+      };
+    },
   },
 });
 ```

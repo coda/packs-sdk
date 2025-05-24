@@ -37,7 +37,7 @@ The fetcher is made available in the `execute` function of a formula through the
 ```ts
 pack.addFormula({
   // ...
-  execute: async ([foo, bar], context) => {
+  execute: async function(args, context) {
     let fetcher = context.fetcher;
     // ...
   },
@@ -49,11 +49,11 @@ In metadata formulas, such as those that determine autocomplete choices or conne
 ```ts
 coda.makeParameter({
   // ...
-  autocomplete: async (context) => {
+  autocomplete: async function(context) {
     let fetcher = context.fetcher;
     // ...
   },
-}),
+});
 ```
 
 
@@ -73,7 +73,7 @@ By default the fetcher runs asynchronously, meaning that the code will continue 
 ```ts
 pack.addFormula({
   // ...
-  execute: async ([], context) => {
+  execute: async function(args, context) {
     let response = await context.fetcher.fetch({
       method: "GET",
       url: "https://www.example.com",
@@ -94,7 +94,7 @@ If you want to make multiple requests in parallel you can instead kick off all o
 ```ts
 pack.addFormula({
   // ...
-  execute: async ([], context) => {
+  execute: async function(args, context) {
     let urls = [
       // The URLs to fetch in parallel.
     ];
@@ -277,7 +277,7 @@ let response = await context.fetcher.fetch({
   url: "https://www.example.com", // Returns an HTML page.
 });
 let html = response.body;
-let bodyStart = html.indexOf('<body>');
+let bodyStart = html.indexOf("<body>");
 ```
 
 
@@ -292,7 +292,7 @@ let response = await context.fetcher.fetch({
 });
 let parsed = response.body;
 // How you access data in the parsed JSON object depends on the contents.
-let rate = parsed.rates["USD"];
+let rate = parsed.rates.USD;
 ```
 
 
@@ -351,7 +351,7 @@ let parsed = response.body;
 // Log the parsed XML, for reference when developing.
 console.log(parsed);
 
-let usd = parsed.data.find(item => item.code[0] === "USD")
+let usd = parsed.data.find(item => item.code[0] === "USD");
 let rate = usd.rate[0];
 ```
 
@@ -428,7 +428,7 @@ To disable this behavior for a specific request within a formula, set the `fetch
 ```ts
 let response = await context.fetcher.fetch({
   method: "GET",
-  url: `https://www.example.com`,
+  url: "https://www.example.com",
   disableAuthentication: true, // No auth will be applied to this request.
 });
 ```

@@ -59,7 +59,7 @@ When defining a schema for the `Object` value type, use the more specific [`make
 ```ts
 let MySchema = coda.makeObjectSchema({
   properties: {
-    name: {type: coda.ValueType.String},
+    name: { type: coda.ValueType.String },
   },
   displayProperty: "name",
 });
@@ -327,7 +327,7 @@ Consider an API that returns locations with a separate `city` and `state` field.
 
 ```ts
 let LocationSchema = coda.makeObjectSchema({
-properties: {
+  properties: {
     city: { type: coda.ValueType.String },
     state: { type: coda.ValueType.String },
     // Add an additional property to use as the display value.
@@ -349,7 +349,7 @@ pack.addFormula({
       state: location.state,
       // Populate the display value using data from the API.
       display: location.city + ", " + location.state,
-    },
+    };
   },
 });
 ```
@@ -444,7 +444,7 @@ pack.addFormula({
   description: "Update the movie details.",
   resultType: coda.ValueType.Object,
   schema: coda.withIdentity(MovieSchema, "Movie"),
-  //...
+  // ...
 });
 ```
 
@@ -542,7 +542,7 @@ for (let customField of customFeilds) {
     type: coda.ValueType.String,
     // Use the custom field's ID as the column ID.
     fixedId: customField.id,
-  }
+  };
 }
 ```
 
@@ -617,7 +617,10 @@ let MovieSchema = coda.makeObjectSchema({
   subtitleProperties: [
     "director",
     // Fully customize the label for the year property.
-    { property: "year", label: `Released in ${coda.PropertyLabelValueTemplate}` },
+    { 
+      property: "year", 
+      label: `Released in ${coda.PropertyLabelValueTemplate}`,
+    },
     // Only show the value of the rating property.
     { property: "rating", label: "" },
   ],

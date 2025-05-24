@@ -114,7 +114,10 @@ try {
   });
   // ...
 } catch (error) {
-  if (error.statusCode == 401) {
+  if (
+      coda.StatusCodeError.isStatusCodeError(error) 
+      && error.statusCode === 401
+    ) {
     // Perhaps the token has expired, re-throw the error to attempt a refresh.
     throw error;
   }
@@ -139,7 +142,11 @@ try {
   });
 } catch (error) {
   // Determine if the error is due to missing scopes.
-  if (error.statusCode == 400 && error.body?.message.includes("permission")) {
+  if (
+    coda.StatusCodeError.isStatusCodeError(error)
+    && error.statusCode === 400 
+    && error.body?.message.includes("permission")
+  ) {
     throw new coda.MissingScopesError();
   }
   // Else handle or throw the error as normal.

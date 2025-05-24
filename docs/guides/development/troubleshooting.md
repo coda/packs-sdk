@@ -12,7 +12,7 @@ You can log messages using the standard JavaScript logging method, `console.log(
 ```ts
 let response = context.fetcher.fetch({
   method: "GET",
-  url: "https://api.example.com/items"
+  url: "https://api.example.com/items",
 });
 let items = response.body.items;
 console.log("Retrieved %s items.", items.length);
