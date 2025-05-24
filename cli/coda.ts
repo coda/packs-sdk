@@ -72,6 +72,7 @@ if (require.main === module) {
           default: false,
           desc: 'Allow executing Packs that use multiple network domains. You must get approval from Coda before you can upload these Packs.',
         },
+        codaApiEndpoint: CodaApiEndpointArg,
       },
     })
     .command({
