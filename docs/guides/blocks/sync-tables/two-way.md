@@ -293,7 +293,7 @@ pack.addSyncTable({
       return {
         result: results,
       };
-    }
+    },
   },
 });
 ```

@@ -86,9 +86,14 @@ bootstrap:
 # Lint / tests
 
 .PHONY: lint
-lint:
+lint: lint-code lint-md lint-changelog
+
+.PHONY: lint-code
+lint-code:
 	find . -name "*.ts" | grep -v /dist/ | grep -v /node_modules/ | grep -v "\.d\.ts" | xargs ${ROOTDIR}/node_modules/.bin/eslint
 
+.PHONY: lint-md
+lint-md:
 	# Ensure markdown has frontmatter
 	MISSING="$(shell awk '/^[^-]/{print FILENAME}; {nextfile}' ./docs/**/*.md)"; \
 	if [[ "$$MISSING" != "" ]]; then \
@@ -97,11 +102,13 @@ lint:
 	fi
 
 	# Markdown lint.
-	npx remark docs --quiet --frail --ignore-pattern 'docs/reference/*'
+	npx remark docs --quiet --frail --ignore-pattern 'docs/reference/*' --ignore-pattern 'docs/.abbreviations.md'
 
 	# Spellcheck docs lint.
 	npx cspell lint '{docs,documentation}/**/*.md' 'CHANGELOG.md' --no-progress
 
+.PHONY: lint-changelog
+lint-changelog:
 	# Changelog lint.
 	npx kacl lint
 
