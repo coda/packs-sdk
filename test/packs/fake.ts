@@ -1,6 +1,5 @@
 import type {PackDefinition} from '../../types';
 import {ParameterType} from '../../api_types';
-import {ParameterValidationError} from '../../api';
 import type {Permission} from '../../schema';
 import {PermissionSyncMode} from '../../api_types';
 import {PermissionType} from '../../schema';
@@ -125,9 +124,13 @@ export const manifest: PackDefinition = createFakePack({
       execute: async ([], _context) => 1,
       validateParameters: async context => {
         if (context.sync?.permissionSyncMode) {
-          return true;
+          return {isValid: true};
         }
-        throw new ParameterValidationError('Validate parameters fails due to non-sync formula', []);
+        return {
+          isValid: false,
+          message: 'Validate parameters fails due to non-sync formula',
+          errors: [],
+        };
       },
     }),
     makeNumericFormula({
@@ -138,14 +141,13 @@ export const manifest: PackDefinition = createFakePack({
       validateParameters: async (_context, _search, params) => {
         const {value} = ensureExists(params);
         if (value > 0) {
-          return true;
+          return {isValid: true};
         }
-        throw new ParameterValidationError('Validate parameters fails if value is not positive', [
-          {
-            parameterName: 'value',
-            message: `Value must be positive, got ${JSON.stringify(value)}`,
-          },
-        ]);
+        return {
+          isValid: false,
+          message: 'Validate parameters fails if value is not positive',
+          errors: [{parameterName: 'value', message: `Value must be positive, got ${JSON.stringify(value)}`}],
+        };
       },
     }),
   ],
@@ -161,13 +163,22 @@ export const manifest: PackDefinition = createFakePack({
           const {teacher} = ensureExists(params);
           // This will be valid if the teacher is Permission and the context permissionSyncMode is PermissionAware
           if (teacher === 'Permission' && context.sync?.permissionSyncMode === PermissionSyncMode.PermissionAware) {
-            return true;
+            return {isValid: true};
           }
           // Also valid if the teacher is Personal and the context permissionSyncMode is Personal
-          if (teacher === 'Personal' && context.sync?.permissionSyncMode === PermissionSyncMode.Personal) {
-            return true;
+          if (
+            (teacher === 'Personal' && (
+              context.sync?.permissionSyncMode === PermissionSyncMode.Personal ||
+              context.sync?.permissionSyncMode === undefined
+            ))
+          ) {
+            return {isValid: true};
           }
-          throw new ParameterValidationError('Validate parameters fails if teacher does not match permissionSyncMode', []);
+          return {
+            isValid: false,
+            message: 'Validate parameters fails if teacher does not match permissionSyncMode',
+            errors: [{parameterName: 'teacher', message: 'Teacher does not match permissionSyncMode'}],
+          };
         },
         execute: async ([teacher, shouldPassthrough], context) => {
           const {continuation, previousCompletion} = context.sync;

@@ -172,17 +172,13 @@ ___
 
 ### validateParameters
 
-• `Optional` **validateParameters**: [`MetadataFormula`](../types/core.MetadataFormula.md)<[`ExecutionContext`](core.ExecutionContext.md), `boolean`\>
+• `Optional` **validateParameters**: [`MetadataFormula`](../types/core.MetadataFormula.md)<[`ExecutionContext`](core.ExecutionContext.md), [`ParameterValidationResult`](../types/core.ParameterValidationResult.md)\>
 
 The JavaScript function that implements parameter validation.
 
 This function takes in parameters and a context containing a [PermissionSyncMode](../enums/core.PermissionSyncMode.md)
 and validates the parameters. A formula may want to validate parameters differently
 for permissionSyncMode 'PermissionAware' vs 'Personal' vs undefined (which represents a formula).
-
-**`Throws`**
-
-[ParameterValidationError](../classes/core.ParameterValidationError.md) if the parameters are invalid.
 
 **`Example`**
 
@@ -197,9 +193,15 @@ validateParameters: async function (context, _, params) {
     errors.push({message: `Product SKU not found.`, propertyName: "sku"});
   }
   if (errors.length > 0) {
-    throw new ParameterValidationError("Invalid parameter values.", errors);
+    return {
+      isValid: false,
+      message: "Invalid parameter values.",
+      errors,
+    };
   }
-return true;
+  return {
+    isValid: true,
+  };
 },
 ```
 

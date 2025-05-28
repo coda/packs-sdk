@@ -788,11 +788,9 @@ describe('Execution', () => {
             bundlePath,
             contextOptions: {useRealFetcher: false},
           });
-          const result = mockPrintFull.args;
-          assert.deepEqual(result, []);
+          const result = mockPrintFull.args[0][0];
+          assert.deepEqual(result, {isValid: true});
         });
-
-        // TODO(gary): Add a test for validateParameters passed through permission mode correctly
 
         it('validateParameters on formula does not include sync in context', async () => {
           await executeFormulaOrSyncFromCLI({
@@ -805,12 +803,15 @@ describe('Execution', () => {
             bundlePath,
             contextOptions: {useRealFetcher: false},
           });
-          const result = mockPrint.args[0][0];
-          assert.instanceOf(result, Error);
-          assert.include(result.message, 'Validate parameters fails due to non-sync formula');
+          const result = mockPrintFull.args[0][0];
+          assert.deepEqual(result, {
+            isValid: false,
+            message: 'Validate parameters fails due to non-sync formula',
+            errors: [],
+          });
         });
 
-        it('validateParameters on formula returns ParameterValidationError', async () => {
+        it('validateParameters on formula returns InvalidParameterValidationResult', async () => {
           await executeFormulaOrSyncFromCLI({
             vm,
             formulaName: 'ValidateParametersFailsIfParamIsNotPositive:validateParameters',
@@ -821,9 +822,17 @@ describe('Execution', () => {
             bundlePath,
             contextOptions: {useRealFetcher: false},
           });
-          const result = mockPrint.args[0][0];
-          assert.instanceOf(result, Error);
-          assert.include(result.message, 'Validate parameters fails if value is not positive');
+          const result = mockPrintFull.args[0][0];
+          assert.deepEqual(result, {
+            isValid: false,
+            message: 'Validate parameters fails if value is not positive',
+            errors: [
+              {
+                message: 'Value must be positive, got 0',
+                parameterName: 'value',
+              },
+            ],
+          });
         });
 
         it('validateParameters on formula can return valid result', async () => {
@@ -837,8 +846,8 @@ describe('Execution', () => {
             bundlePath,
             contextOptions: {useRealFetcher: false},
           });
-          const result = mockPrint.args;
-          assert.deepEqual(result, []);
+          const result = mockPrintFull.args[0][0];
+          assert.deepEqual(result, {isValid: true});
         });
 
         it('autocomplete', async () => {

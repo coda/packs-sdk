@@ -19,6 +19,7 @@ import type {PackFunctionResponse} from '../types';
 import type {ParamDefs} from '../../api_types';
 import type {ParamValues} from '../../api_types';
 import type {ParameterAutocompleteMetadataFormulaSpecification} from '../types';
+import type {ParameterValidationResult} from '../../api';
 import type {ParamsList} from '../../api_types';
 import {PostSetupType} from '../../types';
 import type {PropertyOptionsAnnotatedResult} from '../../api';
@@ -311,7 +312,9 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
           break;
         case MetadataFormulaType.ValidateParameters: {
           const validateParametersFormula =
-            wrapMetadataFunction<ExecutionContext, boolean>(findValidateParametersFormula(manifest, formulaSpec));
+            wrapMetadataFunction<ExecutionContext, ParameterValidationResult>(
+              findValidateParametersFormula(manifest, formulaSpec),
+            );
           if (validateParametersFormula) {
             return validateParametersFormula.execute(params as any, executionContext);
           }

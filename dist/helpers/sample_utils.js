@@ -11,10 +11,9 @@ function fakeDefinitionToMetadata(def) {
     const { formulas: originalFormulas, defaultAuthentication: originalDefaultAuthentication, formats: originalFormats, syncTables: originalSyncTables, ...packMetadata } = def;
     const formulas = originalFormulas.map(formula => {
         const { execute, validateParameters, ...formulaMetadata } = formula;
-        const validateParametersAsFormula = (0, api_1.wrapMetadataFunction)(validateParameters);
         return {
             ...formulaMetadata,
-            validateParameters: (0, metadata_1.compileMetadataFormulaMetadata)(validateParametersAsFormula),
+            validateParameters: (0, metadata_1.compileMetadataFormulaMetadata)((0, api_1.wrapMetadataFunction)(validateParameters)),
         };
     });
     const formats = [];
