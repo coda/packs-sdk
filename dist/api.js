@@ -1,6 +1,47 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.maybeRewriteConnectionForFormula = exports.maybeRewriteConnectionForNamedPropertyOptions = exports.makeEmptyFormula = exports.makeTranslateObjectFormula = exports.makeDynamicSyncTable = exports.makeSyncTableLegacy = exports.makeSyncTable = exports.makeObjectFormula = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.simpleAutocomplete = exports.makePropertyOptionsFormula = exports.makeMetadataFormula = exports.normalizePropertyOptionsResults = exports.makeFormula = exports.makeStringFormula = exports.makeNumericFormula = exports.UpdateOutcome = exports.isSyncPackFormula = exports.isStringPackFormula = exports.isObjectPackFormula = exports.check = exports.makeUserVisibleError = exports.makeFileArrayParameter = exports.makeFileParameter = exports.makeImageArrayParameter = exports.makeImageParameter = exports.makeHtmlArrayParameter = exports.makeHtmlParameter = exports.makeDateArrayParameter = exports.makeDateParameter = exports.makeBooleanArrayParameter = exports.makeBooleanParameter = exports.makeNumericArrayParameter = exports.makeNumericParameter = exports.makeStringArrayParameter = exports.makeStringParameter = exports.makeParameter = exports.wrapGetSchema = exports.wrapMetadataFunction = exports.isDynamicSyncTable = exports.isUserVisibleError = exports.ResponseSizeTooLargeError = exports.GoogleDwdError = exports.MissingScopesError = exports.StatusCodeError = exports.UserVisibleError = void 0;
+exports.UpdateOutcome = exports.ResponseSizeTooLargeError = exports.GoogleDwdError = exports.MissingScopesError = exports.StatusCodeError = exports.UserVisibleError = void 0;
+exports.isUserVisibleError = isUserVisibleError;
+exports.isDynamicSyncTable = isDynamicSyncTable;
+exports.wrapMetadataFunction = wrapMetadataFunction;
+exports.wrapGetSchema = wrapGetSchema;
+exports.makeParameter = makeParameter;
+exports.makeStringParameter = makeStringParameter;
+exports.makeStringArrayParameter = makeStringArrayParameter;
+exports.makeNumericParameter = makeNumericParameter;
+exports.makeNumericArrayParameter = makeNumericArrayParameter;
+exports.makeBooleanParameter = makeBooleanParameter;
+exports.makeBooleanArrayParameter = makeBooleanArrayParameter;
+exports.makeDateParameter = makeDateParameter;
+exports.makeDateArrayParameter = makeDateArrayParameter;
+exports.makeHtmlParameter = makeHtmlParameter;
+exports.makeHtmlArrayParameter = makeHtmlArrayParameter;
+exports.makeImageParameter = makeImageParameter;
+exports.makeImageArrayParameter = makeImageArrayParameter;
+exports.makeFileParameter = makeFileParameter;
+exports.makeFileArrayParameter = makeFileArrayParameter;
+exports.makeUserVisibleError = makeUserVisibleError;
+exports.check = check;
+exports.isObjectPackFormula = isObjectPackFormula;
+exports.isStringPackFormula = isStringPackFormula;
+exports.isSyncPackFormula = isSyncPackFormula;
+exports.makeNumericFormula = makeNumericFormula;
+exports.makeStringFormula = makeStringFormula;
+exports.makeFormula = makeFormula;
+exports.normalizePropertyOptionsResults = normalizePropertyOptionsResults;
+exports.makeMetadataFormula = makeMetadataFormula;
+exports.makePropertyOptionsFormula = makePropertyOptionsFormula;
+exports.simpleAutocomplete = simpleAutocomplete;
+exports.autocompleteSearchObjects = autocompleteSearchObjects;
+exports.makeSimpleAutocompleteMetadataFormula = makeSimpleAutocompleteMetadataFormula;
+exports.makeObjectFormula = makeObjectFormula;
+exports.makeSyncTable = makeSyncTable;
+exports.makeSyncTableLegacy = makeSyncTableLegacy;
+exports.makeDynamicSyncTable = makeDynamicSyncTable;
+exports.makeTranslateObjectFormula = makeTranslateObjectFormula;
+exports.makeEmptyFormula = makeEmptyFormula;
+exports.maybeRewriteConnectionForNamedPropertyOptions = maybeRewriteConnectionForNamedPropertyOptions;
+exports.maybeRewriteConnectionForFormula = maybeRewriteConnectionForFormula;
 const api_types_1 = require("./api_types");
 const api_types_2 = require("./api_types");
 const api_types_3 = require("./api_types");
@@ -214,15 +255,12 @@ exports.ResponseSizeTooLargeError = ResponseSizeTooLargeError;
 function isUserVisibleError(error) {
     return 'isUserVisible' in error && error.isUserVisible;
 }
-exports.isUserVisibleError = isUserVisibleError;
 function isDynamicSyncTable(syncTable) {
     return 'isDynamic' in syncTable;
 }
-exports.isDynamicSyncTable = isDynamicSyncTable;
 function wrapMetadataFunction(fnOrFormula) {
     return typeof fnOrFormula === 'function' ? makeMetadataFormula(fnOrFormula) : fnOrFormula;
 }
-exports.wrapMetadataFunction = wrapMetadataFunction;
 function transformToArraySchema(schema) {
     if ((schema === null || schema === void 0 ? void 0 : schema.type) === schema_2.ValueType.Array) {
         return schema;
@@ -251,7 +289,6 @@ function wrapGetSchema(getSchema) {
         },
     };
 }
-exports.wrapGetSchema = wrapGetSchema;
 /**
  * Create a definition for a parameter for a formula or sync.
  *
@@ -302,101 +339,81 @@ function makeParameter(paramDefinition) {
         crawlStrategy,
     });
 }
-exports.makeParameter = makeParameter;
 /** @deprecated */
 function makeStringParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_6.Type.string });
 }
-exports.makeStringParameter = makeStringParameter;
 /** @deprecated */
 function makeStringArrayParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_13.stringArray });
 }
-exports.makeStringArrayParameter = makeStringArrayParameter;
 /** @deprecated */
 function makeNumericParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_6.Type.number });
 }
-exports.makeNumericParameter = makeNumericParameter;
 /** @deprecated */
 function makeNumericArrayParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_12.numberArray });
 }
-exports.makeNumericArrayParameter = makeNumericArrayParameter;
 /** @deprecated */
 function makeBooleanParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_6.Type.boolean });
 }
-exports.makeBooleanParameter = makeBooleanParameter;
 /** @deprecated */
 function makeBooleanArrayParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_7.booleanArray });
 }
-exports.makeBooleanArrayParameter = makeBooleanArrayParameter;
 /** @deprecated */
 function makeDateParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_6.Type.date });
 }
-exports.makeDateParameter = makeDateParameter;
 /** @deprecated */
 function makeDateArrayParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_8.dateArray });
 }
-exports.makeDateArrayParameter = makeDateArrayParameter;
 /** @deprecated */
 function makeHtmlParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_6.Type.html });
 }
-exports.makeHtmlParameter = makeHtmlParameter;
 /** @deprecated */
 function makeHtmlArrayParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_10.htmlArray });
 }
-exports.makeHtmlArrayParameter = makeHtmlArrayParameter;
 /** @deprecated */
 function makeImageParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_6.Type.image });
 }
-exports.makeImageParameter = makeImageParameter;
 /** @deprecated */
 function makeImageArrayParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_11.imageArray });
 }
-exports.makeImageArrayParameter = makeImageArrayParameter;
 /** @deprecated */
 function makeFileParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_6.Type.file });
 }
-exports.makeFileParameter = makeFileParameter;
 /** @deprecated */
 function makeFileArrayParameter(name, description, args = {}) {
     return Object.freeze({ ...args, name, description, type: api_types_9.fileArray });
 }
-exports.makeFileArrayParameter = makeFileArrayParameter;
 /** @deprecated */
 function makeUserVisibleError(msg) {
     return new UserVisibleError(msg);
 }
-exports.makeUserVisibleError = makeUserVisibleError;
 /** @deprecated */
 function check(condition, msg) {
     if (!condition) {
         throw makeUserVisibleError(msg);
     }
 }
-exports.check = check;
 function isObjectPackFormula(fn) {
     return fn.resultType === api_types_6.Type.object;
 }
-exports.isObjectPackFormula = isObjectPackFormula;
 function isStringPackFormula(fn) {
     return fn.resultType === api_types_6.Type.string;
 }
-exports.isStringPackFormula = isStringPackFormula;
 function isSyncPackFormula(fn) {
     return Boolean(fn.isSyncFormula);
 }
-exports.isSyncPackFormula = isSyncPackFormula;
 /**
  * Possible outcomes for a single sync update.
  * @hidden
@@ -420,7 +437,6 @@ function makeNumericFormula(definition) {
         validateParameters: wrapMetadataFunction(definition.validateParameters),
     });
 }
-exports.makeNumericFormula = makeNumericFormula;
 /**
  * @deprecated
  *
@@ -437,7 +453,6 @@ function makeStringFormula(definition) {
         ...(response && { schema: response.schema }),
     });
 }
-exports.makeStringFormula = makeStringFormula;
 /**
  * Creates a formula definition.
  *
@@ -583,7 +598,6 @@ function makeFormula(fullDefinition) {
     }
     return maybeRewriteConnectionForFormula(formula, fullDefinition.connectionRequirement);
 }
-exports.makeFormula = makeFormula;
 function normalizePropertyOptionsResultsArray(results) {
     return results.map(r => {
         if (typeof r === 'object' && Object.keys(r).length === 2 && 'display' in r && 'value' in r) {
@@ -604,7 +618,6 @@ function normalizePropertyOptionsResults(results) {
         ...otherProps,
     };
 }
-exports.normalizePropertyOptionsResults = normalizePropertyOptionsResults;
 /**
  * A wrapper that generates a formula definition from the function that implements a metadata formula.
  * It is uncommon to ever need to call this directly, normally you would just define the JavaScript
@@ -658,7 +671,6 @@ function makeMetadataFormula(execute, options) {
         // TODO(gary): remove once we stop using makeObjectFormula above
     });
 }
-exports.makeMetadataFormula = makeMetadataFormula;
 /**
  * Builds a formula to store in {@link SyncTablePropertyOptions}.
  * @hidden
@@ -686,7 +698,6 @@ function makePropertyOptionsFormula({ execute, schema, name, }) {
     const formula = makeFormula(formulaDefn);
     return formula;
 }
-exports.makePropertyOptionsFormula = makePropertyOptionsFormula;
 /**
  * Utility to search over an array of autocomplete results and return only those that
  * match the given search string.
@@ -733,7 +744,6 @@ function simpleAutocomplete(search, options) {
     }
     return Promise.resolve(metadataResults);
 }
-exports.simpleAutocomplete = simpleAutocomplete;
 /**
  * A helper to search over a list of objects representing candidate search results,
  * filtering to only those that match a search string, and converting the matching
@@ -781,7 +791,6 @@ async function autocompleteSearchObjects(search, objs, displayKey, valueKey) {
     }
     return metadataResults;
 }
-exports.autocompleteSearchObjects = autocompleteSearchObjects;
 /**
  * @deprecated If you have a hardcoded array of autocomplete options, simply include that array
  * as the value of the `autocomplete` property in your parameter definition. There is no longer
@@ -794,7 +803,6 @@ function makeSimpleAutocompleteMetadataFormula(options) {
         connectionRequirement: api_types_1.ConnectionRequirement.Optional,
     });
 }
-exports.makeSimpleAutocompleteMetadataFormula = makeSimpleAutocompleteMetadataFormula;
 function isResponseHandlerTemplate(obj) {
     return obj && obj.schema;
 }
@@ -844,7 +852,6 @@ function makeObjectFormula({ response, ...definition }) {
         validateParameters: wrapMetadataFunction(definition.validateParameters),
     });
 }
-exports.makeObjectFormula = makeObjectFormula;
 /**
  * Wrapper to produce a sync table definition. All (non-dynamic) sync tables should be created
  * using this wrapper rather than declaring a sync table definition object directly.
@@ -993,7 +1000,6 @@ function makeSyncTable({ name, displayName, description, identityName, schema: i
         role,
     };
 }
-exports.makeSyncTable = makeSyncTable;
 /** @deprecated */
 function makeSyncTableLegacy(name, schema, formula, connectionRequirement, dynamicOptions = {}, displayName) {
     var _a;
@@ -1013,7 +1019,6 @@ function makeSyncTableLegacy(name, schema, formula, connectionRequirement, dynam
         dynamicOptions,
     });
 }
-exports.makeSyncTableLegacy = makeSyncTableLegacy;
 /**
  * Creates a dynamic sync table definition.
  *
@@ -1069,7 +1074,6 @@ function makeDynamicSyncTable({ name, displayName, description, getName: getName
         getName: maybeRewriteConnectionForFormula(getName, connectionRequirement),
     };
 }
-exports.makeDynamicSyncTable = makeDynamicSyncTable;
 /**
  * Helper to generate a formula that fetches a list of entities from a given URL and returns them.
  *
@@ -1123,7 +1127,6 @@ function makeTranslateObjectFormula({ response, ...definition }) {
         validateParameters: wrapMetadataFunction(definition.validateParameters),
     });
 }
-exports.makeTranslateObjectFormula = makeTranslateObjectFormula;
 // TODO(jonathan/ekoleda): Flesh out a guide for empty formulas if this is something we care to support.
 // We probably also need the builder's addFormula() method to support empty formula defs if it doesn't already.
 /**
@@ -1159,7 +1162,6 @@ function makeEmptyFormula(definition) {
         validateParameters: wrapMetadataFunction(definition.validateParameters),
     });
 }
-exports.makeEmptyFormula = makeEmptyFormula;
 function maybeRewriteConnectionForNamedPropertyOptions(namedPropertyOptions, connectionRequirement) {
     if (!namedPropertyOptions) {
         return namedPropertyOptions;
@@ -1170,7 +1172,6 @@ function maybeRewriteConnectionForNamedPropertyOptions(namedPropertyOptions, con
     }
     return result;
 }
-exports.maybeRewriteConnectionForNamedPropertyOptions = maybeRewriteConnectionForNamedPropertyOptions;
 function maybeRewriteConnectionForFormula(formula, connectionRequirement) {
     var _a;
     if (formula && connectionRequirement) {
@@ -1197,7 +1198,6 @@ function maybeRewriteConnectionForFormula(formula, connectionRequirement) {
     }
     return formula;
 }
-exports.maybeRewriteConnectionForFormula = maybeRewriteConnectionForFormula;
 // This helper method finds any inline options functions in a static sync table schema.
 // These functions will need to be extracted into the "namedPropertyOptions" property on the sync
 // table and replaced with strings.

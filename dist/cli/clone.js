@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleClone = void 0;
+exports.handleClone = handleClone;
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const helpers_3 = require("./helpers");
@@ -66,7 +66,6 @@ async function handleClone({ packIdOrUrl, codaApiEndpoint, apiToken }) {
     fs_extra_1.default.writeFileSync(path_1.default.join(manifestDir, 'pack.ts'), sourceCode);
     (0, helpers_6.printAndExit)("Successfully updated pack.ts with the Pack's code!", 0);
 }
-exports.handleClone = handleClone;
 function maybeHandleClientError(err) {
     if ((0, coda_1.isResponseError)(err)) {
         switch (err.response.status) {

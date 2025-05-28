@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleExecute = void 0;
+exports.handleExecute = handleExecute;
 const compile_1 = require("../testing/compile");
 const execution_1 = require("../testing/execution");
 const helpers_1 = require("./helpers");
@@ -35,4 +35,3 @@ async function handleExecute({ manifestPath, formulaName, params, fetch, vm, dyn
         contextOptions: { useRealFetcher: fetch },
     });
 }
-exports.handleExecute = handleExecute;
