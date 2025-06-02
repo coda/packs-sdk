@@ -8,6 +8,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 - Add `validateParameters` metadata formula to CommonPackFormulaDef
 - Add `ValueHintType.Date` as a valid type for the `FilterableProperty` in `IndexDefinition`.
+- `AWSAccessKey` auth: fixed bug with double-signing of requests where the URL path contains special characters like spaces.
 
 ## [1.9.5] - 2025-05-02
 
@@ -899,11 +900,8 @@ await myHelper(context);
 [1.8.4]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.8.4
 [1.8.5]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.8.5
 [1.8.6]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.8.6
-
 [1.9.1]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.1
 [1.9.3]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.3
 [1.9.2]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.2
-
 [1.9.2]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.2
-
 [1.9.5]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.5
