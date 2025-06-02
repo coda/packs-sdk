@@ -123,28 +123,6 @@ lint-changelog:
 lint-fix:
 	find . -name "*.ts" | grep -v /dist/ | grep -v /node_modules/ | grep -v .d.ts | xargs ${ROOTDIR}/node_modules/.bin/eslint --fix
 
-.PHONY: do-compile-isolated-vm-18
-do-compile-isolated-vm-18:
-	rm -rf build-isolated-vm-18
-	mkdir build-isolated-vm-18 && \
-		cd build-isolated-vm-18 && \
-		npm init -y && \
-		docker run --rm --platform linux/amd64 -v `pwd`:/var/task public.ecr.aws/sam/build-nodejs18.x:latest \
-		  bash -c "yum -y install openssl-devel && npm install isolated-vm@${ISOLATED_VM_VERSION}"
-	mkdir -p runtime/native/node18/x86_64/isolated-vm/out
-	cp build-isolated-vm-18/node_modules/isolated-vm/package.json runtime/native/node18/x86_64/isolated-vm/
-	cp build-isolated-vm-18/node_modules/isolated-vm/isolated-vm.js runtime/native/node18/x86_64/isolated-vm/
-	cp build-isolated-vm-18/node_modules/isolated-vm/out/isolated_vm.node runtime/native/node18/x86_64/isolated-vm/out/
-	rm -rf build-isolated-vm-18
-
-.PHONY: compile-isolated-vm-18
-compile-isolated-vm-18:
-	if [ ! -f './runtime/native/node18/x86_64/isolated-vm/package.json' ] || \
-	   [ `node -p -e "require('./runtime/native/node18/x86_64/isolated-vm/package.json').version"` != $(ISOLATED_VM_VERSION) ]; \
-		then $(MAKE) do-compile-isolated-vm-18; \
-		else echo "isolated-vm version matches, skipping."; \
-	fi
-
 .PHONY: do-compile-isolated-vm-22
 do-compile-isolated-vm-22:
 	rm -rf build-isolated-vm-22
@@ -222,7 +200,6 @@ compile-ts:
 .PHONY: compile
 compile:
 	# Generate isolated-vm binaries that are compatible with Amazon Linux 2.
-	$(MAKE) compile-isolated-vm-18
 	$(MAKE) compile-isolated-vm-22
 
 	$(MAKE) compile-ts
