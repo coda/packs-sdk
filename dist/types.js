@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HttpStatusCode = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
+exports.HttpStatusCode = exports.KnowledgeToolSourceType = exports.ToolType = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
 /**
  * @deprecated
  */
@@ -219,6 +219,36 @@ var SyncInterval;
     SyncInterval["Hourly"] = "Hourly";
     SyncInterval["EveryTenMinutes"] = "EveryTenMinutes";
 })(SyncInterval || (exports.SyncInterval = SyncInterval = {}));
+/**
+ *  Default tool types supported by Coda Packs for skill definitions.
+ * @hidden
+ */
+var ToolType;
+(function (ToolType) {
+    /**
+     * Allows formulas within a pack to be used as tools.
+     */
+    ToolType["Pack"] = "Pack";
+    /**
+     * Allows knowledge to be used as a tool.
+     */
+    ToolType["Knowledge"] = "Knowledge";
+})(ToolType || (exports.ToolType = ToolType = {}));
+/**
+ * The type of knowledge source to use.
+ * @hidden
+ */
+var KnowledgeToolSourceType;
+(function (KnowledgeToolSourceType) {
+    /**
+     * Use all knowledge from the pack.
+     */
+    KnowledgeToolSourceType["Global"] = "Global";
+    /**
+     * Use knowledge from a specific pack.
+     */
+    KnowledgeToolSourceType["Pack"] = "Pack";
+})(KnowledgeToolSourceType || (exports.KnowledgeToolSourceType = KnowledgeToolSourceType = {}));
 var HttpStatusCode;
 (function (HttpStatusCode) {
     HttpStatusCode[HttpStatusCode["Ok"] = 200] = "Ok";

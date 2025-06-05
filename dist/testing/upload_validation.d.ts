@@ -17,9 +17,11 @@ export declare const Limits: {
     BuildingBlockName: number;
     BuildingBlockDescription: number;
     ColumnMatcherRegex: number;
+    MaxSkillCount: number;
     NumColumnMatchersPerFormat: number;
     NetworkDomainUrl: number;
     PermissionsBatchSize: number;
+    PromptLength: number;
     UpdateBatchSize: number;
     FilterableProperties: number;
 };
