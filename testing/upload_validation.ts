@@ -69,6 +69,7 @@ import {OptionsType} from '../api_types';
 import {PackCategory} from '../types';
 import type {PackFormatMetadata} from '../compiled_types';
 import type {PackFormulaMetadata} from '../api';
+import type {PackTool} from '../types';
 import type {PackVersionDefinition} from '..';
 import type {PackVersionMetadata} from '../compiled_types';
 import type {ParamDef} from '../api_types';
@@ -103,6 +104,8 @@ import type {SyncTableDef} from '../api';
 import type {SystemAuthenticationTypes} from '../types';
 import {TableRole} from '../api_types';
 import {TokenExchangeCredentialsLocation} from '../types';
+import type {Tool} from '../types';
+import {ToolTypes} from '../types';
 import {Type} from '../api_types';
 import URLParse from 'url-parse';
 import type {UnionType} from '../api_types';
@@ -156,9 +159,11 @@ export const Limits = {
   BuildingBlockName: 50,
   BuildingBlockDescription: 1000,
   ColumnMatcherRegex: 300,
+  MaxJobCount: 15,
   NumColumnMatchersPerFormat: 10,
   NetworkDomainUrl: 253,
   PermissionsBatchSize: 5000,
+  PromptLength: 10000,
   UpdateBatchSize: 1000,
   FilterableProperties: 5,
 };
@@ -1373,29 +1378,35 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     }),
   ]);
 
-  const contentCategorizationSchema = z.discriminatedUnion('type', [
-    zodCompleteStrictObject<MessagingContentCategorization>({
-      type: z.literal(ContentCategorizationType.Messaging),
-    }),
-    zodCompleteStrictObject<DocumentContentCategorization>({
-      type: z.literal(ContentCategorizationType.Document),
-    }),
-    zodCompleteStrictObject<EmailContentCategorization>({
-      type: z.literal(ContentCategorizationType.Email),
-      toProperty: propertySchema,
-      fromProperty: propertySchema,
-      subjectProperty: propertySchema,
-      htmlBodyProperty: propertySchema,
-      plainTextBodyProperty: propertySchema,
-    }),
-    zodCompleteStrictObject<CommentContentCategorization>({
-      type: z.literal(ContentCategorizationType.Comment),
-    }),
-  ]).refine(data =>
-    {return data.type && Object.values(ContentCategorizationType).includes(data.type)}, {
-    message: `must be a valid content categorization type.`,
-    path: ['contentCategorization', 'type'],
-  });
+  const contentCategorizationSchema = z
+    .discriminatedUnion('type', [
+      zodCompleteStrictObject<MessagingContentCategorization>({
+        type: z.literal(ContentCategorizationType.Messaging),
+      }),
+      zodCompleteStrictObject<DocumentContentCategorization>({
+        type: z.literal(ContentCategorizationType.Document),
+      }),
+      zodCompleteStrictObject<EmailContentCategorization>({
+        type: z.literal(ContentCategorizationType.Email),
+        toProperty: propertySchema,
+        fromProperty: propertySchema,
+        subjectProperty: propertySchema,
+        htmlBodyProperty: propertySchema,
+        plainTextBodyProperty: propertySchema,
+      }),
+      zodCompleteStrictObject<CommentContentCategorization>({
+        type: z.literal(ContentCategorizationType.Comment),
+      }),
+    ])
+    .refine(
+      data => {
+        return data.type && Object.values(ContentCategorizationType).includes(data.type);
+      },
+      {
+        message: `must be a valid content categorization type.`,
+        path: ['contentCategorization', 'type'],
+      },
+    );
 
   const contextPropertiesSchema = z.array(propertySchema).min(1);
 
@@ -1755,51 +1766,52 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
 
         const validatePropertyValue = makePropertyValidator(schema, context);
 
-        const {
-          authorityNormProperty,
-          popularityNormProperty,
-          filterableProperties,
-        } = schema.index;
+        const {authorityNormProperty, popularityNormProperty, filterableProperties} = schema.index;
 
         // validate the categorization index
         if (isCategorizationIndexDefinition(schema.index)) {
           const {contentCategorization} = schema.index;
           const {type} = contentCategorization;
           if (type === ContentCategorizationType.Email) {
-            const {
+            const {toProperty, fromProperty, subjectProperty, htmlBodyProperty, plainTextBodyProperty} =
+              contentCategorization;
+            validatePropertyValue(
               toProperty,
-              fromProperty,
-              subjectProperty,
-              htmlBodyProperty,
-              plainTextBodyProperty,
-            } = contentCategorization;
-            validatePropertyValue(toProperty, 'toProperty', property => property.type === ValueType.String, `must be a valid property.`, [
-              'index',
-              'contentCategorization',
               'toProperty',
-            ]);
-            validatePropertyValue(fromProperty, 'fromProperty', property => property.type === ValueType.String, `must be a valid property.`, [
-              'index',
-              'contentCategorization',
+              property => property.type === ValueType.String,
+              `must be a valid property.`,
+              ['index', 'contentCategorization', 'toProperty'],
+            );
+            validatePropertyValue(
+              fromProperty,
               'fromProperty',
-            ]);
-            validatePropertyValue(subjectProperty, 'subjectProperty', property => property.type === ValueType.String, `must be a valid property.`, [
-              'index',
-              'contentCategorization',
+              property => property.type === ValueType.String,
+              `must be a valid property.`,
+              ['index', 'contentCategorization', 'fromProperty'],
+            );
+            validatePropertyValue(
+              subjectProperty,
               'subjectProperty',
-            ]);
-            validatePropertyValue(htmlBodyProperty, 'htmlBodyProperty', property => property.type === ValueType.String, `must be a valid property.`, [
-              'index',
-              'contentCategorization',
+              property => property.type === ValueType.String,
+              `must be a valid property.`,
+              ['index', 'contentCategorization', 'subjectProperty'],
+            );
+            validatePropertyValue(
+              htmlBodyProperty,
               'htmlBodyProperty',
-            ]);
-            validatePropertyValue(plainTextBodyProperty, 'plainTextBodyProperty', property => property.type === ValueType.String, `must be a valid property.`, [
-              'index',
-              'contentCategorization',
+              property => property.type === ValueType.String,
+              `must be a valid property.`,
+              ['index', 'contentCategorization', 'htmlBodyProperty'],
+            );
+            validatePropertyValue(
+              plainTextBodyProperty,
               'plainTextBodyProperty',
-            ]);
+              property => property.type === ValueType.String,
+              `must be a valid property.`,
+              ['index', 'contentCategorization', 'plainTextBodyProperty'],
+            );
           }
-        // validate the custom index
+          // validate the custom index
         } else {
           const {properties, contextProperties} = schema.index;
           for (let i = 0; i < properties.length; i++) {
@@ -2059,6 +2071,62 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       }
     });
 
+  const packToolSchema = zodCompleteStrictObject<PackTool>({
+    type: z.literal(ToolTypes.Pack),
+    packId: z.number(),
+    formulas: z
+      .array(
+        zodCompleteStrictObject<{
+          formulaName: string;
+          description?: string;
+        }>({
+          formulaName: z
+            .string()
+            .min(1)
+            .superRefine((formulaName, context) => {
+              if (!validateFormulaName(formulaName)) {
+                context.addIssue({
+                  code: z.ZodIssueCode.custom,
+                  message: `Formula name must be a valid formula name.`,
+                });
+              }
+            }),
+          description: z.string().optional(),
+        }),
+      )
+      .optional(),
+  });
+
+  const knowledgeToolGlobalSchema = z.object({
+    type: z.literal(ToolTypes.Knowledge),
+    global: z.literal(true),
+  });
+
+  const knowledgeToolPackSchema = z.object({
+    type: z.literal(ToolTypes.Knowledge),
+    packId: z.number(),
+  });
+
+  const toolSchema = z.discriminatedUnion('type', [packToolSchema, knowledgeToolGlobalSchema, knowledgeToolPackSchema]);
+
+  const jobSchema = zodCompleteObject<{
+    name: string;
+    displayName: string;
+    description: string;
+    prompt: string;
+    tools: Tool[];
+  }>({
+    name: z
+      .string()
+      .min(1)
+      .max(Limits.BuildingBlockName)
+      .regex(regexParameterName, 'Job names can only contain alphanumeric characters and underscores.'),
+    displayName: z.string().min(1).max(Limits.BuildingBlockName),
+    description: z.string().min(1).max(Limits.BuildingBlockDescription),
+    prompt: z.string().min(1).max(Limits.PromptLength),
+    tools: z.array(toolSchema),
+  });
+
   // Make sure to call the refiners on this after removing legacyPackMetadataSchema.
   // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level
   // schema we actually use.)
@@ -2158,6 +2226,20 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           context.addIssue({
             code: z.ZodIssueCode.custom,
             message: `Sync table names must be unique. Found duplicate name "${dupe}".`,
+          });
+        }
+      }),
+    jobs: z
+      .array(jobSchema)
+      .max(Limits.MaxJobCount)
+      .optional()
+      .default([])
+      .superRefine((data, context) => {
+        const jobNames = data.map(job => job.name);
+        for (const dupe of getNonUniqueElements(jobNames)) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Job names must be unique. Found duplicate name "${dupe}".`,
           });
         }
       }),

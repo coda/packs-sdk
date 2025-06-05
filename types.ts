@@ -1173,6 +1173,89 @@ export interface RateLimits {
 export type BasicPackDefinition = Omit<PackVersionDefinition, 'version'>;
 
 /**
+ *  Default tool types supported by Coda Packs for job definitions.
+ * @hidden
+ */
+export enum ToolTypes {
+  /**
+   * Allows formulas within a pack to be used as tools.
+   */
+  Pack = 'Pack',
+  /**
+   * Allows pack knowledge to be used as a tool.
+   */
+  Knowledge = 'Knowledge',
+}
+
+/**
+ * The type identifier for a tool
+ * @hidden
+ */
+export type ToolType = keyof ToolMap;
+
+/**
+ * Base interface for all tool definitions.
+ * @hidden
+ */
+export interface BaseTool<T extends string> {
+  /** The type identifier for this tool. */
+  type: T;
+}
+
+/**
+ * Tool that references formulas within a pack.
+ * @hidden
+ */
+export interface PackTool extends BaseTool<ToolTypes.Pack> {
+  /** The ID of the pack to use as a tool. */
+  packId: number;
+  /** The specific formulas to make available as tools. */
+  formulas?: Array<{
+    /** The name of the formula to use as a tool. */
+    formulaName: string;
+  }>;
+}
+
+/**
+ * Tool that provides access to ingested knowledge.
+ * @hidden
+ */
+export type KnowledgeTool = BaseTool<ToolTypes.Knowledge> & ({packId: number} | {global: true});
+
+/**
+ * Map of tool types to their corresponding tool interfaces.
+ * This interface can be extended via declaration merging to add custom tool types.
+ * @hidden
+ */
+export interface ToolMap {
+  [ToolTypes.Pack]: PackTool;
+  [ToolTypes.Knowledge]: KnowledgeTool;
+}
+
+/**
+ * Union of all supported tool types.
+ * @hidden
+ */
+export type Tool = ToolMap[keyof ToolMap];
+
+/**
+ * Definition of a job that can be executed within a pack.
+ * @hidden
+ */
+export interface Job {
+  /** Stable identifier for the job. */
+  name: string;
+  /** Display name shown to users for this job. */
+  displayName: string;
+  /** Description of what this job does. */
+  description: string;
+  /** The prompt/instructions that define the job's behavior. */
+  prompt: string;
+  /** List of tools that this job can use. This does NOT include pack calls by default. */
+  tools: Tool[];
+}
+
+/**
  * The definition of the contents of a Pack at a specific version. This is the
  * heart of the implementation of a Pack.
  */
@@ -1231,6 +1314,11 @@ export interface PackVersionDefinition {
    * Definitions of this pack's sync tables. See {@link SyncTable}.
    */
   syncTables?: SyncTable[];
+  /**
+   * Definitions of jobs that can be executed within this pack.
+   * @hidden
+   */
+  jobs?: Job[];
 }
 
 /**

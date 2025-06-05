@@ -56,6 +56,7 @@ const schema_15 = require("../schema");
 const schema_16 = require("../schema");
 const api_types_5 = require("../api_types");
 const types_6 = require("../types");
+const types_7 = require("../types");
 const api_types_6 = require("../api_types");
 const url_parse_1 = __importDefault(require("url-parse"));
 const schema_17 = require("../schema");
@@ -101,9 +102,11 @@ exports.Limits = {
     BuildingBlockName: 50,
     BuildingBlockDescription: 1000,
     ColumnMatcherRegex: 300,
+    MaxJobCount: 15,
     NumColumnMatchersPerFormat: 10,
     NetworkDomainUrl: 253,
     PermissionsBatchSize: 5000,
+    PromptLength: 10000,
     UpdateBatchSize: 1000,
     FilterableProperties: 5,
 };
@@ -1103,7 +1106,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             placeholder: z.string().optional(),
         }),
     ]);
-    const contentCategorizationSchema = z.discriminatedUnion('type', [
+    const contentCategorizationSchema = z
+        .discriminatedUnion('type', [
         zodCompleteStrictObject({
             type: z.literal(schema_3.ContentCategorizationType.Messaging),
         }),
@@ -1121,7 +1125,10 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         zodCompleteStrictObject({
             type: z.literal(schema_3.ContentCategorizationType.Comment),
         }),
-    ]).refine(data => { return data.type && Object.values(schema_3.ContentCategorizationType).includes(data.type); }, {
+    ])
+        .refine(data => {
+        return data.type && Object.values(schema_3.ContentCategorizationType).includes(data.type);
+    }, {
         message: `must be a valid content categorization type.`,
         path: ['contentCategorization', 'type'],
     });
@@ -1379,38 +1386,18 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             return;
         }
         const validatePropertyValue = makePropertyValidator(schema, context);
-        const { authorityNormProperty, popularityNormProperty, filterableProperties, } = schema.index;
+        const { authorityNormProperty, popularityNormProperty, filterableProperties } = schema.index;
         // validate the categorization index
         if ((0, schema_20.isCategorizationIndexDefinition)(schema.index)) {
             const { contentCategorization } = schema.index;
             const { type } = contentCategorization;
             if (type === schema_3.ContentCategorizationType.Email) {
-                const { toProperty, fromProperty, subjectProperty, htmlBodyProperty, plainTextBodyProperty, } = contentCategorization;
-                validatePropertyValue(toProperty, 'toProperty', property => property.type === schema_18.ValueType.String, `must be a valid property.`, [
-                    'index',
-                    'contentCategorization',
-                    'toProperty',
-                ]);
-                validatePropertyValue(fromProperty, 'fromProperty', property => property.type === schema_18.ValueType.String, `must be a valid property.`, [
-                    'index',
-                    'contentCategorization',
-                    'fromProperty',
-                ]);
-                validatePropertyValue(subjectProperty, 'subjectProperty', property => property.type === schema_18.ValueType.String, `must be a valid property.`, [
-                    'index',
-                    'contentCategorization',
-                    'subjectProperty',
-                ]);
-                validatePropertyValue(htmlBodyProperty, 'htmlBodyProperty', property => property.type === schema_18.ValueType.String, `must be a valid property.`, [
-                    'index',
-                    'contentCategorization',
-                    'htmlBodyProperty',
-                ]);
-                validatePropertyValue(plainTextBodyProperty, 'plainTextBodyProperty', property => property.type === schema_18.ValueType.String, `must be a valid property.`, [
-                    'index',
-                    'contentCategorization',
-                    'plainTextBodyProperty',
-                ]);
+                const { toProperty, fromProperty, subjectProperty, htmlBodyProperty, plainTextBodyProperty } = contentCategorization;
+                validatePropertyValue(toProperty, 'toProperty', property => property.type === schema_18.ValueType.String, `must be a valid property.`, ['index', 'contentCategorization', 'toProperty']);
+                validatePropertyValue(fromProperty, 'fromProperty', property => property.type === schema_18.ValueType.String, `must be a valid property.`, ['index', 'contentCategorization', 'fromProperty']);
+                validatePropertyValue(subjectProperty, 'subjectProperty', property => property.type === schema_18.ValueType.String, `must be a valid property.`, ['index', 'contentCategorization', 'subjectProperty']);
+                validatePropertyValue(htmlBodyProperty, 'htmlBodyProperty', property => property.type === schema_18.ValueType.String, `must be a valid property.`, ['index', 'contentCategorization', 'htmlBodyProperty']);
+                validatePropertyValue(plainTextBodyProperty, 'plainTextBodyProperty', property => property.type === schema_18.ValueType.String, `must be a valid property.`, ['index', 'contentCategorization', 'plainTextBodyProperty']);
             }
             // validate the custom index
         }
@@ -1600,6 +1587,46 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             });
         }
     });
+    const packToolSchema = zodCompleteStrictObject({
+        type: z.literal(types_7.ToolTypes.Pack),
+        packId: z.number(),
+        formulas: z
+            .array(zodCompleteStrictObject({
+            formulaName: z
+                .string()
+                .min(1)
+                .superRefine((formulaName, context) => {
+                if (!validateFormulaName(formulaName)) {
+                    context.addIssue({
+                        code: z.ZodIssueCode.custom,
+                        message: `Formula name must be a valid formula name.`,
+                    });
+                }
+            }),
+            description: z.string().optional(),
+        }))
+            .optional(),
+    });
+    const knowledgeToolGlobalSchema = z.object({
+        type: z.literal(types_7.ToolTypes.Knowledge),
+        global: z.literal(true),
+    });
+    const knowledgeToolPackSchema = z.object({
+        type: z.literal(types_7.ToolTypes.Knowledge),
+        packId: z.number(),
+    });
+    const toolSchema = z.discriminatedUnion('type', [packToolSchema, knowledgeToolGlobalSchema, knowledgeToolPackSchema]);
+    const jobSchema = zodCompleteObject({
+        name: z
+            .string()
+            .min(1)
+            .max(exports.Limits.BuildingBlockName)
+            .regex(regexParameterName, 'Job names can only contain alphanumeric characters and underscores.'),
+        displayName: z.string().min(1).max(exports.Limits.BuildingBlockName),
+        description: z.string().min(1).max(exports.Limits.BuildingBlockDescription),
+        prompt: z.string().min(1).max(exports.Limits.PromptLength),
+        tools: z.array(toolSchema),
+    });
     // Make sure to call the refiners on this after removing legacyPackMetadataSchema.
     // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level
     // schema we actually use.)
@@ -1692,6 +1719,20 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 context.addIssue({
                     code: z.ZodIssueCode.custom,
                     message: `Sync table names must be unique. Found duplicate name "${dupe}".`,
+                });
+            }
+        }),
+        jobs: z
+            .array(jobSchema)
+            .max(exports.Limits.MaxJobCount)
+            .optional()
+            .default([])
+            .superRefine((data, context) => {
+            const jobNames = data.map(job => job.name);
+            for (const dupe of getNonUniqueElements(jobNames)) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: `Job names must be unique. Found duplicate name "${dupe}".`,
                 });
             }
         }),
