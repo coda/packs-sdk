@@ -43,6 +43,8 @@ import type {ImageSchema} from '..';
 import {ImageShapeStyle} from '../schema';
 import {IndexingStrategy} from '../schema';
 import {JSONPath} from 'jsonpath-plus';
+import type {KnowledgeTool} from '../types';
+import {KnowledgeToolSourceType} from '../types';
 import {LifecycleBehavior} from '../schema';
 import {LinkDisplayType} from '../schema';
 import type {LinkSchema} from '../schema';
@@ -69,6 +71,7 @@ import {OptionsType} from '../api_types';
 import {PackCategory} from '../types';
 import type {PackFormatMetadata} from '../compiled_types';
 import type {PackFormulaMetadata} from '../api';
+import type {PackTool} from '../types';
 import type {PackVersionDefinition} from '..';
 import type {PackVersionMetadata} from '../compiled_types';
 import type {ParamDef} from '../api_types';
@@ -88,6 +91,7 @@ import type {Schema} from '../schema';
 import type {SetEndpoint} from '../types';
 import {SimpleStringHintValueTypes} from '../schema';
 import type {SimpleStringSchema} from '../schema';
+import type {Skill} from '../types';
 import type {SliderSchema} from '../schema';
 import type {StringDateSchema} from '../schema';
 import type {StringDateTimeSchema} from '../schema';
@@ -103,6 +107,7 @@ import type {SyncTableDef} from '../api';
 import type {SystemAuthenticationTypes} from '../types';
 import {TableRole} from '../api_types';
 import {TokenExchangeCredentialsLocation} from '../types';
+import {ToolType} from '../types';
 import {Type} from '../api_types';
 import URLParse from 'url-parse';
 import type {UnionType} from '../api_types';
@@ -156,9 +161,11 @@ export const Limits = {
   BuildingBlockName: 50,
   BuildingBlockDescription: 1000,
   ColumnMatcherRegex: 300,
+  MaxSkillCount: 15,
   NumColumnMatchersPerFormat: 10,
   NetworkDomainUrl: 253,
   PermissionsBatchSize: 5000,
+  PromptLength: 10000,
   UpdateBatchSize: 1000,
   FilterableProperties: 5,
 };
@@ -2056,6 +2063,61 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       }
     });
 
+  const packToolSchema = zodCompleteStrictObject<PackTool>({
+    type: z.literal(ToolType.Pack),
+    packId: z.number(),
+    formulas: z
+      .array(
+        zodCompleteStrictObject<{
+          formulaName: string;
+          description?: string;
+        }>({
+          formulaName: z
+            .string()
+            .min(1)
+            .superRefine((formulaName, context) => {
+              if (!validateFormulaName(formulaName)) {
+                context.addIssue({
+                  code: z.ZodIssueCode.custom,
+                  message: `Formula name must be a valid formula name.`,
+                });
+              }
+            }),
+          description: z.string().optional(),
+        }),
+      )
+      .optional(),
+  });
+
+  const knowledgeToolSourceSchema = z.discriminatedUnion('type', [
+    z.object({
+      type: z.literal(KnowledgeToolSourceType.Global),
+    }),
+    z.object({
+      type: z.literal(KnowledgeToolSourceType.Pack),
+      packId: z.number(),
+    }),
+  ]);
+
+  const knowledgeToolSchema = zodCompleteStrictObject<KnowledgeTool>({
+    type: z.literal(ToolType.Knowledge),
+    source: knowledgeToolSourceSchema,
+  });
+
+  const toolSchema = z.discriminatedUnion('type', [packToolSchema, knowledgeToolSchema]);
+
+  const skillSchema = zodCompleteObject<Skill>({
+    name: z
+      .string()
+      .min(1)
+      .max(Limits.BuildingBlockName)
+      .regex(regexParameterName, 'Skill names can only contain alphanumeric characters and underscores.'),
+    displayName: z.string().min(1).max(Limits.BuildingBlockName),
+    description: z.string().min(1).max(Limits.BuildingBlockDescription),
+    prompt: z.string().min(1).max(Limits.PromptLength),
+    tools: z.array(toolSchema),
+  });
+
   // Make sure to call the refiners on this after removing legacyPackMetadataSchema.
   // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level
   // schema we actually use.)
@@ -2155,6 +2217,20 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           context.addIssue({
             code: z.ZodIssueCode.custom,
             message: `Sync table names must be unique. Found duplicate name "${dupe}".`,
+          });
+        }
+      }),
+    skills: z
+      .array(skillSchema)
+      .max(Limits.MaxSkillCount)
+      .optional()
+      .default([])
+      .superRefine((data, context) => {
+        const skillNames = data.map(skill => skill.name);
+        for (const dupe of getNonUniqueElements(skillNames)) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Skill names must be unique. Found duplicate name "${dupe}".`,
           });
         }
       }),
