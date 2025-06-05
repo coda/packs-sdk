@@ -15,6 +15,7 @@ import type {ObjectSchemaDefinition} from './schema';
 import type {PackVersionDefinition} from './types';
 import type {ParamDefs} from './api_types';
 import type {Schema} from './schema';
+import type {Skill} from './types';
 import type {SyncExecutionContext} from './api_types';
 import type {SyncPassthroughData} from './api';
 import type {SyncTable} from './api';
@@ -64,6 +65,11 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    */
   syncTables: SyncTable[];
   /**
+   * See {@link PackVersionDefinition.skills}.
+   * @hidden
+   */
+  skills: Skill[];
+  /**
    * See {@link PackVersionDefinition.networkDomains}.
    */
   networkDomains: string[];
@@ -101,6 +107,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       formulas,
       formats,
       syncTables,
+      skills,
       networkDomains,
       defaultAuthentication,
       systemConnectionAuthentication,
@@ -110,6 +117,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     this.formulas = formulas || [];
     this.formats = formats || [];
     this.syncTables = syncTables || [];
+    this.skills = skills || [];
     this.networkDomains = networkDomains || [];
     this.defaultAuthentication = defaultAuthentication;
     this.systemConnectionAuthentication = systemConnectionAuthentication;
@@ -240,6 +248,28 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    */
   addColumnFormat(format: Format): this {
     this.formats.push(format);
+    return this;
+  }
+
+  /**
+   * Adds a skill definition to this pack.
+   *
+   * In the web editor, the `/Skill` shortcut will insert a snippet of a skeleton skill.
+   *
+   * @example
+   * ```
+   * pack.addSkill({
+   *   name: 'MySkill',
+   *   displayName: 'My Display Name',
+   *   description: 'My description.',
+   *   prompt: 'My prompt',
+   *    tools: [{type: ToolType.Knowledge, source: {type: KnowledgeToolSourceType.Global}}]
+   * });
+   * ```
+   * @hidden
+   */
+  addSkill(skill: Skill): this {
+    this.skills.push(skill);
     return this;
   }
 

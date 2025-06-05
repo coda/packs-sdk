@@ -4,6 +4,7 @@ import {ConnectionRequirement} from '../api_types';
 import type {DynamicSyncTableDef} from '../api';
 import type {DynamicSyncTableOptions} from '../api';
 import type {GenericObjectSchema} from '../schema';
+import {KnowledgeToolSourceType} from '../types';
 import type {MetadataFormulaDef} from '../api';
 import type {ObjectFormulaDef} from '../api';
 import type {ObjectSchema} from '../schema';
@@ -11,8 +12,10 @@ import type {PackDefinitionBuilder} from '../builder';
 import type {ParamDefs} from '../api_types';
 import {ParameterType} from '../api_types';
 import {PostSetupType} from '..';
+import type {Skill} from '../types';
 import type {StringPackFormula} from '../api';
 import type {SyncTableOptions} from '../api';
+import {ToolType} from '../types';
 import {ValueHintType} from '..';
 import {ValueType} from '../schema';
 import {assertCondition} from '..';
@@ -495,5 +498,18 @@ describe('Builder', () => {
       pack.addDynamicSyncTable({...tableAttributes});
       pack.addDynamicSyncTable({...tableAttributes, name: 'table2', identityName: 'table2'});
     });
+  });
+
+  it('skills', () => {
+    const skill: Skill = {
+      name: 'MySkill',
+      displayName: 'My Display Name',
+      description: 'My description.',
+      prompt: 'My prompt',
+      tools: [{type: ToolType.Knowledge, source: {type: KnowledgeToolSourceType.Global}}],
+    };
+    pack.addSkill(skill);
+    assert.equal(pack.skills.length, 1);
+    assert.deepEqual(pack.skills[0], skill);
   });
 });
