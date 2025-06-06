@@ -283,7 +283,7 @@ For each collection, add a set of building blocks that allow users to work with 
 [column_formats]: ./blocks/column-formats.md
 [actions]: ./blocks/actions.md
 [todoist_reference]: https://developer.todoist.com/rest/v2/#overview
-[best_practices_featured_doc]: https://coda.io/@joebauer/best-practices-for-launching-your-pack/building-a-great-doc-for-your-pack-15
+[best_practices_featured_doc]: https://coda.io/@bri-strauss/best-practices-for-launching-your-pack/building-a-great-doc-for-your-pack-15
 [formulas_naming]: ./blocks/formulas.md#naming
 [actions_naming]: ./blocks/actions.md#naming
 [sync_tables_naming]: ./blocks/sync-tables/index.md#naming
