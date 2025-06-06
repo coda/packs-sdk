@@ -266,6 +266,7 @@ export type {SyncIncremental} from './api_types';
 export type {SystemAuthenticationDef} from './types';
 export {TokenExchangeCredentialsLocation} from './types';
 export {PermissionSyncMode} from './api_types';
+export {BrainFeatureSetId} from './api_types';
 
 export type {BooleanHintTypes} from './schema';
 export type {InferrableTypes} from './schema';

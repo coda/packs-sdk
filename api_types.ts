@@ -552,6 +552,7 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
    * The JavaScript function that implements parameter validation.
    *
    * This function takes in parameters and a context containing a {@link PermissionSyncMode}
+   * and a {@link BrainFeatureSetId}
    * and validates the parameters. A formula may want to validate parameters differently
    * for permissionSyncMode 'PermissionAware' vs 'Personal' vs undefined (which represents a formula).
    *
@@ -947,6 +948,13 @@ export interface SyncBase {
    * @hidden
    */
   permissionSyncMode?: PermissionSyncMode;
+
+  /**
+   * The billing tier/feature set for the current sync.
+   * This is only populated when `context.invocationLocation.source === InvocationSource.Brain`.
+   * May be used in validateParameters to determine parameter validity based on the feature set.
+   */
+  brainFeatureSetId?: BrainFeatureSetId;
 }
 
 /**
@@ -1443,4 +1451,9 @@ export interface SyncCompletionMetadataIncomplete {
   hasIncompleteResults: true;
 
   incrementalContinuation?: never;
+}
+
+/** The billing tier/feature set for the current sync */
+export enum BrainFeatureSetId {
+  Enterprise = 'Enterprise',
 }
