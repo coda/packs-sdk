@@ -77,7 +77,7 @@ While it's easy to get started building a Pack, there are lots of options to exp
 [instructionsUrl]: ../reference/sdk/interfaces/core.BaseAuthentication.md#instructionsurl
 [UserVisibleError]: ../reference/sdk/classes/core.UserVisibleError.md
 [SyncTableOptions.description]: ../reference/sdk/interfaces/core.SyncTableOptions.md#description
-[launching]: https://coda.io/@joebauer/best-practices-for-launching-your-pack
+[launching]: https://coda.io/@bri-strauss/best-practices-for-launching-your-pack
 [promotion]: https://coda.io/@hector/promotion-best-practices
 [schemas_row_identifier]: advanced/schemas.md#row-identifier
 [schemas_featured_columns]: advanced/schemas.md#featured-columns
