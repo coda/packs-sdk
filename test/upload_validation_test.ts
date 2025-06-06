@@ -13,6 +13,7 @@ import {ImageOutline} from '../schema';
 import {ImageShapeStyle} from '../schema';
 import {IndexingStrategy} from '../schema';
 import type {Job} from '../types';
+import {KnowledgeToolSourceType} from '../types';
 import {Limits} from '../testing/upload_validation';
 import type {ObjectSchemaDefinition} from '../schema';
 import type {OptionsReference} from '../api_types';
@@ -5736,11 +5737,16 @@ describe('Pack metadata Validation', async () => {
               },
               {
                 type: ToolTypes.Knowledge,
-                packId: 789,
+                source: {
+                  type: KnowledgeToolSourceType.Pack,
+                  packId: 789,
+                },
               },
               {
                 type: ToolTypes.Knowledge,
-                global: true,
+                source: {
+                  type: KnowledgeToolSourceType.Global,
+                },
               },
             ],
           },

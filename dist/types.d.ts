@@ -1054,7 +1054,7 @@ export declare enum ToolTypes {
      */
     Pack = "Pack",
     /**
-     * Allows pack knowledge to be used as a tool.
+     * Allows knowledge to be used as a tool.
      */
     Knowledge = "Knowledge"
 }
@@ -1085,14 +1085,51 @@ export interface PackTool extends BaseTool<ToolTypes.Pack> {
     }>;
 }
 /**
+ * The type of knowledge source to use.
+ * @hidden
+ */
+export declare enum KnowledgeToolSourceType {
+    /**
+     * Use all knowledge from the pack.
+     */
+    Global = "Global",
+    /**
+     * Use knowledge from a specific pack.
+     */
+    Pack = "Pack"
+}
+/**
+ * Base interface for all knowledge tool sources.
+ * @hidden
+ */
+interface BaseKnowledgeToolSource<T extends KnowledgeToolSourceType> {
+    type: T;
+}
+/**
+ * Source for using knowledge from a specific pack.
+ * @hidden
+ */
+interface PackKnowledgeToolSource extends BaseKnowledgeToolSource<KnowledgeToolSourceType.Pack> {
+    packId: number;
+}
+/**
+ * Source for using all knowledge.
+ * @hidden
+ */
+interface GlobalKnowledgeToolSource extends BaseKnowledgeToolSource<KnowledgeToolSourceType.Global> {
+}
+/**
+ * Union of all supported knowledge tool sources.
+ * @hidden
+ */
+type KnowledgeToolSource = PackKnowledgeToolSource | GlobalKnowledgeToolSource;
+/**
  * Tool that provides access to ingested knowledge.
  * @hidden
  */
-export type KnowledgeTool = BaseTool<ToolTypes.Knowledge> & ({
-    packId: number;
-} | {
-    global: true;
-});
+export interface KnowledgeTool extends BaseTool<ToolTypes.Knowledge> {
+    source: KnowledgeToolSource;
+}
 /**
  * Map of tool types to their corresponding tool interfaces.
  * This interface can be extended via declaration merging to add custom tool types.
@@ -1235,3 +1272,4 @@ export declare enum HttpStatusCode {
     BadGateway = 502,
     ServiceUnavailable = 503
 }
+export {};

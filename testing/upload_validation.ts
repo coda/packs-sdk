@@ -43,6 +43,8 @@ import type {ImageSchema} from '..';
 import {ImageShapeStyle} from '../schema';
 import {IndexingStrategy} from '../schema';
 import {JSONPath} from 'jsonpath-plus';
+import type {KnowledgeTool} from '../types';
+import {KnowledgeToolSourceType} from '../types';
 import {LifecycleBehavior} from '../schema';
 import {LinkDisplayType} from '../schema';
 import type {LinkSchema} from '../schema';
@@ -2097,17 +2099,22 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       .optional(),
   });
 
-  const knowledgeToolGlobalSchema = z.object({
+  const knowledgeToolSourceSchema = z.discriminatedUnion('type', [
+    z.object({
+      type: z.literal(KnowledgeToolSourceType.Global),
+    }),
+    z.object({
+      type: z.literal(KnowledgeToolSourceType.Pack),
+      packId: z.number(),
+    }),
+  ]);
+
+  const knowledgeToolSchema = zodCompleteStrictObject<KnowledgeTool>({
     type: z.literal(ToolTypes.Knowledge),
-    global: z.literal(true),
+    source: knowledgeToolSourceSchema,
   });
 
-  const knowledgeToolPackSchema = z.object({
-    type: z.literal(ToolTypes.Knowledge),
-    packId: z.number(),
-  });
-
-  const toolSchema = z.discriminatedUnion('type', [packToolSchema, knowledgeToolGlobalSchema, knowledgeToolPackSchema]);
+  const toolSchema = z.discriminatedUnion('type', [packToolSchema, knowledgeToolSchema]);
 
   const jobSchema = zodCompleteObject<{
     name: string;
