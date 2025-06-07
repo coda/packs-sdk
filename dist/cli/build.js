@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.build = exports.handleBuild = void 0;
+exports.handleBuild = handleBuild;
+exports.build = build;
 const compile_1 = require("../testing/compile");
 const helpers_1 = require("../testing/helpers");
 async function handleBuild({ outputDir, manifestFile, minify, timerStrategy, intermediateOutputDirectory, }) {
@@ -18,7 +19,6 @@ async function handleBuild({ outputDir, manifestFile, minify, timerStrategy, int
         (0, helpers_1.print)(`Pack built successfully. Compiled output is in ${bundlePath}.`);
     }
 }
-exports.handleBuild = handleBuild;
 async function build(manifestFile, { timerStrategy } = {}) {
     const { bundlePath } = await (0, compile_1.compilePackBundle)({
         manifestPath: manifestFile,
@@ -26,4 +26,3 @@ async function build(manifestFile, { timerStrategy } = {}) {
     });
     return bundlePath;
 }
-exports.build = build;
