@@ -1222,7 +1222,7 @@ export interface PackTool extends BaseTool<ToolType.Pack> {
  */
 export enum KnowledgeToolSourceType {
   /**
-   * Use all knowledge from the pack.
+   * Use all knowledge from all packs
    */
   Global = 'Global',
   /**
