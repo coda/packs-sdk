@@ -201,6 +201,28 @@ describe('Pack metadata Validation', async () => {
   });
 
   describe('Formulas', () => {
+    it('invalid formula due to validateParameters field', async () => {
+      const formula = makeFormula({
+        resultType: ValueType.Number,
+        name: 'MyFormula',
+        description: 'My description',
+        examples: [],
+        parameters: [makeNumericParameter('myParam', 'param description')],
+        execute: () => 1,
+        validateParameters: async () => {
+          return {
+            isValid: true,
+            errors: [],
+          };
+        },
+      });
+      const metadata = createFakePackVersionMetadata({
+        formulas: [compileFormulaMetadata(formula)],
+        formulaNamespace: 'MyNamespace',
+      });
+      await validateJsonAndAssertFails(metadata);
+    });
+
     it('valid number formula', async () => {
       const formula = makeFormula({
         resultType: ValueType.Number,
@@ -880,6 +902,44 @@ describe('Pack metadata Validation', async () => {
             },
             parameters: [],
             examples: [],
+          },
+        });
+
+        const metadata = createFakePackVersionMetadata(
+          compilePackMetadata({
+            version: '1',
+            syncTables: [syncTable],
+          }),
+        );
+        await validateJson(metadata);
+      });
+
+      it('valid sync table with validateParameters field', async () => {
+        const syncTable = makeSyncTable({
+          name: 'SyncTable',
+          identityName: 'Sync',
+          schema: makeObjectSchema({
+            type: ValueType.Object,
+            primary: 'foo',
+            id: 'foo',
+            properties: {
+              Foo: {type: ValueType.String},
+            },
+          }),
+          formula: {
+            name: 'SyncTable',
+            description: 'A simple sync table',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            examples: [],
+            validateParameters: async () => {
+              return {
+                isValid: true,
+                errors: [],
+              };
+            },
           },
         });
 

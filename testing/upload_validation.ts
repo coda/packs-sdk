@@ -1936,7 +1936,9 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }
         paramNames.add(param.name);
       }
-    });
+    }).refine(val => {
+      return !val.validateParameters;
+    }, {message: 'validateParameters is only allowed on sync formulas.'});
 
   const formatMetadataSchema = zodCompleteObject<PackFormatMetadata>({
     name: z.string().max(Limits.BuildingBlockName),
