@@ -128,7 +128,7 @@ ___
 
 • `Optional` **validateParameters**: [`MetadataFormula`](../types/core.MetadataFormula.md)<[`ExecutionContext`](core.ExecutionContext.md), [`ParameterValidationResult`](../types/core.ParameterValidationResult.md)\>
 
-The JavaScript function that implements parameter validation.
+The JavaScript function that implements parameter validation. This is only allowed on sync formulas.
 
 This function takes in parameters and a context containing a [PermissionSyncMode](../enums/core.PermissionSyncMode.md)
 and validates the parameters. A formula may want to validate parameters differently

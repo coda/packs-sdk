@@ -396,7 +396,7 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
 	 */
 	readonly allowedAuthenticationNames?: string[];
 	/**
-	 * The JavaScript function that implements parameter validation.
+	 * The JavaScript function that implements parameter validation. This is only allowed on sync formulas.
 	 *
 	 * This function takes in parameters and a context containing a {@link PermissionSyncMode}
 	 * and validates the parameters. A formula may want to validate parameters differently
