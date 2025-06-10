@@ -49,6 +49,22 @@ as a list of two elements, the beginning of the range and the end of the range.
 
 ___
 
+### Email
+
+• **Email** = ``"email"``
+
+Indicates a parameter that is a Coda email value.
+
+___
+
+### EmailArray
+
+• **EmailArray** = ``"emailArray"``
+
+Indicates a parameter that is a list of Coda email values.
+
+___
+
 ### File
 
 • **File** = ``"file"``
@@ -142,6 +158,14 @@ ___
 • **SparseDateArray** = ``"sparseDateArray"``
 
 [DateArray](core.ParameterType.md#datearray) that accepts unparsable values as `undefined`.
+
+___
+
+### SparseEmailArray
+
+• **SparseEmailArray** = ``"sparseEmailArray"``
+
+[EmailArray](core.ParameterType.md#emailarray) that accepts unparsable values as `undefined`.
 
 ___
 
