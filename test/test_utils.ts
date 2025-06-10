@@ -12,6 +12,7 @@ const BaseFakePack = {
   formats: [],
   formulas: [],
   syncTables: [],
+  jobs: [],
   permissionsDescription: 'Some description about permissions',
 };
 
