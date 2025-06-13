@@ -121,13 +121,15 @@ describe('Pack metadata Validation', async () => {
     const metadata = createFakePackVersionMetadata({
       formulaNamespace: 'namespace',
       formulas: [
-        compileFormulaMetadata(makeStringFormula({
-          extraneous: 'evil long string',
-          name: 'formula',
-          description: '',
-          execute: () => '',
-          parameters: [],
-        } as StringFormulaDefLegacy<any>)),
+        compileFormulaMetadata(
+          makeStringFormula({
+            extraneous: 'evil long string',
+            name: 'formula',
+            description: '',
+            execute: () => '',
+            parameters: [],
+          } as StringFormulaDefLegacy<any>),
+        ),
       ],
     });
     const result = await validateJson({
@@ -1302,6 +1304,61 @@ describe('Pack metadata Validation', async () => {
         assert.isArray(validatedMetadata.syncTables[0].schema.properties.Foo.options);
         assert.isTrue(validatedMetadata.syncTables[0].schema.properties.Foo.allowNewValues);
         assert.isString(validatedMetadata.syncTables[0].schema.properties.Bar.options);
+      });
+
+      it('options incorrect use of object allowNewValues', async () => {
+        const syncTable = makeSyncTable({
+          name: 'SyncTable',
+          identityName: 'Sync',
+          schema: makeObjectSchema({
+            type: ValueType.Object,
+            primary: 'foo',
+            id: 'foo',
+            properties: {
+              foo: {
+                type: ValueType.String,
+              },
+              displaynotstring: {
+                type: ValueType.Object,
+                codaType: ValueHintType.SelectList,
+                idProperty: 'id',
+                displayProperty: 'id',
+                allowNewValues: true,
+                properties: {
+                  id: {
+                    type: ValueType.Number,
+                  },
+                },
+                mutable: true,
+                options: [{}],
+              },
+            },
+          }),
+          formula: {
+            name: 'SyncTable',
+            description: 'A simple sync table',
+            async execute([], _context) {
+              return {result: []};
+            },
+            parameters: [],
+            examples: [],
+          },
+        });
+
+        const metadata = createFakePack({
+          syncTables: [syncTable],
+        });
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'allowNewValues can only be true when a string displayProperty is set.',
+            path: 'syncTables[0].schema.properties.Displaynotstring.allowNewValues',
+          },
+          {
+            message: 'allowNewValues can only be true when a string displayProperty is set.',
+            path: 'syncTables[0].getter.schema.items.properties.Displaynotstring.allowNewValues',
+          },
+        ]);
       });
 
       it('identityName propagated to identity field', async () => {
@@ -3417,7 +3474,8 @@ describe('Pack metadata Validation', async () => {
             validated.formulas.some(
               f =>
                 isObject(f.schema) &&
-                f.schema.index && isCustomIndexDefinition(f.schema.index) &&
+                f.schema.index &&
+                isCustomIndexDefinition(f.schema.index) &&
                 f.schema.index?.properties.some(
                   p => typeof p === 'object' && 'strategy' in p && p.strategy === IndexingStrategy.Raw,
                 ),
@@ -3457,10 +3515,10 @@ describe('Pack metadata Validation', async () => {
             index: {
               properties: ['name', 'attachments'],
               filterableProperties: ['value', 'enums', 'boolean', 'datetime'],
-            }
+            },
           });
           await validateJson(metadata);
-        })
+        });
 
         it('works with content categorization', async () => {
           const metadata = metadataForFormulaWithObjectSchema({
@@ -3473,7 +3531,7 @@ describe('Pack metadata Validation', async () => {
               properties: ['body'],
               contentCategorization: {
                 type: ContentCategorizationType.Document,
-              }
+              },
             },
           });
           await validateJson(metadata);
@@ -3498,11 +3556,11 @@ describe('Pack metadata Validation', async () => {
                 subjectProperty: 'subject',
                 htmlBodyProperty: 'htmlBody',
                 plainTextBodyProperty: 'plainTextBody',
-              }
+              },
             },
           });
           await validateJson(metadata);
-          });
+        });
 
         it('fails with invalid index property', async () => {
           const metadata = metadataForFormulaWithObjectSchema({
@@ -3590,7 +3648,7 @@ describe('Pack metadata Validation', async () => {
             index: {
               properties: ['name', 'attachments'],
               filterableProperties: ['value', 'enums', 'boolean', 'datetime', 'numberDateTime', 'date'],
-            }
+            },
           });
           const err = await validateJsonAndAssertFails(metadata);
           assert.deepEqual(err.validationErrors, [
@@ -3613,28 +3671,30 @@ describe('Pack metadata Validation', async () => {
             index: {
               properties: ['name', 'attachments'],
               filterableProperties: ['value', 'badProperty'],
-            }
+            },
           });
           const err = await validateJsonAndAssertFails(metadata);
           assert.deepEqual(err.validationErrors, [
             {
-              message: 'The "filterableProperty" field name "BadProperty" must be a "ValueType.Boolean", "ValueType.Number", or a property with a "ValueHintType.DateTime" or "ValueHintType.SelectList" "codaType".',
+              message:
+                'The "filterableProperty" field name "BadProperty" must be a "ValueType.Boolean", "ValueType.Number", or a property with a "ValueHintType.DateTime" or "ValueHintType.SelectList" "codaType".',
               path: 'formulas[0].schema.index.filterableProperty[1]',
             },
           ]);
         });
 
         it('fails with invalid content categorization', async () => {
-          assert.throws(() => metadataForFormulaWithObjectSchema({
-            type: ValueType.Object,
-            properties: {
-              body: {type: ValueType.String},
-            },
-            index: {
-              contentCategorization: {type: 'invalid'} as any,
-            },
-          }));
-
+          assert.throws(() =>
+            metadataForFormulaWithObjectSchema({
+              type: ValueType.Object,
+              properties: {
+                body: {type: ValueType.String},
+              },
+              index: {
+                contentCategorization: {type: 'invalid'} as any,
+              },
+            }),
+          );
         });
 
         it('fails with invalid email content categorization', async () => {
@@ -3655,7 +3715,7 @@ describe('Pack metadata Validation', async () => {
                 fromProperty: 'from',
                 subjectProperty: 'subject',
                 htmlBodyProperty: 'htmlBody',
-                plainTextBodyProperty: 'plainTextBody'
+                plainTextBodyProperty: 'plainTextBody',
               } as any,
             },
           });
@@ -5275,35 +5335,39 @@ describe('Pack metadata Validation', async () => {
             },
           ],
           formulas: [
-            compileFormulaMetadata(makeFormula({
-              resultType: ValueType.String,
-              name: 'FormulaName',
-              description: '',
-              parameters: [],
-              execute: () => '',
-              allowedAuthenticationNames: ['adminAuth2'],
-            })),
+            compileFormulaMetadata(
+              makeFormula({
+                resultType: ValueType.String,
+                name: 'FormulaName',
+                description: '',
+                parameters: [],
+                execute: () => '',
+                allowedAuthenticationNames: ['adminAuth2'],
+              }),
+            ),
           ],
           syncTables: [
-            compileSyncTable(makeSyncTable({
-              name: 'SyncTable',
-              identityName: 'Identity',
-              schema: makeObjectSchema({
-                type: ValueType.Object,
-                primary: 'foo',
-                id: 'foo',
-                properties: {foo: {type: ValueType.String}},
-              }),
-              formula: {
+            compileSyncTable(
+              makeSyncTable({
                 name: 'SyncTable',
-                description: '',
-                async execute([], _context) {
-                  return {result: []};
+                identityName: 'Identity',
+                schema: makeObjectSchema({
+                  type: ValueType.Object,
+                  primary: 'foo',
+                  id: 'foo',
+                  properties: {foo: {type: ValueType.String}},
+                }),
+                formula: {
+                  name: 'SyncTable',
+                  description: '',
+                  async execute([], _context) {
+                    return {result: []};
+                  },
+                  parameters: [],
+                  allowedAuthenticationNames: ['adminAuth3', ReservedAuthenticationNames.Default],
                 },
-                parameters: [],
-                allowedAuthenticationNames: ['adminAuth3', ReservedAuthenticationNames.Default],
-              },
-            })),
+              }),
+            ),
           ],
           formulaNamespace: 'MyNamespace',
         });
@@ -5322,44 +5386,48 @@ describe('Pack metadata Validation', async () => {
             },
           ],
           syncTables: [
-            compileSyncTable(makeSyncTable({
-              name: 'SyncTable',
-              identityName: 'Identity',
-              schema: makeObjectSchema({
-                type: ValueType.Object,
-                displayProperty: 'foo',
-                idProperty: 'foo',
-                properties: {foo: {type: ValueType.String}},
-              }),
-              formula: {
+            compileSyncTable(
+              makeSyncTable({
                 name: 'SyncTable',
-                description: '',
-                async execute([], _context) {
-                  return {result: []};
+                identityName: 'Identity',
+                schema: makeObjectSchema({
+                  type: ValueType.Object,
+                  displayProperty: 'foo',
+                  idProperty: 'foo',
+                  properties: {foo: {type: ValueType.String}},
+                }),
+                formula: {
+                  name: 'SyncTable',
+                  description: '',
+                  async execute([], _context) {
+                    return {result: []};
+                  },
+                  parameters: [],
+                  allowedAuthenticationNames: ['fakeAuthName'],
                 },
-                parameters: [],
-                allowedAuthenticationNames: ['fakeAuthName'],
-              },
-            })),
-            compileSyncTable(makeSyncTable({
-              name: 'SyncTable2',
-              identityName: 'Identity2',
-              schema: makeObjectSchema({
-                type: ValueType.Object,
-                displayProperty: 'foo',
-                idProperty: 'foo',
-                properties: {foo: {type: ValueType.String}},
               }),
-              formula: {
+            ),
+            compileSyncTable(
+              makeSyncTable({
                 name: 'SyncTable2',
-                description: '',
-                async execute([], _context) {
-                  return {result: []};
+                identityName: 'Identity2',
+                schema: makeObjectSchema({
+                  type: ValueType.Object,
+                  displayProperty: 'foo',
+                  idProperty: 'foo',
+                  properties: {foo: {type: ValueType.String}},
+                }),
+                formula: {
+                  name: 'SyncTable2',
+                  description: '',
+                  async execute([], _context) {
+                    return {result: []};
+                  },
+                  parameters: [],
+                  allowedAuthenticationNames: [ReservedAuthenticationNames.System, ReservedAuthenticationNames.Default],
                 },
-                parameters: [],
-                allowedAuthenticationNames: [ReservedAuthenticationNames.System, ReservedAuthenticationNames.Default],
-              },
-            })),
+              }),
+            ),
           ],
         });
         const err = await validateJsonAndAssertFails(metadata, '1.0.0');
@@ -5394,15 +5462,17 @@ describe('Pack metadata Validation', async () => {
       it('cannot set allowedAuthenticationNames on a formula with no connection', async () => {
         const metadata = createFakePackVersionMetadata({
           formulas: [
-            compileFormulaMetadata(makeFormula({
-              name: 'FormulaName',
-              description: '',
-              parameters: [],
-              execute: () => '',
-              resultType: ValueType.String,
-              connectionRequirement: ConnectionRequirement.None,
-              allowedAuthenticationNames: [ReservedAuthenticationNames.Default],
-            })),
+            compileFormulaMetadata(
+              makeFormula({
+                name: 'FormulaName',
+                description: '',
+                parameters: [],
+                execute: () => '',
+                resultType: ValueType.String,
+                connectionRequirement: ConnectionRequirement.None,
+                allowedAuthenticationNames: [ReservedAuthenticationNames.Default],
+              }),
+            ),
           ],
           formulaNamespace: 'MyNamespace',
         });

@@ -1090,13 +1090,13 @@ export type BasicIndexedProperty = PropertyIdentifier<string>;
 
 /**
  * A property that will be used to filter the results of a search.
- * 
+ *
  * For example, if you want to allow users to query for all emails last modified in the last 30 days,
  * you would add the property that represents the last modified date to filterableProperties.
- * 
- * Filterable properties must be one of the following types: 
+ *
+ * Filterable properties must be one of the following types:
  * {@link ValueHintType.SelectList}, {@link ValueType.Boolean}, {@link ValueHintType.DateTime},
- * {@link ValueHintType.Date}, or {@link ValueType.Number}. 
+ * {@link ValueHintType.Date}, or {@link ValueType.Number}.
  * For filtering purposes, number values will be rounded down to the nearest integer.
  * @hidden
  */
@@ -1144,8 +1144,8 @@ interface BaseIndexDefinition {
    */
   popularityNormProperty?: PropertyIdentifier<string>;
   /**
-   * A list of properties from within {@link ObjectSchemaDefinition.properties} 
-   * that will be made available to filter the results of a search. Limited to 5 properties, 
+   * A list of properties from within {@link ObjectSchemaDefinition.properties}
+   * that will be made available to filter the results of a search. Limited to 5 properties,
    * so these should be the properties most likely to be useful as filters.
    */
   filterableProperties?: FilterableProperty[];
@@ -1197,11 +1197,11 @@ export interface DocumentContentCategorization extends BaseContentCategorization
 
 export interface EmailContentCategorization extends BaseContentCategorization {
   type: ContentCategorizationType.Email;
-  toProperty: PropertyIdentifier<string>
-  fromProperty: PropertyIdentifier<string>
-  subjectProperty: PropertyIdentifier<string>
-  htmlBodyProperty: PropertyIdentifier<string>
-  plainTextBodyProperty: PropertyIdentifier<string>
+  toProperty: PropertyIdentifier<string>;
+  fromProperty: PropertyIdentifier<string>;
+  subjectProperty: PropertyIdentifier<string>;
+  htmlBodyProperty: PropertyIdentifier<string>;
+  plainTextBodyProperty: PropertyIdentifier<string>;
 }
 
 export interface CommentContentCategorization extends BaseContentCategorization {
@@ -1220,7 +1220,6 @@ export interface ContentCategorizationTypeMap {
   [ContentCategorizationType.Email]: EmailContentCategorization;
   [ContentCategorizationType.Comment]: CommentContentCategorization;
 }
-
 
 /**
  * Defines how to index categorized objects for use with full-text indexing.
@@ -1323,7 +1322,6 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    * render such a value as an @-reference to that person, rather than a basic object chip.
    */
   codaType?: ObjectHintTypes;
-
 
   /**
    * Allow custom, user-entered strings in addition to {@link PropertyWithOptions.options}. This
@@ -2184,15 +2182,7 @@ function normalizeContentCategorization(
       return {type};
     }
     case ContentCategorizationType.Email: {
-      const {
-        type,
-        toProperty,
-        fromProperty,
-        subjectProperty,
-        htmlBodyProperty,
-        plainTextBodyProperty,
-        ...rest
-      } = value;
+      const {type, toProperty, fromProperty, subjectProperty, htmlBodyProperty, plainTextBodyProperty, ...rest} = value;
       ensureNever<keyof typeof rest>();
       return {
         type,
@@ -2221,13 +2211,7 @@ function normalizeIndexDefinition(
 ): IndexDefinition {
   // Handle categorization index definitions.
   if (isCategorizationIndexDefinition(index)) {
-    const {
-      contentCategorization,
-      authorityNormProperty,
-      popularityNormProperty,
-      filterableProperties,
-      ...rest
-    } = index;
+    const {contentCategorization, authorityNormProperty, popularityNormProperty, filterableProperties, ...rest} = index;
     ensureNever<keyof typeof rest>();
     return {
       contentCategorization: normalizeContentCategorization(contentCategorization, normalizedProperties),
@@ -2237,20 +2221,14 @@ function normalizeIndexDefinition(
       popularityNormProperty: popularityNormProperty
         ? normalizeSchemaPropertyIdentifier(popularityNormProperty, normalizedProperties)
         : undefined,
-      filterableProperties: filterableProperties?.map(prop => 
+      filterableProperties: filterableProperties?.map(prop =>
         normalizeSchemaPropertyIdentifier(prop, normalizedProperties),
       ),
     };
   }
   // Handle custom index definitions.
-  const {
-    properties,
-    contextProperties,
-    authorityNormProperty,
-    popularityNormProperty,
-    filterableProperties,
-    ...rest
-  } = index;
+  const {properties, contextProperties, authorityNormProperty, popularityNormProperty, filterableProperties, ...rest} =
+    index;
   ensureNever<keyof typeof rest>();
   return {
     properties: properties.map(prop => normalizeIndexProperty(prop, normalizedProperties)),
@@ -2263,7 +2241,7 @@ function normalizeIndexDefinition(
     popularityNormProperty: popularityNormProperty
       ? normalizeSchemaPropertyIdentifier(popularityNormProperty, normalizedProperties)
       : undefined,
-    filterableProperties: filterableProperties?.map(prop => 
+    filterableProperties: filterableProperties?.map(prop =>
       normalizeSchemaPropertyIdentifier(prop, normalizedProperties),
     ),
   };
@@ -2320,6 +2298,7 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     options,
     requireForUpdates,
     codaType,
+    allowNewValues,
     description,
     displayProperty,
     featured,
@@ -2375,6 +2354,7 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     options,
     requireForUpdates,
     codaType,
+    allowNewValues,
     description,
     displayProperty: displayProperty ? normalizeSchemaKey(displayProperty) : undefined,
     featured: featured ? featured.map(normalizeSchemaKey) : undefined,

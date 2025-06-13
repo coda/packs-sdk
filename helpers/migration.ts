@@ -41,6 +41,7 @@ class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
       type,
       attribution,
       codaType,
+      allowNewValues,
       requireForUpdates,
 
       // Properties not needed by ObjectSchemaHelper clients.
@@ -102,6 +103,10 @@ class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
 
   get codaType() {
     return this._schema.codaType;
+  }
+
+  get allowNewValues() {
+    return this._schema.allowNewValues;
   }
 
   get requireForUpdates() {
