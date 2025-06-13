@@ -23,7 +23,7 @@ import type {OAuth2Credentials} from './auth_types';
 import type {QueryParamCredentials} from './auth_types';
 import {STSClient} from '@aws-sdk/client-sts';
 import {Sha256} from '@aws-crypto/sha256-js';
-import {SignatureV4} from '@aws-sdk/signature-v4';
+import {SignatureV4} from '@smithy/signature-v4';
 import type {SyncExecutionContext} from '../api_types';
 import type {SyncStateService} from '../api_types';
 import type {TemporaryBlobStorage} from '../api_types';
