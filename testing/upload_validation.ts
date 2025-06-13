@@ -1450,6 +1450,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       primary: z.string().min(1).optional(),
       displayProperty: z.string().min(1).optional(),
       codaType: z.enum([...ObjectHintValueTypes]).optional(),
+      allowNewValues: z.boolean().optional(),
       featured: z.array(z.string()).optional(),
       featuredProperties: z.array(z.string()).optional(),
       identity: identitySchema.optional(),

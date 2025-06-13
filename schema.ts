@@ -1323,6 +1323,16 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    * render such a value as an @-reference to that person, rather than a basic object chip.
    */
   codaType?: ObjectHintTypes;
+
+
+  /**
+   * Allow custom, user-entered strings in addition to {@link PropertyWithOptions.options}. This
+   * only works for property options formulas if the displayProperty is a non-empty string and
+   * it works by building an object containing only the display property with other fields missing.
+   * @hidden
+   */
+  allowNewValues?: boolean;
+
   /** @deprecated Use {@link ObjectSchemaDefinition.featuredProperties} */
   featured?: L[];
   /**
