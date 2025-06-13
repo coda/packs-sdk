@@ -1,6 +1,6 @@
 {
   "name": "@codahq/packs-sdk",
-  "version": "1.9.6-prerelease.1",
+  "version": "1.9.6-prerelease.2",
   "license": "MIT",
   "workspaces": [
     "dev/eslint"
@@ -22,7 +22,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@aws-crypto/sha256-js": "4.0.0",
+    "@aws-crypto/sha256-js": "5.2.0",
     "@aws-sdk/client-sts": "3.821.0",
     "@smithy/signature-v4": "5.1.2",
     "browserify": "17.0.1",
@@ -60,7 +60,7 @@
     "isolated-vm": "5.0.1"
   },
   "devDependencies": {
-    "@aws-sdk/types": "3.664.0",
+    "@aws-sdk/types": "3.821.0",
     "@brightcove/kacl": "0.1.11",
     "@getify/eslint-plugin-proper-arrows": "11.0.3",
     "@julian_cataldo/remark-lint-frontmatter-schema": "3.7.6",
@@ -123,8 +123,6 @@
       "eslint-plugin-local@1.0.0": "patches/eslint-plugin-local@1.0.0.patch"
     },
     "overrides": {
-      "cross-spawn": ">=7.0.6",
-      "elliptic@<=6.6.0": ">=6.6.1",
       "tar-fs@<2.1.2": ">=2.1.2"
     },
     "packageExtensions": {
