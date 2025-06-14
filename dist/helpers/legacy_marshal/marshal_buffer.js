@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.unmarshalBuffer = exports.marshalBuffer = void 0;
+exports.marshalBuffer = marshalBuffer;
+exports.unmarshalBuffer = unmarshalBuffer;
 const constants_1 = require("./constants");
 const constants_2 = require("./constants");
 function marshalBuffer(val) {
@@ -16,11 +17,9 @@ function marshalBuffer(val) {
         };
     }
 }
-exports.marshalBuffer = marshalBuffer;
 function unmarshalBuffer(val) {
     if (typeof val !== 'object' || val[constants_2.LegacyMarshalingInjectedKeys.CodaMarshaler] !== constants_1.LegacyCodaMarshalerType.Buffer) {
         return;
     }
     return Buffer.from(val.data);
 }
-exports.unmarshalBuffer = unmarshalBuffer;

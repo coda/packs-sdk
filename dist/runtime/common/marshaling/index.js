@@ -1,6 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.unmarshalError = exports.marshalError = exports.unwrapError = exports.wrapErrorForSameOrHigherNodeVersion = exports.unmarshalValue = exports.unmarshalValueFromString = exports.marshalValueToStringForSameOrHigherNodeVersion = exports.marshalValue = exports.marshalValuesForLogging = exports.isMarshaledValue = exports.TransformType = void 0;
+exports.TransformType = void 0;
+exports.isMarshaledValue = isMarshaledValue;
+exports.marshalValuesForLogging = marshalValuesForLogging;
+exports.marshalValue = marshalValue;
+exports.marshalValueToStringForSameOrHigherNodeVersion = marshalValueToStringForSameOrHigherNodeVersion;
+exports.unmarshalValueFromString = unmarshalValueFromString;
+exports.unmarshalValue = unmarshalValue;
+exports.wrapErrorForSameOrHigherNodeVersion = wrapErrorForSameOrHigherNodeVersion;
+exports.unwrapError = unwrapError;
+exports.marshalError = marshalError;
+exports.unmarshalError = unmarshalError;
 const constants_1 = require("./constants");
 const api_1 = require("../../../api");
 const constants_2 = require("./constants");
@@ -146,11 +156,9 @@ function fixUncopyableTypes(val, pathPrefix, postTransforms, depth = 0) {
 function isMarshaledValue(val) {
     return typeof val === 'object' && constants_2.MarshalingInjectedKeys.CodaMarshaler in val;
 }
-exports.isMarshaledValue = isMarshaledValue;
 function marshalValuesForLogging(val) {
     return [marshalValue((0, util_1.format)(...val))];
 }
-exports.marshalValuesForLogging = marshalValuesForLogging;
 function marshalValue(val) {
     const postTransforms = [];
     const { val: encodedVal } = fixUncopyableTypes(val, [], postTransforms, 0);
@@ -160,12 +168,10 @@ function marshalValue(val) {
         [constants_2.MarshalingInjectedKeys.CodaMarshaler]: constants_1.CodaMarshalerType.Object,
     };
 }
-exports.marshalValue = marshalValue;
 function marshalValueToStringForSameOrHigherNodeVersion(val) {
     const serialized = (0, serializer_2.serialize)(marshalValue(val));
     return serialized;
 }
-exports.marshalValueToStringForSameOrHigherNodeVersion = marshalValueToStringForSameOrHigherNodeVersion;
 function unmarshalValueFromString(marshaledValue) {
     if (marshaledValue === undefined) {
         // Historically marshalValueForAnyNodeVersion could sometimes return "undefined" even
@@ -180,7 +186,6 @@ function unmarshalValueFromString(marshaledValue) {
     // Probably a legacy JSON value
     return (0, legacy_marshal_1.internalUnmarshalValueForAnyNodeVersion)(marshaledValue);
 }
-exports.unmarshalValueFromString = unmarshalValueFromString;
 function applyTransform(input, path, fn) {
     if (path.length === 0) {
         return fn(input);
@@ -208,7 +213,6 @@ function unmarshalValue(marshaledValue) {
     }
     return result;
 }
-exports.unmarshalValue = unmarshalValue;
 // The only way to pass information out of isolated-vm through an uncaught exception is
 // in the "message" field, which must be a string. Because of that, we use marshalValueToString()
 // instead of just putting a structuredClone()-compatible object into a custom field on a custom
@@ -216,7 +220,6 @@ exports.unmarshalValue = unmarshalValue;
 function wrapErrorForSameOrHigherNodeVersion(err) {
     return new Error(marshalValueToStringForSameOrHigherNodeVersion(err));
 }
-exports.wrapErrorForSameOrHigherNodeVersion = wrapErrorForSameOrHigherNodeVersion;
 function unwrapError(err) {
     try {
         const unmarshaledValue = unmarshalValueFromString(err.message);
@@ -229,7 +232,6 @@ function unwrapError(err) {
         return err;
     }
 }
-exports.unwrapError = unwrapError;
 function getErrorClassType(err) {
     if (recognizableSystemErrorClasses.some(cls => cls === err.constructor)) {
         return ErrorClassType.System;
@@ -265,7 +267,6 @@ function marshalError(err) {
     };
     return result;
 }
-exports.marshalError = marshalError;
 function getErrorClass(errorClassType, name) {
     let errorClasses;
     switch (errorClassType) {
@@ -297,4 +298,3 @@ function unmarshalError(val) {
     }
     return error;
 }
-exports.unmarshalError = unmarshalError;

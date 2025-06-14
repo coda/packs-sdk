@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getEffectivePropertyKeysFromSchema = void 0;
+exports.getEffectivePropertyKeysFromSchema = getEffectivePropertyKeysFromSchema;
 const schema_1 = require("../schema");
 /**
  * A helper to extract properties fromKeys from a schema object. This is mostly useful
@@ -17,4 +17,3 @@ function getEffectivePropertyKeysFromSchema(schema) {
     }
     return [...new Set(Object.entries(schema.properties).map(([key, property]) => property.fromKey || key))];
 }
-exports.getEffectivePropertyKeysFromSchema = getEffectivePropertyKeysFromSchema;
