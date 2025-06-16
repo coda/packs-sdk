@@ -2,7 +2,7 @@
 
 This changelog keeps track of all changes to the Packs SDK. We follow conventions from [keepachangelog](https://keepachangelog.com/en/1.0.0/).
 
-## [1.9.7] - 2025-06-13
+## Unreleased
 
 ### Changed
 
@@ -912,4 +912,3 @@ await myHelper(context);
 [1.9.2]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.2
 [1.9.6]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.6
 [1.9.5]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.5
-[1.9.7]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.7
