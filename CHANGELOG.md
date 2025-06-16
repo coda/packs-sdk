@@ -2,9 +2,9 @@
 
 This changelog keeps track of all changes to the Packs SDK. We follow conventions from [keepachangelog](https://keepachangelog.com/en/1.0.0/).
 
-## [Unreleased]
-
 ## [1.9.7] - 2025-06-13
+
+### Changed
 
 - Bump some dependencies
 
