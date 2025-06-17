@@ -14,7 +14,7 @@ An parameter validation result where the parameters are invalid.
 
 ### errors
 
-• **errors**: [`ParameterError`](core.ParameterError.md)[]
+• `Optional` **errors**: [`ParameterValidationDetail`](core.ParameterValidationDetail.md)[]
 
 The parameters that were invalid, alongside a message describing the error for the parameter.
 
@@ -32,4 +32,4 @@ ___
 
 • **message**: `string`
 
-The message to display to the user. Each ParameterError will also have a message.
+The message to display to the user. Each ParameterValidationDetail will also have a message.

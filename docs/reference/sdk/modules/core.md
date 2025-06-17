@@ -106,7 +106,7 @@ import * as coda from "@codahq/packs-sdk";
 - [PackFormulaDef](../interfaces/core.PackFormulaDef.md)
 - [PackVersionDefinition](../interfaces/core.PackVersionDefinition.md)
 - [ParamDef](../interfaces/core.ParamDef.md)
-- [ParameterError](../interfaces/core.ParameterError.md)
+- [ParameterValidationDetail](../interfaces/core.ParameterValidationDetail.md)
 - [ProgressBarSchema](../interfaces/core.ProgressBarSchema.md)
 - [PropertyIdentifierDetails](../interfaces/core.PropertyIdentifierDetails.md)
 - [PropertyOptionsExecutionContext](../interfaces/core.PropertyOptionsExecutionContext.md)
