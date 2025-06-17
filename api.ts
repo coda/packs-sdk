@@ -102,7 +102,7 @@ export class UserVisibleError extends Error {
 /**
  * An error that occurs when validating parameters.
  */
-export interface ParameterError {
+export interface ParameterValidationDetail {
   /** The error message for the parameter. */
   message: string;
   /** The name of the parameter that caused the error. */
@@ -116,13 +116,13 @@ export interface InvalidParameterValidationResult {
   /**
    * The parameters that were invalid, alongside a message describing the error for the parameter.
    */
-  errors: ParameterError[];
+  errors?: ParameterValidationDetail[];
   /**
    * Whether the parameters are valid.
    */
   isValid: false;
   /**
-   * The message to display to the user. Each ParameterError will also have a message.
+   * The message to display to the user. Each ParameterValidationDetail will also have a message.
    */
   message: string;
 }

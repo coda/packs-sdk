@@ -131,7 +131,7 @@ export {Type} from './api_types';
 export type {TypedPackFormula} from './api';
 export type {Formula} from './api';
 export {UserVisibleError} from './api';
-export {ParameterError} from './api';
+export {ParameterValidationDetail} from './api';
 export {LegacyDefaultMetadataReturnType} from './api';
 export {ValidParameterValidationResult} from './api';
 export {InvalidParameterValidationResult} from './api';
