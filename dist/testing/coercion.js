@@ -65,6 +65,7 @@ function coerceParam(type, name, value) {
         case api_types_1.Type.image:
         case api_types_1.Type.string:
         case api_types_1.Type.markdown:
+        case api_types_1.Type.email:
             return value;
         default:
             return (0, ensure_1.ensureUnreachable)(type);

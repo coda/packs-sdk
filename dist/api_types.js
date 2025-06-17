@@ -20,6 +20,7 @@ var Type;
     Type[Type["image"] = 6] = "image";
     Type[Type["file"] = 7] = "file";
     Type[Type["markdown"] = 8] = "markdown";
+    Type[Type["email"] = 9] = "email";
 })(Type || (exports.Type = Type = {}));
 function isArrayType(obj) {
     return obj && obj.type === 'array' && typeof obj.items === 'number';
@@ -98,6 +99,10 @@ var ParameterType;
      */
     ParameterType["Markdown"] = "markdown";
     /**
+     * Indicates a parameter that is a Coda email value.
+     */
+    ParameterType["Email"] = "email";
+    /**
      * Indicates a parameter that is a list of Coda text values.
      */
     ParameterType["StringArray"] = "stringArray";
@@ -121,6 +126,14 @@ var ParameterType;
      * {@link BooleanArray} that accepts unparsable values as `undefined`.
      */
     ParameterType["SparseBooleanArray"] = "sparseBooleanArray";
+    /**
+     * Indicates a parameter that is a list of Coda email values.
+     */
+    ParameterType["EmailArray"] = "emailArray";
+    /**
+     * {@link EmailArray} that accepts unparsable values as `undefined`.
+     */
+    ParameterType["SparseEmailArray"] = "sparseEmailArray";
     /**
      * Indicates a parameter that is a list of Coda date values (which includes time and datetime values).
      *
@@ -176,6 +189,7 @@ exports.ParameterTypeInputMap = {
     [ParameterType.Image]: Type.image,
     [ParameterType.File]: Type.file,
     [ParameterType.Markdown]: Type.markdown,
+    [ParameterType.Email]: Type.email,
     [ParameterType.StringArray]: { type: 'array', items: Type.string },
     [ParameterType.NumberArray]: { type: 'array', items: Type.number },
     [ParameterType.BooleanArray]: { type: 'array', items: Type.boolean },
@@ -184,6 +198,7 @@ exports.ParameterTypeInputMap = {
     [ParameterType.ImageArray]: { type: 'array', items: Type.image },
     [ParameterType.FileArray]: { type: 'array', items: Type.file },
     [ParameterType.MarkdownArray]: { type: 'array', items: Type.markdown },
+    [ParameterType.EmailArray]: { type: 'array', items: Type.email },
     [ParameterType.SparseStringArray]: { type: 'array', items: Type.string, allowEmpty: true },
     [ParameterType.SparseNumberArray]: { type: 'array', items: Type.number, allowEmpty: true },
     [ParameterType.SparseBooleanArray]: { type: 'array', items: Type.boolean, allowEmpty: true },
@@ -192,6 +207,7 @@ exports.ParameterTypeInputMap = {
     [ParameterType.SparseImageArray]: { type: 'array', items: Type.image, allowEmpty: true },
     [ParameterType.SparseFileArray]: { type: 'array', items: Type.file, allowEmpty: true },
     [ParameterType.SparseMarkdownArray]: { type: 'array', items: Type.markdown, allowEmpty: true },
+    [ParameterType.SparseEmailArray]: { type: 'array', items: Type.email, allowEmpty: true },
 };
 /**
  * Enumeration of requirement states for whether a given formula or sync table requires

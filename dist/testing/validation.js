@@ -102,6 +102,7 @@ function validateResultType(resultType, result) {
         case api_types_1.Type.object:
             return checkType(typeOfResult === 'object', 'object', result);
         case api_types_1.Type.string:
+        case api_types_1.Type.email:
             return checkType(typeOfResult === 'string', 'string', result);
         default:
             return (0, ensure_2.ensureUnreachable)(resultType);

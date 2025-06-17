@@ -6047,6 +6047,7 @@ module.exports = (() => {
     ["image" /* Image */]: 6 /* image */,
     ["file" /* File */]: 7 /* file */,
     ["markdown" /* Markdown */]: 8 /* markdown */,
+    ["email" /* Email */]: 9 /* email */,
     ["stringArray" /* StringArray */]: { type: "array", items: 0 /* string */ },
     ["numberArray" /* NumberArray */]: { type: "array", items: 1 /* number */ },
     ["booleanArray" /* BooleanArray */]: { type: "array", items: 3 /* boolean */ },
@@ -6055,6 +6056,7 @@ module.exports = (() => {
     ["imageArray" /* ImageArray */]: { type: "array", items: 6 /* image */ },
     ["fileArray" /* FileArray */]: { type: "array", items: 7 /* file */ },
     ["markdownArray`" /* MarkdownArray */]: { type: "array", items: 8 /* markdown */ },
+    ["emailArray" /* EmailArray */]: { type: "array", items: 9 /* email */ },
     ["sparseStringArray" /* SparseStringArray */]: { type: "array", items: 0 /* string */, allowEmpty: true },
     ["sparseNumberArray" /* SparseNumberArray */]: { type: "array", items: 1 /* number */, allowEmpty: true },
     ["sparseBooleanArray" /* SparseBooleanArray */]: { type: "array", items: 3 /* boolean */, allowEmpty: true },
@@ -6062,7 +6064,8 @@ module.exports = (() => {
     ["sparseHtmlArray" /* SparseHtmlArray */]: { type: "array", items: 5 /* html */, allowEmpty: true },
     ["sparseImageArray" /* SparseImageArray */]: { type: "array", items: 6 /* image */, allowEmpty: true },
     ["sparseFileArray" /* SparseFileArray */]: { type: "array", items: 7 /* file */, allowEmpty: true },
-    ["sparseMarkdownArray" /* SparseMarkdownArray */]: { type: "array", items: 8 /* markdown */, allowEmpty: true }
+    ["sparseMarkdownArray" /* SparseMarkdownArray */]: { type: "array", items: 8 /* markdown */, allowEmpty: true },
+    ["sparseEmailArray" /* SparseEmailArray */]: { type: "array", items: 9 /* email */, allowEmpty: true }
   };
   var UntilNowDateRanges = [
     "today" /* Today */,
