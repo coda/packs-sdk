@@ -96,6 +96,7 @@ function validateResultType<ResultT extends any>(resultType: Type, result: Resul
     case Type.object:
       return checkType(typeOfResult === 'object', 'object', result);
     case Type.string:
+    case Type.email:
       return checkType(typeOfResult === 'string', 'string', result);
     default:
       return ensureUnreachable(resultType);

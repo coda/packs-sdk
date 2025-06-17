@@ -28,6 +28,7 @@ export enum Type {
   image,
   file,
   markdown,
+  email,
 }
 
 export type ParamType = Exclude<Type, Type.object>;
@@ -107,6 +108,7 @@ export interface TypeMap {
   [Type.image]: string;
   [Type.file]: string;
   [Type.markdown]: string;
+  [Type.email]: string;
 }
 
 /**
@@ -166,6 +168,10 @@ export enum ParameterType {
    * Indicates a parameter that is a Coda rich text value that should be passed to the pack as Markdown.
    */
   Markdown = 'markdown',
+  /**
+   * Indicates a parameter that is a Coda email value.
+   */
+  Email = 'email',
 
   /**
    * Indicates a parameter that is a list of Coda text values.
@@ -191,6 +197,14 @@ export enum ParameterType {
    * {@link BooleanArray} that accepts unparsable values as `undefined`.
    */
   SparseBooleanArray = 'sparseBooleanArray',
+  /**
+   * Indicates a parameter that is a list of Coda email values.
+   */
+  EmailArray = 'emailArray',
+  /**
+   * {@link EmailArray} that accepts unparsable values as `undefined`.
+   */
+  SparseEmailArray = 'sparseEmailArray',
   /**
    * Indicates a parameter that is a list of Coda date values (which includes time and datetime values).
    *
@@ -247,6 +261,7 @@ export interface ParameterTypeMap {
   [ParameterType.Image]: Type.image;
   [ParameterType.File]: Type.file;
   [ParameterType.Markdown]: Type.markdown;
+  [ParameterType.Email]: Type.email;
 
   [ParameterType.StringArray]: ArrayType<Type.string>;
   [ParameterType.NumberArray]: ArrayType<Type.number>;
@@ -256,6 +271,7 @@ export interface ParameterTypeMap {
   [ParameterType.ImageArray]: ArrayType<Type.image>;
   [ParameterType.FileArray]: ArrayType<Type.file>;
   [ParameterType.MarkdownArray]: ArrayType<Type.markdown>;
+  [ParameterType.EmailArray]: ArrayType<Type.email>;
 
   [ParameterType.SparseStringArray]: SparseArrayType<Type.string>;
   [ParameterType.SparseNumberArray]: SparseArrayType<Type.number>;
@@ -265,6 +281,7 @@ export interface ParameterTypeMap {
   [ParameterType.SparseImageArray]: SparseArrayType<Type.image>;
   [ParameterType.SparseFileArray]: SparseArrayType<Type.file>;
   [ParameterType.SparseMarkdownArray]: SparseArrayType<Type.markdown>;
+  [ParameterType.SparseEmailArray]: SparseArrayType<Type.email>;
 }
 
 export const ParameterTypeInputMap: Record<ParameterType, UnionType> = {
@@ -276,6 +293,7 @@ export const ParameterTypeInputMap: Record<ParameterType, UnionType> = {
   [ParameterType.Image]: Type.image,
   [ParameterType.File]: Type.file,
   [ParameterType.Markdown]: Type.markdown,
+  [ParameterType.Email]: Type.email,
 
   [ParameterType.StringArray]: {type: 'array', items: Type.string},
   [ParameterType.NumberArray]: {type: 'array', items: Type.number},
@@ -285,6 +303,7 @@ export const ParameterTypeInputMap: Record<ParameterType, UnionType> = {
   [ParameterType.ImageArray]: {type: 'array', items: Type.image},
   [ParameterType.FileArray]: {type: 'array', items: Type.file},
   [ParameterType.MarkdownArray]: {type: 'array', items: Type.markdown},
+  [ParameterType.EmailArray]: {type: 'array', items: Type.email},
 
   [ParameterType.SparseStringArray]: {type: 'array', items: Type.string, allowEmpty: true},
   [ParameterType.SparseNumberArray]: {type: 'array', items: Type.number, allowEmpty: true},
@@ -294,7 +313,8 @@ export const ParameterTypeInputMap: Record<ParameterType, UnionType> = {
   [ParameterType.SparseImageArray]: {type: 'array', items: Type.image, allowEmpty: true},
   [ParameterType.SparseFileArray]: {type: 'array', items: Type.file, allowEmpty: true},
   [ParameterType.SparseMarkdownArray]: {type: 'array', items: Type.markdown, allowEmpty: true},
-};
+  [ParameterType.SparseEmailArray]: {type: 'array', items: Type.email, allowEmpty: true},
+} as const;
 
 /**
  * The definition of a formula parameter.

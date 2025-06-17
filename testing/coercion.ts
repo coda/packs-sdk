@@ -71,6 +71,7 @@ function coerceParam(type: ParamType, name: string, value: any): any {
     case Type.image:
     case Type.string:
     case Type.markdown:
+    case Type.email:
       return value;
     default:
       return ensureUnreachable(type);
