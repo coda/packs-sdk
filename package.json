@@ -110,7 +110,7 @@
     "release-it": "17.10.0",
     "remark-cli": "12.0.1",
     "remark-frontmatter": "5.0.0",
-    "remark-lint-code": "^2.0.0",
+    "remark-lint-code": "2.0.0",
     "remark-lint-no-undefined-references": "4.2.1",
     "sharp-cli": "5.1.0",
     "ts-loader": "9.5.1",
@@ -123,7 +123,7 @@
       "eslint-plugin-local@1.0.0": "patches/eslint-plugin-local@1.0.0.patch"
     },
     "overrides": {
-      "tar-fs@<2.1.2": ">=2.1.2"
+      "tar-fs@<2.1.2": "3.0.10"
     },
     "packageExtensions": {
       "isolated-vm": {
