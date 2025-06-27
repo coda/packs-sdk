@@ -7,8 +7,9 @@
   ],
   "engines": {
     "node": ">=20.0.x",
-    "pnpm": "9.15.0"
+    "pnpm": "10.12.4"
   },
+  "packageManager": "pnpm@10.12.4",
   "main": "dist/index.js",
   "bin": {
     "coda": "dist/cli/coda.js"
