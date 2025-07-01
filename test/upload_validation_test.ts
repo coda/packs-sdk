@@ -1,4 +1,5 @@
 import {testHelper} from './test_helper';
+import type {AllToolTypes} from '../types';
 import type {AllowedAuthentication} from '../types';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '..';
@@ -12,12 +13,14 @@ import {ImageCornerStyle} from '../schema';
 import {ImageOutline} from '../schema';
 import {ImageShapeStyle} from '../schema';
 import {IndexingStrategy} from '../schema';
+import {KnowledgeToolSourceType} from '../types';
 import {Limits} from '../testing/upload_validation';
 import type {ObjectSchemaDefinition} from '../schema';
 import type {OptionsReference} from '../api_types';
 import {OptionsType} from '../api_types';
 import type {PackFormulaMetadata} from '../api';
 import {PackMetadataValidationError} from '../testing/upload_validation';
+import type {PackTool} from '../types';
 import type {PackVersionMetadata} from '../compiled_types';
 import type {ParamDefs} from '../api_types';
 import {ParameterType} from '../api_types';
@@ -27,9 +30,11 @@ import {PrecannedDate} from '../api_types';
 import {PrecannedDateRange} from '..';
 import {ReservedAuthenticationNames} from '../types';
 import {ScaleIconSet} from '../schema';
+import type {Skill} from '../types';
 import type {StringFormulaDefLegacy} from '../api';
 import type {SyncTable} from '../api';
 import {TableRole} from '../api_types';
+import {ToolType} from '../types';
 import {Type} from '../api_types';
 import {UntilNowDateRanges} from '../api_types';
 import {ValueHintType} from '../schema';
@@ -45,6 +50,7 @@ import {createFakePackFormulaMetadata} from './test_utils';
 import {createFakePackVersionMetadata} from './test_utils';
 import {deepCopy} from '../helpers/object_utils';
 import {ensureExists} from '../helpers/ensure';
+import {ensureNever} from '../helpers/ensure';
 import {isCustomIndexDefinition} from '../schema';
 import {isObject} from '../schema';
 import {makeAttributionNode} from '..';
@@ -68,6 +74,17 @@ import {validateCrawlHierarchy} from '../testing/upload_validation';
 import {validatePackVersionMetadata} from '../testing/upload_validation';
 import {validateSyncTableSchema} from '../testing/upload_validation';
 import {validateVariousAuthenticationMetadata} from '../testing/upload_validation';
+
+// Used to test exhaustiveness checking of ToolType
+declare module '../types' {
+  interface CustomTool extends BaseTool<'CustomTool'> {
+    type: 'CustomTool';
+  }
+
+  interface ToolMap {
+    CustomTool: CustomTool;
+  }
+}
 
 describe('Pack metadata Validation', async () => {
   async function getCurrentSdkVersion(): Promise<string> {
@@ -121,13 +138,15 @@ describe('Pack metadata Validation', async () => {
     const metadata = createFakePackVersionMetadata({
       formulaNamespace: 'namespace',
       formulas: [
-        compileFormulaMetadata(makeStringFormula({
-          extraneous: 'evil long string',
-          name: 'formula',
-          description: '',
-          execute: () => '',
-          parameters: [],
-        } as StringFormulaDefLegacy<any>)),
+        compileFormulaMetadata(
+          makeStringFormula({
+            extraneous: 'evil long string',
+            name: 'formula',
+            description: '',
+            execute: () => '',
+            parameters: [],
+          } as StringFormulaDefLegacy<any>),
+        ),
       ],
     });
     const result = await validateJson({
@@ -3477,7 +3496,8 @@ describe('Pack metadata Validation', async () => {
             validated.formulas.some(
               f =>
                 isObject(f.schema) &&
-                f.schema.index && isCustomIndexDefinition(f.schema.index) &&
+                f.schema.index &&
+                isCustomIndexDefinition(f.schema.index) &&
                 f.schema.index?.properties.some(
                   p => typeof p === 'object' && 'strategy' in p && p.strategy === IndexingStrategy.Raw,
                 ),
@@ -3517,10 +3537,10 @@ describe('Pack metadata Validation', async () => {
             index: {
               properties: ['name', 'attachments'],
               filterableProperties: ['value', 'enums', 'boolean', 'datetime'],
-            }
+            },
           });
           await validateJson(metadata);
-        })
+        });
 
         it('works with content categorization', async () => {
           const metadata = metadataForFormulaWithObjectSchema({
@@ -3533,7 +3553,7 @@ describe('Pack metadata Validation', async () => {
               properties: ['body'],
               contentCategorization: {
                 type: ContentCategorizationType.Document,
-              }
+              },
             },
           });
           await validateJson(metadata);
@@ -3558,11 +3578,11 @@ describe('Pack metadata Validation', async () => {
                 subjectProperty: 'subject',
                 htmlBodyProperty: 'htmlBody',
                 plainTextBodyProperty: 'plainTextBody',
-              }
+              },
             },
           });
           await validateJson(metadata);
-          });
+        });
 
         it('fails with invalid index property', async () => {
           const metadata = metadataForFormulaWithObjectSchema({
@@ -3650,7 +3670,7 @@ describe('Pack metadata Validation', async () => {
             index: {
               properties: ['name', 'attachments'],
               filterableProperties: ['value', 'enums', 'boolean', 'datetime', 'numberDateTime', 'date'],
-            }
+            },
           });
           const err = await validateJsonAndAssertFails(metadata);
           assert.deepEqual(err.validationErrors, [
@@ -3673,28 +3693,30 @@ describe('Pack metadata Validation', async () => {
             index: {
               properties: ['name', 'attachments'],
               filterableProperties: ['value', 'badProperty'],
-            }
+            },
           });
           const err = await validateJsonAndAssertFails(metadata);
           assert.deepEqual(err.validationErrors, [
             {
-              message: 'The "filterableProperty" field name "BadProperty" must be a "ValueType.Boolean", "ValueType.Number", or a property with a "ValueHintType.DateTime" or "ValueHintType.SelectList" "codaType".',
+              message:
+                'The "filterableProperty" field name "BadProperty" must be a "ValueType.Boolean", "ValueType.Number", or a property with a "ValueHintType.DateTime" or "ValueHintType.SelectList" "codaType".',
               path: 'formulas[0].schema.index.filterableProperty[1]',
             },
           ]);
         });
 
         it('fails with invalid content categorization', async () => {
-          assert.throws(() => metadataForFormulaWithObjectSchema({
-            type: ValueType.Object,
-            properties: {
-              body: {type: ValueType.String},
-            },
-            index: {
-              contentCategorization: {type: 'invalid'} as any,
-            },
-          }));
-
+          assert.throws(() =>
+            metadataForFormulaWithObjectSchema({
+              type: ValueType.Object,
+              properties: {
+                body: {type: ValueType.String},
+              },
+              index: {
+                contentCategorization: {type: 'invalid'} as any,
+              },
+            }),
+          );
         });
 
         it('fails with invalid email content categorization', async () => {
@@ -3715,7 +3737,7 @@ describe('Pack metadata Validation', async () => {
                 fromProperty: 'from',
                 subjectProperty: 'subject',
                 htmlBodyProperty: 'htmlBody',
-                plainTextBodyProperty: 'plainTextBody'
+                plainTextBodyProperty: 'plainTextBody',
               } as any,
             },
           });
@@ -5335,35 +5357,39 @@ describe('Pack metadata Validation', async () => {
             },
           ],
           formulas: [
-            compileFormulaMetadata(makeFormula({
-              resultType: ValueType.String,
-              name: 'FormulaName',
-              description: '',
-              parameters: [],
-              execute: () => '',
-              allowedAuthenticationNames: ['adminAuth2'],
-            })),
+            compileFormulaMetadata(
+              makeFormula({
+                resultType: ValueType.String,
+                name: 'FormulaName',
+                description: '',
+                parameters: [],
+                execute: () => '',
+                allowedAuthenticationNames: ['adminAuth2'],
+              }),
+            ),
           ],
           syncTables: [
-            compileSyncTable(makeSyncTable({
-              name: 'SyncTable',
-              identityName: 'Identity',
-              schema: makeObjectSchema({
-                type: ValueType.Object,
-                primary: 'foo',
-                id: 'foo',
-                properties: {foo: {type: ValueType.String}},
-              }),
-              formula: {
+            compileSyncTable(
+              makeSyncTable({
                 name: 'SyncTable',
-                description: '',
-                async execute([], _context) {
-                  return {result: []};
+                identityName: 'Identity',
+                schema: makeObjectSchema({
+                  type: ValueType.Object,
+                  primary: 'foo',
+                  id: 'foo',
+                  properties: {foo: {type: ValueType.String}},
+                }),
+                formula: {
+                  name: 'SyncTable',
+                  description: '',
+                  async execute([], _context) {
+                    return {result: []};
+                  },
+                  parameters: [],
+                  allowedAuthenticationNames: ['adminAuth3', ReservedAuthenticationNames.Default],
                 },
-                parameters: [],
-                allowedAuthenticationNames: ['adminAuth3', ReservedAuthenticationNames.Default],
-              },
-            })),
+              }),
+            ),
           ],
           formulaNamespace: 'MyNamespace',
         });
@@ -5382,44 +5408,48 @@ describe('Pack metadata Validation', async () => {
             },
           ],
           syncTables: [
-            compileSyncTable(makeSyncTable({
-              name: 'SyncTable',
-              identityName: 'Identity',
-              schema: makeObjectSchema({
-                type: ValueType.Object,
-                displayProperty: 'foo',
-                idProperty: 'foo',
-                properties: {foo: {type: ValueType.String}},
-              }),
-              formula: {
+            compileSyncTable(
+              makeSyncTable({
                 name: 'SyncTable',
-                description: '',
-                async execute([], _context) {
-                  return {result: []};
+                identityName: 'Identity',
+                schema: makeObjectSchema({
+                  type: ValueType.Object,
+                  displayProperty: 'foo',
+                  idProperty: 'foo',
+                  properties: {foo: {type: ValueType.String}},
+                }),
+                formula: {
+                  name: 'SyncTable',
+                  description: '',
+                  async execute([], _context) {
+                    return {result: []};
+                  },
+                  parameters: [],
+                  allowedAuthenticationNames: ['fakeAuthName'],
                 },
-                parameters: [],
-                allowedAuthenticationNames: ['fakeAuthName'],
-              },
-            })),
-            compileSyncTable(makeSyncTable({
-              name: 'SyncTable2',
-              identityName: 'Identity2',
-              schema: makeObjectSchema({
-                type: ValueType.Object,
-                displayProperty: 'foo',
-                idProperty: 'foo',
-                properties: {foo: {type: ValueType.String}},
               }),
-              formula: {
+            ),
+            compileSyncTable(
+              makeSyncTable({
                 name: 'SyncTable2',
-                description: '',
-                async execute([], _context) {
-                  return {result: []};
+                identityName: 'Identity2',
+                schema: makeObjectSchema({
+                  type: ValueType.Object,
+                  displayProperty: 'foo',
+                  idProperty: 'foo',
+                  properties: {foo: {type: ValueType.String}},
+                }),
+                formula: {
+                  name: 'SyncTable2',
+                  description: '',
+                  async execute([], _context) {
+                    return {result: []};
+                  },
+                  parameters: [],
+                  allowedAuthenticationNames: [ReservedAuthenticationNames.System, ReservedAuthenticationNames.Default],
                 },
-                parameters: [],
-                allowedAuthenticationNames: [ReservedAuthenticationNames.System, ReservedAuthenticationNames.Default],
-              },
-            })),
+              }),
+            ),
           ],
         });
         const err = await validateJsonAndAssertFails(metadata, '1.0.0');
@@ -5454,15 +5484,17 @@ describe('Pack metadata Validation', async () => {
       it('cannot set allowedAuthenticationNames on a formula with no connection', async () => {
         const metadata = createFakePackVersionMetadata({
           formulas: [
-            compileFormulaMetadata(makeFormula({
-              name: 'FormulaName',
-              description: '',
-              parameters: [],
-              execute: () => '',
-              resultType: ValueType.String,
-              connectionRequirement: ConnectionRequirement.None,
-              allowedAuthenticationNames: [ReservedAuthenticationNames.Default],
-            })),
+            compileFormulaMetadata(
+              makeFormula({
+                name: 'FormulaName',
+                description: '',
+                parameters: [],
+                execute: () => '',
+                resultType: ValueType.String,
+                connectionRequirement: ConnectionRequirement.None,
+                allowedAuthenticationNames: [ReservedAuthenticationNames.Default],
+              }),
+            ),
           ],
           formulaNamespace: 'MyNamespace',
         });
@@ -5732,6 +5764,246 @@ describe('Pack metadata Validation', async () => {
         {
           message: `Required params should support incremental sync.`,
           path: 'formulas[0].parameters[0]',
+        },
+      ]);
+    });
+  });
+
+  describe('validateSkills', () => {
+    it('validates skills with all tool types', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [
+              {
+                type: ToolType.Pack,
+                packId: 123,
+                formulas: [
+                  {
+                    formulaName: 'Formula1',
+                  },
+                  {
+                    formulaName: 'Formula2',
+                  },
+                ],
+              },
+              {
+                type: ToolType.Pack,
+                packId: 456,
+              },
+              {
+                type: ToolType.Knowledge,
+                source: {
+                  type: KnowledgeToolSourceType.Pack,
+                  packId: 789,
+                },
+              },
+              {
+                type: ToolType.Knowledge,
+                source: {
+                  type: KnowledgeToolSourceType.Global,
+                },
+              },
+            ],
+          },
+        ],
+      });
+      await validateJson(metadata);
+    });
+
+    it('fails for skill with invalid tool type', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [
+              // These casts are needed because we are creating an intentionally invalid tool.
+              {
+                type: 'InvalidType' as unknown as ToolType,
+                packId: 123,
+              } as unknown as PackTool,
+            ],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills[0].tools[0].type',
+          message: "Invalid discriminator value. Expected 'Pack' | 'Knowledge'",
+        },
+      ]);
+    });
+
+    it('Exhaustiveness checking of ToolType works', async () => {
+      const toolType = 'ToolType' as unknown as AllToolTypes;
+
+      switch (toolType) {
+        case ToolType.Pack:
+          break;
+        case ToolType.Knowledge:
+          break;
+        case 'CustomTool':
+          break;
+        default:
+          ensureNever(toolType);
+      }
+    });
+
+    it('fails for PackTool missing packId', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [
+              {
+                type: ToolType.Pack,
+                // missing packId
+                // We must cast to PackTool because the type system bc this is invalid
+              } as unknown as PackTool,
+            ],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills[0].tools[0].packId',
+          message: 'Missing required field skills[0].tools[0].packId.',
+        },
+      ]);
+    });
+
+    it('fails for skill missing required fields', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            // missing name, displayName, description, prompt
+            tools: [],
+          } as unknown as Skill,
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills[0].name',
+          message: 'Missing required field skills[0].name.',
+        },
+        {
+          path: 'skills[0].displayName',
+          message: 'Missing required field skills[0].displayName.',
+        },
+        {
+          path: 'skills[0].description',
+          message: 'Missing required field skills[0].description.',
+        },
+        {
+          path: 'skills[0].prompt',
+          message: 'Missing required field skills[0].prompt.',
+        },
+      ]);
+    });
+
+    it('fails for skill with invalid name (non-alphanumeric)', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'Invalid Skill Name!',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills[0].name',
+          message: 'Skill names can only contain alphanumeric characters and underscores.',
+        },
+      ]);
+    });
+
+    it('fails for duplicate skill names', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'DuplicateSkill',
+            displayName: 'Test Skill 1',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [],
+          },
+          {
+            name: 'DuplicateSkill',
+            displayName: 'Test Skill 2',
+            description: 'Another test skill',
+            prompt: 'You are another helpful assistant',
+            tools: [],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills',
+          message: 'Skill names must be unique. Found duplicate name "DuplicateSkill".',
+        },
+      ]);
+    });
+
+    it('validates skill name length limits', async () => {
+      const longName = 'a'.repeat(Limits.BuildingBlockName + 1); // Exceeds BuildingBlockName limit of 50
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: longName,
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills[0].name',
+
+          message: 'String must contain at most 50 character(s)',
+        },
+      ]);
+    });
+
+    it('validates prompt length limits', async () => {
+      const longPrompt = 'a'.repeat(Limits.PromptLength + 1); // Exceeds PromptLength limit of 1000
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: longPrompt,
+            tools: [],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills[0].prompt',
+          message: `String must contain at most ${Limits.PromptLength} character(s)`,
         },
       ]);
     });
