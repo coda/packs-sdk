@@ -5,7 +5,7 @@ let ivm: typeof import('isolated-vm') | null;
 try {
   ivm = require('isolated-vm');
 } catch (e: any) {
-  ivm = null;
+  throw e;
 }
 
 export function getIvm() {
