@@ -131,6 +131,12 @@
           "node-gyp": "*"
         }
       }
-    }
+    },
+    "onlyBuiltDependencies": [
+      "aws-sdk",
+      "esbuild",
+      "isolated-vm",
+      "sharp"
+    ]
   }
 }
