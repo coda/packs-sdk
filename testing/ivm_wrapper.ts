@@ -5,6 +5,8 @@ let ivm: typeof import('isolated-vm') | null;
 try {
   ivm = require('isolated-vm');
 } catch (e: any) {
+  // eslint-disable-next-line no-console
+  console.error('Error loading isolated-vm', e);
   ivm = null;
 }
 
