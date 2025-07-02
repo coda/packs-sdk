@@ -131,6 +131,14 @@
           "node-gyp": "*"
         }
       }
-    }
+    },
+    "ignoredBuiltDependencies": [
+      "aws-sdk",
+      "esbuild",
+      "sharp"
+    ],
+    "onlyBuiltDependencies": [
+      "isolated-vm"
+    ]
   }
 }
