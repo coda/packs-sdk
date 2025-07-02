@@ -708,10 +708,13 @@ class AuthenticatingBlobStorage implements TemporaryBlobStorage {
 
 class FakeSyncStateService implements SyncStateService {
   async getLatestRowVersions(rowIds: string[]): Promise<{[rowId: string]: string}> {
-    return rowIds.reduce((acc, rowId) => {
-      acc[rowId] = '1.0.0';
-      return acc;
-    }, {} as {[rowId: string]: string});
+    return rowIds.reduce(
+      (acc, rowId) => {
+        acc[rowId] = '1.0.0';
+        return acc;
+      },
+      {} as {[rowId: string]: string},
+    );
   }
 }
 

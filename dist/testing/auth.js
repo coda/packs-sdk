@@ -271,7 +271,7 @@ class CredentialHandler {
             clientId,
             clientSecret,
             scopes: requestedScopes,
-            authDef: this._authDef
+            authDef: this._authDef,
         });
         this.storeCredential({
             clientId,

@@ -6481,15 +6481,7 @@ module.exports = (() => {
         return { type };
       }
       case "Email" /* Email */: {
-        const {
-          type,
-          toProperty,
-          fromProperty,
-          subjectProperty,
-          htmlBodyProperty,
-          plainTextBodyProperty,
-          ...rest
-        } = value;
+        const { type, toProperty, fromProperty, subjectProperty, htmlBodyProperty, plainTextBodyProperty, ...rest } = value;
         ensureNever();
         return {
           type,
@@ -6511,13 +6503,7 @@ module.exports = (() => {
   __name(isCategorizationIndexDefinition, "isCategorizationIndexDefinition");
   function normalizeIndexDefinition(index, normalizedProperties) {
     if (isCategorizationIndexDefinition(index)) {
-      const {
-        contentCategorization,
-        authorityNormProperty: authorityNormProperty2,
-        popularityNormProperty: popularityNormProperty2,
-        filterableProperties: filterableProperties2,
-        ...rest2
-      } = index;
+      const { contentCategorization, authorityNormProperty: authorityNormProperty2, popularityNormProperty: popularityNormProperty2, filterableProperties: filterableProperties2, ...rest2 } = index;
       ensureNever();
       return {
         contentCategorization: normalizeContentCategorization(contentCategorization, normalizedProperties),
@@ -6528,14 +6514,7 @@ module.exports = (() => {
         )
       };
     }
-    const {
-      properties,
-      contextProperties,
-      authorityNormProperty,
-      popularityNormProperty,
-      filterableProperties,
-      ...rest
-    } = index;
+    const { properties, contextProperties, authorityNormProperty, popularityNormProperty, filterableProperties, ...rest } = index;
     ensureNever();
     return {
       properties: properties.map((prop) => normalizeIndexProperty(prop, normalizedProperties)),
@@ -6989,9 +6968,9 @@ module.exports = (() => {
     }
   }
   __name(verifyFormulaSupportsAuthenticationName, "verifyFormulaSupportsAuthenticationName");
-  function findFormula(packDef, formulaNameWithNamespace, authenticationName, {
-    verifyFormulaForAuthenticationName
-  } = { verifyFormulaForAuthenticationName: true }) {
+  function findFormula(packDef, formulaNameWithNamespace, authenticationName, { verifyFormulaForAuthenticationName } = {
+    verifyFormulaForAuthenticationName: true
+  }) {
     const packFormulas = packDef.formulas;
     if (!packFormulas) {
       throw new Error(`Pack definition has no formulas.`);
@@ -7017,9 +6996,9 @@ module.exports = (() => {
     throw new Error(`Pack definition has no formula "${name}"${namespace ?? ` in namespace "${namespace}"`}.`);
   }
   __name(findFormula, "findFormula");
-  function findSyncFormula(packDef, syncFormulaName, authenticationName, {
-    verifyFormulaForAuthenticationName
-  } = { verifyFormulaForAuthenticationName: true }) {
+  function findSyncFormula(packDef, syncFormulaName, authenticationName, { verifyFormulaForAuthenticationName } = {
+    verifyFormulaForAuthenticationName: true
+  }) {
     if (!packDef.syncTables) {
       throw new Error(`Pack definition has no sync tables.`);
     }

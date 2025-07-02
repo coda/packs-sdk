@@ -92,8 +92,9 @@ export function compileSyncTable(syncTable: GenericSyncTable): PackSyncTable {
     getter: {
       supportsUpdates: Boolean(executeUpdate),
       supportsGetPermissions: Boolean(executeGetPermissions),
-      validateParameters:
-        compileMetadataFormulaMetadata<ExecutionContext, ParameterValidationResult>(validateParameters),
+      validateParameters: compileMetadataFormulaMetadata<ExecutionContext, ParameterValidationResult>(
+        validateParameters,
+      ),
       ...getterRest,
     },
   };
@@ -120,9 +121,7 @@ function compileDefaultAuthenticationMetadata(
 export function compileMetadataFormulaMetadata<
   ContextT extends ExecutionContext = ExecutionContext,
   ResultT extends PackFormulaResult = LegacyDefaultMetadataReturnType,
->(
-  formula: MetadataFormula<ContextT, ResultT> | undefined
-): MetadataFormulaMetadata<ContextT, ResultT> | undefined {
+>(formula: MetadataFormula<ContextT, ResultT> | undefined): MetadataFormulaMetadata<ContextT, ResultT> | undefined {
   if (!formula) {
     return;
   }

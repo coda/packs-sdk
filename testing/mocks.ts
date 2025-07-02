@@ -39,13 +39,14 @@ export interface MockSyncExecutionContext<
 }
 
 /** Mock type of the specified `SyncExecutionContext`. */
-export type SyncExecutionContextAsMock<T extends SyncExecutionContext> = T extends SyncExecutionContext<
-  infer ContinuationT,
-  infer IncrementalContinuationT,
-  infer IncrementalSyncContinuationT
->
-  ? MockSyncExecutionContext<ContinuationT, IncrementalContinuationT, IncrementalSyncContinuationT>
-  : never;
+export type SyncExecutionContextAsMock<T extends SyncExecutionContext> =
+  T extends SyncExecutionContext<
+    infer ContinuationT,
+    infer IncrementalContinuationT,
+    infer IncrementalSyncContinuationT
+  >
+    ? MockSyncExecutionContext<ContinuationT, IncrementalContinuationT, IncrementalSyncContinuationT>
+    : never;
 
 export function newMockSyncExecutionContext<T extends SyncExecutionContext<any>>(
   overrides?: Partial<T>,

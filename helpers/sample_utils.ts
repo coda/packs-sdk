@@ -30,7 +30,7 @@ export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata 
     return {
       ...formulaMetadata,
       validateParameters: compileMetadataFormulaMetadata<ExecutionContext, ParameterValidationResult>(
-        wrapMetadataFunction<ExecutionContext, ParameterValidationResult>(validateParameters)
+        wrapMetadataFunction<ExecutionContext, ParameterValidationResult>(validateParameters),
       ),
     };
   });
@@ -73,4 +73,3 @@ export function fakeDefinitionToMetadata(def: FakePackDefinition): PackMetadata 
     ...packMetadata,
   };
 }
-

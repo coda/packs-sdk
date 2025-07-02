@@ -161,7 +161,7 @@ describe('Auth', () => {
       it('fails systemAuth', async () => {
         try {
           await testTokenAuthFlow(
-            createFakePack({systemConnectionAuthentication: auth as unknown as SystemAuthentication})
+            createFakePack({systemConnectionAuthentication: auth as unknown as SystemAuthentication}),
           );
         } catch (err: any) {
           assert.match(err, /CodaApiHeaderBearerToken only works with defaultAuthentication, not system auth./);
@@ -1333,13 +1333,13 @@ describe('Auth', () => {
 
         beforeEach(() => {
           fakeLaunchOAuthServerFlow = sinon.spy(
-              ({afterTokenExchange}: {afterTokenExchange: AfterAuthorizationCodeTokenExchangeCallback}) => {
-                afterTokenExchange({
-                  accessToken: 'some-access-token', 
-                  refreshToken: 'some-refresh-token',
-                  data: {server: 'https://foo.example.com'},
-                });
-              },
+            ({afterTokenExchange}: {afterTokenExchange: AfterAuthorizationCodeTokenExchangeCallback}) => {
+              afterTokenExchange({
+                accessToken: 'some-access-token',
+                refreshToken: 'some-refresh-token',
+                data: {server: 'https://foo.example.com'},
+              });
+            },
           );
 
           sinon.replace(oauthServer, 'launchOAuthServerFlow', fakeLaunchOAuthServerFlow);
@@ -1483,7 +1483,7 @@ describe('Auth', () => {
             accessToken: 'some-access-token',
             refreshToken: 'some-refresh-token',
             scopes: [],
-            endpointUrl: 'https://foo.example.com'
+            endpointUrl: 'https://foo.example.com',
           });
         });
 
@@ -1500,8 +1500,8 @@ describe('Auth', () => {
                 getOptions: makeMetadataFormula(async () => {
                   return [{display: 'Foo', value: 'https://foo.example.com'}];
                 }),
-              }
-            ]
+              },
+            ],
           });
           setupReadline(['some-client-id', 'some-client-secret', 'https://bar.example.com']);
           await doSetupAuth(pack);
@@ -1546,7 +1546,7 @@ describe('Auth', () => {
             accessToken: 'some-access-token',
             refreshToken: 'some-refresh-token',
             scopes: [],
-            endpointUrl: 'https://bar.example.com'
+            endpointUrl: 'https://bar.example.com',
           });
         });
 
@@ -1581,12 +1581,12 @@ describe('Auth', () => {
 
         it(`${AuthenticationType.OAuth2}, leaves existing secrets in place`, async () => {
           const pack = createPackWithDefaultAuth(
-              {
-                type: AuthenticationType.OAuth2,
-                authorizationUrl: 'https://auth-url.com',
-                tokenUrl: 'https://token-url.com',
-              },
-              {name: 'Fake Pack'},
+            {
+              type: AuthenticationType.OAuth2,
+              authorizationUrl: 'https://auth-url.com',
+              tokenUrl: 'https://token-url.com',
+            },
+            {name: 'Fake Pack'},
           );
 
           storeCredential(MANIFEST_PATH, {
@@ -1612,13 +1612,15 @@ describe('Auth', () => {
         const clientSecret = 'some-client-secret';
         const tokenUrl = 'https://token-url.com';
         const accessToken = 'some-access-token';
-        const expiresString =  getExpirationDate(1000).toString();
+        const expiresString = getExpirationDate(1000).toString();
         let fakePerformOAuthClientCredentialsServerFlow: sinon.SinonStub;
 
         beforeEach(() => {
-          fakePerformOAuthClientCredentialsServerFlow = sinon.stub(oauthHelpers, 'performOAuthClientCredentialsServerFlow').callsFake(async ({}) => {
-            return {accessToken, expires: expiresString};
-          });
+          fakePerformOAuthClientCredentialsServerFlow = sinon
+            .stub(oauthHelpers, 'performOAuthClientCredentialsServerFlow')
+            .callsFake(async ({}) => {
+              return {accessToken, expires: expiresString};
+            });
         });
 
         it(`${AuthenticationType.OAuth2ClientCredentials}`, async () => {
@@ -1680,7 +1682,7 @@ describe('Auth', () => {
               type: AuthenticationType.OAuth2ClientCredentials,
               scopes: ['scope1', 'scope2'],
               tokenUrl,
-              tokenPrefix
+              tokenPrefix,
             },
             clientId,
             clientSecret,
@@ -1692,7 +1694,7 @@ describe('Auth', () => {
             clientSecret,
             accessToken,
             scopes: ['scope1', 'scope2'],
-            expires: expiresString
+            expires: expiresString,
           });
         });
 
@@ -1726,11 +1728,11 @@ describe('Auth', () => {
 
         it(`${AuthenticationType.OAuth2ClientCredentials}, leaves existing secrets in place`, async () => {
           const pack = createPackWithDefaultAuth(
-              {
-                type: AuthenticationType.OAuth2ClientCredentials,
-                tokenUrl: 'https://token-url.com',
-              },
-              {name: 'Fake Pack'},
+            {
+              type: AuthenticationType.OAuth2ClientCredentials,
+              tokenUrl: 'https://token-url.com',
+            },
+            {name: 'Fake Pack'},
           );
 
           storeCredential(MANIFEST_PATH, {

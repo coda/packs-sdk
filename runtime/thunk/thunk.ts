@@ -311,10 +311,9 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
 
           break;
         case MetadataFormulaType.ValidateParameters: {
-          const validateParametersFormula =
-            wrapMetadataFunction<ExecutionContext, ParameterValidationResult>(
-              findValidateParametersFormula(manifest, formulaSpec),
-            );
+          const validateParametersFormula = wrapMetadataFunction<ExecutionContext, ParameterValidationResult>(
+            findValidateParametersFormula(manifest, formulaSpec),
+          );
           if (validateParametersFormula) {
             return validateParametersFormula.execute(params as any, executionContext);
           }

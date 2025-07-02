@@ -17,10 +17,9 @@ export async function handleRegister({apiToken, codaApiEndpoint}: ArgumentsCamel
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
   if (!apiToken) {
     // TODO: deal with auto-open on devbox setups
-    const shouldOpenBrowser = promptForInput(
-      'No API token provided. Do you want to visit Coda to create one (y/N)? ',
-      {yesOrNo: true},
-    );
+    const shouldOpenBrowser = promptForInput('No API token provided. Do you want to visit Coda to create one (y/N)? ', {
+      yesOrNo: true,
+    });
     if (shouldOpenBrowser !== 'yes') {
       return process.exit(1);
     }

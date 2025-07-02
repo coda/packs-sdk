@@ -45,8 +45,11 @@ export async function setupAuthFromModule(
   return setupAuth(manifestDir, manifest, opts);
 }
 
-export async function setupAuth(manifestDir: string, packDef: BasicPackDefinition, opts: SetupAuthOptions = {})
-    : Promise<void> {
+export async function setupAuth(
+  manifestDir: string,
+  packDef: BasicPackDefinition,
+  opts: SetupAuthOptions = {},
+): Promise<void> {
   const auth = getPackAuth(packDef);
   if (!auth) {
     return printAndExit(
@@ -234,15 +237,16 @@ class CredentialHandler {
     print('Credentials updated!');
   }
 
-  private _promptOAuth2ClientIdAndSecret(existingCredentials: OAuth2Credentials | OAuth2ClientCredentials | undefined):
-      {clientId: string, clientSecret: string} {
+  private _promptOAuth2ClientIdAndSecret(
+    existingCredentials: OAuth2Credentials | OAuth2ClientCredentials | undefined,
+  ): {clientId: string; clientSecret: string} {
     const clientIdPrompt = existingCredentials
-        ? `Enter the OAuth client id for this Pack (or Enter to skip and use existing):\n`
-        : `Enter the OAuth client id for this Pack:\n`;
+      ? `Enter the OAuth client id for this Pack (or Enter to skip and use existing):\n`
+      : `Enter the OAuth client id for this Pack:\n`;
     const newClientId = promptForInput(clientIdPrompt);
     const clientSecretPrompt = existingCredentials
-        ? `Enter the OAuth client secret for this Pack (or Enter to skip and use existing):\n`
-        : `Enter the OAuth client secret for this Pack:\n`;
+      ? `Enter the OAuth client secret for this Pack (or Enter to skip and use existing):\n`
+      : `Enter the OAuth client secret for this Pack:\n`;
     const newClientSecret = promptForInput(clientSecretPrompt, {mask: true});
 
     const clientId = ensureNonEmptyString(newClientId || existingCredentials?.clientId);
@@ -321,13 +325,13 @@ class CredentialHandler {
 
     const manifestScopes = this._authDef.scopes || [];
     const requestedScopes =
-        this._extraOAuthScopes.length > 0 ? [...manifestScopes, ...this._extraOAuthScopes] : manifestScopes;
+      this._extraOAuthScopes.length > 0 ? [...manifestScopes, ...this._extraOAuthScopes] : manifestScopes;
 
     const {accessToken, expires} = await performOAuthClientCredentialsServerFlow({
       clientId,
       clientSecret,
       scopes: requestedScopes,
-      authDef: this._authDef
+      authDef: this._authDef,
     });
 
     this.storeCredential({
@@ -339,7 +343,6 @@ class CredentialHandler {
     });
     print('Access token saved!');
   }
-
 
   handleAWSAccessKey() {
     assertCondition(this._authDef.type === AuthenticationType.AWSAccessKey);

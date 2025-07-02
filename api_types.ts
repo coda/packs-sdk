@@ -123,14 +123,14 @@ export type PackFormulaResult = $Values<TypeMap> | PackFormulaResult[];
 export type TypeOf<T extends PackFormulaResult> = T extends number
   ? Type.number
   : T extends string
-  ? Type.string
-  : T extends boolean
-  ? Type.boolean
-  : T extends Date
-  ? Type.date
-  : T extends object
-  ? Type.object
-  : never;
+    ? Type.string
+    : T extends boolean
+      ? Type.boolean
+      : T extends Date
+        ? Type.date
+        : T extends object
+          ? Type.object
+          : never;
 
 /**
  * Enumeration of types of formula parameters. These describe Coda value types (as opposed to JavaScript value types).
@@ -445,10 +445,10 @@ export type ParamsList = Array<ParamDef<UnionType>>;
 type TypeOfMap<T extends UnionType> = T extends Type
   ? TypeMap[T]
   : T extends ArrayType<infer V>
-  ? T extends SparseArrayType<infer V>
-    ? Array<TypeMap[V] | undefined>
-    : Array<TypeMap[V]>
-  : never;
+    ? T extends SparseArrayType<infer V>
+      ? Array<TypeMap[V] | undefined>
+      : Array<TypeMap[V]>
+    : never;
 
 /**
  * The type for the set of argument values that are passed to formula's `execute` function, based on
@@ -458,16 +458,15 @@ export type ParamValues<ParamDefsT extends ParamDefs> = {
   [K in keyof ParamDefsT]: ParamDefsT[K] extends RequiredParamDef<infer S>
     ? TypeOfMap<S>
     : ParamDefsT[K] extends ParamDef<infer S>
-    ? TypeOfMap<S> | undefined
-    : never;
+      ? TypeOfMap<S> | undefined
+      : never;
 } & any[]; // NOTE(oleg): we need this to avoid "must have a '[Symbol.iterator]()' method that returns an iterator."
 
 /**
  * The type of values that are allowable to be used as a {@link ParamDef.suggestedValue} for a parameter.
  */
-export type SuggestedValueType<T extends UnionType> = T extends ArrayType<Type.date>
-  ? TypeOfMap<T> | PrecannedDateRange
-  : TypeOfMap<T>;
+export type SuggestedValueType<T extends UnionType> =
+  T extends ArrayType<Type.date> ? TypeOfMap<T> | PrecannedDateRange : TypeOfMap<T>;
 
 // TODO(patrick): Unhide this
 /** @hidden */

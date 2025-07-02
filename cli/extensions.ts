@@ -16,7 +16,7 @@ interface ExtensionsArgs {
 export async function handleExtensions(args: ArgumentsCamelCase<ExtensionsArgs>) {
   const {tools} = args;
   for (const tool of tools) {
-    switch(tool) {
+    switch (tool) {
       case Tools.VSCode:
         installVSCodeExtensions();
         print('Installed Visual Studio Code extensions.');
@@ -29,7 +29,7 @@ export async function handleExtensions(args: ArgumentsCamelCase<ExtensionsArgs>)
 
 function installVSCodeExtensions() {
   const vsCodeDir = path.join(process.cwd(), '.vscode');
-  if (!fs.existsSync(vsCodeDir)){
+  if (!fs.existsSync(vsCodeDir)) {
     fs.mkdirSync(vsCodeDir);
   }
   const pathToRoot = isTestCommand() ? '../' : '../../';

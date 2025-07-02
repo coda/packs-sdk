@@ -1103,7 +1103,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             placeholder: z.string().optional(),
         }),
     ]);
-    const contentCategorizationSchema = z.discriminatedUnion('type', [
+    const contentCategorizationSchema = z
+        .discriminatedUnion('type', [
         zodCompleteStrictObject({
             type: z.literal(schema_3.ContentCategorizationType.Messaging),
         }),
@@ -1121,7 +1122,10 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         zodCompleteStrictObject({
             type: z.literal(schema_3.ContentCategorizationType.Comment),
         }),
-    ]).refine(data => { return data.type && Object.values(schema_3.ContentCategorizationType).includes(data.type); }, {
+    ])
+        .refine(data => {
+        return data.type && Object.values(schema_3.ContentCategorizationType).includes(data.type);
+    }, {
         message: `must be a valid content categorization type.`,
         path: ['contentCategorization', 'type'],
     });
@@ -1379,38 +1383,18 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             return;
         }
         const validatePropertyValue = makePropertyValidator(schema, context);
-        const { authorityNormProperty, popularityNormProperty, filterableProperties, } = schema.index;
+        const { authorityNormProperty, popularityNormProperty, filterableProperties } = schema.index;
         // validate the categorization index
         if ((0, schema_20.isCategorizationIndexDefinition)(schema.index)) {
             const { contentCategorization } = schema.index;
             const { type } = contentCategorization;
             if (type === schema_3.ContentCategorizationType.Email) {
-                const { toProperty, fromProperty, subjectProperty, htmlBodyProperty, plainTextBodyProperty, } = contentCategorization;
-                validatePropertyValue(toProperty, 'toProperty', property => property.type === schema_18.ValueType.String, `must be a valid property.`, [
-                    'index',
-                    'contentCategorization',
-                    'toProperty',
-                ]);
-                validatePropertyValue(fromProperty, 'fromProperty', property => property.type === schema_18.ValueType.String, `must be a valid property.`, [
-                    'index',
-                    'contentCategorization',
-                    'fromProperty',
-                ]);
-                validatePropertyValue(subjectProperty, 'subjectProperty', property => property.type === schema_18.ValueType.String, `must be a valid property.`, [
-                    'index',
-                    'contentCategorization',
-                    'subjectProperty',
-                ]);
-                validatePropertyValue(htmlBodyProperty, 'htmlBodyProperty', property => property.type === schema_18.ValueType.String, `must be a valid property.`, [
-                    'index',
-                    'contentCategorization',
-                    'htmlBodyProperty',
-                ]);
-                validatePropertyValue(plainTextBodyProperty, 'plainTextBodyProperty', property => property.type === schema_18.ValueType.String, `must be a valid property.`, [
-                    'index',
-                    'contentCategorization',
-                    'plainTextBodyProperty',
-                ]);
+                const { toProperty, fromProperty, subjectProperty, htmlBodyProperty, plainTextBodyProperty } = contentCategorization;
+                validatePropertyValue(toProperty, 'toProperty', property => property.type === schema_18.ValueType.String, `must be a valid property.`, ['index', 'contentCategorization', 'toProperty']);
+                validatePropertyValue(fromProperty, 'fromProperty', property => property.type === schema_18.ValueType.String, `must be a valid property.`, ['index', 'contentCategorization', 'fromProperty']);
+                validatePropertyValue(subjectProperty, 'subjectProperty', property => property.type === schema_18.ValueType.String, `must be a valid property.`, ['index', 'contentCategorization', 'subjectProperty']);
+                validatePropertyValue(htmlBodyProperty, 'htmlBodyProperty', property => property.type === schema_18.ValueType.String, `must be a valid property.`, ['index', 'contentCategorization', 'htmlBodyProperty']);
+                validatePropertyValue(plainTextBodyProperty, 'plainTextBodyProperty', property => property.type === schema_18.ValueType.String, `must be a valid property.`, ['index', 'contentCategorization', 'plainTextBodyProperty']);
             }
             // validate the custom index
         }
@@ -1495,7 +1479,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             }
             paramNames.add(param.name);
         }
-    }).refine(val => {
+    })
+        .refine(val => {
         return !val.validateParameters;
     }, { message: 'validateParameters is only allowed on sync formulas.' });
     const formatMetadataSchema = zodCompleteObject({

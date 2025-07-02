@@ -22,8 +22,9 @@ interface AuthorizationCodeTokenCallbackResponse {
   data: {[key: string]: string};
 }
 
-export type AfterAuthorizationCodeTokenExchangeCallback =
-    (params: AfterTokenOAuthAuthorizationCodeExchangeParams) => void;
+export type AfterAuthorizationCodeTokenExchangeCallback = (
+  params: AfterTokenOAuthAuthorizationCodeExchangeParams,
+) => void;
 
 export function launchOAuthServerFlow({
   clientId,
@@ -95,9 +96,9 @@ class OAuthServerContainer {
   private _tokenCallback: (code: string) => Promise<AuthorizationCodeTokenCallbackResponse>;
 
   constructor(
-      tokenCallback: (code: string) => Promise<AuthorizationCodeTokenCallbackResponse>,
-      afterTokenExchange: AfterAuthorizationCodeTokenExchangeCallback,
-      port: number,
+    tokenCallback: (code: string) => Promise<AuthorizationCodeTokenCallbackResponse>,
+    afterTokenExchange: AfterAuthorizationCodeTokenExchangeCallback,
+    port: number,
   ) {
     this._tokenCallback = tokenCallback;
     this._port = port;
@@ -129,4 +130,3 @@ class OAuthServerContainer {
     this._server?.close();
   }
 }
-

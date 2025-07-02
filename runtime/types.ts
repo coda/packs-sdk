@@ -109,5 +109,5 @@ export type FormulaSpecification =
 export type PackFunctionResponse<T extends FormulaSpecification> = T extends SyncFormulaSpecification
   ? GenericSyncFormulaResult
   : T extends SyncUpdateFormulaSpecification
-  ? GenericSyncUpdateResultMarshaled
-  : PackFormulaResult;
+    ? GenericSyncUpdateResultMarshaled
+    : PackFormulaResult;
