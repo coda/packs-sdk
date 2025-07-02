@@ -1,6 +1,6 @@
 {
   "name": "@codahq/packs-sdk",
-  "version": "1.9.7-prerelease.2",
+  "version": "1.9.8",
   "license": "MIT",
   "workspaces": [
     "dev/eslint"
@@ -131,6 +131,14 @@
           "node-gyp": "*"
         }
       }
-    }
+    },
+    "ignoredBuiltDependencies": [
+      "aws-sdk",
+      "esbuild",
+      "sharp"
+    ],
+    "onlyBuiltDependencies": [
+      "isolated-vm"
+    ]
   }
 }
