@@ -3668,7 +3668,7 @@ describe('Pack metadata Validation', async () => {
               name: {type: ValueType.String},
               value: {type: ValueType.Number},
               attachments: {type: ValueType.Array, items: {type: ValueType.String}},
-              badProperty: {type: ValueType.String},
+              badProperty: {type: ValueType.Object, properties: {}},
             },
             index: {
               properties: ['name', 'attachments'],
