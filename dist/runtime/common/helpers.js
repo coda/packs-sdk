@@ -13,7 +13,9 @@ function verifyFormulaSupportsAuthenticationName(formula, authenticationName) {
         throw new Error(`Formula ${formulaName} is not allowed for connection with authentication ${authenticationName}`);
     }
 }
-function findFormula(packDef, formulaNameWithNamespace, authenticationName, { verifyFormulaForAuthenticationName, } = { verifyFormulaForAuthenticationName: true }) {
+function findFormula(packDef, formulaNameWithNamespace, authenticationName, { verifyFormulaForAuthenticationName } = {
+    verifyFormulaForAuthenticationName: true,
+}) {
     const packFormulas = packDef.formulas;
     if (!packFormulas) {
         throw new Error(`Pack definition has no formulas.`);
@@ -40,7 +42,9 @@ function findFormula(packDef, formulaNameWithNamespace, authenticationName, { ve
     throw new Error(`Pack definition has no formula "${name}"${namespace !== null && namespace !== void 0 ? namespace : ` in namespace "${namespace}"`}.`);
 }
 exports.findFormula = findFormula;
-function findSyncFormula(packDef, syncFormulaName, authenticationName, { verifyFormulaForAuthenticationName, } = { verifyFormulaForAuthenticationName: true }) {
+function findSyncFormula(packDef, syncFormulaName, authenticationName, { verifyFormulaForAuthenticationName } = {
+    verifyFormulaForAuthenticationName: true,
+}) {
     if (!packDef.syncTables) {
         throw new Error(`Pack definition has no sync tables.`);
     }

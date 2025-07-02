@@ -1109,10 +1109,7 @@ export type MetadataFormulaResultType = string | number | MetadataFormulaObjectR
  * values of the others. This is dictionary mapping the names of each parameter to its
  * current value.
  */
-export type MetadataFormula<ContextT extends ExecutionContext = ExecutionContext, ResultT extends PackFormulaResult = LegacyDefaultMetadataReturnType> = BaseFormula<[
-    ParamDef<Type.string>,
-    ParamDef<Type.string>
-], ResultT, ContextT> & {
+export type MetadataFormula<ContextT extends ExecutionContext = ExecutionContext, ResultT extends PackFormulaResult = LegacyDefaultMetadataReturnType> = BaseFormula<[ParamDef<Type.string>, ParamDef<Type.string>], ResultT, ContextT> & {
     schema?: any;
 };
 type GenericMetadataFormula = BaseFormula<ParamDefs, any> & {
