@@ -33,7 +33,6 @@ function getS3Service(env: string): S3Client {
   return new S3Client({
     region: AwsRegion,
     credentials: fromIni({profile: env}),
-    computeChecksums: true,
   });
 }
 
