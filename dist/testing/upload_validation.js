@@ -1448,24 +1448,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 const filterableProperty = filterableProperties[i];
                 const objectPath = ['index', 'filterableProperty', i];
                 validatePropertyValue(filterableProperty, 'filterableProperty', filterablePropertySchema => {
-                    if (filterablePropertySchema.type === schema_18.ValueType.Boolean) {
-                        return true;
-                    }
-                    if (filterablePropertySchema.type === schema_18.ValueType.Number) {
-                        return true;
-                    }
-                    if (!('codaType' in filterablePropertySchema && filterablePropertySchema.codaType)) {
-                        return false;
-                    }
-                    switch (filterablePropertySchema.codaType) {
-                        case schema_17.ValueHintType.DateTime:
-                        case schema_17.ValueHintType.Date:
-                        case schema_17.ValueHintType.SelectList:
-                            return true;
-                        default:
-                            return false;
-                    }
-                }, `must be a "ValueType.Boolean", "ValueType.Number", or a property with a "ValueHintType.DateTime" or "ValueHintType.SelectList" "codaType".`, objectPath);
+                    return [schema_18.ValueType.Boolean, schema_18.ValueType.Number, schema_18.ValueType.String].includes(filterablePropertySchema.type);
+                }, `must be a "ValueType.Boolean", "ValueType.Number", or "ValueType.String".`, objectPath);
             }
         }
     }));
