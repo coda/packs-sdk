@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Changed
+
+- Update `filterableProperties` to support plain strings
+
 ## [1.9.7] - 2025-06-16
 
 ### Changed
