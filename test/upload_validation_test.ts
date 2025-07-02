@@ -3672,14 +3672,14 @@ describe('Pack metadata Validation', async () => {
             },
             index: {
               properties: ['name', 'attachments'],
-              filterableProperties: ['value', 'badProperty'],
+              filterableProperties: ['badProperty'],
             }
           });
           const err = await validateJsonAndAssertFails(metadata);
           assert.deepEqual(err.validationErrors, [
             {
-              message: 'The "filterableProperty" field name "BadProperty" must be a "ValueType.Boolean", "ValueType.Number", or a property with a "ValueHintType.DateTime" or "ValueHintType.SelectList" "codaType".',
-              path: 'formulas[0].schema.index.filterableProperty[1]',
+              message: 'The "filterableProperty" field name "BadProperty" must be a "ValueType.Boolean", "ValueType.Number", or "ValueType.String".',
+              path: 'formulas[0].schema.index.filterableProperty[0]',
             },
           ]);
         });

@@ -1866,25 +1866,9 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
               filterableProperty,
               'filterableProperty',
               filterablePropertySchema => {
-                if (filterablePropertySchema.type === ValueType.Boolean) {
-                  return true;
-                }
-                if (filterablePropertySchema.type === ValueType.Number) {
-                  return true;
-                }
-                if (!('codaType' in filterablePropertySchema && filterablePropertySchema.codaType)) {
-                  return false;
-                }
-                switch (filterablePropertySchema.codaType) {
-                  case ValueHintType.DateTime:
-                  case ValueHintType.Date:
-                  case ValueHintType.SelectList:
-                    return true;
-                  default:
-                    return false;
-                }
+                return [ValueType.Boolean, ValueType.Number, ValueType.String].includes(filterablePropertySchema.type);
               },
-              `must be a "ValueType.Boolean", "ValueType.Number", or a property with a "ValueHintType.DateTime" or "ValueHintType.SelectList" "codaType".`,
+              `must be a "ValueType.Boolean", "ValueType.Number", or "ValueType.String".`,
               objectPath,
             );
           }
