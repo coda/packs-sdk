@@ -1,8 +1,12 @@
-import AWS from 'aws-sdk';
 import type {ArgumentsCamelCase} from 'yargs';
-import CloudFront from 'aws-sdk/clients/cloudfront';
-import S3 from 'aws-sdk/clients/s3';
+import {CloudFrontClient} from '@aws-sdk/client-cloudfront';
+import {CreateInvalidationCommand} from '@aws-sdk/client-cloudfront';
+import {ListDistributionsCommand} from '@aws-sdk/client-cloudfront';
+import {ListObjectsV2Command} from '@aws-sdk/client-s3';
+import {PutObjectCommand} from '@aws-sdk/client-s3';
+import {S3Client} from '@aws-sdk/client-s3';
 import {exec as childExec} from 'child_process';
+import {fromIni} from '@aws-sdk/credential-provider-ini';
 import fs from 'fs';
 import path from 'path';
 import {print} from '../../testing/helpers';
@@ -25,24 +29,19 @@ function handleError(e: Error) {
   printAndExit(`${e.message} ${e.stack || ''}`);
 }
 
-function getS3Service(env: string): S3 {
-  const config: S3.ClientConfiguration = {
-    signatureVersion: 'v4',
+function getS3Service(env: string): S3Client {
+  return new S3Client({
     region: AwsRegion,
-    credentials: new AWS.SharedIniFileCredentials({profile: env}),
+    credentials: fromIni({profile: env}),
     computeChecksums: true,
-  };
-  return new S3(config);
+  });
 }
 
-function getCloudfrontService(env: string): CloudFront {
-  const config: CloudFront.ClientConfiguration = {
-    signatureVersion: 'v4',
+function getCloudfrontService(env: string): CloudFrontClient {
+  return new CloudFrontClient({
     region: AwsRegion,
-    credentials: new AWS.SharedIniFileCredentials({profile: env}),
-    computeChecksums: true,
-  };
-  return new CloudFront(config);
+    credentials: fromIni({profile: env}),
+  });
 }
 
 function getS3Bucket(env: string): string {
@@ -93,13 +92,23 @@ async function pushDocumentation({env, forceUpload}: ArgumentsCamelCase<PushDocu
     print(`${env}: Pushing the base index.html redirect file to the base`);
     // This assumes that we are running this file from the root path.
     const redirectIndexHtmlStream = fs.createReadStream('./documentation/redirect-index.html');
-    await s3
-      .upload({Bucket: bucket, Key: baseIndexFileKey, Body: redirectIndexHtmlStream, ContentType: 'text/html'})
-      .promise();
+    const uploadCommand = new PutObjectCommand({
+      Bucket: bucket,
+      Key: baseIndexFileKey,
+      Body: redirectIndexHtmlStream,
+      ContentType: 'text/html',
+      ChecksumAlgorithm: 'CRC32',
+    });
+    await s3.send(uploadCommand);
     redirectIndexHtmlStream.destroy();
 
     if (!forceUpload) {
-      const obj = await s3.listObjectsV2({Bucket: bucket, MaxKeys: 1, Prefix: versionedKey}).promise();
+      const listCommand = new ListObjectsV2Command({
+        Bucket: bucket,
+        MaxKeys: 1,
+        Prefix: versionedKey,
+      });
+      const obj = await s3.send(listCommand);
       if (obj.Contents?.length) {
         printAndExit(`${env}: Trying to upload ${getSDKVersion()} but folder already exists in S3.`);
       }
@@ -111,30 +120,30 @@ async function pushDocumentation({env, forceUpload}: ArgumentsCamelCase<PushDocu
     print(`${env}: The current packs-sdk documentation was pushed to ${versionedKey} successfully.`);
 
     print(`${env}: Finding Cloudfront distribution for documentation...`);
-    const distributions = await cloudfront.listDistributions().promise();
+    const listDistributionsCommand = new ListDistributionsCommand({});
+    const distributions = await cloudfront.send(listDistributionsCommand);
     const docsDistribution = distributions.DistributionList?.Items?.find(distr =>
-      distr.Origins.Items.some(origin => origin.DomainName === getOriginDomainName(env)),
+      distr.Origins?.Items?.some(origin => origin.DomainName === getOriginDomainName(env)),
     );
     if (!docsDistribution) {
       return printAndExit(`${env}: Could not find Cloudfront distribution for documentation.`);
     }
     print(`${env}: Creating Cloudfront invalidation for 'latest' folder...`);
     const docsLatestPath = `${DocumentationRoot}/latest*`;
-    await cloudfront
-      .createInvalidation({
-        DistributionId: docsDistribution.Id,
-        InvalidationBatch: {
-          CallerReference: now,
-          Paths: {
-            Quantity: 1,
-            Items: [docsLatestPath],
-          },
+    const createInvalidationCommand = new CreateInvalidationCommand({
+      DistributionId: docsDistribution.Id,
+      InvalidationBatch: {
+        CallerReference: now,
+        Paths: {
+          Quantity: 1,
+          Items: [docsLatestPath],
         },
-      })
-      .promise();
+      },
+    });
+    await cloudfront.send(createInvalidationCommand);
     print(`${env}: Successfully invalidated the '${docsLatestPath}' folder on ${getOriginDomainName(env)}...`);
   } catch (err: any) {
-    if (err?.code === 'CredentialsError' || err?.code === 'ExpiredToken') {
+    if (err?.name === 'CredentialsError' || err?.name === 'ExpiredToken') {
       printError(`Credentials not found, invalid, or expired! Try running 'prodaccess'.`);
     }
     handleError(err);

@@ -24,7 +24,10 @@
   },
   "dependencies": {
     "@aws-crypto/sha256-js": "5.2.0",
+    "@aws-sdk/client-cloudfront": "^3.840.0",
+    "@aws-sdk/client-s3": "^3.842.0",
     "@aws-sdk/client-sts": "3.821.0",
+    "@aws-sdk/credential-provider-ini": "^3.840.0",
     "@smithy/signature-v4": "5.1.2",
     "browserify": "17.0.1",
     "buffer": "6.0.3",
@@ -61,7 +64,6 @@
     "isolated-vm": "5.0.1"
   },
   "devDependencies": {
-    "@aws-sdk/types": "3.821.0",
     "@brightcove/kacl": "0.1.11",
     "@getify/eslint-plugin-proper-arrows": "11.0.3",
     "@julian_cataldo/remark-lint-frontmatter-schema": "3.7.6",
@@ -93,7 +95,6 @@
     "@typescript-eslint/eslint-plugin": "6.21.0",
     "@typescript-eslint/experimental-utils": "5.62.0",
     "@typescript-eslint/parser": "6.21.0",
-    "aws-sdk": "2.1665.0",
     "chai": "4.5.0",
     "cspell": "8.15.2",
     "dts-bundle-generator": "9.5.1",
