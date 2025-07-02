@@ -70,6 +70,9 @@ jobs:
           name: 'Lint'
           command: make lint
       - run:
+          name: 'Check formatting'
+          command: make autoformat-all-no-fix
+      - run:
           name: 'Test'
           command: make test
       - run:

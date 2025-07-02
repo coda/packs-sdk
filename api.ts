@@ -1070,12 +1070,12 @@ export type Formula<
 > = ResultT extends ValueType.String
   ? StringPackFormula<ParamDefsT>
   : ResultT extends ValueType.Number
-  ? NumericPackFormula<ParamDefsT>
-  : ResultT extends ValueType.Boolean
-  ? BooleanPackFormula<ParamDefsT>
-  : ResultT extends ValueType.Array
-  ? ObjectPackFormula<ParamDefsT, ArraySchema<SchemaT>>
-  : ObjectPackFormula<ParamDefsT, SchemaT>;
+    ? NumericPackFormula<ParamDefsT>
+    : ResultT extends ValueType.Boolean
+      ? BooleanPackFormula<ParamDefsT>
+      : ResultT extends ValueType.Array
+        ? ObjectPackFormula<ParamDefsT, ArraySchema<SchemaT>>
+        : ObjectPackFormula<ParamDefsT, SchemaT>;
 
 type V2PackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema = Schema> =
   | StringPackFormula<ParamDefsT>
@@ -1095,7 +1095,10 @@ export type TypedPackFormula = Formula | GenericSyncFormula;
 
 export type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
 /** @hidden */
-export type PackFormulaMetadata = Omit<TypedPackFormula, 'execute' | 'executeUpdate' | 'executeGetPermissions' | 'validateParameters'> & {
+export type PackFormulaMetadata = Omit<
+  TypedPackFormula,
+  'execute' | 'executeUpdate' | 'executeGetPermissions' | 'validateParameters'
+> & {
   validateParameters?: MetadataFormulaMetadata<ExecutionContext, ParameterValidationResult>;
 };
 /** @hidden */
@@ -1564,7 +1567,7 @@ export function makeStringFormula<ParamDefsT extends ParamDefs>(
  * ```
  */
 export function makeFormula<ParamDefsT extends ParamDefs, ResultT extends ValueType, SchemaT extends Schema = Schema>(
-  fullDefinition: FormulaDefinitionOptions<ParamDefsT, ResultT, SchemaT>
+  fullDefinition: FormulaDefinitionOptions<ParamDefsT, ResultT, SchemaT>,
 ): Formula<ParamDefsT, ResultT, SchemaT> {
   let formula: V2PackFormula<ParamDefsT, SchemaT>;
   switch (fullDefinition.resultType) {
@@ -1751,7 +1754,10 @@ export type ObjectFormulaDef<ParamDefsT extends ParamDefs, SchemaT extends Schem
  * A wrapper type that allows you to specify a formula definition where the `validateParameters`
  * function may be a function definition or a metadata formula definition.
  */
-export type FormulaOptions<ParamDefsT extends ParamDefs, DefT extends CommonPackFormulaDef<ParamDefsT>> = Omit<DefT, 'validateParameters'> & {validateParameters?: MetadataFormulaDef<ExecutionContext, ParameterValidationResult>};
+export type FormulaOptions<ParamDefsT extends ParamDefs, DefT extends CommonPackFormulaDef<ParamDefsT>> = Omit<
+  DefT,
+  'validateParameters'
+> & {validateParameters?: MetadataFormulaDef<ExecutionContext, ParameterValidationResult>};
 
 // can't use a map here since ParamDefsT isn't propagated correctly.
 /**
@@ -1764,12 +1770,13 @@ export type FormulaDefinitionOptions<
 > = ResultT extends ValueType.String
   ? FormulaOptions<ParamDefsT, StringFormulaDef<ParamDefsT>> & ({schema?: StringSchema} | {codaType?: StringHintTypes})
   : ResultT extends ValueType.Number
-  ? FormulaOptions<ParamDefsT, NumericFormulaDef<ParamDefsT>> & ({schema?: NumberSchema} | {codaType?: NumberHintTypes})
-  : ResultT extends ValueType.Boolean
-  ? FormulaOptions<ParamDefsT, BooleanFormulaDef<ParamDefsT>>
-  : ResultT extends ValueType.Array
-  ? FormulaOptions<ParamDefsT, ArrayFormulaDef<ParamDefsT, SchemaT>>
-  : FormulaOptions<ParamDefsT, ObjectFormulaDef<ParamDefsT, SchemaT>>;
+    ? FormulaOptions<ParamDefsT, NumericFormulaDef<ParamDefsT>> &
+        ({schema?: NumberSchema} | {codaType?: NumberHintTypes})
+    : ResultT extends ValueType.Boolean
+      ? FormulaOptions<ParamDefsT, BooleanFormulaDef<ParamDefsT>>
+      : ResultT extends ValueType.Array
+        ? FormulaOptions<ParamDefsT, ArrayFormulaDef<ParamDefsT, SchemaT>>
+        : FormulaOptions<ParamDefsT, ObjectFormulaDef<ParamDefsT, SchemaT>>;
 
 /**
  * The return type for a metadata formula that should return a different display to the user
@@ -1855,11 +1862,7 @@ export type MetadataFormulaResultType = string | number | MetadataFormulaObjectR
 export type MetadataFormula<
   ContextT extends ExecutionContext = ExecutionContext,
   ResultT extends PackFormulaResult = LegacyDefaultMetadataReturnType,
-> = BaseFormula<
-  [ParamDef<Type.string>, ParamDef<Type.string>],
-  ResultT,
-  ContextT
-> & {
+> = BaseFormula<[ParamDef<Type.string>, ParamDef<Type.string>], ResultT, ContextT> & {
   schema?: any;
 };
 
@@ -1935,7 +1938,10 @@ export type PropertyOptionsMetadataFormula<SchemaT extends Schema> = ObjectPackF
   execute(params: ParamValues<[]>, context: PropertyOptionsExecutionContext): Promise<object> | object;
 };
 
-export type MetadataFormulaMetadata<ContextT extends ExecutionContext = ExecutionContext, ResultT extends PackFormulaResult = LegacyDefaultMetadataReturnType> = Omit<MetadataFormula<ContextT, ResultT>, 'execute' | 'validateParameters'>;
+export type MetadataFormulaMetadata<
+  ContextT extends ExecutionContext = ExecutionContext,
+  ResultT extends PackFormulaResult = LegacyDefaultMetadataReturnType,
+> = Omit<MetadataFormula<ContextT, ResultT>, 'execute' | 'validateParameters'>;
 
 /**
  * @hidden

@@ -96,7 +96,7 @@ export type ChainedCommand = InterleavedChainedCommand | SubsequentChainedComman
 export type FormulaResultType<T extends FormulaSpecification> = T extends SyncFormulaSpecification
   ? GenericSyncFormulaResult
   : T extends SyncUpdateFormulaSpecification
-  ? GenericSyncUpdateResult
-  : T extends GetPermissionsFormulaSpecification
-  ? GetPermissionsResult
-  : PackFormulaResult;
+    ? GenericSyncUpdateResult
+    : T extends GetPermissionsFormulaSpecification
+      ? GetPermissionsResult
+      : PackFormulaResult;

@@ -167,10 +167,9 @@ export const manifest: PackDefinition = createFakePack({
           }
           // Also valid if the teacher is Personal and the context permissionSyncMode is Personal
           if (
-            (teacher === 'Personal' && (
-              context.sync?.permissionSyncMode === PermissionSyncMode.Personal ||
-              context.sync?.permissionSyncMode === undefined
-            ))
+            teacher === 'Personal' &&
+            (context.sync?.permissionSyncMode === PermissionSyncMode.Personal ||
+              context.sync?.permissionSyncMode === undefined)
           ) {
             return {isValid: true};
           }

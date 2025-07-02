@@ -2,11 +2,7 @@ import type {BasicPackDefinition} from '../../types';
 import type {Formula} from '../../api';
 import type {GenericSyncFormula} from '../../api';
 
-
-function verifyFormulaSupportsAuthenticationName(
-  formula: Formula,
-  authenticationName: string | undefined,
-) {
+function verifyFormulaSupportsAuthenticationName(formula: Formula, authenticationName: string | undefined) {
   const {allowedAuthenticationNames, name: formulaName} = formula;
   if (!allowedAuthenticationNames) {
     return;
@@ -25,9 +21,9 @@ export function findFormula(
   packDef: BasicPackDefinition,
   formulaNameWithNamespace: string,
   authenticationName: string | undefined,
-  {
-    verifyFormulaForAuthenticationName,
-  }: {verifyFormulaForAuthenticationName: boolean} = {verifyFormulaForAuthenticationName: true}
+  {verifyFormulaForAuthenticationName}: {verifyFormulaForAuthenticationName: boolean} = {
+    verifyFormulaForAuthenticationName: true,
+  },
 ): Formula {
   const packFormulas = packDef.formulas;
   if (!packFormulas) {
@@ -64,9 +60,9 @@ export function findSyncFormula(
   packDef: BasicPackDefinition,
   syncFormulaName: string,
   authenticationName: string | undefined,
-  {
-    verifyFormulaForAuthenticationName,
-  }: {verifyFormulaForAuthenticationName: boolean} = {verifyFormulaForAuthenticationName: true}
+  {verifyFormulaForAuthenticationName}: {verifyFormulaForAuthenticationName: boolean} = {
+    verifyFormulaForAuthenticationName: true,
+  },
 ): GenericSyncFormula {
   if (!packDef.syncTables) {
     throw new Error(`Pack definition has no sync tables.`);
@@ -85,17 +81,9 @@ export function findSyncFormula(
   throw new Error(`Pack definition has no sync formula "${syncFormulaName}" in its sync tables.`);
 }
 
-export function tryFindFormula(
-  packDef: BasicPackDefinition,
-  formulaNameWithNamespace: string,
-): Formula | undefined {
+export function tryFindFormula(packDef: BasicPackDefinition, formulaNameWithNamespace: string): Formula | undefined {
   try {
-    return findFormula(
-      packDef,
-      formulaNameWithNamespace,
-      undefined,
-      {verifyFormulaForAuthenticationName: false}
-    );
+    return findFormula(packDef, formulaNameWithNamespace, undefined, {verifyFormulaForAuthenticationName: false});
   } catch (_err) {}
 }
 
