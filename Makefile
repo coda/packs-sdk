@@ -11,6 +11,7 @@ MIN_PIPENV_VERSION = "2022.10.4"
 DOC_DISABLE_SOURCES ?= true
 DOC_GIT_REVISION ?= main
 
+PRETTIER := npx prettier
 
 # Aliases
 bs: bootstrap
@@ -352,6 +353,17 @@ build: clean lint compile docs
 .PHONY: publish-local
 publish-local: build
 	cp -r dist/* ../packs/node_modules/@codahq/packs-sdk/dist/
+
+.PHONY: autoformat-ts
+autoformat-ts:
+	(cd ${ROOTDIR}; echo -n "autoformat-ts "; ${PRETTIER} --cache --concurrency $${CIRCLE_CORE_COUNT:-16} $${PRETTIER_COMMAND:---write}  $$(git ls-files '*.ts' '*.tsx'))
+
+.PHONY: autoformat-all
+autoformat-all: autoformat-ts
+
+.PHONY: autoformat-all-no-fix
+autoformat-all-no-fix:
+	PRETTIER_COMMAND="--check" $(MAKE) autoformat-all
 
 .PHONY: validate-no-changes
 validate-no-changes: clean compile docs

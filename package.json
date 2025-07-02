@@ -41,6 +41,7 @@
     "node-fetch": "2.6.11",
     "open": "8.4.2",
     "pascalcase": "1.0.0",
+    "prettier": "3.3.3",
     "qs": "6.11.2",
     "readline-sync": "1.4.10",
     "semver": "7.6.3",
