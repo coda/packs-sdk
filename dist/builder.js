@@ -35,10 +35,11 @@ class PackDefinitionBuilder {
      * rather than constructing a builder directly.
      */
     constructor(definition) {
-        const { formulas, formats, syncTables, networkDomains, defaultAuthentication, systemConnectionAuthentication, version, formulaNamespace, } = definition || {};
+        const { formulas, formats, syncTables, skills, networkDomains, defaultAuthentication, systemConnectionAuthentication, version, formulaNamespace, } = definition || {};
         this.formulas = formulas || [];
         this.formats = formats || [];
         this.syncTables = syncTables || [];
+        this.skills = skills || [];
         this.networkDomains = networkDomains || [];
         this.defaultAuthentication = defaultAuthentication;
         this.systemConnectionAuthentication = systemConnectionAuthentication;
@@ -149,6 +150,27 @@ class PackDefinitionBuilder {
      */
     addColumnFormat(format) {
         this.formats.push(format);
+        return this;
+    }
+    /**
+     * Adds a skill definition to this pack.
+     *
+     * In the web editor, the `/Skill` shortcut will insert a snippet of a skeleton skill.
+     *
+     * @example
+     * ```
+     * pack.addSkill({
+     *   name: 'MySkill',
+     *   displayName: 'My Display Name',
+     *   description: 'My description.',
+     *   prompt: 'My prompt',
+     *    tools: [{type: ToolType.Knowledge, source: {type: KnowledgeToolSourceType.Global}}]
+     * });
+     * ```
+     * @hidden
+     */
+    addSkill(skill) {
+        this.skills.push(skill);
         return this;
     }
     _wrapAuthenticationFunctions(authentication) {

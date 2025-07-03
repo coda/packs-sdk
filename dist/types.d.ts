@@ -1076,8 +1076,11 @@ export interface BaseTool<T extends string> {
  * @hidden
  */
 export interface PackTool extends BaseTool<ToolType.Pack> {
-    /** The ID of the pack to use as a tool. */
-    packId: number;
+    /**
+     * The ID of the pack to use as a tool, if referencing a different pack.
+     * Omit this to reference the current pack.
+     */
+    packId?: number;
     /** The specific formulas to make available as tools. */
     formulas?: Array<{
         /** The name of the formula to use as a tool. */
@@ -1110,7 +1113,11 @@ interface BaseKnowledgeToolSource<T extends KnowledgeToolSourceType> {
  * @hidden
  */
 interface PackKnowledgeToolSource extends BaseKnowledgeToolSource<KnowledgeToolSourceType.Pack> {
-    packId: number;
+    /**
+     * The ID of the pack to use for knowledge, if referencing a different pack.
+     * Omit this to reference the current pack.
+     */
+    packId?: number;
 }
 /**
  * Source for using all knowledge.

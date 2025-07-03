@@ -5314,7 +5314,11 @@ export interface RateLimits {
  * editor where Coda will manage versioning on behalf of the pack author.
  */
 export type BasicPackDefinition = Omit<PackVersionDefinition, "version">;
-declare enum ToolType {
+/**
+ *  Default tool types supported by Coda Packs for skill definitions.
+ * @hidden
+ */
+export declare enum ToolType {
 	/**
 	 * Allows formulas within a pack to be used as tools.
 	 */
@@ -5337,15 +5341,22 @@ export interface BaseTool<T extends string> {
  * @hidden
  */
 export interface PackTool extends BaseTool<ToolType.Pack> {
-	/** The ID of the pack to use as a tool. */
-	packId: number;
+	/**
+	 * The ID of the pack to use as a tool, if referencing a different pack.
+	 * Omit this to reference the current pack.
+	 */
+	packId?: number;
 	/** The specific formulas to make available as tools. */
 	formulas?: Array<{
 		/** The name of the formula to use as a tool. */
 		formulaName: string;
 	}>;
 }
-declare enum KnowledgeToolSourceType {
+/**
+ * The type of knowledge source to use.
+ * @hidden
+ */
+export declare enum KnowledgeToolSourceType {
 	/**
 	 * Use all knowledge from the pack.
 	 */
@@ -5367,7 +5378,11 @@ export interface BaseKnowledgeToolSource<T extends KnowledgeToolSourceType> {
  * @hidden
  */
 export interface PackKnowledgeToolSource extends BaseKnowledgeToolSource<KnowledgeToolSourceType.Pack> {
-	packId: number;
+	/**
+	 * The ID of the pack to use for knowledge, if referencing a different pack.
+	 * Omit this to reference the current pack.
+	 */
+	packId?: number;
 }
 /**
  * Source for using all knowledge.
@@ -5558,6 +5573,11 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 */
 	syncTables: SyncTable[];
 	/**
+	 * See {@link PackVersionDefinition.skills}.
+	 * @hidden
+	 */
+	skills: Skill[];
+	/**
 	 * See {@link PackVersionDefinition.networkDomains}.
 	 */
 	networkDomains: string[];
@@ -5669,6 +5689,24 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * ```
 	 */
 	addColumnFormat(format: Format): this;
+	/**
+	 * Adds a skill definition to this pack.
+	 *
+	 * In the web editor, the `/Skill` shortcut will insert a snippet of a skeleton skill.
+	 *
+	 * @example
+	 * ```
+	 * pack.addSkill({
+	 *   name: 'MySkill',
+	 *   displayName: 'My Display Name',
+	 *   description: 'My description.',
+	 *   prompt: 'My prompt',
+	 *    tools: [{type: ToolType.Knowledge, source: {type: KnowledgeToolSourceType.Global}}]
+	 * });
+	 * ```
+	 * @hidden
+	 */
+	addSkill(skill: Skill): this;
 	private _wrapAuthenticationFunctions;
 	/**
 	 * Sets this pack to use authentication for individual users, using the
