@@ -26,7 +26,7 @@ import {isDynamicSyncTable} from '../api';
 export function compilePackMetadata(manifest: PackDefinition): PackMetadata;
 export function compilePackMetadata(manifest: PackVersionDefinition): PackVersionMetadata;
 export function compilePackMetadata(manifest: PackVersionDefinition): PackVersionMetadata {
-  const {formats, formulas, formulaNamespace, syncTables, defaultAuthentication, ...definition} = manifest;
+  const {formats, formulas, formulaNamespace, syncTables, defaultAuthentication, skills, ...definition} = manifest;
   const compiledFormats = compileFormatsMetadata(formats || []);
   const compiledFormulas = (formulas && compileFormulasMetadata(formulas)) || [];
   // Note: we do not need to compile systemConnectionAuthentication metadata because it doesn't contain formulas,
@@ -39,6 +39,8 @@ export function compilePackMetadata(manifest: PackVersionDefinition): PackVersio
     formats: compiledFormats,
     formulas: compiledFormulas,
     syncTables: (syncTables || []).map(compileSyncTable),
+    // Skills can be passed through as they are pure JSON.
+    skills,
   };
 
   return metadata;
