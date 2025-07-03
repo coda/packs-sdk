@@ -1432,8 +1432,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 const filterableProperty = filterableProperties[i];
                 const objectPath = ['index', 'filterableProperty', i];
                 validatePropertyValue(filterableProperty, 'filterableProperty', filterablePropertySchema => {
+                    if (filterablePropertySchema.type === schema_18.ValueType.Array) {
+                        return [schema_18.ValueType.Number, schema_18.ValueType.String].includes(filterablePropertySchema.items.type);
+                    }
                     return [schema_18.ValueType.Boolean, schema_18.ValueType.Number, schema_18.ValueType.String].includes(filterablePropertySchema.type);
-                }, `must be a "ValueType.Boolean", "ValueType.Number", or "ValueType.String".`, objectPath);
+                }, `must be a "ValueType.Boolean", "ValueType.Number", or "ValueType.String" or an array of "ValueType.Number" or "ValueType.String".`, objectPath);
             }
         }
     }));

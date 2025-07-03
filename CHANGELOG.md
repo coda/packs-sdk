@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Changed
+
+- Update `filterableProperties` to support arrays of string and number
+
 ## [1.9.8] - 2025-07-02
 
 ### Changed
