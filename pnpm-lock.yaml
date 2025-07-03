@@ -131,8 +131,8 @@ importers:
         specifier: 3.7.6
         version: 3.7.6
       '@release-it/keep-a-changelog':
-        specifier: 5.0.0
-        version: 5.0.0(release-it@17.10.0(typescript@5.1.6))
+        specifier: 7.0.0
+        version: 7.0.0(release-it@17.10.0(typescript@5.1.6))
       '@types/browserify':
         specifier: 12.0.39
         version: 12.0.39
@@ -1075,11 +1075,11 @@ packages:
     resolution: {integrity: sha512-c83qWb22rNRuB0UaVCI0uRPNRr8Z0FWnEIvT47jiHAmOIUHbBOg5XvV7pM5x+rKn9HRpjxquDbXYSXr3fAKFcw==}
     engines: {node: '>=12'}
 
-  '@release-it/keep-a-changelog@5.0.0':
-    resolution: {integrity: sha512-Y1xqZe50jqK8qKlzEfGLVTjSkn57e/QlQMXHhKRWGgsv8Qy/X0LN1CJphoskZu7p7sAD3RihxhXrjJhRPE4JcA==}
-    engines: {node: '>=18'}
+  '@release-it/keep-a-changelog@7.0.0':
+    resolution: {integrity: sha512-POWxbrMpO/UjphgXku7LYL+BWyiCc0S4tprEMO1+iHSk/CXE8xs6VecfH9KJyQ9Ke3SY4VdHAbMQv/lmizr/lA==}
+    engines: {node: ^20.9.0 || >=22.0.0}
     peerDependencies:
-      release-it: ^17.0.0
+      release-it: ^18.0.0 || ^19.0.0
 
   '@sindresorhus/merge-streams@2.3.0':
     resolution: {integrity: sha512-LtoMMhxAlorcGhmFYI+LhPgbPZCkgP6ra1YL604EeF6U98pLlQ3iWIGMdWSC+vWmPBWBNgmDBAhnAobLROJmwg==}
@@ -4125,6 +4125,11 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
+  semver@7.7.2:
+    resolution: {integrity: sha512-RF0Fw+rO5AMf9MAyaRXI4AV0Ulj5lMHqVxxdSgiVbixSCXoEmmX/jk0CuJw4+3SqroYO9VoUh+HcuJivvtJemA==}
+    engines: {node: '>=10'}
+    hasBin: true
+
   send@0.19.0:
     resolution: {integrity: sha512-dW41u5VfLXu8SJh5bwRmyYUbAoSB3c9uQh6L8h/KtsFREPWpbX1lrljJo186Jc4nmci/sGUZ9a0a0J2zgfq2hw==}
     engines: {node: '>= 0.8.0'}
@@ -5864,10 +5869,11 @@ snapshots:
       '@pnpm/network.ca-file': 1.0.2
       config-chain: 1.1.13
 
-  '@release-it/keep-a-changelog@5.0.0(release-it@17.10.0(typescript@5.1.6))':
+  '@release-it/keep-a-changelog@7.0.0(release-it@17.10.0(typescript@5.1.6))':
     dependencies:
       detect-newline: 4.0.1
       release-it: 17.10.0(typescript@5.1.6)
+      semver: 7.7.2
       string-template: 1.0.0
 
   '@sindresorhus/merge-streams@2.3.0': {}
@@ -9503,6 +9509,8 @@ snapshots:
       ajv-keywords: 3.5.2(ajv@6.12.6)
 
   semver@7.6.3: {}
+
+  semver@7.7.2: {}
 
   send@0.19.0:
     dependencies:
