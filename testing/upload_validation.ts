@@ -1873,9 +1873,12 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
               filterableProperty,
               'filterableProperty',
               filterablePropertySchema => {
+                if (filterablePropertySchema.type === ValueType.Array) {
+                  return [ValueType.Number, ValueType.String].includes(filterablePropertySchema.items.type);
+                }
                 return [ValueType.Boolean, ValueType.Number, ValueType.String].includes(filterablePropertySchema.type);
               },
-              `must be a "ValueType.Boolean", "ValueType.Number", or "ValueType.String".`,
+              `must be a "ValueType.Boolean", "ValueType.Number", or "ValueType.String" or an array of "ValueType.Number" or "ValueType.String".`,
               objectPath,
             );
           }

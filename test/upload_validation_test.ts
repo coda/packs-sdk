@@ -3525,6 +3525,45 @@ describe('Pack metadata Validation', async () => {
           await validateJson(metadata);
         });
 
+        it('works with array filterable properties', async () => {
+          const metadata = metadataForFormulaWithObjectSchema({
+            type: ValueType.Object,
+            properties: {
+              name: {type: ValueType.String},
+              numberArray: {type: ValueType.Array, items: {type: ValueType.Number}},
+              stringArray: {type: ValueType.Array, items: {type: ValueType.String}},
+            },
+            index: {
+              properties: ['name'],
+              filterableProperties: ['numberArray', 'stringArray'],
+            },
+          });
+          await validateJson(metadata);
+        });
+
+        it('Does not support boolean array filterable properties', async () => {
+          const metadata = metadataForFormulaWithObjectSchema({
+            type: ValueType.Object,
+            properties: {
+              name: {type: ValueType.String},
+              booleanArray: {type: ValueType.Array, items: {type: ValueType.Boolean}},
+            },
+            index: {
+              properties: ['name'],
+              filterableProperties: ['booleanArray'],
+            },
+          });
+          await validateJsonAndAssertFails(metadata);
+          const err = await validateJsonAndAssertFails(metadata);
+          assert.deepEqual(err.validationErrors, [
+            {
+              message:
+                'The "filterableProperty" field name "BooleanArray" must be a "ValueType.Boolean", "ValueType.Number", or "ValueType.String" or an array of "ValueType.Number" or "ValueType.String".',
+              path: 'formulas[0].schema.index.filterableProperty[0]',
+            },
+          ]);
+        });
+
         it('works with content categorization', async () => {
           const metadata = metadataForFormulaWithObjectSchema({
             type: ValueType.Object,
@@ -3594,6 +3633,31 @@ describe('Pack metadata Validation', async () => {
             {
               message: 'The "contextProperties" path "Value" does not exist in the "properties" object.',
               path: 'formulas[0].schema.index.contextProperties[0]',
+            },
+          ]);
+        });
+
+        it('fails with invalid array filterable property', async () => {
+          const metadata = metadataForFormulaWithObjectSchema({
+            type: ValueType.Object,
+            properties: {
+              name: {type: ValueType.String},
+              numberArray: {type: ValueType.Array, items: {type: ValueType.Number}},
+              stringArray: {type: ValueType.Array, items: {type: ValueType.String}},
+              objectArray: {type: ValueType.Array, items: {type: ValueType.Object, properties: {}}},
+            },
+            index: {
+              properties: ['name', 'stringArray'],
+              filterableProperties: ['numberArray', 'stringArray', 'objectArray'],
+            },
+          });
+          await validateJsonAndAssertFails(metadata);
+          const err = await validateJsonAndAssertFails(metadata);
+          assert.deepEqual(err.validationErrors, [
+            {
+              message:
+                'The "filterableProperty" field name "ObjectArray" must be a "ValueType.Boolean", "ValueType.Number", or "ValueType.String" or an array of "ValueType.Number" or "ValueType.String".',
+              path: 'formulas[0].schema.index.filterableProperty[2]',
             },
           ]);
         });
@@ -3682,7 +3746,7 @@ describe('Pack metadata Validation', async () => {
           assert.deepEqual(err.validationErrors, [
             {
               message:
-                'The "filterableProperty" field name "BadProperty" must be a "ValueType.Boolean", "ValueType.Number", or "ValueType.String".',
+                'The "filterableProperty" field name "BadProperty" must be a "ValueType.Boolean", "ValueType.Number", or "ValueType.String" or an array of "ValueType.Number" or "ValueType.String".',
               path: 'formulas[0].schema.index.filterableProperty[0]',
             },
           ]);
