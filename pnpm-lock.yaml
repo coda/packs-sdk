@@ -215,8 +215,8 @@ importers:
         specifier: 6.21.0
         version: 6.21.0(eslint@8.57.1)(typescript@5.1.6)
       aws-sdk:
-        specifier: 2.1665.0
-        version: 2.1665.0
+        specifier: 2.1692.0
+        version: 2.1692.0
       chai:
         specifier: 4.5.0
         version: 4.5.0
@@ -1727,8 +1727,8 @@ packages:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
-  aws-sdk@2.1665.0:
-    resolution: {integrity: sha512-IhEcdGmiplF3l/pCROxEYIdi0s+LZ2VkbMAq3RgoXTHxY5cgqVRNaqsEsgIHev2Clxa9V08HttnIERTIUqb1+Q==}
+  aws-sdk@2.1692.0:
+    resolution: {integrity: sha512-x511uiJ/57FIsbgUe5csJ13k3uzu25uWQE+XqfBis/sB0SFoiElJWXRkgEAUh0U6n40eT3ay5Ue4oPkRMu1LYw==}
     engines: {node: '>= 10.0.0'}
 
   b4a@1.6.7:
@@ -6694,7 +6694,7 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.0.0
 
-  aws-sdk@2.1665.0:
+  aws-sdk@2.1692.0:
     dependencies:
       buffer: 4.9.2
       events: 1.1.1
