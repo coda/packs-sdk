@@ -71,6 +71,8 @@ pack.setUserAuthentication({
     return context.endpoint.split("//")[1].split(".")[0];
   },
 });
+
+pack.addNetworkDomain("amazonaws.com");
 {% endraw %}
 ```
 ## Battle.net
