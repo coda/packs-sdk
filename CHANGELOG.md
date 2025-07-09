@@ -4,6 +4,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+## [1.9.10] - 2025-07-09
+
 ### Added
 
 - Add initial `skill` definition to packs sdk
@@ -875,7 +877,7 @@ await myHelper(context);
 
 - Beginning of alpha versioning.
 
-[unreleased]: https://github.com/coda/packs-sdk/compare/v1.9.9...HEAD
+[unreleased]: https://github.com/coda/packs-sdk/compare/v1.9.10...HEAD
 [1.7.5]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.5
 [1.7.4]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.4
 [1.7.3]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.3
@@ -933,3 +935,5 @@ await myHelper(context);
 [1.9.8]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.8
 [1.9.7]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.7
 [1.9.9]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.9
+
+[1.9.10]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.10
