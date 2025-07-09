@@ -4,7 +4,7 @@ exports.compileMetadataFormulaMetadata = exports.compileSyncTable = exports.comp
 const types_1 = require("../types");
 const api_1 = require("../api");
 function compilePackMetadata(manifest) {
-    const { formats, formulas, formulaNamespace, syncTables, defaultAuthentication, ...definition } = manifest;
+    const { formats, formulas, formulaNamespace, syncTables, defaultAuthentication, skills, ...definition } = manifest;
     const compiledFormats = compileFormatsMetadata(formats || []);
     const compiledFormulas = (formulas && compileFormulasMetadata(formulas)) || [];
     // Note: we do not need to compile systemConnectionAuthentication metadata because it doesn't contain formulas,
@@ -17,6 +17,8 @@ function compilePackMetadata(manifest) {
         formats: compiledFormats,
         formulas: compiledFormulas,
         syncTables: (syncTables || []).map(compileSyncTable),
+        // Skills can be passed through as they are pure JSON.
+        skills,
     };
     return metadata;
 }

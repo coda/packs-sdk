@@ -11,6 +11,7 @@ import type { ObjectSchemaDefinition } from './schema';
 import type { PackVersionDefinition } from './types';
 import type { ParamDefs } from './api_types';
 import type { Schema } from './schema';
+import type { Skill } from './types';
 import type { SyncExecutionContext } from './api_types';
 import type { SyncPassthroughData } from './api';
 import type { SyncTable } from './api';
@@ -47,6 +48,11 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * See {@link PackVersionDefinition.syncTables}.
      */
     syncTables: SyncTable[];
+    /**
+     * See {@link PackVersionDefinition.skills}.
+     * @hidden
+     */
+    skills: Skill[];
     /**
      * See {@link PackVersionDefinition.networkDomains}.
      */
@@ -159,6 +165,24 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * ```
      */
     addColumnFormat(format: Format): this;
+    /**
+     * Adds a skill definition to this pack.
+     *
+     * In the web editor, the `/Skill` shortcut will insert a snippet of a skeleton skill.
+     *
+     * @example
+     * ```
+     * pack.addSkill({
+     *   name: 'MySkill',
+     *   displayName: 'My Display Name',
+     *   description: 'My description.',
+     *   prompt: 'My prompt',
+     *    tools: [{type: ToolType.Knowledge, source: {type: KnowledgeToolSourceType.Global}}]
+     * });
+     * ```
+     * @hidden
+     */
+    addSkill(skill: Skill): this;
     private _wrapAuthenticationFunctions;
     /**
      * Sets this pack to use authentication for individual users, using the

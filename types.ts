@@ -1173,6 +1173,141 @@ export interface RateLimits {
 export type BasicPackDefinition = Omit<PackVersionDefinition, 'version'>;
 
 /**
+ *  Default tool types supported by Coda Packs for skill definitions.
+ * @hidden
+ */
+export enum ToolType {
+  /**
+   * Allows formulas within a pack to be used as tools.
+   */
+  Pack = 'Pack',
+  /**
+   * Allows knowledge to be used as a tool.
+   */
+  Knowledge = 'Knowledge',
+}
+
+/**
+ * The type identifier for a tool
+ * @hidden
+ */
+export type AllToolTypes = keyof ToolMap;
+
+/**
+ * Base interface for all tool definitions.
+ * @hidden
+ */
+export interface BaseTool<T extends string> {
+  /** The type identifier for this tool. */
+  type: T;
+}
+
+/**
+ * Tool that references formulas within a pack.
+ * @hidden
+ */
+export interface PackTool extends BaseTool<ToolType.Pack> {
+  /**
+   * The ID of the pack to use as a tool, if referencing a different pack.
+   * Omit this to reference the current pack.
+   */
+  packId?: number;
+  /** The specific formulas to make available as tools. */
+  formulas?: Array<{
+    /** The name of the formula to use as a tool. */
+    formulaName: string;
+  }>;
+}
+
+/**
+ * The type of knowledge source to use.
+ * @hidden
+ */
+export enum KnowledgeToolSourceType {
+  /**
+   * Use all knowledge from the pack.
+   */
+  Global = 'Global',
+  /**
+   * Use knowledge from a specific pack.
+   */
+  Pack = 'Pack',
+}
+
+/**
+ * Base interface for all knowledge tool sources.
+ * @hidden
+ */
+interface BaseKnowledgeToolSource<T extends KnowledgeToolSourceType> {
+  type: T;
+}
+
+/**
+ * Source for using knowledge from a specific pack.
+ * @hidden
+ */
+interface PackKnowledgeToolSource extends BaseKnowledgeToolSource<KnowledgeToolSourceType.Pack> {
+  /**
+   * The ID of the pack to use for knowledge, if referencing a different pack.
+   * Omit this to reference the current pack.
+   */
+  packId?: number;
+}
+
+/**
+ * Source for using all knowledge.
+ * @hidden
+ */
+interface GlobalKnowledgeToolSource extends BaseKnowledgeToolSource<KnowledgeToolSourceType.Global> {}
+
+/**
+ * Union of all supported knowledge tool sources.
+ * @hidden
+ */
+type KnowledgeToolSource = PackKnowledgeToolSource | GlobalKnowledgeToolSource;
+
+/**
+ * Tool that provides access to ingested knowledge.
+ * @hidden
+ */
+export interface KnowledgeTool extends BaseTool<ToolType.Knowledge> {
+  source: KnowledgeToolSource;
+}
+
+/**
+ * Map of tool types to their corresponding tool interfaces.
+ * This interface can be extended via declaration merging to add custom tool types.
+ * @hidden
+ */
+export interface ToolMap {
+  [ToolType.Pack]: PackTool;
+  [ToolType.Knowledge]: KnowledgeTool;
+}
+
+/**
+ * Union of all supported tool types.
+ * @hidden
+ */
+export type Tool = ToolMap[keyof ToolMap];
+
+/**
+ * Set of tools and prompts that defines a skill for this pack
+ * @hidden
+ */
+export interface Skill {
+  /** Stable identifier for the skill. */
+  name: string;
+  /** Display name shown to users for this skill. */
+  displayName: string;
+  /** Description of what this skill does. */
+  description: string;
+  /** The prompt/instructions that define the skill's behavior. */
+  prompt: string;
+  /** List of tools that this skill can use. This does NOT include pack calls by default. */
+  tools: Tool[];
+}
+
+/**
  * The definition of the contents of a Pack at a specific version. This is the
  * heart of the implementation of a Pack.
  */
@@ -1231,6 +1366,11 @@ export interface PackVersionDefinition {
    * Definitions of this pack's sync tables. See {@link SyncTable}.
    */
   syncTables?: SyncTable[];
+  /**
+   * Definitions of skills that can be executed within this pack.
+   * @hidden
+   */
+  skills?: Skill[];
 }
 
 /**
