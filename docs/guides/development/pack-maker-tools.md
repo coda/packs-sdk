@@ -87,7 +87,7 @@ Failed invocations will include some additional detail in the **Overview** entry
 Specifically the **Error** field will include the error message, and the **Stack trace** field will include the line number where the error happened (`code.ts:18:23` means line 18, character 23).
 
 
-### HTTP requests
+### HTTP requests {: #http}
 
 Log entries for fetcher requests include an extra link at the bottom called **Show HTTP request details**. Clicking this link will open a dialog that shows the full details of the request, including the headers and bodies of the request and response.
 
