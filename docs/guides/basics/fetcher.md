@@ -452,7 +452,7 @@ If the server takes too long to respond to your fetch request it will timeout. T
 
 ### From the server {: #429}
 
-Many APIs have internal rate limits, and when you exceed those they will return a 429 "Too Many Requests" response. The fetcher will intercept these responses and automatically retry the request for you. The fetcher will wait a few seconds before retrying, or if a `Retry-After` header is returned in the 429 response it's value will be used.
+Many APIs have internal rate limits, and when you exceed those they will return a 429 "Too Many Requests" response. The fetcher will intercept these responses and automatically retry the request for you. The fetcher will wait a few seconds before retrying, or if a `Retry-After` header is returned in the 429 response its value will be used.
 
 If there isn't enough time left for a retry (it would exceed the 1 minute execution time limit) then the request will fail with a `StatusCodeError` as described in the [Errors section](#errors) above. You can catch this error and throw a user-friendly error message if desired. The logs from all retries will be shows in the [Pack maker tools][pmt_http].
 
