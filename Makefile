@@ -227,7 +227,7 @@ validate-samples:
 	for pack in `find documentation/samples/packs -name "*.ts"`; do \
 		echo Validating $${pack}...; \
 		node dist/cli/coda.js validate --no-checkDeprecationWarnings $${pack}; \
-		if [ $? ]; then \
+		if [ $$? -ne 0 ]; then \
 			RET=1; \
 		fi; \
 	done; \
