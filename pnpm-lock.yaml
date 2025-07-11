@@ -298,8 +298,8 @@ importers:
         version: 3.15.3(typedoc@0.24.8(typescript@5.1.6))
     optionalDependencies:
       isolated-vm:
-        specifier: 5.0.1
-        version: 5.0.1
+        specifier: 6.0.0
+        version: 6.0.0
 
   documentation/samples:
     devDependencies:
@@ -3154,9 +3154,9 @@ packages:
     resolution: {integrity: sha512-LpB/54B+/2J5hqQ7imZHfdU31OlgQqx7ZicVlkm9kzg9/w8GKLEcFfJl/t7DCEDueOyBAD6zCCwTO6Fzs0NoEQ==}
     engines: {node: '>=16'}
 
-  isolated-vm@5.0.1:
-    resolution: {integrity: sha512-hs7+ff59Z2zDvavfcjuot/r1gm6Bmpt+GoZxmVfxUmXaX5scOvUq/Rnme+mUtSh5lW41hH8gAuvk/yTJDYO8Fg==}
-    engines: {node: '>=18.0.0'}
+  isolated-vm@6.0.0:
+    resolution: {integrity: sha512-MMhgIssDZ2g3eD5tyqiWPx0k8Ps2H5halFOGGE9cUjNymJ1xL24ebU8EV7J6z2gEXiiX51VNcXM7BJp3355/LA==}
+    engines: {node: '>=24.0.0'}
 
   issue-parser@7.0.1:
     resolution: {integrity: sha512-3YZcUUR2Wt1WsapF+S/WiA2WmlW0cWAoPccMqne7AxEBhCdFeTPjfv/Axb8V2gyCgY3nRw+ksZ3xSUX+R47iAg==}
@@ -3577,6 +3577,10 @@ packages:
   minimatch@5.1.6:
     resolution: {integrity: sha512-lKwV/1brpG6mBUFHtb7NUmtABCb2WZZmm2wNiOA5hAb8VdCS4B3dtMWyvcoViccwAW/COERjXLt0zP1zXUN26g==}
     engines: {node: '>=10'}
+
+  minimatch@8.0.4:
+    resolution: {integrity: sha512-W0Wvr9HyFXZRGIDgCicunpQ299OKXs9RgZfaukz4qAW/pJhcpUfupc9c+OObPOFueNy8VSrZgEmDtk6Kh4WzDA==}
+    engines: {node: '>=16 || 14 >=14.17'}
 
   minimatch@9.0.3:
     resolution: {integrity: sha512-RHiac9mvaRw0x3AYRgDC1CxAP7HTcNrrECeA8YYJeWnpo+2Q5CegtZjaotWTWxDG3UeGA1coE05iH1mPjT/2mg==}
@@ -8110,7 +8114,7 @@ snapshots:
       fs.realpath: 1.0.0
       inflight: 1.0.6
       inherits: 2.0.4
-      minimatch: 3.1.2
+      minimatch: 8.0.4
       once: 1.4.0
       path-is-absolute: 1.0.1
 
@@ -8443,7 +8447,7 @@ snapshots:
 
   isexe@3.1.1: {}
 
-  isolated-vm@5.0.1:
+  isolated-vm@6.0.0:
     dependencies:
       prebuild-install: 7.1.2
     transitivePeerDependencies:
@@ -8945,6 +8949,10 @@ snapshots:
       brace-expansion: 1.1.12
 
   minimatch@5.1.6:
+    dependencies:
+      brace-expansion: 2.0.1
+
+  minimatch@8.0.4:
     dependencies:
       brace-expansion: 2.0.1
 
