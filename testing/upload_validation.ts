@@ -2068,7 +2068,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
 
   const packToolSchema = zodCompleteStrictObject<PackTool>({
     type: z.literal(ToolType.Pack),
-    packId: z.number(),
+    packId: z.number().optional(),
     formulas: z
       .array(
         zodCompleteStrictObject<{
@@ -2098,7 +2098,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     }),
     z.object({
       type: z.literal(KnowledgeToolSourceType.Pack),
-      packId: z.number(),
+      packId: z.number().optional(),
     }),
   ]);
 

@@ -1580,7 +1580,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     });
     const packToolSchema = zodCompleteStrictObject({
         type: z.literal(types_8.ToolType.Pack),
-        packId: z.number(),
+        packId: z.number().optional(),
         formulas: z
             .array(zodCompleteStrictObject({
             formulaName: z
@@ -1604,7 +1604,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }),
         z.object({
             type: z.literal(types_3.KnowledgeToolSourceType.Pack),
-            packId: z.number(),
+            packId: z.number().optional(),
         }),
     ]);
     const knowledgeToolSchema = zodCompleteStrictObject({
