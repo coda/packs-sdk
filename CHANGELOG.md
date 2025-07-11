@@ -4,7 +4,9 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
-### Fixed validation to allow pack IDs to be optional in agent skill definitions.
+### Changed
+
+- Fixed validation to allow pack IDs to be optional in agent skill definitions.
 
 ## [1.9.10] - 2025-07-09
 
