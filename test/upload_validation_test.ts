@@ -5860,10 +5860,19 @@ describe('Pack metadata Validation', async () => {
                 packId: 456,
               },
               {
+                type: ToolType.Pack,
+              },
+              {
                 type: ToolType.Knowledge,
                 source: {
                   type: KnowledgeToolSourceType.Pack,
                   packId: 789,
+                },
+              },
+              {
+                type: ToolType.Knowledge,
+                source: {
+                  type: KnowledgeToolSourceType.Pack,
                 },
               },
               {
@@ -5919,33 +5928,6 @@ describe('Pack metadata Validation', async () => {
         default:
           ensureNever(toolType);
       }
-    });
-
-    it('fails for PackTool missing packId', async () => {
-      const metadata = createFakePackVersionMetadata({
-        skills: [
-          {
-            name: 'TestSkill',
-            displayName: 'Test Skill',
-            description: 'A test skill',
-            prompt: 'You are a helpful assistant',
-            tools: [
-              {
-                type: ToolType.Pack,
-                // missing packId
-                // We must cast to PackTool because the type system bc this is invalid
-              } as unknown as PackTool,
-            ],
-          },
-        ],
-      });
-      const err = await validateJsonAndAssertFails(metadata);
-      assert.deepEqual(err.validationErrors, [
-        {
-          path: 'skills[0].tools[0].packId',
-          message: 'Missing required field skills[0].tools[0].packId.',
-        },
-      ]);
     });
 
     it('fails for skill missing required fields', async () => {

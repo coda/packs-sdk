@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Changed
+
+- Fixed validation to allow pack IDs to be optional in agent skill definitions.
+
 ## [1.9.10] - 2025-07-09
 
 ### Added
@@ -935,5 +939,4 @@ await myHelper(context);
 [1.9.8]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.8
 [1.9.7]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.7
 [1.9.9]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.9
-
 [1.9.10]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.10
