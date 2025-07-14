@@ -39,7 +39,7 @@ ___
 
 ### codaType
 
-• `Optional` **codaType**: [`Person`](../enums/core.ValueHintType.md#person) \| [`Reference`](../enums/core.ValueHintType.md#reference) \| [`SelectList`](../enums/core.ValueHintType.md#selectlist)
+• `Optional` **codaType**: [`Person`](../enums/core.ValueHintType.md#person) \| [`Reference`](../enums/core.ValueHintType.md#reference) \| [`SelectList`](../enums/core.ValueHintType.md#selectlist) \| `Account`
 
 A hint for how Coda should interpret and render this object value.
 

@@ -1614,6 +1614,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 case ValueHintType.Embed:
                 case ValueHintType.Scale:
                   return false;
+                case ValueHintType.Account:
                 case ValueHintType.CodaInternalRichText:
                 case ValueHintType.Currency:
                 case ValueHintType.Date:

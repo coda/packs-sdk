@@ -63,6 +63,9 @@ class ObjectSchemaHelper {
         var _a;
         return (_a = this._schema.titleProperty) !== null && _a !== void 0 ? _a : this._schema.displayProperty;
     }
+    get displayProperty() {
+        return this._schema.displayProperty;
+    }
 }
 function paramDefHelper(def) {
     return new ParamDefHelper(def);

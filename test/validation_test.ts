@@ -48,6 +48,16 @@ describe('Property validation in objects', () => {
         id: 'email',
         properties: {email: {type: ValueType.String, required: true}},
       },
+      account: {
+        type: ValueType.Object,
+        codaType: ValueHintType.Account,
+        idProperty: 'id',
+        displayProperty: 'name',
+        properties: {
+          id: {type: ValueType.String, required: true},
+          name: {type: ValueType.String, required: true},
+        },
+      },
       ref: {
         type: ValueType.Object,
         codaType: ValueHintType.Reference,

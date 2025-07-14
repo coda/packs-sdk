@@ -195,6 +195,9 @@ function checkPropertyTypeAndCodaType(schema, result, context) {
                 return errors;
             }
             switch (schema.codaType) {
+                case schema_1.ValueHintType.Account:
+                    const accountErrorMessage = tryParseAccount(result, schema);
+                    return accountErrorMessage ? [accountErrorMessage] : [];
                 case schema_1.ValueHintType.Person:
                     const personErrorMessage = tryParsePerson(result, schema);
                     return personErrorMessage ? [personErrorMessage] : [];
@@ -272,6 +275,14 @@ function tryParsePerson(result, schema) {
     }
     if (!(0, string_1.isEmail)(result[validId])) {
         return { message: `The id field for the person result must be an email string, but got "${result[validId]}".` };
+    }
+}
+function tryParseAccount(result, schema) {
+    const { id } = (0, migration_1.objectSchemaHelper)(schema);
+    const validId = (0, ensure_1.ensureExists)(id);
+    const idError = checkFieldInResult(result, validId);
+    if (idError) {
+        return idError;
     }
 }
 function checkFieldInResult(result, property) {

@@ -164,6 +164,44 @@ describe('Schema', () => {
       });
     });
 
+    it('requires for codaType.Account', async () => {
+      expect(() => {
+        makeObjectSchema({
+          type: ValueType.Object,
+          codaType: ValueHintType.Account,
+          displayProperty: 'name',
+          properties: {
+            id: {type: ValueType.String, required: true},
+            name: {type: ValueType.String, required: true},
+          },
+        });
+      }).to.throw('Objects with codaType "account" require a "idProperty" property in the schema definition.');
+
+      expect(() => {
+        makeObjectSchema({
+          type: ValueType.Object,
+          codaType: ValueHintType.Account,
+          idProperty: 'id',
+          properties: {
+            id: {type: ValueType.String},
+            name: {type: ValueType.String},
+          },
+        });
+      }).to.throw('Field "id" must be marked as required in schema with codaType "account".');
+
+      makeObjectSchema({
+        type: ValueType.Object,
+        codaType: ValueHintType.Account,
+        idProperty: 'id',
+        displayProperty: 'name',
+        properties: {
+          id: {type: ValueType.String, required: true},
+          name: {type: ValueType.String, required: true},
+          email: {type: ValueType.String, codaType: ValueHintType.Email, required: false},
+        },
+      });
+    });
+
     it('allows sub-schema re-use', () => {
       const stringSchema = makeSchema({type: ValueType.String});
       const mySchema = makeObjectSchema({

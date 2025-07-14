@@ -200,6 +200,9 @@ function checkPropertyTypeAndCodaType<ResultT extends any>(
         return errors;
       }
       switch (schema.codaType) {
+        case ValueHintType.Account:
+          const accountErrorMessage = tryParseAccount(result, schema);
+          return accountErrorMessage ? [accountErrorMessage] : [];
         case ValueHintType.Person:
           const personErrorMessage = tryParsePerson(result, schema);
           return personErrorMessage ? [personErrorMessage] : [];
@@ -284,6 +287,15 @@ function tryParsePerson(result: any, schema: GenericObjectSchema) {
 
   if (!isEmail(result[validId] as string)) {
     return {message: `The id field for the person result must be an email string, but got "${result[validId]}".`};
+  }
+}
+
+function tryParseAccount(result: any, schema: GenericObjectSchema) {
+  const {id} = objectSchemaHelper(schema);
+  const validId = ensureExists(id);
+  const idError = checkFieldInResult(result, validId);
+  if (idError) {
+    return idError;
   }
 }
 

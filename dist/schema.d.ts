@@ -162,12 +162,38 @@ export declare enum ValueHintType {
     /**
      * Indicates to render a value as a select list.
      */
-    SelectList = "selectList"
+    SelectList = "selectList",
+    /**
+     * Indicates that this field should be interpreted as an account in
+     * an external system. The provided value should be an object where the
+     * 'id' is the ID in the external system, the displayName (optional) is the user name for the
+     * account, and there is an (optional) single property with ValueHintType.Email that represents
+     * the email for the account in the external system.
+     *
+     *
+     * @example
+     * ```
+     * makeObjectSchema({
+     *   type: ValueType.Object,
+     *   codaType: ValueHintType.Account,
+     *   idProperty: 'id',
+     *   displayProperty: 'name',
+     *   properties: {
+     *     id: {type: ValueType.String, required: true},
+     *     email: {type: ValueType.String, codaType: ValueHintType.Email},
+     *     name: {type: ValueType.String},
+     *   },
+     * });
+     * ```
+     *
+     * @hidden
+     */
+    Account = "account"
 }
 export declare const StringHintValueTypes: readonly [ValueHintType.Attachment, ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Email, ValueHintType.Embed, ValueHintType.Html, ValueHintType.ImageReference, ValueHintType.ImageAttachment, ValueHintType.Markdown, ValueHintType.Url, ValueHintType.CodaInternalRichText, ValueHintType.SelectList];
 export declare const NumberHintValueTypes: readonly [ValueHintType.Date, ValueHintType.Time, ValueHintType.DateTime, ValueHintType.Duration, ValueHintType.Percent, ValueHintType.Currency, ValueHintType.Slider, ValueHintType.ProgressBar, ValueHintType.Scale];
 export declare const BooleanHintValueTypes: readonly [ValueHintType.Toggle];
-export declare const ObjectHintValueTypes: readonly [ValueHintType.Person, ValueHintType.Reference, ValueHintType.SelectList];
+export declare const ObjectHintValueTypes: readonly [ValueHintType.Person, ValueHintType.Reference, ValueHintType.SelectList, ValueHintType.Account];
 export declare const AutocompleteHintValueTypes: readonly [ValueHintType.SelectList, ValueHintType.Reference];
 /** The subset of {@link ValueHintType} that can be used with a string value. */
 export type StringHintTypes = (typeof StringHintValueTypes)[number];

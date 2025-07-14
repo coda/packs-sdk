@@ -177,6 +177,33 @@ export enum ValueHintType {
    * Indicates to render a value as a select list.
    */
   SelectList = 'selectList',
+
+  /**
+   * Indicates that this field should be interpreted as an account in
+   * an external system. The provided value should be an object where the
+   * 'id' is the ID in the external system, the displayProperty (optional) is the user name for the
+   * account, and there is an (optional) single property with ValueHintType.Email that represents
+   * the email for the account in the external system.
+   *
+   *
+   * @example
+   * ```
+   * makeObjectSchema({
+   *   type: ValueType.Object,
+   *   codaType: ValueHintType.Account,
+   *   idProperty: 'id',
+   *   displayProperty: 'name',
+   *   properties: {
+   *     id: {type: ValueType.String, required: true},
+   *     email: {type: ValueType.String, codaType: ValueHintType.Email},
+   *     name: {type: ValueType.String},
+   *   },
+   * });
+   * ```
+   *
+   * @hidden
+   */
+  Account = 'account',
 }
 
 export const StringHintValueTypes = [
@@ -207,7 +234,12 @@ export const NumberHintValueTypes = [
   ValueHintType.Scale,
 ] as const;
 export const BooleanHintValueTypes = [ValueHintType.Toggle] as const;
-export const ObjectHintValueTypes = [ValueHintType.Person, ValueHintType.Reference, ValueHintType.SelectList] as const;
+export const ObjectHintValueTypes = [
+  ValueHintType.Person,
+  ValueHintType.Reference,
+  ValueHintType.SelectList,
+  ValueHintType.Account,
+] as const;
 
 export const AutocompleteHintValueTypes = [ValueHintType.SelectList, ValueHintType.Reference] as const;
 
@@ -2056,6 +2088,12 @@ function validateObjectSchema<K extends string, L extends string, T extends Obje
     checkSchemaPropertyIsRequired(ensureExists(primary), schema, 'displayProperty');
   }
   if (schema.codaType === ValueHintType.Person) {
+    const {id} = objectSchemaHelper(schema);
+    checkRequiredFieldInObjectSchema(id, 'idProperty', schema.codaType);
+    checkSchemaPropertyIsRequired(ensureExists(id), schema, 'idProperty');
+  }
+
+  if (schema.codaType === ValueHintType.Account) {
     const {id} = objectSchemaHelper(schema);
     checkRequiredFieldInObjectSchema(id, 'idProperty', schema.codaType);
     checkSchemaPropertyIsRequired(ensureExists(id), schema, 'idProperty');
