@@ -2109,7 +2109,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     source: knowledgeToolSourceSchema,
   });
 
-  const screenAnnotationToolSourceSchema = z.discriminatedUnion('type', [
+  const screenAnnotationSchema = z.discriminatedUnion('type', [
     z.object({
       type: z.literal(ScreenAnnotationType.Suggestions),
     }),
@@ -2117,7 +2117,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
 
   const screenAnnotationToolSchema = zodCompleteStrictObject<ScreenAnnotationTool>({
     type: z.literal(ToolType.ScreenAnnotation),
-    source: screenAnnotationToolSourceSchema,
+    annotation: screenAnnotationSchema,
   });
 
   const toolSchema = z.discriminatedUnion('type', [packToolSchema, knowledgeToolSchema, screenAnnotationToolSchema]);

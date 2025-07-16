@@ -1612,14 +1612,14 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         type: z.literal(types_9.ToolType.Knowledge),
         source: knowledgeToolSourceSchema,
     });
-    const screenAnnotationToolSourceSchema = z.discriminatedUnion('type', [
+    const screenAnnotationSchema = z.discriminatedUnion('type', [
         z.object({
             type: z.literal(types_7.ScreenAnnotationType.Suggestions),
         }),
     ]);
     const screenAnnotationToolSchema = zodCompleteStrictObject({
         type: z.literal(types_9.ToolType.ScreenAnnotation),
-        source: screenAnnotationToolSourceSchema,
+        annotation: screenAnnotationSchema,
     });
     const toolSchema = z.discriminatedUnion('type', [packToolSchema, knowledgeToolSchema, screenAnnotationToolSchema]);
     const skillSchema = zodCompleteObject({

@@ -5417,29 +5417,29 @@ export declare enum ScreenAnnotationType {
 	Suggestions = "Suggestions"
 }
 /**
- * Base interface for all screen annotation tool sources.
+ * Base interface for all screen annotation types.
  * @hidden
  */
-export interface BaseScreenAnnotationToolSource<T extends ScreenAnnotationType> {
+export interface BaseScreenAnnotation<T extends ScreenAnnotationType> {
 	type: T;
 }
 /**
- * Source for using screen annotation suggestions.
+ * Annotation for screen suggestions.
  * @hidden
  */
-export interface SuggestionsScreenAnnotationToolSource extends BaseScreenAnnotationToolSource<ScreenAnnotationType.Suggestions> {
+export interface SuggestionsScreenAnnotation extends BaseScreenAnnotation<ScreenAnnotationType.Suggestions> {
 }
 /**
- * Union of all supported screen annotation tool sources.
+ * Union of all supported screen annotation types.
  * @hidden
  */
-export type ScreenAnnotationToolSource = SuggestionsScreenAnnotationToolSource;
+export type ScreenAnnotation = SuggestionsScreenAnnotation;
 /**
  * Tool that provides access to screen annotation capabilities.
  * @hidden
  */
 export interface ScreenAnnotationTool extends BaseTool<ToolType.ScreenAnnotation> {
-	source: ScreenAnnotationToolSource;
+	annotation: ScreenAnnotation;
 }
 /**
  * Map of tool types to their corresponding tool interfaces.
