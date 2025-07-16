@@ -1301,8 +1301,8 @@ interface BaseScreenAnnotationToolSource<T extends ScreenAnnotationType> {
  * Source for using screen annotation suggestions.
  * @hidden
  */
-interface SuggestionsScreenAnnotationToolSource extends
- BaseScreenAnnotationToolSource<ScreenAnnotationType.Suggestions> {}
+interface SuggestionsScreenAnnotationToolSource
+  extends BaseScreenAnnotationToolSource<ScreenAnnotationType.Suggestions> {}
 
 /**
  * Union of all supported screen annotation tool sources.

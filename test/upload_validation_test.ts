@@ -5917,7 +5917,7 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'skills[0].tools[0].type',
-          message: "Invalid discriminator value. Expected 'Pack' | 'Knowledge'",
+          message: "Invalid discriminator value. Expected 'Pack' | 'Knowledge' | 'ScreenAnnotation'",
         },
       ]);
     });
