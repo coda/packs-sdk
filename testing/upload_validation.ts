@@ -88,6 +88,8 @@ import {ReservedAuthenticationNames} from '../types';
 import {ScaleIconSet} from '../schema';
 import type {ScaleSchema} from '../schema';
 import type {Schema} from '../schema';
+import type {ScreenAnnotationTool} from '../types';
+import {ScreenAnnotationType} from '../types';
 import type {SetEndpoint} from '../types';
 import {SimpleStringHintValueTypes} from '../schema';
 import type {SimpleStringSchema} from '../schema';
@@ -2107,7 +2109,18 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     source: knowledgeToolSourceSchema,
   });
 
-  const toolSchema = z.discriminatedUnion('type', [packToolSchema, knowledgeToolSchema]);
+  const screenAnnotationSchema = z.discriminatedUnion('type', [
+    z.object({
+      type: z.literal(ScreenAnnotationType.Suggestions),
+    }),
+  ]);
+
+  const screenAnnotationToolSchema = zodCompleteStrictObject<ScreenAnnotationTool>({
+    type: z.literal(ToolType.ScreenAnnotation),
+    annotation: screenAnnotationSchema,
+  });
+
+  const toolSchema = z.discriminatedUnion('type', [packToolSchema, knowledgeToolSchema, screenAnnotationToolSchema]);
 
   const skillSchema = zodCompleteObject<Skill>({
     name: z

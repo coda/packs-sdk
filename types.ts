@@ -1185,6 +1185,10 @@ export enum ToolType {
    * Allows knowledge to be used as a tool.
    */
   Knowledge = 'Knowledge',
+  /**
+   * Allows screen annotations to be used as tools.
+   */
+  ScreenAnnotation = 'ScreenAnnotation',
 }
 
 /**
@@ -1275,6 +1279,45 @@ export interface KnowledgeTool extends BaseTool<ToolType.Knowledge> {
 }
 
 /**
+ * The type of screen annotation source to use.
+ * @hidden
+ */
+export enum ScreenAnnotationType {
+  /**
+   * Use screen annotation suggestions.
+   */
+  Suggestions = 'Suggestions',
+}
+
+/**
+ * Base interface for all screen annotation types.
+ * @hidden
+ */
+interface BaseScreenAnnotation<T extends ScreenAnnotationType> {
+  type: T;
+}
+
+/**
+ * Annotation for screen suggestions.
+ * @hidden
+ */
+interface SuggestionsScreenAnnotation extends BaseScreenAnnotation<ScreenAnnotationType.Suggestions> {}
+
+/**
+ * Union of all supported screen annotation types.
+ * @hidden
+ */
+type ScreenAnnotation = SuggestionsScreenAnnotation;
+
+/**
+ * Tool that provides access to screen annotation capabilities.
+ * @hidden
+ */
+export interface ScreenAnnotationTool extends BaseTool<ToolType.ScreenAnnotation> {
+  annotation: ScreenAnnotation;
+}
+
+/**
  * Map of tool types to their corresponding tool interfaces.
  * This interface can be extended via declaration merging to add custom tool types.
  * @hidden
@@ -1282,6 +1325,7 @@ export interface KnowledgeTool extends BaseTool<ToolType.Knowledge> {
 export interface ToolMap {
   [ToolType.Pack]: PackTool;
   [ToolType.Knowledge]: KnowledgeTool;
+  [ToolType.ScreenAnnotation]: ScreenAnnotationTool;
 }
 
 /**
