@@ -30,6 +30,7 @@ import {PrecannedDate} from '../api_types';
 import {PrecannedDateRange} from '..';
 import {ReservedAuthenticationNames} from '../types';
 import {ScaleIconSet} from '../schema';
+import {ScreenAnnotationType} from '../types';
 import type {Skill} from '../types';
 import type {StringFormulaDefLegacy} from '../api';
 import type {SyncTable} from '../api';
@@ -5881,6 +5882,12 @@ describe('Pack metadata Validation', async () => {
                   type: KnowledgeToolSourceType.Global,
                 },
               },
+              {
+                type: ToolType.ScreenAnnotation,
+                source: {
+                  type: ScreenAnnotationType.Suggestions,
+                },
+              },
             ],
           },
         ],
@@ -5922,6 +5929,8 @@ describe('Pack metadata Validation', async () => {
         case ToolType.Pack:
           break;
         case ToolType.Knowledge:
+          break;
+        case ToolType.ScreenAnnotation:
           break;
         case 'CustomTool':
           break;

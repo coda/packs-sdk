@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HttpStatusCode = exports.KnowledgeToolSourceType = exports.ToolType = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
+exports.HttpStatusCode = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.ToolType = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
 /**
  * @deprecated
  */
@@ -233,6 +233,10 @@ var ToolType;
      * Allows knowledge to be used as a tool.
      */
     ToolType["Knowledge"] = "Knowledge";
+    /**
+     * Allows screen annotations to be used as tools.
+     */
+    ToolType["ScreenAnnotation"] = "ScreenAnnotation";
 })(ToolType || (exports.ToolType = ToolType = {}));
 /**
  * The type of knowledge source to use.
@@ -249,6 +253,17 @@ var KnowledgeToolSourceType;
      */
     KnowledgeToolSourceType["Pack"] = "Pack";
 })(KnowledgeToolSourceType || (exports.KnowledgeToolSourceType = KnowledgeToolSourceType = {}));
+/**
+ * The type of screen annotation source to use.
+ * @hidden
+ */
+var ScreenAnnotationType;
+(function (ScreenAnnotationType) {
+    /**
+     * Use screen annotation suggestions.
+     */
+    ScreenAnnotationType["Suggestions"] = "Suggestions";
+})(ScreenAnnotationType || (exports.ScreenAnnotationType = ScreenAnnotationType = {}));
 var HttpStatusCode;
 (function (HttpStatusCode) {
     HttpStatusCode[HttpStatusCode["Ok"] = 200] = "Ok";
