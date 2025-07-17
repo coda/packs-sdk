@@ -41,3 +41,11 @@ ___
 • **Seconds** = ``"seconds"``
 
 Indications a duration as a number of seconds.
+
+___
+
+### Weeks
+
+• **Weeks** = ``"weeks"``
+
+Indications a duration as a number of weeks.
