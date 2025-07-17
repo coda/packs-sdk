@@ -1732,7 +1732,7 @@ describe('Pack metadata Validation', async () => {
                 type: ValueType.String,
                 codaType: ValueHintType.Duration,
                 precision: 2,
-                maxUnit: DurationUnit.Days,
+                maxUnit: DurationUnit.Weeks,
               },
             },
           }),
@@ -1771,7 +1771,7 @@ describe('Pack metadata Validation', async () => {
         assert.equal(schemaProperties.Currency.format, CurrencyFormat.Accounting);
 
         assert.equal(schemaProperties.Duration.precision, 2);
-        assert.equal(schemaProperties.Duration.maxUnit, DurationUnit.Days);
+        assert.equal(schemaProperties.Duration.maxUnit, DurationUnit.Weeks);
       });
 
       it('invalid dynamic sync table', async () => {

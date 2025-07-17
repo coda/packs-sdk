@@ -11,6 +11,13 @@ search:
 Enumeration of units supported by duration schemas. See [maxUnit](../interfaces/core.DurationSchema.md#maxunit).
 
 ## Enumeration Members
+___
+
+### Weeks
+
+• **Weeks** = ``"weeks"``
+
+Indications a duration as a number of weeks.
 
 ### Days
 
