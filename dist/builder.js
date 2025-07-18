@@ -35,11 +35,12 @@ class PackDefinitionBuilder {
      * rather than constructing a builder directly.
      */
     constructor(definition) {
-        const { formulas, formats, syncTables, skills, networkDomains, defaultAuthentication, systemConnectionAuthentication, version, formulaNamespace, } = definition || {};
+        const { formulas, formats, syncTables, skills, networkDomains, defaultAuthentication, systemConnectionAuthentication, version, formulaNamespace, skillEntrypoints, } = definition || {};
         this.formulas = formulas || [];
         this.formats = formats || [];
         this.syncTables = syncTables || [];
         this.skills = skills || [];
+        this.skillEntrypoints = skillEntrypoints;
         this.networkDomains = networkDomains || [];
         this.defaultAuthentication = defaultAuthentication;
         this.systemConnectionAuthentication = systemConnectionAuthentication;
@@ -171,6 +172,21 @@ class PackDefinitionBuilder {
      */
     addSkill(skill) {
         this.skills.push(skill);
+        return this;
+    }
+    /**
+     * Sets the entrypoints that the pack agent can be invoked from.
+     *
+     * @example
+     * ```
+     * pack.setSkillEntrypoints({
+     *   benchInitialization: 'MySkill',
+     * });
+     * ```
+     * @hidden
+     */
+    setSkillEntrypoints(entrypoints) {
+        this.skillEntrypoints = entrypoints;
         return this;
     }
     _wrapAuthenticationFunctions(authentication) {
