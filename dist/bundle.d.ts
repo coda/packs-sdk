@@ -5478,6 +5478,10 @@ export interface Skill {
 	/** List of tools that this skill can use. This does NOT include pack calls by default. */
 	tools: Tool[];
 }
+export interface SkillEntrypoints {
+	/** Skill to be invoked when the agent is clicked on in the bench for the first time. */
+	benchInitialization?: string;
+}
 /**
  * The definition of the contents of a Pack at a specific version. This is the
  * heart of the implementation of a Pack.
@@ -5537,6 +5541,11 @@ export interface PackVersionDefinition {
 	 * @hidden
 	 */
 	skills?: Skill[];
+	/**
+	 * Mapping of skills to entrypoints that the pack agent can be invoked from.
+	 * @hidden
+	 */
+	skillEntrypoints?: SkillEntrypoints;
 }
 /**
  * @deprecated use `#PackVersionDefinition`
@@ -5623,6 +5632,11 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * @hidden
 	 */
 	skills: Skill[];
+	/**
+	 * See {@link PackVersionDefinition.skillEntrypoints}.
+	 * @hidden
+	 */
+	skillEntrypoints?: SkillEntrypoints;
 	/**
 	 * See {@link PackVersionDefinition.networkDomains}.
 	 */
@@ -5753,6 +5767,18 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * @hidden
 	 */
 	addSkill(skill: Skill): this;
+	/**
+	 * Sets the entrypoints that the pack agent can be invoked from.
+	 *
+	 * @example
+	 * ```
+	 * pack.setSkillEntrypoints({
+	 *   benchInitialization: 'MySkill',
+	 * });
+	 * ```
+	 * @hidden
+	 */
+	setSkillEntrypoints(entrypoints: SkillEntrypoints): this;
 	private _wrapAuthenticationFunctions;
 	/**
 	 * Sets this pack to use authentication for individual users, using the

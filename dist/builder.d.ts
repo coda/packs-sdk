@@ -12,6 +12,7 @@ import type { PackVersionDefinition } from './types';
 import type { ParamDefs } from './api_types';
 import type { Schema } from './schema';
 import type { Skill } from './types';
+import type { SkillEntrypoints } from './types';
 import type { SyncExecutionContext } from './api_types';
 import type { SyncPassthroughData } from './api';
 import type { SyncTable } from './api';
@@ -53,6 +54,11 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * @hidden
      */
     skills: Skill[];
+    /**
+     * See {@link PackVersionDefinition.skillEntrypoints}.
+     * @hidden
+     */
+    skillEntrypoints?: SkillEntrypoints;
     /**
      * See {@link PackVersionDefinition.networkDomains}.
      */
@@ -183,6 +189,18 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * @hidden
      */
     addSkill(skill: Skill): this;
+    /**
+     * Sets the entrypoints that the pack agent can be invoked from.
+     *
+     * @example
+     * ```
+     * pack.setSkillEntrypoints({
+     *   benchInitialization: 'MySkill',
+     * });
+     * ```
+     * @hidden
+     */
+    setSkillEntrypoints(entrypoints: SkillEntrypoints): this;
     private _wrapAuthenticationFunctions;
     /**
      * Sets this pack to use authentication for individual users, using the

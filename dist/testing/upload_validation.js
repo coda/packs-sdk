@@ -1748,6 +1748,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 });
             }
         }),
+        skillEntrypoints: z
+            .object({
+            benchInitialization: z.string().optional(),
+        })
+            .optional(),
     });
     function validateIdentityNames(context, identityInfo) {
         for (const [identityName, allowedAuthenticationNames] of identityInfo) {
@@ -2143,6 +2148,21 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 }
             }
         });
+    })
+        .superRefine((data, context) => {
+        const metadata = data;
+        const { skills, skillEntrypoints } = metadata;
+        if (!(skillEntrypoints === null || skillEntrypoints === void 0 ? void 0 : skillEntrypoints.benchInitialization)) {
+            return;
+        }
+        const skillNames = (skills || []).map(skill => skill.name);
+        if (!skillNames.includes(skillEntrypoints.benchInitialization)) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['skillEntrypoints', 'benchInitialization'],
+                message: `"${skillEntrypoints.benchInitialization}" is not the name of a defined skill.`,
+            });
+        }
     });
     return { legacyPackMetadataSchema, variousSupportedAuthenticationValidators, arrayPropertySchema };
 }
