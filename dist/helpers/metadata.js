@@ -1,6 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.compileMetadataFormulaMetadata = exports.compileSyncTable = exports.compileFormulaMetadata = exports.compileFormulasMetadata = exports.compilePackMetadata = void 0;
+exports.compilePackMetadata = compilePackMetadata;
+exports.compileFormulasMetadata = compileFormulasMetadata;
+exports.compileFormulaMetadata = compileFormulaMetadata;
+exports.compileSyncTable = compileSyncTable;
+exports.compileMetadataFormulaMetadata = compileMetadataFormulaMetadata;
 const types_1 = require("../types");
 const api_1 = require("../api");
 function compilePackMetadata(manifest) {
@@ -22,7 +26,6 @@ function compilePackMetadata(manifest) {
     };
     return metadata;
 }
-exports.compilePackMetadata = compilePackMetadata;
 function compileFormatsMetadata(formats) {
     return formats.map(format => {
         return {
@@ -34,7 +37,6 @@ function compileFormatsMetadata(formats) {
 function compileFormulasMetadata(formulas) {
     return formulas.map(compileFormulaMetadata);
 }
-exports.compileFormulasMetadata = compileFormulasMetadata;
 function compileFormulaMetadata(formula) {
     const { execute, validateParameters, ...rest } = formula;
     return {
@@ -42,7 +44,6 @@ function compileFormulaMetadata(formula) {
         validateParameters: compileMetadataFormulaMetadata(validateParameters),
     };
 }
-exports.compileFormulaMetadata = compileFormulaMetadata;
 function compileSyncTable(syncTable) {
     if ((0, api_1.isDynamicSyncTable)(syncTable)) {
         const { getter, getName, getSchema, getDisplayUrl, listDynamicUrls, searchDynamicUrls, ...rest } = syncTable;
@@ -74,7 +75,6 @@ function compileSyncTable(syncTable) {
         },
     };
 }
-exports.compileSyncTable = compileSyncTable;
 function compileDefaultAuthenticationMetadata(authentication) {
     if (!authentication) {
         return;
@@ -97,7 +97,6 @@ function compileMetadataFormulaMetadata(formula) {
     const { execute, validateParameters, ...rest } = formula;
     return rest;
 }
-exports.compileMetadataFormulaMetadata = compileMetadataFormulaMetadata;
 function compilePostSetupStepMetadata(step) {
     const { getOptions, getOptionsFormula, ...rest } = step;
     return {
