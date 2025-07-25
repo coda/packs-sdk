@@ -1437,11 +1437,17 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 const filterableProperty = filterableProperties[i];
                 const objectPath = ['index', 'filterableProperty', i];
                 validatePropertyValue(filterableProperty, 'filterableProperty', filterablePropertySchema => {
-                    if (filterablePropertySchema.type === schema_18.ValueType.Array) {
-                        return [schema_18.ValueType.Number, schema_18.ValueType.String].includes(filterablePropertySchema.items.type);
+                    function isUserSchema(schema) {
+                        return Boolean(schema.type === schema_18.ValueType.Object &&
+                            (schema.codaType === schema_17.ValueHintType.Person || schema.userEmailProperty || schema.userIdProperty));
                     }
-                    return [schema_18.ValueType.Boolean, schema_18.ValueType.Number, schema_18.ValueType.String].includes(filterablePropertySchema.type);
-                }, `must be a "ValueType.Boolean", "ValueType.Number", or "ValueType.String" or an array of "ValueType.Number" or "ValueType.String".`, objectPath);
+                    if (filterablePropertySchema.type === schema_18.ValueType.Array) {
+                        return ([schema_18.ValueType.Number, schema_18.ValueType.String].includes(filterablePropertySchema.items.type) ||
+                            isUserSchema(filterablePropertySchema.items));
+                    }
+                    return ([schema_18.ValueType.Boolean, schema_18.ValueType.Number, schema_18.ValueType.String].includes(filterablePropertySchema.type) ||
+                        isUserSchema(filterablePropertySchema));
+                }, `must be a "ValueType.Boolean", "ValueType.Number", "ValueType.String", "ValueHintType.Person" or an object that has userEmailProperty, userIdProperty specified or an array of "ValueType.Number" or "ValueType.String" or an array of "ValueHintType.Person" or objects that have userEmailProperty, userIdProperty specified.`, objectPath);
             }
         }
     }));
