@@ -342,6 +342,10 @@ var ImageShapeStyle;
 var DurationUnit;
 (function (DurationUnit) {
     /**
+     * Indications a duration as a number of weeks.
+     */
+    DurationUnit["Weeks"] = "weeks";
+    /**
      * Indications a duration as a number of days.
      */
     DurationUnit["Days"] = "days";

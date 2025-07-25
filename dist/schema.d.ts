@@ -659,6 +659,10 @@ export interface ImageSchema extends BaseStringSchema<ValueHintType.ImageReferen
  */
 export declare enum DurationUnit {
     /**
+     * Indications a duration as a number of weeks.
+     */
+    Weeks = "weeks",
+    /**
      * Indications a duration as a number of days.
      */
     Days = "days",
