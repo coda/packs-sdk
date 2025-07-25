@@ -29,7 +29,7 @@
     "browserify": "17.0.1",
     "buffer": "6.0.3",
     "clone": "2.1.2",
-    "cross-fetch": "4.0.0",
+    "cross-fetch": "4.1.0",
     "es6-promise": "4.2.8",
     "esbuild": "0.25.0",
     "exorcist": "2.0.0",
