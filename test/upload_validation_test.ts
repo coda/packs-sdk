@@ -3559,6 +3559,105 @@ describe('Pack metadata Validation', async () => {
           await validateJson(metadata);
         });
 
+        it('Works with person filterable properties', async () => {
+          const metadata = metadataForFormulaWithObjectSchema({
+            type: ValueType.Object,
+            properties: {
+              name: {type: ValueType.String},
+              email: {type: ValueType.String, codaType: ValueHintType.Email},
+              person: {
+                type: ValueType.Object,
+                codaType: ValueHintType.Person,
+                idProperty: 'id',
+                properties: {
+                  id: {type: ValueType.String, required: true},
+                },
+              },
+              personArray: {
+                type: ValueType.Array,
+                items: {
+                  type: ValueType.Object,
+                  codaType: ValueHintType.Person,
+                  idProperty: 'id',
+                  properties: {
+                    id: {type: ValueType.String, required: true},
+                  },
+                },
+              },
+            },
+            index: {
+              properties: ['name'],
+              filterableProperties: ['person', 'personArray'],
+            },
+          });
+          await validateJson(metadata);
+        });
+
+        it('Works with userEmail, userId filterable properties', async () => {
+          const metadata = metadataForFormulaWithObjectSchema({
+            type: ValueType.Object,
+            properties: {
+              name: {type: ValueType.String},
+              email: {type: ValueType.String, codaType: ValueHintType.Email},
+              person: {
+                type: ValueType.Object,
+                userEmailProperty: 'email',
+                userIdProperty: 'id',
+                properties: {
+                  email: {type: ValueType.String, codaType: ValueHintType.Email},
+                  id: {type: ValueType.String},
+                },
+              },
+              personArray: {
+                type: ValueType.Array,
+                items: {
+                  userEmailProperty: 'email',
+                  userIdProperty: 'id',
+                  type: ValueType.Object,
+                  properties: {
+                    email: {type: ValueType.String, codaType: ValueHintType.Email},
+                    id: {type: ValueType.String},
+                  },
+                },
+              },
+            },
+            index: {
+              properties: ['name'],
+              filterableProperties: ['person', 'personArray'],
+            },
+          });
+          await validateJson(metadata);
+        });
+
+        it('Does not work with other object types', async () => {
+          const metadata = metadataForFormulaWithObjectSchema({
+            type: ValueType.Object,
+            properties: {
+              name: {type: ValueType.String},
+              email: {type: ValueType.String, codaType: ValueHintType.Email},
+              nonPerson: {
+                type: ValueType.Object,
+                properties: {
+                  email: {type: ValueType.String, codaType: ValueHintType.Email},
+                  id: {type: ValueType.String},
+                },
+              },
+            },
+            index: {
+              properties: ['name'],
+              filterableProperties: ['nonPerson'],
+            },
+          });
+          const err = await validateJsonAndAssertFails(metadata);
+          assert.deepEqual(err.validationErrors, [
+            {
+              message:
+                'The "filterableProperty" field name "NonPerson" must be a "ValueType.Boolean", "ValueType.Number", "ValueType.String", "ValueHintType.Person" or an object that has userEmailProperty, userIdProperty specified or an array of "ValueType.Number" or "ValueType.String" or an array of "ValueHintType.Person" or objects that have userEmailProperty, userIdProperty specified.',
+              path: 'formulas[0].schema.index.filterableProperty[0]',
+            },
+          ]);
+        });
+
         it('Does not support boolean array filterable properties', async () => {
           const metadata = metadataForFormulaWithObjectSchema({
             type: ValueType.Object,
@@ -3576,7 +3675,7 @@ describe('Pack metadata Validation', async () => {
           assert.deepEqual(err.validationErrors, [
             {
               message:
-                'The "filterableProperty" field name "BooleanArray" must be a "ValueType.Boolean", "ValueType.Number", or "ValueType.String" or an array of "ValueType.Number" or "ValueType.String".',
+                'The "filterableProperty" field name "BooleanArray" must be a "ValueType.Boolean", "ValueType.Number", "ValueType.String", "ValueHintType.Person" or an object that has userEmailProperty, userIdProperty specified or an array of "ValueType.Number" or "ValueType.String" or an array of "ValueHintType.Person" or objects that have userEmailProperty, userIdProperty specified.',
               path: 'formulas[0].schema.index.filterableProperty[0]',
             },
           ]);
@@ -3674,7 +3773,7 @@ describe('Pack metadata Validation', async () => {
           assert.deepEqual(err.validationErrors, [
             {
               message:
-                'The "filterableProperty" field name "ObjectArray" must be a "ValueType.Boolean", "ValueType.Number", or "ValueType.String" or an array of "ValueType.Number" or "ValueType.String".',
+                'The "filterableProperty" field name "ObjectArray" must be a "ValueType.Boolean", "ValueType.Number", "ValueType.String", "ValueHintType.Person" or an object that has userEmailProperty, userIdProperty specified or an array of "ValueType.Number" or "ValueType.String" or an array of "ValueHintType.Person" or objects that have userEmailProperty, userIdProperty specified.',
               path: 'formulas[0].schema.index.filterableProperty[2]',
             },
           ]);
@@ -3764,7 +3863,7 @@ describe('Pack metadata Validation', async () => {
           assert.deepEqual(err.validationErrors, [
             {
               message:
-                'The "filterableProperty" field name "BadProperty" must be a "ValueType.Boolean", "ValueType.Number", or "ValueType.String" or an array of "ValueType.Number" or "ValueType.String".',
+                'The "filterableProperty" field name "BadProperty" must be a "ValueType.Boolean", "ValueType.Number", "ValueType.String", "ValueHintType.Person" or an object that has userEmailProperty, userIdProperty specified or an array of "ValueType.Number" or "ValueType.String" or an array of "ValueHintType.Person" or objects that have userEmailProperty, userIdProperty specified.',
               path: 'formulas[0].schema.index.filterableProperty[0]',
             },
           ]);

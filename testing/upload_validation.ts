@@ -1882,12 +1882,24 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
               filterableProperty,
               'filterableProperty',
               filterablePropertySchema => {
-                if (filterablePropertySchema.type === ValueType.Array) {
-                  return [ValueType.Number, ValueType.String].includes(filterablePropertySchema.items.type);
+                function isUserSchema(schema: Schema & ObjectSchemaProperty): boolean {
+                  return Boolean(
+                    schema.type === ValueType.Object &&
+                      (schema.codaType === ValueHintType.Person || schema.userEmailProperty || schema.userIdProperty),
+                  );
                 }
-                return [ValueType.Boolean, ValueType.Number, ValueType.String].includes(filterablePropertySchema.type);
+                if (filterablePropertySchema.type === ValueType.Array) {
+                  return (
+                    [ValueType.Number, ValueType.String].includes(filterablePropertySchema.items.type) ||
+                    isUserSchema(filterablePropertySchema.items)
+                  );
+                }
+                return (
+                  [ValueType.Boolean, ValueType.Number, ValueType.String].includes(filterablePropertySchema.type) ||
+                  isUserSchema(filterablePropertySchema)
+                );
               },
-              `must be a "ValueType.Boolean", "ValueType.Number", or "ValueType.String" or an array of "ValueType.Number" or "ValueType.String".`,
+              `must be a "ValueType.Boolean", "ValueType.Number", "ValueType.String", "ValueHintType.Person" or an object that has userEmailProperty, userIdProperty specified or an array of "ValueType.Number" or "ValueType.String" or an array of "ValueHintType.Person" or objects that have userEmailProperty, userIdProperty specified.`,
               objectPath,
             );
           }

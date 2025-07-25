@@ -934,8 +934,14 @@ export type BasicIndexedProperty = PropertyIdentifier<string>;
  * For example, if you want to allow users to query for all emails last modified in the last 30 days,
  * you would add the property that represents the last modified date to filterableProperties.
  *
- * Filterable properties must be one of the following types, or an array of one of the following types:
- * {@link ValueType.Boolean}, {@link ValueType.Number}, or {@link ValueType.String}.
+ * Filterable properties may be one of the following types:
+ * {@link ValueType.Boolean}, {@link ValueType.Number}, {@link ValueType.String}, {@link ValueHintType.Person} or
+ * an object with userEmailProperty or userIdProperty specified
+ *
+ * Filterable properties that are arrays may have one of the following item types:
+ * {@link ValueType.Number}, {@link ValueType.String}, {@link ValueHintType.Person} or
+ * an object with userEmailProperty or userIdProperty specified.
+ *
  * For filtering purposes, number values will be rounded down to the nearest integer.
  * @hidden
  */

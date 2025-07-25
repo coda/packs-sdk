@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Changed
+
+- Update `filterableProperties` to support person and array of persons
+
 ## [1.9.11] - 2025-07-11
 
 ### Changed
@@ -942,5 +946,4 @@ await myHelper(context);
 [1.9.7]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.7
 [1.9.9]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.9
 [1.9.10]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.10
-
 [1.9.11]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.11
