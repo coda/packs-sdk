@@ -445,7 +445,7 @@ For performance reasons responses for HTTP `GET` requests are cached by default.
 
 ## Timeouts
 
-If the server takes too long to respond to your fetch request it will timeout. The fetcher's max request time is dynamic, waiting as long as it can while staying under the execution time limit (1 minute). When a timeout occurs the fetch request will fail with an error like `13 INTERNAL: FetchError: network timeout at: <URL>`.
+If the server takes too long to respond to your fetch request it will timeout. The fetcher's max request time is dynamic, waiting as long as it can while staying under the execution time limit (1 minute). When a timeout occurs the fetch request will fail with an error like `DEADLINE_EXCEEDED: fetch request timeout exceeded (XXXms)`.
 
 
 ## Rate limits {: #rate-limits}
