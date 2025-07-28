@@ -1209,7 +1209,9 @@ export interface Skill {
 }
 export interface SkillEntrypoints {
     /** Skill to be invoked when the agent is clicked on in the bench for the first time. */
-    benchInitialization?: string;
+    benchInitialization?: {
+        skillName: string;
+    };
 }
 /**
  * The definition of the contents of a Pack at a specific version. This is the

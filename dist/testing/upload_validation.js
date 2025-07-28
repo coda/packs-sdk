@@ -1750,7 +1750,9 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }),
         skillEntrypoints: z
             .object({
-            benchInitialization: z.string().optional(),
+            benchInitialization: z.object({
+                skillName: z.string(),
+            }).optional(),
         })
             .optional(),
     });
@@ -2156,11 +2158,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             return;
         }
         const skillNames = (skills || []).map(skill => skill.name);
-        if (!skillNames.includes(skillEntrypoints.benchInitialization)) {
+        if (!skillNames.includes(skillEntrypoints.benchInitialization.skillName)) {
             context.addIssue({
                 code: z.ZodIssueCode.custom,
-                path: ['skillEntrypoints', 'benchInitialization'],
-                message: `"${skillEntrypoints.benchInitialization}" is not the name of a defined skill.`,
+                path: ['skillEntrypoints', 'benchInitialization', 'skillName'],
+                message: `"${skillEntrypoints.benchInitialization.skillName}" is not the name of a defined skill.`,
             });
         }
     });

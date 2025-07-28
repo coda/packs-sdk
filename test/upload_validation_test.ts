@@ -6183,7 +6183,9 @@ describe('Pack metadata Validation', async () => {
           },
         ],
         skillEntrypoints: {
-          benchInitialization: 'TestSkill',
+          benchInitialization: {
+            skillName: 'TestSkill',
+          },
         },
       });
       await validateJson(metadata);
@@ -6201,13 +6203,15 @@ describe('Pack metadata Validation', async () => {
           },
         ],
         skillEntrypoints: {
-          benchInitialization: 'NonExistentSkill',
+          benchInitialization: {
+            skillName: 'NonExistentSkill',
+          },
         },
       });
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          path: 'skillEntrypoints.benchInitialization',
+          path: 'skillEntrypoints.benchInitialization.skillName',
           message: '"NonExistentSkill" is not the name of a defined skill.',
         },
       ]);
