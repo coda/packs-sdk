@@ -1354,7 +1354,7 @@ export interface Skill {
 export interface SkillEntrypoints {
   /** Skill to be invoked when the agent is clicked on in the bench for the first time. */
   benchInitialization?: {
-    skillName: string
+    skillName: string;
   };
 }
 

@@ -2264,9 +2264,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       }),
     skillEntrypoints: z
       .object({
-        benchInitialization: z.object({
-          skillName: z.string(),
-        }).optional(),
+        benchInitialization: z
+          .object({
+            skillName: z.string(),
+          })
+          .optional(),
       })
       .optional(),
   });
