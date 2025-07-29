@@ -5478,10 +5478,18 @@ export interface Skill {
 	/** List of tools that this skill can use. This does NOT include pack calls by default. */
 	tools: Tool[];
 }
+/**
+ * Configuration for a skill entrypoint.
+ * @hidden
+ */
 export interface SkillEntrypointConfig {
 	/** The name of the skill to be invoked. */
 	skillName: string;
 }
+/**
+ * Entrypoints that skills can be invoked from.
+ * @hidden
+ */
 export interface SkillEntrypoints {
 	/** Skill to be invoked when the agent is clicked on in the bench for the first time. */
 	benchInitialization?: SkillEntrypointConfig;
