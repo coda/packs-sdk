@@ -1,4 +1,5 @@
 import type {AWSAccessKeyAuthentication} from '../types';
+import type {SkillEntrypoints} from '../types';
 import type {AWSAssumeRoleAuthentication} from '../types';
 import type {AdminAuthentication} from '../types';
 import type {AdminAuthenticationTypes} from '../types';
@@ -2146,6 +2147,19 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     tools: z.array(toolSchema),
   });
 
+  const skillEntrypointsSchema = zodCompleteObject<SkillEntrypoints>({
+    benchInitialization: z
+      .object({
+        skillName: z.string(),
+      })
+      .optional(),
+    defaultChat: z
+      .object({
+        skillName: z.string(),
+      })
+      .optional(),
+  });
+
   // Make sure to call the refiners on this after removing legacyPackMetadataSchema.
   // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level
   // schema we actually use.)
@@ -2262,20 +2276,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           });
         }
       }),
-    skillEntrypoints: z
-      .object({
-        benchInitialization: z
-          .object({
-            skillName: z.string(),
-          })
-          .optional(),
-        defaultChat: z
-          .object({
-            skillName: z.string(),
-          })
-          .optional(),
-      })
-      .optional(),
+    skillEntrypoints: skillEntrypointsSchema.optional(),
   });
 
   function validateIdentityNames(context: z.RefinementCtx, identityInfo: Map<string, string[]>) {
