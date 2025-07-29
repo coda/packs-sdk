@@ -1351,11 +1351,16 @@ export interface Skill {
   tools: Tool[];
 }
 
+interface SkillEntrypointConfig {
+  /** The name of the skill to be invoked. */
+  skillName: string;
+}
+
 export interface SkillEntrypoints {
   /** Skill to be invoked when the agent is clicked on in the bench for the first time. */
-  benchInitialization?: {
-    skillName: string;
-  };
+  benchInitialization?: SkillEntrypointConfig;
+  /** Default skill to be invoked when chatting with the agent. */
+  defaultChat?: SkillEntrypointConfig;
 }
 
 /**

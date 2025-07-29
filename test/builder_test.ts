@@ -500,16 +500,33 @@ describe('Builder', () => {
     });
   });
 
-  it('skills', () => {
-    const skill: Skill = {
-      name: 'MySkill',
-      displayName: 'My Display Name',
-      description: 'My description.',
-      prompt: 'My prompt',
-      tools: [{type: ToolType.Knowledge, source: {type: KnowledgeToolSourceType.Global}}],
-    };
-    pack.addSkill(skill);
-    assert.equal(pack.skills.length, 1);
-    assert.deepEqual(pack.skills[0], skill);
+  describe('skills', () => {
+    let skill: Skill;
+    beforeEach(() => {
+      skill = {
+        name: 'MySkill',
+        displayName: 'My Display Name',
+        description: 'My description.',
+        prompt: 'My prompt',
+        tools: [{type: ToolType.Knowledge, source: {type: KnowledgeToolSourceType.Global}}],
+      };
+    });
+
+    it('adds skills', () => {
+      pack.addSkill(skill);
+      assert.equal(pack.skills.length, 1);
+      assert.deepEqual(pack.skills[0], skill);
+    });
+
+    it('sets skill entrypoints', () => {
+      pack.setSkillEntrypoints({
+        benchInitialization: {skillName: skill.name},
+        defaultChat: {skillName: skill.name},
+      });
+      assert.deepEqual(pack.skillEntrypoints, {
+        benchInitialization: {skillName: skill.name},
+        defaultChat: {skillName: skill.name},
+      });
+    });
   });
 });

@@ -1755,6 +1755,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 skillName: z.string(),
             })
                 .optional(),
+            defaultChat: z
+                .object({
+                skillName: z.string(),
+            })
+                .optional(),
         })
             .optional(),
     });
@@ -2156,16 +2161,18 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         .superRefine((data, context) => {
         const metadata = data;
         const { skills, skillEntrypoints } = metadata;
-        if (!(skillEntrypoints === null || skillEntrypoints === void 0 ? void 0 : skillEntrypoints.benchInitialization)) {
+        if (!skillEntrypoints) {
             return;
         }
-        const skillNames = (skills || []).map(skill => skill.name);
-        if (!skillNames.includes(skillEntrypoints.benchInitialization.skillName)) {
-            context.addIssue({
-                code: z.ZodIssueCode.custom,
-                path: ['skillEntrypoints', 'benchInitialization', 'skillName'],
-                message: `"${skillEntrypoints.benchInitialization.skillName}" is not the name of a defined skill.`,
-            });
+        const skillNames = new Set((skills || []).map(skill => skill.name));
+        for (const [path, entrypoint] of Object.entries(skillEntrypoints)) {
+            if (!skillNames.has(entrypoint.skillName)) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: ['skillEntrypoints', path, 'skillName'],
+                    message: `"${entrypoint.skillName}" is not the name of a defined skill.`,
+                });
+            }
         }
     });
     return { legacyPackMetadataSchema, variousSupportedAuthenticationValidators, arrayPropertySchema };

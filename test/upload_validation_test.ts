@@ -6217,7 +6217,33 @@ describe('Pack metadata Validation', async () => {
       ]);
     });
 
-    it('validates when benchInitialization is not specified', async () => {
+    it('fails for defaultChat referencing non-existent skill', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [],
+          },
+        ],
+        skillEntrypoints: {
+          defaultChat: {
+            skillName: 'NonExistentSkill',
+          },
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skillEntrypoints.defaultChat.skillName',
+          message: '"NonExistentSkill" is not the name of a defined skill.',
+        },
+      ]);
+    });
+
+    it('validates when no entrypoints are specified', async () => {
       const metadata = createFakePackVersionMetadata({
         skills: [
           {
