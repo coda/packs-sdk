@@ -371,7 +371,7 @@ let byteLength = buffer.length;
 ```
 
 
-### Errors
+### Errors {: #errors}
 
 When a request fails (a response code of 300 or higher) the fetch will fail with a [`StatusCodeError`][status_code_error] exception. This exception contains useful information about the failed request, including the full response body.
 
@@ -445,16 +445,29 @@ For performance reasons responses for HTTP `GET` requests are cached by default.
 
 ## Timeouts
 
-The fetcher will wait for a response for at most 50 seconds, after which it will fail with an error like `DEADLINE_EXCEEDED: Deadline exceeded after 50s`. Fifty seconds was chosen so that the request would fail before the 60 second Pack execution timeout would be triggered, giving your code a chance to catch and handle the exception.
+If the server takes too long to respond to your fetch request it will timeout. The fetcher's max request time is dynamic, waiting as long as it can while staying under the execution time limit (1 minute). When a timeout occurs the fetch request will fail with an error like `DEADLINE_EXCEEDED: fetch request timeout exceeded (XXXms)`.
 
 
 ## Rate limits {: #rate-limits}
 
-Making a request to an external API can be expensive, either due to quotas, computing resources, or monetary cost. To help prevent your code from making too many expensive API calls you can set up rate limits for your Pack. To configure these, open the Pack editor and click on **Settings** > **Add rate limits**.
+### From the server {: #429}
+
+Many APIs have internal rate limits, and when you exceed those they will return a 429 "Too Many Requests" response. The fetcher will intercept these responses and automatically retry the request for you. The fetcher will wait a few seconds before retrying, or if a `Retry-After` header is returned in the 429 response its value will be used.
+
+If there isn't enough time left for a retry (it would exceed the 1 minute execution time limit) then the request will fail with a `StatusCodeError` as described in the [Errors section](#errors) above. You can catch this error and throw a user-friendly error message if desired. The logs from all retries will be shows in the [Pack maker tools][pmt_http].
+
+### From your Pack
+
+There are cases where you may want to enforce your own rate limit, for example if you are calling an expensive API. To configure these, open the Pack Studio and click on **Settings** > **Add rate limits**.
 
 <img src="../../../images/rate_limits.png" srcset="../../../images/rate_limits_2x.png 2x" class="screenshot" alt="Rate limit dialog.">
 
-You can set a total rate limit across all users of your Pack, or if your Pack uses [authentication][authentication] you can also set a per-user rate limit. When the limit is reached your formula will pause for a bit to see if more quota becomes available, and if not eventually fail with an error.
+You can set a total rate limit across all users of your Pack, or if your Pack uses [authentication][authentication] you can also set a per-user rate limit. When the limit is reached a synthetic 429 response will be generated, triggering the [retry logic](#429) mentioned above.
+
+
+## Request logs {: #logs}
+
+The full request and response of each request is stored in the logs, and accessible via the Pack maker tools. Read the [Pack maker tools guide][pmt_http] for more information.
 
 
 ## Identifying requests
@@ -501,3 +514,4 @@ You can also identify HTTP requests originating from Packs by the `User-Agent` h
 [example_box]: https://github.com/coda/packs-examples/tree/main/examples/box
 [graphql]: https://graphql.org/
 [forceCache]: ../advanced/caching.md#forcecache
+[pmt_http]: ../development/pack-maker-tools.md#http
