@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- Add `skillEntrypoints` to pack definition
+
 ## [1.9.12] - 2025-07-25
 
 ### Changed

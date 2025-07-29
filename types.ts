@@ -1351,6 +1351,13 @@ export interface Skill {
   tools: Tool[];
 }
 
+export interface SkillEntrypoints {
+  /** Skill to be invoked when the agent is clicked on in the bench for the first time. */
+  benchInitialization?: {
+    skillName: string;
+  };
+}
+
 /**
  * The definition of the contents of a Pack at a specific version. This is the
  * heart of the implementation of a Pack.
@@ -1415,6 +1422,11 @@ export interface PackVersionDefinition {
    * @hidden
    */
   skills?: Skill[];
+  /**
+   * Mapping of skills to entrypoints that the pack agent can be invoked from.
+   * @hidden
+   */
+  skillEntrypoints?: SkillEntrypoints;
 }
 
 /**

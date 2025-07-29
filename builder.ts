@@ -16,6 +16,7 @@ import type {PackVersionDefinition} from './types';
 import type {ParamDefs} from './api_types';
 import type {Schema} from './schema';
 import type {Skill} from './types';
+import type {SkillEntrypoints} from './types';
 import type {SyncExecutionContext} from './api_types';
 import type {SyncPassthroughData} from './api';
 import type {SyncTable} from './api';
@@ -70,6 +71,11 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    */
   skills: Skill[];
   /**
+   * See {@link PackVersionDefinition.skillEntrypoints}.
+   * @hidden
+   */
+  skillEntrypoints?: SkillEntrypoints;
+  /**
    * See {@link PackVersionDefinition.networkDomains}.
    */
   networkDomains: string[];
@@ -113,11 +119,13 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       systemConnectionAuthentication,
       version,
       formulaNamespace,
+      skillEntrypoints,
     } = definition || {};
     this.formulas = formulas || [];
     this.formats = formats || [];
     this.syncTables = syncTables || [];
     this.skills = skills || [];
+    this.skillEntrypoints = skillEntrypoints;
     this.networkDomains = networkDomains || [];
     this.defaultAuthentication = defaultAuthentication;
     this.systemConnectionAuthentication = systemConnectionAuthentication;
@@ -270,6 +278,22 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    */
   addSkill(skill: Skill): this {
     this.skills.push(skill);
+    return this;
+  }
+
+  /**
+   * Sets the entrypoints that the pack agent can be invoked from.
+   *
+   * @example
+   * ```
+   * pack.setSkillEntrypoints({
+   *   benchInitialization: 'MySkill',
+   * });
+   * ```
+   * @hidden
+   */
+  setSkillEntrypoints(entrypoints: SkillEntrypoints): this {
+    this.skillEntrypoints = entrypoints;
     return this;
   }
 

@@ -6163,6 +6163,77 @@ describe('Pack metadata Validation', async () => {
     });
   });
 
+  describe('validateSkillEntrypoints', () => {
+    it('validates valid benchInitialization reference', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [],
+          },
+          {
+            name: 'AnotherSkill',
+            displayName: 'Another Skill',
+            description: 'Another test skill',
+            prompt: 'You are another helpful assistant',
+            tools: [],
+          },
+        ],
+        skillEntrypoints: {
+          benchInitialization: {
+            skillName: 'TestSkill',
+          },
+        },
+      });
+      await validateJson(metadata);
+    });
+
+    it('fails for benchInitialization referencing non-existent skill', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [],
+          },
+        ],
+        skillEntrypoints: {
+          benchInitialization: {
+            skillName: 'NonExistentSkill',
+          },
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skillEntrypoints.benchInitialization.skillName',
+          message: '"NonExistentSkill" is not the name of a defined skill.',
+        },
+      ]);
+    });
+
+    it('validates when benchInitialization is not specified', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [],
+          },
+        ],
+        skillEntrypoints: {},
+      });
+      await validateJson(metadata);
+    });
+  });
+
   describe('deprecation warnings', () => {
     const sdkVersionTriggeringDeprecationWarnings = '1.0.0';
 
