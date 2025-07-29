@@ -94,6 +94,8 @@ import type {SetEndpoint} from '../types';
 import {SimpleStringHintValueTypes} from '../schema';
 import type {SimpleStringSchema} from '../schema';
 import type {Skill} from '../types';
+import type {SkillEntrypointConfig} from '../types';
+import type {SkillEntrypoints} from '../types';
 import type {SliderSchema} from '../schema';
 import type {StringDateSchema} from '../schema';
 import type {StringDateTimeSchema} from '../schema';
@@ -2146,6 +2148,15 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     tools: z.array(toolSchema),
   });
 
+  const skillEntrypointConfigSchema = zodCompleteStrictObject<SkillEntrypointConfig>({
+    skillName: z.string(),
+  });
+
+  const skillEntrypointsSchema = zodCompleteStrictObject<SkillEntrypoints>({
+    benchInitialization: skillEntrypointConfigSchema.optional(),
+    defaultChat: skillEntrypointConfigSchema.optional(),
+  });
+
   // Make sure to call the refiners on this after removing legacyPackMetadataSchema.
   // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level
   // schema we actually use.)
@@ -2262,15 +2273,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           });
         }
       }),
-    skillEntrypoints: z
-      .object({
-        benchInitialization: z
-          .object({
-            skillName: z.string(),
-          })
-          .optional(),
-      })
-      .optional(),
+    skillEntrypoints: skillEntrypointsSchema.optional(),
   });
 
   function validateIdentityNames(context: z.RefinementCtx, identityInfo: Map<string, string[]>) {
@@ -2718,17 +2721,20 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       const metadata = data as PackVersionMetadata;
       const {skills, skillEntrypoints} = metadata;
 
-      if (!skillEntrypoints?.benchInitialization) {
+      if (!skillEntrypoints) {
         return;
       }
 
-      const skillNames = (skills || []).map(skill => skill.name);
-      if (!skillNames.includes(skillEntrypoints.benchInitialization.skillName)) {
-        context.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ['skillEntrypoints', 'benchInitialization', 'skillName'],
-          message: `"${skillEntrypoints.benchInitialization.skillName}" is not the name of a defined skill.`,
-        });
+      const skillNames = new Set((skills || []).map(skill => skill.name));
+
+      for (const [path, entrypoint] of Object.entries(skillEntrypoints)) {
+        if (!skillNames.has(entrypoint.skillName)) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['skillEntrypoints', path, 'skillName'],
+            message: `"${entrypoint.skillName}" is not the name of a defined skill.`,
+          });
+        }
       }
     });
 

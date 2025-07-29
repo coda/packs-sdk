@@ -195,7 +195,8 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * @example
      * ```
      * pack.setSkillEntrypoints({
-     *   benchInitialization: 'MySkill',
+     *   benchInitialization: {skillName: 'MySkill'},
+     *   defaultChat: {skillName: 'MySkill'},
      * });
      * ```
      * @hidden

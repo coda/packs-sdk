@@ -5478,11 +5478,23 @@ export interface Skill {
 	/** List of tools that this skill can use. This does NOT include pack calls by default. */
 	tools: Tool[];
 }
+/**
+ * Configuration for a skill entrypoint.
+ * @hidden
+ */
+export interface SkillEntrypointConfig {
+	/** The name of the skill to be invoked. */
+	skillName: string;
+}
+/**
+ * Entrypoints that skills can be invoked from.
+ * @hidden
+ */
 export interface SkillEntrypoints {
 	/** Skill to be invoked when the agent is clicked on in the bench for the first time. */
-	benchInitialization?: {
-		skillName: string;
-	};
+	benchInitialization?: SkillEntrypointConfig;
+	/** Default skill to be invoked when chatting with the agent. */
+	defaultChat?: SkillEntrypointConfig;
 }
 /**
  * The definition of the contents of a Pack at a specific version. This is the
@@ -5775,7 +5787,8 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * @example
 	 * ```
 	 * pack.setSkillEntrypoints({
-	 *   benchInitialization: 'MySkill',
+	 *   benchInitialization: {skillName: 'MySkill'},
+	 *   defaultChat: {skillName: 'MySkill'},
 	 * });
 	 * ```
 	 * @hidden

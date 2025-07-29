@@ -180,7 +180,8 @@ class PackDefinitionBuilder {
      * @example
      * ```
      * pack.setSkillEntrypoints({
-     *   benchInitialization: 'MySkill',
+     *   benchInitialization: {skillName: 'MySkill'},
+     *   defaultChat: {skillName: 'MySkill'},
      * });
      * ```
      * @hidden
