@@ -1639,17 +1639,12 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         prompt: z.string().min(1).max(exports.Limits.PromptLength),
         tools: z.array(toolSchema),
     });
-    const skillEntrypointsSchema = zodCompleteObject({
-        benchInitialization: z
-            .object({
-            skillName: z.string(),
-        })
-            .optional(),
-        defaultChat: z
-            .object({
-            skillName: z.string(),
-        })
-            .optional(),
+    const skillEntrypointConfigSchema = zodCompleteStrictObject({
+        skillName: z.string(),
+    });
+    const skillEntrypointsSchema = zodCompleteStrictObject({
+        benchInitialization: skillEntrypointConfigSchema.optional(),
+        defaultChat: skillEntrypointConfigSchema.optional(),
     });
     // Make sure to call the refiners on this after removing legacyPackMetadataSchema.
     // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level

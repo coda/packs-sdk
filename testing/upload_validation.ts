@@ -94,6 +94,7 @@ import type {SetEndpoint} from '../types';
 import {SimpleStringHintValueTypes} from '../schema';
 import type {SimpleStringSchema} from '../schema';
 import type {Skill} from '../types';
+import type {SkillEntrypointConfig} from '../types';
 import type {SkillEntrypoints} from '../types';
 import type {SliderSchema} from '../schema';
 import type {StringDateSchema} from '../schema';
@@ -2147,17 +2148,13 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     tools: z.array(toolSchema),
   });
 
-  const skillEntrypointsSchema = zodCompleteObject<SkillEntrypoints>({
-    benchInitialization: z
-      .object({
-        skillName: z.string(),
-      })
-      .optional(),
-    defaultChat: z
-      .object({
-        skillName: z.string(),
-      })
-      .optional(),
+  const skillEntrypointConfigSchema = zodCompleteStrictObject<SkillEntrypointConfig>({
+    skillName: z.string(),
+  });
+
+  const skillEntrypointsSchema = zodCompleteStrictObject<SkillEntrypoints>({
+    benchInitialization: skillEntrypointConfigSchema.optional(),
+    defaultChat: skillEntrypointConfigSchema.optional(),
   });
 
   // Make sure to call the refiners on this after removing legacyPackMetadataSchema.

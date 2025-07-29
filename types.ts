@@ -1355,7 +1355,7 @@ export interface Skill {
  * Configuration for a skill entrypoint.
  * @hidden
  */
-interface SkillEntrypointConfig {
+export interface SkillEntrypointConfig {
   /** The name of the skill to be invoked. */
   skillName: string;
 }
