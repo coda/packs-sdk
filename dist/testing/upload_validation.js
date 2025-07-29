@@ -1639,6 +1639,18 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         prompt: z.string().min(1).max(exports.Limits.PromptLength),
         tools: z.array(toolSchema),
     });
+    const skillEntrypointsSchema = zodCompleteObject({
+        benchInitialization: z
+            .object({
+            skillName: z.string(),
+        })
+            .optional(),
+        defaultChat: z
+            .object({
+            skillName: z.string(),
+        })
+            .optional(),
+    });
     // Make sure to call the refiners on this after removing legacyPackMetadataSchema.
     // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level
     // schema we actually use.)
@@ -1748,20 +1760,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 });
             }
         }),
-        skillEntrypoints: z
-            .object({
-            benchInitialization: z
-                .object({
-                skillName: z.string(),
-            })
-                .optional(),
-            defaultChat: z
-                .object({
-                skillName: z.string(),
-            })
-                .optional(),
-        })
-            .optional(),
+        skillEntrypoints: skillEntrypointsSchema.optional(),
     });
     function validateIdentityNames(context, identityInfo) {
         for (const [identityName, allowedAuthenticationNames] of identityInfo) {
