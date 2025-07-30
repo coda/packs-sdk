@@ -4,6 +4,7 @@ import type {AdminAuthentication} from '../types';
 import type {AdminAuthenticationTypes} from '../types';
 import {AllPrecannedDates} from '../api_types';
 import type {ArraySchema} from '../schema';
+import type {AssistantMessageTool} from '../types';
 import {AttributionNodeType} from '../schema';
 import type {AuthenticationMetadata} from '../compiled_types';
 import {AuthenticationType} from '../types';
@@ -2134,8 +2135,16 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     annotation: screenAnnotationSchema,
   });
 
-  const toolSchema = z.discriminatedUnion('type', [packToolSchema, knowledgeToolSchema, screenAnnotationToolSchema]);
+  const assistantMessageToolSchema = zodCompleteStrictObject<AssistantMessageTool>({
+    type: z.literal(ToolType.AssistantMessage),
+  });
 
+  const toolSchema = z.discriminatedUnion('type', [
+    packToolSchema,
+    knowledgeToolSchema,
+    screenAnnotationToolSchema,
+    assistantMessageToolSchema,
+  ]);
   const skillSchema = zodCompleteObject<Skill>({
     name: z
       .string()

@@ -5987,6 +5987,9 @@ describe('Pack metadata Validation', async () => {
                   type: ScreenAnnotationType.Suggestions,
                 },
               },
+              {
+                type: ToolType.AssistantMessage,
+              },
             ],
           },
         ],
@@ -6016,7 +6019,7 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'skills[0].tools[0].type',
-          message: "Invalid discriminator value. Expected 'Pack' | 'Knowledge' | 'ScreenAnnotation'",
+          message: "Invalid discriminator value. Expected 'Pack' | 'Knowledge' | 'ScreenAnnotation' | 'AssistantMessage'",
         },
       ]);
     });
@@ -6030,6 +6033,8 @@ describe('Pack metadata Validation', async () => {
         case ToolType.Knowledge:
           break;
         case ToolType.ScreenAnnotation:
+          break;
+        case ToolType.AssistantMessage:
           break;
         case 'CustomTool':
           break;

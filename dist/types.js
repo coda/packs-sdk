@@ -237,6 +237,10 @@ var ToolType;
      * Allows screen annotations to be used as tools.
      */
     ToolType["ScreenAnnotation"] = "ScreenAnnotation";
+    /**
+     * Allows assistant messages to be used as tools.
+     */
+    ToolType["AssistantMessage"] = "AssistantMessage";
 })(ToolType || (exports.ToolType = ToolType = {}));
 /**
  * The type of knowledge source to use.
