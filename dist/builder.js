@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PackDefinitionBuilder = exports.newPack = void 0;
+exports.PackDefinitionBuilder = void 0;
+exports.newPack = newPack;
 const types_1 = require("./types");
 const api_types_1 = require("./api_types");
 const api_1 = require("./api");
@@ -25,7 +26,6 @@ const api_7 = require("./api");
 function newPack(definition) {
     return new PackDefinitionBuilder(definition);
 }
-exports.newPack = newPack;
 /**
  * A class that assists in constructing a pack definition. Use {@link newPack} to create one.
  */

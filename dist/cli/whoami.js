@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.formatWhoami = exports.handleWhoami = void 0;
+exports.handleWhoami = handleWhoami;
+exports.formatWhoami = formatWhoami;
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const config_storage_1 = require("./config_storage");
@@ -28,9 +29,7 @@ async function handleWhoami({ apiToken, codaApiEndpoint }) {
         return (0, helpers_3.printAndExit)(errors.join('\n'));
     }
 }
-exports.handleWhoami = handleWhoami;
 function formatWhoami(user) {
     const { name, loginId, tokenName, scoped } = user;
     return `You are ${name} (${loginId}) using ${scoped ? 'scoped' : 'non-scoped'} token "${tokenName}"`;
 }
-exports.formatWhoami = formatWhoami;
