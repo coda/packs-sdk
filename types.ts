@@ -1325,8 +1325,7 @@ export interface ScreenAnnotationTool extends BaseTool<ToolType.ScreenAnnotation
  * Tool that provides access to assistant messages.
  * @hidden
  */
-export interface AssistantMessageTool extends BaseTool<ToolType.AssistantMessage> {
-}
+export interface AssistantMessageTool extends BaseTool<ToolType.AssistantMessage> {}
 
 /**
  * Map of tool types to their corresponding tool interfaces.
