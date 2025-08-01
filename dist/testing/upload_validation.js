@@ -1627,7 +1627,15 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         type: z.literal(types_9.ToolType.ScreenAnnotation),
         annotation: screenAnnotationSchema,
     });
-    const toolSchema = z.discriminatedUnion('type', [packToolSchema, knowledgeToolSchema, screenAnnotationToolSchema]);
+    const assistantMessageToolSchema = zodCompleteStrictObject({
+        type: z.literal(types_9.ToolType.AssistantMessage),
+    });
+    const toolSchema = z.discriminatedUnion('type', [
+        packToolSchema,
+        knowledgeToolSchema,
+        screenAnnotationToolSchema,
+        assistantMessageToolSchema,
+    ]);
     const skillSchema = zodCompleteObject({
         name: z
             .string()

@@ -5336,7 +5336,11 @@ export declare enum ToolType {
 	/**
 	 * Allows screen annotations to be used as tools.
 	 */
-	ScreenAnnotation = "ScreenAnnotation"
+	ScreenAnnotation = "ScreenAnnotation",
+	/**
+	 * Allows assistant messages to be used as tools.
+	 */
+	AssistantMessage = "AssistantMessage"
 }
 /**
  * Base interface for all tool definitions.
@@ -5448,6 +5452,12 @@ export interface ScreenAnnotationTool extends BaseTool<ToolType.ScreenAnnotation
 	annotation: ScreenAnnotation;
 }
 /**
+ * Tool that provides access to assistant messages.
+ * @hidden
+ */
+export interface AssistantMessageTool extends BaseTool<ToolType.AssistantMessage> {
+}
+/**
  * Map of tool types to their corresponding tool interfaces.
  * This interface can be extended via declaration merging to add custom tool types.
  * @hidden
@@ -5456,6 +5466,7 @@ export interface ToolMap {
 	[ToolType.Pack]: PackTool;
 	[ToolType.Knowledge]: KnowledgeTool;
 	[ToolType.ScreenAnnotation]: ScreenAnnotationTool;
+	[ToolType.AssistantMessage]: AssistantMessageTool;
 }
 /**
  * Union of all supported tool types.
