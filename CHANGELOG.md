@@ -7,6 +7,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ### Added
 
 - Add `skillEntrypoints` to pack definition
+- Add `AssistantMessage` tool
 
 ## [1.9.12] - 2025-07-25
 
