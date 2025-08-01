@@ -4,8 +4,6 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
-## [1.9.13] - 2025-08-01
-
 ### Added
 
 - Add `skillEntrypoints` to pack definition
@@ -896,7 +894,7 @@ await myHelper(context);
 
 - Beginning of alpha versioning.
 
-[unreleased]: https://github.com/coda/packs-sdk/compare/v1.9.13...HEAD
+[unreleased]: https://github.com/coda/packs-sdk/compare/v1.9.12...HEAD
 [1.7.5]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.5
 [1.7.4]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.4
 [1.7.3]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.3
@@ -958,4 +956,3 @@ await myHelper(context);
 [1.9.11]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.11
 
 [1.9.12]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.12
-[1.9.13]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.13
