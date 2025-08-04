@@ -1191,6 +1191,8 @@ export enum ToolType {
   ScreenAnnotation = 'ScreenAnnotation',
   /**
    * Allows assistant messages to be used as tools.
+   * This tool is for internal usage only.
+   * @hidden
    */
   AssistantMessage = 'AssistantMessage',
 }
