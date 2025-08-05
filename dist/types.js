@@ -266,9 +266,13 @@ var KnowledgeToolSourceType;
 var ScreenAnnotationType;
 (function (ScreenAnnotationType) {
     /**
-     * Use screen annotation suggestions.
+     * Use screen annotation for text rewriting.
      */
-    ScreenAnnotationType["Suggestions"] = "Suggestions";
+    ScreenAnnotationType["Rewrite"] = "Rewrite";
+    /**
+     * Use screen annotation for guide.
+     */
+    ScreenAnnotationType["Guide"] = "Guide";
 })(ScreenAnnotationType || (exports.ScreenAnnotationType = ScreenAnnotationType = {}));
 var HttpStatusCode;
 (function (HttpStatusCode) {

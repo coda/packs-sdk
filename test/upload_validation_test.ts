@@ -5984,7 +5984,13 @@ describe('Pack metadata Validation', async () => {
               {
                 type: ToolType.ScreenAnnotation,
                 annotation: {
-                  type: ScreenAnnotationType.Suggestions,
+                  type: ScreenAnnotationType.Rewrite,
+                },
+              },
+              {
+                type: ToolType.ScreenAnnotation,
+                annotation: {
+                  type: ScreenAnnotationType.Guide,
                 },
               },
               {

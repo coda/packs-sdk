@@ -2126,7 +2126,10 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
 
   const screenAnnotationSchema = z.discriminatedUnion('type', [
     z.object({
-      type: z.literal(ScreenAnnotationType.Suggestions),
+      type: z.literal(ScreenAnnotationType.Rewrite),
+    }),
+    z.object({
+      type: z.literal(ScreenAnnotationType.Guide),
     }),
   ]);
 
