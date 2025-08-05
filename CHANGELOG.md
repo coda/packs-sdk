@@ -8,6 +8,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 - Add `skillEntrypoints` to pack definition
 - Add `AssistantMessage` tool
+- Rename `Suggestions` tool to `Rewrite`
 
 ## [1.9.12] - 2025-07-25
 
