@@ -1290,9 +1290,13 @@ export interface KnowledgeTool extends BaseTool<ToolType.Knowledge> {
  */
 export enum ScreenAnnotationType {
   /**
-   * Use screen annotation suggestions.
+   * Use screen annotation for text rewriting.
    */
-  Suggestions = 'Suggestions',
+  Rewrite = 'Rewrite',
+  /**
+   * Use screen annotation for guide.
+   */
+  Guide = 'Guide',
 }
 
 /**
@@ -1307,13 +1311,14 @@ interface BaseScreenAnnotation<T extends ScreenAnnotationType> {
  * Annotation for screen suggestions.
  * @hidden
  */
-interface SuggestionsScreenAnnotation extends BaseScreenAnnotation<ScreenAnnotationType.Suggestions> {}
+interface RewriteScreenAnnotation extends BaseScreenAnnotation<ScreenAnnotationType.Rewrite> {}
+interface GuideScreenAnnotation extends BaseScreenAnnotation<ScreenAnnotationType.Guide> {}
 
 /**
  * Union of all supported screen annotation types.
  * @hidden
  */
-type ScreenAnnotation = SuggestionsScreenAnnotation;
+type ScreenAnnotation = RewriteScreenAnnotation | GuideScreenAnnotation;
 
 /**
  * Tool that provides access to screen annotation capabilities.
