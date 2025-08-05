@@ -1311,13 +1311,14 @@ interface BaseScreenAnnotation<T extends ScreenAnnotationType> {
  * Annotation for screen suggestions.
  * @hidden
  */
-interface SuggestionsScreenAnnotation extends BaseScreenAnnotation<ScreenAnnotationType> {}
+interface RewriteScreenAnnotation extends BaseScreenAnnotation<ScreenAnnotationType.Rewrite> {}
+interface GuideScreenAnnotation extends BaseScreenAnnotation<ScreenAnnotationType.Guide> {}
 
 /**
  * Union of all supported screen annotation types.
  * @hidden
  */
-type ScreenAnnotation = SuggestionsScreenAnnotation;
+type ScreenAnnotation = RewriteScreenAnnotation | GuideScreenAnnotation;
 
 /**
  * Tool that provides access to screen annotation capabilities.

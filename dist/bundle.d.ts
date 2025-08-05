@@ -5443,13 +5443,15 @@ export interface BaseScreenAnnotation<T extends ScreenAnnotationType> {
  * Annotation for screen suggestions.
  * @hidden
  */
-export interface SuggestionsScreenAnnotation extends BaseScreenAnnotation<ScreenAnnotationType> {
+export interface RewriteScreenAnnotation extends BaseScreenAnnotation<ScreenAnnotationType.Rewrite> {
+}
+export interface GuideScreenAnnotation extends BaseScreenAnnotation<ScreenAnnotationType.Guide> {
 }
 /**
  * Union of all supported screen annotation types.
  * @hidden
  */
-export type ScreenAnnotation = SuggestionsScreenAnnotation;
+export type ScreenAnnotation = RewriteScreenAnnotation | GuideScreenAnnotation;
 /**
  * Tool that provides access to screen annotation capabilities.
  * @hidden
