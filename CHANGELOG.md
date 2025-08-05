@@ -4,11 +4,14 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+## [1.10.0] - 2025-08-05
+
 ### Added
 
 - Add `skillEntrypoints` to pack definition
 - Add `AssistantMessage` tool
-- Rename `Suggestions` tool to `Rewrite`
+- Add `Rewrite` tool
+- Add `Guide` tool
 
 ## [1.9.12] - 2025-07-25
 
@@ -895,7 +898,7 @@ await myHelper(context);
 
 - Beginning of alpha versioning.
 
-[unreleased]: https://github.com/coda/packs-sdk/compare/v1.9.12...HEAD
+[unreleased]: https://github.com/coda/packs-sdk/compare/v1.10.0...HEAD
 [1.7.5]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.5
 [1.7.4]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.4
 [1.7.3]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.3
@@ -957,3 +960,4 @@ await myHelper(context);
 [1.9.11]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.11
 
 [1.9.12]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.9.12
+[1.10.0]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.10.0
