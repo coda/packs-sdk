@@ -12,7 +12,11 @@ While the Pack Studio and Pack CLI are used to develop a Pack, the primary way t
 There are a few different ways to open the Pack maker tools.
 
 === "Doc menu"
-    Click the three dots icon to the right of the doc's name and select **Toggle Pack maker tools**.
+    Click the three dots icon to the right of the doc's name and select **Toggle Pack maker tools**. 
+    
+    !!! info "Developer mode required"
+    
+        This option is only visible if you have Developer Mode enabled on your Coda account. To enabled developer mode, open your [account settings][account_settings], scroll to the bottom, expand **Developer tools** and toggle on **Enable developer mode**.
 
     <img src="../../../images/pmt_open_doc.png" srcset="../../../images/pmt_open_doc_2x.png 2x" class="screenshot" alt="Open Pack maker tools from doc menu">
 
@@ -127,3 +131,4 @@ A few additional options are available under the three dots menu at the top of t
 
 [troubleshooting_logging]: troubleshooting.md#logging
 [fetcher_headers]: ../basics/fetcher.md#headers
+[account_settings]: https://coda.io/account
