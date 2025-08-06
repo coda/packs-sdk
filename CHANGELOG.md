@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Changed
+
+- Dummy change to bump version
+
 ## [1.10.0] - 2025-08-06
 
 ### Added
