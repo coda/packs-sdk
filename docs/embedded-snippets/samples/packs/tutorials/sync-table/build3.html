@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <!-- Monaco library script is loaded from: https://cdnjs.com/libraries/monaco-editor-->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/vs/loader.min.js"
+      integrity="sha512-A+6SvPGkIN9Rf0mUXmW4xh7rDvALXf/f0VtOUiHlDUSPknu2kcfz1KzLpOJyL2pO+nZS13hhIjLqVgiQExLJrw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      require.config({
+        paths: {
+          vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs',
+        },
+      });
+
+      require(['vs/editor/editor.main'], function () {
+        var editor = monaco.editor.create(document.getElementById('container'), {
+          value: "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\npack.addNetworkDomain(\"gutendex.com\");\n\nconst AuthorSchema = coda.makeObjectSchema({\n  properties: {\n    name: { type: coda.ValueType.String },\n    born: {\n      type: coda.ValueType.Number,\n      fromKey: \"birth_year\",\n    },\n    died: {\n      type: coda.ValueType.Number,\n      fromKey: \"death_year\",\n    },\n  },\n  displayProperty: \"name\",\n});\n\nconst BookSchema = coda.makeObjectSchema({\n  properties: {\n    title: { type: coda.ValueType.String },\n    id: { type: coda.ValueType.Number },\n    subjects: {\n      type: coda.ValueType.Array,\n      items: { type: coda.ValueType.String },\n    },\n    authors: {\n      type: coda.ValueType.Array,\n      items: AuthorSchema,\n    },\n    thumbnail: {\n      type: coda.ValueType.String,\n      codaType: coda.ValueHintType.ImageAttachment,\n    },\n    link: {\n      type: coda.ValueType.String,\n      codaType: coda.ValueHintType.Url,\n    },\n  },\n  displayProperty: \"title\",\n  idProperty: \"id\",\n  featuredProperties: [\n    \"authors\", \"subjects\", \"link\", \"thumbnail\",\n  ],\n});\n\npack.addSyncTable({\n  name: \"Books\",\n  description: \"Lists books in the collection.\",\n  identityName: \"Book\",\n  schema: BookSchema,\n  formula: {\n    name: \"SyncBooks\",\n    description: \"Syncs the books.\",\n    parameters: [\n      coda.makeParameter({\n        type: coda.ParameterType.String,\n        name: \"topic\",\n        description: \"Limit books to this topic.\",\n        optional: true,\n      }),\n    ],\n    execute: async function (args, context) {\n      let [topic] = args;\n      let baseUrl = \"https://gutendex.com/books\";\n      let url = coda.withQueryParams(baseUrl, {\n        topic: topic,\n      });\n      if (context.sync.continuation) {\n        url = context.sync.continuation!.url as string;\n      }\n      let response = await context.fetcher.fetch({\n        method: \"GET\",\n        url: url,\n      });\n      let rows = response.body.results;\n      for (let row of rows) {\n        row.thumbnail = row.formats[\"image/jpeg\"];\n        row.link =\n          \"https://www.gutenberg.org/ebooks/\" + row.id;\n      }\n      let continuation;\n      if (response.body.next) {\n        continuation = {\n          url: response.body.next,\n        };\n      }\n      return {\n        result: rows,\n        continuation: continuation,\n      };\n    },\n  },\n});",
+          language: 'javascript',
+          minimap: {enabled: false},
+          readOnly: true,
+          renderValidationDecorations: 'off',
+          wordWrap: 'on',
+          contextmenu: false,
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div id="container" style="position: absolute; top: 0; right: 16; bottom: 16; left: 0"></div>
+  </body>
+</html>
