@@ -16,14 +16,22 @@ Details about a connection (account) to help identify it to users.
 
 • `Optional` **email**: `string`
 
+The email address of the account. Used for labeling the account in the UI and for internal use.
+
 ___
 
 ### name
 
 • **name**: `string`
 
+A name for the account to label that account in the UI.
+
 ___
 
 ### userId
 
 • `Optional` **userId**: `string`
+
+The ID of the account in the third-party system being called.
+
+This ID is not yet subsequently exposed to pack developers and is mostly for internal use.

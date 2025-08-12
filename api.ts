@@ -1964,8 +1964,19 @@ export type LegacyDefaultMetadataReturnType =
  * Details about a connection (account) to help identify it to users.
  */
 export interface ConnectionDetails {
+  /**
+   * A name for the account to label that account in the UI.
+   */
   name: string;
+  /**
+   * The ID of the account in the third-party system being called.
+   *
+   * This ID is not yet subsequently exposed to pack developers and is mostly for internal use.
+   */
   userId?: string;
+  /**
+   * The email address of the account. Used for labeling the account in the UI and for internal use.
+   */
   email?: string;
 }
 
