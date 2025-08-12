@@ -317,6 +317,7 @@ const SyncMetadataFormulaTokens: Record<SyncMetadataFormulaType, string> = Objec
 const GlobalMetadataFormulaTokens: Record<GlobalMetadataFormulaType, string> = Object.freeze({
   [MetadataFormulaType.GetConnectionName]: 'getConnectionName',
   [MetadataFormulaType.GetConnectionUserId]: 'getConnectionUserId',
+  [MetadataFormulaType.GetConnectionDetails]: 'getConnectionDetails',
 });
 
 const PostSetupMetadataFormulaTokens: Record<PostSetupMetadataFormulaType, string> = Object.freeze({

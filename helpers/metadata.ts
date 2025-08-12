@@ -111,11 +111,12 @@ function compileDefaultAuthenticationMetadata(
   if (authentication.type === AuthenticationType.None || authentication.type === AuthenticationType.Various) {
     return authentication;
   }
-  const {getConnectionName, getConnectionUserId, postSetup, ...rest} = authentication;
+  const {getConnectionName, getConnectionUserId, getConnectionDetails, postSetup, ...rest} = authentication;
   return {
     ...rest,
     getConnectionName: compileMetadataFormulaMetadata(getConnectionName),
     getConnectionUserId: compileMetadataFormulaMetadata(getConnectionUserId),
+    getConnectionDetails: compileMetadataFormulaMetadata(getConnectionDetails),
     postSetup: postSetup ? postSetup.map(compilePostSetupStepMetadata) : undefined,
   };
 }

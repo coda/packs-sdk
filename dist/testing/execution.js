@@ -223,6 +223,7 @@ const SyncMetadataFormulaTokens = Object.freeze({
 const GlobalMetadataFormulaTokens = Object.freeze({
     [types_4.MetadataFormulaType.GetConnectionName]: 'getConnectionName',
     [types_4.MetadataFormulaType.GetConnectionUserId]: 'getConnectionUserId',
+    [types_4.MetadataFormulaType.GetConnectionDetails]: 'getConnectionDetails',
 });
 const PostSetupMetadataFormulaTokens = Object.freeze({
     [types_4.MetadataFormulaType.PostSetupSetEndpoint]: 'setEndpoint',

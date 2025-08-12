@@ -191,15 +191,16 @@ class PackDefinitionBuilder {
         return this;
     }
     _wrapAuthenticationFunctions(authentication) {
-        const { getConnectionName: getConnectionNameDef, getConnectionUserId: getConnectionUserIdDef, postSetup: postSetupDef, ...rest } = authentication;
+        const { getConnectionName: getConnectionNameDef, getConnectionUserId: getConnectionUserIdDef, getConnectionDetails: getConnectionDetailsDef, postSetup: postSetupDef, ...rest } = authentication;
         const getConnectionName = (0, api_7.wrapMetadataFunction)(getConnectionNameDef);
         const getConnectionUserId = (0, api_7.wrapMetadataFunction)(getConnectionUserIdDef);
+        const getConnectionDetails = (0, api_7.wrapMetadataFunction)(getConnectionDetailsDef);
         const postSetup = postSetupDef === null || postSetupDef === void 0 ? void 0 : postSetupDef.map(step => {
             const getOptions = (0, api_7.wrapMetadataFunction)((0, migration_1.setEndpointDefHelper)(step).getOptions);
             const getOptionsFormula = (0, api_7.wrapMetadataFunction)(step.getOptionsFormula);
             return { ...step, getOptions, getOptionsFormula };
         });
-        return { ...rest, getConnectionName, getConnectionUserId, postSetup };
+        return { ...rest, getConnectionName, getConnectionUserId, getConnectionDetails, postSetup };
     }
     /**
      * Sets this pack to use authentication for individual users, using the

@@ -1961,6 +1961,15 @@ export type LegacyDefaultMetadataReturnType =
   | ObjectSchema<any, any>;
 
 /**
+ * Details about a connection (account) to help identify it to users.
+ */
+export interface ConnectionDetails {
+  name: string;
+  userId?: string;
+  email?: string;
+}
+
+/**
  * A JavaScript function that can implement a {@link MetadataFormulaDef}.
  */
 export type MetadataFunction<

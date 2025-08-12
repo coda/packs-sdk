@@ -3870,6 +3870,14 @@ export type MetadataFormulaMetadata<ContextT extends ExecutionContext = Executio
  */
 export type LegacyDefaultMetadataReturnType = MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>;
 /**
+ * Details about a connection (account) to help identify it to users.
+ */
+export interface ConnectionDetails {
+	name: string;
+	userId?: string;
+	email?: string;
+}
+/**
  * A JavaScript function that can implement a {@link MetadataFormulaDef}.
  */
 export type MetadataFunction<ContextT extends ExecutionContext = ExecutionContext, ReturnT = LegacyDefaultMetadataReturnType> = (context: ContextT, search: string, formulaContext?: MetadataContext) => Promise<ReturnT>;
@@ -4583,6 +4591,13 @@ export interface BaseAuthentication {
 	 */
 	getConnectionUserId?: MetadataFormula;
 	/**
+	 * A function that is called when a user sets up a new account, that returns details
+	 * about that account in the third-party system being called.
+	 *
+	 * @ignore
+	 */
+	getConnectionDetails?: MetadataFormula<ExecutionContext, ConnectionDetails>;
+	/**
 	 * A link to a help article or other page with more instructions about how to set up an account for this pack.
 	 */
 	instructionsUrl?: string;
@@ -5142,11 +5157,13 @@ export type AllowedAuthentication = HeaderBearerTokenAuthentication | CodaApiBea
  * The union of supported authentication methods.
  */
 export type Authentication = NoAuthentication | VariousAuthentication | AllowedAuthentication;
-export type AsAuthDef<T extends BaseAuthentication> = Omit<T, "getConnectionName" | "getConnectionUserId" | "postSetup"> & {
+export type AsAuthDef<T extends BaseAuthentication> = Omit<T, "getConnectionName" | "getConnectionUserId" | "getConnectionDetails" | "postSetup"> & {
 	/** See {@link BaseAuthentication.getConnectionName} */
 	getConnectionName?: MetadataFormulaDef;
 	/** See {@link BaseAuthentication.getConnectionUserId} @ignore */
 	getConnectionUserId?: MetadataFormulaDef;
+	/** See {@link BaseAuthentication.getConnectionDetails} @ignore */
+	getConnectionDetails?: MetadataFormulaDef<ExecutionContext, ConnectionDetails>;
 	/** {@link BaseAuthentication.postSetup} */
 	postSetup?: PostSetupDef[];
 };
@@ -5914,9 +5931,10 @@ export type PostSetupMetadata = Omit<PostSetup, "getOptions" | "getOptionsFormul
 	getOptionsFormula?: MetadataFormulaMetadata;
 };
 /** @hidden */
-export type AuthenticationMetadata = DistributiveOmit<Authentication, "getConnectionName" | "getConnectionUserId" | "postSetup"> & {
+export type AuthenticationMetadata = DistributiveOmit<Authentication, "getConnectionName" | "getConnectionUserId" | "getConnectionDetails" | "postSetup"> & {
 	getConnectionName?: MetadataFormulaMetadata;
 	getConnectionUserId?: MetadataFormulaMetadata;
+	getConnectionDetails?: MetadataFormulaMetadata<ExecutionContext, ConnectionDetails>;
 	postSetup?: PostSetupMetadata[];
 };
 /** @hidden */

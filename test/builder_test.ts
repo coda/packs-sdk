@@ -146,6 +146,13 @@ describe('Builder', () => {
         paramName: 'param',
       });
     });
+
+    it('getConnectionDetails', () => {
+      pack.setUserAuthentication({
+        type: AuthenticationType.HeaderBearerToken,
+        getConnectionDetails: async () => ({name: 'name', userId: 'userId', email: 'email'}),
+      });
+    });
   });
 
   describe('default connection requirement', () => {

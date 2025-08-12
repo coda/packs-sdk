@@ -126,6 +126,7 @@ export { LegacyDefaultMetadataReturnType } from './api';
 export { ValidParameterValidationResult } from './api';
 export { InvalidParameterValidationResult } from './api';
 export { ParameterValidationResult } from './api';
+export type { ConnectionDetails } from './api';
 export { makeMetadataFormula } from './api';
 export { makePropertyOptionsFormula } from './api';
 export { makeDynamicSyncTable } from './api';

@@ -98,6 +98,13 @@ async function doFindAndExecutePackFunction({ params, formulaSpec, manifest, exe
                         return selectedAuthentication.getConnectionUserId.execute(params, executionContext);
                     }
                     break;
+                case types_3.MetadataFormulaType.GetConnectionDetails:
+                    if ((selectedAuthentication === null || selectedAuthentication === void 0 ? void 0 : selectedAuthentication.type) !== types_1.AuthenticationType.None &&
+                        (selectedAuthentication === null || selectedAuthentication === void 0 ? void 0 : selectedAuthentication.type) !== types_1.AuthenticationType.Various &&
+                        (selectedAuthentication === null || selectedAuthentication === void 0 ? void 0 : selectedAuthentication.getConnectionDetails)) {
+                        return selectedAuthentication.getConnectionDetails.execute(params, executionContext);
+                    }
+                    break;
                 case types_3.MetadataFormulaType.ParameterAutocomplete: {
                     const autocompleteFormula = findParameterAutocompleteFormula(manifest, formulaSpec);
                     if (autocompleteFormula) {

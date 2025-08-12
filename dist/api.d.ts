@@ -1167,6 +1167,14 @@ export declare type GenericMetadataFormulaMetadata = Omit<GenericMetadataFormula
  */
 export type LegacyDefaultMetadataReturnType = MetadataFormulaResultType | MetadataFormulaResultType[] | ArraySchema | ObjectSchema<any, any>;
 /**
+ * Details about a connection (account) to help identify it to users.
+ */
+export interface ConnectionDetails {
+    name: string;
+    userId?: string;
+    email?: string;
+}
+/**
  * A JavaScript function that can implement a {@link MetadataFormulaDef}.
  */
 export type MetadataFunction<ContextT extends ExecutionContext = ExecutionContext, ReturnT = LegacyDefaultMetadataReturnType> = (context: ContextT, search: string, formulaContext?: MetadataContext) => Promise<ReturnT>;

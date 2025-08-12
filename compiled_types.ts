@@ -3,9 +3,11 @@ import type {AWSAssumeRoleAuthentication} from './types';
 import type {Authentication} from './types';
 import type {AuthenticationType} from './types';
 import type {CodaApiBearerTokenAuthentication} from './types';
+import type {ConnectionDetails} from './api';
 import type {CustomAuthentication} from './types';
 import type {CustomHeaderTokenAuthentication} from './types';
 import type {DistributiveOmit} from './type_utils';
+import type {ExecutionContext} from './api';
 import type {Format} from './types';
 import type {GoogleDomainWideDelegationAuthentication} from './types';
 import type {GoogleServiceAccountAuthentication} from './types';
@@ -60,20 +62,22 @@ export type PostSetupMetadata = Omit<PostSetup, 'getOptions' | 'getOptionsFormul
 /** @hidden */
 export type AuthenticationMetadata = DistributiveOmit<
   Authentication,
-  'getConnectionName' | 'getConnectionUserId' | 'postSetup'
+  'getConnectionName' | 'getConnectionUserId' | 'getConnectionDetails' | 'postSetup'
 > & {
   getConnectionName?: MetadataFormulaMetadata;
   getConnectionUserId?: MetadataFormulaMetadata;
+  getConnectionDetails?: MetadataFormulaMetadata<ExecutionContext, ConnectionDetails>;
   postSetup?: PostSetupMetadata[];
 };
 
 /** @hidden */
 type AuthenticationToMetadata<T extends Authentication> = DistributiveOmit<
   T,
-  'getConnectionName' | 'getConnectionUserId' | 'postSetup'
+  'getConnectionName' | 'getConnectionUserId' | 'getConnectionDetails' | 'postSetup'
 > & {
   getConnectionName?: MetadataFormulaMetadata;
   getConnectionUserId?: MetadataFormulaMetadata;
+  getConnectionDetails?: MetadataFormulaMetadata<ExecutionContext, ConnectionDetails>;
   postSetup?: PostSetupMetadata[];
 };
 

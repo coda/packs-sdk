@@ -13,6 +13,7 @@ var MetadataFormulaType;
 (function (MetadataFormulaType) {
     MetadataFormulaType["GetConnectionName"] = "GetConnectionName";
     MetadataFormulaType["GetConnectionUserId"] = "GetConnectionUserId";
+    MetadataFormulaType["GetConnectionDetails"] = "GetConnectionDetails";
     MetadataFormulaType["ParameterAutocomplete"] = "ParameterAutocomplete";
     MetadataFormulaType["PostSetupSetEndpoint"] = "PostSetupSetEndpoint";
     MetadataFormulaType["SyncListDynamicUrls"] = "SyncListDynamicUrls";

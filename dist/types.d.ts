@@ -1,4 +1,6 @@
 import type { $Values } from './type_utils';
+import type { ConnectionDetails } from './api';
+import type { ExecutionContext } from './api';
 import type { Formula } from './api';
 import type { MetadataFormula } from './api';
 import type { MetadataFormulaDef } from './api';
@@ -249,6 +251,13 @@ export interface BaseAuthentication {
      * @ignore
      */
     getConnectionUserId?: MetadataFormula;
+    /**
+     * A function that is called when a user sets up a new account, that returns details
+     * about that account in the third-party system being called.
+     *
+     * @ignore
+     */
+    getConnectionDetails?: MetadataFormula<ExecutionContext, ConnectionDetails>;
     /**
      * A link to a help article or other page with more instructions about how to set up an account for this pack.
      */
@@ -827,11 +836,13 @@ export interface AuthenticationTypeMap {
     [AuthenticationType.GoogleServiceAccount]: GoogleServiceAccountAuthentication;
     [AuthenticationType.Custom]: CustomAuthentication;
 }
-export type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionName' | 'getConnectionUserId' | 'postSetup'> & {
+export type AsAuthDef<T extends BaseAuthentication> = Omit<T, 'getConnectionName' | 'getConnectionUserId' | 'getConnectionDetails' | 'postSetup'> & {
     /** See {@link BaseAuthentication.getConnectionName} */
     getConnectionName?: MetadataFormulaDef;
     /** See {@link BaseAuthentication.getConnectionUserId} @ignore */
     getConnectionUserId?: MetadataFormulaDef;
+    /** See {@link BaseAuthentication.getConnectionDetails} @ignore */
+    getConnectionDetails?: MetadataFormulaDef<ExecutionContext, ConnectionDetails>;
     /** {@link BaseAuthentication.postSetup} */
     postSetup?: PostSetupDef[];
 };

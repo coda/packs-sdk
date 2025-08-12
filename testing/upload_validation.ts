@@ -637,6 +637,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
     // in the full bundle, not the metadata.
     getConnectionName: z.unknown().optional(),
     getConnectionUserId: z.unknown().optional(),
+    getConnectionDetails: z.unknown().optional(),
     instructionsUrl: z.string().optional(),
     requiresEndpointUrl: z.boolean().optional(),
     endpointDomain: z.string().optional(),

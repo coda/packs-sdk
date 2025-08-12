@@ -7502,6 +7502,11 @@ module.exports = (() => {
               return selectedAuthentication.getConnectionUserId.execute(params, executionContext);
             }
             break;
+          case "GetConnectionDetails" /* GetConnectionDetails */:
+            if (selectedAuthentication?.type !== "None" /* None */ && selectedAuthentication?.type !== "Various" /* Various */ && selectedAuthentication?.getConnectionDetails) {
+              return selectedAuthentication.getConnectionDetails.execute(params, executionContext);
+            }
+            break;
           case "ParameterAutocomplete" /* ParameterAutocomplete */: {
             const autocompleteFormula = findParameterAutocompleteFormula(manifest, formulaSpec);
             if (autocompleteFormula) {

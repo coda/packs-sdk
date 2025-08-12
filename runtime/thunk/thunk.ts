@@ -168,6 +168,15 @@ async function doFindAndExecutePackFunction<T extends FormulaSpecification>({
             return selectedAuthentication.getConnectionUserId.execute(params as [string, string], executionContext);
           }
           break;
+        case MetadataFormulaType.GetConnectionDetails:
+          if (
+            selectedAuthentication?.type !== AuthenticationType.None &&
+            selectedAuthentication?.type !== AuthenticationType.Various &&
+            selectedAuthentication?.getConnectionDetails
+          ) {
+            return selectedAuthentication.getConnectionDetails.execute(params as [string, string], executionContext);
+          }
+          break;
         case MetadataFormulaType.ParameterAutocomplete: {
           const autocompleteFormula = findParameterAutocompleteFormula(manifest, formulaSpec);
           if (autocompleteFormula) {

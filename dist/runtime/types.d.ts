@@ -13,6 +13,7 @@ export declare enum FormulaType {
 export declare enum MetadataFormulaType {
     GetConnectionName = "GetConnectionName",
     GetConnectionUserId = "GetConnectionUserId",
+    GetConnectionDetails = "GetConnectionDetails",
     ParameterAutocomplete = "ParameterAutocomplete",
     PostSetupSetEndpoint = "PostSetupSetEndpoint",
     SyncListDynamicUrls = "SyncListDynamicUrls",
@@ -41,7 +42,7 @@ export interface GetPermissionsFormulaSpecification {
 }
 export interface MetadataFormulaSpecification {
     type: FormulaType.Metadata;
-    metadataFormulaType: MetadataFormulaType.GetConnectionName | MetadataFormulaType.GetConnectionUserId;
+    metadataFormulaType: MetadataFormulaType.GetConnectionName | MetadataFormulaType.GetConnectionUserId | MetadataFormulaType.GetConnectionDetails;
 }
 export interface ParameterAutocompleteMetadataFormulaSpecification {
     type: FormulaType.Metadata;

@@ -302,17 +302,19 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     const {
       getConnectionName: getConnectionNameDef,
       getConnectionUserId: getConnectionUserIdDef,
+      getConnectionDetails: getConnectionDetailsDef,
       postSetup: postSetupDef,
       ...rest
     } = authentication;
     const getConnectionName = wrapMetadataFunction(getConnectionNameDef);
     const getConnectionUserId = wrapMetadataFunction(getConnectionUserIdDef);
+    const getConnectionDetails = wrapMetadataFunction(getConnectionDetailsDef);
     const postSetup = postSetupDef?.map(step => {
       const getOptions = wrapMetadataFunction(setEndpointDefHelper(step).getOptions);
       const getOptionsFormula = wrapMetadataFunction(step.getOptionsFormula);
       return {...step, getOptions, getOptionsFormula};
     });
-    return {...rest, getConnectionName, getConnectionUserId, postSetup};
+    return {...rest, getConnectionName, getConnectionUserId, getConnectionDetails, postSetup};
   }
 
   /**
