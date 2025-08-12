@@ -2,16 +2,16 @@ import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
 // Column format that displays the cell's value within a random cat image,
-// using the CatImage() formula defined above.
+// using the CatPhoto() formula defined above.
 pack.addColumnFormat({
-  name: "Cat Image",
-  instructions: "Displays the text over the image of a random cat.",
-  formulaName: "CatImage",
+  name: "Cat Photo",
+  instructions: "Displays the text over the photo of a random cat.",
+  formulaName: "CatPhoto",
 });
 
-// Formula that fetches a random cat image, with various options.
+// Formula that fetches a random cat photo, with various options.
 pack.addFormula({
-  name: "CatImage",
+  name: "CatPhoto",
   description: "Gets a random cat image.",
   parameters: [
     coda.makeParameter({
@@ -22,7 +22,8 @@ pack.addFormula({
   ],
   resultType: coda.ValueType.String,
   codaType: coda.ValueHintType.ImageReference,
-  execute: async function ([text], context) {
+  execute: async function (args, context) {
+    let [text] = args;
     let url = "https://cataas.com/cat/says/" + encodeURIComponent(text);
     url = coda.withQueryParams(url, {
       json: true,
@@ -32,7 +33,7 @@ pack.addFormula({
       url: url,
       cacheTtlSecs: 0, // Don't cache the result, so we can get a fresh cat.
     });
-    return "https://cataas.com" + response.body.url;
+    return response.body.url;
   },
 });
 

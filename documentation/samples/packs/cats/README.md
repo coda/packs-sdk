@@ -2,6 +2,5 @@ This Pack allows you to fetch random cat photos using the [Cat-as-a-service API]
 
 - A formula for fetching a cat photo.
 - A column format that displays the text on top of a cat photo.
-- A sync table that retrieves all available cat photos.
 
 [cataas]: https://cataas.com/

@@ -44,90 +44,74 @@ pack.addSyncTable({
 {% endraw %}
 ```
 ## With parameter
-A sync table that uses a parameter. This sample syncs cat photos from the CatAAS API.
+A sync table that uses a parameter. This sample syncs the list of emojis.
 
 ```ts
 {% raw %}
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
-// Schema for a Cat image.
-const CatSchema = coda.makeObjectSchema({
+const EmojiSchema = coda.makeObjectSchema({
   properties: {
-    image: {
-      type: coda.ValueType.String,
+    name: { type: coda.ValueType.String, fromKey: "annotation" },
+    hexcode: { type: coda.ValueType.String },
+    emoji: { type: coda.ValueType.String },
+    group: { type: coda.ValueType.String },
+    image: { 
+      type: coda.ValueType.String, 
       codaType: coda.ValueHintType.ImageReference,
     },
-    tags: {
-      type: coda.ValueType.Array,
-      items: coda.makeSchema({ type: coda.ValueType.String }),
-    },
-    created: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.DateTime,
-    },
-    id: { type: coda.ValueType.String },
   },
-  displayProperty: "image",
-  idProperty: "id",
-  featuredProperties: ["tags"],
+  displayProperty: "name",
+  idProperty: "hexcode",
+  featuredProperties: ["emoji", "group", "image"],
 });
 
-// Sync table that retrieves all cat images, optionally filtered by tags.
 pack.addSyncTable({
-  name: "Cats",
-  identityName: "Cat",
-  schema: CatSchema,
-  connectionRequirement: coda.ConnectionRequirement.None,
+  name: "Emojis",
+  description: "Lists all of the emojis.",
+  identityName: "Info",
+  schema: EmojiSchema,
   formula: {
-    name: "SyncCats",
-    description: "Syncs the cats.",
+    name: "SyncEmojis",
+    description: "Syncs the data.",
     parameters: [
       coda.makeParameter({
         type: coda.ParameterType.String,
-        name: "tag",
-        description: "Only cats with this tag will be selected.",
+        name: "group",
+        description: "If specified, only include emojis in this group.",
         optional: true,
-        // Pull the list of tags to use for autocomplete from the API.
-        autocomplete: async function (context, search) {
-          let response = await context.fetcher.fetch({
-            method: "GET",
-            url: "https://cataas.com/api/tags",
-          });
-          let tags = response.body;
-          // Convert the tags into a list of autocomplete options.
-          return coda.simpleAutocomplete(search, tags);
-        },
+        autocomplete: [
+          "smileys-emotion", "people-body", "component", "animals-nature", 
+          "food-drink", "travel-places", "activities", "objects", "symbols",
+        ],
       }),
     ],
-    execute: async function ([tag], context) {
-      let url = coda.withQueryParams("https://cataas.com/api/cats", {
-        tags: tag,
-        limit: 10000,
+    execute: async function (args, context) {
+      let [group] = args;
+      let url = coda.withQueryParams("https://www.emoji.family/api/emojis", {
+        group: group,
       });
       let response = await context.fetcher.fetch({
         method: "GET",
         url: url,
       });
-      let cats = response.body;
-      let result = [];
-      for (let cat of cats) {
-        result.push({
-          image: "https://cataas.com/cat/" + cat._id,
-          tags: cat.tags,
-          created: cat.createdAt,
-          id: cat._id,
-        });
-      }
+      let emojis = response.body;
+      let rows = emojis.map(info => {
+        return {
+          // Start with all of the properties in the API response.
+          ...info,
+          image: `https://www.emoji.family/api/emojis/${info.emoji}/noto/png`,
+        };
+      });
       return {
-        result: result,
+        result: rows,
       };
     },
   },
 });
 
-// Allow the pack to make requests to Cat-as-a-service API.
-pack.addNetworkDomain("cataas.com");
+pack.addNetworkDomain("emoji.family");
 {% endraw %}
 ```
 ## With continuation

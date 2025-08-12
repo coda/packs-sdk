@@ -650,8 +650,8 @@ export const Examples: Example[] = [
       },
       {
         name: 'With parameter',
-        content: 'A sync table that uses a parameter. This sample syncs cat photos from the CatAAS API.',
-        codeFile: './samples/packs/cats/sync_table.ts',
+        content: 'A sync table that uses a parameter. This sample syncs the list of emojis.',
+        codeFile: './samples/packs/sync-table/emojis.ts',
       },
       {
         name: 'With continuation',

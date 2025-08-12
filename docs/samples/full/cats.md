@@ -10,7 +10,6 @@ This Pack allows you to fetch random cat photos using the [Cat-as-a-service API]
 
 - A formula for fetching a cat photo.
 - A column format that displays the text on top of a cat photo.
-- A sync table that retrieves all available cat photos.
 
 [cataas]: https://cataas.com/
 
@@ -22,27 +21,9 @@ This Pack allows you to fetch random cat photos using the [Cat-as-a-service API]
 
     pack.addNetworkDomain("cataas.com");
 
-    // Tag parameter, shared across multiple formulas.
-    const TagParameter = coda.makeParameter({
-      type: coda.ParameterType.String,
-      name: "tag",
-      description: "Only cats with this tag will be selected.",
-      optional: true,
-      // Pull the list of tags to use for autocomplete from the API.
-      autocomplete: async function (context, search) {
-        let response = await context.fetcher.fetch({
-          method: "GET",
-          url: "https://cataas.com/api/tags",
-        });
-        let tags = response.body;
-        // Convert the tags into a list of autocomplete options.
-        return coda.simpleAutocomplete(search, tags);
-      },
-    });
-
-    // Formula that fetches a random cat image, with various options.
+    // Formula that fetches a random cat photo, with various options.
     pack.addFormula({
-      name: "CatImage",
+      name: "CatPhoto",
       description: "Gets a random cat image.",
       parameters: [
         coda.makeParameter({
@@ -79,27 +60,21 @@ This Pack allows you to fetch random cat photos using the [Cat-as-a-service API]
           type: coda.ParameterType.String,
           name: "filter",
           description: "A filter to apply to the image.",
-          autocomplete: ["blur", "mono", "sepia", "negative", "paint", "pixel"],
+          autocomplete: ["mono", "negate"],
           optional: true,
         }),
-        TagParameter,
       ],
       resultType: coda.ValueType.String,
       codaType: coda.ValueHintType.ImageReference,
-      execute: async function (
-        [text, size, color, width, height, filter, tag],
-        context,
-        ) {
+      execute: async function (args, context) {
+        let [text, size, color, width, height, filter] = args;
         let url = "https://cataas.com/cat";
-        if (tag) {
-          url += "/" + tag;
-        }
         if (text) {
           url += "/says/" + encodeURIComponent(text);
         }
         url = coda.withQueryParams(url, {
-          size: size,
-          color: color,
+          fontSize: size,
+          fontColor: color,
           width: width,
           height: height,
           filter: filter,
@@ -110,77 +85,16 @@ This Pack allows you to fetch random cat photos using the [Cat-as-a-service API]
           url: url,
           cacheTtlSecs: 0, // Don't cache the result, so we can get a fresh cat.
         });
-        return "https://cataas.com" + response.body.url;
+        return response.body.url;
       },
     });
 
     // Column format that displays the cell's value within a random cat image,
-    // using the CatImage() formula defined above.
+    // using the CatPhoto() formula defined above.
     pack.addColumnFormat({
-      name: "Cat Image",
-      instructions: "Displays the text over the image of a random cat.",
-      formulaName: "CatImage",
-    });
-
-    // Schema for a Cat image.
-    const CatSchema = coda.makeObjectSchema({
-      properties: {
-        image: {
-          description: "The cat image.",
-          type: coda.ValueType.String,
-          codaType: coda.ValueHintType.ImageReference,
-        },
-        tags: {
-          description: "The tags used to categorize this cat.",
-          type: coda.ValueType.Array,
-          items: coda.makeSchema({ type: coda.ValueType.String }),
-        },
-        created: {
-          description: "When the cat image was added.",
-          type: coda.ValueType.String,
-          codaType: coda.ValueHintType.DateTime,
-        },
-        id: { type: coda.ValueType.String },
-      },
-      displayProperty: "image",
-      idProperty: "id",
-      featuredProperties: ["tags"],
-    });
-
-    // Sync table that retrieves all cat images, optionally filtered by tags.
-    pack.addSyncTable({
-      name: "Cats",
-      identityName: "Cat",
-      schema: CatSchema,
-      connectionRequirement: coda.ConnectionRequirement.None,
-      formula: {
-        name: "SyncCats",
-        description: "Syncs the cats.",
-        parameters: [TagParameter],
-        execute: async function ([tag], context) {
-          let url = coda.withQueryParams("https://cataas.com/api/cats", {
-            tags: tag,
-            limit: 10000,
-          });
-          let response = await context.fetcher.fetch({
-            method: "GET",
-            url: url,
-          });
-          let cats = response.body;
-          let result = [];
-          for (let cat of cats) {
-            result.push({
-              image: "https://cataas.com/cat/" + cat._id,
-              tags: cat.tags,
-              created: cat.createdAt,
-              id: cat._id,
-            });
-          }
-          return {
-            result: result,
-          };
-        },
-      },
+      name: "Cat Photo",
+      instructions: "Displays the text over the photo of a random cat.",
+      formulaName: "CatPhoto",
     });
     ```
 

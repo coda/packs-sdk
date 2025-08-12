@@ -323,9 +323,9 @@ A formula that returns an image, as a reference. This sample returns a random ph
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
-// Formula that fetches a random cat image, with various options.
+// Formula that fetches a random cat photo, with various options.
 pack.addFormula({
-  name: "CatImage",
+  name: "CatPhoto",
   description: "Gets a random cat image.",
   parameters: [
     coda.makeParameter({
@@ -338,13 +338,14 @@ pack.addFormula({
       type: coda.ParameterType.String,
       name: "filter",
       description: "A filter to apply to the image.",
-      autocomplete: ["blur", "mono", "sepia", "negative", "paint", "pixel"],
+      autocomplete: ["mono", "negate"],
       optional: true,
     }),
   ],
   resultType: coda.ValueType.String,
   codaType: coda.ValueHintType.ImageReference,
-  execute: async function ([text, filter], context) {
+  execute: async function (args, context) {
+    let [text, filter] = args;
     let url = "https://cataas.com/cat";
     if (text) {
       url += "/says/" + encodeURIComponent(text);
@@ -358,7 +359,7 @@ pack.addFormula({
       url: url,
       cacheTtlSecs: 0, // Don't cache the result, so we can get a fresh cat.
     });
-    return "https://cataas.com" + response.body.url;
+    return response.body.url;
   },
 });
 
