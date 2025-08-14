@@ -69,7 +69,7 @@ In addition to supplying the role and external ID, the user authenticating the P
       "Action": "sts:AssumeRole",
       "Condition": {
         "StringEquals": {
-          "sts:ExternalId": "<INSERT_SECRET_VALUE_HERE>"
+          "sts:ExternalId": "<PACK_ID>:<EXTERNAL_ID>"
         }
       }
     }
@@ -77,7 +77,9 @@ In addition to supplying the role and external ID, the user authenticating the P
 }
 ```
 
-Coda's AWS account has the ID `arn:aws:iam::029208794193:root`, and this is same for all Packs. To ensure that other Packs can't access the role, users must generate an external ID (usually a UUID) to act as a shared secret. While AWS doesn't strictly require an external ID to use the `AssumeRole` flow, it is recommended for cross-account access scenarios like this and Coda enforces it as a best practice.
+Coda's AWS account has the ID `arn:aws:iam::029208794193:root`, and this is same for all Packs. 
+
+The external ID condition is used as a security measure, to ensure that other Packs can't also use the role. When signing a request, Coda will prepend the Pack ID to the user-supplied external ID value, with the format `<PACK_ID>:<EXTERNAL_ID>`. While AWS doesn't strictly require an external ID to use the `AssumeRole` flow, it is recommended for cross-account access scenarios like this and Coda enforces it as a best practice.
 
 
 ### Running locally
