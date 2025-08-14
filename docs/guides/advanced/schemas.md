@@ -413,6 +413,21 @@ let MovieSchema = coda.makeObjectSchema({
 });
 ```
 
+??? warning "Max row ID length is 1024 characters"
+
+    To work correctly in all parts of the platform, row IDs shouldn't be longer than 1024 characters. If the records come from an API that returns longer IDs, we recommend adding another property to your schema that contains a hash of the original ID and using it as the `idProperty` instead.
+
+    ```{.ts hl_lines="4 6"}
+    let MovieSchema = coda.makeObjectSchema({
+      properties: {
+        id: { type: coda.ValueType.String, description: "External ID of the record." },
+        rowId: { type: coda.ValueType.String, description: "Internal ID of the Coda row." },
+      },
+      idProperty: "rowId",
+      // ...
+    });
+    ```
+
 
 ### Schema identity
 
