@@ -17,11 +17,6 @@ pack.setUserAuthentication({
     "user.read",
   ],
 
-  // Additional parameters to ensure a refresh_token is returned.
-  additionalParams: {
-    prompt: "consent",
-  },
-
   // Enable PKCE (optional but recommended).
   useProofKeyForCodeExchange: true,
 
