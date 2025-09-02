@@ -5909,6 +5909,8 @@ export interface PackFormatMetadata extends Omit<Format, "matchers"> {
 	matchers: string[];
 }
 /** @hidden */
+export type SkillMetadata = Omit<Skill, "prompt">;
+/** @hidden */
 export type PostSetupMetadata = Omit<PostSetup, "getOptions" | "getOptionsFormula"> & {
 	getOptions?: MetadataFormulaMetadata;
 	getOptionsFormula?: MetadataFormulaMetadata;
@@ -5944,7 +5946,9 @@ export type ExternalPackFormat = Omit<Format, "matchers"> & {
 export type ExternalPackFormatMetadata = PackFormatMetadata;
 /** @hidden */
 export type ExternalSyncTable = PackSyncTable;
-export type BasePackVersionMetadata = Omit<PackVersionMetadata, "defaultAuthentication" | "systemConnectionAuthentication" | "formulas" | "formats" | "syncTables">;
+/** @hidden */
+export type ExternalSkill = SkillMetadata;
+export type BasePackVersionMetadata = Omit<PackVersionMetadata, "defaultAuthentication" | "systemConnectionAuthentication" | "formulas" | "formats" | "syncTables" | "skills">;
 /** @hidden */
 export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
 	authentication: {
@@ -5968,6 +5972,7 @@ export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
 	formulas?: ExternalPackFormulas;
 	formats?: ExternalPackFormat[];
 	syncTables?: ExternalSyncTable[];
+	skills?: ExternalSkill[];
 }
 /** @hidden */
 export type ExternalPackMetadata = ExternalPackVersionMetadata & Pick<PackMetadata, "id" | "name" | "shortDescription" | "description" | "permissionsDescription" | "category" | "logoPath" | "exampleImages" | "exampleVideoIds" | "minimumFeatureSet" | "quotas" | "rateLimits" | "isSystem">;

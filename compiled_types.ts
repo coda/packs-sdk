@@ -22,6 +22,7 @@ import type {PackFormulaMetadata} from './api';
 import type {PackVersionDefinition} from './types';
 import type {PostSetup} from './types';
 import type {QueryParamTokenAuthentication} from './types';
+import type {Skill} from './types';
 import type {SyncTable} from './api';
 import type {VariousAuthentication} from './types';
 import type {WebBasicAuthentication} from './types';
@@ -50,6 +51,9 @@ export type PackSyncTable = Omit<
 export interface PackFormatMetadata extends Omit<Format, 'matchers'> {
   matchers: string[];
 }
+
+/** @hidden */
+export type SkillMetadata = Omit<Skill, 'prompt'>;
 
 /** @hidden */
 export type PostSetupMetadata = Omit<PostSetup, 'getOptions' | 'getOptionsFormula'> & {
@@ -145,10 +149,12 @@ export type ExternalPackFormat = Omit<Format, 'matchers'> & {matchers?: string[]
 export type ExternalPackFormatMetadata = PackFormatMetadata;
 /** @hidden */
 export type ExternalSyncTable = PackSyncTable;
+/** @hidden */
+export type ExternalSkill = SkillMetadata;
 
 type BasePackVersionMetadata = Omit<
   PackVersionMetadata,
-  'defaultAuthentication' | 'systemConnectionAuthentication' | 'formulas' | 'formats' | 'syncTables'
+  'defaultAuthentication' | 'systemConnectionAuthentication' | 'formulas' | 'formats' | 'syncTables' | 'skills'
 >;
 
 // Further stripped-down version of `PackVersionMetadata` that contains only what the browser needs.
@@ -174,6 +180,7 @@ export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
   formulas?: ExternalPackFormulas;
   formats?: ExternalPackFormat[];
   syncTables?: ExternalSyncTable[];
+  skills?: ExternalSkill[];
 }
 
 // Further stripped-down version of `PackMetadata` that contains only what the browser needs.

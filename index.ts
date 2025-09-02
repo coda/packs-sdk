@@ -54,6 +54,7 @@ export type {PackFormatMetadata} from './compiled_types';
 export type {PackSyncTable} from './compiled_types';
 export type {PackMetadata} from './compiled_types';
 export type {PackVersionMetadata} from './compiled_types';
+export type {SkillMetadata} from './compiled_types';
 
 // Browser interfaces
 export type {ExternalPackFormat} from './compiled_types';
@@ -64,6 +65,7 @@ export type {ExternalPackFormulas} from './compiled_types';
 export type {ExternalSyncTable} from './compiled_types';
 export type {ExternalPackMetadata} from './compiled_types';
 export type {ExternalPackVersionMetadata} from './compiled_types';
+export type {ExternalSkill} from './compiled_types';
 
 // Formula related interfaces
 export type {ArrayType} from './api_types';
