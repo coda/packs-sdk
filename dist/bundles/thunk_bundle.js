@@ -1856,7 +1856,7 @@ module.exports = (() => {
         return obj !== obj;
       }
       __name(numberIsNaN, "numberIsNaN");
-      var hexSliceLookupTable = function() {
+      var hexSliceLookupTable = (function() {
         const alphabet = "0123456789abcdef";
         const table = new Array(256);
         for (let i = 0; i < 16; ++i) {
@@ -1866,7 +1866,7 @@ module.exports = (() => {
           }
         }
         return table;
-      }();
+      })();
       function defineBigIntMethod(fn) {
         return typeof BigInt === "undefined" ? BufferBigIntNotDefined : fn;
       }
@@ -1911,7 +1911,7 @@ module.exports = (() => {
   var require_clone = __commonJS({
     "node_modules/.pnpm/clone@2.1.2/node_modules/clone/clone.js"(exports, module) {
       init_buffer_shim();
-      var clone2 = function() {
+      var clone2 = (function() {
         "use strict";
         function _instanceof(obj, type) {
           return type != null && obj instanceof type;
@@ -2105,7 +2105,7 @@ module.exports = (() => {
         __name(__getRegExpFlags, "__getRegExpFlags");
         clone3.__getRegExpFlags = __getRegExpFlags;
         return clone3;
-      }();
+      })();
       if (typeof module === "object" && module.exports) {
         module.exports = clone2;
       }
@@ -2650,7 +2650,7 @@ module.exports = (() => {
       var throwTypeError = /* @__PURE__ */ __name(function() {
         throw new $TypeError();
       }, "throwTypeError");
-      var ThrowTypeError = $gOPD ? function() {
+      var ThrowTypeError = $gOPD ? (function() {
         try {
           arguments.callee;
           return throwTypeError;
@@ -2661,7 +2661,7 @@ module.exports = (() => {
             return throwTypeError;
           }
         }
-      }() : throwTypeError;
+      })() : throwTypeError;
       var hasSymbols = require_has_symbols()();
       var getProto = require_get_proto();
       var $ObjectGPO = require_Object_getPrototypeOf();
@@ -3839,13 +3839,13 @@ module.exports = (() => {
       var formats = require_formats();
       var has = Object.prototype.hasOwnProperty;
       var isArray2 = Array.isArray;
-      var hexTable = function() {
+      var hexTable = (function() {
         var array = [];
         for (var i = 0; i < 256; ++i) {
           array.push("%" + ((i < 16 ? "0" : "") + i.toString(16)).toUpperCase());
         }
         return array;
-      }();
+      })();
       var compactQueue = /* @__PURE__ */ __name(function compactQueue2(queue) {
         while (queue.length > 1) {
           var item = queue.pop();
@@ -4942,9 +4942,9 @@ module.exports = (() => {
         }
         return value !== null && typeof value === "object" && typeof value.length === "number" && value.length >= 0 && $toString(value) !== "[object Array]" && $toString(value.callee) === "[object Function]";
       }, "isArguments");
-      var supportsStandardArguments = function() {
+      var supportsStandardArguments = (function() {
         return isStandardArguments(arguments);
-      }();
+      })();
       isStandardArguments.isLegacyArguments = isLegacyArguments;
       module.exports = supportsStandardArguments ? isStandardArguments : isLegacyArguments;
     }
