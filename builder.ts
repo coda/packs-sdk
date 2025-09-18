@@ -16,6 +16,7 @@ import type {PackVersionDefinition} from './types';
 import type {ParamDefs} from './api_types';
 import type {Schema} from './schema';
 import type {Skill} from './types';
+import type {McpProvider} from './types';
 import type {SkillEntrypoints} from './types';
 import type {SyncExecutionContext} from './api_types';
 import type {SyncPassthroughData} from './api';
@@ -71,6 +72,11 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    */
   skills: Skill[];
   /**
+   * See {@link PackVersionDefinition.mcpProviders}.
+   * @hidden
+   */
+  mcpProviders: McpProvider[];
+  /**
    * See {@link PackVersionDefinition.skillEntrypoints}.
    * @hidden
    */
@@ -114,6 +120,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       formats,
       syncTables,
       skills,
+      mcpProviders,
       networkDomains,
       defaultAuthentication,
       systemConnectionAuthentication,
@@ -125,6 +132,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     this.formats = formats || [];
     this.syncTables = syncTables || [];
     this.skills = skills || [];
+    this.mcpProviders = mcpProviders || [];
     this.skillEntrypoints = skillEntrypoints;
     this.networkDomains = networkDomains || [];
     this.defaultAuthentication = defaultAuthentication;
@@ -278,6 +286,27 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    */
   addSkill(skill: Skill): this {
     this.skills.push(skill);
+    return this;
+  }
+
+  /**
+   * Adds an MCP provider definition to this pack.
+   *
+   * MCP providers allow packs to integrate with external AI agents and services
+   * using the Model Context Protocol.
+   *
+   * @example
+   * ```
+   * pack.addMcpProvider({
+   *   endpoint: 'http://localhost:3000/mcp',
+   *   agentName: 'MyAgent',
+   *   agentVersion: '1.0.0'
+   * });
+   * ```
+   * @hidden
+   */
+  addMcpProvider(mcpProvider: McpProvider): this {
+    this.mcpProviders.push(mcpProvider);
     return this;
   }
 

@@ -1370,6 +1370,20 @@ export interface Skill {
 }
 
 /**
+ * Definition of an MCP (Model Context Protocol) provider for this pack.
+ * MCP providers allow packs to integrate with external AI agents and services.
+ * @hidden
+ */
+export interface McpProvider {
+  /** The MCP endpoint URL to connect to. */
+  endpoint: string;
+  /** The name of the agent that will use this MCP provider. */
+  agentName: string;
+  /** The version of the agent that will use this MCP provider. */
+  agentVersion: string;
+}
+
+/**
  * Configuration for a skill entrypoint.
  * @hidden
  */
@@ -1453,6 +1467,11 @@ export interface PackVersionDefinition {
    * @hidden
    */
   skills?: Skill[];
+  /**
+   * Definitions of MCP providers that can be used within this pack.
+   * @hidden
+   */
+  mcpProviders?: McpProvider[];
   /**
    * Mapping of skills to entrypoints that the pack agent can be invoked from.
    * @hidden

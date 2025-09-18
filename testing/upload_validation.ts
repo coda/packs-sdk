@@ -95,6 +95,7 @@ import type {SetEndpoint} from '../types';
 import {SimpleStringHintValueTypes} from '../schema';
 import type {SimpleStringSchema} from '../schema';
 import type {Skill} from '../types';
+import type {McpProvider} from '../types';
 import type {SkillEntrypointConfig} from '../types';
 import type {SkillEntrypoints} from '../types';
 import type {SliderSchema} from '../schema';
@@ -167,6 +168,7 @@ export const Limits = {
   BuildingBlockDescription: 1000,
   ColumnMatcherRegex: 300,
   MaxSkillCount: 15,
+  MaxMcpProviderCount: 10,
   NumColumnMatchersPerFormat: 10,
   NetworkDomainUrl: 253,
   PermissionsBatchSize: 5000,
@@ -2160,6 +2162,12 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     tools: z.array(toolSchema),
   });
 
+  const mcpProviderSchema = zodCompleteObject<McpProvider>({
+    endpoint: z.string().min(1).url('MCP provider endpoint must be a valid URL'),
+    agentName: z.string().min(1).max(Limits.BuildingBlockName),
+    agentVersion: z.string().min(1).max(50),
+  });
+
   const skillEntrypointConfigSchema = zodCompleteStrictObject<SkillEntrypointConfig>({
     skillName: z.string(),
   });
@@ -2282,6 +2290,20 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           context.addIssue({
             code: z.ZodIssueCode.custom,
             message: `Skill names must be unique. Found duplicate name "${dupe}".`,
+          });
+        }
+      }),
+    mcpProviders: z
+      .array(mcpProviderSchema)
+      .max(Limits.MaxMcpProviderCount)
+      .optional()
+      .default([])
+      .superRefine((data, context) => {
+        const endpointNames = data.map(provider => provider.endpoint);
+        for (const dupe of getNonUniqueElements(endpointNames)) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `MCP provider endpoints must be unique. Found duplicate endpoint "${dupe}".`,
           });
         }
       }),

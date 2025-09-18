@@ -293,6 +293,7 @@ export type {PackTool} from './types';
 export type {ScreenAnnotationTool} from './types';
 export type {AssistantMessageTool} from './types';
 export type {Skill} from './types';
+export type {McpProvider} from './types';
 export type {Tool} from './types';
 export {KnowledgeToolSourceType} from './types';
 export {ScreenAnnotationType} from './types';
