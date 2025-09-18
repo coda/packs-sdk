@@ -1063,10 +1063,14 @@ export declare enum ToolType {
     ScreenAnnotation = "ScreenAnnotation",
     /**
      * Allows assistant messages to be used as tools.
-     * This tool is for internal usage only.
      * @hidden
      */
-    AssistantMessage = "AssistantMessage"
+    AssistantMessage = "AssistantMessage",
+    /**
+     * Allows reuse of the default tuned summarizer agent as a tool.
+     * @hidden
+     */
+    Summarizer = "Summarizer"
 }
 /**
  * The type identifier for a tool
@@ -1195,6 +1199,12 @@ export interface ScreenAnnotationTool extends BaseTool<ToolType.ScreenAnnotation
 export interface AssistantMessageTool extends BaseTool<ToolType.AssistantMessage> {
 }
 /**
+ * Tool that provides access to summarization capabilities.
+ * @hidden
+ */
+export interface SummarizerTool extends BaseTool<ToolType.Summarizer> {
+}
+/**
  * Map of tool types to their corresponding tool interfaces.
  * This interface can be extended via declaration merging to add custom tool types.
  * @hidden
@@ -1204,6 +1214,7 @@ export interface ToolMap {
     [ToolType.Knowledge]: KnowledgeTool;
     [ToolType.ScreenAnnotation]: ScreenAnnotationTool;
     [ToolType.AssistantMessage]: AssistantMessageTool;
+    [ToolType.Summarizer]: SummarizerTool;
 }
 /**
  * Union of all supported tool types.

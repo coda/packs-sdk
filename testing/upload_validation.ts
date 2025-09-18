@@ -104,6 +104,7 @@ import type {StringEmbedSchema} from '../schema';
 import type {StringPackFormula} from '../api';
 import type {StringTimeSchema} from '../schema';
 import type {StringWithOptionsSchema} from '../schema';
+import type {SummarizerTool} from '../types';
 import type {SyncExecutionContext} from '..';
 import type {SyncFormula} from '../api';
 import type {SyncPassthroughData} from '../api';
@@ -2142,11 +2143,16 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     type: z.literal(ToolType.AssistantMessage),
   });
 
+  const summarizerToolSchema = zodCompleteStrictObject<SummarizerTool>({
+    type: z.literal(ToolType.Summarizer),
+  });
+
   const toolSchema = z.discriminatedUnion('type', [
     packToolSchema,
     knowledgeToolSchema,
     screenAnnotationToolSchema,
     assistantMessageToolSchema,
+    summarizerToolSchema,
   ]);
   const skillSchema = zodCompleteObject<Skill>({
     name: z

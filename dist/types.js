@@ -239,10 +239,14 @@ var ToolType;
     ToolType["ScreenAnnotation"] = "ScreenAnnotation";
     /**
      * Allows assistant messages to be used as tools.
-     * This tool is for internal usage only.
      * @hidden
      */
     ToolType["AssistantMessage"] = "AssistantMessage";
+    /**
+     * Allows reuse of the default tuned summarizer agent as a tool.
+     * @hidden
+     */
+    ToolType["Summarizer"] = "Summarizer";
 })(ToolType || (exports.ToolType = ToolType = {}));
 /**
  * The type of knowledge source to use.

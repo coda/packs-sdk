@@ -1633,11 +1633,15 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     const assistantMessageToolSchema = zodCompleteStrictObject({
         type: z.literal(types_9.ToolType.AssistantMessage),
     });
+    const summarizerToolSchema = zodCompleteStrictObject({
+        type: z.literal(types_9.ToolType.Summarizer),
+    });
     const toolSchema = z.discriminatedUnion('type', [
         packToolSchema,
         knowledgeToolSchema,
         screenAnnotationToolSchema,
         assistantMessageToolSchema,
+        summarizerToolSchema,
     ]);
     const skillSchema = zodCompleteObject({
         name: z
