@@ -297,3 +297,40 @@ export type {Tool} from './types';
 export {KnowledgeToolSourceType} from './types';
 export {ScreenAnnotationType} from './types';
 export {ToolType} from './types';
+
+// MCP (Model Context Protocol) types and interfaces
+export type {McpAuthentication} from './mcp_types';
+export type {McpCapabilities} from './mcp_types';
+export type {McpClient} from './mcp_types';
+export type {McpClientInfo} from './mcp_types';
+export type {McpContent} from './mcp_types';
+export type {McpError} from './mcp_types';
+export type {McpExecutionContext} from './mcp_types';
+export type {McpProviderConfig} from './mcp_types';
+export type {McpRequest} from './mcp_types';
+export type {McpResponse} from './mcp_types';
+export type {McpSession} from './mcp_types';
+export type {McpTool} from './mcp_types';
+export type {McpToolCall} from './mcp_types';
+export type {McpToolResult} from './mcp_types';
+export type {SseEvent} from './mcp_types';
+
+// MCP client and utilities
+export {createMcpClient} from './mcp_client';
+export {McpClientImpl} from './mcp_client';
+
+// MCP helper functions
+export {McpToolSchema} from './mcp_helpers';
+export {callMcpTool} from './mcp_helpers';
+export {createBearerTokenMcpAuth} from './mcp_helpers';
+export {createMcpProviderConfig} from './mcp_helpers';
+export {createOAuth2McpAuth} from './mcp_helpers';
+export {extractDomainFromEndpoint} from './mcp_helpers';
+export {initializeMcpSession} from './mcp_helpers';
+export {listMcpTools} from './mcp_helpers';
+export {validateMcpProviderConfig} from './mcp_helpers';
+
+// MCP pack integration extensions
+export {addMcpProvider} from './mcp_extensions';
+export {createGenericMcpPack} from './mcp_extensions';
+export {McpProviders} from './mcp_extensions';
