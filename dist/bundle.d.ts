@@ -4957,11 +4957,7 @@ export declare enum TokenExchangeCredentialsLocation {
  * @example
  * ```ts
  * pack.setUserAuthentication({
- *   type: coda.AuthenticationType.MultiQueryParamToken,
- *   params: [
- *     { name: "key", description: "The key." },
- *     { name: "secret", description: "The secret." },
- *   ],
+ *   type: coda.AuthenticationType.WebBasic,
  * });
  * ```
  *

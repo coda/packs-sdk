@@ -15,11 +15,7 @@ Authenticate using HTTP Basic authorization. The user provides a username and pa
 
 ```ts
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.MultiQueryParamToken,
-  params: [
-    { name: "key", description: "The key." },
-    { name: "secret", description: "The secret." },
-  ],
+  type: coda.AuthenticationType.WebBasic,
 });
 ```
 
