@@ -1,16 +1,17 @@
 # MCP (Model Context Protocol) Integration
 
-The Coda Packs SDK now supports integration with Model Context Protocol (MCP) providers, allowing packs to connect to external MCP servers and invoke their tools programmatically.
+The Coda Packs SDK provides types and API functions for integrating with Model Context Protocol (MCP) providers. The actual MCP functionality is implemented in the Coda runtime environment.
 
 ## Overview
 
-MCP is a protocol that allows applications to connect to external tools and services in a standardized way. With MCP support in the Packs SDK, you can:
+MCP is a protocol that allows applications to connect to external tools and services in a standardized way. The Packs SDK provides the interface for:
 
-- Connect to any MCP-compatible server
-- List available tools from MCP providers
-- Call MCP tools with parameters
-- Handle authentication (OAuth2, Bearer tokens)
-- Parse responses in JSON or Server-Sent Events format
+- Configuring MCP providers with type safety
+- Adding MCP support to packs through simple API calls
+- Defining authentication and network requirements
+- Accessing MCP tools through automatically generated formulas
+
+**Note**: The SDK provides the interface and types - the actual MCP client implementation and formula generation happens in the Coda runtime.
 
 ## Quick Start
 
@@ -56,18 +57,19 @@ Creates generic MCP formulas that work with any MCP server:
 - `McpListTools(sessionId)` - List tools from the server
 - `McpCallTool(sessionId, name, arguments?)` - Call a specific tool
 
-### Helper Functions
+### Generated Formulas
 
-```typescript
-// Initialize MCP session
-const sessionId = await coda.initializeMcpSession(config, context);
+When you use `addMcpProvider()` or `createGenericMcpPack()`, the Coda runtime automatically generates formulas:
 
-// List available tools
-const tools = await coda.listMcpTools(sessionId, context);
+**Provider-specific (e.g., Linear):**
+- `LinearInitSession()` - Initialize session with Linear MCP server
+- `LinearListTools(sessionId)` - List available Linear tools
+- `LinearCallTool(sessionId, toolName, arguments)` - Call a Linear tool
 
-// Call a specific tool
-const result = await coda.callMcpTool(sessionId, 'tool_name', {arg1: 'value'}, context);
-```
+**Generic MCP:**
+- `McpInitSession(endpoint, name?)` - Initialize session with any MCP server
+- `McpListTools(sessionId)` - List tools from MCP server
+- `McpCallTool(sessionId, toolName, arguments?)` - Call any MCP tool
 
 ## Configuration
 
@@ -127,44 +129,14 @@ pack.setName('Linear MCP Integration');
 pack.setDescription('Connect to Linear via MCP');
 
 // Add Linear MCP provider
+// This automatically creates LinearInitSession(), LinearListTools(), and LinearCallTool()
 coda.addMcpProvider(pack, coda.McpProviders.Linear());
 
-// Custom formula using MCP
-pack.addFormula({
-  name: 'CreateIssue',
-  description: 'Create a Linear issue using MCP',
-  parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
-      name: 'title',
-      description: 'Issue title',
-    }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
-      name: 'description',
-      description: 'Issue description',
-    }),
-  ],
-  resultType: coda.ValueType.String,
-  isAction: true,
-  async execute(args, context) {
-    const [title, description] = args;
-
-    // Initialize Linear MCP session
-    const sessionId = await coda.initializeMcpSession(
-      coda.McpProviders.Linear(),
-      context
-    );
-
-    // Create the issue
-    return await coda.callMcpTool(
-      sessionId,
-      'create_issue',
-      { title, description },
-      context
-    );
-  },
-});
+// The MCP integration is now complete!
+// Users can use the generated formulas:
+// - LinearInitSession() to start a session
+// - LinearListTools(sessionId) to see available tools
+// - LinearCallTool(sessionId, toolName, arguments) to call tools
 ```
 
 ## Types Reference
@@ -182,31 +154,37 @@ pack.addFormula({
 - `McpAuthentication` - Authentication configuration union type
 - Support for OAuth2, Bearer token, and no authentication
 
-## Error Handling
-
-The SDK automatically handles MCP errors and converts them to `UserVisibleError`:
-
-```typescript
-try {
-  const result = await coda.callMcpTool(sessionId, 'tool_name', args, context);
-  return result;
-} catch (error) {
-  // Error is automatically converted to UserVisibleError
-  throw error;
-}
-```
-
 ## Best Practices
 
-1. **Validate Configuration**: Use `validateMcpProviderConfig()` to check configs
-2. **Handle Sessions**: Store session IDs appropriately for your use case
-3. **Network Domains**: Specify explicit domains rather than using wildcards
-4. **Authentication**: Use OAuth2 for user-facing packs, Bearer tokens for service accounts
-5. **Error Handling**: MCP errors are automatically converted to user-friendly messages
+1. **Use Built-in Providers**: Use `McpProviders.Linear()` and `McpProviders.Custom()` helpers when possible
+2. **Network Domains**: Specify explicit domains rather than using wildcards
+3. **Authentication**: Use OAuth2 for user-facing packs, Bearer tokens for service accounts
+4. **Configuration**: Use `createMcpProviderConfig()` for custom providers
+5. **Documentation**: Document the generated formulas for your pack users
 
-## Limitations
+## Runtime Implementation
 
-- Sessions are not persistent across pack executions
-- Authentication tokens must be managed by the pack's auth system
-- Network requests are subject to Coda's fetcher limitations
-- SSE responses are parsed but not streamed (full response is read first)
+The actual MCP functionality is implemented in the Coda runtime:
+
+- **Session Management**: Sessions are handled by the runtime
+- **Authentication**: OAuth2 and Bearer token auth is managed by Coda's auth system
+- **Network Requests**: Uses Coda's secure fetcher system
+- **Error Handling**: MCP errors are converted to user-friendly messages
+- **Formula Generation**: Formulas are automatically created and registered
+
+## SDK vs Runtime
+
+**SDK Provides:**
+- Type definitions for MCP protocol
+- Configuration interfaces
+- API function signatures
+- Built-in provider configs
+- TypeScript intellisense and validation
+
+**Runtime Provides:**
+- Actual MCP client implementation
+- JSON-RPC 2.0 protocol handling
+- Session management
+- Authentication integration
+- Formula execution
+- Error handling and user feedback

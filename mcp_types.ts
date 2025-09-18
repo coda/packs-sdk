@@ -2,7 +2,8 @@
  * Types and interfaces for Model Context Protocol (MCP) integration with Packs.
  *
  * The Model Context Protocol allows packs to connect to external MCP providers
- * and invoke their tools programmatically.
+ * and invoke their tools programmatically. These types define the public API
+ * for MCP integration - the actual implementation is provided by the Coda runtime.
  *
  * @see [MCP Specification](https://github.com/modelcontextprotocol/specification)
  */

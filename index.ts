@@ -315,22 +315,8 @@ export type {McpToolCall} from './mcp_types';
 export type {McpToolResult} from './mcp_types';
 export type {SseEvent} from './mcp_types';
 
-// MCP client and utilities
-export {createMcpClient} from './mcp_client';
-export {McpClientImpl} from './mcp_client';
-
-// MCP helper functions
-export {McpToolSchema} from './mcp_helpers';
-export {callMcpTool} from './mcp_helpers';
-export {createBearerTokenMcpAuth} from './mcp_helpers';
-export {createMcpProviderConfig} from './mcp_helpers';
-export {createOAuth2McpAuth} from './mcp_helpers';
-export {extractDomainFromEndpoint} from './mcp_helpers';
-export {initializeMcpSession} from './mcp_helpers';
-export {listMcpTools} from './mcp_helpers';
-export {validateMcpProviderConfig} from './mcp_helpers';
-
-// MCP pack integration extensions
-export {addMcpProvider} from './mcp_extensions';
-export {createGenericMcpPack} from './mcp_extensions';
-export {McpProviders} from './mcp_extensions';
+// MCP API functions (implementation provided by Coda runtime)
+export {addMcpProvider} from './mcp_api';
+export {createGenericMcpPack} from './mcp_api';
+export {createMcpProviderConfig} from './mcp_api';
+export {McpProviders} from './mcp_api';
