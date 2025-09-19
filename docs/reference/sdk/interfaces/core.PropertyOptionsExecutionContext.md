@@ -19,6 +19,20 @@ mutable sync tables for properties with `options` enabled.
 
 ## Properties
 
+### agentWaitWebhookUrl
+
+• `Optional` `Readonly` **agentWaitWebhookUrl**: `string`
+
+For agent-based formulas that execute when the Wait tool has been added to the agent skill, this will be populated
+with the webhook URL that can be used by the third party API to signal that the wait condition has been met.
+Payloads sent to this URL will be made available to the agent loop.
+
+#### Inherited from
+
+[SyncExecutionContext](core.SyncExecutionContext.md).[agentWaitWebhookUrl](core.SyncExecutionContext.md#agentwaitwebhookurl)
+
+___
+
 ### endpoint
 
 • `Optional` `Readonly` **endpoint**: `string`

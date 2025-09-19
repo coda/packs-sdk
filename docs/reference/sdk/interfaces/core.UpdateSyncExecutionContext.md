@@ -20,6 +20,20 @@ this contains the [Fetcher](core.Fetcher.md), which is used for making HTTP requ
 
 ## Properties
 
+### agentWaitWebhookUrl
+
+• `Optional` `Readonly` **agentWaitWebhookUrl**: `string`
+
+For agent-based formulas that execute when the Wait tool has been added to the agent skill, this will be populated
+with the webhook URL that can be used by the third party API to signal that the wait condition has been met.
+Payloads sent to this URL will be made available to the agent loop.
+
+#### Inherited from
+
+[ExecutionContext](core.ExecutionContext.md).[agentWaitWebhookUrl](core.ExecutionContext.md#agentwaitwebhookurl)
+
+___
+
 ### endpoint
 
 • `Optional` `Readonly` **endpoint**: `string`

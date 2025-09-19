@@ -1195,6 +1195,11 @@ export enum ToolType {
    * @hidden
    */
   AssistantMessage = 'AssistantMessage',
+  /**
+   * Allows waiting for a specific condition to be met.
+   * @hidden
+   */
+  Wait = 'Wait',
 }
 
 /**
@@ -1334,6 +1339,29 @@ export interface ScreenAnnotationTool extends BaseTool<ToolType.ScreenAnnotation
  */
 export interface AssistantMessageTool extends BaseTool<ToolType.AssistantMessage> {}
 
+export enum WaitConditionType {
+  Time = 'Time',
+  Webhook = 'Webhook',
+}
+
+/**
+ * Base interface for all wait tool sources.
+ * @hidden
+ */
+interface BaseWaitToolSource<T extends WaitConditionType> {
+  type: T;
+}
+
+interface WaitConditionTime extends BaseWaitToolSource<WaitConditionType.Time> {}
+
+interface WaitConditionWebhook extends BaseWaitToolSource<WaitConditionType.Webhook> {}
+
+type WaitCondition = WaitConditionTime | WaitConditionWebhook;
+
+export interface WaitTool extends BaseTool<ToolType.Wait> {
+  condition: WaitCondition;
+}
+
 /**
  * Map of tool types to their corresponding tool interfaces.
  * This interface can be extended via declaration merging to add custom tool types.
@@ -1344,6 +1372,7 @@ export interface ToolMap {
   [ToolType.Knowledge]: KnowledgeTool;
   [ToolType.ScreenAnnotation]: ScreenAnnotationTool;
   [ToolType.AssistantMessage]: AssistantMessageTool;
+  [ToolType.Wait]: WaitTool;
 }
 
 /**

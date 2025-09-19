@@ -63,6 +63,7 @@ const api_types_6 = require("../api_types");
 const url_parse_1 = __importDefault(require("url-parse"));
 const schema_17 = require("../schema");
 const schema_18 = require("../schema");
+const types_10 = require("../types");
 const zod_1 = require("zod");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
@@ -1633,11 +1634,24 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     const assistantMessageToolSchema = zodCompleteStrictObject({
         type: z.literal(types_9.ToolType.AssistantMessage),
     });
+    const waitConditionSchema = z.discriminatedUnion('type', [
+        z.object({
+            type: z.literal(types_10.WaitConditionType.Time),
+        }),
+        z.object({
+            type: z.literal(types_10.WaitConditionType.Webhook),
+        }),
+    ]);
+    const waitToolSchema = zodCompleteStrictObject({
+        type: z.literal(types_9.ToolType.Wait),
+        condition: waitConditionSchema,
+    });
     const toolSchema = z.discriminatedUnion('type', [
         packToolSchema,
         knowledgeToolSchema,
         screenAnnotationToolSchema,
         assistantMessageToolSchema,
+        waitToolSchema,
     ]);
     const skillSchema = zodCompleteObject({
         name: z

@@ -42,6 +42,7 @@ import * as coda from "@codahq/packs-sdk";
 - [Type](../enums/core.Type.md)
 - [ValueHintType](../enums/core.ValueHintType.md)
 - [ValueType](../enums/core.ValueType.md)
+- [WaitConditionType](../enums/core.WaitConditionType.md)
 
 ## Classes
 
@@ -141,6 +142,7 @@ import * as coda from "@codahq/packs-sdk";
 - [UpdateSync](../interfaces/core.UpdateSync.md)
 - [UpdateSyncExecutionContext](../interfaces/core.UpdateSyncExecutionContext.md)
 - [ValidParameterValidationResult](../interfaces/core.ValidParameterValidationResult.md)
+- [WaitTool](../interfaces/core.WaitTool.md)
 - [WebBasicAuthentication](../interfaces/core.WebBasicAuthentication.md)
 
 ## Type Aliases

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HttpStatusCode = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.ToolType = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
+exports.HttpStatusCode = exports.WaitConditionType = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.ToolType = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
 /**
  * @deprecated
  */
@@ -243,6 +243,11 @@ var ToolType;
      * @hidden
      */
     ToolType["AssistantMessage"] = "AssistantMessage";
+    /**
+     * Allows waiting for a specific condition to be met.
+     * @hidden
+     */
+    ToolType["Wait"] = "Wait";
 })(ToolType || (exports.ToolType = ToolType = {}));
 /**
  * The type of knowledge source to use.
@@ -274,6 +279,11 @@ var ScreenAnnotationType;
      */
     ScreenAnnotationType["Guide"] = "Guide";
 })(ScreenAnnotationType || (exports.ScreenAnnotationType = ScreenAnnotationType = {}));
+var WaitConditionType;
+(function (WaitConditionType) {
+    WaitConditionType["Time"] = "Time";
+    WaitConditionType["Webhook"] = "Webhook";
+})(WaitConditionType || (exports.WaitConditionType = WaitConditionType = {}));
 var HttpStatusCode;
 (function (HttpStatusCode) {
     HttpStatusCode[HttpStatusCode["Ok"] = 200] = "Ok";

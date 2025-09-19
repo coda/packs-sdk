@@ -6043,6 +6043,8 @@ describe('Pack metadata Validation', async () => {
           break;
         case ToolType.AssistantMessage:
           break;
+        case ToolType.Wait:
+          break;
         case 'CustomTool':
           break;
         default:

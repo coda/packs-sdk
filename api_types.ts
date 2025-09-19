@@ -1148,6 +1148,13 @@ export interface ExecutionContext {
    * @hidden
    */
   readonly previousAttemptError?: InvocationError;
+
+  /**
+   * For agent-based formulas that execute when the Wait tool has been added to the agent skill, this will be populated
+   * with the webhook URL that can be used by the third party API to signal that the wait condition has been met.
+   * Payloads sent to this URL will be made available to the agent loop.
+   */
+  readonly agentWaitWebhookUrl?: string;
 }
 
 /**

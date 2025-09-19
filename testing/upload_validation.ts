@@ -121,6 +121,8 @@ import {ValueHintType} from '../schema';
 import {ValueType} from '../schema';
 import type {VariousAuthentication} from '../types';
 import type {VariousSupportedAuthenticationTypes} from '../types';
+import {WaitConditionType} from '../types';
+import type {WaitTool} from '../types';
 import type {WebBasicAuthentication} from '../types';
 import {ZodParsedType} from 'zod';
 import {assertCondition} from '../helpers/ensure';
@@ -2142,11 +2144,26 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     type: z.literal(ToolType.AssistantMessage),
   });
 
+  const waitConditionSchema = z.discriminatedUnion('type', [
+    z.object({
+      type: z.literal(WaitConditionType.Time),
+    }),
+    z.object({
+      type: z.literal(WaitConditionType.Webhook),
+    }),
+  ]);
+
+  const waitToolSchema = zodCompleteStrictObject<WaitTool>({
+    type: z.literal(ToolType.Wait),
+    condition: waitConditionSchema,
+  });
+
   const toolSchema = z.discriminatedUnion('type', [
     packToolSchema,
     knowledgeToolSchema,
     screenAnnotationToolSchema,
     assistantMessageToolSchema,
+    waitToolSchema,
   ]);
   const skillSchema = zodCompleteObject<Skill>({
     name: z

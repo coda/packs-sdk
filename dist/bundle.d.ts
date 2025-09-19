@@ -939,6 +939,12 @@ export interface ExecutionContext {
 	 * @hidden
 	 */
 	readonly previousAttemptError?: InvocationError;
+	/**
+	 * For agent-based formulas that execute when the Wait tool has been added to the agent skill, this will be populated
+	 * with the webhook URL that can be used by the third party API to signal that the wait condition has been met.
+	 * Payloads sent to this URL will be made available to the agent loop.
+	 */
+	readonly agentWaitWebhookUrl?: string;
 }
 /**
  * Sub-class of {@link ExecutionContext} that is passed to the `execute` function of every
@@ -5342,7 +5348,12 @@ export declare enum ToolType {
 	 * This tool is for internal usage only.
 	 * @hidden
 	 */
-	AssistantMessage = "AssistantMessage"
+	AssistantMessage = "AssistantMessage",
+	/**
+	 * Allows waiting for a specific condition to be met.
+	 * @hidden
+	 */
+	Wait = "Wait"
 }
 /**
  * Base interface for all tool definitions.
@@ -5465,6 +5476,25 @@ export interface ScreenAnnotationTool extends BaseTool<ToolType.ScreenAnnotation
  */
 export interface AssistantMessageTool extends BaseTool<ToolType.AssistantMessage> {
 }
+export declare enum WaitConditionType {
+	Time = "Time",
+	Webhook = "Webhook"
+}
+/**
+ * Base interface for all wait tool sources.
+ * @hidden
+ */
+export interface BaseWaitToolSource<T extends WaitConditionType> {
+	type: T;
+}
+export interface WaitConditionTime extends BaseWaitToolSource<WaitConditionType.Time> {
+}
+export interface WaitConditionWebhook extends BaseWaitToolSource<WaitConditionType.Webhook> {
+}
+export type WaitCondition = WaitConditionTime | WaitConditionWebhook;
+export interface WaitTool extends BaseTool<ToolType.Wait> {
+	condition: WaitCondition;
+}
 /**
  * Map of tool types to their corresponding tool interfaces.
  * This interface can be extended via declaration merging to add custom tool types.
@@ -5475,6 +5505,7 @@ export interface ToolMap {
 	[ToolType.Knowledge]: KnowledgeTool;
 	[ToolType.ScreenAnnotation]: ScreenAnnotationTool;
 	[ToolType.AssistantMessage]: AssistantMessageTool;
+	[ToolType.Wait]: WaitTool;
 }
 /**
  * Union of all supported tool types.
