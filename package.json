@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@aws-crypto/sha256-js": "5.2.0",
-    "@aws-sdk/client-sts": "3.821.0",
+    "@aws-sdk/client-sts": "3.893.0",
     "@smithy/signature-v4": "5.1.2",
     "browserify": "17.0.1",
     "buffer": "6.0.3",
@@ -61,7 +61,7 @@
     "isolated-vm": "5.0.1"
   },
   "devDependencies": {
-    "@aws-sdk/types": "3.821.0",
+    "@aws-sdk/types": "3.893.0",
     "@brightcove/kacl": "0.1.11",
     "@getify/eslint-plugin-proper-arrows": "11.0.3",
     "@julian_cataldo/remark-lint-frontmatter-schema": "3.7.6",
