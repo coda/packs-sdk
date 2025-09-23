@@ -298,3 +298,26 @@ export type {Tool} from './types';
 export {KnowledgeToolSourceType} from './types';
 export {ScreenAnnotationType} from './types';
 export {ToolType} from './types';
+
+// MCP (Model Context Protocol) types and interfaces
+export type {McpAuthentication} from './mcp_types';
+export type {McpCapabilities} from './mcp_types';
+export type {McpClient} from './mcp_types';
+export type {McpClientInfo} from './mcp_types';
+export type {McpContent} from './mcp_types';
+export type {McpError} from './mcp_types';
+export type {McpExecutionContext} from './mcp_types';
+export type {McpProviderConfig} from './mcp_types';
+export type {McpRequest} from './mcp_types';
+export type {McpResponse} from './mcp_types';
+export type {McpSession} from './mcp_types';
+export type {McpTool} from './mcp_types';
+export type {McpToolCall} from './mcp_types';
+export type {McpToolResult} from './mcp_types';
+export type {SseEvent} from './mcp_types';
+
+// MCP API functions (implementation provided by Coda runtime)
+export {addMcpProvider} from './mcp_api';
+export {createGenericMcpPack} from './mcp_api';
+export {createMcpProviderConfig} from './mcp_api';
+export {McpProviders} from './mcp_api';
