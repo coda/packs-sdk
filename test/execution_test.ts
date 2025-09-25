@@ -336,7 +336,7 @@ describe('Execution', () => {
         schema: makeObjectSchema({
           type: ValueType.Object,
           id: 'stringVal',
-          feature: ['stringVal', 'numberVal'],
+          featured: ['stringVal', 'numberVal'],
           properties: {
             stringVal: {type: ValueType.String, required: true},
             numberVal: {type: ValueType.Number, required: true},
