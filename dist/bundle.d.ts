@@ -2,6 +2,7 @@
 export type $Values<S> = S[keyof S];
 /** Omits properties over a union type, only if the union member has that property. */
 export type DistributiveOmit<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
+export type Exact<T, U> = T & Record<Exclude<keyof T, keyof U>, never>;
 /**
  * Markers used internally to represent data types for parameters and return values.
  * It should not be necessary to ever use these values directly.
@@ -2787,9 +2788,9 @@ export declare function makeSchema<T extends Schema>(schema: T): T;
  * });
  * ```
  */
-export declare function makeObjectSchema<K extends string, L extends string, const T extends Omit<ObjectSchemaDefinition<K, L>, "type">>(schemaDef: T & {
+export declare function makeObjectSchema<K extends string, L extends string, const T extends Omit<ObjectSchemaDefinition<K, L>, "type">>(schemaDef: Exact<T, Omit<ObjectSchemaDefinition<K, L>, "type"> & {
 	type?: ValueType.Object;
-}): T & {
+}>): T & {
 	identity?: Identity;
 	type: ValueType.Object;
 };

@@ -934,13 +934,15 @@ function makeReferenceSchemaFromObjectSchema(schema, identityName) {
         displayProperty: primary,
         identity: identity || { name: (0, ensure_2.ensureExists)(identityName) },
         idProperty: id,
-        mutable,
         options,
         properties: referenceProperties,
         type,
         requireForUpdates,
     };
-    return makeObjectSchema(referenceSchema);
+    // TODO(jonathan): We probably shouldn't even be handling `mutable` here,
+    // this function is meant to be called on top-level schemas which shouldn't have
+    // `ObjectSchemaProperty` properties.
+    return { ...makeObjectSchema(referenceSchema), mutable };
 }
 exports.makeReferenceSchemaFromObjectSchema = makeReferenceSchemaFromObjectSchema;
 /**
@@ -949,10 +951,10 @@ exports.makeReferenceSchemaFromObjectSchema = makeReferenceSchemaFromObjectSchem
  * You could add the identity directly, but that would make the schema less re-usable.
  */
 function withIdentity(schema, identityName) {
-    return makeObjectSchema({
+    return {
         ...(0, object_utils_1.deepCopy)(schema),
         identity: { name: (0, ensure_4.ensureNonEmptyString)(identityName) },
-    });
+    };
 }
 exports.withIdentity = withIdentity;
 /**

@@ -42,7 +42,7 @@ coda.makeObjectSchema({
 
 | Name | Type |
 | :------ | :------ |
-| `schemaDef` | `T` & { `type?`: [`Object`](../enums/core.ValueType.md#object)  } |
+| `schemaDef` | `Exact`<`T`, `Omit`<[`ObjectSchemaDefinition`](../interfaces/core.ObjectSchemaDefinition.md)<`K`, `L`\>, ``"type"``\> & { `type?`: [`Object`](../enums/core.ValueType.md#object)  }\> |
 
 #### Returns
 

@@ -1,3 +1,4 @@
+import type { Exact } from './helpers/object_utils';
 import type { OptionsReference } from './api_types';
 import type { OptionsType } from './api_types';
 import type { PackFormulaResult } from './api_types';
@@ -1685,9 +1686,9 @@ export declare function makeSchema<T extends Schema>(schema: T): T;
  * });
  * ```
  */
-export declare function makeObjectSchema<K extends string, L extends string, const T extends Omit<ObjectSchemaDefinition<K, L>, 'type'>>(schemaDef: T & {
+export declare function makeObjectSchema<K extends string, L extends string, const T extends Omit<ObjectSchemaDefinition<K, L>, 'type'>>(schemaDef: Exact<T, Omit<ObjectSchemaDefinition<K, L>, 'type'> & {
     type?: ValueType.Object;
-}): T & {
+}>): T & {
     identity?: Identity;
     type: ValueType.Object;
 };

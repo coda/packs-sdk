@@ -36,3 +36,5 @@ export function deepCopy<T>(obj: T): T {
 export function isPromise<T>(obj: any): obj is Promise<T> {
   return obj && typeof obj === 'object' && 'then' in obj;
 }
+
+export type Exact<T, U> = T & Record<Exclude<keyof T, keyof U>, never>;

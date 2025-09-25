@@ -2600,7 +2600,7 @@ export function makeSyncTable<
   }
 
   const getSchema = wrapGetSchema(wrapMetadataFunction(getSchemaDef));
-  const schema = makeObjectSchema<K, L, SchemaDefT>(schemaDef) as SchemaT;
+  const schema = makeObjectSchema<K, L, ObjectSchemaDefinition<K, L>>(schemaDef) as SchemaT;
 
   let namedPropertyOptions = moveJsPropertyOptionsFunctionsToFormulas({
     inputSchema,
@@ -2813,7 +2813,7 @@ export function makeDynamicSyncTable<
   placeholderSchema?: SchemaT;
   propertyOptions?: PropertyOptionsMetadataFunction<any>;
 }): DynamicSyncTableDef<K, L, ParamDefsT, any, ContextT, PermissionsContextT> {
-  const placeholderSchema: any =
+  const placeholderSchema =
     placeholderSchemaInput ||
     // default placeholder only shows a column of id, which will be replaced later by the dynamic schema.
     makeObjectSchema({

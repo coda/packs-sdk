@@ -12,3 +12,4 @@ export declare function deepCopy<T>(obj: T): T;
  * Returns whether the value is a Promise.
  */
 export declare function isPromise<T>(obj: any): obj is Promise<T>;
+export type Exact<T, U> = T & Record<Exclude<keyof T, keyof U>, never>;
