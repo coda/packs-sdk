@@ -2011,9 +2011,9 @@ export function makeSchema<T extends Schema>(schema: T): T {
 export function makeObjectSchema<
   K extends string,
   L extends string,
-  const T extends Omit<ObjectSchemaDefinition<K, L>, 'type'>,
+  const T extends Omit<ObjectSchemaDefinition<K, L>, 'type'> & ObjectSchemaProperty,
 >(
-  schemaDef: Exact<T, Omit<ObjectSchemaDefinition<K, L>, 'type'> & {type?: ValueType.Object}>,
+  schemaDef: Exact<T, Omit<ObjectSchemaDefinition<K, L>, 'type'> & ObjectSchemaProperty & {type?: ValueType.Object}>,
 ): T & {
   // TODO(patrick): This should be IdentityDefinition when we distinguish schema definitions from runtime schemas
   identity?: Identity;

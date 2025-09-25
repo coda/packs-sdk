@@ -2788,7 +2788,7 @@ export declare function makeSchema<T extends Schema>(schema: T): T;
  * });
  * ```
  */
-export declare function makeObjectSchema<K extends string, L extends string, const T extends Omit<ObjectSchemaDefinition<K, L>, "type">>(schemaDef: Exact<T, Omit<ObjectSchemaDefinition<K, L>, "type"> & {
+export declare function makeObjectSchema<K extends string, L extends string, const T extends Omit<ObjectSchemaDefinition<K, L>, "type"> & ObjectSchemaProperty>(schemaDef: Exact<T, Omit<ObjectSchemaDefinition<K, L>, "type"> & ObjectSchemaProperty & {
 	type?: ValueType.Object;
 }>): T & {
 	identity?: Identity;
