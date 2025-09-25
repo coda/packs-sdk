@@ -1015,6 +1015,7 @@ describe('Pack metadata Validation', async () => {
               child: makeObjectSchema({
                 type: ValueType.Object,
                 id: 'c1',
+                required: true,
                 featured: ['c1'],
                 properties: {
                   c1: {type: ValueType.String},
