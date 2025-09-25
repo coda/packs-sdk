@@ -2,6 +2,10 @@
 export type $Values<S> = S[keyof S];
 /** Omits properties over a union type, only if the union member has that property. */
 export type DistributiveOmit<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
+/**
+ * Type helper to ensure that a given type can only contain keys from a another given type.
+ * Prevents extraneous keys from being allowable.
+ */
 export type Exact<T, U> = T & Record<Exclude<keyof T, keyof U>, never>;
 /**
  * Markers used internally to represent data types for parameters and return values.
