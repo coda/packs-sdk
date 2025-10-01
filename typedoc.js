@@ -27,6 +27,7 @@ module.exports = {
     'AutocompleteParameterTypeMapping',
     'AutocompleteParameterTypes',
     'BooleanHintValueTypes',
+    'Exact',
     'GenericObjectSchema',
     'NumberHintValueTypes',
     'OptionsReference',

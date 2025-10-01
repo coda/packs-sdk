@@ -1424,7 +1424,6 @@ describe('Pack metadata Validation', async () => {
           name: 'SyncTable',
           identityName: 'IdentityA',
           schema: makeObjectSchema({
-            type: ValueType.Object,
             primary: 'foo',
             id: 'foo',
             identity: {name: 'IdentityB'},

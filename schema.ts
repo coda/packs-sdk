@@ -1,3 +1,4 @@
+import type {Exact} from './helpers/object_utils';
 import type {OptionsReference} from './api_types';
 import type {OptionsType} from './api_types';
 import type {PackFormulaResult} from './api_types';
@@ -2010,9 +2011,9 @@ export function makeSchema<T extends Schema>(schema: T): T {
 export function makeObjectSchema<
   K extends string,
   L extends string,
-  const T extends Omit<ObjectSchemaDefinition<K, L>, 'type'>,
+  const T extends Omit<ObjectSchemaDefinition<K, L>, 'type'> & ObjectSchemaProperty,
 >(
-  schemaDef: T & {type?: ValueType.Object},
+  schemaDef: Exact<T, Omit<ObjectSchemaDefinition<K, L>, 'type'> & ObjectSchemaProperty & {type?: ValueType.Object}>,
 ): T & {
   // TODO(patrick): This should be IdentityDefinition when we distinguish schema definitions from runtime schemas
   identity?: Identity;
@@ -2424,18 +2425,20 @@ export function makeReferenceSchemaFromObjectSchema(
     ensureExists(properties[primary], `Display property "${primary}" must refer to a valid property schema.`);
     referenceProperties[primary] = properties[primary];
   }
-  const referenceSchema: ObjectSchemaDefinition<string, string> & ObjectSchemaProperty = {
+  const referenceSchema: ObjectSchemaDefinition<string, string> = {
     codaType: ValueHintType.Reference,
     displayProperty: primary,
     identity: identity || {name: ensureExists(identityName)},
     idProperty: id,
-    mutable,
     options,
     properties: referenceProperties,
     type,
     requireForUpdates,
   };
-  return makeObjectSchema(referenceSchema);
+  // TODO(jonathan): We probably shouldn't even be handling `mutable` here,
+  // this function is meant to be called on top-level schemas which shouldn't have
+  // `ObjectSchemaProperty` properties.
+  return {...makeObjectSchema(referenceSchema), mutable};
 }
 
 /**
@@ -2444,10 +2447,15 @@ export function makeReferenceSchemaFromObjectSchema(
  * You could add the identity directly, but that would make the schema less re-usable.
  */
 export function withIdentity(schema: GenericObjectSchema, identityName: string): GenericObjectSchema {
-  return makeObjectSchema({
+  return {
     ...deepCopy(schema),
-    identity: {name: ensureNonEmptyString(identityName)},
-  });
+    // Our typing throughout the SDK is dishonest about identities, we declare the the output of
+    // formula/table definitions are Identity but they don't actually include `packId` unless the
+    // developer specified it, we don't inject the current packId until upload time (and even then
+    // I think it only gets injected in the Metadata, not the actual runtime code) and we never really
+    // figured out how to signify this upload-time injection in type system.
+    identity: {name: ensureNonEmptyString(identityName)} as Identity,
+  };
 }
 
 /**

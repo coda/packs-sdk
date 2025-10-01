@@ -12,3 +12,8 @@ export declare function deepCopy<T>(obj: T): T;
  * Returns whether the value is a Promise.
  */
 export declare function isPromise<T>(obj: any): obj is Promise<T>;
+/**
+ * Type helper to ensure that a given type can only contain keys from another given type.
+ * Prevents extraneous keys from being allowable.
+ */
+export type Exact<T, U> = T & Record<Exclude<keyof T, keyof U>, never>;

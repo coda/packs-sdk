@@ -36,13 +36,13 @@ coda.makeObjectSchema({
 | :------ | :------ |
 | `K` | extends `string` |
 | `L` | extends `string` |
-| `T` | extends `Omit`<[`ObjectSchemaDefinition`](../interfaces/core.ObjectSchemaDefinition.md)<`K`, `L`\>, ``"type"``\> |
+| `T` | extends `Omit`<[`ObjectSchemaDefinition`](../interfaces/core.ObjectSchemaDefinition.md)<`K`, `L`\>, ``"type"``\> & [`ObjectSchemaProperty`](../interfaces/core.ObjectSchemaProperty.md) |
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `schemaDef` | `T` & { `type?`: [`Object`](../enums/core.ValueType.md#object)  } |
+| `schemaDef` | `Exact`<`T`, `Omit`<[`ObjectSchemaDefinition`](../interfaces/core.ObjectSchemaDefinition.md)<`K`, `L`\>, ``"type"``\> & [`ObjectSchemaProperty`](../interfaces/core.ObjectSchemaProperty.md) & { `type?`: [`Object`](../enums/core.ValueType.md#object)  }\> |
 
 #### Returns
 
