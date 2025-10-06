@@ -56,5 +56,5 @@ export declare function injectExecutionContext({ context, fetcher, temporaryBlob
     logger: Logger;
 } & ExecutionContextPrimitives): Promise<void>;
 export declare function registerBundle(isolate: Isolate, context: Context, path: string, stubName: string, requiresManualClosure?: boolean): Promise<void>;
-export declare function registerBundles(isolate: Isolate, context: Context, packBundlePath: string, thunkBundlePath: string, requiresManualClosure?: boolean): Promise<void>;
+export declare function registerBundles(isolate: Isolate, context: Context, packBundlePath: string, thunkBundlePath: string, requiresManualClosure?: boolean, parallel?: boolean): Promise<void>;
 export declare function getThunkPath(): string;

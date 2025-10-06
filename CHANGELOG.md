@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- Add parallel flag to registerBundles to speed up registration
+
 ## [1.11.0] - 2025-10-01
 
 ### Changed

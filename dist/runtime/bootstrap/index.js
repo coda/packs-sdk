@@ -210,9 +210,17 @@ async function registerBundle(isolate, context, path, stubName, requiresManualCl
     }
 }
 exports.registerBundle = registerBundle;
-async function registerBundles(isolate, context, packBundlePath, thunkBundlePath, requiresManualClosure = true) {
-    await registerBundle(isolate, context, thunkBundlePath, 'coda', requiresManualClosure);
-    await registerBundle(isolate, context, packBundlePath, 'pack', requiresManualClosure);
+async function registerBundles(isolate, context, packBundlePath, thunkBundlePath, requiresManualClosure = true, parallel = false) {
+    if (parallel) {
+        await Promise.all([
+            registerBundle(isolate, context, thunkBundlePath, 'coda', requiresManualClosure),
+            registerBundle(isolate, context, packBundlePath, 'pack', requiresManualClosure),
+        ]);
+    }
+    else {
+        await registerBundle(isolate, context, thunkBundlePath, 'coda', requiresManualClosure);
+        await registerBundle(isolate, context, packBundlePath, 'pack', requiresManualClosure);
+    }
 }
 exports.registerBundles = registerBundles;
 function getThunkPath() {

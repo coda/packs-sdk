@@ -340,9 +340,17 @@ export async function registerBundles(
   packBundlePath: string,
   thunkBundlePath: string,
   requiresManualClosure: boolean = true,
+  parallel: boolean = false,
 ): Promise<void> {
-  await registerBundle(isolate, context, thunkBundlePath, 'coda', requiresManualClosure);
-  await registerBundle(isolate, context, packBundlePath, 'pack', requiresManualClosure);
+  if (parallel) {
+    await Promise.all([
+      registerBundle(isolate, context, thunkBundlePath, 'coda', requiresManualClosure),
+      registerBundle(isolate, context, packBundlePath, 'pack', requiresManualClosure),
+    ]);
+  } else {
+    await registerBundle(isolate, context, thunkBundlePath, 'coda', requiresManualClosure);
+    await registerBundle(isolate, context, packBundlePath, 'pack', requiresManualClosure);
+  }
 }
 
 export function getThunkPath(): string {
