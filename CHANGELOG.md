@@ -4,6 +4,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+- Minify packaged thunk_bundle
+
 ## [1.11.0] - 2025-10-01
 
 ### Changed
