@@ -92,6 +92,7 @@ import type {Schema} from '../schema';
 import type {ScreenAnnotationTool} from '../types';
 import {ScreenAnnotationType} from '../types';
 import type {SetEndpoint} from '../types';
+import type {ShowImagesTool} from '../types';
 import {SimpleStringHintValueTypes} from '../schema';
 import type {SimpleStringSchema} from '../schema';
 import type {Skill} from '../types';
@@ -2147,12 +2148,17 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     type: z.literal(ToolType.Summarizer),
   });
 
+  const showImagesToolSchema = zodCompleteStrictObject<ShowImagesTool>({
+    type: z.literal(ToolType.ShowImages),
+  });
+
   const toolSchema = z.discriminatedUnion('type', [
     packToolSchema,
     knowledgeToolSchema,
     screenAnnotationToolSchema,
     assistantMessageToolSchema,
     summarizerToolSchema,
+    showImagesToolSchema,
   ]);
   const skillSchema = zodCompleteObject<Skill>({
     name: z

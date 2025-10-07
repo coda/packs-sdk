@@ -247,6 +247,11 @@ var ToolType;
      * @hidden
      */
     ToolType["Summarizer"] = "Summarizer";
+    /**
+     * Allows showing images as a tool.
+     * @hidden
+     */
+    ToolType["ShowImages"] = "ShowImages";
 })(ToolType || (exports.ToolType = ToolType = {}));
 /**
  * The type of knowledge source to use.

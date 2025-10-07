@@ -5347,7 +5347,12 @@ export declare enum ToolType {
 	 * Allows reuse of the default tuned summarizer agent as a tool.
 	 * @hidden
 	 */
-	Summarizer = "Summarizer"
+	Summarizer = "Summarizer",
+	/**
+	 * Allows showing images as a tool.
+	 * @hidden
+	 */
+	ShowImages = "ShowImages"
 }
 /**
  * Base interface for all tool definitions.
@@ -5477,6 +5482,12 @@ export interface AssistantMessageTool extends BaseTool<ToolType.AssistantMessage
 export interface SummarizerTool extends BaseTool<ToolType.Summarizer> {
 }
 /**
+ * Tool that provides access to image display capabilities.
+ * @hidden
+ */
+export interface ShowImagesTool extends BaseTool<ToolType.ShowImages> {
+}
+/**
  * Map of tool types to their corresponding tool interfaces.
  * This interface can be extended via declaration merging to add custom tool types.
  * @hidden
@@ -5487,6 +5498,7 @@ export interface ToolMap {
 	[ToolType.ScreenAnnotation]: ScreenAnnotationTool;
 	[ToolType.AssistantMessage]: AssistantMessageTool;
 	[ToolType.Summarizer]: SummarizerTool;
+	[ToolType.ShowImages]: ShowImagesTool;
 }
 /**
  * Union of all supported tool types.
