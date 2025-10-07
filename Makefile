@@ -140,6 +140,7 @@ compile-thunk:
 		--outfile=${ROOTDIR}/bundles/thunk_bundle.js \
 		--inject:${ROOTDIR}/testing/injections/buffer_shim.js \
 		--format=iife \
+		--minify=true \
 		--define:process.env.IN_ISOLATED_VM_OR_BROWSER=true \
 		--define:process.env.NODE_DEBUG=false \
 		--global-name=module.exports \
