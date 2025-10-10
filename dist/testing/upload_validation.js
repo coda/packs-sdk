@@ -1636,12 +1636,16 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     const summarizerToolSchema = zodCompleteStrictObject({
         type: z.literal(types_9.ToolType.Summarizer),
     });
+    const showImagesToolSchema = zodCompleteStrictObject({
+        type: z.literal(types_9.ToolType.ShowImages),
+    });
     const toolSchema = z.discriminatedUnion('type', [
         packToolSchema,
         knowledgeToolSchema,
         screenAnnotationToolSchema,
         assistantMessageToolSchema,
         summarizerToolSchema,
+        showImagesToolSchema,
     ]);
     const skillSchema = zodCompleteObject({
         name: z
