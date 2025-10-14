@@ -3844,6 +3844,29 @@ describe('Pack metadata Validation', async () => {
           ]);
         });
 
+        it('passes when filterable properties exempted', async () => {
+          const metadata = metadataForFormulaWithObjectSchema({
+            identity: {packId: 1052, name: 'Issue'},
+            type: ValueType.Object,
+            properties: {
+              name: {type: ValueType.String},
+              value: {type: ValueType.Number},
+              attachments: {type: ValueType.Array, items: {type: ValueType.String}},
+              enums: {type: ValueType.String, codaType: ValueHintType.SelectList},
+              boolean: {type: ValueType.Boolean},
+              datetime: {type: ValueType.String, codaType: ValueHintType.DateTime},
+              numberDateTime: {type: ValueType.Number, codaType: ValueHintType.DateTime},
+              anotherValue: {type: ValueType.Number},
+              date: {type: ValueType.String, codaType: ValueHintType.Date},
+            },
+            index: {
+              properties: ['name', 'attachments'],
+              filterableProperties: ['value', 'enums', 'boolean', 'datetime', 'numberDateTime', 'date'],
+            },
+          });
+          await validateJson(metadata);
+        });
+
         it('fails with invalid filterable property', async () => {
           const metadata = metadataForFormulaWithObjectSchema({
             type: ValueType.Object,

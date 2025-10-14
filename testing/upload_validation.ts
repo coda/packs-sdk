@@ -1312,6 +1312,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
   enum ExemptionType {
     IdentityName = 'IdentityName',
     SyncTableGetterName = 'SyncTableGetterName',
+    FilterablePropertyLimit = 'FilterablePropertyLimit',
   }
 
   type Exemption = [number, string, ExemptionType];
@@ -1328,6 +1329,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     [1013, 'Sync issues', ExemptionType.SyncTableGetterName],
     [1013, 'Sync pull requests', ExemptionType.SyncTableGetterName],
     [1013, 'Sync repos', ExemptionType.SyncTableGetterName],
+    [1052, 'Issue', ExemptionType.FilterablePropertyLimit],
     [1054, 'Sync table', ExemptionType.SyncTableGetterName],
     [1062, 'Form responses', ExemptionType.SyncTableGetterName],
     [1062, 'Sync forms', ExemptionType.SyncTableGetterName],
@@ -1428,7 +1430,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     }),
   ]);
 
-  const filterablePropertiesSchema = z.array(propertySchema).max(Limits.FilterableProperties);
+  const filterablePropertiesSchema = z.array(propertySchema);
 
   const customIndexSchema = zodCompleteStrictObject<CustomIndexDefinition>({
     properties: z.array(indexedPropertySchema).min(1),
@@ -1910,6 +1912,34 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             );
           }
         }
+      })
+      .superRefine((data, context) => {
+        const schema = data as GenericObjectSchema;
+        if (
+          !schema.index ||
+          !schema.index.filterableProperties ||
+          schema.index.filterableProperties.length <= Limits.FilterableProperties
+        ) {
+          return;
+        }
+
+        // Ignore property limit if specified.
+        if (
+          Exemptions.some(
+            exemption =>
+              exemption[0] === schema.identity?.packId &&
+              exemption[1] === schema.identity?.name &&
+              exemption[2] === ExemptionType.FilterablePropertyLimit,
+          )
+        ) {
+          return;
+        }
+
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['index', 'filterableProperties'],
+          message: `Array must contain at most ${Limits.FilterableProperties} element(s)`,
+        });
       }),
   );
 
