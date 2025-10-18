@@ -96,6 +96,18 @@ Omit.extraOAuthScopes
 
 ___
 
+### instructions
+
+• `Optional` `Readonly` **instructions**: `string`
+
+Instructions for LLMs to use the formula, overrides the description for LLMs if set.
+
+#### Inherited from
+
+Omit.instructions
+
+___
+
 ### isAction
 
 • `Optional` `Readonly` **isAction**: `boolean`

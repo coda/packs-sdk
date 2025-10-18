@@ -529,4 +529,36 @@ describe('Builder', () => {
       });
     });
   });
+
+  describe('instructions support', () => {
+    it('accepts instructions on addFormula()', () => {
+      pack.addFormula({
+        resultType: ValueType.String,
+        name: 'WithInstructions',
+        description: 'desc',
+        instructions: 'formula-instructions',
+        parameters: [],
+        execute: () => '',
+      });
+      assert.equal((pack.formulas[0] as any).instructions, 'formula-instructions');
+    });
+
+    it('accepts instructions on parameters', () => {
+      pack.addFormula({
+        resultType: ValueType.String,
+        name: 'ParamInstructions',
+        description: 'desc',
+        parameters: [
+          makeParameter({
+            type: ParameterType.String,
+            name: 'p',
+            description: 'param',
+            instructions: 'param-instructions',
+          }),
+        ],
+        execute: () => '',
+      });
+      assert.equal((pack.formulas[0].parameters[0] as any).instructions, 'param-instructions');
+    });
+  });
 });

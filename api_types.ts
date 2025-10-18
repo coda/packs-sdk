@@ -332,6 +332,11 @@ export interface ParamDef<T extends UnionType> {
    * A brief description of what this parameter is used for, shown to the user when invoking the formula.
    */
   description: string;
+
+  /**
+   * Instructions for LLMs on how to use this parameter, overrides the description for LLMs if set.
+   */
+  instructions?: string;
   /**
    * Whether this parameter can be omitted when invoking the formula.
    * All optional parameters must come after all non-optional parameters.
@@ -501,6 +506,11 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
    * A brief description of what the formula does.
    */
   readonly description: string;
+
+  /**
+   * Instructions for LLMs to use the formula, overrides the description for LLMs if set.
+   */
+  readonly instructions?: string;
 
   /**
    * The parameter inputs to the formula, if any.

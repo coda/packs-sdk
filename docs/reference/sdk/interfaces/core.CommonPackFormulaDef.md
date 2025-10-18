@@ -71,6 +71,14 @@ so an end user must have both sets of permissions.
 
 ___
 
+### instructions
+
+• `Optional` `Readonly` **instructions**: `string`
+
+Instructions for LLMs to use the formula, overrides the description for LLMs if set.
+
+___
+
 ### isAction
 
 • `Optional` `Readonly` **isAction**: `boolean`
