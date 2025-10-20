@@ -1054,6 +1054,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     (function (ExemptionType) {
         ExemptionType["IdentityName"] = "IdentityName";
         ExemptionType["SyncTableGetterName"] = "SyncTableGetterName";
+        ExemptionType["FilterablePropertyLimit"] = "FilterablePropertyLimit";
     })(ExemptionType || (ExemptionType = {}));
     const Exemptions = [
         [1013, 'Pull Request', ExemptionType.IdentityName],
@@ -1066,6 +1067,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         [1013, 'Sync issues', ExemptionType.SyncTableGetterName],
         [1013, 'Sync pull requests', ExemptionType.SyncTableGetterName],
         [1013, 'Sync repos', ExemptionType.SyncTableGetterName],
+        [1052, 'Issue', ExemptionType.FilterablePropertyLimit],
         [1054, 'Sync table', ExemptionType.SyncTableGetterName],
         [1062, 'Form responses', ExemptionType.SyncTableGetterName],
         [1062, 'Sync forms', ExemptionType.SyncTableGetterName],
@@ -1144,7 +1146,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             strategy: z.nativeEnum(schema_10.IndexingStrategy),
         }),
     ]);
-    const filterablePropertiesSchema = z.array(propertySchema).max(exports.Limits.FilterableProperties);
+    const filterablePropertiesSchema = z.array(propertySchema);
     const customIndexSchema = zodCompleteStrictObject({
         properties: z.array(indexedPropertySchema).min(1),
         contextProperties: contextPropertiesSchema.optional(),
@@ -1452,6 +1454,28 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 }, `must be a "ValueType.Boolean", "ValueType.Number", "ValueType.String", "ValueHintType.Person" or an object that has userEmailProperty, userIdProperty specified or an array of "ValueType.Number" or "ValueType.String" or an array of "ValueHintType.Person" or objects that have userEmailProperty, userIdProperty specified.`, objectPath);
             }
         }
+    })
+        .superRefine((data, context) => {
+        const schema = data;
+        if (!schema.index ||
+            !schema.index.filterableProperties ||
+            schema.index.filterableProperties.length <= exports.Limits.FilterableProperties) {
+            return;
+        }
+        // Ignore property limit if specified.
+        if (Exemptions.some(exemption => {
+            var _a, _b;
+            return exemption[0] === ((_a = schema.identity) === null || _a === void 0 ? void 0 : _a.packId) &&
+                exemption[1] === ((_b = schema.identity) === null || _b === void 0 ? void 0 : _b.name) &&
+                exemption[2] === ExemptionType.FilterablePropertyLimit;
+        })) {
+            return;
+        }
+        context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['index', 'filterableProperties'],
+            message: `Array must contain at most ${exports.Limits.FilterableProperties} element(s)`,
+        });
     }));
     const objectPropertyUnionSchema = z
         .union([
