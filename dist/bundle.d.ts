@@ -227,6 +227,10 @@ export interface ParamDef<T extends UnionType> {
 	 */
 	description: string;
 	/**
+	 * Instructions for LLMs on how to use this parameter, overrides the description for LLMs if set.
+	 */
+	instructions?: string;
+	/**
 	 * Whether this parameter can be omitted when invoking the formula.
 	 * All optional parameters must come after all non-optional parameters.
 	 */
@@ -359,6 +363,10 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
 	 * A brief description of what the formula does.
 	 */
 	readonly description: string;
+	/**
+	 * Instructions for LLMs to use the formula, overrides the description for LLMs if set.
+	 */
+	readonly instructions?: string;
 	/**
 	 * The parameter inputs to the formula, if any.
 	 */
@@ -4280,6 +4288,7 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
 export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: FormulaOptions<ParamDefsT, ObjectArrayFormulaDef<ParamDefsT, ResultT>>): {
 	description: string;
 	name: string;
+	instructions?: string | undefined;
 	cacheTtlSecs?: number | undefined;
 	parameters: ParamDefsT;
 	varargParameters?: ParamDefs | undefined;
@@ -4324,6 +4333,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
 export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: FormulaOptions<ParamDefsT, EmptyFormulaDef<ParamDefsT>>): {
 	description: string;
 	name: string;
+	instructions?: string | undefined;
 	cacheTtlSecs?: number | undefined;
 	parameters: ParamDefsT;
 	varargParameters?: ParamDefs | undefined;

@@ -906,6 +906,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         },
       ),
     description: z.string().max(Limits.BuildingBlockDescription),
+    instructions: z.string().optional(),
     optional: z.boolean().optional(),
     autocomplete: z.unknown().optional(),
     defaultValue: z.unknown().optional(),
@@ -962,6 +963,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     // done as a superRefine on the top-level object that also contains the pack id.
     name: z.string().max(Limits.BuildingBlockName),
     description: z.string().max(Limits.BuildingBlockDescription),
+    instructions: z.string().optional(),
     examples: z
       .array(
         z.object({

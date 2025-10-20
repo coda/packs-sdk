@@ -69,6 +69,18 @@ A brief description of what this parameter is used for, shown to the user when i
 
 ___
 
+### instructions
+
+• `Optional` **instructions**: `string`
+
+Instructions for LLMs on how to use this parameter, overrides the description for LLMs if set.
+
+#### Inherited from
+
+[ParamDef](core.ParamDef.md).[instructions](core.ParamDef.md#instructions)
+
+___
+
 ### name
 
 • **name**: `string`
