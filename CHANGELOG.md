@@ -4,6 +4,11 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Changed
+
+- Add LLM-facing instructions to formulas and parameters
+- Allow filterableProperties limit override
+
 ## [1.11.1] - 2025-10-10
 
 ### Changed
