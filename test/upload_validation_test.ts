@@ -6021,6 +6021,9 @@ describe('Pack metadata Validation', async () => {
               {
                 type: ToolType.Summarizer,
               },
+              {
+                type: ToolType.ShowImages,
+              },
             ],
           },
         ],
@@ -6051,7 +6054,7 @@ describe('Pack metadata Validation', async () => {
         {
           path: 'skills[0].tools[0].type',
           message:
-            "Invalid discriminator value. Expected 'Pack' | 'Knowledge' | 'ScreenAnnotation' | 'AssistantMessage' | 'Summarizer'",
+            "Invalid discriminator value. Expected 'Pack' | 'Knowledge' | 'ScreenAnnotation' | 'AssistantMessage' | 'Summarizer' | 'ShowImages'",
         },
       ]);
     });
@@ -6069,6 +6072,8 @@ describe('Pack metadata Validation', async () => {
         case ToolType.AssistantMessage:
           break;
         case ToolType.Summarizer:
+          break;
+        case ToolType.ShowImages:
           break;
         case 'CustomTool':
           break;
