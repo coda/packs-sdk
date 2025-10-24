@@ -1361,6 +1361,12 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     ),
   );
 
+  const FilterablePropertyLimitExemptions = new Set(
+    Exemptions.filter(([_packId, _name, exemptionType]) => exemptionType === ExemptionType.FilterablePropertyLimit).map(
+      ([packId, name]) => exemptionKey(packId, name),
+    ),
+  );
+
   function isValidIdentityName(packId: number | undefined, name: string): boolean {
     if (packId && IdentityNameExemptions.has(exemptionKey(packId, name))) {
       return true;
@@ -1924,13 +1930,10 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }
 
         // Ignore property limit if specified.
+        const packId = schema.__packId;
+        const {name} = schema.identity ?? {};
         if (
-          Exemptions.some(
-            exemption =>
-              exemption[0] === schema.identity?.packId &&
-              exemption[1] === schema.identity?.name &&
-              exemption[2] === ExemptionType.FilterablePropertyLimit,
-          )
+          packId && name && FilterablePropertyLimitExemptions.has(exemptionKey(packId, name))
         ) {
           return;
         }
@@ -1938,7 +1941,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         context.addIssue({
           code: z.ZodIssueCode.custom,
           path: ['index', 'filterableProperties'],
-          message: `Array must contain at most ${Limits.FilterableProperties} element(s)`,
+          message: `Array must contain at most ${Limits.FilterableProperties} element(s) at ${packId}/${name}`,
         });
       }),
   );

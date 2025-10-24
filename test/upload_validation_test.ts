@@ -3846,7 +3846,8 @@ describe('Pack metadata Validation', async () => {
 
         it('passes when filterable properties exempted', async () => {
           const metadata = metadataForFormulaWithObjectSchema({
-            identity: {packId: 1052, name: 'Issue'},
+            __packId: 1052,
+            identity: {name: 'Issue'},
             type: ValueType.Object,
             properties: {
               name: {type: ValueType.String},
