@@ -168,8 +168,8 @@ importers:
         specifier: 4.13.3
         version: 4.13.3
       '@types/node':
-        specifier: 18.19.68
-        version: 18.19.68
+        specifier: 22.18.12
+        version: 22.18.12
       '@types/node-fetch':
         specifier: 2.6.13
         version: 2.6.13
@@ -292,7 +292,7 @@ importers:
         version: 9.5.1(typescript@5.1.6)(webpack@5.95.0(esbuild@0.25.0)(uglify-js@3.19.1))
       ts-node:
         specifier: 10.9.2
-        version: 10.9.2(@types/node@18.19.68)(typescript@5.1.6)
+        version: 10.9.2(@types/node@22.18.12)(typescript@5.1.6)
       typedoc:
         specifier: 0.24.8
         version: 0.24.8(typescript@5.1.6)
@@ -1427,11 +1427,8 @@ packages:
   '@types/node-fetch@2.6.13':
     resolution: {integrity: sha512-QGpRVpzSaUs30JBSGPjOg4Uveu384erbHBoT1zeONvyCfwQxIkUshLAOqN/k9EjGviPRmWTTe6aH2qySWKTVSw==}
 
-  '@types/node@18.19.68':
-    resolution: {integrity: sha512-QGtpFH1vB99ZmTa63K4/FU8twThj4fuVSBkGddTp7uIL/cuoLWIUSL2RcOaigBhfR+hg5pgGkBnkoOxrTVBMKw==}
-
-  '@types/node@22.15.19':
-    resolution: {integrity: sha512-3vMNr4TzNQyjHcRZadojpRaD9Ofr6LsonZAoQ+HMUa/9ORTPoxVIw0e0mpqWpdjj8xybyCM+oKOUH2vwFu/oEw==}
+  '@types/node@22.18.12':
+    resolution: {integrity: sha512-BICHQ67iqxQGFSzfCFTT7MRQ5XcBjG5aeKh5Ok38UBbPe5fxTyE+aHFxwVrGyr8GNlqFMLKD1D3P2K/1ks8tog==}
 
   '@types/pascalcase@1.0.2':
     resolution: {integrity: sha512-XkW9PnSAHH0XIq1tefSZs7hvSIkM1RKkWlSobRfUpeHjz9OjyxIlu7XjgHVkxn/qDkk8siXzjLE20tsyqc4CqQ==}
@@ -4341,6 +4338,7 @@ packages:
   source-map@0.8.0-beta.0:
     resolution: {integrity: sha512-2ymg6oRBpebeZi9UUNsgQ89bhx01TcTkmNTGnNO88imTmbSgy4nfujrgVEFKWpMTEGA11EDkTt7mqObTPdigIA==}
     engines: {node: '>= 8'}
+    deprecated: The work that was done in this beta branch won't be included in future versions
 
   spdx-correct@3.2.0:
     resolution: {integrity: sha512-kN9dJbvnySHULIluDHy32WHRUu3Og7B9sbY7tsFLctQkIqnMh3hErYgdMjTYuqmcXX+lK5T1lnUt3G7zNswmZA==}
@@ -4664,9 +4662,6 @@ packages:
   undeclared-identifiers@1.1.3:
     resolution: {integrity: sha512-pJOW4nxjlmfwKApE4zvxLScM/njmwj/DiUBv7EabwE4O8kRUy+HIwxQtZLBPll/jx1LJyBcqNfB3/cpv9EZwOw==}
     hasBin: true
-
-  undici-types@5.26.5:
-    resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
 
   undici-types@6.21.0:
     resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
@@ -6347,12 +6342,12 @@ snapshots:
   '@types/body-parser@1.19.5':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 18.19.68
+      '@types/node': 22.18.12
 
   '@types/browserify@12.0.39':
     dependencies:
       '@types/insert-module-globals': 7.0.5
-      '@types/node': 18.19.68
+      '@types/node': 22.18.12
 
   '@types/chai@4.3.20': {}
 
@@ -6360,11 +6355,11 @@ snapshots:
 
   '@types/concat-stream@2.0.3':
     dependencies:
-      '@types/node': 18.19.68
+      '@types/node': 22.18.12
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 18.19.68
+      '@types/node': 22.18.12
 
   '@types/debug@4.1.12':
     dependencies:
@@ -6374,12 +6369,12 @@ snapshots:
 
   '@types/exorcist@2.0.1':
     dependencies:
-      '@types/node': 18.19.68
+      '@types/node': 22.18.12
       '@types/through': 0.0.33
 
   '@types/express-serve-static-core@5.0.5':
     dependencies:
-      '@types/node': 18.19.68
+      '@types/node': 22.18.12
       '@types/qs': 6.9.11
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.4
@@ -6394,18 +6389,18 @@ snapshots:
   '@types/fs-extra@11.0.3':
     dependencies:
       '@types/jsonfile': 6.1.4
-      '@types/node': 18.19.68
+      '@types/node': 22.18.12
 
   '@types/glob@8.1.0':
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 18.19.68
+      '@types/node': 22.18.12
 
   '@types/http-errors@2.0.4': {}
 
   '@types/insert-module-globals@7.0.5':
     dependencies:
-      '@types/node': 18.19.68
+      '@types/node': 22.18.12
 
   '@types/is-empty@1.2.3': {}
 
@@ -6415,7 +6410,7 @@ snapshots:
 
   '@types/jsonfile@6.1.4':
     dependencies:
-      '@types/node': 18.19.68
+      '@types/node': 22.18.12
 
   '@types/mdast@3.0.15':
     dependencies:
@@ -6433,20 +6428,16 @@ snapshots:
 
   '@types/mock-fs@4.13.3':
     dependencies:
-      '@types/node': 18.19.68
+      '@types/node': 22.18.12
 
   '@types/ms@0.7.34': {}
 
   '@types/node-fetch@2.6.13':
     dependencies:
-      '@types/node': 18.19.68
+      '@types/node': 22.18.12
       form-data: 4.0.4
 
-  '@types/node@18.19.68':
-    dependencies:
-      undici-types: 5.26.5
-
-  '@types/node@22.15.19':
+  '@types/node@22.18.12':
     dependencies:
       undici-types: 6.21.0
 
@@ -6465,17 +6456,17 @@ snapshots:
   '@types/send@0.17.4':
     dependencies:
       '@types/mime': 1.3.5
-      '@types/node': 18.19.68
+      '@types/node': 22.18.12
 
   '@types/serve-static@1.15.7':
     dependencies:
       '@types/http-errors': 2.0.4
-      '@types/node': 18.19.68
+      '@types/node': 22.18.12
       '@types/send': 0.17.4
 
   '@types/sha.js@2.4.4':
     dependencies:
-      '@types/node': 18.19.68
+      '@types/node': 22.18.12
 
   '@types/sinon@17.0.3':
     dependencies:
@@ -6489,7 +6480,7 @@ snapshots:
 
   '@types/through@0.0.33':
     dependencies:
-      '@types/node': 18.19.68
+      '@types/node': 22.18.12
 
   '@types/uglify-js@3.17.5':
     dependencies:
@@ -6505,7 +6496,7 @@ snapshots:
 
   '@types/xml2js@0.4.12':
     dependencies:
-      '@types/node': 18.19.68
+      '@types/node': 22.18.12
 
   '@types/yargs-parser@21.0.3': {}
 
@@ -8533,7 +8524,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 18.19.68
+      '@types/node': 22.18.12
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -10131,14 +10122,14 @@ snapshots:
       typescript: 5.1.6
       webpack: 5.95.0(esbuild@0.25.0)(uglify-js@3.19.1)
 
-  ts-node@10.9.2(@types/node@18.19.68)(typescript@5.1.6):
+  ts-node@10.9.2(@types/node@22.18.12)(typescript@5.1.6):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.11
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
-      '@types/node': 18.19.68
+      '@types/node': 22.18.12
       acorn: 8.13.0
       acorn-walk: 8.3.4
       arg: 4.1.3
@@ -10225,8 +10216,6 @@ snapshots:
       simple-concat: 1.0.1
       xtend: 4.0.2
 
-  undici-types@5.26.5: {}
-
   undici-types@6.21.0: {}
 
   unicorn-magic@0.1.0: {}
@@ -10251,7 +10240,7 @@ snapshots:
       '@types/concat-stream': 2.0.3
       '@types/debug': 4.1.12
       '@types/is-empty': 1.2.3
-      '@types/node': 22.15.19
+      '@types/node': 22.18.12
       '@types/unist': 3.0.3
       concat-stream: 2.0.0
       debug: 4.3.7(supports-color@8.1.1)
