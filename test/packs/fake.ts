@@ -372,12 +372,15 @@ export const manifest: PackDefinition = createFakePack({
               };
         },
         parameters: [
-          makeStringParameter(
-            'teacher', 
-            'teacher name', 
-            {autocomplete: makeSimpleAutocompleteMetadataFormula(
-              ['Smith', 'Brown', 'Cunningham', 'Mr. Incremental', 'Barry']
-            )}),
+          makeStringParameter('teacher', 'teacher name', {
+            autocomplete: makeSimpleAutocompleteMetadataFormula([
+              'Smith',
+              'Brown',
+              'Cunningham',
+              'Mr. Incremental',
+              'Barry',
+            ]),
+          }),
           makeStringParameter('shouldPassthrough', 'should passthrough', {optional: true}),
         ],
         examples: [],
