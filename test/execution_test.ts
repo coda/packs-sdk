@@ -865,6 +865,24 @@ describe('Execution', () => {
           assert.deepEqual(result, [{value: 'foo', display: 'foo'}]);
         });
 
+        it('autocomplete on a sync table', async () => {
+          await executeFormulaOrSyncFromCLI({
+            vm,
+            formulaName: 'Students:autocomplete:teacher',
+            params: ['b'],
+            manifest: fakePack,
+            manifestPath: '',
+            bundleSourceMapPath,
+            bundlePath,
+            contextOptions: {useRealFetcher: false},
+          });
+          const result = mockPrintFull.args[0][0];
+          assert.deepEqual(result, [
+            {value: 'Brown', display: 'Brown'},
+            {value: 'Barry', display: 'Barry'},
+          ]);
+        });
+
         it('autocomplete with formula context', async () => {
           await executeFormulaOrSyncFromCLI({
             vm,
