@@ -15,6 +15,7 @@ import {makeNumericParameter} from '../../api';
 import {makeObjectFormula} from '../../api';
 import {makeObjectSchema} from '../../schema';
 import {makeParameter} from '../../api';
+import {makeSimpleAutocompleteMetadataFormula} from '../../api';
 import {makeStringFormula} from '../../api';
 import {makeStringParameter} from '../../api';
 import {makeSyncTable} from '../../api';
@@ -157,7 +158,7 @@ export const manifest: PackDefinition = createFakePack({
       identityName: 'Person',
       schema: fakePersonSchema,
       formula: {
-        name: 'Students',
+        name: 'SyncStudents',
         description: "Gets students in a teacher's class",
         validateParameters: async (context, _search, params) => {
           const {teacher} = ensureExists(params);
@@ -371,7 +372,15 @@ export const manifest: PackDefinition = createFakePack({
               };
         },
         parameters: [
-          makeStringParameter('teacher', 'teacher name'),
+          makeStringParameter('teacher', 'teacher name', {
+            autocomplete: makeSimpleAutocompleteMetadataFormula([
+              'Smith',
+              'Brown',
+              'Cunningham',
+              'Mr. Incremental',
+              'Barry',
+            ]),
+          }),
           makeStringParameter('shouldPassthrough', 'should passthrough', {optional: true}),
         ],
         examples: [],
