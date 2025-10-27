@@ -1,5 +1,5 @@
 ---
-nav: Contributing
+nav: Overview
 title: Contributing to the Coda Pack SDK
 description: Tips and policies for how to contribute to the SDK.
 ---

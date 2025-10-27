@@ -1,5 +1,5 @@
 ---
-nav: Support
+nav: Overview
 description: The support channels that exist for the Pack SDK.
 ---
 

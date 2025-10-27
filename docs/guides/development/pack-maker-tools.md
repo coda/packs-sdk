@@ -21,7 +21,7 @@ There are a few different ways to open the Pack maker tools.
     <img src="../../../images/pmt_open_doc.png" srcset="../../../images/pmt_open_doc_2x.png 2x" class="screenshot" alt="Open Pack maker tools from doc menu">
 
 === "Pack side panel"
-    Open the side panel for a Pack ({{ coda.pack_panel_clicks }}) and click the button **View logs** at the bottom. This option is only visible for users with edit access to the Pack.
+    Open the side panel for a Pack ({{ custom.pack_panel_clicks }}) and click the button **View logs** at the bottom. This option is only visible for users with edit access to the Pack.
 
     <img src="../../../images/pmt_open_panel.png" srcset="../../../images/pmt_open_panel_2x.png 2x" class="screenshot" alt="Open Pack maker tools from Pack panel">
 

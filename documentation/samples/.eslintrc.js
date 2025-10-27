@@ -11,7 +11,7 @@ module.exports = {
         '@typescript-eslint/no-unused-vars': [
           'error',
           {
-            varsIgnorePattern: 'response|datasetUrl|MySchema|snippet|data|parameters|row',
+            varsIgnorePattern: 'response|datasetUrl|MySchema|snippet|data|parameters|row|_',
             argsIgnorePattern: 'context|param|parameters',
           },
         ],

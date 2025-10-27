@@ -7,7 +7,7 @@ const {ESLint} = require('eslint');
 
 module.exports = function (_options) {
   const eslint = new ESLint();
-  
+
   return async function (node, file) {
     if (node.meta) {
       let attrs = node.meta.split(/\s+/);
@@ -26,7 +26,7 @@ module.exports = function (_options) {
         line: node.position.start.line + message.line,
         column: message.column
       }
-      const msg = `${message.message} [${message.ruleId}]`; 
+      const msg = `${message.message} [${message.ruleId}]`;
       switch (message.severity) {
         case 1:
           file.message(msg, pos)
@@ -47,10 +47,12 @@ function fixCode(code) {
     .replaceAll('{% endraw %}', '')
     .trim()
     // Allow for code snippets that only include a key-value pair.
-    // Before: 
+    // Before:
     //   foo: "bar",
-    // After: 
+    // After:
     //   // eslint-disable-next-line func-style
     //   let value = "bar";
-    .replace(/^\w+\:(.*),$/ms, '// eslint-disable-next-line func-style\nlet value = $1;');
+    .replace(/^\w+\:(.*),$/ms, '// eslint-disable-next-line func-style\nlet value = $1;')
+    // Remove snippet includes (the code is linted elsewhere).
+    .replace(/^--8<-- ".*"$/ms, '');
 }
