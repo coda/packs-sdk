@@ -149,7 +149,7 @@ pack.addSkill({
 
 When the tool is run, blue bars are added to the left of affected paragraphs. Hovering over them reveals the alternative text that the agent suggested, and users have the option to accept or reject them.
 
-<img src="../../../images/agent_rewrite.png" srcset="../../../images/agent_rewrite_2x.png 2x" alt="A screenshot rewrite suggestions created by a Yoda agent." class="screenshot">
+<!-- TODO: Screenshot -->
 
 Under the hood, the rewrite tool has the following input format:
 

@@ -66,12 +66,12 @@ plugins:
         filename: .nav.yml
     - llmstxt:
         enabled: !ENV [MK_DOCS_GENERATE_ASSETS, true]
-        markdown_description: > 
+        markdown_description: >
           A Pack is an extension that adds new powers to your doc.
-          What other platforms call plugins, add-ons, or extensions, we call "Packs". 
-          A Pack extends the core building blocks of Coda, allowing users to build more powerful and integrated docs. 
+          What other platforms call plugins, add-ons, or extensions, we call "Packs".
+          A Pack extends the core building blocks of Coda, allowing users to build more powerful and integrated docs.
           Anyone can build a Pack, and they can use it in their own docs, share it with their team, or publish it to the world.
-          Packs are built using JavaScript or TypeScript, either on your local machine or in the browser, and run on Coda's own servers. 
+          Packs are built using JavaScript or TypeScript, either on your local machine or in the browser, and run on Coda's own servers.
           We have a gallery where users can discover and install Packs, as well as a robust set of admin controls.
         full_output: llms-full.txt
         sections:
@@ -152,7 +152,6 @@ theme:
     - content.action.edit
     - content.action.view
     - content.code.copy
-    # - navigation.indexes
     - navigation.sections
     - navigation.tabs
     - navigation.tabs.sticky
