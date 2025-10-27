@@ -1,47 +1,60 @@
+# Configuration file for the cSpell spell checker.
 version: 0.2
 language: en
+
+# List of additional words to add to the dictionary.
 words:
+  # Names
   - Asana
   - Astley
-  - autocompletes
-  - automations
   - Calendarific
   - Codans
-  - Durin
-  - embeddable
   - Giphy
   - Iframely
-  - IIFE
   - Imgur
   - keepachangelog
-  - keyof
   - Koleda
+  - Replit
+  - Socrata
+  - Splitwise
+  - Typeform
+  - Vonage
+  - Webflow
+  # Acronyms
+  - IIFE
   - PKCE
+  # TsDoc
+  - keyof
+  - typeof
+  # Other
+  - autocompletes
+  - automations
+  - embeddable
   - precanned
   - prepopulated
   - reauthentication
-  - Replit
   - sandboxed
   - sandboxing
   - signup
-  - Socrata
-  - Splitwise
   - templating
-  - Typeform
-  - typeof
   - unredacted
   - vararg
   - varargs
-  - Vonage
-  - Webflow
+
+# Patterns in the content to ignore.
 ignoreRegExpList:
-  - |-
-    ```(.|
-    )*?```
+  # Code blocks.
+  - "```(.|\n)*?```"
+  # Inline code.
   - "`.*?`"
   - "``.*?``"
+  # Python macros.
   - "{%.*?%}"
-  - <.*?>
+  # HTML tags.
+  - "<.*?>"
+  # Icon references.
   - ":.*?:"
+  # Icons in page metadata.
   - "^icon: .*?$"
+  # Markdown attributes
   - "{:.*?}"
