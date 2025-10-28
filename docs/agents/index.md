@@ -16,7 +16,7 @@ We are enabling developers like you to leverage our 16+ years of investment in A
 
 ## Apply to build with us
 
-The agent developer experience is currently in a closed beta, with only select partners able to build, test, and publish agents. If you are interested in developing a solution with us, fill out the application form below.
+The agent developer experience is currently in a closed beta, with only select partners able to build, test, and publish agents. If you are interested in developing a solution with us, fill out the application form.
 
 [Partner Application Form][partner_form]{ .md-button .md-button--primary }
 
@@ -32,5 +32,5 @@ Agents are built on the Coda Pack platform. Coda was acquired by Grammarly in 20
 You'll see the word "Pack" all throughout this definition, and you can think of it as interchangeable with "agent". Building an agent involves creating a Pack with a specific set of features and then enabling it to run in {{ custom.agent_product_name }}.
 
 
-[partner_form]: https://grammarly.outgrow.co/superhuman-partnership-application
+[partner_form]: https://grammarly.outgrow.us/superhuman-partnership-application
 [early_access_form]: https://www.grammarly.com/contact/early-access
