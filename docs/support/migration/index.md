@@ -1,5 +1,5 @@
 ---
-nav: Migration
+nav: Overview
 description: How to upgrade to a new SDK version and what to look out for.
 ---
 

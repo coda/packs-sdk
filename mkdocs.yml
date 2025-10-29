@@ -14,6 +14,10 @@ validation:
   absolute_links: warn
   unrecognized_links: warn
 
+# Run Python scripts during the MkDocs generation process.
+hooks:
+  - documentation/scripts/mkdocs_hooks.py
+
 markdown_extensions:
   - abbr
   - admonition
@@ -24,6 +28,9 @@ markdown_extensions:
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      options:
+        custom_icons:
+          - documentation/theme/.icons
   - footnotes
   - pymdownx.highlight
   - pymdownx.keys
@@ -58,12 +65,13 @@ plugins:
     - awesome-pages:
         filename: .nav.yml
     - llmstxt:
-        markdown_description: > 
+        enabled: !ENV [MK_DOCS_GENERATE_ASSETS, true]
+        markdown_description: >
           A Pack is an extension that adds new powers to your doc.
-          What other platforms call plugins, add-ons, or extensions, we call "Packs". 
-          A Pack extends the core building blocks of Coda, allowing users to build more powerful and integrated docs. 
+          What other platforms call plugins, add-ons, or extensions, we call "Packs".
+          A Pack extends the core building blocks of Coda, allowing users to build more powerful and integrated docs.
           Anyone can build a Pack, and they can use it in their own docs, share it with their team, or publish it to the world.
-          Packs are built using JavaScript or TypeScript, either on your local machine or in the browser, and run on Coda's own servers. 
+          Packs are built using JavaScript or TypeScript, either on your local machine or in the browser, and run on Coda's own servers.
           We have a gallery where users can discover and install Packs, as well as a robust set of admin controls.
         full_output: llms-full.txt
         sections:
@@ -105,13 +113,9 @@ plugins:
           "tutorials/webinars.md": "tutorials/videos.md"
           # 2023-10-02: Launch two-way sync.
           "guides/advanced/two-way-sync.md": "guides/blocks/sync-tables/two-way.md"
-    # Run Python scripts during the MkDocs generation process.
-    - mkdocs-simple-hooks:
-        hooks:
-          on_page_markdown: "documentation.scripts.mkdocs_hooks:on_page_markdown"
     # Generate card images for social sharing.
     - social:
-        cards: !ENV [MK_DOCS_GENERATE_CARDS, true]
+        cards: !ENV [MK_DOCS_GENERATE_ASSETS, true]
         cards_layout_options:
           background_color: "#006838"  # Emerald
           color: "#FFFFFF"
@@ -130,8 +134,10 @@ extra:
       link: https://www.facebook.com/codahq/
 
   # Custom variables.
-  coda:
+  custom:
     pack_panel_clicks: "**Insert** > **Packs** > **{Pack name}**"
+    agent_product_name: "Superhuman Go"
+    agent_icon_name: "superhuman-go"
 
 # Copyright that appears in the footer.
 copyright: "Copyright © 2022 Coda. All rights reserved."
@@ -146,7 +152,6 @@ theme:
     - content.action.edit
     - content.action.view
     - content.code.copy
-    - navigation.indexes
     - navigation.sections
     - navigation.tabs
     - navigation.tabs.sticky

@@ -1,5 +1,5 @@
 ---
-nav: Parameters
+nav: Overview
 description: Define parameters on formulas and sync tables to accept values from the user.
 ---
 

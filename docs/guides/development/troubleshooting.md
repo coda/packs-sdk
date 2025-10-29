@@ -58,4 +58,4 @@ For example, to use the debugger in the VS Code IDE follow these steps:
 
 [mdn_console]: https://developer.mozilla.org/en-US/docs/Web/API/console
 [pmt]: pack-maker-tools.md
-[pmt_http]: pack-maker-tools.md#http-requests
+[pmt_http]: pack-maker-tools.md#http

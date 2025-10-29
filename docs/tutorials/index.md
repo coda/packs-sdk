@@ -1,11 +1,9 @@
 ---
-nav: Tutorials
+nav: Overview
 description: An index of guided lessons to help you learn various aspects of the SDK.
 hide:
 - toc
 ---
-
-# Tutorials
 
 The tutorials below provide step-by-step instructions and sample code to help you get started building Packs and learn key concepts.
 

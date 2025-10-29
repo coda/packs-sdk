@@ -1,5 +1,5 @@
 ---
-nav: Sync tables
+nav: Overview
 description: Create tables of data that automatically sync in records from an external data source.
 ---
 
@@ -12,7 +12,7 @@ Tables are one of the most powerful features of Coda, and many times people use 
 
 ## Using sync tables
 
-Sync tables are added directly to the document, usually by dragging them in from the side panel. Navigate to {{ coda.pack_panel_clicks }} and drag the table into the canvas.
+Sync tables are added directly to the document, usually by dragging them in from the side panel. Navigate to {{ custom.pack_panel_clicks }} and drag the table into the canvas.
 
 <video style="width:auto" loop muted autoplay alt="Recording of adding a sync table." class="screenshot"><source src="../../../images/sync_table_use.mp4" type="video/mp4"></source></video>
 

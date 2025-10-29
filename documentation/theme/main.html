@@ -4,3 +4,16 @@
   Override blocks from the theme here.
   https://squidfunk.github.io/mkdocs-material/customization/?h=block#overriding-blocks
 #}
+
+{% block content %}
+  {% if page and page.url and page.url.startswith('agents/') %}
+    <div class="admonition early-access">
+      <p class="admonition-title">Private Beta</p>
+      <p>
+        Building, testing, and publishing agents are only available to a limited set of developers at this time.<br>
+        The following documentation provides an early preview of the SDK, and the specifics are subject to change.<br>
+      </p>
+    </div>
+  {% endif %}
+  {{ super() }}
+{% endblock %}

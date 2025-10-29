@@ -295,7 +295,7 @@ Coda logs every API request that your Pack makes, and examining those logs can b
     <section class="tutorial-row" markdown>
     <div markdown>
 
-    In the Pack's side panel click the **View logs** button to bring up the Pack Maker Tools. If you have navigated away from the Pack's panel, click {{ coda.pack_panel_clicks }}.
+    In the Pack's side panel click the **View logs** button to bring up the Pack Maker Tools. If you have navigated away from the Pack's panel, click {{ custom.pack_panel_clicks }}.
 
     </div>
     <div markdown>
