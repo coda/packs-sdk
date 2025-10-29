@@ -660,7 +660,8 @@ export class AuthenticatingFetcher implements Fetcher {
 
   private _validateHost(url: string, method: FetchMethodType): void {
     const parsed = new URL(url);
-    const host = parsed.host.toLowerCase();
+    // Use hostname (excludes port) and strip trailing dots for proper domain comparison
+    const host = parsed.hostname.toLowerCase().replace(/\.$/, '');
     const allowedDomains = this._networkDomains || [];
     if (
       !allowedDomains
