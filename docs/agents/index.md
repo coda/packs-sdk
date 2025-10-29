@@ -5,7 +5,7 @@ description: Create and publish your own agents that work everywhere Grammarly d
 
 # Build agents for {{ custom.agent_product_name }}
 
-{{ custom.agent_product_name }} is the AI assistant that works everywhere you work and helps before you even ask. You can use it to interact with agent, AI collaborators built for specific workflows. It includes a powerful set of default agents and the ability to build custom ones.
+{{ custom.agent_product_name }} is the AI assistant that works everywhere you work and helps before you even ask. You can use it to interact with agents, AI collaborators built for specific workflows. It includes a powerful set of default agents and the ability to build custom ones.
 
 We are enabling developers like you to leverage our 16+ years of investment in AI, to build and deploy your own agents quickly. We offer some key value propositions:
 
@@ -27,7 +27,7 @@ If you are interested in building a solution for internal usage at your company,
 
 ## Agents extend Coda Packs
 
-Agents are built on the Coda Pack platform. Coda was acquired by Grammarly in 2025, and Packs are a plugin system for Coda. While most of the features in the Packs platform were initially created to enhance Coda Docs, they were turned out to be a great foundation for building agents as well.
+Agents are built on the Coda Packs platform. Coda was acquired by Grammarly in 2025, and Packs are a plugin system for Coda. While most of the features in the Packs platform were initially created to enhance Coda Docs, they were turned out to be a great foundation for building agents as well.
 
 You'll see the word "Pack" all throughout this definition, and you can think of it as interchangeable with "agent". Building an agent involves creating a Pack with a specific set of features and then enabling it to run in {{ custom.agent_product_name }}.
 

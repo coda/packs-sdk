@@ -136,8 +136,8 @@ extra:
   # Custom variables.
   custom:
     pack_panel_clicks: "**Insert** > **Packs** > **{Pack name}**"
-    agent_product_name: "Grammarly Go"
-    agent_icon_name: "grammarly"
+    agent_product_name: "Superhuman Go"
+    agent_icon_name: "superhuman-go"
 
 # Copyright that appears in the footer.
 copyright: "Copyright © 2022 Coda. All rights reserved."
