@@ -5,7 +5,7 @@ description: Define the tasks your agent can perform and the prompts to guide it
 
 # Define skills for your agent
 
-A skill provides guidance to the LLM on how to perform a specific task or handle a certain type of user question. The skill definition includes metadata about the skill, a prompt to direct the LLM, and a set of [tools][tools] it can utilize.
+A skill guides the LLM on how to perform a specific task or handle a particular type of user question. The skill definition includes metadata about the skill, a prompt to direct the LLM, and a set of [tools][tools] it can use.
 
 ```ts
 pack.addSkill({
@@ -16,7 +16,7 @@ pack.addSkill({
   displayName: "Secret password",
 
   // Description of the skill.
-  // Use for skill routing and potentially user visible.
+  // Used for skill routing, and is potentially user-visible.
   description: "Tells the user the secret password.",
 
   // A prompt that instructs the LLM how to perform the task, internal-only.
@@ -29,7 +29,7 @@ pack.addSkill({
 });
 ```
 
-The LLM will run in a loop, using the prompt for guidance and calling tools as needed until it is finished or needs user input. We currently don’t support more deterministic workflows, where LLMs choose between defined execution paths.
+The LLM will run in a loop, using the prompt for guidance and calling tools as needed, until it finishes or requires user input. We currently don’t support more deterministic workflows in which LLMs choose from predefined execution paths.
 
 
 ## Multiple skills
@@ -45,10 +45,10 @@ pack.addSkill({
 pack.addSkill({
   name: "SecretHandshake",
   displayName: "Secret handshake",
-  description: "Tess the user on how to perform the secret handshake.",
+  description: "Teach the user how to perform the secret handshake.",
   prompt: `
     When the user asks about the secret handshake, tell them that it is:
-    Hand shake, high five, fist bump, explosion
+    Handshake, high five, fist bump, explosion
   `,
   tools: [],
 });
@@ -80,7 +80,7 @@ pack.setSkillEntrypoints({
 
 !!! info "Additional information added to prompt"
 
-    The prompt defined in your `defaultChat` skill will not be used exactly as-is, and it will have some additional content appended to it. This is done to provide the LLM with some details about the user, context, and other critical information needed for it to operate.
+    The prompt defined in your `defaultChat` skill will not be used exactly as-is; it will have additional content appended. This is done to provide the LLM with some details about the user, context, and other critical information needed for it to operate.
 
 
 [tools]: ./tools.md

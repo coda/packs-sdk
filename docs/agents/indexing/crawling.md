@@ -5,17 +5,17 @@ description: Teach your agent how to crawl the data structures during indexing.
 
 # Crawling related tables
 
-Users want to access to all of their important data in the knowledge layer, ideally with as little setup as possible. If your agent can sync all of the records the user has access to by default, then no further work is required. However, if some of your sync tables can only return a subset of records in each sync, then you’ll need to provide additional metadata in your Pack that allows the knowledge layer to crawl the entire dataset.
+Users want to access all their essential data in the knowledge layer, ideally with as little setup as possible. If your agent can sync all of the records the user has access to by default, then no further work is required. However, suppose some of your sync tables return only a subset of records per sync. In that case, you’ll need to provide additional metadata in your Pack to enable the knowledge layer to crawl the entire dataset.
 
 ## Example
 
-Imagine an agent that has a Tasks table that can only sync in the tasks for a single project at a time, as specified by the user in the required `project` parameter. A user that wants to sync in all of their tasks from all of their projects wouldn't be able to, as they can only setup the agent with one value for the `project` parameter.
+Imagine an agent with a Tasks table that can sync tasks for only a single project at a time, as specified by the user in the required `project` parameter. A user who wants to sync all of their tasks from all of their projects wouldn't be able to, as they can only set up the agent with one value for the `project` parameter.
 
-You can solve this by defining a crawl hierarchy that the knowledge layer can follow. If you annotate the `project` parameter as being connected to the Projects table, then the knowledge layer will first sync in the full list of projects, and then run a separate sync of the Tasks table for each project found.
+You can solve this by defining a crawl hierarchy that the knowledge layer can follow. If you annotate the `project` parameter as connected to the Projects table, the knowledge layer will first sync the complete list of projects, then run a separate sync of the Tasks table for each project.
 
 ## Required code changes
 
-In order to establish the crawl hierarchy, add a `crawlStrategy` to the parameter of the child table, pointing to the parent table and column where it should source it’s values from.
+To establish the crawl hierarchy, add the `crawlStrategy` field to the parameters of the child table that can be sourced from the parent table. Set `crawlStrategy` to point to the parent table and the specific column that contains the value.
 
 ```{.ts hl_lines="12-17"}
 pack.addSyncTable({
@@ -28,7 +28,7 @@ pack.addSyncTable({
         type: ParameterType.String,
         name: 'project',
         description: 'The ID of the project containing the tasks.',
-        // Use the project IDs come from ID column in the Projects table.
+        // Use the project IDs that come from the ID column in the Projects table.
         crawlStrategy: {
           parentTable: {
             tableName: 'Projects',
@@ -63,8 +63,8 @@ pack.addSyncTable({
 
 !!! info "Table name, not identity"
 
-    Note that for the crawl strategy you refer to a table via its `name` value, not `identityName` value (which is used for schema references, etc).
+    Note that for the crawl strategy, you refer to a table via its `name` value, not `identityName` value (which is used for schema references, etc).
 
 ## Dynamic sync tables
 
-Crawling is not supported for dynamic sync tables. The datasources returned by `listDynamicUrls` will be shown to the user, but they’ll have to manually select which ones to index.
+Crawling is not supported for dynamic sync tables. The data sources returned by `listDynamicUrls` will be shown to the user, but they’ll have to select which ones to index manually.

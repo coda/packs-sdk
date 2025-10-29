@@ -4,7 +4,7 @@ description: Improve the speed and efficiency of syncing data during indexing.
 
 # Incremental sync
 
-Rather than sync the full result set every time, sync tables can be updated to support an incremental sync, where each sync only returns new or updated records. APIs enable incremental syncs in various ways, most often requiring you to pass a timestamp or opaque sync token from the last sync to the next one.
+Rather than syncing the full result set every time, tables can be updated to support an incremental sync, which returns only new or updated records. APIs enable incremental syncs in various ways, most often requiring you to pass a timestamp or an opaque sync token from the last sync to the next.
 
 To add support for incremental sync in your Pack, you’ll need to:
 
@@ -59,7 +59,7 @@ pack.addSyncTable({
 
 ## Incompatible parameters
 
-For some APIs only a limited set of filters are compatible with incremental sync. If you need to hide an optional parameter when the table is used in the data layer, you can set the field `supportsIncrementalSync` to false.
+For some APIs, only some filters are compatible with incremental sync. If you need to hide an optional parameter when the table is used in the data layer, you can set the field `supportsIncrementalSync` to false.
 
 ```{.ts hl_lines="6"}
 coda.makeParameter({
@@ -74,9 +74,9 @@ coda.makeParameter({
 
 ## Periodic full syncs
 
-Not all APIs provide perfect fidelity in their incremental sync, so to ensure accurate information the data layer will periodically perform a full sync instead of an incremental one. No changes are required to your Pack, as the sync engine will simply omit the `incrementalContinuation` when running your sync table.
+Not all APIs provide perfect fidelity in their incremental syncs, so to ensure accurate information, the data layer will periodically perform a full sync instead. No changes are required to your Pack, as the sync engine will omit the `incrementalContinuation` when running your sync table.
 
-Full syncs are currently scheduled to run once a week, but this is subject to change.
+Full syncs are currently scheduled to run once a week, but this may change.
 
 
 ## Deleted records
@@ -104,12 +104,12 @@ return {
 
 ## Partial updates not supported
 
-When doing an incremental sync, the API may give you information about which fields changed and their new values. Unfortunately there is currently no way to pass only that limited set of information as a result, and you’ll need to fetch the full state of the item and return it.
+When performing an incremental sync, the API may return information about which fields changed and their new values. Unfortunately, there is currently no way to pass only that limited set of information, so you’ll need to fetch the item's complete state and return it.
 
 
 ## Handling errors
 
-For many APIs the tokens used for incremental sync can expire, requiring a full sync to generate a new one. If you encounter an unrecoverable error like this during an incremental sync return a completion object with `hasIncompleteResults: true`. This will instruct the sync engine to run a full sync of that table to ensure that the latest data is available and future incremental syncs can be run.
+For many APIs, the tokens used for incremental sync can expire, requiring a full sync to generate a new one. If you encounter an unrecoverable error like this during an incremental sync, return a completion object with `hasIncompleteResults: true`. This will instruct the sync engine to run a full sync of that table to ensure the latest data is available and that future incremental syncs can run.
 
 ```{.ts hl_lines="11-13"}
 let page;

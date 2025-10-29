@@ -5,7 +5,7 @@ description: Go from zero to a working AI agent in less than five minutes.
 
 # Build your first agent in 5 minutes
 
-You can build an agent for {{ custom.agent_product_name }} in only a few minutes, without leaving your browser. This quick tutorial will walk you through how to build, deploy, and test your agent end-to-end.
+You can build an agent for {{ custom.agent_product_name }} in only a few minutes, without leaving your browser. This quick tutorial walks you through building, deploying, and testing your agent end-to-end.
 
 
 ## Before you begin
@@ -18,7 +18,7 @@ Before you can start coding, there are a few things you need:
 
     ??? warning "Individual accounts only"
 
-        At the moment you can only use agents with *individual* Grammarly accounts. If you have an account that is part of a team on the Pro or Enterprise plans, it won’t be compatible. As a workaround, select another email address and create a new Grammarly account on the Free plan.
+        At the moment, you can only use agents with *individual* Grammarly accounts. If you have an account on a team plan (Pro or Enterprise), it won’t be compatible. As a workaround, select another email address and create a new Grammarly account on the Free plan.
 
 **Coda account**
 
@@ -28,7 +28,7 @@ Before you can start coding, there are a few things you need:
 
         Please ensure that you use the same email address to sign up for both Coda and Grammarly. The email address is the key being used to link both accounts.
 
-**Grammarly Chrome Extension**
+**Grammarly for Chrome**
 
 :   Install it from the [Chrome web store][extension]. Once installed, click on the Grammarly icon :grammarly: in the extension toolbar and enable the option **Use {{ custom.agent_product_name }}**.
 
@@ -54,7 +54,7 @@ Before you can start coding, there are a few things you need:
       displayName: "Secret password",
       description: "Tells the user the secret password.",
       prompt: `
-        When the user asks what the secret password is, tell them it's "foobar".
+        When the user asks for the secret password, tell them it's "foobar".
       `,
       tools: [],
     });
@@ -70,7 +70,7 @@ Before you can start coding, there are a few things you need:
 1.  Open any website ([textarea.org](https://textarea.org) is great for testing agents).
 1.  Slide your mouse to the right of the page, and click the {{ custom.agent_product_name }} icon :{{ custom.agent_icon_name }}: that slides out.
 1.  Click the **+** icon labeled **More agents**.
-1.  In the search box type **Secret**, look for the matching agent with you listed as the author, and click on the tile.
+1.  In the search box, type **Secret**, look for the matching agent with you listed as the author, and click on the tile.
 1.  Click the **Add agent** button at the bottom.
 
 The agent should be added to your bench and selected, with a puzzle piece icon :puzzle: and the label **Secret**.
@@ -78,7 +78,7 @@ The agent should be added to your bench and selected, with a puzzle piece icon :
 
 ## Test the agent
 
-1.  In the chat box type:
+1.  In the chat box, type:
 
     ```
     Who are you?
@@ -92,8 +92,7 @@ The agent should be added to your bench and selected, with a puzzle piece icon :
     What is the password?
     ```
 
-    It should respond back with “foobar”.
-
+    It should respond with “foobar”.
 
 
 ## Next steps
