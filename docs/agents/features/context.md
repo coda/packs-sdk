@@ -5,23 +5,23 @@ description: The information provided to your agent about where it's running.
 
 # Context provided to your agent
 
-While [tools][tools] must be invoked by the LLM, context is provided automatically. All [skills][skills] are provided this context by default, with no additional configuration required.
+While [tools][tools] must be invoked by the LLM, context is provided automatically. All [skills][skills] are provided context by default, with no additional configuration required.
 
 
 ## Screen context
 
-The agent is given access to the text on the screen at the time the agent was invoked. The chat box includes a visual indicator to users about the context being passed, and the user has the option to remove that context for a given session.
+The agent is given access to the text on the screen when it is invoked. The chat box includes a visual indicator for users about the context being passed, and users can remove that context for a given session.
 
 <!-- TODO: Image -->
 
 There are three types of text your agent may receive, with possibly more than one being passed at the same time:
 
 **Screen information**
-:   The text on the screen. The {{ custom.agent_product_name }} platform decides exactly which element of the web page are included, and it usually tries to limit it to the core content and exclude navigational elements, etc.
+:   The text on the screen. The {{ custom.agent_product_name }} platform decides which elements of the web page to include, usually limiting it to core content and excluding navigational elements, etc.
 
     ??? info "Full text not guaranteed"
 
-        The agent will always include the text that is visible on the user's screen (and often much more), but you can't assume it's the full text of the page, doc, etc. The amount of text that is passed to your agent can be capped for performance reasons, and many apps implement “lazy loading”, only rendering the content as it comes into view.
+        The agent will always include the text that is visible on the user's screen (and often much more), but you can't assume it's the full text of the page, doc, etc. The amount of text passed to your agent can be capped for performance reasons, and many apps implement “lazy loading,” rendering content only as it comes into view.
 
 **Editor text**
 :   If the user is currently typing in an editable text field, the current value of that field. It is split into numbered paragraphs, which are referenced by the [Rewrite tool][rewrite_tool].
@@ -44,26 +44,26 @@ pack.addSkill({
 });
 ```
 
-No formatting or visual elements passed to the agent, only the plain text equivalent.
+No formatting or visual elements are passed to the agent; only the plain-text equivalent.
 
 
 ## User information
 
-The agent is provided with the full name and email address of the user that is invoking it. This can be useful for personalizing responses, filtering search results, etc.
+The agent is provided with the user's full name and email address. This can be useful for personalizing responses, filtering search results, etc.
 
 !!! warning "Not proof of identity"
 
-    We don't recommend using the email address as proof of the user's identity, as the LLM may not faithfully pass the value to a formula. If you need to verify the user's identity we recommend using a [supported Authentication mechanism][auth] and having the user connect their account when installing the agent.
+    We don't recommend using the email address as proof of the user's identity, as the LLM may not faithfully pass the value to a formula. If you need to verify the user's identity, we recommend using a [supported Authentication mechanism][auth] and having the user connect their account during agent installation.
 
 
 ## Chat history
 
-An agent has access to the previous messages in the current chat session, both those sent by the user and by the agent itself. Message history from other chat sessions are not available.
+An agent has access to previous messages in the current chat session, both those sent by the user and those sent by the agent. Message history from other chat sessions is not available.
 
 
 ## Date and time
 
-When an agent is invoked it's provided the current date and time, up to the minute (no seconds). It's also provided the timezone of the user, so that the time can be displayed correctly.
+When an agent is invoked, it's provided the current date and time, up to the minute (no seconds). It's also given the user's timezone, so time values can be localized correctly.
 
 
 [tools]: ./tools.md
