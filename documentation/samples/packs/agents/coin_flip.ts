@@ -17,16 +17,16 @@ pack.addSkill({
   displayName: "Flip a coin",
   description: "Flips a coin and gets the result.",
   prompt: `
-    1. If not provided, as the user how many seconds to flip the coin for.
+    1. If not provided, ask the user how many seconds to flip the coin for.
     2. Call StartCoinFlip to begin the coin flip.
-    3. Call GetResult to check the status of the flip, and possibly get the 
+    3. Call GetResult to check the status of the flip, and possibly get the
        result.
-    4. If the flip isn't complete (isComplete is false), go back to step 3 and 
+    4. If the flip isn't complete (isComplete is false), go back to step 3 and
        call GetResult again.
-    5. Tell the user the result of the coin flip. Only do this if the flip is 
+    5. Tell the user the result of the coin flip. Only do this if the flip is
        complete. If not, always call GetResult again.
 
-    Don't stop until you have a result. 
+    Don't stop until you have a result.
     You must get a result, no matter how long it takes.
   `,
   tools: [
