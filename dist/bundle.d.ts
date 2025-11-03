@@ -300,7 +300,7 @@ export interface ParamDef<T extends UnionType> {
 	/** @hidden */
 	supportsIncrementalSync?: boolean;
 	/**
-	 * Hints for how to display this parameter's name and value in the UI.
+	 * Properties to configure how the parameter is displayed to the user in the permission UI
 	 */
 	styleHint?: StyleHint;
 }
@@ -343,7 +343,7 @@ export interface CrawlStrategy {
 	parentTable?: SyncTableRelation;
 }
 /**
- * Hints for how to display a parameter name and value on the UI.
+ * Properties to configure how the parameter is displayed to the user in the permission UI
  */
 export interface StyleHint {
 	/**

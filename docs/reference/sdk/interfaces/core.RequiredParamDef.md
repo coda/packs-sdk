@@ -110,7 +110,7 @@ ___
 
 • `Optional` **styleHint**: [`StyleHint`](core.StyleHint.md)
 
-Hints for how to display this parameter's name and value in the UI.
+Properties to configure how the parameter is displayed to the user in the permission UI
 
 #### Inherited from
 

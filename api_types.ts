@@ -420,7 +420,7 @@ export interface ParamDef<T extends UnionType> {
   supportsIncrementalSync?: boolean;
 
   /**
-   * Hints for how to display this parameter's name and value in the UI.
+   * Properties to configure how the parameter is displayed to the user in the permission UI
    */
   styleHint?: StyleHint;
 }
@@ -485,7 +485,7 @@ export interface CrawlStrategy {
 }
 
 /**
- * Hints for how to display a parameter name and value on the UI.
+ * Properties to configure how the parameter is displayed to the user in the permission UI
  */
 export interface StyleHint {
   /**

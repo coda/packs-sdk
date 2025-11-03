@@ -8,7 +8,7 @@ search:
 
 [core](../modules/core.md).StyleHint
 
-Hints for how to display a parameter name and value on the UI.
+Properties to configure how the parameter is displayed to the user in the permission UI
 
 ## Properties
 
