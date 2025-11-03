@@ -126,6 +126,7 @@ import * as coda from "@codahq/packs-sdk";
 - [StringEmbedSchema](../interfaces/core.StringEmbedSchema.md)
 - [StringTimeSchema](../interfaces/core.StringTimeSchema.md)
 - [StringWithOptionsSchema](../interfaces/core.StringWithOptionsSchema.md)
+- [StyleHint](../interfaces/core.StyleHint.md)
 - [SyncBase](../interfaces/core.SyncBase.md)
 - [SyncExecutionContext](../interfaces/core.SyncExecutionContext.md)
 - [SyncFormulaDef](../interfaces/core.SyncFormulaDef.md)

@@ -917,6 +917,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     allowManualInput: z.boolean().optional(),
     crawlStrategy: z.unknown().optional(),
     supportsIncrementalSync: z.boolean().optional(),
+    styleHint: z.object({visible: z.boolean().optional()}).optional(),
   })
     .refine(
       param => {

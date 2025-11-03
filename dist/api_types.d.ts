@@ -320,6 +320,10 @@ export interface ParamDef<T extends UnionType> {
      */
     /** @hidden */
     supportsIncrementalSync?: boolean;
+    /**
+     * Hints for how to display this parameter's name and value in the UI.
+     */
+    styleHint?: StyleHint;
 }
 /**
  * Marker type for an optional {@link ParamDef}, used internally.
@@ -356,6 +360,15 @@ export type SuggestedValueType<T extends UnionType> = T extends ArrayType<Type.d
 /** @hidden */
 export interface CrawlStrategy {
     parentTable?: SyncTableRelation;
+}
+/**
+ * Hints for how to display a parameter name and value on the UI.
+ */
+export interface StyleHint {
+    /**
+     * Whether the parameter should be visible in the UI.
+     */
+    visible?: boolean;
 }
 /**
  * A pointer to a particular property in another sync table.

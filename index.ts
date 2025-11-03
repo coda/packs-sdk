@@ -76,6 +76,7 @@ export type {ChunkedResponseBody} from './api_types';
 export {ConnectionRequirement} from './api_types';
 export type {Continuation} from './api';
 export type {CrawlStrategy} from './api_types';
+export type {StyleHint} from './api_types';
 export type {SuggestedValueType} from './api_types';
 export type {DynamicOptions} from './api';
 export type {DynamicSyncTableDef} from './api';

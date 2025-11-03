@@ -418,6 +418,11 @@ export interface ParamDef<T extends UnionType> {
   // TODO(ebo): Unhide this
   /** @hidden */
   supportsIncrementalSync?: boolean;
+
+  /**
+   * Hints for how to display this parameter's name and value in the UI.
+   */
+  styleHint?: StyleHint;
 }
 
 /**
@@ -477,6 +482,16 @@ export type SuggestedValueType<T extends UnionType> =
 /** @hidden */
 export interface CrawlStrategy {
   parentTable?: SyncTableRelation;
+}
+
+/**
+ * Hints for how to display a parameter name and value on the UI.
+ */
+export interface StyleHint {
+  /**
+   * Whether the parameter should be visible in the UI.
+   */
+  visible?: boolean;
 }
 
 /**

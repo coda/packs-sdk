@@ -84,6 +84,14 @@ All optional parameters must come after all non-optional parameters.
 
 ___
 
+### styleHint
+
+• `Optional` **styleHint**: [`StyleHint`](core.StyleHint.md)
+
+Hints for how to display this parameter's name and value in the UI.
+
+___
+
 ### suggestedValue
 
 • `Optional` **suggestedValue**: [`SuggestedValueType`](../types/core.SuggestedValueType.md)<`T`\>
