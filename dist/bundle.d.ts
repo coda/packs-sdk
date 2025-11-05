@@ -863,8 +863,9 @@ export type UnknownInvocationError = BaseInvocationError & {
 };
 export type InvocationError = HttpStatusInvocationError | RateLimitExceededInvocationError | TimeoutInvocationError | ResponseTooLargeInvocationError | UnknownInvocationError;
 declare enum InvocationSource {
-	Go = "Go",
+	Brain = "Brain",
 	Doc = "Doc",
+	Go = "Go",
 	NativeIntegration = "NativeIntegration"
 }
 /**

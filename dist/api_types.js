@@ -276,8 +276,9 @@ var InvocationErrorType;
  */
 var InvocationSource;
 (function (InvocationSource) {
-    InvocationSource["Go"] = "Go";
+    InvocationSource["Brain"] = "Brain";
     InvocationSource["Doc"] = "Doc";
+    InvocationSource["Go"] = "Go";
     InvocationSource["NativeIntegration"] = "NativeIntegration";
 })(InvocationSource || (exports.InvocationSource = InvocationSource = {}));
 /**

@@ -1063,8 +1063,9 @@ export type _ensureInvocationErrorEnumCompletion = Assert<MissingInvocationError
  * @hidden
  */
 export enum InvocationSource {
-  Go = 'Go',
+  Brain = 'Brain',
   Doc = 'Doc',
+  Go = 'Go',
   NativeIntegration = 'NativeIntegration',
 }
 
