@@ -1063,6 +1063,9 @@ export type _ensureInvocationErrorEnumCompletion = Assert<MissingInvocationError
  * @hidden
  */
 export enum InvocationSource {
+  /**
+   * @deprecated Brain is no longer use, it was replaced by Go.
+   */
   Brain = 'Brain',
   Doc = 'Doc',
   Go = 'Go',

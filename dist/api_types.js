@@ -276,6 +276,9 @@ var InvocationErrorType;
  */
 var InvocationSource;
 (function (InvocationSource) {
+    /**
+     * @deprecated Brain is no longer use, it was replaced by Go.
+     */
     InvocationSource["Brain"] = "Brain";
     InvocationSource["Doc"] = "Doc";
     InvocationSource["Go"] = "Go";

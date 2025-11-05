@@ -863,6 +863,9 @@ export type UnknownInvocationError = BaseInvocationError & {
 };
 export type InvocationError = HttpStatusInvocationError | RateLimitExceededInvocationError | TimeoutInvocationError | ResponseTooLargeInvocationError | UnknownInvocationError;
 declare enum InvocationSource {
+	/**
+	 * @deprecated Brain is no longer use, it was replaced by Go.
+	 */
 	Brain = "Brain",
 	Doc = "Doc",
 	Go = "Go",
