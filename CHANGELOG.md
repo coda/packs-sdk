@@ -4,8 +4,6 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
-## [1.12.2-prerelease.1] - 2025-11-05
-
 ### Changed
 - Custom Suggested Prompts support
 
