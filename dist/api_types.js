@@ -250,11 +250,11 @@ var PermissionSyncMode;
 (function (PermissionSyncMode) {
     /**
      * In doc syncs are always Personal.
-     * Personal and shared syncs for Coda Brain are Personal.
+     * Personal and shared syncs for Go are Personal.
      */
     PermissionSyncMode["Personal"] = "Personal";
     /**
-     * In Coda Brain, if the org admin selects that a sync should match
+     * In Go, if the org admin selects that a sync should match
      * the permissions of the source, then the sync will be 'PermissionAware'.
      */
     PermissionSyncMode["PermissionAware"] = "PermissionAware";
@@ -276,7 +276,7 @@ var InvocationErrorType;
  */
 var InvocationSource;
 (function (InvocationSource) {
-    InvocationSource["Brain"] = "Brain";
+    InvocationSource["Go"] = "Go";
     InvocationSource["Doc"] = "Doc";
     InvocationSource["NativeIntegration"] = "NativeIntegration";
 })(InvocationSource || (exports.InvocationSource = InvocationSource = {}));
