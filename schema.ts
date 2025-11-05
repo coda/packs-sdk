@@ -1654,12 +1654,12 @@ export interface DelegatedPermission {
 export interface ItemReference {
   id: string | number;
   // We should only be identityName because that's how references/identities
-  // are designed to work elsewhere in the packs abstractions, but today Brain uses
+  // are designed to work elsewhere in the packs abstractions, but today Go uses
   // the sync table name to refer to things so for practical purposes we'll need to make
   // use of the sync table name to resolve these.
   // Here we'll ask for both names, today we'll only use syncTableName but in the future
   // we will likely deprecated syncTableName and only use identityName, once
-  // Brain keys things by identity name and not table name.
+  // GO keys things by identity name and not table name.
   syncTableName: string;
   identityName: string;
   dynamicUrl?: string;

@@ -863,7 +863,7 @@ export interface TemporaryBlobStorage {
 }
 
 /**
- * A service for retrieving the sync state in Coda Brain.
+ * A service for retrieving the sync state in Coda Go.
  * @hidden
  *
  * TODO(ebo): unhide this
@@ -890,11 +890,11 @@ export interface SyncStateService {
 export enum PermissionSyncMode {
   /**
    * In doc syncs are always Personal.
-   * Personal and shared syncs for Coda Brain are Personal.
+   * Personal and shared syncs for Coda Go are Personal.
    */
   Personal = 'Personal',
   /**
-   * In Coda Brain, if the org admin selects that a sync should match
+   * In Coda Go, if the org admin selects that a sync should match
    * the permissions of the source, then the sync will be 'PermissionAware'.
    */
   PermissionAware = 'PermissionAware',
@@ -970,7 +970,7 @@ export interface SyncBase {
   executionId?: string;
 
   /**
-   * This is only populated when `context.invocationLocation.source === InvocationSource.Brain`.
+   * This is only populated when `context.invocationLocation.source === InvocationSource.Go`.
    *
    * TODO(patrick): Unhide this
    * @hidden
@@ -1063,7 +1063,7 @@ export type _ensureInvocationErrorEnumCompletion = Assert<MissingInvocationError
  * @hidden
  */
 export enum InvocationSource {
-  Brain = 'Brain',
+  Go = 'Go',
   Doc = 'Doc',
   NativeIntegration = 'NativeIntegration',
 }
@@ -1175,7 +1175,7 @@ export interface SyncExecutionContext<
   readonly sync: Sync<SyncContinuationT, IncrementalCheckpointContinuationT, IncrementalSyncContinuationT>;
 
   /**
-   * A service for retrieving the sync state in Coda Brain.
+   * A service for retrieving the sync state in Coda Go.
    * @hidden
    *
    * TODO(ebo): make it non-optional and unhide this.
