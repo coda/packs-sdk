@@ -863,7 +863,7 @@ export interface TemporaryBlobStorage {
 }
 
 /**
- * A service for retrieving the sync state in Coda Go.
+ * A service for retrieving the sync state in Go.
  * @hidden
  *
  * TODO(ebo): unhide this
@@ -890,11 +890,11 @@ export interface SyncStateService {
 export enum PermissionSyncMode {
   /**
    * In doc syncs are always Personal.
-   * Personal and shared syncs for Coda Go are Personal.
+   * Personal and shared syncs for Go are Personal.
    */
   Personal = 'Personal',
   /**
-   * In Coda Go, if the org admin selects that a sync should match
+   * In Go, if the org admin selects that a sync should match
    * the permissions of the source, then the sync will be 'PermissionAware'.
    */
   PermissionAware = 'PermissionAware',
@@ -1175,7 +1175,7 @@ export interface SyncExecutionContext<
   readonly sync: Sync<SyncContinuationT, IncrementalCheckpointContinuationT, IncrementalSyncContinuationT>;
 
   /**
-   * A service for retrieving the sync state in Coda Go.
+   * A service for retrieving the sync state in Go.
    * @hidden
    *
    * TODO(ebo): make it non-optional and unhide this.
