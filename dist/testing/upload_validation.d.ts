@@ -18,10 +18,12 @@ export declare const Limits: {
     BuildingBlockDescription: number;
     ColumnMatcherRegex: number;
     MaxSkillCount: number;
+    MaxSuggestedPromptsPerPack: number;
     NumColumnMatchersPerFormat: number;
     NetworkDomainUrl: number;
     PermissionsBatchSize: number;
     PromptLength: number;
+    SuggestedPromptText: number;
     UpdateBatchSize: number;
     FilterableProperties: number;
 };

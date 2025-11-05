@@ -6299,6 +6299,282 @@ describe('Pack metadata Validation', async () => {
     });
   });
 
+  describe('validateSuggestedPrompts', () => {
+    it('validates suggested prompts with all required fields', async () => {
+      const metadata = createFakePackVersionMetadata({
+        suggestedPrompts: [
+          {
+            name: 'ticketStatus',
+            displayName: 'Check ticket status',
+            prompt: 'Show me the status of all open support tickets',
+          },
+          {
+            name: 'urgentItems',
+            displayName: 'Urgent items',
+            prompt: 'Find high-priority tickets that need immediate attention',
+          },
+          {
+            name: 'allCapabilities',
+            displayName: 'What can you do?',
+            prompt: 'List your capabilities and available actions',
+          },
+        ],
+      });
+      await validateJson(metadata);
+    });
+
+    it('validates with no suggested prompts', async () => {
+      const metadata = createFakePackVersionMetadata({
+        suggestedPrompts: [],
+      });
+      await validateJson(metadata);
+    });
+
+    it('fails for duplicate suggested prompt names', async () => {
+      const metadata = createFakePackVersionMetadata({
+        suggestedPrompts: [
+          {
+            name: 'duplicate',
+            displayName: 'First',
+            prompt: 'First prompt',
+          },
+          {
+            name: 'duplicate',
+            displayName: 'Second',
+            prompt: 'Second prompt',
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'suggestedPrompts',
+          message: 'Suggested prompt names must be unique. Found duplicate name "duplicate".',
+        },
+      ]);
+    });
+
+    it('fails for duplicate suggested prompt names (case-insensitive)', async () => {
+      const metadata = createFakePackVersionMetadata({
+        suggestedPrompts: [
+          {
+            name: 'ticketStatus',
+            displayName: 'First',
+            prompt: 'First prompt',
+          },
+          {
+            name: 'TicketStatus',
+            displayName: 'Second',
+            prompt: 'Second prompt',
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'suggestedPrompts',
+          message: 'Suggested prompt names must be unique. Found duplicate name "TicketStatus".',
+        },
+      ]);
+    });
+
+    it('fails for more than 3 suggested prompts', async () => {
+      const metadata = createFakePackVersionMetadata({
+        suggestedPrompts: [
+          {name: 'first', displayName: 'First', prompt: 'First prompt'},
+          {name: 'second', displayName: 'Second', prompt: 'Second prompt'},
+          {name: 'third', displayName: 'Third', prompt: 'Third prompt'},
+          {name: 'fourth', displayName: 'Fourth', prompt: 'Fourth prompt'},
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'suggestedPrompts',
+          message: 'Array must contain at most 3 element(s)',
+        },
+      ]);
+    });
+
+    it('validates suggested prompt name length limits', async () => {
+      const longName = 'a'.repeat(Limits.BuildingBlockName + 1); // Exceeds BuildingBlockName limit of 50
+      const metadata = createFakePackVersionMetadata({
+        suggestedPrompts: [
+          {
+            name: longName,
+            displayName: 'Test',
+            prompt: 'Test prompt',
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'suggestedPrompts[0].name',
+          message: 'String must contain at most 50 character(s)',
+        },
+      ]);
+    });
+
+    it('validates suggested prompt displayName length limits', async () => {
+      const longDisplayName = 'a'.repeat(Limits.BuildingBlockName + 1); // Exceeds BuildingBlockName limit of 50
+      const metadata = createFakePackVersionMetadata({
+        suggestedPrompts: [
+          {
+            name: 'test',
+            displayName: longDisplayName,
+            prompt: 'Test prompt',
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'suggestedPrompts[0].displayName',
+          message: 'String must contain at most 50 character(s)',
+        },
+      ]);
+    });
+
+    it('validates suggested prompt text length limits', async () => {
+      const longPrompt = 'a'.repeat(Limits.SuggestedPromptText + 1); // Exceeds SuggestedPromptText limit of 500
+      const metadata = createFakePackVersionMetadata({
+        suggestedPrompts: [
+          {
+            name: 'test',
+            displayName: 'Test',
+            prompt: longPrompt,
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'suggestedPrompts[0].prompt',
+          message: 'String must contain at most 500 character(s)',
+        },
+      ]);
+    });
+
+    it('fails for name starting with number', async () => {
+      const metadata = createFakePackVersionMetadata({
+        suggestedPrompts: [
+          {
+            name: '1invalid',
+            displayName: 'Test',
+            prompt: 'Test prompt',
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'suggestedPrompts[0].name',
+          message: 'Suggested prompt names can only contain alphanumeric characters and underscores.',
+        },
+      ]);
+    });
+
+    it('fails for name starting with underscore', async () => {
+      const metadata = createFakePackVersionMetadata({
+        suggestedPrompts: [
+          {
+            name: '_invalid',
+            displayName: 'Test',
+            prompt: 'Test prompt',
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'suggestedPrompts[0].name',
+          message: 'Suggested prompt names can only contain alphanumeric characters and underscores.',
+        },
+      ]);
+    });
+
+    it('fails for name with special characters', async () => {
+      const metadata = createFakePackVersionMetadata({
+        suggestedPrompts: [
+          {
+            name: 'ticket-status',
+            displayName: 'Test',
+            prompt: 'Test prompt',
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'suggestedPrompts[0].name',
+          message: 'Suggested prompt names can only contain alphanumeric characters and underscores.',
+        },
+      ]);
+    });
+
+    it('fails for empty name', async () => {
+      const metadata = createFakePackVersionMetadata({
+        suggestedPrompts: [
+          {
+            name: '',
+            displayName: 'Test',
+            prompt: 'Test prompt',
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'suggestedPrompts[0].name',
+          message: 'String must contain at least 1 character(s)',
+        },
+        {
+          path: 'suggestedPrompts[0].name',
+          message: 'Suggested prompt names can only contain alphanumeric characters and underscores.',
+        },
+      ]);
+    });
+
+    it('fails for empty displayName', async () => {
+      const metadata = createFakePackVersionMetadata({
+        suggestedPrompts: [
+          {
+            name: 'test',
+            displayName: '',
+            prompt: 'Test prompt',
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'suggestedPrompts[0].displayName',
+          message: 'String must contain at least 1 character(s)',
+        },
+      ]);
+    });
+
+    it('fails for empty prompt', async () => {
+      const metadata = createFakePackVersionMetadata({
+        suggestedPrompts: [
+          {
+            name: 'test',
+            displayName: 'Test',
+            prompt: '',
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'suggestedPrompts[0].prompt',
+          message: 'String must contain at least 1 character(s)',
+        },
+      ]);
+    });
+  });
+
   describe('deprecation warnings', () => {
     const sdkVersionTriggeringDeprecationWarnings = '1.0.0';
 

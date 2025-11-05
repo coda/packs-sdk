@@ -17,6 +17,7 @@ import type {ParamDefs} from './api_types';
 import type {Schema} from './schema';
 import type {Skill} from './types';
 import type {SkillEntrypoints} from './types';
+import type {SuggestedPrompt} from './types';
 import type {SyncExecutionContext} from './api_types';
 import type {SyncPassthroughData} from './api';
 import type {SyncTable} from './api';
@@ -76,6 +77,10 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    */
   skillEntrypoints?: SkillEntrypoints;
   /**
+   * See {@link PackVersionDefinition.suggestedPrompts}.
+   */
+  suggestedPrompts: SuggestedPrompt[];
+  /**
    * See {@link PackVersionDefinition.networkDomains}.
    */
   networkDomains: string[];
@@ -120,12 +125,14 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       version,
       formulaNamespace,
       skillEntrypoints,
+      suggestedPrompts,
     } = definition || {};
     this.formulas = formulas || [];
     this.formats = formats || [];
     this.syncTables = syncTables || [];
     this.skills = skills || [];
     this.skillEntrypoints = skillEntrypoints;
+    this.suggestedPrompts = suggestedPrompts || [];
     this.networkDomains = networkDomains || [];
     this.defaultAuthentication = defaultAuthentication;
     this.systemConnectionAuthentication = systemConnectionAuthentication;
@@ -295,6 +302,23 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    */
   setSkillEntrypoints(entrypoints: SkillEntrypoints): this {
     this.skillEntrypoints = entrypoints;
+    return this;
+  }
+
+  /**
+   * Adds a suggested prompt that appears as a button when the agent is opened in chat.
+   *
+   * @example
+   * ```
+   * pack.addSuggestedPrompt({
+   *   name: "ticketStatus",
+   *   displayName: "Check ticket status",
+   *   prompt: "Show me the status of all open support tickets"
+   * });
+   * ```
+   */
+  addSuggestedPrompt(prompt: SuggestedPrompt): this {
+    this.suggestedPrompts.push(prompt);
     return this;
   }
 

@@ -21,6 +21,7 @@ export type { PackVersionDefinition } from './types';
 export type { PostSetup } from './types';
 export type { PostSetupDef } from './types';
 export { PostSetupType } from './types';
+export type { SuggestedPrompt } from './types';
 export { newPack } from './builder';
 export { PackDefinitionBuilder } from './builder';
 export type { UserAuthenticationDef } from './api_types';

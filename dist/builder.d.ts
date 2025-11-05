@@ -13,6 +13,7 @@ import type { ParamDefs } from './api_types';
 import type { Schema } from './schema';
 import type { Skill } from './types';
 import type { SkillEntrypoints } from './types';
+import type { SuggestedPrompt } from './types';
 import type { SyncExecutionContext } from './api_types';
 import type { SyncPassthroughData } from './api';
 import type { SyncTable } from './api';
@@ -59,6 +60,10 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * @hidden
      */
     skillEntrypoints?: SkillEntrypoints;
+    /**
+     * See {@link PackVersionDefinition.suggestedPrompts}.
+     */
+    suggestedPrompts: SuggestedPrompt[];
     /**
      * See {@link PackVersionDefinition.networkDomains}.
      */
@@ -202,6 +207,19 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * @hidden
      */
     setSkillEntrypoints(entrypoints: SkillEntrypoints): this;
+    /**
+     * Adds a suggested prompt that appears as a button when the agent is opened in chat.
+     *
+     * @example
+     * ```
+     * pack.addSuggestedPrompt({
+     *   name: "ticketStatus",
+     *   displayName: "Check ticket status",
+     *   prompt: "Show me the status of all open support tickets"
+     * });
+     * ```
+     */
+    addSuggestedPrompt(prompt: SuggestedPrompt): this;
     private _wrapAuthenticationFunctions;
     /**
      * Sets this pack to use authentication for individual users, using the
