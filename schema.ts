@@ -1659,7 +1659,7 @@ export interface ItemReference {
   // use of the sync table name to resolve these.
   // Here we'll ask for both names, today we'll only use syncTableName but in the future
   // we will likely deprecated syncTableName and only use identityName, once
-  // GO keys things by identity name and not table name.
+  // Go keys things by identity name and not table name.
   syncTableName: string;
   identityName: string;
   dynamicUrl?: string;
