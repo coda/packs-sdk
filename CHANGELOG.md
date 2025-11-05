@@ -4,6 +4,9 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Changed
+- Deprecating InvocationSource.Brain and replacing with InvocationSource.Go
+
 ### Fixed
 
 - Fixed CLI execution of sync table metadata functions for sync tables with names that do not match their inner formula name.

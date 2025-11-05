@@ -16,7 +16,7 @@ The sync mode of the current sync.
 
 • **PermissionAware** = ``"PermissionAware"``
 
-In Coda Brain, if the org admin selects that a sync should match
+In Go, if the org admin selects that a sync should match
 the permissions of the source, then the sync will be 'PermissionAware'.
 
 ___
@@ -26,4 +26,4 @@ ___
 • **Personal** = ``"Personal"``
 
 In doc syncs are always Personal.
-Personal and shared syncs for Coda Brain are Personal.
+Personal and shared syncs for Go are Personal.
