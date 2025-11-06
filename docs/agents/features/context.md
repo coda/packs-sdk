@@ -21,7 +21,7 @@ There are three types of text your agent may receive, with possibly more than on
 
     ??? info "Full text not guaranteed"
 
-        The agent will always include the text that is visible on the user's screen (and often much more), but you can't assume it's the full text of the page, doc, etc. The amount of text passed to your agent can be capped for performance reasons, and many apps implement “lazy loading,” rendering content only as it comes into view.
+        The agent will always include the text that is visible on the user's screen (and often much more), but you can't assume it's the full text of the page, doc, etc. The amount of text passed to your agent can be capped for performance reasons, and many apps implement "lazy loading," rendering content only as it comes into view.
 
 **Editor text**
 :   If the user is currently typing in an editable text field, the current value of that field. It is split into numbered paragraphs, which are referenced by the [Rewrite tool][rewrite_tool].

@@ -6,7 +6,7 @@ icon: material/hand-wave-outline
 
 # Hello World sample
 
-This is an example which creates a single formula called `Hello`, that takes in a string called `name` and returns `“Hello, <name>!“`.
+This is an example which creates a single formula called `Hello`, that takes in a string called `name` and returns `"Hello, <name>!"`.
 
 
 === "Hello World"
@@ -30,7 +30,7 @@ This is an example which creates a single formula called `Hello`, that takes in 
       description: "A Hello World example.",
 
       // If your formula requires one or more inputs, you’ll define them here.
-      // Here, we're creating a string input called “name”.
+      // Here, we're creating a string input called "name".
       parameters: [
         coda.makeParameter({
           type: coda.ParameterType.String,
