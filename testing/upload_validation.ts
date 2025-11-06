@@ -104,6 +104,7 @@ import type {StringEmbedSchema} from '../schema';
 import type {StringPackFormula} from '../api';
 import type {StringTimeSchema} from '../schema';
 import type {StringWithOptionsSchema} from '../schema';
+import type {SuggestedPrompt} from '../types';
 import type {SummarizerTool} from '../types';
 import type {SyncExecutionContext} from '..';
 import type {SyncFormula} from '../api';
@@ -168,10 +169,12 @@ export const Limits = {
   BuildingBlockDescription: 1000,
   ColumnMatcherRegex: 300,
   MaxSkillCount: 15,
+  MaxSuggestedPromptsPerPack: 3,
   NumColumnMatchersPerFormat: 10,
   NetworkDomainUrl: 253,
   PermissionsBatchSize: 5000,
   PromptLength: 10000,
+  SuggestedPromptText: 500,
   UpdateBatchSize: 1000,
   FilterableProperties: 5,
 };
@@ -2207,6 +2210,16 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     defaultChat: skillEntrypointConfigSchema.optional(),
   });
 
+  const suggestedPromptSchema = zodCompleteStrictObject<SuggestedPrompt>({
+    name: z
+      .string()
+      .min(1)
+      .max(Limits.BuildingBlockName)
+      .regex(regexParameterName, 'Suggested prompt names can only contain alphanumeric characters and underscores.'),
+    displayName: z.string().min(1).max(Limits.BuildingBlockName),
+    prompt: z.string().min(1).max(Limits.SuggestedPromptText),
+  });
+
   // Make sure to call the refiners on this after removing legacyPackMetadataSchema.
   // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level
   // schema we actually use.)
@@ -2324,6 +2337,20 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }
       }),
     skillEntrypoints: skillEntrypointsSchema.optional(),
+    suggestedPrompts: z
+      .array(suggestedPromptSchema)
+      .max(Limits.MaxSuggestedPromptsPerPack)
+      .optional()
+      .default([])
+      .superRefine((data, context) => {
+        const promptNames = data.map(prompt => prompt.name);
+        for (const dupe of getNonUniqueElements(promptNames)) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Suggested prompt names must be unique. Found duplicate name "${dupe}".`,
+          });
+        }
+      }),
   });
 
   function validateIdentityNames(context: z.RefinementCtx, identityInfo: Map<string, string[]>) {

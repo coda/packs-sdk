@@ -105,10 +105,12 @@ exports.Limits = {
     BuildingBlockDescription: 1000,
     ColumnMatcherRegex: 300,
     MaxSkillCount: 15,
+    MaxSuggestedPromptsPerPack: 3,
     NumColumnMatchersPerFormat: 10,
     NetworkDomainUrl: 253,
     PermissionsBatchSize: 5000,
     PromptLength: 10000,
+    SuggestedPromptText: 500,
     UpdateBatchSize: 1000,
     FilterableProperties: 5,
 };
@@ -1687,6 +1689,15 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         benchInitialization: skillEntrypointConfigSchema.optional(),
         defaultChat: skillEntrypointConfigSchema.optional(),
     });
+    const suggestedPromptSchema = zodCompleteStrictObject({
+        name: z
+            .string()
+            .min(1)
+            .max(exports.Limits.BuildingBlockName)
+            .regex(regexParameterName, 'Suggested prompt names can only contain alphanumeric characters and underscores.'),
+        displayName: z.string().min(1).max(exports.Limits.BuildingBlockName),
+        prompt: z.string().min(1).max(exports.Limits.SuggestedPromptText),
+    });
     // Make sure to call the refiners on this after removing legacyPackMetadataSchema.
     // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level
     // schema we actually use.)
@@ -1797,6 +1808,20 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             }
         }),
         skillEntrypoints: skillEntrypointsSchema.optional(),
+        suggestedPrompts: z
+            .array(suggestedPromptSchema)
+            .max(exports.Limits.MaxSuggestedPromptsPerPack)
+            .optional()
+            .default([])
+            .superRefine((data, context) => {
+            const promptNames = data.map(prompt => prompt.name);
+            for (const dupe of getNonUniqueElements(promptNames)) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: `Suggested prompt names must be unique. Found duplicate name "${dupe}".`,
+                });
+            }
+        }),
     });
     function validateIdentityNames(context, identityInfo) {
         for (const [identityName, allowedAuthenticationNames] of identityInfo) {

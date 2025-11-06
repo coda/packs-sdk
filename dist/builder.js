@@ -35,12 +35,13 @@ class PackDefinitionBuilder {
      * rather than constructing a builder directly.
      */
     constructor(definition) {
-        const { formulas, formats, syncTables, skills, networkDomains, defaultAuthentication, systemConnectionAuthentication, version, formulaNamespace, skillEntrypoints, } = definition || {};
+        const { formulas, formats, syncTables, skills, networkDomains, defaultAuthentication, systemConnectionAuthentication, version, formulaNamespace, skillEntrypoints, suggestedPrompts, } = definition || {};
         this.formulas = formulas || [];
         this.formats = formats || [];
         this.syncTables = syncTables || [];
         this.skills = skills || [];
         this.skillEntrypoints = skillEntrypoints;
+        this.suggestedPrompts = suggestedPrompts || [];
         this.networkDomains = networkDomains || [];
         this.defaultAuthentication = defaultAuthentication;
         this.systemConnectionAuthentication = systemConnectionAuthentication;
@@ -188,6 +189,23 @@ class PackDefinitionBuilder {
      */
     setSkillEntrypoints(entrypoints) {
         this.skillEntrypoints = entrypoints;
+        return this;
+    }
+    /**
+     * Adds a suggested prompt that appears as a button when the agent is opened in chat.
+     *
+     * @example
+     * ```
+     * pack.addSuggestedPrompt({
+     *   name: "ticketStatus",
+     *   displayName: "Check ticket status",
+     *   prompt: "Show me the status of all open support tickets"
+     * });
+     * ```
+     * @hidden
+     */
+    addSuggestedPrompt(prompt) {
+        this.suggestedPrompts.push(prompt);
         return this;
     }
     _wrapAuthenticationFunctions(authentication) {

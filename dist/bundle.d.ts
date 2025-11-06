@@ -5544,6 +5544,27 @@ export interface SkillEntrypoints {
 	defaultChat?: SkillEntrypointConfig;
 }
 /**
+ * A suggested prompt that appears as a button when an agent is opened in chat.
+ * These are static prompts defined in the pack manifest that provide quick access to common actions.
+ *
+ * @example
+ * ```ts
+ * pack.addSuggestedPrompt({
+ *   name: "ticketStatus",
+ *   displayName: "Check ticket status",
+ *   prompt: "Show me the status of all open support tickets"
+ * });
+ * ```
+ */
+export interface SuggestedPrompt {
+	/** A unique identifier for this suggested prompt. This acts as a stable ID for the prompt. */
+	name: string;
+	/** The display text shown to the user in the UI. */
+	displayName: string;
+	/** The prompt text that gets executed when the user clicks this suggested prompt. */
+	prompt: string;
+}
+/**
  * The definition of the contents of a Pack at a specific version. This is the
  * heart of the implementation of a Pack.
  */
@@ -5607,6 +5628,11 @@ export interface PackVersionDefinition {
 	 * @hidden
 	 */
 	skillEntrypoints?: SkillEntrypoints;
+	/**
+	 * Static suggested prompts that appear when the agent is opened in chat.
+	 * @hidden
+	 */
+	suggestedPrompts?: SuggestedPrompt[];
 }
 /**
  * @deprecated use `#PackVersionDefinition`
@@ -5698,6 +5724,11 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * @hidden
 	 */
 	skillEntrypoints?: SkillEntrypoints;
+	/**
+	 * See {@link PackVersionDefinition.suggestedPrompts}.
+	 * @hidden
+	 */
+	suggestedPrompts: SuggestedPrompt[];
 	/**
 	 * See {@link PackVersionDefinition.networkDomains}.
 	 */
@@ -5841,6 +5872,20 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * @hidden
 	 */
 	setSkillEntrypoints(entrypoints: SkillEntrypoints): this;
+	/**
+	 * Adds a suggested prompt that appears as a button when the agent is opened in chat.
+	 *
+	 * @example
+	 * ```
+	 * pack.addSuggestedPrompt({
+	 *   name: "ticketStatus",
+	 *   displayName: "Check ticket status",
+	 *   prompt: "Show me the status of all open support tickets"
+	 * });
+	 * ```
+	 * @hidden
+	 */
+	addSuggestedPrompt(prompt: SuggestedPrompt): this;
 	private _wrapAuthenticationFunctions;
 	/**
 	 * Sets this pack to use authentication for individual users, using the
