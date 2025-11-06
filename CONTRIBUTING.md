@@ -89,7 +89,7 @@ The following section includes information about how to contribute to the SDK it
 
 Adjustments to the `CHANGELOG.md` file should be marked under `### Not yet released` until a release commit is made that updates `package.json` and `CHANGELOG.md` file with a new, later version, and publishes the new version to NPM using `make release`.
 
-Our `CHANGELOG.md` follows the [Keep a Changelog][keepachangelog] standards, where there is a “Unreleased” section at the top for any unreleased changes. Upon release, it is named according to a semantic versioning system and dated.
+Our `CHANGELOG.md` follows the [Keep a Changelog][keepachangelog] standards, where there is a "Unreleased" section at the top for any unreleased changes. Upon release, it is named according to a semantic versioning system and dated.
 
 
 [docs]: https://coda.io/packs/build

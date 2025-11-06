@@ -17,7 +17,7 @@ pack.addFormula({
   description: "A Hello World example.",
 
   // If your formula requires one or more inputs, you’ll define them here.
-  // Here, we're creating a string input called “name”.
+  // Here, we're creating a string input called "name".
   parameters: [
     coda.makeParameter({
       type: coda.ParameterType.String,

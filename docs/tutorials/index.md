@@ -5,6 +5,8 @@ hide:
 - toc
 ---
 
+# Tutorials
+
 The tutorials below provide step-by-step instructions and sample code to help you get started building Packs and learn key concepts.
 
 {% for section in page.parent.children|selectattr("is_section") %}
