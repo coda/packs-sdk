@@ -230,7 +230,7 @@ typedoc:
 
 .PHONY: bundle-docs-js
 bundle-docs-js:
-	esbuild documentation/theme/index.ts --bundle --outfile=docs/assets/bundle.js --minify --keep-names
+	${ROOTDIR}/node_modules/.bin/esbuild documentation/theme/index.ts --bundle --outfile=docs/assets/bundle.js --minify --keep-names
 
 .PHONY: docs
 docs: typedoc generated-documentation bundle-docs-js build-mkdocs
