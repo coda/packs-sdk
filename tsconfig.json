@@ -67,7 +67,8 @@
     "./dist/**/*",
     "./scripts/*",
     "./documentation/samples",
-    "./documentation/scripts"
+    "./documentation/scripts",
+    "./documentation/theme"
   ],
   "ts-node": {
     "files": true

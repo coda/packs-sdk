@@ -99,7 +99,7 @@ Todoist describes their OAuth2 support [in their developer docs][todoist_oauth].
     </div>
     <div markdown>
 
-    <a href="https://developer.todoist.com/guides/#step-1-authorization-request">
+    <a href="https://developer.todoist.com/guides/#permission-scopes">
       <img src="../../../images/tutorial_oauth_scopes.png" srcset="../../../images/tutorial_oauth_scopes_2x.png 2x" class="screenshot" alt="The documentation for the scopes.">
     </a>
 
