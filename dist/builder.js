@@ -202,6 +202,7 @@ class PackDefinitionBuilder {
      *   prompt: "Show me the status of all open support tickets"
      * });
      * ```
+     * @hidden
      */
     addSuggestedPrompt(prompt) {
         this.suggestedPrompts.push(prompt);

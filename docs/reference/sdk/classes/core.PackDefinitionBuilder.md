@@ -91,18 +91,6 @@ BasicPackDefinition.networkDomains
 
 ___
 
-### suggestedPrompts
-
-• **suggestedPrompts**: [`SuggestedPrompt`](../interfaces/core.SuggestedPrompt.md)[]
-
-See [suggestedPrompts](../interfaces/core.PackVersionDefinition.md#suggestedprompts).
-
-#### Implementation of
-
-BasicPackDefinition.suggestedPrompts
-
-___
-
 ### syncTables
 
 • **syncTables**: [`SyncTable`](../types/core.SyncTable.md)[]
@@ -286,34 +274,6 @@ pack.addNetworkDomain('example.com');
 | Name | Type |
 | :------ | :------ |
 | `...domain` | `string`[] |
-
-#### Returns
-
-[`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
-
-___
-
-### addSuggestedPrompt
-
-▸ **addSuggestedPrompt**(`prompt`): [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
-
-Adds a suggested prompt that appears as a button when the agent is opened in chat.
-
-**`Example`**
-
-```
-pack.addSuggestedPrompt({
-  name: "ticketStatus",
-  displayName: "Check ticket status",
-  prompt: "Show me the status of all open support tickets"
-});
-```
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `prompt` | [`SuggestedPrompt`](../interfaces/core.SuggestedPrompt.md) |
 
 #### Returns
 

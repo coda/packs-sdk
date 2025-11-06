@@ -62,6 +62,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
     skillEntrypoints?: SkillEntrypoints;
     /**
      * See {@link PackVersionDefinition.suggestedPrompts}.
+     * @hidden
      */
     suggestedPrompts: SuggestedPrompt[];
     /**
@@ -218,6 +219,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      *   prompt: "Show me the status of all open support tickets"
      * });
      * ```
+     * @hidden
      */
     addSuggestedPrompt(prompt: SuggestedPrompt): this;
     private _wrapAuthenticationFunctions;

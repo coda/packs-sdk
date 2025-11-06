@@ -78,6 +78,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
   skillEntrypoints?: SkillEntrypoints;
   /**
    * See {@link PackVersionDefinition.suggestedPrompts}.
+   * @hidden
    */
   suggestedPrompts: SuggestedPrompt[];
   /**

@@ -68,14 +68,6 @@ contact Coda support for approval.
 
 ___
 
-### suggestedPrompts
-
-• `Optional` **suggestedPrompts**: [`SuggestedPrompt`](core.SuggestedPrompt.md)[]
-
-Static suggested prompts that appear when the agent is opened in chat.
-
-___
-
 ### syncTables
 
 • `Optional` **syncTables**: [`SyncTable`](../types/core.SyncTable.md)[]
