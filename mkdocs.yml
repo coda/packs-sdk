@@ -7,8 +7,7 @@ repo_url: https://github.com/coda/packs-sdk
 repo_name: coda/packs-sdk
 edit_uri: edit/main/docs
 docs_dir: docs
-extra_css:
-  - assets/custom.css
+
 validation:
   omitted_files: warn
   absolute_links: warn
@@ -162,3 +161,9 @@ theme:
   favicon: assets/favicon.png
   icon:
     repo: fontawesome/brands/github
+
+extra_javascript:
+  - assets/bundle.js
+
+extra_css:
+  - assets/custom.css

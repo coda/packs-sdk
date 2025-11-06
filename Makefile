@@ -228,8 +228,12 @@ typedoc:
 	${ROOTDIR}/node_modules/.bin/typedoc index.ts development.ts --options typedoc.js --disableSources "${DOC_DISABLE_SOURCES}" --gitRevision "${DOC_GIT_REVISION}" --out ${ROOTDIR}/docs/reference/sdk
 	node -r ts-node/register documentation/scripts/typedoc_post_process.ts
 
+.PHONY: bundle-docs-js
+bundle-docs-js:
+	${ROOTDIR}/node_modules/.bin/esbuild documentation/theme/index.ts --bundle --outfile=docs/assets/bundle.js --minify --keep-names
+
 .PHONY: docs
-docs: typedoc generated-documentation build-mkdocs
+docs: typedoc generated-documentation bundle-docs-js build-mkdocs
 
 .PHONY: view-docs
 view-docs:
