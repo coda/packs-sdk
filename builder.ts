@@ -316,6 +316,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    *   prompt: "Show me the status of all open support tickets"
    * });
    * ```
+   * @hidden
    */
   addSuggestedPrompt(prompt: SuggestedPrompt): this {
     this.suggestedPrompts.push(prompt);

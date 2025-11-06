@@ -1491,6 +1491,7 @@ export interface PackVersionDefinition {
   skillEntrypoints?: SkillEntrypoints;
   /**
    * Static suggested prompts that appear when the agent is opened in chat.
+   * @hidden
    */
   suggestedPrompts?: SuggestedPrompt[];
 }
