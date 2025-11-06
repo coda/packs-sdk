@@ -92,7 +92,7 @@ pack.addFormula({
 
 ### LLM instructions
 
-The LLM uses the formula and parameter descriptions to understand how to use them, but sometimes the agent needs more information to call them reliably. You can provide an alternate description just for the LLM to use by setting the `instruction` field on the formula or parameter.
+The LLM uses the formula and parameter descriptions to understand how to use them, but sometimes the agent needs more information to call them reliably. You can provide an alternate description just for the LLM to use by setting the `instructions` field on the formula or parameter.
 
 ```{.ts hl_lines="4-9 15-19"}
 pack.addFormula({
