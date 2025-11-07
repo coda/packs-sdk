@@ -5532,6 +5532,13 @@ export interface Skill {
 export interface SkillEntrypointConfig {
 	/** The name of the skill to be invoked. */
 	skillName: string;
+	/**
+	 * Tool names that must be called when this skill is invoked.
+	 * If specified, the LLM will be forced to call these tools.
+	 * - Single tool: Forces that specific tool to be called first
+	 * - Multiple tools: Forces at least one tool call (using 'required' mode)
+	 */
+	requiredTools?: string[];
 }
 /**
  * Entrypoints that skills can be invoked from.

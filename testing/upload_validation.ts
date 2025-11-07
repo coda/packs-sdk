@@ -2203,6 +2203,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
 
   const skillEntrypointConfigSchema = zodCompleteStrictObject<SkillEntrypointConfig>({
     skillName: z.string(),
+    requiredTools: z.array(z.string()).optional(),
   });
 
   const skillEntrypointsSchema = zodCompleteStrictObject<SkillEntrypoints>({
