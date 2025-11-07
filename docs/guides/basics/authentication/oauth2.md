@@ -65,7 +65,7 @@ pack.setUserAuthentication({
 
 There are many subtle variations to the OAuth2 flow, and Coda can accommodate a variety of them. You can find the additional configuration options in the [`OAuth2Authentication`][OAuth2Authentication] documentation, as well as [sample code][sample_apis] showing how to setup OAuth for the most popular APIs.
 
-However if the API provider deviates too far from the OAuth 2.0 specification it may not be possible to find a configuration that will work. Additionally, Coda currently only supports the [Authorization Code][oauth2_code] grant type, and others like [Client Credentials][oauth2_client] can't be used. If you get stuck please [contact support][support] to explore other options.
+However if the API provider deviates too far from the OAuth 2.0 specification it may not be possible to find a configuration that will work. Additionally, Coda currently only supports the [Authorization Code][oauth2_code] and [Client Credentials][oauth2_client] grant types. If you get stuck please [contact support][support] to explore other options.
 
 ??? note "Flexible authentication during token exchange"
     The OAuth2 specification doesn't require a specific authentication schema your app must use when exchanging tokens. Coda supports the two most popular variants:
@@ -115,7 +115,7 @@ try {
   // ...
 } catch (error) {
   if (
-      coda.StatusCodeError.isStatusCodeError(error) 
+      coda.StatusCodeError.isStatusCodeError(error)
       && error.statusCode === 401
     ) {
     // Perhaps the token has expired, re-throw the error to attempt a refresh.
@@ -144,7 +144,7 @@ try {
   // Determine if the error is due to missing scopes.
   if (
     coda.StatusCodeError.isStatusCodeError(error)
-    && error.statusCode === 400 
+    && error.statusCode === 400
     && error.body?.message.includes("permission")
   ) {
     throw new coda.MissingScopesError();
