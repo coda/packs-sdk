@@ -916,6 +916,9 @@ export interface AdminAuthentication {
 export interface AdminAuthenticationDef extends Omit<AdminAuthentication, 'authentication'> {
     authentication: AllowedAuthenticationDef;
 }
+export interface McpServer {
+    endpointUrl: string;
+}
 /**
  * Definition for a custom column type that users can apply to any column in any Coda table.
  * A column format tells Coda to interpret the value in a cell by executing a formula
@@ -1343,6 +1346,14 @@ export interface PackVersionDefinition {
      * @hidden
      */
     suggestedPrompts?: SuggestedPrompt[];
+    /**
+     * MCP server setup for this pack
+     *
+     * TODO(sam): This could potentially be an array here although that complicates how we handle resolution/auth
+     * especially if the auth mechanisms are separated
+     * @hidden
+     */
+    mcpServer?: McpServer;
 }
 /**
  * @deprecated use `#PackVersionDefinition`

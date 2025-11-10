@@ -10,6 +10,7 @@ import type {DynamicSyncTableOptions} from './api';
 import type {Format} from './types';
 import type {Formula} from './api';
 import type {FormulaDefinitionOptions} from './api';
+import type {McpServer} from './types';
 import type {ObjectSchema} from './schema';
 import type {ObjectSchemaDefinition} from './schema';
 import type {PackVersionDefinition} from './types';
@@ -102,6 +103,12 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
   adminAuthentications?: AdminAuthentication[];
 
   /**
+   * See {@link PackVersionDefinition.mcpServer}
+   * @hidden
+   */
+  mcpServer?: McpServer;
+
+  /**
    * See {@link PackVersionDefinition.version}.
    */
   version?: string;
@@ -127,6 +134,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       formulaNamespace,
       skillEntrypoints,
       suggestedPrompts,
+      mcpServer
     } = definition || {};
     this.formulas = formulas || [];
     this.formats = formats || [];
@@ -139,6 +147,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     this.systemConnectionAuthentication = systemConnectionAuthentication;
     this.version = version;
     this.formulaNamespace = formulaNamespace || 'Deprecated';
+    this.mcpServer = mcpServer;
   }
 
   /**
@@ -436,6 +445,21 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    */
   addNetworkDomain(...domain: string[]): this {
     this.networkDomains.push(...domain);
+    return this;
+  }
+
+
+  /**
+   * Adds an MCP server to the pack.
+   * 
+   * Currently MCP packs are not compatible with other building blocks such as 
+   * formulas, sync tables, etc
+   * 
+   * Authentication will be pre-specified as opposed to dynamically discovered. Dynamic
+   * Discovery may be added in a future iteration
+   */
+  addMcpServer(mcpServer: McpServer) {
+    this.mcpServer = mcpServer;
     return this;
   }
 

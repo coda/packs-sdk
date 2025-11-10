@@ -49,6 +49,7 @@ import {KnowledgeToolSourceType} from '../types';
 import {LifecycleBehavior} from '../schema';
 import {LinkDisplayType} from '../schema';
 import type {LinkSchema} from '../schema';
+import type {McpServer} from '../types';
 import type {MessagingContentCategorization} from '../schema';
 import type {MultiHeaderTokenAuthentication} from '../types';
 import type {MultiQueryParamTokenAuthentication} from '../types';
@@ -2351,6 +2352,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           });
         }
       }),
+    // If we want to do this for real we should consider blocking other types of formulas, sync tables, etc
+    // with MCP servers until we figure out how to reasonably combine the concepts
+    mcpServer: zodCompleteStrictObject<McpServer>({
+      endpointUrl: z.string(),
+    }).optional(),
   });
 
   function validateIdentityNames(context: z.RefinementCtx, identityInfo: Map<string, string[]>) {

@@ -1822,6 +1822,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 });
             }
         }),
+        // If we want to do this for real we should consider blocking other types of formulas, sync tables, etc
+        // with MCP servers until we figure out how to reasonably combine the concepts
+        mcpServer: zodCompleteStrictObject({
+            endpointUrl: z.string(),
+        }).optional(),
     });
     function validateIdentityNames(context, identityInfo) {
         for (const [identityName, allowedAuthenticationNames] of identityInfo) {

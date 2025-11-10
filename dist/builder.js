@@ -35,7 +35,7 @@ class PackDefinitionBuilder {
      * rather than constructing a builder directly.
      */
     constructor(definition) {
-        const { formulas, formats, syncTables, skills, networkDomains, defaultAuthentication, systemConnectionAuthentication, version, formulaNamespace, skillEntrypoints, suggestedPrompts, } = definition || {};
+        const { formulas, formats, syncTables, skills, networkDomains, defaultAuthentication, systemConnectionAuthentication, version, formulaNamespace, skillEntrypoints, suggestedPrompts, mcpServer } = definition || {};
         this.formulas = formulas || [];
         this.formats = formats || [];
         this.syncTables = syncTables || [];
@@ -47,6 +47,7 @@ class PackDefinitionBuilder {
         this.systemConnectionAuthentication = systemConnectionAuthentication;
         this.version = version;
         this.formulaNamespace = formulaNamespace || 'Deprecated';
+        this.mcpServer = mcpServer;
     }
     /**
      * Adds a formula definition to this pack.
@@ -308,6 +309,19 @@ class PackDefinitionBuilder {
      */
     addNetworkDomain(...domain) {
         this.networkDomains.push(...domain);
+        return this;
+    }
+    /**
+     * Adds an MCP server to the pack.
+     *
+     * Currently MCP packs are not compatible with other building blocks such as
+     * formulas, sync tables, etc
+     *
+     * Authentication will be pre-specified as opposed to dynamically discovered. Dynamic
+     * Discovery may be added in a future iteration
+     */
+    addMcpServer(mcpServer) {
+        this.mcpServer = mcpServer;
         return this;
     }
     /**

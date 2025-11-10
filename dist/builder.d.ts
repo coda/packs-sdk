@@ -6,6 +6,7 @@ import type { DynamicSyncTableOptions } from './api';
 import type { Format } from './types';
 import type { Formula } from './api';
 import type { FormulaDefinitionOptions } from './api';
+import type { McpServer } from './types';
 import type { ObjectSchema } from './schema';
 import type { ObjectSchemaDefinition } from './schema';
 import type { PackVersionDefinition } from './types';
@@ -82,6 +83,11 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * @hidden
      */
     adminAuthentications?: AdminAuthentication[];
+    /**
+     * See {@link PackVersionDefinition.mcpServer}
+     * @hidden
+     */
+    mcpServer?: McpServer;
     /**
      * See {@link PackVersionDefinition.version}.
      */
@@ -286,6 +292,16 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * ```
      */
     addNetworkDomain(...domain: string[]): this;
+    /**
+     * Adds an MCP server to the pack.
+     *
+     * Currently MCP packs are not compatible with other building blocks such as
+     * formulas, sync tables, etc
+     *
+     * Authentication will be pre-specified as opposed to dynamically discovered. Dynamic
+     * Discovery may be added in a future iteration
+     */
+    addMcpServer(mcpServer: McpServer): this;
     /**
      * Sets the semantic version of this pack version, e.g. `'1.2.3'`.
      *

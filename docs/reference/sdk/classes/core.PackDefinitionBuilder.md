@@ -248,6 +248,30 @@ pack.addFormula({
 
 ___
 
+### addMcpServer
+
+▸ **addMcpServer**(`mcpServer`): [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
+
+Adds an MCP server to the pack.
+
+Currently MCP packs are not compatible with other building blocks such as 
+formulas, sync tables, etc
+
+Authentication will be pre-specified as opposed to dynamically discovered. Dynamic
+Discovery may be added in a future iteration
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `mcpServer` | `McpServer` |
+
+#### Returns
+
+[`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
+
+___
+
 ### addNetworkDomain
 
 ▸ **addNetworkDomain**(`...domain`): [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
