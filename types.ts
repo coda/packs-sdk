@@ -1195,6 +1195,10 @@ export enum ToolType {
    * @hidden
    */
   Summarizer = 'Summarizer',
+  /**
+   * @hidden
+   */
+  MCP = 'MCP',
 }
 
 /**
@@ -1343,6 +1347,11 @@ export interface AssistantMessageTool extends BaseTool<ToolType.AssistantMessage
 export interface SummarizerTool extends BaseTool<ToolType.Summarizer> {}
 
 /**
+ * @hidden
+ */
+export interface MCPTool extends BaseTool<ToolType.MCP> {}
+
+/**
  * Map of tool types to their corresponding tool interfaces.
  * This interface can be extended via declaration merging to add custom tool types.
  * @hidden
@@ -1353,6 +1362,7 @@ export interface ToolMap {
   [ToolType.ScreenAnnotation]: ScreenAnnotationTool;
   [ToolType.AssistantMessage]: AssistantMessageTool;
   [ToolType.Summarizer]: SummarizerTool;
+  [ToolType.MCP]: MCPTool;
 }
 
 /**

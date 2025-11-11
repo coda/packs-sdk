@@ -106,6 +106,7 @@ import type {StringTimeSchema} from '../schema';
 import type {StringWithOptionsSchema} from '../schema';
 import type {SuggestedPrompt} from '../types';
 import type {SummarizerTool} from '../types';
+import type {MCPTool} from '../types';
 import type {SyncExecutionContext} from '..';
 import type {SyncFormula} from '../api';
 import type {SyncPassthroughData} from '../api';
@@ -2182,12 +2183,17 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     type: z.literal(ToolType.Summarizer),
   });
 
+  const mcpToolSchema = zodCompleteStrictObject<MCPTool>({
+    type: z.literal(ToolType.MCP),
+  });
+
   const toolSchema = z.discriminatedUnion('type', [
     packToolSchema,
     knowledgeToolSchema,
     screenAnnotationToolSchema,
     assistantMessageToolSchema,
     summarizerToolSchema,
+    mcpToolSchema,
   ]);
   const skillSchema = zodCompleteObject<Skill>({
     name: z
@@ -2334,6 +2340,20 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             code: z.ZodIssueCode.custom,
             message: `Skill names must be unique. Found duplicate name "${dupe}".`,
           });
+        }
+
+        const mcpSkillIndexes = data
+          .map((skill, index) => ({skill, index}))
+          .filter(({skill}) => skill.tools.some(tool => tool.type === ToolType.MCP))
+          .map(({index}) => index);
+        if (mcpSkillIndexes.length > 1) {
+          for (const duplicateIndex of mcpSkillIndexes.slice(1)) {
+            context.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: ['skills', duplicateIndex],
+              message: 'Only one skill with an MCP tool is allowed per pack.',
+            });
+          }
         }
       }),
     skillEntrypoints: skillEntrypointsSchema.optional(),
