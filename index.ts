@@ -295,6 +295,7 @@ export type {ScreenAnnotationTool} from './types';
 export type {AssistantMessageTool} from './types';
 export type {SummarizerTool} from './types';
 export type {MCPTool} from './types';
+export type {MCPServer} from './types';
 export type {Skill} from './types';
 export type {Tool} from './types';
 export {KnowledgeToolSourceType} from './types';

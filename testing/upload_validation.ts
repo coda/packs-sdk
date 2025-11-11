@@ -45,6 +45,7 @@ import {ImageShapeStyle} from '../schema';
 import {IndexingStrategy} from '../schema';
 import {JSONPath} from 'jsonpath-plus';
 import type {KnowledgeTool} from '../types';
+import type {MCPServer} from '../types';
 import {KnowledgeToolSourceType} from '../types';
 import {LifecycleBehavior} from '../schema';
 import {LinkDisplayType} from '../schema';
@@ -2216,6 +2217,16 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     defaultChat: skillEntrypointConfigSchema.optional(),
   });
 
+  const mcpServerSchema = zodCompleteStrictObject<MCPServer>({
+    endpointUrl: z.string().url('MCP server endpointUrl must be a valid URL.'),
+    name: z
+      .string()
+      .min(1)
+      .max(Limits.BuildingBlockName)
+      .regex(regexParameterName, 'MCP server names can only contain alphanumeric characters and underscores.')
+      .optional(),
+  });
+
   const suggestedPromptSchema = zodCompleteStrictObject<SuggestedPrompt>({
     name: z
       .string()
@@ -2354,6 +2365,21 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
               message: 'Only one skill with an MCP tool is allowed per pack.',
             });
           }
+        }
+      }),
+    mcpServers: z
+      .array(mcpServerSchema)
+      .max(1)
+      .optional()
+      .default([])
+      .superRefine((data, context) => {
+        const serverNames = data.map(server => server.name).filter((name): name is string => Boolean(name));
+        for (const dupe of getNonUniqueElements(serverNames)) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['mcpServers'],
+            message: `MCP server names must be unique. Found duplicate name "${dupe}".`,
+          });
         }
       }),
     skillEntrypoints: skillEntrypointsSchema.optional(),
@@ -2832,6 +2858,17 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             message: `"${entrypoint.skillName}" is not the name of a defined skill.`,
           });
         }
+      }
+    })
+    .superRefine((data, context) => {
+      const metadata = data as PackVersionMetadata;
+      const hasMcpSkill = (metadata.skills || []).some(skill => skill.tools.some(tool => tool.type === ToolType.MCP));
+      if (hasMcpSkill && (!metadata.mcpServers || metadata.mcpServers.length === 0)) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['mcpServers'],
+          message: 'At least one MCP server must be declared when using MCP tools.',
+        });
       }
     });
 

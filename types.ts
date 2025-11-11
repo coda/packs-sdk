@@ -1352,6 +1352,20 @@ export interface SummarizerTool extends BaseTool<ToolType.Summarizer> {}
 export interface MCPTool extends BaseTool<ToolType.MCP> {}
 
 /**
+ * Definition of an MCP server that the pack can connect to.
+ */
+export interface MCPServer {
+  /**
+   * The MCP endpoint URL (e.g. https://example.com/mcp).
+   */
+  endpointUrl: string;
+  /**
+   * Optional stable identifier that can be used to distinguish multiple MCP servers.
+   */
+  name?: string;
+}
+
+/**
  * Map of tool types to their corresponding tool interfaces.
  * This interface can be extended via declaration merging to add custom tool types.
  * @hidden
@@ -1504,6 +1518,10 @@ export interface PackVersionDefinition {
    * @hidden
    */
   suggestedPrompts?: SuggestedPrompt[];
+  /**
+   * Definitions of MCP servers that this pack can connect to.
+   */
+  mcpServers?: MCPServer[];
 }
 
 /**
