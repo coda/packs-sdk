@@ -45,11 +45,12 @@ import {ImageShapeStyle} from '../schema';
 import {IndexingStrategy} from '../schema';
 import {JSONPath} from 'jsonpath-plus';
 import type {KnowledgeTool} from '../types';
-import type {MCPServer} from '../types';
 import {KnowledgeToolSourceType} from '../types';
 import {LifecycleBehavior} from '../schema';
 import {LinkDisplayType} from '../schema';
 import type {LinkSchema} from '../schema';
+import type {MCPServer} from '../types';
+import type {MCPTool} from '../types';
 import type {MessagingContentCategorization} from '../schema';
 import type {MultiHeaderTokenAuthentication} from '../types';
 import type {MultiQueryParamTokenAuthentication} from '../types';
@@ -107,7 +108,6 @@ import type {StringTimeSchema} from '../schema';
 import type {StringWithOptionsSchema} from '../schema';
 import type {SuggestedPrompt} from '../types';
 import type {SummarizerTool} from '../types';
-import type {MCPTool} from '../types';
 import type {SyncExecutionContext} from '..';
 import type {SyncFormula} from '../api';
 import type {SyncPassthroughData} from '../api';
@@ -116,6 +116,7 @@ import type {SyncTableDef} from '../api';
 import type {SystemAuthenticationTypes} from '../types';
 import {TableRole} from '../api_types';
 import {TokenExchangeCredentialsLocation} from '../types';
+import type {Tool} from '../types';
 import {ToolType} from '../types';
 import {Type} from '../api_types';
 import URLParse from 'url-parse';
@@ -2355,7 +2356,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
 
         const mcpSkillIndexes = data
           .map((skill, index) => ({skill, index}))
-          .filter(({skill}) => skill.tools.some(tool => tool.type === ToolType.MCP))
+          .filter(({skill}) => skill.tools.some((tool: Tool) => tool.type === ToolType.MCP))
           .map(({index}) => index);
         if (mcpSkillIndexes.length > 1) {
           for (const duplicateIndex of mcpSkillIndexes.slice(1)) {

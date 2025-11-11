@@ -35,7 +35,7 @@ class PackDefinitionBuilder {
      * rather than constructing a builder directly.
      */
     constructor(definition) {
-        const { formulas, formats, syncTables, skills, networkDomains, defaultAuthentication, systemConnectionAuthentication, version, formulaNamespace, skillEntrypoints, suggestedPrompts, } = definition || {};
+        const { formulas, formats, syncTables, skills, networkDomains, defaultAuthentication, systemConnectionAuthentication, version, formulaNamespace, skillEntrypoints, suggestedPrompts, mcpServers, } = definition || {};
         this.formulas = formulas || [];
         this.formats = formats || [];
         this.syncTables = syncTables || [];
@@ -43,6 +43,7 @@ class PackDefinitionBuilder {
         this.skillEntrypoints = skillEntrypoints;
         this.suggestedPrompts = suggestedPrompts || [];
         this.networkDomains = networkDomains || [];
+        this.mcpServers = mcpServers || [];
         this.defaultAuthentication = defaultAuthentication;
         this.systemConnectionAuthentication = systemConnectionAuthentication;
         this.version = version;
@@ -173,6 +174,10 @@ class PackDefinitionBuilder {
      */
     addSkill(skill) {
         this.skills.push(skill);
+        return this;
+    }
+    addMCPServer(server) {
+        this.mcpServers.push(server);
         return this;
     }
     /**

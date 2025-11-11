@@ -1066,7 +1066,11 @@ export declare enum ToolType {
      * Allows reuse of the default tuned summarizer agent as a tool.
      * @hidden
      */
-    Summarizer = "Summarizer"
+    Summarizer = "Summarizer",
+    /**
+     * @hidden
+     */
+    MCP = "MCP"
 }
 /**
  * The type identifier for a tool
@@ -1203,6 +1207,24 @@ export interface AssistantMessageTool extends BaseTool<ToolType.AssistantMessage
 export interface SummarizerTool extends BaseTool<ToolType.Summarizer> {
 }
 /**
+ * @hidden
+ */
+export interface MCPTool extends BaseTool<ToolType.MCP> {
+}
+/**
+ * Definition of an MCP server that the pack can connect to.
+ */
+export interface MCPServer {
+    /**
+     * The MCP endpoint URL (e.g. https://example.com/mcp).
+     */
+    endpointUrl: string;
+    /**
+     * Optional stable identifier that can be used to distinguish multiple MCP servers.
+     */
+    name?: string;
+}
+/**
  * Map of tool types to their corresponding tool interfaces.
  * This interface can be extended via declaration merging to add custom tool types.
  * @hidden
@@ -1213,6 +1235,7 @@ export interface ToolMap {
     [ToolType.ScreenAnnotation]: ScreenAnnotationTool;
     [ToolType.AssistantMessage]: AssistantMessageTool;
     [ToolType.Summarizer]: SummarizerTool;
+    [ToolType.MCP]: MCPTool;
 }
 /**
  * Union of all supported tool types.
@@ -1343,6 +1366,10 @@ export interface PackVersionDefinition {
      * @hidden
      */
     suggestedPrompts?: SuggestedPrompt[];
+    /**
+     * Definitions of MCP servers that this pack can connect to.
+     */
+    mcpServers?: MCPServer[];
 }
 /**
  * @deprecated use `#PackVersionDefinition`
