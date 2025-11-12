@@ -337,10 +337,10 @@ clean:
 .PHONY: build
 build: clean lint compile docs
 
-# allow debugging packs sdk with local packs repo.
 .PHONY: publish-local
 publish-local: build
-	cp -r dist/* ../packs/node_modules/@codahq/packs-sdk/dist/
+	cp -r dist/* ~/src/coda/node_modules/@codahq/packs-sdk/
+	cp -r dist/* ~/src/coda/node_modules/packs-sdk-for-web-editor/
 
 .PHONY: autoformat-ts
 autoformat-ts:
