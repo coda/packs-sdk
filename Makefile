@@ -337,6 +337,7 @@ clean:
 .PHONY: build
 build: clean lint compile docs
 
+# allow debugging packs sdk with local packs repo.
 .PHONY: publish-local
 publish-local: build
 	cp -r dist/* ~/src/coda/node_modules/@codahq/packs-sdk/
