@@ -102,8 +102,8 @@ How long to set the caching time depends a lot on the specific data and how it's
 
 [formulas]: ../blocks/formulas.md
 [formulas_recalculation]: ../blocks/formulas.md#recalculation
-[formulas_cacheTtlSecs]: ../../reference/sdk/interfaces/core.PackFormulaDef.md#cachettlsecs
-[fetcher_cacheTtlSecs]: ../../reference/sdk/interfaces/core.FetchRequest.md#cachettlsecs
+[formulas_cacheTtlSecs]: ../../reference/sdk/core/interfaces/PackFormulaDef.md#cachettlsecs
+[fetcher_cacheTtlSecs]: ../../reference/sdk/core/interfaces/FetchRequest.md#cachettlsecs
 [actions]: ../blocks/actions.md
 [sync_formula]: ../blocks/sync-tables/index.md#formula
 [authentication]: ../basics/authentication/index.md

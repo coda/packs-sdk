@@ -457,17 +457,17 @@ Dynamic sync tables include a lot of individual functions, but they are run at d
 
 [samples]: ../../../samples/topic/dynamic-sync-table.md
 [sync_tables_naming]: index.md#naming
-[MetadataFormulaObjectResultType]: ../../../reference/sdk/interfaces/core.MetadataFormulaObjectResultType.md
+[MetadataFormulaObjectResultType]: ../../../reference/sdk/core/interfaces/MetadataFormulaObjectResultType.md
 [schemas_identity]: ../../advanced/schemas.md#schema-identity
 [schemas_normalization]: ../../advanced/schemas.md#normalization
 [schemas_sync_table]: ../../advanced/schemas.md#schemas-in-sync-tables
-[fromKey]: ../../../reference/sdk/interfaces/core.ObjectSchemaProperty.md#fromkey
-[addDynamicSyncTable]: ../../../reference/sdk/classes/core.PackDefinitionBuilder.md#adddynamicsynctable
-[listDynamicUrls]: ../../../reference/sdk/interfaces/core.DynamicSyncTableOptions.md#listdynamicurls
-[getName]: ../../../reference/sdk/interfaces/core.DynamicSyncTableOptions.md#getname
-[getDisplayUrl]: ../../../reference/sdk/interfaces/core.DynamicSyncTableOptions.md#getdisplayurl
-[getSchema]: ../../../reference/sdk/interfaces/core.DynamicSyncTableOptions.md#getschema
-[dynamicUrl]: ../../../reference/sdk/interfaces/core.SyncBase.md#dynamicurl
+[fromKey]: ../../../reference/sdk/core/interfaces/ObjectSchemaProperty.md#fromkey
+[addDynamicSyncTable]: ../../../reference/sdk/core/classes/PackDefinitionBuilder.md#adddynamicsynctable
+[listDynamicUrls]: ../../../reference/sdk/core/interfaces/DynamicSyncTableOptions.md#listdynamicurls
+[getName]: ../../../reference/sdk/core/interfaces/DynamicSyncTableOptions.md#getname
+[getDisplayUrl]: ../../../reference/sdk/core/interfaces/DynamicSyncTableOptions.md#getdisplayurl
+[getSchema]: ../../../reference/sdk/core/interfaces/DynamicSyncTableOptions.md#getschema
+[dynamicUrl]: ../../../reference/sdk/core/interfaces/SyncBase.md#dynamicurl
 [sync_tables_identity]: index.md#identity
 [autocomplete_parameter]: ../../basics/parameters/autocomplete.md#parameters
 [sync_tables_reference]: index.md#references

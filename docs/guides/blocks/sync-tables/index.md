@@ -269,13 +269,13 @@ Since the properties themselves may use the [`fromKey`][fromKey] option to load 
 [help_center]: https://help.coda.io/en/articles/3213629-using-packs-tables-to-sync-your-data-into-coda
 [sample_todoist]: ../../../samples/full/todoist.md
 [schemas]: ../../advanced/schemas.md
-[featured]: ../../../reference/sdk/interfaces/core.ObjectSchemaDefinition.md#featuredproperties
+[featured]: ../../../reference/sdk/core/interfaces/ObjectSchemaDefinition.md#featuredproperties
 [formulas]: ../formulas.md
-[SyncFormulaResult]: ../../../reference/sdk/interfaces/core.SyncFormulaResult.md
-[Continuation]: ../../../reference/sdk/interfaces/core.Continuation.md
-[identityName]: ../../../reference/sdk/interfaces/core.SyncTableOptions.md#identityname
+[SyncFormulaResult]: ../../../reference/sdk/core/interfaces/SyncFormulaResult.md
+[Continuation]: ../../../reference/sdk/core/interfaces/Continuation.md
+[identityName]: ../../../reference/sdk/core/interfaces/SyncTableOptions.md#identityname
 [schema_references]: ../../advanced/schemas.md#references
-[dynamicOptions]: ../../../reference/sdk/interfaces/core.SyncTableOptions.md#dynamicoptions
+[dynamicOptions]: ../../../reference/sdk/core/interfaces/SyncTableOptions.md#dynamicoptions
 [actions]: ../actions.md
 [dynamic_sync_tables]: dynamic.md
 [dynamic_sync_tables_schema_only]: dynamic.md#schema-only
@@ -287,6 +287,6 @@ Since the properties themselves may use the [`fromKey`][fromKey] option to load 
 [parameters]: ../../basics/parameters/index.md
 [two_way_sync]: two-way.md
 [schemas_featured_columns]: ../../advanced/schemas.md#featured-columns
-[getEffectivePropertyKeysFromSchema]: ../../../reference/sdk/functions/core.getEffectivePropertyKeysFromSchema.md
-[fromKey]: ../../../reference/sdk/interfaces/core.ObjectSchemaProperty.md#fromkey
+[getEffectivePropertyKeysFromSchema]: ../../../reference/sdk/core/functions/getEffectivePropertyKeysFromSchema.md
+[fromKey]: ../../../reference/sdk/core/interfaces/ObjectSchemaProperty.md#fromkey
 [actions_sync]: ../actions.md#sync

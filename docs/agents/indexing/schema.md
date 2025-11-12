@@ -249,7 +249,7 @@ getSchema: async function (context) {
 If you are upgrading an existing Pack, you’ll need to denormalize any data you want to use in either `contextProperties` or `filterableProperties`. For example, adding a `projectName` property alongside the existing `project` reference property.
 
 
-[temporary_blob_storage]: ../../reference/sdk/interfaces/core.TemporaryBlobStorage.md
+[temporary_blob_storage]: ../../reference/sdk/core/interfaces/TemporaryBlobStorage.md
 [people]: ../../guides/basics/data-types.md#people
 [schemas]: ../../guides/advanced/schemas.md
 [dynamic_sync_tables]: ../../guides/blocks/sync-tables/dynamic.md

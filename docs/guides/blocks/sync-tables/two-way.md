@@ -451,7 +451,7 @@ If your Pack uses [OAuth authentication][oauth] it may require that the user to 
 [sync_tables]: index.md
 [samples]: ../../../samples/topic/two-way.md
 [mdn_spread_object]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax#spread_in_object_literals
-[reference_sync_update]: ../../../reference/sdk/interfaces/core.SyncUpdate.md
+[reference_sync_update]: ../../../reference/sdk/core/interfaces/SyncUpdate.md
 [fetcher_parallel]: ../../basics/fetcher.md#in-parallel
 [parameters_autocomplete]: ../../basics/parameters/autocomplete.md
 [oauth]: ../../basics/authentication/oauth2.md

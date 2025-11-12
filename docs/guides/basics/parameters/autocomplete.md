@@ -158,6 +158,6 @@ pack.addFormula({
 
 [samples]: ../../../samples/topic/autocomplete.md
 [destructuring_assignment]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
-[SimpleAutocompleteOption]: ../../../reference/sdk/interfaces/core.SimpleAutocompleteOption.md
-[autocompleteSearchObjects]: ../../../reference/sdk/functions/core.autocompleteSearchObjects.md
+[SimpleAutocompleteOption]: ../../../reference/sdk/core/interfaces/SimpleAutocompleteOption.md
+[autocompleteSearchObjects]: ../../../reference/sdk/core/functions/autocompleteSearchObjects.md
 [parameters_vararg]: index.md#vararg

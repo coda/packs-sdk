@@ -118,9 +118,9 @@ You can alternatively use the AWS CLI to manage these credentials for you.
 
 
 [awsdocs_sv4]: https://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html
-[sdk_awsaccesskey]: ../../../reference/sdk/enums/core.AuthenticationType.md#awsaccesskey
+[sdk_awsaccesskey]: ../../../reference/sdk/core/enumerations/AuthenticationType.md#awsaccesskey
 [awsdocs_accesskey]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html
 [sample_aws]: ../../../samples/topic/authentication.md#aws-signature-version-4
 [awsdocs_assumerole]: https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html
-[sdk_awsassumerole]: ../../../reference/sdk/enums/core.AuthenticationType.md#awsassumerole
+[sdk_awsassumerole]: ../../../reference/sdk/core/enumerations/AuthenticationType.md#awsassumerole
 [awsdocs_createrole]: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create_for-user.html
