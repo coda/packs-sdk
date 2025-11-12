@@ -1219,6 +1219,17 @@ export interface ToolMap {
  * @hidden
  */
 export type Tool = ToolMap[keyof ToolMap];
+export declare enum SkillOutputType {
+    /**
+     * Indicates this skill outputs plain text.
+     */
+    PlainText = "PlainText",
+    /**
+     * Indicates this skill outputs Markdown. It usually means that the skill prompt has instructions
+     * to output Markdown and the output is expected to be rendered as Markdown.
+     */
+    Markdown = "Markdown"
+}
 /**
  * Set of tools and prompts that defines a skill for this pack
  * @hidden
@@ -1232,6 +1243,8 @@ export interface Skill {
     description: string;
     /** The prompt/instructions that define the skill's behavior. */
     prompt: string;
+    /** Type of the output the skill produces. */
+    outputType?: SkillOutputType;
     /** List of tools that this skill can use. This does NOT include pack calls by default. */
     tools: Tool[];
 }

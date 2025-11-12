@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HttpStatusCode = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.ToolType = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
+exports.HttpStatusCode = exports.SkillOutputType = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.ToolType = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
 /**
  * @deprecated
  */
@@ -278,6 +278,18 @@ var ScreenAnnotationType;
      */
     ScreenAnnotationType["Guide"] = "Guide";
 })(ScreenAnnotationType || (exports.ScreenAnnotationType = ScreenAnnotationType = {}));
+var SkillOutputType;
+(function (SkillOutputType) {
+    /**
+     * Indicates this skill outputs plain text.
+     */
+    SkillOutputType["PlainText"] = "PlainText";
+    /**
+     * Indicates this skill outputs Markdown. It usually means that the skill prompt has instructions
+     * to output Markdown and the output is expected to be rendered as Markdown.
+     */
+    SkillOutputType["Markdown"] = "Markdown";
+})(SkillOutputType || (exports.SkillOutputType = SkillOutputType = {}));
 var HttpStatusCode;
 (function (HttpStatusCode) {
     HttpStatusCode[HttpStatusCode["Ok"] = 200] = "Ok";
