@@ -1367,7 +1367,8 @@ export enum SkillOutputType {
    */
   PlainText = 'PlainText',
   /**
-   * Indicates this skill outputs Markdown. It usually means that the skill prompt has instructions to output Markdown and the output is expected to be rendered as Markdown.
+   * Indicates this skill outputs Markdown. It usually means that the skill prompt has instructions
+   * to output Markdown and the output is expected to be rendered as Markdown.
    */
   Markdown = 'Markdown',
 }
