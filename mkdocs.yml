@@ -74,16 +74,8 @@ plugins:
           We have a gallery where users can discover and install Packs, as well as a robust set of admin controls.
         full_output: llms-full.txt
         sections:
-          Guides:
-          - "guides/**/*.md"
-          Tutorials:
-          - "tutorials/**/*.md"
-          Sample code:
-          - "samples/**/*.md"
-          Reference docs:
-          - "reference/**/*.md"
-          Support:
-          - "support/**/*.md"
+          Documentation:
+          - "*.md"
     # Variables in markdown.
     # See: https://squidfunk.github.io/mkdocs-material/reference/variables/
     - macros:
