@@ -14,29 +14,14 @@ Options provided when defining a dynamic sync table.
 
 ## Type Parameters
 
-### K
-
-`K` *extends* `string`
-
-### L
-
-`L` *extends* `string`
-
-### ParamDefsT
-
-`ParamDefsT` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md)
-
-### SchemaT
-
-`SchemaT` *extends* [`ObjectSchemaDefinition`](ObjectSchemaDefinition.md)\<`K`, `L`\>
-
-### ContextT
-
-`ContextT` *extends* [`SyncExecutionContext`](SyncExecutionContext.md)\<`any`, `any`\>
-
-### PermissionsContextT
-
-`PermissionsContextT` *extends* `SyncPassthroughData`
+| Type Parameter |
+| ------ |
+| `K` *extends* `string` |
+| `L` *extends* `string` |
+| `ParamDefsT` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md) |
+| `SchemaT` *extends* [`ObjectSchemaDefinition`](ObjectSchemaDefinition.md)\<`K`, `L`\> |
+| `ContextT` *extends* [`SyncExecutionContext`](SyncExecutionContext.md)\<`any`, `any`\> |
+| `PermissionsContextT` *extends* `SyncPassthroughData` |
 
 ## Properties
 

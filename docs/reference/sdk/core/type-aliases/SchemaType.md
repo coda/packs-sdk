@@ -29,6 +29,6 @@ to ensure that it matches the schema you have declared for that formula.
 
 ## Type Parameters
 
-### T
-
-`T` *extends* [`Schema`](Schema.md)
+| Type Parameter |
+| ------ |
+| `T` *extends* [`Schema`](Schema.md) |

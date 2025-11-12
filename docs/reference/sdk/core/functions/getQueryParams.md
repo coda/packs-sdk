@@ -14,19 +14,19 @@ search:
 
 Helper to take a URL string and return the parameters (if any) as a JavaScript object.
 
-## Parameters
-
-### url
-
-`string`
-
-## Returns
-
-`object`
-
 ## Example
 
 ```
 // Returns `{token: "asdf", limit: "5"}`
 let params = getQueryParams("/someApi/someEndpoint?token=asdf&limit=5");
 ```
+
+## Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `url` | `string` |
+
+## Returns
+
+`object`

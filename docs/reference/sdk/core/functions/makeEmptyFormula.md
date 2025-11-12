@@ -16,20 +16,6 @@ Creates the definition of an "empty" formula, that is, a formula that uses a [Re
 to define an implementation for the formula rather than implementing an actual `execute` function
 in JavaScript.
 
-## Type Parameters
-
-### ParamDefsT
-
-`ParamDefsT` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md)
-
-## Parameters
-
-### definition
-
-[`FormulaOptions`](../type-aliases/FormulaOptions.md)\<`ParamDefsT`, [`EmptyFormulaDef`](../interfaces/EmptyFormulaDef.md)\<`ParamDefsT`\>\>
-
-## Returns
-
 ## Example
 
 ```
@@ -45,3 +31,17 @@ coda.makeEmptyFormula({
    ],
  }),
 ```
+
+## Type Parameters
+
+| Type Parameter |
+| ------ |
+| `ParamDefsT` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md) |
+
+## Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `definition` | [`FormulaOptions`](../type-aliases/FormulaOptions.md)\<`ParamDefsT`, [`EmptyFormulaDef`](../interfaces/EmptyFormulaDef.md)\<`ParamDefsT`\>\> |
+
+## Returns

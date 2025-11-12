@@ -18,13 +18,10 @@ Information about the current incremental sync.
 
 ## Type Parameters
 
-### SyncContinuationT
-
-`SyncContinuationT`
-
-### CheckpointContinuationT
-
-`CheckpointContinuationT`
+| Type Parameter |
+| ------ |
+| `SyncContinuationT` |
+| `CheckpointContinuationT` |
 
 ## Properties
 

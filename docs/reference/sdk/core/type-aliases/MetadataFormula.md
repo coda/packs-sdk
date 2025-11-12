@@ -48,10 +48,7 @@ current value.
 
 ## Type Parameters
 
-### ContextT
-
-`ContextT` *extends* [`ExecutionContext`](../interfaces/ExecutionContext.md) = [`ExecutionContext`](../interfaces/ExecutionContext.md)
-
-### ResultT
-
-`ResultT` *extends* [`PackFormulaResult`](PackFormulaResult.md) = [`LegacyDefaultMetadataReturnType`](LegacyDefaultMetadataReturnType.md)
+| Type Parameter | Default type |
+| ------ | ------ |
+| `ContextT` *extends* [`ExecutionContext`](../interfaces/ExecutionContext.md) | [`ExecutionContext`](../interfaces/ExecutionContext.md) |
+| `ResultT` *extends* [`PackFormulaResult`](PackFormulaResult.md) | [`LegacyDefaultMetadataReturnType`](LegacyDefaultMetadataReturnType.md) |

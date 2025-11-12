@@ -30,15 +30,15 @@ deal with authentication in any way, Coda will handle that entirely on your beha
 
 #### Type Parameters
 
-##### T
-
-`T` = `any`
+| Type Parameter | Default type |
+| ------ | ------ |
+| `T` | `any` |
 
 #### Parameters
 
-##### request
-
-[`FetchRequest`](FetchRequest.md)
+| Parameter | Type |
+| ------ | ------ |
+| `request` | [`FetchRequest`](FetchRequest.md) |
 
 #### Returns
 

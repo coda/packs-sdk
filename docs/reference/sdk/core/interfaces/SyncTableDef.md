@@ -19,29 +19,14 @@ instead, define sync tables using [makeSyncTable](../functions/makeSyncTable.md)
 
 ## Type Parameters
 
-### K
-
-`K` *extends* `string`
-
-### L
-
-`L` *extends* `string`
-
-### ParamDefsT
-
-`ParamDefsT` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md)
-
-### SchemaT
-
-`SchemaT` *extends* `ObjectSchema`\<`K`, `L`\>
-
-### ContextT
-
-`ContextT` *extends* [`SyncExecutionContext`](SyncExecutionContext.md)\<`any`, `any`\>
-
-### PermissionsContextT
-
-`PermissionsContextT` *extends* `SyncPassthroughData`
+| Type Parameter |
+| ------ |
+| `K` *extends* `string` |
+| `L` *extends* `string` |
+| `ParamDefsT` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md) |
+| `SchemaT` *extends* `ObjectSchema`\<`K`, `L`\> |
+| `ContextT` *extends* [`SyncExecutionContext`](SyncExecutionContext.md)\<`any`, `any`\> |
+| `PermissionsContextT` *extends* `SyncPassthroughData` |
 
 ## Properties
 

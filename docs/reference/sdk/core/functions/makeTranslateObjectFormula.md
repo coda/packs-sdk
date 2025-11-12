@@ -20,24 +20,6 @@ or with slight transformations. The can be accomplished with an `execute` functi
 exactly that, but alternatively you could use `makeTranslateObjectFormula` and an
 `execute` implementation will be generated for you.
 
-## Type Parameters
-
-### ParamDefsT
-
-`ParamDefsT` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md)
-
-### ResultT
-
-`ResultT` *extends* [`Schema`](../type-aliases/Schema.md)
-
-## Parameters
-
-### \_\_namedParameters
-
-[`FormulaOptions`](../type-aliases/FormulaOptions.md)\<`ParamDefsT`, [`ObjectArrayFormulaDef`](../interfaces/ObjectArrayFormulaDef.md)\<`ParamDefsT`, `ResultT`\>\>
-
-## Returns
-
 ## Example
 
 ```
@@ -58,3 +40,18 @@ makeTranslateObjectFormula({
     schema: UserSchema,
   },
 });
+
+## Type Parameters
+
+| Type Parameter |
+| ------ |
+| `ParamDefsT` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md) |
+| `ResultT` *extends* [`Schema`](../type-aliases/Schema.md) |
+
+## Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `__namedParameters` | [`FormulaOptions`](../type-aliases/FormulaOptions.md)\<`ParamDefsT`, [`ObjectArrayFormulaDef`](../interfaces/ObjectArrayFormulaDef.md)\<`ParamDefsT`, `ResultT`\>\> |
+
+## Returns

@@ -41,13 +41,10 @@ Use to construct a user-visible error.
 
 #### Parameters
 
-##### message?
-
-`string`
-
-##### internalError?
-
-`Error`
+| Parameter | Type |
+| ------ | ------ |
+| `message?` | `string` |
+| `internalError?` | `Error` |
 
 #### Returns
 

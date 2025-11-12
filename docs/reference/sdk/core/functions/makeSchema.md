@@ -25,22 +25,6 @@ boilerplate.
 At this time, this wrapper provides only better TypeScript type inference,
 but it may do validation in a future SDK version.
 
-## Type Parameters
-
-### T
-
-`T` *extends* [`Schema`](../type-aliases/Schema.md)
-
-## Parameters
-
-### schema
-
-`T`
-
-## Returns
-
-`T`
-
 ## Example
 
 ```
@@ -49,3 +33,19 @@ coda.makeSchema({
   items: {type: coda.ValueType.String},
 });
 ```
+
+## Type Parameters
+
+| Type Parameter |
+| ------ |
+| `T` *extends* [`Schema`](../type-aliases/Schema.md) |
+
+## Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `schema` | `T` |
+
+## Returns
+
+`T`

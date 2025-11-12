@@ -14,100 +14,6 @@ search:
 
 Creates a dynamic sync table definition.
 
-## Type Parameters
-
-### K
-
-`K` *extends* `string`
-
-### L
-
-`L` *extends* `string`
-
-### ParamDefsT
-
-`ParamDefsT` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md)
-
-### SchemaT
-
-`SchemaT` *extends* [`ObjectSchemaDefinition`](../interfaces/ObjectSchemaDefinition.md)\<`K`, `L`\>
-
-### ContextT
-
-`ContextT` *extends* [`SyncExecutionContext`](../interfaces/SyncExecutionContext.md)\<`any`, `any`, `any`\>
-
-### PermissionsContextT
-
-`PermissionsContextT` *extends* `SyncPassthroughData`
-
-## Parameters
-
-### \_\_namedParameters
-
-#### connectionRequirement?
-
-[`ConnectionRequirement`](../enumerations/ConnectionRequirement.md)
-
-#### defaultAddDynamicColumns?
-
-`boolean`
-
-#### description?
-
-`string`
-
-#### displayName?
-
-`string`
-
-#### entityName?
-
-`string`
-
-#### formula
-
-[`FormulaOptions`](../type-aliases/FormulaOptions.md)\<`ParamDefsT`, [`SyncFormulaDef`](../interfaces/SyncFormulaDef.md)\<`K`, `L`, `ParamDefsT`, `any`, `ContextT`, `PermissionsContextT`\>\>
-
-#### getDisplayUrl
-
-[`MetadataFormulaDef`](../type-aliases/MetadataFormulaDef.md)\<`ContextT`\>
-
-#### getName
-
-[`MetadataFormulaDef`](../type-aliases/MetadataFormulaDef.md)\<`ContextT`\>
-
-#### getSchema
-
-[`MetadataFormulaDef`](../type-aliases/MetadataFormulaDef.md)\<`ContextT`\>
-
-#### identityName
-
-`string`
-
-#### listDynamicUrls?
-
-[`MetadataFormulaDef`](../type-aliases/MetadataFormulaDef.md)\<[`ExecutionContext`](../interfaces/ExecutionContext.md), [`LegacyDefaultMetadataReturnType`](../type-aliases/LegacyDefaultMetadataReturnType.md)\>
-
-#### name
-
-`string`
-
-#### placeholderSchema?
-
-`SchemaT`
-
-#### propertyOptions?
-
-[`PropertyOptionsMetadataFunction`](../type-aliases/PropertyOptionsMetadataFunction.md)\<`any`\>
-
-#### searchDynamicUrls?
-
-[`MetadataFormulaDef`](../type-aliases/MetadataFormulaDef.md)\<[`ExecutionContext`](../interfaces/ExecutionContext.md), [`LegacyDefaultMetadataReturnType`](../type-aliases/LegacyDefaultMetadataReturnType.md)\>
-
-## Returns
-
-[`DynamicSyncTableDef`](../interfaces/DynamicSyncTableDef.md)\<`K`, `L`, `ParamDefsT`, `any`, `ContextT`, `PermissionsContextT`\>
-
 ## Example
 
 ```
@@ -124,3 +30,39 @@ coda.makeDynamicSyncTable({
   ...
 });
 ```
+
+## Type Parameters
+
+| Type Parameter |
+| ------ |
+| `K` *extends* `string` |
+| `L` *extends* `string` |
+| `ParamDefsT` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md) |
+| `SchemaT` *extends* [`ObjectSchemaDefinition`](../interfaces/ObjectSchemaDefinition.md)\<`K`, `L`\> |
+| `ContextT` *extends* [`SyncExecutionContext`](../interfaces/SyncExecutionContext.md)\<`any`, `any`, `any`\> |
+| `PermissionsContextT` *extends* `SyncPassthroughData` |
+
+## Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `__namedParameters` | \{ `connectionRequirement?`: [`ConnectionRequirement`](../enumerations/ConnectionRequirement.md); `defaultAddDynamicColumns?`: `boolean`; `description?`: `string`; `displayName?`: `string`; `entityName?`: `string`; `formula`: [`FormulaOptions`](../type-aliases/FormulaOptions.md)\<`ParamDefsT`, [`SyncFormulaDef`](../interfaces/SyncFormulaDef.md)\<`K`, `L`, `ParamDefsT`, `any`, `ContextT`, `PermissionsContextT`\>\>; `getDisplayUrl`: [`MetadataFormulaDef`](../type-aliases/MetadataFormulaDef.md)\<`ContextT`\>; `getName`: [`MetadataFormulaDef`](../type-aliases/MetadataFormulaDef.md)\<`ContextT`\>; `getSchema`: [`MetadataFormulaDef`](../type-aliases/MetadataFormulaDef.md)\<`ContextT`\>; `identityName`: `string`; `listDynamicUrls?`: [`MetadataFormulaDef`](../type-aliases/MetadataFormulaDef.md)\<[`ExecutionContext`](../interfaces/ExecutionContext.md), [`LegacyDefaultMetadataReturnType`](../type-aliases/LegacyDefaultMetadataReturnType.md)\>; `name`: `string`; `placeholderSchema?`: `SchemaT`; `propertyOptions?`: [`PropertyOptionsMetadataFunction`](../type-aliases/PropertyOptionsMetadataFunction.md)\<`any`\>; `searchDynamicUrls?`: [`MetadataFormulaDef`](../type-aliases/MetadataFormulaDef.md)\<[`ExecutionContext`](../interfaces/ExecutionContext.md), [`LegacyDefaultMetadataReturnType`](../type-aliases/LegacyDefaultMetadataReturnType.md)\>; \} |
+| `__namedParameters.connectionRequirement?` | [`ConnectionRequirement`](../enumerations/ConnectionRequirement.md) |
+| `__namedParameters.defaultAddDynamicColumns?` | `boolean` |
+| `__namedParameters.description?` | `string` |
+| `__namedParameters.displayName?` | `string` |
+| `__namedParameters.entityName?` | `string` |
+| `__namedParameters.formula` | [`FormulaOptions`](../type-aliases/FormulaOptions.md)\<`ParamDefsT`, [`SyncFormulaDef`](../interfaces/SyncFormulaDef.md)\<`K`, `L`, `ParamDefsT`, `any`, `ContextT`, `PermissionsContextT`\>\> |
+| `__namedParameters.getDisplayUrl` | [`MetadataFormulaDef`](../type-aliases/MetadataFormulaDef.md)\<`ContextT`\> |
+| `__namedParameters.getName` | [`MetadataFormulaDef`](../type-aliases/MetadataFormulaDef.md)\<`ContextT`\> |
+| `__namedParameters.getSchema` | [`MetadataFormulaDef`](../type-aliases/MetadataFormulaDef.md)\<`ContextT`\> |
+| `__namedParameters.identityName` | `string` |
+| `__namedParameters.listDynamicUrls?` | [`MetadataFormulaDef`](../type-aliases/MetadataFormulaDef.md)\<[`ExecutionContext`](../interfaces/ExecutionContext.md), [`LegacyDefaultMetadataReturnType`](../type-aliases/LegacyDefaultMetadataReturnType.md)\> |
+| `__namedParameters.name` | `string` |
+| `__namedParameters.placeholderSchema?` | `SchemaT` |
+| `__namedParameters.propertyOptions?` | [`PropertyOptionsMetadataFunction`](../type-aliases/PropertyOptionsMetadataFunction.md)\<`any`\> |
+| `__namedParameters.searchDynamicUrls?` | [`MetadataFormulaDef`](../type-aliases/MetadataFormulaDef.md)\<[`ExecutionContext`](../interfaces/ExecutionContext.md), [`LegacyDefaultMetadataReturnType`](../type-aliases/LegacyDefaultMetadataReturnType.md)\> |
+
+## Returns
+
+[`DynamicSyncTableDef`](../interfaces/DynamicSyncTableDef.md)\<`K`, `L`, `ParamDefsT`, `any`, `ContextT`, `PermissionsContextT`\>

@@ -24,13 +24,10 @@ This type is generally not used directly, but describes the inputs to [makeTrans
 
 ## Type Parameters
 
-### ParamsT
-
-`ParamsT` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md)
-
-### SchemaT
-
-`SchemaT` *extends* [`Schema`](../type-aliases/Schema.md)
+| Type Parameter |
+| ------ |
+| `ParamsT` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md) |
+| `SchemaT` *extends* [`Schema`](../type-aliases/Schema.md) |
 
 ## Properties
 
@@ -222,10 +219,6 @@ This function takes in parameters and a context containing a [PermissionSyncMode
 and validates the parameters. A formula may want to validate parameters differently
 for permissionSyncMode 'PermissionAware' vs 'Personal' vs undefined (which represents a formula).
 
-#### Returns
-
-a [ParameterValidationResult](../type-aliases/ParameterValidationResult.md)
-
 #### Example
 
 ```
@@ -250,6 +243,10 @@ validateParameters: async function (context, _, params) {
   };
 },
 ```
+
+#### Returns
+
+a [ParameterValidationResult](../type-aliases/ParameterValidationResult.md)
 
 #### Inherited from
 

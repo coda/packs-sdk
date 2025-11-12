@@ -18,9 +18,9 @@ include a subset of properties which were manually selected by the Pack user.
 
 ## Parameters
 
-### schema
-
-[`Schema`](../type-aliases/Schema.md)
+| Parameter | Type |
+| ------ | ------ |
+| `schema` | [`Schema`](../type-aliases/Schema.md) |
 
 ## Returns
 

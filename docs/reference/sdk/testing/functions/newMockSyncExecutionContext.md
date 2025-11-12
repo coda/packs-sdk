@@ -14,15 +14,15 @@ search:
 
 ## Type Parameters
 
-### T
-
-`T` *extends* [`SyncExecutionContext`](../../core/interfaces/SyncExecutionContext.md)\<`any`, `any`, `any`\>
+| Type Parameter |
+| ------ |
+| `T` *extends* [`SyncExecutionContext`](../../core/interfaces/SyncExecutionContext.md)\<`any`, `any`, `any`\> |
 
 ## Parameters
 
-### overrides?
-
-`Partial`\<`T`\>
+| Parameter | Type |
+| ------ | ------ |
+| `overrides?` | `Partial`\<`T`\> |
 
 ## Returns
 

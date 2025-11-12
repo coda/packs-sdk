@@ -17,6 +17,6 @@ the parameter definition for that formula.
 
 ## Type Parameters
 
-### ParamDefsT
-
-`ParamDefsT` *extends* [`ParamDefs`](ParamDefs.md)
+| Type Parameter |
+| ------ |
+| `ParamDefsT` *extends* [`ParamDefs`](ParamDefs.md) |

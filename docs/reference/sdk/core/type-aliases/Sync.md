@@ -17,14 +17,8 @@ Information about the current sync, part of the [SyncExecutionContext](../interf
 
 ## Type Parameters
 
-### SyncContinuationT
-
-`SyncContinuationT` = [`Continuation`](../interfaces/Continuation.md)
-
-### IncrementalCheckpointContinuationT
-
-`IncrementalCheckpointContinuationT` = `SyncContinuationT`
-
-### IncrementalSyncContinuationT
-
-`IncrementalSyncContinuationT` = `SyncContinuationT`
+| Type Parameter | Default type |
+| ------ | ------ |
+| `SyncContinuationT` | [`Continuation`](../interfaces/Continuation.md) |
+| `IncrementalCheckpointContinuationT` | `SyncContinuationT` |
+| `IncrementalSyncContinuationT` | `SyncContinuationT` |

@@ -23,17 +23,11 @@ sync formula invocation. The only different is that the presence of the `sync` p
 
 ## Type Parameters
 
-### SyncContinuationT
-
-`SyncContinuationT` = [`Continuation`](Continuation.md)
-
-### IncrementalCheckpointContinuationT
-
-`IncrementalCheckpointContinuationT` = `SyncContinuationT`
-
-### IncrementalSyncContinuationT
-
-`IncrementalSyncContinuationT` = `SyncContinuationT`
+| Type Parameter | Default type |
+| ------ | ------ |
+| `SyncContinuationT` | [`Continuation`](Continuation.md) |
+| `IncrementalCheckpointContinuationT` | `SyncContinuationT` |
+| `IncrementalSyncContinuationT` | `SyncContinuationT` |
 
 ## Properties
 

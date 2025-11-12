@@ -18,13 +18,10 @@ A schema definition for an object value (a value with key-value pairs).
 
 ## Type Parameters
 
-### K
-
-`K` *extends* `string`
-
-### L
-
-`L` *extends* `string`
+| Type Parameter |
+| ------ |
+| `K` *extends* `string` |
+| `L` *extends* `string` |
 
 ## Properties
 

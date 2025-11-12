@@ -113,9 +113,9 @@ Returns if the error is an instance of StatusCodeError. Note that `instanceof` m
 
 #### Parameters
 
-##### err
-
-`any`
+| Parameter | Type |
+| ------ | ------ |
+| `err` | `any` |
 
 #### Returns
 

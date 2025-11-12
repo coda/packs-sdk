@@ -18,9 +18,9 @@ A property with a list of valid options for its value.
 
 ## Type Parameters
 
-### T
-
-`T` *extends* [`PackFormulaResult`](../type-aliases/PackFormulaResult.md)
+| Type Parameter |
+| ------ |
+| `T` *extends* [`PackFormulaResult`](../type-aliases/PackFormulaResult.md) |
 
 ## Properties
 

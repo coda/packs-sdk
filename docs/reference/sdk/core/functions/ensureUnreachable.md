@@ -15,20 +15,6 @@ search:
 Helper for TypeScript to make sure that handling of code forks is exhaustive,
 most commonly with a `switch` statement.
 
-## Parameters
-
-### value
-
-`never`
-
-### message?
-
-`string`
-
-## Returns
-
-`never`
-
 ## Example
 
 ```
@@ -51,3 +37,14 @@ function handleEnum(value: MyEnum) {
   }
 }
 ```
+
+## Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `value` | `never` |
+| `message?` | `string` |
+
+## Returns
+
+`never`

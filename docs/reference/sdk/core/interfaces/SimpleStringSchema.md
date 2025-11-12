@@ -19,9 +19,9 @@ should interpret that string.
 
 ## Type Parameters
 
-### T
-
-`T` *extends* `SimpleStringHintTypes` = `SimpleStringHintTypes`
+| Type Parameter | Default type |
+| ------ | ------ |
+| `T` *extends* `SimpleStringHintTypes` | `SimpleStringHintTypes` |
 
 ## Properties
 

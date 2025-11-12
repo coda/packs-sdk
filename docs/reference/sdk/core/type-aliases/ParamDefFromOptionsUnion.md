@@ -24,10 +24,7 @@ on the inputs to [makeParameter](../functions/makeParameter.md).
 
 ## Type Parameters
 
-### T
-
-`T` *extends* [`ParameterType`](../enumerations/ParameterType.md)
-
-### O
-
-`O` *extends* [`ParameterOptions`](ParameterOptions.md)\<`T`\>
+| Type Parameter |
+| ------ |
+| `T` *extends* [`ParameterType`](../enumerations/ParameterType.md) |
+| `O` *extends* [`ParameterOptions`](ParameterOptions.md)\<`T`\> |

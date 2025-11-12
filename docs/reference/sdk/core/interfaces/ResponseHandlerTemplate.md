@@ -15,9 +15,9 @@ created using [makeTranslateObjectFormula](../functions/makeTranslateObjectFormu
 
 ## Type Parameters
 
-### T
-
-`T` *extends* [`Schema`](../type-aliases/Schema.md)
+| Type Parameter |
+| ------ |
+| `T` *extends* [`Schema`](../type-aliases/Schema.md) |
 
 ## Properties
 
@@ -65,9 +65,9 @@ instead of letting them throw and the formula failing.
 
 #### Parameters
 
-##### error
-
-`Error`
+| Parameter | Type |
+| ------ | ------ |
+| `error` | `Error` |
 
 #### Returns
 

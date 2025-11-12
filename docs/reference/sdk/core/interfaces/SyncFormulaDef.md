@@ -18,29 +18,14 @@ Inputs for creating the formula that implements a sync table.
 
 ## Type Parameters
 
-### K
-
-`K` *extends* `string`
-
-### L
-
-`L` *extends* `string`
-
-### ParamDefsT
-
-`ParamDefsT` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md)
-
-### SchemaT
-
-`SchemaT` *extends* [`ObjectSchemaDefinition`](ObjectSchemaDefinition.md)\<`K`, `L`\>
-
-### ContextT
-
-`ContextT` *extends* [`SyncExecutionContext`](SyncExecutionContext.md)\<`any`, `any`\>
-
-### PermissionsContextT
-
-`PermissionsContextT` *extends* `SyncPassthroughData`
+| Type Parameter |
+| ------ |
+| `K` *extends* `string` |
+| `L` *extends* `string` |
+| `ParamDefsT` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md) |
+| `SchemaT` *extends* [`ObjectSchemaDefinition`](ObjectSchemaDefinition.md)\<`K`, `L`\> |
+| `ContextT` *extends* [`SyncExecutionContext`](SyncExecutionContext.md)\<`any`, `any`\> |
+| `PermissionsContextT` *extends* `SyncPassthroughData` |
 
 ## Properties
 
@@ -253,19 +238,16 @@ as another continuation if there are more result to fetch.
 
 #### Type Parameters
 
-##### ContextReturnT
-
-`ContextReturnT` *extends* [`SyncExecutionContext`](SyncExecutionContext.md)\<`any`, `any`, `any`\>
+| Type Parameter |
+| ------ |
+| `ContextReturnT` *extends* [`SyncExecutionContext`](SyncExecutionContext.md)\<`any`, `any`, `any`\> |
 
 #### Parameters
 
-##### params
-
-[`ParamValues`](../type-aliases/ParamValues.md)\<`ParamDefsT`\>
-
-##### context
-
-`ContextT`
+| Parameter | Type |
+| ------ | ------ |
+| `params` | [`ParamValues`](../type-aliases/ParamValues.md)\<`ParamDefsT`\> |
+| `context` | `ContextT` |
 
 #### Returns
 
@@ -285,17 +267,11 @@ the new state of each object.
 
 #### Parameters
 
-##### params
-
-[`ParamValues`](../type-aliases/ParamValues.md)\<`ParamDefsT`\>
-
-##### updates
-
-[`SyncUpdate`](SyncUpdate.md)\<`K`, `L`, `SchemaT`\>[]
-
-##### context
-
-[`UpdateSyncExecutionContext`](UpdateSyncExecutionContext.md)
+| Parameter | Type |
+| ------ | ------ |
+| `params` | [`ParamValues`](../type-aliases/ParamValues.md)\<`ParamDefsT`\> |
+| `updates` | [`SyncUpdate`](SyncUpdate.md)\<`K`, `L`, `SchemaT`\>[] |
+| `context` | [`UpdateSyncExecutionContext`](UpdateSyncExecutionContext.md) |
 
 #### Returns
 
@@ -315,9 +291,9 @@ that can then be applied to many different formulas in a pack.
 
 #### Parameters
 
-##### error
-
-`Error`
+| Parameter | Type |
+| ------ | ------ |
+| `error` | `Error` |
 
 #### Returns
 

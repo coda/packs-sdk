@@ -14,35 +14,20 @@ search:
 
 ## Type Parameters
 
-### T
-
-`T` *extends* [`PackFormulaResult`](../../core/type-aliases/PackFormulaResult.md) \| [`GenericSyncFormulaResult`](../../core/type-aliases/GenericSyncFormulaResult.md) = `any`
+| Type Parameter | Default type |
+| ------ | ------ |
+| `T` *extends* [`PackFormulaResult`](../../core/type-aliases/PackFormulaResult.md) \| [`GenericSyncFormulaResult`](../../core/type-aliases/GenericSyncFormulaResult.md) | `any` |
 
 ## Parameters
 
-### packDef
-
-[`BasicPackDefinition`](../../core/type-aliases/BasicPackDefinition.md)
-
-### formulaNameWithNamespace
-
-`string`
-
-### params
-
-[`ParamValues`](../../core/type-aliases/ParamValues.md)\<[`ParamDefs`](../../core/type-aliases/ParamDefs.md)\>
-
-### context?
-
-[`ExecutionContext`](../../core/interfaces/ExecutionContext.md)
-
-### options?
-
-[`ExecuteOptions`](../interfaces/ExecuteOptions.md)
-
-### \_\_namedParameters?
-
-[`ContextOptions`](../interfaces/ContextOptions.md) = `{}`
+| Parameter | Type |
+| ------ | ------ |
+| `packDef` | [`BasicPackDefinition`](../../core/type-aliases/BasicPackDefinition.md) |
+| `formulaNameWithNamespace` | `string` |
+| `params` | [`ParamValues`](../../core/type-aliases/ParamValues.md)\<[`ParamDefs`](../../core/type-aliases/ParamDefs.md)\> |
+| `context?` | [`ExecutionContext`](../../core/interfaces/ExecutionContext.md) |
+| `options?` | [`ExecuteOptions`](../interfaces/ExecuteOptions.md) |
+| `__namedParameters?` | [`ContextOptions`](../interfaces/ContextOptions.md) |
 
 ## Returns
 

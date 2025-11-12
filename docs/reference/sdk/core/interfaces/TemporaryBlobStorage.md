@@ -52,23 +52,13 @@ be downloaded with the file name provided.
 
 #### Parameters
 
-##### blobData
-
-`Buffer`
-
-##### contentType
-
-`string`
-
-##### opts?
-
-###### downloadFilename?
-
-`string`
-
-###### expiryMs?
-
-`number`
+| Parameter | Type |
+| ------ | ------ |
+| `blobData` | `Buffer` |
+| `contentType` | `string` |
+| `opts?` | \{ `downloadFilename?`: `string`; `expiryMs?`: `number`; \} |
+| `opts.downloadFilename?` | `string` |
+| `opts.expiryMs?` | `number` |
 
 #### Returns
 
@@ -95,27 +85,14 @@ in favor of the provided value.
 
 #### Parameters
 
-##### url
-
-`string`
-
-##### opts?
-
-###### contentType?
-
-`string`
-
-###### downloadFilename?
-
-`string`
-
-###### expiryMs?
-
-`number`
-
-##### fetchOpts?
-
-`Pick`\<[`FetchRequest`](FetchRequest.md), `"headers"` \| `"cacheTtlSecs"` \| `"disableAuthentication"`\>
+| Parameter | Type |
+| ------ | ------ |
+| `url` | `string` |
+| `opts?` | \{ `contentType?`: `string`; `downloadFilename?`: `string`; `expiryMs?`: `number`; \} |
+| `opts.contentType?` | `string` |
+| `opts.downloadFilename?` | `string` |
+| `opts.expiryMs?` | `number` |
+| `fetchOpts?` | `Pick`\<[`FetchRequest`](FetchRequest.md), `"headers"` \| `"cacheTtlSecs"` \| `"disableAuthentication"`\> |
 
 #### Returns
 

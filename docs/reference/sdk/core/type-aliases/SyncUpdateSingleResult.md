@@ -16,14 +16,8 @@ Type definition for a single update result returned by a sync table update funct
 
 ## Type Parameters
 
-### K
-
-`K` *extends* `string`
-
-### L
-
-`L` *extends* `string`
-
-### SchemaT
-
-`SchemaT` *extends* [`ObjectSchemaDefinition`](../interfaces/ObjectSchemaDefinition.md)\<`K`, `L`\>
+| Type Parameter |
+| ------ |
+| `K` *extends* `string` |
+| `L` *extends* `string` |
+| `SchemaT` *extends* [`ObjectSchemaDefinition`](../interfaces/ObjectSchemaDefinition.md)\<`K`, `L`\> |

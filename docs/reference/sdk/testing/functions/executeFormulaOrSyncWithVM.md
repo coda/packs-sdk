@@ -14,29 +14,19 @@ search:
 
 ## Type Parameters
 
-### T
-
-`T` *extends* [`PackFormulaResult`](../../core/type-aliases/PackFormulaResult.md) \| [`GenericSyncFormulaResult`](../../core/type-aliases/GenericSyncFormulaResult.md) = `any`
+| Type Parameter | Default type |
+| ------ | ------ |
+| `T` *extends* [`PackFormulaResult`](../../core/type-aliases/PackFormulaResult.md) \| [`GenericSyncFormulaResult`](../../core/type-aliases/GenericSyncFormulaResult.md) | `any` |
 
 ## Parameters
 
-### \_\_namedParameters
-
-#### bundlePath
-
-`string`
-
-#### executionContext?
-
-[`ExecutionContext`](../../core/interfaces/ExecutionContext.md) = `...`
-
-#### formulaName
-
-`string`
-
-#### params
-
-[`ParamValues`](../../core/type-aliases/ParamValues.md)\<[`ParamDefs`](../../core/type-aliases/ParamDefs.md)\>
+| Parameter | Type |
+| ------ | ------ |
+| `__namedParameters` | \{ `bundlePath`: `string`; `executionContext?`: [`ExecutionContext`](../../core/interfaces/ExecutionContext.md); `formulaName`: `string`; `params`: [`ParamValues`](../../core/type-aliases/ParamValues.md)\<[`ParamDefs`](../../core/type-aliases/ParamDefs.md)\>; \} |
+| `__namedParameters.bundlePath` | `string` |
+| `__namedParameters.executionContext?` | [`ExecutionContext`](../../core/interfaces/ExecutionContext.md) |
+| `__namedParameters.formulaName` | `string` |
+| `__namedParameters.params` | [`ParamValues`](../../core/type-aliases/ParamValues.md)\<[`ParamDefs`](../../core/type-aliases/ParamDefs.md)\> |
 
 ## Returns
 

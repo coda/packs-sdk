@@ -23,6 +23,6 @@ A definition accepted by [makeFormula](../functions/makeFormula.md) for a formul
 
 ## Type Parameters
 
-### ParamDefsT
-
-`ParamDefsT` *extends* [`ParamDefs`](ParamDefs.md)
+| Type Parameter |
+| ------ |
+| `ParamDefsT` *extends* [`ParamDefs`](ParamDefs.md) |

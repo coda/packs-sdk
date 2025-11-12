@@ -18,6 +18,6 @@ definition for that property.
 
 ## Type Parameters
 
-### K
-
-`K` *extends* `string` = `never`
+| Type Parameter | Default type |
+| ------ | ------ |
+| `K` *extends* `string` | `never` |

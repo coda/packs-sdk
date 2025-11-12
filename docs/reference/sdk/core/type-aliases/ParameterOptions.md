@@ -23,6 +23,6 @@ Options you can specify when defining a parameter using [makeParameter](../funct
 
 ## Type Parameters
 
-### T
-
-`T` *extends* [`ParameterType`](../enumerations/ParameterType.md)
+| Type Parameter |
+| ------ |
+| `T` *extends* [`ParameterType`](../enumerations/ParameterType.md) |

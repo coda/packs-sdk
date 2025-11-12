@@ -20,14 +20,8 @@ pack, like an autocomplete metadata formula or a sync getter formula.
 
 ## Type Parameters
 
-### ParamDefsT
-
-`ParamDefsT` *extends* [`ParamDefs`](ParamDefs.md) = [`ParamDefs`](ParamDefs.md)
-
-### ResultT
-
-`ResultT` *extends* [`ValueType`](../enumerations/ValueType.md) = [`ValueType`](../enumerations/ValueType.md)
-
-### SchemaT
-
-`SchemaT` *extends* [`Schema`](Schema.md) = [`Schema`](Schema.md)
+| Type Parameter | Default type |
+| ------ | ------ |
+| `ParamDefsT` *extends* [`ParamDefs`](ParamDefs.md) | [`ParamDefs`](ParamDefs.md) |
+| `ResultT` *extends* [`ValueType`](../enumerations/ValueType.md) | [`ValueType`](../enumerations/ValueType.md) |
+| `SchemaT` *extends* [`Schema`](Schema.md) | [`Schema`](Schema.md) |

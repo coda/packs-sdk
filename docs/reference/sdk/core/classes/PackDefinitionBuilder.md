@@ -27,9 +27,9 @@ rather than constructing a builder directly.
 
 #### Parameters
 
-##### definition?
-
-`Partial`\<[`PackVersionDefinition`](../interfaces/PackVersionDefinition.md)\>
+| Parameter | Type |
+| ------ | ------ |
+| `definition?` | `Partial`\<[`PackVersionDefinition`](../interfaces/PackVersionDefinition.md)\> |
 
 #### Returns
 
@@ -137,16 +137,6 @@ Adds a column format definition to this pack.
 
 In the web editor, the `/ColumnFormat` shortcut will insert a snippet of a skeleton format.
 
-#### Parameters
-
-##### format
-
-[`Format`](../interfaces/Format.md)
-
-#### Returns
-
-`this`
-
 #### Example
 
 ```
@@ -155,6 +145,16 @@ pack.addColumnFormat({
   formulaName: 'MyFormula',
 });
 ```
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `format` | [`Format`](../interfaces/Format.md) |
+
+#### Returns
+
+`this`
 
 ***
 
@@ -165,42 +165,6 @@ pack.addColumnFormat({
 Adds a dynamic sync table definition to this pack.
 
 In the web editor, the `/DynamicSyncTable` shortcut will insert a snippet of a skeleton sync table.
-
-#### Type Parameters
-
-##### K
-
-`K` *extends* `string`
-
-##### L
-
-`L` *extends* `string`
-
-##### ParamDefsT
-
-`ParamDefsT` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md)
-
-##### SchemaT
-
-`SchemaT` *extends* [`ObjectSchemaDefinition`](../interfaces/ObjectSchemaDefinition.md)\<`K`, `L`\>
-
-##### ContextT
-
-`ContextT` *extends* [`SyncExecutionContext`](../interfaces/SyncExecutionContext.md)\<`any`, `any`, `any`\>
-
-##### PermissionsContextT
-
-`PermissionsContextT` *extends* `SyncPassthroughData`
-
-#### Parameters
-
-##### definition
-
-[`DynamicSyncTableOptions`](../interfaces/DynamicSyncTableOptions.md)\<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`, `PermissionsContextT`\>
-
-#### Returns
-
-`this`
 
 #### Example
 
@@ -219,6 +183,27 @@ pack.addDynamicSyncTable({
 });
 ```
 
+#### Type Parameters
+
+| Type Parameter |
+| ------ |
+| `K` *extends* `string` |
+| `L` *extends* `string` |
+| `ParamDefsT` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md) |
+| `SchemaT` *extends* [`ObjectSchemaDefinition`](../interfaces/ObjectSchemaDefinition.md)\<`K`, `L`\> |
+| `ContextT` *extends* [`SyncExecutionContext`](../interfaces/SyncExecutionContext.md)\<`any`, `any`, `any`\> |
+| `PermissionsContextT` *extends* `SyncPassthroughData` |
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `definition` | [`DynamicSyncTableOptions`](../interfaces/DynamicSyncTableOptions.md)\<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`, `PermissionsContextT`\> |
+
+#### Returns
+
+`this`
+
 ***
 
 ### addFormula()
@@ -228,30 +213,6 @@ pack.addDynamicSyncTable({
 Adds a formula definition to this pack.
 
 In the web editor, the `/Formula` shortcut will insert a snippet of a skeleton formula.
-
-#### Type Parameters
-
-##### ParamDefsT
-
-`ParamDefsT` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md)
-
-##### ResultT
-
-`ResultT` *extends* [`ValueType`](../enumerations/ValueType.md)
-
-##### SchemaT
-
-`SchemaT` *extends* [`Schema`](../type-aliases/Schema.md)
-
-#### Parameters
-
-##### definition
-
-`object` & [`FormulaDefinitionOptions`](../type-aliases/FormulaDefinitionOptions.md)\<`ParamDefsT`, `ResultT`, `SchemaT`\>
-
-#### Returns
-
-`this`
 
 #### Example
 
@@ -273,6 +234,24 @@ pack.addFormula({
 });
 ```
 
+#### Type Parameters
+
+| Type Parameter |
+| ------ |
+| `ParamDefsT` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md) |
+| `ResultT` *extends* [`ValueType`](../enumerations/ValueType.md) |
+| `SchemaT` *extends* [`Schema`](../type-aliases/Schema.md) |
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `definition` | `object` & [`FormulaDefinitionOptions`](../type-aliases/FormulaDefinitionOptions.md)\<`ParamDefsT`, `ResultT`, `SchemaT`\> |
+
+#### Returns
+
+`this`
+
 ***
 
 ### addNetworkDomain()
@@ -290,21 +269,21 @@ any undeclared domains.
 You are allowed one network domain per pack by default. If your pack needs
 to connect to multiple domains, contact Coda Support for approval.
 
-#### Parameters
-
-##### domain
-
-...`string`[]
-
-#### Returns
-
-`this`
-
 #### Example
 
 ```
 pack.addNetworkDomain('example.com');
 ```
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| ...`domain` | `string`[] |
+
+#### Returns
+
+`this`
 
 ***
 
@@ -315,42 +294,6 @@ pack.addNetworkDomain('example.com');
 Adds a sync table definition to this pack.
 
 In the web editor, the `/SyncTable` shortcut will insert a snippet of a skeleton sync table.
-
-#### Type Parameters
-
-##### K
-
-`K` *extends* `string`
-
-##### L
-
-`L` *extends* `string`
-
-##### ParamDefsT
-
-`ParamDefsT` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md)
-
-##### SchemaT
-
-`SchemaT` *extends* `ObjectSchema`\<`K`, `L`\>
-
-##### ContextT
-
-`ContextT` *extends* [`SyncExecutionContext`](../interfaces/SyncExecutionContext.md)\<`any`, `any`, `any`\>
-
-##### PermissionsContextT
-
-`PermissionsContextT` *extends* `SyncPassthroughData`
-
-#### Parameters
-
-##### definition
-
-[`SyncTableOptions`](../interfaces/SyncTableOptions.md)\<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`, `PermissionsContextT`\>
-
-#### Returns
-
-`this`
 
 #### Example
 
@@ -367,6 +310,27 @@ pack.addSyncTable({
 });
 ```
 
+#### Type Parameters
+
+| Type Parameter |
+| ------ |
+| `K` *extends* `string` |
+| `L` *extends* `string` |
+| `ParamDefsT` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md) |
+| `SchemaT` *extends* `ObjectSchema`\<`K`, `L`\> |
+| `ContextT` *extends* [`SyncExecutionContext`](../interfaces/SyncExecutionContext.md)\<`any`, `any`, `any`\> |
+| `PermissionsContextT` *extends* `SyncPassthroughData` |
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `definition` | [`SyncTableOptions`](../interfaces/SyncTableOptions.md)\<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`, `PermissionsContextT`\> |
+
+#### Returns
+
+`this`
+
 ***
 
 ### setSystemAuthentication()
@@ -382,16 +346,6 @@ not register their own account.
 In the web editor, the `/SystemAuthentication` shortcut will insert a snippet of a skeleton
 authentication definition.
 
-#### Parameters
-
-##### systemAuthentication
-
-[`SystemAuthenticationDef`](../type-aliases/SystemAuthenticationDef.md)
-
-#### Returns
-
-`this`
-
 #### Example
 
 ```
@@ -399,6 +353,16 @@ pack.setSystemAuthentication({
   type: AuthenticationType.HeaderBearerToken,
 });
 ```
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `systemAuthentication` | [`SystemAuthenticationDef`](../type-aliases/SystemAuthenticationDef.md) |
+
+#### Returns
+
+`this`
 
 ***
 
@@ -419,16 +383,6 @@ required to invoke all formulas in this pack unless you specify differently on a
 formula. To change the default, you can pass a `defaultConnectionRequirement` option into
 this method.
 
-#### Parameters
-
-##### authDef
-
-[`UserAuthenticationDef`](../type-aliases/UserAuthenticationDef.md)
-
-#### Returns
-
-`this`
-
 #### Example
 
 ```
@@ -436,6 +390,16 @@ pack.setUserAuthentication({
   type: AuthenticationType.HeaderBearerToken,
 });
 ```
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `authDef` | [`UserAuthenticationDef`](../type-aliases/UserAuthenticationDef.md) |
+
+#### Returns
+
+`this`
 
 ***
 
@@ -450,18 +414,18 @@ semantic versioning, or using the CLI. If using the web editor, you can omit thi
 and the web editor will automatically provide an appropriate semantic version
 each time you build a version.
 
-#### Parameters
-
-##### version
-
-`string`
-
-#### Returns
-
-`this`
-
 #### Example
 
 ```
 pack.setVersion('1.2.3');
 ```
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `version` | `string` |
+
+#### Returns
+
+`this`

@@ -22,26 +22,6 @@ them directly as a list, you need not actually implement an autocomplete functio
 The primary use case here is fetching a list of all possible results from an API
 and then refining them using the user's current search string.
 
-## Type Parameters
-
-### T
-
-`T` *extends* `AutocompleteParameterTypes`
-
-## Parameters
-
-### search
-
-`string` | `undefined`
-
-### options
-
-(`TypeMap`\[`AutocompleteParameterTypeMapping`\[`T`\]\] \| [`SimpleAutocompleteOption`](../interfaces/SimpleAutocompleteOption.md)\<`T`\>)[]
-
-## Returns
-
-`Promise`\<[`MetadataFormulaObjectResultType`](../interfaces/MetadataFormulaObjectResultType.md)[]\>
-
 ## Example
 
 ```
@@ -51,3 +31,20 @@ autocomplete: async function(context, search) {
   return coda.simpleAutocomplete(search, allOptions);
 }
 ```
+
+## Type Parameters
+
+| Type Parameter |
+| ------ |
+| `T` *extends* `AutocompleteParameterTypes` |
+
+## Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `search` | `string` \| `undefined` |
+| `options` | (`TypeMap`\[`AutocompleteParameterTypeMapping`\[`T`\]\] \| [`SimpleAutocompleteOption`](../interfaces/SimpleAutocompleteOption.md)\<`T`\>)[] |
+
+## Returns
+
+`Promise`\<[`MetadataFormulaObjectResultType`](../interfaces/MetadataFormulaObjectResultType.md)[]\>

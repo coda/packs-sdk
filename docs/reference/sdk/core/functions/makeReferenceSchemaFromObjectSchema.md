@@ -20,13 +20,10 @@ schema it provides better code reuse to derive a reference schema instead.
 
 ## Parameters
 
-### schema
-
-[`ObjectSchemaDefinition`](../interfaces/ObjectSchemaDefinition.md)\<`string`, `string`\> & [`ObjectSchemaProperty`](../interfaces/ObjectSchemaProperty.md)
-
-### identityName?
-
-`string`
+| Parameter | Type |
+| ------ | ------ |
+| `schema` | [`ObjectSchemaDefinition`](../interfaces/ObjectSchemaDefinition.md)\<`string`, `string`\> & [`ObjectSchemaProperty`](../interfaces/ObjectSchemaProperty.md) |
+| `identityName?` | `string` |
 
 ## Returns
 

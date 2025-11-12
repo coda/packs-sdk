@@ -20,17 +20,11 @@ this contains the [core.Fetcher](../../core/interfaces/Fetcher.md), which is use
 
 ## Type Parameters
 
-### SyncContinuationT
-
-`SyncContinuationT` = [`Continuation`](../../core/interfaces/Continuation.md)
-
-### IncrementalCheckpointContinuationT
-
-`IncrementalCheckpointContinuationT` = `SyncContinuationT`
-
-### IncrementalSyncContinuationT
-
-`IncrementalSyncContinuationT` = `SyncContinuationT`
+| Type Parameter | Default type |
+| ------ | ------ |
+| `SyncContinuationT` | [`Continuation`](../../core/interfaces/Continuation.md) |
+| `IncrementalCheckpointContinuationT` | `SyncContinuationT` |
+| `IncrementalSyncContinuationT` | `SyncContinuationT` |
 
 ## Properties
 

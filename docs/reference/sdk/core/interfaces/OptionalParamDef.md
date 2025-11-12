@@ -18,9 +18,9 @@ Marker type for an optional [ParamDef](ParamDef.md), used internally.
 
 ## Type Parameters
 
-### T
-
-`T` *extends* `UnionType`
+| Type Parameter |
+| ------ |
+| `T` *extends* `UnionType` |
 
 ## Properties
 

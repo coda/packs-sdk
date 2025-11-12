@@ -23,10 +23,7 @@ A pack formula that returns a JavaScript object.
 
 ## Type Parameters
 
-### ParamDefsT
-
-`ParamDefsT` *extends* [`ParamDefs`](ParamDefs.md)
-
-### SchemaT
-
-`SchemaT` *extends* [`Schema`](Schema.md)
+| Type Parameter |
+| ------ |
+| `ParamDefsT` *extends* [`ParamDefs`](ParamDefs.md) |
+| `SchemaT` *extends* [`Schema`](Schema.md) |

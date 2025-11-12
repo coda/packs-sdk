@@ -22,17 +22,11 @@ Base type for the inputs for creating a pack formula.
 
 ## Type Parameters
 
-### ParamsT
-
-`ParamsT` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md)
-
-### ResultT
-
-`ResultT` *extends* [`PackFormulaResult`](../type-aliases/PackFormulaResult.md)
-
-### ContextT
-
-`ContextT` *extends* [`ExecutionContext`](ExecutionContext.md) = [`ExecutionContext`](ExecutionContext.md)
+| Type Parameter | Default type |
+| ------ | ------ |
+| `ParamsT` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md) | - |
+| `ResultT` *extends* [`PackFormulaResult`](../type-aliases/PackFormulaResult.md) | - |
+| `ContextT` *extends* [`ExecutionContext`](ExecutionContext.md) | [`ExecutionContext`](ExecutionContext.md) |
 
 ## Properties
 
@@ -208,10 +202,6 @@ This function takes in parameters and a context containing a [PermissionSyncMode
 and validates the parameters. A formula may want to validate parameters differently
 for permissionSyncMode 'PermissionAware' vs 'Personal' vs undefined (which represents a formula).
 
-#### Returns
-
-a [ParameterValidationResult](../type-aliases/ParameterValidationResult.md)
-
 #### Example
 
 ```
@@ -236,6 +226,10 @@ validateParameters: async function (context, _, params) {
   };
 },
 ```
+
+#### Returns
+
+a [ParameterValidationResult](../type-aliases/ParameterValidationResult.md)
 
 #### Inherited from
 
@@ -264,13 +258,10 @@ The JavaScript function that implements this formula
 
 #### Parameters
 
-##### params
-
-[`ParamValues`](../type-aliases/ParamValues.md)\<`ParamsT`\>
-
-##### context
-
-`ContextT`
+| Parameter | Type |
+| ------ | ------ |
+| `params` | [`ParamValues`](../type-aliases/ParamValues.md)\<`ParamsT`\> |
+| `context` | `ContextT` |
 
 #### Returns
 

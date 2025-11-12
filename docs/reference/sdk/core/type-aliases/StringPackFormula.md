@@ -22,6 +22,6 @@ A pack formula that returns a string.
 
 ## Type Parameters
 
-### ParamDefsT
-
-`ParamDefsT` *extends* [`ParamDefs`](ParamDefs.md)
+| Type Parameter |
+| ------ |
+| `ParamDefsT` *extends* [`ParamDefs`](ParamDefs.md) |

@@ -24,39 +24,21 @@ See [Normalization]({{ config.site_url }}guides/advanced/schemas/#normalization)
 
 ## Type Parameters
 
-### K
-
-`K` *extends* `string`
-
-### L
-
-`L` *extends* `string`
-
-### ParamDefsT
-
-`ParamDefsT` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md)
-
-### SchemaDefT
-
-`SchemaDefT` *extends* [`ObjectSchemaDefinition`](../interfaces/ObjectSchemaDefinition.md)\<`K`, `L`\>
-
-### SchemaT
-
-`SchemaT` *extends* [`ObjectSchemaDefinition`](../interfaces/ObjectSchemaDefinition.md)\<`K`, `L`\> & `object`
-
-### ContextT
-
-`ContextT` *extends* [`SyncExecutionContext`](../interfaces/SyncExecutionContext.md)\<`any`, `any`, `any`\>
-
-### PermissionsContextT
-
-`PermissionsContextT` *extends* `SyncPassthroughData`
+| Type Parameter |
+| ------ |
+| `K` *extends* `string` |
+| `L` *extends* `string` |
+| `ParamDefsT` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md) |
+| `SchemaDefT` *extends* [`ObjectSchemaDefinition`](../interfaces/ObjectSchemaDefinition.md)\<`K`, `L`\> |
+| `SchemaT` *extends* [`ObjectSchemaDefinition`](../interfaces/ObjectSchemaDefinition.md)\<`K`, `L`\> & `object` |
+| `ContextT` *extends* [`SyncExecutionContext`](../interfaces/SyncExecutionContext.md)\<`any`, `any`, `any`\> |
+| `PermissionsContextT` *extends* `SyncPassthroughData` |
 
 ## Parameters
 
-### \_\_namedParameters
-
-[`SyncTableOptions`](../interfaces/SyncTableOptions.md)\<`K`, `L`, `ParamDefsT`, `SchemaDefT`, `ContextT`, `PermissionsContextT`\>
+| Parameter | Type |
+| ------ | ------ |
+| `__namedParameters` | [`SyncTableOptions`](../interfaces/SyncTableOptions.md)\<`K`, `L`, `ParamDefsT`, `SchemaDefT`, `ContextT`, `PermissionsContextT`\> |
 
 ## Returns
 

@@ -32,23 +32,17 @@ created using [makeObjectSchema](makeObjectSchema.md) if the elements are object
 
 ## Type Parameters
 
-### ParamDefsT
-
-`ParamDefsT` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md)
-
-### ResultT
-
-`ResultT` *extends* [`ValueType`](../enumerations/ValueType.md)
-
-### SchemaT
-
-`SchemaT` *extends* [`Schema`](../type-aliases/Schema.md) = [`Schema`](../type-aliases/Schema.md)
+| Type Parameter | Default type |
+| ------ | ------ |
+| `ParamDefsT` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md) | - |
+| `ResultT` *extends* [`ValueType`](../enumerations/ValueType.md) | - |
+| `SchemaT` *extends* [`Schema`](../type-aliases/Schema.md) | [`Schema`](../type-aliases/Schema.md) |
 
 ## Parameters
 
-### fullDefinition
-
-[`FormulaDefinitionOptions`](../type-aliases/FormulaDefinitionOptions.md)\<`ParamDefsT`, `ResultT`, `SchemaT`\>
+| Parameter | Type |
+| ------ | ------ |
+| `fullDefinition` | [`FormulaDefinitionOptions`](../type-aliases/FormulaDefinitionOptions.md)\<`ParamDefsT`, `ResultT`, `SchemaT`\> |
 
 ## Returns
 

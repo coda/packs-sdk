@@ -18,13 +18,10 @@ You could add the identity directly, but that would make the schema less re-usab
 
 ## Parameters
 
-### schema
-
-`GenericObjectSchema`
-
-### identityName
-
-`string`
+| Parameter | Type |
+| ------ | ------ |
+| `schema` | `GenericObjectSchema` |
+| `identityName` | `string` |
 
 ## Returns
 

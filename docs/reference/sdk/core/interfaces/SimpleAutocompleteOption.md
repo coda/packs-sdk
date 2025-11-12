@@ -15,9 +15,9 @@ the underlying option that will be used in the formula when selected.
 
 ## Type Parameters
 
-### T
-
-`T` *extends* `AutocompleteParameterTypes`
+| Type Parameter |
+| ------ |
+| `T` *extends* `AutocompleteParameterTypes` |
 
 ## Properties
 

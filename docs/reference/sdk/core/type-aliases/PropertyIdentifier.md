@@ -17,6 +17,6 @@ An identifier for an object schema property that is comprised of either an exact
 
 ## Type Parameters
 
-### K
-
-`K` *extends* `string` = `string`
+| Type Parameter | Default type |
+| ------ | ------ |
+| `K` *extends* `string` | `string` |

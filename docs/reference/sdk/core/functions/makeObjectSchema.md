@@ -19,30 +19,6 @@ objects rather than specifying object literals. Wrappers validate your schemas
 at creation time, provide better TypeScript type inference, and can reduce
 boilerplate.
 
-## Type Parameters
-
-### K
-
-`K` *extends* `string`
-
-### L
-
-`L` *extends* `string`
-
-### T
-
-`T` *extends* `Omit`\<[`ObjectSchemaDefinition`](../interfaces/ObjectSchemaDefinition.md)\<`K`, `L`\>, `"type"`\> & [`ObjectSchemaProperty`](../interfaces/ObjectSchemaProperty.md)
-
-## Parameters
-
-### schemaDef
-
-`Exact`\<`T`, `Omit`\<[`ObjectSchemaDefinition`](../interfaces/ObjectSchemaDefinition.md)\<`K`, `L`\>, `"type"`\> & [`ObjectSchemaProperty`](../interfaces/ObjectSchemaProperty.md) & `object`\>
-
-## Returns
-
-`T` & `object`
-
 ## Example
 
 ```
@@ -55,3 +31,21 @@ coda.makeObjectSchema({
   },
 });
 ```
+
+## Type Parameters
+
+| Type Parameter |
+| ------ |
+| `K` *extends* `string` |
+| `L` *extends* `string` |
+| `T` *extends* `Omit`\<[`ObjectSchemaDefinition`](../interfaces/ObjectSchemaDefinition.md)\<`K`, `L`\>, `"type"`\> & [`ObjectSchemaProperty`](../interfaces/ObjectSchemaProperty.md) |
+
+## Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `schemaDef` | `Exact`\<`T`, `Omit`\<[`ObjectSchemaDefinition`](../interfaces/ObjectSchemaDefinition.md)\<`K`, `L`\>, `"type"`\> & [`ObjectSchemaProperty`](../interfaces/ObjectSchemaProperty.md) & `object`\> |
+
+## Returns
+
+`T` & `object`

@@ -18,9 +18,9 @@ Information about the current full sync.
 
 ## Type Parameters
 
-### ContinuationT
-
-`ContinuationT` = [`Continuation`](Continuation.md)
+| Type Parameter | Default type |
+| ------ | ------ |
+| `ContinuationT` | [`Continuation`](Continuation.md) |
 
 ## Properties
 

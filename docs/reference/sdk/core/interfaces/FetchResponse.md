@@ -16,9 +16,9 @@ The structure largely follows https://developer.mozilla.org/en-US/docs/Web/API/R
 
 ## Type Parameters
 
-### T
-
-`T` *extends* `any` = `any`
+| Type Parameter | Default type |
+| ------ | ------ |
+| `T` *extends* `any` | `any` |
 
 ## Properties
 

@@ -14,21 +14,17 @@ search:
 
 ## Type Parameters
 
-### T
-
-`T`
+| Type Parameter |
+| ------ |
+| `T` |
 
 ## Parameters
 
-### body
-
-`T`
-
-### status
-
-`number` = `200`
-
-### headers?
+| Parameter | Type | Default value |
+| ------ | ------ | ------ |
+| `body` | `T` | `undefined` |
+| `status` | `number` | `200` |
+| `headers?` | \{\[`header`: `string`\]: `string` \| `string`[] \| `undefined`; \} | `undefined` |
 
 ## Returns
 

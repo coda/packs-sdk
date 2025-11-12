@@ -14,9 +14,9 @@ search:
 
 ## Parameters
 
-### overrides?
-
-`Partial`\<[`MockExecutionContext`](../interfaces/MockExecutionContext.md)\>
+| Parameter | Type |
+| ------ | ------ |
+| `overrides?` | `Partial`\<[`MockExecutionContext`](../interfaces/MockExecutionContext.md)\> |
 
 ## Returns
 

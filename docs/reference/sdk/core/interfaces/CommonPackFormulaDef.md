@@ -19,9 +19,9 @@ Inputs for creating a formula that are common between regular formulas and sync 
 
 ## Type Parameters
 
-### T
-
-`T` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md)
+| Type Parameter |
+| ------ |
+| `T` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md) |
 
 ## Properties
 
@@ -149,10 +149,6 @@ This function takes in parameters and a context containing a [PermissionSyncMode
 and validates the parameters. A formula may want to validate parameters differently
 for permissionSyncMode 'PermissionAware' vs 'Personal' vs undefined (which represents a formula).
 
-#### Returns
-
-a [ParameterValidationResult](../type-aliases/ParameterValidationResult.md)
-
 #### Example
 
 ```
@@ -177,6 +173,10 @@ validateParameters: async function (context, _, params) {
   };
 },
 ```
+
+#### Returns
+
+a [ParameterValidationResult](../type-aliases/ParameterValidationResult.md)
 
 ***
 

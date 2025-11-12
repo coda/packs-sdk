@@ -23,34 +23,6 @@ make a request to an API endpoint that returns a list of all entities,
 and then to take the user's partial input and search over those entities
 for matches. The helper generalizes this use case.
 
-## Type Parameters
-
-### T
-
-`T`
-
-## Parameters
-
-### search
-
-`string`
-
-### objs
-
-`T`[]
-
-### displayKey
-
-\{ \[K in string \| number \| symbol\]: T\[K\] extends string ? K : never \}\[keyof `T`\]
-
-### valueKey
-
-\{ \[K in string \| number \| symbol\]: T\[K\] extends string \| number ? K : never \}\[keyof `T`\]
-
-## Returns
-
-`Promise`\<[`MetadataFormulaObjectResultType`](../interfaces/MetadataFormulaObjectResultType.md)[]\>
-
 ## Example
 
 ```
@@ -70,3 +42,22 @@ coda.makeParameter({
   }
 });
 ```
+
+## Type Parameters
+
+| Type Parameter |
+| ------ |
+| `T` |
+
+## Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `search` | `string` |
+| `objs` | `T`[] |
+| `displayKey` | \{ \[K in string \| number \| symbol\]: T\[K\] extends string ? K : never \}\[keyof `T`\] |
+| `valueKey` | \{ \[K in string \| number \| symbol\]: T\[K\] extends string \| number ? K : never \}\[keyof `T`\] |
+
+## Returns
+
+`Promise`\<[`MetadataFormulaObjectResultType`](../interfaces/MetadataFormulaObjectResultType.md)[]\>

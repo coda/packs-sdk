@@ -17,13 +17,10 @@ If the value is not a string or is empty, an error will be raised at runtime.
 
 ## Parameters
 
-### value
-
-`string` | `null` | `undefined`
-
-### message?
-
-`string`
+| Parameter | Type |
+| ------ | ------ |
+| `value` | `string` \| `null` \| `undefined` |
+| `message?` | `string` |
 
 ## Returns
 

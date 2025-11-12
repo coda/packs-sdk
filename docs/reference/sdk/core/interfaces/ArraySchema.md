@@ -19,9 +19,9 @@ The items are themselves schema definitions, which may refer to scalars or other
 
 ## Type Parameters
 
-### T
-
-`T` *extends* [`Schema`](../type-aliases/Schema.md) = [`Schema`](../type-aliases/Schema.md)
+| Type Parameter | Default type |
+| ------ | ------ |
+| `T` *extends* [`Schema`](../type-aliases/Schema.md) | [`Schema`](../type-aliases/Schema.md) |
 
 ## Properties
 

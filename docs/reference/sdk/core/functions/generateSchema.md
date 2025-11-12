@@ -27,9 +27,9 @@ an object schema, those are left undefined.
 
 ## Parameters
 
-### obj
-
-[`InferrableTypes`](../type-aliases/InferrableTypes.md)
+| Parameter | Type |
+| ------ | ------ |
+| `obj` | [`InferrableTypes`](../type-aliases/InferrableTypes.md) |
 
 ## Returns
 

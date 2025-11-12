@@ -23,15 +23,15 @@ rendered any time a value with that identity is rendered in a doc.
 
 ## Type Parameters
 
-### T
-
-`T` *extends* [`AttributionNode`](../type-aliases/AttributionNode.md)
+| Type Parameter |
+| ------ |
+| `T` *extends* [`AttributionNode`](../type-aliases/AttributionNode.md) |
 
 ## Parameters
 
-### node
-
-`T`
+| Parameter | Type |
+| ------ | ------ |
+| `node` | `T` |
 
 ## Returns
 

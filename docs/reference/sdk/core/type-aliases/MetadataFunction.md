@@ -16,27 +16,18 @@ A JavaScript function that can implement a [MetadataFormulaDef](MetadataFormulaD
 
 ## Type Parameters
 
-### ContextT
-
-`ContextT` *extends* [`ExecutionContext`](../interfaces/ExecutionContext.md) = [`ExecutionContext`](../interfaces/ExecutionContext.md)
-
-### ReturnT
-
-`ReturnT` = [`LegacyDefaultMetadataReturnType`](LegacyDefaultMetadataReturnType.md)
+| Type Parameter | Default type |
+| ------ | ------ |
+| `ContextT` *extends* [`ExecutionContext`](../interfaces/ExecutionContext.md) | [`ExecutionContext`](../interfaces/ExecutionContext.md) |
+| `ReturnT` | [`LegacyDefaultMetadataReturnType`](LegacyDefaultMetadataReturnType.md) |
 
 ## Parameters
 
-### context
-
-`ContextT`
-
-### search
-
-`string`
-
-### formulaContext?
-
-[`MetadataContext`](MetadataContext.md)
+| Parameter | Type |
+| ------ | ------ |
+| `context` | `ContextT` |
+| `search` | `string` |
+| `formulaContext?` | [`MetadataContext`](MetadataContext.md) |
 
 ## Returns
 

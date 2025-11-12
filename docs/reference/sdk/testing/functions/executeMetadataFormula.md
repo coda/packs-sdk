@@ -14,23 +14,13 @@ search:
 
 ## Parameters
 
-### formula
-
-[`MetadataFormula`](../../core/type-aliases/MetadataFormula.md)
-
-### metadataParams
-
-#### formulaContext?
-
-[`MetadataContext`](../../core/type-aliases/MetadataContext.md)
-
-#### search?
-
-`string`
-
-### context
-
-[`ExecutionContext`](../../core/interfaces/ExecutionContext.md) = `...`
+| Parameter | Type |
+| ------ | ------ |
+| `formula` | [`MetadataFormula`](../../core/type-aliases/MetadataFormula.md) |
+| `metadataParams` | \{ `formulaContext?`: [`MetadataContext`](../../core/type-aliases/MetadataContext.md); `search?`: `string`; \} |
+| `metadataParams.formulaContext?` | [`MetadataContext`](../../core/type-aliases/MetadataContext.md) |
+| `metadataParams.search?` | `string` |
+| `context` | [`ExecutionContext`](../../core/interfaces/ExecutionContext.md) |
 
 ## Returns
 

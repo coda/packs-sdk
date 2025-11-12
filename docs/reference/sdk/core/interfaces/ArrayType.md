@@ -14,9 +14,9 @@ The type of a parameter or return value that is an array.
 
 ## Type Parameters
 
-### T
-
-`T` *extends* [`Type`](../enumerations/Type.md)
+| Type Parameter |
+| ------ |
+| `T` *extends* [`Type`](../enumerations/Type.md) |
 
 ## Properties
 

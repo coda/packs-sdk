@@ -17,25 +17,13 @@ are called repeatedly until there is no continuation returned.
 
 ## Type Parameters
 
-### K
-
-`K` *extends* `string`
-
-### L
-
-`L` *extends* `string`
-
-### SchemaT
-
-`SchemaT` *extends* [`ObjectSchemaDefinition`](ObjectSchemaDefinition.md)\<`K`, `L`\>
-
-### ContextT
-
-`ContextT` *extends* [`SyncExecutionContext`](SyncExecutionContext.md)\<`any`\> = [`SyncExecutionContext`](SyncExecutionContext.md)
-
-### PermissionsContextT
-
-`PermissionsContextT` *extends* `SyncPassthroughData` = `SyncPassthroughData`
+| Type Parameter | Default type |
+| ------ | ------ |
+| `K` *extends* `string` | - |
+| `L` *extends* `string` | - |
+| `SchemaT` *extends* [`ObjectSchemaDefinition`](ObjectSchemaDefinition.md)\<`K`, `L`\> | - |
+| `ContextT` *extends* [`SyncExecutionContext`](SyncExecutionContext.md)\<`any`\> | [`SyncExecutionContext`](SyncExecutionContext.md) |
+| `PermissionsContextT` *extends* `SyncPassthroughData` | `SyncPassthroughData` |
 
 ## Properties
 

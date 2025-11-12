@@ -67,9 +67,9 @@ Returns if the error is an instance of MissingScopesError. Note that `instanceof
 
 #### Parameters
 
-##### err
-
-`any`
+| Parameter | Type |
+| ------ | ------ |
+| `err` | `any` |
 
 #### Returns
 

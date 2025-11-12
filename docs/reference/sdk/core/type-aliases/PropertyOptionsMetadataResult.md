@@ -18,6 +18,6 @@ is about 5 minutes, if unspecified.
 
 ## Type Parameters
 
-### ResultT
-
-`ResultT` *extends* [`PackFormulaResult`](PackFormulaResult.md)[]
+| Type Parameter |
+| ------ |
+| `ResultT` *extends* [`PackFormulaResult`](PackFormulaResult.md)[] |

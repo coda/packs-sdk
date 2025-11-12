@@ -16,14 +16,8 @@ A formula definition accepted by [makeFormula](../functions/makeFormula.md).
 
 ## Type Parameters
 
-### ParamDefsT
-
-`ParamDefsT` *extends* [`ParamDefs`](ParamDefs.md)
-
-### ResultT
-
-`ResultT` *extends* [`ValueType`](../enumerations/ValueType.md)
-
-### SchemaT
-
-`SchemaT` *extends* [`Schema`](Schema.md)
+| Type Parameter |
+| ------ |
+| `ParamDefsT` *extends* [`ParamDefs`](ParamDefs.md) |
+| `ResultT` *extends* [`ValueType`](../enumerations/ValueType.md) |
+| `SchemaT` *extends* [`Schema`](Schema.md) |

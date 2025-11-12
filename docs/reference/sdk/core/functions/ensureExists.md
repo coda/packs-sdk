@@ -20,19 +20,16 @@ Calling this function refines a type that can otherwise be null or undefined.
 
 ## Type Parameters
 
-### T
-
-`T`
+| Type Parameter |
+| ------ |
+| `T` |
 
 ## Parameters
 
-### value
-
-`T` | `null` | `undefined`
-
-### message?
-
-`string`
+| Parameter | Type |
+| ------ | ------ |
+| `value` | `T` \| `null` \| `undefined` |
+| `message?` | `string` |
 
 ## Returns
 

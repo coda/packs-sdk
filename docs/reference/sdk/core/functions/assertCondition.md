@@ -18,20 +18,6 @@ to all code that follows call to this function.
 
 See https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#assertion-functions
 
-## Parameters
-
-### condition
-
-`any`
-
-### message?
-
-`string`
-
-## Returns
-
-`asserts condition`
-
 ## Example
 
 ```
@@ -42,3 +28,14 @@ function foo(value: string | number) {
   return value.toUpperCase();
 }
 ```
+
+## Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `condition` | `any` |
+| `message?` | `string` |
+
+## Returns
+
+`asserts condition`

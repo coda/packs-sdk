@@ -16,6 +16,6 @@ The type of values that are allowable to be used as a [ParamDef.suggestedValue](
 
 ## Type Parameters
 
-### T
-
-`T` *extends* `UnionType`
+| Type Parameter |
+| ------ |
+| `T` *extends* `UnionType` |

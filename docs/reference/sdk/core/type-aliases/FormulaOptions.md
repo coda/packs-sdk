@@ -23,10 +23,7 @@ function may be a function definition or a metadata formula definition.
 
 ## Type Parameters
 
-### ParamDefsT
-
-`ParamDefsT` *extends* [`ParamDefs`](ParamDefs.md)
-
-### DefT
-
-`DefT` *extends* [`CommonPackFormulaDef`](../interfaces/CommonPackFormulaDef.md)\<`ParamDefsT`\>
+| Type Parameter |
+| ------ |
+| `ParamDefsT` *extends* [`ParamDefs`](ParamDefs.md) |
+| `DefT` *extends* [`CommonPackFormulaDef`](../interfaces/CommonPackFormulaDef.md)\<`ParamDefsT`\> |

@@ -14,13 +14,10 @@ search:
 
 ## Parameters
 
-### packDef
-
-[`BasicPackDefinition`](../../core/type-aliases/BasicPackDefinition.md)
-
-### manifestPath
-
-`string`
+| Parameter | Type |
+| ------ | ------ |
+| `packDef` | [`BasicPackDefinition`](../../core/type-aliases/BasicPackDefinition.md) |
+| `manifestPath` | `string` |
 
 ## Returns
 

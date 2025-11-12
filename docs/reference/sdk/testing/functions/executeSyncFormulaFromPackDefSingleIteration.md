@@ -17,29 +17,14 @@ including the continuation, for inspection.
 
 ## Parameters
 
-### packDef
-
-[`BasicPackDefinition`](../../core/type-aliases/BasicPackDefinition.md)
-
-### syncFormulaName
-
-`string`
-
-### params
-
-[`ParamValues`](../../core/type-aliases/ParamValues.md)\<[`ParamDefs`](../../core/type-aliases/ParamDefs.md)\>
-
-### context?
-
-[`SyncExecutionContext`](../../core/interfaces/SyncExecutionContext.md)\<[`Continuation`](../../core/interfaces/Continuation.md), [`Continuation`](../../core/interfaces/Continuation.md), [`Continuation`](../../core/interfaces/Continuation.md)\>
-
-### options?
-
-[`ExecuteOptions`](../interfaces/ExecuteOptions.md)
-
-### \_\_namedParameters?
-
-[`ContextOptions`](../interfaces/ContextOptions.md) = `{}`
+| Parameter | Type |
+| ------ | ------ |
+| `packDef` | [`BasicPackDefinition`](../../core/type-aliases/BasicPackDefinition.md) |
+| `syncFormulaName` | `string` |
+| `params` | [`ParamValues`](../../core/type-aliases/ParamValues.md)\<[`ParamDefs`](../../core/type-aliases/ParamDefs.md)\> |
+| `context?` | [`SyncExecutionContext`](../../core/interfaces/SyncExecutionContext.md)\<[`Continuation`](../../core/interfaces/Continuation.md), [`Continuation`](../../core/interfaces/Continuation.md), [`Continuation`](../../core/interfaces/Continuation.md)\> |
+| `options?` | [`ExecuteOptions`](../interfaces/ExecuteOptions.md) |
+| `__namedParameters?` | [`ContextOptions`](../interfaces/ContextOptions.md) |
 
 ## Returns
 

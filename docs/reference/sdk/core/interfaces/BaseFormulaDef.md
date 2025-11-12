@@ -18,13 +18,10 @@ Base type for formula definitions accepted by [makeFormula](../functions/makeFor
 
 ## Type Parameters
 
-### ParamDefsT
-
-`ParamDefsT` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md)
-
-### ResultT
-
-`ResultT` *extends* `string` \| `number` \| `boolean` \| `object`
+| Type Parameter |
+| ------ |
+| `ParamDefsT` *extends* [`ParamDefs`](../type-aliases/ParamDefs.md) |
+| `ResultT` *extends* `string` \| `number` \| `boolean` \| `object` |
 
 ## Properties
 
@@ -200,10 +197,6 @@ This function takes in parameters and a context containing a [PermissionSyncMode
 and validates the parameters. A formula may want to validate parameters differently
 for permissionSyncMode 'PermissionAware' vs 'Personal' vs undefined (which represents a formula).
 
-#### Returns
-
-a [ParameterValidationResult](../type-aliases/ParameterValidationResult.md)
-
 #### Example
 
 ```
@@ -228,6 +221,10 @@ validateParameters: async function (context, _, params) {
   };
 },
 ```
+
+#### Returns
+
+a [ParameterValidationResult](../type-aliases/ParameterValidationResult.md)
 
 #### Inherited from
 
@@ -256,13 +253,10 @@ The JavaScript function that implements this formula
 
 #### Parameters
 
-##### params
-
-[`ParamValues`](../type-aliases/ParamValues.md)\<`ParamDefsT`\>
-
-##### context
-
-[`ExecutionContext`](ExecutionContext.md)
+| Parameter | Type |
+| ------ | ------ |
+| `params` | [`ParamValues`](../type-aliases/ParamValues.md)\<`ParamDefsT`\> |
+| `context` | [`ExecutionContext`](ExecutionContext.md) |
 
 #### Returns
 
@@ -286,9 +280,9 @@ that can then be applied to many different formulas in a pack.
 
 #### Parameters
 
-##### error
-
-`Error`
+| Parameter | Type |
+| ------ | ------ |
+| `error` | `Error` |
 
 #### Returns
 

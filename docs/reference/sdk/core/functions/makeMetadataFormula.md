@@ -25,25 +25,18 @@ it is shaped like a Coda formula to be used at runtime.
 
 ## Type Parameters
 
-### ContextT
-
-`ContextT` *extends* [`ExecutionContext`](../interfaces/ExecutionContext.md)
-
-### ReturnT
-
-`ReturnT` *extends* [`PackFormulaResult`](../type-aliases/PackFormulaResult.md) = [`LegacyDefaultMetadataReturnType`](../type-aliases/LegacyDefaultMetadataReturnType.md)
+| Type Parameter | Default type |
+| ------ | ------ |
+| `ContextT` *extends* [`ExecutionContext`](../interfaces/ExecutionContext.md) | - |
+| `ReturnT` *extends* [`PackFormulaResult`](../type-aliases/PackFormulaResult.md) | [`LegacyDefaultMetadataReturnType`](../type-aliases/LegacyDefaultMetadataReturnType.md) |
 
 ## Parameters
 
-### execute
-
-[`MetadataFunction`](../type-aliases/MetadataFunction.md)\<`ContextT`, `ReturnT`\>
-
-### options?
-
-#### connectionRequirement?
-
-[`ConnectionRequirement`](../enumerations/ConnectionRequirement.md)
+| Parameter | Type |
+| ------ | ------ |
+| `execute` | [`MetadataFunction`](../type-aliases/MetadataFunction.md)\<`ContextT`, `ReturnT`\> |
+| `options?` | \{ `connectionRequirement?`: [`ConnectionRequirement`](../enumerations/ConnectionRequirement.md); \} |
+| `options.connectionRequirement?` | [`ConnectionRequirement`](../enumerations/ConnectionRequirement.md) |
 
 ## Returns
 

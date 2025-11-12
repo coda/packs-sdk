@@ -14,17 +14,11 @@ Type definition for the parameter used to pass in a batch of updates to a sync t
 
 ## Type Parameters
 
-### K
-
-`K` *extends* `string`
-
-### L
-
-`L` *extends* `string`
-
-### SchemaT
-
-`SchemaT` *extends* [`ObjectSchemaDefinition`](ObjectSchemaDefinition.md)\<`K`, `L`\>
+| Type Parameter |
+| ------ |
+| `K` *extends* `string` |
+| `L` *extends* `string` |
+| `SchemaT` *extends* [`ObjectSchemaDefinition`](ObjectSchemaDefinition.md)\<`K`, `L`\> |
 
 ## Properties
 

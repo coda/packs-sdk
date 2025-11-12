@@ -16,6 +16,6 @@ A function or set of values to return for property options.
 
 ## Type Parameters
 
-### T
-
-`T` *extends* [`PackFormulaResult`](PackFormulaResult.md)
+| Type Parameter |
+| ------ |
+| `T` *extends* [`PackFormulaResult`](PackFormulaResult.md) |

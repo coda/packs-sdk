@@ -22,14 +22,8 @@ The base class for pack formula descriptors. Subclasses vary based on the return
 
 ## Type Parameters
 
-### ParamDefsT
-
-`ParamDefsT` *extends* [`ParamDefs`](ParamDefs.md)
-
-### ResultT
-
-`ResultT` *extends* [`PackFormulaResult`](PackFormulaResult.md)
-
-### ContextT
-
-`ContextT` *extends* [`ExecutionContext`](../interfaces/ExecutionContext.md) = [`ExecutionContext`](../interfaces/ExecutionContext.md)
+| Type Parameter | Default type |
+| ------ | ------ |
+| `ParamDefsT` *extends* [`ParamDefs`](ParamDefs.md) | - |
+| `ResultT` *extends* [`PackFormulaResult`](PackFormulaResult.md) | - |
+| `ContextT` *extends* [`ExecutionContext`](../interfaces/ExecutionContext.md) | [`ExecutionContext`](../interfaces/ExecutionContext.md) |

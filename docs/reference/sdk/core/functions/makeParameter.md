@@ -16,19 +16,16 @@ Create a definition for a parameter for a formula or sync.
 
 ## Type Parameters
 
-### T
-
-`T` *extends* [`ParameterType`](../enumerations/ParameterType.md)
-
-### O
-
-`O` *extends* [`ParameterOptions`](../type-aliases/ParameterOptions.md)\<`T`\>
+| Type Parameter |
+| ------ |
+| `T` *extends* [`ParameterType`](../enumerations/ParameterType.md) |
+| `O` *extends* [`ParameterOptions`](../type-aliases/ParameterOptions.md)\<`T`\> |
 
 ## Parameters
 
-### paramDefinition
-
-`O`
+| Parameter | Type |
+| ------ | ------ |
+| `paramDefinition` | `O` |
 
 ## Returns
 

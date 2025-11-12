@@ -16,11 +16,9 @@ Joins all the tokens into a single URL string separated by '/'. Zero length toke
 
 ## Parameters
 
-### tokens
-
-...`string`[]
-
-Zero or more tokens to be combined. If token doesn't end with '/', one will be added as the separator
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| ...`tokens` | `string`[] | Zero or more tokens to be combined. If token doesn't end with '/', one will be added as the separator |
 
 ## Returns
 

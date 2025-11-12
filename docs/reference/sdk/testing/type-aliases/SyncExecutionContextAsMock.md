@@ -16,6 +16,6 @@ Mock type of the specified `SyncExecutionContext`.
 
 ## Type Parameters
 
-### T
-
-`T` *extends* [`SyncExecutionContext`](../../core/interfaces/SyncExecutionContext.md)
+| Type Parameter |
+| ------ |
+| `T` *extends* [`SyncExecutionContext`](../../core/interfaces/SyncExecutionContext.md) |

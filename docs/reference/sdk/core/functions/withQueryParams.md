@@ -16,21 +16,20 @@ Helper to create a new URL by appending parameters to a base URL.
 
 The input URL may or may not having existing parameters.
 
-## Parameters
-
-### url
-
-`string`
-
-### params?
-
-## Returns
-
-`string`
-
 ## Example
 
 ```
 // Returns `"/someApi/someEndpoint?token=asdf&limit=5"`
 let url = withQueryParams("/someApi/someEndpoint", {token: "asdf", limit: 5});
 ```
+
+## Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `url` | `string` |
+| `params?` | \{\[`key`: `string`\]: `any`; \} |
+
+## Returns
+
+`string`

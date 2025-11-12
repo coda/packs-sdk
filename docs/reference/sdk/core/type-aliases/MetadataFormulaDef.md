@@ -18,10 +18,7 @@ or a full metadata formula definition (mostly supported for legacy code).
 
 ## Type Parameters
 
-### ContextT
-
-`ContextT` *extends* [`ExecutionContext`](../interfaces/ExecutionContext.md) = [`ExecutionContext`](../interfaces/ExecutionContext.md)
-
-### ReturnT
-
-`ReturnT` *extends* [`PackFormulaResult`](PackFormulaResult.md) = [`LegacyDefaultMetadataReturnType`](LegacyDefaultMetadataReturnType.md)
+| Type Parameter | Default type |
+| ------ | ------ |
+| `ContextT` *extends* [`ExecutionContext`](../interfaces/ExecutionContext.md) | [`ExecutionContext`](../interfaces/ExecutionContext.md) |
+| `ReturnT` *extends* [`PackFormulaResult`](PackFormulaResult.md) | [`LegacyDefaultMetadataReturnType`](LegacyDefaultMetadataReturnType.md) |

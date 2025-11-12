@@ -19,9 +19,9 @@ The definition of a formula parameter.
 
 ## Type Parameters
 
-### T
-
-`T` *extends* `UnionType`
+| Type Parameter |
+| ------ |
+| `T` *extends* `UnionType` |
 
 ## Properties
 
