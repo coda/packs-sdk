@@ -1671,6 +1671,16 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         assistantMessageToolSchema,
         summarizerToolSchema,
     ]);
+    const proxyModeConfigSchema = z
+        .object({
+        enabled: z.boolean(),
+        initialToolCall: z
+            .object({
+            formulaName: z.string(),
+        })
+            .optional(),
+    })
+        .optional();
     const skillSchema = zodCompleteObject({
         name: z
             .string()
@@ -1681,6 +1691,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         description: z.string().min(1).max(exports.Limits.BuildingBlockDescription),
         prompt: z.string().min(1).max(exports.Limits.PromptLength),
         tools: z.array(toolSchema),
+        proxyMode: proxyModeConfigSchema,
     });
     const skillEntrypointConfigSchema = zodCompleteStrictObject({
         skillName: z.string(),

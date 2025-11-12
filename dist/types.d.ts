@@ -1220,6 +1220,22 @@ export interface ToolMap {
  */
 export type Tool = ToolMap[keyof ToolMap];
 /**
+ * Configuration for proxy mode that allows skipping the initial LLM call.
+ * @hidden
+ */
+export interface ProxyModeConfig {
+    /** Enable proxy mode to skip initial LLM call and immediately execute a tool. */
+    enabled: boolean;
+    /** Tool to call immediately on first message. */
+    initialToolCall?: {
+        /**
+         * Name of the formula to call.
+         * The entire user message will be passed as the first parameter to this formula.
+         */
+        formulaName: string;
+    };
+}
+/**
  * Set of tools and prompts that defines a skill for this pack
  * @hidden
  */
@@ -1234,6 +1250,12 @@ export interface Skill {
     prompt: string;
     /** List of tools that this skill can use. This does NOT include pack calls by default. */
     tools: Tool[];
+    /**
+     * Optional proxy mode configuration to skip initial LLM call.
+     * When enabled, the first user message will immediately trigger the specified tool call,
+     * bypassing the LLM loop for reduced latency.
+     */
+    proxyMode?: ProxyModeConfig;
 }
 /**
  * Configuration for a skill entrypoint.
