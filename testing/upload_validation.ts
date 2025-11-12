@@ -97,7 +97,7 @@ import type {SimpleStringSchema} from '../schema';
 import type {Skill} from '../types';
 import type {SkillEntrypointConfig} from '../types';
 import type {SkillEntrypoints} from '../types';
-import type {SkillOutputType} from '../types';
+import {SkillOutputType} from '../types';
 import type {SliderSchema} from '../schema';
 import type {StringDateSchema} from '../schema';
 import type {StringDateTimeSchema} from '../schema';
