@@ -1,4 +1,4 @@
-import {AWSAccessKeyAuthentication, SkillOutputType} from '../types';
+import type {AWSAccessKeyAuthentication} from '../types';
 import type {AWSAssumeRoleAuthentication} from '../types';
 import type {AdminAuthentication} from '../types';
 import type {AdminAuthenticationTypes} from '../types';
@@ -97,6 +97,7 @@ import type {SimpleStringSchema} from '../schema';
 import type {Skill} from '../types';
 import type {SkillEntrypointConfig} from '../types';
 import type {SkillEntrypoints} from '../types';
+import type {SkillOutputType} from '../types';
 import type {SliderSchema} from '../schema';
 import type {StringDateSchema} from '../schema';
 import type {StringDateTimeSchema} from '../schema';
