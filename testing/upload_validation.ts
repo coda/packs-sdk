@@ -1,4 +1,4 @@
-import type {AWSAccessKeyAuthentication} from '../types';
+import {AWSAccessKeyAuthentication, SkillOutputType} from '../types';
 import type {AWSAssumeRoleAuthentication} from '../types';
 import type {AdminAuthentication} from '../types';
 import type {AdminAuthenticationTypes} from '../types';
@@ -2198,6 +2198,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     displayName: z.string().min(1).max(Limits.BuildingBlockName),
     description: z.string().min(1).max(Limits.BuildingBlockDescription),
     prompt: z.string().min(1).max(Limits.PromptLength),
+    outputType: z.nativeEnum(SkillOutputType).optional(),
     tools: z.array(toolSchema),
   });
 
