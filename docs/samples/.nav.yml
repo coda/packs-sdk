@@ -1,6 +1,6 @@
+append_unmatched: true
 nav:
   - index.md
   - By topic: topic
   - full
   - CLI examples on GitHub: https://github.com/coda/packs-examples
-  - ...
