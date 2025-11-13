@@ -144,5 +144,5 @@ Currently, some Pack features don't work in agents.
 [two_way_sync]: ../guides/blocks/sync-tables/two-way.md
 [actions]: ../guides/blocks/actions.md
 [autocomplete]: ../guides/basics/parameters/autocomplete.md
-[connection_requirement_optional]: ../reference/sdk/enums/core.ConnectionRequirement.md#optional
+[connection_requirement_optional]: ../reference/sdk/core/enumerations/ConnectionRequirement.md#optional
 [weather_pack]: https://coda.io/packs/weather-1015

@@ -226,7 +226,6 @@ typedoc:
 	# Most options loaded from typedoc.js.
 	# If you changes this, also update the similar command in typedoc_coverage_test.ts.
 	${ROOTDIR}/node_modules/.bin/typedoc index.ts development.ts --options typedoc.js --disableSources "${DOC_DISABLE_SOURCES}" --gitRevision "${DOC_GIT_REVISION}" --out ${ROOTDIR}/docs/reference/sdk
-	node -r ts-node/register documentation/scripts/typedoc_post_process.ts
 
 .PHONY: bundle-docs-js
 bundle-docs-js:

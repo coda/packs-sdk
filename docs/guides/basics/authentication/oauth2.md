@@ -303,19 +303,19 @@ Like with the Authorization Code flow, a variety of other advanced options are a
 
 [oauth_definition]: https://oauth.net/2/
 [authentication]: index.md
-[OAuth]: ../../../reference/sdk/enums/core.AuthenticationType.md#oauth2
-[OAuth2Authentication]: ../../../reference/sdk/interfaces/core.OAuth2Authentication.md
-[OAuth2ClientCredentialsAuthentication]: ../../../reference/sdk/interfaces/core.OAuth2ClientCredentialsAuthentication.md
+[OAuth]: ../../../reference/sdk/core/enumerations/AuthenticationType.md#oauth2
+[OAuth2Authentication]: ../../../reference/sdk/core/interfaces/OAuth2Authentication.md
+[OAuth2ClientCredentialsAuthentication]: ../../../reference/sdk/core/interfaces/OAuth2ClientCredentialsAuthentication.md
 [oauth2_code]: https://www.oauth.com/oauth2-servers/server-side-apps/authorization-code/
 [oauth2_client]: https://www.oauth.com/oauth2-servers/access-tokens/client-credentials/
-[extraOAuthScopes]: ../../../reference/sdk/interfaces/core.BaseFormulaDef.md#extraoauthscopes
+[extraOAuthScopes]: ../../../reference/sdk/core/interfaces/BaseFormulaDef.md#extraoauthscopes
 [support]: ../../../support/index.md
 [support_network_domains]: ../../../support/index.md#approvals
 [sample_oauth2]: ../../../samples/topic/authentication.md#oauth2
 [sample_apis]: ../../../samples/topic/apis.md
 [tutorial_oauth2]: ../../../tutorials/build/oauth.md
-[statuscodeerror]: ../../../reference/sdk/classes/core.StatusCodeError.md
-[missingscopeserror]: ../../../reference/sdk/classes/core.MissingScopesError.md
+[statuscodeerror]: ../../../reference/sdk/core/classes/StatusCodeError.md
+[missingscopeserror]: ../../../reference/sdk/core/classes/MissingScopesError.md
 [auth_endpoints]: index.md#endpoints
 [fetcher_network_domains]: ../fetcher.md#network-domains
 [oauth_pkce]: https://www.oauth.com/oauth2-servers/pkce/

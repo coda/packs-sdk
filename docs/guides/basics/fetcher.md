@@ -487,28 +487,28 @@ While we strive to keep the set of addresses consistent, they may be subject to 
 You can also identify HTTP requests originating from Packs by the `User-Agent` header on the request, which will be set to `Coda-Server-Fetcher`.
 
 
-[Fetcher]: ../../reference/sdk/interfaces/core.Fetcher.md
+[Fetcher]: ../../reference/sdk/core/interfaces/Fetcher.md
 [samples]: ../../samples/topic/fetcher.md
-[addNetworkDomain]: ../../reference/sdk/classes/core.PackDefinitionBuilder.md#addnetworkdomain
+[addNetworkDomain]: ../../reference/sdk/core/classes/PackDefinitionBuilder.md#addnetworkdomain
 [support]: ../../support/index.md
 [support_network_domains]: ../../support/index.md#approvals
-[ExecutionContext]: ../../reference/sdk/interfaces/core.ExecutionContext.md
-[fetch]: ../../reference/sdk/interfaces/core.Fetcher.md#fetch
-[FetchRequest]: ../../reference/sdk/interfaces/core.FetchRequest.md
+[ExecutionContext]: ../../reference/sdk/core/interfaces/ExecutionContext.md
+[fetch]: ../../reference/sdk/core/interfaces/Fetcher.md#fetch
+[FetchRequest]: ../../reference/sdk/core/interfaces/FetchRequest.md
 [async_await]: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Async_await
 [promises]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises
-[fetchresponse]: ../../reference/sdk/interfaces/core.FetchResponse.md
+[fetchresponse]: ../../reference/sdk/core/interfaces/FetchResponse.md
 [xml2js]: https://www.npmjs.com/package/xml2js
-[status_code_error]: ../../reference/sdk/classes/core.StatusCodeError.md
+[status_code_error]: ../../reference/sdk/core/classes/StatusCodeError.md
 [buffer]: https://nodejs.org/api/buffer.html#buffer
-[withQueryParams]: ../../reference/sdk/functions/core.withQueryParams.md
+[withQueryParams]: ../../reference/sdk/core/functions/withQueryParams.md
 [stringify]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
 [formula_cache]: ../blocks/formulas.md#caching
 [authentication]: ../basics/authentication/index.md
 [spec_headers]: https://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
-[baseauthentication_networkdomain]: ../../reference/sdk/interfaces/core.BaseAuthentication.md#networkdomain
+[baseauthentication_networkdomain]: ../../reference/sdk/core/interfaces/BaseAuthentication.md#networkdomain
 [auth_user]: ../basics/authentication/index.md#user
-[temporaryblobstorage]: ../../reference/sdk/interfaces/core.TemporaryBlobStorage.md
+[temporaryblobstorage]: ../../reference/sdk/core/interfaces/TemporaryBlobStorage.md
 [caching]: ../advanced/caching.md
 [npm_form_data]: https://www.npmjs.com/package/form-data
 [example_box]: https://github.com/coda/packs-examples/tree/main/examples/box

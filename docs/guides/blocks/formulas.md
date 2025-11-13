@@ -166,9 +166,9 @@ examples: [
 [fetcher_cache]: ../basics/fetcher.md#caching
 [fetcher_rate_limits]: ../basics/fetcher.md#rate-limits
 [authentication]: ../basics/authentication/index.md
-[system_auth]: ../../reference/sdk/classes/core.PackDefinitionBuilder.md#setsystemauthentication
-[user_auth]: ../../reference/sdk/classes/core.PackDefinitionBuilder.md#setuserauthentication
-[connectionRequirement]: ../../reference/sdk/interfaces/core.PackFormulaDef.md#connectionrequirement
+[system_auth]: ../../reference/sdk/core/classes/PackDefinitionBuilder.md#setsystemauthentication
+[user_auth]: ../../reference/sdk/core/classes/PackDefinitionBuilder.md#setuserauthentication
+[connectionRequirement]: ../../reference/sdk/core/interfaces/PackFormulaDef.md#connectionrequirement
 [sync_formula]: sync-tables/index.md#formula
 [pmt_settings]: ../development/pack-maker-tools.md#settings
 [pmt_options]: ../development/pack-maker-tools.md#options
