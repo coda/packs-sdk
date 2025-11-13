@@ -49,5 +49,11 @@ module.exports = {
         camelcase: 'off',
       },
     },
+    {
+      files: ['.eslintrc.js'],
+      rules: {
+        'filenames/match-regex': 'off',
+      },
+    },
   ],
 };
