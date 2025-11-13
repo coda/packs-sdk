@@ -38,7 +38,7 @@ _bootstrap-system-packages:
 	# environments.
 	# https://squidfunk.github.io/mkdocs-material/setup/setting-up-social-cards/#dependencies
 	if command -v brew &> /dev/null; then \
-		brew install cairo freetype libffi libjpeg libpng zlib; \
+		brew install cairo freetype libffi libjpeg libpng pngquant zlib; \
 	fi
 
 .PHONY: _bootstrap-githooks
