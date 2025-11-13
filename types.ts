@@ -1513,10 +1513,10 @@ export interface Skill {
 
   // Standard skill properties (required when execute and mcpTool are not present)
   /** The prompt/instructions that define the skill's behavior. Required for standard skills. */
-  prompt?: string;
+  prompt: string;
   /** List of tools that this skill can use. This does NOT include pack calls by default.
    *  Required for standard skills. */
-  tools?: Tool[];
+  tools: Tool[];
 
   // Proxy skill properties (one required for proxy skills, mutually exclusive)
   /**

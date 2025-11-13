@@ -1360,10 +1360,10 @@ export interface Skill {
     /** Description of what this skill does. */
     description: string;
     /** The prompt/instructions that define the skill's behavior. Required for standard skills. */
-    prompt?: string;
+    prompt: string;
     /** List of tools that this skill can use. This does NOT include pack calls by default.
      *  Required for standard skills. */
-    tools?: Tool[];
+    tools: Tool[];
     /**
      * Custom execution function for proxy skills.
      * Receives full context (chat history, screen context, user info) and returns a response.
