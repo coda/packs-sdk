@@ -1236,7 +1236,120 @@ export interface ProxyModeConfig {
     };
 }
 /**
- * Set of tools and prompts that defines a skill for this pack
+ * Message in the chat history.
+ * @hidden
+ */
+export interface ChatMessage {
+    /** Role of the message sender: 'user', 'assistant', or 'system'. */
+    role: 'user' | 'assistant' | 'system';
+    /** Content of the message. */
+    content: string;
+    /** Optional unique identifier for the message. */
+    id?: string;
+}
+/**
+ * Screen context information available to proxy skills.
+ * @hidden
+ */
+export interface ScreenContext {
+    /** Text content from the current screen/editor. */
+    text?: string;
+    /** Identifier for the current paragraph or selection. */
+    paragraphId?: number;
+    /** Additional context about the current screen state. */
+    [key: string]: unknown;
+}
+/**
+ * User information available to proxy skills.
+ * @hidden
+ */
+export interface UserInfo {
+    /** User's email address. */
+    email: string;
+    /** User's display name. */
+    name?: string;
+    /** Additional user metadata. */
+    [key: string]: unknown;
+}
+/**
+ * Execution context provided to proxy skills.
+ * Contains all information needed for a proxy skill to execute.
+ * @hidden
+ */
+export interface AgentExecutionContext {
+    /** Full chat history including user and assistant messages. */
+    chatHistory: ChatMessage[];
+    /** Current screen/editor context, if available. */
+    screenContext?: ScreenContext;
+    /** Information about the current user. */
+    userInfo: UserInfo;
+    /** Additional context that may be passed by the runtime. */
+    [key: string]: unknown;
+}
+/**
+ * Screen annotation for proxy skills modifying editor content.
+ * @hidden
+ */
+export interface ProxySkillScreenAnnotation {
+    /** Type of annotation (e.g., 'rewrite', 'insert', 'delete'). */
+    type: string;
+    /** Identifier for the paragraph to modify. */
+    paragraphId?: number;
+    /** Original text being replaced. */
+    originalText?: string;
+    /** New text to insert. */
+    newText?: string;
+    /** Additional annotation data. */
+    [key: string]: unknown;
+}
+/**
+ * Response from a proxy skill execution.
+ * @hidden
+ */
+export interface ProxySkillResponse {
+    /** The message to display to the user. */
+    message: string;
+    /** Optional screen annotations for modifying the editor. */
+    screenAnnotations?: ProxySkillScreenAnnotation[];
+}
+/**
+ * Configuration for MCP tool execution in proxy mode.
+ * @hidden
+ */
+export interface McpToolConfig {
+    /** Name of the MCP tool to call (e.g., "company_search"). */
+    toolName: string;
+    /** Name of the MCP server providing the tool (e.g., "glean", "victoriametrics"). */
+    serverName: string;
+    /**
+     * Mapping of MCP tool parameters to input sources.
+     *
+     * Special values:
+     * - "userMessage": Last user message from chat history
+     * - "screenText": Text from screen context
+     * - "chatHistory": Full chat history (for stateless APIs)
+     *
+     * All other values are treated as static literals.
+     *
+     * @example
+     * ```ts
+     * {
+     *   query: "userMessage",        // Use last user message
+     *   context: "screenText",        // Use screen text
+     *   datasources: ["confluence"]   // Static array
+     * }
+     * ```
+     */
+    parameterMapping?: {
+        [parameterName: string]: unknown;
+    };
+}
+/**
+ * Set of tools and prompts that defines a skill for this pack.
+ * Can be either a standard LLM-based skill or a proxy skill.
+ *
+ * Standard skills have prompt and tools.
+ * Proxy skills have execute function OR mcpTool (not both).
  * @hidden
  */
 export interface Skill {
@@ -1246,10 +1359,24 @@ export interface Skill {
     displayName: string;
     /** Description of what this skill does. */
     description: string;
-    /** The prompt/instructions that define the skill's behavior. */
-    prompt: string;
-    /** List of tools that this skill can use. This does NOT include pack calls by default. */
-    tools: Tool[];
+    /** The prompt/instructions that define the skill's behavior. Required for standard skills. */
+    prompt?: string;
+    /** List of tools that this skill can use. This does NOT include pack calls by default.
+     *  Required for standard skills. */
+    tools?: Tool[];
+    /**
+     * Custom execution function for proxy skills.
+     * Receives full context (chat history, screen context, user info) and returns a response.
+     * Use this for custom logic that calls external APIs or performs deterministic operations.
+     * When present, this makes the skill a proxy skill. Mutually exclusive with mcpTool.
+     */
+    execute?: (context: AgentExecutionContext) => Promise<ProxySkillResponse>;
+    /**
+     * MCP tool configuration for proxy skills.
+     * Directly executes an MCP tool with parameter mapping from context.
+     * When present, this makes the skill a proxy skill. Mutually exclusive with execute.
+     */
+    mcpTool?: McpToolConfig;
 }
 /**
  * Configuration for a skill entrypoint.
