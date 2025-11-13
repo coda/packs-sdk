@@ -1,4 +1,4 @@
+append_unmatched: true
 nav:
   - web.md
   - cli.md
-  - ...

@@ -1,5 +1,5 @@
+append_unmatched: true
 nav:
   - skills.md
   - tools.md
   - context.md
-  - ...

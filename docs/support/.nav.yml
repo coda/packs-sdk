@@ -1,3 +1,4 @@
+append_unmatched: true
 nav:
   - index.md
   - faq.md
@@ -5,4 +6,3 @@ nav:
   - changes.md
   - migration
   - contributing
-  - ...

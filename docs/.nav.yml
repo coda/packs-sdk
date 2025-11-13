@@ -1,3 +1,4 @@
+append_unmatched: true
 nav:
   - index.md
   - guides
@@ -6,4 +7,3 @@ nav:
   - reference
   - support
   - agents
-  - ...

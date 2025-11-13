@@ -1,8 +1,8 @@
 title: Building blocks
+append_unmatched: true
 nav:
   - formulas.md
   - cards.md
   - actions.md
   - column-formats.md
   - sync-tables
-  - ...
