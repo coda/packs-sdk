@@ -5540,12 +5540,6 @@ export interface Skill {
 	prompt: string;
 	/** List of tools that this skill can use. This does NOT include pack calls by default. */
 	tools: Tool[];
-	/**
-	 * Optional proxy mode configuration to skip initial LLM call.
-	 * When enabled, the first user message will immediately trigger the specified tool call,
-	 * bypassing the LLM loop for reduced latency.
-	 */
-	proxyMode?: ProxyModeConfig;
 }
 /**
  * Configuration for a skill entrypoint.
@@ -5655,6 +5649,13 @@ export interface PackVersionDefinition {
 	 * @hidden
 	 */
 	suggestedPrompts?: SuggestedPrompt[];
+	/**
+	 * Optional proxy mode configuration to skip initial LLM call.
+	 * When enabled, the first user message will immediately trigger the specified tool call,
+	 * bypassing the LLM loop for reduced latency.
+	 * @hidden
+	 */
+	proxyMode?: ProxyModeConfig;
 }
 /**
  * @deprecated use `#PackVersionDefinition`
@@ -5751,6 +5752,11 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * @hidden
 	 */
 	suggestedPrompts: SuggestedPrompt[];
+	/**
+	 * See {@link PackVersionDefinition.proxyMode}.
+	 * @hidden
+	 */
+	proxyMode?: ProxyModeConfig;
 	/**
 	 * See {@link PackVersionDefinition.networkDomains}.
 	 */
@@ -5908,6 +5914,25 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * @hidden
 	 */
 	addSuggestedPrompt(prompt: SuggestedPrompt): this;
+	/**
+	 * Sets proxy mode configuration to skip the initial LLM call and immediately execute a tool.
+	 * This is useful for agents that want to proxy requests directly to an external AI backend.
+	 *
+	 * When enabled, the first user message will immediately trigger the specified formula,
+	 * bypassing the LLM loop for reduced latency. The LLM will then process the tool result.
+	 *
+	 * @example
+	 * ```
+	 * pack.setProxyMode({
+	 *   enabled: true,
+	 *   initialToolCall: {
+	 *     formulaName: 'CallMyBackend'
+	 *   }
+	 * });
+	 * ```
+	 * @hidden
+	 */
+	setProxyMode(proxyMode: ProxyModeConfig): this;
 	private _wrapAuthenticationFunctions;
 	/**
 	 * Sets this pack to use authentication for individual users, using the

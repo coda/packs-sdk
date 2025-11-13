@@ -1250,12 +1250,6 @@ export interface Skill {
     prompt: string;
     /** List of tools that this skill can use. This does NOT include pack calls by default. */
     tools: Tool[];
-    /**
-     * Optional proxy mode configuration to skip initial LLM call.
-     * When enabled, the first user message will immediately trigger the specified tool call,
-     * bypassing the LLM loop for reduced latency.
-     */
-    proxyMode?: ProxyModeConfig;
 }
 /**
  * Configuration for a skill entrypoint.
@@ -1365,6 +1359,13 @@ export interface PackVersionDefinition {
      * @hidden
      */
     suggestedPrompts?: SuggestedPrompt[];
+    /**
+     * Optional proxy mode configuration to skip initial LLM call.
+     * When enabled, the first user message will immediately trigger the specified tool call,
+     * bypassing the LLM loop for reduced latency.
+     * @hidden
+     */
+    proxyMode?: ProxyModeConfig;
 }
 /**
  * @deprecated use `#PackVersionDefinition`

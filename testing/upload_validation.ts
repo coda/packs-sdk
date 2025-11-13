@@ -2210,7 +2210,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     description: z.string().min(1).max(Limits.BuildingBlockDescription),
     prompt: z.string().min(1).max(Limits.PromptLength),
     tools: z.array(toolSchema),
-    proxyMode: proxyModeConfigSchema,
   });
 
   const skillEntrypointConfigSchema = zodCompleteStrictObject<SkillEntrypointConfig>({
@@ -2363,6 +2362,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           });
         }
       }),
+    proxyMode: proxyModeConfigSchema,
   });
 
   function validateIdentityNames(context: z.RefinementCtx, identityInfo: Map<string, string[]>) {

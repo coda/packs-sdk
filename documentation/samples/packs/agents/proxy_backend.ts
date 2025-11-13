@@ -5,6 +5,16 @@ export const pack = coda.newPack();
 // the initial LLM call and immediately execute their backend API.
 // This reduces latency and ensures reliable tool execution.
 
+// Enable proxy mode at the pack level
+pack.setProxyMode({
+  enabled: true,
+  initialToolCall: {
+    // This formula will be called immediately with the user's first message
+    // The entire user message will be passed as the first parameter
+    formulaName: "CallBackend",
+  },
+});
+
 pack.setSkillEntrypoints({
   defaultChat: { skillName: "ProxyAgent" },
 });
@@ -26,15 +36,6 @@ pack.addSkill({
       type: coda.ToolType.Pack,
     },
   ],
-  // Enable proxy mode to skip the initial LLM call
-  proxyMode: {
-    enabled: true,
-    initialToolCall: {
-      // This formula will be called immediately with the user's message
-      // The entire user message will be passed as the first parameter
-      formulaName: "CallBackend",
-    },
-  },
 });
 
 pack.addFormula({
