@@ -79,16 +79,6 @@ BasicPackDefinition.formulas
 
 ___
 
-### mcpServers
-
-• **mcpServers**: [`MCPServer`](../interfaces/core.MCPServer.md)[]
-
-#### Implementation of
-
-BasicPackDefinition.mcpServers
-
-___
-
 ### networkDomains
 
 • **networkDomains**: `string`[]
@@ -251,22 +241,6 @@ pack.addFormula({
 | Name | Type |
 | :------ | :------ |
 | `definition` | { `resultType`: `ResultT`  } & [`FormulaDefinitionOptions`](../types/core.FormulaDefinitionOptions.md)<`ParamDefsT`, `ResultT`, `SchemaT`\> |
-
-#### Returns
-
-[`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
-
-___
-
-### addMCPServer
-
-▸ **addMCPServer**(`server`): [`PackDefinitionBuilder`](core.PackDefinitionBuilder.md)
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `server` | [`MCPServer`](../interfaces/core.MCPServer.md) |
 
 #### Returns
 

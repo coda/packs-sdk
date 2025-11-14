@@ -118,18 +118,6 @@ ___
 
 ___
 
-### mcpServers
-
-• `Optional` **mcpServers**: [`MCPServer`](core.MCPServer.md)[]
-
-Definitions of MCP servers that this pack can connect to.
-
-#### Inherited from
-
-[PackVersionDefinition](core.PackVersionDefinition.md).[mcpServers](core.PackVersionDefinition.md#mcpservers)
-
-___
-
 ### minimumFeatureSet
 
 • `Optional` **minimumFeatureSet**: `FeatureSet`

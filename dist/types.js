@@ -248,6 +248,7 @@ var ToolType;
      */
     ToolType["Summarizer"] = "Summarizer";
     /**
+     * Tool that provides access to MCP capabilities.
      * @hidden
      */
     ToolType["MCP"] = "MCP";

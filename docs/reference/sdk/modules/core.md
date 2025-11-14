@@ -86,7 +86,6 @@ import * as coda from "@codahq/packs-sdk";
 - [InvocationLocation](../interfaces/core.InvocationLocation.md)
 - [LinkAttributionNode](../interfaces/core.LinkAttributionNode.md)
 - [LinkSchema](../interfaces/core.LinkSchema.md)
-- [MCPServer](../interfaces/core.MCPServer.md)
 - [MetadataFormulaObjectResultType](../interfaces/core.MetadataFormulaObjectResultType.md)
 - [MultiHeaderTokenAuthentication](../interfaces/core.MultiHeaderTokenAuthentication.md)
 - [MultiQueryParamTokenAuthentication](../interfaces/core.MultiQueryParamTokenAuthentication.md)

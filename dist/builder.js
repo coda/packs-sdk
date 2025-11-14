@@ -176,6 +176,15 @@ class PackDefinitionBuilder {
         this.skills.push(skill);
         return this;
     }
+    /**
+     * Adds an MCP server to this pack.
+     *
+     * @example
+     * ```
+     * pack.addMCPServer({name: 'MyMCPServer', endpointUrl: 'https://my-mcp-server.com'});
+     * ```
+     * @hidden
+     */
     addMCPServer(server) {
         this.mcpServers.push(server);
         return this;

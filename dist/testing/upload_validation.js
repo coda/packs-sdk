@@ -1666,6 +1666,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     });
     const mcpToolSchema = zodCompleteStrictObject({
         type: z.literal(types_9.ToolType.MCP),
+        serverNames: z.array(z.string()).optional(),
     });
     const toolSchema = z.discriminatedUnion('type', [
         packToolSchema,
@@ -1699,8 +1700,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             .string()
             .min(1)
             .max(exports.Limits.BuildingBlockName)
-            .regex(regexParameterName, 'MCP server names can only contain alphanumeric characters and underscores.')
-            .optional(),
+            .regex(regexParameterName, 'MCP server names can only contain alphanumeric characters and underscores.'),
     });
     const suggestedPromptSchema = zodCompleteStrictObject({
         name: z

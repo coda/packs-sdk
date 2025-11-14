@@ -70,6 +70,10 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * See {@link PackVersionDefinition.networkDomains}.
      */
     networkDomains: string[];
+    /**
+     * See {@link PackVersionDefinition.mcpServers}.
+     * @hidden
+     */
     mcpServers: MCPServer[];
     /**
      * See {@link PackVersionDefinition.defaultAuthentication}.
@@ -197,6 +201,15 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * @hidden
      */
     addSkill(skill: Skill): this;
+    /**
+     * Adds an MCP server to this pack.
+     *
+     * @example
+     * ```
+     * pack.addMCPServer({name: 'MyMCPServer', endpointUrl: 'https://my-mcp-server.com'});
+     * ```
+     * @hidden
+     */
     addMCPServer(server: MCPServer): this;
     /**
      * Sets the entrypoints that the pack agent can be invoked from.
