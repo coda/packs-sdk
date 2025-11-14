@@ -208,6 +208,28 @@ class PackDefinitionBuilder {
         this.suggestedPrompts.push(prompt);
         return this;
     }
+    /**
+     * Sets proxy mode configuration to skip the initial LLM call and immediately execute a tool.
+     * This is useful for agents that want to proxy requests directly to an external AI backend.
+     *
+     * When enabled, the first user message will immediately trigger the specified formula,
+     * bypassing the LLM loop for reduced latency. The LLM will then process the tool result.
+     *
+     * @example
+     * ```
+     * pack.setProxyMode({
+     *   enabled: true,
+     *   initialToolCall: {
+     *     formulaName: 'CallMyBackend'
+     *   }
+     * });
+     * ```
+     * @hidden
+     */
+    setProxyMode(proxyMode) {
+        this.proxyMode = proxyMode;
+        return this;
+    }
     _wrapAuthenticationFunctions(authentication) {
         const { getConnectionName: getConnectionNameDef, getConnectionUserId: getConnectionUserIdDef, postSetup: postSetupDef, ...rest } = authentication;
         const getConnectionName = (0, api_7.wrapMetadataFunction)(getConnectionNameDef);

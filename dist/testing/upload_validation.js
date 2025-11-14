@@ -1671,7 +1671,25 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         assistantMessageToolSchema,
         summarizerToolSchema,
     ]);
-    const skillSchema = zodCompleteObject({
+    const proxyModeConfigSchema = z
+        .object({
+        enabled: z.boolean(),
+        initialToolCall: z
+            .object({
+            formulaName: z.string(),
+        })
+            .optional(),
+    })
+        .optional();
+    const mcpToolConfigSchema = z
+        .object({
+        toolName: z.string().min(1),
+        serverName: z.string().min(1),
+        parameterMapping: z.record(z.unknown()).optional(),
+    })
+        .strict();
+    const skillSchema = z
+        .object({
         name: z
             .string()
             .min(1)
@@ -1679,8 +1697,49 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             .regex(regexParameterName, 'Skill names can only contain alphanumeric characters and underscores.'),
         displayName: z.string().min(1).max(exports.Limits.BuildingBlockName),
         description: z.string().min(1).max(exports.Limits.BuildingBlockDescription),
-        prompt: z.string().min(1).max(exports.Limits.PromptLength),
-        tools: z.array(toolSchema),
+        prompt: z.string().min(1).max(exports.Limits.PromptLength).optional(),
+        tools: z.array(toolSchema).optional(),
+        execute: z.function().optional(),
+        mcpTool: mcpToolConfigSchema.optional(),
+    })
+        .passthrough()
+        .superRefine((data, context) => {
+        const hasExecute = Boolean(data.execute);
+        const hasMcpTool = Boolean(data.mcpTool);
+        const isProxySkill = hasExecute || hasMcpTool;
+        const isStandardSkill = !isProxySkill;
+        // Standard skills must have prompt and tools
+        if (isStandardSkill) {
+            if (!data.prompt) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: ['prompt'],
+                    message: 'Standard skills must have a prompt',
+                });
+            }
+            if (!data.tools) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: ['tools'],
+                    message: 'Standard skills must have tools',
+                });
+            }
+        }
+        // Proxy skills must have execute XOR mcpTool (not both, not neither)
+        if (isProxySkill) {
+            if (hasExecute && hasMcpTool) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: 'Proxy skills cannot have both execute and mcpTool (choose one)',
+                });
+            }
+            if (data.prompt || data.tools) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: 'Proxy skills cannot have prompt or tools properties',
+                });
+            }
+        }
     });
     const skillEntrypointConfigSchema = zodCompleteStrictObject({
         skillName: z.string(),
@@ -1822,6 +1881,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 });
             }
         }),
+        proxyMode: proxyModeConfigSchema,
     });
     function validateIdentityNames(context, identityInfo) {
         for (const [identityName, allowedAuthenticationNames] of identityInfo) {

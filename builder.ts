@@ -14,6 +14,7 @@ import type {ObjectSchema} from './schema';
 import type {ObjectSchemaDefinition} from './schema';
 import type {PackVersionDefinition} from './types';
 import type {ParamDefs} from './api_types';
+import type {ProxyModeConfig} from './types';
 import type {Schema} from './schema';
 import type {Skill} from './types';
 import type {SkillEntrypoints} from './types';
@@ -81,6 +82,11 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * @hidden
    */
   suggestedPrompts: SuggestedPrompt[];
+  /**
+   * See {@link PackVersionDefinition.proxyMode}.
+   * @hidden
+   */
+  proxyMode?: ProxyModeConfig;
   /**
    * See {@link PackVersionDefinition.networkDomains}.
    */
@@ -321,6 +327,29 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    */
   addSuggestedPrompt(prompt: SuggestedPrompt): this {
     this.suggestedPrompts.push(prompt);
+    return this;
+  }
+
+  /**
+   * Sets proxy mode configuration to skip the initial LLM call and immediately execute a tool.
+   * This is useful for agents that want to proxy requests directly to an external AI backend.
+   *
+   * When enabled, the first user message will immediately trigger the specified formula,
+   * bypassing the LLM loop for reduced latency. The LLM will then process the tool result.
+   *
+   * @example
+   * ```
+   * pack.setProxyMode({
+   *   enabled: true,
+   *   initialToolCall: {
+   *     formulaName: 'CallMyBackend'
+   *   }
+   * });
+   * ```
+   * @hidden
+   */
+  setProxyMode(proxyMode: ProxyModeConfig): this {
+    this.proxyMode = proxyMode;
     return this;
   }
 

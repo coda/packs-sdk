@@ -94,7 +94,6 @@ import {ScreenAnnotationType} from '../types';
 import type {SetEndpoint} from '../types';
 import {SimpleStringHintValueTypes} from '../schema';
 import type {SimpleStringSchema} from '../schema';
-import type {Skill} from '../types';
 import type {SkillEntrypointConfig} from '../types';
 import type {SkillEntrypoints} from '../types';
 import type {SliderSchema} from '../schema';
@@ -2189,17 +2188,81 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     assistantMessageToolSchema,
     summarizerToolSchema,
   ]);
-  const skillSchema = zodCompleteObject<Skill>({
-    name: z
-      .string()
-      .min(1)
-      .max(Limits.BuildingBlockName)
-      .regex(regexParameterName, 'Skill names can only contain alphanumeric characters and underscores.'),
-    displayName: z.string().min(1).max(Limits.BuildingBlockName),
-    description: z.string().min(1).max(Limits.BuildingBlockDescription),
-    prompt: z.string().min(1).max(Limits.PromptLength),
-    tools: z.array(toolSchema),
-  });
+  const proxyModeConfigSchema = z
+    .object({
+      enabled: z.boolean(),
+      initialToolCall: z
+        .object({
+          formulaName: z.string(),
+        })
+        .optional(),
+    })
+    .optional();
+
+  const mcpToolConfigSchema = z
+    .object({
+      toolName: z.string().min(1),
+      serverName: z.string().min(1),
+      parameterMapping: z.record(z.unknown()).optional(),
+    })
+    .strict();
+
+  const skillSchema = z
+    .object({
+      name: z
+        .string()
+        .min(1)
+        .max(Limits.BuildingBlockName)
+        .regex(regexParameterName, 'Skill names can only contain alphanumeric characters and underscores.'),
+      displayName: z.string().min(1).max(Limits.BuildingBlockName),
+      description: z.string().min(1).max(Limits.BuildingBlockDescription),
+      prompt: z.string().min(1).max(Limits.PromptLength).optional(),
+      tools: z.array(toolSchema).optional(),
+      execute: z.function().optional(),
+      mcpTool: mcpToolConfigSchema.optional(),
+    })
+    .passthrough()
+    .superRefine((data, context) => {
+      const hasExecute = Boolean(data.execute);
+      const hasMcpTool = Boolean(data.mcpTool);
+      const isProxySkill = hasExecute || hasMcpTool;
+      const isStandardSkill = !isProxySkill;
+
+      // Standard skills must have prompt and tools
+      if (isStandardSkill) {
+        if (!data.prompt) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['prompt'],
+            message: 'Standard skills must have a prompt',
+          });
+        }
+        if (!data.tools) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['tools'],
+            message: 'Standard skills must have tools',
+          });
+        }
+      }
+
+      // Proxy skills must have execute XOR mcpTool (not both, not neither)
+      if (isProxySkill) {
+        if (hasExecute && hasMcpTool) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Proxy skills cannot have both execute and mcpTool (choose one)',
+          });
+        }
+
+        if (data.prompt || data.tools) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Proxy skills cannot have prompt or tools properties',
+          });
+        }
+      }
+    });
 
   const skillEntrypointConfigSchema = zodCompleteStrictObject<SkillEntrypointConfig>({
     skillName: z.string(),
@@ -2351,6 +2414,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           });
         }
       }),
+    proxyMode: proxyModeConfigSchema,
   });
 
   function validateIdentityNames(context: z.RefinementCtx, identityInfo: Map<string, string[]>) {
