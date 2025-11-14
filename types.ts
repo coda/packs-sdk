@@ -1196,6 +1196,7 @@ export enum ToolType {
    */
   Summarizer = 'Summarizer',
   /**
+   * Tool that provides access to MCP capabilities.
    * @hidden
    */
   MCP = 'MCP',
@@ -1347,12 +1348,19 @@ export interface AssistantMessageTool extends BaseTool<ToolType.AssistantMessage
 export interface SummarizerTool extends BaseTool<ToolType.Summarizer> {}
 
 /**
+ * Tool that provides access to MCP capabilities.
  * @hidden
  */
-export interface MCPTool extends BaseTool<ToolType.MCP> {}
+export interface MCPTool extends BaseTool<ToolType.MCP> {
+  /**
+   * The names of the MCP servers added to this pack that this tool can connect to.
+   */
+  serverNames?: string[];
+}
 
 /**
  * Definition of an MCP server that the pack can connect to.
+ * @hidden
  */
 export interface MCPServer {
   /**
@@ -1360,9 +1368,9 @@ export interface MCPServer {
    */
   endpointUrl: string;
   /**
-   * Optional stable identifier that can be used to distinguish multiple MCP servers.
+   * Stable identifier that can be used to distinguish multiple MCP servers.
    */
-  name?: string;
+  name: string;
 }
 
 /**
@@ -1520,6 +1528,7 @@ export interface PackVersionDefinition {
   suggestedPrompts?: SuggestedPrompt[];
   /**
    * Definitions of MCP servers that this pack can connect to.
+   * @hidden
    */
   mcpServers?: MCPServer[];
 }

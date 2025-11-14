@@ -86,6 +86,10 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * See {@link PackVersionDefinition.networkDomains}.
    */
   networkDomains: string[];
+  /**
+   * See {@link PackVersionDefinition.mcpServers}.
+   * @hidden
+   */
   mcpServers: MCPServer[];
 
   /**
@@ -293,6 +297,15 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     return this;
   }
 
+  /**
+   * Adds an MCP server to this pack.
+   *
+   * @example
+   * ```
+   * pack.addMCPServer({name: 'MyMCPServer', endpointUrl: 'https://my-mcp-server.com'});
+   * ```
+   * @hidden
+   */
   addMCPServer(server: MCPServer): this {
     this.mcpServers.push(server);
     return this;

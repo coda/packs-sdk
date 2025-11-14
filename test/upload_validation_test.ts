@@ -6082,7 +6082,7 @@ describe('Pack metadata Validation', async () => {
       }
     });
 
-    it('allows declaring MCP servers when MCP tools are used', async () => {
+    it('allows declaring MCP servers and MCP tools', async () => {
       const metadata = createFakePackVersionMetadata({
         skills: [
           {
@@ -6112,6 +6112,7 @@ describe('Pack metadata Validation', async () => {
         mcpServers: [
           {
             endpointUrl: 'not-a-url',
+            name: 'InvalidServer',
           },
         ],
       });
