@@ -54,22 +54,7 @@ with `isAction: true`.
 
 ***
 
-<<<<<<< HEAD:docs/reference/sdk/core/interfaces/PackVersionDefinition.md
-<<<<<<< HEAD:docs/reference/sdk/core/interfaces/PackVersionDefinition.md
 ### networkDomains?
-=======
-### mcpServers
-
-• `Optional` **mcpServers**: [`MCPServer`](core.MCPServer.md)[]
-
-Definitions of MCP servers that this pack can connect to.
-
-___
-
-=======
->>>>>>> 88073096 (review build):docs/reference/sdk/interfaces/core.PackVersionDefinition.md
-### networkDomains
->>>>>>> 3d9d31fd (build):docs/reference/sdk/interfaces/core.PackVersionDefinition.md
 
 > `optional` **networkDomains**: `string`[]
 
