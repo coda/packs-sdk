@@ -247,6 +247,11 @@ var ToolType;
      * @hidden
      */
     ToolType["Summarizer"] = "Summarizer";
+    /**
+     * Tool that provides access to MCP capabilities.
+     * @hidden
+     */
+    ToolType["MCP"] = "MCP";
 })(ToolType || (exports.ToolType = ToolType = {}));
 /**
  * The type of knowledge source to use.

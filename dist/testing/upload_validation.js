@@ -1664,12 +1664,17 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     const summarizerToolSchema = zodCompleteStrictObject({
         type: z.literal(types_9.ToolType.Summarizer),
     });
+    const mcpToolSchema = zodCompleteStrictObject({
+        type: z.literal(types_9.ToolType.MCP),
+        serverNames: z.array(z.string()).optional(),
+    });
     const toolSchema = z.discriminatedUnion('type', [
         packToolSchema,
         knowledgeToolSchema,
         screenAnnotationToolSchema,
         assistantMessageToolSchema,
         summarizerToolSchema,
+        mcpToolSchema,
     ]);
     const skillSchema = zodCompleteObject({
         name: z
@@ -1688,6 +1693,14 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     const skillEntrypointsSchema = zodCompleteStrictObject({
         benchInitialization: skillEntrypointConfigSchema.optional(),
         defaultChat: skillEntrypointConfigSchema.optional(),
+    });
+    const mcpServerSchema = zodCompleteStrictObject({
+        endpointUrl: z.string().url('MCP server endpointUrl must be a valid URL.'),
+        name: z
+            .string()
+            .min(1)
+            .max(exports.Limits.BuildingBlockName)
+            .regex(regexParameterName, 'MCP server names can only contain alphanumeric characters and underscores.'),
     });
     const suggestedPromptSchema = zodCompleteStrictObject({
         name: z
@@ -1804,6 +1817,34 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 context.addIssue({
                     code: z.ZodIssueCode.custom,
                     message: `Skill names must be unique. Found duplicate name "${dupe}".`,
+                });
+            }
+            const mcpSkillIndexes = data
+                .map((skill, index) => ({ skill, index }))
+                .filter(({ skill }) => skill.tools.some((tool) => tool.type === types_9.ToolType.MCP))
+                .map(({ index }) => index);
+            if (mcpSkillIndexes.length > 1) {
+                for (const duplicateIndex of mcpSkillIndexes.slice(1)) {
+                    context.addIssue({
+                        code: z.ZodIssueCode.custom,
+                        path: ['skills', duplicateIndex],
+                        message: 'Only one skill with an MCP tool is allowed per pack.',
+                    });
+                }
+            }
+        }),
+        mcpServers: z
+            .array(mcpServerSchema)
+            .max(1)
+            .optional()
+            .default([])
+            .superRefine((data, context) => {
+            const serverNames = data.map(server => server.name).filter((name) => Boolean(name));
+            for (const dupe of getNonUniqueElements(serverNames)) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: ['mcpServers'],
+                    message: `MCP server names must be unique. Found duplicate name "${dupe}".`,
                 });
             }
         }),
@@ -2233,6 +2274,17 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                     message: `"${entrypoint.skillName}" is not the name of a defined skill.`,
                 });
             }
+        }
+    })
+        .superRefine((data, context) => {
+        const metadata = data;
+        const hasMcpSkill = (metadata.skills || []).some(skill => skill.tools.some(tool => tool.type === types_9.ToolType.MCP));
+        if (hasMcpSkill && (!metadata.mcpServers || metadata.mcpServers.length === 0)) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['mcpServers'],
+                message: 'At least one MCP server must be declared when using MCP tools.',
+            });
         }
     });
     return { legacyPackMetadataSchema, variousSupportedAuthenticationValidators, arrayPropertySchema };

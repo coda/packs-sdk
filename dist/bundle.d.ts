@@ -5361,7 +5361,12 @@ export declare enum ToolType {
 	 * Allows reuse of the default tuned summarizer agent as a tool.
 	 * @hidden
 	 */
-	Summarizer = "Summarizer"
+	Summarizer = "Summarizer",
+	/**
+	 * Tool that provides access to MCP capabilities.
+	 * @hidden
+	 */
+	MCP = "MCP"
 }
 /**
  * Base interface for all tool definitions.
@@ -5493,6 +5498,30 @@ export interface AssistantMessageTool extends BaseTool<ToolType.AssistantMessage
 export interface SummarizerTool extends BaseTool<ToolType.Summarizer> {
 }
 /**
+ * Tool that provides access to MCP capabilities.
+ * @hidden
+ */
+export interface MCPTool extends BaseTool<ToolType.MCP> {
+	/**
+	 * The names of the MCP servers added to this pack that this tool can connect to.
+	 */
+	serverNames?: string[];
+}
+/**
+ * Definition of an MCP server that the pack can connect to.
+ * @hidden
+ */
+export interface MCPServer {
+	/**
+	 * The MCP endpoint URL (e.g. https://example.com/mcp).
+	 */
+	endpointUrl: string;
+	/**
+	 * Stable identifier that can be used to distinguish multiple MCP servers.
+	 */
+	name: string;
+}
+/**
  * Map of tool types to their corresponding tool interfaces.
  * This interface can be extended via declaration merging to add custom tool types.
  * @hidden
@@ -5503,6 +5532,7 @@ export interface ToolMap {
 	[ToolType.ScreenAnnotation]: ScreenAnnotationTool;
 	[ToolType.AssistantMessage]: AssistantMessageTool;
 	[ToolType.Summarizer]: SummarizerTool;
+	[ToolType.MCP]: MCPTool;
 }
 /**
  * Union of all supported tool types.
@@ -5633,6 +5663,11 @@ export interface PackVersionDefinition {
 	 * @hidden
 	 */
 	suggestedPrompts?: SuggestedPrompt[];
+	/**
+	 * Definitions of MCP servers that this pack can connect to.
+	 * @hidden
+	 */
+	mcpServers?: MCPServer[];
 }
 /**
  * @deprecated use `#PackVersionDefinition`
@@ -5733,6 +5768,11 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * See {@link PackVersionDefinition.networkDomains}.
 	 */
 	networkDomains: string[];
+	/**
+	 * See {@link PackVersionDefinition.mcpServers}.
+	 * @hidden
+	 */
+	mcpServers: MCPServer[];
 	/**
 	 * See {@link PackVersionDefinition.defaultAuthentication}.
 	 */
@@ -5859,6 +5899,16 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * @hidden
 	 */
 	addSkill(skill: Skill): this;
+	/**
+	 * Adds an MCP server to this pack.
+	 *
+	 * @example
+	 * ```
+	 * pack.addMCPServer({name: 'MyMCPServer', endpointUrl: 'https://my-mcp-server.com'});
+	 * ```
+	 * @hidden
+	 */
+	addMCPServer(server: MCPServer): this;
 	/**
 	 * Sets the entrypoints that the pack agent can be invoked from.
 	 *

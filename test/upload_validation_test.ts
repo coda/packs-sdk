@@ -6021,7 +6021,16 @@ describe('Pack metadata Validation', async () => {
               {
                 type: ToolType.Summarizer,
               },
+              {
+                type: ToolType.MCP,
+              },
             ],
+          },
+        ],
+        mcpServers: [
+          {
+            endpointUrl: 'https://mcp.canva.com/mcp',
+            name: 'Canva',
           },
         ],
       });
@@ -6051,7 +6060,7 @@ describe('Pack metadata Validation', async () => {
         {
           path: 'skills[0].tools[0].type',
           message:
-            "Invalid discriminator value. Expected 'Pack' | 'Knowledge' | 'ScreenAnnotation' | 'AssistantMessage' | 'Summarizer'",
+            "Invalid discriminator value. Expected 'Pack' | 'Knowledge' | 'ScreenAnnotation' | 'AssistantMessage' | 'Summarizer' | 'MCP'",
         },
       ]);
     });
@@ -6070,11 +6079,105 @@ describe('Pack metadata Validation', async () => {
           break;
         case ToolType.Summarizer:
           break;
+        case ToolType.MCP:
+          break;
         case 'CustomTool':
           break;
         default:
           ensureNever(toolType);
       }
+    });
+
+    it('allows declaring MCP servers and MCP tools', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'McpSkill',
+            displayName: 'MCP Skill',
+            description: 'Uses MCP tools',
+            prompt: 'Assist with MCP operations',
+            tools: [
+              {
+                type: ToolType.MCP,
+              },
+            ],
+          },
+        ],
+        mcpServers: [
+          {
+            endpointUrl: 'https://mcp.canva.com/mcp',
+            name: 'Canva',
+          },
+        ],
+      });
+      await validateJson(metadata);
+    });
+
+    it('fails when MCP server endpointUrl is invalid', async () => {
+      const metadata = createFakePackVersionMetadata({
+        mcpServers: [
+          {
+            endpointUrl: 'not-a-url',
+            name: 'InvalidServer',
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'mcpServers[0].endpointUrl',
+          message: 'MCP server endpointUrl must be a valid URL.',
+        },
+      ]);
+    });
+
+    // skipped because currently we do not allow more than one MCP server per pack
+    it.skip('fails when MCP server names are duplicated', async () => {
+      const metadata = createFakePackVersionMetadata({
+        mcpServers: [
+          {
+            endpointUrl: 'https://one.example.com/mcp',
+            name: 'ServerA',
+          },
+          {
+            endpointUrl: 'https://two.example.com/mcp',
+            name: 'ServerA',
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'mcpServers',
+          message: 'MCP server names must be unique. Found duplicate name "ServerA".',
+        },
+      ]);
+    });
+
+    it('fails when MCP tools are used without declaring MCP servers', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'McpSkill',
+            displayName: 'MCP Skill',
+            description: 'Uses MCP tools',
+            prompt: 'Assist with MCP operations',
+            tools: [
+              {
+                type: ToolType.MCP,
+              },
+            ],
+          },
+        ],
+        mcpServers: [],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'mcpServers',
+          message: 'At least one MCP server must be declared when using MCP tools.',
+        },
+      ]);
     });
 
     it('fails for skill missing required fields', async () => {
