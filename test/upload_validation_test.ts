@@ -6027,6 +6027,12 @@ describe('Pack metadata Validation', async () => {
             ],
           },
         ],
+        mcpServers: [
+          {
+            endpointUrl: 'https://mcp.canva.com/mcp',
+            name: 'Canva',
+          },
+        ],
       });
       await validateJson(metadata);
     });
@@ -6125,7 +6131,8 @@ describe('Pack metadata Validation', async () => {
       ]);
     });
 
-    it('fails when MCP server names are duplicated', async () => {
+    // skipped because currently we do not allow more than one MCP server per pack
+    it.skip('fails when MCP server names are duplicated', async () => {
       const metadata = createFakePackVersionMetadata({
         mcpServers: [
           {
