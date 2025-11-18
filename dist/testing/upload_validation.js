@@ -109,7 +109,7 @@ exports.Limits = {
     NumColumnMatchersPerFormat: 10,
     NetworkDomainUrl: 253,
     PermissionsBatchSize: 5000,
-    PromptLength: 10000,
+    PromptLength: 20000,
     SuggestedPromptText: 500,
     UpdateBatchSize: 1000,
     FilterableProperties: 5,
