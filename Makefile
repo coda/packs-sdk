@@ -387,6 +387,7 @@ release:
 
 .PHONY: release-manual
 release-manual:
+	node -r ts-node/register scripts/check_live_sdk_version.ts
 	# this set is taken from esbuild's process https://github.com/evanw/esbuild/blob/master/Makefile#L330
 	@npm --version > /dev/null || (echo "The 'npm' command must be in your path to publish" && false)
 	@echo "Checking for uncommitted/untracked changes..." && test -z "`git status --porcelain | grep -vE ''`" || \
