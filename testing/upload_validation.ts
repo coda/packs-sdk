@@ -13,9 +13,11 @@ import type {BooleanPackFormula} from '../api';
 import type {BooleanSchema} from '../schema';
 import type {CategorizationIndexDefinition} from '../schema';
 import type {CodaApiBearerTokenAuthentication} from '../types';
+import type {CodaDocsTool} from '../types';
 import type {CodaInternalRichTextSchema} from '../schema';
 import type {CommentContentCategorization} from '../schema';
 import {ConnectionRequirement} from '../api_types';
+import type {ContactResolutionTool} from '../types';
 import {ContentCategorizationType} from '../schema';
 import {CurrencyFormat} from '../schema';
 import type {CurrencySchema} from '../schema';
@@ -2190,6 +2192,14 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     serverNames: z.array(z.string()).optional(),
   });
 
+  const contactResolutionToolSchema = zodCompleteStrictObject<ContactResolutionTool>({
+    type: z.literal(ToolType.ContactResolution),
+  });
+
+  const codaDocsToolSchema = zodCompleteStrictObject<CodaDocsTool>({
+    type: z.literal(ToolType.CodaDocs),
+  });
+
   const toolSchema = z.discriminatedUnion('type', [
     packToolSchema,
     knowledgeToolSchema,
@@ -2197,6 +2207,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     assistantMessageToolSchema,
     summarizerToolSchema,
     mcpToolSchema,
+    contactResolutionToolSchema,
+    codaDocsToolSchema,
   ]);
   const skillSchema = zodCompleteObject<Skill>({
     name: z

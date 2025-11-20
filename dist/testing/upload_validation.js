@@ -1668,6 +1668,12 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         type: z.literal(types_9.ToolType.MCP),
         serverNames: z.array(z.string()).optional(),
     });
+    const contactResolutionToolSchema = zodCompleteStrictObject({
+        type: z.literal(types_9.ToolType.ContactResolution),
+    });
+    const codaDocsToolSchema = zodCompleteStrictObject({
+        type: z.literal(types_9.ToolType.CodaDocs),
+    });
     const toolSchema = z.discriminatedUnion('type', [
         packToolSchema,
         knowledgeToolSchema,
@@ -1675,6 +1681,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         assistantMessageToolSchema,
         summarizerToolSchema,
         mcpToolSchema,
+        contactResolutionToolSchema,
+        codaDocsToolSchema,
     ]);
     const skillSchema = zodCompleteObject({
         name: z
