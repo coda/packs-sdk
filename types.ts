@@ -1231,8 +1231,6 @@ export interface PackTool extends BaseTool<ToolType.Pack> {
   formulas?: Array<{
     /** The name of the formula to use as a tool. */
     formulaName: string;
-    /** Instructions for LLMs to use the formula. */
-    instructions?: string;
   }>;
 }
 
