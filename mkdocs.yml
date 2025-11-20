@@ -82,6 +82,8 @@ plugins:
     # See: https://squidfunk.github.io/mkdocs-material/reference/variables/
     - macros:
         module_name: documentation/scripts/mkdocs_macros
+    - optimize:
+        enabled: !ENV [MK_DOCS_GENERATE_ASSETS, true]
     - redirects:
         redirect_maps:
           # 2022-01-14: Reorganize guides and tutorials.
@@ -383,6 +385,8 @@ theme:
     - content.action.edit
     - content.action.view
     - content.code.copy
+    - navigation.path
+    - navigation.prune
     - navigation.sections
     - navigation.tabs
     - navigation.tabs.sticky
