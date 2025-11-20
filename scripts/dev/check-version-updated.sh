@@ -51,6 +51,3 @@ if [ "$CURRENT_VERSION" = "$MAIN_VERSION" ]; then
   echo "make release-manual"
   exit 1
 fi
-
-echo "✓ Version check passed (current: $CURRENT_VERSION, $MAIN_BRANCH: $MAIN_VERSION)"
-exit 0
