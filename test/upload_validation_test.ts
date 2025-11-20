@@ -6024,6 +6024,12 @@ describe('Pack metadata Validation', async () => {
               {
                 type: ToolType.MCP,
               },
+              {
+                type: ToolType.ContactResolution,
+              },
+              {
+                type: ToolType.CodaDocs,
+              },
             ],
           },
         ],
@@ -6060,7 +6066,7 @@ describe('Pack metadata Validation', async () => {
         {
           path: 'skills[0].tools[0].type',
           message:
-            "Invalid discriminator value. Expected 'Pack' | 'Knowledge' | 'ScreenAnnotation' | 'AssistantMessage' | 'Summarizer' | 'MCP'",
+            "Invalid discriminator value. Expected 'Pack' | 'Knowledge' | 'ScreenAnnotation' | 'AssistantMessage' | 'Summarizer' | 'MCP' | 'ContactResolution' | 'CodaDocs'",
         },
       ]);
     });
@@ -6080,6 +6086,10 @@ describe('Pack metadata Validation', async () => {
         case ToolType.Summarizer:
           break;
         case ToolType.MCP:
+          break;
+        case ToolType.ContactResolution:
+          break;
+        case ToolType.CodaDocs:
           break;
         case 'CustomTool':
           break;

@@ -5366,7 +5366,17 @@ export declare enum ToolType {
 	 * Tool that provides access to MCP capabilities.
 	 * @hidden
 	 */
-	MCP = "MCP"
+	MCP = "MCP",
+	/**
+	 * Tool that provides access to contact resolution capabilities.
+	 * @hidden
+	 */
+	ContactResolution = "ContactResolution",
+	/**
+	 * Tool that provides access to Coda docs capabilities.
+	 * @hidden
+	 */
+	CodaDocs = "CodaDocs"
 }
 /**
  * Base interface for all tool definitions.
@@ -5508,6 +5518,18 @@ export interface MCPTool extends BaseTool<ToolType.MCP> {
 	serverNames?: string[];
 }
 /**
+ * Tool that provides access to contact resolution capabilities.
+ * @hidden
+ */
+export interface ContactResolutionTool extends BaseTool<ToolType.ContactResolution> {
+}
+/**
+ * Tool that provides access to Coda docs capabilities.
+ * @hidden
+ */
+export interface CodaDocsTool extends BaseTool<ToolType.CodaDocs> {
+}
+/**
  * Definition of an MCP server that the pack can connect to.
  * @hidden
  */
@@ -5533,6 +5555,8 @@ export interface ToolMap {
 	[ToolType.AssistantMessage]: AssistantMessageTool;
 	[ToolType.Summarizer]: SummarizerTool;
 	[ToolType.MCP]: MCPTool;
+	[ToolType.ContactResolution]: ContactResolutionTool;
+	[ToolType.CodaDocs]: CodaDocsTool;
 }
 /**
  * Union of all supported tool types.
