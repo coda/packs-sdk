@@ -154,5 +154,8 @@
     "onlyBuiltDependencies": [
       "isolated-vm"
     ]
+  },
+  "scripts": {
+    "prepare": "husky"
   }
 }
