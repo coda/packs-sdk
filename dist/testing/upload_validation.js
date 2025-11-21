@@ -1694,7 +1694,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         description: z.string().min(1).max(exports.Limits.BuildingBlockDescription),
         prompt: z.string().min(1).max(exports.Limits.PromptLength),
         tools: z.array(toolSchema),
-        forcedFunction: z.string().optional(),
+        forcedFormula: z.string().optional(),
     });
     const skillEntrypointConfigSchema = zodCompleteStrictObject({
         skillName: z.string(),
@@ -2304,12 +2304,12 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }
         const formulaNames = new Set((formulas || []).map(formula => formula.name));
         skills.forEach((skill, skillIndex) => {
-            if (skill.forcedFunction && !formulaNames.has(skill.forcedFunction)) {
+            if (skill.forcedFormula && !formulaNames.has(skill.forcedFormula)) {
                 const availableTools = Array.from(formulaNames).join(', ');
                 context.addIssue({
                     code: z.ZodIssueCode.custom,
-                    path: ['skills', skillIndex, 'forcedFunction'],
-                    message: `Skill "${skill.name}" specifies forcedFunction "${skill.forcedFunction}" but no matching formula found. Available formulas: ${availableTools}`,
+                    path: ['skills', skillIndex, 'forcedFormula'],
+                    message: `Skill "${skill.name}" specifies forcedFormula "${skill.forcedFormula}" but no matching formula found. Available formulas: ${availableTools}`,
                 });
             }
         });
