@@ -2308,8 +2308,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 const availableTools = Array.from(formulaNames).join(', ');
                 context.addIssue({
                     code: z.ZodIssueCode.custom,
-                    path: ['skills', skillIndex, 'forcedTool'],
-                    message: `Skill "${skill.name}" specifies forcedTool "${skill.forcedFunction}" but no matching formula found. Available formulas: ${availableTools}`,
+                    path: ['skills', skillIndex, 'forcedFunction'],
+                    message: `Skill "${skill.name}" specifies forcedFunction "${skill.forcedFunction}" but no matching formula found. Available formulas: ${availableTools}`,
                 });
             }
         });
