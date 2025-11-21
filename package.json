@@ -6,7 +6,7 @@
     "dev/eslint"
   ],
   "engines": {
-    "node": ">=20.0.x",
+    "node": ">=22.0.0",
     "pnpm": "10.13.1"
   },
   "packageManager": "pnpm@10.13.1",
@@ -58,7 +58,7 @@
     "zod": "3.23.8"
   },
   "optionalDependencies": {
-    "isolated-vm": "5.0.1"
+    "isolated-vm": "6.0.2"
   },
   "devDependencies": {
     "@aws-sdk/types": "3.893.0",
