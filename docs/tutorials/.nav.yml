@@ -1,7 +1,7 @@
+append_unmatched: true
 nav:
   - index.md
   - get-started
   - build
   - From the community:
     - Build a pack in 3 easy steps: https://coda.io/@nina-kastenauer/build-your-own-pack-in-3-easy-steps
-  - ...

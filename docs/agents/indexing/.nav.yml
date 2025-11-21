@@ -1,6 +1,6 @@
+append_unmatched: true
 nav:
   - index.md
   - schema.md
   - crawling.md
   - incremental.md
-  - ...

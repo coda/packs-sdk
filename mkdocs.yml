@@ -60,11 +60,12 @@ markdown_extensions:
       toc_depth: 1-3
 
 plugins:
-    - search
     # Navigation enhancements.
-    # See: https://github.com/lukasgeiter/mkdocs-awesome-pages-plugin
-    - awesome-pages:
-        filename: .nav.yml
+    # See: https://lukasgeiter.github.io/mkdocs-awesome-nav/
+    - awesome-nav
+
+    # Generate an llms.txt file, and a markdown representation for each page.
+    # See: https://github.com/pawamoy/mkdocs-llmstxt
     - llmstxt:
         enabled: !ENV [MK_DOCS_GENERATE_ASSETS, true]
         markdown_description: >
@@ -78,10 +79,14 @@ plugins:
         sections:
           Documentation:
           - "*.md"
-    # Variables in markdown.
-    # See: https://squidfunk.github.io/mkdocs-material/reference/variables/
+
+    # Enable variables, snippets, and python scripts in markdown.
+    # See: https://mkdocs-macros-plugin.readthedocs.io/en/latest/
     - macros:
         module_name: documentation/scripts/mkdocs_macros
+
+    # Allow redirects from old to new URLs.
+    # See: https://github.com/mkdocs/mkdocs-redirects
     - redirects:
         redirect_maps:
           # 2022-01-14: Reorganize guides and tutorials.
@@ -343,8 +348,12 @@ plugins:
           "reference/sdk/variables/core.SvgConstants.DataUrlPrefixWithDarkModeSupport.md": "reference/sdk/core/namespaces/SvgConstants/variables/DataUrlPrefixWithDarkModeSupport.md"
           "reference/sdk/variables/core.ValidFetchMethods.md": "reference/sdk/core/variables/ValidFetchMethods.md"
 
+    # Enable the site-wide search.
+    # See: https://squidfunk.github.io/mkdocs-material/plugins/search/
+    - search
 
     # Generate card images for social sharing.
+    # See: https://squidfunk.github.io/mkdocs-material/plugins/social/
     - social:
         cards: !ENV [MK_DOCS_GENERATE_ASSETS, true]
         cards_layout_options:

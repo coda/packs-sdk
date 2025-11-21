@@ -1,3 +1,4 @@
+append_unmatched: true
 nav:
   - overview.md
   - design.md
@@ -8,4 +9,3 @@ nav:
   - Distribution:
     - Sharing & publishing: https://help.coda.io/en/articles/5987280-sharing-and-publishing-a-pack
     - Selling packs: https://help.coda.io/en/articles/6381607-selling-packs-on-coda
-  - ...
