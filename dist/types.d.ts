@@ -1066,7 +1066,22 @@ export declare enum ToolType {
      * Allows reuse of the default tuned summarizer agent as a tool.
      * @hidden
      */
-    Summarizer = "Summarizer"
+    Summarizer = "Summarizer",
+    /**
+     * Tool that provides access to MCP capabilities.
+     * @hidden
+     */
+    MCP = "MCP",
+    /**
+     * Tool that provides access to contact resolution capabilities.
+     * @hidden
+     */
+    ContactResolution = "ContactResolution",
+    /**
+     * Tool that provides access to Coda docs capabilities.
+     * @hidden
+     */
+    CodaDocs = "CodaDocs"
 }
 /**
  * The type identifier for a tool
@@ -1095,8 +1110,6 @@ export interface PackTool extends BaseTool<ToolType.Pack> {
     formulas?: Array<{
         /** The name of the formula to use as a tool. */
         formulaName: string;
-        /** Instructions for LLMs to use the formula. */
-        instructions?: string;
     }>;
 }
 /**
@@ -1203,6 +1216,42 @@ export interface AssistantMessageTool extends BaseTool<ToolType.AssistantMessage
 export interface SummarizerTool extends BaseTool<ToolType.Summarizer> {
 }
 /**
+ * Tool that provides access to MCP capabilities.
+ * @hidden
+ */
+export interface MCPTool extends BaseTool<ToolType.MCP> {
+    /**
+     * The names of the MCP servers added to this pack that this tool can connect to.
+     */
+    serverNames?: string[];
+}
+/**
+ * Tool that provides access to contact resolution capabilities.
+ * @hidden
+ */
+export interface ContactResolutionTool extends BaseTool<ToolType.ContactResolution> {
+}
+/**
+ * Tool that provides access to Coda docs capabilities.
+ * @hidden
+ */
+export interface CodaDocsTool extends BaseTool<ToolType.CodaDocs> {
+}
+/**
+ * Definition of an MCP server that the pack can connect to.
+ * @hidden
+ */
+export interface MCPServer {
+    /**
+     * The MCP endpoint URL (e.g. https://example.com/mcp).
+     */
+    endpointUrl: string;
+    /**
+     * Stable identifier that can be used to distinguish multiple MCP servers.
+     */
+    name: string;
+}
+/**
  * Map of tool types to their corresponding tool interfaces.
  * This interface can be extended via declaration merging to add custom tool types.
  * @hidden
@@ -1213,6 +1262,9 @@ export interface ToolMap {
     [ToolType.ScreenAnnotation]: ScreenAnnotationTool;
     [ToolType.AssistantMessage]: AssistantMessageTool;
     [ToolType.Summarizer]: SummarizerTool;
+    [ToolType.MCP]: MCPTool;
+    [ToolType.ContactResolution]: ContactResolutionTool;
+    [ToolType.CodaDocs]: CodaDocsTool;
 }
 /**
  * Union of all supported tool types.
@@ -1343,6 +1395,11 @@ export interface PackVersionDefinition {
      * @hidden
      */
     suggestedPrompts?: SuggestedPrompt[];
+    /**
+     * Definitions of MCP servers that this pack can connect to.
+     * @hidden
+     */
+    mcpServers?: MCPServer[];
 }
 /**
  * @deprecated use `#PackVersionDefinition`

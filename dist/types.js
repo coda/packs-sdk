@@ -247,6 +247,21 @@ var ToolType;
      * @hidden
      */
     ToolType["Summarizer"] = "Summarizer";
+    /**
+     * Tool that provides access to MCP capabilities.
+     * @hidden
+     */
+    ToolType["MCP"] = "MCP";
+    /**
+     * Tool that provides access to contact resolution capabilities.
+     * @hidden
+     */
+    ToolType["ContactResolution"] = "ContactResolution";
+    /**
+     * Tool that provides access to Coda docs capabilities.
+     * @hidden
+     */
+    ToolType["CodaDocs"] = "CodaDocs";
 })(ToolType || (exports.ToolType = ToolType = {}));
 /**
  * The type of knowledge source to use.

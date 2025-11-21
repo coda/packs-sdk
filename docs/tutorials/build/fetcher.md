@@ -357,4 +357,4 @@ Now that you have an understanding of how to call an external API, here are some
 [samples_fetcher]: ../../samples/topic/fetcher.md
 [pmt]: ../../guides/development/pack-maker-tools.md
 [autocomplete]: ../../guides/basics/parameters/autocomplete.md
-[uservisibleerror]: ../../reference/sdk/classes/core.UserVisibleError.md
+[uservisibleerror]: ../../reference/sdk/core/classes/UserVisibleError.md

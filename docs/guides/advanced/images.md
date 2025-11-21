@@ -103,7 +103,7 @@ return coda.SvgConstants.DataUrlPrefixWithDarkModeSupport + encoded;
 [samples]: ../../samples/topic/image.md
 [parameters_images]: ../basics/parameters/index.md#images
 [data_types_images]: ../basics/data-types.md#images
-[reference_temporaryblobstorage]: ../../reference/sdk/interfaces/core.TemporaryBlobStorage.md
+[reference_temporaryblobstorage]: ../../reference/sdk/core/interfaces/TemporaryBlobStorage.md
 [buffer]: https://nodejs.org/api/buffer.html#buffer
 [mdn_data_urls]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
 [mdn_svg]: https://developer.mozilla.org/en-US/docs/Web/SVG

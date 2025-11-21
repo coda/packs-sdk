@@ -434,15 +434,15 @@ The table below shows the recommended parameter type to use with various types o
 [^1]: The representation is known as ["serial number"][serial_number] and is common to all major spreadsheet applications.
 
 [samples]: ../../../samples/topic/parameter.md
-[parameters]: ../../../reference/sdk/interfaces/core.PackFormulaDef.md#parameters
-[makeParameter]: ../../../reference/sdk/functions/core.makeParameter.md
-[ParamDef]: ../../../reference/sdk/interfaces/core.ParamDef.md
+[parameters]: ../../../reference/sdk/core/interfaces/PackFormulaDef.md#parameters
+[makeParameter]: ../../../reference/sdk/core/functions/makeParameter.md
+[ParamDef]: ../../../reference/sdk/core/interfaces/ParamDef.md
 [destructuring_assignment]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
 [mdn_rest]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#assigning_the_rest_of_an_array_to_a_variable
 [autocomplete]: autocomplete.md
-[PrecannedDateRange]: ../../../reference/sdk/enums/core.PrecannedDateRange.md
+[PrecannedDateRange]: ../../../reference/sdk/core/enumerations/PrecannedDateRange.md
 [calendar_pack]: https://coda.io/packs/google-calendar-1003/documentation
-[ParameterType]: ../../../reference/sdk/enums/core.ParameterType.md
+[ParameterType]: ../../../reference/sdk/core/enumerations/ParameterType.md
 [ToText]: https://coda.io/formulas#ToText
 [ToNumber]: https://coda.io/formulas#ToNumber
 [ToDateTime]: https://coda.io/formulas#ToDateTime

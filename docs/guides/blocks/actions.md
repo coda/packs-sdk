@@ -202,5 +202,5 @@ While there is no solution for the general case, there is for the common case wh
 [two_way_sync]: ../advanced/two-way-sync.md
 [data_type_object]: ../basics/data-types.md#objects
 [getSchema]: ../blocks/sync-tables/dynamic.md#get-schema
-[includeUnknownProperties]: ../../reference/sdk/interfaces/core.ObjectSchemaDefinition.md#includeunknownproperties
+[includeUnknownProperties]: ../../reference/sdk/core/interfaces/ObjectSchemaDefinition.md#includeunknownproperties
 [samples_action_todoist]: ../../samples/topic/action.md#update-row-in-sync-table

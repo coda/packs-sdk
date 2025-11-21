@@ -13,9 +13,11 @@ import type {BooleanPackFormula} from '../api';
 import type {BooleanSchema} from '../schema';
 import type {CategorizationIndexDefinition} from '../schema';
 import type {CodaApiBearerTokenAuthentication} from '../types';
+import type {CodaDocsTool} from '../types';
 import type {CodaInternalRichTextSchema} from '../schema';
 import type {CommentContentCategorization} from '../schema';
 import {ConnectionRequirement} from '../api_types';
+import type {ContactResolutionTool} from '../types';
 import {ContentCategorizationType} from '../schema';
 import {CurrencyFormat} from '../schema';
 import type {CurrencySchema} from '../schema';
@@ -49,6 +51,8 @@ import {KnowledgeToolSourceType} from '../types';
 import {LifecycleBehavior} from '../schema';
 import {LinkDisplayType} from '../schema';
 import type {LinkSchema} from '../schema';
+import type {MCPServer} from '../types';
+import type {MCPTool} from '../types';
 import type {MessagingContentCategorization} from '../schema';
 import type {MultiHeaderTokenAuthentication} from '../types';
 import type {MultiQueryParamTokenAuthentication} from '../types';
@@ -114,6 +118,7 @@ import type {SyncTableDef} from '../api';
 import type {SystemAuthenticationTypes} from '../types';
 import {TableRole} from '../api_types';
 import {TokenExchangeCredentialsLocation} from '../types';
+import type {Tool} from '../types';
 import {ToolType} from '../types';
 import {Type} from '../api_types';
 import URLParse from 'url-parse';
@@ -173,7 +178,7 @@ export const Limits = {
   NumColumnMatchersPerFormat: 10,
   NetworkDomainUrl: 253,
   PermissionsBatchSize: 5000,
-  PromptLength: 10000,
+  PromptLength: 20000,
   SuggestedPromptText: 500,
   UpdateBatchSize: 1000,
   FilterableProperties: 5,
@@ -2182,12 +2187,28 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     type: z.literal(ToolType.Summarizer),
   });
 
+  const mcpToolSchema = zodCompleteStrictObject<MCPTool>({
+    type: z.literal(ToolType.MCP),
+    serverNames: z.array(z.string()).optional(),
+  });
+
+  const contactResolutionToolSchema = zodCompleteStrictObject<ContactResolutionTool>({
+    type: z.literal(ToolType.ContactResolution),
+  });
+
+  const codaDocsToolSchema = zodCompleteStrictObject<CodaDocsTool>({
+    type: z.literal(ToolType.CodaDocs),
+  });
+
   const toolSchema = z.discriminatedUnion('type', [
     packToolSchema,
     knowledgeToolSchema,
     screenAnnotationToolSchema,
     assistantMessageToolSchema,
     summarizerToolSchema,
+    mcpToolSchema,
+    contactResolutionToolSchema,
+    codaDocsToolSchema,
   ]);
   const skillSchema = zodCompleteObject<Skill>({
     name: z
@@ -2208,6 +2229,15 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
   const skillEntrypointsSchema = zodCompleteStrictObject<SkillEntrypoints>({
     benchInitialization: skillEntrypointConfigSchema.optional(),
     defaultChat: skillEntrypointConfigSchema.optional(),
+  });
+
+  const mcpServerSchema = zodCompleteStrictObject<MCPServer>({
+    endpointUrl: z.string().url('MCP server endpointUrl must be a valid URL.'),
+    name: z
+      .string()
+      .min(1)
+      .max(Limits.BuildingBlockName)
+      .regex(regexParameterName, 'MCP server names can only contain alphanumeric characters and underscores.'),
   });
 
   const suggestedPromptSchema = zodCompleteStrictObject<SuggestedPrompt>({
@@ -2333,6 +2363,35 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           context.addIssue({
             code: z.ZodIssueCode.custom,
             message: `Skill names must be unique. Found duplicate name "${dupe}".`,
+          });
+        }
+
+        const mcpSkillIndexes = data
+          .map((skill, index) => ({skill, index}))
+          .filter(({skill}) => skill.tools.some((tool: Tool) => tool.type === ToolType.MCP))
+          .map(({index}) => index);
+        if (mcpSkillIndexes.length > 1) {
+          for (const duplicateIndex of mcpSkillIndexes.slice(1)) {
+            context.addIssue({
+              code: z.ZodIssueCode.custom,
+              path: ['skills', duplicateIndex],
+              message: 'Only one skill with an MCP tool is allowed per pack.',
+            });
+          }
+        }
+      }),
+    mcpServers: z
+      .array(mcpServerSchema)
+      .max(1)
+      .optional()
+      .default([])
+      .superRefine((data, context) => {
+        const serverNames = data.map(server => server.name).filter((name): name is string => Boolean(name));
+        for (const dupe of getNonUniqueElements(serverNames)) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['mcpServers'],
+            message: `MCP server names must be unique. Found duplicate name "${dupe}".`,
           });
         }
       }),
@@ -2812,6 +2871,17 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             message: `"${entrypoint.skillName}" is not the name of a defined skill.`,
           });
         }
+      }
+    })
+    .superRefine((data, context) => {
+      const metadata = data as PackVersionMetadata;
+      const hasMcpSkill = (metadata.skills || []).some(skill => skill.tools.some(tool => tool.type === ToolType.MCP));
+      if (hasMcpSkill && (!metadata.mcpServers || metadata.mcpServers.length === 0)) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['mcpServers'],
+          message: 'At least one MCP server must be declared when using MCP tools.',
+        });
       }
     });
 
