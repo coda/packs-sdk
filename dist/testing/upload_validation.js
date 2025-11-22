@@ -1694,6 +1694,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         description: z.string().min(1).max(exports.Limits.BuildingBlockDescription),
         prompt: z.string().min(1).max(exports.Limits.PromptLength),
         tools: z.array(toolSchema),
+        forcedFormula: z.string().optional(),
     });
     const skillEntrypointConfigSchema = zodCompleteStrictObject({
         skillName: z.string(),
@@ -2294,6 +2295,24 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 message: 'At least one MCP server must be declared when using MCP tools.',
             });
         }
+    })
+        .superRefine((data, context) => {
+        const metadata = data;
+        const { skills, formulas } = metadata;
+        if (!skills || skills.length === 0) {
+            return;
+        }
+        const formulaNames = new Set((formulas || []).map(formula => formula.name));
+        skills.forEach((skill, skillIndex) => {
+            if (skill.forcedFormula && !formulaNames.has(skill.forcedFormula)) {
+                const availableTools = Array.from(formulaNames).join(', ');
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: ['skills', skillIndex, 'forcedFormula'],
+                    message: `Skill "${skill.name}" specifies forcedFormula "${skill.forcedFormula}" but no matching formula found. Available formulas: ${availableTools}`,
+                });
+            }
+        });
     });
     return { legacyPackMetadataSchema, variousSupportedAuthenticationValidators, arrayPropertySchema };
 }
