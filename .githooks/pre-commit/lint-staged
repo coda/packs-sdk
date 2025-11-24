@@ -1,1 +1,3 @@
+echo "running lint-staged"
+exit 1
 npx lint-staged
