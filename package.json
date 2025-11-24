@@ -1,6 +1,6 @@
 {
   "name": "@codahq/packs-sdk",
-  "version": "1.12.2",
+  "version": "1.12.3.prerelease.1",
   "license": "MIT",
   "workspaces": [
     "dev/eslint"
@@ -154,8 +154,5 @@
     "onlyBuiltDependencies": [
       "isolated-vm"
     ]
-  },
-  "scripts": {
-    "prepare": "husky"
   }
 }
