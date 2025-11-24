@@ -103,7 +103,6 @@
     "eslint-plugin-local": "1.0.0",
     "eslint-plugin-prefer-let": "3.0.1",
     "glob": "10.3.10",
-    "husky": "9.1.6",
     "js-yaml": "4.1.0",
     "lint-staged": "15.2.10",
     "medium-zoom": "1.1.0",
