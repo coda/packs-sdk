@@ -4,6 +4,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+- Remove prepare script
+
 ## [1.12.2] - 2025-11-21
 
 ### Changed
