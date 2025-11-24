@@ -328,6 +328,7 @@ test-file:
 .PHONY: clean-githooks
 clean-githooks:
 	-rm -rf ${ROOTDIR}/.git/hooks/* ${ROOTDIR}/.git/hooks.old
+	-git config --local --unset core.hooksPath
 
 .PHONY: clean
 clean:
