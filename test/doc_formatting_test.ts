@@ -7,7 +7,7 @@ import path from 'path';
  * Markdown auto-formatting breaks our content, which uses non-standard markdown extensions.
  */
 
-const BaseDir = path.join(__dirname, '..');
+const BaseDir = '.';
 const DocsRoot = path.join(BaseDir, 'docs/');
 const MarkdownPattern = path.join(DocsRoot, '**/*.md');
 
