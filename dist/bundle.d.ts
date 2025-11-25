@@ -5576,6 +5576,11 @@ export interface Skill {
 	prompt: string;
 	/** List of tools that this skill can use. This does NOT include pack calls by default. */
 	tools: Tool[];
+	/**
+	 * Forces execution of a specific formula by name, overriding autonomous tool selection.
+	 * @hidden
+	 * */
+	forcedFormula?: string;
 }
 /**
  * Configuration for a skill entrypoint.
