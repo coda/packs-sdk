@@ -2385,9 +2385,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       .array(mcpServerSchema)
       .max(1)
       .optional()
-      .default([])
       .superRefine((data, context) => {
-        const serverNames = data.map(server => server.name).filter((name): name is string => Boolean(name));
+        const serverNames = (data || []).map(server => server.name).filter((name): name is string => Boolean(name));
         for (const dupe of getNonUniqueElements(serverNames)) {
           context.addIssue({
             code: z.ZodIssueCode.custom,
