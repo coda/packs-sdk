@@ -118,7 +118,6 @@ import type {SyncTableDef} from '../api';
 import type {SystemAuthenticationTypes} from '../types';
 import {TableRole} from '../api_types';
 import {TokenExchangeCredentialsLocation} from '../types';
-import type {Tool} from '../types';
 import {ToolType} from '../types';
 import {Type} from '../api_types';
 import URLParse from 'url-parse';
@@ -2365,20 +2364,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             code: z.ZodIssueCode.custom,
             message: `Skill names must be unique. Found duplicate name "${dupe}".`,
           });
-        }
-
-        const mcpSkillIndexes = data
-          .map((skill, index) => ({skill, index}))
-          .filter(({skill}) => skill.tools.some((tool: Tool) => tool.type === ToolType.MCP))
-          .map(({index}) => index);
-        if (mcpSkillIndexes.length > 1) {
-          for (const duplicateIndex of mcpSkillIndexes.slice(1)) {
-            context.addIssue({
-              code: z.ZodIssueCode.custom,
-              path: ['skills', duplicateIndex],
-              message: 'Only one skill with an MCP tool is allowed per pack.',
-            });
-          }
         }
       }),
     mcpServers: z

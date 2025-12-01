@@ -1828,19 +1828,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                     message: `Skill names must be unique. Found duplicate name "${dupe}".`,
                 });
             }
-            const mcpSkillIndexes = data
-                .map((skill, index) => ({ skill, index }))
-                .filter(({ skill }) => skill.tools.some((tool) => tool.type === types_9.ToolType.MCP))
-                .map(({ index }) => index);
-            if (mcpSkillIndexes.length > 1) {
-                for (const duplicateIndex of mcpSkillIndexes.slice(1)) {
-                    context.addIssue({
-                        code: z.ZodIssueCode.custom,
-                        path: ['skills', duplicateIndex],
-                        message: 'Only one skill with an MCP tool is allowed per pack.',
-                    });
-                }
-            }
         }),
         mcpServers: z
             .array(mcpServerSchema)
