@@ -14,7 +14,7 @@ Agent [skills][skills] can be provided with a set of tools, which the LLM can ch
 
 ## Pack tools
 
-One of the basic building blocks of a Pack is a formula. Like an Excel formula, it takes a set of inputs and calculates an output. These formulas can also make network requests, making them a way to fetch and send data to external APIs or servers. You can read more about them in the [Formulas guide][formulas].
+One of the basic building blocks of a Pack is a formula. Like an Excel formula, it takes a set of inputs and calculates an output. These formulas can also make network requests, enabling them to fetch and send data to external APIs or servers. You can read more about them in the [Formulas guide][formulas].
 
 
 ### All formulas
@@ -112,7 +112,7 @@ pack.addSyncTable({
 
 ## Screen annotation tools
 
-These tools allow the LLM to annotate text in the user"s doc or on the user"s screen, providing additional information, suggested changes, etc.
+These tools allow the LLM to annotate text in the user's doc or on the user's screen, providing additional information, suggested changes, etc.
 
 ### Rewrites
 
@@ -173,7 +173,7 @@ While the LLM can fill in these inputs on its own, you may want to suggest a spe
 
 ## MCP Tools
 
-Agents that connect to an MCP can use any of the tools provided by it.
+Agents that connect to an MCP can use any of the tools it provides.
 
 ```ts
 pack.addSkill({
@@ -188,7 +188,7 @@ pack.addMCPServer({
 });
 ```
 
-Learn more about connect to an MCP server in the [MCP guide][mcp].
+Learn more about connecting to an MCP server in the [MCP guide][mcp].
 
 [skills]: ./skills.md
 [formulas]: ../../guides/blocks/formulas.md
