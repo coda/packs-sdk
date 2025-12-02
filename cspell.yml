@@ -29,6 +29,7 @@ words:
   # Other
   - autocompletes
   - automations
+  - datasource
   - embeddable
   - objs
   - precanned
