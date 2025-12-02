@@ -123,7 +123,7 @@
     "typedoc-plugin-markdown": "4.9.0"
   },
   "lint-staged": {
-    "*.{css,json,md,ts}": [
+    "*.{css,json,ts}": [
       "prettier --write"
     ]
   },
