@@ -7,6 +7,7 @@ description: Sample code for agents running on {{ custom.agent_product_name }}.
 
 The code samples below show various ways you can build agents and the features they can use.
 
+
 ## 💵 Currency converter
 
 Converts an amount of money from one currency to another, using the [ExchangeRate API](https://www.exchangerate-api.com/) to get the latest exchange rate. Has a skill that looks for placeholders in their writing and fills them in automatically.
@@ -14,6 +15,7 @@ Converts an amount of money from one currency to another, using the [ExchangeRat
 ```ts
 --8<-- "samples/packs/agents/currency.ts"
 ```
+
 
 ## 💎 Google Gemini
 
@@ -25,6 +27,7 @@ This pattern can be helpful if you want to develop an agent on your own infrastr
 --8<-- "samples/packs/agents/gemini.ts"
 ```
 
+
 ## ✅ Todoist
 
 An agent that allows you to work with your tasks in the app Todoist. It uses the Todoist MCP server to perform CRUD operations, and the REST API to index tasks into the knowledge layer for semantic search.
@@ -32,6 +35,7 @@ An agent that allows you to work with your tasks in the app Todoist. It uses the
 ```ts
 --8<-- "samples/packs/agents/todoist.ts"
 ```
+
 
 ## 🅰️ Gen Alpha
 
@@ -41,6 +45,7 @@ An agent that suggests ways to incorporate more Gen Alpha slang into the user's 
 --8<-- "samples/packs/agents/gen_alpha.ts"
 ```
 
+
 ## 🧙 Gandalf
 
 This example shows how you can override the `defaultChat` skill to build custom routing between the other skills in your Pack.
@@ -48,6 +53,7 @@ This example shows how you can override the `defaultChat` skill to build custom 
 ```ts
 --8<-- "samples/packs/agents/gandalf.ts"
 ```
+
 
 ## 🪙 Coin flip
 

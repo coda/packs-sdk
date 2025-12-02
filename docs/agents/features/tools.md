@@ -44,6 +44,7 @@ pack.addFormula({
 });
 ```
 
+
 ### Specific formulas
 
 You can limit which formulas the skill has access to by specifying the `formulas` field of the tool. This can be useful when you want to focus the LLM on a specific set of tools, as too many tool options can lead to worse results.
@@ -54,17 +55,21 @@ pack.addSkill({
   tools: [
     {
       type: coda.ToolType.Pack,
-      formulas: [{ formulaName: "GCD" }],
-     },
+      formulas: [
+        { formulaName: "GCD" },
+      ],
+    },
   ],
 });
 ```
+
 
 ### Actions
 
 Formulas that have side effects (e.g., create or update records in an API) should be annotated as actions (`isAction: true`). Unlike regular formulas, action formulas require confirmation before they are run. Learn more in the [Actions guide][actions].
 
 <img src="../../../images/agent_action_confirmation.png" srcset="../../../images/agent_action_confirmation_2x.png 2x" alt="A screenshot of the action confirmation UX." class="screenshot">
+
 
 ## Knowledge
 
@@ -83,6 +88,7 @@ Agents can add knowledge by including a sync table with some special properties 
 
     The value of other properties in the schema can’t be accessed.
 
+
 ### Pack knowledge
 
 When you specify the knowledge source type as `Pack`, you give your skill access to all of the indexed knowledge across all sync tables in the same Pack.
@@ -95,7 +101,7 @@ pack.addSkill({
     {
       type: coda.ToolType.Knowledge,
       source: { type: coda.KnowledgeToolSourceType.Pack },
-     },
+    },
   ],
 });
 
@@ -110,9 +116,11 @@ pack.addSyncTable({
 });
 ```
 
+
 ## Screen annotation tools
 
 These tools allow the LLM to annotate text in the user's doc or on the user's screen, providing additional information, suggested changes, etc.
+
 
 ### Rewrites
 
@@ -133,7 +141,7 @@ pack.addSkill({
     {
       type: coda.ToolType.ScreenAnnotation,
       annotation: { type: coda.ScreenAnnotationType.Rewrite },
-     },
+    },
   ],
 });
 ```
@@ -151,7 +159,7 @@ Under the hood, the rewrite tool has the following input format:
     "replacementText": "<suggested text>",
     "explanation": "<why the change matters>",
     "paragraphId": "<id of paragraph containing original text>"
-   }
+  }
 ]
 ```
 
@@ -171,6 +179,7 @@ While the LLM can fill in these inputs on its own, you may want to suggest a spe
     Only pass in one rewrite per paragraph, combining all the changes.
     ```
 
+
 ## MCP Tools
 
 Agents that connect to an MCP can use any of the tools it provides.
@@ -179,7 +188,9 @@ Agents that connect to an MCP can use any of the tools it provides.
 pack.addSkill({
   name: "RandomIcon",
   // ...
-  tools: [{ type: coda.ToolType.MCP }],
+  tools: [
+    { type: coda.ToolType.MCP },
+  ],
 });
 
 pack.addMCPServer({
@@ -189,6 +200,7 @@ pack.addMCPServer({
 ```
 
 Learn more about connecting to an MCP server in the [MCP guide][mcp].
+
 
 [skills]: ./skills.md
 [formulas]: ../../guides/blocks/formulas.md
