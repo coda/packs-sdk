@@ -11,9 +11,11 @@ Agent [skills][skills] can be provided with a set of tools, which the LLM can ch
 - `Knowledge` - Allow the LLM to query previously indexed records from the knowledge layer.
 - `ScreenAnnotation` - Allow the LLM to draw on the user’s doc or screen.
 
+
 ## Pack tools
 
 One of the basic building blocks of a Pack is a formula. Like an Excel formula, it takes a set of inputs and calculates an output. These formulas can also make network requests, making them a way to fetch and send data to external APIs or servers. You can read more about them in the [Formulas guide][formulas].
+
 
 ### All formulas
 
@@ -21,23 +23,23 @@ By default, a Pack tool includes all the formulas in that Pack.
 
 ```ts
 pack.addSkill({
-  name: 'Calculator',
+  name: "Calculator",
   // ...
   tools: [
     // All the formulas in this Pack.
-    {type: coda.ToolType.Pack},
+    { type: coda.ToolType.Pack },
   ],
 });
 
 pack.addFormula({
-  name: 'GCD',
-  description: 'Calculates the greatest common divisor for a set of numbers.',
+  name: "GCD",
+  description: "Calculates the greatest common divisor for a set of numbers.",
   // ...
 });
 
 pack.addFormula({
-  name: 'LCM',
-  description: 'Calculates the least common multiple for a set of numbers.',
+  name: "LCM",
+  description: "Calculates the least common multiple for a set of numbers.",
   // ...
 });
 ```
@@ -52,8 +54,8 @@ pack.addSkill({
   tools: [
     {
       type: coda.ToolType.Pack,
-      formulas: [{formulaName: 'GCD'}],
-    },
+      formulas: [{ formulaName: "GCD" }],
+     },
   ],
 });
 ```
@@ -87,30 +89,30 @@ When you specify the knowledge source type as `Pack`, you give your skill access
 
 ```ts
 pack.addSkill({
-  name: 'TodoList',
+  name: "TodoList",
   // ...
   tools: [
     {
       type: coda.ToolType.Knowledge,
-      source: {type: coda.KnowledgeToolSourceType.Pack},
-    },
+      source: { type: coda.KnowledgeToolSourceType.Pack },
+     },
   ],
 });
 
 pack.addSyncTable({
-  name: 'Projects',
+  name: "Projects",
   // ...
 });
 
 pack.addSyncTable({
-  name: 'Tasks',
+  name: "Tasks",
   // ...
 });
 ```
 
 ## Screen annotation tools
 
-These tools allow the LLM to annotate text in the user's doc or on the user's screen, providing additional information, suggested changes, etc.
+These tools allow the LLM to annotate text in the user"s doc or on the user"s screen, providing additional information, suggested changes, etc.
 
 ### Rewrites
 
@@ -118,9 +120,9 @@ This tool allows your agents to suggest changes to the user’s writing, just li
 
 ```ts
 pack.addSkill({
-  name: 'SoundLikeYoda',
-  displayName: 'Sound like Yoda',
-  description: 'Make your text sound like Yoda from Star Wars.',
+  name: "SoundLikeYoda",
+  displayName: "Sound like Yoda",
+  description: "Make your text sound like Yoda from Star Wars.",
   prompt: `
     Suggest changes to the writing to make it sound like Yoda from Star Wars.
     Use the Rewrite tool to make those suggestions.
@@ -130,8 +132,8 @@ pack.addSkill({
   tools: [
     {
       type: coda.ToolType.ScreenAnnotation,
-      annotation: {type: coda.ScreenAnnotationType.Rewrite},
-    },
+      annotation: { type: coda.ScreenAnnotationType.Rewrite },
+     },
   ],
 });
 ```
@@ -149,7 +151,7 @@ Under the hood, the rewrite tool has the following input format:
     "replacementText": "<suggested text>",
     "explanation": "<why the change matters>",
     "paragraphId": "<id of paragraph containing original text>"
-  }
+   }
 ]
 ```
 
@@ -175,14 +177,14 @@ Agents that connect to an MCP can use any of the tools provided by it.
 
 ```ts
 pack.addSkill({
-  name: 'RandomIcon',
+  name: "RandomIcon",
   // ...
-  tools: [{type: coda.ToolType.MCP}],
+  tools: [{ type: coda.ToolType.MCP }],
 });
 
 pack.addMCPServer({
-  name: 'Icons8',
-  endpointUrl: 'https://mcp.icons8.com/mcp/',
+  name: "Icons8",
+  endpointUrl: "https://mcp.icons8.com/mcp/",
 });
 ```
 

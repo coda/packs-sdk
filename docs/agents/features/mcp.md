@@ -1,6 +1,7 @@
 ---
 nav: MCP
 description: Learn how to connect your agent to a hosted MCP server.
+cSpell:words: Streamable
 ---
 
 # Connect to an MCP server
@@ -11,14 +12,15 @@ Superhuman Go agents can connect to MCP servers, allowing them to take advantage
 
 ```ts
 pack.addMCPServer({
-  name: 'Icons8',
-  endpointUrl: 'https://mcp.icons8.com/mcp/',
+  name: "Icons8",
+  endpointUrl: "https://mcp.icons8.com/mcp/",
 });
 ```
 
 !!! warning "Only one MCP server per-agent"
 
     An agent is limited to only connecting to a single MCP server. The platform expects each agent to only connect to a single external application, and users wishing to work across multiple applications would do so by installing multiple agents.
+
 
 ## Compatibility
 
@@ -45,6 +47,7 @@ pack.addMCPServer({
 pack.addNetworkDomain("icons8.com");
 ```
 
+
 ## Authentication
 
 Requests to MCP servers use the same [authentication system][authentication] as the rest of the platform. The type of authentication must be declared in code, and any client credentials uploaded in the **Settings** screen of the Pack Studio.
@@ -70,9 +73,11 @@ Many MCP servers do not document the type of authentication required or how to r
 
     If possible, configure the agent's authentication to support both the MCP server and the app's REST API (if it has one). A Pack can only include a single type of authentication, and advanced agent features may require using the app's REST API to implement them.
 
+
 ## User confirmation for actions
 
 Superhuman Go agents prompt the user for confirmation before performing actions that mutate records or have side effects. An MCP tool will be considered such an action if the `readOnlyHint` annotation on the tool is any value other than `true`. See the [`ToolAnnotations`][mcp_tool_annotations] type in the MCP specification for more information.
+
 
 [mcp]: https://modelcontextprotocol.io/
 [rfc9728]: https://datatracker.ietf.org/doc/html/rfc9728
