@@ -11,11 +11,9 @@ Agent [skills][skills] can be provided with a set of tools, which the LLM can ch
 - `Knowledge` - Allow the LLM to query previously indexed records from the knowledge layer.
 - `ScreenAnnotation` - Allow the LLM to draw on the user’s doc or screen.
 
-
 ## Pack tools
 
 One of the basic building blocks of a Pack is a formula. Like an Excel formula, it takes a set of inputs and calculates an output. These formulas can also make network requests, making them a way to fetch and send data to external APIs or servers. You can read more about them in the [Formulas guide][formulas].
-
 
 ### All formulas
 
@@ -23,27 +21,26 @@ By default, a Pack tool includes all the formulas in that Pack.
 
 ```ts
 pack.addSkill({
-  name: "Calculator",
+  name: 'Calculator',
   // ...
   tools: [
     // All the formulas in this Pack.
-    { type: coda.ToolType.Pack },
+    {type: coda.ToolType.Pack},
   ],
 });
 
 pack.addFormula({
-  name: "GCD",
-  description: "Calculates the greatest common divisor for a set of numbers.",
+  name: 'GCD',
+  description: 'Calculates the greatest common divisor for a set of numbers.',
   // ...
 });
 
 pack.addFormula({
-  name: "LCM",
-  description: "Calculates the least common multiple for a set of numbers.",
+  name: 'LCM',
+  description: 'Calculates the least common multiple for a set of numbers.',
   // ...
 });
 ```
-
 
 ### Specific formulas
 
@@ -55,14 +52,11 @@ pack.addSkill({
   tools: [
     {
       type: coda.ToolType.Pack,
-      formulas: [
-        { formulaName: "GCD" },
-      ],
+      formulas: [{formulaName: 'GCD'}],
     },
   ],
 });
 ```
-
 
 ### Actions
 
@@ -70,13 +64,11 @@ Formulas that have side effects (e.g., create or update records in an API) shoul
 
 <img src="../../../images/agent_action_confirmation.png" srcset="../../../images/agent_action_confirmation_2x.png 2x" alt="A screenshot of the action confirmation UX." class="screenshot">
 
-
 ## Knowledge
 
 Agent skills can reference previously indexed knowledge, enabling fast, accurate retrieval of relevant information. It’s stored in our knowledge layer, a vector database with permission-aware retrieval. It enables retrieval-augmented generation (RAG), enabling the LLM to work with private data without being trained on it.
 
 Agents can add knowledge by including a sync table with some special properties set. Refer to the [Indexing guide][indexing] guide for more information on how to set up your agent to add knowledge to the index.
-
 
 !!! warning "Limited information available to the LLM"
 
@@ -89,39 +81,36 @@ Agents can add knowledge by including a sync table with some special properties 
 
     The value of other properties in the schema can’t be accessed.
 
-
 ### Pack knowledge
 
 When you specify the knowledge source type as `Pack`, you give your skill access to all of the indexed knowledge across all sync tables in the same Pack.
 
 ```ts
 pack.addSkill({
-  name: "TodoList",
+  name: 'TodoList',
   // ...
   tools: [
     {
       type: coda.ToolType.Knowledge,
-      source: { type: coda.KnowledgeToolSourceType.Pack },
+      source: {type: coda.KnowledgeToolSourceType.Pack},
     },
   ],
 });
 
 pack.addSyncTable({
-  name: "Projects",
+  name: 'Projects',
   // ...
 });
 
 pack.addSyncTable({
-  name: "Tasks",
+  name: 'Tasks',
   // ...
 });
 ```
 
-
 ## Screen annotation tools
 
 These tools allow the LLM to annotate text in the user's doc or on the user's screen, providing additional information, suggested changes, etc.
-
 
 ### Rewrites
 
@@ -129,9 +118,9 @@ This tool allows your agents to suggest changes to the user’s writing, just li
 
 ```ts
 pack.addSkill({
-  name: "SoundLikeYoda",
-  displayName: "Sound like Yoda",
-  description: "Make your text sound like Yoda from Star Wars.",
+  name: 'SoundLikeYoda',
+  displayName: 'Sound like Yoda',
+  description: 'Make your text sound like Yoda from Star Wars.',
   prompt: `
     Suggest changes to the writing to make it sound like Yoda from Star Wars.
     Use the Rewrite tool to make those suggestions.
@@ -141,7 +130,7 @@ pack.addSkill({
   tools: [
     {
       type: coda.ToolType.ScreenAnnotation,
-      annotation: { type: coda.ScreenAnnotationType.Rewrite },
+      annotation: {type: coda.ScreenAnnotationType.Rewrite},
     },
   ],
 });
@@ -166,7 +155,6 @@ Under the hood, the rewrite tool has the following input format:
 
 While the LLM can fill in these inputs on its own, you may want to suggest a specific format for the explanation and related details.
 
-
 !!! info "Multiple calls or rewrites for the same paragraph not supported"
 
     If your agent calls the suggestion tool more than once, only the last call will be used. It’s recommended to add language to your prompt that encourages the LLM to call it only once.
@@ -181,8 +169,27 @@ While the LLM can fill in these inputs on its own, you may want to suggest a spe
     Only pass in one rewrite per paragraph, combining all the changes.
     ```
 
+## MCP Tools
+
+Agents that connect to an MCP can use any of the tools provided by it.
+
+```ts
+pack.addSkill({
+  name: 'RandomIcon',
+  // ...
+  tools: [{type: coda.ToolType.MCP}],
+});
+
+pack.addMCPServer({
+  name: 'Icons8',
+  endpointUrl: 'https://mcp.icons8.com/mcp/',
+});
+```
+
+Learn more about connect to an MCP server in the [MCP guide][mcp].
 
 [skills]: ./skills.md
 [formulas]: ../../guides/blocks/formulas.md
 [actions]: ../../guides/blocks/actions.md
 [indexing]: ../indexing/index.md
+[mcp]: ./mcp.md
