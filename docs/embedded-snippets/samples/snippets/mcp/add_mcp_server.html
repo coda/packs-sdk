@@ -16,7 +16,7 @@
 
       require(['vs/editor/editor.main'], function () {
         var editor = monaco.editor.create(document.getElementById('container'), {
-          value: "pack.addMCPServer({\n  name: \"${1:Example}\",\n  endpointUrl: \"${2:https://example.com/mcp}\",\n});",
+          value: "pack.addMCPServer({\n  name: \"${1:MyMCPServer}\",\n  endpointUrl: \"${2:https://my-mcp-server.com/mcp}\",\n});",
           language: 'javascript',
           minimap: {enabled: false},
           readOnly: true,

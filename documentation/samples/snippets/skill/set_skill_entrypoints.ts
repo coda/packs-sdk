@@ -5,5 +5,5 @@ const pack = coda.newPack();
 // BEGIN
 
 pack.setSkillEntrypoints({
-  defaultChat: { skillName: "${1:SkillIdentifier}" },
+  defaultChat: { skillName: "${1:MySkill}" },
 });

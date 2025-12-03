@@ -290,19 +290,19 @@
   "addSkill": {
     "prefix": "/addSkill",
     "description": "Adds a skill to guide the LLM.",
-    "body": "pack.addSkill({\n  // Unique identifier, internal only.\n  name: \"${1:SkillIdentifier}\",\n\n  // User-visible display name (shown on the agent listing).\n  displayName: \"${2:Skill display name}\",\n\n  // Description of the skill. Used for routing and may be user-visible.\n  description: \"${3:Describe the skill.}\",\n\n  // A prompt that instructs the LLM how to perform the task, internal-only.\n  prompt: \"${4:Explain the steps the model should follow.}\",\n\n  // An optional set of tools the LLM can leverage.\n  tools: [],\n});",
+    "body": "pack.addSkill({\n  name: \"${1:MySkill}\",\n  displayName: \"${2:My skill}\",\n  description: \"${3:My skill description.}\",\n  prompt: \"${4:My prompt}\",\n  tools: [\n    // TODO: Add tools.\n  ],\n});",
     "scope": "javascript,typescript"
   },
   "setSkillEntrypoints": {
     "prefix": "/setSkillEntrypoints",
     "description": "Sets the entrypoints for skills in the Pack.",
-    "body": "pack.setSkillEntrypoints({\n  defaultChat: { skillName: \"${1:SkillIdentifier}\" },\n});",
+    "body": "pack.setSkillEntrypoints({\n  defaultChat: { skillName: \"${1:MySkill}\" },\n});",
     "scope": "javascript,typescript"
   },
   "addMcpServer": {
     "prefix": "/addMcpServer",
     "description": "Adds an MCP server.",
-    "body": "pack.addMCPServer({\n  name: \"${1:Example}\",\n  endpointUrl: \"${2:https://example.com/mcp}\",\n});",
+    "body": "pack.addMCPServer({\n  name: \"${1:MyMCPServer}\",\n  endpointUrl: \"${2:https://my-mcp-server.com/mcp}\",\n});",
     "scope": "javascript,typescript"
   }
 }

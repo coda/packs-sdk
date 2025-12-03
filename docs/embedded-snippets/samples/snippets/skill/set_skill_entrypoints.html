@@ -16,7 +16,7 @@
 
       require(['vs/editor/editor.main'], function () {
         var editor = monaco.editor.create(document.getElementById('container'), {
-          value: "pack.setSkillEntrypoints({\n  defaultChat: { skillName: \"${1:SkillIdentifier}\" },\n});",
+          value: "pack.setSkillEntrypoints({\n  defaultChat: { skillName: \"${1:MySkill}\" },\n});",
           language: 'javascript',
           minimap: {enabled: false},
           readOnly: true,

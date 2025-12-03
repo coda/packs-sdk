@@ -5,6 +5,6 @@ const pack = coda.newPack();
 // BEGIN
 
 pack.addMCPServer({
-  name: "${1:Example}",
-  endpointUrl: "${2:https://example.com/mcp}",
+  name: "${1:MyMCPServer}",
+  endpointUrl: "${2:https://my-mcp-server.com/mcp}",
 });
