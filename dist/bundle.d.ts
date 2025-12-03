@@ -291,11 +291,35 @@ export interface ParamDef<T extends UnionType> {
 	 * @hidden
 	 */
 	allowManualInput?: boolean;
-	/** @hidden */
+	/**
+	 * Enables crawling for this parameter, where it's values are populated from the results of another sync table.
+	 * Crawling can simplify the user setup when a sync table has a required parameter that can be sourced from another
+	 * sync.
+	 *
+	 * Crawling is only implemented for sync tables and only during indexing in Superhuman Go.
+	 *
+	 * @example
+	 * ```ts
+	 * makeParameter({
+	 *   type: ParameterType.String,
+	 *   name: "project",
+	 *   description: "The ID of the project containing the tasks."",
+	 *   // Use the project IDs that come from the ID column in the Projects table.
+	 *   crawlStrategy: {
+	 *     parentTable: {
+	 *       tableName: "Projects",
+	 *       propertyKey: "id",
+	 *     },
+	 *   },
+	 * }),
+	 * ```
+	 *
+	 * @see [Crawling guide](https://coda.io/packs/build/latest/agents/indexing/crawling/)
+	 */
 	crawlStrategy?: CrawlStrategy;
 	/**
 	 * Whether this parameter is compatible with incremental sync.
-	 * If not, it will be hidden from crawl setup UIs.
+	 * If not, it will be hidden from agent setup UI.
 	 */
 	/** @hidden */
 	supportsIncrementalSync?: boolean;
@@ -334,18 +358,43 @@ export type ParamValues<ParamDefsT extends ParamDefs> = {
  * The type of values that are allowable to be used as a {@link ParamDef.suggestedValue} for a parameter.
  */
 export type SuggestedValueType<T extends UnionType> = T extends ArrayType<Type.date> ? TypeOfMap<T> | PrecannedDateRange : TypeOfMap<T>;
-/** @hidden */
+/**
+ * Defines how to crawl a parameter, where it's values are populated from the results of another sync table.
+ *
+ * @example
+ * ```ts
+ * {
+ *   parentTable: {
+ *     tableName: "Projects",
+ *     propertyKey: "id",
+ *   },
+ * },
+ * ```
+ *
+ * @see {@link ParamDef#crawlStrategy}
+ */
 export interface CrawlStrategy {
+	/**
+	 * Information about the parent table and column to use to source the values for this parameter when crawling.
+	 */
 	parentTable?: SyncTableRelation;
 }
 /**
  * A pointer to a particular property in another sync table.
  */
 export interface SyncTableRelation {
+	/**
+	 * The name of the sync table being referenced.
+	 *
+	 * Note: This is the value of the `name` field of the table, not the `identityName` field.
+	 */
 	tableName: string;
+	/**
+	 * The name of the property in the sync table being referenced.
+	 */
 	propertyKey: string;
 	/**
-	 * Indiciates that permissions should be inherited from this relation using the propertyKey as the item id
+	 * Indicates that permissions should be inherited from this relation using the propertyKey as the item id
 	 *
 	 * @deprecated use `ParentDefinition` instead
 	 */
@@ -764,7 +813,9 @@ export interface SyncFull<ContinuationT = Continuation> extends SyncBase {
 	 * value returned in the `continuation` property of result of the prior sync.
 	 */
 	continuation?: ContinuationT;
-	/** @hidden */
+	/**
+	 * The previous completion will not be populated during a full sync.
+	 */
 	previousCompletion?: never;
 }
 /**
@@ -776,7 +827,10 @@ export interface SyncIncremental<SyncContinuationT, CheckpointContinuationT> ext
 	 * value returned in the `continuation` property of result of the prior sync.
 	 */
 	continuation?: SyncContinuationT;
-	/** @hidden */
+	/**
+	 * The completion that was returned from the prior sync invocation. If this is present, use the inner continuation
+	 * to perform an incremental sync.
+	 */
 	previousCompletion: SyncCompletionMetadata<CheckpointContinuationT>;
 }
 /** Information about the current sync. */
@@ -832,43 +886,91 @@ export interface UpdateSync extends SyncBase {
  * @hidden
  */
 export type GetPermissionsSync = Sync;
-declare enum InvocationErrorType {
+/**
+ * The types of errors that can cause an invocation to fail.
+ */
+export declare enum InvocationErrorType {
+	/**
+	 * The execution took too long to complete, and timed out.
+	 */
 	Timeout = "Timeout",
+	/**
+	 * The fetcher response was too large.
+	 */
 	ResponseTooLarge = "ResponseTooLarge",
+	/**
+	 * The execution failed due to an uncaught, non-recoverable, 400+ HTTP response code.
+	 */
 	HttpStatusError = "HttpStatusError",
 	/**
-	 * Could mean 3rd party API rate limit or a rate limit imposed by Coda.
+	 * The execution failed due to rate limits being exceeded. The rate limit could come from an API being called or from
+	 * the platform itself.
 	 */
 	RateLimitExceeded = "RateLimitExceeded",
+	/**
+	 * An unknown error occurred.
+	 */
 	Unknown = "Unknown"
 }
 export interface BaseInvocationError {
 	type: InvocationErrorType;
 }
+/**
+ * An error for an execution that failed due to an uncaught, non-recoverable, 400+ HTTP response code.
+ */
 export type HttpStatusInvocationError = BaseInvocationError & {
 	type: InvocationErrorType.HttpStatusError;
 	statusCode: HttpStatusCode;
 };
+/**
+ * An error for an execution that failed due to rate limits being exceeded.
+ */
 export type RateLimitExceededInvocationError = BaseInvocationError & {
 	type: InvocationErrorType.RateLimitExceeded;
 };
+/**
+ * An error for an execution that took too long to complete, and timed out.
+ */
 export type TimeoutInvocationError = BaseInvocationError & {
 	type: InvocationErrorType.Timeout;
 };
+/**
+ * An error for an execution that failed due to the fetcher response that was too large.
+ */
 export type ResponseTooLargeInvocationError = BaseInvocationError & {
 	type: InvocationErrorType.ResponseTooLarge;
 };
+/**
+ * An error for an execution that failed due to an unknown reason.
+ */
 export type UnknownInvocationError = BaseInvocationError & {
 	type: InvocationErrorType.Unknown;
 };
+/**
+ * @expand
+ */
 export type InvocationError = HttpStatusInvocationError | RateLimitExceededInvocationError | TimeoutInvocationError | ResponseTooLargeInvocationError | UnknownInvocationError;
-declare enum InvocationSource {
+/**
+ * The source applications that can invoke a Pack.
+ */
+export declare enum InvocationSource {
 	/**
 	 * @deprecated Brain is no longer use, it was replaced by Go.
+	 * @hidden
 	 */
 	Brain = "Brain",
+	/**
+	 * A Coda doc.
+	 */
 	Doc = "Doc",
+	/**
+	 * A Superhuman Go agent.
+	 */
 	Go = "Go",
+	/**
+	 * Internal use only.
+	 * @hidden
+	 */
 	NativeIntegration = "NativeIntegration"
 }
 /**
@@ -876,13 +978,7 @@ declare enum InvocationSource {
  */
 export interface InvocationLocation {
 	/**
-	 * What part of the product is invoking this formula? Certain pack functionality
-	 * may not be necessary (or feasible) in certain contexts.
-	 *
-	 * TODO(patrick): Make this non-optional after implementing support in Coda.
-	 *
-	 * TODO(patrick): Unhide this
-	 * @hidden
+	 * The source application that invoked the Pack. Allows the Pack to adjust it's functionality based on the context.
 	 */
 	source?: InvocationSource;
 	/** The base URL of the Coda environment executing this formula. Only for Coda internal use. */
@@ -949,11 +1045,9 @@ export interface ExecutionContext {
 	 */
 	readonly executionId?: string;
 	/**
-	 * If this invocation is a retry, this will be populated with information about what went wrong
-	 * during the previous attempt.
-	 *
-	 * TODO(patrick): Unhide this
-	 * @hidden
+	 * If this invocation is a retry, this will be populated with information about what went wrong during the previous
+	 * attempt. If an error occurs while indexing a sync table, it will retried again later. This field is only applicable
+	 * for sync tables used within Superhuman Go agents.
 	 */
 	readonly previousAttemptError?: InvocationError;
 }
@@ -1109,28 +1203,37 @@ declare enum TableRole {
 	Users = "users",
 	GroupMembers = "groupMembers"
 }
-/** @hidden */
+/**
+ * Contains metadata for a completed sync.
+ */
 export type SyncCompletionMetadataResult<IncrementalContinuationT = Continuation> = SyncCompletionMetadata<IncrementalContinuationT> | SyncCompletionMetadataIncomplete;
-/** @hidden */
+/**
+ * Contains metadata for a successfully completed sync.
+ */
 export interface SyncCompletionMetadata<IncrementalContinuationT = Continuation> {
 	/**
 	 * For enabling incremental syncs. If your sync execution provides this, then Coda will provide it to the
 	 * next sync execution.
 	 */
 	incrementalContinuation: IncrementalContinuationT;
+	/**
+	 * Always `false` for completed syncs.
+	 */
 	hasIncompleteResults?: false;
 }
-/** @hidden */
+/**
+ * Contains metadata for a failed or incomplete sync.
+ */
 export interface SyncCompletionMetadataIncomplete {
 	/**
 	 * Returned by an incremental sync if the results are incomplete. Will be ignored during a full sync.
 	 *
 	 * This will trigger a full sync so that complete results can be obtained.
-	 *
-	 * TODO(sam): Unhide this
-	 * @hidden
 	 */
 	hasIncompleteResults: true;
+	/**
+	 * Not set for incomplete syncs.
+	 */
 	incrementalContinuation?: never;
 }
 /**
@@ -2084,9 +2187,11 @@ export declare enum IndexingStrategy {
 }
 /**
  * A list of properties that will be used to provide context when indexing a property for full-text search.
- * @hidden
  */
 export type ContextProperties = Array<PropertyIdentifier<string>>;
+/**
+ * A property to index, without any additional settings.
+ */
 export type BasicIndexedProperty = PropertyIdentifier<string>;
 /**
  * A property that will be used to filter the results of a search.
@@ -2103,7 +2208,6 @@ export type BasicIndexedProperty = PropertyIdentifier<string>;
  * an object with userEmailProperty or userIdProperty specified.
  *
  * For filtering purposes, number values will be rounded down to the nearest integer.
- * @hidden
  */
 export type FilterableProperty = PropertyIdentifier<string>;
 /**
@@ -2121,6 +2225,9 @@ export interface DetailedIndexedProperty {
 	 */
 	strategy: IndexingStrategy;
 }
+/**
+ * A property to index.
+ */
 export type IndexedProperty = BasicIndexedProperty | DetailedIndexedProperty;
 /**
  * Base definition for all index definitions.
@@ -2153,15 +2260,16 @@ export interface BaseIndexDefinition {
 	filterableProperties?: FilterableProperty[];
 }
 /**
- * Defines how to index custom objects for use with full-text indexing.
- * TODO(alexd): Unhide this
- * @hidden
+ * Defines how to index schemas for use with full-text indexing.
  */
 export interface CustomIndexDefinition extends BaseIndexDefinition {
 	/**
 	 * A list of properties from within {@link ObjectSchemaDefinition.properties} that should be indexed.
 	 */
 	properties: IndexedProperty[];
+	/**
+	 * The context properties to be used for indexing. If unspecified, intelligent defaults may be used.
+	 */
 	contextProperties?: ContextProperties;
 }
 declare enum ContentCategorizationType {
@@ -2210,7 +2318,6 @@ export interface CategorizationIndexDefinition extends BaseIndexDefinition {
 }
 /**
  * Defines how to index objects for use with full-text indexing.
- * @hidden
  */
 export type IndexDefinition = CustomIndexDefinition | CategorizationIndexDefinition;
 declare enum PermissionsBehavior {
@@ -2362,7 +2469,6 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 *
 	 * Must be a {@link ValueType.String} or {@link ValueType.Number} property with the
 	 * {@link ValueHintType.Date} or {@link ValueHintType.DateTime} hints
-	 * @hidden
 	 */
 	createdAtProperty?: PropertyIdentifier<K>;
 	/**
@@ -2371,7 +2477,6 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 *
 	 * Must be a {@link ValueType.String} property with the {@link ValueHintType.Email} hint or
 	 * a {@link ValueType.Object} with the {@link ValueHintType.Person} hint
-	 * @hidden
 	 */
 	createdByProperty?: PropertyIdentifier<K>;
 	/**
@@ -2380,7 +2485,6 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 *
 	 * Must be a {@link ValueType.String} or {@link ValueType.Number} property with the
 	 * {@link ValueHintType.Date} or {@link ValueHintType.DateTime} hints
-	 * @hidden
 	 */
 	modifiedAtProperty?: PropertyIdentifier<K>;
 	/**
@@ -2389,7 +2493,6 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 *
 	 * Must be a {@link ValueType.String} property with the {@link ValueHintType.Email} hint or
 	 * a {@link ValueType.Object} with the {@link ValueHintType.Person} hint
-	 * @hidden
 	 */
 	modifiedByProperty?: PropertyIdentifier<K>;
 	/**
@@ -2446,7 +2549,6 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	memberGroupIdProperty?: PropertyIdentifier<K>;
 	/**
 	 * Defines how to index objects for use with full-text indexing.
-	 * @hidden
 	 */
 	index?: IndexDefinition;
 	/**
@@ -3430,20 +3532,18 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
 	 */
 	continuation?: ContextT["sync"]["continuation"];
 	/**
-	 * Once there is no additional continuation returned from a pack sync formula, this may be returned instead, to give
-	 * metadata about the entirety of the sync execution.
+	 * Used to provide additional metadata at the end of a completed sync. It's primarily used to setup incremental sync.
 	 *
 	 * This is ignored if there is also a {@link continuation} on this object.
 	 *
-	 * TODO(patrick): Unhide this
-	 * @hidden
+	 * @see [Incremental sync guide](https://coda.io/packs/build/latest/agents/indexing/incremental/)
 	 */
 	completion?: SyncCompletionMetadataResult<NonNullable<ContextT["sync"]["previousCompletion"]>["incrementalContinuation"]>;
 	/**
-	 * Return the list of deleted item ids for incremental sync deletion.
+	 * The IDs of the rows that have been deleted, as discovered during an incremental sync. The IDs provided should match
+	 * the values in the {@link ObjectSchemaDefinition#idProperty} field of the schema.
 	 *
-	 * TODO(ebo): Unhide this
-	 * @hidden
+	 * @see [Incremental sync guide](https://coda.io/packs/build/latest/agents/indexing/incremental/#deleted-records)
 	 */
 	deletedRowIds?: string[];
 	/**
@@ -5336,8 +5436,7 @@ export interface RateLimits {
  */
 export type BasicPackDefinition = Omit<PackVersionDefinition, "version">;
 /**
- *  Default tool types supported by Coda Packs for skill definitions.
- * @hidden
+ * The types of tools that can be used in an agent skill.
  */
 export declare enum ToolType {
 	/**
@@ -5354,12 +5453,12 @@ export declare enum ToolType {
 	ScreenAnnotation = "ScreenAnnotation",
 	/**
 	 * Allows assistant messages to be used as tools.
-	 * @hidden
+	 * @internal
 	 */
 	AssistantMessage = "AssistantMessage",
 	/**
 	 * Allows reuse of the default tuned summarizer agent as a tool.
-	 * @hidden
+	 * @internal
 	 */
 	Summarizer = "Summarizer"
 }
@@ -5373,29 +5472,35 @@ export interface BaseTool<T extends string> {
 }
 /**
  * Tool that references formulas within a pack.
- * @hidden
  */
 export interface PackTool extends BaseTool<ToolType.Pack> {
 	/**
 	 * The ID of the pack to use as a tool, if referencing a different pack.
 	 * Omit this to reference the current pack.
+	 *
+	 * @hidden In development
 	 */
 	packId?: number;
 	/** The specific formulas to make available as tools. */
 	formulas?: Array<{
 		/** The name of the formula to use as a tool. */
 		formulaName: string;
-		/** Instructions for LLMs to use the formula. */
+		/**
+		 * Instructions for LLMs to use the formula.
+		 *
+		 * @deprecated Use {@link ParamDef#instructions}
+		 * @hidden Never launched.
+		 */
 		instructions?: string;
 	}>;
 }
 /**
  * The type of knowledge source to use.
- * @hidden
  */
 export declare enum KnowledgeToolSourceType {
 	/**
 	 * Use all knowledge from the pack.
+	 * @hidden @experimental
 	 */
 	Global = "Global",
 	/**
@@ -5408,40 +5513,44 @@ export declare enum KnowledgeToolSourceType {
  * @hidden
  */
 export interface BaseKnowledgeToolSource<T extends KnowledgeToolSourceType> {
+	/**
+	 * The type of knowledge source.
+	 */
 	type: T;
 }
 /**
  * Source for using knowledge from a specific pack.
- * @hidden
  */
 export interface PackKnowledgeToolSource extends BaseKnowledgeToolSource<KnowledgeToolSourceType.Pack> {
 	/**
 	 * The ID of the pack to use for knowledge, if referencing a different pack.
 	 * Omit this to reference the current pack.
+	 *
+	 * @hidden In development
 	 */
 	packId?: number;
 }
 /**
  * Source for using all knowledge.
- * @hidden
+ * @hidden In development
  */
 export interface GlobalKnowledgeToolSource extends BaseKnowledgeToolSource<KnowledgeToolSourceType.Global> {
 }
 /**
  * Union of all supported knowledge tool sources.
- * @hidden
  */
 export type KnowledgeToolSource = PackKnowledgeToolSource | GlobalKnowledgeToolSource;
 /**
  * Tool that provides access to ingested knowledge.
- * @hidden
  */
 export interface KnowledgeTool extends BaseTool<ToolType.Knowledge> {
+	/**
+	 * The source of the knowledge.
+	 */
 	source: KnowledgeToolSource;
 }
 /**
  * The type of screen annotation source to use.
- * @hidden
  */
 export declare enum ScreenAnnotationType {
 	/**
@@ -5450,6 +5559,7 @@ export declare enum ScreenAnnotationType {
 	Rewrite = "Rewrite",
 	/**
 	 * Use screen annotation for guide.
+	 * @hidden Internal only
 	 */
 	Guide = "Guide"
 }
@@ -5458,37 +5568,42 @@ export declare enum ScreenAnnotationType {
  * @hidden
  */
 export interface BaseScreenAnnotation<T extends ScreenAnnotationType> {
+	/**
+	 * The type of screen annotation.
+	 */
 	type: T;
 }
 /**
  * Annotation for screen suggestions.
- * @hidden
+ * @expand
  */
 export interface RewriteScreenAnnotation extends BaseScreenAnnotation<ScreenAnnotationType.Rewrite> {
 }
+/** @hidden Internal only */
 export interface GuideScreenAnnotation extends BaseScreenAnnotation<ScreenAnnotationType.Guide> {
 }
 /**
  * Union of all supported screen annotation types.
- * @hidden
  */
 export type ScreenAnnotation = RewriteScreenAnnotation | GuideScreenAnnotation;
 /**
  * Tool that provides access to screen annotation capabilities.
- * @hidden
  */
 export interface ScreenAnnotationTool extends BaseTool<ToolType.ScreenAnnotation> {
+	/**
+	 * Information about the type of annotation to use.
+	 */
 	annotation: ScreenAnnotation;
 }
 /**
  * Tool that provides access to assistant messages.
- * @hidden
+ * @hidden Internal only
  */
 export interface AssistantMessageTool extends BaseTool<ToolType.AssistantMessage> {
 }
 /**
  * Tool that provides access to summarization capabilities.
- * @hidden
+ * @hidden Internal only
  */
 export interface SummarizerTool extends BaseTool<ToolType.Summarizer> {
 }
@@ -5510,8 +5625,7 @@ export interface ToolMap {
  */
 export type Tool = ToolMap[keyof ToolMap];
 /**
- * Set of tools and prompts that defines a skill for this pack
- * @hidden
+ * A prompt and set of tools that defines a specific skill this agent provides.
  */
 export interface Skill {
 	/** Stable identifier for the skill. */
@@ -5522,12 +5636,11 @@ export interface Skill {
 	description: string;
 	/** The prompt/instructions that define the skill's behavior. */
 	prompt: string;
-	/** List of tools that this skill can use. This does NOT include pack calls by default. */
+	/** List of tools that this skill can use. This does not include pack formulas by default. */
 	tools: Tool[];
 }
 /**
  * Configuration for a skill entrypoint.
- * @hidden
  */
 export interface SkillEntrypointConfig {
 	/** The name of the skill to be invoked. */
@@ -5535,10 +5648,12 @@ export interface SkillEntrypointConfig {
 }
 /**
  * Entrypoints that skills can be invoked from.
- * @hidden
  */
 export interface SkillEntrypoints {
-	/** Skill to be invoked when the agent is clicked on in the bench for the first time. */
+	/**
+	 * Skill to be invoked when the agent is clicked on in the bench for the first time.
+	 * @hidden In development
+	 */
 	benchInitialization?: SkillEntrypointConfig;
 	/** Default skill to be invoked when chatting with the agent. */
 	defaultChat?: SkillEntrypointConfig;
@@ -5555,6 +5670,8 @@ export interface SkillEntrypoints {
  *   prompt: "Show me the status of all open support tickets"
  * });
  * ```
+ *
+ * @hidden In development
  */
 export interface SuggestedPrompt {
 	/** A unique identifier for this suggested prompt. This acts as a stable ID for the prompt. */
@@ -5620,12 +5737,10 @@ export interface PackVersionDefinition {
 	syncTables?: SyncTable[];
 	/**
 	 * Definitions of skills that can be executed within this pack.
-	 * @hidden
 	 */
 	skills?: Skill[];
 	/**
 	 * Mapping of skills to entrypoints that the pack agent can be invoked from.
-	 * @hidden
 	 */
 	skillEntrypoints?: SkillEntrypoints;
 	/**
@@ -5660,7 +5775,10 @@ export interface PackDefinition extends PackVersionDefinition {
 	 */
 	isSystem?: boolean;
 }
-declare enum HttpStatusCode {
+/**
+ * An enum of the HTTP status codes.
+ */
+export declare enum HttpStatusCode {
 	Ok = 200,
 	Created = 201,
 	Accepted = 202,
@@ -5716,12 +5834,10 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	syncTables: SyncTable[];
 	/**
 	 * See {@link PackVersionDefinition.skills}.
-	 * @hidden
 	 */
 	skills: Skill[];
 	/**
 	 * See {@link PackVersionDefinition.skillEntrypoints}.
-	 * @hidden
 	 */
 	skillEntrypoints?: SkillEntrypoints;
 	/**
@@ -5842,34 +5958,37 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 */
 	addColumnFormat(format: Format): this;
 	/**
-	 * Adds a skill definition to this pack.
+	 * Adds an agent skill definition to this pack.
 	 *
 	 * In the web editor, the `/Skill` shortcut will insert a snippet of a skeleton skill.
 	 *
 	 * @example
 	 * ```
 	 * pack.addSkill({
-	 *   name: 'MySkill',
-	 *   displayName: 'My Display Name',
-	 *   description: 'My description.',
-	 *   prompt: 'My prompt',
-	 *    tools: [{type: ToolType.Knowledge, source: {type: KnowledgeToolSourceType.Global}}]
+	 *   name: "MySkill",
+	 *   displayName: "My Display Name",
+	 *   description: "My description.",
+	 *   prompt: `My prompt.`,
+	 *   tools: [
+	 *     { type: coda.ToolType.Pack },
+	 *     {
+	 *       type: coda.ToolType.Knowledge,
+	 *       source: { type: coda.KnowledgeToolSourceType.Pack },
+	 *     },
+	 *   ],
 	 * });
 	 * ```
-	 * @hidden
 	 */
 	addSkill(skill: Skill): this;
 	/**
-	 * Sets the entrypoints that the pack agent can be invoked from.
+	 * Maps agent entrypoints to skills in the Pack.
 	 *
 	 * @example
 	 * ```
 	 * pack.setSkillEntrypoints({
-	 *   benchInitialization: {skillName: 'MySkill'},
-	 *   defaultChat: {skillName: 'MySkill'},
+	 *   defaultChat: { skillName: "MySkill" },
 	 * });
 	 * ```
-	 * @hidden
 	 */
 	setSkillEntrypoints(entrypoints: SkillEntrypoints): this;
 	/**

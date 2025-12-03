@@ -248,7 +248,6 @@ plugins:
           "reference/sdk/interfaces/core.StringEmbedSchema.md": "reference/sdk/core/interfaces/StringEmbedSchema.md"
           "reference/sdk/interfaces/core.StringTimeSchema.md": "reference/sdk/core/interfaces/StringTimeSchema.md"
           "reference/sdk/interfaces/core.StringWithOptionsSchema.md": "reference/sdk/core/interfaces/StringWithOptionsSchema.md"
-          "reference/sdk/interfaces/core.SuggestedPrompt.md": "reference/sdk/core/interfaces/SuggestedPrompt.md"
           "reference/sdk/interfaces/core.SyncBase.md": "reference/sdk/core/interfaces/SyncBase.md"
           "reference/sdk/interfaces/core.SyncExecutionContext.md": "reference/sdk/core/interfaces/SyncExecutionContext.md"
           "reference/sdk/interfaces/core.SyncFormulaDef.md": "reference/sdk/core/interfaces/SyncFormulaDef.md"

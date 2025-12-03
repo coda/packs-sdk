@@ -27,6 +27,20 @@ are called repeatedly until there is no continuation returned.
 
 ## Properties
 
+### completion?
+
+> `optional` **completion**: [`SyncCompletionMetadataResult`](../type-aliases/SyncCompletionMetadataResult.md)\<`NonNullable`\<`ContextT`\[`"sync"`\]\[`"previousCompletion"`\]\>\[`"incrementalContinuation"`\]\>
+
+Used to provide additional metadata at the end of a completed sync. It's primarily used to setup incremental sync.
+
+This is ignored if there is also a [continuation](#continuation) on this object.
+
+#### See
+
+[Incremental sync guide]({{ config.site_url }}agents/indexing/incremental/)
+
+***
+
 ### continuation?
 
 > `optional` **continuation**: `ContextT`\[`"sync"`\]\[`"continuation"`\]
@@ -34,6 +48,19 @@ are called repeatedly until there is no continuation returned.
 A marker indicating where the next sync formula invocation should pick up to get the next page of results.
 The contents of this object are entirely of your choosing. Sync formulas are called repeatedly
 until there is no continuation returned.
+
+***
+
+### deletedRowIds?
+
+> `optional` **deletedRowIds**: `string`[]
+
+The IDs of the rows that have been deleted, as discovered during an incremental sync. The IDs provided should match
+the values in the [ObjectSchemaDefinition#idProperty](ObjectSchemaDefinition.md#idproperty) field of the schema.
+
+#### See
+
+[Incremental sync guide]({{ config.site_url }}agents/indexing/incremental/#deleted-records)
 
 ***
 

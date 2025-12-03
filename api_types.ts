@@ -365,13 +365,12 @@ export interface ParamDef<T extends UnionType> {
   suggestedValue?: SuggestedValueType<T>;
 
   /**
-   * In ingestions, where we want to load *all* data available, the {@link ParamDef.suggestedValue}
-   * will not be ideal, as most use cases will prefer efficiency over completeness.
-   * Use this field to specify a default value for ingestions.
+   * The suggested value to be prepopulated for this parameter when used in an ingestion (sync table indexing).
+   * This value overrides {@link ParamDef.suggestedValue} if set.
    *
-   * @hidden
+   * Useful in situations where the existing suggested value is used to scope down the synced data to what would fit
+   * within Coda's row limits, but during indexing you'd want to include a larger scope of data.
    */
-  // TODO(patrick): Unhide this
   ingestionSuggestedValue?: SuggestedValueType<T>;
   /**
    * @deprecated Use {@link ParamDef.ingestionSuggestedValue} instead.
@@ -387,7 +386,7 @@ export interface ParamDef<T extends UnionType> {
    *
    * @hidden
    */
-  // TODO(patrick): Unhide this
+  // TODO(jonathan): Make this work in Coda docs too, then unhide.
   allowedPresetValues?: Array<SuggestedValueType<T>>;
 
   /**
@@ -404,16 +403,39 @@ export interface ParamDef<T extends UnionType> {
    *
    * @hidden
    */
-  // TODO(patrick): Unhide this
+  // TODO(jonathan): Either finish adding support or remove.
   allowManualInput?: boolean;
 
-  // TODO(patrick): Unhide this
-  /** @hidden */
+  /**
+   * Enables crawling for this parameter, where it's values are populated from the results of another sync table.
+   * Crawling can simplify the user setup when a sync table has a required parameter that can be sourced from another
+   * sync.
+   *
+   * Crawling is only implemented for sync tables and only during indexing in Superhuman Go.
+   *
+   * @example
+   * ```ts
+   * makeParameter({
+   *   type: ParameterType.String,
+   *   name: "project",
+   *   description: "The ID of the project containing the tasks."",
+   *   // Use the project IDs that come from the ID column in the Projects table.
+   *   crawlStrategy: {
+   *     parentTable: {
+   *       tableName: "Projects",
+   *       propertyKey: "id",
+   *     },
+   *   },
+   * }),
+   * ```
+   *
+   * @see [Crawling guide](https://coda.io/packs/build/latest/agents/indexing/crawling/)
+   */
   crawlStrategy?: CrawlStrategy;
 
   /**
    * Whether this parameter is compatible with incremental sync.
-   * If not, it will be hidden from crawl setup UIs.
+   * If not, it will be hidden from agent setup UI.
    */
   // TODO(ebo): Unhide this
   /** @hidden */
@@ -473,20 +495,46 @@ export type ParamValues<ParamDefsT extends ParamDefs> = {
 export type SuggestedValueType<T extends UnionType> =
   T extends ArrayType<Type.date> ? TypeOfMap<T> | PrecannedDateRange : TypeOfMap<T>;
 
-// TODO(patrick): Unhide this
-/** @hidden */
+/**
+ * Defines how to crawl a parameter, where it's values are populated from the results of another sync table.
+ *
+ * @example
+ * ```ts
+ * {
+ *   parentTable: {
+ *     tableName: "Projects",
+ *     propertyKey: "id",
+ *   },
+ * },
+ * ```
+ *
+ * @see {@link ParamDef#crawlStrategy}
+ */
 export interface CrawlStrategy {
+  /**
+   * Information about the parent table and column to use to source the values for this parameter when crawling.
+   */
   parentTable?: SyncTableRelation;
 }
 
 /**
  * A pointer to a particular property in another sync table.
  */
-interface SyncTableRelation {
-  tableName: string;
-  propertyKey: string;
+export interface SyncTableRelation {
   /**
-   * Indiciates that permissions should be inherited from this relation using the propertyKey as the item id
+   * The name of the sync table being referenced.
+   *
+   * Note: This is the value of the `name` field of the table, not the `identityName` field.
+   */
+  tableName: string;
+
+  /**
+   * The name of the property in the sync table being referenced.
+   */
+  propertyKey: string;
+
+  /**
+   * Indicates that permissions should be inherited from this relation using the propertyKey as the item id
    *
    * @deprecated use `ParentDefinition` instead
    */
@@ -917,7 +965,10 @@ export interface SyncFull<ContinuationT = Continuation> extends SyncBase {
    * value returned in the `continuation` property of result of the prior sync.
    */
   continuation?: ContinuationT;
-  /** @hidden */
+
+  /**
+   * The previous completion will not be populated during a full sync.
+   */
   previousCompletion?: never;
 }
 
@@ -930,7 +981,11 @@ export interface SyncIncremental<SyncContinuationT, CheckpointContinuationT> ext
    * value returned in the `continuation` property of result of the prior sync.
    */
   continuation?: SyncContinuationT;
-  /** @hidden */
+
+  /**
+   * The completion that was returned from the prior sync invocation. If this is present, use the inner continuation
+   * to perform an incremental sync.
+   */
   previousCompletion: SyncCompletionMetadata<CheckpointContinuationT>;
 }
 
@@ -1003,18 +1058,34 @@ export interface Logger {
   error(message: string, ...args: LoggerParamType[]): void;
 }
 
+/**
+ * The types of errors that can cause an invocation to fail.
+ */
 export enum InvocationErrorType {
+  /**
+   * The execution took too long to complete, and timed out.
+   */
   Timeout = 'Timeout',
 
+  /**
+   * The fetcher response was too large.
+   */
   ResponseTooLarge = 'ResponseTooLarge',
 
+  /**
+   * The execution failed due to an uncaught, non-recoverable, 400+ HTTP response code.
+   */
   HttpStatusError = 'HttpStatusError',
 
   /**
-   * Could mean 3rd party API rate limit or a rate limit imposed by Coda.
+   * The execution failed due to rate limits being exceeded. The rate limit could come from an API being called or from
+   * the platform itself.
    */
   RateLimitExceeded = 'RateLimitExceeded',
 
+  /**
+   * An unknown error occurred.
+   */
   Unknown = 'Unknown',
 }
 
@@ -1022,27 +1093,45 @@ interface BaseInvocationError {
   type: InvocationErrorType;
 }
 
+/**
+ * An error for an execution that failed due to an uncaught, non-recoverable, 400+ HTTP response code.
+ */
 export type HttpStatusInvocationError = BaseInvocationError & {
   type: InvocationErrorType.HttpStatusError;
   statusCode: HttpStatusCode;
 };
 
+/**
+ * An error for an execution that failed due to rate limits being exceeded.
+ */
 export type RateLimitExceededInvocationError = BaseInvocationError & {
   type: InvocationErrorType.RateLimitExceeded;
 };
 
+/**
+ * An error for an execution that took too long to complete, and timed out.
+ */
 export type TimeoutInvocationError = BaseInvocationError & {
   type: InvocationErrorType.Timeout;
 };
 
+/**
+ * An error for an execution that failed due to the fetcher response that was too large.
+ */
 export type ResponseTooLargeInvocationError = BaseInvocationError & {
   type: InvocationErrorType.ResponseTooLarge;
 };
 
+/**
+ * An error for an execution that failed due to an unknown reason.
+ */
 export type UnknownInvocationError = BaseInvocationError & {
   type: InvocationErrorType.Unknown;
 };
 
+/**
+ * @expand
+ */
 export type InvocationError =
   | HttpStatusInvocationError
   | RateLimitExceededInvocationError
@@ -1059,16 +1148,26 @@ type MissingInvocationErrorTypes = Exclude<InvocationErrorType, InvocationError[
 export type _ensureInvocationErrorEnumCompletion = Assert<MissingInvocationErrorTypes extends never ? true : false>;
 
 /**
- * TODO(patrick): Unhide this
- * @hidden
+ * The source applications that can invoke a Pack.
  */
 export enum InvocationSource {
   /**
    * @deprecated Brain is no longer use, it was replaced by Go.
+   * @hidden
    */
   Brain = 'Brain',
+  /**
+   * A Coda doc.
+   */
   Doc = 'Doc',
+  /**
+   * A Superhuman Go agent.
+   */
   Go = 'Go',
+  /**
+   * Internal use only.
+   * @hidden
+   */
   NativeIntegration = 'NativeIntegration',
 }
 
@@ -1076,14 +1175,9 @@ export enum InvocationSource {
  * Information about the Coda environment and doc this formula was invoked from, for Coda internal use.
  */
 export interface InvocationLocation {
+  // TODO(patrick): Make this non-optional after implementing support in Coda.
   /**
-   * What part of the product is invoking this formula? Certain pack functionality
-   * may not be necessary (or feasible) in certain contexts.
-   *
-   * TODO(patrick): Make this non-optional after implementing support in Coda.
-   *
-   * TODO(patrick): Unhide this
-   * @hidden
+   * The source application that invoked the Pack. Allows the Pack to adjust it's functionality based on the context.
    */
   source?: InvocationSource;
 
@@ -1155,11 +1249,9 @@ export interface ExecutionContext {
   readonly executionId?: string;
 
   /**
-   * If this invocation is a retry, this will be populated with information about what went wrong
-   * during the previous attempt.
-   *
-   * TODO(patrick): Unhide this
-   * @hidden
+   * If this invocation is a retry, this will be populated with information about what went wrong during the previous
+   * attempt. If an error occurs while indexing a sync table, it will retried again later. This field is only applicable
+   * for sync tables used within Superhuman Go agents.
    */
   readonly previousAttemptError?: InvocationError;
 }
@@ -1446,13 +1538,16 @@ export enum TableRole {
   GroupMembers = 'groupMembers',
 }
 
-// TODO(patrick): Unhide this
-/** @hidden */
+/**
+ * Contains metadata for a completed sync.
+ */
 export type SyncCompletionMetadataResult<IncrementalContinuationT = Continuation> =
   | SyncCompletionMetadata<IncrementalContinuationT>
   | SyncCompletionMetadataIncomplete;
 
-/** @hidden */
+/**
+ * Contains metadata for a successfully completed sync.
+ */
 export interface SyncCompletionMetadata<IncrementalContinuationT = Continuation> {
   /**
    * For enabling incremental syncs. If your sync execution provides this, then Coda will provide it to the
@@ -1460,20 +1555,25 @@ export interface SyncCompletionMetadata<IncrementalContinuationT = Continuation>
    */
   incrementalContinuation: IncrementalContinuationT;
 
+  /**
+   * Always `false` for completed syncs.
+   */
   hasIncompleteResults?: false;
 }
 
-/** @hidden */
+/**
+ * Contains metadata for a failed or incomplete sync.
+ */
 export interface SyncCompletionMetadataIncomplete {
   /**
    * Returned by an incremental sync if the results are incomplete. Will be ignored during a full sync.
    *
    * This will trigger a full sync so that complete results can be obtained.
-   *
-   * TODO(sam): Unhide this
-   * @hidden
    */
   hasIncompleteResults: true;
 
+  /**
+   * Not set for incomplete syncs.
+   */
   incrementalContinuation?: never;
 }

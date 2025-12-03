@@ -29,3 +29,11 @@ This will be removed in a future version of the SDK.
 > **protocolAndHost**: `string`
 
 The base URL of the Coda environment executing this formula. Only for Coda internal use.
+
+***
+
+### source?
+
+> `optional` **source**: [`InvocationSource`](../enumerations/InvocationSource.md)
+
+The source application that invoked the Pack. Allows the Pack to adjust it's functionality based on the context.

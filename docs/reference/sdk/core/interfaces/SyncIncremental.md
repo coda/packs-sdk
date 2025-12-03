@@ -59,6 +59,15 @@ The dynamic URL is likely necessary for determining which API resources to fetch
 
 ***
 
+### previousCompletion
+
+> **previousCompletion**: [`SyncCompletionMetadata`](SyncCompletionMetadata.md)\<`CheckpointContinuationT`\>
+
+The completion that was returned from the prior sync invocation. If this is present, use the inner continuation
+to perform an incremental sync.
+
+***
+
 ### schema?
 
 > `optional` **schema**: [`ArraySchema`](ArraySchema.md)\<[`Schema`](../type-aliases/Schema.md)\>

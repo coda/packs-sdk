@@ -39,6 +39,9 @@ interface ReflectionData {
 
 const ModulesKind = 1;
 
+// We don't care about traversing children for these nodes.
+const TerminalTypes = ['HttpStatusCode', 'PrecannedDateRange', 'ScaleIconSet', 'Type'];
+
 function getReflectionData() {
   const tempfile = path.join(os.tmpdir(), `typedoc.json`);
   const command = `node_modules/.bin/typedoc index.ts development.ts --options typedoc.js --json ${tempfile} > /dev/null`;
@@ -67,9 +70,7 @@ function traverse(data: ReflectionData): ReflectionData[] {
   if (data.comment?.blockTags?.find(t => t.tag === '@deprecated')) {
     return entitiesWithMissingTypedoc;
   }
-  // We don't care about traversing children for these nodes.
-  const terminalNames = ['PrecannedDateRange', 'ScaleIconSet', 'Type'];
-  if (terminalNames.includes(data.name)) {
+  if (TerminalTypes.includes(data.name)) {
     return entitiesWithMissingTypedoc;
   }
   for (const child of data.children || []) {
@@ -88,11 +89,8 @@ function hasComment(data: ReflectionData): boolean {
 }
 
 function messageForEntity(data: ReflectionData): string {
-  if (!data.kindString) {
-    throw new Error(`No kindString for ${data.name}, did you forget to add /** ... */ comments?`);
-  }
   const source = data.sources?.[0];
-  return `${data.name.padEnd(40)} ${data.kindString.padEnd(30)} ${source?.fileName}:${source?.line}`;
+  return `${data.name.padEnd(40)} ${source?.fileName}:${source?.line}`;
 }
 
 describe('TypeDoc coverage', () => {

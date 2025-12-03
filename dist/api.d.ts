@@ -649,20 +649,18 @@ export interface SyncFormulaResult<K extends string, L extends string, SchemaT e
      */
     continuation?: ContextT['sync']['continuation'];
     /**
-     * Once there is no additional continuation returned from a pack sync formula, this may be returned instead, to give
-     * metadata about the entirety of the sync execution.
+     * Used to provide additional metadata at the end of a completed sync. It's primarily used to setup incremental sync.
      *
      * This is ignored if there is also a {@link continuation} on this object.
      *
-     * TODO(patrick): Unhide this
-     * @hidden
+     * @see [Incremental sync guide](https://coda.io/packs/build/latest/agents/indexing/incremental/)
      */
     completion?: SyncCompletionMetadataResult<NonNullable<ContextT['sync']['previousCompletion']>['incrementalContinuation']>;
     /**
-     * Return the list of deleted item ids for incremental sync deletion.
+     * The IDs of the rows that have been deleted, as discovered during an incremental sync. The IDs provided should match
+     * the values in the {@link ObjectSchemaDefinition#idProperty} field of the schema.
      *
-     * TODO(ebo): Unhide this
-     * @hidden
+     * @see [Incremental sync guide](https://coda.io/packs/build/latest/agents/indexing/incremental/#deleted-records)
      */
     deletedRowIds?: string[];
     /**

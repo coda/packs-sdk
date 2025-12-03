@@ -77,6 +77,20 @@ replaced by the fetcher in secure way.
 
 ***
 
+### previousAttemptError?
+
+> `readonly` `optional` **previousAttemptError**: [`InvocationError`](../type-aliases/InvocationError.md)
+
+If this invocation is a retry, this will be populated with information about what went wrong during the previous
+attempt. If an error occurs while indexing a sync table, it will retried again later. This field is only applicable
+for sync tables used within Superhuman Go agents.
+
+#### Inherited from
+
+[`ExecutionContext`](ExecutionContext.md).[`previousAttemptError`](ExecutionContext.md#previousattempterror)
+
+***
+
 ### sync
 
 > `readonly` **sync**: [`UpdateSync`](UpdateSync.md)

@@ -43,6 +43,43 @@ If you have a hardcoded list of valid values, you would only need to use
 
 ***
 
+### crawlStrategy?
+
+> `optional` **crawlStrategy**: [`CrawlStrategy`](CrawlStrategy.md)
+
+Enables crawling for this parameter, where it's values are populated from the results of another sync table.
+Crawling can simplify the user setup when a sync table has a required parameter that can be sourced from another
+sync.
+
+Crawling is only implemented for sync tables and only during indexing in Superhuman Go.
+
+#### Example
+
+```ts
+makeParameter({
+  type: ParameterType.String,
+  name: "project",
+  description: "The ID of the project containing the tasks."",
+  // Use the project IDs that come from the ID column in the Projects table.
+  crawlStrategy: {
+    parentTable: {
+      tableName: "Projects",
+      propertyKey: "id",
+    },
+  },
+}),
+```
+
+#### See
+
+[Crawling guide]({{ config.site_url }}agents/indexing/crawling/)
+
+#### Inherited from
+
+[`ParamDef`](ParamDef.md).[`crawlStrategy`](ParamDef.md#crawlstrategy)
+
+***
+
 ### ~~defaultValue?~~
 
 > `optional` **defaultValue**: [`SuggestedValueType`](../type-aliases/SuggestedValueType.md)\<`T`\>
@@ -66,6 +103,22 @@ A brief description of what this parameter is used for, shown to the user when i
 #### Inherited from
 
 [`ParamDef`](ParamDef.md).[`description`](ParamDef.md#description)
+
+***
+
+### ingestionSuggestedValue?
+
+> `optional` **ingestionSuggestedValue**: [`SuggestedValueType`](../type-aliases/SuggestedValueType.md)\<`T`\>
+
+The suggested value to be prepopulated for this parameter when used in an ingestion (sync table indexing).
+This value overrides [ParamDef.suggestedValue](ParamDef.md#suggestedvalue) if set.
+
+Useful in situations where the existing suggested value is used to scope down the synced data to what would fit
+within Coda's row limits, but during indexing you'd want to include a larger scope of data.
+
+#### Inherited from
+
+[`ParamDef`](ParamDef.md).[`ingestionSuggestedValue`](ParamDef.md#ingestionsuggestedvalue)
 
 ***
 

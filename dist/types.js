@@ -220,8 +220,7 @@ var SyncInterval;
     SyncInterval["EveryTenMinutes"] = "EveryTenMinutes";
 })(SyncInterval || (exports.SyncInterval = SyncInterval = {}));
 /**
- *  Default tool types supported by Coda Packs for skill definitions.
- * @hidden
+ * The types of tools that can be used in an agent skill.
  */
 var ToolType;
 (function (ToolType) {
@@ -239,23 +238,23 @@ var ToolType;
     ToolType["ScreenAnnotation"] = "ScreenAnnotation";
     /**
      * Allows assistant messages to be used as tools.
-     * @hidden
+     * @internal
      */
     ToolType["AssistantMessage"] = "AssistantMessage";
     /**
      * Allows reuse of the default tuned summarizer agent as a tool.
-     * @hidden
+     * @internal
      */
     ToolType["Summarizer"] = "Summarizer";
 })(ToolType || (exports.ToolType = ToolType = {}));
 /**
  * The type of knowledge source to use.
- * @hidden
  */
 var KnowledgeToolSourceType;
 (function (KnowledgeToolSourceType) {
     /**
      * Use all knowledge from the pack.
+     * @hidden @experimental
      */
     KnowledgeToolSourceType["Global"] = "Global";
     /**
@@ -265,7 +264,6 @@ var KnowledgeToolSourceType;
 })(KnowledgeToolSourceType || (exports.KnowledgeToolSourceType = KnowledgeToolSourceType = {}));
 /**
  * The type of screen annotation source to use.
- * @hidden
  */
 var ScreenAnnotationType;
 (function (ScreenAnnotationType) {
@@ -275,9 +273,13 @@ var ScreenAnnotationType;
     ScreenAnnotationType["Rewrite"] = "Rewrite";
     /**
      * Use screen annotation for guide.
+     * @hidden Internal only
      */
     ScreenAnnotationType["Guide"] = "Guide";
 })(ScreenAnnotationType || (exports.ScreenAnnotationType = ScreenAnnotationType = {}));
+/**
+ * An enum of the HTTP status codes.
+ */
 var HttpStatusCode;
 (function (HttpStatusCode) {
     HttpStatusCode[HttpStatusCode["Ok"] = 200] = "Ok";

@@ -259,29 +259,55 @@ var PermissionSyncMode;
      */
     PermissionSyncMode["PermissionAware"] = "PermissionAware";
 })(PermissionSyncMode || (exports.PermissionSyncMode = PermissionSyncMode = {}));
+/**
+ * The types of errors that can cause an invocation to fail.
+ */
 var InvocationErrorType;
 (function (InvocationErrorType) {
+    /**
+     * The execution took too long to complete, and timed out.
+     */
     InvocationErrorType["Timeout"] = "Timeout";
+    /**
+     * The fetcher response was too large.
+     */
     InvocationErrorType["ResponseTooLarge"] = "ResponseTooLarge";
+    /**
+     * The execution failed due to an uncaught, non-recoverable, 400+ HTTP response code.
+     */
     InvocationErrorType["HttpStatusError"] = "HttpStatusError";
     /**
-     * Could mean 3rd party API rate limit or a rate limit imposed by Coda.
+     * The execution failed due to rate limits being exceeded. The rate limit could come from an API being called or from
+     * the platform itself.
      */
     InvocationErrorType["RateLimitExceeded"] = "RateLimitExceeded";
+    /**
+     * An unknown error occurred.
+     */
     InvocationErrorType["Unknown"] = "Unknown";
 })(InvocationErrorType || (exports.InvocationErrorType = InvocationErrorType = {}));
 /**
- * TODO(patrick): Unhide this
- * @hidden
+ * The source applications that can invoke a Pack.
  */
 var InvocationSource;
 (function (InvocationSource) {
     /**
      * @deprecated Brain is no longer use, it was replaced by Go.
+     * @hidden
      */
     InvocationSource["Brain"] = "Brain";
+    /**
+     * A Coda doc.
+     */
     InvocationSource["Doc"] = "Doc";
+    /**
+     * A Superhuman Go agent.
+     */
     InvocationSource["Go"] = "Go";
+    /**
+     * Internal use only.
+     * @hidden
+     */
     InvocationSource["NativeIntegration"] = "NativeIntegration";
 })(InvocationSource || (exports.InvocationSource = InvocationSource = {}));
 /**

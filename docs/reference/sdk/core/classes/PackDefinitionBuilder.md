@@ -97,6 +97,30 @@ See [PackVersionDefinition.networkDomains](../interfaces/PackVersionDefinition.m
 
 ***
 
+### skillEntrypoints?
+
+> `optional` **skillEntrypoints**: [`SkillEntrypoints`](../interfaces/SkillEntrypoints.md)
+
+See [PackVersionDefinition.skillEntrypoints](../interfaces/PackVersionDefinition.md#skillentrypoints).
+
+#### Implementation of
+
+[`PackDefinition`](../interfaces/PackDefinition.md).[`skillEntrypoints`](../interfaces/PackDefinition.md#skillentrypoints)
+
+***
+
+### skills
+
+> **skills**: [`Skill`](../interfaces/Skill.md)[]
+
+See [PackVersionDefinition.skills](../interfaces/PackVersionDefinition.md#skills).
+
+#### Implementation of
+
+[`PackDefinition`](../interfaces/PackDefinition.md).[`skills`](../interfaces/PackDefinition.md#skills)
+
+***
+
 ### syncTables
 
 > **syncTables**: [`SyncTable`](../type-aliases/SyncTable.md)[]
@@ -287,6 +311,44 @@ pack.addNetworkDomain('example.com');
 
 ***
 
+### addSkill()
+
+> **addSkill**(`skill`): `this`
+
+Adds an agent skill definition to this pack.
+
+In the web editor, the `/Skill` shortcut will insert a snippet of a skeleton skill.
+
+#### Example
+
+```
+pack.addSkill({
+  name: "MySkill",
+  displayName: "My Display Name",
+  description: "My description.",
+  prompt: `My prompt.`,
+  tools: [
+    { type: coda.ToolType.Pack },
+    {
+      type: coda.ToolType.Knowledge,
+      source: { type: coda.KnowledgeToolSourceType.Pack },
+    },
+  ],
+});
+```
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `skill` | [`Skill`](../interfaces/Skill.md) |
+
+#### Returns
+
+`this`
+
+***
+
 ### addSyncTable()
 
 > **addSyncTable**\<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`, `PermissionsContextT`\>(`definition`): `this`
@@ -326,6 +388,32 @@ pack.addSyncTable({
 | Parameter | Type |
 | ------ | ------ |
 | `definition` | [`SyncTableOptions`](../interfaces/SyncTableOptions.md)\<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`, `PermissionsContextT`\> |
+
+#### Returns
+
+`this`
+
+***
+
+### setSkillEntrypoints()
+
+> **setSkillEntrypoints**(`entrypoints`): `this`
+
+Maps agent entrypoints to skills in the Pack.
+
+#### Example
+
+```
+pack.setSkillEntrypoints({
+  defaultChat: { skillName: "MySkill" },
+});
+```
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `entrypoints` | [`SkillEntrypoints`](../interfaces/SkillEntrypoints.md) |
 
 #### Returns
 
