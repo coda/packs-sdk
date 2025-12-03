@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Changed
+
+- Add LLM-facing instructions to sync tables
+
 ## [1.12.3] - 2025-11-24
 
 ### Changed

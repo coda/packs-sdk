@@ -91,6 +91,15 @@ of the object, and the schema is declared as `{identity: {name: 'Products'}}`.
 
 ***
 
+### instructions?
+
+> `optional` **instructions**: `string`
+
+Instructions for LLMs on how to search this sync table. This overrides the description
+when the sync table is used as a knowledge search tool in an agent.
+
+***
+
 ### name
 
 > **name**: `string`
