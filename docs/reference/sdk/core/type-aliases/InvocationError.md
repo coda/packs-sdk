@@ -11,3 +11,5 @@ search:
 # Type Alias: InvocationError
 
 > **InvocationError** = [`HttpStatusInvocationError`](HttpStatusInvocationError.md) \| [`RateLimitExceededInvocationError`](RateLimitExceededInvocationError.md) \| [`TimeoutInvocationError`](TimeoutInvocationError.md) \| [`ResponseTooLargeInvocationError`](ResponseTooLargeInvocationError.md) \| [`UnknownInvocationError`](UnknownInvocationError.md)
+
+An error that caused an invocation to fail.

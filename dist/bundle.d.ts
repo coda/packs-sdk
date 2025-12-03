@@ -945,6 +945,9 @@ export type ResponseTooLargeInvocationError = BaseInvocationError & {
 export type UnknownInvocationError = BaseInvocationError & {
 	type: InvocationErrorType.Unknown;
 };
+/**
+ * An error that caused an invocation to fail.
+ */
 export type InvocationError = HttpStatusInvocationError | RateLimitExceededInvocationError | TimeoutInvocationError | ResponseTooLargeInvocationError | UnknownInvocationError;
 /**
  * The source applications that can invoke a Pack.

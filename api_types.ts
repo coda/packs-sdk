@@ -1127,6 +1127,9 @@ export type UnknownInvocationError = BaseInvocationError & {
   type: InvocationErrorType.Unknown;
 };
 
+/**
+ * An error that caused an invocation to fail.
+ */
 export type InvocationError =
   | HttpStatusInvocationError
   | RateLimitExceededInvocationError
