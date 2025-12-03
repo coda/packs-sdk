@@ -85,6 +85,11 @@ plugins:
     - macros:
         module_name: documentation/scripts/mkdocs_macros
 
+    # Optimize images for size.
+    # See: https://squidfunk.github.io/mkdocs-material/plugins/optimize/
+    - optimize:
+        enabled: !ENV [MK_DOCS_GENERATE_ASSETS, true]
+
     # Allow redirects from old to new URLs.
     # See: https://github.com/mkdocs/mkdocs-redirects
     - redirects:
@@ -392,6 +397,8 @@ theme:
     - content.action.edit
     - content.action.view
     - content.code.copy
+    - navigation.path
+    - navigation.prune
     - navigation.sections
     - navigation.tabs
     - navigation.tabs.sticky
