@@ -448,7 +448,6 @@
   {
     "triggerTokens": [
       "addMcpServer",
-      "addMCPServer",
       "McpServer",
       "MCP"
     ],

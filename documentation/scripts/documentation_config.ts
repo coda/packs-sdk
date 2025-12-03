@@ -275,7 +275,7 @@ export const Snippets: AutocompleteSnippet[] = [
     codeFile: './samples/snippets/skill/set_skill_entrypoints.ts',
   },
   {
-    triggerTokens: ['addMcpServer', 'addMCPServer', 'McpServer', 'MCP'],
+    triggerTokens: ['addMcpServer', 'McpServer', 'MCP'],
     content: 'Adds an MCP server.',
     codeFile: './samples/snippets/mcp/add_mcp_server.ts',
   },
