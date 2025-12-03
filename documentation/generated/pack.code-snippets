@@ -286,5 +286,23 @@
     "description": "Send data to an API.",
     "body": "let payload = {\n  // TODO: Construct the JSON that the API expects.\n};\nlet response = await context.fetcher.fetch({\n  method: \"POST\",\n  url: \"${1:https://example.com}\",\n  headers: {\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify(payload),\n});\nlet data = response.body;",
     "scope": "javascript,typescript"
+  },
+  "addSkill": {
+    "prefix": "/addSkill",
+    "description": "Adds a skill to guide the LLM.",
+    "body": "pack.addSkill({\n  name: \"${1:MySkill}\",\n  displayName: \"${2:My skill}\",\n  description: \"${3:My skill description.}\",\n  prompt: \"${4:My prompt}\",\n  tools: [\n    // TODO: Add tools.\n  ],\n});",
+    "scope": "javascript,typescript"
+  },
+  "setSkillEntrypoints": {
+    "prefix": "/setSkillEntrypoints",
+    "description": "Sets the entrypoints for skills in the Pack.",
+    "body": "pack.setSkillEntrypoints({\n  defaultChat: { skillName: \"${1:MySkill}\" },\n});",
+    "scope": "javascript,typescript"
+  },
+  "addMcpServer": {
+    "prefix": "/addMcpServer",
+    "description": "Adds an MCP server.",
+    "body": "pack.addMCPServer({\n  name: \"${1:MyMCPServer}\",\n  endpointUrl: \"${2:https://my-mcp-server.com/mcp}\",\n});",
+    "scope": "javascript,typescript"
   }
 }

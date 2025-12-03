@@ -377,7 +377,8 @@
     "triggerTokens": [
       "addSyncTable",
       "addSyncTable",
-      "SyncTable"
+      "SyncTable",
+      "Knowledge"
     ],
     "content": "Adds a sync table.",
     "code": "pack.addSyncTable({\n  name: \"${1:MyThings}\",\n  description: \"${2:Table description.}\",\n  identityName: \"${3:Thing}\",\n  schema: ${3:Thing}Schema,\n  formula: {\n    name: \"Sync$1\",\n    description: \"Syncs the data.\",\n    parameters: [\n      // TODO: Add parameters.\n    ],\n    execute: async function (args, context) {\n      // TODO: Unpack the parameter values.\n      let [] = args;\n      // TODO: Fetch the rows.\n      let rows = [];\n      for (let row of rows) {\n        // TODO: If required, adjust the row to match the schema.\n      }\n      return {\n        result: rows,\n      };\n    },\n  },\n});"
@@ -427,5 +428,30 @@
     ],
     "content": "Send data to an API.",
     "code": "let payload = {\n  // TODO: Construct the JSON that the API expects.\n};\nlet response = await context.fetcher.fetch({\n  method: \"POST\",\n  url: \"${1:https://example.com}\",\n  headers: {\n    \"Content-Type\": \"application/json\",\n  },\n  body: JSON.stringify(payload),\n});\nlet data = response.body;"
+  },
+  {
+    "triggerTokens": [
+      "addSkill",
+      "Skill"
+    ],
+    "content": "Adds a skill to guide the LLM.",
+    "code": "pack.addSkill({\n  name: \"${1:MySkill}\",\n  displayName: \"${2:My skill}\",\n  description: \"${3:My skill description.}\",\n  prompt: \"${4:My prompt}\",\n  tools: [\n    // TODO: Add tools.\n  ],\n});"
+  },
+  {
+    "triggerTokens": [
+      "setSkillEntrypoints",
+      "SkillEntrypoints"
+    ],
+    "content": "Sets the entrypoints for skills in the Pack.",
+    "code": "pack.setSkillEntrypoints({\n  defaultChat: { skillName: \"${1:MySkill}\" },\n});"
+  },
+  {
+    "triggerTokens": [
+      "addMcpServer",
+      "McpServer",
+      "MCP"
+    ],
+    "content": "Adds an MCP server.",
+    "code": "pack.addMCPServer({\n  name: \"${1:MyMCPServer}\",\n  endpointUrl: \"${2:https://my-mcp-server.com/mcp}\",\n});"
   }
 ]
