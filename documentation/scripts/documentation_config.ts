@@ -230,7 +230,7 @@ export const Snippets: AutocompleteSnippet[] = [
     codeFile: './samples/snippets/parameter/array/number_array_parameter.ts',
   },
   {
-    triggerTokens: ['addSyncTable', 'addSyncTable', 'SyncTable'],
+    triggerTokens: ['addSyncTable', 'addSyncTable', 'SyncTable', 'Knowledge'],
     content: 'Adds a sync table.',
     codeFile: './samples/snippets/sync_table.ts',
   },
@@ -263,6 +263,21 @@ export const Snippets: AutocompleteSnippet[] = [
     triggerTokens: ['fetch:post'],
     content: 'Send data to an API.',
     codeFile: './samples/snippets/fetcher/post.ts',
+  },
+  {
+    triggerTokens: ['addSkill', 'Skill'],
+    content: 'Adds a skill to guide the LLM.',
+    codeFile: './samples/snippets/skill/add_skill.ts',
+  },
+  {
+    triggerTokens: ['setSkillEntrypoints', 'SkillEntrypoints'],
+    content: 'Sets the entrypoints for skills in the Pack.',
+    codeFile: './samples/snippets/skill/set_skill_entrypoints.ts',
+  },
+  {
+    triggerTokens: ['addMcpServer', 'addMCPServer', 'McpServer', 'MCP'],
+    content: 'Adds an MCP server.',
+    codeFile: './samples/snippets/mcp/add_mcp_server.ts',
   },
 ];
 
