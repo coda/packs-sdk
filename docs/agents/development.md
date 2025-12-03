@@ -7,7 +7,6 @@ description: Tips and techniques for building and testing agents.
 
 This page covers some tips and techniques for building and testing agents.
 
-
 ## Developing locally
 
 In the [Your first agent tutorial][your_first_agent], we recommend developing in the Pack Studio, a web-based IDE. It is the simplest way to get started. All you have to do is visit [pack.new](https://pack.new) and start writing code.
@@ -15,7 +14,6 @@ In the [Your first agent tutorial][your_first_agent], we recommend developing in
 However, for production work, we recommend developing locally with the CLI, as it allows you to integrate with your version control system, write unit tests, etc. To learn how to set up this environment, follow the [Get started on your local machine][quickstart_cli].
 
 The CLI can run your code locally, but only an individual building block (formula, action, or sync table). It is not possible to run LLM-based functionality, like skills. For that, you’ll need to upload a new version of your agent to the server and test it using {{ custom.agent_product_name }}.
-
 
 ## Testing in a Coda doc
 
@@ -36,20 +34,30 @@ To test your agent’s formulas and syncs in a Coda doc:
 5. Drag a building block into the page.
 6. If user authentication is required, click the **+ Connect an account** button and sign in.
 
+## Testing unreleased versions
+
+If your Pack has previously been [released][releases], the agent will default to the released version of your code when installed. To test a newer, unreleased version of your code:
+
+1.  Open the settings screen for the agent (`https://coda.grammarly.com/brain/agent/setup/{PACK_ID}/debug`).
+1.  Click the gear icon :octicons-gear-16:.
+1.  Change the **Pack version** option to **Latest version**.
+
+<img src="../../images/agent_version.png" srcset="../../images/agent_version_2x.png 2x" class="screenshot" alt="A screenshot of the dropdown that can switch the version of the Pack used by the agent.">
 
 ## Test indexing
 
 When an agent contains sync tables, the agent installation screen includes additional elements that let the user configure which records to sync. If a table has parameters, you can click its row to set those parameters. Clicking **Done** starts the indexing process, which can take a few minutes to complete depending on the size of the dataset.
 
-
 ### Checking status
 
-The status of the indexing job is visible on the agent's settings screen. You can access the settings screen by clicking the plus button :octicons-plus-16: at the bottom of the agent bench, the sliders icon :octicons-sliders-16: in the upper right, and then the gear icon :octicons-gear-16: next to the agent.
+The status of the indexing job is visible on the agent's settings screen. You can access the settings screen by either:
+
+- Clicking the plus button :octicons-plus-16: at the bottom of the agent bench, the sliders icon :octicons-sliders-16: in the upper right, and then the gear icon :octicons-gear-16: next to the agent.
+- Opening the URL `https://coda.grammarly.com/brain/agent/setup/{PACK_ID}/debug`.
 
 Click the **Sync status** tab to see whether the sync is complete and how many records were found.
 
 Click into a specific table to open the Data Explorer. This allows you to view which records were indexed.
-
 
 !!! warning "Missing data"
 
@@ -60,18 +68,9 @@ Click into a specific table to open the Data Explorer. This allows you to view w
 
 The table will show one row per record, with the **rawText** column showing the text from one of the indexed chunks.
 
-
 ### Re-indexing
 
 Making changes to your Pack or connection settings doesn’t immediately trigger the indexing process. Instead, we recommend deleting and recreating the connection whenever you want to see the effects of a change.
-
-
-## Testing unreleased versions
-
-If your Pack has previously been [released][releases], when the agent is installed, it will default to the released version of your code. To test a newer, unreleased version of your code, click the gear icon next to the **Configure what to sync** heading, then** select **Latest version** from the dropdown.
-
-<!-- TODO: Screenshot -->
-
 
 [your_first_agent]: quickstart.md
 [quickstart_cli]: ../tutorials/get-started/cli.md

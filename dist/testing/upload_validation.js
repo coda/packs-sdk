@@ -109,7 +109,7 @@ exports.Limits = {
     NumColumnMatchersPerFormat: 10,
     NetworkDomainUrl: 253,
     PermissionsBatchSize: 5000,
-    PromptLength: 10000,
+    PromptLength: 20000,
     SuggestedPromptText: 500,
     UpdateBatchSize: 1000,
     FilterableProperties: 5,
@@ -1664,12 +1664,25 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     const summarizerToolSchema = zodCompleteStrictObject({
         type: z.literal(types_9.ToolType.Summarizer),
     });
+    const mcpToolSchema = zodCompleteStrictObject({
+        type: z.literal(types_9.ToolType.MCP),
+        serverNames: z.array(z.string()).optional(),
+    });
+    const contactResolutionToolSchema = zodCompleteStrictObject({
+        type: z.literal(types_9.ToolType.ContactResolution),
+    });
+    const codaDocsToolSchema = zodCompleteStrictObject({
+        type: z.literal(types_9.ToolType.CodaDocs),
+    });
     const toolSchema = z.discriminatedUnion('type', [
         packToolSchema,
         knowledgeToolSchema,
         screenAnnotationToolSchema,
         assistantMessageToolSchema,
         summarizerToolSchema,
+        mcpToolSchema,
+        contactResolutionToolSchema,
+        codaDocsToolSchema,
     ]);
     const skillSchema = zodCompleteObject({
         name: z
@@ -1681,6 +1694,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         description: z.string().min(1).max(exports.Limits.BuildingBlockDescription),
         prompt: z.string().min(1).max(exports.Limits.PromptLength),
         tools: z.array(toolSchema),
+        forcedFormula: z.string().optional(),
     });
     const skillEntrypointConfigSchema = zodCompleteStrictObject({
         skillName: z.string(),
@@ -1688,6 +1702,14 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     const skillEntrypointsSchema = zodCompleteStrictObject({
         benchInitialization: skillEntrypointConfigSchema.optional(),
         defaultChat: skillEntrypointConfigSchema.optional(),
+    });
+    const mcpServerSchema = zodCompleteStrictObject({
+        endpointUrl: z.string().url('MCP server endpointUrl must be a valid URL.'),
+        name: z
+            .string()
+            .min(1)
+            .max(exports.Limits.BuildingBlockName)
+            .regex(regexParameterName, 'MCP server names can only contain alphanumeric characters and underscores.'),
     });
     const suggestedPromptSchema = zodCompleteStrictObject({
         name: z
@@ -1804,6 +1826,20 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 context.addIssue({
                     code: z.ZodIssueCode.custom,
                     message: `Skill names must be unique. Found duplicate name "${dupe}".`,
+                });
+            }
+        }),
+        mcpServers: z
+            .array(mcpServerSchema)
+            .max(1)
+            .optional()
+            .superRefine((data, context) => {
+            const serverNames = (data || []).map(server => server.name).filter((name) => Boolean(name));
+            for (const dupe of getNonUniqueElements(serverNames)) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: ['mcpServers'],
+                    message: `MCP server names must be unique. Found duplicate name "${dupe}".`,
                 });
             }
         }),
@@ -2234,6 +2270,35 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 });
             }
         }
+    })
+        .superRefine((data, context) => {
+        const metadata = data;
+        const hasMcpSkill = (metadata.skills || []).some(skill => skill.tools.some(tool => tool.type === types_9.ToolType.MCP));
+        if (hasMcpSkill && (!metadata.mcpServers || metadata.mcpServers.length === 0)) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['mcpServers'],
+                message: 'At least one MCP server must be declared when using MCP tools.',
+            });
+        }
+    })
+        .superRefine((data, context) => {
+        const metadata = data;
+        const { skills, formulas } = metadata;
+        if (!skills || skills.length === 0) {
+            return;
+        }
+        const formulaNames = new Set((formulas || []).map(formula => formula.name));
+        skills.forEach((skill, skillIndex) => {
+            if (skill.forcedFormula && !formulaNames.has(skill.forcedFormula)) {
+                const availableTools = Array.from(formulaNames).join(', ');
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: ['skills', skillIndex, 'forcedFormula'],
+                    message: `Skill "${skill.name}" specifies forcedFormula "${skill.forcedFormula}" but no matching formula found. Available formulas: ${availableTools}`,
+                });
+            }
+        });
     });
     return { legacyPackMetadataSchema, variousSupportedAuthenticationValidators, arrayPropertySchema };
 }

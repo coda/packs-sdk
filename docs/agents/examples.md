@@ -30,7 +30,7 @@ This pattern can be helpful if you want to develop an agent on your own infrastr
 
 ## ✅ Todoist
 
-An agent that allows you to work with your tasks in the app Todoist. It indexes all your tasks for semantic search and provides actions to create new tasks or mark them as done.
+An agent that allows you to work with your tasks in the app Todoist. It uses the Todoist MCP server to perform CRUD operations, and the REST API to index tasks into the knowledge layer for semantic search.
 
 ```ts
 --8<-- "samples/packs/agents/todoist.ts"

@@ -276,11 +276,11 @@ export interface ParamDef<T extends UnionType> {
      */
     suggestedValue?: SuggestedValueType<T>;
     /**
-     * In ingestions, where we want to load *all* data available, the {@link ParamDef.suggestedValue}
-     * will not be ideal, as most use cases will prefer efficiency over completeness.
-     * Use this field to specify a default value for ingestions.
+     * The suggested value to be prepopulated for this parameter when used in an ingestion (sync table indexing).
+     * This value overrides {@link ParamDef.suggestedValue} if set.
      *
-     * @hidden
+     * Useful in situations where the existing suggested value is used to scope down the synced data to what would fit
+     * within Coda's row limits, but during indexing you'd want to include a larger scope of data.
      */
     ingestionSuggestedValue?: SuggestedValueType<T>;
     /**

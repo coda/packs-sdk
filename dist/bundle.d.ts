@@ -255,11 +255,11 @@ export interface ParamDef<T extends UnionType> {
 	 */
 	suggestedValue?: SuggestedValueType<T>;
 	/**
-	 * In ingestions, where we want to load *all* data available, the {@link ParamDef.suggestedValue}
-	 * will not be ideal, as most use cases will prefer efficiency over completeness.
-	 * Use this field to specify a default value for ingestions.
+	 * The suggested value to be prepopulated for this parameter when used in an ingestion (sync table indexing).
+	 * This value overrides {@link ParamDef.suggestedValue} if set.
 	 *
-	 * @hidden
+	 * Useful in situations where the existing suggested value is used to scope down the synced data to what would fit
+	 * within Coda's row limits, but during indexing you'd want to include a larger scope of data.
 	 */
 	ingestionSuggestedValue?: SuggestedValueType<T>;
 	/**
@@ -3244,6 +3244,23 @@ export declare class MissingScopesError extends Error {
 	static isMissingScopesError(err: any): err is MissingScopesError;
 }
 /**
+ * An error that will be thrown by {@link Fetcher.fetch} when the response body from the external system
+ * exceeds packs platform limits
+ *
+ * This error can be caught and retried by requesting less data from the external system through
+ * a smaller page size or omitting large fields.
+ */
+export declare class ResponseSizeTooLargeError extends Error {
+	/**
+	 * The name of the error, for identification purposes.
+	 */
+	name: string;
+	/** @hidden */
+	constructor(message?: string | undefined);
+	/** Returns if the error is an instance of ResponseSizeTooLargeError. Note that `instanceof` may not work. */
+	static isResponseSizeTooLargeError(err: any): err is ResponseSizeTooLargeError;
+}
+/**
  * A map of named property options methods for a particular sync table. The names need to match
  * the values stored in the object schema. For the name, we use the property's name so that
  * it'll be consistent across pack versions. In the future if we want to support packs
@@ -5460,7 +5477,22 @@ export declare enum ToolType {
 	 * Allows reuse of the default tuned summarizer agent as a tool.
 	 * @internal
 	 */
-	Summarizer = "Summarizer"
+	Summarizer = "Summarizer",
+	/**
+	 * Tool that provides access to MCP capabilities.
+	 * @hidden
+	 */
+	MCP = "MCP",
+	/**
+	 * Tool that provides access to contact resolution capabilities.
+	 * @hidden
+	 */
+	ContactResolution = "ContactResolution",
+	/**
+	 * Tool that provides access to Coda docs capabilities.
+	 * @hidden
+	 */
+	CodaDocs = "CodaDocs"
 }
 /**
  * Base interface for all tool definitions.
@@ -5485,13 +5517,6 @@ export interface PackTool extends BaseTool<ToolType.Pack> {
 	formulas?: Array<{
 		/** The name of the formula to use as a tool. */
 		formulaName: string;
-		/**
-		 * Instructions for LLMs to use the formula.
-		 *
-		 * @deprecated Use {@link ParamDef#instructions}
-		 * @hidden Never launched.
-		 */
-		instructions?: string;
 	}>;
 }
 /**
@@ -5608,6 +5633,42 @@ export interface AssistantMessageTool extends BaseTool<ToolType.AssistantMessage
 export interface SummarizerTool extends BaseTool<ToolType.Summarizer> {
 }
 /**
+ * Tool that provides access to MCP capabilities.
+ * @hidden
+ */
+export interface MCPTool extends BaseTool<ToolType.MCP> {
+	/**
+	 * The names of the MCP servers added to this pack that this tool can connect to.
+	 */
+	serverNames?: string[];
+}
+/**
+ * Tool that provides access to contact resolution capabilities.
+ * @hidden
+ */
+export interface ContactResolutionTool extends BaseTool<ToolType.ContactResolution> {
+}
+/**
+ * Tool that provides access to Coda docs capabilities.
+ * @hidden
+ */
+export interface CodaDocsTool extends BaseTool<ToolType.CodaDocs> {
+}
+/**
+ * Definition of an MCP server that the pack can connect to.
+ * @hidden
+ */
+export interface MCPServer {
+	/**
+	 * The MCP endpoint URL (e.g. https://example.com/mcp).
+	 */
+	endpointUrl: string;
+	/**
+	 * Stable identifier that can be used to distinguish multiple MCP servers.
+	 */
+	name: string;
+}
+/**
  * Map of tool types to their corresponding tool interfaces.
  * This interface can be extended via declaration merging to add custom tool types.
  * @hidden
@@ -5618,6 +5679,9 @@ export interface ToolMap {
 	[ToolType.ScreenAnnotation]: ScreenAnnotationTool;
 	[ToolType.AssistantMessage]: AssistantMessageTool;
 	[ToolType.Summarizer]: SummarizerTool;
+	[ToolType.MCP]: MCPTool;
+	[ToolType.ContactResolution]: ContactResolutionTool;
+	[ToolType.CodaDocs]: CodaDocsTool;
 }
 /**
  * Union of all supported tool types.
@@ -5638,6 +5702,11 @@ export interface Skill {
 	prompt: string;
 	/** List of tools that this skill can use. This does not include pack formulas by default. */
 	tools: Tool[];
+	/**
+	 * Forces execution of a specific formula by name, overriding autonomous tool selection.
+	 * @hidden
+	 * */
+	forcedFormula?: string;
 }
 /**
  * Configuration for a skill entrypoint.
@@ -5748,6 +5817,11 @@ export interface PackVersionDefinition {
 	 * @hidden
 	 */
 	suggestedPrompts?: SuggestedPrompt[];
+	/**
+	 * Definitions of MCP servers that this pack can connect to.
+	 * @hidden
+	 */
+	mcpServers?: MCPServer[];
 }
 /**
  * @deprecated use `#PackVersionDefinition`
@@ -5849,6 +5923,11 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * See {@link PackVersionDefinition.networkDomains}.
 	 */
 	networkDomains: string[];
+	/**
+	 * See {@link PackVersionDefinition.mcpServers}.
+	 * @hidden
+	 */
+	mcpServers: MCPServer[];
 	/**
 	 * See {@link PackVersionDefinition.defaultAuthentication}.
 	 */
@@ -5980,6 +6059,16 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * ```
 	 */
 	addSkill(skill: Skill): this;
+	/**
+	 * Adds an MCP server to this pack.
+	 *
+	 * @example
+	 * ```
+	 * pack.addMCPServer({name: 'MyMCPServer', endpointUrl: 'https://my-mcp-server.com'});
+	 * ```
+	 * @hidden
+	 */
+	addMCPServer(server: MCPServer): this;
 	/**
 	 * Maps agent entrypoints to skills in the Pack.
 	 *

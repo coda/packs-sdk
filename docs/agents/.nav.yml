@@ -1,3 +1,4 @@
+append_unmatched: true
 nav:
   - index.md
   - quickstart.md
@@ -7,4 +8,3 @@ nav:
   - development.md
   - troubleshooting.md
   - upgrade.md
-  - ...

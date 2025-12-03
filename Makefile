@@ -31,24 +31,19 @@ _bootstrap-node:
 _bootstrap-python:
 	${PIPENV} sync
 
-.PHONY: _bootstrap-system-packages
-_bootstrap-system-packages:
-	# Install the packages required by the MkDocs Material social plugin if
-	# homebrew is available. These appear to come pre-installed in most linux
-	# environments.
-	# https://squidfunk.github.io/mkdocs-material/setup/setting-up-social-cards/#dependencies
-	if command -v brew &> /dev/null; then \
-		brew install cairo freetype libffi libjpeg libpng zlib; \
-	fi
-
 .PHONY: _bootstrap-githooks
 _bootstrap-githooks: clean-githooks
 	-(cd ${ROOTDIR}; scripts/dev/git-hooks.sh --install)
 
 .PHONY: _bootstrap-doc-tools
 _bootstrap-doc-tools:
-	# Image libraries required by the social cards plugin for MkDocs Material.
-	sudo apt-get install libcairo2-dev libfreetype6-dev libffi-dev libjpeg-dev libpng-dev libz-dev
+	# Install the packages required by the MkDocs Material plugins.
+	# https://squidfunk.github.io/mkdocs-material/plugins/requirements/image-processing/#dependencies
+	if command -v brew &> /dev/null; then \
+		brew install cairo freetype libffi libjpeg libpng zlib pngquant; \
+	else \
+		sudo apt-get install -y libcairo2-dev libfreetype6-dev libffi-dev libjpeg-dev libpng-dev libz-dev pngquant; \
+	fi
 
 .PHONY: _bootstrap-renovate
 _bootstrap-renovate:
@@ -59,7 +54,7 @@ _bootstrap-renovate:
 bootstrap:
 	$(MAKE) MAKEFLAGS= _bootstrap-install-pnpm
 	$(MAKE) MAKEFLAGS= _bootstrap-node
-	$(MAKE) MAKEFLAGS= _bootstrap-system-packages
+	$(MAKE) MAKEFLAGS= _bootstrap-doc-tools
 	$(MAKE) MAKEFLAGS= _bootstrap-python
 	$(MAKE) MAKEFLAGS= _bootstrap-githooks
 	echo
@@ -328,6 +323,7 @@ test-file:
 .PHONY: clean-githooks
 clean-githooks:
 	-rm -rf ${ROOTDIR}/.git/hooks/* ${ROOTDIR}/.git/hooks.old
+	-git config --local --unset core.hooksPath
 
 .PHONY: clean
 clean:
@@ -387,6 +383,7 @@ release:
 
 .PHONY: release-manual
 release-manual:
+	node -r ts-node/register scripts/check_live_sdk_version.ts
 	# this set is taken from esbuild's process https://github.com/evanw/esbuild/blob/master/Makefile#L330
 	@npm --version > /dev/null || (echo "The 'npm' command must be in your path to publish" && false)
 	@echo "Checking for uncommitted/untracked changes..." && test -z "`git status --porcelain | grep -vE ''`" || \

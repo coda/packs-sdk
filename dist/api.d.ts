@@ -237,8 +237,6 @@ export declare class GoogleDwdError extends Error {
  *
  * This error can be caught and retried by requesting less data from the external system through
  * a smaller page size or omitting large fields.
- *
- * @hidden
  */
 export declare class ResponseSizeTooLargeError extends Error {
     /**

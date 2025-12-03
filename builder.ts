@@ -10,6 +10,7 @@ import type {DynamicSyncTableOptions} from './api';
 import type {Format} from './types';
 import type {Formula} from './api';
 import type {FormulaDefinitionOptions} from './api';
+import type {MCPServer} from './types';
 import type {ObjectSchema} from './schema';
 import type {ObjectSchemaDefinition} from './schema';
 import type {PackVersionDefinition} from './types';
@@ -83,6 +84,11 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * See {@link PackVersionDefinition.networkDomains}.
    */
   networkDomains: string[];
+  /**
+   * See {@link PackVersionDefinition.mcpServers}.
+   * @hidden
+   */
+  mcpServers: MCPServer[];
 
   /**
    * See {@link PackVersionDefinition.defaultAuthentication}.
@@ -125,6 +131,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       formulaNamespace,
       skillEntrypoints,
       suggestedPrompts,
+      mcpServers,
     } = definition || {};
     this.formulas = formulas || [];
     this.formats = formats || [];
@@ -133,6 +140,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     this.skillEntrypoints = skillEntrypoints;
     this.suggestedPrompts = suggestedPrompts || [];
     this.networkDomains = networkDomains || [];
+    this.mcpServers = mcpServers || [];
     this.defaultAuthentication = defaultAuthentication;
     this.systemConnectionAuthentication = systemConnectionAuthentication;
     this.version = version;
@@ -289,6 +297,20 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    */
   addSkill(skill: Skill): this {
     this.skills.push(skill);
+    return this;
+  }
+
+  /**
+   * Adds an MCP server to this pack.
+   *
+   * @example
+   * ```
+   * pack.addMCPServer({name: 'MyMCPServer', endpointUrl: 'https://my-mcp-server.com'});
+   * ```
+   * @hidden
+   */
+  addMCPServer(server: MCPServer): this {
+    this.mcpServers.push(server);
     return this;
   }
 

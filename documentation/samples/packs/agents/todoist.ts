@@ -1,16 +1,21 @@
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
+// The REST API and MCP server are hosted on different domains.
+// Note: Connecting to multiple domains requires approval.
 pack.addNetworkDomain("todoist.com");
+pack.addNetworkDomain("todoist.net");
 
+// The REST API and MCP server use the same OAuth credentials.
 pack.setUserAuthentication({
   type: coda.AuthenticationType.OAuth2,
-  // OAuth2 URLs and scopes are found in the the Todoist OAuth guide:
-  // https://developer.todoist.com/guides/##oauth
   authorizationUrl: "https://todoist.com/oauth/authorize",
   tokenUrl: "https://todoist.com/oauth/access_token",
   scopes: ["data:read_write"],
   scopeDelimiter: ",",
+
+  // Allow the credentials to be sent to both domains.
+  networkDomain: ["todoist.com", "todoist.net"],
 
   // Determines the display name of the connected account.
   getConnectionName: async function (context) {
@@ -20,6 +25,11 @@ pack.setUserAuthentication({
     });
     return response.body.full_name;
   },
+});
+
+pack.addMCPServer({
+  name: "Todoist",
+  endpointUrl: "https://ai.todoist.net/mcp",
 });
 
 const TaskSchema = coda.makeObjectSchema({
@@ -94,108 +104,16 @@ pack.addSyncTable({
         method: "GET",
         url: url,
       });
-      let rows = response.body.map(task => formatTaskForSchema(task));
+      let rows = response.body.map(task => {
+          return {
+            ...task,
+            // Convert the priority to a string like "P1".
+            priority: "P" + (5 - task.priority),
+          };
+      });
       return {
         result: rows,
       };
     },
   },
 });
-
-pack.addFormula({
-  name: "Task",
-  description: "Gets a Todoist task by URL",
-  parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
-      name: "url",
-      description: "The URL of the task",
-    }),
-  ],
-  resultType: coda.ValueType.Object,
-  schema: TaskSchema,
-  execute: async function (args, context) {
-    let [url] = args;
-    let taskId = extractTaskId(url);
-    let response = await context.fetcher.fetch({
-      method: "GET",
-      url: `https://api.todoist.com/rest/v2/tasks/${taskId}`,
-    });
-    return formatTaskForSchema(response.body);
-  },
-});
-
-pack.addFormula({
-  name: "AddTask",
-  description: "Add a new task. Returns the URL of the new task.",
-  parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
-      name: "name",
-      description: "The name of the task.",
-    }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
-      name: "description",
-      description: "The description of the task.",
-    }),
-  ],
-  resultType: coda.ValueType.String,
-  isAction: true,
-  execute: async function (args, context) {
-    let [name, description] = args;
-    let response = await context.fetcher.fetch({
-      method: "POST",
-      url: "https://api.todoist.com/rest/v2/tasks",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        content: name,
-        description: description,
-      }),
-    });
-    return response.body.url;
-  },
-});
-
-pack.addFormula({
-  name: "MarkComplete",
-  description: "Mark a task as complete.",
-  parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
-      name: "url",
-      description: "The URL of the task",
-    }),
-  ],
-  resultType: coda.ValueType.String,
-  isAction: true,
-  execute: async function (args, context) {
-    let [url] = args;
-    let taskId = extractTaskId(url);
-    await context.fetcher.fetch({
-      method: "POST",
-      url: `https://api.todoist.com/rest/v2/tasks/${taskId}/close`,
-    });
-    return "OK";
-  },
-});
-
-function extractTaskId(taskUrl: string) {
-  let pattern = /^https:\/\/app\.todoist\.com\/app\/task\/(?:\w+-)*(\w+)$/;
-  let matches = taskUrl.match(pattern);
-  if (matches && matches[1]) {
-    return matches[1];
-  }
-  throw new coda.UserVisibleError("Invalid task URL: " + taskUrl);
-}
-
-// Format a task from the API and return an object matching the Task schema.
-function formatTaskForSchema(task: any) {
-  return {
-    ...task,
-    // Convert the priority to a string like "P1".
-    priority: "P" + (5 - task.priority),
-  };
-}

@@ -14,3 +14,4 @@ site
 .devcontainer
 .cache
 .pnpm_install
+.idea
