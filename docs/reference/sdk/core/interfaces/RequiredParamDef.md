@@ -171,6 +171,19 @@ The suggested value to be prepopulated for this parameter if it is not specified
 
 ***
 
+### supportsIncrementalSync?
+
+> `optional` **supportsIncrementalSync**: `boolean`
+
+Whether this parameter is compatible with incremental sync.
+If not, it will be hidden from agent setup UI.
+
+#### Inherited from
+
+[`ParamDef`](ParamDef.md).[`supportsIncrementalSync`](ParamDef.md#supportsincrementalsync)
+
+***
+
 ### type
 
 > **type**: `T`

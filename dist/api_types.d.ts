@@ -342,7 +342,6 @@ export interface ParamDef<T extends UnionType> {
      * Whether this parameter is compatible with incremental sync.
      * If not, it will be hidden from agent setup UI.
      */
-    /** @hidden */
     supportsIncrementalSync?: boolean;
 }
 /**
@@ -966,9 +965,6 @@ export type ResponseTooLargeInvocationError = BaseInvocationError & {
 export type UnknownInvocationError = BaseInvocationError & {
     type: InvocationErrorType.Unknown;
 };
-/**
- * @expand
- */
 export type InvocationError = HttpStatusInvocationError | RateLimitExceededInvocationError | TimeoutInvocationError | ResponseTooLargeInvocationError | UnknownInvocationError;
 type MissingInvocationErrorTypes = Exclude<InvocationErrorType, InvocationError['type']>;
 /**

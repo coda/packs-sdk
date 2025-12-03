@@ -269,7 +269,7 @@ var KnowledgeToolSourceType;
 (function (KnowledgeToolSourceType) {
     /**
      * Use all knowledge from the pack.
-     * @hidden @experimental
+     * @hidden In development.
      */
     KnowledgeToolSourceType["Global"] = "Global";
     /**
@@ -288,7 +288,7 @@ var ScreenAnnotationType;
     ScreenAnnotationType["Rewrite"] = "Rewrite";
     /**
      * Use screen annotation for guide.
-     * @hidden Internal only
+     * @internal
      */
     ScreenAnnotationType["Guide"] = "Guide";
 })(ScreenAnnotationType || (exports.ScreenAnnotationType = ScreenAnnotationType = {}));

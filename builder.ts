@@ -307,7 +307,6 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * ```
    * pack.addMCPServer({name: 'MyMCPServer', endpointUrl: 'https://my-mcp-server.com'});
    * ```
-   * @hidden
    */
   addMCPServer(server: MCPServer): this {
     this.mcpServers.push(server);

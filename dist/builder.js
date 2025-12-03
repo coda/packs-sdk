@@ -188,7 +188,6 @@ class PackDefinitionBuilder {
      * ```
      * pack.addMCPServer({name: 'MyMCPServer', endpointUrl: 'https://my-mcp-server.com'});
      * ```
-     * @hidden
      */
     addMCPServer(server) {
         this.mcpServers.push(server);

@@ -1250,7 +1250,7 @@ export interface PackTool extends BaseTool<ToolType.Pack> {
 export enum KnowledgeToolSourceType {
   /**
    * Use all knowledge from the pack.
-   * @hidden @experimental
+   * @hidden In development.
    */
   Global = 'Global',
   /**
@@ -1314,7 +1314,7 @@ export enum ScreenAnnotationType {
   Rewrite = 'Rewrite',
   /**
    * Use screen annotation for guide.
-   * @hidden Internal only
+   * @internal
    */
   Guide = 'Guide',
 }
@@ -1332,11 +1332,10 @@ interface BaseScreenAnnotation<T extends ScreenAnnotationType> {
 
 /**
  * Annotation for screen suggestions.
- * @expand
  */
 export interface RewriteScreenAnnotation extends BaseScreenAnnotation<ScreenAnnotationType.Rewrite> {}
 
-/** @hidden Internal only */
+/** @internal */
 interface GuideScreenAnnotation extends BaseScreenAnnotation<ScreenAnnotationType.Guide> {}
 
 /**
@@ -1356,13 +1355,13 @@ export interface ScreenAnnotationTool extends BaseTool<ToolType.ScreenAnnotation
 
 /**
  * Tool that provides access to assistant messages.
- * @hidden Internal only
+ * @internal
  */
 export interface AssistantMessageTool extends BaseTool<ToolType.AssistantMessage> {}
 
 /**
  * Tool that provides access to summarization capabilities.
- * @hidden Internal only
+ * @internal
  */
 export interface SummarizerTool extends BaseTool<ToolType.Summarizer> {}
 
@@ -1391,7 +1390,6 @@ export interface CodaDocsTool extends BaseTool<ToolType.CodaDocs> {}
 
 /**
  * Definition of an MCP server that the pack can connect to.
- * @hidden
  */
 export interface MCPServer {
   /**

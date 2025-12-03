@@ -100,6 +100,7 @@ import * as coda from "@codahq/packs-sdk";
 - [KnowledgeTool](interfaces/KnowledgeTool.md)
 - [LinkAttributionNode](interfaces/LinkAttributionNode.md)
 - [LinkSchema](interfaces/LinkSchema.md)
+- [MCPServer](interfaces/MCPServer.md)
 - [MetadataFormulaObjectResultType](interfaces/MetadataFormulaObjectResultType.md)
 - [MultiHeaderTokenAuthentication](interfaces/MultiHeaderTokenAuthentication.md)
 - [MultiQueryParamTokenAuthentication](interfaces/MultiQueryParamTokenAuthentication.md)

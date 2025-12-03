@@ -278,6 +278,30 @@ pack.addFormula({
 
 ***
 
+### addMCPServer()
+
+> **addMCPServer**(`server`): `this`
+
+Adds an MCP server to this pack.
+
+#### Example
+
+```
+pack.addMCPServer({name: 'MyMCPServer', endpointUrl: 'https://my-mcp-server.com'});
+```
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `server` | [`MCPServer`](../interfaces/MCPServer.md) |
+
+#### Returns
+
+`this`
+
+***
+
 ### addNetworkDomain()
 
 > **addNetworkDomain**(...`domain`): `this`

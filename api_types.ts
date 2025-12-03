@@ -437,8 +437,6 @@ export interface ParamDef<T extends UnionType> {
    * Whether this parameter is compatible with incremental sync.
    * If not, it will be hidden from agent setup UI.
    */
-  // TODO(ebo): Unhide this
-  /** @hidden */
   supportsIncrementalSync?: boolean;
 }
 
@@ -1129,9 +1127,6 @@ export type UnknownInvocationError = BaseInvocationError & {
   type: InvocationErrorType.Unknown;
 };
 
-/**
- * @expand
- */
 export type InvocationError =
   | HttpStatusInvocationError
   | RateLimitExceededInvocationError

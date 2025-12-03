@@ -10,8 +10,6 @@ search:
 
 # Interface: RewriteScreenAnnotation
 
-**`Expand`**
-
 Annotation for screen suggestions.
 
 ## Extends
