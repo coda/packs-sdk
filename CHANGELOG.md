@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Changed
+
+- Added a `state` parameter to the OAuth authorization URL when running `coda auth` locally, for compatibility with OAuth providers that require it.
+
 ## [1.12.3] - 2025-11-24
 
 ### Changed
