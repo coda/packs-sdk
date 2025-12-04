@@ -47,6 +47,30 @@ render such a value as an @-reference to that person, rather than a basic object
 
 ***
 
+### createdAtProperty?
+
+> `optional` **createdAtProperty**: [`PropertyIdentifier`](../type-aliases/PropertyIdentifier.md)\<`K`\>
+
+The name of a property within [ObjectSchemaDefinition.properties](#properties) that can be interpreted as the creation
+datetime of the object.
+
+Must be a [ValueType.String](../enumerations/ValueType.md#string) or [ValueType.Number](../enumerations/ValueType.md#number) property with the
+[ValueHintType.Date](../enumerations/ValueHintType.md#date) or [ValueHintType.DateTime](../enumerations/ValueHintType.md#datetime) hints
+
+***
+
+### createdByProperty?
+
+> `optional` **createdByProperty**: [`PropertyIdentifier`](../type-aliases/PropertyIdentifier.md)\<`K`\>
+
+The name of a property within [ObjectSchemaDefinition.properties](#properties) that can be interpreted as the creator
+of the object.
+
+Must be a [ValueType.String](../enumerations/ValueType.md#string) property with the [ValueHintType.Email](../enumerations/ValueHintType.md#email) hint or
+a [ValueType.Object](../enumerations/ValueType.md#object) with the [ValueHintType.Person](../enumerations/ValueHintType.md#person) hint
+
+***
+
 ### description?
 
 > `optional` **description**: `string`
@@ -159,6 +183,14 @@ scenarios they can be useful.
 
 ***
 
+### index?
+
+> `optional` **index**: [`IndexDefinition`](../type-aliases/IndexDefinition.md)
+
+Defines how to index objects for use with full-text indexing.
+
+***
+
 ### linkProperty?
 
 > `optional` **linkProperty**: [`PropertyIdentifier`](../type-aliases/PropertyIdentifier.md)\<`K`\>
@@ -168,6 +200,30 @@ navigate users to more details about this object
 
 Must be a [ValueType.String](../enumerations/ValueType.md#string) property with a [ValueHintType.Url](../enumerations/ValueHintType.md#url)
 [ObjectSchemaDefinition.codaType](#codatype).
+
+***
+
+### modifiedAtProperty?
+
+> `optional` **modifiedAtProperty**: [`PropertyIdentifier`](../type-aliases/PropertyIdentifier.md)\<`K`\>
+
+The name of a property within [ObjectSchemaDefinition.properties](#properties) that can be interpreted as the last
+modified datetime of the object.
+
+Must be a [ValueType.String](../enumerations/ValueType.md#string) or [ValueType.Number](../enumerations/ValueType.md#number) property with the
+[ValueHintType.Date](../enumerations/ValueHintType.md#date) or [ValueHintType.DateTime](../enumerations/ValueHintType.md#datetime) hints
+
+***
+
+### modifiedByProperty?
+
+> `optional` **modifiedByProperty**: [`PropertyIdentifier`](../type-aliases/PropertyIdentifier.md)\<`K`\>
+
+The name of a property within [ObjectSchemaDefinition.properties](#properties) that can be interpreted as the last
+modifier of the object.
+
+Must be a [ValueType.String](../enumerations/ValueType.md#string) property with the [ValueHintType.Email](../enumerations/ValueHintType.md#email) hint or
+a [ValueType.Object](../enumerations/ValueType.md#object) with the [ValueHintType.Person](../enumerations/ValueHintType.md#person) hint
 
 ***
 

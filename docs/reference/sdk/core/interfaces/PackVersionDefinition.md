@@ -68,6 +68,22 @@ contact Coda support for approval.
 
 ***
 
+### skillEntrypoints?
+
+> `optional` **skillEntrypoints**: [`SkillEntrypoints`](SkillEntrypoints.md)
+
+Mapping of skills to entrypoints that the pack agent can be invoked from.
+
+***
+
+### skills?
+
+> `optional` **skills**: [`Skill`](Skill.md)[]
+
+Definitions of skills that can be executed within this pack.
+
+***
+
 ### syncTables?
 
 > `optional` **syncTables**: [`SyncTable`](../type-aliases/SyncTable.md)[]

@@ -58,6 +58,14 @@ The dynamic URL is likely necessary for determining which API resources to fetch
 
 ***
 
+### previousCompletion?
+
+> `optional` **previousCompletion**: `undefined`
+
+The previous completion will not be populated during a full sync.
+
+***
+
 ### schema?
 
 > `optional` **schema**: [`ArraySchema`](ArraySchema.md)\<[`Schema`](../type-aliases/Schema.md)\>
