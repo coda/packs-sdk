@@ -344,41 +344,7 @@ Often parameters have a limited set of values that they support, such as a range
 
 You can provide a better user experience by validating the parameters before you use them. A common way to do that is to check the values at the start of the `execute` function and throw a user-visible error if a problem is found.
 
-```{.ts hl_lines="19-24"}
-pack.addFormula({
-  name: "CreateOrder",
-  description: "Creates a new order.",
-  parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
-      name: "sku",
-      description: "The SKU of the product.",
-    }),
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
-      name: "quantity",
-      description: "The quantity to order.",
-    }),
-  ],
-  resultType: coda.ValueType.String,
-  execute: async function (args, context) {
-    let [sku, quantity] = args;
-    if (sku.length != 10) {
-      throw new coda.UserVisibleError("Use the 10 digit public SKU.")
-    }
-    if (quantity < 1) {
-      throw new coda.UserVisibleError("The quantity must be 1 or greater.")
-    }
-    // Make the request ...
-  },
-});
-```
-
-This approach works well in a doc, where the user can quickly determine if there is an error and adjust accordingly. However, when a sync table is used by an agent to [index data][indexing], the sync takes places out of view and the user won't get that feedback.
-
-For sync tables only, you can instead use the [`validateParameters`][validateparameters] function. This function is run before the `execute` function begins, and the agent setup process won't complete until it passes. In it you can validate all of the parameter values and return an object containing the full set of errors to show to the user.
-
-```{.ts hl_lines="21-46"}
+```{.ts hl_lines="23-28"}
 pack.addSyncTable({
   name: "Orders",
   description: "List the open orders.",
@@ -396,9 +362,32 @@ pack.addSyncTable({
       coda.makeParameter({
         type: coda.ParameterType.Number,
         name: "quantity",
-        description: "Filters orders by the quantity.",
+        description: "Filters orders by a minimum quantity.",
       }),
     ],
+    execute: async function (args, context) {
+      let [sku, quantity] = args;
+      if (sku.length != 10) {
+        throw new coda.UserVisibleError("Use the 10 digit public SKU.")
+      }
+      if (quantity < 1) {
+        throw new coda.UserVisibleError("The quantity must be 1 or greater.")
+      }
+      // Do the sync.
+    },
+  },
+});
+```
+
+This approach works well in a doc, where the user can quickly determine if there is an error and adjust accordingly. However, when a sync table is used by an agent to [index data][indexing], the sync takes places out of view and the user won't get that feedback.
+
+For sync tables only, you can instead use the [`validateParameters`][validateparameters] function. This function is run before the `execute` function begins, and the agent setup process won't complete until it passes. In it you can validate all of the parameter values and return an object containing the full set of errors to show to the user.
+
+```{.ts hl_lines="5-30"}
+pack.addSyncTable({
+  // ...
+  formula: {
+    // ...
     validateParameters: async function (context, _, args) {
       let { sku, quantity } = args;
       let errors = [];
