@@ -3164,6 +3164,8 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
 	displayName?: string;
 	/** See {@link SyncTableOptions.description} */
 	description?: string;
+	/** See {@link SyncTableOptions.instructions} */
+	instructions?: string;
 	/** See {@link SyncTableOptions.schema} */
 	schema: SchemaT;
 	/**
@@ -4041,6 +4043,11 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
 	 */
 	description?: string;
 	/**
+	 * Instructions for LLMs on how to search this sync table. This overrides the description
+	 * when the sync table is used as a knowledge search tool in an agent.
+	 */
+	instructions?: string;
+	/**
 	 * The "unique identifier" for the entity being synced. This will serve as the unique id for this
 	 * table, and must be unique across other sync tables for your pack. This is often the singular
 	 * form of the table name, e.g. if your table name was 'Products' you might choose 'Product'
@@ -4223,7 +4230,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
  */
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaDefT extends ObjectSchemaDefinition<K, L>, SchemaT extends SchemaDefT & {
 	identity?: Identity;
-}, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData>({ name, displayName, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions, role, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT, ContextT, PermissionsContextT>): SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>;
+}, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData>({ name, displayName, description, instructions, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions, role, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT, ContextT, PermissionsContextT>): SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>;
 /**
  * Creates a dynamic sync table definition.
  *
