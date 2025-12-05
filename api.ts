@@ -365,6 +365,8 @@ export interface SyncTableDef<
 
   /** See {@link SyncTableOptions.description} */
   description?: string;
+  /** See {@link SyncTableOptions.instructions} */
+  instructions?: string;
   /** See {@link SyncTableOptions.schema} */
   schema: SchemaT;
   /**
@@ -2331,6 +2333,11 @@ export interface SyncTableOptions<
    */
   description?: string;
   /**
+   * Instructions for LLMs on how to search this sync table. This overrides the description
+   * when the sync table is used as a knowledge search tool in an agent.
+   */
+  instructions?: string;
+  /**
    * The "unique identifier" for the entity being synced. This will serve as the unique id for this
    * table, and must be unique across other sync tables for your pack. This is often the singular
    * form of the table name, e.g. if your table name was 'Products' you might choose 'Product'
@@ -2536,6 +2543,7 @@ export function makeSyncTable<
   name,
   displayName,
   description,
+  instructions,
   identityName,
   schema: inputSchema,
   formula,
@@ -2694,6 +2702,7 @@ export function makeSyncTable<
     name,
     displayName,
     description,
+    instructions,
     schema: normalizedSchema,
     identityName,
     getter: {

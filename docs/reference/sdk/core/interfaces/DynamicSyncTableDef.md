@@ -133,6 +133,18 @@ See [SyncTableOptions.identityName](SyncTableOptions.md#identityname) for more d
 
 ***
 
+### instructions?
+
+> `optional` **instructions**: `string`
+
+See [SyncTableOptions.instructions](SyncTableOptions.md#instructions)
+
+#### Inherited from
+
+[`SyncTableDef`](SyncTableDef.md).[`instructions`](SyncTableDef.md#instructions)
+
+***
+
 ### isDynamic
 
 > **isDynamic**: `true`

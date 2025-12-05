@@ -856,7 +856,7 @@ exports.makeObjectFormula = makeObjectFormula;
  *
  * See [Normalization](https://coda.io/packs/build/latest/guides/advanced/schemas/#normalization) for more information about schema normalization.
  */
-function makeSyncTable({ name, displayName, description, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions = {}, role, }) {
+function makeSyncTable({ name, displayName, description, instructions, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions = {}, role, }) {
     const { getSchema: getSchemaDef, entityName, defaultAddDynamicColumns } = dynamicOptions;
     const { execute: wrappedExecute, executeUpdate: wrappedExecuteUpdate, executeGetPermissions, onError, ...definition } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
     // Since we mutate schemaDef, we need to make a copy so the input schema can be reused across sync tables.
@@ -970,6 +970,7 @@ function makeSyncTable({ name, displayName, description, identityName, schema: i
         name,
         displayName,
         description,
+        instructions,
         schema: normalizedSchema,
         identityName,
         getter: {
