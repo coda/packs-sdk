@@ -338,6 +338,91 @@ There are some important differences between vararg parameters and standard para
 If you have a parameter that accepts a limited set of values it's usually best to provide those options using autocomplete. See the [Autocomplete guide][autocomplete] for more information.
 
 
+## Validation
+
+Often parameters have a limited set of values that they support, such as a range of numbers or a set of strings. If you are passing these values to an API it may detect these invalid values and throw an error, but the resulting error message may not be clear to the user.
+
+You can provide a better user experience by validating the parameters before you use them. A common way to do that is to check the values at the start of the `execute` function and throw a user-visible error if a problem is found.
+
+```{.ts hl_lines="23-28"}
+pack.addSyncTable({
+  name: "Orders",
+  description: "List the open orders.",
+  identityName: "Order",
+  schema: OrderSchema,
+  formula: {
+    name: "SyncOrders",
+    description: "Syncs the data.",
+    parameters: [
+      coda.makeParameter({
+        type: coda.ParameterType.String,
+        name: "sku",
+        description: "Filters orders by the product SKU.",
+      }),
+      coda.makeParameter({
+        type: coda.ParameterType.Number,
+        name: "quantity",
+        description: "Filters orders by a minimum quantity.",
+      }),
+    ],
+    execute: async function (args, context) {
+      let [sku, quantity] = args;
+      if (sku.length != 10) {
+        throw new coda.UserVisibleError("Use the 10 digit public SKU.")
+      }
+      if (quantity < 1) {
+        throw new coda.UserVisibleError("The quantity must be 1 or greater.")
+      }
+      // Do the sync.
+    },
+  },
+});
+```
+
+This approach works well in a doc, where the user can quickly determine if there is an error and adjust accordingly. However, when a sync table is used by an agent to [index data][indexing], the sync takes places out of view and the user won't get that feedback.
+
+For sync tables only, you can instead use the [`validateParameters`][validateparameters] function. This function is run before the `execute` function begins, and the agent setup process won't complete until it passes. In it you can validate all of the parameter values and return an object containing the full set of errors to show to the user.
+
+```{.ts hl_lines="5-30"}
+pack.addSyncTable({
+  // ...
+  formula: {
+    // ...
+    validateParameters: async function (context, _, args) {
+      let { sku, quantity } = args;
+      let errors = [];
+      if (sku.length != 10) {
+        errors.push({
+          message: "Use the 10 digit public SKU.",
+          parameterName: "sku",
+        });
+      }
+      if (quantity < 1) {
+        errors.push({
+          message: "Must be 1 or greater.",
+          parameterName: "quantity",
+        });
+      }
+      if (errors.length > 0) {
+        return {
+          isValid: false,
+          message: "Please fix the errors.",
+          errors: errors,
+        };
+      }
+      return {
+        isValid: true,
+      };
+    },
+    execute: async function (args, context) {
+      let [sku, quantity] = args;
+      // Do the sync ...
+    },
+  },
+});
+```
+
+
 ## Reusing parameters
 
 It's often the case that many formulas in a Pack use the same parameter. For example, the [Google Calendar Pack][calendar_pack] has many formulas have a parameter for the calendar to operate on. Rather than redefine the same parameter for each formula, it can be more efficient to define the shared parameter once outside of a formula and then reuse it multiple times.
@@ -458,3 +543,5 @@ The table below shows the recommended parameter type to use with various types o
 [fetcher_binary_response]: ../../basics/fetcher.md#binary-response
 [network_domains]: ../../basics/fetcher.md#network-domains
 [examples_box_filename]: https://github.com/coda/packs-examples/blob/c565981293f14a4ca82bc2ddcf385ea9c7bbbad6/examples/box/helpers.ts#L31-L52
+[indexing]: ../../../agents/indexing/index.md
+[validateparameters]: ../../../reference/sdk/core/interfaces/CommonPackFormulaDef.md#validateparameters

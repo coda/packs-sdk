@@ -1,0 +1,33 @@
+<html>
+  <head>
+    <!-- Monaco library script is loaded from: https://cdnjs.com/libraries/monaco-editor-->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/vs/loader.min.js"
+      integrity="sha512-A+6SvPGkIN9Rf0mUXmW4xh7rDvALXf/f0VtOUiHlDUSPknu2kcfz1KzLpOJyL2pO+nZS13hhIjLqVgiQExLJrw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      require.config({
+        paths: {
+          vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs',
+        },
+      });
+
+      require(['vs/editor/editor.main'], function () {
+        var editor = monaco.editor.create(document.getElementById('container'), {
+          value: "import * as coda from \"@codahq/packs-sdk\";\nexport const pack = coda.newPack();\n\nconst PageSize = 100;\n\nconst SpellSchema = coda.makeObjectSchema({\n  type: coda.ValueType.Object,\n  properties: {\n    name: { type: coda.ValueType.String },\n    description: { type: coda.ValueType.String },\n    level: { type: coda.ValueType.Number },\n    school: { type: coda.ValueType.String },\n    index: { type: coda.ValueType.String },\n  },\n  displayProperty: \"name\",\n  idProperty: \"index\",\n  featuredProperties: [\"description\", \"level\", \"school\"],\n});\n\npack.addNetworkDomain(\"dnd5eapi.co\");\n\npack.addSyncTable({\n  name: \"Spells\",\n  identityName: \"Spell\",\n  schema: SpellSchema,\n  formula: {\n    name: \"SyncSpells\",\n    description: \"Sync all the spells.\",\n    parameters: [\n      coda.makeParameter({\n        type: coda.ParameterType.Number,\n        name: \"level\",\n        description: \"Only include spells with the given level.\",\n        optional: true,\n      }),\n      coda.makeParameter({\n        type: coda.ParameterType.String,\n        name: \"school\",\n        description: \"Only include spells with the given magic school.\",\n        optional: true,\n        autocomplete: async function (context, search) {\n          let schools = await getMagicSchools(context);\n          return coda.autocompleteSearchObjects(\n            search, schools, \"name\", \"index\");\n        },\n      }),\n    ],\n    // Validate the parameter values.\n    validateParameters: async function (context, _, args) {\n      let { level, school } = args;\n      let errors: coda.ParameterValidationDetail[] = [];\n      if (level && (level < 0 || level > 9)) {\n        errors.push({\n          message: \"The level must be in the range 0-9.\",\n          parameterName: \"level\",\n        });\n      }\n      if (school) {\n        let schools = await getMagicSchools(context);\n        let found = schools.some(s => s.index === school);\n        if (!found) {\n          errors.push({\n            message: \"Unknown school: \" + school,\n            parameterName: \"school\",\n          });\n        }\n      }\n      if (errors.length > 0) {\n        return {\n          isValid: false,\n          message: \"Please fix the errors.\",\n          errors: errors,\n        };\n      }\n      return {\n        isValid: true,\n      };\n    },\n    execute: async function (args, context) {\n      let skip = context.sync.continuation?.skip ?? 0;\n      let [level, school] = args;\n      let query = `\n        query($limit: Int, $skip: Int, $level: [Int!], $school: [String!]) {\n          spells(limit: $limit, skip: $skip, level: $level, school: $school) {\n            index\n            name\n            desc\n            level\n            school { name }\n          }\n        }\n      `;\n      let payload = {\n        query: query,\n        variables: {\n          limit: PageSize,\n          skip: skip,\n          level: level,\n          school: school,\n        },\n      };\n      let response = await context.fetcher.fetch({\n        method: \"POST\",\n        url: \"https://www.dnd5eapi.co/graphql/2014\",\n        headers: {\n          \"Content-Type\": \"application/json\",\n        },\n        body: JSON.stringify(payload),\n      });\n      let spells = response.body.data.spells;\n      let rows = spells?.map(spell => {\n        return {\n          ...spell,\n          description: spell.desc?.join(\"\\n\"),\n          school: spell.school?.name,\n        };\n      });\n      let continuation;\n      if (spells?.length > 0) {\n        continuation = {\n          skip: skip + PageSize,\n        };\n      }\n      return {\n        result: rows,\n        continuation: continuation,\n      };\n    },\n  },\n});\n\nasync function getMagicSchools(context: coda.ExecutionContext) {\n  let response = await context.fetcher.fetch({\n    method: \"GET\",\n    url: \"https://www.dnd5eapi.co/api/2014/magic-schools\",\n  });\n  return response.body.results;\n}",
+          language: 'javascript',
+          minimap: {enabled: false},
+          readOnly: true,
+          renderValidationDecorations: 'off',
+          wordWrap: 'on',
+          contextmenu: false,
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div id="container" style="position: absolute; top: 0; right: 16; bottom: 16; left: 0"></div>
+  </body>
+</html>

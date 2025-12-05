@@ -606,6 +606,12 @@ export const Examples: Example[] = [
           'A Pack that reuses a parameter across multiple formulas. This sample includes mathematical formulas that operate on a list of numbers.',
         codeFile: './samples/packs/math/math.ts',
       },
+      {
+        name: 'Parameter validation',
+        content:
+          'A Pack with a sync table that validates parameter values. This sample includes a table of D&D spells that can be filtered using parameters.',
+        codeFile: './samples/packs/parameter/spells.ts',
+      },
     ],
   },
   {
