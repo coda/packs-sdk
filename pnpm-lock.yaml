@@ -306,8 +306,8 @@ importers:
         version: 4.9.0(typedoc@0.28.14(typescript@5.1.6))
     optionalDependencies:
       isolated-vm:
-        specifier: 5.0.1
-        version: 5.0.1
+        specifier: 5.0.4
+        version: 5.0.4
 
   documentation/samples:
     devDependencies:
@@ -3215,8 +3215,8 @@ packages:
     resolution: {integrity: sha512-LpB/54B+/2J5hqQ7imZHfdU31OlgQqx7ZicVlkm9kzg9/w8GKLEcFfJl/t7DCEDueOyBAD6zCCwTO6Fzs0NoEQ==}
     engines: {node: '>=16'}
 
-  isolated-vm@5.0.1:
-    resolution: {integrity: sha512-hs7+ff59Z2zDvavfcjuot/r1gm6Bmpt+GoZxmVfxUmXaX5scOvUq/Rnme+mUtSh5lW41hH8gAuvk/yTJDYO8Fg==}
+  isolated-vm@5.0.4:
+    resolution: {integrity: sha512-RYUf/JC4ldWz/oi2BVs8a1XIprQ71q6eQPBwySaF5Apu0KMyf2gIpElbCyPh2OEmRT+FYw1GOKSdkv7jw2KLxw==}
     engines: {node: '>=18.0.0'}
 
   issue-parser@7.0.1:
@@ -8621,7 +8621,7 @@ snapshots:
 
   isexe@3.1.1: {}
 
-  isolated-vm@5.0.1:
+  isolated-vm@5.0.4:
     dependencies:
       prebuild-install: 7.1.2
     optional: true
