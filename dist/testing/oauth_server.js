@@ -36,6 +36,7 @@ function launchOAuthServerFlow({ clientId, clientSecret, authDef, port, afterTok
         client_id: clientId,
         redirect_uri: redirectUri,
         response_type: 'code',
+        // Some OAuth providers require a state parameter, so we add one with an arbitrary value.
         state: new Date().getTime(),
         ...(additionalParams || {}),
     };
