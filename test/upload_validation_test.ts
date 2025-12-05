@@ -6313,6 +6313,53 @@ describe('Pack metadata Validation', async () => {
         },
       ]);
     });
+
+    it('validates skill with model string', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [],
+            model: 'openai_direct_gpt41_priority',
+          },
+        ],
+      });
+      await validateJson(metadata);
+    });
+
+    it('validates skill without model (uses default)', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [],
+          },
+        ],
+      });
+      await validateJson(metadata);
+    });
+
+    it('validates skill with any model string (validation happens at runtime)', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [],
+            model: 'custom-model',
+          },
+        ],
+      });
+      await validateJson(metadata);
+    });
   });
 
   describe('validateSkillEntrypoints', () => {
