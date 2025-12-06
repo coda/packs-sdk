@@ -17,7 +17,7 @@ mkdocs-material = "==9.7.0"
 mkdocs-redirects = "==1.2.2"
 mkdocs-simple-hooks = "==0.1.5"
 pillow = "==10.4.0"
-urllib3 = "==2.2.2"
+urllib3 = "==2.6.0"
 
 [dev-packages]
 
