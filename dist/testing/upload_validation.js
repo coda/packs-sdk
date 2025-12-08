@@ -1695,7 +1695,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         description: z.string().min(1).max(exports.Limits.BuildingBlockDescription),
         prompt: z.string().min(1).max(exports.Limits.PromptLength),
         tools: z.array(toolSchema),
-        forcedFormula: z.string().optional(),
+        forcedFormula: z.string().min(1).optional(),
+        model: z.string().min(1).optional(),
     });
     const skillEntrypointConfigSchema = zodCompleteStrictObject({
         skillName: z.string(),
