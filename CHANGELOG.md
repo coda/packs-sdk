@@ -8,6 +8,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 - Added a `state` parameter to the OAuth authorization URL when running `coda auth` locally, for compatibility with OAuth providers that require it.
 - Add LLM-facing instructions to sync tables
+- Updated isolated-vm to 6.0.2
 
 ## [1.12.3] - 2025-11-24
 

@@ -25,7 +25,7 @@ _bootstrap-install-pnpm:
 
 .PHONY: _bootstrap-node
 _bootstrap-node:
-	.pnpm_install/bin/pnpm install --frozen-lockfile
+	.pnpm_install/bin/pnpm install
 
 .PHONY: _bootstrap-python
 _bootstrap-python:
@@ -314,11 +314,11 @@ publish-docs-gh-pages:
 
 .PHONY: test
 test:
-	TS_NODE_TRANSPILE_ONLY=1 ${ROOTDIR}/node_modules/.bin/mocha test/*_test.ts
+	TS_NODE_TRANSPILE_ONLY=1 TS_NODE_COMPILER_OPTIONS='{"module":"commonjs"}' ${ROOTDIR}/node_modules/.bin/mocha test/*_test.ts
 
 .PHONY: test-file
 test-file:
-	TS_NODE_TRANSPILE_ONLY=1 ${ROOTDIR}/node_modules/.bin/mocha ${FILE}
+	TS_NODE_TRANSPILE_ONLY=1 TS_NODE_COMPILER_OPTIONS='{"module":"commonjs"}' ${ROOTDIR}/node_modules/.bin/mocha ${FILE}
 
 .PHONY: clean-githooks
 clean-githooks:
