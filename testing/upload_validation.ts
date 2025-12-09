@@ -13,6 +13,7 @@ import type {BooleanPackFormula} from '../api';
 import type {BooleanSchema} from '../schema';
 import type {CategorizationIndexDefinition} from '../schema';
 import type {CodaApiBearerTokenAuthentication} from '../types';
+import type {CodaDocsAndTablesTool} from '../types';
 import type {CodaDocsTool} from '../types';
 import type {CodaInternalRichTextSchema} from '../schema';
 import type {CommentContentCategorization} from '../schema';
@@ -2196,7 +2197,12 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     type: z.literal(ToolType.ContactResolution),
   });
 
-  const codaDocsToolSchema = zodCompleteStrictObject<CodaDocsTool>({
+  const codaDocsToolSchema = zodCompleteStrictObject<CodaDocsAndTablesTool>({
+    type: z.literal(ToolType.CodaDocsAndTables),
+  });
+
+  // Deprecated: Use codaDocsToolSchema instead
+  const codaDocsLegacyToolSchema = zodCompleteStrictObject<CodaDocsTool>({
     type: z.literal(ToolType.CodaDocs),
   });
 
@@ -2208,6 +2214,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     summarizerToolSchema,
     mcpToolSchema,
     contactResolutionToolSchema,
+    codaDocsLegacyToolSchema,
     codaDocsToolSchema,
   ]);
   const skillSchema = zodCompleteObject<Skill>({

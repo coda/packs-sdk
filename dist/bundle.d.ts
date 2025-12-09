@@ -5382,8 +5382,14 @@ export declare enum ToolType {
 	/**
 	 * Tool that provides access to Coda docs capabilities.
 	 * @hidden
+	 * TODO(wesley): Deprecate this in favor of CodaDocsAndTables.
 	 */
-	CodaDocs = "CodaDocs"
+	CodaDocs = "CodaDocs",
+	/**
+	 * Tool that provides access to Coda docs and tables capabilities.
+	 * @hidden
+	 */
+	CodaDocsAndTables = "CodaDocsAndTables"
 }
 /**
  * Base interface for all tool definitions.
@@ -5529,8 +5535,15 @@ export interface MCPTool extends BaseTool<ToolType.MCP> {
 export interface ContactResolutionTool extends BaseTool<ToolType.ContactResolution> {
 }
 /**
+ * Tool that provides access to Coda docs and tables capabilities.
+ * @hidden
+ */
+export interface CodaDocsAndTablesTool extends BaseTool<ToolType.CodaDocsAndTables> {
+}
+/**
  * Tool that provides access to Coda docs capabilities.
  * @hidden
+ * @deprecated Use CodaDocsAndTablesTool instead.
  */
 export interface CodaDocsTool extends BaseTool<ToolType.CodaDocs> {
 }
@@ -5561,7 +5574,9 @@ export interface ToolMap {
 	[ToolType.Summarizer]: SummarizerTool;
 	[ToolType.MCP]: MCPTool;
 	[ToolType.ContactResolution]: ContactResolutionTool;
+	/** @deprecated Use CodaDocsAndTables instead. */
 	[ToolType.CodaDocs]: CodaDocsTool;
+	[ToolType.CodaDocsAndTables]: CodaDocsAndTablesTool;
 }
 /**
  * Union of all supported tool types.
