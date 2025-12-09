@@ -6138,6 +6138,28 @@ describe('Pack metadata Validation', async () => {
           path: 'mcpServers[0].endpointUrl',
           message: 'MCP server endpointUrl must be a valid URL.',
         },
+        {
+          path: 'mcpServers.mcpServers',
+          message: 'MCP server endpointUrl must be HTTPS URLs only.',
+        },
+      ]);
+    });
+
+    it('fails when MCP server endpointUrl is not HTTPS', async () => {
+      const metadata = createFakePackVersionMetadata({
+        mcpServers: [
+          {
+            endpointUrl: 'http://one.example.com/mcp',
+            name: 'InvalidServer',
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'mcpServers.mcpServers',
+          message: 'MCP server endpointUrl must be HTTPS URLs only.',
+        },
       ]);
     });
 

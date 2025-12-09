@@ -2381,7 +2381,18 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }
       })
       .superRefine((data, context) => {
-        if ((data || []).map(server => server.endpointUrl).every(url => new URL(url).protocol === 'https:')) {
+        if (
+          (data || [])
+            .map(server => server.endpointUrl)
+            .every(url => {
+              try {
+                const protocol = new URL(url).protocol;
+                return protocol === 'https:';
+              } catch (error) {
+                return false;
+              }
+            })
+        ) {
           return;
         }
         context.addIssue({
