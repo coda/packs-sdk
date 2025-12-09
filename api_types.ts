@@ -407,7 +407,7 @@ export interface ParamDef<T extends UnionType> {
   allowManualInput?: boolean;
 
   /**
-   * Enables crawling for this parameter, where it's values are populated from the results of another sync table.
+   * Enables crawling for this parameter, where its values are populated from the results of another sync table.
    * Crawling can simplify the user setup when a sync table has a required parameter that can be sourced from another
    * sync.
    *
@@ -494,7 +494,7 @@ export type SuggestedValueType<T extends UnionType> =
   T extends ArrayType<Type.date> ? TypeOfMap<T> | PrecannedDateRange : TypeOfMap<T>;
 
 /**
- * Defines how to crawl a parameter, where it's values are populated from the results of another sync table.
+ * Defines how to crawl a parameter, where its values are populated from the results of another sync table.
  *
  * @example
  * ```ts
@@ -1175,7 +1175,7 @@ export enum InvocationSource {
 export interface InvocationLocation {
   // TODO(patrick): Make this non-optional after implementing support in Coda.
   /**
-   * The source application that invoked the Pack. Allows the Pack to adjust it's functionality based on the context.
+   * The source application that invoked the Pack. Allows the Pack to adjust its functionality based on the context.
    */
   source?: InvocationSource;
 

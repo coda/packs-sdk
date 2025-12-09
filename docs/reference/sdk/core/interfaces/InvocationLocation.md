@@ -36,4 +36,4 @@ The base URL of the Coda environment executing this formula. Only for Coda inter
 
 > `optional` **source**: [`InvocationSource`](../enumerations/InvocationSource.md)
 
-The source application that invoked the Pack. Allows the Pack to adjust it's functionality based on the context.
+The source application that invoked the Pack. Allows the Pack to adjust its functionality based on the context.

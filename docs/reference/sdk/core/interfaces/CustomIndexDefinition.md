@@ -22,7 +22,40 @@ Defines how to index schemas for use with full-text indexing.
 
 > `optional` **contextProperties**: [`ContextProperties`](../type-aliases/ContextProperties.md)
 
-The context properties to be used for indexing. If unspecified, intelligent defaults may be used.
+A list of additional properties from within [ObjectSchemaDefinition.properties](ObjectSchemaDefinition.md#properties) that provide context about
+the record. These properties typically contain short-form text, such as categories, folder names, etc. The content
+of these properties will be duplicated in each chunk of text that results from indexing the content in the indexed
+[properties](#properties). Context properties help with retrieval, increasing the likelihood that the LLM will find the
+desired records.
+
+#### Example
+
+```ts
+const ManufacturerSchema = coda.makeObjectSchema({
+  properties: {
+    name: { type: coda.ValueType.String },
+    id: { type: coda.ValueType.String },
+  },
+  displayProperty: "name",
+});
+
+const ProductSchema = coda.makeObjectSchema({
+  properties: {
+    // ...
+    size: { type: coda.ValueType.String },
+    materials: {
+      type: coda.ValueType.Array,
+      items: { type: coda.ValueType.String },
+    },
+    manufacturer: ManufacturerSchema,
+  },
+  // ...
+  index: {
+    // ...
+    contextProperties: ["size", "materials", "manufacturer.name" ],
+  },
+});
+```
 
 ***
 
@@ -44,4 +77,25 @@ so these should be the properties most likely to be useful as filters.
 
 > **properties**: [`IndexedProperty`](../type-aliases/IndexedProperty.md)[]
 
-A list of properties from within [ObjectSchemaDefinition.properties](ObjectSchemaDefinition.md#properties) that should be indexed.
+A list of properties from within [ObjectSchemaDefinition.properties](ObjectSchemaDefinition.md#properties) that should be indexed. These
+properties typically contain long-form text such as descriptions, notes, and message bodies. The content of these
+properties will be broken down into smaller chunks for retrieval and usage by the LLM.
+
+#### Example
+
+```ts
+const ProductSchema = coda.makeObjectSchema({
+  properties: {
+    // ...
+    specSheetLink: {
+      type: coda.ValueType.String,
+      codaType: coda.ValueHintType.Attachment,
+      description: "Link the PDF spec sheet for the product.",
+    },
+  },
+  // ...
+  index: {
+    properties: ["specSheetLink"],
+  },
+});
+```

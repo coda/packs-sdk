@@ -292,7 +292,7 @@ export interface ParamDef<T extends UnionType> {
 	 */
 	allowManualInput?: boolean;
 	/**
-	 * Enables crawling for this parameter, where it's values are populated from the results of another sync table.
+	 * Enables crawling for this parameter, where its values are populated from the results of another sync table.
 	 * Crawling can simplify the user setup when a sync table has a required parameter that can be sourced from another
 	 * sync.
 	 *
@@ -358,7 +358,7 @@ export type ParamValues<ParamDefsT extends ParamDefs> = {
  */
 export type SuggestedValueType<T extends UnionType> = T extends ArrayType<Type.date> ? TypeOfMap<T> | PrecannedDateRange : TypeOfMap<T>;
 /**
- * Defines how to crawl a parameter, where it's values are populated from the results of another sync table.
+ * Defines how to crawl a parameter, where its values are populated from the results of another sync table.
  *
  * @example
  * ```ts
@@ -977,7 +977,7 @@ export declare enum InvocationSource {
  */
 export interface InvocationLocation {
 	/**
-	 * The source application that invoked the Pack. Allows the Pack to adjust it's functionality based on the context.
+	 * The source application that invoked the Pack. Allows the Pack to adjust its functionality based on the context.
 	 */
 	source?: InvocationSource;
 	/** The base URL of the Coda environment executing this formula. Only for Coda internal use. */
@@ -2263,11 +2263,63 @@ export interface BaseIndexDefinition {
  */
 export interface CustomIndexDefinition extends BaseIndexDefinition {
 	/**
-	 * A list of properties from within {@link ObjectSchemaDefinition.properties} that should be indexed.
+	 * A list of properties from within {@link ObjectSchemaDefinition.properties} that should be indexed. These
+	 * properties typically contain long-form text such as descriptions, notes, and message bodies. The content of these
+	 * properties will be broken down into smaller chunks for retrieval and usage by the LLM.
+	 *
+	 * @example
+	 * ```ts
+	 * const ProductSchema = coda.makeObjectSchema({
+	 *   properties: {
+	 *     // ...
+	 *     specSheetLink: {
+	 *       type: coda.ValueType.String,
+	 *       codaType: coda.ValueHintType.Attachment,
+	 *       description: "Link the PDF spec sheet for the product.",
+	 *     },
+	 *   },
+	 *   // ...
+	 *   index: {
+	 *     properties: ["specSheetLink"],
+	 *   },
+	 * });
+	 * ```
 	 */
 	properties: IndexedProperty[];
 	/**
-	 * The context properties to be used for indexing. If unspecified, intelligent defaults may be used.
+	 * A list of additional properties from within {@link ObjectSchemaDefinition.properties} that provide context about
+	 * the record. These properties typically contain short-form text, such as categories, folder names, etc. The content
+	 * of these properties will be duplicated in each chunk of text that results from indexing the content in the indexed
+	 * {@link properties}. Context properties help with retrieval, increasing the likelihood that the LLM will find the
+	 * desired records.
+	 *
+	 * @example
+	 * ```ts
+	 * const ManufacturerSchema = coda.makeObjectSchema({
+	 *   properties: {
+	 *     name: { type: coda.ValueType.String },
+	 *     id: { type: coda.ValueType.String },
+	 *   },
+	 *   displayProperty: "name",
+	 * });
+	 *
+	 * const ProductSchema = coda.makeObjectSchema({
+	 *   properties: {
+	 *     // ...
+	 *     size: { type: coda.ValueType.String },
+	 *     materials: {
+	 *       type: coda.ValueType.Array,
+	 *       items: { type: coda.ValueType.String },
+	 *     },
+	 *     manufacturer: ManufacturerSchema,
+	 *   },
+	 *   // ...
+	 *   index: {
+	 *     // ...
+	 *     contextProperties: ["size", "materials", "manufacturer.name" ],
+	 *   },
+	 * });
+	 * ```
 	 */
 	contextProperties?: ContextProperties;
 }

@@ -10,7 +10,7 @@ search:
 
 # Interface: CrawlStrategy
 
-Defines how to crawl a parameter, where it's values are populated from the results of another sync table.
+Defines how to crawl a parameter, where its values are populated from the results of another sync table.
 
 ## Example
 

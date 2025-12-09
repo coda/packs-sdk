@@ -47,7 +47,7 @@ If you have a hardcoded list of valid values, you would only need to use
 
 > `optional` **crawlStrategy**: [`CrawlStrategy`](CrawlStrategy.md)
 
-Enables crawling for this parameter, where it's values are populated from the results of another sync table.
+Enables crawling for this parameter, where its values are populated from the results of another sync table.
 Crawling can simplify the user setup when a sync table has a required parameter that can be sourced from another
 sync.
 

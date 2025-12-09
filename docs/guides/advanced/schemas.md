@@ -632,8 +632,8 @@ let MovieSchema = coda.makeObjectSchema({
   subtitleProperties: [
     "director",
     // Fully customize the label for the year property.
-    { 
-      property: "year", 
+    {
+      property: "year",
       label: `Released in ${coda.PropertyLabelValueTemplate}`,
     },
     // Only show the value of the rating property.
@@ -664,7 +664,7 @@ let MovieSchema = coda.makeObjectSchema({
 
 <img src="../../../images/schemas_placeholders.png" srcset="../../../images/schemas_placeholders_2x.png 2x" class="screenshot" alt="Placeholders for subtitle properties">
 
-A property will be considered empty and fallback to the placeholder when it's value is one of the following: `null`, `undefined`, `""`, `[]`, `{}`. The placeholder is only used to render the card, and when using the Coda Formula Language to access the property it will still return the original value. Placeholders are currently only supported on the following fields:
+A property will be considered empty and fallback to the placeholder when its value is one of the following: `null`, `undefined`, `""`, `[]`, `{}`. The placeholder is only used to render the card, and when using the Coda Formula Language to access the property it will still return the original value. Placeholders are currently only supported on the following fields:
 
 - [`titleProperty`][titleProperty]
 - [`subtitleProperties`][subtitleProperties]
