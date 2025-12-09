@@ -89,6 +89,14 @@ See [SyncTableOptions.identityName](SyncTableOptions.md#identityname) for more d
 
 ***
 
+### instructions?
+
+> `optional` **instructions**: `string`
+
+See [SyncTableOptions.instructions](SyncTableOptions.md#instructions)
+
+***
+
 ### name
 
 > **name**: `string`

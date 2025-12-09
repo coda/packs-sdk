@@ -1296,8 +1296,13 @@ export interface Skill {
     /**
      * Forces execution of a specific formula by name, overriding autonomous tool selection.
      * @hidden
-     * */
+     */
     forcedFormula?: string;
+    /**
+     * The LLM model to use for this skill. Specify a model name string.
+     * If not specified or if an invalid value is provided, falls back to the default model (GPT-4.1).
+     */
+    model?: string;
 }
 /**
  * Configuration for a skill entrypoint.

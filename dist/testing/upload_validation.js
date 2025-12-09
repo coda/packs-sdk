@@ -717,7 +717,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             message: 'Object parameters are not currently supported.',
         }),
         description: z.string().max(exports.Limits.BuildingBlockDescription),
-        instructions: z.string().optional(),
+        instructions: z.string().max(exports.Limits.PromptLength).optional(),
         optional: z.boolean().optional(),
         autocomplete: z.unknown().optional(),
         defaultValue: z.unknown().optional(),
@@ -759,7 +759,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         // done as a superRefine on the top-level object that also contains the pack id.
         name: z.string().max(exports.Limits.BuildingBlockName),
         description: z.string().max(exports.Limits.BuildingBlockDescription),
-        instructions: z.string().optional(),
+        instructions: z.string().max(exports.Limits.PromptLength).optional(),
         examples: z
             .array(z.object({
             params: z.array(z.union([
@@ -1555,6 +1555,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             .regex(regexFormulaName, 'Sync Table names can only contain alphanumeric characters and underscores.'),
         displayName: z.string().max(exports.Limits.BuildingBlockName).optional(),
         description: z.string().max(exports.Limits.BuildingBlockDescription).optional(),
+        instructions: z.string().max(exports.Limits.PromptLength).optional(),
         schema: genericObjectSchema,
         getter: syncFormulaSchema,
         entityName: z.string().optional(),
@@ -1694,7 +1695,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         description: z.string().min(1).max(exports.Limits.BuildingBlockDescription),
         prompt: z.string().min(1).max(exports.Limits.PromptLength),
         tools: z.array(toolSchema),
-        forcedFormula: z.string().optional(),
+        forcedFormula: z.string().min(1).optional(),
+        model: z.string().min(1).optional(),
     });
     const skillEntrypointConfigSchema = zodCompleteStrictObject({
         skillName: z.string(),

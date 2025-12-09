@@ -9,7 +9,7 @@ orbs:
         steps:
           - run:
               name: Install basic tools
-              command: sudo apt-get update && sudo apt-get install -y python3-pip && sudo python3 -m pip install pipenv
+              command: sudo apt-get update && sudo apt-get install -y python3-pip && sudo python3 -m pip install pipenv --break-system-packages
           - run:
               name: Install image libraries
               command: make _bootstrap-doc-tools
@@ -17,7 +17,7 @@ orbs:
 executors:
   default_build_environment:
     docker:
-      - image: cimg/node:18.16.0
+      - image: cimg/node:22.21.1
         auth:
           username: codainternaltools
           password: $DOCKERHUB_PASSWORD
@@ -55,6 +55,35 @@ commands:
           paths:
             - node_modules
           key: *node-cache-key
+  build_docs:
+    parameters:
+      site_url:
+        type: string
+    steps:
+      - checkout
+      - base-tools/install
+      - bootstrap_node
+      - bootstrap_pipenv
+      - restore_cache:
+          name: Restore Cache - mkdocs
+          keys:
+            - mkdocs-{{ checksum "mkdocs.yml" }}
+      - run:
+          name: 'Typedoc'
+          command: DOC_DISABLE_SOURCES=false DOC_GIT_REVISION="$(git rev-parse HEAD)" make docs
+      - run:
+          name: 'MkDocs'
+          command: MK_DOCS_SITE_URL="<< parameters.site_url >>" make build-mkdocs
+      - save_cache:
+          name: Save Cache - mkdocs
+          key: mkdocs-{{ checksum "mkdocs.yml" }}
+          paths:
+            - .cache
+      - persist_to_workspace:
+          root: ~/repo
+          paths:
+            - site
+
 
 jobs:
   build:
@@ -90,60 +119,24 @@ jobs:
     working_directory: ~/repo
 
     steps:
-      - checkout
-      - base-tools/install
-      - bootstrap_node
-      - bootstrap_pipenv
-      - run:
-          name: 'Typedoc'
-          command: DOC_DISABLE_SOURCES=false DOC_GIT_REVISION="$(git rev-parse HEAD)" make docs
-      - run:
-          name: 'MkDocs'
-          command: MK_DOCS_SITE_URL="https://head.coda.io/packs/build/latest/" make build-mkdocs
-      - persist_to_workspace:
-          root: ~/repo
-          paths:
-            - site
+      - build_docs:
+          site_url: https://head.coda.io/packs/build/latest/
 
   build-docs-staging:
     executor: default_build_environment
     working_directory: ~/repo
 
     steps:
-      - checkout
-      - base-tools/install
-      - bootstrap_node
-      - bootstrap_pipenv
-      - run:
-          name: 'Typedoc'
-          command: DOC_DISABLE_SOURCES=false DOC_GIT_REVISION="$(git rev-parse HEAD)" make docs
-      - run:
-          name: 'MkDocs'
-          command: MK_DOCS_SITE_URL="https://staging.coda.io/packs/build/latest/" make build-mkdocs
-      - persist_to_workspace:
-          root: ~/repo
-          paths:
-            - site
+      - build_docs:
+          site_url: https://staging.coda.io/packs/build/latest/
 
   build-docs-prod:
     executor: default_build_environment
     working_directory: ~/repo
 
     steps:
-      - checkout
-      - base-tools/install
-      - bootstrap_node
-      - bootstrap_pipenv
-      - run:
-          name: 'Typedoc'
-          command: DOC_DISABLE_SOURCES=false DOC_GIT_REVISION="$(git rev-parse HEAD)" make docs
-      - run:
-          name: 'MkDocs'
-          command: MK_DOCS_SITE_URL="https://coda.io/packs/build/latest/" make build-mkdocs
-      - persist_to_workspace:
-          root: ~/repo
-          paths:
-            - site
+      - build_docs:
+          site_url: https://coda.io/packs/build/latest/
 
   push-head-docs:
     executor: default_build_environment
