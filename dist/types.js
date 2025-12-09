@@ -260,8 +260,14 @@ var ToolType;
     /**
      * Tool that provides access to Coda docs capabilities.
      * @hidden
+     * TODO(wesley): Deprecate this in favor of CodaDocsAndTables.
      */
     ToolType["CodaDocs"] = "CodaDocs";
+    /**
+     * Tool that provides access to Coda docs and tables capabilities.
+     * @hidden
+     */
+    ToolType["CodaDocsAndTables"] = "CodaDocsAndTables";
 })(ToolType || (exports.ToolType = ToolType = {}));
 /**
  * The type of knowledge source to use.
