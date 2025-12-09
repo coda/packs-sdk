@@ -6030,6 +6030,9 @@ describe('Pack metadata Validation', async () => {
               {
                 type: ToolType.CodaDocs,
               },
+              {
+                type: ToolType.CodaDocsAndTables,
+              },
             ],
           },
         ],
@@ -6089,7 +6092,7 @@ describe('Pack metadata Validation', async () => {
           break;
         case ToolType.ContactResolution:
           break;
-        case ToolType.CodaDocs:
+        case ToolType.CodaDocsAndTables:
           break;
         case 'CustomTool':
           break;
