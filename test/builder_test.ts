@@ -518,7 +518,44 @@ describe('Builder', () => {
       assert.deepEqual(pack.skills[0], skill);
     });
 
-    it('sets skill entrypoints', () => {
+    it('sets chat skill', () => {
+      const chatSkill: Skill = {
+        name: 'DefaultChat',
+        displayName: 'Chat',
+        description: 'Default chat experience.',
+        prompt: 'You are an expert in this pack.',
+        tools: [{type: ToolType.Pack}],
+      };
+      pack.setChatSkill(chatSkill);
+      assert.deepEqual(pack.chatSkill, chatSkill);
+    });
+
+    it('sets chat skill with contact resolution tool', () => {
+      const chatSkill: Skill = {
+        name: 'DefaultChat',
+        displayName: 'Chat',
+        description: 'Default chat experience.',
+        prompt: 'You are an expert in this pack.',
+        tools: [{type: ToolType.Pack}, {type: ToolType.ContactResolution}],
+      };
+      pack.setChatSkill(chatSkill);
+      assert.deepEqual(pack.chatSkill, chatSkill);
+      assert.equal(pack.chatSkill?.tools?.length, 2);
+    });
+
+    it('sets bench initialization skill', () => {
+      const benchSkill: Skill = {
+        name: 'BenchInit',
+        displayName: 'Bench Initialization',
+        description: 'Initializes the agent in the bench.',
+        prompt: 'You are initializing...',
+        tools: [{type: ToolType.Pack}],
+      };
+      pack.setBenchInitializationSkill(benchSkill);
+      assert.deepEqual(pack.benchInitializationSkill, benchSkill);
+    });
+
+    it('sets skill entrypoints (deprecated)', () => {
       pack.setSkillEntrypoints({
         benchInitialization: {skillName: skill.name},
         defaultChat: {skillName: skill.name},

@@ -76,6 +76,16 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    */
   skillEntrypoints?: SkillEntrypoints;
   /**
+   * See {@link PackVersionDefinition.chatSkill}.
+   * @hidden
+   */
+  chatSkill?: Skill;
+  /**
+   * See {@link PackVersionDefinition.benchInitializationSkill}.
+   * @hidden
+   */
+  benchInitializationSkill?: Skill;
+  /**
    * See {@link PackVersionDefinition.suggestedPrompts}.
    * @hidden
    */
@@ -124,6 +134,8 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       formats,
       syncTables,
       skills,
+      chatSkill,
+      benchInitializationSkill,
       networkDomains,
       defaultAuthentication,
       systemConnectionAuthentication,
@@ -138,6 +150,8 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     this.syncTables = syncTables || [];
     this.skills = skills || [];
     this.skillEntrypoints = skillEntrypoints;
+    this.chatSkill = chatSkill;
+    this.benchInitializationSkill = benchInitializationSkill;
     this.suggestedPrompts = suggestedPrompts || [];
     this.networkDomains = networkDomains || [];
     this.mcpServers = mcpServers || [];
@@ -310,6 +324,48 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    */
   addMCPServer(server: MCPServer): this {
     this.mcpServers.push(server);
+    return this;
+  }
+  /**
+   * Sets the chat skill for this pack's agent.
+   *
+   * The chat skill controls the behavior when users chat with the pack agent.
+   * It defines the prompts, available tools, and optionally the model to use.
+   *
+   * @example
+   * ```ts
+   * pack.setChatSkill({
+   *   name: "DefaultChat",
+   *   displayName: "Chat",
+   *   description: "Default chat experience.",
+   *   prompt: "You are an expert in this pack.",
+   *   tools: [
+   *     { type: coda.ToolType.Pack },  // All pack formulas
+   *   ],
+   * });
+   */
+  setChatSkill(skill: Skill): this {
+    this.chatSkill = skill;
+    return this;
+  }
+
+  /**
+   * Sets the skill used when the agent is first initialized in the bench.
+   *
+   * @example
+   * ```ts
+   * pack.setBenchInitializationSkill({
+   *   name: "BenchInit",
+   *   displayName: "Bench Initialization",
+   *   description: "Initializes the agent in the bench.",
+   *   prompt: "You are initializing...",
+   *   tools: [{ type: coda.ToolType.Pack }],
+   * });
+   * ```
+   * @hidden
+   */
+  setBenchInitializationSkill(skill: Skill): this {
+    this.benchInitializationSkill = skill;
     return this;
   }
 

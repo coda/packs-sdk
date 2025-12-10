@@ -1,11 +1,7 @@
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
-pack.setSkillEntrypoints({
-  defaultChat: { skillName: "Gandalf" },
-});
-
-pack.addSkill({
+pack.setChatSkill({
   name: "Gandalf",
   displayName: "Gandalf",
   description: "Speak to Gandalf.",
