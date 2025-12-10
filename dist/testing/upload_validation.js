@@ -1675,10 +1675,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     const codaDocsToolSchema = zodCompleteStrictObject({
         type: z.literal(types_9.ToolType.CodaDocsAndTables),
     });
-    // Deprecated: Use codaDocsToolSchema instead
-    const codaDocsLegacyToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_9.ToolType.CodaDocs),
-    });
     const toolSchema = z.discriminatedUnion('type', [
         packToolSchema,
         knowledgeToolSchema,
@@ -1687,7 +1683,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         summarizerToolSchema,
         mcpToolSchema,
         contactResolutionToolSchema,
-        codaDocsLegacyToolSchema,
         codaDocsToolSchema,
     ]);
     const skillSchema = zodCompleteObject({
