@@ -1673,6 +1673,10 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         type: z.literal(types_9.ToolType.ContactResolution),
     });
     const codaDocsToolSchema = zodCompleteStrictObject({
+        type: z.literal(types_9.ToolType.CodaDocsAndTables),
+    });
+    // Deprecated: Use codaDocsToolSchema instead
+    const codaDocsLegacyToolSchema = zodCompleteStrictObject({
         type: z.literal(types_9.ToolType.CodaDocs),
     });
     const toolSchema = z.discriminatedUnion('type', [
@@ -1683,6 +1687,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         summarizerToolSchema,
         mcpToolSchema,
         contactResolutionToolSchema,
+        codaDocsLegacyToolSchema,
         codaDocsToolSchema,
     ]);
     const skillSchema = zodCompleteObject({
@@ -1844,6 +1849,26 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                     message: `MCP server names must be unique. Found duplicate name "${dupe}".`,
                 });
             }
+        })
+            .superRefine((data, context) => {
+            if ((data || [])
+                .map(server => server.endpointUrl)
+                .every(url => {
+                try {
+                    const protocol = new URL(url).protocol;
+                    return protocol === 'https:';
+                }
+                catch (error) {
+                    return false;
+                }
+            })) {
+                return;
+            }
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['mcpServers'],
+                message: 'MCP server endpointUrl must be HTTPS URLs only.',
+            });
         }),
         skillEntrypoints: skillEntrypointsSchema.optional(),
         suggestedPrompts: z

@@ -6030,6 +6030,9 @@ describe('Pack metadata Validation', async () => {
               {
                 type: ToolType.CodaDocs,
               },
+              {
+                type: ToolType.CodaDocsAndTables,
+              },
             ],
           },
         ],
@@ -6066,7 +6069,7 @@ describe('Pack metadata Validation', async () => {
         {
           path: 'skills[0].tools[0].type',
           message:
-            "Invalid discriminator value. Expected 'Pack' | 'Knowledge' | 'ScreenAnnotation' | 'AssistantMessage' | 'Summarizer' | 'MCP' | 'ContactResolution' | 'CodaDocs'",
+            "Invalid discriminator value. Expected 'Pack' | 'Knowledge' | 'ScreenAnnotation' | 'AssistantMessage' | 'Summarizer' | 'MCP' | 'ContactResolution' | 'CodaDocs' | 'CodaDocsAndTables'",
         },
       ]);
     });
@@ -6090,6 +6093,8 @@ describe('Pack metadata Validation', async () => {
         case ToolType.ContactResolution:
           break;
         case ToolType.CodaDocs:
+          break;
+        case ToolType.CodaDocsAndTables:
           break;
         case 'CustomTool':
           break;
@@ -6137,6 +6142,28 @@ describe('Pack metadata Validation', async () => {
         {
           path: 'mcpServers[0].endpointUrl',
           message: 'MCP server endpointUrl must be a valid URL.',
+        },
+        {
+          path: 'mcpServers.mcpServers',
+          message: 'MCP server endpointUrl must be HTTPS URLs only.',
+        },
+      ]);
+    });
+
+    it('fails when MCP server endpointUrl is not HTTPS', async () => {
+      const metadata = createFakePackVersionMetadata({
+        mcpServers: [
+          {
+            endpointUrl: 'http://one.example.com/mcp',
+            name: 'InvalidServer',
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'mcpServers.mcpServers',
+          message: 'MCP server endpointUrl must be HTTPS URLs only.',
         },
       ]);
     });
