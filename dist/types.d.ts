@@ -1077,12 +1077,6 @@ export declare enum ToolType {
      */
     ContactResolution = "ContactResolution",
     /**
-     * Tool that provides access to Coda docs capabilities.
-     * @hidden
-     * TODO(wesley): Deprecate this in favor of CodaDocsAndTables.
-     */
-    CodaDocs = "CodaDocs",
-    /**
      * Tool that provides access to Coda docs and tables capabilities.
      * @hidden
      */
@@ -1253,13 +1247,6 @@ export interface ContactResolutionTool extends BaseTool<ToolType.ContactResoluti
 export interface CodaDocsAndTablesTool extends BaseTool<ToolType.CodaDocsAndTables> {
 }
 /**
- * Tool that provides access to Coda docs capabilities.
- * @hidden
- * @deprecated Use CodaDocsAndTablesTool instead.
- */
-export interface CodaDocsTool extends BaseTool<ToolType.CodaDocs> {
-}
-/**
  * Definition of an MCP server that the pack can connect to.
  */
 export interface MCPServer {
@@ -1285,8 +1272,6 @@ export interface ToolMap {
     [ToolType.Summarizer]: SummarizerTool;
     [ToolType.MCP]: MCPTool;
     [ToolType.ContactResolution]: ContactResolutionTool;
-    /** @deprecated Use CodaDocsAndTables instead. */
-    [ToolType.CodaDocs]: CodaDocsTool;
     [ToolType.CodaDocsAndTables]: CodaDocsAndTablesTool;
 }
 /**

@@ -257,12 +257,6 @@ var ToolType;
      */
     ToolType["ContactResolution"] = "ContactResolution";
     /**
-     * Tool that provides access to Coda docs capabilities.
-     * @hidden
-     * TODO(wesley): Deprecate this in favor of CodaDocsAndTables.
-     */
-    ToolType["CodaDocs"] = "CodaDocs";
-    /**
      * Tool that provides access to Coda docs and tables capabilities.
      * @hidden
      */
