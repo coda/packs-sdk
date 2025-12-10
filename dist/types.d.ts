@@ -1405,7 +1405,33 @@ export interface PackVersionDefinition {
      */
     skills?: Skill[];
     /**
+     * The skill used when chatting with the pack agent.
+     * This skill defines the prompts, tools, and model for the default chat experience.
+     *
+     * @example
+     * ```ts
+     * pack.setChatSkill({
+     *   name: "DefaultChat",
+     *   displayName: "Chat",
+     *   description: "Default chat experience for this pack.",
+     *   prompt: "You are an expert in this pack.",
+     *   tools: [
+     *     { type: coda.ToolType.Pack },
+     *   ],
+     * });
+     * ```
+     * @hidden
+     */
+    chatSkill?: Skill;
+    /**
+     * The skill used when the agent is first initialized in the bench.
+     * @hidden
+     */
+    benchInitializationSkill?: Skill;
+    /**
      * Mapping of skills to entrypoints that the pack agent can be invoked from.
+     * @hidden
+     * @deprecated Use {@link chatSkill} or {@link benchInitializationSkill} instead.
      */
     skillEntrypoints?: SkillEntrypoints;
     /**

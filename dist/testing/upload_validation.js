@@ -1831,6 +1831,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 });
             }
         }),
+        chatSkill: skillSchema.optional(),
+        benchInitializationSkill: skillSchema.optional(),
         mcpServers: z
             .array(mcpServerSchema)
             .max(1)

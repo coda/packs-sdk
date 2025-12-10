@@ -101,11 +101,11 @@ See [PackVersionDefinition.networkDomains](../interfaces/PackVersionDefinition.m
 
 > `optional` **skillEntrypoints**: [`SkillEntrypoints`](../interfaces/SkillEntrypoints.md)
 
-See [PackVersionDefinition.skillEntrypoints](../interfaces/PackVersionDefinition.md#skillentrypoints).
+See PackVersionDefinition.skillEntrypoints.
 
 #### Implementation of
 
-[`PackDefinition`](../interfaces/PackDefinition.md).[`skillEntrypoints`](../interfaces/PackDefinition.md#skillentrypoints)
+`BasicPackDefinition.skillEntrypoints`
 
 ***
 
@@ -412,6 +412,40 @@ pack.addSyncTable({
 | Parameter | Type |
 | ------ | ------ |
 | `definition` | [`SyncTableOptions`](../interfaces/SyncTableOptions.md)\<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`, `PermissionsContextT`\> |
+
+#### Returns
+
+`this`
+
+***
+
+### setChatSkill()
+
+> **setChatSkill**(`skill`): `this`
+
+Sets the chat skill for this pack's agent.
+
+The chat skill controls the behavior when users chat with the pack agent.
+It defines the prompts, available tools, and optionally the model to use.
+
+#### Example
+
+```ts
+pack.setChatSkill({
+  name: "DefaultChat",
+  displayName: "Chat",
+  description: "Default chat experience.",
+  prompt: "You are an expert in this pack.",
+  tools: [
+    { type: coda.ToolType.Pack },  // All pack formulas
+  ],
+});
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `skill` | [`Skill`](../interfaces/Skill.md) |
 
 #### Returns
 
