@@ -6091,6 +6091,8 @@ describe('Pack metadata Validation', async () => {
           break;
         case ToolType.CodaDocsAndTables:
           break;
+        case ToolType.DynamicSuggestedPrompt:
+          break;
         case 'CustomTool':
           break;
         default:

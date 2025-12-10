@@ -1209,6 +1209,11 @@ export enum ToolType {
    * @hidden
    */
   CodaDocsAndTables = 'CodaDocsAndTables',
+  /**
+   * Tool that enables dynamic generation of suggested follow-up prompts.
+   * @hidden
+   */
+  DynamicSuggestedPrompt = 'DynamicSuggestedPrompt',
 }
 
 /**
@@ -1389,6 +1394,19 @@ export interface ContactResolutionTool extends BaseTool<ToolType.ContactResoluti
 export interface CodaDocsAndTablesTool extends BaseTool<ToolType.CodaDocsAndTables> {}
 
 /**
+ * Tool that provides access to Coda docs capabilities.
+ * @hidden
+ * @deprecated Use CodaDocsAndTablesTool instead.
+ */
+export interface CodaDocsTool extends BaseTool<ToolType.CodaDocs> {}
+
+/**
+ * Tool that enables dynamic generation of contextual follow-up suggestions.
+ * @hidden
+ */
+export interface DynamicSuggestedPromptTool extends BaseTool<ToolType.DynamicSuggestedPrompt> {}
+
+/**
  * Definition of an MCP server that the pack can connect to.
  */
 export interface MCPServer {
@@ -1416,6 +1434,7 @@ export interface ToolMap {
   [ToolType.MCP]: MCPTool;
   [ToolType.ContactResolution]: ContactResolutionTool;
   [ToolType.CodaDocsAndTables]: CodaDocsAndTablesTool;
+  [ToolType.DynamicSuggestedPrompt]: DynamicSuggestedPromptTool;
 }
 
 /**
@@ -1493,6 +1512,25 @@ export interface SuggestedPrompt {
   displayName: string;
   /** The prompt text that gets executed when the user clicks this suggested prompt. */
   prompt: string;
+}
+
+/**
+ * A dynamically generated suggested prompt returned by the DynamicSuggestedPrompt tool.
+ *
+ * @example
+ * ```ts
+ * {
+ *   displayText: "View demographics?",
+ *   promptText: "What are the demographics of Vancouver?"
+ * }
+ * ```
+ * @hidden
+ */
+export interface DynamicSuggestedPrompt {
+  /** The button label shown to the user in the UI. */
+  displayText: string;
+  /** The prompt text that gets executed when the user clicks this button. */
+  promptText: string;
 }
 
 /**
