@@ -1169,8 +1169,7 @@ export interface RateLimits {
 export type BasicPackDefinition = Omit<PackVersionDefinition, 'version'>;
 
 /**
- *  Default tool types supported by Coda Packs for skill definitions.
- * @hidden
+ * The types of tools that can be used in an agent skill.
  */
 export enum ToolType {
   /**
@@ -1187,12 +1186,12 @@ export enum ToolType {
   ScreenAnnotation = 'ScreenAnnotation',
   /**
    * Allows assistant messages to be used as tools.
-   * @hidden
+   * @internal
    */
   AssistantMessage = 'AssistantMessage',
   /**
    * Allows reuse of the default tuned summarizer agent as a tool.
-   * @hidden
+   * @internal
    */
   Summarizer = 'Summarizer',
   /**
@@ -1229,12 +1228,13 @@ export interface BaseTool<T extends string> {
 
 /**
  * Tool that references formulas within a pack.
- * @hidden
  */
 export interface PackTool extends BaseTool<ToolType.Pack> {
   /**
    * The ID of the pack to use as a tool, if referencing a different pack.
    * Omit this to reference the current pack.
+   *
+   * @hidden In development
    */
   packId?: number;
   /** The specific formulas to make available as tools. */
@@ -1246,11 +1246,11 @@ export interface PackTool extends BaseTool<ToolType.Pack> {
 
 /**
  * The type of knowledge source to use.
- * @hidden
  */
 export enum KnowledgeToolSourceType {
   /**
    * Use all knowledge from the pack.
+   * @hidden In development.
    */
   Global = 'Global',
   /**
@@ -1264,44 +1264,48 @@ export enum KnowledgeToolSourceType {
  * @hidden
  */
 interface BaseKnowledgeToolSource<T extends KnowledgeToolSourceType> {
+  /**
+   * The type of knowledge source.
+   */
   type: T;
 }
 
 /**
  * Source for using knowledge from a specific pack.
- * @hidden
  */
-interface PackKnowledgeToolSource extends BaseKnowledgeToolSource<KnowledgeToolSourceType.Pack> {
+export interface PackKnowledgeToolSource extends BaseKnowledgeToolSource<KnowledgeToolSourceType.Pack> {
   /**
    * The ID of the pack to use for knowledge, if referencing a different pack.
    * Omit this to reference the current pack.
+   *
+   * @hidden In development
    */
   packId?: number;
 }
 
 /**
  * Source for using all knowledge.
- * @hidden
+ * @hidden In development
  */
 interface GlobalKnowledgeToolSource extends BaseKnowledgeToolSource<KnowledgeToolSourceType.Global> {}
 
 /**
  * Union of all supported knowledge tool sources.
- * @hidden
  */
-type KnowledgeToolSource = PackKnowledgeToolSource | GlobalKnowledgeToolSource;
+export type KnowledgeToolSource = PackKnowledgeToolSource | GlobalKnowledgeToolSource;
 
 /**
  * Tool that provides access to ingested knowledge.
- * @hidden
  */
 export interface KnowledgeTool extends BaseTool<ToolType.Knowledge> {
+  /**
+   * The source of the knowledge.
+   */
   source: KnowledgeToolSource;
 }
 
 /**
  * The type of screen annotation source to use.
- * @hidden
  */
 export enum ScreenAnnotationType {
   /**
@@ -1310,6 +1314,7 @@ export enum ScreenAnnotationType {
   Rewrite = 'Rewrite',
   /**
    * Use screen annotation for guide.
+   * @internal
    */
   Guide = 'Guide',
 }
@@ -1319,39 +1324,44 @@ export enum ScreenAnnotationType {
  * @hidden
  */
 interface BaseScreenAnnotation<T extends ScreenAnnotationType> {
+  /**
+   * The type of screen annotation.
+   */
   type: T;
 }
 
 /**
  * Annotation for screen suggestions.
- * @hidden
  */
-interface RewriteScreenAnnotation extends BaseScreenAnnotation<ScreenAnnotationType.Rewrite> {}
+export interface RewriteScreenAnnotation extends BaseScreenAnnotation<ScreenAnnotationType.Rewrite> {}
+
+/** @internal */
 interface GuideScreenAnnotation extends BaseScreenAnnotation<ScreenAnnotationType.Guide> {}
 
 /**
  * Union of all supported screen annotation types.
- * @hidden
  */
-type ScreenAnnotation = RewriteScreenAnnotation | GuideScreenAnnotation;
+export type ScreenAnnotation = RewriteScreenAnnotation | GuideScreenAnnotation;
 
 /**
  * Tool that provides access to screen annotation capabilities.
- * @hidden
  */
 export interface ScreenAnnotationTool extends BaseTool<ToolType.ScreenAnnotation> {
+  /**
+   * Information about the type of annotation to use.
+   */
   annotation: ScreenAnnotation;
 }
 
 /**
  * Tool that provides access to assistant messages.
- * @hidden
+ * @internal
  */
 export interface AssistantMessageTool extends BaseTool<ToolType.AssistantMessage> {}
 
 /**
  * Tool that provides access to summarization capabilities.
- * @hidden
+ * @internal
  */
 export interface SummarizerTool extends BaseTool<ToolType.Summarizer> {}
 
@@ -1380,7 +1390,6 @@ export interface CodaDocsAndTablesTool extends BaseTool<ToolType.CodaDocsAndTabl
 
 /**
  * Definition of an MCP server that the pack can connect to.
- * @hidden
  */
 export interface MCPServer {
   /**
@@ -1416,8 +1425,7 @@ export interface ToolMap {
 export type Tool = ToolMap[keyof ToolMap];
 
 /**
- * Set of tools and prompts that defines a skill for this pack
- * @hidden
+ * A prompt and set of tools that defines a specific skill this agent provides.
  */
 export interface Skill {
   /** Stable identifier for the skill. */
@@ -1428,7 +1436,7 @@ export interface Skill {
   description: string;
   /** The prompt/instructions that define the skill's behavior. */
   prompt: string;
-  /** List of tools that this skill can use. This does NOT include pack calls by default. */
+  /** List of tools that this skill can use. This does not include pack formulas by default. */
   tools: Tool[];
   /**
    * Forces execution of a specific formula by name, overriding autonomous tool selection.
@@ -1444,7 +1452,6 @@ export interface Skill {
 
 /**
  * Configuration for a skill entrypoint.
- * @hidden
  */
 export interface SkillEntrypointConfig {
   /** The name of the skill to be invoked. */
@@ -1453,10 +1460,12 @@ export interface SkillEntrypointConfig {
 
 /**
  * Entrypoints that skills can be invoked from.
- * @hidden
  */
 export interface SkillEntrypoints {
-  /** Skill to be invoked when the agent is clicked on in the bench for the first time. */
+  /**
+   * Skill to be invoked when the agent is clicked on in the bench for the first time.
+   * @hidden In development
+   */
   benchInitialization?: SkillEntrypointConfig;
   /** Default skill to be invoked when chatting with the agent. */
   defaultChat?: SkillEntrypointConfig;
@@ -1474,6 +1483,8 @@ export interface SkillEntrypoints {
  *   prompt: "Show me the status of all open support tickets"
  * });
  * ```
+ *
+ * @hidden In development
  */
 export interface SuggestedPrompt {
   /** A unique identifier for this suggested prompt. This acts as a stable ID for the prompt. */
@@ -1545,12 +1556,10 @@ export interface PackVersionDefinition {
   syncTables?: SyncTable[];
   /**
    * Definitions of skills that can be executed within this pack.
-   * @hidden
    */
   skills?: Skill[];
   /**
    * Mapping of skills to entrypoints that the pack agent can be invoked from.
-   * @hidden
    */
   skillEntrypoints?: SkillEntrypoints;
   /**
@@ -1590,6 +1599,9 @@ export interface PackDefinition extends PackVersionDefinition {
   isSystem?: boolean;
 }
 
+/**
+ * An enum of the HTTP status codes.
+ */
 export enum HttpStatusCode {
   Ok = 200,
   Created = 201,

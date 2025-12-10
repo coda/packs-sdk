@@ -925,9 +925,11 @@ export declare enum IndexingStrategy {
 }
 /**
  * A list of properties that will be used to provide context when indexing a property for full-text search.
- * @hidden
  */
 export type ContextProperties = Array<PropertyIdentifier<string>>;
+/**
+ * A property to index, without any additional settings.
+ */
 export type BasicIndexedProperty = PropertyIdentifier<string>;
 /**
  * A property that will be used to filter the results of a search.
@@ -944,7 +946,6 @@ export type BasicIndexedProperty = PropertyIdentifier<string>;
  * an object with userEmailProperty or userIdProperty specified.
  *
  * For filtering purposes, number values will be rounded down to the nearest integer.
- * @hidden
  */
 export type FilterableProperty = PropertyIdentifier<string>;
 /**
@@ -962,6 +963,9 @@ export interface DetailedIndexedProperty {
      */
     strategy: IndexingStrategy;
 }
+/**
+ * A property to index.
+ */
 export type IndexedProperty = BasicIndexedProperty | DetailedIndexedProperty;
 /**
  * Base definition for all index definitions.
@@ -994,15 +998,68 @@ interface BaseIndexDefinition {
     filterableProperties?: FilterableProperty[];
 }
 /**
- * Defines how to index custom objects for use with full-text indexing.
- * TODO(alexd): Unhide this
- * @hidden
+ * Defines how to index schemas for use with full-text indexing.
  */
 export interface CustomIndexDefinition extends BaseIndexDefinition {
     /**
-     * A list of properties from within {@link ObjectSchemaDefinition.properties} that should be indexed.
+     * A list of properties from within {@link ObjectSchemaDefinition.properties} that should be indexed. These
+     * properties typically contain long-form text such as descriptions, notes, and message bodies. The content of these
+     * properties will be broken down into smaller chunks for retrieval and usage by the LLM.
+     *
+     * @example
+     * ```ts
+     * const ProductSchema = coda.makeObjectSchema({
+     *   properties: {
+     *     // ...
+     *     specSheetLink: {
+     *       type: coda.ValueType.String,
+     *       codaType: coda.ValueHintType.Attachment,
+     *       description: "Link the PDF spec sheet for the product.",
+     *     },
+     *   },
+     *   // ...
+     *   index: {
+     *     properties: ["specSheetLink"],
+     *   },
+     * });
+     * ```
      */
     properties: IndexedProperty[];
+    /**
+     * A list of additional properties from within {@link ObjectSchemaDefinition.properties} that provide context about
+     * the record. These properties typically contain short-form text, such as categories, folder names, etc. The content
+     * of these properties will be duplicated in each chunk of text that results from indexing the content in the indexed
+     * {@link properties}. Context properties help with retrieval, increasing the likelihood that the LLM will find the
+     * desired records.
+     *
+     * @example
+     * ```ts
+     * const ManufacturerSchema = coda.makeObjectSchema({
+     *   properties: {
+     *     name: { type: coda.ValueType.String },
+     *     id: { type: coda.ValueType.String },
+     *   },
+     *   displayProperty: "name",
+     * });
+     *
+     * const ProductSchema = coda.makeObjectSchema({
+     *   properties: {
+     *     // ...
+     *     size: { type: coda.ValueType.String },
+     *     materials: {
+     *       type: coda.ValueType.Array,
+     *       items: { type: coda.ValueType.String },
+     *     },
+     *     manufacturer: ManufacturerSchema,
+     *   },
+     *   // ...
+     *   index: {
+     *     // ...
+     *     contextProperties: ["size", "materials", "manufacturer.name" ],
+     *   },
+     * });
+     * ```
+     */
     contextProperties?: ContextProperties;
 }
 /**
@@ -1061,7 +1118,6 @@ export interface CategorizationIndexDefinition extends BaseIndexDefinition {
 }
 /**
  * Defines how to index objects for use with full-text indexing.
- * @hidden
  */
 export type IndexDefinition = CustomIndexDefinition | CategorizationIndexDefinition;
 /**
@@ -1219,7 +1275,6 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      *
      * Must be a {@link ValueType.String} or {@link ValueType.Number} property with the
      * {@link ValueHintType.Date} or {@link ValueHintType.DateTime} hints
-     * @hidden
      */
     createdAtProperty?: PropertyIdentifier<K>;
     /**
@@ -1228,7 +1283,6 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      *
      * Must be a {@link ValueType.String} property with the {@link ValueHintType.Email} hint or
      * a {@link ValueType.Object} with the {@link ValueHintType.Person} hint
-     * @hidden
      */
     createdByProperty?: PropertyIdentifier<K>;
     /**
@@ -1237,7 +1291,6 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      *
      * Must be a {@link ValueType.String} or {@link ValueType.Number} property with the
      * {@link ValueHintType.Date} or {@link ValueHintType.DateTime} hints
-     * @hidden
      */
     modifiedAtProperty?: PropertyIdentifier<K>;
     /**
@@ -1246,7 +1299,6 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      *
      * Must be a {@link ValueType.String} property with the {@link ValueHintType.Email} hint or
      * a {@link ValueType.Object} with the {@link ValueHintType.Person} hint
-     * @hidden
      */
     modifiedByProperty?: PropertyIdentifier<K>;
     /**
@@ -1303,7 +1355,6 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
     memberGroupIdProperty?: PropertyIdentifier<K>;
     /**
      * Defines how to index objects for use with full-text indexing.
-     * @hidden
      */
     index?: IndexDefinition;
     /**

@@ -53,12 +53,10 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
     syncTables: SyncTable[];
     /**
      * See {@link PackVersionDefinition.skills}.
-     * @hidden
      */
     skills: Skill[];
     /**
      * See {@link PackVersionDefinition.skillEntrypoints}.
-     * @hidden
      */
     skillEntrypoints?: SkillEntrypoints;
     /**
@@ -184,21 +182,26 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      */
     addColumnFormat(format: Format): this;
     /**
-     * Adds a skill definition to this pack.
+     * Adds an agent skill definition to this pack.
      *
      * In the web editor, the `/Skill` shortcut will insert a snippet of a skeleton skill.
      *
      * @example
      * ```
      * pack.addSkill({
-     *   name: 'MySkill',
-     *   displayName: 'My Display Name',
-     *   description: 'My description.',
-     *   prompt: 'My prompt',
-     *    tools: [{type: ToolType.Knowledge, source: {type: KnowledgeToolSourceType.Global}}]
+     *   name: "MySkill",
+     *   displayName: "My Display Name",
+     *   description: "My description.",
+     *   prompt: `My prompt.`,
+     *   tools: [
+     *     { type: coda.ToolType.Pack },
+     *     {
+     *       type: coda.ToolType.Knowledge,
+     *       source: { type: coda.KnowledgeToolSourceType.Pack },
+     *     },
+     *   ],
      * });
      * ```
-     * @hidden
      */
     addSkill(skill: Skill): this;
     /**
@@ -208,20 +211,17 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * ```
      * pack.addMCPServer({name: 'MyMCPServer', endpointUrl: 'https://my-mcp-server.com'});
      * ```
-     * @hidden
      */
     addMCPServer(server: MCPServer): this;
     /**
-     * Sets the entrypoints that the pack agent can be invoked from.
+     * Maps agent entrypoints to skills in the Pack.
      *
      * @example
      * ```
      * pack.setSkillEntrypoints({
-     *   benchInitialization: {skillName: 'MySkill'},
-     *   defaultChat: {skillName: 'MySkill'},
+     *   defaultChat: { skillName: "MySkill" },
      * });
      * ```
-     * @hidden
      */
     setSkillEntrypoints(entrypoints: SkillEntrypoints): this;
     /**

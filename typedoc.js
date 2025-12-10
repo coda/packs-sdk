@@ -5,6 +5,7 @@ module.exports = {
   excludeExternals: true,
   excludePrivate: true,
   excludeProtected: true,
+  excludeInternal: true,
   plugin: [
     'typedoc-plugin-markdown',
     'typedoc-plugin-frontmatter',
@@ -50,6 +51,7 @@ run "make docs" to regenerate this file.
     'AsAuthDef',
     'AutocompleteParameterTypeMapping',
     'AutocompleteParameterTypes',
+    'BaseInvocationError',
     'BooleanHintValueTypes',
     'Exact',
     'NumberHintValueTypes',
@@ -69,7 +71,13 @@ run "make docs" to regenerate this file.
     // Internal only types.
     'AllowedAuthentication',
     'AllowedAuthenticationDef',
+    'CategorizationIndexDefinition',
     'CodaInternalRichTextSchema',
+    'GuideScreenAnnotation',
+
+    // In development.
+    'DetailedIndexedProperty',
+    'GlobalKnowledgeToolSource',
 
     // Deprecated features we should remove from the SDK.
     'FeatureSet',
