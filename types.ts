@@ -1394,13 +1394,6 @@ export interface ContactResolutionTool extends BaseTool<ToolType.ContactResoluti
 export interface CodaDocsAndTablesTool extends BaseTool<ToolType.CodaDocsAndTables> {}
 
 /**
- * Tool that provides access to Coda docs capabilities.
- * @hidden
- * @deprecated Use CodaDocsAndTablesTool instead.
- */
-export interface CodaDocsTool extends BaseTool<ToolType.CodaDocs> {}
-
-/**
  * Tool that enables dynamic generation of contextual follow-up suggestions.
  * @hidden
  */
