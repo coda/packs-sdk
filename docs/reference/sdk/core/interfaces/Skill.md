@@ -30,6 +30,15 @@ Display name shown to users for this skill.
 
 ***
 
+### model?
+
+> `optional` **model**: `string`
+
+The LLM model to use for this skill. Specify a model name string.
+If not specified or if an invalid value is provided, falls back to the default model (GPT-4.1).
+
+***
+
 ### name
 
 > **name**: `string`
