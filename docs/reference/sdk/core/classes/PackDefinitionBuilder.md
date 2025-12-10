@@ -101,11 +101,11 @@ See [PackVersionDefinition.networkDomains](../interfaces/PackVersionDefinition.m
 
 > `optional` **skillEntrypoints**: [`SkillEntrypoints`](../interfaces/SkillEntrypoints.md)
 
-See PackVersionDefinition.skillEntrypoints.
+See [PackVersionDefinition.skillEntrypoints](../interfaces/PackVersionDefinition.md#skillentrypoints).
 
 #### Implementation of
 
-`BasicPackDefinition.skillEntrypoints`
+[`PackDefinition`](../interfaces/PackDefinition.md).[`skillEntrypoints`](../interfaces/PackDefinition.md#skillentrypoints)
 
 ***
 

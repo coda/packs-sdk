@@ -5895,8 +5895,6 @@ export interface PackVersionDefinition {
 	benchInitializationSkill?: Skill;
 	/**
 	 * Mapping of skills to entrypoints that the pack agent can be invoked from.
-	 * @hidden
-	 * @deprecated Use {@link chatSkill} or {@link benchInitializationSkill} instead.
 	 */
 	skillEntrypoints?: SkillEntrypoints;
 	/**
