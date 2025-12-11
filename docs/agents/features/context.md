@@ -10,14 +10,14 @@ While [tools][tools] must be invoked by the LLM, context is provided automatical
 
 ## Screen context
 
-The agent is given access to the text on the screen when it is invoked. The chat box includes a visual indicator for users about the context being passed, and users can remove that context for a given session.
+The agent has access to the information on the screen, including the text and URL of the web page currently open. The chat box includes a visual indicator for users about the context being passed, and users can remove that context for a given session.
 
-<!-- TODO: Image -->
+<img src="../../../images/agent_context_chip.png" srcset="../../../images/agent_context_chip_2x.png 2x" class="screenshot" alt="A screenshot of the agent chat box, showing the page context chip.">
 
 There are three types of text your agent may receive, with possibly more than one being passed at the same time:
 
 **Screen information**
-:   The text on the screen. The {{ custom.agent_product_name }} platform decides which elements of the web page to include, usually limiting it to core content and excluding navigational elements, etc.
+:   The text visible on the screen. The {{ custom.agent_product_name }} platform decides which elements of the web page to include, usually limiting it to core content and excluding navigational elements, etc.
 
     ??? info "Full text not guaranteed"
 

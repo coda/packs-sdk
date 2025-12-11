@@ -6172,30 +6172,35 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * @example
 	 * ```ts
 	 * pack.setChatSkill({
-	 *   name: "DefaultChat",
-	 *   displayName: "Chat",
-	 *   description: "Default chat experience.",
-	 *   prompt: "You are an expert in this pack.",
+	 *   name: "Cow",
+	 *   displayName: "Cow",
+	 *   description: "Talk like a cow.",
+	 *   prompt: `
+	 *     End every reply with "Moo!".
+	 *   `,
 	 *   tools: [
-	 *     { type: coda.ToolType.Pack },  // All pack formulas
+	 *     { type: coda.ToolType.Pack },
 	 *   ],
 	 * });
+	 * ```
 	 */
 	setChatSkill(skill: Skill): this;
 	/**
-	 * Sets the skill used when the agent is first initialized in the bench.
+	 * Sets the skill used when the agent is first opened in the agent bench.
 	 *
 	 * @example
 	 * ```ts
 	 * pack.setBenchInitializationSkill({
-	 *   name: "BenchInit",
-	 *   displayName: "Bench Initialization",
-	 *   description: "Initializes the agent in the bench.",
-	 *   prompt: "You are initializing...",
-	 *   tools: [{ type: coda.ToolType.Pack }],
+	 *   name: "Greeting",
+	 *   displayName: "Greeting",
+	 *   description: "Greet the user.",
+	 *   prompt: `
+	 *     Say hello to the user, referencing the time of day and a friendly nickname.
+	 *     For example: 10AM, Kramer => "Good morning K-man!"
+	 *   `,
+	 *   tools: [],
 	 * });
 	 * ```
-	 * @hidden
 	 */
 	setBenchInitializationSkill(skill: Skill): this;
 	/**
@@ -6217,7 +6222,9 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * pack.addSuggestedPrompt({
 	 *   name: "ticketStatus",
 	 *   displayName: "Check ticket status",
-	 *   prompt: "Show me the status of all open support tickets"
+	 *   prompt: `
+	 *     Show me the status of all open support tickets.
+	 *   `,
 	 * });
 	 * ```
 	 * @hidden
