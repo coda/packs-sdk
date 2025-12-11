@@ -125,6 +125,63 @@ pack.addFormula({
 ```
 
 
+### Alternate suggested parameter values
+
+Since sync tables are limited to 10,000 rows in docs, you may have added parameters for limiting the scope of the sync, perhaps with a `suggestedValue` that populates a reasonable default. When used by an agent to [index data][indexing], however, the sync table can sync many more rows, and it would be better to use a different suggested value that includes a broader scope.
+
+This can be done by setting the field [`ingestionSuggestedValue`][ingestionsuggestedvalue] on the parameter. This suggested value will only be used in the agent setup UI.
+
+```{.ts hl_lines="12"}
+pack.addSyncTable({
+  name: "Tickets",
+  // ...
+  formula: {
+    // ...
+    parameters: [
+      coda.makeParameter({
+        type: coda.ParameterType.DateArray,
+        name: "created",
+        description: "Include tickets created within the given time range.",
+        suggestedValue: coda.PrecannedDateRange.Last30Days,
+        ingestionSuggestedValue: coda.PrecannedDateRange.Last365Days,
+      }),
+    ],
+    execute: async function (args, context) {
+      // ...
+    },
+  },
+});
+```
+
+
+### Source application detection
+
+While uncommon, there may be times when you want to adjust the logic in your code depending on whether it's running in a doc or an agent. You can do that by looking at the [InvocationSource][invocationsource] value in the [`context.invocationLocation.source`][source].
+
+```ts
+pack.addFormula({
+  name: "SendEmail",
+  // ...
+  execute: async function (args, context) {
+    // ...
+    let emailFooter;
+    let source = context.invocationLocation.source;
+    switch (source) {
+      case coda.InvocationSource.Coda:
+        emailFooter = "Sent from Coda.";
+        break;
+      case coda.InvocationSource.Go:
+        emailFooter = "Sent from Superhuman Go.";
+        break;
+      default:
+        throw new Error("Unknown invocation source: " + source);
+    }
+    // ...
+  },
+});
+```
+
+
 ## Known limitations
 
 Currently, some Pack features don't work in agents.
@@ -146,3 +203,6 @@ Currently, some Pack features don't work in agents.
 [autocomplete]: ../guides/basics/parameters/autocomplete.md
 [connection_requirement_optional]: ../reference/sdk/core/enumerations/ConnectionRequirement.md#optional
 [weather_pack]: https://coda.io/packs/weather-1015
+[invocationsource]: ../reference/sdk/core/enumerations/InvocationSource.md
+[source]: ../reference/sdk/core/interfaces/InvocationLocation.md#source
+[ingestionsuggestedvalue]: ../reference/sdk/core/interfaces/ParamDef.md#ingestionsuggestedvalue
