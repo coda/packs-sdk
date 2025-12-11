@@ -6030,6 +6030,9 @@ describe('Pack metadata Validation', async () => {
               {
                 type: ToolType.CodaDocsAndTables,
               },
+              {
+                type: ToolType.DynamicSuggestedPrompt,
+              },
             ],
           },
         ],
@@ -6066,7 +6069,7 @@ describe('Pack metadata Validation', async () => {
         {
           path: 'skills[0].tools[0].type',
           message:
-            "Invalid discriminator value. Expected 'Pack' | 'Knowledge' | 'ScreenAnnotation' | 'AssistantMessage' | 'Summarizer' | 'MCP' | 'ContactResolution' | 'CodaDocsAndTables'",
+            "Invalid discriminator value. Expected 'Pack' | 'Knowledge' | 'ScreenAnnotation' | 'AssistantMessage' | 'Summarizer' | 'MCP' | 'ContactResolution' | 'CodaDocsAndTables' | 'DynamicSuggestedPrompt'",
         },
       ]);
     });
