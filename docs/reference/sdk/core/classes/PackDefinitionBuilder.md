@@ -421,9 +421,10 @@ pack.addSyncTable({
 
 ### setChatSkill()
 
-> **setChatSkill**(`skill`): `this`
+> **setChatSkill**(`skillName`): `this`
 
-Sets the chat skill for this pack's agent.
+Sets the chat skill for this pack's agent by name.
+The skill must first be added to the pack using addSkill().
 
 The chat skill controls the behavior when users chat with the pack agent.
 It defines the prompts, available tools, and optionally the model to use.
@@ -431,21 +432,21 @@ It defines the prompts, available tools, and optionally the model to use.
 #### Example
 
 ```ts
-pack.setChatSkill({
+pack.addSkill({
   name: "DefaultChat",
   displayName: "Chat",
   description: "Default chat experience.",
   prompt: "You are an expert in this pack.",
-  tools: [
-    { type: coda.ToolType.Pack },  // All pack formulas
-  ],
+  tools: [{ type: coda.ToolType.Pack }],
 });
+pack.setChatSkill("DefaultChat");
+```
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `skill` | [`Skill`](../interfaces/Skill.md) |
+| `skillName` | `string` |
 
 #### Returns
 

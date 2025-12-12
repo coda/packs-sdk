@@ -1831,8 +1831,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 });
             }
         }),
-        chatSkill: skillSchema.optional(),
-        benchInitializationSkill: skillSchema.optional(),
+        chatSkill: z.string().optional(),
+        benchInitializationSkill: z.string().optional(),
         mcpServers: z
             .array(mcpServerSchema)
             .max(1)
@@ -2293,6 +2293,25 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                     message: `"${entrypoint.skillName}" is not the name of a defined skill.`,
                 });
             }
+        }
+    })
+        .superRefine((data, context) => {
+        const metadata = data;
+        const { skills, chatSkill, benchInitializationSkill } = metadata;
+        const skillNames = new Set((skills || []).map(skill => skill.name));
+        if (chatSkill && !skillNames.has(chatSkill)) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['chatSkill'],
+                message: `"${chatSkill}" is not the name of a defined skill.`,
+            });
+        }
+        if (benchInitializationSkill && !skillNames.has(benchInitializationSkill)) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ['benchInitializationSkill'],
+                message: `"${benchInitializationSkill}" is not the name of a defined skill.`,
+            });
         }
     })
         .superRefine((data, context) => {

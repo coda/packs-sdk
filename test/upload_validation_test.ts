@@ -6385,132 +6385,97 @@ describe('Pack metadata Validation', async () => {
   });
 
   describe('validateChatSkill', () => {
-    it('validates valid chatSkill', async () => {
+    it('validates valid chatSkill reference', async () => {
       const metadata = createFakePackVersionMetadata({
-        chatSkill: {
-          name: 'DefaultChat',
-          displayName: 'Chat',
-          description: 'Default chat experience.',
-          prompt: 'You are an expert in this pack.',
-          tools: [{type: ToolType.Pack}],
-        },
+        skills: [
+          {
+            name: 'DefaultChat',
+            displayName: 'Chat',
+            description: 'Default chat experience.',
+            prompt: 'You are an expert in this pack.',
+            tools: [{type: ToolType.Pack}],
+          },
+        ],
+        chatSkill: 'DefaultChat',
       });
       await validateJson(metadata);
     });
 
     it('validates chatSkill with ContactResolution tool', async () => {
       const metadata = createFakePackVersionMetadata({
-        chatSkill: {
-          name: 'DefaultChat',
-          displayName: 'Chat',
-          description: 'Default chat experience.',
-          prompt: 'You are an expert in this pack.',
-          tools: [{type: ToolType.Pack}, {type: ToolType.ContactResolution}],
-        },
+        skills: [
+          {
+            name: 'DefaultChat',
+            displayName: 'Chat',
+            description: 'Default chat experience.',
+            prompt: 'You are an expert in this pack.',
+            tools: [{type: ToolType.Pack}, {type: ToolType.ContactResolution}],
+          },
+        ],
+        chatSkill: 'DefaultChat',
       });
       await validateJson(metadata);
     });
 
     it('validates chatSkill with model override', async () => {
       const metadata = createFakePackVersionMetadata({
-        chatSkill: {
-          name: 'DefaultChat',
-          displayName: 'Chat',
-          description: 'Default chat experience.',
-          prompt: 'You are an expert in this pack.',
-          tools: [{type: ToolType.Pack}],
-          model: 'openai_direct_gpt41_priority',
-        },
+        skills: [
+          {
+            name: 'DefaultChat',
+            displayName: 'Chat',
+            description: 'Default chat experience.',
+            prompt: 'You are an expert in this pack.',
+            tools: [{type: ToolType.Pack}],
+            model: 'openai_direct_gpt41_priority',
+          },
+        ],
+        chatSkill: 'DefaultChat',
       });
       await validateJson(metadata);
     });
 
-    it('fails for chatSkill missing required fields', async () => {
+    it('fails for chatSkill referencing non-existent skill', async () => {
       const metadata = createFakePackVersionMetadata({
-        chatSkill: {
-          // missing name, displayName, description, prompt
-          tools: [],
-        } as unknown as Skill,
+        skills: [],
+        chatSkill: 'NonExistentSkill',
       });
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          path: 'chatSkill.name',
-          message: 'Missing required field chatSkill.name.',
-        },
-        {
-          path: 'chatSkill.displayName',
-          message: 'Missing required field chatSkill.displayName.',
-        },
-        {
-          path: 'chatSkill.description',
-          message: 'Missing required field chatSkill.description.',
-        },
-        {
-          path: 'chatSkill.prompt',
-          message: 'Missing required field chatSkill.prompt.',
-        },
-      ]);
-    });
-
-    it('fails for chatSkill with invalid name', async () => {
-      const metadata = createFakePackVersionMetadata({
-        chatSkill: {
-          name: 'Invalid Skill Name!',
-          displayName: 'Chat',
-          description: 'Default chat experience.',
-          prompt: 'You are an expert in this pack.',
-          tools: [],
-        },
-      });
-      const err = await validateJsonAndAssertFails(metadata);
-      assert.deepEqual(err.validationErrors, [
-        {
-          path: 'chatSkill.name',
-          message: 'Skill names can only contain alphanumeric characters and underscores.',
+          path: 'chatSkill',
+          message: '"NonExistentSkill" is not the name of a defined skill.',
         },
       ]);
     });
   });
 
   describe('validateBenchInitializationSkill', () => {
-    it('validates valid benchInitializationSkill', async () => {
+    it('validates valid benchInitializationSkill reference', async () => {
       const metadata = createFakePackVersionMetadata({
-        benchInitializationSkill: {
-          name: 'BenchInit',
-          displayName: 'Bench Initialization',
-          description: 'Initializes the agent in the bench.',
-          prompt: 'You are initializing...',
-          tools: [{type: ToolType.Pack}],
-        },
+        skills: [
+          {
+            name: 'BenchInit',
+            displayName: 'Bench Initialization',
+            description: 'Initializes the agent in the bench.',
+            prompt: 'You are initializing...',
+            tools: [{type: ToolType.Pack}],
+          },
+        ],
+        benchInitializationSkill: 'BenchInit',
       });
       await validateJson(metadata);
     });
 
-    it('fails for benchInitializationSkill missing required fields', async () => {
+    it('fails for benchInitializationSkill referencing non-existent skill', async () => {
       const metadata = createFakePackVersionMetadata({
-        benchInitializationSkill: {
-          // missing name, displayName, description, prompt
-          tools: [],
-        } as unknown as Skill,
+        skills: [],
+        benchInitializationSkill: 'NonExistentSkill',
       });
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          path: 'benchInitializationSkill.name',
-          message: 'Missing required field benchInitializationSkill.name.',
-        },
-        {
-          path: 'benchInitializationSkill.displayName',
-          message: 'Missing required field benchInitializationSkill.displayName.',
-        },
-        {
-          path: 'benchInitializationSkill.description',
-          message: 'Missing required field benchInitializationSkill.description.',
-        },
-        {
-          path: 'benchInitializationSkill.prompt',
-          message: 'Missing required field benchInitializationSkill.prompt.',
+          path: 'benchInitializationSkill',
+          message: '"NonExistentSkill" is not the name of a defined skill.',
         },
       ]);
     });

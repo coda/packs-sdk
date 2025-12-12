@@ -3,7 +3,7 @@ export const pack = coda.newPack();
 
 const GeminiModel = "gemini-2.0-flash";
 
-pack.setChatSkill({
+pack.addSkill({
   name: "GenerateReply",
   displayName: "Generate a reply.",
   description: "Generates a reply to the user.",
@@ -47,6 +47,7 @@ pack.setChatSkill({
     { type: coda.ToolType.Pack },
   ],
 });
+pack.setChatSkill("GenerateReply");
 
 pack.addFormula({
   name: "GetGeminiReply",

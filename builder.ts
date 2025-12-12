@@ -79,12 +79,12 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * See {@link PackVersionDefinition.chatSkill}.
    * @hidden
    */
-  chatSkill?: Skill;
+  chatSkill?: string;
   /**
    * See {@link PackVersionDefinition.benchInitializationSkill}.
    * @hidden
    */
-  benchInitializationSkill?: Skill;
+  benchInitializationSkill?: string;
   /**
    * See {@link PackVersionDefinition.suggestedPrompts}.
    * @hidden
@@ -327,45 +327,48 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     return this;
   }
   /**
-   * Sets the chat skill for this pack's agent.
+   * Sets the chat skill for this pack's agent by name.
+   * The skill must first be added to the pack using addSkill().
    *
    * The chat skill controls the behavior when users chat with the pack agent.
    * It defines the prompts, available tools, and optionally the model to use.
    *
    * @example
    * ```ts
-   * pack.setChatSkill({
+   * pack.addSkill({
    *   name: "DefaultChat",
    *   displayName: "Chat",
    *   description: "Default chat experience.",
    *   prompt: "You are an expert in this pack.",
-   *   tools: [
-   *     { type: coda.ToolType.Pack },  // All pack formulas
-   *   ],
+   *   tools: [{ type: coda.ToolType.Pack }],
    * });
+   * pack.setChatSkill("DefaultChat");
+   * ```
    */
-  setChatSkill(skill: Skill): this {
-    this.chatSkill = skill;
+  setChatSkill(skillName: string): this {
+    this.chatSkill = skillName;
     return this;
   }
 
   /**
    * Sets the skill used when the agent is first initialized in the bench.
+   * The skill must first be added to the pack using addSkill().
    *
    * @example
    * ```ts
-   * pack.setBenchInitializationSkill({
+   * pack.addSkill({
    *   name: "BenchInit",
    *   displayName: "Bench Initialization",
    *   description: "Initializes the agent in the bench.",
    *   prompt: "You are initializing...",
    *   tools: [{ type: coda.ToolType.Pack }],
    * });
+   * pack.setBenchInitializationSkill("BenchInit");
    * ```
    * @hidden
    */
-  setBenchInitializationSkill(skill: Skill): this {
-    this.benchInitializationSkill = skill;
+  setBenchInitializationSkill(skillName: string): this {
+    this.benchInitializationSkill = skillName;
     return this;
   }
 
