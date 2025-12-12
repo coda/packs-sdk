@@ -30,7 +30,7 @@ import {makeFormula} from '@codahq/packs-sdk';
 import {makeParameter} from '@codahq/packs-sdk';
 ```
 
-Having all usages of the SDK prefixed with coda.{something} makes it easier to distinguish what’s part of the SDK and what’s not. It also makes it easier to copy and paste code from other places without having to worry about adding imports.
+Having all usages of the SDK prefixed with coda.{something} makes it easier to distinguish what's part of the SDK and what's not. It also makes it easier to copy and paste code from other places without having to worry about adding imports.
 
 
 ### Use double quotes
@@ -65,7 +65,7 @@ let url = "http://example.com/thing/" + thingId;
 let url = `http://example.com/thing/${thingId}`;
 ```
 
-String concatenation is often easier to read and understand, and doesn’t introduce an additional string delimiter. Template strings can be used if multiple variables are being inserted.
+String concatenation is often easier to read and understand, and doesn't introduce an additional string delimiter. Template strings can be used if multiple variables are being inserted.
 
 
 ### Use `let` for variable declaration
@@ -82,7 +82,7 @@ let url = "http://example.com";
 const url = "http://example.com";
 ```
 
-The distinction between `let` and `const` isn’t always clear to newer coders, and the inflexibility of `const` can lead to more errors as users are playing around with code they copy and pasted.
+The distinction between `let` and `const` isn't always clear to newer coders, and the inflexibility of `const` can lead to more errors as users are playing around with code they copy and pasted.
 
 !!! note "Exception: File-level constants"
     File-level constants such as enums and schemas, should use const.
@@ -109,7 +109,7 @@ if (isThing) {
 let foo = isThing ? "bar" : "baz";
 ```
 
-The ternary operator isn’t widely known among newer coders, and the syntax is very opaque if you haven’t see it before.
+The ternary operator isn't widely known among newer coders, and the syntax is very opaque if you haven't see it before.
 
 
 ### Avoid the spread operator
@@ -131,7 +131,7 @@ return {
 }
 ```
 
-The syntax may not be familiar to newer coders, and more explicit assignments can make it clearer what’s going on.
+The syntax may not be familiar to newer coders, and more explicit assignments can make it clearer what's going on.
 
 
 ### Always set the key and value
@@ -185,7 +185,7 @@ The destructuring syntax may not be familiar to newer coders, and it can easily 
 
 ### Always include `async` and `context` in formula execute methods
 
-Even when a formula doesn’t require them, always declare the `execute` function as `async` and add `context` parameter.
+Even when a formula doesn't require them, always declare the `execute` function as `async` and add `context` parameter.
 
 ```{.ts .yes}
 // Yes
@@ -204,7 +204,7 @@ execute: ([param]) => {
 This makes it easier to add in `fetcher` calls later without needing to understand asynchronous programming. While there is a slight performance impact to making a function `async` unnecessarily, and unused variables are discouraged, the benefits outweigh the costs for new users.
 
 
-### Don’t declare schemas inline
+### Don't declare schemas inline
 
 Even if a schema is only used in one formula, declare it separately.
 

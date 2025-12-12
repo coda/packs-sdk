@@ -42,7 +42,7 @@ You can get internal information about your agent's state by appending `@debug` 
 
 <img src="../../images/agent_debug.png" srcset="../../images/agent_debug_2x.png 2x" class="screenshot" alt="A screenshot of an agent responding with debug information.">
 
-We don’t document the exact format of this output, and it’s subject to change without warning.
+We don't document the exact format of this output, and it's subject to change without warning.
 
 ## Common errors
 

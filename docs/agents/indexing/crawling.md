@@ -5,7 +5,7 @@ description: Teach your agent how to crawl the data structures during indexing.
 
 # Crawling related tables
 
-Users want to access all their essential data in the knowledge layer, ideally with as little setup as possible. If your agent can sync all of the records the user has access to by default, then no further work is required. However, suppose some of your sync tables return only a subset of records per sync. In that case, you’ll need to provide additional metadata in your Pack to enable the knowledge layer to crawl the entire dataset.
+Users want to access all their essential data in the knowledge layer, ideally with as little setup as possible. If your agent can sync all of the records the user has access to by default, then no further work is required. However, suppose some of your sync tables return only a subset of records per sync. In that case, you'll need to provide additional metadata in your Pack to enable the knowledge layer to crawl the entire dataset.
 
 ## Example
 
@@ -67,4 +67,4 @@ pack.addSyncTable({
 
 ## Dynamic sync tables
 
-Crawling is not supported for dynamic sync tables. The data sources returned by `listDynamicUrls` will be shown to the user, but they’ll have to select which ones to index manually.
+Crawling is not supported for dynamic sync tables. The data sources returned by `listDynamicUrls` will be shown to the user, but they'll have to select which ones to index manually.

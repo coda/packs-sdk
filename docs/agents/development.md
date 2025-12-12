@@ -13,7 +13,7 @@ In the [Your first agent tutorial][your_first_agent], we recommend developing in
 
 However, for production work, we recommend developing locally with the CLI, as it allows you to integrate with your version control system, write unit tests, etc. To learn how to set up this environment, follow the [Get started on your local machine][quickstart_cli].
 
-The CLI can run your code locally, but only an individual building block (formula, action, or sync table). It is not possible to run LLM-based functionality, like skills. For that, you’ll need to upload a new version of your agent to the server and test it using {{ custom.agent_product_name }}.
+The CLI can run your code locally, but only an individual building block (formula, action, or sync table). It is not possible to run LLM-based functionality, like skills. For that, you'll need to upload a new version of your agent to the server and test it using {{ custom.agent_product_name }}.
 
 ## Testing in a Coda doc
 
@@ -23,9 +23,9 @@ If your agent contains formulas or sync tables, it can be helpful to test them i
 - View the raw output from formulas and sync tables
 - Easily access the [Pack maker tools][pack_maker_tools] to view execution logs
 
-You won’t be able to test your agent skills in the doc, however, as those can only be used in {{ custom.agent_product_name }}.
+You won't be able to test your agent skills in the doc, however, as those can only be used in {{ custom.agent_product_name }}.
 
-To test your agent’s formulas and syncs in a Coda doc:
+To test your agent's formulas and syncs in a Coda doc:
 
 1. Visit [coda.new](https://coda.new) to create a new doc.
 2. Click the **Insert** button in the upper right of the screen.
@@ -70,7 +70,7 @@ The table will show one row per record, with the **rawText** column showing the 
 
 ### Re-indexing
 
-Making changes to your Pack or connection settings doesn’t immediately trigger the indexing process. Instead, we recommend deleting and recreating the connection whenever you want to see the effects of a change.
+Making changes to your Pack or connection settings doesn't immediately trigger the indexing process. Instead, we recommend deleting and recreating the connection whenever you want to see the effects of a change.
 
 [your_first_agent]: quickstart.md
 [quickstart_cli]: ../tutorials/get-started/cli.md

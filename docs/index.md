@@ -13,7 +13,7 @@ A Pack is an extension that adds new powers to your doc. Packs work by supplemen
 <section class="landing-row" markdown>
 
 <div class="landing-item" markdown>
-## :material-toy-brick-outline: Let’s build building blocks together.
+## :material-toy-brick-outline: Let's build building blocks together.
 
 With a little JavaScript, anyone can create and publish a Pack to the Gallery. All you need to do is write the code and Coda will deploy and host the Pack for you.
 
