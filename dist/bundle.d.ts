@@ -5778,6 +5778,8 @@ export interface SkillEntrypointConfig {
 }
 /**
  * Entrypoints that skills can be invoked from.
+ *
+ * @deprecated Use {@link PackDefinitionBuilder.setChatSkill} instead.
  */
 export interface SkillEntrypoints {
 	/**
@@ -6212,6 +6214,8 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 *   defaultChat: { skillName: "MySkill" },
 	 * });
 	 * ```
+	 *
+	 * @deprecated Use {@link PackDefinitionBuilder.setChatSkill} instead.
 	 */
 	setSkillEntrypoints(entrypoints: SkillEntrypoints): this;
 	/**

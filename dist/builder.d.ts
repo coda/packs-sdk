@@ -272,6 +272,8 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      *   defaultChat: { skillName: "MySkill" },
      * });
      * ```
+     *
+     * @deprecated Use {@link PackDefinitionBuilder.setChatSkill} instead.
      */
     setSkillEntrypoints(entrypoints: SkillEntrypoints): this;
     /**

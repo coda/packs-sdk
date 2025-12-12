@@ -250,6 +250,8 @@ class PackDefinitionBuilder {
      *   defaultChat: { skillName: "MySkill" },
      * });
      * ```
+     *
+     * @deprecated Use {@link PackDefinitionBuilder.setChatSkill} instead.
      */
     setSkillEntrypoints(entrypoints) {
         this.skillEntrypoints = entrypoints;

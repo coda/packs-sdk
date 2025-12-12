@@ -489,7 +489,7 @@ pack.setChatSkill({
 
 ***
 
-### setSkillEntrypoints()
+### ~~setSkillEntrypoints()~~
 
 > **setSkillEntrypoints**(`entrypoints`): `this`
 
@@ -502,6 +502,10 @@ pack.setSkillEntrypoints({
   defaultChat: { skillName: "MySkill" },
 });
 ```
+
+#### Deprecated
+
+Use [PackDefinitionBuilder.setChatSkill](#setchatskill) instead.
 
 #### Parameters
 
