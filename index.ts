@@ -309,7 +309,6 @@ export type {MCPTool} from './types';
 export type {ContactResolutionTool} from './types';
 export type {CodaDocsAndTablesTool} from './types';
 export type {DynamicSuggestedPromptTool} from './types';
-export type {DynamicSuggestedPrompt} from './types';
 export type {MCPServer} from './types';
 export type {Skill} from './types';
 export type {SkillEntrypoints} from './types';

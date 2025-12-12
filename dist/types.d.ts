@@ -1359,24 +1359,6 @@ export interface SuggestedPrompt {
     prompt: string;
 }
 /**
- * A dynamically generated suggested prompt returned by the DynamicSuggestedPrompt tool.
- *
- * @example
- * ```ts
- * {
- *   displayText: "View demographics?",
- *   promptText: "What are the demographics of Vancouver?"
- * }
- * ```
- * @hidden
- */
-export interface DynamicSuggestedPrompt {
-    /** The button label shown to the user in the UI. */
-    displayText: string;
-    /** The prompt text that gets executed when the user clicks this button. */
-    promptText: string;
-}
-/**
  * The definition of the contents of a Pack at a specific version. This is the
  * heart of the implementation of a Pack.
  */
