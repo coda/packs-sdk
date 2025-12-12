@@ -17,7 +17,7 @@ No matter what kind of Pack you are building, there are some basic rules to keep
 
 ### Build building blocks
 
-Unlike other types of integrations, a Coda Pack doesn’t prescribe an exact end-to-end experience. Instead it provides a new set of building blocks, like formulas or buttons, that a user can deploy to improve their docs. These building blocks need to provide sufficient flexibility so that they can be combined in novel and bespoke ways.
+Unlike other types of integrations, a Coda Pack doesn't prescribe an exact end-to-end experience. Instead it provides a new set of building blocks, like formulas or buttons, that a user can deploy to improve their docs. These building blocks need to provide sufficient flexibility so that they can be combined in novel and bespoke ways.
 
 - Prefer parameters over hard-coding specific patterns.
   {: .yes}
@@ -59,7 +59,7 @@ Unlike other types of integrations, a Coda Pack doesn’t prescribe an exact end
 
 ### Build for users
 
-The target user for your Pack is akin to a skilled spreadsheet user: they know how to use formulas and think about data, but they likely aren’t developers. When designing your Pack make sure it’s approachable to someone with this level of technical fluency.
+The target user for your Pack is akin to a skilled spreadsheet user: they know how to use formulas and think about data, but they likely aren't developers. When designing your Pack make sure it's approachable to someone with this level of technical fluency.
 
 When building a Pack that integrates with another application, the simplest approach is to create a thin wrapper on their API. However this may introduce terms and patterns not familiar to non-developers. Instead think of the Pack as an extension of the user experience, but translated from pixels to formulas.
 
@@ -67,7 +67,7 @@ When building a Pack that integrates with another application, the simplest appr
   {: .no}
 - Hide implementation details from the user, like API versions.
   {: .no}
-- Don’t require users to understand technical formats like JSON, XML, etc.
+- Don't require users to understand technical formats like JSON, XML, etc.
   {: .no}
 
 <section class="tutorial-row" markdown>
@@ -115,9 +115,9 @@ Developers love to have expansive APIs that provide complete access to all featu
 
 ### Use simple names
 
-When building a Pack you don’t need to worry about name collisions, and accessibility to users is more important than completeness or accuracy. When choosing a name, prefer simple nouns or verbs and remove any extraneous detail.
+When building a Pack you don't need to worry about name collisions, and accessibility to users is more important than completeness or accuracy. When choosing a name, prefer simple nouns or verbs and remove any extraneous detail.
 
-- Don’t include the Pack or company name.
+- Don't include the Pack or company name.
   {: .no}
 - Avoid unnecessary detail in names, unless required to distinguish them.
   {: .no}

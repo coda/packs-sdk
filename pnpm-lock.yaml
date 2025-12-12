@@ -297,6 +297,12 @@ importers:
       typedoc-plugin-markdown:
         specifier: 4.9.0
         version: 4.9.0(typedoc@0.28.14(typescript@5.1.6))
+      unified-lint-rule:
+        specifier: ^3.0.1
+        version: 3.0.1
+      unist-util-visit:
+        specifier: ^5.0.0
+        version: 5.0.0
     optionalDependencies:
       isolated-vm:
         specifier: 6.0.2
@@ -4735,6 +4741,9 @@ packages:
 
   unified-lint-rule@2.1.2:
     resolution: {integrity: sha512-JWudPtRN7TLFHVLEVZ+Rm8FUb6kCAtHxEXFgBGDxRSdNMnGyTU5zyYvduHSF/liExlFB3vdFvsAHnNVE/UjAwA==}
+
+  unified-lint-rule@3.0.1:
+    resolution: {integrity: sha512-HxIeQOmwL19DGsxHXbeyzKHBsoSCFO7UtRVUvT2v61ptw/G+GbysWcrpHdfs5jqbIFDA11MoKngIhQK0BeTVjA==}
 
   unified@10.1.2:
     resolution: {integrity: sha512-pUSWAi/RAnVy1Pif2kAoeWNBa3JVrx0MId2LASj8G+7AiHWoKZNTomq6LG326T68U7/e263X6fTdcXIy7XnF7Q==}
@@ -10405,6 +10414,13 @@ snapshots:
       trough: 2.2.0
       unified: 10.1.2
       vfile: 5.3.7
+
+  unified-lint-rule@3.0.1:
+    dependencies:
+      '@types/unist': 3.0.3
+      trough: 2.2.0
+      unified: 11.0.5
+      vfile: 6.0.3
 
   unified@10.1.2:
     dependencies:

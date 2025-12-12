@@ -27,7 +27,7 @@ When developing locally using the [`coda` CLI][cli], you can leverage some utili
 - Validation of formula inputs and return values to help catch bugs both in your test code and your formula logic.
 - Hooks to apply authentication to HTTP requests for integration tests.
 
-You’ll find testing and development utilities in `packs-sdk/dist/development`.
+You'll find testing and development utilities in `packs-sdk/dist/development`.
 
 The primary testing utilities are `executeFormulaFromPackDef` and `executeSyncFormula`. You provide the name of a formula, a reference to your Pack definition, and a parameter list, and the utility will execute the formula for you, validate the return value, and return it to you for further assertions. These utilities provide sane default execution contexts, and in the case of a sync, will execute your sync formula repeatedly for each page of results, simulating what a real Coda sync will do.
 
@@ -35,7 +35,7 @@ By default, these utilities will use an execution environment that includes a mo
 
 ### Basic formula unit test
 
-Here’s a very simple example test, using Mocha, for a formula that doesn’t make any fetcher requests:
+Here's a very simple example test, using Mocha, for a formula that doesn't make any fetcher requests:
 
 ```ts
 import {assert} from 'chai';
@@ -164,7 +164,7 @@ The fetcher will apply authentication to these requests if you have configured a
 
 By default, these testing utility functions will validate return values after executing your Pack formulas. This validation checks that the values you actually return from your formula implementations match the schema you have written. This helps find bugs in your code and also helps catch subtle issues in how your values might be interpreted in the Coda application when you Pack is executed for real.
 
-This validation can also help ensure that your test code correctly simulates responses from the API that you’re integrating with. For instance, while developing our Pack, you may have been regularly exercising your formula code by running `coda execute` frequently and you’re confident that your code works correctly when run against the real API. Then you go to write unit tests for you Pack and you define some fake response objects, but you forget some required fields or you specified a field as an array when it should be a comma-separated list. If your fake response result in your Pack is returning a value that doesn’t match the schema you defined, the validator will catch these and notify you.
+This validation can also help ensure that your test code correctly simulates responses from the API that you're integrating with. For instance, while developing our Pack, you may have been regularly exercising your formula code by running `coda execute` frequently and you're confident that your code works correctly when run against the real API. Then you go to write unit tests for you Pack and you define some fake response objects, but you forget some required fields or you specified a field as an array when it should be a comma-separated list. If your fake response result in your Pack is returning a value that doesn't match the schema you defined, the validator will catch these and notify you.
 
 The validator will check for things like:
 

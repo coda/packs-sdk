@@ -163,7 +163,7 @@ const ProductSchema = coda.makeObjectSchema({
 !!! tip "Tips for selecting context properties"
 
     - Include properties that are likely to include search terms from a user query
-    - Don’t include properties that can contain a lot of text (instead, add those to `index.properties`)
+    - Don't include properties that can contain a lot of text (instead, add those to `index.properties`)
     - Aim for at most 3-5 context properties
 
 
@@ -244,9 +244,9 @@ getSchema: async function (context) {
 
 ### Reference properties not resolved
 
-`Reference` properties are not resolved during indexing, meaning they don’t link up to the whole record in the foreign table. If you are building an agent from scratch, avoid using them.
+`Reference` properties are not resolved during indexing, meaning they don't link up to the whole record in the foreign table. If you are building an agent from scratch, avoid using them.
 
-If you are upgrading an existing Pack, you’ll need to denormalize any data you want to use in either `contextProperties` or `filterableProperties`. For example, adding a `projectName` property alongside the existing `project` reference property.
+If you are upgrading an existing Pack, you'll need to denormalize any data you want to use in either `contextProperties` or `filterableProperties`. For example, adding a `projectName` property alongside the existing `project` reference property.
 
 
 [temporary_blob_storage]: ../../reference/sdk/core/interfaces/TemporaryBlobStorage.md

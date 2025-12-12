@@ -29,7 +29,7 @@ This is an example which creates a single formula called `Hello`, that takes in 
       name: "Hello",
       description: "A Hello World example.",
 
-      // If your formula requires one or more inputs, you’ll define them here.
+      // If your formula requires one or more inputs, you'll define them here.
       // Here, we're creating a string input called "name".
       parameters: [
         coda.makeParameter({

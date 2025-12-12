@@ -7,11 +7,11 @@ description: Information on how to update an existing Coda Pack to work with Sup
 
 If you've already built a Pack for Coda, the good news is that it can be easily upgraded to a Superhuman Go agent. All agents are Packs under the hood, and with some minor tweaks, your existing Pack can be one too.
 
-You don’t need to be an AI expert to do this, as we provide the LLM and hook it up to your Pack. It's done automatically, so you can install your Pack in Superhuman Go and start chatting with it right away.
+You don't need to be an AI expert to do this, as we provide the LLM and hook it up to your Pack. It's done automatically, so you can install your Pack in Superhuman Go and start chatting with it right away.
 
 <img src="../../images/agent_upgrade.png" srcset="../../images/agent_upgrade_2x.png 2x" alt="A screenshot of the action confirmation UX." class="screenshot">
 
-In the screenshot above, you can see a user chatting with the [Weather Pack][weather_pack], which hasn’t had any code changes. The LLM knows all the formulas and actions in the Pack, calls them as needed, and displays the results in a human-friendly way.
+In the screenshot above, you can see a user chatting with the [Weather Pack][weather_pack], which hasn't had any code changes. The LLM knows all the formulas and actions in the Pack, calls them as needed, and displays the results in a human-friendly way.
 
 How well your Pack works as an agent can vary, so the main task is to test it as an agent and update it as needed to ensure a great user experience.
 
@@ -40,7 +40,7 @@ Packs used to only run in docs, but now agents can be run anywhere. Update your 
 
 ### Add indexing to your sync tables
 
-The data in your sync tables won’t be available to the agent unless you index them. You should set up indexing for sync tables that:
+The data in your sync tables won't be available to the agent unless you index them. You should set up indexing for sync tables that:
 
 1. Have at least one free-text column (description, notes, body, etc.)
 2. Have a link column
@@ -59,7 +59,7 @@ See the [Skills guide][skills] for more information on how to add custom skills.
 
 ### Utilize suggestions
 
-One of Grammarly’s most powerful features is to see what the user is writing and make suggestions on how to improve it. The same suggestion UI is available to agents.
+One of Grammarly's most powerful features is to see what the user is writing and make suggestions on how to improve it. The same suggestion UI is available to agents.
 
 Look for potential use cases where making a writing suggestion would be beneficial—for example, filling in a placeholder or providing additional context about a term or phrase.
 

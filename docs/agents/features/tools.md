@@ -9,7 +9,7 @@ Agent [skills][skills] can be provided with a set of tools, which the LLM can ch
 
 - `Pack` - Allow the LLM to run a Pack formula, which can calculate a value or take an action.
 - `Knowledge` - Allow the LLM to query previously indexed records from the knowledge layer.
-- `ScreenAnnotation` - Allow the LLM to draw on the user’s doc or screen.
+- `ScreenAnnotation` - Allow the LLM to draw on the user's doc or screen.
 
 
 ## Pack tools
@@ -73,20 +73,20 @@ Formulas that have side effects (e.g., create or update records in an API) shoul
 
 ## Knowledge
 
-Agent skills can reference previously indexed knowledge, enabling fast, accurate retrieval of relevant information. It’s stored in our knowledge layer, a vector database with permission-aware retrieval. It enables retrieval-augmented generation (RAG), enabling the LLM to work with private data without being trained on it.
+Agent skills can reference previously indexed knowledge, enabling fast, accurate retrieval of relevant information. It's stored in our knowledge layer, a vector database with permission-aware retrieval. It enables retrieval-augmented generation (RAG), enabling the LLM to work with private data without being trained on it.
 
 Agents can add knowledge by including a sync table with some special properties set. Refer to the [Indexing guide][indexing] guide for more information on how to set up your agent to add knowledge to the index.
 
 !!! warning "Limited information available to the LLM"
 
-    Although a sync table row can contain many properties, only a select set of that information will be available to the LLM when it’s retrieved. Specifically:
+    Although a sync table row can contain many properties, only a select set of that information will be available to the LLM when it's retrieved. Specifically:
 
-    - A chunk of text that semantically matches the user’s question, from one of the properties in `index.properties`.
+    - A chunk of text that semantically matches the user's question, from one of the properties in `index.properties`.
     - The values only of properties listed in `index.contextProperties`.
     - The value of `titleProperty`.
     - The value of `linkProperty`.
 
-    The value of other properties in the schema can’t be accessed.
+    The value of other properties in the schema can't be accessed.
 
 
 ### Pack knowledge
@@ -124,7 +124,7 @@ These tools allow the LLM to annotate text in the user's doc or on the user's sc
 
 ### Rewrites
 
-This tool allows your agents to suggest changes to the user’s writing, just like the traditional Grammarly grammar assistant.
+This tool allows your agents to suggest changes to the user's writing, just like the traditional Grammarly grammar assistant.
 
 ```ts
 pack.addSkill({
@@ -167,13 +167,13 @@ While the LLM can fill in these inputs on its own, you may want to suggest a spe
 
 !!! info "Multiple calls or rewrites for the same paragraph not supported"
 
-    If your agent calls the suggestion tool more than once, only the last call will be used. It’s recommended to add language to your prompt that encourages the LLM to call it only once.
+    If your agent calls the suggestion tool more than once, only the last call will be used. It's recommended to add language to your prompt that encourages the LLM to call it only once.
 
     ```
     Only make a single call to the Rewrite tool, passing in all suggestions.
     ```
 
-    Additionally, it’s only expecting a single suggestion per paragraph, and passing in more than one can lead to suggestions not displaying correctly. Use language in your prompt to encourage the LLM to merge multiple suggestions for the same paragraph.
+    Additionally, it's only expecting a single suggestion per paragraph, and passing in more than one can lead to suggestions not displaying correctly. Use language in your prompt to encourage the LLM to merge multiple suggestions for the same paragraph.
 
     ```
     Only pass in one rewrite per paragraph, combining all the changes.
