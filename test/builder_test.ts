@@ -518,7 +518,7 @@ describe('Builder', () => {
       assert.deepEqual(pack.skills[0], skill);
     });
 
-    it('sets chat skill', () => {
+    it('sets chat skill by name', () => {
       const chatSkill: Skill = {
         name: 'DefaultChat',
         displayName: 'Chat',
@@ -526,8 +526,9 @@ describe('Builder', () => {
         prompt: 'You are an expert in this pack.',
         tools: [{type: ToolType.Pack}],
       };
-      pack.setChatSkill(chatSkill);
-      assert.deepEqual(pack.chatSkill, chatSkill);
+      pack.addSkill(chatSkill);
+      pack.setChatSkill('DefaultChat');
+      assert.equal(pack.chatSkill, 'DefaultChat');
     });
 
     it('sets chat skill with contact resolution tool', () => {
@@ -538,12 +539,14 @@ describe('Builder', () => {
         prompt: 'You are an expert in this pack.',
         tools: [{type: ToolType.Pack}, {type: ToolType.ContactResolution}],
       };
-      pack.setChatSkill(chatSkill);
-      assert.deepEqual(pack.chatSkill, chatSkill);
-      assert.equal(pack.chatSkill?.tools?.length, 2);
+      pack.addSkill(chatSkill);
+      pack.setChatSkill('DefaultChat');
+      assert.equal(pack.chatSkill, 'DefaultChat');
+      const skill = pack.skills.find(s => s.name === 'DefaultChat');
+      assert.equal(skill?.tools?.length, 2);
     });
 
-    it('sets bench initialization skill', () => {
+    it('sets bench initialization skill by name', () => {
       const benchSkill: Skill = {
         name: 'BenchInit',
         displayName: 'Bench Initialization',
@@ -551,8 +554,9 @@ describe('Builder', () => {
         prompt: 'You are initializing...',
         tools: [{type: ToolType.Pack}],
       };
-      pack.setBenchInitializationSkill(benchSkill);
-      assert.deepEqual(pack.benchInitializationSkill, benchSkill);
+      pack.addSkill(benchSkill);
+      pack.setBenchInitializationSkill('BenchInit');
+      assert.equal(pack.benchInitializationSkill, 'BenchInit');
     });
 
     it('sets skill entrypoints (deprecated)', () => {

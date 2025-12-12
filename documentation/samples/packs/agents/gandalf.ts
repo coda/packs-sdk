@@ -1,7 +1,7 @@
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
-pack.setChatSkill({
+pack.addSkill({
   name: "Gandalf",
   displayName: "Gandalf",
   description: "Speak to Gandalf.",
@@ -12,6 +12,7 @@ pack.setChatSkill({
   `,
   tools: [],
 });
+pack.setChatSkill("Gandalf");
 
 pack.addSkill({
   name: "Secret",
