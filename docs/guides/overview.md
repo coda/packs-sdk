@@ -1,6 +1,7 @@
 ---
 nav: Overview
 description: A quick introduction to what Packs are and how they work.
+cSpell:words: add-ons
 ---
 
 # What are Packs?
