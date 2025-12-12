@@ -301,7 +301,7 @@ export interface HeaderBearerTokenAuthentication extends BaseAuthentication {
 /**
  * Authenticate using a Coda REST API token, sent as an HTTP header.
  *
- * This is identical to {@link AuthenticationType.HeaderBearerToken} except the user wil be presented
+ * This is identical to {@link AuthenticationType.HeaderBearerToken} except the user will be presented
  * with a UI to generate an API token rather than needing to paste an arbitrary API
  * token into a text input.
  *
