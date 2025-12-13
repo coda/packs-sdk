@@ -28,6 +28,7 @@ import type {DetailedIndexedProperty} from '../schema';
 import type {DocumentContentCategorization} from '../schema';
 import type {DurationSchema} from '../schema';
 import {DurationUnit} from '../schema';
+import type {DynamicSuggestedPromptTool} from '../types';
 import type {DynamicSyncTableDef} from '../api';
 import type {EmailContentCategorization} from '../schema';
 import {EmailDisplayType} from '../schema';
@@ -2200,6 +2201,10 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     type: z.literal(ToolType.CodaDocsAndTables),
   });
 
+  const dynamicSuggestedPromptToolSchema = zodCompleteStrictObject<DynamicSuggestedPromptTool>({
+    type: z.literal(ToolType.DynamicSuggestedPrompt),
+  });
+
   const toolSchema = z.discriminatedUnion('type', [
     packToolSchema,
     knowledgeToolSchema,
@@ -2209,6 +2214,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     mcpToolSchema,
     contactResolutionToolSchema,
     codaDocsToolSchema,
+    dynamicSuggestedPromptToolSchema,
   ]);
   const skillSchema = zodCompleteObject<Skill>({
     name: z

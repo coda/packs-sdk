@@ -261,6 +261,11 @@ var ToolType;
      * @hidden
      */
     ToolType["CodaDocsAndTables"] = "CodaDocsAndTables";
+    /**
+     * Tool that enables dynamic generation of suggested follow-up prompts.
+     * @hidden
+     */
+    ToolType["DynamicSuggestedPrompt"] = "DynamicSuggestedPrompt";
 })(ToolType || (exports.ToolType = ToolType = {}));
 /**
  * The type of knowledge source to use.

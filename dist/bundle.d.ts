@@ -5550,7 +5550,12 @@ export declare enum ToolType {
 	 * Tool that provides access to Coda docs and tables capabilities.
 	 * @hidden
 	 */
-	CodaDocsAndTables = "CodaDocsAndTables"
+	CodaDocsAndTables = "CodaDocsAndTables",
+	/**
+	 * Tool that enables dynamic generation of suggested follow-up prompts.
+	 * @hidden
+	 */
+	DynamicSuggestedPrompt = "DynamicSuggestedPrompt"
 }
 /**
  * Base interface for all tool definitions.
@@ -5712,6 +5717,12 @@ export interface ContactResolutionTool extends BaseTool<ToolType.ContactResoluti
 export interface CodaDocsAndTablesTool extends BaseTool<ToolType.CodaDocsAndTables> {
 }
 /**
+ * Tool that enables dynamic generation of contextual follow-up suggestions.
+ * @hidden
+ */
+export interface DynamicSuggestedPromptTool extends BaseTool<ToolType.DynamicSuggestedPrompt> {
+}
+/**
  * Definition of an MCP server that the pack can connect to.
  */
 export interface MCPServer {
@@ -5738,6 +5749,7 @@ export interface ToolMap {
 	[ToolType.MCP]: MCPTool;
 	[ToolType.ContactResolution]: ContactResolutionTool;
 	[ToolType.CodaDocsAndTables]: CodaDocsAndTablesTool;
+	[ToolType.DynamicSuggestedPrompt]: DynamicSuggestedPromptTool;
 }
 /**
  * Union of all supported tool types.
