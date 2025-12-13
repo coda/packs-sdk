@@ -5,7 +5,12 @@ description: Define the tasks your agent can perform and the prompts to guide it
 
 # Define skills for your agent
 
-A skill guides the LLM on how to perform a specific task or handle a particular type of user question. The skill definition includes metadata about the skill, a prompt to direct the LLM, and a set of [tools][tools] it can use.
+A skill guides the LLM on how to perform a specific task or handle a particular type of user question. You aren't required to add skills to your agent, but they can help it perform more reliably and deliver a better experience to users.
+
+
+## Basic skill
+
+The skill definition includes metadata about the skill, a prompt to direct the LLM, and a set of [tools][tools] it can use.
 
 ```ts
 pack.addSkill({
@@ -58,47 +63,59 @@ pack.addSkill({
 
 When you chat with an agent, it is first routed to a chat skill, which acts like a system prompt for your agent. This skill can either reply to the user directly or hand off to another skill that has been defined.
 
-Normally, this chat skill is auto-generated for an agent. It uses a generic prompt defined by the platform and has access to all of the agent's knowledge and tools.
-
-If you want more control over the chat experience, use the `setChatSkill()` method to define the chat skill.
+Normally, this chat skill is auto-generated for an agent. It uses a generic prompt defined by the platform and has access to all of the agent's knowledge and tools. If you want more control over the chat experience, use the `setChatSkill()` method to define the chat skill.
 
 ```ts
 pack.setChatSkill({
-  name: "DefaultChat",
-  displayName: "Chat",
-  description: "Default chat experience for this pack.",
-  prompt: "You are an expert in this pack.",
-  tools: [
-    { type: coda.ToolType.Pack },  // Enables all pack formulas
-  ],
-});
-
-pack.setSkillEntrypoints({
-  defaultChat: { skillName: "Moo" },
-});
-```
-
-!!! warning "Explicit tools"
-
-    When defining a chat skill, you must explicitly include the tools you want the agent to use. Include `{ type: coda.ToolType.Pack }` to enable all pack formulas as tools.
-
-You can also include optional tools like contact resolution:
-
-```ts
-pack.setChatSkill({
-  name: "DefaultChat",
-  displayName: "Chat",
-  description: "Default chat experience.",
-  prompt: "You are an expert in this pack.",
+  name: "Cow",
+  displayName: "Cow",
+  description: "Talk like a cow.",
+  prompt: `
+    End every reply with "Moo!".
+  `,
   tools: [
     { type: coda.ToolType.Pack },
   ],
 });
 ```
 
+When defining your own chat skill, you must explicitly define the tools you want the agent to use. The default chat skill includes the following tools:
+
+```ts
+tools: [
+  { type: coda.ToolType.Pack },
+  {
+    type: coda.ToolType.Knowledge,
+    source: { type: coda.KnowledgeToolSourceType.Pack },
+  },
+],
+```
+
+In addition, the chat skill always has the ability to transfer to other skills that have been defined in the agent using `addSkill()`.
+
 !!! info "Additional information added to prompt"
 
     The prompt defined in your chat skill will not be used exactly as-is; it will have additional content appended. This is done to provide the LLM with some details about the user, context, and other critical information needed for it to operate.
+
+
+## Bench initialization skill
+
+Normally the agent waits for the user to send a message before responding, but you can have your agent send the first message by setting a bench initialization skill. This skill is run the first time the user clicks on the agent's icon in the agent bench. This can be useful when your agent is single-purpose and you want to start right away, or if you want to show some welcome text to the user to guide them.
+
+```ts
+pack.setBenchInitializationSkill({
+  name: "Greeting",
+  displayName: "Greeting",
+  description: "Greet the user.",
+  prompt: `
+    Say hello to the user, referencing the time of day and a friendly nickname.
+    For example: 10AM, Kramer => "Good morning K-man!"
+  `,
+  tools: [],
+});
+```
+
+The bench initialization skill is only run once while the Superhuman Go side panel is open, even if the user clicks the icon again or starts a new chat session. Closing the side panel will clear the state of all agents, and the next time is opened the bench initialization will fire again.
 
 
 [tools]: ./tools.md
