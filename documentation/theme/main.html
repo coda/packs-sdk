@@ -15,5 +15,38 @@
       </p>
     </div>
   {% endif %}
+
+  {% if page and page.canonical_url %}
+    {% set markdown_url = page.canonical_url ~ "index.md" %}
+    {% set prompt = "Can you please read [this page](" ~ markdown_url ~ ") and prepare to answer questions about it?" %}
+    <a
+      href="https://claude.ai/new?q={{ prompt | urlencode }}"
+      title="Ask Claude about this page"
+      class="md-content__button md-icon"
+      target="_blank"
+    >
+      {% set icon = config.theme.icon.edit or "material/file-edit-outline" %}
+      {% include ".icons/anthropic/claude.svg" %}
+    </a>
+    <a
+      href="https://chatgpt.com/?prompt={{ prompt | urlencode }}"
+      title="Ask ChatGPT about this page"
+      class="md-content__button md-icon"
+      target="_blank"
+    >
+      {% set icon = config.theme.icon.edit or "material/file-edit-outline" %}
+      {% include ".icons/openai/chatgpt.svg" %}
+    </a>
+    <a
+      href="{{ markdown_url }}"
+      title="View as markdown"
+      class="md-content__button md-icon"
+      target="_blank"
+    >
+      {% set icon = config.theme.icon.edit or "material/file-edit-outline" %}
+      {% include ".icons/simple/markdown.svg" %}
+    </a>
+  {% endif %}
+
   {{ super() }}
 {% endblock %}

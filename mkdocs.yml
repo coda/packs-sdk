@@ -394,7 +394,6 @@ theme:
   features:
     - announce.dismiss
     - content.action.edit
-    - content.action.view
     - content.code.copy
     - navigation.path
     - navigation.prune
