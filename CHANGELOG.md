@@ -4,6 +4,18 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- Added DynamicSuggestedPrompt tool type and interfaces
+- Added support for Default Skill in skill definitions
+
+### Changed
+
+- Un-hide and document agent SDK features
+- Cleanup CodaDocs Tool Type
+- Document invocation source and ingestion suggested value
+- Bump NVM version to 22
+
 ## [1.12.4] - 2025-12-09
 
 ### Changed
