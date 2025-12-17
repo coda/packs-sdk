@@ -435,15 +435,25 @@
       "Skill"
     ],
     "content": "Adds a skill to guide the LLM.",
-    "code": "pack.addSkill({\n  name: \"${1:MySkill}\",\n  displayName: \"${2:My skill}\",\n  description: \"${3:My skill description.}\",\n  prompt: \"${4:My prompt}\",\n  tools: [\n    // TODO: Add tools.\n  ],\n});"
+    "code": "pack.addSkill({\n  name: \"${1:MySkill}\",\n  displayName: \"${2:My skill}\",\n  description: \"${3:My skill description.}\",\n  prompt: `\n    ${4:My prompt}\n  `,\n  tools: [\n    // TODO: Add tools.\n  ],\n});"
   },
   {
     "triggerTokens": [
-      "setSkillEntrypoints",
-      "SkillEntrypoints"
+      "setChatSkill",
+      "ChatSkill",
+      "chat"
     ],
-    "content": "Sets the entrypoints for skills in the Pack.",
-    "code": "pack.setSkillEntrypoints({\n  defaultChat: { skillName: \"${1:MySkill}\" },\n});"
+    "content": "Sets the skill to use when replying to a chat message.",
+    "code": "pack.setChatSkill({\n  name: \"${1:MySkill}\",\n  displayName: \"${2:My skill}\",\n  description: \"${3:My skill description.}\",\n  prompt: `\n    ${4:My prompt}\n  `,\n  tools: [\n    // TODO: Add tools.\n  ],\n});"
+  },
+  {
+    "triggerTokens": [
+      "setBenchInitializationSkill",
+      "BenchInitializationSkill",
+      "bench"
+    ],
+    "content": "Sets the skill to run when the user clicks on the agent.",
+    "code": "pack.setBenchInitializationSkill({\n  name: \"${1:MySkill}\",\n  displayName: \"${2:My skill}\",\n  description: \"${3:My skill description.}\",\n  prompt: `\n    ${4:My prompt}\n  `,\n  tools: [\n    // TODO: Add tools.\n  ],\n});"
   },
   {
     "triggerTokens": [

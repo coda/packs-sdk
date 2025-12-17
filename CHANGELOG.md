@@ -4,6 +4,14 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- Added `setBenchInitializationSkill`, which allows the agent to run a skill immediately when the agent icon is clicked on in the bench.
+
+### Changed
+
+- Replaced `setSkillEntrypoints` and `defaultChat` with `setChatSkill`.
+
 ## [1.12.5] - 2025-12-16
 
 ### Added

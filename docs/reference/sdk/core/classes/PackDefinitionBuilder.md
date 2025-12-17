@@ -419,27 +419,26 @@ pack.addSyncTable({
 
 ***
 
-### setChatSkill()
+### setBenchInitializationSkill()
 
-> **setChatSkill**(`skill`): `this`
+> **setBenchInitializationSkill**(`skill`): `this`
 
-Sets the chat skill for this pack's agent.
-
-The chat skill controls the behavior when users chat with the pack agent.
-It defines the prompts, available tools, and optionally the model to use.
+Sets the skill used when the agent is first opened in the agent bench.
 
 #### Example
 
 ```ts
-pack.setChatSkill({
-  name: "DefaultChat",
-  displayName: "Chat",
-  description: "Default chat experience.",
-  prompt: "You are an expert in this pack.",
-  tools: [
-    { type: coda.ToolType.Pack },  // All pack formulas
-  ],
+pack.setBenchInitializationSkill({
+  name: "Greeting",
+  displayName: "Greeting",
+  description: "Greet the user.",
+  prompt: `
+    Say hello to the user, referencing the time of day and a friendly nickname.
+    For example: 10AM, Kramer => "Good morning K-man!"
+  `,
+  tools: [],
 });
+```
 
 #### Parameters
 
@@ -453,7 +452,44 @@ pack.setChatSkill({
 
 ***
 
-### setSkillEntrypoints()
+### setChatSkill()
+
+> **setChatSkill**(`skill`): `this`
+
+Sets the chat skill for this pack's agent.
+
+The chat skill controls the behavior when users chat with the pack agent.
+It defines the prompts, available tools, and optionally the model to use.
+
+#### Example
+
+```ts
+pack.setChatSkill({
+  name: "Cow",
+  displayName: "Cow",
+  description: "Talk like a cow.",
+  prompt: `
+    End every reply with "Moo!".
+  `,
+  tools: [
+    { type: coda.ToolType.Pack },
+  ],
+});
+```
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `skill` | [`Skill`](../interfaces/Skill.md) |
+
+#### Returns
+
+`this`
+
+***
+
+### ~~setSkillEntrypoints()~~
 
 > **setSkillEntrypoints**(`entrypoints`): `this`
 
@@ -466,6 +502,10 @@ pack.setSkillEntrypoints({
   defaultChat: { skillName: "MySkill" },
 });
 ```
+
+#### Deprecated
+
+Use [PackDefinitionBuilder.setChatSkill](#setchatskill) instead.
 
 #### Parameters
 

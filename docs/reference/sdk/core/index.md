@@ -140,7 +140,7 @@ import * as coda from "@codahq/packs-sdk";
 - [SimpleStringSchema](interfaces/SimpleStringSchema.md)
 - [Skill](interfaces/Skill.md)
 - [SkillEntrypointConfig](interfaces/SkillEntrypointConfig.md)
-- [SkillEntrypoints](interfaces/SkillEntrypoints.md)
+- [~~SkillEntrypoints~~](interfaces/SkillEntrypoints.md)
 - [SliderSchema](interfaces/SliderSchema.md)
 - [StatusCodeErrorResponse](interfaces/StatusCodeErrorResponse.md)
 - [StringDateSchema](interfaces/StringDateSchema.md)

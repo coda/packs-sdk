@@ -1325,6 +1325,8 @@ export interface SkillEntrypointConfig {
 }
 /**
  * Entrypoints that skills can be invoked from.
+ *
+ * @deprecated Use {@link PackDefinitionBuilder.setChatSkill} instead.
  */
 export interface SkillEntrypoints {
     /**

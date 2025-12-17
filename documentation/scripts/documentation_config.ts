@@ -270,9 +270,14 @@ export const Snippets: AutocompleteSnippet[] = [
     codeFile: './samples/snippets/skill/add_skill.ts',
   },
   {
-    triggerTokens: ['setSkillEntrypoints', 'SkillEntrypoints'],
-    content: 'Sets the entrypoints for skills in the Pack.',
-    codeFile: './samples/snippets/skill/set_skill_entrypoints.ts',
+    triggerTokens: ['setChatSkill', 'ChatSkill', 'chat'],
+    content: 'Sets the skill to use when replying to a chat message.',
+    codeFile: './samples/snippets/skill/set_chat_skill.ts',
+  },
+  {
+    triggerTokens: ['setBenchInitializationSkill', 'BenchInitializationSkill', 'bench'],
+    content: 'Sets the skill to run when the user clicks on the agent.',
+    codeFile: './samples/snippets/skill/set_bench_initialization_skill.ts',
   },
   {
     triggerTokens: ['addMcpServer', 'McpServer', 'MCP'],

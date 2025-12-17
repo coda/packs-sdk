@@ -290,13 +290,19 @@
   "addSkill": {
     "prefix": "/addSkill",
     "description": "Adds a skill to guide the LLM.",
-    "body": "pack.addSkill({\n  name: \"${1:MySkill}\",\n  displayName: \"${2:My skill}\",\n  description: \"${3:My skill description.}\",\n  prompt: \"${4:My prompt}\",\n  tools: [\n    // TODO: Add tools.\n  ],\n});",
+    "body": "pack.addSkill({\n  name: \"${1:MySkill}\",\n  displayName: \"${2:My skill}\",\n  description: \"${3:My skill description.}\",\n  prompt: `\n    ${4:My prompt}\n  `,\n  tools: [\n    // TODO: Add tools.\n  ],\n});",
     "scope": "javascript,typescript"
   },
-  "setSkillEntrypoints": {
-    "prefix": "/setSkillEntrypoints",
-    "description": "Sets the entrypoints for skills in the Pack.",
-    "body": "pack.setSkillEntrypoints({\n  defaultChat: { skillName: \"${1:MySkill}\" },\n});",
+  "setChatSkill": {
+    "prefix": "/setChatSkill",
+    "description": "Sets the skill to use when replying to a chat message.",
+    "body": "pack.setChatSkill({\n  name: \"${1:MySkill}\",\n  displayName: \"${2:My skill}\",\n  description: \"${3:My skill description.}\",\n  prompt: `\n    ${4:My prompt}\n  `,\n  tools: [\n    // TODO: Add tools.\n  ],\n});",
+    "scope": "javascript,typescript"
+  },
+  "setBenchInitializationSkill": {
+    "prefix": "/setBenchInitializationSkill",
+    "description": "Sets the skill to run when the user clicks on the agent.",
+    "body": "pack.setBenchInitializationSkill({\n  name: \"${1:MySkill}\",\n  displayName: \"${2:My skill}\",\n  description: \"${3:My skill description.}\",\n  prompt: `\n    ${4:My prompt}\n  `,\n  tools: [\n    // TODO: Add tools.\n  ],\n});",
     "scope": "javascript,typescript"
   },
   "addMcpServer": {

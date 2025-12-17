@@ -16,7 +16,7 @@
 
       require(['vs/editor/editor.main'], function () {
         var editor = monaco.editor.create(document.getElementById('container'), {
-          value: "pack.addSkill({\n  name: \"${1:MySkill}\",\n  displayName: \"${2:My skill}\",\n  description: \"${3:My skill description.}\",\n  prompt: `\n    $4$My prompt$\n  `,\n  tools: [\n    // TODO: Add tools.\n  ],\n});",
+          value: "pack.setBenchInitializationSkill({\n  name: \"${1:MySkill}\",\n  displayName: \"${2:My skill}\",\n  description: \"${3:My skill description.}\",\n  prompt: `\n    $4$My prompt$\n  `,\n  tools: [\n    // TODO: Add tools.\n  ],\n});",
           language: 'javascript',
           minimap: {enabled: false},
           readOnly: true,
