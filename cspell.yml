@@ -1,6 +1,7 @@
 # Configuration file for the cSpell spell checker.
 version: 0.2
 language: en
+minWordLength: 2
 
 # List of additional words to add to the dictionary.
 words:
@@ -22,7 +23,15 @@ words:
   - Webflow
   # Acronyms
   - IIFE
+  - GCD
+  - GPT
+  - LLM
+  - MCP
+  - MMM
   - PKCE
+  - TTL
+  - UX
+  - VM
   # TsDoc
   - keyof
   - typeof

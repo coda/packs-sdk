@@ -16,11 +16,11 @@ Before you can start coding, there are a few things you need:
 
 **Grammarly Account**
 
-:   If you don’t already have one, sign up for a free account here: [grammarly.com/signup][grammarly_signup]
+:   If you don't already have one, sign up for a free account here: [grammarly.com/signup][grammarly_signup]
 
     ??? warning "Individual accounts only"
 
-        At the moment, you can only use agents with *individual* Grammarly accounts. If you have an account on a team plan (Pro or Enterprise), it won’t be compatible. As a workaround, select another email address and create a new Grammarly account on the Free plan.
+        At the moment, you can only use agents with *individual* Grammarly accounts. If you have an account on a team plan (Pro or Enterprise), it won't be compatible. As a workaround, select another email address and create a new Grammarly account on the Free plan.
 
 **Coda account**
 

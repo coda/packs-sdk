@@ -1,4 +1,6 @@
-module.exports = {
+import remarkLintNoSmartQuotes from './documentation/scripts/remark_lint_no_smart_quotes.mjs';
+
+export default {
   "plugins": [
     "remark-frontmatter",
     [
@@ -35,6 +37,7 @@ module.exports = {
           ]
         }
       }
-    ]
+    ],
+    [remarkLintNoSmartQuotes],
   ]
 };

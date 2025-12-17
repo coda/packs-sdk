@@ -318,7 +318,7 @@ export interface HeaderBearerTokenAuthentication extends BaseAuthentication {
 /**
  * Authenticate using a Coda REST API token, sent as an HTTP header.
  *
- * This is identical to {@link AuthenticationType.HeaderBearerToken} except the user wil be presented
+ * This is identical to {@link AuthenticationType.HeaderBearerToken} except the user will be presented
  * with a UI to generate an API token rather than needing to paste an arbitrary API
  * token into a text input.
  *
@@ -1209,6 +1209,11 @@ export enum ToolType {
    * @hidden
    */
   CodaDocsAndTables = 'CodaDocsAndTables',
+  /**
+   * Tool that enables dynamic generation of suggested follow-up prompts.
+   * @hidden
+   */
+  DynamicSuggestedPrompt = 'DynamicSuggestedPrompt',
 }
 
 /**
@@ -1389,6 +1394,12 @@ export interface ContactResolutionTool extends BaseTool<ToolType.ContactResoluti
 export interface CodaDocsAndTablesTool extends BaseTool<ToolType.CodaDocsAndTables> {}
 
 /**
+ * Tool that enables dynamic generation of contextual follow-up suggestions.
+ * @hidden
+ */
+export interface DynamicSuggestedPromptTool extends BaseTool<ToolType.DynamicSuggestedPrompt> {}
+
+/**
  * Definition of an MCP server that the pack can connect to.
  */
 export interface MCPServer {
@@ -1416,6 +1427,7 @@ export interface ToolMap {
   [ToolType.MCP]: MCPTool;
   [ToolType.ContactResolution]: ContactResolutionTool;
   [ToolType.CodaDocsAndTables]: CodaDocsAndTablesTool;
+  [ToolType.DynamicSuggestedPrompt]: DynamicSuggestedPromptTool;
 }
 
 /**

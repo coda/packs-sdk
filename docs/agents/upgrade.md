@@ -7,11 +7,11 @@ description: Information on how to update an existing Coda Pack to work with Sup
 
 If you've already built a Pack for Coda, the good news is that it can be easily upgraded to a Superhuman Go agent. All agents are Packs under the hood, and with some minor tweaks, your existing Pack can be one too.
 
-You don’t need to be an AI expert to do this, as we provide the LLM and hook it up to your Pack. It's done automatically, so you can install your Pack in Superhuman Go and start chatting with it right away.
+You don't need to be an AI expert to do this, as we provide the LLM and hook it up to your Pack. It's done automatically, so you can install your Pack in Superhuman Go and start chatting with it right away.
 
 <img src="../../images/agent_upgrade.png" srcset="../../images/agent_upgrade_2x.png 2x" alt="A screenshot of the action confirmation UX." class="screenshot">
 
-In the screenshot above, you can see a user chatting with the [Weather Pack][weather_pack], which hasn’t had any code changes. The LLM knows all the formulas and actions in the Pack, calls them as needed, and displays the results in a human-friendly way.
+In the screenshot above, you can see a user chatting with the [Weather Pack][weather_pack], which hasn't had any code changes. The LLM knows all the formulas and actions in the Pack, calls them as needed, and displays the results in a human-friendly way.
 
 How well your Pack works as an agent can vary, so the main task is to test it as an agent and update it as needed to ensure a great user experience.
 
@@ -40,7 +40,7 @@ Packs used to only run in docs, but now agents can be run anywhere. Update your 
 
 ### Add indexing to your sync tables
 
-The data in your sync tables won’t be available to the agent unless you index them. You should set up indexing for sync tables that:
+The data in your sync tables won't be available to the agent unless you index them. You should set up indexing for sync tables that:
 
 1. Have at least one free-text column (description, notes, body, etc.)
 2. Have a link column
@@ -59,7 +59,7 @@ See the [Skills guide][skills] for more information on how to add custom skills.
 
 ### Utilize suggestions
 
-One of Grammarly’s most powerful features is to see what the user is writing and make suggestions on how to improve it. The same suggestion UI is available to agents.
+One of Grammarly's most powerful features is to see what the user is writing and make suggestions on how to improve it. The same suggestion UI is available to agents.
 
 Look for potential use cases where making a writing suggestion would be beneficial—for example, filling in a placeholder or providing additional context about a term or phrase.
 
@@ -125,6 +125,63 @@ pack.addFormula({
 ```
 
 
+### Alternate suggested parameter values
+
+Since sync tables are limited to 10,000 rows in docs, you may have added parameters for limiting the scope of the sync, perhaps with a `suggestedValue` that populates a reasonable default. When used by an agent to [index data][indexing], however, the sync table can sync many more rows, and it would be better to use a different suggested value that includes a broader scope.
+
+This can be done by setting the field [`ingestionSuggestedValue`][ingestionsuggestedvalue] on the parameter. This suggested value will only be used in the agent setup UI.
+
+```{.ts hl_lines="12"}
+pack.addSyncTable({
+  name: "Tickets",
+  // ...
+  formula: {
+    // ...
+    parameters: [
+      coda.makeParameter({
+        type: coda.ParameterType.DateArray,
+        name: "created",
+        description: "Include tickets created within the given time range.",
+        suggestedValue: coda.PrecannedDateRange.Last30Days,
+        ingestionSuggestedValue: coda.PrecannedDateRange.Last365Days,
+      }),
+    ],
+    execute: async function (args, context) {
+      // ...
+    },
+  },
+});
+```
+
+
+### Source application detection
+
+While uncommon, there may be times when you want to adjust the logic in your code depending on whether it's running in a doc or an agent. You can do that by looking at the [InvocationSource][invocationsource] value in the [`context.invocationLocation.source`][source].
+
+```ts
+pack.addFormula({
+  name: "SendEmail",
+  // ...
+  execute: async function (args, context) {
+    // ...
+    let emailFooter;
+    let source = context.invocationLocation.source;
+    switch (source) {
+      case coda.InvocationSource.Coda:
+        emailFooter = "Sent from Coda.";
+        break;
+      case coda.InvocationSource.Go:
+        emailFooter = "Sent from Superhuman Go.";
+        break;
+      default:
+        throw new Error("Unknown invocation source: " + source);
+    }
+    // ...
+  },
+});
+```
+
+
 ## Known limitations
 
 Currently, some Pack features don't work in agents.
@@ -146,3 +203,6 @@ Currently, some Pack features don't work in agents.
 [autocomplete]: ../guides/basics/parameters/autocomplete.md
 [connection_requirement_optional]: ../reference/sdk/core/enumerations/ConnectionRequirement.md#optional
 [weather_pack]: https://coda.io/packs/weather-1015
+[invocationsource]: ../reference/sdk/core/enumerations/InvocationSource.md
+[source]: ../reference/sdk/core/interfaces/InvocationLocation.md#source
+[ingestionsuggestedvalue]: ../reference/sdk/core/interfaces/ParamDef.md#ingestionsuggestedvalue
