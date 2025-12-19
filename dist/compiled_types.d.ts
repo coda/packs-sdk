@@ -23,6 +23,7 @@ import type { PackVersionDefinition } from './types';
 import type { PostSetup } from './types';
 import type { QueryParamTokenAuthentication } from './types';
 import type { Skill } from './types';
+import type { SuggestedPrompt } from './types';
 import type { SyncTable } from './api';
 import type { VariousAuthentication } from './types';
 import type { WebBasicAuthentication } from './types';
@@ -106,7 +107,7 @@ export type ExternalPackFormatMetadata = PackFormatMetadata;
 export type ExternalSyncTable = PackSyncTable;
 /** @hidden */
 export type ExternalSkill = SkillMetadata;
-type BasePackVersionMetadata = Omit<PackVersionMetadata, 'defaultAuthentication' | 'systemConnectionAuthentication' | 'formulas' | 'formats' | 'syncTables' | 'skills'>;
+type BasePackVersionMetadata = Omit<PackVersionMetadata, 'defaultAuthentication' | 'systemConnectionAuthentication' | 'formulas' | 'formats' | 'syncTables' | 'skills' | 'suggestedPrompts'>;
 /** @hidden */
 export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
     authentication: {
@@ -131,6 +132,7 @@ export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
     formats?: ExternalPackFormat[];
     syncTables?: ExternalSyncTable[];
     skills?: ExternalSkill[];
+    suggestedPrompts?: SuggestedPrompt[];
 }
 /** @hidden */
 export type ExternalPackMetadata = ExternalPackVersionMetadata & Pick<PackMetadata, 'id' | 'name' | 'shortDescription' | 'description' | 'permissionsDescription' | 'category' | 'logoPath' | 'exampleImages' | 'exampleVideoIds' | 'minimumFeatureSet' | 'quotas' | 'rateLimits' | 'isSystem'>;

@@ -23,6 +23,7 @@ import type {PackVersionDefinition} from './types';
 import type {PostSetup} from './types';
 import type {QueryParamTokenAuthentication} from './types';
 import type {Skill} from './types';
+import type {SuggestedPrompt} from './types';
 import type {SyncTable} from './api';
 import type {VariousAuthentication} from './types';
 import type {WebBasicAuthentication} from './types';
@@ -154,7 +155,13 @@ export type ExternalSkill = SkillMetadata;
 
 type BasePackVersionMetadata = Omit<
   PackVersionMetadata,
-  'defaultAuthentication' | 'systemConnectionAuthentication' | 'formulas' | 'formats' | 'syncTables' | 'skills'
+  | 'defaultAuthentication'
+  | 'systemConnectionAuthentication'
+  | 'formulas'
+  | 'formats'
+  | 'syncTables'
+  | 'skills'
+  | 'suggestedPrompts'
 >;
 
 // Further stripped-down version of `PackVersionMetadata` that contains only what the browser needs.
@@ -181,6 +188,7 @@ export interface ExternalPackVersionMetadata extends BasePackVersionMetadata {
   formats?: ExternalPackFormat[];
   syncTables?: ExternalSyncTable[];
   skills?: ExternalSkill[];
+  suggestedPrompts?: SuggestedPrompt[];
 }
 
 // Further stripped-down version of `PackMetadata` that contains only what the browser needs.
