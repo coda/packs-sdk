@@ -5757,6 +5757,33 @@ export interface ToolMap {
  */
 export type Tool = ToolMap[keyof ToolMap];
 /**
+ * The supported LLM models for a skill.
+ *
+ * @example
+ * ```ts
+ * models: [{model: SkillModel.OpenAIGPT4}]
+ * ```
+ */
+export declare enum SkillModel {
+	/** OpenAI GPT-4 series models. */
+	OpenAIGPT4 = "OpenAIGPT4",
+	/** OpenAI GPT-5 series models. */
+	OpenAIGPT5 = "OpenAIGPT5"
+}
+/**
+ * Configuration for a specific skill model.
+ */
+export interface SkillModelConfiguration {
+	/** The LLM model to use. */
+	model: SkillModel;
+	/**
+	 * Optional specific prompt for this model.
+	 * If provided, this prompt is used when this model is selected.
+	 * If not provided, the skill's top-level prompt is used.
+	 */
+	prompt?: string;
+}
+/**
  * A prompt and set of tools that defines a specific skill this agent provides.
  */
 export interface Skill {
@@ -5776,10 +5803,14 @@ export interface Skill {
 	 */
 	forcedFormula?: string;
 	/**
-	 * The LLM model to use for this skill. Specify a model name string.
-	 * If not specified or if an invalid value is provided, falls back to the default model (GPT-4.1).
+	 * The LLM model(s) to use for this skill. Specify an array of SkillModelConfiguration objects.
+	 *
+	 * If not specified, Superhuman Go will select a default model.
+	 *
+	 * If multiple models are specified, Superhuman Go will select the best available model based on
+	 * the user's workspace settings.
 	 */
-	model?: string;
+	models?: SkillModelConfiguration[];
 }
 /**
  * Configuration for a skill entrypoint.

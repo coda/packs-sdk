@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HttpStatusCode = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.ToolType = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
+exports.HttpStatusCode = exports.SkillModel = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.ToolType = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
 /**
  * @deprecated
  */
@@ -297,6 +297,21 @@ var ScreenAnnotationType;
      */
     ScreenAnnotationType["Guide"] = "Guide";
 })(ScreenAnnotationType || (exports.ScreenAnnotationType = ScreenAnnotationType = {}));
+/**
+ * The supported LLM models for a skill.
+ *
+ * @example
+ * ```ts
+ * models: [{model: SkillModel.OpenAIGPT4}]
+ * ```
+ */
+var SkillModel;
+(function (SkillModel) {
+    /** OpenAI GPT-4 series models. */
+    SkillModel["OpenAIGPT4"] = "OpenAIGPT4";
+    /** OpenAI GPT-5 series models. */
+    SkillModel["OpenAIGPT5"] = "OpenAIGPT5";
+})(SkillModel || (exports.SkillModel = SkillModel = {}));
 /**
  * An enum of the HTTP status codes.
  */

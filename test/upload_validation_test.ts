@@ -32,6 +32,7 @@ import {ReservedAuthenticationNames} from '../types';
 import {ScaleIconSet} from '../schema';
 import {ScreenAnnotationType} from '../types';
 import type {Skill} from '../types';
+import {SkillModel} from '../types';
 import type {StringFormulaDefLegacy} from '../api';
 import type {SyncTable} from '../api';
 import {TableRole} from '../api_types';
@@ -6350,7 +6351,7 @@ describe('Pack metadata Validation', async () => {
             description: 'A test skill',
             prompt: 'You are a helpful assistant',
             tools: [],
-            model: 'openai_direct_gpt41_priority',
+            models: [{model: SkillModel.OpenAIGPT4}],
           },
         ],
       });
@@ -6372,7 +6373,7 @@ describe('Pack metadata Validation', async () => {
       await validateJson(metadata);
     });
 
-    it('validates skill with any model string (validation happens at runtime)', async () => {
+    it('validates skill with invalid model type', async () => {
       const metadata = createFakePackVersionMetadata({
         skills: [
           {
@@ -6381,11 +6382,12 @@ describe('Pack metadata Validation', async () => {
             description: 'A test skill',
             prompt: 'You are a helpful assistant',
             tools: [],
-            model: 'custom-model',
+            // @ts-expect-error
+            models: 'custom-model',
           },
         ],
       });
-      await validateJson(metadata);
+      await validateJsonAndAssertFails(metadata);
     });
   });
 
@@ -6416,6 +6418,49 @@ describe('Pack metadata Validation', async () => {
       await validateJson(metadata);
     });
 
+    it('validates skill with model configuration', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [],
+            models: [
+              {
+                model: SkillModel.OpenAIGPT4,
+                prompt: 'You are a helpful assistant running on GPT-4',
+              },
+            ],
+          },
+        ],
+      });
+      await validateJson(metadata);
+    });
+
+    it('validates skill with mixed model enum and configuration', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [],
+            models: [
+              {model: SkillModel.OpenAIGPT5},
+              {
+                model: SkillModel.OpenAIGPT4,
+                prompt: 'You are a helpful assistant running on GPT-4',
+              },
+            ],
+          },
+        ],
+      });
+      await validateJson(metadata);
+    });
+
     it('validates chatSkill with model override', async () => {
       const metadata = createFakePackVersionMetadata({
         chatSkill: {
@@ -6424,7 +6469,7 @@ describe('Pack metadata Validation', async () => {
           description: 'Default chat experience.',
           prompt: 'You are an expert in this pack.',
           tools: [{type: ToolType.Pack}],
-          model: 'openai_direct_gpt41_priority',
+          models: [{model: SkillModel.OpenAIGPT4}],
         },
       });
       await validateJson(metadata);
