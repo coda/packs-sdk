@@ -1292,6 +1292,28 @@ export interface ToolMap {
  */
 export type Tool = ToolMap[keyof ToolMap];
 /**
+ * The supported LLM models for a skill.
+ */
+export declare enum SkillModel {
+    /** GPT-4 model. */
+    GPT4 = "GPT4",
+    /** GPT-5 model. */
+    GPT5 = "GPT5"
+}
+/**
+ * Configuration for a specific skill model.
+ */
+export interface SkillModelConfiguration {
+    /** The LLM model to use. */
+    model: SkillModel;
+    /**
+     * Optional specific prompt for this model.
+     * If provided, this prompt is used when this model is selected.
+     * If not provided, the skill's top-level prompt is used.
+     */
+    prompt?: string;
+}
+/**
  * A prompt and set of tools that defines a specific skill this agent provides.
  */
 export interface Skill {
@@ -1311,10 +1333,12 @@ export interface Skill {
      */
     forcedFormula?: string;
     /**
-     * The LLM model to use for this skill. Specify a model name string.
-     * If not specified or if an invalid value is provided, falls back to the default model (GPT-4.1).
+     * The LLM model(s) to use for this skill. Specify a SkillModelConfiguration object or an array of them.
+     * If not specified, falls back to the default model (GPT-4.1).
+     *
+     * If multiple models are specified, Coda will select the best available model based on the user's workspace settings.
      */
-    model?: string;
+    models?: SkillModelConfiguration[];
 }
 /**
  * Configuration for a skill entrypoint.

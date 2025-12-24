@@ -56,9 +56,10 @@ const types_6 = require("../types");
 const schema_15 = require("../schema");
 const types_7 = require("../types");
 const schema_16 = require("../schema");
-const api_types_5 = require("../api_types");
 const types_8 = require("../types");
+const api_types_5 = require("../api_types");
 const types_9 = require("../types");
+const types_10 = require("../types");
 const api_types_6 = require("../api_types");
 const url_parse_1 = __importDefault(require("url-parse"));
 const schema_17 = require("../schema");
@@ -556,7 +557,7 @@ function buildMetadataSchema({ sdkVersion }) {
             pkceChallengeMethod: z.enum(['plain', 'S256']).optional(),
             scopeParamName: z.string().optional(),
             nestedResponseKey: z.string().optional(),
-            credentialsLocation: z.nativeEnum(types_8.TokenExchangeCredentialsLocation).optional(),
+            credentialsLocation: z.nativeEnum(types_9.TokenExchangeCredentialsLocation).optional(),
             ...baseAuthenticationValidators,
         }).superRefine(({ requiresEndpointUrl, endpointKey, authorizationUrl, tokenUrl }, context) => {
             const expectsRelativeUrl = requiresEndpointUrl && !endpointKey;
@@ -587,7 +588,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             tokenQueryParam: z.string().optional(),
             scopeParamName: z.string().optional(),
             nestedResponseKey: z.string().optional(),
-            credentialsLocation: z.nativeEnum(types_8.TokenExchangeCredentialsLocation).optional(),
+            credentialsLocation: z.nativeEnum(types_9.TokenExchangeCredentialsLocation).optional(),
             ...baseAuthenticationValidators,
         }),
         [types_1.AuthenticationType.WebBasic]: zodCompleteStrictObject({
@@ -1615,7 +1616,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }
     });
     const packToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_9.ToolType.Pack),
+        type: z.literal(types_10.ToolType.Pack),
         packId: z.number().optional(),
         formulas: z
             .array(zodCompleteStrictObject({
@@ -1644,7 +1645,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }),
     ]);
     const knowledgeToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_9.ToolType.Knowledge),
+        type: z.literal(types_10.ToolType.Knowledge),
         source: knowledgeToolSourceSchema,
     });
     const screenAnnotationSchema = z.discriminatedUnion('type', [
@@ -1656,27 +1657,31 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }),
     ]);
     const screenAnnotationToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_9.ToolType.ScreenAnnotation),
+        type: z.literal(types_10.ToolType.ScreenAnnotation),
         annotation: screenAnnotationSchema,
     });
     const assistantMessageToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_9.ToolType.AssistantMessage),
+        type: z.literal(types_10.ToolType.AssistantMessage),
     });
     const summarizerToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_9.ToolType.Summarizer),
+        type: z.literal(types_10.ToolType.Summarizer),
     });
     const mcpToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_9.ToolType.MCP),
+        type: z.literal(types_10.ToolType.MCP),
         serverNames: z.array(z.string()).optional(),
     });
     const contactResolutionToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_9.ToolType.ContactResolution),
+        type: z.literal(types_10.ToolType.ContactResolution),
     });
     const codaDocsToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_9.ToolType.CodaDocsAndTables),
+        type: z.literal(types_10.ToolType.CodaDocsAndTables),
     });
     const dynamicSuggestedPromptToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_9.ToolType.DynamicSuggestedPrompt),
+        type: z.literal(types_10.ToolType.DynamicSuggestedPrompt),
+    });
+    const skillModelConfigurationSchema = zodCompleteStrictObject({
+        model: z.nativeEnum(types_8.SkillModel),
+        prompt: z.string().min(1).max(exports.Limits.PromptLength).optional(),
     });
     const toolSchema = z.discriminatedUnion('type', [
         packToolSchema,
@@ -1700,7 +1705,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         prompt: z.string().min(1).max(exports.Limits.PromptLength),
         tools: z.array(toolSchema),
         forcedFormula: z.string().min(1).optional(),
-        model: z.string().min(1).optional(),
+        models: z.array(skillModelConfigurationSchema).optional(),
     });
     const skillEntrypointConfigSchema = zodCompleteStrictObject({
         skillName: z.string(),
@@ -2301,7 +2306,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     })
         .superRefine((data, context) => {
         const metadata = data;
-        const hasMcpSkill = (metadata.skills || []).some(skill => skill.tools.some(tool => tool.type === types_9.ToolType.MCP));
+        const hasMcpSkill = (metadata.skills || []).some(skill => skill.tools.some(tool => tool.type === types_10.ToolType.MCP));
         if (hasMcpSkill && (!metadata.mcpServers || metadata.mcpServers.length === 0)) {
             context.addIssue({
                 code: z.ZodIssueCode.custom,
