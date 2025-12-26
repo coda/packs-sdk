@@ -102,6 +102,8 @@ import type {SimpleStringSchema} from '../schema';
 import type {Skill} from '../types';
 import type {SkillEntrypointConfig} from '../types';
 import type {SkillEntrypoints} from '../types';
+import {SkillModel} from '../types';
+import type {SkillModelConfiguration} from '../types';
 import type {SliderSchema} from '../schema';
 import type {StringDateSchema} from '../schema';
 import type {StringDateTimeSchema} from '../schema';
@@ -2205,6 +2207,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     type: z.literal(ToolType.DynamicSuggestedPrompt),
   });
 
+  const skillModelConfigurationSchema = zodCompleteStrictObject<SkillModelConfiguration>({
+    model: z.nativeEnum(SkillModel),
+    prompt: z.string().min(1).max(Limits.PromptLength).optional(),
+  });
+
   const toolSchema = z.discriminatedUnion('type', [
     packToolSchema,
     knowledgeToolSchema,
@@ -2227,7 +2234,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     prompt: z.string().min(1).max(Limits.PromptLength),
     tools: z.array(toolSchema),
     forcedFormula: z.string().min(1).optional(),
-    model: z.string().min(1).optional(),
+    models: z.array(skillModelConfigurationSchema).optional(),
   });
 
   const skillEntrypointConfigSchema = zodCompleteStrictObject<SkillEntrypointConfig>({
