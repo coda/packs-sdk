@@ -30,12 +30,16 @@ Display name shown to users for this skill.
 
 ***
 
-### model?
+### models?
 
-> `optional` **model**: `string`
+> `optional` **models**: [`SkillModelConfiguration`](SkillModelConfiguration.md)[]
 
-The LLM model to use for this skill. Specify a model name string.
-If not specified or if an invalid value is provided, falls back to the default model (GPT-4.1).
+The LLM model(s) to use for this skill. Specify an array of SkillModelConfiguration objects.
+
+If not specified, Superhuman Go will select a default model.
+
+If multiple models are specified, Superhuman Go will select the best available model based on
+the user's workspace settings.
 
 ***
 

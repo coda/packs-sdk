@@ -59,7 +59,7 @@ pack.addSkill({
 });
 ```
 
-## Chat skill
+## Chat skill {: #default-chat-skill}
 
 When you chat with an agent, it is first routed to a chat skill, which acts like a system prompt for your agent. This skill can either reply to the user directly or hand off to another skill that has been defined.
 
