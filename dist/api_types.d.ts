@@ -476,6 +476,11 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
      */
     readonly isSystem?: boolean;
     /**
+     * Whether this formula can be used as a federated search tool for agents.
+     * @internal
+     */
+    readonly isFederatedSearch?: boolean;
+    /**
      * OAuth scopes that the formula needs that weren't requested in the pack's overall authentication
      * config. For example, a Slack pack can have one formula that needs admin privileges, but non-admins
      * can use the bulk of the pack without those privileges. Coda will give users help in understanding
