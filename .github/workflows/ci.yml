@@ -16,11 +16,7 @@ env:
 
 jobs:
   build:
-    runs-on: self-hosted-2core
-    container:
-      image: common-docker.artifactory.grammarly.io/coda/base:bookworm-2025-11-18-21-52
-      options: --user root
-
+    runs-on: ubuntu-latest
     steps:
       - uses: ./.github/actions/setup_node
       - uses: ./.github/actions/setup_python
@@ -47,47 +43,11 @@ jobs:
           name: diffs
           path: /tmp/diffs
 
-  # Cancel older workflow runs waiting for approval
-  cancel-older-approvals:
-    runs-on: self-hosted-2core
-    container:
-      image: common-docker.artifactory.grammarly.io/coda/base:bookworm-2025-11-18-21-52
-      options: --user root
-    if: github.ref == 'refs/heads/main'
-    needs: build
-    steps:
-      - name: Cancel older workflow runs
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const runs = await github.rest.actions.listWorkflowRuns({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: context.workflow,
-              status: 'waiting',
-              branch: 'main'
-            });
-
-            const currentRunId = context.runId;
-            for (const run of runs.data.workflow_runs) {
-              if (run.id < currentRunId) {
-                console.log(`Cancelling older run: ${run.id}`);
-                await github.rest.actions.cancelWorkflowRun({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  run_id: run.id
-                });
-              }
-            }
-
   build-docs-head:
-    runs-on: self-hosted-2core
-    container:
-      image: common-docker.artifactory.grammarly.io/coda/base:bookworm-2025-11-18-21-52
-      options: --user root
+    runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
-    needs: cancel-older-approvals
-
+    environment:
+      name: head-documentation
     steps:
       - uses: ./.github/actions/setup_node
       - uses: ./.github/actions/setup_python
@@ -111,12 +71,10 @@ jobs:
           path: site
 
   push-head-docs:
-    runs-on: self-hosted-2core
-    container:
-      image: common-docker.artifactory.grammarly.io/coda/base:bookworm-2025-11-18-21-52
-      options: --user root
+    runs-on: ubuntu-latest
+    environment:
+      name: head-documentation
     needs: build-docs-head
-
     steps:
       - uses: ./.github/actions/setup_node
 
@@ -138,12 +96,10 @@ jobs:
         run: make publish-docs-head FLAGS=--forceUpload
 
   build-docs-staging:
-    runs-on: self-hosted-2core
-    container:
-      image: common-docker.artifactory.grammarly.io/coda/base:bookworm-2025-11-18-21-52
-      options: --user root
-    needs: push-head-docs
-
+    runs-on: ubuntu-latest
+    environment:
+      name: staging-documentation
+    needs: push-heada-docs
     steps:
       - uses: ./.github/actions/setup_node
       - uses: ./.github/actions/setup_python
@@ -167,12 +123,10 @@ jobs:
           path: site
 
   push-staging-docs:
-    runs-on: self-hosted-2core
-    container:
-      image: common-docker.artifactory.grammarly.io/coda/base:bookworm-2025-11-18-21-52
-      options: --user root
+    runs-on: ubuntu-latest
+    environment:
+      name: staging-documentation
     needs: [push-head-docs, build-docs-staging]
-
     steps:
       - uses: ./.github/actions/setup_node
 
@@ -215,12 +169,10 @@ jobs:
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
   build-docs-prod:
-    runs-on: self-hosted-2core
-    container:
-      image: common-docker.artifactory.grammarly.io/coda/base:bookworm-2025-11-18-21-52
-      options: --user root
+    runs-on: ubuntu-latest
+    environment:
+      name: prod-documentation
     needs: push-staging-docs
-
     steps:
       - uses: ./.github/actions/setup_node
       - uses: ./.github/actions/setup_python
@@ -244,12 +196,10 @@ jobs:
           path: site
 
   push-prod-docs:
-    runs-on: self-hosted-2core
-    container:
-      image: common-docker.artifactory.grammarly.io/coda/base:bookworm-2025-11-18-21-52
-      options: --user root
+    runs-on: ubuntu-latest
+    environment:
+      name: prod-documentation
     needs: [push-staging-docs, build-docs-prod]
-
     steps:
       - uses: ./.github/actions/setup_node
 
