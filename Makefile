@@ -200,17 +200,17 @@ compile-documentation-scripts:
 compile-samples:
 	${ROOTDIR}/node_modules/.bin/tsc --project ./documentation/samples/tsconfig.json
 
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Linux)
+	REPL_SIZE :=
+else
+	REPL_SIZE := -S1024
+endif
+
 .PHONY: validate-samples
 validate-samples:
-	RET=0; \
-	for pack in `find documentation/samples/packs -name "*.ts"`; do \
-		echo Validating $${pack}...; \
-		node dist/cli/coda.js validate --no-checkDeprecationWarnings $${pack}; \
-		if [ $$? -ne 0 ]; then \
-			RET=1; \
-		fi; \
-	done; \
-	exit $$RET
+	find documentation/samples/packs -name "*.ts" | \
+		xargs -P 8 -I{} ${REPL_SIZE} -n1 sh -c "echo Validating {}...; node dist/cli/coda.js validate --no-checkDeprecationWarnings {} || (echo {} failed && exit 1)"
 
 .PHONY: generated-documentation
 generated-documentation: compile-samples
