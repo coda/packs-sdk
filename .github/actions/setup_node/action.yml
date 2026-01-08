@@ -6,19 +6,20 @@ runs:
   steps:
     - name: Install basic tools
       shell: bash
-      run: sudo apt update && sudo apt install -y g++ build-essential python python3-pip && sudo python3 -m pip install pipenv --break-system-packages
+      run: sudo apt update && sudo apt install -y g++ build-essential python3 python3-pip && sudo python3 -m pip install pipenv --break-system-packages
 
-    - name: Install image libraries
-      shell: bash
-      run: make _bootstrap-doc-tools
+    - name: Use Node 22
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
 
     - name: Cache pnpm dependencies
       uses: actions/cache@v4
       with:
         path: node_modules
-        key: pnpm-v6-dependencies-${{ hashFiles('package.json') }}
+        key: pnpm-v7-dependencies-${{ hashFiles('package.json') }}
         restore-keys: |
-          pnpm-v6-dependencies-
+          pnpm-v7-dependencies-
 
     - name: Install pnpm
       shell: bash

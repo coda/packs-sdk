@@ -13,3 +13,7 @@ runs:
     - name: Bootstrap pipenv
       shell: bash
       run: make _bootstrap-python
+
+    - name: Install image libraries
+      shell: bash
+      run: make _bootstrap-doc-tools
