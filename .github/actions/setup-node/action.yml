@@ -9,7 +9,7 @@ runs:
 
     - name: Install basic tools
       shell: bash
-      run: apt update && apt install -y build-essential python3-pip && python3 -m pip install pipenv --break-system-packages
+      run: apt update && apt install -y build-essential g++ python3-pip && python3 -m pip install pipenv --break-system-packages
 
     - name: Install image libraries
       shell: bash

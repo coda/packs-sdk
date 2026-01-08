@@ -15,24 +15,21 @@ env:
   AWS_REGION: us-west-2
 
 jobs:
-  build:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup_node
+
+      - name: Test
+        run: make test
+
+  validate-no-changes:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup_node
       - uses: ./.github/actions/setup_python
-
-      - name: Lint
-        run: make lint
-
-      - name: Check formatting
-        run: make autoformat-all-no-fix
-
-      - name: Test
-        run: make test
-
-      - name: Validate samples
-        run: make validate-samples
 
       - name: Ensure clean dist diff
         run: make validate-no-changes
@@ -43,6 +40,33 @@ jobs:
         with:
           name: diffs
           path: /tmp/diffs
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup_node
+
+      - name: Lint
+        run: make lint
+
+  check-formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup_node
+
+      - name: Check formatting
+        run: make autoformat-all-no-fix
+
+  validate-samples:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup_node
+
+      - name: Validate samples
+        run: make validate-samples
 
   build-docs-head:
     runs-on: ubuntu-latest
