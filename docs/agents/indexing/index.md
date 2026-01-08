@@ -7,7 +7,7 @@ description: Add content to the built-in vector database to use with RAG.
 
 LLMs have a limited context window — the amount of text they can consider at once. This can make it challenging to give your agent access to all the data it needs, which can be much larger. One approach is RAG (retrieval-augmented generation), in which the LLM first retrieves relevant records for the user's query and then generates a response using them.
 
-The {{ custom.agent_product_name }} platform provides a built-in RAG system we call the knowledge layer. You write some code in your agent to sync the records, and Grammarly will chunk them, store them in a vector database, and expose a search tool to your agent. See the [Tools guide][tools_knowledge] for more information on how to connect indexed knowledge to a skill.
+The {{ custom.agent_product_name }} platform provides a built-in RAG system we call the knowledge layer. You write some code in your agent to sync the records, and Superhuman Go will chunk them, store them in a vector database, and expose a search tool to your agent. See the [Tools guide][tools_knowledge] for more information on how to connect indexed knowledge to a skill.
 
 
 ## When to use it
