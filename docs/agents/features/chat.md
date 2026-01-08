@@ -49,6 +49,10 @@ pack.addFormula({
 });
 ```
 
+!!! info "Images scanned and served by Superhuman"
+
+    Images annotated this way will not be served directly, but instead uploaded to Superhuman's CDN. As part of that process, they will go through a security scanner and may be rejected if they are deemed dangerous.
+
 
 ## Copyable blocks {:#copyable-block}
 
