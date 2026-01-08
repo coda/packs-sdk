@@ -9,7 +9,7 @@ runs:
 
     - name: Install basic tools
       shell: bash
-      run: sudo apt-get update && sudo apt-get install -y python3-pip && sudo python3 -m pip install pipenv --break-system-packages
+      run: sudo apt update && sudo apt install -y python3-pip && sudo python3 -m pip install pipenv --break-system-packages
 
     - name: Install image libraries
       shell: bash
