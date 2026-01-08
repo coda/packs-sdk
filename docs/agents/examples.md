@@ -21,7 +21,7 @@ Converts an amount of money from one currency to another, using the [ExchangeRat
 
 An agent that passes all messages to Google Gemini for a reply. To verify that Gemini, and not the built-in LLM, is answering a question, it answers in rhyme and appends a gemstone emoji (💎) to each reply.
 
-This pattern can be helpful if you want to develop an agent on your own infrastructure and expose it in Grammarly.
+This pattern can be helpful if you want to develop an agent on your own infrastructure and expose it in Superhuman Go.
 
 ```ts
 --8<-- "samples/packs/agents/gemini.ts"

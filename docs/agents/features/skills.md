@@ -39,7 +39,7 @@ The LLM will run in a loop, using the prompt for guidance and calling tools as n
 
 ## Multiple skills
 
-Agents can define multiple skills, and Grammarly will select the skill that best matches the user's query. Make sure to set a good `description` for each skill, as those will be used to determine routing.
+Agents can define multiple skills, and Superhuman Go will select the skill that best matches the user's query. Make sure to set a good `description` for each skill, as those will be used to determine routing.
 
 ```ts
 pack.addSkill({
