@@ -4,9 +4,6 @@ description: Sets up Node.js with pnpm, installs dependencies, and configures ne
 runs:
   using: composite
   steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
     - name: Install basic tools
       shell: bash
       run: sudo apt update && sudo apt install -y python3-pip && sudo python3 -m pip install pipenv --break-system-packages

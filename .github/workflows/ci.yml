@@ -18,6 +18,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup_node
       - uses: ./.github/actions/setup_python
 
@@ -49,6 +50,7 @@ jobs:
     environment:
       name: head-documentation
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup_node
       - uses: ./.github/actions/setup_python
 
@@ -76,6 +78,7 @@ jobs:
       name: head-documentation
     needs: build-docs-head
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup_node
 
       - name: Download site artifact
@@ -101,6 +104,7 @@ jobs:
       name: staging-documentation
     needs: push-head-docs
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup_node
       - uses: ./.github/actions/setup_python
 
@@ -128,6 +132,7 @@ jobs:
       name: staging-documentation
     needs: [push-head-docs, build-docs-staging]
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup_node
 
       - name: Download site artifact
@@ -174,6 +179,7 @@ jobs:
       name: prod-documentation
     needs: push-staging-docs
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup_node
       - uses: ./.github/actions/setup_python
 
@@ -201,6 +207,7 @@ jobs:
       name: prod-documentation
     needs: [push-staging-docs, build-docs-prod]
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup_node
 
       - name: Download site artifact
