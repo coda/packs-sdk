@@ -99,7 +99,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: staging-documentation
-    needs: push-heada-docs
+    needs: push-head-docs
     steps:
       - uses: ./.github/actions/setup_node
       - uses: ./.github/actions/setup_python
