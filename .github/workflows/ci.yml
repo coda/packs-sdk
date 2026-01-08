@@ -1,0 +1,271 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+# TODO: uncomment before sending
+#    branches: ['main']
+
+concurrency:
+  # Cancel in progress runs on this workflow if not running on the main branch.
+  group: ${{ github.workflow }}-${{ github.ref_name != 'main' && github.ref || github.run_id }}
+  cancel-in-progress: true
+
+env:
+  AWS_REGION: us-west-2
+
+jobs:
+  build:
+    runs-on: self-hosted-2core
+    container:
+      image: common-docker.artifactory.grammarly.io/coda/base:bookworm-2025-11-18-21-52
+      options: --user root
+
+    steps:
+      - uses: ./.github/actions/setup_node
+      - uses: ./.github/actions/setup_python
+
+      - name: Lint
+        run: make lint
+
+      - name: Check formatting
+        run: make autoformat-all-no-fix
+
+      - name: Test
+        run: make test
+
+      - name: Validate samples
+        run: make validate-samples
+
+      - name: Ensure clean dist diff
+        run: make validate-no-changes
+
+      - name: Upload diff artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: diffs
+          path: /tmp/diffs
+
+  # Cancel older workflow runs waiting for approval
+  cancel-older-approvals:
+    runs-on: self-hosted-2core
+    container:
+      image: common-docker.artifactory.grammarly.io/coda/base:bookworm-2025-11-18-21-52
+      options: --user root
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    steps:
+      - name: Cancel older workflow runs
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const runs = await github.rest.actions.listWorkflowRuns({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: context.workflow,
+              status: 'waiting',
+              branch: 'main'
+            });
+
+            const currentRunId = context.runId;
+            for (const run of runs.data.workflow_runs) {
+              if (run.id < currentRunId) {
+                console.log(`Cancelling older run: ${run.id}`);
+                await github.rest.actions.cancelWorkflowRun({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  run_id: run.id
+                });
+              }
+            }
+
+  build-docs-head:
+    runs-on: self-hosted-2core
+    container:
+      image: common-docker.artifactory.grammarly.io/coda/base:bookworm-2025-11-18-21-52
+      options: --user root
+    if: github.ref == 'refs/heads/main'
+    needs: cancel-older-approvals
+
+    steps:
+      - uses: ./.github/actions/setup_node
+      - uses: ./.github/actions/setup_python
+
+      - name: Cache mkdocs
+        uses: actions/cache@v4
+        with:
+          path: .cache
+          key: mkdocs-${{ hashFiles('mkdocs.yml') }}
+
+      - name: Build Typedoc
+        run: DOC_DISABLE_SOURCES=false DOC_GIT_REVISION="${{ github.sha }}" make docs
+
+      - name: Build MkDocs
+        run: MK_DOCS_SITE_URL="https://head.coda.io/packs/build/latest/" make build-mkdocs
+
+      - name: Upload site artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-head
+          path: site
+
+  push-head-docs:
+    runs-on: self-hosted-2core
+    container:
+      image: common-docker.artifactory.grammarly.io/coda/base:bookworm-2025-11-18-21-52
+      options: --user root
+    needs: build-docs-head
+
+    steps:
+      - uses: ./.github/actions/setup_node
+
+      - name: Download site artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: site-head
+          path: site
+
+      - name: Configure AWS credentials for Head
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::020355488663:role/automation/CICDRole
+          aws-region: ${{ env.AWS_REGION }}
+          role-session-name: github-actions-packs-sdk-push-head-docs
+          role-duration-seconds: 900
+
+      - name: Deploy to Head
+        run: make publish-docs-head FLAGS=--forceUpload
+
+  build-docs-staging:
+    runs-on: self-hosted-2core
+    container:
+      image: common-docker.artifactory.grammarly.io/coda/base:bookworm-2025-11-18-21-52
+      options: --user root
+    needs: push-head-docs
+
+    steps:
+      - uses: ./.github/actions/setup_node
+      - uses: ./.github/actions/setup_python
+
+      - name: Cache mkdocs
+        uses: actions/cache@v4
+        with:
+          path: .cache
+          key: mkdocs-${{ hashFiles('mkdocs.yml') }}
+
+      - name: Build Typedoc
+        run: DOC_DISABLE_SOURCES=false DOC_GIT_REVISION="${{ github.sha }}" make docs
+
+      - name: Build MkDocs
+        run: MK_DOCS_SITE_URL="https://staging.coda.io/packs/build/latest/" make build-mkdocs
+
+      - name: Upload site artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-staging
+          path: site
+
+  push-staging-docs:
+    runs-on: self-hosted-2core
+    container:
+      image: common-docker.artifactory.grammarly.io/coda/base:bookworm-2025-11-18-21-52
+      options: --user root
+    needs: [push-head-docs, build-docs-staging]
+
+    steps:
+      - uses: ./.github/actions/setup_node
+
+      - name: Download site artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: site-staging
+          path: site
+
+      - name: Configure AWS credentials for Staging
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::053716345611:role/automation/CICDRole
+          aws-region: ${{ env.AWS_REGION }}
+          role-session-name: github-actions-packs-sdk-push-staging-docs
+          role-duration-seconds: 900
+
+      - name: Deploy to Staging
+        run: make publish-docs-staging FLAGS=--forceUpload
+
+      - name: Notify Slack
+        if: success()
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            {
+              "text": "Packs SDK staging docs deployed. Awaiting approval for production deployment.",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Packs SDK staging docs deployed. Awaiting approval for production deployment.\n\n*Workflow Run:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Run>"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+  build-docs-prod:
+    runs-on: self-hosted-2core
+    container:
+      image: common-docker.artifactory.grammarly.io/coda/base:bookworm-2025-11-18-21-52
+      options: --user root
+    needs: push-staging-docs
+
+    steps:
+      - uses: ./.github/actions/setup_node
+      - uses: ./.github/actions/setup_python
+
+      - name: Cache mkdocs
+        uses: actions/cache@v4
+        with:
+          path: .cache
+          key: mkdocs-${{ hashFiles('mkdocs.yml') }}
+
+      - name: Build Typedoc
+        run: DOC_DISABLE_SOURCES=false DOC_GIT_REVISION="${{ github.sha }}" make docs
+
+      - name: Build MkDocs
+        run: MK_DOCS_SITE_URL="https://coda.io/packs/build/latest/" make build-mkdocs
+
+      - name: Upload site artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-prod
+          path: site
+
+  push-prod-docs:
+    runs-on: self-hosted-2core
+    container:
+      image: common-docker.artifactory.grammarly.io/coda/base:bookworm-2025-11-18-21-52
+      options: --user root
+    needs: [push-staging-docs, build-docs-prod]
+
+    steps:
+      - uses: ./.github/actions/setup_node
+
+      - name: Download site artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: site-prod
+          path: site
+
+      - name: Configure AWS credentials for Production
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::029208794193:role/automation/CICDRole
+          aws-region: ${{ env.AWS_REGION }}
+          role-session-name: github-actions-packs-sdk-push-prod-docs
+          role-duration-seconds: 900
+
+      - name: Deploy to Production
+        run: make publish-docs-prod FLAGS=--forceUpload
