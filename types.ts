@@ -1219,6 +1219,12 @@ export enum ToolType {
    * @internal
    */
   WebSearch = 'WebSearch',
+
+  /**
+   * Tool that allows creation of the content that can be embedded in the response.
+   * @internal
+   */
+  EmbeddedContent = 'EmbeddedContent',
 }
 
 /**
@@ -1413,6 +1419,70 @@ export interface DynamicSuggestedPromptTool extends BaseTool<ToolType.DynamicSug
 export interface WebSearchTool extends BaseTool<ToolType.WebSearch> {}
 
 /**
+ * The type of the content that can be embedded in the response.
+ * @internal
+ */
+export enum EmbeddedContentType {
+  /**
+   * Block of text (or other content) that can be copied or inserted in a document.
+   */
+  CopyableBlock = 'CopyableBlock',
+  /**
+   * View that presents a list of content blocks as slides in a carousel.
+   */
+  CarouselView = 'CarouselView',
+  /**
+   * View that presents a list of content blocks in tabs of a tabbed panel.
+   */
+  TabView = 'TabView',
+}
+
+/**
+ * Base interface for all embedded content.
+ * @internal
+ */
+interface BaseEmbeddedContent<T extends EmbeddedContentType> {
+  /**
+   * Type of the content.
+   */
+  type: T;
+}
+
+/**
+ * Block of a content that can be copied or inserted in a document.
+ * @internal
+ */
+export interface CopyableBlockEmbeddedContent extends BaseEmbeddedContent<EmbeddedContentType.CopyableBlock> {}
+
+/**
+ * Carousel of multiple slides.
+ * @internal
+ */
+export interface CarouselViewEmbeddedContent extends BaseEmbeddedContent<EmbeddedContentType.CarouselView> {}
+
+/**
+ * Panel with multiple tabs.
+ * @internal
+ */
+export interface TabViewEmbeddedContent extends BaseEmbeddedContent<EmbeddedContentType.TabView> {}
+
+/**
+ * Union of all supported embedded content classes.
+ * @internal
+ */
+export type EmbeddedContent = CopyableBlockEmbeddedContent | CarouselViewEmbeddedContent | TabViewEmbeddedContent;
+
+/**
+ * Tool that enables creation of the content that can be embedded in the response.
+ */
+export interface EmbeddedContentTool extends BaseTool<ToolType.EmbeddedContent> {
+  /**
+   * Information about the content to create.
+   */
+  embeddedContent: EmbeddedContent;
+}
+
+/**
  * Definition of an MCP server that the pack can connect to.
  */
 export interface MCPServer {
@@ -1442,6 +1512,7 @@ export interface ToolMap {
   [ToolType.CodaDocsAndTables]: CodaDocsAndTablesTool;
   [ToolType.DynamicSuggestedPrompt]: DynamicSuggestedPromptTool;
   [ToolType.WebSearch]: WebSearchTool;
+  [ToolType.EmbeddedContent]: EmbeddedContentTool;
 }
 
 /**

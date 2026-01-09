@@ -321,6 +321,12 @@ export {KnowledgeToolSourceType} from './types';
 export type {ScreenAnnotation} from './types';
 export {ScreenAnnotationType} from './types';
 export {ToolType} from './types';
+export {EmbeddedContentType} from './types';
+export type {EmbeddedContent} from './types';
+export type {CopyableBlockEmbeddedContent} from './types';
+export type {CarouselViewEmbeddedContent} from './types';
+export type {TabViewEmbeddedContent} from './types';
+export type {EmbeddedContentTool} from './types';
 
 export type {InvocationError} from './api_types';
 export type {HttpStatusInvocationError} from './api_types';

@@ -33,6 +33,8 @@ import type {DynamicSyncTableDef} from '../api';
 import type {EmailContentCategorization} from '../schema';
 import {EmailDisplayType} from '../schema';
 import type {EmailSchema} from '../schema';
+import type {EmbeddedContentTool} from '../types';
+import {EmbeddedContentType} from '../types';
 import {FeatureSet} from '../types';
 import type {FormulaOptions} from '../api';
 import type {GenericObjectSchema} from '../schema';
@@ -2182,6 +2184,23 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     annotation: screenAnnotationSchema,
   });
 
+  const embeddedContentSchema = z.discriminatedUnion('type', [
+    z.object({
+      type: z.literal(EmbeddedContentType.CopyableBlock),
+    }),
+    z.object({
+      type: z.literal(EmbeddedContentType.CarouselView),
+    }),
+    z.object({
+      type: z.literal(EmbeddedContentType.TabView),
+    }),
+  ]);
+
+  const embeddedContentToolSchema = zodCompleteStrictObject<EmbeddedContentTool>({
+    type: z.literal(ToolType.EmbeddedContent),
+    embeddedContent: embeddedContentSchema,
+  });
+
   const assistantMessageToolSchema = zodCompleteStrictObject<AssistantMessageTool>({
     type: z.literal(ToolType.AssistantMessage),
   });
@@ -2222,6 +2241,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     contactResolutionToolSchema,
     codaDocsToolSchema,
     dynamicSuggestedPromptToolSchema,
+    embeddedContentToolSchema,
   ]);
   const skillSchema = zodCompleteObject<Skill>({
     name: z
