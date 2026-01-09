@@ -1216,7 +1216,7 @@ export enum ToolType {
   DynamicSuggestedPrompt = 'DynamicSuggestedPrompt',
   /**
    * Tool that enables searching the public internet for up-to-date information.
-   * @hidden
+   * @internal
    */
   WebSearch = 'WebSearch',
 }
@@ -1408,7 +1408,7 @@ export interface DynamicSuggestedPromptTool extends BaseTool<ToolType.DynamicSug
  * Tool that enables searching the public internet for up-to-date information.
  * When enabled, the agent can search the web to retrieve current information
  * that may not be available in the user's workspace or knowledge base.
- * @hidden
+ * @internal
  */
 export interface WebSearchTool extends BaseTool<ToolType.WebSearch> {}
 
