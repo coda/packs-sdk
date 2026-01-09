@@ -15,7 +15,7 @@ For performance reasons Coda uses a variety of caching techniques to store previ
 
 Before Coda executes your [Pack formula][formulas], it first checks a cache of previous formula results. If a matching entry is found, it is returned instead of re-running your code. When a cached result is returned, the Pack Maker Tools logs entry will end with **returned a prior result from the cache** and the **Cache hit** field will be set to **true**.
 
-<img src="../../../images/cache_formula_logs.png" srcset="../../../images/cache_formula_logs_2x.png 2x" class="screenshot" alt="Cached formula in the logs">
+<img src="site:images/cache_formula_logs.png" srcset="site:images/cache_formula_logs_2x.png 2x" class="screenshot" alt="Cached formula in the logs">
 
 Formula result caching is enabled by default for all Pack formulas. You can adjust the caching behavior by setting the [`cacheTtlSecs`][formulas_cacheTtlSecs] field on the formula definition, which specifies for how many seconds the result should be cached. To disable caching for a formula set that value to zero.
 
@@ -30,7 +30,7 @@ The following types of formulas are never cached:
 
 When making an HTTP request with the [fetcher][fetcher], the Packs runtime first checks a cache of previous responses. If a matching entry is found, it is returned instead of making a request to the server. When a cached response is returned, the Pack Maker Tools logs entry will be labeled with **(Cached)** and the **Cache hit** field will be set to **true**.
 
-<img src="../../../images/cache_fetcher_logs.png" srcset="../../../images/cache_fetcher_logs_2x.png 2x" class="screenshot" alt="Cached fetcher requests in the logs">
+<img src="site:images/cache_fetcher_logs.png" srcset="site:images/cache_fetcher_logs_2x.png 2x" class="screenshot" alt="Cached fetcher requests in the logs">
 
 By default the Packs runtime caches the HTTP responses for `GET` requests, meaning that your code may not always be getting the latest response from the server. You can adjust this behavior by setting the [`cacheTtlSecs`][fetcher_cacheTtlSecs] field in the fetch request, which specifies for how many seconds the response should be cached. To disable caching for a request set that value to zero.
 

@@ -29,7 +29,7 @@ The Pack Studio is built right in to the Coda application. To get there:
 
 You are now in the Pack Studio, ready to start building!
 
-<video style="width:auto" loop muted autoplay alt="Recording of navigating to the Pack Studio." class="screenshot"><source src="../../../images/web_ide_navigate.mp4" type="video/mp4"></source></video>
+<video style="width:auto" loop muted autoplay alt="Recording of navigating to the Pack Studio." class="screenshot"><source src="site:images/web_ide_navigate.mp4" type="video/mp4"></source></video>
 
 
 ## Create a Pack from an example
@@ -50,7 +50,7 @@ Next we'll use the Pack Studio to build that code and get it ready to use:
 
 Your Pack is now built and ready to use!
 
-<video style="width:auto" loop muted autoplay alt="Recording of building the Pack." class="screenshot"><source src="../../../images/web_ide_build.mp4" type="video/mp4"></source></video>
+<video style="width:auto" loop muted autoplay alt="Recording of building the Pack." class="screenshot"><source src="site:images/web_ide_build.mp4" type="video/mp4"></source></video>
 
 
 ## Use the Pack
@@ -79,7 +79,7 @@ Now that you have your Pack up and running let's make a change to how it works.
 
 --8<-- "tutorials/get-started/.rebuild.md"
 
-<video style="width:auto" loop muted autoplay alt="Recording of adding a dynamic sync table." class="screenshot"><source src="../../../images/web_ide_rebuild.mp4" type="video/mp4"></source></video>
+<video style="width:auto" loop muted autoplay alt="Recording of adding a dynamic sync table." class="screenshot"><source src="site:images/web_ide_rebuild.mp4" type="video/mp4"></source></video>
 
 
 ## Next steps

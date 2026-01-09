@@ -343,7 +343,7 @@ You should see the name, description, and parameters in the help text, get back 
 </div>
 <div markdown>
 
-<img src="../../../images/tutorial_formula_scaffold.png" srcset="../../../images/tutorial_formula_scaffold_2x.png 2x" class="screenshot" alt="Working scaffold">
+<img src="site:images/tutorial_formula_scaffold.png" srcset="site:images/tutorial_formula_scaffold_2x.png 2x" class="screenshot" alt="Working scaffold">
 
 </div>
 </section>
@@ -351,7 +351,7 @@ You should see the name, description, and parameters in the help text, get back 
 ??? tip "Tip: Slash command"
     When you write Packs using the Pack Studio web editor you can use the slash command `/addFormula` to generate the scaffolding for you!
 
-    <video style="width:auto" loop muted autoplay alt="Recording of using the addFormula slash command." class="screenshot"><source src="../../../images/tutorial_formula_slash.mp4" type="video/mp4"></source></video>
+    <video style="width:auto" loop muted autoplay alt="Recording of using the addFormula slash command." class="screenshot"><source src="site:images/tutorial_formula_slash.mp4" type="video/mp4"></source></video>
 
 
 ## :fontawesome-solid-laptop-code: Write the logic
@@ -442,7 +442,7 @@ Rebuild your Pack, and refresh the formula the formula in the doc. If everything
 </div>
 <div markdown>
 
-<img src="../../../images/tutorial_formula_logic.png" srcset="../../../images/tutorial_formula_logic_2x.png 2x" class="screenshot" alt="The logic working.">
+<img src="site:images/tutorial_formula_logic.png" srcset="site:images/tutorial_formula_logic_2x.png 2x" class="screenshot" alt="The logic working.">
 
 </div>
 </section>
@@ -601,7 +601,7 @@ Rebuild your Pack, and try out the new `byWord` parameter in a formula. If every
 </div>
 <div markdown>
 
-<img src="../../../images/tutorial_formula_feature.png" srcset="../../../images/tutorial_formula_feature_2x.png 2x" class="screenshot" alt="The new feature working.">
+<img src="site:images/tutorial_formula_feature.png" srcset="site:images/tutorial_formula_feature_2x.png 2x" class="screenshot" alt="The new feature working.">
 
 </div>
 </section>

@@ -34,7 +34,7 @@ Name the new repository "hello-pack", set the visibility to **Private**, and the
 </div>
 <div markdown>
 
-<img src="../../../images/tutorial_github_repo.png" srcset="../../../images/tutorial_github_repo_2x.png 2x" class="screenshot" alt="Create a repository from the template.">
+<img src="site:images/tutorial_github_repo.png" srcset="site:images/tutorial_github_repo_2x.png 2x" class="screenshot" alt="Create a repository from the template.">
 
 </div>
 </section>
@@ -49,7 +49,7 @@ From you new repository click the button **Code**. In the resulting dropdown men
 </div>
 <div markdown>
 
-<img src="../../../images/tutorial_github_codespace.png" srcset="../../../images/tutorial_github_codespace_2x.png 2x" class="screenshot" alt="Create a codespace for your repo.">
+<img src="site:images/tutorial_github_codespace.png" srcset="site:images/tutorial_github_codespace_2x.png 2x" class="screenshot" alt="Create a codespace for your repo.">
 
 </div>
 </section>

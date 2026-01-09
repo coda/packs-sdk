@@ -55,7 +55,7 @@ Superhuman Go agents are built using Coda Packs. Follow the steps below to creat
     </div>
     <div markdown>
 
-    <img src="../../images/agent_quickstart_template.png" srcset="../../images/agent_quickstart_template_2x.png 2x" class="screenshot" alt="A screenshot initial dialog shown in the Pack Studio.">
+    <img src="site:images/agent_quickstart_template.png" srcset="site:images/agent_quickstart_template_2x.png 2x" class="screenshot" alt="A screenshot initial dialog shown in the Pack Studio.">
 
     </div>
     </section>
@@ -108,7 +108,7 @@ Superhuman Go agents are built using Coda Packs. Follow the steps below to creat
     </div>
     <div markdown>
 
-    <img src="../../images/agent_quickstart_build.png" srcset="../../images/agent_quickstart_build_2x.png 2x" class="screenshot" alt="A screenshot of the Pack Studio, highlighting the location of the build button.">
+    <img src="site:images/agent_quickstart_build.png" srcset="site:images/agent_quickstart_build_2x.png 2x" class="screenshot" alt="A screenshot of the Pack Studio, highlighting the location of the build button.">
 
     </div>
     </section>
@@ -125,7 +125,7 @@ Superhuman Go agents are built using Coda Packs. Follow the steps below to creat
     </div>
     <div markdown>
 
-    <img src="../../images/agent_quickstart_close.png" srcset="../../images/agent_quickstart_close_2x.png 2x" class="screenshot" alt="A screenshot of the Pack Studio, showing the dialog presented after building the first version.">
+    <img src="site:images/agent_quickstart_close.png" srcset="site:images/agent_quickstart_close_2x.png 2x" class="screenshot" alt="A screenshot of the Pack Studio, showing the dialog presented after building the first version.">
 
     </div>
     </section>
@@ -142,7 +142,7 @@ Superhuman Go agents are built using Coda Packs. Follow the steps below to creat
     </div>
     <div markdown>
 
-    <img src="../../images/agent_quickstart_name.png" srcset="../../images/agent_quickstart_name_2x.png 2x" class="screenshot" alt="A screenshot of the Pack Studio, highlighting where to click to rename the Pack.">
+    <img src="site:images/agent_quickstart_name.png" srcset="site:images/agent_quickstart_name_2x.png 2x" class="screenshot" alt="A screenshot of the Pack Studio, highlighting where to click to rename the Pack.">
 
     </div>
     </section>
@@ -168,7 +168,7 @@ Follow the steps below to install your agent in Superhuman Go.
     </div>
     <div markdown>
 
-    <img src="../../images/agent_quickstart_go.png" srcset="../../images/agent_quickstart_go_2x.png 2x" class="screenshot" alt="A screenshot of the Superhuman Go logo sliding out from the right of the screen.">
+    <img src="site:images/agent_quickstart_go.png" srcset="site:images/agent_quickstart_go_2x.png 2x" class="screenshot" alt="A screenshot of the Superhuman Go logo sliding out from the right of the screen.">
 
     </div>
     </section>
@@ -183,7 +183,7 @@ Follow the steps below to install your agent in Superhuman Go.
     </div>
     <div markdown>
 
-    <img src="../../images/agent_quickstart_add.png" srcset="../../images/agent_quickstart_add_2x.png 2x" class="screenshot" alt="A screenshot of Superhuman Go, highlighting the button to add new agents.">
+    <img src="site:images/agent_quickstart_add.png" srcset="site:images/agent_quickstart_add_2x.png 2x" class="screenshot" alt="A screenshot of Superhuman Go, highlighting the button to add new agents.">
 
     </div>
     </section>
@@ -200,7 +200,7 @@ Follow the steps below to install your agent in Superhuman Go.
     </div>
     <div markdown>
 
-    <img src="../../images/agent_quickstart_search.png" srcset="../../images/agent_quickstart_search_2x.png 2x" class="screenshot" alt="A screenshot of Superhuman Go, highlighting the search box and the agent tile.">
+    <img src="site:images/agent_quickstart_search.png" srcset="site:images/agent_quickstart_search_2x.png 2x" class="screenshot" alt="A screenshot of Superhuman Go, highlighting the search box and the agent tile.">
 
     </div>
     </section>
@@ -215,7 +215,7 @@ Follow the steps below to install your agent in Superhuman Go.
     </div>
     <div markdown>
 
-    <img src="../../images/agent_quickstart_install.png" srcset="../../images/agent_quickstart_install_2x.png 2x" class="screenshot" alt="A screenshot of Superhuman Go, highlighting the button to install an agent.">
+    <img src="site:images/agent_quickstart_install.png" srcset="site:images/agent_quickstart_install_2x.png 2x" class="screenshot" alt="A screenshot of Superhuman Go, highlighting the button to install an agent.">
 
     </div>
     </section>
@@ -245,7 +245,7 @@ Start chatting with your agent and test if it responds correctly.
     </div>
     <div markdown>
 
-    <img src="../../images/agent_quickstart_who.png" srcset="../../images/agent_quickstart_who_2x.png 2x" class="screenshot" alt="A screenshot of a conversation with the Secret agent, responding with it's name.">
+    <img src="site:images/agent_quickstart_who.png" srcset="site:images/agent_quickstart_who_2x.png 2x" class="screenshot" alt="A screenshot of a conversation with the Secret agent, responding with it's name.">
 
     </div>
     </section>
@@ -266,7 +266,7 @@ Start chatting with your agent and test if it responds correctly.
     </div>
     <div markdown>
 
-    <img src="../../images/agent_quickstart_password.png" srcset="../../images/agent_quickstart_password_2x.png 2x" class="screenshot" alt="A screenshot of a conversation with the Secret agent, responding with the password.">
+    <img src="site:images/agent_quickstart_password.png" srcset="site:images/agent_quickstart_password_2x.png 2x" class="screenshot" alt="A screenshot of a conversation with the Secret agent, responding with the password.">
 
     </div>
     </section>

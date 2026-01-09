@@ -12,7 +12,7 @@ While [tools][tools] must be invoked by the LLM, context is provided automatical
 
 The agent has access to the information on the screen, including the text and URL of the web page currently open. The chat box includes a visual indicator for users about the context being passed, and users can remove that context for a given session.
 
-<img src="../../../images/agent_context_chip.png" srcset="../../../images/agent_context_chip_2x.png 2x" class="screenshot" alt="A screenshot of the agent chat box, showing the page context chip.">
+<img src="site:images/agent_context_chip.png" srcset="site:images/agent_context_chip_2x.png 2x" class="screenshot" alt="A screenshot of the agent chat box, showing the page context chip.">
 
 There are three types of text your agent may receive, with possibly more than one being passed at the same time:
 

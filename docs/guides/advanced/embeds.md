@@ -56,11 +56,11 @@ pack.addFormula({
 
 A forced embed is initially displayed in a disabled state:
 
-<img src="../../../images/embed_force_enable.png" srcset="../../../images/embed_force_enable_2x.png 2x" class="screenshot" alt="Force embeds are initially disabled">
+<img src="site:images/embed_force_enable.png" srcset="site:images/embed_force_enable_2x.png 2x" class="screenshot" alt="Force embeds are initially disabled">
 
 Once a user clicks the embed they are prompted to approve embedding the URL:
 
-<img src="../../../images/embed_force_approve.png" srcset="../../../images/embed_force_approve_2x.png 2x" class="screenshot" alt="Force embeds must be approved">
+<img src="site:images/embed_force_approve.png" srcset="site:images/embed_force_approve_2x.png 2x" class="screenshot" alt="Force embeds must be approved">
 
 !!! info "Embed approval scope"
     This approval is once per-domain, per-user. This means that each user in the document will need to approve the embed in order to see the content, but that approval works across all embeds in that doc or others.

@@ -21,7 +21,7 @@ The drawer that opens lets you view logs from your recent sessions with the agen
 - **Agent Execution** entries will contain logs from the LLM-based runtime, and expanding the entry and clicking the link **Show agent runtime details** will allow you to browse the internal state of the agent.
 - **Agent Action** entries will contain logs from a Pack tool call, including details from network requests and `console.log()` statements. Learn more in the [Pack maker tools][pmt] guide.
 
-<img src="../../images/agent_logs.png" srcset="../../images/agent_logs_2x.png 2x" class="screenshot" alt="A screenshot of the agent logs drawer.">
+<img src="site:images/agent_logs.png" srcset="site:images/agent_logs_2x.png 2x" class="screenshot" alt="A screenshot of the agent logs drawer.">
 
 ## Ingestion logs
 
@@ -34,13 +34,13 @@ To access the ingestion logs:
 
 Select a table from the **Datasource** dropdown to see the logs for that sync table. You can see the recent syncs for the table, and drill down into individual executions of the sync table and any associated logs.
 
-<img src="../../images/agent_ingestion_logs.png" srcset="../../images/agent_ingestion_logs_2x.png 2x" class="screenshot" alt="A screenshot of the ingestion logs drawer for an agent.">
+<img src="site:images/agent_ingestion_logs.png" srcset="site:images/agent_ingestion_logs_2x.png 2x" class="screenshot" alt="A screenshot of the ingestion logs drawer for an agent.">
 
 ## Inline debug info
 
 You can get internal information about your agent's state by appending `@debug` to a chat message. This will cause it to output the JSON structures containing the chat history, including messages and tool calls.
 
-<img src="../../images/agent_debug.png" srcset="../../images/agent_debug_2x.png 2x" class="screenshot" alt="A screenshot of an agent responding with debug information.">
+<img src="site:images/agent_debug.png" srcset="site:images/agent_debug_2x.png 2x" class="screenshot" alt="A screenshot of an agent responding with debug information.">
 
 We don't document the exact format of this output, and it's subject to change without warning.
 

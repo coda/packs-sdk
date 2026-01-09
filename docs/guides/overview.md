@@ -25,7 +25,7 @@ Packs can extend Coda in four specific ways:
     Packs can add new formulas for the [Coda formula language][formula_list]. These formulas can do simple calculations, call a library, or pull in data from an external source.
 
     <figure>
-      <img src="../../images/overview_formula.png" srcset="../../images/overview_formula_2x.png 2x" alt="A custom formula in the formula editor">
+      <img src="site:images/overview_formula.png" srcset="site:images/overview_formula_2x.png 2x" alt="A custom formula in the formula editor">
       <figcaption>A formula from the Google Calendar Pack which looks up when the user has busy time on their calendar.</figcaption>
     </figure>
 
@@ -36,7 +36,7 @@ Packs can extend Coda in four specific ways:
     Packs can add new actions, which are a special type of formula that powers [buttons][help_buttons] and [automations][help_automations]. These actions typically make a change in an external application.
 
     <figure>
-      <img src="../../images/overview_action.png" srcset="../../images/overview_action_2x.png 2x" alt="A custom action in a button">
+      <img src="site:images/overview_action.png" srcset="site:images/overview_action_2x.png 2x" alt="A custom action in a button">
       <figcaption>A button being configured with an action from the the Google Calendar Pack that creates a new event in the user's calendar.</figcaption>
     </figure>
 
@@ -47,7 +47,7 @@ Packs can extend Coda in four specific ways:
     Packs can add new [column formats][help_format], which control how values are displayed within a table. They can simply reformat the data or enrich it with related information from an external source.
 
     <figure>
-      <img src="../../images/overview_column_format.png" srcset="../../images/overview_column_format_2x.png 2x" class="screenshot" alt="A custom column format">
+      <img src="site:images/overview_column_format.png" srcset="site:images/overview_column_format_2x.png 2x" class="screenshot" alt="A custom column format">
       <figcaption>A column format from the Google Calendar Pack that displays rich information about an event provided its URL.</figcaption>
     </figure>
 
@@ -58,7 +58,7 @@ Packs can extend Coda in four specific ways:
     Packs can add [Pack tables][help_pack_table], which are a special type of table that automatically syncs in data from an outside source. These tables are often used to bring in records from other apps or productivity tools.
 
     <figure>
-      <img src="../../images/overview_sync_table.png" srcset="../../images/overview_sync_table_2x.png 2x" class="screenshot" alt="A Pack table that syncs from an external source">
+      <img src="site:images/overview_sync_table.png" srcset="site:images/overview_sync_table_2x.png 2x" class="screenshot" alt="A Pack table that syncs from an external source">
       <figcaption>A table from the Google Calendar Pack that pulls in the upcoming events on a user's calendar.</figcaption>
     </figure>
 

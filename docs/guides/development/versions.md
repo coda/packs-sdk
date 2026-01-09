@@ -44,7 +44,7 @@ There are some restrictions to the version numbers you can select however:
 
 The **History** section in the Pack Studio shows a log of all past versions of your code, including when they were created and by who. For each version you can also download the code at that checkpoint or restore it.
 
-<img src="../../../images/versions_restore.png" srcset="../../../images/versions_restore_2x.png 2x" class="screenshot" alt="Version history of a Pack">
+<img src="site:images/versions_restore.png" srcset="site:images/versions_restore_2x.png 2x" class="screenshot" alt="Version history of a Pack">
 
 Restoring a previous version simply loads the code from that version into the web editor, and you'll need to re-build that code (and hence create a new version) to actually change the state of your Pack.
 
@@ -68,7 +68,7 @@ Each release is just a pointer an existing Pack version, so to release new code 
 
 To determine which version of your Pack a given release corresponds to, visit the **History** section of the Pack Studio. Release numbers will be displayed next to their corresponding version, and the **Released** tab can be used to filter the versions to just those that were released.
 
-<img src="../../../images/versions_releases.png" srcset="../../../images/versions_releases_2x.png 2x" class="screenshot" alt="Versions tagged with release">
+<img src="site:images/versions_releases.png" srcset="site:images/versions_releases_2x.png 2x" class="screenshot" alt="Versions tagged with release">
 
 
 ### Rollout
@@ -91,7 +91,7 @@ To your users it will appear as if you've released a new version of your Pack, b
 
 When a user installs your Pack they have only one choice of what version to use: the latest release. The Pack side panel will show them the release number, but not the associated version number.
 
-<img src="../../../images/versions_installed.png" srcset="../../../images/versions_installed_2x.png 2x" class="screenshot" alt="Pack side panel showing release installed">
+<img src="site:images/versions_installed.png" srcset="site:images/versions_installed_2x.png 2x" class="screenshot" alt="Pack side panel showing release installed">
 
 Pack makers can choose to install a different version however, which is useful when testing out new versions before releasing them. Do this in the [Pack maker tools][pmt_settings] panel. Select **Latest Version** to always use the latest build of your Pack, or a specific version if for example you want to reproduce an issue on an earlier release.
 

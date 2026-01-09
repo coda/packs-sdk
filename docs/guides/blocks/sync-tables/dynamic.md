@@ -14,7 +14,7 @@ Sync tables are designed to bring records from an external data source into Coda
 
 Adding a dynamic sync table to a doc is similar to adding a regular sync table, but with an additional step of selecting the specific dataset to sync from. Start by navigating to {{ custom.pack_panel_clicks }} and clicking on the the table in the side panel. This will expand a section below the table that displays the specific datasets that the user has access to. Then drag one of these datasets onto the page.
 
-<video style="width:auto" loop muted autoplay alt="Recording of adding a dynamic sync table." class="screenshot"><source src="../../../../images/dynamic_sync_table_usage.mp4" type="video/mp4"></source></video>
+<video style="width:auto" loop muted autoplay alt="Recording of adding a dynamic sync table." class="screenshot"><source src="site:images/dynamic_sync_table_usage.mp4" type="video/mp4"></source></video>
 
 
 ## Creating a dynamic sync table
@@ -358,7 +358,7 @@ The `getSchema` function is first run when the table is initially dragged into t
 
 Instead of returning a flat list of datasets in the `listDynamicUrls` function, you can instead organize them into folders.
 
-<img src="../../../../images/dynamic_sync_table_folder.png" srcset="../../../../images/dynamic_sync_table_folder_2x.png 2x" class="screenshot" alt="Organize the URL list into folders">
+<img src="site:images/dynamic_sync_table_folder.png" srcset="site:images/dynamic_sync_table_folder_2x.png 2x" class="screenshot" alt="Organize the URL list into folders">
 
 To create a folder, return a [`MetadataFormulaObjectResultType`][MetadataFormulaObjectResultType] with `hasChildren: true`. When a user clicks on a folder, the `listDynamicUrls` function will be re-run, passing in the URL of the parent folder as the second parameter.
 
@@ -383,7 +383,7 @@ Folders can be nested inside of other folders, allowing you to represent complex
 
 Finding the desired dataset, even when [organized into folders](#folders), can be difficult when the there are many options to select from. If the underlying API supports it you can allow users to search for the dataset instead.
 
-<img src="../../../../images/dynamic_sync_table_search.png" srcset="../../../../images/dynamic_sync_table_search_2x.png 2x" class="screenshot" alt="Searching for a dataset.">
+<img src="site:images/dynamic_sync_table_search.png" srcset="site:images/dynamic_sync_table_search_2x.png 2x" class="screenshot" alt="Searching for a dataset.">
 
  To enable this search feature, add a `searchDynamicUrls` function to your sync table definition. This function works identically to `listDynamicUrls`, except that the 2nd parameter contains the user-entered search term instead of the folder URL.
 
@@ -405,7 +405,7 @@ pack.addDynamicSyncTable({
 
 In some cases it's not feasible to generate a list of all possible datasets the user can select from. In these cases you can omit the `listDynamicUrls` function and instead have your users directly enter the URL of the dataset.
 
-<img src="../../../../images/dynamic_sync_table_url.png" srcset="../../../../images/dynamic_sync_table_url_2x.png 2x" class="screenshot" alt="Manually entering the dynamic URL">
+<img src="site:images/dynamic_sync_table_url.png" srcset="site:images/dynamic_sync_table_url_2x.png 2x" class="screenshot" alt="Manually entering the dynamic URL">
 
 When using this approach you should use a user-facing URL as the dynamic URL, as that is what users will have access to. You'll need some way to translate those URLs into something you can use with the API, typically by extracting an ID.
 

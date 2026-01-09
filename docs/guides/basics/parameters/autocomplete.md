@@ -15,11 +15,11 @@ If you have a parameter that accepts a defined set of values it's usually best t
 In the formula editor, parameter options show up in a the same pane used for the autocompletion of built-in elements of the Coda Formula Language. In the actions builder and sync table settings options are presented in a drop down.
 
 === "In the formula editor"
-    <img src="../../../../images/autocomplete_formula.png" srcset="../../../../images/autocomplete_formula_2x.png 2x" class="screenshot" alt="Autocomplete in the formula editor">
+    <img src="site:images/autocomplete_formula.png" srcset="site:images/autocomplete_formula_2x.png 2x" class="screenshot" alt="Autocomplete in the formula editor">
 === "In the action builder"
-    <img src="../../../../images/autocomplete_action.png" srcset="../../../../images/autocomplete_action_2x.png 2x" class="screenshot" alt="Autocomplete in the action builder">
+    <img src="site:images/autocomplete_action.png" srcset="site:images/autocomplete_action_2x.png 2x" class="screenshot" alt="Autocomplete in the action builder">
 === "In the sync table settings"
-    <img src="../../../../images/autocomplete_sync.png" srcset="../../../../images/autocomplete_sync_2x.png 2x" class="screenshot" alt="Autocomplete in the sync table settings">
+    <img src="site:images/autocomplete_sync.png" srcset="site:images/autocomplete_sync_2x.png 2x" class="screenshot" alt="Autocomplete in the sync table settings">
 
 
 ## Simple options
@@ -122,8 +122,8 @@ const GreetingParameter = coda.makeParameter({
 
 !!! warning "Manual refresh required for `StringArray` parameters"
     When using `StringArray` parameters in the builder UIs, the autocomplete values are only fetched once when the parameter UI is loaded. The autocomplete options can be manually refreshed by the user with a menu item, but this limitation doesn't make them a great fit for use cases where the options depend on the values of previous parameters. <!-- o/bug/25402 -->
-    
-    <img src="../../../../images/autocomplete_list_refresh.png" srcset="../../../../images/autocomplete_list_refresh_2x.png 2x" class="screenshot" alt="Autocomplete of list parameters requires manual refresh">
+
+    <img src="site:images/autocomplete_list_refresh.png" srcset="site:images/autocomplete_list_refresh_2x.png 2x" class="screenshot" alt="Autocomplete of list parameters requires manual refresh">
 
 !!! bug "Previous vararg values not available"
     When using [vararg parameters][parameters_vararg] in the builder UIs, the autocomplete function will not be able to access the values of previous vararg parameters. This means it isn't possible to build a set of key/value vararg parameters where the possible values depend on the key selected. <!-- o/bug/25373 -->

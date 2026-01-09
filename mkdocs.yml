@@ -356,6 +356,14 @@ plugins:
     # See: https://squidfunk.github.io/mkdocs-material/plugins/search/
     - search
 
+    # Enable the user of site-root-relative URLs for <img> and <video> elements.
+    # See: https://github.com/OctoPrint/mkdocs-site-urls
+    - site-urls:
+        attributes:
+            - href
+            - src
+            - srcset
+
     # Generate card images for social sharing.
     # See: https://squidfunk.github.io/mkdocs-material/plugins/social/
     - social:
@@ -363,7 +371,6 @@ plugins:
         cards_layout_options:
           background_color: "#006838"  # Emerald
           color: "#FFFFFF"
-
 
 extra:
   # Social icons for the footer.
