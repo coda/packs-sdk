@@ -1214,6 +1214,8 @@ export enum ToolType {
    * @hidden
    */
   DynamicSuggestedPrompt = 'DynamicSuggestedPrompt',
+
+  ResponseEmbedding = 'ResponseEmbedding',
 }
 
 /**
@@ -1399,6 +1401,25 @@ export interface CodaDocsAndTablesTool extends BaseTool<ToolType.CodaDocsAndTabl
  */
 export interface DynamicSuggestedPromptTool extends BaseTool<ToolType.DynamicSuggestedPrompt> {}
 
+export enum ResponseEmbeddingType {
+  InsertableBlock = 'InsertableBlock',
+  Carousel = 'Carousel',
+}
+
+interface BaseResponseEmbedding<T extends ResponseEmbeddingType> {
+  type: T;
+}
+
+interface InsertableBlockResponseEmbedding extends BaseResponseEmbedding<ResponseEmbeddingType.InsertableBlock> {}
+
+interface CarouselResponseEmbedding extends BaseResponseEmbedding<ResponseEmbeddingType.Carousel> {}
+
+export type ResponseEmbedding = InsertableBlockResponseEmbedding | CarouselResponseEmbedding;
+
+export interface ResponseEmbeddingTool extends BaseTool<ToolType.ResponseEmbedding> {
+  embedding: ResponseEmbedding;
+}
+
 /**
  * Definition of an MCP server that the pack can connect to.
  */
@@ -1428,6 +1449,7 @@ export interface ToolMap {
   [ToolType.ContactResolution]: ContactResolutionTool;
   [ToolType.CodaDocsAndTables]: CodaDocsAndTablesTool;
   [ToolType.DynamicSuggestedPrompt]: DynamicSuggestedPromptTool;
+  [ToolType.ResponseEmbedding]: ResponseEmbeddingTool;
 }
 
 /**
