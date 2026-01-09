@@ -6097,6 +6097,8 @@ describe('Pack metadata Validation', async () => {
           break;
         case ToolType.DynamicSuggestedPrompt:
           break;
+        case ToolType.ResponseEmbedding:
+          break;
         case 'CustomTool':
           break;
         default:
