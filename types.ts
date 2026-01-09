@@ -1214,7 +1214,9 @@ export enum ToolType {
    * @hidden
    */
   DynamicSuggestedPrompt = 'DynamicSuggestedPrompt',
-
+  /**
+   * Tool that enables AI responses to be embedded in various formats within Coda documents.
+   */
   ResponseEmbedding = 'ResponseEmbedding',
 }
 
@@ -1401,8 +1403,17 @@ export interface CodaDocsAndTablesTool extends BaseTool<ToolType.CodaDocsAndTabl
  */
 export interface DynamicSuggestedPromptTool extends BaseTool<ToolType.DynamicSuggestedPrompt> {}
 
+/**
+ * The type of response embedding format to use.
+ */
 export enum ResponseEmbeddingType {
+  /**
+   * Embed the response as an insertable block that can be added to the document.
+   */
   InsertableBlock = 'InsertableBlock',
+  /**
+   * Embed the response as a carousel of items that can be browsed.
+   */
   Carousel = 'Carousel',
 }
 
@@ -1414,9 +1425,18 @@ interface InsertableBlockResponseEmbedding extends BaseResponseEmbedding<Respons
 
 interface CarouselResponseEmbedding extends BaseResponseEmbedding<ResponseEmbeddingType.Carousel> {}
 
+/**
+ * Union of all supported response embedding formats.
+ */
 export type ResponseEmbedding = InsertableBlockResponseEmbedding | CarouselResponseEmbedding;
 
+/**
+ * Tool that enables AI responses to be embedded in various formats within Coda documents.
+ */
 export interface ResponseEmbeddingTool extends BaseTool<ToolType.ResponseEmbedding> {
+  /**
+   * The embedding format configuration for the response.
+   */
   embedding: ResponseEmbedding;
 }
 
