@@ -1,81 +1,86 @@
 import {testHelper} from './test_helper';
-import type {AllToolTypes} from '../types';
-import type {AllowedAuthentication} from '../types';
-import type {ArraySchema} from '../schema';
-import {AttributionNodeType} from '..';
-import {AuthenticationType} from '../types';
-import {ConnectionRequirement} from '../api_types';
-import {ContentCategorizationType} from '../schema';
-import {CurrencyFormat} from '..';
-import {DurationUnit} from '..';
-import type {GenericSyncTable} from '../api';
-import {ImageCornerStyle} from '../schema';
-import {ImageOutline} from '../schema';
-import {ImageShapeStyle} from '../schema';
-import {IndexingStrategy} from '../schema';
-import {KnowledgeToolSourceType} from '../types';
-import {Limits} from '../testing/upload_validation';
-import type {ObjectSchemaDefinition} from '../schema';
-import type {OptionsReference} from '../api_types';
-import {OptionsType} from '../api_types';
-import type {PackFormulaMetadata} from '../api';
-import {PackMetadataValidationError} from '../testing/upload_validation';
-import type {PackTool} from '../types';
+import type {AllowedAuthentication, PackTool, Skill} from '../types';
+import {
+  AllToolTypes,
+  AuthenticationType,
+  KnowledgeToolSourceType,
+  PostSetupType,
+  ReservedAuthenticationNames,
+  ResponseEmbeddingType,
+  ScreenAnnotationType,
+  SkillModel,
+  ToolType
+} from '../types';
+import type {ArraySchema, ObjectSchemaDefinition} from '../schema';
+import {
+  ContentCategorizationType,
+  ImageCornerStyle,
+  ImageOutline,
+  ImageShapeStyle,
+  IndexingStrategy,
+  isCustomIndexDefinition,
+  isObject,
+  makeObjectSchema,
+  makeSchema,
+  ScaleIconSet,
+  ValueHintType,
+  ValueType
+} from '../schema';
+import {
+  assertCondition,
+  AttributionNodeType,
+  CurrencyFormat,
+  DurationUnit,
+  makeAttributionNode,
+  makeReferenceSchemaFromObjectSchema,
+  PrecannedDateRange
+} from '..';
+import type {OptionsReference, ParamDefs} from '../api_types';
+import {
+  ConnectionRequirement,
+  numberArray,
+  OptionsType,
+  ParameterType,
+  PastLiveDates,
+  PrecannedDate,
+  TableRole,
+  Type,
+  UntilNowDateRanges
+} from '../api_types';
+import type {GenericSyncTable, PackFormulaMetadata, StringFormulaDefLegacy, SyncTable} from '../api';
+import {
+  makeDynamicSyncTable,
+  makeFormula,
+  makeMetadataFormula,
+  makeNumericArrayParameter,
+  makeNumericFormula,
+  makeNumericParameter,
+  makeObjectFormula,
+  makeParameter,
+  makeStringFormula,
+  makeStringParameter,
+  makeSyncTable,
+  makeSyncTableLegacy
+} from '../api';
+import {
+  _hasCycle,
+  Limits,
+  PackMetadataValidationError,
+  validateCrawlHierarchy,
+  validatePackVersionMetadata,
+  validateSyncTableSchema,
+  validateVariousAuthenticationMetadata
+} from '../testing/upload_validation';
 import type {PackVersionMetadata} from '../compiled_types';
-import type {ParamDefs} from '../api_types';
-import {ParameterType} from '../api_types';
-import {PastLiveDates} from '../api_types';
-import {PostSetupType} from '../types';
-import {PrecannedDate} from '../api_types';
-import {PrecannedDateRange} from '..';
-import {ReservedAuthenticationNames} from '../types';
-import {ScaleIconSet} from '../schema';
-import {ScreenAnnotationType} from '../types';
-import type {Skill} from '../types';
-import {SkillModel} from '../types';
-import type {StringFormulaDefLegacy} from '../api';
-import type {SyncTable} from '../api';
-import {TableRole} from '../api_types';
-import {ToolType} from '../types';
-import {Type} from '../api_types';
-import {UntilNowDateRanges} from '../api_types';
-import {ValueHintType} from '../schema';
-import {ValueType} from '../schema';
-import {_hasCycle} from '../testing/upload_validation';
-import {assertCondition} from '..';
-import {compileFormulaMetadata} from '../helpers/metadata';
-import {compileFormulasMetadata} from '../helpers/metadata';
-import {compilePackMetadata} from '../helpers/metadata';
-import {compileSyncTable} from '../helpers/metadata';
-import {createFakePack} from './test_utils';
-import {createFakePackFormulaMetadata} from './test_utils';
-import {createFakePackVersionMetadata} from './test_utils';
+import {
+  compileFormulaMetadata,
+  compileFormulasMetadata,
+  compilePackMetadata,
+  compileSyncTable
+} from '../helpers/metadata';
+import {createFakePack, createFakePackFormulaMetadata, createFakePackVersionMetadata} from './test_utils';
 import {deepCopy} from '../helpers/object_utils';
-import {ensureExists} from '../helpers/ensure';
-import {ensureNever} from '../helpers/ensure';
-import {isCustomIndexDefinition} from '../schema';
-import {isObject} from '../schema';
-import {makeAttributionNode} from '..';
-import {makeDynamicSyncTable} from '../api';
-import {makeFormula} from '../api';
-import {makeMetadataFormula} from '../api';
-import {makeNumericArrayParameter} from '../api';
-import {makeNumericFormula} from '../api';
-import {makeNumericParameter} from '../api';
-import {makeObjectFormula} from '../api';
-import {makeObjectSchema} from '../schema';
-import {makeParameter} from '../api';
-import {makeReferenceSchemaFromObjectSchema} from '..';
-import {makeSchema} from '../schema';
-import {makeStringFormula} from '../api';
-import {makeStringParameter} from '../api';
-import {makeSyncTable} from '../api';
-import {makeSyncTableLegacy} from '../api';
-import {numberArray} from '../api_types';
-import {validateCrawlHierarchy} from '../testing/upload_validation';
-import {validatePackVersionMetadata} from '../testing/upload_validation';
-import {validateSyncTableSchema} from '../testing/upload_validation';
-import {validateVariousAuthenticationMetadata} from '../testing/upload_validation';
+import {ensureExists, ensureNever} from '../helpers/ensure';
 
 // Used to test exhaustiveness checking of ToolType
 declare module '../types' {
@@ -6033,6 +6038,18 @@ describe('Pack metadata Validation', async () => {
               },
               {
                 type: ToolType.DynamicSuggestedPrompt,
+              },
+              {
+                type: ToolType.ResponseEmbedding,
+                embedding: {
+                  type: ResponseEmbeddingType.InsertableBlock,
+                }
+              },
+              {
+                type: ToolType.ResponseEmbedding,
+                embedding: {
+                  type: ResponseEmbeddingType.Carousel,
+                }
               },
             ],
           },
