@@ -1085,7 +1085,12 @@ export declare enum ToolType {
      * Tool that enables dynamic generation of suggested follow-up prompts.
      * @hidden
      */
-    DynamicSuggestedPrompt = "DynamicSuggestedPrompt"
+    DynamicSuggestedPrompt = "DynamicSuggestedPrompt",
+    /**
+     * Tool that enables searching the public internet for up-to-date information.
+     * @hidden
+     */
+    WebSearch = "WebSearch"
 }
 /**
  * The type identifier for a tool
@@ -1258,6 +1263,14 @@ export interface CodaDocsAndTablesTool extends BaseTool<ToolType.CodaDocsAndTabl
 export interface DynamicSuggestedPromptTool extends BaseTool<ToolType.DynamicSuggestedPrompt> {
 }
 /**
+ * Tool that enables searching the public internet for up-to-date information.
+ * When enabled, the agent can search the web to retrieve current information
+ * that may not be available in the user's workspace or knowledge base.
+ * @hidden
+ */
+export interface WebSearchTool extends BaseTool<ToolType.WebSearch> {
+}
+/**
  * Definition of an MCP server that the pack can connect to.
  */
 export interface MCPServer {
@@ -1285,6 +1298,7 @@ export interface ToolMap {
     [ToolType.ContactResolution]: ContactResolutionTool;
     [ToolType.CodaDocsAndTables]: CodaDocsAndTablesTool;
     [ToolType.DynamicSuggestedPrompt]: DynamicSuggestedPromptTool;
+    [ToolType.WebSearch]: WebSearchTool;
 }
 /**
  * Union of all supported tool types.

@@ -266,6 +266,11 @@ var ToolType;
      * @hidden
      */
     ToolType["DynamicSuggestedPrompt"] = "DynamicSuggestedPrompt";
+    /**
+     * Tool that enables searching the public internet for up-to-date information.
+     * @hidden
+     */
+    ToolType["WebSearch"] = "WebSearch";
 })(ToolType || (exports.ToolType = ToolType = {}));
 /**
  * The type of knowledge source to use.
