@@ -14,7 +14,7 @@ A column format is a custom column type that you can apply to any column in any 
 
 Column formats provided by Packs appear as choices in the **Column type** menu.
 
-<img src="../../../images/column_format_menu.png" srcset="../../../images/column_format_menu_2x.png 2x" class="screenshot" alt="Pack column formats in the column type menu">
+<img src="site:images/column_format_menu.png" srcset="site:images/column_format_menu_2x.png 2x" class="screenshot" alt="Pack column formats in the column type menu">
 
 
 ## Creating column formats
@@ -74,7 +74,7 @@ Column formats can return any supported data type, and it will become the effect
 
 Column formats can use authentication to access private resources. The account used by the column format is configured within the options menu of the column.
 
-<img src="../../../images/column_format_options.png" srcset="../../../images/column_format_options_2x.png 2x" class="screenshot" alt="Selecting the account in the column format options">
+<img src="site:images/column_format_options.png" srcset="site:images/column_format_options_2x.png 2x" class="screenshot" alt="Selecting the account in the column format options">
 
 
 ## Automatic formatting {: #matchers}
@@ -103,7 +103,7 @@ Only Packs already installed in the document will have their matchers used. If m
 
 If your column format has [matchers](#matchers) defined it can also affect how links are displayed on the canvas. When editing the display settings for a link, if it matches a column format there will be a new option to display it using the Pack.
 
-<img src="../../../images/column_format_canvas.png" srcset="../../../images/column_format_canvas_2x.png 2x" class="screenshot" alt="Selecting the account in the column format options">
+<img src="site:images/column_format_canvas.png" srcset="site:images/column_format_canvas_2x.png 2x" class="screenshot" alt="Selecting the account in the column format options">
 
 When selected, this will wrap the link in a call to the formula that backs the column format. For example, using the Todoist column format above, a Todoist URL would be wrapped in a `=Task()` formula.
 

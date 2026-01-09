@@ -21,7 +21,7 @@ Packs that support per-user authentication require some additional setup. Users 
 
 The first time a user adds a building block that requires authentication they will be shown a **Connect an account** button. Upon clicking it the user will be launched into a sign-in flow, which varies depending on the type of authentication used and the service the user is connecting to.
 
-<video style="width:auto" loop muted autoplay alt="Recording of authenticating with a Pack." class="screenshot"><source src="../../../images/auth_sign_in.mp4" type="video/mp4"></source></video>
+<video style="width:auto" loop muted autoplay alt="Recording of authenticating with a Pack." class="screenshot"><source src="site:images/auth_sign_in.mp4" type="video/mp4"></source></video>
 
 Users can sign in to additional accounts and change their sharing settings from the **Settings** tab of the Pack's side panel. Accounts can be reused across docs, and  users can manage all of their connected accounts on the [Account settings][account_settings] page.
 
@@ -31,13 +31,13 @@ Users can sign in to additional accounts and change their sharing settings from 
 In the formula editor the account is shown as the first parameter to the formula, and in the other dialogs the account to use is displayed as a dropdown list.
 
 === "In the formula editor"
-    <img src="../../../images/auth_formula.png" srcset="../../../images/auth_formula_2x.png 2x" class="screenshot" alt="Account selection in the formula editor">
+    <img src="site:images/auth_formula.png" srcset="site:images/auth_formula_2x.png 2x" class="screenshot" alt="Account selection in the formula editor">
 === "In the action builder"
-    <img src="../../../images/auth_action.png" srcset="../../../images/auth_action_2x.png 2x" class="screenshot" alt="Account selection in the action builder">
+    <img src="site:images/auth_action.png" srcset="site:images/auth_action_2x.png 2x" class="screenshot" alt="Account selection in the action builder">
 === "In the column format settings"
-    <img src="../../../images/auth_column_format.png" srcset="../../../images/auth_column_format_2x.png 2x" class="screenshot" alt="Account selection in the column format settings">
+    <img src="site:images/auth_column_format.png" srcset="site:images/auth_column_format_2x.png 2x" class="screenshot" alt="Account selection in the column format settings">
 === "In the sync table settings"
-    <img src="../../../images/auth_sync_table.png" srcset="../../../images/auth_sync_table_2x.png 2x" class="screenshot" alt="Account selection in the sync table settings">
+    <img src="site:images/auth_sync_table.png" srcset="site:images/auth_sync_table_2x.png 2x" class="screenshot" alt="Account selection in the sync table settings">
 
 
 ## Adding authentication to your Pack
@@ -72,7 +72,7 @@ pack.setSystemAuthentication({
 
 After adding the code, build a new version of your Pack and then navigate to the **Settings** tab. There you'll see an **Add system authentication** button you can use to set the credentials.
 
-<img src="../../../images/auth_system.png" srcset="../../../images/auth_system_2x.png 2x" class="screenshot" alt="Entering system credentials">
+<img src="site:images/auth_system.png" srcset="site:images/auth_system_2x.png 2x" class="screenshot" alt="Entering system credentials">
 
 The types of authentication supported, as well as the additional settings, are described in the sections below.
 
@@ -201,7 +201,7 @@ Many APIs use tokens or keys for authentication. Per-user tokens are typically g
 
 When using per-user authentication, the user will be prompted to enter their token when connecting their account.
 
-<img src="../../../images/auth_token.png" srcset="../../../images/auth_token_2x.png 2x" class="screenshot" alt="Users entering an auth token">
+<img src="site:images/auth_token.png" srcset="site:images/auth_token_2x.png 2x" class="screenshot" alt="Users entering an auth token">
 
 !!! tip "Set an instructions URL"
     It may not be obvious to users where they can find their API token. You can set the `instructionsUrl` field of the authentication configuration to a relevant help center article, or in some cases directly to the screen within the application that lists the API token. Coda will link to this URL in the dialog.
@@ -247,7 +247,7 @@ pack.setSystemAuthentication({
 
 Each token defined within the `params` array will result in an additional prompt in the authentication dialog:
 
-<img src="../../../images/auth_custom.png" srcset="../../../images/auth_custom_2x.png 2x" class="screenshot" alt="Entering tokens for custom authentication">
+<img src="site:images/auth_custom.png" srcset="site:images/auth_custom_2x.png 2x" class="screenshot" alt="Entering tokens for custom authentication">
 
 {% raw %}
 Unlike with other authentication types where the values are added to your fetch requests automatically, with `Custom` authentication you must manually add these tokens to your request. Wherever you need to inject one of these tokens enter a placeholder value instead, and before your request is sent Coda will replace it with the value of the corresponding token. The placeholder format is `{{<paramName>-<invocationToken>}}`, where `<paramName>` is the name of the token you defined and `<invocateToken>` is the unique ID generated for that execution of your Pack.
@@ -301,7 +301,7 @@ pack.setUserAuthentication({
 });
 ```
 
-<img src="../../../images/auth_basic.png" srcset="../../../images/auth_basic_2x.png 2x" class="screenshot" alt="Users entering their username and password">
+<img src="site:images/auth_basic.png" srcset="site:images/auth_basic_2x.png 2x" class="screenshot" alt="Users entering their username and password">
 
 [View Sample Code][sample_web_basic]{ .md-button }
 
@@ -465,7 +465,7 @@ pack.setUserAuthentication({
 
 When the user connects to their account they will now also be asked to provide the endpoint URL for their account.
 
-<img src="../../../images/auth_endpoint.png" srcset="../../../images/auth_endpoint_2x.png 2x" class="screenshot" alt="Setting the endpoint URL">
+<img src="site:images/auth_endpoint.png" srcset="site:images/auth_endpoint_2x.png 2x" class="screenshot" alt="Setting the endpoint URL">
 
 [View Sample Code][sample_manual_endpoint]{ .md-button }
 
@@ -527,7 +527,7 @@ pack.setUserAuthentication({
 
 The step's `getOptions` works like [dynamic autocomplete][autocomplete_dynamic], fetching the list of available endpoints and returning a display name and value for each. Note that the returned endpoints must be an object with a `display` and `value` field. Further, the `value` must be a valid URL. After the user enters their credentials they will be prompted to select one of the endpoints in a dialog.
 
-<img src="../../../images/auth_setendpoint.png" srcset="../../../images/auth_setendpoint_2x.png 2x" class="screenshot" alt="Selecting from a list of endpoints">
+<img src="site:images/auth_setendpoint.png" srcset="site:images/auth_setendpoint_2x.png 2x" class="screenshot" alt="Selecting from a list of endpoints">
 
 [View Sample Code][sample_selected_endpoint]{ .md-button }
 

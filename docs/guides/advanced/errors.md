@@ -43,7 +43,7 @@ pack.addFormula({
 });
 ```
 
-<img src="../../../images/errors_generic.png" srcset="../../../images/errors_generic_2x.png 2x" class="screenshot" alt="Generic error message.">
+<img src="site:images/errors_generic.png" srcset="site:images/errors_generic_2x.png 2x" class="screenshot" alt="Generic error message.">
 
 When you want to provide a more specific error message, throw a `UserVisibleError` exception instead.
 
@@ -59,7 +59,7 @@ pack.addFormula({
 });
 ```
 
-<img src="../../../images/errors_user_visible.png" srcset="../../../images/errors_user_visible_2x.png 2x" class="screenshot" alt="User-visible error message.">
+<img src="site:images/errors_user_visible.png" srcset="site:images/errors_user_visible_2x.png 2x" class="screenshot" alt="User-visible error message.">
 
 When the error originates from an API or library, you can catch the error and throw a `UserVisibleError` one instead.
 

@@ -14,11 +14,11 @@ The primary mechanism for passing data from the user or document into your Pack 
 In the formula editor parameters are entered as comma-separated values, while in the action dialog or sync table side panel they presented as input boxes.
 
 === "In the formula editor"
-    <img src="../../../images/parameter_formula.png" srcset="../../../images/parameter_formula_2x.png 2x" class="screenshot" alt="Parameters in the formula editor">
+    <img src="site:images/parameter_formula.png" srcset="site:images/parameter_formula_2x.png 2x" class="screenshot" alt="Parameters in the formula editor">
 === "In the action builder"
-    <img src="../../../images/parameter_action.png" srcset="../../../images/parameter_action_2x.png 2x" class="screenshot" alt="Parameters in the action builder">
+    <img src="site:images/parameter_action.png" srcset="site:images/parameter_action_2x.png 2x" class="screenshot" alt="Parameters in the action builder">
 === "In the sync table settings"
-    <img src="../../../images/parameter_sync.png" srcset="../../../images/parameter_sync_2x.png 2x" class="screenshot" alt="Parameters in the sync table settings">
+    <img src="site:images/parameter_sync.png" srcset="site:images/parameter_sync_2x.png 2x" class="screenshot" alt="Parameters in the sync table settings">
 
 ## Defining parameters
 
@@ -469,7 +469,7 @@ pack.addFormula({
 
 Parameters of the type `DateArray` are often used for date ranges, with the first date representing the start of the range and the second date representing the end. When a `DateArray` parameter is used in an action or sync table the the input box displays a date range picker to make it easier for the user to select a range.
 
-<img src="../../../images/parameter_daterange.png" srcset="../../../images/parameter_daterange_2x.png 2x" class="screenshot" alt="Date array parameters displayed as a date range picker">
+<img src="site:images/parameter_daterange.png" srcset="site:images/parameter_daterange_2x.png 2x" class="screenshot" alt="Date array parameters displayed as a date range picker">
 
 These parameters also support a special set of [suggested values](#suggested) that represent date ranges relative to the current date. These are available in the [`PrecannedDateRange`][PrecannedDateRange] enumeration.
 

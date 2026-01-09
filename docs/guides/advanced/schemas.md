@@ -168,13 +168,13 @@ These descriptions are shown shown in various places in the Coda UI.
 
     When inspecting the property in the formula editor.
 
-    <img src="../../../images/schemas_descriptions.png" srcset="../../../images/schemas_descriptions_2x.png 2x" class="screenshot" alt="A schema property description being shown in the formula editor">
+    <img src="site:images/schemas_descriptions.png" srcset="site:images/schemas_descriptions_2x.png 2x" class="screenshot" alt="A schema property description being shown in the formula editor">
 
 === "Column description"
 
     When used in sync tables or column formats, schema properties can be broken out into their own columns, and the property's description will be used as the initial value for the column's description. This column description is set once when the column is added to the table, and it can later be edited or removed by the user.
 
-    <img src="../../../images/schemas_column_descriptions.png" srcset="../../../images/schemas_column_descriptions_2x.png 2x" class="screenshot" alt="A column description being shown in a sync table">
+    <img src="site:images/schemas_column_descriptions.png" srcset="site:images/schemas_column_descriptions_2x.png 2x" class="screenshot" alt="A column description being shown in a sync table">
 
 ??? tip "Add descriptions to object properties"
 
@@ -388,7 +388,7 @@ let TaskSchema = coda.makeObjectSchema({
 });
 ```
 
-<img src="../../../images/schemas_attribution.png" srcset="../../../images/schemas_attribution_2x.png 2x" class="screenshot" alt="How attribution is displayed on hover">
+<img src="site:images/schemas_attribution.png" srcset="site:images/schemas_attribution_2x.png 2x" class="screenshot" alt="How attribution is displayed on hover">
 
 
 ## Schemas in sync tables
@@ -614,7 +614,7 @@ let MovieSchema = coda.makeObjectSchema({
 });
 ```
 
-<img src="../../../images/schemas_labels_default.png" srcset="../../../images/schemas_labels_default_2x.png 2x" class="screenshot" alt="Default labels for subtitle properties">
+<img src="site:images/schemas_labels_default.png" srcset="site:images/schemas_labels_default_2x.png 2x" class="screenshot" alt="Default labels for subtitle properties">
 
 However, there are times when the default label isn't a great fit. For instance you may want to put the property name after the value (`10 bugs` instead of `Bugs: 10`) or remove the label completely (`P1` instead of `Priority: P1`).
 
@@ -642,7 +642,7 @@ let MovieSchema = coda.makeObjectSchema({
 });
 ```
 
-<img src="../../../images/schemas_labels_custom.png" srcset="../../../images/schemas_labels_custom_2x.png 2x" class="screenshot" alt="Custom labels for subtitle properties">
+<img src="site:images/schemas_labels_custom.png" srcset="site:images/schemas_labels_custom_2x.png 2x" class="screenshot" alt="Custom labels for subtitle properties">
 
 
 ### Property placeholders
@@ -662,7 +662,7 @@ let MovieSchema = coda.makeObjectSchema({
 });
 ```
 
-<img src="../../../images/schemas_placeholders.png" srcset="../../../images/schemas_placeholders_2x.png 2x" class="screenshot" alt="Placeholders for subtitle properties">
+<img src="site:images/schemas_placeholders.png" srcset="site:images/schemas_placeholders_2x.png 2x" class="screenshot" alt="Placeholders for subtitle properties">
 
 A property will be considered empty and fallback to the placeholder when its value is one of the following: `null`, `undefined`, `""`, `[]`, `{}`. The placeholder is only used to render the card, and when using the Coda Formula Language to access the property it will still return the original value. Placeholders are currently only supported on the following fields:
 

@@ -68,7 +68,7 @@ pack.addSkill({
 
 Formulas that have side effects (e.g., create or update records in an API) should be annotated as actions (`isAction: true`). Unlike regular formulas, action formulas require confirmation before they are run. Learn more in the [Actions guide][actions].
 
-<img src="../../../images/agent_action_confirmation.png" srcset="../../../images/agent_action_confirmation_2x.png 2x" alt="A screenshot of the action confirmation UX." class="screenshot">
+<img src="site:images/agent_action_confirmation.png" srcset="site:images/agent_action_confirmation_2x.png 2x" alt="A screenshot of the action confirmation UX." class="screenshot">
 
 
 ## Knowledge

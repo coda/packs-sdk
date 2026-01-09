@@ -23,7 +23,7 @@ pack.setUserAuthentication({
 
 When authenticating, the user will be prompted to enter their access key and secret.
 
-<img src="../../../../images/auth_aws_access_key.png" srcset="../../../../images/auth_aws_access_key_2x.png 2x" class="screenshot" alt="Prompting the user for their access key and secret">
+<img src="site:images/auth_aws_access_key.png" srcset="site:images/auth_aws_access_key_2x.png 2x" class="screenshot" alt="Prompting the user for their access key and secret">
 
 You can learn more about how to generate access keys in the [AWS documentation][awsdocs_accesskey].
 
@@ -45,7 +45,7 @@ pack.setUserAuthentication({
 
 When authenticating, the user will be prompted to enter the Amazon Resource Name (ARN) of the role to assume, as well as an associated external ID.
 
-<img src="../../../../images/auth_aws_assume_role.png" srcset="../../../../images/auth_aws_assume_role_2x.png 2x" class="screenshot" alt="Prompting the user for their role and external ID">
+<img src="site:images/auth_aws_assume_role.png" srcset="site:images/auth_aws_assume_role_2x.png 2x" class="screenshot" alt="Prompting the user for their role and external ID">
 
 You can learn more about how to create roles in the [AWS documentation][awsdocs_createrole].
 
@@ -77,7 +77,7 @@ In addition to supplying the role and external ID, the user authenticating the P
 }
 ```
 
-Coda's AWS account has the ID `arn:aws:iam::029208794193:root`, and this is same for all Packs. 
+Coda's AWS account has the ID `arn:aws:iam::029208794193:root`, and this is same for all Packs.
 
 The external ID condition is used as a security measure, to ensure that other Packs can't also use the role. When signing a request, Coda will prepend the Pack ID to the user-supplied external ID value, with the format `<PACK_ID>:<EXTERNAL_ID>`. While AWS doesn't strictly require an external ID to use the `AssumeRole` flow, it is recommended for cross-account access scenarios like this and Coda enforces it as a best practice.
 

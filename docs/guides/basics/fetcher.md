@@ -460,7 +460,7 @@ If there isn't enough time left for a retry (it would exceed the 1 minute execut
 
 There are cases where you may want to enforce your own rate limit, for example if you are calling an expensive API. To configure these, open the Pack Studio and click on **Settings** > **Add rate limits**.
 
-<img src="../../../images/rate_limits.png" srcset="../../../images/rate_limits_2x.png 2x" class="screenshot" alt="Rate limit dialog.">
+<img src="site:images/rate_limits.png" srcset="site:images/rate_limits_2x.png 2x" class="screenshot" alt="Rate limit dialog.">
 
 You can set a total rate limit across all users of your Pack, or if your Pack uses [authentication][authentication] you can also set a per-user rate limit. When the limit is reached a synthetic 429 response will be generated, triggering the [retry logic](#429) mentioned above.
 

@@ -9,7 +9,7 @@ If you've already built a Pack for Coda, the good news is that it can be easily 
 
 You don't need to be an AI expert to do this, as we provide the LLM and hook it up to your Pack. It's done automatically, so you can install your Pack in Superhuman Go and start chatting with it right away.
 
-<img src="../../images/agent_upgrade.png" srcset="../../images/agent_upgrade_2x.png 2x" alt="A screenshot of the action confirmation UX." class="screenshot">
+<img src="site:images/agent_upgrade.png" srcset="site:images/agent_upgrade_2x.png 2x" alt="A screenshot of the action confirmation UX." class="screenshot">
 
 In the screenshot above, you can see a user chatting with the [Weather Pack][weather_pack], which hasn't had any code changes. The LLM knows all the formulas and actions in the Pack, calls them as needed, and displays the results in a human-friendly way.
 

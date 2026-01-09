@@ -18,7 +18,7 @@ Formulas are one of the most basic building blocks in Coda; used to calculate va
 
 A formula definition consists of a set of key-value pairs, which specify the various settings for the formula. Most of these settings are metadata, such as the name, description, parameters and result type. The actual code that is run each time the formula recalculated is specified using in the `execute` key.
 
-<img src="../../../images/formula_structure.png" srcset="../../../images/formula_structure_2x.png 2x" class="screenshot" alt="Mapping of formula coda to formula editor.">
+<img src="site:images/formula_structure.png" srcset="site:images/formula_structure_2x.png 2x" class="screenshot" alt="Mapping of formula coda to formula editor.">
 
 
 ## Naming
@@ -38,7 +38,7 @@ The name of a formula can only contain letters, numbers, and underscores. This r
 
 Formula names must be unique within a Pack, but can be the same as built-in formulas or those in other Packs. When a doc has access to multiple formulas with the same name the Pack's icon is used to distinguish them.
 
-<img src="../../../images/formula_disambiguation.png" srcset="../../../images/formula_disambiguation_2x.png 2x" class="screenshot" alt="Icons used to disambiguate formulas">
+<img src="site:images/formula_disambiguation.png" srcset="site:images/formula_disambiguation_2x.png 2x" class="screenshot" alt="Icons used to disambiguate formulas">
 
 !!! warning
     Changing the name of a formula will break any existing docs that use it. When creating your Pack select your names carefully.
@@ -59,7 +59,7 @@ All formulas must return a result, which is a single value matching the type spe
 Formulas can use [authentication][authentication] to fetch private data. When using [system authentication][system_auth] there is no change to the user experience, but when you use [user authentication][user_auth] the formula editor will be automatically updated to prompt for a connected account. The connected account will appear as the first parameter of the formula, but its value is not passed to your formula's `execute` function.
 
 === "Formula editor"
-    <img src="../../../images/formula_account.png" srcset="../../../images/formula_account_2x.png 2x" class="screenshot" alt="Account parameter in formula editor">
+    <img src="site:images/formula_account.png" srcset="site:images/formula_account_2x.png 2x" class="screenshot" alt="Account parameter in formula editor">
 
 === "Code"
     ```ts
@@ -101,7 +101,7 @@ After a formula is run its value is stored in the Coda document model. Reloading
 
 Building or releasing a new version of your Pack doesn't automatically cause existing formulas to recalculate, so users may still see old results for a while. In the **Settings** tab of the Pack's side panel there is a "Refresh now" button (**⟳**) that allows users to recalculate all formulas using the Pack, as well as options to cause them to recalculate on a regular schedule.
 
-<img src="../../../images/settings_recalc.png" srcset="../../../images/settings_recalc_2x.png 2x" class="screenshot" alt="Recalculation settings in the Pack side panel">
+<img src="site:images/settings_recalc.png" srcset="site:images/settings_recalc_2x.png 2x" class="screenshot" alt="Recalculation settings in the Pack side panel">
 
 Pack makers also have access to additional options in the Pack Maker Tools:
 
@@ -117,7 +117,7 @@ Coda automatically generates user documentation for your formulas based on the n
 
 === "Formula documentation"
 
-    <img src="../../../images/formula_examples.png" srcset="../../../images/formula_examples_2x.png 2x" class="screenshot" alt="Formula examples in the generated documentation">
+    <img src="site:images/formula_examples.png" srcset="site:images/formula_examples_2x.png 2x" class="screenshot" alt="Formula examples in the generated documentation">
 
 === "Code"
 

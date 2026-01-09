@@ -14,7 +14,7 @@ Tables are one of the most powerful features of Coda, and many times people use 
 
 Sync tables are added directly to the document, usually by dragging them in from the side panel. Navigate to {{ custom.pack_panel_clicks }} and drag the table into the canvas.
 
-<video style="width:auto" loop muted autoplay alt="Recording of adding a sync table." class="screenshot"><source src="../../../images/sync_table_use.mp4" type="video/mp4"></source></video>
+<video style="width:auto" loop muted autoplay alt="Recording of adding a sync table." class="screenshot"><source src="site:images/sync_table_use.mp4" type="video/mp4"></source></video>
 
 If the sync table doesn't have any required parameters it will start syncing immediately, otherwise you'll have to configure it first. The data in the table can be synced manually or set up to sync automatically at regular intervals.
 
@@ -227,7 +227,7 @@ It's often the case that the different synced items in a Pack are related to eac
 
 A reference must specify the identity of the target table as well as the ID of the target row. If that row has already been synced to the doc, then the reference is replaced with the data from that row. Otherwise a grayed out chip is displayed, indicating that the referenced row hasn't been synced yet.
 
-<img src="../../../images/sync_table_reference.png" srcset="../../../images/sync_table_reference_2x.png 2x" class="screenshot" alt="How sync table references look in the doc">
+<img src="site:images/sync_table_reference.png" srcset="site:images/sync_table_reference_2x.png 2x" class="screenshot" alt="How sync table references look in the doc">
 
 See the [Schemas guide][schema_references] for more information on how to create references in your table schema.
 
@@ -252,7 +252,7 @@ Although only [featured columns][schemas_featured_columns] are shown in the tabl
 
 For very large schemas all of these unused properties can come with a performance cost however, so users have the option to choose the exact set of columns they want to sync. This can be done by clicking the **Sync more properties** button in the sync table settings, and is launched automatically when creating the sync table with a very large schema.
 
-<img src="../../../images/sync_table_select_columns.png" srcset="../../../images/sync_table_select_columns_2x.png 2x" class="screenshot" alt="Selecting columns of a sync table">
+<img src="site:images/sync_table_select_columns.png" srcset="site:images/sync_table_select_columns_2x.png 2x" class="screenshot" alt="Selecting columns of a sync table">
 
 Users can choose from top-level properties in the schema, and only those they select will be persisted in the document during the sync.
 

@@ -79,7 +79,7 @@ However if the API provider deviates too far from the OAuth 2.0 specification it
 
 After you add the configuration code, build a new version of your Pack and then navigate to the **Settings** tab. There you'll see an **Add OAuth Credentials** button you can use to set the Pack's credentials.
 
-<img src="../../../../images/auth_oauth.png" srcset="../../../../images/auth_oauth_2x.png 2x" class="screenshot" alt="Setting the OAuth client ID and secret">
+<img src="site:images/auth_oauth.png" srcset="site:images/auth_oauth_2x.png 2x" class="screenshot" alt="Setting the OAuth client ID and secret">
 
 These credentials identify your application and are the same for every user that uses your Pack. You need to obtain these credentials from the API provider, typically by registering your application in the provider's developer console or portal. These values are typically called the client ID and secret, but may in some cases be referred to using terms like "consumer" or "application".
 
@@ -178,7 +178,7 @@ pack.addFormula({
 
 When the Pack above is installed the user will only be required to grant access to the `read` scope. However, when they try to use the `UpdateItem` action formula and it fails they will then be prompted to grant additional access to the `write` scope. This prompt is displayed as a pop-up dialog at the bottom of the doc:
 
-<img src="../../../../images/auth_oauth_incremental.png" srcset="../../../../images/auth_oauth_incremental_2x.png 2x" class="screenshot" alt="Prompting the user for additional permissions">
+<img src="site:images/auth_oauth_incremental.png" srcset="site:images/auth_oauth_incremental_2x.png 2x" class="screenshot" alt="Prompting the user for additional permissions">
 
 When the user signs in again they will be prompted to approve the additional scopes, after which they will be able to use the formula successfully.
 

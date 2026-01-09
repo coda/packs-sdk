@@ -15,11 +15,11 @@ In Coda users can take actions directly within their documents, using native [bu
 Actions provided by Packs appear as choices in the button and automation dialogs along-side built-in actions. Actions can also be used in the formula editor for those buttons and automations.
 
 === "In a button"
-    <img src="../../../images/actions_button.png" srcset="../../../images/actions_button_2x.png 2x" class="screenshot" alt="Selecting an action for a button">
+    <img src="site:images/actions_button.png" srcset="site:images/actions_button_2x.png 2x" class="screenshot" alt="Selecting an action for a button">
 === "In an automation"
-    <img src="../../../images/actions_automation.png" srcset="../../../images/actions_automation_2x.png 2x" class="screenshot" alt="Selecting an action for an automation">
+    <img src="site:images/actions_automation.png" srcset="site:images/actions_automation_2x.png 2x" class="screenshot" alt="Selecting an action for an automation">
 === "In the formula editor"
-    <img src="../../../images/actions_formula.png" srcset="../../../images/actions_formula_2x.png 2x" class="screenshot" alt="Using actions in the formula editor.">
+    <img src="site:images/actions_formula.png" srcset="site:images/actions_formula_2x.png 2x" class="screenshot" alt="Using actions in the formula editor.">
 
 
 ## Creating actions
@@ -90,7 +90,7 @@ In some cases there is no meaningful result, in which case the convention is to 
 
 Actions can use authentication to access private resources, but unlike other formulas they aren't required to always use a specific user account. For actions, the account parameter will include the special option "User's private account". When this option is selected, each user that presses the button will take the action using one of their connected accounts, or be prompted to create an account if they don't have one set up already.
 
-<img src="../../../images/actions_private_account.png" srcset="../../../images/actions_private_account_2x.png 2x" class="screenshot" alt="Private account option for actions">
+<img src="site:images/actions_private_account.png" srcset="site:images/actions_private_account_2x.png 2x" class="screenshot" alt="Private account option for actions">
 
 
 ## Caching & recalculation

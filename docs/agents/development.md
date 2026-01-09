@@ -42,7 +42,7 @@ If your Pack has previously been [released][releases], the agent will default to
 1.  Click the gear icon :octicons-gear-16:.
 1.  Change the **Pack version** option to **Latest version**.
 
-<img src="../../images/agent_version.png" srcset="../../images/agent_version_2x.png 2x" class="screenshot" alt="A screenshot of the dropdown that can switch the version of the Pack used by the agent.">
+<img src="site:images/agent_version.png" srcset="site:images/agent_version_2x.png 2x" class="screenshot" alt="A screenshot of the dropdown that can switch the version of the Pack used by the agent.">
 
 ## Test indexing
 

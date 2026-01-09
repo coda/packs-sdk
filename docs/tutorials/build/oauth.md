@@ -55,7 +55,7 @@ Todoist describes their OAuth2 support [in their developer docs][todoist_oauth].
     <div markdown>
 
     <a href="https://developer.todoist.com/guides/#step-1-authorization-request">
-      <img src="../../../images/tutorial_oauth_authorization_url.png" srcset="../../../images/tutorial_oauth_authorization_url_2x.png 2x" class="screenshot" alt="The documentation for the authorization URL.">
+      <img src="site:images/tutorial_oauth_authorization_url.png" srcset="site:images/tutorial_oauth_authorization_url_2x.png 2x" class="screenshot" alt="The documentation for the authorization URL.">
     </a>
 
     </div>
@@ -80,7 +80,7 @@ Todoist describes their OAuth2 support [in their developer docs][todoist_oauth].
     <div markdown>
 
     <a href="https://developer.todoist.com/guides/#step-3-token-exchange">
-      <img src="../../../images/tutorial_oauth_token_url.png" srcset="../../../images/tutorial_oauth_token_url_2x.png 2x" class="screenshot" alt="The documentation for the token URL.">
+      <img src="site:images/tutorial_oauth_token_url.png" srcset="site:images/tutorial_oauth_token_url_2x.png 2x" class="screenshot" alt="The documentation for the token URL.">
     </a>
 
     </div>
@@ -100,7 +100,7 @@ Todoist describes their OAuth2 support [in their developer docs][todoist_oauth].
     <div markdown>
 
     <a href="https://developer.todoist.com/guides/#permission-scopes">
-      <img src="../../../images/tutorial_oauth_scopes.png" srcset="../../../images/tutorial_oauth_scopes_2x.png 2x" class="screenshot" alt="The documentation for the scopes.">
+      <img src="site:images/tutorial_oauth_scopes.png" srcset="site:images/tutorial_oauth_scopes_2x.png 2x" class="screenshot" alt="The documentation for the scopes.">
     </a>
 
     </div>
@@ -119,7 +119,7 @@ Todoist describes their OAuth2 support [in their developer docs][todoist_oauth].
     <div markdown>
 
     <a href="https://developer.todoist.com/guides/#step-1-authorization-request">
-      <img src="../../../images/tutorial_oauth_scope_comma.png" srcset="../../../images/tutorial_oauth_scope_comma_2x.png 2x" class="screenshot" alt="The documentation for the scope separator.">
+      <img src="site:images/tutorial_oauth_scope_comma.png" srcset="site:images/tutorial_oauth_scope_comma_2x.png 2x" class="screenshot" alt="The documentation for the scope separator.">
     </a>
 
     </div>
@@ -144,7 +144,7 @@ Most API providers host a developer console for creating and managing applicatio
     </div>
     <div markdown>
 
-    <img src="../../../images/tutorial_oauth_console.png" srcset="../../../images/tutorial_oauth_console_2x.png 2x" class="screenshot" alt="The Todoist app management console">
+    <img src="site:images/tutorial_oauth_console.png" srcset="site:images/tutorial_oauth_console_2x.png 2x" class="screenshot" alt="The Todoist app management console">
 
     </div>
     </section>
@@ -164,7 +164,7 @@ Most API providers host a developer console for creating and managing applicatio
     </div>
     <div markdown>
 
-    <img src="../../../images/tutorial_oauth_create.png" srcset="../../../images/tutorial_oauth_create_2x.png 2x" class="screenshot" alt="Creating a new application in the console">
+    <img src="site:images/tutorial_oauth_create.png" srcset="site:images/tutorial_oauth_create_2x.png 2x" class="screenshot" alt="Creating a new application in the console">
 
     </div>
     </section>
@@ -419,7 +419,7 @@ The code we've written so far includes only public information about the OAuth f
     </div>
     <div markdown>
 
-    <img src="../../../images/tutorial_oauth_pack_settings.png" srcset="../../../images/tutorial_oauth_pack_settings_2x.png 2x" class="screenshot" alt="The Pack settings">
+    <img src="site:images/tutorial_oauth_pack_settings.png" srcset="site:images/tutorial_oauth_pack_settings_2x.png 2x" class="screenshot" alt="The Pack settings">
 
     </div>
     </section>
@@ -437,7 +437,7 @@ The code we've written so far includes only public information about the OAuth f
     </div>
     <div markdown>
 
-    <img src="../../../images/tutorial_oauth_pack_redirect.png" srcset="../../../images/tutorial_oauth_pack_redirect_2x.png 2x" class="screenshot" alt="The redirect URL shown in the OAuth settings">
+    <img src="site:images/tutorial_oauth_pack_redirect.png" srcset="site:images/tutorial_oauth_pack_redirect_2x.png 2x" class="screenshot" alt="The redirect URL shown in the OAuth settings">
 
     </div>
     </section>
@@ -457,7 +457,7 @@ The code we've written so far includes only public information about the OAuth f
     </div>
     <div markdown>
 
-    <img src="../../../images/tutorial_oauth_settings.png" srcset="../../../images/tutorial_oauth_settings_2x.png 2x" class="screenshot" alt="The settings for the new application">
+    <img src="site:images/tutorial_oauth_settings.png" srcset="site:images/tutorial_oauth_settings_2x.png 2x" class="screenshot" alt="The settings for the new application">
 
     </div>
     </section>
@@ -475,7 +475,7 @@ The code we've written so far includes only public information about the OAuth f
     </div>
     <div markdown>
 
-    <img src="../../../images/tutorial_oauth_pack_credentials.png" srcset="../../../images/tutorial_oauth_pack_credentials_2x.png 2x" class="screenshot" alt="Entering the OAuth credentials">
+    <img src="site:images/tutorial_oauth_pack_credentials.png" srcset="site:images/tutorial_oauth_pack_credentials_2x.png 2x" class="screenshot" alt="Entering the OAuth credentials">
 
     </div>
     </section>
@@ -499,7 +499,7 @@ Now that the Pack is built and the credentials set, we're finally ready to sign 
     </div>
     <div markdown>
 
-    <img src="../../../images/tutorial_oauth_connect.png" srcset="../../../images/tutorial_oauth_connect_2x.png 2x" class="screenshot" alt="Prompted to connect an account">
+    <img src="site:images/tutorial_oauth_connect.png" srcset="site:images/tutorial_oauth_connect_2x.png 2x" class="screenshot" alt="Prompted to connect an account">
 
     </div>
     </section>
@@ -515,7 +515,7 @@ Now that the Pack is built and the credentials set, we're finally ready to sign 
     </div>
     <div markdown>
 
-    <img src="../../../images/tutorial_oauth_signin.png" srcset="../../../images/tutorial_oauth_signin_2x.png 2x" class="screenshot" alt="Dialog to sign in with an account">
+    <img src="site:images/tutorial_oauth_signin.png" srcset="site:images/tutorial_oauth_signin_2x.png 2x" class="screenshot" alt="Dialog to sign in with an account">
 
     </div>
     </section>
@@ -533,7 +533,7 @@ Now that the Pack is built and the credentials set, we're finally ready to sign 
     </div>
     <div markdown>
 
-    <img src="../../../images/tutorial_oauth_authorize.png" srcset="../../../images/tutorial_oauth_authorize_2x.png 2x" class="screenshot" alt="Authorize access to your Todoist account">
+    <img src="site:images/tutorial_oauth_authorize.png" srcset="site:images/tutorial_oauth_authorize_2x.png 2x" class="screenshot" alt="Authorize access to your Todoist account">
 
     </div>
     </section>
@@ -551,7 +551,7 @@ Now that the Pack is built and the credentials set, we're finally ready to sign 
     </div>
     <div markdown>
 
-    <img src="../../../images/tutorial_oauth_complete.png" srcset="../../../images/tutorial_oauth_complete_2x.png 2x" class="screenshot" alt="Complete the account connection">
+    <img src="site:images/tutorial_oauth_complete.png" srcset="site:images/tutorial_oauth_complete_2x.png 2x" class="screenshot" alt="Complete the account connection">
 
     </div>
     </section>
@@ -570,7 +570,7 @@ You'll notice that it takes in an account as a parameter, and it should auto-sel
 </div>
 <div markdown>
 
-<img src="../../../images/tutorial_oauth_formula.png" srcset="../../../images/tutorial_oauth_formula_2x.png 2x" class="screenshot" alt="Use the formula in a doc">
+<img src="site:images/tutorial_oauth_formula.png" srcset="site:images/tutorial_oauth_formula_2x.png 2x" class="screenshot" alt="Use the formula in a doc">
 
 </div>
 </section>

@@ -510,7 +510,7 @@ To filter to a specific topic, open the sync option for the table, click **Add c
 </div>
 <div markdown>
 
-<img src="../../../images/tutorial_sync_table_build1.png" srcset="../../../images/tutorial_sync_table_build1_2x.png 2x" class="screenshot" alt="The resulting sync table with name and ID fields">
+<img src="site:images/tutorial_sync_table_build1.png" srcset="site:images/tutorial_sync_table_build1_2x.png 2x" class="screenshot" alt="The resulting sync table with name and ID fields">
 
 </div>
 </section>
@@ -787,7 +787,7 @@ The author column displays as a chip, since it's a rich object itself, and hover
 </div>
 <div markdown>
 
-<img src="../../../images/tutorial_sync_table_build2.png" srcset="../../../images/tutorial_sync_table_build2_2x.png 2x" class="screenshot" alt="The resulting sync table with more fields">
+<img src="site:images/tutorial_sync_table_build2.png" srcset="site:images/tutorial_sync_table_build2_2x.png 2x" class="screenshot" alt="The resulting sync table with more fields">
 
 </div>
 </section>
@@ -936,7 +936,7 @@ The Pack maker tools will show multiple executions of the sync formula, with tho
 </div>
 <div markdown>
 
-<img src="../../../images/tutorial_sync_table_build3.png" srcset="../../../images/tutorial_sync_table_build3_2x.png 2x" class="screenshot" alt="The resulting sync table with more rows">
+<img src="site:images/tutorial_sync_table_build3.png" srcset="site:images/tutorial_sync_table_build3_2x.png 2x" class="screenshot" alt="The resulting sync table with more rows">
 
 </div>
 </section>

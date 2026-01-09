@@ -7,7 +7,7 @@ description: Learn how to customize the chat experience for your agent.
 
 Users can chat with agents in the Superhuman Go side panel, and this is often a primary way to access their features.
 
-<img src="../../../images/agent_chat.png" srcset="../../../images/agent_chat_2x.png 2x" alt="A screenshot of chatting with an agent." class="screenshot">
+<img src="site:images/agent_chat.png" srcset="site:images/agent_chat_2x.png 2x" alt="A screenshot of chatting with an agent." class="screenshot">
 
 Chat is enabled for all agents, with no code or configuration required. You can customize how your agent responds by defining [skills][skills] for specific scenarios or overriding the [chat skill][chatskill] that all messages are initially routed through.
 
@@ -26,7 +26,7 @@ The LLM is instructed to generate chat responses in markdown format, and the cha
 
 Chat replies can include images, which will be automatically scaled to fit the width of the side panel.
 
-<img src="../../../images/agent_image.png" srcset="../../../images/agent_image_2x.png 2x" alt="A screenshot of chat response containing an image." class="screenshot">
+<img src="site:images/agent_image.png" srcset="site:images/agent_image_2x.png 2x" alt="A screenshot of chat response containing an image." class="screenshot">
 
 For security reasons, only images returned by a tool will be rendered. Ensure that image URLs are annotated with either the hint type [`ImageAttachment`][hinttype_imageattachment] or [`ImageReference`][hinttype_imagereference] in the schema or formula.
 
@@ -58,7 +58,7 @@ pack.addFormula({
 
 Agents often generate content for use outside Superhuman Go, such as summaries and replies. To make it easier for users to grab this content, you can instruct the agent put it into a copyable block. This block is visually indicated and includes buttons to easily copy its contents to the clipboard or insert them at the user's cursor location.
 
-<img src="../../../images/agent_copyable_block.png" srcset="../../../images/agent_copyable_block_2x.png 2x" alt="A screenshot of chat response containing a copyable block." class="screenshot">
+<img src="site:images/agent_copyable_block.png" srcset="site:images/agent_copyable_block_2x.png 2x" alt="A screenshot of chat response containing a copyable block." class="screenshot">
 
 To display content in a copyable block, instruct the LLM to return it formatted as a block quote.
 

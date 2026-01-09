@@ -115,11 +115,11 @@ pack.addFormula({
 
 Objects are displayed in the doc as a "chip", a small rectangle with rounded corners. The display value is shown within the chip, with additional properties of object shown on hover.
 
-<img src="../../../images/data_types_object_hover.png" srcset="../../../images/data_types_object_hover_2x.png 2x" class="screenshot" alt="Hovering over an object chip">
+<img src="site:images/data_types_object_hover.png" srcset="site:images/data_types_object_hover_2x.png 2x" class="screenshot" alt="Hovering over an object chip">
 
 Like Coda tables, the fields within an object can be accessed using dot notation.
 
-<img src="../../../images/data_types_object_dot.png" srcset="../../../images/data_types_object_dot_2x.png 2x" class="screenshot" alt="Using dot notation to access the properties of the object">
+<img src="site:images/data_types_object_dot.png" srcset="site:images/data_types_object_dot_2x.png 2x" class="screenshot" alt="Using dot notation to access the properties of the object">
 
 
 ### Arrays
