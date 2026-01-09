@@ -6039,13 +6039,13 @@ describe('Pack metadata Validation', async () => {
                 type: ToolType.ResponseEmbedding,
                 embedding: {
                   type: ResponseEmbeddingType.InsertableBlock,
-                }
+                },
               },
               {
                 type: ToolType.ResponseEmbedding,
                 embedding: {
                   type: ResponseEmbeddingType.Carousel,
-                }
+                },
               },
             ],
           },
