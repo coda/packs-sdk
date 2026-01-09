@@ -70,7 +70,8 @@ jobs:
 
   build-docs-head:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    # TODO: uncomment before sending
+    # if: github.ref == 'refs/heads/main'
     environment:
       name: head-documentation
     steps:
@@ -111,13 +112,13 @@ jobs:
           name: site-head
           path: site
 
-      - name: Configure AWS credentials for Head
-        uses: aws-actions/configure-aws-credentials@v4
+      - name: Configure AWS credentials
+        uses: ./.github/actions/setup_aws_profile
         with:
-          role-to-assume: arn:aws:iam::020355488663:role/automation/CICDRole
+          role-to-assume: arn:aws:iam::200135020495:role/automation/CICDRole
+          profile-name: dev
           aws-region: ${{ env.AWS_REGION }}
           role-session-name: github-actions-packs-sdk-push-head-docs
-          role-duration-seconds: 900
 
       - name: Deploy to Head
         run: make publish-docs-head FLAGS=--forceUpload
@@ -165,13 +166,13 @@ jobs:
           name: site-staging
           path: site
 
-      - name: Configure AWS credentials for Staging
-        uses: aws-actions/configure-aws-credentials@v4
+      - name: Configure AWS credentials
+        uses: ./.github/actions/setup_aws_profile
         with:
-          role-to-assume: arn:aws:iam::053716345611:role/automation/CICDRole
+          role-to-assume: arn:aws:iam::200135020495:role/automation/CICDRole
+          profile-name: dev
           aws-region: ${{ env.AWS_REGION }}
           role-session-name: github-actions-packs-sdk-push-staging-docs
-          role-duration-seconds: 900
 
       - name: Deploy to Staging
         run: make publish-docs-staging FLAGS=--forceUpload
@@ -240,13 +241,13 @@ jobs:
           name: site-prod
           path: site
 
-      - name: Configure AWS credentials for Production
-        uses: aws-actions/configure-aws-credentials@v4
+      - name: Configure AWS credentials
+        uses: ./.github/actions/setup_aws_profile
         with:
-          role-to-assume: arn:aws:iam::029208794193:role/automation/CICDRole
+          role-to-assume: arn:aws:iam::200135020495:role/automation/CICDRole
+          profile-name: dev
           aws-region: ${{ env.AWS_REGION }}
           role-session-name: github-actions-packs-sdk-push-prod-docs
-          role-duration-seconds: 900
 
       - name: Deploy to Production
         run: make publish-docs-prod FLAGS=--forceUpload

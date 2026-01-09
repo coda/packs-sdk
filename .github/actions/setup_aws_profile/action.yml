@@ -1,0 +1,49 @@
+# Copied from `coda`
+# TODO(neal): Used the common version once this once available.
+
+name: setup_aws_profile
+description: Configure AWS credentials via OIDC and create a named profile
+
+inputs:
+  role-to-assume:
+    description: 'ARN of the IAM role to assume'
+    required: true
+  profile-name:
+    description: 'Name of the AWS profile to create'
+    required: true
+  aws-region:
+    description: 'AWS region for the profile'
+    required: false
+    default: 'us-west-2'
+  role-session-name:
+    description: 'Role session name for the OIDC authentication'
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Configure AWS credentials via OIDC
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: ${{ inputs.role-to-assume }}
+        aws-region: ${{ inputs.aws-region }}
+        role-session-name: ${{ inputs.role-session-name }}
+
+    - name: Create named AWS profile
+      shell: bash
+      env:
+        PROFILE_NAME: ${{ inputs.profile-name }}
+        AWS_REGION_INPUT: ${{ inputs.aws-region }}
+      run: |
+        # Create a named profile using the credentials from OIDC authentication
+        if [ -z "$AWS_ACCESS_KEY_ID" ]; then
+          echo "ERROR: AWS_ACCESS_KEY_ID is not set. OIDC authentication may have failed."
+          exit 1
+        fi
+
+        aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID" --profile "$PROFILE_NAME"
+        aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY" --profile "$PROFILE_NAME"
+        aws configure set aws_session_token "$AWS_SESSION_TOKEN" --profile "$PROFILE_NAME"
+        aws configure set region "$AWS_REGION_INPUT" --profile "$PROFILE_NAME"
+
+        echo "Created AWS profile: $PROFILE_NAME"
