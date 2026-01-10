@@ -1214,6 +1214,10 @@ export enum ToolType {
    * @hidden
    */
   DynamicSuggestedPrompt = 'DynamicSuggestedPrompt',
+  /**
+   * Tool that enables AI responses to be embedded in various formats within Coda documents.
+   */
+  ResponseEmbedding = 'ResponseEmbedding',
 }
 
 /**
@@ -1400,6 +1404,43 @@ export interface CodaDocsAndTablesTool extends BaseTool<ToolType.CodaDocsAndTabl
 export interface DynamicSuggestedPromptTool extends BaseTool<ToolType.DynamicSuggestedPrompt> {}
 
 /**
+ * The type of response embedding format to use.
+ */
+export enum ResponseEmbeddingType {
+  /**
+   * Embed the response as an insertable block that can be added to the document.
+   */
+  InsertableBlock = 'InsertableBlock',
+  /**
+   * Embed the response as a carousel of items that can be browsed.
+   */
+  Carousel = 'Carousel',
+}
+
+interface BaseResponseEmbedding<T extends ResponseEmbeddingType> {
+  type: T;
+}
+
+interface InsertableBlockResponseEmbedding extends BaseResponseEmbedding<ResponseEmbeddingType.InsertableBlock> {}
+
+interface CarouselResponseEmbedding extends BaseResponseEmbedding<ResponseEmbeddingType.Carousel> {}
+
+/**
+ * Union of all supported response embedding formats.
+ */
+export type ResponseEmbedding = InsertableBlockResponseEmbedding | CarouselResponseEmbedding;
+
+/**
+ * Tool that enables AI responses to be embedded in various formats within Coda documents.
+ */
+export interface ResponseEmbeddingTool extends BaseTool<ToolType.ResponseEmbedding> {
+  /**
+   * The embedding format configuration for the response.
+   */
+  embedding: ResponseEmbedding;
+}
+
+/**
  * Definition of an MCP server that the pack can connect to.
  */
 export interface MCPServer {
@@ -1428,6 +1469,7 @@ export interface ToolMap {
   [ToolType.ContactResolution]: ContactResolutionTool;
   [ToolType.CodaDocsAndTables]: CodaDocsAndTablesTool;
   [ToolType.DynamicSuggestedPrompt]: DynamicSuggestedPromptTool;
+  [ToolType.ResponseEmbedding]: ResponseEmbeddingTool;
 }
 
 /**
