@@ -30,6 +30,14 @@ Allows formulas within a pack to be used as tools.
 
 ***
 
+### ResponseEmbedding
+
+> **ResponseEmbedding**: `"ResponseEmbedding"`
+
+Tool that enables AI responses to be embedded in various formats within Coda documents.
+
+***
+
 ### ScreenAnnotation
 
 > **ScreenAnnotation**: `"ScreenAnnotation"`

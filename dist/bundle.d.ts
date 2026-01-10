@@ -5555,7 +5555,11 @@ export declare enum ToolType {
 	 * Tool that enables dynamic generation of suggested follow-up prompts.
 	 * @hidden
 	 */
-	DynamicSuggestedPrompt = "DynamicSuggestedPrompt"
+	DynamicSuggestedPrompt = "DynamicSuggestedPrompt",
+	/**
+	 * Tool that enables AI responses to be embedded in various formats within Coda documents.
+	 */
+	ResponseEmbedding = "ResponseEmbedding"
 }
 /**
  * Base interface for all tool definitions.
@@ -5722,6 +5726,36 @@ export interface CodaDocsAndTablesTool extends BaseTool<ToolType.CodaDocsAndTabl
  */
 export interface DynamicSuggestedPromptTool extends BaseTool<ToolType.DynamicSuggestedPrompt> {
 }
+declare enum ResponseEmbeddingType {
+	/**
+	 * Embed the response as an insertable block that can be added to the document.
+	 */
+	InsertableBlock = "InsertableBlock",
+	/**
+	 * Embed the response as a carousel of items that can be browsed.
+	 */
+	Carousel = "Carousel"
+}
+export interface BaseResponseEmbedding<T extends ResponseEmbeddingType> {
+	type: T;
+}
+export interface InsertableBlockResponseEmbedding extends BaseResponseEmbedding<ResponseEmbeddingType.InsertableBlock> {
+}
+export interface CarouselResponseEmbedding extends BaseResponseEmbedding<ResponseEmbeddingType.Carousel> {
+}
+/**
+ * Union of all supported response embedding formats.
+ */
+export type ResponseEmbedding = InsertableBlockResponseEmbedding | CarouselResponseEmbedding;
+/**
+ * Tool that enables AI responses to be embedded in various formats within Coda documents.
+ */
+export interface ResponseEmbeddingTool extends BaseTool<ToolType.ResponseEmbedding> {
+	/**
+	 * The embedding format configuration for the response.
+	 */
+	embedding: ResponseEmbedding;
+}
 /**
  * Definition of an MCP server that the pack can connect to.
  */
@@ -5750,6 +5784,7 @@ export interface ToolMap {
 	[ToolType.ContactResolution]: ContactResolutionTool;
 	[ToolType.CodaDocsAndTables]: CodaDocsAndTablesTool;
 	[ToolType.DynamicSuggestedPrompt]: DynamicSuggestedPromptTool;
+	[ToolType.ResponseEmbedding]: ResponseEmbeddingTool;
 }
 /**
  * Union of all supported tool types.
