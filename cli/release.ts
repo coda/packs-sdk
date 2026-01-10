@@ -8,10 +8,13 @@ import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
 import {formatError} from './errors';
 import {formatResponseError} from './errors';
+import {computePackPath, createGitTag, getGitState, gitTagExists} from './git_helpers';
+import type {GitState} from './git_helpers';
 import {importManifest} from './helpers';
 import {isResponseError} from '../helpers/external-api/coda';
-import * as path from 'path';
-import {printAndExit} from '../testing/helpers';
+import {addReleaseToLockFile, lockFileExists} from './lock_file';
+import path from 'path';
+import {print, printAndExit} from '../testing/helpers';
 import {promptForInput} from '../testing/helpers';
 import {tryParseSystemError} from './errors';
 
@@ -37,6 +40,38 @@ export async function handleRelease({
 
   const codaClient = createCodaClient(apiToken, formattedEndpoint);
 
+  // Check if release tracking is enabled (lock file exists)
+  const shouldTrackRelease = lockFileExists(manifestDir);
+
+  // Git state validation (only if tracking releases)
+  let gitState: GitState | undefined;
+  if (shouldTrackRelease) {
+    gitState = getGitState(manifestDir);
+
+    if (gitState.isGitRepo) {
+      // Block release if there are uncommitted changes
+      if (gitState.isDirty) {
+        return printAndExit(
+          'Cannot release with uncommitted changes.\n' +
+            'Please commit your changes first, then run the release command again.',
+        );
+      }
+
+      // Warn if not on main/master branch
+      if (gitState.currentBranch && !['main', 'master'].includes(gitState.currentBranch)) {
+        const shouldContinue = promptForInput(
+          `Warning: You are releasing from branch '${gitState.currentBranch}', not 'main'.\n` +
+            `Continue anyway? (y/N) `,
+          {yesOrNo: true},
+        );
+        if (shouldContinue !== 'yes') {
+          return process.exit(1);
+        }
+      }
+    }
+  }
+
+  // Resolve pack version
   let packVersion = explicitPackVersion;
   if (!packVersion) {
     try {
@@ -68,8 +103,40 @@ export async function handleRelease({
     packVersion = latestPackVersion;
   }
 
+  // Create release via API
   await handleResponse(codaClient.createPackRelease(packId, {}, {packVersion, releaseNotes: notes}));
-  return printAndExit('Success!', 0);
+
+  print(`Pack version ${packVersion} released successfully.`);
+
+  // Track release in lock file and create git tag
+  if (shouldTrackRelease) {
+    const packPath = computePackPath(manifestDir);
+    const gitTag = `pack/${packPath}/release-v${packVersion}`;
+
+    // Add to lock file
+    addReleaseToLockFile(manifestDir, {
+      version: packVersion,
+      releasedAt: new Date().toISOString(),
+      notes,
+      commitSha: gitState?.commitSha || null,
+      gitTag: gitState?.isGitRepo ? gitTag : undefined,
+    });
+    print(`Updated .coda-pack.lock.json`);
+
+    // Create git tag
+    if (gitState?.isGitRepo) {
+      if (gitTagExists(gitTag, manifestDir)) {
+        print(`Git tag ${gitTag} already exists, skipping.`);
+      } else if (createGitTag(gitTag, manifestDir)) {
+        print(`Created git tag: ${gitTag}`);
+        print(`Run 'git push --tags' to push the tag to remote.`);
+      } else {
+        print(`Warning: Failed to create git tag ${gitTag}`);
+      }
+    }
+  }
+
+  return printAndExit('Done!', 0);
 }
 
 async function handleResponse<T extends any>(p: Promise<T>): Promise<T> {
