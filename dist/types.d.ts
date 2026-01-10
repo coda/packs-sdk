@@ -1068,27 +1068,27 @@ export declare enum ToolType {
     Summarizer = "Summarizer",
     /**
      * Tool that provides access to MCP capabilities.
-     * @hidden
+     * @internal
      */
     MCP = "MCP",
     /**
      * Tool that provides access to contact resolution capabilities.
-     * @hidden
+     * @internal
      */
     ContactResolution = "ContactResolution",
     /**
      * Tool that provides access to Coda docs and tables capabilities.
-     * @hidden
+     * @internal
      */
     CodaDocsAndTables = "CodaDocsAndTables",
     /**
      * Tool that enables dynamic generation of suggested follow-up prompts.
-     * @hidden
+     * @internal
      */
     DynamicSuggestedPrompt = "DynamicSuggestedPrompt",
     /**
      * Tool that enables searching the public internet for up-to-date information.
-     * @hidden
+     * @internal
      */
     WebSearch = "WebSearch"
 }
@@ -1236,7 +1236,7 @@ export interface SummarizerTool extends BaseTool<ToolType.Summarizer> {
 }
 /**
  * Tool that provides access to MCP capabilities.
- * @hidden
+ * @internal
  */
 export interface MCPTool extends BaseTool<ToolType.MCP> {
     /**
@@ -1246,19 +1246,19 @@ export interface MCPTool extends BaseTool<ToolType.MCP> {
 }
 /**
  * Tool that provides access to contact resolution capabilities.
- * @hidden
+ * @internal
  */
 export interface ContactResolutionTool extends BaseTool<ToolType.ContactResolution> {
 }
 /**
  * Tool that provides access to Coda docs and tables capabilities.
- * @hidden
+ * @internal
  */
 export interface CodaDocsAndTablesTool extends BaseTool<ToolType.CodaDocsAndTables> {
 }
 /**
  * Tool that enables dynamic generation of contextual follow-up suggestions.
- * @hidden
+ * @internal
  */
 export interface DynamicSuggestedPromptTool extends BaseTool<ToolType.DynamicSuggestedPrompt> {
 }
@@ -1266,7 +1266,7 @@ export interface DynamicSuggestedPromptTool extends BaseTool<ToolType.DynamicSug
  * Tool that enables searching the public internet for up-to-date information.
  * When enabled, the agent can search the web to retrieve current information
  * that may not be available in the user's workspace or knowledge base.
- * @hidden
+ * @internal
  */
 export interface WebSearchTool extends BaseTool<ToolType.WebSearch> {
 }
