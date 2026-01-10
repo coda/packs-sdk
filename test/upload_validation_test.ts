@@ -6083,7 +6083,7 @@ describe('Pack metadata Validation', async () => {
         {
           path: 'skills[0].tools[0].type',
           message:
-            "Invalid discriminator value. Expected 'Pack' | 'Knowledge' | 'ScreenAnnotation' | 'AssistantMessage' | 'Summarizer' | 'MCP' | 'ContactResolution' | 'CodaDocsAndTables' | 'DynamicSuggestedPrompt'",
+            "Invalid discriminator value. Expected 'Pack' | 'Knowledge' | 'ScreenAnnotation' | 'AssistantMessage' | 'Summarizer' | 'MCP' | 'ContactResolution' | 'CodaDocsAndTables' | 'DynamicSuggestedPrompt' | 'ResponseEmbedding'",
         },
       ]);
     });

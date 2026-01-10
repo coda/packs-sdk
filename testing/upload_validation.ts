@@ -94,6 +94,8 @@ import {ReservedAuthenticationNames} from '../types';
 import {ScaleIconSet} from '../schema';
 import type {ScaleSchema} from '../schema';
 import type {Schema} from '../schema';
+import type {ResponseEmbeddingTool} from '../types';
+import {ResponseEmbeddingType} from '../types';
 import type {ScreenAnnotationTool} from '../types';
 import {ScreenAnnotationType} from '../types';
 import type {SetEndpoint} from '../types';
@@ -2182,6 +2184,20 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     annotation: screenAnnotationSchema,
   });
 
+  const responseEmbeddingSchema = z.discriminatedUnion('type', [
+    z.object({
+      type: z.literal(ResponseEmbeddingType.InsertableBlock),
+    }),
+    z.object({
+      type: z.literal(ResponseEmbeddingType.Carousel),
+    }),
+  ]);
+
+  const responseEmbeddingToolSchema = zodCompleteStrictObject<ResponseEmbeddingTool>({
+    type: z.literal(ToolType.ResponseEmbedding),
+    embedding: responseEmbeddingSchema,
+  });
+
   const assistantMessageToolSchema = zodCompleteStrictObject<AssistantMessageTool>({
     type: z.literal(ToolType.AssistantMessage),
   });
@@ -2222,6 +2238,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     contactResolutionToolSchema,
     codaDocsToolSchema,
     dynamicSuggestedPromptToolSchema,
+    responseEmbeddingToolSchema,
   ]);
   const skillSchema = zodCompleteObject<Skill>({
     name: z
