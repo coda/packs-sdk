@@ -7,6 +7,7 @@ import {lockFileExists} from '../cli/lock_file';
 import mockFs from 'mock-fs';
 import path from 'path';
 import {readLockFile} from '../cli/lock_file';
+import sinon from 'sinon';
 import {writeLockFile} from '../cli/lock_file';
 
 const PROJECT_DIR = '/myproject';
@@ -18,6 +19,7 @@ describe('Lock file', () => {
 
   afterEach(() => {
     mockFs.restore();
+    sinon.restore();
   });
 
   describe('lockFileExists', () => {
