@@ -1,11 +1,11 @@
+import {LOCK_FILE_NAME} from '../cli/lock_file';
 import type {PackLockFile} from '../cli/lock_file';
 import type {PackReleaseLockEntry} from '../cli/lock_file';
-import mockFs from 'mock-fs';
-import path from 'path';
-import {LOCK_FILE_NAME} from '../cli/lock_file';
 import {addReleaseToLockFile} from '../cli/lock_file';
 import {getLockFilePath} from '../cli/lock_file';
 import {lockFileExists} from '../cli/lock_file';
+import mockFs from 'mock-fs';
+import path from 'path';
 import {readLockFile} from '../cli/lock_file';
 import {writeLockFile} from '../cli/lock_file';
 
