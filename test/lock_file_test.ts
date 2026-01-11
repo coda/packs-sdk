@@ -13,9 +13,7 @@ const PROJECT_DIR = '/myproject';
 
 describe('Lock file', () => {
   beforeEach(() => {
-    mockFs({
-      [PROJECT_DIR]: {},
-    });
+    mockFs();
   });
 
   afterEach(() => {
