@@ -1,4 +1,4 @@
-import fs from 'fs-extra';
+import fs from 'fs';
 import path from 'path';
 
 export const LOCK_FILE_NAME = '.coda-pack.lock.json';
@@ -47,7 +47,8 @@ export function readLockFile(manifestDir: string): PackLockFile | undefined {
     return undefined;
   }
   try {
-    return fs.readJSONSync(lockFilePath) as PackLockFile;
+    const content = fs.readFileSync(lockFilePath, 'utf8');
+    return JSON.parse(content) as PackLockFile;
   } catch {
     // If file is corrupted or invalid JSON, return empty lock file
     return {releases: []};
@@ -60,7 +61,7 @@ export function readLockFile(manifestDir: string): PackLockFile | undefined {
  */
 export function writeLockFile(manifestDir: string, lockFile: PackLockFile): void {
   const lockFilePath = path.join(manifestDir, LOCK_FILE_NAME);
-  fs.writeJSONSync(lockFilePath, lockFile, {spaces: 2});
+  fs.writeFileSync(lockFilePath, JSON.stringify(lockFile, null, 2));
 }
 
 /**
