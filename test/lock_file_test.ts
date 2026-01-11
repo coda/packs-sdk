@@ -58,7 +58,6 @@ describe('Lock file', () => {
       const result = readLockFile(PROJECT_DIR);
       assert.deepEqual(result, lockFile);
     });
-
   });
 
   describe('writeLockFile', () => {
