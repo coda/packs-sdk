@@ -1,5 +1,6 @@
-import fs from 'fs';
 import path from 'path';
+import {readFile} from '../testing/helpers';
+import {writeJSONFile} from '../testing/helpers';
 
 export const LOCK_FILE_NAME = '.coda-pack.lock.json';
 
@@ -34,7 +35,7 @@ export interface PackLockFile {
  */
 export function lockFileExists(manifestDir: string): boolean {
   const lockFilePath = path.join(manifestDir, LOCK_FILE_NAME);
-  return fs.existsSync(lockFilePath);
+  return readFile(lockFilePath) !== undefined;
 }
 
 /**
@@ -43,12 +44,12 @@ export function lockFileExists(manifestDir: string): boolean {
  */
 export function readLockFile(manifestDir: string): PackLockFile | undefined {
   const lockFilePath = path.join(manifestDir, LOCK_FILE_NAME);
-  if (!fs.existsSync(lockFilePath)) {
+  const content = readFile(lockFilePath);
+  if (!content) {
     return undefined;
   }
   try {
-    const content = fs.readFileSync(lockFilePath, 'utf8');
-    return JSON.parse(content) as PackLockFile;
+    return JSON.parse(content.toString()) as PackLockFile;
   } catch {
     // If file is corrupted or invalid JSON, return empty lock file
     return {releases: []};
@@ -61,7 +62,7 @@ export function readLockFile(manifestDir: string): PackLockFile | undefined {
  */
 export function writeLockFile(manifestDir: string, lockFile: PackLockFile): void {
   const lockFilePath = path.join(manifestDir, LOCK_FILE_NAME);
-  fs.writeFileSync(lockFilePath, JSON.stringify(lockFile, null, 2));
+  writeJSONFile(lockFilePath, lockFile);
 }
 
 /**

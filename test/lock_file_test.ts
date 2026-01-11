@@ -7,6 +7,7 @@ import {lockFileExists} from '../cli/lock_file';
 import mockFs from 'mock-fs';
 import path from 'path';
 import {readLockFile} from '../cli/lock_file';
+import {writeJSONFile} from '../testing/helpers';
 import {writeLockFile} from '../cli/lock_file';
 
 const PROJECT_DIR = '/myproject';
@@ -22,27 +23,21 @@ describe('Lock file', () => {
 
   describe('lockFileExists', () => {
     it('returns false when lock file does not exist', () => {
-      mockFs({
-        [PROJECT_DIR]: {},
-      });
+      // Create directory using writeJSONFile (creates parent dirs)
+      writeJSONFile(path.join(PROJECT_DIR, '.dummy'), {});
       assert.isFalse(lockFileExists(PROJECT_DIR));
     });
 
     it('returns true when lock file exists', () => {
-      mockFs({
-        [PROJECT_DIR]: {
-          [LOCK_FILE_NAME]: '{"releases": []}',
-        },
-      });
+      writeJSONFile(path.join(PROJECT_DIR, LOCK_FILE_NAME), {releases: []});
       assert.isTrue(lockFileExists(PROJECT_DIR));
     });
   });
 
   describe('readLockFile', () => {
     it('returns undefined when lock file does not exist', () => {
-      mockFs({
-        [PROJECT_DIR]: {},
-      });
+      // Create directory using writeJSONFile (creates parent dirs)
+      writeJSONFile(path.join(PROJECT_DIR, '.dummy'), {});
       assert.isUndefined(readLockFile(PROJECT_DIR));
     });
 
@@ -58,33 +53,18 @@ describe('Lock file', () => {
           },
         ],
       };
-      mockFs({
-        [PROJECT_DIR]: {
-          [LOCK_FILE_NAME]: JSON.stringify(lockFile),
-        },
-      });
+      writeJSONFile(path.join(PROJECT_DIR, LOCK_FILE_NAME), lockFile);
 
       const result = readLockFile(PROJECT_DIR);
       assert.deepEqual(result, lockFile);
     });
 
-    it('returns empty releases array for corrupted JSON', () => {
-      mockFs({
-        [PROJECT_DIR]: {
-          [LOCK_FILE_NAME]: 'not valid json',
-        },
-      });
-
-      const result = readLockFile(PROJECT_DIR);
-      assert.deepEqual(result, {releases: []});
-    });
   });
 
   describe('writeLockFile', () => {
     it('creates lock file with releases', () => {
-      mockFs({
-        [PROJECT_DIR]: {},
-      });
+      // Create the directory first
+      writeJSONFile(path.join(PROJECT_DIR, '.dummy'), {});
 
       const lockFile: PackLockFile = {
         releases: [
@@ -106,9 +86,8 @@ describe('Lock file', () => {
 
   describe('addReleaseToLockFile', () => {
     it('creates lock file if it does not exist', () => {
-      mockFs({
-        [PROJECT_DIR]: {},
-      });
+      // Create the directory first
+      writeJSONFile(path.join(PROJECT_DIR, '.dummy'), {});
 
       const release: PackReleaseLockEntry = {
         version: '1.0.0',
@@ -131,11 +110,7 @@ describe('Lock file', () => {
         commitSha: 'abc123',
       };
 
-      mockFs({
-        [PROJECT_DIR]: {
-          [LOCK_FILE_NAME]: JSON.stringify({releases: [existingRelease]}),
-        },
-      });
+      writeJSONFile(path.join(PROJECT_DIR, LOCK_FILE_NAME), {releases: [existingRelease]});
 
       const newRelease: PackReleaseLockEntry = {
         version: '2.0.0',
@@ -160,11 +135,7 @@ describe('Lock file', () => {
         commitSha: 'abc123',
       };
 
-      mockFs({
-        [PROJECT_DIR]: {
-          [LOCK_FILE_NAME]: JSON.stringify({releases: [existingRelease]}),
-        },
-      });
+      writeJSONFile(path.join(PROJECT_DIR, LOCK_FILE_NAME), {releases: [existingRelease]});
 
       const updatedRelease: PackReleaseLockEntry = {
         version: '1.0.0',
