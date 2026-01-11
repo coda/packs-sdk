@@ -7,14 +7,15 @@ import {lockFileExists} from '../cli/lock_file';
 import mockFs from 'mock-fs';
 import path from 'path';
 import {readLockFile} from '../cli/lock_file';
-import {writeJSONFile} from '../testing/helpers';
 import {writeLockFile} from '../cli/lock_file';
 
 const PROJECT_DIR = '/myproject';
 
 describe('Lock file', () => {
   beforeEach(() => {
-    mockFs();
+    mockFs({
+      [PROJECT_DIR]: {},
+    });
   });
 
   afterEach(() => {
@@ -23,21 +24,17 @@ describe('Lock file', () => {
 
   describe('lockFileExists', () => {
     it('returns false when lock file does not exist', () => {
-      // Create directory using writeJSONFile (creates parent dirs)
-      writeJSONFile(path.join(PROJECT_DIR, '.dummy'), {});
       assert.isFalse(lockFileExists(PROJECT_DIR));
     });
 
     it('returns true when lock file exists', () => {
-      writeJSONFile(path.join(PROJECT_DIR, LOCK_FILE_NAME), {releases: []});
+      writeLockFile(PROJECT_DIR, {releases: []});
       assert.isTrue(lockFileExists(PROJECT_DIR));
     });
   });
 
   describe('readLockFile', () => {
     it('returns undefined when lock file does not exist', () => {
-      // Create directory using writeJSONFile (creates parent dirs)
-      writeJSONFile(path.join(PROJECT_DIR, '.dummy'), {});
       assert.isUndefined(readLockFile(PROJECT_DIR));
     });
 
@@ -53,7 +50,7 @@ describe('Lock file', () => {
           },
         ],
       };
-      writeJSONFile(path.join(PROJECT_DIR, LOCK_FILE_NAME), lockFile);
+      writeLockFile(PROJECT_DIR, lockFile);
 
       const result = readLockFile(PROJECT_DIR);
       assert.deepEqual(result, lockFile);
@@ -62,9 +59,6 @@ describe('Lock file', () => {
 
   describe('writeLockFile', () => {
     it('creates lock file with releases', () => {
-      // Create the directory first
-      writeJSONFile(path.join(PROJECT_DIR, '.dummy'), {});
-
       const lockFile: PackLockFile = {
         releases: [
           {
@@ -85,9 +79,6 @@ describe('Lock file', () => {
 
   describe('addReleaseToLockFile', () => {
     it('creates lock file if it does not exist', () => {
-      // Create the directory first
-      writeJSONFile(path.join(PROJECT_DIR, '.dummy'), {});
-
       const release: PackReleaseLockEntry = {
         version: '1.0.0',
         releasedAt: '2026-01-10T10:00:00.000Z',
@@ -109,7 +100,7 @@ describe('Lock file', () => {
         commitSha: 'abc123',
       };
 
-      writeJSONFile(path.join(PROJECT_DIR, LOCK_FILE_NAME), {releases: [existingRelease]});
+      writeLockFile(PROJECT_DIR, {releases: [existingRelease]});
 
       const newRelease: PackReleaseLockEntry = {
         version: '2.0.0',
@@ -134,7 +125,7 @@ describe('Lock file', () => {
         commitSha: 'abc123',
       };
 
-      writeJSONFile(path.join(PROJECT_DIR, LOCK_FILE_NAME), {releases: [existingRelease]});
+      writeLockFile(PROJECT_DIR, {releases: [existingRelease]});
 
       const updatedRelease: PackReleaseLockEntry = {
         version: '1.0.0',
