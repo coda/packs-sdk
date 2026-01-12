@@ -1427,12 +1427,12 @@ interface BaseResponseEmbedding<T extends ResponseEmbeddingType> {
 /**
  * Response embedding presented as a Copyable Block.
  */
-interface CopyableBlockResponseEmbedding extends BaseResponseEmbedding<ResponseEmbeddingType.CopyableBlock> {}
+export interface CopyableBlockResponseEmbedding extends BaseResponseEmbedding<ResponseEmbeddingType.CopyableBlock> {}
 
 /**
  * Response embedding presented as a Carousel.
  */
-interface CarouselResponseEmbedding extends BaseResponseEmbedding<ResponseEmbeddingType.Carousel> {}
+export interface CarouselResponseEmbedding extends BaseResponseEmbedding<ResponseEmbeddingType.Carousel> {}
 
 /**
  * Union of all supported response embedding formats.
