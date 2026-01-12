@@ -29,6 +29,7 @@ import {PostSetupType} from '../types';
 import {PrecannedDate} from '../api_types';
 import {PrecannedDateRange} from '..';
 import {ReservedAuthenticationNames} from '../types';
+import {ResponseEmbeddingType} from '../types';
 import {ScaleIconSet} from '../schema';
 import {ScreenAnnotationType} from '../types';
 import type {Skill} from '../types';
@@ -6034,6 +6035,18 @@ describe('Pack metadata Validation', async () => {
               {
                 type: ToolType.DynamicSuggestedPrompt,
               },
+              {
+                type: ToolType.ResponseEmbedding,
+                embedding: {
+                  type: ResponseEmbeddingType.CopyableBlock,
+                },
+              },
+              {
+                type: ToolType.ResponseEmbedding,
+                embedding: {
+                  type: ResponseEmbeddingType.Carousel,
+                },
+              },
             ],
           },
         ],
@@ -6070,7 +6083,7 @@ describe('Pack metadata Validation', async () => {
         {
           path: 'skills[0].tools[0].type',
           message:
-            "Invalid discriminator value. Expected 'Pack' | 'Knowledge' | 'ScreenAnnotation' | 'AssistantMessage' | 'Summarizer' | 'MCP' | 'ContactResolution' | 'CodaDocsAndTables' | 'DynamicSuggestedPrompt'",
+            "Invalid discriminator value. Expected 'Pack' | 'Knowledge' | 'ScreenAnnotation' | 'AssistantMessage' | 'Summarizer' | 'MCP' | 'ContactResolution' | 'CodaDocsAndTables' | 'DynamicSuggestedPrompt' | 'ResponseEmbedding'",
         },
       ]);
     });
@@ -6096,6 +6109,8 @@ describe('Pack metadata Validation', async () => {
         case ToolType.CodaDocsAndTables:
           break;
         case ToolType.DynamicSuggestedPrompt:
+          break;
+        case ToolType.ResponseEmbedding:
           break;
         case ToolType.WebSearch:
           break;

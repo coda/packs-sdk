@@ -1219,6 +1219,10 @@ export enum ToolType {
    * @internal
    */
   WebSearch = 'WebSearch',
+  /**
+   * Tool that enables AI responses to be embedded in various formats within Coda documents.
+   */
+  ResponseEmbedding = 'ResponseEmbedding',
 }
 
 /**
@@ -1413,6 +1417,55 @@ export interface DynamicSuggestedPromptTool extends BaseTool<ToolType.DynamicSug
 export interface WebSearchTool extends BaseTool<ToolType.WebSearch> {}
 
 /**
+ * The type of response embedding format to use.
+ */
+export enum ResponseEmbeddingType {
+  /**
+   * Embed the response as a text block that can be copied or inserted in the document.
+   */
+  CopyableBlock = 'CopyableBlock',
+  /**
+   * Embed the response as a carousel of items that can be browsed.
+   */
+  Carousel = 'Carousel',
+}
+
+/**
+ * Base class for response embeddings.
+ */
+interface BaseResponseEmbedding<T extends ResponseEmbeddingType> {
+  /**
+   * Type of the response embedding.
+   */
+  type: T;
+}
+
+/**
+ * Response embedding presented as a Copyable Block.
+ */
+export interface CopyableBlockResponseEmbedding extends BaseResponseEmbedding<ResponseEmbeddingType.CopyableBlock> {}
+
+/**
+ * Response embedding presented as a Carousel.
+ */
+export interface CarouselResponseEmbedding extends BaseResponseEmbedding<ResponseEmbeddingType.Carousel> {}
+
+/**
+ * Union of all supported response embedding formats.
+ */
+export type ResponseEmbedding = CopyableBlockResponseEmbedding | CarouselResponseEmbedding;
+
+/**
+ * Tool that enables AI responses to be embedded in various formats within Coda documents.
+ */
+export interface ResponseEmbeddingTool extends BaseTool<ToolType.ResponseEmbedding> {
+  /**
+   * The embedding format configuration for the response.
+   */
+  embedding: ResponseEmbedding;
+}
+
+/**
  * Definition of an MCP server that the pack can connect to.
  */
 export interface MCPServer {
@@ -1442,6 +1495,7 @@ export interface ToolMap {
   [ToolType.CodaDocsAndTables]: CodaDocsAndTablesTool;
   [ToolType.DynamicSuggestedPrompt]: DynamicSuggestedPromptTool;
   [ToolType.WebSearch]: WebSearchTool;
+  [ToolType.ResponseEmbedding]: ResponseEmbeddingTool;
 }
 
 /**
