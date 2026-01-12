@@ -5726,7 +5726,10 @@ export interface CodaDocsAndTablesTool extends BaseTool<ToolType.CodaDocsAndTabl
  */
 export interface DynamicSuggestedPromptTool extends BaseTool<ToolType.DynamicSuggestedPrompt> {
 }
-declare enum ResponseEmbeddingType {
+/**
+ * The type of response embedding format to use.
+ */
+export declare enum ResponseEmbeddingType {
 	/**
 	 * Embed the response as an insertable block that can be added to the document.
 	 */
@@ -5736,11 +5739,20 @@ declare enum ResponseEmbeddingType {
 	 */
 	Carousel = "Carousel"
 }
+/**
+ * Base class for response embeddings.
+ */
 export interface BaseResponseEmbedding<T extends ResponseEmbeddingType> {
 	type: T;
 }
+/**
+ * Response embedding presented as an Insertable Block.
+ */
 export interface InsertableBlockResponseEmbedding extends BaseResponseEmbedding<ResponseEmbeddingType.InsertableBlock> {
 }
+/**
+ * Response embedding presented as a Carousel.
+ */
 export interface CarouselResponseEmbedding extends BaseResponseEmbedding<ResponseEmbeddingType.Carousel> {
 }
 /**

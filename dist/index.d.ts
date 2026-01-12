@@ -285,6 +285,8 @@ export { KnowledgeToolSourceType } from './types';
 export type { ScreenAnnotation } from './types';
 export { ScreenAnnotationType } from './types';
 export { ToolType } from './types';
+export type { ResponseEmbeddingTool } from './types';
+export { ResponseEmbeddingType } from './types';
 export type { InvocationError } from './api_types';
 export type { HttpStatusInvocationError } from './api_types';
 export type { HttpStatusCode } from './types';
