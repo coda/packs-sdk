@@ -22,8 +22,8 @@ Embed the response as a carousel of items that can be browsed.
 
 ***
 
-### InsertableBlock
+### CopyableBlock
 
-> **InsertableBlock**: `"InsertableBlock"`
+> **CopyableBlock**: `"CopyableBlock"`
 
-Embed the response as an insertable block that can be added to the document.
+Embed the response as a text block that can be copied or inserted in the document.

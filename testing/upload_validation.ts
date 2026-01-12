@@ -2186,7 +2186,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
 
   const responseEmbeddingSchema = z.discriminatedUnion('type', [
     z.object({
-      type: z.literal(ResponseEmbeddingType.InsertableBlock),
+      type: z.literal(ResponseEmbeddingType.CopyableBlock),
     }),
     z.object({
       type: z.literal(ResponseEmbeddingType.Carousel),

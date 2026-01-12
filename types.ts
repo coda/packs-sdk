@@ -1408,9 +1408,9 @@ export interface DynamicSuggestedPromptTool extends BaseTool<ToolType.DynamicSug
  */
 export enum ResponseEmbeddingType {
   /**
-   * Embed the response as an insertable block that can be added to the document.
+   * Embed the response as a text block that can be copied or inserted in the document.
    */
-  InsertableBlock = 'InsertableBlock',
+  CopyableBlock = 'CopyableBlock',
   /**
    * Embed the response as a carousel of items that can be browsed.
    */
@@ -1425,9 +1425,9 @@ interface BaseResponseEmbedding<T extends ResponseEmbeddingType> {
 }
 
 /**
- * Response embedding presented as an Insertable Block.
+ * Response embedding presented as a Copyable Block.
  */
-interface InsertableBlockResponseEmbedding extends BaseResponseEmbedding<ResponseEmbeddingType.InsertableBlock> {}
+interface CopyableBlockResponseEmbedding extends BaseResponseEmbedding<ResponseEmbeddingType.CopyableBlock> {}
 
 /**
  * Response embedding presented as a Carousel.
@@ -1437,7 +1437,7 @@ interface CarouselResponseEmbedding extends BaseResponseEmbedding<ResponseEmbedd
 /**
  * Union of all supported response embedding formats.
  */
-export type ResponseEmbedding = InsertableBlockResponseEmbedding | CarouselResponseEmbedding;
+export type ResponseEmbedding = CopyableBlockResponseEmbedding | CarouselResponseEmbedding;
 
 /**
  * Tool that enables AI responses to be embedded in various formats within Coda documents.

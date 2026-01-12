@@ -307,9 +307,9 @@ var ScreenAnnotationType;
 var ResponseEmbeddingType;
 (function (ResponseEmbeddingType) {
     /**
-     * Embed the response as an insertable block that can be added to the document.
+     * Embed the response as a text block that can be copied or inserted in the document.
      */
-    ResponseEmbeddingType["InsertableBlock"] = "InsertableBlock";
+    ResponseEmbeddingType["CopyableBlock"] = "CopyableBlock";
     /**
      * Embed the response as a carousel of items that can be browsed.
      */
