@@ -20,7 +20,7 @@ Tool that enables AI responses to be embedded in various formats within Coda doc
 
 ### embedding
 
-> **embedding**: `ResponseEmbedding`
+> **embedding**: [`ResponseEmbedding`](../type-aliases/ResponseEmbedding.md)
 
 The embedding format configuration for the response.
 
