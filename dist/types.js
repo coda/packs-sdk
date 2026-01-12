@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HttpStatusCode = exports.SkillModel = exports.ResponseEmbeddingType = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.ToolType = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
+exports.HttpStatusCode = exports.SkillModel = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.ToolType = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
 /**
  * @deprecated
  */
@@ -248,28 +248,29 @@ var ToolType;
     ToolType["Summarizer"] = "Summarizer";
     /**
      * Tool that provides access to MCP capabilities.
-     * @hidden
+     * @internal
      */
     ToolType["MCP"] = "MCP";
     /**
      * Tool that provides access to contact resolution capabilities.
-     * @hidden
+     * @internal
      */
     ToolType["ContactResolution"] = "ContactResolution";
     /**
      * Tool that provides access to Coda docs and tables capabilities.
-     * @hidden
+     * @internal
      */
     ToolType["CodaDocsAndTables"] = "CodaDocsAndTables";
     /**
      * Tool that enables dynamic generation of suggested follow-up prompts.
-     * @hidden
+     * @internal
      */
     ToolType["DynamicSuggestedPrompt"] = "DynamicSuggestedPrompt";
     /**
-     * Tool that enables AI responses to be embedded in various formats within Coda documents.
+     * Tool that enables searching the public internet for up-to-date information.
+     * @internal
      */
-    ToolType["ResponseEmbedding"] = "ResponseEmbedding";
+    ToolType["WebSearch"] = "WebSearch";
 })(ToolType || (exports.ToolType = ToolType = {}));
 /**
  * The type of knowledge source to use.
@@ -301,20 +302,6 @@ var ScreenAnnotationType;
      */
     ScreenAnnotationType["Guide"] = "Guide";
 })(ScreenAnnotationType || (exports.ScreenAnnotationType = ScreenAnnotationType = {}));
-/**
- * The type of response embedding format to use.
- */
-var ResponseEmbeddingType;
-(function (ResponseEmbeddingType) {
-    /**
-     * Embed the response as a text block that can be copied or inserted in the document.
-     */
-    ResponseEmbeddingType["CopyableBlock"] = "CopyableBlock";
-    /**
-     * Embed the response as a carousel of items that can be browsed.
-     */
-    ResponseEmbeddingType["Carousel"] = "Carousel";
-})(ResponseEmbeddingType || (exports.ResponseEmbeddingType = ResponseEmbeddingType = {}));
 /**
  * The supported LLM models for a skill.
  *

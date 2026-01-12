@@ -6112,6 +6112,8 @@ describe('Pack metadata Validation', async () => {
           break;
         case ToolType.ResponseEmbedding:
           break;
+        case ToolType.WebSearch:
+          break;
         case 'CustomTool':
           break;
         default:
