@@ -1417,12 +1417,21 @@ export enum ResponseEmbeddingType {
   Carousel = 'Carousel',
 }
 
+/**
+ * Base class for response embeddings.
+ */
 interface BaseResponseEmbedding<T extends ResponseEmbeddingType> {
   type: T;
 }
 
+/**
+ * Response embedding presented as an Insertable Block.
+ */
 interface InsertableBlockResponseEmbedding extends BaseResponseEmbedding<ResponseEmbeddingType.InsertableBlock> {}
 
+/**
+ * Response embedding presented as a Carousel.
+ */
 interface CarouselResponseEmbedding extends BaseResponseEmbedding<ResponseEmbeddingType.Carousel> {}
 
 /**
