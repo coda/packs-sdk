@@ -22,6 +22,8 @@ Response embedding presented as a Carousel.
 
 > **type**: [`Carousel`](../enumerations/ResponseEmbeddingType.md#carousel)
 
+Type of the response embedding.
+
 #### Inherited from
 
 `BaseResponseEmbedding.type`

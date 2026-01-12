@@ -22,6 +22,8 @@ Response embedding presented as a Copyable Block.
 
 > **type**: [`CopyableBlock`](../enumerations/ResponseEmbeddingType.md#copyableblock)
 
+Type of the response embedding.
+
 #### Inherited from
 
 `BaseResponseEmbedding.type`

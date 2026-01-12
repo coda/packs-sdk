@@ -5743,6 +5743,9 @@ export declare enum ResponseEmbeddingType {
  * Base class for response embeddings.
  */
 export interface BaseResponseEmbedding<T extends ResponseEmbeddingType> {
+	/**
+	 * Type of the response embedding.
+	 */
 	type: T;
 }
 /**
