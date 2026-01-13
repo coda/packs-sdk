@@ -1,0 +1,30 @@
+name: Setup Node Environment
+description: Sets up Node.js with pnpm, installs dependencies, and configures necessary tools
+
+runs:
+  using: composite
+  steps:
+    - name: Install basic tools
+      shell: bash
+      run: sudo apt update && sudo apt install -y g++ build-essential python3 python3-pip && sudo python3 -m pip install pipenv --break-system-packages
+
+    - name: Use Node 22
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
+
+    - name: Cache pnpm dependencies
+      uses: actions/cache@v4
+      with:
+        path: node_modules
+        key: pnpm-v7-dependencies-${{ hashFiles('package.json') }}
+        restore-keys: |
+          pnpm-v7-dependencies-
+
+    - name: Install pnpm
+      shell: bash
+      run: make _bootstrap-install-pnpm
+
+    - name: Install Node dependencies
+      shell: bash
+      run: make _bootstrap-node

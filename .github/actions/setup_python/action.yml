@@ -1,0 +1,19 @@
+name: Setup Python Environment
+description: Sets up pipenv and dependencies
+
+runs:
+  using: composite
+  steps:
+    - name: Cache pipenv
+      uses: actions/cache@v4
+      with:
+        path: .venv
+        key: pipenv-${{ hashFiles('Pipfile.lock') }}
+
+    - name: Bootstrap pipenv
+      shell: bash
+      run: make _bootstrap-python
+
+    - name: Install image libraries
+      shell: bash
+      run: make _bootstrap-doc-tools

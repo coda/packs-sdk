@@ -1,0 +1,260 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: ['main']
+
+concurrency:
+  # Cancel in progress runs on this workflow if not running on the main branch.
+  group: ${{ github.workflow }}-${{ github.ref_name != 'main' && github.ref || github.run_id }}
+  cancel-in-progress: true
+
+env:
+  AWS_REGION: us-west-2
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup_node
+
+      - name: Test
+        run: make test
+
+  validate-no-changes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup_node
+      - uses: ./.github/actions/setup_python
+
+      - name: Ensure clean dist diff
+        run: make validate-no-changes
+
+      - name: Upload diff artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: diffs
+          path: /tmp/diffs
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup_node
+
+      - name: Lint
+        run: make lint
+
+  check-formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup_node
+
+      - name: Check formatting
+        run: make autoformat-all-no-fix
+
+  validate-samples:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup_node
+
+      - name: Validate samples
+        run: make validate-samples
+
+  build-docs-head:
+    runs-on: ubuntu-latest
+    if: github.ref_name == 'main'
+    environment:
+      name: head-documentation
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup_node
+      - uses: ./.github/actions/setup_python
+
+      - name: Cache mkdocs
+        uses: actions/cache@v4
+        with:
+          path: .cache
+          key: mkdocs-${{ hashFiles('mkdocs.yml') }}
+
+      - name: Build Typedoc
+        run: DOC_DISABLE_SOURCES=false DOC_GIT_REVISION="${{ github.sha }}" make docs
+
+      - name: Build MkDocs
+        run: MK_DOCS_SITE_URL="https://head.coda.io/packs/build/latest/" make build-mkdocs
+
+      - name: Upload site artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-head
+          path: site
+
+  push-head-docs:
+    runs-on: ubuntu-latest
+    environment:
+      name: head-documentation
+    needs: build-docs-head
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup_node
+
+      - name: Download site artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: site-head
+          path: site
+
+      - name: Configure AWS credentials
+        uses: ./.github/actions/setup_aws_profile
+        with:
+          role-to-assume: arn:aws:iam::020355488663:role/automation/CICDRole
+          profile-name: head
+          aws-region: ${{ env.AWS_REGION }}
+          role-session-name: github-actions-packs-sdk-push-head-docs
+
+      - name: Deploy to Head
+        run: make publish-docs-head FLAGS=--forceUpload
+
+  build-docs-staging:
+    runs-on: ubuntu-latest
+    environment:
+      name: staging-documentation
+    needs: push-head-docs
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup_node
+      - uses: ./.github/actions/setup_python
+
+      - name: Cache mkdocs
+        uses: actions/cache@v4
+        with:
+          path: .cache
+          key: mkdocs-${{ hashFiles('mkdocs.yml') }}
+
+      - name: Build Typedoc
+        run: DOC_DISABLE_SOURCES=false DOC_GIT_REVISION="${{ github.sha }}" make docs
+
+      - name: Build MkDocs
+        run: MK_DOCS_SITE_URL="https://staging.coda.io/packs/build/latest/" make build-mkdocs
+
+      - name: Upload site artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-staging
+          path: site
+
+  push-staging-docs:
+    runs-on: ubuntu-latest
+    environment:
+      name: staging-documentation
+    needs: [push-head-docs, build-docs-staging]
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup_node
+
+      - name: Download site artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: site-staging
+          path: site
+
+      - name: Configure AWS credentials
+        uses: ./.github/actions/setup_aws_profile
+        with:
+          role-arn: arn:aws:iam::053716345611:role/automation/CICDRole
+          profile-name: staging
+          aws-region: ${{ env.AWS_REGION }}
+          role-session-name: github-actions-packs-sdk-push-staging-docs
+
+      - name: Deploy to Staging
+        run: make publish-docs-staging FLAGS=--forceUpload
+
+      # - name: Notify Slack
+      #   if: success()
+      #   uses: slackapi/slack-github-action@v1
+      #   with:
+      #     payload: |
+      #       {
+      #         "text": "Packs SDK staging docs deployed. Awaiting approval for production deployment.",
+      #         "blocks": [
+      #           {
+      #             "type": "section",
+      #             "text": {
+      #               "type": "mrkdwn",
+      #               "text": "Packs SDK staging docs deployed. Awaiting approval for production deployment.\n\n*Workflow Run:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Run>"
+      #             }
+      #           }
+      #         ]
+      #       }
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #     SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+  build-docs-prod:
+    runs-on: ubuntu-latest
+    environment:
+      name: prod-documentation
+    needs: push-staging-docs
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup_node
+      - uses: ./.github/actions/setup_python
+
+      - name: Cache mkdocs
+        uses: actions/cache@v4
+        with:
+          path: .cache
+          key: mkdocs-${{ hashFiles('mkdocs.yml') }}
+
+      - name: Build Typedoc
+        run: DOC_DISABLE_SOURCES=false DOC_GIT_REVISION="${{ github.sha }}" make docs
+
+      - name: Build MkDocs
+        run: MK_DOCS_SITE_URL="https://coda.io/packs/build/latest/" make build-mkdocs
+
+      - name: Upload site artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-prod
+          path: site
+
+  push-prod-docs:
+    runs-on: ubuntu-latest
+    environment:
+      name: prod-documentation
+    needs: [push-staging-docs, build-docs-prod]
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup_node
+
+      - name: Download site artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: site-prod
+          path: site
+
+      - name: Configure AWS credentials
+        uses: ./.github/actions/setup_aws_profile
+        with:
+          role-arn: arn:aws:iam::029208794193:role/automation/CICDRole
+          profile-name: prod
+          aws-region: ${{ env.AWS_REGION }}
+          role-session-name: github-actions-packs-sdk-push-prod-docs
+
+      - name: Deploy to Production
+        run: make publish-docs-prod FLAGS=--forceUpload
