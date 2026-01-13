@@ -8,10 +8,10 @@ runs:
       shell: bash
       run: sudo apt update && sudo apt install -y g++ build-essential python3 python3-pip && sudo python3 -m pip install pipenv --break-system-packages
 
-    - name: Setup Node
-      uses: actions/setup-node@v6
+    - name: Use Node 22
+      uses: actions/setup-node@v4
       with:
-        node-version-file: 'package.json'
+        node-version: 22
 
     - name: Cache pnpm dependencies
       uses: actions/cache@v4
