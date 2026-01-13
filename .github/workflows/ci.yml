@@ -181,27 +181,6 @@ jobs:
       - name: Deploy to Staging
         run: make publish-docs-staging FLAGS=--forceUpload
 
-      # - name: Notify Slack
-      #   if: success()
-      #   uses: slackapi/slack-github-action@v1
-      #   with:
-      #     payload: |
-      #       {
-      #         "text": "Packs SDK staging docs deployed. Awaiting approval for production deployment.",
-      #         "blocks": [
-      #           {
-      #             "type": "section",
-      #             "text": {
-      #               "type": "mrkdwn",
-      #               "text": "Packs SDK staging docs deployed. Awaiting approval for production deployment.\n\n*Workflow Run:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Run>"
-      #             }
-      #           }
-      #         ]
-      #       }
-      #   env:
-      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      #     SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-
   build-docs-prod:
     runs-on: ubuntu-latest
     environment:

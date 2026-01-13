@@ -11,8 +11,10 @@ runs:
     - name: Use Node 22
       uses: actions/setup-node@v6
       with:
-        # node-version: 22
-        node-version-file: package.json
+        node-version: 22
+        # TODO(jonathan): Figure out why using this causes isolated-vm to fail to build,
+        # resulting in test failures.
+        # node-version-file: package.json
 
     - name: Cache pnpm dependencies
       uses: actions/cache@v4
