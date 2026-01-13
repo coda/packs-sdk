@@ -119,7 +119,8 @@ jobs:
       - name: Configure AWS credentials
         uses: ./.github/actions/setup_aws_profile
         with:
-          role-to-assume: arn:aws:iam::200135020495:role/automation/CICDRole
+          # role-to-assume: arn:aws:iam::200135020495:role/automation/CICDRole
+          role-to-assume: arn:aws:iam::020355488663:role/automation/CICDRole
           profile-name: head
           aws-region: ${{ env.AWS_REGION }}
           role-session-name: github-actions-packs-sdk-push-head-docs
