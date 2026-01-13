@@ -1023,6 +1023,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     cacheTtlSecs: z.number().min(0).optional(),
     isExperimental: z.boolean().optional(),
     isSystem: z.boolean().optional(),
+    isFederatedSearch: z.boolean().optional(),
     extraOAuthScopes: z.array(z.string()).optional(),
     allowedAuthenticationNames: z.array(z.string()).optional(),
     // Has to be any to avoid circular dependency.
