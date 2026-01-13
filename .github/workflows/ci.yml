@@ -3,7 +3,7 @@ name: CI
 on:
   pull_request:
   push:
-#    branches: ['main']
+    branches: ['main']
 
 concurrency:
   # Cancel in progress runs on this workflow if not running on the main branch.
