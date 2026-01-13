@@ -3,8 +3,7 @@ name: CI
 on:
   pull_request:
   push:
-# TODO: uncomment before sending
-#    branches: ['main']
+    branches: ['main']
 
 concurrency:
   # Cancel in progress runs on this workflow if not running on the main branch.
@@ -13,10 +12,6 @@ concurrency:
 
 env:
   AWS_REGION: us-west-2
-
-permissions:
-  id-token: write
-  contents: read
 
 jobs:
   test:
@@ -74,8 +69,7 @@ jobs:
 
   build-docs-head:
     runs-on: ubuntu-latest
-    # TODO: uncomment before sending
-    # if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main'
     environment:
       name: head-documentation
     steps:
@@ -106,6 +100,9 @@ jobs:
     environment:
       name: head-documentation
     needs: build-docs-head
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup_node
@@ -119,7 +116,6 @@ jobs:
       - name: Configure AWS credentials
         uses: ./.github/actions/setup_aws_profile
         with:
-          # role-to-assume: arn:aws:iam::200135020495:role/automation/CICDRole
           role-to-assume: arn:aws:iam::020355488663:role/automation/CICDRole
           profile-name: head
           aws-region: ${{ env.AWS_REGION }}
@@ -161,6 +157,9 @@ jobs:
     environment:
       name: staging-documentation
     needs: [push-head-docs, build-docs-staging]
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup_node
@@ -174,7 +173,7 @@ jobs:
       - name: Configure AWS credentials
         uses: ./.github/actions/setup_aws_profile
         with:
-          role-to-assume: arn:aws:iam::200135020495:role/automation/CICDRole
+          role-arn: arn:aws:iam::053716345611:role/automation/CICDRole
           profile-name: staging
           aws-region: ${{ env.AWS_REGION }}
           role-session-name: github-actions-packs-sdk-push-staging-docs
@@ -236,6 +235,9 @@ jobs:
     environment:
       name: prod-documentation
     needs: [push-staging-docs, build-docs-prod]
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup_node
@@ -249,7 +251,7 @@ jobs:
       - name: Configure AWS credentials
         uses: ./.github/actions/setup_aws_profile
         with:
-          role-to-assume: arn:aws:iam::200135020495:role/automation/CICDRole
+          role-arn: arn:aws:iam::029208794193:role/automation/CICDRole
           profile-name: prod
           aws-region: ${{ env.AWS_REGION }}
           role-session-name: github-actions-packs-sdk-push-prod-docs
