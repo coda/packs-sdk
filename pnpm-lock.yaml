@@ -298,7 +298,7 @@ importers:
         specifier: 4.9.0
         version: 4.9.0(typedoc@0.28.14(typescript@5.1.6))
       unified-lint-rule:
-        specifier: ^3.0.1
+        specifier: 3.0.1
         version: 3.0.1
       unist-util-visit:
         specifier: ^5.0.0
