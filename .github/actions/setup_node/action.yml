@@ -9,9 +9,12 @@ runs:
       run: sudo apt update && sudo apt install -y g++ build-essential python3 python3-pip && sudo python3 -m pip install pipenv --break-system-packages
 
     - name: Use Node 22
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
         node-version: 22
+        # TODO(jonathan): Figure out why using this causes isolated-vm to fail to build,
+        # resulting in test failures.
+        # node-version-file: package.json
 
     - name: Cache pnpm dependencies
       uses: actions/cache@v4
