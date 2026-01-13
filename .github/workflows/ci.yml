@@ -120,7 +120,7 @@ jobs:
         uses: ./.github/actions/setup_aws_profile
         with:
           role-to-assume: arn:aws:iam::200135020495:role/automation/CICDRole
-          profile-name: dev
+          profile-name: head
           aws-region: ${{ env.AWS_REGION }}
           role-session-name: github-actions-packs-sdk-push-head-docs
 
@@ -174,7 +174,7 @@ jobs:
         uses: ./.github/actions/setup_aws_profile
         with:
           role-to-assume: arn:aws:iam::200135020495:role/automation/CICDRole
-          profile-name: dev
+          profile-name: staging
           aws-region: ${{ env.AWS_REGION }}
           role-session-name: github-actions-packs-sdk-push-staging-docs
 
@@ -249,7 +249,7 @@ jobs:
         uses: ./.github/actions/setup_aws_profile
         with:
           role-to-assume: arn:aws:iam::200135020495:role/automation/CICDRole
-          profile-name: dev
+          profile-name: prod
           aws-region: ${{ env.AWS_REGION }}
           role-session-name: github-actions-packs-sdk-push-prod-docs
 
