@@ -69,7 +69,7 @@ jobs:
 
   build-docs-head:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.ref_name == 'main'
     environment:
       name: head-documentation
     steps:
