@@ -88,12 +88,12 @@ function getCommitSha(cwd: string): string | undefined {
 }
 
 /**
- * Creates a git tag at the current HEAD.
+ * Creates an annotated git tag at the current HEAD.
  * Returns true if successful, false otherwise.
  */
-export function createGitTag(tag: string, cwd: string): boolean {
+export function createGitTag(tag: string, message: string, cwd: string): boolean {
   try {
-    execSync(`git tag "${tag}"`, {cwd, stdio: 'pipe'});
+    execSync(`git tag -a "${tag}" -m "${message.replace(/"/g, '\\"')}"`, {cwd, stdio: 'pipe'});
     return true;
   } catch {
     return false;

@@ -77,12 +77,12 @@ function getCommitSha(cwd) {
     }
 }
 /**
- * Creates a git tag at the current HEAD.
+ * Creates an annotated git tag at the current HEAD.
  * Returns true if successful, false otherwise.
  */
-function createGitTag(tag, cwd) {
+function createGitTag(tag, message, cwd) {
     try {
-        (0, child_process_1.execSync)(`git tag "${tag}"`, { cwd, stdio: 'pipe' });
+        (0, child_process_1.execSync)(`git tag -a "${tag}" -m "${message.replace(/"/g, '\\"')}"`, { cwd, stdio: 'pipe' });
         return true;
     }
     catch {

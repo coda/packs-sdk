@@ -99,18 +99,31 @@ async function handleRelease({ manifestFile, packVersion: explicitPackVersion, c
             if ((0, git_helpers_3.gitTagExists)(gitTag, manifestDir)) {
                 (0, helpers_6.print)(`Git tag ${gitTag} already exists, skipping.`);
             }
-            else if ((0, git_helpers_1.createGitTag)(gitTag, manifestDir)) {
-                (0, helpers_6.print)(`Created git tag: ${gitTag}`);
-                (0, helpers_6.print)(`Run 'git push --tags' to push the tag to remote.`);
-            }
             else {
-                (0, helpers_6.print)(`Warning: Failed to create git tag ${gitTag}`);
+                const tagMessage = buildTagMessage(releaseResponse.releaseId, gitState.currentBranch, releaseResponse.releaseNotes);
+                if ((0, git_helpers_1.createGitTag)(gitTag, tagMessage, manifestDir)) {
+                    (0, helpers_6.print)(`Created git tag: ${gitTag}`);
+                    (0, helpers_6.print)(`Run 'git push --tags' to push the tag to remote.`);
+                }
+                else {
+                    (0, helpers_6.print)(`Warning: Failed to create git tag ${gitTag}`);
+                }
             }
         }
     }
     return (0, helpers_7.printAndExit)('Done!', 0);
 }
 exports.handleRelease = handleRelease;
+function buildTagMessage(releaseId, branch, notes) {
+    const parts = [`Release ID: ${releaseId}`];
+    if (branch) {
+        parts.push(`Branch: ${branch}`);
+    }
+    if (notes) {
+        parts.push('', notes);
+    }
+    return parts.join('\n');
+}
 async function handleResponse(p) {
     try {
         return await p;

@@ -17,10 +17,10 @@ export interface GitState {
  */
 export declare function getGitState(manifestDir: string): GitState;
 /**
- * Creates a git tag at the current HEAD.
+ * Creates an annotated git tag at the current HEAD.
  * Returns true if successful, false otherwise.
  */
-export declare function createGitTag(tag: string, cwd: string): boolean;
+export declare function createGitTag(tag: string, message: string, cwd: string): boolean;
 /**
  * Checks if a git tag already exists.
  */
