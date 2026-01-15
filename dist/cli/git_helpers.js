@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isGitAvailable = exports.computePackPath = exports.gitTagExists = exports.createGitTag = exports.getGitState = void 0;
+exports.isGitAvailable = exports.gitTagExists = exports.createGitTag = exports.getGitState = void 0;
 const child_process_1 = require("child_process");
 const path_1 = __importDefault(require("path"));
 /**
@@ -103,31 +103,6 @@ function gitTagExists(tag, cwd) {
     }
 }
 exports.gitTagExists = gitTagExists;
-/**
- * Computes the pack path for git tags based on the manifest directory.
- * This extracts the path relative to the packs root.
- *
- * Examples:
- * - /path/to/packs/google/calendar -> google/calendar
- * - /path/to/packs/slack/main -> slack/main
- * - /path/to/packs/atlassian/jira/cloud -> atlassian/jira/cloud
- */
-function computePackPath(manifestDir) {
-    const normalizedPath = path_1.default.resolve(manifestDir);
-    // Try to detect packs root by looking for /packs/ in the path
-    const packsIndex = normalizedPath.indexOf('/packs/');
-    if (packsIndex !== -1) {
-        return normalizedPath.substring(packsIndex + '/packs/'.length);
-    }
-    // Fallback: use the last two directory components
-    const parts = normalizedPath.split(path_1.default.sep).filter(Boolean);
-    if (parts.length >= 2) {
-        return parts.slice(-2).join('/');
-    }
-    // Last resort: just use the directory name
-    return path_1.default.basename(normalizedPath);
-}
-exports.computePackPath = computePackPath;
 /**
  * Checks if git is available on the system.
  */

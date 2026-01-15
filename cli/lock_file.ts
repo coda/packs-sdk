@@ -12,7 +12,7 @@ export interface PackReleaseLockEntry {
   version: string;
   /** The monotonically increasing release number from Coda */
   releaseId: number;
-  /** ISO 8601 timestamp when the release was created (from API response) */
+  /** ISO 8601 timestamp when the release was created */
   releasedAt: string;
   /** Release notes provided via --notes flag */
   notes: string;

@@ -8,14 +8,13 @@ const lock_file_1 = require("./lock_file");
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const build_1 = require("./build");
-const git_helpers_1 = require("./git_helpers");
 const helpers_3 = require("./helpers");
-const git_helpers_2 = require("./git_helpers");
+const git_helpers_1 = require("./git_helpers");
 const helpers_4 = require("./helpers");
 const errors_1 = require("./errors");
 const errors_2 = require("./errors");
+const git_helpers_2 = require("./git_helpers");
 const git_helpers_3 = require("./git_helpers");
-const git_helpers_4 = require("./git_helpers");
 const helpers_5 = require("./helpers");
 const coda_1 = require("../helpers/external-api/coda");
 const lock_file_2 = require("./lock_file");
@@ -35,7 +34,7 @@ async function handleRelease({ manifestFile, packVersion: explicitPackVersion, c
     // Git state validation (only if tracking releases)
     let gitState;
     if (shouldTrackRelease) {
-        gitState = (0, git_helpers_3.getGitState)(manifestDir);
+        gitState = (0, git_helpers_2.getGitState)(manifestDir);
         if (gitState.isGitRepo) {
             // Block release if there are uncommitted changes
             if (gitState.isDirty) {
@@ -80,27 +79,27 @@ async function handleRelease({ manifestFile, packVersion: explicitPackVersion, c
         packVersion = latestPackVersion;
     }
     // Create release via API
-    await handleResponse(codaClient.createPackRelease(packId, {}, { packVersion, releaseNotes: notes }));
-    (0, helpers_6.print)(`Pack version ${packVersion} released successfully.`);
+    const releaseResponse = await handleResponse(codaClient.createPackRelease(packId, {}, { packVersion, releaseNotes: notes }));
+    (0, helpers_6.print)(`Pack version ${packVersion} released successfully (release #${releaseResponse.releaseId}).`);
     // Track release in lock file and create git tag
     if (shouldTrackRelease) {
-        const packPath = (0, git_helpers_1.computePackPath)(manifestDir);
-        const gitTag = `pack/${packPath}/release-v${packVersion}`;
-        // Add to lock file
+        const gitTag = `pack/${packId}/v${packVersion}`;
+        // Add to lock file using API response as source of truth
         (0, lock_file_1.addReleaseToLockFile)(manifestDir, {
-            version: packVersion,
-            releasedAt: new Date().toISOString(),
-            notes,
+            version: releaseResponse.packVersion,
+            releaseId: releaseResponse.releaseId,
+            releasedAt: releaseResponse.createdAt,
+            notes: releaseResponse.releaseNotes,
             commitSha: (gitState === null || gitState === void 0 ? void 0 : gitState.commitSha) || null,
             gitTag: (gitState === null || gitState === void 0 ? void 0 : gitState.isGitRepo) ? gitTag : undefined,
         });
         (0, helpers_6.print)(`Updated .coda-pack.lock.json`);
         // Create git tag
         if (gitState === null || gitState === void 0 ? void 0 : gitState.isGitRepo) {
-            if ((0, git_helpers_4.gitTagExists)(gitTag, manifestDir)) {
+            if ((0, git_helpers_3.gitTagExists)(gitTag, manifestDir)) {
                 (0, helpers_6.print)(`Git tag ${gitTag} already exists, skipping.`);
             }
-            else if ((0, git_helpers_2.createGitTag)(gitTag, manifestDir)) {
+            else if ((0, git_helpers_1.createGitTag)(gitTag, manifestDir)) {
                 (0, helpers_6.print)(`Created git tag: ${gitTag}`);
                 (0, helpers_6.print)(`Run 'git push --tags' to push the tag to remote.`);
             }

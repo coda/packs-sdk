@@ -26,16 +26,6 @@ export declare function createGitTag(tag: string, cwd: string): boolean;
  */
 export declare function gitTagExists(tag: string, cwd: string): boolean;
 /**
- * Computes the pack path for git tags based on the manifest directory.
- * This extracts the path relative to the packs root.
- *
- * Examples:
- * - /path/to/packs/google/calendar -> google/calendar
- * - /path/to/packs/slack/main -> slack/main
- * - /path/to/packs/atlassian/jira/cloud -> atlassian/jira/cloud
- */
-export declare function computePackPath(manifestDir: string): string;
-/**
  * Checks if git is available on the system.
  */
 export declare function isGitAvailable(): boolean;

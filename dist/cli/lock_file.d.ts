@@ -3,13 +3,15 @@ export declare const LOCK_FILE_NAME = ".coda-pack.lock.json";
  * Represents a single release entry in the lock file.
  */
 export interface PackReleaseLockEntry {
-    /** The semantic version of the release (e.g., "56.5.0") */
+    /** The semantic version of the pack (e.g., "1.2.3") */
     version: string;
+    /** The monotonically increasing release number from Coda */
+    releaseId: number;
     /** ISO 8601 timestamp when the release was created */
     releasedAt: string;
     /** Release notes provided via --notes flag */
     notes: string;
-    /** Git commit SHA at time of release, or null for historical releases */
+    /** Git commit SHA at time of release, or null if not in a git repo or for historical releases */
     commitSha: string | null;
     /** Git tag created for this release (if in a git repo) */
     gitTag?: string;
