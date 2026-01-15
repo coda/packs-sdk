@@ -81,6 +81,7 @@ describe('Lock file', () => {
     it('creates lock file if it does not exist', () => {
       const release: PackReleaseLockEntry = {
         version: '1.0.0',
+        releaseId: 1,
         releasedAt: '2026-01-10T10:00:00.000Z',
         notes: 'Initial release',
         commitSha: 'abc123',
@@ -95,6 +96,7 @@ describe('Lock file', () => {
     it('adds new release at the beginning', () => {
       const existingRelease: PackReleaseLockEntry = {
         version: '1.0.0',
+        releaseId: 1,
         releasedAt: '2026-01-10T10:00:00.000Z',
         notes: 'Initial release',
         commitSha: 'abc123',
@@ -104,6 +106,7 @@ describe('Lock file', () => {
 
       const newRelease: PackReleaseLockEntry = {
         version: '2.0.0',
+        releaseId: 2,
         releasedAt: '2026-01-11T10:00:00.000Z',
         notes: 'New features',
         commitSha: 'def456',
@@ -120,6 +123,7 @@ describe('Lock file', () => {
     it('updates existing release instead of creating duplicate', () => {
       const existingRelease: PackReleaseLockEntry = {
         version: '1.0.0',
+        releaseId: 1,
         releasedAt: '2026-01-10T10:00:00.000Z',
         notes: 'Initial release',
         commitSha: 'abc123',
@@ -129,6 +133,7 @@ describe('Lock file', () => {
 
       const updatedRelease: PackReleaseLockEntry = {
         version: '1.0.0',
+        releaseId: 1,
         releasedAt: '2026-01-10T11:00:00.000Z',
         notes: 'Updated notes',
         commitSha: 'abc123',

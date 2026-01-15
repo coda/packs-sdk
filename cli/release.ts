@@ -108,19 +108,22 @@ export async function handleRelease({
   }
 
   // Create release via API
-  await handleResponse(codaClient.createPackRelease(packId, {}, {packVersion, releaseNotes: notes}));
+  const releaseResponse = await handleResponse(
+    codaClient.createPackRelease(packId, {}, {packVersion, releaseNotes: notes}),
+  );
 
-  print(`Pack version ${packVersion} released successfully.`);
+  print(`Pack version ${packVersion} released successfully (release #${releaseResponse.releaseId}).`);
 
   // Track release in lock file and create git tag
   if (shouldTrackRelease) {
     const gitTag = `pack/${packId}/v${packVersion}`;
 
-    // Add to lock file
+    // Add to lock file using API response as source of truth
     addReleaseToLockFile(manifestDir, {
-      version: packVersion,
-      releasedAt: new Date().toISOString(),
-      notes,
+      version: releaseResponse.packVersion,
+      releaseId: releaseResponse.releaseId,
+      releasedAt: releaseResponse.createdAt,
+      notes: releaseResponse.releaseNotes,
       commitSha: gitState?.commitSha || null,
       gitTag: gitState?.isGitRepo ? gitTag : undefined,
     });
