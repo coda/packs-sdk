@@ -134,7 +134,7 @@ export async function handleRelease({
       if (gitTagExists(gitTag, manifestDir)) {
         print(`Git tag ${gitTag} already exists, skipping.`);
       } else {
-        const tagMessage = buildTagMessage(releaseResponse.releaseId, gitState.currentBranch, releaseResponse.releaseNotes);
+        const tagMessage = buildTagMessage(releaseResponse.releaseId, releaseResponse.releaseNotes);
         if (createGitTag(gitTag, tagMessage, manifestDir)) {
           print(`Created git tag: ${gitTag}`);
           print(`Run 'git push --tags' to push the tag to remote.`);
@@ -148,11 +148,8 @@ export async function handleRelease({
   return printAndExit('Done!', 0);
 }
 
-function buildTagMessage(releaseId: number, branch: string | undefined, notes: string): string {
+function buildTagMessage(releaseId: number, notes: string): string {
   const parts = [`Release ID: ${releaseId}`];
-  if (branch) {
-    parts.push(`Branch: ${branch}`);
-  }
   if (notes) {
     parts.push('', notes);
   }
