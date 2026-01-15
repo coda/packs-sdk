@@ -1,13 +1,13 @@
 import type {Client} from '../helpers/external-api/coda';
 import type {PublicApiPackRelease} from '../helpers/external-api/v1';
 import * as gitHelpers from '../cli/git_helpers';
-import * as helpers from '../cli/helpers';
-import * as testingHelpers from '../testing/helpers';
 import {handleRelease} from '../cli/release';
+import * as helpers from '../cli/helpers';
 import {lockFileExists} from '../cli/lock_file';
 import mockFs from 'mock-fs';
 import {readLockFile} from '../cli/lock_file';
 import sinon from 'sinon';
+import * as testingHelpers from '../testing/helpers';
 import {writeLockFile} from '../cli/lock_file';
 
 const PROJECT_DIR = '/myproject';
