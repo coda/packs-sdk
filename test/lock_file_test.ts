@@ -43,6 +43,7 @@ describe('Lock file', () => {
         releases: [
           {
             version: '1.0.0',
+            releaseId: 1,
             releasedAt: '2026-01-10T10:00:00.000Z',
             notes: 'Initial release',
             commitSha: 'abc123',
@@ -63,6 +64,7 @@ describe('Lock file', () => {
         releases: [
           {
             version: '1.0.0',
+            releaseId: 1,
             releasedAt: '2026-01-10T10:00:00.000Z',
             notes: 'Initial release',
             commitSha: 'abc123',
