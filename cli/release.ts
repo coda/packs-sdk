@@ -6,7 +6,6 @@ import {addReleaseToLockFile} from './lock_file';
 import {assertApiToken} from './helpers';
 import {assertPackId} from './helpers';
 import {build} from './build';
-import {computePackPath} from './git_helpers';
 import {createCodaClient} from './helpers';
 import {createGitTag} from './git_helpers';
 import {formatEndpoint} from './helpers';
@@ -115,8 +114,7 @@ export async function handleRelease({
 
   // Track release in lock file and create git tag
   if (shouldTrackRelease) {
-    const packPath = computePackPath(manifestDir);
-    const gitTag = `pack/${packPath}/release-v${packVersion}`;
+    const gitTag = `pack/${packId}/v${packVersion}`;
 
     // Add to lock file
     addReleaseToLockFile(manifestDir, {

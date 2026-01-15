@@ -113,34 +113,6 @@ export function gitTagExists(tag: string, cwd: string): boolean {
 }
 
 /**
- * Computes the pack path for git tags based on the manifest directory.
- * This extracts the path relative to the packs root.
- *
- * Examples:
- * - /path/to/packs/google/calendar -> google/calendar
- * - /path/to/packs/slack/main -> slack/main
- * - /path/to/packs/atlassian/jira/cloud -> atlassian/jira/cloud
- */
-export function computePackPath(manifestDir: string): string {
-  const normalizedPath = path.resolve(manifestDir);
-
-  // Try to detect packs root by looking for /packs/ in the path
-  const packsIndex = normalizedPath.indexOf('/packs/');
-  if (packsIndex !== -1) {
-    return normalizedPath.substring(packsIndex + '/packs/'.length);
-  }
-
-  // Fallback: use the last two directory components
-  const parts = normalizedPath.split(path.sep).filter(Boolean);
-  if (parts.length >= 2) {
-    return parts.slice(-2).join('/');
-  }
-
-  // Last resort: just use the directory name
-  return path.basename(normalizedPath);
-}
-
-/**
  * Checks if git is available on the system.
  */
 export function isGitAvailable(): boolean {
