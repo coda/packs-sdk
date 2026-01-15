@@ -1,8 +1,6 @@
 import type {ArgumentsCamelCase} from 'yargs';
 import type {BasicPackDefinition} from '..';
-import type {GitState} from './git_helpers';
 import type {PackVersionDefinition} from '..';
-import {addReleaseToLockFile} from './lock_file';
 import {assertApiToken} from './helpers';
 import {assertPackId} from './helpers';
 import {build} from './build';
@@ -15,7 +13,6 @@ import {getGitState} from './git_helpers';
 import {gitTagExists} from './git_helpers';
 import {importManifest} from './helpers';
 import {isResponseError} from '../helpers/external-api/coda';
-import {lockFileExists} from './lock_file';
 import path from 'path';
 import {print} from '../testing/helpers';
 import {printAndExit} from '../testing/helpers';
@@ -44,33 +41,26 @@ export async function handleRelease({
 
   const codaClient = createCodaClient(apiToken, formattedEndpoint);
 
-  // Check if release tracking is enabled (lock file exists)
-  const shouldTrackRelease = lockFileExists(manifestDir);
+  // Git state validation
+  const gitState = getGitState(manifestDir);
 
-  // Git state validation (only if tracking releases)
-  let gitState: GitState | undefined;
-  if (shouldTrackRelease) {
-    gitState = getGitState(manifestDir);
+  if (gitState.isGitRepo) {
+    // Block release if there are uncommitted changes
+    if (gitState.isDirty) {
+      return printAndExit(
+        'Cannot release with uncommitted changes.\n' +
+          'Please commit your changes first, then run the release command again.',
+      );
+    }
 
-    if (gitState.isGitRepo) {
-      // Block release if there are uncommitted changes
-      if (gitState.isDirty) {
-        return printAndExit(
-          'Cannot release with uncommitted changes.\n' +
-            'Please commit your changes first, then run the release command again.',
-        );
-      }
-
-      // Warn if not on main/master branch
-      if (gitState.currentBranch && !['main', 'master'].includes(gitState.currentBranch)) {
-        const shouldContinue = promptForInput(
-          `Warning: You are releasing from branch '${gitState.currentBranch}', not 'main'.\n` +
-            `Continue anyway? (y/N) `,
-          {yesOrNo: true},
-        );
-        if (shouldContinue !== 'yes') {
-          return process.exit(1);
-        }
+    // Warn if not on main/master branch
+    if (gitState.currentBranch && !['main', 'master'].includes(gitState.currentBranch)) {
+      const shouldContinue = promptForInput(
+        `Warning: You are releasing from branch '${gitState.currentBranch}', not 'main'.\n` + `Continue anyway? (y/N) `,
+        {yesOrNo: true},
+      );
+      if (shouldContinue !== 'yes') {
+        return process.exit(1);
       }
     }
   }
@@ -114,33 +104,19 @@ export async function handleRelease({
 
   print(`Pack version ${packVersion} released successfully (release #${releaseResponse.releaseId}).`);
 
-  // Track release in lock file and create git tag
-  if (shouldTrackRelease) {
+  // Create git tag
+  if (gitState.isGitRepo) {
     const gitTag = `pack/${packId}/v${packVersion}`;
 
-    // Add to lock file using API response as source of truth
-    addReleaseToLockFile(manifestDir, {
-      version: releaseResponse.packVersion,
-      releaseId: releaseResponse.releaseId,
-      releasedAt: releaseResponse.createdAt,
-      notes: releaseResponse.releaseNotes,
-      commitSha: gitState?.commitSha || null,
-      gitTag: gitState?.isGitRepo ? gitTag : undefined,
-    });
-    print(`Updated .coda-pack.lock.json`);
-
-    // Create git tag
-    if (gitState?.isGitRepo) {
-      if (gitTagExists(gitTag, manifestDir)) {
-        print(`Git tag ${gitTag} already exists, skipping.`);
+    if (gitTagExists(gitTag, manifestDir)) {
+      print(`Git tag ${gitTag} already exists, skipping.`);
+    } else {
+      const tagMessage = buildTagMessage(releaseResponse.releaseId, releaseResponse.releaseNotes);
+      if (createGitTag(gitTag, tagMessage, manifestDir)) {
+        print(`Created git tag: ${gitTag}`);
+        print(`Run 'git push --tags' to push the tag to remote.`);
       } else {
-        const tagMessage = buildTagMessage(releaseResponse.releaseId, releaseResponse.releaseNotes);
-        if (createGitTag(gitTag, tagMessage, manifestDir)) {
-          print(`Created git tag: ${gitTag}`);
-          print(`Run 'git push --tags' to push the tag to remote.`);
-        } else {
-          print(`Warning: Failed to create git tag ${gitTag}`);
-        }
+        print(`Warning: Failed to create git tag ${gitTag}`);
       }
     }
   }

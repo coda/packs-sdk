@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleRelease = void 0;
-const lock_file_1 = require("./lock_file");
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const build_1 = require("./build");
@@ -17,7 +16,6 @@ const git_helpers_2 = require("./git_helpers");
 const git_helpers_3 = require("./git_helpers");
 const helpers_5 = require("./helpers");
 const coda_1 = require("../helpers/external-api/coda");
-const lock_file_2 = require("./lock_file");
 const path_1 = __importDefault(require("path"));
 const helpers_6 = require("../testing/helpers");
 const helpers_7 = require("../testing/helpers");
@@ -29,25 +27,19 @@ async function handleRelease({ manifestFile, packVersion: explicitPackVersion, c
     apiToken = (0, helpers_1.assertApiToken)(codaApiEndpoint, apiToken);
     const packId = (0, helpers_2.assertPackId)(manifestDir, codaApiEndpoint);
     const codaClient = (0, helpers_3.createCodaClient)(apiToken, formattedEndpoint);
-    // Check if release tracking is enabled (lock file exists)
-    const shouldTrackRelease = (0, lock_file_2.lockFileExists)(manifestDir);
-    // Git state validation (only if tracking releases)
-    let gitState;
-    if (shouldTrackRelease) {
-        gitState = (0, git_helpers_2.getGitState)(manifestDir);
-        if (gitState.isGitRepo) {
-            // Block release if there are uncommitted changes
-            if (gitState.isDirty) {
-                return (0, helpers_7.printAndExit)('Cannot release with uncommitted changes.\n' +
-                    'Please commit your changes first, then run the release command again.');
-            }
-            // Warn if not on main/master branch
-            if (gitState.currentBranch && !['main', 'master'].includes(gitState.currentBranch)) {
-                const shouldContinue = (0, helpers_8.promptForInput)(`Warning: You are releasing from branch '${gitState.currentBranch}', not 'main'.\n` +
-                    `Continue anyway? (y/N) `, { yesOrNo: true });
-                if (shouldContinue !== 'yes') {
-                    return process.exit(1);
-                }
+    // Git state validation
+    const gitState = (0, git_helpers_2.getGitState)(manifestDir);
+    if (gitState.isGitRepo) {
+        // Block release if there are uncommitted changes
+        if (gitState.isDirty) {
+            return (0, helpers_7.printAndExit)('Cannot release with uncommitted changes.\n' +
+                'Please commit your changes first, then run the release command again.');
+        }
+        // Warn if not on main/master branch
+        if (gitState.currentBranch && !['main', 'master'].includes(gitState.currentBranch)) {
+            const shouldContinue = (0, helpers_8.promptForInput)(`Warning: You are releasing from branch '${gitState.currentBranch}', not 'main'.\n` + `Continue anyway? (y/N) `, { yesOrNo: true });
+            if (shouldContinue !== 'yes') {
+                return process.exit(1);
             }
         }
     }
@@ -81,33 +73,20 @@ async function handleRelease({ manifestFile, packVersion: explicitPackVersion, c
     // Create release via API
     const releaseResponse = await handleResponse(codaClient.createPackRelease(packId, {}, { packVersion, releaseNotes: notes }));
     (0, helpers_6.print)(`Pack version ${packVersion} released successfully (release #${releaseResponse.releaseId}).`);
-    // Track release in lock file and create git tag
-    if (shouldTrackRelease) {
+    // Create git tag
+    if (gitState.isGitRepo) {
         const gitTag = `pack/${packId}/v${packVersion}`;
-        // Add to lock file using API response as source of truth
-        (0, lock_file_1.addReleaseToLockFile)(manifestDir, {
-            version: releaseResponse.packVersion,
-            releaseId: releaseResponse.releaseId,
-            releasedAt: releaseResponse.createdAt,
-            notes: releaseResponse.releaseNotes,
-            commitSha: (gitState === null || gitState === void 0 ? void 0 : gitState.commitSha) || null,
-            gitTag: (gitState === null || gitState === void 0 ? void 0 : gitState.isGitRepo) ? gitTag : undefined,
-        });
-        (0, helpers_6.print)(`Updated .coda-pack.lock.json`);
-        // Create git tag
-        if (gitState === null || gitState === void 0 ? void 0 : gitState.isGitRepo) {
-            if ((0, git_helpers_3.gitTagExists)(gitTag, manifestDir)) {
-                (0, helpers_6.print)(`Git tag ${gitTag} already exists, skipping.`);
+        if ((0, git_helpers_3.gitTagExists)(gitTag, manifestDir)) {
+            (0, helpers_6.print)(`Git tag ${gitTag} already exists, skipping.`);
+        }
+        else {
+            const tagMessage = buildTagMessage(releaseResponse.releaseId, releaseResponse.releaseNotes);
+            if ((0, git_helpers_1.createGitTag)(gitTag, tagMessage, manifestDir)) {
+                (0, helpers_6.print)(`Created git tag: ${gitTag}`);
+                (0, helpers_6.print)(`Run 'git push --tags' to push the tag to remote.`);
             }
             else {
-                const tagMessage = buildTagMessage(releaseResponse.releaseId, releaseResponse.releaseNotes);
-                if ((0, git_helpers_1.createGitTag)(gitTag, tagMessage, manifestDir)) {
-                    (0, helpers_6.print)(`Created git tag: ${gitTag}`);
-                    (0, helpers_6.print)(`Run 'git push --tags' to push the tag to remote.`);
-                }
-                else {
-                    (0, helpers_6.print)(`Warning: Failed to create git tag ${gitTag}`);
-                }
+                (0, helpers_6.print)(`Warning: Failed to create git tag ${gitTag}`);
             }
         }
     }

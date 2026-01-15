@@ -3,12 +3,9 @@ import type {PublicApiPackRelease} from '../helpers/external-api/v1';
 import * as gitHelpers from '../cli/git_helpers';
 import {handleRelease} from '../cli/release';
 import * as helpers from '../cli/helpers';
-import {lockFileExists} from '../cli/lock_file';
 import mockFs from 'mock-fs';
-import {readLockFile} from '../cli/lock_file';
 import sinon from 'sinon';
 import * as testingHelpers from '../testing/helpers';
-import {writeLockFile} from '../cli/lock_file';
 
 const PROJECT_DIR = '/myproject';
 const MANIFEST_FILE = `${PROJECT_DIR}/pack.ts`;
@@ -78,25 +75,8 @@ describe('Release command', () => {
     }
   }
 
-  describe('without lock file', () => {
-    it('releases without creating lock file or calling git', async () => {
-      const getGitStateStub = sinon.stub(gitHelpers, 'getGitState');
-
-      await runRelease();
-
-      // Release succeeded
-      assert.equal(exitCode, 0);
-      assert.isTrue((mockClient.createPackRelease as sinon.SinonStub).calledOnce);
-
-      // No tracking: lock file not created, git not called
-      assert.isFalse(lockFileExists(PROJECT_DIR));
-      assert.isFalse(getGitStateStub.called);
-    });
-  });
-
-  describe('with lock file, no git repo', () => {
+  describe('without git repo', () => {
     beforeEach(() => {
-      writeLockFile(PROJECT_DIR, {releases: []});
       sinon.stub(gitHelpers, 'getGitState').returns({
         isGitRepo: false,
         isDirty: false,
@@ -105,27 +85,18 @@ describe('Release command', () => {
       });
     });
 
-    it('updates lock file with null commitSha and no gitTag', async () => {
-      sinon.stub(gitHelpers, 'createGitTag');
+    it('releases successfully without creating git tag', async () => {
+      const createGitTagStub = sinon.stub(gitHelpers, 'createGitTag');
 
       await runRelease();
 
       assert.equal(exitCode, 0);
-
-      const lockFile = readLockFile(PROJECT_DIR);
-      assert.equal(lockFile!.releases.length, 1);
-      assert.equal(lockFile!.releases[0].version, '1.0.0');
-      assert.equal(lockFile!.releases[0].releaseId, 42);
-      assert.isNull(lockFile!.releases[0].commitSha);
-      assert.isUndefined(lockFile!.releases[0].gitTag);
+      assert.isTrue((mockClient.createPackRelease as sinon.SinonStub).calledOnce);
+      assert.isFalse(createGitTagStub.called);
     });
   });
 
-  describe('with lock file and git repo', () => {
-    beforeEach(() => {
-      writeLockFile(PROJECT_DIR, {releases: []});
-    });
-
+  describe('with git repo', () => {
     it('blocks release when there are uncommitted changes', async () => {
       sinon.stub(gitHelpers, 'getGitState').returns({
         isGitRepo: true,
@@ -136,19 +107,12 @@ describe('Release command', () => {
 
       await runRelease();
 
-      // Release was blocked
       assert.equal(exitCode, 1);
       assert.include(exitMessage, 'uncommitted changes');
-
-      // API was NOT called
       assert.isFalse((mockClient.createPackRelease as sinon.SinonStub).called);
-
-      // Lock file was NOT updated
-      const lockFile = readLockFile(PROJECT_DIR);
-      assert.equal(lockFile!.releases.length, 0);
     });
 
-    it('records commitSha and gitTag on successful release', async () => {
+    it('creates git tag on successful release', async () => {
       sinon.stub(gitHelpers, 'getGitState').returns({
         isGitRepo: true,
         isDirty: false,
@@ -156,16 +120,16 @@ describe('Release command', () => {
         commitSha: 'abc123def456',
       });
       sinon.stub(gitHelpers, 'gitTagExists').returns(false);
-      sinon.stub(gitHelpers, 'createGitTag').returns(true);
+      const createGitTagStub = sinon.stub(gitHelpers, 'createGitTag').returns(true);
 
       await runRelease();
 
       assert.equal(exitCode, 0);
-
-      const lockFile = readLockFile(PROJECT_DIR);
-      const release = lockFile!.releases[0];
-      assert.equal(release.commitSha, 'abc123def456');
-      assert.equal(release.gitTag, `pack/${PACK_ID}/v1.0.0`);
+      assert.isTrue(createGitTagStub.calledOnce);
+      const [tagName, tagMessage] = createGitTagStub.firstCall.args;
+      assert.equal(tagName, `pack/${PACK_ID}/v1.0.0`);
+      assert.include(tagMessage, 'Release ID: 42');
+      assert.include(tagMessage, 'Test release');
     });
 
     it('skips git tag creation if tag already exists', async () => {
@@ -182,34 +146,6 @@ describe('Release command', () => {
 
       assert.equal(exitCode, 0);
       assert.isFalse(createGitTagStub.called);
-    });
-  });
-
-  describe('with corrupted lock file', () => {
-    beforeEach(() => {
-      mockFs({
-        [PROJECT_DIR]: {
-          'pack.ts': 'export const pack = {};',
-          '.coda-pack.json': JSON.stringify({packId: PACK_ID}),
-          '.coda-pack.lock.json': 'invalid json {{{',
-        },
-      });
-      sinon.stub(gitHelpers, 'getGitState').returns({
-        isGitRepo: false,
-        isDirty: false,
-        currentBranch: undefined,
-        commitSha: undefined,
-      });
-    });
-
-    it('treats as empty and adds new release', async () => {
-      await runRelease();
-
-      assert.equal(exitCode, 0);
-
-      const lockFile = readLockFile(PROJECT_DIR);
-      assert.equal(lockFile!.releases.length, 1);
-      assert.equal(lockFile!.releases[0].version, '1.0.0');
     });
   });
 });
