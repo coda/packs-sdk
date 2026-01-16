@@ -255,7 +255,8 @@ if (require.main === module) {
         gitTag: {
           boolean: true,
           alias: 'g',
-          describe: 'Create a git tag for this release. Can also be enabled by default via `coda setOption <manifestFile> enableGitTags true`',
+          describe:
+            'Create a git tag for this release. Can also be enabled by default via `coda setOption <manifestFile> enableGitTags true`',
           default: false,
         },
         apiToken: ApiTokenArg,
