@@ -252,6 +252,13 @@ if (require.main === module) {
           describe: 'Notes about the contents of this Pack release',
           demandOption: 'Please provide release notes, which will be shown to Pack users to understand the release.',
         },
+        gitTag: {
+          boolean: true,
+          alias: 'g',
+          describe:
+            'Create a git tag for this release. Can also be enabled by default via `coda setOption <manifestFile> enableGitTags true`',
+          default: false,
+        },
         apiToken: ApiTokenArg,
         codaApiEndpoint: CodaApiEndpointArg,
       },
@@ -261,8 +268,10 @@ if (require.main === module) {
       command: 'setOption <manifestFile> <option> <value>',
       describe:
         'Set a persistent build option for the pack. This will store the option alongside the pack id in ' +
-        'the .coda-pack.json file and it will be used for all builds of the pack. ' +
-        'Currently the only supported option is `timerStrategy`. Valid values are "none", "error", or "fake".\n\n' +
+        'the .coda-pack.json file and it will be used for all builds of the pack.\n\n' +
+        'Supported options:\n' +
+        '  - timerStrategy: Valid values are "none", "error", or "fake".\n' +
+        '  - enableGitTags: Valid values are "true" or "false". When true, the release command will create git tags.\n\n' +
         'Usage: coda setOption path/to/pack.ts timerStrategy fake',
       handler: handleSetOption as any,
     })

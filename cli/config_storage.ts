@@ -17,10 +17,12 @@ export interface ApiKeyFile {
 
 export enum PackOptionKey {
   timerStrategy = 'timerStrategy',
+  enableGitTags = 'enableGitTags',
 }
 
 export interface PackOptions {
   [PackOptionKey.timerStrategy]?: TimerShimStrategy;
+  [PackOptionKey.enableGitTags]?: boolean;
 }
 
 export interface PackIdFile {

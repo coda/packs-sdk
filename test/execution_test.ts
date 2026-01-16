@@ -41,6 +41,11 @@ import {newPack} from '../builder';
 import path from 'path';
 import sinon from 'sinon';
 
+// Store reference to native Buffer before compilePackBundle runs browserify.
+// Browserify replaces global.Buffer with its polyfill, which breaks mock-fs
+// in tests that run after this suite. We restore it in the after() hook.
+const NativeBuffer = Buffer;
+
 describe('Execution', () => {
   let bundlePath: string;
   let bundleSourceMapPath: string;
@@ -50,6 +55,14 @@ describe('Execution', () => {
       manifestPath: `${__dirname}/packs/fake`,
       timerStrategy: TimerShimStrategy.Fake,
     }));
+  });
+
+  after(() => {
+    // Restore native Buffer after browserify replaced it with its polyfill.
+    // This ensures mock-fs works correctly in subsequent test suites.
+    if ((global as any).Buffer !== NativeBuffer) {
+      (global as any).Buffer = NativeBuffer;
+    }
   });
 
   it('executes a formula by name', async () => {
