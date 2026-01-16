@@ -34,6 +34,12 @@ function validateOption(option: string, value: string): PackOptions {
         return printAndExit(`Invalid option value "${value}". Valid values are ${validValues.join(', ')}`);
       }
       return {[key]: value as TimerShimStrategy};
+    case PackOptionKey.enableGitTags:
+      const boolValue = value.toLowerCase();
+      if (boolValue !== 'true' && boolValue !== 'false') {
+        return printAndExit(`Invalid option value "${value}". Valid values are true, false`);
+      }
+      return {[key]: boolValue === 'true'};
     default:
       return ensureUnreachable(key);
   }

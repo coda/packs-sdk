@@ -1,5 +1,6 @@
 import type {ArgumentsCamelCase} from 'yargs';
 import type {BasicPackDefinition} from '..';
+import {PackOptionKey} from './config_storage';
 import type {PackVersionDefinition} from '..';
 import {assertApiToken} from './helpers';
 import {assertPackId} from './helpers';
@@ -10,6 +11,7 @@ import {formatEndpoint} from './helpers';
 import {formatError} from './errors';
 import {formatResponseError} from './errors';
 import {getGitState} from './git_helpers';
+import {getPackOptions} from './config_storage';
 import {gitTagExists} from './git_helpers';
 import {importManifest} from './helpers';
 import {isResponseError} from '../helpers/external-api/coda';
@@ -25,6 +27,7 @@ interface ReleaseArgs {
   codaApiEndpoint: string;
   notes: string;
   apiToken?: string;
+  gitTag?: boolean;
 }
 
 export async function handleRelease({
@@ -33,11 +36,16 @@ export async function handleRelease({
   codaApiEndpoint,
   notes,
   apiToken,
+  gitTag,
 }: ArgumentsCamelCase<ReleaseArgs>) {
   const manifestDir = path.dirname(manifestFile);
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
   apiToken = assertApiToken(codaApiEndpoint, apiToken);
   const packId = assertPackId(manifestDir, codaApiEndpoint);
+
+  // Check if git tagging is enabled via CLI flag or pack options
+  const packOptions = getPackOptions(manifestDir);
+  const enableGitTags = gitTag || packOptions?.[PackOptionKey.enableGitTags] || false;
 
   const codaClient = createCodaClient(apiToken, formattedEndpoint);
 
@@ -104,19 +112,19 @@ export async function handleRelease({
 
   print(`Pack version ${packVersion} released successfully (release #${releaseResponse.releaseId}).`);
 
-  // Create git tag
-  if (gitState.isGitRepo) {
-    const gitTag = `pack/${packId}/v${packVersion}`;
+  // Create git tag if enabled
+  if (enableGitTags && gitState.isGitRepo) {
+    const releaseGitTag = `pack/${packId}/v${packVersion}`;
 
-    if (gitTagExists(gitTag, manifestDir)) {
-      print(`Git tag ${gitTag} already exists, skipping.`);
+    if (gitTagExists(releaseGitTag, manifestDir)) {
+      print(`Git tag ${releaseGitTag} already exists, skipping.`);
     } else {
       const tagMessage = buildTagMessage(releaseResponse.releaseId, releaseResponse.releaseNotes);
-      if (createGitTag(gitTag, tagMessage, manifestDir)) {
-        print(`Created git tag: ${gitTag}`);
+      if (createGitTag(releaseGitTag, tagMessage, manifestDir)) {
+        print(`Created git tag: ${releaseGitTag}`);
         print(`Run 'git push --tags' to push the tag to remote.`);
       } else {
-        print(`Warning: Failed to create git tag ${gitTag}`);
+        print(`Warning: Failed to create git tag ${releaseGitTag}`);
       }
     }
   }

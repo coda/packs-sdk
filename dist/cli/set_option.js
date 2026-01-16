@@ -51,6 +51,12 @@ function validateOption(option, value) {
                 return (0, helpers_2.printAndExit)(`Invalid option value "${value}". Valid values are ${validValues.join(', ')}`);
             }
             return { [key]: value };
+        case config_storage_1.PackOptionKey.enableGitTags:
+            const boolValue = value.toLowerCase();
+            if (boolValue !== 'true' && boolValue !== 'false') {
+                return (0, helpers_2.printAndExit)(`Invalid option value "${value}". Valid values are true, false`);
+            }
+            return { [key]: boolValue === 'true' };
         default:
             return (0, __1.ensureUnreachable)(key);
     }
