@@ -173,7 +173,7 @@ jobs:
       - name: Configure AWS credentials
         uses: ./.github/actions/setup_aws_profile
         with:
-          role-arn: arn:aws:iam::053716345611:role/automation/CICDRole
+          role-to-assume: arn:aws:iam::053716345611:role/automation/CICDRole
           profile-name: staging
           aws-region: ${{ env.AWS_REGION }}
           role-session-name: github-actions-packs-sdk-push-staging-docs
@@ -230,7 +230,7 @@ jobs:
       - name: Configure AWS credentials
         uses: ./.github/actions/setup_aws_profile
         with:
-          role-arn: arn:aws:iam::029208794193:role/automation/CICDRole
+          role-to-assume: arn:aws:iam::029208794193:role/automation/CICDRole
           profile-name: prod
           aws-region: ${{ env.AWS_REGION }}
           role-session-name: github-actions-packs-sdk-push-prod-docs
