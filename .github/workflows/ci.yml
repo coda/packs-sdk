@@ -128,6 +128,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: staging-documentation
+    if: github.actor != 'github-actions[bot]'
     needs: push-head-docs
     steps:
       - uses: actions/checkout@v4
@@ -156,6 +157,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: staging-documentation
+    if: github.actor != 'github-actions[bot]'
     needs: [push-head-docs, build-docs-staging]
     permissions:
       id-token: write
@@ -185,6 +187,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: prod-documentation
+    if: github.actor != 'github-actions[bot]'
     needs: push-staging-docs
     steps:
       - uses: actions/checkout@v4
@@ -213,6 +216,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: prod-documentation
+    if: github.actor != 'github-actions[bot]'
     needs: [push-staging-docs, build-docs-prod]
     permissions:
       id-token: write
