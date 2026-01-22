@@ -89,6 +89,7 @@ plugins:
     # See: https://squidfunk.github.io/mkdocs-material/plugins/optimize/
     - optimize:
         enabled: !ENV [MK_DOCS_GENERATE_ASSETS, true]
+        concurrency: 1
 
     # Allow redirects from old to new URLs.
     # See: https://github.com/mkdocs/mkdocs-redirects
