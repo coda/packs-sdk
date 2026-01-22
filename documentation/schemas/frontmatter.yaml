@@ -18,6 +18,23 @@ properties:
     type: array
     items:
       type: string
+  # Blog plugin: Date of the blog post.
+  date:
+    type: string
+    format: date
+  # Blog plugin: URL slug of the blog post.
+  slug:
+    type: string
+  # Blog plugin: Authors of the blog post.
+  authors:
+    type: array
+    items:
+      type: string
+  # Blog plugin: Categories of the blog post.
+  categories:
+    type: array
+    items:
+      type: string
   # Custom: Overrides the title of the page in the left nav only.
   nav:
     type: string

@@ -12,7 +12,7 @@ categories:
 
 Since the initial launch of Superhuman Go in late October, we've been busy improving the platform, including adding new features for agent developers. Here's a quick rundown of what's new:
 
-- [MCP support][mcp] - We've turned the agent platform into an MCP client, allowing your agent to use the tools exposed by an MCP server. This makes it possible to build an initial POC of your agent in only a few lines of code.
+- [MCP support][mcp] - We've turned the agent platform into an MCP client, allowing your agent to use the tools exposed by an MCP server. This makes it possible to build the initial version of your agent in only a few lines of code.
 - [Bench initialization][bench_initialization] - While the name of this feature is a mouthful, the idea is simple: allow the agent to start working as soon as the user has clicked on its icon in the bench. A bench initialization skill can kick off the most common user flow, show help text, or just say hi!
 - [Copyable blocks][copyable_blocks] - Wrap generated content in a blockquote to make it easy to copy or insert into other applications.
 - [Agent logs][agent_logs] - Developers can see detailed logs for each interaction with an agent they create, to enable better debugging.
