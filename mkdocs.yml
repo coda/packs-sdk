@@ -64,6 +64,10 @@ plugins:
     # See: https://lukasgeiter.github.io/mkdocs-awesome-nav/
     - awesome-nav
 
+    # Blog.
+    # See: https://squidfunk.github.io/mkdocs-material/plugins/blog/
+    - blog
+
     # Generate an llms.txt file, and a markdown representation for each page.
     # See: https://github.com/pawamoy/mkdocs-llmstxt
     - llmstxt:
@@ -351,6 +355,16 @@ plugins:
           "reference/sdk/variables/core.SvgConstants.DataUrlPrefix.md": "reference/sdk/core/namespaces/SvgConstants/variables/DataUrlPrefix.md"
           "reference/sdk/variables/core.SvgConstants.DataUrlPrefixWithDarkModeSupport.md": "reference/sdk/core/namespaces/SvgConstants/variables/DataUrlPrefixWithDarkModeSupport.md"
           "reference/sdk/variables/core.ValidFetchMethods.md": "reference/sdk/core/variables/ValidFetchMethods.md"
+
+    # Generate an RSS feed for the blog.
+    # See: https://guts.github.io/mkdocs-rss-plugin/
+    - rss:
+        match_path: blog/posts/.*
+        date_from_meta:
+          as_creation: date
+        categories:
+          - categories
+          - tags
 
     # Enable the site-wide search.
     # See: https://squidfunk.github.io/mkdocs-material/plugins/search/
