@@ -6,6 +6,8 @@ description: Improve the speed and efficiency of syncing data during indexing.
 
 Rather than syncing the full result set every time, tables can be updated to support an incremental sync, which returns only new or updated records. APIs enable incremental syncs in various ways, most often requiring you to pass a timestamp or an opaque sync token from the last sync to the next.
 
+## Adding support
+
 To add support for incremental sync in your Pack, you'll need to:
 
 1. Return a `completion` object at the end of the final sync execution, which contains the metadata needed to perform the next incremental sync.

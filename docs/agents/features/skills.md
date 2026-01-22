@@ -118,4 +118,10 @@ pack.setBenchInitializationSkill({
 The bench initialization skill is only run once while the Superhuman Go side panel is open, even if the user clicks the icon again or starts a new chat session. Closing the side panel will clear the state of all agents, and the next time is opened the bench initialization will fire again.
 
 
+## Prompt limits
+
+Prompts in skills are currently limited to 20,000 characters, which should be sufficient for providing instructions and examples to the LLM. To add additional context consider adding a [Pack tool][tools] that loads it or indexing data into the [knowledge layer][indexing].
+
+
 [tools]: ./tools.md
+[indexing]: ../indexing/index.md
