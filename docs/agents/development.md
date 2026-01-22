@@ -52,7 +52,7 @@ When an agent contains sync tables, the agent installation screen includes addit
 
 The status of the indexing job is visible on the agent's settings screen. You can access the settings screen by either:
 
-- Clicking the plus button :octicons-plus-16: at the bottom of the agent bench, the sliders icon :octicons-sliders-16: in the upper right, and then the gear icon :octicons-gear-16: next to the agent.
+- Clicking on your initials at the bottom of the agent bench, selecting **Manage Agents**, and then the gear icon :octicons-gear-16: next to the agent.
 - Opening the URL `https://coda.grammarly.com/brain/agent/setup/{PACK_ID}/debug`.
 
 Click the **Sync status** tab to see whether the sync is complete and how many records were found.

@@ -27,9 +27,19 @@ Sync tables are a Pack building block that let you pull in large lists of record
 To set up indexing, create a sync table for each record type you want to index. You'll need to ensure the schema includes the required metadata, as described in the [Schema changes guide][indexing_schemas]. You can improve the data freshness by implementing [Incremental sync][incremental] and simplify the user set by implementing [crawling][crawling].
 
 
+## Data freshness and size
+
+The platform determines how often to reindex the data, attempting to find a balance between freshness and resource consumption. The default is to sync the data every 24 hours. If the agent supports [incremental sync][incremental], then an incremental sync is done every 4 hours with a full sync done every 7 days (or as needed).
+
+There are also limits as to how much data can be indexed. By default an agent can index 10 tables and up to 100MB of data across all tables. Where the size limit is reached the sync will be terminated, therefore we recommend that the most relevant records (newest, most trafficked) are synced first.
+
+These defaults are subject to change without warning, and in the future may vary based on the user's plan.
+
+
 [sync_tables]: ../../guides/blocks/sync-tables/index.md
 [tools_knowledge]: ../features/tools.md#knowledge
 [indexing_schemas]: ./schema.md
 [incremental]: ./incremental.md
 [crawling]: ./crawling.md
 [todoist_agent]: ../examples.md#-todoist
+[support]: ../../support/index.md
