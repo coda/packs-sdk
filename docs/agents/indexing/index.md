@@ -42,4 +42,3 @@ These defaults are subject to change without warning, and in the future may vary
 [incremental]: ./incremental.md
 [crawling]: ./crawling.md
 [todoist_agent]: ../examples.md#-todoist
-[support]: ../../support/index.md
