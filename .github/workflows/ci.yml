@@ -83,11 +83,8 @@ jobs:
           path: .cache
           key: mkdocs-${{ hashFiles('mkdocs.yml') }}
 
-      - name: Build Typedoc
-        run: DOC_DISABLE_SOURCES=false DOC_GIT_REVISION="${{ github.sha }}" make docs
-
-      - name: Build MkDocs
-        run: MK_DOCS_SITE_URL="https://head.coda.io/packs/build/latest/" make build-mkdocs
+      - name: Build docs
+        run: DOC_DISABLE_SOURCES=false DOC_GIT_REVISION="${{ github.sha }}" MK_DOCS_SITE_URL="https://head.coda.io/packs/build/latest/" make docs
 
       - name: Upload site artifact
         uses: actions/upload-artifact@v4
@@ -141,11 +138,8 @@ jobs:
           path: .cache
           key: mkdocs-${{ hashFiles('mkdocs.yml') }}
 
-      - name: Build Typedoc
-        run: DOC_DISABLE_SOURCES=false DOC_GIT_REVISION="${{ github.sha }}" make docs
-
-      - name: Build MkDocs
-        run: MK_DOCS_SITE_URL="https://staging.coda.io/packs/build/latest/" make build-mkdocs
+      - name: Build docs
+        run: DOC_DISABLE_SOURCES=false DOC_GIT_REVISION="${{ github.sha }}" MK_DOCS_SITE_URL="https://staging.coda.io/packs/build/latest/" make docs
 
       - name: Upload site artifact
         uses: actions/upload-artifact@v4
@@ -200,11 +194,8 @@ jobs:
           path: .cache
           key: mkdocs-${{ hashFiles('mkdocs.yml') }}
 
-      - name: Build Typedoc
-        run: DOC_DISABLE_SOURCES=false DOC_GIT_REVISION="${{ github.sha }}" make docs
-
-      - name: Build MkDocs
-        run: MK_DOCS_SITE_URL="https://coda.io/packs/build/latest/" make build-mkdocs
+      - name: Build docs
+        run: DOC_DISABLE_SOURCES=false DOC_GIT_REVISION="${{ github.sha }}" MK_DOCS_SITE_URL="https://coda.io/packs/build/latest/" make docs
 
       - name: Upload site artifact
         uses: actions/upload-artifact@v4
