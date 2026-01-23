@@ -98,9 +98,13 @@ In addition, the chat skill always has the ability to transfer to other skills t
     The prompt defined in your chat skill will not be used exactly as-is; it will have additional content appended. This is done to provide the LLM with some details about the user, context, and other critical information needed for it to operate.
 
 
-## Bench initialization skill
+## Bench initialization skill {:#bench}
 
-Normally the agent waits for the user to send a message before responding, but you can have your agent send the first message by setting a bench initialization skill. This skill is run the first time the user clicks on the agent's icon in the agent bench. This can be useful when your agent is single-purpose and you want to start right away, or if you want to show some welcome text to the user to guide them.
+Normally the agent waits for the user to send a message before responding, but you can have your agent send the first message by setting a bench initialization skill. This skill is run the first time the user clicks on the agent's icon in the agent bench.
+
+<video style="width:auto" loop muted autoplay alt="Recording of the agent running a skill when opened on the agent bench." class="screenshot"><source src="site:images/agent_bench_initialization.mp4" type="video/mp4"></source></video>
+
+This can be useful when your agent is single-purpose and you want to start right away, or if you want to show some welcome text to the user to guide them.
 
 ```ts
 pack.setBenchInitializationSkill({
