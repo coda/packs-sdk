@@ -1474,6 +1474,7 @@ export type EmbeddedContent = CopyableBlockEmbeddedContent | CarouselViewEmbedde
 
 /**
  * Tool that enables creation of the content that can be embedded in the response.
+ * @internal
  */
 export interface EmbeddedContentTool extends BaseTool<ToolType.EmbeddedContent> {
   /**
