@@ -85,6 +85,7 @@ import * as coda from "@codahq/packs-sdk";
 - [DynamicSyncTableDef](interfaces/DynamicSyncTableDef.md)
 - [DynamicSyncTableOptions](interfaces/DynamicSyncTableOptions.md)
 - [EmailSchema](interfaces/EmailSchema.md)
+- [EmbeddedContentTool](interfaces/EmbeddedContentTool.md)
 - [EmptyFormulaDef](interfaces/EmptyFormulaDef.md)
 - [ExecutionContext](interfaces/ExecutionContext.md)
 - [Fetcher](interfaces/Fetcher.md)
