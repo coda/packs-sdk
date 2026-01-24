@@ -1328,6 +1328,7 @@ export interface TabViewEmbeddedContent extends BaseEmbeddedContent<EmbeddedCont
 export type EmbeddedContent = CopyableBlockEmbeddedContent | CarouselViewEmbeddedContent | TabViewEmbeddedContent;
 /**
  * Tool that enables creation of the content that can be embedded in the response.
+ * @internal
  */
 export interface EmbeddedContentTool extends BaseTool<ToolType.EmbeddedContent> {
     /**
