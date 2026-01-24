@@ -1220,9 +1220,10 @@ export enum ToolType {
    */
   WebSearch = 'WebSearch',
   /**
-   * Tool that enables AI responses to be embedded in various formats within Coda documents.
+   * Tool that allows creation of the content that can be embedded in the response.
+   * @internal
    */
-  ResponseEmbedding = 'ResponseEmbedding',
+  EmbeddedContent = 'EmbeddedContent',
 }
 
 /**
@@ -1417,52 +1418,67 @@ export interface DynamicSuggestedPromptTool extends BaseTool<ToolType.DynamicSug
 export interface WebSearchTool extends BaseTool<ToolType.WebSearch> {}
 
 /**
- * The type of response embedding format to use.
+ * The type of the content that can be embedded in the response.
+ * @internal
  */
-export enum ResponseEmbeddingType {
+export enum EmbeddedContentType {
   /**
-   * Embed the response as a text block that can be copied or inserted in the document.
+   * Block of text (or other content) that can be copied or inserted in a document.
    */
   CopyableBlock = 'CopyableBlock',
   /**
-   * Embed the response as a carousel of items that can be browsed.
+   * View that presents a list of content blocks as slides in a carousel.
    */
-  Carousel = 'Carousel',
+  CarouselView = 'CarouselView',
+  /**
+   * View that presents a list of content blocks in tabs of a tabbed panel.
+   */
+  TabView = 'TabView',
 }
 
 /**
- * Base class for response embeddings.
+ * Base interface for all embedded content.
+ * @internal
  */
-interface BaseResponseEmbedding<T extends ResponseEmbeddingType> {
+interface BaseEmbeddedContent<T extends EmbeddedContentType> {
   /**
-   * Type of the response embedding.
+   * Type of the content.
    */
   type: T;
 }
 
 /**
- * Response embedding presented as a Copyable Block.
+ * Block of a content that can be copied or inserted in a document.
+ * @internal
  */
-export interface CopyableBlockResponseEmbedding extends BaseResponseEmbedding<ResponseEmbeddingType.CopyableBlock> {}
+export interface CopyableBlockEmbeddedContent extends BaseEmbeddedContent<EmbeddedContentType.CopyableBlock> {}
 
 /**
- * Response embedding presented as a Carousel.
+ * Carousel of multiple slides.
+ * @internal
  */
-export interface CarouselResponseEmbedding extends BaseResponseEmbedding<ResponseEmbeddingType.Carousel> {}
+export interface CarouselViewEmbeddedContent extends BaseEmbeddedContent<EmbeddedContentType.CarouselView> {}
 
 /**
- * Union of all supported response embedding formats.
+ * Panel with multiple tabs.
+ * @internal
  */
-export type ResponseEmbedding = CopyableBlockResponseEmbedding | CarouselResponseEmbedding;
+export interface TabViewEmbeddedContent extends BaseEmbeddedContent<EmbeddedContentType.TabView> {}
 
 /**
- * Tool that enables AI responses to be embedded in various formats within Coda documents.
+ * Union of all supported embedded content classes.
+ * @internal
  */
-export interface ResponseEmbeddingTool extends BaseTool<ToolType.ResponseEmbedding> {
+export type EmbeddedContent = CopyableBlockEmbeddedContent | CarouselViewEmbeddedContent | TabViewEmbeddedContent;
+
+/**
+ * Tool that enables creation of the content that can be embedded in the response.
+ */
+export interface EmbeddedContentTool extends BaseTool<ToolType.EmbeddedContent> {
   /**
-   * The embedding format configuration for the response.
+   * Information about the content to create.
    */
-  embedding: ResponseEmbedding;
+  embeddedContent: EmbeddedContent;
 }
 
 /**
@@ -1495,7 +1511,7 @@ export interface ToolMap {
   [ToolType.CodaDocsAndTables]: CodaDocsAndTablesTool;
   [ToolType.DynamicSuggestedPrompt]: DynamicSuggestedPromptTool;
   [ToolType.WebSearch]: WebSearchTool;
-  [ToolType.ResponseEmbedding]: ResponseEmbeddingTool;
+  [ToolType.EmbeddedContent]: EmbeddedContentTool;
 }
 
 /**

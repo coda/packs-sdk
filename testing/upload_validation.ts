@@ -33,6 +33,8 @@ import type {DynamicSyncTableDef} from '../api';
 import type {EmailContentCategorization} from '../schema';
 import {EmailDisplayType} from '../schema';
 import type {EmailSchema} from '../schema';
+import type {EmbeddedContentTool} from '../types';
+import {EmbeddedContentType} from '../types';
 import {FeatureSet} from '../types';
 import type {FormulaOptions} from '../api';
 import type {GenericObjectSchema} from '../schema';
@@ -91,8 +93,6 @@ import type {ProgressBarSchema} from '../schema';
 import type {PropertyIdentifier} from '../schema';
 import type {QueryParamTokenAuthentication} from '../types';
 import {ReservedAuthenticationNames} from '../types';
-import type {ResponseEmbeddingTool} from '../types';
-import {ResponseEmbeddingType} from '../types';
 import {ScaleIconSet} from '../schema';
 import type {ScaleSchema} from '../schema';
 import type {Schema} from '../schema';
@@ -2184,18 +2184,21 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     annotation: screenAnnotationSchema,
   });
 
-  const responseEmbeddingSchema = z.discriminatedUnion('type', [
+  const embeddedContentSchema = z.discriminatedUnion('type', [
     z.object({
-      type: z.literal(ResponseEmbeddingType.CopyableBlock),
+      type: z.literal(EmbeddedContentType.CopyableBlock),
     }),
     z.object({
-      type: z.literal(ResponseEmbeddingType.Carousel),
+      type: z.literal(EmbeddedContentType.CarouselView),
+    }),
+    z.object({
+      type: z.literal(EmbeddedContentType.TabView),
     }),
   ]);
 
-  const responseEmbeddingToolSchema = zodCompleteStrictObject<ResponseEmbeddingTool>({
-    type: z.literal(ToolType.ResponseEmbedding),
-    embedding: responseEmbeddingSchema,
+  const embeddedContentToolSchema = zodCompleteStrictObject<EmbeddedContentTool>({
+    type: z.literal(ToolType.EmbeddedContent),
+    embeddedContent: embeddedContentSchema,
   });
 
   const assistantMessageToolSchema = zodCompleteStrictObject<AssistantMessageTool>({
@@ -2238,7 +2241,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     contactResolutionToolSchema,
     codaDocsToolSchema,
     dynamicSuggestedPromptToolSchema,
-    responseEmbeddingToolSchema,
+    embeddedContentToolSchema,
   ]);
   const skillSchema = zodCompleteObject<Skill>({
     name: z
