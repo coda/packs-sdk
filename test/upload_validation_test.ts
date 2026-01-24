@@ -6047,6 +6047,12 @@ describe('Pack metadata Validation', async () => {
                   type: EmbeddedContentType.CarouselView,
                 },
               },
+              {
+                type: ToolType.EmbeddedContent,
+                embeddedContent: {
+                  type: EmbeddedContentType.TabView,
+                },
+              },
             ],
           },
         ],
