@@ -517,7 +517,7 @@ declare enum FormulaPurpose {
 	/**
 	 * Indicates this formula can be used for search.
 	 */
-	Search = "Search"
+	Search = "search"
 }
 /**
  * Enumeration of requirement states for whether a given formula or sync table requires

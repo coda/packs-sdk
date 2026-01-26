@@ -672,7 +672,7 @@ export enum FormulaPurpose {
   /**
    * Indicates this formula can be used for search.
    */
-  Search = 'Search',
+  Search = 'search',
 }
 
 /**

@@ -217,7 +217,7 @@ var FormulaPurpose;
     /**
      * Indicates this formula can be used for search.
      */
-    FormulaPurpose["Search"] = "Search";
+    FormulaPurpose["Search"] = "search";
 })(FormulaPurpose || (exports.FormulaPurpose = FormulaPurpose = {}));
 /**
  * Enumeration of requirement states for whether a given formula or sync table requires
