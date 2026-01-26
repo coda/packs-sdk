@@ -457,10 +457,10 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
 	 */
 	readonly isSystem?: boolean;
 	/**
-	 * Whether this formula can be used as a federated search tool for agents.
+	 * The purpose for this formula, if any. Used by agents.
 	 * @internal
 	 */
-	readonly isFederatedSearch?: boolean;
+	readonly purpose?: FormulaPurpose;
 	/**
 	 * OAuth scopes that the formula needs that weren't requested in the pack's overall authentication
 	 * config. For example, a Slack pack can have one formula that needs admin privileges, but non-admins
@@ -512,6 +512,12 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
 	 * ```
 	 */
 	validateParameters?: MetadataFormula<ExecutionContext, ParameterValidationResult>;
+}
+declare enum FormulaPurpose {
+	/**
+	 * Indicates this formula can be used for search.
+	 */
+	Search = "Search"
 }
 /**
  * Enumeration of requirement states for whether a given formula or sync table requires
@@ -4485,7 +4491,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
 	network?: Network | undefined;
 	isExperimental?: boolean | undefined;
 	isSystem?: boolean | undefined;
-	isFederatedSearch?: boolean | undefined;
+	purpose?: FormulaPurpose | undefined;
 	extraOAuthScopes?: string[] | undefined;
 	allowedAuthenticationNames?: string[] | undefined;
 	validateParameters?: MetadataFormulaDef<ExecutionContext, ParameterValidationResult> | undefined;
@@ -4531,7 +4537,7 @@ export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definitio
 	network?: Network | undefined;
 	isExperimental?: boolean | undefined;
 	isSystem?: boolean | undefined;
-	isFederatedSearch?: boolean | undefined;
+	purpose?: FormulaPurpose | undefined;
 	extraOAuthScopes?: string[] | undefined;
 	allowedAuthenticationNames?: string[] | undefined;
 	validateParameters?: MetadataFormulaDef<ExecutionContext, ParameterValidationResult> | undefined;

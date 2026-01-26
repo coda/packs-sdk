@@ -37,6 +37,7 @@ const schema_4 = require("../schema");
 const schema_5 = require("../schema");
 const schema_6 = require("../schema");
 const types_2 = require("../types");
+const api_types_3 = require("../api_types");
 const schema_7 = require("../schema");
 const schema_8 = require("../schema");
 const schema_9 = require("../schema");
@@ -45,9 +46,9 @@ const jsonpath_plus_1 = require("jsonpath-plus");
 const types_3 = require("../types");
 const schema_11 = require("../schema");
 const schema_12 = require("../schema");
-const api_types_3 = require("../api_types");
-const schema_13 = require("../schema");
 const api_types_4 = require("../api_types");
+const schema_13 = require("../schema");
+const api_types_5 = require("../api_types");
 const types_4 = require("../types");
 const schema_14 = require("../schema");
 const types_5 = require("../types");
@@ -57,10 +58,10 @@ const schema_15 = require("../schema");
 const types_7 = require("../types");
 const schema_16 = require("../schema");
 const types_8 = require("../types");
-const api_types_5 = require("../api_types");
+const api_types_6 = require("../api_types");
 const types_9 = require("../types");
 const types_10 = require("../types");
-const api_types_6 = require("../api_types");
+const api_types_7 = require("../api_types");
 const url_parse_1 = __importDefault(require("url-parse"));
 const schema_17 = require("../schema");
 const schema_18 = require("../schema");
@@ -68,7 +69,7 @@ const zod_1 = require("zod");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
 const schema_19 = require("../schema");
-const api_types_7 = require("../api_types");
+const api_types_8 = require("../api_types");
 const schema_20 = require("../schema");
 const object_utils_1 = require("../helpers/object_utils");
 const object_utils_2 = require("../helpers/object_utils");
@@ -706,15 +707,15 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             .regex(regexParameterName, 'Parameter names can only contain alphanumeric characters and underscores.'),
         type: z
             .union([
-            z.nativeEnum(api_types_6.Type),
+            z.nativeEnum(api_types_7.Type),
             z.object({
                 type: zodDiscriminant('array'),
-                items: z.nativeEnum(api_types_6.Type),
+                items: z.nativeEnum(api_types_7.Type),
                 allowEmpty: z.boolean().optional(),
             }),
         ])
-            .refine(paramType => paramType !== api_types_6.Type.object &&
-            !(typeof paramType === 'object' && paramType.type === 'array' && paramType.items === api_types_6.Type.object), {
+            .refine(paramType => paramType !== api_types_7.Type.object &&
+            !(typeof paramType === 'object' && paramType.type === 'array' && paramType.items === api_types_7.Type.object), {
             message: 'Object parameters are not currently supported.',
         }),
         description: z.string().max(exports.Limits.BuildingBlockDescription),
@@ -737,18 +738,18 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         if (!param.allowedPresetValues) {
             return true;
         }
-        return param.type === api_types_6.Type.date || ((0, api_types_7.isArrayType)(param.type) && param.type.items === api_types_6.Type.date);
+        return param.type === api_types_7.Type.date || ((0, api_types_8.isArrayType)(param.type) && param.type.items === api_types_7.Type.date);
     }, { message: 'allowedPresetValues is not allowed on parameters of this type.' })
         .refine(param => {
         var _a;
-        if (!param.allowedPresetValues || param.type !== api_types_6.Type.date) {
+        if (!param.allowedPresetValues || param.type !== api_types_7.Type.date) {
             return true;
         }
         return (_a = param.allowedPresetValues) === null || _a === void 0 ? void 0 : _a.every((value) => typeof value === 'string' && api_types_1.AllPrecannedDates.includes(value));
     }, { message: 'allowedPresetValues for a date parameter can only be a list of PrecannedDate values.' })
         .refine(param => {
         var _a;
-        if (!param.allowedPresetValues || !((0, api_types_7.isArrayType)(param.type) && param.type.items === api_types_6.Type.date)) {
+        if (!param.allowedPresetValues || !((0, api_types_8.isArrayType)(param.type) && param.type.items === api_types_7.Type.date)) {
             return true;
         }
         const relativeDateRanges = Object.values(__1.PrecannedDateRange);
@@ -796,12 +797,12 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         network: zodCompleteObject({
             hasSideEffect: z.boolean().optional(),
             requiresConnection: z.boolean().optional(),
-            connection: z.nativeEnum(api_types_3.NetworkConnection).optional(),
+            connection: z.nativeEnum(api_types_4.NetworkConnection).optional(),
         }).optional(),
         cacheTtlSecs: z.number().min(0).optional(),
         isExperimental: z.boolean().optional(),
         isSystem: z.boolean().optional(),
-        isFederatedSearch: z.boolean().optional(),
+        purpose: z.nativeEnum(api_types_3.FormulaPurpose).optional(),
         extraOAuthScopes: z.array(z.string()).optional(),
         allowedAuthenticationNames: z.array(z.string()).optional(),
         // Has to be any to avoid circular dependency.
@@ -809,7 +810,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     };
     const booleanPackFormulaSchema = zodCompleteObject({
         ...commonPackFormulaSchema,
-        resultType: zodDiscriminant(api_types_6.Type.boolean),
+        resultType: zodDiscriminant(api_types_7.Type.boolean),
         schema: zodCompleteObject({
             type: zodDiscriminant(schema_18.ValueType.Boolean),
             codaType: z.enum([...schema_2.BooleanHintValueTypes]).optional(),
@@ -946,7 +947,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     ]);
     const numericPackFormulaSchema = zodCompleteObject({
         ...commonPackFormulaSchema,
-        resultType: zodDiscriminant(api_types_6.Type.number),
+        resultType: zodDiscriminant(api_types_7.Type.number),
         schema: numberPropertySchema.optional(),
     });
     const simpleStringPropertySchema = zodCompleteStrictObject({
@@ -1038,7 +1039,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     ]);
     const stringPackFormulaSchema = zodCompleteObject({
         ...commonPackFormulaSchema,
-        resultType: zodDiscriminant(api_types_6.Type.string),
+        resultType: zodDiscriminant(api_types_7.Type.string),
         schema: stringPropertySchema.optional(),
     });
     // TODO(jonathan): Give this a better type than ZodTypeAny after figuring out
@@ -1502,7 +1503,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     }, 'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "options" property.');
     const objectPackFormulaSchema = zodCompleteObject({
         ...commonPackFormulaSchema,
-        resultType: zodDiscriminant(api_types_6.Type.object),
+        resultType: zodDiscriminant(api_types_7.Type.object),
         // TODO(jonathan): See if we should really allow this. The SDK right now explicitly tolerates an undefined
         // schema for objects, but that doesn't seem like a use case we actually want to support.
         schema: z.union([genericObjectSchema, arrayPropertySchema]).optional(),
@@ -1583,7 +1584,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 });
             }
         }),
-        role: z.nativeEnum(api_types_5.TableRole).optional(),
+        role: z.nativeEnum(api_types_6.TableRole).optional(),
     };
     const genericSyncTableSchema = zodCompleteObject({
         ...baseSyncTableSchema,
@@ -2279,7 +2280,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                     context.addIssue({
                         code: z.ZodIssueCode.custom,
                         path: ['syncTables', i, 'properties', propertyName, 'options'],
-                        message: options === api_types_4.OptionsType.Dynamic
+                        message: options === api_types_5.OptionsType.Dynamic
                             ? `Sync table ${syncTable.name} must define "options" for this property to use OptionsType.Dynamic`
                             : `"${options}" is not registered as an options function for this sync table.`,
                     });
