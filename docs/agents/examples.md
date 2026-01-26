@@ -1,6 +1,6 @@
 ---
 nav: Examples
-description: Sample code for agents running on {{ custom.agent_product_name }}.
+description: Sample code for agents running on Superhuman Go.
 ---
 
 # Example agents
