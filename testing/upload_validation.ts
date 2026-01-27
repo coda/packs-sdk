@@ -528,23 +528,11 @@ export function normalizeTool(tool: Tool): Tool {
 }
 
 /**
- * Represents a duplicate tool found during validation.
- */
-export interface DuplicateTool {
-  /** Index of the duplicate tool */
-  index: number;
-  /** Index of the original tool this duplicates */
-  originalIndex: number;
-  /** The duplicate tool */
-  tool: Tool;
-}
-
-/**
  * Finds duplicate tools in an array by comparing normalized versions.
  * Returns information about each duplicate found.
  */
-export function findDuplicateTools(tools: Tool[]): DuplicateTool[] {
-  const duplicates: DuplicateTool[] = [];
+export function findDuplicateTools(tools: Tool[]): Array<{index: number; originalIndex: number; tool: Tool}> {
+  const duplicates: Array<{index: number; originalIndex: number; tool: Tool}> = [];
 
   for (let i = 0; i < tools.length; i++) {
     for (let j = i + 1; j < tools.length; j++) {

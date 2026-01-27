@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.zodErrorDetailToValidationError = exports._hasCycle = exports.validateParents = exports.validateCrawlHierarchy = exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.Limits = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
+exports.zodErrorDetailToValidationError = exports.findDuplicateTools = exports.normalizeTool = exports._hasCycle = exports.validateParents = exports.validateCrawlHierarchy = exports.validateSyncTableSchema = exports.validateVariousAuthenticationMetadata = exports.validatePackVersionMetadata = exports.PackMetadataValidationError = exports.Limits = exports.PACKS_VALID_COLUMN_FORMAT_MATCHER_REGEX = void 0;
 const api_types_1 = require("../api_types");
 const schema_1 = require("../schema");
 const types_1 = require("../types");
@@ -72,6 +72,7 @@ const ensure_2 = require("../helpers/ensure");
 const schema_19 = require("../schema");
 const api_types_8 = require("../api_types");
 const schema_20 = require("../schema");
+const util_1 = require("util");
 const object_utils_1 = require("../helpers/object_utils");
 const object_utils_2 = require("../helpers/object_utils");
 const schema_21 = require("../schema");
@@ -366,6 +367,46 @@ function getNonUniqueElements(items) {
     }
     return nonUnique;
 }
+/**
+ * Normalizes a tool for comparison by sorting any arrays within it.
+ * This ensures that tools with the same content but different array ordering
+ * are considered equal.
+ */
+function normalizeTool(tool) {
+    const normalized = { ...tool };
+    // Sort formulas array if present (for Pack tools)
+    if ('formulas' in normalized && Array.isArray(normalized.formulas)) {
+        normalized.formulas = [...normalized.formulas].sort((a, b) => a.formulaName.localeCompare(b.formulaName));
+    }
+    // Sort serverNames array if present (for MCP tools)
+    if ('serverNames' in normalized && Array.isArray(normalized.serverNames)) {
+        normalized.serverNames = [...normalized.serverNames].sort();
+    }
+    return normalized;
+}
+exports.normalizeTool = normalizeTool;
+/**
+ * Finds duplicate tools in an array by comparing normalized versions.
+ * Returns information about each duplicate found.
+ */
+function findDuplicateTools(tools) {
+    const duplicates = [];
+    for (let i = 0; i < tools.length; i++) {
+        for (let j = i + 1; j < tools.length; j++) {
+            const normalizedI = normalizeTool(tools[i]);
+            const normalizedJ = normalizeTool(tools[j]);
+            if ((0, util_1.isDeepStrictEqual)(normalizedI, normalizedJ)) {
+                duplicates.push({
+                    index: j,
+                    originalIndex: i,
+                    tool: tools[j],
+                });
+            }
+        }
+    }
+    return duplicates;
+}
+exports.findDuplicateTools = findDuplicateTools;
 function zodErrorDetailToValidationError(subError) {
     var _a;
     // Top-level errors for union types are totally useless, they just say "invalid input",
@@ -1722,7 +1763,16 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         displayName: z.string().min(1).max(exports.Limits.BuildingBlockName),
         description: z.string().min(1).max(exports.Limits.BuildingBlockDescription),
         prompt: z.string().min(1).max(exports.Limits.PromptLength),
-        tools: z.array(toolSchema),
+        tools: z.array(toolSchema).superRefine((tools, context) => {
+            const duplicates = findDuplicateTools(tools);
+            for (const duplicate of duplicates) {
+                context.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    path: [duplicate.index],
+                    message: `Duplicate tool found. ${JSON.stringify(duplicate.tool)} is equivalent to the tool at index ${duplicate.originalIndex}.`,
+                });
+            }
+        }),
         forcedFormula: z.string().min(1).optional(),
         models: z.array(skillModelConfigurationSchema).optional(),
     });
