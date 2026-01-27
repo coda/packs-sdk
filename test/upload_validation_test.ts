@@ -8,6 +8,7 @@ import {ConnectionRequirement} from '../api_types';
 import {ContentCategorizationType} from '../schema';
 import {CurrencyFormat} from '..';
 import {DurationUnit} from '..';
+import {EmbeddedContentType} from '../types';
 import type {GenericSyncTable} from '../api';
 import {ImageCornerStyle} from '../schema';
 import {ImageOutline} from '../schema';
@@ -6034,6 +6035,24 @@ describe('Pack metadata Validation', async () => {
               {
                 type: ToolType.DynamicSuggestedPrompt,
               },
+              {
+                type: ToolType.EmbeddedContent,
+                embeddedContent: {
+                  type: EmbeddedContentType.CopyableBlock,
+                },
+              },
+              {
+                type: ToolType.EmbeddedContent,
+                embeddedContent: {
+                  type: EmbeddedContentType.CarouselView,
+                },
+              },
+              {
+                type: ToolType.EmbeddedContent,
+                embeddedContent: {
+                  type: EmbeddedContentType.TabView,
+                },
+              },
             ],
           },
         ],
@@ -6070,7 +6089,7 @@ describe('Pack metadata Validation', async () => {
         {
           path: 'skills[0].tools[0].type',
           message:
-            "Invalid discriminator value. Expected 'Pack' | 'Knowledge' | 'ScreenAnnotation' | 'AssistantMessage' | 'Summarizer' | 'MCP' | 'ContactResolution' | 'CodaDocsAndTables' | 'DynamicSuggestedPrompt'",
+            "Invalid discriminator value. Expected 'Pack' | 'Knowledge' | 'ScreenAnnotation' | 'AssistantMessage' | 'Summarizer' | 'MCP' | 'ContactResolution' | 'CodaDocsAndTables' | 'DynamicSuggestedPrompt' | 'EmbeddedContent'",
         },
       ]);
     });
@@ -6096,6 +6115,8 @@ describe('Pack metadata Validation', async () => {
         case ToolType.CodaDocsAndTables:
           break;
         case ToolType.DynamicSuggestedPrompt:
+          break;
+        case ToolType.EmbeddedContent:
           break;
         case ToolType.WebSearch:
           break;

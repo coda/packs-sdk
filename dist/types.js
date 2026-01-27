@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HttpStatusCode = exports.SkillModel = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.ToolType = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
+exports.HttpStatusCode = exports.SkillModel = exports.EmbeddedContentType = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.ToolType = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
 /**
  * @deprecated
  */
@@ -271,6 +271,11 @@ var ToolType;
      * @internal
      */
     ToolType["WebSearch"] = "WebSearch";
+    /**
+     * Tool that allows creation of the content that can be embedded in the response.
+     * @internal
+     */
+    ToolType["EmbeddedContent"] = "EmbeddedContent";
 })(ToolType || (exports.ToolType = ToolType = {}));
 /**
  * The type of knowledge source to use.
@@ -302,6 +307,25 @@ var ScreenAnnotationType;
      */
     ScreenAnnotationType["Guide"] = "Guide";
 })(ScreenAnnotationType || (exports.ScreenAnnotationType = ScreenAnnotationType = {}));
+/**
+ * The type of the content that can be embedded in the response.
+ * @internal
+ */
+var EmbeddedContentType;
+(function (EmbeddedContentType) {
+    /**
+     * Block of text (or other content) that can be copied or inserted in a document.
+     */
+    EmbeddedContentType["CopyableBlock"] = "CopyableBlock";
+    /**
+     * View that presents a list of content blocks as slides in a carousel.
+     */
+    EmbeddedContentType["CarouselView"] = "CarouselView";
+    /**
+     * View that presents a list of content blocks in tabs of a tabbed panel.
+     */
+    EmbeddedContentType["TabView"] = "TabView";
+})(EmbeddedContentType || (exports.EmbeddedContentType = EmbeddedContentType = {}));
 /**
  * The supported LLM models for a skill.
  *
