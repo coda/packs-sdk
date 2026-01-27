@@ -6412,6 +6412,159 @@ describe('Pack metadata Validation', async () => {
       });
       await validateJsonAndAssertFails(metadata);
     });
+
+    it('fails for duplicate singleton tools', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [{type: ToolType.Summarizer}, {type: ToolType.Summarizer}],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills[0].tools[1]',
+          message: 'Duplicate tool found. "Summarizer tool" is equivalent to the tool at index 0.',
+        },
+      ]);
+    });
+
+    it('fails for duplicate Pack tools with same packId and formulas', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [
+              {type: ToolType.Pack, packId: 123, formulas: [{formulaName: 'Foo'}]},
+              {type: ToolType.Pack, packId: 123, formulas: [{formulaName: 'Foo'}]},
+            ],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills[0].tools[1]',
+          message:
+            'Duplicate tool found. "Pack tool (packId: 123, formulas: [Foo])" is equivalent to the tool at index 0.',
+        },
+      ]);
+    });
+
+    it('fails for duplicate Pack tools with formulas in different order', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [
+              {type: ToolType.Pack, packId: 123, formulas: [{formulaName: 'A'}, {formulaName: 'B'}]},
+              {type: ToolType.Pack, packId: 123, formulas: [{formulaName: 'B'}, {formulaName: 'A'}]},
+            ],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills[0].tools[1]',
+          message:
+            'Duplicate tool found. "Pack tool (packId: 123, formulas: [B, A])" is equivalent to the tool at index 0.',
+        },
+      ]);
+    });
+
+    it('fails for duplicate Knowledge tools with same source', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [
+              {type: ToolType.Knowledge, source: {type: KnowledgeToolSourceType.Pack, packId: 456}},
+              {type: ToolType.Knowledge, source: {type: KnowledgeToolSourceType.Pack, packId: 456}},
+            ],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills[0].tools[1]',
+          message: 'Duplicate tool found. "Knowledge tool (Pack, packId: 456)" is equivalent to the tool at index 0.',
+        },
+      ]);
+    });
+
+    it('fails for duplicate ScreenAnnotation tools with same annotation type', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [
+              {type: ToolType.ScreenAnnotation, annotation: {type: ScreenAnnotationType.Rewrite}},
+              {type: ToolType.ScreenAnnotation, annotation: {type: ScreenAnnotationType.Rewrite}},
+            ],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills[0].tools[1]',
+          message: 'Duplicate tool found. "ScreenAnnotation tool (Rewrite)" is equivalent to the tool at index 0.',
+        },
+      ]);
+    });
+
+    it('allows different tools of the same type', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [
+              {type: ToolType.Pack, packId: 123, formulas: [{formulaName: 'Foo'}]},
+              {type: ToolType.Pack, packId: 123, formulas: [{formulaName: 'Bar'}]},
+              {type: ToolType.Pack, packId: 456},
+            ],
+          },
+        ],
+      });
+      await validateJson(metadata);
+    });
+
+    it('allows different singleton tool types', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [{type: ToolType.Summarizer}, {type: ToolType.AssistantMessage}, {type: ToolType.ContactResolution}],
+          },
+        ],
+      });
+      await validateJson(metadata);
+    });
   });
 
   describe('validateChatSkill', () => {
