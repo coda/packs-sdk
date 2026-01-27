@@ -509,62 +509,58 @@ function getNonUniqueElements<T extends string>(items: T[]): T[] {
  * This ensures that tools with the same content but different array ordering
  * are considered equal.
  */
-function normalizeTool(tool: Tool): Tool {
+export function normalizeTool(tool: Tool): Tool {
   const normalized = {...tool};
 
-  switch (normalized.type) {
-    case ToolType.Pack:
-      if (normalized.formulas) {
-        normalized.formulas = [...normalized.formulas].sort((a, b) => a.formulaName.localeCompare(b.formulaName));
-      }
-      break;
-    case ToolType.MCP:
-      if (normalized.serverNames) {
-        normalized.serverNames = [...normalized.serverNames].sort();
-      }
-      break;
+  // Sort formulas array if present (for Pack tools)
+  if ('formulas' in normalized && Array.isArray(normalized.formulas)) {
+    normalized.formulas = [...normalized.formulas].sort((a, b) =>
+      (a as {formulaName: string}).formulaName.localeCompare((b as {formulaName: string}).formulaName),
+    );
+  }
+
+  // Sort serverNames array if present (for MCP tools)
+  if ('serverNames' in normalized && Array.isArray(normalized.serverNames)) {
+    normalized.serverNames = [...normalized.serverNames].sort();
   }
 
   return normalized;
 }
 
 /**
- * Returns a human-readable description of a tool for error messages.
+ * Represents a duplicate tool found during validation.
  */
-function describeToolForError(tool: Tool): string {
-  switch (tool.type) {
-    case ToolType.Pack: {
-      const packId = tool.packId !== undefined ? `packId: ${tool.packId}` : 'current pack';
-      if (tool.formulas && tool.formulas.length > 0) {
-        const formulaNames = tool.formulas.map(f => f.formulaName).join(', ');
-        return `Pack tool (${packId}, formulas: [${formulaNames}])`;
+export interface DuplicateTool {
+  /** Index of the duplicate tool */
+  index: number;
+  /** Index of the original tool this duplicates */
+  originalIndex: number;
+  /** The duplicate tool */
+  tool: Tool;
+}
+
+/**
+ * Finds duplicate tools in an array by comparing normalized versions.
+ * Returns information about each duplicate found.
+ */
+export function findDuplicateTools(tools: Tool[]): DuplicateTool[] {
+  const duplicates: DuplicateTool[] = [];
+
+  for (let i = 0; i < tools.length; i++) {
+    for (let j = i + 1; j < tools.length; j++) {
+      const normalizedI = normalizeTool(tools[i]);
+      const normalizedJ = normalizeTool(tools[j]);
+      if (isDeepStrictEqual(normalizedI, normalizedJ)) {
+        duplicates.push({
+          index: j,
+          originalIndex: i,
+          tool: tools[j],
+        });
       }
-      return `Pack tool (${packId}, all formulas)`;
     }
-    case ToolType.Knowledge: {
-      const sourceType = tool.source.type;
-      if (sourceType === KnowledgeToolSourceType.Pack) {
-        const packId = tool.source.packId !== undefined ? `packId: ${tool.source.packId}` : 'current pack';
-        return `Knowledge tool (${sourceType}, ${packId})`;
-      }
-      return `Knowledge tool (${sourceType})`;
-    }
-    case ToolType.ScreenAnnotation:
-      return `ScreenAnnotation tool (${tool.annotation.type})`;
-    case ToolType.MCP:
-      if (tool.serverNames && tool.serverNames.length > 0) {
-        return `MCP tool (servers: [${tool.serverNames.join(', ')}])`;
-      }
-      return 'MCP tool (all servers)';
-    case ToolType.Summarizer:
-    case ToolType.AssistantMessage:
-    case ToolType.ContactResolution:
-    case ToolType.CodaDocsAndTables:
-    case ToolType.DynamicSuggestedPrompt:
-      return `${tool.type} tool`;
-    default:
-      return `${(tool as Tool).type} tool`;
   }
+
+  return duplicates;
 }
 
 export function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError[] {
@@ -2320,20 +2316,13 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     description: z.string().min(1).max(Limits.BuildingBlockDescription),
     prompt: z.string().min(1).max(Limits.PromptLength),
     tools: z.array(toolSchema).superRefine((tools, context) => {
-      // Check for duplicate tools using normalized comparison
-      for (let i = 0; i < tools.length; i++) {
-        for (let j = i + 1; j < tools.length; j++) {
-          const normalizedI = normalizeTool(tools[i] as Tool);
-          const normalizedJ = normalizeTool(tools[j] as Tool);
-          if (isDeepStrictEqual(normalizedI, normalizedJ)) {
-            const toolDescription = describeToolForError(tools[j] as Tool);
-            context.addIssue({
-              code: z.ZodIssueCode.custom,
-              path: [j],
-              message: `Duplicate tool found. "${toolDescription}" is equivalent to the tool at index ${i}.`,
-            });
-          }
-        }
+      const duplicates = findDuplicateTools(tools as Tool[]);
+      for (const duplicate of duplicates) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: [duplicate.index],
+          message: `Duplicate tool found. ${JSON.stringify(duplicate.tool)} is equivalent to the tool at index ${duplicate.originalIndex}.`,
+        });
       }
     }),
     forcedFormula: z.string().min(1).optional(),

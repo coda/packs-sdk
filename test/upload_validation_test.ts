@@ -14,6 +14,7 @@ import {ImageCornerStyle} from '../schema';
 import {ImageOutline} from '../schema';
 import {ImageShapeStyle} from '../schema';
 import {IndexingStrategy} from '../schema';
+import type {KnowledgeTool} from '../types';
 import {KnowledgeToolSourceType} from '../types';
 import {Limits} from '../testing/upload_validation';
 import type {ObjectSchemaDefinition} from '../schema';
@@ -31,12 +32,14 @@ import {PrecannedDate} from '../api_types';
 import {PrecannedDateRange} from '..';
 import {ReservedAuthenticationNames} from '../types';
 import {ScaleIconSet} from '../schema';
+import type {ScreenAnnotationTool} from '../types';
 import {ScreenAnnotationType} from '../types';
 import type {Skill} from '../types';
 import {SkillModel} from '../types';
 import type {StringFormulaDefLegacy} from '../api';
 import type {SyncTable} from '../api';
 import {TableRole} from '../api_types';
+import type {Tool} from '../types';
 import {ToolType} from '../types';
 import {Type} from '../api_types';
 import {UntilNowDateRanges} from '../api_types';
@@ -54,6 +57,7 @@ import {createFakePackVersionMetadata} from './test_utils';
 import {deepCopy} from '../helpers/object_utils';
 import {ensureExists} from '../helpers/ensure';
 import {ensureNever} from '../helpers/ensure';
+import {findDuplicateTools} from '../testing/upload_validation';
 import {isCustomIndexDefinition} from '../schema';
 import {isObject} from '../schema';
 import {makeAttributionNode} from '..';
@@ -72,6 +76,7 @@ import {makeStringFormula} from '../api';
 import {makeStringParameter} from '../api';
 import {makeSyncTable} from '../api';
 import {makeSyncTableLegacy} from '../api';
+import {normalizeTool} from '../testing/upload_validation';
 import {numberArray} from '../api_types';
 import {validateCrawlHierarchy} from '../testing/upload_validation';
 import {validatePackVersionMetadata} from '../testing/upload_validation';
@@ -6429,12 +6434,13 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'skills[0].tools[1]',
-          message: 'Duplicate tool found. "Summarizer tool" is equivalent to the tool at index 0.',
+          message: `Duplicate tool found. ${JSON.stringify({type: ToolType.Summarizer})} is equivalent to the tool at index 0.`,
         },
       ]);
     });
 
     it('fails for duplicate Pack tools with same packId and formulas', async () => {
+      const tool = {type: ToolType.Pack, packId: 123, formulas: [{formulaName: 'Foo'}]} as PackTool;
       const metadata = createFakePackVersionMetadata({
         skills: [
           {
@@ -6442,10 +6448,7 @@ describe('Pack metadata Validation', async () => {
             displayName: 'Test Skill',
             description: 'A test skill',
             prompt: 'You are a helpful assistant',
-            tools: [
-              {type: ToolType.Pack, packId: 123, formulas: [{formulaName: 'Foo'}]},
-              {type: ToolType.Pack, packId: 123, formulas: [{formulaName: 'Foo'}]},
-            ],
+            tools: [tool, tool],
           },
         ],
       });
@@ -6453,13 +6456,14 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'skills[0].tools[1]',
-          message:
-            'Duplicate tool found. "Pack tool (packId: 123, formulas: [Foo])" is equivalent to the tool at index 0.',
+          message: `Duplicate tool found. ${JSON.stringify(tool)} is equivalent to the tool at index 0.`,
         },
       ]);
     });
 
     it('fails for duplicate Pack tools with formulas in different order', async () => {
+      const tool1 = {type: ToolType.Pack, packId: 123, formulas: [{formulaName: 'A'}, {formulaName: 'B'}]} as PackTool;
+      const tool2 = {type: ToolType.Pack, packId: 123, formulas: [{formulaName: 'B'}, {formulaName: 'A'}]} as PackTool;
       const metadata = createFakePackVersionMetadata({
         skills: [
           {
@@ -6467,10 +6471,7 @@ describe('Pack metadata Validation', async () => {
             displayName: 'Test Skill',
             description: 'A test skill',
             prompt: 'You are a helpful assistant',
-            tools: [
-              {type: ToolType.Pack, packId: 123, formulas: [{formulaName: 'A'}, {formulaName: 'B'}]},
-              {type: ToolType.Pack, packId: 123, formulas: [{formulaName: 'B'}, {formulaName: 'A'}]},
-            ],
+            tools: [tool1, tool2],
           },
         ],
       });
@@ -6478,13 +6479,16 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'skills[0].tools[1]',
-          message:
-            'Duplicate tool found. "Pack tool (packId: 123, formulas: [B, A])" is equivalent to the tool at index 0.',
+          message: `Duplicate tool found. ${JSON.stringify(tool2)} is equivalent to the tool at index 0.`,
         },
       ]);
     });
 
     it('fails for duplicate Knowledge tools with same source', async () => {
+      const tool = {
+        type: ToolType.Knowledge,
+        source: {type: KnowledgeToolSourceType.Pack, packId: 456},
+      } as KnowledgeTool;
       const metadata = createFakePackVersionMetadata({
         skills: [
           {
@@ -6492,10 +6496,7 @@ describe('Pack metadata Validation', async () => {
             displayName: 'Test Skill',
             description: 'A test skill',
             prompt: 'You are a helpful assistant',
-            tools: [
-              {type: ToolType.Knowledge, source: {type: KnowledgeToolSourceType.Pack, packId: 456}},
-              {type: ToolType.Knowledge, source: {type: KnowledgeToolSourceType.Pack, packId: 456}},
-            ],
+            tools: [tool, tool],
           },
         ],
       });
@@ -6503,12 +6504,16 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'skills[0].tools[1]',
-          message: 'Duplicate tool found. "Knowledge tool (Pack, packId: 456)" is equivalent to the tool at index 0.',
+          message: `Duplicate tool found. ${JSON.stringify(tool)} is equivalent to the tool at index 0.`,
         },
       ]);
     });
 
     it('fails for duplicate ScreenAnnotation tools with same annotation type', async () => {
+      const tool = {
+        type: ToolType.ScreenAnnotation,
+        annotation: {type: ScreenAnnotationType.Rewrite},
+      } as ScreenAnnotationTool;
       const metadata = createFakePackVersionMetadata({
         skills: [
           {
@@ -6516,10 +6521,7 @@ describe('Pack metadata Validation', async () => {
             displayName: 'Test Skill',
             description: 'A test skill',
             prompt: 'You are a helpful assistant',
-            tools: [
-              {type: ToolType.ScreenAnnotation, annotation: {type: ScreenAnnotationType.Rewrite}},
-              {type: ToolType.ScreenAnnotation, annotation: {type: ScreenAnnotationType.Rewrite}},
-            ],
+            tools: [tool, tool],
           },
         ],
       });
@@ -6527,7 +6529,7 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'skills[0].tools[1]',
-          message: 'Duplicate tool found. "ScreenAnnotation tool (Rewrite)" is equivalent to the tool at index 0.',
+          message: `Duplicate tool found. ${JSON.stringify(tool)} is equivalent to the tool at index 0.`,
         },
       ]);
     });
@@ -7720,5 +7722,109 @@ describe('Pack metadata Validation', async () => {
         await validateJsonAndAssertFails(metadata);
       });
     });
+  });
+});
+
+describe('normalizeTool', () => {
+  it('returns the same tool for tools without arrays', () => {
+    const tool: Tool = {type: ToolType.Summarizer};
+    const normalized = normalizeTool(tool);
+    assert.deepEqual(normalized, tool);
+  });
+
+  it('sorts formulas array for Pack tools', () => {
+    const tool: Tool = {
+      type: ToolType.Pack,
+      packId: 123,
+      formulas: [{formulaName: 'B'}, {formulaName: 'A'}, {formulaName: 'C'}],
+    };
+    const normalized = normalizeTool(tool);
+    assert.deepEqual((normalized as PackTool).formulas, [{formulaName: 'A'}, {formulaName: 'B'}, {formulaName: 'C'}]);
+  });
+
+  it('sorts serverNames array for MCP tools', () => {
+    const tool: Tool = {
+      type: ToolType.MCP,
+      serverNames: ['zebra', 'alpha', 'beta'],
+    };
+    const normalized = normalizeTool(tool);
+    assert.deepEqual((normalized as {serverNames: string[]}).serverNames, ['alpha', 'beta', 'zebra']);
+  });
+
+  it('does not mutate the original tool', () => {
+    const tool: Tool = {
+      type: ToolType.Pack,
+      packId: 123,
+      formulas: [{formulaName: 'B'}, {formulaName: 'A'}],
+    };
+    normalizeTool(tool);
+    assert.deepEqual((tool as PackTool).formulas, [{formulaName: 'B'}, {formulaName: 'A'}]);
+  });
+});
+
+describe('findDuplicateTools', () => {
+  it('returns empty array when no duplicates', () => {
+    const tools: Tool[] = [
+      {type: ToolType.Summarizer},
+      {type: ToolType.AssistantMessage},
+      {type: ToolType.Pack, packId: 123},
+    ];
+    const duplicates = findDuplicateTools(tools);
+    assert.deepEqual(duplicates, []);
+  });
+
+  it('finds exact duplicate singleton tools', () => {
+    const tools: Tool[] = [{type: ToolType.Summarizer}, {type: ToolType.Summarizer}];
+    const duplicates = findDuplicateTools(tools);
+    assert.equal(duplicates.length, 1);
+    assert.equal(duplicates[0].index, 1);
+    assert.equal(duplicates[0].originalIndex, 0);
+  });
+
+  it('finds duplicate Pack tools with same formulas', () => {
+    const tools: Tool[] = [
+      {type: ToolType.Pack, packId: 123, formulas: [{formulaName: 'Foo'}]},
+      {type: ToolType.Pack, packId: 123, formulas: [{formulaName: 'Foo'}]},
+    ];
+    const duplicates = findDuplicateTools(tools);
+    assert.equal(duplicates.length, 1);
+    assert.equal(duplicates[0].index, 1);
+    assert.equal(duplicates[0].originalIndex, 0);
+  });
+
+  it('finds duplicate Pack tools with formulas in different order', () => {
+    const tools: Tool[] = [
+      {type: ToolType.Pack, packId: 123, formulas: [{formulaName: 'A'}, {formulaName: 'B'}]},
+      {type: ToolType.Pack, packId: 123, formulas: [{formulaName: 'B'}, {formulaName: 'A'}]},
+    ];
+    const duplicates = findDuplicateTools(tools);
+    assert.equal(duplicates.length, 1);
+    assert.equal(duplicates[0].index, 1);
+    assert.equal(duplicates[0].originalIndex, 0);
+  });
+
+  it('does not find duplicates for Pack tools with different formulas', () => {
+    const tools: Tool[] = [
+      {type: ToolType.Pack, packId: 123, formulas: [{formulaName: 'Foo'}]},
+      {type: ToolType.Pack, packId: 123, formulas: [{formulaName: 'Bar'}]},
+    ];
+    const duplicates = findDuplicateTools(tools);
+    assert.deepEqual(duplicates, []);
+  });
+
+  it('finds multiple duplicates', () => {
+    const tools: Tool[] = [{type: ToolType.Summarizer}, {type: ToolType.Summarizer}, {type: ToolType.Summarizer}];
+    const duplicates = findDuplicateTools(tools);
+    // With 3 identical tools, we get 3 duplicate pairs:
+    // - tools[1] duplicates tools[0]
+    // - tools[2] duplicates tools[0]
+    // - tools[2] duplicates tools[1]
+    assert.equal(duplicates.length, 3);
+    assert.equal(duplicates[0].index, 1);
+    assert.equal(duplicates[0].originalIndex, 0);
+    assert.equal(duplicates[1].index, 2);
+    assert.equal(duplicates[1].originalIndex, 0);
+    assert.equal(duplicates[2].index, 2);
+    assert.equal(duplicates[2].originalIndex, 1);
   });
 });
