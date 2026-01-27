@@ -37,31 +37,31 @@ const schema_4 = require("../schema");
 const schema_5 = require("../schema");
 const schema_6 = require("../schema");
 const types_2 = require("../types");
-const types_3 = require("../types");
+const api_types_3 = require("../api_types");
 const schema_7 = require("../schema");
 const schema_8 = require("../schema");
 const schema_9 = require("../schema");
 const schema_10 = require("../schema");
 const jsonpath_plus_1 = require("jsonpath-plus");
-const types_4 = require("../types");
+const types_3 = require("../types");
 const schema_11 = require("../schema");
 const schema_12 = require("../schema");
-const api_types_3 = require("../api_types");
-const schema_13 = require("../schema");
 const api_types_4 = require("../api_types");
-const types_5 = require("../types");
-const schema_14 = require("../schema");
-const types_6 = require("../types");
-const __1 = require("..");
-const types_7 = require("../types");
-const schema_15 = require("../schema");
-const types_8 = require("../types");
-const schema_16 = require("../schema");
-const types_9 = require("../types");
+const schema_13 = require("../schema");
 const api_types_5 = require("../api_types");
-const types_10 = require("../types");
-const types_11 = require("../types");
+const types_4 = require("../types");
+const schema_14 = require("../schema");
+const types_5 = require("../types");
+const __1 = require("..");
+const types_6 = require("../types");
+const schema_15 = require("../schema");
+const types_7 = require("../types");
+const schema_16 = require("../schema");
+const types_8 = require("../types");
 const api_types_6 = require("../api_types");
+const types_9 = require("../types");
+const types_10 = require("../types");
+const api_types_7 = require("../api_types");
 const url_parse_1 = __importDefault(require("url-parse"));
 const schema_17 = require("../schema");
 const schema_18 = require("../schema");
@@ -69,7 +69,7 @@ const zod_1 = require("zod");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
 const schema_19 = require("../schema");
-const api_types_7 = require("../api_types");
+const api_types_8 = require("../api_types");
 const schema_20 = require("../schema");
 const object_utils_1 = require("../helpers/object_utils");
 const object_utils_2 = require("../helpers/object_utils");
@@ -464,7 +464,7 @@ function zodUnionInput(schemas) {
     return schemas;
 }
 const setEndpointPostSetupValidator = zodCompleteObject({
-    type: zodDiscriminant(types_6.PostSetupType.SetEndpoint),
+    type: zodDiscriminant(types_5.PostSetupType.SetEndpoint),
     name: z.string(),
     description: z.string(),
     // TODO(jonathan): Remove this from the metadata object, only needs to be present in the full bundle.
@@ -558,7 +558,7 @@ function buildMetadataSchema({ sdkVersion }) {
             pkceChallengeMethod: z.enum(['plain', 'S256']).optional(),
             scopeParamName: z.string().optional(),
             nestedResponseKey: z.string().optional(),
-            credentialsLocation: z.nativeEnum(types_10.TokenExchangeCredentialsLocation).optional(),
+            credentialsLocation: z.nativeEnum(types_9.TokenExchangeCredentialsLocation).optional(),
             ...baseAuthenticationValidators,
         }).superRefine(({ requiresEndpointUrl, endpointKey, authorizationUrl, tokenUrl }, context) => {
             const expectsRelativeUrl = requiresEndpointUrl && !endpointKey;
@@ -589,7 +589,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             tokenQueryParam: z.string().optional(),
             scopeParamName: z.string().optional(),
             nestedResponseKey: z.string().optional(),
-            credentialsLocation: z.nativeEnum(types_10.TokenExchangeCredentialsLocation).optional(),
+            credentialsLocation: z.nativeEnum(types_9.TokenExchangeCredentialsLocation).optional(),
             ...baseAuthenticationValidators,
         }),
         [types_1.AuthenticationType.WebBasic]: zodCompleteStrictObject({
@@ -685,7 +685,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     const variousSupportedAuthenticationValidators = Object.entries(defaultAuthenticationValidators)
         .filter(([authType]) => authType in variousSupportedAuthenticationTypes)
         .map(([_authType, schema]) => schema);
-    const reservedAuthenticationNames = Object.values(types_7.ReservedAuthenticationNames).map(value => value.toString());
+    const reservedAuthenticationNames = Object.values(types_6.ReservedAuthenticationNames).map(value => value.toString());
     const adminAuthenticationValidator = zodCompleteObject({
         authentication: z.union(zodUnionInput(Object.values(adminAuthenticationValidators))),
         name: z
@@ -707,15 +707,15 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             .regex(regexParameterName, 'Parameter names can only contain alphanumeric characters and underscores.'),
         type: z
             .union([
-            z.nativeEnum(api_types_6.Type),
+            z.nativeEnum(api_types_7.Type),
             z.object({
                 type: zodDiscriminant('array'),
-                items: z.nativeEnum(api_types_6.Type),
+                items: z.nativeEnum(api_types_7.Type),
                 allowEmpty: z.boolean().optional(),
             }),
         ])
-            .refine(paramType => paramType !== api_types_6.Type.object &&
-            !(typeof paramType === 'object' && paramType.type === 'array' && paramType.items === api_types_6.Type.object), {
+            .refine(paramType => paramType !== api_types_7.Type.object &&
+            !(typeof paramType === 'object' && paramType.type === 'array' && paramType.items === api_types_7.Type.object), {
             message: 'Object parameters are not currently supported.',
         }),
         description: z.string().max(exports.Limits.BuildingBlockDescription),
@@ -738,18 +738,18 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         if (!param.allowedPresetValues) {
             return true;
         }
-        return param.type === api_types_6.Type.date || ((0, api_types_7.isArrayType)(param.type) && param.type.items === api_types_6.Type.date);
+        return param.type === api_types_7.Type.date || ((0, api_types_8.isArrayType)(param.type) && param.type.items === api_types_7.Type.date);
     }, { message: 'allowedPresetValues is not allowed on parameters of this type.' })
         .refine(param => {
         var _a;
-        if (!param.allowedPresetValues || param.type !== api_types_6.Type.date) {
+        if (!param.allowedPresetValues || param.type !== api_types_7.Type.date) {
             return true;
         }
         return (_a = param.allowedPresetValues) === null || _a === void 0 ? void 0 : _a.every((value) => typeof value === 'string' && api_types_1.AllPrecannedDates.includes(value));
     }, { message: 'allowedPresetValues for a date parameter can only be a list of PrecannedDate values.' })
         .refine(param => {
         var _a;
-        if (!param.allowedPresetValues || !((0, api_types_7.isArrayType)(param.type) && param.type.items === api_types_6.Type.date)) {
+        if (!param.allowedPresetValues || !((0, api_types_8.isArrayType)(param.type) && param.type.items === api_types_7.Type.date)) {
             return true;
         }
         const relativeDateRanges = Object.values(__1.PrecannedDateRange);
@@ -797,11 +797,12 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         network: zodCompleteObject({
             hasSideEffect: z.boolean().optional(),
             requiresConnection: z.boolean().optional(),
-            connection: z.nativeEnum(api_types_3.NetworkConnection).optional(),
+            connection: z.nativeEnum(api_types_4.NetworkConnection).optional(),
         }).optional(),
         cacheTtlSecs: z.number().min(0).optional(),
         isExperimental: z.boolean().optional(),
         isSystem: z.boolean().optional(),
+        purpose: z.nativeEnum(api_types_3.FormulaPurpose).optional(),
         extraOAuthScopes: z.array(z.string()).optional(),
         allowedAuthenticationNames: z.array(z.string()).optional(),
         // Has to be any to avoid circular dependency.
@@ -809,7 +810,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     };
     const booleanPackFormulaSchema = zodCompleteObject({
         ...commonPackFormulaSchema,
-        resultType: zodDiscriminant(api_types_6.Type.boolean),
+        resultType: zodDiscriminant(api_types_7.Type.boolean),
         schema: zodCompleteObject({
             type: zodDiscriminant(schema_18.ValueType.Boolean),
             codaType: z.enum([...schema_2.BooleanHintValueTypes]).optional(),
@@ -946,7 +947,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     ]);
     const numericPackFormulaSchema = zodCompleteObject({
         ...commonPackFormulaSchema,
-        resultType: zodDiscriminant(api_types_6.Type.number),
+        resultType: zodDiscriminant(api_types_7.Type.number),
         schema: numberPropertySchema.optional(),
     });
     const simpleStringPropertySchema = zodCompleteStrictObject({
@@ -1038,7 +1039,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     ]);
     const stringPackFormulaSchema = zodCompleteObject({
         ...commonPackFormulaSchema,
-        resultType: zodDiscriminant(api_types_6.Type.string),
+        resultType: zodDiscriminant(api_types_7.Type.string),
         schema: stringPropertySchema.optional(),
     });
     // TODO(jonathan): Give this a better type than ZodTypeAny after figuring out
@@ -1502,7 +1503,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     }, 'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "options" property.');
     const objectPackFormulaSchema = zodCompleteObject({
         ...commonPackFormulaSchema,
-        resultType: zodDiscriminant(api_types_6.Type.object),
+        resultType: zodDiscriminant(api_types_7.Type.object),
         // TODO(jonathan): See if we should really allow this. The SDK right now explicitly tolerates an undefined
         // schema for objects, but that doesn't seem like a use case we actually want to support.
         schema: z.union([genericObjectSchema, arrayPropertySchema]).optional(),
@@ -1583,7 +1584,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 });
             }
         }),
-        role: z.nativeEnum(api_types_5.TableRole).optional(),
+        role: z.nativeEnum(api_types_6.TableRole).optional(),
     };
     const genericSyncTableSchema = zodCompleteObject({
         ...baseSyncTableSchema,
@@ -1617,7 +1618,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }
     });
     const packToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_11.ToolType.Pack),
+        type: z.literal(types_10.ToolType.Pack),
         packId: z.number().optional(),
         formulas: z
             .array(zodCompleteStrictObject({
@@ -1638,65 +1639,50 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     });
     const knowledgeToolSourceSchema = z.discriminatedUnion('type', [
         z.object({
-            type: z.literal(types_4.KnowledgeToolSourceType.Global),
+            type: z.literal(types_3.KnowledgeToolSourceType.Global),
         }),
         z.object({
-            type: z.literal(types_4.KnowledgeToolSourceType.Pack),
+            type: z.literal(types_3.KnowledgeToolSourceType.Pack),
             packId: z.number().optional(),
         }),
     ]);
     const knowledgeToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_11.ToolType.Knowledge),
+        type: z.literal(types_10.ToolType.Knowledge),
         source: knowledgeToolSourceSchema,
     });
     const screenAnnotationSchema = z.discriminatedUnion('type', [
         z.object({
-            type: z.literal(types_8.ScreenAnnotationType.Rewrite),
+            type: z.literal(types_7.ScreenAnnotationType.Rewrite),
         }),
         z.object({
-            type: z.literal(types_8.ScreenAnnotationType.Guide),
+            type: z.literal(types_7.ScreenAnnotationType.Guide),
         }),
     ]);
     const screenAnnotationToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_11.ToolType.ScreenAnnotation),
+        type: z.literal(types_10.ToolType.ScreenAnnotation),
         annotation: screenAnnotationSchema,
     });
-    const embeddedContentSchema = z.discriminatedUnion('type', [
-        z.object({
-            type: z.literal(types_2.EmbeddedContentType.CopyableBlock),
-        }),
-        z.object({
-            type: z.literal(types_2.EmbeddedContentType.CarouselView),
-        }),
-        z.object({
-            type: z.literal(types_2.EmbeddedContentType.TabView),
-        }),
-    ]);
-    const embeddedContentToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_11.ToolType.EmbeddedContent),
-        embeddedContent: embeddedContentSchema,
-    });
     const assistantMessageToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_11.ToolType.AssistantMessage),
+        type: z.literal(types_10.ToolType.AssistantMessage),
     });
     const summarizerToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_11.ToolType.Summarizer),
+        type: z.literal(types_10.ToolType.Summarizer),
     });
     const mcpToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_11.ToolType.MCP),
+        type: z.literal(types_10.ToolType.MCP),
         serverNames: z.array(z.string()).optional(),
     });
     const contactResolutionToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_11.ToolType.ContactResolution),
+        type: z.literal(types_10.ToolType.ContactResolution),
     });
     const codaDocsToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_11.ToolType.CodaDocsAndTables),
+        type: z.literal(types_10.ToolType.CodaDocsAndTables),
     });
     const dynamicSuggestedPromptToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_11.ToolType.DynamicSuggestedPrompt),
+        type: z.literal(types_10.ToolType.DynamicSuggestedPrompt),
     });
     const skillModelConfigurationSchema = zodCompleteStrictObject({
-        model: z.nativeEnum(types_9.SkillModel),
+        model: z.nativeEnum(types_8.SkillModel),
         prompt: z.string().min(1).max(exports.Limits.PromptLength).optional(),
     });
     const toolSchema = z.discriminatedUnion('type', [
@@ -1709,7 +1695,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         contactResolutionToolSchema,
         codaDocsToolSchema,
         dynamicSuggestedPromptToolSchema,
-        embeddedContentToolSchema,
     ]);
     const skillSchema = zodCompleteObject({
         name: z
@@ -2120,11 +2105,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         shortDescription: z.string().nonempty().optional(),
         description: z.string().nonempty().optional(),
         permissionsDescription: z.string().optional(),
-        category: z.nativeEnum(types_5.PackCategory).optional(),
+        category: z.nativeEnum(types_4.PackCategory).optional(),
         logoPath: z.string().optional(),
         exampleImages: z.array(z.string()).optional(),
         exampleVideoIds: z.array(z.string()).optional(),
-        minimumFeatureSet: z.nativeEnum(types_3.FeatureSet).optional(),
+        minimumFeatureSet: z.nativeEnum(types_2.FeatureSet).optional(),
         quotas: z.any().optional(),
         rateLimits: z.any().optional(),
         isSystem: z.boolean().optional(),
@@ -2209,7 +2194,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 // This is a Various or None auth pack.
                 return;
             }
-            const readableAuthTitle = name === types_7.ReservedAuthenticationNames.Default ? 'setUserAuthentication()' : `authentication ${name}`;
+            const readableAuthTitle = name === types_6.ReservedAuthenticationNames.Default ? 'setUserAuthentication()' : `authentication ${name}`;
             // Auth network domains must match pack network domains.
             for (const authNetworkDomain of authNetworkDomains) {
                 if (!((_a = data.networkDomains) === null || _a === void 0 ? void 0 : _a.includes(authNetworkDomain))) {
@@ -2243,7 +2228,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }
         for (const authInfo of getAuthentications(data)) {
             const { name, authentication } = authInfo;
-            const readableAuthTitle = name === types_7.ReservedAuthenticationNames.Default ? 'setUserAuthentication()' : `authentication ${name}`;
+            const readableAuthTitle = name === types_6.ReservedAuthenticationNames.Default ? 'setUserAuthentication()' : `authentication ${name}`;
             const usedNetworkDomains = getUsedAuthNetworkDomains(authentication);
             if (usedNetworkDomains) {
                 for (const usedNetworkDomain of usedNetworkDomains) {
@@ -2268,7 +2253,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 // This is a Various or None auth pack.
                 return;
             }
-            const readableAuthTitle = name === types_7.ReservedAuthenticationNames.Default ? 'setUserAuthentication()' : `authentication ${name}`;
+            const readableAuthTitle = name === types_6.ReservedAuthenticationNames.Default ? 'setUserAuthentication()' : `authentication ${name}`;
             // A pack with multiple networks and auth must choose which domain(s) get auth on them.
             if (!(authNetworkDomains === null || authNetworkDomains === void 0 ? void 0 : authNetworkDomains.length)) {
                 if (data.networkDomains && data.networkDomains.length > 1) {
@@ -2295,7 +2280,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                     context.addIssue({
                         code: z.ZodIssueCode.custom,
                         path: ['syncTables', i, 'properties', propertyName, 'options'],
-                        message: options === api_types_4.OptionsType.Dynamic
+                        message: options === api_types_5.OptionsType.Dynamic
                             ? `Sync table ${syncTable.name} must define "options" for this property to use OptionsType.Dynamic`
                             : `"${options}" is not registered as an options function for this sync table.`,
                     });
@@ -2323,7 +2308,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     })
         .superRefine((data, context) => {
         const metadata = data;
-        const hasMcpSkill = (metadata.skills || []).some(skill => skill.tools.some(tool => tool.type === types_11.ToolType.MCP));
+        const hasMcpSkill = (metadata.skills || []).some(skill => skill.tools.some(tool => tool.type === types_10.ToolType.MCP));
         if (hasMcpSkill && (!metadata.mcpServers || metadata.mcpServers.length === 0)) {
             context.addIssue({
                 code: z.ZodIssueCode.custom,
@@ -2355,11 +2340,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
 function getAuthentications(data) {
     const authentications = [];
     if (data.defaultAuthentication) {
-        authentications.push({ name: types_7.ReservedAuthenticationNames.Default, authentication: data.defaultAuthentication });
+        authentications.push({ name: types_6.ReservedAuthenticationNames.Default, authentication: data.defaultAuthentication });
     }
     if (data.systemConnectionAuthentication) {
         authentications.push({
-            name: types_7.ReservedAuthenticationNames.System,
+            name: types_6.ReservedAuthenticationNames.System,
             authentication: data.systemConnectionAuthentication,
         });
     }

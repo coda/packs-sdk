@@ -13,7 +13,7 @@ In the [Your first agent tutorial][your_first_agent], we recommend developing in
 
 However, for production work, we recommend developing locally with the CLI, as it allows you to integrate with your version control system, write unit tests, etc. To learn how to set up this environment, follow the [Get started on your local machine][quickstart_cli].
 
-The CLI can run your code locally, but only an individual building block (formula, action, or sync table). It is not possible to run LLM-based functionality, like skills. For that, you'll need to upload a new version of your agent to the server and test it using {{ custom.agent_product_name }}.
+The CLI can run your code locally, but only an individual building block (formula, action, or sync table). It is not possible to run LLM-based functionality, like skills. For that, you'll need to upload a new version of your agent to the server and test it using Superhuman Go.
 
 ## Testing in a Coda doc
 
@@ -23,7 +23,7 @@ If your agent contains formulas or sync tables, it can be helpful to test them i
 - View the raw output from formulas and sync tables
 - Easily access the [Pack maker tools][pack_maker_tools] to view execution logs
 
-You won't be able to test your agent skills in the doc, however, as those can only be used in {{ custom.agent_product_name }}.
+You won't be able to test your agent skills in the doc, however, as those can only be used in Superhuman Go.
 
 To test your agent's formulas and syncs in a Coda doc:
 

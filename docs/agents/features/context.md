@@ -17,7 +17,7 @@ The agent has access to the information on the screen, including the text and UR
 There are three types of text your agent may receive, with possibly more than one being passed at the same time:
 
 **Screen information**
-:   The text visible on the screen. The {{ custom.agent_product_name }} platform decides which elements of the web page to include, usually limiting it to core content and excluding navigational elements, etc.
+:   The text visible on the screen. The Superhuman Go platform decides which elements of the web page to include, usually limiting it to core content and excluding navigational elements, etc.
 
     ??? info "Full text not guaranteed"
 

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TableRole = exports.OptionsType = exports.FutureLiveDates = exports.PastLiveDates = exports.AllPrecannedDates = exports.PrecannedDate = exports.FromNowDateRanges = exports.PastLiveDateRanges = exports.UntilNowDateRanges = exports.PrecannedDateRange = exports.isSyncExecutionContext = exports.InvocationSource = exports.InvocationErrorType = exports.PermissionSyncMode = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
+exports.TableRole = exports.OptionsType = exports.FutureLiveDates = exports.PastLiveDates = exports.AllPrecannedDates = exports.PrecannedDate = exports.FromNowDateRanges = exports.PastLiveDateRanges = exports.UntilNowDateRanges = exports.PrecannedDateRange = exports.isSyncExecutionContext = exports.InvocationSource = exports.InvocationErrorType = exports.PermissionSyncMode = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.FormulaPurpose = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
 /**
  * Markers used internally to represent data types for parameters and return values.
  * It should not be necessary to ever use these values directly.
@@ -209,6 +209,16 @@ exports.ParameterTypeInputMap = {
     [ParameterType.SparseMarkdownArray]: { type: 'array', items: Type.markdown, allowEmpty: true },
     [ParameterType.SparseEmailArray]: { type: 'array', items: Type.email, allowEmpty: true },
 };
+/**
+ * Enumeration of purposes for a formula that can be used by agents.
+ */
+var FormulaPurpose;
+(function (FormulaPurpose) {
+    /**
+     * Indicates this formula can be used for search.
+     */
+    FormulaPurpose["Search"] = "search";
+})(FormulaPurpose || (exports.FormulaPurpose = FormulaPurpose = {}));
 /**
  * Enumeration of requirement states for whether a given formula or sync table requires
  * a connection (account) to use.

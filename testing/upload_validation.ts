@@ -37,6 +37,7 @@ import type {EmbeddedContentTool} from '../types';
 import {EmbeddedContentType} from '../types';
 import {FeatureSet} from '../types';
 import type {FormulaOptions} from '../api';
+import {FormulaPurpose} from '../api_types';
 import type {GenericObjectSchema} from '../schema';
 import type {GenericSyncFormula} from '..';
 import type {GoogleDomainWideDelegationAuthentication} from '../types';
@@ -1025,6 +1026,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     cacheTtlSecs: z.number().min(0).optional(),
     isExperimental: z.boolean().optional(),
     isSystem: z.boolean().optional(),
+    purpose: z.nativeEnum(FormulaPurpose).optional(),
     extraOAuthScopes: z.array(z.string()).optional(),
     allowedAuthenticationNames: z.array(z.string()).optional(),
     // Has to be any to avoid circular dependency.

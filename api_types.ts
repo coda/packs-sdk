@@ -605,6 +605,12 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
   readonly isSystem?: boolean;
 
   /**
+   * The purpose for this formula, if any. Used by agents.
+   * @internal
+   */
+  readonly purpose?: FormulaPurpose;
+
+  /**
    * OAuth scopes that the formula needs that weren't requested in the pack's overall authentication
    * config. For example, a Slack pack can have one formula that needs admin privileges, but non-admins
    * can use the bulk of the pack without those privileges. Coda will give users help in understanding
@@ -657,6 +663,16 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
    * ```
    */
   validateParameters?: MetadataFormula<ExecutionContext, ParameterValidationResult>;
+}
+
+/**
+ * Enumeration of purposes for a formula that can be used by agents.
+ */
+export enum FormulaPurpose {
+  /**
+   * Indicates this formula can be used for search.
+   */
+  Search = 'search',
 }
 
 /**

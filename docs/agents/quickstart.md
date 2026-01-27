@@ -7,7 +7,7 @@ hide:
 
 # Build your first agent in 5 minutes
 
-You can build an agent for {{ custom.agent_product_name }} in only a few minutes, without leaving your browser. This quick tutorial walks you through building, deploying, and testing your agent end-to-end.
+You can build an agent for Superhuman Go in only a few minutes, without leaving your browser. This quick tutorial walks you through building, deploying, and testing your agent end-to-end.
 
 
 ## :material-pause-box: Before you begin
@@ -32,7 +32,7 @@ Before you can start coding, there are a few things you need:
 
 **Grammarly for Chrome**
 
-:   Install it from the [Chrome web store][extension]. Once installed, click on the Grammarly icon :grammarly: in the extension toolbar and enable the option **Use {{ custom.agent_product_name }}**.
+:   Install it from the [Chrome web store][extension]. Once installed, click on the Grammarly icon :grammarly: in the extension toolbar and enable the option **Use Superhuman Go**.
 
     ??? info "Google Chrome only"
 
@@ -163,7 +163,7 @@ Follow the steps below to install your agent in Superhuman Go.
 
     Open any website ([textarea.org](https://textarea.org) is great for testing agents).
 
-    Slide your mouse to the right of the page, and click the {{ custom.agent_product_name }} icon :{{ custom.agent_icon_name }}: that slides out.
+    Slide your mouse to the right of the page, and click the Superhuman Go icon :superhuman-go: that slides out.
 
     </div>
     <div markdown>
