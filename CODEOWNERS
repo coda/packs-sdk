@@ -1,2 +1,2 @@
-*                 @coda/packs
+*                 @coda/packs @coda/go-ecosystem @coda/go-platform
 runtime/**        @coda/packs @coda/infosec
