@@ -19,7 +19,7 @@ mkdocs-rss-plugin = "==1.17.9"
 mkdocs-simple-hooks = "==0.1.5"
 mkdocs-site-urls = "==0.3.1"
 pillow = "==10.4.0"
-urllib3 = "==2.6.0"
+urllib3 = "==2.6.3"
 
 [dev-packages]
 
