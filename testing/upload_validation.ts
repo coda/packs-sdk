@@ -124,6 +124,7 @@ import type {SyncTableDef} from '../api';
 import type {SystemAuthenticationTypes} from '../types';
 import {TableRole} from '../api_types';
 import {TokenExchangeCredentialsLocation} from '../types';
+import type {Tool} from '../types';
 import {ToolType} from '../types';
 import {Type} from '../api_types';
 import URLParse from 'url-parse';
@@ -140,6 +141,7 @@ import {ensureUnreachable} from '../helpers/ensure';
 import {isArray} from '../schema';
 import {isArrayType} from '../api_types';
 import {isCategorizationIndexDefinition} from '../schema';
+import {isDeepStrictEqual} from 'util';
 import {isDefined} from '../helpers/object_utils';
 import {isNil} from '../helpers/object_utils';
 import {isObject} from '../schema';
@@ -500,6 +502,53 @@ function getNonUniqueElements<T extends string>(items: T[]): T[] {
     set.add(normalized);
   }
   return nonUnique;
+}
+
+/**
+ * Normalizes a tool for comparison by sorting any arrays within it.
+ * This ensures that tools with the same content but different array ordering
+ * are considered equal.
+ */
+export function normalizeTool(tool: Tool): Tool {
+  const normalized = {...tool};
+
+  // Sort formulas array if present (for Pack tools)
+  if ('formulas' in normalized && Array.isArray(normalized.formulas)) {
+    normalized.formulas = [...normalized.formulas].sort((a, b) =>
+      (a as {formulaName: string}).formulaName.localeCompare((b as {formulaName: string}).formulaName),
+    );
+  }
+
+  // Sort serverNames array if present (for MCP tools)
+  if ('serverNames' in normalized && Array.isArray(normalized.serverNames)) {
+    normalized.serverNames = [...normalized.serverNames].sort();
+  }
+
+  return normalized;
+}
+
+/**
+ * Finds duplicate tools in an array by comparing normalized versions.
+ * Returns information about each duplicate found.
+ */
+export function findDuplicateTools(tools: Tool[]): Array<{index: number; originalIndex: number; tool: Tool}> {
+  const duplicates: Array<{index: number; originalIndex: number; tool: Tool}> = [];
+
+  for (let i = 0; i < tools.length; i++) {
+    for (let j = i + 1; j < tools.length; j++) {
+      const normalizedI = normalizeTool(tools[i]);
+      const normalizedJ = normalizeTool(tools[j]);
+      if (isDeepStrictEqual(normalizedI, normalizedJ)) {
+        duplicates.push({
+          index: j,
+          originalIndex: i,
+          tool: tools[j],
+        });
+      }
+    }
+  }
+
+  return duplicates;
 }
 
 export function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError[] {
@@ -2254,7 +2303,16 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     displayName: z.string().min(1).max(Limits.BuildingBlockName),
     description: z.string().min(1).max(Limits.BuildingBlockDescription),
     prompt: z.string().min(1).max(Limits.PromptLength),
-    tools: z.array(toolSchema),
+    tools: z.array(toolSchema).superRefine((tools, context) => {
+      const duplicates = findDuplicateTools(tools as Tool[]);
+      for (const duplicate of duplicates) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: [duplicate.index],
+          message: `Duplicate tool found. ${JSON.stringify(duplicate.tool)} is equivalent to the tool at index ${duplicate.originalIndex}.`,
+        });
+      }
+    }),
     forcedFormula: z.string().min(1).optional(),
     models: z.array(skillModelConfigurationSchema).optional(),
   });

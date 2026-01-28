@@ -2,6 +2,7 @@ import type { ArraySchema } from '../schema';
 import type { ObjectSchema } from '../schema';
 import type { PackVersionMetadata } from '../compiled_types';
 import type { SyncTable } from '../api';
+import type { Tool } from '../types';
 import type { ValidationError } from './types';
 import type { VariousAuthentication } from '../types';
 import * as z from 'zod';
@@ -47,6 +48,21 @@ export declare function validateCrawlHierarchy(syncTables: SyncTable[], context?
 export declare function validateParents(syncTables: SyncTable[], context: z.RefinementCtx): void;
 /** @hidden */
 export declare function _hasCycle(tree: Record<string, string[]>): boolean;
+/**
+ * Normalizes a tool for comparison by sorting any arrays within it.
+ * This ensures that tools with the same content but different array ordering
+ * are considered equal.
+ */
+export declare function normalizeTool(tool: Tool): Tool;
+/**
+ * Finds duplicate tools in an array by comparing normalized versions.
+ * Returns information about each duplicate found.
+ */
+export declare function findDuplicateTools(tools: Tool[]): Array<{
+    index: number;
+    originalIndex: number;
+    tool: Tool;
+}>;
 export declare function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError[];
 interface BuildMetadataSchemaArgs {
     sdkVersion?: string;
