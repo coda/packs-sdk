@@ -1163,6 +1163,7 @@ export declare enum PrecannedDateRange {
 	Last7AndNext7Days = "last_7_and_next_7_days",
 	Last30AndNext30Days = "last_30_and_next_30_days",
 	Last90AndNext90Days = "last_90_and_next_90_days",
+	Last12AndNext12Months = "last_12_and_next_12_months",
 	Tomorrow = "tomorrow",
 	Next7Days = "next_7_days",
 	Next30Days = "next_30_days",
