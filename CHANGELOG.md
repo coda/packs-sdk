@@ -13,6 +13,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 - Replaced `setSkillEntrypoints` and `defaultChat` with `setChatSkill`.
 
+### Fixed
+
+- Added validation to ensure Pack tool formulas in skill definitions reference formulas that exist in the pack.
+
 ## [1.12.5] - 2025-12-16
 
 ### Added
