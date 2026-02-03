@@ -2719,8 +2719,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       })
       .superRefine((data, context) => {
         const metadata = data as PackVersionMetadata;
-        const {formulas, skills = []} = metadata;
-        const formulaNames = new Set((formulas || []).map(f => f.name));
+        const {formulas = [], skills = []} = metadata;
+        const formulaNames = new Set(formulas.map(f => f.name));
 
         // Validate each skill's tools
         skills.forEach((skill, skillIndex) => {
