@@ -6571,9 +6571,7 @@ describe('Pack metadata Validation', async () => {
     it('fails for skill tool referencing non-existent formula', async () => {
       const metadata = createFakePackVersionMetadata({
         formulaNamespace: 'TestPack',
-        formulas: [
-          createFakePackFormulaMetadata({name: 'ExistingFormula'}),
-        ],
+        formulas: [createFakePackFormulaMetadata({name: 'ExistingFormula'})],
         skills: [
           {
             name: 'TestSkill',
@@ -6593,7 +6591,8 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'skills[0].tools[0].formulas[0].formulaName',
-          message: 'Formula "NonExistentFormula" not found. Pack tool formulas must reference formulas defined in this pack.',
+          message:
+            'Formula "NonExistentFormula" not found. Pack tool formulas must reference formulas defined in this pack.',
         },
       ]);
     });
@@ -6601,9 +6600,7 @@ describe('Pack metadata Validation', async () => {
     it('validates skill tool referencing valid formula', async () => {
       const metadata = createFakePackVersionMetadata({
         formulaNamespace: 'TestPack',
-        formulas: [
-          createFakePackFormulaMetadata({name: 'ValidFormula'}),
-        ],
+        formulas: [createFakePackFormulaMetadata({name: 'ValidFormula'})],
         skills: [
           {
             name: 'TestSkill',
@@ -6625,9 +6622,7 @@ describe('Pack metadata Validation', async () => {
     it('allows skill tool with packId to reference any formula name', async () => {
       const metadata = createFakePackVersionMetadata({
         formulaNamespace: 'TestPack',
-        formulas: [
-          createFakePackFormulaMetadata({name: 'MyFormula'}),
-        ],
+        formulas: [createFakePackFormulaMetadata({name: 'MyFormula'})],
         skills: [
           {
             name: 'TestSkill',
