@@ -73,6 +73,7 @@ import * as coda from "@codahq/packs-sdk";
 - [BooleanSchema](interfaces/BooleanSchema.md)
 - [CodaApiBearerTokenAuthentication](interfaces/CodaApiBearerTokenAuthentication.md)
 - [CommonPackFormulaDef](interfaces/CommonPackFormulaDef.md)
+- [ContactResolutionTool](interfaces/ContactResolutionTool.md)
 - [Continuation](interfaces/Continuation.md)
 - [CrawlStrategy](interfaces/CrawlStrategy.md)
 - [CurrencySchema](interfaces/CurrencySchema.md)

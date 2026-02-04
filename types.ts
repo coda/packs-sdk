@@ -1393,7 +1393,6 @@ export interface MCPTool extends BaseTool<ToolType.MCP> {
 
 /**
  * Tool that provides access to contact resolution capabilities.
- * @internal
  */
 export interface ContactResolutionTool extends BaseTool<ToolType.ContactResolution> {}
 
