@@ -71,3 +71,11 @@ Demonstrates how to configure an agent to start running when it's icon is clicke
 ```ts
 --8<-- "samples/packs/agents/qr.ts"
 ```
+
+## 🗽 NY Senate
+
+Demonstrates how to index PDF content and contacts.
+
+```ts
+--8<-- "samples/packs/agents/ny_senate.ts"
+```

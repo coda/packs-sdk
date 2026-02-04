@@ -240,6 +240,36 @@ getSchema: async function (context) {
 },
 ```
 
+## Contacts {:#contacts}
+
+In addition to indexing the records themselves, Superhuman Go can separately index the the people associated with those records. For example, the assignee of a ticket, or the attendees of an event. Once indexed, these contacts can be accessed by every other agent the user has installed using the [Contact resolution tool][contact_resolution_tool].
+
+In order to be indexed a contact must have both a name and an email address. It's not currently possible to index other information about a contact, such as phone number, mailing address, etc.
+
+The enable contact indexing you need to annotate the related object schema:
+
+1.  Ensure the `displayProperty` field is set to a property containing the user's name.
+1.  Set the `userEmailProperty` field to a property containing the user's email address.
+
+```{.ts hl_lines="7-8"}
+const AuthorSchema = coda.makeObjectSchema({
+  properties: {
+    name: { type: coda.ValueType.String },
+    email: { type: coda.ValueType.String, codaType: coda.ValueHintType.Email },
+    // Other properties ...
+  },
+  displayProperty: "name",
+  userEmailProperty: "email",
+});
+```
+
+Schemas annotated this way can be the top-level schema of a sync table, or nested anywhere below. Contacts will be de-duped by their email address, which is treated as the unique identifier.
+
+!!! warning "`Person` objects supported, but not recommended"
+
+    Instead of setting the `userEmailProperty`, you can instead apply the value hint [`Person`][person] and set the required fields. These person schemas are treated special when used a Coda doc, but come with some downsides when the referenced person isn't a member of the organization or when the schema contains additional properties. Most agents should prefer the `userEmailProperty` approach mentiond above.
+
+
 ## Known limitations
 
 ### Reference properties not resolved
@@ -253,3 +283,5 @@ If you are upgrading an existing Pack, you'll need to denormalize any data you w
 [people]: ../../guides/basics/data-types.md#people
 [schemas]: ../../guides/advanced/schemas.md
 [dynamic_sync_tables]: ../../guides/blocks/sync-tables/dynamic.md
+[contact_resolution_tool]: ../features/tools.md#contacts
+[person]: ../../reference/sdk/core/enumerations/ValueHintType.md#person

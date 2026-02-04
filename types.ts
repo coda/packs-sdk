@@ -1201,7 +1201,6 @@ export enum ToolType {
   MCP = 'MCP',
   /**
    * Tool that provides access to contact resolution capabilities.
-   * @internal
    */
   ContactResolution = 'ContactResolution',
   /**

@@ -7,7 +7,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ### Added
 
 - Added `setBenchInitializationSkill`, which allows the agent to run a skill immediately when the agent icon is clicked on in the bench.
-- Added WebSearch tool type for agents to search the public internet
+- Added the `ContactResolution` tool type.
 
 ### Changed
 
@@ -17,7 +17,6 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ### Added
 
-- Added DynamicSuggestedPrompt tool type and interfaces
 - Added support for Default Skill in skill definitions
 
 ### Changed
