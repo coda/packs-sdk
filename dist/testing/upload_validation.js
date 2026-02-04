@@ -2147,6 +2147,33 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                     }
                 }
             }
+        })
+            .superRefine((data, context) => {
+            const metadata = data;
+            const { formulas = [], skills = [] } = metadata;
+            const formulaNames = new Set(formulas.map(f => f.name));
+            // Validate each skill's tools
+            skills.forEach((skill, skillIndex) => {
+                // Validate PackTools that reference the current pack
+                skill.tools.forEach((tool, toolIndex) => {
+                    // Only validate Pack tools without a packId (i.e., referencing current pack).
+                    // Cross-pack tool calls (with packId set) are not validated here, though they will
+                    // fail at runtime for third-party packs since only first-party Coda agents can
+                    // access formulas from other packs.
+                    if (tool.type === types_11.ToolType.Pack && !tool.packId && tool.formulas) {
+                        tool.formulas.forEach((formula, formulaIndex) => {
+                            const { formulaName } = formula;
+                            if (!formulaNames.has(formulaName)) {
+                                context.addIssue({
+                                    code: z.ZodIssueCode.custom,
+                                    path: ['skills', skillIndex, 'tools', toolIndex, 'formulas', formulaIndex, 'formulaName'],
+                                    message: `Formula "${formulaName}" not found. Pack tool formulas must reference formulas defined in this pack.`,
+                                });
+                            }
+                        });
+                    }
+                });
+            });
         });
     }
     function validateFormatMatcher(value) {

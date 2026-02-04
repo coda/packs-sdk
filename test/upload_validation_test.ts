@@ -6567,6 +6567,80 @@ describe('Pack metadata Validation', async () => {
       });
       await validateJson(metadata);
     });
+
+    it('fails for skill tool referencing non-existent formula', async () => {
+      const metadata = createFakePackVersionMetadata({
+        formulaNamespace: 'TestPack',
+        formulas: [createFakePackFormulaMetadata({name: 'ExistingFormula'})],
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [
+              {
+                type: ToolType.Pack,
+                formulas: [{formulaName: 'NonExistentFormula'}],
+              },
+            ],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills[0].tools[0].formulas[0].formulaName',
+          message:
+            'Formula "NonExistentFormula" not found. Pack tool formulas must reference formulas defined in this pack.',
+        },
+      ]);
+    });
+
+    it('validates skill tool referencing valid formula', async () => {
+      const metadata = createFakePackVersionMetadata({
+        formulaNamespace: 'TestPack',
+        formulas: [createFakePackFormulaMetadata({name: 'ValidFormula'})],
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [
+              {
+                type: ToolType.Pack,
+                formulas: [{formulaName: 'ValidFormula'}],
+              },
+            ],
+          },
+        ],
+      });
+      await validateJson(metadata);
+    });
+
+    it('allows skill tool with packId to reference any formula name', async () => {
+      const metadata = createFakePackVersionMetadata({
+        formulaNamespace: 'TestPack',
+        formulas: [createFakePackFormulaMetadata({name: 'MyFormula'})],
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [
+              {
+                type: ToolType.Pack,
+                packId: 123, // Different pack, so we don't validate the formula name
+                formulas: [{formulaName: 'AnyFormula'}],
+              },
+            ],
+          },
+        ],
+      });
+      await validateJson(metadata);
+    });
   });
 
   describe('validateChatSkill', () => {
