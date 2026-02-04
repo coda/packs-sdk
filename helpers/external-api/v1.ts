@@ -317,7 +317,7 @@ export interface PublicApiDocSize {
 }
 
 /**
- * Payload for publishing a doc or or updating its publishing information.
+ * Payload for publishing a doc or updating its publishing information.
  */
 export interface PublicApiDocPublish {
   /**

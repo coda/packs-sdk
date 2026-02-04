@@ -58,7 +58,7 @@ This is a generic error message that is shown when something unexpected goes wro
 
 - `Something went wrong. WS closed because message was too big.`
 
-This error is shown when the page opens in your browser is too large to send to the agent. You can work around it by removing the page context, selecting a subset of the text, or switching to a smaller page.
+This error is shown when the page open in your browser is too large to send to the agent. You can work around it by removing the page context, selecting a subset of the text, or switching to a smaller page.
 
 [developing]: ./development.md
 [pmt]: ../guides/development/pack-maker-tools.md#logs

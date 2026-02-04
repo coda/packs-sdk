@@ -7,12 +7,12 @@ pack.addColumnFormat({
   name: "Reversed Text",
   instructions: "Whatever text you enter into this column will be reversed.",
   // The formula "Reverse()" (defined below) will be run on the content of the
-  // column to determine it's display value.
+  // column to determine its display value.
   formulaName: "Reverse",
 });
 
 // Adds a formula to this Pack to reverse text. It is used by the column format
-// above, but can also be used on it's own anywhere in the doc.
+// above, but can also be used on its own anywhere in the doc.
 pack.addFormula({
   resultType: coda.ValueType.String,
   name: "Reverse",

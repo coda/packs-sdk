@@ -12,7 +12,7 @@ The Superhuman Go platform provides a built-in RAG system we call the knowledge 
 
 ## When to use it
 
-An agent may work with many different types of records, but indexing may not be appropriate for all of them. Indexing works best for record types that have:
+An agent may work with many different types of records, but indexing may not be appropriate for all of them. Indexing works best for record types that:
 
 - Contain significant text content that the user will want to search over.
 - Have user-visible URLs that the user would want to click into.
@@ -24,7 +24,7 @@ Indexing a blog post or draft email makes sense, but indexing quarterly sales nu
 
 Sync tables are a Pack building block that let you pull in large lists of records from external sources. They are primarily composed of a schema that defines the data structure and a sync formula that makes requests and transforms the data. You can read more about how to create a sync table in the [Sync tables guide][sync_tables].
 
-To set up indexing, create a sync table for each record type you want to index. You'll need to ensure the schema includes the required metadata, as described in the [Schema changes guide][indexing_schemas]. You can improve the data freshness by implementing [Incremental sync][incremental] and simplify the user set by implementing [crawling][crawling].
+To set up indexing, create a sync table for each record type you want to index. You'll need to ensure the schema includes the required metadata, as described in the [Schema changes guide][indexing_schemas]. You can improve the data freshness by implementing [Incremental sync][incremental] and simplify the user setup by implementing [crawling][crawling].
 
 
 ## Data freshness and size

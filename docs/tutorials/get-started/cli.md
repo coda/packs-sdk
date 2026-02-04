@@ -6,7 +6,7 @@ icon: octicons/terminal-16
 
 # Get started on your local machine
 
-Although it takes a little longer to get started, building Packs on your local machine has some advantages over the the web-based editor:
+Although it takes a little longer to get started, building Packs on your local machine has some advantages over the web-based editor:
 
 - You can use your own code editing tools, such as [Visual Studio Code][vs_code].
 - You can use your own version control system, such as [GitHub][github].

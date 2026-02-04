@@ -245,7 +245,7 @@ Start chatting with your agent and test if it responds correctly.
     </div>
     <div markdown>
 
-    <img src="site:images/agent_quickstart_who.png" srcset="site:images/agent_quickstart_who_2x.png 2x" class="screenshot" alt="A screenshot of a conversation with the Secret agent, responding with it's name.">
+    <img src="site:images/agent_quickstart_who.png" srcset="site:images/agent_quickstart_who_2x.png 2x" class="screenshot" alt="A screenshot of a conversation with the Secret agent, responding with its name.">
 
     </div>
     </section>
@@ -273,7 +273,7 @@ Start chatting with your agent and test if it responds correctly.
 
 ---
 
-You've built and tested your fist agent, congrats! 🎉
+You've built and tested your first agent, congrats! 🎉
 
 
 ## :material-fast-forward: Next steps

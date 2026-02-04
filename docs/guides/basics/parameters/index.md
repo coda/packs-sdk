@@ -467,7 +467,7 @@ pack.addFormula({
 
 ## Date range parameters
 
-Parameters of the type `DateArray` are often used for date ranges, with the first date representing the start of the range and the second date representing the end. When a `DateArray` parameter is used in an action or sync table the the input box displays a date range picker to make it easier for the user to select a range.
+Parameters of the type `DateArray` are often used for date ranges, with the first date representing the start of the range and the second date representing the end. When a `DateArray` parameter is used in an action or sync table, the input box displays a date range picker to make it easier for the user to select a range.
 
 <img src="site:images/parameter_daterange.png" srcset="site:images/parameter_daterange_2x.png 2x" class="screenshot" alt="Date array parameters displayed as a date range picker">
 

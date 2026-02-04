@@ -16,4 +16,4 @@ The union of types that represent formula definitions, including standard formul
 metadata formulas, and the formulas that implement sync tables.
 
 It should be very uncommon to need to use this type, it is most common in meta analysis of the
-contents of a pack for for Coda internal use.
+contents of a pack for Coda internal use.

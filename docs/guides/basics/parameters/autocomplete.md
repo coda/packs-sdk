@@ -12,7 +12,7 @@ If you have a parameter that accepts a defined set of values it's usually best t
 
 ## Using autocomplete
 
-In the formula editor, parameter options show up in a the same pane used for the autocompletion of built-in elements of the Coda Formula Language. In the actions builder and sync table settings options are presented in a drop down.
+In the formula editor, parameter options show up in the same pane used for the autocompletion of built-in elements of the Coda Formula Language. In the actions builder and sync table settings options are presented in a drop down.
 
 === "In the formula editor"
     <img src="site:images/autocomplete_formula.png" srcset="site:images/autocomplete_formula_2x.png 2x" class="screenshot" alt="Autocomplete in the formula editor">

@@ -3,7 +3,7 @@
 import * as coda from "@codahq/packs-sdk";
 export const pack = coda.newPack();
 
-// Schema that defines the a spell object.
+// Schema that defines a spell object.
 let SpellSchema = coda.makeObjectSchema({
   type: coda.ValueType.Object,
   properties: {

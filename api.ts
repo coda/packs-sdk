@@ -1089,7 +1089,7 @@ type V2PackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema = Schema
  * metadata formulas, and the formulas that implement sync tables.
  *
  * It should be very uncommon to need to use this type, it is most common in meta analysis of the
- * contents of a pack for for Coda internal use.
+ * contents of a pack for Coda internal use.
  */
 export type TypedPackFormula = Formula | GenericSyncFormula;
 
@@ -2422,7 +2422,7 @@ export interface DynamicSyncTableOptions<
    */
   getSchema: MetadataFormulaDef<ContextT>;
   /**
-   * A formula that that returns a browser-friendly url representing the
+   * A formula that returns a browser-friendly url representing the
    * resource being synced. The Coda UI links to this url as the source
    * of the table data. This is typically a browser-friendly form of the
    * `dynamicUrl`, which is typically an API url.

@@ -360,7 +360,7 @@ export const Examples: Example[] = [
       },
       {
         name: 'Multiple headers',
-        content: 'Authentication that passes multiple long-lived token in a HTTP headers. This sample connects to the Copper API.',
+        content: 'Authentication that passes multiple long-lived tokens in HTTP headers. This sample connects to the Copper API.',
         codeFile: './samples/packs/authentication/copper.ts',
       },
       {

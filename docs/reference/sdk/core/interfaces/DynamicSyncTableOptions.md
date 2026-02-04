@@ -89,7 +89,7 @@ These will eventually be consolidated.)
 
 > **getDisplayUrl**: [`MetadataFormulaDef`](../type-aliases/MetadataFormulaDef.md)\<`ContextT`\>
 
-A formula that that returns a browser-friendly url representing the
+A formula that returns a browser-friendly url representing the
 resource being synced. The Coda UI links to this url as the source
 of the table data. This is typically a browser-friendly form of the
 `dynamicUrl`, which is typically an API url.

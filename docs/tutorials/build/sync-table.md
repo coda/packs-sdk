@@ -17,7 +17,7 @@ Sync tables are special tables that pull in rows from an external API or data so
 Before starting this tutorial, make sure you have completed:
 
 - One of the **Get started** tutorials, either [In your browser][quickstart_web] or [On your local machine][quickstart_cli].
-- The [Call an API tutorial][tutorial_fetcher], which covers how to call make an HTTP request.
+- The [Call an API tutorial][tutorial_fetcher], which covers how to make an HTTP request.
 
 
 ## :material-api: Understand the API

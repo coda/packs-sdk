@@ -8,7 +8,7 @@ pack.addNetworkDomain("api.qrserver.com");
 pack.setBenchInitializationSkill({
   name: "CurrentPageQRCode",
   displayName: "Current Page QR Code",
-  description: "Generate a QR containing the URL fo the current page.",
+  description: "Generate a QR containing the URL for the current page.",
   prompt: `
     Generate a QR code, using the URL of the current page as the text.
     Reply with a summary, and the resulting image rendered in markdown format.

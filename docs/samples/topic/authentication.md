@@ -64,7 +64,7 @@ pack.addNetworkDomain("rapidapi.com");
 {% endraw %}
 ```
 ## Multiple headers
-Authentication that passes multiple long-lived token in a HTTP headers. This sample connects to the Copper API.
+Authentication that passes multiple long-lived tokens in HTTP headers. This sample connects to the Copper API.
 
 ```ts
 {% raw %}

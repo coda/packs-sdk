@@ -2614,7 +2614,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
 	 */
 	index?: IndexDefinition;
 	/**
-	 * The name of the property within {@link ObjectSchemaDefinition.properties} that can be be interpreted as
+	 * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as
 	 * text representing the version of an item.
 	 *
 	 * Must be a {@link ValueType.String} property.
@@ -3573,7 +3573,7 @@ export type Formula<ParamDefsT extends ParamDefs = ParamDefs, ResultT extends Va
  * metadata formulas, and the formulas that implement sync tables.
  *
  * It should be very uncommon to need to use this type, it is most common in meta analysis of the
- * contents of a pack for for Coda internal use.
+ * contents of a pack for Coda internal use.
  */
 export type TypedPackFormula = Formula | GenericSyncFormula;
 export type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
@@ -4305,7 +4305,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
 	 */
 	getSchema: MetadataFormulaDef<ContextT>;
 	/**
-	 * A formula that that returns a browser-friendly url representing the
+	 * A formula that returns a browser-friendly url representing the
 	 * resource being synced. The Coda UI links to this url as the source
 	 * of the table data. This is typically a browser-friendly form of the
 	 * `dynamicUrl`, which is typically an API url.
@@ -4771,7 +4771,7 @@ export type PostSetupDef = SetEndpointDef;
 export interface BaseAuthentication {
 	/**
 	 * A function that is called when a user sets up a new account, that returns a name for
-	 * the account to label that account in the UI. The users credentials are applied to any
+	 * the account to label that account in the UI. The user's credentials are applied to any
 	 * fetcher requests that this function makes. Typically, this function makes an API call
 	 * to an API's "who am I" endpoint and returns a username.
 	 *
@@ -4794,14 +4794,14 @@ export interface BaseAuthentication {
 	 */
 	instructionsUrl?: string;
 	/**
-	 * If true, indicates this has pack has a specific endpoint domain for each account, that is used
+	 * If true, indicates this pack has a specific endpoint domain for each account, that is used
 	 * as the basis of HTTP requests. For example, API requests are made to <custom-subdomain>.example.com
 	 * rather than example.com. If true, the user will be prompted to provide their specific endpoint domain
 	 * when creating a new account.
 	 */
 	requiresEndpointUrl?: boolean;
 	/**
-	 * When requiresEndpointUrl is set to true this should be the root domain that all endpoints share.
+	 * When requiresEndpointUrl is set to true, this should be the root domain that all endpoints share.
 	 * For example, this value would be "example.com" if specific endpoints looked like \{custom-subdomain\}.example.com.
 	 *
 	 * For packs that make requests to multiple domains (uncommon), this should be the domain within
@@ -5044,7 +5044,7 @@ export interface BaseOAuthAuthentication extends BaseAuthentication {
 	 * A custom prefix to be used when passing the access token in the HTTP Authorization
 	 * header when making requests. Typically this prefix is `Bearer` which is what will be
 	 * used if this value is omitted. However, some services require a different prefix.
-	 * When sending authenticated requests, a HTTP header of the form
+	 * When sending authenticated requests, an HTTP header of the form
 	 * `Authorization: <tokenPrefix> <token>` will be used.
 	 */
 	tokenPrefix?: string;
@@ -6561,7 +6561,7 @@ export declare function getQueryParams(url: string): {
 	[key: string]: any;
 };
 /**
- * Joins all the tokens into a single URL string separated by '/'. Zero length tokens cause errors.
+ * Joins all the tokens into a single URL string separated by '/'. Zero-length tokens cause errors.
  * @param tokens Zero or more tokens to be combined. If token doesn't end with '/', one will be added as the separator
  */
 declare function join(...tokens: string[]): string;
@@ -6630,8 +6630,8 @@ export declare function ensureExists<T>(value: T | null | undefined, message?: s
  * @example
  * ```
  * function foo(value: string | number) {
- *   assertCondtion(typeof value === 'string');
- *   // TypeScript would otherwise compalin, because `value` could have been number,
+ *   assertCondition(typeof value === 'string');
+ *   // TypeScript would otherwise complain, because `value` could have been number,
  *   // but the above assertion refines the type based on the `typeof` expression.
  *   return value.toUpperCase();
  * }

@@ -119,7 +119,7 @@ const TaskSchema = coda.makeObjectSchema({
   idProperty: "id",
 });
 
-// Formula that looks up rich metadata about a task given it's ID.
+// Formula that looks up rich metadata about a task given its ID.
 pack.addFormula({
   name: "Task",
   description: "Gets a Todoist task by ID",

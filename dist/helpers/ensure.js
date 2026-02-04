@@ -70,8 +70,8 @@ function getErrorConstructor(message) {
  * @example
  * ```
  * function foo(value: string | number) {
- *   assertCondtion(typeof value === 'string');
- *   // TypeScript would otherwise compalin, because `value` could have been number,
+ *   assertCondition(typeof value === 'string');
+ *   // TypeScript would otherwise complain, because `value` could have been number,
  *   // but the above assertion refines the type based on the `typeof` expression.
  *   return value.toUpperCase();
  * }

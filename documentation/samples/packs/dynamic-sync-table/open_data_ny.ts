@@ -330,7 +330,7 @@ async function getDataset(context: coda.SyncExecutionContext):
 }
 
 /**
- * Extract the ID of the dataset from it's URL.
+ * Extract the ID of the dataset from its URL.
  */
 function getDatasetId(url: string): string {
   let match = url.match(DatasetUrlRegex);
