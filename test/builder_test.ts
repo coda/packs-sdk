@@ -598,4 +598,49 @@ describe('Builder', () => {
       assert.equal((pack.formulas[0].parameters[0] as any).instructions, 'param-instructions');
     });
   });
+
+  describe('dynamicSuggestedActionsConfig', () => {
+    it('sets config with minimal options', () => {
+      pack.setDynamicSuggestedActionsConfig({
+        skillName: 'GenerateSuggestedActions',
+      });
+      assert.deepEqual(pack.dynamicSuggestedActionsConfig, {
+        skillName: 'GenerateSuggestedActions',
+      });
+    });
+
+    it('sets config with all options', () => {
+      pack.setDynamicSuggestedActionsConfig({
+        skillName: 'GenerateSuggestedActions',
+        refreshOnEachMessage: true,
+        maxActions: 5,
+      });
+      assert.deepEqual(pack.dynamicSuggestedActionsConfig, {
+        skillName: 'GenerateSuggestedActions',
+        refreshOnEachMessage: true,
+        maxActions: 5,
+      });
+    });
+
+    it('returns this for chaining', () => {
+      const result = pack.setDynamicSuggestedActionsConfig({
+        skillName: 'GenerateSuggestedActions',
+      });
+      assert.equal(result, pack);
+    });
+
+    it('defaults refreshOnEachMessage to false when not specified', () => {
+      pack.setDynamicSuggestedActionsConfig({
+        skillName: 'MySkill',
+      });
+      assert.isUndefined(pack.dynamicSuggestedActionsConfig?.refreshOnEachMessage);
+    });
+
+    it('defaults maxActions to undefined when not specified', () => {
+      pack.setDynamicSuggestedActionsConfig({
+        skillName: 'MySkill',
+      });
+      assert.isUndefined(pack.dynamicSuggestedActionsConfig?.maxActions);
+    });
+  });
 });

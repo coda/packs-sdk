@@ -5,6 +5,7 @@ import type {AllowedAuthenticationDef} from './types';
 import type {Authentication} from './types';
 import {AuthenticationType} from './types';
 import type {BasicPackDefinition} from './types';
+import type {DynamicSuggestedActionsConfig} from './types';
 import {ConnectionRequirement} from './api_types';
 import type {DynamicSyncTableOptions} from './api';
 import type {Format} from './types';
@@ -101,6 +102,12 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
   mcpServers: MCPServer[];
 
   /**
+   * See {@link PackVersionDefinition.dynamicSuggestedActionsConfig}.
+   * @hidden
+   */
+  dynamicSuggestedActionsConfig?: DynamicSuggestedActionsConfig;
+
+  /**
    * See {@link PackVersionDefinition.defaultAuthentication}.
    */
   defaultAuthentication?: Authentication;
@@ -144,6 +151,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       skillEntrypoints,
       suggestedPrompts,
       mcpServers,
+      dynamicSuggestedActionsConfig,
     } = definition || {};
     this.formulas = formulas || [];
     this.formats = formats || [];
@@ -155,6 +163,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     this.suggestedPrompts = suggestedPrompts || [];
     this.networkDomains = networkDomains || [];
     this.mcpServers = mcpServers || [];
+    this.dynamicSuggestedActionsConfig = dynamicSuggestedActionsConfig;
     this.defaultAuthentication = defaultAuthentication;
     this.systemConnectionAuthentication = systemConnectionAuthentication;
     this.version = version;
@@ -408,6 +417,28 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    */
   addSuggestedPrompt(prompt: SuggestedPrompt): this {
     this.suggestedPrompts.push(prompt);
+    return this;
+  }
+
+  /**
+   * Configures dynamic suggested actions for this pack's chat interface.
+   *
+   * The specified skill will be called to generate contextual action suggestions
+   * that appear as buttons above the chat input. The skill should return JSON
+   * in the SuggestedActionsResponse format.
+   *
+   * @example
+   * ```ts
+   * pack.setDynamicSuggestedActionsConfig({
+   *   skillName: 'GenerateSuggestedActions',
+   *   refreshOnEachMessage: false,
+   *   maxActions: 3,
+   * });
+   * ```
+   * @hidden
+   */
+  setDynamicSuggestedActionsConfig(config: DynamicSuggestedActionsConfig): this {
+    this.dynamicSuggestedActionsConfig = config;
     return this;
   }
 
