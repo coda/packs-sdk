@@ -180,7 +180,7 @@ To make it easier to discover these cards, when a user pastes a link into a doc 
 
 Coda will automatically display a link as a card if it matches a Pack already installed in the doc, or for certain Coda-made Packs.
 
-To enable this feature for your Pack, add a [column format][column_format] pointing to a formula that accepts a URL and returns a card. Then add [`matchers`][column_format_matchers] (regular expressions) to the column format that determine which URLs the the prompt should appear on.
+To enable this feature for your Pack, add a [column format][column_format] pointing to a formula that accepts a URL and returns a card. Then add [`matchers`][column_format_matchers] (regular expressions) to the column format that determine which URLs the prompt should appear on.
 
 
 ```ts

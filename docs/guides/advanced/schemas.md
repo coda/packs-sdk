@@ -162,7 +162,7 @@ let PersonSchema = coda.makeObjectSchema({
 });
 ```
 
-These descriptions are shown shown in various places in the Coda UI.
+These descriptions are shown in various places in the Coda UI.
 
 === "Formula editor"
 
@@ -673,7 +673,7 @@ A property will be considered empty and fallback to the placeholder when its val
 
 ## Property paths
 
-Object schema fields that expect a property name (`titleProperty`, `snippetProperty`, etc) also accept a path to a property on a nested object. The paths are specified using a subset of the [JSONPath syntax][jsonpath], which at it's simplest just joins the property names with a dot (like `property1.property2`).
+Object schema fields that expect a property name (`titleProperty`, `snippetProperty`, etc) also accept a path to a property on a nested object. The paths are specified using a subset of the [JSONPath syntax][jsonpath], which at its simplest just joins the property names with a dot (like `property1.property2`).
 
 !!! warning "Only supported for card fields"
     At the moment property paths can only be used in the object [schema fields used by cards](#cards).

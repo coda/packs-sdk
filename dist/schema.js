@@ -953,7 +953,7 @@ exports.makeReferenceSchemaFromObjectSchema = makeReferenceSchemaFromObjectSchem
 function withIdentity(schema, identityName) {
     return {
         ...(0, object_utils_1.deepCopy)(schema),
-        // Our typing throughout the SDK is dishonest about identities, we declare the the output of
+        // Our typing throughout the SDK is dishonest about identities, we declare the output of
         // formula/table definitions are Identity but they don't actually include `packId` unless the
         // developer specified it, we don't inject the current packId until upload time (and even then
         // I think it only gets injected in the Metadata, not the actual runtime code) and we never really

@@ -77,7 +77,7 @@ The Pack uses OAuth2 to connect to a user's GitHub account. A more extensive Git
     // A formula to fetch information about a repo.
     pack.addFormula({
       name: "Repo",
-      description: "Get information about a repo from it's URL.",
+      description: "Get information about a repo from its URL.",
       parameters: [
         coda.makeParameter({
           type: coda.ParameterType.String,

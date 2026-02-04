@@ -27,7 +27,7 @@ If you are interested in building a solution for internal use at your company, p
 
 ## Agents extend Coda Packs
 
-Agents are built on the Coda Packs platform. Coda was acquired by Grammarly in 2025, and Packs are a plugin system for Coda. While most of the features in the Packs platform were initially created to enhance Coda Docs, they were turned out to be an excellent foundation for building agents as well.
+Agents are built on the Coda Packs platform. Coda was acquired by Grammarly in 2025, and Packs are a plugin system for Coda. While most of the features in the Packs platform were initially created to enhance Coda Docs, they turned out to be an excellent foundation for building agents as well.
 
 You'll see the word "Pack" throughout this documentation, and you can think of it as interchangeable with "agent". Building an agent involves creating a Pack with a specific set of features and then enabling it to run in Superhuman Go.
 

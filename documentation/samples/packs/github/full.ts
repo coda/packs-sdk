@@ -54,7 +54,7 @@ const RepoSchema = coda.makeObjectSchema({
 // A formula to fetch information about a repo.
 pack.addFormula({
   name: "Repo",
-  description: "Get information about a repo from it's URL.",
+  description: "Get information about a repo from its URL.",
   parameters: [
     coda.makeParameter({
       type: coda.ParameterType.String,

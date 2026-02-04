@@ -75,5 +75,5 @@ Making changes to your Pack or connection settings doesn't immediately trigger t
 [your_first_agent]: quickstart.md
 [quickstart_cli]: ../tutorials/get-started/cli.md
 [pack_maker_tools]: ../guides/development/pack-maker-tools.md
-[releases]: ../guides//development/versions.md#releases
+[releases]: ../guides/development/versions.md#releases
 [indexing_schemas]: ./indexing/schema.md

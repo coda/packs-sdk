@@ -46,7 +46,7 @@ The Pack uses OAuth2 to connect to a user's Todoist account, which you can creat
 
     pack.setUserAuthentication({
       type: coda.AuthenticationType.OAuth2,
-      // OAuth2 URLs and scopes are found in the the Todoist OAuth guide:
+      // OAuth2 URLs and scopes are found in the Todoist OAuth guide:
       // https://developer.todoist.com/guides/#oauth
       authorizationUrl: "https://todoist.com/oauth/authorize",
       tokenUrl: "https://todoist.com/oauth/access_token",

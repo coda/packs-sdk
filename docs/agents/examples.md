@@ -66,7 +66,7 @@ Demonstrates how to handle a long-running process by using one formula to start 
 
 ## 🔳 QR code generator
 
-Demonstrates how to configure an agent to start running when it's icon is clicked and utilize the web page URL available in the context.
+Demonstrates how to configure an agent to start running when its icon is clicked and utilize the web page URL available in the context.
 
 ```ts
 --8<-- "samples/packs/agents/qr.ts"

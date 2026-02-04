@@ -26,7 +26,7 @@ pack.addColumnFormat({
   name: "Reversed Text",
   instructions: "Whatever text you enter into this column will be reversed.",
   // The formula specified below will be run on the content of the column to
-  // determine it's display value. The formula must be defined within the same
+  // determine its display value. The formula must be defined within the same
   // Pack.
   formulaName: "Reverse",
 });
