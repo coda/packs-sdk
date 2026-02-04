@@ -146,7 +146,7 @@ pack.addSkill({
 });
 ```
 
-When the tool is run, blue bars are added to the left of affected paragraphs. Hovering over them reveals the alternative text the agent suggested, and users can accept or reject it.
+When the tool runs, blue bars are added to the left of the affected paragraphs. Hovering over them reveals the alternative text the agent suggested, which users can accept or reject.
 
 <!-- TODO: Screenshot -->
 
@@ -182,11 +182,11 @@ While the LLM can fill in these inputs on its own, you may want to suggest a spe
 
 ## Contact resolution tool {:#contacts}
 
-In the process of indexing records into the knowledge layer, agents can separately index the people mentioned in those records. The resulting contacts, from all agents that index them, are pooled together and made available to every other agent the user has installed.
+While indexing records into the knowledge layer, agents can separately index the people mentioned in those records. The resulting contacts, from all agents that index them, are pooled together and made available to every other agent the user has installed.
 
-Your agent can search these contacts using the contact resolution tool. With this tool, your users to mention people by name instead of typing out their email address.
+Your agent can search these contacts using the contact resolution tool. With this tool, your users can mention people by name instead of typing their email addresses.
 
-For example, if the user types "Assign the ticket to Alice" your agent can search their contacts, perhaps from Gmail and other agents they have installed, to determine that Alice is `alice@example.com`. Your agent can then continue on with other tool calls that require the email address.
+For example, if the user types "Assign the ticket to Alice" your agent can search their contacts, perhaps from Gmail and other agents they have installed, to determine that Alice is `alice@example.com`. Your agent can then continue with other tool calls that require the email address.
 
 To allow your agent to search these contacts, add the [`ContactResolution`][contact_resolution] tool to the desired skills.
 

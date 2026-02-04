@@ -68,7 +68,7 @@ var ValueHintType;
     ValueHintType["Email"] = "email";
     /**
      * Indicates to interpret and render the value as a Coda person reference. The provided value should be
-     * an object whose `id` property is an email address, which Coda will try to resolve to a user
+     * an object whose `idProperty` property is an email address, which Coda will try to resolve to a user
      * and render an @-reference to the user.
      *
      * @example
@@ -76,12 +76,12 @@ var ValueHintType;
      * makeObjectSchema({
      *   type: ValueType.Object,
      *   codaType: ValueHintType.Person,
-     *   id: 'email',
-     *   primary: 'name',
      *   properties: {
      *     email: {type: ValueType.String, required: true},
      *     name: {type: ValueType.String, required: true},
      *   },
+     *   displayProperty: "name",
+     *   idProperty: "email",
      * });
      * ```
      */
