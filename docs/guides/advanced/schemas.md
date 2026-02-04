@@ -552,7 +552,7 @@ In most cases this default behavior is sufficient, but in rare cases you may wan
 In these cases you should adjust your `getSchema` function to set the ID manually using the `fixedId` field.
 
 ```ts
-for (let customField of customFeilds) {
+for (let customField of customFields) {
   properties[customField.name] = {
     type: coda.ValueType.String,
     // Use the custom field's ID as the column ID.

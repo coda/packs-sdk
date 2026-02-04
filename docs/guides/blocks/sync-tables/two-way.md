@@ -387,7 +387,7 @@ For sync tables with dynamic schemas, you aren't able to define the options func
         getSchema: async function (context) {
           // ...
           let attributes = await getCustomAttributes(context);
-          for (let attr of attriutes) {
+          for (let attr of attributes) {
             properties[attr] = {
               // ...
               codaType: coda.ValueHintType.SelectList,
