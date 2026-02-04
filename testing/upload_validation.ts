@@ -28,6 +28,7 @@ import type {DetailedIndexedProperty} from '../schema';
 import type {DocumentContentCategorization} from '../schema';
 import type {DurationSchema} from '../schema';
 import {DurationUnit} from '../schema';
+import type {DynamicSuggestedActionsConfig} from '../types';
 import type {DynamicSuggestedPromptTool} from '../types';
 import type {DynamicSyncTableDef} from '../api';
 import type {EmailContentCategorization} from '../schema';
@@ -2345,6 +2346,12 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     prompt: z.string().min(1).max(Limits.SuggestedPromptText),
   });
 
+  const dynamicSuggestedActionsConfigSchema = zodCompleteStrictObject<DynamicSuggestedActionsConfig>({
+    skillName: z.string().min(1),
+    refreshOnEachMessage: z.boolean().optional(),
+    maxActions: z.number().int().positive().optional(),
+  });
+
   // Make sure to call the refiners on this after removing legacyPackMetadataSchema.
   // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level
   // schema we actually use.)
@@ -2500,6 +2507,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       }),
 
     skillEntrypoints: skillEntrypointsSchema.optional(),
+    dynamicSuggestedActionsConfig: dynamicSuggestedActionsConfigSchema.optional(),
     suggestedPrompts: z
       .array(suggestedPromptSchema)
       .max(Limits.MaxSuggestedPromptsPerPack)
