@@ -1800,6 +1800,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         displayName: z.string().min(1).max(exports.Limits.BuildingBlockName),
         prompt: z.string().min(1).max(exports.Limits.SuggestedPromptText),
     });
+    const dynamicSuggestedActionsConfigSchema = zodCompleteStrictObject({
+        skillName: z.string().min(1),
+        refreshOnEachMessage: z.boolean().optional(),
+        maxActions: z.number().int().positive().optional(),
+    });
     // Make sure to call the refiners on this after removing legacyPackMetadataSchema.
     // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level
     // schema we actually use.)
@@ -1946,6 +1951,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             });
         }),
         skillEntrypoints: skillEntrypointsSchema.optional(),
+        dynamicSuggestedActionsConfig: dynamicSuggestedActionsConfigSchema.optional(),
         suggestedPrompts: z
             .array(suggestedPromptSchema)
             .max(exports.Limits.MaxSuggestedPromptsPerPack)
