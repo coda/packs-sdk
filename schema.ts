@@ -1493,11 +1493,8 @@ export interface ObjectSchemaDefinition<K extends string, L extends string>
    * For cases where the object being synced represents a user, the name of the property within
    * {@link ObjectSchemaDefinition.properties} that identifies the email address of the user.
    *
-   * This is required for sync tables with role {@link TableRole.User}
-   *
    * Must be a {@link ValueType.String} property with the {@link ValueHintType.Email} hint or
-   * a {@link ValueType.Object} with the {@link ValueHintType.Person} hint
-   * @hidden
+   * a {@link ValueType.Object} with the {@link ValueHintType.Person} hint.
    */
   userEmailProperty?: PropertyIdentifier<K>;
   /**

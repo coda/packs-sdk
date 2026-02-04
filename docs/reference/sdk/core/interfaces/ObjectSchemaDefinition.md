@@ -332,3 +332,15 @@ Must be a [ValueType.String](../enumerations/ValueType.md#string) property
 > **type**: [`Object`](../enumerations/ValueType.md#object)
 
 Identifies this schema as an object schema.
+
+***
+
+### userEmailProperty?
+
+> `optional` **userEmailProperty**: [`PropertyIdentifier`](../type-aliases/PropertyIdentifier.md)\<`K`\>
+
+For cases where the object being synced represents a user, the name of the property within
+[ObjectSchemaDefinition.properties](#properties) that identifies the email address of the user.
+
+Must be a [ValueType.String](../enumerations/ValueType.md#string) property with the [ValueHintType.Email](../enumerations/ValueHintType.md#email) hint or
+a [ValueType.Object](../enumerations/ValueType.md#object) with the [ValueHintType.Person](../enumerations/ValueHintType.md#person) hint.
