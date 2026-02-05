@@ -6,7 +6,7 @@ icon: material/order-alphabetical-ascending
 
 # Data type samples
 
-Packs can return various types of values, and apply hints that tell Coda how to display that data. Formulas and schema properties must declare the these types upfront, and the values you return in your code must match.
+Packs can return various types of values, and apply hints that tell Coda how to display that data. Formulas and schema properties must declare these types upfront, and the values you return in your code must match.
 
 
 [Learn More](../../guides/basics/data-types.md){ .md-button }

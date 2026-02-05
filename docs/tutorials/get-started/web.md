@@ -34,7 +34,7 @@ You are now in the Pack Studio, ready to start building!
 
 ## Create a Pack from an example
 
-When starting a new Pack you have the choice to begin with an existing example or or start from scratch. In this tutorial we'll use the basic [Hello World][samples_hello_world] sample code. Take a moment to read through the code and comments and get an understanding of how a Pack is structured.
+When starting a new Pack, you have the choice to begin with an existing example or start from scratch. In this tutorial we'll use the basic [Hello World][samples_hello_world] sample code. Take a moment to read through the code and comments and get an understanding of how a Pack is structured.
 
 Next we'll use the Pack Studio to build that code and get it ready to use:
 

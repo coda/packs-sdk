@@ -32,7 +32,7 @@ You can learn more about how to generate access keys in the [AWS documentation][
 
 ## Assume role
 
-A more secure way to authenticate is by using a the [`AssumeRole` feature][awsdocs_assumerole] of the Security Token Service (STS). Trust is first established between the AWS user running Packs code and a role you created in your AWS account. When the Pack is run, temporary credentials are generated and used to sign outgoing requests.
+A more secure way to authenticate is by using the [`AssumeRole` feature][awsdocs_assumerole] of the Security Token Service (STS). Trust is first established between the AWS user running Packs code and a role you created in your AWS account. When the Pack is run, temporary credentials are generated and used to sign outgoing requests.
 
 To use this form of authentication, simply set the authentication type to [`AWSAssumeRole`][sdk_awsassumerole] and specify the AWS service you are connecting to.
 

@@ -47,7 +47,7 @@ const TaskSchema = coda.makeObjectSchema({
   idProperty: "id",
 });
 
-// Formula that looks up rich metadata about a task given it's URL. This is used
+// Formula that looks up rich metadata about a task given its URL. This is used
 // by the "Task" column format above, but is also a regular formula that can be
 // used elsewhere.
 pack.addFormula({

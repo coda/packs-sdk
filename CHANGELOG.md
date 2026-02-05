@@ -8,10 +8,16 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 - Added `setBenchInitializationSkill`, which allows the agent to run a skill immediately when the agent icon is clicked on in the bench.
 - Added the `ContactResolution` tool type.
+- Added WebSearch tool type for agents to search the public internet
+- Added `allowedDomains` option to WebSearchTool to restrict search results to specific domains
 
 ### Changed
 
 - Replaced `setSkillEntrypoints` and `defaultChat` with `setChatSkill`.
+
+### Fixed
+
+- Added validation to ensure Pack tool formulas in skill definitions reference formulas that exist in the pack.
 
 ## [1.12.5] - 2025-12-16
 
@@ -563,7 +569,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 - Updated the testing fetcher for `coda execute` to auto-unzip and set the `Accept: */*` request header by default, similar to live behavior.
 - Unrecognized properties in array schemas will now generate errors at upload time instead of the fields being silently stripped. While functionally the same, the explicit errors should help catch cases where a maker may expect a property to be recognized (like `codaType`) when it is actually not supported.
-- Packs using `CodaApiHeaderBearerToken` can have additional non-Coda network domains as long as the auth is restricted to coda.io, subject the the normal Coda approval for multiple domains.
+- Packs using `CodaApiHeaderBearerToken` can have additional non-Coda network domains as long as the auth is restricted to coda.io, subject to the normal Coda approval for multiple domains.
 
 ## [0.12.0] - 2022-05-17
 

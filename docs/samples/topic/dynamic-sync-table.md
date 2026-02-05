@@ -255,7 +255,7 @@ async function getForms(context: coda.ExecutionContext, search?: string) {
   return response.body.items;
 }
 
-// Get metadata about a form given it's URL.
+// Get metadata about a form given its URL.
 async function getForm(context, url) {
   let response = await context.fetcher.fetch({
     method: "GET",
@@ -699,7 +699,7 @@ async function getDataset(context: coda.SyncExecutionContext):
 }
 
 /**
- * Extract the ID of the dataset from it's URL.
+ * Extract the ID of the dataset from its URL.
  */
 function getDatasetId(url: string): string {
   let match = url.match(DatasetUrlRegex);

@@ -6058,6 +6058,13 @@ describe('Pack metadata Validation', async () => {
                   type: EmbeddedContentType.TabView,
                 },
               },
+              {
+                type: ToolType.WebSearch,
+              },
+              {
+                type: ToolType.WebSearch,
+                allowedDomains: ['example.com', 'docs.example.com'],
+              },
             ],
           },
         ],
@@ -6094,7 +6101,7 @@ describe('Pack metadata Validation', async () => {
         {
           path: 'skills[0].tools[0].type',
           message:
-            "Invalid discriminator value. Expected 'Pack' | 'Knowledge' | 'ScreenAnnotation' | 'AssistantMessage' | 'Summarizer' | 'MCP' | 'ContactResolution' | 'CodaDocsAndTables' | 'DynamicSuggestedPrompt' | 'EmbeddedContent'",
+            "Invalid discriminator value. Expected 'Pack' | 'Knowledge' | 'ScreenAnnotation' | 'AssistantMessage' | 'Summarizer' | 'MCP' | 'ContactResolution' | 'CodaDocsAndTables' | 'DynamicSuggestedPrompt' | 'EmbeddedContent' | 'WebSearch'",
         },
       ]);
     });
@@ -6242,6 +6249,173 @@ describe('Pack metadata Validation', async () => {
         {
           path: 'mcpServers',
           message: 'At least one MCP server must be declared when using MCP tools.',
+        },
+      ]);
+    });
+
+    it('allows WebSearch tool without allowedDomains', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'WebSearchSkill',
+            displayName: 'Web Search Skill',
+            description: 'Uses web search',
+            prompt: 'Search the web',
+            tools: [
+              {
+                type: ToolType.WebSearch,
+              },
+            ],
+          },
+        ],
+      });
+      await validateJson(metadata);
+    });
+
+    it('allows WebSearch tool with valid allowedDomains', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'WebSearchSkill',
+            displayName: 'Web Search Skill',
+            description: 'Uses web search',
+            prompt: 'Search the web',
+            tools: [
+              {
+                type: ToolType.WebSearch,
+                allowedDomains: ['example.com', 'docs.example.com', 'stackoverflow.com'],
+              },
+            ],
+          },
+        ],
+      });
+      await validateJson(metadata);
+    });
+
+    it('fails when WebSearch allowedDomains contains empty string', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'WebSearchSkill',
+            displayName: 'Web Search Skill',
+            description: 'Uses web search',
+            prompt: 'Search the web',
+            tools: [
+              {
+                type: ToolType.WebSearch,
+                allowedDomains: ['example.com', ''],
+              },
+            ],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills[0].tools[0].allowedDomains[1]',
+          message: 'String must contain at least 1 character(s)',
+        },
+      ]);
+    });
+
+    it('fails when WebSearch allowedDomains is empty array', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'WebSearchSkill',
+            displayName: 'Web Search Skill',
+            description: 'Uses web search',
+            prompt: 'Search the web',
+            tools: [
+              {
+                type: ToolType.WebSearch,
+                allowedDomains: [],
+              },
+            ],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills[0].tools[0].allowedDomains',
+          message: 'Array must contain at least 1 element(s)',
+        },
+      ]);
+    });
+
+    it('fails when WebSearch allowedDomains exceeds maximum of 100 domains', async () => {
+      const tooManyDomains = Array.from({length: 101}, (_, i) => `domain${i}.com`);
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'WebSearchSkill',
+            displayName: 'Web Search Skill',
+            description: 'Uses web search',
+            prompt: 'Search the web',
+            tools: [
+              {
+                type: ToolType.WebSearch,
+                allowedDomains: tooManyDomains,
+              },
+            ],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills[0].tools[0].allowedDomains',
+          message: 'Array must contain at most 100 element(s)',
+        },
+      ]);
+    });
+
+    it('allows WebSearch with exactly 100 domains', async () => {
+      const maxDomains = Array.from({length: 100}, (_, i) => `domain${i}.com`);
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'WebSearchSkill',
+            displayName: 'Web Search Skill',
+            description: 'Uses web search',
+            prompt: 'Search the web',
+            tools: [
+              {
+                type: ToolType.WebSearch,
+                allowedDomains: maxDomains,
+              },
+            ],
+          },
+        ],
+      });
+      await validateJson(metadata);
+    });
+
+    it('detects duplicate WebSearch tools', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'WebSearchSkill',
+            displayName: 'Web Search Skill',
+            description: 'Uses web search',
+            prompt: 'Search the web',
+            tools: [
+              {
+                type: ToolType.WebSearch,
+              },
+              {
+                type: ToolType.WebSearch,
+              },
+            ],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills[0].tools[1]',
+          message: 'Duplicate tool found. {"type":"WebSearch"} is equivalent to the tool at index 0.',
         },
       ]);
     });
@@ -6562,6 +6736,80 @@ describe('Pack metadata Validation', async () => {
             description: 'A test skill',
             prompt: 'You are a helpful assistant',
             tools: [{type: ToolType.Summarizer}, {type: ToolType.AssistantMessage}, {type: ToolType.ContactResolution}],
+          },
+        ],
+      });
+      await validateJson(metadata);
+    });
+
+    it('fails for skill tool referencing non-existent formula', async () => {
+      const metadata = createFakePackVersionMetadata({
+        formulaNamespace: 'TestPack',
+        formulas: [createFakePackFormulaMetadata({name: 'ExistingFormula'})],
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [
+              {
+                type: ToolType.Pack,
+                formulas: [{formulaName: 'NonExistentFormula'}],
+              },
+            ],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills[0].tools[0].formulas[0].formulaName',
+          message:
+            'Formula "NonExistentFormula" not found. Pack tool formulas must reference formulas defined in this pack.',
+        },
+      ]);
+    });
+
+    it('validates skill tool referencing valid formula', async () => {
+      const metadata = createFakePackVersionMetadata({
+        formulaNamespace: 'TestPack',
+        formulas: [createFakePackFormulaMetadata({name: 'ValidFormula'})],
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [
+              {
+                type: ToolType.Pack,
+                formulas: [{formulaName: 'ValidFormula'}],
+              },
+            ],
+          },
+        ],
+      });
+      await validateJson(metadata);
+    });
+
+    it('allows skill tool with packId to reference any formula name', async () => {
+      const metadata = createFakePackVersionMetadata({
+        formulaNamespace: 'TestPack',
+        formulas: [createFakePackFormulaMetadata({name: 'MyFormula'})],
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [
+              {
+                type: ToolType.Pack,
+                packId: 123, // Different pack, so we don't validate the formula name
+                formulas: [{formulaName: 'AnyFormula'}],
+              },
+            ],
           },
         ],
       });

@@ -1,7 +1,7 @@
 "use strict";
 /**
  * The core components of the Pack SDK. These functions and types are used to
- * define your Pack, it's building blocks, and their logic.
+ * define your Pack, its building blocks, and their logic.
  *
  * This module is imported using the following code:
  *

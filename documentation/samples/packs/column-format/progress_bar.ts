@@ -10,7 +10,7 @@ pack.addColumnFormat({
 });
 
 // Adds a formula to this Pack to draw a number as a progress bar. It is used by
-// the column format above, but can also be used on it's own anywhere in the
+// the column format above, but can also be used on its own anywhere in the
 // doc.
 pack.addFormula({
   name: "ProgressBar",

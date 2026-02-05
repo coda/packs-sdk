@@ -176,7 +176,7 @@ async function getForms(context: coda.ExecutionContext, search?: string) {
   return response.body.items;
 }
 
-// Get metadata about a form given it's URL.
+// Get metadata about a form given its URL.
 async function getForm(context, url) {
   let response = await context.fetcher.fetch({
     method: "GET",

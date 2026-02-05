@@ -75,7 +75,7 @@ Formulas that have side effects (e.g., create or update records in an API) shoul
 
 Agent skills can reference previously indexed knowledge, enabling fast, accurate retrieval of relevant information. It's stored in our knowledge layer, a vector database with permission-aware retrieval. It enables retrieval-augmented generation (RAG), enabling the LLM to work with private data without being trained on it.
 
-Agents can add knowledge by including a sync table with some special properties set. Refer to the [Indexing guide][indexing] guide for more information on how to set up your agent to add knowledge to the index.
+Agents can add knowledge by including a sync table with some special properties set. Refer to the [Indexing guide][indexing] for more information on how to set up your agent to add knowledge to the index.
 
 !!! warning "Limited information available to the LLM"
 

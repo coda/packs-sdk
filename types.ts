@@ -241,7 +241,7 @@ export type PostSetupDef = SetEndpointDef;
 export interface BaseAuthentication {
   /**
    * A function that is called when a user sets up a new account, that returns a name for
-   * the account to label that account in the UI. The users credentials are applied to any
+   * the account to label that account in the UI. The user's credentials are applied to any
    * fetcher requests that this function makes. Typically, this function makes an API call
    * to an API's "who am I" endpoint and returns a username.
    *
@@ -266,7 +266,7 @@ export interface BaseAuthentication {
   instructionsUrl?: string;
 
   /**
-   * If true, indicates this has pack has a specific endpoint domain for each account, that is used
+   * If true, indicates this pack has a specific endpoint domain for each account, that is used
    * as the basis of HTTP requests. For example, API requests are made to <custom-subdomain>.example.com
    * rather than example.com. If true, the user will be prompted to provide their specific endpoint domain
    * when creating a new account.
@@ -274,7 +274,7 @@ export interface BaseAuthentication {
   requiresEndpointUrl?: boolean;
 
   /**
-   * When requiresEndpointUrl is set to true this should be the root domain that all endpoints share.
+   * When requiresEndpointUrl is set to true, this should be the root domain that all endpoints share.
    * For example, this value would be "example.com" if specific endpoints looked like \{custom-subdomain\}.example.com.
    *
    * For packs that make requests to multiple domains (uncommon), this should be the domain within
@@ -527,7 +527,7 @@ export interface BaseOAuthAuthentication extends BaseAuthentication {
    * A custom prefix to be used when passing the access token in the HTTP Authorization
    * header when making requests. Typically this prefix is `Bearer` which is what will be
    * used if this value is omitted. However, some services require a different prefix.
-   * When sending authenticated requests, a HTTP header of the form
+   * When sending authenticated requests, an HTTP header of the form
    * `Authorization: <tokenPrefix> <token>` will be used.
    */
   tokenPrefix?: string;
@@ -1414,7 +1414,18 @@ export interface DynamicSuggestedPromptTool extends BaseTool<ToolType.DynamicSug
  * that may not be available in the user's workspace or knowledge base.
  * @internal
  */
-export interface WebSearchTool extends BaseTool<ToolType.WebSearch> {}
+export interface WebSearchTool extends BaseTool<ToolType.WebSearch> {
+  /**
+   * Optional list of domains to restrict web search results to.
+   * When specified, only results from these domains will be returned.
+   * Omit the HTTP/HTTPS prefix (e.g., use 'docs.example.com' not 'https://docs.example.com').
+   * Subdomains are automatically included in the search.
+   * Maximum of 100 domains allowed.
+   * Example: ['docs.google.com', 'stackoverflow.com']
+   * @internal
+   */
+  allowedDomains?: string[];
+}
 
 /**
  * The type of the content that can be embedded in the response.

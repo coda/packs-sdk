@@ -167,7 +167,7 @@ pack.addFormula({
     let emailFooter;
     let source = context.invocationLocation.source;
     switch (source) {
-      case coda.InvocationSource.Coda:
+      case coda.InvocationSource.Doc:
         emailFooter = "Sent from Coda.";
         break;
       case coda.InvocationSource.Go:

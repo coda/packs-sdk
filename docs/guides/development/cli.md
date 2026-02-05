@@ -310,7 +310,7 @@ Alternatively, you can create releases from within the Pack Studio.
 
 When using the CLI to build a Pack you can split your code into multiple files, which can be really useful for large or complex Packs. You can organize your code however you like, as long as there is a file that exports the Pack definition with the name `pack` (typically named `pack.ts`).
 
-Coda engineers have built dozens of Packs over the years, and have settled on a the recommended file structure below:
+Coda engineers have built dozens of Packs over the years, and have settled on the recommended file structure below:
 
 * `helpers.ts` - A place to define helper functions used by your Pack.
 * `pack.ts` - The core Pack definition, where all of the formulas, sync tables, and other building blocks are added.

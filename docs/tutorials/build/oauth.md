@@ -16,7 +16,7 @@ Before a Pack can use an API to fetch private data, it must first be given acces
 Before starting this tutorial, make sure you have completed:
 
 - One of the **Get started** tutorials, either [In your browser][quickstart_web] or [On your local machine][quickstart_cli].
-- The [Call an API tutorial][tutorial_fetcher], which covers how to call make an HTTP request.
+- The [Call an API tutorial][tutorial_fetcher], which covers how to make an HTTP request.
 
 
 ## :material-shield-key: What is OAuth2?
@@ -581,7 +581,7 @@ You'll notice that it takes in an account as a parameter, and it should auto-sel
 Now that you have an understanding of how to use OAuth2 in Packs, here are some more resources you can explore:
 
 - [Authentication guide][authentication] - Information about how authentication works in Packs.
-- [OAuth guide][oauth_guide] - More in-depth information about how to setup OAuth authentication.
+- [OAuth guide][oauth_guide] - More in-depth information about how to set up OAuth authentication.
 - [Sample code][samples_apis] - A collection of sample Packs that use OAuth2 to connect to various popular APIs.
 
 

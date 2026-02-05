@@ -37,7 +37,7 @@ Packs can extend Coda in four specific ways:
 
     <figure>
       <img src="site:images/overview_action.png" srcset="site:images/overview_action_2x.png 2x" alt="A custom action in a button">
-      <figcaption>A button being configured with an action from the the Google Calendar Pack that creates a new event in the user's calendar.</figcaption>
+      <figcaption>A button being configured with an action from the Google Calendar Pack that creates a new event in the user's calendar.</figcaption>
     </figure>
 
     [Learn more][actions]{ .md-button }

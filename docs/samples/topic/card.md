@@ -6,7 +6,7 @@ icon: material/card-text
 
 # Card samples
 
-A card is an visual way to display key information about an item, typically represented by a URL in an external application.
+A card is a visual way to display key information about an item, typically represented by a URL in an external application.
 
 
 [Learn More](../../guides/blocks/cards.md){ .md-button }
@@ -152,7 +152,7 @@ let SpellSchema = coda.makeObjectSchema({
   snippetProperty: "description",
 });
 
-// Formula that renders a card for a spell given it's name. This will be shown
+// Formula that renders a card for a spell given its name. This will be shown
 // a "Card" in the Pack's list of building blocks, but is also a regular formula
 // that can be used elsewhere.
 pack.addFormula({
@@ -390,7 +390,7 @@ const TaskSchema = coda.makeObjectSchema({
   subtitleProperties: ["priority"],
 });
 
-// Formula that renders a card for a task given it's URL. This will be shown a
+// Formula that renders a card for a task given its URL. This will be shown a
 // "Card" in the Pack's list of building blocks, but is also a regular formula
 // that can be used elsewhere.
 pack.addFormula({

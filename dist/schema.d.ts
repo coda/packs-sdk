@@ -1355,7 +1355,7 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      */
     index?: IndexDefinition;
     /**
-     * The name of the property within {@link ObjectSchemaDefinition.properties} that can be be interpreted as
+     * The name of the property within {@link ObjectSchemaDefinition.properties} that can be interpreted as
      * text representing the version of an item.
      *
      * Must be a {@link ValueType.String} property.

@@ -306,7 +306,7 @@ pack.setUserAuthentication({
 [View Sample Code][sample_web_basic]{ .md-button }
 
 !!! tip "Customize the dialog"
-    Sometimes Basic authentication is used for other types of identifiers and secrets, and the terms "Username" and "Password" in the dialog can be misleading. You can customize the dialog using the `uxOptions` field of the authentication configuration.
+    Sometimes Basic authentication is used for other types of identifiers and secrets, and the terms "Username" and "Password" in the dialog can be misleading. You can customize the dialog using the `uxConfig` field of the authentication configuration.
     ```ts
     pack.setUserAuthentication({
       type: coda.AuthenticationType.WebBasic,

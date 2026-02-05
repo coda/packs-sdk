@@ -69,7 +69,7 @@ let SpellSchema = coda.makeObjectSchema({
   snippetProperty: "description",
 });
 
-// Formula that renders a card for a spell given it's name. This will be shown
+// Formula that renders a card for a spell given its name. This will be shown
 // a "Card" in the Pack's list of building blocks, but is also a regular formula
 // that can be used elsewhere.
 pack.addFormula({

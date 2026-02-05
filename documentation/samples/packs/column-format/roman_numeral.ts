@@ -10,7 +10,7 @@ pack.addColumnFormat({
 });
 
 // Adds a formula to this Pack to convert a number to a Roman numeral. It is
-// used by the column format above, but can also be used on it's own anywhere in
+// used by the column format above, but can also be used on its own anywhere in
 // the doc.
 pack.addFormula({
   name: "RomanNumeral",

@@ -39,7 +39,7 @@ const TaskSchema = coda.makeObjectSchema({
   subtitleProperties: ["priority"],
 });
 
-// Formula that renders a card for a task given it's URL. This will be shown a
+// Formula that renders a card for a task given its URL. This will be shown a
 // "Card" in the Pack's list of building blocks, but is also a regular formula
 // that can be used elsewhere.
 pack.addFormula({

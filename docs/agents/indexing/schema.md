@@ -101,7 +101,7 @@ In addition to text, you can index binary content in files as well. The followin
 - Microsoft Word (`application/msword` and <nobr>`application/vnd.openxmlformats-officedocument.wordprocessingml.document`</nobr>)
 - Rich Text Format (`application/rtf`)
 
-To index binary content, add to`index.properties` the `Attachment` property containing the link to the file.
+To index binary content, add to `index.properties` the `Attachment` property containing the link to the file.
 
 ```{.ts hl_lines="12"}
 const ProductSchema = coda.makeObjectSchema({

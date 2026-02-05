@@ -294,7 +294,7 @@ export interface PublicApiDocSize {
     overApiSizeLimit: boolean;
 }
 /**
- * Payload for publishing a doc or or updating its publishing information.
+ * Payload for publishing a doc or updating its publishing information.
  */
 export interface PublicApiDocPublish {
     /**
