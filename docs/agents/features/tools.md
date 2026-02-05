@@ -66,9 +66,13 @@ pack.addSkill({
 
 ### Actions
 
-Formulas that have side effects (e.g., create or update records in an API) should be annotated as actions (`isAction: true`). Unlike regular formulas, action formulas require confirmation before they are run. Learn more in the [Actions guide][actions].
+Formulas that have side effects (e.g., create or update records in an API) should be annotated as actions (`isAction: true`). Unlike regular formulas, action formulas require confirmation before they are run.
 
 <img src="site:images/agent_action_confirmation.png" srcset="site:images/agent_action_confirmation_2x.png 2x" alt="A screenshot of the action confirmation UX." class="screenshot">
+
+The confirmation card includes all of the parameter values that the LLM has set, and allows the user to edit the values before approving. Dismissing the action will prevent the action formula from running and send a notification back to the LLM.
+
+Learn more about actions in the [Actions guide][actions].
 
 
 ## Knowledge
