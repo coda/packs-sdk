@@ -1,5 +1,4 @@
 dist/** linguist-generated
-docs/embedded-snippets/** linguist-generated
 docs/reference/sdk/** linguist-generated
 docs/samples/*/** linguist-generated
 documentation/generated/** linguist-generated
