@@ -232,9 +232,9 @@ docs: typedoc generated-documentation bundle-docs-js build-mkdocs
 .PHONY: view-docs
 view-docs:
 	if command -v expect &> /dev/null; then \
-		PYTHONPATH=${ROOTDIR} PIPENV_IGNORE_VIRTUALENVS=1 MK_DOCS_SITE_URL=http://localhost:8000/packs-sdk MK_DOCS_GENERATE_ASSETS=false expect -c 'set timeout 60; spawn pipenv run mkdocs serve --livereload --watch-theme; expect "Serving on"; exec open "http://localhost:8000"; interact'; \
+		PYTHONPATH=${ROOTDIR} PIPENV_IGNORE_VIRTUALENVS=1 MK_DOCS_SITE_URL=http://localhost:8000/packs-sdk MK_DOCS_GENERATE_ASSETS=false expect -c 'set timeout 60; spawn pipenv run mkdocs serve --livereload --watch-theme; expect "Serving on"; exec open "http://localhost:8000"; interact' | grep -v 'mkdocs_site_urls:'; \
 	else \
-		PYTHONPATH=${ROOTDIR} PIPENV_IGNORE_VIRTUALENVS=1 MK_DOCS_SITE_URL=http://localhost:8000/packs-sdk MK_DOCS_GENERATE_ASSETS=false pipenv run mkdocs serve --livereload --watch-theme; \
+		PYTHONPATH=${ROOTDIR} PIPENV_IGNORE_VIRTUALENVS=1 MK_DOCS_SITE_URL=http://localhost:8000/packs-sdk MK_DOCS_GENERATE_ASSETS=false pipenv run mkdocs serve --livereload --watch-theme | grep -v 'mkdocs_site_urls:'; \
 	fi
 
 .PHONY: optimize-images

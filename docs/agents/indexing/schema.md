@@ -227,7 +227,7 @@ In addition to helping the LLM, these descriptions will be shown to users in the
 
 ## Schema descriptions
 
-Schemas themselves can have descriptions, helping the LLM understand what the record represents. While they aren't as necessary for regular sync tables, it's helpful to use them with [dynamic sync tables][dynamic_sync_tables], where the semantic meaning of the schema can vary.
+Schemas can include descriptions that help the LLM understand what the record represents. While they aren't strictly necessary for regular sync tables, it's helpful to use them with [dynamic sync tables][dynamic_sync_tables], where the schema's semantic meaning can vary.
 
 ```{.ts hl_lines="5"}
 getSchema: async function (context) {
@@ -239,6 +239,36 @@ getSchema: async function (context) {
   });
 },
 ```
+
+## Contacts {:#contacts}
+
+In addition to indexing the records themselves, Superhuman Go can separately index the people associated with those records. For example, the assignee of a ticket or the attendees of an event. Once indexed, every other agent the user has installed can access these contacts using the [Contact resolution tool][contact_resolution_tool].
+
+To be indexed, a contact must have both a name and an email address. It's not currently possible to index additional information about a contact, such as a phone number or mailing address.
+
+To enable contact indexing, you need to annotate the related object schema:
+
+1.  Ensure the `displayProperty` field is set to a property containing the user's name.
+1.  Set the `userEmailProperty` field to a property containing the user's email address.
+
+```{.ts hl_lines="7-8"}
+const AuthorSchema = coda.makeObjectSchema({
+  properties: {
+    name: { type: coda.ValueType.String },
+    email: { type: coda.ValueType.String, codaType: coda.ValueHintType.Email },
+    // Other properties ...
+  },
+  displayProperty: "name",
+  userEmailProperty: "email",
+});
+```
+
+Schemas annotated this way can be the top-level schema of a sync table, or nested anywhere below. Contacts will be de-duped by their email address, which is treated as the unique identifier.
+
+!!! warning "`Person` objects supported, but not recommended"
+
+    Instead of setting the `userEmailProperty`, you can instead apply the value hint [`Person`][person] and set the required fields. These person schemas are treated specially when used in a Coda doc, but come with some downsides when the referenced person isn't a member of the organization or when the schema contains additional properties. Most agents should prefer the `userEmailProperty` approach mentioned above.
+
 
 ## Known limitations
 
@@ -253,3 +283,5 @@ If you are upgrading an existing Pack, you'll need to denormalize any data you w
 [people]: ../../guides/basics/data-types.md#people
 [schemas]: ../../guides/advanced/schemas.md
 [dynamic_sync_tables]: ../../guides/blocks/sync-tables/dynamic.md
+[contact_resolution_tool]: ../features/tools.md#contacts
+[person]: ../../reference/sdk/core/enumerations/ValueHintType.md#person

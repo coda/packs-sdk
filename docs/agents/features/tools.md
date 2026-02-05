@@ -146,7 +146,7 @@ pack.addSkill({
 });
 ```
 
-When the tool is run, blue bars are added to the left of affected paragraphs. Hovering over them reveals the alternative text the agent suggested, and users can accept or reject it.
+When the tool runs, blue bars are added to the left of the affected paragraphs. Hovering over them reveals the alternative text the agent suggested, which users can accept or reject.
 
 <!-- TODO: Screenshot -->
 
@@ -180,6 +180,35 @@ While the LLM can fill in these inputs on its own, you may want to suggest a spe
     ```
 
 
+## Contact resolution tool {:#contacts}
+
+While indexing records into the knowledge layer, agents can separately index the people mentioned in those records. The resulting contacts, from all agents that index them, are pooled together and made available to every other agent the user has installed.
+
+Your agent can search these contacts using the contact resolution tool. With this tool, your users can mention people by name instead of typing their email addresses.
+
+For example, if the user types "Assign the ticket to Alice" your agent can search their contacts, perhaps from Gmail and other agents they have installed, to determine that Alice is `alice@example.com`. Your agent can then continue with other tool calls that require the email address.
+
+To allow your agent to search these contacts, add the [`ContactResolution`][contact_resolution] tool to the desired skills.
+
+```ts
+pack.setChatSkill({
+  name: "Chat",
+  displayName: "Chat",
+  description: "The root chat skill.",
+  prompt: `
+    When the user mentions someone by name, but an email address is needed,
+    use the Contact Resolution tool to look up the contact.
+  `,
+  tools: [
+    { type: coda.ToolType.ContactResolution },
+    { type: coda.ToolType.Pack },
+  ],
+});
+```
+
+Each contact has a name and email address only; it's not possible to retrieve other information about a contact. To learn more about how to index contacts within your agent, see the [Indexing schemas guide][indexing_schemas].
+
+
 ## MCP Tools
 
 Agents that connect to an MCP can use any of the tools it provides.
@@ -207,3 +236,5 @@ Learn more about connecting to an MCP server in the [MCP guide][mcp].
 [actions]: ../../guides/blocks/actions.md
 [indexing]: ../indexing/index.md
 [mcp]: ./mcp.md
+[indexing_schemas]: ../indexing/schema.md#contacts
+[contact_resolution]: ../../reference/sdk/core/enumerations/ToolType.md#contactresolution

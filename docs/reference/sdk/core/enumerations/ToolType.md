@@ -14,6 +14,14 @@ The types of tools that can be used in an agent skill.
 
 ## Enumeration Members
 
+### ContactResolution
+
+> **ContactResolution**: `"ContactResolution"`
+
+Tool that provides access to contact resolution capabilities.
+
+***
+
 ### Knowledge
 
 > **Knowledge**: `"Knowledge"`

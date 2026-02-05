@@ -55,7 +55,7 @@ export declare enum ValueHintType {
     Email = "email",
     /**
      * Indicates to interpret and render the value as a Coda person reference. The provided value should be
-     * an object whose `id` property is an email address, which Coda will try to resolve to a user
+     * an object whose `idProperty` property is an email address, which Coda will try to resolve to a user
      * and render an @-reference to the user.
      *
      * @example
@@ -63,12 +63,12 @@ export declare enum ValueHintType {
      * makeObjectSchema({
      *   type: ValueType.Object,
      *   codaType: ValueHintType.Person,
-     *   id: 'email',
-     *   primary: 'name',
      *   properties: {
      *     email: {type: ValueType.String, required: true},
      *     name: {type: ValueType.String, required: true},
      *   },
+     *   displayProperty: "name",
+     *   idProperty: "email",
      * });
      * ```
      */
@@ -1305,11 +1305,8 @@ export interface ObjectSchemaDefinition<K extends string, L extends string> exte
      * For cases where the object being synced represents a user, the name of the property within
      * {@link ObjectSchemaDefinition.properties} that identifies the email address of the user.
      *
-     * This is required for sync tables with role {@link TableRole.User}
-     *
      * Must be a {@link ValueType.String} property with the {@link ValueHintType.Email} hint or
-     * a {@link ValueType.Object} with the {@link ValueHintType.Person} hint
-     * @hidden
+     * a {@link ValueType.Object} with the {@link ValueHintType.Person} hint.
      */
     userEmailProperty?: PropertyIdentifier<K>;
     /**
