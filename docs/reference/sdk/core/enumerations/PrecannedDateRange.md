@@ -36,6 +36,12 @@ and ending in the distant future (e.g. 12/31/3999). Exact dates are subject to c
 
 ***
 
+### Last12AndNext12Months
+
+> **Last12AndNext12Months**: `"last_12_and_next_12_months"`
+
+***
+
 ### Last180Days
 
 > **Last180Days**: `"last_180_days"`
