@@ -5752,6 +5752,16 @@ export interface DynamicSuggestedPromptTool extends BaseTool<ToolType.DynamicSug
  * @internal
  */
 export interface WebSearchTool extends BaseTool<ToolType.WebSearch> {
+	/**
+	 * Optional list of domains to restrict web search results to.
+	 * When specified, only results from these domains will be returned.
+	 * Omit the HTTP/HTTPS prefix (e.g., use 'docs.example.com' not 'https://docs.example.com').
+	 * Subdomains are automatically included in the search.
+	 * Maximum of 100 domains allowed.
+	 * Example: ['docs.google.com', 'stackoverflow.com']
+	 * @internal
+	 */
+	allowedDomains?: string[];
 }
 /**
  * The type of the content that can be embedded in the response.

@@ -1738,6 +1738,10 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     const dynamicSuggestedPromptToolSchema = zodCompleteStrictObject({
         type: z.literal(types_11.ToolType.DynamicSuggestedPrompt),
     });
+    const webSearchToolSchema = zodCompleteStrictObject({
+        type: z.literal(types_11.ToolType.WebSearch),
+        allowedDomains: z.array(z.string().min(1)).min(1).max(100).optional(),
+    });
     const skillModelConfigurationSchema = zodCompleteStrictObject({
         model: z.nativeEnum(types_9.SkillModel),
         prompt: z.string().min(1).max(exports.Limits.PromptLength).optional(),
@@ -1753,6 +1757,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         codaDocsToolSchema,
         dynamicSuggestedPromptToolSchema,
         embeddedContentToolSchema,
+        webSearchToolSchema,
     ]);
     const skillSchema = zodCompleteObject({
         name: z

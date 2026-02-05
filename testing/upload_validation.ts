@@ -135,6 +135,7 @@ import {ValueType} from '../schema';
 import type {VariousAuthentication} from '../types';
 import type {VariousSupportedAuthenticationTypes} from '../types';
 import type {WebBasicAuthentication} from '../types';
+import type {WebSearchTool} from '../types';
 import {ZodParsedType} from 'zod';
 import {assertCondition} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
@@ -2277,6 +2278,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     type: z.literal(ToolType.DynamicSuggestedPrompt),
   });
 
+  const webSearchToolSchema = zodCompleteStrictObject<WebSearchTool>({
+    type: z.literal(ToolType.WebSearch),
+    allowedDomains: z.array(z.string().min(1)).min(1).max(100).optional(),
+  });
+
   const skillModelConfigurationSchema = zodCompleteStrictObject<SkillModelConfiguration>({
     model: z.nativeEnum(SkillModel),
     prompt: z.string().min(1).max(Limits.PromptLength).optional(),
@@ -2293,6 +2299,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     codaDocsToolSchema,
     dynamicSuggestedPromptToolSchema,
     embeddedContentToolSchema,
+    webSearchToolSchema,
   ]);
   const skillSchema = zodCompleteObject<Skill>({
     name: z
