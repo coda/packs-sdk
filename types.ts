@@ -1635,8 +1635,6 @@ export interface SuggestedPrompt {
  * @hidden In development
  */
 export interface SuggestedAction {
-  /** Unique identifier for this action */
-  id: string;
   /** Display text shown on the button (max 40 chars) */
   label: string;
   /** The prompt text sent to chat when clicked (max 500 chars) */
