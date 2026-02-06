@@ -1444,6 +1444,10 @@ export enum EmbeddedContentType {
    * View that presents a list of content blocks in tabs of a tabbed panel.
    */
   TabView = 'TabView',
+  /**
+   * UI Widget.
+   */
+  Widget = 'Widget',
 }
 
 /**
