@@ -116,7 +116,7 @@
     "sharp-cli": "5.1.0",
     "ts-loader": "9.5.1",
     "ts-node": "10.9.2",
-    "typedoc": "0.28.14",
+    "typedoc": "0.28.16",
     "typedoc-plugin-frontmatter": "1.3.0",
     "typedoc-plugin-markdown": "4.9.0",
     "unified-lint-rule": "^3.0.1",
