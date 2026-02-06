@@ -324,6 +324,10 @@ var EmbeddedContentType;
      * View that presents a list of content blocks in tabs of a tabbed panel.
      */
     EmbeddedContentType["TabView"] = "TabView";
+    /**
+     * UI Widget.
+     */
+    EmbeddedContentType["Widget"] = "Widget";
 })(EmbeddedContentType || (exports.EmbeddedContentType = EmbeddedContentType = {}));
 /**
  * The supported LLM models for a skill.
