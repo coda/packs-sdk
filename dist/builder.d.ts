@@ -2,6 +2,7 @@ import type { AdminAuthentication } from './types';
 import type { AdminAuthenticationDef } from './types';
 import type { Authentication } from './types';
 import type { BasicPackDefinition } from './types';
+import type { DynamicSuggestedActionsConfig } from './types';
 import type { DynamicSyncTableOptions } from './api';
 import type { Format } from './types';
 import type { Formula } from './api';
@@ -83,6 +84,11 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * @hidden
      */
     mcpServers: MCPServer[];
+    /**
+     * See {@link PackVersionDefinition.dynamicSuggestedActionsConfig}.
+     * @hidden
+     */
+    dynamicSuggestedActionsConfig?: DynamicSuggestedActionsConfig;
     /**
      * See {@link PackVersionDefinition.defaultAuthentication}.
      */
@@ -292,6 +298,24 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * @hidden
      */
     addSuggestedPrompt(prompt: SuggestedPrompt): this;
+    /**
+     * Configures dynamic suggested actions for this pack's chat interface.
+     *
+     * The specified skill will be called to generate contextual action suggestions
+     * that appear as buttons above the chat input. The skill should return JSON
+     * in the SuggestedActionsResponse format.
+     *
+     * @example
+     * ```ts
+     * pack.setDynamicSuggestedActionsConfig({
+     *   skillName: 'GenerateSuggestedActions',
+     *   refreshOnEachMessage: false,
+     *   maxActions: 3,
+     * });
+     * ```
+     * @hidden
+     */
+    setDynamicSuggestedActionsConfig(config: DynamicSuggestedActionsConfig): this;
     private _wrapAuthenticationFunctions;
     /**
      * Sets this pack to use authentication for individual users, using the

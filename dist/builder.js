@@ -35,7 +35,7 @@ class PackDefinitionBuilder {
      * rather than constructing a builder directly.
      */
     constructor(definition) {
-        const { formulas, formats, syncTables, skills, chatSkill, benchInitializationSkill, networkDomains, defaultAuthentication, systemConnectionAuthentication, version, formulaNamespace, skillEntrypoints, suggestedPrompts, mcpServers, } = definition || {};
+        const { formulas, formats, syncTables, skills, chatSkill, benchInitializationSkill, networkDomains, defaultAuthentication, systemConnectionAuthentication, version, formulaNamespace, skillEntrypoints, suggestedPrompts, mcpServers, dynamicSuggestedActionsConfig, } = definition || {};
         this.formulas = formulas || [];
         this.formats = formats || [];
         this.syncTables = syncTables || [];
@@ -46,6 +46,7 @@ class PackDefinitionBuilder {
         this.suggestedPrompts = suggestedPrompts || [];
         this.networkDomains = networkDomains || [];
         this.mcpServers = mcpServers || [];
+        this.dynamicSuggestedActionsConfig = dynamicSuggestedActionsConfig;
         this.defaultAuthentication = defaultAuthentication;
         this.systemConnectionAuthentication = systemConnectionAuthentication;
         this.version = version;
@@ -274,6 +275,27 @@ class PackDefinitionBuilder {
      */
     addSuggestedPrompt(prompt) {
         this.suggestedPrompts.push(prompt);
+        return this;
+    }
+    /**
+     * Configures dynamic suggested actions for this pack's chat interface.
+     *
+     * The specified skill will be called to generate contextual action suggestions
+     * that appear as buttons above the chat input. The skill should return JSON
+     * in the SuggestedActionsResponse format.
+     *
+     * @example
+     * ```ts
+     * pack.setDynamicSuggestedActionsConfig({
+     *   skillName: 'GenerateSuggestedActions',
+     *   refreshOnEachMessage: false,
+     *   maxActions: 3,
+     * });
+     * ```
+     * @hidden
+     */
+    setDynamicSuggestedActionsConfig(config) {
+        this.dynamicSuggestedActionsConfig = config;
         return this;
     }
     _wrapAuthenticationFunctions(authentication) {
