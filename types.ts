@@ -1444,6 +1444,10 @@ export enum EmbeddedContentType {
    * View that presents a list of content blocks in tabs of a tabbed panel.
    */
   TabView = 'TabView',
+  /**
+   * UI Widget.
+   */
+  Widget = 'Widget',
 }
 
 /**
@@ -1476,10 +1480,20 @@ export interface CarouselViewEmbeddedContent extends BaseEmbeddedContent<Embedde
 export interface TabViewEmbeddedContent extends BaseEmbeddedContent<EmbeddedContentType.TabView> {}
 
 /**
+ * UI Widget.
+ * @internal
+ */
+export interface WidgetEmbeddedContent extends BaseEmbeddedContent<EmbeddedContentType.Widget> {}
+
+/**
  * Union of all supported embedded content classes.
  * @internal
  */
-export type EmbeddedContent = CopyableBlockEmbeddedContent | CarouselViewEmbeddedContent | TabViewEmbeddedContent;
+export type EmbeddedContent =
+  | CopyableBlockEmbeddedContent
+  | CarouselViewEmbeddedContent
+  | TabViewEmbeddedContent
+  | WidgetEmbeddedContent;
 
 /**
  * Tool that enables creation of the content that can be embedded in the response.
