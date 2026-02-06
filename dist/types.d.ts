@@ -1334,10 +1334,16 @@ export interface CarouselViewEmbeddedContent extends BaseEmbeddedContent<Embedde
 export interface TabViewEmbeddedContent extends BaseEmbeddedContent<EmbeddedContentType.TabView> {
 }
 /**
+ * UI Widget.
+ * @internal
+ */
+export interface WidgetEmbeddedContent extends BaseEmbeddedContent<EmbeddedContentType.Widget> {
+}
+/**
  * Union of all supported embedded content classes.
  * @internal
  */
-export type EmbeddedContent = CopyableBlockEmbeddedContent | CarouselViewEmbeddedContent | TabViewEmbeddedContent;
+export type EmbeddedContent = CopyableBlockEmbeddedContent | CarouselViewEmbeddedContent | TabViewEmbeddedContent | WidgetEmbeddedContent;
 /**
  * Tool that enables creation of the content that can be embedded in the response.
  * @internal
