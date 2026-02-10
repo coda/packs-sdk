@@ -244,7 +244,7 @@ Identifies this as OAuth2 client credentials authentication.
 
 > `optional` **useDynamicClientRegistration**: `boolean`
 
-Indicates that this OAuth provider supports Dynamic Client Registration (DCR).
+Indicates that this OAuth provider supports Dynamic Client Registration.
 When enabled, the Coda platform will register OAuth clients dynamically with the provider
 rather than requiring a pre-configured client ID and secret.
 

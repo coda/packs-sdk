@@ -282,11 +282,11 @@ pack.setUserAuthentication({
 ```
 
 
-### Dynamic Client Registration (DCR)
+### Dynamic Client Registration
 
-Some OAuth providers support [Dynamic Client Registration (DCR)][oauth_dcr], which allows Coda to automatically register OAuth clients with the provider rather than requiring you to manually create and configure a client application. When enabled, Coda will register a new client for every pack connection, so each user account gets its own dedicated OAuth client credentials.
+Some OAuth providers support [Dynamic Client Registration][oauth_dcr], which allows Coda to automatically register OAuth clients with the provider rather than requiring you to manually create and configure a client application. When enabled, Coda will register a new client for every pack connection, so each user account gets its own dedicated OAuth client credentials.
 
-To indicate that your Pack's OAuth provider supports DCR, set the `useDynamicClientRegistration` field to `true` in your authentication configuration.
+To indicate that your Pack's OAuth provider supports dynamic client registration, set the `useDynamicClientRegistration` field to `true` in your authentication configuration.
 
 ```{.ts hl_lines="4"}
 pack.setUserAuthentication({
