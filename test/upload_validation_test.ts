@@ -6901,6 +6901,106 @@ describe('Pack metadata Validation', async () => {
       await validateJson(metadata);
     });
 
+    it('validates chatSkill with GPT5 model', async () => {
+      const metadata = createFakePackVersionMetadata({
+        chatSkill: {
+          name: 'DefaultChat',
+          displayName: 'Chat',
+          description: 'Default chat experience.',
+          prompt: 'You are an expert in this pack.',
+          tools: [{type: ToolType.Pack}],
+          models: [{model: SkillModel.OpenAIGPT5}],
+        },
+      });
+      await validateJson(metadata);
+    });
+
+    it('validates chatSkill with multiple models', async () => {
+      const metadata = createFakePackVersionMetadata({
+        chatSkill: {
+          name: 'DefaultChat',
+          displayName: 'Chat',
+          description: 'Default chat experience.',
+          prompt: 'You are an expert in this pack.',
+          tools: [{type: ToolType.Pack}],
+          models: [{model: SkillModel.OpenAIGPT4}, {model: SkillModel.OpenAIGPT5}],
+        },
+      });
+      await validateJson(metadata);
+    });
+
+    it('validates chatSkill with model-specific prompt override', async () => {
+      const metadata = createFakePackVersionMetadata({
+        chatSkill: {
+          name: 'DefaultChat',
+          displayName: 'Chat',
+          description: 'Default chat experience.',
+          prompt: 'You are an expert in this pack.',
+          tools: [{type: ToolType.Pack}],
+          models: [
+            {
+              model: SkillModel.OpenAIGPT4,
+              prompt: 'You are an expert in this pack, running on GPT-4.',
+            },
+          ],
+        },
+      });
+      await validateJson(metadata);
+    });
+
+    it('fails for chatSkill with invalid model', async () => {
+      const metadata = createFakePackVersionMetadata({
+        chatSkill: {
+          name: 'DefaultChat',
+          displayName: 'Chat',
+          description: 'Default chat experience.',
+          prompt: 'You are an expert in this pack.',
+          tools: [{type: ToolType.Pack}],
+          models: [{model: 'InvalidModel' as any}],
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.isAtLeast(err.validationErrors!.length, 1);
+      const modelError = err.validationErrors!.find(e => e.path?.includes('models'));
+      assert.isDefined(modelError);
+    });
+
+    it('fails for skill with invalid model', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'TestSkill',
+            displayName: 'Test Skill',
+            description: 'A test skill',
+            prompt: 'You are a helpful assistant',
+            tools: [],
+            models: [{model: 'NotARealModel' as any}],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.isAtLeast(err.validationErrors!.length, 1);
+      const modelError = err.validationErrors!.find(e => e.path?.includes('models'));
+      assert.isDefined(modelError);
+    });
+
+    it('fails for chatSkill model with empty prompt', async () => {
+      const metadata = createFakePackVersionMetadata({
+        chatSkill: {
+          name: 'DefaultChat',
+          displayName: 'Chat',
+          description: 'Default chat experience.',
+          prompt: 'You are an expert in this pack.',
+          tools: [{type: ToolType.Pack}],
+          models: [{model: SkillModel.OpenAIGPT4, prompt: ''}],
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.isAtLeast(err.validationErrors!.length, 1);
+      const promptError = err.validationErrors!.find(e => e.path?.includes('prompt'));
+      assert.isDefined(promptError);
+    });
+
     it('fails for chatSkill missing required fields', async () => {
       const metadata = createFakePackVersionMetadata({
         chatSkill: {
