@@ -282,6 +282,23 @@ pack.setUserAuthentication({
 ```
 
 
+### Dynamic Client Registration (DCR)
+
+Some OAuth providers support [Dynamic Client Registration (DCR)][oauth_dcr], which allows Coda to automatically register OAuth clients with the provider rather than requiring you to manually create and configure a client application. When enabled, Coda will register a new client for every pack connection, so each user account gets its own dedicated OAuth client credentials.
+
+To indicate that your Pack's OAuth provider supports DCR, set the `useDynamicClientRegistration` field to `true` in your authentication configuration.
+
+```{.ts hl_lines="4"}
+pack.setUserAuthentication({
+  type: coda.AuthenticationType.OAuth2,
+  // ...
+  useDynamicClientRegistration: true,
+});
+```
+
+This is a declarative flag — the actual registration flow is handled by the Coda platform at runtime.
+
+
 ## Client credentials flow {: #client_credentials}
 
 While the Authorization Code flow discussed above is used to access private user data, the Client Credentials flow is typically just used to authenticate the integration itself. Therefore it's most commonly implemented as a system-wide form of authentication, although per-user authentication is also supported.
@@ -319,4 +336,5 @@ Like with the Authorization Code flow, a variety of other advanced options are a
 [auth_endpoints]: index.md#endpoints
 [fetcher_network_domains]: ../fetcher.md#network-domains
 [oauth_pkce]: https://www.oauth.com/oauth2-servers/pkce/
+[oauth_dcr]: https://datatracker.ietf.org/doc/html/rfc7591
 [two_way_sync]: ../../blocks/sync-tables/two-way.md

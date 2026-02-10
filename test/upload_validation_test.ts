@@ -4868,6 +4868,7 @@ describe('Pack metadata Validation', async () => {
           additionalParams: {foo: 'bar'},
           endpointKey: 'some-key',
           tokenQueryParam: 'some-param',
+          useDynamicClientRegistration: true,
           postSetup: [
             {
               type: PostSetupType.SetEndpoint,

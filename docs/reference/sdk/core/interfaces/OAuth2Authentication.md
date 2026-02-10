@@ -294,6 +294,22 @@ Identifies this as OAuth2 authentication.
 
 ***
 
+### useDynamicClientRegistration?
+
+> `optional` **useDynamicClientRegistration**: `boolean`
+
+Indicates that this OAuth provider supports Dynamic Client Registration (DCR).
+When enabled, the Coda platform will register OAuth clients dynamically with the provider
+rather than requiring a pre-configured client ID and secret.
+
+See https://datatracker.ietf.org/doc/html/rfc7591 for more details.
+
+#### Inherited from
+
+`BaseOAuthAuthentication.useDynamicClientRegistration`
+
+***
+
 ### useProofKeyForCodeExchange?
 
 > `optional` **useProofKeyForCodeExchange**: `boolean`
