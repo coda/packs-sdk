@@ -353,10 +353,6 @@ pack.addSkill({
   prompt: `My prompt.`,
   tools: [
     { type: coda.ToolType.Pack },
-    {
-      type: coda.ToolType.Knowledge,
-      source: { type: coda.KnowledgeToolSourceType.Pack },
-    },
   ],
 });
 ```
@@ -424,14 +420,12 @@ pack.addSyncTable({
 > **setBenchInitializationSkill**(`skill`): `this`
 
 Sets the skill used when the agent is first opened in the agent bench.
+All fields are optional - omitted fields will use defaults at runtime.
 
 #### Example
 
 ```ts
 pack.setBenchInitializationSkill({
-  name: "Greeting",
-  displayName: "Greeting",
-  description: "Greet the user.",
   prompt: `
     Say hello to the user, referencing the time of day and a friendly nickname.
     For example: 10AM, Kramer => "Good morning K-man!"
@@ -444,7 +438,7 @@ pack.setBenchInitializationSkill({
 
 | Parameter | Type |
 | ------ | ------ |
-| `skill` | [`Skill`](../interfaces/Skill.md) |
+| `skill` | [`PartialSkillDef`](../type-aliases/PartialSkillDef.md) |
 
 #### Returns
 
@@ -467,13 +461,14 @@ It defines the prompts, available tools, and optionally the model to use.
 pack.setChatSkill({
   name: "Cow",
   displayName: "Cow",
-  description: "Talk like a cow.",
-  prompt: `
-    End every reply with "Moo!".
-  `,
   tools: [
     { type: coda.ToolType.Pack },
   ],
+});
+
+// Or just override the prompt
+pack.setChatSkill({
+  prompt: "End every reply with 'Moo!'",
 });
 ```
 
@@ -481,7 +476,7 @@ pack.setChatSkill({
 
 | Parameter | Type |
 | ------ | ------ |
-| `skill` | [`Skill`](../interfaces/Skill.md) |
+| `skill` | [`PartialSkillDef`](../type-aliases/PartialSkillDef.md) |
 
 #### Returns
 

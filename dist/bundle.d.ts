@@ -5915,6 +5915,29 @@ export interface Skill {
 	models?: SkillModelConfiguration[];
 }
 /**
+ * Input type for defining the default chat skill via {@link PackDefinitionBuilder.setChatSkill}
+ * or bench initialization skill via {@link PackDefinitionBuilder.setBenchInitializationSkill}.
+ *
+ * All fields are optional, allowing you to override only the fields you care about.
+ * Fields that are not provided will use default values at runtime.
+ *
+ * @example
+ * ```ts
+ * // Override just tools on the default chat skill
+ * pack.setChatSkill({
+ *   tools: [
+ *     { type: coda.ToolType.Pack },
+ *   ],
+ * });
+ *
+ * // Override just the prompt
+ * pack.setChatSkill({
+ *   prompt: "You are a helpful assistant.",
+ * });
+ * ```
+ */
+export type PartialSkillDef = Partial<Skill>;
+/**
  * Configuration for a skill entrypoint.
  */
 export interface SkillEntrypointConfig {
@@ -6018,28 +6041,31 @@ export interface PackVersionDefinition {
 	skills?: Skill[];
 	/**
 	 * The skill used when chatting with the pack agent.
-	 * This skill defines the prompts, tools, and model for the default chat experience.
+	 * All fields are optional - omitted fields will use defaults at runtime.
 	 *
 	 * @example
 	 * ```ts
+	 * // Override just the tools
 	 * pack.setChatSkill({
-	 *   name: "DefaultChat",
-	 *   displayName: "Chat",
-	 *   description: "Default chat experience for this pack.",
-	 *   prompt: "You are an expert in this pack.",
 	 *   tools: [
 	 *     { type: coda.ToolType.Pack },
 	 *   ],
 	 * });
+	 *
+	 * // Override just the prompt
+	 * pack.setChatSkill({
+	 *   prompt: "You are an expert in this pack.",
+	 * });
 	 * ```
 	 * @hidden
 	 */
-	chatSkill?: Skill;
+	chatSkill?: PartialSkillDef;
 	/**
 	 * The skill used when the agent is first initialized in the bench.
+	 * All fields are optional - omitted fields will use defaults at runtime.
 	 * @hidden
 	 */
-	benchInitializationSkill?: Skill;
+	benchInitializationSkill?: PartialSkillDef;
 	/**
 	 * Mapping of skills to entrypoints that the pack agent can be invoked from.
 	 */
@@ -6150,12 +6176,12 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * See {@link PackVersionDefinition.chatSkill}.
 	 * @hidden
 	 */
-	chatSkill?: Skill;
+	chatSkill?: PartialSkillDef;
 	/**
 	 * See {@link PackVersionDefinition.benchInitializationSkill}.
 	 * @hidden
 	 */
-	benchInitializationSkill?: Skill;
+	benchInitializationSkill?: PartialSkillDef;
 	/**
 	 * See {@link PackVersionDefinition.suggestedPrompts}.
 	 * @hidden
@@ -6292,10 +6318,6 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 *   prompt: `My prompt.`,
 	 *   tools: [
 	 *     { type: coda.ToolType.Pack },
-	 *     {
-	 *       type: coda.ToolType.Knowledge,
-	 *       source: { type: coda.KnowledgeToolSourceType.Pack },
-	 *     },
 	 *   ],
 	 * });
 	 * ```
@@ -6321,26 +6343,25 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * pack.setChatSkill({
 	 *   name: "Cow",
 	 *   displayName: "Cow",
-	 *   description: "Talk like a cow.",
-	 *   prompt: `
-	 *     End every reply with "Moo!".
-	 *   `,
 	 *   tools: [
 	 *     { type: coda.ToolType.Pack },
 	 *   ],
 	 * });
+	 *
+	 * // Or just override the prompt
+	 * pack.setChatSkill({
+	 *   prompt: "End every reply with 'Moo!'",
+	 * });
 	 * ```
 	 */
-	setChatSkill(skill: Skill): this;
+	setChatSkill(skill: PartialSkillDef): this;
 	/**
 	 * Sets the skill used when the agent is first opened in the agent bench.
+	 * All fields are optional - omitted fields will use defaults at runtime.
 	 *
 	 * @example
 	 * ```ts
 	 * pack.setBenchInitializationSkill({
-	 *   name: "Greeting",
-	 *   displayName: "Greeting",
-	 *   description: "Greet the user.",
 	 *   prompt: `
 	 *     Say hello to the user, referencing the time of day and a friendly nickname.
 	 *     For example: 10AM, Kramer => "Good morning K-man!"
@@ -6349,7 +6370,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * });
 	 * ```
 	 */
-	setBenchInitializationSkill(skill: Skill): this;
+	setBenchInitializationSkill(skill: PartialSkillDef): this;
 	/**
 	 * Maps agent entrypoints to skills in the Pack.
 	 *

@@ -171,10 +171,6 @@ class PackDefinitionBuilder {
      *   prompt: `My prompt.`,
      *   tools: [
      *     { type: coda.ToolType.Pack },
-     *     {
-     *       type: coda.ToolType.Knowledge,
-     *       source: { type: coda.KnowledgeToolSourceType.Pack },
-     *     },
      *   ],
      * });
      * ```
@@ -206,13 +202,14 @@ class PackDefinitionBuilder {
      * pack.setChatSkill({
      *   name: "Cow",
      *   displayName: "Cow",
-     *   description: "Talk like a cow.",
-     *   prompt: `
-     *     End every reply with "Moo!".
-     *   `,
      *   tools: [
      *     { type: coda.ToolType.Pack },
      *   ],
+     * });
+     *
+     * // Or just override the prompt
+     * pack.setChatSkill({
+     *   prompt: "End every reply with 'Moo!'",
      * });
      * ```
      */
@@ -222,13 +219,11 @@ class PackDefinitionBuilder {
     }
     /**
      * Sets the skill used when the agent is first opened in the agent bench.
+     * All fields are optional - omitted fields will use defaults at runtime.
      *
      * @example
      * ```ts
      * pack.setBenchInitializationSkill({
-     *   name: "Greeting",
-     *   displayName: "Greeting",
-     *   description: "Greet the user.",
      *   prompt: `
      *     Say hello to the user, referencing the time of day and a friendly nickname.
      *     For example: 10AM, Kramer => "Good morning K-man!"

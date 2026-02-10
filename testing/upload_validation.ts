@@ -86,6 +86,7 @@ import type {PackVersionMetadata} from '../compiled_types';
 import type {ParamDef} from '../api_types';
 import type {ParamDefs} from '../api_types';
 import type {ParentDefinition} from '../schema';
+import type {PartialSkillDef} from '../types';
 import {PermissionsBehavior} from '../schema';
 import {PostSetupType} from '../types';
 import type {PrecannedDate} from '../api_types';
@@ -2325,6 +2326,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     forcedFormula: z.string().min(1).optional(),
     models: z.array(skillModelConfigurationSchema).optional(),
   });
+  const chatSkillSchema: z.ZodType<PartialSkillDef> = skillSchema.partial();
 
   const skillEntrypointConfigSchema = zodCompleteStrictObject<SkillEntrypointConfig>({
     skillName: z.string(),
@@ -2470,8 +2472,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           });
         }
       }),
-    chatSkill: skillSchema.optional(),
-    benchInitializationSkill: skillSchema.optional(),
+    chatSkill: chatSkillSchema.optional(),
+    benchInitializationSkill: chatSkillSchema.optional(),
     mcpServers: z
       .array(mcpServerSchema)
       .max(1)

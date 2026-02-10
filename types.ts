@@ -1594,6 +1594,30 @@ export interface Skill {
 }
 
 /**
+ * Input type for defining the default chat skill via {@link PackDefinitionBuilder.setChatSkill}
+ * or bench initialization skill via {@link PackDefinitionBuilder.setBenchInitializationSkill}.
+ *
+ * All fields are optional, allowing you to override only the fields you care about.
+ * Fields that are not provided will use default values at runtime.
+ *
+ * @example
+ * ```ts
+ * // Override just tools on the default chat skill
+ * pack.setChatSkill({
+ *   tools: [
+ *     { type: coda.ToolType.Pack },
+ *   ],
+ * });
+ *
+ * // Override just the prompt
+ * pack.setChatSkill({
+ *   prompt: "You are a helpful assistant.",
+ * });
+ * ```
+ */
+export type PartialSkillDef = Partial<Skill>;
+
+/**
  * Configuration for a skill entrypoint.
  */
 export interface SkillEntrypointConfig {
@@ -1705,28 +1729,31 @@ export interface PackVersionDefinition {
   skills?: Skill[];
   /**
    * The skill used when chatting with the pack agent.
-   * This skill defines the prompts, tools, and model for the default chat experience.
+   * All fields are optional - omitted fields will use defaults at runtime.
    *
    * @example
    * ```ts
+   * // Override just the tools
    * pack.setChatSkill({
-   *   name: "DefaultChat",
-   *   displayName: "Chat",
-   *   description: "Default chat experience for this pack.",
-   *   prompt: "You are an expert in this pack.",
    *   tools: [
    *     { type: coda.ToolType.Pack },
    *   ],
    * });
+   *
+   * // Override just the prompt
+   * pack.setChatSkill({
+   *   prompt: "You are an expert in this pack.",
+   * });
    * ```
    * @hidden
    */
-  chatSkill?: Skill;
+  chatSkill?: PartialSkillDef;
   /**
    * The skill used when the agent is first initialized in the bench.
+   * All fields are optional - omitted fields will use defaults at runtime.
    * @hidden
    */
-  benchInitializationSkill?: Skill;
+  benchInitializationSkill?: PartialSkillDef;
   /**
    * Mapping of skills to entrypoints that the pack agent can be invoked from.
    */

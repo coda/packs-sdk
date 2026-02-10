@@ -1783,6 +1783,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         forcedFormula: z.string().min(1).optional(),
         models: z.array(skillModelConfigurationSchema).optional(),
     });
+    const chatSkillSchema = skillSchema.partial();
     const skillEntrypointConfigSchema = zodCompleteStrictObject({
         skillName: z.string(),
     });
@@ -1916,8 +1917,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 });
             }
         }),
-        chatSkill: skillSchema.optional(),
-        benchInitializationSkill: skillSchema.optional(),
+        chatSkill: chatSkillSchema.optional(),
+        benchInitializationSkill: chatSkillSchema.optional(),
         mcpServers: z
             .array(mcpServerSchema)
             .max(1)
