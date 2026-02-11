@@ -543,6 +543,8 @@ export interface BaseOAuthAuthentication extends BaseAuthentication {
    * rather than requiring a pre-configured client ID and secret.
    *
    * See https://datatracker.ietf.org/doc/html/rfc7591 for more details.
+   *
+   * @hidden
    */
   useDynamicClientRegistration?: boolean;
 }

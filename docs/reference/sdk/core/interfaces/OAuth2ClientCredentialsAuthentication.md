@@ -237,19 +237,3 @@ The URL that Coda will hit in order to exchange the temporary code for an access
 > **type**: [`OAuth2ClientCredentials`](../enumerations/AuthenticationType.md#oauth2clientcredentials)
 
 Identifies this as OAuth2 client credentials authentication.
-
-***
-
-### useDynamicClientRegistration?
-
-> `optional` **useDynamicClientRegistration**: `boolean`
-
-Indicates that this OAuth provider supports Dynamic Client Registration.
-When enabled, the Coda platform will register OAuth clients dynamically with the provider
-rather than requiring a pre-configured client ID and secret.
-
-See https://datatracker.ietf.org/doc/html/rfc7591 for more details.
-
-#### Inherited from
-
-`BaseOAuthAuthentication.useDynamicClientRegistration`
