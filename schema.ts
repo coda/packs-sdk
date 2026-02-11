@@ -2188,8 +2188,8 @@ function normalizeSchemaPropertyIdentifier(
     return normalizeSchemaKeyPath(key, normalizedProperties);
   }
 
-  const {label, property: value, placeholder, ...rest} = key;
-  ensureNever<keyof typeof rest>();
+  const {label, property: value, placeholder, ..._rest} = key;
+  ensureNever<keyof typeof _rest>();
   return {
     property: normalizeSchemaKeyPath(value, normalizedProperties),
     label,
@@ -2199,8 +2199,8 @@ function normalizeSchemaPropertyIdentifier(
 
 function normalizeIndexProperty(value: IndexedProperty, normalizedProperties: ObjectSchemaProperties): IndexedProperty {
   if (typeof value === 'object' && 'strategy' in value) {
-    const {property, strategy, ...rest} = value;
-    ensureNever<keyof typeof rest>();
+    const {property, strategy, ..._rest} = value;
+    ensureNever<keyof typeof _rest>();
 
     return {
       property: normalizeSchemaPropertyIdentifier(property, normalizedProperties),
@@ -2218,13 +2218,14 @@ function normalizeContentCategorization(
     case ContentCategorizationType.Messaging:
     case ContentCategorizationType.Document:
     case ContentCategorizationType.Comment: {
-      const {type, ...rest} = value;
-      ensureNever<keyof typeof rest>();
+      const {type, ..._rest} = value;
+      ensureNever<keyof typeof _rest>();
       return {type};
     }
     case ContentCategorizationType.Email: {
-      const {type, toProperty, fromProperty, subjectProperty, htmlBodyProperty, plainTextBodyProperty, ...rest} = value;
-      ensureNever<keyof typeof rest>();
+      const {type, toProperty, fromProperty, subjectProperty, htmlBodyProperty, plainTextBodyProperty, ..._rest} =
+        value;
+      ensureNever<keyof typeof _rest>();
       return {
         type,
         toProperty: normalizeSchemaPropertyIdentifier(toProperty, normalizedProperties),
@@ -2252,8 +2253,9 @@ function normalizeIndexDefinition(
 ): IndexDefinition {
   // Handle categorization index definitions.
   if (isCategorizationIndexDefinition(index)) {
-    const {contentCategorization, authorityNormProperty, popularityNormProperty, filterableProperties, ...rest} = index;
-    ensureNever<keyof typeof rest>();
+    const {contentCategorization, authorityNormProperty, popularityNormProperty, filterableProperties, ..._rest} =
+      index;
+    ensureNever<keyof typeof _rest>();
     return {
       contentCategorization: normalizeContentCategorization(contentCategorization, normalizedProperties),
       authorityNormProperty: authorityNormProperty
@@ -2268,9 +2270,9 @@ function normalizeIndexDefinition(
     };
   }
   // Handle custom index definitions.
-  const {properties, contextProperties, authorityNormProperty, popularityNormProperty, filterableProperties, ...rest} =
+  const {properties, contextProperties, authorityNormProperty, popularityNormProperty, filterableProperties, ..._rest} =
     index;
-  ensureNever<keyof typeof rest>();
+  ensureNever<keyof typeof _rest>();
   return {
     properties: properties.map(prop => normalizeIndexProperty(prop, normalizedProperties)),
     contextProperties: contextProperties
@@ -2368,10 +2370,10 @@ export function normalizeObjectSchema(schema: GenericObjectSchema): GenericObjec
     versionProperty,
     index,
     parent,
-    ...rest
+    ..._rest
   } = schema;
   // Have TS ensure we don't forget about new fields in this function.
-  ensureNever<keyof typeof rest>();
+  ensureNever<keyof typeof _rest>();
   for (const key of Object.keys(properties)) {
     const normalizedKey = normalizeSchemaKey(key);
     const property = properties[key];

@@ -1,5 +1,0 @@
-.circleci/*
-.githooks/*
-.idea/*
-.vscode/*
-node_modules/*

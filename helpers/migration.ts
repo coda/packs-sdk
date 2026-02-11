@@ -62,10 +62,10 @@ class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
       versionProperty,
       index,
       parent,
-      ...rest
+      ..._rest
     } = schema;
 
-    ensureNever<keyof typeof rest>();
+    ensureNever<keyof typeof _rest>();
   }
 
   get id(): string | undefined {

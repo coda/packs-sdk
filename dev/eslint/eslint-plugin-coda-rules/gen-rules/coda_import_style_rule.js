@@ -1,6 +1,6 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', {value: true});
-const experimental_utils_1 = require('@typescript-eslint/experimental-utils');
+const experimental_utils_1 = require('@typescript-eslint/utils');
 var MessageIds;
 (function(MessageIds) {
   MessageIds['MultipleSpecifiersFound'] = 'MultipleSpecifiersFound';

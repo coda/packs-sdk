@@ -59,7 +59,7 @@ exports.rule = {
       State[(State['TraversingImport'] = 2)] = 'TraversingImport';
       State[(State['FinishedImports'] = 3)] = 'FinishedImports';
     })(State || (State = {}));
-    const sourceLines = context.getSourceCode().lines;
+    const sourceLines = context.sourceCode.lines;
     const imports = [];
     let importStart = 1; // Lines are 1-indexed
     let state = State.Start;

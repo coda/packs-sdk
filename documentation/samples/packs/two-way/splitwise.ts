@@ -128,7 +128,7 @@ pack.addSyncTable({
         {
           offset: offset,
           limit: limit,
-        }
+        },
       );
       let response = await context.fetcher.fetch({
         method: "GET",
