@@ -18,7 +18,7 @@ mkdocs-redirects = "==1.2.2"
 mkdocs-rss-plugin = "==1.17.9"
 mkdocs-simple-hooks = "==0.1.5"
 mkdocs-site-urls = "==0.3.1"
-pillow = "==10.4.0"
+pillow = "==12.1.1"
 urllib3 = "==2.6.0"
 
 [dev-packages]
