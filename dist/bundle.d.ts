@@ -5051,6 +5051,16 @@ export interface BaseOAuthAuthentication extends BaseAuthentication {
 	 * that should contain the token.
 	 */
 	tokenQueryParam?: string;
+	/**
+	 * Indicates that this OAuth provider supports Dynamic Client Registration.
+	 * When enabled, the Coda platform will register OAuth clients dynamically with the provider
+	 * rather than requiring a pre-configured client ID and secret.
+	 *
+	 * See https://datatracker.ietf.org/doc/html/rfc7591 for more details.
+	 *
+	 * @hidden
+	 */
+	useDynamicClientRegistration?: boolean;
 }
 /**
  * Authenticate using the OAuth2 Authorization Code flow. You must specify the authorization URL,

@@ -788,6 +788,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       scopeParamName: z.string().optional(),
       nestedResponseKey: z.string().optional(),
       credentialsLocation: z.nativeEnum(TokenExchangeCredentialsLocation).optional(),
+      useDynamicClientRegistration: z.boolean().optional(),
       ...baseAuthenticationValidators,
     }).superRefine(({requiresEndpointUrl, endpointKey, authorizationUrl, tokenUrl}, context) => {
       const expectsRelativeUrl = requiresEndpointUrl && !endpointKey;
@@ -822,6 +823,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       scopeParamName: z.string().optional(),
       nestedResponseKey: z.string().optional(),
       credentialsLocation: z.nativeEnum(TokenExchangeCredentialsLocation).optional(),
+      useDynamicClientRegistration: z.boolean().optional(),
       ...baseAuthenticationValidators,
     }),
     [AuthenticationType.WebBasic]: zodCompleteStrictObject<WebBasicAuthentication>({
