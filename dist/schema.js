@@ -706,7 +706,7 @@ function normalizeSchemaPropertyIdentifier(key, normalizedProperties) {
     if (typeof key === 'string') {
         return normalizeSchemaKeyPath(key, normalizedProperties);
     }
-    const { label, property: value, placeholder, ...rest } = key;
+    const { label, property: value, placeholder, ..._rest } = key;
     (0, ensure_3.ensureNever)();
     return {
         property: normalizeSchemaKeyPath(value, normalizedProperties),
@@ -716,7 +716,7 @@ function normalizeSchemaPropertyIdentifier(key, normalizedProperties) {
 }
 function normalizeIndexProperty(value, normalizedProperties) {
     if (typeof value === 'object' && 'strategy' in value) {
-        const { property, strategy, ...rest } = value;
+        const { property, strategy, ..._rest } = value;
         (0, ensure_3.ensureNever)();
         return {
             property: normalizeSchemaPropertyIdentifier(property, normalizedProperties),
@@ -730,12 +730,12 @@ function normalizeContentCategorization(value, normalizedProperties) {
         case ContentCategorizationType.Messaging:
         case ContentCategorizationType.Document:
         case ContentCategorizationType.Comment: {
-            const { type, ...rest } = value;
+            const { type, ..._rest } = value;
             (0, ensure_3.ensureNever)();
             return { type };
         }
         case ContentCategorizationType.Email: {
-            const { type, toProperty, fromProperty, subjectProperty, htmlBodyProperty, plainTextBodyProperty, ...rest } = value;
+            const { type, toProperty, fromProperty, subjectProperty, htmlBodyProperty, plainTextBodyProperty, ..._rest } = value;
             (0, ensure_3.ensureNever)();
             return {
                 type,
@@ -761,7 +761,7 @@ exports.isCustomIndexDefinition = isCustomIndexDefinition;
 function normalizeIndexDefinition(index, normalizedProperties) {
     // Handle categorization index definitions.
     if (isCategorizationIndexDefinition(index)) {
-        const { contentCategorization, authorityNormProperty, popularityNormProperty, filterableProperties, ...rest } = index;
+        const { contentCategorization, authorityNormProperty, popularityNormProperty, filterableProperties, ..._rest } = index;
         (0, ensure_3.ensureNever)();
         return {
             contentCategorization: normalizeContentCategorization(contentCategorization, normalizedProperties),
@@ -775,7 +775,7 @@ function normalizeIndexDefinition(index, normalizedProperties) {
         };
     }
     // Handle custom index definitions.
-    const { properties, contextProperties, authorityNormProperty, popularityNormProperty, filterableProperties, ...rest } = index;
+    const { properties, contextProperties, authorityNormProperty, popularityNormProperty, filterableProperties, ..._rest } = index;
     (0, ensure_3.ensureNever)();
     return {
         properties: properties.map(prop => normalizeIndexProperty(prop, normalizedProperties)),
@@ -835,7 +835,7 @@ function normalizeObjectSchema(schema) {
     const normalizedProperties = {};
     const { attribution, options, requireForUpdates, codaType, description, displayProperty, featured, featuredProperties, id, identity, idProperty, imageProperty, includeUnknownProperties, linkProperty, primary, properties, snippetProperty, subtitleProperties, titleProperty, type, 
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    __packId, createdAtProperty, createdByProperty, modifiedAtProperty, modifiedByProperty, userEmailProperty, userIdProperty, groupIdProperty, memberGroupIdProperty, versionProperty, index, parent, ...rest } = schema;
+    __packId, createdAtProperty, createdByProperty, modifiedAtProperty, modifiedByProperty, userEmailProperty, userIdProperty, groupIdProperty, memberGroupIdProperty, versionProperty, index, parent, ..._rest } = schema;
     // Have TS ensure we don't forget about new fields in this function.
     (0, ensure_3.ensureNever)();
     for (const key of Object.keys(properties)) {
