@@ -308,7 +308,6 @@ var ScreenAnnotationType;
 })(ScreenAnnotationType || (exports.ScreenAnnotationType = ScreenAnnotationType = {}));
 /**
  * The type of the content that can be embedded in the response.
- * @internal
  */
 var EmbeddedContentType;
 (function (EmbeddedContentType) {
