@@ -229,6 +229,7 @@ import * as coda from "@codahq/packs-sdk";
 - [ParameterOptions](type-aliases/ParameterOptions.md)
 - [ParameterValidationResult](type-aliases/ParameterValidationResult.md)
 - [ParamValues](type-aliases/ParamValues.md)
+- [PartialSkillDef](type-aliases/PartialSkillDef.md)
 - [PostSetup](type-aliases/PostSetup.md)
 - [PostSetupDef](type-aliases/PostSetupDef.md)
 - [PropertyIdentifier](type-aliases/PropertyIdentifier.md)

@@ -63,4 +63,13 @@ The prompt/instructions that define the skill's behavior.
 
 > **tools**: `Tool`[]
 
-List of tools that this skill can use. This does not include pack formulas by default.
+List of tools that this skill can use.
+
+When used in [PackDefinitionBuilder.addSkill](../classes/PackDefinitionBuilder.md#addskill), this field is required.
+
+When omitted from [PackDefinitionBuilder.setChatSkill](../classes/PackDefinitionBuilder.md#setchatskill), the following defaults are applied
+at runtime:
+
+- [ToolType.Pack](../enumerations/ToolType.md#pack) — the pack's own formulas (always included)
+- [ToolType.Knowledge](../enumerations/ToolType.md#knowledge) — search over the pack's sync table data (included when the pack
+  defines sync tables)

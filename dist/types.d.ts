@@ -1422,7 +1422,18 @@ export interface Skill {
     description: string;
     /** The prompt/instructions that define the skill's behavior. */
     prompt: string;
-    /** List of tools that this skill can use. This does not include pack formulas by default. */
+    /**
+     * List of tools that this skill can use.
+     *
+     * When used in {@link PackDefinitionBuilder.addSkill}, this field is required.
+     *
+     * When omitted from {@link PackDefinitionBuilder.setChatSkill}, the following defaults are applied
+     * at runtime:
+     *
+     * - {@link ToolType.Pack} — the pack's own formulas (always included)
+     * - {@link ToolType.Knowledge} — search over the pack's sync table data (included when the pack
+     *   defines sync tables)
+     */
     tools: Tool[];
     /**
      * Forces execution of a specific formula by name, overriding autonomous tool selection.
@@ -1439,6 +1450,38 @@ export interface Skill {
      */
     models?: SkillModelConfiguration[];
 }
+/**
+ * Input type for defining the default chat skill via {@link PackDefinitionBuilder.setChatSkill}
+ * or bench initialization skill via {@link PackDefinitionBuilder.setBenchInitializationSkill}.
+ *
+ * All fields are optional, allowing you to override only the fields you care about.
+ * Fields that are not provided will use default values at runtime.
+ *
+ * **Default tools** (when `tools` is omitted):
+ *
+ * - {@link ToolType.Pack} — the pack's own formulas (always included)
+ * - {@link ToolType.Knowledge} — search over the pack's sync table data (included when the pack
+ *   defines sync tables)
+ *
+ * If you specify `tools`, the defaults above are replaced entirely with your list.
+ *
+ * @example
+ * ```ts
+ * // Override just the prompt — default tools are preserved
+ * pack.setChatSkill({
+ *   prompt: "You are a helpful assistant.",
+ * });
+ *
+ * // Override tools — replaces the defaults entirely
+ * pack.setChatSkill({
+ *   tools: [
+ *     { type: coda.ToolType.Pack },
+ *     { type: coda.ToolType.ContactResolution },
+ *   ],
+ * });
+ * ```
+ */
+export type PartialSkillDef = Partial<Skill>;
 /**
  * Configuration for a skill entrypoint.
  */
@@ -1543,28 +1586,31 @@ export interface PackVersionDefinition {
     skills?: Skill[];
     /**
      * The skill used when chatting with the pack agent.
-     * This skill defines the prompts, tools, and model for the default chat experience.
+     * All fields are optional - omitted fields will use defaults at runtime.
      *
      * @example
      * ```ts
+     * // Override just the tools
      * pack.setChatSkill({
-     *   name: "DefaultChat",
-     *   displayName: "Chat",
-     *   description: "Default chat experience for this pack.",
-     *   prompt: "You are an expert in this pack.",
      *   tools: [
      *     { type: coda.ToolType.Pack },
      *   ],
      * });
+     *
+     * // Override just the prompt
+     * pack.setChatSkill({
+     *   prompt: "You are an expert in this pack.",
+     * });
      * ```
      * @hidden
      */
-    chatSkill?: Skill;
+    chatSkill?: PartialSkillDef;
     /**
      * The skill used when the agent is first initialized in the bench.
+     * All fields are optional - omitted fields will use defaults at runtime.
      * @hidden
      */
-    benchInitializationSkill?: Skill;
+    benchInitializationSkill?: PartialSkillDef;
     /**
      * Mapping of skills to entrypoints that the pack agent can be invoked from.
      */

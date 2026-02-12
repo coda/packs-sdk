@@ -275,6 +275,7 @@ export type { CodaDocsAndTablesTool } from './types';
 export type { DynamicSuggestedPromptTool } from './types';
 export type { WebSearchTool } from './types';
 export type { MCPServer } from './types';
+export type { PartialSkillDef } from './types';
 export type { Skill } from './types';
 export type { SkillModelConfiguration } from './types';
 export { SkillModel } from './types';

@@ -11,6 +11,7 @@ import type { ObjectSchema } from './schema';
 import type { ObjectSchemaDefinition } from './schema';
 import type { PackVersionDefinition } from './types';
 import type { ParamDefs } from './api_types';
+import type { PartialSkillDef } from './types';
 import type { Schema } from './schema';
 import type { Skill } from './types';
 import type { SkillEntrypoints } from './types';
@@ -63,12 +64,12 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * See {@link PackVersionDefinition.chatSkill}.
      * @hidden
      */
-    chatSkill?: Skill;
+    chatSkill?: PartialSkillDef;
     /**
      * See {@link PackVersionDefinition.benchInitializationSkill}.
      * @hidden
      */
-    benchInitializationSkill?: Skill;
+    benchInitializationSkill?: PartialSkillDef;
     /**
      * See {@link PackVersionDefinition.suggestedPrompts}.
      * @hidden
@@ -205,10 +206,6 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      *   prompt: `My prompt.`,
      *   tools: [
      *     { type: coda.ToolType.Pack },
-     *     {
-     *       type: coda.ToolType.Knowledge,
-     *       source: { type: coda.KnowledgeToolSourceType.Pack },
-     *     },
      *   ],
      * });
      * ```
@@ -229,31 +226,38 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * The chat skill controls the behavior when users chat with the pack agent.
      * It defines the prompts, available tools, and optionally the model to use.
      *
+     * All fields are optional — omitted fields use defaults at runtime. When `tools` is omitted,
+     * the agent automatically gets:
+     *
+     * - {@link ToolType.Pack} — the pack's own formulas
+     * - {@link ToolType.Knowledge} — search over the pack's sync table data (when sync tables exist)
+     *
+     * Specifying `tools` replaces these defaults entirely.
+     *
      * @example
      * ```ts
+     * // Override just the prompt — default tools are preserved
      * pack.setChatSkill({
-     *   name: "Cow",
-     *   displayName: "Cow",
-     *   description: "Talk like a cow.",
-     *   prompt: `
-     *     End every reply with "Moo!".
-     *   `,
+     *   prompt: "End every reply with 'Moo!'",
+     * });
+     *
+     * // Override tools — replaces the defaults
+     * pack.setChatSkill({
      *   tools: [
      *     { type: coda.ToolType.Pack },
+     *     { type: coda.ToolType.ContactResolution },
      *   ],
      * });
      * ```
      */
-    setChatSkill(skill: Skill): this;
+    setChatSkill(skill: PartialSkillDef): this;
     /**
      * Sets the skill used when the agent is first opened in the agent bench.
+     * All fields are optional - omitted fields will use defaults at runtime.
      *
      * @example
      * ```ts
      * pack.setBenchInitializationSkill({
-     *   name: "Greeting",
-     *   displayName: "Greeting",
-     *   description: "Greet the user.",
      *   prompt: `
      *     Say hello to the user, referencing the time of day and a friendly nickname.
      *     For example: 10AM, Kramer => "Good morning K-man!"
@@ -262,7 +266,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * });
      * ```
      */
-    setBenchInitializationSkill(skill: Skill): this;
+    setBenchInitializationSkill(skill: PartialSkillDef): this;
     /**
      * Maps agent entrypoints to skills in the Pack.
      *

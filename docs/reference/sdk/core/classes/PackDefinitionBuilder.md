@@ -353,10 +353,6 @@ pack.addSkill({
   prompt: `My prompt.`,
   tools: [
     { type: coda.ToolType.Pack },
-    {
-      type: coda.ToolType.Knowledge,
-      source: { type: coda.KnowledgeToolSourceType.Pack },
-    },
   ],
 });
 ```
@@ -424,14 +420,12 @@ pack.addSyncTable({
 > **setBenchInitializationSkill**(`skill`): `this`
 
 Sets the skill used when the agent is first opened in the agent bench.
+All fields are optional - omitted fields will use defaults at runtime.
 
 #### Example
 
 ```ts
 pack.setBenchInitializationSkill({
-  name: "Greeting",
-  displayName: "Greeting",
-  description: "Greet the user.",
   prompt: `
     Say hello to the user, referencing the time of day and a friendly nickname.
     For example: 10AM, Kramer => "Good morning K-man!"
@@ -444,7 +438,7 @@ pack.setBenchInitializationSkill({
 
 | Parameter | Type |
 | ------ | ------ |
-| `skill` | [`Skill`](../interfaces/Skill.md) |
+| `skill` | [`PartialSkillDef`](../type-aliases/PartialSkillDef.md) |
 
 #### Returns
 
@@ -461,18 +455,27 @@ Sets the chat skill for this pack's agent.
 The chat skill controls the behavior when users chat with the pack agent.
 It defines the prompts, available tools, and optionally the model to use.
 
+All fields are optional — omitted fields use defaults at runtime. When `tools` is omitted,
+the agent automatically gets:
+
+- [ToolType.Pack](../enumerations/ToolType.md#pack) — the pack's own formulas
+- [ToolType.Knowledge](../enumerations/ToolType.md#knowledge) — search over the pack's sync table data (when sync tables exist)
+
+Specifying `tools` replaces these defaults entirely.
+
 #### Example
 
 ```ts
+// Override just the prompt — default tools are preserved
 pack.setChatSkill({
-  name: "Cow",
-  displayName: "Cow",
-  description: "Talk like a cow.",
-  prompt: `
-    End every reply with "Moo!".
-  `,
+  prompt: "End every reply with 'Moo!'",
+});
+
+// Override tools — replaces the defaults
+pack.setChatSkill({
   tools: [
     { type: coda.ToolType.Pack },
+    { type: coda.ToolType.ContactResolution },
   ],
 });
 ```
@@ -481,7 +484,7 @@ pack.setChatSkill({
 
 | Parameter | Type |
 | ------ | ------ |
-| `skill` | [`Skill`](../interfaces/Skill.md) |
+| `skill` | [`PartialSkillDef`](../type-aliases/PartialSkillDef.md) |
 
 #### Returns
 
