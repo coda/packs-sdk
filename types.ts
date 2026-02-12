@@ -1575,7 +1575,18 @@ export interface Skill {
   description: string;
   /** The prompt/instructions that define the skill's behavior. */
   prompt: string;
-  /** List of tools that this skill can use. This does not include pack formulas by default. */
+  /**
+   * List of tools that this skill can use.
+   *
+   * When used in {@link PackDefinitionBuilder.addSkill}, this field is required.
+   *
+   * When omitted from {@link PackDefinitionBuilder.setChatSkill}, the following defaults are applied
+   * at runtime:
+   *
+   * - {@link ToolType.Pack} — the pack's own formulas (always included)
+   * - {@link ToolType.Knowledge} — search over the pack's sync table data (included when the pack
+   *   defines sync tables)
+   */
   tools: Tool[];
   /**
    * Forces execution of a specific formula by name, overriding autonomous tool selection.
@@ -1600,18 +1611,27 @@ export interface Skill {
  * All fields are optional, allowing you to override only the fields you care about.
  * Fields that are not provided will use default values at runtime.
  *
+ * **Default tools** (when `tools` is omitted):
+ *
+ * - {@link ToolType.Pack} — the pack's own formulas (always included)
+ * - {@link ToolType.Knowledge} — search over the pack's sync table data (included when the pack
+ *   defines sync tables)
+ *
+ * If you specify `tools`, the defaults above are replaced entirely with your list.
+ *
  * @example
  * ```ts
- * // Override just tools on the default chat skill
+ * // Override just the prompt — default tools are preserved
+ * pack.setChatSkill({
+ *   prompt: "You are a helpful assistant.",
+ * });
+ *
+ * // Override tools — replaces the defaults entirely
  * pack.setChatSkill({
  *   tools: [
  *     { type: coda.ToolType.Pack },
+ *     { type: coda.ToolType.ContactResolution },
  *   ],
- * });
- *
- * // Override just the prompt
- * pack.setChatSkill({
- *   prompt: "You are a helpful assistant.",
  * });
  * ```
  */

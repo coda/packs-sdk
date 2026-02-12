@@ -18,18 +18,27 @@ or bench initialization skill via [PackDefinitionBuilder.setBenchInitializationS
 All fields are optional, allowing you to override only the fields you care about.
 Fields that are not provided will use default values at runtime.
 
+**Default tools** (when `tools` is omitted):
+
+- [ToolType.Pack](../enumerations/ToolType.md#pack) — the pack's own formulas (always included)
+- [ToolType.Knowledge](../enumerations/ToolType.md#knowledge) — search over the pack's sync table data (included when the pack
+  defines sync tables)
+
+If you specify `tools`, the defaults above are replaced entirely with your list.
+
 ## Example
 
 ```ts
-// Override just tools on the default chat skill
+// Override just the prompt — default tools are preserved
+pack.setChatSkill({
+  prompt: "You are a helpful assistant.",
+});
+
+// Override tools — replaces the defaults entirely
 pack.setChatSkill({
   tools: [
     { type: coda.ToolType.Pack },
+    { type: coda.ToolType.ContactResolution },
   ],
-});
-
-// Override just the prompt
-pack.setChatSkill({
-  prompt: "You are a helpful assistant.",
 });
 ```

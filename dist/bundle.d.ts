@@ -5051,16 +5051,6 @@ export interface BaseOAuthAuthentication extends BaseAuthentication {
 	 * that should contain the token.
 	 */
 	tokenQueryParam?: string;
-	/**
-	 * Indicates that this OAuth provider supports Dynamic Client Registration.
-	 * When enabled, the Coda platform will register OAuth clients dynamically with the provider
-	 * rather than requiring a pre-configured client ID and secret.
-	 *
-	 * See https://datatracker.ietf.org/doc/html/rfc7591 for more details.
-	 *
-	 * @hidden
-	 */
-	useDynamicClientRegistration?: boolean;
 }
 /**
  * Authenticate using the OAuth2 Authorization Code flow. You must specify the authorization URL,
@@ -5770,6 +5760,7 @@ export interface WebSearchTool extends BaseTool<ToolType.WebSearch> {
 }
 /**
  * The type of the content that can be embedded in the response.
+ * @internal
  */
 export declare enum EmbeddedContentType {
 	/**
@@ -5787,6 +5778,7 @@ export declare enum EmbeddedContentType {
 }
 /**
  * Base interface for all embedded content.
+ * @internal
  */
 export interface BaseEmbeddedContent<T extends EmbeddedContentType> {
 	/**
@@ -5796,25 +5788,30 @@ export interface BaseEmbeddedContent<T extends EmbeddedContentType> {
 }
 /**
  * Block of a content that can be copied or inserted in a document.
+ * @internal
  */
 export interface CopyableBlockEmbeddedContent extends BaseEmbeddedContent<EmbeddedContentType.CopyableBlock> {
 }
 /**
  * Carousel of multiple slides.
+ * @internal
  */
 export interface CarouselViewEmbeddedContent extends BaseEmbeddedContent<EmbeddedContentType.CarouselView> {
 }
 /**
  * Panel with multiple tabs.
+ * @internal
  */
 export interface TabViewEmbeddedContent extends BaseEmbeddedContent<EmbeddedContentType.TabView> {
 }
 /**
  * Union of all supported embedded content classes.
+ * @internal
  */
 export type EmbeddedContent = CopyableBlockEmbeddedContent | CarouselViewEmbeddedContent | TabViewEmbeddedContent;
 /**
  * Tool that enables creation of the content that can be embedded in the response.
+ * @internal
  */
 export interface EmbeddedContentTool extends BaseTool<ToolType.EmbeddedContent> {
 	/**
@@ -5897,7 +5894,18 @@ export interface Skill {
 	description: string;
 	/** The prompt/instructions that define the skill's behavior. */
 	prompt: string;
-	/** List of tools that this skill can use. This does not include pack formulas by default. */
+	/**
+	 * List of tools that this skill can use.
+	 *
+	 * When used in {@link PackDefinitionBuilder.addSkill}, this field is required.
+	 *
+	 * When omitted from {@link PackDefinitionBuilder.setChatSkill}, the following defaults are applied
+	 * at runtime:
+	 *
+	 * - {@link ToolType.Pack} — the pack's own formulas (always included)
+	 * - {@link ToolType.Knowledge} — search over the pack's sync table data (included when the pack
+	 *   defines sync tables)
+	 */
 	tools: Tool[];
 	/**
 	 * Forces execution of a specific formula by name, overriding autonomous tool selection.
@@ -5921,18 +5929,27 @@ export interface Skill {
  * All fields are optional, allowing you to override only the fields you care about.
  * Fields that are not provided will use default values at runtime.
  *
+ * **Default tools** (when `tools` is omitted):
+ *
+ * - {@link ToolType.Pack} — the pack's own formulas (always included)
+ * - {@link ToolType.Knowledge} — search over the pack's sync table data (included when the pack
+ *   defines sync tables)
+ *
+ * If you specify `tools`, the defaults above are replaced entirely with your list.
+ *
  * @example
  * ```ts
- * // Override just tools on the default chat skill
+ * // Override just the prompt — default tools are preserved
+ * pack.setChatSkill({
+ *   prompt: "You are a helpful assistant.",
+ * });
+ *
+ * // Override tools — replaces the defaults entirely
  * pack.setChatSkill({
  *   tools: [
  *     { type: coda.ToolType.Pack },
+ *     { type: coda.ToolType.ContactResolution },
  *   ],
- * });
- *
- * // Override just the prompt
- * pack.setChatSkill({
- *   prompt: "You are a helpful assistant.",
  * });
  * ```
  */
@@ -6338,19 +6355,27 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * The chat skill controls the behavior when users chat with the pack agent.
 	 * It defines the prompts, available tools, and optionally the model to use.
 	 *
+	 * All fields are optional — omitted fields use defaults at runtime. When `tools` is omitted,
+	 * the agent automatically gets:
+	 *
+	 * - {@link ToolType.Pack} — the pack's own formulas
+	 * - {@link ToolType.Knowledge} — search over the pack's sync table data (when sync tables exist)
+	 *
+	 * Specifying `tools` replaces these defaults entirely.
+	 *
 	 * @example
 	 * ```ts
-	 * pack.setChatSkill({
-	 *   name: "Cow",
-	 *   displayName: "Cow",
-	 *   tools: [
-	 *     { type: coda.ToolType.Pack },
-	 *   ],
-	 * });
-	 *
-	 * // Or just override the prompt
+	 * // Override just the prompt — default tools are preserved
 	 * pack.setChatSkill({
 	 *   prompt: "End every reply with 'Moo!'",
+	 * });
+	 *
+	 * // Override tools — replaces the defaults
+	 * pack.setChatSkill({
+	 *   tools: [
+	 *     { type: coda.ToolType.Pack },
+	 *     { type: coda.ToolType.ContactResolution },
+	 *   ],
 	 * });
 	 * ```
 	 */

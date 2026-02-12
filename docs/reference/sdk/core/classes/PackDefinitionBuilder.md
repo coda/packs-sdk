@@ -455,20 +455,28 @@ Sets the chat skill for this pack's agent.
 The chat skill controls the behavior when users chat with the pack agent.
 It defines the prompts, available tools, and optionally the model to use.
 
+All fields are optional — omitted fields use defaults at runtime. When `tools` is omitted,
+the agent automatically gets:
+
+- [ToolType.Pack](../enumerations/ToolType.md#pack) — the pack's own formulas
+- [ToolType.Knowledge](../enumerations/ToolType.md#knowledge) — search over the pack's sync table data (when sync tables exist)
+
+Specifying `tools` replaces these defaults entirely.
+
 #### Example
 
 ```ts
-pack.setChatSkill({
-  name: "Cow",
-  displayName: "Cow",
-  tools: [
-    { type: coda.ToolType.Pack },
-  ],
-});
-
-// Or just override the prompt
+// Override just the prompt — default tools are preserved
 pack.setChatSkill({
   prompt: "End every reply with 'Moo!'",
+});
+
+// Override tools — replaces the defaults
+pack.setChatSkill({
+  tools: [
+    { type: coda.ToolType.Pack },
+    { type: coda.ToolType.ContactResolution },
+  ],
 });
 ```
 

@@ -2,6 +2,7 @@ import type { AdminAuthentication } from './types';
 import type { AdminAuthenticationDef } from './types';
 import type { Authentication } from './types';
 import type { BasicPackDefinition } from './types';
+import type { PartialSkillDef } from './types';
 import type { DynamicSyncTableOptions } from './api';
 import type { Format } from './types';
 import type { Formula } from './api';
@@ -11,7 +12,6 @@ import type { ObjectSchema } from './schema';
 import type { ObjectSchemaDefinition } from './schema';
 import type { PackVersionDefinition } from './types';
 import type { ParamDefs } from './api_types';
-import type { PartialSkillDef } from './types';
 import type { Schema } from './schema';
 import type { Skill } from './types';
 import type { SkillEntrypoints } from './types';
@@ -226,19 +226,27 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * The chat skill controls the behavior when users chat with the pack agent.
      * It defines the prompts, available tools, and optionally the model to use.
      *
+     * All fields are optional — omitted fields use defaults at runtime. When `tools` is omitted,
+     * the agent automatically gets:
+     *
+     * - {@link ToolType.Pack} — the pack's own formulas
+     * - {@link ToolType.Knowledge} — search over the pack's sync table data (when sync tables exist)
+     *
+     * Specifying `tools` replaces these defaults entirely.
+     *
      * @example
      * ```ts
-     * pack.setChatSkill({
-     *   name: "Cow",
-     *   displayName: "Cow",
-     *   tools: [
-     *     { type: coda.ToolType.Pack },
-     *   ],
-     * });
-     *
-     * // Or just override the prompt
+     * // Override just the prompt — default tools are preserved
      * pack.setChatSkill({
      *   prompt: "End every reply with 'Moo!'",
+     * });
+     *
+     * // Override tools — replaces the defaults
+     * pack.setChatSkill({
+     *   tools: [
+     *     { type: coda.ToolType.Pack },
+     *     { type: coda.ToolType.ContactResolution },
+     *   ],
      * });
      * ```
      */
