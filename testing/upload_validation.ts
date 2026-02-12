@@ -136,7 +136,7 @@ import type {VariousAuthentication} from '../types';
 import type {VariousSupportedAuthenticationTypes} from '../types';
 import type {WebBasicAuthentication} from '../types';
 import type {WebSearchTool} from '../types';
-import {ZodParsedType} from 'zod';
+// ZodParsedType was removed in Zod 4; we use string literals instead.
 import {assertCondition} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
 import {isArray} from '../schema';
@@ -236,7 +236,7 @@ export async function validatePackVersionMetadata(
     throw new PackMetadataValidationError(
       'Pack metadata failed validation',
       validated.error,
-      validated.error.errors.flatMap(zodErrorDetailToValidationError),
+      validated.error.issues.flatMap(e => zodErrorDetailToValidationError(e)),
     );
   }
 
@@ -258,7 +258,7 @@ export function validateVariousAuthenticationMetadata(
   throw new PackMetadataValidationError(
     'Various authentication failed validation',
     validated.error,
-    validated.error.errors.flatMap(zodErrorDetailToValidationError),
+    validated.error.issues.flatMap(e => zodErrorDetailToValidationError(e)),
   );
 }
 
@@ -270,7 +270,7 @@ export function validateSyncTableSchema(
   const {arrayPropertySchema} = buildMetadataSchema(options);
   const validated = arrayPropertySchema.safeParse(schema);
   if (validated.success) {
-    return validated.data;
+    return validated.data as ArraySchema<ObjectSchema<any, any>>;
   }
   // In case this was an ObjectSchema (describing a single row), wrap it up as an ArraySchema.
   const syntheticArraySchema = makeSchema({
@@ -279,13 +279,13 @@ export function validateSyncTableSchema(
   });
   const validatedAsObjectSchema = arrayPropertySchema.safeParse(syntheticArraySchema);
   if (validatedAsObjectSchema.success) {
-    return validatedAsObjectSchema.data;
+    return validatedAsObjectSchema.data as ArraySchema<ObjectSchema<any, any>>;
   }
 
   throw new PackMetadataValidationError(
     'Schema failed validation',
     validated.error,
-    validated.error.errors.flatMap(zodErrorDetailToValidationError),
+    validated.error.issues.flatMap(e => zodErrorDetailToValidationError(e)),
   );
 }
 
@@ -552,18 +552,31 @@ export function findDuplicateTools(tools: Tool[]): Array<{index: number; origina
   return duplicates;
 }
 
-export function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError[] {
+export function zodErrorDetailToValidationError(
+  subError: z.ZodIssue,
+  parentPath: PropertyKey[] = [],
+): ValidationError[] {
+  // In Zod 4, union sub-issues carry relative paths (not full paths like Zod 3).
+  // Compute the full path by prepending the parent context so that errors from
+  // nested unions are reported at their correct absolute position.
+  const zodPath = [...parentPath, ...subError.path];
+  const path = zodPathToPathString(zodPath);
+
   // Top-level errors for union types are totally useless, they just say "invalid input",
   // but they do record all of the specific errors when trying each element of the union,
   // so we filter out the errors that were just due to non-matches of the discriminant
   // and bubble up the rest to the top level, we get actionable output.
   if (subError.code === z.ZodIssueCode.invalid_union) {
     const underlyingErrors: ValidationError[] = [];
-    for (const unionError of subError.unionErrors) {
-      const isNonmatchedUnionMember = unionError.issues.some(issue => {
+    // In Zod 4, invalid_union issues have `errors: ZodIssue[][]` (array of arrays of issues)
+    // instead of Zod 3's `unionErrors: ZodError[]` (array of ZodError objects with `.issues`).
+    const unionIssueGroups = (subError as z.ZodIssue & {errors: z.ZodIssue[][]}).errors;
+    for (const unionIssues of unionIssueGroups) {
+      const isNonmatchedUnionMember = unionIssues.some(issue => {
         return (
           issue.code === z.ZodIssueCode.custom &&
-          issue.params?.customErrorCode === CustomErrorCode.NonMatchingDiscriminant
+          (issue as z.ZodIssue & {params?: Record<string, unknown>}).params?.customErrorCode ===
+            CustomErrorCode.NonMatchingDiscriminant
         );
       });
       // Skip any errors that are nested with an "invalid literal" error that is usually
@@ -572,22 +585,16 @@ export function zodErrorDetailToValidationError(subError: z.ZodIssue): Validatio
       if (isNonmatchedUnionMember) {
         continue;
       }
-      for (const unionIssue of unionError.issues) {
+      for (const unionIssue of unionIssues) {
         const isDiscriminantError =
           unionIssue.code === z.ZodIssueCode.custom &&
-          unionIssue.params?.customErrorCode === CustomErrorCode.NonMatchingDiscriminant;
+          (unionIssue as z.ZodIssue & {params?: Record<string, unknown>}).params?.customErrorCode ===
+            CustomErrorCode.NonMatchingDiscriminant;
         if (!isDiscriminantError) {
-          let errors: ValidationError[];
-          if (unionIssue.code === z.ZodIssueCode.invalid_union) {
-            // Recurse to find the real error underlying any unions within child fields.
-            errors = zodErrorDetailToValidationError(unionIssue);
-          } else {
-            const error: ValidationError = {
-              path: zodPathToPathString(unionIssue.path),
-              message: unionIssue.message,
-            };
-            errors = [error];
-          }
+          // Recurse with zodPath as the parent so sub-issue relative paths are resolved
+          // to their correct absolute positions. This also applies isMissingRequiredFieldError
+          // and handles nested unions naturally.
+          const errors = zodErrorDetailToValidationError(unionIssue, zodPath);
           // dedupe identical errors. These can occur when validating union types, and each union type
           // throws the same validation error.
           for (const error of errors) {
@@ -600,31 +607,42 @@ export function zodErrorDetailToValidationError(subError: z.ZodIssue): Validatio
     }
 
     if (underlyingErrors.length === 0) {
-      return [{path: zodPathToPathString(subError.path), message: 'Could not find any valid schema for this value.'}];
+      return [{path, message: 'Could not find any valid schema for this value.'}];
     }
 
-    return underlyingErrors;
+    // Zod 4 can produce more verbose union error reports than Zod 3, generating generic
+    // "Could not find any valid schema" fallbacks from nested unions alongside specific
+    // errors at the same path. Filter out generic fallbacks only when a more specific
+    // error exists at the same path.
+    const genericFallbackMessage = 'Could not find any valid schema for this value.';
+    return underlyingErrors.filter(e => {
+      if (e.message !== genericFallbackMessage) return true;
+      // Keep generic fallback only if no specific error exists at the same path.
+      return !underlyingErrors.some(other => other.path === e.path && other.message !== genericFallbackMessage);
+    });
   }
 
-  const {path: zodPath, message} = subError;
-  const path = zodPathToPathString(zodPath);
+  // Detect "missing required field" errors.
+  // In Zod 4, invalid_type issues no longer have `received` or `input` properties.
+  // We detect missing fields by checking if the message indicates the received value was undefined
+  // (i.e., the field was not provided at all).
   const isMissingRequiredFieldError =
     subError.code === z.ZodIssueCode.invalid_type &&
-    subError.received === 'undefined' &&
+    subError.message.endsWith('received undefined') &&
     subError.expected.toString() !== 'undefined';
 
   return [
     {
       path,
-      message: isMissingRequiredFieldError ? `Missing required field ${path}.` : message,
+      message: isMissingRequiredFieldError ? `Missing required field ${path}.` : subError.message,
     },
   ];
 }
 
-function zodPathToPathString(zodPath: Array<string | number>): string {
+function zodPathToPathString(zodPath: PropertyKey[]): string {
   const parts: string[] = [];
   zodPath.forEach((zodPathPart, i) => {
-    const part = typeof zodPathPart === 'number' ? `[${zodPathPart}]` : zodPathPart;
+    const part = typeof zodPathPart === 'number' ? `[${zodPathPart}]` : String(zodPathPart);
     const includeSeparator = i !== zodPath.length - 1 && !(typeof zodPath[i + 1] === 'number');
     parts.push(part);
     if (includeSeparator) {
@@ -638,12 +656,18 @@ type ZodCompleteShape<T> = {
   [k in keyof T]: z.ZodTypeAny;
 };
 
+// In Zod 4, z.ZodTypeAny in the shape causes output type inference to resolve as
+// Record<string, unknown> instead of Zod 3's Record<string, any>. Since these schemas
+// are used solely for runtime validation (not type inference), we cast the return to
+// preserve the `any`-typed output that all downstream .superRefine()/.refine() callbacks
+// and .safeParse() consumers rely on. The compile-time shape completeness check (ensuring
+// all keys of O are present) still functions via the ZodCompleteShape<O> constraint.
 function zodCompleteObject<O, T extends ZodCompleteShape<O> = ZodCompleteShape<Required<O>>>(shape: T) {
-  return z.object<T>(shape);
+  return z.object(shape) as any;
 }
 
 function zodCompleteStrictObject<O, T extends ZodCompleteShape<O> = ZodCompleteShape<Required<O>>>(shape: T) {
-  return z.strictObject<T>(shape);
+  return z.strictObject(shape) as any;
 }
 
 function zodDiscriminant(value: string | number | boolean) {
@@ -674,7 +698,7 @@ const setEndpointPostSetupValidator = zodCompleteObject<SetEndpoint>({
   getOptions: z.unknown().optional(),
   getOptionsFormula: z.unknown().optional(),
 }).refine(
-  data => data.getOptions || data.getOptionsFormula,
+  (data: any) => data.getOptions || data.getOptionsFormula,
   'Either getOptions or getOptionsFormula must be specified.',
 );
 
@@ -780,7 +804,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       scopes: z.array(z.string()).optional(),
       scopeDelimiter: z.enum([' ', ',', ';']).optional(),
       tokenPrefix: z.string().optional(),
-      additionalParams: z.record(z.any()).optional(),
+      additionalParams: z.record(z.string(), z.any()).optional(),
       endpointKey: z.string().optional(),
       tokenQueryParam: z.string().optional(),
       useProofKeyForCodeExchange: z.boolean().optional(),
@@ -789,7 +813,7 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       nestedResponseKey: z.string().optional(),
       credentialsLocation: z.nativeEnum(TokenExchangeCredentialsLocation).optional(),
       ...baseAuthenticationValidators,
-    }).superRefine(({requiresEndpointUrl, endpointKey, authorizationUrl, tokenUrl}, context) => {
+    }).superRefine(({requiresEndpointUrl, endpointKey, authorizationUrl, tokenUrl}: any, context: any) => {
       const expectsRelativeUrl = requiresEndpointUrl && !endpointKey;
       const isRelativeUrl = (url: string) => url.startsWith('/');
       const addIssue = (property: string) => {
@@ -982,13 +1006,13 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     supportsIncrementalSync: z.boolean().optional(),
   })
     .refine(
-      param => {
+      (param: any) => {
         return param.optional || param.supportsIncrementalSync !== false;
       },
       {message: 'Required params should support incremental sync.'},
     )
     .refine(
-      param => {
+      (param: any) => {
         if (!param.allowedPresetValues) {
           return true;
         }
@@ -997,7 +1021,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       {message: 'allowedPresetValues is not allowed on parameters of this type.'},
     )
     .refine(
-      param => {
+      (param: any) => {
         if (!param.allowedPresetValues || param.type !== Type.date) {
           return true;
         }
@@ -1008,7 +1032,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       {message: 'allowedPresetValues for a date parameter can only be a list of PrecannedDate values.'},
     )
     .refine(
-      param => {
+      (param: any) => {
         if (!param.allowedPresetValues || !(isArrayType(param.type) && param.type.items === Type.date)) {
           return true;
         }
@@ -1541,7 +1565,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       featuredProperties: z.array(z.string()).optional(),
       identity: identitySchema.optional(),
       attribution: attributionSchema,
-      properties: z.record(objectPropertyUnionSchema),
+      properties: z.record(z.string(), objectPropertyUnionSchema),
       includeUnknownProperties: z.boolean().optional(),
       __packId: z.number().optional(),
       titleProperty: propertySchema.optional(),
@@ -1567,7 +1591,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           ? zodOptionsFieldWithValues(z.string(), true)
           : z.never().optional(),
     })
-      .superRefine((data, context) => {
+      .superRefine((data: any, context: any) => {
         if (!isValidIdentityName(data.identity?.packId, data.identity?.name as string)) {
           context.addIssue({
             code: z.ZodIssueCode.custom,
@@ -1577,7 +1601,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           });
         }
       })
-      .superRefine((data, context) => {
+      .superRefine((data: any, context: any) => {
         const schemaHelper = objectSchemaHelper(data as GenericObjectSchema);
         const fixedIds = new Set();
         for (const prop of Object.values(schemaHelper.properties)) {
@@ -1596,7 +1620,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }
       })
       .refine(
-        data => {
+        (data: any) => {
           const schemaHelper = objectSchemaHelper(data as GenericObjectSchema);
           return isNil(schemaHelper.id) || schemaHelper.id in schemaHelper.properties;
         },
@@ -1605,7 +1629,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         },
       )
       .refine(
-        data => {
+        (data: any) => {
           const schemaHelper = objectSchemaHelper(data as GenericObjectSchema);
           return isNil(schemaHelper.primary) || schemaHelper.primary in schemaHelper.properties;
         },
@@ -1613,9 +1637,9 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           message: 'The "displayProperty" property must appear as a key in the "properties" object.',
         },
       )
-      .superRefine((data, context) => {
+      .superRefine((data: any, context: any) => {
         const schemaHelper = objectSchemaHelper(data as GenericObjectSchema);
-        (schemaHelper.featured || []).forEach((f, i) => {
+        (schemaHelper.featured || []).forEach((f: any, i: number) => {
           if (!(f in schemaHelper.properties)) {
             context.addIssue({
               code: z.ZodIssueCode.custom,
@@ -1625,7 +1649,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           }
         });
       })
-      .superRefine((data, context) => {
+      .superRefine((data: any, context: any) => {
         const schema = data as GenericObjectSchema;
 
         const validatePropertyValue = makePropertyValidator(schema, context);
@@ -1820,7 +1844,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         validateMemberGroupIdProperty();
         validateVersionProperty();
       })
-      .superRefine((data, context) => {
+      .superRefine((data: any, context: any) => {
         const schemaHelper = objectSchemaHelper(data as GenericObjectSchema);
         const internalRichTextPropertyTuple = Object.entries(schemaHelper.properties).find(
           ([_key, prop]) => prop.type === ValueType.String && prop.codaType === ValueHintType.CodaInternalRichText,
@@ -1834,7 +1858,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           return;
         }
       })
-      .superRefine((data, context) => {
+      .superRefine((data: any, context: any) => {
         const schema = data as GenericObjectSchema;
         if (!schema.index) {
           return;
@@ -1977,7 +2001,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           }
         }
       })
-      .superRefine((data, context) => {
+      .superRefine((data: any, context: any) => {
         const schema = data as GenericObjectSchema;
         if (
           !schema.index ||
@@ -2118,7 +2142,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     namedAutocompletes:
       sdkVersion && semver.satisfies(sdkVersion, '<=1.4.0') ? z.any().optional() : z.never().optional(),
     namedPropertyOptions: z
-      .record(formulaMetadataSchema)
+      .record(z.string(), formulaMetadataSchema)
       .optional()
       .default({})
       .superRefine((data, context) => {
@@ -2555,7 +2579,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
   function validateFormulas(schema: z.ZodObject<any>) {
     return schema
       .refine(
-        data => {
+        (data: any) => {
           if (data.formulas && data.formulas.length > 0) {
             return data.formulaNamespace;
           }
@@ -2563,7 +2587,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         },
         {message: 'A formula namespace must be provided whenever formulas are defined.', path: ['formulaNamespace']},
       )
-      .superRefine((untypedMetadata, context) => {
+      .superRefine((untypedMetadata: any, context: any) => {
         const metadata = untypedMetadata as PackVersionMetadata;
 
         for (const authInfo of getAuthentications(metadata)) {
@@ -2600,7 +2624,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           }
         }
       })
-      .superRefine((data, context) => {
+      .superRefine((data: any, context: any) => {
         if (data.defaultAuthentication && data.defaultAuthentication.type !== AuthenticationType.None) {
           return;
         }
@@ -2821,15 +2845,15 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }
       });
     })
-    .superRefine((data, context) => {
+    .superRefine((data: any, context: any) => {
       const {syncTables} = data as PackVersionDefinition;
       if (syncTables) {
         validateCrawlHierarchy(syncTables, context);
         validateParents(syncTables, context);
       }
     })
-    .superRefine((data, context) => {
-      ((data.formulas as any[]) || []).forEach((formula, i) => {
+    .superRefine((data: any, context: any) => {
+      ((data.formulas as any[]) || []).forEach((formula: any, i: number) => {
         // We have to validate regular formula names here as a superRefine because formulas share
         // a validator with sync table getters, and we need pack ids to exempt certain legacy
         // formula getters with spaces in their names.
@@ -2843,7 +2867,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       });
     })
     .refine(
-      data => {
+      (data: any) => {
         const authentications = getAuthentications(data as PackVersionMetadata);
         if (
           data.networkDomains?.length ||
@@ -3183,17 +3207,17 @@ const packMetadataSchemaBySdkVersion: SchemaExtension[] = [
           // A blank string will fail the existing `min(1)` requirement in the zod schema, so
           // we only need to additionally make sure there is a value present.
           if (typeof syncTable.identityName !== 'string') {
-            let receivedType: ZodParsedType = ZodParsedType.unknown;
+            let receivedType: string = 'unknown';
             if (syncTable.identityName === undefined) {
-              receivedType = ZodParsedType.undefined;
+              receivedType = 'undefined';
             } else if (syncTable.identityName === null) {
-              receivedType = ZodParsedType.null;
+              receivedType = 'null';
             }
             context.addIssue({
               code: z.ZodIssueCode.invalid_type,
               path: ['syncTables', i, 'identityName'],
               message: 'An identityName is required on all sync tables',
-              expected: ZodParsedType.string,
+              expected: 'string',
               received: receivedType,
             });
           }

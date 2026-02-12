@@ -133,7 +133,7 @@ describe('Pack metadata Validation', async () => {
   it('wrong top-level types', async () => {
     const metadata = 'asdf';
     const err = await validateJsonAndAssertFails(metadata as unknown as Record<string, any>);
-    assert.deepEqual(err.validationErrors, [{path: '', message: 'Expected object, received string'}]);
+    assert.deepEqual(err.validationErrors, [{path: '', message: 'Invalid input: expected object, received string'}]);
   });
 
   it('simple valid upload', async () => {
@@ -447,7 +447,7 @@ describe('Pack metadata Validation', async () => {
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          message: `String must contain at most ${Limits.BuildingBlockName} character(s)`,
+          message: `Too big: expected string to have <=${Limits.BuildingBlockName} characters`,
           path: 'formulas[0].name',
         },
       ]);
@@ -470,7 +470,7 @@ describe('Pack metadata Validation', async () => {
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          message: `String must contain at most ${Limits.BuildingBlockDescription} character(s)`,
+          message: `Too big: expected string to have <=${Limits.BuildingBlockDescription} characters`,
           path: 'formulas[0].description',
         },
       ]);
@@ -653,7 +653,9 @@ describe('Pack metadata Validation', async () => {
         formulaNamespace: 'MyNamespace',
       });
       const err = await validateJsonAndAssertFails(metadata);
-      assert.deepEqual(err.validationErrors, [{message: 'Required', path: 'formulas[0].description'}]);
+      assert.deepEqual(err.validationErrors, [
+        {message: 'Missing required field formulas[0].description.', path: 'formulas[0].description'},
+      ]);
     });
 
     it('rejects if number of formulas goes over limit', async () => {
@@ -682,7 +684,7 @@ describe('Pack metadata Validation', async () => {
 
       assert.deepEqual(err.validationErrors, [
         {
-          message: `Array must contain at most ${Limits.BuildingBlockCountPerType} element(s)`,
+          message: `Too big: expected array to have <=${Limits.BuildingBlockCountPerType} items`,
           path: 'formulas',
         },
       ]);
@@ -811,7 +813,7 @@ describe('Pack metadata Validation', async () => {
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
           {
-            message: `String must contain at most ${Limits.BuildingBlockName} character(s)`,
+            message: `Too big: expected string to have <=${Limits.BuildingBlockName} characters`,
             path: 'formulas[0].parameters[0].name',
           },
         ]);
@@ -828,7 +830,7 @@ describe('Pack metadata Validation', async () => {
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
           {
-            message: `String must contain at most ${Limits.BuildingBlockDescription} character(s)`,
+            message: `Too big: expected string to have <=${Limits.BuildingBlockDescription} characters`,
             path: 'formulas[0].parameters[0].description',
           },
         ]);
@@ -1135,22 +1137,17 @@ describe('Pack metadata Validation', async () => {
           syncTables: [syncTable],
         });
         const err = await validateJsonAndAssertFails(metadata);
+        // In Zod 4, when the base schema validation fails (e.g., unrecognized keys),
+        // subsequent refinements (superRefine) are not executed. So we only get
+        // the schema-level errors, not the custom property validation errors.
         assert.deepEqual(err.validationErrors, [
           {
-            message: "Unrecognized key(s) in object: 'options'",
+            message: 'Unrecognized key: "options"',
             path: 'syncTables[0].schema.properties.Baz',
           },
           {
-            message: "Unrecognized key(s) in object: 'options'",
+            message: 'Unrecognized key: "options"',
             path: 'syncTables[0].getter.schema.items.properties.Baz',
-          },
-          {
-            message: 'Sync table SyncTable must define "options" for this property to use OptionsType.Dynamic',
-            path: 'syncTables[0].properties.Foo.options',
-          },
-          {
-            message: '"someProp" is not registered as an options function for this sync table.',
-            path: 'syncTables[0].properties.Bar.options',
           },
         ]);
       });
@@ -1308,15 +1305,15 @@ describe('Pack metadata Validation', async () => {
           path: 'syncTables[0].getter.schema.items.properties.Foo.codaType',
         });
         assert.deepInclude(validationErrors, {
-          message: 'Expected string, received object',
+          message: 'Invalid input: expected string, received object',
           path: 'syncTables[0].getter.schema.items.properties.Bar.options[0]',
         });
         assert.deepInclude(validationErrors, {
-          message: 'Required',
+          message: 'Missing required field syncTables[0].getter.schema.items.properties.Bar.options[0].display.',
           path: 'syncTables[0].getter.schema.items.properties.Bar.options[0].display',
         });
         assert.deepInclude(validationErrors, {
-          message: "Unrecognized key(s) in object: 'options'",
+          message: 'Unrecognized key: "options"',
           path: 'syncTables[0].getter.schema.items.properties.Bop',
         });
         const selectListHintTypeError = {
@@ -1659,7 +1656,7 @@ describe('Pack metadata Validation', async () => {
         const err = await validateJsonAndAssertFails(metadata, '1.0.0');
         assert.deepEqual(err.validationErrors, [
           {
-            message: 'Missing required field syncTables[0].identityName.',
+            message: 'An identityName is required on all sync tables',
             path: 'syncTables[0].identityName',
           },
         ]);
@@ -1812,7 +1809,7 @@ describe('Pack metadata Validation', async () => {
           {
             path: 'syncTables[0]',
             message:
-              "Unrecognized key(s) in object: 'getDisplayUrl', 'listDynamicUrls', 'searchDynamicUrls', 'getName'",
+              'Unrecognized keys: "getDisplayUrl", "listDynamicUrls", "searchDynamicUrls", "getName"',
           },
         ]);
 
@@ -1835,9 +1832,9 @@ describe('Pack metadata Validation', async () => {
         });
         const invalidFormulaErrors = await validateJsonAndAssertFails(metadata2);
         assert.deepEqual(invalidFormulaErrors.validationErrors, [
-          {path: 'syncTables[0].getter.name', message: 'Required'},
-          {path: 'syncTables[0].getter.description', message: 'Required'},
-          {path: 'syncTables[0].getter.parameters', message: 'Required'},
+          {path: 'syncTables[0].getter.name', message: 'Missing required field syncTables[0].getter.name.'},
+          {path: 'syncTables[0].getter.description', message: 'Missing required field syncTables[0].getter.description.'},
+          {path: 'syncTables[0].getter.parameters', message: 'Missing required field syncTables[0].getter.parameters.'},
         ]);
       });
 
@@ -2370,7 +2367,7 @@ describe('Pack metadata Validation', async () => {
 
         assert.deepEqual(err.validationErrors, [
           {
-            message: `String must contain at most ${Limits.BuildingBlockName} character(s)`,
+            message: `Too big: expected string to have <=${Limits.BuildingBlockName} characters`,
             path: 'syncTables[0].name',
           },
         ]);
@@ -2407,7 +2404,7 @@ describe('Pack metadata Validation', async () => {
 
         assert.deepEqual(err.validationErrors, [
           {
-            message: `String must contain at most ${Limits.BuildingBlockName} character(s)`,
+            message: `Too big: expected string to have <=${Limits.BuildingBlockName} characters`,
             path: 'syncTables[0].identityName',
           },
         ]);
@@ -2445,7 +2442,7 @@ describe('Pack metadata Validation', async () => {
 
         assert.deepEqual(err.validationErrors, [
           {
-            message: `String must contain at most ${Limits.BuildingBlockDescription} character(s)`,
+            message: `Too big: expected string to have <=${Limits.BuildingBlockDescription} characters`,
             path: 'syncTables[0].description',
           },
         ]);
@@ -2491,7 +2488,7 @@ describe('Pack metadata Validation', async () => {
 
         assert.deepEqual(err.validationErrors, [
           {
-            message: `Array must contain at most ${Limits.BuildingBlockCountPerType} element(s)`,
+            message: `Too big: expected array to have <=${Limits.BuildingBlockCountPerType} items`,
             path: 'syncTables',
           },
         ]);
@@ -2984,7 +2981,7 @@ describe('Pack metadata Validation', async () => {
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
           {
-            message: "Unrecognized key(s) in object: 'codaType'",
+            message: 'Unrecognized key: "codaType"',
             path: 'formulas[0].schema',
           },
         ]);
@@ -3378,7 +3375,7 @@ describe('Pack metadata Validation', async () => {
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
           {
-            message: "Unrecognized key(s) in object: 'foo'",
+            message: 'Unrecognized key: "foo"',
             path: 'formulas[0].schema.properties.Primary',
           },
         ]);
@@ -4336,7 +4333,7 @@ describe('Pack metadata Validation', async () => {
 
         assert.deepEqual(err.validationErrors, [
           {
-            message: `String must contain at most ${Limits.BuildingBlockName} character(s)`,
+            message: `Too big: expected string to have <=${Limits.BuildingBlockName} characters`,
             path: 'formats[0].name',
           },
         ]);
@@ -4413,7 +4410,7 @@ describe('Pack metadata Validation', async () => {
 
         assert.deepEqual(err.validationErrors, [
           {
-            message: `Array must contain at most ${Limits.NumColumnMatchersPerFormat} element(s)`,
+            message: `Too big: expected array to have <=${Limits.NumColumnMatchersPerFormat} items`,
             path: 'formats[0].matchers',
           },
         ]);
@@ -4447,7 +4444,7 @@ describe('Pack metadata Validation', async () => {
 
         assert.deepEqual(err.validationErrors, [
           {
-            message: `String must contain at most ${Limits.ColumnMatcherRegex} character(s)`,
+            message: `Too big: expected string to have <=${Limits.ColumnMatcherRegex} characters`,
             path: 'formats[0].matchers[0]',
           },
         ]);
@@ -4490,7 +4487,7 @@ describe('Pack metadata Validation', async () => {
 
         assert.deepEqual(err.validationErrors, [
           {
-            message: `Array must contain at most ${Limits.BuildingBlockCountPerType} element(s)`,
+            message: `Too big: expected array to have <=${Limits.BuildingBlockCountPerType} items`,
             path: 'formats',
           },
         ]);
@@ -5053,7 +5050,7 @@ describe('Pack metadata Validation', async () => {
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          message: 'Required',
+          message: 'Missing required field defaultAuthentication.paramName.',
           path: 'defaultAuthentication.paramName',
         },
       ]);
@@ -5117,7 +5114,7 @@ describe('Pack metadata Validation', async () => {
       const err = await validateJsonAndAssertFails(metadata, '0.0.1');
       assert.deepEqual(err.validationErrors, [
         {
-          message: 'Array must contain at least 1 element(s)',
+          message: 'Too small: expected array to have >=1 items',
           path: 'defaultAuthentication.networkDomain',
         },
         {
@@ -5380,7 +5377,7 @@ describe('Pack metadata Validation', async () => {
       const err = await validateJsonAndAssertFails(metadata, '1.0.0');
       assert.deepEqual(err.validationErrors, [
         {
-          message: `String must contain at most ${Limits.NetworkDomainUrl} character(s)`,
+          message: `Too big: expected string to have <=${Limits.NetworkDomainUrl} characters`,
           path: 'networkDomains[0]',
         },
       ]);
@@ -5396,7 +5393,7 @@ describe('Pack metadata Validation', async () => {
       const err = await validateJsonAndAssertFails(metadata, '1.0.0');
       assert.deepEqual(err.validationErrors, [
         {
-          message: `Invalid url`,
+          message: `Invalid URL`,
           path: 'defaultAuthentication.tokenUrl',
         },
       ]);
@@ -5901,7 +5898,7 @@ describe('Pack metadata Validation', async () => {
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          message: `String must contain at most ${Limits.BuildingBlockName} character(s)`,
+          message: `Too big: expected string to have <=${Limits.BuildingBlockName} characters`,
           path: 'formulas[0].name',
         },
       ]);
@@ -5924,7 +5921,7 @@ describe('Pack metadata Validation', async () => {
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          message: `String must contain at most ${Limits.BuildingBlockDescription} character(s)`,
+          message: `Too big: expected string to have <=${Limits.BuildingBlockDescription} characters`,
           path: 'formulas[0].description',
         },
       ]);
@@ -6100,8 +6097,7 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'skills[0].tools[0].type',
-          message:
-            "Invalid discriminator value. Expected 'Pack' | 'Knowledge' | 'ScreenAnnotation' | 'AssistantMessage' | 'Summarizer' | 'MCP' | 'ContactResolution' | 'CodaDocsAndTables' | 'DynamicSuggestedPrompt' | 'EmbeddedContent' | 'WebSearch'",
+          message: 'Could not find any valid schema for this value.',
         },
       ]);
     });
@@ -6313,7 +6309,7 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'skills[0].tools[0].allowedDomains[1]',
-          message: 'String must contain at least 1 character(s)',
+          message: 'Too small: expected string to have >=1 characters',
         },
       ]);
     });
@@ -6339,7 +6335,7 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'skills[0].tools[0].allowedDomains',
-          message: 'Array must contain at least 1 element(s)',
+          message: 'Too small: expected array to have >=1 items',
         },
       ]);
     });
@@ -6366,7 +6362,7 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'skills[0].tools[0].allowedDomains',
-          message: 'Array must contain at most 100 element(s)',
+          message: 'Too big: expected array to have <=100 items',
         },
       ]);
     });
@@ -6517,7 +6513,7 @@ describe('Pack metadata Validation', async () => {
         {
           path: 'skills[0].name',
 
-          message: 'String must contain at most 50 character(s)',
+          message: 'Too big: expected string to have <=50 characters',
         },
       ]);
     });
@@ -6539,7 +6535,7 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'skills[0].prompt',
-          message: `String must contain at most ${Limits.PromptLength} character(s)`,
+          message: `Too big: expected string to have <=${Limits.PromptLength} characters`,
         },
       ]);
     });
@@ -7174,7 +7170,7 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'suggestedPrompts',
-          message: 'Array must contain at most 3 element(s)',
+          message: 'Too big: expected array to have <=3 items',
         },
       ]);
     });
@@ -7194,7 +7190,7 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'suggestedPrompts[0].name',
-          message: 'String must contain at most 50 character(s)',
+          message: 'Too big: expected string to have <=50 characters',
         },
       ]);
     });
@@ -7214,7 +7210,7 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'suggestedPrompts[0].displayName',
-          message: 'String must contain at most 50 character(s)',
+          message: 'Too big: expected string to have <=50 characters',
         },
       ]);
     });
@@ -7234,7 +7230,7 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'suggestedPrompts[0].prompt',
-          message: 'String must contain at most 500 character(s)',
+          message: 'Too big: expected string to have <=500 characters',
         },
       ]);
     });
@@ -7310,7 +7306,7 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'suggestedPrompts[0].name',
-          message: 'String must contain at least 1 character(s)',
+          message: 'Too small: expected string to have >=1 characters',
         },
         {
           path: 'suggestedPrompts[0].name',
@@ -7333,7 +7329,7 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'suggestedPrompts[0].displayName',
-          message: 'String must contain at least 1 character(s)',
+          message: 'Too small: expected string to have >=1 characters',
         },
       ]);
     });
@@ -7352,7 +7348,7 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'suggestedPrompts[0].prompt',
-          message: 'String must contain at least 1 character(s)',
+          message: 'Too small: expected string to have >=1 characters',
         },
       ]);
     });
@@ -7596,7 +7592,7 @@ describe('Pack metadata Validation', async () => {
       const err = await validateJsonAndAssertFails(metadata, sdkVersionTriggeringDeprecationWarnings);
       assert.deepEqual(err.validationErrors, [
         {
-          message: 'Array must contain at least 1 element(s)',
+          message: 'Too small: expected array to have >=1 items',
           path: 'defaultAuthentication.scopes',
         },
       ]);
@@ -7622,7 +7618,7 @@ describe('Pack metadata Validation', async () => {
       const err = await validateJsonAndAssertFails(metadata, sdkVersionTriggeringDeprecationWarnings);
       assert.deepEqual(err.validationErrors, [
         {
-          message: 'Array must contain at least 1 element(s)',
+          message: 'Too small: expected array to have >=1 items',
           path: 'defaultAuthentication.scopes',
         },
       ]);
