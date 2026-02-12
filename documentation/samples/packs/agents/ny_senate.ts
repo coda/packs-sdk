@@ -166,7 +166,7 @@ pack.addSyncTable({
           full: true,
           limit: MembersPageSize,
           offset: offset,
-        }
+        },
       );
       let response = await context.fetcher.fetch({
         method: "GET",

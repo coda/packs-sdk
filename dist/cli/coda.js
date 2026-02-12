@@ -36,7 +36,6 @@ const CodaApiEndpointArg = {
     default: config_storage_1.DEFAULT_API_ENDPOINT,
 };
 if (require.main === module) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     void yargs_1.default
         .parserConfiguration({ 'parse-numbers': false })
         .command({

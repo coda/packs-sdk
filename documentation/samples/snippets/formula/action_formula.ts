@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as coda from "@codahq/packs-sdk";
 
 const pack = coda.newPack();

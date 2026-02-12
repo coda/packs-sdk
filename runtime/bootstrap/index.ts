@@ -239,7 +239,7 @@ export async function injectExecutionContext({
   authenticationName,
   executionId,
   previousAttemptError,
-  ...rest
+  ..._rest
 }: {
   context: Context;
   fetcher: Fetcher;
@@ -247,7 +247,7 @@ export async function injectExecutionContext({
   syncStateService: SyncStateService | undefined;
   logger: Logger;
 } & ExecutionContextPrimitives): Promise<void> {
-  ensureNever<keyof typeof rest>();
+  ensureNever<keyof typeof _rest>();
   // Inject all of the primitives into a global we'll access when we execute the pack function.
   const executionContextPrimitives = {
     fetcher: {},

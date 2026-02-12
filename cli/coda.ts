@@ -35,7 +35,6 @@ const CodaApiEndpointArg = {
 };
 
 if (require.main === module) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   void yargs
     .parserConfiguration({'parse-numbers': false})
     .command({

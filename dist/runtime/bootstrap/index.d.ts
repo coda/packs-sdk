@@ -48,7 +48,7 @@ export type ExecutionContextPrimitives = Omit<ExecutionContext, 'fetcher' | 'tem
 /**
  * Injects the ExecutionContext object, including stubs for network calls, into the isolate.
  */
-export declare function injectExecutionContext({ context, fetcher, temporaryBlobStorage, syncStateService, logger, endpoint, invocationLocation, timezone, invocationToken, sync, authenticationName, executionId, previousAttemptError, ...rest }: {
+export declare function injectExecutionContext({ context, fetcher, temporaryBlobStorage, syncStateService, logger, endpoint, invocationLocation, timezone, invocationToken, sync, authenticationName, executionId, previousAttemptError, ..._rest }: {
     context: Context;
     fetcher: Fetcher;
     temporaryBlobStorage: TemporaryBlobStorage;
