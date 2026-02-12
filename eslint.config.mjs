@@ -13,7 +13,6 @@ const codaPlugin = {rules: codaRules};
 // ─── Global ignores (replaces .eslintignore) ────────────────────────────────
 const ignoresConfig = {
   ignores: [
-    '.circleci/*',
     '.githooks/*',
     '.idea/*',
     '.vscode/*',
