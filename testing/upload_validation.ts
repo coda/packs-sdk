@@ -86,7 +86,6 @@ import type {PackVersionMetadata} from '../compiled_types';
 import type {ParamDef} from '../api_types';
 import type {ParamDefs} from '../api_types';
 import type {ParentDefinition} from '../schema';
-// PartialSkillDef import removed - no longer needed after Zod 4 migration
 import {PermissionsBehavior} from '../schema';
 import {PostSetupType} from '../types';
 import type {PrecannedDate} from '../api_types';
@@ -137,7 +136,6 @@ import type {VariousAuthentication} from '../types';
 import type {VariousSupportedAuthenticationTypes} from '../types';
 import type {WebBasicAuthentication} from '../types';
 import type {WebSearchTool} from '../types';
-// ZodParsedType removed in Zod 4
 import {assertCondition} from '../helpers/ensure';
 import {ensureUnreachable} from '../helpers/ensure';
 import {isArray} from '../schema';
@@ -566,10 +564,7 @@ export function zodErrorDetailToValidationError(subError: z.ZodIssue): Validatio
     const underlyingErrors: ValidationError[] = [];
     for (const unionIssues of unionErrorGroups) {
       const isNonmatchedUnionMember = unionIssues.some((issue: any) => {
-        return (
-          issue.code === 'custom' &&
-          issue.params?.customErrorCode === CustomErrorCode.NonMatchingDiscriminant
-        );
+        return issue.code === 'custom' && issue.params?.customErrorCode === CustomErrorCode.NonMatchingDiscriminant;
       });
       // Skip any errors that are nested with an "invalid literal" error that is usually
       // a failed discriminant match; we don't care about reporting any errors from this union
@@ -666,9 +661,9 @@ function zodDiscriminant(value: string | number | boolean) {
   });
 }
 
-type ZodUnionInput = [z.ZodType<any>, z.ZodType<any>, ...z.ZodType<any>[]];
+type ZodUnionInput = [z.ZodType<any>, z.ZodType<any>, ...Array<z.ZodType<any>>];
 
-function zodUnionInput(schemas: z.ZodType<any>[]): ZodUnionInput {
+function zodUnionInput(schemas: Array<z.ZodType<any>>): ZodUnionInput {
   assertCondition(schemas.length >= 2, 'A zod union type requires at least 2 options.');
   return schemas as ZodUnionInput;
 }
@@ -692,7 +687,7 @@ interface BuildMetadataSchemaArgs {
 
 function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
   legacyPackMetadataSchema: z.ZodType<Partial<PackVersionMetadata>>;
-  variousSupportedAuthenticationValidators: z.ZodType<any>[];
+  variousSupportedAuthenticationValidators: Array<z.ZodType<any>>;
   arrayPropertySchema: z.ZodType<any>;
 } {
   const singleAuthDomainSchema = z

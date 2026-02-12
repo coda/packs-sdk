@@ -51,7 +51,6 @@ const api_types_4 = require("../api_types");
 const schema_13 = require("../schema");
 const api_types_5 = require("../api_types");
 const types_5 = require("../types");
-// PartialSkillDef import removed - no longer needed after Zod 4 migration
 const schema_14 = require("../schema");
 const types_6 = require("../types");
 const __1 = require("..");
@@ -67,7 +66,6 @@ const api_types_7 = require("../api_types");
 const url_parse_1 = __importDefault(require("url-parse"));
 const schema_17 = require("../schema");
 const schema_18 = require("../schema");
-// ZodParsedType removed in Zod 4
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
 const schema_19 = require("../schema");
@@ -423,8 +421,7 @@ function zodErrorDetailToValidationError(subError) {
         for (const unionIssues of unionErrorGroups) {
             const isNonmatchedUnionMember = unionIssues.some((issue) => {
                 var _a;
-                return (issue.code === 'custom' &&
-                    ((_a = issue.params) === null || _a === void 0 ? void 0 : _a.customErrorCode) === CustomErrorCode.NonMatchingDiscriminant);
+                return issue.code === 'custom' && ((_a = issue.params) === null || _a === void 0 ? void 0 : _a.customErrorCode) === CustomErrorCode.NonMatchingDiscriminant;
             });
             // Skip any errors that are nested with an "invalid literal" error that is usually
             // a failed discriminant match; we don't care about reporting any errors from this union
