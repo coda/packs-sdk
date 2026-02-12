@@ -51,6 +51,7 @@ const api_types_4 = require("../api_types");
 const schema_13 = require("../schema");
 const api_types_5 = require("../api_types");
 const types_5 = require("../types");
+// PartialSkillDef import removed - no longer needed after Zod 4 migration
 const schema_14 = require("../schema");
 const types_6 = require("../types");
 const __1 = require("..");
@@ -66,7 +67,7 @@ const api_types_7 = require("../api_types");
 const url_parse_1 = __importDefault(require("url-parse"));
 const schema_17 = require("../schema");
 const schema_18 = require("../schema");
-const zod_1 = require("zod");
+// ZodParsedType removed in Zod 4
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
 const schema_19 = require("../schema");
@@ -147,7 +148,7 @@ async function validatePackVersionMetadata(metadata, sdkVersion, { warningMode }
     // first-party pack definitions to only use versioned fields, we can use packVersionMetadataSchema  here.
     const validated = combinedSchema.safeParse(metadata);
     if (!validated.success) {
-        throw new PackMetadataValidationError('Pack metadata failed validation', validated.error, validated.error.errors.flatMap(zodErrorDetailToValidationError));
+        throw new PackMetadataValidationError('Pack metadata failed validation', validated.error, validated.error.issues.flatMap(zodErrorDetailToValidationError));
     }
     return validated.data;
 }
@@ -160,7 +161,7 @@ function validateVariousAuthenticationMetadata(auth, options) {
     if (validated.success) {
         return auth;
     }
-    throw new PackMetadataValidationError('Various authentication failed validation', validated.error, validated.error.errors.flatMap(zodErrorDetailToValidationError));
+    throw new PackMetadataValidationError('Various authentication failed validation', validated.error, validated.error.issues.flatMap(zodErrorDetailToValidationError));
 }
 exports.validateVariousAuthenticationMetadata = validateVariousAuthenticationMetadata;
 // Note: This is called within Coda for validating the result of getSchema calls for dynamic sync tables.
@@ -179,7 +180,7 @@ function validateSyncTableSchema(schema, options) {
     if (validatedAsObjectSchema.success) {
         return validatedAsObjectSchema.data;
     }
-    throw new PackMetadataValidationError('Schema failed validation', validated.error, validated.error.errors.flatMap(zodErrorDetailToValidationError));
+    throw new PackMetadataValidationError('Schema failed validation', validated.error, validated.error.issues.flatMap(zodErrorDetailToValidationError));
 }
 exports.validateSyncTableSchema = validateSyncTableSchema;
 function makePropertyValidator(schema, context) {
@@ -206,7 +207,7 @@ function makePropertyValidator(schema, context) {
             const propertyIdentifierDisplay = propertyValueIsPath ? `"${fieldName}" path` : `"${fieldName}" field name`;
             if (!propertySchema) {
                 context.addIssue({
-                    code: z.ZodIssueCode.custom,
+                    code: 'custom',
                     path: objectPath,
                     message: `The ${propertyIdentifierDisplay} "${propertyValue}" does not exist in the "properties" object.`,
                 });
@@ -214,7 +215,7 @@ function makePropertyValidator(schema, context) {
             }
             if (!isValidSchema(propertySchema)) {
                 context.addIssue({
-                    code: z.ZodIssueCode.custom,
+                    code: 'custom',
                     path: objectPath,
                     message: `The ${propertyIdentifierDisplay} "${propertyValue}" ${invalidSchemaMessage}`,
                 });
@@ -255,7 +256,7 @@ function validateCrawlHierarchy(syncTables, context) {
                 const tableSchema = syncTableSchemasByName[parentTableName];
                 if (!tableSchema) {
                     context === null || context === void 0 ? void 0 : context.addIssue({
-                        code: z.ZodIssueCode.custom,
+                        code: 'custom',
                         path: ['syncTables', tableIndex, 'parameters', paramIndex, 'crawlStrategy', 'parentTable'],
                         message: `Sync table ${syncTable.name} expects parent table ${parentTableName} to exist.`,
                     });
@@ -264,7 +265,7 @@ function validateCrawlHierarchy(syncTables, context) {
                 const property = tableSchema.properties[propertyKey];
                 if (!property) {
                     context === null || context === void 0 ? void 0 : context.addIssue({
-                        code: z.ZodIssueCode.custom,
+                        code: 'custom',
                         path: ['syncTables', tableIndex, 'parameters', paramIndex, 'crawlStrategy', 'parentTable'],
                         message: `Sync table ${syncTable.name} expects parent table ${parentTableName}'s schema to have the property ${propertyKey}.`,
                     });
@@ -272,7 +273,7 @@ function validateCrawlHierarchy(syncTables, context) {
                 }
                 if (inheritPermissions && !(tableSchema.id === propertyKey || tableSchema.idProperty === propertyKey)) {
                     context === null || context === void 0 ? void 0 : context.addIssue({
-                        code: z.ZodIssueCode.custom,
+                        code: 'custom',
                         path: ['syncTables', tableIndex, 'parameters', paramIndex, 'crawlStrategy', 'parentTable'],
                         message: `Sync table ${syncTable.name} expects parent table ${parentTableName}'s schema to have inheritPermissions on the id property.`,
                     });
@@ -282,7 +283,7 @@ function validateCrawlHierarchy(syncTables, context) {
                 // We only allow one parent per table.
                 if (firstDiscoveredParentTable && firstDiscoveredParentTable !== parentTableName) {
                     context === null || context === void 0 ? void 0 : context.addIssue({
-                        code: z.ZodIssueCode.custom,
+                        code: 'custom',
                         path: ['syncTables', tableIndex, 'parameters'],
                         message: `Sync table ${syncTable.name} cannot reference multiple parent tables.`,
                     });
@@ -301,7 +302,7 @@ function validateCrawlHierarchy(syncTables, context) {
     // Verify that there's no cycle
     if (_hasCycle(parentToChildrenMap)) {
         context === null || context === void 0 ? void 0 : context.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: 'custom',
             path: ['syncTables'],
             message: `Sync table parent hierarchy is cyclic`,
         });
@@ -413,12 +414,16 @@ function zodErrorDetailToValidationError(subError) {
     // but they do record all of the specific errors when trying each element of the union,
     // so we filter out the errors that were just due to non-matches of the discriminant
     // and bubble up the rest to the top level, we get actionable output.
-    if (subError.code === z.ZodIssueCode.invalid_union) {
+    if (subError.code === 'invalid_union') {
+        const unionErrorGroups = subError.errors;
+        if (!unionErrorGroups || !Array.isArray(unionErrorGroups)) {
+            return [{ path: zodPathToPathString(subError.path), message: subError.message }];
+        }
         const underlyingErrors = [];
-        for (const unionError of subError.unionErrors) {
-            const isNonmatchedUnionMember = unionError.issues.some(issue => {
+        for (const unionIssues of unionErrorGroups) {
+            const isNonmatchedUnionMember = unionIssues.some((issue) => {
                 var _a;
-                return (issue.code === z.ZodIssueCode.custom &&
+                return (issue.code === 'custom' &&
                     ((_a = issue.params) === null || _a === void 0 ? void 0 : _a.customErrorCode) === CustomErrorCode.NonMatchingDiscriminant);
             });
             // Skip any errors that are nested with an "invalid literal" error that is usually
@@ -427,12 +432,12 @@ function zodErrorDetailToValidationError(subError) {
             if (isNonmatchedUnionMember) {
                 continue;
             }
-            for (const unionIssue of unionError.issues) {
-                const isDiscriminantError = unionIssue.code === z.ZodIssueCode.custom &&
+            for (const unionIssue of unionIssues) {
+                const isDiscriminantError = unionIssue.code === 'custom' &&
                     ((_a = unionIssue.params) === null || _a === void 0 ? void 0 : _a.customErrorCode) === CustomErrorCode.NonMatchingDiscriminant;
                 if (!isDiscriminantError) {
                     let errors;
-                    if (unionIssue.code === z.ZodIssueCode.invalid_union) {
+                    if (unionIssue.code === 'invalid_union') {
                         // Recurse to find the real error underlying any unions within child fields.
                         errors = zodErrorDetailToValidationError(unionIssue);
                     }
@@ -460,9 +465,11 @@ function zodErrorDetailToValidationError(subError) {
     }
     const { path: zodPath, message } = subError;
     const path = zodPathToPathString(zodPath);
-    const isMissingRequiredFieldError = subError.code === z.ZodIssueCode.invalid_type &&
-        subError.received === 'undefined' &&
-        subError.expected.toString() !== 'undefined';
+    // In Zod 4, invalid_type issues don't have a `received` property.
+    // Detect missing fields by checking if the message indicates the received value was undefined.
+    const isMissingRequiredFieldError = subError.code === 'invalid_type' &&
+        subError.message.includes('received undefined') &&
+        subError.expected !== 'undefined';
     return [
         {
             path,
@@ -474,7 +481,7 @@ exports.zodErrorDetailToValidationError = zodErrorDetailToValidationError;
 function zodPathToPathString(zodPath) {
     const parts = [];
     zodPath.forEach((zodPathPart, i) => {
-        const part = typeof zodPathPart === 'number' ? `[${zodPathPart}]` : zodPathPart;
+        const part = typeof zodPathPart === 'number' ? `[${zodPathPart}]` : String(zodPathPart);
         const includeSeparator = i !== zodPath.length - 1 && !(typeof zodPath[i + 1] === 'number');
         parts.push(part);
         if (includeSeparator) {
@@ -493,7 +500,7 @@ function zodDiscriminant(value) {
     return z.union([z.string(), z.number(), z.boolean(), z.undefined()]).superRefine((data, context) => {
         if (data !== value) {
             context.addIssue({
-                code: z.ZodIssueCode.custom,
+                code: 'custom',
                 message: 'Non-matching discriminant',
                 params: { customErrorCode: CustomErrorCode.NonMatchingDiscriminant },
                 fatal: true,
@@ -593,7 +600,7 @@ function buildMetadataSchema({ sdkVersion }) {
             scopes: z.array(z.string()).optional(),
             scopeDelimiter: z.enum([' ', ',', ';']).optional(),
             tokenPrefix: z.string().optional(),
-            additionalParams: z.record(z.any()).optional(),
+            additionalParams: z.record(z.string(), z.any()).optional(),
             endpointKey: z.string().optional(),
             tokenQueryParam: z.string().optional(),
             useProofKeyForCodeExchange: z.boolean().optional(),
@@ -609,7 +616,7 @@ function buildMetadataSchema({ sdkVersion }) {
             const addIssue = (property) => {
                 const expectedType = expectsRelativeUrl ? 'a relative' : 'an absolute';
                 context.addIssue({
-                    code: z.ZodIssueCode.custom,
+                    code: 'custom',
                     path: [property],
                     message: `${property} must be ${expectedType} URL when \
 ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpointUrl !== null && requiresEndpointUrl !== void 0 ? requiresEndpointUrl : 'not true'}`}`,
@@ -1235,7 +1242,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         featuredProperties: z.array(z.string()).optional(),
         identity: identitySchema.optional(),
         attribution: attributionSchema,
-        properties: z.record(objectPropertyUnionSchema),
+        properties: z.record(z.string(), objectPropertyUnionSchema),
         includeUnknownProperties: z.boolean().optional(),
         __packId: z.number().optional(),
         titleProperty: propertySchema.optional(),
@@ -1264,7 +1271,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         var _a, _b;
         if (!isValidIdentityName((_a = data.identity) === null || _a === void 0 ? void 0 : _a.packId, (_b = data.identity) === null || _b === void 0 ? void 0 : _b.name)) {
             context.addIssue({
-                code: z.ZodIssueCode.custom,
+                code: 'custom',
                 path: ['identity', 'name'],
                 message: 'Invalid name. Identity names can only contain alphanumeric characters, underscores, and dashes, and no spaces.',
             });
@@ -1279,7 +1286,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             }
             if (fixedIds.has(prop.fixedId)) {
                 context.addIssue({
-                    code: z.ZodIssueCode.custom,
+                    code: 'custom',
                     path: ['properties'],
                     message: `fixedIds must be unique. Found duplicate "${prop.fixedId}".`,
                 });
@@ -1304,7 +1311,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         (schemaHelper.featured || []).forEach((f, i) => {
             if (!(f in schemaHelper.properties)) {
                 context.addIssue({
-                    code: z.ZodIssueCode.custom,
+                    code: 'custom',
                     path: ['featured', i],
                     message: `The "featuredProperties" field name "${f}" does not exist in the "properties" object.`,
                 });
@@ -1428,7 +1435,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         const internalRichTextPropertyTuple = Object.entries(schemaHelper.properties).find(([_key, prop]) => prop.type === schema_18.ValueType.String && prop.codaType === schema_17.ValueHintType.CodaInternalRichText);
         if (internalRichTextPropertyTuple && !isValidUseOfCodaInternalRichText((_a = data.identity) === null || _a === void 0 ? void 0 : _a.packId)) {
             context.addIssue({
-                code: z.ZodIssueCode.custom,
+                code: 'custom',
                 path: ['identity', 'properties', internalRichTextPropertyTuple[0]],
                 message: 'Invalid codaType. CodaInternalRichText is not a supported value.',
             });
@@ -1521,9 +1528,9 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             return;
         }
         context.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: 'custom',
             path: ['index', 'filterableProperties'],
-            message: `Array must contain at most ${exports.Limits.FilterableProperties} element(s)`,
+            message: `Too big: expected array to have <=${exports.Limits.FilterableProperties} items`,
         });
     }));
     const objectPropertyUnionSchema = z
@@ -1561,7 +1568,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         for (const param of [...parameters, ...varargParameters]) {
             if (paramNames.has(param.name)) {
                 context.addIssue({
-                    code: z.ZodIssueCode.custom,
+                    code: 'custom',
                     path: ['parameters'],
                     message: `Parameter names must be unique. Found duplicate name "${param.name}".`,
                 });
@@ -1617,13 +1624,13 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         // namedAutocompletes no longer does anything, but old SDK version may try to set it.
         namedAutocompletes: sdkVersion && semver_1.default.satisfies(sdkVersion, '<=1.4.0') ? z.any().optional() : z.never().optional(),
         namedPropertyOptions: z
-            .record(formulaMetadataSchema)
+            .record(z.string(), formulaMetadataSchema)
             .optional()
             .default({})
             .superRefine((data, context) => {
             if (Object.keys(data).length > exports.Limits.BuildingBlockName) {
                 context.addIssue({
-                    code: z.ZodIssueCode.custom,
+                    code: 'custom',
                     message: `Too many options formulas for sync table. Max allowed is "${exports.Limits.BuildingBlockName}".`,
                 });
             }
@@ -1655,7 +1662,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         const syncTable = data;
         if (syncTable.getter.varargParameters && syncTable.getter.varargParameters.length > 0) {
             context.addIssue({
-                code: z.ZodIssueCode.custom,
+                code: 'custom',
                 path: ['getter', 'varargParameters'],
                 message: 'Sync table formulas do not currently support varargParameters.',
             });
@@ -1672,7 +1679,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 .superRefine((formulaName, context) => {
                 if (!validateFormulaName(formulaName)) {
                     context.addIssue({
-                        code: z.ZodIssueCode.custom,
+                        code: 'custom',
                         message: `Formula name must be a valid formula name.`,
                     });
                 }
@@ -1774,7 +1781,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             const duplicates = findDuplicateTools(tools);
             for (const duplicate of duplicates) {
                 context.addIssue({
-                    code: z.ZodIssueCode.custom,
+                    code: 'custom',
                     path: [duplicate.index],
                     message: `Duplicate tool found. ${JSON.stringify(duplicate.tool)} is equivalent to the tool at index ${duplicate.originalIndex}.`,
                 });
@@ -1841,7 +1848,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             const formulaNames = data.map(formulaDef => formulaDef.name);
             for (const dupe of getNonUniqueElements(formulaNames)) {
                 context.addIssue({
-                    code: z.ZodIssueCode.custom,
+                    code: 'custom',
                     message: `Formula names must be unique. Found duplicate name "${dupe}".`,
                 });
             }
@@ -1855,7 +1862,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             const formatNames = data.map(formatDef => formatDef.name);
             for (const dupe of getNonUniqueElements(formatNames)) {
                 context.addIssue({
-                    code: z.ZodIssueCode.custom,
+                    code: 'custom',
                     message: `Format names must be unique. Found duplicate name "${dupe}".`,
                 });
             }
@@ -1873,7 +1880,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 if (tableDef.identityName && ((_a = tableDef.schema.identity) === null || _a === void 0 ? void 0 : _a.name)) {
                     if (tableDef.identityName !== tableDef.schema.identity.name) {
                         context.addIssue({
-                            code: z.ZodIssueCode.custom,
+                            code: 'custom',
                             message: `Sync table "${tableDef.name}" defines identityName "${tableDef.identityName}" that conflicts with its schema's identity.name "${tableDef.schema.identity.name}".`,
                         });
                     }
@@ -1891,14 +1898,14 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             validateIdentityNames(context, identityInfo);
             for (const dupe of getNonUniqueElements(formulaNames)) {
                 context.addIssue({
-                    code: z.ZodIssueCode.custom,
+                    code: 'custom',
                     message: `Sync table formula names must be unique. Found duplicate name "${dupe}".`,
                 });
             }
             const tableNames = data.map(tableDef => tableDef.name);
             for (const dupe of getNonUniqueElements(tableNames)) {
                 context.addIssue({
-                    code: z.ZodIssueCode.custom,
+                    code: 'custom',
                     message: `Sync table names must be unique. Found duplicate name "${dupe}".`,
                 });
             }
@@ -1912,7 +1919,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             const skillNames = data.map(skill => skill.name);
             for (const dupe of getNonUniqueElements(skillNames)) {
                 context.addIssue({
-                    code: z.ZodIssueCode.custom,
+                    code: 'custom',
                     message: `Skill names must be unique. Found duplicate name "${dupe}".`,
                 });
             }
@@ -1927,7 +1934,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             const serverNames = (data || []).map(server => server.name).filter((name) => Boolean(name));
             for (const dupe of getNonUniqueElements(serverNames)) {
                 context.addIssue({
-                    code: z.ZodIssueCode.custom,
+                    code: 'custom',
                     path: ['mcpServers'],
                     message: `MCP server names must be unique. Found duplicate name "${dupe}".`,
                 });
@@ -1948,7 +1955,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 return;
             }
             context.addIssue({
-                code: z.ZodIssueCode.custom,
+                code: 'custom',
                 path: ['mcpServers'],
                 message: 'MCP server endpointUrl must be HTTPS URLs only.',
             });
@@ -1963,7 +1970,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             const promptNames = data.map(prompt => prompt.name);
             for (const dupe of getNonUniqueElements(promptNames)) {
                 context.addIssue({
-                    code: z.ZodIssueCode.custom,
+                    code: 'custom',
                     message: `Suggested prompt names must be unique. Found duplicate name "${dupe}".`,
                 });
             }
@@ -1976,7 +1983,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 // If no allowedAuthName is provided, the sync table is allowed to use any authentication.
                 if (seenAuthNames.has(allowedAuthName) || seenAuthNames.has(undefined)) {
                     context.addIssue({
-                        code: z.ZodIssueCode.custom,
+                        code: 'custom',
                         message: allowedAuthName
                             ? `Identity "${identityName}" is used by multiple sync tables with non-distinct allowedAuthenticationNames: ${allowedAuthName}`
                             : `Sync table identity names must be unique. Found duplicate name "${identityName}".`,
@@ -1997,7 +2004,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     }
     function validateFormulas(schema) {
         return schema
-            .refine(data => {
+            .refine((data) => {
             if (data.formulas && data.formulas.length > 0) {
                 return data.formulaNamespace;
             }
@@ -2020,7 +2027,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 if (!(authDomains === null || authDomains === void 0 ? void 0 : authDomains.length)) {
                     // A non-Coda network domain without auth domain restriction isn't allowed.
                     context.addIssue({
-                        code: z.ZodIssueCode.custom,
+                        code: 'custom',
                         path: [`authentication.${name}.networkDomain`],
                         message: `CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict ${name}'s "networkDomain" to coda.io`,
                     });
@@ -2029,47 +2036,47 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 const hasNonCodaAuthDomain = authDomains.some((domain) => !codaDomains.includes(domain));
                 if (hasNonCodaAuthDomain) {
                     context.addIssue({
-                        code: z.ZodIssueCode.custom,
+                        code: 'custom',
                         path: [`authentication.${name}.networkDomain`],
                         message: `CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict ${name}'s "networkDomain" to coda.io`,
                     });
                 }
             }
         })
-            .superRefine((data, context) => {
-            if (data.defaultAuthentication && data.defaultAuthentication.type !== types_1.AuthenticationType.None) {
+            .superRefine((_data, context) => {
+            if (_data.defaultAuthentication && _data.defaultAuthentication.type !== types_1.AuthenticationType.None) {
                 return;
             }
             // if the pack has no default authentication, make sure all formulas don't set connection requirements.
             // TODO(patrick): Consider allowing a pack to *only* use admin authentications.
-            (data.formulas || []).forEach((formula, i) => {
+            (_data.formulas || []).forEach((formula, i) => {
                 if (formula.connectionRequirement && formula.connectionRequirement !== api_types_2.ConnectionRequirement.None) {
                     context.addIssue({
-                        code: z.ZodIssueCode.custom,
+                        code: 'custom',
                         path: ['formulas', i],
                         message: 'Formulas cannot set a connectionRequirement when the Pack does not use user authentication.',
                     });
                 }
             });
-            (data.syncTables || []).forEach((syncTable, i) => {
+            (_data.syncTables || []).forEach((syncTable, i) => {
                 const connectionRequirement = syncTable.getter.connectionRequirement;
                 if (connectionRequirement && connectionRequirement !== api_types_2.ConnectionRequirement.None) {
                     context.addIssue({
-                        code: z.ZodIssueCode.custom,
+                        code: 'custom',
                         path: ['syncTables', i, 'getter', 'connectionRequirement'],
                         message: 'Sync table formulas cannot set a connectionRequirement when the Pack does not use user authentication.',
                     });
                 }
             });
         })
-            .superRefine((data, context) => {
-            const formulas = (data.formulas || []);
-            (data.formats || []).forEach((format, i) => {
+            .superRefine((_data2, context) => {
+            const formulas = (_data2.formulas || []);
+            (_data2.formats || []).forEach((format, i) => {
                 var _a;
                 const formula = formulas.find(f => f.name === format.formulaName);
                 if (!formula) {
                     context.addIssue({
-                        code: z.ZodIssueCode.custom,
+                        code: 'custom',
                         path: ['formats', i],
                         message: 'Could not find a formula definition for this format. Each format must reference the name of a formula defined in this pack.',
                     });
@@ -2084,7 +2091,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                     }
                     if (hasError) {
                         context.addIssue({
-                            code: z.ZodIssueCode.custom,
+                            code: 'custom',
                             path: ['formats', i],
                             message: 'Formats can only be implemented using formulas that take exactly one required parameter.',
                         });
@@ -2104,7 +2111,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 }
                 if (formula.connectionRequirement === api_types_2.ConnectionRequirement.None) {
                     context.addIssue({
-                        code: z.ZodIssueCode.custom,
+                        code: 'custom',
                         path: [formula.name, 'allowedAuthenticationNames'],
                         message: `Cannot specify 'allowedAuthenticationNames' on a formula with 'ConnectionRequirement.None'`,
                     });
@@ -2113,7 +2120,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                     if (!authNames.includes(allowedAuthenticationName) &&
                         !reservedAuthenticationNames.includes(allowedAuthenticationName)) {
                         context.addIssue({
-                            code: z.ZodIssueCode.custom,
+                            code: 'custom',
                             path: [formula.name, 'allowedAuthenticationNames'],
                             message: `${allowedAuthenticationName} is not the name of an authentication`,
                         });
@@ -2173,7 +2180,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                             const { formulaName } = formula;
                             if (!formulaNames.has(formulaName)) {
                                 context.addIssue({
-                                    code: z.ZodIssueCode.custom,
+                                    code: 'custom',
                                     path: ['skills', skillIndex, 'tools', toolIndex, 'formulas', formulaIndex, 'formulaName'],
                                     message: `Formula "${formulaName}" not found. Pack tool formulas must reference formulas defined in this pack.`,
                                 });
@@ -2225,7 +2232,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             const identityName = syncTable.schema.identity.name;
             if (syncTable.schema.properties[identityName]) {
                 context.addIssue({
-                    code: z.ZodIssueCode.custom,
+                    code: 'custom',
                     path: ['syncTables', i, 'schema', 'properties', identityName],
                     message: "Cannot have a sync table property with the same name as the sync table's schema identity.",
                 });
@@ -2241,7 +2248,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             }
             if (!validateFormulaName(getterName)) {
                 context.addIssue({
-                    code: z.ZodIssueCode.custom,
+                    code: 'custom',
                     path: ['syncTables', i, 'getter', 'name'],
                     message: 'Formula names can only contain alphanumeric characters and underscores.',
                 });
@@ -2262,17 +2269,17 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             // formula getters with spaces in their names.
             if (!validateFormulaName(formula.name)) {
                 context.addIssue({
-                    code: z.ZodIssueCode.custom,
+                    code: 'custom',
                     path: ['formulas', i, 'name'],
                     message: 'Formula names can only contain alphanumeric characters and underscores.',
                 });
             }
         });
     })
-        .refine(data => {
+        .refine((_data) => {
         var _a;
-        const authentications = getAuthentications(data);
-        if (((_a = data.networkDomains) === null || _a === void 0 ? void 0 : _a.length) ||
+        const authentications = getAuthentications(_data);
+        if (((_a = _data.networkDomains) === null || _a === void 0 ? void 0 : _a.length) ||
             authentications.every(auth => auth.authentication.type === types_1.AuthenticationType.None ||
                 // Various is an internal authentication type that's only applicable to whitelisted Pack Ids.
                 // Skipping validation here to let it exempt from network domains.
@@ -2301,7 +2308,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             for (const authNetworkDomain of authNetworkDomains) {
                 if (!((_a = data.networkDomains) === null || _a === void 0 ? void 0 : _a.includes(authNetworkDomain))) {
                     context.addIssue({
-                        code: z.ZodIssueCode.custom,
+                        code: 'custom',
                         path: [`authentication.${name}.networkDomain`],
                         message: `The "networkDomain" in ${readableAuthTitle} must match a previously declared network domain.`,
                     });
@@ -2313,7 +2320,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 for (const usedNetworkDomain of usedNetworkDomains) {
                     if (authNetworkDomains.length > 0 && !authNetworkDomains.includes(usedNetworkDomain)) {
                         context.addIssue({
-                            code: z.ZodIssueCode.custom,
+                            code: 'custom',
                             path: [`authentication.${name}`],
                             message: `Domain ${usedNetworkDomain} is used in ${readableAuthTitle} but not declared in its "networkDomain".`,
                         });
@@ -2336,7 +2343,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 for (const usedNetworkDomain of usedNetworkDomains) {
                     if (!data.networkDomains.some(domain => domain === usedNetworkDomain || usedNetworkDomain.endsWith('.' + domain))) {
                         context.addIssue({
-                            code: z.ZodIssueCode.custom,
+                            code: 'custom',
                             path: [`authentication.${name}`],
                             message: `Domain ${usedNetworkDomain} is used in ${readableAuthTitle} but not declared in the pack's "networkDomains".`,
                         });
@@ -2360,7 +2367,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             if (!(authNetworkDomains === null || authNetworkDomains === void 0 ? void 0 : authNetworkDomains.length)) {
                 if (data.networkDomains && data.networkDomains.length > 1) {
                     context.addIssue({
-                        code: z.ZodIssueCode.custom,
+                        code: 'custom',
                         path: [`authentication.${name}.networkDomain`],
                         message: `This pack uses multiple network domains and must set one as a "networkDomain" in ${readableAuthTitle}`,
                     });
@@ -2380,7 +2387,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 }
                 if (typeof options !== 'string' || !(options in (syncTable.namedPropertyOptions || {}))) {
                     context.addIssue({
-                        code: z.ZodIssueCode.custom,
+                        code: 'custom',
                         path: ['syncTables', i, 'properties', propertyName, 'options'],
                         message: options === api_types_5.OptionsType.Dynamic
                             ? `Sync table ${syncTable.name} must define "options" for this property to use OptionsType.Dynamic`
@@ -2401,7 +2408,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         for (const [path, entrypoint] of Object.entries(skillEntrypoints)) {
             if (!skillNames.has(entrypoint.skillName)) {
                 context.addIssue({
-                    code: z.ZodIssueCode.custom,
+                    code: 'custom',
                     path: ['skillEntrypoints', path, 'skillName'],
                     message: `"${entrypoint.skillName}" is not the name of a defined skill.`,
                 });
@@ -2413,7 +2420,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         const hasMcpSkill = (metadata.skills || []).some(skill => skill.tools.some(tool => tool.type === types_11.ToolType.MCP));
         if (hasMcpSkill && (!metadata.mcpServers || metadata.mcpServers.length === 0)) {
             context.addIssue({
-                code: z.ZodIssueCode.custom,
+                code: 'custom',
                 path: ['mcpServers'],
                 message: 'At least one MCP server must be declared when using MCP tools.',
             });
@@ -2430,7 +2437,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             if (skill.forcedFormula && !formulaNames.has(skill.forcedFormula)) {
                 const availableTools = Array.from(formulaNames).join(', ');
                 context.addIssue({
-                    code: z.ZodIssueCode.custom,
+                    code: 'custom',
                     path: ['skills', skillIndex, 'forcedFormula'],
                     message: `Skill "${skill.name}" specifies forcedFormula "${skill.forcedFormula}" but no matching formula found. Available formulas: ${availableTools}`,
                 });
@@ -2561,19 +2568,10 @@ const packMetadataSchemaBySdkVersion = [
                     // A blank string will fail the existing `min(1)` requirement in the zod schema, so
                     // we only need to additionally make sure there is a value present.
                     if (typeof syncTable.identityName !== 'string') {
-                        let receivedType = zod_1.ZodParsedType.unknown;
-                        if (syncTable.identityName === undefined) {
-                            receivedType = zod_1.ZodParsedType.undefined;
-                        }
-                        else if (syncTable.identityName === null) {
-                            receivedType = zod_1.ZodParsedType.null;
-                        }
                         context.addIssue({
-                            code: z.ZodIssueCode.invalid_type,
+                            code: 'custom',
                             path: ['syncTables', i, 'identityName'],
                             message: 'An identityName is required on all sync tables',
-                            expected: zod_1.ZodParsedType.string,
-                            received: receivedType,
                         });
                     }
                 });
@@ -2628,7 +2626,7 @@ function validateObjectSchemaDeprecatedFields(schema, pathPrefix, context) {
     });
     if ((_a = schema.identity) === null || _a === void 0 ? void 0 : _a.attribution) {
         context.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: 'custom',
             path: [...pathPrefix, 'identity', 'attribution'],
             message: 'Attribution has moved and is no longer nested in the Identity object. ' +
                 'Instead of specifying `schema.identity.attribution`, simply specify `schema.attribution`.',
@@ -2645,7 +2643,7 @@ function validateDeprecatedProperty({ obj, oldName, newName, pathPrefix, context
             message += ` Use "${newName}" instead.`;
         }
         context.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: 'custom',
             path: [...pathPrefix, oldName],
             message,
         });
