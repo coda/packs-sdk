@@ -557,7 +557,11 @@ export function zodErrorDetailToValidationError(subError: z.ZodIssue): Validatio
   // so we filter out the errors that were just due to non-matches of the discriminant
   // and bubble up the rest to the top level, we get actionable output.
   if (subError.code === 'invalid_union') {
-    const unionErrorGroups = (subError as any).errors;
+    // Zod 4 changed the union error shape: `unionErrors` (array of ZodError) was replaced with
+    // `errors` (array of arrays of ZodIssue). We use `as any` because the Zod 4 type definitions
+    // don't expose `.errors` on the union issue type yet. If upgrading Zod further, verify this
+    // property still exists on invalid_union issues.
+    const unionErrorGroups: Array<z.ZodIssue[]> | undefined = (subError as any).errors;
     if (!unionErrorGroups || !Array.isArray(unionErrorGroups)) {
       return [{path: zodPathToPathString(subError.path), message: subError.message}];
     }
@@ -608,8 +612,11 @@ export function zodErrorDetailToValidationError(subError: z.ZodIssue): Validatio
 
   const {path: zodPath, message} = subError;
   const path = zodPathToPathString(zodPath);
-  // In Zod 4, invalid_type issues don't have a `received` property.
-  // Detect missing fields by checking if the message indicates the received value was undefined.
+  // In Zod 4, invalid_type issues no longer expose `.received` or `.input` properties
+  // on the issue object. We detect missing required fields by parsing the error message.
+  // The `.expected` property is also untyped in Zod 4, hence the `as any` cast.
+  // If upgrading Zod further, verify these heuristics still work by running the
+  // zodErrorDetailToValidationError tests.
   const isMissingRequiredFieldError =
     subError.code === 'invalid_type' &&
     subError.message.includes('received undefined') &&
@@ -2605,14 +2612,14 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           }
         }
       })
-      .superRefine((_data: any, context) => {
-        if (_data.defaultAuthentication && _data.defaultAuthentication.type !== AuthenticationType.None) {
+      .superRefine((data: any, context) => {
+        if (data.defaultAuthentication && data.defaultAuthentication.type !== AuthenticationType.None) {
           return;
         }
 
         // if the pack has no default authentication, make sure all formulas don't set connection requirements.
         // TODO(patrick): Consider allowing a pack to *only* use admin authentications.
-        ((_data.formulas || []) as PackFormulaMetadata[]).forEach((formula, i) => {
+        ((data.formulas || []) as PackFormulaMetadata[]).forEach((formula, i) => {
           if (formula.connectionRequirement && formula.connectionRequirement !== ConnectionRequirement.None) {
             context.addIssue({
               code: 'custom',
@@ -2622,7 +2629,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           }
         });
 
-        ((_data.syncTables as SyncTable[]) || []).forEach((syncTable, i) => {
+        ((data.syncTables as SyncTable[]) || []).forEach((syncTable, i) => {
           const connectionRequirement = syncTable.getter.connectionRequirement;
           if (connectionRequirement && connectionRequirement !== ConnectionRequirement.None) {
             context.addIssue({
@@ -2634,9 +2641,9 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           }
         });
       })
-      .superRefine((_data2: any, context) => {
-        const formulas = (_data2.formulas || []) as PackFormulaMetadata[];
-        ((_data2.formats as any[]) || []).forEach((format, i) => {
+      .superRefine((data: any, context) => {
+        const formulas = (data.formulas || []) as PackFormulaMetadata[];
+        ((data.formats as any[]) || []).forEach((format, i) => {
           const formula = formulas.find(f => f.name === format.formulaName);
           if (!formula) {
             context.addIssue({
@@ -2848,10 +2855,10 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       });
     })
     .refine(
-      (_data: any) => {
-        const authentications = getAuthentications(_data as PackVersionMetadata);
+      (data: any) => {
+        const authentications = getAuthentications(data as PackVersionMetadata);
         if (
-          _data.networkDomains?.length ||
+          data.networkDomains?.length ||
           authentications.every(
             auth =>
               auth.authentication.type === AuthenticationType.None ||

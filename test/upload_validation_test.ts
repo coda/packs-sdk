@@ -8317,4 +8317,213 @@ describe('zodErrorDetailToValidationError', () => {
       assert.equal(errors[0].message, 'Too small: expected array to have >=1 items');
     }
   });
+
+  it('handles multiple missing required fields independently', () => {
+    const schema = z.object({a: z.string(), b: z.number(), c: z.boolean()});
+    const result = schema.safeParse({});
+    assert.isFalse(result.success);
+    if (!result.success) {
+      const allErrors = result.error.issues.flatMap(issue => zodErrorDetailToValidationError(issue));
+      assert.isAtLeast(allErrors.length, 3);
+      assert.isTrue(allErrors.some(e => e.message === 'Missing required field a.'));
+      assert.isTrue(allErrors.some(e => e.message === 'Missing required field b.'));
+      assert.isTrue(allErrors.some(e => e.message === 'Missing required field c.'));
+    }
+  });
+
+  it('does not flag optional field receiving wrong type as missing', () => {
+    const schema = z.object({name: z.string().optional()});
+    const result = schema.safeParse({name: 123});
+    assert.isFalse(result.success);
+    if (!result.success) {
+      const errors = zodErrorDetailToValidationError(result.error.issues[0]);
+      assert.lengthOf(errors, 1);
+      assert.notInclude(errors[0].message, 'Missing required field');
+    }
+  });
+
+  it('filters out discriminant-only errors in union (via synthetic issue)', () => {
+    // Construct a synthetic invalid_union issue that mimics the discriminant filtering logic.
+    // One union branch has only a NonMatchingDiscriminant error (should be skipped),
+    // the other has a real validation error (should be surfaced).
+    const syntheticIssue: any = {
+      code: 'invalid_union',
+      path: [],
+      message: 'Invalid input',
+      errors: [
+        // Branch 1: only a non-matching discriminant — should be filtered out entirely
+        [
+          {
+            code: 'custom',
+            path: ['type'],
+            message: 'Non-matching discriminant',
+            params: {customErrorCode: 'nonMatchingDiscriminant'},
+          },
+        ],
+        // Branch 2: a real validation error that should be surfaced
+        [
+          {
+            code: 'invalid_type',
+            path: ['value'],
+            message: 'Invalid input: expected string, received number',
+          },
+        ],
+      ],
+    };
+    const errors = zodErrorDetailToValidationError(syntheticIssue as z.ZodIssue);
+    assert.lengthOf(errors, 1);
+    assert.equal(errors[0].path, 'value');
+    assert.include(errors[0].message, 'expected string');
+  });
+
+  it('returns fallback when all union branches are discriminant-only', () => {
+    // When every branch is filtered out due to non-matching discriminants,
+    // the function should return a generic fallback message.
+    const syntheticIssue: any = {
+      code: 'invalid_union',
+      path: ['myField'],
+      message: 'Invalid input',
+      errors: [
+        [
+          {
+            code: 'custom',
+            path: ['myField', 'type'],
+            message: 'Non-matching discriminant',
+            params: {customErrorCode: 'nonMatchingDiscriminant'},
+          },
+        ],
+        [
+          {
+            code: 'custom',
+            path: ['myField', 'type'],
+            message: 'Non-matching discriminant',
+            params: {customErrorCode: 'nonMatchingDiscriminant'},
+          },
+        ],
+      ],
+    };
+    const errors = zodErrorDetailToValidationError(syntheticIssue as z.ZodIssue);
+    assert.lengthOf(errors, 1);
+    assert.equal(errors[0].path, 'myField');
+    assert.equal(errors[0].message, 'Could not find any valid schema for this value.');
+  });
+
+  it('handles union issue with missing .errors property gracefully', () => {
+    // Guard against malformed union issue where .errors is undefined
+    const syntheticIssue: any = {
+      code: 'invalid_union',
+      path: ['field'],
+      message: 'Invalid input',
+      // intentionally missing .errors
+    };
+    const errors = zodErrorDetailToValidationError(syntheticIssue as z.ZodIssue);
+    assert.lengthOf(errors, 1);
+    assert.equal(errors[0].path, 'field');
+    assert.equal(errors[0].message, 'Invalid input');
+  });
+
+  it('handles nested union within union recursively', () => {
+    // An invalid_union that contains another invalid_union in one of its branches
+    const syntheticIssue: any = {
+      code: 'invalid_union',
+      path: [],
+      message: 'Invalid input',
+      errors: [
+        [
+          {
+            code: 'invalid_union',
+            path: ['nested'],
+            message: 'Invalid input',
+            errors: [
+              [
+                {
+                  code: 'invalid_type',
+                  path: ['nested', 'value'],
+                  message: 'Invalid input: expected string, received number',
+                },
+              ],
+            ],
+          },
+        ],
+      ],
+    };
+    const errors = zodErrorDetailToValidationError(syntheticIssue as z.ZodIssue);
+    assert.isNotEmpty(errors);
+    assert.isTrue(errors.some(e => e.path === 'nested.value'));
+  });
+
+  it('does not flag as missing when expected type is undefined', () => {
+    // Edge case: z.undefined() receiving a non-undefined value.
+    // The guard `expected !== 'undefined'` ensures this isn't reported as "Missing required field".
+    const syntheticIssue: any = {
+      code: 'invalid_type',
+      path: ['optOut'],
+      message: 'Invalid input: expected undefined, received undefined',
+      expected: 'undefined',
+    };
+    const errors = zodErrorDetailToValidationError(syntheticIssue as z.ZodIssue);
+    assert.lengthOf(errors, 1);
+    assert.notInclude(errors[0].message, 'Missing required field');
+  });
+
+  it('handles deeply nested array-of-objects path', () => {
+    const schema = z.object({
+      tables: z.array(
+        z.object({
+          columns: z.array(
+            z.object({
+              name: z.string(),
+            }),
+          ),
+        }),
+      ),
+    });
+    const result = schema.safeParse({tables: [{columns: [{name: 123}]}]});
+    assert.isFalse(result.success);
+    if (!result.success) {
+      const errors = zodErrorDetailToValidationError(result.error.issues[0]);
+      assert.lengthOf(errors, 1);
+      assert.equal(errors[0].path, 'tables[0].columns[0].name');
+    }
+  });
+
+  it('handles enum validation error', () => {
+    const schema = z.enum(['red', 'green', 'blue']);
+    const result = schema.safeParse('yellow');
+    assert.isFalse(result.success);
+    if (!result.success) {
+      const errors = zodErrorDetailToValidationError(result.error.issues[0]);
+      assert.lengthOf(errors, 1);
+      assert.equal(errors[0].path, '');
+      assert.isNotEmpty(errors[0].message);
+    }
+  });
+
+  it('deduplicates identical errors across union branches', () => {
+    // Two union branches produce the exact same error — should be deduplicated to 1
+    const syntheticIssue: any = {
+      code: 'invalid_union',
+      path: [],
+      message: 'Invalid input',
+      errors: [
+        [
+          {
+            code: 'invalid_type',
+            path: ['shared'],
+            message: 'Invalid input: expected string, received number',
+          },
+        ],
+        [
+          {
+            code: 'invalid_type',
+            path: ['shared'],
+            message: 'Invalid input: expected string, received number',
+          },
+        ],
+      ],
+    };
+    const errors = zodErrorDetailToValidationError(syntheticIssue as z.ZodIssue);
+    assert.lengthOf(errors, 1);
+    assert.equal(errors[0].path, 'shared');
+  });
 });
