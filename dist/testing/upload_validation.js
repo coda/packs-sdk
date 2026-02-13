@@ -146,7 +146,7 @@ async function validatePackVersionMetadata(metadata, sdkVersion, { warningMode }
     // first-party pack definitions to only use versioned fields, we can use packVersionMetadataSchema  here.
     const validated = combinedSchema.safeParse(metadata);
     if (!validated.success) {
-        throw new PackMetadataValidationError('Pack metadata failed validation', validated.error, validated.error.issues.flatMap(zodErrorDetailToValidationError));
+        throw new PackMetadataValidationError('Pack metadata failed validation', validated.error, validated.error.issues.flatMap(issue => zodErrorDetailToValidationError(issue)));
     }
     return validated.data;
 }
@@ -159,7 +159,7 @@ function validateVariousAuthenticationMetadata(auth, options) {
     if (validated.success) {
         return auth;
     }
-    throw new PackMetadataValidationError('Various authentication failed validation', validated.error, validated.error.issues.flatMap(zodErrorDetailToValidationError));
+    throw new PackMetadataValidationError('Various authentication failed validation', validated.error, validated.error.issues.flatMap(issue => zodErrorDetailToValidationError(issue)));
 }
 exports.validateVariousAuthenticationMetadata = validateVariousAuthenticationMetadata;
 // Note: This is called within Coda for validating the result of getSchema calls for dynamic sync tables.
@@ -178,7 +178,7 @@ function validateSyncTableSchema(schema, options) {
     if (validatedAsObjectSchema.success) {
         return validatedAsObjectSchema.data;
     }
-    throw new PackMetadataValidationError('Schema failed validation', validated.error, validated.error.issues.flatMap(zodErrorDetailToValidationError));
+    throw new PackMetadataValidationError('Schema failed validation', validated.error, validated.error.issues.flatMap(issue => zodErrorDetailToValidationError(issue)));
 }
 exports.validateSyncTableSchema = validateSyncTableSchema;
 function makePropertyValidator(schema, context) {
@@ -406,24 +406,23 @@ function findDuplicateTools(tools) {
     return duplicates;
 }
 exports.findDuplicateTools = findDuplicateTools;
-function zodErrorDetailToValidationError(subError) {
+function zodErrorDetailToValidationError(subError, parentPath = []) {
     var _a;
     // Top-level errors for union types are totally useless, they just say "invalid input",
     // but they do record all of the specific errors when trying each element of the union,
     // so we filter out the errors that were just due to non-matches of the discriminant
     // and bubble up the rest to the top level, we get actionable output.
     if (subError.code === 'invalid_union') {
-        // Zod 4 changed the union error shape: `unionErrors` (array of ZodError) was replaced with
-        // `errors` (array of arrays of ZodIssue). We use `as any` because the Zod 4 type definitions
-        // don't expose `.errors` on the union issue type yet. If upgrading Zod further, verify this
-        // property still exists on invalid_union issues.
+        // In Zod 4, union child issues have paths relative to the union, not the root.
+        // We accumulate the parent path so nested unions reconstruct full paths.
+        const fullParentPath = [...parentPath, ...subError.path];
         const unionErrorGroups = subError.errors;
-        if (!unionErrorGroups || !Array.isArray(unionErrorGroups)) {
-            return [{ path: zodPathToPathString(subError.path), message: subError.message }];
+        if (!unionErrorGroups || unionErrorGroups.length === 0) {
+            return [{ path: zodPathToPathString(fullParentPath), message: subError.message }];
         }
         const underlyingErrors = [];
         for (const unionIssues of unionErrorGroups) {
-            const isNonmatchedUnionMember = unionIssues.some((issue) => {
+            const isNonmatchedUnionMember = unionIssues.some(issue => {
                 var _a;
                 return issue.code === 'custom' && ((_a = issue.params) === null || _a === void 0 ? void 0 : _a.customErrorCode) === CustomErrorCode.NonMatchingDiscriminant;
             });
@@ -440,11 +439,11 @@ function zodErrorDetailToValidationError(subError) {
                     let errors;
                     if (unionIssue.code === 'invalid_union') {
                         // Recurse to find the real error underlying any unions within child fields.
-                        errors = zodErrorDetailToValidationError(unionIssue);
+                        errors = zodErrorDetailToValidationError(unionIssue, fullParentPath);
                     }
                     else {
                         const error = {
-                            path: zodPathToPathString(unionIssue.path),
+                            path: zodPathToPathString([...fullParentPath, ...unionIssue.path]),
                             message: unionIssue.message,
                         };
                         errors = [error];
@@ -460,17 +459,12 @@ function zodErrorDetailToValidationError(subError) {
             }
         }
         if (underlyingErrors.length === 0) {
-            return [{ path: zodPathToPathString(subError.path), message: 'Could not find any valid schema for this value.' }];
+            return [{ path: zodPathToPathString(fullParentPath), message: 'Could not find any valid schema for this value.' }];
         }
         return underlyingErrors;
     }
     const { path: zodPath, message } = subError;
-    const path = zodPathToPathString(zodPath);
-    // In Zod 4, invalid_type issues no longer expose `.received` or `.input` properties
-    // on the issue object. We detect missing required fields by parsing the error message.
-    // The `.expected` property is also untyped in Zod 4, hence the `as any` cast.
-    // If upgrading Zod further, verify these heuristics still work by running the
-    // zodErrorDetailToValidationError tests.
+    const path = zodPathToPathString([...parentPath, ...zodPath]);
     const isMissingRequiredFieldError = subError.code === 'invalid_type' &&
         subError.message.includes('received undefined') &&
         subError.expected !== 'undefined';

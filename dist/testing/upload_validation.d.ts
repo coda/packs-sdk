@@ -63,7 +63,7 @@ export declare function findDuplicateTools(tools: Tool[]): Array<{
     originalIndex: number;
     tool: Tool;
 }>;
-export declare function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError[];
+export declare function zodErrorDetailToValidationError(subError: z.ZodIssue, parentPath?: PropertyKey[]): ValidationError[];
 interface BuildMetadataSchemaArgs {
     sdkVersion?: string;
     warningMode?: boolean;
