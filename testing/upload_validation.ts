@@ -561,7 +561,7 @@ export function zodErrorDetailToValidationError(subError: z.ZodIssue): Validatio
     // `errors` (array of arrays of ZodIssue). We use `as any` because the Zod 4 type definitions
     // don't expose `.errors` on the union issue type yet. If upgrading Zod further, verify this
     // property still exists on invalid_union issues.
-    const unionErrorGroups: Array<z.ZodIssue[]> | undefined = (subError as any).errors;
+    const unionErrorGroups: z.ZodIssue[][] | undefined = (subError as any).errors;
     if (!unionErrorGroups || !Array.isArray(unionErrorGroups)) {
       return [{path: zodPathToPathString(subError.path), message: subError.message}];
     }
