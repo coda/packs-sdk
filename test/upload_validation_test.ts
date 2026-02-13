@@ -656,7 +656,7 @@ describe('Pack metadata Validation', async () => {
       });
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
-        {message: 'Invalid input: expected string, received undefined', path: 'description'},
+        {message: 'Invalid input: expected string, received undefined', path: 'formulas[0].description'},
       ]);
     });
 
@@ -1310,18 +1310,17 @@ describe('Pack metadata Validation', async () => {
         const validationErrors = err.validationErrors ?? [];
 
         // There are quite a few zod errors when this happens, because all the union
-        // types make it unsure of which one should match. Zod 4 produces different
-        // error paths, so we check for key expected errors.
+        // types make it unsure of which one should match. We verify the custom options
+        // error message appears with the expected path.
         assert.isNotEmpty(validationErrors);
 
-        // Zod 4 produces errors at different paths for complex union schemas.
-        // Check that the custom options validation error message appears somewhere.
-        const hasOptionsError = validationErrors.some(
+        const optionsError = validationErrors.find(
           e =>
             e.message ===
             'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "options" property.',
         );
-        assert.isTrue(hasOptionsError, 'Expected options validation error not found');
+        assert.isDefined(optionsError, 'Expected options validation error not found');
+        assert.include(optionsError!.path, 'syncTables[0].schema.properties.');
 
         const errOlderSdkVersion = await validateJsonAndAssertFails(metadata, '1.4.0');
         const olderErrors = errOlderSdkVersion.validationErrors ?? [];
@@ -1810,7 +1809,7 @@ describe('Pack metadata Validation', async () => {
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
           {
-            path: '',
+            path: 'syncTables[0]',
             message: 'Unrecognized keys: "getDisplayUrl", "listDynamicUrls", "searchDynamicUrls", "getName"',
           },
         ]);
@@ -1834,9 +1833,9 @@ describe('Pack metadata Validation', async () => {
         });
         const invalidFormulaErrors = await validateJsonAndAssertFails(metadata2);
         assert.deepEqual(invalidFormulaErrors.validationErrors, [
-          {path: 'getter.name', message: 'Invalid input: expected string, received undefined'},
-          {path: 'getter.description', message: 'Invalid input: expected string, received undefined'},
-          {path: 'getter.parameters', message: 'Invalid input: expected array, received undefined'},
+          {path: 'syncTables[0].getter.name', message: 'Invalid input: expected string, received undefined'},
+          {path: 'syncTables[0].getter.description', message: 'Invalid input: expected string, received undefined'},
+          {path: 'syncTables[0].getter.parameters', message: 'Invalid input: expected array, received undefined'},
         ]);
       });
 
@@ -2984,7 +2983,7 @@ describe('Pack metadata Validation', async () => {
         assert.deepEqual(err.validationErrors, [
           {
             message: 'Unrecognized key: "codaType"',
-            path: '',
+            path: 'formulas[0].schema',
           },
         ]);
       });
@@ -3378,11 +3377,11 @@ describe('Pack metadata Validation', async () => {
         assert.deepEqual(err.validationErrors, [
           {
             message: 'Unrecognized key: "foo"',
-            path: '',
+            path: 'formulas[0].schema.properties.Primary',
           },
           {
             message: 'Could not find any valid schema for this value.',
-            path: '',
+            path: 'formulas[0].schema.properties.Primary',
           },
         ]);
       });
@@ -3413,7 +3412,7 @@ describe('Pack metadata Validation', async () => {
         });
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
-          {message: 'Could not find any valid schema for this value.', path: ''},
+          {message: 'Could not find any valid schema for this value.', path: 'formulas[0].schema.properties.Name'},
         ]);
       });
 
@@ -5058,7 +5057,7 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           message: 'Invalid input: expected string, received undefined',
-          path: 'paramName',
+          path: 'defaultAuthentication.paramName',
         },
       ]);
     });
@@ -6104,7 +6103,7 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'skills[0].tools[0].type',
-          message: 'Could not find any valid schema for this value.',
+          message: 'Invalid input',
         },
       ]);
     });
@@ -8423,7 +8422,8 @@ describe('zodErrorDetailToValidationError', () => {
   });
 
   it('handles nested union within union recursively', () => {
-    // An invalid_union that contains another invalid_union in one of its branches
+    // An invalid_union that contains another invalid_union in one of its branches.
+    // In Zod 4, child issue paths are relative to their parent union scope.
     const syntheticIssue: any = {
       code: 'invalid_union',
       path: [],
@@ -8438,7 +8438,7 @@ describe('zodErrorDetailToValidationError', () => {
               [
                 {
                   code: 'invalid_type',
-                  path: ['nested', 'value'],
+                  path: ['value'],
                   message: 'Invalid input: expected string, received number',
                 },
               ],

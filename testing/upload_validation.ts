@@ -235,7 +235,7 @@ export async function validatePackVersionMetadata(
     throw new PackMetadataValidationError(
       'Pack metadata failed validation',
       validated.error,
-      validated.error.issues.flatMap(zodErrorDetailToValidationError),
+      validated.error.issues.flatMap(issue => zodErrorDetailToValidationError(issue)),
     );
   }
 
@@ -257,7 +257,7 @@ export function validateVariousAuthenticationMetadata(
   throw new PackMetadataValidationError(
     'Various authentication failed validation',
     validated.error,
-    validated.error.issues.flatMap(zodErrorDetailToValidationError),
+    validated.error.issues.flatMap(issue => zodErrorDetailToValidationError(issue)),
   );
 }
 
@@ -284,7 +284,7 @@ export function validateSyncTableSchema(
   throw new PackMetadataValidationError(
     'Schema failed validation',
     validated.error,
-    validated.error.issues.flatMap(zodErrorDetailToValidationError),
+    validated.error.issues.flatMap(issue => zodErrorDetailToValidationError(issue)),
   );
 }
 
@@ -551,23 +551,25 @@ export function findDuplicateTools(tools: Tool[]): Array<{index: number; origina
   return duplicates;
 }
 
-export function zodErrorDetailToValidationError(subError: z.ZodIssue): ValidationError[] {
+export function zodErrorDetailToValidationError(
+  subError: z.ZodIssue,
+  parentPath: PropertyKey[] = [],
+): ValidationError[] {
   // Top-level errors for union types are totally useless, they just say "invalid input",
   // but they do record all of the specific errors when trying each element of the union,
   // so we filter out the errors that were just due to non-matches of the discriminant
   // and bubble up the rest to the top level, we get actionable output.
   if (subError.code === 'invalid_union') {
-    // Zod 4 changed the union error shape: `unionErrors` (array of ZodError) was replaced with
-    // `errors` (array of arrays of ZodIssue). We use `as any` because the Zod 4 type definitions
-    // don't expose `.errors` on the union issue type yet. If upgrading Zod further, verify this
-    // property still exists on invalid_union issues.
-    const unionErrorGroups: z.ZodIssue[][] | undefined = (subError as any).errors;
-    if (!unionErrorGroups || !Array.isArray(unionErrorGroups)) {
-      return [{path: zodPathToPathString(subError.path), message: subError.message}];
+    // In Zod 4, union child issues have paths relative to the union, not the root.
+    // We accumulate the parent path so nested unions reconstruct full paths.
+    const fullParentPath = [...parentPath, ...subError.path];
+    const unionErrorGroups = subError.errors;
+    if (!unionErrorGroups || unionErrorGroups.length === 0) {
+      return [{path: zodPathToPathString(fullParentPath), message: subError.message}];
     }
     const underlyingErrors: ValidationError[] = [];
     for (const unionIssues of unionErrorGroups) {
-      const isNonmatchedUnionMember = unionIssues.some((issue: any) => {
+      const isNonmatchedUnionMember = unionIssues.some(issue => {
         return issue.code === 'custom' && issue.params?.customErrorCode === CustomErrorCode.NonMatchingDiscriminant;
       });
       // Skip any errors that are nested with an "invalid literal" error that is usually
@@ -584,10 +586,10 @@ export function zodErrorDetailToValidationError(subError: z.ZodIssue): Validatio
           let errors: ValidationError[];
           if (unionIssue.code === 'invalid_union') {
             // Recurse to find the real error underlying any unions within child fields.
-            errors = zodErrorDetailToValidationError(unionIssue);
+            errors = zodErrorDetailToValidationError(unionIssue, fullParentPath);
           } else {
             const error: ValidationError = {
-              path: zodPathToPathString(unionIssue.path),
+              path: zodPathToPathString([...fullParentPath, ...unionIssue.path]),
               message: unionIssue.message,
             };
             errors = [error];
@@ -604,23 +606,18 @@ export function zodErrorDetailToValidationError(subError: z.ZodIssue): Validatio
     }
 
     if (underlyingErrors.length === 0) {
-      return [{path: zodPathToPathString(subError.path), message: 'Could not find any valid schema for this value.'}];
+      return [{path: zodPathToPathString(fullParentPath), message: 'Could not find any valid schema for this value.'}];
     }
 
     return underlyingErrors;
   }
 
   const {path: zodPath, message} = subError;
-  const path = zodPathToPathString(zodPath);
-  // In Zod 4, invalid_type issues no longer expose `.received` or `.input` properties
-  // on the issue object. We detect missing required fields by parsing the error message.
-  // The `.expected` property is also untyped in Zod 4, hence the `as any` cast.
-  // If upgrading Zod further, verify these heuristics still work by running the
-  // zodErrorDetailToValidationError tests.
+  const path = zodPathToPathString([...parentPath, ...zodPath]);
   const isMissingRequiredFieldError =
     subError.code === 'invalid_type' &&
     subError.message.includes('received undefined') &&
-    (subError as any).expected !== 'undefined';
+    subError.expected !== 'undefined';
 
   return [
     {
