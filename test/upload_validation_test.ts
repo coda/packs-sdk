@@ -8526,4 +8526,57 @@ describe('zodErrorDetailToValidationError', () => {
     assert.lengthOf(errors, 1);
     assert.equal(errors[0].path, 'shared');
   });
+
+  it('does not false-positive on null input as missing field', () => {
+    const schema = z.object({name: z.string()});
+    const result = schema.safeParse({name: null});
+    assert.isFalse(result.success);
+    if (!result.success) {
+      const nameIssue = result.error.issues.find(i => i.path.includes('name'));
+      assert.exists(nameIssue);
+      const errors = zodErrorDetailToValidationError(nameIssue!);
+      assert.lengthOf(errors, 1);
+      assert.notInclude(errors[0].message, 'Missing required field');
+    }
+  });
+
+  it('prepends explicit parentPath to simple error path', () => {
+    const result = z.string().safeParse(123);
+    assert.isFalse(result.success);
+    if (!result.success) {
+      const errors = zodErrorDetailToValidationError(result.error.issues[0], ['root', 'config']);
+      assert.lengthOf(errors, 1);
+      assert.equal(errors[0].path, 'root.config');
+      assert.include(errors[0].message, 'expected string');
+    }
+  });
+
+  it('prepends explicit parentPath with array index', () => {
+    const schema = z.object({url: z.string()});
+    const result = schema.safeParse({});
+    assert.isFalse(result.success);
+    if (!result.success) {
+      const errors = zodErrorDetailToValidationError(result.error.issues[0], ['items', 0]);
+      assert.lengthOf(errors, 1);
+      assert.equal(errors[0].path, 'items[0].url');
+      assert.equal(errors[0].message, 'Missing required field items[0].url.');
+    }
+  });
+
+  it('reconstructs full path for nested union with real schema', () => {
+    const schema = z.object({
+      items: z.array(z.union([z.object({value: z.string().min(3)}), z.object({value: z.number().min(10)})])),
+    });
+    const result = schema.safeParse({items: [{value: true}]});
+    assert.isFalse(result.success);
+    if (!result.success) {
+      const allErrors = result.error.issues.flatMap(issue => zodErrorDetailToValidationError(issue));
+      assert.isNotEmpty(allErrors);
+      const hasNestedPath = allErrors.some(e => e.path?.startsWith('items[0]'));
+      assert.isTrue(
+        hasNestedPath,
+        `Expected an error path starting with 'items[0]', got: ${allErrors.map(e => e.path).join(', ')}`,
+      );
+    }
+  });
 });
