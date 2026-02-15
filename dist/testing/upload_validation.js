@@ -465,6 +465,9 @@ function zodErrorDetailToValidationError(subError, parentPath = []) {
     }
     const { path: zodPath, message } = subError;
     const path = zodPathToPathString([...parentPath, ...zodPath]);
+    // Zod 4 removed the `.received` property from invalid_type issues, so we detect
+    // missing required fields via message text. This is fragile and tied to Zod's
+    // message format; verify this still works if the pinned Zod version changes.
     const isMissingRequiredFieldError = subError.code === 'invalid_type' &&
         subError.message.includes('received undefined') &&
         subError.expected !== 'undefined';
@@ -1091,7 +1094,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         resultType: zodDiscriminant(api_types_7.Type.string),
         schema: stringPropertySchema.optional(),
     });
-    // TODO(jonathan): Give this a better type than ZodTypeAny after figuring out
+    // TODO(jonathan): Give this a better type than z.ZodType<any> after figuring out
     // recursive typing better.
     const arrayPropertySchema = z.lazy(() => zodCompleteStrictObject({
         type: zodDiscriminant(schema_18.ValueType.Array),
