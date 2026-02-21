@@ -1732,9 +1732,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     const assistantMessageToolSchema = zodCompleteStrictObject({
         type: z.literal(types_11.ToolType.AssistantMessage),
     });
-    const summarizerToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_11.ToolType.Summarizer),
-    });
     const mcpToolSchema = zodCompleteStrictObject({
         type: z.literal(types_11.ToolType.MCP),
         serverNames: z.array(z.string()).optional(),
@@ -1761,7 +1758,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         knowledgeToolSchema,
         screenAnnotationToolSchema,
         assistantMessageToolSchema,
-        summarizerToolSchema,
         mcpToolSchema,
         contactResolutionToolSchema,
         codaDocsToolSchema,
