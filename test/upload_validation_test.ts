@@ -6029,9 +6029,6 @@ describe('Pack metadata Validation', async () => {
                 type: ToolType.AssistantMessage,
               },
               {
-                type: ToolType.Summarizer,
-              },
-              {
                 type: ToolType.MCP,
               },
               {
@@ -6119,8 +6116,6 @@ describe('Pack metadata Validation', async () => {
         case ToolType.ScreenAnnotation:
           break;
         case ToolType.AssistantMessage:
-          break;
-        case ToolType.Summarizer:
           break;
         case ToolType.MCP:
           break;
@@ -6602,7 +6597,7 @@ describe('Pack metadata Validation', async () => {
             displayName: 'Test Skill',
             description: 'A test skill',
             prompt: 'You are a helpful assistant',
-            tools: [{type: ToolType.Summarizer}, {type: ToolType.Summarizer}],
+            tools: [{type: ToolType.ContactResolution}, {type: ToolType.ContactResolution}],
           },
         ],
       });
@@ -6610,7 +6605,7 @@ describe('Pack metadata Validation', async () => {
       assert.deepEqual(err.validationErrors, [
         {
           path: 'skills[0].tools[1]',
-          message: `Duplicate tool found. ${JSON.stringify({type: ToolType.Summarizer})} is equivalent to the tool at index 0.`,
+          message: `Duplicate tool found. ${JSON.stringify({type: ToolType.ContactResolution})} is equivalent to the tool at index 0.`,
         },
       ]);
     });
@@ -6737,7 +6732,11 @@ describe('Pack metadata Validation', async () => {
             displayName: 'Test Skill',
             description: 'A test skill',
             prompt: 'You are a helpful assistant',
-            tools: [{type: ToolType.Summarizer}, {type: ToolType.AssistantMessage}, {type: ToolType.ContactResolution}],
+            tools: [
+              {type: ToolType.CodaDocsAndTables},
+              {type: ToolType.AssistantMessage},
+              {type: ToolType.ContactResolution},
+            ],
           },
         ],
       });
@@ -8062,7 +8061,7 @@ describe('Pack metadata Validation', async () => {
 
 describe('normalizeTool', () => {
   it('returns the same tool for tools without arrays', () => {
-    const tool: Tool = {type: ToolType.Summarizer};
+    const tool: Tool = {type: ToolType.ContactResolution};
     const normalized = normalizeTool(tool);
     assert.deepEqual(normalized, tool);
   });
@@ -8100,7 +8099,7 @@ describe('normalizeTool', () => {
 describe('findDuplicateTools', () => {
   it('returns empty array when no duplicates', () => {
     const tools: Tool[] = [
-      {type: ToolType.Summarizer},
+      {type: ToolType.ContactResolution},
       {type: ToolType.AssistantMessage},
       {type: ToolType.Pack, packId: 123},
     ];
@@ -8109,7 +8108,7 @@ describe('findDuplicateTools', () => {
   });
 
   it('finds exact duplicate singleton tools', () => {
-    const tools: Tool[] = [{type: ToolType.Summarizer}, {type: ToolType.Summarizer}];
+    const tools: Tool[] = [{type: ToolType.ContactResolution}, {type: ToolType.ContactResolution}];
     const duplicates = findDuplicateTools(tools);
     assert.equal(duplicates.length, 1);
     assert.equal(duplicates[0].index, 1);
@@ -8148,7 +8147,11 @@ describe('findDuplicateTools', () => {
   });
 
   it('finds multiple duplicates', () => {
-    const tools: Tool[] = [{type: ToolType.Summarizer}, {type: ToolType.Summarizer}, {type: ToolType.Summarizer}];
+    const tools: Tool[] = [
+      {type: ToolType.ContactResolution},
+      {type: ToolType.ContactResolution},
+      {type: ToolType.ContactResolution},
+    ];
     const duplicates = findDuplicateTools(tools);
     // With 3 identical tools, we get 3 duplicate pairs:
     // - tools[1] duplicates tools[0]

@@ -115,7 +115,6 @@ import type {StringPackFormula} from '../api';
 import type {StringTimeSchema} from '../schema';
 import type {StringWithOptionsSchema} from '../schema';
 import type {SuggestedPrompt} from '../types';
-import type {SummarizerTool} from '../types';
 import type {SyncExecutionContext} from '..';
 import type {SyncFormula} from '../api';
 import type {SyncPassthroughData} from '../api';
@@ -2269,10 +2268,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     type: z.literal(ToolType.AssistantMessage),
   });
 
-  const summarizerToolSchema = zodCompleteStrictObject<SummarizerTool>({
-    type: z.literal(ToolType.Summarizer),
-  });
-
   const mcpToolSchema = zodCompleteStrictObject<MCPTool>({
     type: z.literal(ToolType.MCP),
     serverNames: z.array(z.string()).optional(),
@@ -2305,7 +2300,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     knowledgeToolSchema,
     screenAnnotationToolSchema,
     assistantMessageToolSchema,
-    summarizerToolSchema,
     mcpToolSchema,
     contactResolutionToolSchema,
     codaDocsToolSchema,

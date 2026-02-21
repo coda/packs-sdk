@@ -1200,11 +1200,6 @@ export enum ToolType {
    */
   AssistantMessage = 'AssistantMessage',
   /**
-   * Allows reuse of the default tuned summarizer agent as a tool.
-   * @internal
-   */
-  Summarizer = 'Summarizer',
-  /**
    * Tool that provides access to MCP capabilities.
    * @internal
    */
@@ -1385,12 +1380,6 @@ export interface ScreenAnnotationTool extends BaseTool<ToolType.ScreenAnnotation
 export interface AssistantMessageTool extends BaseTool<ToolType.AssistantMessage> {}
 
 /**
- * Tool that provides access to summarization capabilities.
- * @internal
- */
-export interface SummarizerTool extends BaseTool<ToolType.Summarizer> {}
-
-/**
  * Tool that provides access to MCP capabilities.
  * @internal
  */
@@ -1525,7 +1514,6 @@ export interface ToolMap {
   [ToolType.Knowledge]: KnowledgeTool;
   [ToolType.ScreenAnnotation]: ScreenAnnotationTool;
   [ToolType.AssistantMessage]: AssistantMessageTool;
-  [ToolType.Summarizer]: SummarizerTool;
   [ToolType.MCP]: MCPTool;
   [ToolType.ContactResolution]: ContactResolutionTool;
   [ToolType.CodaDocsAndTables]: CodaDocsAndTablesTool;
