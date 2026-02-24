@@ -32,6 +32,7 @@ import * as coda from "@codahq/packs-sdk";
 - [DurationUnit](enumerations/DurationUnit.md)
 - [EmailDisplayType](enumerations/EmailDisplayType.md)
 - [EmbeddedContentType](enumerations/EmbeddedContentType.md)
+- [FormulaPurpose](enumerations/FormulaPurpose.md)
 - [HttpStatusCode](enumerations/HttpStatusCode.md)
 - [ImageCornerStyle](enumerations/ImageCornerStyle.md)
 - [ImageOutline](enumerations/ImageOutline.md)
