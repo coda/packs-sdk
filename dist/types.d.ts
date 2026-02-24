@@ -1295,6 +1295,7 @@ export interface WebSearchTool extends BaseTool<ToolType.WebSearch> {
 }
 /**
  * The type of the content that can be embedded in the response.
+ * @hidden In development.
  */
 export declare enum EmbeddedContentType {
     /**
@@ -1321,25 +1322,30 @@ interface BaseEmbeddedContent<T extends EmbeddedContentType> {
 }
 /**
  * Block of a content that can be copied or inserted in a document.
+ * @hidden In development.
  */
 export interface CopyableBlockEmbeddedContent extends BaseEmbeddedContent<EmbeddedContentType.CopyableBlock> {
 }
 /**
  * Carousel of multiple slides.
+ * @hidden In development.
  */
 export interface CarouselViewEmbeddedContent extends BaseEmbeddedContent<EmbeddedContentType.CarouselView> {
 }
 /**
  * Panel with multiple tabs.
+ * @hidden In development.
  */
 export interface TabViewEmbeddedContent extends BaseEmbeddedContent<EmbeddedContentType.TabView> {
 }
 /**
  * Union of all supported embedded content classes.
+ * @hidden In development.
  */
 export type EmbeddedContent = CopyableBlockEmbeddedContent | CarouselViewEmbeddedContent | TabViewEmbeddedContent;
 /**
  * Tool that enables creation of the content that can be embedded in the response.
+ * @hidden In development.
  */
 export interface EmbeddedContentTool extends BaseTool<ToolType.EmbeddedContent> {
     /**
