@@ -8,7 +8,7 @@ categories:
   - Updates
 ---
 
-# Seven new SDk features for building better agents
+# Seven new SDK features for building better agents
 
 Since the initial launch of Superhuman Go in late October, we've been busy improving the platform, including adding new features for agent developers. Here's a quick rundown of what's new:
 

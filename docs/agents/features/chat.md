@@ -191,7 +191,6 @@ Images are always displayed within a copyable block, so no additional instructio
 
 [skills]: ./skills.md
 [chatskill]: ./skills.md#default-chat-skill
-[skillmodels]: ./skills.md#models
 [markdown_spec]: https://spec.commonmark.org/current/
 [hinttype_imageattachment]: ../../reference/sdk/core/enumerations/ValueHintType.md#imageattachment
 [hinttype_imagereference]: ../../reference/sdk/core/enumerations/ValueHintType.md#imagereference
