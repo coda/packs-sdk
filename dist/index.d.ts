@@ -77,6 +77,7 @@ export type { Fetcher } from './api_types';
 export type { FetchMethodType } from './api_types';
 export type { FetchRequest } from './api_types';
 export type { FetchResponse } from './api_types';
+export { FormulaPurpose } from './api_types';
 export type { FormulaDefinitionOptions } from './api';
 export type { FormulaOptions } from './api';
 export type { GenericDynamicSyncTable } from './api';

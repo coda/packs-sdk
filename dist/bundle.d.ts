@@ -513,7 +513,10 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
 	 */
 	validateParameters?: MetadataFormula<ExecutionContext, ParameterValidationResult>;
 }
-declare enum FormulaPurpose {
+/**
+ * Enumeration of purposes for a formula that can be used by agents.
+ */
+export declare enum FormulaPurpose {
 	/**
 	 * Indicates this formula can be used for search.
 	 */
