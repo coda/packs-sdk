@@ -14,7 +14,6 @@ Since the initial launch of Superhuman Go in late October, we've been busy impro
 
 - [MCP support][mcp] - We've turned the agent platform into an MCP client, allowing your agent to use the tools exposed by an MCP server. This makes it possible to build the initial version of your agent in only a few lines of code.
 - [Bench initialization][bench_initialization] - While the name of this feature is a mouthful, the idea is simple: allow the agent to start working as soon as the user has clicked on its icon in the bench. A bench initialization skill can kick off the most common user flow, show help text, or just say hi!
-- [Copyable blocks][copyable_blocks] - Wrap generated content in a blockquote to make it easy to copy or insert into other applications.
 - [Agent logs][agent_logs] - Developers can see detailed logs for each interaction with an agent they create, to enable better debugging.
 - [Parameter validation][parameter_validation] - For agents indexing data into the knowledge layer, add parameter validation to your sync tables to ensure that users enter valid settings before kicking off the indexing process.
 
@@ -26,7 +25,6 @@ We've also worked to make it easier for legacy Packs to be upgraded to agents, w
 
 [mcp]: ../../agents/features/mcp.md
 [bench_initialization]: ../../agents/features/skills.md#bench
-[copyable_blocks]: ../../agents/features/chat.md#copyable-block
 [agent_logs]: ../../agents/troubleshooting.md#agent-logs
 [parameter_validation]: ../../guides/basics/parameters/index.md#validation
 [suggested_values]: ../../agents/upgrade.md#alternate-suggested-parameter-values
