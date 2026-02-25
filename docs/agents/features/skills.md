@@ -119,7 +119,48 @@ pack.setBenchInitializationSkill({
 });
 ```
 
-The bench initialization skill is only run once while the Superhuman Go side panel is open, even if the user clicks the icon again or starts a new chat session. Closing the side panel will clear the state of all agents, and the next time is opened the bench initialization will fire again.
+The bench initialization skill is only run once while the Superhuman Go side panel is open, even if the user clicks the icon again or starts a new chat session. Closing the side panel will clear the state of all agents, and the next time it is opened the bench initialization will fire again.
+
+
+## LLM model selection {:#models}
+
+While simple prompts may work fine with any LLM model, more complex or nuanced behavior may benefit from ensuring a specific model is used. You can select which models your skill supports by setting the `models` field.
+
+```{.ts hl_lines="7-9"}
+pack.addSkill({
+  name: "Poem",
+  displayName: "Write poem",
+  description: "Writes a new poem.",
+  prompt: `Write a funny poem.`,
+  tools: [],
+  models: [
+    { model: coda.SkillModel.OpenAIGPT4 },
+  ],
+});
+```
+
+When specified, Superhuman Go will attempt to use one of the defined models when running the skill. In cases where the model has been retired or is incompatible with the customer's settings, a different model may be selected.
+
+Additionally, you can customize the prompt for each model. This allows you to support multiple models and still use prompts optimized for each.
+
+```ts
+models: [
+  {
+    model: coda.SkillModel.OpenAIGPT4,
+    prompt: `Write a funny poem.`,
+  },
+  {
+    model: coda.SkillModel.OpenAIGPT5,
+    prompt: `Write a _really_ funny poem. It's OK to be silly!`,
+  },
+],
+```
+
+The models available to select from are more like model families, grouping together a number of specific versions. You can see the full list of currently supported models in the [SkillModel][skillmodel] enum.
+
+!!! info "Default model"
+
+    If not specified, skills will default to the `OpenAIGPT5` model. This default will change over time, so specify the `models` field to ensure your agent behaves consistently.
 
 
 ## Prompt limits
@@ -129,3 +170,4 @@ Prompts in skills are currently limited to 20,000 characters, which should be su
 
 [tools]: ./tools.md
 [indexing]: ../indexing/index.md
+[skillmodel]: ../../reference/sdk/core/enumerations/SkillModel.md
