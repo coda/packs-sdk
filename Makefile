@@ -226,8 +226,12 @@ typedoc:
 bundle-docs-js:
 	${ROOTDIR}/node_modules/.bin/esbuild documentation/theme/index.ts --bundle --outfile=docs/assets/bundle.js --minify --keep-names
 
+.PHONY: cli-reference
+cli-reference:
+	node -r ts-node/register documentation/scripts/cli_reference_generator.ts
+
 .PHONY: docs
-docs: typedoc generated-documentation bundle-docs-js build-mkdocs
+docs: typedoc generated-documentation cli-reference bundle-docs-js build-mkdocs
 
 .PHONY: view-docs
 view-docs:
