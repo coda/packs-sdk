@@ -30,14 +30,19 @@ const ApiTokenArg = {
 
 const ApiEndpointArg = {
   string: true,
-  hidden: true,
-  alias: 'codaApiEndpoint',
   default: DEFAULT_API_ENDPOINT,
+  desc: 'API endpoint to use for the operation. Required for single-tenant instances. Can also be set persistently via `coda setOption <manifestFile> apiEndpoint <url>`.',
 };
 
 if (require.main === module) {
   void yargs
     .parserConfiguration({'parse-numbers': false})
+    .middleware((argv: any) => {
+      // Support legacy --codaApiEndpoint flag as a hidden alias.
+      if (argv.codaApiEndpoint && !argv.apiEndpoint) {
+        argv.apiEndpoint = argv.codaApiEndpoint;
+      }
+    })
     .command({
       command: 'execute <manifestPath> <formulaName> [params..]',
       describe: 'Execute a formula',
@@ -272,7 +277,7 @@ if (require.main === module) {
         'Supported options:\n' +
         '  - timerStrategy: Valid values are "none", "error", or "fake".\n' +
         '  - enableGitTags: Valid values are "true" or "false". When true, the release command will create git tags.\n' +
-        '  - apiEndpoint: A URL for the API endpoint (e.g. "https://my-env.coda.io"). When set, all commands will use this endpoint by default.\n\n' +
+        '  - apiEndpoint: A URL for the API endpoint, required for single-tenant instances (e.g. "https://my-company.coda.io"). When set, all commands will use this endpoint by default.\n\n' +
         'Usage: coda setOption path/to/pack.ts timerStrategy fake',
       handler: handleSetOption as any,
     })
