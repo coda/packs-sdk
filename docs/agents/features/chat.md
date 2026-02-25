@@ -160,7 +160,6 @@ data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly
 
 [skills]: ./skills.md
 [chatskill]: ./skills.md#default-chat-skill
-[skillmodels]: ./skills.md#models
 [markdown_spec]: https://spec.commonmark.org/current/
 [hinttype_imageattachment]: ../../reference/sdk/core/enumerations/ValueHintType.md#imageattachment
 [hinttype_imagereference]: ../../reference/sdk/core/enumerations/ValueHintType.md#imagereference
