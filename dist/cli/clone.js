@@ -15,12 +15,14 @@ const path_1 = __importDefault(require("path"));
 const helpers_5 = require("../testing/helpers");
 const helpers_6 = require("../testing/helpers");
 const helpers_7 = require("../testing/helpers");
+const helpers_8 = require("./helpers");
 const config_storage_1 = require("./config_storage");
-async function handleClone({ packIdOrUrl, codaApiEndpoint, apiToken }) {
+async function handleClone({ packIdOrUrl, apiEndpoint, apiToken }) {
     const manifestDir = process.cwd();
+    apiEndpoint = (0, helpers_8.resolveApiEndpoint)(apiEndpoint, manifestDir);
     const packId = (0, helpers_2.assertPackIdOrUrl)(packIdOrUrl);
-    const formattedEndpoint = (0, helpers_4.formatEndpoint)(codaApiEndpoint);
-    apiToken = (0, helpers_1.assertApiToken)(codaApiEndpoint, apiToken);
+    const formattedEndpoint = (0, helpers_4.formatEndpoint)(apiEndpoint);
+    apiToken = (0, helpers_1.assertApiToken)(apiEndpoint, apiToken);
     const codeAlreadyExists = fs_extra_1.default.existsSync(path_1.default.join(manifestDir, 'pack.ts'));
     if (codeAlreadyExists) {
         const shouldOverwrite = (0, helpers_7.promptForInput)('A pack.ts file already exists. Do you want to overwrite it? (y/N)?', {
@@ -57,12 +59,12 @@ async function handleClone({ packIdOrUrl, codaApiEndpoint, apiToken }) {
             return process.exit(1);
         }
         await (0, init_1.handleInit)();
-        (0, config_storage_1.storePackId)(manifestDir, packId, codaApiEndpoint);
+        (0, config_storage_1.storePackId)(manifestDir, packId, apiEndpoint);
         return;
     }
     (0, helpers_5.print)(`Fetched source at version ${packVersion}`);
     await (0, init_1.handleInit)();
-    (0, config_storage_1.storePackId)(manifestDir, packId, codaApiEndpoint);
+    (0, config_storage_1.storePackId)(manifestDir, packId, apiEndpoint);
     fs_extra_1.default.writeFileSync(path_1.default.join(manifestDir, 'pack.ts'), sourceCode);
     (0, helpers_6.printAndExit)("Successfully updated pack.ts with the Pack's code!", 0);
 }

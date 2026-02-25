@@ -57,6 +57,14 @@ function validateOption(option, value) {
                 return (0, helpers_2.printAndExit)(`Invalid option value "${value}". Valid values are true, false`);
             }
             return { [key]: boolValue === 'true' };
+        case config_storage_1.PackOptionKey.apiEndpoint:
+            try {
+                new URL(value);
+            }
+            catch {
+                return (0, helpers_2.printAndExit)(`Invalid option value "${value}". Value must be a valid URL (e.g. https://my-env.coda.io)`);
+            }
+            return { [key]: value };
         default:
             return (0, __1.ensureUnreachable)(key);
     }

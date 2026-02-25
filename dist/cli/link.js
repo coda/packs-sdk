@@ -9,17 +9,19 @@ const config_storage_1 = require("./config_storage");
 const coda_1 = require("../helpers/external-api/coda");
 const helpers_5 = require("../testing/helpers");
 const helpers_6 = require("../testing/helpers");
+const helpers_7 = require("./helpers");
 const config_storage_2 = require("./config_storage");
 // Regular expression that matches coda.io/p/<packId> or <packId>.
 const PackEditUrlRegex = /^https:\/\/(?:[^/]*)coda.io(?:\:[0-9]+)?\/p\/([0-9]+)(:?[^0-9].*)?$/;
 const PackGalleryUrlRegex = /^https:\/\/(?:[^/]*)coda.io(?:\:[0-9]+)?\/packs\/[^/]*-([0-9]+)$/;
 const PackPlainIdRegex = /^([0-9]+)$/;
 const PackRegexes = [PackEditUrlRegex, PackGalleryUrlRegex, PackPlainIdRegex];
-async function handleLink({ manifestDir, codaApiEndpoint, packIdOrUrl, apiToken }) {
+async function handleLink({ manifestDir, apiEndpoint, packIdOrUrl, apiToken }) {
     // TODO(dweitzman): Add a download command to fetch the latest code from
     // the server and ask people if they want to download after linking.
-    const formattedEndpoint = (0, helpers_4.formatEndpoint)(codaApiEndpoint);
-    apiToken = (0, helpers_1.assertApiToken)(codaApiEndpoint, apiToken);
+    apiEndpoint = (0, helpers_7.resolveApiEndpoint)(apiEndpoint, manifestDir);
+    const formattedEndpoint = (0, helpers_4.formatEndpoint)(apiEndpoint);
+    apiToken = (0, helpers_1.assertApiToken)(apiEndpoint, apiToken);
     const packId = (0, helpers_2.assertPackIdOrUrl)(packIdOrUrl);
     const codaClient = (0, helpers_3.createCodaClient)(apiToken, formattedEndpoint);
     // Verify that the user has edit access to the pack. Currently only editors
@@ -38,7 +40,7 @@ async function handleLink({ manifestDir, codaApiEndpoint, packIdOrUrl, apiToken 
         }
         throw err;
     }
-    const existingPackId = (0, config_storage_1.getPackId)(manifestDir, codaApiEndpoint);
+    const existingPackId = (0, config_storage_1.getPackId)(manifestDir, apiEndpoint);
     if (existingPackId) {
         if (existingPackId === packId) {
             return (0, helpers_5.printAndExit)(`Already associated with pack ${existingPackId}. No change needed`, 0);
@@ -48,7 +50,7 @@ async function handleLink({ manifestDir, codaApiEndpoint, packIdOrUrl, apiToken 
             return process.exit(1);
         }
     }
-    (0, config_storage_2.storePackId)(manifestDir, packId, codaApiEndpoint);
+    (0, config_storage_2.storePackId)(manifestDir, packId, apiEndpoint);
     return (0, helpers_5.printAndExit)(`Linked successfully!`, 0);
 }
 exports.handleLink = handleLink;

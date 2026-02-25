@@ -26,10 +26,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.assertPackIdOrUrl = exports.assertPackId = exports.assertApiToken = exports.importManifest = exports.getPackAuth = exports.makeManifestFullPath = exports.isTestCommand = exports.formatEndpoint = exports.createCodaClient = exports.spawnProcess = void 0;
+exports.resolveApiEndpoint = exports.assertPackIdOrUrl = exports.assertPackId = exports.assertApiToken = exports.importManifest = exports.getPackAuth = exports.makeManifestFullPath = exports.isTestCommand = exports.formatEndpoint = exports.createCodaClient = exports.spawnProcess = void 0;
 const coda_1 = require("../helpers/external-api/coda");
 const config_storage_1 = require("./config_storage");
 const config_storage_2 = require("./config_storage");
+const config_storage_3 = require("./config_storage");
+const config_storage_4 = require("./config_storage");
 const link_1 = require("./link");
 const path_1 = __importDefault(require("path"));
 const helpers_1 = require("../testing/helpers");
@@ -84,7 +86,7 @@ function assertApiToken(codaApiEndpoint, cliApiToken) {
     if (cliApiToken) {
         return cliApiToken;
     }
-    const apiKey = (0, config_storage_1.getApiKey)(codaApiEndpoint);
+    const apiKey = (0, config_storage_2.getApiKey)(codaApiEndpoint);
     if (!apiKey) {
         return (0, helpers_2.printAndExit)('Missing API token. Please run `coda register` to register one.');
     }
@@ -92,7 +94,7 @@ function assertApiToken(codaApiEndpoint, cliApiToken) {
 }
 exports.assertApiToken = assertApiToken;
 function assertPackId(manifestDir, codaApiEndpoint) {
-    const packId = (0, config_storage_2.getPackId)(manifestDir, codaApiEndpoint);
+    const packId = (0, config_storage_3.getPackId)(manifestDir, codaApiEndpoint);
     if (!packId) {
         return (0, helpers_2.printAndExit)(`Could not find a Pack id in directory ${manifestDir}. You may need to run "coda create" first if this is a brand new pack.`);
     }
@@ -107,3 +109,13 @@ function assertPackIdOrUrl(packIdOrUrl) {
     return packId;
 }
 exports.assertPackIdOrUrl = assertPackIdOrUrl;
+function resolveApiEndpoint(codaApiEndpoint, manifestDir) {
+    const dir = manifestDir || process.env.PWD || '.';
+    const packOptions = (0, config_storage_4.getPackOptions)(dir);
+    const storedEndpoint = packOptions === null || packOptions === void 0 ? void 0 : packOptions[config_storage_1.PackOptionKey.apiEndpoint];
+    if (storedEndpoint) {
+        return storedEndpoint;
+    }
+    return codaApiEndpoint;
+}
+exports.resolveApiEndpoint = resolveApiEndpoint;

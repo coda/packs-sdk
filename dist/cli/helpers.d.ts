@@ -15,3 +15,4 @@ export declare function importManifest<T extends BasicPackDefinition = BasicPack
 export declare function assertApiToken(codaApiEndpoint: string, cliApiToken?: string): string;
 export declare function assertPackId(manifestDir: string, codaApiEndpoint: string): number;
 export declare function assertPackIdOrUrl(packIdOrUrl: string): number;
+export declare function resolveApiEndpoint(codaApiEndpoint: string, manifestDir?: string): string;
