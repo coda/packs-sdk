@@ -13,6 +13,7 @@ import {compilePackMetadata} from '../helpers/metadata';
 import {computeSha256} from '../helpers/crypto';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
+import {resolveApiEndpoint} from './helpers';
 import {formatError} from './errors';
 import {formatResponseError} from './errors';
 import fs from 'fs-extra';
@@ -64,6 +65,7 @@ export async function handleUpload({
   }
 
   const manifestDir = path.dirname(manifestFile);
+  codaApiEndpoint = resolveApiEndpoint(codaApiEndpoint, manifestDir);
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
   apiToken = assertApiToken(codaApiEndpoint, apiToken);
   const packId = assertPackId(manifestDir, codaApiEndpoint);

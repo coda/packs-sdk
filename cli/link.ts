@@ -3,6 +3,7 @@ import {assertApiToken} from './helpers';
 import {assertPackIdOrUrl} from './helpers';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
+import {resolveApiEndpoint} from './helpers';
 import {getPackId} from './config_storage';
 import {isResponseError} from '../helpers/external-api/coda';
 import {printAndExit} from '../testing/helpers';
@@ -25,6 +26,7 @@ interface LinkArgs {
 export async function handleLink({manifestDir, codaApiEndpoint, packIdOrUrl, apiToken}: ArgumentsCamelCase<LinkArgs>) {
   // TODO(dweitzman): Add a download command to fetch the latest code from
   // the server and ask people if they want to download after linking.
+  codaApiEndpoint = resolveApiEndpoint(codaApiEndpoint, manifestDir);
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
   apiToken = assertApiToken(codaApiEndpoint, apiToken);
   const packId = assertPackIdOrUrl(packIdOrUrl);

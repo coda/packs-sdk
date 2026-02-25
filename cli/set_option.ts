@@ -40,6 +40,13 @@ function validateOption(option: string, value: string): PackOptions {
         return printAndExit(`Invalid option value "${value}". Valid values are true, false`);
       }
       return {[key]: boolValue === 'true'};
+    case PackOptionKey.apiEndpoint:
+      try {
+        new URL(value);
+      } catch {
+        return printAndExit(`Invalid option value "${value}". Value must be a valid URL (e.g. https://my-env.coda.io)`);
+      }
+      return {[key]: value};
     default:
       return ensureUnreachable(key);
   }

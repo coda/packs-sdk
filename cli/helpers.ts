@@ -1,9 +1,11 @@
 import type {Authentication} from '../types';
 import type {BasicPackDefinition} from '../types';
 import {Client} from '../helpers/external-api/coda';
+import {PackOptionKey} from './config_storage';
 import type {SpawnSyncOptionsWithBufferEncoding} from 'child_process';
 import {getApiKey} from './config_storage';
 import {getPackId} from './config_storage';
+import {getPackOptions} from './config_storage';
 import {parsePackIdOrUrl} from './link';
 import path from 'path';
 import {print} from '../testing/helpers';
@@ -83,4 +85,14 @@ export function assertPackIdOrUrl(packIdOrUrl: string): number {
     return printAndExit(`Not a valid pack ID or URL: ${packIdOrUrl}`);
   }
   return packId;
+}
+
+export function resolveApiEndpoint(codaApiEndpoint: string, manifestDir?: string): string {
+  const dir = manifestDir || process.env.PWD || '.';
+  const packOptions = getPackOptions(dir);
+  const storedEndpoint = packOptions?.[PackOptionKey.apiEndpoint];
+  if (storedEndpoint) {
+    return storedEndpoint;
+  }
+  return codaApiEndpoint;
 }

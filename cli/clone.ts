@@ -4,6 +4,7 @@ import {assertApiToken} from './helpers';
 import {assertPackIdOrUrl} from './helpers';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
+import {resolveApiEndpoint} from './helpers';
 import fs from 'fs-extra';
 import {handleInit} from './init';
 import {isResponseError} from '../helpers/external-api/coda';
@@ -21,6 +22,7 @@ interface CloneArgs {
 
 export async function handleClone({packIdOrUrl, codaApiEndpoint, apiToken}: ArgumentsCamelCase<CloneArgs>) {
   const manifestDir = process.cwd();
+  codaApiEndpoint = resolveApiEndpoint(codaApiEndpoint, manifestDir);
   const packId = assertPackIdOrUrl(packIdOrUrl);
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
   apiToken = assertApiToken(codaApiEndpoint, apiToken);

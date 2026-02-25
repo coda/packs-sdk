@@ -2,6 +2,7 @@ import type {ArgumentsCamelCase} from 'yargs';
 import type {PublicApiUser} from '../helpers/external-api/v1';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
+import {resolveApiEndpoint} from './helpers';
 import {getApiKey} from './config_storage';
 import {isResponseError} from '../helpers/external-api/coda';
 import {printAndExit} from '../testing/helpers';
@@ -13,6 +14,7 @@ interface WhoamiArgs {
 }
 
 export async function handleWhoami({apiToken, codaApiEndpoint}: ArgumentsCamelCase<WhoamiArgs>) {
+  codaApiEndpoint = resolveApiEndpoint(codaApiEndpoint);
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
   if (!apiToken) {
     apiToken = getApiKey(codaApiEndpoint);

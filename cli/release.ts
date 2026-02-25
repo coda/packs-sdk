@@ -8,6 +8,7 @@ import {build} from './build';
 import {createCodaClient} from './helpers';
 import {createGitTag} from './git_helpers';
 import {formatEndpoint} from './helpers';
+import {resolveApiEndpoint} from './helpers';
 import {formatError} from './errors';
 import {formatResponseError} from './errors';
 import {getGitState} from './git_helpers';
@@ -39,6 +40,7 @@ export async function handleRelease({
   gitTag,
 }: ArgumentsCamelCase<ReleaseArgs>) {
   const manifestDir = path.dirname(manifestFile);
+  codaApiEndpoint = resolveApiEndpoint(codaApiEndpoint, manifestDir);
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
   apiToken = assertApiToken(codaApiEndpoint, apiToken);
   const packId = assertPackId(manifestDir, codaApiEndpoint);

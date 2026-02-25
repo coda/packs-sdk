@@ -3,6 +3,7 @@ import {PACK_ID_FILE_NAME} from './config_storage';
 import {assertApiToken} from './helpers';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
+import {resolveApiEndpoint} from './helpers';
 import {formatError} from './errors';
 import {formatResponseError} from './errors';
 import fs from 'fs';
@@ -40,6 +41,7 @@ export async function createPack(
   apiToken?: string,
 ) {
   const manifestDir = path.dirname(manifestFile);
+  codaApiEndpoint = resolveApiEndpoint(codaApiEndpoint, manifestDir);
   const formattedEndpoint = formatEndpoint(codaApiEndpoint);
   apiToken = assertApiToken(codaApiEndpoint, apiToken);
 

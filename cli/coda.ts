@@ -270,7 +270,8 @@ if (require.main === module) {
         'the .coda-pack.json file and it will be used for all builds of the pack.\n\n' +
         'Supported options:\n' +
         '  - timerStrategy: Valid values are "none", "error", or "fake".\n' +
-        '  - enableGitTags: Valid values are "true" or "false". When true, the release command will create git tags.\n\n' +
+        '  - enableGitTags: Valid values are "true" or "false". When true, the release command will create git tags.\n' +
+        '  - apiEndpoint: A URL for the API endpoint (e.g. "https://my-env.coda.io"). When set, all commands will use this endpoint by default.\n\n' +
         'Usage: coda setOption path/to/pack.ts timerStrategy fake',
       handler: handleSetOption as any,
     })

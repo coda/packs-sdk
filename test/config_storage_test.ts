@@ -1,11 +1,15 @@
 import {DEFAULT_API_ENDPOINT} from '../cli/config_storage';
+import {PackOptionKey} from '../cli/config_storage';
 import {getApiKey} from '../cli/config_storage';
 import {getPackId} from '../cli/config_storage';
+import {getPackOptions} from '../cli/config_storage';
 import mockFs from 'mock-fs';
 import * as path from 'path';
+import {resolveApiEndpoint} from '../cli/helpers';
 import sinon from 'sinon';
 import {storeCodaApiKey} from '../cli/config_storage';
 import {storePackId} from '../cli/config_storage';
+import {storePackOptions} from '../cli/config_storage';
 
 const PROJECT_DIR = '/myproject';
 
@@ -103,6 +107,67 @@ describe('Config storage', () => {
 
       assert.equal(111, getPackId(dir1, endpoint));
       assert.equal(222, getPackId(dir2, endpoint));
+    });
+  });
+
+  describe('pack options - apiEndpoint', () => {
+    it('store and get apiEndpoint', () => {
+      storePackOptions(PROJECT_DIR, {[PackOptionKey.apiEndpoint]: 'https://my-env.coda.io'});
+      const options = getPackOptions(PROJECT_DIR);
+      assert.equal(options?.[PackOptionKey.apiEndpoint], 'https://my-env.coda.io');
+    });
+
+    it('no apiEndpoint stored', () => {
+      const options = getPackOptions(PROJECT_DIR);
+      assert.isUndefined(options);
+    });
+
+    it('apiEndpoint merges with existing options', () => {
+      storePackOptions(PROJECT_DIR, {[PackOptionKey.timerStrategy]: 'fake' as any});
+      storePackOptions(PROJECT_DIR, {[PackOptionKey.apiEndpoint]: 'https://my-env.coda.io'});
+      const options = getPackOptions(PROJECT_DIR);
+      assert.equal(options?.[PackOptionKey.timerStrategy], 'fake');
+      assert.equal(options?.[PackOptionKey.apiEndpoint], 'https://my-env.coda.io');
+    });
+  });
+
+  describe('resolveApiEndpoint', () => {
+    it('returns stored endpoint when present', () => {
+      storePackOptions(PROJECT_DIR, {[PackOptionKey.apiEndpoint]: 'https://my-env.coda.io'});
+      const result = resolveApiEndpoint(DEFAULT_API_ENDPOINT, PROJECT_DIR);
+      assert.equal(result, 'https://my-env.coda.io');
+    });
+
+    it('returns CLI value when no stored endpoint', () => {
+      const result = resolveApiEndpoint(DEFAULT_API_ENDPOINT, PROJECT_DIR);
+      assert.equal(result, DEFAULT_API_ENDPOINT);
+    });
+
+    it('stored endpoint takes priority over CLI default', () => {
+      storePackOptions(PROJECT_DIR, {[PackOptionKey.apiEndpoint]: 'https://staging.coda.io'});
+      const result = resolveApiEndpoint(DEFAULT_API_ENDPOINT, PROJECT_DIR);
+      assert.equal(result, 'https://staging.coda.io');
+    });
+
+    it('returns CLI value when no manifestDir and no config in PWD', () => {
+      const result = resolveApiEndpoint('https://custom.coda.io');
+      assert.equal(result, 'https://custom.coda.io');
+    });
+
+    it('uses PWD when manifestDir not provided and config exists there', () => {
+      storePackOptions(PROJECT_DIR, {[PackOptionKey.apiEndpoint]: 'https://from-pwd.coda.io'});
+      const result = resolveApiEndpoint(DEFAULT_API_ENDPOINT);
+      assert.equal(result, 'https://from-pwd.coda.io');
+    });
+
+    it('different directories resolve different endpoints', () => {
+      const dir1 = path.join(PROJECT_DIR, 'pack1');
+      const dir2 = path.join(PROJECT_DIR, 'pack2');
+      storePackOptions(dir1, {[PackOptionKey.apiEndpoint]: 'https://env1.coda.io'});
+      storePackOptions(dir2, {[PackOptionKey.apiEndpoint]: 'https://env2.coda.io'});
+
+      assert.equal(resolveApiEndpoint(DEFAULT_API_ENDPOINT, dir1), 'https://env1.coda.io');
+      assert.equal(resolveApiEndpoint(DEFAULT_API_ENDPOINT, dir2), 'https://env2.coda.io');
     });
   });
 });
