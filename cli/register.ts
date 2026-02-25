@@ -1,11 +1,11 @@
 import type {ArgumentsCamelCase} from 'yargs';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
-import {resolveApiEndpoint} from './helpers';
 import {isResponseError} from '../helpers/external-api/coda';
 import open from 'open';
 import {printAndExit} from '../testing/helpers';
 import {promptForInput} from '../testing/helpers';
+import {resolveApiEndpoint} from './helpers';
 import {storeCodaApiKey} from './config_storage';
 import {tryParseSystemError} from './errors';
 

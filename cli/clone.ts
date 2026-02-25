@@ -4,7 +4,6 @@ import {assertApiToken} from './helpers';
 import {assertPackIdOrUrl} from './helpers';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
-import {resolveApiEndpoint} from './helpers';
 import fs from 'fs-extra';
 import {handleInit} from './init';
 import {isResponseError} from '../helpers/external-api/coda';
@@ -12,6 +11,7 @@ import path from 'path';
 import {print} from '../testing/helpers';
 import {printAndExit} from '../testing/helpers';
 import {promptForInput} from '../testing/helpers';
+import {resolveApiEndpoint} from './helpers';
 import {storePackId} from './config_storage';
 
 interface CloneArgs {

@@ -3,11 +3,11 @@ import {assertApiToken} from './helpers';
 import {assertPackIdOrUrl} from './helpers';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
-import {resolveApiEndpoint} from './helpers';
 import {getPackId} from './config_storage';
 import {isResponseError} from '../helpers/external-api/coda';
 import {printAndExit} from '../testing/helpers';
 import {promptForInput} from '../testing/helpers';
+import {resolveApiEndpoint} from './helpers';
 import {storePackId} from './config_storage';
 
 // Regular expression that matches coda.io/p/<packId> or <packId>.

@@ -3,7 +3,6 @@ import {PACK_ID_FILE_NAME} from './config_storage';
 import {assertApiToken} from './helpers';
 import {createCodaClient} from './helpers';
 import {formatEndpoint} from './helpers';
-import {resolveApiEndpoint} from './helpers';
 import {formatError} from './errors';
 import {formatResponseError} from './errors';
 import fs from 'fs';
@@ -11,6 +10,7 @@ import {getPackId} from './config_storage';
 import {isResponseError} from '../helpers/external-api/coda';
 import * as path from 'path';
 import {printAndExit} from '../testing/helpers';
+import {resolveApiEndpoint} from './helpers';
 import {storePackId} from './config_storage';
 import {tryParseSystemError} from './errors';
 
