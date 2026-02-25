@@ -16,7 +16,7 @@ import {tryParseSystemError} from './errors';
 
 interface CreateArgs {
   manifestFile: string;
-  codaApiEndpoint: string;
+  apiEndpoint: string;
   name?: string;
   description?: string;
   workspace?: string;
@@ -25,34 +25,34 @@ interface CreateArgs {
 
 export async function handleCreate({
   manifestFile,
-  codaApiEndpoint,
+  apiEndpoint,
   name,
   description,
   workspace,
   apiToken,
 }: ArgumentsCamelCase<CreateArgs>) {
-  await createPack(manifestFile, codaApiEndpoint, {name, description, workspace}, apiToken);
+  await createPack(manifestFile, apiEndpoint, {name, description, workspace}, apiToken);
 }
 
 export async function createPack(
   manifestFile: string,
-  codaApiEndpoint: string,
+  apiEndpoint: string,
   {name, description, workspace}: {name?: string; description?: string; workspace?: string},
   apiToken?: string,
 ) {
   const manifestDir = path.dirname(manifestFile);
-  codaApiEndpoint = resolveApiEndpoint(codaApiEndpoint, manifestDir);
-  const formattedEndpoint = formatEndpoint(codaApiEndpoint);
-  apiToken = assertApiToken(codaApiEndpoint, apiToken);
+  apiEndpoint = resolveApiEndpoint(apiEndpoint, manifestDir);
+  const formattedEndpoint = formatEndpoint(apiEndpoint);
+  apiToken = assertApiToken(apiEndpoint, apiToken);
 
   if (!fs.existsSync(manifestFile)) {
     return printAndExit(`${manifestFile} is not a valid pack definition file. Check the filename and try again.`);
   }
 
-  const existingPackId = getPackId(manifestDir, codaApiEndpoint);
+  const existingPackId = getPackId(manifestDir, apiEndpoint);
   if (existingPackId) {
     return printAndExit(
-      `This directory has already been registered on ${codaApiEndpoint} with pack id ${existingPackId}.\n` +
+      `This directory has already been registered on ${apiEndpoint} with pack id ${existingPackId}.\n` +
         `If you're trying to create a new pack from a different manifest, you should put the new manifest in a different directory.\n` +
         `If you're intentionally trying to create a new pack, you can delete ${PACK_ID_FILE_NAME} in this directory and try again.`,
     );
@@ -62,8 +62,8 @@ export async function createPack(
   try {
     const response = await codaClient.createPack({}, {name, description, workspaceId: parseWorkspace(workspace)});
     const packId = response.packId;
-    storePackId(manifestDir, packId, codaApiEndpoint);
-    return printAndExit(`Pack created successfully! You can manage pack settings at ${codaApiEndpoint}/p/${packId}`, 0);
+    storePackId(manifestDir, packId, apiEndpoint);
+    return printAndExit(`Pack created successfully! You can manage pack settings at ${apiEndpoint}/p/${packId}`, 0);
   } catch (err: any) {
     if (isResponseError(err)) {
       return printAndExit(`Unable to create your pack, received error: ${await formatResponseError(err)}`);

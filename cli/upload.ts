@@ -31,7 +31,7 @@ import {validateMetadata} from './validate';
 
 interface UploadArgs {
   manifestFile: string;
-  codaApiEndpoint: string;
+  apiEndpoint: string;
   notes?: string;
   intermediateOutputDirectory: string;
   timerStrategy: TimerShimStrategy;
@@ -52,7 +52,7 @@ function cleanup(intermediateOutputDirectory: string, logger: Logger) {
 export async function handleUpload({
   intermediateOutputDirectory,
   manifestFile,
-  codaApiEndpoint,
+  apiEndpoint,
   notes,
   timerStrategy,
   apiToken,
@@ -65,10 +65,10 @@ export async function handleUpload({
   }
 
   const manifestDir = path.dirname(manifestFile);
-  codaApiEndpoint = resolveApiEndpoint(codaApiEndpoint, manifestDir);
-  const formattedEndpoint = formatEndpoint(codaApiEndpoint);
-  apiToken = assertApiToken(codaApiEndpoint, apiToken);
-  const packId = assertPackId(manifestDir, codaApiEndpoint);
+  apiEndpoint = resolveApiEndpoint(apiEndpoint, manifestDir);
+  const formattedEndpoint = formatEndpoint(apiEndpoint);
+  apiToken = assertApiToken(apiEndpoint, apiToken);
+  const packId = assertPackId(manifestDir, apiEndpoint);
 
   logger.info('Building Pack bundle...');
 

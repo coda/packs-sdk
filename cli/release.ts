@@ -25,7 +25,7 @@ import {tryParseSystemError} from './errors';
 interface ReleaseArgs {
   manifestFile: string;
   packVersion?: string;
-  codaApiEndpoint: string;
+  apiEndpoint: string;
   notes: string;
   apiToken?: string;
   gitTag?: boolean;
@@ -34,16 +34,16 @@ interface ReleaseArgs {
 export async function handleRelease({
   manifestFile,
   packVersion: explicitPackVersion,
-  codaApiEndpoint,
+  apiEndpoint,
   notes,
   apiToken,
   gitTag,
 }: ArgumentsCamelCase<ReleaseArgs>) {
   const manifestDir = path.dirname(manifestFile);
-  codaApiEndpoint = resolveApiEndpoint(codaApiEndpoint, manifestDir);
-  const formattedEndpoint = formatEndpoint(codaApiEndpoint);
-  apiToken = assertApiToken(codaApiEndpoint, apiToken);
-  const packId = assertPackId(manifestDir, codaApiEndpoint);
+  apiEndpoint = resolveApiEndpoint(apiEndpoint, manifestDir);
+  const formattedEndpoint = formatEndpoint(apiEndpoint);
+  apiToken = assertApiToken(apiEndpoint, apiToken);
+  const packId = assertPackId(manifestDir, apiEndpoint);
 
   // Check if git tagging is enabled via CLI flag or pack options
   const packOptions = getPackOptions(manifestDir);

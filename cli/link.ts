@@ -18,17 +18,17 @@ const PackRegexes = [PackEditUrlRegex, PackGalleryUrlRegex, PackPlainIdRegex];
 
 interface LinkArgs {
   manifestDir: string;
-  codaApiEndpoint: string;
+  apiEndpoint: string;
   packIdOrUrl: string;
   apiToken?: string;
 }
 
-export async function handleLink({manifestDir, codaApiEndpoint, packIdOrUrl, apiToken}: ArgumentsCamelCase<LinkArgs>) {
+export async function handleLink({manifestDir, apiEndpoint, packIdOrUrl, apiToken}: ArgumentsCamelCase<LinkArgs>) {
   // TODO(dweitzman): Add a download command to fetch the latest code from
   // the server and ask people if they want to download after linking.
-  codaApiEndpoint = resolveApiEndpoint(codaApiEndpoint, manifestDir);
-  const formattedEndpoint = formatEndpoint(codaApiEndpoint);
-  apiToken = assertApiToken(codaApiEndpoint, apiToken);
+  apiEndpoint = resolveApiEndpoint(apiEndpoint, manifestDir);
+  const formattedEndpoint = formatEndpoint(apiEndpoint);
+  apiToken = assertApiToken(apiEndpoint, apiToken);
   const packId = assertPackIdOrUrl(packIdOrUrl);
 
   const codaClient = createCodaClient(apiToken, formattedEndpoint);
@@ -49,7 +49,7 @@ export async function handleLink({manifestDir, codaApiEndpoint, packIdOrUrl, api
     throw err;
   }
 
-  const existingPackId = getPackId(manifestDir, codaApiEndpoint);
+  const existingPackId = getPackId(manifestDir, apiEndpoint);
   if (existingPackId) {
     if (existingPackId === packId) {
       return printAndExit(`Already associated with pack ${existingPackId}. No change needed`, 0);
@@ -64,7 +64,7 @@ export async function handleLink({manifestDir, codaApiEndpoint, packIdOrUrl, api
     }
   }
 
-  storePackId(manifestDir, packId, codaApiEndpoint);
+  storePackId(manifestDir, packId, apiEndpoint);
   return printAndExit(`Linked successfully!`, 0);
 }
 
