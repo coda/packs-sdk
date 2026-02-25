@@ -215,6 +215,7 @@ validate-samples:
 .PHONY: generated-documentation
 generated-documentation: compile-samples
 	node -r ts-node/register documentation/scripts/documentation_compiler.ts
+	node -r ts-node/register documentation/scripts/cli_reference_generator.ts
 
 .PHONY: typedoc
 typedoc:

@@ -1,2 +1,3 @@
 #!/usr/bin/env node
-export {};
+import yargs from 'yargs';
+export declare const commands: yargs.CommandModule[];
