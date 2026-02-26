@@ -38,22 +38,24 @@ const config_storage_2 = require("./config_storage");
 const coda_1 = require("../helpers/external-api/coda");
 const path = __importStar(require("path"));
 const helpers_4 = require("../testing/helpers");
+const helpers_5 = require("./helpers");
 const config_storage_3 = require("./config_storage");
 const errors_3 = require("./errors");
-async function handleCreate({ manifestFile, codaApiEndpoint, name, description, workspace, apiToken, }) {
-    await createPack(manifestFile, codaApiEndpoint, { name, description, workspace }, apiToken);
+async function handleCreate({ manifestFile, apiEndpoint, name, description, workspace, apiToken, }) {
+    await createPack(manifestFile, apiEndpoint, { name, description, workspace }, apiToken);
 }
 exports.handleCreate = handleCreate;
-async function createPack(manifestFile, codaApiEndpoint, { name, description, workspace }, apiToken) {
+async function createPack(manifestFile, apiEndpoint, { name, description, workspace }, apiToken) {
     const manifestDir = path.dirname(manifestFile);
-    const formattedEndpoint = (0, helpers_3.formatEndpoint)(codaApiEndpoint);
-    apiToken = (0, helpers_1.assertApiToken)(codaApiEndpoint, apiToken);
+    apiEndpoint = (0, helpers_5.resolveApiEndpoint)(apiEndpoint, manifestDir);
+    const formattedEndpoint = (0, helpers_3.formatEndpoint)(apiEndpoint);
+    apiToken = (0, helpers_1.assertApiToken)(apiEndpoint, apiToken);
     if (!fs_1.default.existsSync(manifestFile)) {
         return (0, helpers_4.printAndExit)(`${manifestFile} is not a valid pack definition file. Check the filename and try again.`);
     }
-    const existingPackId = (0, config_storage_2.getPackId)(manifestDir, codaApiEndpoint);
+    const existingPackId = (0, config_storage_2.getPackId)(manifestDir, apiEndpoint);
     if (existingPackId) {
-        return (0, helpers_4.printAndExit)(`This directory has already been registered on ${codaApiEndpoint} with pack id ${existingPackId}.\n` +
+        return (0, helpers_4.printAndExit)(`This directory has already been registered on ${apiEndpoint} with pack id ${existingPackId}.\n` +
             `If you're trying to create a new pack from a different manifest, you should put the new manifest in a different directory.\n` +
             `If you're intentionally trying to create a new pack, you can delete ${config_storage_1.PACK_ID_FILE_NAME} in this directory and try again.`);
     }
@@ -61,8 +63,8 @@ async function createPack(manifestFile, codaApiEndpoint, { name, description, wo
     try {
         const response = await codaClient.createPack({}, { name, description, workspaceId: parseWorkspace(workspace) });
         const packId = response.packId;
-        (0, config_storage_3.storePackId)(manifestDir, packId, codaApiEndpoint);
-        return (0, helpers_4.printAndExit)(`Pack created successfully! You can manage pack settings at ${codaApiEndpoint}/p/${packId}`, 0);
+        (0, config_storage_3.storePackId)(manifestDir, packId, apiEndpoint);
+        return (0, helpers_4.printAndExit)(`Pack created successfully! You can manage pack settings at ${apiEndpoint}/p/${packId}`, 0);
     }
     catch (err) {
         if ((0, coda_1.isResponseError)(err)) {

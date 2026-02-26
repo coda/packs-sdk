@@ -38,6 +38,7 @@ var PackOptionKey;
 (function (PackOptionKey) {
     PackOptionKey["timerStrategy"] = "timerStrategy";
     PackOptionKey["enableGitTags"] = "enableGitTags";
+    PackOptionKey["apiEndpoint"] = "apiEndpoint";
 })(PackOptionKey || (exports.PackOptionKey = PackOptionKey = {}));
 function isDefaultApiEndpoint(apiEndpoint) {
     return apiEndpoint === exports.DEFAULT_API_ENDPOINT;

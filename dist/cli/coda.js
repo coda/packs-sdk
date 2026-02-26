@@ -30,14 +30,20 @@ const ApiTokenArg = {
     alias: 't',
     desc: 'API token to use for the operation. Use the `register` command to define a default token.',
 };
-const CodaApiEndpointArg = {
+const ApiEndpointArg = {
     string: true,
-    hidden: true,
     default: config_storage_1.DEFAULT_API_ENDPOINT,
+    desc: 'API endpoint to use for the operation. Required for single-tenant instances. Can also be set persistently via `coda setOption <manifestFile> apiEndpoint <url>`.',
 };
 if (require.main === module) {
     void yargs_1.default
         .parserConfiguration({ 'parse-numbers': false })
+        .middleware((argv) => {
+        // Support legacy --codaApiEndpoint flag as a hidden alias.
+        if (argv.codaApiEndpoint && !argv.apiEndpoint) {
+            argv.apiEndpoint = argv.codaApiEndpoint;
+        }
+    })
         .command({
         command: 'execute <manifestPath> <formulaName> [params..]',
         describe: 'Execute a formula',
@@ -117,7 +123,7 @@ if (require.main === module) {
         describe: 'Clone an existing Pack that was created using Pack Studio',
         builder: {
             apiToken: ApiTokenArg,
-            codaApiEndpoint: CodaApiEndpointArg,
+            apiEndpoint: ApiEndpointArg,
         },
         handler: clone_1.handleClone,
     })
@@ -125,7 +131,7 @@ if (require.main === module) {
         command: 'register [apiToken]',
         describe: 'Register API token to publish a Pack',
         builder: {
-            codaApiEndpoint: CodaApiEndpointArg,
+            apiEndpoint: ApiEndpointArg,
         },
         handler: register_1.handleRegister,
     })
@@ -133,7 +139,7 @@ if (require.main === module) {
         command: 'whoami [apiToken]',
         describe: 'Looks up information about the API token that is registered in this environment',
         builder: {
-            codaApiEndpoint: CodaApiEndpointArg,
+            apiEndpoint: ApiEndpointArg,
         },
         handler: whoami_1.handleWhoami,
     })
@@ -182,7 +188,7 @@ if (require.main === module) {
                 desc: 'Options: none, error, fake.',
             },
             apiToken: ApiTokenArg,
-            codaApiEndpoint: CodaApiEndpointArg,
+            apiEndpoint: ApiEndpointArg,
             allowOlderSdkVersion: {
                 boolean: true,
                 desc: 'Not recommended. Allows uploading a Pack build that uses an older version of the ' +
@@ -212,7 +218,7 @@ if (require.main === module) {
                 describe: 'The workspace ID, or workspace URL that you want your Pack to be created under.',
             },
             apiToken: ApiTokenArg,
-            codaApiEndpoint: CodaApiEndpointArg,
+            apiEndpoint: ApiEndpointArg,
         },
         handler: create_1.handleCreate,
     })
@@ -221,7 +227,7 @@ if (require.main === module) {
         describe: "Link to a pre-existing Pack ID on Coda's servers",
         builder: {
             apiToken: ApiTokenArg,
-            codaApiEndpoint: CodaApiEndpointArg,
+            apiEndpoint: ApiEndpointArg,
         },
         handler: link_1.handleLink,
     })
@@ -256,7 +262,7 @@ if (require.main === module) {
                 default: false,
             },
             apiToken: ApiTokenArg,
-            codaApiEndpoint: CodaApiEndpointArg,
+            apiEndpoint: ApiEndpointArg,
         },
         handler: release_1.handleRelease,
     })
@@ -266,7 +272,8 @@ if (require.main === module) {
             'the .coda-pack.json file and it will be used for all builds of the pack.\n\n' +
             'Supported options:\n' +
             '  - timerStrategy: Valid values are "none", "error", or "fake".\n' +
-            '  - enableGitTags: Valid values are "true" or "false". When true, the release command will create git tags.\n\n' +
+            '  - enableGitTags: Valid values are "true" or "false". When true, the release command will create git tags.\n' +
+            '  - apiEndpoint: A URL for the API endpoint, required for single-tenant instances (e.g. "https://my-company.coda.io"). When set, all commands will use this endpoint by default.\n\n' +
             'Usage: coda setOption path/to/pack.ts timerStrategy fake',
         handler: set_option_1.handleSetOption,
     })

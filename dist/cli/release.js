@@ -22,12 +22,14 @@ const path_1 = __importDefault(require("path"));
 const helpers_6 = require("../testing/helpers");
 const helpers_7 = require("../testing/helpers");
 const helpers_8 = require("../testing/helpers");
+const helpers_9 = require("./helpers");
 const errors_3 = require("./errors");
-async function handleRelease({ manifestFile, packVersion: explicitPackVersion, codaApiEndpoint, notes, apiToken, gitTag, }) {
+async function handleRelease({ manifestFile, packVersion: explicitPackVersion, apiEndpoint, notes, apiToken, gitTag, }) {
     const manifestDir = path_1.default.dirname(manifestFile);
-    const formattedEndpoint = (0, helpers_4.formatEndpoint)(codaApiEndpoint);
-    apiToken = (0, helpers_1.assertApiToken)(codaApiEndpoint, apiToken);
-    const packId = (0, helpers_2.assertPackId)(manifestDir, codaApiEndpoint);
+    apiEndpoint = (0, helpers_9.resolveApiEndpoint)(apiEndpoint, manifestDir);
+    const formattedEndpoint = (0, helpers_4.formatEndpoint)(apiEndpoint);
+    apiToken = (0, helpers_1.assertApiToken)(apiEndpoint, apiToken);
+    const packId = (0, helpers_2.assertPackId)(manifestDir, apiEndpoint);
     // Check if git tagging is enabled via CLI flag or pack options
     const packOptions = (0, config_storage_2.getPackOptions)(manifestDir);
     const enableGitTags = gitTag || (packOptions === null || packOptions === void 0 ? void 0 : packOptions[config_storage_1.PackOptionKey.enableGitTags]) || false;

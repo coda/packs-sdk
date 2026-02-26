@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- Added the flag `--apiEnpoint` to various CLI commands, and added the option `apiEndpoint` to the `setOption` command. This can be used to point to the CLI to an alternative server, for use by customers on single-tenant instances.
+
 ## [1.13.0] - 2026-02-06
 
 ### Added

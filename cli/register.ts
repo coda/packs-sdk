@@ -5,16 +5,18 @@ import {isResponseError} from '../helpers/external-api/coda';
 import open from 'open';
 import {printAndExit} from '../testing/helpers';
 import {promptForInput} from '../testing/helpers';
+import {resolveApiEndpoint} from './helpers';
 import {storeCodaApiKey} from './config_storage';
 import {tryParseSystemError} from './errors';
 
 interface RegisterArgs {
   apiToken?: string;
-  codaApiEndpoint: string;
+  apiEndpoint: string;
 }
 
-export async function handleRegister({apiToken, codaApiEndpoint}: ArgumentsCamelCase<RegisterArgs>) {
-  const formattedEndpoint = formatEndpoint(codaApiEndpoint);
+export async function handleRegister({apiToken, apiEndpoint}: ArgumentsCamelCase<RegisterArgs>) {
+  apiEndpoint = resolveApiEndpoint(apiEndpoint);
+  const formattedEndpoint = formatEndpoint(apiEndpoint);
   if (!apiToken) {
     // TODO: deal with auto-open on devbox setups
     const shouldOpenBrowser = promptForInput('No API token provided. Do you want to visit Coda to create one (y/N)? ', {
@@ -40,6 +42,6 @@ export async function handleRegister({apiToken, codaApiEndpoint}: ArgumentsCamel
     return printAndExit(errors.join('\n'));
   }
 
-  storeCodaApiKey(apiToken, process.env.PWD, codaApiEndpoint);
+  storeCodaApiKey(apiToken, process.env.PWD, apiEndpoint);
   printAndExit(`API key validated and stored successfully!`, 0);
 }

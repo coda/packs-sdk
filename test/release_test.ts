@@ -64,7 +64,7 @@ describe('Release command', () => {
       await handleRelease({
         manifestFile: MANIFEST_FILE,
         packVersion: '1.0.0',
-        codaApiEndpoint: 'https://coda.io',
+        apiEndpoint: 'https://coda.io',
         notes: 'Test release',
         apiToken: 'test-token',
         gitTag: false,
