@@ -242,11 +242,6 @@ var ToolType;
      */
     ToolType["AssistantMessage"] = "AssistantMessage";
     /**
-     * Allows reuse of the default tuned summarizer agent as a tool.
-     * @internal
-     */
-    ToolType["Summarizer"] = "Summarizer";
-    /**
      * Tool that provides access to MCP capabilities.
      * @internal
      */
