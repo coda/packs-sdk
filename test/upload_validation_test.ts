@@ -6250,6 +6250,27 @@ describe('Pack metadata Validation', async () => {
       ]);
     });
 
+    it('allows MCP tools with packId and no local MCP servers', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'McpSkill',
+            displayName: 'MCP Skill',
+            description: 'Uses MCP tools from another pack',
+            prompt: 'Assist with MCP operations',
+            tools: [
+              {
+                type: ToolType.MCP,
+                packId: 12345,
+              },
+            ],
+          },
+        ],
+        mcpServers: [],
+      });
+      await validateJson(metadata);
+    });
+
     it('allows WebSearch tool without allowedDomains', async () => {
       const metadata = createFakePackVersionMetadata({
         skills: [
