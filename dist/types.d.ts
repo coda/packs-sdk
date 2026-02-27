@@ -1239,7 +1239,6 @@ export interface AssistantMessageTool extends BaseTool<ToolType.AssistantMessage
 }
 /**
  * Tool that provides access to MCP capabilities.
- * @hidden
  */
 export interface MCPTool extends BaseTool<ToolType.MCP> {
     /**
@@ -1249,6 +1248,7 @@ export interface MCPTool extends BaseTool<ToolType.MCP> {
     /**
      * The ID of the pack that contains the MCP servers that this tool can connect to.
      * By default looks in the current pack.
+     * @hidden
      */
     packId?: number;
 }
