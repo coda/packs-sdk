@@ -5714,13 +5714,18 @@ export interface AssistantMessageTool extends BaseTool<ToolType.AssistantMessage
 }
 /**
  * Tool that provides access to MCP capabilities.
- * @internal
  */
 export interface MCPTool extends BaseTool<ToolType.MCP> {
 	/**
 	 * The names of the MCP servers added to this pack that this tool can connect to.
 	 */
 	serverNames?: string[];
+	/**
+	 * The ID of the pack that contains the MCP servers that this tool can connect to.
+	 * By default looks in the current pack.
+	 * @hidden
+	 */
+	packId?: number;
 }
 /**
  * Tool that provides access to contact resolution capabilities.

@@ -103,6 +103,7 @@ import * as coda from "@codahq/packs-sdk";
 - [LinkAttributionNode](interfaces/LinkAttributionNode.md)
 - [LinkSchema](interfaces/LinkSchema.md)
 - [MCPServer](interfaces/MCPServer.md)
+- [MCPTool](interfaces/MCPTool.md)
 - [MetadataFormulaObjectResultType](interfaces/MetadataFormulaObjectResultType.md)
 - [MultiHeaderTokenAuthentication](interfaces/MultiHeaderTokenAuthentication.md)
 - [MultiQueryParamTokenAuthentication](interfaces/MultiQueryParamTokenAuthentication.md)

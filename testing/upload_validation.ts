@@ -2271,6 +2271,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
   const mcpToolSchema = zodCompleteStrictObject<MCPTool>({
     type: z.literal(ToolType.MCP),
     serverNames: z.array(z.string()).optional(),
+    packId: z.number().optional(),
   });
 
   const contactResolutionToolSchema = zodCompleteStrictObject<ContactResolutionTool>({
@@ -3021,8 +3022,10 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     })
     .superRefine((data, context) => {
       const metadata = data as PackVersionMetadata;
-      const hasMcpSkill = (metadata.skills || []).some(skill => skill.tools.some(tool => tool.type === ToolType.MCP));
-      if (hasMcpSkill && (!metadata.mcpServers || metadata.mcpServers.length === 0)) {
+      const hasMcpToolWithoutPackId = (metadata.skills || []).some(skill =>
+        skill.tools.some(tool => tool.type === ToolType.MCP && !(tool as MCPTool).packId),
+      );
+      if (hasMcpToolWithoutPackId && (!metadata.mcpServers || metadata.mcpServers.length === 0)) {
         context.addIssue({
           code: 'custom',
           path: ['mcpServers'],
