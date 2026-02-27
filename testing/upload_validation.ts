@@ -28,7 +28,6 @@ import type {DetailedIndexedProperty} from '../schema';
 import type {DocumentContentCategorization} from '../schema';
 import type {DurationSchema} from '../schema';
 import {DurationUnit} from '../schema';
-import type {DynamicSuggestedPromptTool} from '../types';
 import type {DynamicSyncTableDef} from '../api';
 import type {EmailContentCategorization} from '../schema';
 import {EmailDisplayType} from '../schema';
@@ -2282,10 +2281,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     type: z.literal(ToolType.CodaDocsAndTables),
   });
 
-  const dynamicSuggestedPromptToolSchema = zodCompleteStrictObject<DynamicSuggestedPromptTool>({
-    type: z.literal(ToolType.DynamicSuggestedPrompt),
-  });
-
   const webSearchToolSchema = zodCompleteStrictObject<WebSearchTool>({
     type: z.literal(ToolType.WebSearch),
     allowedDomains: z.array(z.string().min(1)).min(1).max(100).optional(),
@@ -2304,7 +2299,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     mcpToolSchema,
     contactResolutionToolSchema,
     codaDocsToolSchema,
-    dynamicSuggestedPromptToolSchema,
     embeddedContentToolSchema,
     webSearchToolSchema,
   ]);

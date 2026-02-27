@@ -6038,9 +6038,6 @@ describe('Pack metadata Validation', async () => {
                 type: ToolType.CodaDocsAndTables,
               },
               {
-                type: ToolType.DynamicSuggestedPrompt,
-              },
-              {
                 type: ToolType.EmbeddedContent,
                 embeddedContent: {
                   type: EmbeddedContentType.CopyableBlock,
@@ -6122,8 +6119,6 @@ describe('Pack metadata Validation', async () => {
         case ToolType.ContactResolution:
           break;
         case ToolType.CodaDocsAndTables:
-          break;
-        case ToolType.DynamicSuggestedPrompt:
           break;
         case ToolType.EmbeddedContent:
           break;

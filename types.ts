@@ -1214,11 +1214,6 @@ export enum ToolType {
    */
   CodaDocsAndTables = 'CodaDocsAndTables',
   /**
-   * Tool that enables dynamic generation of suggested follow-up prompts.
-   * @internal
-   */
-  DynamicSuggestedPrompt = 'DynamicSuggestedPrompt',
-  /**
    * Tool that enables searching the public internet for up-to-date information.
    * @internal
    */
@@ -1408,12 +1403,6 @@ export interface ContactResolutionTool extends BaseTool<ToolType.ContactResoluti
 export interface CodaDocsAndTablesTool extends BaseTool<ToolType.CodaDocsAndTables> {}
 
 /**
- * Tool that enables dynamic generation of contextual follow-up suggestions.
- * @internal
- */
-export interface DynamicSuggestedPromptTool extends BaseTool<ToolType.DynamicSuggestedPrompt> {}
-
-/**
  * Tool that enables searching the public internet for up-to-date information.
  * When enabled, the agent can search the web to retrieve current information
  * that may not be available in the user's workspace or knowledge base.
@@ -1523,7 +1512,6 @@ export interface ToolMap {
   [ToolType.MCP]: MCPTool;
   [ToolType.ContactResolution]: ContactResolutionTool;
   [ToolType.CodaDocsAndTables]: CodaDocsAndTablesTool;
-  [ToolType.DynamicSuggestedPrompt]: DynamicSuggestedPromptTool;
   [ToolType.WebSearch]: WebSearchTool;
   [ToolType.EmbeddedContent]: EmbeddedContentTool;
 }
