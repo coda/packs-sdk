@@ -293,7 +293,7 @@ importers:
         specifier: ^8.0.0
         version: 8.55.0(eslint@9.39.2)(typescript@5.1.6)
       unified-lint-rule:
-        specifier: ^3.0.1
+        specifier: 3.0.1
         version: 3.0.1
       unist-util-visit:
         specifier: ^5.0.0
