@@ -58,6 +58,19 @@ jobs:
       - name: Check formatting
         run: make autoformat-all-no-fix
 
+  check-version-bump:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup_node
+      - name: Fetch main branch
+        run: git fetch origin main
+      - name: Check version bump
+        run: ./scripts/dev/check-version-updated.sh
+
   validate-samples:
     runs-on: ubuntu-latest
     steps:
