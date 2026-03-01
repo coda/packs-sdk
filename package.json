@@ -88,7 +88,7 @@
     "@types/yargs": "17.0.26",
     "@eslint/compat": "^2.0.0",
     "@typescript-eslint/utils": "^8.0.0",
-    "aws-sdk": "2.1665.0",
+    "aws-sdk": "2.1693.0",
     "chai": "4.5.0",
     "cspell": "8.15.2",
     "dts-bundle-generator": "9.5.1",
