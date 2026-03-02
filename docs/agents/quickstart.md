@@ -14,21 +14,9 @@ You can build an agent for Superhuman Go in only a few minutes, without leaving 
 
 Before you can start coding, there are a few things you need:
 
-**Grammarly Account**
+**Superhuman Account**
 
-:   If you don't already have one, sign up for a free account here: [grammarly.com/signup][grammarly_signup]
-
-    ??? warning "Individual accounts only"
-
-        At the moment, you can only use agents with *individual* Grammarly accounts. If you have an account on a team plan (Pro or Enterprise), it won't be compatible. As a workaround, select another email address and create a new Grammarly account on the Free plan.
-
-**Coda account**
-
-:   If you don't already have one, sign up for a free account here: [coda.io/signup][coda_signup]
-
-    ??? tip "Ensure the emails match"
-
-        Please ensure that you use the same email address to sign up for both Coda and Grammarly. The email address is the key being used to link both accounts.
+:   If you don't already have one, sign up for a free account here: [id.superhuman.com/signup][superhuman_signup]
 
 **Grammarly for Chrome**
 
@@ -284,8 +272,7 @@ The agent you just built was pretty simple, but agents can do so much more. Expl
 - Read the documentation on [Skills][skills], [Tools][tools], and [Context][context] to learn more about the capabilities of the platform.
 
 
-[grammarly_signup]: https://www.grammarly.com/signup
-[coda_signup]: https://coda.io/signup
+[superhuman_signup]: https://id.superhuman.com/signup
 [extension]: https://chromewebstore.google.com/detail/grammarly-ai-writing-assi/kbfnbcaeplbcioakkpcpgfkobkghlhen
 [examples]: ./examples.md
 [skills]: ./features/skills.md
