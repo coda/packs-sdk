@@ -60,7 +60,7 @@ jobs:
 
   check-version-bump:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'skip-version-check')
     steps:
       - uses: actions/checkout@v4
         with:
