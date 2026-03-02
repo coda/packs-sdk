@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.commands = void 0;
 const config_storage_1 = require("./config_storage");
 const config_storage_2 = require("./config_storage");
 const execution_1 = require("../testing/execution");
@@ -41,11 +42,8 @@ const TimerStrategyArg = {
     string: true,
     desc: `Options: none, error, fake (default: ${config_storage_3.DEFAULT_TIMER_STRATEGY}).`,
 };
-if (require.main === module) {
-    void yargs_1.default
-        .parserConfiguration({ 'parse-numbers': false })
-        .middleware(helpers_1.backfillFromPackConfig)
-        .command({
+exports.commands = [
+    {
         command: 'execute <manifestPath> <formulaName> [params..]',
         describe: 'Execute a formula',
         handler: execute_1.handleExecute,
@@ -57,7 +55,8 @@ if (require.main === module) {
             },
             vm: {
                 boolean: true,
-                desc: 'Execute the requested command in a virtual machine that mimics the environment Coda uses to execute Packs.',
+                desc: 'Execute the requested command in a virtual machine that mimics the environment Coda uses to execute Packs.' +
+                    'This defaults to true if the isolated-vm package is installed, and to false if not.',
                 default: Boolean((0, ivm_wrapper_1.tryGetIvm)()),
             },
             dynamicUrl: {
@@ -76,8 +75,8 @@ if (require.main === module) {
                 desc: 'Allow executing Packs that use multiple network domains. You must get approval from Coda before you can upload these Packs.',
             },
         },
-    })
-        .command({
+    },
+    {
         command: 'auth <manifestPath>',
         describe: 'Set up authentication for a Pack',
         handler: auth_2.handleAuth,
@@ -96,13 +95,13 @@ if (require.main === module) {
                     `need extra permissions. Example: --extra_oauth_scopes='first second third'`,
             },
         },
-    })
-        .command({
+    },
+    {
         command: 'init',
         describe: 'Initialize an empty Pack',
         handler: init_1.handleInit,
-    })
-        .command({
+    },
+    {
         command: 'extensions <tools..>',
         describe: 'Installs developer extensions for working with Packs.',
         builder: (yargs) => {
@@ -114,8 +113,8 @@ if (require.main === module) {
             return yargs;
         },
         handler: extensions_2.handleExtensions,
-    })
-        .command({
+    },
+    {
         command: 'clone <packIdOrUrl>',
         describe: 'Clone an existing Pack that was created using Pack Studio',
         builder: {
@@ -123,24 +122,24 @@ if (require.main === module) {
             apiEndpoint: ApiEndpointArg,
         },
         handler: clone_1.handleClone,
-    })
-        .command({
+    },
+    {
         command: 'register [apiToken]',
         describe: 'Register API token to publish a Pack',
         builder: {
             apiEndpoint: ApiEndpointArg,
         },
         handler: register_1.handleRegister,
-    })
-        .command({
+    },
+    {
         command: 'whoami [apiToken]',
         describe: 'Looks up information about the API token that is registered in this environment',
         builder: {
             apiEndpoint: ApiEndpointArg,
         },
         handler: whoami_1.handleWhoami,
-    })
-        .command({
+    },
+    {
         command: 'build <manifestFile>',
         describe: 'Build your Pack locally (not required; for debugging purposes only)',
         builder: {
@@ -160,8 +159,8 @@ if (require.main === module) {
             },
         },
         handler: build_1.handleBuild,
-    })
-        .command({
+    },
+    {
         command: 'upload <manifestFile>',
         describe: 'Build and upload your Pack version to Coda',
         builder: {
@@ -186,8 +185,8 @@ if (require.main === module) {
             },
         },
         handler: upload_1.handleUpload,
-    })
-        .command({
+    },
+    {
         command: 'create <manifestFile>',
         describe: "Register a new Pack with Coda's servers",
         builder: {
@@ -210,8 +209,8 @@ if (require.main === module) {
             apiEndpoint: ApiEndpointArg,
         },
         handler: create_1.handleCreate,
-    })
-        .command({
+    },
+    {
         command: 'link <manifestDir> <packIdOrUrl>',
         describe: "Link to a pre-existing Pack ID on Coda's servers",
         builder: {
@@ -219,8 +218,8 @@ if (require.main === module) {
             apiEndpoint: ApiEndpointArg,
         },
         handler: link_1.handleLink,
-    })
-        .command({
+    },
+    {
         command: 'validate <manifestFile>',
         describe: 'Validate your Pack definition',
         builder: {
@@ -231,8 +230,8 @@ if (require.main === module) {
             },
         },
         handler: validate_1.handleValidate,
-    })
-        .command({
+    },
+    {
         command: 'release <manifestFile> [packVersion]',
         describe: 'Set the Pack version that is installable for users. You may specify a specific version, ' +
             'or omit a version to use the version currently in the manifest file. ' +
@@ -253,8 +252,8 @@ if (require.main === module) {
             apiEndpoint: ApiEndpointArg,
         },
         handler: release_1.handleRelease,
-    })
-        .command({
+    },
+    {
         command: 'setOption <manifestFile> <option> <value>',
         describe: 'Set a persistent build option for the pack. This will store the option alongside the pack id in ' +
             'the .coda-pack.json file and it will be used for all builds of the pack.\n\n' +
@@ -264,8 +263,12 @@ if (require.main === module) {
             '  - apiEndpoint: A URL for the API endpoint, required for single-tenant instances (e.g. "https://my-company.coda.io"). When set, all commands will use this endpoint by default.\n\n' +
             'Usage: coda setOption path/to/pack.ts timerStrategy fake',
         handler: set_option_1.handleSetOption,
-    })
-        .demandCommand()
-        .strict()
-        .help().argv;
+    },
+];
+if (require.main === module) {
+    let cli = yargs_1.default.parserConfiguration({ 'parse-numbers': false }).middleware(helpers_1.backfillFromPackConfig);
+    for (const cmd of exports.commands) {
+        cli = cli.command(cmd);
+    }
+    void cli.demandCommand().strict().help().argv;
 }

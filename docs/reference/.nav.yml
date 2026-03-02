@@ -1,3 +1,4 @@
 append_unmatched: true
 nav:
   - SDK: sdk
+  - CLI: cli

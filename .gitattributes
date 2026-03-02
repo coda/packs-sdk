@@ -1,4 +1,5 @@
 dist/** linguist-generated
 docs/reference/sdk/** linguist-generated
+docs/reference/cli/** linguist-generated
 docs/samples/*/** linguist-generated
 documentation/generated/** linguist-generated
