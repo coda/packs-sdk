@@ -1733,12 +1733,10 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     const assistantMessageToolSchema = zodCompleteStrictObject({
         type: z.literal(types_11.ToolType.AssistantMessage),
     });
-    const summarizerToolSchema = zodCompleteStrictObject({
-        type: z.literal(types_11.ToolType.Summarizer),
-    });
     const mcpToolSchema = zodCompleteStrictObject({
         type: z.literal(types_11.ToolType.MCP),
         serverNames: z.array(z.string()).optional(),
+        packId: z.number().optional(),
     });
     const contactResolutionToolSchema = zodCompleteStrictObject({
         type: z.literal(types_11.ToolType.ContactResolution),
@@ -1762,7 +1760,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         knowledgeToolSchema,
         screenAnnotationToolSchema,
         assistantMessageToolSchema,
-        summarizerToolSchema,
         mcpToolSchema,
         contactResolutionToolSchema,
         codaDocsToolSchema,
@@ -2419,8 +2416,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     })
         .superRefine((data, context) => {
         const metadata = data;
-        const hasMcpSkill = (metadata.skills || []).some(skill => skill.tools.some(tool => tool.type === types_11.ToolType.MCP));
-        if (hasMcpSkill && (!metadata.mcpServers || metadata.mcpServers.length === 0)) {
+        const hasMcpToolWithoutPackId = (metadata.skills || []).some(skill => skill.tools.some(tool => tool.type === types_11.ToolType.MCP && !tool.packId));
+        if (hasMcpToolWithoutPackId && (!metadata.mcpServers || metadata.mcpServers.length === 0)) {
             context.addIssue({
                 code: 'custom',
                 path: ['mcpServers'],
