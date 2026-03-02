@@ -1,6 +1,5 @@
 import type {Client} from '../helpers/external-api/coda';
 import type {PublicApiPackRelease} from '../helpers/external-api/v1';
-import * as configStorage from '../cli/config_storage';
 import * as gitHelpers from '../cli/git_helpers';
 import {handleRelease} from '../cli/release';
 import * as helpers from '../cli/helpers';
@@ -64,7 +63,7 @@ describe('Release command', () => {
       await handleRelease({
         manifestFile: MANIFEST_FILE,
         packVersion: '1.0.0',
-        codaApiEndpoint: 'https://coda.io',
+        apiEndpoint: 'https://coda.io',
         notes: 'Test release',
         apiToken: 'test-token',
         gitTag: false,
@@ -147,23 +146,6 @@ describe('Release command', () => {
       assert.equal(tagName, `pack/${PACK_ID}/v1.0.0`);
       assert.include(tagMessage, 'Release ID: 42');
       assert.include(tagMessage, 'Test release');
-    });
-
-    it('creates git tag when enableGitTags option is set', async () => {
-      sinon.stub(gitHelpers, 'getGitState').returns({
-        isGitRepo: true,
-        isDirty: false,
-        currentBranch: 'main',
-        commitSha: 'abc123def456',
-      });
-      sinon.stub(gitHelpers, 'gitTagExists').returns(false);
-      sinon.stub(configStorage, 'getPackOptions').returns({enableGitTags: true});
-      const createGitTagStub = sinon.stub(gitHelpers, 'createGitTag').returns(true);
-
-      await runRelease();
-
-      assert.equal(exitCode, 0);
-      assert.isTrue(createGitTagStub.calledOnce);
     });
 
     it('skips git tag creation if tag already exists', async () => {

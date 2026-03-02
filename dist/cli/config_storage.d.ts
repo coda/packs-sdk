@@ -1,5 +1,7 @@
-import type { TimerShimStrategy } from '../testing/compile';
+import { TimerShimStrategy } from '../testing/compile';
 export declare const DEFAULT_API_ENDPOINT = "https://coda.io";
+export declare const DEFAULT_TIMER_STRATEGY = TimerShimStrategy.None;
+export declare const DEFAULT_GIT_TAG = false;
 export declare const PACK_ID_FILE_NAME = ".coda-pack.json";
 export interface ApiKeyFile {
     apiKey: string;
@@ -9,11 +11,20 @@ export interface ApiKeyFile {
 }
 export declare enum PackOptionKey {
     timerStrategy = "timerStrategy",
+    gitTag = "gitTag",
+    apiEndpoint = "apiEndpoint"
+}
+/** @deprecated Keys kept only for reading legacy config files. */
+export declare enum DeprecatedPackOptionKey {
+    /** @deprecated Use {@link PackOptionKey.gitTag} instead. */
     enableGitTags = "enableGitTags"
 }
 export interface PackOptions {
     [PackOptionKey.timerStrategy]?: TimerShimStrategy;
-    [PackOptionKey.enableGitTags]?: boolean;
+    [PackOptionKey.gitTag]?: boolean;
+    [PackOptionKey.apiEndpoint]?: string;
+    /** @deprecated Kept for reading legacy config files. */
+    [DeprecatedPackOptionKey.enableGitTags]?: boolean;
 }
 export interface PackIdFile {
     packId: number;

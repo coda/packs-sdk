@@ -1,6 +1,5 @@
 import type {ArgumentsCamelCase} from 'yargs';
 import type {BasicPackDefinition} from '..';
-import {PackOptionKey} from './config_storage';
 import type {PackVersionDefinition} from '..';
 import {assertApiToken} from './helpers';
 import {assertPackId} from './helpers';
@@ -11,7 +10,6 @@ import {formatEndpoint} from './helpers';
 import {formatError} from './errors';
 import {formatResponseError} from './errors';
 import {getGitState} from './git_helpers';
-import {getPackOptions} from './config_storage';
 import {gitTagExists} from './git_helpers';
 import {importManifest} from './helpers';
 import {isResponseError} from '../helpers/external-api/coda';
@@ -24,7 +22,7 @@ import {tryParseSystemError} from './errors';
 interface ReleaseArgs {
   manifestFile: string;
   packVersion?: string;
-  codaApiEndpoint: string;
+  apiEndpoint: string;
   notes: string;
   apiToken?: string;
   gitTag?: boolean;
@@ -33,19 +31,15 @@ interface ReleaseArgs {
 export async function handleRelease({
   manifestFile,
   packVersion: explicitPackVersion,
-  codaApiEndpoint,
+  apiEndpoint,
   notes,
   apiToken,
   gitTag,
 }: ArgumentsCamelCase<ReleaseArgs>) {
   const manifestDir = path.dirname(manifestFile);
-  const formattedEndpoint = formatEndpoint(codaApiEndpoint);
-  apiToken = assertApiToken(codaApiEndpoint, apiToken);
-  const packId = assertPackId(manifestDir, codaApiEndpoint);
-
-  // Check if git tagging is enabled via CLI flag or pack options
-  const packOptions = getPackOptions(manifestDir);
-  const enableGitTags = gitTag || packOptions?.[PackOptionKey.enableGitTags] || false;
+  const formattedEndpoint = formatEndpoint(apiEndpoint);
+  apiToken = assertApiToken(apiEndpoint, apiToken);
+  const packId = assertPackId(manifestDir, apiEndpoint);
 
   const codaClient = createCodaClient(apiToken, formattedEndpoint);
 
@@ -113,7 +107,7 @@ export async function handleRelease({
   print(`Pack version ${packVersion} released successfully (release #${releaseResponse.releaseId}).`);
 
   // Create git tag if enabled
-  if (enableGitTags && gitState.isGitRepo) {
+  if (gitTag && gitState.isGitRepo) {
     const releaseGitTag = `pack/${packId}/v${packVersion}`;
 
     if (gitTagExists(releaseGitTag, manifestDir)) {

@@ -26,19 +26,29 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPackOptions = exports.storePackOptions = exports.getPackId = exports.storePackId = exports.storeCodaApiKey = exports.getApiKey = exports.PackOptionKey = exports.PACK_ID_FILE_NAME = exports.DEFAULT_API_ENDPOINT = void 0;
+exports.getPackOptions = exports.storePackOptions = exports.getPackId = exports.storePackId = exports.storeCodaApiKey = exports.getApiKey = exports.DeprecatedPackOptionKey = exports.PackOptionKey = exports.PACK_ID_FILE_NAME = exports.DEFAULT_GIT_TAG = exports.DEFAULT_TIMER_STRATEGY = exports.DEFAULT_API_ENDPOINT = void 0;
+const compile_1 = require("../testing/compile");
 const path = __importStar(require("path"));
 const helpers_1 = require("../testing/helpers");
 const url_parse_1 = __importDefault(require("url-parse"));
 const helpers_2 = require("../testing/helpers");
 exports.DEFAULT_API_ENDPOINT = 'https://coda.io';
+exports.DEFAULT_TIMER_STRATEGY = compile_1.TimerShimStrategy.None;
+exports.DEFAULT_GIT_TAG = false;
 const API_KEY_FILE_NAME = '.coda.json';
 exports.PACK_ID_FILE_NAME = '.coda-pack.json';
 var PackOptionKey;
 (function (PackOptionKey) {
     PackOptionKey["timerStrategy"] = "timerStrategy";
-    PackOptionKey["enableGitTags"] = "enableGitTags";
+    PackOptionKey["gitTag"] = "gitTag";
+    PackOptionKey["apiEndpoint"] = "apiEndpoint";
 })(PackOptionKey || (exports.PackOptionKey = PackOptionKey = {}));
+/** @deprecated Keys kept only for reading legacy config files. */
+var DeprecatedPackOptionKey;
+(function (DeprecatedPackOptionKey) {
+    /** @deprecated Use {@link PackOptionKey.gitTag} instead. */
+    DeprecatedPackOptionKey["enableGitTags"] = "enableGitTags";
+})(DeprecatedPackOptionKey || (exports.DeprecatedPackOptionKey = DeprecatedPackOptionKey = {}));
 function isDefaultApiEndpoint(apiEndpoint) {
     return apiEndpoint === exports.DEFAULT_API_ENDPOINT;
 }

@@ -5552,11 +5552,6 @@ export declare enum ToolType {
 	 */
 	AssistantMessage = "AssistantMessage",
 	/**
-	 * Allows reuse of the default tuned summarizer agent as a tool.
-	 * @internal
-	 */
-	Summarizer = "Summarizer",
-	/**
 	 * Tool that provides access to MCP capabilities.
 	 * @internal
 	 */
@@ -5718,20 +5713,19 @@ export interface ScreenAnnotationTool extends BaseTool<ToolType.ScreenAnnotation
 export interface AssistantMessageTool extends BaseTool<ToolType.AssistantMessage> {
 }
 /**
- * Tool that provides access to summarization capabilities.
- * @internal
- */
-export interface SummarizerTool extends BaseTool<ToolType.Summarizer> {
-}
-/**
  * Tool that provides access to MCP capabilities.
- * @internal
  */
 export interface MCPTool extends BaseTool<ToolType.MCP> {
 	/**
 	 * The names of the MCP servers added to this pack that this tool can connect to.
 	 */
 	serverNames?: string[];
+	/**
+	 * The ID of the pack that contains the MCP servers that this tool can connect to.
+	 * By default looks in the current pack.
+	 * @hidden
+	 */
+	packId?: number;
 }
 /**
  * Tool that provides access to contact resolution capabilities.
@@ -5851,7 +5845,6 @@ export interface ToolMap {
 	[ToolType.Knowledge]: KnowledgeTool;
 	[ToolType.ScreenAnnotation]: ScreenAnnotationTool;
 	[ToolType.AssistantMessage]: AssistantMessageTool;
-	[ToolType.Summarizer]: SummarizerTool;
 	[ToolType.MCP]: MCPTool;
 	[ToolType.ContactResolution]: ContactResolutionTool;
 	[ToolType.CodaDocsAndTables]: CodaDocsAndTablesTool;

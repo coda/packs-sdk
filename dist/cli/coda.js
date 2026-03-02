@@ -6,10 +6,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.commands = void 0;
 const config_storage_1 = require("./config_storage");
+const config_storage_2 = require("./config_storage");
 const execution_1 = require("../testing/execution");
 const auth_1 = require("../testing/auth");
-const compile_1 = require("../testing/compile");
+const config_storage_3 = require("./config_storage");
 const extensions_1 = require("./extensions");
+const helpers_1 = require("./helpers");
 const auth_2 = require("./auth");
 const build_1 = require("./build");
 const clone_1 = require("./clone");
@@ -31,10 +33,14 @@ const ApiTokenArg = {
     alias: 't',
     desc: 'API token to use for the operation. Use the `register` command to define a default token.',
 };
-const CodaApiEndpointArg = {
+const ApiEndpointArg = {
     string: true,
-    hidden: true,
-    default: config_storage_1.DEFAULT_API_ENDPOINT,
+    desc: `API endpoint to use for the operation (default: ${config_storage_1.DEFAULT_API_ENDPOINT}). Required for single-tenant instances. Can also be set persistently via \`coda setOption <manifestFile> apiEndpoint <url>\`.`,
+    alias: 'codaApiEndpoint',
+};
+const TimerStrategyArg = {
+    string: true,
+    desc: `Options: none, error, fake (default: ${config_storage_3.DEFAULT_TIMER_STRATEGY}).`,
 };
 exports.commands = [
     {
@@ -57,11 +63,7 @@ exports.commands = [
                 string: true,
                 desc: 'For a dynamic sync table with a variable source location, specify the URL to test here.',
             },
-            timerStrategy: {
-                string: true,
-                default: compile_1.TimerShimStrategy.None,
-                desc: 'Options: none, error, fake.',
-            },
+            timerStrategy: TimerStrategyArg,
             maxRows: {
                 number: true,
                 default: execution_1.DEFAULT_MAX_ROWS,
@@ -117,7 +119,7 @@ exports.commands = [
         describe: 'Clone an existing Pack that was created using Pack Studio',
         builder: {
             apiToken: ApiTokenArg,
-            codaApiEndpoint: CodaApiEndpointArg,
+            apiEndpoint: ApiEndpointArg,
         },
         handler: clone_1.handleClone,
     },
@@ -125,7 +127,7 @@ exports.commands = [
         command: 'register [apiToken]',
         describe: 'Register API token to publish a Pack',
         builder: {
-            codaApiEndpoint: CodaApiEndpointArg,
+            apiEndpoint: ApiEndpointArg,
         },
         handler: register_1.handleRegister,
     },
@@ -133,7 +135,7 @@ exports.commands = [
         command: 'whoami [apiToken]',
         describe: 'Looks up information about the API token that is registered in this environment',
         builder: {
-            codaApiEndpoint: CodaApiEndpointArg,
+            apiEndpoint: ApiEndpointArg,
         },
         handler: whoami_1.handleWhoami,
     },
@@ -150,11 +152,7 @@ exports.commands = [
                 boolean: true,
                 default: true,
             },
-            timerStrategy: {
-                string: true,
-                default: compile_1.TimerShimStrategy.None,
-                desc: 'Options: none, error, fake.',
-            },
+            timerStrategy: TimerStrategyArg,
             intermediateOutputDirectory: {
                 string: true,
                 default: undefined,
@@ -176,13 +174,9 @@ exports.commands = [
                 alias: 'o',
                 default: './_upload_build',
             },
-            timerStrategy: {
-                string: true,
-                default: compile_1.TimerShimStrategy.None,
-                desc: 'Options: none, error, fake.',
-            },
+            timerStrategy: TimerStrategyArg,
             apiToken: ApiTokenArg,
-            codaApiEndpoint: CodaApiEndpointArg,
+            apiEndpoint: ApiEndpointArg,
             allowOlderSdkVersion: {
                 boolean: true,
                 desc: 'Not recommended. Allows uploading a Pack build that uses an older version of the ' +
@@ -212,7 +206,7 @@ exports.commands = [
                 describe: 'The workspace ID, or workspace URL that you want your Pack to be created under.',
             },
             apiToken: ApiTokenArg,
-            codaApiEndpoint: CodaApiEndpointArg,
+            apiEndpoint: ApiEndpointArg,
         },
         handler: create_1.handleCreate,
     },
@@ -221,7 +215,7 @@ exports.commands = [
         describe: "Link to a pre-existing Pack ID on Coda's servers",
         builder: {
             apiToken: ApiTokenArg,
-            codaApiEndpoint: CodaApiEndpointArg,
+            apiEndpoint: ApiEndpointArg,
         },
         handler: link_1.handleLink,
     },
@@ -252,11 +246,10 @@ exports.commands = [
             gitTag: {
                 boolean: true,
                 alias: 'g',
-                describe: 'Create a git tag for this release. Can also be enabled by default via `coda setOption <manifestFile> enableGitTags true`',
-                default: false,
+                describe: `Create a git tag for this release (default: ${config_storage_2.DEFAULT_GIT_TAG}). Can also be enabled by default via \`coda setOption <manifestFile> gitTag true\``,
             },
             apiToken: ApiTokenArg,
-            codaApiEndpoint: CodaApiEndpointArg,
+            apiEndpoint: ApiEndpointArg,
         },
         handler: release_1.handleRelease,
     },
@@ -266,13 +259,16 @@ exports.commands = [
             'the .coda-pack.json file and it will be used for all builds of the pack.\n\n' +
             'Supported options:\n' +
             '  - timerStrategy: Valid values are "none", "error", or "fake".\n' +
-            '  - enableGitTags: Valid values are "true" or "false". When true, the release command will create git tags.\n\n' +
+            '  - gitTag: Valid values are "true" or "false". When true, the release command will create git tags.\n' +
+            '  - apiEndpoint: A URL for the API endpoint, required for single-tenant instances (e.g. "https://my-company.coda.io"). When set, all commands will use this endpoint by default.\n\n' +
             'Usage: coda setOption path/to/pack.ts timerStrategy fake',
         handler: set_option_1.handleSetOption,
     },
 ];
 if (require.main === module) {
-    let cli = yargs_1.default.parserConfiguration({ 'parse-numbers': false });
+    let cli = yargs_1.default
+        .parserConfiguration({ 'parse-numbers': false })
+        .middleware(helpers_1.backfillFromPackConfig);
     for (const cmd of exports.commands) {
         cli = cli.command(cmd);
     }

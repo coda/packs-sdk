@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleRelease = void 0;
-const config_storage_1 = require("./config_storage");
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const build_1 = require("./build");
@@ -14,7 +13,6 @@ const helpers_4 = require("./helpers");
 const errors_1 = require("./errors");
 const errors_2 = require("./errors");
 const git_helpers_2 = require("./git_helpers");
-const config_storage_2 = require("./config_storage");
 const git_helpers_3 = require("./git_helpers");
 const helpers_5 = require("./helpers");
 const coda_1 = require("../helpers/external-api/coda");
@@ -23,14 +21,11 @@ const helpers_6 = require("../testing/helpers");
 const helpers_7 = require("../testing/helpers");
 const helpers_8 = require("../testing/helpers");
 const errors_3 = require("./errors");
-async function handleRelease({ manifestFile, packVersion: explicitPackVersion, codaApiEndpoint, notes, apiToken, gitTag, }) {
+async function handleRelease({ manifestFile, packVersion: explicitPackVersion, apiEndpoint, notes, apiToken, gitTag, }) {
     const manifestDir = path_1.default.dirname(manifestFile);
-    const formattedEndpoint = (0, helpers_4.formatEndpoint)(codaApiEndpoint);
-    apiToken = (0, helpers_1.assertApiToken)(codaApiEndpoint, apiToken);
-    const packId = (0, helpers_2.assertPackId)(manifestDir, codaApiEndpoint);
-    // Check if git tagging is enabled via CLI flag or pack options
-    const packOptions = (0, config_storage_2.getPackOptions)(manifestDir);
-    const enableGitTags = gitTag || (packOptions === null || packOptions === void 0 ? void 0 : packOptions[config_storage_1.PackOptionKey.enableGitTags]) || false;
+    const formattedEndpoint = (0, helpers_4.formatEndpoint)(apiEndpoint);
+    apiToken = (0, helpers_1.assertApiToken)(apiEndpoint, apiToken);
+    const packId = (0, helpers_2.assertPackId)(manifestDir, apiEndpoint);
     const codaClient = (0, helpers_3.createCodaClient)(apiToken, formattedEndpoint);
     // Git state validation
     const gitState = (0, git_helpers_2.getGitState)(manifestDir);
@@ -79,7 +74,7 @@ async function handleRelease({ manifestFile, packVersion: explicitPackVersion, c
     const releaseResponse = await handleResponse(codaClient.createPackRelease(packId, {}, { packVersion, releaseNotes: notes }));
     (0, helpers_6.print)(`Pack version ${packVersion} released successfully (release #${releaseResponse.releaseId}).`);
     // Create git tag if enabled
-    if (enableGitTags && gitState.isGitRepo) {
+    if (gitTag && gitState.isGitRepo) {
         const releaseGitTag = `pack/${packId}/v${packVersion}`;
         if ((0, git_helpers_3.gitTagExists)(releaseGitTag, manifestDir)) {
             (0, helpers_6.print)(`Git tag ${releaseGitTag} already exists, skipping.`);

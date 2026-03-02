@@ -9,13 +9,13 @@ import {tryParseSystemError} from './errors';
 
 interface WhoamiArgs {
   apiToken?: string;
-  codaApiEndpoint: string;
+  apiEndpoint: string;
 }
 
-export async function handleWhoami({apiToken, codaApiEndpoint}: ArgumentsCamelCase<WhoamiArgs>) {
-  const formattedEndpoint = formatEndpoint(codaApiEndpoint);
+export async function handleWhoami({apiToken, apiEndpoint}: ArgumentsCamelCase<WhoamiArgs>) {
+  const formattedEndpoint = formatEndpoint(apiEndpoint);
   if (!apiToken) {
-    apiToken = getApiKey(codaApiEndpoint);
+    apiToken = getApiKey(apiEndpoint);
     if (!apiToken) {
       return printAndExit('Missing API token. Please run `coda register` to register one.');
     }

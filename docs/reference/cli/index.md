@@ -47,9 +47,9 @@ Build your Pack locally (not required; for debugging purposes only)
 :   **Type:** boolean | **Default:** `true`
 
 `--timerStrategy`
-:   Options: none, error, fake.
+:   Options: none, error, fake (default: none).
 
-    **Type:** string | **Default:** `none`
+    **Type:** string
 
 `--intermediateOutputDirectory`
 :   **Type:** string
@@ -66,6 +66,11 @@ Clone an existing Pack that was created using Pack Studio
 
 `--apiToken`, `-t`
 :   API token to use for the operation. Use the `register` command to define a default token.
+
+    **Type:** string
+
+`--apiEndpoint`, `--codaApiEndpoint`
+:   API endpoint to use for the operation (default: https://coda.io). Required for single-tenant instances. Can also be set persistently via `coda setOption <manifestFile> apiEndpoint <url>`.
 
     **Type:** string
 
@@ -99,6 +104,11 @@ Register a new Pack with Coda's servers
 
     **Type:** string
 
+`--apiEndpoint`, `--codaApiEndpoint`
+:   API endpoint to use for the operation (default: https://coda.io). Required for single-tenant instances. Can also be set persistently via `coda setOption <manifestFile> apiEndpoint <url>`.
+
+    **Type:** string
+
 ---
 
 ## execute
@@ -125,9 +135,9 @@ Execute a formula
     **Type:** string
 
 `--timerStrategy`
-:   Options: none, error, fake.
+:   Options: none, error, fake (default: none).
 
-    **Type:** string | **Default:** `none`
+    **Type:** string
 
 `--maxRows`
 :   For a sync table, the maximum number of rows to sync.
@@ -170,6 +180,11 @@ Link to a pre-existing Pack ID on Coda's servers
 
     **Type:** string
 
+`--apiEndpoint`, `--codaApiEndpoint`
+:   API endpoint to use for the operation (default: https://coda.io). Required for single-tenant instances. Can also be set persistently via `coda setOption <manifestFile> apiEndpoint <url>`.
+
+    **Type:** string
+
 ---
 
 ## register
@@ -177,6 +192,13 @@ Link to a pre-existing Pack ID on Coda's servers
 Register API token to publish a Pack
 
 **Usage:** `coda register [apiToken]`
+
+**Options:**
+
+`--apiEndpoint`, `--codaApiEndpoint`
+:   API endpoint to use for the operation (default: https://coda.io). Required for single-tenant instances. Can also be set persistently via `coda setOption <manifestFile> apiEndpoint <url>`.
+
+    **Type:** string
 
 ---
 
@@ -194,12 +216,17 @@ Set the Pack version that is installable for users. You may specify a specific v
     **Type:** string | **Required**
 
 `--gitTag`, `-g`
-:   Create a git tag for this release. Can also be enabled by default via `coda setOption <manifestFile> enableGitTags true`
+:   Create a git tag for this release (default: false). Can also be enabled by default via `coda setOption <manifestFile> gitTag true`
 
-    **Type:** boolean | **Default:** `false`
+    **Type:** boolean
 
 `--apiToken`, `-t`
 :   API token to use for the operation. Use the `register` command to define a default token.
+
+    **Type:** string
+
+`--apiEndpoint`, `--codaApiEndpoint`
+:   API endpoint to use for the operation (default: https://coda.io). Required for single-tenant instances. Can also be set persistently via `coda setOption <manifestFile> apiEndpoint <url>`.
 
     **Type:** string
 
@@ -211,7 +238,8 @@ Set a persistent build option for the pack. This will store the option alongside
 <br>
 Supported options:<br>
   - timerStrategy: Valid values are "none", "error", or "fake".<br>
-  - enableGitTags: Valid values are "true" or "false". When true, the release command will create git tags.<br>
+  - gitTag: Valid values are "true" or "false". When true, the release command will create git tags.<br>
+  - apiEndpoint: A URL for the API endpoint, required for single-tenant instances (e.g. "https://my-company.coda.io"). When set, all commands will use this endpoint by default.<br>
 <br>
 Usage: coda setOption path/to/pack.ts timerStrategy fake
 
@@ -236,12 +264,17 @@ Build and upload your Pack version to Coda
 :   **Type:** string | **Default:** `./_upload_build`
 
 `--timerStrategy`
-:   Options: none, error, fake.
+:   Options: none, error, fake (default: none).
 
-    **Type:** string | **Default:** `none`
+    **Type:** string
 
 `--apiToken`, `-t`
 :   API token to use for the operation. Use the `register` command to define a default token.
+
+    **Type:** string
+
+`--apiEndpoint`, `--codaApiEndpoint`
+:   API endpoint to use for the operation (default: https://coda.io). Required for single-tenant instances. Can also be set persistently via `coda setOption <manifestFile> apiEndpoint <url>`.
 
     **Type:** string
 
@@ -272,6 +305,13 @@ Validate your Pack definition
 Looks up information about the API token that is registered in this environment
 
 **Usage:** `coda whoami [apiToken]`
+
+**Options:**
+
+`--apiEndpoint`, `--codaApiEndpoint`
+:   API endpoint to use for the operation (default: https://coda.io). Required for single-tenant instances. Can also be set persistently via `coda setOption <manifestFile> apiEndpoint <url>`.
+
+    **Type:** string
 
 
 

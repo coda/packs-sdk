@@ -41,7 +41,7 @@ exports.handleSetOption = handleSetOption;
 function validateOption(option, value) {
     const validOptions = Object.values(config_storage_1.PackOptionKey);
     if (!validOptions.includes(option)) {
-        return (0, helpers_2.printAndExit)(`Unsupported option "${option}". Value options are: ${validOptions.join(', ')}`);
+        return (0, helpers_2.printAndExit)(`Unsupported option "${option}". Valid options are: ${validOptions.join(', ')}`);
     }
     const key = option;
     switch (key) {
@@ -51,12 +51,20 @@ function validateOption(option, value) {
                 return (0, helpers_2.printAndExit)(`Invalid option value "${value}". Valid values are ${validValues.join(', ')}`);
             }
             return { [key]: value };
-        case config_storage_1.PackOptionKey.enableGitTags:
+        case config_storage_1.PackOptionKey.gitTag:
             const boolValue = value.toLowerCase();
             if (boolValue !== 'true' && boolValue !== 'false') {
                 return (0, helpers_2.printAndExit)(`Invalid option value "${value}". Valid values are true, false`);
             }
             return { [key]: boolValue === 'true' };
+        case config_storage_1.PackOptionKey.apiEndpoint:
+            try {
+                new URL(value);
+            }
+            catch {
+                return (0, helpers_2.printAndExit)(`Invalid option value "${value}". Value must be a valid URL (e.g. https://my-env.coda.io)`);
+            }
+            return { [key]: value };
         default:
             return (0, __1.ensureUnreachable)(key);
     }

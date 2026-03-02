@@ -57,16 +57,16 @@ function cleanup(intermediateOutputDirectory, logger) {
         logger.info(`Intermediate files are moved to ${tempDirectory}`);
     }
 }
-async function handleUpload({ intermediateOutputDirectory, manifestFile, codaApiEndpoint, notes, timerStrategy, apiToken, allowOlderSdkVersion, }) {
+async function handleUpload({ intermediateOutputDirectory, manifestFile, apiEndpoint, notes, timerStrategy, apiToken, allowOlderSdkVersion, }) {
     const logger = console;
     function printAndExit(message) {
         cleanup(intermediateOutputDirectory, logger);
         (0, helpers_8.printAndExit)(message);
     }
     const manifestDir = path.dirname(manifestFile);
-    const formattedEndpoint = (0, helpers_4.formatEndpoint)(codaApiEndpoint);
-    apiToken = (0, helpers_1.assertApiToken)(codaApiEndpoint, apiToken);
-    const packId = (0, helpers_2.assertPackId)(manifestDir, codaApiEndpoint);
+    const formattedEndpoint = (0, helpers_4.formatEndpoint)(apiEndpoint);
+    apiToken = (0, helpers_1.assertApiToken)(apiEndpoint, apiToken);
+    const packId = (0, helpers_2.assertPackId)(manifestDir, apiEndpoint);
     logger.info('Building Pack bundle...');
     if (fs_extra_1.default.existsSync(intermediateOutputDirectory)) {
         logger.info(`Existing directory ${intermediateOutputDirectory} detected. Probably left over from previous build. Removing it...`);

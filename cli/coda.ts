@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 
 import {DEFAULT_API_ENDPOINT} from './config_storage';
+import {DEFAULT_GIT_TAG} from './config_storage';
 import {DEFAULT_MAX_ROWS} from '../testing/execution';
 import {DEFAULT_OAUTH_SERVER_PORT} from '../testing/auth';
-import {TimerShimStrategy} from '../testing/compile';
+import {DEFAULT_TIMER_STRATEGY} from './config_storage';
 import {Tools} from './extensions';
+import {backfillFromPackConfig} from './helpers';
 import {handleAuth} from './auth';
 import {handleBuild} from './build';
 import {handleClone} from './clone';
@@ -28,10 +30,15 @@ const ApiTokenArg = {
   desc: 'API token to use for the operation. Use the `register` command to define a default token.',
 };
 
-const CodaApiEndpointArg = {
+const ApiEndpointArg = {
   string: true,
-  hidden: true,
-  default: DEFAULT_API_ENDPOINT,
+  desc: `API endpoint to use for the operation (default: ${DEFAULT_API_ENDPOINT}). Required for single-tenant instances. Can also be set persistently via \`coda setOption <manifestFile> apiEndpoint <url>\`.`,
+  alias: 'codaApiEndpoint',
+};
+
+const TimerStrategyArg = {
+  string: true,
+  desc: `Options: none, error, fake (default: ${DEFAULT_TIMER_STRATEGY}).`,
 };
 
 export const commands: yargs.CommandModule[] = [
@@ -56,11 +63,7 @@ export const commands: yargs.CommandModule[] = [
         string: true,
         desc: 'For a dynamic sync table with a variable source location, specify the URL to test here.',
       },
-      timerStrategy: {
-        string: true,
-        default: TimerShimStrategy.None,
-        desc: 'Options: none, error, fake.',
-      },
+      timerStrategy: TimerStrategyArg,
       maxRows: {
         number: true,
         default: DEFAULT_MAX_ROWS,
@@ -117,7 +120,7 @@ export const commands: yargs.CommandModule[] = [
     describe: 'Clone an existing Pack that was created using Pack Studio',
     builder: {
       apiToken: ApiTokenArg,
-      codaApiEndpoint: CodaApiEndpointArg,
+      apiEndpoint: ApiEndpointArg,
     },
     handler: handleClone as any,
   },
@@ -125,7 +128,7 @@ export const commands: yargs.CommandModule[] = [
     command: 'register [apiToken]',
     describe: 'Register API token to publish a Pack',
     builder: {
-      codaApiEndpoint: CodaApiEndpointArg,
+      apiEndpoint: ApiEndpointArg,
     },
     handler: handleRegister as any,
   },
@@ -133,7 +136,7 @@ export const commands: yargs.CommandModule[] = [
     command: 'whoami [apiToken]',
     describe: 'Looks up information about the API token that is registered in this environment',
     builder: {
-      codaApiEndpoint: CodaApiEndpointArg,
+      apiEndpoint: ApiEndpointArg,
     },
     handler: handleWhoami as any,
   },
@@ -150,11 +153,7 @@ export const commands: yargs.CommandModule[] = [
         boolean: true,
         default: true,
       },
-      timerStrategy: {
-        string: true,
-        default: TimerShimStrategy.None,
-        desc: 'Options: none, error, fake.',
-      },
+      timerStrategy: TimerStrategyArg,
       intermediateOutputDirectory: {
         string: true,
         default: undefined,
@@ -176,13 +175,9 @@ export const commands: yargs.CommandModule[] = [
         alias: 'o',
         default: './_upload_build',
       },
-      timerStrategy: {
-        string: true,
-        default: TimerShimStrategy.None,
-        desc: 'Options: none, error, fake.',
-      },
+      timerStrategy: TimerStrategyArg,
       apiToken: ApiTokenArg,
-      codaApiEndpoint: CodaApiEndpointArg,
+      apiEndpoint: ApiEndpointArg,
       allowOlderSdkVersion: {
         boolean: true,
         desc:
@@ -213,7 +208,7 @@ export const commands: yargs.CommandModule[] = [
         describe: 'The workspace ID, or workspace URL that you want your Pack to be created under.',
       },
       apiToken: ApiTokenArg,
-      codaApiEndpoint: CodaApiEndpointArg,
+      apiEndpoint: ApiEndpointArg,
     },
     handler: handleCreate as any,
   },
@@ -222,7 +217,7 @@ export const commands: yargs.CommandModule[] = [
     describe: "Link to a pre-existing Pack ID on Coda's servers",
     builder: {
       apiToken: ApiTokenArg,
-      codaApiEndpoint: CodaApiEndpointArg,
+      apiEndpoint: ApiEndpointArg,
     },
     handler: handleLink as any,
   },
@@ -254,12 +249,10 @@ export const commands: yargs.CommandModule[] = [
       gitTag: {
         boolean: true,
         alias: 'g',
-        describe:
-          'Create a git tag for this release. Can also be enabled by default via `coda setOption <manifestFile> enableGitTags true`',
-        default: false,
+        describe: `Create a git tag for this release (default: ${DEFAULT_GIT_TAG}). Can also be enabled by default via \`coda setOption <manifestFile> gitTag true\``,
       },
       apiToken: ApiTokenArg,
-      codaApiEndpoint: CodaApiEndpointArg,
+      apiEndpoint: ApiEndpointArg,
     },
     handler: handleRelease as any,
   },
@@ -270,14 +263,15 @@ export const commands: yargs.CommandModule[] = [
       'the .coda-pack.json file and it will be used for all builds of the pack.\n\n' +
       'Supported options:\n' +
       '  - timerStrategy: Valid values are "none", "error", or "fake".\n' +
-      '  - enableGitTags: Valid values are "true" or "false". When true, the release command will create git tags.\n\n' +
+      '  - gitTag: Valid values are "true" or "false". When true, the release command will create git tags.\n' +
+      '  - apiEndpoint: A URL for the API endpoint, required for single-tenant instances (e.g. "https://my-company.coda.io"). When set, all commands will use this endpoint by default.\n\n' +
       'Usage: coda setOption path/to/pack.ts timerStrategy fake',
     handler: handleSetOption as any,
   },
 ];
 
 if (require.main === module) {
-  let cli = yargs.parserConfiguration({'parse-numbers': false});
+  let cli = yargs.parserConfiguration({'parse-numbers': false}).middleware(backfillFromPackConfig);
   for (const cmd of commands) {
     cli = cli.command(cmd);
   }

@@ -15,15 +15,15 @@ import {storePackId} from './config_storage';
 
 interface CloneArgs {
   packIdOrUrl: string;
-  codaApiEndpoint: string;
+  apiEndpoint: string;
   apiToken?: string;
 }
 
-export async function handleClone({packIdOrUrl, codaApiEndpoint, apiToken}: ArgumentsCamelCase<CloneArgs>) {
+export async function handleClone({packIdOrUrl, apiEndpoint, apiToken}: ArgumentsCamelCase<CloneArgs>) {
   const manifestDir = process.cwd();
   const packId = assertPackIdOrUrl(packIdOrUrl);
-  const formattedEndpoint = formatEndpoint(codaApiEndpoint);
-  apiToken = assertApiToken(codaApiEndpoint, apiToken);
+  const formattedEndpoint = formatEndpoint(apiEndpoint);
+  apiToken = assertApiToken(apiEndpoint, apiToken);
 
   const codeAlreadyExists = fs.existsSync(path.join(manifestDir, 'pack.ts'));
   if (codeAlreadyExists) {
@@ -68,14 +68,14 @@ export async function handleClone({packIdOrUrl, codaApiEndpoint, apiToken}: Argu
     }
 
     await handleInit();
-    storePackId(manifestDir, packId, codaApiEndpoint);
+    storePackId(manifestDir, packId, apiEndpoint);
     return;
   }
 
   print(`Fetched source at version ${packVersion}`);
 
   await handleInit();
-  storePackId(manifestDir, packId, codaApiEndpoint);
+  storePackId(manifestDir, packId, apiEndpoint);
 
   fs.writeFileSync(path.join(manifestDir, 'pack.ts'), sourceCode);
   printAndExit("Successfully updated pack.ts with the Pack's code!", 0);

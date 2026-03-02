@@ -12,8 +12,8 @@ const helpers_3 = require("../testing/helpers");
 const helpers_4 = require("../testing/helpers");
 const config_storage_1 = require("./config_storage");
 const errors_1 = require("./errors");
-async function handleRegister({ apiToken, codaApiEndpoint }) {
-    const formattedEndpoint = (0, helpers_2.formatEndpoint)(codaApiEndpoint);
+async function handleRegister({ apiToken, apiEndpoint }) {
+    const formattedEndpoint = (0, helpers_2.formatEndpoint)(apiEndpoint);
     if (!apiToken) {
         // TODO: deal with auto-open on devbox setups
         const shouldOpenBrowser = (0, helpers_4.promptForInput)('No API token provided. Do you want to visit Coda to create one (y/N)? ', {
@@ -36,7 +36,7 @@ async function handleRegister({ apiToken, codaApiEndpoint }) {
         const errors = [`Unexpected error while checking validity of API token: ${err}`, (0, errors_1.tryParseSystemError)(err)];
         return (0, helpers_3.printAndExit)(errors.join('\n'));
     }
-    (0, config_storage_1.storeCodaApiKey)(apiToken, process.env.PWD, codaApiEndpoint);
+    (0, config_storage_1.storeCodaApiKey)(apiToken, process.env.PWD, apiEndpoint);
     (0, helpers_3.printAndExit)(`API key validated and stored successfully!`, 0);
 }
 exports.handleRegister = handleRegister;
