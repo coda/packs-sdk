@@ -43,3 +43,11 @@ Allows formulas within a pack to be used as tools.
 > **ScreenAnnotation**: `"ScreenAnnotation"`
 
 Allows screen annotations to be used as tools.
+
+***
+
+### WebSearch
+
+> **WebSearch**: `"WebSearch"`
+
+Tool that enables searching the public internet for up-to-date information.
