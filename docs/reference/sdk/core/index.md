@@ -171,6 +171,7 @@ import * as coda from "@codahq/packs-sdk";
 - [UpdateSyncExecutionContext](interfaces/UpdateSyncExecutionContext.md)
 - [ValidParameterValidationResult](interfaces/ValidParameterValidationResult.md)
 - [WebBasicAuthentication](interfaces/WebBasicAuthentication.md)
+- [WebSearchTool](interfaces/WebSearchTool.md)
 
 ## Type Aliases
 

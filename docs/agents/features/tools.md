@@ -5,12 +5,7 @@ description: Provide your agent the ability to run code and call APIs.
 
 # Give your agent access to tools
 
-Agent [skills][skills] can be provided with a set of tools, which the LLM can choose to leverage. There are a few types of tools:
-
-- `Pack` - Allow the LLM to run a Pack formula, which can calculate a value or take an action.
-- `Knowledge` - Allow the LLM to query previously indexed records from the knowledge layer.
-- `ScreenAnnotation` - Allow the LLM to draw on the user's doc or screen.
-
+Agent [skills][skills] can be provided with a set of tools, which the LLM can choose to leverage. These tools can provide access to external knowledge or functionality, allowing you to build more capable agents.
 
 ## Pack tools
 
@@ -231,6 +226,46 @@ pack.addMCPServer({
 Learn more about connecting to an MCP server in the [MCP guide][mcp].
 
 
+## Web search
+
+The `WebSearch` tool allows the agent to search the internet for information or fetch data from a public URL. It's useful when the agent needs to do deeper research or reference information that may have changed after the LLM's training cutoff.
+
+```ts
+pack.addSkill({
+  name: "HalfLife3",
+  displayName: "Half-life 3",
+  description: "Answers questions about the video game Half-life 3.",
+  prompt: `
+    Use the web search tool to find out if a release date has been announced
+    for Half-life 3.
+  `,
+  tools: [
+    { type: coda.ToolType.WebSearch },
+  ],
+});
+```
+
+You can limit which domains the search results come from by specifying the [`allowedDomains`][allowed_domains] field.
+
+```ts
+pack.addSkill({
+  name: "CodeReviewer",
+  // ...
+  tools: [
+    {
+      type: coda.ToolType.WebSearch,
+      allowedDomains: ["github.com"],
+    },
+  ],
+});
+```
+
+When used to retrieve information from a specific URL, and the user did not supply that URL, Superhuman Go will require the user to approve the tool call first.
+
+!!! tip "Use the Fetcher for API calls"
+    The web search tool can only access public information and returns a summary of the retrieved information. When you need to make precise API calls, instead create a [formula][formulas] and use the [`Fetcher`][fetcher] to make the HTTP request.
+
+
 [skills]: ./skills.md
 [formulas]: ../../guides/blocks/formulas.md
 [actions]: ../../guides/blocks/actions.md
@@ -238,3 +273,5 @@ Learn more about connecting to an MCP server in the [MCP guide][mcp].
 [mcp]: ./mcp.md
 [indexing_schemas]: ../indexing/schema.md#contacts
 [contact_resolution]: ../../reference/sdk/core/enumerations/ToolType.md#contactresolution
+[fetcher]: ../../guides/basics/fetcher.md
+[allowed_domains]: ../../reference/sdk/core/interfaces/WebSearchTool.md#alloweddomains
