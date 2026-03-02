@@ -6,10 +6,8 @@ const helpers_2 = require("./helpers");
 const config_storage_1 = require("./config_storage");
 const coda_1 = require("../helpers/external-api/coda");
 const helpers_3 = require("../testing/helpers");
-const helpers_4 = require("./helpers");
 const errors_1 = require("./errors");
 async function handleWhoami({ apiToken, apiEndpoint }) {
-    apiEndpoint = (0, helpers_4.resolveApiEndpoint)(apiEndpoint);
     const formattedEndpoint = (0, helpers_2.formatEndpoint)(apiEndpoint);
     if (!apiToken) {
         apiToken = (0, config_storage_1.getApiKey)(apiEndpoint);

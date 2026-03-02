@@ -15,11 +15,9 @@ const path_1 = __importDefault(require("path"));
 const helpers_5 = require("../testing/helpers");
 const helpers_6 = require("../testing/helpers");
 const helpers_7 = require("../testing/helpers");
-const helpers_8 = require("./helpers");
 const config_storage_1 = require("./config_storage");
 async function handleClone({ packIdOrUrl, apiEndpoint, apiToken }) {
     const manifestDir = process.cwd();
-    apiEndpoint = (0, helpers_8.resolveApiEndpoint)(apiEndpoint, manifestDir);
     const packId = (0, helpers_2.assertPackIdOrUrl)(packIdOrUrl);
     const formattedEndpoint = (0, helpers_4.formatEndpoint)(apiEndpoint);
     apiToken = (0, helpers_1.assertApiToken)(apiEndpoint, apiToken);

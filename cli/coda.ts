@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 
 import {DEFAULT_API_ENDPOINT} from './config_storage';
+import {DEFAULT_GIT_TAG} from './config_storage';
 import {DEFAULT_MAX_ROWS} from '../testing/execution';
 import {DEFAULT_OAUTH_SERVER_PORT} from '../testing/auth';
-import {TimerShimStrategy} from '../testing/compile';
+import {DEFAULT_TIMER_STRATEGY} from './config_storage';
 import {Tools} from './extensions';
+import {backfillFromPackConfig} from './helpers';
 import {handleAuth} from './auth';
 import {handleBuild} from './build';
 import {handleClone} from './clone';
@@ -30,19 +32,19 @@ const ApiTokenArg = {
 
 const ApiEndpointArg = {
   string: true,
-  default: DEFAULT_API_ENDPOINT,
-  desc: 'API endpoint to use for the operation. Required for single-tenant instances. Can also be set persistently via `coda setOption <manifestFile> apiEndpoint <url>`.',
+  desc: `API endpoint to use for the operation (default: ${DEFAULT_API_ENDPOINT}). Required for single-tenant instances. Can also be set persistently via \`coda setOption <manifestFile> apiEndpoint <url>\`.`,
+  alias: 'codaApiEndpoint',
+};
+
+const TimerStrategyArg = {
+  string: true,
+  desc: `Options: none, error, fake (default: ${DEFAULT_TIMER_STRATEGY}).`,
 };
 
 if (require.main === module) {
   void yargs
     .parserConfiguration({'parse-numbers': false})
-    .middleware((argv: any) => {
-      // Support legacy --codaApiEndpoint flag as a hidden alias.
-      if (argv.codaApiEndpoint && !argv.apiEndpoint) {
-        argv.apiEndpoint = argv.codaApiEndpoint;
-      }
-    })
+    .middleware(backfillFromPackConfig)
     .command({
       command: 'execute <manifestPath> <formulaName> [params..]',
       describe: 'Execute a formula',
@@ -62,11 +64,7 @@ if (require.main === module) {
           string: true,
           desc: 'For a dynamic sync table with a variable source location, specify the URL to test here.',
         },
-        timerStrategy: {
-          string: true,
-          default: TimerShimStrategy.None,
-          desc: 'Options: none, error, fake.',
-        },
+        timerStrategy: TimerStrategyArg,
         maxRows: {
           number: true,
           default: DEFAULT_MAX_ROWS,
@@ -156,11 +154,7 @@ if (require.main === module) {
           boolean: true,
           default: true,
         },
-        timerStrategy: {
-          string: true,
-          default: TimerShimStrategy.None,
-          desc: 'Options: none, error, fake.',
-        },
+        timerStrategy: TimerStrategyArg,
         intermediateOutputDirectory: {
           string: true,
           default: undefined,
@@ -182,11 +176,7 @@ if (require.main === module) {
           alias: 'o',
           default: './_upload_build',
         },
-        timerStrategy: {
-          string: true,
-          default: TimerShimStrategy.None,
-          desc: 'Options: none, error, fake.',
-        },
+        timerStrategy: TimerStrategyArg,
         apiToken: ApiTokenArg,
         apiEndpoint: ApiEndpointArg,
         allowOlderSdkVersion: {
@@ -260,9 +250,7 @@ if (require.main === module) {
         gitTag: {
           boolean: true,
           alias: 'g',
-          describe:
-            'Create a git tag for this release. Can also be enabled by default via `coda setOption <manifestFile> enableGitTags true`',
-          default: false,
+          describe: `Create a git tag for this release (default: ${DEFAULT_GIT_TAG}). Can also be enabled by default via \`coda setOption <manifestFile> gitTag true\``,
         },
         apiToken: ApiTokenArg,
         apiEndpoint: ApiEndpointArg,
@@ -276,7 +264,7 @@ if (require.main === module) {
         'the .coda-pack.json file and it will be used for all builds of the pack.\n\n' +
         'Supported options:\n' +
         '  - timerStrategy: Valid values are "none", "error", or "fake".\n' +
-        '  - enableGitTags: Valid values are "true" or "false". When true, the release command will create git tags.\n' +
+        '  - gitTag: Valid values are "true" or "false". When true, the release command will create git tags.\n' +
         '  - apiEndpoint: A URL for the API endpoint, required for single-tenant instances (e.g. "https://my-company.coda.io"). When set, all commands will use this endpoint by default.\n\n' +
         'Usage: coda setOption path/to/pack.ts timerStrategy fake',
       handler: handleSetOption as any,

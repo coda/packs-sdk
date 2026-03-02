@@ -46,7 +46,6 @@ const path = __importStar(require("path"));
 const helpers_7 = require("../testing/helpers");
 const helpers_8 = require("../testing/helpers");
 const helpers_9 = require("../testing/helpers");
-const helpers_10 = require("./helpers");
 const errors_3 = require("./errors");
 const uuid_1 = require("uuid");
 const validate_1 = require("./validate");
@@ -65,7 +64,6 @@ async function handleUpload({ intermediateOutputDirectory, manifestFile, apiEndp
         (0, helpers_8.printAndExit)(message);
     }
     const manifestDir = path.dirname(manifestFile);
-    apiEndpoint = (0, helpers_10.resolveApiEndpoint)(apiEndpoint, manifestDir);
     const formattedEndpoint = (0, helpers_4.formatEndpoint)(apiEndpoint);
     apiToken = (0, helpers_1.assertApiToken)(apiEndpoint, apiToken);
     const packId = (0, helpers_2.assertPackId)(manifestDir, apiEndpoint);

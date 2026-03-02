@@ -24,7 +24,7 @@ export async function handleSetOption({manifestFile, option, value}: ArgumentsCa
 function validateOption(option: string, value: string): PackOptions {
   const validOptions = Object.values(PackOptionKey) as string[];
   if (!validOptions.includes(option)) {
-    return printAndExit(`Unsupported option "${option}". Value options are: ${validOptions.join(', ')}`);
+    return printAndExit(`Unsupported option "${option}". Valid options are: ${validOptions.join(', ')}`);
   }
   const key = option as PackOptionKey;
   switch (key) {
@@ -34,7 +34,7 @@ function validateOption(option: string, value: string): PackOptions {
         return printAndExit(`Invalid option value "${value}". Valid values are ${validValues.join(', ')}`);
       }
       return {[key]: value as TimerShimStrategy};
-    case PackOptionKey.enableGitTags:
+    case PackOptionKey.gitTag:
       const boolValue = value.toLowerCase();
       if (boolValue !== 'true' && boolValue !== 'false') {
         return printAndExit(`Invalid option value "${value}". Valid values are true, false`);

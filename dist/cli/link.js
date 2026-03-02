@@ -9,7 +9,6 @@ const config_storage_1 = require("./config_storage");
 const coda_1 = require("../helpers/external-api/coda");
 const helpers_5 = require("../testing/helpers");
 const helpers_6 = require("../testing/helpers");
-const helpers_7 = require("./helpers");
 const config_storage_2 = require("./config_storage");
 // Regular expression that matches coda.io/p/<packId> or <packId>.
 const PackEditUrlRegex = /^https:\/\/(?:[^/]*)coda.io(?:\:[0-9]+)?\/p\/([0-9]+)(:?[^0-9].*)?$/;
@@ -19,7 +18,6 @@ const PackRegexes = [PackEditUrlRegex, PackGalleryUrlRegex, PackPlainIdRegex];
 async function handleLink({ manifestDir, apiEndpoint, packIdOrUrl, apiToken }) {
     // TODO(dweitzman): Add a download command to fetch the latest code from
     // the server and ask people if they want to download after linking.
-    apiEndpoint = (0, helpers_7.resolveApiEndpoint)(apiEndpoint, manifestDir);
     const formattedEndpoint = (0, helpers_4.formatEndpoint)(apiEndpoint);
     apiToken = (0, helpers_1.assertApiToken)(apiEndpoint, apiToken);
     const packId = (0, helpers_2.assertPackIdOrUrl)(packIdOrUrl);

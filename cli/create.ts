@@ -10,7 +10,6 @@ import {getPackId} from './config_storage';
 import {isResponseError} from '../helpers/external-api/coda';
 import * as path from 'path';
 import {printAndExit} from '../testing/helpers';
-import {resolveApiEndpoint} from './helpers';
 import {storePackId} from './config_storage';
 import {tryParseSystemError} from './errors';
 
@@ -41,7 +40,6 @@ export async function createPack(
   apiToken?: string,
 ) {
   const manifestDir = path.dirname(manifestFile);
-  apiEndpoint = resolveApiEndpoint(apiEndpoint, manifestDir);
   const formattedEndpoint = formatEndpoint(apiEndpoint);
   apiToken = assertApiToken(apiEndpoint, apiToken);
 

@@ -26,12 +26,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.resolveApiEndpoint = exports.assertPackIdOrUrl = exports.assertPackId = exports.assertApiToken = exports.importManifest = exports.getPackAuth = exports.makeManifestFullPath = exports.isTestCommand = exports.formatEndpoint = exports.createCodaClient = exports.spawnProcess = void 0;
+exports.backfillFromPackConfig = exports.assertPackIdOrUrl = exports.assertPackId = exports.assertApiToken = exports.importManifest = exports.getPackAuth = exports.makeManifestFullPath = exports.isTestCommand = exports.formatEndpoint = exports.createCodaClient = exports.spawnProcess = void 0;
 const coda_1 = require("../helpers/external-api/coda");
 const config_storage_1 = require("./config_storage");
 const config_storage_2 = require("./config_storage");
 const config_storage_3 = require("./config_storage");
 const config_storage_4 = require("./config_storage");
+const config_storage_5 = require("./config_storage");
+const config_storage_6 = require("./config_storage");
+const config_storage_7 = require("./config_storage");
+const config_storage_8 = require("./config_storage");
 const link_1 = require("./link");
 const path_1 = __importDefault(require("path"));
 const helpers_1 = require("../testing/helpers");
@@ -86,7 +90,7 @@ function assertApiToken(codaApiEndpoint, cliApiToken) {
     if (cliApiToken) {
         return cliApiToken;
     }
-    const apiKey = (0, config_storage_2.getApiKey)(codaApiEndpoint);
+    const apiKey = (0, config_storage_6.getApiKey)(codaApiEndpoint);
     if (!apiKey) {
         return (0, helpers_2.printAndExit)('Missing API token. Please run `coda register` to register one.');
     }
@@ -94,7 +98,7 @@ function assertApiToken(codaApiEndpoint, cliApiToken) {
 }
 exports.assertApiToken = assertApiToken;
 function assertPackId(manifestDir, codaApiEndpoint) {
-    const packId = (0, config_storage_3.getPackId)(manifestDir, codaApiEndpoint);
+    const packId = (0, config_storage_7.getPackId)(manifestDir, codaApiEndpoint);
     if (!packId) {
         return (0, helpers_2.printAndExit)(`Could not find a Pack id in directory ${manifestDir}. You may need to run "coda create" first if this is a brand new pack.`);
     }
@@ -109,13 +113,29 @@ function assertPackIdOrUrl(packIdOrUrl) {
     return packId;
 }
 exports.assertPackIdOrUrl = assertPackIdOrUrl;
-function resolveApiEndpoint(codaApiEndpoint, manifestDir) {
-    const dir = manifestDir || process.env.PWD || '.';
-    const packOptions = (0, config_storage_4.getPackOptions)(dir);
-    const storedEndpoint = packOptions === null || packOptions === void 0 ? void 0 : packOptions[config_storage_1.PackOptionKey.apiEndpoint];
-    if (storedEndpoint) {
-        return storedEndpoint;
+function backfillFromPackConfig(argv) {
+    var _a, _b, _c, _d;
+    const manifestDir = getManifestDir(argv);
+    const packOptions = (0, config_storage_8.getPackOptions)(manifestDir);
+    if (argv.apiEndpoint === undefined) {
+        argv.apiEndpoint = (_a = packOptions === null || packOptions === void 0 ? void 0 : packOptions[config_storage_5.PackOptionKey.apiEndpoint]) !== null && _a !== void 0 ? _a : config_storage_1.DEFAULT_API_ENDPOINT;
     }
-    return codaApiEndpoint;
+    if (argv.timerStrategy === undefined) {
+        argv.timerStrategy = (_b = packOptions === null || packOptions === void 0 ? void 0 : packOptions[config_storage_5.PackOptionKey.timerStrategy]) !== null && _b !== void 0 ? _b : config_storage_3.DEFAULT_TIMER_STRATEGY;
+    }
+    if (argv.gitTag === undefined) {
+        argv.gitTag =
+            (_d = (_c = packOptions === null || packOptions === void 0 ? void 0 : packOptions[config_storage_5.PackOptionKey.gitTag]) !== null && _c !== void 0 ? _c : packOptions === null || packOptions === void 0 ? void 0 : packOptions[config_storage_4.DeprecatedPackOptionKey.enableGitTags]) !== null && _d !== void 0 ? _d : config_storage_2.DEFAULT_GIT_TAG;
+    }
 }
-exports.resolveApiEndpoint = resolveApiEndpoint;
+exports.backfillFromPackConfig = backfillFromPackConfig;
+function getManifestDir(argv) {
+    const manifestPath = argv.manifestFile || argv.manifestPath;
+    if (manifestPath) {
+        return path_1.default.dirname(manifestPath);
+    }
+    if (argv.manifestDir) {
+        return argv.manifestDir;
+    }
+    return process.cwd();
+}
