@@ -262,7 +262,6 @@ var ToolType;
     ToolType["DynamicSuggestedPrompt"] = "DynamicSuggestedPrompt";
     /**
      * Tool that enables searching the public internet for up-to-date information.
-     * @internal
      */
     ToolType["WebSearch"] = "WebSearch";
     /**

@@ -5572,7 +5572,6 @@ export declare enum ToolType {
 	DynamicSuggestedPrompt = "DynamicSuggestedPrompt",
 	/**
 	 * Tool that enables searching the public internet for up-to-date information.
-	 * @internal
 	 */
 	WebSearch = "WebSearch",
 	/**
@@ -5747,18 +5746,27 @@ export interface DynamicSuggestedPromptTool extends BaseTool<ToolType.DynamicSug
 /**
  * Tool that enables searching the public internet for up-to-date information.
  * When enabled, the agent can search the web to retrieve current information
- * that may not be available in the user's workspace or knowledge base.
- * @internal
+ * about a topic or from a URL.
  */
 export interface WebSearchTool extends BaseTool<ToolType.WebSearch> {
 	/**
 	 * Optional list of domains to restrict web search results to.
 	 * When specified, only results from these domains will be returned.
-	 * Omit the HTTP/HTTPS prefix (e.g., use 'docs.example.com' not 'https://docs.example.com').
+	 * Omit the HTTP/HTTPS prefix (e.g., use `docs.example.com` not `https://docs.example.com`).
 	 * Subdomains are automatically included in the search.
 	 * Maximum of 100 domains allowed.
-	 * Example: ['docs.google.com', 'stackoverflow.com']
-	 * @internal
+	 * @example
+	 * ```ts
+	 * pack.addSkill({
+	 *   // ...
+	 *   tools: [
+	 *     {
+	 *       type: coda.ToolType.WebSearch,
+	 *       allowedDomains: ["docs.google.com", "stackoverflow.com"],
+	 *     },
+	 *   ],
+	 * });
+	 * ```
 	 */
 	allowedDomains?: string[];
 }
