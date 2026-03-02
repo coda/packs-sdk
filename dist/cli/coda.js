@@ -266,9 +266,7 @@ exports.commands = [
     },
 ];
 if (require.main === module) {
-    let cli = yargs_1.default
-        .parserConfiguration({ 'parse-numbers': false })
-        .middleware(helpers_1.backfillFromPackConfig);
+    let cli = yargs_1.default.parserConfiguration({ 'parse-numbers': false }).middleware(helpers_1.backfillFromPackConfig);
     for (const cmd of exports.commands) {
         cli = cli.command(cmd);
     }
