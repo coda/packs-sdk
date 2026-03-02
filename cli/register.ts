@@ -5,7 +5,6 @@ import {isResponseError} from '../helpers/external-api/coda';
 import open from 'open';
 import {printAndExit} from '../testing/helpers';
 import {promptForInput} from '../testing/helpers';
-import {resolveApiEndpoint} from './helpers';
 import {storeCodaApiKey} from './config_storage';
 import {tryParseSystemError} from './errors';
 
@@ -15,7 +14,6 @@ interface RegisterArgs {
 }
 
 export async function handleRegister({apiToken, apiEndpoint}: ArgumentsCamelCase<RegisterArgs>) {
-  apiEndpoint = resolveApiEndpoint(apiEndpoint);
   const formattedEndpoint = formatEndpoint(apiEndpoint);
   if (!apiToken) {
     // TODO: deal with auto-open on devbox setups

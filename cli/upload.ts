@@ -24,7 +24,6 @@ import * as path from 'path';
 import {print} from '../testing/helpers';
 import {printAndExit as printAndExitImpl} from '../testing/helpers';
 import {readFile} from '../testing/helpers';
-import {resolveApiEndpoint} from './helpers';
 import {tryParseSystemError} from './errors';
 import {v4} from 'uuid';
 import {validateMetadata} from './validate';
@@ -65,7 +64,6 @@ export async function handleUpload({
   }
 
   const manifestDir = path.dirname(manifestFile);
-  apiEndpoint = resolveApiEndpoint(apiEndpoint, manifestDir);
   const formattedEndpoint = formatEndpoint(apiEndpoint);
   apiToken = assertApiToken(apiEndpoint, apiToken);
   const packId = assertPackId(manifestDir, apiEndpoint);

@@ -1,6 +1,5 @@
 import type {ArgumentsCamelCase} from 'yargs';
 import type {BasicPackDefinition} from '..';
-import {PackOptionKey} from './config_storage';
 import type {PackVersionDefinition} from '..';
 import {assertApiToken} from './helpers';
 import {assertPackId} from './helpers';
@@ -11,7 +10,6 @@ import {formatEndpoint} from './helpers';
 import {formatError} from './errors';
 import {formatResponseError} from './errors';
 import {getGitState} from './git_helpers';
-import {getPackOptions} from './config_storage';
 import {gitTagExists} from './git_helpers';
 import {importManifest} from './helpers';
 import {isResponseError} from '../helpers/external-api/coda';
@@ -19,7 +17,6 @@ import path from 'path';
 import {print} from '../testing/helpers';
 import {printAndExit} from '../testing/helpers';
 import {promptForInput} from '../testing/helpers';
-import {resolveApiEndpoint} from './helpers';
 import {tryParseSystemError} from './errors';
 
 interface ReleaseArgs {
@@ -40,14 +37,9 @@ export async function handleRelease({
   gitTag,
 }: ArgumentsCamelCase<ReleaseArgs>) {
   const manifestDir = path.dirname(manifestFile);
-  apiEndpoint = resolveApiEndpoint(apiEndpoint, manifestDir);
   const formattedEndpoint = formatEndpoint(apiEndpoint);
   apiToken = assertApiToken(apiEndpoint, apiToken);
   const packId = assertPackId(manifestDir, apiEndpoint);
-
-  // Check if git tagging is enabled via CLI flag or pack options
-  const packOptions = getPackOptions(manifestDir);
-  const enableGitTags = gitTag || packOptions?.[PackOptionKey.enableGitTags] || false;
 
   const codaClient = createCodaClient(apiToken, formattedEndpoint);
 
@@ -115,7 +107,7 @@ export async function handleRelease({
   print(`Pack version ${packVersion} released successfully (release #${releaseResponse.releaseId}).`);
 
   // Create git tag if enabled
-  if (enableGitTags && gitState.isGitRepo) {
+  if (gitTag && gitState.isGitRepo) {
     const releaseGitTag = `pack/${packId}/v${packVersion}`;
 
     if (gitTagExists(releaseGitTag, manifestDir)) {

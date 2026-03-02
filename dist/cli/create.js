@@ -38,7 +38,6 @@ const config_storage_2 = require("./config_storage");
 const coda_1 = require("../helpers/external-api/coda");
 const path = __importStar(require("path"));
 const helpers_4 = require("../testing/helpers");
-const helpers_5 = require("./helpers");
 const config_storage_3 = require("./config_storage");
 const errors_3 = require("./errors");
 async function handleCreate({ manifestFile, apiEndpoint, name, description, workspace, apiToken, }) {
@@ -47,7 +46,6 @@ async function handleCreate({ manifestFile, apiEndpoint, name, description, work
 exports.handleCreate = handleCreate;
 async function createPack(manifestFile, apiEndpoint, { name, description, workspace }, apiToken) {
     const manifestDir = path.dirname(manifestFile);
-    apiEndpoint = (0, helpers_5.resolveApiEndpoint)(apiEndpoint, manifestDir);
     const formattedEndpoint = (0, helpers_3.formatEndpoint)(apiEndpoint);
     apiToken = (0, helpers_1.assertApiToken)(apiEndpoint, apiToken);
     if (!fs_1.default.existsSync(manifestFile)) {

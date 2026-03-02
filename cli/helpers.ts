@@ -1,6 +1,10 @@
 import type {Authentication} from '../types';
 import type {BasicPackDefinition} from '../types';
 import {Client} from '../helpers/external-api/coda';
+import {DEFAULT_API_ENDPOINT} from './config_storage';
+import {DEFAULT_GIT_TAG} from './config_storage';
+import {DEFAULT_TIMER_STRATEGY} from './config_storage';
+import {DeprecatedPackOptionKey} from './config_storage';
 import {PackOptionKey} from './config_storage';
 import type {SpawnSyncOptionsWithBufferEncoding} from 'child_process';
 import {getApiKey} from './config_storage';
@@ -87,12 +91,29 @@ export function assertPackIdOrUrl(packIdOrUrl: string): number {
   return packId;
 }
 
-export function resolveApiEndpoint(codaApiEndpoint: string, manifestDir?: string): string {
-  const dir = manifestDir || process.env.PWD || '.';
-  const packOptions = getPackOptions(dir);
-  const storedEndpoint = packOptions?.[PackOptionKey.apiEndpoint];
-  if (storedEndpoint) {
-    return storedEndpoint;
+export function backfillFromPackConfig(argv: any) {
+  const manifestDir = getManifestDir(argv);
+  const packOptions = getPackOptions(manifestDir);
+
+  if (argv.apiEndpoint === undefined) {
+    argv.apiEndpoint = packOptions?.[PackOptionKey.apiEndpoint] ?? DEFAULT_API_ENDPOINT;
   }
-  return codaApiEndpoint;
+  if (argv.timerStrategy === undefined) {
+    argv.timerStrategy = packOptions?.[PackOptionKey.timerStrategy] ?? DEFAULT_TIMER_STRATEGY;
+  }
+  if (argv.gitTag === undefined) {
+    argv.gitTag =
+      packOptions?.[PackOptionKey.gitTag] ?? packOptions?.[DeprecatedPackOptionKey.enableGitTags] ?? DEFAULT_GIT_TAG;
+  }
+}
+
+function getManifestDir(argv: any): string {
+  const manifestPath = argv.manifestFile || argv.manifestPath;
+  if (manifestPath) {
+    return path.dirname(manifestPath);
+  }
+  if (argv.manifestDir) {
+    return argv.manifestDir;
+  }
+  return process.cwd();
 }

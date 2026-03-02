@@ -11,7 +11,6 @@ import path from 'path';
 import {print} from '../testing/helpers';
 import {printAndExit} from '../testing/helpers';
 import {promptForInput} from '../testing/helpers';
-import {resolveApiEndpoint} from './helpers';
 import {storePackId} from './config_storage';
 
 interface CloneArgs {
@@ -22,7 +21,6 @@ interface CloneArgs {
 
 export async function handleClone({packIdOrUrl, apiEndpoint, apiToken}: ArgumentsCamelCase<CloneArgs>) {
   const manifestDir = process.cwd();
-  apiEndpoint = resolveApiEndpoint(apiEndpoint, manifestDir);
   const packId = assertPackIdOrUrl(packIdOrUrl);
   const formattedEndpoint = formatEndpoint(apiEndpoint);
   apiToken = assertApiToken(apiEndpoint, apiToken);

@@ -7,7 +7,6 @@ import {getPackId} from './config_storage';
 import {isResponseError} from '../helpers/external-api/coda';
 import {printAndExit} from '../testing/helpers';
 import {promptForInput} from '../testing/helpers';
-import {resolveApiEndpoint} from './helpers';
 import {storePackId} from './config_storage';
 
 // Regular expression that matches coda.io/p/<packId> or <packId>.
@@ -26,7 +25,6 @@ interface LinkArgs {
 export async function handleLink({manifestDir, apiEndpoint, packIdOrUrl, apiToken}: ArgumentsCamelCase<LinkArgs>) {
   // TODO(dweitzman): Add a download command to fetch the latest code from
   // the server and ask people if they want to download after linking.
-  apiEndpoint = resolveApiEndpoint(apiEndpoint, manifestDir);
   const formattedEndpoint = formatEndpoint(apiEndpoint);
   apiToken = assertApiToken(apiEndpoint, apiToken);
   const packId = assertPackIdOrUrl(packIdOrUrl);

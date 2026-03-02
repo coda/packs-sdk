@@ -5,7 +5,6 @@ import {formatEndpoint} from './helpers';
 import {getApiKey} from './config_storage';
 import {isResponseError} from '../helpers/external-api/coda';
 import {printAndExit} from '../testing/helpers';
-import {resolveApiEndpoint} from './helpers';
 import {tryParseSystemError} from './errors';
 
 interface WhoamiArgs {
@@ -14,7 +13,6 @@ interface WhoamiArgs {
 }
 
 export async function handleWhoami({apiToken, apiEndpoint}: ArgumentsCamelCase<WhoamiArgs>) {
-  apiEndpoint = resolveApiEndpoint(apiEndpoint);
   const formattedEndpoint = formatEndpoint(apiEndpoint);
   if (!apiToken) {
     apiToken = getApiKey(apiEndpoint);

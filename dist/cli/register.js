@@ -10,11 +10,9 @@ const coda_1 = require("../helpers/external-api/coda");
 const open_1 = __importDefault(require("open"));
 const helpers_3 = require("../testing/helpers");
 const helpers_4 = require("../testing/helpers");
-const helpers_5 = require("./helpers");
 const config_storage_1 = require("./config_storage");
 const errors_1 = require("./errors");
 async function handleRegister({ apiToken, apiEndpoint }) {
-    apiEndpoint = (0, helpers_5.resolveApiEndpoint)(apiEndpoint);
     const formattedEndpoint = (0, helpers_2.formatEndpoint)(apiEndpoint);
     if (!apiToken) {
         // TODO: deal with auto-open on devbox setups
