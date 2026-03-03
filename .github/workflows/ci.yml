@@ -35,7 +35,7 @@ jobs:
 
       - name: Upload diff artifacts
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: diffs
           path: /tmp/diffs
@@ -100,7 +100,7 @@ jobs:
         run: DOC_DISABLE_SOURCES=false DOC_GIT_REVISION="${{ github.sha }}" MK_DOCS_SITE_URL="https://head.coda.io/packs/build/latest/" make docs
 
       - name: Upload site artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: site-head
           path: site
@@ -118,7 +118,7 @@ jobs:
       - uses: ./.github/actions/setup_node
 
       - name: Download site artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: site-head
           path: site
@@ -155,7 +155,7 @@ jobs:
         run: DOC_DISABLE_SOURCES=false DOC_GIT_REVISION="${{ github.sha }}" MK_DOCS_SITE_URL="https://staging.coda.io/packs/build/latest/" make docs
 
       - name: Upload site artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: site-staging
           path: site
@@ -174,7 +174,7 @@ jobs:
       - uses: ./.github/actions/setup_node
 
       - name: Download site artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: site-staging
           path: site
@@ -211,7 +211,7 @@ jobs:
         run: DOC_DISABLE_SOURCES=false DOC_GIT_REVISION="${{ github.sha }}" MK_DOCS_SITE_URL="https://coda.io/packs/build/latest/" make docs
 
       - name: Upload site artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: site-prod
           path: site
@@ -230,7 +230,7 @@ jobs:
       - uses: ./.github/actions/setup_node
 
       - name: Download site artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: site-prod
           path: site
