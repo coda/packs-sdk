@@ -5,7 +5,7 @@ runs:
   using: composite
   steps:
     - name: Cache pipenv
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: .venv
         key: pipenv-${{ hashFiles('Pipfile.lock') }}
