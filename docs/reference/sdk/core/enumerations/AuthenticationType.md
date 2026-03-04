@@ -135,7 +135,7 @@ The API must use a (largely) standards-compliant implementation of OAuth2.
 
 #### See
 
-[OAuth2Authentication](../interfaces/OAuth2Authentication.md)
+[OAuth2Authentication](../type-aliases/OAuth2Authentication.md)
 
 ***
 

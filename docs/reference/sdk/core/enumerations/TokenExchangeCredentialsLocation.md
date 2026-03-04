@@ -11,7 +11,7 @@ search:
 # Enumeration: TokenExchangeCredentialsLocation
 
 Where to pass the client credentials (client ID and client secret) when making the OAuth2 token
-exchange request. Used in [OAuth2Authentication.credentialsLocation](../interfaces/OAuth2Authentication.md#credentialslocation).
+exchange request. Used in [OAuth2StaticCodeAuthentication.credentialsLocation](../interfaces/OAuth2StaticCodeAuthentication.md#credentialslocation).
 
 ## Enumeration Members
 

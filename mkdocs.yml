@@ -233,7 +233,7 @@ plugins:
           "reference/sdk/interfaces/core.NumericDurationSchema.md": "reference/sdk/core/interfaces/NumericDurationSchema.md"
           "reference/sdk/interfaces/core.NumericSchema.md": "reference/sdk/core/interfaces/NumericSchema.md"
           "reference/sdk/interfaces/core.NumericTimeSchema.md": "reference/sdk/core/interfaces/NumericTimeSchema.md"
-          "reference/sdk/interfaces/core.OAuth2Authentication.md": "reference/sdk/core/interfaces/OAuth2Authentication.md"
+          "reference/sdk/interfaces/core.OAuth2Authentication.md": "reference/sdk/core/type-aliases/OAuth2Authentication.md"
           "reference/sdk/interfaces/core.OAuth2ClientCredentialsAuthentication.md": "reference/sdk/core/interfaces/OAuth2ClientCredentialsAuthentication.md"
           "reference/sdk/interfaces/core.ObjectArrayFormulaDef.md": "reference/sdk/core/interfaces/ObjectArrayFormulaDef.md"
           "reference/sdk/interfaces/core.ObjectSchemaDefinition.md": "reference/sdk/core/interfaces/ObjectSchemaDefinition.md"

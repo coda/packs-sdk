@@ -176,6 +176,9 @@ class AuthenticatingFetcher {
         (0, ensure_1.assertCondition)(accessToken);
         (0, ensure_1.assertCondition)(refreshToken);
         const { tokenUrl } = this._authDef;
+        if (!tokenUrl) {
+            throw new Error('Dynamic Client Registration (DCR) is not supported when testing locally');
+        }
         const params = {
             grant_type: 'refresh_token',
             refresh_token: refreshToken,

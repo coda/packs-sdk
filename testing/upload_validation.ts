@@ -69,8 +69,8 @@ import type {NumericDurationSchema} from '../schema';
 import type {NumericPackFormula} from '../api';
 import type {NumericSchema} from '../schema';
 import type {NumericTimeSchema} from '../schema';
-import type {OAuth2Authentication} from '../types';
 import type {OAuth2ClientCredentialsAuthentication} from '../types';
+import type {OAuth2DynamicCodeAuthentication} from '../types';
 import {ObjectHintValueTypes} from '../schema';
 import type {ObjectPackFormula} from '../api';
 import type {ObjectSchema} from '../schema';
@@ -568,7 +568,7 @@ export function zodErrorDetailToValidationError(
     }
     const underlyingErrors: ValidationError[] = [];
     for (const unionIssues of unionErrorGroups) {
-      const isNonmatchedUnionMember = unionIssues.some(issue => {
+      const isNonmatchedUnionMember = unionIssues.some((issue: z.ZodIssue) => {
         return issue.code === 'custom' && issue.params?.customErrorCode === CustomErrorCode.NonMatchingDiscriminant;
       });
       // Skip any errors that are nested with an "invalid literal" error that is usually
@@ -779,12 +779,12 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
         ),
       ...baseAuthenticationValidators,
     }),
-    [AuthenticationType.OAuth2]: zodCompleteStrictObject<OAuth2Authentication>({
+    [AuthenticationType.OAuth2]: zodCompleteStrictObject<OAuth2DynamicCodeAuthentication>({
       type: zodDiscriminant(AuthenticationType.OAuth2),
       /** Accepts relative URLs when requiresEndpointUrl is true. */
-      authorizationUrl: z.string().refine(validateUrlParsesIfAbsolute),
+      authorizationUrl: z.string().refine(validateUrlParsesIfAbsolute).optional(),
       /** Accepts relative URLs when requiresEndpointUrl is true. */
-      tokenUrl: z.string().refine(validateUrlParsesIfAbsolute),
+      tokenUrl: z.string().refine(validateUrlParsesIfAbsolute).optional(),
       scopes: z.array(z.string()).optional(),
       scopeDelimiter: z.enum([' ', ',', ';']).optional(),
       tokenPrefix: z.string().optional(),
@@ -798,29 +798,56 @@ function buildMetadataSchema({sdkVersion}: BuildMetadataSchemaArgs): {
       credentialsLocation: z.nativeEnum(TokenExchangeCredentialsLocation).optional(),
       useDynamicClientRegistration: z.boolean().optional(),
       ...baseAuthenticationValidators,
-    }).superRefine(({requiresEndpointUrl, endpointKey, authorizationUrl, tokenUrl}, context) => {
-      const expectsRelativeUrl = requiresEndpointUrl && !endpointKey;
-      const isRelativeUrl = (url: string) => url.startsWith('/');
-      const addIssue = (property: string) => {
-        const expectedType = expectsRelativeUrl ? 'a relative' : 'an absolute';
-        context.addIssue({
-          code: 'custom',
-          path: [property],
-          message: `${property} must be ${expectedType} URL when \
-${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpointUrl ?? 'not true'}`}`,
-        });
-      };
+    }).superRefine(
+      ({requiresEndpointUrl, endpointKey, authorizationUrl, tokenUrl, useDynamicClientRegistration}, context) => {
+        if (useDynamicClientRegistration !== true) {
+          if (!authorizationUrl) {
+            context.addIssue({
+              code: 'custom',
+              path: ['authorizationUrl'],
+              message: 'authorizationUrl is required when useDynamicClientRegistration is not enabled',
+            });
+          }
+          if (!tokenUrl) {
+            context.addIssue({
+              code: 'custom',
+              path: ['tokenUrl'],
+              message: 'tokenUrl is required when useDynamicClientRegistration is not enabled',
+            });
+          }
+        }
 
-      if (
-        (expectsRelativeUrl && !isRelativeUrl(authorizationUrl)) ||
-        (!expectsRelativeUrl && !isAbsoluteUrl(authorizationUrl))
-      ) {
-        addIssue('authorizationUrl');
-      }
-      if ((expectsRelativeUrl && !isRelativeUrl(tokenUrl)) || (!expectsRelativeUrl && !isAbsoluteUrl(tokenUrl))) {
-        addIssue('tokenUrl');
-      }
-    }),
+        if (authorizationUrl) {
+          const expectsRelativeUrl = requiresEndpointUrl && !endpointKey;
+          const isRelativeUrl = (url: string) => url.startsWith('/');
+          if (
+            (expectsRelativeUrl && !isRelativeUrl(authorizationUrl)) ||
+            (!expectsRelativeUrl && !isAbsoluteUrl(authorizationUrl))
+          ) {
+            const expectedType = expectsRelativeUrl ? 'a relative' : 'an absolute';
+            context.addIssue({
+              code: 'custom',
+              path: ['authorizationUrl'],
+              message: `authorizationUrl must be ${expectedType} URL when \
+${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpointUrl ?? 'not true'}`}`,
+            });
+          }
+        }
+        if (tokenUrl) {
+          const expectsRelativeUrl = requiresEndpointUrl && !endpointKey;
+          const isRelativeUrl = (url: string) => url.startsWith('/');
+          if ((expectsRelativeUrl && !isRelativeUrl(tokenUrl)) || (!expectsRelativeUrl && !isAbsoluteUrl(tokenUrl))) {
+            const expectedType = expectsRelativeUrl ? 'a relative' : 'an absolute';
+            context.addIssue({
+              code: 'custom',
+              path: ['tokenUrl'],
+              message: `tokenUrl must be ${expectedType} URL when \
+${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpointUrl ?? 'not true'}`}`,
+            });
+          }
+        }
+      },
+    ),
     [AuthenticationType.OAuth2ClientCredentials]: zodCompleteStrictObject<OAuth2ClientCredentialsAuthentication>({
       type: zodDiscriminant(AuthenticationType.OAuth2ClientCredentials),
       tokenUrl: z.string().url().refine(validateUrlParsesIfAbsolute),
@@ -831,7 +858,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
       scopeParamName: z.string().optional(),
       nestedResponseKey: z.string().optional(),
       credentialsLocation: z.nativeEnum(TokenExchangeCredentialsLocation).optional(),
-      useDynamicClientRegistration: z.boolean().optional(),
       ...baseAuthenticationValidators,
     }),
     [AuthenticationType.WebBasic]: zodCompleteStrictObject<WebBasicAuthentication>({
@@ -3107,13 +3133,17 @@ function getUsedAuthNetworkDomains(
   switch (type) {
     case AuthenticationType.OAuth2: {
       const {authorizationUrl, tokenUrl} = authentication;
-      const parsedAuthUrl = URLParse(authorizationUrl);
-      if (parsedAuthUrl.hostname) {
-        domains.push(parsedAuthUrl.hostname);
+      if (authorizationUrl) {
+        const parsedAuthUrl = URLParse(authorizationUrl);
+        if (parsedAuthUrl.hostname) {
+          domains.push(parsedAuthUrl.hostname);
+        }
       }
-      const parsedTokenUrl = URLParse(tokenUrl);
-      if (parsedTokenUrl.hostname) {
-        domains.push(parsedTokenUrl.hostname);
+      if (tokenUrl) {
+        const parsedTokenUrl = URLParse(tokenUrl);
+        if (parsedTokenUrl.hostname) {
+          domains.push(parsedTokenUrl.hostname);
+        }
       }
       return domains;
     }
@@ -3122,9 +3152,11 @@ function getUsedAuthNetworkDomains(
       if (endpointDomain) {
         domains.push(endpointDomain);
       }
-      const parsedTokenUrl = URLParse(tokenUrl);
-      if (parsedTokenUrl.hostname) {
-        domains.push(parsedTokenUrl.hostname);
+      if (tokenUrl) {
+        const parsedTokenUrl = URLParse(tokenUrl);
+        if (parsedTokenUrl.hostname) {
+          domains.push(parsedTokenUrl.hostname);
+        }
       }
       return domains;
     }

@@ -14,6 +14,9 @@ const url_1 = require("../helpers/url");
 function launchOAuthServerFlow({ clientId, clientSecret, authDef, port, afterTokenExchange, scopes, }) {
     // TODO: Handle PKCE.
     const { authorizationUrl, tokenUrl, additionalParams, scopeDelimiter, nestedResponseKey, scopeParamName } = authDef;
+    if (!authorizationUrl || !tokenUrl) {
+        throw new Error('Dynamic Client Registration (DCR) is not supported when testing locally');
+    }
     // Use the manifest's scopes as a default.
     const requestedScopes = scopes && scopes.length > 0 ? scopes : authDef.scopes;
     const scope = requestedScopes ? requestedScopes.join(scopeDelimiter || ' ') : requestedScopes;

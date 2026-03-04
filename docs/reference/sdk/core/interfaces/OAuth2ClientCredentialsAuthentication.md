@@ -224,9 +224,9 @@ that should contain the token.
 
 > **tokenUrl**: `string`
 
-The URL that Coda will hit in order to exchange the temporary code for an access token.
+The URL that Coda will hit in order to exchange credentials for an access token.
 
-#### Inherited from
+#### Overrides
 
 `BaseOAuthAuthentication.tokenUrl`
 
