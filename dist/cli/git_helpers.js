@@ -3,7 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isGitAvailable = exports.gitTagExists = exports.createGitTag = exports.getGitState = void 0;
+exports.getGitState = getGitState;
+exports.createGitTag = createGitTag;
+exports.gitTagExists = gitTagExists;
+exports.isGitAvailable = isGitAvailable;
 const child_process_1 = require("child_process");
 const path_1 = __importDefault(require("path"));
 /**
@@ -27,7 +30,6 @@ function getGitState(manifestDir) {
         commitSha: getCommitSha(cwd),
     };
 }
-exports.getGitState = getGitState;
 /**
  * Checks if the given directory is inside a git repository.
  */
@@ -89,7 +91,6 @@ function createGitTag(tag, message, cwd) {
         return false;
     }
 }
-exports.createGitTag = createGitTag;
 /**
  * Checks if a git tag already exists.
  */
@@ -102,7 +103,6 @@ function gitTagExists(tag, cwd) {
         return false;
     }
 }
-exports.gitTagExists = gitTagExists;
 /**
  * Checks if git is available on the system.
  */
@@ -115,4 +115,3 @@ function isGitAvailable() {
         return false;
     }
 }
-exports.isGitAvailable = isGitAvailable;

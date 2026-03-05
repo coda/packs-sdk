@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.parsePackIdOrUrl = exports.handleLink = void 0;
+exports.handleLink = handleLink;
+exports.parsePackIdOrUrl = parsePackIdOrUrl;
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const helpers_3 = require("./helpers");
@@ -51,7 +52,6 @@ async function handleLink({ manifestDir, apiEndpoint, packIdOrUrl, apiToken }) {
     (0, config_storage_2.storePackId)(manifestDir, packId, apiEndpoint);
     return (0, helpers_5.printAndExit)(`Linked successfully!`, 0);
 }
-exports.handleLink = handleLink;
 function parsePackIdOrUrl(packIdOrUrl) {
     for (const regex of PackRegexes) {
         const match = packIdOrUrl.match(regex);
@@ -62,4 +62,3 @@ function parsePackIdOrUrl(packIdOrUrl) {
     }
     return null;
 }
-exports.parsePackIdOrUrl = parsePackIdOrUrl;

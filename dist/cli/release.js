@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleRelease = void 0;
+exports.handleRelease = handleRelease;
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const build_1 = require("./build");
@@ -92,7 +92,6 @@ async function handleRelease({ manifestFile, packVersion: explicitPackVersion, a
     }
     return (0, helpers_7.printAndExit)('Done!', 0);
 }
-exports.handleRelease = handleRelease;
 function buildTagMessage(releaseId, notes) {
     const parts = [`Release ID: ${releaseId}`];
     if (notes) {
