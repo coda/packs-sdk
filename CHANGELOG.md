@@ -4,6 +4,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+## [1.13.1] - 2026-03-05
+
 ### Added
 
 - Added the flag `--apiEnpoint` to various CLI commands, and added the option `apiEndpoint` to the `setOption` command. This can be used to point to the CLI to an alternative server, for use by customers on single-tenant instances.
@@ -998,7 +1000,7 @@ await myHelper(context);
 
 - Beginning of alpha versioning.
 
-[unreleased]: https://github.com/coda/packs-sdk/compare/v1.13.0...HEAD
+[unreleased]: https://github.com/coda/packs-sdk/compare/v1.13.1...HEAD
 [1.7.5]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.5
 [1.7.4]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.4
 [1.7.3]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.3
@@ -1065,6 +1067,7 @@ await myHelper(context);
 [1.11.1]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.11.1
 [1.11.0]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.11.0
 [1.12.0]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.12.0
+[1.13.1]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.13.1
 [1.13.0]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.13.0
 [1.12.5]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.12.5
 [1.12.4]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.12.4
