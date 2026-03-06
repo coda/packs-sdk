@@ -109,6 +109,8 @@ exports.Limits = {
     ColumnMatcherRegex: 300,
     MaxSkillCount: 15,
     MaxSuggestedPromptsPerPack: 3,
+    MaxTriggersPerPack: 5,
+    TriggerConditionLength: 500,
     NumColumnMatchersPerFormat: 10,
     NetworkDomainUrl: 253,
     PermissionsBatchSize: 5000,
@@ -1838,6 +1840,15 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         displayName: z.string().min(1).max(exports.Limits.BuildingBlockName),
         prompt: z.string().min(1).max(exports.Limits.SuggestedPromptText),
     });
+    const assistTriggerSchema = zodCompleteStrictObject({
+        name: z
+            .string()
+            .min(1)
+            .max(exports.Limits.BuildingBlockName)
+            .regex(regexParameterName, 'Trigger names can only contain alphanumeric characters and underscores.'),
+        condition: z.string().min(1).max(exports.Limits.TriggerConditionLength),
+        skillName: z.string().min(1).max(exports.Limits.BuildingBlockName).optional(),
+    });
     // Make sure to call the refiners on this after removing legacyPackMetadataSchema.
     // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level
     // schema we actually use.)
@@ -1995,6 +2006,20 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 context.addIssue({
                     code: 'custom',
                     message: `Suggested prompt names must be unique. Found duplicate name "${dupe}".`,
+                });
+            }
+        }),
+        assistTriggers: z
+            .array(assistTriggerSchema)
+            .max(exports.Limits.MaxTriggersPerPack)
+            .optional()
+            .default([])
+            .superRefine((data, context) => {
+            const triggerNames = data.map(trigger => trigger.name);
+            for (const dupe of getNonUniqueElements(triggerNames)) {
+                context.addIssue({
+                    code: 'custom',
+                    message: `Trigger names must be unique. Found duplicate name "${dupe}".`,
                 });
             }
         }),
