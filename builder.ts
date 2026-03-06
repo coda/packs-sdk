@@ -2,11 +2,11 @@ import type {AdminAuthentication} from './types';
 import type {AdminAuthenticationDef} from './types';
 import type {AllowedAuthentication} from './types';
 import type {AllowedAuthenticationDef} from './types';
-import type {AssistTrigger} from './types';
 import type {Authentication} from './types';
 import {AuthenticationType} from './types';
 import type {BasicPackDefinition} from './types';
 import {ConnectionRequirement} from './api_types';
+import type {ContextualTrigger} from './types';
 import type {DynamicSyncTableOptions} from './api';
 import type {Format} from './types';
 import type {Formula} from './api';
@@ -93,10 +93,10 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    */
   suggestedPrompts: SuggestedPrompt[];
   /**
-   * See {@link PackVersionDefinition.assistTriggers}.
+   * See {@link PackVersionDefinition.contextualTriggers}.
    * @hidden
    */
-  assistTriggers: AssistTrigger[];
+  contextualTriggers: ContextualTrigger[];
   /**
    * See {@link PackVersionDefinition.networkDomains}.
    */
@@ -150,7 +150,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       formulaNamespace,
       skillEntrypoints,
       suggestedPrompts,
-      assistTriggers,
+      contextualTriggers,
       mcpServers,
     } = definition || {};
     this.formulas = formulas || [];
@@ -161,7 +161,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     this.chatSkill = chatSkill;
     this.benchInitializationSkill = benchInitializationSkill;
     this.suggestedPrompts = suggestedPrompts || [];
-    this.assistTriggers = assistTriggers || [];
+    this.contextualTriggers = contextualTriggers || [];
     this.networkDomains = networkDomains || [];
     this.mcpServers = mcpServers || [];
     this.defaultAuthentication = defaultAuthentication;
@@ -427,15 +427,15 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    *
    * @example
    * ```
-   * pack.addAssistTrigger({
+   * pack.addContextualTrigger({
    *   name: "onEmailCompose",
    *   condition: "The user is composing an email message.",
    * });
    * ```
    * @hidden
    */
-  addAssistTrigger(trigger: AssistTrigger): this {
-    this.assistTriggers.push(trigger);
+  addContextualTrigger(trigger: ContextualTrigger): this {
+    this.contextualTriggers.push(trigger);
     return this;
   }
 

@@ -4,7 +4,6 @@ import type {AdminAuthentication} from '../types';
 import type {AdminAuthenticationTypes} from '../types';
 import {AllPrecannedDates} from '../api_types';
 import type {ArraySchema} from '../schema';
-import type {AssistTrigger} from '../types';
 import type {AssistantMessageTool} from '../types';
 import {AttributionNodeType} from '../schema';
 import type {AuthenticationMetadata} from '../compiled_types';
@@ -20,6 +19,7 @@ import type {CommentContentCategorization} from '../schema';
 import {ConnectionRequirement} from '../api_types';
 import type {ContactResolutionTool} from '../types';
 import {ContentCategorizationType} from '../schema';
+import type {ContextualTrigger} from '../types';
 import {CurrencyFormat} from '../schema';
 import type {CurrencySchema} from '../schema';
 import type {CustomAuthentication} from '../types';
@@ -182,8 +182,8 @@ export const Limits = {
   ColumnMatcherRegex: 300,
   MaxSkillCount: 15,
   MaxSuggestedPromptsPerPack: 3,
-  MaxTriggersPerPack: 10,
-  TriggerConditionLength: 2000,
+  MaxTriggersPerPack: 5,
+  TriggerConditionLength: 500,
   NumColumnMatchersPerFormat: 10,
   NetworkDomainUrl: 253,
   PermissionsBatchSize: 5000,
@@ -2389,7 +2389,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     prompt: z.string().min(1).max(Limits.SuggestedPromptText),
   });
 
-  const assistTriggerSchema = zodCompleteStrictObject<AssistTrigger>({
+  const contextualTriggerSchema = zodCompleteStrictObject<ContextualTrigger>({
     name: z
       .string()
       .min(1)
@@ -2568,8 +2568,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           });
         }
       }),
-    assistTriggers: z
-      .array(assistTriggerSchema)
+    contextualTriggers: z
+      .array(contextualTriggerSchema)
       .max(Limits.MaxTriggersPerPack)
       .optional()
       .default([])

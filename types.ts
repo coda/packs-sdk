@@ -1741,12 +1741,12 @@ export interface SuggestedPrompt {
 }
 
 /**
- * A assist trigger that defines when an agent should proactively activate during an editing session.
- * The `condition` is a natural language prompt evaluated by an LLM against the user's current context.
+ * A trigger that defines when an agent should proactively activate based on the user's current context.
+ * The `condition` is a natural language prompt evaluated by an LLM against the user's context.
  *
  * @example
  * ```ts
- * pack.addTrigger({
+ * pack.addContextualTrigger({
  *   name: "onEmailCompose",
  *   condition: "The user is composing an email message.",
  * });
@@ -1754,7 +1754,7 @@ export interface SuggestedPrompt {
  *
  * @hidden In development
  */
-export interface AssistTrigger {
+export interface ContextualTrigger {
   /** Stable identifier for this trigger. */
   name: string;
   /** Natural language condition evaluated by the LLM to decide if the agent should activate. */
@@ -1863,10 +1863,10 @@ export interface PackVersionDefinition {
    */
   suggestedPrompts?: SuggestedPrompt[];
   /**
-   * Assist triggers that define when the agent should proactively activate.
+   * Contextual triggers that define when the agent should proactively activate based on user context.
    * @hidden
    */
-  assistTriggers?: AssistTrigger[];
+  contextualTriggers?: ContextualTrigger[];
   /**
    * Definitions of MCP servers that this pack can connect to.
    * @hidden

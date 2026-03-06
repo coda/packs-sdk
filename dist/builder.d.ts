@@ -2,6 +2,7 @@ import type { AdminAuthentication } from './types';
 import type { AdminAuthenticationDef } from './types';
 import type { Authentication } from './types';
 import type { BasicPackDefinition } from './types';
+import type { ContextualTrigger } from './types';
 import type { DynamicSyncTableOptions } from './api';
 import type { Format } from './types';
 import type { Formula } from './api';
@@ -75,6 +76,11 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * @hidden
      */
     suggestedPrompts: SuggestedPrompt[];
+    /**
+     * See {@link PackVersionDefinition.contextualTriggers}.
+     * @hidden
+     */
+    contextualTriggers: ContextualTrigger[];
     /**
      * See {@link PackVersionDefinition.networkDomains}.
      */
@@ -295,6 +301,19 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
      * ```
      */
     addSuggestedPrompt(prompt: SuggestedPrompt): this;
+    /**
+     * Adds an assist trigger that defines when the agent should proactively activate.
+     *
+     * @example
+     * ```
+     * pack.addContextualTrigger({
+     *   name: "onEmailCompose",
+     *   condition: "The user is composing an email message.",
+     * });
+     * ```
+     * @hidden
+     */
+    addContextualTrigger(trigger: ContextualTrigger): this;
     private _wrapAuthenticationFunctions;
     /**
      * Sets this pack to use authentication for individual users, using the

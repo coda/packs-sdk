@@ -35,7 +35,7 @@ class PackDefinitionBuilder {
      * rather than constructing a builder directly.
      */
     constructor(definition) {
-        const { formulas, formats, syncTables, skills, chatSkill, benchInitializationSkill, networkDomains, defaultAuthentication, systemConnectionAuthentication, version, formulaNamespace, skillEntrypoints, suggestedPrompts, mcpServers, } = definition || {};
+        const { formulas, formats, syncTables, skills, chatSkill, benchInitializationSkill, networkDomains, defaultAuthentication, systemConnectionAuthentication, version, formulaNamespace, skillEntrypoints, suggestedPrompts, contextualTriggers, mcpServers, } = definition || {};
         this.formulas = formulas || [];
         this.formats = formats || [];
         this.syncTables = syncTables || [];
@@ -44,6 +44,7 @@ class PackDefinitionBuilder {
         this.chatSkill = chatSkill;
         this.benchInitializationSkill = benchInitializationSkill;
         this.suggestedPrompts = suggestedPrompts || [];
+        this.contextualTriggers = contextualTriggers || [];
         this.networkDomains = networkDomains || [];
         this.mcpServers = mcpServers || [];
         this.defaultAuthentication = defaultAuthentication;
@@ -276,6 +277,22 @@ class PackDefinitionBuilder {
      */
     addSuggestedPrompt(prompt) {
         this.suggestedPrompts.push(prompt);
+        return this;
+    }
+    /**
+     * Adds an assist trigger that defines when the agent should proactively activate.
+     *
+     * @example
+     * ```
+     * pack.addContextualTrigger({
+     *   name: "onEmailCompose",
+     *   condition: "The user is composing an email message.",
+     * });
+     * ```
+     * @hidden
+     */
+    addContextualTrigger(trigger) {
+        this.contextualTriggers.push(trigger);
         return this;
     }
     _wrapAuthenticationFunctions(authentication) {

@@ -20,6 +20,8 @@ export declare const Limits: {
     ColumnMatcherRegex: number;
     MaxSkillCount: number;
     MaxSuggestedPromptsPerPack: number;
+    MaxTriggersPerPack: number;
+    TriggerConditionLength: number;
     NumColumnMatchersPerFormat: number;
     NetworkDomainUrl: number;
     PermissionsBatchSize: number;
