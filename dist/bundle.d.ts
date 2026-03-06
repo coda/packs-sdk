@@ -6470,14 +6470,13 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * @example
 	 * ```
 	 * pack.addSuggestedPrompt({
-	 *   name: "ticketStatus",
+	 *   name: "TicketStatus",
 	 *   displayName: "Check ticket status",
 	 *   prompt: `
 	 *     Show me the status of all open support tickets.
 	 *   `,
 	 * });
 	 * ```
-	 * @hidden
 	 */
 	addSuggestedPrompt(prompt: SuggestedPrompt): this;
 	private _wrapAuthenticationFunctions;

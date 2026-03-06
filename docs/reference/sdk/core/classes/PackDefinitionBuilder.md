@@ -369,6 +369,36 @@ pack.addSkill({
 
 ***
 
+### addSuggestedPrompt()
+
+> **addSuggestedPrompt**(`prompt`): `this`
+
+Adds a suggested prompt that appears as a button when the agent is opened in chat.
+
+#### Example
+
+```
+pack.addSuggestedPrompt({
+  name: "TicketStatus",
+  displayName: "Check ticket status",
+  prompt: `
+    Show me the status of all open support tickets.
+  `,
+});
+```
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `prompt` | `SuggestedPrompt` |
+
+#### Returns
+
+`this`
+
+***
+
 ### addSyncTable()
 
 > **addSyncTable**\<`K`, `L`, `ParamDefsT`, `SchemaT`, `ContextT`, `PermissionsContextT`\>(`definition`): `this`
