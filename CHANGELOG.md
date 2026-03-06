@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- Launched `addSuggestedPrompt`, and added an associated slash command.
+
 ## [1.13.1] - 2026-03-05
 
 ### Added
