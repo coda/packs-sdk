@@ -14,6 +14,7 @@ const BaseFakePack = {
   syncTables: [],
   skills: [],
   suggestedPrompts: [],
+  assistTriggers: [],
   mcpServers: [],
   permissionsDescription: 'Some description about permissions',
 };
