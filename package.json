@@ -1,6 +1,10 @@
 {
   "name": "@codahq/packs-sdk",
+<<<<<<< HEAD
   "version": "1.13.2-prerelease.0",
+=======
+  "version": "1.13.2-prerelease.1",
+>>>>>>> 61500f68 (Add assist trigger functionality to PackDefinitionBuilder)
   "license": "MIT",
   "engines": {
     "node": ">=22.0.0",
