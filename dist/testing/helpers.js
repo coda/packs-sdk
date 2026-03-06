@@ -15,18 +15,38 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.chunkArray = exports.processVmError = exports.getExpirationDate = exports.writeJSONFile = exports.readJSONFile = exports.readFile = exports.promptForInput = exports.printAndExit = exports.printFull = exports.printError = exports.printWarn = exports.print = exports.getManifestFromModule = void 0;
+exports.printError = exports.printWarn = exports.print = void 0;
+exports.getManifestFromModule = getManifestFromModule;
+exports.printFull = printFull;
+exports.printAndExit = printAndExit;
+exports.promptForInput = promptForInput;
+exports.readFile = readFile;
+exports.readJSONFile = readJSONFile;
+exports.writeJSONFile = writeJSONFile;
+exports.getExpirationDate = getExpirationDate;
+exports.processVmError = processVmError;
+exports.chunkArray = chunkArray;
 const ensure_1 = require("../helpers/ensure");
 const fs_1 = __importDefault(require("fs"));
 const util_1 = require("util");
@@ -42,7 +62,6 @@ function getManifestFromModule(module) {
     }
     return module.pack || module.manifest;
 }
-exports.getManifestFromModule = getManifestFromModule;
 // eslint-disable-next-line no-console
 exports.print = console.log;
 // eslint-disable-next-line no-console
@@ -65,12 +84,10 @@ function printFull(value) {
         console.log(value);
     }
 }
-exports.printFull = printFull;
 function printAndExit(msg, exitCode = 1) {
     (0, exports.print)(msg);
     return process.exit(exitCode);
 }
-exports.printAndExit = printAndExit;
 function promptForInput(prompt, { mask, options, yesOrNo } = {}) {
     while (true) {
         const answer = readlineSync.question(prompt, { mask: mask ? '*' : undefined, hideEchoBack: mask });
@@ -89,7 +106,6 @@ function promptForInput(prompt, { mask, options, yesOrNo } = {}) {
         }
     }
 }
-exports.promptForInput = promptForInput;
 function readFile(fileName) {
     (0, ensure_1.ensureNonEmptyString)(fileName);
     let file;
@@ -104,12 +120,10 @@ function readFile(fileName) {
     }
     return file;
 }
-exports.readFile = readFile;
 function readJSONFile(fileName) {
     const file = readFile(fileName);
     return file ? JSON.parse(file.toString()) : undefined;
 }
-exports.readJSONFile = readJSONFile;
 function writeJSONFile(fileName, payload, mode) {
     (0, ensure_1.ensureNonEmptyString)(fileName);
     const dirname = path_1.default.dirname(fileName);
@@ -123,12 +137,10 @@ function writeJSONFile(fileName, payload, mode) {
     }
     fs_1.default.writeFileSync(fileName, JSON.stringify(payload, undefined, 2), { mode });
 }
-exports.writeJSONFile = writeJSONFile;
 function getExpirationDate(expiresInSeconds) {
     // OAuth standard says expiresIn units should be seconds.
     return new Date(Date.now() + expiresInSeconds * 1000);
 }
-exports.getExpirationDate = getExpirationDate;
 async function processVmError(vmError, bundlePath) {
     // this is weird. the error thrown by ivm seems a standard error but somehow its stack can't be overwritten.
     // unwrapError(wrapError(err)) will recreate the same type of error in a standard way, where the stack can
@@ -143,7 +155,6 @@ async function processVmError(vmError, bundlePath) {
     err.stack = `${err.constructor.name}${messageSuffix}\n${translatedStacktrace}`;
     return err;
 }
-exports.processVmError = processVmError;
 /**
  * This function splits an array into chunks of a maximum size.
  *
@@ -158,4 +169,3 @@ function chunkArray(array, size) {
     }
     return chunks;
 }
-exports.chunkArray = chunkArray;

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleRegister = void 0;
+exports.handleRegister = handleRegister;
 const helpers_1 = require("./helpers");
 const helpers_2 = require("./helpers");
 const coda_1 = require("../helpers/external-api/coda");
@@ -39,4 +39,3 @@ async function handleRegister({ apiToken, apiEndpoint }) {
     (0, config_storage_1.storeCodaApiKey)(apiToken, process.env.PWD, apiEndpoint);
     (0, helpers_3.printAndExit)(`API key validated and stored successfully!`, 0);
 }
-exports.handleRegister = handleRegister;

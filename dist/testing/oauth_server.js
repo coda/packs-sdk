@@ -3,7 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeRedirectUrl = exports.launchOAuthServerFlow = void 0;
+exports.launchOAuthServerFlow = launchOAuthServerFlow;
+exports.makeRedirectUrl = makeRedirectUrl;
 require("cross-fetch/polyfill");
 const child_process_1 = require("child_process");
 const express_1 = __importDefault(require("express"));
@@ -53,11 +54,9 @@ function launchOAuthServerFlow({ clientId, clientSecret, authDef, port, afterTok
     };
     serverContainer.start(launchCallback);
 }
-exports.launchOAuthServerFlow = launchOAuthServerFlow;
 function makeRedirectUrl(port) {
     return `http://localhost:${port}/oauth`;
 }
-exports.makeRedirectUrl = makeRedirectUrl;
 class OAuthServerContainer {
     constructor(tokenCallback, afterTokenExchange, port) {
         this._tokenCallback = tokenCallback;
