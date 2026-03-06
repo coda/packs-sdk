@@ -152,7 +152,7 @@ var PostSetupType;
 })(PostSetupType || (exports.PostSetupType = PostSetupType = {}));
 /**
  * Where to pass the client credentials (client ID and client secret) when making the OAuth2 token
- * exchange request. Used in {@link OAuth2Authentication.credentialsLocation}.
+ * exchange request. Used in {@link OAuth2StaticCodeAuthentication.credentialsLocation}.
  */
 var TokenExchangeCredentialsLocation;
 (function (TokenExchangeCredentialsLocation) {

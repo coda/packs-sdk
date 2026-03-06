@@ -4997,6 +4997,60 @@ describe('Pack metadata Validation', async () => {
       await validateJson(metadata);
     });
 
+    it('OAuth2 with DCR, URLs omitted', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.OAuth2,
+          useDynamicClientRegistration: true,
+        },
+      });
+      await validateJson(metadata);
+    });
+
+    it('OAuth2 with DCR, URLs provided', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.OAuth2,
+          useDynamicClientRegistration: true,
+          authorizationUrl: 'https://example.com/authUrl',
+          tokenUrl: 'https://example.com/tokenUrl',
+        },
+      });
+      await validateJson(metadata);
+    });
+
+    it('OAuth2 without DCR, missing authorizationUrl', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.OAuth2,
+          tokenUrl: 'https://example.com/tokenUrl',
+        } as any,
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: 'authorizationUrl is required when useDynamicClientRegistration is not enabled',
+          path: 'defaultAuthentication.authorizationUrl',
+        },
+      ]);
+    });
+
+    it('OAuth2 without DCR, missing tokenUrl', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.OAuth2,
+          authorizationUrl: 'https://example.com/authUrl',
+        } as any,
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: 'tokenUrl is required when useDynamicClientRegistration is not enabled',
+          path: 'defaultAuthentication.tokenUrl',
+        },
+      ]);
+    });
+
     it('WebBasic', async () => {
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {

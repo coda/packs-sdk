@@ -429,7 +429,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       const getOptionsFormula = wrapMetadataFunction(step.getOptionsFormula);
       return {...step, getOptions, getOptionsFormula};
     });
-    return {...rest, getConnectionName, getConnectionUserId, postSetup};
+    return {...rest, getConnectionName, getConnectionUserId, postSetup} as AllowedAuthentication;
   }
 
   /**

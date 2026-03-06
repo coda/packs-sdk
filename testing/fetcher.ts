@@ -230,6 +230,9 @@ export class AuthenticatingFetcher implements Fetcher {
     assertCondition(accessToken);
     assertCondition(refreshToken);
     const {tokenUrl} = this._authDef;
+    if (!tokenUrl) {
+      throw new Error('Dynamic Client Registration (DCR) is not supported when testing locally');
+    }
 
     const params = {
       grant_type: 'refresh_token',

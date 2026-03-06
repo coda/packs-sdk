@@ -5024,7 +5024,7 @@ export interface BaseOAuthAuthentication extends BaseAuthentication {
 	/**
 	 * The URL that Coda will hit in order to exchange the temporary code for an access token.
 	 */
-	tokenUrl: string;
+	tokenUrl?: string;
 	/**
 	 * In rare cases, OAuth providers send back access tokens nested inside another object in
 	 * their authentication response.
@@ -5051,48 +5051,14 @@ export interface BaseOAuthAuthentication extends BaseAuthentication {
 	 * that should contain the token.
 	 */
 	tokenQueryParam?: string;
-	/**
-	 * Indicates that this OAuth provider supports Dynamic Client Registration.
-	 * When enabled, the Coda platform will register OAuth clients dynamically with the provider
-	 * rather than requiring a pre-configured client ID and secret.
-	 *
-	 * See https://datatracker.ietf.org/doc/html/rfc7591 for more details.
-	 *
-	 * @hidden
-	 */
-	useDynamicClientRegistration?: boolean;
 }
 /**
- * Authenticate using the OAuth2 Authorization Code flow. You must specify the authorization URL,
- * token exchange URL, and scopes here as part of the pack definition. You'll provide the
- * application's client ID and client secret in the pack management UI, so that these can be stored
- * securely.
- *
- * The API must use a (largely) standards-compliant implementation of OAuth2.
- *
- * @example
- * ```ts
- * pack.setUserAuthentication({
- *   type: coda.AuthenticationType.OAuth2,
- *   // These URLs come from the API's developer documentation.
- *   authorizationUrl: "https://example.com/authorize",
- *   tokenUrl: "https://api.example.com/token",
- * });
- * ```
- *
- * @see [Authenticating using OAuth](https://coda.io/packs/build/latest/guides/basics/authentication/oauth2/)
- * @see [Authentication samples - OAuth2](https://coda.io/packs/build/latest/samples/topic/authentication/#oauth2)
+ * Fields shared by the OAuth2 Authorization Code variants (static and dynamic client).
+ * Extends {@link BaseOAuthAuthentication} with authorization-code-specific options.
  */
-export interface OAuth2Authentication extends BaseOAuthAuthentication {
+export interface BaseOAuth2CodeAuthentication extends BaseOAuthAuthentication {
 	/** Identifies this as OAuth2 authentication. */
 	type: AuthenticationType.OAuth2;
-	/**
-	 * The URL to which the user will be redirected in order to authorize this pack.
-	 * This is typically just a base url with no parameters. Coda will append the `scope`
-	 * parameter automatically. If the authorization flow requires additional parameters,
-	 * they may be specified using {@link additionalParams}.
-	 */
-	authorizationUrl: string;
 	/**
 	 * Option custom URL parameters and values that should be included when redirecting the
 	 * user to the {@link authorizationUrl}.
@@ -5126,6 +5092,83 @@ export interface OAuth2Authentication extends BaseOAuthAuthentication {
 	pkceChallengeMethod?: "plain" | "S256";
 }
 /**
+ * OAuth2 authentication with a statically configured client (no DCR).
+ * Both `authorizationUrl` and `tokenUrl` are required.
+ *
+ * @example
+ * ```ts
+ * pack.setUserAuthentication({
+ *   type: coda.AuthenticationType.OAuth2,
+ *   // These URLs come from the API's developer documentation.
+ *   authorizationUrl: "https://example.com/authorize",
+ *   tokenUrl: "https://api.example.com/token",
+ * });
+ * ```
+ *
+ * @see [Authenticating using OAuth](https://coda.io/packs/build/latest/guides/basics/authentication/oauth2/)
+ * @see [Authentication samples - OAuth2](https://coda.io/packs/build/latest/samples/topic/authentication/#oauth2)
+ */
+export interface OAuth2StaticCodeAuthentication extends BaseOAuth2CodeAuthentication {
+	/**
+	 * The URL to which the user will be redirected in order to authorize this pack.
+	 * This is typically just a base url with no parameters. Coda will append the `scope`
+	 * parameter automatically. If the authorization flow requires additional parameters,
+	 * they may be specified using {@link additionalParams}.
+	 */
+	authorizationUrl: string;
+	/** The URL that Coda will hit in order to exchange the temporary code for an access token. */
+	tokenUrl: string;
+	/**
+	 * Indicates that Dynamic Client Registration is not used.
+	 * See {@link OAuth2DynamicCodeAuthentication.useDynamicClientRegistration} for details on DCR.
+	 *
+	 * @hidden
+	 */
+	useDynamicClientRegistration?: false;
+}
+/**
+ * OAuth2 authentication with Dynamic Client Registration (DCR) enabled.
+ * `authorizationUrl` and `tokenUrl` are optional because they are automatically
+ * discovered using the pack's declared MCP servers and network domains.
+ *
+ * @hidden
+ */
+export interface OAuth2DynamicCodeAuthentication extends BaseOAuth2CodeAuthentication {
+	/**
+	 * The URL to which the user will be redirected in order to authorize this pack.
+	 * Optional when using DCR, as it is automatically discovered.
+	 */
+	authorizationUrl?: string;
+	/** The URL for token exchange. Optional when using DCR, as it is automatically discovered. */
+	tokenUrl?: string;
+	/**
+	 * Indicates that this OAuth provider supports Dynamic Client Registration.
+	 * When enabled, the Coda platform will automatically discover authorization endpoints
+	 * and dynamically register OAuth client credentials (client ID and secret) using the
+	 * pack's declared MCP servers and network domains.
+	 *
+	 * See https://datatracker.ietf.org/doc/html/rfc7591 for more details.
+	 *
+	 * @hidden
+	 */
+	useDynamicClientRegistration: true;
+}
+/**
+ * Authenticate using the OAuth2 Authorization Code flow. You must specify the authorization URL,
+ * token exchange URL, and scopes here as part of the pack definition. You'll provide the
+ * application's client ID and client secret in the pack management UI, so that these can be stored
+ * securely.
+ *
+ * The API must use a (largely) standards-compliant implementation of OAuth2.
+ *
+ * When `useDynamicClientRegistration` is `true`, `authorizationUrl` and `tokenUrl` become optional
+ * as they are automatically discovered using the pack's declared MCP servers and network domains.
+ *
+ * @see [Authenticating using OAuth](https://coda.io/packs/build/latest/guides/basics/authentication/oauth2/)
+ * @see [Authentication samples - OAuth2](https://coda.io/packs/build/latest/samples/topic/authentication/#oauth2)
+ */
+export type OAuth2Authentication = OAuth2StaticCodeAuthentication | OAuth2DynamicCodeAuthentication;
+/**
  * Authenticate using the OAuth2 Client Credentials flow.
  * You must specify the token exchange URL here as part of the pack definition.
  * You'll provide the application's client ID and client secret when authenticating.
@@ -5142,10 +5185,12 @@ export interface OAuth2Authentication extends BaseOAuthAuthentication {
 export interface OAuth2ClientCredentialsAuthentication extends BaseOAuthAuthentication {
 	/** Identifies this as OAuth2 client credentials authentication. */
 	type: AuthenticationType.OAuth2ClientCredentials;
+	/** The URL that Coda will hit in order to exchange credentials for an access token. */
+	tokenUrl: string;
 }
 /**
  * Where to pass the client credentials (client ID and client secret) when making the OAuth2 token
- * exchange request. Used in {@link OAuth2Authentication.credentialsLocation}.
+ * exchange request. Used in {@link OAuth2StaticCodeAuthentication.credentialsLocation}.
  */
 export declare enum TokenExchangeCredentialsLocation {
 	/**

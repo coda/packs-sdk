@@ -304,7 +304,7 @@ Like with the Authorization Code flow, a variety of other advanced options are a
 [oauth_definition]: https://oauth.net/2/
 [authentication]: index.md
 [OAuth]: ../../../reference/sdk/core/enumerations/AuthenticationType.md#oauth2
-[OAuth2Authentication]: ../../../reference/sdk/core/interfaces/OAuth2Authentication.md
+[OAuth2Authentication]: ../../../reference/sdk/core/type-aliases/OAuth2Authentication.md
 [OAuth2ClientCredentialsAuthentication]: ../../../reference/sdk/core/interfaces/OAuth2ClientCredentialsAuthentication.md
 [oauth2_code]: https://www.oauth.com/oauth2-servers/server-side-apps/authorization-code/
 [oauth2_client]: https://www.oauth.com/oauth2-servers/access-tokens/client-credentials/

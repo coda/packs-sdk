@@ -422,7 +422,7 @@ function zodErrorDetailToValidationError(subError, parentPath = []) {
         }
         const underlyingErrors = [];
         for (const unionIssues of unionErrorGroups) {
-            const isNonmatchedUnionMember = unionIssues.some(issue => {
+            const isNonmatchedUnionMember = unionIssues.some((issue) => {
                 var _a;
                 return issue.code === 'custom' && ((_a = issue.params) === null || _a === void 0 ? void 0 : _a.customErrorCode) === CustomErrorCode.NonMatchingDiscriminant;
             });
@@ -595,9 +595,9 @@ function buildMetadataSchema({ sdkVersion }) {
         [types_1.AuthenticationType.OAuth2]: zodCompleteStrictObject({
             type: zodDiscriminant(types_1.AuthenticationType.OAuth2),
             /** Accepts relative URLs when requiresEndpointUrl is true. */
-            authorizationUrl: z.string().refine(validateUrlParsesIfAbsolute),
+            authorizationUrl: z.string().refine(validateUrlParsesIfAbsolute).optional(),
             /** Accepts relative URLs when requiresEndpointUrl is true. */
-            tokenUrl: z.string().refine(validateUrlParsesIfAbsolute),
+            tokenUrl: z.string().refine(validateUrlParsesIfAbsolute).optional(),
             scopes: z.array(z.string()).optional(),
             scopeDelimiter: z.enum([' ', ',', ';']).optional(),
             tokenPrefix: z.string().optional(),
@@ -611,24 +611,49 @@ function buildMetadataSchema({ sdkVersion }) {
             credentialsLocation: z.nativeEnum(types_10.TokenExchangeCredentialsLocation).optional(),
             useDynamicClientRegistration: z.boolean().optional(),
             ...baseAuthenticationValidators,
-        }).superRefine(({ requiresEndpointUrl, endpointKey, authorizationUrl, tokenUrl }, context) => {
-            const expectsRelativeUrl = requiresEndpointUrl && !endpointKey;
-            const isRelativeUrl = (url) => url.startsWith('/');
-            const addIssue = (property) => {
-                const expectedType = expectsRelativeUrl ? 'a relative' : 'an absolute';
-                context.addIssue({
-                    code: 'custom',
-                    path: [property],
-                    message: `${property} must be ${expectedType} URL when \
-${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpointUrl !== null && requiresEndpointUrl !== void 0 ? requiresEndpointUrl : 'not true'}`}`,
-                });
-            };
-            if ((expectsRelativeUrl && !isRelativeUrl(authorizationUrl)) ||
-                (!expectsRelativeUrl && !isAbsoluteUrl(authorizationUrl))) {
-                addIssue('authorizationUrl');
+        }).superRefine(({ requiresEndpointUrl, endpointKey, authorizationUrl, tokenUrl, useDynamicClientRegistration }, context) => {
+            if (useDynamicClientRegistration !== true) {
+                if (!authorizationUrl) {
+                    context.addIssue({
+                        code: 'custom',
+                        path: ['authorizationUrl'],
+                        message: 'authorizationUrl is required when useDynamicClientRegistration is not enabled',
+                    });
+                }
+                if (!tokenUrl) {
+                    context.addIssue({
+                        code: 'custom',
+                        path: ['tokenUrl'],
+                        message: 'tokenUrl is required when useDynamicClientRegistration is not enabled',
+                    });
+                }
             }
-            if ((expectsRelativeUrl && !isRelativeUrl(tokenUrl)) || (!expectsRelativeUrl && !isAbsoluteUrl(tokenUrl))) {
-                addIssue('tokenUrl');
+            if (authorizationUrl) {
+                const expectsRelativeUrl = requiresEndpointUrl && !endpointKey;
+                const isRelativeUrl = (url) => url.startsWith('/');
+                if ((expectsRelativeUrl && !isRelativeUrl(authorizationUrl)) ||
+                    (!expectsRelativeUrl && !isAbsoluteUrl(authorizationUrl))) {
+                    const expectedType = expectsRelativeUrl ? 'a relative' : 'an absolute';
+                    context.addIssue({
+                        code: 'custom',
+                        path: ['authorizationUrl'],
+                        message: `authorizationUrl must be ${expectedType} URL when \
+${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpointUrl !== null && requiresEndpointUrl !== void 0 ? requiresEndpointUrl : 'not true'}`}`,
+                    });
+                }
+            }
+            if (tokenUrl) {
+                const expectsRelativeUrl = requiresEndpointUrl && !endpointKey;
+                const isRelativeUrl = (url) => url.startsWith('/');
+                if ((expectsRelativeUrl && !isRelativeUrl(tokenUrl)) || (!expectsRelativeUrl && !isAbsoluteUrl(tokenUrl))) {
+                    const expectedType = expectsRelativeUrl ? 'a relative' : 'an absolute';
+                    context.addIssue({
+                        code: 'custom',
+                        path: ['tokenUrl'],
+                        message: `tokenUrl must be ${expectedType} URL when \
+${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpointUrl !== null && requiresEndpointUrl !== void 0 ? requiresEndpointUrl : 'not true'}`}`,
+                    });
+                }
             }
         }),
         [types_1.AuthenticationType.OAuth2ClientCredentials]: zodCompleteStrictObject({
@@ -641,7 +666,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             scopeParamName: z.string().optional(),
             nestedResponseKey: z.string().optional(),
             credentialsLocation: z.nativeEnum(types_10.TokenExchangeCredentialsLocation).optional(),
-            useDynamicClientRegistration: z.boolean().optional(),
             ...baseAuthenticationValidators,
         }),
         [types_1.AuthenticationType.WebBasic]: zodCompleteStrictObject({
@@ -2485,13 +2509,17 @@ function getUsedAuthNetworkDomains(authentication, includeOAuthTokenUrls = false
     switch (type) {
         case types_1.AuthenticationType.OAuth2: {
             const { authorizationUrl, tokenUrl } = authentication;
-            const parsedAuthUrl = (0, url_parse_1.default)(authorizationUrl);
-            if (parsedAuthUrl.hostname) {
-                domains.push(parsedAuthUrl.hostname);
+            if (authorizationUrl) {
+                const parsedAuthUrl = (0, url_parse_1.default)(authorizationUrl);
+                if (parsedAuthUrl.hostname) {
+                    domains.push(parsedAuthUrl.hostname);
+                }
             }
-            const parsedTokenUrl = (0, url_parse_1.default)(tokenUrl);
-            if (parsedTokenUrl.hostname) {
-                domains.push(parsedTokenUrl.hostname);
+            if (tokenUrl) {
+                const parsedTokenUrl = (0, url_parse_1.default)(tokenUrl);
+                if (parsedTokenUrl.hostname) {
+                    domains.push(parsedTokenUrl.hostname);
+                }
             }
             return domains;
         }
@@ -2500,9 +2528,11 @@ function getUsedAuthNetworkDomains(authentication, includeOAuthTokenUrls = false
             if (endpointDomain) {
                 domains.push(endpointDomain);
             }
-            const parsedTokenUrl = (0, url_parse_1.default)(tokenUrl);
-            if (parsedTokenUrl.hostname) {
-                domains.push(parsedTokenUrl.hostname);
+            if (tokenUrl) {
+                const parsedTokenUrl = (0, url_parse_1.default)(tokenUrl);
+                if (parsedTokenUrl.hostname) {
+                    domains.push(parsedTokenUrl.hostname);
+                }
             }
             return domains;
         }
