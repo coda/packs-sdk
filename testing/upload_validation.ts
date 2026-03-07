@@ -4,6 +4,7 @@ import type {AdminAuthentication} from '../types';
 import type {AdminAuthenticationTypes} from '../types';
 import {AllPrecannedDates} from '../api_types';
 import type {ArraySchema} from '../schema';
+import type {AssistTrigger} from '../types';
 import type {AssistantMessageTool} from '../types';
 import {AttributionNodeType} from '../schema';
 import type {AuthenticationMetadata} from '../compiled_types';
@@ -181,6 +182,8 @@ export const Limits = {
   ColumnMatcherRegex: 300,
   MaxSkillCount: 15,
   MaxSuggestedPromptsPerPack: 3,
+  MaxTriggersPerPack: 5,
+  TriggerConditionLength: 500,
   NumColumnMatchersPerFormat: 10,
   NetworkDomainUrl: 253,
   PermissionsBatchSize: 5000,
@@ -2386,6 +2389,16 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     prompt: z.string().min(1).max(Limits.SuggestedPromptText),
   });
 
+  const assistTriggerSchema = zodCompleteStrictObject<AssistTrigger>({
+    name: z
+      .string()
+      .min(1)
+      .max(Limits.BuildingBlockName)
+      .regex(regexParameterName, 'Trigger names can only contain alphanumeric characters and underscores.'),
+    condition: z.string().min(1).max(Limits.TriggerConditionLength),
+    skillName: z.string().min(1).max(Limits.BuildingBlockName).optional(),
+  });
+
   // Make sure to call the refiners on this after removing legacyPackMetadataSchema.
   // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level
   // schema we actually use.)
@@ -2552,6 +2565,20 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           context.addIssue({
             code: 'custom',
             message: `Suggested prompt names must be unique. Found duplicate name "${dupe}".`,
+          });
+        }
+      }),
+    assistTriggers: z
+      .array(assistTriggerSchema)
+      .max(Limits.MaxTriggersPerPack)
+      .optional()
+      .default([])
+      .superRefine((data, context) => {
+        const triggerNames = data.map(trigger => trigger.name);
+        for (const dupe of getNonUniqueElements(triggerNames)) {
+          context.addIssue({
+            code: 'custom',
+            message: `Trigger names must be unique. Found duplicate name "${dupe}".`,
           });
         }
       }),

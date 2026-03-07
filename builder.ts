@@ -2,6 +2,7 @@ import type {AdminAuthentication} from './types';
 import type {AdminAuthenticationDef} from './types';
 import type {AllowedAuthentication} from './types';
 import type {AllowedAuthenticationDef} from './types';
+import type {AssistTrigger} from './types';
 import type {Authentication} from './types';
 import {AuthenticationType} from './types';
 import type {BasicPackDefinition} from './types';
@@ -92,6 +93,11 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    */
   suggestedPrompts: SuggestedPrompt[];
   /**
+   * See {@link PackVersionDefinition.assistTriggers}.
+   * @hidden
+   */
+  assistTriggers: AssistTrigger[];
+  /**
    * See {@link PackVersionDefinition.networkDomains}.
    */
   networkDomains: string[];
@@ -144,6 +150,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       formulaNamespace,
       skillEntrypoints,
       suggestedPrompts,
+      assistTriggers,
       mcpServers,
     } = definition || {};
     this.formulas = formulas || [];
@@ -154,6 +161,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     this.chatSkill = chatSkill;
     this.benchInitializationSkill = benchInitializationSkill;
     this.suggestedPrompts = suggestedPrompts || [];
+    this.assistTriggers = assistTriggers || [];
     this.networkDomains = networkDomains || [];
     this.mcpServers = mcpServers || [];
     this.defaultAuthentication = defaultAuthentication;
@@ -411,6 +419,23 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    */
   addSuggestedPrompt(prompt: SuggestedPrompt): this {
     this.suggestedPrompts.push(prompt);
+    return this;
+  }
+
+  /**
+   * Adds an assist trigger that defines when the agent should proactively activate.
+   *
+   * @example
+   * ```
+   * pack.addAssistTrigger({
+   *   name: "onEmailCompose",
+   *   condition: "The user is composing an email message.",
+   * });
+   * ```
+   * @hidden
+   */
+  addAssistTrigger(trigger: AssistTrigger): this {
+    this.assistTriggers.push(trigger);
     return this;
   }
 

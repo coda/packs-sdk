@@ -1579,6 +1579,28 @@ export interface SuggestedPrompt {
     prompt: string;
 }
 /**
+ * A assist trigger that defines when an agent should proactively activate during an editing session.
+ * The `condition` is a natural language prompt evaluated by an LLM against the user's current context.
+ *
+ * @example
+ * ```ts
+ * pack.addTrigger({
+ *   name: "onEmailCompose",
+ *   condition: "The user is composing an email message.",
+ * });
+ * ```
+ *
+ * @hidden In development
+ */
+export interface AssistTrigger {
+    /** Stable identifier for this trigger. */
+    name: string;
+    /** Natural language condition evaluated by the LLM to decide if the agent should activate. */
+    condition: string;
+    /** Which skill to invoke when the trigger fires. If omitted, defaults to the chatSkill. */
+    skillName?: string;
+}
+/**
  * The definition of the contents of a Pack at a specific version. This is the
  * heart of the implementation of a Pack.
  */
@@ -1672,6 +1694,11 @@ export interface PackVersionDefinition {
      * @hidden
      */
     suggestedPrompts?: SuggestedPrompt[];
+    /**
+     * Assist triggers that define when the agent should proactively activate.
+     * @hidden
+     */
+    assistTriggers?: AssistTrigger[];
     /**
      * Definitions of MCP servers that this pack can connect to.
      * @hidden
