@@ -266,14 +266,13 @@ class PackDefinitionBuilder {
      * @example
      * ```
      * pack.addSuggestedPrompt({
-     *   name: "ticketStatus",
+     *   name: "TicketStatus",
      *   displayName: "Check ticket status",
      *   prompt: `
      *     Show me the status of all open support tickets.
      *   `,
      * });
      * ```
-     * @hidden
      */
     addSuggestedPrompt(prompt) {
         this.suggestedPrompts.push(prompt);

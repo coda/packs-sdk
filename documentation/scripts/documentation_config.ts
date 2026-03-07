@@ -284,6 +284,11 @@ export const Snippets: AutocompleteSnippet[] = [
     content: 'Adds an MCP server.',
     codeFile: './samples/snippets/mcp/add_mcp_server.ts',
   },
+  {
+    triggerTokens: ['addSuggestedPrompt', 'SuggestedPrompt', 'suggested'],
+    content: 'Adds a suggested prompt that shows up as a button in new chats.',
+    codeFile: './samples/snippets/agent/add_suggested_prompt.ts',
+  },
 ];
 
 export const Examples: Example[] = [

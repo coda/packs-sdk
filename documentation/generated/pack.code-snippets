@@ -310,5 +310,11 @@
     "description": "Adds an MCP server.",
     "body": "pack.addMCPServer({\n  name: \"${1:MyMCPServer}\",\n  endpointUrl: \"${2:https://my-mcp-server.com/mcp}\",\n});",
     "scope": "javascript,typescript"
+  },
+  "addSuggestedPrompt": {
+    "prefix": "/addSuggestedPrompt",
+    "description": "Adds a suggested prompt that shows up as a button in new chats.",
+    "body": "pack.addSuggestedPrompt({\n  name: \"${1:MyPrompt}\",\n  displayName: \"${2:My Prompt}\",\n  prompt: `\n    ${4:My prompt}\n  `,\n});",
+    "scope": "javascript,typescript"
   }
 }
