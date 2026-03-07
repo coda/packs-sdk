@@ -197,8 +197,8 @@ importers:
         specifier: 1.4.9
         version: 1.4.9
       '@types/uuid':
-        specifier: 9.0.8
-        version: 9.0.8
+        specifier: 11.0.0
+        version: 11.0.0
       '@types/xml2js':
         specifier: 0.4.12
         version: 0.4.12
@@ -1572,8 +1572,9 @@ packages:
   '@types/url-parse@1.4.9':
     resolution: {integrity: sha512-pFvFO5NSAVwp8vDSENcAF13eyAcBIv/OXKvMU466CEwu/+5tyUwW05mVzhmcxaU9j9iTSYOypQqbTrYUa1emFw==}
 
-  '@types/uuid@9.0.8':
-    resolution: {integrity: sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==}
+  '@types/uuid@11.0.0':
+    resolution: {integrity: sha512-HVyk8nj2m+jcFRNazzqyVKiZezyhDKrGUA3jlEcg/nZ6Ms+qHwocba1Y/AaVaznJTAM9xpdFSh+ptbNrhOGvZA==}
+    deprecated: This is a stub types definition. uuid provides its own type definitions, so you do not need this installed.
 
   '@types/xml2js@0.4.12':
     resolution: {integrity: sha512-CZPpQKBZ8db66EP5hCjwvYrLThgZvnyZrPXK2W+UI1oOaWezGt34iOaUCX4Jah2X8+rQqjvl9VKEIT8TR1I0rA==}
@@ -6644,7 +6645,9 @@ snapshots:
 
   '@types/url-parse@1.4.9': {}
 
-  '@types/uuid@9.0.8': {}
+  '@types/uuid@11.0.0':
+    dependencies:
+      uuid: 9.0.1
 
   '@types/xml2js@0.4.12':
     dependencies:
