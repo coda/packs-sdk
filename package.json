@@ -109,7 +109,7 @@
     "remark-frontmatter": "5.0.0",
     "remark-lint-code": "2.0.0",
     "remark-lint-no-undefined-references": "4.2.1",
-    "sharp-cli": "5.1.0",
+    "sharp-cli": "5.2.0",
     "ts-loader": "9.5.1",
     "ts-node": "10.9.2",
     "typescript-eslint": "^8.0.0",
