@@ -209,8 +209,8 @@ importers:
         specifier: ^8.0.0
         version: 8.55.0(eslint@9.39.2)(typescript@5.1.6)
       aws-sdk:
-        specifier: 2.1665.0
-        version: 2.1665.0
+        specifier: 2.1693.0
+        version: 2.1693.0
       chai:
         specifier: 4.5.0
         version: 4.5.0
@@ -1842,8 +1842,8 @@ packages:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
-  aws-sdk@2.1665.0:
-    resolution: {integrity: sha512-IhEcdGmiplF3l/pCROxEYIdi0s+LZ2VkbMAq3RgoXTHxY5cgqVRNaqsEsgIHev2Clxa9V08HttnIERTIUqb1+Q==}
+  aws-sdk@2.1693.0:
+    resolution: {integrity: sha512-cJmb8xEnVLT+R6fBS5sn/EFJiX7tUnDaPtOPZ1vFbOJtd0fnZn/Ky2XGgsvvoeliWeH7mL3TWSX5zXXGSQV6gQ==}
     engines: {node: '>= 10.0.0'}
     deprecated: The AWS SDK for JavaScript (v2) has reached end-of-support, and no longer receives updates. Please migrate your code to use AWS SDK for JavaScript (v3). More info https://a.co/cUPnyil
 
@@ -6966,7 +6966,7 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.0.0
 
-  aws-sdk@2.1665.0:
+  aws-sdk@2.1693.0:
     dependencies:
       buffer: 4.9.2
       events: 1.1.1
