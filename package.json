@@ -92,7 +92,7 @@
     "chai": "4.5.0",
     "cspell": "8.15.2",
     "dts-bundle-generator": "9.5.1",
-    "eslint": "^9.0.0",
+    "eslint": "^10.0.0",
     "eslint-plugin-ban": "^1.6.0",
     "eslint-plugin-check-file": "^2.8.0",
     "eslint-plugin-prefer-let": "3.0.1",
