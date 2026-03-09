@@ -81,7 +81,7 @@ export declare class Client {
         pageToken?: string;
     }): Promise<types.PublicApiRowList>;
     upsertRows(docId: string, tableIdOrName: string, params: {
-        disableParsing?: boolean | undefined;
+        disableParsing?: boolean;
     } | undefined, payload: types.PublicApiRowsUpsert): Promise<types.PublicApiRowsUpsertResult>;
     deleteRows(docId: string, tableIdOrName: string, params: {} | undefined, payload: types.PublicApiRowsDelete): Promise<types.PublicApiRowsDeleteResult>;
     getRow(docId: string, tableIdOrName: string, rowIdOrName: string, params?: {
@@ -89,7 +89,7 @@ export declare class Client {
         valueFormat?: types.PublicApiValueFormat;
     }): Promise<types.PublicApiRowDetail>;
     updateRow(docId: string, tableIdOrName: string, rowIdOrName: string, params: {
-        disableParsing?: boolean | undefined;
+        disableParsing?: boolean;
     } | undefined, payload: types.PublicApiRowUpdate): Promise<types.PublicApiRowUpdateResult>;
     deleteRow(docId: string, tableIdOrName: string, rowIdOrName: string, params?: {}): Promise<types.PublicApiRowDeleteResult>;
     pushButton(docId: string, tableIdOrName: string, rowIdOrName: string, columnIdOrName: string, params?: {}): Promise<types.PublicApiPushButtonResult>;

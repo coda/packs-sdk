@@ -1,6 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.legacyUnwrapError = exports.legacyWrapError = exports.internalUnmarshalValueForAnyNodeVersion = exports.marshalValueForAnyNodeVersion = void 0;
+exports.marshalValueForAnyNodeVersion = marshalValueForAnyNodeVersion;
+exports.internalUnmarshalValueForAnyNodeVersion = internalUnmarshalValueForAnyNodeVersion;
+exports.legacyWrapError = legacyWrapError;
+exports.legacyUnwrapError = legacyUnwrapError;
 const marshal_errors_1 = require("./marshal_errors");
 const marshal_errors_2 = require("./marshal_errors");
 const marshal_buffer_1 = require("./marshal_buffer");
@@ -91,7 +94,6 @@ function marshalValueForAnyNodeVersion(val) {
     }
     return result;
 }
-exports.marshalValueForAnyNodeVersion = marshalValueForAnyNodeVersion;
 /**
  * Use unmarshalValueFromString() instead. It can determine what type of marshaling was used and
  * call the correct unmarshal function, which gives us more flexibility to swap between marshaling
@@ -105,11 +107,9 @@ function internalUnmarshalValueForAnyNodeVersion(marshaledValue) {
     // JSON parsing can't populate `undefined` in deserialize b/c it's not a valid JSON value, so we make a 2nd pass.
     return reviveUndefinedValues(parsed);
 }
-exports.internalUnmarshalValueForAnyNodeVersion = internalUnmarshalValueForAnyNodeVersion;
 function legacyWrapError(err) {
     return new Error(marshalValueForAnyNodeVersion(err));
 }
-exports.legacyWrapError = legacyWrapError;
 function legacyUnwrapError(err) {
     try {
         const unmarshaledValue = internalUnmarshalValueForAnyNodeVersion(err.message);
@@ -122,7 +122,6 @@ function legacyUnwrapError(err) {
         return err;
     }
 }
-exports.legacyUnwrapError = legacyUnwrapError;
 // Recursively traverses objects/arrays
 function reviveUndefinedValues(val) {
     // Check null first b/c typeof null === 'object'

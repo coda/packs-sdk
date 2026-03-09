@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getTokenExpiry = exports.performOAuthClientCredentialsServerFlow = exports.requestOAuthAccessToken = void 0;
+exports.requestOAuthAccessToken = requestOAuthAccessToken;
+exports.performOAuthClientCredentialsServerFlow = performOAuthClientCredentialsServerFlow;
+exports.getTokenExpiry = getTokenExpiry;
 const types_1 = require("../types");
 const helpers_1 = require("./helpers");
 async function requestOAuthAccessToken(params, { tokenUrl, nestedResponseKey, scopeParamName, }) {
@@ -50,7 +52,6 @@ async function requestOAuthAccessToken(params, { tokenUrl, nestedResponseKey, sc
     const { access_token: accessToken, refresh_token: refreshToken, ...data } = tokenContainer;
     return { accessToken, refreshToken, data };
 }
-exports.requestOAuthAccessToken = requestOAuthAccessToken;
 async function performOAuthClientCredentialsServerFlow({ clientId, clientSecret, authDef, scopes, }) {
     const { tokenUrl, nestedResponseKey, scopeParamName, scopeDelimiter } = authDef;
     // Use the manifest's scopes as a default.
@@ -69,8 +70,6 @@ async function performOAuthClientCredentialsServerFlow({ clientId, clientSecret,
     });
     return { accessToken, expires: getTokenExpiry(data) };
 }
-exports.performOAuthClientCredentialsServerFlow = performOAuthClientCredentialsServerFlow;
 function getTokenExpiry(data) {
     return data.expires_in && (0, helpers_1.getExpirationDate)(Number(data.expires_in)).toString();
 }
-exports.getTokenExpiry = getTokenExpiry;

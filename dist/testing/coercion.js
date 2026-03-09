@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.coerceParams = void 0;
+exports.coerceParams = coerceParams;
 const api_types_1 = require("../api_types");
 const ensure_1 = require("../helpers/ensure");
 const api_types_2 = require("../api_types");
@@ -28,7 +28,6 @@ function coerceParams(formula, args) {
     }
     return coerced;
 }
-exports.coerceParams = coerceParams;
 function coerceParamValue(paramDef, paramValue) {
     if (!(0, object_utils_1.isDefined)(paramValue)) {
         return paramValue;

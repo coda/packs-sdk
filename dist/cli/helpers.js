@@ -15,18 +15,38 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.backfillFromPackConfig = exports.assertPackIdOrUrl = exports.assertPackId = exports.assertApiToken = exports.importManifest = exports.getPackAuth = exports.makeManifestFullPath = exports.isTestCommand = exports.formatEndpoint = exports.createCodaClient = exports.spawnProcess = void 0;
+exports.spawnProcess = spawnProcess;
+exports.createCodaClient = createCodaClient;
+exports.formatEndpoint = formatEndpoint;
+exports.isTestCommand = isTestCommand;
+exports.makeManifestFullPath = makeManifestFullPath;
+exports.getPackAuth = getPackAuth;
+exports.importManifest = importManifest;
+exports.assertApiToken = assertApiToken;
+exports.assertPackId = assertPackId;
+exports.assertPackIdOrUrl = assertPackIdOrUrl;
+exports.backfillFromPackConfig = backfillFromPackConfig;
 const coda_1 = require("../helpers/external-api/coda");
 const config_storage_1 = require("./config_storage");
 const config_storage_2 = require("./config_storage");
@@ -47,24 +67,19 @@ function spawnProcess(command, { stdio = 'inherit' } = {}) {
         stdio,
     });
 }
-exports.spawnProcess = spawnProcess;
 function createCodaClient(apiToken, protocolAndHost) {
     return new coda_1.Client({ protocolAndHost, apiToken });
 }
-exports.createCodaClient = createCodaClient;
 function formatEndpoint(endpoint) {
     return endpoint.startsWith('https://') ? endpoint : `https://${endpoint}`;
 }
-exports.formatEndpoint = formatEndpoint;
 function isTestCommand() {
     var _a;
     return (_a = process.argv[1]) === null || _a === void 0 ? void 0 : _a.endsWith('coda.ts');
 }
-exports.isTestCommand = isTestCommand;
 function makeManifestFullPath(manifestPath) {
     return path_1.default.isAbsolute(manifestPath) ? manifestPath : path_1.default.join(process.cwd(), manifestPath);
 }
-exports.makeManifestFullPath = makeManifestFullPath;
 // Packs today do not have both defaultAuth and systemAuth specs, so this helper gets
 // whichever is available, defaulting to defaultAuth. A smarter version could be supported
 // in the future, for a use case like a Google Maps pack which allowed a default credential
@@ -80,12 +95,10 @@ function getPackAuth(packDef) {
     // Since SystemAuthentication is a strict subset of Authentication, we can cast them together.
     return defaultAuthentication || systemConnectionAuthentication;
 }
-exports.getPackAuth = getPackAuth;
 async function importManifest(bundleFilename) {
     const module = await Promise.resolve(`${path_1.default.resolve(bundleFilename)}`).then(s => __importStar(require(s)));
     return module.pack || module.manifest;
 }
-exports.importManifest = importManifest;
 function assertApiToken(codaApiEndpoint, cliApiToken) {
     if (cliApiToken) {
         return cliApiToken;
@@ -96,7 +109,6 @@ function assertApiToken(codaApiEndpoint, cliApiToken) {
     }
     return apiKey;
 }
-exports.assertApiToken = assertApiToken;
 function assertPackId(manifestDir, codaApiEndpoint) {
     const packId = (0, config_storage_7.getPackId)(manifestDir, codaApiEndpoint);
     if (!packId) {
@@ -104,7 +116,6 @@ function assertPackId(manifestDir, codaApiEndpoint) {
     }
     return packId;
 }
-exports.assertPackId = assertPackId;
 function assertPackIdOrUrl(packIdOrUrl) {
     const packId = (0, link_1.parsePackIdOrUrl)(packIdOrUrl);
     if (!packId) {
@@ -112,7 +123,6 @@ function assertPackIdOrUrl(packIdOrUrl) {
     }
     return packId;
 }
-exports.assertPackIdOrUrl = assertPackIdOrUrl;
 function backfillFromPackConfig(argv) {
     var _a, _b, _c, _d;
     const manifestDir = getManifestDir(argv);
@@ -128,7 +138,6 @@ function backfillFromPackConfig(argv) {
             (_d = (_c = packOptions === null || packOptions === void 0 ? void 0 : packOptions[config_storage_5.PackOptionKey.gitTag]) !== null && _c !== void 0 ? _c : packOptions === null || packOptions === void 0 ? void 0 : packOptions[config_storage_4.DeprecatedPackOptionKey.enableGitTags]) !== null && _d !== void 0 ? _d : config_storage_2.DEFAULT_GIT_TAG;
     }
 }
-exports.backfillFromPackConfig = backfillFromPackConfig;
 function getManifestDir(argv) {
     const manifestPath = argv.manifestFile || argv.manifestPath;
     if (manifestPath) {

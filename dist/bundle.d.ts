@@ -4475,23 +4475,23 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
 export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: FormulaOptions<ParamDefsT, ObjectArrayFormulaDef<ParamDefsT, ResultT>>): {
 	description: string;
 	name: string;
-	instructions?: string | undefined;
-	cacheTtlSecs?: number | undefined;
+	instructions?: string;
+	cacheTtlSecs?: number;
 	parameters: ParamDefsT;
-	varargParameters?: ParamDefs | undefined;
-	examples?: {
-		params: (PackFormulaValue | undefined)[];
+	varargParameters?: ParamDefs;
+	examples?: Array<{
+		params: Array<PackFormulaValue | undefined>;
 		result: PackFormulaResult;
-	}[] | undefined;
-	isAction?: boolean | undefined;
-	connectionRequirement?: ConnectionRequirement | undefined;
-	network?: Network | undefined;
-	isExperimental?: boolean | undefined;
-	isSystem?: boolean | undefined;
-	purpose?: FormulaPurpose | undefined;
-	extraOAuthScopes?: string[] | undefined;
-	allowedAuthenticationNames?: string[] | undefined;
-	validateParameters?: MetadataFormulaDef<ExecutionContext, ParameterValidationResult> | undefined;
+	}>;
+	isAction?: boolean;
+	connectionRequirement?: ConnectionRequirement;
+	network?: Network;
+	isExperimental?: boolean;
+	isSystem?: boolean;
+	purpose?: FormulaPurpose;
+	extraOAuthScopes?: string[];
+	allowedAuthenticationNames?: string[];
+	validateParameters?: MetadataFormulaDef<ExecutionContext, ParameterValidationResult>;
 } & {
 	execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<SchemaType<ResultT>>;
 	resultType: Type.object;
@@ -4521,23 +4521,23 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
 export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: FormulaOptions<ParamDefsT, EmptyFormulaDef<ParamDefsT>>): {
 	description: string;
 	name: string;
-	instructions?: string | undefined;
-	cacheTtlSecs?: number | undefined;
+	instructions?: string;
+	cacheTtlSecs?: number;
 	parameters: ParamDefsT;
-	varargParameters?: ParamDefs | undefined;
-	examples?: {
-		params: (PackFormulaValue | undefined)[];
+	varargParameters?: ParamDefs;
+	examples?: Array<{
+		params: Array<PackFormulaValue | undefined>;
 		result: PackFormulaResult;
-	}[] | undefined;
-	isAction?: boolean | undefined;
-	connectionRequirement?: ConnectionRequirement | undefined;
-	network?: Network | undefined;
-	isExperimental?: boolean | undefined;
-	isSystem?: boolean | undefined;
-	purpose?: FormulaPurpose | undefined;
-	extraOAuthScopes?: string[] | undefined;
-	allowedAuthenticationNames?: string[] | undefined;
-	validateParameters?: MetadataFormulaDef<ExecutionContext, ParameterValidationResult> | undefined;
+	}>;
+	isAction?: boolean;
+	connectionRequirement?: ConnectionRequirement;
+	network?: Network;
+	isExperimental?: boolean;
+	isSystem?: boolean;
+	purpose?: FormulaPurpose;
+	extraOAuthScopes?: string[];
+	allowedAuthenticationNames?: string[];
+	validateParameters?: MetadataFormulaDef<ExecutionContext, ParameterValidationResult>;
 } & {
 	execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<string>;
 	resultType: Type.string;

@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fakeDefinitionToMetadata = exports.fakeDefinitionToDefinition = void 0;
+exports.fakeDefinitionToDefinition = fakeDefinitionToDefinition;
+exports.fakeDefinitionToMetadata = fakeDefinitionToMetadata;
 const metadata_1 = require("./metadata");
 const api_1 = require("../api");
 function fakeDefinitionToDefinition(def) {
     return def;
 }
-exports.fakeDefinitionToDefinition = fakeDefinitionToDefinition;
 function fakeDefinitionToMetadata(def) {
     const { formulas: originalFormulas, defaultAuthentication: originalDefaultAuthentication, formats: originalFormats, syncTables: originalSyncTables, ...packMetadata } = def;
     const formulas = originalFormulas.map(formula => {
@@ -51,4 +51,3 @@ function fakeDefinitionToMetadata(def) {
         ...packMetadata,
     };
 }
-exports.fakeDefinitionToMetadata = fakeDefinitionToMetadata;

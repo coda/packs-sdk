@@ -8,7 +8,8 @@
  * Hash: 3cb65a92b168c432b6eb8cad28cd0cc16911c3536d86f2d256c7ddb6007de8ad
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Client = exports.isResponseError = exports.ResponseError = void 0;
+exports.Client = exports.ResponseError = void 0;
+exports.isResponseError = isResponseError;
 require("es6-promise/auto");
 require("cross-fetch/polyfill");
 const url_1 = require("../url");
@@ -22,7 +23,6 @@ exports.ResponseError = ResponseError;
 function isResponseError(err) {
     return err instanceof ResponseError;
 }
-exports.isResponseError = isResponseError;
 class Client {
     constructor({ apiToken, protocolAndHost = 'https://coda.io', userAgent = 'Coda-Typescript-API-Client', }) {
         this.protocolAndHost = protocolAndHost;

@@ -15,18 +15,34 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPackOptions = exports.storePackOptions = exports.getPackId = exports.storePackId = exports.storeCodaApiKey = exports.getApiKey = exports.DeprecatedPackOptionKey = exports.PackOptionKey = exports.PACK_ID_FILE_NAME = exports.DEFAULT_GIT_TAG = exports.DEFAULT_TIMER_STRATEGY = exports.DEFAULT_API_ENDPOINT = void 0;
+exports.DeprecatedPackOptionKey = exports.PackOptionKey = exports.PACK_ID_FILE_NAME = exports.DEFAULT_GIT_TAG = exports.DEFAULT_TIMER_STRATEGY = exports.DEFAULT_API_ENDPOINT = void 0;
+exports.getApiKey = getApiKey;
+exports.storeCodaApiKey = storeCodaApiKey;
+exports.storePackId = storePackId;
+exports.getPackId = getPackId;
+exports.storePackOptions = storePackOptions;
+exports.getPackOptions = getPackOptions;
 const compile_1 = require("../testing/compile");
 const path = __importStar(require("path"));
 const helpers_1 = require("../testing/helpers");
@@ -72,7 +88,6 @@ function getApiKey(codaApiEndpoint) {
     }
     return process.env.CODA_PACKS_API_KEY;
 }
-exports.getApiKey = getApiKey;
 function storeCodaApiKey(apiKey, projectDir = '.', codaApiEndpoint) {
     const filename = path.join(projectDir, API_KEY_FILE_NAME);
     const apiKeyFile = readApiKeyFile(filename) || { apiKey: '' };
@@ -86,7 +101,6 @@ function storeCodaApiKey(apiKey, projectDir = '.', codaApiEndpoint) {
     }
     writeApiKeyFile(filename, apiKeyFile);
 }
-exports.storeCodaApiKey = storeCodaApiKey;
 function readApiKeyFile(filename) {
     return (0, helpers_1.readJSONFile)(filename);
 }
@@ -105,7 +119,6 @@ function storePackId(manifestDir, packId, codaApiEndpoint) {
     }
     writePacksFile(manifestDir, fileContents);
 }
-exports.storePackId = storePackId;
 function getPackId(manifestDir, codaApiEndpoint) {
     var _a;
     const fileContents = readPackIdFile(manifestDir);
@@ -120,19 +133,16 @@ function getPackId(manifestDir, codaApiEndpoint) {
         return (_a = fileContents.environmentPackIds) === null || _a === void 0 ? void 0 : _a[host];
     }
 }
-exports.getPackId = getPackId;
 // Merges new options with existing ones, if any.
 function storePackOptions(manifestDir, options) {
     const fileContents = readPackIdFile(manifestDir) || { packId: -1 };
     fileContents.options = { ...fileContents.options, ...options };
     writePacksFile(manifestDir, fileContents);
 }
-exports.storePackOptions = storePackOptions;
 function getPackOptions(manifestDir) {
     const fileContents = readPackIdFile(manifestDir);
     return fileContents === null || fileContents === void 0 ? void 0 : fileContents.options;
 }
-exports.getPackOptions = getPackOptions;
 function readPackIdFile(manifestDir) {
     const filename = path.join(manifestDir, exports.PACK_ID_FILE_NAME);
     return (0, helpers_1.readJSONFile)(filename);

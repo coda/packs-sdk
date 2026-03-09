@@ -1582,23 +1582,23 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
 export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs, ResultT extends Schema>({ response, ...definition }: FormulaOptions<ParamDefsT, ObjectArrayFormulaDef<ParamDefsT, ResultT>>): {
     name: string;
     description: string;
-    instructions?: string | undefined;
+    instructions?: string;
     parameters: ParamDefsT;
-    varargParameters?: ParamDefs | undefined;
-    examples?: {
-        params: (import("./api_types").PackFormulaValue | undefined)[];
+    varargParameters?: ParamDefs;
+    examples?: Array<{
+        params: Array<import("./api_types").PackFormulaValue | undefined>;
         result: PackFormulaResult;
-    }[] | undefined;
-    isAction?: boolean | undefined;
-    connectionRequirement?: ConnectionRequirement | undefined;
-    network?: import("./api_types").Network | undefined;
-    cacheTtlSecs?: number | undefined;
-    isExperimental?: boolean | undefined;
-    isSystem?: boolean | undefined;
-    purpose?: import("./api_types").FormulaPurpose | undefined;
-    extraOAuthScopes?: string[] | undefined;
-    allowedAuthenticationNames?: string[] | undefined;
-    validateParameters?: MetadataFormulaDef<ExecutionContext, ParameterValidationResult> | undefined;
+    }>;
+    isAction?: boolean;
+    connectionRequirement?: ConnectionRequirement;
+    network?: import("./api_types").Network;
+    cacheTtlSecs?: number;
+    isExperimental?: boolean;
+    isSystem?: boolean;
+    purpose?: import("./api_types").FormulaPurpose;
+    extraOAuthScopes?: string[];
+    allowedAuthenticationNames?: string[];
+    validateParameters?: MetadataFormulaDef<ExecutionContext, ParameterValidationResult>;
 } & {
     execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<SchemaType<ResultT>>;
     resultType: Type.object;
@@ -1628,23 +1628,23 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
 export declare function makeEmptyFormula<ParamDefsT extends ParamDefs>(definition: FormulaOptions<ParamDefsT, EmptyFormulaDef<ParamDefsT>>): {
     name: string;
     description: string;
-    instructions?: string | undefined;
+    instructions?: string;
     parameters: ParamDefsT;
-    varargParameters?: ParamDefs | undefined;
-    examples?: {
-        params: (import("./api_types").PackFormulaValue | undefined)[];
+    varargParameters?: ParamDefs;
+    examples?: Array<{
+        params: Array<import("./api_types").PackFormulaValue | undefined>;
         result: PackFormulaResult;
-    }[] | undefined;
-    isAction?: boolean | undefined;
-    connectionRequirement?: ConnectionRequirement | undefined;
-    network?: import("./api_types").Network | undefined;
-    cacheTtlSecs?: number | undefined;
-    isExperimental?: boolean | undefined;
-    isSystem?: boolean | undefined;
-    purpose?: import("./api_types").FormulaPurpose | undefined;
-    extraOAuthScopes?: string[] | undefined;
-    allowedAuthenticationNames?: string[] | undefined;
-    validateParameters?: MetadataFormulaDef<ExecutionContext, ParameterValidationResult> | undefined;
+    }>;
+    isAction?: boolean;
+    connectionRequirement?: ConnectionRequirement;
+    network?: import("./api_types").Network;
+    cacheTtlSecs?: number;
+    isExperimental?: boolean;
+    isSystem?: boolean;
+    purpose?: import("./api_types").FormulaPurpose;
+    extraOAuthScopes?: string[];
+    allowedAuthenticationNames?: string[];
+    validateParameters?: MetadataFormulaDef<ExecutionContext, ParameterValidationResult>;
 } & {
     execute: (params: ParamValues<ParamDefsT>, context: ExecutionContext) => Promise<string>;
     resultType: Type.string;
