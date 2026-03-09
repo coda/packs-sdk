@@ -1,6 +1,6 @@
 {
   "name": "@codahq/packs-sdk",
-  "version": "1.13.2",
+  "version": "1.13.3-prerelease.0",
   "license": "MIT",
   "engines": {
     "node": ">=22.0.0",
@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@aws-crypto/sha256-js": "5.2.0",
-    "@aws-sdk/client-sts": "3.985.0",
+    "@aws-sdk/client-sts": "3.1003.0",
     "@smithy/signature-v4": "5.1.2",
     "browserify": "17.0.1",
     "buffer": "6.0.3",
@@ -38,7 +38,7 @@
     "node-fetch": "2.6.13",
     "open": "8.4.2",
     "pascalcase": "1.0.0",
-    "qs": "6.14.1",
+    "qs": "6.14.2",
     "readline-sync": "1.4.10",
     "semver": "7.6.3",
     "sha.js": "2.4.12",
@@ -58,7 +58,7 @@
     "isolated-vm": "6.0.2"
   },
   "devDependencies": {
-    "@aws-sdk/types": "3.973.1",
+    "@aws-sdk/types": "3.973.5",
     "@brightcove/kacl": "0.1.11",
     "@getify/eslint-plugin-proper-arrows": "11.0.3",
     "@julian_cataldo/remark-lint-frontmatter-schema": "3.7.6",
@@ -104,13 +104,13 @@
     "mocha": "10.7.3",
     "mock-fs": "5.2.0",
     "prettier": "3.3.3",
-    "release-it": "17.10.0",
+    "release-it": "17.11.0",
     "remark-cli": "12.0.1",
     "remark-frontmatter": "5.0.0",
     "remark-lint-code": "2.0.0",
     "remark-lint-no-undefined-references": "4.2.1",
     "sharp-cli": "5.1.0",
-    "ts-loader": "9.5.1",
+    "ts-loader": "9.5.4",
     "ts-node": "10.9.2",
     "typescript-eslint": "^8.0.0",
     "typedoc": "0.28.14",
@@ -126,12 +126,30 @@
   },
   "pnpm": {
     "overrides": {
-      "@octokit/plugin-paginate-rest@>=9.3.0-beta.1 <11.4.1": "9.2.2",
+      "@isaacs/brace-expansion@<=5.0.0": "5.0.1",
+      "@octokit/plugin-paginate-rest@>=9.3.0-beta.1 <11.4.1": "11.4.1",
+      "ajv@<6.14.0": "6.14.0",
+      "ajv@>=7.0.0-alpha.0 <8.18.0": "8.18.0",
+      "basic-ftp@<5.2.0": "5.2.0",
+      "bn.js@<4.12.3": "4.12.3",
+      "bn.js@>=5.0.0 <5.2.3": "5.2.3",
       "brace-expansion@>=2.0.0 <2.0.2": "2.0.2",
       "cipher-base@<1.0.5": "1.0.5",
+      "diff@>=4.0.0 <4.0.4": "4.0.4",
+      "diff@>=5.0.0 <5.2.2": "5.2.2",
+      "fast-xml-parser@>=5.0.0 <5.3.8": "5.3.8",
       "glob@>=11.0.0 <11.1.0": "11.1.0",
+      "lodash@>=4.0.0 <=4.17.22": "4.17.23",
+      "markdown-it@>=13.0.0 <14.1.1": "14.1.1",
+      "minimatch@<3.1.4": "3.1.4",
+      "minimatch@>=5.0.0 <5.1.8": "5.1.8",
+      "minimatch@>=9.0.0 <9.0.7": "9.0.7",
+      "minimatch@>=10.0.0 <10.2.3": "10.2.3",
+      "qs@>=6.7.0 <6.14.2": "6.14.2",
+      "serialize-javascript@<=7.0.2": "7.0.4",
       "tar-fs@<2.1.4": "2.1.4",
-      "tmp@<0.2.4": "0.2.4"
+      "tmp@<0.2.4": "0.2.4",
+      "webpack@>=5.49.0 <5.104.1": "5.104.1"
     },
     "packageExtensions": {
       "isolated-vm": {
