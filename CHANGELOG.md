@@ -3,6 +3,11 @@
 This changelog keeps track of all changes to the Packs SDK. We follow conventions from [keepachangelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
+## [1.13.3-prerelease.1] - 2026-03-10
+
+### Changed
+
+- Removing DynamicSuggestedPromptTool
 
 ## [1.13.2] - 2026-03-09
 
