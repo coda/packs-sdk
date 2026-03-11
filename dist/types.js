@@ -256,11 +256,6 @@ var ToolType;
      */
     ToolType["CodaDocsAndTables"] = "CodaDocsAndTables";
     /**
-     * Tool that enables dynamic generation of suggested follow-up prompts.
-     * @internal
-     */
-    ToolType["DynamicSuggestedPrompt"] = "DynamicSuggestedPrompt";
-    /**
      * Tool that enables searching the public internet for up-to-date information.
      */
     ToolType["WebSearch"] = "WebSearch";
