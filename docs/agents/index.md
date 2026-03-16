@@ -16,7 +16,7 @@ We are enabling developers like you to leverage our 16+ years of investment in A
 
 ## Apply to build with us
 
-The agent developer experience is currently in a closed beta, with only select partners able to build, test, and publish agents. If you are interested in developing a solution with us, fill out the application form.
+The full agent developer experience is currently in a closed beta, with only select partners able to publish agents. If you are interested in developing a solution with us, fill out the application form.
 
 [Partner Application Form][partner_form]{ .md-button .md-button--primary }
 
