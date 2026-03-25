@@ -1123,6 +1123,12 @@ export declare enum ToolType {
      */
     CodaDocsAndTables = "CodaDocsAndTables",
     /**
+     * Tool that enables fetching the full content of a specific web page or PDF at a URL.
+     * This could be merged with WebSearch in the future but is kept independent while prototyping.
+     * @hidden
+     */
+    WebFetch = "WebFetch",
+    /**
      * Tool that enables searching the public internet for up-to-date information.
      */
     WebSearch = "WebSearch",
@@ -1316,6 +1322,19 @@ export interface WebSearchTool extends BaseTool<ToolType.WebSearch> {
     allowedDomains?: string[];
 }
 /**
+ * Tool that enables fetching the full content of a specific web page or PDF at a URL.
+ * @hidden
+ */
+export interface WebFetchTool extends BaseTool<ToolType.WebFetch> {
+    /**
+     * Optional list of domains to restrict fetching to.
+     * When specified, only URLs on these domains can be fetched without user approval.
+     * Omit the HTTP/HTTPS prefix (e.g., use `docs.example.com` not `https://docs.example.com`).
+     * Subdomains are automatically included.
+     */
+    allowedDomains?: string[];
+}
+/**
  * The type of the content that can be embedded in the response.
  * @hidden In development.
  */
@@ -1400,6 +1419,7 @@ export interface ToolMap {
     [ToolType.MCP]: MCPTool;
     [ToolType.ContactResolution]: ContactResolutionTool;
     [ToolType.CodaDocsAndTables]: CodaDocsAndTablesTool;
+    [ToolType.WebFetch]: WebFetchTool;
     [ToolType.WebSearch]: WebSearchTool;
     [ToolType.EmbeddedContent]: EmbeddedContentTool;
 }

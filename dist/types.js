@@ -251,6 +251,12 @@ var ToolType;
      */
     ToolType["CodaDocsAndTables"] = "CodaDocsAndTables";
     /**
+     * Tool that enables fetching the full content of a specific web page or PDF at a URL.
+     * This could be merged with WebSearch in the future but is kept independent while prototyping.
+     * @hidden
+     */
+    ToolType["WebFetch"] = "WebFetch";
+    /**
      * Tool that enables searching the public internet for up-to-date information.
      */
     ToolType["WebSearch"] = "WebSearch";
