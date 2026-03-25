@@ -6125,6 +6125,13 @@ describe('Pack metadata Validation', async () => {
                 type: ToolType.WebSearch,
                 allowedDomains: ['example.com', 'docs.example.com'],
               },
+              {
+                type: ToolType.WebFetch,
+              },
+              {
+                type: ToolType.WebFetch,
+                allowedDomains: ['example.com', 'docs.example.com'],
+              },
             ],
           },
         ],
@@ -6184,6 +6191,8 @@ describe('Pack metadata Validation', async () => {
         case ToolType.EmbeddedContent:
           break;
         case ToolType.WebSearch:
+          break;
+        case ToolType.WebFetch:
           break;
         case 'CustomTool':
           break;
@@ -6490,6 +6499,173 @@ describe('Pack metadata Validation', async () => {
         {
           path: 'skills[0].tools[1]',
           message: 'Duplicate tool found. {"type":"WebSearch"} is equivalent to the tool at index 0.',
+        },
+      ]);
+    });
+
+    it('allows WebFetch tool without allowedDomains', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'WebFetchSkill',
+            displayName: 'Web Fetch Skill',
+            description: 'Uses web fetch',
+            prompt: 'Fetch a web page',
+            tools: [
+              {
+                type: ToolType.WebFetch,
+              },
+            ],
+          },
+        ],
+      });
+      await validateJson(metadata);
+    });
+
+    it('allows WebFetch tool with valid allowedDomains', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'WebFetchSkill',
+            displayName: 'Web Fetch Skill',
+            description: 'Uses web fetch',
+            prompt: 'Fetch a web page',
+            tools: [
+              {
+                type: ToolType.WebFetch,
+                allowedDomains: ['example.com', 'docs.example.com', 'stackoverflow.com'],
+              },
+            ],
+          },
+        ],
+      });
+      await validateJson(metadata);
+    });
+
+    it('fails when WebFetch allowedDomains contains empty string', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'WebFetchSkill',
+            displayName: 'Web Fetch Skill',
+            description: 'Uses web fetch',
+            prompt: 'Fetch a web page',
+            tools: [
+              {
+                type: ToolType.WebFetch,
+                allowedDomains: ['example.com', ''],
+              },
+            ],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills[0].tools[0].allowedDomains[1]',
+          message: 'Too small: expected string to have >=1 characters',
+        },
+      ]);
+    });
+
+    it('fails when WebFetch allowedDomains is empty array', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'WebFetchSkill',
+            displayName: 'Web Fetch Skill',
+            description: 'Uses web fetch',
+            prompt: 'Fetch a web page',
+            tools: [
+              {
+                type: ToolType.WebFetch,
+                allowedDomains: [],
+              },
+            ],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills[0].tools[0].allowedDomains',
+          message: 'Too small: expected array to have >=1 items',
+        },
+      ]);
+    });
+
+    it('fails when WebFetch allowedDomains exceeds maximum of 100 domains', async () => {
+      const tooManyDomains = Array.from({length: 101}, (_, i) => `domain${i}.com`);
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'WebFetchSkill',
+            displayName: 'Web Fetch Skill',
+            description: 'Uses web fetch',
+            prompt: 'Fetch a web page',
+            tools: [
+              {
+                type: ToolType.WebFetch,
+                allowedDomains: tooManyDomains,
+              },
+            ],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills[0].tools[0].allowedDomains',
+          message: 'Too big: expected array to have <=100 items',
+        },
+      ]);
+    });
+
+    it('allows WebFetch with exactly 100 domains', async () => {
+      const maxDomains = Array.from({length: 100}, (_, i) => `domain${i}.com`);
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'WebFetchSkill',
+            displayName: 'Web Fetch Skill',
+            description: 'Uses web fetch',
+            prompt: 'Fetch a web page',
+            tools: [
+              {
+                type: ToolType.WebFetch,
+                allowedDomains: maxDomains,
+              },
+            ],
+          },
+        ],
+      });
+      await validateJson(metadata);
+    });
+
+    it('detects duplicate WebFetch tools', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'WebFetchSkill',
+            displayName: 'Web Fetch Skill',
+            description: 'Uses web fetch',
+            prompt: 'Fetch a web page',
+            tools: [
+              {
+                type: ToolType.WebFetch,
+              },
+              {
+                type: ToolType.WebFetch,
+              },
+            ],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills[0].tools[1]',
+          message: 'Duplicate tool found. {"type":"WebFetch"} is equivalent to the tool at index 0.',
         },
       ]);
     });
