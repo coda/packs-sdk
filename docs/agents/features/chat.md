@@ -175,9 +175,9 @@ These initial actions are defined in the Pack code using the `addSuggestedPrompt
 
 ```ts
 pack.addSuggestedPrompt({
-  name: "SuggestTitle",
-  displayName: "Suggest a title",
-  prompt: `Suggest a few possible titles for what I'm writing.`
+  name: "CreatePost",
+  displayName: "Create a social post",
+  prompt: `Create a social post based off of my writing.`,
 });
 ```
 
@@ -194,15 +194,17 @@ When your agent replies to a user, in addition to the message it can also includ
 
 Follow-up actions are enabled by default on all agents, and the LLM will often attempt to populate them even without any instructions to do so. To influence the actions that are suggested, provide instructions to the LLM in the prompt of your skills.
 
-```{.ts hl_lines="7-8"}
+```{.ts hl_lines="9-10"}
 pack.addSkill({
-  name: "SuggestTitle",
-  displayName: "Suggest a title",
-  description: "Suggest a few possible titles for what the user is writing.",
+  name: "GeneratePost",
+  displayName: "Generate social post",
+  description: "Generate a social post based on the user's writing.",
   prompt: `
-    Reply with a list of three possible titles for the writing.
-    Generate structured suggested prompts based on different styles of headlines
-    they may want instead.
+    Create a short, attention grabbing social post based on the user's writing.
+    It should be no more than 280 characters long, and placed in a copyable block.
+
+    Generate structured suggested prompts for tailoring the platform to specific social networks.
+    Don't include the suggested prompts in the message.
   `,
   tools: [],
 });
@@ -212,7 +214,19 @@ pack.addSkill({
 
     Follow-up suggested actions are currently exposed to the LLM as `suggestedPrompts`, so it can be helpful to refer to them using that language in your prompts.
 
-It's not possible to disable follow-up actions completely, but you can instruct the LLM not to generate them in your prompt.
+It's not possible to disable follow-up actions completely, but you can similarly instruct the LLM not to generate them in the prompt of your skills. You'll need to include this guidance in the [chat skill][chatskill] and any other skills in your agent.
+
+```{.ts hl_lines="6"}
+pack.setChatSkill({
+  name: "Chat",
+  displayName: "Chat",
+  description: "The chat skill.",
+  prompt: `
+    Never generate structured suggested prompts.
+  `,
+  tools: [],
+});
+```
 
 
 [skills]: ./skills.md
