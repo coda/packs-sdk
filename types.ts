@@ -1254,7 +1254,9 @@ export enum ToolType {
    */
   CodaDocsAndTables = 'CodaDocsAndTables',
   /**
-   * Tool that enables fetching the full content of a specific web page or document at a URL.
+   * Tool that enables fetching the full content of a specific web page or PDF at a URL.
+   * This could be merged with WebSearch in the future but is kept independent while prototyping.
+   * @hidden
    */
   WebFetch = 'WebFetch',
   /**
@@ -1467,6 +1469,10 @@ export interface WebSearchTool extends BaseTool<ToolType.WebSearch> {
   allowedDomains?: string[];
 }
 
+/**
+ * Tool that enables fetching the full content of a specific web page or PDF at a URL.
+ * @hidden
+ */
 export interface WebFetchTool extends BaseTool<ToolType.WebFetch> {
   /**
    * Optional list of domains to restrict fetching to.
