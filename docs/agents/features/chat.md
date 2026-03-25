@@ -175,9 +175,9 @@ These initial actions are defined in the Pack code using the `addSuggestedPrompt
 
 ```ts
 pack.addSuggestedPrompt({
-  name: "SuggestTitle",
-  displayName: "Suggest a title",
-  prompt: `Suggest a few possible titles for what I'm writing.`
+  name: "CreatePost",
+  displayName: "Create a social post",
+  prompt: `Create a social post based off of my writing.`,
 });
 ```
 
@@ -196,15 +196,15 @@ Follow-up actions are enabled by default on all agents, and the LLM will often a
 
 ```{.ts hl_lines="9-10"}
 pack.addSkill({
-  name: "SuggestTitle",
-  displayName: "Suggest a title",
-  description: "Suggest a few possible titles for what the user is writing.",
+  name: "GeneratePost",
+  displayName: "Generate social post",
+  description: "Generate a social post based on the user's writing.",
   prompt: `
-    Reply with a list of three possible titles for the writing. Prefer titles
-    that are brief, memorable, and light-hearted.
+    Create a short, attention grabbing social post based on the user's writing.
+    It should be no more than 280 characters long, and placed in a copyable block.
 
-    Generate structured suggested prompts based on different styles of headlines
-    they may want instead.
+    Generate structured suggested prompts for tailoring the platform to specific social networks.
+    Don't include the suggested prompts in the message.
   `,
   tools: [],
 });
