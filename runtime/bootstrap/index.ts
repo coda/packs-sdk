@@ -239,6 +239,7 @@ export async function injectExecutionContext({
   authenticationName,
   executionId,
   previousAttemptError,
+  userId,
   ..._rest
 }: {
   context: Context;
@@ -262,6 +263,7 @@ export async function injectExecutionContext({
     executionId,
     authenticationName,
     previousAttemptError,
+    userId,
   };
 
   await context.global.set('executionContext', executionContextPrimitives, {copy: true});

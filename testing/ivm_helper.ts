@@ -59,6 +59,7 @@ export async function setupIvmContext(bundlePath: string, executionContext: Exec
     authenticationName: executionContext.authenticationName,
     executionId: executionContext.executionId,
     previousAttemptError: executionContext.previousAttemptError,
+    userId: executionContext.userId,
     syncStateService: isSyncExecutionContext(executionContext) ? executionContext.syncStateService : undefined,
   });
 

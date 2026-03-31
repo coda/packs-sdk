@@ -1268,6 +1268,11 @@ export interface ExecutionContext {
    * for sync tables used within Superhuman Go agents.
    */
   readonly previousAttemptError?: InvocationError;
+
+  /**
+   * The Coda user ID of the user who invoked this formula.
+   */
+  readonly userId?: string;
 }
 
 /**
