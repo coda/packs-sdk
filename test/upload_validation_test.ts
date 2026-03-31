@@ -4679,25 +4679,6 @@ describe('Pack metadata Validation', async () => {
       await validateJson(metadata);
     });
 
-    it('CodaApiHeaderBearerToken, invalid domain', async () => {
-      const metadata = createFakePackVersionMetadata({
-        defaultAuthentication: {
-          type: AuthenticationType.CodaApiHeaderBearerToken,
-          deferConnectionSetup: true,
-          shouldAutoAuthSetup: true,
-          networkDomain: 'other.domain',
-        },
-        networkDomains: ['coda.io', 'other.domain'],
-      });
-      const err = await validateJsonAndAssertFails(metadata);
-      assert.deepEqual(err.validationErrors, [
-        {
-          message: `CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict defaultUserAuthentication's "networkDomain" to coda.io`,
-          path: 'authentication.defaultUserAuthentication.networkDomain',
-        },
-      ]);
-    });
-
     it('CodaApiHeaderBearerToken, no auth domains', async () => {
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
@@ -4710,33 +4691,21 @@ describe('Pack metadata Validation', async () => {
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          message: `CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict defaultUserAuthentication's "networkDomain" to coda.io`,
-          path: 'authentication.defaultUserAuthentication.networkDomain',
-        },
-        {
           message: `This pack uses multiple network domains and must set one as a "networkDomain" in setUserAuthentication()`,
           path: 'authentication.defaultUserAuthentication.networkDomain',
         },
       ]);
     });
 
-    it('CodaApiHeaderBearerToken, bad auth domain', async () => {
+    it('CodaApiHeaderBearerToken, multi-domain with non-coda domain', async () => {
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {
           type: AuthenticationType.CodaApiHeaderBearerToken,
-          deferConnectionSetup: true,
-          shouldAutoAuthSetup: true,
-          networkDomain: 'other.domain',
+          networkDomain: 'coda.io',
         },
-        networkDomains: ['coda.io', 'other.domain'],
+        networkDomains: ['coda.io', 'notetaker.superhuman.com'],
       });
-      const err = await validateJsonAndAssertFails(metadata);
-      assert.deepEqual(err.validationErrors, [
-        {
-          message: `CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict defaultUserAuthentication's "networkDomain" to coda.io`,
-          path: 'authentication.defaultUserAuthentication.networkDomain',
-        },
-      ]);
+      await validateJson(metadata);
     });
 
     it('CodaApiHeaderBearerToken, valid domain with credential pinning', async () => {

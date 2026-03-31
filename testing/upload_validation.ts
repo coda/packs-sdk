@@ -2597,43 +2597,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         },
         {message: 'A formula namespace must be provided whenever formulas are defined.', path: ['formulaNamespace']},
       )
-      .superRefine((untypedMetadata, context) => {
-        const metadata = untypedMetadata as PackVersionMetadata;
-
-        for (const authInfo of getAuthentications(metadata)) {
-          const {name, authentication} = authInfo;
-          if (authentication.type !== AuthenticationType.CodaApiHeaderBearerToken) {
-            return;
-          }
-
-          const codaDomains = ['coda.io', 'localhost'];
-
-          const hasNonCodaNetwork = metadata.networkDomains?.some((domain: string) => !codaDomains.includes(domain));
-          if (!hasNonCodaNetwork) {
-            continue;
-          }
-
-          const authDomains = getDeclaredAuthNetworkDomains(authentication);
-          if (!authDomains?.length) {
-            // A non-Coda network domain without auth domain restriction isn't allowed.
-            context.addIssue({
-              code: 'custom',
-              path: [`authentication.${name}.networkDomain`],
-              message: `CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict ${name}'s "networkDomain" to coda.io`,
-            });
-            continue;
-          }
-
-          const hasNonCodaAuthDomain = authDomains.some((domain: string) => !codaDomains.includes(domain));
-          if (hasNonCodaAuthDomain) {
-            context.addIssue({
-              code: 'custom',
-              path: [`authentication.${name}.networkDomain`],
-              message: `CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict ${name}'s "networkDomain" to coda.io`,
-            });
-          }
-        }
-      })
       .superRefine((data: any, context) => {
         if (data.defaultAuthentication && data.defaultAuthentication.type !== AuthenticationType.None) {
           return;
