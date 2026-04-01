@@ -37,6 +37,7 @@ import type {StringHintTypes} from './schema';
 import type {StringSchema} from './schema';
 import type {SyncCompletionMetadataResult} from './api_types';
 import type {SyncExecutionContext} from './api_types';
+import {DataIndexing} from './api_types';
 import {TableRole} from './api_types';
 import {Type} from './api_types';
 import type {TypeMap} from './api_types';
@@ -394,6 +395,12 @@ export interface SyncTableDef<
    * @hidden
    */
   role?: TableRole;
+
+  /** See {@link SyncTableOptions.indexing} */
+  indexing?: {
+    /** See {@link DataIndexing} */
+    default: DataIndexing;
+  };
 }
 
 /**
@@ -2378,6 +2385,27 @@ export interface SyncTableOptions<
    * @hidden
    */
   role?: TableRole;
+
+  /**
+   * Options to control the default indexing (ingestion) behavior for this sync table when
+   * setting up a connector. Use this to exclude sync tables from ingestion by default when
+   * they aren't relevant to most users, while still allowing users to opt in.
+   *
+   * @example
+   * ```
+   * pack.addSyncTable({
+   *   name: "MessagesSharedMailbox",
+   *   // ...
+   *   indexing: {
+   *     default: coda.DataIndexing.Exclude,
+   *   },
+   * });
+   * ```
+   */
+  indexing?: {
+    /** The default indexing status for this sync table. See {@link DataIndexing}. */
+    default: DataIndexing;
+  };
 }
 
 /**
@@ -2513,6 +2541,15 @@ export interface DynamicSyncTableOptions<
    * ```
    */
   propertyOptions?: PropertyOptionsMetadataFunction<any>;
+
+  /**
+   * Options to control the default indexing (ingestion) behavior for this sync table.
+   * See {@link SyncTableOptions.indexing} for details.
+   */
+  indexing?: {
+    /** The default indexing status for this sync table. See {@link DataIndexing}. */
+    default: DataIndexing;
+  };
 }
 
 /**
@@ -2547,6 +2584,7 @@ export function makeSyncTable<
   connectionRequirement,
   dynamicOptions = {},
   role,
+  indexing,
 }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT, ContextT, PermissionsContextT>): SyncTableDef<
   K,
   L,
@@ -2721,6 +2759,7 @@ export function makeSyncTable<
     defaultAddDynamicColumns,
     namedPropertyOptions: maybeRewriteConnectionForNamedPropertyOptions(namedPropertyOptions, connectionRequirement),
     role,
+    indexing,
   };
 }
 
@@ -2802,6 +2841,7 @@ export function makeDynamicSyncTable<
   defaultAddDynamicColumns,
   placeholderSchema: placeholderSchemaInput,
   propertyOptions,
+  indexing,
 }: {
   name: string;
   displayName?: string;
@@ -2818,6 +2858,9 @@ export function makeDynamicSyncTable<
   defaultAddDynamicColumns?: boolean;
   placeholderSchema?: SchemaT;
   propertyOptions?: PropertyOptionsMetadataFunction<any>;
+  indexing?: {
+    default: DataIndexing;
+  };
 }): DynamicSyncTableDef<K, L, ParamDefsT, any, ContextT, PermissionsContextT> {
   const placeholderSchema =
     placeholderSchemaInput ||
@@ -2845,6 +2888,7 @@ export function makeDynamicSyncTable<
     formula,
     connectionRequirement,
     dynamicOptions: {getSchema, entityName, defaultAddDynamicColumns, propertyOptions},
+    indexing,
   });
 
   return {

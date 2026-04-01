@@ -77,6 +77,7 @@ export type {PropertyOptionsMetadataFormula} from './api';
 export type {PropertyOptionsExecutionContext} from './api_types';
 export type {ChunkedResponseBody} from './api_types';
 export {ConnectionRequirement} from './api_types';
+export {DataIndexing} from './api_types';
 export type {Continuation} from './api';
 export type {CrawlStrategy} from './api_types';
 export type {SyncTableRelation} from './api_types';

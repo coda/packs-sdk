@@ -120,6 +120,7 @@ import type {SyncPassthroughData} from '../api';
 import type {SyncTable} from '../api';
 import type {SyncTableDef} from '../api';
 import type {SystemAuthenticationTypes} from '../types';
+import {DataIndexing} from '../api_types';
 import {TableRole} from '../api_types';
 import {TokenExchangeCredentialsLocation} from '../types';
 import type {Tool} from '../types';
@@ -2166,6 +2167,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }
       }),
     role: z.nativeEnum(TableRole).optional(),
+    indexing: z
+      .object({
+        default: z.nativeEnum(DataIndexing),
+      })
+      .optional(),
   };
 
   type GenericSyncTableDef = SyncTableDef<

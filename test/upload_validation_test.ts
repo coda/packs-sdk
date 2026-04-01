@@ -5,6 +5,7 @@ import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '..';
 import {AuthenticationType} from '../types';
 import {ConnectionRequirement} from '../api_types';
+import {DataIndexing} from '../api_types';
 import {ContentCategorizationType} from '../schema';
 import {CurrencyFormat} from '..';
 import {DurationUnit} from '..';
@@ -8125,6 +8126,149 @@ describe('Pack metadata Validation', async () => {
         );
         await validateJsonAndAssertFails(metadata);
       });
+    });
+  });
+
+  describe('Sync table indexing', () => {
+    it('Succeeds with indexing.default set to Exclude', async () => {
+      const syncTable = makeSyncTable({
+        name: 'SharedMailbox',
+        identityName: 'SharedMailbox',
+        schema: makeObjectSchema({
+          idProperty: 'id',
+          displayProperty: 'id',
+          properties: {
+            id: {type: ValueType.String},
+          },
+        }),
+        formula: {
+          name: 'SharedMailbox',
+          description: '',
+          async execute([], _context) {
+            return {result: []};
+          },
+          parameters: [],
+          examples: [],
+        },
+        indexing: {
+          default: DataIndexing.Exclude,
+        },
+      });
+      const metadata = createFakePackVersionMetadata(
+        compilePackMetadata({
+          version: '1',
+          syncTables: [syncTable],
+          defaultAuthentication: {
+            type: AuthenticationType.None,
+          },
+        }),
+      );
+      await doValidateJson(metadata);
+    });
+
+    it('Succeeds with indexing.default set to Include', async () => {
+      const syncTable = makeSyncTable({
+        name: 'Mailbox',
+        identityName: 'Mailbox',
+        schema: makeObjectSchema({
+          idProperty: 'id',
+          displayProperty: 'id',
+          properties: {
+            id: {type: ValueType.String},
+          },
+        }),
+        formula: {
+          name: 'Mailbox',
+          description: '',
+          async execute([], _context) {
+            return {result: []};
+          },
+          parameters: [],
+          examples: [],
+        },
+        indexing: {
+          default: DataIndexing.Include,
+        },
+      });
+      const metadata = createFakePackVersionMetadata(
+        compilePackMetadata({
+          version: '1',
+          syncTables: [syncTable],
+          defaultAuthentication: {
+            type: AuthenticationType.None,
+          },
+        }),
+      );
+      await doValidateJson(metadata);
+    });
+
+    it('Succeeds without indexing field', async () => {
+      const syncTable = makeSyncTable({
+        name: 'Mailbox',
+        identityName: 'Mailbox',
+        schema: makeObjectSchema({
+          idProperty: 'id',
+          displayProperty: 'id',
+          properties: {
+            id: {type: ValueType.String},
+          },
+        }),
+        formula: {
+          name: 'Mailbox',
+          description: '',
+          async execute([], _context) {
+            return {result: []};
+          },
+          parameters: [],
+          examples: [],
+        },
+      });
+      const metadata = createFakePackVersionMetadata(
+        compilePackMetadata({
+          version: '1',
+          syncTables: [syncTable],
+          defaultAuthentication: {
+            type: AuthenticationType.None,
+          },
+        }),
+      );
+      await doValidateJson(metadata);
+    });
+
+    it('Fails with invalid indexing.default value', async () => {
+      const syncTable = makeSyncTable({
+        name: 'Mailbox',
+        identityName: 'Mailbox',
+        schema: makeObjectSchema({
+          idProperty: 'id',
+          displayProperty: 'id',
+          properties: {
+            id: {type: ValueType.String},
+          },
+        }),
+        formula: {
+          name: 'Mailbox',
+          description: '',
+          async execute([], _context) {
+            return {result: []};
+          },
+          parameters: [],
+          examples: [],
+        },
+        indexing: {
+          default: 'invalid' as any,
+        },
+      });
+      const metadata = createFakePackVersionMetadata(
+        compilePackMetadata({
+          version: '1',
+          syncTables: [syncTable],
+          defaultAuthentication: {
+            type: AuthenticationType.None,
+          },
+        }),
+      );
+      await validateJsonAndAssertFails(metadata);
     });
   });
 });

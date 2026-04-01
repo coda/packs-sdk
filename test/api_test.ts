@@ -4,6 +4,7 @@ import type {ArrayType} from '../api_types';
 import {AuthenticationType} from '../types';
 import type {BaseAuthentication} from '../types';
 import {ConnectionRequirement} from '../api_types';
+import {DataIndexing} from '../api_types';
 import type {EnsureExtends} from '../type_utils';
 import type {ExecutionContext} from '../api_types';
 import {OptionsType} from '../api_types';
@@ -174,6 +175,53 @@ describe('API test', () => {
       });
       assert.equal(table2.identityName, 'MyIdentityName');
       assert.equal(table.schema.identity?.name, 'MyIdentityName');
+    });
+
+    it('indexing persists', () => {
+      const table = makeSyncTable({
+        name: 'SomeSync',
+        identityName: 'MyIdentityName',
+        schema: schema.makeObjectSchema({
+          type: ValueType.Object,
+          id: 'id',
+          primary: 'id',
+          properties: {id: {type: ValueType.String}},
+        }),
+        formula: {
+          name: 'Whatever',
+          description: 'Whatever',
+          parameters: [],
+          async execute() {
+            return {result: []};
+          },
+        },
+        indexing: {
+          default: DataIndexing.Exclude,
+        },
+      });
+      assert.deepEqual(table.indexing, {default: DataIndexing.Exclude});
+    });
+
+    it('indexing defaults to undefined', () => {
+      const table = makeSyncTable({
+        name: 'SomeSync',
+        identityName: 'MyIdentityName',
+        schema: schema.makeObjectSchema({
+          type: ValueType.Object,
+          id: 'id',
+          primary: 'id',
+          properties: {id: {type: ValueType.String}},
+        }),
+        formula: {
+          name: 'Whatever',
+          description: 'Whatever',
+          parameters: [],
+          async execute() {
+            return {result: []};
+          },
+        },
+      });
+      assert.isUndefined(table.indexing);
     });
 
     it('identityName cannot conflict with identity.name', () => {
