@@ -90,6 +90,34 @@ describe('API test', () => {
       assert.equal(ConnectionRequirement.Optional, table.getter.connectionRequirement);
     });
 
+    it('indexing persists on dynamic sync table', () => {
+      const table = makeDynamicSyncTable({
+        name: 'Whatever',
+        identityName: 'Whatever',
+        connectionRequirement: ConnectionRequirement.Optional,
+        getName: makeMetadataFormula(async () => 'sup'),
+        getSchema: makeMetadataFormula(async () =>
+          schema.makeSchema({
+            type: ValueType.Array,
+            items: schema.makeSchema({type: ValueType.Object, properties: {}}),
+          }),
+        ),
+        getDisplayUrl: makeMetadataFormula(async () => 'sup'),
+        formula: {
+          name: 'Whatever',
+          description: 'Whatever',
+          parameters: [],
+          async execute() {
+            return {result: []};
+          },
+        },
+        indexing: {
+          default: DataIndexing.Exclude,
+        },
+      });
+      assert.deepEqual(table.indexing, {default: DataIndexing.Exclude});
+    });
+
     describe('getSchema', () => {
       const makeTable = (s: schema.ArraySchema | schema.ObjectSchema<any, any>) =>
         makeDynamicSyncTable({
