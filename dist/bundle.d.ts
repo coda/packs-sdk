@@ -1214,6 +1214,18 @@ declare enum TableRole {
 	GroupMembers = "groupMembers"
 }
 /**
+ * Indicates the default indexing (ingestion) behavior for a sync table when setting up a connector.
+ *
+ * By default, all sync tables are included in ingestion. Use {@link DataIndexing.Exclude} to
+ * mark a sync table as excluded by default, while still allowing users to opt in.
+ */
+export declare enum DataIndexing {
+	/** The sync table is included in ingestion by default. */
+	Include = "include",
+	/** The sync table is excluded from ingestion by default, but users can manually opt in. */
+	Exclude = "exclude"
+}
+/**
  * Contains metadata for a completed sync.
  */
 export type SyncCompletionMetadataResult<IncrementalContinuationT = Continuation> = SyncCompletionMetadata<IncrementalContinuationT> | SyncCompletionMetadataIncomplete;
@@ -3371,6 +3383,11 @@ export interface SyncTableDef<K extends string, L extends string, ParamDefsT ext
 	 * @hidden
 	 */
 	role?: TableRole;
+	/** See {@link SyncTableOptions.indexing} */
+	indexing?: {
+		/** See {@link DataIndexing} */
+		default: DataIndexing;
+	};
 }
 /**
  * Type definition for a Dynamic Sync Table. Should not be necessary to use directly,
@@ -4266,6 +4283,26 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
 	 * @hidden
 	 */
 	role?: TableRole;
+	/**
+	 * Options to control the default indexing (ingestion) behavior for this sync table when
+	 * setting up a connector. Use this to exclude sync tables from ingestion by default when
+	 * they aren't relevant to most users, while still allowing users to opt in.
+	 *
+	 * @example
+	 * ```
+	 * pack.addSyncTable({
+	 *   name: "MessagesSharedMailbox",
+	 *   // ...
+	 *   indexing: {
+	 *     default: coda.DataIndexing.Exclude,
+	 *   },
+	 * });
+	 * ```
+	 */
+	indexing?: {
+		/** The default indexing status for this sync table. See {@link DataIndexing}. */
+		default: DataIndexing;
+	};
 }
 /**
  * Options provided when defining a dynamic sync table.
@@ -4392,6 +4429,14 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
 	 * ```
 	 */
 	propertyOptions?: PropertyOptionsMetadataFunction<any>;
+	/**
+	 * Options to control the default indexing (ingestion) behavior for this sync table.
+	 * See {@link SyncTableOptions.indexing} for details.
+	 */
+	indexing?: {
+		/** The default indexing status for this sync table. See {@link DataIndexing}. */
+		default: DataIndexing;
+	};
 }
 /**
  * Wrapper to produce a sync table definition. All (non-dynamic) sync tables should be created
@@ -4406,7 +4451,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
  */
 export declare function makeSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaDefT extends ObjectSchemaDefinition<K, L>, SchemaT extends SchemaDefT & {
 	identity?: Identity;
-}, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData>({ name, displayName, description, instructions, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions, role, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT, ContextT, PermissionsContextT>): SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>;
+}, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData>({ name, displayName, description, instructions, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions, role, indexing, }: SyncTableOptions<K, L, ParamDefsT, SchemaDefT, ContextT, PermissionsContextT>): SyncTableDef<K, L, ParamDefsT, SchemaT, ContextT, PermissionsContextT>;
 /**
  * Creates a dynamic sync table definition.
  *
@@ -4426,7 +4471,7 @@ export declare function makeSyncTable<K extends string, L extends string, ParamD
  * });
  * ```
  */
-export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData>({ name, displayName, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, searchDynamicUrls: searchDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, propertyOptions, }: {
+export declare function makeDynamicSyncTable<K extends string, L extends string, ParamDefsT extends ParamDefs, SchemaT extends ObjectSchemaDefinition<K, L>, ContextT extends SyncExecutionContext<any, any>, PermissionsContextT extends SyncPassthroughData>({ name, displayName, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, searchDynamicUrls: searchDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, propertyOptions, indexing, }: {
 	name: string;
 	displayName?: string;
 	description?: string;
@@ -4442,6 +4487,9 @@ export declare function makeDynamicSyncTable<K extends string, L extends string,
 	defaultAddDynamicColumns?: boolean;
 	placeholderSchema?: SchemaT;
 	propertyOptions?: PropertyOptionsMetadataFunction<any>;
+	indexing?: {
+		default: DataIndexing;
+	};
 }): DynamicSyncTableDef<K, L, ParamDefsT, any, ContextT, PermissionsContextT>;
 /**
  * Helper to generate a formula that fetches a list of entities from a given URL and returns them.

@@ -39,7 +39,7 @@ How long formulas running with the same values should cache their results for.
 
 #### Inherited from
 
-[`SyncFormulaDef`](SyncFormulaDef.md).[`cacheTtlSecs`](SyncFormulaDef.md#cachettlsecs)
+[`CommonPackFormulaDef`](CommonPackFormulaDef.md).[`cacheTtlSecs`](CommonPackFormulaDef.md#cachettlsecs)
 
 ***
 
@@ -51,7 +51,7 @@ Does this formula require a connection (aka an account)?
 
 #### Inherited from
 
-[`SyncFormulaDef`](SyncFormulaDef.md).[`connectionRequirement`](SyncFormulaDef.md#connectionrequirement)
+[`CommonPackFormulaDef`](CommonPackFormulaDef.md).[`connectionRequirement`](CommonPackFormulaDef.md#connectionrequirement)
 
 ***
 
@@ -63,7 +63,7 @@ A brief description of what the formula does.
 
 #### Inherited from
 
-[`SyncFormulaDef`](SyncFormulaDef.md).[`description`](SyncFormulaDef.md#description)
+[`CommonPackFormulaDef`](CommonPackFormulaDef.md).[`description`](CommonPackFormulaDef.md#description)
 
 ***
 
@@ -100,7 +100,7 @@ so an end user must have both sets of permissions.
 
 #### Inherited from
 
-[`SyncFormulaDef`](SyncFormulaDef.md).[`extraOAuthScopes`](SyncFormulaDef.md#extraoauthscopes)
+[`CommonPackFormulaDef`](CommonPackFormulaDef.md).[`extraOAuthScopes`](CommonPackFormulaDef.md#extraoauthscopes)
 
 ***
 
@@ -112,7 +112,7 @@ Instructions for LLMs to use the formula, overrides the description for LLMs if 
 
 #### Inherited from
 
-[`SyncFormulaDef`](SyncFormulaDef.md).[`instructions`](SyncFormulaDef.md#instructions)
+[`CommonPackFormulaDef`](CommonPackFormulaDef.md).[`instructions`](CommonPackFormulaDef.md#instructions)
 
 ***
 
@@ -125,7 +125,7 @@ Actions are presented as buttons in the Coda UI.
 
 #### Inherited from
 
-[`SyncFormulaDef`](SyncFormulaDef.md).[`isAction`](SyncFormulaDef.md#isaction)
+[`CommonPackFormulaDef`](CommonPackFormulaDef.md).[`isAction`](CommonPackFormulaDef.md#isaction)
 
 ***
 
@@ -138,7 +138,7 @@ The formula can still be invoked by manually typing its full name.
 
 #### Inherited from
 
-[`SyncFormulaDef`](SyncFormulaDef.md).[`isExperimental`](SyncFormulaDef.md#isexperimental)
+[`CommonPackFormulaDef`](CommonPackFormulaDef.md).[`isExperimental`](CommonPackFormulaDef.md#isexperimental)
 
 ***
 
@@ -151,7 +151,7 @@ Not for use by packs that are not authored by Coda.
 
 #### Inherited from
 
-[`SyncFormulaDef`](SyncFormulaDef.md).[`isSystem`](SyncFormulaDef.md#issystem)
+[`CommonPackFormulaDef`](CommonPackFormulaDef.md).[`isSystem`](CommonPackFormulaDef.md#issystem)
 
 ***
 
@@ -163,7 +163,7 @@ The name of the formula, used to invoke it.
 
 #### Inherited from
 
-[`SyncFormulaDef`](SyncFormulaDef.md).[`name`](SyncFormulaDef.md#name)
+[`CommonPackFormulaDef`](CommonPackFormulaDef.md).[`name`](CommonPackFormulaDef.md#name)
 
 ***
 
@@ -177,7 +177,7 @@ use `isAction` and `connectionRequirement` instead
 
 #### Inherited from
 
-[`SyncFormulaDef`](SyncFormulaDef.md).[`network`](SyncFormulaDef.md#network)
+[`CommonPackFormulaDef`](CommonPackFormulaDef.md).[`network`](CommonPackFormulaDef.md#network)
 
 ***
 
