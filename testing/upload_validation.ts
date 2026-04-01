@@ -2607,8 +2607,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           }
 
           const codaDomains = ['coda.io', 'localhost', 'superhuman.com'];
-          const isCodaDomain = (domain: string) =>
-            codaDomains.some(cd => domain === cd || domain.endsWith('.' + cd));
+          const isCodaDomain = (domain: string) => codaDomains.some(cd => domain === cd || domain.endsWith('.' + cd));
 
           const hasNonCodaNetwork = metadata.networkDomains?.some((domain: string) => !isCodaDomain(domain));
           if (!hasNonCodaNetwork) {
