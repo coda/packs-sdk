@@ -8270,6 +8270,44 @@ describe('Pack metadata Validation', async () => {
       );
       await validateJsonAndAssertFails(metadata);
     });
+
+    it('Succeeds with indexing.default on dynamic sync table', async () => {
+      const syncTable = makeDynamicSyncTable({
+        name: 'DynamicSharedMailbox',
+        identityName: 'DynamicSharedMailbox',
+        getName: makeMetadataFormula(async () => {
+          return '';
+        }),
+        getSchema: makeMetadataFormula(async () => {
+          return '';
+        }),
+        formula: {
+          name: 'DynamicSharedMailbox',
+          description: '',
+          examples: [],
+          parameters: [],
+          execute: async () => {
+            return {result: []};
+          },
+        },
+        getDisplayUrl: makeMetadataFormula(async () => {
+          return '';
+        }),
+        indexing: {
+          default: DataIndexing.Exclude,
+        },
+      });
+      const metadata = createFakePackVersionMetadata(
+        compilePackMetadata({
+          version: '1',
+          syncTables: [syncTable],
+          defaultAuthentication: {
+            type: AuthenticationType.None,
+          },
+        }),
+      );
+      await doValidateJson(metadata);
+    });
   });
 });
 
