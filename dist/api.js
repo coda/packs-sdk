@@ -854,7 +854,7 @@ exports.makeObjectFormula = makeObjectFormula;
  *
  * See [Normalization](https://coda.io/packs/build/latest/guides/advanced/schemas/#normalization) for more information about schema normalization.
  */
-function makeSyncTable({ name, displayName, description, instructions, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions = {}, role, }) {
+function makeSyncTable({ name, displayName, description, instructions, identityName, schema: inputSchema, formula, connectionRequirement, dynamicOptions = {}, role, indexing, }) {
     const { getSchema: getSchemaDef, entityName, defaultAddDynamicColumns } = dynamicOptions;
     const { execute: wrappedExecute, executeUpdate: wrappedExecuteUpdate, executeGetPermissions, onError, ...definition } = maybeRewriteConnectionForFormula(formula, connectionRequirement);
     // Since we mutate schemaDef, we need to make a copy so the input schema can be reused across sync tables.
@@ -990,6 +990,7 @@ function makeSyncTable({ name, displayName, description, instructions, identityN
         defaultAddDynamicColumns,
         namedPropertyOptions: maybeRewriteConnectionForNamedPropertyOptions(namedPropertyOptions, connectionRequirement),
         role,
+        indexing,
     };
 }
 exports.makeSyncTable = makeSyncTable;
@@ -1032,7 +1033,7 @@ exports.makeSyncTableLegacy = makeSyncTableLegacy;
  * });
  * ```
  */
-function makeDynamicSyncTable({ name, displayName, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, searchDynamicUrls: searchDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, propertyOptions, }) {
+function makeDynamicSyncTable({ name, displayName, description, getName: getNameDef, getSchema: getSchemaDef, identityName, getDisplayUrl: getDisplayUrlDef, formula, listDynamicUrls: listDynamicUrlsDef, searchDynamicUrls: searchDynamicUrlsDef, entityName, connectionRequirement, defaultAddDynamicColumns, placeholderSchema: placeholderSchemaInput, propertyOptions, indexing, }) {
     const placeholderSchema = placeholderSchemaInput ||
         // default placeholder only shows a column of id, which will be replaced later by the dynamic schema.
         (0, schema_3.makeObjectSchema)({
@@ -1058,6 +1059,7 @@ function makeDynamicSyncTable({ name, displayName, description, getName: getName
         formula,
         connectionRequirement,
         dynamicOptions: { getSchema, entityName, defaultAddDynamicColumns, propertyOptions },
+        indexing,
     });
     return {
         ...table,

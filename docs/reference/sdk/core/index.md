@@ -29,6 +29,7 @@ import * as coda from "@codahq/packs-sdk";
 - [AuthenticationType](enumerations/AuthenticationType.md)
 - [ConnectionRequirement](enumerations/ConnectionRequirement.md)
 - [CurrencyFormat](enumerations/CurrencyFormat.md)
+- [DataIndexing](enumerations/DataIndexing.md)
 - [DurationUnit](enumerations/DurationUnit.md)
 - [EmailDisplayType](enumerations/EmailDisplayType.md)
 - [HttpStatusCode](enumerations/HttpStatusCode.md)

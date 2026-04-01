@@ -24,6 +24,7 @@ import type {CurrencySchema} from '../schema';
 import type {CustomAuthentication} from '../types';
 import type {CustomHeaderTokenAuthentication} from '../types';
 import type {CustomIndexDefinition} from '../schema';
+import {DataIndexing} from '../api_types';
 import type {DetailedIndexedProperty} from '../schema';
 import type {DocumentContentCategorization} from '../schema';
 import type {DurationSchema} from '../schema';
@@ -2166,6 +2167,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }
       }),
     role: z.nativeEnum(TableRole).optional(),
+    indexing: z
+      .object({
+        default: z.nativeEnum(DataIndexing),
+      })
+      .optional(),
   };
 
   type GenericSyncTableDef = SyncTableDef<

@@ -1553,6 +1553,19 @@ export enum TableRole {
 }
 
 /**
+ * Indicates the default indexing (ingestion) behavior for a sync table when setting up a connector.
+ *
+ * By default, all sync tables are included in ingestion. Use {@link DataIndexing.Exclude} to
+ * mark a sync table as excluded by default, while still allowing users to opt in.
+ */
+export enum DataIndexing {
+  /** The sync table is included in ingestion by default. */
+  Include = 'include',
+  /** The sync table is excluded from ingestion by default, but users can manually opt in. */
+  Exclude = 'exclude',
+}
+
+/**
  * Contains metadata for a completed sync.
  */
 export type SyncCompletionMetadataResult<IncrementalContinuationT = Continuation> =

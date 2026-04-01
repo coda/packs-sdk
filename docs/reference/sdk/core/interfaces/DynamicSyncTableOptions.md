@@ -124,6 +124,21 @@ differentiate which exact table to use.
 
 ***
 
+### indexing?
+
+> `optional` **indexing**: `object`
+
+Options to control the default indexing (ingestion) behavior for this sync table.
+See [SyncTableOptions.indexing](SyncTableOptions.md#indexing) for details.
+
+#### default
+
+> **default**: [`DataIndexing`](../enumerations/DataIndexing.md)
+
+The default indexing status for this sync table. See [DataIndexing](../enumerations/DataIndexing.md).
+
+***
+
 ### listDynamicUrls?
 
 > `optional` **listDynamicUrls**: [`MetadataFormulaDef`](../type-aliases/MetadataFormulaDef.md)\<[`ExecutionContext`](ExecutionContext.md), [`LegacyDefaultMetadataReturnType`](../type-aliases/LegacyDefaultMetadataReturnType.md)\>
