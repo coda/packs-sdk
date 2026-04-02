@@ -2043,8 +2043,9 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 if (authentication.type !== types_1.AuthenticationType.CodaApiHeaderBearerToken) {
                     return;
                 }
-                const codaDomains = ['coda.io', 'localhost'];
-                const hasNonCodaNetwork = (_a = metadata.networkDomains) === null || _a === void 0 ? void 0 : _a.some((domain) => !codaDomains.includes(domain));
+                const codaDomains = ['coda.io', 'localhost', 'superhuman.com'];
+                const isCodaDomain = (domain) => codaDomains.some(cd => domain === cd || domain.endsWith('.' + cd));
+                const hasNonCodaNetwork = (_a = metadata.networkDomains) === null || _a === void 0 ? void 0 : _a.some((domain) => !isCodaDomain(domain));
                 if (!hasNonCodaNetwork) {
                     continue;
                 }
@@ -2058,7 +2059,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                     });
                     continue;
                 }
-                const hasNonCodaAuthDomain = authDomains.some((domain) => !codaDomains.includes(domain));
+                const hasNonCodaAuthDomain = authDomains.some((domain) => !isCodaDomain(domain));
                 if (hasNonCodaAuthDomain) {
                     context.addIssue({
                         code: 'custom',

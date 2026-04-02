@@ -4752,6 +4752,17 @@ describe('Pack metadata Validation', async () => {
       await validateJson(metadata);
     });
 
+    it('CodaApiHeaderBearerToken, valid superhuman.com subdomain', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.CodaApiHeaderBearerToken,
+          networkDomain: 'coda.io',
+        },
+        networkDomains: ['coda.io', 'notetaker.superhuman.com'],
+      });
+      await validateJson(metadata);
+    });
+
     it('CustomHeaderToken', async () => {
       const metadata = createFakePackVersionMetadata({
         defaultAuthentication: {

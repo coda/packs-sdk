@@ -2606,9 +2606,10 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             return;
           }
 
-          const codaDomains = ['coda.io', 'localhost'];
+          const codaDomains = ['coda.io', 'localhost', 'superhuman.com'];
+          const isCodaDomain = (domain: string) => codaDomains.some(cd => domain === cd || domain.endsWith('.' + cd));
 
-          const hasNonCodaNetwork = metadata.networkDomains?.some((domain: string) => !codaDomains.includes(domain));
+          const hasNonCodaNetwork = metadata.networkDomains?.some((domain: string) => !isCodaDomain(domain));
           if (!hasNonCodaNetwork) {
             continue;
           }
@@ -2624,7 +2625,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             continue;
           }
 
-          const hasNonCodaAuthDomain = authDomains.some((domain: string) => !codaDomains.includes(domain));
+          const hasNonCodaAuthDomain = authDomains.some((domain: string) => !isCodaDomain(domain));
           if (hasNonCodaAuthDomain) {
             context.addIssue({
               code: 'custom',
