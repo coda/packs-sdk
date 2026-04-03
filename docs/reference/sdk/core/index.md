@@ -115,6 +115,7 @@ import * as coda from "@codahq/packs-sdk";
 - [NumericSchema](interfaces/NumericSchema.md)
 - [NumericTimeSchema](interfaces/NumericTimeSchema.md)
 - [OAuth2ClientCredentialsAuthentication](interfaces/OAuth2ClientCredentialsAuthentication.md)
+- [OAuth2DynamicCodeAuthentication](interfaces/OAuth2DynamicCodeAuthentication.md)
 - [OAuth2StaticCodeAuthentication](interfaces/OAuth2StaticCodeAuthentication.md)
 - [ObjectArrayFormulaDef](interfaces/ObjectArrayFormulaDef.md)
 - [ObjectSchemaDefinition](interfaces/ObjectSchemaDefinition.md)
