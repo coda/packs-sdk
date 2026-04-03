@@ -9,10 +9,7 @@ pack.addNetworkDomain("todoist.net");
 // The REST API and MCP server use the same OAuth credentials.
 pack.setUserAuthentication({
   type: coda.AuthenticationType.OAuth2,
-  authorizationUrl: "https://todoist.com/oauth/authorize",
-  tokenUrl: "https://todoist.com/oauth/access_token",
-  scopes: ["data:read_write"],
-  scopeDelimiter: ",",
+  useDynamicClientRegistration: true,
 
   // Allow the credentials to be sent to both domains.
   networkDomain: ["todoist.com", "todoist.net"],

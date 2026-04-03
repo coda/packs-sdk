@@ -282,6 +282,39 @@ pack.setUserAuthentication({
 ```
 
 
+### Dynamic Client Registration (DCR) {: #dcr}
+
+Some OAuth providers support [Dynamic Client Registration (DCR)][oauth_dcr], which allows applications to automatically register themselves and obtain client credentials (client ID and secret) without manual setup in a developer console. This is common with services that support [MCP servers][mcp_servers].
+
+When DCR is enabled, Coda will automatically:
+
+1. Discover the authorization and token endpoints based on the pack's declared MCP servers and network domains.
+2. Register OAuth client credentials (client ID and secret) with the provider.
+
+This means you don't need to manually obtain or enter a client ID and secret, and the `authorizationUrl` and `tokenUrl` fields become optional.
+
+```ts
+pack.setUserAuthentication({
+  type: coda.AuthenticationType.OAuth2,
+  useDynamicClientRegistration: true,
+});
+```
+
+If the automatic endpoint discovery doesn't work for your provider, you can still specify the URLs manually alongside DCR:
+
+```ts
+pack.setUserAuthentication({
+  type: coda.AuthenticationType.OAuth2,
+  useDynamicClientRegistration: true,
+  authorizationUrl: "https://example.com/authorize",
+  tokenUrl: "https://api.example.com/token",
+});
+```
+
+!!! warning "Not supported in local testing"
+    Dynamic Client Registration is not supported when [testing locally][cli] with the `coda execute` command. You will need to upload your Pack to test this feature.
+
+
 ## Client credentials flow {: #client_credentials}
 
 While the Authorization Code flow discussed above is used to access private user data, the Client Credentials flow is typically just used to authenticate the integration itself. Therefore it's most commonly implemented as a system-wide form of authentication, although per-user authentication is also supported.
@@ -319,4 +352,7 @@ Like with the Authorization Code flow, a variety of other advanced options are a
 [auth_endpoints]: index.md#endpoints
 [fetcher_network_domains]: ../fetcher.md#network-domains
 [oauth_pkce]: https://www.oauth.com/oauth2-servers/pkce/
+[oauth_dcr]: https://datatracker.ietf.org/doc/html/rfc7591
+[mcp_servers]: ../../../agents/features/mcp.md
+[cli]: ../../development/cli.md
 [two_way_sync]: ../../blocks/sync-tables/two-way.md
