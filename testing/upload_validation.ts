@@ -24,6 +24,7 @@ import type {CurrencySchema} from '../schema';
 import type {CustomAuthentication} from '../types';
 import type {CustomHeaderTokenAuthentication} from '../types';
 import type {CustomIndexDefinition} from '../schema';
+import {DataIndexing} from '../api_types';
 import type {DetailedIndexedProperty} from '../schema';
 import type {DocumentContentCategorization} from '../schema';
 import type {DurationSchema} from '../schema';
@@ -2166,6 +2167,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         }
       }),
     role: z.nativeEnum(TableRole).optional(),
+    indexing: z
+      .object({
+        default: z.nativeEnum(DataIndexing),
+      })
+      .optional(),
   };
 
   type GenericSyncTableDef = SyncTableDef<
@@ -2600,9 +2606,10 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             return;
           }
 
-          const codaDomains = ['coda.io', 'localhost'];
+          const codaDomains = ['coda.io', 'localhost', 'superhuman.com'];
+          const isCodaDomain = (domain: string) => codaDomains.some(cd => domain === cd || domain.endsWith('.' + cd));
 
-          const hasNonCodaNetwork = metadata.networkDomains?.some((domain: string) => !codaDomains.includes(domain));
+          const hasNonCodaNetwork = metadata.networkDomains?.some((domain: string) => !isCodaDomain(domain));
           if (!hasNonCodaNetwork) {
             continue;
           }
@@ -2618,7 +2625,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             continue;
           }
 
-          const hasNonCodaAuthDomain = authDomains.some((domain: string) => !codaDomains.includes(domain));
+          const hasNonCodaAuthDomain = authDomains.some((domain: string) => !isCodaDomain(domain));
           if (hasNonCodaAuthDomain) {
             context.addIssue({
               code: 'custom',

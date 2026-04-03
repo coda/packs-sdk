@@ -133,6 +133,24 @@ See [SyncTableOptions.identityName](SyncTableOptions.md#identityname) for more d
 
 ***
 
+### indexing?
+
+> `optional` **indexing**: `object`
+
+See [SyncTableOptions.indexing](SyncTableOptions.md#indexing)
+
+#### default
+
+> **default**: [`DataIndexing`](../enumerations/DataIndexing.md)
+
+See [DataIndexing](../enumerations/DataIndexing.md)
+
+#### Inherited from
+
+[`SyncTableDef`](SyncTableDef.md).[`indexing`](SyncTableDef.md#indexing)
+
+***
+
 ### instructions?
 
 > `optional` **instructions**: `string`
