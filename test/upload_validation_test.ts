@@ -6092,9 +6092,6 @@ describe('Pack metadata Validation', async () => {
                 },
               },
               {
-                type: ToolType.AssistantMessage,
-              },
-              {
                 type: ToolType.MCP,
               },
               {
@@ -6177,8 +6174,6 @@ describe('Pack metadata Validation', async () => {
         case ToolType.Knowledge:
           break;
         case ToolType.ScreenAnnotation:
-          break;
-        case ToolType.AssistantMessage:
           break;
         case ToolType.MCP:
           break;
@@ -6814,11 +6809,7 @@ describe('Pack metadata Validation', async () => {
             displayName: 'Test Skill',
             description: 'A test skill',
             prompt: 'You are a helpful assistant',
-            tools: [
-              {type: ToolType.CodaDocsAndTables},
-              {type: ToolType.AssistantMessage},
-              {type: ToolType.ContactResolution},
-            ],
+            tools: [{type: ToolType.CodaDocsAndTables}, {type: ToolType.ContactResolution}],
           },
         ],
       });
@@ -8455,11 +8446,7 @@ describe('normalizeTool', () => {
 
 describe('findDuplicateTools', () => {
   it('returns empty array when no duplicates', () => {
-    const tools: Tool[] = [
-      {type: ToolType.ContactResolution},
-      {type: ToolType.AssistantMessage},
-      {type: ToolType.Pack, packId: 123},
-    ];
+    const tools: Tool[] = [{type: ToolType.ContactResolution}, {type: ToolType.Pack, packId: 123}];
     const duplicates = findDuplicateTools(tools);
     assert.deepEqual(duplicates, []);
   });
