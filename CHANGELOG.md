@@ -4,6 +4,23 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- Added `DataIndexing` option for sync tables to configure default ingestion behavior.
+- Allow multiple domains for Coda header bearer token authentication.
+
+### Fixed
+
+- Fixed `SourceMapConsumer` memory leak that could cause Lambda hangs under memory pressure.
+
+### Removed
+
+- Removed `DynamicSuggestedPromptTool`.
+
+### Changed
+
+- Updated dependencies and pnpm overrides for security patches.
+
 ## [1.13.2] - 2026-03-09
 
 ### Added
