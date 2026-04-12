@@ -6898,6 +6898,100 @@ describe('Pack metadata Validation', async () => {
       });
       await validateJson(metadata);
     });
+
+    it('fails for chatSkill tool referencing non-existent formula', async () => {
+      const metadata = createFakePackVersionMetadata({
+        formulaNamespace: 'TestPack',
+        formulas: [createFakePackFormulaMetadata({name: 'ExistingFormula'})],
+        chatSkill: {
+          name: 'ChatSkill',
+          displayName: 'Chat Skill',
+          description: 'A chat skill',
+          prompt: 'You are a helpful assistant',
+          tools: [
+            {
+              type: ToolType.Pack,
+              formulas: [{formulaName: 'NonExistentFormula'}],
+            },
+          ],
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'chatSkill.tools[0].formulas[0].formulaName',
+          message:
+            'Formula "NonExistentFormula" not found. Pack tool formulas must reference formulas defined in this pack.',
+        },
+      ]);
+    });
+
+    it('fails for benchInitializationSkill tool referencing non-existent formula', async () => {
+      const metadata = createFakePackVersionMetadata({
+        formulaNamespace: 'TestPack',
+        formulas: [createFakePackFormulaMetadata({name: 'ExistingFormula'})],
+        benchInitializationSkill: {
+          name: 'BenchSkill',
+          displayName: 'Bench Skill',
+          description: 'A bench initialization skill',
+          prompt: 'You are a helpful assistant',
+          tools: [
+            {
+              type: ToolType.Pack,
+              formulas: [{formulaName: 'NonExistentFormula'}],
+            },
+          ],
+        },
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'benchInitializationSkill.tools[0].formulas[0].formulaName',
+          message:
+            'Formula "NonExistentFormula" not found. Pack tool formulas must reference formulas defined in this pack.',
+        },
+      ]);
+    });
+
+    it('validates chatSkill tool referencing valid formula', async () => {
+      const metadata = createFakePackVersionMetadata({
+        formulaNamespace: 'TestPack',
+        formulas: [createFakePackFormulaMetadata({name: 'ValidFormula'})],
+        chatSkill: {
+          name: 'ChatSkill',
+          displayName: 'Chat Skill',
+          description: 'A chat skill',
+          prompt: 'You are a helpful assistant',
+          tools: [
+            {
+              type: ToolType.Pack,
+              formulas: [{formulaName: 'ValidFormula'}],
+            },
+          ],
+        },
+      });
+      await validateJson(metadata);
+    });
+
+    it('validates benchInitializationSkill tool referencing valid formula', async () => {
+      const metadata = createFakePackVersionMetadata({
+        formulaNamespace: 'TestPack',
+        formulas: [createFakePackFormulaMetadata({name: 'ValidFormula'})],
+        benchInitializationSkill: {
+          name: 'BenchSkill',
+          displayName: 'Bench Skill',
+          description: 'A bench initialization skill',
+          prompt: 'You are a helpful assistant',
+          tools: [
+            {
+              type: ToolType.Pack,
+              formulas: [{formulaName: 'ValidFormula'}],
+            },
+          ],
+        },
+      });
+      await validateJson(metadata);
+    });
   });
 
   describe('validateChatSkill', () => {
