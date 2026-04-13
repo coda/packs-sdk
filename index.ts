@@ -306,7 +306,6 @@ export type {PackKnowledgeToolSource} from './types';
 export type {PackTool} from './types';
 export type {ScreenAnnotationTool} from './types';
 export type {RewriteScreenAnnotation} from './types';
-export type {AssistantMessageTool} from './types';
 export type {MCPTool} from './types';
 export type {ContactResolutionTool} from './types';
 export type {CodaDocsAndTablesTool} from './types';
