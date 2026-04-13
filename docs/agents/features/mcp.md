@@ -65,6 +65,7 @@ Requests to MCP servers use the same [authentication system][authentication] as 
     pack.setUserAuthentication({
       type: coda.AuthenticationType.OAuth2,
       useDynamicClientRegistration: true,
+      useProofKeyForCodeExchange: true,
     });
     ```
 
@@ -82,6 +83,7 @@ Requests to MCP servers use the same [authentication system][authentication] as 
       type: coda.AuthenticationType.OAuth2,
       authorizationUrl: "https://example.com/authorize",
       tokenUrl: "https://example.com/token",
+      useProofKeyForCodeExchange: true,
     });
     ```
 

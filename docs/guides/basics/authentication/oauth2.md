@@ -297,6 +297,7 @@ This means you don't need to manually obtain or enter a client ID and secret, an
 pack.setUserAuthentication({
   type: coda.AuthenticationType.OAuth2,
   useDynamicClientRegistration: true,
+  useProofKeyForCodeExchange: true,
 });
 ```
 
@@ -308,6 +309,7 @@ pack.setUserAuthentication({
   useDynamicClientRegistration: true,
   authorizationUrl: "https://example.com/authorize",
   tokenUrl: "https://api.example.com/token",
+  useProofKeyForCodeExchange: true,
 });
 ```
 
