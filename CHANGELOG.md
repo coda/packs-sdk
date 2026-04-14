@@ -8,6 +8,25 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 - Launched `useDynamicClientRegistration` for OAuth2 authentication, allowing for the automatic discovery of OAuth endpoints and automatic registration of client credentials.
 
+## [1.13.3] - 2026-04-09
+
+### Added
+
+- Added `DataIndexing` option for sync tables to configure default ingestion behavior.
+- Allow multiple domains for Coda header bearer token authentication.
+
+### Fixed
+
+- Fixed `SourceMapConsumer` memory leak that could cause Lambda hangs under memory pressure.
+
+### Removed
+
+- Removed `DynamicSuggestedPromptTool`.
+
+### Changed
+
+- Updated dependencies and pnpm overrides for security patches.
+
 ## [1.13.2] - 2026-03-09
 
 ### Added
@@ -1010,7 +1029,7 @@ await myHelper(context);
 
 - Beginning of alpha versioning.
 
-[unreleased]: https://github.com/coda/packs-sdk/compare/v1.13.2...HEAD
+[unreleased]: https://github.com/coda/packs-sdk/compare/v1.13.3...HEAD
 [1.7.5]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.5
 [1.7.4]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.4
 [1.7.3]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.3
@@ -1085,3 +1104,5 @@ await myHelper(context);
 [1.12.3]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.12.3
 [1.12.2]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.12.2
 [1.12.1]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.12.1
+
+[1.13.3]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.13.3

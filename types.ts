@@ -1239,11 +1239,6 @@ export enum ToolType {
    */
   ScreenAnnotation = 'ScreenAnnotation',
   /**
-   * Allows assistant messages to be used as tools.
-   * @internal
-   */
-  AssistantMessage = 'AssistantMessage',
-  /**
    * Tool that provides access to MCP capabilities.
    * @internal
    */
@@ -1412,12 +1407,6 @@ export interface ScreenAnnotationTool extends BaseTool<ToolType.ScreenAnnotation
 }
 
 /**
- * Tool that provides access to assistant messages.
- * @internal
- */
-export interface AssistantMessageTool extends BaseTool<ToolType.AssistantMessage> {}
-
-/**
  * Tool that provides access to MCP capabilities.
  */
 export interface MCPTool extends BaseTool<ToolType.MCP> {
@@ -1560,7 +1549,6 @@ export interface ToolMap {
   [ToolType.Pack]: PackTool;
   [ToolType.Knowledge]: KnowledgeTool;
   [ToolType.ScreenAnnotation]: ScreenAnnotationTool;
-  [ToolType.AssistantMessage]: AssistantMessageTool;
   [ToolType.MCP]: MCPTool;
   [ToolType.ContactResolution]: ContactResolutionTool;
   [ToolType.CodaDocsAndTables]: CodaDocsAndTablesTool;

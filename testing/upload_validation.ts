@@ -4,7 +4,6 @@ import type {AdminAuthentication} from '../types';
 import type {AdminAuthenticationTypes} from '../types';
 import {AllPrecannedDates} from '../api_types';
 import type {ArraySchema} from '../schema';
-import type {AssistantMessageTool} from '../types';
 import {AttributionNodeType} from '../schema';
 import type {AuthenticationMetadata} from '../compiled_types';
 import {AuthenticationType} from '../types';
@@ -2295,10 +2294,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     embeddedContent: embeddedContentSchema,
   });
 
-  const assistantMessageToolSchema = zodCompleteStrictObject<AssistantMessageTool>({
-    type: z.literal(ToolType.AssistantMessage),
-  });
-
   const mcpToolSchema = zodCompleteStrictObject<MCPTool>({
     type: z.literal(ToolType.MCP),
     serverNames: z.array(z.string()).optional(),
@@ -2327,7 +2322,6 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     packToolSchema,
     knowledgeToolSchema,
     screenAnnotationToolSchema,
-    assistantMessageToolSchema,
     mcpToolSchema,
     contactResolutionToolSchema,
     codaDocsToolSchema,
@@ -2764,10 +2758,8 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         const {formulas = [], skills = []} = metadata;
         const formulaNames = new Set(formulas.map(f => f.name));
 
-        // Validate each skill's tools
-        skills.forEach((skill, skillIndex) => {
-          // Validate PackTools that reference the current pack
-          skill.tools.forEach((tool, toolIndex) => {
+        function validateSkillTools(skill: {tools?: Tool[]}, basePath: Array<string | number>) {
+          (skill.tools || []).forEach((tool, toolIndex) => {
             // Only validate Pack tools without a packId (i.e., referencing current pack).
             // Cross-pack tool calls (with packId set) are not validated here, though they will
             // fail at runtime for third-party packs since only first-party Coda agents can
@@ -2778,14 +2770,27 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 if (!formulaNames.has(formulaName)) {
                   context.addIssue({
                     code: 'custom',
-                    path: ['skills', skillIndex, 'tools', toolIndex, 'formulas', formulaIndex, 'formulaName'],
+                    path: [...basePath, 'tools', toolIndex, 'formulas', formulaIndex, 'formulaName'],
                     message: `Formula "${formulaName}" not found. Pack tool formulas must reference formulas defined in this pack.`,
                   });
                 }
               });
             }
           });
+        }
+
+        // Validate each skill's tools
+        skills.forEach((skill, skillIndex) => {
+          validateSkillTools(skill, ['skills', skillIndex]);
         });
+
+        // Validate chatSkill and benchInitializationSkill tools
+        if (metadata.chatSkill) {
+          validateSkillTools(metadata.chatSkill, ['chatSkill']);
+        }
+        if (metadata.benchInitializationSkill) {
+          validateSkillTools(metadata.benchInitializationSkill, ['benchInitializationSkill']);
+        }
       });
   }
 

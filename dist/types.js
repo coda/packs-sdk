@@ -237,11 +237,6 @@ var ToolType;
      */
     ToolType["ScreenAnnotation"] = "ScreenAnnotation";
     /**
-     * Allows assistant messages to be used as tools.
-     * @internal
-     */
-    ToolType["AssistantMessage"] = "AssistantMessage";
-    /**
      * Tool that provides access to MCP capabilities.
      * @internal
      */
