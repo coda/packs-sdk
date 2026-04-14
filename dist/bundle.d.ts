@@ -5178,8 +5178,6 @@ export interface OAuth2StaticCodeAuthentication extends BaseOAuth2CodeAuthentica
  * OAuth2 authentication with Dynamic Client Registration (DCR) enabled.
  * `authorizationUrl` and `tokenUrl` are optional because they are automatically
  * discovered using the pack's declared MCP servers and network domains.
- *
- * @hidden
  */
 export interface OAuth2DynamicCodeAuthentication extends BaseOAuth2CodeAuthentication {
 	/**
@@ -5196,8 +5194,6 @@ export interface OAuth2DynamicCodeAuthentication extends BaseOAuth2CodeAuthentic
 	 * pack's declared MCP servers and network domains.
 	 *
 	 * See https://datatracker.ietf.org/doc/html/rfc7591 for more details.
-	 *
-	 * @hidden
 	 */
 	useDynamicClientRegistration: true;
 }

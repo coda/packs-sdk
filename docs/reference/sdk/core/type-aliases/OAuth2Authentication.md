@@ -10,7 +10,7 @@ search:
 
 # Type Alias: OAuth2Authentication
 
-> **OAuth2Authentication** = [`OAuth2StaticCodeAuthentication`](../interfaces/OAuth2StaticCodeAuthentication.md) \| `OAuth2DynamicCodeAuthentication`
+> **OAuth2Authentication** = [`OAuth2StaticCodeAuthentication`](../interfaces/OAuth2StaticCodeAuthentication.md) \| [`OAuth2DynamicCodeAuthentication`](../interfaces/OAuth2DynamicCodeAuthentication.md)
 
 Authenticate using the OAuth2 Authorization Code flow. You must specify the authorization URL,
 token exchange URL, and scopes here as part of the pack definition. You'll provide the

@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- Launched `useDynamicClientRegistration` for OAuth2 authentication, allowing for the automatic discovery of OAuth endpoints and automatic registration of client credentials.
+
 ## [1.13.3] - 2026-04-09
 
 ### Added
