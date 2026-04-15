@@ -1,7 +1,7 @@
 # MkDocs options.
 # See: https://www.mkdocs.org/user-guide/configuration/
-site_name: Coda Pack SDK
-site_description: "Documentation for the SDK to build Coda Packs."
+site_name: Superhuman Packs SDK
+site_description: "Documentation for the SDK to build Superhuman Packs."
 site_url: !ENV [MK_DOCS_SITE_URL, "https://coda.io/packs/build/latest/"]
 repo_url: https://github.com/coda/packs-sdk
 repo_name: coda/packs-sdk
@@ -73,12 +73,8 @@ plugins:
     - llmstxt:
         enabled: !ENV [MK_DOCS_GENERATE_ASSETS, true]
         markdown_description: >
-          A Pack is an extension that adds new powers to your doc.
+          A Pack is an extension that adds new powers to the Superhuman suite.
           What other platforms call plugins, add-ons, or extensions, we call "Packs".
-          A Pack extends the core building blocks of Coda, allowing users to build more powerful and integrated docs.
-          Anyone can build a Pack, and they can use it in their own docs, share it with their team, or publish it to the world.
-          Packs are built using JavaScript or TypeScript, either on your local machine or in the browser, and run on Coda's own servers.
-          We have a gallery where users can discover and install Packs, as well as a robust set of admin controls.
         full_output: llms-full.txt
         sections:
           Documentation:
@@ -390,21 +386,27 @@ plugins:
 extra:
   # Social icons for the footer.
   social:
-    - icon: fontawesome/brands/twitter
-      link: https://twitter.com/coda_hq
-    - icon: fontawesome/brands/youtube
-      link: https://www.youtube.com/channel/UC73YRwUcAjAW_euaGzDUAzg
     - icon: fontawesome/brands/linkedin
-      link: https://www.linkedin.com/company/codainc/mycompany/
+      link: https://www.linkedin.com/company/superhumanhq
+    - icon: fontawesome/brands/x-twitter
+      link: https://x.com/Superhuman
+    - icon: fontawesome/brands/tiktok
+      link: https://www.tiktok.com/@superhumanhq?lang=e
+    - icon: fontawesome/brands/instagram
+      link: https://www.instagram.com/superhuman__hq/?hl=en
+    - icon: fontawesome/brands/threads
+      link: https://www.threads.com/@superhuman__hq
     - icon: fontawesome/brands/facebook
-      link: https://www.facebook.com/codahq/
+      link: https://www.facebook.com/SuperhumanCo
+    - icon: fontawesome/brands/youtube
+      link: https://www.youtube.com/@Superhuman_HQ
 
   # Custom variables.
   custom:
     pack_panel_clicks: "**Insert** > **Packs** > **{Pack name}**"
 
 # Copyright that appears in the footer.
-copyright: "Copyright © 2022 Coda. All rights reserved."
+copyright: "Copyright © 2026 Superhuman Platform Inc. All rights reserved."
 
 # Material theme options.
 # See: https://squidfunk.github.io/mkdocs-material/
@@ -422,8 +424,8 @@ theme:
     - navigation.tabs.sticky
 
   palette:
-    scheme: coda
-  logo: assets/logo.png
+    scheme: superhuman
+  logo: assets/logo.svg
   favicon: assets/favicon.png
   icon:
     repo: fontawesome/brands/github
