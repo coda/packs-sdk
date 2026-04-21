@@ -17,7 +17,7 @@ These style rules have been written to optimize the experience for novice develo
 
 ### Use a single SDK import
 
-Import the entire SDK into a single variable named coda instead of using multiple, narrow imports.
+Import the entire SDK into a single variable named `sdk` instead of using multiple, narrow imports.
 
 ```{.ts .yes}
 // Yes
@@ -30,7 +30,7 @@ import {makeFormula} from '@codahq/packs-sdk';
 import {makeParameter} from '@codahq/packs-sdk';
 ```
 
-Having all usages of the SDK prefixed with sdk.{something} makes it easier to distinguish what's part of the SDK and what's not. It also makes it easier to copy and paste code from other places without having to worry about adding imports.
+Having all usages of the SDK prefixed with `sdk.{something}` makes it easier to distinguish what's part of the SDK and what's not. It also makes it easier to copy and paste code from other places without having to worry about adding imports.
 
 
 ### Use double quotes

@@ -126,7 +126,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
   private _defaultConnectionRequirement: ConnectionRequirement | undefined;
 
   /**
-   * Constructs a {@link PackDefinitionBuilder}. However, `coda.newPack()` should be used instead
+   * Constructs a {@link PackDefinitionBuilder}. However, `sdk.newPack()` should be used instead
    * rather than constructing a builder directly.
    */
   constructor(definition?: Partial<PackVersionDefinition>) {
