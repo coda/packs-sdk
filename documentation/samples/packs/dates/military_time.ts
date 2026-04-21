@@ -1,5 +1,5 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Displays a time using military conventions. The result is a string (text)
 // value.
@@ -7,13 +7,13 @@ pack.addFormula({
   name: "ToMilitaryTime",
   description: "Displays a time in military time.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Date,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Date,
       name: "time",
       description: "The input time.",
     }),
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   execute: async function ([time], context) {
     // Format the JavaScript Date into 2-digit, 24 hour time.
     let formatted = time.toLocaleTimeString("en-US", {

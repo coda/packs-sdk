@@ -1,15 +1,15 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // A schema to represent a holiday.
-const HolidaySchema = coda.makeObjectSchema({
+const HolidaySchema = sdk.makeObjectSchema({
   properties: {
-    name: { type: coda.ValueType.String },
-    description: { type: coda.ValueType.String },
-    locations: { type: coda.ValueType.String },
+    name: { type: sdk.ValueType.String },
+    description: { type: sdk.ValueType.String },
+    locations: { type: sdk.ValueType.String },
     type: {
-      type: coda.ValueType.Array,
-      items: { type: coda.ValueType.String },
+      type: sdk.ValueType.Array,
+      items: { type: sdk.ValueType.String },
     },
   },
   displayProperty: "name",
@@ -20,8 +20,8 @@ pack.addFormula({
   name: "Holidays",
   description: "Get the holidays (if any) on a given day.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "country",
       description: "Which country's holidays to return (ex: US).",
       // Auto-complete the valid country identifiers using the API.
@@ -31,7 +31,7 @@ pack.addFormula({
           url: "https://calendarific.com/api/v2/countries",
         });
         let countries = response.body.response.countries;
-        return coda.autocompleteSearchObjects(
+        return sdk.autocompleteSearchObjects(
           search,
           countries,
           "country_name",
@@ -39,13 +39,13 @@ pack.addFormula({
           );
       },
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.Date,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Date,
       name: "date",
       description: "Which date to lookup.",
     }),
   ],
-  resultType: coda.ValueType.Array,
+  resultType: sdk.ValueType.Array,
   items: HolidaySchema,
   execute: async function ([country, date], context) {
     // Create a formatter that outputs a numeric day, month, and year.
@@ -65,7 +65,7 @@ pack.addFormula({
     let year = parts.find(part => part.type === "year").value;
 
     // Make a request to the Calendarific API.
-    let url = coda.withQueryParams("https://calendarific.com/api/v2/holidays", {
+    let url = sdk.withQueryParams("https://calendarific.com/api/v2/holidays", {
       country: country,
       year: year,
       month: month,
@@ -83,7 +83,7 @@ pack.addFormula({
 
 // Calendarific requires an API key as a query parameter.
 pack.setSystemAuthentication({
-  type: coda.AuthenticationType.QueryParamToken,
+  type: sdk.AuthenticationType.QueryParamToken,
   paramName: "api_key",
 });
 

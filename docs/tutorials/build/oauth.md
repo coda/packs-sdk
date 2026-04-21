@@ -204,8 +204,8 @@ Now that we've got the OAuth2 URLs, scopes, client ID and secret we're ready to 
     <div markdown>
 
     ```ts
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     pack.addNetworkDomain("todoist.com");
 
@@ -213,8 +213,8 @@ Now that we've got the OAuth2 URLs, scopes, client ID and secret we're ready to 
       name: "Tasks",
       description: "A list of your current tasks.",
       parameters: [],
-      resultType: coda.ValueType.Array,
-      items: { type: coda.ValueType.String },
+      resultType: sdk.ValueType.Array,
+      items: { type: sdk.ValueType.String },
       execute: async function ([], context) {
         // TODO
         return [];
@@ -239,8 +239,8 @@ Now that we've got the OAuth2 URLs, scopes, client ID and secret we're ready to 
     <div markdown>
 
     ```{.ts hl_lines="9-18"}
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     pack.addNetworkDomain("todoist.com");
 
@@ -278,11 +278,11 @@ Now that we've got the OAuth2 URLs, scopes, client ID and secret we're ready to 
     <div markdown>
 
     ```{.ts hl_lines="4-6"}
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     pack.setUserAuthentication({
-      type: coda.AuthenticationType.OAuth2,
+      type: sdk.AuthenticationType.OAuth2,
     });
 
     pack.addFormula({
@@ -307,11 +307,11 @@ Now that we've got the OAuth2 URLs, scopes, client ID and secret we're ready to 
     <div markdown>
 
     ```{.ts hl_lines="6-7"}
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     pack.setUserAuthentication({
-      type: coda.AuthenticationType.OAuth2,
+      type: sdk.AuthenticationType.OAuth2,
       authorizationUrl: "https://todoist.com/oauth/authorize",
       tokenUrl: "https://todoist.com/oauth/access_token",
     });
@@ -338,11 +338,11 @@ Now that we've got the OAuth2 URLs, scopes, client ID and secret we're ready to 
     <div markdown>
 
     ```{.ts hl_lines="8-9"}
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     pack.setUserAuthentication({
-      type: coda.AuthenticationType.OAuth2,
+      type: sdk.AuthenticationType.OAuth2,
       authorizationUrl: "https://todoist.com/oauth/authorize",
       tokenUrl: "https://todoist.com/oauth/access_token",
       scopes: ["data:read"],
@@ -365,13 +365,13 @@ All the code is written, but we're not ready to start using the Pack just yet. B
 
 ??? example "View the full code"
     ```ts
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     pack.addNetworkDomain("todoist.com");
 
     pack.setUserAuthentication({
-      type: coda.AuthenticationType.OAuth2,
+      type: sdk.AuthenticationType.OAuth2,
       authorizationUrl: "https://todoist.com/oauth/authorize",
       tokenUrl: "https://todoist.com/oauth/access_token",
       scopes: ["data:read"],
@@ -382,8 +382,8 @@ All the code is written, but we're not ready to start using the Pack just yet. B
       name: "Tasks",
       description: "A list of your current tasks.",
       parameters: [],
-      resultType: coda.ValueType.Array,
-      items: { type: coda.ValueType.String },
+      resultType: sdk.ValueType.Array,
+      items: { type: sdk.ValueType.String },
       execute: async function ([], context) {
         let response = await context.fetcher.fetch({
           method: "GET",

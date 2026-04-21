@@ -23,9 +23,9 @@ class ObjectSchemaHelper<T extends ObjectSchemaDefinition<string, string>> {
 
   // This method doesn't do anything, but it gives developers a chance to double-check if they've forgotten
   // to update a client of ObjectSchemaHelper when they add a new property to ObjectSchemaDefinition.
-  // For example, coda.makeReferenceSchemaFromObjectSchema() depends on ObjectSchemaHelper so if you
+  // For example, sdk.makeReferenceSchemaFromObjectSchema() depends on ObjectSchemaHelper so if you
   // add a new schema option related to property options you would likely need to add it to ObjectSchemaHelper
-  // and propagate it through coda.makeReferenceSchemaFromObjectSchema() also.
+  // and propagate it through sdk.makeReferenceSchemaFromObjectSchema() also.
   private _checkAgainstAllProperties(schema: ObjectSchemaDefinition<string, string>) {
     const {
       // Properties needed by ObjectSchemaHelper clients.

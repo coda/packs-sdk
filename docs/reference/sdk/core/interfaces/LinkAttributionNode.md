@@ -18,8 +18,8 @@ of the data source or directly to the source data.
 ## Example
 
 ```
-coda.makeAttributionNode({
-  type: coda.AttributionNodeType.Link,
+sdk.makeAttributionNode({
+  type: sdk.AttributionNodeType.Link,
   anchorUrl: "https://example.com",
   anchorText: "Data provided by ExampleCorp.",
 });

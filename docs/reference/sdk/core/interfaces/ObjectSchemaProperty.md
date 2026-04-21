@@ -68,10 +68,10 @@ execute: async function(context) {
 
 You can define your schema like this:
 ```
-coda.makeObjectSchema({
+sdk.makeObjectSchema({
   properties: {
-    name: {type: coda.ValueType.String},
-    durationSeconds: {type: coda.ValueType.Number, fromKey: "duration"},
+    name: {type: sdk.ValueType.String},
+    durationSeconds: {type: sdk.ValueType.Number, fromKey: "duration"},
   },
 });
 ```

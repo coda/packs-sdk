@@ -16,12 +16,12 @@ created using [makeTranslateObjectFormula](../functions/makeTranslateObjectFormu
 ## Example
 
 ```
-coda.makeTranslateObjectFormula({
+sdk.makeTranslateObjectFormula({
   name: "FetchWidget",
   description: "Fetches a widget.",
   parameters: [
-    coda.makeParameter({type: coda.ParameterType.String, name: "id"}),
-    coda.makeParameter({type: coda.ParameterType.String, name: "outputFormat"}),
+    sdk.makeParameter({type: sdk.ParameterType.String, name: "id"}),
+    sdk.makeParameter({type: sdk.ParameterType.String, name: "outputFormat"}),
   ],
   request: {
     method: "GET",

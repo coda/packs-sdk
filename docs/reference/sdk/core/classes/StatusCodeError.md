@@ -28,13 +28,13 @@ try {
   });
 } catch (error) {
   // If the request failed because the server returned a 300+ status code.
-  if (coda.StatusCodeError.isStatusCodeError(error)) {
+  if (sdk.StatusCodeError.isStatusCodeError(error)) {
     // Cast the error as a StatusCodeError, for better intellisense.
-    let statusError = error as coda.StatusCodeError;
+    let statusError = error as sdk.StatusCodeError;
     // If the API returned an error message in the body, show it to the user.
     let message = statusError.body?.detail;
     if (message) {
-      throw new coda.UserVisibleError(message);
+      throw new sdk.UserVisibleError(message);
     }
   }
   // The request failed for some other reason. Re-throw the error so that it

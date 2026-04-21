@@ -237,7 +237,7 @@ var CurrencyFormat;
 /**
  * Icons that can be used with a {@link ScaleSchema}.
  *
- * For example, to render a star rating, use a {@link ScaleSchema} with `icon: coda.ScaleIconSet.Star`.
+ * For example, to render a star rating, use a {@link ScaleSchema} with `icon: sdk.ScaleIconSet.Star`.
  */
 var ScaleIconSet;
 (function (ScaleIconSet) {
@@ -577,9 +577,9 @@ exports.generateSchema = generateSchema;
  *
  * @example
  * ```
- * coda.makeSchema({
- *   type: coda.ValueType.Array,
- *   items: {type: coda.ValueType.String},
+ * sdk.makeSchema({
+ *   type: sdk.ValueType.Array,
+ *   items: {type: sdk.ValueType.String},
  * });
  * ```
  */
@@ -597,12 +597,12 @@ exports.makeSchema = makeSchema;
  *
  * @example
  * ```
- * coda.makeObjectSchema({
+ * sdk.makeObjectSchema({
  *   id: "email",
  *   primary: "name",
  *   properties: {
- *     email: {type: coda.ValueType.String, required: true},
- *     name: {type: coda.ValueType.String, required: true},
+ *     email: {type: sdk.ValueType.String, required: true},
+ *     name: {type: sdk.ValueType.String, required: true},
  *   },
  * });
  * ```

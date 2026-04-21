@@ -1,5 +1,5 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // The version of the Webflow API to use.
 const WebflowApiVersion = "1.0.0";
@@ -7,7 +7,7 @@ const WebflowApiVersion = "1.0.0";
 // Per-user authentication to the ClickUp API, using OAuth2.
 // See https://developers.webflow.com/oauth
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://webflow.com/oauth/authorize",
   tokenUrl: "https://api.webflow.com/oauth/access_token",
 

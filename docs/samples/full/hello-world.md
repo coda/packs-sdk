@@ -17,10 +17,10 @@ This is an example which creates a single formula called `Hello`, that takes in 
     */
 
     // This import statement gives you access to all parts of the Coda Packs SDK.
-    import * as coda from "@codahq/packs-sdk";
+    import * as sdk from "@codahq/packs-sdk";
 
     // This line creates your new Pack.
-    export const pack = coda.newPack();
+    export const pack = sdk.newPack();
 
     // Here, we add a new formula to this Pack.
     pack.addFormula({
@@ -32,8 +32,8 @@ This is an example which creates a single formula called `Hello`, that takes in 
       // If your formula requires one or more inputs, you'll define them here.
       // Here, we're creating a string input called "name".
       parameters: [
-        coda.makeParameter({
-          type: coda.ParameterType.String,
+        sdk.makeParameter({
+          type: sdk.ParameterType.String,
           name: "name",
           description: "The name you would like to say hello to.",
         }),
@@ -41,7 +41,7 @@ This is an example which creates a single formula called `Hello`, that takes in 
 
       // The resultType defines what will be returned in your Coda doc. Here, we're
       // returning a simple text string.
-      resultType: coda.ValueType.String,
+      resultType: sdk.ValueType.String,
 
       // Everything inside this execute statement will happen anytime your Coda
       // formula is called in a doc. An array of all user inputs is always the 1st

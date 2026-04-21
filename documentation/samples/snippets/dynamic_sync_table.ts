@@ -1,6 +1,6 @@
-import * as coda from "@codahq/packs-sdk";
+import * as sdk from "@codahq/packs-sdk";
 
-const pack = coda.newPack();
+const pack = sdk.newPack();
 
 // BEGIN
 
@@ -12,7 +12,7 @@ pack.addDynamicSyncTable({
     // TODO: Fetch the list of datasets the user can connect to.
     let datasets = [];
     // TODO: Replace "name" and "url" below with correct JSON keys.
-    return coda.autocompleteSearchObjects(undefined, datasets, "name", "url");
+    return sdk.autocompleteSearchObjects(undefined, datasets, "name", "url");
   },
   getName: async function (context) {
     let datasetUrl = context.sync.dynamicUrl;
@@ -22,7 +22,7 @@ pack.addDynamicSyncTable({
   getSchema: async function (context) {
     let datasetUrl = context.sync.dynamicUrl;
     // TODO: Fetch metadata about the dataset and use it to construct a schema.
-    let schema = coda.makeObjectSchema({
+    let schema = sdk.makeObjectSchema({
       properties: {},
       displayProperty: "",
       idProperty: "",

@@ -67,7 +67,7 @@ Instead of storing SVG images in temporary blob storage, you can instead encode 
 ```ts
 let svg = "...";
 let encoded = Buffer.from(svg).toString("base64");
-return coda.SvgConstants.DataUrlPrefix + encoded;
+return sdk.SvgConstants.DataUrlPrefix + encoded;
 ```
 
 !!! danger "Data URL Size"
@@ -78,12 +78,12 @@ return coda.SvgConstants.DataUrlPrefix + encoded;
 
 You may want to adjust the colors of your generated SVG based on whether the user has dark mode enabled. To accomplish this:
 
-1.  Assign an `id` to the root element of your SVG, using the value provided in `coda.SvgConstants.DarkModeFragmentId`.
+1.  Assign an `id` to the root element of your SVG, using the value provided in `sdk.SvgConstants.DarkModeFragmentId`.
 1.  Create a CSS style rule for that element and the [CSS `:target` selector][mdn_target], that applies the dark mode styling changes.
-1.  Return the SVG using the `coda.SvgConstants.DataUrlPrefixWithDarkModeSupport` prefix.
+1.  Return the SVG using the `sdk.SvgConstants.DataUrlPrefixWithDarkModeSupport` prefix.
 
 ```ts
-let darkModeId = coda.SvgConstants.DarkModeFragmentId;
+let darkModeId = sdk.SvgConstants.DarkModeFragmentId;
 let svg = `
   <svg ...>
     <g id="${darkModeId}">
@@ -95,7 +95,7 @@ let svg = `
   </svg>
 `.trim();
 let encoded = Buffer.from(svg).toString("base64");
-return coda.SvgConstants.DataUrlPrefixWithDarkModeSupport + encoded;
+return sdk.SvgConstants.DataUrlPrefixWithDarkModeSupport + encoded;
 ```
 
 

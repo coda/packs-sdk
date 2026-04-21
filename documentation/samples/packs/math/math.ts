@@ -1,9 +1,9 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // A "numbers" parameter shared by both formulas.
-const NumbersParameter = coda.makeParameter({
-  type: coda.ParameterType.NumberArray,
+const NumbersParameter = sdk.makeParameter({
+  type: sdk.ParameterType.NumberArray,
   name: "numbers",
   description: "The numbers to perform the calculation on.",
 });
@@ -15,16 +15,16 @@ pack.addFormula({
     // Use the shared parameter created above.
     NumbersParameter,
   ],
-  resultType: coda.ValueType.Number,
+  resultType: sdk.ValueType.Number,
   execute: async function ([numbers]) {
     // Handle the error case where the list is empty.
     if (numbers.length === 0) {
-      throw new coda.UserVisibleError("The list cannot be empty.");
+      throw new sdk.UserVisibleError("The list cannot be empty.");
     }
 
     // Handle the error case where all the numbers are zeros.
     if (numbers.every(number => number === 0)) {
-      throw new coda.UserVisibleError(
+      throw new sdk.UserVisibleError(
         "The list must contain a non-zero number.");
     }
 
@@ -44,16 +44,16 @@ pack.addFormula({
     // Use the shared parameter created above.
     NumbersParameter,
   ],
-  resultType: coda.ValueType.Number,
+  resultType: sdk.ValueType.Number,
   execute: async function ([numbers]) {
     // Handle the error case where the list is empty.
     if (numbers.length === 0) {
-      throw new coda.UserVisibleError("The list cannot be empty.");
+      throw new sdk.UserVisibleError("The list cannot be empty.");
     }
 
     // Handle the error case where the list contains a zero.
     if (numbers.some(number => number === 0)) {
-      throw new coda.UserVisibleError("The list must not contain a zero.");
+      throw new sdk.UserVisibleError("The list must not contain a zero.");
     }
 
     let result = numbers[0];

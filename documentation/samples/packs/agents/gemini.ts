@@ -1,5 +1,5 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 const GeminiModel = "gemini-2.0-flash";
 
@@ -44,7 +44,7 @@ pack.setChatSkill({
   `,
   tools: [
     // All the formulas in this Pack.
-    { type: coda.ToolType.Pack },
+    { type: sdk.ToolType.Pack },
   ],
 });
 
@@ -52,22 +52,22 @@ pack.addFormula({
   name: "GetGeminiReply",
   description: "Passes a message to Gemini and gets a reply.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.StringArray,
+    sdk.makeParameter({
+      type: sdk.ParameterType.StringArray,
       name: "messages",
       description: `
         The messages in the chat history, as an array of strings. Prefix each
         message with either 'user:' or 'model:', depending on the source.
       `,
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "screenContext",
       description: "Context about what is on the user's screen.",
       optional: true,
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "userContext",
       description: `
         Context about the user that comes from the system prompt, such as
@@ -76,7 +76,7 @@ pack.addFormula({
       optional: true,
     }),
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   execute: async function (args, context) {
     let [messages, screenContext, userContext] = args;
     let payload = {
@@ -123,7 +123,7 @@ pack.addFormula({
 });
 
 pack.setSystemAuthentication({
-  type: coda.AuthenticationType.CustomHeaderToken,
+  type: sdk.AuthenticationType.CustomHeaderToken,
   headerName: "X-goog-api-key",
   instructionsUrl: "https://aistudio.google.com/app/apikey",
 });

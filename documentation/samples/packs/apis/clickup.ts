@@ -1,10 +1,10 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the ClickUp API, using OAuth2.
 // See https://clickup.com/api
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://app.clickup.com/api",
   tokenUrl: "https://app.clickup.com/api/v2/oauth/token",
 

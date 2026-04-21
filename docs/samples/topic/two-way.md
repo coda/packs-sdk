@@ -16,39 +16,39 @@ A sync table that supports user edits via two-way sync. It uses the default beha
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // A schema defining the data in the sync table, indicating which fields are
 // editable (mutable).
-const TaskSchema = coda.makeObjectSchema({
+const TaskSchema = sdk.makeObjectSchema({
   properties: {
     name: {
       description: "The name of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       fromKey: "content",
       required: true,
       mutable: true,
     },
     description: {
       description: "A detailed description of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       mutable: true,
     },
     url: {
       description: "A link to the task in the Todoist app.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
     completed: {
       description: "If the task has been completed.",
-      type: coda.ValueType.Boolean,
+      type: sdk.ValueType.Boolean,
       fromKey: "is_completed",
       mutable: true,
     },
     id: {
       description: "The ID of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
   },
@@ -115,7 +115,7 @@ pack.addNetworkDomain("todoist.com");
 
 // Setup authentication using a Todoist API token.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.HeaderBearerToken,
+  type: sdk.AuthenticationType.HeaderBearerToken,
   instructionsUrl: "https://todoist.com/app/settings/integrations",
 });
 {% endraw %}
@@ -125,39 +125,39 @@ A sync table that supports user edits via two-way sync, batch processing multipl
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // A schema defining the data in the sync table, indicating which fields are
 // editable (mutable).
-const TaskSchema = coda.makeObjectSchema({
+const TaskSchema = sdk.makeObjectSchema({
   properties: {
     name: {
       description: "The name of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       fromKey: "content",
       required: true,
       mutable: true,
     },
     description: {
       description: "A detailed description of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       mutable: true,
     },
     url: {
       description: "A link to the task in the Todoist app.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
     completed: {
       description: "If the task has been completed.",
-      type: coda.ValueType.Boolean,
+      type: sdk.ValueType.Boolean,
       fromKey: "is_completed",
       mutable: true,
     },
     id: {
       description: "The ID of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
   },
@@ -211,8 +211,8 @@ pack.addSyncTable({
   },
 });
 
-async function updateTask(context: coda.ExecutionContext,
-  update: coda.GenericSyncUpdate): Promise<any> {
+async function updateTask(context: sdk.ExecutionContext,
+  update: sdk.GenericSyncUpdate): Promise<any> {
   let { previousValue, newValue } = update;
   let taskId = newValue.id;
 
@@ -244,7 +244,7 @@ pack.addNetworkDomain("todoist.com");
 
 // Setup authentication using a Todoist API token.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.HeaderBearerToken,
+  type: sdk.AuthenticationType.HeaderBearerToken,
   instructionsUrl: "https://todoist.com/app/settings/integrations",
 });
 {% endraw %}
@@ -254,39 +254,39 @@ A sync table that supports user edits via two-way sync, batch processing multipl
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // A schema defining the data in the sync table, indicating which fields are
 // editable (mutable).
-const TaskSchema = coda.makeObjectSchema({
+const TaskSchema = sdk.makeObjectSchema({
   properties: {
     name: {
       description: "The name of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       fromKey: "content",
       required: true,
       mutable: true,
     },
     description: {
       description: "A detailed description of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       mutable: true,
     },
     url: {
       description: "A link to the task in the Todoist app.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
     completed: {
       description: "If the task has been completed.",
-      type: coda.ValueType.Boolean,
+      type: sdk.ValueType.Boolean,
       fromKey: "is_completed",
       mutable: true,
     },
     id: {
       description: "The ID of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
   },
@@ -338,7 +338,7 @@ pack.addSyncTable({
         for (let command of commands) {
           let status = statuses[command.uuid];
           if (status.error) {
-            return new coda.UserVisibleError(status.error);
+            return new sdk.UserVisibleError(status.error);
           }
         }
         // If there were no errors, fetch the updated task and return it.
@@ -353,7 +353,7 @@ pack.addSyncTable({
 });
 
 // Generate a list of API commands from a row update.
-function generateCommands(update: coda.GenericSyncUpdate): any[] {
+function generateCommands(update: sdk.GenericSyncUpdate): any[] {
   let commands = [];
   let { previousValue, newValue } = update;
   // Update the task.
@@ -376,7 +376,7 @@ function generateCommands(update: coda.GenericSyncUpdate): any[] {
 }
 
 // Fetch the current state of an individual task.
-async function getTask(context: coda.ExecutionContext, id: string) {
+async function getTask(context: sdk.ExecutionContext, id: string) {
   let response = await context.fetcher.fetch({
     method: "GET",
     url: `https://api.todoist.com/rest/v2/tasks/${id}`,
@@ -389,7 +389,7 @@ pack.addNetworkDomain("todoist.com");
 
 // Setup authentication using a Todoist API token.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.HeaderBearerToken,
+  type: sdk.AuthenticationType.HeaderBearerToken,
   instructionsUrl: "https://todoist.com/app/settings/integrations",
 });
 {% endraw %}
@@ -399,63 +399,63 @@ A sync table that supports user edits via two-way sync, with a defined set of op
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
-const CategorySchema = coda.makeObjectSchema({
+const CategorySchema = sdk.makeObjectSchema({
   properties: {
     id: {
       description: "A unique ID for the category.",
-      type: coda.ValueType.Number,
+      type: sdk.ValueType.Number,
       required: true,
     },
     name: {
       description: "The name of the category.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
     icon: {
       description: "An icon representing the category.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.ImageReference,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.ImageReference,
     },
   },
   displayProperty: "name",
 });
 
-const ExpenseSchema = coda.makeObjectSchema({
+const ExpenseSchema = sdk.makeObjectSchema({
   properties: {
     id: {
       description: "A unique ID for the expense.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     description: {
       description: "The description of the expense.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       mutable: true,
     },
     date: {
       description: "The date the expense was made.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Date,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Date,
       mutable: true,
     },
     cost: {
       description: "The total cost of the expense.",
-      type: coda.ValueType.Number,
-      codaType: coda.ValueHintType.Currency,
+      type: sdk.ValueType.Number,
+      codaType: sdk.ValueHintType.Currency,
       mutable: true,
     },
     notes: {
       description: "Any notes on the expense.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       fromKey: "details",
       mutable: true,
     },
     repeat: {
       description: "How often the expense automatically repeats.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.SelectList,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.SelectList,
       fromKey: "repeat_interval",
       mutable: true,
       // Static list of options.
@@ -463,8 +463,8 @@ const ExpenseSchema = coda.makeObjectSchema({
     },
     currency: {
       description: "The code of the currency of the expense.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.SelectList,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.SelectList,
       fromKey: "currency_code",
       mutable: true,
       // Dynamic list of options.
@@ -479,7 +479,7 @@ const ExpenseSchema = coda.makeObjectSchema({
     },
     category: {
       ...CategorySchema,
-      codaType: coda.ValueHintType.SelectList,
+      codaType: sdk.ValueHintType.SelectList,
       mutable: true,
       // Dynamic list of options, as objects.
       options: async function (context) {
@@ -524,7 +524,7 @@ pack.addSyncTable({
       let [] = args;
       let offset = context.sync.continuation?.offset as number || 0;
       let limit = 20;
-      let url = coda.withQueryParams(
+      let url = sdk.withQueryParams(
         "https://secure.splitwise.com/api/v3.0/get_expenses",
         {
           offset: offset,
@@ -569,8 +569,8 @@ pack.addSyncTable({
   },
 });
 
-async function updateExpense(context: coda.ExecutionContext,
-  update: coda.GenericSyncUpdate) {
+async function updateExpense(context: sdk.ExecutionContext,
+  update: sdk.GenericSyncUpdate) {
   let expense = update.newValue;
 
   // Only include fields in the body that have been updated.
@@ -598,10 +598,10 @@ async function updateExpense(context: coda.ExecutionContext,
     return result.expenses[0];
   } catch (e) {
     // If the API returned an error, show that error to the user.
-    if (coda.StatusCodeError.isStatusCodeError(e)) {
+    if (sdk.StatusCodeError.isStatusCodeError(e)) {
       let errors = Object.values(e.body.errors).flat();
       if (errors?.length > 0) {
-        throw new coda.UserVisibleError(errors.join("\n"));
+        throw new sdk.UserVisibleError(errors.join("\n"));
       }
     }
     throw e;
@@ -609,7 +609,7 @@ async function updateExpense(context: coda.ExecutionContext,
 }
 
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://secure.splitwise.com/oauth/authorize",
   tokenUrl: "https://secure.splitwise.com/oauth/token",
   getConnectionName: async function (context) {

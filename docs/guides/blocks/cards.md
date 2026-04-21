@@ -54,10 +54,10 @@ The card's title appears at the top of the card, and is required.
 Many object schemas already define a [display value][schemas_display_value] (via `displayProperty`) which determines which property value is shown in the mention chip for the object. The same display value will be shown as the title of the card, but can be overridden by defining a `titleProperty`. This is useful if you want to use a different property specifically for cards, for example that is longer.
 
 ```ts
-const ProductSchema = coda.makeObjectSchema({
+const ProductSchema = sdk.makeObjectSchema({
   properties: {
-    sku: { type: coda.ValueType.String },
-    name: { type: coda.ValueType.String },
+    sku: { type: sdk.ValueType.String },
+    name: { type: sdk.ValueType.String },
     // ...
   },
   // Use the SKU in mention chips, to save space.
@@ -78,13 +78,13 @@ The card can include a subtitle that highlights key properties, which appears un
 The properties displayed in the subtitle are determined via the `subtitleProperties` field of the schema, which lists the subset of properties to show and the order to show them.
 
 ```ts
-const ProductSchema = coda.makeObjectSchema({
+const ProductSchema = sdk.makeObjectSchema({
   properties: {
     // ...
-    quantity: { type: coda.ValueType.Number },
+    quantity: { type: sdk.ValueType.Number },
     price: {
-      type: coda.ValueType.Number,
-      codaType: coda.ValueHintType.Currency,
+      type: sdk.ValueType.Number,
+      codaType: sdk.ValueHintType.Currency,
     },
   },
   // ...
@@ -106,10 +106,10 @@ The card body can include a snippet of content, which appears under the title (a
 The snippet is meant to contain a limited amount of text, although there is no size limit enforced. Which property's content to use for the snippet is defined by the field `snippetProperty`, and it can only refer to properties of type `String` or `Array` of `String`. These properties can contain rich text, such as [Markdown][data_types_markdown] and [HTML][data_types_html].
 
 ```ts
-const ProductSchema = coda.makeObjectSchema({
+const ProductSchema = sdk.makeObjectSchema({
   properties: {
     // ...
-    description: { type: coda.ValueType.String },
+    description: { type: sdk.ValueType.String },
   },
   // ...
   snippetProperty: "description",
@@ -127,12 +127,12 @@ Which property's content to use for the image is defined by the field `imageProp
 <!-- TODO(spencer): Include ImageAttachment above once the post-processing work is complete. -->
 
 ```ts
-const ProductSchema = coda.makeObjectSchema({
+const ProductSchema = sdk.makeObjectSchema({
   properties: {
     // ...
     photo: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.ImageReference,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.ImageReference,
     },
   },
   // ...
@@ -153,12 +153,12 @@ The card can include a link, which will be opened when the card is clicked. The 
 Which property's content to use for the link is defined by the field `linkProperty`, and it can only refer to properties of type `String` with a hint of `Url`.
 
 ```ts
-const ProductSchema = coda.makeObjectSchema({
+const ProductSchema = sdk.makeObjectSchema({
   properties: {
     // ...
     websiteLink: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
   },
   // ...
@@ -188,13 +188,13 @@ pack.addFormula({
   name: "Product",
   description: "...",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "url",
       description: "...",
     }),
   ],
-  resultType: coda.ValueType.Object,
+  resultType: sdk.ValueType.Object,
   schema: ProductSchema,
   // ...
 });

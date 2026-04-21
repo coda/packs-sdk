@@ -1,36 +1,36 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // A schema defining the data in the sync table, indicating which fields are
 // editable (mutable).
-const TaskSchema = coda.makeObjectSchema({
+const TaskSchema = sdk.makeObjectSchema({
   properties: {
     name: {
       description: "The name of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       fromKey: "content",
       required: true,
       mutable: true,
     },
     description: {
       description: "A detailed description of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       mutable: true,
     },
     url: {
       description: "A link to the task in the Todoist app.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
     completed: {
       description: "If the task has been completed.",
-      type: coda.ValueType.Boolean,
+      type: sdk.ValueType.Boolean,
       fromKey: "is_completed",
       mutable: true,
     },
     id: {
       description: "The ID of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
   },
@@ -97,6 +97,6 @@ pack.addNetworkDomain("todoist.com");
 
 // Setup authentication using a Todoist API token.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.HeaderBearerToken,
+  type: sdk.AuthenticationType.HeaderBearerToken,
   instructionsUrl: "https://todoist.com/app/settings/integrations",
 });

@@ -41,9 +41,9 @@ pack.addSyncTable({
   },
 });
 
-const ProjectSchema = coda.makeObjectSchema({
+const ProjectSchema = sdk.makeObjectSchema({
   properties: {
-    id: { type: coda.ValueType.String },
+    id: { type: sdk.ValueType.String },
     // ...
   },
   // ...

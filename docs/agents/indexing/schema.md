@@ -30,11 +30,11 @@ Set `titleProperty` to the property that contains the title of the record. This 
 Often, the same property is used for both `displayProperty` and `titleProperty`. However, these may differ for records with both a short and a long identifier, with the former preferred for `displayProperty` and the latter preferred for `titleProperty`.
 
 ```{.ts hl_lines="9"}
-const ProductSchema = coda.makeObjectSchema({
+const ProductSchema = sdk.makeObjectSchema({
   properties: {
-    id: { type: coda.ValueType.String },
-    sku: { type: coda.ValueType.String },
-    name: { type: coda.ValueType.String },
+    id: { type: sdk.ValueType.String },
+    sku: { type: sdk.ValueType.String },
+    name: { type: sdk.ValueType.String },
   },
   idProperty: "id",
   displayProperty: "sku",
@@ -52,10 +52,10 @@ Set `linkProperty` to the property that contains the user-visible link to the re
 The property should contain a deep link to the record in the source application, which a user can open in their browser.
 
 ```{.ts hl_lines="7"}
-const ProductSchema = coda.makeObjectSchema({
+const ProductSchema = sdk.makeObjectSchema({
   properties: {
     // ...
-    link: { type: coda.ValueType.String, codaType: coda.ValueHintType.Url },
+    link: { type: sdk.ValueType.String, codaType: sdk.ValueHintType.Url },
   },
   // ...
   linkProperty: "link",
@@ -68,12 +68,12 @@ const ProductSchema = coda.makeObjectSchema({
 Optionally set `index.properties` to the list of properties that contain long-form text that should be indexed for the record. These are typically properties such as descriptions, notes, and message bodies. The content of these properties will be broken down into smaller chunks for retrieval and usage by the LLM.
 
 ```{.ts hl_lines="10-12"}
-const ProductSchema = coda.makeObjectSchema({
+const ProductSchema = sdk.makeObjectSchema({
   properties: {
     // ...
     description: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Html,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Html,
     },
   },
   // ...
@@ -104,12 +104,12 @@ In addition to text, you can index binary content in files as well. The followin
 To index binary content, add to `index.properties` the `Attachment` property containing the link to the file.
 
 ```{.ts hl_lines="12"}
-const ProductSchema = coda.makeObjectSchema({
+const ProductSchema = sdk.makeObjectSchema({
   properties: {
     // ...
     specSheetLink: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Attachment,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Attachment,
       description: "Link the PDF spec sheet for the product.",
     },
   },
@@ -134,21 +134,21 @@ Select properties of type `String`. If you select a property of type `Array<Stri
 The `titleProperty` will automatically be included as a context property in each chunk.
 
 ```{.ts hl_lines="22"}
-const ManufacturerSchema = coda.makeObjectSchema({
+const ManufacturerSchema = sdk.makeObjectSchema({
   properties: {
-    name: { type: coda.ValueType.String },
-    id: { type: coda.ValueType.String },
+    name: { type: sdk.ValueType.String },
+    id: { type: sdk.ValueType.String },
   },
   displayProperty: "name",
 });
 
-const ProductSchema = coda.makeObjectSchema({
+const ProductSchema = sdk.makeObjectSchema({
   properties: {
     // ...
-    size: { type: coda.ValueType.String },
+    size: { type: sdk.ValueType.String },
     materials: {
-      type: coda.ValueType.Array,
-      items: { type: coda.ValueType.String },
+      type: sdk.ValueType.Array,
+      items: { type: sdk.ValueType.String },
     },
     manufacturer: ManufacturerSchema,
   },
@@ -178,11 +178,11 @@ Optionally set `index.filterableProperties` to a list of properties that contain
 - `Array` of `String`, `Number`, or `Person` object
 
 ```{.ts hl_lines="10"}
-const ProductSchema = coda.makeObjectSchema({
+const ProductSchema = sdk.makeObjectSchema({
   properties: {
     // ...
-    category: { type: coda.ValueType.String },
-    rating: { type: coda.ValueType.Number },
+    category: { type: sdk.ValueType.String },
+    rating: { type: sdk.ValueType.Number },
   },
   // ...
   index: {
@@ -209,11 +209,11 @@ To help with filtering and ranking, set the following fields in your schema, if 
 Ensure each property has an informative description that provides relevant context to help the LLM interpret the meaning of that column.
 
 ```{.ts hl_lines="6-9"}
-const ProductSchema = coda.makeObjectSchema({
+const ProductSchema = sdk.makeObjectSchema({
   properties: {
     // ...
     rmaRequired: {
-      type: coda.ValueType.Boolean,
+      type: sdk.ValueType.Boolean,
       description: `
         True if the product requires an RMA (Return Merchandise Authorization)
         before a refund can be issued.
@@ -233,7 +233,7 @@ Schemas can include descriptions that help the LLM understand what the record re
 getSchema: async function (context) {
   let reportUrl = context.sync.dynamicUrl;
   let report = await getReportInfo(context, reportUrl);
-  return coda.makeObjectSchema({
+  return sdk.makeObjectSchema({
     description: report.description,
     // ...
   });
@@ -252,10 +252,10 @@ To enable contact indexing, you need to annotate the related object schema:
 1.  Set the `userEmailProperty` field to a property containing the user's email address.
 
 ```{.ts hl_lines="7-8"}
-const AuthorSchema = coda.makeObjectSchema({
+const AuthorSchema = sdk.makeObjectSchema({
   properties: {
-    name: { type: coda.ValueType.String },
-    email: { type: coda.ValueType.String, codaType: coda.ValueHintType.Email },
+    name: { type: sdk.ValueType.String },
+    email: { type: sdk.ValueType.String, codaType: sdk.ValueHintType.Email },
     // Other properties ...
   },
   displayProperty: "name",

@@ -22,7 +22,7 @@ Formulas that return an `Object` value must specify an object schema that define
 ```ts
 pack.addFormula({
   // ...
-  resultType: coda.ValueType.Object,
+  resultType: sdk.ValueType.Object,
   schema: MySchema,
   // ...
 });
@@ -38,7 +38,7 @@ Formulas that return an `Array` value must specify a schema that defines the ite
 ```ts
 pack.addFormula({
   // ...
-  resultType: coda.ValueType.Array,
+  resultType: sdk.ValueType.Array,
   items: MySchema,
   // ...
 });
@@ -49,17 +49,17 @@ pack.addFormula({
 Schemas are created using the [`makeSchema`][makeSchema] method.
 
 ```ts
-let NumberSchema = coda.makeSchema({
-  type: coda.ValueType.Number,
+let NumberSchema = sdk.makeSchema({
+  type: sdk.ValueType.Number,
 });
 ```
 
 When defining a schema for the `Object` value type, use the more specific [`makeObjectSchema`][makeObjectSchema] method. The `type` field can be omitted, since the type must be `Object`.
 
 ```ts
-let MySchema = coda.makeObjectSchema({
+let MySchema = sdk.makeObjectSchema({
   properties: {
-    name: { type: coda.ValueType.String },
+    name: { type: sdk.ValueType.String },
   },
   displayProperty: "name",
 });
@@ -70,9 +70,9 @@ Schemas can also be declared inline in the formula or sync table where they are 
 ```ts
 pack.addFormula({
   // ...
-  resultType: coda.ValueType.Array,
-  items: coda.makeSchema({
-    type: coda.ValueType.Number,
+  resultType: sdk.ValueType.Array,
+  items: sdk.makeSchema({
+    type: sdk.ValueType.Number,
   }),
   // ...
 });
@@ -87,9 +87,9 @@ pack.addFormula({
 The primary role of a schema is to define the type of data that will be returned. This is done by specifying a value type and optionally a value hint. The value type corresponds to the JavaScript type that will be returned, and the value hint indicates how Coda should interpret that value. These are set using the `type` and `codaType` field respectively.
 
 ```ts
-let DateSchema = coda.makeSchema({
-  type: coda.ValueType.String,
-  codaType: coda.ValueHintType.Date,
+let DateSchema = sdk.makeSchema({
+  type: sdk.ValueType.String,
+  codaType: sdk.ValueHintType.Date,
 });
 ```
 
@@ -106,11 +106,11 @@ The most common form of schema you'll need to define are object schemas. They ar
 The individual properties of the object are defined using the `properties` field of the schema. It contains a set of key value/pairs, where the key is the name of the property and the value is a schema describing the property.
 
 ```ts
-let PersonSchema = coda.makeObjectSchema({
+let PersonSchema = sdk.makeObjectSchema({
   properties: {
-    name: { type: coda.ValueType.String },
-    born: { type: coda.ValueType.String, codaType: coda.ValueHintType.Date },
-    age: { type: coda.ValueType.Number },
+    name: { type: sdk.ValueType.String },
+    born: { type: sdk.ValueType.String, codaType: sdk.ValueHintType.Date },
+    age: { type: sdk.ValueType.Number },
   },
   // ...
 });
@@ -119,13 +119,13 @@ let PersonSchema = coda.makeObjectSchema({
 Object schema properties can themselves contain other object schemas, allowing complex nesting of structured data.
 
 ```ts
-let MovieSchema = coda.makeObjectSchema({
+let MovieSchema = sdk.makeObjectSchema({
   properties: {
-    title: { type: coda.ValueType.String },
-    year: { type: coda.ValueType.Number },
+    title: { type: sdk.ValueType.String },
+    year: { type: sdk.ValueType.Number },
     director: PersonSchema,
     actors: {
-      type: coda.ValueType.Array,
+      type: sdk.ValueType.Array,
       items: PersonSchema,
     },
   },
@@ -142,19 +142,19 @@ While a good property name may speak for itself, it's often useful to add additi
 
 
 ```{.ts hl_lines="5 10 14"}
-let PersonSchema = coda.makeObjectSchema({
+let PersonSchema = sdk.makeObjectSchema({
   properties: {
     name: {
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       description: "The full name of the person.",
     },
     born: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Date,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Date,
       description: "The date when the person was born.",
     },
     age: {
-      type: coda.ValueType.Number,
+      type: sdk.ValueType.Number,
       description: "The age of the person, in years.",
     },
   },
@@ -181,7 +181,7 @@ These descriptions are shown in various places in the Coda UI.
     If a schema is only used by a single property, or you want to show the description everywhere, then simply add the description to the schema.
 
     ```{.ts hl_lines="2"}
-    let PersonSchema = coda.makeObjectSchema({
+    let PersonSchema = sdk.makeObjectSchema({
       description: "A person",
       // ...
     });
@@ -190,10 +190,10 @@ These descriptions are shown in various places in the Coda UI.
     More commonly however a schema is reused across multiple properties, where the context and meaning of the value are different. In that case you can use [JavaScript's spread syntax][mdn_spread_object] to copy of the schema and add a description.
 
     ```{.ts hl_lines="6-7 10-11"}
-    let MovieSchema = coda.makeObjectSchema({
+    let MovieSchema = sdk.makeObjectSchema({
       properties: {
-        title: { type: coda.ValueType.String },
-        year: { type: coda.ValueType.Number },
+        title: { type: sdk.ValueType.String },
+        year: { type: sdk.ValueType.Number },
         director: {
           ...PersonSchema,
           description: "The director of the movie.",
@@ -213,18 +213,18 @@ These descriptions are shown in various places in the Coda UI.
 When a formula or sync table returns an object, only the fields matching the properties defined in the schema are retained, and all others are discarded. The simplest approach is to define a schema where the property names are the same as the fields returned by the API.
 
 ```ts
-let LocationSchema = coda.makeObjectSchema({
+let LocationSchema = sdk.makeObjectSchema({
   properties: {
     // These names match exactly what the API returns.
-    latDeg: { type: coda.ValueType.Number },
-    longDeg: { type: coda.ValueType.Number },
+    latDeg: { type: sdk.ValueType.Number },
+    longDeg: { type: sdk.ValueType.Number },
   },
   // ...
 });
 
 pack.addFormula({
   // ...
-  resultType: coda.ValueType.Object,
+  resultType: sdk.ValueType.Object,
   schema: LocationSchema,
   execute: async function([], context) {
     let location = await fetchLocationFromAPI(context);
@@ -237,18 +237,18 @@ pack.addFormula({
 However sometimes the names in the API aren't the most user-friendly, and it would be nicer to use a different name in your Pack. To do so, give your property a better name and then use the `fromKey` field of the schema to map it back to the API response.
 
 ```ts
-let LocationSchema = coda.makeObjectSchema({
+let LocationSchema = sdk.makeObjectSchema({
   properties: {
     // These are custom names, mapped to the API response using "fromKey".
-    latitude: { type: coda.ValueType.Number, fromKey: "latDeg" },
-    longitude: { type: coda.ValueType.Number, fromKey: "longDeg" },
+    latitude: { type: sdk.ValueType.Number, fromKey: "latDeg" },
+    longitude: { type: sdk.ValueType.Number, fromKey: "longDeg" },
   },
   // ...
 });
 
 pack.addFormula({
   // ...
-  resultType: coda.ValueType.Object,
+  resultType: sdk.ValueType.Object,
   schema: LocationSchema,
   execute: async function([], context) {
     let location = await fetchLocationFromAPI(context);
@@ -262,11 +262,11 @@ pack.addFormula({
     When mapping a response field to an existing schema, it isn't clear where to put the `fromKey` field. The best approach is to use the [spread operator (`...`)][mdn_spread_object] to copy the schema and then add on the `fromKey` field.
 
     ```ts
-    let PersonSchema = coda.makeObjectSchema({
+    let PersonSchema = sdk.makeObjectSchema({
       // ...
     });
 
-    let MovieSchema = coda.makeObjectSchema({
+    let MovieSchema = sdk.makeObjectSchema({
       properties: {
         director: {
           ...PersonSchema,
@@ -281,18 +281,18 @@ pack.addFormula({
 The `fromKey` field works for simple renaming, but doesn't handle more complex cases such as pulling up a nested field. A more flexible approach is to rearrange the data from the API before you return it to ensure it matches the schema.
 
 ```ts
-let LocationSchema = coda.makeObjectSchema({
+let LocationSchema = sdk.makeObjectSchema({
   properties: {
     // These are custom names.
-    latitude: { type: coda.ValueType.Number },
-    longitude: { type: coda.ValueType.Number },
+    latitude: { type: sdk.ValueType.Number },
+    longitude: { type: sdk.ValueType.Number },
   },
   // ...
 });
 
 pack.addFormula({
   // ...
-  resultType: coda.ValueType.Object,
+  resultType: sdk.ValueType.Object,
   schema: LocationSchema,
   execute: async function([], context) {
     let location = await fetchLocationFromAPI(context);
@@ -311,9 +311,9 @@ pack.addFormula({
 Object schemas must define what value should be displayed within the chip when it is rendered in the doc. This is done by setting the `displayProperty` field to the name of the property containing the value to display.
 
 ```ts
-let MovieSchema = coda.makeObjectSchema({
+let MovieSchema = sdk.makeObjectSchema({
   properties: {
-    title: { type: coda.ValueType.String },
+    title: { type: sdk.ValueType.String },
     // ...
   },
   displayProperty: "title",
@@ -326,12 +326,12 @@ You can select any property to use as the display value, although usually a name
 Consider an API that returns locations with a separate `city` and `state` field. Neither of those alone is a very great display value, but you could combine them together to create one.
 
 ```ts
-let LocationSchema = coda.makeObjectSchema({
+let LocationSchema = sdk.makeObjectSchema({
   properties: {
-    city: { type: coda.ValueType.String },
-    state: { type: coda.ValueType.String },
+    city: { type: sdk.ValueType.String },
+    state: { type: sdk.ValueType.String },
     // Add an additional property to use as the display value.
-    display: { type: coda.ValueType.String },
+    display: { type: sdk.ValueType.String },
     // ...
   },
   displayProperty: "display",
@@ -340,7 +340,7 @@ let LocationSchema = coda.makeObjectSchema({
 
 pack.addFormula({
   // ...
-  resultType: coda.ValueType.Object,
+  resultType: sdk.ValueType.Object,
   schema: LocationSchema,
   execute: async function([], context) {
     let location = await fetchLocationFromAPI(context);
@@ -367,20 +367,20 @@ The normalized name of a property is shown in the formula editor, but it also im
 The terms of service for some APIs require you to provide visual attribution when you display their data. This can be accommodated in Packs using the `attribution` field of the schema. You can include a mix of text, links, and images which will be displayed when the user hovers over the object's chip.
 
 ```ts
-let TaskSchema = coda.makeObjectSchema({
+let TaskSchema = sdk.makeObjectSchema({
   // ...
   attribution: [
     {
-      type: coda.AttributionNodeType.Text,
+      type: sdk.AttributionNodeType.Text,
       text: "Provided by Todoist",
     },
     {
-      type: coda.AttributionNodeType.Link,
+      type: sdk.AttributionNodeType.Link,
       anchorText: "todoist.com",
       anchorUrl: "https://todoist.com",
     },
     {
-      type: coda.AttributionNodeType.Image,
+      type: sdk.AttributionNodeType.Image,
       imageUrl: "https://todoist.com/favicon.ico",
       anchorUrl: "https://todoist.com",
     },
@@ -403,9 +403,9 @@ Object schemas used in a sync table must specify which property value should be 
 Similar to the [display value](#display), this is done by setting the `idProperty` field to the name of the property containing the unique identifier.
 
 ```ts
-let MovieSchema = coda.makeObjectSchema({
+let MovieSchema = sdk.makeObjectSchema({
   properties: {
-    id: { type: coda.ValueType.String },
+    id: { type: sdk.ValueType.String },
     // ...
   },
   idProperty: "id",
@@ -418,10 +418,10 @@ let MovieSchema = coda.makeObjectSchema({
     To work correctly in all parts of the platform, row IDs shouldn't be longer than 1024 characters. If the records come from an API that returns longer IDs, we recommend adding another property to your schema that contains a hash of the original ID and using it as the `idProperty` instead.
 
     ```{.ts hl_lines="4 6"}
-    let MovieSchema = coda.makeObjectSchema({
+    let MovieSchema = sdk.makeObjectSchema({
       properties: {
-        id: { type: coda.ValueType.String, description: "External ID of the record." },
-        rowId: { type: coda.ValueType.String, description: "Internal ID of the Coda row." },
+        id: { type: sdk.ValueType.String, description: "External ID of the record." },
+        rowId: { type: sdk.ValueType.String, description: "Internal ID of the Coda row." },
       },
       idProperty: "rowId",
       // ...
@@ -439,7 +439,7 @@ Sync tables have an `identityName` field which defines the [unique identifier][s
 This can be done by adding an `identity` to your schema and setting its `name` field.
 
 ```ts
-let MovieSchema = coda.makeObjectSchema({
+let MovieSchema = sdk.makeObjectSchema({
   // ...
   identity: {
     name: "Movie",
@@ -447,18 +447,18 @@ let MovieSchema = coda.makeObjectSchema({
 });
 ```
 
-Alternatively, you can use the helper function `coda.withIdentity()` to make a copy of the schema with the identity set. This can allow for better reuse of schemas across your Pack.
+Alternatively, you can use the helper function `sdk.withIdentity()` to make a copy of the schema with the identity set. This can allow for better reuse of schemas across your Pack.
 
 ```ts
-let MovieSchema = coda.makeObjectSchema({
+let MovieSchema = sdk.makeObjectSchema({
   // ...
 });
 
 pack.addFormula({
   name: "UpdateMovie",
   description: "Update the movie details.",
-  resultType: coda.ValueType.Object,
-  schema: coda.withIdentity(MovieSchema, "Movie"),
+  resultType: sdk.ValueType.Object,
+  schema: sdk.withIdentity(MovieSchema, "Movie"),
   // ...
 });
 ```
@@ -471,13 +471,13 @@ By default a sync table will only contain one column, containing a chip with the
 You can specify additional default columns by setting the `featuredProperties` field of the schema. This field should contain the names of the properties that should be given their own columns when the sync table is created.
 
 ```ts
-let MovieSchema = coda.makeObjectSchema({
+let MovieSchema = sdk.makeObjectSchema({
   properties: {
-    title: { type: coda.ValueType.String },
-    year: { type: coda.ValueType.Number },
+    title: { type: sdk.ValueType.String },
+    year: { type: sdk.ValueType.Number },
     director: PersonSchema,
     actors: {
-      type: coda.ValueType.Array,
+      type: sdk.ValueType.Array,
       items: PersonSchema,
     },
   },
@@ -499,17 +499,17 @@ The simplest way to create a reference schema is to use the helper function [`ma
 
 ```ts
 let PersonReferenceSchema =
-    coda.makeReferenceSchemaFromObjectSchema(PersonSchema, "Person");
+    sdk.makeReferenceSchemaFromObjectSchema(PersonSchema, "Person");
 ```
 
 In some instances you may have to create the reference schema manually however, like when you want a row to be able to reference other rows in the same table. A reference schema is an object schema with the `codaType` field set to `Reference`. It must specify both an `idProperty` and `displayProperty`, and those properties must be marked as `required`. It must also have an `identity` set, with the name matching the `identityName` of the target sync table.
 
 ```ts
-let PersonReferenceSchema = coda.makeObjectSchema({
-  codaType: coda.ValueHintType.Reference,
+let PersonReferenceSchema = sdk.makeObjectSchema({
+  codaType: sdk.ValueHintType.Reference,
   properties: {
-    name: { type: coda.ValueType.String, required: true },
-    id: { type: coda.ValueType.String, required: true },
+    name: { type: sdk.ValueType.String, required: true },
+    id: { type: sdk.ValueType.String, required: true },
     // Other properties can be omitted.
   },
   displayProperty: "name",
@@ -523,13 +523,13 @@ let PersonReferenceSchema = coda.makeObjectSchema({
 You can then use the reference schema in other sync table schemas in your Pack.
 
 ```ts
-let MovieSchema = coda.makeObjectSchema({
+let MovieSchema = sdk.makeObjectSchema({
   properties: {
-    title: { type: coda.ValueType.String },
-    year: { type: coda.ValueType.Number },
+    title: { type: sdk.ValueType.String },
+    year: { type: sdk.ValueType.Number },
     director: PersonReferenceSchema,
     actors: {
-      type: coda.ValueType.Array,
+      type: sdk.ValueType.Array,
       items: PersonReferenceSchema,
     },
   },
@@ -554,7 +554,7 @@ In these cases you should adjust your `getSchema` function to set the ID manuall
 ```ts
 for (let customField of customFields) {
   properties[customField.name] = {
-    type: coda.ValueType.String,
+    type: sdk.ValueType.String,
     // Use the custom field's ID as the column ID.
     fixedId: customField.id,
   };
@@ -571,10 +571,10 @@ While these automatically derived column names are convenient, they can result i
 You can more accurately control the resulting column name for a property by setting the `displayName` field of the property.
 
 ```{.ts hl_lines="5"}
-let DeviceSchema = coda.makeObjectSchema({
+let DeviceSchema = sdk.makeObjectSchema({
   properties: {
     iPhone_version: {
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       displayName: "iPhone version",
     },
     // ...
@@ -608,7 +608,7 @@ Read the [Cards guide][cards] for more information on how these fields are used.
 A card's subtitle contains a set of properties, joined with a separator. Unlike other areas of the card where only the property's value is shown, in the subtitle a label is shown as well. By default, the label and value are shown together as `{label}: {value}`.
 
 ```ts
-let MovieSchema = coda.makeObjectSchema({
+let MovieSchema = sdk.makeObjectSchema({
   // ...
   subtitleProperties: ["director", "year", "rating"],
 });
@@ -627,14 +627,14 @@ There are three options for setting the label:
 1.  Pass an empty string, which will remove the label completely.
 
 ```ts
-let MovieSchema = coda.makeObjectSchema({
+let MovieSchema = sdk.makeObjectSchema({
   // ...
   subtitleProperties: [
     "director",
     // Fully customize the label for the year property.
     {
       property: "year",
-      label: `Released in ${coda.PropertyLabelValueTemplate}`,
+      label: `Released in ${sdk.PropertyLabelValueTemplate}`,
     },
     // Only show the value of the rating property.
     { property: "rating", label: "" },
@@ -652,7 +652,7 @@ When a property used in a card doesn't have a value set the corresponding sectio
 To do so, use a [`PropertyIdentifierDetails`][PropertyIdentifierDetails] object to specify the property to use and set the `placeholder` field to the default / fallback value to display when the property is empty.
 
 ```ts
-let MovieSchema = coda.makeObjectSchema({
+let MovieSchema = sdk.makeObjectSchema({
   // ...
   subtitleProperties: [
     "director",
@@ -682,18 +682,18 @@ Object schema fields that expect a property name (`titleProperty`, `snippetPrope
 Consider the following schema for a movie:
 
 ```ts
-let PersonSchema = coda.makeObjectSchema({
+let PersonSchema = sdk.makeObjectSchema({
   properties: {
-    name: { type: coda.ValueType.String },
+    name: { type: sdk.ValueType.String },
     // ...
   },
 });
 
-let MovieSchema = coda.makeObjectSchema({
+let MovieSchema = sdk.makeObjectSchema({
   properties: {
     director: PersonSchema,
     actors: {
-      type: coda.ValueType.Array,
+      type: sdk.ValueType.Array,
       items: PersonSchema,
     },
     // ...
@@ -713,7 +713,7 @@ If you need to further customize the value, such as combining the value of multi
     When using property paths to specify a card's subtitle, it's recommended that you manually set the [labels for those properties](#labels). Coda will generate a label based off of the property path, but the result is often not desirable.
 
     ```
-    let MovieSchema = coda.makeObjectSchema({
+    let MovieSchema = sdk.makeObjectSchema({
       // ...
       subtitleProperties: [
         { property: "director.name", label: "Director" },

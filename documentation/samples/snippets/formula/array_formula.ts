@@ -1,6 +1,6 @@
-import * as coda from "@codahq/packs-sdk";
+import * as sdk from "@codahq/packs-sdk";
 
-const pack = coda.newPack();
+const pack = sdk.newPack();
 
 // BEGIN
 
@@ -10,9 +10,9 @@ pack.addFormula({
   parameters: [
     // TODO: Add parameters.
   ],
-  resultType: coda.ValueType.Array,
-  items: coda.makeSchema({
-    type: coda.ValueType.String,
+  resultType: sdk.ValueType.Array,
+  items: sdk.makeSchema({
+    type: sdk.ValueType.String,
   }),
   execute: async function (args, context) {
     // TODO: Unpack the parameter values.

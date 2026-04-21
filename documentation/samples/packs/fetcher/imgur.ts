@@ -1,23 +1,23 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 pack.addFormula({
   name: "Upload",
   description: "Uploads an image to Imgur.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Image,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Image,
       name: "image",
       description: "The image to upload.",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "title",
       description: "The title of the image.",
       optional: true,
     }),
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   isAction: true,
   execute: async function (args, context) {
     let [imageUrl, title] = args;
@@ -39,7 +39,7 @@ pack.addFormula({
 pack.addNetworkDomain("imgur.com");
 
 pack.setSystemAuthentication({
-  type: coda.AuthenticationType.CustomHeaderToken,
+  type: sdk.AuthenticationType.CustomHeaderToken,
   headerName: "Authentication",
   tokenPrefix: "Client-ID",
 });

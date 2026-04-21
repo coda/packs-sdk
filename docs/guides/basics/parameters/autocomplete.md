@@ -27,8 +27,8 @@ In the formula editor, parameter options show up in the same pane used for the a
 The simplest way to set this up is to set the `autocomplete` property of the parameter to an array of valid options.
 
 ```ts
-coda.makeParameter({
-  type: coda.ParameterType.String,
+sdk.makeParameter({
+  type: sdk.ParameterType.String,
   name: "animal",
   description: "The selected animal.",
   autocomplete: ["cow", "pig", "sheep"],
@@ -41,8 +41,8 @@ coda.makeParameter({
 If you want the options to have a different label you can provide an array of [`SimpleAutocompleteOption`][SimpleAutocompleteOption] objects, each containing a `display` and `value` property. The `display` label will be what's shown in the list of choices, but once they select a choice it will be replaced by the `value` which is what is passed into your `execute` function.
 
 ```ts
-coda.makeParameter({
-  type: coda.ParameterType.String,
+sdk.makeParameter({
+  type: sdk.ParameterType.String,
   name: "animal",
   description: "The selected animal.",
   autocomplete: [
@@ -58,22 +58,22 @@ The values can be either strings or numbers, and should match the type of the pa
 
 ## Dynamic options
 
-When the autocomplete options can't be known upfront you can instead use a function to generate them dynamically. Define an `autocomplete` function that returns an array of autocomplete objects, usually generated from the results of an API call. The function has access to the formula context (and fetcher) as well as the user's current input for the parameter, which you can use to filter the results. The helper function [`coda.autocompleteSearchObjects`][autocompleteSearchObjects] is useful for converting an API response into an array of [`SimpleAutocompleteOption`][SimpleAutocompleteOption] objects.
+When the autocomplete options can't be known upfront you can instead use a function to generate them dynamically. Define an `autocomplete` function that returns an array of autocomplete objects, usually generated from the results of an API call. The function has access to the formula context (and fetcher) as well as the user's current input for the parameter, which you can use to filter the results. The helper function [`sdk.autocompleteSearchObjects`][autocompleteSearchObjects] is useful for converting an API response into an array of [`SimpleAutocompleteOption`][SimpleAutocompleteOption] objects.
 
 ```ts
-coda.makeParameter({
-  type: coda.ParameterType.String,
+sdk.makeParameter({
+  type: sdk.ParameterType.String,
   name: "gameId",
   description: "The ID of the game on boardgameatlas.com",
   autocomplete: async function(context, search) {
-    let url = coda.withQueryParams(
+    let url = sdk.withQueryParams(
       "https://api.boardgameatlas.com/api/search",
       { fuzzy_match: true, name: search });
     let response = await context.fetcher.fetch({ method: "GET", url: url });
     let results = response.body.games;
     // Generate an array of autocomplete objects, using the game's name as the
     // label and its ID for the value.
-    return coda.autocompleteSearchObjects(search, results, "name", "id");
+    return sdk.autocompleteSearchObjects(search, results, "name", "id");
   },
 });
 ```
@@ -84,8 +84,8 @@ coda.makeParameter({
 The `autocomplete` function also has access to the values entered for previous parameters. Unlike in the `execute` function where these are passed in as an array and accessed by position, in `autocomplete` functions they are passed as an object of key/value pairs and accessed by name.
 
 ```ts
-const LanguageParameter = coda.makeParameter({
-  type: coda.ParameterType.String,
+const LanguageParameter = sdk.makeParameter({
+  type: sdk.ParameterType.String,
   name: "language",
   description: "The language to use.",
   autocomplete: [
@@ -94,8 +94,8 @@ const LanguageParameter = coda.makeParameter({
   ],
 });
 
-const GreetingParameter = coda.makeParameter({
-  type: coda.ParameterType.String,
+const GreetingParameter = sdk.makeParameter({
+  type: sdk.ParameterType.String,
   name: "greeting",
   description: "The greeting to use.",
   autocomplete: async function (context, search, { language }) {
@@ -105,7 +105,7 @@ const GreetingParameter = coda.makeParameter({
     } else {
       options = ["Hello", "Howdy"];
     }
-    return coda.simpleAutocomplete(search, options);
+    return sdk.simpleAutocomplete(search, options);
   },
 });
 ```
@@ -139,8 +139,8 @@ const AnimalOptions = ["cow", "pig", "sheep"];
 pack.addFormula({
   // ...
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "animal",
       description: "The selected animal.",
       autocomplete: AnimalOptions,
@@ -149,7 +149,7 @@ pack.addFormula({
   // ...
   execute: async function([animal], context) {
     if (!AnimalOptions.includes(animal)) {
-      throw new coda.UserVisibleError("Unknown animal: " + animal);
+      throw new sdk.UserVisibleError("Unknown animal: " + animal);
     }
   },
 });

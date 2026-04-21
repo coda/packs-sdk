@@ -1,22 +1,22 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 pack.addSkill({
   name: "PlaceholderFiller",
   displayName: "Placeholder Filler",
-  description: 
+  description:
     "Finds placeholders for currency values in the writing, and fills them in.",
   prompt: `
     Look for text like "$100 (or X CAD)" in the user's writing.
     Use the ExchangeRate tool to convert from one currency to another.
-    Create a suggestion using the rewrite tool to replace the placeholder with 
+    Create a suggestion using the rewrite tool to replace the placeholder with
     the value.
   `,
   tools: [
-    { type: coda.ToolType.Pack },
+    { type: sdk.ToolType.Pack },
     {
-      type: coda.ToolType.ScreenAnnotation,
-      annotation: { type: coda.ScreenAnnotationType.Rewrite },
+      type: sdk.ToolType.ScreenAnnotation,
+      annotation: { type: sdk.ScreenAnnotationType.Rewrite },
     },
   ],
 });
@@ -25,18 +25,18 @@ pack.addFormula({
   name: "ExchangeRate",
   description: "Gets the current exchange rate between two currencies.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "from",
       description: "The ISO 4217 country code to convert from.",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "to",
       description: "The ISO 4217 country code to convert to.",
     }),
   ],
-  resultType: coda.ValueType.Number,
+  resultType: sdk.ValueType.Number,
   execute: async function (args, context) {
     let [fromCountry, toCountry] = args;
     let response = await context.fetcher.fetch({
@@ -47,7 +47,7 @@ pack.addFormula({
     let rates = response.body.conversion_rates;
     let rate = rates[toCountry];
     if (!rate) {
-      throw new coda.UserVisibleError("Exchange rate not available.");
+      throw new sdk.UserVisibleError("Exchange rate not available.");
     }
     return rate;
   },
@@ -55,7 +55,7 @@ pack.addFormula({
 
 // Use the same API key for all users, passed in the Authorization header.
 pack.setSystemAuthentication({
-  type: coda.AuthenticationType.HeaderBearerToken,
+  type: sdk.AuthenticationType.HeaderBearerToken,
   instructionsUrl: "https://app.exchangerate-api.com/dashboard",
 });
 

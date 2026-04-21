@@ -15,13 +15,13 @@ The Asana API uses OAuth2 to authenticate users, and requires the use of PKCE.
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the Asana API, using OAuth2.
 // See https://developers.asana.com/docs/oauth
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://app.asana.com/-/oauth_authorize",
   tokenUrl: "https://app.asana.com/-/oauth_token",
 
@@ -48,14 +48,14 @@ The Amazon Web Services (AWS) S3 service uses their custom signature method.
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the AWS S3 service, using AWS Signature Version 4.
 // The user provides the URL of their S3 bucket as the endpoint, along with an
 // access key and secret.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.AWSAccessKey,
+  type: sdk.AuthenticationType.AWSAccessKey,
   instructionsUrl:
     "https://aws.amazon.com/premiumsupport/knowledge-center/create-access-key/",
 
@@ -80,15 +80,15 @@ Blizzard&#x27;s Battle.net APIs use the Client Credentials OAuth2 flow.
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // System-wide authentication to Blizzard's Battle.net APIs, using the OAuth2
 // client_credentials flow.
 // eslint-disable-next-line max-len
 // See https://develop.battle.net/documentation/guides/using-oauth/client-credentials-flow.
 pack.setSystemAuthentication({
-  type: coda.AuthenticationType.OAuth2ClientCredentials,
+  type: sdk.AuthenticationType.OAuth2ClientCredentials,
   tokenUrl: "https://oauth.battle.net/token",
 });
 
@@ -101,13 +101,13 @@ The Board Game Atlas API requires the developer to provide their client ID as qu
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Authenticate using a client ID.
 // See: https://www.boardgameatlas.com/api/docs/apps
 pack.setSystemAuthentication({
-  type: coda.AuthenticationType.QueryParamToken,
+  type: sdk.AuthenticationType.QueryParamToken,
   paramName: "client_id",
 });
 
@@ -119,13 +119,13 @@ The ClickUp API uses OAuth2 to authenticate users.
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the ClickUp API, using OAuth2.
 // See https://clickup.com/api
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://app.clickup.com/api",
   tokenUrl: "https://app.clickup.com/api/v2/oauth/token",
 
@@ -149,14 +149,14 @@ The Coda API requires the user to provide an API token, passed in an Authorizati
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the Coda API, using a token in the Authorization
 // header.
 // See https://coda.io/developers/apis/v1
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.CodaApiHeaderBearerToken,
+  type: sdk.AuthenticationType.CodaApiHeaderBearerToken,
 
   // Creates the token automatically when the Pack is installed.
   shouldAutoAuthSetup: true,
@@ -171,13 +171,13 @@ The Copper API requires the user to provide an API key and their email address, 
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the Copper API, using multiple HTTP headers.
 // See https://developer.copper.com/introduction/requests.html#headers.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.MultiHeaderToken,
+  type: sdk.AuthenticationType.MultiHeaderToken,
   headers: [
     { name: "X-PW-AccessToken", description: "API key" },
     { name: "X-PW-UserEmail", description: "Email address" },
@@ -206,13 +206,13 @@ The Dropbox API uses OAuth2 to authenticate users, prompting them to approve a s
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Set per-user authentication using Dropbox's OAuth2.
 // See https://developers.dropbox.com/oauth-guide
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://www.dropbox.com/oauth2/authorize",
   tokenUrl: "https://api.dropbox.com/oauth2/token",
   scopes: ["files.content.read"],
@@ -232,14 +232,14 @@ The Facebook (Meta) APIs use OAuth2 to authenticate users, prompting them to app
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to Facebook (Meta) APIs, using OAuth2.
 // eslint-disable-next-line max-len
 // See https://developers.facebook.com/docs/facebook-login/guides/advanced/manual-flow
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://www.facebook.com/v14.0/dialog/oauth",
   tokenUrl: "https://graph.facebook.com/v14.0/oauth/access_token",
 
@@ -268,13 +268,13 @@ The Giphy API requires the developer to provide their API key as query parameter
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // System-wide authentication to the Giphy API, using an API key in the query
 // string. See https://support.giphy.com/hc/en-us/articles/360020283431.
 pack.setSystemAuthentication({
-  type: coda.AuthenticationType.QueryParamToken,
+  type: sdk.AuthenticationType.QueryParamToken,
   paramName: "api_key",
 });
 
@@ -287,14 +287,14 @@ The GitHub API uses OAuth2 to authenticate users, prompting them to approve a sp
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Setup per-user authentication using GitHub's OAuth2.
 // Remember to set your client ID and secret in the "Settings" tab.
 // See https://docs.github.com/en/developers/apps/building-oauth-apps
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://github.com/login/oauth/authorize",
   tokenUrl: "https://github.com/login/oauth/access_token",
   tokenPrefix: "token",
@@ -319,13 +319,13 @@ The Google APIs use OAuth2 to authenticate users, prompting them to approve a sp
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to Google APIs, using OAuth2.
 // See https://developers.google.com/identity/protocols/oauth2/web-server
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://accounts.google.com/o/oauth2/v2/auth",
   tokenUrl: "https://oauth2.googleapis.com/token",
 
@@ -360,15 +360,15 @@ The Jira API uses OAuth2 to authenticate users. After authenticating users must 
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the Jira Cloud API, using OAuth2 with a
 // post-submit step to select the instance to connect to. Note that this code
 // isn't compatible with Jira Data Center.
 // See https://developer.atlassian.com/cloud/confluence/oauth-2-3lo-apps
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://auth.atlassian.com/authorize",
   tokenUrl: "https://auth.atlassian.com/oauth/token",
   scopes: ["offline_access", "read:jira-user", "read:jira-work"],
@@ -380,7 +380,7 @@ pack.setUserAuthentication({
   // After approving access, the user should select which instance they want to
   // connect to.
   postSetup: [{
-    type: coda.PostSetupType.SetEndpoint,
+    type: sdk.PostSetupType.SetEndpoint,
     name: "SelectEndpoint",
     description: "Select the site to connect to:",
     // Determine the list of sites they have access to.
@@ -415,7 +415,7 @@ pack.setUserAuthentication({
 });
 
 // Get information about the Jira server.
-async function getServer(context: coda.ExecutionContext) {
+async function getServer(context: sdk.ExecutionContext) {
   let url = "/rest/api/3/serverInfo";
   let response = await context.fetcher.fetch({
     method: "GET",
@@ -425,7 +425,7 @@ async function getServer(context: coda.ExecutionContext) {
 }
 
 // Get information about the Jira user.
-async function getUser(context: coda.ExecutionContext) {
+async function getUser(context: sdk.ExecutionContext) {
   let url = "/rest/api/3/myself";
   let response = await context.fetcher.fetch({
     method: "GET",
@@ -443,14 +443,14 @@ The Microsoft APIs use OAuth2 to authenticate users, prompting them to approve a
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to Microsoft APIs, using OAuth2.
 // eslint-disable-next-line max-len
 // See https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl:
     "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
   tokenUrl: "https://login.microsoftonline.com/common/oauth2/v2.0/token",
@@ -485,14 +485,14 @@ The Okta API requires the user to provide an API key, passed as an Authorization
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the Okta API, using a custom token prefix and
 // account-specific endpoints.
 // See https://developer.okta.com/docs/reference/core-okta-api/#authentication
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.CustomHeaderToken,
+  type: sdk.AuthenticationType.CustomHeaderToken,
   headerName: "Authorization",
   tokenPrefix: "SSWS",
 
@@ -522,13 +522,13 @@ Rapid APIs require that the developer provide an API key, passed in a custom hea
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // System-wide authentication to RapidAPI, using an API key in a custom header.
 // See https://docs.rapidapi.com/docs/keys#how-to-find-your-api-key.
 pack.setSystemAuthentication({
-  type: coda.AuthenticationType.CustomHeaderToken,
+  type: sdk.AuthenticationType.CustomHeaderToken,
   headerName: "X-RapidAPI-Key",
 });
 
@@ -541,15 +541,15 @@ The Salesforce API uses OAuth2 to authenticate users, prompting them to approve 
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the Salesforce API, using OAuth2 and an
 // automatically determined account-specific endpoint.
 // eslint-disable-next-line max-len
 // See https://help.salesforce.com/s/articleView?id=sf.remoteaccess_authenticate.htm&type=5
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://login.salesforce.com/services/oauth2/authorize",
   tokenUrl: "https://login.salesforce.com/services/oauth2/token",
   scopes: ["id", "api", "refresh_token"],
@@ -584,13 +584,13 @@ The Slack API uses OAuth2 to authenticate users, prompting them to approve a spe
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the Slack API, using OAuth2.
 // See https://api.slack.com/authentication/oauth-v2
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://slack.com/oauth/v2/authorize",
   tokenUrl: "https://slack.com/api/oauth.v2.access",
   scopes: ["users.profile:read"],
@@ -626,20 +626,20 @@ The Todoist API uses OAuth2 to authenticate users, prompting them to approve a s
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the Todoist API, using an OAuth2 flow.
 // See https://developer.todoist.com/guides/#oauth
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://todoist.com/oauth/authorize",
   tokenUrl: "https://todoist.com/oauth/access_token",
   scopes: ["data:read_write"],
 
   // Determines the display name of the connected account.
   getConnectionName: async function (context) {
-    let url = coda.withQueryParams("https://api.todoist.com/sync/v9/sync", {
+    let url = sdk.withQueryParams("https://api.todoist.com/sync/v9/sync", {
       resource_types: JSON.stringify(["user"]),
     });
     let response = await context.fetcher.fetch({
@@ -659,13 +659,13 @@ The Typeform API uses OAuth2 to authenticate users, prompting them to approve a 
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Configure per-user authentication for the Typeform API, using OAuth2.
 // See: https://developer.typeform.com/get-started/applications/
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://api.typeform.com/oauth/authorize",
   tokenUrl: "https://api.typeform.com/oauth/token",
 
@@ -693,14 +693,14 @@ The Twilio API requires the user to provide the SID and token for their account,
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the Twilio API, using an Account SID and token in
 // an "Authorization: Basic ..." header.
 // See https://www.twilio.com/docs/usage/requests-to-twilio
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.WebBasic,
+  type: sdk.AuthenticationType.WebBasic,
   instructionsUrl: "https://www.twilio.com/docs/sms/api#sms-api-authentication",
 
   // Use Twilio-specific placeholders for the username and password fields.
@@ -729,8 +729,8 @@ The Typeform API uses OAuth2 to authenticate users, and requires the developer t
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // The version of the Webflow API to use.
 const WebflowApiVersion = "1.0.0";
@@ -738,7 +738,7 @@ const WebflowApiVersion = "1.0.0";
 // Per-user authentication to the ClickUp API, using OAuth2.
 // See https://developers.webflow.com/oauth
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://webflow.com/oauth/authorize",
   tokenUrl: "https://api.webflow.com/oauth/access_token",
 
@@ -765,14 +765,14 @@ The Yahoo APIs uses OAuth2 to authenticate users.
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Setup per-user authentication using Yahoo's OAuth2.
 // Remember to set your client ID and secret in the "Settings" tab.
 // See https://developer.yahoo.com/oauth2/guide/flows_authcode/
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://api.login.yahoo.com/oauth2/request_auth",
   tokenUrl: "https://api.login.yahoo.com/oauth2/get_token",
   scopes: ["openid"],

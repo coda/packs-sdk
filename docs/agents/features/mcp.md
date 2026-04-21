@@ -63,7 +63,7 @@ Requests to MCP servers use the same [authentication system][authentication] as 
     });
 
     pack.setUserAuthentication({
-      type: coda.AuthenticationType.OAuth2,
+      type: sdk.AuthenticationType.OAuth2,
       useDynamicClientRegistration: true,
       useProofKeyForCodeExchange: true,
     });
@@ -80,7 +80,7 @@ Requests to MCP servers use the same [authentication system][authentication] as 
     });
 
     pack.setUserAuthentication({
-      type: coda.AuthenticationType.OAuth2,
+      type: sdk.AuthenticationType.OAuth2,
       authorizationUrl: "https://example.com/authorize",
       tokenUrl: "https://example.com/token",
       useProofKeyForCodeExchange: true,
@@ -96,7 +96,7 @@ Requests to MCP servers use the same [authentication system][authentication] as 
     });
 
     pack.setUserAuthentication({
-      type: coda.AuthenticationType.HeaderBearerToken,
+      type: sdk.AuthenticationType.HeaderBearerToken,
     });
     ```
 
@@ -109,7 +109,7 @@ Requests to MCP servers use the same [authentication system][authentication] as 
     });
 
     pack.setUserAuthentication({
-      type: coda.AuthenticationType.QueryParamToken,
+      type: sdk.AuthenticationType.QueryParamToken,
       paramName: "api_key",
     });
     ```

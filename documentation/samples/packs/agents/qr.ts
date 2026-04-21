@@ -1,5 +1,5 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 pack.addNetworkDomain("api.qrserver.com");
 
@@ -15,7 +15,7 @@ pack.setBenchInitializationSkill({
   `,
   tools: [
     {
-      type: coda.ToolType.Pack,
+      type: sdk.ToolType.Pack,
       formulas: [
         { formulaName: "QRCode" },
       ],
@@ -27,17 +27,17 @@ pack.addFormula({
   name: "QRCode",
   description: "Generate a QR code for the text supplied.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "text",
       description: "The text to encode in the QR code.",
     }),
   ],
-  resultType: coda.ValueType.String,
-  codaType: coda.ValueHintType.ImageReference,
+  resultType: sdk.ValueType.String,
+  codaType: sdk.ValueHintType.ImageReference,
   execute: async function (args, context) {
     let [text] = args;
-    return coda.withQueryParams("https://api.qrserver.com/v1/create-qr-code/", {
+    return sdk.withQueryParams("https://api.qrserver.com/v1/create-qr-code/", {
       data: text,
       size: "512x512",
     });

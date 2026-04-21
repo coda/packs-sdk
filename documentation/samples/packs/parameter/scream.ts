@@ -1,30 +1,30 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Formats text to look like screaming. For example, "Hello" => "HELLO!!!".
 pack.addFormula({
   name: "Scream",
   description: "Make text uppercase and add exclamation points.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "text",
       description: "The text to scream.",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "volume",
       description: "The number of exclamation points to add.",
       optional: true,
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "character",
       description: "The character to repeat.",
       optional: true,
     }),
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   examples: [
     { params: ["Hello"], result: "HELLO!!!" },
     { params: ["Hello", 5], result: "HELLO!!!!!" },

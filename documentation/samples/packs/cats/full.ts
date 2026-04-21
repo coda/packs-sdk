@@ -1,5 +1,5 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 pack.addNetworkDomain("cataas.com");
 
@@ -8,53 +8,53 @@ pack.addFormula({
   name: "CatPhoto",
   description: "Gets a random cat image.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "text",
       description: "Text to display over the image.",
       optional: true,
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "size",
       description: "The size of the text, in pixels.",
       optional: true,
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "color",
       description: "The color of the text. Any valid CSS color can be used.",
       optional: true,
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "width",
       description: "The width of the desired image, in pixels.",
       optional: true,
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "height",
       description: "The height of the desired image, in pixels.",
       optional: true,
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "filter",
       description: "A filter to apply to the image.",
       autocomplete: ["mono", "negate"],
       optional: true,
     }),
   ],
-  resultType: coda.ValueType.String,
-  codaType: coda.ValueHintType.ImageReference,
+  resultType: sdk.ValueType.String,
+  codaType: sdk.ValueHintType.ImageReference,
   execute: async function (args, context) {
     let [text, size, color, width, height, filter] = args;
     let url = "https://cataas.com/cat";
     if (text) {
       url += "/says/" + encodeURIComponent(text);
     }
-    url = coda.withQueryParams(url, {
+    url = sdk.withQueryParams(url, {
       fontSize: size,
       fontColor: color,
       width: width,

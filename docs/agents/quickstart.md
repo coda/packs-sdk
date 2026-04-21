@@ -65,9 +65,9 @@ Superhuman Go agents are built using Coda Packs. Follow the steps below to creat
     <div markdown>
 
     ```ts
-    import * as coda from "@codahq/packs-sdk";
+    import * as sdk from "@codahq/packs-sdk";
 
-    export const pack = coda.newPack();
+    export const pack = sdk.newPack();
 
     pack.addSkill({
       name: "SecretPassword",

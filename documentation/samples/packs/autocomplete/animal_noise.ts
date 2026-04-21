@@ -1,19 +1,19 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Returns the noise an animal makes. Ex) "cow" => "moo".
 pack.addFormula({
   name: "AnimalNoise",
   description: "Gets the noise than an animal makes.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "animal",
       description: "The selected animal.",
       autocomplete: ["cow", "pig", "sheep"],
     }),
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   execute: async function ([animal], context) {
     switch (animal) {
       case "cow":
@@ -23,7 +23,7 @@ pack.addFormula({
       case "sheep":
         return "baa";
       default:
-        throw new coda.UserVisibleError("Unknown animal: " + animal);
+        throw new sdk.UserVisibleError("Unknown animal: " + animal);
     }
   },
 });

@@ -1,5 +1,5 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Adds a column format to the Pack, which will display the contents of the
 // column as Roman numerals.
@@ -16,13 +16,13 @@ pack.addFormula({
   name: "RomanNumeral",
   description: "Converts a number to the equivalent Roman numeral.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "value",
       description: "The number to convert.",
     }),
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   execute: async function ([value], context) {
     let pairs = Object.entries(NumberMapping);
     // Sort the pairs by the number, largest to smallest.

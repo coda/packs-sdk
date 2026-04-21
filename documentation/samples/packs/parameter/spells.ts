@@ -1,16 +1,16 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 const PageSize = 100;
 
-const SpellSchema = coda.makeObjectSchema({
-  type: coda.ValueType.Object,
+const SpellSchema = sdk.makeObjectSchema({
+  type: sdk.ValueType.Object,
   properties: {
-    name: { type: coda.ValueType.String },
-    description: { type: coda.ValueType.String },
-    level: { type: coda.ValueType.Number },
-    school: { type: coda.ValueType.String },
-    index: { type: coda.ValueType.String },
+    name: { type: sdk.ValueType.String },
+    description: { type: sdk.ValueType.String },
+    level: { type: sdk.ValueType.Number },
+    school: { type: sdk.ValueType.String },
+    index: { type: sdk.ValueType.String },
   },
   displayProperty: "name",
   idProperty: "index",
@@ -27,20 +27,20 @@ pack.addSyncTable({
     name: "SyncSpells",
     description: "Sync all the spells.",
     parameters: [
-      coda.makeParameter({
-        type: coda.ParameterType.Number,
+      sdk.makeParameter({
+        type: sdk.ParameterType.Number,
         name: "level",
         description: "Only include spells with the given level.",
         optional: true,
       }),
-      coda.makeParameter({
-        type: coda.ParameterType.String,
+      sdk.makeParameter({
+        type: sdk.ParameterType.String,
         name: "school",
         description: "Only include spells with the given magic school.",
         optional: true,
         autocomplete: async function (context, search) {
           let schools = await getMagicSchools(context);
-          return coda.autocompleteSearchObjects(
+          return sdk.autocompleteSearchObjects(
             search, schools, "name", "index");
         },
       }),
@@ -48,7 +48,7 @@ pack.addSyncTable({
     // Validate the parameter values.
     validateParameters: async function (context, _, args) {
       let { level, school } = args;
-      let errors: coda.ParameterValidationDetail[] = [];
+      let errors: sdk.ParameterValidationDetail[] = [];
       if (level && (level < 0 || level > 9)) {
         errors.push({
           message: "The level must be in the range 0-9.",
@@ -129,7 +129,7 @@ pack.addSyncTable({
   },
 });
 
-async function getMagicSchools(context: coda.ExecutionContext) {
+async function getMagicSchools(context: sdk.ExecutionContext) {
   let response = await context.fetcher.fetch({
     method: "GET",
     url: "https://www.dnd5eapi.co/api/2014/magic-schools",

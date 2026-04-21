@@ -93,7 +93,7 @@ class PackDefinitionBuilder {
      * pack.addSyncTable({
      *   name: 'MySyncTable',
      *   identityName: 'EntityName',
-     *   schema: coda.makeObjectSchema({
+     *   schema: sdk.makeObjectSchema({
      *     ...
      *   }),
      *   formula: {
@@ -170,7 +170,7 @@ class PackDefinitionBuilder {
      *   description: "My description.",
      *   prompt: `My prompt.`,
      *   tools: [
-     *     { type: coda.ToolType.Pack },
+     *     { type: sdk.ToolType.Pack },
      *   ],
      * });
      * ```
@@ -215,8 +215,8 @@ class PackDefinitionBuilder {
      * // Override tools — replaces the defaults
      * pack.setChatSkill({
      *   tools: [
-     *     { type: coda.ToolType.Pack },
-     *     { type: coda.ToolType.ContactResolution },
+     *     { type: sdk.ToolType.Pack },
+     *     { type: sdk.ToolType.ContactResolution },
      *   ],
      * });
      * ```

@@ -37,8 +37,8 @@ pack.setChatSkill({
 // Override tools — replaces the defaults entirely
 pack.setChatSkill({
   tools: [
-    { type: coda.ToolType.Pack },
-    { type: coda.ToolType.ContactResolution },
+    { type: sdk.ToolType.Pack },
+    { type: sdk.ToolType.ContactResolution },
   ],
 });
 ```

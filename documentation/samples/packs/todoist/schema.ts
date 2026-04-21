@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // BEGIN
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // A reference to a synced Task. Usually you can use
-// `coda.makeReferenceSchemaFromObjectSchema` to generate these from the primary
+// `sdk.makeReferenceSchemaFromObjectSchema` to generate these from the primary
 // schema, but that doesn't work in this case since a task itself can contain
 // a reference to a parent task.
-const TaskReferenceSchema = coda.makeObjectSchema({
-  codaType: coda.ValueHintType.Reference,
+const TaskReferenceSchema = sdk.makeObjectSchema({
+  codaType: sdk.ValueHintType.Reference,
   properties: {
-    name: { type: coda.ValueType.String, required: true },
-    id: { type: coda.ValueType.String, required: true },
+    name: { type: sdk.ValueType.String, required: true },
+    id: { type: sdk.ValueType.String, required: true },
   },
   displayProperty: "name",
   idProperty: "id",
@@ -23,25 +23,25 @@ const TaskReferenceSchema = coda.makeObjectSchema({
 });
 
 // A schema defining a Task object.
-const TaskSchema = coda.makeObjectSchema({
+const TaskSchema = sdk.makeObjectSchema({
   properties: {
     name: {
       description: "The name of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
     description: {
       description: "A detailed description of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     url: {
       description: "A link to the task in the Todoist app.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
     id: {
       description: "The ID of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
     // Add a reference to the sync'ed row of the parent task.

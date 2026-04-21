@@ -17,8 +17,8 @@ This might be used to attribute the data source.
 ## Example
 
 ```
-coda.makeAttributionNode({
-  type: coda.AttributionNodeType.Text,
+sdk.makeAttributionNode({
+  type: sdk.AttributionNodeType.Text,
   text: "Data provided by ExampleCorp.",
 });
 ```

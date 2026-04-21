@@ -19,7 +19,7 @@ The parameter name is defined in the [paramName](#paramname) property.
 
 ```ts
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.QueryParamToken,
+  type: sdk.AuthenticationType.QueryParamToken,
   paramName: "key",
 });
 ```

@@ -21,7 +21,7 @@ Import the entire SDK into a single variable named coda instead of using multipl
 
 ```{.ts .yes}
 // Yes
-import * as coda from "@codahq/packs-sdk";
+import * as sdk from "@codahq/packs-sdk";
 ```
 
 ```{.ts .no}
@@ -30,7 +30,7 @@ import {makeFormula} from '@codahq/packs-sdk';
 import {makeParameter} from '@codahq/packs-sdk';
 ```
 
-Having all usages of the SDK prefixed with coda.{something} makes it easier to distinguish what's part of the SDK and what's not. It also makes it easier to copy and paste code from other places without having to worry about adding imports.
+Having all usages of the SDK prefixed with sdk.{something} makes it easier to distinguish what's part of the SDK and what's not. It also makes it easier to copy and paste code from other places without having to worry about adding imports.
 
 
 ### Use double quotes
@@ -88,7 +88,7 @@ The distinction between `let` and `const` isn't always clear to newer coders, an
     File-level constants such as enums and schemas, should use const.
     ```ts
     const MaxItems = 100;
-    const MySchema = coda.makeObjectSchema(...);
+    const MySchema = sdk.makeObjectSchema(...);
     ```
 
 
@@ -210,7 +210,7 @@ Even if a schema is only used in one formula, declare it separately.
 
 ```{.ts .yes}
 // Yes
-const MySchema = coda.makeObjectSchema({ ... });
+const MySchema = sdk.makeObjectSchema({ ... });
 pack.addFormula({
   // ...
   schema: MySchema,
@@ -221,7 +221,7 @@ pack.addFormula({
 // No
 pack.addFormula({
   // ...
-  schema: coda.makeObjectSchema({ ... });
+  schema: sdk.makeObjectSchema({ ... });
 });
 ```
 
@@ -234,12 +234,12 @@ Name schema constants using UpperCamelCase, like you would for a class.
 
 ```{.ts .yes}
 // Yes
-const MySchema = coda.makeObjectSchema({ ... });
+const MySchema = sdk.makeObjectSchema({ ... });
 ```
 
 ```{.ts .no}
 // No
-const mySchema = coda.makeObjectSchema({ ... });
+const mySchema = sdk.makeObjectSchema({ ... });
 ```
 
 Although not technically a class, schemas are similar enough and should be treated similarly.
@@ -311,7 +311,7 @@ pack.addFormula({
 The order of keys in an object schema declaration should be:
 
 ```
-const MySchema = coda.makeObjectSchema({
+const MySchema = sdk.makeObjectSchema({
   properties: ...,
   displayProperty: ...,
   idProperty: ...,

@@ -1,12 +1,12 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the Salesforce API, using OAuth2 and an
 // automatically determined account-specific endpoint.
 // eslint-disable-next-line max-len
 // See https://help.salesforce.com/s/articleView?id=sf.remoteaccess_authenticate.htm&type=5
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://login.salesforce.com/services/oauth2/authorize",
   tokenUrl: "https://login.salesforce.com/services/oauth2/token",
   scopes: ["id", "api", "refresh_token"],

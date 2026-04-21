@@ -21,8 +21,8 @@ The Pack uses OAuth2 to connect to a user's GitHub account. A more extensive Git
 
 === "pack.ts"
     ```ts
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     // Regular expression used to parse repo URLs.
     const RepoUrlRegex = new RegExp("^https://github.com/([^/]+)/([^/]+)");
@@ -37,7 +37,7 @@ The Pack uses OAuth2 to connect to a user's GitHub account. A more extensive Git
     // Remember to set your client ID and secret in the "Settings" tab.
     // See https://docs.github.com/en/developers/apps/building-oauth-apps
     pack.setUserAuthentication({
-      type: coda.AuthenticationType.OAuth2,
+      type: sdk.AuthenticationType.OAuth2,
       authorizationUrl: "https://github.com/login/oauth/authorize",
       tokenUrl: "https://github.com/login/oauth/access_token",
       tokenPrefix: "token",
@@ -54,20 +54,20 @@ The Pack uses OAuth2 to connect to a user's GitHub account. A more extensive Git
     });
 
     // A schema that defines a repo object.
-    const RepoSchema = coda.makeObjectSchema({
+    const RepoSchema = sdk.makeObjectSchema({
       properties: {
-        id: { type: coda.ValueType.Number },
-        name: { type: coda.ValueType.String },
-        fullName: { type: coda.ValueType.String, fromKey: "full_name" },
-        description: { type: coda.ValueType.String },
+        id: { type: sdk.ValueType.Number },
+        name: { type: sdk.ValueType.String },
+        fullName: { type: sdk.ValueType.String, fromKey: "full_name" },
+        description: { type: sdk.ValueType.String },
         url: {
-          type: coda.ValueType.String,
-          codaType: coda.ValueHintType.Url,
+          type: sdk.ValueType.String,
+          codaType: sdk.ValueHintType.Url,
           fromKey: "html_url",
         },
-        watchers: { type: coda.ValueType.Number, fromKey: "watchers_count" },
-        forks: { type: coda.ValueType.Number, fromKey: "forks_count" },
-        stars: { type: coda.ValueType.Number, fromKey: "stargazers_count" },
+        watchers: { type: sdk.ValueType.Number, fromKey: "watchers_count" },
+        forks: { type: sdk.ValueType.Number, fromKey: "forks_count" },
+        stars: { type: sdk.ValueType.Number, fromKey: "stargazers_count" },
       },
       displayProperty: "name",
       idProperty: "id",
@@ -79,13 +79,13 @@ The Pack uses OAuth2 to connect to a user's GitHub account. A more extensive Git
       name: "Repo",
       description: "Get information about a repo from its URL.",
       parameters: [
-        coda.makeParameter({
-          type: coda.ParameterType.String,
+        sdk.makeParameter({
+          type: sdk.ParameterType.String,
           name: "url",
           description: "The URL of the repo.",
         }),
       ],
-      resultType: coda.ValueType.Object,
+      resultType: sdk.ValueType.Object,
       schema: RepoSchema,
       execute: async function ([url], context) {
         let { owner, name } = parseRepoUrl(url);
@@ -111,13 +111,13 @@ The Pack uses OAuth2 to connect to a user's GitHub account. A more extensive Git
       name: "Star",
       description: "Add a star to a repo.",
       parameters: [
-        coda.makeParameter({
-          type: coda.ParameterType.String,
+        sdk.makeParameter({
+          type: sdk.ParameterType.String,
           name: "url",
           description: "The URL of the repo.",
         }),
       ],
-      resultType: coda.ValueType.Boolean,
+      resultType: sdk.ValueType.Boolean,
       isAction: true,
       execute: async function ([url], context) {
         let { owner, name } = parseRepoUrl(url);
@@ -144,7 +144,7 @@ The Pack uses OAuth2 to connect to a user's GitHub account. A more extensive Git
           let page = (context.sync.continuation?.page as number) || 1;
 
           // Fetch a page of repos from the GitHub API.
-          let url = coda.withQueryParams("https://api.github.com/user/repos", {
+          let url = sdk.withQueryParams("https://api.github.com/user/repos", {
             page: page,
             per_page: PageSize,
           });
@@ -173,7 +173,7 @@ The Pack uses OAuth2 to connect to a user's GitHub account. A more extensive Git
     function parseRepoUrl(url) {
       let match = url.match(RepoUrlRegex);
       if (!match) {
-        throw new coda.UserVisibleError("Invalid repo URL: " + url);
+        throw new sdk.UserVisibleError("Invalid repo URL: " + url);
       }
       return {
         owner: match[1],

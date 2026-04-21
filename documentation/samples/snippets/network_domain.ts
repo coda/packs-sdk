@@ -1,6 +1,6 @@
-import * as coda from "@codahq/packs-sdk";
+import * as sdk from "@codahq/packs-sdk";
 
-const pack = coda.newPack();
+const pack = sdk.newPack();
 
 // BEGIN
 pack.addNetworkDomain("${1:example.com}");

@@ -1,34 +1,34 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Formula that fetches a random cat photo, with various options.
 pack.addFormula({
   name: "CatPhoto",
   description: "Gets a random cat image.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "text",
       description: "Text to display over the image.",
       optional: true,
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "filter",
       description: "A filter to apply to the image.",
       autocomplete: ["mono", "negate"],
       optional: true,
     }),
   ],
-  resultType: coda.ValueType.String,
-  codaType: coda.ValueHintType.ImageReference,
+  resultType: sdk.ValueType.String,
+  codaType: sdk.ValueHintType.ImageReference,
   execute: async function (args, context) {
     let [text, filter] = args;
     let url = "https://cataas.com/cat";
     if (text) {
       url += "/says/" + encodeURIComponent(text);
     }
-    url = coda.withQueryParams(url, {
+    url = sdk.withQueryParams(url, {
       filter: filter,
       json: true,
     });

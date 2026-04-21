@@ -1,18 +1,18 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Action formula (for buttons and automations) that adds a new task in Todoist.
 pack.addFormula({
   name: "AddTask",
   description: "Add a new task.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "name",
       description: "The name of the task.",
     }),
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   isAction: true,
 
   execute: async function ([name], context) {
@@ -37,6 +37,6 @@ pack.addNetworkDomain("todoist.com");
 
 // Setup authentication using a Todoist API token.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.HeaderBearerToken,
+  type: sdk.AuthenticationType.HeaderBearerToken,
   instructionsUrl: "https://todoist.com/app/settings/integrations",
 });
