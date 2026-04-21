@@ -23,7 +23,7 @@ This Pack provides a `Daylight` formula that determines the daylight, sunrise,
      * @see {@link https://sunrise-sunset.org/api|Sunrise Sunset API}
      */
 
-    // This import statement provides access to all parts of the Coda Packs SDK.
+    // This import statement provides access to all parts of the Packs SDK.
     import * as coda from "@codahq/packs-sdk";
 
     // This line creates the new Pack.

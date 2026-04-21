@@ -44,7 +44,7 @@ Create a new project directory if you haven't already and initialize your projec
 # Initialize npm and follow prompts.
 npm init
 
-# Install the Coda Packs SDK locally in your project
+# Install the Packs SDK locally in your project
 npm install --save @codahq/packs-sdk
 ```
 
@@ -69,7 +69,7 @@ Run `npx coda init` to initialize an empty project with the recommended settings
 
 ## Running code locally
 
-Once published, your Pack functionality will be executed on Coda servers after being invoked from a Coda doc. During the development process, you can call your formulas directly from the command line, to simulate this process for rapid development. When you're nearing the end of authoring your Pack, you can upload your Pack to Coda and run it in a real doc to verify it works as intended.
+Once published, your Pack functionality will be executed on the platform's servers after being invoked from a Coda doc. During the development process, you can call your formulas directly from the command line, to simulate this process for rapid development. When you're nearing the end of authoring your Pack, you can upload your Pack and run it in a real doc to verify it works as intended.
 
 
 ### Running formulas
@@ -131,7 +131,7 @@ npx coda execute src/pack.ts MyFormula "1985-10-26,1955-11-12"
 ```
 
 !!! warning "Can't escape commas"
-    It currently isn't possible to escape commas in `StringArray` parameter values. To test your formula with arrays of strings containing commas you'll need to either [write a test case][testing] or [upload](#upload) it to Coda's servers and try it in a real doc.
+    It currently isn't possible to escape commas in `StringArray` parameter values. To test your formula with arrays of strings containing commas you'll need to either [write a test case][testing] or [upload](#upload) it to the platform's servers and try it in a real doc.
 
 
 ### Running syncs
@@ -242,12 +242,12 @@ The credentials will be automatically applied to your fetch requests when you ex
 
 ## Uploading Packs {: #upload}
 
-All of the commands shown so far have only affected your local machine. To get the Pack running on Coda's servers you'll need to use some of the commands below.
+All of the commands shown so far have only affected your local machine. To get the Pack running on the platform's servers you'll need to use some of the commands below.
 
 
 ### Registering an API token {: #register}
 
-All of the Pack upload commands work with the Coda API to upload your Pack, and hence require an API token to identify you as the user. Simply run this command, and you'll be given a link to the Coda Account page to create an API token, which you can then paste in the terminal. You API token will be saved in a hidden local file named `.coda.json` in your current directory, to be used with future commands.
+All of the Pack upload commands work with the Coda API to upload your Pack, and hence require an API token to identify you as the user. Simply run this command, and you'll be given a link to the Account page to create an API token, which you can then paste in the terminal. You API token will be saved in a hidden local file named `.coda.json` in your current directory, to be used with future commands.
 
 ```sh
 npx coda register
@@ -256,13 +256,13 @@ npx coda register
 
 ### Creating a new Pack
 
-When you've implemented your Pack and are ready to upload it to Coda for the first time, you'll need to create new Pack on Coda's servers to get assigned a Pack ID. Run this command just once for each Pack you create:
+When you've implemented your Pack and are ready to upload it for the first time, you'll need to create new Pack on the platform's servers to get assigned a Pack ID. Run this command just once for each Pack you create:
 
 ```sh
 npx coda create path/to/pack.ts
 ```
 
-This will create a new empty Pack on Coda's servers. It will print out the url of the Pack Studio page in the Coda UI, and store the newly-assigned Pack ID in a hidden file `.coda-pack.json` in the same directory as your Pack definition. (This allows you to put multiple Pack definitions in the same repo, as long as they're in different directories.) The ID in this file will be used in subsequent CLI commands for managing your Pack.
+This will create a new empty Pack on the platform's servers. It will print out the url of the Pack Studio page in the Coda UI, and store the newly-assigned Pack ID in a hidden file `.coda-pack.json` in the same directory as your Pack definition. (This allows you to put multiple Pack definitions in the same repo, as long as they're in different directories.) The ID in this file will be used in subsequent CLI commands for managing your Pack.
 
 This command accepts optional flags for specifying a name and description for the Pack. You can always set or update the name and description in the Pack management UI later.
 
@@ -273,7 +273,7 @@ npx coda create src/pack.ts --name "My Pack" --description "My pack description.
 
 ### Uploading a Pack version
 
-As you make changes to your Pack, when you're ready to upload them to Coda so that you can try them in a real doc, use this command to upload a new version of your Pack based on your latest code.
+As you make changes to your Pack, when you're ready to upload them so that you can try them in a real doc, use this command to upload a new version of your Pack based on your latest code.
 
 ```sh
 npx coda upload path/to/pack.ts
@@ -310,7 +310,7 @@ Alternatively, you can create releases from within the Pack Studio.
 
 When using the CLI to build a Pack you can split your code into multiple files, which can be really useful for large or complex Packs. You can organize your code however you like, as long as there is a file that exports the Pack definition with the name `pack` (typically named `pack.ts`).
 
-Coda engineers have built dozens of Packs over the years, and have settled on the recommended file structure below:
+Superhuman engineers have built dozens of Packs over the years, and have settled on the recommended file structure below:
 
 * `helpers.ts` - A place to define helper functions used by your Pack.
 * `pack.ts` - The core Pack definition, where all of the formulas, sync tables, and other building blocks are added.

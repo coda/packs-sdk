@@ -78,7 +78,7 @@ Clone an existing Pack that was created using Pack Studio
 
 ## create
 
-Register a new Pack with Coda's servers
+Register a new Pack with the server
 
 **Usage:** `coda create <manifestFile>`
 
@@ -125,7 +125,7 @@ Execute a formula
     **Type:** boolean | **Default:** `true`
 
 `--vm`
-:   Execute the requested command in a virtual machine that mimics the environment Coda uses to execute Packs.This defaults to true if the isolated-vm package is installed, and to false if not.
+:   Execute the requested command in a virtual machine that mimics the environment the platform uses to execute Packs.This defaults to true if the isolated-vm package is installed, and to false if not.
 
     **Type:** boolean
 
@@ -145,7 +145,7 @@ Execute a formula
     **Type:** number | **Default:** `1000`
 
 `--allowMultipleNetworkDomains`
-:   Allow executing Packs that use multiple network domains. You must get approval from Coda before you can upload these Packs.
+:   Allow executing Packs that use multiple network domains. You must get approval from Superhuman before you can upload these Packs.
 
     **Type:** boolean | **Default:** `false`
 
@@ -169,7 +169,7 @@ Initialize an empty Pack
 
 ## link
 
-Link to a pre-existing Pack ID on Coda's servers
+Link to a pre-existing Pack ID on the server
 
 **Usage:** `coda link <manifestDir> <packIdOrUrl>`
 
@@ -249,7 +249,7 @@ Usage: coda setOption path/to/pack.ts timerStrategy fake
 
 ## upload
 
-Build and upload your Pack version to Coda
+Build and upload your Pack version to the server
 
 **Usage:** `coda upload <manifestFile>`
 

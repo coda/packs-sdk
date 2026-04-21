@@ -10,7 +10,7 @@ _A Pack is an extension that adds new powers to your doc._
 
 What other platforms call plugins, add-ons, or extensions, we call "Packs". A Pack extends the core building blocks of Coda, allowing users to build more powerful and integrated docs. Anyone can build a Pack, and they can use it in their own docs, share it with their team, or publish it to the world.
 
-Packs are built using JavaScript or TypeScript, either on your local machine or in the browser, and run on Coda's own servers. We have a [gallery][gallery_packs] where users can discover and install Packs, as well as a robust set of [admin controls][help_admin].
+Packs are built using JavaScript or TypeScript, either on your local machine or in the browser, and run on the platform's servers. We have a [gallery][gallery_packs] where users can discover and install Packs, as well as a robust set of [admin controls][help_admin].
 
 [Packs overview][packs_landing]{ .md-button }
 [Why build Packs?][packs_why]{ .md-button }
@@ -76,7 +76,7 @@ You will need to have a basic understanding of JavaScript or TypeScript to be su
 
 ## How do Packs work?
 
-Each Pack is its own [serverless application][wikipedia_serverless], fully managed and run by Coda. All you have to do is write the code and we'll take care of the rest.
+Each Pack is its own [serverless application][wikipedia_serverless], fully managed and run by the platform. All you have to do is write the code and we'll take care of the rest.
 
 All Pack code is run on the server, ensuring a consistent and secure environment. Each execution of a Pack can run for at most a minute, but there are features that allow for longer running operations.
 
@@ -96,7 +96,7 @@ sequenceDiagram
   Pack-->>-Doc: Result
 ```
 
-Packs are run in a custom JavaScript execution environment created by Coda, compatible with the [ES2022 standard][mdn_ecmascript]. You can use all the modern JavaScript features, but browser- and Node-specific objects are not available (`window`, `fs`, etc).
+Packs are run in a custom JavaScript execution environment, compatible with the [ES2022 standard][mdn_ecmascript]. You can use all the modern JavaScript features, but browser- and Node-specific objects are not available (`window`, `fs`, etc).
 
 
 

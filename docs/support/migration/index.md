@@ -20,7 +20,7 @@ npm install @codahq/packs-sdk@<version> --save
 
 Where `<version>` is the version you want to upgrade to.
 
-After updating the SDK locally you'll need to upload a new version of your Pack to Coda's servers:
+After updating the SDK locally you'll need to upload a new version of your Pack to the platform's servers:
 
 ```shell
 npx coda upload pack.ts

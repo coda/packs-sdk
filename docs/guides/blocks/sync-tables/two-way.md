@@ -151,7 +151,7 @@ executeUpdate: async function (args, updates, context) {
 
 While needed for all sync tables, when implementing two-way sync you need to pay extra attention to how you transform row values between the form used by the API and that used by the table. This is not an issue if your sync table schema exactly matches the items returned by the API, but often you want or need a different representation of the data in Coda.
 
-When possible, utilize the `fromKey` field of property schemas to allow Coda to automatically map between the API results and the table columns. This works not only when syncing in rows in the `execute` function, but also in reverse when sending updates in the `executeUpdate` function. Specifically, the [`SyncUpdate`][reference_sync_update] object's `newValue`, `previousValue`, and `updatedFields` will all be keyed using the `fromKey` value if set.
+When possible, utilize the `fromKey` field of property schemas to allow the platform to automatically map between the API results and the table columns. This works not only when syncing in rows in the `execute` function, but also in reverse when sending updates in the `executeUpdate` function. Specifically, the [`SyncUpdate`][reference_sync_update] object's `newValue`, `previousValue`, and `updatedFields` will all be keyed using the `fromKey` value if set.
 
 ??? example "Using fromKey to transform automatically"
     ```ts
@@ -173,7 +173,8 @@ When possible, utilize the `fromKey` field of property schemas to allow Coda to 
         execute: async function (args, context) {
           let tasks = await getTasks(context);
           // Each task looks like: {"id": "123", "content": "Foo"}
-          // Coda will automatically map the "content" field to the "name" property.
+          // The platform will automatically map the "content" field to the
+          // "name" property.
           return {
             result: tasks,
           };
@@ -182,10 +183,12 @@ When possible, utilize the `fromKey` field of property schemas to allow Coda to 
           let update = updates[0];
           let task = update.newValue;
           // The new value looks like: {"id": "123", "content": "Bar"}
-          // Coda automatically mapped "name" property back to "content".
+          // The platform automatically mapped "name" property back to
+          // "content".
           task = await updateTask(context, task);
           // The final value will look like: {"id": "123", "content": "Bar"}
-          // Once again, Coda will automatically map "content" to "name".
+          // Once again, the platform will automatically map "content" to
+          // "name".
           return {
             result: [task],
           };
@@ -349,7 +352,7 @@ const ShirtSchema = coda.makeObjectSchema({
 
 ### In dynamic schemas
 
-For sync tables with dynamic schemas, you aren't able to define the options function directly on the property itself. Instead use the special value `OptionsType.Dynamic`, which tells Coda to call the sync table's `propertyOptions` function. This is a single function that handles the option generating for all dynamic properties. It's defined directly on a dynamic sync table, or within the `dynamicOptions` of a regular sync table. The function can determine which property to provide options for by inspecting `context.propertyName`.
+For sync tables with dynamic schemas, you aren't able to define the options function directly on the property itself. Instead use the special value `OptionsType.Dynamic`, which tells the platform to call the sync table's `propertyOptions` function. This is a single function that handles the option generating for all dynamic properties. It's defined directly on a dynamic sync table, or within the `dynamicOptions` of a regular sync table. The function can determine which property to provide options for by inspecting `context.propertyName`.
 
 <!-- TODO: Document exactly what propertyName contains (original, normalized, fromKey). -->
 

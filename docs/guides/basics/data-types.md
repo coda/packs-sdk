@@ -5,7 +5,7 @@ description: Use semantic types to accurately represent data in the document.
 
 # Return data with meaningful types
 
-Pack formulas are written in JavaScript and can return standard JavaScript data types. Coda however supports a wider array of semantic types that change how the data is displayed to the user. When defining a [formula][formulas] or [schema][schemas] you must specify the type of the data being returned.
+Pack formulas are written in JavaScript and can return standard JavaScript data types. The platform however supports a wider array of semantic types that change how the data is displayed to the user. When defining a [formula][formulas] or [schema][schemas] you must specify the type of the data being returned.
 
 [View Sample Code][samples]{ .md-button }
 

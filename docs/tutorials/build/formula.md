@@ -194,7 +194,7 @@ We'll start by scaffolding out the structure of the formula. Once we have it loo
     <section class="tutorial-row" markdown>
     <div markdown>
 
-    Each parameter must also specify what type of data it expects. Coda supports a variety of data types, like text, numbers, dates, etc.
+    Each parameter must also specify what type of data it expects. The platform supports a variety of data types, like text, numbers, dates, etc.
 
     In this case we want to accept text, which is called a "string" in JavaScript. The enumeration `coda.ParameterType` contains all of the supported parameter types.
 
@@ -356,7 +356,7 @@ You should see the name, description, and parameters in the help text, get back 
 
 ## :fontawesome-solid-laptop-code: Write the logic
 
-All the code we've written so far has just been a bunch of settings that tell Coda the shape of the formula. Now it's time to get down to business and write the code that actually makes the formula do something useful.
+All the code we've written so far has just been a bunch of settings that tell the platform the shape of the formula. Now it's time to get down to business and write the code that actually makes the formula do something useful.
 
 
 === ":material-numeric-1-circle: Capture the formula inputs"

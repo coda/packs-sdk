@@ -1,6 +1,6 @@
 ---
 nav: Upgrading existing Packs
-description: Information on how to update an existing Coda Pack to work with Superhuman Go.
+description: Information on how to update an existing Pack to work with Superhuman Go.
 ---
 
 # Upgrade an existing Pack to an agent

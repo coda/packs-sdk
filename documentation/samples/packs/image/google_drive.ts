@@ -102,12 +102,12 @@ pack.setUserAuthentication({
     prompt: "consent",
   },
   // Send the authentication information to all domains.
-  // Note: Using auth with multiple domains requires approval from Coda.
+  // Note: Using auth with multiple domains requires approval from Superhuman.
   networkDomain: ["googleapis.com", "docs.google.com", "googleusercontent.com"],
 });
 
 // Allow access to the Google domains.
-// Note: Using multiple domains in a Pack requires approval from Coda.
+// Note: Using multiple domains in a Pack requires approval from Superhuman.
 pack.addNetworkDomain("googleapis.com");
 pack.addNetworkDomain("docs.google.com");
 pack.addNetworkDomain("googleusercontent.com");

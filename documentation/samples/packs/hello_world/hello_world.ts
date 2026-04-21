@@ -3,7 +3,7 @@ Start making Packs!
 Try out the hello world sample below to create your first build.
 */
 
-// This import statement gives you access to all parts of the Coda Packs SDK.
+// This import statement gives you access to all parts of the Packs SDK.
 import * as coda from "@codahq/packs-sdk";
 
 // This line creates your new Pack.

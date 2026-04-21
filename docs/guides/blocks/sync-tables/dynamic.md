@@ -242,7 +242,7 @@ Since the schema itself is dynamically generated, getting the rows to match that
 
 When generating the schema for the table you need to determine the name of each property. Usually this is based on the name or title of the corresponding field or column in the dataset. Although the convention for manually defined schemas is to use lower camel case, there are no limitations to the characters you can use in a property name. This means that you don't need to sanitize or convert the names as you build the schema.
 
-It's worth remembering though that Coda will [normalize your property names][schemas_normalization] before exposing them in the Coda formula language. When you click the **Add Column** button for a property in the sync table, that normalized name is then transformed again into a column title. This process can sometimes lead to unexpected results.
+It's worth remembering though that the platform will [normalize your property names][schemas_normalization] before exposing them in the Coda formula language. When you click the **Add Column** button for a property in the sync table, that normalized name is then transformed again into a column title. This process can sometimes lead to unexpected results.
 
 For example, if you define a property with the name `GitHub (Beta)`, it will be normalized to `GitHubBeta` in the Coda formula language, and then transformed to `Git Hub Beta` as a column name. Currently it's not possible to override this behavior and manually specify the column name.
 

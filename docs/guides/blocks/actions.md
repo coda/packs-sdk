@@ -102,7 +102,7 @@ Unlike other formulas, actions are never cached or automatically recalculated. T
 
 It's common for a Pack to have a [sync table][sync_table] that brings in records from an external API, and an action that allows the user to update those records. The changes made by the action will be reflected in the table the next time it syncs, but you can update the row immediately by selecting the correct return value for your formula.
 
-If an action formula returns a [schema][schemas] with an identity matching an existing sync table, Coda will look up the corresponding row in the table and update it with the returned object. Use the helper function `coda.withIdentity()` to add the identity information to the schema.
+If an action formula returns a [schema][schemas] with an identity matching an existing sync table, the platform will look up the corresponding row in the table and update it with the returned object. Use the helper function `coda.withIdentity()` to add the identity information to the schema.
 
 ```ts
 const TaskSchema = coda.makeObjectSchema({
@@ -141,7 +141,7 @@ The returned object is merged into the existing row, such that any top-level pro
 
 Action formulas must declare the schema of the object they return, which presents a challenge when trying to update rows in sync tables that use the `getSchema` method to [dynamically generate their schemas][getSchema]. It's possible to work around this incompatibility however, as long as there is a predictable `idProperty` for the dynamic schema.
 
-Create a "base schema" for your action formula to use, which at a minimum includes an `idProperty` (and the corresponding property definition). Additionally, set the schema field [`includeUnknownProperties`][includeUnknownProperties] to true. This tells Coda not to strip out extra data in the response that doesn't match a defined property, allowing it to flow through to the sync table.
+Create a "base schema" for your action formula to use, which at a minimum includes an `idProperty` (and the corresponding property definition). Additionally, set the schema field [`includeUnknownProperties`][includeUnknownProperties] to true. This tells the platform not to strip out extra data in the response that doesn't match a defined property, allowing it to flow through to the sync table.
 
 ```ts
 const BaseTaskSchema = coda.makeObjectSchema({

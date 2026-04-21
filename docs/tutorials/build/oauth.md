@@ -270,7 +270,7 @@ Now that we've got the OAuth2 URLs, scopes, client ID and secret we're ready to 
     <section class="tutorial-row" markdown>
     <div markdown>
 
-    Coda handles all of the OAuth logic for Packs, all you need to do is define some settings. This starts by adding an authorization configuration to the Pack.
+    The platform handles all of the OAuth logic for Packs, all you need to do is define some settings. This starts by adding an authorization configuration to the Pack.
 
     Use `setUserAuthentication` here, since we want each user to sign in with their own Todoist account. Then specify the type of authentication to use as `OAuth2`.
 
@@ -299,7 +299,7 @@ Now that we've got the OAuth2 URLs, scopes, client ID and secret we're ready to 
     <section class="tutorial-row" markdown>
     <div markdown>
 
-    To handle the OAuth flow, Coda needs to know the URLs the provider has for granting authorization and generating tokens.
+    To handle the OAuth flow, the platform needs to know the URLs the provider has for granting authorization and generating tokens.
 
     Set the `authorizationURL` and `tokenUrl` fields using the values found in the Todoist API documentation.
 
@@ -452,7 +452,7 @@ The code we've written so far includes only public information about the OAuth f
 
     Set the **OAuth redirect URL** field to the value you copied above and click the **Save settings** button. Todoist will use this to verify that no other applications use this set of credentials.
 
-    Next copy the **Client ID** and **Client secret** shown on that screen. We need to provide this to your Pack so Coda can properly identify it during the OAuth flow.
+    Next copy the **Client ID** and **Client secret** shown on that screen. We need to provide this to your Pack so the platform can properly identify it during the OAuth flow.
 
     </div>
     <div markdown>
@@ -526,7 +526,7 @@ Now that the Pack is built and the credentials set, we're finally ready to sign 
     <section class="tutorial-row" markdown>
     <div markdown>
 
-    Coda opens the Todoist website in a new tab and shows the access prompt. The permissions listed reflect the scopes requested by the Pack.
+    The platform opens the Todoist website in a new tab and shows the access prompt. The permissions listed reflect the scopes requested by the Pack.
 
     Click the **Agree** button.
 
