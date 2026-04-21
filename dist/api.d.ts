@@ -51,7 +51,7 @@ export { FetchRequest } from './api_types';
  * @example
  * ```
  * if (!url.startsWith("https://")) {
- *   throw new coda.UserVisibleError("Please provide a valid url.");
+ *   throw new sdk.UserVisibleError("Please provide a valid url.");
  * }
  * ```
  *
@@ -136,13 +136,13 @@ export interface StatusCodeErrorResponse {
  *   });
  * } catch (error) {
  *   // If the request failed because the server returned a 300+ status code.
- *   if (coda.StatusCodeError.isStatusCodeError(error)) {
+ *   if (sdk.StatusCodeError.isStatusCodeError(error)) {
  *     // Cast the error as a StatusCodeError, for better intellisense.
- *     let statusError = error as coda.StatusCodeError;
+ *     let statusError = error as sdk.StatusCodeError;
  *     // If the API returned an error message in the body, show it to the user.
  *     let message = statusError.body?.detail;
  *     if (message) {
- *       throw new coda.UserVisibleError(message);
+ *       throw new sdk.UserVisibleError(message);
  *     }
  *   }
  *   // The request failed for some other reason. Re-throw the error so that it
@@ -204,7 +204,7 @@ export declare class StatusCodeError extends Error {
  * } catch (error) {
  *   // Determine if the error is due to missing scopes.
  *   if (error.statusCode == 400 && error.body?.message.includes("permission")) {
- *     throw new coda.MissingScopesError();
+ *     throw new sdk.MissingScopesError();
  *   }
  *   // Else handle or throw the error as normal.
  * }
@@ -1230,7 +1230,7 @@ export interface SimpleAutocompleteOption<T extends AutocompleteParameterTypes> 
  * autocomplete: async function(context, search) {
  *   const response = await context.fetcher.fetch({method: "GET", url: "/api/entities"});
  *   const allOptions = response.body.entities.map(entity => entity.name);
- *   return coda.simpleAutocomplete(search, allOptions);
+ *   return sdk.simpleAutocomplete(search, allOptions);
  * }
  * ```
  */
@@ -1249,7 +1249,7 @@ export declare function simpleAutocomplete<T extends AutocompleteParameterTypes>
  *
  * @example
  * ```
- * coda.makeParameter({
+ * sdk.makeParameter({
  *   type: ParameterType.Number,
  *   name: "userId",
  *   description: "The ID of a user.",
@@ -1261,7 +1261,7 @@ export declare function simpleAutocomplete<T extends AutocompleteParameterTypes>
  *     // those that match. Then it will transform the matching objects into the form
  *     // `{display: "Jane Doe", value: 123}` which is what is required to render
  *     // autocomplete responses.
- *     return coda.autocompleteSearchObjects(search, usersResponse.body, "name", "userId");
+ *     return sdk.autocompleteSearchObjects(search, usersResponse.body, "name", "userId");
  *   }
  * });
  * ```
@@ -1385,7 +1385,7 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
      *   name: "MessagesSharedMailbox",
      *   // ...
      *   indexing: {
-     *     default: coda.DataIndexing.Exclude,
+     *     default: sdk.DataIndexing.Exclude,
      *   },
      * });
      * ```
@@ -1494,16 +1494,16 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
      *
      * @example
      * ```
-     * coda.makeDynamicSyncTable({
+     * sdk.makeDynamicSyncTable({
      *   name: "MySyncTable",
      *   getSchema: async function (context) => {
-     *     return coda.makeObjectSchema({
+     *     return sdk.makeObjectSchema({
      *       properties: {
      *         dynamicPropertyName: {
-     *           type: coda.ValueType.String,
-     *           codaType: coda.ValueHintType.SelectList,
+     *           type: sdk.ValueType.String,
+     *           codaType: sdk.ValueHintType.SelectList,
      *           mutable: true,
-     *           options: coda.OptionsType.Dynamic,
+     *           options: sdk.OptionsType.Dynamic,
      *         },
      *       },
      *     });
@@ -1512,7 +1512,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
      *     if (context.propertyName === "dynamicPropertyName") {
      *       return ["Dynamic Value 1", "Dynamic value 2"];
      *     }
-     *     throw new coda.UserVisibleError(
+     *     throw new sdk.UserVisibleError(
      *       `Cannot generate options for property ${context.propertyName}`
      *     );
      *   },
@@ -1553,7 +1553,7 @@ export declare function makeSyncTableLegacy<K extends string, L extends string, 
  *
  * @example
  * ```
- * coda.makeDynamicSyncTable({
+ * sdk.makeDynamicSyncTable({
  *   name: "MySyncTable",
  *   getName: async function(context) => {
  *     const response = await context.fetcher.fetch({method: "GET", url: context.sync.dynamicUrl});
@@ -1649,7 +1649,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
  *
  * @example
  * ```
- * coda.makeEmptyFormula({
+ * sdk.makeEmptyFormula({
     name: "GetWidget",
     description: "Gets a widget.",
     request: {
@@ -1657,7 +1657,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
       method: "GET",
     },
     parameters: [
-      coda.makeParameter({type: coda.ParameterType.Number, name: "id", description: "The ID of the widget to get."}),
+      sdk.makeParameter({type: sdk.ParameterType.Number, name: "id", description: "The ID of the widget to get."}),
     ],
   }),
  * ```

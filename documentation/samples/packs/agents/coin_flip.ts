@@ -1,5 +1,5 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // How long to keep checking the flip status in a single tool call.
 // The LLM will chain together multiple tool calls.
@@ -31,15 +31,15 @@ pack.addSkill({
   `,
   tools: [
     {
-      type: coda.ToolType.Pack,
+      type: sdk.ToolType.Pack,
     },
   ],
 });
 
-const FlipSchema = coda.makeObjectSchema({
+const FlipSchema = sdk.makeObjectSchema({
   properties: {
-    isComplete: { type: coda.ValueType.Boolean },
-    result: { type: coda.ValueType.String },
+    isComplete: { type: sdk.ValueType.Boolean },
+    result: { type: sdk.ValueType.String },
   },
   displayProperty: "result",
 });
@@ -48,13 +48,13 @@ pack.addFormula({
   name: "StartCoinFlip",
   description: "Starts a coin flip. Returns the ID of the flip.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "seconds",
       description: "How long the coin should flip for, in seconds.",
     }),
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   cacheTtlSecs: 0,
   execute: async function (args, context) {
     let [seconds] = args;
@@ -67,13 +67,13 @@ pack.addFormula({
   name: "GetResult",
   description: "Gets the result of a coin flip.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "flipId",
       description: "The ID of the coin flip.",
     }),
   ],
-  resultType: coda.ValueType.Object,
+  resultType: sdk.ValueType.Object,
   schema: FlipSchema,
   cacheTtlSecs: 0,
   execute: async function (args, context) {

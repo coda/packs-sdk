@@ -31,7 +31,7 @@ try {
 } catch (error) {
   // Determine if the error is due to missing scopes.
   if (error.statusCode == 400 && error.body?.message.includes("permission")) {
-    throw new coda.MissingScopesError();
+    throw new sdk.MissingScopesError();
   }
   // Else handle or throw the error as normal.
 }

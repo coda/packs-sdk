@@ -1,11 +1,11 @@
-import * as coda from "@codahq/packs-sdk";
+import * as sdk from "@codahq/packs-sdk";
 
-const pack = coda.newPack();
+const pack = sdk.newPack();
 
 const $0 = undefined;
 
 // BEGIN
 
 pack.setSystemAuthentication({
-  type: coda.AuthenticationType[$0],
+  type: sdk.AuthenticationType[$0],
 });

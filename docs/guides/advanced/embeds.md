@@ -25,8 +25,8 @@ Pack formulas can generate an embed by returning a URL with the `Embed` value hi
 ```ts
 pack.addFormula({
   // ...
-  resultType: coda.ValueType.String,
-  codaType: coda.ValueHintType.Embed,
+  resultType: sdk.ValueType.String,
+  codaType: sdk.ValueHintType.Embed,
   execute: async function ([], context) {
     // TODO: Build or fetch embed URL.
     return embedUrl;
@@ -41,10 +41,10 @@ You may still be able to embed URLs that aren't supported by Iframely by using t
 ```ts
 pack.addFormula({
   // ...
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   schema: {
-    type: coda.ValueType.String,
-    codaType: coda.ValueHintType.Embed,
+    type: sdk.ValueType.String,
+    codaType: sdk.ValueHintType.Embed,
     force: true,
   },
   execute: async function ([], context) {

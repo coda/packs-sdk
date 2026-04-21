@@ -182,16 +182,16 @@ is available in the option function's context parameter.
 #### Example
 
 ```
-coda.makeDynamicSyncTable({
+sdk.makeDynamicSyncTable({
   name: "MySyncTable",
   getSchema: async function (context) => {
-    return coda.makeObjectSchema({
+    return sdk.makeObjectSchema({
       properties: {
         dynamicPropertyName: {
-          type: coda.ValueType.String,
-          codaType: coda.ValueHintType.SelectList,
+          type: sdk.ValueType.String,
+          codaType: sdk.ValueHintType.SelectList,
           mutable: true,
-          options: coda.OptionsType.Dynamic,
+          options: sdk.OptionsType.Dynamic,
         },
       },
     });
@@ -200,7 +200,7 @@ coda.makeDynamicSyncTable({
     if (context.propertyName === "dynamicPropertyName") {
       return ["Dynamic Value 1", "Dynamic value 2"];
     }
-    throw new coda.UserVisibleError(
+    throw new sdk.UserVisibleError(
       `Cannot generate options for property ${context.propertyName}`
     );
   },

@@ -5,7 +5,7 @@
  * This module is imported using the following code:
  *
  * ```ts
- * import * as coda from "@codahq/packs-sdk";
+ * import * as sdk from "@codahq/packs-sdk";
  * ```
  *
  * @module core

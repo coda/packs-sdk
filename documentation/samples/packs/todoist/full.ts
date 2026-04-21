@@ -1,4 +1,4 @@
-import * as coda from "@codahq/packs-sdk";
+import * as sdk from "@codahq/packs-sdk";
 
 // #region Constants
 
@@ -18,12 +18,12 @@ const TaskUrlPatterns: RegExp[] = [
 
 // #region Pack setup
 
-export const pack = coda.newPack();
+export const pack = sdk.newPack();
 
 pack.addNetworkDomain("todoist.com");
 
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   // OAuth2 URLs and scopes are found in the Todoist OAuth guide:
   // https://developer.todoist.com/guides/#oauth
   authorizationUrl: "https://todoist.com/oauth/authorize",
@@ -33,7 +33,7 @@ pack.setUserAuthentication({
 
   // Determines the display name of the connected account.
   getConnectionName: async function (context) {
-    let url = coda.withQueryParams("https://api.todoist.com/sync/v9/sync", {
+    let url = sdk.withQueryParams("https://api.todoist.com/sync/v9/sync", {
       resource_types: JSON.stringify(["user"]),
     });
     let response = await context.fetcher.fetch({
@@ -49,60 +49,60 @@ pack.setUserAuthentication({
 
 // #region Schemas
 
-const DueSchema = coda.makeObjectSchema({
+const DueSchema = sdk.makeObjectSchema({
   properties: {
     date: {
       description: "The date the task is due.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Date,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Date,
     },
     time: {
       description: "The specific moment the task is due.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.DateTime,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.DateTime,
       fromKey: "datetime",
     },
     display: {
       description: "The display value for the due date.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       fromKey: "string",
     },
   },
   displayProperty: "display",
 });
 
-const ProjectSchema = coda.makeObjectSchema({
+const ProjectSchema = sdk.makeObjectSchema({
   properties: {
     name: {
       description: "The name of the project.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       mutable: true,
       required: true,
     },
     url: {
       description: "A link to the project in the Todoist app.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
     shared: {
       description: "Is the project is shared.",
-      type: coda.ValueType.Boolean,
+      type: sdk.ValueType.Boolean,
       fromKey: "is_shared",
     },
     favorite: {
       description: "Is the project a favorite.",
-      type: coda.ValueType.Boolean,
+      type: sdk.ValueType.Boolean,
       mutable: true,
       fromKey: "is_favorite",
     },
     id: {
       description: "The ID of the project.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
     parentProjectId: {
       description: "For sub-projects, the ID of the parent project.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       fromKey: "parent_id",
     },
   },
@@ -117,47 +117,47 @@ const ProjectSchema = coda.makeObjectSchema({
 
 // Create a reference schema for projects, to use for relation columns.
 const ProjectReferenceSchema =
-  coda.makeReferenceSchemaFromObjectSchema(ProjectSchema, "Project");
+  sdk.makeReferenceSchemaFromObjectSchema(ProjectSchema, "Project");
 
 // Using the reference schema, add a property for the parent project.
-(ProjectSchema.properties as coda.ObjectSchemaProperties)
+(ProjectSchema.properties as sdk.ObjectSchemaProperties)
   .parentProject = ProjectReferenceSchema;
 
-const TaskSchema = coda.makeObjectSchema({
+const TaskSchema = sdk.makeObjectSchema({
   properties: {
     name: {
       description: "The name of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       fromKey: "content",
       required: true,
       mutable: true,
     },
     description: {
       description: "A detailed description of the task.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Markdown,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Markdown,
       mutable: true,
     },
     url: {
       description: "A link to the task in the Todoist app.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
     completed: {
       description: "If the task has been completed.",
-      type: coda.ValueType.Boolean,
+      type: sdk.ValueType.Boolean,
       fromKey: "is_completed",
       mutable: true,
     },
     order: {
       description: "The position of the task in the project or parent task.",
-      type: coda.ValueType.Number,
+      type: sdk.ValueType.Number,
       mutable: true,
     },
     priority: {
       description: "The priority of the task.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.SelectList,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.SelectList,
       options: ["P1", "P2", "P3", "P4"],
       mutable: true,
     },
@@ -167,17 +167,17 @@ const TaskSchema = coda.makeObjectSchema({
     },
     id: {
       description: "The ID of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
     projectId: {
       description: "The ID of the project that the task belongs to.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       fromKey: "project_id",
     },
     parentTaskId: {
       description: "For sub-tasks, the ID of the parent task it belongs to.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       fromKey: "parent_id",
     },
     // A reference to the project (for sync tables only).
@@ -202,10 +202,10 @@ const TaskSchema = coda.makeObjectSchema({
 
 // Create a reference schema for tasks, to use for relation columns.
 const TaskReferenceSchema =
-  coda.makeReferenceSchemaFromObjectSchema(TaskSchema, "Task");
+  sdk.makeReferenceSchemaFromObjectSchema(TaskSchema, "Task");
 
 // Using the reference schema, add a property for the parent task.
-(TaskSchema.properties as coda.ObjectSchemaProperties)
+(TaskSchema.properties as sdk.ObjectSchemaProperties)
   .parentTask = TaskReferenceSchema;
 
 // Format a project from the API and return an object matching the schema.
@@ -267,13 +267,13 @@ pack.addFormula({
   name: "Project",
   description: "Gets a Todoist project by URL",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "url",
       description: "The URL of the project",
     }),
   ],
-  resultType: coda.ValueType.Object,
+  resultType: sdk.ValueType.Object,
   schema: ProjectSchema,
   execute: async function ([url], context) {
     let projectId = extractProjectId(url);
@@ -289,13 +289,13 @@ pack.addFormula({
   name: "Task",
   description: "Gets a Todoist task by URL",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "url",
       description: "The URL of the task",
     }),
   ],
-  resultType: coda.ValueType.Object,
+  resultType: sdk.ValueType.Object,
   schema: TaskSchema,
   execute: async function ([url], context) {
     let taskId = extractTaskId(url);
@@ -333,13 +333,13 @@ pack.addFormula({
   name: "AddProject",
   description: "Add a new Todoist project",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "name",
       description: "The name of the new project",
     }),
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   isAction: true,
   execute: async function ([name], context) {
     let response = await context.fetcher.fetch({
@@ -360,20 +360,20 @@ pack.addFormula({
   name: "AddTask",
   description: "Add a new task.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "name",
       description: "The name of the task.",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "projectId",
       description: "The ID of the project to add it to. If blank, " +
         "it will be added to the user's Inbox.",
       optional: true,
     }),
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   isAction: true,
   execute: async function ([name, projectId], context) {
     let response = await context.fetcher.fetch({
@@ -395,29 +395,29 @@ pack.addFormula({
   name: "SetDueDate",
   description: "Change the due date of a task.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "taskId",
       description: "The ID of the task.",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.Date,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Date,
       name: "date",
       description: "The date the task is due.",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.Boolean,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Boolean,
       name: "endOfDay",
       description:
         "If the task is due at the end of the day (vs a specific time).",
       suggestedValue: true,
     }),
   ],
-  resultType: coda.ValueType.Object,
+  resultType: sdk.ValueType.Object,
   // To update the existing row in a sync table, return the schema with an
   // identity matching the identityName on the sync table being updated, using
-  // the helper function coda.withIdentity().
-  schema: coda.withIdentity(TaskSchema, "Task"),
+  // the helper function sdk.withIdentity().
+  schema: sdk.withIdentity(TaskSchema, "Task"),
   isAction: true,
   execute: async function ([taskId, date, endOfDay = false], context) {
     let url = "https://api.todoist.com/rest/v2/tasks/" + taskId;
@@ -499,14 +499,14 @@ pack.addSyncTable({
     name: "SyncTasks",
     description: "Sync tasks",
     parameters: [
-      coda.makeParameter({
-        type: coda.ParameterType.String,
+      sdk.makeParameter({
+        type: sdk.ParameterType.String,
         name: "filter",
         description: "A supported filter string. See the Todoist help center.",
         optional: true,
       }),
-      coda.makeParameter({
-        type: coda.ParameterType.String,
+      sdk.makeParameter({
+        type: sdk.ParameterType.String,
         name: "project",
         description: "Limit tasks to a specific project.",
         optional: true,
@@ -517,12 +517,12 @@ pack.addSyncTable({
             url: url,
           });
           let projects = response.body;
-          return coda.autocompleteSearchObjects(search, projects, "name", "id");
+          return sdk.autocompleteSearchObjects(search, projects, "name", "id");
         },
       }),
     ],
     execute: async function ([filter, project], context) {
-      let url = coda.withQueryParams("https://api.todoist.com/rest/v2/tasks", {
+      let url = sdk.withQueryParams("https://api.todoist.com/rest/v2/tasks", {
         filter: filter,
         project_id: project,
       });
@@ -563,7 +563,7 @@ pack.addSyncTable({
         for (let command of commands) {
           let status = statuses[command.uuid];
           if (status.error) {
-            return new coda.UserVisibleError(status.error);
+            return new sdk.UserVisibleError(status.error);
           }
         }
         // If there were no errors, fetch the updated task and return it.
@@ -583,7 +583,7 @@ pack.addSyncTable({
 });
 
 // Generate a list of API commands from a Task row update.
-function generateTaskCommands(update: coda.GenericSyncUpdate): any[] {
+function generateTaskCommands(update: sdk.GenericSyncUpdate): any[] {
   let commands: any[] = [];
   let { previousValue, newValue, updatedFields } = update;
 
@@ -631,7 +631,7 @@ function extractProjectId(projectUrl: string) {
       return matches[1];
     }
   }
-  throw new coda.UserVisibleError("Invalid project URL: " + projectUrl);
+  throw new sdk.UserVisibleError("Invalid project URL: " + projectUrl);
 }
 
 function extractTaskId(taskUrl: string) {
@@ -641,7 +641,7 @@ function extractTaskId(taskUrl: string) {
       return matches[1];
     }
   }
-  throw new coda.UserVisibleError("Invalid task URL: " + taskUrl);
+  throw new sdk.UserVisibleError("Invalid task URL: " + taskUrl);
 }
 
 function getUniqueId() {

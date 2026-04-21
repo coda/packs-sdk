@@ -64,7 +64,7 @@ Formulas can use [authentication][authentication] to fetch private data. When us
 === "Code"
     ```ts
     pack.setUserAuthentication({
-      type: coda.AuthenticationType.HeaderBearerToken,
+      type: sdk.AuthenticationType.HeaderBearerToken,
       instructionsUrl: "https://todoist.com/app/settings/integrations",
     });
 
@@ -72,8 +72,8 @@ Formulas can use [authentication][authentication] to fetch private data. When us
       name: "Task",
       description: "Gets a Todoist task by URL",
       parameters: [
-        coda.makeParameter({
-          type: coda.ParameterType.String,
+        sdk.makeParameter({
+          type: sdk.ParameterType.String,
           name: "url",
           description: "The URL of the task",
         }),
@@ -126,18 +126,18 @@ Coda automatically generates user documentation for your formulas based on the n
       name: "ToUSD",
       description: "Convert from a different currency to US dollars.",
       parameters: [
-        coda.makeParameter({
-          type: coda.ParameterType.Number,
+        sdk.makeParameter({
+          type: sdk.ParameterType.Number,
           name: "amount",
           description: "The amount to convert."
         }),
-        coda.makeParameter({
-          type: coda.ParameterType.String,
+        sdk.makeParameter({
+          type: sdk.ParameterType.String,
           name: "from",
           description: "The currency to convert from."
         }),
       ],
-      resultType: coda.ValueType.Number,
+      resultType: sdk.ValueType.Number,
       examples: [
         { params: [10, "EUR"], result: 11.44 },
         { params: [12.25, "CAD"], result: 9.80 },

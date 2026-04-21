@@ -33,8 +33,8 @@ A column format that formats text. This sample displays the text in the cell in 
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Adds a column format to the Pack, which will display the contents of the
 // column in reverse order.
@@ -49,19 +49,19 @@ pack.addColumnFormat({
 // Adds a formula to this Pack to reverse text. It is used by the column format
 // above, but can also be used on its own anywhere in the doc.
 pack.addFormula({
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   name: "Reverse",
   description: "Reverses text.",
   parameters: [
     // Formulas used in column formats can have only one required parameter.
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "input",
       description: "The text to reverse.",
     }),
     // Optional parameters can't be set when run as a column format.
-    coda.makeParameter({
-      type: coda.ParameterType.Boolean,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Boolean,
       name: "byWord",
       description: "Reverse the text word-by-word.",
       suggestedValue: false,
@@ -83,8 +83,8 @@ A column format that formats a number as text. This sample displays the number i
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Adds a column format to the Pack, which will display the contents of the
 // column as Roman numerals.
@@ -101,13 +101,13 @@ pack.addFormula({
   name: "RomanNumeral",
   description: "Converts a number to the equivalent Roman numeral.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "value",
       description: "The number to convert.",
     }),
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   execute: async function ([value], context) {
     let pairs = Object.entries(NumberMapping);
     // Sort the pairs by the number, largest to smallest.
@@ -134,8 +134,8 @@ A column format that formats a number as graphic. This sample displays the numbe
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Adds a column format to the Pack, which will display the contents of the
 // column as a progress bar.
@@ -152,16 +152,16 @@ pack.addFormula({
   name: "ProgressBar",
   description: "Draws a progress bar.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "percentage",
       description: "The percentage complete, as a number between 0 and 1.",
     }),
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   execute: async function ([percentage], context) {
     if (percentage < 0 || percentage > 1) {
-      throw new coda.UserVisibleError("Percentage must be between 0 and 1.");
+      throw new sdk.UserVisibleError("Percentage must be between 0 and 1.");
     }
     let chars = Math.floor(percentage * 10);
     return "⬛".repeat(chars) + "⬜".repeat(10 - chars);
@@ -174,8 +174,8 @@ A column format that formats text as an image. This sample displays the text in 
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Column format that displays the cell's value within a random cat image,
 // using the CatPhoto() formula defined above.
@@ -190,18 +190,18 @@ pack.addFormula({
   name: "CatPhoto",
   description: "Gets a random cat image.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "text",
       description: "Text to display over the image.",
     }),
   ],
-  resultType: coda.ValueType.String,
-  codaType: coda.ValueHintType.ImageReference,
+  resultType: sdk.ValueType.String,
+  codaType: sdk.ValueHintType.ImageReference,
   execute: async function (args, context) {
     let [text] = args;
     let url = "https://cataas.com/cat/says/" + encodeURIComponent(text);
-    url = coda.withQueryParams(url, {
+    url = sdk.withQueryParams(url, {
       json: true,
     });
     let response = await context.fetcher.fetch({
@@ -222,7 +222,7 @@ A column format that formats a URL as rich data. This sample displays the URL of
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
+import * as sdk from "@codahq/packs-sdk";
 
 // Regular expressions that match Todoist task URLs. Used by the column format
 // and also the formula that powers it.
@@ -232,7 +232,7 @@ const TaskUrlPatterns: RegExp[] = [
   new RegExp("^https://todoist.com/showTask\\?id=([0-9]+)"),
 ];
 
-export const pack = coda.newPack();
+export const pack = sdk.newPack();
 
 // Add a column format that displays a task URL as rich metadata.
 pack.addColumnFormat({
@@ -245,25 +245,25 @@ pack.addColumnFormat({
 });
 
 // A schema defining the rich metadata to be returned.
-const TaskSchema = coda.makeObjectSchema({
+const TaskSchema = sdk.makeObjectSchema({
   properties: {
     name: {
       description: "The name of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
     description: {
       description: "A detailed description of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     url: {
       description: "A link to the task in the Todoist app.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
     id: {
       description: "The ID of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
   },
@@ -278,13 +278,13 @@ pack.addFormula({
   name: "Task",
   description: "Gets a Todoist task by URL",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "url",
       description: "The URL of the task",
     }),
   ],
-  resultType: coda.ValueType.Object,
+  resultType: sdk.ValueType.Object,
   schema: TaskSchema,
 
   execute: async function ([url], context) {
@@ -311,7 +311,7 @@ function extractTaskId(taskUrl: string) {
       return matches[1];
     }
   }
-  throw new coda.UserVisibleError("Invalid task URL: " + taskUrl);
+  throw new sdk.UserVisibleError("Invalid task URL: " + taskUrl);
 }
 
 // Allow the pack to make requests to Todoist.
@@ -319,7 +319,7 @@ pack.addNetworkDomain("todoist.com");
 
 // Setup authentication using a Todoist API token.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.HeaderBearerToken,
+  type: sdk.AuthenticationType.HeaderBearerToken,
   instructionsUrl: "https://todoist.com/app/settings/integrations",
 });
 {% endraw %}

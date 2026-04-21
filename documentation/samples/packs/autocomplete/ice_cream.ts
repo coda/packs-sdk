@@ -1,26 +1,26 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Generates a fictitious ice cream order, using a flexible set of choices.
 pack.addFormula({
   name: "OrderIcecream",
   description: "Put in your ice cream order.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "scoops",
       description: "How many scoops do you want?",
     }),
   ],
   varargParameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "choice",
       description: "Which choice to set.",
       autocomplete: ["flavor", "topping", "vessel"],
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "value",
       description: "The value of that choice.",
       autocomplete: async function (context, search, params) {
@@ -37,7 +37,7 @@ pack.addFormula({
       },
     }),
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   execute: async function ([scoops, ...args], context) {
     let result = `${scoops}: scoops`;
     let choice, value;

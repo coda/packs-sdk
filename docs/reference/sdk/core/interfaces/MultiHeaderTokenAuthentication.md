@@ -17,7 +17,7 @@ Each header is specified with a name and an optional token prefix.
 
 ```ts
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.MultiHeaderToken,
+  type: sdk.AuthenticationType.MultiHeaderToken,
   headers: [
     {name: 'Header1', description: 'Enter the value for Header1',  tokenPrefix: 'prefix1'},
     {name: 'Header2', description: 'Enter value for Header2'},

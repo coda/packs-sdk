@@ -25,8 +25,8 @@ In the formula editor parameters are entered as comma-separated values, while in
 The [`parameters`][parameters] property of a formula contains the array of parameter definitions, each one containing information about the parameter. The helper function [`makeParameter()`][makeParameter] is used to create these definitions, and a `type`, `name`, and `description` are required.
 
 ```ts
-coda.makeParameter({
-  type: coda.ParameterType.String,
+sdk.makeParameter({
+  type: sdk.ParameterType.String,
   name: "type",
   description: "The type of cookie.",
 });
@@ -42,13 +42,13 @@ At runtime, the values set by the user are passed to the formula's `execute` fun
 pack.addFormula({
   // ...
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "type",
       description: "The type of cookie.",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "num",
       description: "How many cookies.",
     }),
@@ -208,19 +208,19 @@ pack.addFormula({
   name: "TotalCost",
   // ...
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "cost",
       description: "The cost of the item.",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "quantity",
       description: "How many items.",
       optional: true,
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "taxRate",
       description: "The tax rate for the item.",
       optional: true,
@@ -265,8 +265,8 @@ As a convenience to users of your Pack, you can provide a suggested value for a 
 To add a suggested value to a parameter set the field `suggestedValue` to the value you'd like to use. The suggested value must be of the same type as the parameter, for example a number parameter must have a number as its suggested default value.
 
 ```ts
-coda.makeParameter({
-  type: coda.ParameterType.Number,
+sdk.makeParameter({
+  type: sdk.ParameterType.Number,
   name: "days",
   description: "How many days of data to fetch.",
   suggestedValue: 30,
@@ -296,15 +296,15 @@ They are defined using the `varargParameters` property and accept the same param
 pack.addFormula({
   // ...
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "name",
       description: "The person's name.",
     }),
   ],
   varargParameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "nickname",
       description: "A nickname for the person.",
     }),
@@ -354,13 +354,13 @@ pack.addSyncTable({
     name: "SyncOrders",
     description: "Syncs the data.",
     parameters: [
-      coda.makeParameter({
-        type: coda.ParameterType.String,
+      sdk.makeParameter({
+        type: sdk.ParameterType.String,
         name: "sku",
         description: "Filters orders by the product SKU.",
       }),
-      coda.makeParameter({
-        type: coda.ParameterType.Number,
+      sdk.makeParameter({
+        type: sdk.ParameterType.Number,
         name: "quantity",
         description: "Filters orders by a minimum quantity.",
       }),
@@ -368,10 +368,10 @@ pack.addSyncTable({
     execute: async function (args, context) {
       let [sku, quantity] = args;
       if (sku.length != 10) {
-        throw new coda.UserVisibleError("Use the 10 digit public SKU.")
+        throw new sdk.UserVisibleError("Use the 10 digit public SKU.")
       }
       if (quantity < 1) {
-        throw new coda.UserVisibleError("The quantity must be 1 or greater.")
+        throw new sdk.UserVisibleError("The quantity must be 1 or greater.")
       }
       // Do the sync.
     },
@@ -429,8 +429,8 @@ It's often the case that many formulas in a Pack use the same parameter. For exa
 
 
 ```ts
-const ProjectParam = coda.makeParameter({
-  type: coda.ParameterType.String,
+const ProjectParam = sdk.makeParameter({
+  type: sdk.ParameterType.String,
   name: "projectId",
   description: "The ID of the project.",
 });
@@ -449,8 +449,8 @@ pack.addFormula({
   description: "Get a task within a project.",
   parameters: [
     ProjectParam,
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "taskId",
       description: "The ID of the task.",
     }),
@@ -474,11 +474,11 @@ Parameters of the type `DateArray` are often used for date ranges, with the firs
 These parameters also support a special set of [suggested values](#suggested) that represent date ranges relative to the current date. These are available in the [`PrecannedDateRange`][PrecannedDateRange] enumeration.
 
 ```ts
-coda.makeParameter({
-  type: coda.ParameterType.DateArray,
+sdk.makeParameter({
+  type: sdk.ParameterType.DateArray,
   name: "dateRange",
   description: "The date range over which data should be fetched.",
-  suggestedValue: coda.PrecannedDateRange.Last30Days,
+  suggestedValue: sdk.PrecannedDateRange.Last30Days,
 });
 ```
 

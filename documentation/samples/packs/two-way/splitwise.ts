@@ -1,60 +1,60 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
-const CategorySchema = coda.makeObjectSchema({
+const CategorySchema = sdk.makeObjectSchema({
   properties: {
     id: {
       description: "A unique ID for the category.",
-      type: coda.ValueType.Number,
+      type: sdk.ValueType.Number,
       required: true,
     },
     name: {
       description: "The name of the category.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
     icon: {
       description: "An icon representing the category.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.ImageReference,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.ImageReference,
     },
   },
   displayProperty: "name",
 });
 
-const ExpenseSchema = coda.makeObjectSchema({
+const ExpenseSchema = sdk.makeObjectSchema({
   properties: {
     id: {
       description: "A unique ID for the expense.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     description: {
       description: "The description of the expense.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       mutable: true,
     },
     date: {
       description: "The date the expense was made.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Date,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Date,
       mutable: true,
     },
     cost: {
       description: "The total cost of the expense.",
-      type: coda.ValueType.Number,
-      codaType: coda.ValueHintType.Currency,
+      type: sdk.ValueType.Number,
+      codaType: sdk.ValueHintType.Currency,
       mutable: true,
     },
     notes: {
       description: "Any notes on the expense.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       fromKey: "details",
       mutable: true,
     },
     repeat: {
       description: "How often the expense automatically repeats.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.SelectList,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.SelectList,
       fromKey: "repeat_interval",
       mutable: true,
       // Static list of options.
@@ -62,8 +62,8 @@ const ExpenseSchema = coda.makeObjectSchema({
     },
     currency: {
       description: "The code of the currency of the expense.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.SelectList,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.SelectList,
       fromKey: "currency_code",
       mutable: true,
       // Dynamic list of options.
@@ -78,7 +78,7 @@ const ExpenseSchema = coda.makeObjectSchema({
     },
     category: {
       ...CategorySchema,
-      codaType: coda.ValueHintType.SelectList,
+      codaType: sdk.ValueHintType.SelectList,
       mutable: true,
       // Dynamic list of options, as objects.
       options: async function (context) {
@@ -123,7 +123,7 @@ pack.addSyncTable({
       let [] = args;
       let offset = context.sync.continuation?.offset as number || 0;
       let limit = 20;
-      let url = coda.withQueryParams(
+      let url = sdk.withQueryParams(
         "https://secure.splitwise.com/api/v3.0/get_expenses",
         {
           offset: offset,
@@ -168,8 +168,8 @@ pack.addSyncTable({
   },
 });
 
-async function updateExpense(context: coda.ExecutionContext,
-  update: coda.GenericSyncUpdate) {
+async function updateExpense(context: sdk.ExecutionContext,
+  update: sdk.GenericSyncUpdate) {
   let expense = update.newValue;
 
   // Only include fields in the body that have been updated.
@@ -197,10 +197,10 @@ async function updateExpense(context: coda.ExecutionContext,
     return result.expenses[0];
   } catch (e) {
     // If the API returned an error, show that error to the user.
-    if (coda.StatusCodeError.isStatusCodeError(e)) {
+    if (sdk.StatusCodeError.isStatusCodeError(e)) {
       let errors = Object.values(e.body.errors).flat();
       if (errors?.length > 0) {
-        throw new coda.UserVisibleError(errors.join("\n"));
+        throw new sdk.UserVisibleError(errors.join("\n"));
       }
     }
     throw e;
@@ -208,7 +208,7 @@ async function updateExpense(context: coda.ExecutionContext,
 }
 
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://secure.splitwise.com/oauth/authorize",
   tokenUrl: "https://secure.splitwise.com/oauth/token",
   getConnectionName: async function (context) {

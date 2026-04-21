@@ -1,22 +1,22 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // A schema defining the data in the Projects sync table.
-const ProjectSchema = coda.makeObjectSchema({
+const ProjectSchema = sdk.makeObjectSchema({
   properties: {
     name: {
       description: "The name of the project.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
     url: {
       description: "A link to the project in the Todoist app.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
     id: {
       description: "The ID of the project.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
   },
@@ -28,31 +28,31 @@ const ProjectSchema = coda.makeObjectSchema({
 // A reference schema, allowing other sync tables to link to rows in the
 // Projects sync table. The second parameter must match the identityName field
 // of the sync table being referenced.
-const ProjectReferenceSchema = coda.makeReferenceSchemaFromObjectSchema(
+const ProjectReferenceSchema = sdk.makeReferenceSchemaFromObjectSchema(
   ProjectSchema, "Project");
 
 // A schema defining the data in the Tasks sync table.
-const TaskSchema = coda.makeObjectSchema({
+const TaskSchema = sdk.makeObjectSchema({
   properties: {
     name: {
       description: "The name of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
     description: {
       description: "A detailed description of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     url: {
       description: "A link to the task in the Todoist app.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
     // Reference a project from the Projects sync table.
     project: ProjectReferenceSchema,
     id: {
       description: "The ID of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
   },
@@ -137,6 +137,6 @@ pack.addNetworkDomain("todoist.com");
 
 // Setup authentication using a Todoist API token.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.HeaderBearerToken,
+  type: sdk.AuthenticationType.HeaderBearerToken,
   instructionsUrl: "https://todoist.com/app/settings/integrations",
 });

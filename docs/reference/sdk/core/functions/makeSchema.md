@@ -28,9 +28,9 @@ but it may do validation in a future SDK version.
 ## Example
 
 ```
-coda.makeSchema({
-  type: coda.ValueType.Array,
-  items: {type: coda.ValueType.String},
+sdk.makeSchema({
+  type: sdk.ValueType.Array,
+  items: {type: sdk.ValueType.String},
 });
 ```
 

@@ -16,21 +16,21 @@ A formula that requires getting a date in the document&#x27;s timezone. This sam
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 pack.addFormula({
   name: "GoodNYEGlasses",
   description: "Determines if a date is good for New Years Eve glasses " +
     "(the year contains two zeros).",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Date,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Date,
       name: "date",
       description: "The input date.",
     }),
   ],
-  resultType: coda.ValueType.Boolean,
+  resultType: sdk.ValueType.Boolean,
   execute: async function ([date], context) {
     // Format the JavaScript Date into a four-digit year.
     let formatted = date.toLocaleDateString("en", {
@@ -49,8 +49,8 @@ A formula that requires getting a time in the document&#x27;s timezone. This sam
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Displays a time using military conventions. The result is a string (text)
 // value.
@@ -58,13 +58,13 @@ pack.addFormula({
   name: "ToMilitaryTime",
   description: "Displays a time in military time.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Date,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Date,
       name: "time",
       description: "The input time.",
     }),
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   execute: async function ([time], context) {
     // Format the JavaScript Date into 2-digit, 24 hour time.
     let formatted = time.toLocaleTimeString("en-US", {
@@ -85,21 +85,21 @@ A formula that requires getting a date and time in the document&#x27;s timezone.
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 pack.addFormula({
   name: "SameDigit",
   description: "Determines if a date and time only contain a single digit." +
     "For example, 1/1/11 1:11.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Date,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Date,
       name: "dateAndTime",
       description: "The input date and time.",
     }),
   ],
-  resultType: coda.ValueType.Boolean,
+  resultType: sdk.ValueType.Boolean,
   execute: async function ([dateAndTime], context) {
     // Format the JavaScript Date to only include the monday, day, year, hour
     // and minute as numbers.
@@ -125,18 +125,18 @@ A formula that requires sending a date to an API. This sample use the Calendarif
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // A schema to represent a holiday.
-const HolidaySchema = coda.makeObjectSchema({
+const HolidaySchema = sdk.makeObjectSchema({
   properties: {
-    name: { type: coda.ValueType.String },
-    description: { type: coda.ValueType.String },
-    locations: { type: coda.ValueType.String },
+    name: { type: sdk.ValueType.String },
+    description: { type: sdk.ValueType.String },
+    locations: { type: sdk.ValueType.String },
     type: {
-      type: coda.ValueType.Array,
-      items: { type: coda.ValueType.String },
+      type: sdk.ValueType.Array,
+      items: { type: sdk.ValueType.String },
     },
   },
   displayProperty: "name",
@@ -147,8 +147,8 @@ pack.addFormula({
   name: "Holidays",
   description: "Get the holidays (if any) on a given day.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "country",
       description: "Which country's holidays to return (ex: US).",
       // Auto-complete the valid country identifiers using the API.
@@ -158,7 +158,7 @@ pack.addFormula({
           url: "https://calendarific.com/api/v2/countries",
         });
         let countries = response.body.response.countries;
-        return coda.autocompleteSearchObjects(
+        return sdk.autocompleteSearchObjects(
           search,
           countries,
           "country_name",
@@ -166,13 +166,13 @@ pack.addFormula({
           );
       },
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.Date,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Date,
       name: "date",
       description: "Which date to lookup.",
     }),
   ],
-  resultType: coda.ValueType.Array,
+  resultType: sdk.ValueType.Array,
   items: HolidaySchema,
   execute: async function ([country, date], context) {
     // Create a formatter that outputs a numeric day, month, and year.
@@ -192,7 +192,7 @@ pack.addFormula({
     let year = parts.find(part => part.type === "year").value;
 
     // Make a request to the Calendarific API.
-    let url = coda.withQueryParams("https://calendarific.com/api/v2/holidays", {
+    let url = sdk.withQueryParams("https://calendarific.com/api/v2/holidays", {
       country: country,
       year: year,
       month: month,
@@ -210,7 +210,7 @@ pack.addFormula({
 
 // Calendarific requires an API key as a query parameter.
 pack.setSystemAuthentication({
-  type: coda.AuthenticationType.QueryParamToken,
+  type: sdk.AuthenticationType.QueryParamToken,
   paramName: "api_key",
 });
 
@@ -222,23 +222,23 @@ A formula that computes a relative time. This sample adds five minutes onto an i
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Formula that adds five minutes to an input date and time.
 pack.addFormula({
   name: "FiveMinsLate",
   description: "Adds five minutes to the input date and time.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Date,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Date,
       name: "input",
       description: "The input date and time.",
     }),
   ],
   // Return the result as the number of seconds since the epoch.
-  resultType: coda.ValueType.Number,
-  codaType: coda.ValueHintType.Time,
+  resultType: sdk.ValueType.Number,
+  codaType: sdk.ValueHintType.Time,
   execute: async function ([input], context) {
     let seconds = input.getTime() / 1000;
     seconds += 5 * 60; // Add five minutes, as seconds.

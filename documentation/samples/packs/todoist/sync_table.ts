@@ -1,26 +1,26 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // A schema defining the data in the sync table.
-const TaskSchema = coda.makeObjectSchema({
+const TaskSchema = sdk.makeObjectSchema({
   properties: {
     name: {
       description: "The name of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
     description: {
       description: "A detailed description of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     url: {
       description: "A link to the task in the Todoist app.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
     id: {
       description: "The ID of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
   },
@@ -37,14 +37,14 @@ pack.addSyncTable({
     name: "SyncTasks",
     description: "Sync tasks",
     parameters: [
-      coda.makeParameter({
-        type: coda.ParameterType.String,
+      sdk.makeParameter({
+        type: sdk.ParameterType.String,
         name: "filter",
         description: "A supported filter string. See the Todoist help center.",
         optional: true,
       }),
-      coda.makeParameter({
-        type: coda.ParameterType.String,
+      sdk.makeParameter({
+        type: sdk.ParameterType.String,
         name: "project",
         description: "Limit tasks to a specific project.",
         optional: true,
@@ -55,12 +55,12 @@ pack.addSyncTable({
             url: url,
           });
           let projects = response.body;
-          return coda.autocompleteSearchObjects(search, projects, "name", "id");
+          return sdk.autocompleteSearchObjects(search, projects, "name", "id");
         },
       }),
     ],
     execute: async function ([filter, project], context) {
-      let url = coda.withQueryParams("https://api.todoist.com/rest/v2/tasks", {
+      let url = sdk.withQueryParams("https://api.todoist.com/rest/v2/tasks", {
         filter: filter,
         project_id: project,
       });
@@ -90,6 +90,6 @@ pack.addNetworkDomain("todoist.com");
 
 // Setup authentication using a Todoist API token.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.HeaderBearerToken,
+  type: sdk.AuthenticationType.HeaderBearerToken,
   instructionsUrl: "https://todoist.com/app/settings/integrations",
 });

@@ -1,11 +1,11 @@
-import * as coda from "@codahq/packs-sdk";
+import * as sdk from "@codahq/packs-sdk";
 
-const pack = coda.newPack();
+const pack = sdk.newPack();
 
 // BEGIN
 
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.CustomHeaderToken,
+  type: sdk.AuthenticationType.CustomHeaderToken,
   headerName: "${1:MyToken}",
   instructionsUrl: "${2:https://help.example.com/api-tokens}",
   getConnectionName: async function (context) {

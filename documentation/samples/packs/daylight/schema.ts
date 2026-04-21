@@ -1,25 +1,25 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // BEGIN
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Define a schema for the information about the daylight at a given location.
-const SunSchema = coda.makeObjectSchema({
+const SunSchema = sdk.makeObjectSchema({
   properties: {
     daylight: {
       description: "How much daylight there will be.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Duration,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Duration,
     },
     sunriseUTC: {
       description: "When the sun will rise (in UTC).",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Time,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Time,
     },
     sunsetUTC: {
       description: "When the sun will set (in UTC).",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Time,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Time,
     },
   },
   // Which of the properties defined above will be shown inside the chip.

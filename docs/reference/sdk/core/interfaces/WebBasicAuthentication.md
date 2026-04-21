@@ -17,7 +17,7 @@ Authenticate using HTTP Basic authorization. The user provides a username and pa
 
 ```ts
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.WebBasic,
+  type: sdk.AuthenticationType.WebBasic,
 });
 ```
 

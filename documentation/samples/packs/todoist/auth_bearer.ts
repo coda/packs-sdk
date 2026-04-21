@@ -1,15 +1,15 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the Todoist API, using a personal API token in
 // an "Authorization: Bearer ..." header.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.HeaderBearerToken,
+  type: sdk.AuthenticationType.HeaderBearerToken,
   instructionsUrl: "https://todoist.com/app/settings/integrations",
 
   // Determines the display name of the connected account.
   getConnectionName: async function (context) {
-    let url = coda.withQueryParams("https://api.todoist.com/sync/v9/sync", {
+    let url = sdk.withQueryParams("https://api.todoist.com/sync/v9/sync", {
       resource_types: JSON.stringify(["user"]),
     });
     let response = await context.fetcher.fetch({

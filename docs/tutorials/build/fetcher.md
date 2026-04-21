@@ -80,26 +80,26 @@ Now that we've got our API selected and formula designed we're ready to dive int
     <div markdown>
 
     ```ts
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     pack.addFormula({
       name: "ToUSD",
       description: "Convert a currency to US dollars.",
       parameters: [
-        coda.makeParameter({
-          type: coda.ParameterType.Number,
+        sdk.makeParameter({
+          type: sdk.ParameterType.Number,
           name: "amount",
           description: "The amount to convert."
         }),
-        coda.makeParameter({
-          type: coda.ParameterType.String,
+        sdk.makeParameter({
+          type: sdk.ParameterType.String,
           name: "from",
           description: "The currency to convert from."
         }),
       ],
-      resultType: coda.ValueType.Number,
-      codaType: coda.ValueHintType.Currency,
+      resultType: sdk.ValueType.Number,
+      codaType: sdk.ValueHintType.Currency,
       execute: async function ([amount, from], context) {
         // TODO
         return 0;
@@ -211,8 +211,8 @@ Now that we've got our API selected and formula designed we're ready to dive int
     <div markdown>
 
     ```{.ts hl_lines="4"}
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     pack.addNetworkDomain("er-api.com");
 
@@ -250,8 +250,8 @@ If everything is working correctly you should get back the currency value conver
 
 ??? example "View the full code"
     ```ts
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     pack.addNetworkDomain("er-api.com");
 
@@ -259,19 +259,19 @@ If everything is working correctly you should get back the currency value conver
       name: "ToUSD",
       description: "Convert a currency to US dollars.",
       parameters: [
-        coda.makeParameter({
-          type: coda.ParameterType.Number,
+        sdk.makeParameter({
+          type: sdk.ParameterType.Number,
           name: "amount",
           description: "The amount to convert."
         }),
-        coda.makeParameter({
-          type: coda.ParameterType.String,
+        sdk.makeParameter({
+          type: sdk.ParameterType.String,
           name: "from",
           description: "The currency to convert from."
         }),
       ],
-      resultType: coda.ValueType.Number,
-      codaType: coda.ValueHintType.Currency,
+      resultType: sdk.ValueType.Number,
+      codaType: sdk.ValueHintType.Currency,
       execute: async function ([amount, from], context) {
         let url =
           "https://open.er-api.com/v6/latest/" + from;

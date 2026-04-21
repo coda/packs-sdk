@@ -17,7 +17,7 @@ Creates a dynamic sync table definition.
 ## Example
 
 ```
-coda.makeDynamicSyncTable({
+sdk.makeDynamicSyncTable({
   name: "MySyncTable",
   getName: async function(context) => {
     const response = await context.fetcher.fetch({method: "GET", url: context.sync.dynamicUrl});

@@ -43,15 +43,15 @@ When using a formula as a tool, ensure any image URLs returned are correctly ann
 === "Returning an image"
 
     ```{.ts hl_lines="9"}
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     pack.addFormula({
       name: "DogPhoto",
       description: "Gets a random photo of a dog.",
       parameters: [],
-      resultType: coda.ValueType.String,
-      codaType: coda.ValueHintType.ImageReference,
+      resultType: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.ImageReference,
       cacheTtlSecs: 0,
       execute: async function (args, context) {
         let response = await context.fetcher.fetch({
@@ -67,15 +67,15 @@ When using a formula as a tool, ensure any image URLs returned are correctly ann
 === "Returning a schema"
 
     ```{.ts hl_lines="9"}
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
-    const PokemonSchema = coda.makeObjectSchema({
+    const PokemonSchema = sdk.makeObjectSchema({
       properties: {
-        name: { type: coda.ValueType.String },
+        name: { type: sdk.ValueType.String },
         sprite: {
-          type: coda.ValueType.String,
-          codaType: coda.ValueHintType.ImageReference,
+          type: sdk.ValueType.String,
+          codaType: sdk.ValueHintType.ImageReference,
         },
       },
       displayProperty: "name",
@@ -85,13 +85,13 @@ When using a formula as a tool, ensure any image URLs returned are correctly ann
       name: "Pokemon",
       description: "Gets information about a Pokemon.",
       parameters: [
-        coda.makeParameter({
-          type: coda.ParameterType.String,
+        sdk.makeParameter({
+          type: sdk.ParameterType.String,
           name: "nameOrId",
           description: "The name or ID of the Pokemon to lookup.",
         }),
       ],
-      resultType: coda.ValueType.Object,
+      resultType: sdk.ValueType.Object,
       schema: PokemonSchema,
       execute: async function (args, context) {
         let [nameOrId] = args;
@@ -125,8 +125,8 @@ In these cases, you'll need to ensure that the domain of the image matches one o
 Some apps host images on a CDN at a separate domain; in that case, you'll need to declare multiple domains, which [requires approval][support_approvals]. If your agent uses authentication, you'll also need to specify which domains to send credentials to via the `networkDomain` field.
 
 ```{.ts hl_lines="12-14 19-20"}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 pack.addMCPServer({
   name: "GitHub",
@@ -141,7 +141,7 @@ pack.addNetworkDomain("github.com");
 pack.addNetworkDomain("githubusercontent.com");
 
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.HeaderBearerToken,
+  type: sdk.AuthenticationType.HeaderBearerToken,
   instructionsUrl: "https://github.com/settings/tokens",
   // Only send credentials to the MCP server.
   networkDomain: ["githubcopilot.com"]

@@ -17,17 +17,17 @@ The basic structure of a card.
 ```ts
 {% raw %}
 // A schema that defines the data shown in the card.
-const ThingSchema = coda.makeObjectSchema({
+const ThingSchema = sdk.makeObjectSchema({
   properties: {
-    name: { type: coda.ValueType.String },
-    description: { type: coda.ValueType.String },
+    name: { type: sdk.ValueType.String },
+    description: { type: sdk.ValueType.String },
     picture: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.ImageReference,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.ImageReference,
     },
     link: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
     // TODO: Add more properties.
   },
@@ -46,13 +46,13 @@ pack.addFormula({
   name: "$1",
   description: "My description.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "url",
       description: " My parameter description.",
     }),
   ],
-  resultType: coda.ValueType.Object,
+  resultType: sdk.ValueType.Object,
   schema: $1Schema,
   execute: async function (args, context) {
     let [url] = args;
@@ -81,61 +81,61 @@ A formula that returns a card containing an title, subtitle, and snippet. This s
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // A schema defining the card, including all of metadata what specifically to
 // highlight in the card.
-let SpellSchema = coda.makeObjectSchema({
-  type: coda.ValueType.Object,
+let SpellSchema = sdk.makeObjectSchema({
+  type: sdk.ValueType.Object,
   properties: {
     name: {
       description: "The spell name.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     description: {
       description: "A description of the spell.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     higher_level: {
       description: "A description for casting the spell at a higher level.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     level: {
       description: "The level of the spell.",
-      type: coda.ValueType.Number,
+      type: sdk.ValueType.Number,
     },
     range: {
       description: "The range of the spell.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     material: {
       description: "The material component for the spell to be cast.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     duration: {
       description: "How long the spell effect lasts.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       // Not using the Duration value hint, since this can contain values like
       // "Instantaneous".
     },
     casting_time: {
       description: "How long it takes for the spell to activate.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       // Not using the Duration value hint, since this can contain values like
       // "1 action".
     },
     attack_type: {
       description: "The attack type of the spell.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     damage_type: {
       description: "The damage type of the spell.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     index: {
       description: "A unique identifier for the spell.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
   },
   displayProperty: "name",
@@ -159,18 +159,18 @@ pack.addFormula({
   name: "Spell",
   description: "Gets information about a spell, given its name.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "name",
       description: "The name of the spell.",
       suggestedValue: "Acid Arrow",
     }),
   ],
-  resultType: coda.ValueType.Object,
+  resultType: sdk.ValueType.Object,
   schema: SpellSchema,
   execute: async function ([name], context) {
     // Search for spells that match the name provided.
-    let searchUrl = coda.withQueryParams(
+    let searchUrl = sdk.withQueryParams(
       "https://www.dnd5eapi.co/api/spells/",
       { name: name },
       );
@@ -182,7 +182,7 @@ pack.addFormula({
 
     // If no spells match, throw an error.
     if (!results?.length) {
-      throw new coda.UserVisibleError("Unknown spell: " + name);
+      throw new sdk.UserVisibleError("Unknown spell: " + name);
     }
 
     // Fetch the spell details for the first result.
@@ -199,7 +199,7 @@ pack.addNetworkDomain("dnd5eapi.co");
 
 // Fetch a batch of spells from the API and return them formatted to match the
 // schema. This utility function is shared by the formula and sync table.
-async function fetchSpells(fetcher: coda.Fetcher, spellResults) {
+async function fetchSpells(fetcher: sdk.Fetcher, spellResults) {
   let requests = [];
   for (let spellResult of spellResults) {
     // Add on the domain.
@@ -242,23 +242,23 @@ A formula that returns a card that includes an image. This samples returns a car
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Define the schema that will be used to render the card.
-const WeatherSchema = coda.makeObjectSchema({
+const WeatherSchema = sdk.makeObjectSchema({
   properties: {
-    summary: { type: coda.ValueType.String, fromKey: "shortForecast" },
-    forecast: { type: coda.ValueType.String, fromKey: "detailedForecast" },
-    temperature: { type: coda.ValueType.String },
-    wind: { type: coda.ValueType.String, fromKey: "windSpeed" },
+    summary: { type: sdk.ValueType.String, fromKey: "shortForecast" },
+    forecast: { type: sdk.ValueType.String, fromKey: "detailedForecast" },
+    temperature: { type: sdk.ValueType.String },
+    wind: { type: sdk.ValueType.String, fromKey: "windSpeed" },
     icon: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.ImageReference,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.ImageReference,
     },
     link: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
   },
   displayProperty: "summary",
@@ -277,29 +277,29 @@ pack.addFormula({
   name: "CurrentWeather",
   description: "Get the current weather at a specific location (US only).",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "latitude",
       description: "The latitude of the location.",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "longitude",
       description: "The longitude of the location.",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.Boolean,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Boolean,
       name: "isMetric",
       description: "Whether to use metric units. Default: false.",
       optional: true,
     }),
   ],
-  resultType: coda.ValueType.Object,
+  resultType: sdk.ValueType.Object,
   schema: WeatherSchema,
   execute: async function ([latitude, longitude, isMetric], context) {
     let url = await getForecastUrl(latitude, longitude, context);
     if (isMetric) {
-      url = coda.withQueryParams(url, { units: "si" });
+      url = sdk.withQueryParams(url, { units: "si" });
     }
     let response = await context.fetcher.fetch({
       method: "GET",
@@ -310,7 +310,7 @@ pack.addFormula({
     // Add the unit onto the temperature.
     weather.temperature = `${weather.temperature}°${weather.temperatureUnit}`;
     weather.link =
-      coda.withQueryParams("https://forecast.weather.gov/MapClick.php", {
+      sdk.withQueryParams("https://forecast.weather.gov/MapClick.php", {
         lat: latitude,
         lon: longitude,
       });
@@ -320,7 +320,7 @@ pack.addFormula({
 
 // A helper function that gets the forecast URL for a given location.
 async function getForecastUrl(latitude: number, longitude: number,
-  context: coda.ExecutionContext): Promise<string> {
+  context: sdk.ExecutionContext): Promise<string> {
   try {
     let response = await context.fetcher.fetch({
       method: "GET",
@@ -331,10 +331,10 @@ async function getForecastUrl(latitude: number, longitude: number,
   } catch (error) {
     // Check if the error is due to the location being outside the US.
     if (error.statusCode === 404) {
-      let statusError = error as coda.StatusCodeError;
+      let statusError = error as sdk.StatusCodeError;
       let message = statusError.body?.detail;
       if (message) {
-        throw new coda.UserVisibleError(message);
+        throw new sdk.UserVisibleError(message);
       }
     }
     throw error;
@@ -349,34 +349,34 @@ A card that can be created manually or automatically when pasting a link. This s
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // A schema defining the card, including all of metadata what specifically to
 // highlight in the card.
-const TaskSchema = coda.makeObjectSchema({
+const TaskSchema = sdk.makeObjectSchema({
   properties: {
     name: {
       description: "The name of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
     description: {
       description: "A detailed description of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     url: {
       description: "A link to the task in the Todoist app.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
     priority: {
       description: "The priority of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     id: {
       description: "The ID of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
   },
@@ -397,13 +397,13 @@ pack.addFormula({
   name: "Task",
   description: "Gets a Todoist task by URL",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "url",
       description: "The URL of the task",
     }),
   ],
-  resultType: coda.ValueType.Object,
+  resultType: sdk.ValueType.Object,
   schema: TaskSchema,
 
   execute: async function ([url], context) {
@@ -450,7 +450,7 @@ function extractTaskId(taskUrl: string) {
       return matches[1];
     }
   }
-  throw new coda.UserVisibleError("Invalid task URL: " + taskUrl);
+  throw new sdk.UserVisibleError("Invalid task URL: " + taskUrl);
 }
 
 // Allow the pack to make requests to Todoist.
@@ -458,7 +458,7 @@ pack.addNetworkDomain("todoist.com");
 
 // Setup authentication using a Todoist API token.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.HeaderBearerToken,
+  type: sdk.AuthenticationType.HeaderBearerToken,
   instructionsUrl: "https://todoist.com/app/settings/integrations",
 });
 {% endraw %}

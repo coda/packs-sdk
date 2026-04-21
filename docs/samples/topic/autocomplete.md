@@ -16,22 +16,22 @@ A formula with a parameter that provides autocomplete for acceptable values. Thi
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Returns the noise an animal makes. Ex) "cow" => "moo".
 pack.addFormula({
   name: "AnimalNoise",
   description: "Gets the noise than an animal makes.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "animal",
       description: "The selected animal.",
       autocomplete: ["cow", "pig", "sheep"],
     }),
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   execute: async function ([animal], context) {
     switch (animal) {
       case "cow":
@@ -41,7 +41,7 @@ pack.addFormula({
       case "sheep":
         return "baa";
       default:
-        throw new coda.UserVisibleError("Unknown animal: " + animal);
+        throw new sdk.UserVisibleError("Unknown animal: " + animal);
     }
   },
 });
@@ -52,32 +52,32 @@ A formula with a parameter that provides autocomplete for acceptable values, whe
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Gets the price of a board game by ID, with autocomplete on the ID.
 pack.addFormula({
   name: "GetPrice",
   description: "Gets the price of a board game.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "gameId",
       description: "The ID of the game on boardgameatlas.com",
       autocomplete: async function (context, search, parameters) {
-        let url = coda.withQueryParams(
+        let url = sdk.withQueryParams(
           "https://api.boardgameatlas.com/api/search",
           { fuzzy_match: true, name: search });
         let response = await context.fetcher.fetch({ method: "GET", url: url });
         let results = response.body.games;
         // Generate an array of autocomplete objects, using the game's name as
         // the label and its ID for the value.
-        return coda.autocompleteSearchObjects(search, results, "name", "id");
+        return sdk.autocompleteSearchObjects(search, results, "name", "id");
       },
     }),
   ],
-  resultType: coda.ValueType.Number,
-  codaType: coda.ValueHintType.Currency,
+  resultType: sdk.ValueType.Number,
+  codaType: sdk.ValueHintType.Currency,
   execute: async function ([gameId], context) {
     let response = await context.fetcher.fetch({
       method: "GET",
@@ -92,7 +92,7 @@ pack.addNetworkDomain("boardgameatlas.com");
 // Authenticate using a client ID.
 // See: https://www.boardgameatlas.com/api/docs/apps
 pack.setSystemAuthentication({
-  type: coda.AuthenticationType.QueryParamToken,
+  type: sdk.AuthenticationType.QueryParamToken,
   paramName: "client_id",
 });
 {% endraw %}
@@ -102,8 +102,8 @@ A formula with a parameter that provides autocomplete for acceptable values, whe
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Greet someone in their language, with the greeting autocomplete adjusting
 // based on the language selected.
@@ -111,8 +111,8 @@ pack.addFormula({
   name: "Greeting",
   description: "Greet someone.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "language",
       description: "The language to greet them in.",
       autocomplete: [
@@ -120,8 +120,8 @@ pack.addFormula({
         { display: "Spanish", value: "es" },
       ],
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "greeting",
       description: "The greeting to use.",
       autocomplete: async function (context, search, { language }) {
@@ -131,17 +131,17 @@ pack.addFormula({
         } else {
           options = ["Hello", "Howdy"];
         }
-        return coda.simpleAutocomplete(search, options);
+        return sdk.simpleAutocomplete(search, options);
       },
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "name",
       description: "The name to greet.",
     }),
   ],
-  resultType: coda.ValueType.String,
-  connectionRequirement: coda.ConnectionRequirement.None,
+  resultType: sdk.ValueType.String,
+  connectionRequirement: sdk.ConnectionRequirement.None,
   execute: async function ([language, greeting, name], context) {
     let result = greeting + " " + name + "!";
     if (language === "es") {
@@ -158,29 +158,29 @@ A formula with vararg parameters that represent key-value pairs, which provides 
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Generates a fictitious ice cream order, using a flexible set of choices.
 pack.addFormula({
   name: "OrderIcecream",
   description: "Put in your ice cream order.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "scoops",
       description: "How many scoops do you want?",
     }),
   ],
   varargParameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "choice",
       description: "Which choice to set.",
       autocomplete: ["flavor", "topping", "vessel"],
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "value",
       description: "The value of that choice.",
       autocomplete: async function (context, search, params) {
@@ -197,7 +197,7 @@ pack.addFormula({
       },
     }),
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   execute: async function ([scoops, ...args], context) {
     let result = `${scoops}: scoops`;
     let choice, value;

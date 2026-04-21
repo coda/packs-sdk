@@ -1,11 +1,11 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the Vonage API, using an API key and secret
 // in the request body.
 // See https://developer.vonage.com/en/api/sms
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.Custom,
+  type: sdk.AuthenticationType.Custom,
   params: [
     { name: "api_key", description: "API key." },
     { name: "api_secret", description: "API secret." },
@@ -16,23 +16,23 @@ pack.addFormula({
   name: "SendSMS",
   description: "Sends an SMS message.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "from",
       description: "The phone number to send from.",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "to",
       description: "The phone number to send to.",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "text",
       description: "The text of the message.",
     }),
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   isAction: true,
   execute: async function ([from, to, text], context) {
     // Create the placeholders for the API key and secret.
@@ -62,7 +62,7 @@ pack.addFormula({
 
     let message = response.body.messages[0];
     if (message.status !== "0") {
-      throw new coda.UserVisibleError(message["error-text"]);
+      throw new sdk.UserVisibleError(message["error-text"]);
     }
     return message["message-id"];
   },

@@ -47,7 +47,7 @@ pack.addFormula({
 In metadata formulas, such as those that determine autocomplete choices or connection names, the context is the only parameter:
 
 ```ts
-coda.makeParameter({
+sdk.makeParameter({
   // ...
   autocomplete: async function(context) {
     let fetcher = context.fetcher;
@@ -136,10 +136,10 @@ let response = await context.fetcher.fetch({
 
 ### URL query parameters {:#query-parameters}
 
-To send data in the URL query parameters, simply append those parameters to the URL passed to the fetcher. For example, `https://www.example.com?foo=bar&thing=true`. The SDK provides a helper function, [`coda.withQueryParams()`][withQueryParams] that simplifies the process of encoding and appending query parameters to a URL.
+To send data in the URL query parameters, simply append those parameters to the URL passed to the fetcher. For example, `https://www.example.com?foo=bar&thing=true`. The SDK provides a helper function, [`sdk.withQueryParams()`][withQueryParams] that simplifies the process of encoding and appending query parameters to a URL.
 
 ```ts
-let url = coda.withQueryParams("https://www.example.com", {
+let url = sdk.withQueryParams("https://www.example.com", {
   foo: "bar",
   thing: true,
 });
@@ -186,7 +186,7 @@ Both of these options are compatible with Packs, as described in [URL query para
         }
       }
     `;
-    let url = coda.withQueryParams("https://api.example.com", {
+    let url = sdk.withQueryParams("https://api.example.com", {
       query: query,
     });
     let response = await context.fetcher.fetch({
@@ -385,13 +385,13 @@ try {
   });
 } catch (error) {
   // If the request failed because the server returned a 300+ status code.
-  if (coda.StatusCodeError.isStatusCodeError(error)) {
+  if (sdk.StatusCodeError.isStatusCodeError(error)) {
     // Cast the error as a StatusCodeError, for better intellisense.
-    let statusError = error as coda.StatusCodeError;
+    let statusError = error as sdk.StatusCodeError;
     // If the API returned an error message in the body, show it to the user.
     let message = statusError.body?.detail;
     if (message) {
-      throw new coda.UserVisibleError(message);
+      throw new sdk.UserVisibleError(message);
     }
   }
   // The request failed for some other reason. Re-throw the error so that it

@@ -6,34 +6,34 @@
  */
 
 // This import statement provides access to all parts of the Coda Packs SDK.
-import * as coda from "@codahq/packs-sdk";
+import * as sdk from "@codahq/packs-sdk";
 
 // This line creates the new Pack.
-export const pack = coda.newPack();
+export const pack = sdk.newPack();
 
 // The domain that the Pack will match fetcher requests to.
 pack.addNetworkDomain("sunrise-sunset.org");
 
 // Define a schema that will be used to bundle up the multiple pieces of data
 // our formula will return. In the Coda doc this will be displayed as a chip.
-const SunSchema = coda.makeObjectSchema({
+const SunSchema = sdk.makeObjectSchema({
   properties: {
     // The values we return are simple strings, but we use the codaType field to
     // to tell Coda to interpret them as durations and time values.
     daylight: {
       description: "How much daylight there will be.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Duration,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Duration,
     },
     sunrise: {
       description: "When the sun will rise (in the document's timezone).",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Time,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Time,
     },
     sunset: {
       description: "When the sun will set (in the document's timezone).",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Time,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Time,
     },
   },
   // Which of the properties defined above will be shown inside the chip.
@@ -48,18 +48,18 @@ pack.addFormula({
   // This formula takes two required numeric inputs (the latitude and longitude)
   // and one optional date.
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "lat",
       description: "The latitude to use.",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "lng",
       description: "The longitude to use.",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.Date,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Date,
       name: "date",
       description: "The date to use. Defaults to today.",
       // This date parameter is an optional input.
@@ -68,7 +68,7 @@ pack.addFormula({
   ],
 
   // In this formula, we're returning an object with multiple properties.
-  resultType: coda.ValueType.Object,
+  resultType: sdk.ValueType.Object,
 
   // This object will be defined according to the schema written above.
   schema: SunSchema,
@@ -86,9 +86,9 @@ pack.addFormula({
       timeZone: context.timezone, // Use the timezone of the doc (important!).
     });
 
-    // Create the URL to fetch, using the helper function coda.withQueryParams
+    // Create the URL to fetch, using the helper function sdk.withQueryParams
     // to add on query parameters (ex: "?lat=40.123...").
-    let url = coda.withQueryParams("https://api.sunrise-sunset.org/json", {
+    let url = sdk.withQueryParams("https://api.sunrise-sunset.org/json", {
       lat: lat,
       lng: lng,
       date: formattedDate,

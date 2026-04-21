@@ -140,8 +140,8 @@ Start by scaffolding out the structure of the sync table, coming back to some of
     <div markdown>
 
     ```ts
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     pack.addNetworkDomain("gutendex.com");
 
@@ -166,8 +166,8 @@ Start by scaffolding out the structure of the sync table, coming back to some of
     <div markdown>
 
     ```{.ts hl_lines="7-9"}
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     pack.addNetworkDomain("gutendex.com");
 
@@ -192,8 +192,8 @@ Start by scaffolding out the structure of the sync table, coming back to some of
     <div markdown>
 
     ```{.ts hl_lines="10"}
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     pack.addNetworkDomain("gutendex.com");
 
@@ -224,8 +224,8 @@ Start by scaffolding out the structure of the sync table, coming back to some of
     <div markdown>
 
     ```{.ts hl_lines="11-18"}
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     pack.addNetworkDomain("gutendex.com");
 
@@ -274,8 +274,8 @@ With the structure set up, you can now write the code that fetches the rows.
         name: "SyncBooks",
         description: "Syncs the books.",
         parameters: [
-          coda.makeParameter({
-            type: coda.ParameterType.String,
+          sdk.makeParameter({
+            type: sdk.ParameterType.String,
             name: "topic",
             description: "Limit books to this topic.",
             optional: true,
@@ -313,7 +313,7 @@ With the structure set up, you can now write the code that fetches the rows.
         execute: async function (args, context) {
           let [topic] = args;
           let baseUrl = "https://gutendex.com/books";
-          let url = coda.withQueryParams(baseUrl, {
+          let url = sdk.withQueryParams(baseUrl, {
             topic: topic,
           });
           let response = await context.fetcher.fetch({
@@ -348,7 +348,7 @@ With the structure set up, you can now write the code that fetches the rows.
         execute: async function (args, context) {
           let [topic] = args;
           let baseUrl = "https://gutendex.com/books";
-          let url = coda.withQueryParams(baseUrl, {
+          let url = sdk.withQueryParams(baseUrl, {
             topic: topic,
           });
           let response = await context.fetcher.fetch({
@@ -385,18 +385,18 @@ The schema is essentially a blueprint for each row in the sync table, describing
 
     Schemas must be defined in the code before the sync tables that use them.
 
-    There are different types of schemas, but a sync table must use an object schema. Create one using `coda.makeObjectSchema`.
+    There are different types of schemas, but a sync table must use an object schema. Create one using `sdk.makeObjectSchema`.
 
     </div>
     <div markdown>
 
     ```{.ts hl_lines="6-8"}
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     pack.addNetworkDomain("gutendex.com");
 
-    const BookSchema = coda.makeObjectSchema({
+    const BookSchema = sdk.makeObjectSchema({
 
     });
 
@@ -432,9 +432,9 @@ The schema is essentially a blueprint for each row in the sync table, describing
     <div markdown>
 
     ```{.ts hl_lines="2-4"}
-    const BookSchema = coda.makeObjectSchema({
+    const BookSchema = sdk.makeObjectSchema({
       properties: {
-        title: { type: coda.ValueType.String },
+        title: { type: sdk.ValueType.String },
       },
     });
     ```
@@ -453,10 +453,10 @@ The schema is essentially a blueprint for each row in the sync table, describing
     <div markdown>
 
     ```{.ts hl_lines="4"}
-    const BookSchema = coda.makeObjectSchema({
+    const BookSchema = sdk.makeObjectSchema({
       properties: {
-        title: { type: coda.ValueType.String },
-        id: { type: coda.ValueType.Number },
+        title: { type: sdk.ValueType.String },
+        id: { type: sdk.ValueType.Number },
       },
     });
     ```
@@ -479,10 +479,10 @@ The schema is essentially a blueprint for each row in the sync table, describing
     <div markdown>
 
     ```{.ts hl_lines="6-7"}
-    const BookSchema = coda.makeObjectSchema({
+    const BookSchema = sdk.makeObjectSchema({
       properties: {
-        title: { type: coda.ValueType.String },
-        id: { type: coda.ValueType.Number },
+        title: { type: sdk.ValueType.String },
+        id: { type: sdk.ValueType.Number },
       },
       displayProperty: "title",
       idProperty: "id",
@@ -545,12 +545,12 @@ Now that you have the basics working, extend the schema to include the full set 
     <div markdown>
 
     ```{.ts hl_lines="4-7"}
-    const BookSchema = coda.makeObjectSchema({
+    const BookSchema = sdk.makeObjectSchema({
       properties: {
         // ...
         subjects: {
-          type: coda.ValueType.Array,
-          items: { type: coda.ValueType.String }
+          type: sdk.ValueType.Array,
+          items: { type: sdk.ValueType.String }
         },
       },
       // ...
@@ -585,15 +585,15 @@ Now that you have the basics working, extend the schema to include the full set 
     <div markdown>
 
     ```{.ts hl_lines="8-11"}
-    const BookSchema = coda.makeObjectSchema({
+    const BookSchema = sdk.makeObjectSchema({
       properties: {
         // ...
         subjects: {
-          type: coda.ValueType.Array,
-          items: { type: coda.ValueType.String }
+          type: sdk.ValueType.Array,
+          items: { type: sdk.ValueType.String }
         },
         authors: {
-          type: coda.ValueType.Array,
+          type: sdk.ValueType.Array,
           items: AuthorSchema,
         },
       },
@@ -619,22 +619,22 @@ Now that you have the basics working, extend the schema to include the full set 
     <div markdown>
 
     ```{.ts hl_lines="1-14"}
-    const AuthorSchema = coda.makeObjectSchema({
+    const AuthorSchema = sdk.makeObjectSchema({
       properties: {
-        name: { type: coda.ValueType.String },
+        name: { type: sdk.ValueType.String },
         born: {
-          type: coda.ValueType.Number,
+          type: sdk.ValueType.Number,
           fromKey: "birth_year",
         },
         died: {
-          type: coda.ValueType.Number,
+          type: sdk.ValueType.Number,
           fromKey: "death_year",
         },
       },
       displayProperty: "name",
     });
 
-    const BookSchema = coda.makeObjectSchema({
+    const BookSchema = sdk.makeObjectSchema({
       // ...
     });
     ```
@@ -657,28 +657,28 @@ Now that you have the basics working, extend the schema to include the full set 
     <div markdown>
 
     ```{.ts hl_lines="16-23"}
-    const AuthorSchema = coda.makeObjectSchema({
+    const AuthorSchema = sdk.makeObjectSchema({
       // ...
     });
 
-    const BookSchema = coda.makeObjectSchema({
+    const BookSchema = sdk.makeObjectSchema({
       properties: {
         // ...
         subjects: {
-          type: coda.ValueType.Array,
-          items: { type: coda.ValueType.String }
+          type: sdk.ValueType.Array,
+          items: { type: sdk.ValueType.String }
         },
         authors: {
-          type: coda.ValueType.Array,
+          type: sdk.ValueType.Array,
           items: AuthorSchema,
         },
         thumbnail: {
-          type: coda.ValueType.String,
-          codaType: coda.ValueHintType.ImageAttachment,
+          type: sdk.ValueType.String,
+          codaType: sdk.ValueHintType.ImageAttachment,
         },
         link: {
-          type: coda.ValueType.String,
-          codaType: coda.ValueHintType.Url,
+          type: sdk.ValueType.String,
+          codaType: sdk.ValueHintType.Url,
         },
       },
       // ...
@@ -715,7 +715,7 @@ Now that you have the basics working, extend the schema to include the full set 
     execute: async function (args, context) {
       let [topic] = args;
       let baseUrl = "https://gutendex.com/books";
-      let url = coda.withQueryParams(baseUrl, {
+      let url = sdk.withQueryParams(baseUrl, {
         topic: topic,
       });
       let response = await context.fetcher.fetch({
@@ -750,11 +750,11 @@ Now that you have the basics working, extend the schema to include the full set 
     <div markdown>
 
     ```{.ts hl_lines="11-13"}
-    const AuthorSchema = coda.makeObjectSchema({
+    const AuthorSchema = sdk.makeObjectSchema({
       // ...
     });
 
-    const BookSchema = coda.makeObjectSchema({
+    const BookSchema = sdk.makeObjectSchema({
       properties: {
         // ...
       },
@@ -836,7 +836,7 @@ To tell Coda that the sync is complete simply pass an `undefined` continuation.
     execute: async function (args, context) {
       let [topic] = args;
       let baseUrl = "https://gutendex.com/books";
-      let url = coda.withQueryParams(baseUrl, {
+      let url = sdk.withQueryParams(baseUrl, {
         topic: topic,
       });
       let response = await context.fetcher.fetch({
@@ -883,7 +883,7 @@ To tell Coda that the sync is complete simply pass an `undefined` continuation.
     execute: async function (args, context) {
       let [topic] = args;
       let baseUrl = "https://gutendex.com/books";
-      let url = coda.withQueryParams(baseUrl, {
+      let url = sdk.withQueryParams(baseUrl, {
         topic: topic,
       });;
       if (context.sync.continuation) {

@@ -1,5 +1,5 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // A formula that demonstrates how to generate an SVG that adapts to the user's
 // dark mode setting in Coda.
@@ -7,13 +7,13 @@ pack.addFormula({
   name: "HelloDarkMode",
   description: "Generates an image that adapts to the dark mode setting.",
   parameters: [],
-  resultType: coda.ValueType.String,
-  codaType: coda.ValueHintType.ImageReference,
+  resultType: sdk.ValueType.String,
+  codaType: sdk.ValueHintType.ImageReference,
   execute: async function ([], context) {
     // When loading your image in dark mode, Coda will append the URL fragment
     // "#DarkMode". Instead of hard-coding that value, it's safer to retrieve
     // it from the SDK.
-    let darkModeId = coda.SvgConstants.DarkModeFragmentId;
+    let darkModeId = sdk.SvgConstants.DarkModeFragmentId;
     // Generate the SVG markup. Prefer using a library for this when possible.
     let svg = `
       <svg viewBox="0 0 36 10" xmlns="http://www.w3.org/2000/svg">
@@ -33,6 +33,6 @@ pack.addFormula({
     // Encode the markup as base64.
     let encoded = Buffer.from(svg).toString("base64");
     // Return the SVG as a data URL (using the dark mode prefix).
-    return coda.SvgConstants.DataUrlPrefixWithDarkModeSupport + encoded;
+    return sdk.SvgConstants.DataUrlPrefixWithDarkModeSupport + encoded;
   },
 });

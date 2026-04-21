@@ -1,26 +1,26 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 const PageSize = 20;
 const OneDaySecs = 24 * 60 * 60;
 
-const ProductSchema = coda.makeObjectSchema({
+const ProductSchema = sdk.makeObjectSchema({
   properties: {
     name: {
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       fromKey: "title",
     },
-    description: { type: coda.ValueType.String },
+    description: { type: sdk.ValueType.String },
     image: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.ImageAttachment,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.ImageAttachment,
     },
     link: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
       fromKey: "onlineStoreUrl",
     },
-    id: { type: coda.ValueType.String },
+    id: { type: sdk.ValueType.String },
   },
   displayProperty: "name",
   idProperty: "id",
@@ -38,8 +38,8 @@ pack.addSyncTable({
     name: "SyncProducts",
     description: "Syncs the data.",
     parameters: [
-      coda.makeParameter({
-        type: coda.ParameterType.String,
+      sdk.makeParameter({
+        type: sdk.ParameterType.String,
         name: "name",
         description: "If specified, only matching products will be included.",
         optional: true,

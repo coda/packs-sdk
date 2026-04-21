@@ -48,18 +48,18 @@ A sync table that uses a parameter. This sample syncs the list of emojis.
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
-const EmojiSchema = coda.makeObjectSchema({
+const EmojiSchema = sdk.makeObjectSchema({
   properties: {
-    name: { type: coda.ValueType.String, fromKey: "annotation" },
-    hexcode: { type: coda.ValueType.String },
-    emoji: { type: coda.ValueType.String },
-    group: { type: coda.ValueType.String },
-    image: { 
-      type: coda.ValueType.String, 
-      codaType: coda.ValueHintType.ImageReference,
+    name: { type: sdk.ValueType.String, fromKey: "annotation" },
+    hexcode: { type: sdk.ValueType.String },
+    emoji: { type: sdk.ValueType.String },
+    group: { type: sdk.ValueType.String },
+    image: {
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.ImageReference,
     },
   },
   displayProperty: "name",
@@ -76,20 +76,20 @@ pack.addSyncTable({
     name: "SyncEmojis",
     description: "Syncs the data.",
     parameters: [
-      coda.makeParameter({
-        type: coda.ParameterType.String,
+      sdk.makeParameter({
+        type: sdk.ParameterType.String,
         name: "group",
         description: "If specified, only include emojis in this group.",
         optional: true,
         autocomplete: [
-          "smileys-emotion", "people-body", "component", "animals-nature", 
+          "smileys-emotion", "people-body", "component", "animals-nature",
           "food-drink", "travel-places", "activities", "objects", "symbols",
         ],
       }),
     ],
     execute: async function (args, context) {
       let [group] = args;
-      let url = coda.withQueryParams("https://www.emoji.family/api/emojis", {
+      let url = sdk.withQueryParams("https://www.emoji.family/api/emojis", {
         group: group,
       });
       let response = await context.fetcher.fetch({
@@ -119,8 +119,8 @@ A sync table that uses continuations to sync data using multiple executions. Thi
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // How many spells to fetch in each sync formula execution.
 const BATCH_SIZE = 20;
@@ -130,56 +130,56 @@ pack.addNetworkDomain("dnd5eapi.co");
 
 // Schema that defines the metadata to return for each spell. Shared by the
 // formula, column format, and sync table.
-let SpellSchema = coda.makeObjectSchema({
-  type: coda.ValueType.Object,
+let SpellSchema = sdk.makeObjectSchema({
+  type: sdk.ValueType.Object,
   properties: {
     name: {
       description: "The spell name.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     description: {
       description: "A description of the spell.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     higher_level: {
       description: "A description for casting the spell at a higher level.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     level: {
       description: "The level of the spell.",
-      type: coda.ValueType.Number,
+      type: sdk.ValueType.Number,
     },
     range: {
       description: "The range of the spell.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     material: {
       description: "The material component for the spell to be cast.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     duration: {
       description: "How long the spell effect lasts.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       // Not using the Duration value hint, since this can contain values like
       // "Instantaneous".
     },
     casting_time: {
       description: "How long it takes for the spell to activate.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       // Not using the Duration value hint, since this can contain values like
       // "1 action".
     },
     attack_type: {
       description: "The attack type of the spell.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     damage_type: {
       description: "The damage type of the spell.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     index: {
       description: "A unique identifier for the spell.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
   },
   displayProperty: "name",
@@ -203,7 +203,7 @@ pack.addSyncTable({
   name: "Spells",
   identityName: "Spell",
   schema: SpellSchema,
-  connectionRequirement: coda.ConnectionRequirement.None,
+  connectionRequirement: sdk.ConnectionRequirement.None,
   formula: {
     name: "SyncSpells",
     description: "Sync all the spells.",
@@ -249,7 +249,7 @@ pack.addSyncTable({
 
 // Fetch a batch of spells from the API and return them formatted to match the
 // schema. This utility function is shared by the formula and sync table.
-async function fetchSpells(fetcher: coda.Fetcher, spellResults) {
+async function fetchSpells(fetcher: sdk.Fetcher, spellResults) {
   let requests = [];
   for (let spellResult of spellResults) {
     // Add on the domain.
@@ -280,29 +280,29 @@ A sync table that pulls from an API using authentication. This sample syncs the 
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // A schema defining the data in the sync table.
-const TaskSchema = coda.makeObjectSchema({
+const TaskSchema = sdk.makeObjectSchema({
   properties: {
     name: {
       description: "The name of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
     description: {
       description: "A detailed description of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     url: {
       description: "A link to the task in the Todoist app.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
     id: {
       description: "The ID of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
   },
@@ -319,14 +319,14 @@ pack.addSyncTable({
     name: "SyncTasks",
     description: "Sync tasks",
     parameters: [
-      coda.makeParameter({
-        type: coda.ParameterType.String,
+      sdk.makeParameter({
+        type: sdk.ParameterType.String,
         name: "filter",
         description: "A supported filter string. See the Todoist help center.",
         optional: true,
       }),
-      coda.makeParameter({
-        type: coda.ParameterType.String,
+      sdk.makeParameter({
+        type: sdk.ParameterType.String,
         name: "project",
         description: "Limit tasks to a specific project.",
         optional: true,
@@ -337,12 +337,12 @@ pack.addSyncTable({
             url: url,
           });
           let projects = response.body;
-          return coda.autocompleteSearchObjects(search, projects, "name", "id");
+          return sdk.autocompleteSearchObjects(search, projects, "name", "id");
         },
       }),
     ],
     execute: async function ([filter, project], context) {
-      let url = coda.withQueryParams("https://api.todoist.com/rest/v2/tasks", {
+      let url = sdk.withQueryParams("https://api.todoist.com/rest/v2/tasks", {
         filter: filter,
         project_id: project,
       });
@@ -372,7 +372,7 @@ pack.addNetworkDomain("todoist.com");
 
 // Setup authentication using a Todoist API token.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.HeaderBearerToken,
+  type: sdk.AuthenticationType.HeaderBearerToken,
   instructionsUrl: "https://todoist.com/app/settings/integrations",
 });
 {% endraw %}
@@ -382,25 +382,25 @@ A sync table that contains a reference to a row in another sync table. This samp
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // A schema defining the data in the Projects sync table.
-const ProjectSchema = coda.makeObjectSchema({
+const ProjectSchema = sdk.makeObjectSchema({
   properties: {
     name: {
       description: "The name of the project.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
     url: {
       description: "A link to the project in the Todoist app.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
     id: {
       description: "The ID of the project.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
   },
@@ -412,31 +412,31 @@ const ProjectSchema = coda.makeObjectSchema({
 // A reference schema, allowing other sync tables to link to rows in the
 // Projects sync table. The second parameter must match the identityName field
 // of the sync table being referenced.
-const ProjectReferenceSchema = coda.makeReferenceSchemaFromObjectSchema(
+const ProjectReferenceSchema = sdk.makeReferenceSchemaFromObjectSchema(
   ProjectSchema, "Project");
 
 // A schema defining the data in the Tasks sync table.
-const TaskSchema = coda.makeObjectSchema({
+const TaskSchema = sdk.makeObjectSchema({
   properties: {
     name: {
       description: "The name of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
     description: {
       description: "A detailed description of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     url: {
       description: "A link to the task in the Todoist app.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
     // Reference a project from the Projects sync table.
     project: ProjectReferenceSchema,
     id: {
       description: "The ID of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
   },
@@ -521,7 +521,7 @@ pack.addNetworkDomain("todoist.com");
 
 // Setup authentication using a Todoist API token.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.HeaderBearerToken,
+  type: sdk.AuthenticationType.HeaderBearerToken,
   instructionsUrl: "https://todoist.com/app/settings/integrations",
 });
 {% endraw %}

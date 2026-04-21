@@ -1,12 +1,12 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the Jira Cloud API, using OAuth2 with a
 // post-submit step to select the instance to connect to. Note that this code
 // isn't compatible with Jira Data Center.
 // See https://developer.atlassian.com/cloud/confluence/oauth-2-3lo-apps
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://auth.atlassian.com/authorize",
   tokenUrl: "https://auth.atlassian.com/oauth/token",
   scopes: ["offline_access", "read:jira-user", "read:jira-work"],
@@ -18,7 +18,7 @@ pack.setUserAuthentication({
   // After approving access, the user should select which instance they want to
   // connect to.
   postSetup: [{
-    type: coda.PostSetupType.SetEndpoint,
+    type: sdk.PostSetupType.SetEndpoint,
     name: "SelectEndpoint",
     description: "Select the site to connect to:",
     // Determine the list of sites they have access to.
@@ -53,7 +53,7 @@ pack.setUserAuthentication({
 });
 
 // Get information about the Jira server.
-async function getServer(context: coda.ExecutionContext) {
+async function getServer(context: sdk.ExecutionContext) {
   let url = "/rest/api/3/serverInfo";
   let response = await context.fetcher.fetch({
     method: "GET",
@@ -63,7 +63,7 @@ async function getServer(context: coda.ExecutionContext) {
 }
 
 // Get information about the Jira user.
-async function getUser(context: coda.ExecutionContext) {
+async function getUser(context: sdk.ExecutionContext) {
   let url = "/rest/api/3/myself";
   let response = await context.fetcher.fetch({
     method: "GET",

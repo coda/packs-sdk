@@ -18,9 +18,9 @@ The basic structure of an object schema.
 
 ```ts
 {% raw %}
-const ThingSchema = coda.makeObjectSchema({
+const ThingSchema = sdk.makeObjectSchema({
   properties: {
-    name: { type: coda.ValueType.String },
+    name: { type: sdk.ValueType.String },
     // TODO: Add more properties.
   },
   displayProperty: "$2",
@@ -32,26 +32,26 @@ An object schema used by a formula. This sample defines the schema for informati
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Define a schema for the information about the daylight at a given location.
-const SunSchema = coda.makeObjectSchema({
+const SunSchema = sdk.makeObjectSchema({
   properties: {
     daylight: {
       description: "How much daylight there will be.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Duration,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Duration,
     },
     sunriseUTC: {
       description: "When the sun will rise (in UTC).",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Time,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Time,
     },
     sunsetUTC: {
       description: "When the sun will set (in UTC).",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Time,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Time,
     },
   },
   // Which of the properties defined above will be shown inside the chip.
@@ -64,60 +64,60 @@ An object schema used by a sync table. This sample defines the schema for the in
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Schema that defines a spell object.
-let SpellSchema = coda.makeObjectSchema({
-  type: coda.ValueType.Object,
+let SpellSchema = sdk.makeObjectSchema({
+  type: sdk.ValueType.Object,
   properties: {
     name: {
       description: "The spell name.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     description: {
       description: "A description of the spell.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     higher_level: {
       description: "A description for casting the spell at a higher level.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     level: {
       description: "The level of the spell.",
-      type: coda.ValueType.Number,
+      type: sdk.ValueType.Number,
     },
     range: {
       description: "The range of the spell.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     material: {
       description: "The material component for the spell to be cast.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     duration: {
       description: "How long the spell effect lasts.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       // Not using the Duration value hint, since this can contain values like
       // "Instantaneous".
     },
     casting_time: {
       description: "How long it takes for the spell to activate.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       // Not using the Duration value hint, since this can contain values like
       // "1 action".
     },
     attack_type: {
       description: "The attack type of the spell.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     damage_type: {
       description: "The damage type of the spell.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     index: {
       description: "A unique identifier for the spell.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
   },
   displayProperty: "name",
@@ -131,18 +131,18 @@ An object schema used by a sync table, that includes a row reference to itself. 
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // A reference to a synced Task. Usually you can use
-// `coda.makeReferenceSchemaFromObjectSchema` to generate these from the primary
+// `sdk.makeReferenceSchemaFromObjectSchema` to generate these from the primary
 // schema, but that doesn't work in this case since a task itself can contain
 // a reference to a parent task.
-const TaskReferenceSchema = coda.makeObjectSchema({
-  codaType: coda.ValueHintType.Reference,
+const TaskReferenceSchema = sdk.makeObjectSchema({
+  codaType: sdk.ValueHintType.Reference,
   properties: {
-    name: { type: coda.ValueType.String, required: true },
-    id: { type: coda.ValueType.String, required: true },
+    name: { type: sdk.ValueType.String, required: true },
+    id: { type: sdk.ValueType.String, required: true },
   },
   displayProperty: "name",
   idProperty: "id",
@@ -154,25 +154,25 @@ const TaskReferenceSchema = coda.makeObjectSchema({
 });
 
 // A schema defining a Task object.
-const TaskSchema = coda.makeObjectSchema({
+const TaskSchema = sdk.makeObjectSchema({
   properties: {
     name: {
       description: "The name of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
     description: {
       description: "A detailed description of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     url: {
       description: "A link to the task in the Todoist app.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
     id: {
       description: "The ID of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
     // Add a reference to the sync'ed row of the parent task.

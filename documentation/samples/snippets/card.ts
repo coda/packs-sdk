@@ -1,24 +1,24 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import * as coda from "@codahq/packs-sdk";
+import * as sdk from "@codahq/packs-sdk";
 
-const pack = coda.newPack();
+const pack = sdk.newPack();
 
 const $1Schema = undefined;
 
 // BEGIN
 
 // A schema that defines the data shown in the card.
-const $1$Thing$Schema = coda.makeObjectSchema({
+const $1$Thing$Schema = sdk.makeObjectSchema({
   properties: {
-    $2$name$: { type: coda.ValueType.String },
-    $3$description$: { type: coda.ValueType.String },
+    $2$name$: { type: sdk.ValueType.String },
+    $3$description$: { type: sdk.ValueType.String },
     $4$picture$: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.ImageReference,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.ImageReference,
     },
     $5$link$: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
     // TODO: Add more properties.
   },
@@ -37,13 +37,13 @@ pack.addFormula({
   name: "$1",
   description: "${6:My description.}",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "url",
       description: "${6: My parameter description.}",
     }),
   ],
-  resultType: coda.ValueType.Object,
+  resultType: sdk.ValueType.Object,
   schema: $1Schema,
   execute: async function (args, context) {
     let [url] = args;
