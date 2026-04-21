@@ -1,5 +1,5 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // How many spells to fetch in each sync formula execution.
 const BATCH_SIZE = 20;
@@ -9,56 +9,56 @@ pack.addNetworkDomain("dnd5eapi.co");
 
 // Schema that defines the metadata to return for each spell. Shared by the
 // formula, column format, and sync table.
-let SpellSchema = coda.makeObjectSchema({
-  type: coda.ValueType.Object,
+let SpellSchema = sdk.makeObjectSchema({
+  type: sdk.ValueType.Object,
   properties: {
     name: {
       description: "The spell name.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     description: {
       description: "A description of the spell.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     higher_level: {
       description: "A description for casting the spell at a higher level.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     level: {
       description: "The level of the spell.",
-      type: coda.ValueType.Number,
+      type: sdk.ValueType.Number,
     },
     range: {
       description: "The range of the spell.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     material: {
       description: "The material component for the spell to be cast.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     duration: {
       description: "How long the spell effect lasts.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       // Not using the Duration value hint, since this can contain values like
       // "Instantaneous".
     },
     casting_time: {
       description: "How long it takes for the spell to activate.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       // Not using the Duration value hint, since this can contain values like
       // "1 action".
     },
     attack_type: {
       description: "The attack type of the spell.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     damage_type: {
       description: "The damage type of the spell.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     index: {
       description: "A unique identifier for the spell.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
   },
   displayProperty: "name",
@@ -91,18 +91,18 @@ pack.addFormula({
   name: "Spell",
   description: "Gets information about a spell, given its name.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "name",
       description: "The name of the spell.",
       suggestedValue: "Acid Arrow",
     }),
   ],
-  resultType: coda.ValueType.Object,
+  resultType: sdk.ValueType.Object,
   schema: SpellSchema,
   execute: async function ([name], context) {
     // Search for spells that match the name provided.
-    let searchUrl = coda.withQueryParams(
+    let searchUrl = sdk.withQueryParams(
       "https://www.dnd5eapi.co/api/spells/",
       { name: name },
       );
@@ -114,7 +114,7 @@ pack.addFormula({
 
     // If no spells match, throw an error.
     if (!results?.length) {
-      throw new coda.UserVisibleError("Unknown spell: " + name);
+      throw new sdk.UserVisibleError("Unknown spell: " + name);
     }
 
     // Fetch the spell details for the first result.
@@ -139,7 +139,7 @@ pack.addSyncTable({
   name: "Spells",
   identityName: "Spell",
   schema: SpellSchema,
-  connectionRequirement: coda.ConnectionRequirement.None,
+  connectionRequirement: sdk.ConnectionRequirement.None,
   formula: {
     name: "SyncSpells",
     description: "Sync all the spells.",
@@ -185,7 +185,7 @@ pack.addSyncTable({
 
 // Fetch a batch of spells from the API and return them formatted to match the
 // schema. This utility function is shared by the formula and sync table.
-async function fetchSpells(fetcher: coda.Fetcher, spellResults) {
+async function fetchSpells(fetcher: sdk.Fetcher, spellResults) {
   let requests = [];
   for (let spellResult of spellResults) {
     // Add on the domain.

@@ -17,7 +17,7 @@ Both `authorizationUrl` and `tokenUrl` are required.
 
 ```ts
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   // These URLs come from the API's developer documentation.
   authorizationUrl: "https://example.com/authorize",
   tokenUrl: "https://api.example.com/token",

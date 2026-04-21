@@ -28,7 +28,7 @@ and then refining them using the user's current search string.
 autocomplete: async function(context, search) {
   const response = await context.fetcher.fetch({method: "GET", url: "/api/entities"});
   const allOptions = response.body.entities.map(entity => entity.name);
-  return coda.simpleAutocomplete(search, allOptions);
+  return sdk.simpleAutocomplete(search, allOptions);
 }
 ```
 

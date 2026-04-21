@@ -23,7 +23,7 @@ Coda REST API.
 
 ```ts
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.CodaApiHeaderBearerToken,
+  type: sdk.AuthenticationType.CodaApiHeaderBearerToken,
 });
 ```
 

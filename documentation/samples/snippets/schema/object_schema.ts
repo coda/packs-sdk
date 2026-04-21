@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import * as coda from "@codahq/packs-sdk";
+import * as sdk from "@codahq/packs-sdk";
 
 // BEGIN
 
-const $1$Thing$Schema = coda.makeObjectSchema({
+const $1$Thing$Schema = sdk.makeObjectSchema({
   properties: {
-    $2$name$: { type: coda.ValueType.String },
+    $2$name$: { type: sdk.ValueType.String },
     // TODO: Add more properties.
   },
   displayProperty: "$2",

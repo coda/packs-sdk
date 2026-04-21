@@ -1,26 +1,26 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // A schema defining the rich metadata to be returned about each task.
-const TaskSchema = coda.makeObjectSchema({
+const TaskSchema = sdk.makeObjectSchema({
   properties: {
     name: {
       description: "The name of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
     description: {
       description: "A detailed description of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     url: {
       description: "A link to the task in the Todoist app.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
     id: {
       description: "The ID of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
   },
@@ -33,13 +33,13 @@ pack.addFormula({
   name: "Task",
   description: "Gets a Todoist task by ID",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "taskId",
       description: "The ID of the task",
     }),
   ],
-  resultType: coda.ValueType.Object,
+  resultType: sdk.ValueType.Object,
   schema: TaskSchema,
 
   execute: async function ([taskId], context) {
@@ -62,6 +62,6 @@ pack.addNetworkDomain("todoist.com");
 
 // Setup authentication using a Todoist API token.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.HeaderBearerToken,
+  type: sdk.AuthenticationType.HeaderBearerToken,
   instructionsUrl: "https://todoist.com/app/settings/integrations",
 });

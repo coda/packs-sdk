@@ -1,11 +1,11 @@
-import * as coda from "@codahq/packs-sdk";
+import * as sdk from "@codahq/packs-sdk";
 
-const pack = coda.newPack();
+const pack = sdk.newPack();
 
 // BEGIN
 
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.MultiHeaderToken,
+  type: sdk.AuthenticationType.MultiHeaderToken,
   headers: [
     { name: "${1:X-My-Token}", description: "${2:My token description}" },
     { name: "${3:X-My-Key}", description: "${4:My key description}" },

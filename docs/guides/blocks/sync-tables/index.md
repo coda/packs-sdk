@@ -38,7 +38,7 @@ The item is displayed as a chip in the first column of the sync table, and it co
 The schema used in a sync table can be shared by other building blocks in your Pack, like a formula or column format. Even when the schema is only used by the sync table, we recommend you define it as a separate variable in your code for readability and future reuse.
 
 ```ts
-const TaskSchema = coda.makeObjectSchema({
+const TaskSchema = sdk.makeObjectSchema({
   // ...
 });
 ```
@@ -258,7 +258,7 @@ Users can choose from top-level properties in the schema, and only those they se
 
 While there is no harm in your Pack retrieving properties that won't be persisted, in some cases you can optimize your sync if you know the exact set of fields the user is requesting. This can be determined by inspecting the value of `context.sync.schema`. This will be a copy of the original schema, but with only properties that the user selected.
 
-Since the properties themselves may use the [`fromKey`][fromKey] option to load their value from a different field in the row objects, it can be somewhat involved to map the properties back to API fields. To assist with this there is a helper function [`coda.getEffectivePropertyKeysFromSchema()`][getEffectivePropertyKeysFromSchema] that will do the conversion for you.
+Since the properties themselves may use the [`fromKey`][fromKey] option to load their value from a different field in the row objects, it can be somewhat involved to map the properties back to API fields. To assist with this there is a helper function [`sdk.getEffectivePropertyKeysFromSchema()`][getEffectivePropertyKeysFromSchema] that will do the conversion for you.
 
 ??? example "Example: Open Data NY sync table"
     ```ts

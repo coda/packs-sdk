@@ -1,5 +1,5 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // The REST API and MCP server are hosted on different domains.
 // Note: Connecting to multiple domains requires approval.
@@ -8,7 +8,7 @@ pack.addNetworkDomain("todoist.net");
 
 // The REST API and MCP server use the same OAuth credentials.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   useDynamicClientRegistration: true,
 
   // Allow the credentials to be sent to both domains.
@@ -29,37 +29,37 @@ pack.addMCPServer({
   endpointUrl: "https://ai.todoist.net/mcp",
 });
 
-const TaskSchema = coda.makeObjectSchema({
+const TaskSchema = sdk.makeObjectSchema({
   properties: {
     name: {
       description: "The name of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       fromKey: "content",
     },
     description: {
       description: "A detailed description of the task.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Markdown,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Markdown,
     },
     url: {
       description: "A link to the task in the Todoist app.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
     priority: {
       description: "The priority of the task.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.SelectList,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.SelectList,
       options: ["P1", "P2", "P3", "P4"],
     },
     due: {
       description: "When the task is due.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.DateTime,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.DateTime,
     },
     id: {
       description: "The ID of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
   },
@@ -85,8 +85,8 @@ pack.addSyncTable({
     name: "SyncTasks",
     description: "Sync tasks",
     parameters: [
-      coda.makeParameter({
-        type: coda.ParameterType.String,
+      sdk.makeParameter({
+        type: sdk.ParameterType.String,
         name: "filter",
         description: "A supported filter string. See the Todoist help center.",
         optional: true,
@@ -94,7 +94,7 @@ pack.addSyncTable({
     ],
     execute: async function (args, context) {
       let [filter] = args;
-      let url = coda.withQueryParams("https://api.todoist.com/rest/v2/tasks", {
+      let url = sdk.withQueryParams("https://api.todoist.com/rest/v2/tasks", {
         filter: filter,
       });
       let response = await context.fetcher.fetch({

@@ -80,7 +80,7 @@ pack.addFormula({
   name: "GetWorkspaceId",
   description: "Gets the ID of the user's workspace.",
   parameters: [],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   // Hide this in Coda docs, but allow the LLM to use it.
   isExperimental: true,
   execute: async function (args, context) {
@@ -105,8 +105,8 @@ pack.addFormula({
     UpdateCustomer formula instead.
   `,
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "name",
       description: "The name of the contact.",
       instructions: `
@@ -117,7 +117,7 @@ pack.addFormula({
     }),
     // ...
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   execute: async function (args, context) {
     // ...
   },
@@ -138,12 +138,12 @@ pack.addSyncTable({
   formula: {
     // ...
     parameters: [
-      coda.makeParameter({
-        type: coda.ParameterType.DateArray,
+      sdk.makeParameter({
+        type: sdk.ParameterType.DateArray,
         name: "created",
         description: "Include tickets created within the given time range.",
-        suggestedValue: coda.PrecannedDateRange.Last30Days,
-        ingestionSuggestedValue: coda.PrecannedDateRange.Last365Days,
+        suggestedValue: sdk.PrecannedDateRange.Last30Days,
+        ingestionSuggestedValue: sdk.PrecannedDateRange.Last365Days,
       }),
     ],
     execute: async function (args, context) {
@@ -167,10 +167,10 @@ pack.addFormula({
     let emailFooter;
     let source = context.invocationLocation.source;
     switch (source) {
-      case coda.InvocationSource.Doc:
+      case sdk.InvocationSource.Doc:
         emailFooter = "Sent from Coda.";
         break;
-      case coda.InvocationSource.Go:
+      case sdk.InvocationSource.Go:
         emailFooter = "Sent from Superhuman Go.";
         break;
       default:

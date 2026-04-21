@@ -1,5 +1,5 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 /*
 --8<-- [start:json]
@@ -32,25 +32,25 @@ export const pack = coda.newPack();
 */
 
 // --8<-- [start:schema]
-const TaskSchema = coda.makeObjectSchema({
+const TaskSchema = sdk.makeObjectSchema({
   properties: {
     name: {
       description: "The name of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       fromKey: "content",
     },
     description: {
       description: "A description of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
     url: {
       description: "A link to the task.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
     id: {
       description: "The ID of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
     },
   },
   displayProperty: "name",
@@ -68,14 +68,14 @@ pack.addSyncTable({
     name: "SyncTasks",
     description: "Sync tasks",
     parameters: [
-      coda.makeParameter({
-        type: coda.ParameterType.String,
+      sdk.makeParameter({
+        type: sdk.ParameterType.String,
         name: "filter",
         description: "A supported filter string. See the Todoist help center.",
         optional: true,
       }),
-      coda.makeParameter({
-        type: coda.ParameterType.String,
+      sdk.makeParameter({
+        type: sdk.ParameterType.String,
         name: "project",
         description: "Limit tasks to a specific project.",
         optional: true,
@@ -86,12 +86,12 @@ pack.addSyncTable({
             url: url,
           });
           let projects = response.body;
-          return coda.autocompleteSearchObjects(search, projects, "name", "id");
+          return sdk.autocompleteSearchObjects(search, projects, "name", "id");
         },
       }),
     ],
     execute: async function ([filter, project], context) {
-      let url = coda.withQueryParams("https://api.todoist.com/rest/v2/tasks", {
+      let url = sdk.withQueryParams("https://api.todoist.com/rest/v2/tasks", {
         filter: filter,
         project_id: project,
       });
@@ -128,13 +128,13 @@ pack.addFormula({
   name: "Task",
   description: "Gets a Todoist task by URL",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "url",
       description: "The URL of the task",
     }),
   ],
-  resultType: coda.ValueType.Object,
+  resultType: sdk.ValueType.Object,
   schema: TaskSchema,
 
   execute: async function ([url], context) {
@@ -160,7 +160,7 @@ function extractTaskId(taskUrl: string) {
       return matches[1];
     }
   }
-  throw new coda.UserVisibleError("Invalid task URL: " + taskUrl);
+  throw new sdk.UserVisibleError("Invalid task URL: " + taskUrl);
 }
 // --8<-- [end:getter]
 
@@ -179,13 +179,13 @@ pack.addFormula({
   name: "AddTask",
   description: "Add a new task.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "name",
       description: "The name of the task.",
     }),
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   isAction: true,
 
   execute: async function ([name], context) {

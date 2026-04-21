@@ -18,7 +18,7 @@ If you have an agent deployed on the platform, we recommend running a quick vali
 pack.addSkill({
   // ...
   models: [
-    { model: coda.SkillModel.OpenAIGPT4 },
+    { model: sdk.SkillModel.OpenAIGPT4 },
   ],
 });
 ```

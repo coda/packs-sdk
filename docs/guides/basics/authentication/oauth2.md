@@ -44,7 +44,7 @@ To configure [`OAuth2`][OAuth] authentication you must specify the authorization
 
 ```ts
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   // These URLs come from the API's developer documentation.
   authorizationUrl: "https://example.com/authorize",
   tokenUrl: "https://api.example.com/token",
@@ -55,7 +55,7 @@ Many APIs also support granular scopes, allowing you to request a limited set of
 
 ```ts
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   // These URLs come from the API's developer documentation.
   authorizationUrl: "https://example.com/authorize",
   tokenUrl: "https://api.example.com/token",
@@ -115,7 +115,7 @@ try {
   // ...
 } catch (error) {
   if (
-      coda.StatusCodeError.isStatusCodeError(error)
+      sdk.StatusCodeError.isStatusCodeError(error)
       && error.statusCode === 401
     ) {
     // Perhaps the token has expired, re-throw the error to attempt a refresh.
@@ -143,11 +143,11 @@ try {
 } catch (error) {
   // Determine if the error is due to missing scopes.
   if (
-    coda.StatusCodeError.isStatusCodeError(error)
+    sdk.StatusCodeError.isStatusCodeError(error)
     && error.statusCode === 400
     && error.body?.message.includes("permission")
   ) {
-    throw new coda.MissingScopesError();
+    throw new sdk.MissingScopesError();
   }
   // Else handle or throw the error as normal.
 }
@@ -160,7 +160,7 @@ Even when you do know all of the scopes you need, you may not want to request th
 
 ```ts
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   // ...
   scopes: ["read"],
 });
@@ -189,7 +189,7 @@ For sync tables that support [two-way sync][two_way_sync] you may want to set ad
 
 ```ts
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   // ...
   scopes: ["read"],
 });
@@ -214,7 +214,7 @@ The `updateOptions.extraOAuthScopes` field overrides the value of `extraOAuthSco
 
 ```ts
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   // ...
   scopes: ["user:read"],
 });
@@ -264,7 +264,7 @@ Some OAuth providers offer or require the use of [Proof Key for Code Exchange (P
 
 ```{.ts hl_lines="4"}
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   // ...
   useProofKeyForCodeExchange: true,
 });
@@ -274,7 +274,7 @@ The PKCE standard supports two different ways of creating a challenge from the v
 
 ```{.ts hl_lines="5"}
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   // ...
   useProofKeyForCodeExchange: true,
   pkceChallengeMethod: "plain",
@@ -295,7 +295,7 @@ This means you don't need to manually obtain or enter a client ID and secret, an
 
 ```ts
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   useDynamicClientRegistration: true,
   useProofKeyForCodeExchange: true,
 });
@@ -305,7 +305,7 @@ If the automatic endpoint discovery doesn't work for your provider, you can stil
 
 ```ts
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   useDynamicClientRegistration: true,
   authorizationUrl: "https://example.com/authorize",
   tokenUrl: "https://api.example.com/token",
@@ -325,7 +325,7 @@ To setup the authentication all you need to do is set the type and provide the U
 
 ```ts
 pack.setSystemAuthentication({
-  type: coda.AuthenticationType.OAuth2ClientCredentials,
+  type: sdk.AuthenticationType.OAuth2ClientCredentials,
   // This URL comes from the API's developer documentation.
   tokenUrl: "https://api.example.com/token",
 });

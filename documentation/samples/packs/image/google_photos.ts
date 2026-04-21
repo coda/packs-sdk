@@ -1,5 +1,5 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Regular expression that matches Coda-hosted images.
 const HostedImageUrlRegex = new RegExp("^https://(?:[^/]*\.)?codahosted.io/.*");
@@ -15,16 +15,16 @@ pack.addFormula({
   name: "Upload",
   description: "Uploads images to Google Photos.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.ImageArray,
+    sdk.makeParameter({
+      type: sdk.ParameterType.ImageArray,
       name: "images",
       description: "The images to upload.",
     }),
   ],
-  resultType: coda.ValueType.Array,
+  resultType: sdk.ValueType.Array,
   items: {
-    type: coda.ValueType.String,
-    codaType: coda.ValueHintType.Url,
+    type: sdk.ValueType.String,
+    codaType: sdk.ValueHintType.Url,
   },
   isAction: true,
   execute: async function ([imageUrls], context) {
@@ -41,13 +41,13 @@ pack.addFormula({
 
 // Download the images from Coda, in parallel. For each image it returns a
 // buffer of image data and the MIME type of the image.
-async function downloadImages(imageUrls, context: coda.ExecutionContext):
+async function downloadImages(imageUrls, context: sdk.ExecutionContext):
     Promise<ImageData[]> {
   let requests = [];
   for (let imageUrl of imageUrls) {
     // Reject images not hosted in Coda, since we can't download them.
     if (!imageUrl.match(HostedImageUrlRegex)) {
-      throw new coda.UserVisibleError("Not compatible with Image URL columns.");
+      throw new sdk.UserVisibleError("Not compatible with Image URL columns.");
     }
 
     // Start the download.
@@ -77,7 +77,7 @@ async function downloadImages(imageUrls, context: coda.ExecutionContext):
 // Uploads the images to Google Photos, in parallel. For each image it returns a
 // temporary upload token.
 async function uploadImages(images: ImageData[],
-    context: coda.ExecutionContext): Promise<string[]> {
+    context: sdk.ExecutionContext): Promise<string[]> {
   let requests = [];
   for (let image of images) {
     // Start the upload.
@@ -108,7 +108,7 @@ async function uploadImages(images: ImageData[],
 // Adds uploaded images to the user's library. For each image it returns the URL
 // of the image in Google Photos.
 async function addImages(uploadTokens: string[],
-    context: coda.ExecutionContext): Promise<string[]> {
+    context: sdk.ExecutionContext): Promise<string[]> {
   // Construct the request payload.
   let items = [];
   for (let uploadToken of uploadTokens) {
@@ -139,7 +139,7 @@ async function addImages(uploadTokens: string[],
   for (let [i, result] of results.entries()) {
     // Throw an error if any of the uploads failed.
     if (result.status.message !== "Success") {
-      throw new coda.UserVisibleError(
+      throw new sdk.UserVisibleError(
         `Upload failed for image ${i + 1}: ${result.status.message}`);
     }
     let url = result.mediaItem.productUrl;
@@ -149,7 +149,7 @@ async function addImages(uploadTokens: string[],
 }
 
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://accounts.google.com/o/oauth2/v2/auth",
   tokenUrl: "https://oauth2.googleapis.com/token",
   scopes: [

@@ -1,11 +1,11 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to Microsoft APIs, using OAuth2.
 // eslint-disable-next-line max-len
 // See https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl:
     "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
   tokenUrl: "https://login.microsoftonline.com/common/oauth2/v2.0/token",

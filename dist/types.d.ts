@@ -287,7 +287,7 @@ export interface BaseAuthentication {
  * @example
  * ```ts
  * pack.setUserAuthentication({
- *   type: coda.AuthenticationType.HeaderBearerToken,
+ *   type: sdk.AuthenticationType.HeaderBearerToken,
  * });
  * ```
  *
@@ -311,7 +311,7 @@ export interface HeaderBearerTokenAuthentication extends BaseAuthentication {
  * @example
  * ```ts
  * pack.setUserAuthentication({
- *   type: coda.AuthenticationType.CodaApiHeaderBearerToken,
+ *   type: sdk.AuthenticationType.CodaApiHeaderBearerToken,
  * });
  * ```
  *
@@ -339,7 +339,7 @@ export interface CodaApiBearerTokenAuthentication extends BaseAuthentication {
  * @example
  * ```ts
  * pack.setUserAuthentication({
- *   type: coda.AuthenticationType.CustomHeaderToken,
+ *   type: sdk.AuthenticationType.CustomHeaderToken,
  *   headerName: "X-API-Key",
  * });
  * ```
@@ -369,7 +369,7 @@ export interface CustomHeaderTokenAuthentication extends BaseAuthentication {
  * @example
  * ```ts
  * pack.setUserAuthentication({
- *   type: coda.AuthenticationType.MultiHeaderToken,
+ *   type: sdk.AuthenticationType.MultiHeaderToken,
  *   headers: [
  *     {name: 'Header1', description: 'Enter the value for Header1',  tokenPrefix: 'prefix1'},
  *     {name: 'Header2', description: 'Enter value for Header2'},
@@ -410,7 +410,7 @@ export interface MultiHeaderTokenAuthentication extends BaseAuthentication {
  * @example
  * ```ts
  * pack.setUserAuthentication({
- *   type: coda.AuthenticationType.QueryParamToken,
+ *   type: sdk.AuthenticationType.QueryParamToken,
  *   paramName: "key",
  * });
  * ```
@@ -436,7 +436,7 @@ export interface QueryParamTokenAuthentication extends BaseAuthentication {
  * @example
  * ```ts
  * pack.setUserAuthentication({
- *   type: coda.AuthenticationType.MultiQueryParamToken,
+ *   type: sdk.AuthenticationType.MultiQueryParamToken,
  *   params: [
  *     { name: "key", description: "The key." },
  *     { name: "secret", description: "The secret." },
@@ -561,7 +561,7 @@ interface BaseOAuth2CodeAuthentication extends BaseOAuthAuthentication {
  * @example
  * ```ts
  * pack.setUserAuthentication({
- *   type: coda.AuthenticationType.OAuth2,
+ *   type: sdk.AuthenticationType.OAuth2,
  *   // These URLs come from the API's developer documentation.
  *   authorizationUrl: "https://example.com/authorize",
  *   tokenUrl: "https://api.example.com/token",
@@ -635,7 +635,7 @@ export type OAuth2Authentication = OAuth2StaticCodeAuthentication | OAuth2Dynami
  * @example
  * ```ts
  * pack.setUserAuthentication({
- *   type: coda.AuthenticationType.OAuth2ClientCredentials,
+ *   type: sdk.AuthenticationType.OAuth2ClientCredentials,
  *   // This URL comes from the API's developer documentation.
  *   tokenUrl: "https://api.example.com/token",
  * });
@@ -675,7 +675,7 @@ export declare enum TokenExchangeCredentialsLocation {
  * @example
  * ```ts
  * pack.setUserAuthentication({
- *   type: coda.AuthenticationType.WebBasic,
+ *   type: sdk.AuthenticationType.WebBasic,
  * });
  * ```
  *
@@ -1306,7 +1306,7 @@ export interface WebSearchTool extends BaseTool<ToolType.WebSearch> {
      *   // ...
      *   tools: [
      *     {
-     *       type: coda.ToolType.WebSearch,
+     *       type: sdk.ToolType.WebSearch,
      *       allowedDomains: ["docs.google.com", "stackoverflow.com"],
      *     },
      *   ],
@@ -1500,8 +1500,8 @@ export interface Skill {
  * // Override tools — replaces the defaults entirely
  * pack.setChatSkill({
  *   tools: [
- *     { type: coda.ToolType.Pack },
- *     { type: coda.ToolType.ContactResolution },
+ *     { type: sdk.ToolType.Pack },
+ *     { type: sdk.ToolType.ContactResolution },
  *   ],
  * });
  * ```
@@ -1618,7 +1618,7 @@ export interface PackVersionDefinition {
      * // Override just the tools
      * pack.setChatSkill({
      *   tools: [
-     *     { type: coda.ToolType.Pack },
+     *     { type: sdk.ToolType.Pack },
      *   ],
      * });
      *

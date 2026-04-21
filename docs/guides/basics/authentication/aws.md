@@ -16,7 +16,7 @@ The simplest method of authentication requires that the user provides an access 
 
 ```ts
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.AWSAccessKey,
+  type: sdk.AuthenticationType.AWSAccessKey,
   service: "s3",
 });
 ```
@@ -38,7 +38,7 @@ To use this form of authentication, simply set the authentication type to [`AWSA
 
 ```ts
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.AWSAssumeRole,
+  type: sdk.AuthenticationType.AWSAssumeRole,
   service: "s3",
 });
 ```

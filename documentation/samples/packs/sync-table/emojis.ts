@@ -1,15 +1,15 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
-const EmojiSchema = coda.makeObjectSchema({
+const EmojiSchema = sdk.makeObjectSchema({
   properties: {
-    name: { type: coda.ValueType.String, fromKey: "annotation" },
-    hexcode: { type: coda.ValueType.String },
-    emoji: { type: coda.ValueType.String },
-    group: { type: coda.ValueType.String },
-    image: { 
-      type: coda.ValueType.String, 
-      codaType: coda.ValueHintType.ImageReference,
+    name: { type: sdk.ValueType.String, fromKey: "annotation" },
+    hexcode: { type: sdk.ValueType.String },
+    emoji: { type: sdk.ValueType.String },
+    group: { type: sdk.ValueType.String },
+    image: {
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.ImageReference,
     },
   },
   displayProperty: "name",
@@ -26,20 +26,20 @@ pack.addSyncTable({
     name: "SyncEmojis",
     description: "Syncs the data.",
     parameters: [
-      coda.makeParameter({
-        type: coda.ParameterType.String,
+      sdk.makeParameter({
+        type: sdk.ParameterType.String,
         name: "group",
         description: "If specified, only include emojis in this group.",
         optional: true,
         autocomplete: [
-          "smileys-emotion", "people-body", "component", "animals-nature", 
+          "smileys-emotion", "people-body", "component", "animals-nature",
           "food-drink", "travel-places", "activities", "objects", "symbols",
         ],
       }),
     ],
     execute: async function (args, context) {
       let [group] = args;
-      let url = coda.withQueryParams("https://www.emoji.family/api/emojis", {
+      let url = sdk.withQueryParams("https://www.emoji.family/api/emojis", {
         group: group,
       });
       let response = await context.fetcher.fetch({

@@ -242,17 +242,17 @@ export interface PropertyWithOptions<T extends PackFormulaResult> {
    * ```
    * properties: {
    *   color: {
-   *      type: coda.ValueType.String,
-   *      codaType: coda.ValueHintType.SelectList,
+   *      type: sdk.ValueType.String,
+   *      codaType: sdk.ValueHintType.SelectList,
    *      mutable: true,
    *      options: ['red', 'green', 'blue'],
    *   },
    *   user: {
-   *      type: coda.ValueType.String,
-   *      codaType: coda.ValueHintType.SelectList,
+   *      type: sdk.ValueType.String,
+   *      codaType: sdk.ValueHintType.SelectList,
    *      mutable: true,
    *      options: async function (context) {
-   *        let url = coda.withQueryParams("https://example.com/userSearch", { name: context.search });
+   *        let url = sdk.withQueryParams("https://example.com/userSearch", { name: context.search });
    *        let response = await context.fetcher.fetch({ method: "GET", url: url });
    *        let results = response.body.users;
    *        return results.map(user => {display: user.name, value: user.id})
@@ -484,7 +484,7 @@ export interface ProgressBarSchema extends BaseNumberSchema<ValueHintType.Progre
 /**
  * Icons that can be used with a {@link ScaleSchema}.
  *
- * For example, to render a star rating, use a {@link ScaleSchema} with `icon: coda.ScaleIconSet.Star`.
+ * For example, to render a star rating, use a {@link ScaleSchema} with `icon: sdk.ScaleIconSet.Star`.
  */
 export enum ScaleIconSet {
   Star = 'star',
@@ -881,10 +881,10 @@ export interface ObjectSchemaProperty {
    *
    * You can define your schema like this:
    * ```
-   * coda.makeObjectSchema({
+   * sdk.makeObjectSchema({
    *   properties: {
-   *     name: {type: coda.ValueType.String},
-   *     durationSeconds: {type: coda.ValueType.Number, fromKey: "duration"},
+   *     name: {type: sdk.ValueType.String},
+   *     durationSeconds: {type: sdk.ValueType.Number, fromKey: "duration"},
    *   },
    * });
    * ```
@@ -936,7 +936,7 @@ export interface ObjectSchemaProperty {
    * and if somehow there were a value here it would be overwritten.
    * Coda table schemas use a normalized version of a property key, so this field is used
    * internally to track what the Pack maker used as the property key, verbatim.
-   * E.g., if a sync table schema had `properties: { 'foo-bar': {type: coda.ValueType.String} }`,
+   * E.g., if a sync table schema had `properties: { 'foo-bar': {type: sdk.ValueType.String} }`,
    * then the resulting column name would be "FooBar", but 'foo-bar' will be persisted as
    * the `originalKey`.
    * When we distinguish schema definitions from runtime schemas, this should be non-optional in the
@@ -1172,12 +1172,12 @@ export interface CustomIndexDefinition extends BaseIndexDefinition {
    *
    * @example
    * ```ts
-   * const ProductSchema = coda.makeObjectSchema({
+   * const ProductSchema = sdk.makeObjectSchema({
    *   properties: {
    *     // ...
    *     specSheetLink: {
-   *       type: coda.ValueType.String,
-   *       codaType: coda.ValueHintType.Attachment,
+   *       type: sdk.ValueType.String,
+   *       codaType: sdk.ValueHintType.Attachment,
    *       description: "Link the PDF spec sheet for the product.",
    *     },
    *   },
@@ -1198,21 +1198,21 @@ export interface CustomIndexDefinition extends BaseIndexDefinition {
    *
    * @example
    * ```ts
-   * const ManufacturerSchema = coda.makeObjectSchema({
+   * const ManufacturerSchema = sdk.makeObjectSchema({
    *   properties: {
-   *     name: { type: coda.ValueType.String },
-   *     id: { type: coda.ValueType.String },
+   *     name: { type: sdk.ValueType.String },
+   *     id: { type: sdk.ValueType.String },
    *   },
    *   displayProperty: "name",
    * });
    *
-   * const ProductSchema = coda.makeObjectSchema({
+   * const ProductSchema = sdk.makeObjectSchema({
    *   properties: {
    *     // ...
-   *     size: { type: coda.ValueType.String },
+   *     size: { type: sdk.ValueType.String },
    *     materials: {
-   *       type: coda.ValueType.Array,
-   *       items: { type: coda.ValueType.String },
+   *       type: sdk.ValueType.Array,
+   *       items: { type: sdk.ValueType.String },
    *     },
    *     manufacturer: ManufacturerSchema,
    *   },
@@ -1780,8 +1780,8 @@ export enum AttributionNodeType {
  *
  * @example
  * ```
- * coda.makeAttributionNode({
- *   type: coda.AttributionNodeType.Text,
+ * sdk.makeAttributionNode({
+ *   type: sdk.AttributionNodeType.Text,
  *   text: "Data provided by ExampleCorp.",
  * });
  * ```
@@ -1801,8 +1801,8 @@ export interface TextAttributionNode {
  *
  * @example
  * ```
- * coda.makeAttributionNode({
- *   type: coda.AttributionNodeType.Link,
+ * sdk.makeAttributionNode({
+ *   type: sdk.AttributionNodeType.Link,
  *   anchorUrl: "https://example.com",
  *   anchorText: "Data provided by ExampleCorp.",
  * });
@@ -1825,8 +1825,8 @@ export interface LinkAttributionNode {
  *
  * @example
  * ```
- * coda.makeAttributionNode({
- *   type: coda.AttributionNodeType.Image,
+ * sdk.makeAttributionNode({
+ *   type: sdk.AttributionNodeType.Image,
  *   anchorUrl: "https://example.com",
  *   imageUrl: "https://example.com/assets/logo.png",
  * });
@@ -2022,9 +2022,9 @@ export function generateSchema(obj: InferrableTypes): Schema {
  *
  * @example
  * ```
- * coda.makeSchema({
- *   type: coda.ValueType.Array,
- *   items: {type: coda.ValueType.String},
+ * sdk.makeSchema({
+ *   type: sdk.ValueType.Array,
+ *   items: {type: sdk.ValueType.String},
  * });
  * ```
  */
@@ -2042,12 +2042,12 @@ export function makeSchema<T extends Schema>(schema: T): T {
  *
  * @example
  * ```
- * coda.makeObjectSchema({
+ * sdk.makeObjectSchema({
  *   id: "email",
  *   primary: "name",
  *   properties: {
- *     email: {type: coda.ValueType.String, required: true},
- *     name: {type: coda.ValueType.String, required: true},
+ *     email: {type: sdk.ValueType.String, required: true},
+ *     name: {type: sdk.ValueType.String, required: true},
  *   },
  * });
  * ```

@@ -1,6 +1,6 @@
-import * as coda from "@codahq/packs-sdk";
+import * as sdk from "@codahq/packs-sdk";
 
-export const pack = coda.newPack();
+export const pack = sdk.newPack();
 
 // How many members to sync in a single execution.
 const MembersPageSize = 1000;
@@ -17,32 +17,32 @@ pack.addNetworkDomain("nysenate.gov");
 
 // The API uses an API key in the query parameters.
 pack.setSystemAuthentication({
-  type: coda.AuthenticationType.QueryParamToken,
+  type: sdk.AuthenticationType.QueryParamToken,
   paramName: "key",
 });
 
 // The schema for a member, with contact indexing.
-const MemberSchema = coda.makeObjectSchema({
+const MemberSchema = sdk.makeObjectSchema({
   description: "A member of the NY State Senate.",
   properties: {
     id: {
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       fromKey: "memberId",
       description: "A unique ID for the member.",
     },
     name: {
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       fromKey: "fullName",
       description: "The full name of the member.",
     },
     district: {
-      type: coda.ValueType.Number,
+      type: sdk.ValueType.Number,
       fromKey: "districtCode",
       description: "The congressional district that the member represents.",
     },
     email: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Email,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Email,
       description: "The email address of the member.",
     },
   },
@@ -54,33 +54,33 @@ const MemberSchema = coda.makeObjectSchema({
 });
 
 // The schema for a law.
-const LawSchema = coda.makeObjectSchema({
+const LawSchema = sdk.makeObjectSchema({
   description: "A law in the New York State legal code.",
   properties: {
     id: {
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       fromKey: "lawId",
       required: true,
       description: "A unique ID for the law.",
     },
     name: {
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
       description: "The name of the law.",
     },
     type: {
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       fromKey: "lawType",
       description:
         "The type of law (Consolidated, Unconsolidated, Constitution, etc)",
     },
     chapter: {
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       description: "The chapter designation for the law.",
     },
     link: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
       description: "A link to the law on nysenate.gov.",
     },
   },
@@ -90,40 +90,40 @@ const LawSchema = coda.makeObjectSchema({
 });
 
 // The schema for a document, with full-text indexing.
-const DocumentSchema = coda.makeObjectSchema({
+const DocumentSchema = sdk.makeObjectSchema({
   properties: {
     id: {
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       description: "A unique ID for the document.",
     },
     title: {
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       description: "The title of the document.",
     },
     path: {
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       description: `
         A breadcrumb trail of the parent documents (chapter, title, article,
         etc) that contain this document.
       `,
     },
     law: {
-      ...coda.makeReferenceSchemaFromObjectSchema(LawSchema, "Law"),
+      ...sdk.makeReferenceSchemaFromObjectSchema(LawSchema, "Law"),
       description: "The law that this document pertains to.",
     },
     pdf: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Attachment,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Attachment,
       description: "The contents of the document, as a PDF.",
     },
     link: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
       description: "A link to the document on nysenate.gov.",
     },
     lastModified: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Date,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Date,
       description: "When the document was last modified.",
     },
   },
@@ -160,7 +160,7 @@ pack.addSyncTable({
         timeZone: "America/New_York",
       }).format(new Date());
 
-      let url = coda.withQueryParams(
+      let url = sdk.withQueryParams(
         `https://legislation.nysenate.gov/api/3/members/${year}`,
         {
           full: true,
@@ -230,8 +230,8 @@ pack.addSyncTable({
     name: "SyncDocuments",
     description: "Syncs the data.",
     parameters: [
-      coda.makeParameter({
-        type: coda.ParameterType.String,
+      sdk.makeParameter({
+        type: sdk.ParameterType.String,
         name: "law",
         description: "The ID of the law.",
         autocomplete: async function (context, search) {
@@ -242,7 +242,7 @@ pack.addSyncTable({
           });
           let data = response.body;
           let laws = data.result.items;
-          return coda.autocompleteSearchObjects(search, laws, "name", "lawId");
+          return sdk.autocompleteSearchObjects(search, laws, "name", "lawId");
         },
         // During indexing, run a sync for each law in the Laws table.
         crawlStrategy: {

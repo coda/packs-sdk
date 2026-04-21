@@ -1,22 +1,22 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Schema defining the fields to sync for each file.
-const FileSchema = coda.makeObjectSchema({
+const FileSchema = sdk.makeObjectSchema({
   properties: {
-    name: { type: coda.ValueType.String },
+    name: { type: sdk.ValueType.String },
     url: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
       fromKey: "webViewLink",
     },
     thumbnail: {
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       // ImageAttachments instructs Coda to ingest the image and store it in the
       // doc.
-      codaType: coda.ValueHintType.ImageAttachment,
+      codaType: sdk.ValueHintType.ImageAttachment,
     },
-    id: { type: coda.ValueType.String },
+    id: { type: sdk.ValueType.String },
   },
   displayProperty: "name",
   idProperty: "id",
@@ -38,7 +38,7 @@ pack.addSyncTable({
 
       // Get a batch of files.
       let url = "https://www.googleapis.com/drive/v3/files";
-      url = coda.withQueryParams(url, {
+      url = sdk.withQueryParams(url, {
         fields: "files(id,name,webViewLink,thumbnailLink)",
         pageToken: pageToken,
       });
@@ -93,7 +93,7 @@ pack.addSyncTable({
 
 // Set per-user authentication using Google's OAuth2.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://accounts.google.com/o/oauth2/v2/auth",
   tokenUrl: "https://oauth2.googleapis.com/token",
   scopes: ["https://www.googleapis.com/auth/drive.readonly"],

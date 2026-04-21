@@ -1479,17 +1479,17 @@ export interface PropertyWithOptions<T extends PackFormulaResult> {
 	 * ```
 	 * properties: {
 	 *   color: {
-	 *      type: coda.ValueType.String,
-	 *      codaType: coda.ValueHintType.SelectList,
+	 *      type: sdk.ValueType.String,
+	 *      codaType: sdk.ValueHintType.SelectList,
 	 *      mutable: true,
 	 *      options: ['red', 'green', 'blue'],
 	 *   },
 	 *   user: {
-	 *      type: coda.ValueType.String,
-	 *      codaType: coda.ValueHintType.SelectList,
+	 *      type: sdk.ValueType.String,
+	 *      codaType: sdk.ValueHintType.SelectList,
 	 *      mutable: true,
 	 *      options: async function (context) {
-	 *        let url = coda.withQueryParams("https://example.com/userSearch", { name: context.search });
+	 *        let url = sdk.withQueryParams("https://example.com/userSearch", { name: context.search });
 	 *        let response = await context.fetcher.fetch({ method: "GET", url: url });
 	 *        let results = response.body.users;
 	 *        return results.map(user => {display: user.name, value: user.id})
@@ -1695,7 +1695,7 @@ export interface ProgressBarSchema extends BaseNumberSchema<ValueHintType.Progre
 /**
  * Icons that can be used with a {@link ScaleSchema}.
  *
- * For example, to render a star rating, use a {@link ScaleSchema} with `icon: coda.ScaleIconSet.Star`.
+ * For example, to render a star rating, use a {@link ScaleSchema} with `icon: sdk.ScaleIconSet.Star`.
  */
 export declare enum ScaleIconSet {
 	Star = "star",
@@ -2046,10 +2046,10 @@ export interface ObjectSchemaProperty {
 	 *
 	 * You can define your schema like this:
 	 * ```
-	 * coda.makeObjectSchema({
+	 * sdk.makeObjectSchema({
 	 *   properties: {
-	 *     name: {type: coda.ValueType.String},
-	 *     durationSeconds: {type: coda.ValueType.Number, fromKey: "duration"},
+	 *     name: {type: sdk.ValueType.String},
+	 *     durationSeconds: {type: sdk.ValueType.Number, fromKey: "duration"},
 	 *   },
 	 * });
 	 * ```
@@ -2096,7 +2096,7 @@ export interface ObjectSchemaProperty {
 	 * and if somehow there were a value here it would be overwritten.
 	 * Coda table schemas use a normalized version of a property key, so this field is used
 	 * internally to track what the Pack maker used as the property key, verbatim.
-	 * E.g., if a sync table schema had `properties: { 'foo-bar': {type: coda.ValueType.String} }`,
+	 * E.g., if a sync table schema had `properties: { 'foo-bar': {type: sdk.ValueType.String} }`,
 	 * then the resulting column name would be "FooBar", but 'foo-bar' will be persisted as
 	 * the `originalKey`.
 	 * When we distinguish schema definitions from runtime schemas, this should be non-optional in the
@@ -2292,12 +2292,12 @@ export interface CustomIndexDefinition extends BaseIndexDefinition {
 	 *
 	 * @example
 	 * ```ts
-	 * const ProductSchema = coda.makeObjectSchema({
+	 * const ProductSchema = sdk.makeObjectSchema({
 	 *   properties: {
 	 *     // ...
 	 *     specSheetLink: {
-	 *       type: coda.ValueType.String,
-	 *       codaType: coda.ValueHintType.Attachment,
+	 *       type: sdk.ValueType.String,
+	 *       codaType: sdk.ValueHintType.Attachment,
 	 *       description: "Link the PDF spec sheet for the product.",
 	 *     },
 	 *   },
@@ -2318,21 +2318,21 @@ export interface CustomIndexDefinition extends BaseIndexDefinition {
 	 *
 	 * @example
 	 * ```ts
-	 * const ManufacturerSchema = coda.makeObjectSchema({
+	 * const ManufacturerSchema = sdk.makeObjectSchema({
 	 *   properties: {
-	 *     name: { type: coda.ValueType.String },
-	 *     id: { type: coda.ValueType.String },
+	 *     name: { type: sdk.ValueType.String },
+	 *     id: { type: sdk.ValueType.String },
 	 *   },
 	 *   displayProperty: "name",
 	 * });
 	 *
-	 * const ProductSchema = coda.makeObjectSchema({
+	 * const ProductSchema = sdk.makeObjectSchema({
 	 *   properties: {
 	 *     // ...
-	 *     size: { type: coda.ValueType.String },
+	 *     size: { type: sdk.ValueType.String },
 	 *     materials: {
-	 *       type: coda.ValueType.Array,
-	 *       items: { type: coda.ValueType.String },
+	 *       type: sdk.ValueType.Array,
+	 *       items: { type: sdk.ValueType.String },
 	 *     },
 	 *     manufacturer: ManufacturerSchema,
 	 *   },
@@ -2809,8 +2809,8 @@ export declare enum AttributionNodeType {
  *
  * @example
  * ```
- * coda.makeAttributionNode({
- *   type: coda.AttributionNodeType.Text,
+ * sdk.makeAttributionNode({
+ *   type: sdk.AttributionNodeType.Text,
  *   text: "Data provided by ExampleCorp.",
  * });
  * ```
@@ -2829,8 +2829,8 @@ export interface TextAttributionNode {
  *
  * @example
  * ```
- * coda.makeAttributionNode({
- *   type: coda.AttributionNodeType.Link,
+ * sdk.makeAttributionNode({
+ *   type: sdk.AttributionNodeType.Link,
  *   anchorUrl: "https://example.com",
  *   anchorText: "Data provided by ExampleCorp.",
  * });
@@ -2852,8 +2852,8 @@ export interface LinkAttributionNode {
  *
  * @example
  * ```
- * coda.makeAttributionNode({
- *   type: coda.AttributionNodeType.Image,
+ * sdk.makeAttributionNode({
+ *   type: sdk.AttributionNodeType.Image,
  *   anchorUrl: "https://example.com",
  *   imageUrl: "https://example.com/assets/logo.png",
  * });
@@ -2950,9 +2950,9 @@ export declare function generateSchema(obj: InferrableTypes): Schema;
  *
  * @example
  * ```
- * coda.makeSchema({
- *   type: coda.ValueType.Array,
- *   items: {type: coda.ValueType.String},
+ * sdk.makeSchema({
+ *   type: sdk.ValueType.Array,
+ *   items: {type: sdk.ValueType.String},
  * });
  * ```
  */
@@ -2967,12 +2967,12 @@ export declare function makeSchema<T extends Schema>(schema: T): T;
  *
  * @example
  * ```
- * coda.makeObjectSchema({
+ * sdk.makeObjectSchema({
  *   id: "email",
  *   primary: "name",
  *   properties: {
- *     email: {type: coda.ValueType.String, required: true},
- *     name: {type: coda.ValueType.String, required: true},
+ *     email: {type: sdk.ValueType.String, required: true},
+ *     name: {type: sdk.ValueType.String, required: true},
  *   },
  * });
  * ```
@@ -3003,12 +3003,12 @@ export declare function withIdentity(schema: GenericObjectSchema, identityName: 
  *
  * @example
  * ```
- * coda.makeTranslateObjectFormula({
+ * sdk.makeTranslateObjectFormula({
  *   name: "FetchWidget",
  *   description: "Fetches a widget.",
  *   parameters: [
- *     coda.makeParameter({type: coda.ParameterType.String, name: "id"}),
- *     coda.makeParameter({type: coda.ParameterType.String, name: "outputFormat"}),
+ *     sdk.makeParameter({type: sdk.ParameterType.String, name: "id"}),
+ *     sdk.makeParameter({type: sdk.ParameterType.String, name: "outputFormat"}),
  *   ],
  *   request: {
  *     method: "GET",
@@ -3142,7 +3142,7 @@ export interface ResponseHandlerTemplate<T extends Schema> {
  * @example
  * ```
  * if (!url.startsWith("https://")) {
- *   throw new coda.UserVisibleError("Please provide a valid url.");
+ *   throw new sdk.UserVisibleError("Please provide a valid url.");
  * }
  * ```
  *
@@ -3227,13 +3227,13 @@ export interface StatusCodeErrorResponse {
  *   });
  * } catch (error) {
  *   // If the request failed because the server returned a 300+ status code.
- *   if (coda.StatusCodeError.isStatusCodeError(error)) {
+ *   if (sdk.StatusCodeError.isStatusCodeError(error)) {
  *     // Cast the error as a StatusCodeError, for better intellisense.
- *     let statusError = error as coda.StatusCodeError;
+ *     let statusError = error as sdk.StatusCodeError;
  *     // If the API returned an error message in the body, show it to the user.
  *     let message = statusError.body?.detail;
  *     if (message) {
- *       throw new coda.UserVisibleError(message);
+ *       throw new sdk.UserVisibleError(message);
  *     }
  *   }
  *   // The request failed for some other reason. Re-throw the error so that it
@@ -3295,7 +3295,7 @@ export declare class StatusCodeError extends Error {
  * } catch (error) {
  *   // Determine if the error is due to missing scopes.
  *   if (error.statusCode == 400 && error.body?.message.includes("permission")) {
- *     throw new coda.MissingScopesError();
+ *     throw new sdk.MissingScopesError();
  *   }
  *   // Else handle or throw the error as normal.
  * }
@@ -4141,7 +4141,7 @@ export interface SimpleAutocompleteOption<T extends AutocompleteParameterTypes> 
  * autocomplete: async function(context, search) {
  *   const response = await context.fetcher.fetch({method: "GET", url: "/api/entities"});
  *   const allOptions = response.body.entities.map(entity => entity.name);
- *   return coda.simpleAutocomplete(search, allOptions);
+ *   return sdk.simpleAutocomplete(search, allOptions);
  * }
  * ```
  */
@@ -4160,7 +4160,7 @@ export declare function simpleAutocomplete<T extends AutocompleteParameterTypes>
  *
  * @example
  * ```
- * coda.makeParameter({
+ * sdk.makeParameter({
  *   type: ParameterType.Number,
  *   name: "userId",
  *   description: "The ID of a user.",
@@ -4172,7 +4172,7 @@ export declare function simpleAutocomplete<T extends AutocompleteParameterTypes>
  *     // those that match. Then it will transform the matching objects into the form
  *     // `{display: "Jane Doe", value: 123}` which is what is required to render
  *     // autocomplete responses.
- *     return coda.autocompleteSearchObjects(search, usersResponse.body, "name", "userId");
+ *     return sdk.autocompleteSearchObjects(search, usersResponse.body, "name", "userId");
  *   }
  * });
  * ```
@@ -4294,7 +4294,7 @@ export interface SyncTableOptions<K extends string, L extends string, ParamDefsT
 	 *   name: "MessagesSharedMailbox",
 	 *   // ...
 	 *   indexing: {
-	 *     default: coda.DataIndexing.Exclude,
+	 *     default: sdk.DataIndexing.Exclude,
 	 *   },
 	 * });
 	 * ```
@@ -4403,16 +4403,16 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
 	 *
 	 * @example
 	 * ```
-	 * coda.makeDynamicSyncTable({
+	 * sdk.makeDynamicSyncTable({
 	 *   name: "MySyncTable",
 	 *   getSchema: async function (context) => {
-	 *     return coda.makeObjectSchema({
+	 *     return sdk.makeObjectSchema({
 	 *       properties: {
 	 *         dynamicPropertyName: {
-	 *           type: coda.ValueType.String,
-	 *           codaType: coda.ValueHintType.SelectList,
+	 *           type: sdk.ValueType.String,
+	 *           codaType: sdk.ValueHintType.SelectList,
 	 *           mutable: true,
-	 *           options: coda.OptionsType.Dynamic,
+	 *           options: sdk.OptionsType.Dynamic,
 	 *         },
 	 *       },
 	 *     });
@@ -4421,7 +4421,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
 	 *     if (context.propertyName === "dynamicPropertyName") {
 	 *       return ["Dynamic Value 1", "Dynamic value 2"];
 	 *     }
-	 *     throw new coda.UserVisibleError(
+	 *     throw new sdk.UserVisibleError(
 	 *       `Cannot generate options for property ${context.propertyName}`
 	 *     );
 	 *   },
@@ -4457,7 +4457,7 @@ export declare function makeSyncTable<K extends string, L extends string, ParamD
  *
  * @example
  * ```
- * coda.makeDynamicSyncTable({
+ * sdk.makeDynamicSyncTable({
  *   name: "MySyncTable",
  *   getName: async function(context) => {
  *     const response = await context.fetcher.fetch({method: "GET", url: context.sync.dynamicUrl});
@@ -4553,7 +4553,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
  *
  * @example
  * ```
- * coda.makeEmptyFormula({
+ * sdk.makeEmptyFormula({
 	name: "GetWidget",
 	description: "Gets a widget.",
 	request: {
@@ -4561,7 +4561,7 @@ export declare function makeTranslateObjectFormula<ParamDefsT extends ParamDefs,
 	  method: "GET",
 	},
 	parameters: [
-	  coda.makeParameter({type: coda.ParameterType.Number, name: "id", description: "The ID of the widget to get."}),
+	  sdk.makeParameter({type: sdk.ParameterType.Number, name: "id", description: "The ID of the widget to get."}),
 	],
   }),
  * ```
@@ -4872,7 +4872,7 @@ export interface BaseAuthentication {
  * @example
  * ```ts
  * pack.setUserAuthentication({
- *   type: coda.AuthenticationType.HeaderBearerToken,
+ *   type: sdk.AuthenticationType.HeaderBearerToken,
  * });
  * ```
  *
@@ -4896,7 +4896,7 @@ export interface HeaderBearerTokenAuthentication extends BaseAuthentication {
  * @example
  * ```ts
  * pack.setUserAuthentication({
- *   type: coda.AuthenticationType.CodaApiHeaderBearerToken,
+ *   type: sdk.AuthenticationType.CodaApiHeaderBearerToken,
  * });
  * ```
  *
@@ -4924,7 +4924,7 @@ export interface CodaApiBearerTokenAuthentication extends BaseAuthentication {
  * @example
  * ```ts
  * pack.setUserAuthentication({
- *   type: coda.AuthenticationType.CustomHeaderToken,
+ *   type: sdk.AuthenticationType.CustomHeaderToken,
  *   headerName: "X-API-Key",
  * });
  * ```
@@ -4954,7 +4954,7 @@ export interface CustomHeaderTokenAuthentication extends BaseAuthentication {
  * @example
  * ```ts
  * pack.setUserAuthentication({
- *   type: coda.AuthenticationType.MultiHeaderToken,
+ *   type: sdk.AuthenticationType.MultiHeaderToken,
  *   headers: [
  *     {name: 'Header1', description: 'Enter the value for Header1',  tokenPrefix: 'prefix1'},
  *     {name: 'Header2', description: 'Enter value for Header2'},
@@ -4995,7 +4995,7 @@ export interface MultiHeaderTokenAuthentication extends BaseAuthentication {
  * @example
  * ```ts
  * pack.setUserAuthentication({
- *   type: coda.AuthenticationType.QueryParamToken,
+ *   type: sdk.AuthenticationType.QueryParamToken,
  *   paramName: "key",
  * });
  * ```
@@ -5021,7 +5021,7 @@ export interface QueryParamTokenAuthentication extends BaseAuthentication {
  * @example
  * ```ts
  * pack.setUserAuthentication({
- *   type: coda.AuthenticationType.MultiQueryParamToken,
+ *   type: sdk.AuthenticationType.MultiQueryParamToken,
  *   params: [
  *     { name: "key", description: "The key." },
  *     { name: "secret", description: "The secret." },
@@ -5146,7 +5146,7 @@ export interface BaseOAuth2CodeAuthentication extends BaseOAuthAuthentication {
  * @example
  * ```ts
  * pack.setUserAuthentication({
- *   type: coda.AuthenticationType.OAuth2,
+ *   type: sdk.AuthenticationType.OAuth2,
  *   // These URLs come from the API's developer documentation.
  *   authorizationUrl: "https://example.com/authorize",
  *   tokenUrl: "https://api.example.com/token",
@@ -5220,7 +5220,7 @@ export type OAuth2Authentication = OAuth2StaticCodeAuthentication | OAuth2Dynami
  * @example
  * ```ts
  * pack.setUserAuthentication({
- *   type: coda.AuthenticationType.OAuth2ClientCredentials,
+ *   type: sdk.AuthenticationType.OAuth2ClientCredentials,
  *   // This URL comes from the API's developer documentation.
  *   tokenUrl: "https://api.example.com/token",
  * });
@@ -5260,7 +5260,7 @@ export declare enum TokenExchangeCredentialsLocation {
  * @example
  * ```ts
  * pack.setUserAuthentication({
- *   type: coda.AuthenticationType.WebBasic,
+ *   type: sdk.AuthenticationType.WebBasic,
  * });
  * ```
  *
@@ -5829,7 +5829,7 @@ export interface WebSearchTool extends BaseTool<ToolType.WebSearch> {
 	 *   // ...
 	 *   tools: [
 	 *     {
-	 *       type: coda.ToolType.WebSearch,
+	 *       type: sdk.ToolType.WebSearch,
 	 *       allowedDomains: ["docs.google.com", "stackoverflow.com"],
 	 *     },
 	 *   ],
@@ -6023,8 +6023,8 @@ export interface Skill {
  * // Override tools — replaces the defaults entirely
  * pack.setChatSkill({
  *   tools: [
- *     { type: coda.ToolType.Pack },
- *     { type: coda.ToolType.ContactResolution },
+ *     { type: sdk.ToolType.Pack },
+ *     { type: sdk.ToolType.ContactResolution },
  *   ],
  * });
  * ```
@@ -6141,7 +6141,7 @@ export interface PackVersionDefinition {
 	 * // Override just the tools
 	 * pack.setChatSkill({
 	 *   tools: [
-	 *     { type: coda.ToolType.Pack },
+	 *     { type: sdk.ToolType.Pack },
 	 *   ],
 	 * });
 	 *
@@ -6310,7 +6310,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	formulaNamespace?: string;
 	private _defaultConnectionRequirement;
 	/**
-	 * Constructs a {@link PackDefinitionBuilder}. However, `coda.newPack()` should be used instead
+	 * Constructs a {@link PackDefinitionBuilder}. However, `sdk.newPack()` should be used instead
 	 * rather than constructing a builder directly.
 	 */
 	constructor(definition?: Partial<PackVersionDefinition>);
@@ -6351,7 +6351,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * pack.addSyncTable({
 	 *   name: 'MySyncTable',
 	 *   identityName: 'EntityName',
-	 *   schema: coda.makeObjectSchema({
+	 *   schema: sdk.makeObjectSchema({
 	 *     ...
 	 *   }),
 	 *   formula: {
@@ -6410,7 +6410,7 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 *   description: "My description.",
 	 *   prompt: `My prompt.`,
 	 *   tools: [
-	 *     { type: coda.ToolType.Pack },
+	 *     { type: sdk.ToolType.Pack },
 	 *   ],
 	 * });
 	 * ```
@@ -6449,8 +6449,8 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * // Override tools — replaces the defaults
 	 * pack.setChatSkill({
 	 *   tools: [
-	 *     { type: coda.ToolType.Pack },
-	 *     { type: coda.ToolType.ContactResolution },
+	 *     { type: sdk.ToolType.Pack },
+	 *     { type: sdk.ToolType.ContactResolution },
 	 *   ],
 	 * });
 	 * ```

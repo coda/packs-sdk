@@ -1,20 +1,20 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Define the schema that will be used to render the card.
-const WeatherSchema = coda.makeObjectSchema({
+const WeatherSchema = sdk.makeObjectSchema({
   properties: {
-    summary: { type: coda.ValueType.String, fromKey: "shortForecast" },
-    forecast: { type: coda.ValueType.String, fromKey: "detailedForecast" },
-    temperature: { type: coda.ValueType.String },
-    wind: { type: coda.ValueType.String, fromKey: "windSpeed" },
+    summary: { type: sdk.ValueType.String, fromKey: "shortForecast" },
+    forecast: { type: sdk.ValueType.String, fromKey: "detailedForecast" },
+    temperature: { type: sdk.ValueType.String },
+    wind: { type: sdk.ValueType.String, fromKey: "windSpeed" },
     icon: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.ImageReference,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.ImageReference,
     },
     link: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
   },
   displayProperty: "summary",
@@ -33,29 +33,29 @@ pack.addFormula({
   name: "CurrentWeather",
   description: "Get the current weather at a specific location (US only).",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "latitude",
       description: "The latitude of the location.",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "longitude",
       description: "The longitude of the location.",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.Boolean,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Boolean,
       name: "isMetric",
       description: "Whether to use metric units. Default: false.",
       optional: true,
     }),
   ],
-  resultType: coda.ValueType.Object,
+  resultType: sdk.ValueType.Object,
   schema: WeatherSchema,
   execute: async function ([latitude, longitude, isMetric], context) {
     let url = await getForecastUrl(latitude, longitude, context);
     if (isMetric) {
-      url = coda.withQueryParams(url, { units: "si" });
+      url = sdk.withQueryParams(url, { units: "si" });
     }
     let response = await context.fetcher.fetch({
       method: "GET",
@@ -66,7 +66,7 @@ pack.addFormula({
     // Add the unit onto the temperature.
     weather.temperature = `${weather.temperature}°${weather.temperatureUnit}`;
     weather.link =
-      coda.withQueryParams("https://forecast.weather.gov/MapClick.php", {
+      sdk.withQueryParams("https://forecast.weather.gov/MapClick.php", {
         lat: latitude,
         lon: longitude,
       });
@@ -76,7 +76,7 @@ pack.addFormula({
 
 // A helper function that gets the forecast URL for a given location.
 async function getForecastUrl(latitude: number, longitude: number,
-  context: coda.ExecutionContext): Promise<string> {
+  context: sdk.ExecutionContext): Promise<string> {
   try {
     let response = await context.fetcher.fetch({
       method: "GET",
@@ -87,10 +87,10 @@ async function getForecastUrl(latitude: number, longitude: number,
   } catch (error) {
     // Check if the error is due to the location being outside the US.
     if (error.statusCode === 404) {
-      let statusError = error as coda.StatusCodeError;
+      let statusError = error as sdk.StatusCodeError;
       let message = statusError.body?.detail;
       if (message) {
-        throw new coda.UserVisibleError(message);
+        throw new sdk.UserVisibleError(message);
       }
     }
     throw error;

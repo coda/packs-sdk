@@ -19,7 +19,7 @@ in JavaScript.
 ## Example
 
 ```
-coda.makeEmptyFormula({
+sdk.makeEmptyFormula({
    name: "GetWidget",
    description: "Gets a widget.",
    request: {
@@ -27,7 +27,7 @@ coda.makeEmptyFormula({
      method: "GET",
    },
    parameters: [
-     coda.makeParameter({type: coda.ParameterType.Number, name: "id", description: "The ID of the widget to get."}),
+     sdk.makeParameter({type: sdk.ParameterType.Number, name: "id", description: "The ID of the widget to get."}),
    ],
  }),
 ```

@@ -1,12 +1,12 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 pack.addNetworkDomain("gutendex.com");
 
-const BookSchema = coda.makeObjectSchema({
+const BookSchema = sdk.makeObjectSchema({
   properties: {
-    title: { type: coda.ValueType.String },
-    id: { type: coda.ValueType.Number },
+    title: { type: sdk.ValueType.String },
+    id: { type: sdk.ValueType.Number },
   },
   displayProperty: "title",
   idProperty: "id",
@@ -21,8 +21,8 @@ pack.addSyncTable({
     name: "SyncBooks",
     description: "Syncs the books.",
     parameters: [
-      coda.makeParameter({
-        type: coda.ParameterType.String,
+      sdk.makeParameter({
+        type: sdk.ParameterType.String,
         name: "topic",
         description: "Limit books to this topic.",
         optional: true,
@@ -31,7 +31,7 @@ pack.addSyncTable({
     execute: async function (args, context) {
       let [topic] = args;
       let baseUrl = "https://gutendex.com/books";
-      let url = coda.withQueryParams(baseUrl, {
+      let url = sdk.withQueryParams(baseUrl, {
         topic: topic,
       });
       let response = await context.fetcher.fetch({

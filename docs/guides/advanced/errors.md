@@ -22,18 +22,18 @@ pack.addFormula({
   name: "CreateOrder",
   description: "Create a new order.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "sku",
       description: "The SKU of the item to order.",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "quantity",
       description: "The number of items to order.",
     }),
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   execute: async function ([sku, quantity], context) {
     if (quantity < 0) {
       throw new Error("The quantity must be greater than zero.");
@@ -52,7 +52,7 @@ pack.addFormula({
   // ...
   execute: async function ([sku, quantity], context) {
     if (quantity < 0) {
-      throw new coda.UserVisibleError("The quantity must be greater than zero.");
+      throw new sdk.UserVisibleError("The quantity must be greater than zero.");
     }
     // ...
   },
@@ -79,7 +79,7 @@ pack.addFormula({
       if (error.statusCode === 400) {
         // Use the message field in the response, or fallback to generic one.
         let message = error.body?.message ?? "Invalid parameters.";
-        throw new coda.UserVisibleError(message);
+        throw new sdk.UserVisibleError(message);
       }
       // If the error wasn't from the API, just re-throw it.
       throw error;
@@ -128,7 +128,7 @@ function handleError(error) {
   if (error.statusCode === 400) {
     // Use the message field in the response, or fallback to generic one.
     let message = error.body?.message ?? "Invalid parameters.";
-    throw new coda.UserVisibleError(message);
+    throw new sdk.UserVisibleError(message);
   }
   // If the error wasn't from the API, just re-throw it.
   throw error;

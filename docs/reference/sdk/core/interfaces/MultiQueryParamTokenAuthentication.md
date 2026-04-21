@@ -19,7 +19,7 @@ The parameter names are defined in the [params](#params) array property.
 
 ```ts
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.MultiQueryParamToken,
+  type: sdk.AuthenticationType.MultiQueryParamToken,
   params: [
     { name: "key", description: "The key." },
     { name: "secret", description: "The secret." },

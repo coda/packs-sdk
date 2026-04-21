@@ -17,7 +17,7 @@ The header name is defined in the [headerName](#headername) property.
 
 ```ts
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.CustomHeaderToken,
+  type: sdk.AuthenticationType.CustomHeaderToken,
   headerName: "X-API-Key",
 });
 ```

@@ -18,7 +18,7 @@ You'll provide the application's client ID and client secret when authenticating
 
 ```ts
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2ClientCredentials,
+  type: sdk.AuthenticationType.OAuth2ClientCredentials,
   // This URL comes from the API's developer documentation.
   tokenUrl: "https://api.example.com/token",
 });

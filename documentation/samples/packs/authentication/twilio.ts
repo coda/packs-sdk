@@ -1,11 +1,11 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the Twilio API, using an Account SID and token in
 // an "Authorization: Basic ..." header.
 // See https://www.twilio.com/docs/usage/requests-to-twilio
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.WebBasic,
+  type: sdk.AuthenticationType.WebBasic,
   instructionsUrl: "https://www.twilio.com/docs/sms/api#sms-api-authentication",
 
   // Use Twilio-specific placeholders for the username and password fields.

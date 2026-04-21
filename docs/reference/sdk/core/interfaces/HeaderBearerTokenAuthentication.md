@@ -16,7 +16,7 @@ Authenticate using an HTTP header of the form `Authorization: Bearer <token>`.
 
 ```ts
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.HeaderBearerToken,
+  type: sdk.AuthenticationType.HeaderBearerToken,
 });
 ```
 

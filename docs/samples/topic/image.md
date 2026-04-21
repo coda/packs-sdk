@@ -16,8 +16,8 @@ A formula that takes an image as a parameter. This sample returns the file size 
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Regular expression that matches Coda-hosted images.
 const HostedImageUrlRegex = new RegExp("^https://(?:[^/]*\.)?codahosted.io/.*");
@@ -27,20 +27,20 @@ pack.addFormula({
   name: "FileSize",
   description: "Gets the file size of an image, in bytes.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Image,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Image,
       name: "image",
       description:
         "The image to operate on. Not compatible with Image URL columns.",
     }),
   ],
-  resultType: coda.ValueType.Number,
+  resultType: sdk.ValueType.Number,
   execute: async function ([imageUrl], context) {
     // Throw an error if the image isn't Coda-hosted. Image URL columns can
     // contain images on any domain, but by default Packs can only access image
     // attachments hosted on codahosted.io.
     if (!imageUrl.match(HostedImageUrlRegex)) {
-      throw new coda.UserVisibleError("Not compatible with Image URL columns.");
+      throw new sdk.UserVisibleError("Not compatible with Image URL columns.");
     }
     // Fetch the image content.
     let response = await context.fetcher.fetch({
@@ -62,37 +62,37 @@ A formula that return an external image. This sample returns a random photo of a
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Formula that fetches a random cat photo, with various options.
 pack.addFormula({
   name: "CatPhoto",
   description: "Gets a random cat image.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "text",
       description: "Text to display over the image.",
       optional: true,
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "filter",
       description: "A filter to apply to the image.",
       autocomplete: ["mono", "negate"],
       optional: true,
     }),
   ],
-  resultType: coda.ValueType.String,
-  codaType: coda.ValueHintType.ImageReference,
+  resultType: sdk.ValueType.String,
+  codaType: sdk.ValueHintType.ImageReference,
   execute: async function (args, context) {
     let [text, filter] = args;
     let url = "https://cataas.com/cat";
     if (text) {
       url += "/says/" + encodeURIComponent(text);
     }
-    url = coda.withQueryParams(url, {
+    url = sdk.withQueryParams(url, {
       filter: filter,
       json: true,
     });
@@ -114,8 +114,8 @@ A formula that returns an image uploaded to &#x60;temporaryBlobStorage&#x60;. Th
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 pack.addNetworkDomain("boringavatars.com");
 
@@ -123,20 +123,20 @@ pack.addFormula({
   name: "BoringAvatar",
   description: "Get a boring avatar image.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "size",
       description: "The size to generate the avatar in pixels.",
     }),
   ],
-  resultType: coda.ValueType.String,
-  codaType: coda.ValueHintType.ImageAttachment,
+  resultType: sdk.ValueType.String,
+  codaType: sdk.ValueHintType.ImageAttachment,
   execute: async function ([size], context) {
-    let resp = await context.fetcher.fetch({ 
-      method: "GET", 
+    let resp = await context.fetcher.fetch({
+      method: "GET",
       url: `https://source.boringavatars.com/beam/${size}`,
       // Formats response as binary to get a Buffer of the svg data
-      isBinaryResponse: true, 
+      isBinaryResponse: true,
     });
     // This API returns direct SVG code used to generate the avatar.
     let svg = resp.body;
@@ -153,8 +153,8 @@ An action that downloads images from Coda and uploads them to another service. T
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Regular expression that matches Coda-hosted images.
 const HostedImageUrlRegex = new RegExp("^https://(?:[^/]*\.)?codahosted.io/.*");
@@ -170,16 +170,16 @@ pack.addFormula({
   name: "Upload",
   description: "Uploads images to Google Photos.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.ImageArray,
+    sdk.makeParameter({
+      type: sdk.ParameterType.ImageArray,
       name: "images",
       description: "The images to upload.",
     }),
   ],
-  resultType: coda.ValueType.Array,
+  resultType: sdk.ValueType.Array,
   items: {
-    type: coda.ValueType.String,
-    codaType: coda.ValueHintType.Url,
+    type: sdk.ValueType.String,
+    codaType: sdk.ValueHintType.Url,
   },
   isAction: true,
   execute: async function ([imageUrls], context) {
@@ -196,13 +196,13 @@ pack.addFormula({
 
 // Download the images from Coda, in parallel. For each image it returns a
 // buffer of image data and the MIME type of the image.
-async function downloadImages(imageUrls, context: coda.ExecutionContext):
+async function downloadImages(imageUrls, context: sdk.ExecutionContext):
     Promise<ImageData[]> {
   let requests = [];
   for (let imageUrl of imageUrls) {
     // Reject images not hosted in Coda, since we can't download them.
     if (!imageUrl.match(HostedImageUrlRegex)) {
-      throw new coda.UserVisibleError("Not compatible with Image URL columns.");
+      throw new sdk.UserVisibleError("Not compatible with Image URL columns.");
     }
 
     // Start the download.
@@ -232,7 +232,7 @@ async function downloadImages(imageUrls, context: coda.ExecutionContext):
 // Uploads the images to Google Photos, in parallel. For each image it returns a
 // temporary upload token.
 async function uploadImages(images: ImageData[],
-    context: coda.ExecutionContext): Promise<string[]> {
+    context: sdk.ExecutionContext): Promise<string[]> {
   let requests = [];
   for (let image of images) {
     // Start the upload.
@@ -263,7 +263,7 @@ async function uploadImages(images: ImageData[],
 // Adds uploaded images to the user's library. For each image it returns the URL
 // of the image in Google Photos.
 async function addImages(uploadTokens: string[],
-    context: coda.ExecutionContext): Promise<string[]> {
+    context: sdk.ExecutionContext): Promise<string[]> {
   // Construct the request payload.
   let items = [];
   for (let uploadToken of uploadTokens) {
@@ -294,7 +294,7 @@ async function addImages(uploadTokens: string[],
   for (let [i, result] of results.entries()) {
     // Throw an error if any of the uploads failed.
     if (result.status.message !== "Success") {
-      throw new coda.UserVisibleError(
+      throw new sdk.UserVisibleError(
         `Upload failed for image ${i + 1}: ${result.status.message}`);
     }
     let url = result.mediaItem.productUrl;
@@ -304,7 +304,7 @@ async function addImages(uploadTokens: string[],
 }
 
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://accounts.google.com/o/oauth2/v2/auth",
   tokenUrl: "https://oauth2.googleapis.com/token",
   scopes: [
@@ -324,26 +324,26 @@ A sync table that includes images sourced from raw data. This sample syncs files
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Schema defining the fields to sync for each file.
-const FileSchema = coda.makeObjectSchema({
+const FileSchema = sdk.makeObjectSchema({
   properties: {
-    name: { type: coda.ValueType.String },
-    path: { type: coda.ValueType.String, fromKey: "path_display" },
+    name: { type: sdk.ValueType.String },
+    path: { type: sdk.ValueType.String, fromKey: "path_display" },
     url: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
     thumbnail: {
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       // ImageAttachments instructs Coda to ingest the image and store it in the
       // doc. This is required, since the thumbnail image URLs returned by
       // TemporaryBlobStorage expire.
-      codaType: coda.ValueHintType.ImageAttachment,
+      codaType: sdk.ValueHintType.ImageAttachment,
     },
-    id: { type: coda.ValueType.String },
+    id: { type: sdk.ValueType.String },
   },
   displayProperty: "name",
   idProperty: "id",
@@ -423,7 +423,7 @@ pack.addSyncTable({
 });
 
 // Gets a batch of files from the API.
-async function getFiles(context: coda.SyncExecutionContext): Promise<any> {
+async function getFiles(context: sdk.SyncExecutionContext): Promise<any> {
   let url = "https://api.dropboxapi.com/2/files/list_folder";
   let body;
 
@@ -431,7 +431,7 @@ async function getFiles(context: coda.SyncExecutionContext): Promise<any> {
   let cursor = context.sync.continuation?.cursor;
   if (cursor) {
     // Continue from the cursor.
-    url = coda.joinUrl(url, "/continue");
+    url = sdk.joinUrl(url, "/continue");
     body = {
       cursor: cursor,
     };
@@ -457,7 +457,7 @@ async function getFiles(context: coda.SyncExecutionContext): Promise<any> {
 }
 
 // Get the thumbnail metadata for a list of file paths.
-async function getThumbnails(paths, context: coda.ExecutionContext):
+async function getThumbnails(paths, context: sdk.ExecutionContext):
     Promise<string[]> {
   // Use a batch URL to get all of the thumbnail metadata in one request.
   let url = "https://content.dropboxapi.com/2/files/get_thumbnail_batch";
@@ -488,7 +488,7 @@ async function getThumbnails(paths, context: coda.ExecutionContext):
 }
 
 // Get the Dropbox URLs for a list of file IDs.
-async function getFileUrls(fileIds, context: coda.ExecutionContext):
+async function getFileUrls(fileIds, context: sdk.ExecutionContext):
     Promise<string[]> {
   // Use a batch URL to get all of the thumbnail metadata in one request.
   let url = "https://api.dropboxapi.com/2/sharing/get_file_metadata/batch";
@@ -509,7 +509,7 @@ async function getFileUrls(fileIds, context: coda.ExecutionContext):
 
 // Set per-user authentication using Dropbox's OAuth2.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://www.dropbox.com/oauth2/authorize",
   tokenUrl: "https://api.dropbox.com/oauth2/token",
   scopes: ["files.content.read", "sharing.read"],
@@ -527,25 +527,25 @@ A sync table that includes images sourced from private URLs. This sample syncs f
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Schema defining the fields to sync for each file.
-const FileSchema = coda.makeObjectSchema({
+const FileSchema = sdk.makeObjectSchema({
   properties: {
-    name: { type: coda.ValueType.String },
+    name: { type: sdk.ValueType.String },
     url: {
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
       fromKey: "webViewLink",
     },
     thumbnail: {
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       // ImageAttachments instructs Coda to ingest the image and store it in the
       // doc.
-      codaType: coda.ValueHintType.ImageAttachment,
+      codaType: sdk.ValueHintType.ImageAttachment,
     },
-    id: { type: coda.ValueType.String },
+    id: { type: sdk.ValueType.String },
   },
   displayProperty: "name",
   idProperty: "id",
@@ -567,7 +567,7 @@ pack.addSyncTable({
 
       // Get a batch of files.
       let url = "https://www.googleapis.com/drive/v3/files";
-      url = coda.withQueryParams(url, {
+      url = sdk.withQueryParams(url, {
         fields: "files(id,name,webViewLink,thumbnailLink)",
         pageToken: pageToken,
       });
@@ -622,7 +622,7 @@ pack.addSyncTable({
 
 // Set per-user authentication using Google's OAuth2.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://accounts.google.com/o/oauth2/v2/auth",
   tokenUrl: "https://oauth2.googleapis.com/token",
   scopes: ["https://www.googleapis.com/auth/drive.readonly"],
@@ -647,29 +647,29 @@ A formula that generated an SVG, and returns it as a data URI. This sample gener
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // A formula that generates an image using some input text.
 pack.addFormula({
   name: "TextToImage",
   description: "Generates an image using the text provided.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "text",
       description: "The text to include in the image.",
       suggestedValue: "Hello World!",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "color",
       description: "The desired color of the text. Defaults to black.",
       optional: true,
     }),
   ],
-  resultType: coda.ValueType.String,
-  codaType: coda.ValueHintType.ImageReference,
+  resultType: sdk.ValueType.String,
+  codaType: sdk.ValueHintType.ImageReference,
   execute: async function ([text, color = "black"], context) {
     // Calculate the width of the generated image required to fit the text.
     // Using a fixed-width font to make this easy.
@@ -685,7 +685,7 @@ pack.addFormula({
     // Encode the markup as base64.
     let encoded = Buffer.from(svg).toString("base64");
     // Return the SVG as a data URL.
-    return coda.SvgConstants.DataUrlPrefix + encoded;
+    return sdk.SvgConstants.DataUrlPrefix + encoded;
   },
 });
 {% endraw %}
@@ -695,8 +695,8 @@ A formula that generates an SVG that adapts if dark mode is enabled. This sample
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // A formula that demonstrates how to generate an SVG that adapts to the user's
 // dark mode setting in Coda.
@@ -704,13 +704,13 @@ pack.addFormula({
   name: "HelloDarkMode",
   description: "Generates an image that adapts to the dark mode setting.",
   parameters: [],
-  resultType: coda.ValueType.String,
-  codaType: coda.ValueHintType.ImageReference,
+  resultType: sdk.ValueType.String,
+  codaType: sdk.ValueHintType.ImageReference,
   execute: async function ([], context) {
     // When loading your image in dark mode, Coda will append the URL fragment
     // "#DarkMode". Instead of hard-coding that value, it's safer to retrieve
     // it from the SDK.
-    let darkModeId = coda.SvgConstants.DarkModeFragmentId;
+    let darkModeId = sdk.SvgConstants.DarkModeFragmentId;
     // Generate the SVG markup. Prefer using a library for this when possible.
     let svg = `
       <svg viewBox="0 0 36 10" xmlns="http://www.w3.org/2000/svg">
@@ -730,7 +730,7 @@ pack.addFormula({
     // Encode the markup as base64.
     let encoded = Buffer.from(svg).toString("base64");
     // Return the SVG as a data URL (using the dark mode prefix).
-    return coda.SvgConstants.DataUrlPrefixWithDarkModeSupport + encoded;
+    return sdk.SvgConstants.DataUrlPrefixWithDarkModeSupport + encoded;
   },
 });
 {% endraw %}
@@ -740,33 +740,33 @@ A formula that takes an file as a parameter. This sample uploads the file to an 
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Action that uploads a file to Amazon S3.
 pack.addFormula({
   name: "Upload",
   description: "Upload a file to AWS S3.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.File,
+    sdk.makeParameter({
+      type: sdk.ParameterType.File,
       name: "file",
       description: "The file to upload.",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "name",
       description: "The target file name. Default: the original file name.",
       optional: true,
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "path",
       description: "The target directory path. Default: the root directory.",
       optional: true,
     }),
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   isAction: true,
   execute: async function ([fileUrl, name, path="/"], context) {
     // Fetch the file contents.
@@ -790,7 +790,7 @@ pack.addFormula({
     }
 
     // Upload to S3.
-    let s3Url = coda.joinUrl(context.endpoint, path, name);
+    let s3Url = sdk.joinUrl(context.endpoint, path, name);
     await context.fetcher.fetch({
       method: "PUT",
       url: s3Url,
@@ -818,7 +818,7 @@ function getFilename(contentDisposition) {
 
 // Set per-user authentication using AWS Signature Version 4 with an access key.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.AWSAccessKey,
+  type: sdk.AuthenticationType.AWSAccessKey,
   service: "s3",
   requiresEndpointUrl: true,
   endpointDomain: "amazonaws.com",

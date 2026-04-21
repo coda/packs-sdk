@@ -1,9 +1,9 @@
-import * as coda from "@codahq/packs-sdk";
+import * as sdk from "@codahq/packs-sdk";
 
 let parameters = [
   // BEGIN
-  coda.makeParameter({
-    type: coda.ParameterType.String,
+  sdk.makeParameter({
+    type: sdk.ParameterType.String,
     name: "${1:myParameter}",
     description: "${2:My description.}",
   }),

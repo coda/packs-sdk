@@ -1,36 +1,36 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // A schema defining the data in the sync table, indicating which fields are
 // editable (mutable).
-const TaskSchema = coda.makeObjectSchema({
+const TaskSchema = sdk.makeObjectSchema({
   properties: {
     name: {
       description: "The name of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       fromKey: "content",
       required: true,
       mutable: true,
     },
     description: {
       description: "A detailed description of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       mutable: true,
     },
     url: {
       description: "A link to the task in the Todoist app.",
-      type: coda.ValueType.String,
-      codaType: coda.ValueHintType.Url,
+      type: sdk.ValueType.String,
+      codaType: sdk.ValueHintType.Url,
     },
     completed: {
       description: "If the task has been completed.",
-      type: coda.ValueType.Boolean,
+      type: sdk.ValueType.Boolean,
       fromKey: "is_completed",
       mutable: true,
     },
     id: {
       description: "The ID of the task.",
-      type: coda.ValueType.String,
+      type: sdk.ValueType.String,
       required: true,
     },
   },
@@ -82,7 +82,7 @@ pack.addSyncTable({
         for (let command of commands) {
           let status = statuses[command.uuid];
           if (status.error) {
-            return new coda.UserVisibleError(status.error);
+            return new sdk.UserVisibleError(status.error);
           }
         }
         // If there were no errors, fetch the updated task and return it.
@@ -97,7 +97,7 @@ pack.addSyncTable({
 });
 
 // Generate a list of API commands from a row update.
-function generateCommands(update: coda.GenericSyncUpdate): any[] {
+function generateCommands(update: sdk.GenericSyncUpdate): any[] {
   let commands = [];
   let { previousValue, newValue } = update;
   // Update the task.
@@ -120,7 +120,7 @@ function generateCommands(update: coda.GenericSyncUpdate): any[] {
 }
 
 // Fetch the current state of an individual task.
-async function getTask(context: coda.ExecutionContext, id: string) {
+async function getTask(context: sdk.ExecutionContext, id: string) {
   let response = await context.fetcher.fetch({
     method: "GET",
     url: `https://api.todoist.com/rest/v2/tasks/${id}`,
@@ -133,6 +133,6 @@ pack.addNetworkDomain("todoist.com");
 
 // Setup authentication using a Todoist API token.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.HeaderBearerToken,
+  type: sdk.AuthenticationType.HeaderBearerToken,
   instructionsUrl: "https://todoist.com/app/settings/integrations",
 });

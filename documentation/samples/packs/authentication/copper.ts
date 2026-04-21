@@ -1,10 +1,10 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the Copper API, using multiple HTTP headers.
 // See https://developer.copper.com/introduction/requests.html#headers.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.MultiHeaderToken,
+  type: sdk.AuthenticationType.MultiHeaderToken,
   headers: [
     { name: "X-PW-AccessToken", description: "API key" },
     { name: "X-PW-UserEmail", description: "Email address" },

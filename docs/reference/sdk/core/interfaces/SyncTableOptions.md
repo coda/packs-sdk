@@ -106,7 +106,7 @@ pack.addSyncTable({
   name: "MessagesSharedMailbox",
   // ...
   indexing: {
-    default: coda.DataIndexing.Exclude,
+    default: sdk.DataIndexing.Exclude,
   },
 });
 ```

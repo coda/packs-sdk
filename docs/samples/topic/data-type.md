@@ -22,7 +22,7 @@ pack.addFormula({
   parameters: [
     // TODO: Add parameters.
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   execute: async function (args, context) {
     // TODO: Unpack the parameter values.
     let [] = args;
@@ -43,7 +43,7 @@ pack.addFormula({
   parameters: [
     // TODO: Add parameters.
   ],
-  resultType: coda.ValueType.Number,
+  resultType: sdk.ValueType.Number,
   execute: async function (args, context) {
     // TODO: Unpack the parameter values.
     let [] = args;
@@ -64,7 +64,7 @@ pack.addFormula({
   parameters: [
     // TODO: Add parameters.
   ],
-  resultType: coda.ValueType.Boolean,
+  resultType: sdk.ValueType.Boolean,
   execute: async function (args, context) {
     // TODO: Unpack the parameter values.
     let [] = args;
@@ -85,9 +85,9 @@ pack.addFormula({
   parameters: [
     // TODO: Add parameters.
   ],
-  resultType: coda.ValueType.Array,
-  items: coda.makeSchema({
-    type: coda.ValueType.String,
+  resultType: sdk.ValueType.Array,
+  items: sdk.makeSchema({
+    type: sdk.ValueType.String,
   }),
   execute: async function (args, context) {
     // TODO: Unpack the parameter values.
@@ -109,7 +109,7 @@ pack.addFormula({
   parameters: [
     // TODO: Add parameters.
   ],
-  resultType: coda.ValueType.Object,
+  resultType: sdk.ValueType.Object,
   schema: ThingSchema,
   execute: async function (args, context) {
     // TODO: Unpack the parameter values.
@@ -125,22 +125,22 @@ A formula that returns a number formatted as a percent value. This sample conver
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Formula that converts slices of a pizza into a percentage eaten.
 pack.addFormula({
   name: "PizzaEaten",
   description: "Calculates what percentage of a pizza was eaten.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "slices",
       description: "How many slices were eaten.",
     }),
   ],
-  resultType: coda.ValueType.Number,
-  codaType: coda.ValueHintType.Percent,
+  resultType: sdk.ValueType.Number,
+  codaType: sdk.ValueHintType.Percent,
   execute: async function ([slices], context) {
     return slices / 8;
   },
@@ -152,8 +152,8 @@ A formula that returns a number formatted as a currency value. This sample conve
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 pack.addNetworkDomain("exchangerate.host");
 
@@ -161,28 +161,28 @@ pack.addFormula({
   name: "ToUSD",
   description: "Convert from a different currency to US dollars.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Number,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Number,
       name: "amount",
       description: "The amount to convert.",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "from",
       description: "The currency to convert from.",
     }),
   ],
-  resultType: coda.ValueType.Number,
+  resultType: sdk.ValueType.Number,
   schema: {
-    type: coda.ValueType.Number,
-    codaType: coda.ValueHintType.Currency,
+    type: sdk.ValueType.Number,
+    codaType: sdk.ValueHintType.Currency,
     // Ensure the currency symbol displayed with the result is "$".
     currencyCode: "USD",
     // Only show two decimal places (no fractional pennies).
     precision: 2,
   },
   execute: async function ([amount, from], context) {
-    let url = coda.withQueryParams("https://api.exchangerate.host/latest", {
+    let url = sdk.withQueryParams("https://api.exchangerate.host/latest", {
       base: from,
       amount: amount,
     });
@@ -201,23 +201,23 @@ A formula that returns a date and time, passed as a string. This sample adds fiv
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Formula that adds five minutes to an input date and time.
 pack.addFormula({
   name: "FiveMinsLate",
   description: "Adds five minutes to the input date and time.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.Date,
+    sdk.makeParameter({
+      type: sdk.ParameterType.Date,
       name: "input",
       description: "The input date and time.",
     }),
   ],
   // Return the result as the number of seconds since the epoch.
-  resultType: coda.ValueType.Number,
-  codaType: coda.ValueHintType.Time,
+  resultType: sdk.ValueType.Number,
+  codaType: sdk.ValueHintType.Time,
   execute: async function ([input], context) {
     let seconds = input.getTime() / 1000;
     seconds += 5 * 60; // Add five minutes, as seconds.
@@ -231,23 +231,23 @@ A formula that returns markdown content. This sample returns the contents of the
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Returns the contents of GitHub repo's README.md file as markdown.
 pack.addFormula({
   name: "GetReadme",
   description: "Gets the content of a GitHub repo's README.md file.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "repo",
       description: "The repo to read from.",
       suggestedValue: "coda/packs-sdk",
     }),
   ],
-  resultType: coda.ValueType.String,
-  codaType: coda.ValueHintType.Markdown,
+  resultType: sdk.ValueType.String,
+  codaType: sdk.ValueHintType.Markdown,
   execute: async function ([repo], context) {
     let url = `https://raw.githubusercontent.com/${repo}/HEAD/README.md`;
     let result = await context.fetcher.fetch({
@@ -266,22 +266,22 @@ A formula that returns HTML content. This sample returns HTML with every word of
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Returns HTML with every other word of the input text bolded.
 pack.addFormula({
   name: "AlternatingBold",
   description: "Bold every other word.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "text",
       description: "The text to bold.",
     }),
   ],
-  resultType: coda.ValueType.String,
-  codaType: coda.ValueHintType.Html,
+  resultType: sdk.ValueType.String,
+  codaType: sdk.ValueHintType.Html,
   execute: async function ([text], context) {
     let words = text.split(" ");
     for (let i = 0; i < words.length; i++) {
@@ -299,16 +299,16 @@ A formula that a URL to embed. This sample returns an embed of the infamous YouT
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Returns the infamous YouTube video by Rick Astley as an embed.
 pack.addFormula({
   name: "Rickroll",
   description: "Embeds the video \"Never Gonna Give You Up\".",
   parameters: [],
-  resultType: coda.ValueType.String,
-  codaType: coda.ValueHintType.Embed,
+  resultType: sdk.ValueType.String,
+  codaType: sdk.ValueHintType.Embed,
   execute: async function ([], context) {
     return "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
   },
@@ -320,37 +320,37 @@ A formula that returns an image, as a reference. This sample returns a random ph
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Formula that fetches a random cat photo, with various options.
 pack.addFormula({
   name: "CatPhoto",
   description: "Gets a random cat image.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "text",
       description: "Text to display over the image.",
       optional: true,
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "filter",
       description: "A filter to apply to the image.",
       autocomplete: ["mono", "negate"],
       optional: true,
     }),
   ],
-  resultType: coda.ValueType.String,
-  codaType: coda.ValueHintType.ImageReference,
+  resultType: sdk.ValueType.String,
+  codaType: sdk.ValueHintType.ImageReference,
   execute: async function (args, context) {
     let [text, filter] = args;
     let url = "https://cataas.com/cat";
     if (text) {
       url += "/says/" + encodeURIComponent(text);
     }
-    url = coda.withQueryParams(url, {
+    url = sdk.withQueryParams(url, {
       filter: filter,
       json: true,
     });

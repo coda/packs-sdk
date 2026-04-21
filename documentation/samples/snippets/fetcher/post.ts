@@ -1,6 +1,6 @@
-import type * as coda from "@codahq/packs-sdk";
+import type * as sdk from "@codahq/packs-sdk";
 
-async function snippet(context: coda.ExecutionContext) {
+async function snippet(context: sdk.ExecutionContext) {
   // BEGIN
   let payload = {
     // TODO: Construct the JSON that the API expects.

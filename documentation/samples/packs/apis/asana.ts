@@ -1,10 +1,10 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the Asana API, using OAuth2.
 // See https://developers.asana.com/docs/oauth
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://app.asana.com/-/oauth_authorize",
   tokenUrl: "https://app.asana.com/-/oauth_token",
 

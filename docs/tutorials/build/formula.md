@@ -49,8 +49,8 @@ We'll start by scaffolding out the structure of the formula. Once we have it loo
     <div markdown>
 
     ```ts
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
     ```
 
     </div>
@@ -68,8 +68,8 @@ We'll start by scaffolding out the structure of the formula. Once we have it loo
     <div markdown>
 
     ```{.ts hl_lines="4-6"}
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     pack.addFormula({
 
@@ -90,8 +90,8 @@ We'll start by scaffolding out the structure of the formula. Once we have it loo
     <div markdown>
 
     ```{.ts hl_lines="5-6"}
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     pack.addFormula({
       name: "Reverse",
@@ -114,8 +114,8 @@ We'll start by scaffolding out the structure of the formula. Once we have it loo
     <div markdown>
 
     ```{.ts hl_lines="7-9"}
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     pack.addFormula({
       name: "Reverse",
@@ -135,20 +135,20 @@ We'll start by scaffolding out the structure of the formula. Once we have it loo
     <section class="tutorial-row" markdown>
     <div markdown>
 
-    Inside the array add a parameter definition for each input (only one in this case). Parameter definitions are created using the function `coda.makeParameter()`. Like the outer formula definition, each parameter definition is itself a set of key-value pairs.
+    Inside the array add a parameter definition for each input (only one in this case). Parameter definitions are created using the function `sdk.makeParameter()`. Like the outer formula definition, each parameter definition is itself a set of key-value pairs.
 
     </div>
     <div markdown>
 
     ```{.ts hl_lines="8-10"}
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     pack.addFormula({
       name: "Reverse",
       description: "Reverses some text.",
       parameters: [
-        coda.makeParameter({
+        sdk.makeParameter({
 
         }),
       ],
@@ -170,14 +170,14 @@ We'll start by scaffolding out the structure of the formula. Once we have it loo
     <div markdown>
 
     ```{.ts hl_lines="9-10"}
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     pack.addFormula({
       name: "Reverse",
       description: "Reverses some text.",
       parameters: [
-        coda.makeParameter({
+        sdk.makeParameter({
           name: "text",
           description: "The text to reverse.",
         }),
@@ -196,21 +196,21 @@ We'll start by scaffolding out the structure of the formula. Once we have it loo
 
     Each parameter must also specify what type of data it expects. The platform supports a variety of data types, like text, numbers, dates, etc.
 
-    In this case we want to accept text, which is called a "string" in JavaScript. The enumeration `coda.ParameterType` contains all of the supported parameter types.
+    In this case we want to accept text, which is called a "string" in JavaScript. The enumeration `sdk.ParameterType` contains all of the supported parameter types.
 
     </div>
     <div markdown>
 
     ```{.ts hl_lines="9"}
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     pack.addFormula({
       name: "Reverse",
       description: "Reverses some text.",
       parameters: [
-        coda.makeParameter({
-          type: coda.ParameterType.String,
+        sdk.makeParameter({
+          type: sdk.ParameterType.String,
           name: "text",
           description: "The text to reverse.",
         }),
@@ -229,26 +229,26 @@ We'll start by scaffolding out the structure of the formula. Once we have it loo
 
     We're done with the parameters, but there are more properties of the formula to set. Similar to how parameters must define the type of data they accept, formulas must also define the type of data they return.
 
-    In this case we want the formula to return text, a JavaScript string. The enumeration `coda.ValueType` contains all of the supported result types.
+    In this case we want the formula to return text, a JavaScript string. The enumeration `sdk.ValueType` contains all of the supported result types.
 
     </div>
     <div markdown>
 
     ```{.ts hl_lines="14"}
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     pack.addFormula({
       name: "Reverse",
       description: "Reverses some text.",
       parameters: [
-        coda.makeParameter({
-          type: coda.ParameterType.String,
+        sdk.makeParameter({
+          type: sdk.ParameterType.String,
           name: "text",
           description: "The text to reverse.",
         }),
       ],
-      resultType: coda.ValueType.String,
+      resultType: sdk.ValueType.String,
     });
     ```
 
@@ -269,20 +269,20 @@ We'll start by scaffolding out the structure of the formula. Once we have it loo
     <div markdown>
 
     ```{.ts hl_lines="15-17"}
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     pack.addFormula({
       name: "Reverse",
       description: "Reverses some text.",
       parameters: [
-        coda.makeParameter({
-          type: coda.ParameterType.String,
+        sdk.makeParameter({
+          type: sdk.ParameterType.String,
           name: "text",
           description: "The text to reverse.",
         }),
       ],
-      resultType: coda.ValueType.String,
+      resultType: sdk.ValueType.String,
       execute: async function () {
 
       },
@@ -306,20 +306,20 @@ We'll start by scaffolding out the structure of the formula. Once we have it loo
     <div markdown>
 
     ```{.ts hl_lines="16"}
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     pack.addFormula({
       name: "Reverse",
       description: "Reverses some text.",
       parameters: [
-        coda.makeParameter({
-          type: coda.ParameterType.String,
+        sdk.makeParameter({
+          type: sdk.ParameterType.String,
           name: "text",
           description: "The text to reverse.",
         }),
       ],
-      resultType: coda.ValueType.String,
+      resultType: sdk.ValueType.String,
       execute: async function () {
         return "Not implemented yet";
       },
@@ -449,20 +449,20 @@ Rebuild your Pack, and refresh the formula the formula in the doc. If everything
 
 ??? example "View the full code"
     ```ts
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     pack.addFormula({
       name: "Reverse",
       description: "Reverses some text.",
       parameters: [
-        coda.makeParameter({
-          type: coda.ParameterType.String,
+        sdk.makeParameter({
+          type: sdk.ParameterType.String,
           name: "text",
           description: "The text to reverse.",
         }),
       ],
-      resultType: coda.ValueType.String,
+      resultType: sdk.ValueType.String,
       execute: async function (args, context) {
         let [text] = args;
         return text.split("").reverse().join("");
@@ -497,13 +497,13 @@ Let's update our formula to make this possible.
 
     ```{.ts hl_lines="7-12"}
     parameters: [
-      coda.makeParameter({
-        type: coda.ParameterType.String,
+      sdk.makeParameter({
+        type: sdk.ParameterType.String,
         name: "text",
         description: "The text to reverse.",
       }),
-      coda.makeParameter({
-        type: coda.ParameterType.Boolean,
+      sdk.makeParameter({
+        type: sdk.ParameterType.Boolean,
         name: "byWord",
         description: "Whether to split by word.",
         optional: true,
@@ -608,26 +608,26 @@ Rebuild your Pack, and try out the new `byWord` parameter in a formula. If every
 
 ??? example "View the full code"
     ```ts
-    import * as coda from "@codahq/packs-sdk";
-    export const pack = coda.newPack();
+    import * as sdk from "@codahq/packs-sdk";
+    export const pack = sdk.newPack();
 
     pack.addFormula({
       name: "Reverse",
       description: "Reverses some text.",
       parameters: [
-        coda.makeParameter({
-          type: coda.ParameterType.String,
+        sdk.makeParameter({
+          type: sdk.ParameterType.String,
           name: "text",
           description: "The text to reverse.",
         }),
-        coda.makeParameter({
-          type: coda.ParameterType.Boolean,
+        sdk.makeParameter({
+          type: sdk.ParameterType.Boolean,
           name: "byWord",
           description: "Whether to split by word.",
           optional: true,
         }),
       ],
-      resultType: coda.ValueType.String,
+      resultType: sdk.ValueType.String,
       execute: async function (args, context) {
         let [text, byWord = false] = args;
         let separator = "";

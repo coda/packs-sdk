@@ -18,18 +18,18 @@ Authentication that passes a long-lived token in the Authorization header using 
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the Todoist API, using a personal API token in
 // an "Authorization: Bearer ..." header.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.HeaderBearerToken,
+  type: sdk.AuthenticationType.HeaderBearerToken,
   instructionsUrl: "https://todoist.com/app/settings/integrations",
 
   // Determines the display name of the connected account.
   getConnectionName: async function (context) {
-    let url = coda.withQueryParams("https://api.todoist.com/sync/v9/sync", {
+    let url = sdk.withQueryParams("https://api.todoist.com/sync/v9/sync", {
       resource_types: JSON.stringify(["user"]),
     });
     let response = await context.fetcher.fetch({
@@ -49,13 +49,13 @@ Authentication that passes a long-lived token in a custom header. This sample co
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // System-wide authentication to RapidAPI, using an API key in a custom header.
 // See https://docs.rapidapi.com/docs/keys#how-to-find-your-api-key.
 pack.setSystemAuthentication({
-  type: coda.AuthenticationType.CustomHeaderToken,
+  type: sdk.AuthenticationType.CustomHeaderToken,
   headerName: "X-RapidAPI-Key",
 });
 
@@ -68,13 +68,13 @@ Authentication that passes multiple long-lived tokens in HTTP headers. This samp
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the Copper API, using multiple HTTP headers.
 // See https://developer.copper.com/introduction/requests.html#headers.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.MultiHeaderToken,
+  type: sdk.AuthenticationType.MultiHeaderToken,
   headers: [
     { name: "X-PW-AccessToken", description: "API key" },
     { name: "X-PW-UserEmail", description: "Email address" },
@@ -103,13 +103,13 @@ Authentication that passes a long-lived token in a query parameter. This sample 
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // System-wide authentication to the Giphy API, using an API key in the query
 // string. See https://support.giphy.com/hc/en-us/articles/360020283431.
 pack.setSystemAuthentication({
-  type: coda.AuthenticationType.QueryParamToken,
+  type: sdk.AuthenticationType.QueryParamToken,
   paramName: "api_key",
 });
 
@@ -122,13 +122,13 @@ Authentication that passes multiple long-lived tokens in query parameters. This 
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the Smarty API, using multiple query parameters.
 // See https://www.smarty.com/docs/cloud/authentication#keypairs
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.MultiQueryParamToken,
+  type: sdk.AuthenticationType.MultiQueryParamToken,
   params: [
     { name: "auth-id", description: "The Auth ID of the secret key." },
     { name: "auth-token", description: "The Auth Token of the secret key." },
@@ -144,14 +144,14 @@ Authentication that passes any number of custom tokens in the URL, headers, or r
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the Vonage API, using an API key and secret
 // in the request body.
 // See https://developer.vonage.com/en/api/sms
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.Custom,
+  type: sdk.AuthenticationType.Custom,
   params: [
     { name: "api_key", description: "API key." },
     { name: "api_secret", description: "API secret." },
@@ -162,23 +162,23 @@ pack.addFormula({
   name: "SendSMS",
   description: "Sends an SMS message.",
   parameters: [
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "from",
       description: "The phone number to send from.",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "to",
       description: "The phone number to send to.",
     }),
-    coda.makeParameter({
-      type: coda.ParameterType.String,
+    sdk.makeParameter({
+      type: sdk.ParameterType.String,
       name: "text",
       description: "The text of the message.",
     }),
   ],
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
   isAction: true,
   execute: async function ([from, to, text], context) {
     // Create the placeholders for the API key and secret.
@@ -208,7 +208,7 @@ pack.addFormula({
 
     let message = response.body.messages[0];
     if (message.status !== "0") {
-      throw new coda.UserVisibleError(message["error-text"]);
+      throw new sdk.UserVisibleError(message["error-text"]);
     }
     return message["message-id"];
   },
@@ -223,14 +223,14 @@ Authentication that passes a username and password in the Authorization header u
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the Twilio API, using an Account SID and token in
 // an "Authorization: Basic ..." header.
 // See https://www.twilio.com/docs/usage/requests-to-twilio
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.WebBasic,
+  type: sdk.AuthenticationType.WebBasic,
   instructionsUrl: "https://www.twilio.com/docs/sms/api#sms-api-authentication",
 
   // Use Twilio-specific placeholders for the username and password fields.
@@ -259,14 +259,14 @@ Authentication optimized for connecting to the Coda API, which is a token passed
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the Coda API, using a token in the Authorization
 // header.
 // See https://coda.io/developers/apis/v1
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.CodaApiHeaderBearerToken,
+  type: sdk.AuthenticationType.CodaApiHeaderBearerToken,
 
   // Creates the token automatically when the Pack is installed.
   shouldAutoAuthSetup: true,
@@ -281,14 +281,14 @@ Authentication that supports Amazon Web Services (AWS), using an access key and 
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the AWS S3 service, using AWS Signature Version 4.
 // The user provides the URL of their S3 bucket as the endpoint, along with an
 // access key and secret.
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.AWSAccessKey,
+  type: sdk.AuthenticationType.AWSAccessKey,
   instructionsUrl:
     "https://aws.amazon.com/premiumsupport/knowledge-center/create-access-key/",
 
@@ -313,20 +313,20 @@ Authentication that uses the Authorization Code OAuth2 flow. This sample connect
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the Todoist API, using an OAuth2 flow.
 // See https://developer.todoist.com/guides/#oauth
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://todoist.com/oauth/authorize",
   tokenUrl: "https://todoist.com/oauth/access_token",
   scopes: ["data:read_write"],
 
   // Determines the display name of the connected account.
   getConnectionName: async function (context) {
-    let url = coda.withQueryParams("https://api.todoist.com/sync/v9/sync", {
+    let url = sdk.withQueryParams("https://api.todoist.com/sync/v9/sync", {
       resource_types: JSON.stringify(["user"]),
     });
     let response = await context.fetcher.fetch({
@@ -346,15 +346,15 @@ Authentication that uses the Client Credentials OAuth2 flow. This sample connect
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // System-wide authentication to Blizzard's Battle.net APIs, using the OAuth2
 // client_credentials flow.
 // eslint-disable-next-line max-len
 // See https://develop.battle.net/documentation/guides/using-oauth/client-credentials-flow.
 pack.setSystemAuthentication({
-  type: coda.AuthenticationType.OAuth2ClientCredentials,
+  type: sdk.AuthenticationType.OAuth2ClientCredentials,
   tokenUrl: "https://oauth.battle.net/token",
 });
 
@@ -367,14 +367,14 @@ Authentication that requires users to enter the endpoint URL for their account. 
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the Okta API, using a custom token prefix and
 // account-specific endpoints.
 // See https://developer.okta.com/docs/reference/core-okta-api/#authentication
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.CustomHeaderToken,
+  type: sdk.AuthenticationType.CustomHeaderToken,
   headerName: "Authorization",
   tokenPrefix: "SSWS",
 
@@ -404,15 +404,15 @@ Authentication that automatically determines the account-specific endpoint URL d
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the Salesforce API, using OAuth2 and an
 // automatically determined account-specific endpoint.
 // eslint-disable-next-line max-len
 // See https://help.salesforce.com/s/articleView?id=sf.remoteaccess_authenticate.htm&type=5
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://login.salesforce.com/services/oauth2/authorize",
   tokenUrl: "https://login.salesforce.com/services/oauth2/token",
   scopes: ["id", "api", "refresh_token"],
@@ -447,15 +447,15 @@ Authentication that presents a list of endpoints to the user for them to select 
 
 ```ts
 {% raw %}
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // Per-user authentication to the Jira Cloud API, using OAuth2 with a
 // post-submit step to select the instance to connect to. Note that this code
 // isn't compatible with Jira Data Center.
 // See https://developer.atlassian.com/cloud/confluence/oauth-2-3lo-apps
 pack.setUserAuthentication({
-  type: coda.AuthenticationType.OAuth2,
+  type: sdk.AuthenticationType.OAuth2,
   authorizationUrl: "https://auth.atlassian.com/authorize",
   tokenUrl: "https://auth.atlassian.com/oauth/token",
   scopes: ["offline_access", "read:jira-user", "read:jira-work"],
@@ -467,7 +467,7 @@ pack.setUserAuthentication({
   // After approving access, the user should select which instance they want to
   // connect to.
   postSetup: [{
-    type: coda.PostSetupType.SetEndpoint,
+    type: sdk.PostSetupType.SetEndpoint,
     name: "SelectEndpoint",
     description: "Select the site to connect to:",
     // Determine the list of sites they have access to.
@@ -502,7 +502,7 @@ pack.setUserAuthentication({
 });
 
 // Get information about the Jira server.
-async function getServer(context: coda.ExecutionContext) {
+async function getServer(context: sdk.ExecutionContext) {
   let url = "/rest/api/3/serverInfo";
   let response = await context.fetcher.fetch({
     method: "GET",
@@ -512,7 +512,7 @@ async function getServer(context: coda.ExecutionContext) {
 }
 
 // Get information about the Jira user.
-async function getUser(context: coda.ExecutionContext) {
+async function getUser(context: sdk.ExecutionContext) {
   let url = "/rest/api/3/myself";
   let response = await context.fetcher.fetch({
     method: "GET",

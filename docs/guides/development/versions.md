@@ -27,7 +27,7 @@ By default version numbers are automatically generated for you, as a set of incr
 It is possible to manually set the version numbers, by calling the `setVersion()` method in your code:
 
 ```ts
-export const pack = coda.newPack();
+export const pack = sdk.newPack();
 pack.setVersion("1.0.5");
 ```
 

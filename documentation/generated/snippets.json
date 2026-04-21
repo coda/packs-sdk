@@ -8,7 +8,7 @@
       "addFormula"
     ],
     "content": "Adds a Coda formula which will return a text string in the doc.",
-    "code": "pack.addFormula({\n  name: \"${1:MyFormula}\",\n  description: \"${2:My description.}\",\n  parameters: [\n    // TODO: Add parameters.\n  ],\n  resultType: coda.ValueType.String,\n  execute: async function (args, context) {\n    // TODO: Unpack the parameter values.\n    let [] = args;\n    // TODO: Compute the result.\n    return \"\";\n  },\n});"
+    "code": "pack.addFormula({\n  name: \"${1:MyFormula}\",\n  description: \"${2:My description.}\",\n  parameters: [\n    // TODO: Add parameters.\n  ],\n  resultType: sdk.ValueType.String,\n  execute: async function (args, context) {\n    // TODO: Unpack the parameter values.\n    let [] = args;\n    // TODO: Compute the result.\n    return \"\";\n  },\n});"
   },
   {
     "triggerTokens": [
@@ -18,7 +18,7 @@
       "ArrayFormula"
     ],
     "content": "Adds a Coda formula which will return a text string in the doc.",
-    "code": "pack.addFormula({\n  name: \"${1:MyFormula}\",\n  description: \"${2:My description.}\",\n  parameters: [\n    // TODO: Add parameters.\n  ],\n  resultType: coda.ValueType.Array,\n  items: coda.makeSchema({\n    type: coda.ValueType.String,\n  }),\n  execute: async function (args, context) {\n    // TODO: Unpack the parameter values.\n    let [] = args;\n    // TODO: Compute the result.\n    return [];\n  },\n});"
+    "code": "pack.addFormula({\n  name: \"${1:MyFormula}\",\n  description: \"${2:My description.}\",\n  parameters: [\n    // TODO: Add parameters.\n  ],\n  resultType: sdk.ValueType.Array,\n  items: sdk.makeSchema({\n    type: sdk.ValueType.String,\n  }),\n  execute: async function (args, context) {\n    // TODO: Unpack the parameter values.\n    let [] = args;\n    // TODO: Compute the result.\n    return [];\n  },\n});"
   },
   {
     "triggerTokens": [
@@ -28,7 +28,7 @@
       "BooleanFormula"
     ],
     "content": "Adds a Coda formula which will return true or false in the doc.",
-    "code": "pack.addFormula({\n  name: \"${1:MyFormula}\",\n  description: \"${2:My description.}\",\n  parameters: [\n    // TODO: Add parameters.\n  ],\n  resultType: coda.ValueType.Boolean,\n  execute: async function (args, context) {\n    // TODO: Unpack the parameter values.\n    let [] = args;\n    // TODO: Compute the result.\n    return true;\n  },\n});"
+    "code": "pack.addFormula({\n  name: \"${1:MyFormula}\",\n  description: \"${2:My description.}\",\n  parameters: [\n    // TODO: Add parameters.\n  ],\n  resultType: sdk.ValueType.Boolean,\n  execute: async function (args, context) {\n    // TODO: Unpack the parameter values.\n    let [] = args;\n    // TODO: Compute the result.\n    return true;\n  },\n});"
   },
   {
     "triggerTokens": [
@@ -38,7 +38,7 @@
       "NumericFormula"
     ],
     "content": "Adds a Coda formula which will return a number in the doc.",
-    "code": "pack.addFormula({\n  name: \"${1:MyFormula}\",\n  description: \"${2:My description.}\",\n  parameters: [\n    // TODO: Add parameters.\n  ],\n  resultType: coda.ValueType.Number,\n  execute: async function (args, context) {\n    // TODO: Unpack the parameter values.\n    let [] = args;\n    // TODO: Compute the result.\n    return 0;\n  },\n});"
+    "code": "pack.addFormula({\n  name: \"${1:MyFormula}\",\n  description: \"${2:My description.}\",\n  parameters: [\n    // TODO: Add parameters.\n  ],\n  resultType: sdk.ValueType.Number,\n  execute: async function (args, context) {\n    // TODO: Unpack the parameter values.\n    let [] = args;\n    // TODO: Compute the result.\n    return 0;\n  },\n});"
   },
   {
     "triggerTokens": [
@@ -48,7 +48,7 @@
       "ObjectFormula"
     ],
     "content": "Adds a Coda formula which will return an object in the doc.",
-    "code": "pack.addFormula({\n  name: \"${1:MyFormula}\",\n  description: \"${2:My description.}\",\n  parameters: [\n    // TODO: Add parameters.\n  ],\n  resultType: coda.ValueType.Object,\n  schema: ${3:ThingSchema},\n  execute: async function (args, context) {\n    // TODO: Unpack the parameter values.\n    let [] = args;\n    // TODO: Compute the result.\n    return {};\n  },\n});"
+    "code": "pack.addFormula({\n  name: \"${1:MyFormula}\",\n  description: \"${2:My description.}\",\n  parameters: [\n    // TODO: Add parameters.\n  ],\n  resultType: sdk.ValueType.Object,\n  schema: ${3:ThingSchema},\n  execute: async function (args, context) {\n    // TODO: Unpack the parameter values.\n    let [] = args;\n    // TODO: Compute the result.\n    return {};\n  },\n});"
   },
   {
     "triggerTokens": [
@@ -57,7 +57,7 @@
       "addButton"
     ],
     "content": "Adds an action formula which can be used in a button or automation.",
-    "code": "pack.addFormula({\n  name: \"${1:MyAction}\",\n  description: \"${2:My description.}\",\n  parameters: [\n    // TODO: Add parameters.\n  ],\n  resultType: coda.ValueType.String,\n  isAction: true,\n  execute: async function (args, context) {\n    // TODO: Unpack the parameter values.\n    let [] = args;\n    // TODO: Do something.\n    return \"OK\";\n  },\n});"
+    "code": "pack.addFormula({\n  name: \"${1:MyAction}\",\n  description: \"${2:My description.}\",\n  parameters: [\n    // TODO: Add parameters.\n  ],\n  resultType: sdk.ValueType.String,\n  isAction: true,\n  execute: async function (args, context) {\n    // TODO: Unpack the parameter values.\n    let [] = args;\n    // TODO: Do something.\n    return \"OK\";\n  },\n});"
   },
   {
     "triggerTokens": [
@@ -73,7 +73,7 @@
       "card"
     ],
     "content": "Adds a everything you need for a card (schema, formula, and column format).",
-    "code": "// A schema that defines the data shown in the card.\nconst ${1:Thing}Schema = coda.makeObjectSchema({\n  properties: {\n    ${2:name}: { type: coda.ValueType.String },\n    ${3:description}: { type: coda.ValueType.String },\n    ${4:picture}: {\n      type: coda.ValueType.String,\n      codaType: coda.ValueHintType.ImageReference,\n    },\n    ${5:link}: {\n      type: coda.ValueType.String,\n      codaType: coda.ValueHintType.Url,\n    },\n    // TODO: Add more properties.\n  },\n  displayProperty: \"$2\",\n  titleProperty: \"$2\",\n  snippetProperty: \"$3\",\n  imageProperty: \"$4\",\n  linkProperty: \"$5\",\n  subtitleProperties: [\n    // TODO: List the properties to show under the title.\n  ],\n});\n\n// A formula that accepts a URL and returns an object matching the schema above.\npack.addFormula({\n  name: \"$1\",\n  description: \"${6:My description.}\",\n  parameters: [\n    coda.makeParameter({\n      type: coda.ParameterType.String,\n      name: \"url\",\n      description: \"${6: My parameter description.}\",\n    }),\n  ],\n  resultType: coda.ValueType.Object,\n  schema: $1Schema,\n  execute: async function (args, context) {\n    let [url] = args;\n    // TODO: Fetch information about the item represented by the URL.\n    return {\n      // TODO: Populate with fetched information.\n      $5: url,\n    };\n  },\n});\n\n// A column format that defines which URL patterns the formula should match.\npack.addColumnFormat({\n  name: \"$1\",\n  instructions: \"${7:My instructions.}\",\n  formulaName: \"$1\",\n  matchers: [\n    new RegExp(\"${8:https://example.com/.*}\"),\n    // TODO: Optionally add more URL patterns.\n  ],\n});"
+    "code": "// A schema that defines the data shown in the card.\nconst ${1:Thing}Schema = sdk.makeObjectSchema({\n  properties: {\n    ${2:name}: { type: sdk.ValueType.String },\n    ${3:description}: { type: sdk.ValueType.String },\n    ${4:picture}: {\n      type: sdk.ValueType.String,\n      codaType: sdk.ValueHintType.ImageReference,\n    },\n    ${5:link}: {\n      type: sdk.ValueType.String,\n      codaType: sdk.ValueHintType.Url,\n    },\n    // TODO: Add more properties.\n  },\n  displayProperty: \"$2\",\n  titleProperty: \"$2\",\n  snippetProperty: \"$3\",\n  imageProperty: \"$4\",\n  linkProperty: \"$5\",\n  subtitleProperties: [\n    // TODO: List the properties to show under the title.\n  ],\n});\n\n// A formula that accepts a URL and returns an object matching the schema above.\npack.addFormula({\n  name: \"$1\",\n  description: \"${6:My description.}\",\n  parameters: [\n    sdk.makeParameter({\n      type: sdk.ParameterType.String,\n      name: \"url\",\n      description: \"${6: My parameter description.}\",\n    }),\n  ],\n  resultType: sdk.ValueType.Object,\n  schema: $1Schema,\n  execute: async function (args, context) {\n    let [url] = args;\n    // TODO: Fetch information about the item represented by the URL.\n    return {\n      // TODO: Populate with fetched information.\n      $5: url,\n    };\n  },\n});\n\n// A column format that defines which URL patterns the formula should match.\npack.addColumnFormat({\n  name: \"$1\",\n  instructions: \"${7:My instructions.}\",\n  formulaName: \"$1\",\n  matchers: [\n    new RegExp(\"${8:https://example.com/.*}\"),\n    // TODO: Optionally add more URL patterns.\n  ],\n});"
   },
   {
     "triggerTokens": [
@@ -82,7 +82,7 @@
       "UserAuthentication"
     ],
     "content": "Sets per-user authentication for the Pack.",
-    "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.$0,\n});"
+    "code": "pack.setUserAuthentication({\n  type: sdk.AuthenticationType.$0,\n});"
   },
   {
     "triggerTokens": [
@@ -91,7 +91,7 @@
       "HeaderBearerTokenAuthentication"
     ],
     "content": "Sets per-user authentication for the Pack using a bearer token in the Authentication header.",
-    "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.HeaderBearerToken,\n  instructionsUrl: \"${1:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
+    "code": "pack.setUserAuthentication({\n  type: sdk.AuthenticationType.HeaderBearerToken,\n  instructionsUrl: \"${1:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
   },
   {
     "triggerTokens": [
@@ -100,7 +100,7 @@
       "CodaApiBearerTokenAuthentication"
     ],
     "content": "Sets per-user authentication for the Pack, using a Coda API token.",
-    "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.CodaApiHeaderBearerToken,\n});"
+    "code": "pack.setUserAuthentication({\n  type: sdk.AuthenticationType.CodaApiHeaderBearerToken,\n});"
   },
   {
     "triggerTokens": [
@@ -109,7 +109,7 @@
       "CustomHeaderTokenAuthentication"
     ],
     "content": "Sets per-user authentication for the Pack, using a token in a custom header.",
-    "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.CustomHeaderToken,\n  headerName: \"${1:MyToken}\",\n  instructionsUrl: \"${2:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
+    "code": "pack.setUserAuthentication({\n  type: sdk.AuthenticationType.CustomHeaderToken,\n  headerName: \"${1:MyToken}\",\n  instructionsUrl: \"${2:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
   },
   {
     "triggerTokens": [
@@ -118,7 +118,7 @@
       "MultiHeaderTokenAuthentication"
     ],
     "content": "Sets per-user authentication for the Pack, using multiple tokens passed as HTTP headers.",
-    "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.MultiHeaderToken,\n  headers: [\n    { name: \"${1:X-My-Token}\", description: \"${2:My token description}\" },\n    { name: \"${3:X-My-Key}\", description: \"${4:My key description}\" },\n    // TODO: Add more headers, if needed.\n  ],\n  instructionsUrl: \"${5:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
+    "code": "pack.setUserAuthentication({\n  type: sdk.AuthenticationType.MultiHeaderToken,\n  headers: [\n    { name: \"${1:X-My-Token}\", description: \"${2:My token description}\" },\n    { name: \"${3:X-My-Key}\", description: \"${4:My key description}\" },\n    // TODO: Add more headers, if needed.\n  ],\n  instructionsUrl: \"${5:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
   },
   {
     "triggerTokens": [
@@ -127,7 +127,7 @@
       "CustomAuthentication"
     ],
     "content": "Sets per-user authentication for the Pack, using a set of custom tokens.",
-    "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.Custom,\n  params: [\n    {\n      name: \"${1:myToken}\",\n      description: \"${2:My description}\",\n    },\n    // TODO: Add more parameters, if needed.\n  ],\n  instructionsUrl: \"${3:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
+    "code": "pack.setUserAuthentication({\n  type: sdk.AuthenticationType.Custom,\n  params: [\n    {\n      name: \"${1:myToken}\",\n      description: \"${2:My description}\",\n    },\n    // TODO: Add more parameters, if needed.\n  ],\n  instructionsUrl: \"${3:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
   },
   {
     "triggerTokens": [
@@ -136,7 +136,7 @@
       "MultiQueryParamTokenAuthentication"
     ],
     "content": "Sets per-user authentication for the Pack, using multiple tokens passed in URL query parameters.",
-    "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.MultiQueryParamToken,\n  params: [\n    { name: \"${1:myToken}\", description: \"${2:My token description}\" },\n    { name: \"${3:myKey}\", description: \"${4:My key description}\" },\n    // TODO: Add more parameters, if needed.\n  ],\n  instructionsUrl: \"${5:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
+    "code": "pack.setUserAuthentication({\n  type: sdk.AuthenticationType.MultiQueryParamToken,\n  params: [\n    { name: \"${1:myToken}\", description: \"${2:My token description}\" },\n    { name: \"${3:myKey}\", description: \"${4:My key description}\" },\n    // TODO: Add more parameters, if needed.\n  ],\n  instructionsUrl: \"${5:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
   },
   {
     "triggerTokens": [
@@ -146,14 +146,14 @@
       "authorization_code"
     ],
     "content": "Sets per-user, OAuth2 authentication for the Pack using the Authorization Code flow.",
-    "code": "// When registering your app in the API's developer console set the redirect URL\n// to: https://coda.io/packsAuth/oauth2/{PACK ID}\n// After building your Pack, remember to visit the Settings tab to set your\n// client ID and secret.\npack.setUserAuthentication({\n  type: coda.AuthenticationType.OAuth2,\n  // The following two URLs will be found in the API's documentation.\n  authorizationUrl: \"${1:https://example.com/authorize}\",\n  tokenUrl: \"${2:https://example.com/token}\",\n  scopes: [\n    // TODO: List the API scopes to request, if any.\n  ],\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
+    "code": "// When registering your app in the API's developer console set the redirect URL\n// to: https://coda.io/packsAuth/oauth2/{PACK ID}\n// After building your Pack, remember to visit the Settings tab to set your\n// client ID and secret.\npack.setUserAuthentication({\n  type: sdk.AuthenticationType.OAuth2,\n  // The following two URLs will be found in the API's documentation.\n  authorizationUrl: \"${1:https://example.com/authorize}\",\n  tokenUrl: \"${2:https://example.com/token}\",\n  scopes: [\n    // TODO: List the API scopes to request, if any.\n  ],\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
   },
   {
     "triggerTokens": [
       "setUserAuthentication:OAuth2ClientCredentials"
     ],
     "content": "Sets per-user, OAuth2 authentication for the Pack using the Client Credentials flow.",
-    "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.OAuth2ClientCredentials,\n  // The following URL will be found in the API's documentation.\n  tokenUrl: \"${1:https://example.com/token}\",\n});"
+    "code": "pack.setUserAuthentication({\n  type: sdk.AuthenticationType.OAuth2ClientCredentials,\n  // The following URL will be found in the API's documentation.\n  tokenUrl: \"${1:https://example.com/token}\",\n});"
   },
   {
     "triggerTokens": [
@@ -162,7 +162,7 @@
       "QueryParamTokenAuthentication"
     ],
     "content": "Sets per-user authentication for the Pack, using a token passed in a URL query parameter.",
-    "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.QueryParamToken,\n  paramName: \"${1:myToken}\",\n  instructionsUrl: \"${2:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
+    "code": "pack.setUserAuthentication({\n  type: sdk.AuthenticationType.QueryParamToken,\n  paramName: \"${1:myToken}\",\n  instructionsUrl: \"${2:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
   },
   {
     "triggerTokens": [
@@ -171,7 +171,7 @@
       "WebBasicAuthentication"
     ],
     "content": "Sets per-user authentication for the Pack, using a username and password passed in the Authorization header.",
-    "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.WebBasic,\n  instructionsUrl: \"${1:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
+    "code": "pack.setUserAuthentication({\n  type: sdk.AuthenticationType.WebBasic,\n  instructionsUrl: \"${1:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
   },
   {
     "triggerTokens": [
@@ -180,35 +180,35 @@
       "SystemAuthentication"
     ],
     "content": "Sets system-wide authentication for the Pack.",
-    "code": "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.$0,\n});"
+    "code": "pack.setSystemAuthentication({\n  type: sdk.AuthenticationType.$0,\n});"
   },
   {
     "triggerTokens": [
       "setSystemAuthentication:Bearer"
     ],
     "content": "Sets system-wide authentication for the Pack using a bearer token in the Authentication header.",
-    "code": "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.HeaderBearerToken,\n});"
+    "code": "pack.setSystemAuthentication({\n  type: sdk.AuthenticationType.HeaderBearerToken,\n});"
   },
   {
     "triggerTokens": [
       "setSystemAuthentication:Header"
     ],
     "content": "Sets system-wide authentication for the Pack, using a token in a custom header.",
-    "code": "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.CustomHeaderToken,\n  headerName: \"${1:MyToken}\",\n});"
+    "code": "pack.setSystemAuthentication({\n  type: sdk.AuthenticationType.CustomHeaderToken,\n  headerName: \"${1:MyToken}\",\n});"
   },
   {
     "triggerTokens": [
       "setSystemAuthentication:Custom"
     ],
     "content": "Sets system-wide authentication for the Pack, using a set of custom tokens.",
-    "code": "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.Custom,\n  params: [\n    {\n      name: \"${1:myToken}\",\n      description: \"${2:My description}\",\n    },\n    // TODO: Add more parameters, if needed.\n  ],\n});"
+    "code": "pack.setSystemAuthentication({\n  type: sdk.AuthenticationType.Custom,\n  params: [\n    {\n      name: \"${1:myToken}\",\n      description: \"${2:My description}\",\n    },\n    // TODO: Add more parameters, if needed.\n  ],\n});"
   },
   {
     "triggerTokens": [
       "setSystemAuthentication:QueryParams"
     ],
     "content": "Sets system-wide authentication for the Pack, using multiple tokens passed in URL query parameters.",
-    "code": "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.MultiQueryParamToken,\n  params: [\n    { name: \"${1:myToken}\", description: \"${2:My token description}\" },\n    { name: \"${3:myKey}\", description: \"${4:My key description}\" },\n    // TODO: Add more parameters, if needed.\n  ],\n});"
+    "code": "pack.setSystemAuthentication({\n  type: sdk.AuthenticationType.MultiQueryParamToken,\n  params: [\n    { name: \"${1:myToken}\", description: \"${2:My token description}\" },\n    { name: \"${3:myKey}\", description: \"${4:My key description}\" },\n    // TODO: Add more parameters, if needed.\n  ],\n});"
   },
   {
     "triggerTokens": [
@@ -218,21 +218,21 @@
       "client_credentials"
     ],
     "content": "Sets system-wide, OAuth2 authentication for the Pack using the Client Credentials flow.",
-    "code": "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.OAuth2ClientCredentials,\n  // The following URL will be found in the API's documentation.\n  tokenUrl: \"${1:https://example.com/token}\",\n});"
+    "code": "pack.setSystemAuthentication({\n  type: sdk.AuthenticationType.OAuth2ClientCredentials,\n  // The following URL will be found in the API's documentation.\n  tokenUrl: \"${1:https://example.com/token}\",\n});"
   },
   {
     "triggerTokens": [
       "setSystemAuthentication:QueryParam"
     ],
     "content": "Sets system-wide authentication for the Pack, using a token passed in a URL query parameter.",
-    "code": "pack.setSystemAuthentication({\n  type: coda.AuthenticationType.QueryParamToken,\n  paramName: \"${1:myToken}\",\n});"
+    "code": "pack.setSystemAuthentication({\n  type: sdk.AuthenticationType.QueryParamToken,\n  paramName: \"${1:myToken}\",\n});"
   },
   {
     "triggerTokens": [
       "setSystemAuthentication:WebBasic"
     ],
     "content": "Sets system-wide authentication for the Pack, using a username and password passed in the Authorization header.",
-    "code": "pack.setUserAuthentication({\n  type: coda.AuthenticationType.WebBasic,\n  instructionsUrl: \"${1:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
+    "code": "pack.setUserAuthentication({\n  type: sdk.AuthenticationType.WebBasic,\n  instructionsUrl: \"${1:https://help.example.com/api-tokens}\",\n  getConnectionName: async function (context) {\n    // TODO: Fetch the name of the account.\n    let name = \"\";\n    return name;\n  },\n});"
   },
   {
     "triggerTokens": [
@@ -251,7 +251,7 @@
       "StringParameter"
     ],
     "content": "Creates a string parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.String,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
+    "code": "sdk.makeParameter({\n  type: sdk.ParameterType.String,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
   },
   {
     "triggerTokens": [
@@ -261,7 +261,7 @@
       "BooleanParameter"
     ],
     "content": "Creates a boolean parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.Boolean,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
+    "code": "sdk.makeParameter({\n  type: sdk.ParameterType.Boolean,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
   },
   {
     "triggerTokens": [
@@ -271,7 +271,7 @@
       "DateParameter"
     ],
     "content": "Creates a date parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.Date,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
+    "code": "sdk.makeParameter({\n  type: sdk.ParameterType.Date,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
   },
   {
     "triggerTokens": [
@@ -281,7 +281,7 @@
       "HtmlParameter"
     ],
     "content": "Creates a html parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.Html,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
+    "code": "sdk.makeParameter({\n  type: sdk.ParameterType.Html,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
   },
   {
     "triggerTokens": [
@@ -291,7 +291,7 @@
       "ImageParameter"
     ],
     "content": "Creates an image parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.Image,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
+    "code": "sdk.makeParameter({\n  type: sdk.ParameterType.Image,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
   },
   {
     "triggerTokens": [
@@ -301,7 +301,7 @@
       "FileParameter"
     ],
     "content": "Creates a file parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.File,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
+    "code": "sdk.makeParameter({\n  type: sdk.ParameterType.File,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
   },
   {
     "triggerTokens": [
@@ -311,7 +311,7 @@
       "NumberParameter"
     ],
     "content": "Creates a number parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.Number,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
+    "code": "sdk.makeParameter({\n  type: sdk.ParameterType.Number,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
   },
   {
     "triggerTokens": [
@@ -321,7 +321,7 @@
       "StringArrayParameter"
     ],
     "content": "Creates a string array parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.StringArray,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
+    "code": "sdk.makeParameter({\n  type: sdk.ParameterType.StringArray,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
   },
   {
     "triggerTokens": [
@@ -331,7 +331,7 @@
       "BooleanArrayParameter"
     ],
     "content": "Creates a boolean array parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.BooleanArray,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
+    "code": "sdk.makeParameter({\n  type: sdk.ParameterType.BooleanArray,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
   },
   {
     "triggerTokens": [
@@ -341,7 +341,7 @@
       "DateArrayParameter"
     ],
     "content": "Creates a date array parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.DateArray,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
+    "code": "sdk.makeParameter({\n  type: sdk.ParameterType.DateArray,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
   },
   {
     "triggerTokens": [
@@ -351,7 +351,7 @@
       "HtmlArrayParameter"
     ],
     "content": "Creates a html array parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.HtmlArray,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
+    "code": "sdk.makeParameter({\n  type: sdk.ParameterType.HtmlArray,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
   },
   {
     "triggerTokens": [
@@ -361,7 +361,7 @@
       "ImageArrayParameter"
     ],
     "content": "Creates a image array parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.ImageArray,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
+    "code": "sdk.makeParameter({\n  type: sdk.ParameterType.ImageArray,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
   },
   {
     "triggerTokens": [
@@ -371,7 +371,7 @@
       "NumberArrayParameter"
     ],
     "content": "Creates a number array parameter.",
-    "code": "coda.makeParameter({\n  type: coda.ParameterType.NumberArray,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
+    "code": "sdk.makeParameter({\n  type: sdk.ParameterType.NumberArray,\n  name: \"${1:myParameter}\",\n  description: \"${2:My description.}\",\n}),"
   },
   {
     "triggerTokens": [
@@ -390,7 +390,7 @@
       "DynamicSyncTable"
     ],
     "content": "Adds a dynamic sync table.",
-    "code": "pack.addDynamicSyncTable({\n  name: \"${1:MyThings}\",\n  description: \"${2:My description.}\",\n  identityName: \"${1}\",\n  listDynamicUrls: async function (context) {\n    // TODO: Fetch the list of datasets the user can connect to.\n    let datasets = [];\n    // TODO: Replace \"name\" and \"url\" below with correct JSON keys.\n    return coda.autocompleteSearchObjects(undefined, datasets, \"name\", \"url\");\n  },\n  getName: async function (context) {\n    let datasetUrl = context.sync.dynamicUrl;\n    // TODO: Fetch metadata about the dataset and return the name.\n    return \"Table Name\";\n  },\n  getSchema: async function (context) {\n    let datasetUrl = context.sync.dynamicUrl;\n    // TODO: Fetch metadata about the dataset and use it to construct a schema.\n    let schema = coda.makeObjectSchema({\n      properties: {},\n      displayProperty: \"\",\n      idProperty: \"\",\n      featuredProperties: [],\n    });\n    return schema;\n  },\n  getDisplayUrl: async function (context) {\n    let datasetUrl = context.sync.dynamicUrl;\n    // TODO: Fetch metadata about the dataset and return a user-friendly URL.\n    return \"\";\n  },\n  formula: {\n    name: \"Sync$1\",\n    description: \"Syncs the data.\",\n    parameters: [\n      // TODO: Add parameters.\n    ],\n    execute: async function (args, context) {\n      let datasetUrl = context.sync.dynamicUrl!;\n      // TODO: Unpack the parameter values.\n      let [] = args;\n      // TODO: Fetch the rows.\n      let rows = [];\n      for (let row of rows) {\n        // TODO: If required, adjust the row to match the schema.\n      }\n      return {\n        result: rows,\n      };\n    },\n  },\n});"
+    "code": "pack.addDynamicSyncTable({\n  name: \"${1:MyThings}\",\n  description: \"${2:My description.}\",\n  identityName: \"${1}\",\n  listDynamicUrls: async function (context) {\n    // TODO: Fetch the list of datasets the user can connect to.\n    let datasets = [];\n    // TODO: Replace \"name\" and \"url\" below with correct JSON keys.\n    return sdk.autocompleteSearchObjects(undefined, datasets, \"name\", \"url\");\n  },\n  getName: async function (context) {\n    let datasetUrl = context.sync.dynamicUrl;\n    // TODO: Fetch metadata about the dataset and return the name.\n    return \"Table Name\";\n  },\n  getSchema: async function (context) {\n    let datasetUrl = context.sync.dynamicUrl;\n    // TODO: Fetch metadata about the dataset and use it to construct a schema.\n    let schema = sdk.makeObjectSchema({\n      properties: {},\n      displayProperty: \"\",\n      idProperty: \"\",\n      featuredProperties: [],\n    });\n    return schema;\n  },\n  getDisplayUrl: async function (context) {\n    let datasetUrl = context.sync.dynamicUrl;\n    // TODO: Fetch metadata about the dataset and return a user-friendly URL.\n    return \"\";\n  },\n  formula: {\n    name: \"Sync$1\",\n    description: \"Syncs the data.\",\n    parameters: [\n      // TODO: Add parameters.\n    ],\n    execute: async function (args, context) {\n      let datasetUrl = context.sync.dynamicUrl!;\n      // TODO: Unpack the parameter values.\n      let [] = args;\n      // TODO: Fetch the rows.\n      let rows = [];\n      for (let row of rows) {\n        // TODO: If required, adjust the row to match the schema.\n      }\n      return {\n        result: rows,\n      };\n    },\n  },\n});"
   },
   {
     "triggerTokens": [
@@ -399,21 +399,21 @@
       "ObjectSchema"
     ],
     "content": "Creates an object schema definition.",
-    "code": "const ${1:Thing}Schema = coda.makeObjectSchema({\n  properties: {\n    ${2:name}: { type: coda.ValueType.String },\n    // TODO: Add more properties.\n  },\n  displayProperty: \"$2\",\n});"
+    "code": "const ${1:Thing}Schema = sdk.makeObjectSchema({\n  properties: {\n    ${2:name}: { type: sdk.ValueType.String },\n    // TODO: Add more properties.\n  },\n  displayProperty: \"$2\",\n});"
   },
   {
     "triggerTokens": [
       "makeObjectSchema:sync"
     ],
     "content": "Creates an object schema definition for a sync table.",
-    "code": "const ${1:Thing}Schema = coda.makeObjectSchema({\n  properties: {\n    ${2:name}: { type: coda.ValueType.String },\n    ${3:id}: { type: coda.ValueType.String },\n    // TODO: Add more properties.\n  },\n  displayProperty: \"$2\",\n  idProperty: \"$3\",\n  featuredProperties: [\n    // TODO: Add featured properties.\n  ],\n});"
+    "code": "const ${1:Thing}Schema = sdk.makeObjectSchema({\n  properties: {\n    ${2:name}: { type: sdk.ValueType.String },\n    ${3:id}: { type: sdk.ValueType.String },\n    // TODO: Add more properties.\n  },\n  displayProperty: \"$2\",\n  idProperty: \"$3\",\n  featuredProperties: [\n    // TODO: Add featured properties.\n  ],\n});"
   },
   {
     "triggerTokens": [
       "makeObjectSchema:card"
     ],
     "content": "Creates an object schema definition for a card.",
-    "code": "const ${1:Thing}Schema = coda.makeObjectSchema({\n  properties: {\n    ${2:name}: { type: coda.ValueType.String },\n    ${3:description}: { type: coda.ValueType.String },\n    ${4:picture}: {\n      type: coda.ValueType.String,\n      codaType: coda.ValueHintType.ImageReference,\n    },\n    ${5:link}: {\n      type: coda.ValueType.String,\n      codaType: coda.ValueHintType.Url,\n    },\n    // TODO: Add more properties.\n  },\n  displayProperty: \"$2\",\n  titleProperty: \"$2\",\n  snippetProperty: \"$3\",\n  imageProperty: \"$4\",\n  linkProperty: \"$5\",\n  subtitleProperties: [\n    // TODO: List the properties to show under the title.\n  ],\n});"
+    "code": "const ${1:Thing}Schema = sdk.makeObjectSchema({\n  properties: {\n    ${2:name}: { type: sdk.ValueType.String },\n    ${3:description}: { type: sdk.ValueType.String },\n    ${4:picture}: {\n      type: sdk.ValueType.String,\n      codaType: sdk.ValueHintType.ImageReference,\n    },\n    ${5:link}: {\n      type: sdk.ValueType.String,\n      codaType: sdk.ValueHintType.Url,\n    },\n    // TODO: Add more properties.\n  },\n  displayProperty: \"$2\",\n  titleProperty: \"$2\",\n  snippetProperty: \"$3\",\n  imageProperty: \"$4\",\n  linkProperty: \"$5\",\n  subtitleProperties: [\n    // TODO: List the properties to show under the title.\n  ],\n});"
   },
   {
     "triggerTokens": [

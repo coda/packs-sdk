@@ -1,5 +1,5 @@
-import * as coda from "@codahq/packs-sdk";
-export const pack = coda.newPack();
+import * as sdk from "@codahq/packs-sdk";
+export const pack = sdk.newPack();
 
 // When using the fetcher, this is the domain of the API that your pack makes
 // fetcher requests to.
@@ -10,7 +10,7 @@ pack.addFormula({
   name: "BaconIpsum",
   description: "Returns meat-themed lorem ipsum copy.",
   parameters: [], // No parameters required.
-  resultType: coda.ValueType.String,
+  resultType: sdk.ValueType.String,
 
   // This function is declared async to that is can wait for the fetcher to
   // complete. The context parameter provides access to the fetcher.

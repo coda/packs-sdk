@@ -37,7 +37,7 @@ pack.addSkill({
   // ...
   tools: [
     {
-      type: coda.ToolType.WebSearch,
+      type: sdk.ToolType.WebSearch,
       allowedDomains: ["docs.google.com", "stackoverflow.com"],
     },
   ],
