@@ -14,7 +14,7 @@ search:
 
 A wrapper that generates a formula definition from the function that implements a metadata formula.
 It is uncommon to ever need to call this directly, normally you would just define the JavaScript
-function implementation, and Coda will wrap it with this to generate a full metadata formula
+function implementation, and the platform will wrap it with this to generate a full metadata formula
 definition.
 
 All function-like behavior in a pack is ultimately implemented using formulas, like you would

@@ -16,7 +16,7 @@ search:
 use `#PackVersionDefinition`
 
 The legacy complete definition of a Pack including un-versioned metadata.
-This should only be used by legacy Coda pack implementations.
+This should only be used by legacy pack implementations.
 
 ## Extends
 
@@ -109,7 +109,7 @@ with `isAction: true`.
 
 > `optional` **isSystem**: `boolean`
 
-Whether this is a pack that will be used by Coda internally and not exposed directly to users.
+Whether this is a pack that will be used internally and not exposed directly to users.
 
 ***
 
@@ -141,7 +141,7 @@ and for security reasons. These network domains are enforced at execution time: 
 to a domain not listed here will be rejected.
 
 Only one network domain is allowed by default. If your pack has needs to connect to multiple domains
-contact Coda support for approval.
+contact support for approval.
 
 #### Inherited from
 
@@ -213,7 +213,7 @@ Definitions of this pack's sync tables. See [SyncTable](../type-aliases/SyncTabl
 
 > `optional` **systemConnectionAuthentication**: [`SystemAuthentication`](../type-aliases/SystemAuthentication.md)
 
-If specified, this pack requires system credentials to be set up via Coda's admin console in order to work when no
+If specified, this pack requires system credentials to be set up via the admin console in order to work when no
 explicit connection is specified by the user.
 
 #### Inherited from

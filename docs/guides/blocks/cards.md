@@ -178,7 +178,7 @@ To make it easier to discover these cards, when a user pastes a link into a doc 
 !!! info "Built-in card option"
     The link "Display as" menu may include an option for "Card", which displays a fix set of metadata for public URLs. This is distinct from Pack cards, which are shown as additional options below that.
 
-Coda will automatically display a link as a card if it matches a Pack already installed in the doc, or for certain first-party Packs.
+Coda will automatically display a link as a card if it matches a Pack already installed in the doc, or for certain Superhuman-authored Packs.
 
 To enable this feature for your Pack, add a [column format][column_format] pointing to a formula that accepts a URL and returns a card. Then add [`matchers`][column_format_matchers] (regular expressions) to the column format that determine which URLs the prompt should appear on.
 
