@@ -1,5 +1,6 @@
 import type {AdminAuthentication} from './types';
 import type {AdminAuthenticationDef} from './types';
+import type {AgentSettingField} from './types';
 import type {AllowedAuthentication} from './types';
 import type {AllowedAuthenticationDef} from './types';
 import type {Authentication} from './types';
@@ -100,6 +101,11 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    * @hidden
    */
   mcpServers: MCPServer[];
+  /**
+   * See {@link PackVersionDefinition.agentSettings}.
+   * @hidden In development
+   */
+  agentSettings: AgentSettingField[];
 
   /**
    * See {@link PackVersionDefinition.defaultAuthentication}.
@@ -145,6 +151,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
       skillEntrypoints,
       suggestedPrompts,
       mcpServers,
+      agentSettings,
     } = definition || {};
     this.formulas = formulas || [];
     this.formats = formats || [];
@@ -156,6 +163,7 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
     this.suggestedPrompts = suggestedPrompts || [];
     this.networkDomains = networkDomains || [];
     this.mcpServers = mcpServers || [];
+    this.agentSettings = agentSettings || [];
     this.defaultAuthentication = defaultAuthentication;
     this.systemConnectionAuthentication = systemConnectionAuthentication;
     this.version = version;
@@ -411,6 +419,31 @@ export class PackDefinitionBuilder implements BasicPackDefinition {
    */
   addSuggestedPrompt(prompt: SuggestedPrompt): this {
     this.suggestedPrompts.push(prompt);
+    return this;
+  }
+
+  /**
+   * Adds a user-customizable setting to this pack's agent. The agent builder
+   * UI renders these and persists the user's choices on each agent instance.
+   *
+   * @example
+   * ```
+   * pack.addAgentSetting({
+   *   type: coda.AgentSettingFieldType.SingleSelect,
+   *   name: 'language',
+   *   displayName: 'Language',
+   *   defaultValue: 'en',
+   *   options: [
+   *     {value: 'en', label: 'English'},
+   *     {value: 'es', label: 'Spanish'},
+   *   ],
+   * });
+   * ```
+   *
+   * @hidden In development
+   */
+  addAgentSetting(setting: AgentSettingField): this {
+    this.agentSettings.push(setting);
     return this;
   }
 

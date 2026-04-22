@@ -2,11 +2,15 @@ import type {AWSAccessKeyAuthentication} from '../types';
 import type {AWSAssumeRoleAuthentication} from '../types';
 import type {AdminAuthentication} from '../types';
 import type {AdminAuthenticationTypes} from '../types';
+import type {AgentSettingField} from '../types';
+import type {AgentSettingFieldOption} from '../types';
+import {AgentSettingFieldType} from '../types';
 import {AllPrecannedDates} from '../api_types';
 import type {ArraySchema} from '../schema';
 import {AttributionNodeType} from '../schema';
 import type {AuthenticationMetadata} from '../compiled_types';
 import {AuthenticationType} from '../types';
+import type {BooleanAgentSettingField} from '../types';
 import {BooleanHintValueTypes} from '../schema';
 import type {BooleanPackFormula} from '../api';
 import type {BooleanSchema} from '../schema';
@@ -59,6 +63,7 @@ import type {MCPTool} from '../types';
 import type {MessagingContentCategorization} from '../schema';
 import type {MultiHeaderTokenAuthentication} from '../types';
 import type {MultiQueryParamTokenAuthentication} from '../types';
+import type {MultiSelectAgentSettingField} from '../types';
 import type {Network} from '../api_types';
 import {NetworkConnection} from '../api_types';
 import type {NoAuthentication} from '../types';
@@ -101,6 +106,7 @@ import {ScreenAnnotationType} from '../types';
 import type {SetEndpoint} from '../types';
 import {SimpleStringHintValueTypes} from '../schema';
 import type {SimpleStringSchema} from '../schema';
+import type {SingleSelectAgentSettingField} from '../types';
 import type {Skill} from '../types';
 import type {SkillEntrypointConfig} from '../types';
 import type {SkillEntrypoints} from '../types';
@@ -180,6 +186,8 @@ export const Limits = {
   ColumnMatcherRegex: 300,
   MaxSkillCount: 15,
   MaxSuggestedPromptsPerPack: 3,
+  MaxAgentSettingsPerPack: 25,
+  MaxAgentSettingOptionsPerField: 50,
   NumColumnMatchersPerFormat: 10,
   NetworkDomainUrl: 253,
   PermissionsBatchSize: 5000,
@@ -2380,6 +2388,88 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     prompt: z.string().min(1).max(Limits.SuggestedPromptText),
   });
 
+  const agentSettingNameSchema = z
+    .string()
+    .min(1)
+    .max(Limits.BuildingBlockName)
+    .regex(regexParameterName, 'Agent setting names can only contain alphanumeric characters and underscores.');
+  const agentSettingDisplayNameSchema = z.string().min(1).max(Limits.BuildingBlockName);
+  const agentSettingDescriptionSchema = z.string().max(Limits.BuildingBlockDescription).optional();
+  const agentSettingGroupSchema = z.string().max(Limits.BuildingBlockName).optional();
+  const agentSettingOptionSchema = z.object({
+    value: z.string().min(1).max(Limits.BuildingBlockName),
+    label: z.string().min(1).max(Limits.BuildingBlockName),
+  });
+  const agentSettingOptionsSchema = z
+    .array(agentSettingOptionSchema)
+    .min(1)
+    .max(Limits.MaxAgentSettingOptionsPerField)
+    .superRefine((options, context) => {
+      for (const dupe of getNonUniqueElements(options.map(option => option.value))) {
+        context.addIssue({
+          code: 'custom',
+          message: `Agent setting option values must be unique. Found duplicate value "${dupe}".`,
+        });
+      }
+    });
+
+  const booleanAgentSettingSchema = zodCompleteStrictObject<BooleanAgentSettingField>({
+    type: z.literal(AgentSettingFieldType.Boolean),
+    name: agentSettingNameSchema,
+    displayName: agentSettingDisplayNameSchema,
+    description: agentSettingDescriptionSchema,
+    group: agentSettingGroupSchema,
+    defaultValue: z.boolean().optional(),
+  });
+  const singleSelectAgentSettingSchema = zodCompleteStrictObject<SingleSelectAgentSettingField>({
+    type: z.literal(AgentSettingFieldType.SingleSelect),
+    name: agentSettingNameSchema,
+    displayName: agentSettingDisplayNameSchema,
+    description: agentSettingDescriptionSchema,
+    group: agentSettingGroupSchema,
+    options: agentSettingOptionsSchema,
+    defaultValue: z.string().optional(),
+  }).superRefine((field, context) => {
+    if (
+      field.defaultValue !== undefined &&
+      !field.options.some((option: AgentSettingFieldOption) => option.value === field.defaultValue)
+    ) {
+      context.addIssue({
+        code: 'custom',
+        path: ['defaultValue'],
+        message: `Agent setting "${field.name}" defaultValue "${field.defaultValue}" is not one of the configured options.`,
+      });
+    }
+  });
+  const multiSelectAgentSettingSchema = zodCompleteStrictObject<MultiSelectAgentSettingField>({
+    type: z.literal(AgentSettingFieldType.MultiSelect),
+    name: agentSettingNameSchema,
+    displayName: agentSettingDisplayNameSchema,
+    description: agentSettingDescriptionSchema,
+    group: agentSettingGroupSchema,
+    options: agentSettingOptionsSchema,
+    defaultValue: z.array(z.string()).optional(),
+  }).superRefine((field, context) => {
+    if (!field.defaultValue) {
+      return;
+    }
+    const allowed = new Set(field.options.map((option: AgentSettingFieldOption) => option.value));
+    for (const value of field.defaultValue) {
+      if (!allowed.has(value)) {
+        context.addIssue({
+          code: 'custom',
+          path: ['defaultValue'],
+          message: `Agent setting "${field.name}" defaultValue "${value}" is not one of the configured options.`,
+        });
+      }
+    }
+  });
+  const agentSettingFieldSchema: z.ZodType<AgentSettingField> = z.discriminatedUnion('type', [
+    booleanAgentSettingSchema,
+    singleSelectAgentSettingSchema,
+    multiSelectAgentSettingSchema,
+  ]);
+
   // Make sure to call the refiners on this after removing legacyPackMetadataSchema.
   // (Zod doesn't let you call .extends() after you've called .refine(), so we're only refining the top-level
   // schema we actually use.)
@@ -2546,6 +2636,18 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
           context.addIssue({
             code: 'custom',
             message: `Suggested prompt names must be unique. Found duplicate name "${dupe}".`,
+          });
+        }
+      }),
+    agentSettings: z
+      .array(agentSettingFieldSchema)
+      .max(Limits.MaxAgentSettingsPerPack)
+      .optional()
+      .superRefine((data, context) => {
+        for (const dupe of getNonUniqueElements((data || []).map(field => field.name))) {
+          context.addIssue({
+            code: 'custom',
+            message: `Agent setting names must be unique. Found duplicate name "${dupe}".`,
           });
         }
       }),

@@ -1,4 +1,5 @@
 import {testHelper} from './test_helper';
+import {AgentSettingFieldType} from '../types';
 import type {AllToolTypes} from '../types';
 import type {AllowedAuthentication} from '../types';
 import type {ArraySchema} from '../schema';
@@ -7606,6 +7607,129 @@ describe('Pack metadata Validation', async () => {
         {
           path: 'suggestedPrompts[0].prompt',
           message: 'Too small: expected string to have >=1 characters',
+        },
+      ]);
+    });
+  });
+
+  describe('validateAgentSettings', () => {
+    it('validates a mix of boolean, single-select, and multi-select fields', async () => {
+      const metadata = createFakePackVersionMetadata({
+        agentSettings: [
+          {
+            type: AgentSettingFieldType.Boolean,
+            name: 'detectAiText',
+            displayName: 'Detect AI text',
+            defaultValue: false,
+          },
+          {
+            type: AgentSettingFieldType.SingleSelect,
+            name: 'language',
+            displayName: 'Language',
+            group: 'Locale',
+            defaultValue: 'en',
+            options: [
+              {value: 'en', label: 'English'},
+              {value: 'es', label: 'Spanish'},
+            ],
+          },
+          {
+            type: AgentSettingFieldType.MultiSelect,
+            name: 'tones',
+            displayName: 'Tones',
+            options: [
+              {value: 'formal', label: 'Formal'},
+              {value: 'friendly', label: 'Friendly'},
+            ],
+          },
+        ],
+      });
+      await validateJson(metadata);
+    });
+
+    it('fails for duplicate setting names', async () => {
+      const metadata = createFakePackVersionMetadata({
+        agentSettings: [
+          {type: AgentSettingFieldType.Boolean, name: 'flag', displayName: 'Flag A'},
+          {type: AgentSettingFieldType.Boolean, name: 'flag', displayName: 'Flag B'},
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'agentSettings',
+          message: 'Agent setting names must be unique. Found duplicate name "flag".',
+        },
+      ]);
+    });
+
+    it('fails when a single-select defaultValue is not in options', async () => {
+      const metadata = createFakePackVersionMetadata({
+        agentSettings: [
+          {
+            type: AgentSettingFieldType.SingleSelect,
+            name: 'language',
+            displayName: 'Language',
+            defaultValue: 'fr',
+            options: [
+              {value: 'en', label: 'English'},
+              {value: 'es', label: 'Spanish'},
+            ],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'agentSettings[0].defaultValue',
+          message: 'Agent setting "language" defaultValue "fr" is not one of the configured options.',
+        },
+      ]);
+    });
+
+    it('fails when a multi-select defaultValue contains an unknown value', async () => {
+      const metadata = createFakePackVersionMetadata({
+        agentSettings: [
+          {
+            type: AgentSettingFieldType.MultiSelect,
+            name: 'tones',
+            displayName: 'Tones',
+            defaultValue: ['formal', 'snarky'],
+            options: [
+              {value: 'formal', label: 'Formal'},
+              {value: 'friendly', label: 'Friendly'},
+            ],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'agentSettings[0].defaultValue',
+          message: 'Agent setting "tones" defaultValue "snarky" is not one of the configured options.',
+        },
+      ]);
+    });
+
+    it('fails for duplicate option values within a single field', async () => {
+      const metadata = createFakePackVersionMetadata({
+        agentSettings: [
+          {
+            type: AgentSettingFieldType.SingleSelect,
+            name: 'language',
+            displayName: 'Language',
+            options: [
+              {value: 'en', label: 'English'},
+              {value: 'en', label: 'English (alt)'},
+            ],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'agentSettings[0].options',
+          message: 'Agent setting option values must be unique. Found duplicate value "en".',
         },
       ]);
     });

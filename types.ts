@@ -1713,6 +1713,102 @@ export interface SuggestedPrompt {
 }
 
 /**
+ * Field types supported by {@link AgentSettingField}.
+ *
+ * @hidden In development
+ */
+export enum AgentSettingFieldType {
+  /** Boolean toggle. */
+  Boolean = 'Boolean',
+  /** Single-choice picker. */
+  SingleSelect = 'SingleSelect',
+  /** Multi-choice picker. */
+  MultiSelect = 'MultiSelect',
+}
+
+/**
+ * A single option for {@link SingleSelectAgentSettingField} or
+ * {@link MultiSelectAgentSettingField}.
+ *
+ * @hidden In development
+ */
+export interface AgentSettingFieldOption {
+  /** Stable value persisted on the agent instance. */
+  value: string;
+  /** Display label shown to the user. */
+  label: string;
+}
+
+interface AgentSettingFieldBase {
+  /** Stable storage key. Must be unique across all fields in a schema. */
+  name: string;
+  /** Display label shown to the user. */
+  displayName: string;
+  /** Optional helper text rendered as a tooltip / description in the UI. */
+  description?: string;
+  /** Optional UI grouping key. Fields with the same group render together. */
+  group?: string;
+}
+
+/**
+ * A boolean toggle setting.
+ *
+ * @hidden In development
+ */
+export interface BooleanAgentSettingField extends AgentSettingFieldBase {
+  type: AgentSettingFieldType.Boolean;
+  /** Default value applied by the UI when no value is stored on the instance. */
+  defaultValue?: boolean;
+}
+
+/**
+ * A single-select picker setting.
+ *
+ * @hidden In development
+ */
+export interface SingleSelectAgentSettingField extends AgentSettingFieldBase {
+  type: AgentSettingFieldType.SingleSelect;
+  options: AgentSettingFieldOption[];
+  /** Default option `value` applied by the UI when no value is stored. */
+  defaultValue?: string;
+}
+
+/**
+ * A multi-select picker setting. The stored value is a list of option `value`s.
+ *
+ * @hidden In development
+ */
+export interface MultiSelectAgentSettingField extends AgentSettingFieldBase {
+  type: AgentSettingFieldType.MultiSelect;
+  options: AgentSettingFieldOption[];
+  /** Default option `value`s applied by the UI when nothing is stored. */
+  defaultValue?: string[];
+}
+
+/**
+ * A single user-customizable setting on an agent instance.
+ *
+ * Pack authors declare the settings they want to expose; the agent builder UI
+ * renders them and persists the user's choices on the instance. Defaults are
+ * resolved on read by the UI/runtime so changes to {@link BooleanAgentSettingField.defaultValue}
+ * (and friends) propagate without backfilling stored instances.
+ *
+ * @example
+ * ```ts
+ * pack.addAgentSetting({
+ *   type: coda.AgentSettingFieldType.Boolean,
+ *   name: 'detectAiText',
+ *   displayName: 'Detect AI text',
+ *   defaultValue: false,
+ *   group: 'Detection',
+ * });
+ * ```
+ *
+ * @hidden In development
+ */
+export type AgentSettingField = BooleanAgentSettingField | SingleSelectAgentSettingField | MultiSelectAgentSettingField;
+
+/**
  * The definition of the contents of a Pack at a specific version. This is the
  * heart of the implementation of a Pack.
  */
@@ -1816,6 +1912,13 @@ export interface PackVersionDefinition {
    * @hidden
    */
   mcpServers?: MCPServer[];
+  /**
+   * User-customizable settings exposed in the agent builder for instances of
+   * this pack's agent. See {@link AgentSettingField}.
+   *
+   * @hidden In development
+   */
+  agentSettings?: AgentSettingField[];
 }
 
 /**

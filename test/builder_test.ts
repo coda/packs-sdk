@@ -1,4 +1,6 @@
 import './test_helper';
+import type {AgentSettingField} from '../types';
+import {AgentSettingFieldType} from '../types';
 import {AuthenticationType} from '../types';
 import {ConnectionRequirement} from '../api_types';
 import type {DynamicSyncTableDef} from '../api';
@@ -564,6 +566,50 @@ describe('Builder', () => {
         benchInitialization: {skillName: skill.name},
         defaultChat: {skillName: skill.name},
       });
+    });
+  });
+
+  describe('agent settings', () => {
+    it('starts empty', () => {
+      assert.deepEqual(pack.agentSettings, []);
+    });
+
+    it('adds a boolean setting', () => {
+      const setting: AgentSettingField = {
+        type: AgentSettingFieldType.Boolean,
+        name: 'detectAiText',
+        displayName: 'Detect AI text',
+        defaultValue: false,
+      };
+      pack.addAgentSetting(setting);
+      assert.deepEqual(pack.agentSettings, [setting]);
+    });
+
+    it('adds single- and multi-select settings with grouping', () => {
+      pack.addAgentSetting({
+        type: AgentSettingFieldType.SingleSelect,
+        name: 'language',
+        displayName: 'Language',
+        group: 'Locale',
+        defaultValue: 'en',
+        options: [
+          {value: 'en', label: 'English'},
+          {value: 'es', label: 'Spanish'},
+        ],
+      });
+      pack.addAgentSetting({
+        type: AgentSettingFieldType.MultiSelect,
+        name: 'tones',
+        displayName: 'Tones',
+        group: 'Style',
+        options: [
+          {value: 'formal', label: 'Formal'},
+          {value: 'friendly', label: 'Friendly'},
+        ],
+      });
+      assert.equal(pack.agentSettings.length, 2);
+      assert.equal(pack.agentSettings[0].name, 'language');
+      assert.equal(pack.agentSettings[1].name, 'tones');
     });
   });
 
