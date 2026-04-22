@@ -11,7 +11,8 @@ search:
 # Interface: CustomAuthentication
 
 Authenticate for custom, non-standard API authentication schemes by inserting one or more arbitrary secret values
-into the request (the body, URL, headers, or form data) using template replacement. Approval from Coda is required.
+into the request (the body, URL, headers, or form data) using template replacement. Approval from Superhuman is
+required.
 
 Some APIs use non-standard authentication schemes which often require secret credentials to be put in specific places
 in the request URL or request body. Custom authentication supports many of these cases by allowing you as the pack
@@ -132,7 +133,7 @@ A link to a help article or other page with more instructions about how to set u
 Which domain(s) should get auth credentials, when a pack is configured with multiple domains.
 Packs configured with only one domain or with requiresEndpointUrl set to true can omit this.
 
-Using multiple authenticated network domains is uncommon and requires Coda approval.
+Using multiple authenticated network domains is uncommon and requires Superhuman approval.
 
 #### Inherited from
 

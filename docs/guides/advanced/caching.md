@@ -5,7 +5,7 @@ description: The various caching layers and how to configure them.
 
 # Caching formula and fetcher results
 
-For performance reasons Coda uses a variety of caching techniques to store previous results and reuse them later. This guide discusses the various caching layers and how to configure them.
+For performance reasons the platform uses a variety of caching techniques to store previous results and reuse them later. This guide discusses the various caching layers and how to configure them.
 
 !!! info "Recalculation"
     The caching discussed below comes into play once the Coda formula engine decides to execute your formula. For more information about when formulas are recalculated, see the [Recalculation][formulas_recalculation] section of the Formulas guide.
@@ -13,7 +13,7 @@ For performance reasons Coda uses a variety of caching techniques to store previ
 
 ## Formula cache {: #formula}
 
-Before Coda executes your [Pack formula][formulas], it first checks a cache of previous formula results. If a matching entry is found, it is returned instead of re-running your code. When a cached result is returned, the Pack Maker Tools logs entry will end with **returned a prior result from the cache** and the **Cache hit** field will be set to **true**.
+Before the platform executes your [Pack formula][formulas], it first checks a cache of previous formula results. If a matching entry is found, it is returned instead of re-running your code. When a cached result is returned, the Pack Maker Tools logs entry will end with **returned a prior result from the cache** and the **Cache hit** field will be set to **true**.
 
 <img src="site:images/cache_formula_logs.png" srcset="site:images/cache_formula_logs_2x.png 2x" class="screenshot" alt="Cached formula in the logs">
 

@@ -25,7 +25,7 @@ While it's easy to get started building a Pack, there are lots of options to exp
 ## Column formats
 
 - [x] Follow the guidance on [column format naming][column_formats_naming].
-- [x] For column formats that use a URL as input, [add a matcher pattern][column_formats_matchers]. This allows Coda to apply the format automatically when a user adds a compatible URL to a table.
+- [x] For column formats that use a URL as input, [add a matcher pattern][column_formats_matchers]. This allows the format to be applied automatically when a user adds a compatible URL to a table.
 
 
 ## Sync tables

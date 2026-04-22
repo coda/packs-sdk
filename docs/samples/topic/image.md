@@ -6,7 +6,7 @@ icon: material/image
 
 # Images &amp; file samples
 
-Packs have native support for accepting images and files as parameters and returning them as results, always passed as URLs. Packs can either return a "live" URL to a hosted image (`ImageReference`) or a temporary URL that Coda should upload the doc (`ImageAttachment`). The utility provided at `content.temporaryBlobStorage` can be used to save private images to a temporary location for later upload, which can be used in conjunction with the `ImageAttachment` hint type to permanently ingest an image resource using the temporary URL. Packs also provide support for embedded SVGs, including support for dark mode.
+Packs have native support for accepting images and files as parameters and returning them as results, always passed as URLs. Packs can either return a "live" URL to a hosted image (`ImageReference`) or a temporary URL that the platform should upload to the doc (`ImageAttachment`). The utility provided at `content.temporaryBlobStorage` can be used to save private images to a temporary location for later upload, which can be used in conjunction with the `ImageAttachment` hint type to permanently ingest an image resource using the temporary URL. Packs also provide support for embedded SVGs, including support for dark mode.
 
 
 [Learn More](../../guides/advanced/images.md){ .md-button }
@@ -631,12 +631,12 @@ pack.setUserAuthentication({
     prompt: "consent",
   },
   // Send the authentication information to all domains.
-  // Note: Using auth with multiple domains requires approval from Coda.
+  // Note: Using auth with multiple domains requires approval from Superhuman.
   networkDomain: ["googleapis.com", "docs.google.com", "googleusercontent.com"],
 });
 
 // Allow access to the Google domains.
-// Note: Using multiple domains in a Pack requires approval from Coda.
+// Note: Using multiple domains in a Pack requires approval from Superhuman.
 pack.addNetworkDomain("googleapis.com");
 pack.addNetworkDomain("docs.google.com");
 pack.addNetworkDomain("googleusercontent.com");

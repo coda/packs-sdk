@@ -42,7 +42,7 @@ var ValueType;
     ValueType["Object"] = "object";
 })(ValueType || (exports.ValueType = ValueType = {}));
 /**
- * Synthetic types that instruct Coda how to coerce values from primitives at ingestion time.
+ * Synthetic types that instruct the platform how to coerce values from primitives at ingestion time.
  */
 var ValueHintType;
 (function (ValueHintType) {
@@ -946,7 +946,7 @@ function makeReferenceSchemaFromObjectSchema(schema, identityName) {
 }
 exports.makeReferenceSchemaFromObjectSchema = makeReferenceSchemaFromObjectSchema;
 /**
- * Convenience for defining the result schema for an action. The identity enables Coda to
+ * Convenience for defining the result schema for an action. The identity enables the platform to
  * update the corresponding sync table row, if it exists.
  * You could add the identity directly, but that would make the schema less re-usable.
  */

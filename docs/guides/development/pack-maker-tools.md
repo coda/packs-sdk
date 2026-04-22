@@ -82,7 +82,7 @@ Clicking on a log entry expands it to reveal additional details.
 
 <img src="site:images/pmt_details.png" srcset="site:images/pmt_details_2x.png 2x" class="screenshot" alt="Log entry details">
 
-These details include information you can use directly (**Pack Version**, etc), as well as internal details that may be useful when working with Coda support (**Request ID**, etc). The **Overview** log entry will include a **Duration** field containing the total execution time.
+These details include information you can use directly (**Pack Version**, etc), as well as internal details that may be useful when working with support (**Request ID**, etc). The **Overview** log entry will include a **Duration** field containing the total execution time.
 
 Failed invocations will include some additional detail in the **Overview** entry.
 

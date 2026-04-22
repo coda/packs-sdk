@@ -6,7 +6,7 @@ hide:
   - toc
 ---
 
-# Build Packs for Coda
+# Build Packs for Superhuman
 
 A Pack is an extension that adds new powers to your doc. Packs work by supplementing the core building blocks of Coda, so you can customize how your doc looks, works, and integrates.
 
@@ -15,7 +15,7 @@ A Pack is an extension that adds new powers to your doc. Packs work by supplemen
 <div class="landing-item" markdown>
 ## :material-toy-brick-outline: Let's build building blocks together.
 
-With a little JavaScript, anyone can create and publish a Pack to the Gallery. All you need to do is write the code and Coda will deploy and host the Pack for you.
+With a little JavaScript, anyone can create and publish a Pack to the Gallery. All you need to do is write the code and the platform will deploy and host the Pack for you.
 
 Packs can be created for personal use, shared with a team, or published to the world. Everything from simple utilities to rich integrations can be built with Packs.
 
@@ -35,7 +35,7 @@ Packs can be created for personal use, shared with a team, or published to the w
 <div class="landing-item" markdown>
 ## :octicons-stopwatch-16: Build your first Pack in minutes.
 
-Using Coda's Pack Studio you can write, build, and deploy your Pack all from your browser. Nothing to download or install.
+Using the Pack Studio you can write, build, and deploy your Pack all from your browser. Nothing to download or install.
 
 [Get started][get_started]{ .md-button .md-button--primary }
 
@@ -72,7 +72,7 @@ From Math to GitHub to Cat Photos, we've got dozens of examples written covering
 <div class="box-item" markdown>
 ### :fontawesome-solid-people-group: Community
 
-Our passionate community of Pack makers and Coda experts can help answer your questions or share tips to get you started.
+Our passionate community of Pack makers and Superhuman experts can help answer your questions or share tips to get you started.
 
 [Join the community][community]{ .md-button }
 </div>
@@ -102,7 +102,7 @@ Sit back, relax, and watch as Developer Advocate Eric Koleda builds a Pack from 
 <div class="landing-item" markdown>
 ## :fontawesome-regular-lightbulb: Get inspired.
 
-Coda makers have been busy building Packs of all types, and many have published their work to the Gallery. Try installing a few Packs to get a sense for what you could build.
+Makers have been busy building Packs of all types, and many have published their work to the Gallery. Try installing a few Packs to get a sense for what you could build.
 
 [Browse the Gallery][gallery]{ .md-button }
 </div>

@@ -282,7 +282,7 @@ export interface ParamDef<T extends UnionType> {
 	 *
 	 * Pack code cannot completely assume it will never see other values, though. For example, if this
 	 * parameter's value is being set via a formula (instead of a user manually picking a value from
-	 * Coda's UI), Coda will do nothing to validate that input before passing it to the pack.
+	 * Coda's UI), the platform will do nothing to validate that input before passing it to the pack.
 	 *
 	 * Defaults to true.
 	 *
@@ -447,13 +447,13 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
 	 */
 	readonly cacheTtlSecs?: number;
 	/**
-	 * If specified, the formula will not be suggested to users in Coda's formula autocomplete.
+	 * If specified, the formula will not be suggested to users in the formula autocomplete.
 	 * The formula can still be invoked by manually typing its full name.
 	 */
 	readonly isExperimental?: boolean;
 	/**
-	 * Whether this is a formula that will be used by Coda internally and not exposed directly to users.
-	 * Not for use by packs that are not authored by Coda.
+	 * Whether this is a formula that will be used internally and not exposed directly to users.
+	 * Not for use by packs that are not Superhuman-authored.
 	 */
 	readonly isSystem?: boolean;
 	/**
@@ -464,7 +464,7 @@ export interface CommonPackFormulaDef<T extends ParamDefs> {
 	/**
 	 * OAuth scopes that the formula needs that weren't requested in the pack's overall authentication
 	 * config. For example, a Slack pack can have one formula that needs admin privileges, but non-admins
-	 * can use the bulk of the pack without those privileges. Coda will give users help in understanding
+	 * can use the bulk of the pack without those privileges. The platform will give users help in understanding
 	 * that they need additional authentication to use a formula with extra OAuth scopes. Note that
 	 * these scopes will always be requested in addition to the default scopes for the pack,
 	 * so an end user must have both sets of permissions.
@@ -590,7 +590,7 @@ export interface FetchRequest {
 	/**
 	 * The URL to connect to. This is typically an absolute URL, but if your
 	 * pack uses authentication and {@link BaseAuthentication.requiresEndpointUrl} and so has a unique
-	 * endpoint per user account, you may also use a relative URL and Coda will
+	 * endpoint per user account, you may also use a relative URL and the platform will
 	 * apply the user's endpoint automatically.
 	 */
 	url: string;
@@ -607,16 +607,16 @@ export interface FetchRequest {
 		[key: string]: string;
 	};
 	/**
-	 * HTTP headers. You should NOT include authentication headers, as Coda will add them for you.
+	 * HTTP headers. You should NOT include authentication headers, as the platform will add them for you.
 	 */
 	headers?: {
 		[header: string]: string;
 	};
 	/**
-	 * A time in seconds that Coda should cache the result of this HTTP request.
+	 * A time in seconds that the platform should cache the result of this HTTP request.
 	 *
 	 * Any time that this pack makes the same FetchRequest, a cached value can be returned
-	 * instead of making the HTTP request. If left unspecified, Coda will automatically
+	 * instead of making the HTTP request. If left unspecified, the platform will automatically
 	 * cache all GET requests for approximately 5 minutes. To disable the default caching,
 	 * set this value to `0`.
 	 *
@@ -625,7 +625,7 @@ export interface FetchRequest {
 	 */
 	cacheTtlSecs?: number;
 	/**
-	 * If true, Coda will cache the request (including POST, PUT, PATCH, and DELETE) and return the
+	 * If true, the platform will cache the request (including POST, PUT, PATCH, and DELETE) and return the
 	 * same response for subsequent requests. This option does *not* need to be specified to cache
 	 * GET requests.
 	 *
@@ -634,14 +634,14 @@ export interface FetchRequest {
 	 */
 	forceCache?: boolean;
 	/**
-	 * Indicates that you expect the response to be binary data, instructing Coda
-	 * not to attempt to parse the response in any way. Otherwise, Coda may attempt
+	 * Indicates that you expect the response to be binary data, instructing the platform
+	 * not to attempt to parse the response in any way. Otherwise, the platform may attempt
 	 * to parse the response as a JSON object. If true, {@link FetchResponse.body}
 	 * will be a NodeJS Buffer.
 	 */
 	isBinaryResponse?: boolean;
 	/**
-	 * If true, Coda will not apply authentication credentials even if this pack is
+	 * If true, the platform will not apply authentication credentials even if this pack is
 	 * configured to use authentication. This is very rare, but sometimes you may
 	 * wish to make an unauthenticated supporting request as part of a formula implementation.
 	 */
@@ -708,7 +708,7 @@ export interface Fetcher {
 	 * If authentication is used with this pack, the user's secret credentials will be
 	 * automatically applied to the request (whether in the HTTP headers, as a URL parameter,
 	 * or whatever the authentication type dictates). Your invocation of `fetch()` need not
-	 * deal with authentication in any way, Coda will handle that entirely on your behalf.
+	 * deal with authentication in any way, the platform will handle that entirely on your behalf.
 	 */
 	fetch<T = any>(request: FetchRequest): Promise<FetchResponse<T>>;
 }
@@ -984,14 +984,14 @@ export declare enum InvocationSource {
 	NativeIntegration = "NativeIntegration"
 }
 /**
- * Information about the Coda environment and doc this formula was invoked from, for Coda internal use.
+ * Information about the platform environment and doc this formula was invoked from, for internal use.
  */
 export interface InvocationLocation {
 	/**
 	 * The source application that invoked the Pack. Allows the Pack to adjust its functionality based on the context.
 	 */
 	source?: InvocationSource;
-	/** The base URL of the Coda environment executing this formula. Only for Coda internal use. */
+	/** The base URL of the platform environment executing this formula. Only for internal use. */
 	protocolAndHost: string;
 	/**
 	 * @deprecated This will be removed in a future version of the SDK.
@@ -1019,12 +1019,12 @@ export interface ExecutionContext {
 	 *
 	 * If the API URLs are variable based on the user account, you will need this endpoint
 	 * to construct URLs to use with the fetcher. Alternatively, you can use relative URLs
-	 * (e.g. "/api/entity") and Coda will include the endpoint for you automatically.
+	 * (e.g. "/api/entity") and the platform will include the endpoint for you automatically.
 	 */
 	readonly endpoint?: string;
 	/**
-	 * Information about the Coda environment and doc this formula was invoked from.
-	 * This is mostly for Coda internal use and we do not recommend relying on it.
+	 * Information about the environment and doc this formula was invoked from.
+	 * This is mostly for internal use and we do not recommend relying on it.
 	 */
 	readonly invocationLocation: InvocationLocation;
 	/**
@@ -1234,7 +1234,7 @@ export type SyncCompletionMetadataResult<IncrementalContinuationT = Continuation
  */
 export interface SyncCompletionMetadata<IncrementalContinuationT = Continuation> {
 	/**
-	 * For enabling incremental syncs. If your sync execution provides this, then Coda will provide it to the
+	 * For enabling incremental syncs. If your sync execution provides this, then the platform will provide it to the
 	 * next sync execution.
 	 */
 	incrementalContinuation: IncrementalContinuationT;
@@ -1285,7 +1285,7 @@ export declare enum ValueType {
 	Object = "object"
 }
 /**
- * Synthetic types that instruct Coda how to coerce values from primitives at ingestion time.
+ * Synthetic types that instruct the platform how to coerce values from primitives at ingestion time.
  */
 export declare enum ValueHintType {
 	/**
@@ -2033,7 +2033,7 @@ export interface ObjectSchemaProperty {
 	 * Suppose that you're fetching an object from an API that has a property called "duration".
 	 * But in your pack, you'd like the value to be called "durationSeconds" to be more precise.
 	 * You could write code in your `execute` function to relabel the field, but you could
-	 * also use `fromKey` and Coda will do it for you.
+	 * also use `fromKey` and the platform will do it for you.
 	 *
 	 * Suppose your `execute` function looked like this:
 	 * ```
@@ -2054,7 +2054,7 @@ export interface ObjectSchemaProperty {
 	 * });
 	 * ```
 	 *
-	 * This tells Coda to transform your formula's return value, creating a field "durationSeconds"
+	 * This tells the platform to transform your formula's return value, creating a field "durationSeconds"
 	 * whose value comes another field called "duration".
 	 */
 	fromKey?: string;
@@ -2992,7 +2992,7 @@ export declare function makeObjectSchema<K extends string, L extends string, con
  */
 export declare function makeReferenceSchemaFromObjectSchema(schema: ObjectSchemaDefinition<string, string> & ObjectSchemaProperty, identityName?: string): GenericObjectSchema & ObjectSchemaProperty;
 /**
- * Convenience for defining the result schema for an action. The identity enables Coda to
+ * Convenience for defining the result schema for an action. The identity enables the platform to
  * update the corresponding sync table row, if it exists.
  * You could add the identity directly, but that would make the schema less re-usable.
  */
@@ -3277,10 +3277,10 @@ export declare class StatusCodeError extends Error {
 /**
  * Throw this error if the user needs to re-authenticate to gain OAuth scopes that have been added
  * to the pack since their connection was created, or scopes that are specific to a certain formula.
- * This is useful because Coda will always attempt to execute a formula even if a user has not yet
+ * This is useful because the platform will always attempt to execute a formula even if a user has not yet
  * re-authenticated with all relevant scopes.
  *
- * You don't *always* need to throw this specific error, as Coda will interpret a 403 (Forbidden)
+ * You don't *always* need to throw this specific error, as the platform will interpret a 403 (Forbidden)
  * status code error as a MissingScopesError when the user's connection was made without all
  * currently relevant scopes. This error exists because that default behavior is insufficient if
  * the OAuth service does not set a 403 status code (the OAuth spec doesn't specifically require
@@ -3418,7 +3418,7 @@ export interface DynamicSyncTableDef<K extends string, L extends string, ParamDe
  * can be invoked quickly. The end result of a sync is the concatenation of the results from
  * each individual invocation.
  *
- * To instruct Coda to fetch a subsequent result page, return a `Continuation` that
+ * To instruct the platform to fetch a subsequent result page, return a `Continuation` that
  * describes which page of results to fetch next. The continuation will be passed verbatim
  * as an input to the subsequent invocation of the sync formula.
  *
@@ -3441,7 +3441,7 @@ export interface Continuation {
 }
 /**
  * Type definition for some additional data that is returned by a sync table
- * in addition to the data itself. This data is not stored in Coda, but
+ * in addition to the data itself. This data is not stored in the doc, but
  * is passed to the executeGetPermissions function of the sync table
  * See {@link SyncFormulaResult.permissionsContext}.
  * TODO(drew): Unhide this
@@ -3587,7 +3587,7 @@ export type Formula<ParamDefsT extends ParamDefs = ParamDefs, ResultT extends Va
  * metadata formulas, and the formulas that implement sync tables.
  *
  * It should be very uncommon to need to use this type, it is most common in meta analysis of the
- * contents of a pack for Coda internal use.
+ * contents of a pack for internal use.
  */
 export type TypedPackFormula = Formula | GenericSyncFormula;
 export type TypedObjectPackFormula = ObjectPackFormula<ParamDefs, Schema>;
@@ -4042,7 +4042,7 @@ export type MetadataFormulaResultType = string | number | MetadataFormulaObjectR
  * A variety of tasks like those mentioned above can all be accomplished with formulas that
  * share the same structure, so all of these supporting features are defined as `MetadataFormulas`.
  * You typically do not need to define a `MetadataFormula` explicitly, but rather can simply define
- * the JavaScript function that implements the formula. Coda will wrap this function with the necessary
+ * the JavaScript function that implements the formula. The platform will wrap this function with the necessary
  * formula boilerplate to make it look like a complete Coda formula.
  *
  * All metadata functions are passed an {@link ExecutionContext} as the first parameter,
@@ -4094,7 +4094,7 @@ export type MetadataFormulaDef<ContextT extends ExecutionContext = ExecutionCont
 /**
  * A wrapper that generates a formula definition from the function that implements a metadata formula.
  * It is uncommon to ever need to call this directly, normally you would just define the JavaScript
- * function implementation, and Coda will wrap it with this to generate a full metadata formula
+ * function implementation, and the platform will wrap it with this to generate a full metadata formula
  * definition.
  *
  * All function-like behavior in a pack is ultimately implemented using formulas, like you would
@@ -4444,7 +4444,7 @@ export interface DynamicSyncTableOptions<K extends string, L extends string, Par
  *
  * This wrapper does a variety of helpful things, including
  * * Doing basic validation of the provided definition.
- * * Normalizing the schema definition to conform to Coda-recommended syntax.
+ * * Normalizing the schema definition to conform to recommended syntax.
  * * Wrapping the execute formula to normalize return values to match the normalized schema.
  *
  * See [Normalization](https://coda.io/packs/build/latest/guides/advanced/schemas/#normalization) for more information about schema normalization.
@@ -4615,7 +4615,7 @@ declare enum PackCategory {
 	Weather = "Weather"
 }
 /**
- * Authentication types supported by Coda Packs.
+ * Authentication types supported by Packs.
  *
  * @see [Authenticating with other services](https://coda.io/packs/build/latest/guides/basics/authentication/)
  * @see [Authentication samples](https://coda.io/packs/build/latest/samples/topic/authentication/)
@@ -4682,7 +4682,7 @@ export declare enum AuthenticationType {
 	WebBasic = "WebBasic",
 	/**
 	 * Authenticate in a custom way by having one or more arbitrary secret values inserted into the request URL, body,
-	 * headers, or the form data using template replacement. Approval from Coda is required.
+	 * headers, or the form data using template replacement. Approval from Superhuman is required.
 	 *
 	 * @see {@link CustomAuthentication}
 	 */
@@ -4706,7 +4706,7 @@ export declare enum AuthenticationType {
 	 */
 	CodaApiHeaderBearerToken = "CodaApiHeaderBearerToken",
 	/**
-	 * Only for use by Coda-authored packs.
+	 * Only for use by Superhuman-authored packs.
 	 *
 	 * @see {@link GoogleDomainWideDelegationAuthentication}
 	 * TODO(neal): Unhide.
@@ -4714,7 +4714,7 @@ export declare enum AuthenticationType {
 	 */
 	GoogleDomainWideDelegation = "GoogleDomainWideDelegation",
 	/**
-	 * Only for use by Coda-authored packs.
+	 * Only for use by Superhuman-authored packs.
 	 *
 	 * @see {@link GoogleServiceAccountAuthentication}
 	 * TODO(neal): Unhide.
@@ -4722,7 +4722,7 @@ export declare enum AuthenticationType {
 	 */
 	GoogleServiceAccount = "GoogleServiceAccount",
 	/**
-	 * Only for use by Coda-authored packs.
+	 * Only for use by Superhuman-authored packs.
 	 *
 	 * @see {@link VariousAuthentication}
 	 * @hidden
@@ -4862,7 +4862,7 @@ export interface BaseAuthentication {
 	 * Which domain(s) should get auth credentials, when a pack is configured with multiple domains.
 	 * Packs configured with only one domain or with requiresEndpointUrl set to true can omit this.
 	 *
-	 * Using multiple authenticated network domains is uncommon and requires Coda approval.
+	 * Using multiple authenticated network domains is uncommon and requires Superhuman approval.
 	 */
 	networkDomain?: string | string[];
 }
@@ -4890,7 +4890,7 @@ export interface HeaderBearerTokenAuthentication extends BaseAuthentication {
  * with a UI to generate an API token rather than needing to paste an arbitrary API
  * token into a text input.
  *
- * This is primarily for use by Coda-authored packs, as it is only relevant for interacting with the
+ * This is primarily for use by Superhuman-authored packs, as it is only relevant for interacting with the
  * Coda REST API.
  *
  * @example
@@ -5065,12 +5065,12 @@ export interface BaseOAuthAuthentication extends BaseAuthentication {
 	/**
 	 * The delimiter to use when joining {@link scopes} when generating authorization URLs.
 	 *
-	 * The OAuth2 standard is to use spaces to delimit scopes, and Coda will do that by default.
+	 * The OAuth2 standard is to use spaces to delimit scopes, and the platform will do that by default.
 	 * If the API you are using requires a different delimiter, say a comma, specify it here.
 	 */
 	scopeDelimiter?: " " | "," | ";";
 	/**
-	 * The URL that Coda will hit in order to exchange the temporary code for an access token.
+	 * The URL that the platform will hit in order to exchange the temporary code for an access token.
 	 */
 	tokenUrl?: string;
 	/**
@@ -5159,12 +5159,12 @@ export interface BaseOAuth2CodeAuthentication extends BaseOAuthAuthentication {
 export interface OAuth2StaticCodeAuthentication extends BaseOAuth2CodeAuthentication {
 	/**
 	 * The URL to which the user will be redirected in order to authorize this pack.
-	 * This is typically just a base url with no parameters. Coda will append the `scope`
+	 * This is typically just a base url with no parameters. The platform will append the `scope`
 	 * parameter automatically. If the authorization flow requires additional parameters,
 	 * they may be specified using {@link additionalParams}.
 	 */
 	authorizationUrl: string;
-	/** The URL that Coda will hit in order to exchange the temporary code for an access token. */
+	/** The URL that the platform will hit in order to exchange the temporary code for an access token. */
 	tokenUrl: string;
 	/**
 	 * Indicates that Dynamic Client Registration is not used.
@@ -5189,7 +5189,7 @@ export interface OAuth2DynamicCodeAuthentication extends BaseOAuth2CodeAuthentic
 	tokenUrl?: string;
 	/**
 	 * Indicates that this OAuth provider supports Dynamic Client Registration.
-	 * When enabled, the Coda platform will automatically discover authorization endpoints
+	 * When enabled, the platform will automatically discover authorization endpoints
 	 * and dynamically register OAuth client credentials (client ID and secret) using the
 	 * pack's declared MCP servers and network domains.
 	 *
@@ -5229,7 +5229,7 @@ export type OAuth2Authentication = OAuth2StaticCodeAuthentication | OAuth2Dynami
 export interface OAuth2ClientCredentialsAuthentication extends BaseOAuthAuthentication {
 	/** Identifies this as OAuth2 client credentials authentication. */
 	type: AuthenticationType.OAuth2ClientCredentials;
-	/** The URL that Coda will hit in order to exchange credentials for an access token. */
+	/** The URL that the platform will hit in order to exchange credentials for an access token. */
 	tokenUrl: string;
 }
 /**
@@ -5238,7 +5238,7 @@ export interface OAuth2ClientCredentialsAuthentication extends BaseOAuthAuthenti
  */
 export declare enum TokenExchangeCredentialsLocation {
 	/**
-	 * Allow Coda to determine this automatically. Currently that means Coda tries passing the
+	 * Allow the platform to determine this automatically. Currently that means the platform tries passing the
 	 * credentials in the body first, and if that fails then tries passing them in the Authorization
 	 * header.
 	 */
@@ -5305,7 +5305,8 @@ export interface CustomAuthParameter {
 }
 /**
  * Authenticate for custom, non-standard API authentication schemes by inserting one or more arbitrary secret values
- * into the request (the body, URL, headers, or form data) using template replacement. Approval from Coda is required.
+ * into the request (the body, URL, headers, or form data) using template replacement. Approval from Superhuman is
+ * required.
  *
  * Some APIs use non-standard authentication schemes which often require secret credentials to be put in specific places
  * in the request URL or request body. Custom authentication supports many of these cases by allowing you as the pack
@@ -5398,7 +5399,7 @@ export interface AWSAssumeRoleAuthentication extends BaseAuthentication {
 	service: string;
 }
 /**
- * Only for use by Coda-authored packs.
+ * Only for use by Superhuman-authored packs.
  *
  * TODO(neal): Unhide.
  * @hidden
@@ -5409,7 +5410,7 @@ export interface GoogleDomainWideDelegationAuthentication extends BaseAuthentica
 	scopes: string[];
 }
 /**
- * Only for use by Coda-authored packs.
+ * Only for use by Superhuman-authored packs.
  *
  * TODO(neal): Unhide.
  * @hidden
@@ -5420,7 +5421,7 @@ export interface GoogleServiceAccountAuthentication extends BaseAuthentication {
 	scopes: string[];
 }
 /**
- * Only for use by Coda-authored packs.
+ * Only for use by Superhuman-authored packs.
  *
  * @hidden
  */
@@ -5431,7 +5432,7 @@ export interface VariousAuthentication {
 /**
  * The union of authentication types that all pack makers are allowed to use.
  *
- * The only types excluded here are Various (only for use by Coda) and NoAuthentication,
+ * The only types excluded here are Various (only for internal use) and NoAuthentication,
  * which should never need to be used by pack makers.
  *
  * These authentication types all extend BaseAuthentication.
@@ -5457,7 +5458,7 @@ export type AllowedAuthenticationDef = AsAuthDef<HeaderBearerTokenAuthentication
  * The union of supported authentication definitions. These represent simplified configurations
  * a pack developer can specify when calling {@link PackDefinitionBuilder.setUserAuthentication} when using
  * a pack definition builder. The builder massages these definitions into the form of
- * an {@link Authentication} value, which is the value Coda ultimately cares about.
+ * an {@link Authentication} value, which is the value the platform ultimately cares about.
  */
 export type AuthenticationDef = NoAuthentication | VariousAuthentication | AllowedAuthenticationDef;
 /**
@@ -5469,7 +5470,7 @@ export type SystemAuthentication = HeaderBearerTokenAuthentication | CustomHeade
  * The union of supported system authentication definitions. These represent simplified
  * configurations a pack developer can specify when calling {@link PackDefinitionBuilder.setSystemAuthentication}
  * when using a pack definition builder. The builder massages these definitions into the form of
- * an {@link SystemAuthentication} value, which is the value Coda ultimately cares about.
+ * an {@link SystemAuthentication} value, which is the value the platform ultimately cares about.
  */
 export type SystemAuthenticationDef = AsAuthDef<HeaderBearerTokenAuthentication> | AsAuthDef<CustomHeaderTokenAuthentication> | AsAuthDef<MultiHeaderTokenAuthentication> | AsAuthDef<QueryParamTokenAuthentication> | AsAuthDef<MultiQueryParamTokenAuthentication> | AsAuthDef<WebBasicAuthentication> | AsAuthDef<AWSAccessKeyAuthentication> | AsAuthDef<AWSAssumeRoleAuthentication> | AsAuthDef<GoogleServiceAccountAuthentication> | AsAuthDef<CustomAuthentication> | AsAuthDef<OAuth2ClientCredentialsAuthentication>;
 /**
@@ -5483,7 +5484,7 @@ export type VariousSupportedAuthentication = NoAuthentication | HeaderBearerToke
 export interface AdminAuthentication {
 	authentication: AllowedAuthentication;
 	/**
-	 * A unique identifier for this authentication configuration. Coda will pass it into formulas via
+	 * A unique identifier for this authentication configuration. The platform will pass it into formulas via
 	 * the execution context. Users will not see this value.
 	 *
 	 * Names must use only alphanumeric characters and underscores, and must *not*
@@ -5616,7 +5617,7 @@ export interface RateLimits {
 }
 /**
  * A pack definition without an author-defined semantic version, for use in the web
- * editor where Coda will manage versioning on behalf of the pack author.
+ * editor where the platform will manage versioning on behalf of the pack author.
  */
 export type BasicPackDefinition = Omit<PackVersionDefinition, "version">;
 /**
@@ -6088,7 +6089,7 @@ export interface PackVersionDefinition {
 	 */
 	defaultAuthentication?: Authentication;
 	/**
-	 * If specified, this pack requires system credentials to be set up via Coda's admin console in order to work when no
+	 * If specified, this pack requires system credentials to be set up via the admin console in order to work when no
 	 * explicit connection is specified by the user.
 	 */
 	systemConnectionAuthentication?: SystemAuthentication;
@@ -6104,7 +6105,7 @@ export interface PackVersionDefinition {
 	 * to a domain not listed here will be rejected.
 	 *
 	 * Only one network domain is allowed by default. If your pack has needs to connect to multiple domains
-	 * contact Coda support for approval.
+	 * contact support for approval.
 	 */
 	networkDomains?: string[];
 	/**
@@ -6177,7 +6178,7 @@ export interface PackVersionDefinition {
  * @deprecated use `#PackVersionDefinition`
  *
  * The legacy complete definition of a Pack including un-versioned metadata.
- * This should only be used by legacy Coda pack implementations.
+ * This should only be used by legacy pack implementations.
  */
 export interface PackDefinition extends PackVersionDefinition {
 	id: PackId;
@@ -6195,7 +6196,7 @@ export interface PackDefinition extends PackVersionDefinition {
 	}>;
 	rateLimits?: RateLimits;
 	/**
-	 * Whether this is a pack that will be used by Coda internally and not exposed directly to users.
+	 * Whether this is a pack that will be used internally and not exposed directly to users.
 	 */
 	isSystem?: boolean;
 }
@@ -6551,11 +6552,11 @@ export declare class PackDefinitionBuilder implements BasicPackDefinition {
 	 * use "example.com" as your network domain.
 	 *
 	 * If your pack make HTTP requests, it must declare a network domain,
-	 * for security purposes. Coda enforces that your pack cannot make requests to
+	 * for security purposes. The platform enforces that your pack cannot make requests to
 	 * any undeclared domains.
 	 *
 	 * You are allowed one network domain per pack by default. If your pack needs
-	 * to connect to multiple domains, contact Coda Support for approval.
+	 * to connect to multiple domains, contact Superhuman for approval.
 	 *
 	 * @example
 	 * ```

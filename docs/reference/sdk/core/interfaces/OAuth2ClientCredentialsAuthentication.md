@@ -111,7 +111,7 @@ their authentication response.
 Which domain(s) should get auth credentials, when a pack is configured with multiple domains.
 Packs configured with only one domain or with requiresEndpointUrl set to true can omit this.
 
-Using multiple authenticated network domains is uncommon and requires Coda approval.
+Using multiple authenticated network domains is uncommon and requires Superhuman approval.
 
 #### Inherited from
 
@@ -153,7 +153,7 @@ when creating a new account.
 
 The delimiter to use when joining [scopes](#scopes) when generating authorization URLs.
 
-The OAuth2 standard is to use spaces to delimit scopes, and Coda will do that by default.
+The OAuth2 standard is to use spaces to delimit scopes, and the platform will do that by default.
 If the API you are using requires a different delimiter, say a comma, specify it here.
 
 #### Inherited from
@@ -224,7 +224,7 @@ that should contain the token.
 
 > **tokenUrl**: `string`
 
-The URL that Coda will hit in order to exchange credentials for an access token.
+The URL that the platform will hit in order to exchange credentials for an access token.
 
 #### Overrides
 

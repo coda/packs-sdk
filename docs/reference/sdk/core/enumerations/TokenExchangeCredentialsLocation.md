@@ -27,7 +27,7 @@ The credentials are passed in the Authorization header using the `Basic` scheme.
 
 > **Automatic**: `"Automatic"`
 
-Allow Coda to determine this automatically. Currently that means Coda tries passing the
+Allow the platform to determine this automatically. Currently that means the platform tries passing the
 credentials in the body first, and if that fails then tries passing them in the Authorization
 header.
 

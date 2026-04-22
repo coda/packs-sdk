@@ -55,7 +55,7 @@ export const commands: yargs.CommandModule[] = [
       vm: {
         boolean: true,
         desc:
-          'Execute the requested command in a virtual machine that mimics the environment Coda uses to execute Packs.' +
+          'Execute the requested command in a virtual machine that mimics the environment the platform uses to execute Packs.' +
           'This defaults to true if the isolated-vm package is installed, and to false if not.',
         default: Boolean(tryGetIvm()),
       },
@@ -72,7 +72,7 @@ export const commands: yargs.CommandModule[] = [
       allowMultipleNetworkDomains: {
         boolean: true,
         default: false,
-        desc: 'Allow executing Packs that use multiple network domains. You must get approval from Coda before you can upload these Packs.',
+        desc: 'Allow executing Packs that use multiple network domains. You must get approval from Superhuman before you can upload these Packs.',
       },
     },
   },
@@ -163,7 +163,7 @@ export const commands: yargs.CommandModule[] = [
   },
   {
     command: 'upload <manifestFile>',
-    describe: 'Build and upload your Pack version to Coda',
+    describe: 'Build and upload your Pack version to the server',
     builder: {
       notes: {
         string: true,
@@ -190,7 +190,7 @@ export const commands: yargs.CommandModule[] = [
   },
   {
     command: 'create <manifestFile>',
-    describe: "Register a new Pack with Coda's servers",
+    describe: 'Register a new Pack with the server',
     builder: {
       name: {
         string: true,
@@ -214,7 +214,7 @@ export const commands: yargs.CommandModule[] = [
   },
   {
     command: 'link <manifestDir> <packIdOrUrl>',
-    describe: "Link to a pre-existing Pack ID on Coda's servers",
+    describe: 'Link to a pre-existing Pack ID on the server',
     builder: {
       apiToken: ApiTokenArg,
       apiEndpoint: ApiEndpointArg,

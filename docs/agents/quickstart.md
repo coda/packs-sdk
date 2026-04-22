@@ -29,7 +29,7 @@ Before you can start coding, there are a few things you need:
 
 ## :fontawesome-solid-laptop-code: Create the agent
 
-Superhuman Go agents are built using Coda Packs. Follow the steps below to create a Coda Pack that will work as an agent.
+Superhuman Go agents are built using Packs. Follow the steps below to create a Pack that will work as an agent.
 
 === ":material-numeric-1-circle: Create Pack"
 
@@ -137,7 +137,7 @@ Superhuman Go agents are built using Coda Packs. Follow the steps below to creat
 
 ---
 
-Your Pack is now built, deployed, and ready to use as an agent. You can close the Coda Pack Studio.
+Your Pack is now built, deployed, and ready to use as an agent. You can close the Pack Studio.
 
 
 ## :material-download-box: Install the agent

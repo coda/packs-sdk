@@ -10,7 +10,7 @@ search:
 
 # Enumeration: AuthenticationType
 
-Authentication types supported by Coda Packs.
+Authentication types supported by Packs.
 
 ## See
 
@@ -60,7 +60,7 @@ Authenticate using a Coda REST API token, sent as an HTTP header.
 > **Custom**: `"Custom"`
 
 Authenticate in a custom way by having one or more arbitrary secret values inserted into the request URL, body,
-headers, or the form data using template replacement. Approval from Coda is required.
+headers, or the form data using template replacement. Approval from Superhuman is required.
 
 #### See
 

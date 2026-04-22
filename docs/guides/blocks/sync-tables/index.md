@@ -106,7 +106,7 @@ pack.addSyncTable({
 });
 ```
 
-On each sync your code must return the full set of items, and Coda will determine how to update existing rows, remove old rows, etc. This could take a long time for large datasets or slow APIs, and the [Long-running syncs](#longrunning) section has more information on how to handle this.
+On each sync your code must return the full set of items, and the platform will determine how to update existing rows, remove old rows, etc. This could take a long time for large datasets or slow APIs, and the [Long-running syncs](#longrunning) section has more information on how to handle this.
 
 
 ## Naming
@@ -145,14 +145,14 @@ In most sync tables, parameters are used to allow users to filter the results in
 
 ## Row limits
 
-Each sync table has a user-defined maximum number of rows, which defaults to 1000 but can be set as high as 10,000. Once a sync table reaches the limit Coda will stop the sync (even if the code returned a [continuation](#longrunning)) and truncate the resulting rows to fit within the limit.
+Each sync table has a user-defined maximum number of rows, which defaults to 1000 but can be set as high as 10,000. Once a sync table reaches the limit the platform will stop the sync (even if the code returned a [continuation](#longrunning)) and truncate the resulting rows to fit within the limit.
 
 
 ## Long-running syncs {: #longrunning}
 
 The sync formula that populates a sync table will timeout after a minute, but for some data sources it may take longer to retrieve all the results. In these cases you can utilize the continuation mechanism of sync tables to break your sync up into multiple executions. A continuation is like a save point, allowing you to record where you left off and then pick up again later.
 
-If at the end of an execution there are more items left to sync, return a custom continuation object along with the synced items. Coda will then re-run your sync formula, passing in the previous continuation object. The synced items from each execution will be appended to the table. This process will continue until no continuation object is returned or the table reaches the row limit.
+If at the end of an execution there are more items left to sync, return a custom continuation object along with the synced items. The platform will then re-run your sync formula, passing in the previous continuation object. The synced items from each execution will be appended to the table. This process will continue until no continuation object is returned or the table reaches the row limit.
 
 ```mermaid
 flowchart TD

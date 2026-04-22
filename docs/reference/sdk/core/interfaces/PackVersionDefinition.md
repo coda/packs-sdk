@@ -64,7 +64,7 @@ and for security reasons. These network domains are enforced at execution time: 
 to a domain not listed here will be rejected.
 
 Only one network domain is allowed by default. If your pack has needs to connect to multiple domains
-contact Coda support for approval.
+contact support for approval.
 
 ***
 
@@ -96,7 +96,7 @@ Definitions of this pack's sync tables. See [SyncTable](../type-aliases/SyncTabl
 
 > `optional` **systemConnectionAuthentication**: [`SystemAuthentication`](../type-aliases/SystemAuthentication.md)
 
-If specified, this pack requires system credentials to be set up via Coda's admin console in order to work when no
+If specified, this pack requires system credentials to be set up via the admin console in order to work when no
 explicit connection is specified by the user.
 
 ***

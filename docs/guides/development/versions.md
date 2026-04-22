@@ -5,7 +5,7 @@ description: Create new builds of your Pack and release them to users.
 
 # Managing versions and releases
 
-Building a Pack is often an incremental process, and Coda provides a version and release mechanic to make it possible to add new features or fix bugs in a way that doesn't impact existing users.
+Building a Pack is often an incremental process, and the platform provides a version and release mechanic to make it possible to add new features or fix bugs in a way that doesn't impact existing users.
 
 ## Versions
 
@@ -35,7 +35,7 @@ There are some restrictions to the version numbers you can select however:
 
 - The version numbers must increase with each new build / upload.
 - The version numbers must follow the [SemVer standard][semver], meaning them must be of the form `1`, `1.2`, or `1.2.3`.
-- If you make a user-visible change to your Pack Coda will enforce standards on your version number:
+- If you make a user-visible change to your Pack the platform will enforce standards on your version number:
     - A new minor version if you make a backwards-compatible change (add a new building block or parameter, etc).
     - A new major version if you make a backwards-incompatible change (add a new request parameter, remove a building block, etc).
 
@@ -73,7 +73,7 @@ To determine which version of your Pack a given release corresponds to, visit th
 
 ### Rollout
 
-Creating a new release only takes a moment, but it can take much longer for it to reach your users. A few minutes after you create the release Coda begins the process of upgrading existing docs that use your Pack to the new release. This process can take anywhere from a few minutes to a few hours, depending on how many docs need to be processed.
+Creating a new release only takes a moment, but it can take much longer for it to reach your users. A few minutes after you create the release the platform begins the process of upgrading existing docs that use your Pack to the new release. This process can take anywhere from a few minutes to a few hours, depending on how many docs need to be processed.
 
 
 ### Rollbacks

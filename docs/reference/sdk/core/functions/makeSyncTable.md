@@ -17,7 +17,7 @@ using this wrapper rather than declaring a sync table definition object directly
 
 This wrapper does a variety of helpful things, including
 * Doing basic validation of the provided definition.
-* Normalizing the schema definition to conform to Coda-recommended syntax.
+* Normalizing the schema definition to conform to recommended syntax.
 * Wrapping the execute formula to normalize return values to match the normalized schema.
 
 See [Normalization]({{ config.site_url }}guides/advanced/schemas/#normalization) for more information about schema normalization.

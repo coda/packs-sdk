@@ -10,7 +10,7 @@ search:
 
 # Enumeration: ValueHintType
 
-Synthetic types that instruct Coda how to coerce values from primitives at ingestion time.
+Synthetic types that instruct the platform how to coerce values from primitives at ingestion time.
 
 ## Enumeration Members
 
