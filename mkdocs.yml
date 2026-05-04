@@ -380,7 +380,7 @@ plugins:
     - social:
         cards: !ENV [MK_DOCS_GENERATE_ASSETS, true]
         cards_layout_options:
-          background_color: "#006838"  # Emerald
+          background_color: "#714cb6"  # Superhuman Purple
           color: "#FFFFFF"
 
 extra:
@@ -426,7 +426,7 @@ theme:
   palette:
     scheme: superhuman
   logo: assets/logo.svg
-  favicon: assets/favicon.png
+  favicon: assets/favicon.svg
   icon:
     repo: fontawesome/brands/github
 
@@ -434,4 +434,6 @@ extra_javascript:
   - assets/bundle.js
 
 extra_css:
+  - assets/origin.css
+  - assets/theme.css
   - assets/custom.css
