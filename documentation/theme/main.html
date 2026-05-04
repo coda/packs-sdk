@@ -5,6 +5,12 @@
   https://squidfunk.github.io/mkdocs-material/customization/?h=block#overriding-blocks
 #}
 
+{% set markdown_url = page.canonical_url ~ "index.md" %}
+
+{% block extrahead %}
+  <link rel="alternate" type="text/markdown" title="LLM-friendly version" href="{{ markdown_url }}" />
+{% endblock %}
+
 {% block content %}
   {% if page and page.url and page.url.startswith('agents/') %}
     <div class="admonition early-access">
@@ -18,7 +24,7 @@
   {% endif %}
 
   {% if page and page.canonical_url %}
-    {% set markdown_url = page.canonical_url ~ "index.md" %}
+
     {% set prompt = "Can you please read [this page](" ~ markdown_url ~ ") and prepare to answer questions about it?" %}
     <a
       href="https://claude.ai/new?q={{ prompt | urlencode }}"
