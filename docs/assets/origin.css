@@ -1,0 +1,514 @@
+:root {
+  /* Colors */
+  --origin-red-0: #fff0f0;
+  --origin-red-10: #fedbdb;
+  --origin-red-20: #ffa8aa;
+  --origin-red-30: #ff565e;
+  --origin-red-40: #f72a42;
+  --origin-red-60: #cd0037;
+  --origin-red-80: #9f182d;
+  --origin-red-90: #860628;
+  --origin-red-100: #5b051c;
+  --origin-blue-0: #eff8fd;
+  --origin-blue-10: #daedfb;
+  --origin-blue-20: #bbdff7;
+  --origin-blue-30: #8dcaf2;
+  --origin-blue-40: #4198d2;
+  --origin-blue-60: #1173a8;
+  --origin-blue-80: #0c5683;
+  --origin-blue-90: #0a476d;
+  --origin-blue-100: #16293d;
+  --origin-gold-pro-0: #fff6e0;
+  --origin-gold-pro-10: #ffebb8;
+  --origin-gold-pro-20: #ffdc85;
+  --origin-gold-pro-30: #ffbf47;
+  --origin-gold-pro-40: #ffa10a;
+  --origin-gold-pro-60: #e57300;
+  --origin-gold-pro-80: #bd5200;
+  --origin-gold-pro-90: #7a3500;
+  --origin-green-0: #f4fdfa;
+  --origin-green-10: #d5f7eb;
+  --origin-green-20: #98ebcd;
+  --origin-green-30: #3ac7a1;
+  --origin-green-40: #26a28b;
+  --origin-green-60: #148072;
+  --origin-green-80: #005c54;
+  --origin-green-90: #0c4243;
+  --origin-green-100: #17261f;
+  --origin-green-grammarly-0: #027e6f;
+  --origin-white-0: #ffffff;
+  --origin-orange-0: #fff3e1;
+  --origin-orange-10: #ffe9c9;
+  --origin-orange-20: #fdc298;
+  --origin-orange-30: #ff9d56;
+  --origin-orange-40: #f18333;
+  --origin-orange-60: #c25000;
+  --origin-orange-80: #a64500;
+  --origin-orange-90: #812d00;
+  --origin-orange-100: #611a00;
+  --origin-orange-coda-0: #ee5a29;
+  --origin-purple-0: #f7f5ff;
+  --origin-purple-10: #e8e0ff;
+  --origin-purple-20: #d4c7ff;
+  --origin-purple-30: #bea1f5;
+  --origin-purple-40: #9e7be0;
+  --origin-purple-50: #8861ca;
+  --origin-purple-60: #714cb6;
+  --origin-purple-80: #533192;
+  --origin-purple-90: #3f256f;
+  --origin-purple-100: #281647;
+  --origin-purple-enterprise-10: #ddd9f9;
+  --origin-purple-enterprise-20: #cac3f7;
+  --origin-purple-enterprise-60: #5e47e5;
+  --origin-purple-enterprise-80: #3d27c0;
+  --origin-purple-enterprise-90: #1b0d6f;
+  --origin-yellow-0: #fff8da;
+  --origin-yellow-10: #fef1bb;
+  --origin-yellow-20: #fcdf83;
+  --origin-yellow-30: #f9d255;
+  --origin-yellow-40: #f5c428;
+  --origin-yellow-60: #dfad0d;
+  --origin-yellow-80: #ae880d;
+  --origin-yellow-90: #7f640b;
+  --origin-yellow-100: #664d02;
+  --origin-neutral-0: #fcfaf7;
+  --origin-neutral-5: #f7f6f2;
+  --origin-neutral-10: #f2f0eb;
+  --origin-neutral-20: #dedbd5;
+  --origin-neutral-30: #bfbcb6;
+  --origin-neutral-40: #8d8a86;
+  --origin-neutral-60: #73716d;
+  --origin-neutral-80: #474543;
+  --origin-neutral-85: #383735;
+  --origin-neutral-90: #292827;
+  --origin-neutral-95: #1f1e1d;
+  --origin-neutral-100: #141413;
+  --origin-mulberry-0: #fff2fa;
+  --origin-mulberry-10: #ffdcf3;
+  --origin-mulberry-20: #f6aadd;
+  --origin-mulberry-30: #da7cb4;
+  --origin-mulberry-40: #bf6193;
+  --origin-mulberry-60: #8d3d62;
+  --origin-mulberry-80: #792d4b;
+  --origin-mulberry-90: #602639;
+  --origin-mulberry-100: #421d24;
+  --origin-lightgreen-0: #00e0ac;
+  --origin-transparent-0: rgba(255, 255, 255, 0);
+  --origin-yellowgreen-0: #d5ff00;
+  --origin-elevation-base-low: 0px 0px 2px 0px rgb(7.8431% 7.8431% 7.451% / 0.12),
+    0px 1px 8px 0px rgb(7.8431% 7.8431% 7.451% / 0.12);
+  --origin-elevation-base-high: 0px 0px 2px 0px rgb(7.8431% 7.8431% 7.451% / 0.12),
+    0px 6px 24px 0px rgb(7.8431% 7.8431% 7.451% / 0.12);
+  --origin-color-red-contrast-low: #cd0037; /** Use in Tag */
+  --origin-color-red-contrast-high: #cd0037; /** Use in Tag */
+  --origin-color-red-contrast-lower: #fedbdb; /** Use in Tag */
+  --origin-color-red-contrast-higher: #9f182d; /** Use in Tag */
+  --origin-color-red-contrast-lowest: #fff0f0; /** Use in Tag */
+  --origin-color-red-contrast-highest: #860628; /** Use in Tag */
+  --origin-color-tag-pro-icon-default: #ffbf47; /** Use in Tag, soon to be deprecated */
+  --origin-color-tag-pro-text-default: #ffffff; /** Use in Tag, soon to be deprecated */
+  --origin-color-tag-pro-background-default: #141413; /** Use in Tag, soon to be deprecated */
+  --origin-color-tag-premium-icon-default: #7a3500; /** Use in Tag, soon to be deprecated */
+  --origin-color-tag-premium-text-default: #7a3500; /** Use in Tag, soon to be deprecated */
+  --origin-color-tag-premium-background-default: #ffbf47; /** Use in Tag, soon to be deprecated */
+  --origin-color-blue-contrast-low: #1173a8; /** Use in Tag */
+  --origin-color-blue-contrast-high: #1173a8; /** Use in Tag */
+  --origin-color-blue-contrast-lower: #daedfb; /** Use in Tag */
+  --origin-color-blue-contrast-higher: #0c5683; /** Use in Tag */
+  --origin-color-blue-contrast-lowest: #eff8fd; /** Use in Tag */
+  --origin-color-blue-contrast-highest: #0a476d; /** Use in Tag */
+  --origin-color-fill-pro-default: #ffbf47; /** Use in Badge */
+  --origin-color-fill-pro-subdued: #ffebb8; /** to be deprecated */
+  --origin-color-fill-base-accent: #f2f0eb;
+  --origin-color-fill-base-default: #ffffff;
+  --origin-color-fill-base-inverse: #292827;
+  --origin-color-fill-base-subdued: #fcfaf7;
+  --origin-color-fill-brand-default: #714cb6;
+  --origin-color-fill-hover-default: #f2f0eb; /** Use in hover states of Accordion, Combobox and Menu */
+  --origin-color-fill-hover-subdued: #f7f6f2; /** Hover state for Table */
+  --origin-color-fill-light-default: #ffffff;
+  --origin-color-fill-active-default: #f2f0eb; /** Use in active states of Accordion, Combobox and Menu */
+  --origin-color-fill-clarity-default: #1173a8; /** Use in Badge, soon to be deprecated */
+  --origin-color-fill-clarity-subdued: #eff8fd;
+  --origin-color-fill-premium-default: #ffbf47; /** Used in Badge */
+  --origin-color-fill-premium-subdued: #fff6e0;
+  --origin-color-fill-success-default: #005c54; /** Used in Badge */
+  --origin-color-fill-success-subdued: #f4fdfa;
+  --origin-color-fill-warning-default: #bd5200; /** Used in Badge */
+  --origin-color-fill-warning-subdued: #fff6e0;
+  --origin-color-fill-critical-default: #cd0037; /** Used in Badge */
+  --origin-color-fill-critical-subdued: #fff0f0;
+  --origin-color-fill-selected-default: #f2f0eb;
+  --origin-color-fill-selected-subdued: #f7f6f2;
+  --origin-color-fill-correctness-default: #cd0037; /** Used in Badge */
+  --origin-color-fill-correctness-subdued: #fedbdb;
+  --origin-color-fill-interactive-default: #602639; /** Used in Switch */
+  --origin-color-icon-pro-default: #141413; /** Use in Plan Tag */
+  --origin-color-icon-base-default: #141413; /** Use in icon */
+  --origin-color-icon-base-inverse: #ffffff; /** Use in icon */
+  --origin-color-icon-base-subdued: #73716d; /** Use in icon */
+  --origin-color-icon-dark-default: #141413;
+  --origin-color-icon-agent-default: #421d24; /** Use in agent icon */
+  --origin-color-icon-brand-default: #714cb6;
+  --origin-color-icon-light-default: #ffffff;
+  --origin-color-icon-rating-default: #792d4b; /** Use in Rating */
+  --origin-color-icon-premium-default: #7a3500; /** soon to be deprecated */
+  --origin-color-icon-success-default: #005c54; /** Use in Toast */
+  --origin-color-icon-warning-default: #c25000; /** Use in Toast */
+  --origin-color-icon-warning-inverse: #ff9d56;
+  --origin-color-icon-business-default: #73716d;
+  --origin-color-icon-critical-default: #cd0037;
+  --origin-color-icon-critical-inverse: #ff565e;
+  --origin-color-icon-selected-default: #141413;
+  --origin-color-icon-interactive-default: #602639; /** Use in Switch */
+  --origin-color-link-text-primary: #1173a8;
+  --origin-color-link-text-secondary: #141413;
+  --origin-color-link-border-primary: #1173a8;
+  --origin-color-link-border-secondary: #141413;
+  --origin-color-logo-coda-light: #ffffff; /** Use in logo */
+  --origin-color-logo-coda-default: #101010; /** Use in logo */
+  --origin-color-logo-coda-primary: #ee5a29; /** Use in logo */
+  --origin-color-logo-coda-secondary: #006838; /** Use in logo */
+  --origin-color-logo-hero-dark: #421d24; /** Use in logo */
+  --origin-color-logo-hero-default: #421d24; /** Use in logo */
+  --origin-color-logo-mail-light: #ffffff; /** Use in logo */
+  --origin-color-logo-mail-default: #000000; /** Use in logo */
+  --origin-color-logo-mail-primary: rgba(248, 217, 255, 0); /** Use in logo */
+  --origin-color-logo-product-dark: #421d24; /** Use in logo */
+  --origin-color-logo-grammarly-dark: #141413; /** Use in logo */
+  --origin-color-logo-grammarly-light: #ffffff; /** Use in logo */
+  --origin-color-logo-grammarly-default: #141413; /** Use in logo */
+  --origin-color-logo-grammarly-inverse: #ffffff; /** Use in logo */
+  --origin-color-logo-grammarly-primary: #027e6f; /** Use in logo */
+  --origin-color-logo-superhuman-light: #fcfaf7; /** Use in logo */
+  --origin-color-logo-superhuman-default: #421d24; /** Use in logo */
+  --origin-color-logo-superhuman-primary: #421d24; /** Use in logo */
+  --origin-color-logo-superhuman-secondary: #d4c7ff; /** Use in logo */
+  --origin-color-menu-icon-hover: #141413; /** Use in Menu */
+  --origin-color-menu-icon-default: #73716d; /** Use in Menu */
+  --origin-color-text-edu-default: #ffffff; /** Use in Plan Tag, soon to be deprecated */
+  --origin-color-text-pro-default: #141413; /** Use in Badge, soon to be deprecated */
+  --origin-color-text-base-default: #141413; /** Use in many components */
+  --origin-color-text-base-inverse: #ffffff; /** Use in many components */
+  --origin-color-text-base-subdued: #73716d; /** Use in many components */
+  --origin-color-text-dark-default: #141413; /** Use in many components */
+  --origin-color-text-free-default: #141413; /** Use in Plan Tag, soon to be deprecated */
+  --origin-color-text-brand-default: #714cb6; /** Use in Link and Tab */
+  --origin-color-text-light-default: #ffffff; /** Use in many components */
+  --origin-color-text-premium-default: #7a3500; /** Use in Badge, soon to be deprecated */
+  --origin-color-text-success-default: #005c54;
+  --origin-color-text-warning-default: #7a3500;
+  --origin-color-text-addition-default: #8861ca; /** Use in Text Tansforms */
+  --origin-color-text-business-default: #141413; /** Use in Plan Tag, soon to be deprecated */
+  --origin-color-text-critical-default: #cd0037;
+  --origin-color-text-deletion-default: #73716d; /** Use in Text Tansforms */
+  --origin-color-text-selected-default: #141413;
+  --origin-color-text-enterprise-default: #ffffff; /** Use in Plan Tag, soon to be deprecated */
+  --origin-color-vbar-line-hover: #bfbcb6; /** Use in vbar */
+  --origin-color-vbar-line-default: #dedbd5; /** Use in vbar */
+  --origin-color-vbar-anchor-default: #4198d2; /** Use in vbar */
+  --origin-color-green-contrast-low: #148072; /** Use in Tag */
+  --origin-color-green-contrast-high: #148072; /** Use in Tag */
+  --origin-color-green-contrast-lower: #d5f7eb; /** Use in Tag */
+  --origin-color-green-contrast-higher: #005c54; /** Use in Tag */
+  --origin-color-green-contrast-lowest: #f4fdfa; /** Use in Tag */
+  --origin-color-green-contrast-highest: #0c4243; /** Use in Tag */
+  --origin-color-border-pro-default: #ffa10a; /** to be deprecated */
+  --origin-color-border-base-active: #1173a8;
+  --origin-color-border-base-default: #8d8a86; /** Use in many components */
+  --origin-color-border-base-inverse: #ffffff; /** Use in many components */
+  --origin-color-border-base-subdued: #dedbd5; /** Use in many components */
+  --origin-color-border-dark-subdued: #474543;
+  --origin-color-border-brand-default: #714cb6;
+  --origin-color-border-brand-subdued: #d4c7ff;
+  --origin-color-border-focus-default: #73716d; /** Use in focus states */
+  --origin-color-border-clarity-default: #4198d2; /** to be deprecated, replaced by underlines */
+  --origin-color-border-premium-default: #ffa10a; /** to be deprecated, replaced by underlines */
+  --origin-color-border-premium-subdued: #e57300; /** to be deprecated */
+  --origin-color-border-success-default: #148072;
+  --origin-color-border-success-subdued: #3ac7a1;
+  --origin-color-border-warning-default: #bd5200;
+  --origin-color-border-warning-subdued: #ffdc85;
+  --origin-color-border-addition-default: #8861ca; /** to be deprecated */
+  --origin-color-border-business-default: #73716d; /** to be deprecated */
+  --origin-color-border-business-subdued: #dedbd5; /** to be deprecated */
+  --origin-color-border-critical-default: #cd0037; /** Use in Checkbox error */
+  --origin-color-border-critical-subdued: #ffa8aa;
+  --origin-color-border-deletion-default: #696969; /** to be deprecated */
+  --origin-color-border-elevated-default: rgba(255, 255, 255, 0);
+  --origin-color-border-selected-active: #141413;
+  --origin-color-border-selected-default: #714cb6;
+  --origin-color-border-correctness-default: #f00c00; /** to be deprecated, replaced by underlines */
+  --origin-color-border-interactive-default: #602639; /** Use in Switch */
+  --origin-color-button-pro-fill-states: #292827; /** Use in Button */
+  --origin-color-button-pro-fill-default: #ffbf47; /** Use in Button */
+  --origin-color-button-pro-content-hover: #ffbf47; /** Use in Button */
+  --origin-color-button-pro-content-active: #dedbd5; /** Use in Button */
+  --origin-color-button-pro-content-default: #141413; /** Use in Button */
+  --origin-color-button-ghost-fill-hover: #f7f5ff; /** Use in Button */
+  --origin-color-button-ghost-fill-active: #e8e0ff; /** Use in Button */
+  --origin-color-button-ghost-fill-default: rgb(100% 100% 100% / 0); /** Use in Button */
+  --origin-color-button-ghost-content-states: #533192; /** Use in Button */
+  --origin-color-button-ghost-content-default: #714cb6; /** Use in Button */
+  --origin-color-button-ghost-shortcut-border-default: rgb(44.314% 29.804% 71.373% / 0.3); /** Use in Button */
+  --origin-color-button-premium-fill-hover: #ffdc85; /** Use in Button */
+  --origin-color-button-premium-fill-active: #ffebb8; /** Use in Button */
+  --origin-color-button-premium-fill-default: #ffbf47; /** Use in Button */
+  --origin-color-button-premium-content-default: #7a3500; /** Use in Button */
+  --origin-color-button-primary-fill-hover: #533192; /** Use in Button */
+  --origin-color-button-primary-fill-active: #3f256f; /** Use in Button */
+  --origin-color-button-primary-fill-default: #714cb6; /** Use in Button */
+  --origin-color-button-primary-content-default: #ffffff; /** Use in Button */
+  --origin-color-button-primary-shortcut-border-default: rgb(83.137% 78.039% 100% / 0.3); /** Use in Button */
+  --origin-color-button-subdued-fill-hover: #f2f0eb; /** Use in Button */
+  --origin-color-button-subdued-fill-active: #dedbd5; /** Use in Button */
+  --origin-color-button-subdued-fill-default: rgb(100% 100% 100% / 0); /** Use in Button */
+  --origin-color-button-subdued-border-default: rgb(100% 100% 100% / 0); /** Use in Button */
+  --origin-color-button-subdued-content-states: #141413; /** Use in Button */
+  --origin-color-button-subdued-content-default: #73716d; /** Use in Button */
+  --origin-color-button-subdued-shortcut-border-default: rgb(74.902% 73.725% 71.373% / 0.7); /** Use in Button */
+  --origin-color-button-critical-fill-hover: #9f182d; /** Use in Button */
+  --origin-color-button-critical-fill-active: #860628; /** Use in Button */
+  --origin-color-button-critical-fill-default: #cd0037; /** Use in Button */
+  --origin-color-button-critical-content-default: #ffffff; /** Use in Button */
+  --origin-color-button-tertiary-fill-hover: #f2f0eb; /** Use in Button */
+  --origin-color-button-tertiary-fill-active: #dedbd5; /** Use in Button */
+  --origin-color-button-tertiary-fill-default: rgb(100% 100% 100% / 0); /** Use in Button */
+  --origin-color-button-tertiary-border-default: rgb(100% 100% 100% / 0); /** Use in Button */
+  --origin-color-button-tertiary-content-states: #141413; /** Use in Button */
+  --origin-color-button-tertiary-content-default: #141413; /** Use in Button */
+  --origin-color-button-tertiary-shortcut-border-default: rgb(74.902% 73.725% 71.373% / 0.7); /** Use in Button */
+  --origin-color-button-secondary-fill-hover: #f2f0eb; /** Use in Button */
+  --origin-color-button-secondary-fill-active: #dedbd5; /** Use in Button */
+  --origin-color-button-secondary-fill-default: rgb(100% 100% 100% / 0); /** Use in Button */
+  --origin-color-button-secondary-border-default: #dedbd5; /** Use in Button */
+  --origin-color-button-secondary-content-default: #141413; /** Use in Button */
+  --origin-color-button-secondary-shortcut-border-default: rgb(74.902% 73.725% 71.373% / 0.7); /** Use in Button */
+  --origin-color-button-enterprise-fill-hover: #3d27c0; /** Use in Button */
+  --origin-color-button-enterprise-fill-active: #5e47e5; /** Use in Button */
+  --origin-color-button-enterprise-fill-default: #1b0d6f; /** Use in Button */
+  --origin-color-button-enterprise-content-default: #ffffff; /** Use in Button */
+  --origin-color-orange-contrast-low: #c25000; /** Use in Tag */
+  --origin-color-orange-contrast-high: #c25000; /** Use in Tag */
+  --origin-color-orange-contrast-lower: #ffe9c9; /** Use in Tag */
+  --origin-color-orange-contrast-higher: #a64500; /** Use in Tag */
+  --origin-color-orange-contrast-lowest: #fff3e1; /** Use in Tag */
+  --origin-color-orange-contrast-highest: #812d00; /** Use in Tag */
+  --origin-color-purple-contrast-low: #714cb6; /** Use in Tag */
+  --origin-color-purple-contrast-high: #714cb6; /** Use in Tag */
+  --origin-color-purple-contrast-lower: #e8e0ff; /** Use in Tag */
+  --origin-color-purple-contrast-higher: #533192; /** Use in Tag */
+  --origin-color-purple-contrast-lowest: #f7f5ff; /** Use in Tag */
+  --origin-color-purple-contrast-highest: #3f256f; /** Use in Tag */
+  --origin-color-select-fill-hover: #4198d2; /** Use in Select */
+  --origin-color-select-fill-default: #f2f0eb; /** Use in Select */
+  --origin-color-select-icon-default: #141413; /** Use in Select */
+  --origin-color-select-icon-inverse: #ffffff; /** Use in Select */
+  --origin-color-select-text-default: #141413; /** Use in Select */
+  --origin-color-select-text-inverse: #ffffff; /** Use in Select */
+  --origin-color-select-border-inner: #bfbcb6; /** Use in Select */
+  --origin-color-yellow-contrast-low: #f5c428; /** Use in Tag */
+  --origin-color-yellow-contrast-high: #7f640b; /** Use in Tag */
+  --origin-color-yellow-contrast-lower: #fef1bb; /** Use in Tag */
+  --origin-color-yellow-contrast-higher: #664d02; /** Use in Tag */
+  --origin-color-yellow-contrast-lowest: #fff8da; /** Use in Tag */
+  --origin-color-yellow-contrast-highest: #664d02; /** Use in Tag */
+  --origin-color-neutral-contrast-low: #73716d; /** Use in Tag */
+  --origin-color-neutral-contrast-high: #73716d; /** Use in Tag */
+  --origin-color-neutral-contrast-lower: #dedbd5; /** Use in Tag */
+  --origin-color-neutral-contrast-higher: #474543; /** Use in Tag */
+  --origin-color-neutral-contrast-lowest: #fcfaf7; /** Use in Tag */
+  --origin-color-neutral-contrast-highest: #292827; /** Use in Tag */
+  --origin-color-mulberry-contrast-low: #8d3d62;
+  --origin-color-mulberry-contrast-high: #8d3d62;
+  --origin-color-mulberry-contrast-lower: #ffdcf3;
+  --origin-color-mulberry-contrast-higher: #792d4b;
+  --origin-color-mulberry-contrast-lowest: #fff2fa;
+  --origin-color-mulberry-contrast-highest: #602639;
+  --origin-color-skeleton-fill-default: #f2f0eb; /** Use in Loader */
+  --origin-color-skeleton-shimmer: #dedbd5; /** Use in Loader */
+  --origin-color-elevation-base-low: rgb(7.8431% 7.8431% 7.451% / 0.12);
+  --origin-color-highlight-pro-default: rgba(245, 196, 40, 0.2); /** Use in Highlights */
+  --origin-color-highlight-addition-default: #f3effa; /** Use in Highlights */
+  --origin-color-highlight-critical-default: rgba(247, 42, 66, 0.2); /** Use in Highlights */
+  --origin-color-highlight-deletion-default: #f1f1f0; /** Use in Highlights */
+  --origin-color-highlight-noncritical-default: rgba(65, 152, 210, 0.2); /** Use in Highlights */
+  --origin-color-underline-pro-default: #ae880d; /** Use in Underlines */
+  --origin-color-underline-pro-subdued: #f5c428; /** Use in Underlines */
+  --origin-color-underline-critical-default: #f72a42; /** Use in Underlines */
+  --origin-color-underline-noncritical-default: #4198d2; /** Use in Underlines */
+  --origin-color-background-edu-default: #1b0d6f; /** Use in Plan Tag, soon to be deprecated */
+  --origin-color-background-base-default: #ffffff; /** Use in many components */
+  --origin-color-background-base-inverse: #292827; /** Use in many components */
+  --origin-color-background-base-subdued: #fcfaf7; /** Use in many components */
+  --origin-color-background-base-transparent: rgba(255, 255, 255, 0);
+  --origin-color-background-free-default: #f2f0eb; /** Use in Plan Tag, soon to be deprecated */
+  --origin-color-background-brand-default: #714cb6;
+  --origin-color-background-brand-subdued: #f7f5ff;
+  --origin-color-background-neutral-default: #73716d; /** Used in Badge and Switch */
+  --origin-color-background-neutral-subdued: #bfbcb6;
+  --origin-color-background-overlay-default: rgb(27.843% 27.059% 26.275% / 0.6); /** Used in Modal overlay */
+  --origin-color-background-business-default: #f2f0eb; /** Used in Badge */
+  --origin-color-background-business-subdued: #fcfaf7;
+  --origin-color-background-enterprise-default: #1b0d6f; /** Used in Plan Tag */
+  --origin-color-illustration-fill-1: #f2f0eb;
+  --origin-color-illustration-fill-2: #ffffff;
+  --origin-color-illustration-fill-default: #141413;
+  --origin-color-illustration-shadow-default: #8d8a86;
+  --origin-color-illustration-stroke-1: #141413;
+  --origin-color-illustration-stroke-2: #141413;
+  --origin-color-illustration-stroke-3: #ffffff;
+  --origin-color-illustration-stroke-default: #141413;
+
+  /* Core */
+  --origin-space-0: 0px;
+  --origin-space-1: 4px;
+  --origin-space-2: 8px;
+  --origin-space-3: 12px;
+  --origin-space-4: 16px;
+  --origin-space-5: 20px;
+  --origin-space-6: 24px;
+  --origin-space-8: 32px;
+  --origin-space-10: 40px;
+  --origin-space-12: 48px;
+  --origin-space-14: 56px;
+  --origin-space-16: 64px;
+  --origin-space-18: 72px;
+  --origin-space-20: 80px;
+  --origin-space-24: 96px;
+  --origin-space-32: 128px;
+  --origin-space-36: 144px;
+  --origin-space-40: 160px;
+  --origin-space-x-large: 12px;
+  --origin-space-x-small: 8px;
+  --origin-space-x-medium: 10px;
+  --origin-space-x-xlarge: 16px;
+  --origin-space-x-xxlarge: 20px;
+  --origin-space-gap-small: 2px;
+  --origin-space-gap-medium: 4px;
+  --origin-space-shortcut-gap-large: 8px;
+  --origin-space-shortcut-gap-small: 4px;
+  --origin-space-shortcut-gap-medium: 6px;
+  --origin-space-half: 2px;
+  --origin-space-quarter: 1px;
+  --origin-space-1-and-half: 6px;
+  --origin-space-2-and-half: 10px;
+  --origin-space-1-and-quarter: 5px;
+  --origin-size-control-large: 40px;
+  --origin-size-control-small: 30px;
+  --origin-size-control-medium: 34px;
+  --origin-size-control-xlarge: 44px;
+  --origin-size-control-xxlarge: 52px;
+  --origin-text-size-large: 18px;
+  --origin-text-size-small: 14px;
+  --origin-text-size-medium: 16px;
+  --origin-text-size-xsmall: 12px;
+  --origin-font-family-mono-default: 'Super Mono VF', ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas,
+    'DejaVu Sans Mono', monospace;
+  --origin-font-family-sans-default: 'Super Sans VF', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+  --origin-font-family-serif-default: 'Super Serif VF', Charter, 'Bitstream Charter', 'Sitka Text', Cambria, serif;
+  --origin-font-family-heading-large: 'Super Sans VF', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+  --origin-font-family-heading-small: 'Super Sans VF', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+  --origin-font-family-heading-medium: 'Super Sans VF', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+  --origin-font-family-heading-xlarge: 'Super Sans VF', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+  --origin-font-family-heading-xsmall: 'Super Sans VF', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+  --origin-font-family-heading-xxsmall: 'Super Sans VF', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+  --origin-font-weight-bold: 770;
+  --origin-font-weight-light: 280;
+  --origin-font-weight-medium: 600;
+  --origin-font-weight-heading-large: 600;
+  --origin-font-weight-heading-small: 600;
+  --origin-font-weight-heading-medium: 600;
+  --origin-font-weight-heading-xlarge: 600;
+  --origin-font-weight-heading-xsmall: 600;
+  --origin-font-weight-heading-xxsmall: 600;
+  --origin-font-weight-regular: 540;
+  --origin-font-weight-semibold: 680;
+  --origin-line-height-text-large: 27px;
+  --origin-line-height-text-small: 21px;
+  --origin-line-height-text-medium: 24px;
+  --origin-line-height-text-xsmall: 18px;
+  --origin-line-height-heading-large: 30px;
+  --origin-line-height-heading-small: 22.5px;
+  --origin-line-height-heading-medium: 25px;
+  --origin-line-height-heading-xlarge: 35px;
+  --origin-line-height-heading-xsmall: 20px;
+  --origin-line-height-heading-xxsmall: 17.5px;
+  --origin-letter-spacing-text-large: 0;
+  --origin-letter-spacing-text-small: 0;
+  --origin-letter-spacing-text-medium: 0;
+  --origin-letter-spacing-text-xsmall: 0;
+  --origin-letter-spacing-heading-large: 0;
+  --origin-letter-spacing-heading-small: 0;
+  --origin-letter-spacing-heading-medium: 0;
+  --origin-letter-spacing-heading-xlarge: 0;
+  --origin-letter-spacing-heading-xsmall: 0;
+  --origin-letter-spacing-heading-xxsmall: 0;
+  --origin-heading-size-large: 24px;
+  --origin-heading-size-small: 18px;
+  --origin-heading-size-medium: 20px;
+  --origin-heading-size-xlarge: 28px;
+  --origin-heading-size-xsmall: 16px;
+  --origin-heading-size-xxsmall: 14px;
+  --origin-paragraph-large: 36px;
+  --origin-paragraph-small: 18px;
+  --origin-paragraph-medium: 24px;
+  --origin-paragraph-xsmall: 16px;
+  --origin-radius-0: 0px;
+  --origin-radius-1: 4px;
+  --origin-radius-2: 8px;
+  --origin-radius-3: 12px;
+  --origin-radius-4: 16px;
+  --origin-radius-5: 20px;
+  --origin-radius-6: 24px;
+  --origin-radius-8: 32px;
+  --origin-radius-10: 40px;
+  --origin-radius-12: 48px;
+  --origin-radius-25: 100px;
+  --origin-radius-large: 12px;
+  --origin-radius-small: 6px;
+  --origin-radius-button-large: 12px;
+  --origin-radius-button-small: 8px;
+  --origin-radius-button-medium: 10px;
+  --origin-radius-button-xlarge: 12px;
+  --origin-radius-medium: 10px;
+  --origin-radius-half: 2px;
+  --origin-radius-1-and-half: 6px;
+  --origin-radius-2-and-half: 10px;
+  --origin-z-index-0: 0;
+  --origin-z-index-100: 100;
+  --origin-z-index-200: 200;
+  --origin-z-index-300: 300;
+  --origin-z-index-400: 400;
+  --origin-z-index-500: 500;
+  --origin-z-index-top: 99999;
+  --origin-z-index-auto: auto;
+  --origin-z-index-bottom: -100;
+  --origin-spread-0: 0px;
+  --origin-spread-1: 4px;
+  --origin-spread-half: 2px;
+  --origin-spread-quarter: 1px;
+  --origin-spread-half-quarter: 0.5px;
+  --origin-blur-0: 0px;
+  --origin-blur-1: 4px;
+  --origin-blur-2: 8px;
+  --origin-blur-3: 12px;
+  --origin-blur-4: 16px;
+  --origin-blur-5: 20px;
+  --origin-blur-6: 24px;
+  --origin-blur-half: 2px;
+  --origin-blur-1-and-half: 6px;
+  --origin-blur-2-and-half: 10px;
+  --origin-axis-0: 0px;
+  --origin-axis-1: 4px;
+  --origin-axis-half: 2px;
+  --origin-axis-quarter: 1px;
+  --origin-axis-1-and-half: 6px;
+}
