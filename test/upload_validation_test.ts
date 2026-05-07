@@ -6475,6 +6475,58 @@ describe('Pack metadata Validation', async () => {
       await validateJson(metadata);
     });
 
+    it('fails when WebSearch allowedDomains contains URL with protocol', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'WebSearchSkill',
+            displayName: 'Web Search Skill',
+            description: 'Uses web search',
+            prompt: 'Search the web',
+            tools: [
+              {
+                type: ToolType.WebSearch,
+                allowedDomains: ['https://example.com'],
+              },
+            ],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills[0].tools[0].allowedDomains[0]',
+          message: 'Invalid domain. Instead of "https://www.example.com", just specify "example.com".',
+        },
+      ]);
+    });
+
+    it('fails when WebSearch allowedDomains contains URL with path', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'WebSearchSkill',
+            displayName: 'Web Search Skill',
+            description: 'Uses web search',
+            prompt: 'Search the web',
+            tools: [
+              {
+                type: ToolType.WebSearch,
+                allowedDomains: ['example.com/path'],
+              },
+            ],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills[0].tools[0].allowedDomains[0]',
+          message: 'Invalid domain. Instead of "https://www.example.com", just specify "example.com".',
+        },
+      ]);
+    });
+
     it('detects duplicate WebSearch tools', async () => {
       const metadata = createFakePackVersionMetadata({
         skills: [
@@ -6640,6 +6692,58 @@ describe('Pack metadata Validation', async () => {
         ],
       });
       await validateJson(metadata);
+    });
+
+    it('fails when WebFetch allowedDomains contains URL with protocol', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'WebFetchSkill',
+            displayName: 'Web Fetch Skill',
+            description: 'Uses web fetch',
+            prompt: 'Fetch a web page',
+            tools: [
+              {
+                type: ToolType.WebFetch,
+                allowedDomains: ['https://example.com'],
+              },
+            ],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills[0].tools[0].allowedDomains[0]',
+          message: 'Invalid domain. Instead of "https://www.example.com", just specify "example.com".',
+        },
+      ]);
+    });
+
+    it('fails when WebFetch allowedDomains contains URL with path', async () => {
+      const metadata = createFakePackVersionMetadata({
+        skills: [
+          {
+            name: 'WebFetchSkill',
+            displayName: 'Web Fetch Skill',
+            description: 'Uses web fetch',
+            prompt: 'Fetch a web page',
+            tools: [
+              {
+                type: ToolType.WebFetch,
+                allowedDomains: ['example.com/path'],
+              },
+            ],
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          path: 'skills[0].tools[0].allowedDomains[0]',
+          message: 'Invalid domain. Instead of "https://www.example.com", just specify "example.com".',
+        },
+      ]);
     });
 
     it('detects duplicate WebFetch tools', async () => {

@@ -2309,14 +2309,23 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     type: z.literal(ToolType.CodaDocsAndTables),
   });
 
+  // https://developers.openai.com/api/docs/guides/tools-web-search#domain-filtering
+  const allowedDomainSchema = z
+    .string()
+    .min(1)
+    .max(Limits.NetworkDomainUrl)
+    .refine(domain => !(domain.startsWith('http:') || domain.startsWith('https:') || domain.indexOf('/') >= 0), {
+      message: 'Invalid domain. Instead of "https://www.example.com", just specify "example.com".',
+    });
+
   const webSearchToolSchema = zodCompleteStrictObject<WebSearchTool>({
     type: z.literal(ToolType.WebSearch),
-    allowedDomains: z.array(z.string().min(1)).min(1).max(100).optional(),
+    allowedDomains: z.array(allowedDomainSchema).min(1).max(100).optional(),
   });
 
   const webFetchToolSchema = zodCompleteStrictObject<WebFetchTool>({
     type: z.literal(ToolType.WebFetch),
-    allowedDomains: z.array(z.string().min(1)).min(1).max(100).optional(),
+    allowedDomains: z.array(allowedDomainSchema).min(1).max(100).optional(),
   });
 
   const skillModelConfigurationSchema = zodCompleteStrictObject<SkillModelConfiguration>({
