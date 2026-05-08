@@ -6185,7 +6185,7 @@ describe('Pack metadata Validation', async () => {
         mcpServers: [
           {
             endpointUrl: 'https://mcp.example.com/mcp',
-            name: 'Canva',
+            name: 'Example',
           },
         ],
       });
@@ -6264,7 +6264,7 @@ describe('Pack metadata Validation', async () => {
         mcpServers: [
           {
             endpointUrl: 'https://mcp.example.com/mcp',
-            name: 'Canva',
+            name: 'Example',
           },
         ],
       });
