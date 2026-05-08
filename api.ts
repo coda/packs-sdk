@@ -630,7 +630,18 @@ export function makeParameter<T extends ParameterType, O extends ParameterOption
   let autocomplete: MetadataFormula | undefined;
 
   if (Array.isArray(autocompleteDefOrItems)) {
-    const autocompleteDef = makeSimpleAutocompleteMetadataFormula(autocompleteDefOrItems);
+    // The conditional `autocomplete?` field on ParameterOptions guarantees
+    // that whenever `autocompleteDefOrItems` is an array, the outer T is in
+    // AutocompleteParameterTypes. Pass the union explicitly so the call
+    // type-checks under stricter generic inference (e.g. tsgo / TS6 native
+    // compiler) — TypeScript's older inference quietly distributed the
+    // generic over makeParameter's union, but the native compiler doesn't.
+    const autocompleteDef = makeSimpleAutocompleteMetadataFormula<AutocompleteParameterTypes>(
+      autocompleteDefOrItems as Array<
+        | TypeMap[AutocompleteParameterTypeMapping[AutocompleteParameterTypes]]
+        | SimpleAutocompleteOption<AutocompleteParameterTypes>
+      >,
+    );
     autocomplete = wrapMetadataFunction(autocompleteDef);
   } else {
     autocomplete = wrapMetadataFunction(autocompleteDefOrItems);
