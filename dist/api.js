@@ -268,6 +268,12 @@ function makeParameter(paramDefinition) {
     const actualType = api_types_4.ParameterTypeInputMap[type];
     let autocomplete;
     if (Array.isArray(autocompleteDefOrItems)) {
+        // The conditional `autocomplete?` field on ParameterOptions guarantees
+        // that whenever `autocompleteDefOrItems` is an array, the outer T is in
+        // AutocompleteParameterTypes. Pass the union explicitly so the call
+        // type-checks under stricter generic inference (e.g. tsgo / TS6 native
+        // compiler) — TypeScript's older inference quietly distributed the
+        // generic over makeParameter's union, but the native compiler doesn't.
         const autocompleteDef = makeSimpleAutocompleteMetadataFormula(autocompleteDefOrItems);
         autocomplete = wrapMetadataFunction(autocompleteDef);
     }
