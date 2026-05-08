@@ -5,6 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
+  '@types/estree': 1.0.8
   '@isaacs/brace-expansion@<=5.0.0': 5.0.1
   '@octokit/plugin-paginate-rest@>=9.3.0-beta.1 <11.4.1': 11.4.1
   ajv@<6.14.0: 6.14.0
@@ -1458,8 +1459,8 @@ packages:
   '@types/debug@4.1.12':
     resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
 
-  '@types/estree@1.0.6':
-    resolution: {integrity: sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==}
+  '@types/estree@1.0.8':
+    resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
 
   '@types/exorcist@2.0.1':
     resolution: {integrity: sha512-m/Dh3GEps0KnD3gSo+8pm/kPGQm+CenpI5zzwJOAgTna30AuC5pmjGA1QXCFVqiJEVKV8QCTGnDPOqMDtIyBVQ==}
@@ -6484,7 +6485,7 @@ snapshots:
     dependencies:
       '@types/ms': 0.7.34
 
-  '@types/estree@1.0.6': {}
+  '@types/estree@1.0.8': {}
 
   '@types/exorcist@2.0.1':
     dependencies:
@@ -7867,7 +7868,7 @@ snapshots:
       '@humanfs/node': 0.16.7
       '@humanwhocodes/module-importer': 1.0.1
       '@humanwhocodes/retry': 0.4.3
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.8
       ajv: 6.14.0
       chalk: 4.1.2
       cross-spawn: 7.0.6
@@ -10585,7 +10586,7 @@ snapshots:
 
   webpack@5.95.0(esbuild@0.25.0)(uglify-js@3.19.1):
     dependencies:
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.8
       '@webassemblyjs/ast': 1.12.1
       '@webassemblyjs/wasm-edit': 1.12.1
       '@webassemblyjs/wasm-parser': 1.12.1
