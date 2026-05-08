@@ -66,6 +66,7 @@ Requests to MCP servers use the same [authentication system][authentication] as 
       type: sdk.AuthenticationType.OAuth2,
       useDynamicClientRegistration: true,
       useProofKeyForCodeExchange: true,
+      scopes: ["read", "write"],
     });
     ```
 
@@ -84,6 +85,7 @@ Requests to MCP servers use the same [authentication system][authentication] as 
       authorizationUrl: "https://example.com/authorize",
       tokenUrl: "https://example.com/token",
       useProofKeyForCodeExchange: true,
+      scopes: ["read", "write"],
     });
     ```
 
