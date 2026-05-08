@@ -5471,6 +5471,60 @@ describe('Pack metadata Validation', async () => {
       ]);
     });
 
+    it('missing networkDomains when specifying mcpServers', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: undefined,
+        defaultAuthentication: {type: AuthenticationType.None},
+        mcpServers: [
+          {
+            endpointUrl: 'https://mcp.example.com/mcp',
+            name: 'Example',
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message:
+            "This pack uses MCP servers but did not declare a network domain. Specify the domain that your pack makes http requests to using `networkDomains: ['example.com']`",
+          path: 'networkDomains',
+        },
+      ]);
+    });
+
+    it('valid networkDomains when specifying mcpServers', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['mcp.example.com'],
+        defaultAuthentication: {type: AuthenticationType.None},
+        mcpServers: [
+          {
+            endpointUrl: 'https://mcp.example.com/mcp',
+            name: 'Example',
+          },
+        ],
+      });
+      await validateJson(metadata);
+    });
+
+    it('mcpServer endpointUrl domain not covered by networkDomains', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['example.com'],
+        mcpServers: [
+          {
+            endpointUrl: 'https://mcp.canva.com/mcp',
+            name: 'Canva',
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: `Domain mcp.canva.com is used in MCP server Canva but not declared in the pack's "networkDomains".`,
+          path: 'mcpServers[0].endpointUrl',
+        },
+      ]);
+    });
+
     describe('Admin authentication', () => {
       it('validates name', async () => {
         const metadata = createFakePackVersionMetadata({
@@ -6130,7 +6184,7 @@ describe('Pack metadata Validation', async () => {
         ],
         mcpServers: [
           {
-            endpointUrl: 'https://mcp.canva.com/mcp',
+            endpointUrl: 'https://mcp.example.com/mcp',
             name: 'Canva',
           },
         ],
@@ -6209,7 +6263,7 @@ describe('Pack metadata Validation', async () => {
         ],
         mcpServers: [
           {
-            endpointUrl: 'https://mcp.canva.com/mcp',
+            endpointUrl: 'https://mcp.example.com/mcp',
             name: 'Canva',
           },
         ],

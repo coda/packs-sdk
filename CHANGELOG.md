@@ -8,6 +8,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 - Launched `useDynamicClientRegistration` for OAuth2 authentication, allowing for the automatic discovery of OAuth endpoints and automatic registration of client credentials.
 
+### Changed
+
+- Upload validation now requires Packs that declare MCP servers to also declare a matching network domain, mirroring the existing requirement for authentication.
+
 ## [1.13.3] - 2026-04-09
 
 ### Added
