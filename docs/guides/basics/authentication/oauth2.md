@@ -298,6 +298,7 @@ pack.setUserAuthentication({
   type: sdk.AuthenticationType.OAuth2,
   useDynamicClientRegistration: true,
   useProofKeyForCodeExchange: true,
+  scopes: ["read", "write"],
 });
 ```
 
@@ -310,6 +311,7 @@ pack.setUserAuthentication({
   authorizationUrl: "https://example.com/authorize",
   tokenUrl: "https://api.example.com/token",
   useProofKeyForCodeExchange: true,
+  scopes: ["read", "write"],
 });
 ```
 
