@@ -5525,6 +5525,26 @@ describe('Pack metadata Validation', async () => {
       ]);
     });
 
+    it('mcpServer endpointUrl subdomain differs from networkDomains subdomain', async () => {
+      const metadata = createFakePackVersionMetadata({
+        networkDomains: ['api.example.com'],
+        defaultAuthentication: {type: AuthenticationType.None},
+        mcpServers: [
+          {
+            endpointUrl: 'https://mcp.example.com/mcp',
+            name: 'Example',
+          },
+        ],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: `Domain mcp.example.com is used in MCP server Example but not declared in the pack's "networkDomains".`,
+          path: 'mcpServers[0].endpointUrl',
+        },
+      ]);
+    });
+
     describe('Admin authentication', () => {
       it('validates name', async () => {
         const metadata = createFakePackVersionMetadata({
