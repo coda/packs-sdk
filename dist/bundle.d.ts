@@ -5658,7 +5658,12 @@ export declare enum ToolType {
 	 * Tool that allows creation of the content that can be embedded in the response.
 	 * @internal
 	 */
-	EmbeddedContent = "EmbeddedContent"
+	EmbeddedContent = "EmbeddedContent",
+	/**
+	 * Tool that provides combined web access capabilities including search and fetch.
+	 * Each capability can be independently enabled/disabled and configured with domain filters.
+	 */
+	WebAccess = "WebAccess"
 }
 /**
  * Base interface for all tool definitions.
@@ -5839,6 +5844,118 @@ export interface WebSearchTool extends BaseTool<ToolType.WebSearch> {
 	allowedDomains?: string[];
 }
 /**
+ * The filtering mode for domain restrictions on a web access capability.
+ */
+export declare enum WebAccessDomainFilterMode {
+	/**
+	 * Only allow access to the specified domains.
+	 */
+	AllowList = "AllowList",
+	/**
+	 * Block access to the specified domains, allow everything else.
+	 */
+	BlockList = "BlockList"
+}
+/**
+ * Domain filter that restricts access to only the specified domains.
+ */
+export interface WebAccessAllowListFilter {
+	/** The filtering mode. */
+	mode: WebAccessDomainFilterMode.AllowList;
+	/**
+	 * The domains to allow.
+	 * Omit the HTTP/HTTPS prefix (e.g., use `docs.example.com` not `https://docs.example.com`).
+	 * Subdomains are automatically included.
+	 * Maximum of 100 domains allowed.
+	 */
+	domains: string[];
+}
+/**
+ * Domain filter that blocks the specified domains and allows everything else.
+ */
+export interface WebAccessBlockListFilter {
+	/** The filtering mode. */
+	mode: WebAccessDomainFilterMode.BlockList;
+	/**
+	 * The domains to block.
+	 * Omit the HTTP/HTTPS prefix (e.g., use `docs.example.com` not `https://docs.example.com`).
+	 * Subdomains are automatically included.
+	 * Maximum of 100 domains allowed.
+	 */
+	domains: string[];
+}
+/**
+ * Union of all supported domain filter types for web access capabilities.
+ */
+export type WebAccessDomainFilter = WebAccessAllowListFilter | WebAccessBlockListFilter;
+/**
+ * Configuration for the web search capability within a {@link WebAccessTool}.
+ */
+export interface WebAccessSearchConfig {
+	/**
+	 * Whether this capability is enabled. When omitted, the capability is enabled.
+	 */
+	enabled?: boolean;
+	/**
+	 * Optional domain filter to restrict which domains can be searched.
+	 */
+	domainFilter?: WebAccessDomainFilter;
+}
+/**
+ * Configuration for the web fetch capability within a {@link WebAccessTool}.
+ */
+export interface WebAccessFetchConfig {
+	/**
+	 * Whether this capability is enabled. When omitted, the capability is enabled.
+	 */
+	enabled?: boolean;
+	/**
+	 * Optional domain filter to restrict which domains can be fetched.
+	 */
+	domainFilter?: WebAccessDomainFilter;
+}
+/**
+ * Tool that provides combined web access capabilities including search and fetch.
+ * Each capability can be independently enabled/disabled and configured with domain filters.
+ *
+ * @example
+ * ```ts
+ * pack.addSkill({
+ *   // ...
+ *   tools: [
+ *     {
+ *       type: sdk.ToolType.WebAccess,
+ *       search: {
+ *         domainFilter: {
+ *           mode: sdk.WebAccessDomainFilterMode.AllowList,
+ *           domains: ["stackoverflow.com"],
+ *         },
+ *       },
+ *       fetch: {
+ *         enabled: false,
+ *         domainFilter: {
+ *           mode: sdk.WebAccessDomainFilterMode.BlockList,
+ *           domains: ["evil.com"],
+ *         },
+ *       },
+ *     },
+ *   ],
+ * });
+ * ```
+ */
+export interface WebAccessTool extends BaseTool<ToolType.WebAccess> {
+	/**
+	 * Configuration for web search capability.
+	 * When omitted, the capability is enabled with no domain restrictions.
+	 */
+	search?: WebAccessSearchConfig;
+	/**
+	 * Configuration for web fetch capability.
+	 * When omitted, the capability is enabled with no domain restrictions.
+	 */
+	fetch?: WebAccessFetchConfig;
+}
+/**
  * The type of the content that can be embedded in the response.
  * @hidden In development.
  */
@@ -5925,6 +6042,7 @@ export interface ToolMap {
 	[ToolType.CodaDocsAndTables]: CodaDocsAndTablesTool;
 	[ToolType.WebSearch]: WebSearchTool;
 	[ToolType.EmbeddedContent]: EmbeddedContentTool;
+	[ToolType.WebAccess]: WebAccessTool;
 }
 /**
  * Union of all supported tool types.

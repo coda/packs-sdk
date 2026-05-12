@@ -67,6 +67,7 @@ const api_types_8 = require("../api_types");
 const url_parse_1 = __importDefault(require("url-parse"));
 const schema_17 = require("../schema");
 const schema_18 = require("../schema");
+const types_12 = require("../types");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
 const schema_19 = require("../schema");
@@ -1775,6 +1776,29 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         type: z.literal(types_11.ToolType.WebSearch),
         allowedDomains: z.array(z.string().min(1)).min(1).max(100).optional(),
     });
+    const domainFilterSchema = z.discriminatedUnion('mode', [
+        z.strictObject({
+            mode: z.literal(types_12.WebAccessDomainFilterMode.AllowList),
+            domains: z.array(z.string().min(1)).min(1).max(100),
+        }),
+        z.strictObject({
+            mode: z.literal(types_12.WebAccessDomainFilterMode.BlockList),
+            domains: z.array(z.string().min(1)).min(1).max(100),
+        }),
+    ]);
+    const webAccessSearchConfigSchema = zodCompleteStrictObject({
+        enabled: z.boolean().optional(),
+        domainFilter: domainFilterSchema.optional(),
+    });
+    const webAccessFetchConfigSchema = zodCompleteStrictObject({
+        enabled: z.boolean().optional(),
+        domainFilter: domainFilterSchema.optional(),
+    });
+    const webAccessToolSchema = zodCompleteStrictObject({
+        type: z.literal(types_11.ToolType.WebAccess),
+        search: webAccessSearchConfigSchema.optional(),
+        fetch: webAccessFetchConfigSchema.optional(),
+    });
     const skillModelConfigurationSchema = zodCompleteStrictObject({
         model: z.nativeEnum(types_9.SkillModel),
         prompt: z.string().min(1).max(exports.Limits.PromptLength).optional(),
@@ -1788,6 +1812,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         codaDocsToolSchema,
         embeddedContentToolSchema,
         webSearchToolSchema,
+        webAccessToolSchema,
     ]);
     const skillSchema = zodCompleteObject({
         name: z

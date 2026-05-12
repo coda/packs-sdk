@@ -54,6 +54,7 @@ import * as sdk from "@codahq/packs-sdk";
 - [Type](enumerations/Type.md)
 - [ValueHintType](enumerations/ValueHintType.md)
 - [ValueType](enumerations/ValueType.md)
+- [WebAccessDomainFilterMode](enumerations/WebAccessDomainFilterMode.md)
 
 ## Classes
 
@@ -172,6 +173,11 @@ import * as sdk from "@codahq/packs-sdk";
 - [UpdateSync](interfaces/UpdateSync.md)
 - [UpdateSyncExecutionContext](interfaces/UpdateSyncExecutionContext.md)
 - [ValidParameterValidationResult](interfaces/ValidParameterValidationResult.md)
+- [WebAccessAllowListFilter](interfaces/WebAccessAllowListFilter.md)
+- [WebAccessBlockListFilter](interfaces/WebAccessBlockListFilter.md)
+- [WebAccessFetchConfig](interfaces/WebAccessFetchConfig.md)
+- [WebAccessSearchConfig](interfaces/WebAccessSearchConfig.md)
+- [WebAccessTool](interfaces/WebAccessTool.md)
 - [WebBasicAuthentication](interfaces/WebBasicAuthentication.md)
 - [WebSearchTool](interfaces/WebSearchTool.md)
 
@@ -257,6 +263,7 @@ import * as sdk from "@codahq/packs-sdk";
 - [TypedPackFormula](type-aliases/TypedPackFormula.md)
 - [UnknownInvocationError](type-aliases/UnknownInvocationError.md)
 - [UserAuthenticationDef](type-aliases/UserAuthenticationDef.md)
+- [WebAccessDomainFilter](type-aliases/WebAccessDomainFilter.md)
 
 ## Variables
 

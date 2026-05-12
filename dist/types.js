@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HttpStatusCode = exports.SkillModel = exports.EmbeddedContentType = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.ToolType = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
+exports.HttpStatusCode = exports.SkillModel = exports.EmbeddedContentType = exports.WebAccessDomainFilterMode = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.ToolType = exports.SyncInterval = exports.QuotaLimitType = exports.FeatureSet = exports.ReservedAuthenticationNames = exports.TokenExchangeCredentialsLocation = exports.PostSetupType = exports.AuthenticationType = exports.PackCategory = void 0;
 /**
  * @deprecated
  */
@@ -259,6 +259,11 @@ var ToolType;
      * @internal
      */
     ToolType["EmbeddedContent"] = "EmbeddedContent";
+    /**
+     * Tool that provides combined web access capabilities including search and fetch.
+     * Each capability can be independently enabled/disabled and configured with domain filters.
+     */
+    ToolType["WebAccess"] = "WebAccess";
 })(ToolType || (exports.ToolType = ToolType = {}));
 /**
  * The type of knowledge source to use.
@@ -290,6 +295,20 @@ var ScreenAnnotationType;
      */
     ScreenAnnotationType["Guide"] = "Guide";
 })(ScreenAnnotationType || (exports.ScreenAnnotationType = ScreenAnnotationType = {}));
+/**
+ * The filtering mode for domain restrictions on a web access capability.
+ */
+var WebAccessDomainFilterMode;
+(function (WebAccessDomainFilterMode) {
+    /**
+     * Only allow access to the specified domains.
+     */
+    WebAccessDomainFilterMode["AllowList"] = "AllowList";
+    /**
+     * Block access to the specified domains, allow everything else.
+     */
+    WebAccessDomainFilterMode["BlockList"] = "BlockList";
+})(WebAccessDomainFilterMode || (exports.WebAccessDomainFilterMode = WebAccessDomainFilterMode = {}));
 /**
  * The type of the content that can be embedded in the response.
  * @hidden In development.

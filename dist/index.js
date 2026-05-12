@@ -13,7 +13,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ValueType = exports.ValueHintType = exports.ScaleIconSet = exports.PropertyLabelValueTemplate = exports.LinkDisplayType = exports.IndexingStrategy = exports.ImageOutline = exports.ImageShapeStyle = exports.ImageCornerStyle = exports.EmailDisplayType = exports.DurationUnit = exports.CurrencyFormat = exports.AttributionNodeType = exports.ensureUnreachable = exports.ensureNonEmptyString = exports.ensureExists = exports.assertCondition = exports.SvgConstants = exports.getEffectivePropertyKeysFromSchema = exports.withQueryParams = exports.joinUrl = exports.getQueryParams = exports.simpleAutocomplete = exports.makeSimpleAutocompleteMetadataFormula = exports.autocompleteSearchObjects = exports.makeParameter = exports.makeTranslateObjectFormula = exports.makeSyncTable = exports.makeFormula = exports.makeEmptyFormula = exports.makeDynamicSyncTable = exports.makePropertyOptionsFormula = exports.makeMetadataFormula = exports.ResponseSizeTooLargeError = exports.UserVisibleError = exports.Type = exports.MissingScopesError = exports.StatusCodeError = exports.PrecannedDateRange = exports.ParameterType = exports.NetworkConnection = exports.InvocationSource = exports.UpdateOutcome = exports.DataIndexing = exports.ConnectionRequirement = exports.OptionsType = exports.PackDefinitionBuilder = exports.newPack = exports.PostSetupType = exports.AuthenticationType = void 0;
-exports.EmbeddedContentType = exports.ToolType = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.SkillModel = exports.PermissionSyncMode = exports.TokenExchangeCredentialsLocation = exports.ValidFetchMethods = exports.withIdentity = exports.makeSchema = exports.makeReferenceSchemaFromObjectSchema = exports.makeObjectSchema = exports.makeAttributionNode = exports.generateSchema = void 0;
+exports.EmbeddedContentType = exports.ToolType = exports.ScreenAnnotationType = exports.KnowledgeToolSourceType = exports.SkillModel = exports.WebAccessDomainFilterMode = exports.PermissionSyncMode = exports.TokenExchangeCredentialsLocation = exports.ValidFetchMethods = exports.withIdentity = exports.makeSchema = exports.makeReferenceSchemaFromObjectSchema = exports.makeObjectSchema = exports.makeAttributionNode = exports.generateSchema = void 0;
 var types_1 = require("./types");
 Object.defineProperty(exports, "AuthenticationType", { enumerable: true, get: function () { return types_1.AuthenticationType; } });
 var types_2 = require("./types");
@@ -140,12 +140,14 @@ Object.defineProperty(exports, "TokenExchangeCredentialsLocation", { enumerable:
 var api_types_10 = require("./api_types");
 Object.defineProperty(exports, "PermissionSyncMode", { enumerable: true, get: function () { return api_types_10.PermissionSyncMode; } });
 var types_4 = require("./types");
-Object.defineProperty(exports, "SkillModel", { enumerable: true, get: function () { return types_4.SkillModel; } });
+Object.defineProperty(exports, "WebAccessDomainFilterMode", { enumerable: true, get: function () { return types_4.WebAccessDomainFilterMode; } });
 var types_5 = require("./types");
-Object.defineProperty(exports, "KnowledgeToolSourceType", { enumerable: true, get: function () { return types_5.KnowledgeToolSourceType; } });
+Object.defineProperty(exports, "SkillModel", { enumerable: true, get: function () { return types_5.SkillModel; } });
 var types_6 = require("./types");
-Object.defineProperty(exports, "ScreenAnnotationType", { enumerable: true, get: function () { return types_6.ScreenAnnotationType; } });
+Object.defineProperty(exports, "KnowledgeToolSourceType", { enumerable: true, get: function () { return types_6.KnowledgeToolSourceType; } });
 var types_7 = require("./types");
-Object.defineProperty(exports, "ToolType", { enumerable: true, get: function () { return types_7.ToolType; } });
+Object.defineProperty(exports, "ScreenAnnotationType", { enumerable: true, get: function () { return types_7.ScreenAnnotationType; } });
 var types_8 = require("./types");
-Object.defineProperty(exports, "EmbeddedContentType", { enumerable: true, get: function () { return types_8.EmbeddedContentType; } });
+Object.defineProperty(exports, "ToolType", { enumerable: true, get: function () { return types_8.ToolType; } });
+var types_9 = require("./types");
+Object.defineProperty(exports, "EmbeddedContentType", { enumerable: true, get: function () { return types_9.EmbeddedContentType; } });

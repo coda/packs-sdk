@@ -46,6 +46,15 @@ Allows screen annotations to be used as tools.
 
 ***
 
+### WebAccess
+
+> **WebAccess**: `"WebAccess"`
+
+Tool that provides combined web access capabilities including search and fetch.
+Each capability can be independently enabled/disabled and configured with domain filters.
+
+***
+
 ### WebSearch
 
 > **WebSearch**: `"WebSearch"`
