@@ -104,10 +104,10 @@ Packs are run in a custom JavaScript execution environment, compatible with the 
 [packs_why]: https://coda.io/why-build-packs
 [gallery_slack]: https://coda.io/packs/slack-1000
 [formula_list]: https://coda.io/formulas
-[help_buttons]: https://help.coda.io/en/articles/2033889-overview-of-buttons
-[help_automations]: https://help.coda.io/en/articles/2423860-automations-in-coda
-[help_format]: https://help.coda.io/en/articles/1235680-overview-of-column-formats
-[help_pack_table]: https://help.coda.io/en/articles/3213629-using-packs-tables-to-sync-your-data-into-coda
+[help_buttons]: https://help.coda.io/hc/en-us/articles/39555758072717-Button-basics
+[help_automations]: https://help.coda.io/hc/en-us/articles/39555778179853-Automations-in-Coda
+[help_format]: https://help.coda.io/hc/en-us/articles/39555851862925-Column-basics
+[help_pack_table]: https://help.coda.io/hc/en-us/articles/39555773352461-Sync-data-with-Pack-tables
 [codecademy]: https://www.codecademy.com/learn/introduction-to-javascript
 [community]: https://community.coda.io/c/developers-central/making-packs/15
 [quickstart_web]: ../tutorials/get-started/web.md
@@ -119,5 +119,5 @@ Packs are run in a custom JavaScript execution environment, compatible with the 
 [actions]: blocks/actions.md
 [column_formats]: blocks/column-formats.md
 [sync_tables]: blocks/sync-tables/index.md
-[help_admin]: https://help.coda.io/en/articles/5574990-managing-packs-approvals-for-enterprise-admins
+[help_admin]: https://help.coda.io/hc/en-us/articles/39555784421773-Enable-Pack-approvals-and-manage-requests
 [gallery_packs]: https://coda.io/gallery?filter=packs

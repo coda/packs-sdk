@@ -543,8 +543,8 @@ The full set of formatting options for a given value type and hint can be found 
 [unix_epoch]: https://en.wikipedia.org/wiki/Unix_time
 [iframely]: https://iframely.com/
 [oEmbed]: https://oembed.com/
-[embed_force]: https://help.coda.io/en/articles/1211364-embedding-content-in-your-doc#using-the-force-parameter
-[column_formats]: https://help.coda.io/en/articles/1235680-overview-of-column-formats
+[embed_force]: https://help.coda.io/hc/en-us/articles/39555949656077-Embed-third-party-content-in-your-doc#h_01K57937QDYQQRV47NPGVMPRCY
+[column_formats]: https://help.coda.io/hc/en-us/articles/39555851862925-Column-basics
 [actions]: ../blocks/actions.md
 [precision]: ../../reference/sdk/core/interfaces/NumericSchema.md#precision
 [currencyCode]: ../../reference/sdk/core/interfaces/CurrencySchema.md#currencycode
