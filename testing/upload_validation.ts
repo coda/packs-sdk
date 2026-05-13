@@ -1429,6 +1429,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     [1013, 'Sync pull requests', ExemptionType.SyncTableGetterName],
     [1013, 'Sync repos', ExemptionType.SyncTableGetterName],
     [1003, 'Event', ExemptionType.FilterablePropertyLimit],
+    [42226, 'Event', ExemptionType.FilterablePropertyLimit],
     [1052, 'Issue', ExemptionType.FilterablePropertyLimit],
     [1054, 'Sync table', ExemptionType.SyncTableGetterName],
     [1062, 'Form responses', ExemptionType.SyncTableGetterName],
