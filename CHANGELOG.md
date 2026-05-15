@@ -4,13 +4,20 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+## [1.13.4] - 2026-05-15
+
 ### Added
 
 - Launched `useDynamicClientRegistration` for OAuth2 authentication, allowing for the automatic discovery of OAuth endpoints and automatic registration of client credentials.
 
+### Fixed
+
+- Fixed `makeParameter` type error (TS2345) when `autocomplete` is an array.
+
 ### Changed
 
 - Upload validation now requires Packs that declare MCP servers to also declare a matching network domain, mirroring the existing requirement for authentication.
+- Removed deprecated `AssistantMessageTool`.
 
 ## [1.13.3] - 2026-04-09
 
