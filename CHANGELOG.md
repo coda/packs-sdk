@@ -4,6 +4,8 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+## [1.14.0] - 2026-05-15
+
 ### Added
 
 - Launched `useDynamicClientRegistration` for OAuth2 authentication, allowing for the automatic discovery of OAuth endpoints and automatic registration of client credentials.
@@ -1038,7 +1040,7 @@ await myHelper(context);
 
 - Beginning of alpha versioning.
 
-[unreleased]: https://github.com/coda/packs-sdk/compare/v1.13.3...HEAD
+[unreleased]: https://github.com/coda/packs-sdk/compare/v1.14.0...HEAD
 [1.7.5]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.5
 [1.7.4]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.4
 [1.7.3]: https://github.com/coda/packs-sdk/compare/v1.7.1...v1.7.3
@@ -1114,3 +1116,4 @@ await myHelper(context);
 [1.12.2]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.12.2
 [1.12.1]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.12.1
 [1.13.3]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.13.3
+[1.14.0]: https://github.com/coda/packs-sdk/compare/v1.7.8...v1.14.0
