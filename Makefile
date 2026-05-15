@@ -98,6 +98,21 @@ lint-changelog:
 		exit 1; \
 	fi
 
+.PHONY: lint-links
+lint-links:
+	# Check for broken links in docs. Network-bound, so kept out of the default `lint` target.
+	# --skip patterns filter out template macros (%7B = `{`), JSDoc `{@link url|text}` artifacts (%7C = `|`),
+	# vendored CHANGELOG inside node_modules, and placeholder URLs used in examples.
+	npx linkinator '{docs,documentation}/**/*.md' \
+		--markdown \
+		--retry \
+		--retry-errors \
+		--skip 'node_modules' \
+		--skip 'example\.com' \
+		--skip 'my-company\.coda\.io' \
+		--skip '%7B' \
+		--skip '%7C'
+
 .PHONY: lint-fix
 lint-fix:
 	find . -name "*.ts" | grep -v /dist/ | grep -v /node_modules/ | grep -v .d.ts | xargs ${ROOTDIR}/node_modules/.bin/eslint --fix
