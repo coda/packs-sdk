@@ -4,7 +4,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
-## [1.13.4] - 2026-05-15
+## [1.14.0] - 2026-05-15
 
 ### Added
 
