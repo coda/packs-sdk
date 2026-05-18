@@ -266,7 +266,7 @@ Since the properties themselves may use the [`fromKey`][fromKey] option to load 
     ```
 
 [samples]: ../../../samples/topic/sync-table.md
-[help_center]: https://help.coda.io/en/articles/3213629-using-packs-tables-to-sync-your-data-into-coda
+[help_center]: https://help.coda.io/hc/en-us/articles/39555773352461-Sync-data-with-Pack-tables
 [sample_todoist]: ../../../samples/full/todoist.md
 [schemas]: ../../advanced/schemas.md
 [featured]: ../../../reference/sdk/core/interfaces/ObjectSchemaDefinition.md#featuredproperties
@@ -279,7 +279,7 @@ Since the properties themselves may use the [`fromKey`][fromKey] option to load 
 [actions]: ../actions.md
 [dynamic_sync_tables]: dynamic.md
 [dynamic_sync_tables_schema_only]: dynamic.md#schema-only
-[hc_relations]: https://help.coda.io/en/articles/1385997-connect-tables-with-relation-columns
+[hc_relations]: https://help.coda.io/hc/en-us/articles/39555878926861-Connect-tables-with-relation-columns
 [sample_continuation]: ../../../samples/topic/sync-table.md#with-continuation
 [sample_reference]: ../../../samples/topic/sync-table.md#with-row-references
 [parmeters]: ../../basics/parameters/index.md

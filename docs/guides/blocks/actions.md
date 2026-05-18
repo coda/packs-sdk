@@ -190,8 +190,8 @@ Dynamic sync tables have dynamic schemas, and therefore need to use the techniqu
 While there is no solution for the general case, there is for the common case where a button appears in a column of the same table. As long as the `identity.name` of the schema matches that of the dynamic sync table containing the button, the dynamic URL will be automatically populated and the row update will work. Using that same action elsewhere in the doc however will not update the existing row.
 
 
-[help_buttons]: https://help.coda.io/en/articles/2033889-overview-of-buttons
-[help_automations]: https://help.coda.io/en/articles/2423860-automations-in-coda
+[help_buttons]: https://help.coda.io/hc/en-us/articles/39555758072717-Button-basics
+[help_automations]: https://help.coda.io/hc/en-us/articles/39555778179853-Automations-in-Coda
 [fetcher]: ../basics/fetcher.md
 [samples]: ../../samples/topic/action.md
 [formulas]: formulas.md

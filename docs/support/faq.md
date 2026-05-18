@@ -86,4 +86,4 @@ Only the [support][support_email] team can transfer a Pack to another workspace,
 [packs_apps_script]: https://coda.io/packs/apps-script-14470
 [dynamic_sync_tables]: ../guides/blocks/sync-tables/dynamic.md
 [support_email]: mailto:support+packstudio@coda.io
-[hc_selling]: https://help.coda.io/en/articles/6381607-selling-packs-on-coda
+[hc_selling]: https://help.coda.io/hc/en-us/articles/39555971447053-Sell-your-Packs-on-Coda

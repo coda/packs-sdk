@@ -556,7 +556,6 @@ There are services however where each account is associated with a distinct doma
 [sample_multiple_query_params]: ../../../samples/topic/authentication.md#multiple-query-parameters
 [sample_multiple_headers]: ../../../samples/topic/authentication.md#multiple-headers
 
-[hc_account_sharing]: https://help.coda.io/en/articles/4587167-what-can-coda-access-with-packs
 [account_settings]: https://coda.io/account
 [AuthenticationType]: ../../../reference/sdk/core/enumerations/AuthenticationType.md
 [support]: ../../../support/index.md

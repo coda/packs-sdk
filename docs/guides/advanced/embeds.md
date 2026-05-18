@@ -68,7 +68,7 @@ Once a user clicks the embed they are prompted to approve embedding the URL:
 Once approved, Coda attempts to load the URL int an `<iframe>` element with [sandboxing applied][mdn_iframe_sandbox]. The URL must be secure (begin with `https://`) and must not prevent being loaded in an iframe (via the [`X-Frame-Options`][mdn_xfo] or [`Content-Security-Policy`][mdn_csp] headers).
 
 
-[help_center_embed]: https://help.coda.io/en/articles/1211364-embedding-content-in-your-doc
+[help_center_embed]: https://help.coda.io/hc/en-us/articles/39555949656077-Embed-third-party-content-in-your-doc
 [iframely]: https://iframely.com/
 [iframely_check]: https://iframely.com/embed
 [iframely_docs]: https://iframely.com/docs/webmasters
