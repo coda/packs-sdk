@@ -1,6 +1,6 @@
 {
   "name": "@codahq/packs-sdk",
-  "version": "1.14.0",
+  "version": "1.14.0-prerelease.1",
   "license": "MIT",
   "engines": {
     "node": ">=22.0.0",
@@ -9,7 +9,8 @@
   "packageManager": "pnpm@10.28.2",
   "main": "dist/index.js",
   "bin": {
-    "coda": "dist/cli/coda.js"
+    "packs": "dist/cli/index.js",
+    "coda": "dist/cli/index.js"
   },
   "typings": "dist/index.d.ts",
   "repository": {

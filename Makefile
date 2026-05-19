@@ -175,7 +175,7 @@ compile-ts:
 		--keep-names \
 		--target=es2020;
 
-	chmod +x ${ROOTDIR}/dist/cli/coda.js
+	chmod +x ${ROOTDIR}/dist/cli/index.js
 
 .PHONY: compile
 compile:
@@ -210,7 +210,7 @@ endif
 .PHONY: validate-samples
 validate-samples:
 	find documentation/samples/packs -name "*.ts" | \
-		xargs -P 8 -I{} ${REPL_SIZE} -n1 sh -c "echo Validating {}...; node dist/cli/coda.js validate --no-checkDeprecationWarnings {} || (echo {} failed && exit 1)"
+		xargs -P 8 -I{} ${REPL_SIZE} -n1 sh -c "echo Validating {}...; node dist/cli/index.js validate --no-checkDeprecationWarnings {} || (echo {} failed && exit 1)"
 
 .PHONY: generated-documentation
 generated-documentation: compile-samples

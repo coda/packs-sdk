@@ -32,7 +32,7 @@ const ApiTokenArg = {
 
 const ApiEndpointArg = {
   string: true,
-  desc: `API endpoint to use for the operation (default: ${DEFAULT_API_ENDPOINT}). Required for single-tenant instances. Can also be set persistently via \`coda setOption <manifestFile> apiEndpoint <url>\`.`,
+  desc: `API endpoint to use for the operation (default: ${DEFAULT_API_ENDPOINT}). Required for single-tenant instances. Can also be set persistently via \`packs setOption <manifestFile> apiEndpoint <url>\`.`,
   alias: 'codaApiEndpoint',
 };
 
@@ -49,7 +49,7 @@ export const commands: yargs.CommandModule[] = [
     builder: {
       fetch: {
         boolean: true,
-        desc: 'Actually fetch http requests instead of using mocks. Run "coda auth" first to set up credentials.',
+        desc: 'Actually fetch http requests instead of using mocks. Run "packs auth" first to set up credentials.',
         default: true,
       },
       vm: {
@@ -249,7 +249,7 @@ export const commands: yargs.CommandModule[] = [
       gitTag: {
         boolean: true,
         alias: 'g',
-        describe: `Create a git tag for this release (default: ${DEFAULT_GIT_TAG}). Can also be enabled by default via \`coda setOption <manifestFile> gitTag true\``,
+        describe: `Create a git tag for this release (default: ${DEFAULT_GIT_TAG}). Can also be enabled by default via \`packs setOption <manifestFile> gitTag true\``,
       },
       apiToken: ApiTokenArg,
       apiEndpoint: ApiEndpointArg,
@@ -265,7 +265,7 @@ export const commands: yargs.CommandModule[] = [
       '  - timerStrategy: Valid values are "none", "error", or "fake".\n' +
       '  - gitTag: Valid values are "true" or "false". When true, the release command will create git tags.\n' +
       '  - apiEndpoint: A URL for the API endpoint, required for single-tenant instances (e.g. "https://my-company.coda.io"). When set, all commands will use this endpoint by default.\n\n' +
-      'Usage: coda setOption path/to/pack.ts timerStrategy fake',
+      'Usage: packs setOption path/to/pack.ts timerStrategy fake',
     handler: handleSetOption as any,
   },
 ];

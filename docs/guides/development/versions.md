@@ -14,7 +14,7 @@ Versions are like checkpoints for your code, and represent a unique build of you
 A new version is created when:
 
 - You press the **Build** button in the Pack Studio web editor, and the build completes successfully.
-- You run `npx coda upload` using the Packs CLI.
+- You run `npx packs upload` using the Packs CLI.
 
 !!! info "Many Pack versions"
     When working in the Pack Studio web editor the only way to test your code is to build it and try it in a live doc, therefore it's not uncommon to accumulate many Pack versions. While this may feel messy, rest assured it has no impact on how your Pack looks or works.
@@ -60,7 +60,7 @@ A new release is created when:
 
 - You click the **Release** button in the Pack Studio web editor.
 - You click the **Release version** option in the **History** tab of the Pack Studio.
-- You run the `npx coda release` command using the Pack CLI.
+- You run the `npx packs release` command using the Pack CLI.
 
 Each release is just a pointer an existing Pack version, so to release new code you must create a version first and then release it. Additionally, each new release must use a newer version than that of the current release.
 

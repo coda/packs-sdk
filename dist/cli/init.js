@@ -48,7 +48,7 @@ async function handleInit() {
     }
     if (!isPacksExamplesInstalled) {
         if (!isGitAvailable()) {
-            return (0, helpers_1.printAndExit)('The coda init command requires git to be installed and available in your path. ' +
+            return (0, helpers_1.printAndExit)('The packs init command requires git to be installed and available in your path. ' +
                 'See https://git-scm.com/downloads for suggested ways to install.');
         }
         const installCommand = `npm install https://github.com/coda/packs-examples.git`;

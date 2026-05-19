@@ -344,7 +344,7 @@ export class AuthenticatingFetcher implements Fetcher {
     if (!this._credentials) {
       throw new Error(
         `${this._authDef.type} authentication is required for this pack, but no local credentials were found. ` +
-          'Run "coda auth path/to/pack/manifest to set up credentials."',
+          'Run "packs auth path/to/pack/manifest to set up credentials."',
       );
     }
 

@@ -84,7 +84,7 @@ The external ID condition is used as a security measure, to ensure that other Pa
 
 ### Running locally
 
-If you are developing your Pack locally using the CLI, when you run your Pack using `coda execute` it won't be running under the platform's AWS account. Instead you'll need to create your own AWS user and setup your local environment to use it.
+If you are developing your Pack locally using the CLI, when you run your Pack using `packs execute` it won't be running under the platform's AWS account. Instead you'll need to create your own AWS user and setup your local environment to use it.
 
 First update your policy to include the ID of the user you created.
 
@@ -111,7 +111,7 @@ Then generate an access key and secret for the user, and pass these using the en
 
 ```sh
 AWS_ACCESS_KEY_ID="<ACCESS_KEY>" AWS_SECRET_ACCESS_KEY="<SECRET>" \
-npx coda execute pack.ts <FormulaName>
+npx packs execute pack.ts <FormulaName>
 ```
 
 You can alternatively use the AWS CLI to manage these credentials for you.

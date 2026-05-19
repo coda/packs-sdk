@@ -1,5 +1,5 @@
 import * as Handlebars from 'handlebars';
-import {commands} from '../../cli/coda';
+import {commands} from '../../cli';
 import * as fs from 'fs';
 import path from 'path';
 
