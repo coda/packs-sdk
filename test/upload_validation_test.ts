@@ -735,6 +735,32 @@ describe('Pack metadata Validation', async () => {
         ]);
       });
 
+      it('rejects parameter named "account"', async () => {
+        const metadata = makeMetadataFromParams([
+          makeParameter({type: ParameterType.String, name: 'account', description: ''}),
+        ]);
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'Parameter names must not be one of the reserved parameter names: account.',
+            path: 'formulas[0].parameters[0].name',
+          },
+        ]);
+      });
+
+      it('rejects parameter named "Account" (case-insensitive)', async () => {
+        const metadata = makeMetadataFromParams([
+          makeParameter({type: ParameterType.String, name: 'Account', description: ''}),
+        ]);
+        const err = await validateJsonAndAssertFails(metadata);
+        assert.deepEqual(err.validationErrors, [
+          {
+            message: 'Parameter names must not be one of the reserved parameter names: account.',
+            path: 'formulas[0].parameters[0].name',
+          },
+        ]);
+      });
+
       it('invalid formula with object parameter', async () => {
         const metadata = makeMetadataFromParams([
           {type: Type.object, name: 'myParam', description: 'param description'},

@@ -93,6 +93,7 @@ import type {ProgressBarSchema} from '../schema';
 import type {PropertyIdentifier} from '../schema';
 import type {QueryParamTokenAuthentication} from '../types';
 import {ReservedAuthenticationNames} from '../types';
+import {ReservedParameterNames} from '../api_types';
 import {ScaleIconSet} from '../schema';
 import type {ScaleSchema} from '../schema';
 import type {Schema} from '../schema';
@@ -981,11 +982,16 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
 
   const primitiveUnion = z.union([z.number(), z.string(), z.boolean(), z.date()]);
 
+  const reservedParameterNames = Object.values(ReservedParameterNames).map(value => value.toString().toLowerCase());
+  const reservedParameterNameMessage = `Parameter names must not be one of the reserved parameter names: ${reservedParameterNames.join(', ')}.`;
   const paramDefValidator = zodCompleteObject<ParamDef<any>>({
     name: z
       .string()
       .max(Limits.BuildingBlockName)
-      .regex(regexParameterName, 'Parameter names can only contain alphanumeric characters and underscores.'),
+      .regex(regexParameterName, 'Parameter names can only contain alphanumeric characters and underscores.')
+      .refine(name => !reservedParameterNames.includes(name.toLowerCase()), {
+        message: reservedParameterNameMessage,
+      }),
     type: z
       .union([
         z.nativeEnum(Type),

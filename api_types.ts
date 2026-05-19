@@ -252,6 +252,21 @@ export enum ParameterType {
   SparseMarkdownArray = 'sparseMarkdownArray',
 }
 
+/**
+ * Parameter names that are reserved by Coda and cannot be used as the name of a
+ * parameter in a formula, action, or sync table. Matching is case-insensitive.
+ *
+ * @hidden
+ */
+export enum ReservedParameterNames {
+  /**
+   * Coda treats a parameter named "account" specially when surfacing connection
+   * accounts in the formula UI, so it cannot be used as a pack-defined parameter
+   * name.
+   */
+  Account = 'account',
+}
+
 export interface ParameterTypeMap {
   [ParameterType.String]: Type.string;
   [ParameterType.Number]: Type.number;
