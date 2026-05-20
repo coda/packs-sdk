@@ -254,15 +254,15 @@ export enum ParameterType {
 
 /**
  * Parameter names that are reserved by Coda and cannot be used as the name of a
- * parameter in a formula, action, or sync table. Matching is case-insensitive.
+ * parameter in a formula, action, or sync table. Matching is case-sensitive.
  *
  * @hidden
  */
 export enum ReservedParameterNames {
   /**
-   * Coda treats a parameter named "account" specially when surfacing connection
-   * accounts in the formula UI, so it cannot be used as a pack-defined parameter
-   * name.
+   * A parameter named "account" collides with the connection-account picker that
+   * Coda surfaces in the formula UI when a pack uses user authentication, so it
+   * is reserved in that case.
    */
   Account = 'account',
 }

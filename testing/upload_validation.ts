@@ -982,16 +982,11 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
 
   const primitiveUnion = z.union([z.number(), z.string(), z.boolean(), z.date()]);
 
-  const reservedParameterNames = Object.values(ReservedParameterNames).map(value => value.toString().toLowerCase());
-  const reservedParameterNameMessage = `Parameter names must not be one of the reserved parameter names: ${reservedParameterNames.join(', ')}.`;
   const paramDefValidator = zodCompleteObject<ParamDef<any>>({
     name: z
       .string()
       .max(Limits.BuildingBlockName)
-      .regex(regexParameterName, 'Parameter names can only contain alphanumeric characters and underscores.')
-      .refine(name => !reservedParameterNames.includes(name.toLowerCase()), {
-        message: reservedParameterNameMessage,
-      }),
+      .regex(regexParameterName, 'Parameter names can only contain alphanumeric characters and underscores.'),
     type: z
       .union([
         z.nativeEnum(Type),
@@ -2598,6 +2593,40 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         },
         {message: 'A formula namespace must be provided whenever formulas are defined.', path: ['formulaNamespace']},
       )
+      .superRefine((untypedMetadata, context) => {
+        // A parameter named "account" collides with the connection-account picker Coda
+        // shows in the formula UI, but only when the pack uses user authentication. We
+        // only flag the exact lowercase name because that's what reproduces the ambiguity.
+        const metadata = untypedMetadata as PackVersionMetadata;
+        const hasUserAuth =
+          !!metadata.defaultAuthentication && metadata.defaultAuthentication.type !== AuthenticationType.None;
+        if (!hasUserAuth) {
+          return;
+        }
+        const checkParam = (param: ParamDef<any>, path: Array<string | number>) => {
+          if (param.name === ReservedParameterNames.Account) {
+            context.addIssue({
+              code: 'custom',
+              path: [...path, 'name'],
+              message: `Parameter name "${ReservedParameterNames.Account}" is reserved when the pack uses user authentication.`,
+            });
+          }
+        };
+        (metadata.formulas || []).forEach((formula, i) => {
+          (formula.parameters || []).forEach((param, j) => checkParam(param, ['formulas', i, 'parameters', j]));
+          (formula.varargParameters || []).forEach((param, j) =>
+            checkParam(param, ['formulas', i, 'varargParameters', j]),
+          );
+        });
+        (metadata.syncTables || []).forEach((syncTable, i) => {
+          (syncTable.getter.parameters || []).forEach((param, j) =>
+            checkParam(param, ['syncTables', i, 'getter', 'parameters', j]),
+          );
+          (syncTable.getter.varargParameters || []).forEach((param, j) =>
+            checkParam(param, ['syncTables', i, 'getter', 'varargParameters', j]),
+          );
+        });
+      })
       .superRefine((untypedMetadata, context) => {
         const metadata = untypedMetadata as PackVersionMetadata;
 

@@ -694,7 +694,7 @@ describe('Pack metadata Validation', async () => {
     });
 
     describe('parameters', () => {
-      function makeMetadataFromParams(params: ParamDefs) {
+      function makeMetadataFromParams(params: ParamDefs, {withUserAuth = true}: {withUserAuth?: boolean} = {}) {
         const formula = makeNumericFormula({
           name: 'MyFormula',
           description: 'My description',
@@ -705,6 +705,7 @@ describe('Pack metadata Validation', async () => {
         return createFakePackVersionMetadata({
           formulas: [compileFormulaMetadata(formula)],
           formulaNamespace: 'MyNamespace',
+          ...(withUserAuth ? {} : {defaultAuthentication: {type: AuthenticationType.None}}),
         });
       }
 
@@ -735,30 +736,32 @@ describe('Pack metadata Validation', async () => {
         ]);
       });
 
-      it('rejects parameter named "account"', async () => {
+      it('rejects parameter named "account" when pack uses user authentication', async () => {
         const metadata = makeMetadataFromParams([
           makeParameter({type: ParameterType.String, name: 'account', description: ''}),
         ]);
         const err = await validateJsonAndAssertFails(metadata);
         assert.deepEqual(err.validationErrors, [
           {
-            message: 'Parameter names must not be one of the reserved parameter names: account.',
+            message: 'Parameter name "account" is reserved when the pack uses user authentication.',
             path: 'formulas[0].parameters[0].name',
           },
         ]);
       });
 
-      it('rejects parameter named "Account" (case-insensitive)', async () => {
+      it('allows parameter named "account" when pack has no user authentication', async () => {
+        const metadata = makeMetadataFromParams(
+          [makeParameter({type: ParameterType.String, name: 'account', description: ''})],
+          {withUserAuth: false},
+        );
+        await validateJson(metadata);
+      });
+
+      it('allows parameter named "Account" (case-sensitive) even with user authentication', async () => {
         const metadata = makeMetadataFromParams([
           makeParameter({type: ParameterType.String, name: 'Account', description: ''}),
         ]);
-        const err = await validateJsonAndAssertFails(metadata);
-        assert.deepEqual(err.validationErrors, [
-          {
-            message: 'Parameter names must not be one of the reserved parameter names: account.',
-            path: 'formulas[0].parameters[0].name',
-          },
-        ]);
+        await validateJson(metadata);
       });
 
       it('invalid formula with object parameter', async () => {

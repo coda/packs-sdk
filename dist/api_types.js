@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DataIndexing = exports.TableRole = exports.OptionsType = exports.FutureLiveDates = exports.PastLiveDates = exports.AllPrecannedDates = exports.PrecannedDate = exports.FromNowDateRanges = exports.PastLiveDateRanges = exports.UntilNowDateRanges = exports.PrecannedDateRange = exports.isSyncExecutionContext = exports.InvocationSource = exports.InvocationErrorType = exports.PermissionSyncMode = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.FormulaPurpose = exports.ParameterTypeInputMap = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
+exports.DataIndexing = exports.TableRole = exports.OptionsType = exports.FutureLiveDates = exports.PastLiveDates = exports.AllPrecannedDates = exports.PrecannedDate = exports.FromNowDateRanges = exports.PastLiveDateRanges = exports.UntilNowDateRanges = exports.PrecannedDateRange = exports.isSyncExecutionContext = exports.InvocationSource = exports.InvocationErrorType = exports.PermissionSyncMode = exports.ValidFetchMethods = exports.NetworkConnection = exports.ConnectionRequirement = exports.FormulaPurpose = exports.ParameterTypeInputMap = exports.ReservedParameterNames = exports.ParameterType = exports.fileArray = exports.imageArray = exports.htmlArray = exports.dateArray = exports.booleanArray = exports.numberArray = exports.stringArray = exports.isArrayType = exports.Type = void 0;
 /**
  * Markers used internally to represent data types for parameters and return values.
  * It should not be necessary to ever use these values directly.
@@ -180,6 +180,21 @@ var ParameterType;
      */
     ParameterType["SparseMarkdownArray"] = "sparseMarkdownArray";
 })(ParameterType || (exports.ParameterType = ParameterType = {}));
+/**
+ * Parameter names that are reserved by Coda and cannot be used as the name of a
+ * parameter in a formula, action, or sync table. Matching is case-sensitive.
+ *
+ * @hidden
+ */
+var ReservedParameterNames;
+(function (ReservedParameterNames) {
+    /**
+     * A parameter named "account" collides with the connection-account picker that
+     * Coda surfaces in the formula UI when a pack uses user authentication, so it
+     * is reserved in that case.
+     */
+    ReservedParameterNames["Account"] = "account";
+})(ReservedParameterNames || (exports.ReservedParameterNames = ReservedParameterNames = {}));
 exports.ParameterTypeInputMap = {
     [ParameterType.String]: Type.string,
     [ParameterType.Number]: Type.number,

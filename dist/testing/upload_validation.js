@@ -56,21 +56,22 @@ const schema_14 = require("../schema");
 const types_6 = require("../types");
 const __1 = require("..");
 const types_7 = require("../types");
+const api_types_7 = require("../api_types");
 const schema_15 = require("../schema");
 const types_8 = require("../types");
 const schema_16 = require("../schema");
 const types_9 = require("../types");
-const api_types_7 = require("../api_types");
+const api_types_8 = require("../api_types");
 const types_10 = require("../types");
 const types_11 = require("../types");
-const api_types_8 = require("../api_types");
+const api_types_9 = require("../api_types");
 const url_parse_1 = __importDefault(require("url-parse"));
 const schema_17 = require("../schema");
 const schema_18 = require("../schema");
 const ensure_1 = require("../helpers/ensure");
 const ensure_2 = require("../helpers/ensure");
 const schema_19 = require("../schema");
-const api_types_9 = require("../api_types");
+const api_types_10 = require("../api_types");
 const schema_20 = require("../schema");
 const util_1 = require("util");
 const object_utils_1 = require("../helpers/object_utils");
@@ -784,15 +785,15 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             .regex(regexParameterName, 'Parameter names can only contain alphanumeric characters and underscores.'),
         type: z
             .union([
-            z.nativeEnum(api_types_8.Type),
+            z.nativeEnum(api_types_9.Type),
             z.object({
                 type: zodDiscriminant('array'),
-                items: z.nativeEnum(api_types_8.Type),
+                items: z.nativeEnum(api_types_9.Type),
                 allowEmpty: z.boolean().optional(),
             }),
         ])
-            .refine(paramType => paramType !== api_types_8.Type.object &&
-            !(typeof paramType === 'object' && paramType.type === 'array' && paramType.items === api_types_8.Type.object), {
+            .refine(paramType => paramType !== api_types_9.Type.object &&
+            !(typeof paramType === 'object' && paramType.type === 'array' && paramType.items === api_types_9.Type.object), {
             message: 'Object parameters are not currently supported.',
         }),
         description: z.string().max(exports.Limits.BuildingBlockDescription),
@@ -815,18 +816,18 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         if (!param.allowedPresetValues) {
             return true;
         }
-        return param.type === api_types_8.Type.date || ((0, api_types_9.isArrayType)(param.type) && param.type.items === api_types_8.Type.date);
+        return param.type === api_types_9.Type.date || ((0, api_types_10.isArrayType)(param.type) && param.type.items === api_types_9.Type.date);
     }, { message: 'allowedPresetValues is not allowed on parameters of this type.' })
         .refine(param => {
         var _a;
-        if (!param.allowedPresetValues || param.type !== api_types_8.Type.date) {
+        if (!param.allowedPresetValues || param.type !== api_types_9.Type.date) {
             return true;
         }
         return (_a = param.allowedPresetValues) === null || _a === void 0 ? void 0 : _a.every((value) => typeof value === 'string' && api_types_1.AllPrecannedDates.includes(value));
     }, { message: 'allowedPresetValues for a date parameter can only be a list of PrecannedDate values.' })
         .refine(param => {
         var _a;
-        if (!param.allowedPresetValues || !((0, api_types_9.isArrayType)(param.type) && param.type.items === api_types_8.Type.date)) {
+        if (!param.allowedPresetValues || !((0, api_types_10.isArrayType)(param.type) && param.type.items === api_types_9.Type.date)) {
             return true;
         }
         const relativeDateRanges = Object.values(__1.PrecannedDateRange);
@@ -887,7 +888,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     };
     const booleanPackFormulaSchema = zodCompleteObject({
         ...commonPackFormulaSchema,
-        resultType: zodDiscriminant(api_types_8.Type.boolean),
+        resultType: zodDiscriminant(api_types_9.Type.boolean),
         schema: zodCompleteObject({
             type: zodDiscriminant(schema_18.ValueType.Boolean),
             codaType: z.enum([...schema_2.BooleanHintValueTypes]).optional(),
@@ -1024,7 +1025,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     ]);
     const numericPackFormulaSchema = zodCompleteObject({
         ...commonPackFormulaSchema,
-        resultType: zodDiscriminant(api_types_8.Type.number),
+        resultType: zodDiscriminant(api_types_9.Type.number),
         schema: numberPropertySchema.optional(),
     });
     const simpleStringPropertySchema = zodCompleteStrictObject({
@@ -1116,7 +1117,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     ]);
     const stringPackFormulaSchema = zodCompleteObject({
         ...commonPackFormulaSchema,
-        resultType: zodDiscriminant(api_types_8.Type.string),
+        resultType: zodDiscriminant(api_types_9.Type.string),
         schema: stringPropertySchema.optional(),
     });
     // TODO(jonathan): Give this a better type than z.ZodType<any> after figuring out
@@ -1582,7 +1583,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     }, 'You must set "codaType" to ValueHintType.SelectList or ValueHintType.Reference when setting an "options" property.');
     const objectPackFormulaSchema = zodCompleteObject({
         ...commonPackFormulaSchema,
-        resultType: zodDiscriminant(api_types_8.Type.object),
+        resultType: zodDiscriminant(api_types_9.Type.object),
         // TODO(jonathan): See if we should really allow this. The SDK right now explicitly tolerates an undefined
         // schema for objects, but that doesn't seem like a use case we actually want to support.
         schema: z.union([genericObjectSchema, arrayPropertySchema]).optional(),
@@ -1663,7 +1664,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
                 });
             }
         }),
-        role: z.nativeEnum(api_types_7.TableRole).optional(),
+        role: z.nativeEnum(api_types_8.TableRole).optional(),
         indexing: z
             .object({
             default: z.nativeEnum(api_types_3.DataIndexing),
@@ -2032,6 +2033,33 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
             }
             return true;
         }, { message: 'A formula namespace must be provided whenever formulas are defined.', path: ['formulaNamespace'] })
+            .superRefine((untypedMetadata, context) => {
+            // A parameter named "account" collides with the connection-account picker Coda
+            // shows in the formula UI, but only when the pack uses user authentication. We
+            // only flag the exact lowercase name because that's what reproduces the ambiguity.
+            const metadata = untypedMetadata;
+            const hasUserAuth = !!metadata.defaultAuthentication && metadata.defaultAuthentication.type !== types_1.AuthenticationType.None;
+            if (!hasUserAuth) {
+                return;
+            }
+            const checkParam = (param, path) => {
+                if (param.name === api_types_7.ReservedParameterNames.Account) {
+                    context.addIssue({
+                        code: 'custom',
+                        path: [...path, 'name'],
+                        message: `Parameter name "${api_types_7.ReservedParameterNames.Account}" is reserved when the pack uses user authentication.`,
+                    });
+                }
+            };
+            (metadata.formulas || []).forEach((formula, i) => {
+                (formula.parameters || []).forEach((param, j) => checkParam(param, ['formulas', i, 'parameters', j]));
+                (formula.varargParameters || []).forEach((param, j) => checkParam(param, ['formulas', i, 'varargParameters', j]));
+            });
+            (metadata.syncTables || []).forEach((syncTable, i) => {
+                (syncTable.getter.parameters || []).forEach((param, j) => checkParam(param, ['syncTables', i, 'getter', 'parameters', j]));
+                (syncTable.getter.varargParameters || []).forEach((param, j) => checkParam(param, ['syncTables', i, 'getter', 'varargParameters', j]));
+            });
+        })
             .superRefine((untypedMetadata, context) => {
             var _a;
             const metadata = untypedMetadata;
