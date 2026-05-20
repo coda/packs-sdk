@@ -61,7 +61,7 @@ export declare function executeFormulaOrSyncWithRawParams<T extends FormulaSpeci
  * will be run in a completely isolated environment, with absolutely no sharing
  * of state or global variables between iterations.
  *
- * For now, use `coda execute --vm` to simulate that level of isolation.
+ * For now, use `packs execute --vm` to simulate that level of isolation.
  */
 export declare function executeSyncFormula(packDef: BasicPackDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, { validateParams: shouldValidateParams, validateResult: shouldValidateResult, useDeprecatedResultNormalization, }?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<GenericSyncFormulaResult>;
 /**
@@ -74,7 +74,7 @@ export declare function executeSyncFormula(packDef: BasicPackDefinition, syncFor
  * will be run in a completely isolated environment, with absolutely no sharing
  * of state or global variables between iterations.
  *
- * For now, use `coda execute --vm` to simulate that level of isolation.
+ * For now, use `packs execute --vm` to simulate that level of isolation.
  * @deprecated Use {@link executeSyncFormula} instead.
  */
 export declare function executeSyncFormulaFromPackDef(packDef: BasicPackDefinition, syncFormulaName: string, params: ParamValues<ParamDefs>, context?: SyncExecutionContext, { validateParams: shouldValidateParams, validateResult: shouldValidateResult, useDeprecatedResultNormalization, }?: ExecuteOptions, { useRealFetcher, manifestPath }?: ContextOptions): Promise<Array<ObjectSchemaDefinitionType<any, any, any>>>;

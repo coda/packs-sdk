@@ -32,7 +32,7 @@ export function formatEndpoint(endpoint: string) {
 }
 
 export function isTestCommand() {
-  return process.argv[1]?.endsWith('coda.ts');
+  return process.argv[1]?.endsWith('cli/index.ts');
 }
 
 export function makeManifestFullPath(manifestPath: string): string {
@@ -68,7 +68,7 @@ export function assertApiToken(codaApiEndpoint: string, cliApiToken?: string): s
   }
   const apiKey = getApiKey(codaApiEndpoint);
   if (!apiKey) {
-    return printAndExit('Missing API token. Please run `coda register` to register one.');
+    return printAndExit('Missing API token. Please run `packs register` to register one.');
   }
   return apiKey;
 }
@@ -77,7 +77,7 @@ export function assertPackId(manifestDir: string, codaApiEndpoint: string): numb
   const packId = getPackId(manifestDir, codaApiEndpoint);
   if (!packId) {
     return printAndExit(
-      `Could not find a Pack id in directory ${manifestDir}. You may need to run "coda create" first if this is a brand new pack.`,
+      `Could not find a Pack id in directory ${manifestDir}. You may need to run "packs create" first if this is a brand new pack.`,
     );
   }
   return packId;

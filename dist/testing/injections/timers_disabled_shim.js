@@ -2,7 +2,7 @@
 // so for now we just have this file in js.
 
 const ErrorMessage =
-  `Please use \`coda setOption path/to/pack.ts timerStrategy fake\`. Native node timing ` +
+  `Please use \`packs setOption path/to/pack.ts timerStrategy fake\`. Native node timing ` +
   `primitives like setTimeout or setInternal aren't supported in the pack execution sandbox ` +
   `environment. However, if you are using a library that relies upon them, you can use the ` +
   `set an option to build your pack with shimmed implementations that approximate the native ` +

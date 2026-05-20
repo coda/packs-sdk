@@ -4,6 +4,10 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Changed
+
+- Renamed the CLI binary from `coda` to `packs`. The `coda` command remains available as an alias for backwards compatibility.
+
 ## [1.14.0] - 2026-05-15
 
 ### Added

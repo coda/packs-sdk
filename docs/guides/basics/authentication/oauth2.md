@@ -316,7 +316,7 @@ pack.setUserAuthentication({
 ```
 
 !!! warning "Not supported in local testing"
-    Dynamic Client Registration is not supported when [testing locally][cli] with the `coda execute` command. You will need to upload your Pack to test this feature.
+    Dynamic Client Registration is not supported when [testing locally][cli] with the `packs execute` command. You will need to upload your Pack to test this feature.
 
 
 ## Client credentials flow {: #client_credentials}

@@ -14,7 +14,7 @@ Although it takes a little longer to get started, building Packs on your local m
 
 [^1]: Not all libraries available on NPM are compatible with the Pack SDK. See the [Using libraries][libraries] guide for more information.
 
-Local development is enabled through the `coda` command line tool (CLI). Keep reading to learn how to install the CLI and use it to build a Pack.
+Local development is enabled through the `packs` command line tool (CLI). Keep reading to learn how to install the CLI and use it to build a Pack.
 
 
 ## Before you get started
@@ -47,15 +47,15 @@ cd my-pack
     npm install --save @codahq/packs-sdk
     ```
 
-    The Pack SDK includes both the `coda` CLI as well as the libraries and type definitions needed to build Packs.
+    The Pack SDK includes both the `packs` CLI as well as the libraries and type definitions needed to build Packs.
 
 1. Create the file structure for your Pack.
 
     ```sh
-    npx coda init
+    npx packs init
     ```
 
-    The `coda init` command creates the basic skeleton of a Pack based off of our [template Pack][template_pack]. It's not required, but it's a fast way to get started.
+    The `packs init` command creates the basic skeleton of a Pack based off of our [template Pack][template_pack]. It's not required, but it's a fast way to get started.
 
 
 When it's complete you should see a `pack.ts` file in your directory.

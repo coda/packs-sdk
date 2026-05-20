@@ -202,7 +202,7 @@ async function executeFormulaOrSyncFromCLI({ formulaName, params, manifest, mani
             if (!vm && !isSourceMapsEnabled()) {
                 (0, helpers_6.print)(`
 Enable the Node flag --enable-source-maps to get an accurate stack trace. For example:
-NODE_OPTIONS="--enable-source-maps" npx coda execute ...`);
+NODE_OPTIONS="--enable-source-maps" npx packs execute ...`);
             }
         }
         else {
@@ -517,7 +517,7 @@ exports.executeFormulaOrSyncWithRawParams = executeFormulaOrSyncWithRawParams;
  * will be run in a completely isolated environment, with absolutely no sharing
  * of state or global variables between iterations.
  *
- * For now, use `coda execute --vm` to simulate that level of isolation.
+ * For now, use `packs execute --vm` to simulate that level of isolation.
  */
 async function executeSyncFormula(packDef, syncFormulaName, params, context, { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, useDeprecatedResultNormalization = true, } = {}, { useRealFetcher, manifestPath } = {}) {
     const formula = (0, helpers_3.findSyncFormula)(packDef, syncFormulaName, context === null || context === void 0 ? void 0 : context.authenticationName);
@@ -573,7 +573,7 @@ exports.executeSyncFormula = executeSyncFormula;
  * will be run in a completely isolated environment, with absolutely no sharing
  * of state or global variables between iterations.
  *
- * For now, use `coda execute --vm` to simulate that level of isolation.
+ * For now, use `packs execute --vm` to simulate that level of isolation.
  * @deprecated Use {@link executeSyncFormula} instead.
  */
 async function executeSyncFormulaFromPackDef(packDef, syncFormulaName, params, context, { validateParams: shouldValidateParams = true, validateResult: shouldValidateResult = true, useDeprecatedResultNormalization = true, } = {}, { useRealFetcher, manifestPath } = {}) {
