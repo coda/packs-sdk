@@ -2,7 +2,6 @@ import type {AWSAccessKeyAuthentication} from './types';
 import type {AWSAssumeRoleAuthentication} from './types';
 import type {Authentication} from './types';
 import type {AuthenticationType} from './types';
-import type {CodaApiBearerTokenAuthentication} from './types';
 import type {CustomAuthentication} from './types';
 import type {CustomHeaderTokenAuthentication} from './types';
 import type {DistributiveOmit} from './type_utils';
@@ -23,6 +22,7 @@ import type {PackVersionDefinition} from './types';
 import type {PostSetup} from './types';
 import type {QueryParamTokenAuthentication} from './types';
 import type {Skill} from './types';
+import type {SuperhumanDocsApiHeaderBearerTokenAuthentication} from './types';
 import type {SyncTable} from './api';
 import type {VariousAuthentication} from './types';
 import type {WebBasicAuthentication} from './types';
@@ -85,7 +85,7 @@ type AuthenticationToMetadata<T extends Authentication> = DistributiveOmit<
 export interface AuthenticationMetadataTypeMap {
   [AuthenticationType.AWSAccessKey]: AuthenticationToMetadata<AWSAccessKeyAuthentication>;
   [AuthenticationType.AWSAssumeRole]: AuthenticationToMetadata<AWSAssumeRoleAuthentication>;
-  [AuthenticationType.CodaApiHeaderBearerToken]: AuthenticationToMetadata<CodaApiBearerTokenAuthentication>;
+  [AuthenticationType.SuperhumanDocsApiHeaderBearerToken]: AuthenticationToMetadata<SuperhumanDocsApiHeaderBearerTokenAuthentication>;
   [AuthenticationType.CustomHeaderToken]: AuthenticationToMetadata<CustomHeaderTokenAuthentication>;
   [AuthenticationType.MultiHeaderToken]: AuthenticationToMetadata<MultiHeaderTokenAuthentication>;
   [AuthenticationType.Custom]: AuthenticationToMetadata<CustomAuthentication>;

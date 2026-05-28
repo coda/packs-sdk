@@ -4692,7 +4692,7 @@ describe('Pack metadata Validation', async () => {
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          message: `CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict defaultUserAuthentication's "networkDomain" to coda.io`,
+          message: `SuperhumanDocsApiHeaderBearerToken can only be used for coda.io domains. Restrict defaultUserAuthentication's "networkDomain" to coda.io`,
           path: 'authentication.defaultUserAuthentication.networkDomain',
         },
       ]);
@@ -4710,7 +4710,7 @@ describe('Pack metadata Validation', async () => {
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          message: `CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict defaultUserAuthentication's "networkDomain" to coda.io`,
+          message: `SuperhumanDocsApiHeaderBearerToken can only be used for coda.io domains. Restrict defaultUserAuthentication's "networkDomain" to coda.io`,
           path: 'authentication.defaultUserAuthentication.networkDomain',
         },
         {
@@ -4733,7 +4733,7 @@ describe('Pack metadata Validation', async () => {
       const err = await validateJsonAndAssertFails(metadata);
       assert.deepEqual(err.validationErrors, [
         {
-          message: `CodaApiHeaderBearerToken can only be used for coda.io domains. Restrict defaultUserAuthentication's "networkDomain" to coda.io`,
+          message: `SuperhumanDocsApiHeaderBearerToken can only be used for coda.io domains. Restrict defaultUserAuthentication's "networkDomain" to coda.io`,
           path: 'authentication.defaultUserAuthentication.networkDomain',
         },
       ]);
@@ -4761,6 +4761,35 @@ describe('Pack metadata Validation', async () => {
         networkDomains: ['coda.io', 'notetaker.superhuman.com'],
       });
       await validateJson(metadata);
+    });
+
+    it('SuperhumanDocsApiHeaderBearerToken (renamed)', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.SuperhumanDocsApiHeaderBearerToken,
+          shouldAutoAuthSetup: true,
+        },
+        networkDomains: ['coda.io'],
+      });
+      await validateJson(metadata);
+    });
+
+    it('SuperhumanDocsApiHeaderBearerToken (renamed), invalid domain', async () => {
+      const metadata = createFakePackVersionMetadata({
+        defaultAuthentication: {
+          type: AuthenticationType.SuperhumanDocsApiHeaderBearerToken,
+          shouldAutoAuthSetup: true,
+          networkDomain: 'other.domain',
+        },
+        networkDomains: ['coda.io', 'other.domain'],
+      });
+      const err = await validateJsonAndAssertFails(metadata);
+      assert.deepEqual(err.validationErrors, [
+        {
+          message: `SuperhumanDocsApiHeaderBearerToken can only be used for coda.io domains. Restrict defaultUserAuthentication's "networkDomain" to coda.io`,
+          path: 'authentication.defaultUserAuthentication.networkDomain',
+        },
+      ]);
     });
 
     it('CustomHeaderToken', async () => {

@@ -164,7 +164,32 @@ describe('Auth', () => {
             createFakePack({systemConnectionAuthentication: auth as unknown as SystemAuthentication}),
           );
         } catch (err: any) {
-          assert.match(err, /CodaApiHeaderBearerToken only works with defaultAuthentication, not system auth./);
+          assert.match(
+            err,
+            /SuperhumanDocsApiHeaderBearerToken only works with defaultAuthentication, not system auth./,
+          );
+          return;
+        }
+
+        throw new Error('Promise unexpectedly resolved');
+      });
+    });
+
+    describe('SuperhumanDocsApiHeaderBearerToken (renamed from CodaApiHeaderBearerToken)', () => {
+      const auth: Authentication = {
+        type: AuthenticationType.SuperhumanDocsApiHeaderBearerToken,
+      };
+      it('defaultAuthentication', async () => testTokenAuthFlow(createFakePack({defaultAuthentication: auth})));
+      it('fails systemAuth', async () => {
+        try {
+          await testTokenAuthFlow(
+            createFakePack({systemConnectionAuthentication: auth as unknown as SystemAuthentication}),
+          );
+        } catch (err: any) {
+          assert.match(
+            err,
+            /SuperhumanDocsApiHeaderBearerToken only works with defaultAuthentication, not system auth./,
+          );
           return;
         }
 
@@ -622,7 +647,36 @@ describe('Auth', () => {
       it('fails systemAuth fetch', async () => {
         await testHelper.willBeRejectedWith(
           execTest(createFakePack({systemConnectionAuthentication: auth as unknown as SystemAuthentication})),
-          new RegExp('CodaApiHeaderBearerToken only works with defaultAuthentication, not system auth.'),
+          new RegExp('SuperhumanDocsApiHeaderBearerToken only works with defaultAuthentication, not system auth.'),
+        );
+      });
+    });
+
+    describe('SuperhumanDocsApiHeaderBearerToken (renamed from CodaApiHeaderBearerToken)', async () => {
+      const auth: Authentication = {type: AuthenticationType.SuperhumanDocsApiHeaderBearerToken};
+      const execTest = async (pack: PackDefinition) => {
+        setupReadline('some-token');
+        await doSetupAuth(pack);
+
+        await executeFetch(pack, 'https://example.com', {result: 'hello'});
+
+        sinon.assert.calledOnceWithExactly(mockMakeRequest, {
+          body: undefined,
+          form: undefined,
+          headers: {Authorization: 'Bearer some-token', 'User-Agent': 'Coda-Test-Server-Fetcher'},
+          method: 'GET',
+          uri: 'https://example.com',
+          encoding: undefined,
+          resolveWithFullResponse: true,
+          followRedirect: true,
+          throwOnRedirect: false,
+        });
+      };
+      it('defaultAuth', () => execTest(createPackWithDefaultAuth(auth)));
+      it('fails systemAuth fetch', async () => {
+        await testHelper.willBeRejectedWith(
+          execTest(createFakePack({systemConnectionAuthentication: auth as unknown as SystemAuthentication})),
+          new RegExp('SuperhumanDocsApiHeaderBearerToken only works with defaultAuthentication, not system auth.'),
         );
       });
     });

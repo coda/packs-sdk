@@ -64,10 +64,10 @@ export async function setupAuth(
         `This Pack declares AuthenticationType.None and so does not require authentication. ` +
           `Please declare another AuthenticationType to use authentication with this Pack.`,
       );
-    case AuthenticationType.CodaApiHeaderBearerToken:
+    case AuthenticationType.SuperhumanDocsApiHeaderBearerToken:
       ensureExists(
         packDef.defaultAuthentication,
-        'CodaApiHeaderBearerToken only works with defaultAuthentication, not system auth.',
+        'SuperhumanDocsApiHeaderBearerToken only works with defaultAuthentication, not system auth.',
       );
     case AuthenticationType.CustomHeaderToken:
     case AuthenticationType.HeaderBearerToken:

@@ -118,9 +118,18 @@ export enum AuthenticationType {
    */
   AWSAssumeRole = 'AWSAssumeRole',
   /**
-   * Authenticate using a Coda REST API token, sent as an HTTP header.
+   * Authenticate using a Superhuman Docs REST API token, sent as an HTTP header.
    *
-   * @see {@link CodaApiBearerTokenAuthentication}
+   * @see {@link SuperhumanDocsApiHeaderBearerTokenAuthentication}
+   */
+  SuperhumanDocsApiHeaderBearerToken = 'CodaApiHeaderBearerToken',
+  /**
+   * Authenticate using a Superhuman Docs REST API token, sent as an HTTP header.
+   *
+   * @deprecated Use {@link AuthenticationType.SuperhumanDocsApiHeaderBearerToken} instead.
+   * This value is supported indefinitely for backwards compatibility.
+   *
+   * @see {@link SuperhumanDocsApiHeaderBearerTokenAuthentication}
    */
   CodaApiHeaderBearerToken = 'CodaApiHeaderBearerToken',
   /**
@@ -316,39 +325,47 @@ export interface HeaderBearerTokenAuthentication extends BaseAuthentication {
 }
 
 /**
- * Authenticate using a Coda REST API token, sent as an HTTP header.
+ * Authenticate using a Superhuman Docs REST API token, sent as an HTTP header.
  *
  * This is identical to {@link AuthenticationType.HeaderBearerToken} except the user will be presented
  * with a UI to generate an API token rather than needing to paste an arbitrary API
  * token into a text input.
  *
  * This is primarily for use by Superhuman-authored packs, as it is only relevant for interacting with the
- * Coda REST API.
+ * Superhuman Docs REST API.
  *
  * @example
  * ```ts
  * pack.setUserAuthentication({
- *   type: sdk.AuthenticationType.CodaApiHeaderBearerToken,
+ *   type: sdk.AuthenticationType.SuperhumanDocsApiHeaderBearerToken,
  * });
  * ```
  *
- * @see [Authenticating with other services - Coda API token](https://coda.io/packs/build/latest/guides/basics/authentication/#coda-api-token)
- * @see [Authentication samples - Coda API token](https://coda.io/packs/build/latest/samples/topic/authentication/#coda-api-token)
+ * @see [Authenticating with other services - Superhuman Docs API token](https://coda.io/packs/build/latest/guides/basics/authentication/#coda-api-token)
+ * @see [Authentication samples - Superhuman Docs API token](https://coda.io/packs/build/latest/samples/topic/authentication/#coda-api-token)
  */
-export interface CodaApiBearerTokenAuthentication extends BaseAuthentication {
-  /** Identifies this as CodaApiHeaderBearerToken authentication. */
-  type: AuthenticationType.CodaApiHeaderBearerToken;
+export interface SuperhumanDocsApiHeaderBearerTokenAuthentication extends BaseAuthentication {
+  /** Identifies this as SuperhumanDocsApiHeaderBearerToken authentication. */
+  type:
+    | AuthenticationType.SuperhumanDocsApiHeaderBearerToken
+    | AuthenticationType.CodaApiHeaderBearerToken;
   /**
    * @deprecated
    */
   deferConnectionSetup?: boolean;
   /**
-   * If true, automatically creates and configures an account with a Coda API token with
+   * If true, automatically creates and configures an account with a Superhuman Docs API token with
    * default settings when installing the pack: a read-write token, added to the doc
    * as a shared account that allows actions.
    */
   shouldAutoAuthSetup?: boolean;
 }
+
+/**
+ * @deprecated Use {@link SuperhumanDocsApiHeaderBearerTokenAuthentication} instead.
+ * This alias is supported indefinitely for backwards compatibility.
+ */
+export type CodaApiBearerTokenAuthentication = SuperhumanDocsApiHeaderBearerTokenAuthentication;
 
 /**
  * Authenticate using an HTTP header with a custom name and token prefix that you specify.
@@ -898,7 +915,7 @@ export interface VariousAuthentication {
  */
 export type AllowedAuthentication =
   | HeaderBearerTokenAuthentication
-  | CodaApiBearerTokenAuthentication
+  | SuperhumanDocsApiHeaderBearerTokenAuthentication
   | CustomHeaderTokenAuthentication
   | MultiHeaderTokenAuthentication
   | QueryParamTokenAuthentication
@@ -922,7 +939,7 @@ export interface AuthenticationTypeMap {
   [AuthenticationType.None]: NoAuthentication;
   [AuthenticationType.Various]: VariousAuthentication;
   [AuthenticationType.HeaderBearerToken]: HeaderBearerTokenAuthentication;
-  [AuthenticationType.CodaApiHeaderBearerToken]: CodaApiBearerTokenAuthentication;
+  [AuthenticationType.SuperhumanDocsApiHeaderBearerToken]: SuperhumanDocsApiHeaderBearerTokenAuthentication;
   [AuthenticationType.CustomHeaderToken]: CustomHeaderTokenAuthentication;
   [AuthenticationType.QueryParamToken]: QueryParamTokenAuthentication;
   [AuthenticationType.MultiQueryParamToken]: MultiQueryParamTokenAuthentication;
@@ -953,7 +970,7 @@ export type AsAuthDef<T extends BaseAuthentication> = Omit<
  */
 export type AllowedAuthenticationDef =
   | AsAuthDef<HeaderBearerTokenAuthentication>
-  | AsAuthDef<CodaApiBearerTokenAuthentication>
+  | AsAuthDef<SuperhumanDocsApiHeaderBearerTokenAuthentication>
   | AsAuthDef<CustomHeaderTokenAuthentication>
   | AsAuthDef<MultiHeaderTokenAuthentication>
   | AsAuthDef<QueryParamTokenAuthentication>

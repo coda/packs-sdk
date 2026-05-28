@@ -5,5 +5,5 @@ const pack = sdk.newPack();
 // BEGIN
 
 pack.setUserAuthentication({
-  type: sdk.AuthenticationType.CodaApiHeaderBearerToken,
+  type: sdk.AuthenticationType.SuperhumanDocsApiHeaderBearerToken,
 });

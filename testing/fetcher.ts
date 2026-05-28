@@ -448,7 +448,7 @@ export class AuthenticatingFetcher implements Fetcher {
         return {headers, body, form, url: parsedUrl.href};
       }
       case AuthenticationType.HeaderBearerToken:
-      case AuthenticationType.CodaApiHeaderBearerToken: {
+      case AuthenticationType.SuperhumanDocsApiHeaderBearerToken: {
         const {token} = this._credentials as TokenCredentials;
         return {url, body, form, headers: {...headers, Authorization: `Bearer ${token}`}};
       }

@@ -55,8 +55,15 @@ export const Snippets: AutocompleteSnippet[] = [
     codeFile: './samples/snippets/authentication/user_bearer.ts',
   },
   {
-    triggerTokens: ['setUserAuthentication:CodaApi', 'CodaApiHeaderBearerToken', 'CodaApiBearerTokenAuthentication'],
-    content: 'Sets per-user authentication for the Pack, using a Coda API token.',
+    triggerTokens: [
+      'setUserAuthentication:SuperhumanDocsApi',
+      'SuperhumanDocsApiHeaderBearerToken',
+      'SuperhumanDocsApiHeaderBearerTokenAuthentication',
+      'setUserAuthentication:CodaApi',
+      'CodaApiHeaderBearerToken',
+      'CodaApiBearerTokenAuthentication',
+    ],
+    content: 'Sets per-user authentication for the Pack, using a Superhuman Docs API token.',
     codeFile: './samples/snippets/authentication/user_coda.ts',
   },
   {

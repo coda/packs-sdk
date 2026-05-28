@@ -47,6 +47,7 @@ export type {OAuth2StaticCodeAuthentication} from './types';
 export type {OAuth2DynamicCodeAuthentication} from './types';
 export type {OAuth2ClientCredentialsAuthentication} from './types';
 export type {QueryParamTokenAuthentication} from './types';
+export type {SuperhumanDocsApiHeaderBearerTokenAuthentication} from './types';
 export type {SystemAuthentication} from './types';
 export type {VariousAuthentication} from './types';
 export type {VariousSupportedAuthentication} from './types';

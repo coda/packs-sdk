@@ -4,9 +4,17 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 
 ## [Unreleased]
 
+### Added
+
+- Added `AuthenticationType.SuperhumanDocsApiHeaderBearerToken` and the `SuperhumanDocsApiHeaderBearerTokenAuthentication` interface as the new names for the (now deprecated) `CodaApiHeaderBearerToken` auth type and `CodaApiBearerTokenAuthentication` interface.
+
 ### Changed
 
 - Renamed the CLI binary from `coda` to `packs`. The `coda` command remains available as an alias for backwards compatibility.
+
+### Deprecated
+
+- Deprecated `AuthenticationType.CodaApiHeaderBearerToken` and `CodaApiBearerTokenAuthentication` in favor of `AuthenticationType.SuperhumanDocsApiHeaderBearerToken` and `SuperhumanDocsApiHeaderBearerTokenAuthentication`. The old names remain available indefinitely for backwards compatibility.
 
 ## [1.14.0] - 2026-05-15
 
