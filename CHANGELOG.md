@@ -7,6 +7,7 @@ This changelog keeps track of all changes to the Packs SDK. We follow convention
 ### Changed
 
 - Renamed the CLI binary from `coda` to `packs`. The `coda` command remains available as an alias for backwards compatibility.
+- Upload validation now rejects a parameter named `account` (case-sensitive) on Packs that use user authentication, because it collides with the connection-account picker Coda shows in the formula UI.
 
 ## [1.14.0] - 2026-05-15
 
