@@ -5,7 +5,7 @@ description: Configure authentication for an API that uses OAuth2.
 
 # Authenticating using OAuth
 
-[OAuth 2.0][oauth_definition] is a modern, more secure alternative to passing usernames and passwords that has been adopted by many APIs. The details of this protocol can get complicated, but when building a Pack you only need to specify some configuration options and Coda handles the token exchange, storage, refresh, etc.
+[OAuth 2.0][oauth_definition] is a modern, more secure alternative to passing usernames and passwords that has been adopted by many APIs. The details of this protocol can get complicated, but when building a Pack you only need to specify some configuration options and the platform handles the token exchange, storage, refresh, etc.
 
 Read the [Authentication guide][authentication] for more information about how to authenticate users in Packs.
 
@@ -13,7 +13,7 @@ Read the [Authentication guide][authentication] for more information about how t
 [View Sample Code][sample_oauth2]{ .md-button }
 
 !!! warning "OAuth 1.0 not supported"
-    Coda doesn't currently support the older 1.0 or 1.0a versions of the OAuth specification. If you would like to connect to an API that only supports these versions of the standard please [contact support][support] so that we can continue to gauge interest.
+    The platform doesn't support the older 1.0 or 1.0a versions of the OAuth specification. If you would like to connect to an API that only supports these versions of the standard please [contact support][support] so that we can continue to gauge interest.
 
 
 ## Supported OAuth flows
@@ -63,17 +63,17 @@ pack.setUserAuthentication({
 });
 ```
 
-There are many subtle variations to the OAuth2 flow, and Coda can accommodate a variety of them. You can find the additional configuration options in the [`OAuth2Authentication`][OAuth2Authentication] documentation, as well as [sample code][sample_apis] showing how to set up OAuth for the most popular APIs.
+There are many subtle variations to the OAuth2 flow, and the platform can accommodate a variety of them. You can find the additional configuration options in the [`OAuth2Authentication`][OAuth2Authentication] documentation, as well as [sample code][sample_apis] showing how to set up OAuth for the most popular APIs.
 
-However if the API provider deviates too far from the OAuth 2.0 specification it may not be possible to find a configuration that will work. Additionally, Coda currently only supports the [Authorization Code][oauth2_code] and [Client Credentials][oauth2_client] grant types. If you get stuck please [contact support][support] to explore other options.
+However if the API provider deviates too far from the OAuth 2.0 specification it may not be possible to find a configuration that will work. Additionally, the platform currently only supports the [Authorization Code][oauth2_code] and [Client Credentials][oauth2_client] grant types. If you get stuck please [contact support][support] to explore other options.
 
 ??? note "Flexible authentication during token exchange"
-    The OAuth2 specification doesn't require a specific authentication schema your app must use when exchanging tokens. Coda supports the two most popular variants:
+    The OAuth2 specification doesn't require a specific authentication schema your app must use when exchanging tokens. The platform supports the two most popular variants:
 
     1. Sending the `client_secret` in the JSON body
     1. Sending an `Authorization: Basic` header using the client ID and secret.
 
-    No configuration is required, Coda will try them both to see what works.
+    No configuration is required, both will be tried automatically to see what works.
 
 ### Set developer credentials
 
@@ -100,7 +100,7 @@ https://coda.io/packsAuth/oauth2/{PACK ID}
 
 ## Token expiry and refresh
 
-Many APIs return short-lived access tokens which expire after a few hours. Coda doesn't track the expiration of these tokens, but instead waits for an API request using the token to fail before attempting to refresh it. Specifically, Coda only does a refresh when:
+Many APIs return short-lived access tokens which expire after a few hours. Token expiration isn't tracked directly; instead, a refresh is attempted when an API request using the token fails. Specifically, a refresh only happens when:
 
 - The Pack execution fails with a [`StatusCodeError`][statuscodeerror] with a 401 status (Unauthorized)
 - The OAuth provider returned a `refresh_token` during a previous token exchange
@@ -128,7 +128,7 @@ try {
 
 ## Additional scopes
 
-As your pack grows you may find that you need to request more OAuth scopes than you initially did when your existing users connected. Coda allows new scopes to be added to Pack OAuth settings in a non-breaking way: we don't prompt the user to re-authorize until they try to use a Pack feature that fails. Once that happens, we notice that the connection the user was using was created with a stale list of OAuth scopes and we prompt them to re-authenticate it to get your new scopes.
+As your pack grows you may find that you need to request more OAuth scopes than you initially did when your existing users connected. New scopes can be added to Pack OAuth settings in a non-breaking way: we don't prompt the user to re-authorize until they try to use a Pack feature that fails. Once that happens, we notice that the connection the user was using was created with a stale list of OAuth scopes and we prompt them to re-authenticate it to get your new scopes.
 
 
 ### Triggering a prompt
@@ -247,7 +247,7 @@ Some services host a unique domain or subdomain for each account, and require th
 
 It currently isn't possible to change the `authorizationUrl` and `tokenUrl` dynamically or prompt the user to specify them. One workaround is to create a copy of the Pack for each domain you want to connect to, but that obviously doesn't scale well.
 
-Additionally, in order to prevent abuse, Coda enforces the `authorizationUrl` and `tokenUrl` configured have the same domain. This is almost always true, but in rare cases an API provider may use a different URL for each. To request an exemption from this restriction fill out the [Approval request form][support_network_domains].
+Additionally, in order to prevent abuse, the platform enforces that the `authorizationUrl` and `tokenUrl` configured have the same domain. This is almost always true, but in rare cases an API provider may use a different URL for each. To request an exemption from this restriction fill out the [Approval request form][support_network_domains].
 
 !!! info "OAuth domain and network domain"
     The domain of the OAuth configuration URLs does not need to match the [network domain][fetcher_network_domains] configured for fetcher requests. This is convenient for services where the OAuth provider is a 3rd party (Okta, Auth0, etc).
@@ -270,7 +270,7 @@ pack.setUserAuthentication({
 });
 ```
 
-The PKCE standard supports two different ways of creating a challenge from the verifier: `S256` (the default) and `plain`. Coda will use the more secure `S256` method by default, but you can override it using the `pkceChallengeMethod` field.
+The PKCE standard supports two different ways of creating a challenge from the verifier: `S256` (the default) and `plain`. The platform will use the more secure `S256` method by default, but you can override it using the `pkceChallengeMethod` field.
 
 ```{.ts hl_lines="5"}
 pack.setUserAuthentication({
@@ -286,7 +286,7 @@ pack.setUserAuthentication({
 
 Some OAuth providers support [Dynamic Client Registration (DCR)][oauth_dcr], which allows applications to automatically register themselves and obtain client credentials (client ID and secret) without manual setup in a developer console. This is common with services that support [MCP servers][mcp_servers].
 
-When DCR is enabled, Coda will automatically:
+When DCR is enabled, the platform will automatically:
 
 1. Discover the authorization and token endpoints based on the pack's declared MCP servers and network domains.
 2. Register OAuth client credentials (client ID and secret) with the provider.
@@ -298,6 +298,7 @@ pack.setUserAuthentication({
   type: sdk.AuthenticationType.OAuth2,
   useDynamicClientRegistration: true,
   useProofKeyForCodeExchange: true,
+  scopes: ["read", "write"],
 });
 ```
 
@@ -310,11 +311,12 @@ pack.setUserAuthentication({
   authorizationUrl: "https://example.com/authorize",
   tokenUrl: "https://api.example.com/token",
   useProofKeyForCodeExchange: true,
+  scopes: ["read", "write"],
 });
 ```
 
 !!! warning "Not supported in local testing"
-    Dynamic Client Registration is not supported when [testing locally][cli] with the `coda execute` command. You will need to upload your Pack to test this feature.
+    Dynamic Client Registration is not supported when [testing locally][cli] with the `packs execute` command. You will need to upload your Pack to test this feature.
 
 
 ## Client credentials flow {: #client_credentials}

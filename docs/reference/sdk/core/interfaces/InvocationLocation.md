@@ -10,7 +10,7 @@ search:
 
 # Interface: InvocationLocation
 
-Information about the Coda environment and doc this formula was invoked from, for Coda internal use.
+Information about the platform environment and doc this formula was invoked from, for internal use.
 
 ## Properties
 
@@ -28,7 +28,7 @@ This will be removed in a future version of the SDK.
 
 > **protocolAndHost**: `string`
 
-The base URL of the Coda environment executing this formula. Only for Coda internal use.
+The base URL of the platform environment executing this formula. Only for internal use.
 
 ***
 

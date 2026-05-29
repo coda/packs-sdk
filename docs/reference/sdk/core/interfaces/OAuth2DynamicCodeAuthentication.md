@@ -144,7 +144,7 @@ their authentication response.
 Which domain(s) should get auth credentials, when a pack is configured with multiple domains.
 Packs configured with only one domain or with requiresEndpointUrl set to true can omit this.
 
-Using multiple authenticated network domains is uncommon and requires Coda approval.
+Using multiple authenticated network domains is uncommon and requires Superhuman approval.
 
 #### Inherited from
 
@@ -198,7 +198,7 @@ when creating a new account.
 
 The delimiter to use when joining [scopes](#scopes) when generating authorization URLs.
 
-The OAuth2 standard is to use spaces to delimit scopes, and Coda will do that by default.
+The OAuth2 standard is to use spaces to delimit scopes, and the platform will do that by default.
 If the API you are using requires a different delimiter, say a comma, specify it here.
 
 #### Inherited from
@@ -294,7 +294,7 @@ Identifies this as OAuth2 authentication.
 > **useDynamicClientRegistration**: `true`
 
 Indicates that this OAuth provider supports Dynamic Client Registration.
-When enabled, the Coda platform will automatically discover authorization endpoints
+When enabled, the platform will automatically discover authorization endpoints
 and dynamically register OAuth client credentials (client ID and secret) using the
 pack's declared MCP servers and network domains.
 

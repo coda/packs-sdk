@@ -32,5 +32,5 @@ Always `false` for completed syncs.
 
 > **incrementalContinuation**: `IncrementalContinuationT`
 
-For enabling incremental syncs. If your sync execution provides this, then Coda will provide it to the
+For enabling incremental syncs. If your sync execution provides this, then the platform will provide it to the
 next sync execution.

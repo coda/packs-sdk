@@ -5,7 +5,7 @@ description: A collection of videos showing how to build Packs or use the SDK.
 
 # Videos
 
-Coda hosts regular [webinars][webinars] on a variety of topics, including Packs and how to build them. This page includes some recordings from those webinars and other videos about building Packs.
+Regular [webinars][webinars] are hosted on a variety of topics, including Packs and how to build them. This page includes some recordings from those webinars and other videos about building Packs.
 
 
 ## An introduction to Packs in Coda
@@ -19,7 +19,7 @@ A basic overview of Packs and how they can be used to enrich your docs.
 ## Build a Todoist Coda Pack from Scratch
 _June 2022_
 
-Learn how to build a Pack from scratch that retrieves your task list from Todoist. It was built in under 10 minutes and with less than 30 lines of code in Coda's browser-based Pack Studio.
+Learn how to build a Pack from scratch that retrieves your task list from Todoist. It was built in under 10 minutes and with less than 30 lines of code in the browser-based Pack Studio.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/OoR1qX9w4Js" title="YouTube video player: Build a Todoist Coda Pack from Scratch" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
@@ -35,7 +35,7 @@ An introduction to the Pack Command Line Tool (CLI), including what it has to of
 ## Your team hub needs more photos of dogs
 _March 2023_
 
-Learn how to develop a simple Pack to bring random dog photos into your docs. In real-time, he shows you everything you need to develop your first Coda Pack.
+Learn how to develop a simple Pack to bring random dog photos into your docs. In real-time, he shows you everything you need to develop your first Pack.
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/z8J6kBxAod4" title="YouTube video player: Your team hub needs more photos of dogs" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 

@@ -365,11 +365,11 @@ class PackDefinitionBuilder {
      * use "example.com" as your network domain.
      *
      * If your pack make HTTP requests, it must declare a network domain,
-     * for security purposes. Coda enforces that your pack cannot make requests to
+     * for security purposes. The platform enforces that your pack cannot make requests to
      * any undeclared domains.
      *
      * You are allowed one network domain per pack by default. If your pack needs
-     * to connect to multiple domains, contact Coda Support for approval.
+     * to connect to multiple domains, contact Superhuman for approval.
      *
      * @example
      * ```

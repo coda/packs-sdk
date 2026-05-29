@@ -12,7 +12,7 @@ To connect to a Google API from a Pack you need to use OAuth2 authentication. Ma
 !!! info "Exceptions"
     There are some [exceptions to Google's verification requirement][google_verification_exceptions], for example an app only used internally within a single organization. Check this list first before beginning the verification process.
 
-One of the checks is that Google must verify you own the domain name for all of the domains used by the integration. This includes the redirect URI that users are sent to after they complete the approval screen. For Coda Packs this redirect URL follows the pattern:
+One of the checks is that Google must verify you own the domain name for all of the domains used by the integration. This includes the redirect URI that users are sent to after they complete the approval screen. For Packs this redirect URL follows the pattern:
 
 ```
 https://coda.io/packsAuth/oauth2/{PACK ID}
@@ -28,8 +28,8 @@ Although Google includes an exception for apps that don't own the domain of thei
 - Ensure you have a privacy policy published, even if it's just a minimal one. It can live in the published doc mentioned above.
 - Record a video showing the installation and usage of the Pack.
 - In the verification form there is a field that asks for a similar app that has been verified, and you can refer them to the previously approved [Apps Script Pack][packs_apps_script], with project number 367090187070.
-- If they insist on proof of ownership of `coda.io`, quote the clause from the FAQ and mention that Coda requires that everyone uses a redirect URL hosted on `coda.io`. You can link them to [this section][oauth_redirect] of the OAuth documentation.
-- If they insist that a branded "Google Sign-in" button be used to start the OAuth flow, mention that the Coda platform controls these buttons and that you can't change them.
+- If they insist on proof of ownership of `coda.io`, quote the clause from the FAQ and mention that the platform requires that everyone uses a redirect URL hosted on `coda.io`. You can link them to [this section][oauth_redirect] of the OAuth documentation.
+- If they insist that a branded "Google Sign-in" button be used to start the OAuth flow, mention that the platform controls these buttons and that you can't change them.
 
 With enough persistence you should be able to get your Pack verified. The process may take a week or more to complete, so plan accordingly.
 
@@ -76,7 +76,7 @@ Replace `{PACK_ID}` with the ID of your Pack. The response includes a `workspace
 
 ## How can I move a Pack to another workspace? {: #transfer-workspace}
 
-Only the [Coda support][support_email] team can transfer a Pack to another workspace, so please reach out if you need to make a change. If the Pack already has billing enabled, transferring it to a different workspace will require additional steps, so please note it in your request to support.
+Only the [support][support_email] team can transfer a Pack to another workspace, so please reach out if you need to make a change. If the Pack already has billing enabled, transferring it to a different workspace will require additional steps, so please note it in your request to support.
 
 
 [google_verification]: https://support.google.com/cloud/answer/9110914
@@ -86,4 +86,4 @@ Only the [Coda support][support_email] team can transfer a Pack to another works
 [packs_apps_script]: https://coda.io/packs/apps-script-14470
 [dynamic_sync_tables]: ../guides/blocks/sync-tables/dynamic.md
 [support_email]: mailto:support+packstudio@coda.io
-[hc_selling]: https://help.coda.io/en/articles/6381607-selling-packs-on-coda
+[hc_selling]: https://help.coda.io/hc/en-us/articles/39555971447053-Sell-your-Packs-on-Coda

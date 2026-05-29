@@ -15,4 +15,4 @@ search:
 The union of supported authentication definitions. These represent simplified configurations
 a pack developer can specify when calling [PackDefinitionBuilder.setUserAuthentication](../classes/PackDefinitionBuilder.md#setuserauthentication) when using
 a pack definition builder. The builder massages these definitions into the form of
-an [Authentication](Authentication.md) value, which is the value Coda ultimately cares about.
+an [Authentication](Authentication.md) value, which is the value the platform ultimately cares about.

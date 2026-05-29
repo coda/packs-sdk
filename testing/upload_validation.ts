@@ -1429,6 +1429,7 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
     [1013, 'Sync pull requests', ExemptionType.SyncTableGetterName],
     [1013, 'Sync repos', ExemptionType.SyncTableGetterName],
     [1003, 'Event', ExemptionType.FilterablePropertyLimit],
+    [42226, 'Event', ExemptionType.FilterablePropertyLimit],
     [1052, 'Issue', ExemptionType.FilterablePropertyLimit],
     [1054, 'Sync table', ExemptionType.SyncTableGetterName],
     [1062, 'Form responses', ExemptionType.SyncTableGetterName],
@@ -2908,6 +2909,20 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
         path: ['networkDomains'],
       },
     )
+    .refine(
+      (data: any) => {
+        if (data.networkDomains?.length || !data.mcpServers?.length) {
+          return true;
+        }
+        return false;
+      },
+      {
+        message:
+          'This pack uses MCP servers but did not declare a network domain. ' +
+          "Specify the domain that your pack makes http requests to using `networkDomains: ['example.com']`",
+        path: ['networkDomains'],
+      },
+    )
     .superRefine((untypedData, context) => {
       const data = untypedData as PackVersionMetadata;
 
@@ -2977,6 +2992,29 @@ ${endpointKey ? 'endpointKey is set' : `requiresEndpointUrl is ${requiresEndpoin
               return;
             }
           }
+        }
+      }
+    })
+    .superRefine((untypedData, context) => {
+      const data = untypedData as PackVersionMetadata;
+      if (!data.networkDomains || !data.mcpServers) {
+        return;
+      }
+
+      for (const [i, server] of data.mcpServers.entries()) {
+        const usedNetworkDomain = URLParse(server.endpointUrl).hostname;
+        if (!usedNetworkDomain) {
+          continue;
+        }
+        if (
+          !data.networkDomains.some(domain => domain === usedNetworkDomain || usedNetworkDomain.endsWith('.' + domain))
+        ) {
+          context.addIssue({
+            code: 'custom',
+            path: [`mcpServers[${i}].endpointUrl`],
+            message: `Domain ${usedNetworkDomain} is used in MCP server ${server.name} but not declared in the pack's "networkDomains".`,
+          });
+          return;
         }
       }
     })

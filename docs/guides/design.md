@@ -5,7 +5,7 @@ description: How to design your Pack so that it's easy to use and support.
 
 # Design your Pack
 
-Coda Packs don't include traditional user interface elements like dialogs or sidebars. Instead users interact with your building blocks using standard Coda interfaces, like the formula editor. However there are still many subtle design choices to make when building your Pack, and they can have a real impact on usability.
+Packs don't include traditional user interface elements like dialogs or sidebars. Instead users interact with your building blocks using standard Coda interfaces, like the formula editor. However there are still many subtle design choices to make when building your Pack, and they can have a real impact on usability.
 
 This page aims to provide the guidance you need to create a Pack that meets the needs and expectations of Coda users.
 
@@ -17,7 +17,7 @@ No matter what kind of Pack you are building, there are some basic rules to keep
 
 ### Build building blocks
 
-Unlike other types of integrations, a Coda Pack doesn't prescribe an exact end-to-end experience. Instead it provides a new set of building blocks, like formulas or buttons, that a user can deploy to improve their docs. These building blocks need to provide sufficient flexibility so that they can be combined in novel and bespoke ways.
+Unlike other types of integrations, a Pack doesn't prescribe an exact end-to-end experience. Instead it provides a new set of building blocks, like formulas or buttons, that a user can deploy to improve their docs. These building blocks need to provide sufficient flexibility so that they can be combined in novel and bespoke ways.
 
 - Prefer parameters over hard-coding specific patterns.
   {: .yes}

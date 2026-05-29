@@ -35,7 +35,7 @@ const ApiTokenArg = {
 };
 const ApiEndpointArg = {
     string: true,
-    desc: `API endpoint to use for the operation (default: ${config_storage_1.DEFAULT_API_ENDPOINT}). Required for single-tenant instances. Can also be set persistently via \`coda setOption <manifestFile> apiEndpoint <url>\`.`,
+    desc: `API endpoint to use for the operation (default: ${config_storage_1.DEFAULT_API_ENDPOINT}). Required for single-tenant instances. Can also be set persistently via \`packs setOption <manifestFile> apiEndpoint <url>\`.`,
     alias: 'codaApiEndpoint',
 };
 const TimerStrategyArg = {
@@ -50,12 +50,12 @@ exports.commands = [
         builder: {
             fetch: {
                 boolean: true,
-                desc: 'Actually fetch http requests instead of using mocks. Run "coda auth" first to set up credentials.',
+                desc: 'Actually fetch http requests instead of using mocks. Run "packs auth" first to set up credentials.',
                 default: true,
             },
             vm: {
                 boolean: true,
-                desc: 'Execute the requested command in a virtual machine that mimics the environment Coda uses to execute Packs.' +
+                desc: 'Execute the requested command in a virtual machine that mimics the environment the platform uses to execute Packs.' +
                     'This defaults to true if the isolated-vm package is installed, and to false if not.',
                 default: Boolean((0, ivm_wrapper_1.tryGetIvm)()),
             },
@@ -72,7 +72,7 @@ exports.commands = [
             allowMultipleNetworkDomains: {
                 boolean: true,
                 default: false,
-                desc: 'Allow executing Packs that use multiple network domains. You must get approval from Coda before you can upload these Packs.',
+                desc: 'Allow executing Packs that use multiple network domains. You must get approval from Superhuman before you can upload these Packs.',
             },
         },
     },
@@ -162,7 +162,7 @@ exports.commands = [
     },
     {
         command: 'upload <manifestFile>',
-        describe: 'Build and upload your Pack version to Coda',
+        describe: 'Build and upload your Pack version to the server',
         builder: {
             notes: {
                 string: true,
@@ -188,7 +188,7 @@ exports.commands = [
     },
     {
         command: 'create <manifestFile>',
-        describe: "Register a new Pack with Coda's servers",
+        describe: 'Register a new Pack with the server',
         builder: {
             name: {
                 string: true,
@@ -212,7 +212,7 @@ exports.commands = [
     },
     {
         command: 'link <manifestDir> <packIdOrUrl>',
-        describe: "Link to a pre-existing Pack ID on Coda's servers",
+        describe: 'Link to a pre-existing Pack ID on the server',
         builder: {
             apiToken: ApiTokenArg,
             apiEndpoint: ApiEndpointArg,
@@ -246,7 +246,7 @@ exports.commands = [
             gitTag: {
                 boolean: true,
                 alias: 'g',
-                describe: `Create a git tag for this release (default: ${config_storage_2.DEFAULT_GIT_TAG}). Can also be enabled by default via \`coda setOption <manifestFile> gitTag true\``,
+                describe: `Create a git tag for this release (default: ${config_storage_2.DEFAULT_GIT_TAG}). Can also be enabled by default via \`packs setOption <manifestFile> gitTag true\``,
             },
             apiToken: ApiTokenArg,
             apiEndpoint: ApiEndpointArg,
@@ -261,7 +261,7 @@ exports.commands = [
             '  - timerStrategy: Valid values are "none", "error", or "fake".\n' +
             '  - gitTag: Valid values are "true" or "false". When true, the release command will create git tags.\n' +
             '  - apiEndpoint: A URL for the API endpoint, required for single-tenant instances (e.g. "https://my-company.coda.io"). When set, all commands will use this endpoint by default.\n\n' +
-            'Usage: coda setOption path/to/pack.ts timerStrategy fake',
+            'Usage: packs setOption path/to/pack.ts timerStrategy fake',
         handler: set_option_1.handleSetOption,
     },
 ];

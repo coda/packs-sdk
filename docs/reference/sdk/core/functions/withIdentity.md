@@ -12,7 +12,7 @@ search:
 
 > **withIdentity**(`schema`, `identityName`): `GenericObjectSchema`
 
-Convenience for defining the result schema for an action. The identity enables Coda to
+Convenience for defining the result schema for an action. The identity enables the platform to
 update the corresponding sync table row, if it exists.
 You could add the identity directly, but that would make the schema less re-usable.
 

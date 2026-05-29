@@ -247,10 +247,10 @@ export class StatusCodeError extends Error {
 /**
  * Throw this error if the user needs to re-authenticate to gain OAuth scopes that have been added
  * to the pack since their connection was created, or scopes that are specific to a certain formula.
- * This is useful because Coda will always attempt to execute a formula even if a user has not yet
+ * This is useful because the platform will always attempt to execute a formula even if a user has not yet
  * re-authenticated with all relevant scopes.
  *
- * You don't *always* need to throw this specific error, as Coda will interpret a 403 (Forbidden)
+ * You don't *always* need to throw this specific error, as the platform will interpret a 403 (Forbidden)
  * status code error as a MissingScopesError when the user's connection was made without all
  * currently relevant scopes. This error exists because that default behavior is insufficient if
  * the OAuth service does not set a 403 status code (the OAuth spec doesn't specifically require
@@ -441,7 +441,7 @@ export interface DynamicSyncTableDef<
  * can be invoked quickly. The end result of a sync is the concatenation of the results from
  * each individual invocation.
  *
- * To instruct Coda to fetch a subsequent result page, return a `Continuation` that
+ * To instruct the platform to fetch a subsequent result page, return a `Continuation` that
  * describes which page of results to fetch next. The continuation will be passed verbatim
  * as an input to the subsequent invocation of the sync formula.
  *
@@ -463,7 +463,7 @@ export interface Continuation {
 
 /**
  * Type definition for some additional data that is returned by a sync table
- * in addition to the data itself. This data is not stored in Coda, but
+ * in addition to the data itself. This data is not stored in the doc, but
  * is passed to the executeGetPermissions function of the sync table
  * See {@link SyncFormulaResult.permissionsContext}.
  * TODO(drew): Unhide this
@@ -630,7 +630,18 @@ export function makeParameter<T extends ParameterType, O extends ParameterOption
   let autocomplete: MetadataFormula | undefined;
 
   if (Array.isArray(autocompleteDefOrItems)) {
-    const autocompleteDef = makeSimpleAutocompleteMetadataFormula(autocompleteDefOrItems);
+    // The conditional `autocomplete?` field on ParameterOptions guarantees
+    // that whenever `autocompleteDefOrItems` is an array, the outer T is in
+    // AutocompleteParameterTypes. Pass the union explicitly so the call
+    // type-checks under stricter generic inference (e.g. tsgo / TS6 native
+    // compiler) — TypeScript's older inference quietly distributed the
+    // generic over makeParameter's union, but the native compiler doesn't.
+    const autocompleteDef = makeSimpleAutocompleteMetadataFormula<AutocompleteParameterTypes>(
+      autocompleteDefOrItems as Array<
+        | TypeMap[AutocompleteParameterTypeMapping[AutocompleteParameterTypes]]
+        | SimpleAutocompleteOption<AutocompleteParameterTypes>
+      >,
+    );
     autocomplete = wrapMetadataFunction(autocompleteDef);
   } else {
     autocomplete = wrapMetadataFunction(autocompleteDefOrItems);
@@ -1096,7 +1107,7 @@ type V2PackFormula<ParamDefsT extends ParamDefs, SchemaT extends Schema = Schema
  * metadata formulas, and the formulas that implement sync tables.
  *
  * It should be very uncommon to need to use this type, it is most common in meta analysis of the
- * contents of a pack for Coda internal use.
+ * contents of a pack for internal use.
  */
 export type TypedPackFormula = Formula | GenericSyncFormula;
 
@@ -1850,7 +1861,7 @@ export type MetadataFormulaResultType = string | number | MetadataFormulaObjectR
  * A variety of tasks like those mentioned above can all be accomplished with formulas that
  * share the same structure, so all of these supporting features are defined as `MetadataFormulas`.
  * You typically do not need to define a `MetadataFormula` explicitly, but rather can simply define
- * the JavaScript function that implements the formula. Coda will wrap this function with the necessary
+ * the JavaScript function that implements the formula. The platform will wrap this function with the necessary
  * formula boilerplate to make it look like a complete Coda formula.
  *
  * All metadata functions are passed an {@link ExecutionContext} as the first parameter,
@@ -1992,7 +2003,7 @@ export type MetadataFormulaDef<
 /**
  * A wrapper that generates a formula definition from the function that implements a metadata formula.
  * It is uncommon to ever need to call this directly, normally you would just define the JavaScript
- * function implementation, and Coda will wrap it with this to generate a full metadata formula
+ * function implementation, and the platform will wrap it with this to generate a full metadata formula
  * definition.
  *
  * All function-like behavior in a pack is ultimately implemented using formulas, like you would
@@ -2558,7 +2569,7 @@ export interface DynamicSyncTableOptions<
  *
  * This wrapper does a variety of helpful things, including
  * * Doing basic validation of the provided definition.
- * * Normalizing the schema definition to conform to Coda-recommended syntax.
+ * * Normalizing the schema definition to conform to recommended syntax.
  * * Wrapping the execute formula to normalize return values to match the normalized schema.
  *
  * See [Normalization](https://coda.io/packs/build/latest/guides/advanced/schemas/#normalization) for more information about schema normalization.
@@ -2786,7 +2797,7 @@ export function makeSyncTableLegacy<
     throw new Error('Legacy sync tables must specify identity.name');
   }
   if (schema.__packId) {
-    throw new Error('Do not use the __packId field, it is only for internal Coda use.');
+    throw new Error('Do not use the __packId field, it is only for internal use.');
   }
   return makeSyncTable({
     name,

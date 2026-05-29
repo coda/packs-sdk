@@ -30,7 +30,7 @@ export declare enum ValueType {
     Object = "object"
 }
 /**
- * Synthetic types that instruct Coda how to coerce values from primitives at ingestion time.
+ * Synthetic types that instruct the platform how to coerce values from primitives at ingestion time.
  */
 export declare enum ValueHintType {
     /**
@@ -744,7 +744,7 @@ export interface ObjectSchemaProperty {
      * Suppose that you're fetching an object from an API that has a property called "duration".
      * But in your pack, you'd like the value to be called "durationSeconds" to be more precise.
      * You could write code in your `execute` function to relabel the field, but you could
-     * also use `fromKey` and Coda will do it for you.
+     * also use `fromKey` and the platform will do it for you.
      *
      * Suppose your `execute` function looked like this:
      * ```
@@ -765,7 +765,7 @@ export interface ObjectSchemaProperty {
      * });
      * ```
      *
-     * This tells Coda to transform your formula's return value, creating a field "durationSeconds"
+     * This tells the platform to transform your formula's return value, creating a field "durationSeconds"
      * whose value comes another field called "duration".
      */
     fromKey?: string;
@@ -1771,7 +1771,7 @@ export declare function normalizeObjectSchema(schema: GenericObjectSchema): Gene
  */
 export declare function makeReferenceSchemaFromObjectSchema(schema: ObjectSchemaDefinition<string, string> & ObjectSchemaProperty, identityName?: string): GenericObjectSchema & ObjectSchemaProperty;
 /**
- * Convenience for defining the result schema for an action. The identity enables Coda to
+ * Convenience for defining the result schema for an action. The identity enables the platform to
  * update the corresponding sync table row, if it exists.
  * You could add the identity directly, but that would make the schema less re-usable.
  */

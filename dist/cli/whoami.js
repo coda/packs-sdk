@@ -12,7 +12,7 @@ async function handleWhoami({ apiToken, apiEndpoint }) {
     if (!apiToken) {
         apiToken = (0, config_storage_1.getApiKey)(apiEndpoint);
         if (!apiToken) {
-            return (0, helpers_3.printAndExit)('Missing API token. Please run `coda register` to register one.');
+            return (0, helpers_3.printAndExit)('Missing API token. Please run `packs register` to register one.');
         }
     }
     const client = (0, helpers_1.createCodaClient)(apiToken, formattedEndpoint);

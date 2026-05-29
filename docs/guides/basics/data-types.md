@@ -5,7 +5,7 @@ description: Use semantic types to accurately represent data in the document.
 
 # Return data with meaningful types
 
-Pack formulas are written in JavaScript and can return standard JavaScript data types. Coda however supports a wider array of semantic types that change how the data is displayed to the user. When defining a [formula][formulas] or [schema][schemas] you must specify the type of the data being returned.
+Pack formulas are written in JavaScript and can return standard JavaScript data types. The platform however supports a wider array of semantic types that change how the data is displayed to the user. When defining a [formula][formulas] or [schema][schemas] you must specify the type of the data being returned.
 
 [View Sample Code][samples]{ .md-button }
 
@@ -543,8 +543,8 @@ The full set of formatting options for a given value type and hint can be found 
 [unix_epoch]: https://en.wikipedia.org/wiki/Unix_time
 [iframely]: https://iframely.com/
 [oEmbed]: https://oembed.com/
-[embed_force]: https://help.coda.io/en/articles/1211364-embedding-content-in-your-doc#using-the-force-parameter
-[column_formats]: https://help.coda.io/en/articles/1235680-overview-of-column-formats
+[embed_force]: https://help.coda.io/hc/en-us/articles/39555949656077-Embed-third-party-content-in-your-doc#h_01K57937QDYQQRV47NPGVMPRCY
+[column_formats]: https://help.coda.io/hc/en-us/articles/39555851862925-Column-basics
 [actions]: ../blocks/actions.md
 [precision]: ../../reference/sdk/core/interfaces/NumericSchema.md#precision
 [currencyCode]: ../../reference/sdk/core/interfaces/CurrencySchema.md#currencycode

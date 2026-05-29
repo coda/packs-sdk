@@ -422,7 +422,7 @@ The schema is essentially a blueprint for each row in the sync table, describing
     One piece of data you'll want to store for each row is the title of the book. To create that property, add a new key-value pair to the `properties` object. The key (left side) determines two things:
 
     1. How users will access the property's value in the doc.
-    1. Where Coda can find that value in the rows your sync formula returned.
+    1. Where the platform can find that value in the rows your sync formula returned.
 
     Your sync formula is currently returning the API data as-is, and it returns the title under the key `title`. That's also a great name to expose to our users, so use it as the key of the property.
 
@@ -804,9 +804,9 @@ The sync table is working great, but it still only includes the first 32 results
 
 While you could attempt to do this in a loop, the sync formula can only run for at most one minute, which may not be enough time to fetch all of the pages. Instead you should utilize a feature of sync tables called "continuations".
 
-When the sync formula returns a continuation along with the rows, it tells Coda that the sync isn't complete yet and to run the sync formula again. You can store data in the continuation which will be passed to the next execution, allowing you to continue where you left off.
+When the sync formula returns a continuation along with the rows, it tells the platform that the sync isn't complete yet and to run the sync formula again. You can store data in the continuation which will be passed to the next execution, allowing you to continue where you left off.
 
-To tell Coda that the sync is complete simply pass an `undefined` continuation.
+To tell the platform that the sync is complete simply pass an `undefined` continuation.
 
 === ":material-numeric-1-circle: Return continuation"
 

@@ -966,7 +966,7 @@ describe('Auth', () => {
           executeFetch(pack, '/foo?bar=blah', {result: 'hello'}),
           new RegExp(
             'WebBasic authentication is required for this pack, but no local credentials were found. ' +
-              'Run "coda auth path/to/pack/manifest to set up credentials.',
+              'Run "packs auth path/to/pack/manifest to set up credentials.',
           ),
         );
 
@@ -1222,7 +1222,7 @@ describe('Auth', () => {
           executeFetch(pack, '/foo?bar=blah', {result: 'hello'}),
           new RegExp(
             'Custom authentication is required for this pack, but no local credentials were found. ' +
-              'Run "coda auth path/to/pack/manifest to set up credentials.',
+              'Run "packs auth path/to/pack/manifest to set up credentials.',
           ),
         );
 

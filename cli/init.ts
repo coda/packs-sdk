@@ -53,7 +53,7 @@ export async function handleInit() {
   if (!isPacksExamplesInstalled) {
     if (!isGitAvailable()) {
       return printAndExit(
-        'The coda init command requires git to be installed and available in your path. ' +
+        'The packs init command requires git to be installed and available in your path. ' +
           'See https://git-scm.com/downloads for suggested ways to install.',
       );
     }
