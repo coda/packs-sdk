@@ -346,9 +346,7 @@ export interface HeaderBearerTokenAuthentication extends BaseAuthentication {
  */
 export interface SuperhumanDocsApiHeaderBearerTokenAuthentication extends BaseAuthentication {
   /** Identifies this as SuperhumanDocsApiHeaderBearerToken authentication. */
-  type:
-    | AuthenticationType.SuperhumanDocsApiHeaderBearerToken
-    | AuthenticationType.CodaApiHeaderBearerToken;
+  type: AuthenticationType.SuperhumanDocsApiHeaderBearerToken | AuthenticationType.CodaApiHeaderBearerToken;
   /**
    * @deprecated
    */

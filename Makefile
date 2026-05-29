@@ -362,8 +362,8 @@ publish-local: build
 CODA_DIR ?= ../coda
 .PHONY: publish-coda
 publish-coda: compile
-	cp -r dist/* ${CODA_DIR}/node_modules/@codahq/packs-sdk/dist/
-	cp -r dist/* ${CODA_DIR}/node_modules/packs-sdk-for-web-editor/dist/
+	cp -r dist/* "${CODA_DIR}"/node_modules/@codahq/packs-sdk/dist/
+	cp -r dist/* "${CODA_DIR}"/node_modules/packs-sdk-for-web-editor/dist/
 	@echo "Published dist to @codahq/packs-sdk and packs-sdk-for-web-editor in ${CODA_DIR}. Restart the coda dev server."
 
 .PHONY: autoformat-ts
