@@ -7,7 +7,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-cairosvg = "==2.7.1"
+cairosvg = "==2.9.0"
 importlib_metadata = "==6.6.0"
 mkdocs = "==1.6.1"
 mkdocs-awesome-nav = "==3.2.0"
@@ -18,8 +18,8 @@ mkdocs-redirects = "==1.2.2"
 mkdocs-rss-plugin = "==1.17.9"
 mkdocs-simple-hooks = "==0.1.5"
 mkdocs-site-urls = "==0.3.1"
-pillow = "==12.1.1"
-urllib3 = "==2.6.0"
+pillow = "==12.2.0"
+urllib3 = "==2.7.0"
 
 [dev-packages]
 
