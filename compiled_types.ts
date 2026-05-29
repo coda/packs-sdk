@@ -85,6 +85,7 @@ type AuthenticationToMetadata<T extends Authentication> = DistributiveOmit<
 export interface AuthenticationMetadataTypeMap {
   [AuthenticationType.AWSAccessKey]: AuthenticationToMetadata<AWSAccessKeyAuthentication>;
   [AuthenticationType.AWSAssumeRole]: AuthenticationToMetadata<AWSAssumeRoleAuthentication>;
+  // eslint-disable-next-line max-len
   [AuthenticationType.SuperhumanDocsApiHeaderBearerToken]: AuthenticationToMetadata<SuperhumanDocsApiHeaderBearerTokenAuthentication>;
   [AuthenticationType.CustomHeaderToken]: AuthenticationToMetadata<CustomHeaderTokenAuthentication>;
   [AuthenticationType.MultiHeaderToken]: AuthenticationToMetadata<MultiHeaderTokenAuthentication>;
