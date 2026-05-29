@@ -19,7 +19,7 @@ overrides:
   diff@>=5.0.0 <5.2.2: 5.2.2
   fast-xml-parser@>=5.0.0 <5.3.8: 5.7.0
   glob@>=11.0.0 <11.1.0: 11.1.0
-  lodash@>=4.0.0 <=4.17.22: 4.17.23
+  lodash@>=4.0.0 <=4.17.22: 4.18.1
   markdown-it@>=13.0.0 <14.1.1: 14.1.1
   minimatch@<3.1.4: 3.1.4
   minimatch@>=5.0.0 <5.1.8: 5.1.8
@@ -3493,8 +3493,8 @@ packages:
   lodash.uniqby@4.7.0:
     resolution: {integrity: sha512-e/zcLx6CSbmaEgFHCA7BnoQKyCtKMxnuWrJygbwPs/AIn+IMKl66L8/s+wBUn5LRw2pZx3bUHibiV1b6aTWIww==}
 
-  lodash@4.17.23:
-    resolution: {integrity: sha512-LgVTMpQtIopCi79SJeDiP0TfWi5CNEc/L/aRdTh3yIvmZXTnheWpKjSZhnvMl8iXbC1tFg9gdHHDMLoV7CnG+w==}
+  lodash@4.18.1:
+    resolution: {integrity: sha512-dMInicTPVE8d1e5otfwmmjlxkZoUpiVLwyeTdUsi/Caj/gfzzblBcCE5sRHV/AsjuCmxWrte2TNGSYuCeCq+0Q==}
 
   log-symbols@4.1.0:
     resolution: {integrity: sha512-8XPvpAA8uyhfteu8pIvQxpJZ7SYYdpUivZpGy6sFsBuKRY/7rQGavedeB8aK+Zkyq6upMFVL/9AW6vOYzfRyLg==}
@@ -8884,7 +8884,7 @@ snapshots:
 
   lodash.uniqby@4.7.0: {}
 
-  lodash@4.17.23: {}
+  lodash@4.18.1: {}
 
   log-symbols@4.1.0:
     dependencies:
@@ -9754,7 +9754,7 @@ snapshots:
       globby: 14.0.2
       inquirer: 9.3.2
       issue-parser: 7.0.1
-      lodash: 4.17.23
+      lodash: 4.18.1
       mime-types: 2.1.35
       new-github-release-url: 2.0.0
       open: 10.1.0
